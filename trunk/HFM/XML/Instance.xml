@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Instance Name="MyMachine">
+	<UnitInfo>
+		<DateStarted>10 August 09:37:33</DateStarted>
+		<FramesComplete>35</FramesComplete>
+		<PercentComplete>35</PercentComplete>
+		<TimePerFrame>1h 15m 44s</TimePerFrame>
+		<ExpectedCompletionDate>16 August 2006 1:46 am</ExpectedCompletionDate>
+	</UnitInfo>
+	<Computer>
+		<EstPPD>82.36</EstPPD>
+		<EstPPW>576.54</EstPPW>
+		<EstUPD>0.46</EstUPD>
+		<EstUPW>3.77</EstUPW>
+		<TotalProjects>243</TotalProjects>
+	</Computer>
+	<Protein>
+		<ProjectNumber>1814</ProjectNumber>
+		<ServerIP>171.65.103.158 </ServerIP>
+		<WorkUnit>p1814_Collagen_POG10more_refolding</WorkUnit>
+		<NumAtoms>1116</NumAtoms>
+		<PreferredDays>30</PreferredDays>
+		<MaxDays>44</MaxDays>
+		<Credit>153</Credit>
+		<Frames>100</Frames>
+		<Core>Amber</Core>
+		<Description>This is the BLAH</Description>
+		<Contact>spark7</Contact>
+	</Protein>
+	<LastUpdatedDate>10 August 2006</LastUpdatedDate>
+	<LastUpdatedTime>9:25:23 pm</LastUpdatedTime>
+	<LastRetrievedDate>10 August 2006</LastRetrievedDate>
+	<LastRetrievedTime>9:25:23 pm</LastRetrievedTime>
+</Instance>

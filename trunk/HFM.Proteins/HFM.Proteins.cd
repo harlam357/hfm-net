@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="HFM.Proteins.Protein">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Protein.cs</FileName>
+      <HashCode>AAgEABAIAEAgAAABCAAgBACEAEAAAEAOAAIEAAAAQAE=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HFM.Proteins.ProjectInfoUpdatedEventArgs" Collapsed="true">
+    <Position X="7.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>ProteinCollection.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HFM.Proteins.ProteinCollection" Collapsed="true">
+    <Position X="5.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>ProteinCollection.cs</FileName>
+      <HashCode>AEIAAAIAAAAAAAAAAACEEAAAAIBAAAAAQAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HFM.Proteins.UnitInfo">
+    <Position X="0.5" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <FileName>UnitInfo.cs</FileName>
+      <HashCode>ABlAl4REAAQAAAYIkoDAAEAiDEIAACAJACAECEhgEBA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="HFM.Proteins.eClientStatus" Collapsed="true">
+    <Position X="5.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UnitInfo.cs</FileName>
+      <HashCode>QAAgAAAAAAIAAAEAAAgAAAAAAAAAAAAIAAAAAAAAABA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="HFM.Proteins.eClientType" Collapsed="true">
+    <Position X="7.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UnitInfo.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAQAAIAIAAAAAAAAAAAAAAABA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Delegate Name="HFM.Proteins.ProjectInfoUpdatedEventHandler" Collapsed="true">
+    <Position X="5.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>ProteinCollection.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAQAAAA=</HashCode>
+    </TypeIdentifier>
+  </Delegate>
+</ClassDiagram>
