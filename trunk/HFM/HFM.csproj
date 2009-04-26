@@ -144,7 +144,6 @@
     <Content Include="CSS\Orange.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="GPLv2.TXT" />
     <None Include="Resources\hfm_logo.png" />
     <Content Include="XML\Overview.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
