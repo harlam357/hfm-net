@@ -355,5 +355,65 @@ namespace HFM.Preferences.Properties {
                 this["PpdCalculation"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Standard")]
+        public string TimeStyle {
+            get {
+                return ((string)(this["TimeStyle"]));
+            }
+            set {
+                this["TimeStyle"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("notepad.exe")]
+        public string LogFileViewer {
+            get {
+                return ((string)(this["LogFileViewer"]));
+            }
+            set {
+                this["LogFileViewer"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("explorer.exe")]
+        public string FileExplorer {
+            get {
+                return ((string)(this["FileExplorer"]));
+            }
+            set {
+                this["FileExplorer"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://fah-web.stanford.edu/psummaryC.html")]
+        public string ProjectDownloadUrl {
+            get {
+                return ((string)(this["ProjectDownloadUrl"]));
+            }
+            set {
+                this["ProjectDownloadUrl"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool WebGenAfterRefresh {
+            get {
+                return ((bool)(this["WebGenAfterRefresh"]));
+            }
+            set {
+                this["WebGenAfterRefresh"] = value;
+            }
+        }
     }
 }

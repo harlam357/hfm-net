@@ -62,12 +62,15 @@ namespace HFM.Forms
          this.mnuClientsEdit = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuClientsDelete = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuClientsSep2 = new System.Windows.Forms.ToolStripSeparator();
+         this.mnuClientsViewCachedLog = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuClientsViewClientFiles = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuClientsSep3 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuClientsRefreshSelected = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuClientsRefreshAll = new System.Windows.Forms.ToolStripMenuItem();
-         this.mnuClientsSep3 = new System.Windows.Forms.ToolStripSeparator();
-         this.mnuClientsViewCachedLog = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuView = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuViewShowHideLog = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuViewSep1 = new System.Windows.Forms.ToolStripSeparator();
+         this.mnuViewToggleDateTime = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuToolsMessages = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuToolsDownloadProjects = new System.Windows.Forms.ToolStripMenuItem();
@@ -81,12 +84,22 @@ namespace HFM.Forms
          this.pnlMain = new System.Windows.Forms.Panel();
          this.txtLogFile = new System.Windows.Forms.TextBox();
          this.dataGridView1 = new System.Windows.Forms.DataGridView();
+         this.gridContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+         this.mnuContextClientsRefreshSelected = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuContextClientsSep1 = new System.Windows.Forms.ToolStripSeparator();
+         this.mnuContextClientsAdd = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuContextClientsEdit = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuContextClientsDelete = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuContextClientsSep2 = new System.Windows.Forms.ToolStripSeparator();
+         this.mnuContextClientsViewCachedLog = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuContextClientsViewClientFiles = new System.Windows.Forms.ToolStripMenuItem();
          this.webGenTimer = new System.Windows.Forms.Timer(this.components);
          this.statusStrip.SuspendLayout();
          this.notifyMenu.SuspendLayout();
          this.AppMenu.SuspendLayout();
          this.pnlMain.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+         this.gridContextMenuStrip.SuspendLayout();
          this.SuspendLayout();
          // 
          // bgWorkTimer
@@ -313,10 +326,11 @@ namespace HFM.Forms
             this.mnuClientsEdit,
             this.mnuClientsDelete,
             this.mnuClientsSep2,
-            this.mnuClientsRefreshSelected,
-            this.mnuClientsRefreshAll,
+            this.mnuClientsViewCachedLog,
+            this.mnuClientsViewClientFiles,
             this.mnuClientsSep3,
-            this.mnuClientsViewCachedLog});
+            this.mnuClientsRefreshSelected,
+            this.mnuClientsRefreshAll});
          this.mnuClients.Name = "mnuClients";
          this.mnuClients.Size = new System.Drawing.Size(51, 20);
          this.mnuClients.Text = "&Clients";
@@ -324,39 +338,58 @@ namespace HFM.Forms
          // mnuClientsAdd
          // 
          this.mnuClientsAdd.Name = "mnuClientsAdd";
-         this.mnuClientsAdd.Size = new System.Drawing.Size(186, 22);
+         this.mnuClientsAdd.Size = new System.Drawing.Size(221, 22);
          this.mnuClientsAdd.Text = "&Add Client";
          this.mnuClientsAdd.Click += new System.EventHandler(this.mnuClientsAdd_Click);
          // 
          // mnuClientsSep1
          // 
          this.mnuClientsSep1.Name = "mnuClientsSep1";
-         this.mnuClientsSep1.Size = new System.Drawing.Size(183, 6);
+         this.mnuClientsSep1.Size = new System.Drawing.Size(218, 6);
          // 
          // mnuClientsEdit
          // 
          this.mnuClientsEdit.Name = "mnuClientsEdit";
-         this.mnuClientsEdit.Size = new System.Drawing.Size(186, 22);
+         this.mnuClientsEdit.Size = new System.Drawing.Size(221, 22);
          this.mnuClientsEdit.Text = "&Edit Client";
          this.mnuClientsEdit.Click += new System.EventHandler(this.mnuClientsEdit_Click);
          // 
          // mnuClientsDelete
          // 
          this.mnuClientsDelete.Name = "mnuClientsDelete";
-         this.mnuClientsDelete.Size = new System.Drawing.Size(186, 22);
+         this.mnuClientsDelete.Size = new System.Drawing.Size(221, 22);
          this.mnuClientsDelete.Text = "&Delete Client";
          this.mnuClientsDelete.Click += new System.EventHandler(this.mnuClientsDelete_Click);
          // 
          // mnuClientsSep2
          // 
          this.mnuClientsSep2.Name = "mnuClientsSep2";
-         this.mnuClientsSep2.Size = new System.Drawing.Size(183, 6);
+         this.mnuClientsSep2.Size = new System.Drawing.Size(218, 6);
+         // 
+         // mnuClientsViewCachedLog
+         // 
+         this.mnuClientsViewCachedLog.Name = "mnuClientsViewCachedLog";
+         this.mnuClientsViewCachedLog.Size = new System.Drawing.Size(221, 22);
+         this.mnuClientsViewCachedLog.Text = "View Cached &Log File";
+         this.mnuClientsViewCachedLog.Click += new System.EventHandler(this.mnuClientsViewCachedLog_Click);
+         // 
+         // mnuClientsViewClientFiles
+         // 
+         this.mnuClientsViewClientFiles.Name = "mnuClientsViewClientFiles";
+         this.mnuClientsViewClientFiles.Size = new System.Drawing.Size(221, 22);
+         this.mnuClientsViewClientFiles.Text = "View Client &Files (Local Only)";
+         this.mnuClientsViewClientFiles.Click += new System.EventHandler(this.mnuClientsViewClientFiles_Click);
+         // 
+         // mnuClientsSep3
+         // 
+         this.mnuClientsSep3.Name = "mnuClientsSep3";
+         this.mnuClientsSep3.Size = new System.Drawing.Size(218, 6);
          // 
          // mnuClientsRefreshSelected
          // 
          this.mnuClientsRefreshSelected.Name = "mnuClientsRefreshSelected";
          this.mnuClientsRefreshSelected.ShortcutKeys = System.Windows.Forms.Keys.F5;
-         this.mnuClientsRefreshSelected.Size = new System.Drawing.Size(186, 22);
+         this.mnuClientsRefreshSelected.Size = new System.Drawing.Size(221, 22);
          this.mnuClientsRefreshSelected.Text = "Refresh &Selected";
          this.mnuClientsRefreshSelected.Click += new System.EventHandler(this.mnuClientsRefreshSelected_Click);
          // 
@@ -364,26 +397,16 @@ namespace HFM.Forms
          // 
          this.mnuClientsRefreshAll.Name = "mnuClientsRefreshAll";
          this.mnuClientsRefreshAll.ShortcutKeys = System.Windows.Forms.Keys.F6;
-         this.mnuClientsRefreshAll.Size = new System.Drawing.Size(186, 22);
+         this.mnuClientsRefreshAll.Size = new System.Drawing.Size(221, 22);
          this.mnuClientsRefreshAll.Text = "&Refresh All";
          this.mnuClientsRefreshAll.Click += new System.EventHandler(this.mnuClientsRefreshAll_Click);
-         // 
-         // mnuClientsSep3
-         // 
-         this.mnuClientsSep3.Name = "mnuClientsSep3";
-         this.mnuClientsSep3.Size = new System.Drawing.Size(183, 6);
-         // 
-         // mnuClientsViewCachedLog
-         // 
-         this.mnuClientsViewCachedLog.Name = "mnuClientsViewCachedLog";
-         this.mnuClientsViewCachedLog.Size = new System.Drawing.Size(186, 22);
-         this.mnuClientsViewCachedLog.Text = "View Cached Log File";
-         this.mnuClientsViewCachedLog.Click += new System.EventHandler(this.mnuClientsViewCachedLog_Click);
          // 
          // mnuView
          // 
          this.mnuView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuViewShowHideLog});
+            this.mnuViewShowHideLog,
+            this.mnuViewSep1,
+            this.mnuViewToggleDateTime});
          this.mnuView.Name = "mnuView";
          this.mnuView.Size = new System.Drawing.Size(41, 20);
          this.mnuView.Text = "&View";
@@ -392,9 +415,22 @@ namespace HFM.Forms
          // 
          this.mnuViewShowHideLog.Name = "mnuViewShowHideLog";
          this.mnuViewShowHideLog.ShortcutKeys = System.Windows.Forms.Keys.F8;
-         this.mnuViewShowHideLog.Size = new System.Drawing.Size(194, 22);
+         this.mnuViewShowHideLog.Size = new System.Drawing.Size(215, 22);
          this.mnuViewShowHideLog.Text = "&Show/Hide Log File";
          this.mnuViewShowHideLog.Click += new System.EventHandler(this.mnuViewShowHideLog_Click);
+         // 
+         // mnuViewSep1
+         // 
+         this.mnuViewSep1.Name = "mnuViewSep1";
+         this.mnuViewSep1.Size = new System.Drawing.Size(212, 6);
+         // 
+         // mnuViewToggleDateTime
+         // 
+         this.mnuViewToggleDateTime.Name = "mnuViewToggleDateTime";
+         this.mnuViewToggleDateTime.ShortcutKeys = System.Windows.Forms.Keys.F9;
+         this.mnuViewToggleDateTime.Size = new System.Drawing.Size(215, 22);
+         this.mnuViewToggleDateTime.Text = "Toggle &Date/Time Style";
+         this.mnuViewToggleDateTime.Click += new System.EventHandler(this.mnuViewToggleDateTime_Click);
          // 
          // mnuTools
          // 
@@ -535,9 +571,77 @@ namespace HFM.Forms
          this.dataGridView1.ShowCellToolTips = false;
          this.dataGridView1.Size = new System.Drawing.Size(988, 362);
          this.dataGridView1.TabIndex = 0;
+         this.dataGridView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseDown);
          this.dataGridView1.Sorted += new System.EventHandler(this.dataGridView1_Sorted);
          this.dataGridView1.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_RowEnter);
+         this.dataGridView1.ColumnDividerDoubleClick += new System.Windows.Forms.DataGridViewColumnDividerDoubleClickEventHandler(this.dataGridView1_ColumnDividerDoubleClick);
          this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
+         // 
+         // gridContextMenuStrip
+         // 
+         this.gridContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuContextClientsRefreshSelected,
+            this.mnuContextClientsSep1,
+            this.mnuContextClientsAdd,
+            this.mnuContextClientsEdit,
+            this.mnuContextClientsDelete,
+            this.mnuContextClientsSep2,
+            this.mnuContextClientsViewCachedLog,
+            this.mnuContextClientsViewClientFiles});
+         this.gridContextMenuStrip.Name = "contextMenuStrip1";
+         this.gridContextMenuStrip.Size = new System.Drawing.Size(186, 170);
+         // 
+         // mnuContextClientsRefreshSelected
+         // 
+         this.mnuContextClientsRefreshSelected.Name = "mnuContextClientsRefreshSelected";
+         this.mnuContextClientsRefreshSelected.Size = new System.Drawing.Size(185, 22);
+         this.mnuContextClientsRefreshSelected.Text = "Refresh Selected";
+         this.mnuContextClientsRefreshSelected.Click += new System.EventHandler(this.mnuClientsRefreshSelected_Click);
+         // 
+         // mnuContextClientsSep1
+         // 
+         this.mnuContextClientsSep1.Name = "mnuContextClientsSep1";
+         this.mnuContextClientsSep1.Size = new System.Drawing.Size(182, 6);
+         // 
+         // mnuContextClientsAdd
+         // 
+         this.mnuContextClientsAdd.Name = "mnuContextClientsAdd";
+         this.mnuContextClientsAdd.Size = new System.Drawing.Size(185, 22);
+         this.mnuContextClientsAdd.Text = "Add Client";
+         this.mnuContextClientsAdd.Click += new System.EventHandler(this.mnuClientsAdd_Click);
+         // 
+         // mnuContextClientsEdit
+         // 
+         this.mnuContextClientsEdit.Name = "mnuContextClientsEdit";
+         this.mnuContextClientsEdit.Size = new System.Drawing.Size(185, 22);
+         this.mnuContextClientsEdit.Text = "Edit Client";
+         this.mnuContextClientsEdit.Click += new System.EventHandler(this.mnuClientsEdit_Click);
+         // 
+         // mnuContextClientsDelete
+         // 
+         this.mnuContextClientsDelete.Name = "mnuContextClientsDelete";
+         this.mnuContextClientsDelete.Size = new System.Drawing.Size(185, 22);
+         this.mnuContextClientsDelete.Text = "Delete Client";
+         this.mnuContextClientsDelete.Click += new System.EventHandler(this.mnuClientsDelete_Click);
+         // 
+         // mnuContextClientsSep2
+         // 
+         this.mnuContextClientsSep2.Name = "mnuContextClientsSep2";
+         this.mnuContextClientsSep2.Size = new System.Drawing.Size(182, 6);
+         // 
+         // mnuContextClientsViewCachedLog
+         // 
+         this.mnuContextClientsViewCachedLog.Name = "mnuContextClientsViewCachedLog";
+         this.mnuContextClientsViewCachedLog.Size = new System.Drawing.Size(185, 22);
+         this.mnuContextClientsViewCachedLog.Text = "View Cached Log File";
+         this.mnuContextClientsViewCachedLog.Click += new System.EventHandler(this.mnuClientsViewCachedLog_Click);
+         // 
+         // mnuContextClientsViewClientFiles
+         // 
+         this.mnuContextClientsViewClientFiles.Name = "mnuContextClientsViewClientFiles";
+         this.mnuContextClientsViewClientFiles.Size = new System.Drawing.Size(185, 22);
+         this.mnuContextClientsViewClientFiles.Text = "View Client Files";
+         this.mnuContextClientsViewClientFiles.Click += new System.EventHandler(this.mnuClientsViewClientFiles_Click);
          // 
          // webGenTimer
          // 
@@ -567,6 +671,7 @@ namespace HFM.Forms
          this.pnlMain.ResumeLayout(false);
          this.pnlMain.PerformLayout();
          ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+         this.gridContextMenuStrip.ResumeLayout(false);
          this.ResumeLayout(false);
          this.PerformLayout();
 
@@ -623,5 +728,17 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripSeparator mnuClientsSep3;
       private System.Windows.Forms.ToolStripMenuItem mnuClientsViewCachedLog;
       private System.Windows.Forms.ToolStripMenuItem mnuToolsDownloadProjects;
+      private System.Windows.Forms.ContextMenuStrip gridContextMenuStrip;
+      private System.Windows.Forms.ToolStripMenuItem mnuContextClientsAdd;
+      private System.Windows.Forms.ToolStripSeparator mnuContextClientsSep1;
+      private System.Windows.Forms.ToolStripMenuItem mnuContextClientsRefreshSelected;
+      private System.Windows.Forms.ToolStripMenuItem mnuContextClientsEdit;
+      private System.Windows.Forms.ToolStripMenuItem mnuContextClientsDelete;
+      private System.Windows.Forms.ToolStripSeparator mnuContextClientsSep2;
+      private System.Windows.Forms.ToolStripMenuItem mnuContextClientsViewCachedLog;
+      private System.Windows.Forms.ToolStripSeparator mnuViewSep1;
+      private System.Windows.Forms.ToolStripMenuItem mnuViewToggleDateTime;
+      private System.Windows.Forms.ToolStripMenuItem mnuClientsViewClientFiles;
+      private System.Windows.Forms.ToolStripMenuItem mnuContextClientsViewClientFiles;
    }
 }

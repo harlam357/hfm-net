@@ -224,7 +224,8 @@ namespace HFM.Forms
             txtLocalPath.Text = txtLocalPath.Text.Substring(0, txtLocalPath.Text.Length - 12);
          }
 
-         Regex rValidPath = new Regex("^((?<DRIVE>[a-z]:)|(\\\\\\\\(?<SERVER>[0-9]*[a-z\\-][a-z0-9\\-]*)\\\\(?<VOLUME>[^\\.\\x01-\\x1F\\\\\"\"\\*\\?<>:|\\\\/][^\\x01-\\x1F\\\\\"\"\\*\\?|><:\\\\/]*)))?(?<FOLDERS>(?<FOLDER1>(\\.|(\\.\\.)|([^\\.\\x01-\\x1F\\\\\"\"\\*\\?|><:\\\\/][^\\x01-\\x1F\\\\\"\"\\*\\?<>:|\\\\/]*)))?(?<FOLDERm>[\\\\/](\\.|(\\.\\.)|([^\\.\\x01-\\x1F\\\\\"\"\\*\\?|><:\\\\/][^\\x01-\\x1F\\\\\"\"\\*\\?<>:|\\\\/]*)))*)?[\\\\/]?$", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+         //Regex rValidPath = new Regex("^((?<DRIVE>[a-z]:)|(\\\\\\\\(?<SERVER>[0-9]*[a-z\\-][a-z0-9\\-]*)\\\\(?<VOLUME>[^\\.\\x01-\\x1F\\\\\"\"\\*\\?<>:|\\\\/][^\\x01-\\x1F\\\\\"\"\\*\\?|><:\\\\/]*)))?(?<FOLDERS>(?<FOLDER1>(\\.|(\\.\\.)|([^\\.\\x01-\\x1F\\\\\"\"\\*\\?|><:\\\\/][^\\x01-\\x1F\\\\\"\"\\*\\?<>:|\\\\/]*)))?(?<FOLDERm>[\\\\/](\\.|(\\.\\.)|([^\\.\\x01-\\x1F\\\\\"\"\\*\\?|><:\\\\/][^\\x01-\\x1F\\\\\"\"\\*\\?<>:|\\\\/]*)))*)?[\\\\/]?$", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+         Regex rValidPath = new Regex(@"^((([a-zA-Z]:)|(\\{2}\w+)|(\\{2}(?:(?:25[0-5]|2[0-4]\d|[01]\d\d|\d?\d)(?(?=\.?\d)\.)){4}))(\\(\w[\w ]*)))", RegexOptions.Singleline | RegexOptions.IgnoreCase);
          Match mPath = rValidPath.Match(txtLocalPath.Text);
          Match mPath2 = rValidPath.Match(txtLocalPath.Text + "\\");
 
@@ -350,10 +351,12 @@ namespace HFM.Forms
             txtWebURL.Text = txtWebURL.Text.Substring(0, txtWebURL.Text.Length - 12);
          }
 
-         Regex rURLDNS = new Regex("^http([s])?://^([a-z0-9]([-a-z0-9]*[a-z0-9])?\\.)+((a[cdefgilmnoqrstuwxz]|aero|arpa)|(b[abdefghijmnorstvwyz]|biz)|(c[acdfghiklmnorsuvxyz]|cat|com|coop)|d[ejkmoz]|(e[ceghrstu]|edu)|f[ijkmor]|(g[abdefghilmnpqrstuwy]|gov)|h[kmnrtu]|(i[delmnoqrst]|info|int)|(j[emop]|jobs)|k[eghimnprwyz]|l[abcikrstuvy]|(m[acdghklmnopqrstuvwxyz]|mil|mobi|museum)|(n[acefgilopruz]|name|net)|(om|org)|(p[aefghklmnrstwy]|pro)|qa|r[eouw]|s[abcdeghijklmnortvyz]|(t[cdfghjklmnoprtvwz]|travel)|u[agkmsyz]|v[aceginu]|w[fs]|y[etu]|z[amw])(/([A-Za-z0-9\\-\\.\\,\\[\\]\\{\\}\\!\\@\\#\\$\\%\\^\\&\\(\\)])*)*/$", RegexOptions.Singleline);
-         Regex rURLIP = new Regex("^http([s])?://(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(/([A-Za-z0-9\\-\\.\\,\\[\\]\\{\\}\\!\\@\\#\\$\\%\\^\\&\\(\\)])*)*/$", RegexOptions.Singleline);
-         Match mURLDNS = rURLDNS.Match(txtWebURL.Text);
-         Match mURLIP = rURLIP.Match(txtWebURL.Text);
+         //Regex rURLDNS = new Regex("^http([s])?://^([a-z0-9]([-a-z0-9]*[a-z0-9])?\\.)+((a[cdefgilmnoqrstuwxz]|aero|arpa)|(b[abdefghijmnorstvwyz]|biz)|(c[acdfghiklmnorsuvxyz]|cat|com|coop)|d[ejkmoz]|(e[ceghrstu]|edu)|f[ijkmor]|(g[abdefghilmnpqrstuwy]|gov)|h[kmnrtu]|(i[delmnoqrst]|info|int)|(j[emop]|jobs)|k[eghimnprwyz]|l[abcikrstuvy]|(m[acdghklmnopqrstuvwxyz]|mil|mobi|museum)|(n[acefgilopruz]|name|net)|(om|org)|(p[aefghklmnrstwy]|pro)|qa|r[eouw]|s[abcdeghijklmnortvyz]|(t[cdfghjklmnoprtvwz]|travel)|u[agkmsyz]|v[aceginu]|w[fs]|y[etu]|z[amw])(/([A-Za-z0-9\\-\\.\\,\\[\\]\\{\\}\\!\\@\\#\\$\\%\\^\\&\\(\\)])*)*/$", RegexOptions.Singleline);
+         //Regex rURLIP = new Regex("^http([s])?://(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(/([A-Za-z0-9\\-\\.\\,\\[\\]\\{\\}\\!\\@\\#\\$\\%\\^\\&\\(\\)])*)*/$", RegexOptions.Singleline);
+         Regex rURL = new Regex(@"(http|https|file)://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?", RegexOptions.Singleline);
+         //Match mURLDNS = rURLDNS.Match(txtWebURL.Text);
+         //Match mURLIP = rURLIP.Match(txtWebURL.Text);
+         Match mURL = rURL.Match(txtWebURL.Text);
          
          if (txtWebURL.Text.Length == 0)
          {
@@ -363,7 +366,8 @@ namespace HFM.Forms
             txtWebURL.Focus();
             ShowToolTip("URL must be a valid URL and be\r\nthe path to the folder containing\r\nunitinfo.txt and fahlog.txt.", txtWebURL, 5000);
          }
-         else if (txtWebURL.Text.Length > 0 && (mURLDNS.Success || mURLIP.Success) == false)
+         //else if (txtWebURL.Text.Length > 0 && (mURLDNS.Success || mURLIP.Success) == false)
+         else if (txtWebURL.Text.Length > 0 && mURL.Success == false)
          {
             //e.Cancel = true;
             //txtWebURL.Focus();
@@ -388,8 +392,6 @@ namespace HFM.Forms
       /// </summary>
       /// <param name="sMessage">Tip to be displayed</param>
       /// <param name="cTarget">Control to point to with the tip</param>
-      /// <param name="atX">Screen location for tip (X)</param>
-      /// <param name="atY">Screen location for tip (Y)</param>
       /// <param name="Delay">Time to show tip (milliseconds)</param>
       private void ShowToolTip(String sMessage, Control cTarget, Int32 Delay)
       {

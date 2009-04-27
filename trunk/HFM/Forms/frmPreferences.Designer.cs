@@ -49,6 +49,8 @@ namespace HFM.Forms
         private void InitializeComponent()
         {
            this.grpUpdateData = new System.Windows.Forms.GroupBox();
+           this.label2 = new System.Windows.Forms.Label();
+           this.cboPpdCalc = new System.Windows.Forms.ComboBox();
            this.chkOffline = new System.Windows.Forms.CheckBox();
            this.lbl2Collect = new System.Windows.Forms.Label();
            this.txtCollectMinutes = new System.Windows.Forms.TextBox();
@@ -73,12 +75,23 @@ namespace HFM.Forms
            this.tabControl1 = new System.Windows.Forms.TabControl();
            this.tabSchdTasks = new System.Windows.Forms.TabPage();
            this.tabDefaults = new System.Windows.Forms.TabPage();
+           this.grpFileExplorer = new System.Windows.Forms.GroupBox();
+           this.btnBrowseFileExplorer = new System.Windows.Forms.Button();
+           this.label4 = new System.Windows.Forms.Label();
+           this.txtFileExplorer = new System.Windows.Forms.TextBox();
+           this.grpLogFileViewer = new System.Windows.Forms.GroupBox();
+           this.btnBrowseLogViewer = new System.Windows.Forms.Button();
+           this.label3 = new System.Windows.Forms.Label();
+           this.txtLogFileViewer = new System.Windows.Forms.TextBox();
            this.grpDefaultConfig = new System.Windows.Forms.GroupBox();
            this.chkDefaultConfig = new System.Windows.Forms.CheckBox();
            this.btnBrowseConfigFile = new System.Windows.Forms.Button();
            this.txtDefaultConfigFile = new System.Windows.Forms.TextBox();
            this.label1 = new System.Windows.Forms.Label();
            this.tabWeb = new System.Windows.Forms.TabPage();
+           this.grpProjectDownload = new System.Windows.Forms.GroupBox();
+           this.txtProjectDownloadUrl = new System.Windows.Forms.TextBox();
+           this.label5 = new System.Windows.Forms.Label();
            this.grpWebStats = new System.Windows.Forms.GroupBox();
            this.lbl3EOCUserID = new System.Windows.Forms.Label();
            this.lbl3StanfordUserID = new System.Windows.Forms.Label();
@@ -102,16 +115,19 @@ namespace HFM.Forms
            this.lbl3Proxy = new System.Windows.Forms.Label();
            this.tabVisStyles = new System.Windows.Forms.TabPage();
            this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
-           this.cboPpdCalc = new System.Windows.Forms.ComboBox();
-           this.label2 = new System.Windows.Forms.Label();
+           this.radioSchedule = new System.Windows.Forms.RadioButton();
+           this.radioFullRefresh = new System.Windows.Forms.RadioButton();
            this.grpUpdateData.SuspendLayout();
            this.pnl1CSSSample.SuspendLayout();
            this.grpHTMLOutput.SuspendLayout();
            this.tabControl1.SuspendLayout();
            this.tabSchdTasks.SuspendLayout();
            this.tabDefaults.SuspendLayout();
+           this.grpFileExplorer.SuspendLayout();
+           this.grpLogFileViewer.SuspendLayout();
            this.grpDefaultConfig.SuspendLayout();
            this.tabWeb.SuspendLayout();
+           this.grpProjectDownload.SuspendLayout();
            this.grpWebStats.SuspendLayout();
            this.grpWebProxy.SuspendLayout();
            this.tabVisStyles.SuspendLayout();
@@ -133,6 +149,24 @@ namespace HFM.Forms
            this.grpUpdateData.TabIndex = 0;
            this.grpUpdateData.TabStop = false;
            this.grpUpdateData.Text = "Update Data";
+           // 
+           // label2
+           // 
+           this.label2.AutoSize = true;
+           this.label2.Location = new System.Drawing.Point(217, 67);
+           this.label2.Name = "label2";
+           this.label2.Size = new System.Drawing.Size(123, 13);
+           this.label2.TabIndex = 8;
+           this.label2.Text = "Calculate PPD based on";
+           // 
+           // cboPpdCalc
+           // 
+           this.cboPpdCalc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+           this.cboPpdCalc.FormattingEnabled = true;
+           this.cboPpdCalc.Location = new System.Drawing.Point(346, 64);
+           this.cboPpdCalc.Name = "cboPpdCalc";
+           this.cboPpdCalc.Size = new System.Drawing.Size(109, 21);
+           this.cboPpdCalc.TabIndex = 7;
            // 
            // chkOffline
            // 
@@ -197,8 +231,9 @@ namespace HFM.Forms
            // 
            // btnCancel
            // 
+           this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-           this.btnCancel.Location = new System.Drawing.Point(447, 295);
+           this.btnCancel.Location = new System.Drawing.Point(447, 353);
            this.btnCancel.Name = "btnCancel";
            this.btnCancel.Size = new System.Drawing.Size(75, 23);
            this.btnCancel.TabIndex = 4;
@@ -208,8 +243,8 @@ namespace HFM.Forms
            // 
            // btnOK
            // 
-           this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-           this.btnOK.Location = new System.Drawing.Point(366, 295);
+           this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+           this.btnOK.Location = new System.Drawing.Point(366, 353);
            this.btnOK.Name = "btnOK";
            this.btnOK.Size = new System.Drawing.Size(75, 23);
            this.btnOK.TabIndex = 3;
@@ -250,6 +285,7 @@ namespace HFM.Forms
            this.wbCssSample.Name = "wbCssSample";
            this.wbCssSample.Size = new System.Drawing.Size(354, 208);
            this.wbCssSample.TabIndex = 0;
+           this.wbCssSample.TabStop = false;
            // 
            // StyleList
            // 
@@ -263,6 +299,8 @@ namespace HFM.Forms
            // 
            // grpHTMLOutput
            // 
+           this.grpHTMLOutput.Controls.Add(this.radioFullRefresh);
+           this.grpHTMLOutput.Controls.Add(this.radioSchedule);
            this.grpHTMLOutput.Controls.Add(this.txtWebGenMinutes);
            this.grpHTMLOutput.Controls.Add(this.lbl2MinutesToGen);
            this.grpHTMLOutput.Controls.Add(this.btnBrowseWebFolder);
@@ -279,7 +317,7 @@ namespace HFM.Forms
            // txtWebGenMinutes
            // 
            this.txtWebGenMinutes.Enabled = false;
-           this.txtWebGenMinutes.Location = new System.Drawing.Point(166, 17);
+           this.txtWebGenMinutes.Location = new System.Drawing.Point(204, 18);
            this.txtWebGenMinutes.MaxLength = 3;
            this.txtWebGenMinutes.Name = "txtWebGenMinutes";
            this.txtWebGenMinutes.ReadOnly = true;
@@ -293,11 +331,11 @@ namespace HFM.Forms
            // lbl2MinutesToGen
            // 
            this.lbl2MinutesToGen.AutoSize = true;
-           this.lbl2MinutesToGen.Location = new System.Drawing.Point(217, 21);
+           this.lbl2MinutesToGen.Location = new System.Drawing.Point(256, 21);
            this.lbl2MinutesToGen.Name = "lbl2MinutesToGen";
-           this.lbl2MinutesToGen.Size = new System.Drawing.Size(43, 13);
+           this.lbl2MinutesToGen.Size = new System.Drawing.Size(44, 13);
            this.lbl2MinutesToGen.TabIndex = 2;
-           this.lbl2MinutesToGen.Text = "minutes";
+           this.lbl2MinutesToGen.Text = "Minutes";
            // 
            // btnBrowseWebFolder
            // 
@@ -333,9 +371,9 @@ namespace HFM.Forms
            this.chkWebSiteGenerator.AutoSize = true;
            this.chkWebSiteGenerator.Location = new System.Drawing.Point(7, 20);
            this.chkWebSiteGenerator.Name = "chkWebSiteGenerator";
-           this.chkWebSiteGenerator.Size = new System.Drawing.Size(145, 17);
+           this.chkWebSiteGenerator.Size = new System.Drawing.Size(113, 17);
            this.chkWebSiteGenerator.TabIndex = 0;
-           this.chkWebSiteGenerator.Text = "Create a Web Site, every";
+           this.chkWebSiteGenerator.Text = "Create a Web Site";
            this.chkWebSiteGenerator.UseVisualStyleBackColor = true;
            this.chkWebSiteGenerator.CheckedChanged += new System.EventHandler(this.chkWebSiteGenerator_CheckedChanged);
            // 
@@ -350,7 +388,7 @@ namespace HFM.Forms
            this.tabControl1.Multiline = true;
            this.tabControl1.Name = "tabControl1";
            this.tabControl1.SelectedIndex = 0;
-           this.tabControl1.Size = new System.Drawing.Size(509, 276);
+           this.tabControl1.Size = new System.Drawing.Size(509, 329);
            this.tabControl1.TabIndex = 5;
            // 
            // tabSchdTasks
@@ -361,20 +399,98 @@ namespace HFM.Forms
            this.tabSchdTasks.Location = new System.Drawing.Point(4, 22);
            this.tabSchdTasks.Name = "tabSchdTasks";
            this.tabSchdTasks.Padding = new System.Windows.Forms.Padding(3);
-           this.tabSchdTasks.Size = new System.Drawing.Size(501, 250);
+           this.tabSchdTasks.Size = new System.Drawing.Size(501, 303);
            this.tabSchdTasks.TabIndex = 2;
            this.tabSchdTasks.Text = "Scheduled Tasks";
            this.tabSchdTasks.UseVisualStyleBackColor = true;
            // 
            // tabDefaults
            // 
+           this.tabDefaults.Controls.Add(this.grpFileExplorer);
+           this.tabDefaults.Controls.Add(this.grpLogFileViewer);
            this.tabDefaults.Controls.Add(this.grpDefaultConfig);
            this.tabDefaults.Location = new System.Drawing.Point(4, 22);
            this.tabDefaults.Name = "tabDefaults";
-           this.tabDefaults.Size = new System.Drawing.Size(501, 250);
+           this.tabDefaults.Size = new System.Drawing.Size(501, 303);
            this.tabDefaults.TabIndex = 4;
            this.tabDefaults.Text = "Defaults";
            this.tabDefaults.UseVisualStyleBackColor = true;
+           // 
+           // grpFileExplorer
+           // 
+           this.grpFileExplorer.Controls.Add(this.btnBrowseFileExplorer);
+           this.grpFileExplorer.Controls.Add(this.label4);
+           this.grpFileExplorer.Controls.Add(this.txtFileExplorer);
+           this.grpFileExplorer.Location = new System.Drawing.Point(6, 167);
+           this.grpFileExplorer.Name = "grpFileExplorer";
+           this.grpFileExplorer.Size = new System.Drawing.Size(485, 60);
+           this.grpFileExplorer.TabIndex = 2;
+           this.grpFileExplorer.TabStop = false;
+           this.grpFileExplorer.Text = "External File Explorer";
+           // 
+           // btnBrowseFileExplorer
+           // 
+           this.btnBrowseFileExplorer.Location = new System.Drawing.Point(421, 23);
+           this.btnBrowseFileExplorer.Name = "btnBrowseFileExplorer";
+           this.btnBrowseFileExplorer.Size = new System.Drawing.Size(24, 23);
+           this.btnBrowseFileExplorer.TabIndex = 2;
+           this.btnBrowseFileExplorer.Text = "...";
+           this.btnBrowseFileExplorer.UseVisualStyleBackColor = true;
+           this.btnBrowseFileExplorer.Click += new System.EventHandler(this.btnBrowseFileExplorer_Click);
+           // 
+           // label4
+           // 
+           this.label4.AutoSize = true;
+           this.label4.Location = new System.Drawing.Point(30, 28);
+           this.label4.Name = "label4";
+           this.label4.Size = new System.Drawing.Size(52, 13);
+           this.label4.TabIndex = 0;
+           this.label4.Text = "Filename:";
+           // 
+           // txtFileExplorer
+           // 
+           this.txtFileExplorer.Location = new System.Drawing.Point(88, 25);
+           this.txtFileExplorer.Name = "txtFileExplorer";
+           this.txtFileExplorer.Size = new System.Drawing.Size(327, 20);
+           this.txtFileExplorer.TabIndex = 1;
+           // 
+           // grpLogFileViewer
+           // 
+           this.grpLogFileViewer.Controls.Add(this.btnBrowseLogViewer);
+           this.grpLogFileViewer.Controls.Add(this.label3);
+           this.grpLogFileViewer.Controls.Add(this.txtLogFileViewer);
+           this.grpLogFileViewer.Location = new System.Drawing.Point(6, 101);
+           this.grpLogFileViewer.Name = "grpLogFileViewer";
+           this.grpLogFileViewer.Size = new System.Drawing.Size(485, 60);
+           this.grpLogFileViewer.TabIndex = 1;
+           this.grpLogFileViewer.TabStop = false;
+           this.grpLogFileViewer.Text = "External Log File Viewer";
+           // 
+           // btnBrowseLogViewer
+           // 
+           this.btnBrowseLogViewer.Location = new System.Drawing.Point(421, 23);
+           this.btnBrowseLogViewer.Name = "btnBrowseLogViewer";
+           this.btnBrowseLogViewer.Size = new System.Drawing.Size(24, 23);
+           this.btnBrowseLogViewer.TabIndex = 2;
+           this.btnBrowseLogViewer.Text = "...";
+           this.btnBrowseLogViewer.UseVisualStyleBackColor = true;
+           this.btnBrowseLogViewer.Click += new System.EventHandler(this.btnBrowseLogViewer_Click);
+           // 
+           // label3
+           // 
+           this.label3.AutoSize = true;
+           this.label3.Location = new System.Drawing.Point(30, 28);
+           this.label3.Name = "label3";
+           this.label3.Size = new System.Drawing.Size(52, 13);
+           this.label3.TabIndex = 0;
+           this.label3.Text = "Filename:";
+           // 
+           // txtLogFileViewer
+           // 
+           this.txtLogFileViewer.Location = new System.Drawing.Point(88, 25);
+           this.txtLogFileViewer.Name = "txtLogFileViewer";
+           this.txtLogFileViewer.Size = new System.Drawing.Size(327, 20);
+           this.txtLogFileViewer.TabIndex = 1;
            // 
            // grpDefaultConfig
            // 
@@ -384,7 +500,7 @@ namespace HFM.Forms
            this.grpDefaultConfig.Controls.Add(this.label1);
            this.grpDefaultConfig.Location = new System.Drawing.Point(6, 9);
            this.grpDefaultConfig.Name = "grpDefaultConfig";
-           this.grpDefaultConfig.Size = new System.Drawing.Size(485, 91);
+           this.grpDefaultConfig.Size = new System.Drawing.Size(485, 86);
            this.grpDefaultConfig.TabIndex = 0;
            this.grpDefaultConfig.TabStop = false;
            this.grpDefaultConfig.Text = "Default Config File";
@@ -395,7 +511,7 @@ namespace HFM.Forms
            this.chkDefaultConfig.Location = new System.Drawing.Point(13, 22);
            this.chkDefaultConfig.Name = "chkDefaultConfig";
            this.chkDefaultConfig.Size = new System.Drawing.Size(134, 17);
-           this.chkDefaultConfig.TabIndex = 9;
+           this.chkDefaultConfig.TabIndex = 0;
            this.chkDefaultConfig.Text = "Use Default Config File";
            this.chkDefaultConfig.UseVisualStyleBackColor = true;
            this.chkDefaultConfig.CheckedChanged += new System.EventHandler(this.chkDefaultConfig_CheckedChanged);
@@ -406,7 +522,7 @@ namespace HFM.Forms
            this.btnBrowseConfigFile.Location = new System.Drawing.Point(421, 47);
            this.btnBrowseConfigFile.Name = "btnBrowseConfigFile";
            this.btnBrowseConfigFile.Size = new System.Drawing.Size(24, 23);
-           this.btnBrowseConfigFile.TabIndex = 8;
+           this.btnBrowseConfigFile.TabIndex = 3;
            this.btnBrowseConfigFile.Text = "...";
            this.btnBrowseConfigFile.UseVisualStyleBackColor = true;
            this.btnBrowseConfigFile.Click += new System.EventHandler(this.btnBrowseConfigFile_Click);
@@ -418,7 +534,7 @@ namespace HFM.Forms
            this.txtDefaultConfigFile.Name = "txtDefaultConfigFile";
            this.txtDefaultConfigFile.ReadOnly = true;
            this.txtDefaultConfigFile.Size = new System.Drawing.Size(327, 20);
-           this.txtDefaultConfigFile.TabIndex = 7;
+           this.txtDefaultConfigFile.TabIndex = 2;
            // 
            // label1
            // 
@@ -426,21 +542,50 @@ namespace HFM.Forms
            this.label1.Location = new System.Drawing.Point(30, 52);
            this.label1.Name = "label1";
            this.label1.Size = new System.Drawing.Size(52, 13);
-           this.label1.TabIndex = 6;
+           this.label1.TabIndex = 1;
            this.label1.Text = "Filename:";
            // 
            // tabWeb
            // 
            this.tabWeb.BackColor = System.Drawing.SystemColors.Control;
+           this.tabWeb.Controls.Add(this.grpProjectDownload);
            this.tabWeb.Controls.Add(this.grpWebStats);
            this.tabWeb.Controls.Add(this.grpWebProxy);
            this.tabWeb.Location = new System.Drawing.Point(4, 22);
            this.tabWeb.Name = "tabWeb";
            this.tabWeb.Padding = new System.Windows.Forms.Padding(3);
-           this.tabWeb.Size = new System.Drawing.Size(501, 250);
+           this.tabWeb.Size = new System.Drawing.Size(501, 303);
            this.tabWeb.TabIndex = 1;
            this.tabWeb.Text = "Web Settings";
            this.tabWeb.UseVisualStyleBackColor = true;
+           // 
+           // grpProjectDownload
+           // 
+           this.grpProjectDownload.Controls.Add(this.txtProjectDownloadUrl);
+           this.grpProjectDownload.Controls.Add(this.label5);
+           this.grpProjectDownload.Location = new System.Drawing.Point(6, 117);
+           this.grpProjectDownload.Name = "grpProjectDownload";
+           this.grpProjectDownload.Size = new System.Drawing.Size(489, 53);
+           this.grpProjectDownload.TabIndex = 10;
+           this.grpProjectDownload.TabStop = false;
+           this.grpProjectDownload.Text = "Project Download URL";
+           // 
+           // txtProjectDownloadUrl
+           // 
+           this.txtProjectDownloadUrl.Location = new System.Drawing.Point(56, 19);
+           this.txtProjectDownloadUrl.Name = "txtProjectDownloadUrl";
+           this.txtProjectDownloadUrl.Size = new System.Drawing.Size(423, 20);
+           this.txtProjectDownloadUrl.TabIndex = 1;
+           this.txtProjectDownloadUrl.Validating += new System.ComponentModel.CancelEventHandler(this.txtProjectDownloadUrl_Validating);
+           // 
+           // label5
+           // 
+           this.label5.AutoSize = true;
+           this.label5.Location = new System.Drawing.Point(7, 22);
+           this.label5.Name = "label5";
+           this.label5.Size = new System.Drawing.Size(48, 13);
+           this.label5.TabIndex = 0;
+           this.label5.Text = "Address:";
            // 
            // grpWebStats
            // 
@@ -455,7 +600,7 @@ namespace HFM.Forms
            this.grpWebStats.Controls.Add(this.linkEOC);
            this.grpWebStats.Location = new System.Drawing.Point(6, 9);
            this.grpWebStats.Name = "grpWebStats";
-           this.grpWebStats.Size = new System.Drawing.Size(486, 102);
+           this.grpWebStats.Size = new System.Drawing.Size(489, 102);
            this.grpWebStats.TabIndex = 9;
            this.grpWebStats.TabStop = false;
            this.grpWebStats.Text = "Web Statistics";
@@ -466,7 +611,7 @@ namespace HFM.Forms
            this.lbl3EOCUserID.Location = new System.Drawing.Point(2, 20);
            this.lbl3EOCUserID.Name = "lbl3EOCUserID";
            this.lbl3EOCUserID.Size = new System.Drawing.Size(153, 13);
-           this.lbl3EOCUserID.TabIndex = 4;
+           this.lbl3EOCUserID.TabIndex = 0;
            this.lbl3EOCUserID.Text = "Extreme Overclocking User ID:";
            // 
            // lbl3StanfordUserID
@@ -475,7 +620,7 @@ namespace HFM.Forms
            this.lbl3StanfordUserID.Location = new System.Drawing.Point(2, 46);
            this.lbl3StanfordUserID.Name = "lbl3StanfordUserID";
            this.lbl3StanfordUserID.Size = new System.Drawing.Size(89, 13);
-           this.lbl3StanfordUserID.TabIndex = 6;
+           this.lbl3StanfordUserID.TabIndex = 1;
            this.lbl3StanfordUserID.Text = "Stanford User ID:";
            // 
            // linkTeam
@@ -493,14 +638,14 @@ namespace HFM.Forms
            this.txtEOCUserID.Location = new System.Drawing.Point(194, 17);
            this.txtEOCUserID.Name = "txtEOCUserID";
            this.txtEOCUserID.Size = new System.Drawing.Size(138, 20);
-           this.txtEOCUserID.TabIndex = 5;
+           this.txtEOCUserID.TabIndex = 3;
            // 
            // txtStanfordTeamID
            // 
            this.txtStanfordTeamID.Location = new System.Drawing.Point(194, 69);
            this.txtStanfordTeamID.Name = "txtStanfordTeamID";
            this.txtStanfordTeamID.Size = new System.Drawing.Size(138, 20);
-           this.txtStanfordTeamID.TabIndex = 7;
+           this.txtStanfordTeamID.TabIndex = 5;
            // 
            // lbl3StanfordTeamID
            // 
@@ -508,7 +653,7 @@ namespace HFM.Forms
            this.lbl3StanfordTeamID.Location = new System.Drawing.Point(2, 72);
            this.lbl3StanfordTeamID.Name = "lbl3StanfordTeamID";
            this.lbl3StanfordTeamID.Size = new System.Drawing.Size(94, 13);
-           this.lbl3StanfordTeamID.TabIndex = 6;
+           this.lbl3StanfordTeamID.TabIndex = 2;
            this.lbl3StanfordTeamID.Text = "Stanford Team ID:";
            // 
            // linkStanford
@@ -516,7 +661,7 @@ namespace HFM.Forms
            this.linkStanford.Location = new System.Drawing.Point(338, 46);
            this.linkStanford.Name = "linkStanford";
            this.linkStanford.Size = new System.Drawing.Size(83, 19);
-           this.linkStanford.TabIndex = 8;
+           this.linkStanford.TabIndex = 7;
            this.linkStanford.TabStop = true;
            this.linkStanford.Text = "Test Stanford ID";
            this.linkStanford.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkStanford_LinkClicked);
@@ -526,14 +671,14 @@ namespace HFM.Forms
            this.txtStanfordUserID.Location = new System.Drawing.Point(194, 43);
            this.txtStanfordUserID.Name = "txtStanfordUserID";
            this.txtStanfordUserID.Size = new System.Drawing.Size(138, 20);
-           this.txtStanfordUserID.TabIndex = 7;
+           this.txtStanfordUserID.TabIndex = 4;
            // 
            // linkEOC
            // 
            this.linkEOC.Location = new System.Drawing.Point(338, 20);
            this.linkEOC.Name = "linkEOC";
            this.linkEOC.Size = new System.Drawing.Size(64, 19);
-           this.linkEOC.TabIndex = 8;
+           this.linkEOC.TabIndex = 6;
            this.linkEOC.TabStop = true;
            this.linkEOC.Text = "Test EOC ID";
            this.linkEOC.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkEOC_LinkClicked);
@@ -550,7 +695,7 @@ namespace HFM.Forms
            this.grpWebProxy.Controls.Add(this.lbl3ProxyUser);
            this.grpWebProxy.Controls.Add(this.lbl3Port);
            this.grpWebProxy.Controls.Add(this.lbl3Proxy);
-           this.grpWebProxy.Location = new System.Drawing.Point(6, 117);
+           this.grpWebProxy.Location = new System.Drawing.Point(6, 176);
            this.grpWebProxy.Name = "grpWebProxy";
            this.grpWebProxy.Size = new System.Drawing.Size(489, 122);
            this.grpWebProxy.TabIndex = 9;
@@ -563,7 +708,7 @@ namespace HFM.Forms
            this.chkUseProxy.Location = new System.Drawing.Point(6, 19);
            this.chkUseProxy.Name = "chkUseProxy";
            this.chkUseProxy.Size = new System.Drawing.Size(117, 17);
-           this.chkUseProxy.TabIndex = 8;
+           this.chkUseProxy.TabIndex = 0;
            this.chkUseProxy.Text = "Use a Proxy Server";
            this.chkUseProxy.UseVisualStyleBackColor = true;
            this.chkUseProxy.CheckedChanged += new System.EventHandler(this.chkUseProxy_CheckedChanged);
@@ -575,7 +720,7 @@ namespace HFM.Forms
            this.chkUseProxyAuth.Location = new System.Drawing.Point(25, 68);
            this.chkUseProxyAuth.Name = "chkUseProxyAuth";
            this.chkUseProxyAuth.Size = new System.Drawing.Size(205, 17);
-           this.chkUseProxyAuth.TabIndex = 8;
+           this.chkUseProxyAuth.TabIndex = 5;
            this.chkUseProxyAuth.Text = "Authenticate to the Web Proxy Server";
            this.chkUseProxyAuth.UseVisualStyleBackColor = true;
            this.chkUseProxyAuth.CheckedChanged += new System.EventHandler(this.chkUseProxyAuth_CheckedChanged);
@@ -587,7 +732,7 @@ namespace HFM.Forms
            this.txtProxyPass.Name = "txtProxyPass";
            this.txtProxyPass.ReadOnly = true;
            this.txtProxyPass.Size = new System.Drawing.Size(155, 20);
-           this.txtProxyPass.TabIndex = 7;
+           this.txtProxyPass.TabIndex = 9;
            this.txtProxyPass.UseSystemPasswordChar = true;
            // 
            // txtProxyUser
@@ -606,7 +751,7 @@ namespace HFM.Forms
            this.txtProxyPort.Name = "txtProxyPort";
            this.txtProxyPort.ReadOnly = true;
            this.txtProxyPort.Size = new System.Drawing.Size(94, 20);
-           this.txtProxyPort.TabIndex = 7;
+           this.txtProxyPort.TabIndex = 4;
            // 
            // lbl3ProxyPass
            // 
@@ -614,7 +759,7 @@ namespace HFM.Forms
            this.lbl3ProxyPass.Location = new System.Drawing.Point(265, 94);
            this.lbl3ProxyPass.Name = "lbl3ProxyPass";
            this.lbl3ProxyPass.Size = new System.Drawing.Size(56, 13);
-           this.lbl3ProxyPass.TabIndex = 6;
+           this.lbl3ProxyPass.TabIndex = 8;
            this.lbl3ProxyPass.Text = "Password:";
            // 
            // txtProxyServer
@@ -624,7 +769,7 @@ namespace HFM.Forms
            this.txtProxyServer.Name = "txtProxyServer";
            this.txtProxyServer.ReadOnly = true;
            this.txtProxyServer.Size = new System.Drawing.Size(250, 20);
-           this.txtProxyServer.TabIndex = 7;
+           this.txtProxyServer.TabIndex = 2;
            // 
            // lbl3ProxyUser
            // 
@@ -641,7 +786,7 @@ namespace HFM.Forms
            this.lbl3Port.Location = new System.Drawing.Point(354, 45);
            this.lbl3Port.Name = "lbl3Port";
            this.lbl3Port.Size = new System.Drawing.Size(29, 13);
-           this.lbl3Port.TabIndex = 6;
+           this.lbl3Port.TabIndex = 3;
            this.lbl3Port.Text = "Port:";
            // 
            // lbl3Proxy
@@ -650,7 +795,7 @@ namespace HFM.Forms
            this.lbl3Proxy.Location = new System.Drawing.Point(22, 45);
            this.lbl3Proxy.Name = "lbl3Proxy";
            this.lbl3Proxy.Size = new System.Drawing.Size(70, 13);
-           this.lbl3Proxy.TabIndex = 6;
+           this.lbl3Proxy.TabIndex = 1;
            this.lbl3Proxy.Text = "Proxy Server:";
            // 
            // tabVisStyles
@@ -662,7 +807,7 @@ namespace HFM.Forms
            this.tabVisStyles.Controls.Add(this.lbl1Style);
            this.tabVisStyles.Location = new System.Drawing.Point(4, 22);
            this.tabVisStyles.Name = "tabVisStyles";
-           this.tabVisStyles.Size = new System.Drawing.Size(501, 250);
+           this.tabVisStyles.Size = new System.Drawing.Size(501, 303);
            this.tabVisStyles.TabIndex = 3;
            this.tabVisStyles.Text = "Web Visual Styles";
            this.tabVisStyles.UseVisualStyleBackColor = true;
@@ -673,29 +818,34 @@ namespace HFM.Forms
            this.openConfigDialog.Filter = "HFM Configuration Files|*.hfm";
            this.openConfigDialog.RestoreDirectory = true;
            // 
-           // cboPpdCalc
+           // radioSchedule
            // 
-           this.cboPpdCalc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-           this.cboPpdCalc.FormattingEnabled = true;
-           this.cboPpdCalc.Location = new System.Drawing.Point(346, 64);
-           this.cboPpdCalc.Name = "cboPpdCalc";
-           this.cboPpdCalc.Size = new System.Drawing.Size(109, 21);
-           this.cboPpdCalc.TabIndex = 7;
+           this.radioSchedule.AutoSize = true;
+           this.radioSchedule.Location = new System.Drawing.Point(151, 19);
+           this.radioSchedule.Name = "radioSchedule";
+           this.radioSchedule.Size = new System.Drawing.Size(52, 17);
+           this.radioSchedule.TabIndex = 6;
+           this.radioSchedule.TabStop = true;
+           this.radioSchedule.Text = "Every";
+           this.radioSchedule.UseVisualStyleBackColor = true;
+           this.radioSchedule.CheckedChanged += new System.EventHandler(this.radioSchedule_CheckedChanged);
            // 
-           // label2
+           // radioFullRefresh
            // 
-           this.label2.AutoSize = true;
-           this.label2.Location = new System.Drawing.Point(217, 67);
-           this.label2.Name = "label2";
-           this.label2.Size = new System.Drawing.Size(123, 13);
-           this.label2.TabIndex = 8;
-           this.label2.Text = "Calculate PPD based on";
+           this.radioFullRefresh.AutoSize = true;
+           this.radioFullRefresh.Location = new System.Drawing.Point(319, 19);
+           this.radioFullRefresh.Name = "radioFullRefresh";
+           this.radioFullRefresh.Size = new System.Drawing.Size(125, 17);
+           this.radioFullRefresh.TabIndex = 7;
+           this.radioFullRefresh.TabStop = true;
+           this.radioFullRefresh.Text = "After each full refresh";
+           this.radioFullRefresh.UseVisualStyleBackColor = true;
            // 
            // frmPreferences
            // 
            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-           this.ClientSize = new System.Drawing.Size(532, 326);
+           this.ClientSize = new System.Drawing.Size(532, 388);
            this.Controls.Add(this.tabControl1);
            this.Controls.Add(this.btnOK);
            this.Controls.Add(this.btnCancel);
@@ -717,9 +867,15 @@ namespace HFM.Forms
            this.tabControl1.ResumeLayout(false);
            this.tabSchdTasks.ResumeLayout(false);
            this.tabDefaults.ResumeLayout(false);
+           this.grpFileExplorer.ResumeLayout(false);
+           this.grpFileExplorer.PerformLayout();
+           this.grpLogFileViewer.ResumeLayout(false);
+           this.grpLogFileViewer.PerformLayout();
            this.grpDefaultConfig.ResumeLayout(false);
            this.grpDefaultConfig.PerformLayout();
            this.tabWeb.ResumeLayout(false);
+           this.grpProjectDownload.ResumeLayout(false);
+           this.grpProjectDownload.PerformLayout();
            this.grpWebStats.ResumeLayout(false);
            this.grpWebStats.PerformLayout();
            this.grpWebProxy.ResumeLayout(false);
@@ -787,5 +943,18 @@ namespace HFM.Forms
        private System.Windows.Forms.OpenFileDialog openConfigDialog;
        private System.Windows.Forms.Label label2;
        private System.Windows.Forms.ComboBox cboPpdCalc;
+       private System.Windows.Forms.GroupBox grpFileExplorer;
+       private System.Windows.Forms.Label label4;
+       private System.Windows.Forms.TextBox txtFileExplorer;
+       private System.Windows.Forms.GroupBox grpLogFileViewer;
+       private System.Windows.Forms.Label label3;
+       private System.Windows.Forms.TextBox txtLogFileViewer;
+       private System.Windows.Forms.Button btnBrowseFileExplorer;
+       private System.Windows.Forms.Button btnBrowseLogViewer;
+       private System.Windows.Forms.GroupBox grpProjectDownload;
+       private System.Windows.Forms.TextBox txtProjectDownloadUrl;
+       private System.Windows.Forms.Label label5;
+       private System.Windows.Forms.RadioButton radioSchedule;
+       private System.Windows.Forms.RadioButton radioFullRefresh;
     }
 }

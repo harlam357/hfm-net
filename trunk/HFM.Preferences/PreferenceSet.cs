@@ -33,6 +33,12 @@ namespace HFM.Preferences
       LastFrame,
       LastThreeFrames
    }
+   
+   public enum eTimeStyle
+   {
+      Standard,
+      Formatted
+   }
 
    public class PreferenceSet
    {
@@ -236,6 +242,41 @@ namespace HFM.Preferences
          set { _PpdCalculation = value; }
       }
       
+      private eTimeStyle _TimeStyle;
+      public eTimeStyle TimeStyle
+      {
+         get { return _TimeStyle; }
+         set { _TimeStyle = value; }
+      }
+      
+      private string _LogFileViewer;
+      public string LogFileViewer
+      {
+         get { return _LogFileViewer; }
+         set { _LogFileViewer = value; }
+      }
+
+      private string _FileExplorer;
+      public string FileExplorer
+      {
+         get { return _FileExplorer; }
+         set { _FileExplorer = value; }
+      }
+      
+      private string _ProjectDownloadUrl;
+      public string ProjectDownloadUrl
+      {
+         get { return _ProjectDownloadUrl; }
+         set { _ProjectDownloadUrl = value; }
+      }
+      
+      private bool _WebGenAfterRefresh;
+      public bool WebGenAfterRefresh
+      {
+         get { return _WebGenAfterRefresh; }
+         set { _WebGenAfterRefresh = value; }
+      }
+      
       public String AppPath
       {
          get
@@ -380,6 +421,24 @@ namespace HFM.Preferences
                _PpdCalculation = ePpdCalculation.LastThreeFrames;
                break;
          }
+         
+         switch (Settings.Default.TimeStyle)
+         {
+            case "Standard":
+               _TimeStyle = eTimeStyle.Standard;
+               break;
+            case "Formatted":
+               _TimeStyle = eTimeStyle.Formatted;
+               break;
+            default:
+               _TimeStyle = eTimeStyle.Standard;
+               break;
+         }
+         
+         _LogFileViewer = Settings.Default.LogFileViewer;
+         _FileExplorer = Settings.Default.FileExplorer;
+         _ProjectDownloadUrl = Settings.Default.ProjectDownloadUrl;
+         _WebGenAfterRefresh = Settings.Default.WebGenAfterRefresh;
 
          _AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
          _AppDataPath = Path.Combine(_AppDataPath, System.Reflection.Assembly.GetEntryAssembly().GetName().Name); ;
@@ -451,6 +510,11 @@ namespace HFM.Preferences
             Settings.Default.DefaultConfigFile = _DefaultConfigFile;
             Settings.Default.UseDefaultConfigFile = _UseDefaultConfigFile;
             Settings.Default.PpdCalculation = _PpdCalculation.ToString();
+            Settings.Default.TimeStyle = _TimeStyle.ToString();
+            Settings.Default.LogFileViewer = _LogFileViewer;
+            Settings.Default.FileExplorer = _FileExplorer;
+            Settings.Default.ProjectDownloadUrl = _ProjectDownloadUrl;
+            Settings.Default.WebGenAfterRefresh = _WebGenAfterRefresh;
 
             Settings.Default.Save();
          }

@@ -86,5 +86,20 @@
     <Setting Name="PpdCalculation" Type="System.String" Scope="User">
       <Value Profile="(Default)">LastThreeFrames</Value>
     </Setting>
+    <Setting Name="TimeStyle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Standard</Value>
+    </Setting>
+    <Setting Name="LogFileViewer" Type="System.String" Scope="User">
+      <Value Profile="(Default)">notepad.exe</Value>
+    </Setting>
+    <Setting Name="FileExplorer" Type="System.String" Scope="User">
+      <Value Profile="(Default)">explorer.exe</Value>
+    </Setting>
+    <Setting Name="ProjectDownloadUrl" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://fah-web.stanford.edu/psummaryC.html</Value>
+    </Setting>
+    <Setting Name="WebGenAfterRefresh" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
