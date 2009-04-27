@@ -632,6 +632,11 @@ namespace HFM.Forms
       
       private static string GetFormattedDownloadTimeString(DateTime date)
       {
+         if (date.Equals(DateTime.MinValue))
+         {
+            return String.Empty;
+         }
+         
          TimeSpan span = DateTime.Now.Subtract(date);
          string formatString = "{1}hr {2}min ago";
          if (span.Days > 0)
@@ -644,6 +649,11 @@ namespace HFM.Forms
 
       private static string GetFormattedDeadlineString(DateTime date)
       {
+         if (date.Equals(DateTime.MinValue))
+         {
+            return String.Empty;
+         }
+      
          TimeSpan span = date.Subtract(DateTime.Now);
          string formatString = "In {1}hr {2}min";
          if (span.Days > 0)
@@ -1418,39 +1428,43 @@ namespace HFM.Forms
          string[] instanceKeys = new string[numInstances];
          HostInstances.InstanceCollection.Keys.CopyTo(instanceKeys, 0);
 
-         // create the instance wait handle array
-         WaitHandle[] waitHandles = new WaitHandle[numInstances];
-
-         // loop through the instances
-         for (int i = 0; i < numInstances; i++)
+         List<WaitHandle> waitHandleList = new List<WaitHandle>();
+         for (int i = 0; i < numInstances; )
          {
-            // try to get the key value from the collection, if the value is not found then
-            // the user removed a client in the middle of a retrieve process, ignore the key
-            ClientInstance Instance;
-            if (HostInstances.InstanceCollection.TryGetValue(instanceKeys[i], out Instance))
+            waitHandleList.Clear();
+            // loop through the instances (can only handle up to 64 wait handles at a time)
+            for (int j = 0; j < 64 && i < numInstances; j++)
             {
-               if (Synchronous) // do the individual retrieves on a single thread
+               // try to get the key value from the collection, if the value is not found then
+               // the user removed a client in the middle of a retrieve process, ignore the key
+               ClientInstance Instance;
+               if (HostInstances.InstanceCollection.TryGetValue(instanceKeys[i], out Instance))
                {
-                  RetrieveInstance(Instance);
-               }
-               else // fire individual threads to do the their own retrieve simultaneously
-               {
-                  //ThreadPool.QueueUserWorkItem(new WaitCallback(RetrieveInstance), Instance);
-                  RetrieveInstanceDelegate del = RetrieveInstance;
-                  IAsyncResult async = del.BeginInvoke(Instance, null, null);
-                  
-                  // get the wait handle for each invoked delegate
-                  waitHandles[i] = async.AsyncWaitHandle;
-               }
-            }
+                  if (Synchronous) // do the individual retrieves on a single thread
+                  {
+                     RetrieveInstance(Instance);
+                  }
+                  else // fire individual threads to do the their own retrieve simultaneously
+                  {
+                     //ThreadPool.QueueUserWorkItem(new WaitCallback(RetrieveInstance), Instance);
+                     RetrieveInstanceDelegate del = RetrieveInstance;
+                     IAsyncResult async = del.BeginInvoke(Instance, null, null);
 
-            Application.DoEvents();
-         }
-         
-         if (Synchronous == false)
-         {
-            // wait for all invoked threads to complete
-            WaitHandle.WaitAll(waitHandles);
+                     // get the wait handle for each invoked delegate
+                     waitHandleList.Add(async.AsyncWaitHandle);
+                  }
+               }
+
+               i++; // increment the outer loop counter
+               Application.DoEvents();
+            }
+            
+            if (Synchronous == false)
+            {
+               WaitHandle[] waitHandles = waitHandleList.ToArray();
+               // wait for all invoked threads to complete
+               WaitHandle.WaitAll(waitHandles);
+            }
          }
       }
 
@@ -1937,18 +1951,14 @@ namespace HFM.Forms
          if (show == false)
          {
             txtLogFile.Visible = false;
-            AnchorStyles currentAnchorStyle = dataGridView1.Anchor;
-            dataGridView1.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+            splitContainer1.Panel2Collapsed = true;
             Size = new Size(Size.Width, Size.Height - ShowHideLogOffset);
-            dataGridView1.Anchor = currentAnchorStyle;
          }
          else
          {
             txtLogFile.Visible = true;
-            AnchorStyles currentAnchorStyle = dataGridView1.Anchor;
-            dataGridView1.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
             Size = new Size(Size.Width, Size.Height + ShowHideLogOffset);
-            dataGridView1.Anchor = currentAnchorStyle;
+            splitContainer1.Panel2Collapsed = false;
          }
       }
       

@@ -30,9 +30,9 @@ namespace HFM.Forms
       {
          this.components = new System.ComponentModel.Container();
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
-         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
          this.bgWorkTimer = new System.Windows.Forms.Timer(this.components);
          this.statusStrip = new System.Windows.Forms.StatusStrip();
          this.statusLabelLeft = new System.Windows.Forms.ToolStripStatusLabel();
@@ -81,9 +81,7 @@ namespace HFM.Forms
          this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
          this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
          this.saveConfigDialog = new System.Windows.Forms.SaveFileDialog();
-         this.pnlMain = new System.Windows.Forms.Panel();
          this.txtLogFile = new System.Windows.Forms.TextBox();
-         this.dataGridView1 = new System.Windows.Forms.DataGridView();
          this.gridContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
          this.mnuContextClientsRefreshSelected = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuContextClientsSep1 = new System.Windows.Forms.ToolStripSeparator();
@@ -94,12 +92,16 @@ namespace HFM.Forms
          this.mnuContextClientsViewCachedLog = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuContextClientsViewClientFiles = new System.Windows.Forms.ToolStripMenuItem();
          this.webGenTimer = new System.Windows.Forms.Timer(this.components);
+         this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+         this.dataGridView1 = new System.Windows.Forms.DataGridView();
          this.statusStrip.SuspendLayout();
          this.notifyMenu.SuspendLayout();
          this.AppMenu.SuspendLayout();
-         this.pnlMain.SuspendLayout();
-         ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
          this.gridContextMenuStrip.SuspendLayout();
+         this.splitContainer1.Panel1.SuspendLayout();
+         this.splitContainer1.Panel2.SuspendLayout();
+         this.splitContainer1.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
          this.SuspendLayout();
          // 
          // bgWorkTimer
@@ -508,74 +510,17 @@ namespace HFM.Forms
          this.saveConfigDialog.DefaultExt = "hfm";
          this.saveConfigDialog.Filter = "HFM Configuration Files|*.hfm";
          // 
-         // pnlMain
-         // 
-         this.pnlMain.Controls.Add(this.txtLogFile);
-         this.pnlMain.Controls.Add(this.dataGridView1);
-         this.pnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.pnlMain.Location = new System.Drawing.Point(0, 24);
-         this.pnlMain.Name = "pnlMain";
-         this.pnlMain.Size = new System.Drawing.Size(988, 720);
-         this.pnlMain.TabIndex = 5;
-         // 
          // txtLogFile
          // 
-         this.txtLogFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                     | System.Windows.Forms.AnchorStyles.Right)));
          this.txtLogFile.BackColor = System.Drawing.Color.White;
-         this.txtLogFile.Location = new System.Drawing.Point(0, 368);
+         this.txtLogFile.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.txtLogFile.Location = new System.Drawing.Point(0, 0);
          this.txtLogFile.Multiline = true;
          this.txtLogFile.Name = "txtLogFile";
          this.txtLogFile.ReadOnly = true;
          this.txtLogFile.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-         this.txtLogFile.Size = new System.Drawing.Size(987, 351);
+         this.txtLogFile.Size = new System.Drawing.Size(988, 356);
          this.txtLogFile.TabIndex = 1;
-         // 
-         // dataGridView1
-         // 
-         this.dataGridView1.AllowUserToAddRows = false;
-         this.dataGridView1.AllowUserToDeleteRows = false;
-         this.dataGridView1.AllowUserToOrderColumns = true;
-         this.dataGridView1.AllowUserToResizeRows = false;
-         dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-         this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-         this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                     | System.Windows.Forms.AnchorStyles.Left)
-                     | System.Windows.Forms.AnchorStyles.Right)));
-         this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-         this.dataGridView1.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-         dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-         dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-         dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-         dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-         dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-         dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-         this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-         this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-         dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-         dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-         dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-         dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-         dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-         dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-         this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle3;
-         this.dataGridView1.Location = new System.Drawing.Point(0, 0);
-         this.dataGridView1.MultiSelect = false;
-         this.dataGridView1.Name = "dataGridView1";
-         this.dataGridView1.ReadOnly = true;
-         this.dataGridView1.RowHeadersVisible = false;
-         this.dataGridView1.RowTemplate.Height = 18;
-         this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-         this.dataGridView1.ShowCellToolTips = false;
-         this.dataGridView1.Size = new System.Drawing.Size(988, 362);
-         this.dataGridView1.TabIndex = 0;
-         this.dataGridView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseDown);
-         this.dataGridView1.Sorted += new System.EventHandler(this.dataGridView1_Sorted);
-         this.dataGridView1.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_RowEnter);
-         this.dataGridView1.ColumnDividerDoubleClick += new System.Windows.Forms.DataGridViewColumnDividerDoubleClickEventHandler(this.dataGridView1_ColumnDividerDoubleClick);
-         this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
          // 
          // gridContextMenuStrip
          // 
@@ -589,7 +534,7 @@ namespace HFM.Forms
             this.mnuContextClientsViewCachedLog,
             this.mnuContextClientsViewClientFiles});
          this.gridContextMenuStrip.Name = "contextMenuStrip1";
-         this.gridContextMenuStrip.Size = new System.Drawing.Size(186, 170);
+         this.gridContextMenuStrip.Size = new System.Drawing.Size(186, 148);
          // 
          // mnuContextClientsRefreshSelected
          // 
@@ -648,12 +593,78 @@ namespace HFM.Forms
          this.webGenTimer.Interval = 900000;
          this.webGenTimer.Tick += new System.EventHandler(this.webGenTimer_Tick);
          // 
+         // splitContainer1
+         // 
+         this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+         this.splitContainer1.IsSplitterFixed = true;
+         this.splitContainer1.Location = new System.Drawing.Point(0, 24);
+         this.splitContainer1.Name = "splitContainer1";
+         this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+         // 
+         // splitContainer1.Panel1
+         // 
+         this.splitContainer1.Panel1.Controls.Add(this.dataGridView1);
+         this.splitContainer1.Panel1.RightToLeft = System.Windows.Forms.RightToLeft.No;
+         // 
+         // splitContainer1.Panel2
+         // 
+         this.splitContainer1.Panel2.Controls.Add(this.txtLogFile);
+         this.splitContainer1.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
+         this.splitContainer1.Size = new System.Drawing.Size(988, 720);
+         this.splitContainer1.SplitterDistance = 360;
+         this.splitContainer1.TabIndex = 6;
+         // 
+         // dataGridView1
+         // 
+         this.dataGridView1.AllowUserToAddRows = false;
+         this.dataGridView1.AllowUserToDeleteRows = false;
+         this.dataGridView1.AllowUserToOrderColumns = true;
+         this.dataGridView1.AllowUserToResizeRows = false;
+         dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+         this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
+         this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+         this.dataGridView1.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+         dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+         dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
+         dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
+         dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+         dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+         dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+         this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+         this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+         dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+         dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+         dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+         dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+         dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+         dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+         this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle6;
+         this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.dataGridView1.Location = new System.Drawing.Point(0, 0);
+         this.dataGridView1.MultiSelect = false;
+         this.dataGridView1.Name = "dataGridView1";
+         this.dataGridView1.ReadOnly = true;
+         this.dataGridView1.RowHeadersVisible = false;
+         this.dataGridView1.RowTemplate.Height = 18;
+         this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+         this.dataGridView1.ShowCellToolTips = false;
+         this.dataGridView1.Size = new System.Drawing.Size(988, 360);
+         this.dataGridView1.TabIndex = 0;
+         this.dataGridView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseDown);
+         this.dataGridView1.Sorted += new System.EventHandler(this.dataGridView1_Sorted);
+         this.dataGridView1.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_RowEnter);
+         this.dataGridView1.ColumnDividerDoubleClick += new System.Windows.Forms.DataGridViewColumnDividerDoubleClickEventHandler(this.dataGridView1_ColumnDividerDoubleClick);
+         this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
+         // 
          // frmMain
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.ClientSize = new System.Drawing.Size(988, 773);
-         this.Controls.Add(this.pnlMain);
+         this.Controls.Add(this.splitContainer1);
          this.Controls.Add(this.AppMenu);
          this.Controls.Add(this.statusStrip);
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -668,10 +679,12 @@ namespace HFM.Forms
          this.notifyMenu.ResumeLayout(false);
          this.AppMenu.ResumeLayout(false);
          this.AppMenu.PerformLayout();
-         this.pnlMain.ResumeLayout(false);
-         this.pnlMain.PerformLayout();
-         ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
          this.gridContextMenuStrip.ResumeLayout(false);
+         this.splitContainer1.Panel1.ResumeLayout(false);
+         this.splitContainer1.Panel2.ResumeLayout(false);
+         this.splitContainer1.Panel2.PerformLayout();
+         this.splitContainer1.ResumeLayout(false);
+         ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
          this.ResumeLayout(false);
          this.PerformLayout();
 
@@ -714,8 +727,6 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripSeparator mnuClientsSep1;
       private System.Windows.Forms.ToolStripMenuItem mnuClientsEdit;
       private System.Windows.Forms.ToolStripMenuItem mnuClientsDelete;
-      private System.Windows.Forms.Panel pnlMain;
-      private System.Windows.Forms.DataGridView dataGridView1;
       private System.Windows.Forms.ToolStripSeparator mnuClientsSep2;
       private System.Windows.Forms.ToolStripMenuItem mnuClientsRefreshSelected;
       private System.Windows.Forms.ToolStripMenuItem mnuClientsRefreshAll;
@@ -740,5 +751,7 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripMenuItem mnuViewToggleDateTime;
       private System.Windows.Forms.ToolStripMenuItem mnuClientsViewClientFiles;
       private System.Windows.Forms.ToolStripMenuItem mnuContextClientsViewClientFiles;
+      private System.Windows.Forms.SplitContainer splitContainer1;
+      private System.Windows.Forms.DataGridView dataGridView1;
    }
 }
