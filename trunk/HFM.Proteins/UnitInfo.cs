@@ -176,10 +176,7 @@ namespace HFM.Proteins
         /// 
         /// </summary>
         private Int32 _RawComplete;
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //private Int32 _RawCompleteOld;
+
         /// <summary>
         /// 
         /// </summary>
@@ -188,7 +185,6 @@ namespace HFM.Proteins
             get { return _RawComplete; }
             set
             {
-                //_RawCompleteOld = _RawComplete;
                 _RawComplete = value;
             }
         }
@@ -391,23 +387,20 @@ namespace HFM.Proteins
         {
             //DateTime Start = Debug.ExecStart;
 
-            //if ((_RawTotal != 0) && (_RawComplete != 0) && (_RawCompleteOld != 0) && (_RawTimePerSection != 0))
             if ((_RawTotal != 0) && (_RawComplete != 0) && (RawTimePerSection != 0))
             {
                 try
                 {
-                    Int32 FramesTotal = ProteinCollection.Instance[_ProjectID].Frames;
-                    Int32 RawScaleFactor = _RawTotal / FramesTotal;
-                    //Int32 RawPerTime = _RawComplete - _RawCompleteOld;
-                    //Double FramesPerTime = RawPerTime / RawScaleFactor;
-                    _FramesComplete = _RawComplete / RawScaleFactor;
-                    _PercentComplete = _FramesComplete * 100 / FramesTotal;
-                    _TimePerFrame = new TimeSpan(0, 0, Convert.ToInt32(RawTimePerSection)); // / FramesPerTime));
-                    //if (_TimePerFrame.Hours < 0)
-                    //   _TimePerFrame += new TimeSpan(12, 0, 0);
-                    _UPD = 86400 / (_TimePerFrame.TotalSeconds * FramesTotal);
-                    _PPD = Math.Round(_UPD * ProteinCollection.Instance[_ProjectID].Credit, 1);
-                    _ETA = new TimeSpan((100 - _PercentComplete)*_TimePerFrame.Ticks);
+                    Int32 FramesTotal = ProteinCollection.Instance[ProjectID].Frames;
+                    Int32 RawScaleFactor = RawFramesTotal / FramesTotal;
+
+                    FramesComplete = RawFramesComplete / RawScaleFactor;
+                    PercentComplete = FramesComplete * 100 / FramesTotal;
+                    TimePerFrame = new TimeSpan(0, 0, Convert.ToInt32(RawTimePerSection));
+
+                    UPD = 86400 / (TimePerFrame.TotalSeconds * FramesTotal);
+                    PPD = Math.Round(UPD * ProteinCollection.Instance[ProjectID].Credit, 5);
+                    ETA = new TimeSpan((100 - PercentComplete) * TimePerFrame.Ticks);
                 }
                 catch (Exception ex)
                 {

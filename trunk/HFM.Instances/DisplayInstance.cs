@@ -209,7 +209,7 @@ namespace HFM.Instances
          _InstanceName = baseInstance.Name;
          _ClientType = baseInstance.UnitInfo.ClientType;
          _TimePerFrame = baseInstance.UnitInfo.TimePerFrame;
-         _PPD = baseInstance.UnitInfo.PPD;
+         _PPD = Math.Round(baseInstance.UnitInfo.PPD, 1);
          _PPD_MHz = Math.Round(baseInstance.UnitInfo.PPD / baseInstance.ClientProcessorMegahertz, 3);
          _ETA = baseInstance.UnitInfo.ETA;
          _Core = baseInstance.CurrentProtein.Core;

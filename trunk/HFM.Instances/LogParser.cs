@@ -568,14 +568,14 @@ namespace HFM.Instances
       /// <param name="Instance">Client Instance</param>
       private static void DetermineStatus(ClientInstance Instance)
       {
-         // Terminal Time - defined as current time minus twice (5 times for GPU) the current Raw Time per Section.
+         // Terminal Time - defined as current time minus twice (7 times for GPU) the current Raw Time per Section.
          // if a new frame has not completed in twice the amount of time it should take to complete we should deem 
          // this client Hung.
          DateTime terminalTime;
 
          if (Instance.UnitInfo.ClientType.Equals(eClientType.GPU))
          {
-            terminalTime = DateTime.Now.Subtract(new TimeSpan(0, 0, Instance.UnitInfo.RawTimePerSection * 5));
+            terminalTime = DateTime.Now.Subtract(new TimeSpan(0, 0, Instance.UnitInfo.RawTimePerSection * 7));
          }
          else
          {
@@ -607,7 +607,7 @@ namespace HFM.Instances
             // not completed a frame since the local machine time rolled over to the next day
             if (now.TimeOfDay.Hours < Instance.UnitInfo.TimeOfLastFrame.Hours)
             {
-               System.Diagnostics.Debug.WriteLine("Doing prior day adjustment...");
+               Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("Doing prior day adjustment on {0}...", Instance.Name));
 
                // get today's date and subtract 1 day
                currentFrameTime = currentFrameTime.Subtract(new TimeSpan(1, 0, 0, 0));
@@ -616,7 +616,7 @@ namespace HFM.Instances
             // add Time of Last Frame (TimeSpan) to the DateTime with the correct date
             currentFrameTime = currentFrameTime.Add(Instance.UnitInfo.TimeOfLastFrame);
 
-            if (currentFrameTime > terminalTime)
+            if (currentFrameTime.AddMinutes(Instance.ClientTimeOffset * -1) > terminalTime)
             {
                Instance.UnitInfo.Status = eClientStatus.Running;
             }

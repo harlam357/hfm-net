@@ -814,12 +814,23 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void mnuEditPreferences_Click(object sender, EventArgs e)
       {
+         ePpdCalculation currentPpdCalc = PreferenceSet.Instance.PpdCalculation;
+      
          frmPreferences prefDialog = new frmPreferences();
          if (prefDialog.ShowDialog() == DialogResult.OK)
          {
             SetTimerState();
             HostInstances.OfflineClientsLast = PreferenceSet.Instance.OfflineLast;
-            RefreshDisplay();
+            
+            // If the PPD Calculation style changed, we need to do a new Retrieval
+            if (currentPpdCalc.Equals(PreferenceSet.Instance.PpdCalculation))
+            {
+               RefreshDisplay();
+            }
+            else
+            {
+               QueueNewRetrieval();
+            }
          }
       }
       #endregion
@@ -880,37 +891,15 @@ namespace HFM.Forms
                if (newHost.radioLocal.Checked)
                {
                   xHost = new ClientInstance(InstanceType.PathInstance);
-                  xHost.Name = newHost.txtName.Text;
-                  xHost.RemoteFAHLogFilename = newHost.txtLogFileName.Text;
-                  xHost.RemoteUnitInfoFilename = newHost.txtUnitFileName.Text;
-                  int mhz;
-                  if (int.TryParse(newHost.txtClientMegahertz.Text, out mhz))
-                  {
-                     xHost.ClientProcessorMegahertz = mhz;
-                  }
-                  else
-                  {
-                     xHost.ClientProcessorMegahertz = 1;
-                  }
-                  xHost.ClientIsOnVirtualMachine = newHost.chkClientVM.Checked;
+                  SetInstanceBasicInfo(newHost, xHost);
+                  
                   xHost.Path = newHost.txtLocalPath.Text;
                }
                else if (newHost.radioHTTP.Checked)
                {
                   xHost = new ClientInstance(InstanceType.HTTPInstance);
-                  xHost.Name = newHost.txtName.Text;
-                  xHost.RemoteFAHLogFilename = newHost.txtLogFileName.Text;
-                  xHost.RemoteUnitInfoFilename = newHost.txtUnitFileName.Text;
-                  int mhz;
-                  if (int.TryParse(newHost.txtClientMegahertz.Text, out mhz))
-                  {
-                     xHost.ClientProcessorMegahertz = mhz;
-                  }
-                  else
-                  {
-                     xHost.ClientProcessorMegahertz = 1;
-                  }
-                  xHost.ClientIsOnVirtualMachine = newHost.chkClientVM.Checked;
+                  SetInstanceBasicInfo(newHost, xHost);
+                  
                   xHost.Path = newHost.txtWebURL.Text;
                   xHost.Username = newHost.txtWebUser.Text;
                   xHost.Password = newHost.txtWebPass.Text;
@@ -918,19 +907,8 @@ namespace HFM.Forms
                else if (newHost.radioFTP.Checked)
                {
                   xHost = new ClientInstance(InstanceType.FTPInstance);
-                  xHost.Name = newHost.txtName.Text;
-                  xHost.RemoteFAHLogFilename = newHost.txtLogFileName.Text;
-                  xHost.RemoteUnitInfoFilename = newHost.txtUnitFileName.Text;
-                  int mhz;
-                  if (int.TryParse(newHost.txtClientMegahertz.Text, out mhz))
-                  {
-                     xHost.ClientProcessorMegahertz = mhz;
-                  }
-                  else
-                  {
-                     xHost.ClientProcessorMegahertz = 1;
-                  }
-                  xHost.ClientIsOnVirtualMachine = newHost.chkClientVM.Checked;
+                  SetInstanceBasicInfo(newHost, xHost);
+                  
                   xHost.Server = newHost.txtFTPServer.Text;
                   xHost.Path = newHost.txtFTPPath.Text;
                   xHost.Username = newHost.txtFTPUser.Text;
@@ -970,6 +948,7 @@ namespace HFM.Forms
          editHost.txtUnitFileName.Text = Instance.RemoteUnitInfoFilename;
          editHost.txtClientMegahertz.Text = Instance.ClientProcessorMegahertz.ToString();
          editHost.chkClientVM.Checked = Instance.ClientIsOnVirtualMachine;
+         editHost.numOffset.Value = Instance.ClientTimeOffset;
          if (Instance.InstanceHostType.Equals(InstanceType.PathInstance))
          {
             editHost.radioLocal.Select();
@@ -1055,13 +1034,13 @@ namespace HFM.Forms
          }
       }
 
-      private static void SetInstanceBasicInfo(frmHost editHost, ClientInstance Instance)
+      private static void SetInstanceBasicInfo(frmHost hostForm, ClientInstance Instance)
       {
-         Instance.Name = editHost.txtName.Text;
-         Instance.RemoteFAHLogFilename = editHost.txtLogFileName.Text;
-         Instance.RemoteUnitInfoFilename = editHost.txtUnitFileName.Text;
+         Instance.Name = hostForm.txtName.Text;
+         Instance.RemoteFAHLogFilename = hostForm.txtLogFileName.Text;
+         Instance.RemoteUnitInfoFilename = hostForm.txtUnitFileName.Text;
          int mhz;
-         if (int.TryParse(editHost.txtClientMegahertz.Text, out mhz))
+         if (int.TryParse(hostForm.txtClientMegahertz.Text, out mhz))
          {
             Instance.ClientProcessorMegahertz = mhz;
          }
@@ -1069,7 +1048,8 @@ namespace HFM.Forms
          {
             Instance.ClientProcessorMegahertz = 1;
          }
-         Instance.ClientIsOnVirtualMachine = editHost.chkClientVM.Checked;
+         Instance.ClientIsOnVirtualMachine = hostForm.chkClientVM.Checked;
+         Instance.ClientTimeOffset = Convert.ToInt32(hostForm.numOffset.Value);
       }
 
       /// <summary>

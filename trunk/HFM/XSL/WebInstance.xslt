@@ -10,12 +10,12 @@
 				<table class="Instance">
 					<tr>
 						<td class="Heading"><xsl:value-of select="@Name"/></td>
-            <td class="Plain" colspan="2" align="right">
-              <a href="index.html">Overview Page</a>
-              <br />
-              <a href="summary.html">Summary Page</a>
-            </td>
-          </tr>
+            					<td class="Plain" colspan="2" align="right">
+              						<a href="index.html">Overview Page</a>
+              						<br />
+              						<a href="summary.html">Summary Page</a>
+            					</td>
+          				</tr>
 					<tr>
 						<td class="LeftCol">Protein</td>
 						<td class="RightCol">
@@ -65,7 +65,7 @@
 			<td class="LeftCol">Current<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Progress</td>
 			<td class="RightCol">
 				<xsl:value-of select="FramesComplete"/> frames complete (<xsl:value-of select="PercentComplete"/>%)
-		</td>
+			</td>
 		</tr>
 		<tr>
 			<td class="AltLeftCol">Time<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Per<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Frame</td>
@@ -73,14 +73,20 @@
 				<xsl:value-of select="TimePerFrame"/>
 			</td>
 		</tr>
+		<tr>
+			<td class="AltLeftCol">Expected<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Completion</td>
+			<td class="AltRightCol">
+				<xsl:value-of select="ExpectedCompletionDate"/>
+			</td>
+		</tr>
 	</xsl:template>
 	<xsl:template match="Protein">
-<!--		<tr>
+		<tr>
 			<td class="LeftCol">Work Unit</td>
 			<td class="RightCol">
 				<xsl:value-of select="WorkUnit"/>
 			</td>
-		</tr> -->
+		</tr>
 		<tr>
 			<td class="LeftCol">Project<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Number</td>
 			<td class="RightCol">
@@ -137,9 +143,9 @@
 		</tr>
 		<tr>
 			<td class="AltLeftCol">Description</td>
-      <td class="AltRightCol">
-        <xsl:value-of select="Description" disable-output-escaping="yes"/>
-      </td>
-    </tr>
-  </xsl:template>
+      			<td class="AltRightCol">
+        			<xsl:value-of select="Description" disable-output-escaping="yes"/>
+      			</td>
+    		</tr>
+  	</xsl:template>
 </xsl:stylesheet>

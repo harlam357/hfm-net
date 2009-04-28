@@ -120,6 +120,23 @@
   <metadata name="toolTipCore.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>135, 17</value>
   </metadata>
+  <data name="chkClientVM.ToolTip" xml:space="preserve">
+    <value>This option only needs checked if the
+client reports local time as UTC.  This
+is typically the case with VMs that cannot
+be configured with a timezone offset.
+
+example: notfred's Virtual Appliance</value>
+  </data>
+  <data name="numOffset.ToolTip" xml:space="preserve">
+    <value>Allows you to make adjustments for 
+the client's reported frame times.
+
+If the client's clock is 20 minutes behind
+this machine, set it to -20.  If the client's
+clock is 30 minutes ahead of this machine,
+set this value to 30.</value>
+  </data>
   <metadata name="openLogFolder.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>249, 17</value>
   </metadata>

@@ -65,6 +65,8 @@ namespace HFM.Forms
            this.wbCssSample = new System.Windows.Forms.WebBrowser();
            this.StyleList = new System.Windows.Forms.ListBox();
            this.grpHTMLOutput = new System.Windows.Forms.GroupBox();
+           this.radioFullRefresh = new System.Windows.Forms.RadioButton();
+           this.radioSchedule = new System.Windows.Forms.RadioButton();
            this.txtWebGenMinutes = new System.Windows.Forms.TextBox();
            this.lbl2MinutesToGen = new System.Windows.Forms.Label();
            this.btnBrowseWebFolder = new System.Windows.Forms.Button();
@@ -115,8 +117,6 @@ namespace HFM.Forms
            this.lbl3Proxy = new System.Windows.Forms.Label();
            this.tabVisStyles = new System.Windows.Forms.TabPage();
            this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
-           this.radioSchedule = new System.Windows.Forms.RadioButton();
-           this.radioFullRefresh = new System.Windows.Forms.RadioButton();
            this.grpUpdateData.SuspendLayout();
            this.pnl1CSSSample.SuspendLayout();
            this.grpHTMLOutput.SuspendLayout();
@@ -314,6 +314,31 @@ namespace HFM.Forms
            this.grpHTMLOutput.TabStop = false;
            this.grpHTMLOutput.Text = "HTML Output";
            // 
+           // radioFullRefresh
+           // 
+           this.radioFullRefresh.AutoSize = true;
+           this.radioFullRefresh.Enabled = false;
+           this.radioFullRefresh.Location = new System.Drawing.Point(319, 19);
+           this.radioFullRefresh.Name = "radioFullRefresh";
+           this.radioFullRefresh.Size = new System.Drawing.Size(125, 17);
+           this.radioFullRefresh.TabIndex = 7;
+           this.radioFullRefresh.TabStop = true;
+           this.radioFullRefresh.Text = "After each full refresh";
+           this.radioFullRefresh.UseVisualStyleBackColor = true;
+           // 
+           // radioSchedule
+           // 
+           this.radioSchedule.AutoSize = true;
+           this.radioSchedule.Enabled = false;
+           this.radioSchedule.Location = new System.Drawing.Point(151, 19);
+           this.radioSchedule.Name = "radioSchedule";
+           this.radioSchedule.Size = new System.Drawing.Size(52, 17);
+           this.radioSchedule.TabIndex = 6;
+           this.radioSchedule.TabStop = true;
+           this.radioSchedule.Text = "Every";
+           this.radioSchedule.UseVisualStyleBackColor = true;
+           this.radioSchedule.CheckedChanged += new System.EventHandler(this.radioSchedule_CheckedChanged);
+           // 
            // txtWebGenMinutes
            // 
            this.txtWebGenMinutes.Enabled = false;
@@ -331,6 +356,7 @@ namespace HFM.Forms
            // lbl2MinutesToGen
            // 
            this.lbl2MinutesToGen.AutoSize = true;
+           this.lbl2MinutesToGen.Enabled = false;
            this.lbl2MinutesToGen.Location = new System.Drawing.Point(256, 21);
            this.lbl2MinutesToGen.Name = "lbl2MinutesToGen";
            this.lbl2MinutesToGen.Size = new System.Drawing.Size(44, 13);
@@ -817,29 +843,6 @@ namespace HFM.Forms
            this.openConfigDialog.DefaultExt = "hfm";
            this.openConfigDialog.Filter = "HFM Configuration Files|*.hfm";
            this.openConfigDialog.RestoreDirectory = true;
-           // 
-           // radioSchedule
-           // 
-           this.radioSchedule.AutoSize = true;
-           this.radioSchedule.Location = new System.Drawing.Point(151, 19);
-           this.radioSchedule.Name = "radioSchedule";
-           this.radioSchedule.Size = new System.Drawing.Size(52, 17);
-           this.radioSchedule.TabIndex = 6;
-           this.radioSchedule.TabStop = true;
-           this.radioSchedule.Text = "Every";
-           this.radioSchedule.UseVisualStyleBackColor = true;
-           this.radioSchedule.CheckedChanged += new System.EventHandler(this.radioSchedule_CheckedChanged);
-           // 
-           // radioFullRefresh
-           // 
-           this.radioFullRefresh.AutoSize = true;
-           this.radioFullRefresh.Location = new System.Drawing.Point(319, 19);
-           this.radioFullRefresh.Name = "radioFullRefresh";
-           this.radioFullRefresh.Size = new System.Drawing.Size(125, 17);
-           this.radioFullRefresh.TabIndex = 7;
-           this.radioFullRefresh.TabStop = true;
-           this.radioFullRefresh.Text = "After each full refresh";
-           this.radioFullRefresh.UseVisualStyleBackColor = true;
            // 
            // frmPreferences
            // 

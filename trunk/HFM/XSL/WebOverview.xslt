@@ -7,14 +7,16 @@
 				<link rel="stylesheet" type="text/css" href="$CSSFILE" />
 			</head>
 			<body>
-				<table class="Overview" width="100%">
+                                <!--Uncomment this line to enable a logo on the Overview Page-->
+				<!--<img style="float:left; margin-right:0px; margin-bottom:0px" src="{photo}" alt="" title="Home" />-->
+				<table class="Overview" width="50%">
 					<tr>
 						<td class="Heading">Overview</td>
 						<td class="Plain">
-              <a href="summary.html">
-                Summary<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Page
-              </a>
-            </td>
+              						<a href="summary.html">
+                					Summary<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Page
+              						</a>
+            					</td>
 					</tr>
 					<tr>
 						<td class="LeftCol">Total<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Folding<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Clients</td>

@@ -121,7 +121,6 @@ namespace HFM.Instances
             return XMLOps.Transform(xmlDoc, xslTransform);
         }
 
-
         /// <summary>
         /// Generates the Summary page. xslTransform allows the calling method to select the appropriate transform.
         /// This allows the same summary method to generate the website page and the app page.
@@ -135,20 +134,30 @@ namespace HFM.Instances
             xmlDoc.Load(PreferenceSet.Instance.AppPath + "\\XML\\Summary.XML");
             XmlElement xmlRootData = xmlDoc.DocumentElement;
 
-            foreach (KeyValuePair<String, ClientInstance> kvp in HostInstances.InstanceCollection)
+            ClientInstance[] instances = new ClientInstance[HostInstances.Count];
+            HostInstances.InstanceCollection.Values.CopyTo(instances, 0);
+
+            Array.Sort(instances, delegate(ClientInstance instance1, ClientInstance instance2)
+                                  {
+                                     return instance1.Name.CompareTo(instance2.Name);
+                                  });
+
+            foreach (ClientInstance Instance in instances)
             {
-                ClientInstance Instance = kvp.Value;
+                //ClientInstance Instance = kvp.Value;
                 XmlDocument xmlFrag = new XmlDocument();
                 xmlFrag.Load(PreferenceSet.Instance.AppPath + "\\XML\\SummaryFrag.XML");
                 XmlElement xmlData = xmlFrag.DocumentElement;
 
                 XMLOps.setXmlNode(xmlData, "Name", Instance.Name);
                 XMLOps.setXmlNode(xmlData, "PercentComplete", Instance.UnitInfo.PercentComplete.ToString());
-                XMLOps.setXmlNode(xmlData, "Credit", String.Format("{0:0}", kvp.Value.CurrentProtein.Credit));
+                XMLOps.setXmlNode(xmlData, "Credit", String.Format("{0:0}", Instance.CurrentProtein.Credit));
                 XMLOps.setXmlNode(xmlData, "PPD", String.Format("{0:0.00}", Instance.UnitInfo.PPD));
                 XMLOps.setXmlNode(xmlData, "PPW", String.Format("{0:0.00}", 7 * Instance.UnitInfo.PPD));
                 XMLOps.setXmlNode(xmlData, "UPD", String.Format("{0:0.00}", Instance.UnitInfo.UPD));
                 XMLOps.setXmlNode(xmlData, "UPW", String.Format("{0:0.00}", 7 * Instance.UnitInfo.UPD));
+                XMLOps.setXmlNode(xmlData, "Completed", Instance.NumberOfCompletedUnitsSinceLastStart.ToString());
+                XMLOps.setXmlNode(xmlData, "Failed", Instance.NumberOfFailedUnitsSinceLastStart.ToString());
                 XMLOps.setXmlNode(xmlData, "LastUpdate", Instance.LastRetrievalTime.ToString("d-MMM hh:mm tt"));
 
                 Int32 addSeconds = Convert.ToInt32((Instance.CurrentProtein.Frames - Instance.UnitInfo.FramesComplete) * Instance.UnitInfo.TimePerFrame.TotalSeconds);
@@ -264,6 +273,7 @@ namespace HFM.Instances
             }
 
             //    <TotalCompleted>0</TotalCompleted>
+            //    <TotalFailed>0</TotalFailed>
             //    <LastUpdatedDate>Now</LastUpdatedDate>
             //    <LastUpdatedTime>Now</LastUpdatedTime>
 

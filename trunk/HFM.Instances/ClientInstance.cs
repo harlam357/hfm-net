@@ -48,6 +48,7 @@ namespace HFM.Instances
       private const string xmlNodeUnitInfo = "UnitInfoFile";
       private const string xmlNodeClientMHz = "ClientMHz";
       private const string xmlNodeClientVM = "ClientVM";
+      private const string xmlNodeClientOffset = "ClientOffset";
       private const string xmlPropType = "HostType";
       private const string xmlPropPath = "Path";
       private const string xmlPropServ = "Server";
@@ -175,6 +176,13 @@ namespace HFM.Instances
          set { _ClientIsOnVirtualMachine = value; }
       }
 
+      private Int32 _ClientTimeOffset;
+      public Int32 ClientTimeOffset
+      {
+         get { return _ClientTimeOffset; }
+         set { _ClientTimeOffset = value; }
+      }
+
       private InstanceType _InstanceHostType;
       public InstanceType InstanceHostType
       {
@@ -184,7 +192,7 @@ namespace HFM.Instances
             _InstanceHostType = value; 
             OnInstanceHostTypeChanged(EventArgs.Empty);
          }
-      }  
+      }
 
       /// <summary>
       /// Private variable storing location of log files for this instance
@@ -322,6 +330,8 @@ namespace HFM.Instances
          RemoteUnitInfoFilename = String.Empty;
          ClientProcessorMegahertz = 1;
          ClientIsOnVirtualMachine = false;
+         ClientTimeOffset = 0;
+         
          Path = String.Empty;
          Server = String.Empty;
          Username = String.Empty;
@@ -384,6 +394,11 @@ namespace HFM.Instances
          if (success)
          {
             ProcessExisting();
+         }
+         else
+         {
+            // Clear the time based values when log retrieval fails
+            ClearTimeBasedValues();
          }
       }
 
@@ -749,6 +764,7 @@ namespace HFM.Instances
             xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlNodeUnitInfo, RemoteUnitInfoFilename));
             xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlNodeClientMHz, ClientProcessorMegahertz.ToString()));
             xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlNodeClientVM, ClientIsOnVirtualMachine.ToString()));
+            xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlNodeClientOffset, ClientTimeOffset.ToString()));
             xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropType, InstanceHostType.ToString()));
             xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropPath, Path));
             xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropServ, Server));
@@ -827,6 +843,21 @@ namespace HFM.Instances
          {
             Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Could not parse Client VM Flag, defaulting to false."));
             ClientIsOnVirtualMachine = false;
+         }
+
+         try
+         {
+            ClientTimeOffset = int.Parse(xmlData.SelectSingleNode(xmlNodeClientOffset).InnerText);
+         }
+         catch (NullReferenceException)
+         {
+            Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Client Time Offset, defaulting to 0."));
+            ClientTimeOffset = 0;
+         }
+         catch (FormatException)
+         {
+            Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Could not parse Client Time Offset, defaulting to 0."));
+            ClientTimeOffset = 0;
          }
 
          try

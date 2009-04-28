@@ -224,10 +224,12 @@ namespace HFM.Forms
             txtLocalPath.Text = txtLocalPath.Text.Substring(0, txtLocalPath.Text.Length - 12);
          }
 
-         //Regex rValidPath = new Regex("^((?<DRIVE>[a-z]:)|(\\\\\\\\(?<SERVER>[0-9]*[a-z\\-][a-z0-9\\-]*)\\\\(?<VOLUME>[^\\.\\x01-\\x1F\\\\\"\"\\*\\?<>:|\\\\/][^\\x01-\\x1F\\\\\"\"\\*\\?|><:\\\\/]*)))?(?<FOLDERS>(?<FOLDER1>(\\.|(\\.\\.)|([^\\.\\x01-\\x1F\\\\\"\"\\*\\?|><:\\\\/][^\\x01-\\x1F\\\\\"\"\\*\\?<>:|\\\\/]*)))?(?<FOLDERm>[\\\\/](\\.|(\\.\\.)|([^\\.\\x01-\\x1F\\\\\"\"\\*\\?|><:\\\\/][^\\x01-\\x1F\\\\\"\"\\*\\?<>:|\\\\/]*)))*)?[\\\\/]?$", RegexOptions.Singleline | RegexOptions.IgnoreCase);
-         Regex rValidPath = new Regex(@"^((([a-zA-Z]:)|(\\{2}\w+)|(\\{2}(?:(?:25[0-5]|2[0-4]\d|[01]\d\d|\d?\d)(?(?=\.?\d)\.)){4}))(\\(\w[\w ]*)))", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+         Regex rValidPath = new Regex("^((?<DRIVE>[a-z]:)|(\\\\\\\\(?<SERVER>[0-9]*[a-z\\-][a-z0-9\\-]*)\\\\(?<VOLUME>[^\\.\\x01-\\x1F\\\\\"\"\\*\\?<>:|\\\\/][^\\x01-\\x1F\\\\\"\"\\*\\?|><:\\\\/]*)))?(?<FOLDERS>(?<FOLDER1>(\\.|(\\.\\.)|([^\\.\\x01-\\x1F\\\\\"\"\\*\\?|><:\\\\/][^\\x01-\\x1F\\\\\"\"\\*\\?<>:|\\\\/]*)))?(?<FOLDERm>[\\\\/](\\.|(\\.\\.)|([^\\.\\x01-\\x1F\\\\\"\"\\*\\?|><:\\\\/][^\\x01-\\x1F\\\\\"\"\\*\\?<>:|\\\\/]*)))*)?[\\\\/]?$", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+         Regex rValidPath2 = new Regex(@"^((([a-zA-Z]:)|(\\{2}\w+)|(\\{2}(?:(?:25[0-5]|2[0-4]\d|[01]\d\d|\d?\d)(?(?=\.?\d)\.)){4}))(\\(\w[\w ]*)))", RegexOptions.Singleline | RegexOptions.IgnoreCase);
          Match mPath = rValidPath.Match(txtLocalPath.Text);
          Match mPath2 = rValidPath.Match(txtLocalPath.Text + "\\");
+         Match mPath3 = rValidPath2.Match(txtLocalPath.Text);
+         Match mPath4 = rValidPath2.Match(txtLocalPath.Text + "\\");
 
          if (txtLocalPath.Text.Length == 0)
          {
@@ -237,7 +239,7 @@ namespace HFM.Forms
             txtLocalPath.Focus();
             ShowToolTip("Log Folder must be a valid local\r\nor network (UNC) path.", txtLocalPath, 5000);
          }
-         else if (txtLocalPath.Text.Length > 3 && (mPath.Success || mPath2.Success) == false)
+         else if (txtLocalPath.Text.Length > 3 && (mPath.Success || mPath2.Success || mPath3.Success || mPath4.Success) != true)
          {
             //e.Cancel = true;
             //txtLocalPath.Focus();
@@ -247,7 +249,7 @@ namespace HFM.Forms
          }
          else
          {
-            if (mPath2.Success)
+            if (mPath2.Success || mPath4.Success)
             {
                txtLocalPath.Text += "\\";
             }
@@ -404,7 +406,8 @@ namespace HFM.Forms
             }
             else
             {
-               toolTipCore.Show(sMessage, cTarget, cTarget.Width, 0, Delay);
+               //toolTipCore.Show(sMessage, cTarget, cTarget.Width, 0, Delay);
+               toolTipCore.Show(sMessage, cTarget, Delay);
             }
          }
          catch (InvalidOperationException ex)

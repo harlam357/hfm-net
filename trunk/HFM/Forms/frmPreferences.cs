@@ -174,8 +174,9 @@ namespace HFM.Forms
          if (chkWebSiteGenerator.Checked)
          {
             radioSchedule.Enabled = true;
-            radioFullRefresh.Enabled = true;
             radioSchedule_CheckedChanged(sender, e);
+            lbl2MinutesToGen.Enabled = true;
+            radioFullRefresh.Enabled = true;
             txtWebSiteBase.Enabled = true;
             txtWebSiteBase.ReadOnly = false;
             btnBrowseWebFolder.Enabled = true;
@@ -183,9 +184,10 @@ namespace HFM.Forms
          else
          {
             radioSchedule.Enabled = false;
-            radioFullRefresh.Enabled = false;
             txtWebGenMinutes.Enabled = false;
             txtWebGenMinutes.ReadOnly = true;
+            lbl2MinutesToGen.Enabled = false;
+            radioFullRefresh.Enabled = false;
             txtWebSiteBase.Enabled = false;
             txtWebSiteBase.ReadOnly = true;
             btnBrowseWebFolder.Enabled = false;

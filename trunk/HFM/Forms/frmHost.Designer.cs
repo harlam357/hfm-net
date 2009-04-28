@@ -49,6 +49,7 @@ namespace HFM.Forms
         private void InitializeComponent()
         {
            this.components = new System.ComponentModel.Container();
+           System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmHost));
            this.btnOK = new System.Windows.Forms.Button();
            this.btnCancel = new System.Windows.Forms.Button();
            this.txtLocalPath = new System.Windows.Forms.TextBox();
@@ -77,37 +78,42 @@ namespace HFM.Forms
            this.grpFTP = new System.Windows.Forms.GroupBox();
            this.grpHTTP = new System.Windows.Forms.GroupBox();
            this.toolTipCore = new System.Windows.Forms.ToolTip(this.components);
+           this.chkClientVM = new System.Windows.Forms.CheckBox();
+           this.numOffset = new System.Windows.Forms.NumericUpDown();
            this.openLogFolder = new System.Windows.Forms.FolderBrowserDialog();
            this.txtLogFileName = new System.Windows.Forms.TextBox();
            this.lblLogFileName = new System.Windows.Forms.Label();
            this.txtUnitFileName = new System.Windows.Forms.TextBox();
            this.lblUnitInfoName = new System.Windows.Forms.Label();
-           this.chkClientVM = new System.Windows.Forms.CheckBox();
            this.lblClientMegahertz = new System.Windows.Forms.Label();
            this.txtClientMegahertz = new System.Windows.Forms.TextBox();
+           this.label1 = new System.Windows.Forms.Label();
            this.grpLocal.SuspendLayout();
            this.grpFTP.SuspendLayout();
            this.grpHTTP.SuspendLayout();
+           ((System.ComponentModel.ISupportInitialize)(this.numOffset)).BeginInit();
            this.SuspendLayout();
            // 
            // btnOK
            // 
-           this.btnOK.Location = new System.Drawing.Point(214, 486);
+           this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+           this.btnOK.Location = new System.Drawing.Point(214, 498);
            this.btnOK.Name = "btnOK";
            this.btnOK.Size = new System.Drawing.Size(81, 25);
-           this.btnOK.TabIndex = 12;
+           this.btnOK.TabIndex = 14;
            this.btnOK.Text = "OK";
            this.btnOK.UseVisualStyleBackColor = true;
            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
            // 
            // btnCancel
            // 
+           this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
            this.btnCancel.CausesValidation = false;
            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-           this.btnCancel.Location = new System.Drawing.Point(306, 486);
+           this.btnCancel.Location = new System.Drawing.Point(306, 498);
            this.btnCancel.Name = "btnCancel";
            this.btnCancel.Size = new System.Drawing.Size(81, 25);
-           this.btnCancel.TabIndex = 13;
+           this.btnCancel.TabIndex = 15;
            this.btnCancel.Text = "Cancel";
            this.btnCancel.UseVisualStyleBackColor = true;
            // 
@@ -376,8 +382,40 @@ namespace HFM.Forms
            // 
            // toolTipCore
            // 
+           this.toolTipCore.AutoPopDelay = 8000;
+           this.toolTipCore.InitialDelay = 500;
            this.toolTipCore.IsBalloon = true;
+           this.toolTipCore.ReshowDelay = 100;
            this.toolTipCore.ToolTipTitle = "Quick Help";
+           // 
+           // chkClientVM
+           // 
+           this.chkClientVM.AutoSize = true;
+           this.chkClientVM.Location = new System.Drawing.Point(9, 472);
+           this.chkClientVM.Name = "chkClientVM";
+           this.chkClientVM.Size = new System.Drawing.Size(301, 17);
+           this.chkClientVM.TabIndex = 11;
+           this.chkClientVM.Text = "Client is on Virtual Machine (and reports UTC as local time)";
+           this.toolTipCore.SetToolTip(this.chkClientVM, resources.GetString("chkClientVM.ToolTip"));
+           this.chkClientVM.UseVisualStyleBackColor = true;
+           // 
+           // numOffset
+           // 
+           this.numOffset.Location = new System.Drawing.Point(9, 499);
+           this.numOffset.Maximum = new decimal(new int[] {
+            120,
+            0,
+            0,
+            0});
+           this.numOffset.Minimum = new decimal(new int[] {
+            120,
+            0,
+            0,
+            -2147483648});
+           this.numOffset.Name = "numOffset";
+           this.numOffset.Size = new System.Drawing.Size(54, 20);
+           this.numOffset.TabIndex = 12;
+           this.toolTipCore.SetToolTip(this.numOffset, resources.GetString("numOffset.ToolTip"));
            // 
            // openLogFolder
            // 
@@ -421,16 +459,6 @@ namespace HFM.Forms
            this.lblUnitInfoName.TabIndex = 4;
            this.lblUnitInfoName.Text = "Filename for Unit Info (\"UnitInfo.txt\")";
            // 
-           // chkClientVM
-           // 
-           this.chkClientVM.AutoSize = true;
-           this.chkClientVM.Location = new System.Drawing.Point(9, 472);
-           this.chkClientVM.Name = "chkClientVM";
-           this.chkClientVM.Size = new System.Drawing.Size(153, 17);
-           this.chkClientVM.TabIndex = 11;
-           this.chkClientVM.Text = "Client is on Virtual Machine";
-           this.chkClientVM.UseVisualStyleBackColor = true;
-           // 
            // lblClientMegahertz
            // 
            this.lblClientMegahertz.AutoSize = true;
@@ -450,11 +478,22 @@ namespace HFM.Forms
            this.txtClientMegahertz.Text = "1";
            this.txtClientMegahertz.Validating += new System.ComponentModel.CancelEventHandler(this.txtClientMegahertz_Validating);
            // 
+           // label1
+           // 
+           this.label1.AutoSize = true;
+           this.label1.Location = new System.Drawing.Point(65, 502);
+           this.label1.Name = "label1";
+           this.label1.Size = new System.Drawing.Size(136, 13);
+           this.label1.TabIndex = 13;
+           this.label1.Text = "Client Time Offset (Minutes)";
+           // 
            // frmHost
            // 
            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-           this.ClientSize = new System.Drawing.Size(394, 521);
+           this.ClientSize = new System.Drawing.Size(394, 533);
+           this.Controls.Add(this.label1);
+           this.Controls.Add(this.numOffset);
            this.Controls.Add(this.txtClientMegahertz);
            this.Controls.Add(this.lblClientMegahertz);
            this.Controls.Add(this.chkClientVM);
@@ -479,13 +518,14 @@ namespace HFM.Forms
            this.ShowIcon = false;
            this.ShowInTaskbar = false;
            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-           this.Text = "Add / Modify Folding Instance";
+           this.Text = "12";
            this.grpLocal.ResumeLayout(false);
            this.grpLocal.PerformLayout();
            this.grpFTP.ResumeLayout(false);
            this.grpFTP.PerformLayout();
            this.grpHTTP.ResumeLayout(false);
            this.grpHTTP.PerformLayout();
+           ((System.ComponentModel.ISupportInitialize)(this.numOffset)).EndInit();
            this.ResumeLayout(false);
            this.PerformLayout();
 
@@ -529,6 +569,8 @@ namespace HFM.Forms
        internal System.Windows.Forms.CheckBox chkClientVM;
        private System.Windows.Forms.Label lblClientMegahertz;
        public System.Windows.Forms.TextBox txtClientMegahertz;
+       private System.Windows.Forms.Label label1;
+       internal System.Windows.Forms.NumericUpDown numOffset;
 
     }
 }
