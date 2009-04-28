@@ -167,9 +167,14 @@ namespace HFM.Forms
       private void SetupTraceListeners()
       {
          FileInfo fi = new FileInfo("HFM.log");
-         if (fi.Exists && fi.Length > 204800)
+         if (fi.Exists && fi.Length > 512000)
          {
-            fi.Delete();
+            FileInfo fi2 = new FileInfo("HFM-prev.log");
+            if (fi2.Exists)
+            {
+               fi2.Delete();
+            }
+            fi.MoveTo("HFM-prev.log");
          }
 
          TextWriterTraceListenerWithDateTime listener = new TextWriterTraceListenerWithDateTime("HFM.log");
