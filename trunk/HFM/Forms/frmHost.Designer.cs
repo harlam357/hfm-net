@@ -518,7 +518,7 @@ namespace HFM.Forms
            this.ShowIcon = false;
            this.ShowInTaskbar = false;
            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-           this.Text = "12";
+           this.Text = "Add / Modify Folding Instance";
            this.grpLocal.ResumeLayout(false);
            this.grpLocal.PerformLayout();
            this.grpFTP.ResumeLayout(false);
