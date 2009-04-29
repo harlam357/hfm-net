@@ -1246,6 +1246,20 @@ namespace HFM.Forms
             MessageBox.Show("Failed to show EOC Team Stats page.");
          }
       }
+
+      private void mnuWebHFMGoogleCode_Click(object sender, EventArgs e)
+      {
+         try
+         {
+            Process.Start("http://code.google.com/p/hfm-net/");
+         }
+         catch (Exception ex)
+         {
+            Debug.WriteToHfmConsole(TraceLevel.Error,
+                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            MessageBox.Show("Failed to show HFM.NET Google Code page.");
+         }
+      }
       #endregion
 
       #region Background Work Routines
