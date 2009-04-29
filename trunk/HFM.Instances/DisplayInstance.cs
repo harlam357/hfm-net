@@ -22,13 +22,13 @@ namespace HFM.Instances
       /// <summary>
       /// Private member holding the percentage progress of the unit
       /// </summary>
-      private string _PercentComplete;
+      private string _Progress;
       /// <summary>
       /// Current progress (percentage) of the unit
       /// </summary>
-      public string PercentComplete
+      public string Progress
       {
-         get { return _PercentComplete; }
+         get { return _Progress; }
       }
 
       /// <summary>
@@ -200,12 +200,17 @@ namespace HFM.Instances
       {
          get { return _Deadline; }
       }
+
+      public string Dummy
+      {
+         get { return String.Empty; }
+      }
       #endregion
       
       public void Load(ClientInstance baseInstance)
       {
          _Status = baseInstance.UnitInfo.Status;
-         _PercentComplete = String.Format("{0:00}%", baseInstance.UnitInfo.PercentComplete);
+         _Progress = String.Format("{0:00}%", baseInstance.UnitInfo.PercentComplete);
          _InstanceName = baseInstance.Name;
          _ClientType = baseInstance.UnitInfo.ClientType;
          _TimePerFrame = baseInstance.UnitInfo.TimePerFrame;

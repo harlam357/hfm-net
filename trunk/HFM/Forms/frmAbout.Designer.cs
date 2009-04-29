@@ -56,14 +56,13 @@ namespace HFM.Forms
            this.btnClose = new System.Windows.Forms.Button();
            this.pictureBox1 = new System.Windows.Forms.PictureBox();
            this.lblGPL = new System.Windows.Forms.Label();
-           this.label1 = new System.Windows.Forms.Label();
            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
            this.SuspendLayout();
            // 
            // lblProduct
            // 
            this.lblProduct.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-           this.lblProduct.Location = new System.Drawing.Point(10, 7);
+           this.lblProduct.Location = new System.Drawing.Point(8, 7);
            this.lblProduct.Name = "lblProduct";
            this.lblProduct.Size = new System.Drawing.Size(115, 32);
            this.lblProduct.TabIndex = 1;
@@ -71,25 +70,25 @@ namespace HFM.Forms
            // 
            // lblVersion
            // 
-           this.lblVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-           this.lblVersion.Location = new System.Drawing.Point(11, 37);
+           this.lblVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+           this.lblVersion.Location = new System.Drawing.Point(129, 10);
            this.lblVersion.Name = "lblVersion";
-           this.lblVersion.Size = new System.Drawing.Size(264, 28);
+           this.lblVersion.Size = new System.Drawing.Size(230, 28);
            this.lblVersion.TabIndex = 2;
            this.lblVersion.Text = "[Version]";
            // 
            // lblCopyrights
            // 
-           this.lblCopyrights.Location = new System.Drawing.Point(12, 70);
+           this.lblCopyrights.Location = new System.Drawing.Point(10, 37);
            this.lblCopyrights.Name = "lblCopyrights";
-           this.lblCopyrights.Size = new System.Drawing.Size(471, 113);
+           this.lblCopyrights.Size = new System.Drawing.Size(471, 126);
            this.lblCopyrights.TabIndex = 3;
            this.lblCopyrights.Text = resources.GetString("lblCopyrights.Text");
            // 
            // lblLinkOrig
            // 
            this.lblLinkOrig.LinkArea = new System.Windows.Forms.LinkArea(58, 15);
-           this.lblLinkOrig.Location = new System.Drawing.Point(14, 187);
+           this.lblLinkOrig.Location = new System.Drawing.Point(10, 169);
            this.lblLinkOrig.Name = "lblLinkOrig";
            this.lblLinkOrig.Size = new System.Drawing.Size(474, 22);
            this.lblLinkOrig.TabIndex = 5;
@@ -103,7 +102,7 @@ namespace HFM.Forms
            // 
            this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
            this.btnClose.DialogResult = System.Windows.Forms.DialogResult.OK;
-           this.btnClose.Location = new System.Drawing.Point(404, 250);
+           this.btnClose.Location = new System.Drawing.Point(455, 202);
            this.btnClose.Name = "btnClose";
            this.btnClose.Size = new System.Drawing.Size(75, 23);
            this.btnClose.TabIndex = 0;
@@ -114,7 +113,7 @@ namespace HFM.Forms
            // 
            this.pictureBox1.Image = global::HFM.Properties.Resources.aboutBox;
            this.pictureBox1.InitialImage = null;
-           this.pictureBox1.Location = new System.Drawing.Point(319, 7);
+           this.pictureBox1.Location = new System.Drawing.Point(369, 7);
            this.pictureBox1.Name = "pictureBox1";
            this.pictureBox1.Size = new System.Drawing.Size(164, 93);
            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -123,7 +122,7 @@ namespace HFM.Forms
            // 
            // lblGPL
            // 
-           this.lblGPL.Location = new System.Drawing.Point(12, 215);
+           this.lblGPL.Location = new System.Drawing.Point(10, 197);
            this.lblGPL.Name = "lblGPL";
            this.lblGPL.Size = new System.Drawing.Size(471, 37);
            this.lblGPL.TabIndex = 6;
@@ -131,23 +130,12 @@ namespace HFM.Forms
                " terms of the\r\nGNU General Public License, version 2, as published by the Free S" +
                "oftware Foundation.";
            // 
-           // label1
-           // 
-           this.label1.AutoSize = true;
-           this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-           this.label1.Location = new System.Drawing.Point(123, 16);
-           this.label1.Name = "label1";
-           this.label1.Size = new System.Drawing.Size(152, 13);
-           this.label1.TabIndex = 7;
-           this.label1.Text = "(harlam\'s Folding Monitor)";
-           // 
            // frmAbout
            // 
            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
            this.CancelButton = this.btnClose;
-           this.ClientSize = new System.Drawing.Size(491, 283);
-           this.Controls.Add(this.label1);
+           this.ClientSize = new System.Drawing.Size(542, 235);
            this.Controls.Add(this.btnClose);
            this.Controls.Add(this.lblGPL);
            this.Controls.Add(this.lblLinkOrig);
@@ -166,7 +154,6 @@ namespace HFM.Forms
            this.TopMost = true;
            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
            this.ResumeLayout(false);
-           this.PerformLayout();
 
         }
 
@@ -178,8 +165,7 @@ namespace HFM.Forms
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.LinkLabel lblLinkOrig;
         private System.Windows.Forms.Button btnClose;
-        private System.Windows.Forms.Label lblGPL;
-       private System.Windows.Forms.Label label1;
+       private System.Windows.Forms.Label lblGPL;
 
     }
 }

@@ -30,6 +30,10 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HTMLparser, Version=3.1.4.41868, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\HTMLparser2\bin\Release\HTMLparser.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
@@ -52,10 +56,6 @@
     <ProjectReference Include="..\HFM.Instrumentation\HFM.Instrumentation.csproj">
       <Project>{7D6B604A-5C4A-4E97-A6D4-9C927ABBD74A}</Project>
       <Name>HFM.Instrumentation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HTMLparser2\HTMLparserLibDotNet11.csproj">
-      <Project>{5AA5CE86-CC56-4213-BDB5-B8A57E5B0020}</Project>
-      <Name>HTMLparserLibDotNet11</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

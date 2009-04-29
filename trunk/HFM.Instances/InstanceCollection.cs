@@ -81,7 +81,7 @@ namespace HFM.Instances
            set { _displayCollection.OfflineClientsLast = value; }
         }
 
-        public const int NumberOfDisplayFields = 16;
+        public const int NumberOfDisplayFields = 17;
         #endregion
     
         #region Read and Write Xml

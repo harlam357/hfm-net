@@ -30,9 +30,9 @@ namespace HFM.Forms
       {
          this.components = new System.ComponentModel.Container();
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
-         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
          this.bgWorkTimer = new System.Windows.Forms.Timer(this.components);
          this.statusStrip = new System.Windows.Forms.StatusStrip();
          this.statusLabelLeft = new System.Windows.Forms.ToolStripStatusLabel();
@@ -94,6 +94,10 @@ namespace HFM.Forms
          this.webGenTimer = new System.Windows.Forms.Timer(this.components);
          this.splitContainer1 = new System.Windows.Forms.SplitContainer();
          this.dataGridView1 = new System.Windows.Forms.DataGridView();
+         this.mnuWeb = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuWebEOCUser = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuWebStanfordUser = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuWebEOCTeam = new System.Windows.Forms.ToolStripMenuItem();
          this.statusStrip.SuspendLayout();
          this.notifyMenu.SuspendLayout();
          this.AppMenu.SuspendLayout();
@@ -234,6 +238,7 @@ namespace HFM.Forms
             this.mnuClients,
             this.mnuView,
             this.mnuTools,
+            this.mnuWeb,
             this.mnuHelp});
          this.AppMenu.Location = new System.Drawing.Point(0, 0);
          this.AppMenu.Name = "AppMenu";
@@ -472,7 +477,7 @@ namespace HFM.Forms
          // 
          this.mnuHelpContents.Image = global::HFM.Properties.Resources.HelpContents;
          this.mnuHelpContents.Name = "mnuHelpContents";
-         this.mnuHelpContents.Size = new System.Drawing.Size(129, 22);
+         this.mnuHelpContents.Size = new System.Drawing.Size(152, 22);
          this.mnuHelpContents.Text = "&Contents";
          this.mnuHelpContents.Visible = false;
          this.mnuHelpContents.Click += new System.EventHandler(this.mnuHelpContents_Click);
@@ -480,7 +485,7 @@ namespace HFM.Forms
          // mnuHelpIndex
          // 
          this.mnuHelpIndex.Name = "mnuHelpIndex";
-         this.mnuHelpIndex.Size = new System.Drawing.Size(129, 22);
+         this.mnuHelpIndex.Size = new System.Drawing.Size(152, 22);
          this.mnuHelpIndex.Text = "&Index";
          this.mnuHelpIndex.Visible = false;
          this.mnuHelpIndex.Click += new System.EventHandler(this.mnuHelpIndex_Click);
@@ -488,14 +493,14 @@ namespace HFM.Forms
          // mnuHelpSep1
          // 
          this.mnuHelpSep1.Name = "mnuHelpSep1";
-         this.mnuHelpSep1.Size = new System.Drawing.Size(126, 6);
+         this.mnuHelpSep1.Size = new System.Drawing.Size(149, 6);
          this.mnuHelpSep1.Visible = false;
          // 
          // mnuHelpAbout
          // 
          this.mnuHelpAbout.Image = global::HFM.Properties.Resources.About;
          this.mnuHelpAbout.Name = "mnuHelpAbout";
-         this.mnuHelpAbout.Size = new System.Drawing.Size(129, 22);
+         this.mnuHelpAbout.Size = new System.Drawing.Size(152, 22);
          this.mnuHelpAbout.Text = "&About";
          this.mnuHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
          // 
@@ -621,27 +626,27 @@ namespace HFM.Forms
          this.dataGridView1.AllowUserToDeleteRows = false;
          this.dataGridView1.AllowUserToOrderColumns = true;
          this.dataGridView1.AllowUserToResizeRows = false;
-         dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-         this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
+         dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+         this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle7;
          this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
          this.dataGridView1.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-         dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-         dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
-         dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
-         dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-         dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-         dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-         this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+         dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+         dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control;
+         dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText;
+         dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+         dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+         dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+         this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle8;
          this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-         dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-         dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
-         dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
-         dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-         dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-         dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-         this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle6;
+         dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+         dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window;
+         dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.ControlText;
+         dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+         dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+         dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+         this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle9;
          this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
          this.dataGridView1.Location = new System.Drawing.Point(0, 0);
          this.dataGridView1.MultiSelect = false;
@@ -658,6 +663,40 @@ namespace HFM.Forms
          this.dataGridView1.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_RowEnter);
          this.dataGridView1.ColumnDividerDoubleClick += new System.Windows.Forms.DataGridViewColumnDividerDoubleClickEventHandler(this.dataGridView1_ColumnDividerDoubleClick);
          this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
+         // 
+         // mnuWeb
+         // 
+         this.mnuWeb.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuWebEOCUser,
+            this.mnuWebStanfordUser,
+            this.mnuWebEOCTeam});
+         this.mnuWeb.Name = "mnuWeb";
+         this.mnuWeb.Size = new System.Drawing.Size(41, 20);
+         this.mnuWeb.Text = "&Web";
+         // 
+         // mnuWebEOCUser
+         // 
+         this.mnuWebEOCUser.Name = "mnuWebEOCUser";
+         this.mnuWebEOCUser.ShortcutKeys = System.Windows.Forms.Keys.F2;
+         this.mnuWebEOCUser.Size = new System.Drawing.Size(199, 22);
+         this.mnuWebEOCUser.Text = "&EOC User Stats";
+         this.mnuWebEOCUser.Click += new System.EventHandler(this.mnuWebEOCUser_Click);
+         // 
+         // mnuWebStanfordUser
+         // 
+         this.mnuWebStanfordUser.Name = "mnuWebStanfordUser";
+         this.mnuWebStanfordUser.ShortcutKeys = System.Windows.Forms.Keys.F3;
+         this.mnuWebStanfordUser.Size = new System.Drawing.Size(199, 22);
+         this.mnuWebStanfordUser.Text = "&Stanford User Stats";
+         this.mnuWebStanfordUser.Click += new System.EventHandler(this.mnuWebStanfordUser_Click);
+         // 
+         // mnuWebEOCTeam
+         // 
+         this.mnuWebEOCTeam.Name = "mnuWebEOCTeam";
+         this.mnuWebEOCTeam.ShortcutKeys = System.Windows.Forms.Keys.F4;
+         this.mnuWebEOCTeam.Size = new System.Drawing.Size(199, 22);
+         this.mnuWebEOCTeam.Text = "EOC &Team Stats";
+         this.mnuWebEOCTeam.Click += new System.EventHandler(this.mnuWebEOCTeam_Click);
          // 
          // frmMain
          // 
@@ -753,5 +792,9 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripMenuItem mnuContextClientsViewClientFiles;
       private System.Windows.Forms.SplitContainer splitContainer1;
       private System.Windows.Forms.DataGridView dataGridView1;
+      private System.Windows.Forms.ToolStripMenuItem mnuWeb;
+      private System.Windows.Forms.ToolStripMenuItem mnuWebEOCUser;
+      private System.Windows.Forms.ToolStripMenuItem mnuWebStanfordUser;
+      private System.Windows.Forms.ToolStripMenuItem mnuWebEOCTeam;
    }
 }

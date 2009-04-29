@@ -20,12 +20,14 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-
 using HFM.Preferences;
+using Debug=HFM.Instrumentation.Debug;
 
 namespace HFM.Forms
 {
@@ -263,17 +265,44 @@ namespace HFM.Forms
 
       private void linkEOC_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
       {
-         System.Diagnostics.Process.Start(PreferenceSet.EOCUserBaseURL + txtEOCUserID.Text);
+         try
+         {
+            Process.Start(String.Concat(PreferenceSet.EOCUserBaseURL, txtEOCUserID.Text));
+         }
+         catch (Exception ex)
+         {
+            Debug.WriteToHfmConsole(TraceLevel.Error,
+                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            MessageBox.Show("Failed to show EOC User Stats page.");
+         }
       }
 
       private void linkStanford_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
       {
-         System.Diagnostics.Process.Start(PreferenceSet.StanfordBaseURL + txtStanfordUserID.Text);
+         try
+         {
+            Process.Start(String.Concat(PreferenceSet.StanfordBaseURL, txtStanfordUserID.Text));
+         }
+         catch (Exception ex)
+         {
+            Debug.WriteToHfmConsole(TraceLevel.Error,
+                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            MessageBox.Show("Failed to show Stanford User Stats page.");
+         }
       }
 
       private void linkTeam_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
       {
-         System.Diagnostics.Process.Start(PreferenceSet.EOCTeamBaseURL + txtStanfordTeamID.Text);
+         try
+         {
+            Process.Start(String.Concat(PreferenceSet.EOCTeamBaseURL, txtStanfordTeamID.Text));
+         }
+         catch (Exception ex)
+         {
+            Debug.WriteToHfmConsole(TraceLevel.Error,
+                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            MessageBox.Show("Failed to show EOC Team Stats page.");
+         }
       }
 
       private void EnableProxy()
@@ -351,41 +380,50 @@ namespace HFM.Forms
 
       private void btnBrowseConfigFile_Click(object sender, EventArgs e)
       {
-         openConfigDialog.RestoreDirectory = true;
-         openConfigDialog.CheckPathExists = true;
-         openConfigDialog.InitialDirectory = System.IO.Path.GetFullPath(txtDefaultConfigFile.Text);
-         openConfigDialog.FileName = System.IO.Path.GetFileName(txtDefaultConfigFile.Text);
-         if (openConfigDialog.ShowDialog() == DialogResult.OK)
-         {
-            txtDefaultConfigFile.Text = openConfigDialog.FileName;
-         }
+         DoFolderBrowse(txtDefaultConfigFile, "hfm", "HFM Configuration Files|*.hfm");
       }
 
       private void btnBrowseLogViewer_Click(object sender, EventArgs e)
       {
-         openConfigDialog.RestoreDirectory = true;
-         openConfigDialog.DefaultExt = "exe";
-         openConfigDialog.Filter = "Program Files|*.exe";
-         openConfigDialog.CheckPathExists = true;
-         openConfigDialog.InitialDirectory = System.IO.Path.GetFullPath(txtLogFileViewer.Text);
-         openConfigDialog.FileName = System.IO.Path.GetFileName(txtLogFileViewer.Text);
-         if (openConfigDialog.ShowDialog() == DialogResult.OK)
-         {
-            txtLogFileViewer.Text = openConfigDialog.FileName;
-         }
+         DoFolderBrowse(txtLogFileViewer, "exe", "Program Files|*.exe");
       }
 
       private void btnBrowseFileExplorer_Click(object sender, EventArgs e)
       {
-         openConfigDialog.RestoreDirectory = true;
-         openConfigDialog.DefaultExt = "exe";
-         openConfigDialog.Filter = "Program Files|*.exe";
-         openConfigDialog.CheckPathExists = true;
-         openConfigDialog.InitialDirectory = System.IO.Path.GetFullPath(txtFileExplorer.Text);
-         openConfigDialog.FileName = System.IO.Path.GetFileName(txtFileExplorer.Text);
+         DoFolderBrowse(txtFileExplorer, "exe", "Program Files|*.exe");
+      }
+      
+      private void DoFolderBrowse(Control txt, string extension, string filter)
+      {
+         if (String.IsNullOrEmpty(txt.Text) == false)
+         {
+            FileInfo fileInfo = new FileInfo(txt.Text);
+            if (fileInfo.Exists)
+            {
+               openConfigDialog.InitialDirectory = fileInfo.DirectoryName;
+               openConfigDialog.FileName = fileInfo.Name;
+            }
+            else
+            {
+               DirectoryInfo dirInfo = new DirectoryInfo(txt.Text);
+               if (dirInfo.Exists)
+               {
+                  openConfigDialog.InitialDirectory = dirInfo.FullName;
+                  openConfigDialog.FileName = String.Empty;
+               }
+            }
+         }
+         else
+         {
+            openConfigDialog.InitialDirectory = String.Empty;
+            openConfigDialog.FileName = String.Empty;
+         }
+
+         openConfigDialog.DefaultExt = extension;
+         openConfigDialog.Filter = filter;
          if (openConfigDialog.ShowDialog() == DialogResult.OK)
          {
-            txtFileExplorer.Text = openConfigDialog.FileName;
+            txt.Text = openConfigDialog.FileName;
          }
       }
 

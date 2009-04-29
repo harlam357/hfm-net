@@ -31,6 +31,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 
+using HFM.Classes;
 using HFM.Instances;
 using HFM.Instrumentation;
 using HFM.Proteins;
@@ -142,7 +143,10 @@ namespace HFM.Forms
          InitializeComponent();
 
          // Set Main Form Text
-         base.Text += String.Format(" - v{0} Beta", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version);
+         FileVersionInfo fileVersionInfo =
+            FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetEntryAssembly().Location);
+         base.Text += String.Format(" v{0}.{1}.{2} - Build {3} - Beta", fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
+                                                                          fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
 
          // Create Messages Window
          _frmMessages = new frmMessages();
@@ -157,8 +161,12 @@ namespace HFM.Forms
          ClearCacheFolder();
          // Clear the UI
          ClearUI();
+         // Add Dummy Column
+         dataGridView1.Columns["Dummy"].HeaderText = String.Empty;
          // Restore Form Preferences
          RestoreFormPreferences();
+         // Add Column Selector
+         new DataGridViewColumnSelector(dataGridView1);
       }
 
       /// <summary>
@@ -1193,6 +1201,50 @@ namespace HFM.Forms
       private void mnuToolsDownloadProjects_Click(object sender, EventArgs e)
       {
          ProteinCollection.Instance.DownloadFromStanford();
+      }
+      #endregion
+
+      #region Web Menu Click Handlers
+      private void mnuWebEOCUser_Click(object sender, EventArgs e)
+      {
+         try
+         {
+            Process.Start(PreferenceSet.Instance.EOCUserURL);
+         }
+         catch (Exception ex)
+         {
+            Debug.WriteToHfmConsole(TraceLevel.Error,
+                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            MessageBox.Show("Failed to show EOC User Stats page.");
+         }
+      }
+
+      private void mnuWebStanfordUser_Click(object sender, EventArgs e)
+      {
+         try
+         {
+            Process.Start(PreferenceSet.Instance.StanfordUserURL);
+         }
+         catch (Exception ex)
+         {
+            Debug.WriteToHfmConsole(TraceLevel.Error,
+                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            MessageBox.Show("Failed to show Stanford User Stats page.");
+         }
+      }
+
+      private void mnuWebEOCTeam_Click(object sender, EventArgs e)
+      {
+         try
+         {
+            Process.Start(PreferenceSet.Instance.EOCTeamURL);
+         }
+         catch (Exception ex)
+         {
+            Debug.WriteToHfmConsole(TraceLevel.Error,
+                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            MessageBox.Show("Failed to show EOC Team Stats page.");
+         }
       }
       #endregion
 

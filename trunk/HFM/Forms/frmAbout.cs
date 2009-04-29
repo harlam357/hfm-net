@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace HFM.Forms
@@ -28,7 +30,11 @@ namespace HFM.Forms
         {
             InitializeComponent();
 
-            lblVersion.Text = "Version " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            //lblVersion.Text = "Version " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            FileVersionInfo fileVersionInfo =
+               FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetEntryAssembly().Location);
+            lblVersion.Text = "Version " + String.Format("{0}.{1}.{2} - Build {3}", fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
+                                                                                        fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
         }
 
         //private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
