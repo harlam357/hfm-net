@@ -33,7 +33,7 @@ namespace HFM.Instrumentation
       {
          DateTime dateTime = DateTime.Now;
       
-         string traceLine = String.Format("[{0}-{1}] - {2}", dateTime.ToShortDateString(), dateTime.ToLongTimeString(), message);
+         string traceLine = String.Format("[{0}-{1}] {2}", dateTime.ToShortDateString(), dateTime.ToLongTimeString(), message);
 
          base.WriteLine(traceLine);
          OnTextMessage(new TextMessageEventArgs(traceLine));

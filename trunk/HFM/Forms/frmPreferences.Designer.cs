@@ -77,6 +77,9 @@ namespace HFM.Forms
            this.tabControl1 = new System.Windows.Forms.TabControl();
            this.tabSchdTasks = new System.Windows.Forms.TabPage();
            this.tabDefaults = new System.Windows.Forms.TabPage();
+           this.grpDebugMessageLevel = new System.Windows.Forms.GroupBox();
+           this.cboMessageLevel = new System.Windows.Forms.ComboBox();
+           this.label6 = new System.Windows.Forms.Label();
            this.grpFileExplorer = new System.Windows.Forms.GroupBox();
            this.btnBrowseFileExplorer = new System.Windows.Forms.Button();
            this.label4 = new System.Windows.Forms.Label();
@@ -123,6 +126,7 @@ namespace HFM.Forms
            this.tabControl1.SuspendLayout();
            this.tabSchdTasks.SuspendLayout();
            this.tabDefaults.SuspendLayout();
+           this.grpDebugMessageLevel.SuspendLayout();
            this.grpFileExplorer.SuspendLayout();
            this.grpLogFileViewer.SuspendLayout();
            this.grpDefaultConfig.SuspendLayout();
@@ -432,6 +436,7 @@ namespace HFM.Forms
            // 
            // tabDefaults
            // 
+           this.tabDefaults.Controls.Add(this.grpDebugMessageLevel);
            this.tabDefaults.Controls.Add(this.grpFileExplorer);
            this.tabDefaults.Controls.Add(this.grpLogFileViewer);
            this.tabDefaults.Controls.Add(this.grpDefaultConfig);
@@ -441,6 +446,35 @@ namespace HFM.Forms
            this.tabDefaults.TabIndex = 4;
            this.tabDefaults.Text = "Defaults";
            this.tabDefaults.UseVisualStyleBackColor = true;
+           // 
+           // grpDebugMessageLevel
+           // 
+           this.grpDebugMessageLevel.Controls.Add(this.cboMessageLevel);
+           this.grpDebugMessageLevel.Controls.Add(this.label6);
+           this.grpDebugMessageLevel.Location = new System.Drawing.Point(6, 233);
+           this.grpDebugMessageLevel.Name = "grpDebugMessageLevel";
+           this.grpDebugMessageLevel.Size = new System.Drawing.Size(485, 60);
+           this.grpDebugMessageLevel.TabIndex = 3;
+           this.grpDebugMessageLevel.TabStop = false;
+           this.grpDebugMessageLevel.Text = "Messages";
+           // 
+           // cboMessageLevel
+           // 
+           this.cboMessageLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+           this.cboMessageLevel.FormattingEnabled = true;
+           this.cboMessageLevel.Location = new System.Drawing.Point(153, 25);
+           this.cboMessageLevel.Name = "cboMessageLevel";
+           this.cboMessageLevel.Size = new System.Drawing.Size(75, 21);
+           this.cboMessageLevel.TabIndex = 2;
+           // 
+           // label6
+           // 
+           this.label6.AutoSize = true;
+           this.label6.Location = new System.Drawing.Point(30, 28);
+           this.label6.Name = "label6";
+           this.label6.Size = new System.Drawing.Size(117, 13);
+           this.label6.TabIndex = 1;
+           this.label6.Text = "Debug Message Level:";
            // 
            // grpFileExplorer
            // 
@@ -870,6 +904,8 @@ namespace HFM.Forms
            this.tabControl1.ResumeLayout(false);
            this.tabSchdTasks.ResumeLayout(false);
            this.tabDefaults.ResumeLayout(false);
+           this.grpDebugMessageLevel.ResumeLayout(false);
+           this.grpDebugMessageLevel.PerformLayout();
            this.grpFileExplorer.ResumeLayout(false);
            this.grpFileExplorer.PerformLayout();
            this.grpLogFileViewer.ResumeLayout(false);
@@ -959,5 +995,8 @@ namespace HFM.Forms
        private System.Windows.Forms.Label label5;
        private System.Windows.Forms.RadioButton radioSchedule;
        private System.Windows.Forms.RadioButton radioFullRefresh;
+       private System.Windows.Forms.GroupBox grpDebugMessageLevel;
+       private System.Windows.Forms.ComboBox cboMessageLevel;
+       private System.Windows.Forms.Label label6;
     }
 }

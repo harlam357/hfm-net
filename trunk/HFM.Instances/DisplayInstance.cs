@@ -10,11 +10,11 @@ namespace HFM.Instances
       /// <summary>
       /// 
       /// </summary>
-      private eClientStatus _Status;
+      private ClientStatus _Status;
       /// <summary>
       /// 
       /// </summary>
-      public eClientStatus Status
+      public ClientStatus Status
       {
          get { return _Status; }
       }
@@ -46,11 +46,11 @@ namespace HFM.Instances
       /// <summary>
       /// 
       /// </summary>
-      private eClientType _ClientType;
+      private ClientType _ClientType;
       /// <summary>
       /// 
       /// </summary>
-      public eClientType ClientType
+      public ClientType ClientType
       {
          get { return _ClientType; }
       }
@@ -209,10 +209,10 @@ namespace HFM.Instances
       
       public void Load(ClientInstance baseInstance)
       {
-         _Status = baseInstance.UnitInfo.Status;
+         _Status = baseInstance.Status;
          _Progress = String.Format("{0:00}%", baseInstance.UnitInfo.PercentComplete);
-         _InstanceName = baseInstance.Name;
-         _ClientType = baseInstance.UnitInfo.ClientType;
+         _InstanceName = baseInstance.InstanceName;
+         _ClientType = baseInstance.UnitInfo.TypeOfClient;
          _TimePerFrame = baseInstance.UnitInfo.TimePerFrame;
          _PPD = Math.Round(baseInstance.UnitInfo.PPD, 1);
          _PPD_MHz = Math.Round(baseInstance.UnitInfo.PPD / baseInstance.ClientProcessorMegahertz, 3);

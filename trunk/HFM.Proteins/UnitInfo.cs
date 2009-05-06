@@ -21,395 +21,349 @@
 using System;
 using System.Diagnostics;
 
-using Debug=HFM.Instrumentation.Debug;
+using Debug = HFM.Instrumentation.Debug;
 
 namespace HFM.Proteins
 {
-    public enum eClientStatus
-    {
-       Unknown,
-       Offline,
-       Stopped,
-       Hung,
-       Paused,
-       RunningNoFrameTimes,
-       Running   
-    }
+   #region Enum
+   public enum ClientType
+   {
+      Unknown,
+      Standard,
+      SMP,
+      GPU
+   } 
+   #endregion
 
-    public enum eClientType
-    {
-       Unknown,
-       Standard,
-       SMP,
-       GPU
-    }
-    
-    /// <summary>
-    /// Contains the state of a protein in progress
-    /// </summary>
-    public class UnitInfo
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        private eClientStatus _Status;
-        /// <summary>
-        /// 
-        /// </summary>
-        public eClientStatus Status
-        {
-           get { return _Status; }
-           set { _Status = value; }
-        }   
+   /// <summary>
+   /// Contains the state of a protein in progress
+   /// </summary>
+   public class UnitInfo
+   {
+      #region Public Properties and Related Private Members
+      /// <summary>
+      /// Client Type for this work unit
+      /// </summary>
+      private ClientType _TypeOfClient;
+      /// <summary>
+      /// Client Type for this work unit
+      /// </summary>
+      public ClientType TypeOfClient
+      {
+         get { return _TypeOfClient; }
+         set { _TypeOfClient = value; }
+      }
 
-        /// <summary>
-        /// Private member holding the name of the unit
-        /// </summary>
-        private String _ProteinName = String.Empty;
-        /// <summary>
-        /// 
-        /// </summary>
-        public String ProteinName
-        {
-            get { return _ProteinName; }
-            set { _ProteinName = value; }
-        }
+      /// <summary>
+      /// Core Version Number
+      /// </summary>
+      private string _CoreVersion = String.Empty;
+      /// <summary>
+      /// Core Version Number
+      /// </summary>
+      public string CoreVersion
+      {
+         get { return _CoreVersion; }
+         set { _CoreVersion = value; }
+      }
 
-        /// <summary>
-        /// Private member holding the download time of the unit
-        /// </summary>
-        private DateTime _DownloadTime;
-        /// <summary>
-        /// Date/time the unit was downloaded
-        /// </summary>
-        public DateTime DownloadTime
-        {
-            get { return _DownloadTime; }
-            set { _DownloadTime = value; }
-        }
+      /// <summary>
+      /// Date/time the unit was downloaded
+      /// </summary>
+      private DateTime _DownloadTime;
+      /// <summary>
+      /// Date/time the unit was downloaded
+      /// </summary>
+      public DateTime DownloadTime
+      {
+         get { return _DownloadTime; }
+         set { _DownloadTime = value; }
+      }
 
-        /// <summary>
-        /// Private member holding the percentage progress of the unit
-        /// </summary>
-        private int _PercentComplete;
-        /// <summary>
-        /// Current progress (percentage) of the unit
-        /// </summary>
-        public int PercentComplete
-        {
-            get { return _PercentComplete; }
-            set { _PercentComplete = value; }
-        }
+      /// <summary>
+      /// Date/time the unit is due (preferred deadline)
+      /// </summary>
+      private DateTime _DueTime;
+      /// <summary>
+      /// Date/time the unit is due (preferred deadline)
+      /// </summary>
+      public DateTime DueTime
+      {
+         get { return _DueTime; }
+         set { _DueTime = value; }
+      }
 
-        /// <summary>
-        /// Private member holding the frame progress of the unit
-        /// </summary>
-        private int _FramesComplete;
-        /// <summary>
-        /// 
-        /// </summary>
-        public int FramesComplete
-        {
-            get { return _FramesComplete; }
-            set { _FramesComplete = value; }
-        }
+      /// <summary>
+      /// Frame progress of the unit
+      /// </summary>
+      private int _FramesComplete;
+      /// <summary>
+      /// Frame progress of the unit
+      /// </summary>
+      public int FramesComplete
+      {
+         get { return _FramesComplete; }
+         set { _FramesComplete = value; }
+      }
 
-        /// <summary>
-        /// Private member holding the time per frame of the unit
-        /// </summary>
-        private TimeSpan _TimePerFrame;
-        /// <summary>
-        /// 
-        /// </summary>
-        public TimeSpan TimePerFrame
-        {
-            get { return _TimePerFrame; }
-            set { _TimePerFrame = value; }
-        }
-
-        /// <summary>
-        /// Private member holding the time that the last frame completed
-        /// </summary>
-        private TimeSpan _TimeOfLastFrame;
-        /// <summary>
-        /// Time that the last frame completed
-        /// </summary>
-        public TimeSpan TimeOfLastFrame
-        {
-            get { return _TimeOfLastFrame; }
-            set { _TimeOfLastFrame = value; }
-        }
-
-        /// <summary>
-        /// Private variable holding the PPD rating for this instance
-        /// </summary>
-        private Double _PPD;
-        /// <summary>
-        /// PPD rating for this instance
-        /// </summary>
-        public Double PPD
-        {
-            get
+      /// <summary>
+      /// Current progress (percentage) of the unit
+      /// </summary>
+      private int _PercentComplete;
+      /// <summary>
+      /// Current progress (percentage) of the unit
+      /// </summary>
+      public int PercentComplete
+      {
+         get { return _PercentComplete; }
+         set
+         {
+            // Add check for valid values instead of just accepting whatever is given - Issue 2
+            if (value < 0 || value > 100)
             {
-                return _PPD;
+               _PercentComplete = 0;
             }
-            set { _PPD = value; }
-        }
-
-        /// <summary>
-        /// Private variable holding the UPD rating for this instance
-        /// </summary>
-        private Double _UPD;
-        /// <summary>
-        /// UPD rating for this instance
-        /// </summary>
-        public Double UPD
-        {
-            get
+            else
             {
-                return _UPD;
+               _PercentComplete = value;
             }
-            set { _UPD = value; }
-        }
+         }
+      }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        private Int32 _RawComplete;
+      /// <summary>
+      /// Project ID Number
+      /// </summary>
+      private Int32 _ProjectID;
+      /// <summary>
+      /// Project ID Number
+      /// </summary>
+      public Int32 ProjectID
+      {
+         get { return _ProjectID; }
+         set { _ProjectID = value; }
+      }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public Int32 RawFramesComplete
-        {
-            get { return _RawComplete; }
-            set
+      /// <summary>
+      /// Project ID (Run)
+      /// </summary>
+      private Int32 _ProjectRun;
+      /// <summary>
+      /// Project ID (Run)
+      /// </summary>
+      public Int32 ProjectRun
+      {
+         get { return _ProjectRun; }
+         set { _ProjectRun = value; }
+      }
+
+      /// <summary>
+      /// Project ID (Clone)
+      /// </summary>
+      private Int32 _ProjectClone;
+      /// <summary>
+      /// Project ID (Clone)
+      /// </summary>
+      public Int32 ProjectClone
+      {
+         get { return _ProjectClone; }
+         set { _ProjectClone = value; }
+      }
+
+      /// <summary>
+      /// Project ID (Gen)
+      /// </summary>
+      private Int32 _ProjectGen;
+      /// <summary>
+      /// Project ID (Gen)
+      /// </summary>
+      public Int32 ProjectGen
+      {
+         get { return _ProjectGen; }
+         set { _ProjectGen = value; }
+      }
+      
+      /// <summary>
+      /// Name of the unit
+      /// </summary>
+      private String _ProteinName = String.Empty;
+      /// <summary>
+      /// Name of the unit
+      /// </summary>
+      public String ProteinName
+      {
+         get { return _ProteinName; }
+         set { _ProteinName = value; }
+      }
+
+      /// <summary>
+      /// Tag string as read from the UnitInfo.txt file
+      /// </summary>
+      private string _ProteinTag = String.Empty;
+      /// <summary>
+      /// Tag string as read from the UnitInfo.txt file
+      /// </summary>
+      public string ProteinTag
+      {
+         get { return _ProteinTag; }
+         set { _ProteinTag = value; }
+      }
+
+      /// <summary>
+      /// Raw number of frames complete (this is not always a percent value)
+      /// </summary>
+      private Int32 _RawComplete;
+      /// <summary>
+      /// Raw number of frames complete (this is not always a percent value)
+      /// </summary>
+      public Int32 RawFramesComplete
+      {
+         get { return _RawComplete; }
+         set
+         {
+            _RawComplete = value;
+         }
+      }
+
+      /// <summary>
+      /// Raw total number of frames (this is not always 100)
+      /// </summary>
+      private Int32 _RawTotal;
+      /// <summary>
+      /// Raw total number of frames (this is not always 100)
+      /// </summary>
+      public Int32 RawFramesTotal
+      {
+         get { return _RawTotal; }
+         set
+         {
+            _RawTotal = value;
+         }
+      }
+
+      /// <summary>
+      /// Timestamp from log file for the last completed frame
+      /// </summary>
+      private TimeSpan _TimeOfLastFrame;
+      /// <summary>
+      /// Timestamp from log file for the last completed frame
+      /// </summary>
+      public TimeSpan TimeOfLastFrame
+      {
+         get { return _TimeOfLastFrame; }
+         set { _TimeOfLastFrame = value; }
+      }
+
+      #region Time Based Values
+      /// <summary>
+      /// Time per frame (TPF) of the unit
+      /// </summary>
+      private TimeSpan _TimePerFrame;
+      /// <summary>
+      /// Time per frame (TPF) of the unit
+      /// </summary>
+      public TimeSpan TimePerFrame
+      {
+         get { return _TimePerFrame; }
+         set { _TimePerFrame = value; }
+      }
+
+      /// <summary>
+      /// Units per day (UPD) rating for this instance
+      /// </summary>
+      private Double _UPD;
+      /// <summary>
+      /// Units per day (UPD) rating for this instance
+      /// </summary>
+      public Double UPD
+      {
+         get
+         {
+            return _UPD;
+         }
+         set { _UPD = value; }
+      }
+
+      /// <summary>
+      /// Points per day (PPD) rating for this instance
+      /// </summary>
+      private Double _PPD;
+      /// <summary>
+      /// Points per day (PPD) rating for this instance
+      /// </summary>
+      public Double PPD
+      {
+         get
+         {
+            return _PPD;
+         }
+         set { _PPD = value; }
+      }
+
+      /// <summary>
+      /// Esimated time of arrival (ETA) for this protein
+      /// </summary>
+      private TimeSpan _ETA;
+      /// <summary>
+      /// Esimated time of arrival (ETA) for this protein
+      /// </summary>
+      public TimeSpan ETA
+      {
+         get { return _ETA; }
+         set { _ETA = value; }
+      }
+
+      /// <summary>
+      /// Time per section based on current PPD calculation setting (readonly)
+      /// </summary>
+      public Int32 RawTimePerSection
+      {
+         get
+         {
+            switch (Preferences.PreferenceSet.Instance.PpdCalculation)
             {
-                _RawComplete = value;
+               case Preferences.ePpdCalculation.LastFrame:
+                  return _RawTimePerLastSection;
+               case Preferences.ePpdCalculation.LastThreeFrames:
+                  return _RawTimePerThreeSections;
             }
-        }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        private Int32 _RawTotal;
-        /// <summary>
-        /// 
-        /// </summary>
-        public Int32 RawFramesTotal
-        {
-            get { return _RawTotal; }
-            set
-            {
-                _RawTotal = value;
-            }
-        }
+            return 0;
+         }
+      }
 
-        public Int32 RawTimePerSection
-        {
-            get 
-            { 
-                switch (Preferences.PreferenceSet.Instance.PpdCalculation)
-                {
-                    case Preferences.ePpdCalculation.LastFrame:
-                        return _RawTimePerLastSection;
-                    case Preferences.ePpdCalculation.LastThreeFrames:
-                        return _RawTimePerThreeSections;
-                }
-                
-                return 0;
-            }
-        }
+      /// <summary>
+      /// Average frame time over the last three sections
+      /// </summary>
+      private Int32 _RawTimePerThreeSections = 0;
+      /// <summary>
+      /// Average frame time over the last three sections
+      /// </summary>
+      public Int32 RawTimePerThreeSections
+      {
+         get { return _RawTimePerThreeSections; }
+         set
+         {
+            _RawTimePerThreeSections = value;
+         }
+      }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        private Int32 _RawTimePerThreeSections = 0;
-        /// <summary>
-        /// 
-        /// </summary>
-        public Int32 RawTimePerThreeSections
-        {
-            get { return _RawTimePerThreeSections; }
-            set
-            {
-                _RawTimePerThreeSections = value;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private Int32 _RawTimePerLastSection = 0;
-        /// <summary>
-        /// 
-        /// </summary>
-        public Int32 RawTimePerLastSection
-        {
-           get { return _RawTimePerLastSection; }
-           set
-           {
-              _RawTimePerLastSection = value;
-           }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private string _ProteinTag = String.Empty;
-        /// <summary>
-        /// 
-        /// </summary>
-        public string ProteinTag
-        {
-            get { return _ProteinTag; }
-            set { _ProteinTag = value; }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private DateTime _DueTime;
-        /// <summary>
-        /// 
-        /// </summary>
-        public DateTime DueTime
-        {
-            get { return _DueTime; }
-            set { _DueTime = value; }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private Int32 _ProjectID;
-        /// <summary>
-        /// 
-        /// </summary>
-        public Int32 ProjectID
-        {
-            get { return _ProjectID; }
-            set { _ProjectID = value; }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private Int32 _ProjectRun;
-        /// <summary>
-        /// 
-        /// </summary>
-        public Int32 ProjectRun
-        {
-            get { return _ProjectRun; }
-            set { _ProjectRun = value; }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private Int32 _ProjectClone;
-        /// <summary>
-        /// 
-        /// </summary>
-        public Int32 ProjectClone
-        {
-            get { return _ProjectClone; }
-            set { _ProjectClone = value; }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private Int32 _ProjectGen;
-        /// <summary>
-        /// 
-        /// </summary>
-        public Int32 ProjectGen
-        {
-            get { return _ProjectGen; }
-            set { _ProjectGen = value; }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private eClientType _ClientType;
-        /// <summary>
-        /// 
-        /// </summary>
-        public eClientType ClientType
-        {
-           get { return _ClientType; }
-           set { _ClientType = value; }
-        }
-
-        /// <summary>
-        /// Private variable holding the ETA
-        /// </summary>
-        private TimeSpan _ETA;
-        /// <summary>
-        /// ETA for this instance
-        /// </summary>
-        public TimeSpan ETA
-        {
-           get { return _ETA; }
-           set { _ETA = value; }
-        }
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //private eCoreType _CoreType;
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //public eCoreType CoreType
-        //{
-        //   get { return _CoreType; }
-        //   set { _CoreType = value; }
-        //}
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        private string _CoreVersion = String.Empty;
-        /// <summary>
-        /// 
-        /// </summary>
-        public string CoreVersion
-        {
-           get { return _CoreVersion; }
-           set { _CoreVersion = value; }
-        }
-
-        public void SetTimeBasedValues(string InstanceName)
-        {
-            //DateTime Start = Debug.ExecStart;
-
-            if ((_RawTotal != 0) && (_RawComplete != 0) && (RawTimePerSection != 0))
-            {
-                try
-                {
-                    Int32 FramesTotal = ProteinCollection.Instance[ProjectID].Frames;
-                    Int32 RawScaleFactor = RawFramesTotal / FramesTotal;
-
-                    FramesComplete = RawFramesComplete / RawScaleFactor;
-                    PercentComplete = FramesComplete * 100 / FramesTotal;
-                    TimePerFrame = new TimeSpan(0, 0, Convert.ToInt32(RawTimePerSection));
-
-                    UPD = 86400 / (TimePerFrame.TotalSeconds * FramesTotal);
-                    PPD = Math.Round(UPD * ProteinCollection.Instance[ProjectID].Credit, 5);
-                    ETA = new TimeSpan((100 - PercentComplete) * TimePerFrame.Ticks);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-                }
-            }
-            
-            //Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, InstanceName, Debug.GetExecTime(Start)));
-            return;
-        }
-    }
+      /// <summary>
+      /// Frame time of the last section
+      /// </summary>
+      private Int32 _RawTimePerLastSection = 0;
+      /// <summary>
+      /// Frame time of the last section
+      /// </summary>
+      public Int32 RawTimePerLastSection
+      {
+         get { return _RawTimePerLastSection; }
+         set
+         {
+            _RawTimePerLastSection = value;
+         }
+      }
+      #endregion
+      
+      #endregion
+   }
 }

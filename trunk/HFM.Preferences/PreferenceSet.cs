@@ -277,6 +277,13 @@ namespace HFM.Preferences
          set { _WebGenAfterRefresh = value; }
       }
       
+      private int _MessageLevel;
+      public int MessageLevel
+      {
+         get { return _MessageLevel; }
+         set { _MessageLevel = value; }
+      }
+      
       public String AppPath
       {
          get
@@ -439,6 +446,7 @@ namespace HFM.Preferences
          _FileExplorer = Settings.Default.FileExplorer;
          _ProjectDownloadUrl = Settings.Default.ProjectDownloadUrl;
          _WebGenAfterRefresh = Settings.Default.WebGenAfterRefresh;
+         _MessageLevel = Settings.Default.MessageLevel;
 
          _AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
          _AppDataPath = Path.Combine(_AppDataPath, System.Reflection.Assembly.GetEntryAssembly().GetName().Name); ;
@@ -515,6 +523,7 @@ namespace HFM.Preferences
             Settings.Default.FileExplorer = _FileExplorer;
             Settings.Default.ProjectDownloadUrl = _ProjectDownloadUrl;
             Settings.Default.WebGenAfterRefresh = _WebGenAfterRefresh;
+            Settings.Default.MessageLevel = _MessageLevel;
 
             Settings.Default.Save();
          }

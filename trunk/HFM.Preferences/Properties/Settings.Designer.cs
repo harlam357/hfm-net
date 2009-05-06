@@ -394,7 +394,7 @@ namespace HFM.Preferences.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://fah-web.stanford.edu/psummaryC.html")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://fah-web.stanford.edu/psummary.html")]
         public string ProjectDownloadUrl {
             get {
                 return ((string)(this["ProjectDownloadUrl"]));
@@ -413,6 +413,18 @@ namespace HFM.Preferences.Properties {
             }
             set {
                 this["WebGenAfterRefresh"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int MessageLevel {
+            get {
+                return ((int)(this["MessageLevel"]));
+            }
+            set {
+                this["MessageLevel"] = value;
             }
         }
     }

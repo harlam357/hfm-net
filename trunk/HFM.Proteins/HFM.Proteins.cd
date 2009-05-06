@@ -9,42 +9,35 @@
     </TypeIdentifier>
   </Class>
   <Class Name="HFM.Proteins.ProjectInfoUpdatedEventArgs" Collapsed="true">
-    <Position X="7.25" Y="0.5" Width="1.5" />
+    <Position X="5.25" Y="4" Width="1.5" />
     <TypeIdentifier>
       <FileName>ProteinCollection.cs</FileName>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
   </Class>
-  <Class Name="HFM.Proteins.ProteinCollection" Collapsed="true">
-    <Position X="5.5" Y="0.5" Width="1.5" />
+  <Class Name="HFM.Proteins.ProteinCollection">
+    <Position X="5" Y="0.5" Width="2" />
     <TypeIdentifier>
       <FileName>ProteinCollection.cs</FileName>
-      <HashCode>AEIAAAIAAAAAAAAAAACEEAAAAIBAAAAAQAAAAAAAAAA=</HashCode>
+      <HashCode>AEIAAAAAAABAAAAAAACEAAAAAIBAIAAAQAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="HFM.Proteins.UnitInfo">
     <Position X="0.5" Y="0.5" Width="2" />
     <TypeIdentifier>
       <FileName>UnitInfo.cs</FileName>
-      <HashCode>ABlAl4REAAQAAAYIkoDAAEAiDEIAACAJACAECEhgEBA=</HashCode>
+      <HashCode>ABhAl4RAAAQACAIIkgBAAEAiDEIAACAJACAECEhgEBA=</HashCode>
     </TypeIdentifier>
   </Class>
-  <Enum Name="HFM.Proteins.eClientStatus" Collapsed="true">
-    <Position X="5.5" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <FileName>UnitInfo.cs</FileName>
-      <HashCode>QAAgAAAAAAIAAAEAAAgAAAAAAAAAAAAIAAAAAAAAABA=</HashCode>
-    </TypeIdentifier>
-  </Enum>
-  <Enum Name="HFM.Proteins.eClientType" Collapsed="true">
-    <Position X="7.25" Y="1.5" Width="1.5" />
+  <Enum Name="HFM.Proteins.ClientType">
+    <Position X="5.25" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <FileName>UnitInfo.cs</FileName>
       <HashCode>AAAAAAAAAAAAAAAAAAAAQAAIAIAAAAAAAAAAAAAAABA=</HashCode>
     </TypeIdentifier>
   </Enum>
   <Delegate Name="HFM.Proteins.ProjectInfoUpdatedEventHandler" Collapsed="true">
-    <Position X="5.5" Y="2.25" Width="1.5" />
+    <Position X="5.25" Y="4.75" Width="1.5" />
     <TypeIdentifier>
       <FileName>ProteinCollection.cs</FileName>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAQAAAA=</HashCode>

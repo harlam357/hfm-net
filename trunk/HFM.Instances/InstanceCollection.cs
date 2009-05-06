@@ -200,7 +200,7 @@ namespace HFM.Instances
         /// <param name="instance">Instance</param>
         public void Add(ClientInstance instance)
         {
-           Add(instance.Name, instance);
+           Add(instance.InstanceName, instance);
         }
 
         /// <summary>
@@ -258,7 +258,7 @@ namespace HFM.Instances
               foreach (ClientInstance instance in _instanceCollection.Values)
               {
                  instance.SetTimeBasedValues();
-                 DisplayInstance findInstance = FindDisplayInstance(_displayCollection, instance.Name);
+                 DisplayInstance findInstance = FindDisplayInstance(_displayCollection, instance.InstanceName);
                  if (findInstance != null)
                  {
                     findInstance.Load(instance);

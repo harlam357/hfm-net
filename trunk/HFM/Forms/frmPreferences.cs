@@ -81,9 +81,9 @@ namespace HFM.Forms
       {
          Prefs = PreferenceSet.Instance;
 
-         System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(Application.ExecutablePath.Substring(0, Application.ExecutablePath.LastIndexOf("\\") + 1) + "CSS");
+         DirectoryInfo di = new DirectoryInfo(Application.ExecutablePath.Substring(0, Application.ExecutablePath.LastIndexOf("\\") + 1) + "CSS");
          StyleList.Items.Clear();
-         foreach (System.IO.FileInfo fi in di.GetFiles())
+         foreach (FileInfo fi in di.GetFiles())
          {
             StyleList.Items.Add(fi.Name.ToLower().Replace(".css", ""));
          }
@@ -118,6 +118,19 @@ namespace HFM.Forms
          txtDefaultConfigFile.Text = Prefs.DefaultConfigFile;
          txtLogFileViewer.Text = Prefs.LogFileViewer;
          txtFileExplorer.Text = Prefs.FileExplorer;
+         cboMessageLevel.Items.Add(TraceLevel.Off.ToString());
+         cboMessageLevel.Items.Add(TraceLevel.Error.ToString());
+         cboMessageLevel.Items.Add(TraceLevel.Warning.ToString());
+         cboMessageLevel.Items.Add(TraceLevel.Info.ToString());
+         cboMessageLevel.Items.Add(TraceLevel.Verbose.ToString());
+         if (Prefs.MessageLevel >= 0 && Prefs.MessageLevel <= 4)
+         {
+            cboMessageLevel.SelectedIndex = Prefs.MessageLevel;
+         }
+         else
+         {
+            cboMessageLevel.SelectedIndex = (int)TraceLevel.Info;
+         }
 
          // Web
          txtEOCUserID.Text = Prefs.EOCUserID.ToString();
@@ -239,6 +252,7 @@ namespace HFM.Forms
          Prefs.DefaultConfigFile = txtDefaultConfigFile.Text;
          Prefs.LogFileViewer = txtLogFileViewer.Text;
          Prefs.FileExplorer = txtFileExplorer.Text;
+         Prefs.MessageLevel = cboMessageLevel.SelectedIndex;
 
          // Web Settings tab
          Prefs.EOCUserID = Int32.Parse(txtEOCUserID.Text);

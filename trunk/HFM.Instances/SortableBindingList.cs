@@ -227,13 +227,13 @@ namespace HFM.Instances
             //}
             if (_offlineClientsLast)
             {
-               if (((eClientStatus)xStatusValue).Equals(eClientStatus.Offline) && 
-                   ((eClientStatus)yStatusValue).Equals(eClientStatus.Offline) == false)
+               if (((ClientStatus)xStatusValue).Equals(ClientStatus.Offline) && 
+                   ((ClientStatus)yStatusValue).Equals(ClientStatus.Offline) == false)
                {
                   return 1;
                }
-               if (((eClientStatus)yStatusValue).Equals(eClientStatus.Offline) &&
-                   ((eClientStatus)xStatusValue).Equals(eClientStatus.Offline) == false)
+               if (((ClientStatus)yStatusValue).Equals(ClientStatus.Offline) &&
+                   ((ClientStatus)xStatusValue).Equals(ClientStatus.Offline) == false)
                {
                   return -1;
                }

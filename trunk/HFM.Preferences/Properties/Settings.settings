@@ -96,10 +96,13 @@
       <Value Profile="(Default)">explorer.exe</Value>
     </Setting>
     <Setting Name="ProjectDownloadUrl" Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://fah-web.stanford.edu/psummaryC.html</Value>
+      <Value Profile="(Default)">http://fah-web.stanford.edu/psummary.html</Value>
     </Setting>
     <Setting Name="WebGenAfterRefresh" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="MessageLevel" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3</Value>
     </Setting>
   </Settings>
 </SettingsFile>

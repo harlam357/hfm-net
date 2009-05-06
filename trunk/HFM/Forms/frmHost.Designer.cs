@@ -403,12 +403,12 @@ namespace HFM.Forms
            // 
            this.numOffset.Location = new System.Drawing.Point(9, 499);
            this.numOffset.Maximum = new decimal(new int[] {
-            120,
+            720,
             0,
             0,
             0});
            this.numOffset.Minimum = new decimal(new int[] {
-            120,
+            720,
             0,
             0,
             -2147483648});

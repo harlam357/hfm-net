@@ -84,22 +84,12 @@ namespace HFM.Instances
                String sData = tr.ReadLine();
                if (sData.StartsWith("Name: "))
                {
-                  // Note: Removed setting of ProteinID. I will use ProjectID and ProjectRunCloneGen instead.
-                  //Instance.UnitInfo.ProteinID = ProteinHelper.ExtractProteinID(sData.Substring(6));
                   Instance.UnitInfo.ProteinName = sData.Substring(6);
                }
                else if (sData.StartsWith("Tag:"))
                {
                   Instance.UnitInfo.ProteinTag = sData.Substring(5);
-                  try
-                  {
-                     SetProjectID(Instance, rProjectNumberFromTag.Match(Instance.UnitInfo.ProteinTag));
-                     _bProjectFound = true;
-                  }
-                  catch (FormatException)
-                  {
-                     //TODO: Log this failure
-                  }
+                  DoProjectIDMatch(Instance, rProjectNumberFromTag.Match(Instance.UnitInfo.ProteinTag));
                }
                else if (sData.StartsWith("Download time: "))
                {
@@ -117,8 +107,8 @@ namespace HFM.Instances
          }
          catch (Exception ex)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-            Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+            Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
             return false;
          }
          finally
@@ -129,7 +119,7 @@ namespace HFM.Instances
             }
          }
          
-         Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, Instance.Name, Debug.GetExecTime(Start)));
+         Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, Instance.InstanceName, Debug.GetExecTime(Start)));
          return true;
       }
 
@@ -148,7 +138,6 @@ namespace HFM.Instances
          DateTime Start = Debug.ExecStart;
 
          // declare variables for log reading and starting points
-         //StreamReader FAHlog;
          string[] FAHLogText = null;
          int clientStart = 0;
          int unitStart = 0;
@@ -166,11 +155,9 @@ namespace HFM.Instances
          _bProjectFound = false;
          _bCoreFound = false;
 
-         //while (FAHlog.Peek() != -1)
          // start the parse loop where the client started last
          for (int i = clientStart; i < FAHLogText.Length; i++)
          {
-            //string logLine = FAHlog.ReadLine();
             string logLine = FAHLogText[i];
             // add the line to the instance log holder
             //Instance.CurrentLogText.Add(logLine);
@@ -193,7 +180,7 @@ namespace HFM.Instances
             // begin true parsing at the begining of the most recent unit
             if (i > unitStart)
             {
-               Instance.UnitInfo.Status = eClientStatus.RunningNoFrameTimes;
+               Instance.Status = ClientStatus.RunningNoFrameTimes;
                
                // add the line to the instance log holder
                Instance.CurrentLogText.Add(logLine);
@@ -203,9 +190,9 @@ namespace HFM.Instances
 
                // don't start parsing frames until we know the client type
                // we have to know the project number before we know the client type (see SetProjectID)
-               if (Instance.UnitInfo.ClientType.Equals(eClientType.Unknown) == false)
+               if (Instance.UnitInfo.TypeOfClient.Equals(ClientType.Unknown) == false)
                {
-                  if (Instance.UnitInfo.ClientType.Equals(eClientType.GPU))
+                  if (Instance.UnitInfo.TypeOfClient.Equals(ClientType.GPU))
                   {
                      CheckForCompletedGpuFrame(Instance, logLine, ref time1, ref time2, ref time3, ref time4);
                   }
@@ -215,17 +202,17 @@ namespace HFM.Instances
                   }
                }
 
-               if (logLine.Contains("+ Paused"))
+               if (logLine.Contains("+ Paused")) // || logLine.Contains("+ Running on battery power"))
                {
-                  Instance.UnitInfo.Status = eClientStatus.Paused;
+                  Instance.Status = ClientStatus.Paused;
                }
-               if (logLine.Contains("+ Working ...") && Instance.UnitInfo.Status.Equals(eClientStatus.Paused))
+               if (logLine.Contains("+ Working ...") && Instance.Status.Equals(ClientStatus.Paused))
                {
-                  Instance.UnitInfo.Status = eClientStatus.RunningNoFrameTimes;
+                  Instance.Status = ClientStatus.RunningNoFrameTimes;
                }
                if (logLine.Contains("Folding@Home Client Shutdown"))
                {
-                  Instance.UnitInfo.Status = eClientStatus.Stopped;
+                  Instance.Status = ClientStatus.Stopped;
                   break; //we found a Shutdown message, quit parsing
                }
             }
@@ -234,15 +221,13 @@ namespace HFM.Instances
             Application.DoEvents();
          }
 
-         //FAHlog.Close();
-
          bool bResult = true;
          
-         if (Instance.UnitInfo.Status != eClientStatus.Stopped &&
-             Instance.UnitInfo.Status != eClientStatus.Paused)
+         if (Instance.Status != ClientStatus.Stopped &&
+             Instance.Status != ClientStatus.Paused)
          {
             DetermineStatus(Instance);
-            if (Instance.UnitInfo.Status.Equals(eClientStatus.Hung))
+            if (Instance.Status.Equals(ClientStatus.Hung))
             {
                // client is hung, clear PPD values
                bResult = false;
@@ -254,7 +239,7 @@ namespace HFM.Instances
             bResult = false;
          }
 
-         Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, Instance.Name, Debug.GetExecTime(Start)));
+         Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, Instance.InstanceName, Debug.GetExecTime(Start)));
 
          return bResult;
       }
@@ -273,13 +258,12 @@ namespace HFM.Instances
       {
          try
          {
-            //FAHlog = File.OpenText(LogFileName);
             FAHLogText = File.ReadAllLines(LogFileName);
             GetParsingStartPositionsFromLog(FAHLogText, out clientStart, out unitStart);
          }
          catch (Exception ex)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
             return false;
          }
          return true;
@@ -300,7 +284,6 @@ namespace HFM.Instances
          for (int i = FAHLogText.Length - 1; i >= 0; i--)
          {
             string s = FAHLogText[i];
-            //if (s.Contains("###############################################################################"))
             if (s.Contains("--- Opening Log file"))
             {
                clientStart = i;
@@ -329,15 +312,47 @@ namespace HFM.Instances
          Match mProjectNumber;
          if (_bProjectFound == false && (mProjectNumber = rProjectNumber.Match(logLine)).Success)
          {
+            DoProjectIDMatch(Instance, rProteinID.Match(mProjectNumber.Result("${ProjectNumber}")));
+         }
+      }
+      
+      /// <summary>
+      /// Attempts to Set Project ID with given Match.  If Project cannot be found in local cache, download again.
+      /// </summary>
+      /// <param name="Instance">Client Instance</param>
+      /// <param name="match">Regex Match containing Project data</param>
+      private void DoProjectIDMatch(ClientInstance Instance, Match match)
+      {
+         try
+         {
+            SetProjectID(Instance, match);
+            _bProjectFound = true;
+         }
+         catch (System.Collections.Generic.KeyNotFoundException)
+         {
+            Debug.WriteToHfmConsole(TraceLevel.Warning,
+                                    String.Format("{0} Project ID '{1}' not found in Protein Collection.",
+                                                  Debug.FunctionName, Instance.UnitInfo.ProjectID));
+                                                  
+            // If a Project cannot be identified using the local Project data, update Project data from Stanford. - Issue 4
+            Debug.WriteToHfmConsole(TraceLevel.Info,
+                                    String.Format("{0} Attempting to download new Project data...", Debug.FunctionName));
+            ProteinCollection.Instance.DownloadFromStanford(null);
             try
             {
-               SetProjectID(Instance, rProteinID.Match(mProjectNumber.Result("${ProjectNumber}")));
+               SetProjectID(Instance, rProjectNumberFromTag.Match(Instance.UnitInfo.ProteinTag));
                _bProjectFound = true;
             }
-            catch (FormatException)
+            catch (System.Collections.Generic.KeyNotFoundException)
             {
-               //TODO: Log this failure
+               Debug.WriteToHfmConsole(TraceLevel.Error,
+                                       String.Format("{0} Project ID '{1}' not found on Stanford Web Project Summary.",
+                                                     Debug.FunctionName, Instance.UnitInfo.ProjectID));
             }
+         }
+         catch (FormatException ex)
+         {
+            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", Debug.FunctionName, ex.Message));
          }
       }
 
@@ -346,6 +361,8 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="Instance">Client Instance</param>
       /// <param name="match">Project string match</param>
+      /// <exception cref="System.Collections.Generic.KeyNotFoundException">Thrown when Project ID cannot be found in Protein Collection.</exception>
+      /// <exception cref="FormatException">Thrown when Project ID string fails to parse.</exception>
       private static void SetProjectID(ClientInstance Instance, Match match)
       {
          if (match.Success)
@@ -355,20 +372,12 @@ namespace HFM.Instances
             Instance.UnitInfo.ProjectClone = int.Parse(match.Result("${Clone}"));
             Instance.UnitInfo.ProjectGen = int.Parse(match.Result("${Gen}"));
 
-            try
-            {
-               Instance.CurrentProtein = ProteinCollection.Instance[Instance.UnitInfo.ProjectID];
-               Instance.UnitInfo.ClientType = GetClientTypeFromProtein(Instance.CurrentProtein);
-            }
-            catch (System.Collections.Generic.KeyNotFoundException ex)
-            {
-               // Disregard - we don't know the protein name!
-               Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-            }
+            Instance.CurrentProtein = ProteinCollection.Instance[Instance.UnitInfo.ProjectID];
+            Instance.UnitInfo.TypeOfClient = GetClientTypeFromProtein(Instance.CurrentProtein);
          }
          else
          {
-            throw new FormatException("Failed to parse the Project (R/C/G) values");
+            throw new FormatException(String.Format("Failed to parse the Project (R/C/G) values from '{0}'", match.Value));
          }
       }
 
@@ -377,27 +386,33 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="CurrentProtein">Current Instance Protein</param>
       /// <returns>Client Type</returns>
-      private static eClientType GetClientTypeFromProtein(Protein CurrentProtein)
+      private static ClientType GetClientTypeFromProtein(Protein CurrentProtein)
       {
          switch (CurrentProtein.Core)
          {
-            case "TINKER":
-            case "AMBER":
             case "GROMACS":
             case "DGROMACS":
-            case "DGROMACSC":
+            case "GBGROMACS":
+            case "AMBER":
+            case "QMD":
             case "GROMACS33":
+            case "GROST":
             case "GROSIMT":
+            case "DGROMACSB":
+            case "DGROMACSC":
             case "GRO-A4":
-               return eClientType.Standard;
+            case "TINKER":
+               return ClientType.Standard;
             case "GRO-SMP":
             case "GROCVS":
-               return eClientType.SMP;
+               return ClientType.SMP;
             case "GROGPU2":
             case "GROGPU2-MT":
-               return eClientType.GPU;
+            case "ATI-DEV":
+            case "NVIDIA-DEV":
+               return ClientType.GPU;
             default:
-               return eClientType.Unknown;
+               return ClientType.Unknown;
          }
       }
 
@@ -457,8 +472,8 @@ namespace HFM.Instances
          Match mFramesCompleted = rFramesCompleted.Match(logLine);
          if (mFramesCompleted.Success)
          {
-            // This works on SMP A1 & A2 Core Log Files
-            //TODO: Test Standard Client Logs
+            // This works on SMP A1 & A2 Core
+            // Confirmed to work with Standard Gromacs Core
 
             try
             {
@@ -467,7 +482,7 @@ namespace HFM.Instances
             }
             catch (FormatException)
             {
-               //TODO: Log this failure
+               Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} Failed to parse raw frame values from '{1}'.", Debug.FunctionName, logLine));
             }
 
             SetTimeStamp(Instance, mFramesCompleted.Result("${Timestamp}"),
@@ -485,7 +500,7 @@ namespace HFM.Instances
       /// <param name="time3"></param>
       /// <param name="time4"></param>
       private static void SetTimeStamp(ClientInstance Instance, string timeStampString, ref DateTime time1, ref DateTime time2, 
-                                                                              ref DateTime time3, ref DateTime time4)
+                                                                                        ref DateTime time3, ref DateTime time4)
       {
          System.Globalization.DateTimeStyles style;
       
@@ -550,7 +565,7 @@ namespace HFM.Instances
          if (timeLastFrame < timeCompareFrame)
          {
             // get time before rollover
-            tDelta = new TimeSpan(0, 24, 0, 0).Subtract(timeCompareFrame.TimeOfDay);
+            tDelta = new TimeSpan(24, 0, 0).Subtract(timeCompareFrame.TimeOfDay);
             // add time from latest reading
             tDelta = tDelta.Add(timeLastFrame.TimeOfDay);
          }
@@ -568,61 +583,105 @@ namespace HFM.Instances
       /// <param name="Instance">Client Instance</param>
       private static void DetermineStatus(ClientInstance Instance)
       {
-         // Terminal Time - defined as current time minus twice (7 times for GPU) the current Raw Time per Section.
-         // if a new frame has not completed in twice the amount of time it should take to complete we should deem 
-         // this client Hung.
-         DateTime terminalTime;
+         #region Get Terminal Time
+         // Terminal Time - defined as last retrieval time minus twice (7 times for GPU) the current Raw Time per Section.
+         // if a new frame has not completed in twice the amount of time it should take to complete we should deem this client Hung.
+         DateTime terminalDateTime;
 
-         if (Instance.UnitInfo.ClientType.Equals(eClientType.GPU))
+         if (Instance.UnitInfo.TypeOfClient.Equals(ClientType.GPU))
          {
-            terminalTime = DateTime.Now.Subtract(new TimeSpan(0, 0, Instance.UnitInfo.RawTimePerSection * 7));
+            terminalDateTime = Instance.LastRetrievalTime.Subtract(new TimeSpan(0, 0, Instance.UnitInfo.RawTimePerSection * 7));
          }
          else
          {
-            terminalTime = DateTime.Now.Subtract(new TimeSpan(0, 0, Instance.UnitInfo.RawTimePerSection * 2));
+            terminalDateTime = Instance.LastRetrievalTime.Subtract(new TimeSpan(0, 0, Instance.UnitInfo.RawTimePerSection * 2));
          }
+         #endregion
 
          // make sure we have calculated a frame time (could be based on 'LastFrame' or 'LastThreeFrames')
          if (Instance.UnitInfo.RawTimePerSection > 0)
          {
-            DateTime currentFrameTime;
-            DateTime now = DateTime.Now;
+            #region Get Last Retrieval Time Date
+            DateTime currentFrameDateTime;
          
             if (Instance.ClientIsOnVirtualMachine)
             {
-               // get todays date only (in universal), we'll add the current time below
-               currentFrameTime = new DateTime(DateTime.Today.Ticks, DateTimeKind.Utc);
+               // get only the date from the last retrieval time (in universal), we'll add the current time below
+               currentFrameDateTime = new DateTime(Instance.LastRetrievalTime.Date.Ticks, DateTimeKind.Utc);
             }
             else
             {
-               // get todays date only, we'll add the current time below
-               currentFrameTime = DateTime.Today;
+               // get only the date from the last retrieval time, we'll add the current time below
+               currentFrameDateTime = Instance.LastRetrievalTime.Date;
+            }
+            #endregion
+            
+            #region Apply Frame Time Offset and Set Current Frame Time Date
+            TimeSpan offset = TimeSpan.FromMinutes(Instance.ClientTimeOffset);
+            TimeSpan adjustedFrameTime = Instance.UnitInfo.TimeOfLastFrame.Subtract(offset);
+
+            // client time has already rolled over to the next day. the offset correction has 
+            // caused the adjusted frame time span to be negetive.  take the that negetive span
+            // and add it to a full 24 hours to correct.
+            if (adjustedFrameTime < TimeSpan.Zero)
+            {
+               adjustedFrameTime = TimeSpan.FromDays(1).Add(adjustedFrameTime);
+            }
+            
+            // the offset correction has caused the frame time span to be greater than 24 hours.
+            // subtract the extra day from the adjusted frame time span.
+            else if (adjustedFrameTime > TimeSpan.FromDays(1))
+            {
+               adjustedFrameTime = adjustedFrameTime.Subtract(TimeSpan.FromDays(1));
             }
 
-            Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} ({1}) Current TimeOfDay: {2}", Debug.FunctionName, Instance.Name, now.TimeOfDay));
-            Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} ({1}) Current TimeOfLastFrame: {2}", Debug.FunctionName, Instance.Name, Instance.UnitInfo.TimeOfLastFrame));
-
-            // the current time of day is less than the last frame time, then the frame was from the day prior
-            // this should only happen after midnight time on the machine running HFM and when the client has 
-            // not completed a frame since the local machine time rolled over to the next day
-            if (now.TimeOfDay.Hours < Instance.UnitInfo.TimeOfLastFrame.Hours)
+            // add adjusted Time of Last Frame (TimeSpan) to the DateTime with the correct date
+            currentFrameDateTime = currentFrameDateTime.Add(adjustedFrameTime);
+            #endregion
+            
+            #region Check For Frame from Prior Day (Midnight Rollover on Local Machine)
+            bool priorDayAdjust = false;
+            
+            // if the current (and adjusted) frame time hours is greater than the last retrieval time hours, 
+            // and the time difference is greater than an hour, then frame is from the day prior.
+            // this should only happen after midnight time on the machine running HFM when the monitored client has 
+            // not completed a frame since the local machine time rolled over to the next day, otherwise the time
+            // stamps between HFM and the client are too far off, a positive offset should be set to correct.
+            if (currentFrameDateTime.TimeOfDay.Hours > Instance.LastRetrievalTime.TimeOfDay.Hours &&
+                currentFrameDateTime.TimeOfDay.Subtract(Instance.LastRetrievalTime.TimeOfDay).Hours > 0)
             {
-               Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("Doing prior day adjustment on {0}...", Instance.Name));
+               priorDayAdjust = true;
 
-               // get today's date and subtract 1 day
-               currentFrameTime = currentFrameTime.Subtract(new TimeSpan(1, 0, 0, 0));
+               // subtract 1 day from today's date
+               currentFrameDateTime = currentFrameDateTime.Subtract(TimeSpan.FromDays(1));
             }
-
-            // add Time of Last Frame (TimeSpan) to the DateTime with the correct date
-            currentFrameTime = currentFrameTime.Add(Instance.UnitInfo.TimeOfLastFrame);
-
-            if (currentFrameTime.AddMinutes(Instance.ClientTimeOffset * -1) > terminalTime)
+            #endregion
+            
+            #region Write Verbose Trace
+            if (HFM.Instrumentation.TraceLevelSwitch.GetTraceLevelSwitch().TraceVerbose)
             {
-               Instance.UnitInfo.Status = eClientStatus.Running;
+               System.Collections.Generic.List<string> messages = new System.Collections.Generic.List<string>(10);
+
+               messages.Add(String.Format("{0} ({1})", Debug.FunctionName, Instance.InstanceName));
+               messages.Add(String.Format(" - Retrieval Time (Date) ------- : {0}", Instance.LastRetrievalTime));
+               messages.Add(String.Format(" - Time Of Last Frame (TimeSpan) : {0}", Instance.UnitInfo.TimeOfLastFrame));
+               messages.Add(String.Format(" - Offset (Minutes) ------------ : {0}", Instance.ClientTimeOffset));
+               messages.Add(String.Format(" - Time Of Last Frame (Adjusted) : {0}", adjustedFrameTime));
+               messages.Add(String.Format(" - Prior Day Adjustment -------- : {0}", priorDayAdjust));
+               messages.Add(String.Format(" - Time Of Last Frame (Date) --- : {0}", currentFrameDateTime));
+               messages.Add(String.Format(" - Terminal Time (Date) -------- : {0}", terminalDateTime));
+               
+               Debug.WriteToHfmConsole(TraceLevel.Verbose, messages.ToArray());
+            }
+            #endregion
+
+            if (currentFrameDateTime > terminalDateTime)
+            {
+               Instance.Status = ClientStatus.Running;
             }
             else // current frame is less than terminal time
             {
-               Instance.UnitInfo.Status = eClientStatus.Hung;
+               Instance.Status = ClientStatus.Hung;
             }
          }
       }

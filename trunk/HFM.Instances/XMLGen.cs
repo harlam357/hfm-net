@@ -51,7 +51,7 @@ namespace HFM.Instances
             //        <ExpectedCompletionDate>16 August 2006 1:46 am</ExpectedCompletionDate>
             //    </UnitInfo>
 
-            xmlData.SetAttribute("Name", Instance.Name);
+            xmlData.SetAttribute("Name", Instance.InstanceName);
 
             XMLOps.setXmlNode(xmlData, "UnitInfo/DateStarted", Instance.UnitInfo.DownloadTime.ToString("d MMMM yyyy hh:mm tt"));
             XMLOps.setXmlNode(xmlData, "UnitInfo/FramesComplete", String.Format("{0}", Instance.UnitInfo.FramesComplete));
@@ -103,7 +103,7 @@ namespace HFM.Instances
             XMLOps.setXmlNode(xmlData, "Protein/Credit", Instance.CurrentProtein.Credit.ToString());
             XMLOps.setXmlNode(xmlData, "Protein/Frames", Instance.CurrentProtein.Frames.ToString());
             XMLOps.setXmlNode(xmlData, "Protein/Core", Instance.CurrentProtein.Core);
-            XMLOps.setXmlNode(xmlData, "Protein/Description", HFM.Helpers.ProteinData.DescriptionFromURL(Instance.CurrentProtein.Description));
+            XMLOps.setXmlNode(xmlData, "Protein/Description", ProteinData.DescriptionFromURL(Instance.CurrentProtein.Description));
             XMLOps.setXmlNode(xmlData, "Protein/Contact", Instance.CurrentProtein.Contact);
 
             //    <LastUpdatedDate>10 August 2006</LastUpdatedDate>
@@ -139,7 +139,7 @@ namespace HFM.Instances
 
             Array.Sort(instances, delegate(ClientInstance instance1, ClientInstance instance2)
                                   {
-                                     return instance1.Name.CompareTo(instance2.Name);
+                                     return instance1.InstanceName.CompareTo(instance2.InstanceName);
                                   });
 
             foreach (ClientInstance Instance in instances)
@@ -149,7 +149,7 @@ namespace HFM.Instances
                 xmlFrag.Load(PreferenceSet.Instance.AppPath + "\\XML\\SummaryFrag.XML");
                 XmlElement xmlData = xmlFrag.DocumentElement;
 
-                XMLOps.setXmlNode(xmlData, "Name", Instance.Name);
+                XMLOps.setXmlNode(xmlData, "Name", Instance.InstanceName);
                 XMLOps.setXmlNode(xmlData, "PercentComplete", Instance.UnitInfo.PercentComplete.ToString());
                 XMLOps.setXmlNode(xmlData, "Credit", String.Format("{0:0}", Instance.CurrentProtein.Credit));
                 XMLOps.setXmlNode(xmlData, "PPD", String.Format("{0:0.00}", Instance.UnitInfo.PPD));
@@ -203,23 +203,23 @@ namespace HFM.Instances
                totalCompleted += kvp.Value.NumberOfCompletedUnitsSinceLastStart;
                totalFailed += kvp.Value.NumberOfFailedUnitsSinceLastStart;
 
-               switch (kvp.Value.UnitInfo.Status)
+               switch (kvp.Value.Status)
                {
-                  case eClientStatus.Running:
-                  case eClientStatus.RunningNoFrameTimes:
+                  case ClientStatus.Running:
+                  case ClientStatus.RunningNoFrameTimes:
                      goodHostCount++;
                      break;
-                  //case eClientStatus.Paused:
+                  //case ClientStatus.Paused:
                   //   newPausedHosts++;
                   //   break;
-                  //case eClientStatus.Hung:
+                  //case ClientStatus.Hung:
                   //   newHungHosts++;
                   //   break;
-                  //case eClientStatus.Stopped:
+                  //case ClientStatus.Stopped:
                   //   newStoppedHosts++;
                   //   break;
-                  //case eClientStatus.Offline:
-                  //case eClientStatus.Unknown:
+                  //case ClientStatus.Offline:
+                  //case ClientStatus.Unknown:
                   //   newOfflineUnknownHosts++;
                   //   break;
                   default:

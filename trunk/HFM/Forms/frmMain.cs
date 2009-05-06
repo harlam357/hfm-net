@@ -146,7 +146,7 @@ namespace HFM.Forms
          FileVersionInfo fileVersionInfo =
             FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetEntryAssembly().Location);
          base.Text += String.Format(" v{0}.{1}.{2} - Build {3} - Beta", fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
-                                                                          fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
+                                                                        fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
 
          // Create Messages Window
          _frmMessages = new frmMessages();
@@ -189,11 +189,13 @@ namespace HFM.Forms
 
          Trace.Listeners.Add(listener);
          Trace.AutoFlush = true;
-
-         Trace.WriteLine("Starting...");
-         Trace.WriteLine("-----------");
+         
+         TraceLevelSwitch.Instance.Level = (TraceLevel)PreferenceSet.Instance.MessageLevel;
 
          listener.TextMessage += Debug_TextMessage;
+
+         Debug.WriteToHfmConsole(String.Format("Starting - {0}", base.Text));
+         Debug.WriteToHfmConsole(String.Empty);
       }
 
       /// <summary>
@@ -223,7 +225,7 @@ namespace HFM.Forms
             }
             catch (Exception ex)
             {
-               // OK now this could be anything (even permissions), but we'll just chuck a dialog up.
+               // OK now this could be anything (even permissions), but we'll just write to the log and continue.
                Debug.WriteToHfmConsole(TraceLevel.Warning,
                                        String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
             }
@@ -260,6 +262,12 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void frmMainNew_FormClosing(object sender, FormClosingEventArgs e)
       {
+         if (CanContinueDestructiveOp(sender, e) == false)
+         {
+            e.Cancel = true;
+            return;
+         }
+      
          // Save column state data
          // including order, column width and whether or not the column is visible
          StringCollection stringCollection = new StringCollection();
@@ -300,9 +308,9 @@ namespace HFM.Forms
          // Save the data
          PreferenceSet.Instance.Save();
 
-         Trace.WriteLine("----------");
-         Trace.WriteLine("Exiting...");
-         Trace.WriteLine(String.Empty);
+         Debug.WriteToHfmConsole("----------");
+         Debug.WriteToHfmConsole("Exiting...");
+         Debug.WriteToHfmConsole(String.Empty);
       }
 
       /// <summary>
@@ -415,26 +423,26 @@ namespace HFM.Forms
                      // Draw the inset highlight box.
                      Pen fillPen;
                      Brush fillBrush;
-                     switch (((eClientStatus) e.Value))
+                     switch (((ClientStatus) e.Value))
                      {
-                        case eClientStatus.Running:
+                        case ClientStatus.Running:
                            fillPen = Pens.DarkGreen;
                            fillBrush = Brushes.DarkGreen;
                            break;
-                        case eClientStatus.RunningNoFrameTimes:
+                        case ClientStatus.RunningNoFrameTimes:
                            fillPen = Pens.Yellow;
                            fillBrush = Brushes.Yellow;
                            break;
-                        case eClientStatus.Stopped:
-                        case eClientStatus.Hung:
+                        case ClientStatus.Stopped:
+                        case ClientStatus.Hung:
                            fillPen = Pens.DarkRed;
                            fillBrush = Brushes.DarkRed;
                            break;
-                        case eClientStatus.Paused:
+                        case ClientStatus.Paused:
                            fillPen = Pens.Orange;
                            fillBrush = Brushes.Orange;
                            break;
-                        case eClientStatus.Offline:
+                        case ClientStatus.Offline:
                            fillPen = Pens.Gray;
                            fillBrush = Brushes.Gray;
                            break;
@@ -720,7 +728,7 @@ namespace HFM.Forms
                      MessageBox.Show(
                         String.Format(
                            "Failed to show client '{0}' files.\n\nPlease check the current File Explorer defined in the Preferences.",
-                           Instance.Name));
+                           Instance.InstanceName));
                   }
                }
             }
@@ -812,10 +820,8 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void mnuFileQuit_Click(object sender, EventArgs e)
       {
-         if (CanContinueDestructiveOp(sender, e))
-         {
-            Application.Exit();
-         }
+         // CanContinueDestructiveOp code moved into frmMainNew_FormClosing() - Issue 1
+         Close();
       }
       #endregion
 
@@ -834,7 +840,13 @@ namespace HFM.Forms
          {
             SetTimerState();
             HostInstances.OfflineClientsLast = PreferenceSet.Instance.OfflineLast;
-            
+            TraceLevel newLevel = (TraceLevel)PreferenceSet.Instance.MessageLevel;
+            if (newLevel != TraceLevelSwitch.Instance.Level)
+            {
+               TraceLevelSwitch.Instance.Level = newLevel;
+               Debug.WriteToHfmConsole(String.Format("Debug Message Level Changed: {0}", newLevel));
+            }
+
             // If the PPD Calculation style changed, we need to do a new Retrieval
             if (currentPpdCalc.Equals(PreferenceSet.Instance.PpdCalculation))
             {
@@ -928,17 +940,13 @@ namespace HFM.Forms
                   xHost.Password = newHost.txtFTPPass.Text;
                }
 
-               if (xHost != null)
-               {
-                  // Add the new Host Instance and Queue Retrieval
-                  HostInstances.Add(xHost);
-                  QueueNewRetrieval(xHost);
-                  ChangedAfterSave = true;
-               }
-               else
-               {
-                  //TODO: Host Failed to Add
-               }
+               // xHost should not be null at this point
+               System.Diagnostics.Debug.Assert(xHost != null);
+               
+               // Add the new Host Instance and Queue Retrieval
+               HostInstances.Add(xHost);
+               QueueNewRetrieval(xHost);
+               ChangedAfterSave = true;
             }
          }
       }
@@ -956,7 +964,7 @@ namespace HFM.Forms
 
          ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString()];
 
-         editHost.txtName.Text = Instance.Name;
+         editHost.txtName.Text = Instance.InstanceName;
          editHost.txtLogFileName.Text = Instance.RemoteFAHLogFilename;
          editHost.txtUnitFileName.Text = Instance.RemoteUnitInfoFilename;
          editHost.txtClientMegahertz.Text = Instance.ClientProcessorMegahertz.ToString();
@@ -989,7 +997,7 @@ namespace HFM.Forms
 
          if (editHost.ShowDialog() == DialogResult.OK)
          {
-            if (Instance.Name != editHost.txtName.Text)
+            if (Instance.InstanceName != editHost.txtName.Text)
             {
                if (HostInstances.Contains(editHost.txtName.Text))
                {
@@ -998,7 +1006,7 @@ namespace HFM.Forms
                }
             }
             
-            string oldName = Instance.Name;
+            string oldName = Instance.InstanceName;
             if (editHost.radioLocal.Checked)
             {
                if (Instance.InstanceHostType.Equals(InstanceType.PathInstance) == false)
@@ -1036,9 +1044,9 @@ namespace HFM.Forms
             }
             
             // if the host key changed
-            if (oldName != Instance.Name)
+            if (oldName != Instance.InstanceName)
             {
-               HostInstances.UpdateDisplayHostName(oldName, Instance.Name);
+               HostInstances.UpdateDisplayHostName(oldName, Instance.InstanceName);
                HostInstances.InstanceCollection.Remove(oldName);
                HostInstances.Add(Instance);
             }
@@ -1049,7 +1057,7 @@ namespace HFM.Forms
 
       private static void SetInstanceBasicInfo(frmHost hostForm, ClientInstance Instance)
       {
-         Instance.Name = hostForm.txtName.Text;
+         Instance.InstanceName = hostForm.txtName.Text;
          Instance.RemoteFAHLogFilename = hostForm.txtLogFileName.Text;
          Instance.RemoteUnitInfoFilename = hostForm.txtUnitFileName.Text;
          int mhz;
@@ -1116,12 +1124,12 @@ namespace HFM.Forms
             {
                Debug.WriteToHfmConsole(TraceLevel.Error,
                                        String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-               MessageBox.Show(String.Format("Failed to show client '{0}' FAHLog file.\n\nPlease check the current Log File Viewer defined in the Preferences.", Instance.Name));
+               MessageBox.Show(String.Format("Failed to show client '{0}' FAHLog file.\n\nPlease check the current Log File Viewer defined in the Preferences.", Instance.InstanceName));
             }
          }
          else
          {
-            MessageBox.Show(String.Format("Cannot find client '{0}' FAHLog file.", Instance.Name));
+            MessageBox.Show(String.Format("Cannot find client '{0}' FAHLog file.", Instance.InstanceName));
          }
       }
 
@@ -1141,7 +1149,7 @@ namespace HFM.Forms
             {
                Debug.WriteToHfmConsole(TraceLevel.Error,
                                        String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-               MessageBox.Show(String.Format("Failed to show client '{0}' files.\n\nPlease check the current File Explorer defined in the Preferences.", Instance.Name));
+               MessageBox.Show(String.Format("Failed to show client '{0}' files.\n\nPlease check the current File Explorer defined in the Preferences.", Instance.InstanceName));
             }
          }
       }
@@ -1355,7 +1363,7 @@ namespace HFM.Forms
          // Generate a page per instance
          foreach (KeyValuePair<String, ClientInstance> kvp in HostInstances.InstanceCollection)
          {
-            sw = new StreamWriter(Path.Combine(PreferenceSet.Instance.WebRoot, Path.ChangeExtension(kvp.Value.Name, ".html")), false);
+            sw = new StreamWriter(Path.Combine(PreferenceSet.Instance.WebRoot, Path.ChangeExtension(kvp.Value.InstanceName, ".html")), false);
             sw.Write(XMLGen.InstanceXml("WebInstance.xslt", kvp.Value));
             sw.Close();
          }
@@ -1399,7 +1407,7 @@ namespace HFM.Forms
          // don't fire this process twice
          if (RetrievalInProgress)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Info, "Retrieval Already In Progress...");
+            Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Retrieval Already In Progress...", Debug.FunctionName));
             return;
          }
          
@@ -1618,23 +1626,23 @@ namespace HFM.Forms
          {
             newTotalPPD += kvp.Value.UnitInfo.PPD;
             
-            switch (kvp.Value.UnitInfo.Status)
+            switch (kvp.Value.Status)
             {
-               case eClientStatus.Running:
-               case eClientStatus.RunningNoFrameTimes:
+               case ClientStatus.Running:
+               case ClientStatus.RunningNoFrameTimes:
                   newGoodHosts++;
                   break;
-               //case eClientStatus.Paused:
+               //case ClientStatus.Paused:
                //   newPausedHosts++;
                //   break;
-               //case eClientStatus.Hung:
+               //case ClientStatus.Hung:
                //   newHungHosts++;
                //   break;
-               //case eClientStatus.Stopped:
+               //case ClientStatus.Stopped:
                //   newStoppedHosts++;
                //   break;
-               //case eClientStatus.Offline:
-               //case eClientStatus.Unknown:
+               //case ClientStatus.Offline:
+               //case ClientStatus.Unknown:
                //   newOfflineUnknownHosts++;
                //   break;
             }
@@ -1838,7 +1846,7 @@ namespace HFM.Forms
                }
                catch (IOException)
                {
-                  //TODO: Log this Exception
+                  Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} Failed to clear cache file '{1}'.", Debug.FunctionName, fi.Name));
                }
             }
          }

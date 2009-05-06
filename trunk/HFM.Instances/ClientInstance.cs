@@ -32,16 +32,30 @@ using Debug=HFM.Instrumentation.Debug;
 
 namespace HFM.Instances
 {
+   #region Enum
+   public enum ClientStatus
+   {
+      Unknown,
+      Offline,
+      Stopped,
+      Hung,
+      Paused,
+      RunningNoFrameTimes,
+      Running
+   }
+
    public enum InstanceType
    {
       PathInstance,
       FTPInstance,
       HTTPInstance
    }
+   #endregion
 
    public class ClientInstance
    {
       #region Constants
+      // Xml Serialization Constants
       private const string xmlNodeInstance = "Instance";
       private const string xmlAttrName = "Name";
       private const string xmlNodeFAHLog = "FAHLogFile";
@@ -55,51 +69,91 @@ namespace HFM.Instances
       private const string xmlPropUser = "Username";
       private const string xmlPropPass = "Password";
       
+      // Log Filename Constants
       private const string LocalFAHLog = "FAHLog.txt";
       private const string LocalUnitInfo = "UnitInfo.txt";
       #endregion
       
+      #region Public Events
+      /// <summary>
+      /// Raised when Instance Host Type is Changed
+      /// </summary>
       public event EventHandler InstanceHostTypeChanged;
+      #endregion
 
-      #region Public Properties and Related Private Variables
+      #region Private Members
+      /// <summary>
+      /// Local flag set when log retrieval is in progress
+      /// </summary>
+      private bool _RetrievalInProgress = false;
+      #endregion
+
+      #region Public Readonly Properties
+      /// <summary>
+      /// Log File Cache Directory
+      /// </summary>
+      public string BaseDirectory
+      {
+         get { return System.IO.Path.Combine(PreferenceSet.Instance.AppDataPath, PreferenceSet.Instance.CacheFolder); }
+      }
+
+      /// <summary>
+      /// Cached FAHLog Filename for this instance
+      /// </summary>
+      public string CachedFAHLogName
+      {
+         get { return String.Format("{0}-{1}", InstanceName, LocalFAHLog); }
+      }
+
+      /// <summary>
+      /// Cached UnitInfo Filename for this instance
+      /// </summary>
+      public string CachedUnitInfoName
+      {
+         get { return String.Format("{0}-{1}", InstanceName, LocalUnitInfo); }
+      } 
+      #endregion
+
+      #region Public Properties and Related Private Members
+      
+      #region User specified values (from the frmHost dialog)
+      /// <summary>
+      /// The name assigned to this client instance
+      /// </summary>
       private string _InstanceName;
-      public string Name
+      /// <summary>
+      /// The name assigned to this client instance
+      /// </summary>
+      public string InstanceName
       {
          get { return _InstanceName; }
          set { _InstanceName = value; }
       }
 
-      private Protein _CurrentProtein;
-      public Protein CurrentProtein
+      /// <summary>
+      /// The number of processor megahertz for this client instance
+      /// </summary>
+      private Int32 _ClientProcessorMegahertz;
+      /// <summary>
+      /// The number of processor megahertz for this client instance
+      /// </summary>
+      public Int32 ClientProcessorMegahertz
       {
-         get { return _CurrentProtein; }
-         set { _CurrentProtein = value; }
+         get { return _ClientProcessorMegahertz; }
+         set { _ClientProcessorMegahertz = value; }
       }
 
-      private readonly UnitInfo _UnitInfo;
-      public UnitInfo UnitInfo
-      {
-         get { return _UnitInfo; }
-      }
-
-      protected DateTime _LastRetrieved = DateTime.MinValue;
-      public DateTime LastRetrievalTime
-      {
-         get { return _LastRetrieved; }
-      }
-
-      private Int32 _TotalUnits;
-      public Int32 TotalUnits
-      {
-         get { return _TotalUnits; }
-         set { _TotalUnits = value; }
-      }
-
+      /// <summary>
+      /// Remote client log file name
+      /// </summary>
       private string _RemoteFAHLogFilename = LocalFAHLog;
+      /// <summary>
+      /// Remote client log file name
+      /// </summary>
       public string RemoteFAHLogFilename
       {
          get { return _RemoteFAHLogFilename; }
-         set 
+         set
          {
             if (value == String.Empty)
             {
@@ -107,18 +161,24 @@ namespace HFM.Instances
             }
             else
             {
-               _RemoteFAHLogFilename = value; 
+               _RemoteFAHLogFilename = value;
             }
-            
+
          }
       }
 
+      /// <summary>
+      /// Remote client unit info log file name
+      /// </summary>
       private string _RemoteUnitInfoFilename = LocalUnitInfo;
+      /// <summary>
+      /// Remote client unit info log file name
+      /// </summary>
       public string RemoteUnitInfoFilename
       {
          get { return _RemoteUnitInfoFilename; }
-         set 
-         { 
+         set
+         {
             if (value == String.Empty)
             {
                _RemoteUnitInfoFilename = LocalUnitInfo;
@@ -130,76 +190,29 @@ namespace HFM.Instances
          }
       }
 
-      public string BaseDirectory
-      {
-         get { return System.IO.Path.Combine(PreferenceSet.Instance.AppDataPath, PreferenceSet.Instance.CacheFolder); }
-      }
-
-      private readonly List<string> _CurrentLogText = new List<string>();
-      public List<string> CurrentLogText
-      {
-         get { return _CurrentLogText; }
-      }
-
-      private bool _RetrievalInProgress = false;
-      protected bool RetrievalInProgress
-      {
-         get { return _RetrievalInProgress; }
-         set { _RetrievalInProgress = value; }
-      }
-
-      private Int32 _NumberOfCompletedUnitsSinceLastStart;
-      public Int32 NumberOfCompletedUnitsSinceLastStart
-      {
-         get { return _NumberOfCompletedUnitsSinceLastStart; }
-         set { _NumberOfCompletedUnitsSinceLastStart = value; }
-      }
-
-      private Int32 _NumberOfFailedUnitsSinceLastStart;
-      public Int32 NumberOfFailedUnitsSinceLastStart
-      {
-         get { return _NumberOfFailedUnitsSinceLastStart; }
-         set { _NumberOfFailedUnitsSinceLastStart = value; }
-      }
-      
-      private Int32 _ClientProcessorMegahertz;
-      public Int32 ClientProcessorMegahertz
-      {
-         get { return _ClientProcessorMegahertz; }
-         set { _ClientProcessorMegahertz = value; }
-      }
-      
-      private bool _ClientIsOnVirtualMachine;
-      public bool ClientIsOnVirtualMachine
-      {
-         get { return _ClientIsOnVirtualMachine; }
-         set { _ClientIsOnVirtualMachine = value; }
-      }
-
-      private Int32 _ClientTimeOffset;
-      public Int32 ClientTimeOffset
-      {
-         get { return _ClientTimeOffset; }
-         set { _ClientTimeOffset = value; }
-      }
-
+      /// <summary>
+      /// Client host type (Path, FTP, or HTTP)
+      /// </summary>
       private InstanceType _InstanceHostType;
+      /// <summary>
+      /// Client host type (Path, FTP, or HTTP)
+      /// </summary>
       public InstanceType InstanceHostType
       {
          get { return _InstanceHostType; }
-         set 
-         { 
-            _InstanceHostType = value; 
+         set
+         {
+            _InstanceHostType = value;
             OnInstanceHostTypeChanged(EventArgs.Empty);
          }
       }
 
       /// <summary>
-      /// Private variable storing location of log files for this instance
+      /// Location of log files for this instance
       /// </summary>
       private string _Path;
       /// <summary>
-      /// Public property storing location of log files for this instance
+      /// Location of log files for this instance
       /// </summary>
       public string Path
       {
@@ -221,9 +234,12 @@ namespace HFM.Instances
       }
 
       /// <summary>
-      /// FTP username on remote server
+      /// Username on remote server
       /// </summary>
       private string _Username;
+      /// <summary>
+      /// Username on remote server
+      /// </summary>
       public string Username
       {
          get { return _Username; }
@@ -231,104 +247,270 @@ namespace HFM.Instances
       }
 
       /// <summary>
-      /// FTP password on remote server
+      /// Password on remote server
       /// </summary>
       private string _Password;
+      /// <summary>
+      /// Password on remote server
+      /// </summary>
       public string Password
       {
          get { return _Password; }
          set { _Password = value; }
       }
 
-      public string CachedFAHLogName
+      /// <summary>
+      /// Specifies that this client is on a VM that reports local time as UTC
+      /// </summary>
+      private bool _ClientIsOnVirtualMachine;
+      /// <summary>
+      /// Specifies that this client is on a VM that reports local time as UTC
+      /// </summary>
+      public bool ClientIsOnVirtualMachine
       {
-         get { return String.Format("{0}-{1}", Name, LocalFAHLog); }
+         get { return _ClientIsOnVirtualMachine; }
+         set { _ClientIsOnVirtualMachine = value; }
       }
 
-      public string CachedUnitInfoName
+      /// <summary>
+      /// Specifies the number of minutes (+/-) this client's clock differentiates
+      /// </summary>
+      private Int32 _ClientTimeOffset;
+      /// <summary>
+      /// Specifies the number of minutes (+/-) this client's clock differentiates
+      /// </summary>
+      public Int32 ClientTimeOffset
       {
-         get { return String.Format("{0}-{1}", Name, LocalUnitInfo); }
-      }
+         get { return _ClientTimeOffset; }
+         set { _ClientTimeOffset = value; }
+      } 
       #endregion
 
-      #region Protected Variables
-      protected ProteinCollection _Proteins;
+      #region Log Retrieval Timestamps
+      /// <summary>
+      /// When the log files were last successfully retrieved
+      /// </summary>
+      private DateTime _LastRetrievalTime = DateTime.MinValue;
+      /// <summary>
+      /// When the log files were last successfully retrieved
+      /// </summary>
+      public DateTime LastRetrievalTime
+      {
+         get { return _LastRetrievalTime; }
+         private set
+         {
+            //_PreviousLastRetrievalTime = _LastRetrievalTime;
+            _LastRetrievalTime = value;
+         }
+      } 
+      #endregion
+
+      #region Values captured during log file parse
+      /// <summary>
+      /// Status of this client
+      /// </summary>
+      private ClientStatus _Status;
+      /// <summary>
+      /// Status of this client
+      /// </summary>
+      public ClientStatus Status
+      {
+         get { return _Status; }
+         set { _Status = value; }
+      }
+      
+      /// <summary>
+      /// Total Units Completed for lifetime of the client (read from log file)
+      /// </summary>
+      private Int32 _TotalUnits;
+      /// <summary>
+      /// Total Units Completed for lifetime of the client (read from log file)
+      /// </summary>
+      public Int32 TotalUnits
+      {
+         get { return _TotalUnits; }
+         set { _TotalUnits = value; }
+      }
+
+      /// <summary>
+      /// Number of completed units since the last client start
+      /// </summary>
+      private Int32 _NumberOfCompletedUnitsSinceLastStart;
+      /// <summary>
+      /// Number of completed units since the last client start
+      /// </summary>
+      public Int32 NumberOfCompletedUnitsSinceLastStart
+      {
+         get { return _NumberOfCompletedUnitsSinceLastStart; }
+         set { _NumberOfCompletedUnitsSinceLastStart = value; }
+      }
+
+      /// <summary>
+      /// Number of failed units since the last client start
+      /// </summary>
+      private Int32 _NumberOfFailedUnitsSinceLastStart;
+      /// <summary>
+      /// Number of failed units since the last client start
+      /// </summary>
+      public Int32 NumberOfFailedUnitsSinceLastStart
+      {
+         get { return _NumberOfFailedUnitsSinceLastStart; }
+         set { _NumberOfFailedUnitsSinceLastStart = value; }
+      }
+
+      /// <summary>
+      /// List of current log file text lines
+      /// </summary>
+      private readonly List<string> _CurrentLogText = new List<string>();
+      /// <summary>
+      /// List of current log file text lines
+      /// </summary>
+      public List<string> CurrentLogText
+      {
+         get { return _CurrentLogText; }
+      }
+
+      /// <summary>
+      /// Class member containing info on the currently running protein
+      /// </summary>
+      private Protein _CurrentProtein;
+      /// <summary>
+      /// Class member containing info on the currently running protein
+      /// </summary>
+      public Protein CurrentProtein
+      {
+         get { return _CurrentProtein; }
+         set { _CurrentProtein = value; }
+      }
+
+      /// <summary>
+      /// Class member containing info specific to the current work unit
+      /// </summary>
+      private readonly UnitInfo _UnitInfo;
+      /// <summary>
+      /// Class member containing info specific to the current work unit
+      /// </summary>
+      public UnitInfo UnitInfo
+      {
+         get { return _UnitInfo; }
+      } 
+      #endregion
+      
       #endregion
 
       #region Constructor
       /// <summary>
-      /// Class constructor
+      /// Primary Constructor
       /// </summary>
       public ClientInstance(InstanceType type)
       {
          InstanceHostTypeChanged += ClearInstanceValues;
          _InstanceHostType = type;
-      
+
          _UnitInfo = new UnitInfo();
          Clear();
-         
-         _Proteins = ProteinCollection.Instance;
       }
       #endregion
 
+      #region Protected Event Wrappers
+      /// <summary>
+      /// Call when changing Host Type
+      /// </summary>
+      protected void OnInstanceHostTypeChanged(EventArgs e)
+      {
+         if (InstanceHostTypeChanged != null)
+         {
+            InstanceHostTypeChanged(this, e);
+         }
+      } 
+      #endregion
+
       #region Data Processing
+      /// <summary>
+      /// Clear Client Instance and UnitInfo Values
+      /// </summary>
       private void Clear()
       {
-         // clear the instance log holder
-         CurrentLogText.Clear();
-         // reset completed and failed values
+         // reset total, completed, and failed values
+         TotalUnits = 0;
          NumberOfCompletedUnitsSinceLastStart = 0;
          NumberOfFailedUnitsSinceLastStart = 0;
+         // clear the instance log holder
+         CurrentLogText.Clear();
       
-         _UnitInfo.ClientType = eClientType.Unknown;
-         _UnitInfo.CoreVersion = String.Empty;
-         _UnitInfo.DownloadTime = DateTime.MinValue;
-         _UnitInfo.DueTime = DateTime.MinValue;
-         _UnitInfo.FramesComplete = 0;
-         _UnitInfo.PercentComplete = 0;
-         _UnitInfo.ProjectID = 0;
-         _UnitInfo.ProjectRun = 0;
-         _UnitInfo.ProjectClone = 0;
-         _UnitInfo.ProjectGen = 0;
-         _UnitInfo.ProteinName = String.Empty;
-         _UnitInfo.ProteinTag = String.Empty;
-         _UnitInfo.RawFramesComplete = 0;
-         _UnitInfo.RawFramesTotal = 0;
-         //_UnitInfo.Status = eClientStatus.Unknown;
-         _UnitInfo.TimeOfLastFrame = TimeSpan.Zero;
+         UnitInfo.TypeOfClient = ClientType.Unknown;
+         UnitInfo.CoreVersion = String.Empty;
+         UnitInfo.DownloadTime = DateTime.MinValue;
+         UnitInfo.DueTime = DateTime.MinValue;
+         UnitInfo.FramesComplete = 0;
+         UnitInfo.PercentComplete = 0;
+         UnitInfo.ProjectID = 0;
+         UnitInfo.ProjectRun = 0;
+         UnitInfo.ProjectClone = 0;
+         UnitInfo.ProjectGen = 0;
+         UnitInfo.ProteinName = String.Empty;
+         UnitInfo.ProteinTag = String.Empty;
+         UnitInfo.RawFramesComplete = 0;
+         UnitInfo.RawFramesTotal = 0;
+         UnitInfo.TimeOfLastFrame = TimeSpan.Zero;
          
          ClearTimeBasedValues();
 
          _CurrentProtein = new Protein();
-         _CurrentProtein.Contact = "Unassigned Contact";
-         _CurrentProtein.Core = "Unassigned Core";
-         _CurrentProtein.Credit = 0;
-         _CurrentProtein.Description = "Unassigned Description";
-         _CurrentProtein.Frames = 100;
-         _CurrentProtein.MaxDays = 0;
-         _CurrentProtein.NumAtoms = 0;
-         _CurrentProtein.PreferredDays = 0;
-         _CurrentProtein.ProjectNumber = 0;
-         _CurrentProtein.ServerIP = "0.0.0.0";
-         _CurrentProtein.WorkUnitName = "Unassigned Protein";
       }
       
+      /// <summary>
+      /// Clear only the time based values for this instance
+      /// </summary>
       private void ClearTimeBasedValues()
       {
-         _UnitInfo.ETA = TimeSpan.Zero;
-         _UnitInfo.PPD = 0.0;
-         _UnitInfo.RawTimePerLastSection = 0;
-         _UnitInfo.RawTimePerThreeSections = 0;
-         _UnitInfo.TimePerFrame = TimeSpan.Zero;
-         _UnitInfo.UPD = 0.0;
+         // Set in SetTimeBasedValues()
+         UnitInfo.TimePerFrame = TimeSpan.Zero;
+         UnitInfo.UPD = 0.0;
+         UnitInfo.PPD = 0.0;
+         UnitInfo.ETA = TimeSpan.Zero;
+
+         // Set in LogParser.SetTimeStamp()
+         UnitInfo.RawTimePerLastSection = 0;
+         UnitInfo.RawTimePerThreeSections = 0;
+      }
+
+      /// <summary>
+      /// Sets the time based values (FramesComplete, PercentComplete, TimePerFrame, UPD, PPD, ETA)
+      /// </summary>
+      public void SetTimeBasedValues()
+      {
+         if ((UnitInfo.RawFramesTotal != 0) && (UnitInfo.RawFramesComplete != 0) && (UnitInfo.RawTimePerSection != 0))
+         {
+            try
+            {
+               Int32 FramesTotal = ProteinCollection.Instance[UnitInfo.ProjectID].Frames;
+               Int32 RawScaleFactor = UnitInfo.RawFramesTotal / FramesTotal;
+
+               UnitInfo.FramesComplete = UnitInfo.RawFramesComplete / RawScaleFactor;
+               UnitInfo.PercentComplete = UnitInfo.FramesComplete * 100 / FramesTotal;
+               UnitInfo.TimePerFrame = new TimeSpan(0, 0, Convert.ToInt32(UnitInfo.RawTimePerSection));
+
+               UnitInfo.UPD = 86400 / (UnitInfo.TimePerFrame.TotalSeconds * FramesTotal);
+               UnitInfo.PPD = Math.Round(UnitInfo.UPD * ProteinCollection.Instance[UnitInfo.ProjectID].Credit, 5);
+               UnitInfo.ETA = new TimeSpan((100 - UnitInfo.PercentComplete) * UnitInfo.TimePerFrame.Ticks);
+            }
+            catch (Exception ex)
+            {
+               Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            }
+         }
       }
       
+      /// <summary>
+      /// Clear the user specified values that define this instance
+      /// </summary>
       private void ClearInstanceValues(object sender, EventArgs e)
       {
-         Name = String.Empty;
+         InstanceName = String.Empty;
+         ClientProcessorMegahertz = 1;
          RemoteFAHLogFilename = String.Empty;
          RemoteUnitInfoFilename = String.Empty;
-         ClientProcessorMegahertz = 1;
          ClientIsOnVirtualMachine = false;
          ClientTimeOffset = 0;
          
@@ -338,6 +520,9 @@ namespace HFM.Instances
          Password = String.Empty;
       }
 
+      /// <summary>
+      /// Process the cached log files that exist on this machine
+      /// </summary>
       public void ProcessExisting()
       {
          DateTime Start = Debug.ExecStart;
@@ -347,30 +532,27 @@ namespace HFM.Instances
          Boolean allGood;
 
          LogParser lp = new LogParser();
-         allGood = lp.ParseUnitInfo(System.IO.Path.Combine(BaseDirectory, CachedUnitInfoName), this) &&
-                   lp.ParseFAHLog(System.IO.Path.Combine(BaseDirectory, CachedFAHLogName), this);
+         if (lp.ParseUnitInfo(System.IO.Path.Combine(BaseDirectory, CachedUnitInfoName), this) == false)
+         {
+            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} ({1}) UnitInfo parse failed.", Debug.FunctionName, InstanceName));
+         }
+         allGood = lp.ParseFAHLog(System.IO.Path.Combine(BaseDirectory, CachedFAHLogName), this);
 
          if (allGood)
          {
-            UnitInfo.SetTimeBasedValues(Name);
+            SetTimeBasedValues();
          }
          else
          {
             // Clear the time based values when log parsing fails
             ClearTimeBasedValues();
          }
-         Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, Name, Debug.GetExecTime(Start)));
-      }
-      
-      public void SetTimeBasedValues()
-      {
-         UnitInfo.SetTimeBasedValues(Name);
+         
+         Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, InstanceName, Debug.GetExecTime(Start)));
       }
 
       /// <summary>
-      /// Virtual method - override to define appropriate retrieval semantics for
-      /// the subclass. Note: Call base class method from override to correctly
-      /// update internal structures.
+      /// Retrieve Instance Log Files based on Instance Type
       /// </summary>
       public void Retrieve()
       {
@@ -400,14 +582,16 @@ namespace HFM.Instances
             // Clear the time based values when log retrieval fails
             ClearTimeBasedValues();
          }
+         
+         Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Client Status: {2}", Debug.FunctionName, InstanceName, Status));
       }
 
       /// <summary>
-      /// Retrieve the instance's log files
+      /// Retrieve the log and unit info files from the configured Local path
       /// </summary>
       public bool RetrievePathInstance()
       {
-         if (RetrievalInProgress)
+         if (_RetrievalInProgress)
          {
             return false;
          }
@@ -416,33 +600,45 @@ namespace HFM.Instances
 
          try
          {
-            RetrievalInProgress = true;
+            _RetrievalInProgress = true;
 
             FileInfo fiLog = new FileInfo(System.IO.Path.Combine(Path, RemoteFAHLogFilename));
             string FAHLog_txt = System.IO.Path.Combine(BaseDirectory, CachedFAHLogName);
+            FileInfo fiCachedLog = new FileInfo(FAHLog_txt);
             try
             {
+               Debug.WriteToHfmConsole(TraceLevel.Verbose,
+                                       String.Format("{0} ({1}) FAHLog copy (start).", Debug.FunctionName,
+                                                     InstanceName));
                if (fiLog.Exists)
                {
-                  Debug.WriteToHfmConsole(TraceLevel.Verbose,
-                                          String.Format("{0} ({1}) FAHLog copy (start).", Debug.FunctionName, Name));
-                  fiLog.CopyTo(FAHLog_txt, true);
-                  Debug.WriteToHfmConsole(TraceLevel.Verbose,
-                                          String.Format("{0} ({1}) FAHLog copy (success).", Debug.FunctionName, Name));
+                  if (fiCachedLog.Exists == false || fiLog.Length != fiCachedLog.Length)
+                  {
+                     fiLog.CopyTo(FAHLog_txt, true);
+                     Debug.WriteToHfmConsole(TraceLevel.Verbose,
+                                             String.Format("{0} ({1}) FAHLog copy (success).", Debug.FunctionName,
+                                                           InstanceName));
+                  }
+                  else
+                  {
+                     Debug.WriteToHfmConsole(TraceLevel.Verbose,
+                                             String.Format("{0} ({1}) FAHLog copy (file has not changed).", Debug.FunctionName,
+                                                           InstanceName));
+                  }
                }
                else
                {
-                  UnitInfo.Status = eClientStatus.Offline;
+                  Status = ClientStatus.Offline;
                   Debug.WriteToHfmConsole(TraceLevel.Error,
-                                          String.Format("{0} ({1}) The path {2} is inaccessible.", Debug.FunctionName, Name, fiLog.FullName));
+                                          String.Format("{0} ({1}) The path {2} is inaccessible.", Debug.FunctionName, InstanceName, fiLog.FullName));
                   return false;
                }
             }
             catch (Exception ex)
             {
-               UnitInfo.Status = eClientStatus.Offline;
+               Status = ClientStatus.Offline;
                Debug.WriteToHfmConsole(TraceLevel.Error,
-                                       String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, Name, ex.Message));
+                                       String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, InstanceName, ex.Message));
 
                return false;
             }
@@ -452,48 +648,63 @@ namespace HFM.Instances
             string UnitInfo_txt = System.IO.Path.Combine(BaseDirectory, CachedUnitInfoName);
             try
             {
+               Debug.WriteToHfmConsole(TraceLevel.Verbose,
+                                       String.Format("{0} ({1}) UnitInfo copy (start).", Debug.FunctionName, InstanceName));
                if (fiUI.Exists)
                {
-                  Debug.WriteToHfmConsole(TraceLevel.Verbose,
-                                          String.Format("{0} ({1}) UnitInfo copy (start).", Debug.FunctionName, Name));
-                  fiUI.CopyTo(UnitInfo_txt, true);
-                  Debug.WriteToHfmConsole(TraceLevel.Verbose,
-                                          String.Format("{0} ({1}) UnitInfo copy (success).", Debug.FunctionName, Name));
+                  // If file size is too large, do not copy it and delete the current cached copy - Issue 2
+                  if (fiUI.Length < 1024)
+                  {
+                     fiUI.CopyTo(UnitInfo_txt, true);
+                     Debug.WriteToHfmConsole(TraceLevel.Verbose,
+                                             String.Format("{0} ({1}) UnitInfo copy (success).", Debug.FunctionName,
+                                                           InstanceName));
+                  }
+                  else
+                  {
+                     if (File.Exists(UnitInfo_txt))
+                     {
+                        File.Delete(UnitInfo_txt);
+                     }
+                     Debug.WriteToHfmConsole(TraceLevel.Warning,
+                                             String.Format("{0} ({1}) UnitInfo copy (file is too big: {2} bytes).", Debug.FunctionName,
+                                                           InstanceName, fiUI.Length));
+                  }
                }
                else
                {
-                  UnitInfo.Status = eClientStatus.Offline;
+                  Status = ClientStatus.Offline;
                   Debug.WriteToHfmConsole(TraceLevel.Error,
-                                          String.Format("{0} ({1}) The path {2} is inaccessible.", Debug.FunctionName, Name, fiUI.FullName));
+                                          String.Format("{0} ({1}) The path {2} is inaccessible.", Debug.FunctionName, InstanceName, fiUI.FullName));
                   return false;
                }
             }
             catch (Exception ex)
             {
-               UnitInfo.Status = eClientStatus.Offline;
+               Status = ClientStatus.Offline;
                Debug.WriteToHfmConsole(TraceLevel.Error,
-                                       String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, Name, ex.Message));
+                                       String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, InstanceName, ex.Message));
                return false;
             }
 
-            _LastRetrieved = DateTime.Now;
+            LastRetrievalTime = DateTime.Now;
          }
          finally
          {
-            RetrievalInProgress = false;
+            _RetrievalInProgress = false;
          }
          
-         Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, Name, Debug.GetExecTime(Start)));
+         Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, InstanceName, Debug.GetExecTime(Start)));
 
          return true;
       }
 
       /// <summary>
-      /// 
+      /// Retrieve the log and unit info files from the configured HTTP location
       /// </summary>
       public bool RetrieveHTTPInstance()
       {
-         if (RetrievalInProgress)
+         if (_RetrievalInProgress)
          {
             // Don't allow this to fire more than once at a time
             return false;
@@ -503,7 +714,7 @@ namespace HFM.Instances
 
          try
          {
-            RetrievalInProgress = true;
+            _RetrievalInProgress = true;
 
             PreferenceSet Prefs = PreferenceSet.Instance;
 
@@ -539,9 +750,9 @@ namespace HFM.Instances
             }
             catch (Exception ex)
             {
-               UnitInfo.Status = eClientStatus.Offline;
-               Debug.WriteToHfmConsole(TraceLevel.Warning,
-                                       String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, Name,
+               Status = ClientStatus.Offline;
+               Debug.WriteToHfmConsole(TraceLevel.Error,
+                                       String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, InstanceName,
                                                      ex.Message));
                return false;
             }
@@ -570,6 +781,9 @@ namespace HFM.Instances
                String UnitInfo_txt = System.IO.Path.Combine(BaseDirectory, CachedUnitInfoName);
                StreamWriter sw2 = new StreamWriter(UnitInfo_txt, false);
                StreamReader sr2 = new StreamReader(r2.GetResponseStream(), Encoding.ASCII);
+               
+               //TODO: (HTTP) If this download begins getting too big we likely have a bad UnitInfo.txt file. - Issue 2
+               //      Stop the download and delete the current cached copy, as done for Path Instances.
 
                sw2.Write(sr2.ReadToEnd());
                sw2.Flush();
@@ -578,22 +792,21 @@ namespace HFM.Instances
             }
             catch (Exception ex)
             {
-               UnitInfo.Status = eClientStatus.Offline;
-               Debug.WriteToHfmConsole(TraceLevel.Warning,
-                                       String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, Name,
+               Status = ClientStatus.Offline;
+               Debug.WriteToHfmConsole(TraceLevel.Error,
+                                       String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, InstanceName,
                                                      ex.Message));
                return false;
             }
 
-            //TODO: Check _LastRetrieved here.  Moved this in from the Base class.
-            _LastRetrieved = DateTime.Now;
+            LastRetrievalTime = DateTime.Now;
          }
          finally
          {
-            RetrievalInProgress = false;
+            _RetrievalInProgress = false;
          }
 
-         Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, Name, Debug.GetExecTime(Start)));
+         Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, InstanceName, Debug.GetExecTime(Start)));
          
          return true;
       }
@@ -603,7 +816,7 @@ namespace HFM.Instances
       /// </summary>
       public bool RetrieveFTPInstance()
       {
-         if (RetrievalInProgress)
+         if (_RetrievalInProgress)
          {
             // Don't allow this to fire more than once at a time
             return false;
@@ -613,7 +826,7 @@ namespace HFM.Instances
 
          try
          {
-            RetrievalInProgress = true;
+            _RetrievalInProgress = true;
 
             PreferenceSet Prefs = PreferenceSet.Instance;
 
@@ -653,9 +866,9 @@ namespace HFM.Instances
             }
             catch (Exception ex)
             {
-               UnitInfo.Status = eClientStatus.Offline;
-               Debug.WriteToHfmConsole(TraceLevel.Warning,
-                                       String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, Name,
+               Status = ClientStatus.Offline;
+               Debug.WriteToHfmConsole(TraceLevel.Error,
+                                       String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, InstanceName,
                                                      ex.Message));
                return false;
             }
@@ -705,9 +918,9 @@ namespace HFM.Instances
             }
             catch (Exception ex)
             {
-               UnitInfo.Status = eClientStatus.Offline;
-               Debug.WriteToHfmConsole(TraceLevel.Warning,
-                                       String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, Name,
+               Status = ClientStatus.Offline;
+               Debug.WriteToHfmConsole(TraceLevel.Error,
+                                       String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, InstanceName,
                                                      ex.Message));
                return false;
             }
@@ -715,40 +928,32 @@ namespace HFM.Instances
             StreamWriter sw2 = new StreamWriter(UnitInfo_txt, false);
             StreamReader sr2 = new StreamReader(ftpr2.GetResponseStream(), Encoding.ASCII);
 
+            //TODO: (FTP) If this download begins getting too big we likely have a bad UnitInfo.txt file. - Issue 2
+            //      Stop the download and delete the current cached copy, as done for Path Instances.
+
             sw2.Write(sr2.ReadToEnd());
             sw2.Flush();
             sw2.Close();
             sr2.Close();
 
-            //TODO: Check _LastRetrieved here.  Moved this in from the Base class.
-            _LastRetrieved = DateTime.Now;
+            LastRetrievalTime = DateTime.Now;
          }
          finally
          {
-            RetrievalInProgress = false;
+            _RetrievalInProgress = false;
          }
 
-         Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, Name, Debug.GetExecTime(Start)));
+         Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, InstanceName, Debug.GetExecTime(Start)));
          
          return true;
       }
       #endregion
-      
-      protected void OnInstanceHostTypeChanged(EventArgs e)
-      {
-         if (InstanceHostTypeChanged != null)
-         {
-            InstanceHostTypeChanged(this, e);
-         }
-      }
 
       #region XML Serialization
       /// <summary>
-      /// Virtual method - override to define appropriate save to XML semantics for
-      /// the subclass. Note: Call base class method from override to correctly
-      /// save common elements.
+      /// Serialize this client instance to Xml
       /// </summary>
-      public virtual System.Xml.XmlDocument ToXml()
+      public System.Xml.XmlDocument ToXml()
       {
          DateTime Start = Debug.ExecStart;
 
@@ -757,7 +962,7 @@ namespace HFM.Instances
             System.Xml.XmlDocument xmlData = new System.Xml.XmlDocument();
 
             System.Xml.XmlElement xmlRoot = xmlData.CreateElement(xmlNodeInstance);
-            xmlRoot.SetAttribute(xmlAttrName, Name);
+            xmlRoot.SetAttribute(xmlAttrName, InstanceName);
             xmlData.AppendChild(xmlRoot);
             
             xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlNodeFAHLog, RemoteFAHLogFilename));
@@ -771,7 +976,7 @@ namespace HFM.Instances
             xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropUser, Username));
             xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropPass, Password));
             
-            Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+            Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, InstanceName, Debug.GetExecTime(Start)));
             return xmlData;
          }
          catch (Exception ex)
@@ -783,25 +988,21 @@ namespace HFM.Instances
       }
 
       /// <summary>
-      /// Virtual method - override to define appropriate load from XML semantics for
-      /// the subclass. Note: Call base class method from override to correctly
-      /// load common elements.
+      /// Deserialize into this instance based on the given XmlNode data
       /// </summary>
-      /// <param name="xmlData">Xml containing the Instance configuration.
-      /// Should be identical in structure and scope to the output of the ToXml
-      /// method in the same class.</param>
-      public virtual void FromXml(System.Xml.XmlNode xmlData)
+      /// <param name="xmlData">XmlNode containing the client instance data</param>
+      public void FromXml(System.Xml.XmlNode xmlData)
       {
          DateTime Start = Debug.ExecStart;
          
-         Name = xmlData.Attributes[xmlAttrName].ChildNodes[0].Value;
+         InstanceName = xmlData.Attributes[xmlAttrName].ChildNodes[0].Value;
          try
          {
             RemoteFAHLogFilename = xmlData.SelectSingleNode(xmlNodeFAHLog).InnerText;
          }
          catch (NullReferenceException)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Remote FAH Log Filename."));
+            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Remote FAH Log Filename."));
             RemoteFAHLogFilename = LocalFAHLog;
          }
          
@@ -811,7 +1012,7 @@ namespace HFM.Instances
          }
          catch (NullReferenceException)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Remote FAH UnitInfo Filename."));
+            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Remote FAH UnitInfo Filename."));
             RemoteUnitInfoFilename = LocalUnitInfo;
          }
          
@@ -821,12 +1022,12 @@ namespace HFM.Instances
          }
          catch (NullReferenceException)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Client MHz, defaulting to 1 MHz."));
+            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Client MHz, defaulting to 1 MHz."));
             ClientProcessorMegahertz = 1;
          }
          catch (FormatException)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Could not parse Client MHz, defaulting to 1 MHz."));
+            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Could not parse Client MHz, defaulting to 1 MHz."));
             ClientProcessorMegahertz = 1;
          }
 
@@ -836,12 +1037,12 @@ namespace HFM.Instances
          }
          catch (NullReferenceException)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Client VM Flag, defaulting to false."));
+            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Client VM Flag, defaulting to false."));
             ClientIsOnVirtualMachine = false;
          }
          catch (InvalidCastException)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Could not parse Client VM Flag, defaulting to false."));
+            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Could not parse Client VM Flag, defaulting to false."));
             ClientIsOnVirtualMachine = false;
          }
 
@@ -851,12 +1052,12 @@ namespace HFM.Instances
          }
          catch (NullReferenceException)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Client Time Offset, defaulting to 0."));
+            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Client Time Offset, defaulting to 0."));
             ClientTimeOffset = 0;
          }
          catch (FormatException)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Could not parse Client Time Offset, defaulting to 0."));
+            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Could not parse Client Time Offset, defaulting to 0."));
             ClientTimeOffset = 0;
          }
 
@@ -866,7 +1067,7 @@ namespace HFM.Instances
          }
          catch (NullReferenceException)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Client Path."));
+            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Client Path."));
          }
 
          try
@@ -876,7 +1077,7 @@ namespace HFM.Instances
          catch (NullReferenceException)
          {
             Server = String.Empty;
-            Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Client Server."));
+            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Client Server."));
          }
          
          try
@@ -886,7 +1087,7 @@ namespace HFM.Instances
          catch (NullReferenceException)
          {
             Username = String.Empty;
-            Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Server Username."));
+            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Server Username."));
          }
          
          try
@@ -896,10 +1097,10 @@ namespace HFM.Instances
          catch (NullReferenceException)
          {
             Password = String.Empty;
-            Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Server Password."));
+            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Server Password."));
          }
-         
-         Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+
+         Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, InstanceName, Debug.GetExecTime(Start)));
       }
       #endregion
    }
