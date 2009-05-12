@@ -685,9 +685,10 @@ namespace HFM.Forms
            // 
            // linkTeam
            // 
+           this.linkTeam.AutoSize = true;
            this.linkTeam.Location = new System.Drawing.Point(338, 72);
            this.linkTeam.Name = "linkTeam";
-           this.linkTeam.Size = new System.Drawing.Size(70, 19);
+           this.linkTeam.Size = new System.Drawing.Size(72, 13);
            this.linkTeam.TabIndex = 8;
            this.linkTeam.TabStop = true;
            this.linkTeam.Text = "Test Team ID";
@@ -718,9 +719,10 @@ namespace HFM.Forms
            // 
            // linkStanford
            // 
+           this.linkStanford.AutoSize = true;
            this.linkStanford.Location = new System.Drawing.Point(338, 46);
            this.linkStanford.Name = "linkStanford";
-           this.linkStanford.Size = new System.Drawing.Size(83, 19);
+           this.linkStanford.Size = new System.Drawing.Size(85, 13);
            this.linkStanford.TabIndex = 7;
            this.linkStanford.TabStop = true;
            this.linkStanford.Text = "Test Stanford ID";
@@ -735,9 +737,10 @@ namespace HFM.Forms
            // 
            // linkEOC
            // 
+           this.linkEOC.AutoSize = true;
            this.linkEOC.Location = new System.Drawing.Point(338, 20);
            this.linkEOC.Name = "linkEOC";
-           this.linkEOC.Size = new System.Drawing.Size(64, 19);
+           this.linkEOC.Size = new System.Drawing.Size(67, 13);
            this.linkEOC.TabIndex = 6;
            this.linkEOC.TabStop = true;
            this.linkEOC.Text = "Test EOC ID";

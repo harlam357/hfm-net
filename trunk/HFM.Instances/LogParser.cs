@@ -22,10 +22,10 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
+//using System.Windows.Forms;
 
 using HFM.Proteins;
-using Debug=HFM.Instrumentation.Debug;
+using Debug = HFM.Instrumentation.Debug;
 
 namespace HFM.Instances
 {
@@ -33,31 +33,43 @@ namespace HFM.Instances
    {
       #region Members
       private readonly Regex rProjectNumber =
-               new Regex("Project: (?<ProjectNumber>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+            new Regex("Project: (?<ProjectNumber>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       private readonly Regex rProjectNumberFromTag =
-               new Regex("P(?<ProjectNumber>.*)R(?<Run>.*)C(?<Clone>.*)G(?<Gen>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);         
+            new Regex("P(?<ProjectNumber>.*)R(?<Run>.*)C(?<Clone>.*)G(?<Gen>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       //private Regex rProtein =
-      //     new Regex("Protein: (?<Protein>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+      //      new Regex("Protein: (?<Protein>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       private readonly Regex rCoreVersion =
-           new Regex("\\[(?<Timestamp>.*)\\] Version (?<CoreVer>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+            new Regex("\\[(?<Timestamp>.*)\\] Version (?<CoreVer>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       private readonly Regex rFramesCompleted =
-           new Regex("\\[(?<Timestamp>.*)\\] Completed (?<Completed>.*) out of (?<Total>.*) steps  ((?<Percent>.*))", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+            new Regex("\\[(?<Timestamp>.*)\\] Completed (?<Completed>.*) out of (?<Total>.*) steps  \\((?<Percent>.*)%\\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       private readonly Regex rFramesCompletedGpu =
-           new Regex("\\[(?<Timestamp>.*)\\] Completed (?<Percent>.*)%");
+            new Regex("\\[(?<Timestamp>.*)\\] Completed (?<Percent>.*)%", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+
+      private readonly Regex rUserTeam =
+            new Regex("\\[(?<Timestamp>.*)\\] - User name: (?<Username>.*) \\(Team (?<TeamNumber>.*)\\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+
+      private readonly Regex rUserID =
+            new Regex("\\[(?<Timestamp>.*)\\] - User ID: (?<UserID>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+
+      private readonly Regex rMachineID =
+            new Regex("\\[(?<Timestamp>.*)\\] - Machine ID: (?<MachineID>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       //private Regex rCompletedWUs =
-      //     new Regex("Number of Units Completed: (?<Completed>.*)$", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline); 
+      //      new Regex("Number of Units Completed: (?<Completed>.*)$", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline); 
 
       private readonly Regex rProteinID =
-           new Regex(@"(?<ProjectNumber>.*) \(Run (?<Run>.*), Clone (?<Clone>.*), Gen (?<Gen>.*)\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+            new Regex(@"(?<ProjectNumber>.*) \(Run (?<Run>.*), Clone (?<Clone>.*), Gen (?<Gen>.*)\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       bool _bProjectFound = false;
       bool _bCoreFound = false;
+      bool _bUserTeamFound = false;
+      bool _bUserIDFound = false;
+      bool _bMachineIDFound = false;
       #endregion
 
       #region Parsing Methods
@@ -71,9 +83,9 @@ namespace HFM.Instances
       public Boolean ParseUnitInfo(String LogFileName, ClientInstance Instance)
       {
          if (!File.Exists(LogFileName)) return false;
-         
+
          DateTime Start = Debug.ExecStart;
-         
+
          TextReader tr = null;
          try
          {
@@ -118,7 +130,7 @@ namespace HFM.Instances
                tr.Dispose();
             }
          }
-         
+
          Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, Instance.InstanceName, Debug.GetExecTime(Start)));
          return true;
       }
@@ -151,16 +163,15 @@ namespace HFM.Instances
          DateTime time3 = DateTime.MinValue;         // Time - one frame ago
          DateTime time4 = DateTime.MinValue;         // Time - current frame
 
-         // setup project and core found flags
-         _bProjectFound = false;
-         _bCoreFound = false;
-
          // start the parse loop where the client started last
          for (int i = clientStart; i < FAHLogText.Length; i++)
          {
             string logLine = FAHLogText[i];
             // add the line to the instance log holder
             //Instance.CurrentLogText.Add(logLine);
+            
+            // Read Username and Team Number - Issue 5
+            CheckForUserTeamAndIDs(Instance, logLine);
 
             if (logLine.Contains("FINISHED_UNIT"))
             {
@@ -181,10 +192,10 @@ namespace HFM.Instances
             if (i > unitStart)
             {
                Instance.Status = ClientStatus.RunningNoFrameTimes;
-               
+
                // add the line to the instance log holder
                Instance.CurrentLogText.Add(logLine);
-            
+
                CheckForProjectID(Instance, logLine);
                CheckForCoreVersion(Instance, logLine);
 
@@ -218,11 +229,11 @@ namespace HFM.Instances
             }
 
             // Process UI message queue
-            Application.DoEvents();
+            //Application.DoEvents();
          }
 
          bool bResult = true;
-         
+
          if (Instance.Status != ClientStatus.Stopped &&
              Instance.Status != ClientStatus.Paused)
          {
@@ -301,7 +312,7 @@ namespace HFM.Instances
             }
          }
       }
-      
+
       /// <summary>
       /// Check the given log line for Project information
       /// </summary>
@@ -315,7 +326,7 @@ namespace HFM.Instances
             DoProjectIDMatch(Instance, rProteinID.Match(mProjectNumber.Result("${ProjectNumber}")));
          }
       }
-      
+
       /// <summary>
       /// Attempts to Set Project ID with given Match.  If Project cannot be found in local cache, download again.
       /// </summary>
@@ -333,7 +344,7 @@ namespace HFM.Instances
             Debug.WriteToHfmConsole(TraceLevel.Warning,
                                     String.Format("{0} Project ID '{1}' not found in Protein Collection.",
                                                   Debug.FunctionName, Instance.UnitInfo.ProjectID));
-                                                  
+
             // If a Project cannot be identified using the local Project data, update Project data from Stanford. - Issue 4
             Debug.WriteToHfmConsole(TraceLevel.Info,
                                     String.Format("{0} Attempting to download new Project data...", Debug.FunctionName));
@@ -433,6 +444,36 @@ namespace HFM.Instances
       }
 
       /// <summary>
+      /// Check the given log line for User, Team, and Machine related ID values
+      /// </summary>
+      /// <param name="Instance">Client Instance</param>
+      /// <param name="logLine">Log Line</param>
+      private void CheckForUserTeamAndIDs(ClientInstance Instance, string logLine)
+      {
+         Match mUserTeam;
+         if (_bUserTeamFound == false && (mUserTeam = rUserTeam.Match(logLine)).Success)
+         {
+            Instance.UnitInfo.Username = mUserTeam.Result("${Username}");
+            Instance.UnitInfo.Team = int.Parse(mUserTeam.Result("${TeamNumber}"));
+            _bUserTeamFound = true;
+         }
+
+         Match mUserID;
+         if (_bUserIDFound == false && (mUserID = rUserID.Match(logLine)).Success)
+         {
+            Instance.UserID = mUserID.Result("${UserID}");
+            _bUserIDFound = true;
+         }
+
+         Match mMachineID;
+         if (_bMachineIDFound == false && (mMachineID = rMachineID.Match(logLine)).Success)
+         {
+            Instance.MachineID = int.Parse(mMachineID.Result("${MachineID}"));
+            _bMachineIDFound = true;
+         }
+      }
+
+      /// <summary>
       /// Check the given log line for Completed Frame information (GPU Only)
       /// </summary>
       /// <param name="Instance">Client Instance</param>
@@ -479,6 +520,7 @@ namespace HFM.Instances
             {
                Instance.UnitInfo.RawFramesComplete = Int32.Parse(mFramesCompleted.Result("${Completed}"));
                Instance.UnitInfo.RawFramesTotal = Int32.Parse(mFramesCompleted.Result("${Total}"));
+               //string temp = mFramesCompleted.Result("${Percent}");
             }
             catch (FormatException)
             {
@@ -499,11 +541,11 @@ namespace HFM.Instances
       /// <param name="time2"></param>
       /// <param name="time3"></param>
       /// <param name="time4"></param>
-      private static void SetTimeStamp(ClientInstance Instance, string timeStampString, ref DateTime time1, ref DateTime time2, 
+      private static void SetTimeStamp(ClientInstance Instance, string timeStampString, ref DateTime time1, ref DateTime time2,
                                                                                         ref DateTime time3, ref DateTime time4)
       {
          System.Globalization.DateTimeStyles style;
-      
+
          if (Instance.ClientIsOnVirtualMachine)
          {
             // set parse style to maintain universal
@@ -535,7 +577,7 @@ namespace HFM.Instances
             TimeSpan tDelta = GetDelta(time4, time1);
             Instance.UnitInfo.RawTimePerThreeSections = Convert.ToInt32(tDelta.TotalSeconds / 3);
          }
-         
+
          //else if (time2 != DateTime.MinValue)
          //{
          //   // time2 is valid for 2 "set" ago
@@ -565,7 +607,7 @@ namespace HFM.Instances
          if (timeLastFrame < timeCompareFrame)
          {
             // get time before rollover
-            tDelta = new TimeSpan(24, 0, 0).Subtract(timeCompareFrame.TimeOfDay);
+            tDelta = TimeSpan.FromDays(1).Subtract(timeCompareFrame.TimeOfDay);
             // add time from latest reading
             tDelta = tDelta.Add(timeLastFrame.TimeOfDay);
          }

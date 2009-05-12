@@ -49,11 +49,6 @@ namespace HFM.Forms
       private const int MinToMillisec = 60000;
 
       /// <summary>
-      /// Offset value for Form resize on Show/Hide Log File
-      /// </summary>
-      private const int ShowHideLogOffset = 360;
-
-      /// <summary>
       /// Collection of host instances
       /// </summary>
       private FoldingInstanceCollection HostInstances;
@@ -235,6 +230,8 @@ namespace HFM.Forms
          dataGridView1.ColumnDisplayIndexChanged += dataGridView1_ColumnDisplayIndexChanged;
          // Then run it once to ensure the last column is set to Fill
          dataGridView1_ColumnDisplayIndexChanged(null, null);
+         // Add the Splitter Moved Handler here after everything is shown - Issue 8
+         splitContainer1.SplitterMoved += splitContainer1_SplitterMoved;
       }
 
       /// <summary>
@@ -252,6 +249,13 @@ namespace HFM.Forms
          else
          {
             ShowInTaskbar = false;
+         }
+         
+         // When the log file window (panel) is collapsed, get the split location
+         // changes based on the height of Panel1 - Issue 8
+         if (Visible && splitContainer1.Panel2Collapsed)
+         {
+            PreferenceSet.Instance.FormSplitLocation = splitContainer1.Panel1.Height;
          }
       }
 
@@ -314,13 +318,25 @@ namespace HFM.Forms
       }
 
       /// <summary>
+      /// Update Split Location in Preferences
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
+      private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
+      {
+         // When the log file window (Panel2) is visible, this event will fire.
+         // Update the split location directly from the split panel control. - Issue 8
+         PreferenceSet.Instance.FormSplitLocation = splitContainer1.SplitterDistance;
+      }
+
+      /// <summary>
       /// Event Handler - adds messages to the frmMessages window
       /// </summary>
       /// <param name="e"></param>
       private void Debug_TextMessage(TextMessageEventArgs e)
       {
          _frmMessages.AddMessage(e.Message);
-         Application.DoEvents();
+         //Application.DoEvents();
       }
       #endregion
       
@@ -411,14 +427,10 @@ namespace HFM.Forms
                      // Erase the cell.
                      e.Graphics.FillRectangle(backColorBrush, e.CellBounds);
 
-                     // Draw the grid lines (only the right and bottom lines;
-                     // DataGridView takes care of the others).
+                     // Draw the bottom grid line
                      e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
                                          e.CellBounds.Bottom - 1, e.CellBounds.Right,
                                          e.CellBounds.Bottom - 1);
-                     //e.Graphics.DrawLine(gridLinePen, e.CellBounds.Right - 1,
-                     //                    e.CellBounds.Top, e.CellBounds.Right - 1,
-                     //                    e.CellBounds.Bottom);
 
                      // Draw the inset highlight box.
                      Pen fillPen;
@@ -474,6 +486,10 @@ namespace HFM.Forms
          }
       }
 
+      /// <summary>
+      /// Paint the Time based cells with the custom time format
+      /// </summary>
+      /// <param name="e"></param>
       private void PaintTimeBasedCell(DataGridViewCellPaintingEventArgs e)
       {
          if ((dataGridView1.Columns["TPF"].Index == e.ColumnIndex || 
@@ -499,11 +515,11 @@ namespace HFM.Forms
                      textColor = Brushes.White;
                   }
 
-                  // Draw the grid lines (only the right and bottom lines;
-                  // DataGridView takes care of the others).
+                  // Draw the bottom grid line
                   e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
                                       e.CellBounds.Bottom - 1, e.CellBounds.Right,
                                       e.CellBounds.Bottom - 1);
+                                      
                   if (dataGridView1.Columns["TPF"].Index == e.ColumnIndex)
                   {
                      TimeSpan span = (TimeSpan)e.Value;
@@ -557,6 +573,11 @@ namespace HFM.Forms
          }
       }
 
+      /// <summary>
+      /// Measure Text and set Column Width on Double-Click
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
       private void dataGridView1_ColumnDividerDoubleClick(object sender, DataGridViewColumnDividerDoubleClickEventArgs e)
       {
          Font font = new Font(dataGridView1.DefaultCellStyle.Font, FontStyle.Regular);
@@ -629,6 +650,7 @@ namespace HFM.Forms
          }
       }
 
+      #region Custom String Formatting Helpers
       private static string GetFormattedTpfString(TimeSpan span)
       {
          string formatString = "{1}min {2}sec";
@@ -647,24 +669,24 @@ namespace HFM.Forms
          {
             formatString = "{0}d {1}hr {2}min";
          }
-         
+
          return String.Format(formatString, span.Days, span.Hours, span.Minutes);
       }
-      
+
       private static string GetFormattedDownloadTimeString(DateTime date)
       {
          if (date.Equals(DateTime.MinValue))
          {
             return String.Empty;
          }
-         
+
          TimeSpan span = DateTime.Now.Subtract(date);
          string formatString = "{1}hr {2}min ago";
          if (span.Days > 0)
          {
             formatString = "{0}d {1}hr {2}min ago";
          }
-         
+
          return String.Format(formatString, span.Days, span.Hours, span.Minutes);
       }
 
@@ -674,17 +696,23 @@ namespace HFM.Forms
          {
             return String.Empty;
          }
-      
+
          TimeSpan span = date.Subtract(DateTime.Now);
          string formatString = "In {1}hr {2}min";
          if (span.Days > 0)
          {
             formatString = "In {0}d {1}hr {2}min";
          }
-         
-         return String.Format(formatString, span.Days, span.Hours, span.Minutes);
-      }
 
+         return String.Format(formatString, span.Days, span.Hours, span.Minutes);
+      } 
+      #endregion
+
+      /// <summary>
+      /// Handle Right-Click (Contest Menu) and Left Double-Click (File Browser)
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
       private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
       {
          DataGridView.HitTestInfo hti = dataGridView1.HitTest(e.X, e.Y);
@@ -1055,6 +1083,11 @@ namespace HFM.Forms
          }
       }
 
+      /// <summary>
+      /// Gets basic client info from the frmHost and sets in the given Client Instance
+      /// </summary>
+      /// <param name="hostForm">frmHost object</param>
+      /// <param name="Instance">Client Instance</param>
       private static void SetInstanceBasicInfo(frmHost hostForm, ClientInstance Instance)
       {
          Instance.InstanceName = hostForm.txtName.Text;
@@ -1133,6 +1166,11 @@ namespace HFM.Forms
          }
       }
 
+      /// <summary>
+      /// Fire process to show the current client file directory (Local Clients Only)
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
       private void mnuClientsViewClientFiles_Click(object sender, EventArgs e)
       {
          if (dataGridView1.SelectedRows.Count == 0) return;
@@ -1166,6 +1204,11 @@ namespace HFM.Forms
          ShowHideLog(!txtLogFile.Visible);
       }
 
+      /// <summary>
+      /// Toggle the Date/Time Style
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
       private void mnuViewToggleDateTime_Click(object sender, EventArgs e)
       {
          if (PreferenceSet.Instance.TimeStyle.Equals(eTimeStyle.Standard))
@@ -1515,7 +1558,7 @@ namespace HFM.Forms
                }
 
                i++; // increment the outer loop counter
-               Application.DoEvents();
+               //Application.DoEvents();
             }
             
             if (Synchronous == false)
@@ -1647,7 +1690,7 @@ namespace HFM.Forms
                //   break;
             }
             
-            Application.DoEvents();
+            //Application.DoEvents();
          }
 
          TotalPPD = newTotalPPD;
@@ -1874,9 +1917,10 @@ namespace HFM.Forms
          {
             if (PreferenceSet.Instance.FormLogVisible == false)
             {
-               size = new Size(size.Width, size.Height + ShowHideLogOffset);
+               size = new Size(size.Width, size.Height + PreferenceSet.Instance.FormLogWindowHeight);
             }
             Size = size;
+            splitContainer1.SplitterDistance = PreferenceSet.Instance.FormSplitLocation;
          }
 
          if (PreferenceSet.Instance.FormLogVisible == false)
@@ -2011,16 +2055,23 @@ namespace HFM.Forms
          {
             txtLogFile.Visible = false;
             splitContainer1.Panel2Collapsed = true;
-            Size = new Size(Size.Width, Size.Height - ShowHideLogOffset);
+            PreferenceSet.Instance.FormLogWindowHeight = (splitContainer1.Height - splitContainer1.SplitterDistance);
+            Size = new Size(Size.Width, Size.Height - PreferenceSet.Instance.FormLogWindowHeight);
          }
          else
          {
             txtLogFile.Visible = true;
-            Size = new Size(Size.Width, Size.Height + ShowHideLogOffset);
+            Resize -= frmMain_Resize; // disable Form resize event for this operation
+            Size = new Size(Size.Width, Size.Height + PreferenceSet.Instance.FormLogWindowHeight);
+            Resize += frmMain_Resize; // re-enable
             splitContainer1.Panel2Collapsed = false;
          }
       }
       
+      /// <summary>
+      /// Fire File Browser Process
+      /// </summary>
+      /// <param name="path"></param>
       private static void StartFileBrowser(string path)
       {
          Process.Start(PreferenceSet.Instance.FileExplorer, path);

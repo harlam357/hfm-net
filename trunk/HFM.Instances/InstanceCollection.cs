@@ -22,7 +22,6 @@ using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Xml;
-using System.Reflection;
 using System.Collections.Generic;
 
 namespace HFM.Instances
@@ -81,7 +80,7 @@ namespace HFM.Instances
            set { _displayCollection.OfflineClientsLast = value; }
         }
 
-        public const int NumberOfDisplayFields = 17;
+        public const int NumberOfDisplayFields = 19;
         #endregion
     
         #region Read and Write Xml
@@ -149,14 +148,14 @@ namespace HFM.Instances
         /// if the path does not start with either ?: or \\</param>
         public virtual void ToXml(String xmlDocName)
         {
-            System.Xml.XmlDocument xmlData = new System.Xml.XmlDocument();
+            XmlDocument xmlData = new XmlDocument();
 
             // Create the XML Declaration (well formed)
             XmlDeclaration xmlDeclaration = xmlData.CreateXmlDeclaration("1.0", "utf-8", null);
             xmlData.InsertBefore(xmlDeclaration, xmlData.DocumentElement);
 
             // Create the root element
-            System.Xml.XmlElement xmlRoot = xmlData.CreateElement("Hosts");
+            XmlElement xmlRoot = xmlData.CreateElement("Hosts");
 
             // Loop through the collection and serialize the lot
             foreach (KeyValuePair<String, ClientInstance> de in _instanceCollection)

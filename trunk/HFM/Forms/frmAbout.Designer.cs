@@ -81,7 +81,7 @@ namespace HFM.Forms
            // 
            this.lblCopyrights.Location = new System.Drawing.Point(10, 37);
            this.lblCopyrights.Name = "lblCopyrights";
-           this.lblCopyrights.Size = new System.Drawing.Size(471, 126);
+           this.lblCopyrights.Size = new System.Drawing.Size(497, 126);
            this.lblCopyrights.TabIndex = 3;
            this.lblCopyrights.Text = resources.GetString("lblCopyrights.Text");
            // 
@@ -90,7 +90,7 @@ namespace HFM.Forms
            this.lblLinkOrig.LinkArea = new System.Windows.Forms.LinkArea(58, 15);
            this.lblLinkOrig.Location = new System.Drawing.Point(10, 169);
            this.lblLinkOrig.Name = "lblLinkOrig";
-           this.lblLinkOrig.Size = new System.Drawing.Size(474, 22);
+           this.lblLinkOrig.Size = new System.Drawing.Size(497, 22);
            this.lblLinkOrig.TabIndex = 5;
            this.lblLinkOrig.TabStop = true;
            this.lblLinkOrig.Text = "The HFM.NET UI was inspired by FahMon and is based on the FAHLogStats.NET code ba" +
@@ -102,7 +102,7 @@ namespace HFM.Forms
            // 
            this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
            this.btnClose.DialogResult = System.Windows.Forms.DialogResult.OK;
-           this.btnClose.Location = new System.Drawing.Point(455, 202);
+           this.btnClose.Location = new System.Drawing.Point(465, 202);
            this.btnClose.Name = "btnClose";
            this.btnClose.Size = new System.Drawing.Size(75, 23);
            this.btnClose.TabIndex = 0;
@@ -111,9 +111,10 @@ namespace HFM.Forms
            // 
            // pictureBox1
            // 
+           this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
            this.pictureBox1.Image = global::HFM.Properties.Resources.aboutBox;
            this.pictureBox1.InitialImage = null;
-           this.pictureBox1.Location = new System.Drawing.Point(369, 7);
+           this.pictureBox1.Location = new System.Drawing.Point(376, 14);
            this.pictureBox1.Name = "pictureBox1";
            this.pictureBox1.Size = new System.Drawing.Size(164, 93);
            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -124,7 +125,7 @@ namespace HFM.Forms
            // 
            this.lblGPL.Location = new System.Drawing.Point(10, 197);
            this.lblGPL.Name = "lblGPL";
-           this.lblGPL.Size = new System.Drawing.Size(471, 37);
+           this.lblGPL.Size = new System.Drawing.Size(497, 37);
            this.lblGPL.TabIndex = 6;
            this.lblGPL.Text = "This program is free software; you can redistribute it and/or modify it under the" +
                " terms of the\r\nGNU General Public License, version 2, as published by the Free S" +
@@ -135,7 +136,7 @@ namespace HFM.Forms
            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
            this.CancelButton = this.btnClose;
-           this.ClientSize = new System.Drawing.Size(542, 235);
+           this.ClientSize = new System.Drawing.Size(552, 235);
            this.Controls.Add(this.btnClose);
            this.Controls.Add(this.lblGPL);
            this.Controls.Add(this.lblLinkOrig);

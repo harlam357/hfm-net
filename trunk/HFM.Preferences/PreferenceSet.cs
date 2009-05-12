@@ -284,6 +284,20 @@ namespace HFM.Preferences
          set { _MessageLevel = value; }
       }
       
+      private int _FormSplitLocation;
+      public int FormSplitLocation
+      {
+         get { return _FormSplitLocation; }
+         set { _FormSplitLocation = value; }
+      }
+      
+      private int _FormLogWindowHeight;
+      public int FormLogWindowHeight
+      {
+         get { return _FormLogWindowHeight; }
+         set { _FormLogWindowHeight = value; }
+      }
+
       public String AppPath
       {
          get
@@ -412,6 +426,9 @@ namespace HFM.Preferences
          {
             _FormSortOrder = SortOrder.None;
          }
+         _FormSplitLocation = Settings.Default.FormSplitLocation;
+         _FormLogWindowHeight = Settings.Default.FormLogWindowHeight;
+         
          _OfflineLast = Settings.Default.OfflineLast;
          _DefaultConfigFile = Settings.Default.DefaultConfigFile;
          _UseDefaultConfigFile = Settings.Default.UseDefaultConfigFile;
@@ -514,6 +531,8 @@ namespace HFM.Preferences
             Settings.Default.FormColumns = _FormColumns;
             Settings.Default.FormSortColumn = _FormSortColumn;
             Settings.Default.FormSortOrder = _FormSortOrder;
+            Settings.Default.FormSplitLocation = _FormSplitLocation;
+            Settings.Default.FormLogWindowHeight = _FormLogWindowHeight;
             Settings.Default.OfflineLast = _OfflineLast;
             Settings.Default.DefaultConfigFile = _DefaultConfigFile;
             Settings.Default.UseDefaultConfigFile = _UseDefaultConfigFile;

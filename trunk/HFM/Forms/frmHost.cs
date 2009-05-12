@@ -224,7 +224,7 @@ namespace HFM.Forms
             txtLocalPath.Text = txtLocalPath.Text.Substring(0, txtLocalPath.Text.Length - 12);
          }
 
-         Regex rValidPath = new Regex("^((?<DRIVE>[a-z]:)|(\\\\\\\\(?<SERVER>[0-9]*[a-z\\-][a-z0-9\\-]*)\\\\(?<VOLUME>[^\\.\\x01-\\x1F\\\\\"\"\\*\\?<>:|\\\\/][^\\x01-\\x1F\\\\\"\"\\*\\?|><:\\\\/]*)))?(?<FOLDERS>(?<FOLDER1>(\\.|(\\.\\.)|([^\\.\\x01-\\x1F\\\\\"\"\\*\\?|><:\\\\/][^\\x01-\\x1F\\\\\"\"\\*\\?<>:|\\\\/]*)))?(?<FOLDERm>[\\\\/](\\.|(\\.\\.)|([^\\.\\x01-\\x1F\\\\\"\"\\*\\?|><:\\\\/][^\\x01-\\x1F\\\\\"\"\\*\\?<>:|\\\\/]*)))*)?[\\\\/]?$", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+         Regex rValidPath = new Regex("^((?<DRIVE>[a-z]:)|(\\\\\\\\(?<SERVER>[0-9]*[a-z\\-][a-z0-9\\-\\.]*)\\\\(?<VOLUME>[^\\.\\x01-\\x1F\\\\\"\"\\*\\?<>:|\\\\/][^\\x01-\\x1F\\\\\"\"\\*\\?|><:\\\\/]*)))?(?<FOLDERS>(?<FOLDER1>(\\.|(\\.\\.)|([^\\.\\x01-\\x1F\\\\\"\"\\*\\?|><:\\\\/][^\\x01-\\x1F\\\\\"\"\\*\\?<>:|\\\\/]*)))?(?<FOLDERm>[\\\\/](\\.|(\\.\\.)|([^\\.\\x01-\\x1F\\\\\"\"\\*\\?|><:\\\\/][^\\x01-\\x1F\\\\\"\"\\*\\?<>:|\\\\/]*)))*)?[\\\\/]?$", RegexOptions.Singleline | RegexOptions.IgnoreCase);
          Regex rValidPath2 = new Regex(@"^((([a-zA-Z]:)|(\\{2}\w+)|(\\{2}(?:(?:25[0-5]|2[0-4]\d|[01]\d\d|\d?\d)(?(?=\.?\d)\.)){4}))(\\(\w[\w ]*)))", RegexOptions.Singleline | RegexOptions.IgnoreCase);
          Match mPath = rValidPath.Match(txtLocalPath.Text);
          Match mPath2 = rValidPath.Match(txtLocalPath.Text + "\\");
@@ -397,6 +397,7 @@ namespace HFM.Forms
       /// <param name="Delay">Time to show tip (milliseconds)</param>
       private void ShowToolTip(String sMessage, Control cTarget, Int32 Delay)
       {
+         //TODO: This Invoke is not necessary here
          try
          {
             if (cTarget.InvokeRequired)

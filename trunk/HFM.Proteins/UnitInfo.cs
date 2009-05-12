@@ -19,9 +19,6 @@
  */
 
 using System;
-using System.Diagnostics;
-
-using Debug = HFM.Instrumentation.Debug;
 
 namespace HFM.Proteins
 {
@@ -52,6 +49,32 @@ namespace HFM.Proteins
       {
          get { return _TypeOfClient; }
          set { _TypeOfClient = value; }
+      }
+      
+      /// <summary>
+      /// Username associated with this work unit
+      /// </summary>
+      private string _Username;
+      /// <summary>
+      /// Username associated with this work unit
+      /// </summary>
+      public string Username
+      {
+         get { return _Username; }
+         set { _Username = value; }
+      }
+
+      /// <summary>
+      /// Team Number associated with this work unit
+      /// </summary>
+      private int _Team;
+      /// <summary>
+      /// Team Number associated with this work unit
+      /// </summary>
+      public int Team
+      {
+         get { return _Team; }
+         set { _Team = value; }
       }
 
       /// <summary>

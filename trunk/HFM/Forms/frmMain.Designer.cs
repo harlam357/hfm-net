@@ -74,6 +74,12 @@ namespace HFM.Forms
          this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuToolsMessages = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuToolsDownloadProjects = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuWeb = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuWebEOCUser = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuWebStanfordUser = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuWebEOCTeam = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuWebSep1 = new System.Windows.Forms.ToolStripSeparator();
+         this.mnuWebHFMGoogleCode = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuHelpContents = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuHelpIndex = new System.Windows.Forms.ToolStripMenuItem();
@@ -94,12 +100,6 @@ namespace HFM.Forms
          this.webGenTimer = new System.Windows.Forms.Timer(this.components);
          this.splitContainer1 = new System.Windows.Forms.SplitContainer();
          this.dataGridView1 = new System.Windows.Forms.DataGridView();
-         this.mnuWeb = new System.Windows.Forms.ToolStripMenuItem();
-         this.mnuWebEOCUser = new System.Windows.Forms.ToolStripMenuItem();
-         this.mnuWebStanfordUser = new System.Windows.Forms.ToolStripMenuItem();
-         this.mnuWebEOCTeam = new System.Windows.Forms.ToolStripMenuItem();
-         this.mnuWebSep1 = new System.Windows.Forms.ToolStripSeparator();
-         this.mnuWebHFMGoogleCode = new System.Windows.Forms.ToolStripMenuItem();
          this.statusStrip.SuspendLayout();
          this.notifyMenu.SuspendLayout();
          this.AppMenu.SuspendLayout();
@@ -464,6 +464,54 @@ namespace HFM.Forms
          this.mnuToolsDownloadProjects.Text = "Download Projects From Stanford";
          this.mnuToolsDownloadProjects.Click += new System.EventHandler(this.mnuToolsDownloadProjects_Click);
          // 
+         // mnuWeb
+         // 
+         this.mnuWeb.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuWebEOCUser,
+            this.mnuWebStanfordUser,
+            this.mnuWebEOCTeam,
+            this.mnuWebSep1,
+            this.mnuWebHFMGoogleCode});
+         this.mnuWeb.Name = "mnuWeb";
+         this.mnuWeb.Size = new System.Drawing.Size(41, 20);
+         this.mnuWeb.Text = "&Web";
+         // 
+         // mnuWebEOCUser
+         // 
+         this.mnuWebEOCUser.Name = "mnuWebEOCUser";
+         this.mnuWebEOCUser.ShortcutKeys = System.Windows.Forms.Keys.F2;
+         this.mnuWebEOCUser.Size = new System.Drawing.Size(208, 22);
+         this.mnuWebEOCUser.Text = "&EOC User Stats";
+         this.mnuWebEOCUser.Click += new System.EventHandler(this.mnuWebEOCUser_Click);
+         // 
+         // mnuWebStanfordUser
+         // 
+         this.mnuWebStanfordUser.Name = "mnuWebStanfordUser";
+         this.mnuWebStanfordUser.ShortcutKeys = System.Windows.Forms.Keys.F3;
+         this.mnuWebStanfordUser.Size = new System.Drawing.Size(208, 22);
+         this.mnuWebStanfordUser.Text = "&Stanford User Stats";
+         this.mnuWebStanfordUser.Click += new System.EventHandler(this.mnuWebStanfordUser_Click);
+         // 
+         // mnuWebEOCTeam
+         // 
+         this.mnuWebEOCTeam.Name = "mnuWebEOCTeam";
+         this.mnuWebEOCTeam.ShortcutKeys = System.Windows.Forms.Keys.F4;
+         this.mnuWebEOCTeam.Size = new System.Drawing.Size(208, 22);
+         this.mnuWebEOCTeam.Text = "EOC &Team Stats";
+         this.mnuWebEOCTeam.Click += new System.EventHandler(this.mnuWebEOCTeam_Click);
+         // 
+         // mnuWebSep1
+         // 
+         this.mnuWebSep1.Name = "mnuWebSep1";
+         this.mnuWebSep1.Size = new System.Drawing.Size(205, 6);
+         // 
+         // mnuWebHFMGoogleCode
+         // 
+         this.mnuWebHFMGoogleCode.Name = "mnuWebHFMGoogleCode";
+         this.mnuWebHFMGoogleCode.Size = new System.Drawing.Size(208, 22);
+         this.mnuWebHFMGoogleCode.Text = "HFM.NET on Google Code";
+         this.mnuWebHFMGoogleCode.Click += new System.EventHandler(this.mnuWebHFMGoogleCode_Click);
+         // 
          // mnuHelp
          // 
          this.mnuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -479,7 +527,7 @@ namespace HFM.Forms
          // 
          this.mnuHelpContents.Image = global::HFM.Properties.Resources.HelpContents;
          this.mnuHelpContents.Name = "mnuHelpContents";
-         this.mnuHelpContents.Size = new System.Drawing.Size(152, 22);
+         this.mnuHelpContents.Size = new System.Drawing.Size(129, 22);
          this.mnuHelpContents.Text = "&Contents";
          this.mnuHelpContents.Visible = false;
          this.mnuHelpContents.Click += new System.EventHandler(this.mnuHelpContents_Click);
@@ -487,7 +535,7 @@ namespace HFM.Forms
          // mnuHelpIndex
          // 
          this.mnuHelpIndex.Name = "mnuHelpIndex";
-         this.mnuHelpIndex.Size = new System.Drawing.Size(152, 22);
+         this.mnuHelpIndex.Size = new System.Drawing.Size(129, 22);
          this.mnuHelpIndex.Text = "&Index";
          this.mnuHelpIndex.Visible = false;
          this.mnuHelpIndex.Click += new System.EventHandler(this.mnuHelpIndex_Click);
@@ -495,14 +543,14 @@ namespace HFM.Forms
          // mnuHelpSep1
          // 
          this.mnuHelpSep1.Name = "mnuHelpSep1";
-         this.mnuHelpSep1.Size = new System.Drawing.Size(149, 6);
+         this.mnuHelpSep1.Size = new System.Drawing.Size(126, 6);
          this.mnuHelpSep1.Visible = false;
          // 
          // mnuHelpAbout
          // 
          this.mnuHelpAbout.Image = global::HFM.Properties.Resources.About;
          this.mnuHelpAbout.Name = "mnuHelpAbout";
-         this.mnuHelpAbout.Size = new System.Drawing.Size(152, 22);
+         this.mnuHelpAbout.Size = new System.Drawing.Size(129, 22);
          this.mnuHelpAbout.Text = "&About";
          this.mnuHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
          // 
@@ -604,7 +652,6 @@ namespace HFM.Forms
          // 
          this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
          this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-         this.splitContainer1.IsSplitterFixed = true;
          this.splitContainer1.Location = new System.Drawing.Point(0, 24);
          this.splitContainer1.Name = "splitContainer1";
          this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -665,54 +712,6 @@ namespace HFM.Forms
          this.dataGridView1.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_RowEnter);
          this.dataGridView1.ColumnDividerDoubleClick += new System.Windows.Forms.DataGridViewColumnDividerDoubleClickEventHandler(this.dataGridView1_ColumnDividerDoubleClick);
          this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
-         // 
-         // mnuWeb
-         // 
-         this.mnuWeb.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuWebEOCUser,
-            this.mnuWebStanfordUser,
-            this.mnuWebEOCTeam,
-            this.mnuWebSep1,
-            this.mnuWebHFMGoogleCode});
-         this.mnuWeb.Name = "mnuWeb";
-         this.mnuWeb.Size = new System.Drawing.Size(41, 20);
-         this.mnuWeb.Text = "&Web";
-         // 
-         // mnuWebEOCUser
-         // 
-         this.mnuWebEOCUser.Name = "mnuWebEOCUser";
-         this.mnuWebEOCUser.ShortcutKeys = System.Windows.Forms.Keys.F2;
-         this.mnuWebEOCUser.Size = new System.Drawing.Size(208, 22);
-         this.mnuWebEOCUser.Text = "&EOC User Stats";
-         this.mnuWebEOCUser.Click += new System.EventHandler(this.mnuWebEOCUser_Click);
-         // 
-         // mnuWebStanfordUser
-         // 
-         this.mnuWebStanfordUser.Name = "mnuWebStanfordUser";
-         this.mnuWebStanfordUser.ShortcutKeys = System.Windows.Forms.Keys.F3;
-         this.mnuWebStanfordUser.Size = new System.Drawing.Size(208, 22);
-         this.mnuWebStanfordUser.Text = "&Stanford User Stats";
-         this.mnuWebStanfordUser.Click += new System.EventHandler(this.mnuWebStanfordUser_Click);
-         // 
-         // mnuWebEOCTeam
-         // 
-         this.mnuWebEOCTeam.Name = "mnuWebEOCTeam";
-         this.mnuWebEOCTeam.ShortcutKeys = System.Windows.Forms.Keys.F4;
-         this.mnuWebEOCTeam.Size = new System.Drawing.Size(208, 22);
-         this.mnuWebEOCTeam.Text = "EOC &Team Stats";
-         this.mnuWebEOCTeam.Click += new System.EventHandler(this.mnuWebEOCTeam_Click);
-         // 
-         // mnuWebSep1
-         // 
-         this.mnuWebSep1.Name = "mnuWebSep1";
-         this.mnuWebSep1.Size = new System.Drawing.Size(205, 6);
-         // 
-         // mnuWebHFMGoogleCode
-         // 
-         this.mnuWebHFMGoogleCode.Name = "mnuWebHFMGoogleCode";
-         this.mnuWebHFMGoogleCode.Size = new System.Drawing.Size(208, 22);
-         this.mnuWebHFMGoogleCode.Text = "HFM.NET on Google Code";
-         this.mnuWebHFMGoogleCode.Click += new System.EventHandler(this.mnuWebHFMGoogleCode_Click);
          // 
          // frmMain
          // 

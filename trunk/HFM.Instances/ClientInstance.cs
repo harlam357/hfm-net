@@ -72,6 +72,9 @@ namespace HFM.Instances
       // Log Filename Constants
       private const string LocalFAHLog = "FAHLog.txt";
       private const string LocalUnitInfo = "UnitInfo.txt";
+      
+      // Log File Size Constants
+      private const int UnitInfoMax = 1048576; // 1 Megabyte
       #endregion
       
       #region Public Events
@@ -318,6 +321,32 @@ namespace HFM.Instances
          get { return _Status; }
          set { _Status = value; }
       }
+
+      /// <summary>
+      /// User ID associated with this client
+      /// </summary>
+      private string _UserID;
+      /// <summary>
+      /// User ID associated with this client
+      /// </summary>
+      public string UserID
+      {
+         get { return _UserID; }
+         set { _UserID = value; }
+      }
+
+      /// <summary>
+      /// Machine ID associated with this client
+      /// </summary>
+      private int _MachineID;
+      /// <summary>
+      /// Machine ID associated with this client
+      /// </summary>
+      public int MachineID
+      {
+         get { return _MachineID; }
+         set { _MachineID = value; }
+      }
       
       /// <summary>
       /// Total Units Completed for lifetime of the client (read from log file)
@@ -432,6 +461,8 @@ namespace HFM.Instances
       private void Clear()
       {
          // reset total, completed, and failed values
+         UserID = String.Empty;
+         MachineID = 0;
          TotalUnits = 0;
          NumberOfCompletedUnitsSinceLastStart = 0;
          NumberOfFailedUnitsSinceLastStart = 0;
@@ -439,6 +470,8 @@ namespace HFM.Instances
          CurrentLogText.Clear();
       
          UnitInfo.TypeOfClient = ClientType.Unknown;
+         UnitInfo.Username = "Unknown"; //String.Empty;
+         UnitInfo.Team = 0;
          UnitInfo.CoreVersion = String.Empty;
          UnitInfo.DownloadTime = DateTime.MinValue;
          UnitInfo.DueTime = DateTime.MinValue;
@@ -653,7 +686,7 @@ namespace HFM.Instances
                if (fiUI.Exists)
                {
                   // If file size is too large, do not copy it and delete the current cached copy - Issue 2
-                  if (fiUI.Length < 1024)
+                  if (fiUI.Length < UnitInfoMax)
                   {
                      fiUI.CopyTo(UnitInfo_txt, true);
                      Debug.WriteToHfmConsole(TraceLevel.Verbose,

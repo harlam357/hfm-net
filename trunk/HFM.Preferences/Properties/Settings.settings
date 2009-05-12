@@ -104,5 +104,11 @@
     <Setting Name="MessageLevel" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">3</Value>
     </Setting>
+    <Setting Name="FormSplitLocation" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">360</Value>
+    </Setting>
+    <Setting Name="FormLogWindowHeight" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">360</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

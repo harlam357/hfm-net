@@ -176,7 +176,31 @@ namespace HFM.Instances
       {
          get { return _Failed; }
       }
+      
+      /// <summary>
+      /// 
+      /// </summary>
+      private string _Username;
+      /// <summary>
+      /// 
+      /// </summary>
+      public string Username
+      {
+         get { return _Username; }
+      }
 
+      /// <summary>
+      /// 
+      /// </summary>
+      private int _Team;
+      /// <summary>
+      /// 
+      /// </summary>
+      public int Team
+      {
+         get { return _Team; }
+      }
+      
       /// <summary>
       /// Private member holding the download time of the unit
       /// </summary>
@@ -226,6 +250,8 @@ namespace HFM.Instances
          _Credit = baseInstance.CurrentProtein.Credit;
          _Complete = baseInstance.NumberOfCompletedUnitsSinceLastStart;
          _Failed = baseInstance.NumberOfFailedUnitsSinceLastStart;
+         _Username = baseInstance.UnitInfo.Username;
+         _Team = baseInstance.UnitInfo.Team;
          _DownloadTime = baseInstance.UnitInfo.DownloadTime;
          _Deadline = baseInstance.UnitInfo.DownloadTime.AddDays(baseInstance.CurrentProtein.PreferredDays);
       }

@@ -19,11 +19,7 @@
  */
 
 using System;
-using System.Diagnostics;
-using System.IO;
 using System.Windows.Forms;
-
-using HFM.Instrumentation;
 
 namespace HFM
 {
@@ -58,7 +54,8 @@ namespace HFM
         {
             cmdArgs = argv;
             Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+            // Use GDI+ Text Rendering - Issue 9
+            Application.SetCompatibleTextRenderingDefault(true);
             //SetThreadPool();
             Application.Run(new Forms.frmMain());
         }

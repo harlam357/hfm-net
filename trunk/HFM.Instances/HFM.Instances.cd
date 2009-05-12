@@ -5,7 +5,7 @@
     <Position X="3.5" Y="0.5" Width="2" />
     <TypeIdentifier>
       <FileName>DisplayInstance.cs</FileName>
-      <HashCode>IAkAg4AMAAAAAAYBBIBgEEQAAERAAQAAABsECAiAhAQ=</HashCode>
+      <HashCode>IAkAg4AMAAAAAAYBBYJgEEQAAERAAQACEBsECAiAhAQ=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="HFM.Instances.FoldingInstanceCollection">
@@ -19,7 +19,7 @@
     <Position X="10.5" Y="0.5" Width="2" />
     <TypeIdentifier>
       <FileName>LogParser.cs</FileName>
-      <HashCode>oQQAACABAAAhAAAAARAABIAABgAAQAAAAoAAQAABCAA=</HashCode>
+      <HashCode>oQQAACABAAQhAIAAARIABIAABgAARAAAEoAAQAABCSA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="HFM.Instances.SortableBindingList&lt;T&gt;" BaseTypeListCollapsed="true">
@@ -42,7 +42,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="HFM.Instances.XMLGen">
-    <Position X="3.75" Y="7.75" Width="1.5" />
+    <Position X="3.75" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>XMLGen.cs</FileName>
       <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
@@ -52,7 +52,7 @@
     <Position X="0.5" Y="0.5" Width="2.75" />
     <TypeIdentifier>
       <FileName>ClientInstance.cs</FileName>
-      <HashCode>VLAjDBQVAQFYBEYAgRLEEIApAgAwCAQGBCBAAxLCjIQ=</HashCode>
+      <HashCode>VLAjDBQVAQBYBEYAgRLEEIApAgAwCAQGBCBAAxLCnIQ=</HashCode>
     </TypeIdentifier>
   </Class>
   <Enum Name="HFM.Instances.InstanceType">

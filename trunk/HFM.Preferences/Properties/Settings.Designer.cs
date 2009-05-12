@@ -427,5 +427,29 @@ namespace HFM.Preferences.Properties {
                 this["MessageLevel"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("360")]
+        public int FormSplitLocation {
+            get {
+                return ((int)(this["FormSplitLocation"]));
+            }
+            set {
+                this["FormSplitLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("360")]
+        public int FormLogWindowHeight {
+            get {
+                return ((int)(this["FormLogWindowHeight"]));
+            }
+            set {
+                this["FormLogWindowHeight"] = value;
+            }
+        }
     }
 }
