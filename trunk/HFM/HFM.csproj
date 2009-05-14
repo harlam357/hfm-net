@@ -48,6 +48,9 @@
       <Link>AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Classes\DataGridViewColumnSelector.cs" />
+    <Compile Include="Classes\DataGridViewWrapper.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Forms\frmAbout.cs">
       <SubType>Form</SubType>
     </Compile>

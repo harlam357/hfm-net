@@ -99,7 +99,7 @@ namespace HFM.Forms
          this.mnuContextClientsViewClientFiles = new System.Windows.Forms.ToolStripMenuItem();
          this.webGenTimer = new System.Windows.Forms.Timer(this.components);
          this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-         this.dataGridView1 = new System.Windows.Forms.DataGridView();
+         this.dataGridView1 = new HFM.Classes.DataGridViewWrapper();
          this.statusStrip.SuspendLayout();
          this.notifyMenu.SuspendLayout();
          this.AppMenu.SuspendLayout();
@@ -806,7 +806,7 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripMenuItem mnuClientsViewClientFiles;
       private System.Windows.Forms.ToolStripMenuItem mnuContextClientsViewClientFiles;
       private System.Windows.Forms.SplitContainer splitContainer1;
-      private System.Windows.Forms.DataGridView dataGridView1;
+      private HFM.Classes.DataGridViewWrapper dataGridView1;
       private System.Windows.Forms.ToolStripMenuItem mnuWeb;
       private System.Windows.Forms.ToolStripMenuItem mnuWebEOCUser;
       private System.Windows.Forms.ToolStripMenuItem mnuWebStanfordUser;

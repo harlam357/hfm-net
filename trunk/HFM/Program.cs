@@ -54,8 +54,7 @@ namespace HFM
         {
             cmdArgs = argv;
             Application.EnableVisualStyles();
-            // Use GDI+ Text Rendering - Issue 9
-            Application.SetCompatibleTextRenderingDefault(true);
+            Application.SetCompatibleTextRenderingDefault(false);
             //SetThreadPool();
             Application.Run(new Forms.frmMain());
         }
