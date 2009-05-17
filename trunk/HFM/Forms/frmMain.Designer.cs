@@ -87,7 +87,7 @@ namespace HFM.Forms
          this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
          this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
          this.saveConfigDialog = new System.Windows.Forms.SaveFileDialog();
-         this.txtLogFile = new System.Windows.Forms.TextBox();
+         this.txtLogFile = new HFM.Classes.TextBoxWrapper();
          this.gridContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
          this.mnuContextClientsRefreshSelected = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuContextClientsSep1 = new System.Windows.Forms.ToolStripSeparator();
@@ -98,8 +98,10 @@ namespace HFM.Forms
          this.mnuContextClientsViewCachedLog = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuContextClientsViewClientFiles = new System.Windows.Forms.ToolStripMenuItem();
          this.webGenTimer = new System.Windows.Forms.Timer(this.components);
-         this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+         this.splitContainer1 = new Classes.SplitContainerWrapper();
          this.dataGridView1 = new HFM.Classes.DataGridViewWrapper();
+         this.mnuFileImportFahMon = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuFileSep2 = new System.Windows.Forms.ToolStripSeparator();
          this.statusStrip.SuspendLayout();
          this.notifyMenu.SuspendLayout();
          this.AppMenu.SuspendLayout();
@@ -256,6 +258,8 @@ namespace HFM.Forms
             this.mnuFileSave,
             this.mnuFileSaveas,
             this.mnuFileSep1,
+            this.mnuFileImportFahMon,
+            this.mnuFileSep2,
             this.mnuFileQuit});
          this.mnuFile.Name = "mnuFile";
          this.mnuFile.Size = new System.Drawing.Size(35, 20);
@@ -323,7 +327,7 @@ namespace HFM.Forms
          // mnuEditPreferences
          // 
          this.mnuEditPreferences.Name = "mnuEditPreferences";
-         this.mnuEditPreferences.Size = new System.Drawing.Size(143, 22);
+         this.mnuEditPreferences.Size = new System.Drawing.Size(152, 22);
          this.mnuEditPreferences.Text = "&Preferences";
          this.mnuEditPreferences.Click += new System.EventHandler(this.mnuEditPreferences_Click);
          // 
@@ -713,6 +717,18 @@ namespace HFM.Forms
          this.dataGridView1.ColumnDividerDoubleClick += new System.Windows.Forms.DataGridViewColumnDividerDoubleClickEventHandler(this.dataGridView1_ColumnDividerDoubleClick);
          this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
          // 
+         // mnuFileImportFahMon
+         // 
+         this.mnuFileImportFahMon.Name = "mnuFileImportFahMon";
+         this.mnuFileImportFahMon.Size = new System.Drawing.Size(260, 22);
+         this.mnuFileImportFahMon.Text = "&Import FahMon Configuration File";
+         this.mnuFileImportFahMon.Click += new System.EventHandler(this.mnuFileImportFahMon_Click);
+         // 
+         // mnuFileSep2
+         // 
+         this.mnuFileSep2.Name = "mnuFileSep2";
+         this.mnuFileSep2.Size = new System.Drawing.Size(257, 6);
+         // 
          // frmMain
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -784,7 +800,7 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripSeparator mnuClientsSep2;
       private System.Windows.Forms.ToolStripMenuItem mnuClientsRefreshSelected;
       private System.Windows.Forms.ToolStripMenuItem mnuClientsRefreshAll;
-      private System.Windows.Forms.TextBox txtLogFile;
+      private Classes.TextBoxWrapper txtLogFile;
       private System.Windows.Forms.ToolStripMenuItem mnuView;
       private System.Windows.Forms.ToolStripMenuItem mnuViewShowHideLog;
       private System.Windows.Forms.Timer webGenTimer;
@@ -805,13 +821,15 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripMenuItem mnuViewToggleDateTime;
       private System.Windows.Forms.ToolStripMenuItem mnuClientsViewClientFiles;
       private System.Windows.Forms.ToolStripMenuItem mnuContextClientsViewClientFiles;
-      private System.Windows.Forms.SplitContainer splitContainer1;
-      private HFM.Classes.DataGridViewWrapper dataGridView1;
+      private Classes.SplitContainerWrapper splitContainer1;
+      private Classes.DataGridViewWrapper dataGridView1;
       private System.Windows.Forms.ToolStripMenuItem mnuWeb;
       private System.Windows.Forms.ToolStripMenuItem mnuWebEOCUser;
       private System.Windows.Forms.ToolStripMenuItem mnuWebStanfordUser;
       private System.Windows.Forms.ToolStripMenuItem mnuWebEOCTeam;
       private System.Windows.Forms.ToolStripSeparator mnuWebSep1;
       private System.Windows.Forms.ToolStripMenuItem mnuWebHFMGoogleCode;
+      private System.Windows.Forms.ToolStripMenuItem mnuFileImportFahMon;
+      private System.Windows.Forms.ToolStripSeparator mnuFileSep2;
    }
 }

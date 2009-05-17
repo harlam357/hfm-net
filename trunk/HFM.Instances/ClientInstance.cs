@@ -77,6 +77,14 @@ namespace HFM.Instances
       private const int UnitInfoMax = 1048576; // 1 Megabyte
       #endregion
       
+      #region Enum
+      enum DownloadType
+      {
+         FAHLog = 0,
+         UnitInfo
+      }
+      #endregion
+      
       #region Public Events
       /// <summary>
       /// Raised when Instance Host Type is Changed
@@ -136,7 +144,7 @@ namespace HFM.Instances
       /// <summary>
       /// The number of processor megahertz for this client instance
       /// </summary>
-      private Int32 _ClientProcessorMegahertz;
+      private Int32 _ClientProcessorMegahertz = 1;
       /// <summary>
       /// The number of processor megahertz for this client instance
       /// </summary>
@@ -638,89 +646,78 @@ namespace HFM.Instances
             FileInfo fiLog = new FileInfo(System.IO.Path.Combine(Path, RemoteFAHLogFilename));
             string FAHLog_txt = System.IO.Path.Combine(BaseDirectory, CachedFAHLogName);
             FileInfo fiCachedLog = new FileInfo(FAHLog_txt);
-            try
+
+            Debug.WriteToHfmConsole(TraceLevel.Verbose,
+                                    String.Format("{0} ({1}) FAHLog copy (start).", Debug.FunctionName,
+                                                  InstanceName));
+            if (fiLog.Exists)
             {
-               Debug.WriteToHfmConsole(TraceLevel.Verbose,
-                                       String.Format("{0} ({1}) FAHLog copy (start).", Debug.FunctionName,
-                                                     InstanceName));
-               if (fiLog.Exists)
+               if (fiCachedLog.Exists == false || fiLog.Length != fiCachedLog.Length)
                {
-                  if (fiCachedLog.Exists == false || fiLog.Length != fiCachedLog.Length)
-                  {
-                     fiLog.CopyTo(FAHLog_txt, true);
-                     Debug.WriteToHfmConsole(TraceLevel.Verbose,
-                                             String.Format("{0} ({1}) FAHLog copy (success).", Debug.FunctionName,
-                                                           InstanceName));
-                  }
-                  else
-                  {
-                     Debug.WriteToHfmConsole(TraceLevel.Verbose,
-                                             String.Format("{0} ({1}) FAHLog copy (file has not changed).", Debug.FunctionName,
-                                                           InstanceName));
-                  }
+                  fiLog.CopyTo(FAHLog_txt, true);
+                  Debug.WriteToHfmConsole(TraceLevel.Verbose,
+                                          String.Format("{0} ({1}) FAHLog copy (success).", Debug.FunctionName,
+                                                        InstanceName));
                }
                else
                {
-                  Status = ClientStatus.Offline;
-                  Debug.WriteToHfmConsole(TraceLevel.Error,
-                                          String.Format("{0} ({1}) The path {2} is inaccessible.", Debug.FunctionName, InstanceName, fiLog.FullName));
-                  return false;
+                  Debug.WriteToHfmConsole(TraceLevel.Verbose,
+                                          String.Format("{0} ({1}) FAHLog copy (file has not changed).", Debug.FunctionName,
+                                                        InstanceName));
                }
             }
-            catch (Exception ex)
+            else
             {
                Status = ClientStatus.Offline;
                Debug.WriteToHfmConsole(TraceLevel.Error,
-                                       String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, InstanceName, ex.Message));
-
+                                       String.Format("{0} ({1}) The path {2} is inaccessible.", Debug.FunctionName, InstanceName, fiLog.FullName));
                return false;
             }
 
             // Retrieve UnitInfo.txt (or equivalent)
             FileInfo fiUI = new FileInfo(System.IO.Path.Combine(Path, RemoteUnitInfoFilename));
             string UnitInfo_txt = System.IO.Path.Combine(BaseDirectory, CachedUnitInfoName);
-            try
+
+            Debug.WriteToHfmConsole(TraceLevel.Verbose,
+                                    String.Format("{0} ({1}) UnitInfo copy (start).", Debug.FunctionName, InstanceName));
+            if (fiUI.Exists)
             {
-               Debug.WriteToHfmConsole(TraceLevel.Verbose,
-                                       String.Format("{0} ({1}) UnitInfo copy (start).", Debug.FunctionName, InstanceName));
-               if (fiUI.Exists)
+               // If file size is too large, do not copy it and delete the current cached copy - Issue 2
+               if (fiUI.Length < UnitInfoMax)
                {
-                  // If file size is too large, do not copy it and delete the current cached copy - Issue 2
-                  if (fiUI.Length < UnitInfoMax)
-                  {
-                     fiUI.CopyTo(UnitInfo_txt, true);
-                     Debug.WriteToHfmConsole(TraceLevel.Verbose,
-                                             String.Format("{0} ({1}) UnitInfo copy (success).", Debug.FunctionName,
-                                                           InstanceName));
-                  }
-                  else
-                  {
-                     if (File.Exists(UnitInfo_txt))
-                     {
-                        File.Delete(UnitInfo_txt);
-                     }
-                     Debug.WriteToHfmConsole(TraceLevel.Warning,
-                                             String.Format("{0} ({1}) UnitInfo copy (file is too big: {2} bytes).", Debug.FunctionName,
-                                                           InstanceName, fiUI.Length));
-                  }
+                  fiUI.CopyTo(UnitInfo_txt, true);
+                  Debug.WriteToHfmConsole(TraceLevel.Verbose,
+                                          String.Format("{0} ({1}) UnitInfo copy (success).", Debug.FunctionName,
+                                                        InstanceName));
                }
                else
                {
-                  Status = ClientStatus.Offline;
-                  Debug.WriteToHfmConsole(TraceLevel.Error,
-                                          String.Format("{0} ({1}) The path {2} is inaccessible.", Debug.FunctionName, InstanceName, fiUI.FullName));
-                  return false;
+                  if (File.Exists(UnitInfo_txt))
+                  {
+                     File.Delete(UnitInfo_txt);
+                  }
+                  Debug.WriteToHfmConsole(TraceLevel.Warning,
+                                          String.Format("{0} ({1}) UnitInfo copy (file is too big: {2} bytes).", Debug.FunctionName,
+                                                        InstanceName, fiUI.Length));
                }
             }
-            catch (Exception ex)
+            else
             {
                Status = ClientStatus.Offline;
                Debug.WriteToHfmConsole(TraceLevel.Error,
-                                       String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, InstanceName, ex.Message));
+                                       String.Format("{0} ({1}) The path {2} is inaccessible.", Debug.FunctionName, InstanceName, fiUI.FullName));
                return false;
             }
 
             LastRetrievalTime = DateTime.Now;
+         }
+         catch (Exception ex)
+         {
+            Status = ClientStatus.Offline;
+            Debug.WriteToHfmConsole(TraceLevel.Error,
+                                    String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, InstanceName, ex.Message));
+
+            return false;
          }
          finally
          {
@@ -749,90 +746,26 @@ namespace HFM.Instances
          {
             _RetrievalInProgress = true;
 
-            PreferenceSet Prefs = PreferenceSet.Instance;
-
-            // Download FAHlog.txt
-            WebRequest httpc1 = WebRequest.Create(Path + "/" + RemoteFAHLogFilename);
-            httpc1.Credentials = new NetworkCredential(Username, Password);
-            httpc1.Method = WebRequestMethods.Http.Get;
-            httpc1.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-            if (Prefs.UseProxy)
+            bool bFAHLog = HttpDownloadHelper(RemoteFAHLogFilename, CachedFAHLogName, DownloadType.FAHLog);
+            bool bUnitInfo = false;
+            if (bFAHLog)
             {
-               httpc1.Proxy = new WebProxy(Prefs.ProxyServer, Prefs.ProxyPort);
-               if (Prefs.UseProxyAuth)
-               {
-                  httpc1.Proxy.Credentials = new NetworkCredential(Prefs.ProxyUser, Prefs.ProxyPass);
-               }
+               bUnitInfo = HttpDownloadHelper(RemoteUnitInfoFilename, CachedUnitInfoName, DownloadType.UnitInfo);
             }
-            else
+            
+            if ((bFAHLog && bUnitInfo) == false)
             {
-               httpc1.Proxy = null;
-            }
-
-            try
-            {
-               WebResponse r1 = httpc1.GetResponse();
-               String FAHLog_txt = System.IO.Path.Combine(BaseDirectory, CachedFAHLogName);
-               StreamWriter sw1 = new StreamWriter(FAHLog_txt, false);
-               StreamReader sr1 = new StreamReader(r1.GetResponseStream(), Encoding.ASCII);
-
-               sw1.Write(sr1.ReadToEnd());
-               sw1.Flush();
-               sw1.Close();
-               sr1.Close();
-            }
-            catch (Exception ex)
-            {
-               Status = ClientStatus.Offline;
-               Debug.WriteToHfmConsole(TraceLevel.Error,
-                                       String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, InstanceName,
-                                                     ex.Message));
-               return false;
-            }
-
-            // Download unitinfo.txt
-            WebRequest httpc2 = WebRequest.Create(Path + "/" + RemoteUnitInfoFilename);
-            httpc2.Credentials = new NetworkCredential(Username, Password);
-            httpc2.Method = WebRequestMethods.Http.Get;
-            httpc2.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-            if (Prefs.UseProxy)
-            {
-               httpc2.Proxy = new WebProxy(Prefs.ProxyServer, Prefs.ProxyPort);
-               if (Prefs.UseProxyAuth)
-               {
-                  httpc2.Proxy.Credentials = new NetworkCredential(Prefs.ProxyUser, Prefs.ProxyPass);
-               }
-            }
-            else
-            {
-               httpc2.Proxy = null;
-            }
-
-            try
-            {
-               WebResponse r2 = httpc2.GetResponse();
-               String UnitInfo_txt = System.IO.Path.Combine(BaseDirectory, CachedUnitInfoName);
-               StreamWriter sw2 = new StreamWriter(UnitInfo_txt, false);
-               StreamReader sr2 = new StreamReader(r2.GetResponseStream(), Encoding.ASCII);
-               
-               //TODO: (HTTP) If this download begins getting too big we likely have a bad UnitInfo.txt file. - Issue 2
-               //      Stop the download and delete the current cached copy, as done for Path Instances.
-
-               sw2.Write(sr2.ReadToEnd());
-               sw2.Flush();
-               sw2.Close();
-               sr2.Close();
-            }
-            catch (Exception ex)
-            {
-               Status = ClientStatus.Offline;
-               Debug.WriteToHfmConsole(TraceLevel.Error,
-                                       String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, InstanceName,
-                                                     ex.Message));
                return false;
             }
 
             LastRetrievalTime = DateTime.Now;
+         }
+         catch (Exception ex)
+         {
+            Status = ClientStatus.Offline;
+            Debug.WriteToHfmConsole(TraceLevel.Error,
+                                    String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, InstanceName, ex.Message));
+            return false;
          }
          finally
          {
@@ -840,6 +773,75 @@ namespace HFM.Instances
          }
 
          Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, InstanceName, Debug.GetExecTime(Start)));
+         
+         return true;
+      }
+      
+      /// <summary>
+      /// Makes the Http connection and downloads the specified files
+      /// </summary>
+      /// <param name="RemoteLogFilename">Remote filename</param>
+      /// <param name="CachedLogFilename">Local Cached filename</param>
+      /// <param name="type">Type of Download (FAHLog or UnitInfo)</param>
+      private bool HttpDownloadHelper(string RemoteLogFilename, string CachedLogFilename, DownloadType type)
+      {
+         PreferenceSet Prefs = PreferenceSet.Instance;
+      
+         WebRequest httpc1 = WebRequest.Create(String.Format("{0}{1}{2}", Path, "/", RemoteLogFilename));
+         httpc1.Method = WebRequestMethods.Http.Get;
+         httpc1.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+
+         httpc1.Credentials = new NetworkCredential(Username, Password);
+         
+         if (Prefs.UseProxy)
+         {
+            httpc1.Proxy = new WebProxy(Prefs.ProxyServer, Prefs.ProxyPort);
+            if (Prefs.UseProxyAuth)
+            {
+               httpc1.Proxy.Credentials = new NetworkCredential(Prefs.ProxyUser, Prefs.ProxyPass);
+            }
+         }
+         else
+         {
+            httpc1.Proxy = null;
+         }
+
+         string FAHLog_txt = System.IO.Path.Combine(BaseDirectory, CachedLogFilename);
+
+         StreamWriter sw1 = null;
+         StreamReader sr1 = null;
+         try
+         {
+            WebResponse r1 = httpc1.GetResponse();
+            if (type.Equals(DownloadType.UnitInfo) && r1.ContentLength >= UnitInfoMax)
+            {
+               if (File.Exists(FAHLog_txt))
+               {
+                  File.Delete(FAHLog_txt);
+               }
+               Debug.WriteToHfmConsole(TraceLevel.Warning,
+                                       String.Format("{0} ({1}) UnitInfo HTTP download (file is too big: {2} bytes).", Debug.FunctionName,
+                                                     InstanceName, r1.ContentLength));
+            }
+            else
+            {
+               sr1 = new StreamReader(r1.GetResponseStream(), Encoding.ASCII);
+               sw1 = new StreamWriter(FAHLog_txt, false);
+               sw1.Write(sr1.ReadToEnd());
+            }
+         }
+         finally
+         {
+            if (sr1 != null)
+            {
+               sr1.Close();
+            }
+            if (sw1 != null)
+            {
+               sw1.Flush();
+               sw1.Close();
+            }
+         }
          
          return true;
       }
@@ -861,115 +863,26 @@ namespace HFM.Instances
          {
             _RetrievalInProgress = true;
 
-            PreferenceSet Prefs = PreferenceSet.Instance;
-
-            // Download FAHlog.txt
-            FtpWebRequest ftpc1 = (FtpWebRequest) FtpWebRequest.Create("ftp://" + Server + Path + RemoteFAHLogFilename);
-            ftpc1.Method = WebRequestMethods.Ftp.DownloadFile;
-            if ((Username != String.Empty) && (Username != null))
+            bool bFAHLog = FtpDownloadHelper(RemoteFAHLogFilename, CachedFAHLogName);
+            bool bUnitInfo = false;
+            if (bFAHLog)
             {
-               if (Username.Contains("\\"))
-               {
-                  String[] UserParts = Username.Split('\\');
-                  ftpc1.Credentials = new NetworkCredential(UserParts[1], Password, UserParts[0]);
-               }
-               else
-               {
-                  ftpc1.Credentials = new NetworkCredential(Username, Password);
-               }
-            }
-            ftpc1.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-            if (Prefs.UseProxy)
-            {
-               ftpc1.Proxy = new WebProxy(Prefs.ProxyServer, Prefs.ProxyPort);
-               if (Prefs.UseProxyAuth)
-               {
-                  ftpc1.Proxy.Credentials = new NetworkCredential(Prefs.ProxyUser, Prefs.ProxyPass);
-               }
-            }
-            else
-            {
-               ftpc1.Proxy = null;
+               bUnitInfo = FtpDownloadHelper(RemoteUnitInfoFilename, CachedUnitInfoName);
             }
 
-            FtpWebResponse ftpr1;
-            try
+            if ((bFAHLog && bUnitInfo) == false)
             {
-               ftpr1 = (FtpWebResponse) ftpc1.GetResponse();
-            }
-            catch (Exception ex)
-            {
-               Status = ClientStatus.Offline;
-               Debug.WriteToHfmConsole(TraceLevel.Error,
-                                       String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, InstanceName,
-                                                     ex.Message));
                return false;
             }
-            String FAHLog_txt = System.IO.Path.Combine(BaseDirectory, CachedFAHLogName);
-            StreamWriter sw1 = new StreamWriter(FAHLog_txt, false);
-            StreamReader sr1 = new StreamReader(ftpr1.GetResponseStream(), Encoding.ASCII);
-
-            sw1.Write(sr1.ReadToEnd());
-            sw1.Flush();
-            sw1.Close();
-            sr1.Close();
-
-            // Download unitinfo.txt
-            FtpWebRequest ftpc2 =
-               (FtpWebRequest) FtpWebRequest.Create("ftp://" + Server + Path + RemoteUnitInfoFilename);
-            if ((Username != "") && (Username != null))
-            {
-               if (Username.Contains("\\"))
-               {
-                  String[] UserParts = Username.Split('\\');
-                  ftpc2.Credentials = new NetworkCredential(UserParts[1], Password, UserParts[0]);
-               }
-               else
-               {
-                  ftpc2.Credentials = new NetworkCredential(Username, Password);
-               }
-            }
-            ftpc2.Method = WebRequestMethods.Ftp.DownloadFile;
-            ftpc2.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-            if (Prefs.UseProxy)
-            {
-               ftpc2.Proxy = new WebProxy(Prefs.ProxyServer, Prefs.ProxyPort);
-               if (Prefs.UseProxyAuth)
-               {
-                  ftpc2.Proxy.Credentials = new NetworkCredential(Prefs.ProxyUser, Prefs.ProxyPass);
-               }
-            }
-            else
-            {
-               ftpc2.Proxy = null;
-            }
-
-            FtpWebResponse ftpr2;
-            try
-            {
-               ftpr2 = (FtpWebResponse) ftpc2.GetResponse();
-            }
-            catch (Exception ex)
-            {
-               Status = ClientStatus.Offline;
-               Debug.WriteToHfmConsole(TraceLevel.Error,
-                                       String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, InstanceName,
-                                                     ex.Message));
-               return false;
-            }
-            String UnitInfo_txt = System.IO.Path.Combine(BaseDirectory, CachedUnitInfoName);
-            StreamWriter sw2 = new StreamWriter(UnitInfo_txt, false);
-            StreamReader sr2 = new StreamReader(ftpr2.GetResponseStream(), Encoding.ASCII);
-
-            //TODO: (FTP) If this download begins getting too big we likely have a bad UnitInfo.txt file. - Issue 2
-            //      Stop the download and delete the current cached copy, as done for Path Instances.
-
-            sw2.Write(sr2.ReadToEnd());
-            sw2.Flush();
-            sw2.Close();
-            sr2.Close();
-
+            
             LastRetrievalTime = DateTime.Now;
+         }
+         catch (Exception ex)
+         {
+            Status = ClientStatus.Offline;
+            Debug.WriteToHfmConsole(TraceLevel.Error,
+                                    String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, InstanceName, ex.Message));
+            return false;
          }
          finally
          {
@@ -980,6 +893,73 @@ namespace HFM.Instances
          
          return true;
       }
+
+      /// <summary>
+      /// Makes the Ftp connection and downloads the specified files
+      /// </summary>
+      /// <param name="RemoteLogFilename">Remote filename</param>
+      /// <param name="CachedLogFilename">Local Cached filename</param>
+      private bool FtpDownloadHelper(string RemoteLogFilename, string CachedLogFilename)
+      {
+         PreferenceSet Prefs = PreferenceSet.Instance;
+
+         FtpWebRequest ftpc1 = (FtpWebRequest)FtpWebRequest.Create(String.Format("ftp://{0}{1}{2}", Server, Path, RemoteLogFilename));
+         ftpc1.Method = WebRequestMethods.Ftp.DownloadFile;
+         ftpc1.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+         
+         if ((Username != String.Empty) && (Username != null))
+         {
+            if (Username.Contains("\\"))
+            {
+               String[] UserParts = Username.Split('\\');
+               ftpc1.Credentials = new NetworkCredential(UserParts[1], Password, UserParts[0]);
+            }
+            else
+            {
+               ftpc1.Credentials = new NetworkCredential(Username, Password);
+            }
+         }
+         
+         if (Prefs.UseProxy)
+         {
+            ftpc1.Proxy = new WebProxy(Prefs.ProxyServer, Prefs.ProxyPort);
+            if (Prefs.UseProxyAuth)
+            {
+               ftpc1.Proxy.Credentials = new NetworkCredential(Prefs.ProxyUser, Prefs.ProxyPass);
+            }
+         }
+         else
+         {
+            ftpc1.Proxy = null;
+         }
+
+         string FAHLog_txt = System.IO.Path.Combine(BaseDirectory, CachedLogFilename);
+         
+         StreamReader sr1 = null;
+         StreamWriter sw1 = null;
+         try
+         {
+            FtpWebResponse ftpr1 = (FtpWebResponse)ftpc1.GetResponse();
+            sr1 = new StreamReader(ftpr1.GetResponseStream(), Encoding.ASCII);
+            sw1 = new StreamWriter(FAHLog_txt, false);
+            sw1.Write(sr1.ReadToEnd());
+         }
+         finally
+         {
+            if (sr1 != null)
+            {
+               sr1.Close();
+            }
+            if (sw1 != null)
+            {
+               sw1.Flush();
+               sw1.Close();
+            }
+         }
+
+         return true;
+      }
+
       #endregion
 
       #region XML Serialization

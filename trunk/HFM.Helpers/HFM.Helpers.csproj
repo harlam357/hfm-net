@@ -41,6 +41,7 @@
     <Compile Include="ProteinData.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="StringOps.cs" />
     <Compile Include="XMLOps.cs" />
   </ItemGroup>
   <ItemGroup>

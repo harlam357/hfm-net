@@ -1,6 +1,5 @@
-﻿/*
- * HFM.NET - Application Assembly Configuration
- * Copyright (C) 2006-2007 David Rawling
+/*
+ * HFM.NET - TextBox Wrapper Class
  * Copyright (C) 2009 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -18,16 +17,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System.Reflection;
-using System.Resources;
+using System.Windows.Forms;
 
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-[assembly: AssemblyVersion("0.1.1.15")]
-[assembly: AssemblyFileVersion("0.1.1.15")]
-[assembly: NeutralResourcesLanguageAttribute("en")]
+namespace HFM.Classes
+{
+   public class TextBoxWrapper : TextBox
+   {
+      public TextBoxWrapper()
+      {
+         // Enable DoubleBuffering - Issue 9 (slow drawing on XP while GPU2 is active)
+         base.DoubleBuffered = true;
+      }
+   }
+}

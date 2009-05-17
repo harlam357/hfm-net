@@ -12,13 +12,8 @@ namespace HFM.Helpers
 {
    public static class ProteinData
    {
-      //static ProteinData()
-      //{
-      //}
-
       public static string DescriptionFromURL(string sURL)
       {
-         //Exception exception;
          string str;
          PreferenceSet instance = PreferenceSet.Instance;
 
@@ -27,6 +22,7 @@ namespace HFM.Helpers
             WebRequest request = WebRequest.Create(sURL);
             request.Method = "GET";
             request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.CacheIfAvailable);
+            
             if (instance.UseProxy)
             {
                request.Proxy = new WebProxy(instance.ProxyServer, instance.ProxyPort);
@@ -39,44 +35,34 @@ namespace HFM.Helpers
             {
                request.Proxy = null;
             }
-            //try
-            //{
-               string str2;
-               string str3;
-               StreamReader reader = new StreamReader(request.GetResponse().GetResponseStream(), Encoding.ASCII);
-               str = reader.ReadToEnd();
-               reader.Close();
-               int index = str.IndexOf("<TABLE");
-               int length = str.LastIndexOf("</TABLE>");
-               str = str.Substring(index, (length - index) + 8);
-               length = str.IndexOf("<FORM ");
-               index = str.IndexOf("</FORM>");
-               if ((index >= 0) && (length >= 0))
-               {
-                  str2 = str.Substring(0, length);
-                  str3 = str.Substring(index);
-                  str = str2 + str3;
-               }
-               index = str.IndexOf("<font");
-               length = str.IndexOf(">", index);
-               if ((index >= 0) && (length >= 0))
-               {
-                  str2 = str.Substring(0, index);
-                  str3 = str.Substring(length + 1);
-                  str = str2 + "<font size=\"3\">" + str3;
-               }
-            //}
-            //catch (Exception exception1)
-            //{
-            //   exception = exception1;
-            //   Debug.WriteToHfmConsole(TraceLevel.Warning,
-            //                           String.Format("{0} threw exception {1}.", Debug.FunctionName, exception.Message));
-            //   str = sURL;
-            //}
+
+            string str2;
+            string str3;
+            StreamReader reader = new StreamReader(request.GetResponse().GetResponseStream(), Encoding.ASCII);
+            str = reader.ReadToEnd();
+            reader.Close();
+            int index = str.IndexOf("<TABLE");
+            int length = str.LastIndexOf("</TABLE>");
+            str = str.Substring(index, (length - index) + 8);
+            length = str.IndexOf("<FORM ");
+            index = str.IndexOf("</FORM>");
+            if ((index >= 0) && (length >= 0))
+            {
+               str2 = str.Substring(0, length);
+               str3 = str.Substring(index);
+               str = str2 + str3;
+            }
+            index = str.IndexOf("<font");
+            length = str.IndexOf(">", index);
+            if ((index >= 0) && (length >= 0))
+            {
+               str2 = str.Substring(0, index);
+               str3 = str.Substring(length + 1);
+               str = str2 + "<font size=\"3\">" + str3;
+            }
          }
          catch (Exception ex)
          {
-            //exception = ex;
             Debug.WriteToHfmConsole(TraceLevel.Warning,
                                     String.Format("{0} threw exception {1}", Debug.FunctionName, ex.Message));
             str = sURL;

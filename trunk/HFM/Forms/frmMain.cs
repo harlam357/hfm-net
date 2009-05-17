@@ -842,6 +842,33 @@ namespace HFM.Forms
       }
 
       /// <summary>
+      /// Import FahMon clientstab.txt configuration
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
+      private void mnuFileImportFahMon_Click(object sender, EventArgs e)
+      {
+         if (RetrievalInProgress)
+         {
+            MessageBox.Show(this, "Retrieval in progress... please wait to open another config file.",
+               Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+         }
+
+         if (CanContinueDestructiveOp(sender, e))
+         {
+            openConfigDialog.DefaultExt = "txt";
+            openConfigDialog.Filter = "Text Files|*.txt";
+            openConfigDialog.FileName = "clientstab.txt";
+            openConfigDialog.RestoreDirectory = true;
+            if (openConfigDialog.ShowDialog() == DialogResult.OK)
+            {
+               ImportFahMonFile(openConfigDialog.FileName);
+            }
+         }
+      }
+
+      /// <summary>
       /// Exit the application
       /// </summary>
       /// <param name="sender"></param>
@@ -2028,17 +2055,33 @@ namespace HFM.Forms
       /// <summary>
       /// Loads a configuration file into memory
       /// </summary>
-      /// <param name="sFileName"></param>
-      private void LoadFile(String sFileName)
+      /// <param name="filename"></param>
+      private void LoadFile(string filename)
       {
          // Clear the UI
          ClearUI();
          // Set config file name
-         ConfigFilename = sFileName;
+         ConfigFilename = filename;
          // Read the config file
-         HostInstances.FromXml(sFileName);
-         // Set the Web Gen flag (if timer is enabled this will gen the website on load)
-         ExecuteWebGenAfterRetrieve = true;
+         HostInstances.FromXml(filename);
+         // Get client logs         
+         QueueNewRetrieval();
+         // Start Retrieval and WebGen Timers
+         SetTimerState();
+      }
+
+      /// <summary>
+      /// Imports a FahMon configuration file into memory
+      /// </summary>
+      /// <param name="filename"></param>
+      private void ImportFahMonFile(string filename)
+      {
+         // Clear the UI
+         ClearUI();
+         // Read the config file
+         HostInstances.FromFahMonClientsTab(filename);
+         // Collection imported from external source
+         ChangedAfterSave = true;
          // Get client logs         
          QueueNewRetrieval();
          // Start Retrieval and WebGen Timers

@@ -21,9 +21,9 @@ using System.Windows.Forms;
 
 namespace HFM.Classes
 {
-   public class DataGridViewWrapper : DataGridView
+   internal class DataGridViewWrapper : DataGridView
    {
-      public DataGridViewWrapper()
+      internal DataGridViewWrapper()
       {
          // Enable DoubleBuffering - Issue 9 (slow drawing on XP while GPU2 is active)
          base.DoubleBuffered = true;

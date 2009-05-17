@@ -20,12 +20,10 @@
 
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
-using System.Text.RegularExpressions;
+using System.IO;
 using System.Windows.Forms;
-
-using Debug = HFM.Instrumentation.Debug;
+using HFM.Helpers;
 
 namespace HFM.Forms
 {
@@ -90,6 +88,8 @@ namespace HFM.Forms
       {
          txtName.BackColor = SystemColors.Window;
          txtClientMegahertz.BackColor = SystemColors.Window;
+         txtLogFileName.BackColor = SystemColors.Window;
+         txtUnitFileName.BackColor = SystemColors.Window;
          txtLocalPath.BackColor = SystemColors.Window;
          txtFTPServer.BackColor = SystemColors.Window;
          txtFTPPath.BackColor = SystemColors.Window;
@@ -159,16 +159,11 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void txtName_Validating(object sender, CancelEventArgs e)
       {
-         Regex rValidName = new Regex("^[a-zA-Z0-9\\-_\\+=\\$&^\\[\\]][a-zA-Z0-9 \\.\\-_\\+=\\$&^\\[\\]]+$", RegexOptions.Singleline);
-         Match mValidName = rValidName.Match(txtName.Text);
-         if (txtName.Text.Length > 0 && mValidName.Success == false)
+         if (txtName.Text.Length > 0 && StringOps.ValidateInstanceName(txtName.Text) == false)
          {
-            //e.Cancel = true;
-            //txtName.Focus();
             txtName.BackColor = Color.Yellow;
             txtName.Focus();
-            ShowToolTip("Instance name can contain only\r\nletters, numbers and basic symbols\r\n(+=-_~$@^&.,[]), must not end with\r\ndot (.) and cannot start with space.", 
-               txtName, 5000);
+            toolTipCore.Show("Instance name can contain only letters, numbers,\r\nand basic symbols (+=-_$&^.[]). It must be at\r\nleast three characters long and must not begin or\r\nend with a dot (.) or a space.", txtName, 5000);
          }
          else
          {
@@ -189,20 +184,60 @@ namespace HFM.Forms
          {
             txtClientMegahertz.BackColor = Color.Yellow;
             txtClientMegahertz.Focus();
-            ShowToolTip("Client Processor Megahertz must be numeric.",
+            toolTipCore.Show("Client Processor Megahertz must be numeric.",
                txtClientMegahertz, 5000);
          }
          else if (mhz < 1)
          {
             txtClientMegahertz.BackColor = Color.Yellow;
             txtClientMegahertz.Focus();
-            ShowToolTip("Client Processor Megahertz must be greater than zero.",
+            toolTipCore.Show("Client Processor Megahertz must be greater than zero.",
                txtClientMegahertz, 5000);
          }
          else
          {
             txtClientMegahertz.BackColor = SystemColors.Window;
             toolTipCore.Hide(txtClientMegahertz);
+         }
+      }
+
+      /// <summary>
+      /// Validate the contents of the FAHLog textbox
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
+      private void txtLogFileName_Validating(object sender, CancelEventArgs e)
+      {
+         if (txtLogFileName.Text.Length > 0 && StringOps.ValidateFileName(txtLogFileName.Text) == false)
+         {
+            txtLogFileName.BackColor = Color.Yellow;
+            txtLogFileName.Focus();
+            toolTipCore.Show("File name contains invalid characters.", txtLogFileName, 5000);
+         }
+         else
+         {
+            txtLogFileName.BackColor = SystemColors.Window;
+            toolTipCore.Hide(txtLogFileName);
+         }
+      }
+
+      /// <summary>
+      /// Validate the contents of the UnitInfo textbox
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
+      private void txtUnitFileName_Validating(object sender, CancelEventArgs e)
+      {
+         if (txtUnitFileName.Text.Length > 0 && StringOps.ValidateFileName(txtUnitFileName.Text) == false)
+         {
+            txtUnitFileName.BackColor = Color.Yellow;
+            txtUnitFileName.Focus();
+            toolTipCore.Show("File name contains invalid characters.", txtUnitFileName, 5000);
+         }
+         else
+         {
+            txtUnitFileName.BackColor = SystemColors.Window;
+            toolTipCore.Hide(txtUnitFileName);
          }
       }
 
@@ -223,35 +258,27 @@ namespace HFM.Forms
          {
             txtLocalPath.Text = txtLocalPath.Text.Substring(0, txtLocalPath.Text.Length - 12);
          }
-
-         Regex rValidPath = new Regex("^((?<DRIVE>[a-z]:)|(\\\\\\\\(?<SERVER>[0-9]*[a-z\\-][a-z0-9\\-\\.]*)\\\\(?<VOLUME>[^\\.\\x01-\\x1F\\\\\"\"\\*\\?<>:|\\\\/][^\\x01-\\x1F\\\\\"\"\\*\\?|><:\\\\/]*)))?(?<FOLDERS>(?<FOLDER1>(\\.|(\\.\\.)|([^\\.\\x01-\\x1F\\\\\"\"\\*\\?|><:\\\\/][^\\x01-\\x1F\\\\\"\"\\*\\?<>:|\\\\/]*)))?(?<FOLDERm>[\\\\/](\\.|(\\.\\.)|([^\\.\\x01-\\x1F\\\\\"\"\\*\\?|><:\\\\/][^\\x01-\\x1F\\\\\"\"\\*\\?<>:|\\\\/]*)))*)?[\\\\/]?$", RegexOptions.Singleline | RegexOptions.IgnoreCase);
-         Regex rValidPath2 = new Regex(@"^((([a-zA-Z]:)|(\\{2}\w+)|(\\{2}(?:(?:25[0-5]|2[0-4]\d|[01]\d\d|\d?\d)(?(?=\.?\d)\.)){4}))(\\(\w[\w ]*)))", RegexOptions.Singleline | RegexOptions.IgnoreCase);
-         Match mPath = rValidPath.Match(txtLocalPath.Text);
-         Match mPath2 = rValidPath.Match(txtLocalPath.Text + "\\");
-         Match mPath3 = rValidPath2.Match(txtLocalPath.Text);
-         Match mPath4 = rValidPath2.Match(txtLocalPath.Text + "\\");
+         
+         bool bPath = StringOps.ValidatePathInstancePath(txtLocalPath.Text);
+         bool bPathWithSlash = StringOps.ValidatePathInstancePath(String.Concat(txtLocalPath.Text, Path.DirectorySeparatorChar));
 
          if (txtLocalPath.Text.Length == 0)
          {
-            //e.Cancel = true;
-            //txtLocalPath.Focus();
             txtLocalPath.BackColor = Color.Yellow;
-            txtLocalPath.Focus();
-            ShowToolTip("Log Folder must be a valid local\r\nor network (UNC) path.", txtLocalPath, 5000);
+            //txtLocalPath.Focus();
+            toolTipCore.Show("Log Folder must be a valid local\r\nor network (UNC) path.", txtLocalPath, 5000);
          }
-         else if (txtLocalPath.Text.Length > 3 && (mPath.Success || mPath2.Success || mPath3.Success || mPath4.Success) != true)
+         else if (txtLocalPath.Text.Length > 2 && (bPath || bPathWithSlash) != true)
          {
-            //e.Cancel = true;
-            //txtLocalPath.Focus();
             txtLocalPath.BackColor = Color.Yellow;
-            txtLocalPath.Focus();
-            ShowToolTip("Log Folder must be a valid local\r\nor network (UNC) path.", txtLocalPath, 5000);
+            //txtLocalPath.Focus();
+            toolTipCore.Show("Log Folder must be a valid local\r\nor network (UNC) path.", txtLocalPath, 5000);
          }
          else
          {
-            if (mPath2.Success || mPath4.Success)
+            if (bPathWithSlash)
             {
-               txtLocalPath.Text += "\\";
+               txtLocalPath.Text += Path.DirectorySeparatorChar;
             }
             txtLocalPath.BackColor = SystemColors.Window;
             toolTipCore.Hide(txtLocalPath);
@@ -267,26 +294,17 @@ namespace HFM.Forms
       {
          if (radioFTP.Checked == false) return;
 
-         Regex rServer = new Regex("^([a-z0-9]([-a-z0-9]*[a-z0-9])?\\.)+((a[cdefgilmnoqrstuwxz]|aero|arpa)|(b[abdefghijmnorstvwyz]|biz)|(c[acdfghiklmnorsuvxyz]|cat|com|coop)|d[ejkmoz]|(e[ceghrstu]|edu)|f[ijkmor]|(g[abdefghilmnpqrstuwy]|gov)|h[kmnrtu]|(i[delmnoqrst]|info|int)|(j[emop]|jobs)|k[eghimnprwyz]|l[abcikrstuvy]|(m[acdghklmnopqrstuvwxyz]|mil|mobi|museum)|(n[acefgilopruz]|name|net)|(om|org)|(p[aefghklmnrstwy]|pro)|qa|r[eouw]|s[abcdeghijklmnortvyz]|(t[cdfghjklmnoprtvwz]|travel)|u[agkmsyz]|v[aceginu]|w[fs]|y[etu]|z[amw])$", RegexOptions.Singleline);
-         Regex rIP = new Regex("(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)", RegexOptions.Singleline);
-         Match mServer = rServer.Match(txtFTPServer.Text);
-         Match mIP = rIP.Match(txtFTPServer.Text);
-
          if (txtFTPServer.Text.Length == 0)
          {
-            //e.Cancel = true;
-            //txtLocalPath.Focus();
             txtFTPServer.BackColor = Color.Yellow;
-            txtFTPServer.Focus();
-            ShowToolTip("FTP server must be a valid\r\nhost name or IP address.", txtFTPServer, 5000);
-         }
-         else if (txtFTPServer.Text.Length > 0 && (mServer.Success || mIP.Success) == false)
-         {
-            //e.Cancel = true;
             //txtFTPServer.Focus();
+            toolTipCore.Show("FTP server must be a valid\r\nhost name or IP address.", txtFTPServer, 5000);
+         }
+         else if (txtFTPServer.Text.Length > 0 && StringOps.ValidateFtpServerName(txtFTPServer.Text) == false)
+         {
             txtFTPServer.BackColor = Color.Yellow;
-            txtFTPServer.Focus();
-            ShowToolTip("FTP server must be a valid\r\nhost name or IP address.", txtFTPServer, 5000);
+            //txtFTPServer.Focus();
+            toolTipCore.Show("FTP server must be a valid\r\nhost name or IP address.", txtFTPServer, 5000);
          }
          else
          {
@@ -316,17 +334,17 @@ namespace HFM.Forms
          {
             txtFTPPath.Text += "/";
          }
-
-         Regex sPath = new Regex("^/.*/$", RegexOptions.Singleline);
-         Match mPath = sPath.Match(txtFTPPath.Text);
-
-         if (txtFTPPath.Text.Length > 0 && mPath.Success == false)
+         
+         if (txtFTPPath.Text == "/") // Root path, don't validate against Regex
          {
-            //e.Cancel = true;
-            //txtFTPPath.Focus();
+            txtFTPPath.BackColor = SystemColors.Window;
+            toolTipCore.Hide(txtFTPPath);
+         }
+         else if (txtFTPPath.Text.Length > 0 && StringOps.ValidateFtpPath(txtFTPPath.Text) == false)
+         {
             txtFTPPath.BackColor = Color.Yellow;
-            txtFTPPath.Focus();
-            ShowToolTip("FTP path should be the full\r\npath to the folder that\r\ncontains the log and Unit Info\r\nfiles (including the trailing /).", txtFTPPath, 5000);
+            //txtFTPPath.Focus();
+            toolTipCore.Show("FTP path should be the full\r\npath to the folder that\r\ncontains the log and Unit Info\r\nfiles (including the trailing /).", txtFTPPath, 5000);
          }
          else
          {
@@ -334,6 +352,34 @@ namespace HFM.Forms
             toolTipCore.Hide(txtFTPPath);
          }
       }
+
+      ///// <summary>
+      ///// Validate the contents of the FTP User textbox
+      ///// </summary>
+      ///// <param name="sender"></param>
+      ///// <param name="e"></param>
+      //private void txtFTPUser_Validating(object sender, CancelEventArgs e)
+      //{
+      //   if (txtFTPUser.Text.Length > 0)
+      //   {
+      //      txtFTPUser.BackColor = SystemColors.Window;
+      //      toolTipCore.Hide(txtFTPUser);
+      //   }
+      //}
+
+      ///// <summary>
+      ///// Validate the contents of the FTP Password textbox
+      ///// </summary>
+      ///// <param name="sender"></param>
+      ///// <param name="e"></param>
+      //private void txtFTPPass_Validating(object sender, CancelEventArgs e)
+      //{
+      //   if (txtFTPPass.Text.Length > 0)
+      //   {
+      //      txtFTPPass.BackColor = SystemColors.Window;
+      //      toolTipCore.Hide(txtFTPPass);
+      //   }
+      //}
 
       /// <summary>
       /// Validate the contents of the Web URL textbox
@@ -352,30 +398,22 @@ namespace HFM.Forms
          {
             txtWebURL.Text = txtWebURL.Text.Substring(0, txtWebURL.Text.Length - 12);
          }
-
-         //Regex rURLDNS = new Regex("^http([s])?://^([a-z0-9]([-a-z0-9]*[a-z0-9])?\\.)+((a[cdefgilmnoqrstuwxz]|aero|arpa)|(b[abdefghijmnorstvwyz]|biz)|(c[acdfghiklmnorsuvxyz]|cat|com|coop)|d[ejkmoz]|(e[ceghrstu]|edu)|f[ijkmor]|(g[abdefghilmnpqrstuwy]|gov)|h[kmnrtu]|(i[delmnoqrst]|info|int)|(j[emop]|jobs)|k[eghimnprwyz]|l[abcikrstuvy]|(m[acdghklmnopqrstuvwxyz]|mil|mobi|museum)|(n[acefgilopruz]|name|net)|(om|org)|(p[aefghklmnrstwy]|pro)|qa|r[eouw]|s[abcdeghijklmnortvyz]|(t[cdfghjklmnoprtvwz]|travel)|u[agkmsyz]|v[aceginu]|w[fs]|y[etu]|z[amw])(/([A-Za-z0-9\\-\\.\\,\\[\\]\\{\\}\\!\\@\\#\\$\\%\\^\\&\\(\\)])*)*/$", RegexOptions.Singleline);
-         //Regex rURLIP = new Regex("^http([s])?://(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(/([A-Za-z0-9\\-\\.\\,\\[\\]\\{\\}\\!\\@\\#\\$\\%\\^\\&\\(\\)])*)*/$", RegexOptions.Singleline);
-         Regex rURL = new Regex(@"(http|https|file)://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?", RegexOptions.Singleline);
-         //Match mURLDNS = rURLDNS.Match(txtWebURL.Text);
-         //Match mURLIP = rURLIP.Match(txtWebURL.Text);
-         Match mURL = rURL.Match(txtWebURL.Text);
+         if (txtWebURL.Text.EndsWith("/") == false)
+         {
+            txtWebURL.Text += "/";
+         }
          
          if (txtWebURL.Text.Length == 0)
          {
-            //e.Cancel = true;
-            //txtWebURL.Focus();
             txtWebURL.BackColor = Color.Yellow;
-            txtWebURL.Focus();
-            ShowToolTip("URL must be a valid URL and be\r\nthe path to the folder containing\r\nunitinfo.txt and fahlog.txt.", txtWebURL, 5000);
+            //txtWebURL.Focus();
+            toolTipCore.Show("URL must be a valid URL and be\r\nthe path to the folder containing\r\nunitinfo.txt and fahlog.txt.", txtWebURL, 5000);
          }
-         //else if (txtWebURL.Text.Length > 0 && (mURLDNS.Success || mURLIP.Success) == false)
-         else if (txtWebURL.Text.Length > 0 && mURL.Success == false)
+         else if (txtWebURL.Text.Length > 0 && StringOps.ValidateHttpURL(txtWebURL.Text) == false)
          {
-            //e.Cancel = true;
-            //txtWebURL.Focus();
             txtWebURL.BackColor = Color.Yellow;
-            txtWebURL.Focus();
-            ShowToolTip("URL must be a valid URL and be\r\nthe path to the folder containing\r\nunitinfo.txt and fahlog.txt.", txtWebURL, 5000);
+            //txtWebURL.Focus();
+            toolTipCore.Show("URL must be a valid URL and be\r\nthe path to the folder containing\r\nunitinfo.txt and fahlog.txt.", txtWebURL, 5000);
          }
          else
          {
@@ -383,62 +421,37 @@ namespace HFM.Forms
             toolTipCore.Hide(txtWebURL);
          }
       }
-
-      /// <summary>
-      /// Delegate method to ensure tooltip is displayed by UI thread
-      /// </summary>
-      delegate void showTooltipCallback(String sMessage, Control cTarget, Int32 Delay);
-
-      /// <summary>
-      /// Show the appropriate tooltip balloon/box
-      /// </summary>
-      /// <param name="sMessage">Tip to be displayed</param>
-      /// <param name="cTarget">Control to point to with the tip</param>
-      /// <param name="Delay">Time to show tip (milliseconds)</param>
-      private void ShowToolTip(String sMessage, Control cTarget, Int32 Delay)
-      {
-         //TODO: This Invoke is not necessary here
-         try
-         {
-            if (cTarget.InvokeRequired)
-            {
-               showTooltipCallback tFunc = ShowToolTip;
-               Invoke(tFunc, new object[] { sMessage, cTarget, Delay });
-            }
-            else
-            {
-               //toolTipCore.Show(sMessage, cTarget, cTarget.Width, 0, Delay);
-               toolTipCore.Show(sMessage, cTarget, Delay);
-            }
-         }
-         catch (InvalidOperationException ex)
-         {
-            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw InvalidOp exception {1}.", Debug.FunctionName, ex.Message));
-         }
-      }
       #endregion
 
       #region Button Event Handlers
       private void btnOK_Click(object sender, EventArgs e)
       {
-         // Check for error condition on Name
-         if (txtName.BackColor == Color.Yellow) return;
-
          if (txtName.Text.Length == 0)
          {
             txtName.BackColor = Color.Yellow;
             txtName.Focus();
-            ShowToolTip("Instance Name is required.", txtName, 5000);
+            toolTipCore.Show("Instance Name is required.", txtName, 5000);
             return;
          }
 
-         if (txtClientMegahertz.BackColor == Color.Yellow) return;
+         if (txtLogFileName.Text.Length == 0)
+         {
+            txtLogFileName.BackColor = Color.Yellow;
+            txtLogFileName.Focus();
+            toolTipCore.Show("FAHLog File Name is required.", txtLogFileName, 5000);
+            return;
+         }
+
+         if (txtUnitFileName.Text.Length == 0)
+         {
+            txtUnitFileName.BackColor = Color.Yellow;
+            txtUnitFileName.Focus();
+            toolTipCore.Show("UnitInfo File Name is required.", txtUnitFileName, 5000);
+            return;
+         }
 
          if (radioLocal.Checked)
          {
-            // Check for error condition on Path
-            if (txtLocalPath.BackColor == Color.Yellow) return;
-
             if (txtLocalPath.Text.Length == 0)
             {
                txtLocalPath.BackColor = Color.Yellow;
@@ -447,12 +460,8 @@ namespace HFM.Forms
             }
          }
 
-         if (radioFTP.Checked)
+         else if (radioFTP.Checked)
          {
-            // Check for error condition on Server and Path
-            if (txtFTPServer.BackColor == Color.Yellow) return;
-            if (txtFTPPath.BackColor == Color.Yellow) return;
-
             if (txtFTPServer.Text.Length == 0)
             {
                txtFTPServer.BackColor = Color.Yellow;
@@ -473,30 +482,23 @@ namespace HFM.Forms
             txtFTPPass.BackColor = SystemColors.Window;
             toolTipCore.Hide(txtFTPPass);
 
-            if (txtFTPUser.Text.Length == 0)
+            if ((txtFTPUser.Text.Length < 1) && (txtFTPPass.Text.Length > 0))
             {
-               //e.Cancel = true;
-               //txtFTPUser.Focus();
                txtFTPUser.BackColor = Color.Yellow;
                txtFTPUser.Focus();
-               ShowToolTip("Username must be specified.", txtFTPUser, 5000);
+               toolTipCore.Show("Username must be specified if password is set.", txtFTPUser, 5000);
                return;
             }
-            else if (txtFTPPass.Text.Length == 0)
+            else if ((txtFTPUser.Text.Length > 0) && (txtFTPPass.Text.Length < 1))
             {
-               //e.Cancel = true;
-               //txtFTPPass.Focus();
                txtFTPPass.BackColor = Color.Yellow;
                txtFTPPass.Focus();
-               ShowToolTip("Password must be specified.", txtFTPPass, 5000);
+               toolTipCore.Show("Password must be specified if username is set.", txtFTPPass, 5000);
                return;
             }
          }
          else if (radioHTTP.Checked)
          {
-            // Check for error condition on Name and Path
-            if (txtWebURL.BackColor == Color.Yellow) return;
-
             if (txtWebURL.Text.Length == 0)
             {
                txtWebURL.BackColor = Color.Yellow;
@@ -512,20 +514,34 @@ namespace HFM.Forms
 
             if ((txtWebUser.Text.Length < 1) && (txtWebPass.Text.Length > 0))
             {
-               //e.Cancel = true;
-               //txtWebUser.Focus();
                txtWebUser.BackColor = Color.Yellow;
                txtWebUser.Focus();
-               ShowToolTip("Username must be specified if password is set.", txtWebUser, 5000);
+               toolTipCore.Show("Username must be specified if password is set.", txtWebUser, 5000);
                return;
             }
             else if ((txtWebUser.Text.Length > 0) && (txtWebPass.Text.Length < 1))
             {
-               //e.Cancel = true;
                txtWebPass.BackColor = Color.Yellow;
                txtWebPass.Focus();
-               ShowToolTip("Username must be specified if password is set.", txtWebPass, 5000);
+               toolTipCore.Show("Password must be specified if username is set.", txtWebPass, 5000);
                return;
+            }
+         }
+
+         // Check for error conditions
+         if (txtName.BackColor == Color.Yellow ||
+             txtClientMegahertz.BackColor == Color.Yellow ||
+             txtLogFileName.BackColor == Color.Yellow ||
+             txtUnitFileName.BackColor == Color.Yellow ||
+             txtLocalPath.BackColor == Color.Yellow ||
+             txtFTPServer.BackColor == Color.Yellow ||
+             txtFTPPath.BackColor == Color.Yellow ||
+             txtWebURL.BackColor == Color.Yellow)
+         {
+            if (MessageBox.Show("There are validation errors.  Do you wish to accept the input anyway?", "HFM.NET", 
+                  MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.No)
+            {
+               return;   
             }
          }
 
