@@ -50,30 +50,57 @@
     <Compile Include="Classes\ButtonWrapper.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Classes\ButtonWrapper.Designer.cs">
+      <DependentUpon>ButtonWrapper.cs</DependentUpon>
+    </Compile>
     <Compile Include="Classes\CheckBoxWrapper.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Classes\CheckBoxWrapper.Designer.cs">
+      <DependentUpon>CheckBoxWrapper.cs</DependentUpon>
+    </Compile>
     <Compile Include="Classes\ComboBoxWrapper.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Classes\ComboBoxWrapper.Designer.cs">
+      <DependentUpon>ComboBoxWrapper.cs</DependentUpon>
     </Compile>
     <Compile Include="Classes\DataGridViewColumnSelector.cs" />
     <Compile Include="Classes\DataGridViewWrapper.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Classes\GoupBoxWrapper.cs">
+    <Compile Include="Classes\DataGridViewWrapper.Designer.cs">
+      <DependentUpon>DataGridViewWrapper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\GroupBoxWrapper.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Classes\GroupBoxWrapper.Designer.cs">
+      <DependentUpon>GroupBoxWrapper.cs</DependentUpon>
     </Compile>
     <Compile Include="Classes\LabelWrapper.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Classes\LabelWrapper.Designer.cs">
+      <DependentUpon>LabelWrapper.cs</DependentUpon>
+    </Compile>
     <Compile Include="Classes\RadioButtonWrapper.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Classes\RadioButtonWrapper.Designer.cs">
+      <DependentUpon>RadioButtonWrapper.cs</DependentUpon>
     </Compile>
     <Compile Include="Classes\SplitContainerWrapper.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Classes\SplitContainerWrapper.Designer.cs">
+      <DependentUpon>SplitContainerWrapper.cs</DependentUpon>
+    </Compile>
     <Compile Include="Classes\TextBoxWrapper.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Classes\TextBoxWrapper.Designer.cs">
+      <DependentUpon>TextBoxWrapper.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmAbout.cs">
       <SubType>Form</SubType>

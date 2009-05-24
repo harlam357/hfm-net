@@ -21,12 +21,11 @@ using System.Windows.Forms;
 
 namespace HFM.Classes
 {
-   internal class CheckBoxWrapper : CheckBox
+   public partial class CheckBoxWrapper : CheckBox
    {
-      internal CheckBoxWrapper()
+      public CheckBoxWrapper()
       {
-         // Enable DoubleBuffering - Issue 9 (slow drawing on XP while GPU2 is active)
-         base.DoubleBuffered = true;
+         InitializeComponent();
       }
    }
 }

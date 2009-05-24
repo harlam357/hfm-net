@@ -21,12 +21,11 @@ using System.Windows.Forms;
 
 namespace HFM.Classes
 {
-   internal class LabelWrapper : Label
+   public partial class LabelWrapper : Label
    {
-      internal LabelWrapper()
+      public LabelWrapper()
       {
-         // Enable DoubleBuffering - Issue 9 (slow drawing on XP while GPU2 is active)
-         base.DoubleBuffered = true;
+         InitializeComponent();
       }
    }
 }

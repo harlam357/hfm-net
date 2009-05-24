@@ -21,12 +21,11 @@ using System.Windows.Forms;
 
 namespace HFM.Classes
 {
-   internal class ComboBoxWrapper : ComboBox
+   public partial class ComboBoxWrapper : ComboBox
    {
-      internal ComboBoxWrapper()
+      public ComboBoxWrapper()
       {
-         // Enable DoubleBuffering - Issue 9 (slow drawing on XP while GPU2 is active)
-         base.DoubleBuffered = true;
+         InitializeComponent();
       }
    }
 }

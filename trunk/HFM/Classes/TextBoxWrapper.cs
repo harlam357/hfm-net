@@ -16,17 +16,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-
+ 
 using System.Windows.Forms;
 
 namespace HFM.Classes
 {
-   public class TextBoxWrapper : TextBox
+   public partial class TextBoxWrapper : TextBox
    {
       public TextBoxWrapper()
       {
-         // Enable DoubleBuffering - Issue 9 (slow drawing on XP while GPU2 is active)
-         base.DoubleBuffered = true;
+         InitializeComponent();
       }
    }
 }

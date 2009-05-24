@@ -21,12 +21,11 @@ using System.Windows.Forms;
 
 namespace HFM.Classes
 {
-   internal class DataGridViewWrapper : DataGridView
+   public partial class DataGridViewWrapper : DataGridView
    {
-      internal DataGridViewWrapper()
+      public DataGridViewWrapper()
       {
-         // Enable DoubleBuffering - Issue 9 (slow drawing on XP while GPU2 is active)
-         base.DoubleBuffered = true;
+         InitializeComponent();
       }
    }
 }

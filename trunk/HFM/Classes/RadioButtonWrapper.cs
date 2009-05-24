@@ -21,12 +21,11 @@ using System.Windows.Forms;
 
 namespace HFM.Classes
 {
-   internal class RadioButtonWrapper : RadioButton
+   public partial class RadioButtonWrapper : RadioButton
    {
-      internal RadioButtonWrapper()
+      public RadioButtonWrapper()
       {
-         // Enable DoubleBuffering - Issue 9 (slow drawing on XP while GPU2 is active)
-         base.DoubleBuffered = true;
+         InitializeComponent();
       }
    }
 }
