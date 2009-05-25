@@ -108,6 +108,8 @@ namespace HFM.Forms
 
          cboPpdCalc.Items.Add(ePpdCalculation.LastFrame);
          cboPpdCalc.Items.Add(ePpdCalculation.LastThreeFrames);
+         cboPpdCalc.Items.Add(ePpdCalculation.AllFrames);
+         cboPpdCalc.Items.Add(ePpdCalculation.EffectiveRate);
          cboPpdCalc.Text = Prefs.PpdCalculation.ToString();
 
          txtCollectMinutes.Text = Prefs.SyncTimeMinutes.ToString();

@@ -118,9 +118,9 @@ namespace HFM.Instrumentation
 
       public static void WriteToHfmConsole(TraceLevel level, string message)
       {
-         if (((int)level) <= ((int)TraceLevelSwitch.GetTraceLevelSwitch().Level))
+         lock (_lockTraceWrite)
          {
-            lock (_lockTraceWrite)
+            if (((int) level) <= ((int) TraceLevelSwitch.GetTraceLevelSwitch().Level))
             {
                Trace.WriteLine(FormatTraceString(level, message));
             }
@@ -129,9 +129,9 @@ namespace HFM.Instrumentation
 
       public static void WriteToHfmConsole(TraceLevel level, string[] messages)
       {
-         if (((int)level) <= ((int)TraceLevelSwitch.GetTraceLevelSwitch().Level))
+         lock (_lockTraceWrite)
          {
-            lock (_lockTraceWrite)
+            if (((int) level) <= ((int) TraceLevelSwitch.GetTraceLevelSwitch().Level))
             {
                foreach (string message in messages)
                {

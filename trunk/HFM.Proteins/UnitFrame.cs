@@ -1,6 +1,5 @@
-﻿/*
- * HFM.NET - Application Assembly Configuration
- * Copyright (C) 2006-2007 David Rawling
+/*
+ * HFM.NET - Unit Frame Data Class
  * Copyright (C) 2009 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -18,16 +17,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System.Reflection;
-using System.Resources;
+using System;
 
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-[assembly: AssemblyVersion("0.2.0.17")]
-[assembly: AssemblyFileVersion("0.2.0.17")]
-[assembly: NeutralResourcesLanguageAttribute("en")]
+namespace HFM.Proteins
+{
+   [Serializable]
+   public class UnitFrame
+   {
+      private readonly Int32 _FramePercent;
+      public Int32 FramePercent
+      {
+         get { return _FramePercent; }
+      }
+   
+      private readonly TimeSpan _TimeOfFrame;
+      public TimeSpan TimeOfFrame
+      {
+         get { return _TimeOfFrame; }
+      }
+      
+      private TimeSpan _FrameDuration;
+      public TimeSpan FrameDuration
+      {
+         get { return _FrameDuration; }
+         set { _FrameDuration = value; }
+      }
+   
+      public UnitFrame(Int32 framePercent, TimeSpan frameTime)
+      {
+         _FramePercent = framePercent;
+         _TimeOfFrame = frameTime;
+      }
+   }
+}

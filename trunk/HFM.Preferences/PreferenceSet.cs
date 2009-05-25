@@ -31,7 +31,9 @@ namespace HFM.Preferences
    public enum ePpdCalculation
    {
       LastFrame,
-      LastThreeFrames
+      LastThreeFrames,
+      AllFrames,
+      EffectiveRate
    }
    
    public enum eTimeStyle

@@ -26,7 +26,9 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 using System.Collections.Generic;
+
 using HFM.Helpers;
+using HFM.Proteins;
 using Debug=HFM.Instrumentation.Debug;
 
 namespace HFM.Instances
@@ -39,12 +41,12 @@ namespace HFM.Instances
       /// <summary>
       /// Main instance collection
       /// </summary>
-      private readonly Dictionary<string, ClientInstance> _instanceCollection = new Dictionary<string, ClientInstance>();
+      private readonly Dictionary<string, ClientInstance> _instanceCollection;
 
       /// <summary>
       /// Display instance collection (this is bound to the DataGridView)
       /// </summary>
-      private readonly SortableBindingList<DisplayInstance> _displayCollection = new SortableBindingList<DisplayInstance>();
+      private readonly SortableBindingList<DisplayInstance> _displayCollection;
       #endregion
 
       #region CTOR
@@ -98,14 +100,14 @@ namespace HFM.Instances
       {
          XmlDocument xmlData = new XmlDocument();
 
-         // Save the XML stream to the file
+         // Load the XML file
          if ((xmlDocName.Substring(1, 1) == ":") || (xmlDocName.StartsWith("\\\\")))
          {
             xmlData.Load(xmlDocName);
          }
          else
          {
-            xmlData.Load(Preferences.PreferenceSet.Instance.AppDataPath + "\\" + xmlDocName);
+            xmlData.Load(Path.Combine(Preferences.PreferenceSet.Instance.AppDataPath, xmlDocName));
          }
 
          // xmlData now contains the collection of Nodes. Hopefully.
@@ -120,6 +122,12 @@ namespace HFM.Instances
                InstanceType type = (InstanceType)Enum.Parse(typeof(InstanceType), InstanceType, false);
                ClientInstance instance = new ClientInstance(type);
                instance.FromXml(xn);
+               UnitInfo restoreUnitInfo = UnitInfoCollection.Instance.RetrieveUnitInfo(instance.InstanceName, instance.Path);
+               if (restoreUnitInfo != null)
+               {
+                  instance.CurrentUnitInfo = restoreUnitInfo;
+                  Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Restored UnitInfo for Instance '{1}'.", Debug.FunctionName, instance.InstanceName));
+               }
                Add(instance);
             }
             else
@@ -167,9 +175,32 @@ namespace HFM.Instances
          }
          else
          {
-            xmlData.Save(Preferences.PreferenceSet.Instance.AppDataPath + "\\" + xmlDocName);
+            xmlData.Save(Path.Combine(Preferences.PreferenceSet.Instance.AppDataPath, xmlDocName));
          }
       }
+      #endregion
+
+      #region Save UnitInfo Collection
+      /// <summary>
+      /// Serialize the Current UnitInfo Objects to disk
+      /// </summary>
+      public void SaveCurrentUnitInfo()
+      {
+         DateTime Start = Debug.ExecStart;
+      
+         UnitInfoCollection collection = UnitInfoCollection.Instance;
+
+         collection.Clear();
+
+         foreach (ClientInstance instance in _instanceCollection.Values)
+         {
+            collection.Add(instance.CurrentUnitInfo);
+         }
+
+         collection.Serialize();
+
+         Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+      } 
       #endregion
 
       #region FahMon Import Support
@@ -354,13 +385,16 @@ namespace HFM.Instances
       }
 
       /// <summary>
-      /// Instance Collection Contains Key
+      /// Collection Contains Name
       /// </summary>
-      /// <param name="Key">Instance Key</param>
-      /// <returns></returns>
-      public bool Contains(string Key)
+      /// <param name="instanceName">Instance Name to search for</param>
+      public bool ContainsName(string instanceName)
       {
-         return _instanceCollection.ContainsKey(Key);
+         ClientInstance findInstance = new List<ClientInstance>(_instanceCollection.Values).Find(delegate(ClientInstance instance)
+                                                                      {
+                                                                         return instance.InstanceName.ToUpper() == instanceName.ToUpper();
+                                                                      });
+         return findInstance != null;
       }
       #endregion
 
@@ -400,7 +434,12 @@ namespace HFM.Instances
          }
       }
 
-      public void UpdateDisplayHostName(string oldName, string newName)
+      /// <summary>
+      /// Update an Instance Name in the Display Collection
+      /// </summary>
+      /// <param name="oldName">Old Instance Name</param>
+      /// <param name="newName">New Instance Name</param>
+      public void UpdateDisplayInstanceName(string oldName, string newName)
       {
          DisplayInstance findInstance = FindDisplayInstance(_displayCollection, oldName);
          findInstance.UpdateName(newName);
@@ -416,15 +455,20 @@ namespace HFM.Instances
       /// <returns></returns>
       private static DisplayInstance FindDisplayInstance(IEnumerable<DisplayInstance> collection, string Key)
       {
-         foreach (DisplayInstance instance in collection)
-         {
-            if (instance.Name == Key)
-            {
-               return instance;
-            }
-         }
+         //foreach (DisplayInstance instance in collection)
+         //{
+         //   if (instance.Name == Key)
+         //   {
+         //      return instance;
+         //   }
+         //}
 
-         return null;
+         return new List<DisplayInstance>(collection).Find(delegate(DisplayInstance displayInstance)
+                                                            {
+                                                               return displayInstance.Name == Key;
+                                                            });
+
+         //return null;
       }
       #endregion
    }

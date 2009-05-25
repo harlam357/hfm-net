@@ -38,14 +38,14 @@ namespace HFM.Forms
       public void AddMessage(string message)
       {
          List<string> lines = new List<string>(txtMessages.Lines);
-      
+
          if (txtMessages.Lines.Length > 500)
          {
             lines.RemoveRange(0, 100);
          }
-         
+
          lines.Add(message);
-         
+
          UpdateMessages(lines.ToArray());
       }
       
@@ -61,7 +61,9 @@ namespace HFM.Forms
       {
          if (InvokeRequired)
          {
-            Invoke(new UpdateMessagesDelegate(UpdateMessages), new object[] { lines });
+            // BIG BUG FIX HERE!!! Using Invoke instead of BeginInvoke was casing 
+            // deadlock when trying to call this delegate from multiple threads
+            BeginInvoke(new UpdateMessagesDelegate(UpdateMessages), new object[] { lines });
          }
          else
          {

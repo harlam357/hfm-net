@@ -49,13 +49,13 @@ namespace HFM.Forms
       private void InitializeComponent()
       {
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAbout));
-         this.lblProduct = new Classes.LabelWrapper();
-         this.lblVersion = new Classes.LabelWrapper();
-         this.lblCopyrights = new Classes.LabelWrapper();
+         this.lblProduct = new HFM.Classes.LabelWrapper();
+         this.lblVersion = new HFM.Classes.LabelWrapper();
+         this.lblCopyrights = new HFM.Classes.LabelWrapper();
          this.lblLinkOrig = new System.Windows.Forms.LinkLabel();
-         this.btnClose = new Classes.ButtonWrapper();
+         this.btnClose = new HFM.Classes.ButtonWrapper();
          this.pictureBox1 = new System.Windows.Forms.PictureBox();
-         this.lblGPL = new Classes.LabelWrapper();
+         this.lblGPL = new HFM.Classes.LabelWrapper();
          ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
          this.SuspendLayout();
          // 
@@ -87,14 +87,14 @@ namespace HFM.Forms
          // 
          // lblLinkOrig
          // 
-         this.lblLinkOrig.LinkArea = new System.Windows.Forms.LinkArea(58, 15);
+         this.lblLinkOrig.LinkArea = new System.Windows.Forms.LinkArea(28, 15);
          this.lblLinkOrig.Location = new System.Drawing.Point(10, 169);
          this.lblLinkOrig.Name = "lblLinkOrig";
          this.lblLinkOrig.Size = new System.Drawing.Size(497, 22);
          this.lblLinkOrig.TabIndex = 5;
          this.lblLinkOrig.TabStop = true;
-         this.lblLinkOrig.Text = "The HFM.NET UI was inspired by FahMon and is based on the FAHLogStats.NET code ba" +
-             "se.";
+         this.lblLinkOrig.Text = "The HFM.NET is based on the FAHLogStats.NET code base.  The UI is inspired by Fah" +
+             "Mon.";
          this.lblLinkOrig.UseCompatibleTextRendering = true;
          this.lblLinkOrig.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
          // 

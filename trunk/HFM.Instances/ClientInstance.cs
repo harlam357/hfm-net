@@ -50,6 +50,12 @@ namespace HFM.Instances
       FTPInstance,
       HTTPInstance
    }
+
+   public enum DownloadType
+   {
+      FAHLog = 0,
+      UnitInfo
+   }
    #endregion
 
    public class ClientInstance
@@ -77,19 +83,16 @@ namespace HFM.Instances
       private const int UnitInfoMax = 1048576; // 1 Megabyte
       #endregion
       
-      #region Enum
-      enum DownloadType
-      {
-         FAHLog = 0,
-         UnitInfo
-      }
-      #endregion
-      
       #region Public Events
       /// <summary>
       /// Raised when Instance Host Type is Changed
       /// </summary>
       public event EventHandler InstanceHostTypeChanged;
+
+      /// <summary>
+      /// Raised when Client is on VM flag is Changed
+      /// </summary>
+      public event EventHandler ClientIsOnVirtualMachineChanged;
       #endregion
 
       #region Private Members
@@ -127,7 +130,7 @@ namespace HFM.Instances
 
       #region Public Properties and Related Private Members
       
-      #region User specified values (from the frmHost dialog)
+      #region User Specified Values (from the frmHost dialog)
       /// <summary>
       /// The name assigned to this client instance
       /// </summary>
@@ -213,8 +216,11 @@ namespace HFM.Instances
          get { return _InstanceHostType; }
          set
          {
-            _InstanceHostType = value;
-            OnInstanceHostTypeChanged(EventArgs.Empty);
+            if (_InstanceHostType != value)
+            {
+               _InstanceHostType = value;
+               OnInstanceHostTypeChanged(EventArgs.Empty);
+            }
          }
       }
 
@@ -280,7 +286,14 @@ namespace HFM.Instances
       public bool ClientIsOnVirtualMachine
       {
          get { return _ClientIsOnVirtualMachine; }
-         set { _ClientIsOnVirtualMachine = value; }
+         set 
+         {
+            if (_ClientIsOnVirtualMachine != value)
+            {
+               _ClientIsOnVirtualMachine = value;
+               OnClientIsOnVirtualMachineChanged(EventArgs.Empty);
+            }
+         }
       }
 
       /// <summary>
@@ -310,7 +323,6 @@ namespace HFM.Instances
          get { return _LastRetrievalTime; }
          private set
          {
-            //_PreviousLastRetrievalTime = _LastRetrievalTime;
             _LastRetrievalTime = value;
          }
       } 
@@ -396,43 +408,22 @@ namespace HFM.Instances
       }
 
       /// <summary>
-      /// List of current log file text lines
+      /// Class member containing info specific to the current work unit
       /// </summary>
-      private readonly List<string> _CurrentLogText = new List<string>();
-      /// <summary>
-      /// List of current log file text lines
-      /// </summary>
-      public List<string> CurrentLogText
-      {
-         get { return _CurrentLogText; }
-      }
-
-      /// <summary>
-      /// Class member containing info on the currently running protein
-      /// </summary>
-      private Protein _CurrentProtein;
-      /// <summary>
-      /// Class member containing info on the currently running protein
-      /// </summary>
-      public Protein CurrentProtein
-      {
-         get { return _CurrentProtein; }
-         set { _CurrentProtein = value; }
-      }
-
+      private UnitInfo _UnitInfo;
       /// <summary>
       /// Class member containing info specific to the current work unit
       /// </summary>
-      private readonly UnitInfo _UnitInfo;
-      /// <summary>
-      /// Class member containing info specific to the current work unit
-      /// </summary>
-      public UnitInfo UnitInfo
+      public UnitInfo CurrentUnitInfo
       {
          get { return _UnitInfo; }
+         set 
+         { 
+            _UnitInfo = value;
+         }
       } 
       #endregion
-      
+
       #endregion
 
       #region Constructor
@@ -441,11 +432,18 @@ namespace HFM.Instances
       /// </summary>
       public ClientInstance(InstanceType type)
       {
-         InstanceHostTypeChanged += ClearInstanceValues;
+         // When Instance Host Type Changes, Clear the User Specified Values
+         InstanceHostTypeChanged += ClearUserSpecifiedValues;
+         // When Client is on VM Changes, Clear the Unit Frame Data
+         // The captured TimeOfFrame values will no longer be valid
+         ClientIsOnVirtualMachineChanged += ClearFrameData;
+         
+         // Set the Host Type
          _InstanceHostType = type;
-
-         _UnitInfo = new UnitInfo();
+         // Clear Instance Specific Values
          Clear();
+         // Create a fresh UnitInfo
+         _UnitInfo = new UnitInfo(InstanceName, Path);
       }
       #endregion
 
@@ -458,6 +456,17 @@ namespace HFM.Instances
          if (InstanceHostTypeChanged != null)
          {
             InstanceHostTypeChanged(this, e);
+         }
+      }
+
+      /// <summary>
+      /// Call when changing Client is on VM
+      /// </summary>
+      protected void OnClientIsOnVirtualMachineChanged(EventArgs e)
+      {
+         if (ClientIsOnVirtualMachineChanged != null)
+         {
+            ClientIsOnVirtualMachineChanged(this, e);
          }
       } 
       #endregion
@@ -474,46 +483,30 @@ namespace HFM.Instances
          TotalUnits = 0;
          NumberOfCompletedUnitsSinceLastStart = 0;
          NumberOfFailedUnitsSinceLastStart = 0;
-         // clear the instance log holder
-         CurrentLogText.Clear();
-      
-         UnitInfo.TypeOfClient = ClientType.Unknown;
-         UnitInfo.Username = "Unknown"; //String.Empty;
-         UnitInfo.Team = 0;
-         UnitInfo.CoreVersion = String.Empty;
-         UnitInfo.DownloadTime = DateTime.MinValue;
-         UnitInfo.DueTime = DateTime.MinValue;
-         UnitInfo.FramesComplete = 0;
-         UnitInfo.PercentComplete = 0;
-         UnitInfo.ProjectID = 0;
-         UnitInfo.ProjectRun = 0;
-         UnitInfo.ProjectClone = 0;
-         UnitInfo.ProjectGen = 0;
-         UnitInfo.ProteinName = String.Empty;
-         UnitInfo.ProteinTag = String.Empty;
-         UnitInfo.RawFramesComplete = 0;
-         UnitInfo.RawFramesTotal = 0;
-         UnitInfo.TimeOfLastFrame = TimeSpan.Zero;
-         
-         ClearTimeBasedValues();
+      }
 
-         _CurrentProtein = new Protein();
+      /// <summary>
+      /// Clear the Unit Frame Data from the Current Unit Info
+      /// </summary>
+      private void ClearFrameData(object sender, EventArgs e)
+      {
+         CurrentUnitInfo.ClearFrameData();
       }
       
       /// <summary>
-      /// Clear only the time based values for this instance
+      /// 
       /// </summary>
-      private void ClearTimeBasedValues()
+      private bool IsUnitInfoCurrentUnitInfo(UnitInfo parsedUnitInfo)
       {
-         // Set in SetTimeBasedValues()
-         UnitInfo.TimePerFrame = TimeSpan.Zero;
-         UnitInfo.UPD = 0.0;
-         UnitInfo.PPD = 0.0;
-         UnitInfo.ETA = TimeSpan.Zero;
-
-         // Set in LogParser.SetTimeStamp()
-         UnitInfo.RawTimePerLastSection = 0;
-         UnitInfo.RawTimePerThreeSections = 0;
+         // if the Project is the same and either the Name or Path matches
+         if (parsedUnitInfo.ProjectRunCloneGen == CurrentUnitInfo.ProjectRunCloneGen) //&&
+            //(parsedUnitInfo.OwningInstanceName == CurrentUnitInfo.OwningInstanceName ||
+            // parsedUnitInfo.OwningInstancePath == CurrentUnitInfo.OwningInstancePath))
+         {
+            return true;
+         }
+         
+         return false;
       }
 
       /// <summary>
@@ -521,32 +514,55 @@ namespace HFM.Instances
       /// </summary>
       public void SetTimeBasedValues()
       {
-         if ((UnitInfo.RawFramesTotal != 0) && (UnitInfo.RawFramesComplete != 0) && (UnitInfo.RawTimePerSection != 0))
-         {
-            try
+         //if ((CurrentUnitInfo.RawFramesTotal != 0) && (CurrentUnitInfo.RawFramesComplete != 0))
+         //{
+            if (CurrentUnitInfo.RawTimePerSection != 0)
             {
-               Int32 FramesTotal = ProteinCollection.Instance[UnitInfo.ProjectID].Frames;
-               Int32 RawScaleFactor = UnitInfo.RawFramesTotal / FramesTotal;
+               try
+               {
+                  Int32 FramesTotal = ProteinCollection.Instance[CurrentUnitInfo.ProjectID].Frames;
+                  Int32 RawScaleFactor = CurrentUnitInfo.RawFramesTotal / FramesTotal;
 
-               UnitInfo.FramesComplete = UnitInfo.RawFramesComplete / RawScaleFactor;
-               UnitInfo.PercentComplete = UnitInfo.FramesComplete * 100 / FramesTotal;
-               UnitInfo.TimePerFrame = new TimeSpan(0, 0, Convert.ToInt32(UnitInfo.RawTimePerSection));
+                  //TODO: FramesComplete is pretty isolated here... can it be moved into this routine and not exposed at the class level?
+                  CurrentUnitInfo.FramesComplete = CurrentUnitInfo.RawFramesComplete / RawScaleFactor;
+                  CurrentUnitInfo.PercentComplete = CurrentUnitInfo.FramesComplete * 100 / FramesTotal;
+                  CurrentUnitInfo.TimePerFrame = new TimeSpan(0, 0, Convert.ToInt32(CurrentUnitInfo.RawTimePerSection));
 
-               UnitInfo.UPD = 86400 / (UnitInfo.TimePerFrame.TotalSeconds * FramesTotal);
-               UnitInfo.PPD = Math.Round(UnitInfo.UPD * ProteinCollection.Instance[UnitInfo.ProjectID].Credit, 5);
-               UnitInfo.ETA = new TimeSpan((100 - UnitInfo.PercentComplete) * UnitInfo.TimePerFrame.Ticks);
+                  CurrentUnitInfo.UPD = ProteinCollection.Instance[CurrentUnitInfo.ProjectID].GetUPD(CurrentUnitInfo.TimePerFrame); //86400 / (CurrentUnitInfo.TimePerFrame.TotalSeconds * FramesTotal);
+                  CurrentUnitInfo.PPD = ProteinCollection.Instance[CurrentUnitInfo.ProjectID].GetPPD(CurrentUnitInfo.TimePerFrame); //Math.Round(CurrentUnitInfo.UPD * ProteinCollection.Instance[CurrentUnitInfo.ProjectID].Credit, 5);
+                  CurrentUnitInfo.ETA = new TimeSpan((100 - CurrentUnitInfo.PercentComplete) * CurrentUnitInfo.TimePerFrame.Ticks);
+               }
+               catch (Exception ex)
+               {
+                  Debug.WriteToHfmConsole(TraceLevel.Error,
+                                          String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+               }
             }
-            catch (Exception ex)
+            else if (Status.Equals(ClientStatus.RunningNoFrameTimes))
             {
-               Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+               // If we have frames but no section time, try pulling the percent complete from the UnitFrame data
+               if (CurrentUnitInfo.PercentComplete == 0)
+               {
+                  // Only if we didn't get a reading from the UnitInfo.txt parse
+                  CurrentUnitInfo.PercentComplete = CurrentUnitInfo.CurrentFramePercent;
+               }
+
+               TimeSpan benchmarkAverageTimePerFrame = ProteinBenchmarkCollection.Instance.GetBenchmarkAverageFrameTime(CurrentUnitInfo);
+               if (benchmarkAverageTimePerFrame.Equals(TimeSpan.Zero) == false)
+               {
+                  CurrentUnitInfo.TimePerFrame = benchmarkAverageTimePerFrame;
+                  CurrentUnitInfo.UPD = ProteinCollection.Instance[CurrentUnitInfo.ProjectID].GetUPD(CurrentUnitInfo.TimePerFrame); //86400 / (CurrentUnitInfo.TimePerFrame.TotalSeconds * FramesTotal);
+                  CurrentUnitInfo.PPD = ProteinCollection.Instance[CurrentUnitInfo.ProjectID].GetPPD(CurrentUnitInfo.TimePerFrame); //Math.Round(CurrentUnitInfo.UPD * ProteinCollection.Instance[CurrentUnitInfo.ProjectID].Credit, 5);
+                  CurrentUnitInfo.ETA = new TimeSpan((100 - CurrentUnitInfo.PercentComplete) * CurrentUnitInfo.TimePerFrame.Ticks);
+               }
             }
-         }
+         //}
       }
-      
+
       /// <summary>
       /// Clear the user specified values that define this instance
       /// </summary>
-      private void ClearInstanceValues(object sender, EventArgs e)
+      private void ClearUserSpecifiedValues(object sender, EventArgs e)
       {
          InstanceName = String.Empty;
          ClientProcessorMegahertz = 1;
@@ -554,11 +570,120 @@ namespace HFM.Instances
          RemoteUnitInfoFilename = String.Empty;
          ClientIsOnVirtualMachine = false;
          ClientTimeOffset = 0;
-         
+
          Path = String.Empty;
          Server = String.Empty;
          Username = String.Empty;
          Password = String.Empty;
+      }
+
+      /// <summary>
+      /// Determine Client Status
+      /// </summary>
+      /// <param name="Instance">Client Instance</param>
+      private static void DetermineStatus(ClientInstance Instance)
+      {
+         #region Get Terminal Time
+         // Terminal Time - defined as last retrieval time minus twice (7 times for GPU) the current Raw Time per Section.
+         // if a new frame has not completed in twice the amount of time it should take to complete we should deem this client Hung.
+         DateTime terminalDateTime;
+
+         if (Instance.CurrentUnitInfo.TypeOfClient.Equals(ClientType.GPU))
+         {
+            terminalDateTime = Instance.LastRetrievalTime.Subtract(new TimeSpan(0, 0, Instance.CurrentUnitInfo.RawTimePerSection * 7));
+         }
+         else
+         {
+            terminalDateTime = Instance.LastRetrievalTime.Subtract(new TimeSpan(0, 0, Instance.CurrentUnitInfo.RawTimePerSection * 2));
+         }
+         #endregion
+
+         // make sure we have calculated a frame time (could be based on 'LastFrame' or 'LastThreeFrames')
+         if (Instance.CurrentUnitInfo.RawTimePerSection > 0)
+         {
+            #region Get Last Retrieval Time Date
+            DateTime currentFrameDateTime;
+
+            if (Instance.ClientIsOnVirtualMachine)
+            {
+               // get only the date from the last retrieval time (in universal), we'll add the current time below
+               currentFrameDateTime = new DateTime(Instance.LastRetrievalTime.Date.Ticks, DateTimeKind.Utc);
+            }
+            else
+            {
+               // get only the date from the last retrieval time, we'll add the current time below
+               currentFrameDateTime = Instance.LastRetrievalTime.Date;
+            }
+            #endregion
+
+            #region Apply Frame Time Offset and Set Current Frame Time Date
+            TimeSpan offset = TimeSpan.FromMinutes(Instance.ClientTimeOffset);
+            TimeSpan adjustedFrameTime = Instance.CurrentUnitInfo.TimeOfLastFrame.Subtract(offset);
+
+            // client time has already rolled over to the next day. the offset correction has 
+            // caused the adjusted frame time span to be negetive.  take the that negetive span
+            // and add it to a full 24 hours to correct.
+            if (adjustedFrameTime < TimeSpan.Zero)
+            {
+               adjustedFrameTime = TimeSpan.FromDays(1).Add(adjustedFrameTime);
+            }
+
+            // the offset correction has caused the frame time span to be greater than 24 hours.
+            // subtract the extra day from the adjusted frame time span.
+            else if (adjustedFrameTime > TimeSpan.FromDays(1))
+            {
+               adjustedFrameTime = adjustedFrameTime.Subtract(TimeSpan.FromDays(1));
+            }
+
+            // add adjusted Time of Last Frame (TimeSpan) to the DateTime with the correct date
+            currentFrameDateTime = currentFrameDateTime.Add(adjustedFrameTime);
+            #endregion
+
+            #region Check For Frame from Prior Day (Midnight Rollover on Local Machine)
+            bool priorDayAdjust = false;
+
+            // if the current (and adjusted) frame time hours is greater than the last retrieval time hours, 
+            // and the time difference is greater than an hour, then frame is from the day prior.
+            // this should only happen after midnight time on the machine running HFM when the monitored client has 
+            // not completed a frame since the local machine time rolled over to the next day, otherwise the time
+            // stamps between HFM and the client are too far off, a positive offset should be set to correct.
+            if (currentFrameDateTime.TimeOfDay.Hours > Instance.LastRetrievalTime.TimeOfDay.Hours &&
+                currentFrameDateTime.TimeOfDay.Subtract(Instance.LastRetrievalTime.TimeOfDay).Hours > 0)
+            {
+               priorDayAdjust = true;
+
+               // subtract 1 day from today's date
+               currentFrameDateTime = currentFrameDateTime.Subtract(TimeSpan.FromDays(1));
+            }
+            #endregion
+
+            #region Write Verbose Trace
+            if (HFM.Instrumentation.TraceLevelSwitch.GetTraceLevelSwitch().TraceVerbose)
+            {
+               List<string> messages = new List<string>(10);
+
+               messages.Add(String.Format("{0} ({1})", Debug.FunctionName, Instance.InstanceName));
+               messages.Add(String.Format(" - Retrieval Time (Date) ------- : {0}", Instance.LastRetrievalTime));
+               messages.Add(String.Format(" - Time Of Last Frame (TimeSpan) : {0}", Instance.CurrentUnitInfo.TimeOfLastFrame));
+               messages.Add(String.Format(" - Offset (Minutes) ------------ : {0}", Instance.ClientTimeOffset));
+               messages.Add(String.Format(" - Time Of Last Frame (Adjusted) : {0}", adjustedFrameTime));
+               messages.Add(String.Format(" - Prior Day Adjustment -------- : {0}", priorDayAdjust));
+               messages.Add(String.Format(" - Time Of Last Frame (Date) --- : {0}", currentFrameDateTime));
+               messages.Add(String.Format(" - Terminal Time (Date) -------- : {0}", terminalDateTime));
+
+               Debug.WriteToHfmConsole(TraceLevel.Verbose, messages.ToArray());
+            }
+            #endregion
+
+            if (currentFrameDateTime > terminalDateTime)
+            {
+               Instance.Status = ClientStatus.Running;
+            }
+            else // current frame is less than terminal time
+            {
+               Instance.Status = ClientStatus.Hung;
+            }
+         }
       }
 
       /// <summary>
@@ -568,27 +693,79 @@ namespace HFM.Instances
       {
          DateTime Start = Debug.ExecStart;
 
-         Clear();
-
-         Boolean allGood;
+         UnitInfo parsedUnitInfo = null;
 
          LogParser lp = new LogParser();
-         if (lp.ParseUnitInfo(System.IO.Path.Combine(BaseDirectory, CachedUnitInfoName), this) == false)
+         if (lp.ReadLogText(System.IO.Path.Combine(BaseDirectory, CachedFAHLogName)))
          {
-            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} ({1}) UnitInfo parse failed.", Debug.FunctionName, InstanceName));
-         }
-         allGood = lp.ParseFAHLog(System.IO.Path.Combine(BaseDirectory, CachedFAHLogName), this);
+            if (lp.Previous1UnitStartPosition > 0)
+            {
+               parsedUnitInfo = lp.ParseFAHLog(System.IO.Path.Combine(BaseDirectory, CachedFAHLogName), this, UnitToRead.Previous1);
+               // check this against the CurrentUnitInfo
+               if (IsUnitInfoCurrentUnitInfo(parsedUnitInfo))
+               {
+                  // current frame has already been recorded, increment to the next frame
+                  int previousFramePercent = CurrentUnitInfo.CurrentFramePercent + 1;
+               
+                  // update the UnitFrames
+                  CurrentUnitInfo.UnitFrames = parsedUnitInfo.UnitFrames;
+                  CurrentUnitInfo.CurrentFrame = parsedUnitInfo.CurrentFrame;
+                  CurrentUnitInfo.FramesObserved = parsedUnitInfo.FramesObserved;
+                  
+                  // set the frame times and calculate values
+                  CurrentUnitInfo.SetFrameTimes();
+                  SetTimeBasedValues();
+                  ProteinBenchmarkCollection.Instance.UpdateBenchmarkData(CurrentUnitInfo, previousFramePercent, CurrentUnitInfo.CurrentFramePercent);
+               }
+            }
+            if (lp.LastUnitStartPosition > 0)
+            {
+               parsedUnitInfo = lp.ParseFAHLog(System.IO.Path.Combine(BaseDirectory, CachedFAHLogName), this, UnitToRead.Last);
 
-         if (allGood)
+               int currentFrames = 0;
+               // check this against the CurrentUnitInfo
+               if (IsUnitInfoCurrentUnitInfo(parsedUnitInfo))
+               {
+                  // current frame has already been recorded, increment to the next frame
+                  currentFrames = CurrentUnitInfo.CurrentFramePercent + 1;
+               }
+
+               ProteinBenchmarkCollection.Instance.UpdateBenchmarkData(parsedUnitInfo, currentFrames, parsedUnitInfo.CurrentFramePercent);
+            }
+         }
+
+         if (parsedUnitInfo != null)
          {
-            SetTimeBasedValues();
+            // Parsed is now Current
+            CurrentUnitInfo = parsedUnitInfo;
+
+            if (Status != ClientStatus.Stopped &&
+                Status != ClientStatus.Paused)
+            {
+               CurrentUnitInfo.SetFrameTimes();
+               DetermineStatus(this);
+               if (Status.Equals(ClientStatus.Hung))
+               {
+                  // client is hung, clear PPD values
+                  CurrentUnitInfo.ClearTimeBasedValues();
+               }
+               else
+               {
+                  SetTimeBasedValues();
+               }
+            }
+            else
+            {
+               // client is stopped or paused, clear PPD values
+               CurrentUnitInfo.ClearTimeBasedValues();
+            }
          }
          else
          {
             // Clear the time based values when log parsing fails
-            ClearTimeBasedValues();
+            CurrentUnitInfo.ClearTimeBasedValues();
          }
-         
+
          Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, InstanceName, Debug.GetExecTime(Start)));
       }
 
@@ -614,6 +791,9 @@ namespace HFM.Instances
                throw new NotImplementedException(String.Format("Instance Type '{0}' is not implemented", InstanceHostType));
          }
 
+         // Clear the instance before
+         Clear();
+
          if (success)
          {
             ProcessExisting();
@@ -621,7 +801,7 @@ namespace HFM.Instances
          else
          {
             // Clear the time based values when log retrieval fails
-            ClearTimeBasedValues();
+            CurrentUnitInfo.ClearTimeBasedValues();
          }
          
          Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Client Status: {2}", Debug.FunctionName, InstanceName, Status));

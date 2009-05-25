@@ -22,13 +22,20 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
-//using System.Windows.Forms;
 
 using HFM.Proteins;
 using Debug = HFM.Instrumentation.Debug;
 
 namespace HFM.Instances
 {
+   #region Enum
+   enum UnitToRead
+   {
+      Last,
+      Previous1
+   } 
+   #endregion
+
    class LogParser
    {
       #region Members
@@ -64,12 +71,36 @@ namespace HFM.Instances
 
       private readonly Regex rProteinID =
             new Regex(@"(?<ProjectNumber>.*) \(Run (?<Run>.*), Clone (?<Clone>.*), Gen (?<Gen>.*)\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+            
+      private readonly Regex rPercent1 =
+            new Regex("(?<Percent>.*) percent", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
-      bool _bProjectFound = false;
-      bool _bCoreFound = false;
-      bool _bUserTeamFound = false;
-      bool _bUserIDFound = false;
-      bool _bMachineIDFound = false;
+      private readonly Regex rPercent2 =
+            new Regex("(?<Percent>.*)%", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+
+      private bool _bCoreFound = false;
+      private bool _bUserTeamFound = false;
+      private bool _bReadUnitInfoFile = false;
+      private bool _bUserIDFound = false;
+      private bool _bMachineIDFound = false;
+
+      // declare variables for log reading and starting points
+      private string[] FAHLogText = null;
+      private int _ClientStartPosition = 0;
+      public int ClientStartPosition
+      {
+         get { return _ClientStartPosition; }
+      }
+      private int _LastUnitStartPosition = 0;
+      public int LastUnitStartPosition
+      {
+         get { return _LastUnitStartPosition; }
+      }
+      private int _Previous1UnitStartPosition = 0;
+      public int Previous1UnitStartPosition
+      {
+         get { return _Previous1UnitStartPosition; }
+      }
       #endregion
 
       #region Parsing Methods
@@ -78,9 +109,9 @@ namespace HFM.Instances
       /// console
       /// </summary>
       /// <param name="LogFileName">Full path to local copy of UnitInfo.txt</param>
-      /// <param name="Instance">Reference back to the instance to which the
-      /// UnitInfo file belongs</param>
-      public Boolean ParseUnitInfo(String LogFileName, ClientInstance Instance)
+      /// <param name="Instance">Client Instance that owns the log file we're parsing</param>
+      /// <param name="parsedUnitInfo">Container for parsed information</param>
+      public Boolean ParseUnitInfoFile(String LogFileName, ClientInstance Instance, UnitInfo parsedUnitInfo)
       {
          if (!File.Exists(LogFileName)) return false;
 
@@ -96,24 +127,36 @@ namespace HFM.Instances
                String sData = tr.ReadLine();
                if (sData.StartsWith("Name: "))
                {
-                  Instance.UnitInfo.ProteinName = sData.Substring(6);
+                  parsedUnitInfo.ProteinName = sData.Substring(6);
                }
                else if (sData.StartsWith("Tag:"))
                {
-                  Instance.UnitInfo.ProteinTag = sData.Substring(5);
-                  DoProjectIDMatch(Instance, rProjectNumberFromTag.Match(Instance.UnitInfo.ProteinTag));
+                  parsedUnitInfo.ProteinTag = sData.Substring(5);
+                  DoProjectIDMatch(parsedUnitInfo, rProjectNumberFromTag.Match(parsedUnitInfo.ProteinTag));
                }
                else if (sData.StartsWith("Download time: "))
                {
-                  Instance.UnitInfo.DownloadTime = DateTime.ParseExact(sData.Substring(15), "MMMM d H:mm:ss", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.AssumeUniversal);
+                  if (Instance.ClientIsOnVirtualMachine)
+                  {
+                     parsedUnitInfo.DownloadTime =
+                        DateTime.ParseExact(sData.Substring(15), "MMMM d H:mm:ss",
+                                            System.Globalization.DateTimeFormatInfo.InvariantInfo);
+                  }
+                  else
+                  {
+                     parsedUnitInfo.DownloadTime =
+                        DateTime.ParseExact(sData.Substring(15), "MMMM d H:mm:ss",
+                                            System.Globalization.DateTimeFormatInfo.InvariantInfo,
+                                            System.Globalization.DateTimeStyles.AssumeUniversal);
+                  }
                }
                else if (sData.StartsWith("Due time: "))
                {
-                  Instance.UnitInfo.DueTime = DateTime.ParseExact(sData.Substring(10), "MMMM d H:mm:ss", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.AssumeUniversal);
+                  parsedUnitInfo.DueTime = DateTime.ParseExact(sData.Substring(10), "MMMM d H:mm:ss", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.AssumeUniversal);
                }
                else if (sData.StartsWith("Progress: "))
                {
-                  Instance.UnitInfo.PercentComplete = Int32.Parse(sData.Substring(10, sData.IndexOf("%") - 10));
+                  parsedUnitInfo.PercentComplete = Int32.Parse(sData.Substring(10, sData.IndexOf("%") - 10));
                }
             }
          }
@@ -139,39 +182,27 @@ namespace HFM.Instances
       /// Reads through the FAH log file and grabs desired information
       /// </summary>
       /// <param name="LogFileName">Full path to the FAH log file</param>
-      /// <param name="Instance">Instance to which the log file data is
-      /// attached</param>
-      /// <returns></returns>
-      public Boolean ParseFAHLog(String LogFileName, ClientInstance Instance)
+      /// <param name="Instance">Client Instance that owns the log file we're parsing</param>
+      /// <param name="ReadUnit">Specify which work unit to parse from the FAHLog</param>
+      /// <returns>Parsed Log File Information</returns>
+      public UnitInfo ParseFAHLog(String LogFileName, ClientInstance Instance, UnitToRead ReadUnit)
       {
-         // if file does not exist, get out
-         if (!File.Exists(LogFileName)) return false;
-
          DateTime Start = Debug.ExecStart;
 
-         // declare variables for log reading and starting points
-         string[] FAHLogText = null;
-         int clientStart = 0;
-         int unitStart = 0;
-
-         // try to read the log.  if failure, get out
-         if (!ReadLogText(LogFileName, ref FAHLogText, ref clientStart, ref unitStart)) return false;
-
-         // setup frame time holders
-         DateTime time1 = DateTime.MinValue;         // Time - Three frames ago
-         DateTime time2 = DateTime.MinValue;         // Time - Two frames ago
-         DateTime time3 = DateTime.MinValue;         // Time - one frame ago
-         DateTime time4 = DateTime.MinValue;         // Time - current frame
+         _bCoreFound = false;
+         _bUserTeamFound = false;
+         
+         UnitInfo parsedUnitInfo = new UnitInfo(Instance.InstanceName, Instance.Path);
 
          // start the parse loop where the client started last
-         for (int i = clientStart; i < FAHLogText.Length; i++)
+         for (int i = _ClientStartPosition; i < FAHLogText.Length; i++)
          {
             string logLine = FAHLogText[i];
             // add the line to the instance log holder
             //Instance.CurrentLogText.Add(logLine);
             
             // Read Username and Team Number - Issue 5
-            CheckForUserTeamAndIDs(Instance, logLine);
+            CheckForUserTeamAndIDs(Instance, parsedUnitInfo, logLine);
 
             if (logLine.Contains("FINISHED_UNIT"))
             {
@@ -188,28 +219,60 @@ namespace HFM.Instances
             //   Instance.TotalUnits = Int32.Parse(mCompletedWUs.Result("${Completed}"));
             //}
 
-            // begin true parsing at the begining of the most recent unit
-            if (i > unitStart)
+            int parseStart;
+            int parseEnd = Int32.MaxValue;
+            switch (ReadUnit)
+            {
+               case UnitToRead.Last:
+                  parseStart = _LastUnitStartPosition;
+                  break;
+               case UnitToRead.Previous1:
+                  parseStart = _Previous1UnitStartPosition;
+                  parseEnd = _LastUnitStartPosition;
+                  break;
+               default:
+                  throw new NotImplementedException(String.Format("Reads for type '{0}' are not yet implemented.", ReadUnit));
+            }
+
+            // begin parsing the specified unit based on positions set above
+            if (i >= parseStart && i < parseEnd)
             {
                Instance.Status = ClientStatus.RunningNoFrameTimes;
 
-               // add the line to the instance log holder
-               Instance.CurrentLogText.Add(logLine);
+               // only parse the UnitInfo.txt file when parsing the most recent unit log
+               if (ReadUnit.Equals(UnitToRead.Last) && _bReadUnitInfoFile == false)
+               {
+                  if (ParseUnitInfoFile(Path.Combine(Instance.BaseDirectory, Instance.CachedUnitInfoName), Instance, parsedUnitInfo) == false)
+                  {
+                     Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} ({1}) UnitInfo parse failed.", Debug.FunctionName, Instance.InstanceName));
+                  }
+                  _bReadUnitInfoFile = true;
+               }
 
-               CheckForProjectID(Instance, logLine);
-               CheckForCoreVersion(Instance, logLine);
+               // add the line to the instance log holder
+               parsedUnitInfo.CurrentLogText.Add(logLine);
+
+               CheckForProjectID(parsedUnitInfo, logLine);
+               CheckForCoreVersion(parsedUnitInfo, logLine);
 
                // don't start parsing frames until we know the client type
                // we have to know the project number before we know the client type (see SetProjectID)
-               if (Instance.UnitInfo.TypeOfClient.Equals(ClientType.Unknown) == false)
+               if (parsedUnitInfo.TypeOfClient.Equals(ClientType.Unknown) == false)
                {
-                  if (Instance.UnitInfo.TypeOfClient.Equals(ClientType.GPU))
+                  if (parsedUnitInfo.TypeOfClient.Equals(ClientType.GPU))
                   {
-                     CheckForCompletedGpuFrame(Instance, logLine, ref time1, ref time2, ref time3, ref time4);
+                     CheckForCompletedGpuFrame(Instance, parsedUnitInfo, logLine);
                   }
                   else //SMP or Standard
                   {
-                     CheckForCompletedFrame(Instance, logLine, ref time1, ref time2, ref time3, ref time4);
+                     try
+                     {
+                        CheckForCompletedFrame(Instance, parsedUnitInfo, logLine);
+                     }
+                     catch (Exception ex)
+                     {
+                        Debug.WriteToHfmConsole(TraceLevel.Warning, ex.Message);
+                     }
                   }
                }
 
@@ -227,32 +290,11 @@ namespace HFM.Instances
                   break; //we found a Shutdown message, quit parsing
                }
             }
-
-            // Process UI message queue
-            //Application.DoEvents();
-         }
-
-         bool bResult = true;
-
-         if (Instance.Status != ClientStatus.Stopped &&
-             Instance.Status != ClientStatus.Paused)
-         {
-            DetermineStatus(Instance);
-            if (Instance.Status.Equals(ClientStatus.Hung))
-            {
-               // client is hung, clear PPD values
-               bResult = false;
-            }
-         }
-         else
-         {
-            // client is stopped or paused, clear PPD values
-            bResult = false;
          }
 
          Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, Instance.InstanceName, Debug.GetExecTime(Start)));
 
-         return bResult;
+         return parsedUnitInfo;
       }
       #endregion
 
@@ -261,16 +303,22 @@ namespace HFM.Instances
       /// Reads Log File into string array then determines the parsing start points
       /// </summary>
       /// <param name="LogFileName">Log File Name</param>
-      /// <param name="FAHLogText">Log Line array</param>
-      /// <param name="clientStart">Client start message index in array</param>
-      /// <param name="unitStart">Last unit start message index in array</param>
       /// <returns>Success or Failure</returns>
-      private static bool ReadLogText(string LogFileName, ref string[] FAHLogText, ref int clientStart, ref int unitStart)
+      public bool ReadLogText(string LogFileName)
       {
+         // reset FAHLog text and position variables
+         FAHLogText = null;
+         _ClientStartPosition = 0;
+         _LastUnitStartPosition = 0;
+         _Previous1UnitStartPosition = 0;
+
+         // if file does not exist, get out
+         if (!File.Exists(LogFileName)) return false;
+
          try
          {
             FAHLogText = File.ReadAllLines(LogFileName);
-            GetParsingStartPositionsFromLog(FAHLogText, out clientStart, out unitStart);
+            GetParsingStartPositionsFromLog(FAHLogText, out _ClientStartPosition, out _LastUnitStartPosition, out _Previous1UnitStartPosition);
          }
          catch (Exception ex)
          {
@@ -284,12 +332,14 @@ namespace HFM.Instances
       /// Finds the starting indexes in the given Log File string array
       /// </summary>
       /// <param name="FAHLogText">Log Line array</param>
-      /// <param name="clientStart">Client start message index in array</param>
-      /// <param name="unitStart">Last unit start message index in array</param>
-      private static void GetParsingStartPositionsFromLog(string[] FAHLogText, out int clientStart, out int unitStart)
+      /// <param name="ClientStartPosition">Client start message index in array</param>
+      /// <param name="LastUnitStartPosition">Last unit start message index in array</param>
+      /// <param name="Previous1UnitStartPosition">First previous unit start message index in array</param>
+      private static void GetParsingStartPositionsFromLog(string[] FAHLogText, out int ClientStartPosition, out int LastUnitStartPosition, out int Previous1UnitStartPosition)
       {
-         clientStart = 0;
-         unitStart = 0;
+         ClientStartPosition = 0;
+         LastUnitStartPosition = 0;
+         Previous1UnitStartPosition = 0;
 
          //work backwards through the file text to find starting positions
          for (int i = FAHLogText.Length - 1; i >= 0; i--)
@@ -297,15 +347,22 @@ namespace HFM.Instances
             string s = FAHLogText[i];
             if (s.Contains("--- Opening Log file"))
             {
-               clientStart = i;
+               ClientStartPosition = i;
             }
 
-            if (s.Contains("*------------------------------*") && unitStart == 0)
+            if (s.Contains("*------------------------------*"))
             {
-               unitStart = i;
+               if (LastUnitStartPosition == 0)
+               {
+                  LastUnitStartPosition = i; // Set start of most current unit
+               }
+               else if (Previous1UnitStartPosition == 0)
+               {
+                  Previous1UnitStartPosition = i; // Set start of previous unit
+               }
             }
 
-            if (clientStart != 0 && unitStart != 0)
+            if (ClientStartPosition != 0 && LastUnitStartPosition != 0 && Previous1UnitStartPosition != 0)
             {
                //found our starting points, get out
                break;
@@ -316,34 +373,33 @@ namespace HFM.Instances
       /// <summary>
       /// Check the given log line for Project information
       /// </summary>
-      /// <param name="Instance">Client Instance</param>
+      /// <param name="parsedUnitInfo">Container for parsed information</param>
       /// <param name="logLine">Log Line</param>
-      private void CheckForProjectID(ClientInstance Instance, string logLine)
+      private void CheckForProjectID(UnitInfo parsedUnitInfo, string logLine)
       {
          Match mProjectNumber;
-         if (_bProjectFound == false && (mProjectNumber = rProjectNumber.Match(logLine)).Success)
+         if ((mProjectNumber = rProjectNumber.Match(logLine)).Success)
          {
-            DoProjectIDMatch(Instance, rProteinID.Match(mProjectNumber.Result("${ProjectNumber}")));
+            DoProjectIDMatch(parsedUnitInfo, rProteinID.Match(mProjectNumber.Result("${ProjectNumber}")));
          }
       }
 
       /// <summary>
       /// Attempts to Set Project ID with given Match.  If Project cannot be found in local cache, download again.
       /// </summary>
-      /// <param name="Instance">Client Instance</param>
+      /// <param name="parsedUnitInfo">Container for parsed information</param>
       /// <param name="match">Regex Match containing Project data</param>
-      private void DoProjectIDMatch(ClientInstance Instance, Match match)
+      private void DoProjectIDMatch(UnitInfo parsedUnitInfo, Match match)
       {
          try
          {
-            SetProjectID(Instance, match);
-            _bProjectFound = true;
+            SetProjectID(parsedUnitInfo, match);
          }
          catch (System.Collections.Generic.KeyNotFoundException)
          {
             Debug.WriteToHfmConsole(TraceLevel.Warning,
                                     String.Format("{0} Project ID '{1}' not found in Protein Collection.",
-                                                  Debug.FunctionName, Instance.UnitInfo.ProjectID));
+                                                  Debug.FunctionName, parsedUnitInfo.ProjectID));
 
             // If a Project cannot be identified using the local Project data, update Project data from Stanford. - Issue 4
             Debug.WriteToHfmConsole(TraceLevel.Info,
@@ -351,14 +407,13 @@ namespace HFM.Instances
             ProteinCollection.Instance.DownloadFromStanford(null);
             try
             {
-               SetProjectID(Instance, rProjectNumberFromTag.Match(Instance.UnitInfo.ProteinTag));
-               _bProjectFound = true;
+               SetProjectID(parsedUnitInfo, rProjectNumberFromTag.Match(parsedUnitInfo.ProteinTag));
             }
             catch (System.Collections.Generic.KeyNotFoundException)
             {
                Debug.WriteToHfmConsole(TraceLevel.Error,
                                        String.Format("{0} Project ID '{1}' not found on Stanford Web Project Summary.",
-                                                     Debug.FunctionName, Instance.UnitInfo.ProjectID));
+                                                     Debug.FunctionName, parsedUnitInfo.ProjectID));
             }
          }
          catch (FormatException ex)
@@ -370,21 +425,28 @@ namespace HFM.Instances
       /// <summary>
       /// Sets the ProjectID and gets the Protein info from the Protein Collection (from Stanford)
       /// </summary>
-      /// <param name="Instance">Client Instance</param>
+      /// <param name="parsedUnitInfo">Container for parsed information</param>
       /// <param name="match">Project string match</param>
       /// <exception cref="System.Collections.Generic.KeyNotFoundException">Thrown when Project ID cannot be found in Protein Collection.</exception>
       /// <exception cref="FormatException">Thrown when Project ID string fails to parse.</exception>
-      private static void SetProjectID(ClientInstance Instance, Match match)
+      private static void SetProjectID(UnitInfo parsedUnitInfo, Match match)
       {
          if (match.Success)
          {
-            Instance.UnitInfo.ProjectID = int.Parse(match.Result("${ProjectNumber}"));
-            Instance.UnitInfo.ProjectRun = int.Parse(match.Result("${Run}"));
-            Instance.UnitInfo.ProjectClone = int.Parse(match.Result("${Clone}"));
-            Instance.UnitInfo.ProjectGen = int.Parse(match.Result("${Gen}"));
+            // once frames have been observed we already have the ProjectID
+            // when a previous unit is returned during this unit's progress the project string
+            // is drawn just as it is drawn at the beginning of a unit, we don't want this string
+            // to override the ProjectID we already captured
+            if (parsedUnitInfo.FramesObserved == 0)
+            {
+               parsedUnitInfo.ProjectID = Int32.Parse(match.Result("${ProjectNumber}"));
+               parsedUnitInfo.ProjectRun = Int32.Parse(match.Result("${Run}"));
+               parsedUnitInfo.ProjectClone = Int32.Parse(match.Result("${Clone}"));
+               parsedUnitInfo.ProjectGen = Int32.Parse(match.Result("${Gen}"));
 
-            Instance.CurrentProtein = ProteinCollection.Instance[Instance.UnitInfo.ProjectID];
-            Instance.UnitInfo.TypeOfClient = GetClientTypeFromProtein(Instance.CurrentProtein);
+               parsedUnitInfo.CurrentProtein = ProteinCollection.Instance[parsedUnitInfo.ProjectID];
+               parsedUnitInfo.TypeOfClient = GetClientTypeFromProtein(parsedUnitInfo.CurrentProtein);
+            }
          }
          else
          {
@@ -430,15 +492,15 @@ namespace HFM.Instances
       /// <summary>
       /// Check the given log line for Core version information
       /// </summary>
-      /// <param name="Instance">Client Instance</param>
+      /// <param name="parsedUnitInfo">Container for parsed information</param>
       /// <param name="logLine">Log Line</param>
-      private void CheckForCoreVersion(ClientInstance Instance, string logLine)
+      private void CheckForCoreVersion(UnitInfo parsedUnitInfo, string logLine)
       {
          Match mCoreVer;
          if (_bCoreFound == false && (mCoreVer = rCoreVersion.Match(logLine)).Success)
          {
             string sCoreVer = mCoreVer.Result("${CoreVer}");
-            Instance.UnitInfo.CoreVersion = sCoreVer.Substring(0, sCoreVer.IndexOf(" "));
+            parsedUnitInfo.CoreVersion = sCoreVer.Substring(0, sCoreVer.IndexOf(" "));
             _bCoreFound = true;
          }
       }
@@ -446,15 +508,16 @@ namespace HFM.Instances
       /// <summary>
       /// Check the given log line for User, Team, and Machine related ID values
       /// </summary>
-      /// <param name="Instance">Client Instance</param>
+      /// <param name="Instance">Client Instance that owns the log file we're parsing</param>
+      /// <param name="parsedUnitInfo">Container for parsed information</param>
       /// <param name="logLine">Log Line</param>
-      private void CheckForUserTeamAndIDs(ClientInstance Instance, string logLine)
+      private void CheckForUserTeamAndIDs(ClientInstance Instance, UnitInfo parsedUnitInfo, string logLine)
       {
          Match mUserTeam;
          if (_bUserTeamFound == false && (mUserTeam = rUserTeam.Match(logLine)).Success)
          {
-            Instance.UnitInfo.Username = mUserTeam.Result("${Username}");
-            Instance.UnitInfo.Team = int.Parse(mUserTeam.Result("${TeamNumber}"));
+            parsedUnitInfo.FoldingID = mUserTeam.Result("${Username}");
+            parsedUnitInfo.Team = int.Parse(mUserTeam.Result("${TeamNumber}"));
             _bUserTeamFound = true;
          }
 
@@ -476,256 +539,93 @@ namespace HFM.Instances
       /// <summary>
       /// Check the given log line for Completed Frame information (GPU Only)
       /// </summary>
-      /// <param name="Instance">Client Instance</param>
+      /// <param name="Instance">Client Instance that owns the log file we're parsing</param>
+      /// <param name="parsedUnitInfo">Container for parsed information</param>
       /// <param name="logLine">Log Line</param>
-      /// <param name="time1"></param>
-      /// <param name="time2"></param>
-      /// <param name="time3"></param>
-      /// <param name="time4"></param>
-      private void CheckForCompletedGpuFrame(ClientInstance Instance, string logLine, ref DateTime time1, ref DateTime time2, ref DateTime time3, ref DateTime time4)
+      private void CheckForCompletedGpuFrame(ClientInstance Instance, UnitInfo parsedUnitInfo, string logLine)
       {
          Match mFramesCompletedGpu = rFramesCompletedGpu.Match(logLine);
          if (mFramesCompletedGpu.Success)
          {
-            //This works on GPU2 & GPU2-MT Core Log Files
-
-            Instance.UnitInfo.RawFramesComplete = Int32.Parse(mFramesCompletedGpu.Result("${Percent}"));
-            Instance.UnitInfo.RawFramesTotal = 100; //Instance.CurrentProtein.Frames
+            parsedUnitInfo.RawFramesComplete = Int32.Parse(mFramesCompletedGpu.Result("${Percent}"));
+            parsedUnitInfo.RawFramesTotal = 100; //Instance.CurrentProtein.Frames
             //TODO: Hard code here, 100 GPU Frames. Could I get this from the Project Data?
             //I could but what's the point, 100% is 100%.
 
-            SetTimeStamp(Instance, mFramesCompletedGpu.Result("${Timestamp}"),
-                         ref time1, ref time2, ref time3, ref time4);
+            SetTimeStamp(Instance, parsedUnitInfo, mFramesCompletedGpu.Result("${Timestamp}"), parsedUnitInfo.RawFramesComplete);
          }
       }
 
       /// <summary>
       /// Check the given log line for Completed Frame information (All other clients)
       /// </summary>
-      /// <param name="Instance">Client Instance</param>
+      /// <param name="Instance">Client Instance that owns the log file we're parsing</param>
+      /// <param name="parsedUnitInfo">Container for parsed information</param>
       /// <param name="logLine">Log Line</param>
-      /// <param name="time1"></param>
-      /// <param name="time2"></param>
-      /// <param name="time3"></param>
-      /// <param name="time4"></param>
-      private void CheckForCompletedFrame(ClientInstance Instance, string logLine, ref DateTime time1, ref DateTime time2, ref DateTime time3, ref DateTime time4)
+      private void CheckForCompletedFrame(ClientInstance Instance, UnitInfo parsedUnitInfo, string logLine)
       {
          Match mFramesCompleted = rFramesCompleted.Match(logLine);
          if (mFramesCompleted.Success)
          {
-            // This works on SMP A1 & A2 Core
-            // Confirmed to work with Standard Gromacs Core
-
             try
             {
-               Instance.UnitInfo.RawFramesComplete = Int32.Parse(mFramesCompleted.Result("${Completed}"));
-               Instance.UnitInfo.RawFramesTotal = Int32.Parse(mFramesCompleted.Result("${Total}"));
-               //string temp = mFramesCompleted.Result("${Percent}");
+               parsedUnitInfo.RawFramesComplete = Int32.Parse(mFramesCompleted.Result("${Completed}"));
+               parsedUnitInfo.RawFramesTotal = Int32.Parse(mFramesCompleted.Result("${Total}"));
             }
-            catch (FormatException)
+            catch (FormatException ex)
             {
-               Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} Failed to parse raw frame values from '{1}'.", Debug.FunctionName, logLine));
+               throw new FormatException(String.Format("{0} Failed to parse raw frame values from '{1}'.", Debug.FunctionName, logLine), ex);
             }
 
-            SetTimeStamp(Instance, mFramesCompleted.Result("${Timestamp}"),
-                         ref time1, ref time2, ref time3, ref time4);
+            Match mPercent1 = rPercent1.Match(mFramesCompleted.Result("${Percent}"));
+            Match mPercent2 = rPercent2.Match(mFramesCompleted.Result("${Percent}"));
+
+            int percent;
+            if (mPercent1.Success)
+            {
+               percent = Int32.Parse(mPercent1.Result("${Percent}"));
+            }
+            else if (mPercent2.Success)
+            {
+               percent = Int32.Parse(mPercent2.Result("${Percent}"));
+            }
+            else
+            {
+               throw new FormatException(String.Format("{0} Failed to parse frame percent from '{1}'.", Debug.FunctionName, logLine));
+            }
+
+            SetTimeStamp(Instance, parsedUnitInfo, mFramesCompleted.Result("${Timestamp}"), percent);
          }
       }
 
       /// <summary>
       /// Set the Raw Time per Section based on the given and previously read 
       /// </summary>
-      /// <param name="Instance">Client Instance</param>
+      /// <param name="Instance">Client Instance that owns the log file we're parsing</param>
+      /// <param name="parsedUnitInfo">Container for parsed information</param>
       /// <param name="timeStampString">String containing the current frame time stamp</param>
-      /// <param name="time1"></param>
-      /// <param name="time2"></param>
-      /// <param name="time3"></param>
-      /// <param name="time4"></param>
-      private static void SetTimeStamp(ClientInstance Instance, string timeStampString, ref DateTime time1, ref DateTime time2,
-                                                                                        ref DateTime time3, ref DateTime time4)
+      /// <param name="percent">Frame Percentage</param>
+      private static void SetTimeStamp(ClientInstance Instance, UnitInfo parsedUnitInfo, string timeStampString, int percent)
       {
          System.Globalization.DateTimeStyles style;
 
          if (Instance.ClientIsOnVirtualMachine)
          {
             // set parse style to maintain universal
-            style = System.Globalization.DateTimeStyles.AssumeUniversal |
-                    System.Globalization.DateTimeStyles.NoCurrentDateDefault |
-                    System.Globalization.DateTimeStyles.AdjustToUniversal;
+            style = System.Globalization.DateTimeStyles.NoCurrentDateDefault;
          }
          else
          {
             // set parse style to parse local
-            style = System.Globalization.DateTimeStyles.AssumeUniversal |
-                    System.Globalization.DateTimeStyles.NoCurrentDateDefault;
+            style = System.Globalization.DateTimeStyles.NoCurrentDateDefault |
+                    System.Globalization.DateTimeStyles.AssumeUniversal;
          }
 
          DateTime timeStamp = DateTime.ParseExact(timeStampString, "HH:mm:ss",
                                System.Globalization.DateTimeFormatInfo.InvariantInfo,
                                style);
 
-         time1 = time2;
-         time2 = time3;
-         time3 = time4;
-         time4 = timeStamp;
-
-         Instance.UnitInfo.TimeOfLastFrame = time4.TimeOfDay;
-
-         if (time1 != DateTime.MinValue)
-         {
-            // time1 is valid for 3 "sets" ago
-            TimeSpan tDelta = GetDelta(time4, time1);
-            Instance.UnitInfo.RawTimePerThreeSections = Convert.ToInt32(tDelta.TotalSeconds / 3);
-         }
-
-         //else if (time2 != DateTime.MinValue)
-         //{
-         //   // time2 is valid for 2 "set" ago
-         //   TimeSpan tDelta = GetDelta(time4, time2);
-         //   Instance.UnitInfo.RawTimePerSection = Convert.ToInt32(tDelta.TotalSeconds / 2);
-         //}
-
-         if (time3 != DateTime.MinValue)
-         {
-            // time3 is valid for 1 "set" ago
-            TimeSpan tDelta = GetDelta(time4, time3);
-            Instance.UnitInfo.RawTimePerLastSection = Convert.ToInt32(tDelta.TotalSeconds);
-         }
-      }
-
-      /// <summary>
-      /// Get Time Delta between given frames
-      /// </summary>
-      /// <param name="timeLastFrame">Time of last frame</param>
-      /// <param name="timeCompareFrame">Time of a previous frame to compare</param>
-      /// <returns></returns>
-      private static TimeSpan GetDelta(DateTime timeLastFrame, DateTime timeCompareFrame)
-      {
-         TimeSpan tDelta;
-
-         // check for rollover back to 00:00:00 timeLastFrame will be less than previous timeCompareFrame reading
-         if (timeLastFrame < timeCompareFrame)
-         {
-            // get time before rollover
-            tDelta = TimeSpan.FromDays(1).Subtract(timeCompareFrame.TimeOfDay);
-            // add time from latest reading
-            tDelta = tDelta.Add(timeLastFrame.TimeOfDay);
-         }
-         else
-         {
-            tDelta = timeLastFrame.Subtract(timeCompareFrame);
-         }
-
-         return tDelta;
-      }
-
-      /// <summary>
-      /// Determine Client Status
-      /// </summary>
-      /// <param name="Instance">Client Instance</param>
-      private static void DetermineStatus(ClientInstance Instance)
-      {
-         #region Get Terminal Time
-         // Terminal Time - defined as last retrieval time minus twice (7 times for GPU) the current Raw Time per Section.
-         // if a new frame has not completed in twice the amount of time it should take to complete we should deem this client Hung.
-         DateTime terminalDateTime;
-
-         if (Instance.UnitInfo.TypeOfClient.Equals(ClientType.GPU))
-         {
-            terminalDateTime = Instance.LastRetrievalTime.Subtract(new TimeSpan(0, 0, Instance.UnitInfo.RawTimePerSection * 7));
-         }
-         else
-         {
-            terminalDateTime = Instance.LastRetrievalTime.Subtract(new TimeSpan(0, 0, Instance.UnitInfo.RawTimePerSection * 2));
-         }
-         #endregion
-
-         // make sure we have calculated a frame time (could be based on 'LastFrame' or 'LastThreeFrames')
-         if (Instance.UnitInfo.RawTimePerSection > 0)
-         {
-            #region Get Last Retrieval Time Date
-            DateTime currentFrameDateTime;
-         
-            if (Instance.ClientIsOnVirtualMachine)
-            {
-               // get only the date from the last retrieval time (in universal), we'll add the current time below
-               currentFrameDateTime = new DateTime(Instance.LastRetrievalTime.Date.Ticks, DateTimeKind.Utc);
-            }
-            else
-            {
-               // get only the date from the last retrieval time, we'll add the current time below
-               currentFrameDateTime = Instance.LastRetrievalTime.Date;
-            }
-            #endregion
-            
-            #region Apply Frame Time Offset and Set Current Frame Time Date
-            TimeSpan offset = TimeSpan.FromMinutes(Instance.ClientTimeOffset);
-            TimeSpan adjustedFrameTime = Instance.UnitInfo.TimeOfLastFrame.Subtract(offset);
-
-            // client time has already rolled over to the next day. the offset correction has 
-            // caused the adjusted frame time span to be negetive.  take the that negetive span
-            // and add it to a full 24 hours to correct.
-            if (adjustedFrameTime < TimeSpan.Zero)
-            {
-               adjustedFrameTime = TimeSpan.FromDays(1).Add(adjustedFrameTime);
-            }
-            
-            // the offset correction has caused the frame time span to be greater than 24 hours.
-            // subtract the extra day from the adjusted frame time span.
-            else if (adjustedFrameTime > TimeSpan.FromDays(1))
-            {
-               adjustedFrameTime = adjustedFrameTime.Subtract(TimeSpan.FromDays(1));
-            }
-
-            // add adjusted Time of Last Frame (TimeSpan) to the DateTime with the correct date
-            currentFrameDateTime = currentFrameDateTime.Add(adjustedFrameTime);
-            #endregion
-            
-            #region Check For Frame from Prior Day (Midnight Rollover on Local Machine)
-            bool priorDayAdjust = false;
-            
-            // if the current (and adjusted) frame time hours is greater than the last retrieval time hours, 
-            // and the time difference is greater than an hour, then frame is from the day prior.
-            // this should only happen after midnight time on the machine running HFM when the monitored client has 
-            // not completed a frame since the local machine time rolled over to the next day, otherwise the time
-            // stamps between HFM and the client are too far off, a positive offset should be set to correct.
-            if (currentFrameDateTime.TimeOfDay.Hours > Instance.LastRetrievalTime.TimeOfDay.Hours &&
-                currentFrameDateTime.TimeOfDay.Subtract(Instance.LastRetrievalTime.TimeOfDay).Hours > 0)
-            {
-               priorDayAdjust = true;
-
-               // subtract 1 day from today's date
-               currentFrameDateTime = currentFrameDateTime.Subtract(TimeSpan.FromDays(1));
-            }
-            #endregion
-            
-            #region Write Verbose Trace
-            if (HFM.Instrumentation.TraceLevelSwitch.GetTraceLevelSwitch().TraceVerbose)
-            {
-               System.Collections.Generic.List<string> messages = new System.Collections.Generic.List<string>(10);
-
-               messages.Add(String.Format("{0} ({1})", Debug.FunctionName, Instance.InstanceName));
-               messages.Add(String.Format(" - Retrieval Time (Date) ------- : {0}", Instance.LastRetrievalTime));
-               messages.Add(String.Format(" - Time Of Last Frame (TimeSpan) : {0}", Instance.UnitInfo.TimeOfLastFrame));
-               messages.Add(String.Format(" - Offset (Minutes) ------------ : {0}", Instance.ClientTimeOffset));
-               messages.Add(String.Format(" - Time Of Last Frame (Adjusted) : {0}", adjustedFrameTime));
-               messages.Add(String.Format(" - Prior Day Adjustment -------- : {0}", priorDayAdjust));
-               messages.Add(String.Format(" - Time Of Last Frame (Date) --- : {0}", currentFrameDateTime));
-               messages.Add(String.Format(" - Terminal Time (Date) -------- : {0}", terminalDateTime));
-               
-               Debug.WriteToHfmConsole(TraceLevel.Verbose, messages.ToArray());
-            }
-            #endregion
-
-            if (currentFrameDateTime > terminalDateTime)
-            {
-               Instance.Status = ClientStatus.Running;
-            }
-            else // current frame is less than terminal time
-            {
-               Instance.Status = ClientStatus.Hung;
-            }
-         }
+         parsedUnitInfo.SetCurrentFrame(new UnitFrame(percent, timeStamp.TimeOfDay));
       }
       #endregion
    }

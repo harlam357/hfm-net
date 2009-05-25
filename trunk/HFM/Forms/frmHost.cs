@@ -147,6 +147,10 @@ namespace HFM.Forms
          if (openLogFolder.SelectedPath.Length > 0)
          {
             txtLocalPath.Text = openLogFolder.SelectedPath;
+            if (txtLocalPath.Text.EndsWith(Path.DirectorySeparatorChar.ToString()) == false)
+            {
+               txtLocalPath.Text += Path.DirectorySeparatorChar;
+            }
          }
       }
       #endregion
@@ -276,7 +280,7 @@ namespace HFM.Forms
          }
          else
          {
-            if (bPathWithSlash)
+            if (bPath == false && bPathWithSlash)
             {
                txtLocalPath.Text += Path.DirectorySeparatorChar;
             }

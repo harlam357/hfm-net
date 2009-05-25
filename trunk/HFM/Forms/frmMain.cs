@@ -264,7 +264,7 @@ namespace HFM.Forms
       /// </summary>
       /// <param name="sender"></param>
       /// <param name="e"></param>
-      private void frmMainNew_FormClosing(object sender, FormClosingEventArgs e)
+      private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
       {
          if (CanContinueDestructiveOp(sender, e) == false)
          {
@@ -311,6 +311,11 @@ namespace HFM.Forms
 
          // Save the data
          PreferenceSet.Instance.Save();
+         
+         // Save the data on current WUs in progress
+         HostInstances.SaveCurrentUnitInfo();
+         // Save the benchmark collection
+         ProteinBenchmarkCollection.Instance.Serialize();
 
          Debug.WriteToHfmConsole("----------");
          Debug.WriteToHfmConsole("Exiting...");
@@ -375,7 +380,7 @@ namespace HFM.Forms
          {
             ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
          
-            string[] logText = Instance.CurrentLogText.ToArray();
+            string[] logText = Instance.CurrentUnitInfo.CurrentLogText.ToArray();
                
             statusLabelLeft.Text = Instance.Path;
 
@@ -781,6 +786,7 @@ namespace HFM.Forms
 
          if (CanContinueDestructiveOp(sender, e))
          {
+            HostInstances.SaveCurrentUnitInfo();
             ClearUI();
          }
       }
@@ -801,9 +807,13 @@ namespace HFM.Forms
 
          if (CanContinueDestructiveOp(sender, e))
          {
+            openConfigDialog.DefaultExt = "hfm";
+            openConfigDialog.Filter = "HFM Configuration Files|*.hfm";
+            openConfigDialog.FileName = ConfigFilename;
             openConfigDialog.RestoreDirectory = true;
             if (openConfigDialog.ShowDialog() == DialogResult.OK)
             {
+               HostInstances.SaveCurrentUnitInfo();
                LoadFile(openConfigDialog.FileName);
             }
          }
@@ -961,7 +971,7 @@ namespace HFM.Forms
          newHost.chkClientVM.Checked = false;
          if (newHost.ShowDialog() == DialogResult.OK)
          {
-            if (HostInstances.Contains(newHost.txtName.Text))
+            if (HostInstances.ContainsName(newHost.txtName.Text))
             {
                MessageBox.Show(String.Format("Host Name '{0}' already exists.", newHost.txtName.Text));
             }
@@ -1054,7 +1064,7 @@ namespace HFM.Forms
          {
             if (Instance.InstanceName != editHost.txtName.Text)
             {
-               if (HostInstances.Contains(editHost.txtName.Text))
+               if (HostInstances.ContainsName(editHost.txtName.Text))
                {
                   MessageBox.Show(String.Format("Client Name '{0}' already exists.", editHost.txtName.Text));
                   return;
@@ -1062,6 +1072,7 @@ namespace HFM.Forms
             }
             
             string oldName = Instance.InstanceName;
+            string oldPath = Instance.Path;
             if (editHost.radioLocal.Checked)
             {
                if (Instance.InstanceHostType.Equals(InstanceType.PathInstance) == false)
@@ -1101,9 +1112,16 @@ namespace HFM.Forms
             // if the host key changed
             if (oldName != Instance.InstanceName)
             {
-               HostInstances.UpdateDisplayHostName(oldName, Instance.InstanceName);
+               HostInstances.UpdateDisplayInstanceName(oldName, Instance.InstanceName);
                HostInstances.InstanceCollection.Remove(oldName);
                HostInstances.Add(Instance);
+               
+               ProteinBenchmarkCollection.Instance.UpdateInstanceName(oldName, Instance.InstanceName);
+            }
+            // if the path changed
+            if (oldPath != Instance.Path)
+            {
+               ProteinBenchmarkCollection.Instance.UpdateInstancePath(Instance.InstanceName, Instance.Path);
             }
             QueueNewRetrieval(Instance);
             ChangedAfterSave = true;
@@ -1224,8 +1242,6 @@ namespace HFM.Forms
       /// <summary>
       /// Show or Hide the FAH Log Window
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void mnuViewShowHideLog_Click(object sender, EventArgs e)
       {
          ShowHideLog(!txtLogFile.Visible);
@@ -1234,8 +1250,6 @@ namespace HFM.Forms
       /// <summary>
       /// Toggle the Date/Time Style
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void mnuViewToggleDateTime_Click(object sender, EventArgs e)
       {
          if (PreferenceSet.Instance.TimeStyle.Equals(eTimeStyle.Standard))
@@ -1256,8 +1270,6 @@ namespace HFM.Forms
       /// <summary>
       /// Show or Hide the HFM Messages Window
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void mnuToolsMessages_Click(object sender, EventArgs e)
       {
          if (_frmMessages.Visible)
@@ -1274,11 +1286,22 @@ namespace HFM.Forms
       /// <summary>
       /// Download Project Info From Stanford
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void mnuToolsDownloadProjects_Click(object sender, EventArgs e)
       {
          ProteinCollection.Instance.DownloadFromStanford();
+      }
+
+      /// <summary>
+      /// Show the Benchmarks Dialog
+      /// </summary>
+      private void mnuToolsBenchmarks_Click(object sender, EventArgs e)
+      {
+         ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString()];
+         
+         frmBenchmarks frm = new frmBenchmarks(HostInstances, Instance.CurrentUnitInfo.ProjectID);
+         frm.StartPosition = FormStartPosition.Manual;
+         frm.Location = new Point(Location.X + 50, Location.Y + 50);
+         frm.Show();
       }
       #endregion
 
@@ -1526,6 +1549,8 @@ namespace HFM.Forms
 
          // clear full retrieval flag
          RetrievalInProgress = false;
+         // Save the benchmark collection
+         ProteinBenchmarkCollection.Instance.Serialize();
       }
       
       private void StartBackgroundTimer()
@@ -1627,27 +1652,35 @@ namespace HFM.Forms
       /// </summary>
       private void RefreshDisplay()
       {
-         HostInstances.RefreshDisplayCollection();
-         if (dataGridView1.DataSource != null)
+         try 
          {
-            CurrencyManager cm = (CurrencyManager)dataGridView1.BindingContext[dataGridView1.DataSource];
-            if (cm != null)
+            HostInstances.RefreshDisplayCollection();
+            if (dataGridView1.DataSource != null)
             {
-               if (InvokeRequired)
+               CurrencyManager cm = (CurrencyManager) dataGridView1.BindingContext[dataGridView1.DataSource];
+               if (cm != null)
                {
-                  Invoke(new MethodInvoker(cm.Refresh));
+                  if (InvokeRequired)
+                  {
+                     Invoke(new MethodInvoker(cm.Refresh));
+                  }
+                  else
+                  {
+                     cm.Refresh();
+                     //dataGridView1.Invalidate();
+                  }
                }
-               else
-               {
-                  cm.Refresh();
-                  //dataGridView1.Invalidate();
-               }
+
+               ApplySort(SortColumnOrder);
             }
 
-            ApplySort(SortColumnOrder);
+            RefreshControls();
          }
-
-         RefreshControls();
+         catch (ObjectDisposedException ex)
+         {
+            Debug.WriteToHfmConsole(TraceLevel.Error,
+                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+         }
       }
 
       /// <summary>
@@ -1694,7 +1727,7 @@ namespace HFM.Forms
          //Int32 newOfflineUnknownHosts = 0;
          foreach (KeyValuePair<String, ClientInstance> kvp in HostInstances.InstanceCollection)
          {
-            newTotalPPD += kvp.Value.UnitInfo.PPD;
+            newTotalPPD += kvp.Value.CurrentUnitInfo.PPD;
             
             switch (kvp.Value.Status)
             {
@@ -1716,8 +1749,6 @@ namespace HFM.Forms
                //   newOfflineUnknownHosts++;
                //   break;
             }
-            
-            //Application.DoEvents();
          }
 
          TotalPPD = newTotalPPD;

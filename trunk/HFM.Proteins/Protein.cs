@@ -22,6 +22,7 @@ using System;
 
 namespace HFM.Proteins
 {
+   [Serializable]
    public class Protein
    {
       public Protein()
@@ -181,6 +182,32 @@ namespace HFM.Proteins
       {
          get { return _Contact; }
          set { _Contact = value; }
+      }
+      
+      /// <summary>
+      /// Get Points Per Day based on given Frame Time
+      /// </summary>
+      /// <param name="frameTime">Frame Time</param>
+      public double GetPPD(TimeSpan frameTime)
+      {
+         if (frameTime.Equals(TimeSpan.Zero))
+         {
+            return 0.0;
+         }
+         return Math.Round(GetUPD(frameTime) * Credit, 5);
+      }
+
+      /// <summary>
+      /// Get Units Per Day based on given Frame Time
+      /// </summary>
+      /// <param name="frameTime">Frame Time</param>
+      public double GetUPD(TimeSpan frameTime)
+      {
+         if (frameTime.Equals(TimeSpan.Zero))
+         {
+            return 0.0;
+         }
+         return 86400 / (frameTime.TotalSeconds * Frames);
       }
    }
 }

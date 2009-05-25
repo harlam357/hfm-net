@@ -46,7 +46,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Protein.cs" />
     <Compile Include="ProteinCollection.cs" />
+    <Compile Include="UnitFrame.cs" />
     <Compile Include="UnitInfo.cs" />
+    <Compile Include="UnitInfoCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HFM.Preferences\HFM.Preferences.csproj">

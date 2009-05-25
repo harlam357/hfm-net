@@ -108,6 +108,12 @@
     <Compile Include="Forms\frmAbout.Designer.cs">
       <DependentUpon>frmAbout.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frmBenchmarks.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmBenchmarks.Designer.cs">
+      <DependentUpon>frmBenchmarks.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -181,6 +187,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\frmBenchmarks.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmBenchmarks.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmMain.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmMain.cs</DependentUpon>

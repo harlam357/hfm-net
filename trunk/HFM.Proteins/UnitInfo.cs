@@ -19,6 +19,9 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using Debug=HFM.Instrumentation.Debug;
 
 namespace HFM.Proteins
 {
@@ -35,9 +38,171 @@ namespace HFM.Proteins
    /// <summary>
    /// Contains the state of a protein in progress
    /// </summary>
+   [Serializable]
    public class UnitInfo
    {
+      #region CTOR
+      /// <summary>
+      /// Primary Constructor
+      /// </summary>
+      public UnitInfo(string ownerName, string ownerPath)
+      {
+         _OwningInstanceName = ownerName;
+         _OwningInstancePath = ownerPath;
+         
+         Clear();
+      } 
+      #endregion
+
+      #region Owner Data Properties
+      /// <summary>
+      /// Name of the Client Instance that owns this UnitInfo
+      /// </summary>
+      private string _OwningInstanceName;
+      /// <summary>
+      /// Name of the Client Instance that owns this UnitInfo
+      /// </summary>
+      public string OwningInstanceName
+      {
+         get { return _OwningInstanceName; }
+         set { _OwningInstanceName = value; }
+      }
+
+      /// <summary>
+      /// Path of the Client Instance that owns this UnitInfo
+      /// </summary>
+      private string _OwningInstancePath;
+      /// <summary>
+      /// Path of the Client Instance that owns this UnitInfo
+      /// </summary>
+      public string OwningInstancePath
+      {
+         get { return _OwningInstancePath; }
+         set { _OwningInstancePath = value; }
+      }
+      #endregion
+
+      #region ReadOnly Properties
+      /// <summary>
+      /// Formatted Project (Run, Clone, Gen) Information
+      /// </summary>
+      public string ProjectRunCloneGen
+      {
+         get
+         {
+            return String.Format("P{0} (R{1}, C{2}, G{3})", ProjectID,
+                                                            ProjectRun,
+                                                            ProjectClone,
+                                                            ProjectGen);
+         }
+      }
+
+      /// <summary>
+      /// Time per section based on current PPD calculation setting (readonly)
+      /// </summary>
+      public Int32 RawTimePerSection
+      {
+         get
+         {
+            switch (Preferences.PreferenceSet.Instance.PpdCalculation)
+            {
+               case Preferences.ePpdCalculation.LastFrame:
+                  return _RawTimePerLastSection;
+               case Preferences.ePpdCalculation.LastThreeFrames:
+                  return _RawTimePerThreeSections;
+               case Preferences.ePpdCalculation.AllFrames:
+                  return _RawTimePerAllSections;
+               case Preferences.ePpdCalculation.EffectiveRate:
+                  return _RawTimePerUnitDownload;
+            }
+
+            return 0;
+         }
+      }
+
+      #region Values Based on CurrentFrame
+      /// <summary>
+      /// Timestamp from the last completed frame
+      /// </summary>
+      public TimeSpan TimeOfLastFrame
+      {
+         get
+         {
+            if (_CurrentFrame != null)
+            {
+               return _CurrentFrame.TimeOfFrame;
+            }
+
+            return TimeSpan.Zero;
+         }
+      }
+
+      /// <summary>
+      /// Frame time for the last completed frame
+      /// </summary>
+      public TimeSpan CurrentFrameDuration
+      {
+         get
+         {
+            if (_CurrentFrame != null)
+            {
+               return _CurrentFrame.FrameDuration;
+            }
+
+            return TimeSpan.Zero;
+         }
+      }
+
+      /// <summary>
+      /// Percentage from the last completed frame
+      /// </summary>
+      public Int32 CurrentFramePercent
+      {
+         get
+         {
+            if (_CurrentFrame != null)
+            {
+               return _CurrentFrame.FramePercent;
+            }
+
+            return 0;
+         }
+      }
+      #endregion
+      
+      //public bool HasFrameData
+      //{
+      //   get { return _FramesObserved > 0; }
+      //}
+      #endregion
+      
       #region Public Properties and Related Private Members
+      /// <summary>
+      /// The Folding ID (Username) attached to this work unit
+      /// </summary>
+      private string _FoldingID;
+      /// <summary>
+      /// The Folding ID (Username) attached to this work unit
+      /// </summary>
+      public string FoldingID
+      {
+         get { return _FoldingID; }
+         set { _FoldingID = value; }
+      }
+
+      /// <summary>
+      /// The Team number attached to this work unit
+      /// </summary>
+      private Int32 _Team;
+      /// <summary>
+      /// The Team number attached to this work unit
+      /// </summary>
+      public Int32 Team
+      {
+         get { return _Team; }
+         set { _Team = value; }
+      }
+      
       /// <summary>
       /// Client Type for this work unit
       /// </summary>
@@ -49,32 +214,6 @@ namespace HFM.Proteins
       {
          get { return _TypeOfClient; }
          set { _TypeOfClient = value; }
-      }
-      
-      /// <summary>
-      /// Username associated with this work unit
-      /// </summary>
-      private string _Username;
-      /// <summary>
-      /// Username associated with this work unit
-      /// </summary>
-      public string Username
-      {
-         get { return _Username; }
-         set { _Username = value; }
-      }
-
-      /// <summary>
-      /// Team Number associated with this work unit
-      /// </summary>
-      private int _Team;
-      /// <summary>
-      /// Team Number associated with this work unit
-      /// </summary>
-      public int Team
-      {
-         get { return _Team; }
-         set { _Team = value; }
       }
 
       /// <summary>
@@ -119,11 +258,11 @@ namespace HFM.Proteins
       /// <summary>
       /// Frame progress of the unit
       /// </summary>
-      private int _FramesComplete;
+      private Int32 _FramesComplete;
       /// <summary>
       /// Frame progress of the unit
       /// </summary>
-      public int FramesComplete
+      public Int32 FramesComplete
       {
          get { return _FramesComplete; }
          set { _FramesComplete = value; }
@@ -132,11 +271,11 @@ namespace HFM.Proteins
       /// <summary>
       /// Current progress (percentage) of the unit
       /// </summary>
-      private int _PercentComplete;
+      private Int32 _PercentComplete;
       /// <summary>
       /// Current progress (percentage) of the unit
       /// </summary>
-      public int PercentComplete
+      public Int32 PercentComplete
       {
          get { return _PercentComplete; }
          set
@@ -264,16 +403,31 @@ namespace HFM.Proteins
       }
 
       /// <summary>
-      /// Timestamp from log file for the last completed frame
+      /// List of current log file text lines
       /// </summary>
-      private TimeSpan _TimeOfLastFrame;
+      private readonly List<string> _CurrentLogText = new List<string>();
       /// <summary>
-      /// Timestamp from log file for the last completed frame
+      /// List of current log file text lines
       /// </summary>
-      public TimeSpan TimeOfLastFrame
+      public List<string> CurrentLogText
       {
-         get { return _TimeOfLastFrame; }
-         set { _TimeOfLastFrame = value; }
+         get { return _CurrentLogText; }
+      }
+
+      /// <summary>
+      /// Class member containing info on the currently running protein
+      /// </summary>
+      private Protein _CurrentProtein;
+      /// <summary>
+      /// Class member containing info on the currently running protein
+      /// </summary>
+      public Protein CurrentProtein
+      {
+         get { return _CurrentProtein; }
+         set 
+         {
+            _CurrentProtein = value; 
+         }
       }
 
       #region Time Based Values
@@ -336,21 +490,34 @@ namespace HFM.Proteins
       }
 
       /// <summary>
-      /// Time per section based on current PPD calculation setting (readonly)
+      /// Average frame time since unit download
       /// </summary>
-      public Int32 RawTimePerSection
+      private Int32 _RawTimePerUnitDownload;
+      /// <summary>
+      /// Average frame time since unit download
+      /// </summary>
+      public Int32 RawTimePerUnitDownload
       {
-         get
+         get { return _RawTimePerUnitDownload; }
+         set
          {
-            switch (Preferences.PreferenceSet.Instance.PpdCalculation)
-            {
-               case Preferences.ePpdCalculation.LastFrame:
-                  return _RawTimePerLastSection;
-               case Preferences.ePpdCalculation.LastThreeFrames:
-                  return _RawTimePerThreeSections;
-            }
-
-            return 0;
+            _RawTimePerUnitDownload = value;
+         }
+      }
+      
+      /// <summary>
+      /// Average frame time over all sections
+      /// </summary>
+      private Int32 _RawTimePerAllSections = 0;
+      /// <summary>
+      /// Average frame time over all sections
+      /// </summary>
+      public Int32 RawTimePerAllSections
+      {
+         get { return _RawTimePerAllSections; }
+         set
+         {
+            _RawTimePerAllSections = value;
          }
       }
 
@@ -386,7 +553,214 @@ namespace HFM.Proteins
          }
       }
       #endregion
+
+      #region Frame (UnitFrame) Data Variables
+
+      /// <summary>
+      /// Number of Frames Observed on this Unit
+      /// </summary>
+      private Int32 _FramesObserved = 0;
+      /// <summary>
+      /// Number of Frames Observed on this Unit
+      /// </summary>
+      public Int32 FramesObserved
+      {
+         get { return _FramesObserved; }
+         set { _FramesObserved = value; }
+      }
       
+      /// <summary>
+      /// Last Observed Frame on this Unit
+      /// </summary>
+      private UnitFrame _CurrentFrame = null;
+      public UnitFrame CurrentFrame
+      {
+         get { return _CurrentFrame; }
+         set { _CurrentFrame = value; }
+      }
+      
+      /// <summary>
+      /// Frame Data for this Unit
+      /// </summary>
+      private UnitFrame[] _UnitFrames = new UnitFrame[101];
+      /// <summary>
+      /// Frame Data for this Unit
+      /// </summary>
+      public UnitFrame[] UnitFrames
+      {
+         get { return _UnitFrames; }
+         set { _UnitFrames = value; }
+      }
+      
+      #endregion
+      
+      #endregion
+
+      #region Clear UnitInfo and Clear Time Based Values
+      private void Clear()
+      {
+         FoldingID = "Unknown";
+         Team = 0;
+         TypeOfClient = ClientType.Unknown;
+         CoreVersion = String.Empty;
+         DownloadTime = DateTime.MinValue;
+         DueTime = DateTime.MinValue;
+         FramesComplete = 0;
+         PercentComplete = 0;
+         ProjectID = 0;
+         ProjectRun = 0;
+         ProjectClone = 0;
+         ProjectGen = 0;
+         ProteinName = String.Empty;
+         ProteinTag = String.Empty;
+         RawFramesComplete = 0;
+         RawFramesTotal = 0;
+         _CurrentLogText.Clear();
+         CurrentProtein = new Protein();
+
+         ClearTimeBasedValues();
+      }
+      
+      /// <summary>
+      /// Clear only the time based values for this instance
+      /// </summary>
+      public void ClearTimeBasedValues()
+      {
+         // Set in SetTimeBasedValues()
+         PercentComplete = 0;
+         TimePerFrame = TimeSpan.Zero;
+         UPD = 0.0;
+         PPD = 0.0;
+         ETA = TimeSpan.Zero;
+
+         // Set in SetFrameTimes()
+         RawTimePerUnitDownload = 0;
+         RawTimePerAllSections = 0;
+         RawTimePerThreeSections = 0;
+         RawTimePerLastSection = 0;
+      }
+      #endregion
+
+      #region Set Frame and Clear Frame Data
+      /// <summary>
+      /// Set the Current Work Unit Frame
+      /// </summary>
+      /// <param name="frame">Current Work Unit Frame</param>
+      public void SetCurrentFrame(UnitFrame frame)
+      {
+         if (_UnitFrames[frame.FramePercent] == null)
+         {
+            // increment observed count
+            _FramesObserved++;
+         
+            CurrentFrame = frame;
+            UnitFrames[CurrentFrame.FramePercent] = CurrentFrame;
+            
+            CurrentFrame.FrameDuration = TimeSpan.Zero;
+            if (CurrentFramePercent > 0 && UnitFrames[CurrentFramePercent - 1] != null)
+            {
+               CurrentFrame.FrameDuration = GetDelta(CurrentFrame.TimeOfFrame, UnitFrames[CurrentFramePercent - 1].TimeOfFrame);
+            }
+         }
+      }
+
+      /// <summary>
+      /// Clear the Observed Count, Current Frame Pointer, and the UnitFrames Array
+      /// </summary>
+      public void ClearFrameData()
+      {
+         _FramesObserved = 0;
+         _CurrentFrame = null;
+         _UnitFrames = new UnitFrame[101];
+      }
+      #endregion
+
+      #region Calculate Frame Time Variations
+      /// <summary>
+      /// Sets Frame Time Variations based on the observed frames
+      /// </summary>
+      public void SetFrameTimes()
+      {
+         RawTimePerLastSection = 0;
+         RawTimePerThreeSections = 0;
+         RawTimePerAllSections = 0;
+         RawTimePerUnitDownload = 0;
+         
+         if (FramesObserved > 0)
+         {
+            // time is valid for 1 "set" ago
+            if (_FramesObserved > 1)
+            {
+               RawTimePerLastSection = Convert.ToInt32(_CurrentFrame.FrameDuration.TotalSeconds);
+            }
+            
+            // time is valid for 3 "sets" ago
+            if (_FramesObserved > 3)
+            {
+               RawTimePerThreeSections = (GetDuration(3) / 3);
+            }
+
+            RawTimePerAllSections = (GetDuration(FramesObserved) / FramesObserved);
+            
+            if (DownloadTime.Equals(DateTime.MinValue) == false)
+            {
+               TimeSpan timeSinceUnitDownload = DateTime.Now.Subtract(DownloadTime);
+               RawTimePerUnitDownload = (Convert.ToInt32(timeSinceUnitDownload.TotalSeconds) / CurrentFramePercent);
+            }
+         }
+      }
+      
+      /// <summary>
+      /// Get the total duration over the specified number of most recent frames
+      /// </summary>
+      /// <param name="numberOfFrames">Number of most recent frames</param>
+      public int GetDuration(int numberOfFrames)
+      {
+         int TotalSeconds = 0;
+         int frameNumber = CurrentFrame.FramePercent;
+         
+         try
+         {
+            for (int i = 0; i < numberOfFrames; i++)
+            {
+               TotalSeconds += Convert.ToInt32(UnitFrames[frameNumber].FrameDuration.TotalSeconds);
+               frameNumber--;
+            }
+         }
+         catch (NullReferenceException ex)
+         {
+            TotalSeconds = 0;
+            Debug.WriteToHfmConsole(TraceLevel.Warning,
+                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+         }
+         
+         return TotalSeconds;
+      }
+
+      /// <summary>
+      /// Get Time Delta between given frames
+      /// </summary>
+      /// <param name="timeLastFrame">Time of last frame</param>
+      /// <param name="timeCompareFrame">Time of a previous frame to compare</param>
+      private static TimeSpan GetDelta(TimeSpan timeLastFrame, TimeSpan timeCompareFrame)
+      {
+         TimeSpan tDelta;
+
+         // check for rollover back to 00:00:00 timeLastFrame will be less than previous timeCompareFrame reading
+         if (timeLastFrame < timeCompareFrame)
+         {
+            // get time before rollover
+            tDelta = TimeSpan.FromDays(1).Subtract(timeCompareFrame);
+            // add time from latest reading
+            tDelta = tDelta.Add(timeLastFrame);
+         }
+         else
+         {
+            tDelta = timeLastFrame.Subtract(timeCompareFrame);
+         }
+
+         return tDelta;
+      }
       #endregion
    }
 }

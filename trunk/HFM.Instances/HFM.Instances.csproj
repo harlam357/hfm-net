@@ -47,8 +47,10 @@
     <Compile Include="InstanceCollection.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="InstanceProteinBenchmark.cs" />
     <Compile Include="LogParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProteinBenchmarkCollection.cs" />
     <Compile Include="SortableBindingList.cs" />
     <Compile Include="XMLGen.cs">
       <SubType>Code</SubType>

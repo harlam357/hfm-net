@@ -53,6 +53,8 @@ namespace HFM.Forms
          this.mnuFileSave = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuFileSaveas = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuFileSep1 = new System.Windows.Forms.ToolStripSeparator();
+         this.mnuFileImportFahMon = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuFileSep2 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuFileQuit = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuEdit = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuEditPreferences = new System.Windows.Forms.ToolStripMenuItem();
@@ -73,6 +75,7 @@ namespace HFM.Forms
          this.mnuViewToggleDateTime = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuToolsMessages = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuToolsBenchmarks = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuToolsDownloadProjects = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuWeb = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuWebEOCUser = new System.Windows.Forms.ToolStripMenuItem();
@@ -98,10 +101,8 @@ namespace HFM.Forms
          this.mnuContextClientsViewCachedLog = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuContextClientsViewClientFiles = new System.Windows.Forms.ToolStripMenuItem();
          this.webGenTimer = new System.Windows.Forms.Timer(this.components);
-         this.splitContainer1 = new Classes.SplitContainerWrapper();
+         this.splitContainer1 = new HFM.Classes.SplitContainerWrapper();
          this.dataGridView1 = new HFM.Classes.DataGridViewWrapper();
-         this.mnuFileImportFahMon = new System.Windows.Forms.ToolStripMenuItem();
-         this.mnuFileSep2 = new System.Windows.Forms.ToolStripSeparator();
          this.statusStrip.SuspendLayout();
          this.notifyMenu.SuspendLayout();
          this.AppMenu.SuspendLayout();
@@ -308,6 +309,18 @@ namespace HFM.Forms
          this.mnuFileSep1.Name = "mnuFileSep1";
          this.mnuFileSep1.Size = new System.Drawing.Size(257, 6);
          // 
+         // mnuFileImportFahMon
+         // 
+         this.mnuFileImportFahMon.Name = "mnuFileImportFahMon";
+         this.mnuFileImportFahMon.Size = new System.Drawing.Size(260, 22);
+         this.mnuFileImportFahMon.Text = "&Import FahMon Configuration File";
+         this.mnuFileImportFahMon.Click += new System.EventHandler(this.mnuFileImportFahMon_Click);
+         // 
+         // mnuFileSep2
+         // 
+         this.mnuFileSep2.Name = "mnuFileSep2";
+         this.mnuFileSep2.Size = new System.Drawing.Size(257, 6);
+         // 
          // mnuFileQuit
          // 
          this.mnuFileQuit.Image = global::HFM.Properties.Resources.Quit;
@@ -327,7 +340,7 @@ namespace HFM.Forms
          // mnuEditPreferences
          // 
          this.mnuEditPreferences.Name = "mnuEditPreferences";
-         this.mnuEditPreferences.Size = new System.Drawing.Size(152, 22);
+         this.mnuEditPreferences.Size = new System.Drawing.Size(143, 22);
          this.mnuEditPreferences.Text = "&Preferences";
          this.mnuEditPreferences.Click += new System.EventHandler(this.mnuEditPreferences_Click);
          // 
@@ -449,6 +462,7 @@ namespace HFM.Forms
          // 
          this.mnuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuToolsMessages,
+            this.mnuToolsBenchmarks,
             this.mnuToolsDownloadProjects});
          this.mnuTools.Name = "mnuTools";
          this.mnuTools.Size = new System.Drawing.Size(44, 20);
@@ -457,9 +471,18 @@ namespace HFM.Forms
          // mnuToolsMessages
          // 
          this.mnuToolsMessages.Name = "mnuToolsMessages";
+         this.mnuToolsMessages.ShortcutKeys = System.Windows.Forms.Keys.F7;
          this.mnuToolsMessages.Size = new System.Drawing.Size(246, 22);
-         this.mnuToolsMessages.Text = "&Show/Hide Messages Window";
+         this.mnuToolsMessages.Text = "Show/Hide &Messages Window";
          this.mnuToolsMessages.Click += new System.EventHandler(this.mnuToolsMessages_Click);
+         // 
+         // mnuToolsBenchmarks
+         // 
+         this.mnuToolsBenchmarks.Name = "mnuToolsBenchmarks";
+         this.mnuToolsBenchmarks.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
+         this.mnuToolsBenchmarks.Size = new System.Drawing.Size(246, 22);
+         this.mnuToolsBenchmarks.Text = "&Benchmarks";
+         this.mnuToolsBenchmarks.Click += new System.EventHandler(this.mnuToolsBenchmarks_Click);
          // 
          // mnuToolsDownloadProjects
          // 
@@ -717,18 +740,6 @@ namespace HFM.Forms
          this.dataGridView1.ColumnDividerDoubleClick += new System.Windows.Forms.DataGridViewColumnDividerDoubleClickEventHandler(this.dataGridView1_ColumnDividerDoubleClick);
          this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
          // 
-         // mnuFileImportFahMon
-         // 
-         this.mnuFileImportFahMon.Name = "mnuFileImportFahMon";
-         this.mnuFileImportFahMon.Size = new System.Drawing.Size(260, 22);
-         this.mnuFileImportFahMon.Text = "&Import FahMon Configuration File";
-         this.mnuFileImportFahMon.Click += new System.EventHandler(this.mnuFileImportFahMon_Click);
-         // 
-         // mnuFileSep2
-         // 
-         this.mnuFileSep2.Name = "mnuFileSep2";
-         this.mnuFileSep2.Size = new System.Drawing.Size(257, 6);
-         // 
          // frmMain
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -742,7 +753,7 @@ namespace HFM.Forms
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
          this.Text = "HFM.NET";
          this.Shown += new System.EventHandler(this.frmMain_Shown);
-         this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMainNew_FormClosing);
+         this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
          this.Resize += new System.EventHandler(this.frmMain_Resize);
          this.statusStrip.ResumeLayout(false);
          this.statusStrip.PerformLayout();
@@ -831,5 +842,6 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripMenuItem mnuWebHFMGoogleCode;
       private System.Windows.Forms.ToolStripMenuItem mnuFileImportFahMon;
       private System.Windows.Forms.ToolStripSeparator mnuFileSep2;
+      private System.Windows.Forms.ToolStripMenuItem mnuToolsBenchmarks;
    }
 }
