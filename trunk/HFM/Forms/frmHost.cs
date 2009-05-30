@@ -23,7 +23,9 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+
 using HFM.Helpers;
+using HFM.Instances;
 
 namespace HFM.Forms
 {
@@ -36,6 +38,9 @@ namespace HFM.Forms
       public frmHost()
       {
          InitializeComponent();
+         
+         txtLogFileName.Text = ClientInstance.LocalFAHLog;
+         txtUnitFileName.Text = ClientInstance.LocalUnitInfo;
       } 
       #endregion
 
@@ -206,7 +211,7 @@ namespace HFM.Forms
       }
 
       /// <summary>
-      /// Validate the contents of the FAHLog textbox
+      /// Validate the contents of the FAHlog textbox
       /// </summary>
       /// <param name="sender"></param>
       /// <param name="e"></param>
@@ -226,7 +231,7 @@ namespace HFM.Forms
       }
 
       /// <summary>
-      /// Validate the contents of the UnitInfo textbox
+      /// Validate the contents of the unitinfo textbox
       /// </summary>
       /// <param name="sender"></param>
       /// <param name="e"></param>
@@ -411,13 +416,13 @@ namespace HFM.Forms
          {
             txtWebURL.BackColor = Color.Yellow;
             //txtWebURL.Focus();
-            toolTipCore.Show("URL must be a valid URL and be\r\nthe path to the folder containing\r\nunitinfo.txt and fahlog.txt.", txtWebURL, 5000);
+            toolTipCore.Show("URL must be a valid URL and be\r\nthe path to the folder containing\r\nunitinfo.txt and FAHlog.txt.", txtWebURL, 5000);
          }
          else if (txtWebURL.Text.Length > 0 && StringOps.ValidateHttpURL(txtWebURL.Text) == false)
          {
             txtWebURL.BackColor = Color.Yellow;
             //txtWebURL.Focus();
-            toolTipCore.Show("URL must be a valid URL and be\r\nthe path to the folder containing\r\nunitinfo.txt and fahlog.txt.", txtWebURL, 5000);
+            toolTipCore.Show("URL must be a valid URL and be\r\nthe path to the folder containing\r\nunitinfo.txt and FAHlog.txt.", txtWebURL, 5000);
          }
          else
          {
@@ -442,7 +447,7 @@ namespace HFM.Forms
          {
             txtLogFileName.BackColor = Color.Yellow;
             txtLogFileName.Focus();
-            toolTipCore.Show("FAHLog File Name is required.", txtLogFileName, 5000);
+            toolTipCore.Show("FAHlog.txt File Name is required.", txtLogFileName, 5000);
             return;
          }
 
@@ -450,7 +455,7 @@ namespace HFM.Forms
          {
             txtUnitFileName.BackColor = Color.Yellow;
             txtUnitFileName.Focus();
-            toolTipCore.Show("UnitInfo File Name is required.", txtUnitFileName, 5000);
+            toolTipCore.Show("unitinfo.txt File Name is required.", txtUnitFileName, 5000);
             return;
          }
 

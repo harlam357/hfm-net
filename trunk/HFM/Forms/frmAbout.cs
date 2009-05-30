@@ -22,29 +22,40 @@ using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 
+using Debug = HFM.Instrumentation.Debug;
+
 namespace HFM.Forms
 {
-    public partial class frmAbout : Form
-    {
-        public frmAbout()
-        {
-            InitializeComponent();
+   public partial class frmAbout : Form
+   {
+      public frmAbout()
+      {
+         InitializeComponent();
 
-            //lblVersion.Text = "Version " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            FileVersionInfo fileVersionInfo =
-               FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetEntryAssembly().Location);
-            lblVersion.Text = "Version " + String.Format("{0}.{1}.{2} - Build {3}", fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
-                                                                                        fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
-        }
+         FileVersionInfo fileVersionInfo =
+         FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetEntryAssembly().Location);
+         lblVersion.Text = "Version " + String.Format("{0}.{1}.{2} - Build {3}", fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
+                                                                                 fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
+      }
 
-        //private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        //{
-        //    System.Diagnostics.Process.Start("http://www.gnu.org/licenses/gpl.txt");
-        //}
+      //private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+      //{
+      //    System.Diagnostics.Process.Start("http://www.gnu.org/licenses/gpl.txt");
+      //}
 
-        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            System.Diagnostics.Process.Start("http://code.google.com/p/fahlogstats-net/");
-        }
-    }
+      private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+      {
+         try
+         {
+            // Issue 28 - wrap process start in try catch
+            Process.Start("http://code.google.com/p/fahlogstats-net/");
+         }
+         catch (Exception ex)
+         {
+            Debug.WriteToHfmConsole(TraceLevel.Error,
+                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            MessageBox.Show("Failed to show FAHLogStats.NET Google Code page.");
+         }
+      }
+   }
 }

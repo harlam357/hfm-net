@@ -269,27 +269,16 @@ namespace HFM.Proteins
       }
 
       /// <summary>
-      /// Current progress (percentage) of the unit
+      /// Unit Start Time Stamp
       /// </summary>
-      private Int32 _PercentComplete;
+      private TimeSpan _UnitStartTime;
       /// <summary>
-      /// Current progress (percentage) of the unit
+      /// Unit Start Time Stamp
       /// </summary>
-      public Int32 PercentComplete
+      public TimeSpan UnitStartTime
       {
-         get { return _PercentComplete; }
-         set
-         {
-            // Add check for valid values instead of just accepting whatever is given - Issue 2
-            if (value < 0 || value > 100)
-            {
-               _PercentComplete = 0;
-            }
-            else
-            {
-               _PercentComplete = value;
-            }
-         }
+         get { return _UnitStartTime; }
+         set { _UnitStartTime = value; }
       }
 
       /// <summary>
@@ -431,6 +420,30 @@ namespace HFM.Proteins
       }
 
       #region Time Based Values
+      /// <summary>
+      /// Current progress (percentage) of the unit
+      /// </summary>
+      private Int32 _PercentComplete;
+      /// <summary>
+      /// Current progress (percentage) of the unit
+      /// </summary>
+      public Int32 PercentComplete
+      {
+         get { return _PercentComplete; }
+         set
+         {
+            // Add check for valid values instead of just accepting whatever is given - Issue 2
+            if (value < 0 || value > 100)
+            {
+               _PercentComplete = 0;
+            }
+            else
+            {
+               _PercentComplete = value;
+            }
+         }
+      }
+      
       /// <summary>
       /// Time per frame (TPF) of the unit
       /// </summary>
@@ -697,10 +710,10 @@ namespace HFM.Proteins
             // time is valid for 3 "sets" ago
             if (_FramesObserved > 3)
             {
-               RawTimePerThreeSections = (GetDuration(3) / 3);
+               RawTimePerThreeSections = GetDuration(3);
             }
 
-            RawTimePerAllSections = (GetDuration(FramesObserved) / FramesObserved);
+            RawTimePerAllSections = GetDuration(FramesObserved);
             
             if (DownloadTime.Equals(DateTime.MinValue) == false)
             {
@@ -721,10 +734,25 @@ namespace HFM.Proteins
          
          try
          {
+            // Make sure we only add frame durations greater than a Zero TimeSpan
+            // The first frame will always have a Zero TimeSpan for frame duration
+            // we don't want to take this frame into account when calculating 'AllFrames' - Issue 23
+            TimeSpan TotalTime = TimeSpan.Zero;
+            int countFrames = 0;
+            
             for (int i = 0; i < numberOfFrames; i++)
             {
-               TotalSeconds += Convert.ToInt32(UnitFrames[frameNumber].FrameDuration.TotalSeconds);
+               if (UnitFrames[frameNumber].FrameDuration > TimeSpan.Zero)
+               {
+                  TotalTime = TotalTime.Add(UnitFrames[frameNumber].FrameDuration);
+                  countFrames++;
+               }
                frameNumber--;
+            }
+            
+            if (countFrames > 0)
+            {
+               TotalSeconds = Convert.ToInt32(TotalTime.TotalSeconds) / countFrames;
             }
          }
          catch (NullReferenceException ex)
@@ -733,7 +761,7 @@ namespace HFM.Proteins
             Debug.WriteToHfmConsole(TraceLevel.Warning,
                                     String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
          }
-         
+
          return TotalSeconds;
       }
 

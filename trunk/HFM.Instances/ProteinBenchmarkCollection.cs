@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using HFM.Helpers;
+using HFM.Preferences;
 using HFM.Proteins;
 using Debug=HFM.Instrumentation.Debug;
 
@@ -173,7 +173,7 @@ namespace HFM.Instances
             {
                if (_Instance == null)
                {
-                  _Instance = Deserialize(Path.Combine(Preferences.PreferenceSet.Instance.AppPath, DataStoreFilename));
+                  _Instance = Deserialize(Path.Combine(PreferenceSet.AppPath, DataStoreFilename));
                }
                if (_Instance == null)
                {
@@ -188,7 +188,7 @@ namespace HFM.Instances
       #region Serialization Support
       public void Serialize()
       {
-         Serialize(Instance, Path.Combine(Preferences.PreferenceSet.Instance.AppPath, DataStoreFilename));
+         Serialize(Instance, Path.Combine(PreferenceSet.AppPath, DataStoreFilename));
       }
 
       private static ProteinBenchmarkCollection Deserialize(string filePath)

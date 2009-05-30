@@ -74,10 +74,10 @@ namespace HFM.Instances
       private const string xmlPropServ = "Server";
       private const string xmlPropUser = "Username";
       private const string xmlPropPass = "Password";
-      
+
       // Log Filename Constants
-      private const string LocalFAHLog = "FAHLog.txt";
-      private const string LocalUnitInfo = "UnitInfo.txt";
+      public const string LocalFAHLog = "FAHlog.txt";
+      public const string LocalUnitInfo = "unitinfo.txt";
       
       // Log File Size Constants
       private const int UnitInfoMax = 1048576; // 1 Megabyte
@@ -112,7 +112,7 @@ namespace HFM.Instances
       }
 
       /// <summary>
-      /// Cached FAHLog Filename for this instance
+      /// Cached FAHlog Filename for this instance
       /// </summary>
       public string CachedFAHLogName
       {
@@ -499,38 +499,44 @@ namespace HFM.Instances
       private bool IsUnitInfoCurrentUnitInfo(UnitInfo parsedUnitInfo)
       {
          // if the Project is the same and either the Name or Path matches
-         if (parsedUnitInfo.ProjectRunCloneGen == CurrentUnitInfo.ProjectRunCloneGen) //&&
-            //(parsedUnitInfo.OwningInstanceName == CurrentUnitInfo.OwningInstanceName ||
-            // parsedUnitInfo.OwningInstancePath == CurrentUnitInfo.OwningInstancePath))
+         if (parsedUnitInfo.ProjectRunCloneGen == CurrentUnitInfo.ProjectRunCloneGen)
          {
             return true;
          }
          
          return false;
       }
+      
+      /// <summary>
+      /// Sets the time based values on the Current Unit Info
+      /// </summary>
+      public void SetTimeBasedValues()
+      {
+         SetTimeBasedValues(CurrentUnitInfo);
+      }
 
       /// <summary>
       /// Sets the time based values (FramesComplete, PercentComplete, TimePerFrame, UPD, PPD, ETA)
       /// </summary>
-      public void SetTimeBasedValues()
+      public void SetTimeBasedValues(UnitInfo unit)
       {
-         //if ((CurrentUnitInfo.RawFramesTotal != 0) && (CurrentUnitInfo.RawFramesComplete != 0))
+         //if ((unit.RawFramesTotal != 0) && (unit.RawFramesComplete != 0))
          //{
-            if (CurrentUnitInfo.RawTimePerSection != 0)
+            if (unit.RawTimePerSection != 0)
             {
                try
                {
-                  Int32 FramesTotal = ProteinCollection.Instance[CurrentUnitInfo.ProjectID].Frames;
-                  Int32 RawScaleFactor = CurrentUnitInfo.RawFramesTotal / FramesTotal;
+                  Int32 FramesTotal = ProteinCollection.Instance[unit.ProjectID].Frames;
+                  Int32 RawScaleFactor = unit.RawFramesTotal / FramesTotal;
 
                   //TODO: FramesComplete is pretty isolated here... can it be moved into this routine and not exposed at the class level?
-                  CurrentUnitInfo.FramesComplete = CurrentUnitInfo.RawFramesComplete / RawScaleFactor;
-                  CurrentUnitInfo.PercentComplete = CurrentUnitInfo.FramesComplete * 100 / FramesTotal;
-                  CurrentUnitInfo.TimePerFrame = new TimeSpan(0, 0, Convert.ToInt32(CurrentUnitInfo.RawTimePerSection));
+                  unit.FramesComplete = unit.RawFramesComplete / RawScaleFactor;
+                  unit.PercentComplete = unit.FramesComplete * 100 / FramesTotal;
+                  unit.TimePerFrame = new TimeSpan(0, 0, Convert.ToInt32(unit.RawTimePerSection));
 
-                  CurrentUnitInfo.UPD = ProteinCollection.Instance[CurrentUnitInfo.ProjectID].GetUPD(CurrentUnitInfo.TimePerFrame); //86400 / (CurrentUnitInfo.TimePerFrame.TotalSeconds * FramesTotal);
-                  CurrentUnitInfo.PPD = ProteinCollection.Instance[CurrentUnitInfo.ProjectID].GetPPD(CurrentUnitInfo.TimePerFrame); //Math.Round(CurrentUnitInfo.UPD * ProteinCollection.Instance[CurrentUnitInfo.ProjectID].Credit, 5);
-                  CurrentUnitInfo.ETA = new TimeSpan((100 - CurrentUnitInfo.PercentComplete) * CurrentUnitInfo.TimePerFrame.Ticks);
+                  unit.UPD = ProteinCollection.Instance[unit.ProjectID].GetUPD(unit.TimePerFrame);
+                  unit.PPD = ProteinCollection.Instance[unit.ProjectID].GetPPD(unit.TimePerFrame);
+                  unit.ETA = new TimeSpan((100 - unit.PercentComplete) * unit.TimePerFrame.Ticks);
                }
                catch (Exception ex)
                {
@@ -541,19 +547,19 @@ namespace HFM.Instances
             else if (Status.Equals(ClientStatus.RunningNoFrameTimes))
             {
                // If we have frames but no section time, try pulling the percent complete from the UnitFrame data
-               if (CurrentUnitInfo.PercentComplete == 0)
+               if (unit.PercentComplete == 0)
                {
-                  // Only if we didn't get a reading from the UnitInfo.txt parse
-                  CurrentUnitInfo.PercentComplete = CurrentUnitInfo.CurrentFramePercent;
+                  // Only if we didn't get a reading from the unitinfo.txt parse
+                  unit.PercentComplete = unit.CurrentFramePercent;
                }
 
-               TimeSpan benchmarkAverageTimePerFrame = ProteinBenchmarkCollection.Instance.GetBenchmarkAverageFrameTime(CurrentUnitInfo);
+               TimeSpan benchmarkAverageTimePerFrame = ProteinBenchmarkCollection.Instance.GetBenchmarkAverageFrameTime(unit);
                if (benchmarkAverageTimePerFrame.Equals(TimeSpan.Zero) == false)
                {
-                  CurrentUnitInfo.TimePerFrame = benchmarkAverageTimePerFrame;
-                  CurrentUnitInfo.UPD = ProteinCollection.Instance[CurrentUnitInfo.ProjectID].GetUPD(CurrentUnitInfo.TimePerFrame); //86400 / (CurrentUnitInfo.TimePerFrame.TotalSeconds * FramesTotal);
-                  CurrentUnitInfo.PPD = ProteinCollection.Instance[CurrentUnitInfo.ProjectID].GetPPD(CurrentUnitInfo.TimePerFrame); //Math.Round(CurrentUnitInfo.UPD * ProteinCollection.Instance[CurrentUnitInfo.ProjectID].Credit, 5);
-                  CurrentUnitInfo.ETA = new TimeSpan((100 - CurrentUnitInfo.PercentComplete) * CurrentUnitInfo.TimePerFrame.Ticks);
+                  unit.TimePerFrame = benchmarkAverageTimePerFrame;
+                  unit.UPD = ProteinCollection.Instance[unit.ProjectID].GetUPD(unit.TimePerFrame);
+                  unit.PPD = ProteinCollection.Instance[unit.ProjectID].GetPPD(unit.TimePerFrame);
+                  unit.ETA = new TimeSpan((100 - unit.PercentComplete) * unit.TimePerFrame.Ticks);
                }
             }
          //}
@@ -578,10 +584,71 @@ namespace HFM.Instances
       }
 
       /// <summary>
+      /// Determines what values to feed the DetermineStatus routine and then calls it
+      /// </summary>
+      /// <param name="Instance">Client Instance</param>
+      private static void DetermineStatusWrapper(ClientInstance Instance)
+      {
+         // if we have a frame time, use it
+         if (Instance.CurrentUnitInfo.RawTimePerSection > 0)
+         {
+            Instance.Status = DetermineStatus(Instance, Instance.CurrentUnitInfo.TimeOfLastFrame, Instance.CurrentUnitInfo.RawTimePerSection);
+         }
+
+         // no frame time based on the current PPD calculation selection ('LastFrame', 'LastThreeFrames', etc)
+         // this section attempts to give DetermineStats values to detect Hung clients before they have a valid
+         // frame time - Issue 10
+         else 
+         {
+            // if we have a frame time stamp, use it
+            TimeSpan frameTime = Instance.CurrentUnitInfo.TimeOfLastFrame;
+            if (frameTime == TimeSpan.Zero)
+            {
+               // otherwise, use the unit start time
+               frameTime = Instance.CurrentUnitInfo.UnitStartTime;
+            }
+
+            // get the average frame time for this client and project id
+            TimeSpan averageFrameTime = ProteinBenchmarkCollection.Instance.GetBenchmarkAverageFrameTime(Instance.CurrentUnitInfo);
+            if (averageFrameTime > TimeSpan.Zero)
+            {
+               if (DetermineStatus(Instance, frameTime, Convert.ToInt32(averageFrameTime.TotalSeconds)).Equals(ClientStatus.Hung))
+               {
+                  Instance.Status = ClientStatus.Hung;
+               }
+            }
+
+            // no benchmarked average frame time, use some arbitrary (and large) values for the frame time
+            // we want to give the client plenty of time to show progress but don't want it to sit idle for days
+            else 
+            {
+               if (Instance.CurrentUnitInfo.TypeOfClient.Equals(ClientType.GPU))
+               {
+                  // GPU: use 5 minutes (300 seconds) as a base frame time
+                  if (DetermineStatus(Instance, frameTime, 300).Equals(ClientStatus.Hung))
+                  {
+                     Instance.Status = ClientStatus.Hung;
+                  }
+               }
+               else
+               {
+                  // CPU: use 1 hour (3600 seconds) as a base frame time
+                  if (DetermineStatus(Instance, frameTime, 3600).Equals(ClientStatus.Hung))
+                  {
+                     Instance.Status = ClientStatus.Hung;
+                  }
+               } 
+            }
+         }
+      }
+      
+      /// <summary>
       /// Determine Client Status
       /// </summary>
       /// <param name="Instance">Client Instance</param>
-      private static void DetermineStatus(ClientInstance Instance)
+      /// <param name="TimeOfLastFrame">Time Stamp from Last Recorded Frame</param>
+      /// <param name="SectionTime">The Current Frame Time (in seconds)</param>
+      private static ClientStatus DetermineStatus(ClientInstance Instance, TimeSpan TimeOfLastFrame, int SectionTime)
       {
          #region Get Terminal Time
          // Terminal Time - defined as last retrieval time minus twice (7 times for GPU) the current Raw Time per Section.
@@ -590,99 +657,95 @@ namespace HFM.Instances
 
          if (Instance.CurrentUnitInfo.TypeOfClient.Equals(ClientType.GPU))
          {
-            terminalDateTime = Instance.LastRetrievalTime.Subtract(new TimeSpan(0, 0, Instance.CurrentUnitInfo.RawTimePerSection * 7));
+            terminalDateTime = Instance.LastRetrievalTime.Subtract(TimeSpan.FromSeconds(SectionTime * 7));
          }
          else
          {
-            terminalDateTime = Instance.LastRetrievalTime.Subtract(new TimeSpan(0, 0, Instance.CurrentUnitInfo.RawTimePerSection * 2));
+            terminalDateTime = Instance.LastRetrievalTime.Subtract(TimeSpan.FromSeconds(SectionTime * 2));
          }
          #endregion
 
-         // make sure we have calculated a frame time (could be based on 'LastFrame' or 'LastThreeFrames')
-         if (Instance.CurrentUnitInfo.RawTimePerSection > 0)
+         #region Get Last Retrieval Time Date
+         DateTime currentFrameDateTime;
+
+         if (Instance.ClientIsOnVirtualMachine)
          {
-            #region Get Last Retrieval Time Date
-            DateTime currentFrameDateTime;
+            // get only the date from the last retrieval time (in universal), we'll add the current time below
+            currentFrameDateTime = new DateTime(Instance.LastRetrievalTime.Date.Ticks, DateTimeKind.Utc);
+         }
+         else
+         {
+            // get only the date from the last retrieval time, we'll add the current time below
+            currentFrameDateTime = Instance.LastRetrievalTime.Date;
+         }
+         #endregion
 
-            if (Instance.ClientIsOnVirtualMachine)
-            {
-               // get only the date from the last retrieval time (in universal), we'll add the current time below
-               currentFrameDateTime = new DateTime(Instance.LastRetrievalTime.Date.Ticks, DateTimeKind.Utc);
-            }
-            else
-            {
-               // get only the date from the last retrieval time, we'll add the current time below
-               currentFrameDateTime = Instance.LastRetrievalTime.Date;
-            }
-            #endregion
+         #region Apply Frame Time Offset and Set Current Frame Time Date
+         TimeSpan offset = TimeSpan.FromMinutes(Instance.ClientTimeOffset);
+         TimeSpan adjustedFrameTime = TimeOfLastFrame.Subtract(offset);
 
-            #region Apply Frame Time Offset and Set Current Frame Time Date
-            TimeSpan offset = TimeSpan.FromMinutes(Instance.ClientTimeOffset);
-            TimeSpan adjustedFrameTime = Instance.CurrentUnitInfo.TimeOfLastFrame.Subtract(offset);
+         // client time has already rolled over to the next day. the offset correction has 
+         // caused the adjusted frame time span to be negetive.  take the that negetive span
+         // and add it to a full 24 hours to correct.
+         if (adjustedFrameTime < TimeSpan.Zero)
+         {
+            adjustedFrameTime = TimeSpan.FromDays(1).Add(adjustedFrameTime);
+         }
 
-            // client time has already rolled over to the next day. the offset correction has 
-            // caused the adjusted frame time span to be negetive.  take the that negetive span
-            // and add it to a full 24 hours to correct.
-            if (adjustedFrameTime < TimeSpan.Zero)
-            {
-               adjustedFrameTime = TimeSpan.FromDays(1).Add(adjustedFrameTime);
-            }
+         // the offset correction has caused the frame time span to be greater than 24 hours.
+         // subtract the extra day from the adjusted frame time span.
+         else if (adjustedFrameTime > TimeSpan.FromDays(1))
+         {
+            adjustedFrameTime = adjustedFrameTime.Subtract(TimeSpan.FromDays(1));
+         }
 
-            // the offset correction has caused the frame time span to be greater than 24 hours.
-            // subtract the extra day from the adjusted frame time span.
-            else if (adjustedFrameTime > TimeSpan.FromDays(1))
-            {
-               adjustedFrameTime = adjustedFrameTime.Subtract(TimeSpan.FromDays(1));
-            }
+         // add adjusted Time of Last Frame (TimeSpan) to the DateTime with the correct date
+         currentFrameDateTime = currentFrameDateTime.Add(adjustedFrameTime);
+         #endregion
 
-            // add adjusted Time of Last Frame (TimeSpan) to the DateTime with the correct date
-            currentFrameDateTime = currentFrameDateTime.Add(adjustedFrameTime);
-            #endregion
+         #region Check For Frame from Prior Day (Midnight Rollover on Local Machine)
+         bool priorDayAdjust = false;
 
-            #region Check For Frame from Prior Day (Midnight Rollover on Local Machine)
-            bool priorDayAdjust = false;
+         // if the current (and adjusted) frame time hours is greater than the last retrieval time hours, 
+         // and the time difference is greater than an hour, then frame is from the day prior.
+         // this should only happen after midnight time on the machine running HFM when the monitored client has 
+         // not completed a frame since the local machine time rolled over to the next day, otherwise the time
+         // stamps between HFM and the client are too far off, a positive offset should be set to correct.
+         if (currentFrameDateTime.TimeOfDay.Hours > Instance.LastRetrievalTime.TimeOfDay.Hours &&
+             currentFrameDateTime.TimeOfDay.Subtract(Instance.LastRetrievalTime.TimeOfDay).Hours > 0)
+         {
+            priorDayAdjust = true;
 
-            // if the current (and adjusted) frame time hours is greater than the last retrieval time hours, 
-            // and the time difference is greater than an hour, then frame is from the day prior.
-            // this should only happen after midnight time on the machine running HFM when the monitored client has 
-            // not completed a frame since the local machine time rolled over to the next day, otherwise the time
-            // stamps between HFM and the client are too far off, a positive offset should be set to correct.
-            if (currentFrameDateTime.TimeOfDay.Hours > Instance.LastRetrievalTime.TimeOfDay.Hours &&
-                currentFrameDateTime.TimeOfDay.Subtract(Instance.LastRetrievalTime.TimeOfDay).Hours > 0)
-            {
-               priorDayAdjust = true;
+            // subtract 1 day from today's date
+            currentFrameDateTime = currentFrameDateTime.Subtract(TimeSpan.FromDays(1));
+         }
+         #endregion
 
-               // subtract 1 day from today's date
-               currentFrameDateTime = currentFrameDateTime.Subtract(TimeSpan.FromDays(1));
-            }
-            #endregion
+         #region Write Verbose Trace
+         if (HFM.Instrumentation.TraceLevelSwitch.GetTraceLevelSwitch().TraceVerbose)
+         {
+            List<string> messages = new List<string>(10);
 
-            #region Write Verbose Trace
-            if (HFM.Instrumentation.TraceLevelSwitch.GetTraceLevelSwitch().TraceVerbose)
-            {
-               List<string> messages = new List<string>(10);
+            messages.Add(String.Format("{0} ({1})", Debug.FunctionName, Instance.InstanceName));
+            messages.Add(String.Format(" - Retrieval Time (Date) ------- : {0}", Instance.LastRetrievalTime));
+            messages.Add(String.Format(" - Time Of Last Frame (TimeSpan) : {0}", TimeOfLastFrame));
+            messages.Add(String.Format(" - Offset (Minutes) ------------ : {0}", Instance.ClientTimeOffset));
+            messages.Add(String.Format(" - Time Of Last Frame (Adjusted) : {0}", adjustedFrameTime));
+            messages.Add(String.Format(" - Prior Day Adjustment -------- : {0}", priorDayAdjust));
+            messages.Add(String.Format(" - Time Of Last Frame (Date) --- : {0}", currentFrameDateTime));
+            messages.Add(String.Format(" - Terminal Time (Date) -------- : {0}", terminalDateTime));
 
-               messages.Add(String.Format("{0} ({1})", Debug.FunctionName, Instance.InstanceName));
-               messages.Add(String.Format(" - Retrieval Time (Date) ------- : {0}", Instance.LastRetrievalTime));
-               messages.Add(String.Format(" - Time Of Last Frame (TimeSpan) : {0}", Instance.CurrentUnitInfo.TimeOfLastFrame));
-               messages.Add(String.Format(" - Offset (Minutes) ------------ : {0}", Instance.ClientTimeOffset));
-               messages.Add(String.Format(" - Time Of Last Frame (Adjusted) : {0}", adjustedFrameTime));
-               messages.Add(String.Format(" - Prior Day Adjustment -------- : {0}", priorDayAdjust));
-               messages.Add(String.Format(" - Time Of Last Frame (Date) --- : {0}", currentFrameDateTime));
-               messages.Add(String.Format(" - Terminal Time (Date) -------- : {0}", terminalDateTime));
+            Debug.WriteToHfmConsole(TraceLevel.Verbose, messages.ToArray());
+         }
+         #endregion
 
-               Debug.WriteToHfmConsole(TraceLevel.Verbose, messages.ToArray());
-            }
-            #endregion
-
-            if (currentFrameDateTime > terminalDateTime)
-            {
-               Instance.Status = ClientStatus.Running;
-            }
-            else // current frame is less than terminal time
-            {
-               Instance.Status = ClientStatus.Hung;
-            }
+         if (currentFrameDateTime > terminalDateTime)
+         {
+            return ClientStatus.Running;
+         }
+         else // current frame is less than terminal time
+         {
+            return ClientStatus.Hung;
          }
       }
 
@@ -720,6 +783,8 @@ namespace HFM.Instances
             }
             if (lp.LastUnitStartPosition > 0)
             {
+               Status = ClientStatus.RunningNoFrameTimes;
+            
                parsedUnitInfo = lp.ParseFAHLog(System.IO.Path.Combine(BaseDirectory, CachedFAHLogName), this, UnitToRead.Last);
 
                int currentFrames = 0;
@@ -730,6 +795,9 @@ namespace HFM.Instances
                   currentFrames = CurrentUnitInfo.CurrentFramePercent + 1;
                }
 
+               // set the frame times and calculate values
+               parsedUnitInfo.SetFrameTimes();
+               SetTimeBasedValues(parsedUnitInfo);
                ProteinBenchmarkCollection.Instance.UpdateBenchmarkData(parsedUnitInfo, currentFrames, parsedUnitInfo.CurrentFramePercent);
             }
          }
@@ -739,25 +807,25 @@ namespace HFM.Instances
             // Parsed is now Current
             CurrentUnitInfo = parsedUnitInfo;
 
-            if (Status != ClientStatus.Stopped &&
-                Status != ClientStatus.Paused)
+            if (Status == ClientStatus.Stopped ||
+                Status == ClientStatus.Paused)
             {
-               CurrentUnitInfo.SetFrameTimes();
-               DetermineStatus(this);
+               // client is stopped or paused, clear PPD values
+               CurrentUnitInfo.ClearTimeBasedValues();
+            }
+            else
+            {
+               //CurrentUnitInfo.SetFrameTimes();
+               DetermineStatusWrapper(this);
                if (Status.Equals(ClientStatus.Hung))
                {
                   // client is hung, clear PPD values
                   CurrentUnitInfo.ClearTimeBasedValues();
                }
-               else
-               {
-                  SetTimeBasedValues();
-               }
-            }
-            else
-            {
-               // client is stopped or paused, clear PPD values
-               CurrentUnitInfo.ClearTimeBasedValues();
+               //else
+               //{
+               //   SetTimeBasedValues();
+               //}
             }
          }
          else
@@ -828,7 +896,7 @@ namespace HFM.Instances
             FileInfo fiCachedLog = new FileInfo(FAHLog_txt);
 
             Debug.WriteToHfmConsole(TraceLevel.Verbose,
-                                    String.Format("{0} ({1}) FAHLog copy (start).", Debug.FunctionName,
+                                    String.Format("{0} ({1}) FAHlog copy (start).", Debug.FunctionName,
                                                   InstanceName));
             if (fiLog.Exists)
             {
@@ -836,13 +904,13 @@ namespace HFM.Instances
                {
                   fiLog.CopyTo(FAHLog_txt, true);
                   Debug.WriteToHfmConsole(TraceLevel.Verbose,
-                                          String.Format("{0} ({1}) FAHLog copy (success).", Debug.FunctionName,
+                                          String.Format("{0} ({1}) FAHlog copy (success).", Debug.FunctionName,
                                                         InstanceName));
                }
                else
                {
                   Debug.WriteToHfmConsole(TraceLevel.Verbose,
-                                          String.Format("{0} ({1}) FAHLog copy (file has not changed).", Debug.FunctionName,
+                                          String.Format("{0} ({1}) FAHlog copy (file has not changed).", Debug.FunctionName,
                                                         InstanceName));
                }
             }
@@ -854,7 +922,7 @@ namespace HFM.Instances
                return false;
             }
 
-            // Retrieve UnitInfo.txt (or equivalent)
+            // Retrieve unitinfo.txt (or equivalent)
             FileInfo fiUI = new FileInfo(System.IO.Path.Combine(Path, RemoteUnitInfoFilename));
             string UnitInfo_txt = System.IO.Path.Combine(BaseDirectory, CachedUnitInfoName);
 

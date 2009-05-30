@@ -48,76 +48,77 @@ namespace HFM.Forms
       /// </summary>
       private void InitializeComponent()
       {
-         this.grpUpdateData = new Classes.GroupBoxWrapper();
-         this.label2 = new Classes.LabelWrapper();
-         this.cboPpdCalc = new Classes.ComboBoxWrapper();
-         this.chkOffline = new Classes.CheckBoxWrapper();
-         this.lbl2Collect = new Classes.LabelWrapper();
-         this.txtCollectMinutes = new Classes.TextBoxWrapper();
-         this.lbl2SchedExplain = new Classes.LabelWrapper();
-         this.chkScheduled = new Classes.CheckBoxWrapper();
-         this.chkSynchronous = new Classes.CheckBoxWrapper();
-         this.btnCancel = new Classes.ButtonWrapper();
-         this.btnOK = new Classes.ButtonWrapper();
-         this.lbl1Preview = new Classes.LabelWrapper();
-         this.lbl1Style = new Classes.LabelWrapper();
+         this.grpUpdateData = new HFM.Classes.GroupBoxWrapper();
+         this.label2 = new HFM.Classes.LabelWrapper();
+         this.cboPpdCalc = new HFM.Classes.ComboBoxWrapper();
+         this.chkOffline = new HFM.Classes.CheckBoxWrapper();
+         this.lbl2Collect = new HFM.Classes.LabelWrapper();
+         this.txtCollectMinutes = new HFM.Classes.TextBoxWrapper();
+         this.lbl2SchedExplain = new HFM.Classes.LabelWrapper();
+         this.chkScheduled = new HFM.Classes.CheckBoxWrapper();
+         this.chkSynchronous = new HFM.Classes.CheckBoxWrapper();
+         this.btnCancel = new HFM.Classes.ButtonWrapper();
+         this.btnOK = new HFM.Classes.ButtonWrapper();
+         this.lbl1Preview = new HFM.Classes.LabelWrapper();
+         this.lbl1Style = new HFM.Classes.LabelWrapper();
          this.pnl1CSSSample = new System.Windows.Forms.Panel();
          this.wbCssSample = new System.Windows.Forms.WebBrowser();
          this.StyleList = new System.Windows.Forms.ListBox();
-         this.grpHTMLOutput = new Classes.GroupBoxWrapper();
-         this.radioFullRefresh = new Classes.RadioButtonWrapper();
-         this.radioSchedule = new Classes.RadioButtonWrapper();
-         this.txtWebGenMinutes = new Classes.TextBoxWrapper();
-         this.lbl2MinutesToGen = new Classes.LabelWrapper();
-         this.btnBrowseWebFolder = new Classes.ButtonWrapper();
-         this.txtWebSiteBase = new Classes.TextBoxWrapper();
-         this.lbl2WebSiteDir = new Classes.LabelWrapper();
-         this.chkWebSiteGenerator = new Classes.CheckBoxWrapper();
+         this.grpHTMLOutput = new HFM.Classes.GroupBoxWrapper();
+         this.radioFullRefresh = new HFM.Classes.RadioButtonWrapper();
+         this.radioSchedule = new HFM.Classes.RadioButtonWrapper();
+         this.txtWebGenMinutes = new HFM.Classes.TextBoxWrapper();
+         this.lbl2MinutesToGen = new HFM.Classes.LabelWrapper();
+         this.btnBrowseWebFolder = new HFM.Classes.ButtonWrapper();
+         this.txtWebSiteBase = new HFM.Classes.TextBoxWrapper();
+         this.lbl2WebSiteDir = new HFM.Classes.LabelWrapper();
+         this.chkWebSiteGenerator = new HFM.Classes.CheckBoxWrapper();
          this.locateWebFolder = new System.Windows.Forms.FolderBrowserDialog();
          this.tabControl1 = new System.Windows.Forms.TabControl();
          this.tabSchdTasks = new System.Windows.Forms.TabPage();
          this.tabDefaults = new System.Windows.Forms.TabPage();
-         this.grpDebugMessageLevel = new Classes.GroupBoxWrapper();
-         this.cboMessageLevel = new Classes.ComboBoxWrapper();
-         this.label6 = new Classes.LabelWrapper();
-         this.grpFileExplorer = new Classes.GroupBoxWrapper();
-         this.btnBrowseFileExplorer = new Classes.ButtonWrapper();
-         this.label4 = new Classes.LabelWrapper();
-         this.txtFileExplorer = new Classes.TextBoxWrapper();
-         this.grpLogFileViewer = new Classes.GroupBoxWrapper();
-         this.btnBrowseLogViewer = new Classes.ButtonWrapper();
-         this.label3 = new Classes.LabelWrapper();
-         this.txtLogFileViewer = new Classes.TextBoxWrapper();
-         this.grpDefaultConfig = new Classes.GroupBoxWrapper();
-         this.chkDefaultConfig = new Classes.CheckBoxWrapper();
-         this.btnBrowseConfigFile = new Classes.ButtonWrapper();
-         this.txtDefaultConfigFile = new Classes.TextBoxWrapper();
-         this.label1 = new Classes.LabelWrapper();
+         this.grpDebugMessageLevel = new HFM.Classes.GroupBoxWrapper();
+         this.cboMessageLevel = new HFM.Classes.ComboBoxWrapper();
+         this.label6 = new HFM.Classes.LabelWrapper();
+         this.grpFileExplorer = new HFM.Classes.GroupBoxWrapper();
+         this.btnBrowseFileExplorer = new HFM.Classes.ButtonWrapper();
+         this.label4 = new HFM.Classes.LabelWrapper();
+         this.txtFileExplorer = new HFM.Classes.TextBoxWrapper();
+         this.grpLogFileViewer = new HFM.Classes.GroupBoxWrapper();
+         this.btnBrowseLogViewer = new HFM.Classes.ButtonWrapper();
+         this.label3 = new HFM.Classes.LabelWrapper();
+         this.txtLogFileViewer = new HFM.Classes.TextBoxWrapper();
+         this.grpDefaultConfig = new HFM.Classes.GroupBoxWrapper();
+         this.chkAutoSave = new HFM.Classes.CheckBoxWrapper();
+         this.chkDefaultConfig = new HFM.Classes.CheckBoxWrapper();
+         this.btnBrowseConfigFile = new HFM.Classes.ButtonWrapper();
+         this.txtDefaultConfigFile = new HFM.Classes.TextBoxWrapper();
+         this.label1 = new HFM.Classes.LabelWrapper();
          this.tabWeb = new System.Windows.Forms.TabPage();
-         this.grpProjectDownload = new Classes.GroupBoxWrapper();
-         this.txtProjectDownloadUrl = new Classes.TextBoxWrapper();
-         this.label5 = new Classes.LabelWrapper();
-         this.grpWebStats = new Classes.GroupBoxWrapper();
-         this.lbl3EOCUserID = new Classes.LabelWrapper();
-         this.lbl3StanfordUserID = new Classes.LabelWrapper();
+         this.grpProjectDownload = new HFM.Classes.GroupBoxWrapper();
+         this.txtProjectDownloadUrl = new HFM.Classes.TextBoxWrapper();
+         this.label5 = new HFM.Classes.LabelWrapper();
+         this.grpWebStats = new HFM.Classes.GroupBoxWrapper();
+         this.lbl3EOCUserID = new HFM.Classes.LabelWrapper();
+         this.lbl3StanfordUserID = new HFM.Classes.LabelWrapper();
          this.linkTeam = new System.Windows.Forms.LinkLabel();
-         this.txtEOCUserID = new Classes.TextBoxWrapper();
-         this.txtStanfordTeamID = new Classes.TextBoxWrapper();
-         this.lbl3StanfordTeamID = new Classes.LabelWrapper();
+         this.txtEOCUserID = new HFM.Classes.TextBoxWrapper();
+         this.txtStanfordTeamID = new HFM.Classes.TextBoxWrapper();
+         this.lbl3StanfordTeamID = new HFM.Classes.LabelWrapper();
          this.linkStanford = new System.Windows.Forms.LinkLabel();
-         this.txtStanfordUserID = new Classes.TextBoxWrapper();
+         this.txtStanfordUserID = new HFM.Classes.TextBoxWrapper();
          this.linkEOC = new System.Windows.Forms.LinkLabel();
-         this.grpWebProxy = new Classes.GroupBoxWrapper();
-         this.chkUseProxy = new Classes.CheckBoxWrapper();
-         this.chkUseProxyAuth = new Classes.CheckBoxWrapper();
-         this.txtProxyPass = new Classes.TextBoxWrapper();
-         this.txtProxyUser = new Classes.TextBoxWrapper();
-         this.txtProxyPort = new Classes.TextBoxWrapper();
-         this.lbl3ProxyPass = new Classes.LabelWrapper();
-         this.txtProxyServer = new Classes.TextBoxWrapper();
-         this.lbl3ProxyUser = new Classes.LabelWrapper();
-         this.lbl3Port = new Classes.LabelWrapper();
-         this.lbl3Proxy = new Classes.LabelWrapper();
+         this.grpWebProxy = new HFM.Classes.GroupBoxWrapper();
+         this.chkUseProxy = new HFM.Classes.CheckBoxWrapper();
+         this.chkUseProxyAuth = new HFM.Classes.CheckBoxWrapper();
+         this.txtProxyPass = new HFM.Classes.TextBoxWrapper();
+         this.txtProxyUser = new HFM.Classes.TextBoxWrapper();
+         this.txtProxyPort = new HFM.Classes.TextBoxWrapper();
+         this.lbl3ProxyPass = new HFM.Classes.LabelWrapper();
+         this.txtProxyServer = new HFM.Classes.TextBoxWrapper();
+         this.lbl3ProxyUser = new HFM.Classes.LabelWrapper();
+         this.lbl3Port = new HFM.Classes.LabelWrapper();
+         this.lbl3Proxy = new HFM.Classes.LabelWrapper();
          this.tabVisStyles = new System.Windows.Forms.TabPage();
          this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
          this.grpUpdateData.SuspendLayout();
@@ -325,7 +326,7 @@ namespace HFM.Forms
          this.radioFullRefresh.Location = new System.Drawing.Point(319, 19);
          this.radioFullRefresh.Name = "radioFullRefresh";
          this.radioFullRefresh.Size = new System.Drawing.Size(125, 17);
-         this.radioFullRefresh.TabIndex = 7;
+         this.radioFullRefresh.TabIndex = 4;
          this.radioFullRefresh.TabStop = true;
          this.radioFullRefresh.Text = "After each full refresh";
          this.radioFullRefresh.UseVisualStyleBackColor = true;
@@ -337,7 +338,7 @@ namespace HFM.Forms
          this.radioSchedule.Location = new System.Drawing.Point(151, 19);
          this.radioSchedule.Name = "radioSchedule";
          this.radioSchedule.Size = new System.Drawing.Size(52, 17);
-         this.radioSchedule.TabIndex = 6;
+         this.radioSchedule.TabIndex = 1;
          this.radioSchedule.TabStop = true;
          this.radioSchedule.Text = "Every";
          this.radioSchedule.UseVisualStyleBackColor = true;
@@ -351,7 +352,7 @@ namespace HFM.Forms
          this.txtWebGenMinutes.Name = "txtWebGenMinutes";
          this.txtWebGenMinutes.ReadOnly = true;
          this.txtWebGenMinutes.Size = new System.Drawing.Size(48, 20);
-         this.txtWebGenMinutes.TabIndex = 1;
+         this.txtWebGenMinutes.TabIndex = 2;
          this.txtWebGenMinutes.Text = "15";
          this.txtWebGenMinutes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          this.txtWebGenMinutes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtMinutes_KeyPress);
@@ -364,7 +365,7 @@ namespace HFM.Forms
          this.lbl2MinutesToGen.Location = new System.Drawing.Point(256, 21);
          this.lbl2MinutesToGen.Name = "lbl2MinutesToGen";
          this.lbl2MinutesToGen.Size = new System.Drawing.Size(44, 13);
-         this.lbl2MinutesToGen.TabIndex = 2;
+         this.lbl2MinutesToGen.TabIndex = 3;
          this.lbl2MinutesToGen.Text = "Minutes";
          // 
          // btnBrowseWebFolder
@@ -373,7 +374,7 @@ namespace HFM.Forms
          this.btnBrowseWebFolder.Location = new System.Drawing.Point(445, 43);
          this.btnBrowseWebFolder.Name = "btnBrowseWebFolder";
          this.btnBrowseWebFolder.Size = new System.Drawing.Size(24, 23);
-         this.btnBrowseWebFolder.TabIndex = 5;
+         this.btnBrowseWebFolder.TabIndex = 7;
          this.btnBrowseWebFolder.Text = "...";
          this.btnBrowseWebFolder.UseVisualStyleBackColor = true;
          this.btnBrowseWebFolder.Click += new System.EventHandler(this.btnBrowseWebFolder_Click);
@@ -385,7 +386,7 @@ namespace HFM.Forms
          this.txtWebSiteBase.Name = "txtWebSiteBase";
          this.txtWebSiteBase.ReadOnly = true;
          this.txtWebSiteBase.Size = new System.Drawing.Size(327, 20);
-         this.txtWebSiteBase.TabIndex = 4;
+         this.txtWebSiteBase.TabIndex = 6;
          // 
          // lbl2WebSiteDir
          // 
@@ -393,7 +394,7 @@ namespace HFM.Forms
          this.lbl2WebSiteDir.Location = new System.Drawing.Point(26, 48);
          this.lbl2WebSiteDir.Name = "lbl2WebSiteDir";
          this.lbl2WebSiteDir.Size = new System.Drawing.Size(80, 13);
-         this.lbl2WebSiteDir.TabIndex = 3;
+         this.lbl2WebSiteDir.TabIndex = 5;
          this.lbl2WebSiteDir.Text = "In the directory:";
          // 
          // chkWebSiteGenerator
@@ -554,6 +555,7 @@ namespace HFM.Forms
          // 
          // grpDefaultConfig
          // 
+         this.grpDefaultConfig.Controls.Add(this.chkAutoSave);
          this.grpDefaultConfig.Controls.Add(this.chkDefaultConfig);
          this.grpDefaultConfig.Controls.Add(this.btnBrowseConfigFile);
          this.grpDefaultConfig.Controls.Add(this.txtDefaultConfigFile);
@@ -563,16 +565,26 @@ namespace HFM.Forms
          this.grpDefaultConfig.Size = new System.Drawing.Size(485, 86);
          this.grpDefaultConfig.TabIndex = 0;
          this.grpDefaultConfig.TabStop = false;
-         this.grpDefaultConfig.Text = "Default Config File";
+         this.grpDefaultConfig.Text = "Configuration File";
+         // 
+         // chkAutoSave
+         // 
+         this.chkAutoSave.AutoSize = true;
+         this.chkAutoSave.Location = new System.Drawing.Point(294, 22);
+         this.chkAutoSave.Name = "chkAutoSave";
+         this.chkAutoSave.Size = new System.Drawing.Size(141, 17);
+         this.chkAutoSave.TabIndex = 4;
+         this.chkAutoSave.Text = "Auto Save Configuration";
+         this.chkAutoSave.UseVisualStyleBackColor = true;
          // 
          // chkDefaultConfig
          // 
          this.chkDefaultConfig.AutoSize = true;
          this.chkDefaultConfig.Location = new System.Drawing.Point(13, 22);
          this.chkDefaultConfig.Name = "chkDefaultConfig";
-         this.chkDefaultConfig.Size = new System.Drawing.Size(134, 17);
+         this.chkDefaultConfig.Size = new System.Drawing.Size(166, 17);
          this.chkDefaultConfig.TabIndex = 0;
-         this.chkDefaultConfig.Text = "Use Default Config File";
+         this.chkDefaultConfig.Text = "Use Default Configuration File";
          this.chkDefaultConfig.UseVisualStyleBackColor = true;
          this.chkDefaultConfig.CheckedChanged += new System.EventHandler(this.chkDefaultConfig_CheckedChanged);
          // 
@@ -1001,5 +1013,6 @@ namespace HFM.Forms
       private Classes.GroupBoxWrapper grpDebugMessageLevel;
       private Classes.ComboBoxWrapper cboMessageLevel;
       private Classes.LabelWrapper label6;
+      private HFM.Classes.CheckBoxWrapper chkAutoSave;
    }
 }

@@ -79,9 +79,7 @@ namespace HFM.Instrumentation
          {
             StackFrame sf = new StackFrame(1, true);
 
-            String[] fileParts = sf.GetFileName().Split('\\');
-
-            return fileParts[fileParts.Length - 1];
+            return System.IO.Path.GetFileName(sf.GetFileName());
          }
       }
 

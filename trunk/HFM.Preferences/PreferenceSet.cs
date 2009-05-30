@@ -237,6 +237,13 @@ namespace HFM.Preferences
          set { _UseDefaultConfigFile = value; }
       }
       
+      private bool _AutoSaveConfig;
+      public bool AutoSaveConfig
+      {
+         get { return _AutoSaveConfig; }
+         set { _AutoSaveConfig = value; }
+      }
+      
       private ePpdCalculation _PpdCalculation;
       public ePpdCalculation PpdCalculation
       {
@@ -300,17 +307,11 @@ namespace HFM.Preferences
          set { _FormLogWindowHeight = value; }
       }
 
-      public String AppPath
+      public static String AppPath
       {
          get
          {
-            String s = System.Reflection.Assembly.GetEntryAssembly().Location;
-            String[] sParts = s.Split('\\');
-            sParts[sParts.GetUpperBound(0)] = "";
-            s = String.Join("\\", sParts);
-            s.Trim(new char[] { '\\' });
-
-            return s;
+            return Path.GetDirectoryName(Application.ExecutablePath);
          }
       }
 
@@ -434,6 +435,7 @@ namespace HFM.Preferences
          _OfflineLast = Settings.Default.OfflineLast;
          _DefaultConfigFile = Settings.Default.DefaultConfigFile;
          _UseDefaultConfigFile = Settings.Default.UseDefaultConfigFile;
+         _AutoSaveConfig = Settings.Default.AutoSaveConfig;
          
          switch (Settings.Default.PpdCalculation)
          {
@@ -537,6 +539,7 @@ namespace HFM.Preferences
             Settings.Default.FormLogWindowHeight = _FormLogWindowHeight;
             Settings.Default.OfflineLast = _OfflineLast;
             Settings.Default.DefaultConfigFile = _DefaultConfigFile;
+            Settings.Default.AutoSaveConfig = _AutoSaveConfig;
             Settings.Default.UseDefaultConfigFile = _UseDefaultConfigFile;
             Settings.Default.PpdCalculation = _PpdCalculation.ToString();
             Settings.Default.TimeStyle = _TimeStyle.ToString();

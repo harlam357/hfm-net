@@ -33,7 +33,6 @@ namespace HFM.Forms
          System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
          System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
          System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-         this.bgWorkTimer = new System.Windows.Forms.Timer(this.components);
          this.statusStrip = new System.Windows.Forms.StatusStrip();
          this.statusLabelLeft = new System.Windows.Forms.ToolStripStatusLabel();
          this.statusLabelHosts = new System.Windows.Forms.ToolStripStatusLabel();
@@ -100,7 +99,6 @@ namespace HFM.Forms
          this.mnuContextClientsSep2 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuContextClientsViewCachedLog = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuContextClientsViewClientFiles = new System.Windows.Forms.ToolStripMenuItem();
-         this.webGenTimer = new System.Windows.Forms.Timer(this.components);
          this.splitContainer1 = new HFM.Classes.SplitContainerWrapper();
          this.dataGridView1 = new HFM.Classes.DataGridViewWrapper();
          this.statusStrip.SuspendLayout();
@@ -112,11 +110,6 @@ namespace HFM.Forms
          this.splitContainer1.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
          this.SuspendLayout();
-         // 
-         // bgWorkTimer
-         // 
-         this.bgWorkTimer.Interval = 600000;
-         this.bgWorkTimer.Tick += new System.EventHandler(this.bgWorkTimer_Tick);
          // 
          // statusStrip
          // 
@@ -670,11 +663,6 @@ namespace HFM.Forms
          this.mnuContextClientsViewClientFiles.Text = "View Client Files";
          this.mnuContextClientsViewClientFiles.Click += new System.EventHandler(this.mnuClientsViewClientFiles_Click);
          // 
-         // webGenTimer
-         // 
-         this.webGenTimer.Interval = 900000;
-         this.webGenTimer.Tick += new System.EventHandler(this.webGenTimer_Tick);
-         // 
          // splitContainer1
          // 
          this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -773,7 +761,6 @@ namespace HFM.Forms
 
       #endregion
 
-      private System.Windows.Forms.Timer bgWorkTimer;
       private System.Windows.Forms.StatusStrip statusStrip;
       private System.Windows.Forms.ToolStripStatusLabel statusLabelLeft;
       private System.Windows.Forms.ToolStripStatusLabel statusLabelHosts;
@@ -814,7 +801,6 @@ namespace HFM.Forms
       private Classes.TextBoxWrapper txtLogFile;
       private System.Windows.Forms.ToolStripMenuItem mnuView;
       private System.Windows.Forms.ToolStripMenuItem mnuViewShowHideLog;
-      private System.Windows.Forms.Timer webGenTimer;
       private System.Windows.Forms.ToolStripMenuItem mnuTools;
       private System.Windows.Forms.ToolStripMenuItem mnuToolsMessages;
       private System.Windows.Forms.ToolStripSeparator mnuClientsSep3;

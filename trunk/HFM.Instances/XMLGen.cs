@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Xml;
 
 using HFM.Preferences;
@@ -40,7 +41,7 @@ namespace HFM.Instances
         public static String InstanceXml(String xslTransform, ClientInstance Instance)
         {
             XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(PreferenceSet.Instance.AppPath + "\\XML\\Instance.XML");
+            xmlDoc.Load(Path.Combine(Path.Combine(PreferenceSet.AppPath, "XML"), "Instance.XML"));
             XmlElement xmlData = xmlDoc.DocumentElement;
 
             //    <UnitInfo>
@@ -131,7 +132,7 @@ namespace HFM.Instances
         public static String SummaryXml(String xslTransform, FoldingInstanceCollection HostInstances)
         {
             XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(PreferenceSet.Instance.AppPath + "\\XML\\Summary.XML");
+            xmlDoc.Load(Path.Combine(Path.Combine(PreferenceSet.AppPath, "XML"), "Summary.XML"));
             XmlElement xmlRootData = xmlDoc.DocumentElement;
 
             ClientInstance[] instances = new ClientInstance[HostInstances.Count];
@@ -146,7 +147,7 @@ namespace HFM.Instances
             {
                 //ClientInstance Instance = kvp.Value;
                 XmlDocument xmlFrag = new XmlDocument();
-                xmlFrag.Load(PreferenceSet.Instance.AppPath + "\\XML\\SummaryFrag.XML");
+                xmlFrag.Load(Path.Combine(Path.Combine(PreferenceSet.AppPath, "XML"), "SummaryFrag.XML"));
                 XmlElement xmlData = xmlFrag.DocumentElement;
 
                 XMLOps.setXmlNode(xmlData, "Name", Instance.InstanceName);
@@ -229,7 +230,7 @@ namespace HFM.Instances
             }
 
             XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(PreferenceSet.Instance.AppPath + "\\XML\\Overview.XML");
+            xmlDoc.Load(Path.Combine(Path.Combine(PreferenceSet.AppPath, "XML"), "Overview.XML"));
             XmlElement xmlData = xmlDoc.DocumentElement;
 
             //<Overview>

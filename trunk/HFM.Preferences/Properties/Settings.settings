@@ -110,5 +110,8 @@
     <Setting Name="FormLogWindowHeight" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">360</Value>
     </Setting>
+    <Setting Name="AutoSaveConfig" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

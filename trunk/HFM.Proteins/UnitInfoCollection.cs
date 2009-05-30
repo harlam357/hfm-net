@@ -23,9 +23,10 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections.Generic;
 using System.Text;
-using Debug = HFM.Instrumentation.Debug;
 
 using HFM.Proteins;
+using HFM.Preferences;
+using Debug = HFM.Instrumentation.Debug;
 
 namespace HFM.Proteins
 {
@@ -67,7 +68,7 @@ namespace HFM.Proteins
          {
             bool bWriteHeader = false;
 
-            string fileName = Path.Combine(Preferences.PreferenceSet.Instance.AppPath, CompletedUnitsCSV);
+            string fileName = Path.Combine(PreferenceSet.AppPath, CompletedUnitsCSV);
             if (File.Exists(fileName) == false)
             {
                bWriteHeader = true;

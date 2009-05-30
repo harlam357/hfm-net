@@ -39,6 +39,9 @@ namespace HFM.Instances
    class LogParser
    {
       #region Members
+      private readonly Regex rTimeStamp =
+            new Regex("\\[(?<Timestamp>.*)\\]", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+      
       private readonly Regex rProjectNumber =
             new Regex("Project: (?<ProjectNumber>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
@@ -79,7 +82,6 @@ namespace HFM.Instances
             new Regex("(?<Percent>.*)%", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       private bool _bCoreFound = false;
-      private bool _bUserTeamFound = false;
       private bool _bReadUnitInfoFile = false;
       private bool _bUserIDFound = false;
       private bool _bMachineIDFound = false;
@@ -105,10 +107,10 @@ namespace HFM.Instances
 
       #region Parsing Methods
       /// <summary>
-      /// Extract the content from the UnitInfo.txt file produced by the folding
+      /// Extract the content from the unitinfo.txt file produced by the folding
       /// console
       /// </summary>
-      /// <param name="LogFileName">Full path to local copy of UnitInfo.txt</param>
+      /// <param name="LogFileName">Full path to local copy of unitinfo.txt</param>
       /// <param name="Instance">Client Instance that owns the log file we're parsing</param>
       /// <param name="parsedUnitInfo">Container for parsed information</param>
       public Boolean ParseUnitInfoFile(String LogFileName, ClientInstance Instance, UnitInfo parsedUnitInfo)
@@ -190,9 +192,23 @@ namespace HFM.Instances
          DateTime Start = Debug.ExecStart;
 
          _bCoreFound = false;
-         _bUserTeamFound = false;
          
          UnitInfo parsedUnitInfo = new UnitInfo(Instance.InstanceName, Instance.Path);
+
+         int parseStart;
+         int parseEnd = Int32.MaxValue;
+         switch (ReadUnit)
+         {
+            case UnitToRead.Last:
+               parseStart = _LastUnitStartPosition;
+               break;
+            case UnitToRead.Previous1:
+               parseStart = _Previous1UnitStartPosition;
+               parseEnd = _LastUnitStartPosition;
+               break;
+            default:
+               throw new NotImplementedException(String.Format("Reads for type '{0}' are not yet implemented.", ReadUnit));
+         }
 
          // start the parse loop where the client started last
          for (int i = _ClientStartPosition; i < FAHLogText.Length; i++)
@@ -219,27 +235,16 @@ namespace HFM.Instances
             //   Instance.TotalUnits = Int32.Parse(mCompletedWUs.Result("${Completed}"));
             //}
 
-            int parseStart;
-            int parseEnd = Int32.MaxValue;
-            switch (ReadUnit)
+            // Get the UnitStart time stamp from the first line for this WU - Issue 10
+            if (i == parseStart)
             {
-               case UnitToRead.Last:
-                  parseStart = _LastUnitStartPosition;
-                  break;
-               case UnitToRead.Previous1:
-                  parseStart = _Previous1UnitStartPosition;
-                  parseEnd = _LastUnitStartPosition;
-                  break;
-               default:
-                  throw new NotImplementedException(String.Format("Reads for type '{0}' are not yet implemented.", ReadUnit));
+               SetUnitStartTimeStamp(Instance, parsedUnitInfo, logLine);
             }
 
             // begin parsing the specified unit based on positions set above
             if (i >= parseStart && i < parseEnd)
             {
-               Instance.Status = ClientStatus.RunningNoFrameTimes;
-
-               // only parse the UnitInfo.txt file when parsing the most recent unit log
+               // only parse the unitinfo.txt file when parsing the most recent unit log
                if (ReadUnit.Equals(UnitToRead.Last) && _bReadUnitInfoFile == false)
                {
                   if (ParseUnitInfoFile(Path.Combine(Instance.BaseDirectory, Instance.CachedUnitInfoName), Instance, parsedUnitInfo) == false)
@@ -269,7 +274,7 @@ namespace HFM.Instances
                      {
                         CheckForCompletedFrame(Instance, parsedUnitInfo, logLine);
                      }
-                     catch (Exception ex)
+                     catch (FormatException ex)
                      {
                         Debug.WriteToHfmConsole(TraceLevel.Warning, ex.Message);
                      }
@@ -283,6 +288,9 @@ namespace HFM.Instances
                if (logLine.Contains("+ Working ...") && Instance.Status.Equals(ClientStatus.Paused))
                {
                   Instance.Status = ClientStatus.RunningNoFrameTimes;
+                  // Reset Frames Observed after Pause, this will cause the Instance to only use frames
+                  // beyond this point to set frame times and determine status - Issue 13
+                  parsedUnitInfo.FramesObserved = 0; 
                }
                if (logLine.Contains("Folding@Home Client Shutdown"))
                {
@@ -433,11 +441,11 @@ namespace HFM.Instances
       {
          if (match.Success)
          {
-            // once frames have been observed we already have the ProjectID
+            // once a current frame exists we already have the ProjectID
             // when a previous unit is returned during this unit's progress the project string
             // is drawn just as it is drawn at the beginning of a unit, we don't want this string
             // to override the ProjectID we already captured
-            if (parsedUnitInfo.FramesObserved == 0)
+            if (parsedUnitInfo.CurrentFrame == null)
             {
                parsedUnitInfo.ProjectID = Int32.Parse(match.Result("${ProjectNumber}"));
                parsedUnitInfo.ProjectRun = Int32.Parse(match.Result("${Run}"));
@@ -514,11 +522,10 @@ namespace HFM.Instances
       private void CheckForUserTeamAndIDs(ClientInstance Instance, UnitInfo parsedUnitInfo, string logLine)
       {
          Match mUserTeam;
-         if (_bUserTeamFound == false && (mUserTeam = rUserTeam.Match(logLine)).Success)
+         if ((mUserTeam = rUserTeam.Match(logLine)).Success)
          {
             parsedUnitInfo.FoldingID = mUserTeam.Result("${Username}");
             parsedUnitInfo.Team = int.Parse(mUserTeam.Result("${TeamNumber}"));
-            _bUserTeamFound = true;
          }
 
          Match mUserID;
@@ -533,6 +540,43 @@ namespace HFM.Instances
          {
             Instance.MachineID = int.Parse(mMachineID.Result("${MachineID}"));
             _bMachineIDFound = true;
+         }
+      }
+
+      /// <summary>
+      /// Get the time stamp from this log line and set as the unit's start time
+      /// </summary>
+      /// <param name="Instance">Client Instance that owns the log file we're parsing</param>
+      /// <param name="parsedUnitInfo">Container for parsed information</param>
+      /// <param name="logLine">Log Line</param>
+      private void SetUnitStartTimeStamp(ClientInstance Instance, UnitInfo parsedUnitInfo, string logLine)
+      {
+         Match mTimeStamp = rTimeStamp.Match(logLine);
+         if (mTimeStamp.Success)
+         {
+            System.Globalization.DateTimeStyles style;
+
+            if (Instance.ClientIsOnVirtualMachine)
+            {
+               // set parse style to maintain universal
+               style = System.Globalization.DateTimeStyles.NoCurrentDateDefault;
+            }
+            else
+            {
+               // set parse style to parse local
+               style = System.Globalization.DateTimeStyles.NoCurrentDateDefault |
+                       System.Globalization.DateTimeStyles.AssumeUniversal;
+            }
+
+            DateTime timeStamp = DateTime.ParseExact(mTimeStamp.Result("${Timestamp}"), "HH:mm:ss",
+                                                     System.Globalization.DateTimeFormatInfo.InvariantInfo,
+                                                     style);
+
+            parsedUnitInfo.UnitStartTime = timeStamp.TimeOfDay;
+         }
+         else
+         {
+            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} ({1}) Failed to set 'UnitStartTime'.", Debug.FunctionName, Instance.InstanceName));
          }
       }
 

@@ -87,14 +87,14 @@ namespace HFM.Forms
          // 
          // lblLinkOrig
          // 
-         this.lblLinkOrig.LinkArea = new System.Windows.Forms.LinkArea(28, 15);
+         this.lblLinkOrig.LinkArea = new System.Windows.Forms.LinkArea(29, 15);
          this.lblLinkOrig.Location = new System.Drawing.Point(10, 169);
          this.lblLinkOrig.Name = "lblLinkOrig";
          this.lblLinkOrig.Size = new System.Drawing.Size(497, 22);
          this.lblLinkOrig.TabIndex = 5;
          this.lblLinkOrig.TabStop = true;
-         this.lblLinkOrig.Text = "The HFM.NET is based on the FAHLogStats.NET code base.  The UI is inspired by Fah" +
-             "Mon.";
+         this.lblLinkOrig.Text = "HFM.NET was derived from the FAHLogStats.NET code base.  The UI is inspired by Fa" +
+             "hMon.";
          this.lblLinkOrig.UseCompatibleTextRendering = true;
          this.lblLinkOrig.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
          // 

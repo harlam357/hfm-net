@@ -81,7 +81,7 @@ namespace HFM.Forms
       {
          Prefs = PreferenceSet.Instance;
 
-         DirectoryInfo di = new DirectoryInfo(Application.ExecutablePath.Substring(0, Application.ExecutablePath.LastIndexOf("\\") + 1) + "CSS");
+         DirectoryInfo di = new DirectoryInfo(Path.Combine(PreferenceSet.AppPath, "CSS"));
          StyleList.Items.Clear();
          foreach (FileInfo fi in di.GetFiles())
          {
@@ -118,6 +118,7 @@ namespace HFM.Forms
          // Defaults
          chkDefaultConfig.Checked = Prefs.UseDefaultConfigFile;
          txtDefaultConfigFile.Text = Prefs.DefaultConfigFile;
+         chkAutoSave.Checked = Prefs.AutoSaveConfig;
          txtLogFileViewer.Text = Prefs.LogFileViewer;
          txtFileExplorer.Text = Prefs.FileExplorer;
          cboMessageLevel.Items.Add(TraceLevel.Off.ToString());
@@ -149,7 +150,7 @@ namespace HFM.Forms
 
       private void StyleList_SelectedIndexChanged(object sender, EventArgs e)
       {
-         String sStylesheet = Application.ExecutablePath.Substring(0, Application.ExecutablePath.LastIndexOf("\\") + 1) + "CSS\\" + StyleList.SelectedItem + ".css";
+         String sStylesheet = Path.Combine(Path.Combine(PreferenceSet.AppPath, "CSS"), Path.ChangeExtension(StyleList.SelectedItem.ToString(), ".css"));
          StringBuilder sb = new StringBuilder();
 
          sb.Append("<HTML><HEAD><TITLE>Test CSS File</TITLE>");
@@ -252,6 +253,7 @@ namespace HFM.Forms
          // Defaults
          Prefs.UseDefaultConfigFile = chkDefaultConfig.Checked;
          Prefs.DefaultConfigFile = txtDefaultConfigFile.Text;
+         Prefs.AutoSaveConfig = chkAutoSave.Checked;
          Prefs.LogFileViewer = txtLogFileViewer.Text;
          Prefs.FileExplorer = txtFileExplorer.Text;
          Prefs.MessageLevel = cboMessageLevel.SelectedIndex;

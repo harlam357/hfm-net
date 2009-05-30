@@ -428,7 +428,6 @@ namespace HFM.Forms
          this.txtLogFileName.Name = "txtLogFileName";
          this.txtLogFileName.Size = new System.Drawing.Size(173, 20);
          this.txtLogFileName.TabIndex = 3;
-         this.txtLogFileName.Text = "FAHLog.txt";
          this.txtLogFileName.Validating += new System.ComponentModel.CancelEventHandler(this.txtLogFileName_Validating);
          // 
          // lblLogFileName
@@ -436,9 +435,9 @@ namespace HFM.Forms
          this.lblLogFileName.AutoSize = true;
          this.lblLogFileName.Location = new System.Drawing.Point(6, 67);
          this.lblLogFileName.Name = "lblLogFileName";
-         this.lblLogFileName.Size = new System.Drawing.Size(106, 13);
+         this.lblLogFileName.Size = new System.Drawing.Size(116, 13);
          this.lblLogFileName.TabIndex = 2;
-         this.lblLogFileName.Text = "Filename for FAHLog";
+         this.lblLogFileName.Text = "Filename for FAHlog.txt";
          // 
          // txtUnitFileName
          // 
@@ -447,7 +446,6 @@ namespace HFM.Forms
          this.txtUnitFileName.Name = "txtUnitFileName";
          this.txtUnitFileName.Size = new System.Drawing.Size(173, 20);
          this.txtUnitFileName.TabIndex = 4;
-         this.txtUnitFileName.Text = "UnitInfo.txt";
          this.txtUnitFileName.Validating += new System.ComponentModel.CancelEventHandler(this.txtUnitFileName_Validating);
          // 
          // lblUnitInfoName
@@ -455,9 +453,9 @@ namespace HFM.Forms
          this.lblUnitInfoName.AutoSize = true;
          this.lblUnitInfoName.Location = new System.Drawing.Point(6, 93);
          this.lblUnitInfoName.Name = "lblUnitInfoName";
-         this.lblUnitInfoName.Size = new System.Drawing.Size(104, 13);
+         this.lblUnitInfoName.Size = new System.Drawing.Size(115, 13);
          this.lblUnitInfoName.TabIndex = 4;
-         this.lblUnitInfoName.Text = "Filename for UnitInfo";
+         this.lblUnitInfoName.Text = "Filename for unitinfo.txt";
          // 
          // lblClientMegahertz
          // 

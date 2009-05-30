@@ -63,7 +63,7 @@ namespace HFM.Forms
          this.listBox1.FormattingEnabled = true;
          this.listBox1.Location = new System.Drawing.Point(0, 0);
          this.listBox1.Name = "listBox1";
-         this.listBox1.Size = new System.Drawing.Size(51, 342);
+         this.listBox1.Size = new System.Drawing.Size(65, 342);
          this.listBox1.TabIndex = 0;
          this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
          // 
@@ -83,7 +83,7 @@ namespace HFM.Forms
          this.splitContainerBench.Panel2.Controls.Add(this.txtBenchmarks);
          this.splitContainerBench.Panel2.Controls.Add(this.btnExit);
          this.splitContainerBench.Size = new System.Drawing.Size(556, 353);
-         this.splitContainerBench.SplitterDistance = 51;
+         this.splitContainerBench.SplitterDistance = 65;
          this.splitContainerBench.TabIndex = 2;
          // 
          // txtBenchmarks
@@ -96,7 +96,7 @@ namespace HFM.Forms
          this.txtBenchmarks.Name = "txtBenchmarks";
          this.txtBenchmarks.ReadOnly = true;
          this.txtBenchmarks.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-         this.txtBenchmarks.Size = new System.Drawing.Size(501, 353);
+         this.txtBenchmarks.Size = new System.Drawing.Size(487, 353);
          this.txtBenchmarks.TabIndex = 0;
          // 
          // btnExit
@@ -126,13 +126,16 @@ namespace HFM.Forms
          // splitContainerMain.Panel2
          // 
          this.splitContainerMain.Panel2.Controls.Add(this.grpProjectInfo);
-         this.splitContainerMain.Size = new System.Drawing.Size(556, 472);
+         this.splitContainerMain.Size = new System.Drawing.Size(556, 492);
          this.splitContainerMain.SplitterDistance = 353;
          this.splitContainerMain.SplitterWidth = 2;
          this.splitContainerMain.TabIndex = 3;
          // 
          // grpProjectInfo
          // 
+         this.grpProjectInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                     | System.Windows.Forms.AnchorStyles.Left)
+                     | System.Windows.Forms.AnchorStyles.Right)));
          this.grpProjectInfo.Controls.Add(this.linkDescription);
          this.grpProjectInfo.Controls.Add(this.lblServerIP);
          this.grpProjectInfo.Controls.Add(this.lblContact);
@@ -144,10 +147,10 @@ namespace HFM.Forms
          this.grpProjectInfo.Controls.Add(this.lblCredit);
          this.grpProjectInfo.Controls.Add(this.lblDescription);
          this.grpProjectInfo.Controls.Add(this.lblProjectID);
-         this.grpProjectInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.grpProjectInfo.Location = new System.Drawing.Point(0, 0);
+         this.grpProjectInfo.Location = new System.Drawing.Point(10, 6);
+         this.grpProjectInfo.Margin = new System.Windows.Forms.Padding(10);
          this.grpProjectInfo.Name = "grpProjectInfo";
-         this.grpProjectInfo.Size = new System.Drawing.Size(556, 117);
+         this.grpProjectInfo.Size = new System.Drawing.Size(536, 121);
          this.grpProjectInfo.TabIndex = 0;
          this.grpProjectInfo.TabStop = false;
          this.grpProjectInfo.Text = "Project Information";
@@ -258,9 +261,10 @@ namespace HFM.Forms
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.CancelButton = this.btnExit;
-         this.ClientSize = new System.Drawing.Size(556, 472);
+         this.ClientSize = new System.Drawing.Size(556, 492);
          this.Controls.Add(this.splitContainerMain);
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+         this.MinimumSize = new System.Drawing.Size(564, 200);
          this.Name = "frmBenchmarks";
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
          this.Text = "Benchmarks";

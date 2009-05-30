@@ -83,13 +83,13 @@ namespace HFM.Instances
          { 
             if (_FrameTimes.Count > 0)
             {
-               int totalSeconds = 0;
+               TimeSpan totalTime = TimeSpan.Zero;
                foreach (TimeSpan time in _FrameTimes)
                {
-                  totalSeconds += Convert.ToInt32(time.TotalSeconds);
+                  totalTime = totalTime.Add(time);
                }
 
-               return TimeSpan.FromSeconds(totalSeconds / _FrameTimes.Count);
+               return TimeSpan.FromSeconds((Convert.ToInt32(totalTime.TotalSeconds) / _FrameTimes.Count));
             }
             
             return TimeSpan.Zero;

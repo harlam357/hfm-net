@@ -19,8 +19,8 @@
  */
 
 using System;
+using System.IO;
 using System.Text;
-using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Xsl;
 
@@ -75,22 +75,20 @@ namespace HFM.Helpers
             XslCompiledTransform xslt = new XslCompiledTransform();
             XmlReaderSettings xsltSettings = new XmlReaderSettings();
             xsltSettings.ProhibitDtd = false;
-            XmlReader xmlReader = XmlReader.Create(PreferenceSet.Instance.AppPath + "\\XSL\\" + xslFile, xsltSettings);
+            XmlReader xmlReader = XmlReader.Create(Path.Combine(Path.Combine(PreferenceSet.AppPath, "XSL"), xslFile), xsltSettings);
             xslt.Load(xmlReader);
 
             StringBuilder sb = new StringBuilder();
-            System.IO.TextWriter tw = new System.IO.StringWriter(sb);
+            TextWriter tw = new StringWriter(sb);
 
             // Transform the XML data to an in memory stream - which happens to be a string
             xslt.Transform(xmlDoc, null, tw);
 
             // Return the transformed XML
-            String sWebPage = sb.ToString();
-            String sAppPath = Application.ExecutablePath.Substring(0, Application.ExecutablePath.LastIndexOf("\\"));
-            sWebPage = sWebPage.Replace("$APPPATH", sAppPath + "\\");
+            string sWebPage = sb.ToString();
+            sWebPage = sWebPage.Replace("$APPPATH", PreferenceSet.AppPath);
             sWebPage = sWebPage.Replace("$CSSFILE", PreferenceSet.Instance.CSSFileName);
             return sWebPage;
         }
-
     }
 }

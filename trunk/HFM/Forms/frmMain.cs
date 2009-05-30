@@ -89,14 +89,19 @@ namespace HFM.Forms
       private SortOrder SortColumnOrder = SortOrder.None;
       
       /// <summary>
+      /// Retrieval Timer Object (init 10 minutes)
+      /// </summary>
+      private readonly System.Timers.Timer workTimer = new System.Timers.Timer(600000);
+
+      /// <summary>
+      /// WebGen Timer Object (init 15 minutes)
+      /// </summary>
+      private readonly System.Timers.Timer webTimer = new System.Timers.Timer(900000);
+      
+      /// <summary>
       /// Messages Form
       /// </summary>
       private readonly frmMessages _frmMessages = null;
-      
-      /// <summary>
-      /// Local flag that forces web gen to run after a full retrieve process
-      /// </summary>
-      private bool ExecuteWebGenAfterRetrieve = false;
 
       /// <summary>
       /// Local time that denotes when a full retrieve started (only accessed by the RetrieveInProgress property)
@@ -151,6 +156,10 @@ namespace HFM.Forms
          
          // Hook up Protein Collection Updated Event Handler
          ProteinCollection.Instance.ProjectInfoUpdated += Instance_ProjectInfoUpdated;
+         // Hook up Background Timer Event Handler
+         workTimer.Elapsed += bgWorkTimer_Tick;
+         // Hook up WebGen Timer Event Handler
+         webTimer.Elapsed += webGenTimer_Tick;
          
          // Clear the Log File Cache Folder
          ClearCacheFolder();
@@ -1011,7 +1020,12 @@ namespace HFM.Forms
                // Add the new Host Instance and Queue Retrieval
                HostInstances.Add(xHost);
                QueueNewRetrieval(xHost);
+
                ChangedAfterSave = true;
+               if (PreferenceSet.Instance.AutoSaveConfig)
+               {
+                  mnuFileSave_Click(sender, e);
+               }
             }
          }
       }
@@ -1124,7 +1138,12 @@ namespace HFM.Forms
                ProteinBenchmarkCollection.Instance.UpdateInstancePath(Instance.InstanceName, Instance.Path);
             }
             QueueNewRetrieval(Instance);
+
             ChangedAfterSave = true;
+            if (PreferenceSet.Instance.AutoSaveConfig)
+            {
+               mnuFileSave_Click(sender, e);
+            }
          }
       }
 
@@ -1159,7 +1178,12 @@ namespace HFM.Forms
          if (dataGridView1.SelectedRows.Count == 0) return;
          
          HostInstances.Remove(dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString());
+
          ChangedAfterSave = true;
+         if (PreferenceSet.Instance.AutoSaveConfig)
+         {
+            mnuFileSave_Click(sender, e);
+         }
       }
 
       /// <summary>
@@ -1202,12 +1226,12 @@ namespace HFM.Forms
             {
                Debug.WriteToHfmConsole(TraceLevel.Error,
                                        String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-               MessageBox.Show(String.Format("Failed to show client '{0}' FAHLog file.\n\nPlease check the current Log File Viewer defined in the Preferences.", Instance.InstanceName));
+               MessageBox.Show(String.Format("Failed to show client '{0}' FAHlog file.\n\nPlease check the current Log File Viewer defined in the Preferences.", Instance.InstanceName));
             }
          }
          else
          {
-            MessageBox.Show(String.Format("Cannot find client '{0}' FAHLog file.", Instance.InstanceName));
+            MessageBox.Show(String.Format("Cannot find client '{0}' FAHlog file.", Instance.InstanceName));
          }
       }
 
@@ -1373,8 +1397,8 @@ namespace HFM.Forms
          if (HostInstances.Count < 1)
          {
             Debug.WriteToHfmConsole(TraceLevel.Info, "No Hosts - Stopping Both Background Timer Loops");
-            bgWorkTimer.Stop();
-            webGenTimer.Stop();
+            workTimer.Stop();
+            webTimer.Stop();
             return;
          }
 
@@ -1386,18 +1410,18 @@ namespace HFM.Forms
          else
          {
             Debug.WriteToHfmConsole(TraceLevel.Info, "Stopping Background Timer Loop");
-            bgWorkTimer.Stop();
+            workTimer.Stop();
          }
 
          // Enable the web generation timer
          if (PreferenceSet.Instance.GenerateWeb && PreferenceSet.Instance.WebGenAfterRefresh == false)
          {
-            webGenTimer.Interval = Convert.ToInt32(PreferenceSet.Instance.GenerateInterval) * MinToMillisec;
-            webGenTimer.Start();
+            StartWebGenTimer();
          }
          else
          {
-            webGenTimer.Stop();
+            Debug.WriteToHfmConsole(TraceLevel.Info, "Stopping WebGen Timer Loop");
+            webTimer.Stop();
          }
       }
 
@@ -1420,12 +1444,15 @@ namespace HFM.Forms
       private void webGenTimer_Tick(object sender, EventArgs e)
       {
          if (PreferenceSet.Instance.GenerateWeb == false) return;
-      
-         //webGenTimer.Stop();
-         StopWebGenTimer();
+
+         if (webTimer.Enabled)
+         {
+            Debug.WriteToHfmConsole(TraceLevel.Info, "Stopping WebGen Timer Loop");
+         }
+         webTimer.Stop();
 
          Debug.WriteToHfmConsole(TraceLevel.Info,
-                                 String.Format("{0} Starting webGen.", Debug.FunctionName));
+                                 String.Format("{0} Starting WebGen.", Debug.FunctionName));
          
          StreamWriter sw;
 
@@ -1436,8 +1463,7 @@ namespace HFM.Forms
          }
 
          // Copy the CSS file to the output directory
-         string sAppPath = Path.GetDirectoryName(Application.ExecutablePath);
-         string sCSSFileName = Path.Combine(Path.Combine(sAppPath, "CSS"), PreferenceSet.Instance.CSSFileName);
+         string sCSSFileName = Path.Combine(Path.Combine(PreferenceSet.AppPath, "CSS"), PreferenceSet.Instance.CSSFileName);
          if (File.Exists(sCSSFileName))
          {
             File.Copy(sCSSFileName, Path.Combine(PreferenceSet.Instance.WebRoot, PreferenceSet.Instance.CSSFileName), true);
@@ -1461,34 +1487,20 @@ namespace HFM.Forms
             sw.Close();
          }
 
-         //webGenTimer.Start();
          StartWebGenTimer();
       }
       
-      private void StopWebGenTimer()
-      {
-         if (InvokeRequired)
-         {
-            Invoke(new MethodInvoker(StopWebGenTimer));
-         }
-         else
-         {
-            webGenTimer.Stop();
-         }
-      }
-
+      /// <summary>
+      /// Start the Web Generation Timer
+      /// </summary>
       private void StartWebGenTimer()
       {
-         if (InvokeRequired)
+         if (PreferenceSet.Instance.GenerateWeb && PreferenceSet.Instance.WebGenAfterRefresh == false)
          {
-            Invoke(new MethodInvoker(StartWebGenTimer));
-         }
-         else
-         {
-            if (PreferenceSet.Instance.GenerateWeb && PreferenceSet.Instance.WebGenAfterRefresh == false)
-            {
-               webGenTimer.Start();
-            }
+            webTimer.Interval = Convert.ToInt32(PreferenceSet.Instance.GenerateInterval) * MinToMillisec;
+            Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("Starting WebGen Timer Loop: {0} Minutes",
+                                                                    PreferenceSet.Instance.GenerateInterval));
+            webTimer.Start();
          }
       }
 
@@ -1507,13 +1519,8 @@ namespace HFM.Forms
          // only fire if there are Hosts
          if (HostInstances.Count > 0)
          {
-            if (PreferenceSet.Instance.GenerateWeb && PreferenceSet.Instance.WebGenAfterRefresh)
-            {
-               ExecuteWebGenAfterRetrieve = true;
-            }
-
             Debug.WriteToHfmConsole(TraceLevel.Info, "Stopping Background Timer Loop");
-            bgWorkTimer.Stop();
+            workTimer.Stop();
          
             // set full retrieval flag
             RetrievalInProgress = true;
@@ -1534,9 +1541,8 @@ namespace HFM.Forms
          async.AsyncWaitHandle.WaitOne();
          
          // run post retrieval processes
-         if (ExecuteWebGenAfterRetrieve)
+         if (PreferenceSet.Instance.GenerateWeb && PreferenceSet.Instance.WebGenAfterRefresh)
          {
-            ExecuteWebGenAfterRetrieve = false;
             // do a web gen
             webGenTimer_Tick(null, null);
          }
@@ -1555,17 +1561,10 @@ namespace HFM.Forms
       
       private void StartBackgroundTimer()
       {
-         if (InvokeRequired)
-         {
-            Invoke(new MethodInvoker(StartBackgroundTimer));
-         }
-         else
-         {
-            bgWorkTimer.Interval = Convert.ToInt32(PreferenceSet.Instance.SyncTimeMinutes) * MinToMillisec;
-            Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("Starting Background Timer Loop: {0} Minutes",
-                                                                    PreferenceSet.Instance.SyncTimeMinutes));
-            bgWorkTimer.Start();
-         }
+         workTimer.Interval = Convert.ToInt32(PreferenceSet.Instance.SyncTimeMinutes) * MinToMillisec;
+         Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("Starting Background Timer Loop: {0} Minutes",
+                                                                 PreferenceSet.Instance.SyncTimeMinutes));
+         workTimer.Start();
       }
 
       /// <summary>
@@ -1600,7 +1599,6 @@ namespace HFM.Forms
                   }
                   else // fire individual threads to do the their own retrieve simultaneously
                   {
-                     //ThreadPool.QueueUserWorkItem(new WaitCallback(RetrieveInstance), Instance);
                      RetrieveInstanceDelegate del = RetrieveInstance;
                      IAsyncResult async = del.BeginInvoke(Instance, null, null);
 
@@ -1610,7 +1608,6 @@ namespace HFM.Forms
                }
 
                i++; // increment the outer loop counter
-               //Application.DoEvents();
             }
             
             if (Synchronous == false)
