@@ -183,11 +183,10 @@ namespace HFM.Instances
       /// <summary>
       /// Reads through the FAH log file and grabs desired information
       /// </summary>
-      /// <param name="LogFileName">Full path to the FAH log file</param>
       /// <param name="Instance">Client Instance that owns the log file we're parsing</param>
       /// <param name="ReadUnit">Specify which work unit to parse from the FAHLog</param>
       /// <returns>Parsed Log File Information</returns>
-      public UnitInfo ParseFAHLog(String LogFileName, ClientInstance Instance, UnitToRead ReadUnit)
+      public UnitInfo ParseFAHLog(ClientInstance Instance, UnitToRead ReadUnit)
       {
          DateTime Start = Debug.ExecStart;
 
@@ -214,17 +213,19 @@ namespace HFM.Instances
          for (int i = _ClientStartPosition; i < FAHLogText.Length; i++)
          {
             string logLine = FAHLogText[i];
-            // add the line to the instance log holder
-            //Instance.CurrentLogText.Add(logLine);
+            
+            // add the line to the unit info log holder
+            //parsedUnitInfo.CurrentLogText.Add(logLine);
             
             // Read Username and Team Number - Issue 5
             CheckForUserTeamAndIDs(Instance, parsedUnitInfo, logLine);
-
-            if (logLine.Contains("FINISHED_UNIT"))
+            
+            // Only accumulate Completed and Failed work unit counts on most recent work unit - Issue 35
+            if (ReadUnit.Equals(UnitToRead.Last) && logLine.Contains("FINISHED_UNIT"))
             {
                Instance.NumberOfCompletedUnitsSinceLastStart++;
             }
-            if (logLine.Contains("EARLY_UNIT_END") || logLine.Contains("UNSTABLE_MACHINE"))
+            if (ReadUnit.Equals(UnitToRead.Last) && (logLine.Contains("EARLY_UNIT_END") || logLine.Contains("UNSTABLE_MACHINE")))
             {
                Instance.NumberOfFailedUnitsSinceLastStart++;
             }
@@ -254,7 +255,7 @@ namespace HFM.Instances
                   _bReadUnitInfoFile = true;
                }
 
-               // add the line to the instance log holder
+               // add the line to the unit info log holder
                parsedUnitInfo.CurrentLogText.Add(logLine);
 
                CheckForProjectID(parsedUnitInfo, logLine);
@@ -288,9 +289,13 @@ namespace HFM.Instances
                if (logLine.Contains("+ Working ...") && Instance.Status.Equals(ClientStatus.Paused))
                {
                   Instance.Status = ClientStatus.RunningNoFrameTimes;
-                  // Reset Frames Observed after Pause, this will cause the Instance to only use frames
-                  // beyond this point to set frame times and determine status - Issue 13
-                  parsedUnitInfo.FramesObserved = 0; 
+                  
+                  // Reset Frames Observed, Current Frame, and Unit Start Time after Pause. 
+                  // This will cause the Instance to only use frames beyond this point to 
+                  // set frame times and determine status - Issue 13 (Revised)
+                  parsedUnitInfo.CurrentFrame = null;
+                  parsedUnitInfo.FramesObserved = 0;
+                  SetUnitStartTimeStamp(Instance, parsedUnitInfo, logLine); 
                }
                if (logLine.Contains("Folding@Home Client Shutdown"))
                {
@@ -621,8 +626,10 @@ namespace HFM.Instances
                throw new FormatException(String.Format("{0} Failed to parse raw frame values from '{1}'.", Debug.FunctionName, logLine), ex);
             }
 
-            Match mPercent1 = rPercent1.Match(mFramesCompleted.Result("${Percent}"));
-            Match mPercent2 = rPercent2.Match(mFramesCompleted.Result("${Percent}"));
+            string percentString = mFramesCompleted.Result("${Percent}");
+            
+            Match mPercent1 = rPercent1.Match(percentString);
+            Match mPercent2 = rPercent2.Match(percentString);
 
             int percent;
             if (mPercent1.Success)
@@ -633,7 +640,8 @@ namespace HFM.Instances
             {
                percent = Int32.Parse(mPercent2.Result("${Percent}"));
             }
-            else
+            // Try to parse a percentage from in between the parentheses (for older single core clients like v5.02) - Issue 36
+            else if (Int32.TryParse(percentString, out percent) == false)
             {
                throw new FormatException(String.Format("{0} Failed to parse frame percent from '{1}'.", Debug.FunctionName, logLine));
             }

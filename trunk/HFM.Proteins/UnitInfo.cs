@@ -714,8 +714,9 @@ namespace HFM.Proteins
             }
 
             RawTimePerAllSections = GetDuration(FramesObserved);
-            
-            if (DownloadTime.Equals(DateTime.MinValue) == false)
+
+            // Make sure CurrentFramePercent is greater than 0 to avoid DivideByZeroException - Issue 34
+            if (DownloadTime.Equals(DateTime.MinValue) == false && CurrentFramePercent > 0)
             {
                TimeSpan timeSinceUnitDownload = DateTime.Now.Subtract(DownloadTime);
                RawTimePerUnitDownload = (Convert.ToInt32(timeSinceUnitDownload.TotalSeconds) / CurrentFramePercent);

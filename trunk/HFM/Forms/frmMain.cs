@@ -1320,9 +1320,16 @@ namespace HFM.Forms
       /// </summary>
       private void mnuToolsBenchmarks_Click(object sender, EventArgs e)
       {
-         ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString()];
+         int ProjectID = 0;
+      
+         // Make sure we have a selected client in the data grid view - Issue 33
+         if (dataGridView1.SelectedRows.Count > 0)
+         {
+            ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString()];
+            ProjectID = Instance.CurrentUnitInfo.ProjectID;
+         }
          
-         frmBenchmarks frm = new frmBenchmarks(HostInstances, Instance.CurrentUnitInfo.ProjectID);
+         frmBenchmarks frm = new frmBenchmarks(HostInstances, ProjectID);
          frm.StartPosition = FormStartPosition.Manual;
          frm.Location = new Point(Location.X + 50, Location.Y + 50);
          frm.Show();

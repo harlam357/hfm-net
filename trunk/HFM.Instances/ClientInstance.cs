@@ -763,7 +763,7 @@ namespace HFM.Instances
          {
             if (lp.Previous1UnitStartPosition > 0)
             {
-               parsedUnitInfo = lp.ParseFAHLog(System.IO.Path.Combine(BaseDirectory, CachedFAHLogName), this, UnitToRead.Previous1);
+               parsedUnitInfo = lp.ParseFAHLog(this, UnitToRead.Previous1);
                // check this against the CurrentUnitInfo
                if (IsUnitInfoCurrentUnitInfo(parsedUnitInfo))
                {
@@ -785,7 +785,7 @@ namespace HFM.Instances
             {
                Status = ClientStatus.RunningNoFrameTimes;
             
-               parsedUnitInfo = lp.ParseFAHLog(System.IO.Path.Combine(BaseDirectory, CachedFAHLogName), this, UnitToRead.Last);
+               parsedUnitInfo = lp.ParseFAHLog(this, UnitToRead.Last);
 
                int currentFrames = 0;
                // check this against the CurrentUnitInfo
@@ -815,17 +815,12 @@ namespace HFM.Instances
             }
             else
             {
-               //CurrentUnitInfo.SetFrameTimes();
                DetermineStatusWrapper(this);
                if (Status.Equals(ClientStatus.Hung))
                {
                   // client is hung, clear PPD values
                   CurrentUnitInfo.ClearTimeBasedValues();
                }
-               //else
-               //{
-               //   SetTimeBasedValues();
-               //}
             }
          }
          else
