@@ -550,7 +550,7 @@ namespace HFM.Instances
                if (unit.PercentComplete == 0)
                {
                   // Only if we didn't get a reading from the unitinfo.txt parse
-                  unit.PercentComplete = unit.CurrentFramePercent;
+                  unit.PercentComplete = unit.LastUnitFramePercent;
                }
 
                TimeSpan benchmarkAverageTimePerFrame = ProteinBenchmarkCollection.Instance.GetBenchmarkAverageFrameTime(unit);
@@ -768,7 +768,7 @@ namespace HFM.Instances
                if (IsUnitInfoCurrentUnitInfo(parsedUnitInfo))
                {
                   // current frame has already been recorded, increment to the next frame
-                  int previousFramePercent = CurrentUnitInfo.CurrentFramePercent + 1;
+                  int previousFramePercent = CurrentUnitInfo.LastUnitFramePercent + 1;
                
                   // update the UnitFrames
                   CurrentUnitInfo.UnitFrames = parsedUnitInfo.UnitFrames;
@@ -778,7 +778,7 @@ namespace HFM.Instances
                   // set the frame times and calculate values
                   CurrentUnitInfo.SetFrameTimes();
                   SetTimeBasedValues();
-                  ProteinBenchmarkCollection.Instance.UpdateBenchmarkData(CurrentUnitInfo, previousFramePercent, CurrentUnitInfo.CurrentFramePercent);
+                  ProteinBenchmarkCollection.Instance.UpdateBenchmarkData(CurrentUnitInfo, previousFramePercent, CurrentUnitInfo.LastUnitFramePercent);
                }
             }
             if (lp.LastUnitStartPosition > 0)
@@ -792,13 +792,13 @@ namespace HFM.Instances
                if (IsUnitInfoCurrentUnitInfo(parsedUnitInfo))
                {
                   // current frame has already been recorded, increment to the next frame
-                  currentFrames = CurrentUnitInfo.CurrentFramePercent + 1;
+                  currentFrames = CurrentUnitInfo.LastUnitFramePercent + 1;
                }
 
                // set the frame times and calculate values
                parsedUnitInfo.SetFrameTimes();
                SetTimeBasedValues(parsedUnitInfo);
-               ProteinBenchmarkCollection.Instance.UpdateBenchmarkData(parsedUnitInfo, currentFrames, parsedUnitInfo.CurrentFramePercent);
+               ProteinBenchmarkCollection.Instance.UpdateBenchmarkData(parsedUnitInfo, currentFrames, parsedUnitInfo.LastUnitFramePercent);
             }
          }
 

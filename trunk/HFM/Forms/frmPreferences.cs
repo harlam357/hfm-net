@@ -26,6 +26,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using HFM.Helpers;
 using HFM.Preferences;
 using Debug=HFM.Instrumentation.Debug;
 
@@ -34,10 +35,27 @@ namespace HFM.Forms
    public partial class frmPreferences : Form
    {
       public PreferenceSet Prefs;
+      
+      private readonly WebBrowser wbCssSample;
 
       public frmPreferences()
       {
          InitializeComponent();
+         
+         if (PlatformOps.IsRunningOnMono() == false)
+         {
+            wbCssSample = new WebBrowser();
+
+            pnl1CSSSample.Controls.Add(wbCssSample);
+
+            wbCssSample.Dock = DockStyle.Fill;
+            wbCssSample.Location = new Point(0, 0);
+            wbCssSample.MinimumSize = new Size(20, 20);
+            wbCssSample.Name = "wbCssSample";
+            wbCssSample.Size = new Size(354, 208);
+            wbCssSample.TabIndex = 0;
+            wbCssSample.TabStop = false;
+         }
       }
 
       private void checkBox2_CheckedChanged(object sender, EventArgs e)
@@ -184,7 +202,10 @@ namespace HFM.Forms
          sb.Append("</table>");
          sb.Append("</BODY></HTML>");
 
-         wbCssSample.DocumentText = sb.ToString();
+         if (PlatformOps.IsRunningOnMono() == false)
+         {
+            wbCssSample.DocumentText = sb.ToString();
+         }
       }
 
       private void chkWebSiteGenerator_CheckedChanged(object sender, EventArgs e)

@@ -82,7 +82,8 @@ namespace HFM.Proteins
       }
       #endregion
 
-      #region ReadOnly Properties
+      #region Read Only Properties
+      
       /// <summary>
       /// Formatted Project (Run, Clone, Gen) Information
       /// </summary>
@@ -120,7 +121,7 @@ namespace HFM.Proteins
          }
       }
 
-      #region Values Based on CurrentFrame
+      #region Values Based on UnitFrame Data
       /// <summary>
       /// Timestamp from the last completed frame
       /// </summary>
@@ -138,31 +139,18 @@ namespace HFM.Proteins
       }
 
       /// <summary>
-      /// Frame time for the last completed frame
+      /// Last frame percent based on UnitFrame Data
       /// </summary>
-      public TimeSpan CurrentFrameDuration
+      public Int32 LastUnitFramePercent
       {
          get
          {
-            if (_CurrentFrame != null)
+            for (int i = 100; i >= 0; i--)
             {
-               return _CurrentFrame.FrameDuration;
-            }
-
-            return TimeSpan.Zero;
-         }
-      }
-
-      /// <summary>
-      /// Percentage from the last completed frame
-      /// </summary>
-      public Int32 CurrentFramePercent
-      {
-         get
-         {
-            if (_CurrentFrame != null)
-            {
-               return _CurrentFrame.FramePercent;
+               if (UnitFrames[i] != null)
+               {
+                  return UnitFrames[i].FramePercent;
+               }
             }
 
             return 0;
@@ -170,13 +158,10 @@ namespace HFM.Proteins
       }
       #endregion
       
-      //public bool HasFrameData
-      //{
-      //   get { return _FramesObserved > 0; }
-      //}
       #endregion
-      
+
       #region Public Properties and Related Private Members
+      
       /// <summary>
       /// The Folding ID (Username) attached to this work unit
       /// </summary>
@@ -670,9 +655,9 @@ namespace HFM.Proteins
             UnitFrames[CurrentFrame.FramePercent] = CurrentFrame;
             
             CurrentFrame.FrameDuration = TimeSpan.Zero;
-            if (CurrentFramePercent > 0 && UnitFrames[CurrentFramePercent - 1] != null)
+            if (CurrentFrame.FramePercent > 0 && UnitFrames[CurrentFrame.FramePercent - 1] != null && FramesObserved > 1)
             {
-               CurrentFrame.FrameDuration = GetDelta(CurrentFrame.TimeOfFrame, UnitFrames[CurrentFramePercent - 1].TimeOfFrame);
+               CurrentFrame.FrameDuration = GetDelta(CurrentFrame.TimeOfFrame, UnitFrames[CurrentFrame.FramePercent - 1].TimeOfFrame);
             }
          }
       }
@@ -716,10 +701,10 @@ namespace HFM.Proteins
             RawTimePerAllSections = GetDuration(FramesObserved);
 
             // Make sure CurrentFramePercent is greater than 0 to avoid DivideByZeroException - Issue 34
-            if (DownloadTime.Equals(DateTime.MinValue) == false && CurrentFramePercent > 0)
+            if (DownloadTime.Equals(DateTime.MinValue) == false && CurrentFrame.FramePercent > 0)
             {
                TimeSpan timeSinceUnitDownload = DateTime.Now.Subtract(DownloadTime);
-               RawTimePerUnitDownload = (Convert.ToInt32(timeSinceUnitDownload.TotalSeconds) / CurrentFramePercent);
+               RawTimePerUnitDownload = (Convert.ToInt32(timeSinceUnitDownload.TotalSeconds) / CurrentFrame.FramePercent);
             }
          }
       }

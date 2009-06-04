@@ -62,7 +62,6 @@ namespace HFM.Forms
          this.lbl1Preview = new HFM.Classes.LabelWrapper();
          this.lbl1Style = new HFM.Classes.LabelWrapper();
          this.pnl1CSSSample = new System.Windows.Forms.Panel();
-         this.wbCssSample = new System.Windows.Forms.WebBrowser();
          this.StyleList = new System.Windows.Forms.ListBox();
          this.grpHTMLOutput = new HFM.Classes.GroupBoxWrapper();
          this.radioFullRefresh = new HFM.Classes.RadioButtonWrapper();
@@ -122,7 +121,6 @@ namespace HFM.Forms
          this.tabVisStyles = new System.Windows.Forms.TabPage();
          this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
          this.grpUpdateData.SuspendLayout();
-         this.pnl1CSSSample.SuspendLayout();
          this.grpHTMLOutput.SuspendLayout();
          this.tabControl1.SuspendLayout();
          this.tabSchdTasks.SuspendLayout();
@@ -276,21 +274,10 @@ namespace HFM.Forms
          // pnl1CSSSample
          // 
          this.pnl1CSSSample.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-         this.pnl1CSSSample.Controls.Add(this.wbCssSample);
          this.pnl1CSSSample.Location = new System.Drawing.Point(132, 31);
          this.pnl1CSSSample.Name = "pnl1CSSSample";
          this.pnl1CSSSample.Size = new System.Drawing.Size(358, 212);
          this.pnl1CSSSample.TabIndex = 1;
-         // 
-         // wbCssSample
-         // 
-         this.wbCssSample.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.wbCssSample.Location = new System.Drawing.Point(0, 0);
-         this.wbCssSample.MinimumSize = new System.Drawing.Size(20, 20);
-         this.wbCssSample.Name = "wbCssSample";
-         this.wbCssSample.Size = new System.Drawing.Size(354, 208);
-         this.wbCssSample.TabIndex = 0;
-         this.wbCssSample.TabStop = false;
          // 
          // StyleList
          // 
@@ -913,7 +900,6 @@ namespace HFM.Forms
          this.Shown += new System.EventHandler(this.frmPreferences_Shown);
          this.grpUpdateData.ResumeLayout(false);
          this.grpUpdateData.PerformLayout();
-         this.pnl1CSSSample.ResumeLayout(false);
          this.grpHTMLOutput.ResumeLayout(false);
          this.grpHTMLOutput.PerformLayout();
          this.tabControl1.ResumeLayout(false);
@@ -947,7 +933,6 @@ namespace HFM.Forms
       private Classes.ButtonWrapper btnOK;
       private System.Windows.Forms.Panel pnl1CSSSample;
       private System.Windows.Forms.ListBox StyleList;
-      private System.Windows.Forms.WebBrowser wbCssSample;
       private Classes.LabelWrapper lbl1Style;
       private Classes.LabelWrapper lbl1Preview;
       private Classes.GroupBoxWrapper grpHTMLOutput;

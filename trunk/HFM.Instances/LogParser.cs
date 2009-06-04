@@ -82,6 +82,7 @@ namespace HFM.Instances
             new Regex("(?<Percent>.*)%", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       private bool _bCoreFound = false;
+      private bool _bProjectFound = false;
       private bool _bReadUnitInfoFile = false;
       private bool _bUserIDFound = false;
       private bool _bMachineIDFound = false;
@@ -134,7 +135,14 @@ namespace HFM.Instances
                else if (sData.StartsWith("Tag:"))
                {
                   parsedUnitInfo.ProteinTag = sData.Substring(5);
-                  DoProjectIDMatch(parsedUnitInfo, rProjectNumberFromTag.Match(parsedUnitInfo.ProteinTag));
+                  try 
+                  {
+                     DoProjectIDMatch(parsedUnitInfo, rProjectNumberFromTag.Match(parsedUnitInfo.ProteinTag));
+                  }
+                  catch (FormatException ex)
+                  {
+                     Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", Debug.FunctionName, ex.Message));
+                  }
                }
                else if (sData.StartsWith("Download time: "))
                {
@@ -191,6 +199,7 @@ namespace HFM.Instances
          DateTime Start = Debug.ExecStart;
 
          _bCoreFound = false;
+         _bProjectFound = false;
          
          UnitInfo parsedUnitInfo = new UnitInfo(Instance.InstanceName, Instance.Path);
 
@@ -391,9 +400,17 @@ namespace HFM.Instances
       private void CheckForProjectID(UnitInfo parsedUnitInfo, string logLine)
       {
          Match mProjectNumber;
-         if ((mProjectNumber = rProjectNumber.Match(logLine)).Success)
+         if (_bProjectFound == false && (mProjectNumber = rProjectNumber.Match(logLine)).Success)
          {
-            DoProjectIDMatch(parsedUnitInfo, rProteinID.Match(mProjectNumber.Result("${ProjectNumber}")));
+            try
+            {
+               DoProjectIDMatch(parsedUnitInfo, rProteinID.Match(mProjectNumber.Result("${ProjectNumber}")));
+               _bProjectFound = true;
+            }
+            catch (FormatException ex)
+            {
+               Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", Debug.FunctionName, ex.Message));
+            }
          }
       }
 
@@ -418,9 +435,10 @@ namespace HFM.Instances
             Debug.WriteToHfmConsole(TraceLevel.Info,
                                     String.Format("{0} Attempting to download new Project data...", Debug.FunctionName));
             ProteinCollection.Instance.DownloadFromStanford(null);
+            
             try
             {
-               SetProjectID(parsedUnitInfo, rProjectNumberFromTag.Match(parsedUnitInfo.ProteinTag));
+               SetProjectID(parsedUnitInfo, match);
             }
             catch (System.Collections.Generic.KeyNotFoundException)
             {
@@ -428,10 +446,6 @@ namespace HFM.Instances
                                        String.Format("{0} Project ID '{1}' not found on Stanford Web Project Summary.",
                                                      Debug.FunctionName, parsedUnitInfo.ProjectID));
             }
-         }
-         catch (FormatException ex)
-         {
-            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", Debug.FunctionName, ex.Message));
          }
       }
 
@@ -446,20 +460,13 @@ namespace HFM.Instances
       {
          if (match.Success)
          {
-            // once a current frame exists we already have the ProjectID
-            // when a previous unit is returned during this unit's progress the project string
-            // is drawn just as it is drawn at the beginning of a unit, we don't want this string
-            // to override the ProjectID we already captured
-            if (parsedUnitInfo.CurrentFrame == null)
-            {
-               parsedUnitInfo.ProjectID = Int32.Parse(match.Result("${ProjectNumber}"));
-               parsedUnitInfo.ProjectRun = Int32.Parse(match.Result("${Run}"));
-               parsedUnitInfo.ProjectClone = Int32.Parse(match.Result("${Clone}"));
-               parsedUnitInfo.ProjectGen = Int32.Parse(match.Result("${Gen}"));
+            parsedUnitInfo.ProjectID = Int32.Parse(match.Result("${ProjectNumber}"));
+            parsedUnitInfo.ProjectRun = Int32.Parse(match.Result("${Run}"));
+            parsedUnitInfo.ProjectClone = Int32.Parse(match.Result("${Clone}"));
+            parsedUnitInfo.ProjectGen = Int32.Parse(match.Result("${Gen}"));
 
-               parsedUnitInfo.CurrentProtein = ProteinCollection.Instance[parsedUnitInfo.ProjectID];
-               parsedUnitInfo.TypeOfClient = GetClientTypeFromProtein(parsedUnitInfo.CurrentProtein);
-            }
+            parsedUnitInfo.CurrentProtein = ProteinCollection.Instance[parsedUnitInfo.ProjectID];
+            parsedUnitInfo.TypeOfClient = GetClientTypeFromProtein(parsedUnitInfo.CurrentProtein);
          }
          else
          {
@@ -559,23 +566,9 @@ namespace HFM.Instances
          Match mTimeStamp = rTimeStamp.Match(logLine);
          if (mTimeStamp.Success)
          {
-            System.Globalization.DateTimeStyles style;
-
-            if (Instance.ClientIsOnVirtualMachine)
-            {
-               // set parse style to maintain universal
-               style = System.Globalization.DateTimeStyles.NoCurrentDateDefault;
-            }
-            else
-            {
-               // set parse style to parse local
-               style = System.Globalization.DateTimeStyles.NoCurrentDateDefault |
-                       System.Globalization.DateTimeStyles.AssumeUniversal;
-            }
-
             DateTime timeStamp = DateTime.ParseExact(mTimeStamp.Result("${Timestamp}"), "HH:mm:ss",
                                                      System.Globalization.DateTimeFormatInfo.InvariantInfo,
-                                                     style);
+                                                     GetDateTimeStyle(Instance));
 
             parsedUnitInfo.UnitStartTime = timeStamp.TimeOfDay;
          }
@@ -659,8 +652,21 @@ namespace HFM.Instances
       /// <param name="percent">Frame Percentage</param>
       private static void SetTimeStamp(ClientInstance Instance, UnitInfo parsedUnitInfo, string timeStampString, int percent)
       {
-         System.Globalization.DateTimeStyles style;
+         DateTime timeStamp = DateTime.ParseExact(timeStampString, "HH:mm:ss",
+                              System.Globalization.DateTimeFormatInfo.InvariantInfo,
+                              GetDateTimeStyle(Instance));
 
+         parsedUnitInfo.SetCurrentFrame(new UnitFrame(percent, timeStamp.TimeOfDay));
+      }
+      
+      /// <summary>
+      /// Get the DateTimeStyle for the given Client Instance
+      /// </summary>
+      /// <param name="Instance">Client Instance that owns the log file we're parsing</param>
+      private static System.Globalization.DateTimeStyles GetDateTimeStyle(ClientInstance Instance)
+      {
+         System.Globalization.DateTimeStyles style;
+      
          if (Instance.ClientIsOnVirtualMachine)
          {
             // set parse style to maintain universal
@@ -672,13 +678,10 @@ namespace HFM.Instances
             style = System.Globalization.DateTimeStyles.NoCurrentDateDefault |
                     System.Globalization.DateTimeStyles.AssumeUniversal;
          }
-
-         DateTime timeStamp = DateTime.ParseExact(timeStampString, "HH:mm:ss",
-                               System.Globalization.DateTimeFormatInfo.InvariantInfo,
-                               style);
-
-         parsedUnitInfo.SetCurrentFrame(new UnitFrame(percent, timeStamp.TimeOfDay));
+         
+         return style;
       }
+
       #endregion
    }
 }
