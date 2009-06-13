@@ -28,6 +28,7 @@ using Debug=HFM.Instrumentation.Debug;
 
 namespace HFM.Preferences
 {
+   #region Enum
    public enum ePpdCalculation
    {
       LastFrame,
@@ -35,21 +36,24 @@ namespace HFM.Preferences
       AllFrames,
       EffectiveRate
    }
-   
+
    public enum eTimeStyle
    {
       Standard,
       Formatted
-   }
+   } 
+   #endregion
 
    public class PreferenceSet
    {
+      #region Public Const
       public const String EOCUserBaseURL = "http://folding.extremeoverclocking.com/user_summary.php?s=&u=";
       public const String EOCTeamBaseURL = "http://folding.extremeoverclocking.com/team_summary.php?s=&t=";
       public const String StanfordBaseURL = "http://fah-web.stanford.edu/cgi-bin/main.py?qtype=userpage&username=";
-      
+
       public const Int32 MinutesDefault = 15;
-      public const Int32 ProxyPortDefault = 8080;
+      public const Int32 ProxyPortDefault = 8080; 
+      #endregion
 
       #region Public Properties and associated Private Variables
       private Boolean _SyncOnLoad;
@@ -366,14 +370,17 @@ namespace HFM.Preferences
 
       #endregion
 
+      #region Constructor
       /// <summary>
       /// Private Constructor to enforce Singleton pattern; loads preferences
       /// </summary>
       private PreferenceSet()
       {
          Load();
-      }
+      } 
+      #endregion
 
+      #region Implementation
       /// <summary>
       /// Load the current set of preferences and adjust for sanity
       /// </summary>
@@ -421,7 +428,7 @@ namespace HFM.Preferences
 
          _CacheFolder = Settings.Default.CacheFolder;
          _FormLogVisible = Settings.Default.FormLogVisible;
-         
+
          try
          {
             _FormLocation = Settings.Default.FormLocation;
@@ -430,7 +437,7 @@ namespace HFM.Preferences
          }
          catch (NullReferenceException)
          { }
-         
+
          _FormSortColumn = Settings.Default.FormSortColumn;
          try
          {
@@ -442,12 +449,12 @@ namespace HFM.Preferences
          }
          _FormSplitLocation = Settings.Default.FormSplitLocation;
          _FormLogWindowHeight = Settings.Default.FormLogWindowHeight;
-         
+
          _OfflineLast = Settings.Default.OfflineLast;
          _DefaultConfigFile = Settings.Default.DefaultConfigFile;
          _UseDefaultConfigFile = Settings.Default.UseDefaultConfigFile;
          _AutoSaveConfig = Settings.Default.AutoSaveConfig;
-         
+
          switch (Settings.Default.PpdCalculation)
          {
             case "LastFrame":
@@ -460,7 +467,7 @@ namespace HFM.Preferences
                _PpdCalculation = ePpdCalculation.LastThreeFrames;
                break;
          }
-         
+
          switch (Settings.Default.TimeStyle)
          {
             case "Standard":
@@ -473,7 +480,7 @@ namespace HFM.Preferences
                _TimeStyle = eTimeStyle.Standard;
                break;
          }
-         
+
          _LogFileViewer = Settings.Default.LogFileViewer;
          _FileExplorer = Settings.Default.FileExplorer;
          _ProjectDownloadUrl = Settings.Default.ProjectDownloadUrl;
@@ -488,16 +495,6 @@ namespace HFM.Preferences
          }
 
          Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
-      }
-
-      public static bool ValidateMinutes(int Minutes)
-      {
-         if ((Minutes > 180) || (Minutes < 1))
-         {
-            return false;
-         }
-
-         return true;
       }
 
       private static void UpgradeUserSettings()
@@ -577,6 +574,19 @@ namespace HFM.Preferences
             Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
          }
          Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
-      }
+      } 
+      #endregion
+
+      #region Preference Validation
+      public static bool ValidateMinutes(int Minutes)
+      {
+         if ((Minutes > 180) || (Minutes < 1))
+         {
+            return false;
+         }
+
+         return true;
+      } 
+      #endregion
    }
 }

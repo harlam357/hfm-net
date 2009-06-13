@@ -33,16 +33,19 @@ namespace HFM.Forms
 {
    public partial class frmPreferences : Form
    {
-      public PreferenceSet Prefs;
-      
+      #region Members
       private readonly WebBrowser wbCssSample;
-      private const string CssExtension = ".css";
-      private const string CssFolder = "CSS";
+      private readonly PreferenceSet Prefs;
 
+      private const string CssExtension = ".css";
+      private const string CssFolder = "CSS"; 
+      #endregion
+
+      #region Form Constructor / functionality
       public frmPreferences()
       {
          InitializeComponent();
-         
+
          if (PlatformOps.IsRunningOnMono() == false)
          {
             wbCssSample = new WebBrowser();
@@ -57,8 +60,115 @@ namespace HFM.Forms
             wbCssSample.TabIndex = 0;
             wbCssSample.TabStop = false;
          }
+
+         Prefs = PreferenceSet.Instance;
       }
 
+      private void frmPreferences_Shown(object sender, EventArgs e)
+      {
+         #region Scheduled Tasks Tab
+         chkSynchronous.Checked = Prefs.SyncOnLoad;
+         chkScheduled.Checked = Prefs.SyncOnSchedule;
+
+         if (PreferenceSet.ValidateMinutes(Prefs.SyncTimeMinutes))
+         {
+            txtCollectMinutes.Text = Prefs.SyncTimeMinutes.ToString();
+         }
+         else
+         {
+            txtCollectMinutes.Text = PreferenceSet.MinutesDefault.ToString();
+         }
+
+         chkOffline.Checked = Prefs.OfflineLast;
+
+         cboPpdCalc.Items.Add(ePpdCalculation.LastFrame);
+         cboPpdCalc.Items.Add(ePpdCalculation.LastThreeFrames);
+         cboPpdCalc.Items.Add(ePpdCalculation.AllFrames);
+         cboPpdCalc.Items.Add(ePpdCalculation.EffectiveRate);
+         cboPpdCalc.Text = Prefs.PpdCalculation.ToString();
+
+         chkWebSiteGenerator.Checked = Prefs.GenerateWeb;
+
+         if (Prefs.WebGenAfterRefresh)
+         {
+            radioFullRefresh.Checked = true;
+         }
+         else
+         {
+            radioSchedule.Checked = true;
+         }
+
+         if (PreferenceSet.ValidateMinutes(Prefs.GenerateInterval))
+         {
+            txtWebGenMinutes.Text = Prefs.GenerateInterval.ToString();
+         }
+         else
+         {
+            txtWebGenMinutes.Text = PreferenceSet.MinutesDefault.ToString();
+         }
+
+         txtWebSiteBase.Text = Prefs.WebRoot;
+         #endregion
+
+         #region Defaults Tab
+         chkDefaultConfig.Checked = Prefs.UseDefaultConfigFile;
+         txtDefaultConfigFile.Text = Prefs.DefaultConfigFile;
+         chkAutoSave.Checked = Prefs.AutoSaveConfig;
+         txtLogFileViewer.Text = Prefs.LogFileViewer;
+         txtFileExplorer.Text = Prefs.FileExplorer;
+         cboMessageLevel.Items.Add(TraceLevel.Off.ToString());
+         cboMessageLevel.Items.Add(TraceLevel.Error.ToString());
+         cboMessageLevel.Items.Add(TraceLevel.Warning.ToString());
+         cboMessageLevel.Items.Add(TraceLevel.Info.ToString());
+         cboMessageLevel.Items.Add(TraceLevel.Verbose.ToString());
+         if (Prefs.MessageLevel >= 0 && Prefs.MessageLevel <= 4)
+         {
+            cboMessageLevel.SelectedIndex = Prefs.MessageLevel;
+         }
+         else
+         {
+            cboMessageLevel.SelectedIndex = (int)TraceLevel.Info;
+         }
+         #endregion
+
+         #region Web Tab
+         txtEOCUserID.Text = Prefs.EOCUserID.ToString();
+         txtStanfordUserID.Text = Prefs.StanfordID;
+         txtStanfordTeamID.Text = Prefs.TeamID.ToString();
+         txtProjectDownloadUrl.Text = Prefs.ProjectDownloadUrl;
+         chkUseProxy.Checked = Prefs.UseProxy;
+         txtProxyServer.Text = Prefs.ProxyServer;
+         txtProxyPort.Text = Prefs.ProxyPort.ToString();
+         chkUseProxyAuth.Checked = Prefs.UseProxyAuth;
+         txtProxyUser.Text = Prefs.ProxyUser;
+         txtProxyPass.Text = Prefs.ProxyPass;
+         #endregion
+
+         #region Visual Style Tab
+         DirectoryInfo di = new DirectoryInfo(Path.Combine(PreferenceSet.AppPath, CssFolder));
+         StyleList.Items.Clear();
+         foreach (FileInfo fi in di.GetFiles())
+         {
+            if (fi.Name.EndsWith(CssExtension))
+            {
+               StyleList.Items.Add(fi.Name.Replace(CssExtension, String.Empty));
+            }
+         }
+
+         for (int i = 0; i < StyleList.Items.Count; i++)
+         {
+            object item = StyleList.Items[i];
+
+            if (item.ToString().ToLower().Equals(Prefs.CSSFileName.ToLower().Replace(CssExtension, String.Empty)))
+            {
+               StyleList.SelectedItem = item;
+            }
+         }
+         #endregion
+      } 
+      #endregion
+
+      #region Scheduled Tasks Tab
       private void chkScheduled_CheckedChanged(object sender, EventArgs e)
       {
          if (chkScheduled.Checked)
@@ -71,19 +181,49 @@ namespace HFM.Forms
          }
       }
 
-      private void txtDigitsOnly_KeyPress(object sender, KeyPressEventArgs e)
+      private void chkWebSiteGenerator_CheckedChanged(object sender, EventArgs e)
       {
-         // only allow digits and backspace characters
-         if (char.IsDigit(e.KeyChar) == false && e.KeyChar != '\b')
+         if (chkWebSiteGenerator.Checked)
          {
-            e.Handled = true;
+            radioSchedule.Enabled = true;
+            radioSchedule_CheckedChanged(sender, e);
+            lbl2MinutesToGen.Enabled = true;
+            radioFullRefresh.Enabled = true;
+            txtWebSiteBase.Enabled = true;
+            txtWebSiteBase.ReadOnly = false;
+            btnBrowseWebFolder.Enabled = true;
+         }
+         else
+         {
+            radioSchedule.Enabled = false;
+            txtWebGenMinutes.Enabled = false;
+            txtWebGenMinutes.ReadOnly = true;
+            lbl2MinutesToGen.Enabled = false;
+            radioFullRefresh.Enabled = false;
+            txtWebSiteBase.Enabled = false;
+            txtWebSiteBase.ReadOnly = true;
+            btnBrowseWebFolder.Enabled = false;
+         }
+      }
+
+      private void radioSchedule_CheckedChanged(object sender, EventArgs e)
+      {
+         if (radioSchedule.Checked)
+         {
+            txtWebGenMinutes.Enabled = true;
+            txtWebGenMinutes.ReadOnly = false;
+         }
+         else
+         {
+            txtWebGenMinutes.Enabled = false;
+            txtWebGenMinutes.ReadOnly = true;
          }
       }
 
       private void txtMinutes_Validating(object sender, CancelEventArgs e)
       {
          Control textBox = (Control)sender;
-      
+
          int Minutes;
          if (int.TryParse(textBox.Text, out Minutes) == false)
          {
@@ -104,103 +244,162 @@ namespace HFM.Forms
          }
       }
 
-      private void frmPreferences_Shown(object sender, EventArgs e)
+      private void btnBrowseWebFolder_Click(object sender, EventArgs e)
       {
-         Prefs = PreferenceSet.Instance;
-
-         DirectoryInfo di = new DirectoryInfo(Path.Combine(PreferenceSet.AppPath, CssFolder));
-         StyleList.Items.Clear();
-         foreach (FileInfo fi in di.GetFiles())
+         if (txtWebSiteBase.Text != String.Empty)
          {
-            if (fi.Name.EndsWith(CssExtension))
-            {
-               StyleList.Items.Add(fi.Name.Replace(CssExtension, String.Empty));
-            }
+            locateWebFolder.SelectedPath = txtWebSiteBase.Text;
          }
-
-         // Visual Style tab
-         for (int i = 0; i < StyleList.Items.Count; i++)
+         if (locateWebFolder.ShowDialog() == DialogResult.OK)
          {
-            object item = StyleList.Items[i];
-
-            if (item.ToString().ToLower().Equals(Prefs.CSSFileName.ToLower().Replace(CssExtension, String.Empty)))
-            {
-               StyleList.SelectedItem = item;
-            }
+            txtWebSiteBase.Text = locateWebFolder.SelectedPath;
          }
-
-         // Scheduled Tasks tab
-         if (PreferenceSet.ValidateMinutes(Prefs.GenerateInterval))
+      }
+      #endregion
+ 
+      #region Defaults Tab
+      private void chkDefaultConfig_CheckedChanged(object sender, EventArgs e)
+      {
+         if (chkDefaultConfig.Checked)
          {
-            txtWebGenMinutes.Text = Prefs.GenerateInterval.ToString();
+            txtDefaultConfigFile.Enabled = true;
+            txtDefaultConfigFile.ReadOnly = false;
+            btnBrowseConfigFile.Enabled = true;
          }
          else
          {
-            txtWebGenMinutes.Text = PreferenceSet.MinutesDefault.ToString();
+            txtDefaultConfigFile.Enabled = false;
+            txtDefaultConfigFile.ReadOnly = true;
+            btnBrowseConfigFile.Enabled = false;
          }
+      } 
+      #endregion
 
-         chkWebSiteGenerator.Checked = Prefs.GenerateWeb;
-         if (Prefs.WebGenAfterRefresh)
+      #region Web Tab
+      private void linkEOC_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+      {
+         try
          {
-            radioFullRefresh.Checked = true;
+            Process.Start(String.Concat(PreferenceSet.EOCUserBaseURL, txtEOCUserID.Text));
          }
-         else
+         catch (Exception ex)
          {
-            radioSchedule.Checked = true;
+            Debug.WriteToHfmConsole(TraceLevel.Error,
+                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            MessageBox.Show("Failed to show EOC User Stats page.");
          }
-         chkSynchronous.Checked = Prefs.SyncOnLoad;
-         chkScheduled.Checked = Prefs.SyncOnSchedule;
-         chkOffline.Checked = Prefs.OfflineLast;
-
-         cboPpdCalc.Items.Add(ePpdCalculation.LastFrame);
-         cboPpdCalc.Items.Add(ePpdCalculation.LastThreeFrames);
-         cboPpdCalc.Items.Add(ePpdCalculation.AllFrames);
-         cboPpdCalc.Items.Add(ePpdCalculation.EffectiveRate);
-         cboPpdCalc.Text = Prefs.PpdCalculation.ToString();
-
-         if (PreferenceSet.ValidateMinutes(Prefs.SyncTimeMinutes))
-         {
-            txtCollectMinutes.Text = Prefs.SyncTimeMinutes.ToString();
-         }
-         else
-         {
-            txtCollectMinutes.Text = PreferenceSet.MinutesDefault.ToString();
-         }
-         txtWebSiteBase.Text = Prefs.WebRoot;
-
-         // Defaults
-         chkDefaultConfig.Checked = Prefs.UseDefaultConfigFile;
-         txtDefaultConfigFile.Text = Prefs.DefaultConfigFile;
-         chkAutoSave.Checked = Prefs.AutoSaveConfig;
-         txtLogFileViewer.Text = Prefs.LogFileViewer;
-         txtFileExplorer.Text = Prefs.FileExplorer;
-         cboMessageLevel.Items.Add(TraceLevel.Off.ToString());
-         cboMessageLevel.Items.Add(TraceLevel.Error.ToString());
-         cboMessageLevel.Items.Add(TraceLevel.Warning.ToString());
-         cboMessageLevel.Items.Add(TraceLevel.Info.ToString());
-         cboMessageLevel.Items.Add(TraceLevel.Verbose.ToString());
-         if (Prefs.MessageLevel >= 0 && Prefs.MessageLevel <= 4)
-         {
-            cboMessageLevel.SelectedIndex = Prefs.MessageLevel;
-         }
-         else
-         {
-            cboMessageLevel.SelectedIndex = (int)TraceLevel.Info;
-         }
-
-         // Web
-         txtEOCUserID.Text = Prefs.EOCUserID.ToString();
-         txtStanfordUserID.Text = Prefs.StanfordID;
-         txtStanfordTeamID.Text = Prefs.TeamID.ToString();
-         txtProjectDownloadUrl.Text = Prefs.ProjectDownloadUrl;
-         chkUseProxy.Checked = Prefs.UseProxy;
-         chkUseProxyAuth.Checked = Prefs.UseProxyAuth;
-         txtProxyServer.Text = Prefs.ProxyServer;
-         txtProxyPort.Text = Prefs.ProxyPort.ToString();
-         txtProxyUser.Text = Prefs.ProxyUser;
-         txtProxyPass.Text = Prefs.ProxyPass;
       }
 
+      private void linkStanford_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+      {
+         try
+         {
+            Process.Start(String.Concat(PreferenceSet.StanfordBaseURL, txtStanfordUserID.Text));
+         }
+         catch (Exception ex)
+         {
+            Debug.WriteToHfmConsole(TraceLevel.Error,
+                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            MessageBox.Show("Failed to show Stanford User Stats page.");
+         }
+      }
+
+      private void linkTeam_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+      {
+         try
+         {
+            Process.Start(String.Concat(PreferenceSet.EOCTeamBaseURL, txtStanfordTeamID.Text));
+         }
+         catch (Exception ex)
+         {
+            Debug.WriteToHfmConsole(TraceLevel.Error,
+                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            MessageBox.Show("Failed to show EOC Team Stats page.");
+         }
+      }
+
+      private void txtProjectDownloadUrl_Validating(object sender, CancelEventArgs e)
+      {
+         Control textBox = (Control)sender;
+
+         if (StringOps.ValidateHttpURL(txtProjectDownloadUrl.Text) == false)
+         {
+            txtProjectDownloadUrl.BackColor = Color.Yellow;
+            txtProjectDownloadUrl.Focus();
+            toolTipPrefs.Show("URL must be a valid URL and the path to a valid Stanford Project Summary page", textBox.Parent, textBox.Location.X + 5, textBox.Location.Y - 20, 5000);
+         }
+         else
+         {
+            txtProjectDownloadUrl.BackColor = SystemColors.Window;
+            toolTipPrefs.Hide(textBox.Parent);
+         }
+      }
+
+      private void chkUseProxy_CheckedChanged(object sender, EventArgs e)
+      {
+         if (chkUseProxy.Checked)
+         {
+            EnableProxy();
+            if (chkUseProxyAuth.Checked)
+            {
+               EnableProxyAuth();
+            }
+         }
+         else
+         {
+            DisableProxy();
+         }
+      }
+
+      private void chkUseProxyAuth_CheckedChanged(object sender, EventArgs e)
+      {
+         if (chkUseProxyAuth.Checked)
+         {
+            EnableProxyAuth();
+         }
+         else
+         {
+            DisableProxyAuth();
+         }
+      }
+
+      private void EnableProxy()
+      {
+         txtProxyServer.Enabled = true;
+         txtProxyPort.Enabled = true;
+         txtProxyServer.ReadOnly = false;
+         txtProxyPort.ReadOnly = false;
+         chkUseProxyAuth.Enabled = true;
+      }
+
+      private void DisableProxy()
+      {
+         txtProxyServer.Enabled = false;
+         txtProxyPort.Enabled = false;
+         txtProxyServer.ReadOnly = true;
+         txtProxyPort.ReadOnly = true;
+         chkUseProxyAuth.Enabled = false;
+         DisableProxyAuth();
+      }
+
+      private void EnableProxyAuth()
+      {
+         txtProxyUser.Enabled = true;
+         txtProxyUser.ReadOnly = false;
+         txtProxyPass.Enabled = true;
+         txtProxyPass.ReadOnly = false;
+      }
+
+      private void DisableProxyAuth()
+      {
+         txtProxyUser.Enabled = false;
+         txtProxyUser.ReadOnly = true;
+         txtProxyPass.Enabled = false;
+         txtProxyPass.ReadOnly = true;
+      }
+      #endregion
+
+      #region Visual Style Tab
       private void StyleList_SelectedIndexChanged(object sender, EventArgs e)
       {
          String sStylesheet = Path.Combine(Path.Combine(PreferenceSet.AppPath, CssFolder), Path.ChangeExtension(StyleList.SelectedItem.ToString(), CssExtension));
@@ -242,49 +441,15 @@ namespace HFM.Forms
             wbCssSample.DocumentText = sb.ToString();
          }
       }
+      #endregion
 
-      private void chkWebSiteGenerator_CheckedChanged(object sender, EventArgs e)
-      {
-         if (chkWebSiteGenerator.Checked)
-         {
-            radioSchedule.Enabled = true;
-            radioSchedule_CheckedChanged(sender, e);
-            lbl2MinutesToGen.Enabled = true;
-            radioFullRefresh.Enabled = true;
-            txtWebSiteBase.Enabled = true;
-            txtWebSiteBase.ReadOnly = false;
-            btnBrowseWebFolder.Enabled = true;
-         }
-         else
-         {
-            radioSchedule.Enabled = false;
-            txtWebGenMinutes.Enabled = false;
-            txtWebGenMinutes.ReadOnly = true;
-            lbl2MinutesToGen.Enabled = false;
-            radioFullRefresh.Enabled = false;
-            txtWebSiteBase.Enabled = false;
-            txtWebSiteBase.ReadOnly = true;
-            btnBrowseWebFolder.Enabled = false;
-         }
-      }
-
-      private void btnBrowseWebFolder_Click(object sender, EventArgs e)
-      {
-         if (txtWebSiteBase.Text != String.Empty)
-         {
-            locateWebFolder.SelectedPath = txtWebSiteBase.Text;
-         }
-         if (locateWebFolder.ShowDialog() == DialogResult.OK)
-         {
-            txtWebSiteBase.Text = locateWebFolder.SelectedPath;
-         }
-      }
-
+      #region Button Click Event Handlers
+      
       private void btnOK_Click(object sender, EventArgs e)
       {
          // Check for error condition on Name
          if (txtProjectDownloadUrl.BackColor == Color.Yellow) return;
-      
+
          // Visual Styles tab
          Prefs.CSSFileName = StyleList.SelectedItem + CssExtension;
 
@@ -348,7 +513,7 @@ namespace HFM.Forms
          Prefs.ProxyPass = txtProxyPass.Text;
 
          Prefs.Save();
-         
+
          DialogResult = System.Windows.Forms.DialogResult.OK;
          Close();
       }
@@ -358,127 +523,7 @@ namespace HFM.Forms
          Prefs.Discard();
       }
 
-      private void linkEOC_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-      {
-         try
-         {
-            Process.Start(String.Concat(PreferenceSet.EOCUserBaseURL, txtEOCUserID.Text));
-         }
-         catch (Exception ex)
-         {
-            Debug.WriteToHfmConsole(TraceLevel.Error,
-                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-            MessageBox.Show("Failed to show EOC User Stats page.");
-         }
-      }
-
-      private void linkStanford_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-      {
-         try
-         {
-            Process.Start(String.Concat(PreferenceSet.StanfordBaseURL, txtStanfordUserID.Text));
-         }
-         catch (Exception ex)
-         {
-            Debug.WriteToHfmConsole(TraceLevel.Error,
-                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-            MessageBox.Show("Failed to show Stanford User Stats page.");
-         }
-      }
-
-      private void linkTeam_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-      {
-         try
-         {
-            Process.Start(String.Concat(PreferenceSet.EOCTeamBaseURL, txtStanfordTeamID.Text));
-         }
-         catch (Exception ex)
-         {
-            Debug.WriteToHfmConsole(TraceLevel.Error,
-                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-            MessageBox.Show("Failed to show EOC Team Stats page.");
-         }
-      }
-
-      private void EnableProxy()
-      {
-         txtProxyServer.Enabled = true;
-         txtProxyPort.Enabled = true;
-         txtProxyServer.ReadOnly = false;
-         txtProxyPort.ReadOnly = false;
-         chkUseProxyAuth.Enabled = true;
-      }
-
-      private void DisableProxy()
-      {
-         txtProxyServer.Enabled = false;
-         txtProxyPort.Enabled = false;
-         txtProxyServer.ReadOnly = true;
-         txtProxyPort.ReadOnly = true;
-         chkUseProxyAuth.Enabled = false;
-         DisableProxyAuth();
-      }
-
-      private void EnableProxyAuth()
-      {
-         txtProxyUser.Enabled = true;
-         txtProxyUser.ReadOnly = false;
-         txtProxyPass.Enabled = true;
-         txtProxyPass.ReadOnly = false;
-      }
-
-      private void DisableProxyAuth()
-      {
-         txtProxyUser.Enabled = false;
-         txtProxyUser.ReadOnly = true;
-         txtProxyPass.Enabled = false;
-         txtProxyPass.ReadOnly = true;
-      }
-
-      private void chkUseProxy_CheckedChanged(object sender, EventArgs e)
-      {
-         if (chkUseProxy.Checked)
-         {
-            EnableProxy();
-            if (chkUseProxyAuth.Checked)
-            {
-               EnableProxyAuth();
-            }
-         }
-         else
-         {
-            DisableProxy();
-         }
-      }
-
-      private void chkUseProxyAuth_CheckedChanged(object sender, EventArgs e)
-      {
-         if (chkUseProxyAuth.Checked)
-         {
-            EnableProxyAuth();
-         }
-         else
-         {
-            DisableProxyAuth();
-         }
-      }
-
-      private void chkDefaultConfig_CheckedChanged(object sender, EventArgs e)
-      {
-         if (chkDefaultConfig.Checked)
-         {
-            txtDefaultConfigFile.Enabled = true;
-            txtDefaultConfigFile.ReadOnly = false;
-            btnBrowseConfigFile.Enabled = true;
-         }
-         else
-         {
-            txtDefaultConfigFile.Enabled = false;
-            txtDefaultConfigFile.ReadOnly = true;
-            btnBrowseConfigFile.Enabled = false;
-         }
-      }
-
+      #region Folder Browsing
       private void btnBrowseConfigFile_Click(object sender, EventArgs e)
       {
          DoFolderBrowse(txtDefaultConfigFile, "hfm", "HFM Configuration Files|*.hfm");
@@ -493,7 +538,7 @@ namespace HFM.Forms
       {
          DoFolderBrowse(txtFileExplorer, "exe", "Program Files|*.exe");
       }
-      
+
       private void DoFolderBrowse(Control txt, string extension, string filter)
       {
          if (String.IsNullOrEmpty(txt.Text) == false)
@@ -526,37 +571,20 @@ namespace HFM.Forms
          {
             txt.Text = openConfigDialog.FileName;
          }
-      }
+      }  
+      #endregion
+      
+      #endregion
 
-      private void txtProjectDownloadUrl_Validating(object sender, CancelEventArgs e)
+      #region TextBox KeyPress Event Handler (to enforce digits only)
+      private void txtDigitsOnly_KeyPress(object sender, KeyPressEventArgs e)
       {
-         Control textBox = (Control)sender;
-         
-         if (StringOps.ValidateHttpURL(txtProjectDownloadUrl.Text) == false)
+         // only allow digits and backspace characters
+         if (char.IsDigit(e.KeyChar) == false && e.KeyChar != '\b')
          {
-            txtProjectDownloadUrl.BackColor = Color.Yellow;
-            txtProjectDownloadUrl.Focus();
-            toolTipPrefs.Show("URL must be a valid URL and the path to a valid Stanford Project Summary page", textBox.Parent, textBox.Location.X + 5, textBox.Location.Y - 20, 5000);
-         }
-         else
-         {
-            txtProjectDownloadUrl.BackColor = SystemColors.Window;
-            toolTipPrefs.Hide(textBox.Parent);
+            e.Handled = true;
          }
       }
-
-      private void radioSchedule_CheckedChanged(object sender, EventArgs e)
-      {
-         if (radioSchedule.Checked)
-         {
-            txtWebGenMinutes.Enabled = true;
-            txtWebGenMinutes.ReadOnly = false;
-         }
-         else
-         {
-            txtWebGenMinutes.Enabled = false;
-            txtWebGenMinutes.ReadOnly = true;
-         }
-      }
+      #endregion
    }
 }

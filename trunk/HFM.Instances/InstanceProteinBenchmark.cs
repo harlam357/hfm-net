@@ -28,6 +28,8 @@ namespace HFM.Instances
    [Serializable]
    public class InstanceProteinBenchmark
    {
+      #region Members & Read Only Properties
+
       private const Int32 MaxFrames = 300;
       
       #region Owner Data Properties
@@ -57,18 +59,18 @@ namespace HFM.Instances
          set { _OwningInstancePath = value; }
       }
       #endregion
-   
+
       private readonly Int32 _ProjectID;
       public Int32 ProjectID
       {
          get { return _ProjectID; }
       }
-   
+
       private TimeSpan _MinimumFrameTime;
       public TimeSpan MinimumFrameTime
       {
-         get 
-         { 
+         get
+         {
             if (_MinimumFrameTime == TimeSpan.MaxValue)
             {
                return TimeSpan.Zero;
@@ -76,11 +78,11 @@ namespace HFM.Instances
             return _MinimumFrameTime;
          }
       }
-      
+
       public TimeSpan AverageFrameTime
       {
-         get 
-         { 
+         get
+         {
             if (_FrameTimes.Count > 0)
             {
                TimeSpan totalTime = TimeSpan.Zero;
@@ -91,7 +93,7 @@ namespace HFM.Instances
 
                return TimeSpan.FromSeconds((Convert.ToInt32(totalTime.TotalSeconds) / _FrameTimes.Count));
             }
-            
+
             return TimeSpan.Zero;
          }
       }
@@ -100,8 +102,22 @@ namespace HFM.Instances
       public Queue<TimeSpan> FrameTimes
       {
          get { return _FrameTimes; }
-      }
+      } 
+      
+      #endregion
 
+      #region Constructor
+      public InstanceProteinBenchmark(string ownerName, string ownerPath, Int32 proteinID)
+      {
+         _OwningInstanceName = ownerName;
+         _OwningInstancePath = ownerPath;
+         _ProjectID = proteinID;
+         _MinimumFrameTime = TimeSpan.Zero;
+         _FrameTimes = new Queue<TimeSpan>(MaxFrames);
+      } 
+      #endregion
+
+      #region Implementation
       public void SetFrameTime(TimeSpan frameTime)
       {
          if (frameTime > TimeSpan.Zero)
@@ -119,23 +135,14 @@ namespace HFM.Instances
             _FrameTimes.Enqueue(frameTime);
          }
       }
-   
-      public InstanceProteinBenchmark(string ownerName, string ownerPath, Int32 proteinID)
-      {
-         _OwningInstanceName = ownerName;
-         _OwningInstancePath = ownerPath;
-         _ProjectID = proteinID;
-         _MinimumFrameTime = TimeSpan.Zero;
-         _FrameTimes = new Queue<TimeSpan>(MaxFrames);
-      }
-      
+
       public string[] ToMultiLineString(ClientInstance instance)
       {
          Protein protein;
          ProteinCollection.Instance.TryGetValue(_ProjectID, out protein);
-         
+
          List<string> output = new List<string>(10);
- 
+
          if (protein != null)
          {
             output.Add(String.Empty);
@@ -145,7 +152,7 @@ namespace HFM.Instances
             output.Add(String.Empty);
             output.Add(String.Format(" Min. Time / Frame : {0} - {1} PPD", _MinimumFrameTime, Math.Round(protein.GetPPD(_MinimumFrameTime), 1)));
             output.Add(String.Format(" Avg. Time / Frame : {0} - {1} PPD", AverageFrameTime, Math.Round(protein.GetPPD(AverageFrameTime), 1)));
-            
+
             TimeSpan currentFrameTime = TimeSpan.Zero;
             TimeSpan threeFrameTime = TimeSpan.Zero;
             TimeSpan allFrameTime = TimeSpan.Zero;
@@ -168,8 +175,9 @@ namespace HFM.Instances
             Debug.WriteToHfmConsole(TraceLevel.Warning,
                                     String.Format("{0} could not find Project ID '{1}'.", Debug.FunctionName, _ProjectID));
          }
-         
+
          return output.ToArray();
-      }
+      } 
+      #endregion
    }
 }

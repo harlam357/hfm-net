@@ -33,12 +33,15 @@ namespace HFM.Proteins
    [Serializable]
    public class UnitInfoCollection
    {
+      #region Members
       private const string DataStoreFilename = "UnitInfoCache.dat";
       private const string CompletedUnitsCSV = "CompletedUnits.csv";
       private const string COMMA = ",";
-      
-      private readonly List<UnitInfo> _unitInfoList = new List<UnitInfo>();
 
+      private readonly List<UnitInfo> _unitInfoList = new List<UnitInfo>(); 
+      #endregion
+
+      #region Implementation
       public void Add(UnitInfo unit)
       {
          _unitInfoList.Add(unit);
@@ -57,7 +60,8 @@ namespace HFM.Proteins
                                                              unit.OwningInstancePath == instancePath;
                                                    });
          return findUnit;
-      }
+      } 
+      #endregion
 
       #region Write Completed Unit Info
       public void WriteCompletedUnitInfo(UnitInfo unit)

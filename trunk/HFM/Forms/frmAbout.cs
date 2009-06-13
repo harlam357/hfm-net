@@ -28,6 +28,7 @@ namespace HFM.Forms
 {
    public partial class frmAbout : Form
    {
+      #region Constructor
       public frmAbout()
       {
          InitializeComponent();
@@ -36,13 +37,10 @@ namespace HFM.Forms
          FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetEntryAssembly().Location);
          lblVersion.Text = "Version " + String.Format("{0}.{1}.{2} - Build {3}", fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
                                                                                  fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
-      }
+      } 
+      #endregion
 
-      //private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-      //{
-      //    System.Diagnostics.Process.Start("http://www.gnu.org/licenses/gpl.txt");
-      //}
-
+      #region Event Handlers
       private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
       {
          try
@@ -56,6 +54,7 @@ namespace HFM.Forms
                                     String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
             MessageBox.Show("Failed to show FAHLogStats.NET Google Code page.");
          }
-      }
+      } 
+      #endregion
    }
 }

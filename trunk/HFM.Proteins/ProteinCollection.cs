@@ -50,7 +50,6 @@ namespace HFM.Proteins
    {
       private static ProteinCollection _Instance;
       private readonly static Object classLock = typeof(ProteinCollection);
-      //private readonly Timer _DownloadTimer;
 
       // Erk ... this required local admin before!?
       private readonly string _LocalProjectInfoFile = Path.Combine(PreferenceSet.Instance.AppDataPath, "ProjectInfo.tab");
@@ -87,8 +86,6 @@ namespace HFM.Proteins
          Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
       }
 
-
-
       /// <summary>
       /// Thread-safe, static, Singleton initialize/return
       /// </summary>
@@ -106,23 +103,6 @@ namespace HFM.Proteins
             return _Instance;
          }
       }
-
-      ///// <summary>
-      ///// Handle scheduled (timer) download
-      ///// </summary>
-      ///// <param name="sender"></param>
-      ///// <param name="e"></param>
-      //private void _DownloadTimer_Tick(object sender, EventArgs e)
-      //{
-      //    DateTime Start = Debug.ExecStart;
-      //    _DownloadTimer.Stop();
-
-      //    DownloadFromStanford(null);
-      //    LoadFromTabDelimitedFile(_LocalProjectInfoFile);
-
-      //    _DownloadTimer.Start();
-      //    Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
-      //}
 
       public bool LoadFromTabDelimitedFile()
       {

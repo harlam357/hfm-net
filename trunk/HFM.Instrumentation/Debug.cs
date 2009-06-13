@@ -25,8 +25,7 @@ namespace HFM.Instrumentation
 {
    public static class Debug
    {
-      private static readonly object _lockTraceWrite = typeof(Trace);
-
+      #region Instrumentation
       /// <summary>
       /// The function name of the caller function (1 stack level up)
       /// </summary>
@@ -104,7 +103,11 @@ namespace HFM.Instrumentation
          {
             return DateTime.Now;
          }
-      }
+      } 
+      #endregion
+
+      #region HFM Console Write Support
+      private static readonly object _lockTraceWrite = typeof(Trace);
 
       public static void WriteToHfmConsole(string message)
       {
@@ -118,7 +121,7 @@ namespace HFM.Instrumentation
       {
          lock (_lockTraceWrite)
          {
-            if (((int) level) <= ((int) TraceLevelSwitch.GetTraceLevelSwitch().Level))
+            if (((int)level) <= ((int)TraceLevelSwitch.GetTraceLevelSwitch().Level))
             {
                Trace.WriteLine(FormatTraceString(level, message));
             }
@@ -129,7 +132,7 @@ namespace HFM.Instrumentation
       {
          lock (_lockTraceWrite)
          {
-            if (((int) level) <= ((int) TraceLevelSwitch.GetTraceLevelSwitch().Level))
+            if (((int)level) <= ((int)TraceLevelSwitch.GetTraceLevelSwitch().Level))
             {
                foreach (string message in messages)
                {
@@ -138,11 +141,11 @@ namespace HFM.Instrumentation
             }
          }
       }
-      
+
       public static string FormatTraceString(TraceLevel level, string message)
       {
          string messageIdentifier = String.Empty;
-         
+
          switch (level)
          {
             case TraceLevel.Off:
@@ -163,6 +166,7 @@ namespace HFM.Instrumentation
          }
 
          return String.Format("{0} {1}", messageIdentifier, message);
-      }
+      } 
+      #endregion
    }
 }

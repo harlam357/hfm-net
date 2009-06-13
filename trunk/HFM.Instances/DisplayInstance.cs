@@ -230,7 +230,8 @@ namespace HFM.Instances
          get { return String.Empty; }
       }
       #endregion
-      
+
+      #region Implementation
       public void Load(ClientInstance Instance)
       {
          _Status = Instance.Status;
@@ -252,10 +253,11 @@ namespace HFM.Instances
          _DownloadTime = Instance.CurrentUnitInfo.DownloadTime;
          _Deadline = Instance.CurrentUnitInfo.Deadline;
       }
-      
+
       public void UpdateName(string Key)
       {
          _InstanceName = Key;
-      }
+      } 
+      #endregion
    }
 }

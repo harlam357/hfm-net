@@ -28,25 +28,6 @@ namespace HFM
         public static String[] cmdArgs;
 
         /// <summary>
-        /// Configure the threadpool size
-        /// </summary>
-       //private static void SetThreadPool()
-       //{
-       //   int iMinThreads, iMinIOThreads;
-       //   int iMaxThreads, iMaxIOThreads;
-       //   int iThreads, iIOThreads;
-
-       //   // Get the current sizes and use to ensure good initial sizes for the pool
-       //   System.Threading.ThreadPool.GetMinThreads(out iMinThreads, out iMinIOThreads);
-       //   System.Threading.ThreadPool.GetMaxThreads(out iMaxThreads, out iMaxIOThreads);
-
-       //   iThreads = System.Math.Min(iMaxThreads, 10 * System.Environment.ProcessorCount);
-       //   iIOThreads = System.Math.Min(iMaxIOThreads, 10 * iMinIOThreads * System.Environment.ProcessorCount);
-
-       //   System.Threading.ThreadPool.SetMinThreads(iThreads, iIOThreads);
-       //}
-
-        /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
@@ -55,7 +36,6 @@ namespace HFM
             cmdArgs = argv;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            //SetThreadPool();
             Application.Run(new Forms.frmMain());
         }
     }

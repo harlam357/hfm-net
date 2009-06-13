@@ -24,17 +24,22 @@ namespace HFM.Forms
 {
    public partial class frmMessages : Form
    {
+      #region Properties
       public string[] TextLines
       {
          get { return txtMessages.Lines; }
          set { txtMessages.Lines = value; }
-      }
-   
+      } 
+      #endregion
+
+      #region Constructor
       public frmMessages()
       {
          InitializeComponent();
-      }
-      
+      } 
+      #endregion
+
+      #region Implementation
       public void AddMessage(string message)
       {
          List<string> lines = new List<string>(txtMessages.Lines);
@@ -48,7 +53,7 @@ namespace HFM.Forms
 
          UpdateMessages(lines.ToArray());
       }
-      
+
       public void ScrollToEnd()
       {
          txtMessages.SelectionStart = txtMessages.Text.Length;
@@ -56,7 +61,7 @@ namespace HFM.Forms
       }
 
       private delegate void UpdateMessagesDelegate(string[] lines);
-      
+
       private void UpdateMessages(string[] lines)
       {
          if (InvokeRequired)
@@ -77,6 +82,7 @@ namespace HFM.Forms
          Hide();
          e.Cancel = true;
          base.OnClosing(e);
-      }
+      } 
+      #endregion
    }
 }

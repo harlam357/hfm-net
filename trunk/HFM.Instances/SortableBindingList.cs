@@ -34,9 +34,10 @@ namespace HFM.Instances
    [Serializable]
    public class SortableBindingList<T> : BindingList<T>, ITypedList
    {
+      #region Members
       private const string statusColumnName = "Status";
       private const string nameColumnName = "Name";
-      
+
       private bool _isSorted;
       private ListSortDirection _dir = ListSortDirection.Ascending;
       private bool _sortColumns = false;
@@ -48,7 +49,8 @@ namespace HFM.Instances
       private PropertyDescriptor _sort = null;
 
       [NonSerialized]
-      private bool _offlineClientsLast = true;
+      private bool _offlineClientsLast = true; 
+      #endregion
 
       #region Properties
       public bool OfflineClientsLast

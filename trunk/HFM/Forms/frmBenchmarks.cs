@@ -30,9 +30,12 @@ namespace HFM.Forms
 {
    public partial class frmBenchmarks : Form
    {
+      #region Members
       private readonly FoldingInstanceCollection _clientInstances;
-      private readonly int _initialProjectID;
-   
+      private readonly int _initialProjectID; 
+      #endregion
+
+      #region #region Form Constructor / functionality
       public frmBenchmarks(FoldingInstanceCollection clientInstances, int projectID)
       {
          _clientInstances = clientInstances;
@@ -50,18 +53,20 @@ namespace HFM.Forms
             listBox1.SelectedIndex = index;
          }
       }
+      #endregion
 
+      #region Event Handlers
       private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
       {
          txtBenchmarks.Text = String.Empty;
          int ProjectID = (int)listBox1.SelectedItem;
 
          string[] lines = UpdateProteinInformation(ProjectID);
-         
+
          UpdateBenchmarkText(lines);
 
          List<InstanceProteinBenchmark> list = ProteinBenchmarkCollection.Instance.GetProjectBenchmarks(ProjectID);
-         
+
          foreach (InstanceProteinBenchmark benchmark in list)
          {
             ClientInstance instance;
@@ -69,21 +74,42 @@ namespace HFM.Forms
             UpdateBenchmarkText(benchmark.ToMultiLineString(instance));
          }
       }
-      
+
+      private void linkDescription_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+      {
+         try
+         {
+            Process.Start(linkDescription.Text);
+         }
+         catch (Exception ex)
+         {
+            Debug.WriteToHfmConsole(TraceLevel.Error,
+                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            MessageBox.Show("Failed to show Project Description.");
+         }
+      }
+
+      private void btnExit_Click(object sender, EventArgs e)
+      {
+         Close();
+      } 
+      #endregion
+
+      #region Helper Routines
       private void UpdateBenchmarkText(IEnumerable<string> benchmarkLines)
       {
          List<string> lines = new List<string>(txtBenchmarks.Lines);
          lines.AddRange(benchmarkLines);
          txtBenchmarks.Lines = lines.ToArray();
       }
-      
+
       private string[] UpdateProteinInformation(int ProjectID)
       {
          List<string> lines = new List<string>(5);
-      
+
          Protein protein;
          ProteinCollection.Instance.TryGetValue(ProjectID, out protein);
-         
+
          if (protein != null)
          {
             lblProjectID.Text = String.Format("Project: {0}", protein.WorkUnitName);
@@ -108,27 +134,9 @@ namespace HFM.Forms
             Debug.WriteToHfmConsole(TraceLevel.Warning,
                                     String.Format("{0} could not find Project ID '{1}'.", Debug.FunctionName, ProjectID));
          }
-         
+
          return lines.ToArray();
       }
-
-      private void linkDescription_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-      {
-         try
-         {
-            Process.Start(linkDescription.Text);
-         }
-         catch (Exception ex)
-         {
-            Debug.WriteToHfmConsole(TraceLevel.Error,
-                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-            MessageBox.Show("Failed to show Project Description.");
-         }
-      }
-
-      private void btnExit_Click(object sender, EventArgs e)
-      {
-         Close();
-      }
+      #endregion
    }
 }

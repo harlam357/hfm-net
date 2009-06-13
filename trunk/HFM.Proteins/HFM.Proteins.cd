@@ -5,10 +5,10 @@
     <Position X="3" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>Protein.cs</FileName>
-      <HashCode>AAgEABAIAEAgAAABCAAgBACEAEAAAEAOAAIEAAAAQAE=</HashCode>
+      <HashCode>AAgEABAIAEAgAAABCAAgBACEAEAAAEBOAAIEAAAAQAE=</HashCode>
     </TypeIdentifier>
   </Class>
-  <Class Name="HFM.Proteins.ProjectInfoUpdatedEventArgs" Collapsed="true">
+  <Class Name="HFM.Proteins.ProjectInfoUpdatedEventArgs">
     <Position X="5.25" Y="4" Width="1.5" />
     <TypeIdentifier>
       <FileName>ProteinCollection.cs</FileName>
@@ -26,18 +26,32 @@
     <Position X="0.5" Y="0.5" Width="2" />
     <TypeIdentifier>
       <FileName>UnitInfo.cs</FileName>
-      <HashCode>ABhAl4RAAAQACAIIkgBAAEAiDEIAACAJACAECEhgEBA=</HashCode>
+      <HashCode>ANjEl4RoBAQACAIIkgJABEQiDGKIBCBLEiEGCFhgEJA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HFM.Proteins.UnitInfoCollection">
+    <Position X="7.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UnitInfoCollection.cs</FileName>
+      <HashCode>AAIAABQAgAgAgCAAAAAEARAAACBAAAAAQAAAAABAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HFM.Proteins.UnitFrame">
+    <Position X="3" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UnitFrame.cs</FileName>
+      <HashCode>AAAQAAAAICAAAAAABAAAAABEAAAAAAAAAAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Enum Name="HFM.Proteins.ClientType">
-    <Position X="5.25" Y="5.75" Width="1.5" />
+    <Position X="5.25" Y="6.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>UnitInfo.cs</FileName>
       <HashCode>AAAAAAAAAAAAAAAAAAAAQAAIAIAAAAAAAAAAAAAAABA=</HashCode>
     </TypeIdentifier>
   </Enum>
-  <Delegate Name="HFM.Proteins.ProjectInfoUpdatedEventHandler" Collapsed="true">
-    <Position X="5.25" Y="4.75" Width="1.5" />
+  <Delegate Name="HFM.Proteins.ProjectInfoUpdatedEventHandler">
+    <Position X="5.25" Y="5.25" Width="1.5" />
     <TypeIdentifier>
       <FileName>ProteinCollection.cs</FileName>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAQAAAA=</HashCode>
