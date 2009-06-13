@@ -1,13 +1,23 @@
 ﻿<Instance>
-   <Name>Instance</Name>
+   <Status>Offline</Status>
+   <StatusColor>Red</StatusColor>
+   <StatusFontColor>Black</StatusFontColor>
    <PercentComplete>?</PercentComplete>
-   <Credit>?</Credit>
+   <Name>Instance</Name>
+   <ClientType>N/A</ClientType>
+   <TPF>00:00:00</TPF>
    <PPD>N/A</PPD>
-   <PPW>N/A</PPW>
    <UPD>N/A</UPD>
-   <UPW>N/A</UPW>
+   <MHz>1</MHz>
+   <PPDMHz>N/A</PPDMHz>
+   <ETA>00:00:00</ETA>
+   <Core>N/A</Core>
+   <CoreVersion>N/A</CoreVersion>
+   <ProjectRunCloneGen>N/A</ProjectRunCloneGen>
+   <Credit>N/A</Credit>
    <Completed>N/A</Completed>
    <Failed>N/A</Failed>
-   <LastUpdate>Never</LastUpdate>
-   <CompleteTime>Never</CompleteTime>
+   <Username>N/A</Username>
+   <DownloadTime>00:00:00</DownloadTime>
+   <Deadline>00:00:00</Deadline>
 </Instance>

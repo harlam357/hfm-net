@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Instance Name="MyMachine">
+   <HFMVersion>0</HFMVersion>
    <UnitInfo>
       <DateStarted>10 August 09:37:33</DateStarted>
       <FramesComplete>35</FramesComplete>

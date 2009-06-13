@@ -120,6 +120,17 @@ namespace HFM.Proteins
             return 0;
          }
       }
+      
+      /// <summary>
+      /// Work unit deadline
+      /// </summary>
+      public DateTime Deadline
+      {
+         get 
+         {
+            return DownloadTime.AddDays(CurrentProtein.PreferredDays);
+         }
+      }
 
       #region Values Based on UnitFrame Data
       /// <summary>

@@ -1,7 +1,8 @@
 /*
  * HFM.NET - Orange Style Sheet
  * Copyright (C) 2006-2007 David Rawling
-
+ * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
@@ -65,9 +66,9 @@ TD
 
 .Blank
 {
-	color: #F87217;
-	background-color: White;
 	border: none;
+	background-color: White;
+	color: #F87217;
 	padding: 5px 5px 5px 5px;
 	margin: 2px 2px 2px 2px;
 	font-size: inherit;
@@ -75,9 +76,9 @@ TD
 
 .Empty
 {
-	color: White;
-	background-color: White;
 	border: none;
+	background-color: White;
+	color: White;
 	padding: 5px 5px 5px 5px;
 	margin: 2px 2px 2px 2px;
 	font-size: inherit;
@@ -85,12 +86,21 @@ TD
 
 .Plain
 {
-	color: #C35617;
-	background-color: White;
 	border: none;
+	background-color: White;
+	color: #C35617;
 	padding: 5px 5px 5px 5px;
 	margin: 2px 2px 2px 2px;
 	font-size: inherit;
+}
+
+.StatusCol
+{
+	border: solid 1px #F87217;
+	padding: 5px 5px 5px 5px;
+	margin: 2px 2px 2px 2px;
+	font-size: inherit;
+	vertical-align: top;
 }
 
 .LeftCol
@@ -106,9 +116,9 @@ TD
 
 .RightCol
 {
+	border: solid 1px #F87217;
 	background-color: #FDD017;
 	color: #C35617;
-	border: solid 1px #F87217;
 	padding: 5px 5px 5px 5px;
 	margin: 2px 2px 2px 2px;
 	font-size: inherit;
@@ -128,9 +138,9 @@ TD
 
 .AltRightCol
 {
+	border: solid 1px #F87217;
 	background-color: #EDC017;
 	color: #C35617;
-	border: solid 1px #F87217;
 	padding: 5px 5px 5px 5px;
 	margin: 2px 2px 2px 2px;
 	font-size: inherit;

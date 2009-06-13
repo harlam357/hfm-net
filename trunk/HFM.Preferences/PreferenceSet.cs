@@ -47,6 +47,9 @@ namespace HFM.Preferences
       public const String EOCUserBaseURL = "http://folding.extremeoverclocking.com/user_summary.php?s=&u=";
       public const String EOCTeamBaseURL = "http://folding.extremeoverclocking.com/team_summary.php?s=&t=";
       public const String StanfordBaseURL = "http://fah-web.stanford.edu/cgi-bin/main.py?qtype=userpage&username=";
+      
+      public const Int32 MinutesDefault = 15;
+      public const Int32 ProxyPortDefault = 8080;
 
       #region Public Properties and associated Private Variables
       private Boolean _SyncOnLoad;
@@ -384,7 +387,11 @@ namespace HFM.Preferences
 
          if (Int32.TryParse(Settings.Default.GenerateInterval, out _GenerateInterval) == false)
          {
-            _GenerateInterval = 15;
+            _GenerateInterval = MinutesDefault;
+         }
+         else if (ValidateMinutes(_GenerateInterval) == false)
+         {
+            _GenerateInterval = MinutesDefault;
          }
 
          _GenerateWeb = Settings.Default.GenerateWeb;
@@ -393,7 +400,11 @@ namespace HFM.Preferences
 
          if (Int32.TryParse(Settings.Default.SyncTimeMinutes, out _SyncTimeMinutes) == false)
          {
-            _SyncTimeMinutes = 15;
+            _SyncTimeMinutes = MinutesDefault;
+         }
+         else if (ValidateMinutes(_SyncTimeMinutes) == false)
+         {
+            _SyncTimeMinutes = MinutesDefault;
          }
 
          _WebRoot = Settings.Default.WebRoot;
@@ -479,6 +490,16 @@ namespace HFM.Preferences
          Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
       }
 
+      public static bool ValidateMinutes(int Minutes)
+      {
+         if ((Minutes > 180) || (Minutes < 1))
+         {
+            return false;
+         }
+
+         return true;
+      }
+
       private static void UpgradeUserSettings()
       {
          System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
@@ -557,13 +578,5 @@ namespace HFM.Preferences
          }
          Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
       }
-
-      /// <summary>
-      /// Save on destroy
-      /// </summary>
-      //~PreferenceSet()
-      //{
-      //   Save();
-      //}
    }
 }

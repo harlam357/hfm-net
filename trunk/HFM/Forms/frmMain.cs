@@ -253,7 +253,12 @@ namespace HFM.Forms
          if (WindowState != FormWindowState.Minimized)
          {
             originalState = WindowState;
-            ShowInTaskbar = true;
+            // ReApply Sort when restoring from the sys tray - Issue 32
+            if (ShowInTaskbar == false)
+            {
+               ShowInTaskbar = true;
+               ApplySort(SortColumnOrder);
+            }
          }
          else
          {
@@ -418,6 +423,27 @@ namespace HFM.Forms
       }
 
       /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
+      private void dataGridView1_MouseMove(object sender, MouseEventArgs e)
+      {
+         DataGridView.HitTestInfo info = dataGridView1.HitTest(e.X, e.Y);
+
+         if (info.ColumnIndex == 0 && info.RowIndex > -1)
+         {
+            ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.Rows[info.RowIndex].Cells["Name"].Value.ToString()];
+
+            toolTipGrid.Show(Instance.Status.ToString(), dataGridView1, e.X + 15, e.Y, 3000);
+         }
+         else
+         {
+            toolTipGrid.Hide(dataGridView1);
+         }
+      }
+
+      /// <summary>
       /// Override painting in the Status column
       /// </summary>
       /// <param name="sender"></param>
@@ -447,38 +473,9 @@ namespace HFM.Forms
                                          e.CellBounds.Bottom - 1);
 
                      // Draw the inset highlight box.
-                     Pen fillPen;
-                     Brush fillBrush;
-                     switch (((ClientStatus) e.Value))
-                     {
-                        case ClientStatus.Running:
-                           fillPen = Pens.DarkGreen;
-                           fillBrush = Brushes.DarkGreen;
-                           break;
-                        case ClientStatus.RunningNoFrameTimes:
-                           fillPen = Pens.Yellow;
-                           fillBrush = Brushes.Yellow;
-                           break;
-                        case ClientStatus.Stopped:
-                        case ClientStatus.Hung:
-                           fillPen = Pens.DarkRed;
-                           fillBrush = Brushes.DarkRed;
-                           break;
-                        case ClientStatus.Paused:
-                           fillPen = Pens.Orange;
-                           fillBrush = Brushes.Orange;
-                           break;
-                        case ClientStatus.Offline:
-                           fillPen = Pens.Gray;
-                           fillBrush = Brushes.Gray;
-                           break;
-                        default:
-                           fillPen = Pens.Gray;
-                           fillBrush = Brushes.Gray;
-                           break;
-                     }
-                     e.Graphics.DrawRectangle(fillPen, newRect);
-                     e.Graphics.FillRectangle(fillBrush, newRect);
+                     ClientStatus status = (ClientStatus)e.Value;
+                     e.Graphics.DrawRectangle(ClientInstance.GetStatusPen(status), newRect);
+                     e.Graphics.FillRectangle(ClientInstance.GetStatusBrush(status), newRect);
 
                      //Draw the text content of the cell, ignoring alignment.
                      //if (e.Value != null)
@@ -767,10 +764,7 @@ namespace HFM.Forms
                   {
                      Debug.WriteToHfmConsole(TraceLevel.Error,
                                              String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-                     MessageBox.Show(
-                        String.Format(
-                           "Failed to show client '{0}' files.\n\nPlease check the current File Explorer defined in the Preferences.",
-                           Instance.InstanceName));
+                     MessageBox.Show(String.Format("Failed to show client '{0}' files.\n\nPlease check the current File Explorer defined in the Preferences.", Instance.InstanceName));
                   }
                }
             }
@@ -1461,40 +1455,54 @@ namespace HFM.Forms
          Debug.WriteToHfmConsole(TraceLevel.Info,
                                  String.Format("{0} Starting WebGen.", Debug.FunctionName));
          
-         StreamWriter sw;
-
-         // Create the web folder (just in case)
-         if (Directory.Exists(PreferenceSet.Instance.WebRoot) == false)
+         StreamWriter sw = null;
+         
+         try
          {
-            Directory.CreateDirectory(PreferenceSet.Instance.WebRoot);
-         }
+            // Create the web folder (just in case)
+            if (Directory.Exists(PreferenceSet.Instance.WebRoot) == false)
+            {
+               Directory.CreateDirectory(PreferenceSet.Instance.WebRoot);
+            }
 
-         // Copy the CSS file to the output directory
-         string sCSSFileName = Path.Combine(Path.Combine(PreferenceSet.AppPath, "CSS"), PreferenceSet.Instance.CSSFileName);
-         if (File.Exists(sCSSFileName))
-         {
-            File.Copy(sCSSFileName, Path.Combine(PreferenceSet.Instance.WebRoot, PreferenceSet.Instance.CSSFileName), true);
-         }
+            // Copy the CSS file to the output directory
+            string sCSSFileName = Path.Combine(Path.Combine(PreferenceSet.AppPath, "CSS"), PreferenceSet.Instance.CSSFileName);
+            if (File.Exists(sCSSFileName))
+            {
+               File.Copy(sCSSFileName, Path.Combine(PreferenceSet.Instance.WebRoot, PreferenceSet.Instance.CSSFileName), true);
+            }
 
-         // Generate the index page
-         sw = new StreamWriter(Path.Combine(PreferenceSet.Instance.WebRoot, "index.html"), false);
-         sw.Write(XMLGen.OverviewXml("WebOverview.xslt", HostInstances));
-         sw.Close();
-
-         // Generate the summary page
-         sw = new StreamWriter(Path.Combine(PreferenceSet.Instance.WebRoot, "summary.html"), false);
-         sw.Write(XMLGen.SummaryXml("WebSummary.xslt", HostInstances));
-         sw.Close();
-
-         // Generate a page per instance
-         foreach (KeyValuePair<String, ClientInstance> kvp in HostInstances.InstanceCollection)
-         {
-            sw = new StreamWriter(Path.Combine(PreferenceSet.Instance.WebRoot, Path.ChangeExtension(kvp.Value.InstanceName, ".html")), false);
-            sw.Write(XMLGen.InstanceXml("WebInstance.xslt", kvp.Value));
+            // Generate the index page
+            sw = new StreamWriter(Path.Combine(PreferenceSet.Instance.WebRoot, "index.html"), false);
+            sw.Write(XMLGen.OverviewXml("WebOverview.xslt", HostInstances));
             sw.Close();
-         }
 
-         StartWebGenTimer();
+            // Generate the summary page
+            sw = new StreamWriter(Path.Combine(PreferenceSet.Instance.WebRoot, "summary.html"), false);
+            sw.Write(XMLGen.SummaryXml("WebSummary.xslt", HostInstances));
+            sw.Close();
+
+            // Generate a page per instance
+            foreach (ClientInstance instance in HostInstances.InstanceCollection.Values)
+            {
+               sw = new StreamWriter(Path.Combine(PreferenceSet.Instance.WebRoot, Path.ChangeExtension(instance.InstanceName, ".html")), false);
+               sw.Write(XMLGen.InstanceXml("WebInstance.xslt", instance));
+               sw.Close();
+            }
+         }
+         catch (Exception ex)
+         {
+            Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+         }
+         finally
+         {
+            if (sw != null)
+            {
+               sw.Close();
+            }
+
+            StartWebGenTimer();
+         }
       }
       
       /// <summary>
@@ -1723,44 +1731,14 @@ namespace HFM.Forms
       /// </summary>
       private void RefreshControls()
       {
-         Double newTotalPPD = 0;
-         Int32 newGoodHosts = 0;
-         //Int32 newPausedHosts = 0;
-         //Int32 newHungHosts = 0;
-         //Int32 newStoppedHosts = 0;
-         //Int32 newOfflineUnknownHosts = 0;
-         foreach (KeyValuePair<String, ClientInstance> kvp in HostInstances.InstanceCollection)
-         {
-            newTotalPPD += kvp.Value.CurrentUnitInfo.PPD;
-            
-            switch (kvp.Value.Status)
-            {
-               case ClientStatus.Running:
-               case ClientStatus.RunningNoFrameTimes:
-                  newGoodHosts++;
-                  break;
-               //case ClientStatus.Paused:
-               //   newPausedHosts++;
-               //   break;
-               //case ClientStatus.Hung:
-               //   newHungHosts++;
-               //   break;
-               //case ClientStatus.Stopped:
-               //   newStoppedHosts++;
-               //   break;
-               //case ClientStatus.Offline:
-               //case ClientStatus.Unknown:
-               //   newOfflineUnknownHosts++;
-               //   break;
-            }
-         }
+         InstanceTotals totals = HostInstances.GetInstanceTotals();
 
-         TotalPPD = newTotalPPD;
-         GoodHosts = newGoodHosts;
+         TotalPPD = totals.PPD;
+         GoodHosts = totals.WorkingClients;
          
          SetNotifyIconText(String.Format("{0} Clients Working\n{1} Clients Offline\n{2:###,###,##0.00} PPD (Est)",
-                                         GoodHosts, (HostInstances.InstanceCollection.Count - GoodHosts), TotalPPD));
-         RefreshStatusLabels();                        
+                                         GoodHosts, totals.NonWorkingClients, TotalPPD));
+         RefreshStatusLabels();
       }
 
       /// <summary>
@@ -2147,9 +2125,9 @@ namespace HFM.Forms
       }
       
       /// <summary>
-      /// Fire File Browser Process
+      /// Fire File Browser Process (wrap calls to this function in try catch)
       /// </summary>
-      /// <param name="path"></param>
+      /// <param name="path">The Folder Path to browse</param>
       private static void StartFileBrowser(string path)
       {
          Process.Start(PreferenceSet.Instance.FileExplorer, path);

@@ -33,6 +33,16 @@ using Debug=HFM.Instrumentation.Debug;
 
 namespace HFM.Instances
 {
+   public struct InstanceTotals
+   {
+      public double PPD;
+      public double UPD;
+      public Int32 WorkingClients;
+      public Int32 NonWorkingClients;
+      public Int32 TotalCompletedUnits;
+      public Int32 TotalFailedUnits;
+   }
+
    public class FoldingInstanceCollection
    {
       #region Members
@@ -391,9 +401,9 @@ namespace HFM.Instances
       public bool ContainsName(string instanceName)
       {
          ClientInstance findInstance = new List<ClientInstance>(_instanceCollection.Values).Find(delegate(ClientInstance instance)
-                                                                      {
-                                                                         return instance.InstanceName.ToUpper() == instanceName.ToUpper();
-                                                                      });
+                                                                {
+                                                                   return instance.InstanceName.ToUpper() == instanceName.ToUpper();
+                                                                });
          return findInstance != null;
       }
       #endregion
@@ -448,6 +458,48 @@ namespace HFM.Instances
 
       #region Helper Functions
       /// <summary>
+      /// Get Totals for all loaded Client Instances
+      /// </summary>
+      /// <returns>Totals for all Instances (InstanceTotals Structure)</returns>
+      public InstanceTotals GetInstanceTotals()
+      {
+         InstanceTotals totals = new InstanceTotals();
+         
+         foreach (ClientInstance instance in _instanceCollection.Values)
+         {
+            totals.PPD += instance.CurrentUnitInfo.PPD;
+            totals.UPD += instance.CurrentUnitInfo.UPD;
+            totals.TotalCompletedUnits += instance.NumberOfCompletedUnitsSinceLastStart;
+            totals.TotalFailedUnits += instance.NumberOfFailedUnitsSinceLastStart;
+            
+            switch (instance.Status)
+            {
+               case ClientStatus.Running:
+               case ClientStatus.RunningNoFrameTimes:
+                  totals.WorkingClients++;
+                  break;
+               //case ClientStatus.Paused:
+               //   newPausedHosts++;
+               //   break;
+               //case ClientStatus.Hung:
+               //   newHungHosts++;
+               //   break;
+               //case ClientStatus.Stopped:
+               //   newStoppedHosts++;
+               //   break;
+               //case ClientStatus.Offline:
+               //case ClientStatus.Unknown:
+               //   newOfflineUnknownHosts++;
+               //   break;
+            }
+         }
+         
+         totals.NonWorkingClients = Count - totals.WorkingClients;
+
+         return totals;
+      }
+
+      /// <summary>
       /// Finds the DisplayInstance by Key (Instance Name)
       /// </summary>
       /// <param name="collection">DisplayIntance Collection</param>
@@ -455,20 +507,10 @@ namespace HFM.Instances
       /// <returns></returns>
       private static DisplayInstance FindDisplayInstance(IEnumerable<DisplayInstance> collection, string Key)
       {
-         //foreach (DisplayInstance instance in collection)
-         //{
-         //   if (instance.Name == Key)
-         //   {
-         //      return instance;
-         //   }
-         //}
-
          return new List<DisplayInstance>(collection).Find(delegate(DisplayInstance displayInstance)
                                                             {
                                                                return displayInstance.Name == Key;
                                                             });
-
-         //return null;
       }
       #endregion
    }

@@ -19,6 +19,7 @@
  */
 
 using System;
+using System.Drawing;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -1202,7 +1203,6 @@ namespace HFM.Instances
 
          return true;
       }
-
       #endregion
 
       #region XML Serialization
@@ -1357,6 +1357,88 @@ namespace HFM.Instances
          }
 
          Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, InstanceName, Debug.GetExecTime(Start)));
+      }
+      #endregion
+      
+      #region Status Color Helper Functions
+      /// <summary>
+      /// Gets Status Color Pen Object
+      /// </summary>
+      /// <param name="status">Client Status</param>
+      /// <returns>Status Color (Pen)</returns>
+      public static Pen GetStatusPen(ClientStatus status)
+      {
+         return new Pen(GetStatusColor(status));
+      }
+
+      /// <summary>
+      /// Gets Status Color Brush Object
+      /// </summary>
+      /// <param name="status">Client Status</param>
+      /// <returns>Status Color (Brush)</returns>
+      public static SolidBrush GetStatusBrush(ClientStatus status)
+      {
+         return new SolidBrush(GetStatusColor(status));
+      }
+
+      /// <summary>
+      /// Gets Status Html Color String
+      /// </summary>
+      /// <param name="status">Client Status</param>
+      /// <returns>Status Html Color (String)</returns>
+      public static string GetStatusHtmlColor(ClientStatus status)
+      {
+         return ColorTranslator.ToHtml(GetStatusColor(status));
+      }
+
+      /// <summary>
+      /// Gets Status Html Font Color String
+      /// </summary>
+      /// <param name="status">Client Status</param>
+      /// <returns>Status Html Font Color (String)</returns>
+      public static string GetStatusHtmlFontColor(ClientStatus status)
+      {
+         switch (status)
+         {
+            case ClientStatus.Running:
+               return ColorTranslator.ToHtml(Color.White);
+            case ClientStatus.RunningNoFrameTimes:
+               return ColorTranslator.ToHtml(Color.Black);
+            case ClientStatus.Stopped:
+            case ClientStatus.Hung:
+               return ColorTranslator.ToHtml(Color.White);
+            case ClientStatus.Paused:
+               return ColorTranslator.ToHtml(Color.Black);
+            case ClientStatus.Offline:
+               return ColorTranslator.ToHtml(Color.Black);
+            default:
+               return ColorTranslator.ToHtml(Color.Black);
+         }
+      }
+
+      /// <summary>
+      /// Gets Status Color Object
+      /// </summary>
+      /// <param name="status">Client Status</param>
+      /// <returns>Status Color (Color)</returns>
+      public static Color GetStatusColor(ClientStatus status)
+      {
+         switch (status)
+         {
+            case ClientStatus.Running:
+               return Color.DarkGreen;
+            case ClientStatus.RunningNoFrameTimes:
+               return Color.Yellow;
+            case ClientStatus.Stopped:
+            case ClientStatus.Hung:
+               return Color.DarkRed;
+            case ClientStatus.Paused:
+               return Color.Orange;
+            case ClientStatus.Offline:
+               return Color.Gray;
+            default:
+               return Color.Gray;
+         }
       }
       #endregion
    }

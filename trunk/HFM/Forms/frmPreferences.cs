@@ -24,7 +24,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using HFM.Helpers;
 using HFM.Preferences;
@@ -37,6 +36,8 @@ namespace HFM.Forms
       public PreferenceSet Prefs;
       
       private readonly WebBrowser wbCssSample;
+      private const string CssExtension = ".css";
+      private const string CssFolder = "CSS";
 
       public frmPreferences()
       {
@@ -58,7 +59,7 @@ namespace HFM.Forms
          }
       }
 
-      private void checkBox2_CheckedChanged(object sender, EventArgs e)
+      private void chkScheduled_CheckedChanged(object sender, EventArgs e)
       {
          if (chkScheduled.Checked)
          {
@@ -70,9 +71,10 @@ namespace HFM.Forms
          }
       }
 
-      private void txtMinutes_KeyPress(object sender, KeyPressEventArgs e)
+      private void txtDigitsOnly_KeyPress(object sender, KeyPressEventArgs e)
       {
-         if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
+         // only allow digits and backspace characters
+         if (char.IsDigit(e.KeyChar) == false && e.KeyChar != '\b')
          {
             e.Handled = true;
          }
@@ -80,18 +82,25 @@ namespace HFM.Forms
 
       private void txtMinutes_Validating(object sender, CancelEventArgs e)
       {
-         int Minutes = 0;
-         try
+         Control textBox = (Control)sender;
+      
+         int Minutes;
+         if (int.TryParse(textBox.Text, out Minutes) == false)
          {
-            Minutes = Convert.ToInt16(txtCollectMinutes.Text);
+            textBox.BackColor = Color.Yellow;
+            textBox.Focus();
+            toolTipPrefs.Show("Minutes must be a value from 1 to 180", textBox.Parent, textBox.Location.X + 5, textBox.Location.Y - 20, 5000);
          }
-         catch
+         else if (PreferenceSet.ValidateMinutes(Minutes) == false)
          {
-            e.Cancel = true;
+            textBox.BackColor = Color.Yellow;
+            textBox.Focus();
+            toolTipPrefs.Show("Minutes must be a value from 1 to 180", textBox.Parent, textBox.Location.X + 5, textBox.Location.Y - 20, 5000);
          }
-         if ((Minutes > 180) || (Minutes < 1))
+         else
          {
-            e.Cancel = true;
+            textBox.BackColor = SystemColors.Window;
+            toolTipPrefs.Hide(textBox.Parent);
          }
       }
 
@@ -99,18 +108,37 @@ namespace HFM.Forms
       {
          Prefs = PreferenceSet.Instance;
 
-         DirectoryInfo di = new DirectoryInfo(Path.Combine(PreferenceSet.AppPath, "CSS"));
+         DirectoryInfo di = new DirectoryInfo(Path.Combine(PreferenceSet.AppPath, CssFolder));
          StyleList.Items.Clear();
          foreach (FileInfo fi in di.GetFiles())
          {
-            StyleList.Items.Add(fi.Name.ToLower().Replace(".css", ""));
+            if (fi.Name.EndsWith(CssExtension))
+            {
+               StyleList.Items.Add(fi.Name.Replace(CssExtension, String.Empty));
+            }
          }
 
          // Visual Style tab
-         StyleList.SelectedItem = Prefs.CSSFileName.ToLower().Replace(".css", "");
+         for (int i = 0; i < StyleList.Items.Count; i++)
+         {
+            object item = StyleList.Items[i];
+
+            if (item.ToString().ToLower().Equals(Prefs.CSSFileName.ToLower().Replace(CssExtension, String.Empty)))
+            {
+               StyleList.SelectedItem = item;
+            }
+         }
 
          // Scheduled Tasks tab
-         txtWebGenMinutes.Text = Prefs.GenerateInterval.ToString();
+         if (PreferenceSet.ValidateMinutes(Prefs.GenerateInterval))
+         {
+            txtWebGenMinutes.Text = Prefs.GenerateInterval.ToString();
+         }
+         else
+         {
+            txtWebGenMinutes.Text = PreferenceSet.MinutesDefault.ToString();
+         }
+
          chkWebSiteGenerator.Checked = Prefs.GenerateWeb;
          if (Prefs.WebGenAfterRefresh)
          {
@@ -130,7 +158,14 @@ namespace HFM.Forms
          cboPpdCalc.Items.Add(ePpdCalculation.EffectiveRate);
          cboPpdCalc.Text = Prefs.PpdCalculation.ToString();
 
-         txtCollectMinutes.Text = Prefs.SyncTimeMinutes.ToString();
+         if (PreferenceSet.ValidateMinutes(Prefs.SyncTimeMinutes))
+         {
+            txtCollectMinutes.Text = Prefs.SyncTimeMinutes.ToString();
+         }
+         else
+         {
+            txtCollectMinutes.Text = PreferenceSet.MinutesDefault.ToString();
+         }
          txtWebSiteBase.Text = Prefs.WebRoot;
 
          // Defaults
@@ -168,11 +203,11 @@ namespace HFM.Forms
 
       private void StyleList_SelectedIndexChanged(object sender, EventArgs e)
       {
-         String sStylesheet = Path.Combine(Path.Combine(PreferenceSet.AppPath, "CSS"), Path.ChangeExtension(StyleList.SelectedItem.ToString(), ".css"));
+         String sStylesheet = Path.Combine(Path.Combine(PreferenceSet.AppPath, CssFolder), Path.ChangeExtension(StyleList.SelectedItem.ToString(), CssExtension));
          StringBuilder sb = new StringBuilder();
 
          sb.Append("<HTML><HEAD><TITLE>Test CSS File</TITLE>");
-         sb.Append("<LINK REL=\"Stylesheet\" TYPE=\"text/css\" href=\"file:///" + sStylesheet + "\" />");
+         sb.Append("<LINK REL=\"Stylesheet\" TYPE=\"text/css\" href=\"file://" + sStylesheet + "\" />");
          sb.Append("</HEAD><BODY>");
 
          sb.Append("<table class=\"Instance\">");
@@ -251,7 +286,7 @@ namespace HFM.Forms
          if (txtProjectDownloadUrl.BackColor == Color.Yellow) return;
       
          // Visual Styles tab
-         Prefs.CSSFileName = StyleList.SelectedItem + ".css";
+         Prefs.CSSFileName = StyleList.SelectedItem + CssExtension;
 
          // Scheduled Tasks tab
          Prefs.GenerateInterval = Int32.Parse(txtWebGenMinutes.Text);
@@ -280,14 +315,35 @@ namespace HFM.Forms
          Prefs.MessageLevel = cboMessageLevel.SelectedIndex;
 
          // Web Settings tab
-         Prefs.EOCUserID = Int32.Parse(txtEOCUserID.Text);
+         if (txtEOCUserID.Text.Length > 0)
+         {
+            Prefs.EOCUserID = Int32.Parse(txtEOCUserID.Text);
+         }
+         else
+         {
+            Prefs.EOCUserID = 0;
+         }
          Prefs.StanfordID = txtStanfordUserID.Text;
-         Prefs.TeamID = Int32.Parse(txtStanfordTeamID.Text);
+         if (txtStanfordTeamID.Text.Length > 0)
+         {
+            Prefs.TeamID = Int32.Parse(txtStanfordTeamID.Text);
+         }
+         else
+         {
+            Prefs.TeamID = 0;
+         }
          Prefs.ProjectDownloadUrl = txtProjectDownloadUrl.Text;
          Prefs.UseProxy = chkUseProxy.Checked;
          Prefs.UseProxyAuth = chkUseProxyAuth.Checked;
          Prefs.ProxyServer = txtProxyServer.Text;
-         Prefs.ProxyPort = Int32.Parse(txtProxyPort.Text);
+         if (txtProxyPort.Text.Length > 0)
+         {
+            Prefs.ProxyPort = Int32.Parse(txtProxyPort.Text);
+         }
+         else
+         {
+            Prefs.ProxyPort = PreferenceSet.ProxyPortDefault;
+         }
          Prefs.ProxyUser = txtProxyUser.Text;
          Prefs.ProxyPass = txtProxyPass.Text;
 
@@ -385,7 +441,9 @@ namespace HFM.Forms
          {
             EnableProxy();
             if (chkUseProxyAuth.Checked)
+            {
                EnableProxyAuth();
+            }
          }
          else
          {
@@ -396,9 +454,13 @@ namespace HFM.Forms
       private void chkUseProxyAuth_CheckedChanged(object sender, EventArgs e)
       {
          if (chkUseProxyAuth.Checked)
+         {
             EnableProxyAuth();
+         }
          else
+         {
             DisableProxyAuth();
+         }
       }
 
       private void chkDefaultConfig_CheckedChanged(object sender, EventArgs e)
@@ -468,19 +530,18 @@ namespace HFM.Forms
 
       private void txtProjectDownloadUrl_Validating(object sender, CancelEventArgs e)
       {
-      
-         Regex rURL = new Regex(@"(http|https)://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?", RegexOptions.Singleline);
-
-         if (rURL.Match(txtProjectDownloadUrl.Text).Success == false)
+         Control textBox = (Control)sender;
+         
+         if (StringOps.ValidateHttpURL(txtProjectDownloadUrl.Text) == false)
          {
             txtProjectDownloadUrl.BackColor = Color.Yellow;
             txtProjectDownloadUrl.Focus();
-            //ShowToolTip("URL must be a valid URL and be\r\nthe path to a valid Stanford Project Summary page.", txtProjectDownloadUrl, 5000);
+            toolTipPrefs.Show("URL must be a valid URL and the path to a valid Stanford Project Summary page", textBox.Parent, textBox.Location.X + 5, textBox.Location.Y - 20, 5000);
          }
          else
          {
             txtProjectDownloadUrl.BackColor = SystemColors.Window;
-            //toolTipCore.Hide(txtProjectDownloadUrl);
+            toolTipPrefs.Hide(textBox.Parent);
          }
       }
 

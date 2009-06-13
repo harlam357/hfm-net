@@ -48,6 +48,12 @@ namespace HFM.Forms
       /// </summary>
       private void InitializeComponent()
       {
+         this.components = new System.ComponentModel.Container();
+         this.pnl1CSSSample = new System.Windows.Forms.Panel();
+         this.StyleList = new System.Windows.Forms.ListBox();
+         this.locateWebFolder = new System.Windows.Forms.FolderBrowserDialog();
+         this.tabControl1 = new System.Windows.Forms.TabControl();
+         this.tabSchdTasks = new System.Windows.Forms.TabPage();
          this.grpUpdateData = new HFM.Classes.GroupBoxWrapper();
          this.label2 = new HFM.Classes.LabelWrapper();
          this.cboPpdCalc = new HFM.Classes.ComboBoxWrapper();
@@ -57,12 +63,6 @@ namespace HFM.Forms
          this.lbl2SchedExplain = new HFM.Classes.LabelWrapper();
          this.chkScheduled = new HFM.Classes.CheckBoxWrapper();
          this.chkSynchronous = new HFM.Classes.CheckBoxWrapper();
-         this.btnCancel = new HFM.Classes.ButtonWrapper();
-         this.btnOK = new HFM.Classes.ButtonWrapper();
-         this.lbl1Preview = new HFM.Classes.LabelWrapper();
-         this.lbl1Style = new HFM.Classes.LabelWrapper();
-         this.pnl1CSSSample = new System.Windows.Forms.Panel();
-         this.StyleList = new System.Windows.Forms.ListBox();
          this.grpHTMLOutput = new HFM.Classes.GroupBoxWrapper();
          this.radioFullRefresh = new HFM.Classes.RadioButtonWrapper();
          this.radioSchedule = new HFM.Classes.RadioButtonWrapper();
@@ -72,9 +72,6 @@ namespace HFM.Forms
          this.txtWebSiteBase = new HFM.Classes.TextBoxWrapper();
          this.lbl2WebSiteDir = new HFM.Classes.LabelWrapper();
          this.chkWebSiteGenerator = new HFM.Classes.CheckBoxWrapper();
-         this.locateWebFolder = new System.Windows.Forms.FolderBrowserDialog();
-         this.tabControl1 = new System.Windows.Forms.TabControl();
-         this.tabSchdTasks = new System.Windows.Forms.TabPage();
          this.tabDefaults = new System.Windows.Forms.TabPage();
          this.grpDebugMessageLevel = new HFM.Classes.GroupBoxWrapper();
          this.cboMessageLevel = new HFM.Classes.ComboBoxWrapper();
@@ -119,11 +116,16 @@ namespace HFM.Forms
          this.lbl3Port = new HFM.Classes.LabelWrapper();
          this.lbl3Proxy = new HFM.Classes.LabelWrapper();
          this.tabVisStyles = new System.Windows.Forms.TabPage();
+         this.lbl1Preview = new HFM.Classes.LabelWrapper();
+         this.lbl1Style = new HFM.Classes.LabelWrapper();
          this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
-         this.grpUpdateData.SuspendLayout();
-         this.grpHTMLOutput.SuspendLayout();
+         this.toolTipPrefs = new System.Windows.Forms.ToolTip(this.components);
+         this.btnOK = new HFM.Classes.ButtonWrapper();
+         this.btnCancel = new HFM.Classes.ButtonWrapper();
          this.tabControl1.SuspendLayout();
          this.tabSchdTasks.SuspendLayout();
+         this.grpUpdateData.SuspendLayout();
+         this.grpHTMLOutput.SuspendLayout();
          this.tabDefaults.SuspendLayout();
          this.grpDebugMessageLevel.SuspendLayout();
          this.grpFileExplorer.SuspendLayout();
@@ -135,6 +137,51 @@ namespace HFM.Forms
          this.grpWebProxy.SuspendLayout();
          this.tabVisStyles.SuspendLayout();
          this.SuspendLayout();
+         // 
+         // pnl1CSSSample
+         // 
+         this.pnl1CSSSample.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+         this.pnl1CSSSample.Location = new System.Drawing.Point(132, 31);
+         this.pnl1CSSSample.Name = "pnl1CSSSample";
+         this.pnl1CSSSample.Size = new System.Drawing.Size(358, 212);
+         this.pnl1CSSSample.TabIndex = 1;
+         // 
+         // StyleList
+         // 
+         this.StyleList.FormattingEnabled = true;
+         this.StyleList.Location = new System.Drawing.Point(6, 31);
+         this.StyleList.Name = "StyleList";
+         this.StyleList.Size = new System.Drawing.Size(120, 212);
+         this.StyleList.Sorted = true;
+         this.StyleList.TabIndex = 1;
+         this.StyleList.SelectedIndexChanged += new System.EventHandler(this.StyleList_SelectedIndexChanged);
+         // 
+         // tabControl1
+         // 
+         this.tabControl1.Controls.Add(this.tabSchdTasks);
+         this.tabControl1.Controls.Add(this.tabDefaults);
+         this.tabControl1.Controls.Add(this.tabWeb);
+         this.tabControl1.Controls.Add(this.tabVisStyles);
+         this.tabControl1.HotTrack = true;
+         this.tabControl1.Location = new System.Drawing.Point(13, 13);
+         this.tabControl1.Multiline = true;
+         this.tabControl1.Name = "tabControl1";
+         this.tabControl1.SelectedIndex = 0;
+         this.tabControl1.Size = new System.Drawing.Size(509, 329);
+         this.tabControl1.TabIndex = 5;
+         // 
+         // tabSchdTasks
+         // 
+         this.tabSchdTasks.BackColor = System.Drawing.SystemColors.Control;
+         this.tabSchdTasks.Controls.Add(this.grpUpdateData);
+         this.tabSchdTasks.Controls.Add(this.grpHTMLOutput);
+         this.tabSchdTasks.Location = new System.Drawing.Point(4, 22);
+         this.tabSchdTasks.Name = "tabSchdTasks";
+         this.tabSchdTasks.Padding = new System.Windows.Forms.Padding(3);
+         this.tabSchdTasks.Size = new System.Drawing.Size(501, 303);
+         this.tabSchdTasks.TabIndex = 2;
+         this.tabSchdTasks.Text = "Scheduled Tasks";
+         this.tabSchdTasks.UseVisualStyleBackColor = true;
          // 
          // grpUpdateData
          // 
@@ -199,7 +246,7 @@ namespace HFM.Forms
          this.txtCollectMinutes.TabIndex = 3;
          this.txtCollectMinutes.Text = "15";
          this.txtCollectMinutes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-         this.txtCollectMinutes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtMinutes_KeyPress);
+         this.txtCollectMinutes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
          this.txtCollectMinutes.Validating += new System.ComponentModel.CancelEventHandler(this.txtMinutes_Validating);
          // 
          // lbl2SchedExplain
@@ -221,7 +268,7 @@ namespace HFM.Forms
          this.chkScheduled.TabIndex = 2;
          this.chkScheduled.Text = "Every";
          this.chkScheduled.UseVisualStyleBackColor = true;
-         this.chkScheduled.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+         this.chkScheduled.CheckedChanged += new System.EventHandler(this.chkScheduled_CheckedChanged);
          // 
          // chkSynchronous
          // 
@@ -231,63 +278,6 @@ namespace HFM.Forms
          this.chkSynchronous.TabIndex = 1;
          this.chkSynchronous.Text = "In series (synchronous retrieval)";
          this.chkSynchronous.UseVisualStyleBackColor = true;
-         // 
-         // btnCancel
-         // 
-         this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-         this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-         this.btnCancel.Location = new System.Drawing.Point(447, 353);
-         this.btnCancel.Name = "btnCancel";
-         this.btnCancel.Size = new System.Drawing.Size(75, 23);
-         this.btnCancel.TabIndex = 4;
-         this.btnCancel.Text = "Cancel";
-         this.btnCancel.UseVisualStyleBackColor = true;
-         this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-         // 
-         // btnOK
-         // 
-         this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-         this.btnOK.Location = new System.Drawing.Point(366, 353);
-         this.btnOK.Name = "btnOK";
-         this.btnOK.Size = new System.Drawing.Size(75, 23);
-         this.btnOK.TabIndex = 3;
-         this.btnOK.Text = "OK";
-         this.btnOK.UseVisualStyleBackColor = true;
-         this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
-         // 
-         // lbl1Preview
-         // 
-         this.lbl1Preview.Location = new System.Drawing.Point(129, 6);
-         this.lbl1Preview.Name = "lbl1Preview";
-         this.lbl1Preview.Size = new System.Drawing.Size(67, 23);
-         this.lbl1Preview.TabIndex = 2;
-         this.lbl1Preview.Text = "Preview";
-         // 
-         // lbl1Style
-         // 
-         this.lbl1Style.Location = new System.Drawing.Point(3, 6);
-         this.lbl1Style.Name = "lbl1Style";
-         this.lbl1Style.Size = new System.Drawing.Size(84, 23);
-         this.lbl1Style.TabIndex = 0;
-         this.lbl1Style.Text = "Style Sheet";
-         // 
-         // pnl1CSSSample
-         // 
-         this.pnl1CSSSample.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-         this.pnl1CSSSample.Location = new System.Drawing.Point(132, 31);
-         this.pnl1CSSSample.Name = "pnl1CSSSample";
-         this.pnl1CSSSample.Size = new System.Drawing.Size(358, 212);
-         this.pnl1CSSSample.TabIndex = 1;
-         // 
-         // StyleList
-         // 
-         this.StyleList.FormattingEnabled = true;
-         this.StyleList.Location = new System.Drawing.Point(6, 31);
-         this.StyleList.Name = "StyleList";
-         this.StyleList.Size = new System.Drawing.Size(120, 212);
-         this.StyleList.Sorted = true;
-         this.StyleList.TabIndex = 1;
-         this.StyleList.SelectedIndexChanged += new System.EventHandler(this.StyleList_SelectedIndexChanged);
          // 
          // grpHTMLOutput
          // 
@@ -342,7 +332,7 @@ namespace HFM.Forms
          this.txtWebGenMinutes.TabIndex = 2;
          this.txtWebGenMinutes.Text = "15";
          this.txtWebGenMinutes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-         this.txtWebGenMinutes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtMinutes_KeyPress);
+         this.txtWebGenMinutes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
          this.txtWebGenMinutes.Validating += new System.ComponentModel.CancelEventHandler(this.txtMinutes_Validating);
          // 
          // lbl2MinutesToGen
@@ -394,33 +384,6 @@ namespace HFM.Forms
          this.chkWebSiteGenerator.Text = "Create a Web Site";
          this.chkWebSiteGenerator.UseVisualStyleBackColor = true;
          this.chkWebSiteGenerator.CheckedChanged += new System.EventHandler(this.chkWebSiteGenerator_CheckedChanged);
-         // 
-         // tabControl1
-         // 
-         this.tabControl1.Controls.Add(this.tabSchdTasks);
-         this.tabControl1.Controls.Add(this.tabDefaults);
-         this.tabControl1.Controls.Add(this.tabWeb);
-         this.tabControl1.Controls.Add(this.tabVisStyles);
-         this.tabControl1.HotTrack = true;
-         this.tabControl1.Location = new System.Drawing.Point(13, 13);
-         this.tabControl1.Multiline = true;
-         this.tabControl1.Name = "tabControl1";
-         this.tabControl1.SelectedIndex = 0;
-         this.tabControl1.Size = new System.Drawing.Size(509, 329);
-         this.tabControl1.TabIndex = 5;
-         // 
-         // tabSchdTasks
-         // 
-         this.tabSchdTasks.BackColor = System.Drawing.SystemColors.Control;
-         this.tabSchdTasks.Controls.Add(this.grpUpdateData);
-         this.tabSchdTasks.Controls.Add(this.grpHTMLOutput);
-         this.tabSchdTasks.Location = new System.Drawing.Point(4, 22);
-         this.tabSchdTasks.Name = "tabSchdTasks";
-         this.tabSchdTasks.Padding = new System.Windows.Forms.Padding(3);
-         this.tabSchdTasks.Size = new System.Drawing.Size(501, 303);
-         this.tabSchdTasks.TabIndex = 2;
-         this.tabSchdTasks.Text = "Scheduled Tasks";
-         this.tabSchdTasks.UseVisualStyleBackColor = true;
          // 
          // tabDefaults
          // 
@@ -696,16 +659,20 @@ namespace HFM.Forms
          // txtEOCUserID
          // 
          this.txtEOCUserID.Location = new System.Drawing.Point(194, 17);
+         this.txtEOCUserID.MaxLength = 9;
          this.txtEOCUserID.Name = "txtEOCUserID";
          this.txtEOCUserID.Size = new System.Drawing.Size(138, 20);
          this.txtEOCUserID.TabIndex = 3;
+         this.txtEOCUserID.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
          // 
          // txtStanfordTeamID
          // 
          this.txtStanfordTeamID.Location = new System.Drawing.Point(194, 69);
+         this.txtStanfordTeamID.MaxLength = 9;
          this.txtStanfordTeamID.Name = "txtStanfordTeamID";
          this.txtStanfordTeamID.Size = new System.Drawing.Size(138, 20);
          this.txtStanfordTeamID.TabIndex = 5;
+         this.txtStanfordTeamID.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
          // 
          // lbl3StanfordTeamID
          // 
@@ -810,10 +777,12 @@ namespace HFM.Forms
          // 
          this.txtProxyPort.Enabled = false;
          this.txtProxyPort.Location = new System.Drawing.Point(389, 42);
+         this.txtProxyPort.MaxLength = 5;
          this.txtProxyPort.Name = "txtProxyPort";
          this.txtProxyPort.ReadOnly = true;
          this.txtProxyPort.Size = new System.Drawing.Size(94, 20);
          this.txtProxyPort.TabIndex = 4;
+         this.txtProxyPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
          // 
          // lbl3ProxyPass
          // 
@@ -874,11 +843,50 @@ namespace HFM.Forms
          this.tabVisStyles.Text = "Web Visual Styles";
          this.tabVisStyles.UseVisualStyleBackColor = true;
          // 
+         // lbl1Preview
+         // 
+         this.lbl1Preview.Location = new System.Drawing.Point(129, 6);
+         this.lbl1Preview.Name = "lbl1Preview";
+         this.lbl1Preview.Size = new System.Drawing.Size(67, 23);
+         this.lbl1Preview.TabIndex = 2;
+         this.lbl1Preview.Text = "Preview";
+         // 
+         // lbl1Style
+         // 
+         this.lbl1Style.Location = new System.Drawing.Point(3, 6);
+         this.lbl1Style.Name = "lbl1Style";
+         this.lbl1Style.Size = new System.Drawing.Size(84, 23);
+         this.lbl1Style.TabIndex = 0;
+         this.lbl1Style.Text = "Style Sheet";
+         // 
          // openConfigDialog
          // 
          this.openConfigDialog.DefaultExt = "hfm";
          this.openConfigDialog.Filter = "HFM Configuration Files|*.hfm";
          this.openConfigDialog.RestoreDirectory = true;
+         // 
+         // btnOK
+         // 
+         this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+         this.btnOK.Location = new System.Drawing.Point(366, 353);
+         this.btnOK.Name = "btnOK";
+         this.btnOK.Size = new System.Drawing.Size(75, 23);
+         this.btnOK.TabIndex = 3;
+         this.btnOK.Text = "OK";
+         this.btnOK.UseVisualStyleBackColor = true;
+         this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+         // 
+         // btnCancel
+         // 
+         this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+         this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+         this.btnCancel.Location = new System.Drawing.Point(447, 353);
+         this.btnCancel.Name = "btnCancel";
+         this.btnCancel.Size = new System.Drawing.Size(75, 23);
+         this.btnCancel.TabIndex = 4;
+         this.btnCancel.Text = "Cancel";
+         this.btnCancel.UseVisualStyleBackColor = true;
+         this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
          // 
          // frmPreferences
          // 
@@ -898,12 +906,12 @@ namespace HFM.Forms
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
          this.Text = "Preferences";
          this.Shown += new System.EventHandler(this.frmPreferences_Shown);
+         this.tabControl1.ResumeLayout(false);
+         this.tabSchdTasks.ResumeLayout(false);
          this.grpUpdateData.ResumeLayout(false);
          this.grpUpdateData.PerformLayout();
          this.grpHTMLOutput.ResumeLayout(false);
          this.grpHTMLOutput.PerformLayout();
-         this.tabControl1.ResumeLayout(false);
-         this.tabSchdTasks.ResumeLayout(false);
          this.tabDefaults.ResumeLayout(false);
          this.grpDebugMessageLevel.ResumeLayout(false);
          this.grpDebugMessageLevel.PerformLayout();
@@ -998,6 +1006,7 @@ namespace HFM.Forms
       private Classes.GroupBoxWrapper grpDebugMessageLevel;
       private Classes.ComboBoxWrapper cboMessageLevel;
       private Classes.LabelWrapper label6;
-      private HFM.Classes.CheckBoxWrapper chkAutoSave;
+      private Classes.CheckBoxWrapper chkAutoSave;
+      private System.Windows.Forms.ToolTip toolTipPrefs;
    }
 }

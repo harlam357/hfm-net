@@ -44,7 +44,7 @@
                </tr>
                <tr>
                   <td class="LeftCol">
-                     Total<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPD<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>(Working<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Clients)
+                     Total<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPD
                   </td>
                   <td class="RightCol">
                      <xsl:value-of select="EstPPD"/>
@@ -52,7 +52,7 @@
                </tr>
                <tr>
                   <td class="LeftCol">
-                     Total<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPW<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>(Working<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Clients)
+                     Total<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPW
                   </td>
                   <td class="RightCol">
                      <xsl:value-of select="EstPPW"/>
@@ -60,7 +60,7 @@
                </tr>
                <tr>
                   <td class="LeftCol">
-                     Total<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>UPD<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>(Working<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Clients)
+                     Total<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>UPD
                   </td>
                   <td class="RightCol">
                      <xsl:value-of select="EstUPD"/>
@@ -68,7 +68,7 @@
                </tr>
                <tr>
                   <td class="LeftCol">
-                     Total<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>UPW<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>(Working<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Clients)
+                     Total<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>UPW
                   </td>
                   <td class="RightCol">
                      <xsl:value-of select="EstUPW"/>
@@ -76,7 +76,7 @@
                </tr>
                <tr>
                   <td class="LeftCol">
-                     Average<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPD<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>(Working<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Clients)
+                     Average<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPD
                   </td>
                   <td class="RightCol">
                      <xsl:value-of select="AvEstPPD"/>
@@ -84,7 +84,7 @@
                </tr>
                <tr>
                   <td class="LeftCol">
-                     Average<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPW<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>(Working<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Clients)
+                     Average<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPW
                   </td>
                   <td class="RightCol">
                      <xsl:value-of select="AvEstPPW"/>
@@ -92,7 +92,7 @@
                </tr>
                <tr>
                   <td class="LeftCol">
-                     Average<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>UPD<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>(Working<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Clients)
+                     Average<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>UPD
                   </td>
                   <td class="RightCol">
                      <xsl:value-of select="AvEstUPD"/>
@@ -100,7 +100,7 @@
                </tr>
                <tr>
                   <td class="LeftCol">
-                     Average<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>UPW<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>(Working<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Clients)
+                     Average<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>UPW
                   </td>
                   <td class="RightCol">
                      <xsl:value-of select="AvEstUPW"/>
@@ -119,8 +119,11 @@
                   </td>
                </tr>
                <tr>
+                  <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+               </tr>
+               <tr>
                   <td class="Plain" colspan="2" align="center">
-                     Page rendered by HFM.NET on <xsl:value-of select="LastUpdatedDate"/>
+                     Page rendered by HFM.NET <xsl:value-of select="HFMVersion"/> on <xsl:value-of select="LastUpdatedDate"/>
                      at <xsl:value-of select="LastUpdatedTime"/>
                   </td>
                </tr>

@@ -81,6 +81,18 @@ namespace HFM.Instances
       }
 
       /// <summary>
+      /// The number of processor megahertz for this client instance
+      /// </summary>
+      private Int32 _MHz;
+      /// <summary>
+      /// The number of processor megahertz for this client instance
+      /// </summary>
+      public Int32 MHz
+      {
+         get { return _MHz; }
+      }
+
+      /// <summary>
       /// Private variable holding the PPD rating for this instance
       /// </summary>
       private double _PPD_MHz;
@@ -188,18 +200,6 @@ namespace HFM.Instances
       {
          get { return _Username; }
       }
-
-      /// <summary>
-      /// 
-      /// </summary>
-      private int _Team;
-      /// <summary>
-      /// 
-      /// </summary>
-      public int Team
-      {
-         get { return _Team; }
-      }
       
       /// <summary>
       /// Private member holding the download time of the unit
@@ -231,26 +231,26 @@ namespace HFM.Instances
       }
       #endregion
       
-      public void Load(ClientInstance baseInstance)
+      public void Load(ClientInstance Instance)
       {
-         _Status = baseInstance.Status;
-         _Progress = String.Format("{0:00}%", baseInstance.CurrentUnitInfo.PercentComplete);
-         _InstanceName = baseInstance.InstanceName;
-         _ClientType = baseInstance.CurrentUnitInfo.TypeOfClient;
-         _TimePerFrame = baseInstance.CurrentUnitInfo.TimePerFrame;
-         _PPD = Math.Round(baseInstance.CurrentUnitInfo.PPD, 1);
-         _PPD_MHz = Math.Round(baseInstance.CurrentUnitInfo.PPD / baseInstance.ClientProcessorMegahertz, 3);
-         _ETA = baseInstance.CurrentUnitInfo.ETA;
-         _Core = baseInstance.CurrentUnitInfo.CurrentProtein.Core;
-         _CoreVersion = baseInstance.CurrentUnitInfo.CoreVersion;
-         _ProjectRunCloneGen = baseInstance.CurrentUnitInfo.ProjectRunCloneGen;
-         _Credit = baseInstance.CurrentUnitInfo.CurrentProtein.Credit;
-         _Complete = baseInstance.NumberOfCompletedUnitsSinceLastStart;
-         _Failed = baseInstance.NumberOfFailedUnitsSinceLastStart;
-         _Username = baseInstance.CurrentUnitInfo.FoldingID;
-         _Team = baseInstance.CurrentUnitInfo.Team;
-         _DownloadTime = baseInstance.CurrentUnitInfo.DownloadTime;
-         _Deadline = baseInstance.CurrentUnitInfo.DownloadTime.AddDays(baseInstance.CurrentUnitInfo.CurrentProtein.PreferredDays);
+         _Status = Instance.Status;
+         _Progress = String.Format("{0:00}%", Instance.CurrentUnitInfo.PercentComplete);
+         _InstanceName = Instance.InstanceName;
+         _ClientType = Instance.CurrentUnitInfo.TypeOfClient;
+         _TimePerFrame = Instance.CurrentUnitInfo.TimePerFrame;
+         _PPD = Math.Round(Instance.CurrentUnitInfo.PPD, 1);
+         _MHz = Instance.ClientProcessorMegahertz;
+         _PPD_MHz = Math.Round(Instance.CurrentUnitInfo.PPD / Instance.ClientProcessorMegahertz, 3);
+         _ETA = Instance.CurrentUnitInfo.ETA;
+         _Core = Instance.CurrentUnitInfo.CurrentProtein.Core;
+         _CoreVersion = Instance.CurrentUnitInfo.CoreVersion;
+         _ProjectRunCloneGen = Instance.CurrentUnitInfo.ProjectRunCloneGen;
+         _Credit = Instance.CurrentUnitInfo.CurrentProtein.Credit;
+         _Complete = Instance.NumberOfCompletedUnitsSinceLastStart;
+         _Failed = Instance.NumberOfFailedUnitsSinceLastStart;
+         _Username = String.Format("{0} ({1})", Instance.CurrentUnitInfo.FoldingID, Instance.CurrentUnitInfo.Team);
+         _DownloadTime = Instance.CurrentUnitInfo.DownloadTime;
+         _Deadline = Instance.CurrentUnitInfo.Deadline;
       }
       
       public void UpdateName(string Key)

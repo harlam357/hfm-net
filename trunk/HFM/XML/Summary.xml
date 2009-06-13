@@ -2,4 +2,5 @@
 <Overview>
    <!--Uncomment this line to enable a logo on the Summary Page-->
    <!--<photo>http://(url to your logo)</photo>-->
+   <HFMVersion>0</HFMVersion>
 </Overview>

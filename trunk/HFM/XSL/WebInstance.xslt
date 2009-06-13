@@ -50,7 +50,7 @@
                </tr>
                <tr>
                   <td class="Plain" colspan="2" align="center">
-                     Page rendered by HFM.NET on <xsl:value-of select="LastUpdatedDate"/>
+                     Page rendered by HFM.NET <xsl:value-of select="HFMVersion"/> on <xsl:value-of select="LastUpdatedDate"/>
                      at <xsl:value-of select="LastUpdatedTime"/>
                   </td>
                </tr>

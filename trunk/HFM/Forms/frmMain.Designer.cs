@@ -89,7 +89,6 @@ namespace HFM.Forms
          this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
          this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
          this.saveConfigDialog = new System.Windows.Forms.SaveFileDialog();
-         this.txtLogFile = new HFM.Classes.TextBoxWrapper();
          this.gridContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
          this.mnuContextClientsRefreshSelected = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuContextClientsSep1 = new System.Windows.Forms.ToolStripSeparator();
@@ -99,8 +98,10 @@ namespace HFM.Forms
          this.mnuContextClientsSep2 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuContextClientsViewCachedLog = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuContextClientsViewClientFiles = new System.Windows.Forms.ToolStripMenuItem();
+         this.toolTipGrid = new System.Windows.Forms.ToolTip(this.components);
          this.splitContainer1 = new HFM.Classes.SplitContainerWrapper();
          this.dataGridView1 = new HFM.Classes.DataGridViewWrapper();
+         this.txtLogFile = new HFM.Classes.TextBoxWrapper();
          this.statusStrip.SuspendLayout();
          this.notifyMenu.SuspendLayout();
          this.AppMenu.SuspendLayout();
@@ -585,18 +586,6 @@ namespace HFM.Forms
          this.saveConfigDialog.DefaultExt = "hfm";
          this.saveConfigDialog.Filter = "HFM Configuration Files|*.hfm";
          // 
-         // txtLogFile
-         // 
-         this.txtLogFile.BackColor = System.Drawing.Color.White;
-         this.txtLogFile.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtLogFile.Location = new System.Drawing.Point(0, 0);
-         this.txtLogFile.Multiline = true;
-         this.txtLogFile.Name = "txtLogFile";
-         this.txtLogFile.ReadOnly = true;
-         this.txtLogFile.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-         this.txtLogFile.Size = new System.Drawing.Size(988, 356);
-         this.txtLogFile.TabIndex = 1;
-         // 
          // gridContextMenuStrip
          // 
          this.gridContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -725,8 +714,21 @@ namespace HFM.Forms
          this.dataGridView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseDown);
          this.dataGridView1.Sorted += new System.EventHandler(this.dataGridView1_Sorted);
          this.dataGridView1.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_RowEnter);
+         this.dataGridView1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseMove);
          this.dataGridView1.ColumnDividerDoubleClick += new System.Windows.Forms.DataGridViewColumnDividerDoubleClickEventHandler(this.dataGridView1_ColumnDividerDoubleClick);
          this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
+         // 
+         // txtLogFile
+         // 
+         this.txtLogFile.BackColor = System.Drawing.Color.White;
+         this.txtLogFile.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.txtLogFile.Location = new System.Drawing.Point(0, 0);
+         this.txtLogFile.Multiline = true;
+         this.txtLogFile.Name = "txtLogFile";
+         this.txtLogFile.ReadOnly = true;
+         this.txtLogFile.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+         this.txtLogFile.Size = new System.Drawing.Size(988, 356);
+         this.txtLogFile.TabIndex = 1;
          // 
          // frmMain
          // 
@@ -829,5 +831,6 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripMenuItem mnuFileImportFahMon;
       private System.Windows.Forms.ToolStripSeparator mnuFileSep2;
       private System.Windows.Forms.ToolStripMenuItem mnuToolsBenchmarks;
+      private System.Windows.Forms.ToolTip toolTipGrid;
    }
 }
