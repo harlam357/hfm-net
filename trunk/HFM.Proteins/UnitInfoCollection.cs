@@ -193,7 +193,7 @@ namespace HFM.Proteins
             {
                if (_Instance == null)
                {
-                  _Instance = Deserialize(Path.Combine(Preferences.PreferenceSet.Instance.AppDataPath, DataStoreFilename));
+                  _Instance = Deserialize(Path.Combine(PreferenceSet.Instance.AppDataPath, DataStoreFilename));
                }
                if (_Instance == null)
                {
@@ -208,7 +208,7 @@ namespace HFM.Proteins
       #region Serialization Support
       public void Serialize()
       {
-         Serialize(Instance, Path.Combine(Preferences.PreferenceSet.Instance.AppDataPath, DataStoreFilename));
+         Serialize(Instance, Path.Combine(PreferenceSet.Instance.AppDataPath, DataStoreFilename));
       }
 
       private static UnitInfoCollection Deserialize(string filePath)

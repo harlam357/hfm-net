@@ -33,10 +33,9 @@ namespace HFM.Instances
       /// <summary>
       /// Generates and transforms data for an Instance
       /// </summary>
-      /// <param name="xslTransform">Filename of XSL transform to apply</param>
       /// <param name="Instance">Instance to use as data source</param>
-      /// <returns>Transformed data</returns>
-      public static String InstanceXml(String xslTransform, ClientInstance Instance)
+      /// <returns>Generated Xml Document</returns>
+      public static XmlDocument InstanceXml(ClientInstance Instance)
       {
          XmlDocument xmlDoc = new XmlDocument();
          xmlDoc.Load(Path.Combine(Path.Combine(PreferenceSet.AppPath, "XML"), "Instance.xml"));
@@ -78,10 +77,11 @@ namespace HFM.Instances
          //        <TotalProjects>243</TotalProjects>
          //    </Computer>
 
-         XMLOps.setXmlNode(xmlData, "Computer/EstPPD", String.Format("{0:#,###,##0.00}", Instance.CurrentUnitInfo.PPD));
-         XMLOps.setXmlNode(xmlData, "Computer/EstPPW", String.Format("{0:#,###,##0.00}", Instance.CurrentUnitInfo.PPD * 7));
-         XMLOps.setXmlNode(xmlData, "Computer/EstUPD", String.Format("{0:#,###,##0.00}", Instance.CurrentUnitInfo.UPD));
-         XMLOps.setXmlNode(xmlData, "Computer/EstUPW", String.Format("{0:#,###,##0.00}", Instance.CurrentUnitInfo.UPD * 7));
+         string PPDFormatString = PreferenceSet.GetPPDFormatString();
+         XMLOps.setXmlNode(xmlData, "Computer/EstPPD", String.Format("{0:" + PPDFormatString + "}", Instance.CurrentUnitInfo.PPD));
+         XMLOps.setXmlNode(xmlData, "Computer/EstPPW", String.Format("{0:" + PPDFormatString + "}", Instance.CurrentUnitInfo.PPD * 7));
+         XMLOps.setXmlNode(xmlData, "Computer/EstUPD", String.Format("{0:" + PPDFormatString + "}", Instance.CurrentUnitInfo.UPD));
+         XMLOps.setXmlNode(xmlData, "Computer/EstUPW", String.Format("{0:" + PPDFormatString + "}", Instance.CurrentUnitInfo.UPD * 7));
          XMLOps.setXmlNode(xmlData, "Computer/TotalProjects", Instance.TotalUnits.ToString());
 
          //    <Protein>
@@ -122,17 +122,16 @@ namespace HFM.Instances
          XMLOps.setXmlNode(xmlData, "LastRetrievedDate", Instance.LastRetrievalTime.ToLongDateString());
          XMLOps.setXmlNode(xmlData, "LastRetrievedTime", Instance.LastRetrievalTime.ToLongTimeString());
 
-         return XMLOps.Transform(xmlDoc, xslTransform);
+         return xmlDoc;
       }
 
       /// <summary>
       /// Generates the Summary page. xslTransform allows the calling method to select the appropriate transform.
       /// This allows the same summary method to generate the website page and the app page.
       /// </summary>
-      /// <param name="xslTransform">Filename to use for Xsl transform</param>
       /// <param name="HostInstances">Collection of folding instances</param>
-      /// <returns>HTML page as string</returns>
-      public static String SummaryXml(String xslTransform, FoldingInstanceCollection HostInstances)
+      /// <returns>Generated Xml Document</returns>
+      public static XmlDocument SummaryXml(FoldingInstanceCollection HostInstances)
       {
          XmlDocument xmlDoc = new XmlDocument();
          xmlDoc.Load(Path.Combine(Path.Combine(PreferenceSet.AppPath, "XML"), "Summary.xml"));
@@ -165,7 +164,7 @@ namespace HFM.Instances
             XMLOps.setXmlNode(xmlData, "Name", Instance.InstanceName);
             XMLOps.setXmlNode(xmlData, "ClientType", Instance.CurrentUnitInfo.TypeOfClient.ToString());
             XMLOps.setXmlNode(xmlData, "TPF", Instance.CurrentUnitInfo.TimePerFrame.ToString());
-            XMLOps.setXmlNode(xmlData, "PPD", String.Format("{0:0.00}", Instance.CurrentUnitInfo.PPD));
+            XMLOps.setXmlNode(xmlData, "PPD", String.Format("{0:" + PreferenceSet.GetPPDFormatString() + "}", Instance.CurrentUnitInfo.PPD));
             XMLOps.setXmlNode(xmlData, "UPD", String.Format("{0:0.00}", Instance.CurrentUnitInfo.UPD));
             XMLOps.setXmlNode(xmlData, "MHz", Instance.ClientProcessorMegahertz.ToString());
             XMLOps.setXmlNode(xmlData, "PPDMHz", String.Format("{0:0.000}", Instance.CurrentUnitInfo.PPD / Instance.ClientProcessorMegahertz));
@@ -193,17 +192,16 @@ namespace HFM.Instances
          xmlRootData.AppendChild(xLastUpdDate);
          xmlRootData.AppendChild(xLastUpdTime);
 
-         return XMLOps.Transform(xmlDoc, xslTransform);
+         return xmlDoc;
       }
 
       /// <summary>
       /// Generates the Overview page. xslTransform allows the calling method to select the appropriate transform.
       /// This allows the same overview method to generate the website page and the app page.
       /// </summary>
-      /// <param name="xslTransform">Filename to use for Xsl transform</param>
       /// <param name="HostInstances">Collection of folding instances</param>
-      /// <returns>HTML page as string</returns>
-      public static String OverviewXml(String xslTransform, FoldingInstanceCollection HostInstances)
+      /// <returns>Generated Xml Document</returns>
+      public static XmlDocument OverviewXml(FoldingInstanceCollection HostInstances)
       {
          InstanceTotals totals = HostInstances.GetInstanceTotals();
 
@@ -231,11 +229,12 @@ namespace HFM.Instances
          //    <EstPPW>0.00</EstPPW>
          //    <EstUPD>0.00</EstUPD>
          //    <EstUPW>0.00</EstUPW>
-
-         XMLOps.setXmlNode(xmlData, "EstPPD", String.Format("{0:0.00}", totals.PPD));
-         XMLOps.setXmlNode(xmlData, "EstPPW", String.Format("{0:0.00}", totals.PPD * 7));
-         XMLOps.setXmlNode(xmlData, "EstUPD", String.Format("{0:0.00}", totals.UPD));
-         XMLOps.setXmlNode(xmlData, "EstUPW", String.Format("{0:0.00}", totals.UPD * 7));
+         
+         string PPDFormatString = PreferenceSet.GetPPDFormatString();
+         XMLOps.setXmlNode(xmlData, "EstPPD", String.Format("{0:" + PPDFormatString + "}", totals.PPD));
+         XMLOps.setXmlNode(xmlData, "EstPPW", String.Format("{0:" + PPDFormatString + "}", totals.PPD * 7));
+         XMLOps.setXmlNode(xmlData, "EstUPD", String.Format("{0:" + PPDFormatString + "}", totals.UPD));
+         XMLOps.setXmlNode(xmlData, "EstUPW", String.Format("{0:" + PPDFormatString + "}", totals.UPD * 7));
 
          //    <AvEstPPD>0.00</AvEstPPD>
          //    <AvEstPPW>0.00</AvEstPPW>
@@ -244,10 +243,10 @@ namespace HFM.Instances
 
          if (totals.WorkingClients > 0)
          {
-            XMLOps.setXmlNode(xmlData, "AvEstPPD", String.Format("{0:0.00}", totals.PPD / totals.WorkingClients));
-            XMLOps.setXmlNode(xmlData, "AvEstPPW", String.Format("{0:0.00}", totals.PPD * 7 / totals.WorkingClients));
-            XMLOps.setXmlNode(xmlData, "AvEstUPD", String.Format("{0:0.00}", totals.UPD / totals.WorkingClients));
-            XMLOps.setXmlNode(xmlData, "AvEstUPW", String.Format("{0:0.00}", totals.UPD * 7 / totals.WorkingClients));
+            XMLOps.setXmlNode(xmlData, "AvEstPPD", String.Format("{0:" + PPDFormatString + "}", totals.PPD / totals.WorkingClients));
+            XMLOps.setXmlNode(xmlData, "AvEstPPW", String.Format("{0:" + PPDFormatString + "}", totals.PPD * 7 / totals.WorkingClients));
+            XMLOps.setXmlNode(xmlData, "AvEstUPD", String.Format("{0:" + PPDFormatString + "}", totals.UPD / totals.WorkingClients));
+            XMLOps.setXmlNode(xmlData, "AvEstUPW", String.Format("{0:" + PPDFormatString + "}", totals.UPD * 7 / totals.WorkingClients));
          }
          else
          {
@@ -267,7 +266,7 @@ namespace HFM.Instances
          XMLOps.setXmlNode(xmlData, "LastUpdatedDate", DateTime.Now.ToLongDateString());
          XMLOps.setXmlNode(xmlData, "LastUpdatedTime", DateTime.Now.ToLongTimeString());
 
-         return XMLOps.Transform(xmlDoc, xslTransform);
+         return xmlDoc;
       }
    }
 }

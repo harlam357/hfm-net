@@ -28,10 +28,13 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
+using System.Xml;
 
 using HFM.Classes;
+using HFM.Helpers;
 using HFM.Instances;
 using HFM.Instrumentation;
 using HFM.Proteins;
@@ -431,11 +434,23 @@ namespace HFM.Forms
       {
          DataGridView.HitTestInfo info = dataGridView1.HitTest(e.X, e.Y);
 
-         if (info.ColumnIndex == 0 && info.RowIndex > -1)
+         if (dataGridView1.Columns["Status"].Index == info.ColumnIndex && info.RowIndex > -1)
          {
             ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.Rows[info.RowIndex].Cells["Name"].Value.ToString()];
 
-            toolTipGrid.Show(Instance.Status.ToString(), dataGridView1, e.X + 15, e.Y, 3000);
+            toolTipGrid.Show(Instance.Status.ToString(), dataGridView1, e.X + 15, e.Y);
+         }
+         else if (dataGridView1.Columns["Username"].Index == info.ColumnIndex && info.RowIndex > -1)
+         {
+            ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.Rows[info.RowIndex].Cells["Name"].Value.ToString()];
+            if (Instance.IsUsernameOk() == false)
+            {
+               toolTipGrid.Show("Client's User Name does not match the configured User Name", dataGridView1, e.X + 15, e.Y);
+            }
+            else
+            {
+               toolTipGrid.Hide(dataGridView1);
+            }
          }
          else
          {
@@ -486,6 +501,38 @@ namespace HFM.Forms
                      //}
 
                      e.Handled = true;
+                  }
+               }
+               #endregion
+            }
+            else if (dataGridView1.Columns["Username"].Index == e.ColumnIndex)
+            {
+               #region Username Incorrect Custom Paint
+               ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
+               if (Instance.IsUsernameOk() == false)
+               {
+                  using (Brush gridBrush = new SolidBrush(dataGridView1.GridColor))
+                  {
+                     using (Pen gridLinePen = new Pen(gridBrush))
+                     {
+                        // Erase the cell.
+                        e.Graphics.FillRectangle(Brushes.Orange, e.CellBounds);
+
+                        // Draw the bottom grid line
+                        e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
+                                            e.CellBounds.Bottom - 1, e.CellBounds.Right,
+                                            e.CellBounds.Bottom - 1);
+
+                        // Draw the text content of the cell, ignoring alignment.
+                        if (e.Value != null)
+                        {
+                           e.Graphics.DrawString(e.Value.ToString(), e.CellStyle.Font,
+                                                 Brushes.Black, e.CellBounds.X + 2,
+                                                 e.CellBounds.Y + 2, StringFormat.GenericDefault);
+                        }
+
+                        e.Handled = true;
+                     }
                   }
                }
                #endregion
@@ -1452,42 +1499,48 @@ namespace HFM.Forms
          }
          webTimer.Stop();
 
-         Debug.WriteToHfmConsole(TraceLevel.Info,
-                                 String.Format("{0} Starting WebGen.", Debug.FunctionName));
-         
-         StreamWriter sw = null;
+         Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Starting WebGen.", Debug.FunctionName));
+
+         PreferenceSet Prefs = PreferenceSet.Instance;
+         Match match = StringOps.MatchFtpWithUserPassUrl(Prefs.WebRoot);
          
          try
          {
-            // Create the web folder (just in case)
-            if (Directory.Exists(PreferenceSet.Instance.WebRoot) == false)
+            if (match.Success)
             {
-               Directory.CreateDirectory(PreferenceSet.Instance.WebRoot);
+               DoHtmlGeneration(Path.GetTempPath());
+
+               string Server = match.Result("${domain}");
+               string FtpPath = match.Result("${file}");
+               string Username = match.Result("${username}");
+               string Password = match.Result("${password}");
+
+               NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.Combine(PreferenceSet.AppPath, "CSS"), Prefs.CSSFileName), Username, Password);
+               NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "index.html"), Username, Password);
+               NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "summary.html"), Username, Password);
+               NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "mobile.html"), Username, Password);
+               NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "mobilesummary.html"), Username, Password);
+               foreach (ClientInstance instance in HostInstances.InstanceCollection.Values)
+               {
+                  NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), Path.ChangeExtension(instance.InstanceName, ".html")), Username, Password);
+               }
             }
-
-            // Copy the CSS file to the output directory
-            string sCSSFileName = Path.Combine(Path.Combine(PreferenceSet.AppPath, "CSS"), PreferenceSet.Instance.CSSFileName);
-            if (File.Exists(sCSSFileName))
+            else
             {
-               File.Copy(sCSSFileName, Path.Combine(PreferenceSet.Instance.WebRoot, PreferenceSet.Instance.CSSFileName), true);
-            }
+               // Create the web folder (just in case)
+               if (Directory.Exists(PreferenceSet.Instance.WebRoot) == false)
+               {
+                  Directory.CreateDirectory(Prefs.WebRoot);
+               }
 
-            // Generate the index page
-            sw = new StreamWriter(Path.Combine(PreferenceSet.Instance.WebRoot, "index.html"), false);
-            sw.Write(XMLGen.OverviewXml("WebOverview.xslt", HostInstances));
-            sw.Close();
+               // Copy the CSS file to the output directory
+               string sCSSFileName = Path.Combine(Path.Combine(PreferenceSet.AppPath, "CSS"), Prefs.CSSFileName);
+               if (File.Exists(sCSSFileName))
+               {
+                  File.Copy(sCSSFileName, Path.Combine(Prefs.WebRoot, Prefs.CSSFileName), true);
+               }
 
-            // Generate the summary page
-            sw = new StreamWriter(Path.Combine(PreferenceSet.Instance.WebRoot, "summary.html"), false);
-            sw.Write(XMLGen.SummaryXml("WebSummary.xslt", HostInstances));
-            sw.Close();
-
-            // Generate a page per instance
-            foreach (ClientInstance instance in HostInstances.InstanceCollection.Values)
-            {
-               sw = new StreamWriter(Path.Combine(PreferenceSet.Instance.WebRoot, Path.ChangeExtension(instance.InstanceName, ".html")), false);
-               sw.Write(XMLGen.InstanceXml("WebInstance.xslt", instance));
-               sw.Close();
+               DoHtmlGeneration(Prefs.WebRoot);
             }
          }
          catch (Exception ex)
@@ -1496,15 +1549,59 @@ namespace HFM.Forms
          }
          finally
          {
-            if (sw != null)
-            {
-               sw.Close();
-            }
-
             StartWebGenTimer();
          }
       }
       
+      private void DoHtmlGeneration(string FolderPath)
+      {
+         StreamWriter sw = null;
+      
+         try
+         {
+            // Generate the index page XML
+            XmlDocument OverviewXml = XMLGen.OverviewXml(HostInstances);
+         
+            // Generate the index page
+            sw = new StreamWriter(Path.Combine(FolderPath, "index.html"), false);
+            sw.Write(XMLOps.Transform(OverviewXml, "WebOverview.xslt"));
+            sw.Close();
+
+            // Generate the mobile index page
+            sw = new StreamWriter(Path.Combine(FolderPath, "mobile.html"), false);
+            sw.Write(XMLOps.Transform(OverviewXml, "WebMobileOverview.xslt"));
+            sw.Close();
+
+            // Generate the summart page XML
+            XmlDocument SummaryXml = XMLGen.SummaryXml(HostInstances);
+
+            // Generate the summary page
+            sw = new StreamWriter(Path.Combine(FolderPath, "summary.html"), false);
+            sw.Write(XMLOps.Transform(SummaryXml, "WebSummary.xslt"));
+            sw.Close();
+
+            // Generate the mobile summary page
+            sw = new StreamWriter(Path.Combine(FolderPath, "mobilesummary.html"), false);
+            sw.Write(XMLOps.Transform(SummaryXml, "WebMobileSummary.xslt"));
+            sw.Close();
+
+            // Generate a page per instance
+            foreach (ClientInstance instance in HostInstances.InstanceCollection.Values)
+            {
+               sw = new StreamWriter(Path.Combine(FolderPath, Path.ChangeExtension(instance.InstanceName, ".html")), false);
+               sw.Write(XMLOps.Transform(XMLGen.InstanceXml(instance), "WebInstance.xslt"));
+               sw.Close();
+            }
+         }
+         finally
+         {
+            if (sw != null)
+            {
+               sw.Close();
+            }
+         }
+      }
+
       /// <summary>
       /// Start the Web Generation Timer
       /// </summary>
@@ -1736,7 +1833,7 @@ namespace HFM.Forms
          TotalPPD = totals.PPD;
          GoodHosts = totals.WorkingClients;
          
-         SetNotifyIconText(String.Format("{0} Clients Working\n{1} Clients Offline\n{2:###,###,##0.00} PPD (Est)",
+         SetNotifyIconText(String.Format("{0} Clients Working\n{1} Clients Offline\n{2:" + PreferenceSet.GetPPDFormatString() + "} PPD",
                                          GoodHosts, totals.NonWorkingClients, TotalPPD));
          RefreshStatusLabels();
       }
@@ -1782,7 +1879,7 @@ namespace HFM.Forms
             SetStatusLabelHostsText(String.Format("{0} Clients", GoodHosts));
          }
 
-         SetStatusLabelPPDText(String.Format("{0:###,###,##0.00} PPD", TotalPPD));
+         SetStatusLabelPPDText(String.Format("{0:" + PreferenceSet.GetPPDFormatString() + "} PPD", TotalPPD));
       }
 
       /// <summary>

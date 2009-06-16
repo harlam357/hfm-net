@@ -3,6 +3,8 @@
    <xsl:template match="Overview">
       <html>
          <head>
+            <meta http-equiv="Pragma" content="no-cache" />
+            <meta http-equiv="Cache-Control" content="no-cache" />
             <title>Folding System Summary</title>
             <link rel="stylesheet" type="text/css" href="$CSSFILE" />
          </head>

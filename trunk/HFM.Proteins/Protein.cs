@@ -19,6 +19,7 @@
  */
 
 using System;
+using HFM.Preferences;
 
 namespace HFM.Proteins
 {
@@ -194,7 +195,7 @@ namespace HFM.Proteins
          {
             return 0.0;
          }
-         return Math.Round(GetUPD(frameTime) * Credit, 5);
+         return Math.Round(GetUPD(frameTime) * Credit, PreferenceSet.MaxDecimalPlaces);
       }
 
       /// <summary>

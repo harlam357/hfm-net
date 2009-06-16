@@ -5,118 +5,116 @@
          <head>
             <meta http-equiv="Pragma" content="no-cache" />
             <meta http-equiv="Cache-Control" content="no-cache" />
-            <title>Folding System Overview</title>
+            <title>Mobile System Overview</title>
             <link rel="stylesheet" type="text/css" href="$CSSFILE" />
          </head>
          <body>
-            <!--Uncomment this line to enable a logo on the Overview Page-->
-            <!--<img style="float:left; margin-right:0px; margin-bottom:0px" src="{photo}" alt="" title="Home" />-->
-            <table class="Overview" width="30%">
+            <table class="Overview" width="85">
                <tr>
-                  <td class="Heading" width="50%">Overview</td>
-                  <td class="Plain" width="50%">
-                     <a href="summary.html">
+                  <td class="Heading" width="60">Overview</td>
+                  <td class="Plain" width="25">
+                     <a href="mobilesummary.html">
                         Summary<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Page
                      </a>
                   </td>
                </tr>
                <tr>
-                  <td class="LeftCol">
-                     Total<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Folding<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Clients
+                  <td class="LeftCol" width="60">
+                     Total<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Clients
                   </td>
-                  <td class="RightCol">
+                  <td class="RightCol" width="25">
                      <xsl:value-of select="TotalHosts"/>
                   </td>
                </tr>
                <tr>
-                  <td class="LeftCol">
-                     Working<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Clients
+                  <td class="LeftCol" width="60">
+                     Working
                   </td>
-                  <td class="RightCol">
+                  <td class="RightCol" width="25">
                      <xsl:value-of select="GoodHosts"/>
                   </td>
                </tr>
                <tr>
-                  <td class="LeftCol">
-                     Non-Working<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Clients
+                  <td class="LeftCol" width="60">
+                     Non-Working
                   </td>
-                  <td class="RightCol">
+                  <td class="RightCol" width="25">
                      <xsl:value-of select="BadHosts"/>
                   </td>
                </tr>
                <tr>
-                  <td class="LeftCol">
+                  <td class="LeftCol" width="60">
                      Total<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPD
                   </td>
-                  <td class="RightCol">
+                  <td class="RightCol" width="25">
                      <xsl:value-of select="EstPPD"/>
                   </td>
                </tr>
                <tr>
-                  <td class="LeftCol">
+                  <td class="LeftCol" width="60">
                      Total<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPW
                   </td>
-                  <td class="RightCol">
+                  <td class="RightCol" width="25">
                      <xsl:value-of select="EstPPW"/>
                   </td>
                </tr>
                <tr>
-                  <td class="LeftCol">
+                  <td class="LeftCol" width="60">
                      Total<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>UPD
                   </td>
-                  <td class="RightCol">
+                  <td class="RightCol" width="25">
                      <xsl:value-of select="EstUPD"/>
                   </td>
                </tr>
                <tr>
-                  <td class="LeftCol">
+                  <td class="LeftCol" width="60">
                      Total<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>UPW
                   </td>
-                  <td class="RightCol">
+                  <td class="RightCol" width="25">
                      <xsl:value-of select="EstUPW"/>
                   </td>
                </tr>
                <tr>
-                  <td class="LeftCol">
+                  <td class="LeftCol" width="60">
                      Average<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPD
                   </td>
-                  <td class="RightCol">
+                  <td class="RightCol" width="25">
                      <xsl:value-of select="AvEstPPD"/>
                   </td>
                </tr>
                <tr>
-                  <td class="LeftCol">
+                  <td class="LeftCol" width="60">
                      Average<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPW
                   </td>
-                  <td class="RightCol">
+                  <td class="RightCol" width="25">
                      <xsl:value-of select="AvEstPPW"/>
                   </td>
                </tr>
                <tr>
-                  <td class="LeftCol">
+                  <td class="LeftCol" width="60">
                      Average<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>UPD
                   </td>
-                  <td class="RightCol">
+                  <td class="RightCol" width="25">
                      <xsl:value-of select="AvEstUPD"/>
                   </td>
                </tr>
                <tr>
-                  <td class="LeftCol">
+                  <td class="LeftCol" width="60">
                      Average<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>UPW
                   </td>
-                  <td class="RightCol">
+                  <td class="RightCol" width="25">
                      <xsl:value-of select="AvEstUPW"/>
                   </td>
                </tr>
                <tr>
-                  <td class="LeftCol">Completed Units</td>
-                  <td class="RightCol">
+                  <td class="LeftCol" width="60">Completed Units</td>
+                  <td class="RightCol" width="25">
                      <xsl:value-of select="TotalCompleted"/>
                   </td>
                </tr>
                <tr>
-                  <td class="LeftCol">Failed Units</td>
-                  <td class="RightCol">
+                  <td class="LeftCol" width="60">Failed Units</td>
+                  <td class="RightCol" width="25">
                      <xsl:value-of select="TotalFailed"/>
                   </td>
                </tr>

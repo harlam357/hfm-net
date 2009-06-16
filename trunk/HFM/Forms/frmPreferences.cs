@@ -66,10 +66,16 @@ namespace HFM.Forms
 
       private void frmPreferences_Shown(object sender, EventArgs e)
       {
-         #region Scheduled Tasks Tab
+         LoadScheduledTasksTab();
+         LoadDefaultsTab();
+         LoadWebTab();
+         LoadVisualStyleTab();
+      }
+
+      private void LoadScheduledTasksTab()
+      {
          chkSynchronous.Checked = Prefs.SyncOnLoad;
          chkScheduled.Checked = Prefs.SyncOnSchedule;
-
          if (PreferenceSet.ValidateMinutes(Prefs.SyncTimeMinutes))
          {
             txtCollectMinutes.Text = Prefs.SyncTimeMinutes.ToString();
@@ -78,17 +84,13 @@ namespace HFM.Forms
          {
             txtCollectMinutes.Text = PreferenceSet.MinutesDefault.ToString();
          }
-
          chkOffline.Checked = Prefs.OfflineLast;
-
          cboPpdCalc.Items.Add(ePpdCalculation.LastFrame);
          cboPpdCalc.Items.Add(ePpdCalculation.LastThreeFrames);
          cboPpdCalc.Items.Add(ePpdCalculation.AllFrames);
          cboPpdCalc.Items.Add(ePpdCalculation.EffectiveRate);
          cboPpdCalc.Text = Prefs.PpdCalculation.ToString();
-
          chkWebSiteGenerator.Checked = Prefs.GenerateWeb;
-
          if (Prefs.WebGenAfterRefresh)
          {
             radioFullRefresh.Checked = true;
@@ -97,7 +99,6 @@ namespace HFM.Forms
          {
             radioSchedule.Checked = true;
          }
-
          if (PreferenceSet.ValidateMinutes(Prefs.GenerateInterval))
          {
             txtWebGenMinutes.Text = Prefs.GenerateInterval.ToString();
@@ -106,11 +107,11 @@ namespace HFM.Forms
          {
             txtWebGenMinutes.Text = PreferenceSet.MinutesDefault.ToString();
          }
-
          txtWebSiteBase.Text = Prefs.WebRoot;
-         #endregion
+      }
 
-         #region Defaults Tab
+      private void LoadDefaultsTab()
+      {
          chkDefaultConfig.Checked = Prefs.UseDefaultConfigFile;
          txtDefaultConfigFile.Text = Prefs.DefaultConfigFile;
          chkAutoSave.Checked = Prefs.AutoSaveConfig;
@@ -129,9 +130,13 @@ namespace HFM.Forms
          {
             cboMessageLevel.SelectedIndex = (int)TraceLevel.Info;
          }
-         #endregion
+         udDecimalPlaces.Minimum = PreferenceSet.MinDecimalPlaces;
+         udDecimalPlaces.Maximum = PreferenceSet.MaxDecimalPlaces;
+         udDecimalPlaces.Value = Prefs.DecimalPlaces;
+      }
 
-         #region Web Tab
+      private void LoadWebTab()
+      {
          txtEOCUserID.Text = Prefs.EOCUserID.ToString();
          txtStanfordUserID.Text = Prefs.StanfordID;
          txtStanfordTeamID.Text = Prefs.TeamID.ToString();
@@ -142,9 +147,10 @@ namespace HFM.Forms
          chkUseProxyAuth.Checked = Prefs.UseProxyAuth;
          txtProxyUser.Text = Prefs.ProxyUser;
          txtProxyPass.Text = Prefs.ProxyPass;
-         #endregion
-
-         #region Visual Style Tab
+      }
+      
+      private void LoadVisualStyleTab()
+      {
          DirectoryInfo di = new DirectoryInfo(Path.Combine(PreferenceSet.AppPath, CssFolder));
          StyleList.Items.Clear();
          foreach (FileInfo fi in di.GetFiles())
@@ -164,8 +170,12 @@ namespace HFM.Forms
                StyleList.SelectedItem = item;
             }
          }
-         #endregion
-      } 
+      }
+
+      private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+      {
+         toolTipPrefs.RemoveAll();
+      }
       #endregion
 
       #region Scheduled Tasks Tab
@@ -227,21 +237,61 @@ namespace HFM.Forms
          int Minutes;
          if (int.TryParse(textBox.Text, out Minutes) == false)
          {
-            textBox.BackColor = Color.Yellow;
-            textBox.Focus();
-            toolTipPrefs.Show("Minutes must be a value from 1 to 180", textBox.Parent, textBox.Location.X + 5, textBox.Location.Y - 20, 5000);
+            SetMinutesError(textBox);
          }
          else if (PreferenceSet.ValidateMinutes(Minutes) == false)
          {
-            textBox.BackColor = Color.Yellow;
-            textBox.Focus();
-            toolTipPrefs.Show("Minutes must be a value from 1 to 180", textBox.Parent, textBox.Location.X + 5, textBox.Location.Y - 20, 5000);
+            SetMinutesError(textBox);
          }
          else
          {
             textBox.BackColor = SystemColors.Window;
             toolTipPrefs.Hide(textBox.Parent);
          }
+      }
+      
+      private void SetMinutesError(Control textBox)
+      {
+         textBox.BackColor = Color.Yellow;
+         textBox.Focus();
+         if (textBox.Visible)
+         {
+            toolTipPrefs.Show(String.Format("Minutes must be a value from {0} to {1}", PreferenceSet.MinMinutes, PreferenceSet.MaxMinutes),
+                              textBox.Parent, textBox.Location.X + 5, textBox.Location.Y - 20, 5000);
+         }
+      }
+
+      private void txtWebSiteBase_Validating(object sender, CancelEventArgs e)
+      {
+         bool bPath = StringOps.ValidatePathInstancePath(txtWebSiteBase.Text);
+         bool bPathWithSlash = StringOps.ValidatePathInstancePath(String.Concat(txtWebSiteBase.Text, Path.DirectorySeparatorChar));
+         bool bIsFtpUrl = StringOps.ValidateFtpWithUserPassUrl(txtWebSiteBase.Text);
+
+         if (txtWebSiteBase.Text.Length == 0)
+         {
+            SetWebFolderError();
+         }
+         else if (txtWebSiteBase.Text.Length > 2 && (bPath || bPathWithSlash || bIsFtpUrl) != true)
+         {
+            SetWebFolderError();
+         }
+         else
+         {
+            if (bPath == false && bPathWithSlash)
+            {
+               txtWebSiteBase.Text += Path.DirectorySeparatorChar;
+            }
+            txtWebSiteBase.BackColor = SystemColors.Window;
+            toolTipPrefs.Hide(txtWebSiteBase);
+         }
+      }
+
+      private void SetWebFolderError()
+      {
+         txtWebSiteBase.BackColor = Color.Yellow;
+         txtWebSiteBase.Focus();
+         toolTipPrefs.Show("HTML Output Folder must be a valid local path, network (UNC) path, or FTP URL",
+            txtWebSiteBase.Parent, txtWebSiteBase.Location.X + 5, txtWebSiteBase.Location.Y - 20, 5000);
       }
 
       private void btnBrowseWebFolder_Click(object sender, EventArgs e)
@@ -325,8 +375,12 @@ namespace HFM.Forms
          if (StringOps.ValidateHttpURL(txtProjectDownloadUrl.Text) == false)
          {
             txtProjectDownloadUrl.BackColor = Color.Yellow;
-            txtProjectDownloadUrl.Focus();
-            toolTipPrefs.Show("URL must be a valid URL and the path to a valid Stanford Project Summary page", textBox.Parent, textBox.Location.X + 5, textBox.Location.Y - 20, 5000);
+            if (txtProjectDownloadUrl.Visible)
+            {
+               txtProjectDownloadUrl.Focus();
+               toolTipPrefs.Show("URL must be a valid URL and the path to a valid Stanford Project Summary page",
+                                 textBox.Parent, textBox.Location.X + 5, textBox.Location.Y - 20, 5000);
+            }
          }
          else
          {
@@ -447,13 +501,25 @@ namespace HFM.Forms
       
       private void btnOK_Click(object sender, EventArgs e)
       {
-         // Check for error condition on Name
+         // Check for error conditions
+         if (txtCollectMinutes.BackColor == Color.Yellow) return;
+         if (txtWebGenMinutes.BackColor == Color.Yellow) return;
+         if (txtWebSiteBase.BackColor == Color.Yellow) return;
          if (txtProjectDownloadUrl.BackColor == Color.Yellow) return;
 
-         // Visual Styles tab
-         Prefs.CSSFileName = StyleList.SelectedItem + CssExtension;
+         GetDataScheduledTasksTab();
+         GetDataDefaultsTab();
+         GetDataWebSettingsTab();
+         GetDataVisualStylesTab();
 
-         // Scheduled Tasks tab
+         Prefs.Save();
+
+         DialogResult = System.Windows.Forms.DialogResult.OK;
+         Close();
+      }
+
+      private void GetDataScheduledTasksTab()
+      {
          Prefs.GenerateInterval = Int32.Parse(txtWebGenMinutes.Text);
          Prefs.GenerateWeb = chkWebSiteGenerator.Checked;
          if (radioFullRefresh.Checked)
@@ -470,16 +536,21 @@ namespace HFM.Forms
          Prefs.PpdCalculation = (ePpdCalculation)cboPpdCalc.SelectedItem;
          Prefs.SyncTimeMinutes = Int32.Parse(txtCollectMinutes.Text);
          Prefs.WebRoot = txtWebSiteBase.Text;
+      }
 
-         // Defaults
+      private void GetDataDefaultsTab()
+      {
          Prefs.UseDefaultConfigFile = chkDefaultConfig.Checked;
          Prefs.DefaultConfigFile = txtDefaultConfigFile.Text;
          Prefs.AutoSaveConfig = chkAutoSave.Checked;
          Prefs.LogFileViewer = txtLogFileViewer.Text;
          Prefs.FileExplorer = txtFileExplorer.Text;
          Prefs.MessageLevel = cboMessageLevel.SelectedIndex;
+         Prefs.DecimalPlaces = Convert.ToInt32(udDecimalPlaces.Value);
+      }
 
-         // Web Settings tab
+      private void GetDataWebSettingsTab()
+      {
          if (txtEOCUserID.Text.Length > 0)
          {
             Prefs.EOCUserID = Int32.Parse(txtEOCUserID.Text);
@@ -511,11 +582,11 @@ namespace HFM.Forms
          }
          Prefs.ProxyUser = txtProxyUser.Text;
          Prefs.ProxyPass = txtProxyPass.Text;
+      }
 
-         Prefs.Save();
-
-         DialogResult = System.Windows.Forms.DialogResult.OK;
-         Close();
+      private void GetDataVisualStylesTab()
+      {
+         Prefs.CSSFileName = String.Concat(StyleList.SelectedItem, CssExtension);
       }
 
       private void btnCancel_Click(object sender, EventArgs e)

@@ -41,6 +41,9 @@ namespace HFM.Proteins
    [Serializable]
    public class UnitInfo
    {
+      public const String UsernameDefault = "Unknown";
+      public const Int32 TeamDefault = 0;
+   
       #region CTOR
       /// <summary>
       /// Primary Constructor
@@ -608,8 +611,8 @@ namespace HFM.Proteins
       #region Clear UnitInfo and Clear Time Based Values
       private void Clear()
       {
-         FoldingID = "Unknown";
-         Team = 0;
+         FoldingID = UsernameDefault;
+         Team = TeamDefault;
          TypeOfClient = ClientType.Unknown;
          CoreVersion = String.Empty;
          DownloadTime = DateTime.MinValue;

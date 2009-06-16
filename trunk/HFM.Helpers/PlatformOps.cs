@@ -21,7 +21,7 @@ using System;
 
 namespace HFM.Helpers
 {
-   public class PlatformOps
+   public static class PlatformOps
    {
       public static bool IsRunningOnMono()
       {

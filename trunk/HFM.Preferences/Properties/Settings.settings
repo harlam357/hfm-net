@@ -15,7 +15,7 @@
       <Value Profile="(Default)">C:\Inetpub\wwwroot\MyFolding</Value>
     </Setting>
     <Setting Name="CSSFile" Type="System.String" Scope="User">
-      <Value Profile="(Default)">blue.css</Value>
+      <Value Profile="(Default)">Blue.css</Value>
     </Setting>
     <Setting Name="SyncTimeMinutes" Type="System.String" Scope="User">
       <Value Profile="(Default)">15</Value>
@@ -112,6 +112,9 @@
     </Setting>
     <Setting Name="AutoSaveConfig" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="DecimalPlaces" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
     </Setting>
   </Settings>
 </SettingsFile>

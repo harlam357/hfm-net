@@ -73,7 +73,7 @@ namespace HFM.Preferences.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("blue.css")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Blue.css")]
         public string CSSFile {
             get {
                 return ((string)(this["CSSFile"]));
@@ -463,5 +463,18 @@ namespace HFM.Preferences.Properties {
                 this["AutoSaveConfig"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int DecimalPlaces {
+            get {
+                return ((int)(this["DecimalPlaces"]));
+            }
+            set {
+                this["DecimalPlaces"] = value;
+            }
+        }
+        
     }
 }

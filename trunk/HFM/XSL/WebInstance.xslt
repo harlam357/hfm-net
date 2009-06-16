@@ -3,6 +3,8 @@
    <xsl:template match="Instance">
       <html>
          <head>
+            <meta http-equiv="Pragma" content="no-cache" />
+            <meta http-equiv="Cache-Control" content="no-cache" />
             <title>Folding Data for Host</title>
             <link rel="stylesheet" type="text/css" href="$CSSFILE" />
          </head>

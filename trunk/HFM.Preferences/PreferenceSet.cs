@@ -21,6 +21,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 
 using HFM.Preferences.Properties;
@@ -51,6 +52,12 @@ namespace HFM.Preferences
       public const String EOCTeamBaseURL = "http://folding.extremeoverclocking.com/team_summary.php?s=&t=";
       public const String StanfordBaseURL = "http://fah-web.stanford.edu/cgi-bin/main.py?qtype=userpage&username=";
 
+      public const Int32 MinDecimalPlaces = 0;
+      public const Int32 MaxDecimalPlaces = 5;
+      
+      public const Int32 MinMinutes = 1;
+      public const Int32 MaxMinutes = 180;
+      
       public const Int32 MinutesDefault = 15;
       public const Int32 ProxyPortDefault = 8080; 
       #endregion
@@ -313,6 +320,13 @@ namespace HFM.Preferences
          get { return _FormLogWindowHeight; }
          set { _FormLogWindowHeight = value; }
       }
+      
+      private int _DecimalPlaces;
+      public int DecimalPlaces
+      {
+         get { return _DecimalPlaces; }
+         set { _DecimalPlaces = value; }
+      }
 
       public static String AppPath
       {
@@ -486,6 +500,7 @@ namespace HFM.Preferences
          _ProjectDownloadUrl = Settings.Default.ProjectDownloadUrl;
          _WebGenAfterRefresh = Settings.Default.WebGenAfterRefresh;
          _MessageLevel = Settings.Default.MessageLevel;
+         _DecimalPlaces = Settings.Default.DecimalPlaces;
 
          _AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
          _AppDataPath = Path.Combine(_AppDataPath, System.Reflection.Assembly.GetEntryAssembly().GetName().Name); ;
@@ -566,6 +581,7 @@ namespace HFM.Preferences
             Settings.Default.ProjectDownloadUrl = _ProjectDownloadUrl;
             Settings.Default.WebGenAfterRefresh = _WebGenAfterRefresh;
             Settings.Default.MessageLevel = _MessageLevel;
+            Settings.Default.DecimalPlaces = _DecimalPlaces;
 
             Settings.Default.Save();
          }
@@ -580,13 +596,42 @@ namespace HFM.Preferences
       #region Preference Validation
       public static bool ValidateMinutes(int Minutes)
       {
-         if ((Minutes > 180) || (Minutes < 1))
+         if ((Minutes > MaxMinutes) || (Minutes < MinMinutes))
          {
             return false;
          }
 
          return true;
       } 
+      
+      //public static bool ValidateDecimalPlaces(int Places)
+      //{
+      //   if ((Places > MaxDecimalPlaces) || (Places < MinDecimalPlaces))
+      //   {
+      //      return false;
+      //   }
+
+      //   return true;
+      //}
+      #endregion
+      
+      #region Preference Formatting
+      public static string GetPPDFormatString()
+      {
+         int DecimalPlaces = Instance.DecimalPlaces;
+      
+         StringBuilder sbldr = new StringBuilder("###,###,##0");
+         if (DecimalPlaces > 0)
+         {
+            sbldr.Append(".");
+            for (int i = 0; i < DecimalPlaces; i++)
+            {
+               sbldr.Append("0");
+            }
+         }
+         
+         return sbldr.ToString();
+      }
       #endregion
    }
 }

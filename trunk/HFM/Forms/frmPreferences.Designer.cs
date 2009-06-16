@@ -73,6 +73,9 @@ namespace HFM.Forms
          this.lbl2WebSiteDir = new HFM.Classes.LabelWrapper();
          this.chkWebSiteGenerator = new HFM.Classes.CheckBoxWrapper();
          this.tabDefaults = new System.Windows.Forms.TabPage();
+         this.grpDecimalPlaces = new HFM.Classes.GroupBoxWrapper();
+         this.udDecimalPlaces = new System.Windows.Forms.NumericUpDown();
+         this.labelWrapper1 = new HFM.Classes.LabelWrapper();
          this.grpDebugMessageLevel = new HFM.Classes.GroupBoxWrapper();
          this.cboMessageLevel = new HFM.Classes.ComboBoxWrapper();
          this.label6 = new HFM.Classes.LabelWrapper();
@@ -127,6 +130,8 @@ namespace HFM.Forms
          this.grpUpdateData.SuspendLayout();
          this.grpHTMLOutput.SuspendLayout();
          this.tabDefaults.SuspendLayout();
+         this.grpDecimalPlaces.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.udDecimalPlaces)).BeginInit();
          this.grpDebugMessageLevel.SuspendLayout();
          this.grpFileExplorer.SuspendLayout();
          this.grpLogFileViewer.SuspendLayout();
@@ -169,6 +174,7 @@ namespace HFM.Forms
          this.tabControl1.SelectedIndex = 0;
          this.tabControl1.Size = new System.Drawing.Size(509, 329);
          this.tabControl1.TabIndex = 5;
+         this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
          // 
          // tabSchdTasks
          // 
@@ -195,7 +201,7 @@ namespace HFM.Forms
          this.grpUpdateData.Controls.Add(this.chkSynchronous);
          this.grpUpdateData.Location = new System.Drawing.Point(6, 9);
          this.grpUpdateData.Name = "grpUpdateData";
-         this.grpUpdateData.Size = new System.Drawing.Size(485, 101);
+         this.grpUpdateData.Size = new System.Drawing.Size(489, 101);
          this.grpUpdateData.TabIndex = 0;
          this.grpUpdateData.TabStop = false;
          this.grpUpdateData.Text = "Update Data";
@@ -291,7 +297,7 @@ namespace HFM.Forms
          this.grpHTMLOutput.Controls.Add(this.chkWebSiteGenerator);
          this.grpHTMLOutput.Location = new System.Drawing.Point(6, 116);
          this.grpHTMLOutput.Name = "grpHTMLOutput";
-         this.grpHTMLOutput.Size = new System.Drawing.Size(485, 76);
+         this.grpHTMLOutput.Size = new System.Drawing.Size(489, 76);
          this.grpHTMLOutput.TabIndex = 1;
          this.grpHTMLOutput.TabStop = false;
          this.grpHTMLOutput.Text = "HTML Output";
@@ -364,6 +370,7 @@ namespace HFM.Forms
          this.txtWebSiteBase.ReadOnly = true;
          this.txtWebSiteBase.Size = new System.Drawing.Size(327, 20);
          this.txtWebSiteBase.TabIndex = 6;
+         this.txtWebSiteBase.Validating += new System.ComponentModel.CancelEventHandler(this.txtWebSiteBase_Validating);
          // 
          // lbl2WebSiteDir
          // 
@@ -387,6 +394,7 @@ namespace HFM.Forms
          // 
          // tabDefaults
          // 
+         this.tabDefaults.Controls.Add(this.grpDecimalPlaces);
          this.tabDefaults.Controls.Add(this.grpDebugMessageLevel);
          this.tabDefaults.Controls.Add(this.grpFileExplorer);
          this.tabDefaults.Controls.Add(this.grpLogFileViewer);
@@ -398,13 +406,40 @@ namespace HFM.Forms
          this.tabDefaults.Text = "Defaults";
          this.tabDefaults.UseVisualStyleBackColor = true;
          // 
+         // grpDecimalPlaces
+         // 
+         this.grpDecimalPlaces.Controls.Add(this.udDecimalPlaces);
+         this.grpDecimalPlaces.Controls.Add(this.labelWrapper1);
+         this.grpDecimalPlaces.Location = new System.Drawing.Point(254, 233);
+         this.grpDecimalPlaces.Name = "grpDecimalPlaces";
+         this.grpDecimalPlaces.Size = new System.Drawing.Size(241, 60);
+         this.grpDecimalPlaces.TabIndex = 4;
+         this.grpDecimalPlaces.TabStop = false;
+         this.grpDecimalPlaces.Text = "Decimal Places";
+         // 
+         // udDecimalPlaces
+         // 
+         this.udDecimalPlaces.Location = new System.Drawing.Point(130, 25);
+         this.udDecimalPlaces.Name = "udDecimalPlaces";
+         this.udDecimalPlaces.Size = new System.Drawing.Size(39, 20);
+         this.udDecimalPlaces.TabIndex = 1;
+         // 
+         // labelWrapper1
+         // 
+         this.labelWrapper1.AutoSize = true;
+         this.labelWrapper1.Location = new System.Drawing.Point(16, 28);
+         this.labelWrapper1.Name = "labelWrapper1";
+         this.labelWrapper1.Size = new System.Drawing.Size(108, 13);
+         this.labelWrapper1.TabIndex = 0;
+         this.labelWrapper1.Text = "Show PPD Decimals:";
+         // 
          // grpDebugMessageLevel
          // 
          this.grpDebugMessageLevel.Controls.Add(this.cboMessageLevel);
          this.grpDebugMessageLevel.Controls.Add(this.label6);
          this.grpDebugMessageLevel.Location = new System.Drawing.Point(6, 233);
          this.grpDebugMessageLevel.Name = "grpDebugMessageLevel";
-         this.grpDebugMessageLevel.Size = new System.Drawing.Size(485, 60);
+         this.grpDebugMessageLevel.Size = new System.Drawing.Size(241, 60);
          this.grpDebugMessageLevel.TabIndex = 3;
          this.grpDebugMessageLevel.TabStop = false;
          this.grpDebugMessageLevel.Text = "Messages";
@@ -413,7 +448,7 @@ namespace HFM.Forms
          // 
          this.cboMessageLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
          this.cboMessageLevel.FormattingEnabled = true;
-         this.cboMessageLevel.Location = new System.Drawing.Point(153, 25);
+         this.cboMessageLevel.Location = new System.Drawing.Point(139, 25);
          this.cboMessageLevel.Name = "cboMessageLevel";
          this.cboMessageLevel.Size = new System.Drawing.Size(75, 21);
          this.cboMessageLevel.TabIndex = 2;
@@ -421,7 +456,7 @@ namespace HFM.Forms
          // label6
          // 
          this.label6.AutoSize = true;
-         this.label6.Location = new System.Drawing.Point(30, 28);
+         this.label6.Location = new System.Drawing.Point(16, 28);
          this.label6.Name = "label6";
          this.label6.Size = new System.Drawing.Size(117, 13);
          this.label6.TabIndex = 1;
@@ -434,7 +469,7 @@ namespace HFM.Forms
          this.grpFileExplorer.Controls.Add(this.txtFileExplorer);
          this.grpFileExplorer.Location = new System.Drawing.Point(6, 167);
          this.grpFileExplorer.Name = "grpFileExplorer";
-         this.grpFileExplorer.Size = new System.Drawing.Size(485, 60);
+         this.grpFileExplorer.Size = new System.Drawing.Size(489, 60);
          this.grpFileExplorer.TabIndex = 2;
          this.grpFileExplorer.TabStop = false;
          this.grpFileExplorer.Text = "External File Explorer";
@@ -472,7 +507,7 @@ namespace HFM.Forms
          this.grpLogFileViewer.Controls.Add(this.txtLogFileViewer);
          this.grpLogFileViewer.Location = new System.Drawing.Point(6, 101);
          this.grpLogFileViewer.Name = "grpLogFileViewer";
-         this.grpLogFileViewer.Size = new System.Drawing.Size(485, 60);
+         this.grpLogFileViewer.Size = new System.Drawing.Size(489, 60);
          this.grpLogFileViewer.TabIndex = 1;
          this.grpLogFileViewer.TabStop = false;
          this.grpLogFileViewer.Text = "External Log File Viewer";
@@ -512,7 +547,7 @@ namespace HFM.Forms
          this.grpDefaultConfig.Controls.Add(this.label1);
          this.grpDefaultConfig.Location = new System.Drawing.Point(6, 9);
          this.grpDefaultConfig.Name = "grpDefaultConfig";
-         this.grpDefaultConfig.Size = new System.Drawing.Size(485, 86);
+         this.grpDefaultConfig.Size = new System.Drawing.Size(489, 86);
          this.grpDefaultConfig.TabIndex = 0;
          this.grpDefaultConfig.TabStop = false;
          this.grpDefaultConfig.Text = "Configuration File";
@@ -630,7 +665,7 @@ namespace HFM.Forms
          // lbl3EOCUserID
          // 
          this.lbl3EOCUserID.AutoSize = true;
-         this.lbl3EOCUserID.Location = new System.Drawing.Point(2, 20);
+         this.lbl3EOCUserID.Location = new System.Drawing.Point(7, 20);
          this.lbl3EOCUserID.Name = "lbl3EOCUserID";
          this.lbl3EOCUserID.Size = new System.Drawing.Size(153, 13);
          this.lbl3EOCUserID.TabIndex = 0;
@@ -639,7 +674,7 @@ namespace HFM.Forms
          // lbl3StanfordUserID
          // 
          this.lbl3StanfordUserID.AutoSize = true;
-         this.lbl3StanfordUserID.Location = new System.Drawing.Point(2, 46);
+         this.lbl3StanfordUserID.Location = new System.Drawing.Point(7, 46);
          this.lbl3StanfordUserID.Name = "lbl3StanfordUserID";
          this.lbl3StanfordUserID.Size = new System.Drawing.Size(89, 13);
          this.lbl3StanfordUserID.TabIndex = 1;
@@ -677,7 +712,7 @@ namespace HFM.Forms
          // lbl3StanfordTeamID
          // 
          this.lbl3StanfordTeamID.AutoSize = true;
-         this.lbl3StanfordTeamID.Location = new System.Drawing.Point(2, 72);
+         this.lbl3StanfordTeamID.Location = new System.Drawing.Point(7, 72);
          this.lbl3StanfordTeamID.Name = "lbl3StanfordTeamID";
          this.lbl3StanfordTeamID.Size = new System.Drawing.Size(94, 13);
          this.lbl3StanfordTeamID.TabIndex = 2;
@@ -913,6 +948,9 @@ namespace HFM.Forms
          this.grpHTMLOutput.ResumeLayout(false);
          this.grpHTMLOutput.PerformLayout();
          this.tabDefaults.ResumeLayout(false);
+         this.grpDecimalPlaces.ResumeLayout(false);
+         this.grpDecimalPlaces.PerformLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.udDecimalPlaces)).EndInit();
          this.grpDebugMessageLevel.ResumeLayout(false);
          this.grpDebugMessageLevel.PerformLayout();
          this.grpFileExplorer.ResumeLayout(false);
@@ -1008,5 +1046,8 @@ namespace HFM.Forms
       private Classes.LabelWrapper label6;
       private Classes.CheckBoxWrapper chkAutoSave;
       private System.Windows.Forms.ToolTip toolTipPrefs;
+      private HFM.Classes.GroupBoxWrapper grpDecimalPlaces;
+      private HFM.Classes.LabelWrapper labelWrapper1;
+      private System.Windows.Forms.NumericUpDown udDecimalPlaces;
    }
 }

@@ -163,6 +163,15 @@ namespace HFM.Helpers
       }
 
       /// <summary>
+      /// Validate FTP URL String with Username and Password
+      /// </summary>
+      /// <param name="val">String to validate</param>
+      public static bool ValidateFtpWithUserPassUrl(string val)
+      {
+         return MatchFtpWithUserPassUrl(val).Success;
+      }
+
+      /// <summary>
       /// Match FTP URL String with Username and Password
       /// </summary>
       /// <param name="val"></param>
