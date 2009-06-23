@@ -166,10 +166,10 @@ namespace HFM.Forms
          
          // Clear the Log File Cache Folder
          ClearCacheFolder();
+         // Manually Create the Columns - Issue 41
+         DisplayInstance.SetupDataGridViewColumns(dataGridView1);
          // Clear the UI
          ClearUI();
-         // Add Dummy Column
-         dataGridView1.Columns["Dummy"].HeaderText = String.Empty;
          // Restore Form Preferences
          RestoreFormPreferences();
          // Add Column Selector
@@ -2145,6 +2145,7 @@ namespace HFM.Forms
 
          // Re-initialise the list of host instances
          HostInstances = new FoldingInstanceCollection();
+         dataGridView1.AutoGenerateColumns = false;
          dataGridView1.DataSource = HostInstances.GetDisplayCollection();
          HostInstances.RefreshCollection += HostInstances_RefreshCollection;
          HostInstances.OfflineClientsLast = PreferenceSet.Instance.OfflineLast;

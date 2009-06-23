@@ -18,7 +18,7 @@
  */
 
 using System;
-
+using System.Windows.Forms;
 using HFM.Preferences;
 using HFM.Proteins;
 
@@ -279,5 +279,47 @@ namespace HFM.Instances
          _InstanceName = Key;
       } 
       #endregion
+
+      public static void SetupDataGridViewColumns(DataGridView dataGridView1)
+      {
+         dataGridView1.Columns.Add("Status", "Status");
+         dataGridView1.Columns["Status"].DataPropertyName = "Status";
+         dataGridView1.Columns.Add("Progress", "Progress");
+         dataGridView1.Columns["Progress"].DataPropertyName = "Progress";
+         dataGridView1.Columns.Add("Name", "Name");
+         dataGridView1.Columns["Name"].DataPropertyName = "Name";
+         dataGridView1.Columns.Add("ClientType", "Client Type");
+         dataGridView1.Columns["ClientType"].DataPropertyName = "ClientType";
+         dataGridView1.Columns.Add("TPF", "TPF");
+         dataGridView1.Columns["TPF"].DataPropertyName = "TPF";
+         dataGridView1.Columns.Add("PPD", "PPD");
+         dataGridView1.Columns["PPD"].DataPropertyName = "PPD";
+         dataGridView1.Columns.Add("MHz", "MHz");
+         dataGridView1.Columns["MHz"].DataPropertyName = "MHz";
+         dataGridView1.Columns.Add("PPD_MHz", "PPD/MHz");
+         dataGridView1.Columns["PPD_MHz"].DataPropertyName = "PPD_MHz";
+         dataGridView1.Columns.Add("ETA", "ETA");
+         dataGridView1.Columns["ETA"].DataPropertyName = "ETA";
+         dataGridView1.Columns.Add("Core", "Core");
+         dataGridView1.Columns["Core"].DataPropertyName = "Core";
+         dataGridView1.Columns.Add("CoreVersion", "Core Version");
+         dataGridView1.Columns["CoreVersion"].DataPropertyName = "CoreVersion";
+         dataGridView1.Columns.Add("ProjectRunCloneGen", "Project (Run/Clone/Gen)");
+         dataGridView1.Columns["ProjectRunCloneGen"].DataPropertyName = "ProjectRunCloneGen";
+         dataGridView1.Columns.Add("Credit", "Credit");
+         dataGridView1.Columns["Credit"].DataPropertyName = "Credit";
+         dataGridView1.Columns.Add("Complete", "Complete");
+         dataGridView1.Columns["Complete"].DataPropertyName = "Complete";
+         dataGridView1.Columns.Add("Failed", "Failed");
+         dataGridView1.Columns["Failed"].DataPropertyName = "Failed";
+         dataGridView1.Columns.Add("Username", "User Name");
+         dataGridView1.Columns["Username"].DataPropertyName = "Username";
+         dataGridView1.Columns.Add("DownloadTime", "Download Time");
+         dataGridView1.Columns["DownloadTime"].DataPropertyName = "DownloadTime";
+         dataGridView1.Columns.Add("Deadline", "Deadline");
+         dataGridView1.Columns["Deadline"].DataPropertyName = "Deadline";
+         dataGridView1.Columns.Add("Dummy", String.Empty);
+         //dataGridView1.Columns["Dummy"].DataPropertyName = "Dummy";
+      }
    }
 }
