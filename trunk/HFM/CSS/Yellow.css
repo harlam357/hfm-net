@@ -1,5 +1,5 @@
 /*
- * HFM.NET - Orange Style Sheet
+ * HFM.NET - Yellow Style Sheet
  * Copyright (C) 2006-2007 David Rawling
  * Copyright (C) 2009 Ryan Harlamert (harlam357)
  *
@@ -48,8 +48,8 @@ TD
 
 .Heading
 {
-	background-color: #C35617;
-	color: White;
+	background-color: #FFD800;
+	color: #111111;
 	font-weight: bold;
 	padding: 5px 5px 5px 5px;
 	margin: 2px 2px 2px 2px;
@@ -57,8 +57,8 @@ TD
 
 .Heading2
 {
-	background-color: #C35617;
-	color: White;
+	background-color: #FFD800;
+	color: #111111;
 	font-style: italic;
 	padding: 5px 5px 5px 5px;
 	margin: 2px 2px 2px 2px;
@@ -67,8 +67,8 @@ TD
 .Blank
 {
 	border: none;
-	background-color: White;
-	color: #F87217;
+	background-color: #FFFFFF;
+	color: #FFFFFF;
 	padding: 5px 5px 5px 5px;
 	margin: 2px 2px 2px 2px;
 	font-size: inherit;
@@ -77,8 +77,8 @@ TD
 .Empty
 {
 	border: none;
-	background-color: White;
-	color: White;
+	background-color: #FFFFFF;
+	color: #FFFFFF;
 	padding: 5px 5px 5px 5px;
 	margin: 2px 2px 2px 2px;
 	font-size: inherit;
@@ -87,8 +87,8 @@ TD
 .Plain
 {
 	border: none;
-	background-color: White;
-	color: #C35617;
+	background-color: #FFFFFF;
+	color: #111111;
 	padding: 5px 5px 5px 5px;
 	margin: 2px 2px 2px 2px;
 	font-size: inherit;
@@ -96,7 +96,7 @@ TD
 
 .StatusCol
 {
-	border: solid 1px #F87217;
+	border: solid 1px #FFD800;
 	padding: 5px 5px 5px 5px;
 	margin: 2px 2px 2px 2px;
 	font-size: inherit;
@@ -105,9 +105,9 @@ TD
 
 .LeftCol
 {
-	border: solid 1px #F87217;
-	background-color: #ffffff;
-	color: #C35617;
+	border: solid 1px #FFD800;
+	background-color: #FFF9DD;
+	color: #111111;
 	padding: 5px 5px 5px 5px;
 	margin: 2px 2px 2px 2px;
 	font-size: inherit;
@@ -116,9 +116,9 @@ TD
 
 .RightCol
 {
-	border: solid 1px #F87217;
-	background-color: #ffffff;
-	color: #C35617;
+	border: solid 1px #FFD800;
+	background-color: #FFF9DD;
+	color: #111111;
 	padding: 5px 5px 5px 5px;
 	margin: 2px 2px 2px 2px;
 	font-size: inherit;
@@ -127,9 +127,9 @@ TD
 
 .AltLeftCol
 {
-	border: solid 1px #F87217;
-	background-color: #ffd06b;
-	color: #C35617;
+	border: solid 1px #FFD800;
+	background-color: #FFEC8E;
+	color: #111111;
 	padding: 5px 5px 5px 5px;
 	margin: 2px 2px 2px 2px;
 	font-size: inherit;
@@ -138,9 +138,9 @@ TD
 
 .AltRightCol
 {
-	border: solid 1px #F87217;
-	background-color: #ffd06b;
-	color: #C35617;
+	border: solid 1px #FFD800;
+	background-color: #FFEC8E;
+	color: #111111;
 	padding: 5px 5px 5px 5px;
 	margin: 2px 2px 2px 2px;
 	font-size: inherit;

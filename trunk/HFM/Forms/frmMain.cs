@@ -1493,6 +1493,8 @@ namespace HFM.Forms
       {
          if (PreferenceSet.Instance.GenerateWeb == false) return;
 
+         DateTime Start = Debug.ExecStart;
+
          if (webTimer.Enabled)
          {
             Debug.WriteToHfmConsole(TraceLevel.Info, "Stopping WebGen Timer Loop");
@@ -1515,15 +1517,7 @@ namespace HFM.Forms
                string Username = match.Result("${username}");
                string Password = match.Result("${password}");
 
-               NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.Combine(PreferenceSet.AppPath, "CSS"), Prefs.CSSFileName), Username, Password);
-               NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "index.html"), Username, Password);
-               NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "summary.html"), Username, Password);
-               NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "mobile.html"), Username, Password);
-               NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "mobilesummary.html"), Username, Password);
-               foreach (ClientInstance instance in HostInstances.InstanceCollection.Values)
-               {
-                  NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), Path.ChangeExtension(instance.InstanceName, ".html")), Username, Password);
-               }
+               DoWebFtpUpload(Prefs, Server, FtpPath, Username, Password);
             }
             else
             {
@@ -1550,9 +1544,15 @@ namespace HFM.Forms
          finally
          {
             StartWebGenTimer();
+            Debug.WriteToHfmConsole(TraceLevel.Info,
+                                    String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
          }
       }
-      
+
+      /// <summary>
+      /// Generate HTML Pages
+      /// </summary>
+      /// <param name="FolderPath">Folder Path to place Generated Pages</param>
       private void DoHtmlGeneration(string FolderPath)
       {
          StreamWriter sw = null;
@@ -1599,6 +1599,39 @@ namespace HFM.Forms
             {
                sw.Close();
             }
+         }
+      }
+
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="Prefs">PreferenceSet Instance</param>
+      /// <param name="Server">Server Name</param>
+      /// <param name="FtpPath">Path from FTP Server Root</param>
+      /// <param name="Username">FTP Server Username</param>
+      /// <param name="Password">FTP Server Password</param>
+      private void DoWebFtpUpload(PreferenceSet Prefs, string Server, string FtpPath, string Username, string Password)
+      {
+         // Time FTP Upload Conversation - Issue 52
+         DateTime Start = Debug.ExecStart;
+         
+         try 
+         {
+            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.Combine(PreferenceSet.AppPath, "CSS"), Prefs.CSSFileName), Username, Password);
+            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "index.html"), Username, Password);
+            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "summary.html"), Username, Password);
+            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "mobile.html"), Username, Password);
+            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "mobilesummary.html"), Username, Password);
+            foreach (ClientInstance instance in HostInstances.InstanceCollection.Values)
+            {
+               NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), Path.ChangeExtension(instance.InstanceName, ".html")), Username, Password);
+            }
+         }
+         finally
+         {
+            // Time FTP Upload Conversation - Issue 52
+            Debug.WriteToHfmConsole(TraceLevel.Info,
+                                    String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
          }
       }
 

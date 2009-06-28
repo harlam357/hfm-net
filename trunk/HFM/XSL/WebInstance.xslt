@@ -52,7 +52,7 @@
                </tr>
                <tr>
                   <td class="Plain" colspan="2" align="center">
-                     Page rendered by HFM.NET <xsl:value-of select="HFMVersion"/> on <xsl:value-of select="LastUpdatedDate"/>
+                     Page rendered by <a href="http://code.google.com/p/hfm-net/">HFM.NET</a><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="HFMVersion"/> on <xsl:value-of select="LastUpdatedDate"/>
                      at <xsl:value-of select="LastUpdatedTime"/>
                   </td>
                </tr>
@@ -92,10 +92,10 @@
          </td>
       </tr>
       <tr>
-         <td class="AltLeftCol">
+         <td class="LeftCol">
             Expected<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Completion
          </td>
-         <td class="AltRightCol">
+         <td class="RightCol">
             <xsl:value-of select="ExpectedCompletionDate"/>
          </td>
       </tr>
@@ -108,78 +108,78 @@
          </td>
       </tr>
       <tr>
-         <td class="LeftCol">
+         <td class="AltLeftCol">
             Project<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Number
          </td>
-         <td class="RightCol">
+         <td class="AltRightCol">
             <xsl:value-of select="ProjectNumber"/>
          </td>
       </tr>
       <tr>
-         <td class="AltLeftCol">
+         <td class="LeftCol">
             Server<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Address
          </td>
-         <td class="AltRightCol">
+         <td class="RightCol">
             <xsl:value-of select="ServerIP"/>
          </td>
       </tr>
       <tr>
-         <td class="LeftCol">
+         <td class="AltLeftCol">
             Number<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>of<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Atoms
          </td>
-         <td class="RightCol">
+         <td class="AltRightCol">
             <xsl:value-of select="NumAtoms"/>
          </td>
       </tr>
       <tr>
-         <td class="AltLeftCol">
+         <td class="LeftCol">
             Preferred<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Deadline
          </td>
-         <td class="AltRightCol">
+         <td class="RightCol">
             <xsl:value-of select="PreferredDays"/> days
          </td>
       </tr>
       <tr>
-         <td class="LeftCol">
+         <td class="AltLeftCol">
             Final<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Deadline
          </td>
-         <td class="RightCol">
+         <td class="AltRightCol">
             <xsl:value-of select="MaxDays"/> days
          </td>
       </tr>
       <tr>
-         <td class="AltLeftCol">
+         <td class="LeftCol">
             Points<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Credit
          </td>
-         <td class="AltRightCol">
+         <td class="RightCol">
             <xsl:value-of select="Credit"/>
          </td>
       </tr>
       <tr>
-         <td class="LeftCol">
+         <td class="AltLeftCol">
             Number<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>of<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Frames
          </td>
-         <td class="RightCol">
+         <td class="AltRightCol">
             <xsl:value-of select="Frames"/>
          </td>
       </tr>
       <tr>
-         <td class="AltLeftCol">Core</td>
-         <td class="AltRightCol">
+         <td class="LeftCol">Core</td>
+         <td class="RightCol">
             <xsl:value-of select="Core"/>
          </td>
       </tr>
       <tr>
-         <td class="LeftCol">
+         <td class="AltLeftCol">
             Contact<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Person
          </td>
-         <td class="RightCol">
+         <td class="AltRightCol">
             <xsl:value-of select="Contact"/>
          </td>
       </tr>
       <tr>
-         <td class="AltLeftCol">Description</td>
-         <td class="AltRightCol">
+         <td class="LeftCol">Description</td>
+         <td class="RightCol">
             <xsl:value-of select="Description" disable-output-escaping="yes"/>
          </td>
       </tr>

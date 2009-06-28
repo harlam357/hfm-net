@@ -199,6 +199,21 @@
       <SubType>Designer</SubType>
       <DependentUpon>frmMessages.cs</DependentUpon>
     </EmbeddedResource>
+    <Content Include="CSS\BlueTwo.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CSS\Green.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CSS\Purple.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CSS\Red.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CSS\Yellow.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="hfm_48_48.ico" />
     <Content Include="CSS\Grey.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

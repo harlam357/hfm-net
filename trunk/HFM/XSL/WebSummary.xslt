@@ -26,22 +26,22 @@
                   <td class="Heading">TPF</td>
                   <td class="Heading">PPD</td>
                   <td class="Heading">MHz</td>
-                  <td class="Heading">PPD<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>MHz</td>
+                  <td class="Heading">PPD/MHz</td>
                   <td class="Heading">ETA</td>
                   <td class="Heading">Core</td>
                   <td class="Heading">Version</td>
-                  <td class="Heading">Project<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>(Run/Clone/Gen)</td>
+                  <td class="Heading">Project<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>(Run,<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Clone,<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Gen)</td>
                   <td class="Heading">Credit</td>
                   <td class="Heading">Completed</td>
                   <td class="Heading">Failed</td>
-                  <td class="Heading">Username</td>
+                  <td class="Heading">User<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Name</td>
                   <td class="Heading">Download<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Time</td>
                   <td class="Heading">Deadline</td>
                </tr>
                <xsl:apply-templates select="Instance" />
                <tr>
                   <td class="Plain" colspan="18" align="center">
-                     Page rendered by HFM.NET <xsl:value-of select="HFMVersion"/> on <xsl:value-of select="LastUpdatedDate"/>
+                     Page rendered by <a href="http://code.google.com/p/hfm-net/">HFM.NET</a><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="HFMVersion"/> on <xsl:value-of select="LastUpdatedDate"/>
                      at <xsl:value-of select="LastUpdatedTime"/>
                   </td>
                </tr>
@@ -109,7 +109,16 @@
          <td width="3%" class="RightCol">
             <xsl:value-of select="Failed"/>
          </td>
-         <td width="8%" class="RightCol">
+         <td width="8%">
+            <xsl:choose>
+               <xsl:when test="UsernameMatch='False'">
+                  <xsl:attribute name="class">StatusCol</xsl:attribute>
+                  <xsl:attribute name="bgcolor">Orange</xsl:attribute>
+               </xsl:when>
+               <xsl:otherwise>
+                  <xsl:attribute name="class">RightCol</xsl:attribute>
+               </xsl:otherwise>
+            </xsl:choose>
             <xsl:value-of select="Username"/>
          </td>
          <td width="8%" class="RightCol">

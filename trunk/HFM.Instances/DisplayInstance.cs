@@ -304,7 +304,7 @@ namespace HFM.Instances
          dataGridView1.Columns["Core"].DataPropertyName = "Core";
          dataGridView1.Columns.Add("CoreVersion", "Core Version");
          dataGridView1.Columns["CoreVersion"].DataPropertyName = "CoreVersion";
-         dataGridView1.Columns.Add("ProjectRunCloneGen", "Project (Run/Clone/Gen)");
+         dataGridView1.Columns.Add("ProjectRunCloneGen", "Project (Run, Clone, Gen)");
          dataGridView1.Columns["ProjectRunCloneGen"].DataPropertyName = "ProjectRunCloneGen";
          dataGridView1.Columns.Add("Credit", "Credit");
          dataGridView1.Columns["Credit"].DataPropertyName = "Credit";

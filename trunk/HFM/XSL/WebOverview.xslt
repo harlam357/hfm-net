@@ -29,10 +29,10 @@
                   </td>
                </tr>
                <tr>
-                  <td class="LeftCol">
+                  <td class="AltLeftCol">
                      Working<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Clients
                   </td>
-                  <td class="RightCol">
+                  <td class="AltRightCol">
                      <xsl:value-of select="GoodHosts"/>
                   </td>
                </tr>
@@ -45,10 +45,10 @@
                   </td>
                </tr>
                <tr>
-                  <td class="LeftCol">
+                  <td class="AltLeftCol">
                      Total<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPD
                   </td>
-                  <td class="RightCol">
+                  <td class="AltRightCol">
                      <xsl:value-of select="EstPPD"/>
                   </td>
                </tr>
@@ -61,10 +61,10 @@
                   </td>
                </tr>
                <tr>
-                  <td class="LeftCol">
+                  <td class="AltLeftCol">
                      Total<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>UPD
                   </td>
-                  <td class="RightCol">
+                  <td class="AltRightCol">
                      <xsl:value-of select="EstUPD"/>
                   </td>
                </tr>
@@ -77,10 +77,10 @@
                   </td>
                </tr>
                <tr>
-                  <td class="LeftCol">
+                  <td class="AltLeftCol">
                      Average<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPD
                   </td>
-                  <td class="RightCol">
+                  <td class="AltRightCol">
                      <xsl:value-of select="AvEstPPD"/>
                   </td>
                </tr>
@@ -93,10 +93,10 @@
                   </td>
                </tr>
                <tr>
-                  <td class="LeftCol">
+                  <td class="AltLeftCol">
                      Average<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>UPD
                   </td>
-                  <td class="RightCol">
+                  <td class="AltRightCol">
                      <xsl:value-of select="AvEstUPD"/>
                   </td>
                </tr>
@@ -109,8 +109,8 @@
                   </td>
                </tr>
                <tr>
-                  <td class="LeftCol">Completed Units</td>
-                  <td class="RightCol">
+                  <td class="AltLeftCol">Completed Units</td>
+                  <td class="AltRightCol">
                      <xsl:value-of select="TotalCompleted"/>
                   </td>
                </tr>
@@ -125,7 +125,7 @@
                </tr>
                <tr>
                   <td class="Plain" colspan="2" align="center">
-                     Page rendered by HFM.NET <xsl:value-of select="HFMVersion"/> on <xsl:value-of select="LastUpdatedDate"/>
+                     Page rendered by <a href="http://code.google.com/p/hfm-net/">HFM.NET</a><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="HFMVersion"/> on <xsl:value-of select="LastUpdatedDate"/>
                      at <xsl:value-of select="LastUpdatedTime"/>
                   </td>
                </tr>
