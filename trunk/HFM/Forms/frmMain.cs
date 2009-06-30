@@ -134,6 +134,11 @@ namespace HFM.Forms
             }
          }
       }
+      
+      /// <summary>
+      /// Container for User Stats (Daily Average - Daily, Weekly, Total Points and WUs)
+      /// </summary>
+      private readonly UserStatsDataContainer UserStatsData = new UserStatsDataContainer();
       #endregion
 
       #region Form Constructor / functionality
@@ -174,6 +179,13 @@ namespace HFM.Forms
          RestoreFormPreferences();
          // Add Column Selector
          new DataGridViewColumnSelector(dataGridView1);
+
+         // Hook-up PreferenceSet Event Handlers
+         PreferenceSet Prefs = PreferenceSet.Instance;
+         Prefs.ShowUserStatsChanged += ShowHideUserStatsControls;
+         ShowHideUserStatsControls(this, EventArgs.Empty);
+         Prefs.OfflineLastChanged += SetOfflineLast;
+         Prefs.MessageLevelChanged += SetMessageLevel;
       }
 
       /// <summary>
@@ -212,6 +224,8 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void frmMain_Shown(object sender, EventArgs e)
       {
+         PreferenceSet Prefs = PreferenceSet.Instance;
+      
          String sFilename = String.Empty;
 
          if (Program.cmdArgs.Length > 0)
@@ -219,9 +233,9 @@ namespace HFM.Forms
             // Filename on command line - probably from Explorer
             sFilename = Program.cmdArgs[0];
          }
-         else if (PreferenceSet.Instance.UseDefaultConfigFile)
+         else if (Prefs.UseDefaultConfigFile)
          {
-            sFilename = PreferenceSet.Instance.DefaultConfigFile;
+            sFilename = Prefs.DefaultConfigFile;
          }
 
          if (sFilename != String.Empty)
@@ -954,13 +968,18 @@ namespace HFM.Forms
          if (prefDialog.ShowDialog() == DialogResult.OK)
          {
             SetTimerState();
-            HostInstances.OfflineClientsLast = PreferenceSet.Instance.OfflineLast;
-            TraceLevel newLevel = (TraceLevel)PreferenceSet.Instance.MessageLevel;
-            if (newLevel != TraceLevelSwitch.Instance.Level)
-            {
-               TraceLevelSwitch.Instance.Level = newLevel;
-               Debug.WriteToHfmConsole(String.Format("Debug Message Level Changed: {0}", newLevel));
-            }
+            
+            /*** This code is now being handles through PreferenceSet Event Handlers (changed in Revision 26) ***/
+            
+            //HostInstances.OfflineClientsLast = PreferenceSet.Instance.OfflineLast;
+            //TraceLevel newLevel = (TraceLevel)PreferenceSet.Instance.MessageLevel;
+            //if (newLevel != TraceLevelSwitch.Instance.Level)
+            //{
+            //   TraceLevelSwitch.Instance.Level = newLevel;
+            //   Debug.WriteToHfmConsole(String.Format("Debug Message Level Changed: {0}", newLevel));
+            //}
+            
+            /****************************************************************************************************/
 
             // If the PPD Calculation style changed, we need to do a new Retrieval
             if (currentPpdCalc.Equals(PreferenceSet.Instance.PpdCalculation))
@@ -1420,6 +1439,11 @@ namespace HFM.Forms
          }
       }
 
+      private void mnuWebRefreshUserStats_Click(object sender, EventArgs e)
+      {
+         ForceRefreshUserStatsData();
+      }
+
       private void mnuWebHFMGoogleCode_Click(object sender, EventArgs e)
       {
          try
@@ -1684,16 +1708,23 @@ namespace HFM.Forms
          IAsyncResult async = new MethodInvoker(DoRetrieval).BeginInvoke(null, null);
          // wait for completion
          async.AsyncWaitHandle.WaitOne();
+
+         PreferenceSet Prefs = PreferenceSet.Instance;
          
          // run post retrieval processes
-         if (PreferenceSet.Instance.GenerateWeb && PreferenceSet.Instance.WebGenAfterRefresh)
+         if (Prefs.GenerateWeb && Prefs.WebGenAfterRefresh)
          {
             // do a web gen
             webGenTimer_Tick(null, null);
          }
 
+         if (Prefs.ShowUserStats)
+         {
+            RefreshUserStatsData();
+         }
+
          // Enable the data retrieval timer
-         if (PreferenceSet.Instance.SyncOnSchedule)
+         if (Prefs.SyncOnSchedule)
          {
             StartBackgroundTimer();
          }
@@ -1703,7 +1734,10 @@ namespace HFM.Forms
          // Save the benchmark collection
          ProteinBenchmarkCollection.Instance.Serialize();
       }
-      
+
+      /// <summary>
+      /// Starts Retrieval Timer Loop
+      /// </summary>
       private void StartBackgroundTimer()
       {
          workTimer.Interval = Convert.ToInt32(PreferenceSet.Instance.SyncTimeMinutes) * MinToMillisec;
@@ -2034,6 +2068,7 @@ namespace HFM.Forms
       #endregion
 
       #region Helper Routines
+      
       /// <summary>
       /// Clears the log cache folder specified by the CacheFolder setting
       /// </summary>
@@ -2181,7 +2216,7 @@ namespace HFM.Forms
          dataGridView1.AutoGenerateColumns = false;
          dataGridView1.DataSource = HostInstances.GetDisplayCollection();
          HostInstances.RefreshCollection += HostInstances_RefreshCollection;
-         HostInstances.OfflineClientsLast = PreferenceSet.Instance.OfflineLast;
+         SetOfflineLast(this, EventArgs.Empty);
 
          // and the config filename - this is a new one now
          ConfigFilename = String.Empty;
@@ -2254,7 +2289,7 @@ namespace HFM.Forms
             splitContainer1.Panel2Collapsed = false;
          }
       }
-      
+
       /// <summary>
       /// Fire File Browser Process (wrap calls to this function in try catch)
       /// </summary>
@@ -2263,6 +2298,86 @@ namespace HFM.Forms
       {
          Process.Start(PreferenceSet.Instance.FileExplorer, path);
       }
+
+      /// <summary>
+      /// Refresh User Stats from external source
+      /// </summary>
+      private void RefreshUserStatsData()
+      {
+         RefreshUserStatsData(false);
+      }
+
+      /// <summary>
+      /// Force Refresh User Stats from external source
+      /// </summary>
+      private void ForceRefreshUserStatsData()
+      {
+         RefreshUserStatsData(true);
+      }
+
+      /// <summary>
+      /// Refresh User Stats from external source
+      /// </summary>
+      private void RefreshUserStatsData(bool ForceRefresh)
+      {
+         try
+         {
+            XMLOps.GetEOCXmlData(UserStatsData, ForceRefresh);
+            statusLabel24hr.Text = String.Format("24hr: {0:###,###,##0}", UserStatsData.User24hrAvg);
+            statusLabelToday.Text = String.Format("Today: {0:###,###,##0}", UserStatsData.UserPointsToday);
+            statusLabelWeek.Text = String.Format("Week: {0:###,###,##0}", UserStatsData.UserPointsWeek);
+            statusLabelTotal.Text = String.Format("Total: {0:###,###,##0}", UserStatsData.UserPointsTotal);
+            statusLabelWUs.Text = String.Format("WUs: {0:###,###,##0}", UserStatsData.UserWUsTotal);
+         }
+         catch (Exception ex)
+         {
+            Debug.WriteToHfmConsole(TraceLevel.Error,
+                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+         }
+      }
+
+      #region PreferenceSet Event Handlers
+      /// <summary>
+      /// Show or Hide User Stats Controls based on user setting
+      /// </summary>
+      private void ShowHideUserStatsControls(object sender, EventArgs e)
+      {
+         bool show = PreferenceSet.Instance.ShowUserStats;
+         if (show)
+         {
+            RefreshUserStatsData();
+         }
+
+         statusLabel24hr.Visible = show;
+         statusLabelToday.Visible = show;
+         statusLabelWeek.Visible = show;
+         statusLabelTotal.Visible = show;
+         statusLabelWUs.Visible = show;
+         statusLabelMiddle.Visible = show;
+      }
+
+      /// <summary>
+      /// Sets OfflineLast Property on HostInstances Collection
+      /// </summary>
+      private void SetOfflineLast(object sender, EventArgs e)
+      {
+         HostInstances.OfflineClientsLast = PreferenceSet.Instance.OfflineLast;
+      }
+
+      /// <summary>
+      /// Sets Debug Message Level on Trace Level Switch
+      /// </summary>
+      private static void SetMessageLevel(object sender, EventArgs e)
+      {
+         TraceLevel newLevel = (TraceLevel)PreferenceSet.Instance.MessageLevel;
+         if (newLevel != TraceLevelSwitch.Instance.Level)
+         {
+            TraceLevelSwitch.Instance.Level = newLevel;
+            Debug.WriteToHfmConsole(String.Format("Debug Message Level Changed: {0}", newLevel));
+         }
+      }
+      #endregion
+      
       #endregion
    }
 }

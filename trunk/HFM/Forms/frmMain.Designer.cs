@@ -30,11 +30,17 @@ namespace HFM.Forms
       {
          this.components = new System.ComponentModel.Container();
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
-         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
          this.statusStrip = new System.Windows.Forms.StatusStrip();
          this.statusLabelLeft = new System.Windows.Forms.ToolStripStatusLabel();
+         this.statusLabel24hr = new System.Windows.Forms.ToolStripStatusLabel();
+         this.statusLabelToday = new System.Windows.Forms.ToolStripStatusLabel();
+         this.statusLabelWeek = new System.Windows.Forms.ToolStripStatusLabel();
+         this.statusLabelTotal = new System.Windows.Forms.ToolStripStatusLabel();
+         this.statusLabelWUs = new System.Windows.Forms.ToolStripStatusLabel();
+         this.statusLabelMiddle = new System.Windows.Forms.ToolStripStatusLabel();
          this.statusLabelHosts = new System.Windows.Forms.ToolStripStatusLabel();
          this.statusLabelPPW = new System.Windows.Forms.ToolStripStatusLabel();
          this.statusLabelRight = new System.Windows.Forms.ToolStripStatusLabel();
@@ -81,6 +87,8 @@ namespace HFM.Forms
          this.mnuWebStanfordUser = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuWebEOCTeam = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuWebSep1 = new System.Windows.Forms.ToolStripSeparator();
+         this.mnuWebRefreshUserStats = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuWebSep2 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuWebHFMGoogleCode = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuHelpContents = new System.Windows.Forms.ToolStripMenuItem();
@@ -116,6 +124,12 @@ namespace HFM.Forms
          // 
          this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusLabelLeft,
+            this.statusLabel24hr,
+            this.statusLabelToday,
+            this.statusLabelWeek,
+            this.statusLabelTotal,
+            this.statusLabelWUs,
+            this.statusLabelMiddle,
             this.statusLabelHosts,
             this.statusLabelPPW,
             this.statusLabelRight});
@@ -126,16 +140,80 @@ namespace HFM.Forms
          // 
          // statusLabelLeft
          // 
-         this.statusLabelLeft.AutoSize = false;
          this.statusLabelLeft.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
                      | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
                      | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
          this.statusLabelLeft.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
          this.statusLabelLeft.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
          this.statusLabelLeft.Name = "statusLabelLeft";
-         this.statusLabelLeft.Size = new System.Drawing.Size(839, 24);
+         this.statusLabelLeft.Size = new System.Drawing.Size(478, 24);
          this.statusLabelLeft.Spring = true;
          this.statusLabelLeft.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+         // 
+         // statusLabel24hr
+         // 
+         this.statusLabel24hr.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+         this.statusLabel24hr.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
+         this.statusLabel24hr.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+         this.statusLabel24hr.Name = "statusLabel24hr";
+         this.statusLabel24hr.Size = new System.Drawing.Size(58, 24);
+         this.statusLabel24hr.Text = "24hr: N/A";
+         // 
+         // statusLabelToday
+         // 
+         this.statusLabelToday.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+         this.statusLabelToday.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
+         this.statusLabelToday.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+         this.statusLabelToday.Name = "statusLabelToday";
+         this.statusLabelToday.Size = new System.Drawing.Size(66, 24);
+         this.statusLabelToday.Text = "Today: N/A";
+         // 
+         // statusLabelWeek
+         // 
+         this.statusLabelWeek.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+         this.statusLabelWeek.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
+         this.statusLabelWeek.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+         this.statusLabelWeek.Name = "statusLabelWeek";
+         this.statusLabelWeek.Size = new System.Drawing.Size(63, 24);
+         this.statusLabelWeek.Text = "Week: N/A";
+         // 
+         // statusLabelTotal
+         // 
+         this.statusLabelTotal.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+         this.statusLabelTotal.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
+         this.statusLabelTotal.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+         this.statusLabelTotal.Name = "statusLabelTotal";
+         this.statusLabelTotal.Size = new System.Drawing.Size(60, 24);
+         this.statusLabelTotal.Text = "Total: N/A";
+         // 
+         // statusLabelWUs
+         // 
+         this.statusLabelWUs.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+         this.statusLabelWUs.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
+         this.statusLabelWUs.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+         this.statusLabelWUs.Name = "statusLabelWUs";
+         this.statusLabelWUs.Size = new System.Drawing.Size(58, 24);
+         this.statusLabelWUs.Text = "WUs: N/A";
+         // 
+         // statusLabelMiddle
+         // 
+         this.statusLabelMiddle.AutoSize = false;
+         this.statusLabelMiddle.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+         this.statusLabelMiddle.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
+         this.statusLabelMiddle.Name = "statusLabelMiddle";
+         this.statusLabelMiddle.Size = new System.Drawing.Size(50, 24);
          // 
          // statusLabelHosts
          // 
@@ -169,7 +247,7 @@ namespace HFM.Forms
                      | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
          this.statusLabelRight.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
          this.statusLabelRight.Name = "statusLabelRight";
-         this.statusLabelRight.Size = new System.Drawing.Size(100, 24);
+         this.statusLabelRight.Size = new System.Drawing.Size(50, 24);
          this.statusLabelRight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
          // 
          // notifyMenu
@@ -492,6 +570,8 @@ namespace HFM.Forms
             this.mnuWebStanfordUser,
             this.mnuWebEOCTeam,
             this.mnuWebSep1,
+            this.mnuWebRefreshUserStats,
+            this.mnuWebSep2,
             this.mnuWebHFMGoogleCode});
          this.mnuWeb.Name = "mnuWeb";
          this.mnuWeb.Size = new System.Drawing.Size(41, 20);
@@ -525,6 +605,18 @@ namespace HFM.Forms
          // 
          this.mnuWebSep1.Name = "mnuWebSep1";
          this.mnuWebSep1.Size = new System.Drawing.Size(205, 6);
+         // 
+         // mnuWebRefreshUserStats
+         // 
+         this.mnuWebRefreshUserStats.Name = "mnuWebRefreshUserStats";
+         this.mnuWebRefreshUserStats.Size = new System.Drawing.Size(208, 22);
+         this.mnuWebRefreshUserStats.Text = "Refresh EOC User Stats";
+         this.mnuWebRefreshUserStats.Click += new System.EventHandler(this.mnuWebRefreshUserStats_Click);
+         // 
+         // mnuWebSep2
+         // 
+         this.mnuWebSep2.Name = "mnuWebSep2";
+         this.mnuWebSep2.Size = new System.Drawing.Size(205, 6);
          // 
          // mnuWebHFMGoogleCode
          // 
@@ -679,27 +771,27 @@ namespace HFM.Forms
          this.dataGridView1.AllowUserToDeleteRows = false;
          this.dataGridView1.AllowUserToOrderColumns = true;
          this.dataGridView1.AllowUserToResizeRows = false;
-         dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-         this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+         dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+         this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
          this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
          this.dataGridView1.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-         dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-         dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-         dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-         dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-         dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-         dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-         this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+         dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+         dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
+         dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
+         dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+         dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+         dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+         this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
          this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-         dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-         dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-         dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-         dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-         dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-         dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-         this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle3;
+         dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+         dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+         dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+         dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+         dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+         dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+         this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle6;
          this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
          this.dataGridView1.Location = new System.Drawing.Point(0, 0);
          this.dataGridView1.MultiSelect = false;
@@ -832,5 +924,13 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripSeparator mnuFileSep2;
       private System.Windows.Forms.ToolStripMenuItem mnuToolsBenchmarks;
       private System.Windows.Forms.ToolTip toolTipGrid;
+      private System.Windows.Forms.ToolStripStatusLabel statusLabel24hr;
+      private System.Windows.Forms.ToolStripStatusLabel statusLabelToday;
+      private System.Windows.Forms.ToolStripStatusLabel statusLabelWeek;
+      private System.Windows.Forms.ToolStripStatusLabel statusLabelTotal;
+      private System.Windows.Forms.ToolStripStatusLabel statusLabelWUs;
+      private System.Windows.Forms.ToolStripStatusLabel statusLabelMiddle;
+      private System.Windows.Forms.ToolStripSeparator mnuWebSep2;
+      private System.Windows.Forms.ToolStripMenuItem mnuWebRefreshUserStats;
    }
 }

@@ -35,7 +35,7 @@ namespace HFM.Forms
       private readonly int _initialProjectID; 
       #endregion
 
-      #region #region Form Constructor / functionality
+      #region Form Constructor / functionality
       public frmBenchmarks(FoldingInstanceCollection clientInstances, int projectID)
       {
          _clientInstances = clientInstances;
@@ -112,16 +112,16 @@ namespace HFM.Forms
 
          if (protein != null)
          {
-            lblProjectID.Text = String.Format("Project: {0}", protein.WorkUnitName);
-            lblCredit.Text = String.Format("Credit: {0}", protein.Credit);
-            lblFrames.Text = String.Format("Frames: {0}", protein.Frames);
-            lblAtoms.Text = String.Format("Atoms: {0}", protein.NumAtoms);
-            lblCore.Text = String.Format("Core: {0}", protein.Core);
+            txtProjectID.Text = protein.WorkUnitName;
+            txtCredit.Text = protein.Credit.ToString();
+            txtFrames.Text = protein.Frames.ToString();
+            txtAtoms.Text = protein.NumAtoms.ToString();
+            txtCore.Text = protein.Core;
             linkDescription.Text = protein.Description;
-            lblPrefered.Text = String.Format("Prefered Days: {0}", protein.PreferredDays);
-            lblMaxDays.Text = String.Format("Maximum Days: {0}", protein.MaxDays);
-            lblContact.Text = String.Format("Contact: {0}", protein.Contact);
-            lblServerIP.Text = String.Format("Server IP: {0}", protein.ServerIP);
+            txtPreferredDays.Text = protein.PreferredDays.ToString();
+            txtMaximumDays.Text = protein.MaxDays.ToString();
+            txtContact.Text = protein.Contact;
+            txtServerIP.Text = protein.ServerIP;
 
             lines.Add(String.Format(" Project ID: {0}", protein.ProjectNumber));
             lines.Add(String.Format(" Core: {0}", protein.Core));

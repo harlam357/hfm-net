@@ -37,12 +37,21 @@ namespace HFM.Forms
          this.btnExit = new HFM.Classes.ButtonWrapper();
          this.splitContainerMain = new HFM.Classes.SplitContainerWrapper();
          this.grpProjectInfo = new HFM.Classes.GroupBoxWrapper();
+         this.txtServerIP = new HFM.Classes.TextBoxWrapper();
+         this.txtContact = new HFM.Classes.TextBoxWrapper();
+         this.txtMaximumDays = new HFM.Classes.TextBoxWrapper();
+         this.txtPreferredDays = new HFM.Classes.TextBoxWrapper();
+         this.txtCore = new HFM.Classes.TextBoxWrapper();
+         this.txtAtoms = new HFM.Classes.TextBoxWrapper();
+         this.txtFrames = new HFM.Classes.TextBoxWrapper();
+         this.txtCredit = new HFM.Classes.TextBoxWrapper();
+         this.txtProjectID = new HFM.Classes.TextBoxWrapper();
          this.linkDescription = new System.Windows.Forms.LinkLabel();
          this.lblServerIP = new HFM.Classes.LabelWrapper();
          this.lblContact = new HFM.Classes.LabelWrapper();
          this.lblCore = new HFM.Classes.LabelWrapper();
          this.lblMaxDays = new HFM.Classes.LabelWrapper();
-         this.lblPrefered = new HFM.Classes.LabelWrapper();
+         this.lblPreferred = new HFM.Classes.LabelWrapper();
          this.lblAtoms = new HFM.Classes.LabelWrapper();
          this.lblFrames = new HFM.Classes.LabelWrapper();
          this.lblCredit = new HFM.Classes.LabelWrapper();
@@ -136,12 +145,21 @@ namespace HFM.Forms
          this.grpProjectInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                      | System.Windows.Forms.AnchorStyles.Left)
                      | System.Windows.Forms.AnchorStyles.Right)));
+         this.grpProjectInfo.Controls.Add(this.txtServerIP);
+         this.grpProjectInfo.Controls.Add(this.txtContact);
+         this.grpProjectInfo.Controls.Add(this.txtMaximumDays);
+         this.grpProjectInfo.Controls.Add(this.txtPreferredDays);
+         this.grpProjectInfo.Controls.Add(this.txtCore);
+         this.grpProjectInfo.Controls.Add(this.txtAtoms);
+         this.grpProjectInfo.Controls.Add(this.txtFrames);
+         this.grpProjectInfo.Controls.Add(this.txtCredit);
+         this.grpProjectInfo.Controls.Add(this.txtProjectID);
          this.grpProjectInfo.Controls.Add(this.linkDescription);
          this.grpProjectInfo.Controls.Add(this.lblServerIP);
          this.grpProjectInfo.Controls.Add(this.lblContact);
          this.grpProjectInfo.Controls.Add(this.lblCore);
          this.grpProjectInfo.Controls.Add(this.lblMaxDays);
-         this.grpProjectInfo.Controls.Add(this.lblPrefered);
+         this.grpProjectInfo.Controls.Add(this.lblPreferred);
          this.grpProjectInfo.Controls.Add(this.lblAtoms);
          this.grpProjectInfo.Controls.Add(this.lblFrames);
          this.grpProjectInfo.Controls.Add(this.lblCredit);
@@ -154,6 +172,87 @@ namespace HFM.Forms
          this.grpProjectInfo.TabIndex = 0;
          this.grpProjectInfo.TabStop = false;
          this.grpProjectInfo.Text = "Project Information";
+         // 
+         // txtServerIP
+         // 
+         this.txtServerIP.Location = new System.Drawing.Point(429, 89);
+         this.txtServerIP.Name = "txtServerIP";
+         this.txtServerIP.ReadOnly = true;
+         this.txtServerIP.Size = new System.Drawing.Size(95, 20);
+         this.txtServerIP.TabIndex = 19;
+         this.txtServerIP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+         // 
+         // txtContact
+         // 
+         this.txtContact.Location = new System.Drawing.Point(429, 66);
+         this.txtContact.Name = "txtContact";
+         this.txtContact.ReadOnly = true;
+         this.txtContact.Size = new System.Drawing.Size(95, 20);
+         this.txtContact.TabIndex = 18;
+         this.txtContact.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+         // 
+         // txtMaximumDays
+         // 
+         this.txtMaximumDays.Location = new System.Drawing.Point(429, 41);
+         this.txtMaximumDays.Name = "txtMaximumDays";
+         this.txtMaximumDays.ReadOnly = true;
+         this.txtMaximumDays.Size = new System.Drawing.Size(95, 20);
+         this.txtMaximumDays.TabIndex = 17;
+         this.txtMaximumDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+         // 
+         // txtPreferredDays
+         // 
+         this.txtPreferredDays.Location = new System.Drawing.Point(429, 17);
+         this.txtPreferredDays.Name = "txtPreferredDays";
+         this.txtPreferredDays.ReadOnly = true;
+         this.txtPreferredDays.Size = new System.Drawing.Size(95, 20);
+         this.txtPreferredDays.TabIndex = 16;
+         this.txtPreferredDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+         // 
+         // txtCore
+         // 
+         this.txtCore.Location = new System.Drawing.Point(55, 66);
+         this.txtCore.Name = "txtCore";
+         this.txtCore.ReadOnly = true;
+         this.txtCore.Size = new System.Drawing.Size(122, 20);
+         this.txtCore.TabIndex = 15;
+         this.txtCore.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+         // 
+         // txtAtoms
+         // 
+         this.txtAtoms.Location = new System.Drawing.Point(233, 66);
+         this.txtAtoms.Name = "txtAtoms";
+         this.txtAtoms.ReadOnly = true;
+         this.txtAtoms.Size = new System.Drawing.Size(92, 20);
+         this.txtAtoms.TabIndex = 14;
+         this.txtAtoms.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+         // 
+         // txtFrames
+         // 
+         this.txtFrames.Location = new System.Drawing.Point(233, 41);
+         this.txtFrames.Name = "txtFrames";
+         this.txtFrames.ReadOnly = true;
+         this.txtFrames.Size = new System.Drawing.Size(92, 20);
+         this.txtFrames.TabIndex = 13;
+         this.txtFrames.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+         // 
+         // txtCredit
+         // 
+         this.txtCredit.Location = new System.Drawing.Point(55, 41);
+         this.txtCredit.Name = "txtCredit";
+         this.txtCredit.ReadOnly = true;
+         this.txtCredit.Size = new System.Drawing.Size(122, 20);
+         this.txtCredit.TabIndex = 12;
+         this.txtCredit.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+         // 
+         // txtProjectID
+         // 
+         this.txtProjectID.Location = new System.Drawing.Point(75, 17);
+         this.txtProjectID.Name = "txtProjectID";
+         this.txtProjectID.ReadOnly = true;
+         this.txtProjectID.Size = new System.Drawing.Size(250, 20);
+         this.txtProjectID.TabIndex = 11;
+         this.txtProjectID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
          // linkDescription
          // 
@@ -169,7 +268,7 @@ namespace HFM.Forms
          // lblServerIP
          // 
          this.lblServerIP.AutoSize = true;
-         this.lblServerIP.Location = new System.Drawing.Point(371, 92);
+         this.lblServerIP.Location = new System.Drawing.Point(369, 92);
          this.lblServerIP.Name = "lblServerIP";
          this.lblServerIP.Size = new System.Drawing.Size(54, 13);
          this.lblServerIP.TabIndex = 9;
@@ -178,7 +277,7 @@ namespace HFM.Forms
          // lblContact
          // 
          this.lblContact.AutoSize = true;
-         this.lblContact.Location = new System.Drawing.Point(371, 69);
+         this.lblContact.Location = new System.Drawing.Point(376, 69);
          this.lblContact.Name = "lblContact";
          this.lblContact.Size = new System.Drawing.Size(47, 13);
          this.lblContact.TabIndex = 8;
@@ -196,25 +295,25 @@ namespace HFM.Forms
          // lblMaxDays
          // 
          this.lblMaxDays.AutoSize = true;
-         this.lblMaxDays.Location = new System.Drawing.Point(371, 44);
+         this.lblMaxDays.Location = new System.Drawing.Point(342, 44);
          this.lblMaxDays.Name = "lblMaxDays";
          this.lblMaxDays.Size = new System.Drawing.Size(81, 13);
          this.lblMaxDays.TabIndex = 6;
          this.lblMaxDays.Text = "Maximum Days:";
          // 
-         // lblPrefered
+         // lblPreferred
          // 
-         this.lblPrefered.AutoSize = true;
-         this.lblPrefered.Location = new System.Drawing.Point(371, 20);
-         this.lblPrefered.Name = "lblPrefered";
-         this.lblPrefered.Size = new System.Drawing.Size(77, 13);
-         this.lblPrefered.TabIndex = 5;
-         this.lblPrefered.Text = "Prefered Days:";
+         this.lblPreferred.AutoSize = true;
+         this.lblPreferred.Location = new System.Drawing.Point(343, 20);
+         this.lblPreferred.Name = "lblPreferred";
+         this.lblPreferred.Size = new System.Drawing.Size(80, 13);
+         this.lblPreferred.TabIndex = 5;
+         this.lblPreferred.Text = "Preferred Days:";
          // 
          // lblAtoms
          // 
          this.lblAtoms.AutoSize = true;
-         this.lblAtoms.Location = new System.Drawing.Point(179, 44);
+         this.lblAtoms.Location = new System.Drawing.Point(188, 69);
          this.lblAtoms.Name = "lblAtoms";
          this.lblAtoms.Size = new System.Drawing.Size(39, 13);
          this.lblAtoms.TabIndex = 4;
@@ -223,7 +322,7 @@ namespace HFM.Forms
          // lblFrames
          // 
          this.lblFrames.AutoSize = true;
-         this.lblFrames.Location = new System.Drawing.Point(91, 44);
+         this.lblFrames.Location = new System.Drawing.Point(183, 44);
          this.lblFrames.Name = "lblFrames";
          this.lblFrames.Size = new System.Drawing.Size(44, 13);
          this.lblFrames.TabIndex = 3;
@@ -252,9 +351,9 @@ namespace HFM.Forms
          this.lblProjectID.AutoSize = true;
          this.lblProjectID.Location = new System.Drawing.Point(12, 20);
          this.lblProjectID.Name = "lblProjectID";
-         this.lblProjectID.Size = new System.Drawing.Size(54, 13);
+         this.lblProjectID.Size = new System.Drawing.Size(57, 13);
          this.lblProjectID.TabIndex = 0;
-         this.lblProjectID.Text = "ProjectID:";
+         this.lblProjectID.Text = "Project ID:";
          // 
          // frmBenchmarks
          // 
@@ -294,13 +393,22 @@ namespace HFM.Forms
       private HFM.Classes.LabelWrapper lblDescription;
       private HFM.Classes.LabelWrapper lblFrames;
       private HFM.Classes.LabelWrapper lblMaxDays;
-      private HFM.Classes.LabelWrapper lblPrefered;
+      private HFM.Classes.LabelWrapper lblPreferred;
       private HFM.Classes.LabelWrapper lblAtoms;
       private HFM.Classes.LabelWrapper lblServerIP;
       private HFM.Classes.LabelWrapper lblContact;
       private HFM.Classes.LabelWrapper lblCore;
       private System.Windows.Forms.LinkLabel linkDescription;
       private ButtonWrapper btnExit;
+      private TextBoxWrapper txtProjectID;
+      private TextBoxWrapper txtAtoms;
+      private TextBoxWrapper txtFrames;
+      private TextBoxWrapper txtCredit;
+      private TextBoxWrapper txtServerIP;
+      private TextBoxWrapper txtContact;
+      private TextBoxWrapper txtMaximumDays;
+      private TextBoxWrapper txtPreferredDays;
+      private TextBoxWrapper txtCore;
 
    }
 }

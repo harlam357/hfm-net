@@ -48,6 +48,7 @@ namespace HFM.Preferences
    public class PreferenceSet
    {
       #region Public Const
+      public const String EOCUserXmlURL = "http://folding.extremeoverclocking.com/xml/user_summary.php?u=";
       public const String EOCUserBaseURL = "http://folding.extremeoverclocking.com/user_summary.php?s=&u=";
       public const String EOCTeamBaseURL = "http://folding.extremeoverclocking.com/team_summary.php?s=&t=";
       public const String StanfordBaseURL = "http://fah-web.stanford.edu/cgi-bin/main.py?qtype=userpage&username=";
@@ -230,12 +231,30 @@ namespace HFM.Preferences
          set { _FormSortOrder = value; }
       }
 
+      #region OfflineLast
+      public event EventHandler OfflineLastChanged;
       private bool _OfflineLast;
       public bool OfflineLast
       {
          get { return _OfflineLast; }
-         set { _OfflineLast = value; }
+         set 
+         {
+            if (_OfflineLast != value)
+            { 
+               _OfflineLast = value; 
+               OnOfflineLastChanged(EventArgs.Empty);
+            }
+         }
       }
+      
+      protected void OnOfflineLastChanged(EventArgs e)
+      {
+         if (OfflineLastChanged != null)
+         {
+            OfflineLastChanged(this, e);
+         }
+      }
+      #endregion
 
       private string _DefaultConfigFile;
       public string DefaultConfigFile
@@ -300,13 +319,31 @@ namespace HFM.Preferences
          set { _WebGenAfterRefresh = value; }
       }
       
+      #region MessageLevel
+      public event EventHandler MessageLevelChanged;
       private int _MessageLevel;
       public int MessageLevel
       {
          get { return _MessageLevel; }
-         set { _MessageLevel = value; }
+         set 
+         {
+            if (_MessageLevel != value)
+            {
+               _MessageLevel = value; 
+               OnMessageLevelChanged(EventArgs.Empty);
+            }
+         }
       }
       
+      protected void OnMessageLevelChanged(EventArgs e)
+      {
+         if (MessageLevelChanged != null)
+         {
+            MessageLevelChanged(this, e);
+         }
+      }
+      #endregion
+
       private int _FormSplitLocation;
       public int FormSplitLocation
       {
@@ -327,12 +364,45 @@ namespace HFM.Preferences
          get { return _DecimalPlaces; }
          set { _DecimalPlaces = value; }
       }
+      
+      #region ShowUserStats
+      public event EventHandler ShowUserStatsChanged;
+      private bool _ShowUserStats;
+      public bool ShowUserStats
+      {
+         get { return _ShowUserStats; }
+         set 
+         { 
+            if (_ShowUserStats != value)
+            {
+               _ShowUserStats = value;
+               OnShowUserStatsChanged(EventArgs.Empty);
+            }
+         }
+      }
+      
+      protected void OnShowUserStatsChanged(EventArgs e)
+      {
+         if (ShowUserStatsChanged != null)
+         {
+            ShowUserStatsChanged(this, e);
+         }
+      }
+      #endregion
 
       public static String AppPath
       {
          get
          {
             return Path.GetDirectoryName(Application.ExecutablePath);
+         }
+      }
+      
+      public string EOCUserXml
+      {
+         get 
+         { 
+            return String.Concat(EOCUserXmlURL, EOCUserID);
          }
       }
 
@@ -501,7 +571,8 @@ namespace HFM.Preferences
          _WebGenAfterRefresh = Settings.Default.WebGenAfterRefresh;
          _MessageLevel = Settings.Default.MessageLevel;
          _DecimalPlaces = Settings.Default.DecimalPlaces;
-
+         _ShowUserStats = Settings.Default.ShowUserStats;
+         
          _AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
          _AppDataPath = Path.Combine(_AppDataPath, System.Reflection.Assembly.GetEntryAssembly().GetName().Name); ;
          if (Directory.Exists(_AppDataPath) == false)
@@ -582,6 +653,7 @@ namespace HFM.Preferences
             Settings.Default.WebGenAfterRefresh = _WebGenAfterRefresh;
             Settings.Default.MessageLevel = _MessageLevel;
             Settings.Default.DecimalPlaces = _DecimalPlaces;
+            Settings.Default.ShowUserStats = _ShowUserStats;
 
             Settings.Default.Save();
          }

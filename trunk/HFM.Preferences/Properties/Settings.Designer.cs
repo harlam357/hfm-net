@@ -476,5 +476,16 @@ namespace HFM.Preferences.Properties {
             }
         }
         
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowUserStats {
+            get {
+                return ((bool)(this["ShowUserStats"]));
+            }
+            set {
+                this["ShowUserStats"] = value;
+            }
+        }
     }
 }

@@ -123,7 +123,7 @@
                </tr>
                <tr>
                   <td class="Plain" colspan="2" align="center">
-                     Page rendered by <a href="http://code.google.com/p/hfm-net/">HFM.NET</a><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="HFMVersion"/> on <xsl:value-of select="LastUpdatedDate"/>
+                     Page rendered by <a href="http://code.google.com/p/hfm-net/">HFM.NET</a> <xsl:value-of select="HFMVersion"/> on <xsl:value-of select="LastUpdatedDate"/>
                      at <xsl:value-of select="LastUpdatedTime"/>
                   </td>
                </tr>

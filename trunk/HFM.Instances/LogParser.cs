@@ -137,11 +137,11 @@ namespace HFM.Instances
                   parsedUnitInfo.ProteinTag = sData.Substring(5);
                   try 
                   {
-                     DoProjectIDMatch(parsedUnitInfo, rProjectNumberFromTag.Match(parsedUnitInfo.ProteinTag));
+                     DoProjectIDMatch(parsedUnitInfo, rProjectNumberFromTag.Match(parsedUnitInfo.ProteinTag), parsedUnitInfo.ProteinTag);
                   }
                   catch (FormatException ex)
                   {
-                     Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", Debug.FunctionName, ex.Message));
+                     Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} ({1}) {2}.", Debug.FunctionName, Instance.InstanceName, ex.Message));
                   }
                }
                else if (sData.StartsWith("Download time: "))
@@ -404,12 +404,12 @@ namespace HFM.Instances
          {
             try
             {
-               DoProjectIDMatch(parsedUnitInfo, rProteinID.Match(mProjectNumber.Result("${ProjectNumber}")));
+               DoProjectIDMatch(parsedUnitInfo, rProteinID.Match(mProjectNumber.Result("${ProjectNumber}")), mProjectNumber.Result("${ProjectNumber}"));
                _bProjectFound = true;
             }
             catch (FormatException ex)
             {
-               Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", Debug.FunctionName, ex.Message));
+               Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} ({1}) {2}.", Debug.FunctionName, parsedUnitInfo.OwningInstanceName, ex.Message));
             }
          }
       }
@@ -419,11 +419,12 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="parsedUnitInfo">Container for parsed information</param>
       /// <param name="match">Regex Match containing Project data</param>
-      private void DoProjectIDMatch(UnitInfo parsedUnitInfo, Match match)
+      /// <param name="matchValue">String value being matched (for logging purposes)</param>
+      private static void DoProjectIDMatch(UnitInfo parsedUnitInfo, Match match, string matchValue)
       {
          try
          {
-            SetProjectID(parsedUnitInfo, match);
+            SetProjectID(parsedUnitInfo, match, matchValue);
          }
          catch (System.Collections.Generic.KeyNotFoundException)
          {
@@ -438,7 +439,7 @@ namespace HFM.Instances
             
             try
             {
-               SetProjectID(parsedUnitInfo, match);
+               SetProjectID(parsedUnitInfo, match, matchValue);
             }
             catch (System.Collections.Generic.KeyNotFoundException)
             {
@@ -454,9 +455,10 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="parsedUnitInfo">Container for parsed information</param>
       /// <param name="match">Project string match</param>
+      /// <param name="matchValue">String value being matched (for logging purposes)</param>
       /// <exception cref="System.Collections.Generic.KeyNotFoundException">Thrown when Project ID cannot be found in Protein Collection.</exception>
       /// <exception cref="FormatException">Thrown when Project ID string fails to parse.</exception>
-      private static void SetProjectID(UnitInfo parsedUnitInfo, Match match)
+      private static void SetProjectID(UnitInfo parsedUnitInfo, Match match, string matchValue)
       {
          if (match.Success)
          {
@@ -470,7 +472,7 @@ namespace HFM.Instances
          }
          else
          {
-            throw new FormatException(String.Format("Failed to parse the Project (R/C/G) values from '{0}'", match.Value));
+            throw new FormatException(String.Format("Failed to parse the Project (R/C/G) values from '{0}'", matchValue));
          }
       }
 

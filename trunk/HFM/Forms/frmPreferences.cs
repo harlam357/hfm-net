@@ -85,6 +85,7 @@ namespace HFM.Forms
             txtCollectMinutes.Text = PreferenceSet.MinutesDefault.ToString();
          }
          chkOffline.Checked = Prefs.OfflineLast;
+         chkShowUserStats.Checked = Prefs.ShowUserStats;
          cboPpdCalc.Items.Add(ePpdCalculation.LastFrame);
          cboPpdCalc.Items.Add(ePpdCalculation.LastThreeFrames);
          cboPpdCalc.Items.Add(ePpdCalculation.AllFrames);
@@ -533,6 +534,7 @@ namespace HFM.Forms
          Prefs.SyncOnLoad = chkSynchronous.Checked;
          Prefs.SyncOnSchedule = chkScheduled.Checked;
          Prefs.OfflineLast = chkOffline.Checked;
+         Prefs.ShowUserStats = chkShowUserStats.Checked;
          Prefs.PpdCalculation = (ePpdCalculation)cboPpdCalc.SelectedItem;
          Prefs.SyncTimeMinutes = Int32.Parse(txtCollectMinutes.Text);
          Prefs.WebRoot = txtWebSiteBase.Text;
