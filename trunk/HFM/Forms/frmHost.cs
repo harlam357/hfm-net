@@ -29,7 +29,7 @@ using HFM.Instances;
 
 namespace HFM.Forms
 {
-   public partial class frmHost : Form
+   public partial class frmHost : Classes.FormWrapper
    {
       #region Constructor
       /// <summary>

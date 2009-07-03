@@ -18,11 +18,10 @@
  */
 
 using System.Collections.Generic;
-using System.Windows.Forms;
 
 namespace HFM.Forms
 {
-   public partial class frmMessages : Form
+   public partial class frmMessages : Classes.FormWrapper
    {
       #region Properties
       public string[] TextLines

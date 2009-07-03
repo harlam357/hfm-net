@@ -18,6 +18,8 @@
  */
  
 using System;
+using System.Diagnostics;
+using Debug=HFM.Instrumentation.Debug;
 
 namespace HFM.Helpers
 {
@@ -113,8 +115,12 @@ namespace HFM.Helpers
             return true;
          }
 
-         TimeSpan NextUpdateTime = GetNextUpdateTime(LastUpdated);
-         if (DateTime.UtcNow.TimeOfDay > NextUpdateTime)
+         DateTime CurrentTime = DateTime.UtcNow;
+         Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Current Time: {1} (UTC)", Debug.FunctionName, CurrentTime));
+         DateTime NextUpdateTime = GetNextUpdateTime(LastUpdated);
+         Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Next Update Time: {1} (UTC)", Debug.FunctionName, NextUpdateTime));
+
+         if (CurrentTime > NextUpdateTime)
          {
             return true;
          }
@@ -122,33 +128,32 @@ namespace HFM.Helpers
          return false;
       }
 
-      private static TimeSpan GetNextUpdateTime(DateTime LastUpdated)
+      private static DateTime GetNextUpdateTime(DateTime LastUpdated)
       {
-         int offset = 0;
-         
          // What I really need to know is if it is Daylight Savings Time
          // in the Central Time Zone, not the local machines Time Zone.
-
-         //if (DateTime.Now.IsDaylightSavingTime())
-         //{
-         //   offset = 1;
-         //}
-
-         TimeSpan time = TimeSpan.Zero;
-
-         int hours = 24;
-         for (int i = 0; i < 9; i++)
+         
+         int offset = 0;
+         if (DateTime.Now.IsDaylightSavingTime())
          {
-            if (LastUpdated.TimeOfDay > TimeSpan.FromHours(hours - offset))
+            offset = 1;
+         }
+
+         DateTime nextUpdateTime = DateTime.UtcNow.Date;
+
+         int hours = 21;
+         for (int i = 0; i < 8; i++)
+         {
+            if (LastUpdated.TimeOfDay >= TimeSpan.FromHours(hours - offset))
             {
-               time = TimeSpan.FromHours(hours + 3 - offset);
+               nextUpdateTime = nextUpdateTime.Add(TimeSpan.FromHours(hours + 3 - offset));
                break;
             }
 
             hours -= 3;
          }
 
-         return time;
+         return nextUpdateTime;
       }
    }
 }

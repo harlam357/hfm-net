@@ -43,7 +43,7 @@ using Debug=HFM.Instrumentation.Debug;
 
 namespace HFM.Forms
 {
-   public partial class frmMain : Form
+   public partial class frmMain : FormWrapper
    {
       #region Private Variables
       /// <summary>
@@ -1838,12 +1838,11 @@ namespace HFM.Forms
                {
                   if (InvokeRequired)
                   {
-                     Invoke(new MethodInvoker(cm.Refresh));
+                     BeginInvoke(new MethodInvoker(cm.Refresh));
                   }
                   else
                   {
                      cm.Refresh();
-                     //dataGridView1.Invalidate();
                   }
                }
 
@@ -1873,7 +1872,7 @@ namespace HFM.Forms
       {
          if (InvokeRequired)
          {
-            Invoke(new ApplySortDelegate(ApplySort), new object[] {order});
+            BeginInvoke(new ApplySortDelegate(ApplySort), new object[] {order});
          }
          else
          {
@@ -1919,7 +1918,7 @@ namespace HFM.Forms
       {
          if (InvokeRequired)
          {
-            Invoke(new SimpleVoidStringDelegate(SetNotifyIconText), new object[] { val });
+            BeginInvoke(new SimpleVoidStringDelegate(SetNotifyIconText), new object[] { val });
          }
          else
          {
@@ -1957,7 +1956,7 @@ namespace HFM.Forms
       {
          if (InvokeRequired)
          {
-            Invoke(new SimpleVoidStringDelegate(SetStatusLabelHostsText), new object[] { val });
+            BeginInvoke(new SimpleVoidStringDelegate(SetStatusLabelHostsText), new object[] { val });
          }
          else
          {
@@ -1973,7 +1972,7 @@ namespace HFM.Forms
       {
          if (InvokeRequired)
          {
-            Invoke(new SimpleVoidStringDelegate(SetStatusLabelPPDText), new object[] { val });
+            BeginInvoke(new SimpleVoidStringDelegate(SetStatusLabelPPDText), new object[] { val });
          }
          else
          {
@@ -2345,7 +2344,14 @@ namespace HFM.Forms
          bool show = PreferenceSet.Instance.ShowUserStats;
          if (show)
          {
+            mnuWebRefreshUserStats.Visible = true;
+            mnuWebSep2.Visible = true;
             RefreshUserStatsData();
+         }
+         else
+         {
+            mnuWebRefreshUserStats.Visible = false;
+            mnuWebSep2.Visible = false;
          }
 
          statusLabel24hr.Visible = show;

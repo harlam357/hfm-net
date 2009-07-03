@@ -102,7 +102,7 @@ namespace HFM.Helpers
       /// <returns>True if refresh succeeds.  False otherwise.</returns>
       public static bool GetEOCXmlData(UserStatsDataContainer UserStatsData, bool ForceRefresh)
       {
-         if (UserStatsData.TimeForUpdate() || ForceRefresh)
+         if (ForceRefresh || UserStatsData.TimeForUpdate())
          {
             DateTime Start = Debug.ExecStart;
          

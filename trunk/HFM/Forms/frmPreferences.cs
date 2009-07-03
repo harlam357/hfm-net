@@ -31,7 +31,7 @@ using Debug=HFM.Instrumentation.Debug;
 
 namespace HFM.Forms
 {
-   public partial class frmPreferences : Form
+   public partial class frmPreferences : Classes.FormWrapper
    {
       #region Members
       private readonly WebBrowser wbCssSample;

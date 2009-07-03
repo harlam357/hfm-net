@@ -146,7 +146,7 @@ namespace HFM.Forms
          this.statusLabelLeft.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
          this.statusLabelLeft.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
          this.statusLabelLeft.Name = "statusLabelLeft";
-         this.statusLabelLeft.Size = new System.Drawing.Size(478, 24);
+         this.statusLabelLeft.Size = new System.Drawing.Size(534, 24);
          this.statusLabelLeft.Spring = true;
          this.statusLabelLeft.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
          // 
@@ -581,47 +581,47 @@ namespace HFM.Forms
          // 
          this.mnuWebEOCUser.Name = "mnuWebEOCUser";
          this.mnuWebEOCUser.ShortcutKeys = System.Windows.Forms.Keys.F2;
-         this.mnuWebEOCUser.Size = new System.Drawing.Size(208, 22);
-         this.mnuWebEOCUser.Text = "&EOC User Stats";
+         this.mnuWebEOCUser.Size = new System.Drawing.Size(226, 22);
+         this.mnuWebEOCUser.Text = "&EOC User Stats Page";
          this.mnuWebEOCUser.Click += new System.EventHandler(this.mnuWebEOCUser_Click);
          // 
          // mnuWebStanfordUser
          // 
          this.mnuWebStanfordUser.Name = "mnuWebStanfordUser";
          this.mnuWebStanfordUser.ShortcutKeys = System.Windows.Forms.Keys.F3;
-         this.mnuWebStanfordUser.Size = new System.Drawing.Size(208, 22);
-         this.mnuWebStanfordUser.Text = "&Stanford User Stats";
+         this.mnuWebStanfordUser.Size = new System.Drawing.Size(226, 22);
+         this.mnuWebStanfordUser.Text = "&Stanford User Stats Page";
          this.mnuWebStanfordUser.Click += new System.EventHandler(this.mnuWebStanfordUser_Click);
          // 
          // mnuWebEOCTeam
          // 
          this.mnuWebEOCTeam.Name = "mnuWebEOCTeam";
          this.mnuWebEOCTeam.ShortcutKeys = System.Windows.Forms.Keys.F4;
-         this.mnuWebEOCTeam.Size = new System.Drawing.Size(208, 22);
-         this.mnuWebEOCTeam.Text = "EOC &Team Stats";
+         this.mnuWebEOCTeam.Size = new System.Drawing.Size(226, 22);
+         this.mnuWebEOCTeam.Text = "EOC &Team Stats Page";
          this.mnuWebEOCTeam.Click += new System.EventHandler(this.mnuWebEOCTeam_Click);
          // 
          // mnuWebSep1
          // 
          this.mnuWebSep1.Name = "mnuWebSep1";
-         this.mnuWebSep1.Size = new System.Drawing.Size(205, 6);
+         this.mnuWebSep1.Size = new System.Drawing.Size(223, 6);
          // 
          // mnuWebRefreshUserStats
          // 
          this.mnuWebRefreshUserStats.Name = "mnuWebRefreshUserStats";
-         this.mnuWebRefreshUserStats.Size = new System.Drawing.Size(208, 22);
-         this.mnuWebRefreshUserStats.Text = "Refresh EOC User Stats";
+         this.mnuWebRefreshUserStats.Size = new System.Drawing.Size(230, 22);
+         this.mnuWebRefreshUserStats.Text = "Force Refresh EOC User Stats";
          this.mnuWebRefreshUserStats.Click += new System.EventHandler(this.mnuWebRefreshUserStats_Click);
          // 
          // mnuWebSep2
          // 
          this.mnuWebSep2.Name = "mnuWebSep2";
-         this.mnuWebSep2.Size = new System.Drawing.Size(205, 6);
+         this.mnuWebSep2.Size = new System.Drawing.Size(223, 6);
          // 
          // mnuWebHFMGoogleCode
          // 
          this.mnuWebHFMGoogleCode.Name = "mnuWebHFMGoogleCode";
-         this.mnuWebHFMGoogleCode.Size = new System.Drawing.Size(208, 22);
+         this.mnuWebHFMGoogleCode.Size = new System.Drawing.Size(226, 22);
          this.mnuWebHFMGoogleCode.Text = "HFM.NET on Google Code";
          this.mnuWebHFMGoogleCode.Click += new System.EventHandler(this.mnuWebHFMGoogleCode_Click);
          // 

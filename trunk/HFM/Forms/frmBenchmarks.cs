@@ -28,7 +28,7 @@ using Debug = HFM.Instrumentation.Debug;
 
 namespace HFM.Forms
 {
-   public partial class frmBenchmarks : Form
+   public partial class frmBenchmarks : Classes.FormWrapper
    {
       #region Members
       private readonly FoldingInstanceCollection _clientInstances;

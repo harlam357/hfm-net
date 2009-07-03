@@ -26,7 +26,7 @@ using Debug = HFM.Instrumentation.Debug;
 
 namespace HFM.Forms
 {
-   public partial class frmAbout : Form
+   public partial class frmAbout : Classes.FormWrapper
    {
       #region Constructor
       public frmAbout()
