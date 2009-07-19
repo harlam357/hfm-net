@@ -73,17 +73,14 @@ namespace HFM.Proteins
       /// </summary>
       private ProteinCollection()
       {
-         DateTime Start = Debug.ExecStart;
+         //DateTime Start = Debug.ExecStart;
+         
          if (LoadFromTabDelimitedFile() == false)
          {
             DownloadFromStanford();
          }
 
-         //_DownloadTimer = new Timer();
-         //_DownloadTimer.Interval = 172800;     // 1000ms/sec * 60sec/min * 60min/hr * 24hr/d * 2d;
-         //_DownloadTimer.Tick += new System.EventHandler(this._DownloadTimer_Tick);
-         //_DownloadTimer.Start();
-         Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+         //Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
       }
 
       /// <summary>

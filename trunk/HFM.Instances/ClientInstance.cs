@@ -115,6 +115,22 @@ namespace HFM.Instances
       {
          get { return String.Format("{0}-{1}", InstanceName, LocalUnitInfo); }
       } 
+      
+      /// <summary>
+      /// Combined UserID and MachineID string
+      /// </summary>
+      public string UserAndMachineID
+      {
+         get { return String.Format("{0} ({1})", UserID, MachineID); }
+      }
+      
+      /// <summary>
+      /// Returns true if UserID is unknown
+      /// </summary>
+      public bool UserIDUnknown
+      {
+         get { return UserID == String.Empty; }
+      }
       #endregion
 
       #region Public Properties and Related Private Members
@@ -1287,7 +1303,7 @@ namespace HFM.Instances
          switch (status)
          {
             case ClientStatus.Running:
-               return Color.DarkGreen;
+               return Color.Green; // Issue 45
             case ClientStatus.RunningNoFrameTimes:
                return Color.Yellow;
             case ClientStatus.Stopped:

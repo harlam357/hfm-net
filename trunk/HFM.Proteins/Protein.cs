@@ -26,6 +26,8 @@ namespace HFM.Proteins
    [Serializable]
    public class Protein
    {
+      public const string UnassignedDescription = "Unassigned Description";
+   
       public Protein()
       {
          // Initialize
@@ -38,7 +40,7 @@ namespace HFM.Proteins
          Credit = 0;
          Frames = 100;
          Core = "Unassigned Core";
-         Description = "Unassigned Description";
+         Description = UnassignedDescription;
          Contact = "Unassigned Contact";
       }
 

@@ -134,6 +134,20 @@ namespace HFM.Proteins
             return DownloadTime.AddDays(CurrentProtein.PreferredDays);
          }
       }
+      
+      /// <summary>
+      /// Returns true if Project (R/C/G) has not been identified
+      /// </summary>
+      public bool ProjectIsUnknown
+      {
+         get 
+         {
+            return ProjectID == 0 &&
+                   ProjectRun == 0 &&
+                   ProjectClone == 0 &&
+                   ProjectGen ==0;
+         }
+      }
 
       #region Values Based on UnitFrame Data
       /// <summary>

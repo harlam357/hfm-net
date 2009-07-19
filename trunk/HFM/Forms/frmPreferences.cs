@@ -337,7 +337,7 @@ namespace HFM.Forms
          {
             Debug.WriteToHfmConsole(TraceLevel.Error,
                                     String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-            MessageBox.Show("Failed to show EOC User Stats page.");
+            MessageBox.Show(Properties.Resources.ProcessStartError, String.Format("EOC User Stats page"));
          }
       }
 
@@ -351,7 +351,7 @@ namespace HFM.Forms
          {
             Debug.WriteToHfmConsole(TraceLevel.Error,
                                     String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-            MessageBox.Show("Failed to show Stanford User Stats page.");
+            MessageBox.Show(Properties.Resources.ProcessStartError, String.Format("Stanford User Stats page"));
          }
       }
 
@@ -365,7 +365,7 @@ namespace HFM.Forms
          {
             Debug.WriteToHfmConsole(TraceLevel.Error,
                                     String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-            MessageBox.Show("Failed to show EOC Team Stats page.");
+            MessageBox.Show(Properties.Resources.ProcessStartError, String.Format("EOC Team Stats page"));
          }
       }
 
@@ -652,8 +652,16 @@ namespace HFM.Forms
       #region TextBox KeyPress Event Handler (to enforce digits only)
       private void txtDigitsOnly_KeyPress(object sender, KeyPressEventArgs e)
       {
-         // only allow digits and backspace characters
-         if (char.IsDigit(e.KeyChar) == false && e.KeyChar != '\b')
+         System.Diagnostics.Debug.WriteLine(String.Format("Keystroke: {0}", (int)e.KeyChar));
+      
+         // only allow digits special keystrokes - Issue 65
+         if (char.IsDigit(e.KeyChar) == false &&
+               e.KeyChar != 8 &&       // backspace 
+               e.KeyChar != 26 &&      // Ctrl+Z
+               e.KeyChar != 24 &&      // Ctrl+X
+               e.KeyChar != 3 &&       // Ctrl+C
+               e.KeyChar != 22 &&      // Ctrl+V
+               e.KeyChar != 25)        // Ctrl+Y
          {
             e.Handled = true;
          }

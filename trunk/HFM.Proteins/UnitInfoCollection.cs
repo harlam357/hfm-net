@@ -205,6 +205,16 @@ namespace HFM.Proteins
       } 
       #endregion
       
+      #region Constructor
+      /// <summary>
+      /// Private Constructor to enforce Singleton pattern; loads preferences
+      /// </summary>
+      private UnitInfoCollection()
+      {
+
+      } 
+      #endregion
+      
       #region Serialization Support
       public void Serialize()
       {

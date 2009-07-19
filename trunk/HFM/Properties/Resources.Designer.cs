@@ -116,6 +116,15 @@ namespace HFM.Properties {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to Error occured while attempting to show {0}..
+        /// </summary>
+        internal static string ProcessStartError {
+            get {
+                return ResourceManager.GetString("ProcessStartError", resourceCulture);
+            }
+        }
+        
         internal static System.Drawing.Bitmap Quit {
             get {
                 object obj = ResourceManager.GetObject("Quit", resourceCulture);

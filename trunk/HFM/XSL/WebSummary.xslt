@@ -67,10 +67,7 @@
          </td>
          <td width="14%" class="RightCol">
             <a>
-               <xsl:attribute name="href">
-                  <xsl:value-of select="Name"/>.html
-               </xsl:attribute>
-               <xsl:value-of select="Name"/>
+               <xsl:attribute name="href"><xsl:value-of select="Name"/>.html</xsl:attribute><xsl:value-of select="Name"/>
             </a>
          </td>
          <td width="4%" class="RightCol">

@@ -85,7 +85,7 @@ namespace HFM.Forms
          {
             Debug.WriteToHfmConsole(TraceLevel.Error,
                                     String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-            MessageBox.Show("Failed to show Project Description.");
+            MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, "Project Description"));
          }
       }
 

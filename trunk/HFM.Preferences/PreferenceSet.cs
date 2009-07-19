@@ -547,6 +547,12 @@ namespace HFM.Preferences
             case "LastThreeFrames":
                _PpdCalculation = ePpdCalculation.LastThreeFrames;
                break;
+            case "AllFrames":
+               _PpdCalculation = ePpdCalculation.AllFrames;
+               break;
+            case "EffectiveRate":
+               _PpdCalculation = ePpdCalculation.EffectiveRate;
+               break;               
             default:
                _PpdCalculation = ePpdCalculation.LastThreeFrames;
                break;

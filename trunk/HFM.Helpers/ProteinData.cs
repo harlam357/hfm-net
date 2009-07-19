@@ -14,6 +14,9 @@ namespace HFM.Helpers
    {
       public static string DescriptionFromURL(string sURL)
       {
+         // Stub out if the given URL is an Unassigned Description
+         if (sURL.Equals(HFM.Proteins.Protein.UnassignedDescription)) return sURL;
+      
          string str;
          PreferenceSet instance = PreferenceSet.Instance;
 

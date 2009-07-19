@@ -38,10 +38,10 @@ namespace HFM.Forms
       public frmHost()
       {
          InitializeComponent();
-         
+
          txtLogFileName.Text = ClientInstance.LocalFAHLog;
          txtUnitFileName.Text = ClientInstance.LocalUnitInfo;
-      } 
+      }
       #endregion
 
       #region Radio button management
@@ -146,9 +146,9 @@ namespace HFM.Forms
          {
             openLogFolder.SelectedPath = txtLocalPath.Text;
          }
-         
+
          openLogFolder.ShowDialog();
-         
+
          if (openLogFolder.SelectedPath.Length > 0)
          {
             txtLocalPath.Text = openLogFolder.SelectedPath;
@@ -156,6 +156,7 @@ namespace HFM.Forms
             {
                txtLocalPath.Text += Path.DirectorySeparatorChar;
             }
+            txtLocalPath_Validating(sender, null);
          }
       }
       #endregion
@@ -258,7 +259,7 @@ namespace HFM.Forms
       private void txtLocalPath_Validating(object sender, CancelEventArgs e)
       {
          if (radioLocal.Checked == false) return;
-         
+
          if (txtLocalPath.Text.ToUpper().EndsWith("FAHLOG.TXT"))
          {
             txtLocalPath.Text = txtLocalPath.Text.Substring(0, txtLocalPath.Text.Length - 10);
@@ -267,7 +268,7 @@ namespace HFM.Forms
          {
             txtLocalPath.Text = txtLocalPath.Text.Substring(0, txtLocalPath.Text.Length - 12);
          }
-         
+
          bool bPath = StringOps.ValidatePathInstancePath(txtLocalPath.Text);
          bool bPathWithSlash = StringOps.ValidatePathInstancePath(String.Concat(txtLocalPath.Text, Path.DirectorySeparatorChar));
 
@@ -343,7 +344,7 @@ namespace HFM.Forms
          {
             txtFTPPath.Text += "/";
          }
-         
+
          if (txtFTPPath.Text == "/") // Root path, don't validate against Regex
          {
             txtFTPPath.BackColor = SystemColors.Window;
@@ -411,7 +412,7 @@ namespace HFM.Forms
          {
             txtWebURL.Text += "/";
          }
-         
+
          if (txtWebURL.Text.Length == 0)
          {
             txtWebURL.BackColor = Color.Yellow;
@@ -547,16 +548,16 @@ namespace HFM.Forms
              txtFTPPath.BackColor == Color.Yellow ||
              txtWebURL.BackColor == Color.Yellow)
          {
-            if (MessageBox.Show("There are validation errors.  Do you wish to accept the input anyway?", "HFM.NET", 
+            if (MessageBox.Show("There are validation errors.  Do you wish to accept the input anyway?", "HFM.NET",
                   MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.No)
             {
-               return;   
+               return;
             }
          }
 
          DialogResult = DialogResult.OK;
          Close();
-      } 
+      }
       #endregion
    }
 }

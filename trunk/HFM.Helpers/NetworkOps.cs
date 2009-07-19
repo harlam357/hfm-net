@@ -25,7 +25,7 @@ using System.Net.Cache;
 using System.Text;
 
 using HFM.Preferences;
-using Debug=HFM.Instrumentation.Debug;
+using Debug = HFM.Instrumentation.Debug;
 
 namespace HFM.Helpers
 {
@@ -39,7 +39,7 @@ namespace HFM.Helpers
    {
       // Log File Size Constants
       public const int UnitInfoMax = 1048576; // 1 Megabyte
-   
+
       public static void FtpUploadHelper(string Server, string FtpPath, string LocalFile, string Username, string Password)
       {
          FtpWebRequest ftpc1 = (FtpWebRequest)FtpWebRequest.Create(String.Format("ftp://{0}{1}{2}", Server, FtpPath, Path.GetFileName(LocalFile)));
@@ -177,7 +177,7 @@ namespace HFM.Helpers
             }
          }
       }
-      
+
       private static void SetProxy(WebRequest request)
       {
          PreferenceSet Prefs = PreferenceSet.Instance;
@@ -189,10 +189,7 @@ namespace HFM.Helpers
                request.Proxy.Credentials = new NetworkCredential(Prefs.ProxyUser, Prefs.ProxyPass);
             }
          }
-         else
-         {
-            request.Proxy = null;
-         }
+         // Don't set request.Proxy = null - Issue 49
       }
    }
 }

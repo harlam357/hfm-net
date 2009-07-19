@@ -68,12 +68,11 @@ namespace HFM.Forms
             // BIG BUG FIX HERE!!! Using Invoke instead of BeginInvoke was casing 
             // deadlock when trying to call this delegate from multiple threads
             BeginInvoke(new UpdateMessagesDelegate(UpdateMessages), new object[] { lines });
+            return;
          }
-         else
-         {
-            txtMessages.Lines = lines;
-            ScrollToEnd();
-         }
+         
+         txtMessages.Lines = lines;
+         ScrollToEnd();
       }
 
       protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
