@@ -4,6 +4,7 @@
    <StatusFontColor>Black</StatusFontColor>
    <PercentComplete>?</PercentComplete>
    <Name>Instance</Name>
+   <UserIDDuplicate>False</UserIDDuplicate>
    <ClientType>N/A</ClientType>
    <TPF>00:00:00</TPF>
    <PPD>N/A</PPD>
@@ -14,6 +15,7 @@
    <Core>N/A</Core>
    <CoreVersion>N/A</CoreVersion>
    <ProjectRunCloneGen>N/A</ProjectRunCloneGen>
+   <ProjectDuplicate>False</ProjectDuplicate>
    <Credit>N/A</Credit>
    <Completed>N/A</Completed>
    <Failed>N/A</Failed>

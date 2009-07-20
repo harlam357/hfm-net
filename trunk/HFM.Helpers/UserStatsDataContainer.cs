@@ -19,12 +19,20 @@
 
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+
+using HFM.Preferences;
 using Debug = HFM.Instrumentation.Debug;
 
 namespace HFM.Helpers
 {
+   [Serializable]
    public class UserStatsDataContainer
    {
+      private const string DataStoreFilename = "UserStatsCache.dat";
+   
+      #region Members
       private DateTime _LastUpdated = DateTime.MinValue;
 
       public DateTime LastUpdated
@@ -107,6 +115,7 @@ namespace HFM.Helpers
             }
          }
       }
+      #endregion
 
       public bool TimeForUpdate()
       {
@@ -160,5 +169,107 @@ namespace HFM.Helpers
 
          return nextUpdateTime;
       }
+
+      #region Singleton Support
+      private static UserStatsDataContainer _Instance;
+      private static readonly object classLock = typeof(UserStatsDataContainer);
+
+      public static UserStatsDataContainer Instance
+      {
+         get
+         {
+            lock (classLock)
+            {
+               if (_Instance == null)
+               {
+                  _Instance = Deserialize(Path.Combine(PreferenceSet.Instance.AppDataPath, DataStoreFilename));
+               }
+               if (_Instance == null)
+               {
+                  _Instance = new UserStatsDataContainer();
+               }
+            }
+            return _Instance;
+         }
+      }
+      #endregion
+      
+      #region Constructor
+      /// <summary>
+      /// Private Constructor to enforce Singleton pattern; loads preferences
+      /// </summary>
+      private UserStatsDataContainer()
+      {
+
+      } 
+      #endregion
+      
+      #region Serialization Support
+      public void Serialize()
+      {
+         Serialize(Instance, Path.Combine(PreferenceSet.Instance.AppDataPath, DataStoreFilename));
+      }
+
+      private static UserStatsDataContainer Deserialize(string filePath)
+      {
+         DateTime Start = Debug.ExecStart;
+      
+         UserStatsDataContainer container = null;
+      
+         FileStream fileStream = null;
+         BinaryFormatter formatter = new BinaryFormatter();
+         try
+         {
+            fileStream = new FileStream(filePath, FileMode.Open);
+            container = (UserStatsDataContainer)formatter.Deserialize(fileStream);
+         }
+         catch (Exception ex)
+         {
+            Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+         }
+         finally
+         {
+            if (fileStream != null)
+            {
+               fileStream.Close();
+            }
+         }
+
+         Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+         
+         return container;
+      }
+
+      private static readonly object _serializeLock = typeof(UserStatsDataContainer);
+
+      private static void Serialize(UserStatsDataContainer container, string filePath)
+      {
+         DateTime Start = Debug.ExecStart;
+
+         lock (_serializeLock)
+         {
+            FileStream fileStream = null;
+            BinaryFormatter formatter = new BinaryFormatter();
+            try
+            {
+               fileStream = new FileStream(filePath, FileMode.Create);
+               formatter.Serialize(fileStream, container);
+            }
+            catch (Exception ex)
+            {
+               Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            }
+            finally
+            {
+               if (fileStream != null)
+               {
+                  fileStream.Close();
+               }
+            }
+         }
+
+         Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+      }
+      #endregion
    }
 }

@@ -22,14 +22,12 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -54,27 +52,7 @@ namespace HFM.Forms
       /// <summary>
       /// Collection of host instances
       /// </summary>
-      private FoldingInstanceCollection HostInstances;
-      
-      /// <summary>
-      /// Internal filename
-      /// </summary>
-      private string ConfigFilename = String.Empty;
-
-      /// <summary>
-      /// Internal variable storing whether New, Open, Quit should prompt for saving the config first
-      /// </summary>
-      private bool ChangedAfterSave = false;
-
-      /// <summary>
-      /// Private PPD counter for tooltip
-      /// </summary>
-      private Double TotalPPD;
-
-      /// <summary>
-      /// Private Good Host counter for tooltip
-      /// </summary>
-      private Int32 GoodHosts;
+      private readonly FoldingInstanceCollection HostInstances = new FoldingInstanceCollection();
       
       /// <summary>
       /// Holds the state of the window before it is hidden (minimise to tray behaviour)
@@ -107,6 +85,11 @@ namespace HFM.Forms
       private readonly frmMessages _frmMessages = null;
 
       /// <summary>
+      /// Notify Icon for frmMain
+      /// </summary>
+      private NotifyIcon notifyIcon = null;
+
+      /// <summary>
       /// Local time that denotes when a full retrieve started (only accessed by the RetrieveInProgress property)
       /// </summary>
       private DateTime _RetrieveExecStart;
@@ -134,11 +117,6 @@ namespace HFM.Forms
             }
          }
       }
-      
-      /// <summary>
-      /// Container for User Stats (Daily Average - Daily, Weekly, Total Points and WUs)
-      /// </summary>
-      private readonly UserStatsDataContainer UserStatsData = new UserStatsDataContainer();
       #endregion
 
       #region Form Constructor / functionality
@@ -180,12 +158,25 @@ namespace HFM.Forms
          // Add Column Selector
          new DataGridViewColumnSelector(dataGridView1);
 
+         // Hook-up Instance Collection Event Handlers
+         dataGridView1.AutoGenerateColumns = false;
+         dataGridView1.DataSource = HostInstances.GetDisplayCollection();
+         HostInstances.CollectionChanged += HostInstances_CollectionChanged;
+         HostInstances.CollectionLoaded += HostInstances_CollectionLoaded;
+         //HostInstances.CollectionSaved += HostInstances_CollectionSaved;
+         HostInstances.InstanceAdded += HostInstances_InstanceDataChanged;
+         HostInstances.InstanceEdited += HostInstances_InstanceDataChanged;
+         HostInstances.InstanceRemoved += HostInstances_InstanceDataChanged;
+         HostInstances.InstanceRetrieved += HostInstances_InstanceRetrieved;
+         HostInstances.DuplicatesFound += HostInstances_DuplicatesFound;
+
          // Hook-up PreferenceSet Event Handlers
          PreferenceSet Prefs = PreferenceSet.Instance;
-         Prefs.ShowUserStatsChanged += ShowHideUserStatsControls;
-         ShowHideUserStatsControls(this, EventArgs.Empty);
-         Prefs.OfflineLastChanged += SetOfflineLast;
-         Prefs.MessageLevelChanged += SetMessageLevel;
+         Prefs.ShowUserStatsChanged += PreferenceSet_ShowUserStatsChanged;
+         PreferenceSet_ShowUserStatsChanged(this, EventArgs.Empty);
+         Prefs.OfflineLastChanged += PreferenceSet_OfflineLastChanged;
+         PreferenceSet_OfflineLastChanged(this, EventArgs.Empty);
+         Prefs.MessageLevelChanged += PreferenceSet_MessageLevelChanged;
       }
 
       /// <summary>
@@ -258,6 +249,15 @@ namespace HFM.Forms
          dataGridView1_ColumnDisplayIndexChanged(null, null);
          // Add the Splitter Moved Handler here after everything is shown - Issue 8
          splitContainer1.SplitterMoved += splitContainer1_SplitterMoved;
+
+         notifyIcon = new NotifyIcon(components);
+         
+         notifyIcon.BalloonTipIcon = ToolTipIcon.Info;
+         notifyIcon.ContextMenuStrip = notifyMenu;
+         notifyIcon.Icon = Icon;
+         notifyIcon.Text = base.Text;
+         notifyIcon.DoubleClick += notifyIcon_DoubleClick;
+         notifyIcon.Visible = true;
       }
 
       /// <summary>
@@ -407,23 +407,34 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void dataGridView1_RowEnter(object sender, DataGridViewCellEventArgs e)
       {
-         if (HostInstances.Count > 0)
+         if (HostInstances.HasInstances)
          {
-            ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
+            string InstanceName = dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString();
          
-            string[] logText = Instance.CurrentUnitInfo.CurrentLogText.ToArray();
-               
-            statusLabelLeft.Text = Instance.Path;
+            ClientInstance Instance;
+            if (HostInstances.InstanceCollection.TryGetValue(InstanceName, out Instance))
+            {
+               //ClientInstance Instance =
+               //   HostInstances.InstanceCollection[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
 
-            if (logText.Length > 0)
-            {
-               txtLogFile.Lines = logText;
-               txtLogFile.SelectionStart = txtLogFile.Text.Length;
-               txtLogFile.ScrollToCaret();
+               string[] logText = Instance.CurrentUnitInfo.CurrentLogText.ToArray();
+
+               statusLabelLeft.Text = Instance.Path;
+
+               if (logText.Length > 0)
+               {
+                  txtLogFile.Lines = logText;
+                  txtLogFile.SelectionStart = txtLogFile.Text.Length;
+                  txtLogFile.ScrollToCaret();
+               }
+               else
+               {
+                  txtLogFile.Text = "No Log Available";
+               }
             }
-            else
+            else // this should only happen when this fires in the middle of an 'Edit' operation that changes the Client Name
             {
-               txtLogFile.Text = "No Log Available";
+               System.Diagnostics.Debug.WriteLine(String.Format("{0} could not find Client Name '{1}'", Debug.FunctionName, InstanceName));
             }
          }
       }
@@ -460,6 +471,30 @@ namespace HFM.Forms
             if (Instance.IsUsernameOk() == false)
             {
                toolTipGrid.Show("Client's User Name does not match the configured User Name", dataGridView1, e.X + 15, e.Y);
+            }
+            else
+            {
+               toolTipGrid.Hide(dataGridView1);
+            }
+         }
+         else if (dataGridView1.Columns["ProjectRunCloneGen"].Index == info.ColumnIndex && info.RowIndex > -1)
+         {
+            ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.Rows[info.RowIndex].Cells["Name"].Value.ToString()];
+            if (HostInstances.IsDuplicateProject(Instance.CurrentUnitInfo.ProjectRunCloneGen))
+            {
+               toolTipGrid.Show("Client is working on the same work unit as another client", dataGridView1, e.X + 15, e.Y);
+            }
+            else
+            {
+               toolTipGrid.Hide(dataGridView1);
+            }
+         }
+         else if (dataGridView1.Columns["Name"].Index == info.ColumnIndex && info.RowIndex > -1)
+         {
+            ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.Rows[info.RowIndex].Cells["Name"].Value.ToString()];
+            if (HostInstances.IsDuplicateUserAndMachineID(Instance.UserAndMachineID))
+            {
+               toolTipGrid.Show("Client is working with the same User and Machine ID as another client", dataGridView1, e.X + 15, e.Y);
             }
             else
             {
@@ -524,6 +559,70 @@ namespace HFM.Forms
                #region Username Incorrect Custom Paint
                ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
                if (Instance.IsUsernameOk() == false)
+               {
+                  using (Brush gridBrush = new SolidBrush(dataGridView1.GridColor))
+                  {
+                     using (Pen gridLinePen = new Pen(gridBrush))
+                     {
+                        // Erase the cell.
+                        e.Graphics.FillRectangle(Brushes.Orange, e.CellBounds);
+
+                        // Draw the bottom grid line
+                        e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
+                                            e.CellBounds.Bottom - 1, e.CellBounds.Right,
+                                            e.CellBounds.Bottom - 1);
+
+                        // Draw the text content of the cell, ignoring alignment.
+                        if (e.Value != null)
+                        {
+                           e.Graphics.DrawString(e.Value.ToString(), e.CellStyle.Font,
+                                                 Brushes.Black, e.CellBounds.X + 2,
+                                                 e.CellBounds.Y + 2, StringFormat.GenericDefault);
+                        }
+
+                        e.Handled = true;
+                     }
+                  }
+               }
+               #endregion
+            }
+            else if (dataGridView1.Columns["ProjectRunCloneGen"].Index == e.ColumnIndex)
+            {
+               #region Username Incorrect Custom Paint
+               ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
+               if (HostInstances.IsDuplicateProject(Instance.CurrentUnitInfo.ProjectRunCloneGen))
+               {
+                  using (Brush gridBrush = new SolidBrush(dataGridView1.GridColor))
+                  {
+                     using (Pen gridLinePen = new Pen(gridBrush))
+                     {
+                        // Erase the cell.
+                        e.Graphics.FillRectangle(Brushes.Orange, e.CellBounds);
+
+                        // Draw the bottom grid line
+                        e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
+                                            e.CellBounds.Bottom - 1, e.CellBounds.Right,
+                                            e.CellBounds.Bottom - 1);
+
+                        // Draw the text content of the cell, ignoring alignment.
+                        if (e.Value != null)
+                        {
+                           e.Graphics.DrawString(e.Value.ToString(), e.CellStyle.Font,
+                                                 Brushes.Black, e.CellBounds.X + 2,
+                                                 e.CellBounds.Y + 2, StringFormat.GenericDefault);
+                        }
+
+                        e.Handled = true;
+                     }
+                  }
+               }
+               #endregion
+            }
+            else if (dataGridView1.Columns["Name"].Index == e.ColumnIndex)
+            {
+               #region Username Incorrect Custom Paint
+               ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
+               if (HostInstances.IsDuplicateUserAndMachineID(Instance.UserAndMachineID))
                {
                   using (Brush gridBrush = new SolidBrush(dataGridView1.GridColor))
                   {
@@ -725,10 +824,10 @@ namespace HFM.Forms
       #region Custom String Formatting Helpers
       private static string GetFormattedTpfString(TimeSpan span)
       {
-         string formatString = "{1}min {2}sec";
+         string formatString = "{1:00}min {2:00}sec";
          if (span.Hours > 0)
          {
-            formatString = "{0}hr {1}min {2}sec";
+            formatString = "{0:00}hr {1:00}min {2:00}sec";
          }
 
          return String.Format(formatString, span.Hours, span.Minutes, span.Seconds);
@@ -736,10 +835,10 @@ namespace HFM.Forms
 
       private static string GetFormattedEtaString(TimeSpan span)
       {
-         string formatString = "{1}hr {2}min";
+         string formatString = "{1:00}hr {2:00}min";
          if (span.Days > 0)
          {
-            formatString = "{0}d {1}hr {2}min";
+            formatString = "{0}d {1:00}hr {2:00}min";
          }
 
          return String.Format(formatString, span.Days, span.Hours, span.Minutes);
@@ -753,10 +852,10 @@ namespace HFM.Forms
          }
 
          TimeSpan span = DateTime.Now.Subtract(date);
-         string formatString = "{1}hr {2}min ago";
+         string formatString = "{1:00}hr {2:00}min ago";
          if (span.Days > 0)
          {
-            formatString = "{0}d {1}hr {2}min ago";
+            formatString = "{0}d {1:00}hr {2:00}min ago";
          }
 
          return String.Format(formatString, span.Days, span.Hours, span.Minutes);
@@ -770,10 +869,10 @@ namespace HFM.Forms
          }
 
          TimeSpan span = date.Subtract(DateTime.Now);
-         string formatString = "In {1}hr {2}min";
+         string formatString = "In {1:00}hr {2:00}min";
          if (span.Days > 0)
          {
-            formatString = "In {0}d {1}hr {2}min";
+            formatString = "In {0}d {1:00}hr {2:00}min";
          }
 
          return String.Format(formatString, span.Days, span.Hours, span.Minutes);
@@ -825,7 +924,7 @@ namespace HFM.Forms
                   {
                      Debug.WriteToHfmConsole(TraceLevel.Error,
                                              String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-                     MessageBox.Show(String.Format("Failed to show client '{0}' files.\n\nPlease check the current File Explorer defined in the Preferences.", Instance.InstanceName));
+                     MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, String.Format("client '{0}' files.\n\nPlease check the current File Explorer defined in the Preferences", Instance.InstanceName)));
                   }
                }
             }
@@ -850,7 +949,6 @@ namespace HFM.Forms
 
          if (CanContinueDestructiveOp(sender, e))
          {
-            HostInstances.SaveCurrentUnitInfo();
             ClearUI();
          }
       }
@@ -873,11 +971,10 @@ namespace HFM.Forms
          {
             openConfigDialog.DefaultExt = "hfm";
             openConfigDialog.Filter = "HFM Configuration Files|*.hfm";
-            openConfigDialog.FileName = ConfigFilename;
+            openConfigDialog.FileName = HostInstances.ConfigFilename;
             openConfigDialog.RestoreDirectory = true;
             if (openConfigDialog.ShowDialog() == DialogResult.OK)
             {
-               HostInstances.SaveCurrentUnitInfo();
                LoadFile(openConfigDialog.FileName);
             }
          }
@@ -890,14 +987,13 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void mnuFileSave_Click(object sender, EventArgs e)
       {
-         if (ConfigFilename == String.Empty)
+         if (HostInstances.HasConfigFilename == false)
          {
             mnuFileSaveas_Click(sender, e);
          }
          else
          {
-            HostInstances.ToXml(ConfigFilename);
-            ChangedAfterSave = false;
+            HostInstances.ToXml();
          }
       }
 
@@ -908,10 +1004,12 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void mnuFileSaveas_Click(object sender, EventArgs e)
       {
+         // No Config File and no Instances, stub out
+         if (HostInstances.HasConfigFilename == false && HostInstances.HasInstances == false) return;
+      
          if (saveConfigDialog.ShowDialog() == DialogResult.OK)
          {
-            ConfigFilename = saveConfigDialog.FileName;
-            mnuFileSave_Click(sender, e);
+            HostInstances.ToXml(HostInstances.ConfigFilename);
          }
       }
 
@@ -969,18 +1067,6 @@ namespace HFM.Forms
          {
             SetTimerState();
             
-            /*** This code is now being handles through PreferenceSet Event Handlers (changed in Revision 26) ***/
-            
-            //HostInstances.OfflineClientsLast = PreferenceSet.Instance.OfflineLast;
-            //TraceLevel newLevel = (TraceLevel)PreferenceSet.Instance.MessageLevel;
-            //if (newLevel != TraceLevelSwitch.Instance.Level)
-            //{
-            //   TraceLevelSwitch.Instance.Level = newLevel;
-            //   Debug.WriteToHfmConsole(String.Format("Debug Message Level Changed: {0}", newLevel));
-            //}
-            
-            /****************************************************************************************************/
-
             // If the PPD Calculation style changed, we need to do a new Retrieval
             if (currentPpdCalc.Equals(PreferenceSet.Instance.PpdCalculation))
             {
@@ -1038,55 +1124,48 @@ namespace HFM.Forms
          frmHost newHost = new frmHost();
          newHost.radioLocal.Checked = true;
          newHost.chkClientVM.Checked = false;
+
          if (newHost.ShowDialog() == DialogResult.OK)
          {
             if (HostInstances.ContainsName(newHost.txtName.Text))
             {
-               MessageBox.Show(String.Format("Host Name '{0}' already exists.", newHost.txtName.Text));
+               MessageBox.Show(String.Format("Client Name '{0}' already exists.", newHost.txtName.Text));
+               return;
             }
-            else
+
+            ClientInstance xHost = null;
+            if (newHost.radioLocal.Checked)
             {
-               ClientInstance xHost = null;
-               if (newHost.radioLocal.Checked)
-               {
-                  xHost = new ClientInstance(InstanceType.PathInstance);
-                  SetInstanceBasicInfo(newHost, xHost);
-                  
-                  xHost.Path = newHost.txtLocalPath.Text;
-               }
-               else if (newHost.radioHTTP.Checked)
-               {
-                  xHost = new ClientInstance(InstanceType.HTTPInstance);
-                  SetInstanceBasicInfo(newHost, xHost);
-                  
-                  xHost.Path = newHost.txtWebURL.Text;
-                  xHost.Username = newHost.txtWebUser.Text;
-                  xHost.Password = newHost.txtWebPass.Text;
-               }
-               else if (newHost.radioFTP.Checked)
-               {
-                  xHost = new ClientInstance(InstanceType.FTPInstance);
-                  SetInstanceBasicInfo(newHost, xHost);
-                  
-                  xHost.Server = newHost.txtFTPServer.Text;
-                  xHost.Path = newHost.txtFTPPath.Text;
-                  xHost.Username = newHost.txtFTPUser.Text;
-                  xHost.Password = newHost.txtFTPPass.Text;
-               }
-
-               // xHost should not be null at this point
-               System.Diagnostics.Debug.Assert(xHost != null);
+               xHost = new ClientInstance(InstanceType.PathInstance);
+               SetInstanceBasicInfo(newHost, xHost);
                
-               // Add the new Host Instance and Queue Retrieval
-               HostInstances.Add(xHost);
-               QueueNewRetrieval(xHost);
-
-               ChangedAfterSave = true;
-               if (PreferenceSet.Instance.AutoSaveConfig)
-               {
-                  mnuFileSave_Click(sender, e);
-               }
+               xHost.Path = newHost.txtLocalPath.Text;
             }
+            else if (newHost.radioHTTP.Checked)
+            {
+               xHost = new ClientInstance(InstanceType.HTTPInstance);
+               SetInstanceBasicInfo(newHost, xHost);
+               
+               xHost.Path = newHost.txtWebURL.Text;
+               xHost.Username = newHost.txtWebUser.Text;
+               xHost.Password = newHost.txtWebPass.Text;
+            }
+            else if (newHost.radioFTP.Checked)
+            {
+               xHost = new ClientInstance(InstanceType.FTPInstance);
+               SetInstanceBasicInfo(newHost, xHost);
+               
+               xHost.Server = newHost.txtFTPServer.Text;
+               xHost.Path = newHost.txtFTPPath.Text;
+               xHost.Username = newHost.txtFTPUser.Text;
+               xHost.Password = newHost.txtFTPPass.Text;
+            }
+
+            // xHost should not be null at this point
+            System.Diagnostics.Debug.Assert(xHost != null);
+            
+            // Add the new Host Instance
+            HostInstances.Add(xHost);
          }
       }
 
@@ -1109,6 +1188,7 @@ namespace HFM.Forms
          editHost.txtClientMegahertz.Text = Instance.ClientProcessorMegahertz.ToString();
          editHost.chkClientVM.Checked = Instance.ClientIsOnVirtualMachine;
          editHost.numOffset.Value = Instance.ClientTimeOffset;
+
          if (Instance.InstanceHostType.Equals(InstanceType.PathInstance))
          {
             editHost.radioLocal.Select();
@@ -1147,6 +1227,7 @@ namespace HFM.Forms
             
             string oldName = Instance.InstanceName;
             string oldPath = Instance.Path;
+
             if (editHost.radioLocal.Checked)
             {
                if (Instance.InstanceHostType.Equals(InstanceType.PathInstance) == false)
@@ -1182,28 +1263,8 @@ namespace HFM.Forms
                Instance.Username = editHost.txtFTPUser.Text;
                Instance.Password = editHost.txtFTPPass.Text;
             }
-            
-            // if the host key changed
-            if (oldName != Instance.InstanceName)
-            {
-               HostInstances.UpdateDisplayInstanceName(oldName, Instance.InstanceName);
-               HostInstances.InstanceCollection.Remove(oldName);
-               HostInstances.Add(Instance);
-               
-               ProteinBenchmarkCollection.Instance.UpdateInstanceName(oldName, Instance.InstanceName);
-            }
-            // if the path changed
-            if (oldPath != Instance.Path)
-            {
-               ProteinBenchmarkCollection.Instance.UpdateInstancePath(Instance.InstanceName, Instance.Path);
-            }
-            QueueNewRetrieval(Instance);
 
-            ChangedAfterSave = true;
-            if (PreferenceSet.Instance.AutoSaveConfig)
-            {
-               mnuFileSave_Click(sender, e);
-            }
+            HostInstances.Edit(oldName, oldPath, Instance);
          }
       }
 
@@ -1238,12 +1299,6 @@ namespace HFM.Forms
          if (dataGridView1.SelectedRows.Count == 0) return;
          
          HostInstances.Remove(dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString());
-
-         ChangedAfterSave = true;
-         if (PreferenceSet.Instance.AutoSaveConfig)
-         {
-            mnuFileSave_Click(sender, e);
-         }
       }
 
       /// <summary>
@@ -1253,7 +1308,7 @@ namespace HFM.Forms
       {
          if (dataGridView1.SelectedRows.Count == 0) return;
       
-         QueueNewRetrieval(HostInstances.InstanceCollection[dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString()]);
+         HostInstances.RetrieveSingleClient(dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString());
       }
 
       /// <summary>
@@ -1286,7 +1341,7 @@ namespace HFM.Forms
             {
                Debug.WriteToHfmConsole(TraceLevel.Error,
                                        String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-               MessageBox.Show(String.Format("Failed to show client '{0}' FAHlog file.\n\nPlease check the current Log File Viewer defined in the Preferences.", Instance.InstanceName));
+               MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, String.Format("client '{0}' FAHlog file.\n\nPlease check the current Log File Viewer defined in the Preferences", Instance.InstanceName)));
             }
          }
          else
@@ -1316,7 +1371,7 @@ namespace HFM.Forms
             {
                Debug.WriteToHfmConsole(TraceLevel.Error,
                                        String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-               MessageBox.Show(String.Format("Failed to show client '{0}' files.\n\nPlease check the current File Explorer defined in the Preferences.", Instance.InstanceName));
+               MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, String.Format("client '{0}' files.\n\nPlease check the current File Explorer defined in the Preferences", Instance.InstanceName)));
             }
          }
       }
@@ -1345,7 +1400,6 @@ namespace HFM.Forms
             PreferenceSet.Instance.TimeStyle = eTimeStyle.Standard;
          }
 
-         //RefreshDisplay();
          dataGridView1.Invalidate();
       }
       #endregion
@@ -1407,7 +1461,7 @@ namespace HFM.Forms
          {
             Debug.WriteToHfmConsole(TraceLevel.Error,
                                     String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-            MessageBox.Show("Failed to show EOC User Stats page.");
+            MessageBox.Show(Properties.Resources.ProcessStartError, String.Format("EOC User Stats page"));
          }
       }
 
@@ -1421,7 +1475,7 @@ namespace HFM.Forms
          {
             Debug.WriteToHfmConsole(TraceLevel.Error,
                                     String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-            MessageBox.Show("Failed to show Stanford User Stats page.");
+            MessageBox.Show(Properties.Resources.ProcessStartError, String.Format("Stanford User Stats page"));
          }
       }
 
@@ -1435,7 +1489,7 @@ namespace HFM.Forms
          {
             Debug.WriteToHfmConsole(TraceLevel.Error,
                                     String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-            MessageBox.Show("Failed to show EOC Team Stats page.");
+            MessageBox.Show(Properties.Resources.ProcessStartError, String.Format("EOC Team Stats page"));
          }
       }
 
@@ -1454,7 +1508,7 @@ namespace HFM.Forms
          {
             Debug.WriteToHfmConsole(TraceLevel.Error,
                                     String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-            MessageBox.Show("Failed to show HFM.NET Google Code page.");
+            MessageBox.Show(Properties.Resources.ProcessStartError, String.Format("HFM.NET Google Code page"));
          }
       }
       #endregion
@@ -1466,7 +1520,7 @@ namespace HFM.Forms
       private void SetTimerState()
       {
          // Disable timers if no hosts
-         if (HostInstances.Count < 1)
+         if (HostInstances.HasInstances == false)
          {
             Debug.WriteToHfmConsole(TraceLevel.Info, "No Hosts - Stopping Both Background Timer Loops");
             workTimer.Stop();
@@ -1686,7 +1740,7 @@ namespace HFM.Forms
          }
          
          // only fire if there are Hosts
-         if (HostInstances.Count > 0)
+         if (HostInstances.HasInstances)
          {
             Debug.WriteToHfmConsole(TraceLevel.Info, "Stopping Background Timer Loop");
             workTimer.Stop();
@@ -1705,7 +1759,7 @@ namespace HFM.Forms
       private void DoRetrievalWrapper()
       {
          // fire the actual retrieval thread
-         IAsyncResult async = new MethodInvoker(DoRetrieval).BeginInvoke(null, null);
+         IAsyncResult async = new MethodInvoker(HostInstances.DoRetrieval).BeginInvoke(null, null);
          // wait for completion
          async.AsyncWaitHandle.WaitOne();
 
@@ -1731,8 +1785,6 @@ namespace HFM.Forms
 
          // clear full retrieval flag
          RetrievalInProgress = false;
-         // Save the benchmark collection
-         ProteinBenchmarkCollection.Instance.Serialize();
       }
 
       /// <summary>
@@ -1746,83 +1798,6 @@ namespace HFM.Forms
          workTimer.Start();
       }
 
-      /// <summary>
-      /// Do a full retrieval operation
-      /// </summary>
-      private void DoRetrieval()
-      {
-         // get flag synchronous or asynchronous - we don't want this flag to change on us
-         // in the middle of a retrieve, so grab it now and use the local copy
-         bool Synchronous = PreferenceSet.Instance.SyncOnLoad;
-
-         // copy the current instance keys into local array
-         int numInstances = HostInstances.Count;
-         string[] instanceKeys = new string[numInstances];
-         HostInstances.InstanceCollection.Keys.CopyTo(instanceKeys, 0);
-
-         List<WaitHandle> waitHandleList = new List<WaitHandle>();
-         for (int i = 0; i < numInstances; )
-         {
-            waitHandleList.Clear();
-            // loop through the instances (can only handle up to 64 wait handles at a time)
-            for (int j = 0; j < 64 && i < numInstances; j++)
-            {
-               // try to get the key value from the collection, if the value is not found then
-               // the user removed a client in the middle of a retrieve process, ignore the key
-               ClientInstance Instance;
-               if (HostInstances.InstanceCollection.TryGetValue(instanceKeys[i], out Instance))
-               {
-                  if (Synchronous) // do the individual retrieves on a single thread
-                  {
-                     RetrieveInstance(Instance);
-                  }
-                  else // fire individual threads to do the their own retrieve simultaneously
-                  {
-                     RetrieveInstanceDelegate del = RetrieveInstance;
-                     IAsyncResult async = del.BeginInvoke(Instance, null, null);
-
-                     // get the wait handle for each invoked delegate
-                     waitHandleList.Add(async.AsyncWaitHandle);
-                  }
-               }
-
-               i++; // increment the outer loop counter
-            }
-            
-            if (Synchronous == false)
-            {
-               WaitHandle[] waitHandles = waitHandleList.ToArray();
-               // wait for all invoked threads to complete
-               WaitHandle.WaitAll(waitHandles);
-            }
-         }
-      }
-
-      /// <summary>
-      /// Stick this Instance in the background thread queue to retrieve the info for the given Instance
-      /// </summary>
-      private void QueueNewRetrieval(ClientInstance Instance)
-      {
-         new RetrieveInstanceDelegate(RetrieveInstance).BeginInvoke(Instance, null, null);
-      }
-
-      /// <summary>
-      /// Delegate used for asynchronous instance retrieval
-      /// </summary>
-      /// <param name="Instance"></param>
-      private delegate void RetrieveInstanceDelegate(ClientInstance Instance);
-
-      /// <summary>
-      /// Stub to execute retrieve and refresh display
-      /// </summary>
-      /// <param name="Instance"></param>
-      private void RetrieveInstance(ClientInstance Instance)
-      {
-         Instance.Retrieve();
-         // Update the UI (this is confirmed needed)
-         RefreshDisplay();
-      }
-      
       /// <summary>
       /// Refresh the Form
       /// </summary>
@@ -1896,12 +1871,12 @@ namespace HFM.Forms
       {
          InstanceTotals totals = HostInstances.GetInstanceTotals();
 
-         TotalPPD = totals.PPD;
-         GoodHosts = totals.WorkingClients;
+         double TotalPPD = totals.PPD;
+         int GoodHosts = totals.WorkingClients;
          
          SetNotifyIconText(String.Format("{0} Clients Working\n{1} Clients Offline\n{2:" + PreferenceSet.GetPPDFormatString() + "} PPD",
                                          GoodHosts, totals.NonWorkingClients, TotalPPD));
-         RefreshStatusLabels();
+         RefreshStatusLabels(GoodHosts, TotalPPD);
       }
 
       /// <summary>
@@ -1919,8 +1894,11 @@ namespace HFM.Forms
          if (InvokeRequired)
          {
             BeginInvoke(new SimpleVoidStringDelegate(SetNotifyIconText), new object[] { val });
+            return;
          }
-         else
+         
+         // make sure the object has been created
+         if (notifyIcon != null)
          {
             if (val.Length > 64)
             {
@@ -1934,11 +1912,11 @@ namespace HFM.Forms
       /// <summary>
       /// Update the Status Labels with Client and PPD info
       /// </summary>
-      private void RefreshStatusLabels()
+      private void RefreshStatusLabels(int GoodHosts, double TotalPPD)
       {
          if (GoodHosts == 1)
          {
-            SetStatusLabelHostsText(String.Format("{0} Clients", GoodHosts));
+            SetStatusLabelHostsText(String.Format("{0} Client", GoodHosts));
          }
          else
          {
@@ -1957,11 +1935,10 @@ namespace HFM.Forms
          if (InvokeRequired)
          {
             BeginInvoke(new SimpleVoidStringDelegate(SetStatusLabelHostsText), new object[] { val });
+            return;
          }
-         else
-         {
-            statusLabelHosts.Text = val;
-         }
+         
+         statusLabelHosts.Text = val;
       }
 
       /// <summary>
@@ -1973,11 +1950,10 @@ namespace HFM.Forms
          if (InvokeRequired)
          {
             BeginInvoke(new SimpleVoidStringDelegate(SetStatusLabelPPDText), new object[] { val });
+            return;
          }
-         else
-         {
-            statusLabelPPW.Text = val;
-         }
+         
+         statusLabelPPW.Text = val;
       }
 
       /// <summary>
@@ -1987,17 +1963,6 @@ namespace HFM.Forms
       {
          // Do Retrieve on all clients after Project Info is updated (this is confirmed needed)
          QueueNewRetrieval();
-      }
-
-      /// <summary>
-      /// Forces a screen refresh when the instance collection is updated
-      /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
-      private void HostInstances_RefreshCollection(object sender, EventArgs e)
-      {
-         // Update the UI (this is confirmed needed)
-         RefreshDisplay();
       }
       #endregion
 
@@ -2174,14 +2139,14 @@ namespace HFM.Forms
       /// <returns>Whether or not a destructive operation can be performed</returns>
       private bool CanContinueDestructiveOp(object sender, EventArgs e)
       {
-         if (ChangedAfterSave)
+         if (HostInstances.ChangedAfterSave)
          {
-            DialogResult qResult = MessageBox.Show("There are changes to the configuration that have not been saved. Would you like to save these changes?\n\nYes - Continue and save the changes\nNo - Continue and do not save the changes\nCancel - Do not continue", "Warning", MessageBoxButtons.YesNoCancel);
+            DialogResult qResult = MessageBox.Show("There are changes to the configuration that have not been saved.  Would you like to save these changes?\n\nYes - Continue and save the changes / No - Continue and do not save the changes / Cancel - Do not continue", base.Text, MessageBoxButtons.YesNoCancel);
             switch (qResult)
             {
                case DialogResult.Yes:
                   mnuFileSave_Click(sender, e);
-                  if (ChangedAfterSave)
+                  if (HostInstances.ChangedAfterSave)
                   {
                      return false;
                   }
@@ -2209,25 +2174,10 @@ namespace HFM.Forms
       {
          // clear the log text
          txtLogFile.Text = String.Empty;
-
-         // Re-initialise the list of host instances
-         HostInstances = new FoldingInstanceCollection();
-         dataGridView1.AutoGenerateColumns = false;
-         dataGridView1.DataSource = HostInstances.GetDisplayCollection();
-         HostInstances.RefreshCollection += HostInstances_RefreshCollection;
-         SetOfflineLast(this, EventArgs.Empty);
-
-         // and the config filename - this is a new one now
-         ConfigFilename = String.Empty;
-
-         // Technically there are now no changes after a save
-         ChangedAfterSave = false;
-
+         // Clear the list of host instances
+         HostInstances.Clear();
          // This will disable the timers, we have no hosts
          SetTimerState();
-
-         // Update the UI (this is confirmed needed)
-         RefreshDisplay();
       }
 
       /// <summary>
@@ -2238,14 +2188,14 @@ namespace HFM.Forms
       {
          // Clear the UI
          ClearUI();
-         // Set config file name
-         ConfigFilename = filename;
          // Read the config file
          HostInstances.FromXml(filename);
-         // Get client logs         
-         QueueNewRetrieval();
-         // Start Retrieval and WebGen Timers
-         SetTimerState();
+
+         if (HostInstances.HasInstances == false)
+         {
+            MessageBox.Show(this, "No client configurations were loaded from the given config file.",
+               Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+         }
       }
 
       /// <summary>
@@ -2258,12 +2208,12 @@ namespace HFM.Forms
          ClearUI();
          // Read the config file
          HostInstances.FromFahMonClientsTab(filename);
-         // Collection imported from external source
-         ChangedAfterSave = true;
-         // Get client logs         
-         QueueNewRetrieval();
-         // Start Retrieval and WebGen Timers
-         SetTimerState();
+
+         if (HostInstances.HasInstances == false)
+         {
+            MessageBox.Show(this, "No client configurations were imported from the given config file.\n\nPossibly because the file is in an older FahMon format (not tab delimited).\n\nLater versions of FahMon write a clientstab.txt file in tab delimited format.", 
+               Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+         }
       }
 
       /// <summary>
@@ -2298,6 +2248,7 @@ namespace HFM.Forms
          Process.Start(PreferenceSet.Instance.FileExplorer, path);
       }
 
+      #region User Stats Data Methods
       /// <summary>
       /// Refresh User Stats from external source
       /// </summary>
@@ -2321,6 +2272,8 @@ namespace HFM.Forms
       {
          try
          {
+            UserStatsDataContainer UserStatsData = UserStatsDataContainer.Instance;
+         
             XMLOps.GetEOCXmlData(UserStatsData, ForceRefresh);
             statusLabel24hr.Text = String.Format("24hr: {0:###,###,##0}", UserStatsData.User24hrAvg);
             statusLabelToday.Text = String.Format("Today: {0:###,###,##0}", UserStatsData.UserPointsToday);
@@ -2334,12 +2287,74 @@ namespace HFM.Forms
                                     String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
          }
       }
+      #endregion
+
+      #region Instance Collection Event Handlers
+      /// <summary>
+      /// Forces a screen refresh when the instance collection is changed
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
+      private void HostInstances_CollectionChanged(object sender, EventArgs e)
+      {
+         // Update the UI (this is confirmed needed)
+         RefreshDisplay();
+      }
+
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
+      private void HostInstances_CollectionLoaded(object sender, EventArgs e)
+      {
+         // Get client logs         
+         QueueNewRetrieval();
+         // Start Retrieval and WebGen Timers
+         SetTimerState();
+      }
+
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
+      private void HostInstances_InstanceDataChanged(object sender, EventArgs e)
+      {
+         if (PreferenceSet.Instance.AutoSaveConfig)
+         {
+            mnuFileSave_Click(sender, e);
+         }
+      }
+
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
+      private void HostInstances_InstanceRetrieved(object sender, EventArgs e)
+      {
+         // Update the UI (this is confirmed needed)
+         RefreshDisplay();
+      }
+
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
+      private void HostInstances_DuplicatesFound(object sender, EventArgs e)
+      {
+         // Update the UI (this is confirmed needed)
+         RefreshDisplay();
+      }
+      #endregion
 
       #region PreferenceSet Event Handlers
       /// <summary>
       /// Show or Hide User Stats Controls based on user setting
       /// </summary>
-      private void ShowHideUserStatsControls(object sender, EventArgs e)
+      private void PreferenceSet_ShowUserStatsChanged(object sender, EventArgs e)
       {
          bool show = PreferenceSet.Instance.ShowUserStats;
          if (show)
@@ -2365,7 +2380,7 @@ namespace HFM.Forms
       /// <summary>
       /// Sets OfflineLast Property on HostInstances Collection
       /// </summary>
-      private void SetOfflineLast(object sender, EventArgs e)
+      private void PreferenceSet_OfflineLastChanged(object sender, EventArgs e)
       {
          HostInstances.OfflineClientsLast = PreferenceSet.Instance.OfflineLast;
       }
@@ -2373,7 +2388,7 @@ namespace HFM.Forms
       /// <summary>
       /// Sets Debug Message Level on Trace Level Switch
       /// </summary>
-      private static void SetMessageLevel(object sender, EventArgs e)
+      private static void PreferenceSet_MessageLevelChanged(object sender, EventArgs e)
       {
          TraceLevel newLevel = (TraceLevel)PreferenceSet.Instance.MessageLevel;
          if (newLevel != TraceLevelSwitch.Instance.Level)

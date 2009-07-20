@@ -65,7 +65,16 @@
          <td width="3%" class="RightCol">
             <xsl:value-of select="PercentComplete"/>%
          </td>
-         <td width="14%" class="RightCol">
+         <td width="14%">
+            <xsl:choose>
+               <xsl:when test="UserIDDuplicate='True'">
+                  <xsl:attribute name="class">StatusCol</xsl:attribute>
+                  <xsl:attribute name="bgcolor">Orange</xsl:attribute>
+               </xsl:when>
+               <xsl:otherwise>
+                  <xsl:attribute name="class">RightCol</xsl:attribute>
+               </xsl:otherwise>
+            </xsl:choose>
             <a>
                <xsl:attribute name="href"><xsl:value-of select="Name"/>.html</xsl:attribute><xsl:value-of select="Name"/>
             </a>
@@ -94,7 +103,16 @@
          <td width="3%" class="RightCol">
             <xsl:value-of select="CoreVersion"/>
          </td>
-         <td width="8%" class="RightCol"> <!--65%-->
+         <td width="8%"> <!--65%-->
+            <xsl:choose>
+               <xsl:when test="ProjectDuplicate='True'">
+                  <xsl:attribute name="class">StatusCol</xsl:attribute>
+                  <xsl:attribute name="bgcolor">Orange</xsl:attribute>
+               </xsl:when>
+               <xsl:otherwise>
+                  <xsl:attribute name="class">RightCol</xsl:attribute>
+               </xsl:otherwise>
+            </xsl:choose>
             <xsl:value-of select="ProjectRunCloneGen"/>
          </td>
          <td width="4%" class="RightCol">

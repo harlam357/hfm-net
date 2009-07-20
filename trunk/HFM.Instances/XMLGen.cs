@@ -162,6 +162,7 @@ namespace HFM.Instances
             XMLOps.setXmlNode(xmlData, "StatusFontColor", ClientInstance.GetStatusHtmlFontColor(Instance.Status));
             XMLOps.setXmlNode(xmlData, "PercentComplete", Instance.CurrentUnitInfo.PercentComplete.ToString());
             XMLOps.setXmlNode(xmlData, "Name", Instance.InstanceName);
+            XMLOps.setXmlNode(xmlData, "UserIDDuplicate", HostInstances.IsDuplicateUserAndMachineID(Instance.UserAndMachineID).ToString());
             XMLOps.setXmlNode(xmlData, "ClientType", Instance.CurrentUnitInfo.TypeOfClient.ToString());
             XMLOps.setXmlNode(xmlData, "TPF", Instance.CurrentUnitInfo.TimePerFrame.ToString());
             XMLOps.setXmlNode(xmlData, "PPD", String.Format("{0:" + PreferenceSet.GetPPDFormatString() + "}", Instance.CurrentUnitInfo.PPD));
@@ -172,6 +173,7 @@ namespace HFM.Instances
             XMLOps.setXmlNode(xmlData, "Core", Instance.CurrentUnitInfo.CurrentProtein.Core);
             XMLOps.setXmlNode(xmlData, "CoreVersion", Instance.CurrentUnitInfo.CoreVersion);
             XMLOps.setXmlNode(xmlData, "ProjectRunCloneGen", Instance.CurrentUnitInfo.ProjectRunCloneGen);
+            XMLOps.setXmlNode(xmlData, "ProjectDuplicate", HostInstances.IsDuplicateProject(Instance.CurrentUnitInfo.ProjectRunCloneGen).ToString());
             XMLOps.setXmlNode(xmlData, "Credit", String.Format("{0:0}", Instance.CurrentUnitInfo.CurrentProtein.Credit));
             XMLOps.setXmlNode(xmlData, "Completed", Instance.NumberOfCompletedUnitsSinceLastStart.ToString());
             XMLOps.setXmlNode(xmlData, "Failed", Instance.NumberOfFailedUnitsSinceLastStart.ToString());

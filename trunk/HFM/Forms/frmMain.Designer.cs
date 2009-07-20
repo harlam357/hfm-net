@@ -29,10 +29,10 @@ namespace HFM.Forms
       private void InitializeComponent()
       {
          this.components = new System.ComponentModel.Container();
+         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
-         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
          this.statusStrip = new System.Windows.Forms.StatusStrip();
          this.statusLabelLeft = new System.Windows.Forms.ToolStripStatusLabel();
          this.statusLabel24hr = new System.Windows.Forms.ToolStripStatusLabel();
@@ -50,7 +50,6 @@ namespace HFM.Forms
          this.mnuNotifyMax = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuNotifySep1 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuNotifyQuit = new System.Windows.Forms.ToolStripMenuItem();
-         this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
          this.AppMenu = new System.Windows.Forms.MenuStrip();
          this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuFileNew = new System.Windows.Forms.ToolStripMenuItem();
@@ -297,15 +296,6 @@ namespace HFM.Forms
          this.mnuNotifyQuit.Size = new System.Drawing.Size(128, 22);
          this.mnuNotifyQuit.Text = "&Quit";
          this.mnuNotifyQuit.Click += new System.EventHandler(this.mnuFileQuit_Click);
-         // 
-         // notifyIcon
-         // 
-         this.notifyIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-         this.notifyIcon.ContextMenuStrip = this.notifyMenu;
-         this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
-         this.notifyIcon.Text = "frmMainNew";
-         this.notifyIcon.Visible = true;
-         this.notifyIcon.DoubleClick += new System.EventHandler(this.notifyIcon_DoubleClick);
          // 
          // AppMenu
          // 
@@ -771,27 +761,27 @@ namespace HFM.Forms
          this.dataGridView1.AllowUserToDeleteRows = false;
          this.dataGridView1.AllowUserToOrderColumns = true;
          this.dataGridView1.AllowUserToResizeRows = false;
-         dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-         this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
+         dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+         this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
          this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
          this.dataGridView1.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-         dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-         dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
-         dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
-         dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-         dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-         dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-         this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+         dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+         dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+         dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+         dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+         dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+         dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+         this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
          this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-         dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-         dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
-         dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
-         dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-         dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-         dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-         this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle6;
+         dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+         dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+         dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+         dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+         dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+         dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+         this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle3;
          this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
          this.dataGridView1.Location = new System.Drawing.Point(0, 0);
          this.dataGridView1.MultiSelect = false;
@@ -866,7 +856,6 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripMenuItem mnuNotifyMax;
       private System.Windows.Forms.ToolStripSeparator mnuNotifySep1;
       private System.Windows.Forms.ToolStripMenuItem mnuNotifyQuit;
-      private System.Windows.Forms.NotifyIcon notifyIcon;
       private System.Windows.Forms.MenuStrip AppMenu;
       private System.Windows.Forms.ToolStripMenuItem mnuFile;
       private System.Windows.Forms.ToolStripMenuItem mnuFileNew;

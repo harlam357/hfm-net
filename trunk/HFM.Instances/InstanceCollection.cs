@@ -19,15 +19,18 @@
  */
 
 using System;
+using System.Collections;
 using System.Diagnostics;
 using System.IO;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 using System.Collections.Generic;
 
 using HFM.Helpers;
+using HFM.Preferences;
 using HFM.Proteins;
 using Debug=HFM.Instrumentation.Debug;
 
@@ -43,11 +46,22 @@ namespace HFM.Instances
       public Int32 TotalFailedUnits;
    }
 
-   public class FoldingInstanceCollection
+   public sealed class FoldingInstanceCollection
    {
+      #region Events
+      public event EventHandler CollectionChanged;
+      public event EventHandler CollectionLoaded;
+      public event EventHandler CollectionSaved;
+      public event EventHandler InstanceAdded;
+      public event EventHandler InstanceEdited;
+      public event EventHandler InstanceRemoved;
+      public event EventHandler InstanceRetrieved;
+      public event EventHandler DuplicatesFound;
+      #endregion
+      
       #region Members
-      public event EventHandler RefreshCollection;
-
+      public const int NumberOfDisplayFields = 19;
+      
       /// <summary>
       /// Main instance collection
       /// </summary>
@@ -57,6 +71,26 @@ namespace HFM.Instances
       /// Display instance collection (this is bound to the DataGridView)
       /// </summary>
       private readonly SortableBindingList<DisplayInstance> _displayCollection;
+      
+      /// <summary>
+      /// List of Duplicate Project (R/C/G)
+      /// </summary>
+      private readonly List<string> _duplicateProjects;
+
+      /// <summary>
+      /// List of Duplicate Client User and Machine ID combinations
+      /// </summary>
+      private readonly List<string> _duplicateUserID;
+
+      /// <summary>
+      /// Internal filename
+      /// </summary>
+      private string _ConfigFilename = String.Empty;
+
+      /// <summary>
+      /// Internal variable storing whether New, Open, Quit should prompt for saving the config first
+      /// </summary>
+      private bool _ChangedAfterSave = false;
       #endregion
 
       #region CTOR
@@ -67,7 +101,74 @@ namespace HFM.Instances
       {
          _instanceCollection = new Dictionary<string, ClientInstance>();
          _displayCollection = new SortableBindingList<DisplayInstance>();
-         OnRefreshCollection(EventArgs.Empty);
+         _duplicateProjects = new List<string>();
+         _duplicateUserID = new List<string>();
+      }
+      #endregion
+
+      #region Event Wrappers
+      private void OnCollectionChanged(EventArgs e)
+      {
+         if (CollectionChanged != null)
+         {
+            CollectionChanged(this, e);
+         }
+      }
+
+      private void OnCollectionLoaded(EventArgs e)
+      {
+         if (CollectionLoaded != null)
+         {
+            CollectionLoaded(this, e);
+         }
+      }
+
+      private void OnCollectionSaved(EventArgs e)
+      {
+         if (CollectionSaved != null)
+         {
+            CollectionSaved(this, e);
+         }
+      }
+
+      private void OnInstanceAdded(EventArgs e)
+      {
+         if (InstanceAdded != null)
+         {
+            InstanceAdded(this, e);
+         }
+      }
+
+      private void OnInstanceEdited(EventArgs e)
+      {
+         if (InstanceEdited != null)
+         {
+            InstanceEdited(this, e);
+         }
+      }
+
+      private void OnInstanceRemoved(EventArgs e)
+      {
+         if (InstanceRemoved != null)
+         {
+            InstanceRemoved(this, e);
+         }
+      }
+
+      private void OnInstanceRetrieved(EventArgs e)
+      {
+         if (InstanceRetrieved != null)
+         {
+            InstanceRetrieved(this, e);
+         }
+      }
+
+      private void OnDuplicatesFound(EventArgs e)
+      {
+         if (DuplicatesFound != null)
+         {
+            DuplicatesFound(this, e);
+         }
       }
       #endregion
 
@@ -81,11 +182,43 @@ namespace HFM.Instances
       }
 
       /// <summary>
+      /// Client Configuration Filename
+      /// </summary>
+      public string ConfigFilename
+      {
+         get { return _ConfigFilename; }
+      }
+      
+      /// <summary>
+      /// Client Configuration has Filename defined
+      /// </summary>
+      public bool HasConfigFilename
+      {
+         get { return _ConfigFilename != String.Empty; }
+      }
+
+      /// <summary>
+      /// Denotes the Saved State of the Current Client Configuration (false == saved, true == unsaved)
+      /// </summary>
+      public bool ChangedAfterSave
+      {
+         get { return _ChangedAfterSave; }
+      }
+
+      /// <summary>
       /// Client Instance Count
       /// </summary>
       public int Count
       {
          get { return _instanceCollection.Count; }
+      }
+
+      /// <summary>
+      /// Returns True if Client Instance Count is greater than 0
+      /// </summary>
+      public bool HasInstances
+      {
+         get { return Count > 0; }
       }
 
       /// <summary>
@@ -96,8 +229,6 @@ namespace HFM.Instances
          get { return _displayCollection.OfflineClientsLast; }
          set { _displayCollection.OfflineClientsLast = value; }
       }
-
-      public const int NumberOfDisplayFields = 19;
       #endregion
 
       #region Read and Write Xml
@@ -106,8 +237,11 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="xmlDocName">Filename (verbatim) to load data from - User AppData Path is prepended
       /// if the path does not start with either ?: or \\</param>
-      public virtual void FromXml(String xmlDocName)
+      public void FromXml(string xmlDocName)
       {
+         _ChangedAfterSave = false;
+         _ConfigFilename = xmlDocName;
+
          XmlDocument xmlData = new XmlDocument();
 
          // Load the XML file
@@ -117,7 +251,7 @@ namespace HFM.Instances
          }
          else
          {
-            xmlData.Load(Path.Combine(Preferences.PreferenceSet.Instance.AppDataPath, xmlDocName));
+            xmlData.Load(Path.Combine(PreferenceSet.Instance.AppDataPath, xmlDocName));
          }
 
          // xmlData now contains the collection of Nodes. Hopefully.
@@ -138,7 +272,7 @@ namespace HFM.Instances
                   instance.CurrentUnitInfo = restoreUnitInfo;
                   Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Restored UnitInfo for Instance '{1}'.", Debug.FunctionName, instance.InstanceName));
                }
-               Add(instance);
+               Add(instance, false);
             }
             else
             {
@@ -146,7 +280,18 @@ namespace HFM.Instances
             }
          }
 
-         OnRefreshCollection(EventArgs.Empty);
+         if (HasInstances)
+         {
+            OnCollectionLoaded(EventArgs.Empty);
+         }
+      }
+
+      /// <summary>
+      /// Saves the current collection of Host Instances to disk
+      /// </summary>
+      public void ToXml()
+      {
+         ToXml(ConfigFilename);
       }
 
       /// <summary>
@@ -154,8 +299,10 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="xmlDocName">Filename (verbatim) to save data to - User AppData Path is prepended
       /// if the path does not start with either ?: or \\</param>
-      public virtual void ToXml(String xmlDocName)
+      public void ToXml(string xmlDocName)
       {
+         _ConfigFilename = xmlDocName;
+      
          XmlDocument xmlData = new XmlDocument();
 
          // Create the XML Declaration (well formed)
@@ -185,32 +332,12 @@ namespace HFM.Instances
          }
          else
          {
-            xmlData.Save(Path.Combine(Preferences.PreferenceSet.Instance.AppDataPath, xmlDocName));
+            xmlData.Save(Path.Combine(PreferenceSet.Instance.AppDataPath, xmlDocName));
          }
+         
+         _ChangedAfterSave = false;
+         OnCollectionSaved(EventArgs.Empty);
       }
-      #endregion
-
-      #region Save UnitInfo Collection
-      /// <summary>
-      /// Serialize the Current UnitInfo Objects to disk
-      /// </summary>
-      public void SaveCurrentUnitInfo()
-      {
-         DateTime Start = Debug.ExecStart;
-      
-         UnitInfoCollection collection = UnitInfoCollection.Instance;
-
-         collection.Clear();
-
-         foreach (ClientInstance instance in _instanceCollection.Values)
-         {
-            collection.Add(instance.CurrentUnitInfo);
-         }
-
-         collection.Serialize();
-
-         Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
-      } 
       #endregion
 
       #region FahMon Import Support
@@ -220,6 +347,8 @@ namespace HFM.Instances
       /// <param name="filename">Path of ClientsTab.txt to import</param>
       public void FromFahMonClientsTab(string filename)
       {
+         _ChangedAfterSave = false;
+         
          StreamReader fileStream = null;
          try
          {
@@ -252,7 +381,7 @@ namespace HFM.Instances
                               instance.ClientIsOnVirtualMachine = true;
                            }
                         }
-                        Add(instance);
+                        Add(instance, false);
                         Debug.WriteToHfmConsole(TraceLevel.Info,
                                                 String.Format("{0} Added FahMon Instance Name: {1}.", Debug.FunctionName, instance.InstanceName));
                      }
@@ -262,10 +391,13 @@ namespace HFM.Instances
                                                 String.Format("{0} Failed to add FahMon Instance: {1}.", Debug.FunctionName, line));
                      }
                   }
+                  else
+                  {
+                     Debug.WriteToHfmConsole(TraceLevel.Warning,
+                                             String.Format("{0} Failed to add FahMon Instance (not tab delimited): {1}.", Debug.FunctionName, line));
+                  }
                }
             }
-
-            OnRefreshCollection(EventArgs.Empty);
          }
          catch (Exception ex)
          {
@@ -278,6 +410,12 @@ namespace HFM.Instances
             {
                fileStream.Close();
             }
+         }
+
+         if (HasInstances)
+         {
+            _ChangedAfterSave = true;
+            OnCollectionLoaded(EventArgs.Empty);
          }
       }
 
@@ -351,47 +489,130 @@ namespace HFM.Instances
       }
       #endregion
 
-      #region Event Wrappers
-      protected void OnRefreshCollection(EventArgs e)
-      {
-         if (RefreshCollection != null)
-         {
-            RefreshCollection(this, e);
-         }
-      }
-      #endregion
-
       #region Implementation
       /// <summary>
       /// Add an Instance
       /// </summary>
-      /// <param name="instance">Instance</param>
-      public void Add(ClientInstance instance)
+      /// <param name="Instance">Client Instance</param>
+      public void Add(ClientInstance Instance)
       {
-         Add(instance.InstanceName, instance);
+         Add(Instance, true);
+      }
+      
+      /// <summary>
+      /// Add an Instance
+      /// </summary>
+      /// <param name="Instance">Client Instance</param>
+      /// <param name="FireAddedEvent">Specifies whether this call fires the InstanceAdded Event</param>
+      private void Add(ClientInstance Instance, bool FireAddedEvent)
+      {
+         Add(Instance.InstanceName, Instance, FireAddedEvent);
       }
 
       /// <summary>
       /// Add an Instance with Key
       /// </summary>
       /// <param name="Key">Instance Key</param>
-      /// <param name="instance">Instance</param>
-      public void Add(string Key, ClientInstance instance)
+      /// <param name="Instance">Client Instance</param>
+      public void Add(string Key, ClientInstance Instance)
       {
-         _instanceCollection.Add(Key, instance);
-         OnRefreshCollection(EventArgs.Empty);
+         Add(Key, Instance, true);
       }
 
+      /// <summary>
+      /// Add an Instance with Key
+      /// </summary>
+      /// <param name="Key">Instance Key</param>
+      /// <param name="Instance">Client Instance</param>
+      /// <param name="FireAddedEvent">Specifies whether this call fires the InstanceAdded Event</param>
+      private void Add(string Key, ClientInstance Instance, bool FireAddedEvent)
+      {
+         _instanceCollection.Add(Key, Instance);
+         OnCollectionChanged(EventArgs.Empty);
+         
+         if (FireAddedEvent)
+         {
+            RetrieveSingleClient(Instance);
+
+            _ChangedAfterSave = true;
+            OnInstanceAdded(EventArgs.Empty);
+         }
+      }
+      
+      public void Edit(string oldName, string oldPath, ClientInstance Instance)
+      {
+         // if the host key changed
+         if (oldName != Instance.InstanceName)
+         {
+            UpdateDisplayInstanceName(oldName, Instance.InstanceName);
+            Remove(oldName, false);
+            Add(Instance, false);
+            
+            ProteinBenchmarkCollection.Instance.UpdateInstanceName(oldName, Instance.InstanceName);
+         }
+         // if the path changed, update the paths in the benchmark collection
+         if (oldPath != Instance.Path)
+         {
+            ProteinBenchmarkCollection.Instance.UpdateInstancePath(Instance.InstanceName, Instance.Path);
+         }
+         
+         RetrieveSingleClient(Instance);
+
+         _ChangedAfterSave = true;
+         OnInstanceEdited(EventArgs.Empty);
+      }
+      
       /// <summary>
       /// Remove an Instance by Key
       /// </summary>
       /// <param name="Key">Instance Key</param>
       public void Remove(string Key)
       {
+         Remove(Key, true);
+      }
+
+      /// <summary>
+      /// Remove an Instance by Key
+      /// </summary>
+      /// <param name="Key">Instance Key</param>
+      /// <param name="FireRemovedEvent">Specifies whether this call fires the InstanceRemoved Event</param>
+      private void Remove(string Key, bool FireRemovedEvent)
+      {
          _instanceCollection.Remove(Key);
          DisplayInstance findInstance = FindDisplayInstance(_displayCollection, Key);
          _displayCollection.Remove(findInstance);
-         OnRefreshCollection(EventArgs.Empty);
+         OnCollectionChanged(EventArgs.Empty);
+         
+         if (FireRemovedEvent)
+         {
+            _ChangedAfterSave = true;
+            OnInstanceRemoved(EventArgs.Empty);
+
+            FindDuplicates();
+         }
+      }
+      
+      /// <summary>
+      /// Clear All Instance Data
+      /// </summary>
+      public void Clear()
+      {
+         if (HasInstances)
+         {
+            SaveCurrentUnitInfo();
+         }
+      
+         _instanceCollection.Clear();
+         _displayCollection.Clear();
+         _duplicateProjects.Clear();
+         _duplicateUserID.Clear();
+
+         // new config filename
+         _ConfigFilename = String.Empty;
+         // collection has not changed
+         _ChangedAfterSave = false;
+         
+         OnCollectionChanged(EventArgs.Empty);
       }
 
       /// <summary>
@@ -405,6 +626,153 @@ namespace HFM.Instances
                                                                    return instance.InstanceName.ToUpper() == instanceName.ToUpper();
                                                                 });
          return findInstance != null;
+      }
+
+      /// <summary>
+      /// Do a full retrieval operation
+      /// </summary>
+      public void DoRetrieval()
+      {
+         // get flag synchronous or asynchronous - we don't want this flag to change on us
+         // in the middle of a retrieve, so grab it now and use the local copy
+         bool Synchronous = PreferenceSet.Instance.SyncOnLoad;
+
+         // copy the current instance keys into local array
+         int numInstances = _instanceCollection.Count;
+         string[] instanceKeys = new string[numInstances];
+         _instanceCollection.Keys.CopyTo(instanceKeys, 0);
+
+         List<WaitHandle> waitHandleList = new List<WaitHandle>();
+         for (int i = 0; i < numInstances; )
+         {
+            waitHandleList.Clear();
+            // loop through the instances (can only handle up to 64 wait handles at a time)
+            for (int j = 0; j < 64 && i < numInstances; j++)
+            {
+               // try to get the key value from the collection, if the value is not found then
+               // the user removed a client in the middle of a retrieve process, ignore the key
+               ClientInstance Instance;
+               if (_instanceCollection.TryGetValue(instanceKeys[i], out Instance))
+               {
+                  if (Synchronous) // do the individual retrieves on a single thread
+                  {
+                     RetrieveInstance(Instance);
+                  }
+                  else // fire individual threads to do the their own retrieve simultaneously
+                  {
+                     IAsyncResult async = QueueNewRetrieval(Instance);
+
+                     // get the wait handle for each invoked delegate
+                     waitHandleList.Add(async.AsyncWaitHandle);
+                  }
+               }
+
+               i++; // increment the outer loop counter
+            }
+
+            if (Synchronous == false)
+            {
+               WaitHandle[] waitHandles = waitHandleList.ToArray();
+               // wait for all invoked threads to complete
+               WaitHandle.WaitAll(waitHandles);
+            }
+         }
+
+         // check for clients with duplicate Project (Run, Clone, Gen) or UserID
+         FindDuplicates();
+
+         // Save the benchmark collection
+         ProteinBenchmarkCollection.Instance.Serialize();
+      }
+
+      /// <summary>
+      /// Delegate used for asynchronous instance retrieval
+      /// </summary>
+      /// <param name="Instance"></param>
+      private delegate void RetrieveInstanceDelegate(ClientInstance Instance);
+
+      /// <summary>
+      /// Stick this Instance in the background thread queue to retrieve the info for the given Instance
+      /// </summary>
+      private IAsyncResult QueueNewRetrieval(ClientInstance Instance)
+      {
+         return new RetrieveInstanceDelegate(RetrieveInstance).BeginInvoke(Instance, null, null);
+      }
+
+      /// <summary>
+      /// Stub to execute retrieve and refresh display
+      /// </summary>
+      /// <param name="Instance"></param>
+      private void RetrieveInstance(ClientInstance Instance)
+      {
+         Instance.Retrieve();
+         // This event should signal the UI to update
+         OnInstanceRetrieved(EventArgs.Empty);
+      }
+
+      /// <summary>
+      /// Retrieve the given Client Instance
+      /// </summary>
+      /// <param name="InstanceName">Client Instance Name</param>
+      public void RetrieveSingleClient(string InstanceName)
+      {
+         RetrieveSingleClient(_instanceCollection[InstanceName]);
+      }
+
+      /// <summary>
+      /// Retrieve the given Client Instance
+      /// </summary>
+      /// <param name="Instance">Client Instance</param>
+      public void RetrieveSingleClient(ClientInstance Instance)
+      {
+         // fire the actual retrieval thread
+         new RetrieveInstanceDelegate(DoSingleClientRetieval).BeginInvoke(Instance, null, null);
+      }
+
+      /// <summary>
+      /// Do a single retrieval operation on the given Client Instance
+      /// </summary>
+      /// <param name="Instance">Client Instance</param>
+      private void DoSingleClientRetieval(ClientInstance Instance)
+      {
+         IAsyncResult async = QueueNewRetrieval(Instance);
+         async.AsyncWaitHandle.WaitOne();
+
+         // check for clients with duplicate Project (Run, Clone, Gen) or UserID
+         FindDuplicates();
+
+         // Save the benchmark collection
+         ProteinBenchmarkCollection.Instance.Serialize();
+      }
+      #endregion
+
+      #region Save UnitInfo Collection
+      /// <summary>
+      /// Serialize the Current UnitInfo Objects to disk
+      /// </summary>
+      public void SaveCurrentUnitInfo()
+      {
+         // If no clients loaded, stub out
+         if (HasInstances == false) return;
+         
+         DateTime Start = Debug.ExecStart;
+
+         UnitInfoCollection collection = UnitInfoCollection.Instance;
+
+         collection.Clear();
+
+         foreach (ClientInstance instance in _instanceCollection.Values)
+         {
+            // Don't save the UnitInfo object if the contained Project is Unknown
+            if (instance.CurrentUnitInfo.ProjectIsUnknown == false)
+            {
+               collection.Add(instance.CurrentUnitInfo);
+            }
+         }
+
+         collection.Serialize();
+
+         Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
       }
       #endregion
 
@@ -453,6 +821,79 @@ namespace HFM.Instances
       {
          DisplayInstance findInstance = FindDisplayInstance(_displayCollection, oldName);
          findInstance.UpdateName(newName);
+      }
+      #endregion
+
+      #region Duplicate UserID and Project Support
+      /// <summary>
+      /// Find Clients with Duplicate UserIDs or Project (R/C/G) - Issue 19
+      /// </summary>
+      private void FindDuplicates()
+      {
+         DateTime Start = Debug.ExecStart;
+
+         _duplicateUserID.Clear();
+         _duplicateProjects.Clear();
+
+         Hashtable userHash = new Hashtable(Count);
+         Hashtable projectHash = new Hashtable(Count);
+
+         foreach (ClientInstance instance in _instanceCollection.Values)
+         {
+            string PRCG = instance.CurrentUnitInfo.ProjectRunCloneGen;
+            if (projectHash.Contains(PRCG))
+            {
+               _duplicateProjects.Add(PRCG);
+            }
+            else
+            {
+               // don't add an unknown project
+               if (instance.CurrentUnitInfo.ProjectIsUnknown == false)
+               {
+                  projectHash.Add(instance.CurrentUnitInfo.ProjectRunCloneGen, null);
+               }
+            }
+
+            string UserAndMachineID = instance.UserAndMachineID;
+            if (userHash.Contains(UserAndMachineID))
+            {
+               _duplicateUserID.Add(UserAndMachineID);
+            }
+            else
+            {
+               // don't add an unknown User ID
+               if (instance.UserIDUnknown == false)
+               {
+                  userHash.Add(UserAndMachineID, null);
+               }
+            }
+         }
+
+         Debug.WriteToHfmConsole(TraceLevel.Info,
+                                 String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+
+         if (_duplicateUserID.Count > 0 || _duplicateProjects.Count > 0)
+         {
+            OnDuplicatesFound(EventArgs.Empty);
+         }
+      }
+
+      /// <summary>
+      /// Look for given Project (R/C/G) in list of Duplicates
+      /// </summary>
+      /// <param name="PRCG">The Project (R/C/G) to look for</param>
+      public bool IsDuplicateProject(string PRCG)
+      {
+         return _duplicateProjects.Contains(PRCG);
+      }
+
+      /// <summary>
+      /// Look for given User and Machine ID combination in list of Duplicates
+      /// </summary>
+      /// <param name="UserAndMachineID">The User and Machine ID to look for</param>
+      public bool IsDuplicateUserAndMachineID(string UserAndMachineID)
+      {
+         return _duplicateUserID.Contains(UserAndMachineID);
       }
       #endregion
 
