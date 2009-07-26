@@ -86,6 +86,8 @@ namespace HFM.Forms
          }
          chkOffline.Checked = Prefs.OfflineLast;
          chkShowUserStats.Checked = Prefs.ShowUserStats;
+         chkDuplicateUserID.Checked = Prefs.DuplicateUserIDCheck;
+         chkDuplicateProject.Checked = Prefs.DuplicateProjectCheck;
          cboPpdCalc.Items.Add(ePpdCalculation.LastFrame);
          cboPpdCalc.Items.Add(ePpdCalculation.LastThreeFrames);
          cboPpdCalc.Items.Add(ePpdCalculation.AllFrames);
@@ -535,6 +537,8 @@ namespace HFM.Forms
          Prefs.SyncOnSchedule = chkScheduled.Checked;
          Prefs.OfflineLast = chkOffline.Checked;
          Prefs.ShowUserStats = chkShowUserStats.Checked;
+         Prefs.DuplicateUserIDCheck = chkDuplicateUserID.Checked;
+         Prefs.DuplicateProjectCheck = chkDuplicateProject.Checked;
          Prefs.PpdCalculation = (ePpdCalculation)cboPpdCalc.SelectedItem;
          Prefs.SyncTimeMinutes = Int32.Parse(txtCollectMinutes.Text);
          Prefs.WebRoot = txtWebSiteBase.Text;
@@ -542,8 +546,15 @@ namespace HFM.Forms
 
       private void GetDataDefaultsTab()
       {
-         Prefs.UseDefaultConfigFile = chkDefaultConfig.Checked;
          Prefs.DefaultConfigFile = txtDefaultConfigFile.Text;
+         if (String.IsNullOrEmpty(Prefs.DefaultConfigFile))
+         {
+            Prefs.UseDefaultConfigFile = false;
+         }
+         else
+         {
+            Prefs.UseDefaultConfigFile = chkDefaultConfig.Checked;
+         }
          Prefs.AutoSaveConfig = chkAutoSave.Checked;
          Prefs.LogFileViewer = txtLogFileViewer.Text;
          Prefs.FileExplorer = txtFileExplorer.Text;

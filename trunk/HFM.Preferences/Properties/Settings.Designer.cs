@@ -487,5 +487,29 @@ namespace HFM.Preferences.Properties {
                 this["ShowUserStats"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DuplicateUserIDCheck {
+            get {
+                return ((bool)(this["DuplicateUserIDCheck"]));
+            }
+            set {
+                this["DuplicateUserIDCheck"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DuplicateProjectCheck {
+            get {
+                return ((bool)(this["DuplicateProjectCheck"]));
+            }
+            set {
+                this["DuplicateProjectCheck"] = value;
+            }
+        }
     }
 }

@@ -75,6 +75,14 @@ namespace HFM.Forms
          ScrollToEnd();
       }
 
+      private void txtMessages_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+      {
+         if (e.KeyCode == System.Windows.Forms.Keys.F7) //Close on F7 - Issue 74
+         {
+            Close();
+         }
+      }
+
       protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
       {
          Hide();

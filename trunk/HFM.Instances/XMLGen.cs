@@ -148,6 +148,23 @@ namespace HFM.Instances
 
          Array.Sort(instances, delegate(ClientInstance instance1, ClientInstance instance2)
                                {
+                                  if (PreferenceSet.Instance.OfflineLast) //Issue 78
+                                  {
+                                     if (instance1.Status.Equals(ClientStatus.Offline) &&
+                                         instance2.Status.Equals(ClientStatus.Offline))
+                                     {
+                                        return instance1.InstanceName.CompareTo(instance2.InstanceName);
+                                     }
+                                     else if (instance1.Status.Equals(ClientStatus.Offline))
+                                     {
+                                        return 1;
+                                     }
+                                     else if (instance2.Status.Equals(ClientStatus.Offline))
+                                     {
+                                        return -1;
+                                     }
+                                  }
+
                                   return instance1.InstanceName.CompareTo(instance2.InstanceName);
                                });
 

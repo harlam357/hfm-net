@@ -389,6 +389,31 @@ namespace HFM.Preferences
          }
       }
       #endregion
+      
+      #region Duplicate Checks
+      public event EventHandler DuplicateCheckChanged;
+      private bool _DuplicateUserIDCheck;
+      public bool DuplicateUserIDCheck
+      {
+         get { return _DuplicateUserIDCheck; }
+         set { _DuplicateUserIDCheck = value; }
+      }
+
+      private bool _DuplicateProjectCheck;
+      public bool DuplicateProjectCheck
+      {
+         get { return _DuplicateProjectCheck; }
+         set { _DuplicateProjectCheck = value; }
+      }
+      
+      protected void OnDuplicateCheckChanged(EventArgs e)
+      {
+         if (DuplicateCheckChanged != null)
+         {
+            DuplicateCheckChanged(this, e);
+         }
+      }
+      #endregion
 
       public static String AppPath
       {
@@ -578,6 +603,8 @@ namespace HFM.Preferences
          _MessageLevel = Settings.Default.MessageLevel;
          _DecimalPlaces = Settings.Default.DecimalPlaces;
          _ShowUserStats = Settings.Default.ShowUserStats;
+         _DuplicateUserIDCheck = Settings.Default.DuplicateUserIDCheck;
+         _DuplicateProjectCheck = Settings.Default.DuplicateProjectCheck;
          
          _AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
          _AppDataPath = Path.Combine(_AppDataPath, System.Reflection.Assembly.GetEntryAssembly().GetName().Name); ;
@@ -586,7 +613,7 @@ namespace HFM.Preferences
             Directory.CreateDirectory(_AppDataPath);
          }
 
-         Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+         System.Diagnostics.Debug.WriteLine(String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
       }
 
       private static void UpgradeUserSettings()
@@ -660,6 +687,20 @@ namespace HFM.Preferences
             Settings.Default.MessageLevel = _MessageLevel;
             Settings.Default.DecimalPlaces = _DecimalPlaces;
             Settings.Default.ShowUserStats = _ShowUserStats;
+            
+            #region Duplicate Checks
+            bool RaiseDuplicateCheckChanged = false;
+            if (Settings.Default.DuplicateUserIDCheck != _DuplicateUserIDCheck ||
+                Settings.Default.DuplicateProjectCheck != _DuplicateProjectCheck)
+            {
+               RaiseDuplicateCheckChanged = true;
+            }
+
+            Settings.Default.DuplicateUserIDCheck = _DuplicateUserIDCheck;
+            Settings.Default.DuplicateProjectCheck = _DuplicateProjectCheck;
+            
+            if (RaiseDuplicateCheckChanged) OnDuplicateCheckChanged(EventArgs.Empty);
+            #endregion
 
             Settings.Default.Save();
          }
@@ -667,7 +708,8 @@ namespace HFM.Preferences
          {
             Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
          }
-         Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+
+         System.Diagnostics.Debug.WriteLine(String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
       } 
       #endregion
 

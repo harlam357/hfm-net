@@ -54,12 +54,8 @@ namespace HFM.Forms
          this.locateWebFolder = new System.Windows.Forms.FolderBrowserDialog();
          this.tabControl1 = new System.Windows.Forms.TabControl();
          this.tabSchdTasks = new System.Windows.Forms.TabPage();
-         this.tabDefaults = new System.Windows.Forms.TabPage();
-         this.tabWeb = new System.Windows.Forms.TabPage();
-         this.tabVisStyles = new System.Windows.Forms.TabPage();
-         this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
-         this.toolTipPrefs = new System.Windows.Forms.ToolTip(this.components);
          this.grpUpdateData = new HFM.Classes.GroupBoxWrapper();
+         this.chkShowUserStats = new HFM.Classes.CheckBoxWrapper();
          this.label2 = new HFM.Classes.LabelWrapper();
          this.cboPpdCalc = new HFM.Classes.ComboBoxWrapper();
          this.chkOffline = new HFM.Classes.CheckBoxWrapper();
@@ -77,6 +73,7 @@ namespace HFM.Forms
          this.txtWebSiteBase = new HFM.Classes.TextBoxWrapper();
          this.lbl2WebSiteDir = new HFM.Classes.LabelWrapper();
          this.chkWebSiteGenerator = new HFM.Classes.CheckBoxWrapper();
+         this.tabDefaults = new System.Windows.Forms.TabPage();
          this.grpDecimalPlaces = new HFM.Classes.GroupBoxWrapper();
          this.udDecimalPlaces = new System.Windows.Forms.NumericUpDown();
          this.labelWrapper1 = new HFM.Classes.LabelWrapper();
@@ -97,6 +94,7 @@ namespace HFM.Forms
          this.btnBrowseConfigFile = new HFM.Classes.ButtonWrapper();
          this.txtDefaultConfigFile = new HFM.Classes.TextBoxWrapper();
          this.label1 = new HFM.Classes.LabelWrapper();
+         this.tabWeb = new System.Windows.Forms.TabPage();
          this.grpProjectDownload = new HFM.Classes.GroupBoxWrapper();
          this.txtProjectDownloadUrl = new HFM.Classes.TextBoxWrapper();
          this.label5 = new HFM.Classes.LabelWrapper();
@@ -121,27 +119,31 @@ namespace HFM.Forms
          this.lbl3ProxyUser = new HFM.Classes.LabelWrapper();
          this.lbl3Port = new HFM.Classes.LabelWrapper();
          this.lbl3Proxy = new HFM.Classes.LabelWrapper();
+         this.tabVisStyles = new System.Windows.Forms.TabPage();
          this.lbl1Preview = new HFM.Classes.LabelWrapper();
          this.lbl1Style = new HFM.Classes.LabelWrapper();
+         this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
+         this.toolTipPrefs = new System.Windows.Forms.ToolTip(this.components);
          this.btnOK = new HFM.Classes.ButtonWrapper();
          this.btnCancel = new HFM.Classes.ButtonWrapper();
-         this.chkShowUserStats = new HFM.Classes.CheckBoxWrapper();
+         this.chkDuplicateUserID = new HFM.Classes.CheckBoxWrapper();
+         this.chkDuplicateProject = new HFM.Classes.CheckBoxWrapper();
          this.tabControl1.SuspendLayout();
          this.tabSchdTasks.SuspendLayout();
-         this.tabDefaults.SuspendLayout();
-         this.tabWeb.SuspendLayout();
-         this.tabVisStyles.SuspendLayout();
          this.grpUpdateData.SuspendLayout();
          this.grpHTMLOutput.SuspendLayout();
+         this.tabDefaults.SuspendLayout();
          this.grpDecimalPlaces.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.udDecimalPlaces)).BeginInit();
          this.grpDebugMessageLevel.SuspendLayout();
          this.grpFileExplorer.SuspendLayout();
          this.grpLogFileViewer.SuspendLayout();
          this.grpDefaultConfig.SuspendLayout();
+         this.tabWeb.SuspendLayout();
          this.grpProjectDownload.SuspendLayout();
          this.grpWebStats.SuspendLayout();
          this.grpWebProxy.SuspendLayout();
+         this.tabVisStyles.SuspendLayout();
          this.SuspendLayout();
          // 
          // pnl1CSSSample
@@ -190,56 +192,10 @@ namespace HFM.Forms
          this.tabSchdTasks.Text = "Scheduled Tasks";
          this.tabSchdTasks.UseVisualStyleBackColor = true;
          // 
-         // tabDefaults
-         // 
-         this.tabDefaults.Controls.Add(this.grpDecimalPlaces);
-         this.tabDefaults.Controls.Add(this.grpDebugMessageLevel);
-         this.tabDefaults.Controls.Add(this.grpFileExplorer);
-         this.tabDefaults.Controls.Add(this.grpLogFileViewer);
-         this.tabDefaults.Controls.Add(this.grpDefaultConfig);
-         this.tabDefaults.Location = new System.Drawing.Point(4, 22);
-         this.tabDefaults.Name = "tabDefaults";
-         this.tabDefaults.Size = new System.Drawing.Size(501, 303);
-         this.tabDefaults.TabIndex = 4;
-         this.tabDefaults.Text = "Defaults";
-         this.tabDefaults.UseVisualStyleBackColor = true;
-         // 
-         // tabWeb
-         // 
-         this.tabWeb.BackColor = System.Drawing.SystemColors.Control;
-         this.tabWeb.Controls.Add(this.grpProjectDownload);
-         this.tabWeb.Controls.Add(this.grpWebStats);
-         this.tabWeb.Controls.Add(this.grpWebProxy);
-         this.tabWeb.Location = new System.Drawing.Point(4, 22);
-         this.tabWeb.Name = "tabWeb";
-         this.tabWeb.Padding = new System.Windows.Forms.Padding(3);
-         this.tabWeb.Size = new System.Drawing.Size(501, 303);
-         this.tabWeb.TabIndex = 1;
-         this.tabWeb.Text = "Web Settings";
-         this.tabWeb.UseVisualStyleBackColor = true;
-         // 
-         // tabVisStyles
-         // 
-         this.tabVisStyles.BackColor = System.Drawing.SystemColors.Control;
-         this.tabVisStyles.Controls.Add(this.pnl1CSSSample);
-         this.tabVisStyles.Controls.Add(this.lbl1Preview);
-         this.tabVisStyles.Controls.Add(this.StyleList);
-         this.tabVisStyles.Controls.Add(this.lbl1Style);
-         this.tabVisStyles.Location = new System.Drawing.Point(4, 22);
-         this.tabVisStyles.Name = "tabVisStyles";
-         this.tabVisStyles.Size = new System.Drawing.Size(501, 303);
-         this.tabVisStyles.TabIndex = 3;
-         this.tabVisStyles.Text = "Web Visual Styles";
-         this.tabVisStyles.UseVisualStyleBackColor = true;
-         // 
-         // openConfigDialog
-         // 
-         this.openConfigDialog.DefaultExt = "hfm";
-         this.openConfigDialog.Filter = "HFM Configuration Files|*.hfm";
-         this.openConfigDialog.RestoreDirectory = true;
-         // 
          // grpUpdateData
          // 
+         this.grpUpdateData.Controls.Add(this.chkDuplicateProject);
+         this.grpUpdateData.Controls.Add(this.chkDuplicateUserID);
          this.grpUpdateData.Controls.Add(this.chkShowUserStats);
          this.grpUpdateData.Controls.Add(this.label2);
          this.grpUpdateData.Controls.Add(this.cboPpdCalc);
@@ -251,15 +207,25 @@ namespace HFM.Forms
          this.grpUpdateData.Controls.Add(this.chkSynchronous);
          this.grpUpdateData.Location = new System.Drawing.Point(6, 9);
          this.grpUpdateData.Name = "grpUpdateData";
-         this.grpUpdateData.Size = new System.Drawing.Size(489, 126);
+         this.grpUpdateData.Size = new System.Drawing.Size(489, 154);
          this.grpUpdateData.TabIndex = 0;
          this.grpUpdateData.TabStop = false;
          this.grpUpdateData.Text = "Update Data";
          // 
+         // chkShowUserStats
+         // 
+         this.chkShowUserStats.AutoSize = true;
+         this.chkShowUserStats.Location = new System.Drawing.Point(246, 66);
+         this.chkShowUserStats.Name = "chkShowUserStats";
+         this.chkShowUserStats.Size = new System.Drawing.Size(126, 17);
+         this.chkShowUserStats.TabIndex = 9;
+         this.chkShowUserStats.Text = "Show EOC user stats";
+         this.chkShowUserStats.UseVisualStyleBackColor = true;
+         // 
          // label2
          // 
          this.label2.AutoSize = true;
-         this.label2.Location = new System.Drawing.Point(7, 96);
+         this.label2.Location = new System.Drawing.Point(7, 125);
          this.label2.Name = "label2";
          this.label2.Size = new System.Drawing.Size(123, 13);
          this.label2.TabIndex = 8;
@@ -269,7 +235,7 @@ namespace HFM.Forms
          // 
          this.cboPpdCalc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
          this.cboPpdCalc.FormattingEnabled = true;
-         this.cboPpdCalc.Location = new System.Drawing.Point(136, 93);
+         this.cboPpdCalc.Location = new System.Drawing.Point(136, 122);
          this.cboPpdCalc.Name = "cboPpdCalc";
          this.cboPpdCalc.Size = new System.Drawing.Size(109, 21);
          this.cboPpdCalc.TabIndex = 7;
@@ -348,7 +314,7 @@ namespace HFM.Forms
          this.grpHTMLOutput.Controls.Add(this.txtWebSiteBase);
          this.grpHTMLOutput.Controls.Add(this.lbl2WebSiteDir);
          this.grpHTMLOutput.Controls.Add(this.chkWebSiteGenerator);
-         this.grpHTMLOutput.Location = new System.Drawing.Point(6, 137);
+         this.grpHTMLOutput.Location = new System.Drawing.Point(6, 165);
          this.grpHTMLOutput.Name = "grpHTMLOutput";
          this.grpHTMLOutput.Size = new System.Drawing.Size(489, 76);
          this.grpHTMLOutput.TabIndex = 1;
@@ -444,6 +410,20 @@ namespace HFM.Forms
          this.chkWebSiteGenerator.Text = "Create a Web Site";
          this.chkWebSiteGenerator.UseVisualStyleBackColor = true;
          this.chkWebSiteGenerator.CheckedChanged += new System.EventHandler(this.chkWebSiteGenerator_CheckedChanged);
+         // 
+         // tabDefaults
+         // 
+         this.tabDefaults.Controls.Add(this.grpDecimalPlaces);
+         this.tabDefaults.Controls.Add(this.grpDebugMessageLevel);
+         this.tabDefaults.Controls.Add(this.grpFileExplorer);
+         this.tabDefaults.Controls.Add(this.grpLogFileViewer);
+         this.tabDefaults.Controls.Add(this.grpDefaultConfig);
+         this.tabDefaults.Location = new System.Drawing.Point(4, 22);
+         this.tabDefaults.Name = "tabDefaults";
+         this.tabDefaults.Size = new System.Drawing.Size(501, 303);
+         this.tabDefaults.TabIndex = 4;
+         this.tabDefaults.Text = "Defaults";
+         this.tabDefaults.UseVisualStyleBackColor = true;
          // 
          // grpDecimalPlaces
          // 
@@ -640,6 +620,20 @@ namespace HFM.Forms
          this.label1.Size = new System.Drawing.Size(52, 13);
          this.label1.TabIndex = 1;
          this.label1.Text = "Filename:";
+         // 
+         // tabWeb
+         // 
+         this.tabWeb.BackColor = System.Drawing.SystemColors.Control;
+         this.tabWeb.Controls.Add(this.grpProjectDownload);
+         this.tabWeb.Controls.Add(this.grpWebStats);
+         this.tabWeb.Controls.Add(this.grpWebProxy);
+         this.tabWeb.Location = new System.Drawing.Point(4, 22);
+         this.tabWeb.Name = "tabWeb";
+         this.tabWeb.Padding = new System.Windows.Forms.Padding(3);
+         this.tabWeb.Size = new System.Drawing.Size(501, 303);
+         this.tabWeb.TabIndex = 1;
+         this.tabWeb.Text = "Web Settings";
+         this.tabWeb.UseVisualStyleBackColor = true;
          // 
          // grpProjectDownload
          // 
@@ -889,6 +883,20 @@ namespace HFM.Forms
          this.lbl3Proxy.TabIndex = 1;
          this.lbl3Proxy.Text = "Proxy Server:";
          // 
+         // tabVisStyles
+         // 
+         this.tabVisStyles.BackColor = System.Drawing.SystemColors.Control;
+         this.tabVisStyles.Controls.Add(this.pnl1CSSSample);
+         this.tabVisStyles.Controls.Add(this.lbl1Preview);
+         this.tabVisStyles.Controls.Add(this.StyleList);
+         this.tabVisStyles.Controls.Add(this.lbl1Style);
+         this.tabVisStyles.Location = new System.Drawing.Point(4, 22);
+         this.tabVisStyles.Name = "tabVisStyles";
+         this.tabVisStyles.Size = new System.Drawing.Size(501, 303);
+         this.tabVisStyles.TabIndex = 3;
+         this.tabVisStyles.Text = "Web Visual Styles";
+         this.tabVisStyles.UseVisualStyleBackColor = true;
+         // 
          // lbl1Preview
          // 
          this.lbl1Preview.Location = new System.Drawing.Point(129, 6);
@@ -904,6 +912,12 @@ namespace HFM.Forms
          this.lbl1Style.Size = new System.Drawing.Size(84, 23);
          this.lbl1Style.TabIndex = 0;
          this.lbl1Style.Text = "Style Sheet";
+         // 
+         // openConfigDialog
+         // 
+         this.openConfigDialog.DefaultExt = "hfm";
+         this.openConfigDialog.Filter = "HFM Configuration Files|*.hfm";
+         this.openConfigDialog.RestoreDirectory = true;
          // 
          // btnOK
          // 
@@ -928,15 +942,25 @@ namespace HFM.Forms
          this.btnCancel.UseVisualStyleBackColor = true;
          this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
          // 
-         // chkShowUserStats
+         // chkDuplicateUserID
          // 
-         this.chkShowUserStats.AutoSize = true;
-         this.chkShowUserStats.Location = new System.Drawing.Point(246, 66);
-         this.chkShowUserStats.Name = "chkShowUserStats";
-         this.chkShowUserStats.Size = new System.Drawing.Size(126, 17);
-         this.chkShowUserStats.TabIndex = 9;
-         this.chkShowUserStats.Text = "Show EOC user stats";
-         this.chkShowUserStats.UseVisualStyleBackColor = true;
+         this.chkDuplicateUserID.AutoSize = true;
+         this.chkDuplicateUserID.Location = new System.Drawing.Point(10, 92);
+         this.chkDuplicateUserID.Name = "chkDuplicateUserID";
+         this.chkDuplicateUserID.Size = new System.Drawing.Size(189, 17);
+         this.chkDuplicateUserID.TabIndex = 10;
+         this.chkDuplicateUserID.Text = "Duplicate User/Machine ID check";
+         this.chkDuplicateUserID.UseVisualStyleBackColor = true;
+         // 
+         // chkDuplicateProject
+         // 
+         this.chkDuplicateProject.AutoSize = true;
+         this.chkDuplicateProject.Location = new System.Drawing.Point(246, 92);
+         this.chkDuplicateProject.Name = "chkDuplicateProject";
+         this.chkDuplicateProject.Size = new System.Drawing.Size(182, 17);
+         this.chkDuplicateProject.TabIndex = 11;
+         this.chkDuplicateProject.Text = "Duplicate Project (R/C/G) check";
+         this.chkDuplicateProject.UseVisualStyleBackColor = true;
          // 
          // frmPreferences
          // 
@@ -958,13 +982,11 @@ namespace HFM.Forms
          this.Shown += new System.EventHandler(this.frmPreferences_Shown);
          this.tabControl1.ResumeLayout(false);
          this.tabSchdTasks.ResumeLayout(false);
-         this.tabDefaults.ResumeLayout(false);
-         this.tabWeb.ResumeLayout(false);
-         this.tabVisStyles.ResumeLayout(false);
          this.grpUpdateData.ResumeLayout(false);
          this.grpUpdateData.PerformLayout();
          this.grpHTMLOutput.ResumeLayout(false);
          this.grpHTMLOutput.PerformLayout();
+         this.tabDefaults.ResumeLayout(false);
          this.grpDecimalPlaces.ResumeLayout(false);
          this.grpDecimalPlaces.PerformLayout();
          ((System.ComponentModel.ISupportInitialize)(this.udDecimalPlaces)).EndInit();
@@ -976,12 +998,14 @@ namespace HFM.Forms
          this.grpLogFileViewer.PerformLayout();
          this.grpDefaultConfig.ResumeLayout(false);
          this.grpDefaultConfig.PerformLayout();
+         this.tabWeb.ResumeLayout(false);
          this.grpProjectDownload.ResumeLayout(false);
          this.grpProjectDownload.PerformLayout();
          this.grpWebStats.ResumeLayout(false);
          this.grpWebStats.PerformLayout();
          this.grpWebProxy.ResumeLayout(false);
          this.grpWebProxy.PerformLayout();
+         this.tabVisStyles.ResumeLayout(false);
          this.ResumeLayout(false);
 
       }
@@ -1065,5 +1089,7 @@ namespace HFM.Forms
       private HFM.Classes.LabelWrapper labelWrapper1;
       private System.Windows.Forms.NumericUpDown udDecimalPlaces;
       private HFM.Classes.CheckBoxWrapper chkShowUserStats;
+      private HFM.Classes.CheckBoxWrapper chkDuplicateProject;
+      private HFM.Classes.CheckBoxWrapper chkDuplicateUserID;
    }
 }

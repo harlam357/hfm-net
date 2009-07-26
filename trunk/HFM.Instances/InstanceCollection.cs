@@ -239,19 +239,23 @@ namespace HFM.Instances
       /// if the path does not start with either ?: or \\</param>
       public void FromXml(string xmlDocName)
       {
+         if (String.IsNullOrEmpty(xmlDocName))
+         {
+            throw new ArgumentException("Argument 'xmlDocName' cannot be a null or empty string.", "xmlDocName");
+         }
+
          _ChangedAfterSave = false;
-         _ConfigFilename = xmlDocName;
 
          XmlDocument xmlData = new XmlDocument();
 
          // Load the XML file
-         if ((xmlDocName.Substring(1, 1) == ":") || (xmlDocName.StartsWith("\\\\")))
+         if (Path.IsPathRooted(xmlDocName))
          {
             xmlData.Load(xmlDocName);
          }
          else
          {
-            xmlData.Load(Path.Combine(PreferenceSet.Instance.AppDataPath, xmlDocName));
+            xmlData.Load(Path.Combine(PreferenceSet.AppPath, xmlDocName));
          }
 
          // xmlData now contains the collection of Nodes. Hopefully.
@@ -282,6 +286,7 @@ namespace HFM.Instances
 
          if (HasInstances)
          {
+            _ConfigFilename = xmlDocName;
             OnCollectionLoaded(EventArgs.Empty);
          }
       }
@@ -301,8 +306,11 @@ namespace HFM.Instances
       /// if the path does not start with either ?: or \\</param>
       public void ToXml(string xmlDocName)
       {
-         _ConfigFilename = xmlDocName;
-      
+         if (String.IsNullOrEmpty(xmlDocName))
+         {
+            throw new ArgumentException("Argument 'xmlDocName' cannot be a null or empty string.", "xmlDocName");
+         }
+
          XmlDocument xmlData = new XmlDocument();
 
          // Create the XML Declaration (well formed)
@@ -326,13 +334,14 @@ namespace HFM.Instances
          xmlData.AppendChild(xmlRoot);
 
          // Save the XML stream to the file
-         if ((xmlDocName.Substring(1, 1) == ":") || (xmlDocName.StartsWith("\\\\")))
+         if (Path.IsPathRooted(xmlDocName))
          {
             xmlData.Save(xmlDocName);
+            _ConfigFilename = xmlDocName;
          }
          else
          {
-            xmlData.Save(Path.Combine(PreferenceSet.Instance.AppDataPath, xmlDocName));
+            throw new ArgumentException(String.Format("Argument 'xmlDocName' must be a rooted path.  Given path '{0}'.", xmlDocName), "xmlDocName");
          }
          
          _ChangedAfterSave = false;
@@ -828,43 +837,55 @@ namespace HFM.Instances
       /// <summary>
       /// Find Clients with Duplicate UserIDs or Project (R/C/G) - Issue 19
       /// </summary>
-      private void FindDuplicates()
+      public void FindDuplicates()
       {
          DateTime Start = Debug.ExecStart;
 
          _duplicateUserID.Clear();
          _duplicateProjects.Clear();
 
+         PreferenceSet Prefs = PreferenceSet.Instance;
+
+         // If neither check is selected, just get out
+         if (Prefs.DuplicateProjectCheck == false && 
+             Prefs.DuplicateUserIDCheck == false) return;
+
          Hashtable userHash = new Hashtable(Count);
          Hashtable projectHash = new Hashtable(Count);
 
          foreach (ClientInstance instance in _instanceCollection.Values)
          {
-            string PRCG = instance.CurrentUnitInfo.ProjectRunCloneGen;
-            if (projectHash.Contains(PRCG))
+            if (Prefs.DuplicateProjectCheck)
             {
-               _duplicateProjects.Add(PRCG);
-            }
-            else
-            {
-               // don't add an unknown project
-               if (instance.CurrentUnitInfo.ProjectIsUnknown == false)
+               string PRCG = instance.CurrentUnitInfo.ProjectRunCloneGen;
+               if (projectHash.Contains(PRCG))
                {
-                  projectHash.Add(instance.CurrentUnitInfo.ProjectRunCloneGen, null);
+                  _duplicateProjects.Add(PRCG);
+               }
+               else
+               {
+                  // don't add an unknown project
+                  if (instance.CurrentUnitInfo.ProjectIsUnknown == false)
+                  {
+                     projectHash.Add(instance.CurrentUnitInfo.ProjectRunCloneGen, null);
+                  }
                }
             }
 
-            string UserAndMachineID = instance.UserAndMachineID;
-            if (userHash.Contains(UserAndMachineID))
+            if (Prefs.DuplicateUserIDCheck)
             {
-               _duplicateUserID.Add(UserAndMachineID);
-            }
-            else
-            {
-               // don't add an unknown User ID
-               if (instance.UserIDUnknown == false)
+               string UserAndMachineID = instance.UserAndMachineID;
+               if (userHash.Contains(UserAndMachineID))
                {
-                  userHash.Add(UserAndMachineID, null);
+                  _duplicateUserID.Add(UserAndMachineID);
+               }
+               else
+               {
+                  // don't add an unknown User ID
+                  if (instance.UserIDUnknown == false)
+                  {
+                     userHash.Add(UserAndMachineID, null);
+                  }
                }
             }
          }

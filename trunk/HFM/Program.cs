@@ -23,20 +23,33 @@ using System.Windows.Forms;
 
 namespace HFM
 {
-    static class Program
-    {
-        public static String[] cmdArgs;
+   static class Program
+   {
+      private static System.Threading.Mutex m;
 
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        static void Main(String[] argv)
-        {
-            cmdArgs = argv;
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Forms.frmMain());
-        }
-    }
+      public static String[] cmdArgs;
+
+      /// <summary>
+      /// The main entry point for the application.
+      /// </summary>
+      [STAThread]
+      static void Main(String[] argv)
+      {
+         bool ok;
+         m = new System.Threading.Mutex(true, "HFM", out ok);
+
+         if (ok == false)
+         {
+            MessageBox.Show("Another instance of HFM.NET is already running.");
+            return;
+         }
+
+         cmdArgs = argv;
+         Application.EnableVisualStyles();
+         Application.SetCompatibleTextRenderingDefault(false);
+         Application.Run(new Forms.frmMain());
+
+         GC.KeepAlive(m);
+      }
+   }
 }

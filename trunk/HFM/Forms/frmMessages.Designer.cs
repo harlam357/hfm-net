@@ -45,6 +45,7 @@ namespace HFM.Forms
          this.txtMessages.Size = new System.Drawing.Size(701, 455);
          this.txtMessages.TabIndex = 0;
          this.txtMessages.WordWrap = false;
+         this.txtMessages.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtMessages_KeyDown);
          // 
          // frmMessages
          // 

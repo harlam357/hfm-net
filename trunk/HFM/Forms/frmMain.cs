@@ -70,6 +70,11 @@ namespace HFM.Forms
       private SortOrder SortColumnOrder = SortOrder.None;
       
       /// <summary>
+      /// True when in the ApplySort() routine
+      /// </summary>
+      private bool InApplySort = false;
+      
+      /// <summary>
       /// Retrieval Timer Object (init 10 minutes)
       /// </summary>
       private readonly System.Timers.Timer workTimer = new System.Timers.Timer(600000);
@@ -177,6 +182,7 @@ namespace HFM.Forms
          Prefs.OfflineLastChanged += PreferenceSet_OfflineLastChanged;
          PreferenceSet_OfflineLastChanged(this, EventArgs.Empty);
          Prefs.MessageLevelChanged += PreferenceSet_MessageLevelChanged;
+         Prefs.DuplicateCheckChanged += PreferenceSet_DuplicateCheckChanged;
       }
 
       /// <summary>
@@ -217,30 +223,21 @@ namespace HFM.Forms
       {
          PreferenceSet Prefs = PreferenceSet.Instance;
       
-         String sFilename = String.Empty;
+         String Filename = String.Empty;
 
          if (Program.cmdArgs.Length > 0)
          {
             // Filename on command line - probably from Explorer
-            sFilename = Program.cmdArgs[0];
+            Filename = Program.cmdArgs[0];
          }
          else if (Prefs.UseDefaultConfigFile)
          {
-            sFilename = Prefs.DefaultConfigFile;
+            Filename = Prefs.DefaultConfigFile;
          }
 
-         if (sFilename != String.Empty)
+         if (String.IsNullOrEmpty(Filename) == false)
          {
-            try
-            {
-               LoadFile(sFilename);
-            }
-            catch (Exception ex)
-            {
-               // OK now this could be anything (even permissions), but we'll just write to the log and continue.
-               Debug.WriteToHfmConsole(TraceLevel.Warning,
-                                       String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-            }
+            DoLoadFile(Filename);
          }
          
          // Add the Index Changed Handler here after everything is shown
@@ -274,7 +271,7 @@ namespace HFM.Forms
             if (ShowInTaskbar == false)
             {
                ShowInTaskbar = true;
-               ApplySort(SortColumnOrder);
+               ApplySort();
             }
          }
          else
@@ -303,45 +300,28 @@ namespace HFM.Forms
             return;
          }
       
-         // Save column state data
-         // including order, column width and whether or not the column is visible
-         StringCollection stringCollection = new StringCollection();
-         int i = 0;
+         PreferenceSet Prefs = PreferenceSet.Instance;
 
-         foreach (DataGridViewColumn column in dataGridView1.Columns)
-         {
-            stringCollection.Add(String.Format(
-                "{0},{1},{2},{3}",
-                column.DisplayIndex.ToString("D2"),
-                column.Width,
-                column.Visible,
-                i++));
-         }
-
-         PreferenceSet.Instance.FormColumns = stringCollection;
-         if (dataGridView1.SortedColumn != null)
-         {
-            PreferenceSet.Instance.FormSortColumn = dataGridView1.SortedColumn.Name;
-         }
-         PreferenceSet.Instance.FormSortOrder = dataGridView1.SortOrder;
+         SaveColumnSettings(Prefs);
+         SaveSortColumn(Prefs);
 
          // Save location and size data
          // RestoreBounds remembers normal position if minimized or maximized
          if (WindowState == FormWindowState.Normal)
          {
-            PreferenceSet.Instance.FormLocation = Location;
-            PreferenceSet.Instance.FormSize = Size;
+            Prefs.FormLocation = Location;
+            Prefs.FormSize = Size;
          }
          else
          {
-            PreferenceSet.Instance.FormLocation = RestoreBounds.Location;
-            PreferenceSet.Instance.FormSize = RestoreBounds.Size;
+            Prefs.FormLocation = RestoreBounds.Location;
+            Prefs.FormSize = RestoreBounds.Size;
          }
 
-         PreferenceSet.Instance.FormLogVisible = txtLogFile.Visible;
+         Prefs.FormLogVisible = txtLogFile.Visible;
 
          // Save the data
-         PreferenceSet.Instance.Save();
+         Prefs.Save();
          
          // Save the data on current WUs in progress
          HostInstances.SaveCurrentUnitInfo();
@@ -360,9 +340,12 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
       {
+         PreferenceSet Prefs = PreferenceSet.Instance;
+
          // When the log file window (Panel2) is visible, this event will fire.
          // Update the split location directly from the split panel control. - Issue 8
-         PreferenceSet.Instance.FormSplitLocation = splitContainer1.SplitterDistance;
+         Prefs.FormSplitLocation = splitContainer1.SplitterDistance;
+         Prefs.Save();
       }
 
       /// <summary>
@@ -397,6 +380,11 @@ namespace HFM.Forms
                   column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                }
             }
+
+            PreferenceSet Prefs = PreferenceSet.Instance;
+
+            SaveColumnSettings(Prefs); // Save Column Settings - Issue 73
+            Prefs.Save();
          }
       }
 
@@ -446,8 +434,16 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void dataGridView1_Sorted(object sender, EventArgs e)
       {
-         SortColumnName = dataGridView1.SortedColumn.Name;
-         SortColumnOrder = dataGridView1.SortOrder;
+         if (InApplySort == false)
+         {
+            SortColumnName = dataGridView1.SortedColumn.Name;
+            SortColumnOrder = dataGridView1.SortOrder;
+
+            PreferenceSet Prefs = PreferenceSet.Instance;
+
+            SaveSortColumn(Prefs); // Save Column Sort Order - Issue 73
+            Prefs.Save();
+         }
       }
 
       /// <summary>
@@ -975,7 +971,7 @@ namespace HFM.Forms
             openConfigDialog.RestoreDirectory = true;
             if (openConfigDialog.ShowDialog() == DialogResult.OK)
             {
-               LoadFile(openConfigDialog.FileName);
+               DoLoadFile(openConfigDialog.FileName);
             }
          }
       }
@@ -1009,7 +1005,7 @@ namespace HFM.Forms
       
          if (saveConfigDialog.ShowDialog() == DialogResult.OK)
          {
-            HostInstances.ToXml(HostInstances.ConfigFilename);
+            HostInstances.ToXml(saveConfigDialog.FileName); // Issue 75
          }
       }
 
@@ -1821,7 +1817,7 @@ namespace HFM.Forms
                   }
                }
 
-               ApplySort(SortColumnOrder);
+               ApplySort();
             }
 
             RefreshControls();
@@ -1834,33 +1830,33 @@ namespace HFM.Forms
       }
 
       /// <summary>
-      /// Delegate used for Post-Message Invoke to UI Thread
-      /// </summary>
-      /// <param name="order"></param>
-      private delegate void ApplySortDelegate(SortOrder order);
-      
-      /// <summary>
       /// Apply Sort to Data Grid View
       /// </summary>
-      /// <param name="order"></param>
-      private void ApplySort(SortOrder order)
+      private void ApplySort()
       {
          if (InvokeRequired)
          {
-            BeginInvoke(new ApplySortDelegate(ApplySort), new object[] {order});
+            BeginInvoke(new MethodInvoker(ApplySort), null);
          }
          else
          {
-            if (SortColumnOrder.Equals(SortOrder.Ascending))
+            InApplySort = true;
+            
+            if (String.IsNullOrEmpty(SortColumnName) == false && SortColumnOrder.Equals(SortOrder.None) == false)
             {
-               dataGridView1.Sort(dataGridView1.Columns[SortColumnName], ListSortDirection.Ascending);
-               dataGridView1.SortedColumn.HeaderCell.SortGlyphDirection = SortColumnOrder;
+               if (SortColumnOrder.Equals(SortOrder.Ascending))
+               {
+                  dataGridView1.Sort(dataGridView1.Columns[SortColumnName], ListSortDirection.Ascending);
+                  dataGridView1.SortedColumn.HeaderCell.SortGlyphDirection = SortColumnOrder;
+               }
+               else if (SortColumnOrder.Equals(SortOrder.Descending))
+               {
+                  dataGridView1.Sort(dataGridView1.Columns[SortColumnName], ListSortDirection.Descending);
+                  dataGridView1.SortedColumn.HeaderCell.SortGlyphDirection = SortColumnOrder;
+               }
             }
-            else if (SortColumnOrder.Equals(SortOrder.Descending))
-            {
-               dataGridView1.Sort(dataGridView1.Columns[SortColumnName], ListSortDirection.Descending);
-               dataGridView1.SortedColumn.HeaderCell.SortGlyphDirection = SortColumnOrder;
-            }
+            
+            InApplySort = false;
          }
       }
 
@@ -2072,9 +2068,11 @@ namespace HFM.Forms
       /// </summary>
       private void RestoreFormPreferences()
       {
+         PreferenceSet Prefs = PreferenceSet.Instance;
+
          // Restore state data
-         Point location = PreferenceSet.Instance.FormLocation;
-         Size size = PreferenceSet.Instance.FormSize;
+         Point location = Prefs.FormLocation;
+         Size size = Prefs.FormSize;
 
          if (location.X != 0 && location.Y != 0)
          {
@@ -2084,25 +2082,25 @@ namespace HFM.Forms
          }
          if (size.Width != 0 && size.Height != 0)
          {
-            if (PreferenceSet.Instance.FormLogVisible == false)
+            if (Prefs.FormLogVisible == false)
             {
-               size = new Size(size.Width, size.Height + PreferenceSet.Instance.FormLogWindowHeight);
+               size = new Size(size.Width, size.Height + Prefs.FormLogWindowHeight);
             }
             Size = size;
-            splitContainer1.SplitterDistance = PreferenceSet.Instance.FormSplitLocation;
+            splitContainer1.SplitterDistance = Prefs.FormSplitLocation;
          }
 
-         if (PreferenceSet.Instance.FormLogVisible == false)
+         if (Prefs.FormLogVisible == false)
          {
             ShowHideLog(false);
          }
-         
-         if (PreferenceSet.Instance.FormSortColumn != String.Empty &&
-             PreferenceSet.Instance.FormSortOrder != SortOrder.None)
-         {
-            SortColumnName = PreferenceSet.Instance.FormSortColumn;
-            SortColumnOrder = PreferenceSet.Instance.FormSortOrder;
-         }
+
+         //if (Prefs.FormSortColumn != String.Empty &&
+         //    Prefs.FormSortOrder != SortOrder.None)
+         //{
+            SortColumnName = Prefs.FormSortColumn;
+            SortColumnOrder = Prefs.FormSortOrder;
+         //}
          
          try
          {
@@ -2130,7 +2128,41 @@ namespace HFM.Forms
             // This happens when the FormColumns setting is empty
          }
       }
-      
+
+      /// <summary>
+      /// Save Column Index, Width, and Visibility
+      /// </summary>
+      /// <param name="Prefs">Preferences Set</param>
+      private void SaveColumnSettings(PreferenceSet Prefs)
+      {
+         // Save column state data
+         // including order, column width and whether or not the column is visible
+         StringCollection stringCollection = new StringCollection();
+         int i = 0;
+
+         foreach (DataGridViewColumn column in dataGridView1.Columns)
+         {
+            stringCollection.Add(String.Format(
+                                    "{0},{1},{2},{3}",
+                                    column.DisplayIndex.ToString("D2"),
+                                    column.Width,
+                                    column.Visible,
+                                    i++));
+         }
+
+         Prefs.FormColumns = stringCollection;
+      }
+
+      /// <summary>
+      /// Save Sorted Column Name and Order
+      /// </summary>
+      /// <param name="Prefs">Preferences Set</param>
+      private void SaveSortColumn(PreferenceSet Prefs)
+      {
+         Prefs.FormSortColumn = SortColumnName;
+         Prefs.FormSortOrder = SortColumnOrder;
+      }
+
       /// <summary>
       /// Test current application status for changes; ask for confirmation if necessary.
       /// </summary>
@@ -2181,15 +2213,42 @@ namespace HFM.Forms
       }
 
       /// <summary>
+      /// Call LoadFile() and handle any thrown exceptions
+      /// </summary>
+      /// <param name="Filename">File to load</param>
+      private void DoLoadFile(string Filename)
+      {
+         try
+         {
+            LoadFile(Filename);
+         }
+         catch (FileNotFoundException fnfe)
+         {
+            Debug.WriteToHfmConsole(TraceLevel.Warning,
+                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, fnfe.Message));
+
+            MessageBox.Show(fnfe.Message, base.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+         }
+         catch (Exception ex)
+         {
+            // OK now this could be anything (even permissions)
+            Debug.WriteToHfmConsole(TraceLevel.Error,
+                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+
+            MessageBox.Show(ex.Message, base.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+         }
+      }
+
+      /// <summary>
       /// Loads a configuration file into memory
       /// </summary>
-      /// <param name="filename"></param>
-      private void LoadFile(string filename)
+      /// <param name="Filename">File to load</param>
+      private void LoadFile(string Filename)
       {
          // Clear the UI
          ClearUI();
          // Read the config file
-         HostInstances.FromXml(filename);
+         HostInstances.FromXml(Filename);
 
          if (HostInstances.HasInstances == false)
          {
@@ -2396,6 +2455,14 @@ namespace HFM.Forms
             TraceLevelSwitch.Instance.Level = newLevel;
             Debug.WriteToHfmConsole(String.Format("Debug Message Level Changed: {0}", newLevel));
          }
+      }
+
+      /// <summary>
+      /// Checks for Duplicates after Duplicate Check Preferences have changed
+      /// </summary>
+      private void PreferenceSet_DuplicateCheckChanged(object sender, EventArgs e)
+      {
+         HostInstances.FindDuplicates(); // Issue 81
       }
       #endregion
       
