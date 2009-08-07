@@ -196,7 +196,7 @@ namespace HFM.Helpers
       
       #region Constructor
       /// <summary>
-      /// Private Constructor to enforce Singleton pattern; loads preferences
+      /// Private Constructor to enforce Singleton pattern
       /// </summary>
       private UserStatsDataContainer()
       {

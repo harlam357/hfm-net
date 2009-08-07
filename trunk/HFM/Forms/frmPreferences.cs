@@ -339,7 +339,7 @@ namespace HFM.Forms
          {
             Debug.WriteToHfmConsole(TraceLevel.Error,
                                     String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-            MessageBox.Show(Properties.Resources.ProcessStartError, String.Format("EOC User Stats page"));
+            MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, "EOC User Stats page"));
          }
       }
 
@@ -353,7 +353,7 @@ namespace HFM.Forms
          {
             Debug.WriteToHfmConsole(TraceLevel.Error,
                                     String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-            MessageBox.Show(Properties.Resources.ProcessStartError, String.Format("Stanford User Stats page"));
+            MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, "Stanford User Stats page"));
          }
       }
 
@@ -367,7 +367,7 @@ namespace HFM.Forms
          {
             Debug.WriteToHfmConsole(TraceLevel.Error,
                                     String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-            MessageBox.Show(Properties.Resources.ProcessStartError, String.Format("EOC Team Stats page"));
+            MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, "EOC Team Stats page"));
          }
       }
 

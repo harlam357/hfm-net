@@ -1,5 +1,5 @@
 /*
- * HFM.NET - Instance Collection Helper Class
+ * HFM.NET - Instance Collection Class
  * Copyright (C) 2006-2007 David Rawling
  * Copyright (C) 2009 Ryan Harlamert (harlam357)
  *
@@ -19,7 +19,6 @@
  */
 
 using System;
-using System.Collections;
 using System.Diagnostics;
 using System.IO;
 using System.ComponentModel;
@@ -40,6 +39,7 @@ namespace HFM.Instances
    {
       public double PPD;
       public double UPD;
+      public Int32 TotalClients;
       public Int32 WorkingClients;
       public Int32 NonWorkingClients;
       public Int32 TotalCompletedUnits;
@@ -60,6 +60,9 @@ namespace HFM.Instances
       #endregion
       
       #region Members
+      /// <summary>
+      /// Total Number of Fields (Columns) available to the DataGridView
+      /// </summary>
       public const int NumberOfDisplayFields = 19;
       
       /// <summary>
@@ -194,7 +197,7 @@ namespace HFM.Instances
       /// </summary>
       public bool HasConfigFilename
       {
-         get { return _ConfigFilename != String.Empty; }
+         get { return _ConfigFilename.Length > 0; }
       }
 
       /// <summary>
@@ -320,17 +323,19 @@ namespace HFM.Instances
          // Create the root element
          XmlElement xmlRoot = xmlData.CreateElement("Hosts");
 
-         // Loop through the collection and serialize the lot
-         foreach (KeyValuePair<String, ClientInstance> de in _instanceCollection)
+         lock (_instanceCollection)
          {
-            ClientInstance fi = de.Value;
-            XmlDocument xmlDoc = fi.ToXml();
-
-            foreach (XmlNode xn in xmlDoc.ChildNodes)
+            // Loop through the collection and serialize the lot
+            foreach (ClientInstance instance in _instanceCollection.Values)
             {
-               xmlRoot.AppendChild(xmlData.ImportNode(xn, true));
+               XmlDocument xmlDoc = instance.ToXml();
+               foreach (XmlNode xn in xmlDoc.ChildNodes)
+               {
+                  xmlRoot.AppendChild(xmlData.ImportNode(xn, true));
+               }
             }
          }
+         
          xmlData.AppendChild(xmlRoot);
 
          // Save the XML stream to the file
@@ -548,19 +553,25 @@ namespace HFM.Instances
          }
       }
       
-      public void Edit(string oldName, string oldPath, ClientInstance Instance)
+      /// <summary>
+      /// Edit the ClientInstance Name and Path
+      /// </summary>
+      /// <param name="PreviousName">Previous Client Instance Name</param>
+      /// <param name="PreviousPath">Previous Client Instance Path</param>
+      /// <param name="Instance">Client Instance</param>
+      public void Edit(string PreviousName, string PreviousPath, ClientInstance Instance)
       {
          // if the host key changed
-         if (oldName != Instance.InstanceName)
+         if (PreviousName != Instance.InstanceName)
          {
-            UpdateDisplayInstanceName(oldName, Instance.InstanceName);
-            Remove(oldName, false);
+            UpdateDisplayInstanceName(PreviousName, Instance.InstanceName);
+            Remove(PreviousName, false);
             Add(Instance, false);
             
-            ProteinBenchmarkCollection.Instance.UpdateInstanceName(oldName, Instance.InstanceName);
+            ProteinBenchmarkCollection.Instance.UpdateInstanceName(PreviousName, Instance.InstanceName);
          }
          // if the path changed, update the paths in the benchmark collection
-         if (oldPath != Instance.Path)
+         if (PreviousPath != Instance.Path)
          {
             ProteinBenchmarkCollection.Instance.UpdateInstancePath(Instance.InstanceName, Instance.Path);
          }
@@ -627,14 +638,25 @@ namespace HFM.Instances
       /// <summary>
       /// Collection Contains Name
       /// </summary>
-      /// <param name="instanceName">Instance Name to search for</param>
-      public bool ContainsName(string instanceName)
+      /// <param name="InstanceName">Instance Name to search for</param>
+      public bool ContainsName(string InstanceName)
       {
          ClientInstance findInstance = new List<ClientInstance>(_instanceCollection.Values).Find(delegate(ClientInstance instance)
                                                                 {
-                                                                   return instance.InstanceName.ToUpper() == instanceName.ToUpper();
+                                                                   return instance.InstanceName.ToUpper() == InstanceName.ToUpper();
                                                                 });
          return findInstance != null;
+      }
+
+      /// <summary>
+      /// Get Array Representation of Current Client Instance objects in Collection
+      /// </summary>
+      public ClientInstance[] GetCurrentInstanceArray()
+      {
+         ClientInstance[] instances = new ClientInstance[Count];
+         _instanceCollection.Values.CopyTo(instances, 0);
+         
+         return instances;
       }
 
       /// <summary>
@@ -714,9 +736,12 @@ namespace HFM.Instances
       /// <param name="Instance"></param>
       private void RetrieveInstance(ClientInstance Instance)
       {
-         Instance.Retrieve();
-         // This event should signal the UI to update
-         OnInstanceRetrieved(EventArgs.Empty);
+         if (Instance.RetrievalInProgress == false)
+         {
+            Instance.Retrieve();
+            // This event should signal the UI to update
+            OnInstanceRetrieved(EventArgs.Empty);
+         }
       }
 
       /// <summary>
@@ -744,14 +769,17 @@ namespace HFM.Instances
       /// <param name="Instance">Client Instance</param>
       private void DoSingleClientRetieval(ClientInstance Instance)
       {
-         IAsyncResult async = QueueNewRetrieval(Instance);
-         async.AsyncWaitHandle.WaitOne();
+         if (Instance.RetrievalInProgress == false)
+         {
+            IAsyncResult async = QueueNewRetrieval(Instance);
+            async.AsyncWaitHandle.WaitOne();
 
-         // check for clients with duplicate Project (Run, Clone, Gen) or UserID
-         FindDuplicates();
+            // check for clients with duplicate Project (Run, Clone, Gen) or UserID
+            FindDuplicates();
 
-         // Save the benchmark collection
-         ProteinBenchmarkCollection.Instance.Serialize();
+            // Save the benchmark collection
+            ProteinBenchmarkCollection.Instance.Serialize();
+         }
       }
       #endregion
 
@@ -769,13 +797,16 @@ namespace HFM.Instances
          UnitInfoCollection collection = UnitInfoCollection.Instance;
 
          collection.Clear();
-
-         foreach (ClientInstance instance in _instanceCollection.Values)
+         
+         lock (_instanceCollection)
          {
-            // Don't save the UnitInfo object if the contained Project is Unknown
-            if (instance.CurrentUnitInfo.ProjectIsUnknown == false)
+            foreach (ClientInstance instance in _instanceCollection.Values)
             {
-               collection.Add(instance.CurrentUnitInfo);
+               // Don't save the UnitInfo object if the contained Project is Unknown
+               if (instance.CurrentUnitInfo.ProjectIsUnknown == false)
+               {
+                  collection.Add(instance.CurrentUnitInfo);
+               }
             }
          }
 
@@ -835,63 +866,11 @@ namespace HFM.Instances
 
       #region Duplicate UserID and Project Support
       /// <summary>
-      /// Find Clients with Duplicate UserIDs or Project (R/C/G) - Issue 19
+      /// Find Clients with Duplicate UserIDs or Project (R/C/G)
       /// </summary>
-      public void FindDuplicates()
+      public void FindDuplicates() // Issue 19
       {
-         DateTime Start = Debug.ExecStart;
-
-         _duplicateUserID.Clear();
-         _duplicateProjects.Clear();
-
-         PreferenceSet Prefs = PreferenceSet.Instance;
-
-         // If neither check is selected, just get out
-         if (Prefs.DuplicateProjectCheck == false && 
-             Prefs.DuplicateUserIDCheck == false) return;
-
-         Hashtable userHash = new Hashtable(Count);
-         Hashtable projectHash = new Hashtable(Count);
-
-         foreach (ClientInstance instance in _instanceCollection.Values)
-         {
-            if (Prefs.DuplicateProjectCheck)
-            {
-               string PRCG = instance.CurrentUnitInfo.ProjectRunCloneGen;
-               if (projectHash.Contains(PRCG))
-               {
-                  _duplicateProjects.Add(PRCG);
-               }
-               else
-               {
-                  // don't add an unknown project
-                  if (instance.CurrentUnitInfo.ProjectIsUnknown == false)
-                  {
-                     projectHash.Add(instance.CurrentUnitInfo.ProjectRunCloneGen, null);
-                  }
-               }
-            }
-
-            if (Prefs.DuplicateUserIDCheck)
-            {
-               string UserAndMachineID = instance.UserAndMachineID;
-               if (userHash.Contains(UserAndMachineID))
-               {
-                  _duplicateUserID.Add(UserAndMachineID);
-               }
-               else
-               {
-                  // don't add an unknown User ID
-                  if (instance.UserIDUnknown == false)
-                  {
-                     userHash.Add(UserAndMachineID, null);
-                  }
-               }
-            }
-         }
-
-         Debug.WriteToHfmConsole(TraceLevel.Info,
-                                 String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+         InstanceCollectionHelpers.FindDuplicates(_duplicateUserID, _duplicateProjects, _instanceCollection.Values);
 
          if (_duplicateUserID.Count > 0 || _duplicateProjects.Count > 0)
          {
@@ -925,40 +904,7 @@ namespace HFM.Instances
       /// <returns>Totals for all Instances (InstanceTotals Structure)</returns>
       public InstanceTotals GetInstanceTotals()
       {
-         InstanceTotals totals = new InstanceTotals();
-         
-         foreach (ClientInstance instance in _instanceCollection.Values)
-         {
-            totals.PPD += instance.CurrentUnitInfo.PPD;
-            totals.UPD += instance.CurrentUnitInfo.UPD;
-            totals.TotalCompletedUnits += instance.NumberOfCompletedUnitsSinceLastStart;
-            totals.TotalFailedUnits += instance.NumberOfFailedUnitsSinceLastStart;
-            
-            switch (instance.Status)
-            {
-               case ClientStatus.Running:
-               case ClientStatus.RunningNoFrameTimes:
-                  totals.WorkingClients++;
-                  break;
-               //case ClientStatus.Paused:
-               //   newPausedHosts++;
-               //   break;
-               //case ClientStatus.Hung:
-               //   newHungHosts++;
-               //   break;
-               //case ClientStatus.Stopped:
-               //   newStoppedHosts++;
-               //   break;
-               //case ClientStatus.Offline:
-               //case ClientStatus.Unknown:
-               //   newOfflineUnknownHosts++;
-               //   break;
-            }
-         }
-         
-         totals.NonWorkingClients = Count - totals.WorkingClients;
-
-         return totals;
+         return InstanceCollectionHelpers.GetInstanceTotals(_instanceCollection.Values);
       }
 
       /// <summary>

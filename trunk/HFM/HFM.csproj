@@ -271,6 +271,8 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>REM "$(DevEnvDir)..\..\SDK\v2.0\bin\mt.exe" -manifest "$(ProjectDir)$(TargetName).exe.manifest"  –outputresource:"$(TargetDir)$(TargetFileName)";#1</PostBuildEvent>
+    <PostBuildEvent>if $(ConfigurationName)==Debug goto End
+call ..\..\..\Deploy.bat ..\..\..\$(ConfigurationName)
+:End</PostBuildEvent>
   </PropertyGroup>
 </Project>

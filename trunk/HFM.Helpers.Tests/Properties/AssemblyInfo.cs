@@ -1,6 +1,5 @@
 ﻿/*
  * HFM.NET - Application Assembly Configuration
- * Copyright (C) 2006-2007 David Rawling
  * Copyright (C) 2009 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -24,11 +23,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("HFM.Helpers")]
+[assembly: AssemblyTitle("HFM.Helpers.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("harlam357")]
-[assembly: AssemblyProduct("HFM.Helpers")]
+[assembly: AssemblyProduct("HFM.Helpers.Tests")]
 [assembly: AssemblyCopyright("Copyright © Ryan Harlamert 2009.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -39,4 +38,5 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("13abd0b3-5b4f-40cf-ad54-6561642fa57c")]
+[assembly: Guid("37211429-f2be-4412-a3ae-e159e909e9b4")]
+

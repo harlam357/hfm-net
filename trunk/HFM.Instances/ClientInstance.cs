@@ -19,10 +19,13 @@
  */
 
 using System;
+using System.Globalization;
 using System.Drawing;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
+
 using HFM.Helpers;
 using HFM.Proteins;
 using HFM.Preferences;
@@ -84,13 +87,6 @@ namespace HFM.Instances
       public event EventHandler ClientIsOnVirtualMachineChanged;
       #endregion
 
-      #region Private Members
-      /// <summary>
-      /// Local flag set when log retrieval is in progress
-      /// </summary>
-      private bool _RetrievalInProgress = false;
-      #endregion
-
       #region Public Readonly Properties
       /// <summary>
       /// Log File Cache Directory
@@ -129,11 +125,25 @@ namespace HFM.Instances
       /// </summary>
       public bool UserIDUnknown
       {
-         get { return UserID == String.Empty; }
+         get { return UserID.Length == 0; }
       }
       #endregion
 
       #region Public Properties and Related Private Members
+
+      #region Retrieval In Progress Flag
+      /// <summary>
+      /// Local flag set when log retrieval is in progress
+      /// </summary>
+      private volatile bool _RetrievalInProgress = false;
+      /// <summary>
+      /// Local flag set when log retrieval is in progress
+      /// </summary>
+      public bool RetrievalInProgress
+      {
+         get { return _RetrievalInProgress; }
+      } 
+      #endregion
       
       #region User Specified Values (from the frmHost dialog)
       /// <summary>
@@ -326,10 +336,6 @@ namespace HFM.Instances
       public DateTime LastRetrievalTime
       {
          get { return _LastRetrievalTime; }
-         private set
-         {
-            _LastRetrievalTime = value;
-         }
       } 
       #endregion
 
@@ -842,84 +848,90 @@ namespace HFM.Instances
       /// </summary>
       public void Retrieve()
       {
-         bool success;
-         
-         switch (InstanceHostType)
+         if (_RetrievalInProgress)
          {
-            case InstanceType.PathInstance:
-               success = RetrievePathInstance();
-               break;
-            case InstanceType.HTTPInstance:
-               success = RetrieveHTTPInstance();
-               break;
-            case InstanceType.FTPInstance:
-               success = RetrieveFTPInstance();
-               break;
-            default:
-               throw new NotImplementedException(String.Format("Instance Type '{0}' is not implemented", InstanceHostType));
+            // Don't allow this to fire more than once at a time
+            return;
          }
-
-         // Clear the instance before
-         Clear();
-
-         if (success)
+         
+         try
          {
+            _RetrievalInProgress = true;
+         
+            switch (InstanceHostType)
+            {
+               case InstanceType.PathInstance:
+                  RetrievePathInstance();
+                  break;
+               case InstanceType.HTTPInstance:
+                  RetrieveHTTPInstance();
+                  break;
+               case InstanceType.FTPInstance:
+                  RetrieveFTPInstance();
+                  break;
+               default:
+                  throw new NotImplementedException(String.Format("Instance Type '{0}' is not implemented", InstanceHostType));
+            }
+
+            // Clear the Instance Level values before processing
+            Clear();
+            // Process the retrieved logs
             ProcessExisting();
          }
-         else
+         catch (Exception ex)
          {
+            Status = ClientStatus.Offline;
+            Debug.WriteToHfmConsole(TraceLevel.Error,
+                                    String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, InstanceName, ex.Message));
+
             // Clear the time based values when log retrieval fails
             CurrentUnitInfo.ClearTimeBasedValues();
          }
-         
+         finally
+         {
+            _RetrievalInProgress = false;
+         }
+
          Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Client Status: {2}", Debug.FunctionName, InstanceName, Status));
       }
 
       /// <summary>
       /// Retrieve the log and unit info files from the configured Local path
       /// </summary>
-      public bool RetrievePathInstance()
+      private void RetrievePathInstance()
       {
-         if (_RetrievalInProgress)
-         {
-            return false;
-         }
-
          DateTime Start = Debug.ExecStart;
 
          try
          {
-            _RetrievalInProgress = true;
-
             FileInfo fiLog = new FileInfo(System.IO.Path.Combine(Path, RemoteFAHLogFilename));
             string FAHLog_txt = System.IO.Path.Combine(BaseDirectory, CachedFAHLogName);
             FileInfo fiCachedLog = new FileInfo(FAHLog_txt);
 
             Debug.WriteToHfmConsole(TraceLevel.Verbose,
-                                    String.Format("{0} ({1}) FAHlog copy (start).", Debug.FunctionName,
-                                                  InstanceName));
+                                    String.Format("{0} ({1}) FAHlog copy (start).", Debug.FunctionName, InstanceName));
             if (fiLog.Exists)
             {
                if (fiCachedLog.Exists == false || fiLog.Length != fiCachedLog.Length)
                {
                   fiLog.CopyTo(FAHLog_txt, true);
                   Debug.WriteToHfmConsole(TraceLevel.Verbose,
-                                          String.Format("{0} ({1}) FAHlog copy (success).", Debug.FunctionName,
-                                                        InstanceName));
+                                          String.Format("{0} ({1}) FAHlog copy (success).", Debug.FunctionName, InstanceName));
                }
                else
                {
                   Debug.WriteToHfmConsole(TraceLevel.Verbose,
-                                          String.Format("{0} ({1}) FAHlog copy (file has not changed).", Debug.FunctionName,
-                                                        InstanceName));
+                                          String.Format("{0} ({1}) FAHlog copy (file has not changed).", Debug.FunctionName, InstanceName));
                }
             }
             else
             {
-               Status = ClientStatus.Offline;
-               Debug.WriteToHfmConsole(TraceLevel.Error,
-                                       String.Format("{0} ({1}) The path {2} is inaccessible.", Debug.FunctionName, InstanceName, fiLog.FullName));
-               return false;
+               //Status = ClientStatus.Offline;
+               //Debug.WriteToHfmConsole(TraceLevel.Error,
+               //                        String.Format("{0} ({1}) The path {2} is inaccessible.", Debug.FunctionName, InstanceName, fiLog.FullName));
+               //return false;
+               
+               throw new FileNotFoundException(String.Format("The path {0} is inaccessible", fiLog.FullName));
             }
 
             // Retrieve unitinfo.txt (or equivalent)
@@ -949,136 +961,92 @@ namespace HFM.Instances
                                                         InstanceName, fiUI.Length));
                }
             }
+            /*** Remove Requirement for UnitInfo to be Present ***/
+            //else
+            //{
+            //   Status = ClientStatus.Offline;
+            //   Debug.WriteToHfmConsole(TraceLevel.Error,
+            //                           String.Format("{0} ({1}) The path {2} is inaccessible.", Debug.FunctionName, InstanceName, fiUI.FullName));
+            //   return false;
+            //}
             else
             {
-               Status = ClientStatus.Offline;
-               Debug.WriteToHfmConsole(TraceLevel.Error,
+               Debug.WriteToHfmConsole(TraceLevel.Warning,
                                        String.Format("{0} ({1}) The path {2} is inaccessible.", Debug.FunctionName, InstanceName, fiUI.FullName));
-               return false;
             }
 
-            LastRetrievalTime = DateTime.Now;
-         }
-         catch (Exception ex)
-         {
-            Status = ClientStatus.Offline;
-            Debug.WriteToHfmConsole(TraceLevel.Error,
-                                    String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, InstanceName, ex.Message));
-
-            return false;
+            _LastRetrievalTime = DateTime.Now;
          }
          finally
          {
-            _RetrievalInProgress = false;
+            Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, InstanceName, Debug.GetExecTime(Start)));
          }
-         
-         Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, InstanceName, Debug.GetExecTime(Start)));
-
-         return true;
       }
 
       /// <summary>
       /// Retrieve the log and unit info files from the configured HTTP location
       /// </summary>
-      public bool RetrieveHTTPInstance()
+      private void RetrieveHTTPInstance()
       {
-         if (_RetrievalInProgress)
-         {
-            // Don't allow this to fire more than once at a time
-            return false;
-         }
-
          DateTime Start = Debug.ExecStart;
 
          try
          {
-            _RetrievalInProgress = true;
-
-            string HttpPath = String.Format("{0}{1}{2}", Path, "/", RemoteFAHLogFilename);
+            string HttpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Path, "/", RemoteFAHLogFilename);
             string LocalFile = System.IO.Path.Combine(BaseDirectory, CachedFAHLogName);
-
-            bool bFAHLog = NetworkOps.HttpDownloadHelper(HttpPath, LocalFile, Username, Password, InstanceName, DownloadType.FAHLog);
-            bool bUnitInfo = false;
-            if (bFAHLog)
-            {
-               HttpPath = String.Format("{0}{1}{2}", Path, "/", RemoteUnitInfoFilename);
-               LocalFile = System.IO.Path.Combine(BaseDirectory, CachedUnitInfoName);
-
-               bUnitInfo = NetworkOps.HttpDownloadHelper(HttpPath, LocalFile, Username, Password, InstanceName, DownloadType.UnitInfo);
-            }
+            NetworkOps.HttpDownloadHelper(HttpPath, LocalFile, InstanceName, Username, Password, DownloadType.FAHLog);
             
-            if ((bFAHLog && bUnitInfo) == false)
+            try
             {
-               return false;
+               HttpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Path, "/", RemoteUnitInfoFilename);
+               LocalFile = System.IO.Path.Combine(BaseDirectory, CachedUnitInfoName);
+               NetworkOps.HttpDownloadHelper(HttpPath, LocalFile, InstanceName, Username, Password, DownloadType.UnitInfo);
+            }
+            /*** Remove Requirement for UnitInfo to be Present ***/
+            catch (WebException ex)
+            {
+               Debug.WriteToHfmConsole(TraceLevel.Warning,
+                                       String.Format("{0} ({1}) unitinfo download threw exception {2}.", Debug.FunctionName, InstanceName, ex.Message));
             }
 
-            LastRetrievalTime = DateTime.Now;
-         }
-         catch (Exception ex)
-         {
-            Status = ClientStatus.Offline;
-            Debug.WriteToHfmConsole(TraceLevel.Error,
-                                    String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, InstanceName, ex.Message));
-            return false;
+            _LastRetrievalTime = DateTime.Now;
          }
          finally
          {
-            _RetrievalInProgress = false;
+            Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, InstanceName, Debug.GetExecTime(Start)));
          }
-
-         Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, InstanceName, Debug.GetExecTime(Start)));
-         
-         return true;
       }
 
       /// <summary>
       /// Retrieve the log and unit info files from the configured FTP location
       /// </summary>
-      public bool RetrieveFTPInstance()
+      private void RetrieveFTPInstance()
       {
-         if (_RetrievalInProgress)
-         {
-            // Don't allow this to fire more than once at a time
-            return false;
-         }
-
          DateTime Start = Debug.ExecStart;
 
          try
          {
-            _RetrievalInProgress = true;
-
-            string LocalFile = System.IO.Path.Combine(BaseDirectory, CachedFAHLogName);
-            bool bFAHLog = NetworkOps.FtpDownloadHelper(Server, Path, RemoteFAHLogFilename, LocalFile, Username, Password);
-            bool bUnitInfo = false;
-            if (bFAHLog)
-            {
-               LocalFile = System.IO.Path.Combine(BaseDirectory, CachedUnitInfoName);
-               bUnitInfo = NetworkOps.FtpDownloadHelper(Server, Path, RemoteUnitInfoFilename, LocalFile, Username, Password);
-            }
-
-            if ((bFAHLog && bUnitInfo) == false)
-            {
-               return false;
-            }
+            string LocalFilePath = System.IO.Path.Combine(BaseDirectory, CachedFAHLogName);
+            NetworkOps.FtpDownloadHelper(Server, Path, RemoteFAHLogFilename, LocalFilePath, Username, Password);
             
-            LastRetrievalTime = DateTime.Now;
-         }
-         catch (Exception ex)
-         {
-            Status = ClientStatus.Offline;
-            Debug.WriteToHfmConsole(TraceLevel.Error,
-                                    String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, InstanceName, ex.Message));
-            return false;
+            try
+            {
+               LocalFilePath = System.IO.Path.Combine(BaseDirectory, CachedUnitInfoName);
+               NetworkOps.FtpDownloadHelper(Server, Path, RemoteUnitInfoFilename, LocalFilePath, Username, Password);
+            }
+            /*** Remove Requirement for UnitInfo to be Present ***/
+            catch (WebException ex)
+            {
+               Debug.WriteToHfmConsole(TraceLevel.Warning,
+                                       String.Format("{0} ({1}) unitinfo download threw exception {2}.", Debug.FunctionName, InstanceName, ex.Message));
+            }
+
+            _LastRetrievalTime = DateTime.Now;
          }
          finally
          {
-            _RetrievalInProgress = false;
+            Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, InstanceName, Debug.GetExecTime(Start)));
          }
-
-         Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, InstanceName, Debug.GetExecTime(Start)));
-         
-         return true;
       }
       #endregion
 

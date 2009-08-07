@@ -19,23 +19,118 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Xml;
 
 using HFM.Preferences;
 using HFM.Helpers;
+using Debug=HFM.Instrumentation.Debug;
 
 namespace HFM.Instances
 {
    public static class XMLGen
    {
       /// <summary>
+      /// Generate HTML Pages
+      /// </summary>
+      /// <param name="FolderPath">Folder Path to place Generated Pages</param>
+      /// <param name="Instances">Client Instance Array</param>
+      public static void DoHtmlGeneration(string FolderPath, ClientInstance[] Instances)
+      {
+         StreamWriter sw = null;
+
+         try
+         {
+            // Get instance totals   
+            InstanceTotals totals = InstanceCollectionHelpers.GetInstanceTotals(Instances);
+
+            // Generate the index page XML
+            XmlDocument OverviewXml = CreateOverviewXml(totals);
+
+            // Generate the index page
+            sw = new StreamWriter(Path.Combine(FolderPath, "index.html"), false);
+            sw.Write(XMLOps.Transform(OverviewXml, "WebOverview.xslt"));
+            sw.Close();
+
+            // Generate the mobile index page
+            sw = new StreamWriter(Path.Combine(FolderPath, "mobile.html"), false);
+            sw.Write(XMLOps.Transform(OverviewXml, "WebMobileOverview.xslt"));
+            sw.Close();
+
+            // Generate the summart page XML
+            XmlDocument SummaryXml = CreateSummaryXml(Instances);
+
+            // Generate the summary page
+            sw = new StreamWriter(Path.Combine(FolderPath, "summary.html"), false);
+            sw.Write(XMLOps.Transform(SummaryXml, "WebSummary.xslt"));
+            sw.Close();
+
+            // Generate the mobile summary page
+            sw = new StreamWriter(Path.Combine(FolderPath, "mobilesummary.html"), false);
+            sw.Write(XMLOps.Transform(SummaryXml, "WebMobileSummary.xslt"));
+            sw.Close();
+
+            // Generate a page per instance
+            foreach (ClientInstance instance in Instances)
+            {
+               sw = new StreamWriter(Path.Combine(FolderPath, Path.ChangeExtension(instance.InstanceName, ".html")), false);
+               sw.Write(XMLOps.Transform(CreateInstanceXml(instance), "WebInstance.xslt"));
+               sw.Close();
+            }
+         }
+         finally
+         {
+            if (sw != null)
+            {
+               sw.Close();
+            }
+         }
+      }
+
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="Server">Server Name</param>
+      /// <param name="FtpPath">Path from FTP Server Root</param>
+      /// <param name="Username">FTP Server Username</param>
+      /// <param name="Password">FTP Server Password</param>
+      /// <param name="Instances">Client Instance Collection</param>
+      public static void DoWebFtpUpload(string Server, string FtpPath, string Username, string Password, ICollection<ClientInstance> Instances)
+      {
+         // Time FTP Upload Conversation - Issue 52
+         DateTime Start = Debug.ExecStart;
+
+         try
+         {
+            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.Combine(PreferenceSet.AppPath, "CSS"), PreferenceSet.Instance.CSSFileName), Username, Password);
+            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "index.html"), Username, Password);
+            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "summary.html"), Username, Password);
+            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "mobile.html"), Username, Password);
+            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "mobilesummary.html"), Username, Password);
+
+            foreach (ClientInstance instance in Instances)
+            {
+                  NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(),
+                                             Path.ChangeExtension(instance.InstanceName, ".html")),
+                                             Username, Password);
+            }
+         }
+         finally
+         {
+            // Time FTP Upload Conversation - Issue 52
+            Debug.WriteToHfmConsole(TraceLevel.Info,
+                                    String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+         }
+      }
+   
+      /// <summary>
       /// Generates and transforms data for an Instance
       /// </summary>
       /// <param name="Instance">Instance to use as data source</param>
       /// <returns>Generated Xml Document</returns>
-      public static XmlDocument InstanceXml(ClientInstance Instance)
+      private static XmlDocument CreateInstanceXml(ClientInstance Instance)
       {
          XmlDocument xmlDoc = new XmlDocument();
          xmlDoc.Load(Path.Combine(Path.Combine(PreferenceSet.AppPath, "XML"), "Instance.xml"));
@@ -50,11 +145,8 @@ namespace HFM.Instances
          //    </UnitInfo>
 
          xmlData.SetAttribute("Name", Instance.InstanceName);
-         FileVersionInfo fileVersionInfo =
-            FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetEntryAssembly().Location);
-         string Version = String.Format("v{0}.{1}.{2}.{3}", fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
-                                                            fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
-         XMLOps.setXmlNode(xmlData, "HFMVersion", Version);
+
+         XMLOps.setXmlNode(xmlData, "HFMVersion", PlatformOps.GetApplicationVersion());
 
          XMLOps.setXmlNode(xmlData, "UnitInfo/DateStarted", Instance.CurrentUnitInfo.DownloadTime.ToString("d MMMM yyyy hh:mm tt"));
          XMLOps.setXmlNode(xmlData, "UnitInfo/FramesComplete", String.Format("{0}", Instance.CurrentUnitInfo.FramesComplete));
@@ -107,7 +199,7 @@ namespace HFM.Instances
          XMLOps.setXmlNode(xmlData, "Protein/Credit", Instance.CurrentUnitInfo.CurrentProtein.Credit.ToString());
          XMLOps.setXmlNode(xmlData, "Protein/Frames", Instance.CurrentUnitInfo.CurrentProtein.Frames.ToString());
          XMLOps.setXmlNode(xmlData, "Protein/Core", Instance.CurrentUnitInfo.CurrentProtein.Core);
-         XMLOps.setXmlNode(xmlData, "Protein/Description", ProteinData.DescriptionFromURL(Instance.CurrentUnitInfo.CurrentProtein.Description));
+         XMLOps.setXmlNode(xmlData, "Protein/Description", NetworkOps.ProteinDescriptionFromUrl(Instance.CurrentUnitInfo.CurrentProtein.Description));
          XMLOps.setXmlNode(xmlData, "Protein/Contact", Instance.CurrentUnitInfo.CurrentProtein.Contact);
 
          //    <LastUpdatedDate>10 August 2006</LastUpdatedDate>
@@ -129,26 +221,25 @@ namespace HFM.Instances
       /// Generates the Summary page. xslTransform allows the calling method to select the appropriate transform.
       /// This allows the same summary method to generate the website page and the app page.
       /// </summary>
-      /// <param name="HostInstances">Collection of folding instances</param>
+      /// <param name="Instances">Array of folding instances</param>
       /// <returns>Generated Xml Document</returns>
-      public static XmlDocument SummaryXml(FoldingInstanceCollection HostInstances)
+      private static XmlDocument CreateSummaryXml(ClientInstance[] Instances)
       {
          XmlDocument xmlDoc = new XmlDocument();
          xmlDoc.Load(Path.Combine(Path.Combine(PreferenceSet.AppPath, "XML"), "Summary.xml"));
          XmlElement xmlRootData = xmlDoc.DocumentElement;
          
-         FileVersionInfo fileVersionInfo =
-            FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetEntryAssembly().Location);
-         string Version = String.Format("v{0}.{1}.{2}.{3}", fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
-                                                            fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
-         XMLOps.setXmlNode(xmlRootData, "HFMVersion", Version);
+         XMLOps.setXmlNode(xmlRootData, "HFMVersion", PlatformOps.GetApplicationVersion());
 
-         ClientInstance[] instances = new ClientInstance[HostInstances.Count];
-         HostInstances.InstanceCollection.Values.CopyTo(instances, 0);
+         List<string> duplicateUserID = new List<string>(Instances.Length);
+         List<string> duplicateProjects = new List<string>(Instances.Length);
+         
+         InstanceCollectionHelpers.FindDuplicates(duplicateUserID, duplicateProjects, Instances);
 
-         Array.Sort(instances, delegate(ClientInstance instance1, ClientInstance instance2)
+         Array.Sort(Instances, delegate(ClientInstance instance1, ClientInstance instance2)
                                {
-                                  if (PreferenceSet.Instance.OfflineLast) //Issue 78
+                                  // Make the HTML Summary respect the 'List Office Clients Last' option - Issue 78
+                                  if (PreferenceSet.Instance.OfflineLast)
                                   {
                                      if (instance1.Status.Equals(ClientStatus.Offline) &&
                                          instance2.Status.Equals(ClientStatus.Offline))
@@ -168,7 +259,7 @@ namespace HFM.Instances
                                   return instance1.InstanceName.CompareTo(instance2.InstanceName);
                                });
 
-         foreach (ClientInstance Instance in instances)
+         foreach (ClientInstance Instance in Instances)
          {
             XmlDocument xmlFrag = new XmlDocument();
             xmlFrag.Load(Path.Combine(Path.Combine(PreferenceSet.AppPath, "XML"), "SummaryFrag.xml"));
@@ -179,7 +270,7 @@ namespace HFM.Instances
             XMLOps.setXmlNode(xmlData, "StatusFontColor", ClientInstance.GetStatusHtmlFontColor(Instance.Status));
             XMLOps.setXmlNode(xmlData, "PercentComplete", Instance.CurrentUnitInfo.PercentComplete.ToString());
             XMLOps.setXmlNode(xmlData, "Name", Instance.InstanceName);
-            XMLOps.setXmlNode(xmlData, "UserIDDuplicate", HostInstances.IsDuplicateUserAndMachineID(Instance.UserAndMachineID).ToString());
+            XMLOps.setXmlNode(xmlData, "UserIDDuplicate", duplicateUserID.Contains(Instance.UserAndMachineID).ToString());
             XMLOps.setXmlNode(xmlData, "ClientType", Instance.CurrentUnitInfo.TypeOfClient.ToString());
             XMLOps.setXmlNode(xmlData, "TPF", Instance.CurrentUnitInfo.TimePerFrame.ToString());
             XMLOps.setXmlNode(xmlData, "PPD", String.Format("{0:" + PreferenceSet.GetPPDFormatString() + "}", Instance.CurrentUnitInfo.PPD));
@@ -190,7 +281,7 @@ namespace HFM.Instances
             XMLOps.setXmlNode(xmlData, "Core", Instance.CurrentUnitInfo.CurrentProtein.Core);
             XMLOps.setXmlNode(xmlData, "CoreVersion", Instance.CurrentUnitInfo.CoreVersion);
             XMLOps.setXmlNode(xmlData, "ProjectRunCloneGen", Instance.CurrentUnitInfo.ProjectRunCloneGen);
-            XMLOps.setXmlNode(xmlData, "ProjectDuplicate", HostInstances.IsDuplicateProject(Instance.CurrentUnitInfo.ProjectRunCloneGen).ToString());
+            XMLOps.setXmlNode(xmlData, "ProjectDuplicate", duplicateProjects.Contains(Instance.CurrentUnitInfo.ProjectRunCloneGen).ToString());
             XMLOps.setXmlNode(xmlData, "Credit", String.Format("{0:0}", Instance.CurrentUnitInfo.CurrentProtein.Credit));
             XMLOps.setXmlNode(xmlData, "Completed", Instance.NumberOfCompletedUnitsSinceLastStart.ToString());
             XMLOps.setXmlNode(xmlData, "Failed", Instance.NumberOfFailedUnitsSinceLastStart.ToString());
@@ -219,21 +310,15 @@ namespace HFM.Instances
       /// Generates the Overview page. xslTransform allows the calling method to select the appropriate transform.
       /// This allows the same overview method to generate the website page and the app page.
       /// </summary>
-      /// <param name="HostInstances">Collection of folding instances</param>
+      /// <param name="Totals">Instance Totals</param>
       /// <returns>Generated Xml Document</returns>
-      public static XmlDocument OverviewXml(FoldingInstanceCollection HostInstances)
+      private static XmlDocument CreateOverviewXml(InstanceTotals Totals)
       {
-         InstanceTotals totals = HostInstances.GetInstanceTotals();
-
          XmlDocument xmlDoc = new XmlDocument();
          xmlDoc.Load(Path.Combine(Path.Combine(PreferenceSet.AppPath, "XML"), "Overview.xml"));
          XmlElement xmlData = xmlDoc.DocumentElement;
 
-         FileVersionInfo fileVersionInfo =
-            FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetEntryAssembly().Location);
-         string Version = String.Format(" v{0}.{1}.{2}.{3}", fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
-                                                             fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
-         XMLOps.setXmlNode(xmlData, "HFMVersion", Version);
+         XMLOps.setXmlNode(xmlData, "HFMVersion", PlatformOps.GetApplicationVersion());
 
          //<Overview>
          //    <TotalHosts>0</TotalHosts>
@@ -241,9 +326,9 @@ namespace HFM.Instances
          //    <BadHosts>0</BadHosts>
          //</Overview>
 
-         XMLOps.setXmlNode(xmlData, "TotalHosts", HostInstances.Count.ToString());
-         XMLOps.setXmlNode(xmlData, "GoodHosts", totals.WorkingClients.ToString());
-         XMLOps.setXmlNode(xmlData, "BadHosts", totals.NonWorkingClients.ToString());
+         XMLOps.setXmlNode(xmlData, "TotalHosts", Totals.TotalClients.ToString());
+         XMLOps.setXmlNode(xmlData, "GoodHosts", Totals.WorkingClients.ToString());
+         XMLOps.setXmlNode(xmlData, "BadHosts", Totals.NonWorkingClients.ToString());
 
          //    <EstPPD>0.00</EstPPD>
          //    <EstPPW>0.00</EstPPW>
@@ -251,22 +336,22 @@ namespace HFM.Instances
          //    <EstUPW>0.00</EstUPW>
          
          string PPDFormatString = PreferenceSet.GetPPDFormatString();
-         XMLOps.setXmlNode(xmlData, "EstPPD", String.Format("{0:" + PPDFormatString + "}", totals.PPD));
-         XMLOps.setXmlNode(xmlData, "EstPPW", String.Format("{0:" + PPDFormatString + "}", totals.PPD * 7));
-         XMLOps.setXmlNode(xmlData, "EstUPD", String.Format("{0:" + PPDFormatString + "}", totals.UPD));
-         XMLOps.setXmlNode(xmlData, "EstUPW", String.Format("{0:" + PPDFormatString + "}", totals.UPD * 7));
+         XMLOps.setXmlNode(xmlData, "EstPPD", String.Format("{0:" + PPDFormatString + "}", Totals.PPD));
+         XMLOps.setXmlNode(xmlData, "EstPPW", String.Format("{0:" + PPDFormatString + "}", Totals.PPD * 7));
+         XMLOps.setXmlNode(xmlData, "EstUPD", String.Format("{0:" + PPDFormatString + "}", Totals.UPD));
+         XMLOps.setXmlNode(xmlData, "EstUPW", String.Format("{0:" + PPDFormatString + "}", Totals.UPD * 7));
 
          //    <AvEstPPD>0.00</AvEstPPD>
          //    <AvEstPPW>0.00</AvEstPPW>
          //    <AvEstUPD>0.00</AvEstUPD>
          //    <AvEstUPW>0.00</AvEstUPW>
 
-         if (totals.WorkingClients > 0)
+         if (Totals.WorkingClients > 0)
          {
-            XMLOps.setXmlNode(xmlData, "AvEstPPD", String.Format("{0:" + PPDFormatString + "}", totals.PPD / totals.WorkingClients));
-            XMLOps.setXmlNode(xmlData, "AvEstPPW", String.Format("{0:" + PPDFormatString + "}", totals.PPD * 7 / totals.WorkingClients));
-            XMLOps.setXmlNode(xmlData, "AvEstUPD", String.Format("{0:" + PPDFormatString + "}", totals.UPD / totals.WorkingClients));
-            XMLOps.setXmlNode(xmlData, "AvEstUPW", String.Format("{0:" + PPDFormatString + "}", totals.UPD * 7 / totals.WorkingClients));
+            XMLOps.setXmlNode(xmlData, "AvEstPPD", String.Format("{0:" + PPDFormatString + "}", Totals.PPD / Totals.WorkingClients));
+            XMLOps.setXmlNode(xmlData, "AvEstPPW", String.Format("{0:" + PPDFormatString + "}", Totals.PPD * 7 / Totals.WorkingClients));
+            XMLOps.setXmlNode(xmlData, "AvEstUPD", String.Format("{0:" + PPDFormatString + "}", Totals.UPD / Totals.WorkingClients));
+            XMLOps.setXmlNode(xmlData, "AvEstUPW", String.Format("{0:" + PPDFormatString + "}", Totals.UPD * 7 / Totals.WorkingClients));
          }
          else
          {
@@ -281,8 +366,8 @@ namespace HFM.Instances
          //    <LastUpdatedDate>Now</LastUpdatedDate>
          //    <LastUpdatedTime>Now</LastUpdatedTime>
 
-         XMLOps.setXmlNode(xmlData, "TotalCompleted", totals.TotalCompletedUnits.ToString());
-         XMLOps.setXmlNode(xmlData, "TotalFailed", totals.TotalFailedUnits.ToString());
+         XMLOps.setXmlNode(xmlData, "TotalCompleted", Totals.TotalCompletedUnits.ToString());
+         XMLOps.setXmlNode(xmlData, "TotalFailed", Totals.TotalFailedUnits.ToString());
          XMLOps.setXmlNode(xmlData, "LastUpdatedDate", DateTime.Now.ToLongDateString());
          XMLOps.setXmlNode(xmlData, "LastUpdatedTime", DateTime.Now.ToLongTimeString());
 

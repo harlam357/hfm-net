@@ -29,7 +29,6 @@ using System.Drawing;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.Xml;
 
 using HFM.Classes;
 using HFM.Helpers;
@@ -134,10 +133,7 @@ namespace HFM.Forms
          InitializeComponent();
 
          // Set Main Form Text
-         FileVersionInfo fileVersionInfo =
-            FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetEntryAssembly().Location);
-         base.Text += String.Format(" v{0}.{1}.{2} - Build {3} - Beta", fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
-                                                                        fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
+         base.Text += String.Format(" v{0} - Beta", PlatformOps.GetApplicationLabelVersion());
 
          // Create Messages Window
          _frmMessages = new frmMessages();
@@ -905,7 +901,7 @@ namespace HFM.Forms
          }
          if (e.Button == System.Windows.Forms.MouseButtons.Left && e.Clicks == 2)
          {
-            if (hti.Type == DataGridViewHitTestType.Cell)
+            if (hti.Type == DataGridViewHitTestType.Cell && dataGridView1.SelectedRows.Count > 0)
             {
                ClientInstance Instance =
                   HostInstances.InstanceCollection[dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString()];
@@ -920,7 +916,7 @@ namespace HFM.Forms
                   {
                      Debug.WriteToHfmConsole(TraceLevel.Error,
                                              String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-                     MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, String.Format("client '{0}' files.\n\nPlease check the current File Explorer defined in the Preferences", Instance.InstanceName)));
+                     MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, String.Format("client '{0}' files.{1}{1}Please check the current File Explorer defined in the Preferences", Instance.InstanceName, Environment.NewLine)));
                   }
                }
             }
@@ -1337,7 +1333,7 @@ namespace HFM.Forms
             {
                Debug.WriteToHfmConsole(TraceLevel.Error,
                                        String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-               MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, String.Format("client '{0}' FAHlog file.\n\nPlease check the current Log File Viewer defined in the Preferences", Instance.InstanceName)));
+               MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, String.Format("client '{0}' FAHlog file.{1}{1}Please check the current Log File Viewer defined in the Preferences", Instance.InstanceName, Environment.NewLine)));
             }
          }
          else
@@ -1367,7 +1363,7 @@ namespace HFM.Forms
             {
                Debug.WriteToHfmConsole(TraceLevel.Error,
                                        String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
-               MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, String.Format("client '{0}' files.\n\nPlease check the current File Explorer defined in the Preferences", Instance.InstanceName)));
+               MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, String.Format("client '{0}' files.{1}{1}Please check the current File Explorer defined in the Preferences", Instance.InstanceName, Environment.NewLine)));
             }
          }
       }
@@ -1584,14 +1580,15 @@ namespace HFM.Forms
          {
             if (match.Success)
             {
-               DoHtmlGeneration(Path.GetTempPath());
+               ClientInstance[] instances = HostInstances.GetCurrentInstanceArray();
+               XMLGen.DoHtmlGeneration(Path.GetTempPath(), instances);
 
                string Server = match.Result("${domain}");
                string FtpPath = match.Result("${file}");
                string Username = match.Result("${username}");
                string Password = match.Result("${password}");
 
-               DoWebFtpUpload(Prefs, Server, FtpPath, Username, Password);
+               XMLGen.DoWebFtpUpload(Server, FtpPath, Username, Password, instances);
             }
             else
             {
@@ -1608,7 +1605,7 @@ namespace HFM.Forms
                   File.Copy(sCSSFileName, Path.Combine(Prefs.WebRoot, Prefs.CSSFileName), true);
                }
 
-               DoHtmlGeneration(Prefs.WebRoot);
+               XMLGen.DoHtmlGeneration(Prefs.WebRoot, HostInstances.GetCurrentInstanceArray());
             }
          }
          catch (Exception ex)
@@ -1618,92 +1615,6 @@ namespace HFM.Forms
          finally
          {
             StartWebGenTimer();
-            Debug.WriteToHfmConsole(TraceLevel.Info,
-                                    String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
-         }
-      }
-
-      /// <summary>
-      /// Generate HTML Pages
-      /// </summary>
-      /// <param name="FolderPath">Folder Path to place Generated Pages</param>
-      private void DoHtmlGeneration(string FolderPath)
-      {
-         StreamWriter sw = null;
-      
-         try
-         {
-            // Generate the index page XML
-            XmlDocument OverviewXml = XMLGen.OverviewXml(HostInstances);
-         
-            // Generate the index page
-            sw = new StreamWriter(Path.Combine(FolderPath, "index.html"), false);
-            sw.Write(XMLOps.Transform(OverviewXml, "WebOverview.xslt"));
-            sw.Close();
-
-            // Generate the mobile index page
-            sw = new StreamWriter(Path.Combine(FolderPath, "mobile.html"), false);
-            sw.Write(XMLOps.Transform(OverviewXml, "WebMobileOverview.xslt"));
-            sw.Close();
-
-            // Generate the summart page XML
-            XmlDocument SummaryXml = XMLGen.SummaryXml(HostInstances);
-
-            // Generate the summary page
-            sw = new StreamWriter(Path.Combine(FolderPath, "summary.html"), false);
-            sw.Write(XMLOps.Transform(SummaryXml, "WebSummary.xslt"));
-            sw.Close();
-
-            // Generate the mobile summary page
-            sw = new StreamWriter(Path.Combine(FolderPath, "mobilesummary.html"), false);
-            sw.Write(XMLOps.Transform(SummaryXml, "WebMobileSummary.xslt"));
-            sw.Close();
-
-            // Generate a page per instance
-            foreach (ClientInstance instance in HostInstances.InstanceCollection.Values)
-            {
-               sw = new StreamWriter(Path.Combine(FolderPath, Path.ChangeExtension(instance.InstanceName, ".html")), false);
-               sw.Write(XMLOps.Transform(XMLGen.InstanceXml(instance), "WebInstance.xslt"));
-               sw.Close();
-            }
-         }
-         finally
-         {
-            if (sw != null)
-            {
-               sw.Close();
-            }
-         }
-      }
-
-      /// <summary>
-      /// 
-      /// </summary>
-      /// <param name="Prefs">PreferenceSet Instance</param>
-      /// <param name="Server">Server Name</param>
-      /// <param name="FtpPath">Path from FTP Server Root</param>
-      /// <param name="Username">FTP Server Username</param>
-      /// <param name="Password">FTP Server Password</param>
-      private void DoWebFtpUpload(PreferenceSet Prefs, string Server, string FtpPath, string Username, string Password)
-      {
-         // Time FTP Upload Conversation - Issue 52
-         DateTime Start = Debug.ExecStart;
-         
-         try 
-         {
-            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.Combine(PreferenceSet.AppPath, "CSS"), Prefs.CSSFileName), Username, Password);
-            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "index.html"), Username, Password);
-            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "summary.html"), Username, Password);
-            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "mobile.html"), Username, Password);
-            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "mobilesummary.html"), Username, Password);
-            foreach (ClientInstance instance in HostInstances.InstanceCollection.Values)
-            {
-               NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), Path.ChangeExtension(instance.InstanceName, ".html")), Username, Password);
-            }
-         }
-         finally
-         {
-            // Time FTP Upload Conversation - Issue 52
             Debug.WriteToHfmConsole(TraceLevel.Info,
                                     String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
          }
@@ -1822,6 +1733,10 @@ namespace HFM.Forms
 
             RefreshControls();
          }
+         // This can happen when exiting the app in the middle of a retrieval process.
+         // TODO: When implementing retrieval thread cancelling, cancel the the retrieval
+         // thread on shutdown before allowing the app to exit.  Should be able to remove
+         // this catch at that point.
          catch (ObjectDisposedException ex)
          {
             Debug.WriteToHfmConsole(TraceLevel.Error,
@@ -1870,8 +1785,8 @@ namespace HFM.Forms
          double TotalPPD = totals.PPD;
          int GoodHosts = totals.WorkingClients;
          
-         SetNotifyIconText(String.Format("{0} Clients Working\n{1} Clients Offline\n{2:" + PreferenceSet.GetPPDFormatString() + "} PPD",
-                                         GoodHosts, totals.NonWorkingClients, TotalPPD));
+         SetNotifyIconText(String.Format("{0} Clients Working{3}{1} Clients Offline{3}{2:" + PreferenceSet.GetPPDFormatString() + "} PPD",
+                                         GoodHosts, totals.NonWorkingClients, TotalPPD, Environment.NewLine));
          RefreshStatusLabels(GoodHosts, TotalPPD);
       }
 
@@ -2173,7 +2088,7 @@ namespace HFM.Forms
       {
          if (HostInstances.ChangedAfterSave)
          {
-            DialogResult qResult = MessageBox.Show("There are changes to the configuration that have not been saved.  Would you like to save these changes?\n\nYes - Continue and save the changes / No - Continue and do not save the changes / Cancel - Do not continue", base.Text, MessageBoxButtons.YesNoCancel);
+            DialogResult qResult = MessageBox.Show(this, String.Format("There are changes to the configuration that have not been saved.  Would you like to save these changes?{0}{0}Yes - Continue and save the changes / No - Continue and do not save the changes / Cancel - Do not continue", Environment.NewLine), base.Text, MessageBoxButtons.YesNoCancel);
             switch (qResult)
             {
                case DialogResult.Yes:
@@ -2270,7 +2185,7 @@ namespace HFM.Forms
 
          if (HostInstances.HasInstances == false)
          {
-            MessageBox.Show(this, "No client configurations were imported from the given config file.\n\nPossibly because the file is in an older FahMon format (not tab delimited).\n\nLater versions of FahMon write a clientstab.txt file in tab delimited format.", 
+            MessageBox.Show(this, String.Format("No client configurations were imported from the given config file.{0}{0}Possibly because the file is in an older FahMon format (not tab delimited).{0}{0}Later versions of FahMon write a clientstab.txt file in tab delimited format.", Environment.NewLine), 
                Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
          }
       }

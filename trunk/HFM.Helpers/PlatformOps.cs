@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Diagnostics;
 
 namespace HFM.Helpers
 {
@@ -26,6 +27,22 @@ namespace HFM.Helpers
       public static bool IsRunningOnMono()
       {
          return Type.GetType("Mono.Runtime") != null;
+      }
+      
+      public static string GetApplicationVersion()
+      {
+         FileVersionInfo fileVersionInfo =
+            FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetEntryAssembly().Location);
+         return String.Format("v{0}.{1}.{2}.{3}", fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
+                                                  fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
+      }
+
+      public static string GetApplicationLabelVersion()
+      {
+         FileVersionInfo fileVersionInfo =
+            FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetEntryAssembly().Location);
+         return String.Format("{0}.{1}.{2} - Build {3}", fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
+                                                         fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
       }
    }
 }

@@ -48,6 +48,8 @@ namespace HFM.Preferences
    public class PreferenceSet
    {
       #region Public Const
+      public const String ExeName = "HFM";
+      
       public const String EOCUserXmlURL = "http://folding.extremeoverclocking.com/xml/user_summary.php?u=";
       public const String EOCUserBaseURL = "http://folding.extremeoverclocking.com/user_summary.php?s=&u=";
       public const String EOCTeamBaseURL = "http://folding.extremeoverclocking.com/team_summary.php?s=&t=";
@@ -607,7 +609,7 @@ namespace HFM.Preferences
          _DuplicateProjectCheck = Settings.Default.DuplicateProjectCheck;
          
          _AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-         _AppDataPath = Path.Combine(_AppDataPath, System.Reflection.Assembly.GetEntryAssembly().GetName().Name); ;
+         _AppDataPath = Path.Combine(_AppDataPath, ExeName);
          if (Directory.Exists(_AppDataPath) == false)
          {
             Directory.CreateDirectory(_AppDataPath);

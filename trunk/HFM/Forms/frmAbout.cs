@@ -22,6 +22,7 @@ using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 
+using HFM.Helpers;
 using Debug = HFM.Instrumentation.Debug;
 
 namespace HFM.Forms
@@ -33,10 +34,7 @@ namespace HFM.Forms
       {
          InitializeComponent();
 
-         FileVersionInfo fileVersionInfo =
-         FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetEntryAssembly().Location);
-         lblVersion.Text = "Version " + String.Format("{0}.{1}.{2} - Build {3}", fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
-                                                                                 fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
+         lblVersion.Text = String.Format("Version {0}", PlatformOps.GetApplicationLabelVersion());
       } 
       #endregion
 
