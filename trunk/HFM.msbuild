@@ -27,7 +27,7 @@
       Condition="$(Revision) != '0' "/>
   </Target>
 
-  <Target Name="Compile">
+  <Target Name="Compile" DependsOnTargets="Version">
     <MSBuild Projects="HFM.sln"
              Targets="Rebuild"
              Properties="Configuration=Release" />

@@ -117,7 +117,7 @@ namespace HFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error occured while attempting to show {0}..
+        ///   Looks up a localized string similar to Error occurred while attempting to show {0}..
         /// </summary>
         internal static string ProcessStartError {
             get {
