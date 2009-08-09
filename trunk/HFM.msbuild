@@ -46,4 +46,8 @@
          WorkingDirectory=".\Release"
          ZipFileName="HFM Release $(Major).$(Minor).$(Build).$(Revision).zip" />
   </Target>
+
+   <Target Name ="CopyZip" Condition="'$(ZipDestination)' != ''">
+      <Copy SourceFiles=".\Release\HFM Release $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(ZipDestination)" />
+   </Target>
 </Project>

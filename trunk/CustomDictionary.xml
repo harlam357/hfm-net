@@ -1,0 +1,24 @@
+<Dictionary>
+   <Words>
+      <Unrecognized>
+         <!--<Word>SomeWord</Word>-->
+      </Unrecognized>
+      <Recognized>
+         <Word>Harlamert</Word>
+         <Word>harlam</Word>
+         <Word>Stegman</Word>
+         <Word>Vincenzo</Word>
+         <Word>notfred's</Word>
+         <Word>Chudnovsky</Word>
+         <Word>Rawling</Word>
+      </Recognized>
+      <Deprecated>
+         <!--<Term PreferredAlternate="EnterpriseServices">ComPlus</Term>-->
+      </Deprecated>
+   </Words>
+   <Acronyms>
+      <CasingExceptions>
+         <Acronym>Ppd</Acronym>
+      </CasingExceptions>
+   </Acronyms>
+</Dictionary>
