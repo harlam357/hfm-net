@@ -13,6 +13,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Instrumentation", "HFM.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Helpers", "HFM.Helpers\HFM.Helpers.csproj", "{4A9D010E-BAEA-4818-9216-8E0DBD7D5570}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6895CDB7-69DA-4663-B474-4AE91A10419D}"
+	ProjectSection(SolutionItems) = preProject
+		HFM.msbuild = HFM.msbuild
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

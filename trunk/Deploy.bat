@@ -3,8 +3,7 @@ if !%1==! goto End
 
 echo Cleaning Deploy Folder...
 rd /S /Q %1
-if errorlevel 1 goto Error
-md %1
+if not exist %1 md %1
 if errorlevel 1 goto Error
 
 echo Deploying Assemblies...
@@ -32,7 +31,7 @@ echo Finished Cleanly.
 goto End
 
 :Error
-echo An Error Occured While Cleaning Deploy Folder.
+echo An Error Occured While Creating Deploy Folder.
 
 :End
 echo on

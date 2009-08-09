@@ -205,6 +205,14 @@
       <SubType>Designer</SubType>
       <DependentUpon>frmMessages.cs</DependentUpon>
     </EmbeddedResource>
+    <Content Include="..\GPLv2.TXT">
+      <Link>GPLv2.TXT</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\HTMLparser License.txt">
+      <Link>HTMLparser License.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="CSS\BlueTwo.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -274,5 +282,6 @@
     <PostBuildEvent>if $(ConfigurationName)==Debug goto End
 call ..\..\..\Deploy.bat ..\..\..\$(ConfigurationName)
 :End</PostBuildEvent>
+    <PreBuildEvent>C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\MSBuild.exe ..\..\..\HFM.msbuild /t:Version</PreBuildEvent>
   </PropertyGroup>
 </Project>

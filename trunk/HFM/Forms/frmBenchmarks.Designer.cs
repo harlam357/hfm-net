@@ -31,11 +31,10 @@ namespace HFM.Forms
       private void InitializeComponent()
       {
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBenchmarks));
-         this.listBox1 = new System.Windows.Forms.ListBox();
          this.splitContainerBench = new HFM.Classes.SplitContainerWrapper();
+         this.listBox1 = new System.Windows.Forms.ListBox();
          this.txtBenchmarks = new HFM.Classes.TextBoxWrapper();
          this.btnExit = new HFM.Classes.ButtonWrapper();
-         this.splitContainerMain = new HFM.Classes.SplitContainerWrapper();
          this.grpProjectInfo = new HFM.Classes.GroupBoxWrapper();
          this.txtServerIP = new HFM.Classes.TextBoxWrapper();
          this.txtContact = new HFM.Classes.TextBoxWrapper();
@@ -57,14 +56,33 @@ namespace HFM.Forms
          this.lblCredit = new HFM.Classes.LabelWrapper();
          this.lblDescription = new HFM.Classes.LabelWrapper();
          this.lblProjectID = new HFM.Classes.LabelWrapper();
+         this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
          this.splitContainerBench.Panel1.SuspendLayout();
          this.splitContainerBench.Panel2.SuspendLayout();
          this.splitContainerBench.SuspendLayout();
-         this.splitContainerMain.Panel1.SuspendLayout();
-         this.splitContainerMain.Panel2.SuspendLayout();
-         this.splitContainerMain.SuspendLayout();
          this.grpProjectInfo.SuspendLayout();
+         this.tableLayoutPanel1.SuspendLayout();
          this.SuspendLayout();
+         // 
+         // splitContainerBench
+         // 
+         this.splitContainerBench.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.splitContainerBench.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+         this.splitContainerBench.Location = new System.Drawing.Point(0, 0);
+         this.splitContainerBench.Margin = new System.Windows.Forms.Padding(0);
+         this.splitContainerBench.Name = "splitContainerBench";
+         // 
+         // splitContainerBench.Panel1
+         // 
+         this.splitContainerBench.Panel1.Controls.Add(this.listBox1);
+         // 
+         // splitContainerBench.Panel2
+         // 
+         this.splitContainerBench.Panel2.Controls.Add(this.txtBenchmarks);
+         this.splitContainerBench.Panel2.Controls.Add(this.btnExit);
+         this.splitContainerBench.Size = new System.Drawing.Size(556, 342);
+         this.splitContainerBench.SplitterDistance = 65;
+         this.splitContainerBench.TabIndex = 2;
          // 
          // listBox1
          // 
@@ -76,25 +94,6 @@ namespace HFM.Forms
          this.listBox1.TabIndex = 0;
          this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
          // 
-         // splitContainerBench
-         // 
-         this.splitContainerBench.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.splitContainerBench.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-         this.splitContainerBench.Location = new System.Drawing.Point(0, 0);
-         this.splitContainerBench.Name = "splitContainerBench";
-         // 
-         // splitContainerBench.Panel1
-         // 
-         this.splitContainerBench.Panel1.Controls.Add(this.listBox1);
-         // 
-         // splitContainerBench.Panel2
-         // 
-         this.splitContainerBench.Panel2.Controls.Add(this.txtBenchmarks);
-         this.splitContainerBench.Panel2.Controls.Add(this.btnExit);
-         this.splitContainerBench.Size = new System.Drawing.Size(556, 353);
-         this.splitContainerBench.SplitterDistance = 65;
-         this.splitContainerBench.TabIndex = 2;
-         // 
          // txtBenchmarks
          // 
          this.txtBenchmarks.BackColor = System.Drawing.Color.White;
@@ -105,7 +104,7 @@ namespace HFM.Forms
          this.txtBenchmarks.Name = "txtBenchmarks";
          this.txtBenchmarks.ReadOnly = true;
          this.txtBenchmarks.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-         this.txtBenchmarks.Size = new System.Drawing.Size(487, 353);
+         this.txtBenchmarks.Size = new System.Drawing.Size(487, 342);
          this.txtBenchmarks.TabIndex = 0;
          // 
          // btnExit
@@ -118,27 +117,6 @@ namespace HFM.Forms
          this.btnExit.Text = "Exit";
          this.btnExit.UseVisualStyleBackColor = true;
          this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
-         // 
-         // splitContainerMain
-         // 
-         this.splitContainerMain.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.splitContainerMain.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-         this.splitContainerMain.IsSplitterFixed = true;
-         this.splitContainerMain.Location = new System.Drawing.Point(0, 0);
-         this.splitContainerMain.Name = "splitContainerMain";
-         this.splitContainerMain.Orientation = System.Windows.Forms.Orientation.Horizontal;
-         // 
-         // splitContainerMain.Panel1
-         // 
-         this.splitContainerMain.Panel1.Controls.Add(this.splitContainerBench);
-         // 
-         // splitContainerMain.Panel2
-         // 
-         this.splitContainerMain.Panel2.Controls.Add(this.grpProjectInfo);
-         this.splitContainerMain.Size = new System.Drawing.Size(556, 492);
-         this.splitContainerMain.SplitterDistance = 353;
-         this.splitContainerMain.SplitterWidth = 2;
-         this.splitContainerMain.TabIndex = 3;
          // 
          // grpProjectInfo
          // 
@@ -165,10 +143,10 @@ namespace HFM.Forms
          this.grpProjectInfo.Controls.Add(this.lblCredit);
          this.grpProjectInfo.Controls.Add(this.lblDescription);
          this.grpProjectInfo.Controls.Add(this.lblProjectID);
-         this.grpProjectInfo.Location = new System.Drawing.Point(10, 6);
+         this.grpProjectInfo.Location = new System.Drawing.Point(10, 352);
          this.grpProjectInfo.Margin = new System.Windows.Forms.Padding(10);
          this.grpProjectInfo.Name = "grpProjectInfo";
-         this.grpProjectInfo.Size = new System.Drawing.Size(536, 121);
+         this.grpProjectInfo.Size = new System.Drawing.Size(536, 120);
          this.grpProjectInfo.TabIndex = 0;
          this.grpProjectInfo.TabStop = false;
          this.grpProjectInfo.Text = "Project Information";
@@ -355,13 +333,28 @@ namespace HFM.Forms
          this.lblProjectID.TabIndex = 0;
          this.lblProjectID.Text = "Project ID:";
          // 
+         // tableLayoutPanel1
+         // 
+         this.tableLayoutPanel1.ColumnCount = 1;
+         this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+         this.tableLayoutPanel1.Controls.Add(this.grpProjectInfo, 0, 1);
+         this.tableLayoutPanel1.Controls.Add(this.splitContainerBench, 0, 0);
+         this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+         this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+         this.tableLayoutPanel1.RowCount = 2;
+         this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+         this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 140F));
+         this.tableLayoutPanel1.Size = new System.Drawing.Size(556, 482);
+         this.tableLayoutPanel1.TabIndex = 3;
+         // 
          // frmBenchmarks
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.CancelButton = this.btnExit;
-         this.ClientSize = new System.Drawing.Size(556, 492);
-         this.Controls.Add(this.splitContainerMain);
+         this.ClientSize = new System.Drawing.Size(556, 482);
+         this.Controls.Add(this.tableLayoutPanel1);
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
          this.MinimumSize = new System.Drawing.Size(564, 200);
          this.Name = "frmBenchmarks";
@@ -372,43 +365,42 @@ namespace HFM.Forms
          this.splitContainerBench.Panel2.ResumeLayout(false);
          this.splitContainerBench.Panel2.PerformLayout();
          this.splitContainerBench.ResumeLayout(false);
-         this.splitContainerMain.Panel1.ResumeLayout(false);
-         this.splitContainerMain.Panel2.ResumeLayout(false);
-         this.splitContainerMain.ResumeLayout(false);
          this.grpProjectInfo.ResumeLayout(false);
          this.grpProjectInfo.PerformLayout();
+         this.tableLayoutPanel1.ResumeLayout(false);
          this.ResumeLayout(false);
 
       }
 
       #endregion
 
-      private System.Windows.Forms.ListBox listBox1;
-      private HFM.Classes.SplitContainerWrapper splitContainerBench;
-      private HFM.Classes.TextBoxWrapper txtBenchmarks;
-      private HFM.Classes.SplitContainerWrapper splitContainerMain;
-      private HFM.Classes.GroupBoxWrapper grpProjectInfo;
-      private HFM.Classes.LabelWrapper lblProjectID;
-      private HFM.Classes.LabelWrapper lblCredit;
-      private HFM.Classes.LabelWrapper lblDescription;
-      private HFM.Classes.LabelWrapper lblFrames;
-      private HFM.Classes.LabelWrapper lblMaxDays;
-      private HFM.Classes.LabelWrapper lblPreferred;
-      private HFM.Classes.LabelWrapper lblAtoms;
-      private HFM.Classes.LabelWrapper lblServerIP;
-      private HFM.Classes.LabelWrapper lblContact;
-      private HFM.Classes.LabelWrapper lblCore;
-      private System.Windows.Forms.LinkLabel linkDescription;
+      private SplitContainerWrapper splitContainerBench;
       private ButtonWrapper btnExit;
-      private TextBoxWrapper txtProjectID;
-      private TextBoxWrapper txtAtoms;
-      private TextBoxWrapper txtFrames;
-      private TextBoxWrapper txtCredit;
+      private TextBoxWrapper txtBenchmarks;
+      private System.Windows.Forms.ListBox listBox1;
+      private GroupBoxWrapper grpProjectInfo;
+      private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
       private TextBoxWrapper txtServerIP;
       private TextBoxWrapper txtContact;
       private TextBoxWrapper txtMaximumDays;
       private TextBoxWrapper txtPreferredDays;
       private TextBoxWrapper txtCore;
+      private TextBoxWrapper txtAtoms;
+      private TextBoxWrapper txtFrames;
+      private TextBoxWrapper txtCredit;
+      private TextBoxWrapper txtProjectID;
+      private System.Windows.Forms.LinkLabel linkDescription;
+      private LabelWrapper lblServerIP;
+      private LabelWrapper lblContact;
+      private LabelWrapper lblCore;
+      private LabelWrapper lblMaxDays;
+      private LabelWrapper lblPreferred;
+      private LabelWrapper lblAtoms;
+      private LabelWrapper lblFrames;
+      private LabelWrapper lblCredit;
+      private LabelWrapper lblDescription;
+      private LabelWrapper lblProjectID;
+
 
    }
 }

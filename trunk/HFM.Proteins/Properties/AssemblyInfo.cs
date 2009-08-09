@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Protein Class Library Assembly Configuration
+ * HFM.NET - Application Assembly Configuration
  * Copyright (C) 2006-2007 David Rawling
  * Copyright (C) 2009 Ryan Harlamert (harlam357)
  *
@@ -18,9 +18,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Resources;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -33,6 +34,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright © Ryan Harlamert 2009.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+
+[assembly: NeutralResourcesLanguageAttribute("en-US")]
+[assembly: CLSCompliant(true)]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 

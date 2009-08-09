@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+
+  <PropertyGroup>
+    <Major>0</Major>
+    <Minor>2</Minor>
+    <Build>2</Build>
+    <Revision>0</Revision>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ZipFiles Include=".\Release\**\*.*" />
+  </ItemGroup>
+
+  <Target Name="Version">
+    <SvnVersion LocalPath="." ToolPath="$(ProgramFiles)\CollabNet Subversion Client">
+      <Output TaskParameter="Revision" PropertyName="Revision" />
+    </SvnVersion>
+
+    <Message Text="Version: $(Major).$(Minor).$(Build).$(Revision)"/>
+
+    <AssemblyInfo CodeLanguage="CS"
+      OutputFile="AssemblyVersion.cs"
+      AssemblyVersion="$(Major).$(Minor).$(Build).$(Revision)"
+      AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
+      Condition="$(Revision) != '0' "/>
+  </Target>
+
+  <Target Name="Compile">
+    <MSBuild Projects="HFM.sln"
+             Targets="Rebuild"
+             Properties="Configuration=Release" />
+  </Target>
+
+  <Target Name="Build" DependsOnTargets="Compile">
+    <Message Text="HFM.NET Build Complete"/>
+  </Target>
+
+  <Target Name="FxCop">
+    <Exec Command="&quot;$(ProgramFiles)\Microsoft FxCop 1.36\FxCopCmd.exe&quot; /project:HFM.FxCop /out:FxCopReport.xml" />
+  </Target>
+
+  <Target Name="Zip">
+    <Zip Files="@(ZipFiles)"
+         WorkingDirectory=".\Release"
+         ZipFileName="HFM Release $(Major).$(Minor).$(Build).$(Revision).zip" />
+  </Target>
+</Project>
