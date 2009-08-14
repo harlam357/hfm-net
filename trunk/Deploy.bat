@@ -1,10 +1,9 @@
 @echo off
 if !%1==! goto End
 
-echo Cleaning Deploy Folder...
-rd /S /Q %1
 if not exist %1 md %1
 if errorlevel 1 goto Error
+del /S /Q %1\*.*
 
 echo Deploying Assemblies...
 copy /y HFM.exe %1
@@ -20,18 +19,23 @@ echo Copying Support Files and Folders...
 copy /Y GPLv2.TXT %1
 copy /Y "HTMLparser License.txt" %1
 
-md %1\CSS
+if not exist %1\CSS md %1\CSS
+if errorlevel 1 goto Error
 xcopy /Y CSS %1\CSS
-md %1\XML
+
+if not exist %1\XML md %1\XML
+if errorlevel 1 goto Error
 xcopy /Y XML %1\XML
-md %1\XSL
+
+if not exist %1\XSL md %1\XSL
+if errorlevel 1 goto Error
 xcopy /Y XSL %1\XSL
 
 echo Finished Cleanly.
 goto End
 
 :Error
-echo An Error Occured While Creating Deploy Folder.
+echo An Error Occured While Creating a Deploy Folder.
 
 :End
 echo on
