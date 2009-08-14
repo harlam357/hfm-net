@@ -64,7 +64,7 @@ namespace HFM.Helpers
             throw new ArgumentException("Arguments 'Server', 'FtpPath', and 'LocalFilePath' cannot be a null or empty string.");
          }
 
-         FtpWebRequest request = (FtpWebRequest)FtpWebRequest.Create(String.Format("ftp://{0}{1}{2}", Server, FtpPath, Path.GetFileName(LocalFilePath)));
+         FtpWebRequest request = (FtpWebRequest)FtpWebRequest.Create(new Uri(String.Format("ftp://{0}{1}{2}", Server, FtpPath, Path.GetFileName(LocalFilePath))));
          request.Method = WebRequestMethods.Ftp.UploadFile;
          request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
 
@@ -100,7 +100,7 @@ namespace HFM.Helpers
             throw new ArgumentException("Arguments 'Server', 'FtpPath', 'RemoteFileName', and 'LocalFilePath' cannot be a null or empty string.");
          }
       
-         FtpWebRequest request = (FtpWebRequest)FtpWebRequest.Create(String.Format("ftp://{0}{1}{2}", Server, FtpPath, RemoteFileName));
+         FtpWebRequest request = (FtpWebRequest)FtpWebRequest.Create(new Uri(String.Format("ftp://{0}{1}{2}", Server, FtpPath, RemoteFileName)));
          request.Method = WebRequestMethods.Ftp.DownloadFile;
          request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
 
@@ -130,7 +130,30 @@ namespace HFM.Helpers
       /// <exception cref="ArgumentException">Throws if Url, LocalFilePath, or InstanceName is Null or Empty.</exception>
       public static void HttpDownloadHelper(string Url, string LocalFilePath, string InstanceName, string Username, string Password, DownloadType type)
       {
-         if (String.IsNullOrEmpty(Url) || String.IsNullOrEmpty(LocalFilePath) || String.IsNullOrEmpty(InstanceName))
+         if (String.IsNullOrEmpty(Url))
+         {
+            throw new ArgumentException("Argument 'Url' cannot be a null or empty string.");
+         }
+      
+         HttpDownloadHelper(new Uri(Url), LocalFilePath, InstanceName, Username, Password, type);
+      }
+
+      /// <summary>
+      /// Download a File via Http.
+      /// </summary>
+      /// <param name="Url">Http Url of remote file.</param>
+      /// <param name="LocalFilePath">Path to local file.</param>
+      /// <param name="InstanceName">Name of the Instance object that called this method.</param>
+      /// <param name="Username">Http Login Username.</param>
+      /// <param name="Password">Http Login Password.</param>
+      /// <param name="type">Type of Download.</param>
+      /// <exception cref="ArgumentNullException">Throws if Url is Null.</exception>
+      /// <exception cref="ArgumentException">Throws if LocalFilePath or InstanceName is Null or Empty.</exception>
+      public static void HttpDownloadHelper(Uri Url, string LocalFilePath, string InstanceName, string Username, string Password, DownloadType type)
+      {
+         if (Url == null) throw new ArgumentNullException("Url", "Argument 'Url' cannot be null.");
+      
+         if (String.IsNullOrEmpty(LocalFilePath) || String.IsNullOrEmpty(InstanceName))
          {
             throw new ArgumentException("Arguments 'Url', 'LocalFilePath', and 'InstanceName' cannot be a null or empty string.");
          }
