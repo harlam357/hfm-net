@@ -21,7 +21,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Debug=HFM.Instrumentation.Debug;
+
+using HFM.Instrumentation;
 
 namespace HFM.Proteins
 {
@@ -46,12 +47,22 @@ namespace HFM.Proteins
    
       #region CTOR
       /// <summary>
+      /// Overload Constructor
+      /// </summary>
+      public UnitInfo(string ownerName, string ownerPath) : this(ownerName, ownerPath, UsernameDefault, TeamDefault)
+      {
+         
+      }
+
+      /// <summary>
       /// Primary Constructor
       /// </summary>
-      public UnitInfo(string ownerName, string ownerPath)
+      public UnitInfo(string ownerName, string ownerPath, string foldingID, int team)
       {
          _OwningInstanceName = ownerName;
          _OwningInstancePath = ownerPath;
+         _FoldingID = foldingID;
+         _Team = team;
          
          Clear();
       } 
@@ -625,8 +636,8 @@ namespace HFM.Proteins
       #region Clear UnitInfo and Clear Time Based Values
       private void Clear()
       {
-         FoldingID = UsernameDefault;
-         Team = TeamDefault;
+         //FoldingID = UsernameDefault;
+         //Team = TeamDefault;
          TypeOfClient = ClientType.Unknown;
          CoreVersion = String.Empty;
          DownloadTime = DateTime.MinValue;
@@ -772,8 +783,7 @@ namespace HFM.Proteins
          catch (NullReferenceException ex)
          {
             TotalSeconds = 0;
-            Debug.WriteToHfmConsole(TraceLevel.Warning,
-                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
          }
 
          return TotalSeconds;

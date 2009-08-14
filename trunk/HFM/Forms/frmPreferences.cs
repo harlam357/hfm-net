@@ -25,9 +25,10 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+
 using HFM.Helpers;
+using HFM.Instrumentation;
 using HFM.Preferences;
-using Debug=HFM.Instrumentation.Debug;
 
 namespace HFM.Forms
 {
@@ -337,8 +338,7 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error,
-                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            HfmTrace.WriteToHfmConsole(ex);
             MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, "EOC User Stats page"));
          }
       }
@@ -351,8 +351,7 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error,
-                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            HfmTrace.WriteToHfmConsole(ex);
             MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, "Stanford User Stats page"));
          }
       }
@@ -365,8 +364,7 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error,
-                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            HfmTrace.WriteToHfmConsole(ex);
             MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, "EOC Team Stats page"));
          }
       }
@@ -663,7 +661,7 @@ namespace HFM.Forms
       #region TextBox KeyPress Event Handler (to enforce digits only)
       private void txtDigitsOnly_KeyPress(object sender, KeyPressEventArgs e)
       {
-         System.Diagnostics.Debug.WriteLine(String.Format("Keystroke: {0}", (int)e.KeyChar));
+         Debug.WriteLine(String.Format("Keystroke: {0}", (int)e.KeyChar));
       
          // only allow digits special keystrokes - Issue 65
          if (char.IsDigit(e.KeyChar) == false &&

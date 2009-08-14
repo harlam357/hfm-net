@@ -25,8 +25,8 @@ using System.Text;
 using System.Xml;
 using System.Xml.Xsl;
 
+using HFM.Instrumentation;
 using HFM.Preferences;
-using Debug=HFM.Instrumentation.Debug;
 
 namespace HFM.Helpers
 {
@@ -105,7 +105,7 @@ namespace HFM.Helpers
          // if Forced or Time For an Update
          if (ForceRefresh || UserStatsData.TimeForUpdate())
          {
-            DateTime Start = Debug.ExecStart;
+            DateTime Start = HfmTrace.ExecStart;
 
             #region Get the XML Document
             XmlDocument xmlData = new XmlDocument();
@@ -138,14 +138,13 @@ namespace HFM.Helpers
                UserStatsData.Serialize();
             }
 
-            Debug.WriteToHfmConsole(TraceLevel.Info, 
-                                    String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, Start);
             
             return true;
          }
 
-         Debug.WriteToHfmConsole(TraceLevel.Info, 
-                                 String.Format("{0} Last EOC Stats Update: {1} (UTC)", Debug.FunctionName, UserStatsData.LastUpdated));
+         HfmTrace.WriteToHfmConsole(TraceLevel.Info, 
+                                    String.Format("{0} Last EOC Stats Update: {1} (UTC)", HfmTrace.FunctionName, UserStatsData.LastUpdated));
          
          return false;
       }

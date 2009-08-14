@@ -27,9 +27,9 @@ using System.IO;
 using System.Net;
 
 using HFM.Helpers;
+using HFM.Instrumentation;
 using HFM.Proteins;
 using HFM.Preferences;
-using Debug=HFM.Instrumentation.Debug;
 
 namespace HFM.Instances
 {
@@ -393,6 +393,32 @@ namespace HFM.Instances
       }
 
       /// <summary>
+      /// The Folding ID (Username) attached to this client
+      /// </summary>
+      private string _FoldingID;
+      /// <summary>
+      /// The Folding ID (Username) attached to this client
+      /// </summary>
+      public string FoldingID
+      {
+         get { return _FoldingID; }
+         set { _FoldingID = value; }
+      }
+
+      /// <summary>
+      /// The Team number attached to this client
+      /// </summary>
+      private Int32 _Team;
+      /// <summary>
+      /// The Team number attached to this client
+      /// </summary>
+      public Int32 Team
+      {
+         get { return _Team; }
+         set { _Team = value; }
+      }
+
+      /// <summary>
       /// Number of completed units since the last client start
       /// </summary>
       private Int32 _NumberOfCompletedUnitsSinceLastStart;
@@ -551,8 +577,7 @@ namespace HFM.Instances
                }
                catch (Exception ex)
                {
-                  Debug.WriteToHfmConsole(TraceLevel.Error,
-                                          String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+                  HfmTrace.WriteToHfmConsole(ex);
                }
             }
             else if (Status.Equals(ClientStatus.RunningNoFrameTimes))
@@ -737,7 +762,7 @@ namespace HFM.Instances
          {
             List<string> messages = new List<string>(10);
 
-            messages.Add(String.Format("{0} ({1})", Debug.FunctionName, Instance.InstanceName));
+            messages.Add(String.Format("{0} ({1})", HfmTrace.FunctionName, Instance.InstanceName));
             messages.Add(String.Format(" - Retrieval Time (Date) ------- : {0}", Instance.LastRetrievalTime));
             messages.Add(String.Format(" - Time Of Last Frame (TimeSpan) : {0}", TimeOfLastFrame));
             messages.Add(String.Format(" - Offset (Minutes) ------------ : {0}", Instance.ClientTimeOffset));
@@ -746,7 +771,7 @@ namespace HFM.Instances
             messages.Add(String.Format(" - Time Of Last Frame (Date) --- : {0}", currentFrameDateTime));
             messages.Add(String.Format(" - Terminal Time (Date) -------- : {0}", terminalDateTime));
 
-            Debug.WriteToHfmConsole(TraceLevel.Verbose, messages.ToArray());
+            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, messages);
          }
          #endregion
 
@@ -765,52 +790,64 @@ namespace HFM.Instances
       /// </summary>
       public void ProcessExisting()
       {
-         DateTime Start = Debug.ExecStart;
+         DateTime Start = HfmTrace.ExecStart;
 
          UnitInfo parsedUnitInfo = null;
 
+         LogReader lr = new LogReader();
+         lr.ReadLogText(this, System.IO.Path.Combine(BaseDirectory, CachedFAHLogName));
+         lr.ScanFAHLog(this);
+         
          LogParser lp = new LogParser();
-         if (lp.ReadLogText(System.IO.Path.Combine(BaseDirectory, CachedFAHLogName)))
+         
+         IList<string> logLines = lr.GetPreviousWorkUnitLog();
+         if (logLines != null)
          {
-            if (lp.Previous1UnitStartPosition > 0)
-            {
-               parsedUnitInfo = lp.ParseFAHLog(this, UnitToRead.Previous1);
-               // check this against the CurrentUnitInfo
-               if (IsUnitInfoCurrentUnitInfo(parsedUnitInfo))
-               {
-                  // current frame has already been recorded, increment to the next frame
-                  int previousFramePercent = CurrentUnitInfo.LastUnitFramePercent + 1;
-               
-                  // update the UnitFrames
-                  CurrentUnitInfo.UnitFrames = parsedUnitInfo.UnitFrames;
-                  CurrentUnitInfo.CurrentFrame = parsedUnitInfo.CurrentFrame;
-                  CurrentUnitInfo.FramesObserved = parsedUnitInfo.FramesObserved;
-                  
-                  // set the frame times and calculate values
-                  CurrentUnitInfo.SetFrameTimes();
-                  SetTimeBasedValues();
-                  ProteinBenchmarkCollection.Instance.UpdateBenchmarkData(CurrentUnitInfo, previousFramePercent, CurrentUnitInfo.LastUnitFramePercent);
-               }
-            }
-            if (lp.LastUnitStartPosition > 0)
-            {
-               Status = ClientStatus.RunningNoFrameTimes;
+            parsedUnitInfo = new UnitInfo(InstanceName, Path, FoldingID, Team);
+            lp.ParseFAHLog(this, logLines, parsedUnitInfo);
             
-               parsedUnitInfo = lp.ParseFAHLog(this, UnitToRead.Last);
+            // check this against the CurrentUnitInfo
+            if (IsUnitInfoCurrentUnitInfo(parsedUnitInfo))
+            {
+               // current frame has already been recorded, increment to the next frame
+               int previousFramePercent = CurrentUnitInfo.LastUnitFramePercent + 1;
 
-               int currentFrames = 0;
-               // check this against the CurrentUnitInfo
-               if (IsUnitInfoCurrentUnitInfo(parsedUnitInfo))
-               {
-                  // current frame has already been recorded, increment to the next frame
-                  currentFrames = CurrentUnitInfo.LastUnitFramePercent + 1;
-               }
+               // update the UnitFrames
+               CurrentUnitInfo.UnitFrames = parsedUnitInfo.UnitFrames;
+               CurrentUnitInfo.CurrentFrame = parsedUnitInfo.CurrentFrame;
+               CurrentUnitInfo.FramesObserved = parsedUnitInfo.FramesObserved;
 
                // set the frame times and calculate values
-               parsedUnitInfo.SetFrameTimes();
-               SetTimeBasedValues(parsedUnitInfo);
-               ProteinBenchmarkCollection.Instance.UpdateBenchmarkData(parsedUnitInfo, currentFrames, parsedUnitInfo.LastUnitFramePercent);
+               CurrentUnitInfo.SetFrameTimes();
+               SetTimeBasedValues();
+               ProteinBenchmarkCollection.Instance.UpdateBenchmarkData(CurrentUnitInfo, previousFramePercent, CurrentUnitInfo.LastUnitFramePercent);
             }
+         }
+         
+         logLines = lr.GetCurrentWorkUnitLog();
+         if (logLines != null)
+         {
+            Status = ClientStatus.RunningNoFrameTimes;
+
+            parsedUnitInfo = new UnitInfo(InstanceName, Path, FoldingID, Team);
+            if (lp.ParseUnitInfoFile(System.IO.Path.Combine(BaseDirectory, CachedUnitInfoName), this, parsedUnitInfo) == false)
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} ({1}) unitinfo parse failed.", HfmTrace.FunctionName, InstanceName));
+            }
+            lp.ParseFAHLog(this, logLines, parsedUnitInfo);
+
+            int currentFrames = 0;
+            // check this against the CurrentUnitInfo
+            if (IsUnitInfoCurrentUnitInfo(parsedUnitInfo))
+            {
+               // current frame has already been recorded, increment to the next frame
+               currentFrames = CurrentUnitInfo.LastUnitFramePercent + 1;
+            }
+
+            // set the frame times and calculate values
+            parsedUnitInfo.SetFrameTimes();
+            SetTimeBasedValues(parsedUnitInfo);
+            ProteinBenchmarkCollection.Instance.UpdateBenchmarkData(parsedUnitInfo, currentFrames, parsedUnitInfo.LastUnitFramePercent);
          }
 
          if (parsedUnitInfo != null)
@@ -840,7 +877,7 @@ namespace HFM.Instances
             CurrentUnitInfo.ClearTimeBasedValues();
          }
 
-         Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, InstanceName, Debug.GetExecTime(Start)));
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, Start);
       }
 
       /// <summary>
@@ -881,8 +918,7 @@ namespace HFM.Instances
          catch (Exception ex)
          {
             Status = ClientStatus.Offline;
-            Debug.WriteToHfmConsole(TraceLevel.Error,
-                                    String.Format("{0} ({1}) threw exception {2}.", Debug.FunctionName, InstanceName, ex.Message));
+            HfmTrace.WriteToHfmConsole(InstanceName, ex);
 
             // Clear the time based values when log retrieval fails
             CurrentUnitInfo.ClearTimeBasedValues();
@@ -892,7 +928,7 @@ namespace HFM.Instances
             _RetrievalInProgress = false;
          }
 
-         Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Client Status: {2}", Debug.FunctionName, InstanceName, Status));
+         HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Client Status: {2}", HfmTrace.FunctionName, InstanceName, Status));
       }
 
       /// <summary>
@@ -900,7 +936,7 @@ namespace HFM.Instances
       /// </summary>
       private void RetrievePathInstance()
       {
-         DateTime Start = Debug.ExecStart;
+         DateTime Start = HfmTrace.ExecStart;
 
          try
          {
@@ -908,47 +944,46 @@ namespace HFM.Instances
             string FAHLog_txt = System.IO.Path.Combine(BaseDirectory, CachedFAHLogName);
             FileInfo fiCachedLog = new FileInfo(FAHLog_txt);
 
-            Debug.WriteToHfmConsole(TraceLevel.Verbose,
-                                    String.Format("{0} ({1}) FAHlog copy (start).", Debug.FunctionName, InstanceName));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
+                                       String.Format("{0} ({1}) FAHlog copy (start)", HfmTrace.FunctionName, InstanceName));
             if (fiLog.Exists)
             {
                if (fiCachedLog.Exists == false || fiLog.Length != fiCachedLog.Length)
                {
                   fiLog.CopyTo(FAHLog_txt, true);
-                  Debug.WriteToHfmConsole(TraceLevel.Verbose,
-                                          String.Format("{0} ({1}) FAHlog copy (success).", Debug.FunctionName, InstanceName));
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
+                                             String.Format("{0} ({1}) FAHlog copy (success)", HfmTrace.FunctionName, InstanceName));
                }
                else
                {
-                  Debug.WriteToHfmConsole(TraceLevel.Verbose,
-                                          String.Format("{0} ({1}) FAHlog copy (file has not changed).", Debug.FunctionName, InstanceName));
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
+                                             String.Format("{0} ({1}) FAHlog copy (file has not changed)", HfmTrace.FunctionName, InstanceName));
                }
             }
             else
             {
                //Status = ClientStatus.Offline;
-               //Debug.WriteToHfmConsole(TraceLevel.Error,
-               //                        String.Format("{0} ({1}) The path {2} is inaccessible.", Debug.FunctionName, InstanceName, fiLog.FullName));
+               //HfmTrace.WriteToHfmConsole(TraceLevel.Error,
+               //                           String.Format("{0} ({1}) The path {2} is inaccessible.", HfmTrace.FunctionName, InstanceName, fiLog.FullName));
                //return false;
                
-               throw new FileNotFoundException(String.Format("The path {0} is inaccessible", fiLog.FullName));
+               throw new FileNotFoundException(String.Format("The path {0} is inaccessible.", fiLog.FullName));
             }
 
             // Retrieve unitinfo.txt (or equivalent)
             FileInfo fiUI = new FileInfo(System.IO.Path.Combine(Path, RemoteUnitInfoFilename));
             string UnitInfo_txt = System.IO.Path.Combine(BaseDirectory, CachedUnitInfoName);
 
-            Debug.WriteToHfmConsole(TraceLevel.Verbose,
-                                    String.Format("{0} ({1}) UnitInfo copy (start).", Debug.FunctionName, InstanceName));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
+                                       String.Format("{0} ({1}) UnitInfo copy (start)", HfmTrace.FunctionName, InstanceName));
             if (fiUI.Exists)
             {
                // If file size is too large, do not copy it and delete the current cached copy - Issue 2
                if (fiUI.Length < NetworkOps.UnitInfoMax)
                {
                   fiUI.CopyTo(UnitInfo_txt, true);
-                  Debug.WriteToHfmConsole(TraceLevel.Verbose,
-                                          String.Format("{0} ({1}) UnitInfo copy (success).", Debug.FunctionName,
-                                                        InstanceName));
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
+                                             String.Format("{0} ({1}) UnitInfo copy (success)", HfmTrace.FunctionName, InstanceName));
                }
                else
                {
@@ -956,30 +991,29 @@ namespace HFM.Instances
                   {
                      File.Delete(UnitInfo_txt);
                   }
-                  Debug.WriteToHfmConsole(TraceLevel.Warning,
-                                          String.Format("{0} ({1}) UnitInfo copy (file is too big: {2} bytes).", Debug.FunctionName,
-                                                        InstanceName, fiUI.Length));
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
+                                             String.Format("{0} ({1}) UnitInfo copy (file is too big: {2} bytes)", HfmTrace.FunctionName, InstanceName, fiUI.Length));
                }
             }
             /*** Remove Requirement for UnitInfo to be Present ***/
             //else
             //{
             //   Status = ClientStatus.Offline;
-            //   Debug.WriteToHfmConsole(TraceLevel.Error,
-            //                           String.Format("{0} ({1}) The path {2} is inaccessible.", Debug.FunctionName, InstanceName, fiUI.FullName));
+            //   HfmTrace.WriteToHfmConsole(TraceLevel.Error,
+            //                              String.Format("{0} ({1}) The path {2} is inaccessible.", HfmTrace.FunctionName, InstanceName, fiUI.FullName));
             //   return false;
             //}
             else
             {
-               Debug.WriteToHfmConsole(TraceLevel.Warning,
-                                       String.Format("{0} ({1}) The path {2} is inaccessible.", Debug.FunctionName, InstanceName, fiUI.FullName));
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
+                                          String.Format("{0} ({1}) The path {2} is inaccessible.", HfmTrace.FunctionName, InstanceName, fiUI.FullName));
             }
 
             _LastRetrievalTime = DateTime.Now;
          }
          finally
          {
-            Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, InstanceName, Debug.GetExecTime(Start)));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, InstanceName, Start);
          }
       }
 
@@ -988,7 +1022,7 @@ namespace HFM.Instances
       /// </summary>
       private void RetrieveHTTPInstance()
       {
-         DateTime Start = Debug.ExecStart;
+         DateTime Start = HfmTrace.ExecStart;
 
          try
          {
@@ -1005,15 +1039,15 @@ namespace HFM.Instances
             /*** Remove Requirement for UnitInfo to be Present ***/
             catch (WebException ex)
             {
-               Debug.WriteToHfmConsole(TraceLevel.Warning,
-                                       String.Format("{0} ({1}) unitinfo download threw exception {2}.", Debug.FunctionName, InstanceName, ex.Message));
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
+                                          String.Format("{0} ({1}) Unitinfo Download Threw Exception: {2}.", HfmTrace.FunctionName, InstanceName, ex.Message));
             }
 
             _LastRetrievalTime = DateTime.Now;
          }
          finally
          {
-            Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, InstanceName, Debug.GetExecTime(Start)));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, InstanceName, Start);
          }
       }
 
@@ -1022,7 +1056,7 @@ namespace HFM.Instances
       /// </summary>
       private void RetrieveFTPInstance()
       {
-         DateTime Start = Debug.ExecStart;
+         DateTime Start = HfmTrace.ExecStart;
 
          try
          {
@@ -1037,15 +1071,15 @@ namespace HFM.Instances
             /*** Remove Requirement for UnitInfo to be Present ***/
             catch (WebException ex)
             {
-               Debug.WriteToHfmConsole(TraceLevel.Warning,
-                                       String.Format("{0} ({1}) unitinfo download threw exception {2}.", Debug.FunctionName, InstanceName, ex.Message));
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
+                                          String.Format("{0} ({1}) Unitinfo Download Threw Exception: {2}.", HfmTrace.FunctionName, InstanceName, ex.Message));
             }
 
             _LastRetrievalTime = DateTime.Now;
          }
          finally
          {
-            Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, InstanceName, Debug.GetExecTime(Start)));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, InstanceName, Start);
          }
       }
       #endregion
@@ -1056,7 +1090,7 @@ namespace HFM.Instances
       /// </summary>
       public System.Xml.XmlDocument ToXml()
       {
-         DateTime Start = Debug.ExecStart;
+         DateTime Start = HfmTrace.ExecStart;
 
          try
          {
@@ -1077,12 +1111,15 @@ namespace HFM.Instances
             xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropUser, Username));
             xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropPass, Password));
             
-            Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, InstanceName, Debug.GetExecTime(Start)));
             return xmlData;
          }
          catch (Exception ex)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            HfmTrace.WriteToHfmConsole(ex);
+         }
+         finally
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, InstanceName, Start);
          }
          
          return null;
@@ -1094,7 +1131,7 @@ namespace HFM.Instances
       /// <param name="xmlData">XmlNode containing the client instance data</param>
       public void FromXml(System.Xml.XmlNode xmlData)
       {
-         DateTime Start = Debug.ExecStart;
+         DateTime Start = HfmTrace.ExecStart;
          
          InstanceName = xmlData.Attributes[xmlAttrName].ChildNodes[0].Value;
          try
@@ -1103,7 +1140,7 @@ namespace HFM.Instances
          }
          catch (NullReferenceException)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Remote FAH Log Filename."));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Cannot load Remote FAHlog Filename."));
             RemoteFAHLogFilename = LocalFAHLog;
          }
          
@@ -1113,7 +1150,7 @@ namespace HFM.Instances
          }
          catch (NullReferenceException)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Remote FAH UnitInfo Filename."));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Cannot load Remote FAH unitinfo Filename."));
             RemoteUnitInfoFilename = LocalUnitInfo;
          }
          
@@ -1123,12 +1160,12 @@ namespace HFM.Instances
          }
          catch (NullReferenceException)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Client MHz, defaulting to 1 MHz."));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Cannot load Client MHz, defaulting to 1 MHz."));
             ClientProcessorMegahertz = 1;
          }
          catch (FormatException)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Could not parse Client MHz, defaulting to 1 MHz."));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Could not parse Client MHz, defaulting to 1 MHz."));
             ClientProcessorMegahertz = 1;
          }
 
@@ -1138,12 +1175,12 @@ namespace HFM.Instances
          }
          catch (NullReferenceException)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Client VM Flag, defaulting to false."));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Cannot load Client VM Flag, defaulting to false."));
             ClientIsOnVirtualMachine = false;
          }
          catch (InvalidCastException)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Could not parse Client VM Flag, defaulting to false."));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Could not parse Client VM Flag, defaulting to false."));
             ClientIsOnVirtualMachine = false;
          }
 
@@ -1153,12 +1190,12 @@ namespace HFM.Instances
          }
          catch (NullReferenceException)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Client Time Offset, defaulting to 0."));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Cannot load Client Time Offset, defaulting to 0."));
             ClientTimeOffset = 0;
          }
          catch (FormatException)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Could not parse Client Time Offset, defaulting to 0."));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Could not parse Client Time Offset, defaulting to 0."));
             ClientTimeOffset = 0;
          }
 
@@ -1168,7 +1205,7 @@ namespace HFM.Instances
          }
          catch (NullReferenceException)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Client Path."));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Cannot load Client Path."));
          }
 
          try
@@ -1178,7 +1215,7 @@ namespace HFM.Instances
          catch (NullReferenceException)
          {
             Server = String.Empty;
-            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Client Server."));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Cannot load Client Server."));
          }
          
          try
@@ -1188,7 +1225,7 @@ namespace HFM.Instances
          catch (NullReferenceException)
          {
             Username = String.Empty;
-            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Server Username."));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Cannot load Server Username."));
          }
          
          try
@@ -1198,10 +1235,10 @@ namespace HFM.Instances
          catch (NullReferenceException)
          {
             Password = String.Empty;
-            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, "Cannot load Server Password."));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Cannot load Server Password."));
          }
 
-         Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} ({1}) Execution Time: {2}", Debug.FunctionName, InstanceName, Debug.GetExecTime(Start)));
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, Start);
       }
       #endregion
       

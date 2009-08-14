@@ -22,9 +22,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+
+using HFM.Instrumentation;
 using HFM.Preferences;
 using HFM.Proteins;
-using Debug=HFM.Instrumentation.Debug;
 
 namespace HFM.Instances
 {
@@ -73,9 +74,9 @@ namespace HFM.Instances
             }
             else
             {
-               Debug.WriteToHfmConsole(TraceLevel.Warning,
-                                       String.Format("{0} FrameID '{1}' not found in UnitInfo for Client '{2}' ({3}).",
-                                                     Debug.FunctionName, i, unit.OwningInstanceName, unit.ProjectRunCloneGen));
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
+                                          String.Format("{0} ({1}) FrameID '{2}' Not Found ({3})",
+                                                        HfmTrace.FunctionName, unit.OwningInstanceName, i, unit.ProjectRunCloneGen));
             }
          }
       }
@@ -193,7 +194,7 @@ namespace HFM.Instances
 
       private static ProteinBenchmarkCollection Deserialize(string filePath)
       {
-         DateTime Start = Debug.ExecStart;
+         DateTime Start = HfmTrace.ExecStart;
       
          ProteinBenchmarkCollection collection = null;
 
@@ -206,7 +207,7 @@ namespace HFM.Instances
          }
          catch (Exception ex)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            HfmTrace.WriteToHfmConsole(ex);
          }
          finally
          {
@@ -216,7 +217,7 @@ namespace HFM.Instances
             }
          }
 
-         Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
 
          return collection;
       }
@@ -225,7 +226,7 @@ namespace HFM.Instances
 
       private static void Serialize(ProteinBenchmarkCollection collection, string filePath)
       {
-         DateTime Start = Debug.ExecStart;
+         DateTime Start = HfmTrace.ExecStart;
       
          lock (_serializeLock)
          {
@@ -238,7 +239,7 @@ namespace HFM.Instances
             }
             catch (Exception ex)
             {
-               Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+               HfmTrace.WriteToHfmConsole(ex);
             }
             finally
             {
@@ -249,7 +250,7 @@ namespace HFM.Instances
             }
          }
 
-         Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
       }
       #endregion
    }

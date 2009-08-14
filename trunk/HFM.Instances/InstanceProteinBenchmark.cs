@@ -20,8 +20,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+
 using HFM.Proteins;
-using Debug=HFM.Instrumentation.Debug;
+using HFM.Instrumentation;
 
 namespace HFM.Instances
 {
@@ -172,8 +173,8 @@ namespace HFM.Instances
          }
          else
          {
-            Debug.WriteToHfmConsole(TraceLevel.Warning,
-                                    String.Format("{0} could not find Project ID '{1}'.", Debug.FunctionName, _ProjectID));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
+                                       String.Format("{0} could not find Project ID '{1}'.", HfmTrace.FunctionName, _ProjectID));
          }
 
          return output.ToArray();

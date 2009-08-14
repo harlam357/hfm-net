@@ -25,7 +25,7 @@ using System.Text;
 using System.Windows.Forms;
 
 using HFM.Preferences.Properties;
-using Debug=HFM.Instrumentation.Debug;
+using HFM.Instrumentation;
 
 namespace HFM.Preferences
 {
@@ -497,7 +497,7 @@ namespace HFM.Preferences
       /// </summary>
       public void Load()
       {
-         DateTime Start = Debug.ExecStart;
+         DateTime Start = HfmTrace.ExecStart;
 
          UpgradeUserSettings();
 
@@ -615,7 +615,7 @@ namespace HFM.Preferences
             Directory.CreateDirectory(_AppDataPath);
          }
 
-         System.Diagnostics.Debug.WriteLine(String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+         Debug.WriteLine(String.Format("{0} Execution Time: {1}", HfmTrace.FunctionName, HfmTrace.GetExecTime(Start)));
       }
 
       private static void UpgradeUserSettings()
@@ -644,7 +644,7 @@ namespace HFM.Preferences
       /// </summary>
       public void Save()
       {
-         DateTime Start = Debug.ExecStart;
+         DateTime Start = HfmTrace.ExecStart;
 
          try
          {
@@ -708,10 +708,10 @@ namespace HFM.Preferences
          }
          catch (Exception ex)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            HfmTrace.WriteToHfmConsole(ex);
          }
 
-         System.Diagnostics.Debug.WriteLine(String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+         Debug.WriteLine(String.Format("{0} Execution Time: {1}", HfmTrace.FunctionName, HfmTrace.GetExecTime(Start)));
       } 
       #endregion
 

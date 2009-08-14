@@ -36,7 +36,6 @@ using HFM.Instances;
 using HFM.Instrumentation;
 using HFM.Proteins;
 using HFM.Preferences;
-using Debug=HFM.Instrumentation.Debug;
 
 namespace HFM.Forms
 {
@@ -111,12 +110,12 @@ namespace HFM.Forms
          { 
             if (value)
             {
-               _RetrieveExecStart = Debug.ExecStart;
+               _RetrieveExecStart = HfmTrace.ExecStart;
                _RetrievalInProgress = value;
             }
             else
             {
-               Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("Total Retrieval Execution Time: {0}", Debug.GetExecTime(_RetrieveExecStart)));
+               HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Total Retrieval Execution Time: {0}", HfmTrace.GetExecTime(_RetrieveExecStart)));
                _RetrievalInProgress = value;
             }
          }
@@ -197,17 +196,15 @@ namespace HFM.Forms
             fi.MoveTo("HFM-prev.log");
          }
 
-         TextWriterTraceListenerWithDateTime listener = new TextWriterTraceListenerWithDateTime("HFM.log");
-
+         TextWriterTraceListener listener = new TextWriterTraceListener("HFM.log");
          Trace.Listeners.Add(listener);
          Trace.AutoFlush = true;
          
          TraceLevelSwitch.Instance.Level = (TraceLevel)PreferenceSet.Instance.MessageLevel;
 
-         listener.TextMessage += Debug_TextMessage;
-
-         Debug.WriteToHfmConsole(String.Format("Starting - {0}", base.Text));
-         Debug.WriteToHfmConsole(String.Empty);
+         HfmTrace.Instance.TextMessage += HfmTrace_TextMessage;
+         HfmTrace.WriteToHfmConsole(String.Format("Starting - {0}", base.Text));
+         HfmTrace.WriteToHfmConsole(String.Empty);
       }
 
       /// <summary>
@@ -324,9 +321,9 @@ namespace HFM.Forms
          // Save the benchmark collection
          ProteinBenchmarkCollection.Instance.Serialize();
 
-         Debug.WriteToHfmConsole("----------");
-         Debug.WriteToHfmConsole("Exiting...");
-         Debug.WriteToHfmConsole(String.Empty);
+         HfmTrace.WriteToHfmConsole("----------");
+         HfmTrace.WriteToHfmConsole("Exiting...");
+         HfmTrace.WriteToHfmConsole(String.Empty);
       }
 
       /// <summary>
@@ -347,8 +344,7 @@ namespace HFM.Forms
       /// <summary>
       /// Event Handler - adds messages to the frmMessages window
       /// </summary>
-      /// <param name="e"></param>
-      private void Debug_TextMessage(TextMessageEventArgs e)
+      private void HfmTrace_TextMessage(object sender, TextMessageEventArgs e)
       {
          _frmMessages.AddMessage(e.Message);
          //Application.DoEvents();
@@ -418,7 +414,7 @@ namespace HFM.Forms
             }
             else // this should only happen when this fires in the middle of an 'Edit' operation that changes the Client Name
             {
-               System.Diagnostics.Debug.WriteLine(String.Format("{0} could not find Client Name '{1}'", Debug.FunctionName, InstanceName));
+               Debug.WriteLine(String.Format("{0} could not find Client Name '{1}'.", HfmTrace.FunctionName, InstanceName));
             }
          }
       }
@@ -914,8 +910,8 @@ namespace HFM.Forms
                   }
                   catch (Exception ex)
                   {
-                     Debug.WriteToHfmConsole(TraceLevel.Error,
-                                             String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+                     HfmTrace.WriteToHfmConsole(ex);
+                     
                      MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, String.Format("client '{0}' files.{1}{1}Please check the current File Explorer defined in the Preferences", Instance.InstanceName, Environment.NewLine)));
                   }
                }
@@ -1154,7 +1150,7 @@ namespace HFM.Forms
             }
 
             // xHost should not be null at this point
-            System.Diagnostics.Debug.Assert(xHost != null);
+            Debug.Assert(xHost != null);
             
             // Add the new Host Instance
             HostInstances.Add(xHost);
@@ -1331,8 +1327,8 @@ namespace HFM.Forms
             }
             catch (Exception ex)
             {
-               Debug.WriteToHfmConsole(TraceLevel.Error,
-                                       String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+               HfmTrace.WriteToHfmConsole(ex);
+               
                MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, String.Format("client '{0}' FAHlog file.{1}{1}Please check the current Log File Viewer defined in the Preferences", Instance.InstanceName, Environment.NewLine)));
             }
          }
@@ -1361,8 +1357,8 @@ namespace HFM.Forms
             }
             catch (Exception ex)
             {
-               Debug.WriteToHfmConsole(TraceLevel.Error,
-                                       String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+               HfmTrace.WriteToHfmConsole(ex);
+               
                MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, String.Format("client '{0}' files.{1}{1}Please check the current File Explorer defined in the Preferences", Instance.InstanceName, Environment.NewLine)));
             }
          }
@@ -1451,8 +1447,8 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error,
-                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            HfmTrace.WriteToHfmConsole(ex);
+            
             MessageBox.Show(Properties.Resources.ProcessStartError, String.Format("EOC User Stats page"));
          }
       }
@@ -1465,8 +1461,8 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error,
-                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            HfmTrace.WriteToHfmConsole(ex);
+            
             MessageBox.Show(Properties.Resources.ProcessStartError, String.Format("Stanford User Stats page"));
          }
       }
@@ -1479,8 +1475,8 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error,
-                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            HfmTrace.WriteToHfmConsole(ex);
+            
             MessageBox.Show(Properties.Resources.ProcessStartError, String.Format("EOC Team Stats page"));
          }
       }
@@ -1498,8 +1494,8 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error,
-                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            HfmTrace.WriteToHfmConsole(ex);
+            
             MessageBox.Show(Properties.Resources.ProcessStartError, String.Format("HFM.NET Google Code page"));
          }
       }
@@ -1514,7 +1510,7 @@ namespace HFM.Forms
          // Disable timers if no hosts
          if (HostInstances.HasInstances == false)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Info, "No Hosts - Stopping Both Background Timer Loops");
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, "No Hosts - Stopping Both Background Timer Loops");
             workTimer.Stop();
             webTimer.Stop();
             return;
@@ -1527,7 +1523,7 @@ namespace HFM.Forms
          }
          else
          {
-            Debug.WriteToHfmConsole(TraceLevel.Info, "Stopping Background Timer Loop");
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping Background Timer Loop");
             workTimer.Stop();
          }
 
@@ -1538,7 +1534,7 @@ namespace HFM.Forms
          }
          else
          {
-            Debug.WriteToHfmConsole(TraceLevel.Info, "Stopping WebGen Timer Loop");
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping WebGen Timer Loop");
             webTimer.Stop();
          }
       }
@@ -1550,7 +1546,7 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void bgWorkTimer_Tick(object sender, EventArgs e)
       {
-         Debug.WriteToHfmConsole(TraceLevel.Info, "Running Background Timer...");
+         HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Running Background Timer...");
          QueueNewRetrieval();
       }
 
@@ -1563,15 +1559,15 @@ namespace HFM.Forms
       {
          if (PreferenceSet.Instance.GenerateWeb == false) return;
 
-         DateTime Start = Debug.ExecStart;
+         DateTime Start = HfmTrace.ExecStart;
 
          if (webTimer.Enabled)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Info, "Stopping WebGen Timer Loop");
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping WebGen Timer Loop");
          }
          webTimer.Stop();
 
-         Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Starting WebGen.", Debug.FunctionName));
+         HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Starting WebGen.", HfmTrace.FunctionName));
 
          PreferenceSet Prefs = PreferenceSet.Instance;
          Match match = StringOps.MatchFtpWithUserPassUrl(Prefs.WebRoot);
@@ -1610,13 +1606,12 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            HfmTrace.WriteToHfmConsole(ex);
          }
          finally
          {
             StartWebGenTimer();
-            Debug.WriteToHfmConsole(TraceLevel.Info,
-                                    String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, Start);
          }
       }
 
@@ -1628,8 +1623,8 @@ namespace HFM.Forms
          if (PreferenceSet.Instance.GenerateWeb && PreferenceSet.Instance.WebGenAfterRefresh == false)
          {
             webTimer.Interval = Convert.ToInt32(PreferenceSet.Instance.GenerateInterval) * MinToMillisec;
-            Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("Starting WebGen Timer Loop: {0} Minutes",
-                                                                    PreferenceSet.Instance.GenerateInterval));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Starting WebGen Timer Loop: {0} Minutes",
+                                                                       PreferenceSet.Instance.GenerateInterval));
             webTimer.Start();
          }
       }
@@ -1642,14 +1637,14 @@ namespace HFM.Forms
          // don't fire this process twice
          if (RetrievalInProgress)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Retrieval Already In Progress...", Debug.FunctionName));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Retrieval Already In Progress...", HfmTrace.FunctionName));
             return;
          }
          
          // only fire if there are Hosts
          if (HostInstances.HasInstances)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Info, "Stopping Background Timer Loop");
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping Background Timer Loop");
             workTimer.Stop();
          
             // set full retrieval flag
@@ -1700,8 +1695,8 @@ namespace HFM.Forms
       private void StartBackgroundTimer()
       {
          workTimer.Interval = Convert.ToInt32(PreferenceSet.Instance.SyncTimeMinutes) * MinToMillisec;
-         Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("Starting Background Timer Loop: {0} Minutes",
-                                                                 PreferenceSet.Instance.SyncTimeMinutes));
+         HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Starting Background Timer Loop: {0} Minutes",
+                                                                    PreferenceSet.Instance.SyncTimeMinutes));
          workTimer.Start();
       }
 
@@ -1739,8 +1734,7 @@ namespace HFM.Forms
          // this catch at that point.
          catch (ObjectDisposedException ex)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error,
-                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            HfmTrace.WriteToHfmConsole(ex);
          }
       }
 
@@ -1949,7 +1943,7 @@ namespace HFM.Forms
       /// </summary>
       private static void ClearCacheFolder()
       {
-         DateTime Start = Debug.ExecStart;
+         DateTime Start = HfmTrace.ExecStart;
       
          string cacheFolder = Path.Combine(PreferenceSet.Instance.AppDataPath,
                                            PreferenceSet.Instance.CacheFolder);
@@ -1969,13 +1963,12 @@ namespace HFM.Forms
                }
                catch (IOException)
                {
-                  Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} Failed to clear cache file '{1}'.", Debug.FunctionName, fi.Name));
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} Failed to Clear Cache File '{1}'.", HfmTrace.FunctionName, fi.Name));
                }
             }
          }
 
-         Debug.WriteToHfmConsole(TraceLevel.Info,
-                                 String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+         HfmTrace.WriteToHfmConsole(TraceLevel.Info, Start);
       }
 
       /// <summary>
@@ -2139,16 +2132,14 @@ namespace HFM.Forms
          }
          catch (FileNotFoundException fnfe)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Warning,
-                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, fnfe.Message));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, fnfe);
 
             MessageBox.Show(fnfe.Message, base.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
          }
          catch (Exception ex)
          {
             // OK now this could be anything (even permissions)
-            Debug.WriteToHfmConsole(TraceLevel.Error,
-                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            HfmTrace.WriteToHfmConsole(ex);
 
             MessageBox.Show(ex.Message, base.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
          }
@@ -2257,8 +2248,7 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error,
-                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            HfmTrace.WriteToHfmConsole(ex);
          }
       }
       #endregion
@@ -2368,7 +2358,7 @@ namespace HFM.Forms
          if (newLevel != TraceLevelSwitch.Instance.Level)
          {
             TraceLevelSwitch.Instance.Level = newLevel;
-            Debug.WriteToHfmConsole(String.Format("Debug Message Level Changed: {0}", newLevel));
+            HfmTrace.WriteToHfmConsole(String.Format("Debug Message Level Changed: {0}", newLevel));
          }
       }
 

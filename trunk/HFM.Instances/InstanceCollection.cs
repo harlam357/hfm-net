@@ -31,7 +31,7 @@ using System.Collections.Generic;
 using HFM.Helpers;
 using HFM.Preferences;
 using HFM.Proteins;
-using Debug=HFM.Instrumentation.Debug;
+using HFM.Instrumentation;
 
 namespace HFM.Instances
 {
@@ -277,7 +277,7 @@ namespace HFM.Instances
                if (restoreUnitInfo != null)
                {
                   instance.CurrentUnitInfo = restoreUnitInfo;
-                  Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Restored UnitInfo for Instance '{1}'.", Debug.FunctionName, instance.InstanceName));
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Restored UnitInfo for Instance '{1}'.", HfmTrace.FunctionName, instance.InstanceName));
                }
                Add(instance, false);
             }
@@ -396,27 +396,26 @@ namespace HFM.Instances
                            }
                         }
                         Add(instance, false);
-                        Debug.WriteToHfmConsole(TraceLevel.Info,
-                                                String.Format("{0} Added FahMon Instance Name: {1}.", Debug.FunctionName, instance.InstanceName));
+                        HfmTrace.WriteToHfmConsole(TraceLevel.Info,
+                                                   String.Format("{0} Added FahMon Instance Name: {1}.", HfmTrace.FunctionName, instance.InstanceName));
                      }
                      else
                      {
-                        Debug.WriteToHfmConsole(TraceLevel.Warning,
-                                                String.Format("{0} Failed to add FahMon Instance: {1}.", Debug.FunctionName, line));
+                        HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
+                                                   String.Format("{0} Failed to add FahMon Instance: {1}.", HfmTrace.FunctionName, line));
                      }
                   }
                   else
                   {
-                     Debug.WriteToHfmConsole(TraceLevel.Warning,
-                                             String.Format("{0} Failed to add FahMon Instance (not tab delimited): {1}.", Debug.FunctionName, line));
+                     HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
+                                                String.Format("{0} Failed to add FahMon Instance (not tab delimited): {1}.", HfmTrace.FunctionName, line));
                   }
                }
             }
          }
          catch (Exception ex)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error,
-                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            HfmTrace.WriteToHfmConsole(ex);
          }
          finally
          {
@@ -446,8 +445,8 @@ namespace HFM.Instances
          {
             // Remove illegal characters
             instanceName = StringOps.CleanInstanceName(instanceName);
-            Debug.WriteToHfmConsole(TraceLevel.Warning,
-                                    String.Format("{0} Cleaned FahMon Instance Name: {1}.", Debug.FunctionName, instanceName));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
+                                       String.Format("{0} Cleaned FahMon Instance Name: {1}.", HfmTrace.FunctionName, instanceName));
          }
 
          // Get the instance path token
@@ -792,7 +791,7 @@ namespace HFM.Instances
          // If no clients loaded, stub out
          if (HasInstances == false) return;
          
-         DateTime Start = Debug.ExecStart;
+         DateTime Start = HfmTrace.ExecStart;
 
          UnitInfoCollection collection = UnitInfoCollection.Instance;
 
@@ -812,7 +811,7 @@ namespace HFM.Instances
 
          collection.Serialize();
 
-         Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
       }
       #endregion
 

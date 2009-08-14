@@ -26,7 +26,7 @@ using System.Text;
 
 using HFM.Proteins;
 using HFM.Preferences;
-using Debug = HFM.Instrumentation.Debug;
+using HFM.Instrumentation;
 
 namespace HFM.Proteins
 {
@@ -89,7 +89,7 @@ namespace HFM.Proteins
          }
          catch (Exception ex)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            HfmTrace.WriteToHfmConsole(ex);
          }
          finally
          {
@@ -223,7 +223,7 @@ namespace HFM.Proteins
 
       private static UnitInfoCollection Deserialize(string filePath)
       {
-         DateTime Start = Debug.ExecStart;
+         DateTime Start = HfmTrace.ExecStart;
       
          UnitInfoCollection collection = null;
       
@@ -236,7 +236,7 @@ namespace HFM.Proteins
          }
          catch (Exception ex)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            HfmTrace.WriteToHfmConsole(ex);
          }
          finally
          {
@@ -246,7 +246,7 @@ namespace HFM.Proteins
             }
          }
 
-         Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
          
          return collection;
       }
@@ -255,7 +255,7 @@ namespace HFM.Proteins
 
       private static void Serialize(UnitInfoCollection collection, string filePath)
       {
-         DateTime Start = Debug.ExecStart;
+         DateTime Start = HfmTrace.ExecStart;
       
          lock (_serializeLock)
          {
@@ -268,7 +268,7 @@ namespace HFM.Proteins
             }
             catch (Exception ex)
             {
-               Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+               HfmTrace.WriteToHfmConsole(ex);
             }
             finally
             {
@@ -279,7 +279,7 @@ namespace HFM.Proteins
             }
          }
 
-         Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
       }
       #endregion
    }

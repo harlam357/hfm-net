@@ -24,7 +24,7 @@ using System.Windows.Forms;
 
 using HFM.Instances;
 using HFM.Proteins;
-using Debug = HFM.Instrumentation.Debug;
+using HFM.Instrumentation;
 
 namespace HFM.Forms
 {
@@ -83,8 +83,7 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error,
-                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            HfmTrace.WriteToHfmConsole(ex);
             MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, "Project Description"));
          }
       }
@@ -131,8 +130,8 @@ namespace HFM.Forms
          }
          else
          {
-            Debug.WriteToHfmConsole(TraceLevel.Warning,
-                                    String.Format("{0} could not find Project ID '{1}'.", Debug.FunctionName, ProjectID));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
+                                       String.Format("{0} could not find Project ID '{1}'.", HfmTrace.FunctionName, ProjectID));
          }
 
          return lines.ToArray();

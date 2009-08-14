@@ -23,7 +23,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
 using HFM.Preferences;
-using Debug = HFM.Instrumentation.Debug;
+using HFM.Instrumentation;
 
 namespace HFM.Helpers
 {
@@ -125,9 +125,9 @@ namespace HFM.Helpers
          }
 
          DateTime CurrentTime = DateTime.UtcNow;
-         Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Current Time: {1} (UTC)", Debug.FunctionName, CurrentTime));
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Current Time: {1} (UTC)", HfmTrace.FunctionName, CurrentTime));
          DateTime NextUpdateTime = GetNextUpdateTime(LastUpdated);
-         Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Next Update Time: {1} (UTC)", Debug.FunctionName, NextUpdateTime));
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Next Update Time: {1} (UTC)", HfmTrace.FunctionName, NextUpdateTime));
 
          if (CurrentTime > NextUpdateTime)
          {
@@ -212,7 +212,7 @@ namespace HFM.Helpers
 
       private static UserStatsDataContainer Deserialize(string filePath)
       {
-         DateTime Start = Debug.ExecStart;
+         DateTime Start = HfmTrace.ExecStart;
       
          UserStatsDataContainer container = null;
       
@@ -225,7 +225,7 @@ namespace HFM.Helpers
          }
          catch (Exception ex)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            HfmTrace.WriteToHfmConsole(ex);
          }
          finally
          {
@@ -235,7 +235,7 @@ namespace HFM.Helpers
             }
          }
 
-         Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
          
          return container;
       }
@@ -244,7 +244,7 @@ namespace HFM.Helpers
 
       private static void Serialize(UserStatsDataContainer container, string filePath)
       {
-         DateTime Start = Debug.ExecStart;
+         DateTime Start = HfmTrace.ExecStart;
 
          lock (_serializeLock)
          {
@@ -257,7 +257,7 @@ namespace HFM.Helpers
             }
             catch (Exception ex)
             {
-               Debug.WriteToHfmConsole(TraceLevel.Error, String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+               HfmTrace.WriteToHfmConsole(ex);
             }
             finally
             {
@@ -268,7 +268,7 @@ namespace HFM.Helpers
             }
          }
 
-         Debug.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
       }
       #endregion
    }

@@ -25,7 +25,7 @@ using System.Net.Cache;
 using System.Text;
 
 using HFM.Preferences;
-using Debug = HFM.Instrumentation.Debug;
+using HFM.Instrumentation;
 
 namespace HFM.Helpers
 {
@@ -149,9 +149,9 @@ namespace HFM.Helpers
             {
                File.Delete(LocalFilePath);
             }
-            Debug.WriteToHfmConsole(TraceLevel.Warning,
-                                    String.Format("{0} ({1}) UnitInfo Http download (file is too big: {2} bytes).", Debug.FunctionName,
-                                                  InstanceName, r1.ContentLength));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
+                                       String.Format("{0} ({1}) UnitInfo Http download (file is too big: {2} bytes).", HfmTrace.FunctionName,
+                                                     InstanceName, r1.ContentLength));
          }
          else
          {
@@ -236,8 +236,7 @@ namespace HFM.Helpers
          }
          catch (Exception ex)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Warning,
-                                    String.Format("{0} threw exception {1}", Debug.FunctionName, ex.Message));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
             str = Url;
          }
 

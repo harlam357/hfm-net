@@ -23,7 +23,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 
 using HFM.Helpers;
-using Debug = HFM.Instrumentation.Debug;
+using HFM.Instrumentation;
 
 namespace HFM.Forms
 {
@@ -48,8 +48,7 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Error,
-                                    String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            HfmTrace.WriteToHfmConsole(ex);
             MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, "FAHLogStats.NET Google Code page"));
          }
       } 

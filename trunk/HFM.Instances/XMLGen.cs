@@ -24,9 +24,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Xml;
 
+using HFM.Instrumentation;
 using HFM.Preferences;
 using HFM.Helpers;
-using Debug=HFM.Instrumentation.Debug;
 
 namespace HFM.Instances
 {
@@ -100,7 +100,7 @@ namespace HFM.Instances
       public static void DoWebFtpUpload(string Server, string FtpPath, string Username, string Password, ICollection<ClientInstance> Instances)
       {
          // Time FTP Upload Conversation - Issue 52
-         DateTime Start = Debug.ExecStart;
+         DateTime Start = HfmTrace.ExecStart;
 
          try
          {
@@ -120,8 +120,7 @@ namespace HFM.Instances
          finally
          {
             // Time FTP Upload Conversation - Issue 52
-            Debug.WriteToHfmConsole(TraceLevel.Info,
-                                    String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, Start);
          }
       }
    

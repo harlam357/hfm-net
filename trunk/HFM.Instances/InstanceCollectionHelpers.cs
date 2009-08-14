@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 
 using HFM.Preferences;
-using Debug=HFM.Instrumentation.Debug;
+using HFM.Instrumentation;
 
 namespace HFM.Instances
 {
@@ -77,7 +77,7 @@ namespace HFM.Instances
       /// </summary>
       public static void FindDuplicates(List<string> DuplicateUserID, List<string> DuplicateProjects, ICollection<ClientInstance> Instances)
       {
-         DateTime Start = Debug.ExecStart;
+         DateTime Start = HfmTrace.ExecStart;
 
          DuplicateUserID.Clear();
          DuplicateProjects.Clear();
@@ -128,8 +128,7 @@ namespace HFM.Instances
             }
          }
 
-         Debug.WriteToHfmConsole(TraceLevel.Info,
-                                 String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+         HfmTrace.WriteToHfmConsole(TraceLevel.Info, Start);
       }
    }
 }

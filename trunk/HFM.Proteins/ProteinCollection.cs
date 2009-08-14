@@ -28,7 +28,7 @@ using System.Text;
 using Majestic12;
 
 using HFM.Preferences;
-using Debug = HFM.Instrumentation.Debug;
+using HFM.Instrumentation;
 
 namespace HFM.Proteins
 {
@@ -51,7 +51,6 @@ namespace HFM.Proteins
       private static ProteinCollection _Instance;
       private readonly static Object classLock = typeof(ProteinCollection);
 
-      // Erk ... this required local admin before!?
       private readonly string _LocalProjectInfoFile = Path.Combine(PreferenceSet.Instance.AppDataPath, "ProjectInfo.tab");
 
       public event ProjectInfoUpdatedEventHandler ProjectInfoUpdated;
@@ -73,14 +72,10 @@ namespace HFM.Proteins
       /// </summary>
       private ProteinCollection()
       {
-         //DateTime Start = Debug.ExecStart;
-         
          if (LoadFromTabDelimitedFile() == false)
          {
             DownloadFromStanford();
          }
-
-         //Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
       }
 
       /// <summary>
@@ -112,8 +107,7 @@ namespace HFM.Proteins
       /// <param name="ProjectInfoFile">Filename to load</param>
       public bool LoadFromTabDelimitedFile(string ProjectInfoFile)
       {
-         DateTime Start = Debug.ExecStart;
-         //String[] CSVData = new String[this.Count];
+         DateTime Start = HfmTrace.ExecStart;
 
          try
          {
@@ -146,9 +140,9 @@ namespace HFM.Proteins
                      Add(p.ProjectNumber, p);
                   }
                }
-               catch (Exception ExInner)
+               catch (Exception ex)
                {
-                  Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, ExInner.Message));
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
                }
             }
             if (Count > 0)
@@ -158,11 +152,14 @@ namespace HFM.Proteins
          }
          catch (Exception ex)
          {
-            Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw exception {1}.", Debug.FunctionName, ex.Message));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
             return false;
          }
+         finally
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, Start);
+         }
 
-         Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
          return true;
       }
 
@@ -177,7 +174,7 @@ namespace HFM.Proteins
       /// <param name="State">Null in this implementation</param>
       public void DownloadFromStanford(Object State /* null */)
       {
-         DateTime Start = Debug.ExecStart;
+         DateTime Start = HfmTrace.ExecStart;
          lock (this)
          {
             PreferenceSet Prefs = PreferenceSet.Instance;
@@ -212,20 +209,20 @@ namespace HFM.Proteins
             }
             catch (WebException ExWeb)
             {
-               Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw WebException {1}.", Debug.FunctionName, ExWeb.Message));
-               Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw WebException {1}.", HfmTrace.FunctionName, ExWeb.Message));
+               HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Execution Time: {1}", HfmTrace.FunctionName, HfmTrace.GetExecTime(Start)));
                return;
             }
             catch (IOException ExIO)
             {
-               Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw IOException {1}.", Debug.FunctionName, ExIO.Message));
-               Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw IOException {1}.", HfmTrace.FunctionName, ExIO.Message));
+               HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Execution Time: {1}", HfmTrace.FunctionName, HfmTrace.GetExecTime(Start)));
                return;
             }
             catch (Exception ex)
             {
-               Debug.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw Exception {1}.", Debug.FunctionName, ex.Message));
-               Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} threw Exception {1}.", HfmTrace.FunctionName, ex.Message));
+               HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Execution Time: {1}", HfmTrace.FunctionName, HfmTrace.GetExecTime(Start)));
                return;
             }
 
@@ -336,20 +333,20 @@ namespace HFM.Proteins
                   catch (Exception ex)
                   {
                      // Ignore this row of the table - unparseable
-                     Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} threw exception while parsing HTML: {1}", Debug.FunctionName, ex.Message));
+                     HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
                   }
                }
             }
             if (Count > 0)
             {
+               SaveToTabDelimitedFile(_LocalProjectInfoFile);
+
+               HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Loaded {1} Proteins from Stanford.", HfmTrace.FunctionName, Count));
                OnProjectInfoUpdated(new ProjectInfoUpdatedEventArgs());
             }
          }
 
-         SaveToTabDelimitedFile(_LocalProjectInfoFile);
-
-         Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} loaded {1} proteins from Stanford", Debug.FunctionName, Instance.Count));
-         Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+         HfmTrace.WriteToHfmConsole(TraceLevel.Info, Start);
          return;
       }
 
@@ -359,7 +356,7 @@ namespace HFM.Proteins
       /// <param name="ExtraNFOFile">Fully qualified filename to write</param>
       public void SaveToTabDelimitedFile(String ExtraNFOFile)
       {
-         DateTime Start = Debug.ExecStart;
+         DateTime Start = HfmTrace.ExecStart;
 
          String[] CSVData = new String[Count];
          Int32 i = 0;
@@ -379,7 +376,7 @@ namespace HFM.Proteins
          }
 
          File.WriteAllLines(_LocalProjectInfoFile, CSVData, Encoding.ASCII);
-         Debug.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Execution Time: {1}", Debug.FunctionName, Debug.GetExecTime(Start)));
+         HfmTrace.WriteToHfmConsole(TraceLevel.Info, Start);
       }
    }
 }
