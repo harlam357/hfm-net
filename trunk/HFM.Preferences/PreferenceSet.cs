@@ -417,6 +417,31 @@ namespace HFM.Preferences
       }
       #endregion
 
+      #region Color Log File
+      public event EventHandler ColorLogFileChanged;
+      private bool _ColorLogFile;
+      public bool ColorLogFile
+      {
+         get { return _ColorLogFile; }
+         set 
+         { 
+            if (_ColorLogFile != value)
+            {
+               _ColorLogFile = value;
+               OnColorLogFileChanged(EventArgs.Empty);
+            }
+         }
+      }
+
+      protected void OnColorLogFileChanged(EventArgs e)
+      {
+         if (ColorLogFileChanged != null)
+         {
+            ColorLogFileChanged(this, e);
+         }
+      } 
+      #endregion
+
       public static String AppPath
       {
          get
@@ -607,6 +632,7 @@ namespace HFM.Preferences
          _ShowUserStats = Settings.Default.ShowUserStats;
          _DuplicateUserIDCheck = Settings.Default.DuplicateUserIDCheck;
          _DuplicateProjectCheck = Settings.Default.DuplicateProjectCheck;
+         _ColorLogFile = Settings.Default.ColorLogFile;
          
          _AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
          _AppDataPath = Path.Combine(_AppDataPath, ExeName);
@@ -703,6 +729,8 @@ namespace HFM.Preferences
             
             if (RaiseDuplicateCheckChanged) OnDuplicateCheckChanged(EventArgs.Empty);
             #endregion
+
+            Settings.Default.ColorLogFile = _ColorLogFile;
 
             Settings.Default.Save();
          }

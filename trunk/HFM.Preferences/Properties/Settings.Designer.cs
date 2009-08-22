@@ -511,5 +511,17 @@ namespace HFM.Preferences.Properties {
                 this["DuplicateProjectCheck"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ColorLogFile {
+            get {
+                return ((bool)(this["ColorLogFile"]));
+            }
+            set {
+                this["ColorLogFile"] = value;
+            }
+        }
     }
 }

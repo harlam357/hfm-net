@@ -29,20 +29,27 @@ namespace HFM.Helpers
          return Type.GetType("Mono.Runtime") != null;
       }
       
-      public static string GetApplicationVersion()
+      public static string ApplicationVersion
       {
-         FileVersionInfo fileVersionInfo =
-            FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetEntryAssembly().Location);
-         return String.Format("v{0}.{1}.{2}.{3}", fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
-                                                  fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
+         get
+         {
+            return GetVersion("v{0}.{1}.{2}.{3}");
+         }
       }
 
-      public static string GetApplicationLabelVersion()
+      public static string ApplicationLabelVersion
       {
-         FileVersionInfo fileVersionInfo =
-            FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetEntryAssembly().Location);
-         return String.Format("{0}.{1}.{2} - Build {3}", fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
-                                                         fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
+         get
+         {
+            return GetVersion("{0}.{1}.{2} - Build {3}");
+         }
+      }
+      
+      private static string GetVersion(string Format)
+      {
+         FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetEntryAssembly().Location);
+         return String.Format(Format, fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
+                              fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
       }
    }
 }

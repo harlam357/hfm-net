@@ -192,7 +192,25 @@ namespace HFM.Helpers
       /// Get the Protein Description from the Url.
       /// </summary>
       /// <param name="Url">Http Url of remote file.</param>
+      /// <exception cref="ArgumentException">Throws if Url is Null or Empty.</exception>
       public static string ProteinDescriptionFromUrl(string Url)
+      {
+         if (String.IsNullOrEmpty(Url))
+         {
+            throw new ArgumentException("Argument 'Url' cannot be a null or empty string.");
+         }
+
+         // Stub out if the given URL is an Unassigned Description
+         if (Url.Equals(HFM.Proteins.Protein.UnassignedDescription)) return Url;
+      
+         return ProteinDescriptionFromUrl(new Uri(Url));
+      }
+
+      /// <summary>
+      /// Get the Protein Description from the Url.
+      /// </summary>
+      /// <param name="Url">Http Url of remote file.</param>
+      public static string ProteinDescriptionFromUrl(Uri Url)
       {
          return ProteinDescriptionFromUrl(Url, String.Empty, String.Empty);
       }
@@ -203,16 +221,10 @@ namespace HFM.Helpers
       /// <param name="Url">Http Url of remote file.</param>
       /// <param name="Username">Http Login Username.</param>
       /// <param name="Password">Http Login Password.</param>
-      /// <exception cref="ArgumentException">Throws if Url is Null or Empty.</exception>
-      public static string ProteinDescriptionFromUrl(string Url, string Username, string Password)
+      /// <exception cref="ArgumentNullException">Throws if Url is Null.</exception>
+      public static string ProteinDescriptionFromUrl(Uri Url, string Username, string Password)
       {
-         if (String.IsNullOrEmpty(Url))
-         {
-            throw new ArgumentException("Argument 'Url' cannot be a null or empty string.");
-         }
-      
-         // Stub out if the given URL is an Unassigned Description
-         if (Url.Equals(HFM.Proteins.Protein.UnassignedDescription)) return Url;
+         if (Url == null) throw new ArgumentNullException("Url", "Argument 'Url' cannot be null.");
 
          string str;
 
@@ -233,22 +245,22 @@ namespace HFM.Helpers
                str = reader.ReadToEnd();
             }
             
-            int index = str.IndexOf("<TABLE");
+            int index = str.IndexOf("<TABLE", StringComparison.InvariantCulture);
             int length = str.LastIndexOf("</TABLE>");
             
             str = str.Substring(index, (length - index) + 8);
-            length = str.IndexOf("<FORM ");
-            index = str.IndexOf("</FORM>");
+            length = str.IndexOf("<FORM ", StringComparison.InvariantCulture);
+            index = str.IndexOf("</FORM>", StringComparison.InvariantCulture);
             
             if ((index >= 0) && (length >= 0))
             {
                str2 = str.Substring(0, length);
-               str3 = str.Substring(index);
+               str3 = str.Substring(index + 7);
                str = str2 + str3;
             }
-            
-            index = str.IndexOf("<font");
-            length = str.IndexOf(">", index);
+
+            index = str.IndexOf("<font", StringComparison.InvariantCulture);
+            length = str.IndexOf(">", index, StringComparison.InvariantCulture);
             
             if ((index >= 0) && (length >= 0))
             {
@@ -260,7 +272,7 @@ namespace HFM.Helpers
          catch (Exception ex)
          {
             HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
-            str = Url;
+            str = Url.AbsoluteUri;
          }
 
          return str;

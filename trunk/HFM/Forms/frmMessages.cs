@@ -23,13 +23,7 @@ namespace HFM.Forms
 {
    public partial class frmMessages : Classes.FormWrapper
    {
-      #region Properties
-      public string[] TextLines
-      {
-         get { return txtMessages.Lines; }
-         set { txtMessages.Lines = value; }
-      } 
-      #endregion
+      private volatile List<string> _lines = new List<string>(500);
 
       #region Constructor
       public frmMessages()
@@ -41,16 +35,14 @@ namespace HFM.Forms
       #region Implementation
       public void AddMessage(string message)
       {
-         List<string> lines = new List<string>(txtMessages.Lines);
-
-         if (txtMessages.Lines.Length > 500)
+         if (_lines.Count > 500)
          {
-            lines.RemoveRange(0, 100);
+            _lines.RemoveRange(0, 100);
          }
 
-         lines.Add(message);
+         _lines.Add(message);
 
-         UpdateMessages(lines.ToArray());
+         UpdateMessages(_lines.ToArray());
       }
 
       public void ScrollToEnd()
@@ -67,7 +59,7 @@ namespace HFM.Forms
          {
             // BIG BUG FIX HERE!!! Using Invoke instead of BeginInvoke was casing 
             // deadlock when trying to call this delegate from multiple threads
-            BeginInvoke(new UpdateMessagesDelegate(UpdateMessages), new object[] { lines });
+            txtMessages.BeginInvoke(new UpdateMessagesDelegate(UpdateMessages), new object[] { lines });
             return;
          }
          

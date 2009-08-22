@@ -55,6 +55,8 @@ namespace HFM.Forms
          this.tabControl1 = new System.Windows.Forms.TabControl();
          this.tabSchdTasks = new System.Windows.Forms.TabPage();
          this.grpUpdateData = new HFM.Classes.GroupBoxWrapper();
+         this.chkDuplicateProject = new HFM.Classes.CheckBoxWrapper();
+         this.chkDuplicateUserID = new HFM.Classes.CheckBoxWrapper();
          this.chkShowUserStats = new HFM.Classes.CheckBoxWrapper();
          this.label2 = new HFM.Classes.LabelWrapper();
          this.cboPpdCalc = new HFM.Classes.ComboBoxWrapper();
@@ -126,8 +128,7 @@ namespace HFM.Forms
          this.toolTipPrefs = new System.Windows.Forms.ToolTip(this.components);
          this.btnOK = new HFM.Classes.ButtonWrapper();
          this.btnCancel = new HFM.Classes.ButtonWrapper();
-         this.chkDuplicateUserID = new HFM.Classes.CheckBoxWrapper();
-         this.chkDuplicateProject = new HFM.Classes.CheckBoxWrapper();
+         this.chkColorLog = new HFM.Classes.CheckBoxWrapper();
          this.tabControl1.SuspendLayout();
          this.tabSchdTasks.SuspendLayout();
          this.grpUpdateData.SuspendLayout();
@@ -194,6 +195,7 @@ namespace HFM.Forms
          // 
          // grpUpdateData
          // 
+         this.grpUpdateData.Controls.Add(this.chkColorLog);
          this.grpUpdateData.Controls.Add(this.chkDuplicateProject);
          this.grpUpdateData.Controls.Add(this.chkDuplicateUserID);
          this.grpUpdateData.Controls.Add(this.chkShowUserStats);
@@ -212,13 +214,33 @@ namespace HFM.Forms
          this.grpUpdateData.TabStop = false;
          this.grpUpdateData.Text = "Update Data";
          // 
+         // chkDuplicateProject
+         // 
+         this.chkDuplicateProject.AutoSize = true;
+         this.chkDuplicateProject.Location = new System.Drawing.Point(270, 92);
+         this.chkDuplicateProject.Name = "chkDuplicateProject";
+         this.chkDuplicateProject.Size = new System.Drawing.Size(182, 17);
+         this.chkDuplicateProject.TabIndex = 8;
+         this.chkDuplicateProject.Text = "Duplicate Project (R/C/G) check";
+         this.chkDuplicateProject.UseVisualStyleBackColor = true;
+         // 
+         // chkDuplicateUserID
+         // 
+         this.chkDuplicateUserID.AutoSize = true;
+         this.chkDuplicateUserID.Location = new System.Drawing.Point(10, 92);
+         this.chkDuplicateUserID.Name = "chkDuplicateUserID";
+         this.chkDuplicateUserID.Size = new System.Drawing.Size(189, 17);
+         this.chkDuplicateUserID.TabIndex = 7;
+         this.chkDuplicateUserID.Text = "Duplicate User/Machine ID check";
+         this.chkDuplicateUserID.UseVisualStyleBackColor = true;
+         // 
          // chkShowUserStats
          // 
          this.chkShowUserStats.AutoSize = true;
-         this.chkShowUserStats.Location = new System.Drawing.Point(246, 66);
+         this.chkShowUserStats.Location = new System.Drawing.Point(270, 66);
          this.chkShowUserStats.Name = "chkShowUserStats";
          this.chkShowUserStats.Size = new System.Drawing.Size(126, 17);
-         this.chkShowUserStats.TabIndex = 9;
+         this.chkShowUserStats.TabIndex = 6;
          this.chkShowUserStats.Text = "Show EOC user stats";
          this.chkShowUserStats.UseVisualStyleBackColor = true;
          // 
@@ -228,7 +250,7 @@ namespace HFM.Forms
          this.label2.Location = new System.Drawing.Point(7, 125);
          this.label2.Name = "label2";
          this.label2.Size = new System.Drawing.Size(123, 13);
-         this.label2.TabIndex = 8;
+         this.label2.TabIndex = 9;
          this.label2.Text = "Calculate PPD based on";
          // 
          // cboPpdCalc
@@ -238,7 +260,7 @@ namespace HFM.Forms
          this.cboPpdCalc.Location = new System.Drawing.Point(136, 122);
          this.cboPpdCalc.Name = "cboPpdCalc";
          this.cboPpdCalc.Size = new System.Drawing.Size(109, 21);
-         this.cboPpdCalc.TabIndex = 7;
+         this.cboPpdCalc.TabIndex = 10;
          // 
          // chkOffline
          // 
@@ -246,7 +268,7 @@ namespace HFM.Forms
          this.chkOffline.Location = new System.Drawing.Point(10, 66);
          this.chkOffline.Name = "chkOffline";
          this.chkOffline.Size = new System.Drawing.Size(157, 17);
-         this.chkOffline.TabIndex = 6;
+         this.chkOffline.TabIndex = 5;
          this.chkOffline.Text = "Always list offline clients last";
          this.chkOffline.UseVisualStyleBackColor = true;
          // 
@@ -256,12 +278,12 @@ namespace HFM.Forms
          this.lbl2Collect.Location = new System.Drawing.Point(7, 19);
          this.lbl2Collect.Name = "lbl2Collect";
          this.lbl2Collect.Size = new System.Drawing.Size(94, 13);
-         this.lbl2Collect.TabIndex = 5;
+         this.lbl2Collect.TabIndex = 0;
          this.lbl2Collect.Text = "Collect client data:";
          // 
          // txtCollectMinutes
          // 
-         this.txtCollectMinutes.Location = new System.Drawing.Point(296, 38);
+         this.txtCollectMinutes.Location = new System.Drawing.Point(320, 38);
          this.txtCollectMinutes.MaxLength = 3;
          this.txtCollectMinutes.Name = "txtCollectMinutes";
          this.txtCollectMinutes.Size = new System.Drawing.Size(48, 20);
@@ -274,7 +296,7 @@ namespace HFM.Forms
          // lbl2SchedExplain
          // 
          this.lbl2SchedExplain.AutoSize = true;
-         this.lbl2SchedExplain.Location = new System.Drawing.Point(345, 41);
+         this.lbl2SchedExplain.Location = new System.Drawing.Point(369, 41);
          this.lbl2SchedExplain.Name = "lbl2SchedExplain";
          this.lbl2SchedExplain.Size = new System.Drawing.Size(108, 13);
          this.lbl2SchedExplain.TabIndex = 4;
@@ -286,7 +308,7 @@ namespace HFM.Forms
          this.chkScheduled.AutoSize = true;
          this.chkScheduled.Checked = true;
          this.chkScheduled.CheckState = System.Windows.Forms.CheckState.Checked;
-         this.chkScheduled.Location = new System.Drawing.Point(246, 40);
+         this.chkScheduled.Location = new System.Drawing.Point(270, 40);
          this.chkScheduled.Name = "chkScheduled";
          this.chkScheduled.Size = new System.Drawing.Size(53, 17);
          this.chkScheduled.TabIndex = 2;
@@ -942,25 +964,15 @@ namespace HFM.Forms
          this.btnCancel.UseVisualStyleBackColor = true;
          this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
          // 
-         // chkDuplicateUserID
+         // chkColorLog
          // 
-         this.chkDuplicateUserID.AutoSize = true;
-         this.chkDuplicateUserID.Location = new System.Drawing.Point(10, 92);
-         this.chkDuplicateUserID.Name = "chkDuplicateUserID";
-         this.chkDuplicateUserID.Size = new System.Drawing.Size(189, 17);
-         this.chkDuplicateUserID.TabIndex = 10;
-         this.chkDuplicateUserID.Text = "Duplicate User/Machine ID check";
-         this.chkDuplicateUserID.UseVisualStyleBackColor = true;
-         // 
-         // chkDuplicateProject
-         // 
-         this.chkDuplicateProject.AutoSize = true;
-         this.chkDuplicateProject.Location = new System.Drawing.Point(246, 92);
-         this.chkDuplicateProject.Name = "chkDuplicateProject";
-         this.chkDuplicateProject.Size = new System.Drawing.Size(182, 17);
-         this.chkDuplicateProject.TabIndex = 11;
-         this.chkDuplicateProject.Text = "Duplicate Project (R/C/G) check";
-         this.chkDuplicateProject.UseVisualStyleBackColor = true;
+         this.chkColorLog.AutoSize = true;
+         this.chkColorLog.Location = new System.Drawing.Point(270, 118);
+         this.chkColorLog.Name = "chkColorLog";
+         this.chkColorLog.Size = new System.Drawing.Size(126, 17);
+         this.chkColorLog.TabIndex = 11;
+         this.chkColorLog.Text = "Color the FAHlog text";
+         this.chkColorLog.UseVisualStyleBackColor = true;
          // 
          // frmPreferences
          // 
@@ -1091,5 +1103,6 @@ namespace HFM.Forms
       private HFM.Classes.CheckBoxWrapper chkShowUserStats;
       private HFM.Classes.CheckBoxWrapper chkDuplicateProject;
       private HFM.Classes.CheckBoxWrapper chkDuplicateUserID;
+      private HFM.Classes.CheckBoxWrapper chkColorLog;
    }
 }

@@ -34,7 +34,7 @@ namespace HFM.Forms
       {
          InitializeComponent();
 
-         lblVersion.Text = String.Format("Version {0}", PlatformOps.GetApplicationLabelVersion());
+         lblVersion.Text = String.Format("Version {0}", PlatformOps.ApplicationLabelVersion);
       } 
       #endregion
 

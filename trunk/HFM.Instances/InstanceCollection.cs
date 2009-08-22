@@ -57,9 +57,55 @@ namespace HFM.Instances
       public event EventHandler InstanceRemoved;
       public event EventHandler InstanceRetrieved;
       public event EventHandler DuplicatesFound;
+      
+      public event EventHandler RefreshUserStatsData;
       #endregion
       
       #region Members
+      /// <summary>
+      /// Conversion factor - minutes to milli-seconds
+      /// </summary>
+      private const int MinToMillisec = 60000;
+
+      /// <summary>
+      /// Retrieval Timer Object (init 10 minutes)
+      /// </summary>
+      private readonly System.Timers.Timer workTimer = new System.Timers.Timer(600000);
+
+      /// <summary>
+      /// WebGen Timer Object (init 15 minutes)
+      /// </summary>
+      private readonly System.Timers.Timer webTimer = new System.Timers.Timer(900000);
+
+      /// <summary>
+      /// Local time that denotes when a full retrieve started (only accessed by the RetrieveInProgress property)
+      /// </summary>
+      private DateTime _RetrieveExecStart;
+      /// <summary>
+      /// Local flag that denotes a full retrieve already in progress (only accessed by the RetrieveInProgress property)
+      /// </summary>
+      private volatile bool _RetrievalInProgress = false;
+      /// <summary>
+      /// Local flag that denotes a full retrieve already in progress
+      /// </summary>
+      public bool RetrievalInProgress
+      {
+         get { return _RetrievalInProgress; }
+         private set
+         {
+            if (value)
+            {
+               _RetrieveExecStart = HfmTrace.ExecStart;
+               _RetrievalInProgress = value;
+            }
+            else
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Total Retrieval Execution Time: {0}", HfmTrace.GetExecTime(_RetrieveExecStart)));
+               _RetrievalInProgress = value;
+            }
+         }
+      }
+      
       /// <summary>
       /// Total Number of Fields (Columns) available to the DataGridView
       /// </summary>
@@ -106,6 +152,11 @@ namespace HFM.Instances
          _displayCollection = new SortableBindingList<DisplayInstance>();
          _duplicateProjects = new List<string>();
          _duplicateUserID = new List<string>();
+
+         // Hook up Background Timer Event Handler
+         workTimer.Elapsed += bgWorkTimer_Tick;
+         // Hook up WebGen Timer Event Handler
+         webTimer.Elapsed += webGenTimer_Tick;
       }
       #endregion
 
@@ -173,6 +224,14 @@ namespace HFM.Instances
             DuplicatesFound(this, e);
          }
       }
+
+      private void OnRefreshUserStatsData(EventArgs e)
+      {
+         if (RefreshUserStatsData != null)
+         {
+            RefreshUserStatsData(this, e);
+         }
+      }
       #endregion
 
       #region Properties
@@ -182,6 +241,25 @@ namespace HFM.Instances
       public Dictionary<string, ClientInstance> InstanceCollection
       {
          get { return _instanceCollection; }
+      }
+
+      /// <summary>
+      /// Get Array Representation of Current Client Instance objects in Collection
+      /// </summary>
+      public ClientInstance[] CurrentInstanceArray
+      {
+         get
+         {
+            if (Count > 0)
+            {
+               ClientInstance[] instances = new ClientInstance[Count];
+               _instanceCollection.Values.CopyTo(instances, 0);
+
+               return instances;
+            }
+            
+            return null;
+         }
       }
 
       /// <summary>
@@ -290,6 +368,12 @@ namespace HFM.Instances
          if (HasInstances)
          {
             _ConfigFilename = xmlDocName;
+
+            // Get client logs         
+            QueueNewRetrieval();
+            // Start Retrieval and WebGen Timers
+            SetTimerState();
+
             OnCollectionLoaded(EventArgs.Empty);
          }
       }
@@ -428,6 +512,12 @@ namespace HFM.Instances
          if (HasInstances)
          {
             _ChangedAfterSave = true;
+
+            // Get client logs         
+            QueueNewRetrieval();
+            // Start Retrieval and WebGen Timers
+            SetTimerState();
+
             OnCollectionLoaded(EventArgs.Empty);
          }
       }
@@ -502,7 +592,7 @@ namespace HFM.Instances
       }
       #endregion
 
-      #region Implementation
+      #region List Like Implementation (eventually implement IList or ICollection)
       /// <summary>
       /// Add an Instance
       /// </summary>
@@ -646,16 +736,148 @@ namespace HFM.Instances
                                                                 });
          return findInstance != null;
       }
+      #endregion
+
+      #region Retrieval Logic
+      /// <summary>
+      /// When the host refresh timer expires, refresh all the hosts
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
+      private void bgWorkTimer_Tick(object sender, EventArgs e)
+      {
+         HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Running Background Timer...");
+         QueueNewRetrieval();
+      }
 
       /// <summary>
-      /// Get Array Representation of Current Client Instance objects in Collection
+      /// When the web gen timer expires, refresh the website files
       /// </summary>
-      public ClientInstance[] GetCurrentInstanceArray()
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
+      private void webGenTimer_Tick(object sender, EventArgs e)
       {
-         ClientInstance[] instances = new ClientInstance[Count];
-         _instanceCollection.Values.CopyTo(instances, 0);
+         if (PreferenceSet.Instance.GenerateWeb == false) return;
+
+         DateTime Start = HfmTrace.ExecStart;
+
+         if (webTimer.Enabled)
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping WebGen Timer Loop");
+         }
+         webTimer.Stop();
+
+         HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Starting WebGen.", HfmTrace.FunctionName));
+
+         PreferenceSet Prefs = PreferenceSet.Instance;
+         Match match = StringOps.MatchFtpWithUserPassUrl(Prefs.WebRoot);
          
-         return instances;
+         try
+         {
+            if (match.Success)
+            {
+               ClientInstance[] instances = CurrentInstanceArray;
+               XMLGen.DoHtmlGeneration(Path.GetTempPath(), instances);
+
+               string Server = match.Result("${domain}");
+               string FtpPath = match.Result("${file}");
+               string Username = match.Result("${username}");
+               string Password = match.Result("${password}");
+
+               XMLGen.DoWebFtpUpload(Server, FtpPath, Username, Password, instances);
+            }
+            else
+            {
+               // Create the web folder (just in case)
+               if (Directory.Exists(PreferenceSet.Instance.WebRoot) == false)
+               {
+                  Directory.CreateDirectory(Prefs.WebRoot);
+               }
+
+               // Copy the CSS file to the output directory
+               string sCSSFileName = Path.Combine(Path.Combine(PreferenceSet.AppPath, "CSS"), Prefs.CSSFileName);
+               if (File.Exists(sCSSFileName))
+               {
+                  File.Copy(sCSSFileName, Path.Combine(Prefs.WebRoot, Prefs.CSSFileName), true);
+               }
+
+               XMLGen.DoHtmlGeneration(Prefs.WebRoot, CurrentInstanceArray);
+            }
+         }
+         catch (Exception ex)
+         {
+            HfmTrace.WriteToHfmConsole(ex);
+         }
+         finally
+         {
+            StartWebGenTimer();
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, Start);
+         }
+      }
+
+      /// <summary>
+      /// Stick each Instance in the background thread queue to retrieve the info for a given Instance
+      /// </summary>
+      public void QueueNewRetrieval()
+      {
+         // don't fire this process twice
+         if (RetrievalInProgress)
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Retrieval Already In Progress...", HfmTrace.FunctionName));
+            return;
+         }
+         
+         // only fire if there are Hosts
+         if (HasInstances)
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping Background Timer Loop");
+            workTimer.Stop();
+
+            // fire the retrieval wrapper thread (basically a wait thread off the UI thread)
+            new MethodInvoker(DoRetrievalWrapper).BeginInvoke(null, null);
+         }
+      }
+      
+      /// <summary>
+      /// Wraps the DoRetrieval function on a seperate thread and fires post retrieval processes
+      /// </summary>
+      private void DoRetrievalWrapper()
+      {
+         try
+         {
+            // set full retrieval flag
+            RetrievalInProgress = true;
+
+            // fire the actual retrieval thread
+            IAsyncResult async = new MethodInvoker(DoRetrieval).BeginInvoke(null, null);
+            // wait for completion
+            async.AsyncWaitHandle.WaitOne();
+
+            PreferenceSet Prefs = PreferenceSet.Instance;
+
+            // run post retrieval processes
+            if (Prefs.GenerateWeb && Prefs.WebGenAfterRefresh)
+            {
+               // do a web gen
+               webGenTimer_Tick(null, null);
+            }
+
+            if (Prefs.ShowUserStats)
+            {
+               OnRefreshUserStatsData(EventArgs.Empty);
+            }
+
+            // Enable the data retrieval timer
+            if (Prefs.SyncOnSchedule)
+            {
+               StartBackgroundTimer();
+            }
+         }
+         finally
+         {
+            // clear full retrieval flag
+            RetrievalInProgress = false;
+         }
       }
 
       /// <summary>
@@ -673,7 +895,7 @@ namespace HFM.Instances
          _instanceCollection.Keys.CopyTo(instanceKeys, 0);
 
          List<WaitHandle> waitHandleList = new List<WaitHandle>();
-         for (int i = 0; i < numInstances; )
+         for (int i = 0; i < numInstances;)
          {
             waitHandleList.Clear();
             // loop through the instances (can only handle up to 64 wait handles at a time)
@@ -780,6 +1002,77 @@ namespace HFM.Instances
             ProteinBenchmarkCollection.Instance.Serialize();
          }
       }
+
+      /// <summary>
+      /// Disable and enable the background work timers
+      /// </summary>
+      public void SetTimerState()
+      {
+         // Disable timers if no hosts
+         if (HasInstances == false)
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, "No Hosts - Stopping Both Background Timer Loops");
+            workTimer.Stop();
+            webTimer.Stop();
+            return;
+         }
+
+         // Enable the data retrieval timer
+         if (PreferenceSet.Instance.SyncOnSchedule)
+         {
+            if (RetrievalInProgress == false)
+            {
+               StartBackgroundTimer();
+            }
+         }
+         else
+         {
+            if (workTimer.Enabled)
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping Background Timer Loop");
+               workTimer.Stop();
+            }
+         }
+
+         // Enable the web generation timer
+         if (PreferenceSet.Instance.GenerateWeb && PreferenceSet.Instance.WebGenAfterRefresh == false)
+         {
+            StartWebGenTimer();
+         }
+         else
+         {
+            if (webTimer.Enabled)
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping WebGen Timer Loop");
+               webTimer.Stop();
+            }
+         }
+      }
+
+      /// <summary>
+      /// Starts Retrieval Timer Loop
+      /// </summary>
+      private void StartBackgroundTimer()
+      {
+         workTimer.Interval = Convert.ToInt32(PreferenceSet.Instance.SyncTimeMinutes) * MinToMillisec;
+         HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Starting Background Timer Loop: {0} Minutes",
+                                                                    PreferenceSet.Instance.SyncTimeMinutes));
+         workTimer.Start();
+      }
+
+      /// <summary>
+      /// Start the Web Generation Timer
+      /// </summary>
+      private void StartWebGenTimer()
+      {
+         if (PreferenceSet.Instance.GenerateWeb && PreferenceSet.Instance.WebGenAfterRefresh == false)
+         {
+            webTimer.Interval = Convert.ToInt32(PreferenceSet.Instance.GenerateInterval) * MinToMillisec;
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Starting WebGen Timer Loop: {0} Minutes",
+                                                                       PreferenceSet.Instance.GenerateInterval));
+            webTimer.Start();
+         }
+      }
       #endregion
 
       #region Save UnitInfo Collection
@@ -869,7 +1162,7 @@ namespace HFM.Instances
       /// </summary>
       public void FindDuplicates() // Issue 19
       {
-         InstanceCollectionHelpers.FindDuplicates(_duplicateUserID, _duplicateProjects, _instanceCollection.Values);
+         InstanceCollectionHelpers.FindDuplicates(_duplicateUserID, _duplicateProjects, CurrentInstanceArray);
 
          if (_duplicateUserID.Count > 0 || _duplicateProjects.Count > 0)
          {

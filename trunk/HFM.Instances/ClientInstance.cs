@@ -39,6 +39,7 @@ namespace HFM.Instances
       Unknown,
       Offline,
       Stopped,
+      EuePause,
       Hung,
       Paused,
       RunningNoFrameTimes,
@@ -73,6 +74,9 @@ namespace HFM.Instances
       // Log Filename Constants
       public const string LocalFAHLog = "FAHlog.txt";
       public const string LocalUnitInfo = "unitinfo.txt";
+      
+      public const string DefaultUserID = "";
+      public const int DefaultMachineID = 0; 
       #endregion
       
       #region Public Events
@@ -354,6 +358,18 @@ namespace HFM.Instances
       }
 
       /// <summary>
+      /// List of current log file lines
+      /// </summary>
+      private IList<LogLine> _CurrentLogLines = new List<LogLine>();
+      /// <summary>
+      /// List of current log file text lines
+      /// </summary>
+      public IList<LogLine> CurrentLogLines
+      {
+         get { return _CurrentLogLines; }
+      }
+
+      /// <summary>
       /// User ID associated with this client
       /// </summary>
       private string _UserID;
@@ -514,9 +530,14 @@ namespace HFM.Instances
       /// </summary>
       private void Clear()
       {
-         // reset total, completed, and failed values
-         UserID = String.Empty;
-         MachineID = 0;
+         // reset client level values
+         _CurrentLogLines = new List<LogLine>();
+         
+         FoldingID = UnitInfo.UsernameDefault;
+         Team = UnitInfo.TeamDefault;
+         UserID = DefaultUserID;
+         MachineID = DefaultMachineID;
+
          TotalUnits = 0;
          NumberOfCompletedUnitsSinceLastStart = 0;
          NumberOfFailedUnitsSinceLastStart = 0;
@@ -758,7 +779,7 @@ namespace HFM.Instances
          #endregion
 
          #region Write Verbose Trace
-         if (HFM.Instrumentation.TraceLevelSwitch.GetTraceLevelSwitch().TraceVerbose)
+         if (TraceLevelSwitch.GetTraceLevelSwitch().TraceVerbose)
          {
             List<string> messages = new List<string>(10);
 
@@ -800,7 +821,7 @@ namespace HFM.Instances
          
          LogParser lp = new LogParser();
          
-         IList<string> logLines = lr.GetPreviousWorkUnitLog();
+         IList<LogLine> logLines = lr.PreviousWorkUnitLogLines;
          if (logLines != null)
          {
             parsedUnitInfo = new UnitInfo(InstanceName, Path, FoldingID, Team);
@@ -824,9 +845,11 @@ namespace HFM.Instances
             }
          }
          
-         logLines = lr.GetCurrentWorkUnitLog();
+         logLines = lr.CurrentWorkUnitLogLines;
          if (logLines != null)
          {
+            _CurrentLogLines = logLines;
+            
             Status = ClientStatus.RunningNoFrameTimes;
 
             parsedUnitInfo = new UnitInfo(InstanceName, Path, FoldingID, Team);
@@ -856,6 +879,7 @@ namespace HFM.Instances
             CurrentUnitInfo = parsedUnitInfo;
 
             if (Status == ClientStatus.Stopped ||
+                Status == ClientStatus.EuePause ||
                 Status == ClientStatus.Paused)
             {
                // client is stopped or paused, clear PPD values
@@ -885,12 +909,9 @@ namespace HFM.Instances
       /// </summary>
       public void Retrieve()
       {
-         if (_RetrievalInProgress)
-         {
-            // Don't allow this to fire more than once at a time
-            return;
-         }
-         
+         // Don't allow this to fire more than once at a time
+         if (_RetrievalInProgress) return;
+
          try
          {
             _RetrievalInProgress = true;
@@ -1287,6 +1308,7 @@ namespace HFM.Instances
             case ClientStatus.RunningNoFrameTimes:
                return ColorTranslator.ToHtml(Color.Black);
             case ClientStatus.Stopped:
+            case ClientStatus.EuePause:
             case ClientStatus.Hung:
                return ColorTranslator.ToHtml(Color.White);
             case ClientStatus.Paused:
@@ -1312,6 +1334,7 @@ namespace HFM.Instances
             case ClientStatus.RunningNoFrameTimes:
                return Color.Yellow;
             case ClientStatus.Stopped:
+            case ClientStatus.EuePause:
             case ClientStatus.Hung:
                return Color.DarkRed;
             case ClientStatus.Paused:

@@ -108,7 +108,7 @@ namespace HFM.Forms
          this.toolTipGrid = new System.Windows.Forms.ToolTip(this.components);
          this.splitContainer1 = new HFM.Classes.SplitContainerWrapper();
          this.dataGridView1 = new HFM.Classes.DataGridViewWrapper();
-         this.txtLogFile = new HFM.Classes.TextBoxWrapper();
+         this.txtLogFile = new HFM.Classes.RichTextBoxWrapper();
          this.statusStrip.SuspendLayout();
          this.notifyMenu.SuspendLayout();
          this.AppMenu.SuspendLayout();
@@ -805,12 +805,12 @@ namespace HFM.Forms
          this.txtLogFile.BackColor = System.Drawing.Color.White;
          this.txtLogFile.Dock = System.Windows.Forms.DockStyle.Fill;
          this.txtLogFile.Location = new System.Drawing.Point(0, 0);
-         this.txtLogFile.Multiline = true;
          this.txtLogFile.Name = "txtLogFile";
          this.txtLogFile.ReadOnly = true;
-         this.txtLogFile.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+         this.txtLogFile.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
          this.txtLogFile.Size = new System.Drawing.Size(988, 356);
          this.txtLogFile.TabIndex = 1;
+         this.txtLogFile.Text = "";
          // 
          // frmMain
          // 
@@ -835,7 +835,6 @@ namespace HFM.Forms
          this.gridContextMenuStrip.ResumeLayout(false);
          this.splitContainer1.Panel1.ResumeLayout(false);
          this.splitContainer1.Panel2.ResumeLayout(false);
-         this.splitContainer1.Panel2.PerformLayout();
          this.splitContainer1.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
          this.ResumeLayout(false);
@@ -881,7 +880,7 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripSeparator mnuClientsSep2;
       private System.Windows.Forms.ToolStripMenuItem mnuClientsRefreshSelected;
       private System.Windows.Forms.ToolStripMenuItem mnuClientsRefreshAll;
-      private Classes.TextBoxWrapper txtLogFile;
+      private Classes.RichTextBoxWrapper txtLogFile;
       private System.Windows.Forms.ToolStripMenuItem mnuView;
       private System.Windows.Forms.ToolStripMenuItem mnuViewShowHideLog;
       private System.Windows.Forms.ToolStripMenuItem mnuTools;

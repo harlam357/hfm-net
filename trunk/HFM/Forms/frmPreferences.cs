@@ -89,6 +89,7 @@ namespace HFM.Forms
          chkShowUserStats.Checked = Prefs.ShowUserStats;
          chkDuplicateUserID.Checked = Prefs.DuplicateUserIDCheck;
          chkDuplicateProject.Checked = Prefs.DuplicateProjectCheck;
+         chkColorLog.Checked = Prefs.ColorLogFile;
          cboPpdCalc.Items.Add(ePpdCalculation.LastFrame);
          cboPpdCalc.Items.Add(ePpdCalculation.LastThreeFrames);
          cboPpdCalc.Items.Add(ePpdCalculation.AllFrames);
@@ -537,6 +538,7 @@ namespace HFM.Forms
          Prefs.ShowUserStats = chkShowUserStats.Checked;
          Prefs.DuplicateUserIDCheck = chkDuplicateUserID.Checked;
          Prefs.DuplicateProjectCheck = chkDuplicateProject.Checked;
+         Prefs.ColorLogFile = chkColorLog.Checked;
          Prefs.PpdCalculation = (ePpdCalculation)cboPpdCalc.SelectedItem;
          Prefs.SyncTimeMinutes = Int32.Parse(txtCollectMinutes.Text);
          Prefs.WebRoot = txtWebSiteBase.Text;

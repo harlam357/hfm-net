@@ -26,13 +26,24 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ScriptedRelease|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -95,6 +106,12 @@
     </Compile>
     <Compile Include="Classes\RadioButtonWrapper.Designer.cs">
       <DependentUpon>RadioButtonWrapper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\RichTextBoxWrapper.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Classes\RichTextBoxWrapper.Designer.cs">
+      <DependentUpon>RichTextBoxWrapper.cs</DependentUpon>
     </Compile>
     <Compile Include="Classes\SplitContainerWrapper.cs">
       <SubType>Component</SubType>
@@ -279,9 +296,17 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>if $(ConfigurationName)==Debug goto End
+    <PostBuildEvent>if $(ConfigurationName)==ScriptedRelease goto Deploy
+goto End
+
+:Deploy
 call ..\..\..\Deploy.bat ..\..\..\$(ConfigurationName)
 :End</PostBuildEvent>
-    <PreBuildEvent>C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\MSBuild.exe ..\..\..\HFM.msbuild /t:Version</PreBuildEvent>
+    <PreBuildEvent>if $(ConfigurationName)==ScriptedRelease goto BuildAsmInfo
+goto End
+
+:BuildAsmInfo
+C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\MSBuild.exe ..\..\..\HFM.msbuild /t:Version
+:End</PreBuildEvent>
   </PropertyGroup>
 </Project>

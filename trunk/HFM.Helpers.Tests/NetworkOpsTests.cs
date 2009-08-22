@@ -32,35 +32,35 @@ namespace HFM.Helpers.Tests
       [ExpectedException(typeof(FileNotFoundException))]
       public void FtpUploadHelper_LocalFileDoesNotExistTest()
       {
-         NetworkOps.FtpUploadHelper("NotExistServerName", "/rootsub/subfolder", "page.html", String.Empty, String.Empty);
+         NetworkOps.FtpUploadHelper("notexistservername", "/rootsub/subfolder", "page.html", String.Empty, String.Empty);
       }
       
       [Test]
       [ExpectedException(typeof(WebException))]
       public void FtpUploadHelper_HostNameDoesNotExistTest()
       {
-         NetworkOps.FtpUploadHelper("NotExistServerName", "/rootsub/subfolder", Path.Combine("TestFiles", "test.html"), String.Empty, String.Empty);
+         NetworkOps.FtpUploadHelper("notexistservername", "/rootsub/subfolder", Path.Combine("TestFiles", "test.html"), String.Empty, String.Empty);
       }
 
       [Test]
       [ExpectedException(typeof(WebException))]
       public void FtpDownloadHelper_HostNameDoesNotExistTest()
       {
-         NetworkOps.FtpDownloadHelper("NotExistServerName", "/rootsub/subfolder", "FAHlog.txt", "FAHlog.txt", String.Empty, String.Empty);
+         NetworkOps.FtpDownloadHelper("notexistservername", "/rootsub/subfolder", "FAHlog.txt", "FAHlog.txt", String.Empty, String.Empty);
       }
 
       [Test]
       [ExpectedException(typeof(WebException))]
       public void HttpDownloadHelper_HostNameDoesNotExistTest()
       {
-         NetworkOps.HttpDownloadHelper("http://NotExistServerName/unitinfo.txt", "unitinfo.txt", "InstanceName", String.Empty, String.Empty, DownloadType.UnitInfo);
+         NetworkOps.HttpDownloadHelper("http://notexistservername/unitinfo.txt", "unitinfo.txt", "InstanceName", String.Empty, String.Empty, DownloadType.UnitInfo);
       }
 
       [Test]
       public void ProteinDescriptionFromUrl_HostNameDoesNotExistTest()
       {
-         string Url = "http://NotExistServerName/page.html";
-         Assert.AreEqual(Url, NetworkOps.ProteinDescriptionFromUrl(Url, String.Empty, String.Empty));
+         string Url = "http://notexistservername/page.html";
+         Assert.AreEqual(Url, NetworkOps.ProteinDescriptionFromUrl(Url));
       }
 
       [Test]

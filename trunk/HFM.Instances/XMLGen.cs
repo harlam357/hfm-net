@@ -33,12 +33,17 @@ namespace HFM.Instances
    public static class XMLGen
    {
       /// <summary>
-      /// Generate HTML Pages
+      /// Generate HTML Pages.
       /// </summary>
-      /// <param name="FolderPath">Folder Path to place Generated Pages</param>
-      /// <param name="Instances">Client Instance Array</param>
+      /// <param name="FolderPath">Folder Path to place Generated Pages.</param>
+      /// <param name="Instances">Client Instance Array.</param>
+      /// <exception cref="ArgumentException">Throws if FolderPath is Null or Empty or if Instances is a Zero Length Array.</exception>
       public static void DoHtmlGeneration(string FolderPath, ClientInstance[] Instances)
       {
+         if (String.IsNullOrEmpty(FolderPath)) throw new ArgumentException("Argument 'FolderPath' cannot be a null or empty string.");
+         if (Instances == null) throw new ArgumentNullException("Instances", "Argument 'Instances' cannot be null.");
+         if (Instances.Length == 0) throw new ArgumentException("Argument 'Instances' cannot be a zero length array.");
+         
          StreamWriter sw = null;
 
          try
@@ -145,7 +150,7 @@ namespace HFM.Instances
 
          xmlData.SetAttribute("Name", Instance.InstanceName);
 
-         XMLOps.setXmlNode(xmlData, "HFMVersion", PlatformOps.GetApplicationVersion());
+         XMLOps.setXmlNode(xmlData, "HFMVersion", PlatformOps.ApplicationVersion);
 
          XMLOps.setXmlNode(xmlData, "UnitInfo/DateStarted", Instance.CurrentUnitInfo.DownloadTime.ToString("d MMMM yyyy hh:mm tt"));
          XMLOps.setXmlNode(xmlData, "UnitInfo/FramesComplete", String.Format("{0}", Instance.CurrentUnitInfo.FramesComplete));
@@ -228,7 +233,7 @@ namespace HFM.Instances
          xmlDoc.Load(Path.Combine(Path.Combine(PreferenceSet.AppPath, "XML"), "Summary.xml"));
          XmlElement xmlRootData = xmlDoc.DocumentElement;
          
-         XMLOps.setXmlNode(xmlRootData, "HFMVersion", PlatformOps.GetApplicationVersion());
+         XMLOps.setXmlNode(xmlRootData, "HFMVersion", PlatformOps.ApplicationVersion);
 
          List<string> duplicateUserID = new List<string>(Instances.Length);
          List<string> duplicateProjects = new List<string>(Instances.Length);
@@ -317,7 +322,7 @@ namespace HFM.Instances
          xmlDoc.Load(Path.Combine(Path.Combine(PreferenceSet.AppPath, "XML"), "Overview.xml"));
          XmlElement xmlData = xmlDoc.DocumentElement;
 
-         XMLOps.setXmlNode(xmlData, "HFMVersion", PlatformOps.GetApplicationVersion());
+         XMLOps.setXmlNode(xmlData, "HFMVersion", PlatformOps.ApplicationVersion);
 
          //<Overview>
          //    <TotalHosts>0</TotalHosts>

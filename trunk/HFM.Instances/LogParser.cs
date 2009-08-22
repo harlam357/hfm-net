@@ -43,17 +43,11 @@ namespace HFM.Instances
       private readonly Regex rTimeStamp =
             new Regex("\\[(?<Timestamp>.*)\\]", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
       
-      private readonly Regex rProjectNumber =
-            new Regex("Project: (?<ProjectNumber>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
-
       private readonly Regex rProjectNumberFromTag =
             new Regex("P(?<ProjectNumber>.*)R(?<Run>.*)C(?<Clone>.*)G(?<Gen>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
-      //private Regex rProtein =
-      //      new Regex("Protein: (?<Protein>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
-
-      private readonly Regex rCoreVersion =
-            new Regex("\\[(?<Timestamp>.*)\\] Version (?<CoreVer>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+      private readonly Regex rProteinID =
+            new Regex(@"(?<ProjectNumber>.*) \(Run (?<Run>.*), Clone (?<Clone>.*), Gen (?<Gen>.*)\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       private readonly Regex rFramesCompleted =
             new Regex("\\[(?<Timestamp>.*)\\] Completed (?<Completed>.*) out of (?<Total>.*) steps  \\((?<Percent>.*)\\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
@@ -61,12 +55,6 @@ namespace HFM.Instances
       private readonly Regex rFramesCompletedGpu =
             new Regex("\\[(?<Timestamp>.*)\\] Completed (?<Percent>.*)%", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
-      //private Regex rCompletedWUs =
-      //      new Regex("Number of Units Completed: (?<Completed>.*)$", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline); 
-
-      private readonly Regex rProteinID =
-            new Regex(@"(?<ProjectNumber>.*) \(Run (?<Run>.*), Clone (?<Clone>.*), Gen (?<Gen>.*)\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
-            
       private readonly Regex rPercent1 =
             new Regex("(?<Percent>.*) percent", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
@@ -75,17 +63,15 @@ namespace HFM.Instances
 
       private bool _bCoreFound = false;
       private bool _bProjectFound = false;
-
       #endregion
 
       #region Parsing Methods
       /// <summary>
-      /// Extract the content from the unitinfo.txt file produced by the folding
-      /// console
+      /// Parse the content from the unitinfo.txt file.
       /// </summary>
-      /// <param name="LogFileName">Full path to local copy of unitinfo.txt</param>
-      /// <param name="Instance">Client Instance that owns the log file we're parsing</param>
-      /// <param name="parsedUnitInfo">Container for parsed information</param>
+      /// <param name="LogFileName">Full path to local copy of unitinfo.txt.</param>
+      /// <param name="Instance">Client Instance that owns the log file we're parsing.</param>
+      /// <param name="parsedUnitInfo">Container for parsed information.</param>
       public Boolean ParseUnitInfoFile(String LogFileName, ClientInstance Instance, UnitInfo parsedUnitInfo)
       {
          if (!File.Exists(LogFileName)) return false;
@@ -161,33 +147,25 @@ namespace HFM.Instances
       }
 
       /// <summary>
-      /// Reads through the FAH log file and grabs desired information
+      /// Itterates through the given list of LogLines and parses the desired information.
       /// </summary>
-      /// <param name="Instance">Client Instance that owns the log file we're parsing</param>
-      /// <returns>Parsed Log File Information</returns>
-      public void ParseFAHLog(ClientInstance Instance, IList<string> FAHLog, UnitInfo parsedUnitInfo)
+      /// <param name="Instance">Client Instance that owns the log file we're parsing.</param>
+      /// <param name="FAHLog">List of LogLines to Parse.</param>
+      /// <param name="parsedUnitInfo">Container for parsed information.</param>
+      public void ParseFAHLog(ClientInstance Instance, IList<LogLine> FAHLog, UnitInfo parsedUnitInfo)
       {
          DateTime Start = HfmTrace.ExecStart;
 
          _bCoreFound = false;
          _bProjectFound = false;
          
-         SetUnitStartTimeStamp(Instance, parsedUnitInfo, FAHLog[0]);
+         SetUnitStartTimeStamp(Instance, parsedUnitInfo, FAHLog[0].LineRaw);
 
          // start the parse loop where the client started last
-         foreach (string logLine in FAHLog)
+         foreach (LogLine logLine in FAHLog)
          {
-            // add the line to the unit info log holder
-            parsedUnitInfo.CurrentLogText.Add(logLine);
-
-            //Match mCompletedWUs = rCompletedWUs.Match(logLine);
-            //if (mCompletedWUs.Success)
-            //{
-            //   Instance.TotalUnits = Int32.Parse(mCompletedWUs.Result("${Completed}"));
-            //}
-
-            CheckForProjectID(parsedUnitInfo, logLine);
             CheckForCoreVersion(parsedUnitInfo, logLine);
+            CheckForProjectID(parsedUnitInfo, logLine);
 
             // don't start parsing frames until we know the client type
             // we have to know the project number before we know the client type (see SetProjectID)
@@ -210,11 +188,11 @@ namespace HFM.Instances
                }
             }
 
-            if (logLine.Contains("+ Paused")) // || logLine.Contains("+ Running on battery power"))
+            if (logLine.LineType.Equals(LogLineType.WorkUnitPaused)) // || logLine.LineRaw.Contains("+ Running on battery power"))
             {
                Instance.Status = ClientStatus.Paused;
             }
-            if (logLine.Contains("+ Working ...") && Instance.Status.Equals(ClientStatus.Paused))
+            else if (logLine.LineType.Equals(LogLineType.WorkUnitWorking) && Instance.Status.Equals(ClientStatus.Paused))
             {
                Instance.Status = ClientStatus.RunningNoFrameTimes;
                
@@ -223,9 +201,17 @@ namespace HFM.Instances
                // set frame times and determine status - Issue 13 (Revised)
                parsedUnitInfo.CurrentFrame = null;
                parsedUnitInfo.FramesObserved = 0;
-               SetUnitStartTimeStamp(Instance, parsedUnitInfo, logLine); 
+               SetUnitStartTimeStamp(Instance, parsedUnitInfo, logLine.LineRaw); 
             }
-            if (logLine.Contains("Folding@Home Client Shutdown"))
+            else if (logLine.LineType.Equals(LogLineType.WorkUnitCoreShutdown))
+            {
+               parsedUnitInfo.UnitResult = (WorkUnitResult)logLine.LineData;
+            }
+            else if (logLine.LineType.Equals(LogLineType.ClientEuePauseState))
+            {
+               Instance.Status = ClientStatus.EuePause;
+            }
+            else if (logLine.LineType.Equals(LogLineType.ClientShutdown))
             {
                Instance.Status = ClientStatus.Stopped;
                break; //we found a Shutdown message, quit parsing
@@ -238,18 +224,54 @@ namespace HFM.Instances
 
       #region Parsing Helpers
       /// <summary>
+      /// Get the time stamp from this log line and set as the unit's start time
+      /// </summary>
+      /// <param name="Instance">Client Instance that owns the log file we're parsing</param>
+      /// <param name="parsedUnitInfo">Container for parsed information</param>
+      /// <param name="logLine">Log Line</param>
+      private void SetUnitStartTimeStamp(ClientInstance Instance, UnitInfo parsedUnitInfo, string logLine)
+      {
+         Match mTimeStamp = rTimeStamp.Match(logLine);
+         if (mTimeStamp.Success)
+         {
+            DateTime timeStamp = DateTime.ParseExact(mTimeStamp.Result("${Timestamp}"), "HH:mm:ss",
+                                                     System.Globalization.DateTimeFormatInfo.InvariantInfo,
+                                                     GetDateTimeStyle(Instance.ClientIsOnVirtualMachine));
+
+            parsedUnitInfo.UnitStartTime = timeStamp.TimeOfDay;
+         }
+         else
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} ({1}) Failed to set 'UnitStartTime'.", HfmTrace.FunctionName, Instance.InstanceName));
+         }
+      }
+      
+      /// <summary>
+      /// Check the given log line for Core version information
+      /// </summary>
+      /// <param name="parsedUnitInfo">Container for parsed information</param>
+      /// <param name="logLine">Log Line</param>
+      private void CheckForCoreVersion(UnitInfo parsedUnitInfo, LogLine logLine)
+      {
+         if (_bCoreFound == false && logLine.LineType.Equals(LogLineType.WorkUnitCoreVersion))
+         {
+            parsedUnitInfo.CoreVersion = logLine.LineData.ToString();
+            _bCoreFound = true;
+         }
+      }
+      
+      /// <summary>
       /// Check the given log line for Project information
       /// </summary>
       /// <param name="parsedUnitInfo">Container for parsed information</param>
       /// <param name="logLine">Log Line</param>
-      private void CheckForProjectID(UnitInfo parsedUnitInfo, string logLine)
+      private void CheckForProjectID(UnitInfo parsedUnitInfo, LogLine logLine)
       {
-         Match mProjectNumber;
-         if (_bProjectFound == false && (mProjectNumber = rProjectNumber.Match(logLine)).Success)
+         if (_bProjectFound == false && logLine.LineType.Equals(LogLineType.WorkUnitProject))
          {
             try
             {
-               DoProjectIDMatch(parsedUnitInfo, rProteinID.Match(mProjectNumber.Result("${ProjectNumber}")), mProjectNumber.Result("${ProjectNumber}"));
+               DoProjectIDMatch(parsedUnitInfo, rProteinID.Match(logLine.LineData.ToString()), logLine.LineData.ToString());
                _bProjectFound = true;
             }
             catch (FormatException ex)
@@ -280,7 +302,7 @@ namespace HFM.Instances
             // If a Project cannot be identified using the local Project data, update Project data from Stanford. - Issue 4
             HfmTrace.WriteToHfmConsole(TraceLevel.Info,
                                        String.Format("{0} Attempting to download new Project data...", HfmTrace.FunctionName));
-            ProteinCollection.Instance.DownloadFromStanford(null);
+            ProteinCollection.Instance.DownloadFromStanford();
             
             try
             {
@@ -357,55 +379,18 @@ namespace HFM.Instances
       }
 
       /// <summary>
-      /// Check the given log line for Core version information
-      /// </summary>
-      /// <param name="parsedUnitInfo">Container for parsed information</param>
-      /// <param name="logLine">Log Line</param>
-      private void CheckForCoreVersion(UnitInfo parsedUnitInfo, string logLine)
-      {
-         Match mCoreVer;
-         if (_bCoreFound == false && (mCoreVer = rCoreVersion.Match(logLine)).Success)
-         {
-            string sCoreVer = mCoreVer.Result("${CoreVer}");
-            parsedUnitInfo.CoreVersion = sCoreVer.Substring(0, sCoreVer.IndexOf(" "));
-            _bCoreFound = true;
-         }
-      }
-
-      /// <summary>
-      /// Get the time stamp from this log line and set as the unit's start time
-      /// </summary>
-      /// <param name="Instance">Client Instance that owns the log file we're parsing</param>
-      /// <param name="parsedUnitInfo">Container for parsed information</param>
-      /// <param name="logLine">Log Line</param>
-      private void SetUnitStartTimeStamp(ClientInstance Instance, UnitInfo parsedUnitInfo, string logLine)
-      {
-         Match mTimeStamp = rTimeStamp.Match(logLine);
-         if (mTimeStamp.Success)
-         {
-            DateTime timeStamp = DateTime.ParseExact(mTimeStamp.Result("${Timestamp}"), "HH:mm:ss",
-                                                     System.Globalization.DateTimeFormatInfo.InvariantInfo,
-                                                     GetDateTimeStyle(Instance));
-
-            parsedUnitInfo.UnitStartTime = timeStamp.TimeOfDay;
-         }
-         else
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} ({1}) Failed to set 'UnitStartTime'.", HfmTrace.FunctionName, Instance.InstanceName));
-         }
-      }
-
-      /// <summary>
       /// Check the given log line for Completed Frame information (GPU Only)
       /// </summary>
       /// <param name="Instance">Client Instance that owns the log file we're parsing</param>
       /// <param name="parsedUnitInfo">Container for parsed information</param>
       /// <param name="logLine">Log Line</param>
-      private void CheckForCompletedGpuFrame(ClientInstance Instance, UnitInfo parsedUnitInfo, string logLine)
+      private void CheckForCompletedGpuFrame(ClientInstance Instance, UnitInfo parsedUnitInfo, LogLine logLine)
       {
-         Match mFramesCompletedGpu = rFramesCompletedGpu.Match(logLine);
+         Match mFramesCompletedGpu = rFramesCompletedGpu.Match(logLine.LineRaw);
          if (mFramesCompletedGpu.Success)
          {
+            logLine.LineType = LogLineType.WorkUnitFrame;
+         
             parsedUnitInfo.RawFramesComplete = Int32.Parse(mFramesCompletedGpu.Result("${Percent}"));
             parsedUnitInfo.RawFramesTotal = 100; //Instance.CurrentProtein.Frames
             //TODO: Hard code here, 100 GPU Frames. Could I get this from the Project Data?
@@ -421,11 +406,13 @@ namespace HFM.Instances
       /// <param name="Instance">Client Instance that owns the log file we're parsing</param>
       /// <param name="parsedUnitInfo">Container for parsed information</param>
       /// <param name="logLine">Log Line</param>
-      private void CheckForCompletedFrame(ClientInstance Instance, UnitInfo parsedUnitInfo, string logLine)
+      private void CheckForCompletedFrame(ClientInstance Instance, UnitInfo parsedUnitInfo, LogLine logLine)
       {
-         Match mFramesCompleted = rFramesCompleted.Match(logLine);
+         Match mFramesCompleted = rFramesCompleted.Match(logLine.LineRaw);
          if (mFramesCompleted.Success)
          {
+            logLine.LineType = LogLineType.WorkUnitFrame;
+         
             try
             {
                parsedUnitInfo.RawFramesComplete = Int32.Parse(mFramesCompleted.Result("${Completed}"));
@@ -471,7 +458,7 @@ namespace HFM.Instances
       {
          DateTime timeStamp = DateTime.ParseExact(timeStampString, "HH:mm:ss",
                               System.Globalization.DateTimeFormatInfo.InvariantInfo,
-                              GetDateTimeStyle(Instance));
+                              GetDateTimeStyle(Instance.ClientIsOnVirtualMachine));
 
          parsedUnitInfo.SetCurrentFrame(new UnitFrame(percent, timeStamp.TimeOfDay));
       }
@@ -480,11 +467,11 @@ namespace HFM.Instances
       /// Get the DateTimeStyle for the given Client Instance
       /// </summary>
       /// <param name="Instance">Client Instance that owns the log file we're parsing</param>
-      private static System.Globalization.DateTimeStyles GetDateTimeStyle(ClientInstance Instance)
+      private static System.Globalization.DateTimeStyles GetDateTimeStyle(bool ClientIsOnVirtualMachine)
       {
          System.Globalization.DateTimeStyles style;
       
-         if (Instance.ClientIsOnVirtualMachine)
+         if (ClientIsOnVirtualMachine)
          {
             // set parse style to maintain universal
             style = System.Globalization.DateTimeStyles.NoCurrentDateDefault;
@@ -498,7 +485,6 @@ namespace HFM.Instances
          
          return style;
       }
-
       #endregion
    }
 }

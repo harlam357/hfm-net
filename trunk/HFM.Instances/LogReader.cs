@@ -18,11 +18,13 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 
+using HFM.Proteins;
 using HFM.Instrumentation;
 
 namespace HFM.Instances
@@ -34,12 +36,36 @@ namespace HFM.Instances
    {
       Unknown = -1,
       LogOpen = 0,
-      LogHeader, 
+      LogHeader,
+      ClientAutosendStart,
+      ClientAutosendComplete,
+      ClientSendStart,
+      ClientSendConnectFailed,
+      ClientSendFailed,
+      ClientSendComplete,
+      ClientArguments,
+      ClientUserNameTeam,
+      ClientRequestingUserID,
+      ClientReceivedUserID,
+      ClientUserID,
+      ClientMachineID,
+      ClientAttemptGetWorkPacket,
+      ClientIndicateMemory,
+      ClientDetectCpu,
       WorkUnitProcessing,
-      CoreDownload,
+      WorkUnitCoreDownload,
       WorkUnitWorking,
       WorkUnitStart,
-      WorkUnitStarted
+      WorkUnitCoreVersion,
+      WorkUnitRunning,
+      WorkUnitProject,
+      WorkUnitFrame,
+      WorkUnitPaused,
+      WorkUnitShuttingDownCore,
+      WorkUnitCoreShutdown,
+      ClientNumberOfUnitsCompleted,
+      ClientEuePauseState,
+      ClientShutdown
    }
 
    /// <summary>
@@ -49,46 +75,85 @@ namespace HFM.Instances
    {
       #region Members
       /// <summary>
-      /// Regular Expression to match User (Folding ID) and Team string.
-      /// </summary>
-      private static readonly Regex rUserTeam =
-               new Regex("\\[(?<Timestamp>.*)\\] - User name: (?<Username>.*) \\(Team (?<TeamNumber>.*)\\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
-
-      /// <summary>
-      /// Regular Expression to match User ID string.
-      /// </summary>
-      private static readonly Regex rUserID =
-            new Regex("\\[(?<Timestamp>.*)\\] - User ID: (?<UserID>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
-
-      /// <summary>
-      /// Regular Expression to match Machine ID string.
-      /// </summary>
-      private static readonly Regex rMachineID =
-            new Regex("\\[(?<Timestamp>.*)\\] - Machine ID: (?<MachineID>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
-
-      /// <summary>
-      /// Local Flag set true once User ID has been found.
-      /// </summary>
-      private bool _bUserIDFound = false;
-      /// <summary>
-      /// Local Flag set true once Machine ID has been found.
-      /// </summary>
-      private bool _bMachineIDFound = false;
-
-      /// <summary>
       /// Local log text array.
       /// </summary>
       private string[] _FAHLogText = null;
       /// <summary>
       /// List of client run positions.
       /// </summary>
-      private readonly ClientRunPositionsList _ClientRunPositionsList = new ClientRunPositionsList(); 
-      
-      public ClientRunPositionsList LogPositions
+      private readonly ClientRunList _ClientRunList = new ClientRunList(); 
+      /// <summary>
+      /// List of client run positions.
+      /// </summary>
+      public ClientRunList ClientRunList
       {
-         get { return _ClientRunPositionsList; }
+         get { return _ClientRunList; }
+      }
+
+      /// <summary>
+      /// List of client log lines.
+      /// </summary>
+      private readonly ClientLogLineList _ClientLogLines = new ClientLogLineList();
+      /// <summary>
+      /// List of client log lines.
+      /// </summary>
+      public ClientLogLineList ClientLogLines
+      {
+         get { return _ClientLogLines; }
       }
       #endregion
+
+      /// <summary>
+      /// Returns log text of the previous work unit.
+      /// </summary>
+      public IList<LogLine> PreviousWorkUnitLogLines
+      {
+         get
+         {
+            ClientRun lastClientRun = _ClientRunList.LastClientRun;
+            if (lastClientRun.UnitStartPositions.Count > 1)
+            {
+               int start = lastClientRun.UnitStartPositions[lastClientRun.UnitStartPositions.Count - 2];
+               int end = lastClientRun.UnitStartPositions[lastClientRun.UnitStartPositions.Count - 1];
+
+               int length = end - start;
+
+               LogLine[] logLines = new LogLine[length];
+
+               _ClientLogLines.CopyTo(start, logLines, 0, length);
+
+               return logLines;
+            }
+
+            return null;
+         }
+      }
+
+      /// <summary>
+      /// Returns log text of the current work unit.
+      /// </summary>
+      public IList<LogLine> CurrentWorkUnitLogLines
+      {  
+         get
+         {
+            ClientRun lastClientRun = _ClientRunList.LastClientRun;
+            if (lastClientRun.UnitStartPositions.Count > 0)
+            {
+               int start = lastClientRun.UnitStartPositions[lastClientRun.UnitStartPositions.Count - 1];
+               int end = _FAHLogText.Length;
+
+               int length = end - start;
+               
+               LogLine[] logLines = new LogLine[length];
+               
+               _ClientLogLines.CopyTo(start, logLines, 0, length);
+
+               return logLines;
+            }
+
+            return null;
+         }
+      }
 
       /// <summary>
       /// Read log file into local string array.
@@ -100,58 +165,12 @@ namespace HFM.Instances
       {
          if (Instance == null) throw new ArgumentNullException("Instance", "Argument 'Instance' cannot be null.");
          if (String.IsNullOrEmpty(LogFilePath)) throw new ArgumentException("Argument 'LogFileName' cannot be a null or empty string.");
-         
+
          DateTime Start = HfmTrace.ExecStart;
 
          _FAHLogText = File.ReadAllLines(LogFilePath);
 
          HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Instance.InstanceName, Start);
-      }
-
-      /// <summary>
-      /// Returns log text of the previous work unit.
-      /// </summary>
-      public IList<string> GetPreviousWorkUnitLog()
-      {
-         ClientRunPositions lastRun = _ClientRunPositionsList.LastClientRun;
-         if (lastRun.UnitStartPositions.Count > 1)
-         {
-            int start = lastRun.UnitStartPositions[lastRun.UnitStartPositions.Count - 2];
-            int end = lastRun.UnitStartPositions[lastRun.UnitStartPositions.Count - 1];
-            
-            int length = end - start;
-            
-            string[] logLines = new string[length];
-            
-            Array.Copy(_FAHLogText, start, logLines, 0, length);
-            
-            return logLines;
-         }
-         
-         return null;
-      }
-
-      /// <summary>
-      /// Returns log text of the current work unit.
-      /// </summary>
-      public IList<string> GetCurrentWorkUnitLog()
-      {
-         ClientRunPositions lastRun = _ClientRunPositionsList.LastClientRun;
-         if (lastRun.UnitStartPositions.Count > 0)
-         {
-            int start = lastRun.UnitStartPositions[lastRun.UnitStartPositions.Count - 1];
-            int end = _FAHLogText.Length;
-
-            int length = end - start;
-
-            string[] logLines = new string[length];
-
-            Array.Copy(_FAHLogText, start, logLines, 0, length);
-
-            return logLines;
-         }
-
-         return null;
       }
 
       /// <summary>
@@ -166,12 +185,14 @@ namespace HFM.Instances
 
          for (int i = 0; i < _FAHLogText.Length; i++)
          {
-            string logLine = _FAHLogText[i];
-            
-            LogLineType lineType = DetermineLineType(logLine);
-            _ClientRunPositionsList.HandleLineType(lineType, i);
+            _ClientLogLines.HandleLogLine(i, _FAHLogText[i]);
          }
-         
+
+         foreach (LogLine line in _ClientLogLines)
+         {
+            _ClientRunList.HandleLogLine(line);
+         }
+
          DoLastRunLevelDetection(Instance);
 
          HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Instance.InstanceName, Start);
@@ -183,131 +204,32 @@ namespace HFM.Instances
       /// <param name="Instance">Client Instance that owns the log file we're parsing.</param>
       private void DoLastRunLevelDetection(ClientInstance Instance)
       {
-         ClientRunPositions clientRun = _ClientRunPositionsList.LastClientRun;
+         ClientRun clientRun = _ClientRunList.LastClientRun;
          
          if (clientRun != null)
          {
-            int startIndex = clientRun.ClientStartPosition;
-            
-            for (int i = startIndex; i < _FAHLogText.Length; i++)
+            ArrayList list = (ArrayList)_ClientLogLines.GetRunUserNameAndTeam(clientRun);
+            if (list != null)
             {
-               string logLine = _FAHLogText[i];
-               
-               CheckForUserTeamAndIDs(Instance, logLine);
-            
-               // Only accumulate Completed and Failed work unit counts on most recent work unit - Issue 35
-               if (logLine.Contains("FINISHED_UNIT"))
-               {
-                  Instance.NumberOfCompletedUnitsSinceLastStart++;
-               }
-               if ((logLine.Contains("EARLY_UNIT_END") || logLine.Contains("UNSTABLE_MACHINE")))
-               {
-                  Instance.NumberOfFailedUnitsSinceLastStart++;
-               }
+               Instance.FoldingID = list[0].ToString();
+               Instance.Team = (int)list[1];
             }
+            
+            Instance.UserID = _ClientLogLines.GetRunUserID(clientRun);
+            Instance.MachineID = _ClientLogLines.GetRunMachineID(clientRun);
+            
+            Instance.NumberOfCompletedUnitsSinceLastStart = clientRun.NumberOfCompletedUnits;
+            Instance.NumberOfFailedUnitsSinceLastStart = clientRun.NumberOfFailedUnits;
+            
+            Instance.TotalUnits = clientRun.NumberOfTotalUnitsCompleted;
          }
-      }
-
-      /// <summary>
-      /// Inspect the given log line for Folding ID and Team or User ID and Machine ID values.
-      /// </summary>
-      /// <param name="Instance">Client Instance that owns the log file we're parsing.</param>
-      /// <param name="LogLine">The log line being inspected.</param>
-      private void CheckForUserTeamAndIDs(ClientInstance Instance, string LogLine)
-      {
-         Match mUserTeam;
-         if ((mUserTeam = rUserTeam.Match(LogLine)).Success)
-         {
-            Instance.FoldingID = mUserTeam.Result("${Username}");
-            Instance.Team = Int32.Parse(mUserTeam.Result("${TeamNumber}"));
-         }
-
-         Match mUserID;
-         if (_bUserIDFound == false && (mUserID = rUserID.Match(LogLine)).Success)
-         {
-            Instance.UserID = mUserID.Result("${UserID}");
-            _bUserIDFound = true;
-         }
-
-         Match mMachineID;
-         if (_bMachineIDFound == false && (mMachineID = rMachineID.Match(LogLine)).Success)
-         {
-            Instance.MachineID = Int32.Parse(mMachineID.Result("${MachineID}"));
-            _bMachineIDFound = true;
-         }
-      }
-
-      /// <summary>
-      /// Inspect the given log line and determine the line type.
-      /// </summary>
-      /// <param name="LogLine">The log line being inspected.</param>
-      private static LogLineType DetermineLineType(string LogLine)
-      {
-         if (LogLine.Contains("--- Opening Log file"))
-         {
-            return LogLineType.LogOpen;
-         }
-         else if (LogLine.Contains("###############################################################################"))
-         {
-            return LogLineType.LogHeader;
-         }
-         else if (LogLine.Contains("+ Processing work unit"))
-         {
-            return LogLineType.WorkUnitProcessing;
-         }
-         else if (LogLine.Contains("+ Downloading new core"))
-         {
-            return LogLineType.CoreDownload;
-         }
-         else if (LogLine.Contains("+ Working ..."))
-         {
-            return LogLineType.WorkUnitWorking;
-         }
-         else if (LogLine.Contains("*------------------------------*"))
-         {
-            return LogLineType.WorkUnitStart;
-         }
-         else if (IsLineTypeWorkUnitStarted(LogLine))
-         {
-            return LogLineType.WorkUnitStarted;
-         }
-         else
-         {
-            return LogLineType.Unknown;
-         }
-      }
-
-      /// <summary>
-      /// Inspect the given log line and determine if the line type is LogLineType.WorkUnitStarted.
-      /// </summary>
-      /// <param name="LogLine">The log line being inspected.</param>
-      private static bool IsLineTypeWorkUnitStarted(string LogLine)
-      {
-         if (LogLine.Contains("Preparing to commence simulation"))
-         {
-            return true;
-         }
-         else if (LogLine.Contains("Called DecompressByteArray"))
-         {
-            return true;
-         }
-         else if (LogLine.Contains("- Digital signature verified"))
-         {
-            return true;
-         }
-         else if (LogLine.Contains("Entering M.D."))
-         {
-            return true;
-         }
-         
-         return false;
       }
    }
    
    /// <summary>
-   /// List of Client Run Positions.
+   /// List of Client Runs.
    /// </summary>
-   public class ClientRunPositionsList : List<ClientRunPositions>
+   public class ClientRunList : List<ClientRun>
    {
       /// <summary>
       /// Local variable containing the current LogLineType.
@@ -317,7 +239,7 @@ namespace HFM.Instances
       /// <summary>
       /// Returns the most recent client run if available, otherwise null.
       /// </summary>
-      public ClientRunPositions LastClientRun
+      public ClientRun LastClientRun
       {
          get 
          { 
@@ -333,39 +255,45 @@ namespace HFM.Instances
       /// <summary>
       /// Handles the given LogLineType and sets the correct position value.
       /// </summary>
-      /// <param name="LineType">LogLineType to handle.</param>
-      /// <param name="LineIndex">Index of the given LogLineType.</param>
-      public void HandleLineType(LogLineType LineType, int LineIndex)
+      public void HandleLogLine(LogLine line)
       {
-         switch (LineType)
+         switch (line.LineType)
          {
             case LogLineType.LogOpen:
-               HandleLogOpen(LineIndex);
-               _CurrentLineType = LineType;
+               HandleLogOpen(line.LineIndex);
+               _CurrentLineType = line.LineType;
                break;
             case LogLineType.LogHeader:
-               HandleLogHeader(LineIndex);
-               _CurrentLineType = LineType;
+               HandleLogHeader(line.LineIndex);
+               _CurrentLineType = line.LineType;
                break;
             case LogLineType.WorkUnitProcessing:
-               HandleWorkUnitProcessing(LineIndex);
-               _CurrentLineType = LineType;
+               HandleWorkUnitProcessing(line.LineIndex);
+               _CurrentLineType = line.LineType;
                break;
-            case LogLineType.CoreDownload:
-               HandleCoreDownload();
-               _CurrentLineType = LineType;
+            case LogLineType.WorkUnitCoreDownload:
+               HandleWorkUnitCoreDownload();
+               _CurrentLineType = line.LineType;
                break;
             case LogLineType.WorkUnitWorking:
-               HandleWorkUnitWorking(LineIndex);
-               _CurrentLineType = LineType;
+               HandleWorkUnitWorking(line.LineIndex);
                break;
             case LogLineType.WorkUnitStart:
-               HandleWorkUnitStart(LineIndex);
-               _CurrentLineType = LineType;
+               HandleWorkUnitStart(line.LineIndex);
+               _CurrentLineType = line.LineType;
                break;
-            case LogLineType.WorkUnitStarted:
-               //HandleWorkUnitStarted(LineIndex);
-               _CurrentLineType = LineType;
+            case LogLineType.WorkUnitRunning:
+               _CurrentLineType = line.LineType;
+               break;
+            case LogLineType.WorkUnitPaused:
+               _CurrentLineType = line.LineType;
+               break;
+            case LogLineType.WorkUnitCoreShutdown:
+               HandleWorkUnitCoreShutdown(line);
+               _CurrentLineType = line.LineType;
+               break;
+            case LogLineType.ClientNumberOfUnitsCompleted:
+               HandleClientNumberOfUnitsCompleted(line);
                break;
          }
       }
@@ -376,7 +304,7 @@ namespace HFM.Instances
       /// <param name="LineIndex">Index of the given LogLineType.</param>
       private void HandleLogOpen(int LineIndex)
       {
-         Add(new ClientRunPositions(LineIndex));
+         Add(new ClientRun(LineIndex));
       }
 
       /// <summary>
@@ -388,7 +316,7 @@ namespace HFM.Instances
          if (_CurrentLineType.Equals(LogLineType.LogOpen) ||
              _CurrentLineType.Equals(LogLineType.LogHeader)) return;
 
-         Add(new ClientRunPositions(LineIndex));
+         Add(new ClientRun(LineIndex));
       }
 
       /// <summary>
@@ -397,17 +325,23 @@ namespace HFM.Instances
       /// <param name="LineIndex">Index of the given LogLineType.</param>
       private void HandleWorkUnitProcessing(int LineIndex)
       {
-         LastClientRun.UnitStartPositions.Add(LineIndex);
+         if (LastClientRun != null)
+         {
+            LastClientRun.UnitStartPositions.Add(LineIndex);
+         }
       }
 
       /// <summary>
-      /// Handles CoreDownload LogLineType.
+      /// Handles WorkUnitCoreDownload LogLineType.
       /// </summary>
-      private void HandleCoreDownload()
+      private void HandleWorkUnitCoreDownload()
       {
          if (_CurrentLineType.Equals(LogLineType.WorkUnitProcessing))
          {
-            LastClientRun.UnitStartPositions.RemoveAt(LastClientRun.UnitStartPositions.Count - 1);
+            if (LastClientRun != null)
+            {
+               LastClientRun.UnitStartPositions.RemoveAt(LastClientRun.UnitStartPositions.Count - 1);
+            }
          }
       }
 
@@ -417,9 +351,21 @@ namespace HFM.Instances
       /// <param name="LineIndex">Index of the given LogLineType.</param>
       private void HandleWorkUnitWorking(int LineIndex)
       {
-         if (_CurrentLineType.Equals(LogLineType.WorkUnitProcessing) == false)
+         if (_CurrentLineType.Equals(LogLineType.WorkUnitPaused))
          {
-            LastClientRun.UnitStartPositions.Add(LineIndex);
+            _CurrentLineType = LogLineType.WorkUnitRunning;
+         }
+         else 
+         {
+            if (_CurrentLineType.Equals(LogLineType.WorkUnitProcessing) == false)
+            {
+               if (LastClientRun != null)
+               {
+                  LastClientRun.UnitStartPositions.Add(LineIndex);
+               }
+            }
+            
+            _CurrentLineType = LogLineType.WorkUnitWorking;
          }
       }
 
@@ -431,21 +377,74 @@ namespace HFM.Instances
       {
          if (_CurrentLineType.Equals(LogLineType.WorkUnitWorking) == false)
          {
-            LastClientRun.UnitStartPositions.Add(LineIndex);
+            if (LastClientRun != null)
+            {
+               LastClientRun.UnitStartPositions.Add(LineIndex);
+            }
          }
       }
 
-      //private void HandleWorkUnitStarted(int LineIndex)
-      //{
-      //   throw new Exception("The method or operation is not implemented.");
-      //}
+      /// <summary>
+      /// Handles WorkUnitCoreShutdown LogLineType.
+      /// </summary>
+      /// <param name="logLine">The given LogLine object.</param>
+      private void HandleWorkUnitCoreShutdown(LogLine logLine)
+      {
+         if (_CurrentLineType.Equals(LogLineType.WorkUnitRunning))
+         {
+            if (LastClientRun != null)
+            {
+               if (logLine.LineData.Equals(WorkUnitResult.FinishedUnit))
+               {
+                  LastClientRun.NumberOfCompletedUnits++;
+               }
+               if (logLine.LineData.Equals(WorkUnitResult.EarlyUnitEnd) || logLine.LineData.Equals(WorkUnitResult.UnstableMachine))
+               {
+                  LastClientRun.NumberOfFailedUnits++;
+               }
+            }
+         }
+      }
+
+      /// <summary>
+      /// Handles ClientNumberOfUnitsCompleted LogLineType.
+      /// </summary>
+      /// <param name="logLine">The given LogLine object.</param>
+      private void HandleClientNumberOfUnitsCompleted(LogLine logLine)
+      {
+         if (LastClientRun != null)
+         {
+            LastClientRun.NumberOfTotalUnitsCompleted = (int)logLine.LineData;
+         }
+      }
    }
    
    /// <summary>
    /// Holds Positions (Index) for a Single Client Run.
    /// </summary>
-   public class ClientRunPositions
+   public class ClientRun
    {
+      private int _NumberOfCompletedUnits = 0;
+      public int NumberOfCompletedUnits
+      {
+         get { return _NumberOfCompletedUnits; }
+         set { _NumberOfCompletedUnits = value; }
+      }
+
+      private int _NumberOfFailedUnits = 0;
+      public int NumberOfFailedUnits
+      {
+         get { return _NumberOfFailedUnits; }
+         set { _NumberOfFailedUnits = value; }
+      }
+      
+      private int _NumberOfTotalUnitsCompleted = 0;
+      public int NumberOfTotalUnitsCompleted
+      {
+         get { return _NumberOfTotalUnitsCompleted; }
+         set { _NumberOfTotalUnitsCompleted = value; }
+      }
+   
       /// <summary>
       /// Line index of client start position.
       /// </summary>
@@ -474,9 +473,406 @@ namespace HFM.Instances
       /// Primary Constructor.
       /// </summary>
       /// <param name="ClientStartLineIndex">Line index of client start position.</param>
-      public ClientRunPositions(int ClientStartLineIndex)
+      public ClientRun(int ClientStartLineIndex)
       {
          _ClientStartPosition = ClientStartLineIndex;
+      }
+   }
+   
+   public class ClientLogLineList : List<LogLine>
+   {
+      public void HandleLogLine(int index, string logLine)
+      {
+         LogLineType lineType = DetermineLineType(logLine);
+         Add(new LogLine(lineType, index, logLine));
+      }
+
+      /// <summary>
+      /// Inspect the given log line and determine the line type.
+      /// </summary>
+      /// <param name="logLine">The log line being inspected.</param>
+      private static LogLineType DetermineLineType(string logLine)
+      {
+         if (logLine.Contains("--- Opening Log file"))
+         {
+            return LogLineType.LogOpen;
+         }
+         else if (logLine.Contains("###############################################################################"))
+         {
+            return LogLineType.LogHeader;
+         }
+         else if (logLine.Contains("] - Autosending finished units..."))
+         {
+            return LogLineType.ClientAutosendStart;
+         }
+         else if (logLine.Contains("] - Autosend completed"))
+         {
+            return LogLineType.ClientAutosendComplete;
+         }
+         else if (logLine.Contains("] + Attempting to send results"))
+         {
+            return LogLineType.ClientSendStart;
+         }
+         else if (logLine.Contains("] + Could not connect to Work Server"))
+         {
+            return LogLineType.ClientSendConnectFailed;
+         }
+         else if (logLine.Contains("] - Error: Could not transmit unit"))
+         {
+            return LogLineType.ClientSendFailed;
+         }
+         else if (logLine.Contains("] + Results successfully sent"))
+         {
+            return LogLineType.ClientSendComplete;
+         }
+         else if (logLine.Contains("Arguments:"))
+         {
+            return LogLineType.ClientArguments;
+         }
+         else if (logLine.Contains("] - User name:"))
+         {
+            return LogLineType.ClientUserNameTeam;
+         }
+         else if (logLine.Contains("] + Requesting User ID from server"))
+         {
+            return LogLineType.ClientRequestingUserID;
+         }
+         else if (logLine.Contains("- Received User ID ="))
+         {
+            return LogLineType.ClientReceivedUserID;
+         }
+         else if (logLine.Contains("] - User ID:"))
+         {
+            return LogLineType.ClientUserID;
+         }
+         else if (logLine.Contains("] - Machine ID:"))
+         {
+            return LogLineType.ClientMachineID;
+         }
+         else if (logLine.Contains("] + Attempting to get work packet"))
+         {
+            return LogLineType.ClientAttemptGetWorkPacket;
+         }
+         else if (logLine.Contains("] - Will indicate memory of"))
+         {
+            return LogLineType.ClientIndicateMemory;
+         }
+         else if (logLine.Contains("] - Detect CPU. Vendor:"))
+         {
+            return LogLineType.ClientDetectCpu;
+         }
+         else if (logLine.Contains("] + Processing work unit"))
+         {
+            return LogLineType.WorkUnitProcessing;
+         }
+         else if (logLine.Contains("] + Downloading new core"))
+         {
+            return LogLineType.WorkUnitCoreDownload;
+         }
+         else if (logLine.Contains("] + Working ..."))
+         {
+            return LogLineType.WorkUnitWorking;
+         }
+         else if (logLine.Contains("] *------------------------------*"))
+         {
+            return LogLineType.WorkUnitStart;
+         }
+         else if (logLine.Contains("] Version"))
+         {
+            return LogLineType.WorkUnitCoreVersion;
+         }
+         else if (IsLineTypeWorkUnitStarted(logLine))
+         {
+            return LogLineType.WorkUnitRunning;
+         }
+         else if (logLine.Contains("] Project:"))
+         {
+            return LogLineType.WorkUnitProject;
+         }
+         else if (logLine.Contains("] + Paused"))
+         {
+            return LogLineType.WorkUnitPaused;
+         }
+         else if (logLine.Contains("] - Shutting down core"))
+         {
+            return LogLineType.WorkUnitShuttingDownCore;
+         }
+         else if (logLine.Contains("] Folding@home Core Shutdown:"))
+         {
+            return LogLineType.WorkUnitCoreShutdown;
+         }
+         else if (logLine.Contains("] + Number of Units Completed:"))
+         {
+            return LogLineType.ClientNumberOfUnitsCompleted;
+         }
+         else if (logLine.Contains("] EUE limit exceeded. Pausing 24 hours."))
+         {
+            return LogLineType.ClientEuePauseState;
+         }
+         else if (logLine.Contains("Folding@Home Client Shutdown"))
+         {
+            return LogLineType.ClientShutdown;
+         }
+         else
+         {
+            return LogLineType.Unknown;
+         }
+      }
+
+      /// <summary>
+      /// Inspect the given log line and determine if the line type is LogLineType.WorkUnitRunning.
+      /// </summary>
+      /// <param name="logLine">The log line being inspected.</param>
+      private static bool IsLineTypeWorkUnitStarted(string logLine)
+      {
+         if (logLine.Contains("] Preparing to commence simulation"))
+         {
+            return true;
+         }
+         else if (logLine.Contains("] Called DecompressByteArray"))
+         {
+            return true;
+         }
+         else if (logLine.Contains("] - Digital signature verified"))
+         {
+            return true;
+         }
+         else if (logLine.Contains("] Entering M.D."))
+         {
+            return true;
+         }
+
+         return false;
+      }
+
+      public string GetRunArguments(ClientRun ClientRun)
+      {
+         foreach (LogLine line in this)
+         {
+            if (line.LineIndex >= ClientRun.ClientStartPosition)
+            {
+               if (line.LineType.Equals(LogLineType.ClientArguments))
+               {
+                  return line.LineData.ToString();
+               }
+            }
+         }
+         
+         return String.Empty;
+      }
+
+      public object GetRunUserNameAndTeam(ClientRun ClientRun)
+      {
+         // Make sure to get the last occurance of User name / Team.
+         // When one configures the client the original User name and Team
+         // will be logged.  When the config is done, the User name and Team
+         // input during the config will be logged.  We want this configed
+         // User name and Team.
+         object UserNameAndTeam = null;
+      
+         foreach (LogLine line in this)
+         {
+            if (line.LineIndex >= ClientRun.ClientStartPosition)
+            {
+               if (line.LineType.Equals(LogLineType.ClientUserNameTeam))
+               {
+                  UserNameAndTeam = line.LineData;
+               }
+            }
+         }
+
+         return UserNameAndTeam;
+      }
+
+      public string GetRunUserID(ClientRun ClientRun)
+      {
+         foreach (LogLine line in this)
+         {
+            if (line.LineIndex >= ClientRun.ClientStartPosition)
+            {
+               if (line.LineType.Equals(LogLineType.ClientUserID) ||
+                   line.LineType.Equals(LogLineType.ClientReceivedUserID))
+               {
+                  return line.LineData.ToString();
+               }
+            }
+         }
+
+         return ClientInstance.DefaultUserID;
+      }
+
+      public int GetRunMachineID(ClientRun ClientRun)
+      {
+         foreach (LogLine line in this)
+         {
+            if (line.LineIndex >= ClientRun.ClientStartPosition)
+            {
+               if (line.LineType.Equals(LogLineType.ClientMachineID))
+               {
+                  return (int)line.LineData;
+               }
+            }
+         }
+
+         return ClientInstance.DefaultMachineID;
+      }
+   }
+   
+   public class LogLine
+   {
+      /// <summary>
+      /// Regular Expression to match User (Folding ID) and Team string.
+      /// </summary>
+      private static readonly Regex rUserTeam =
+         new Regex("\\[(?<Timestamp>.*)\\] - User name: (?<Username>.*) \\(Team (?<TeamNumber>.*)\\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+
+      /// <summary>
+      /// Regular Expression to match User ID string.
+      /// </summary>
+      private static readonly Regex rReceivedUserID =
+         new Regex("\\[(?<Timestamp>.*)\\].*- Received User ID = (?<UserID>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+
+      /// <summary>
+      /// Regular Expression to match User ID string.
+      /// </summary>
+      private static readonly Regex rUserID =
+         new Regex("\\[(?<Timestamp>.*)\\] - User ID: (?<UserID>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+
+      /// <summary>
+      /// Regular Expression to match Machine ID string.
+      /// </summary>
+      private static readonly Regex rMachineID =
+         new Regex("\\[(?<Timestamp>.*)\\] - Machine ID: (?<MachineID>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+
+      private static readonly Regex rCoreVersion =
+         new Regex("\\[(?<Timestamp>.*)\\] Version (?<CoreVer>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+
+      private static readonly Regex rProjectNumber =
+         new Regex("\\[(?<Timestamp>.*)\\] Project: (?<ProjectNumber>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+
+      /// <summary>
+      /// Regular Expression to match Machine ID string.
+      /// </summary>
+      private static readonly Regex rCoreShutdown =
+         new Regex("\\[(?<Timestamp>.*)\\] Folding@home Core Shutdown: (?<UnitResult>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+
+      private static readonly Regex rCompletedWUs =
+         new Regex("\\[(?<Timestamp>.*)\\] \\+ Number of Units Completed: (?<Completed>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline); 
+   
+      private LogLineType _LineType;
+      public LogLineType LineType
+      {
+         get { return _LineType; }
+         set { _LineType = value; }
+      }
+      
+      private readonly int _LineIndex;
+      public int LineIndex
+      {
+         get { return _LineIndex; }
+      }
+      
+      private readonly string _LineRaw;
+      public string LineRaw
+      {
+         get { return _LineRaw; }
+      }
+
+      private readonly object _LineData;
+      public object LineData
+      {
+         get { return _LineData; }
+      }
+      
+      public LogLine(LogLineType type, int index, string logLine)
+      {
+         _LineType = type;
+         _LineIndex = index;
+         _LineRaw = logLine;
+         _LineData = GetLineData(type, logLine);
+      }
+
+      private static object GetLineData(LogLineType type, string logLine)
+      {
+         switch (type)
+         {
+            case LogLineType.ClientArguments:
+               return logLine.Substring(10).Trim();
+            case LogLineType.ClientUserNameTeam:
+               Match mUserTeam;
+               if ((mUserTeam = rUserTeam.Match(logLine)).Success)
+               {
+                  ArrayList list = new ArrayList(2);
+                  list.Add(mUserTeam.Result("${Username}"));
+                  list.Add(Int32.Parse(mUserTeam.Result("${TeamNumber}")));
+                  return list;
+               }
+               break;
+            case LogLineType.ClientReceivedUserID:
+               Match mReceivedUserID;
+               if ((mReceivedUserID = rReceivedUserID.Match(logLine)).Success)
+               {
+                  return mReceivedUserID.Result("${UserID}");
+               }
+               break;
+            case LogLineType.ClientUserID:
+               Match mUserID;
+               if ((mUserID = rUserID.Match(logLine)).Success)
+               {
+                  return mUserID.Result("${UserID}");
+               }
+               break;
+            case LogLineType.ClientMachineID:
+               Match mMachineID;
+               if ((mMachineID = rMachineID.Match(logLine)).Success)
+               {
+                  return Int32.Parse(mMachineID.Result("${MachineID}"));
+               }
+               break;
+            case LogLineType.WorkUnitCoreVersion:
+               Match mCoreVer;
+               if ((mCoreVer = rCoreVersion.Match(logLine)).Success)
+               {
+                  string sCoreVer = mCoreVer.Result("${CoreVer}");
+                  if (sCoreVer.IndexOf(" ") > 1)
+                  {
+                     return sCoreVer.Substring(0, sCoreVer.IndexOf(" "));
+                  }
+                  else
+                  {
+                     return sCoreVer;
+                  }
+               }
+               break;
+            case LogLineType.WorkUnitProject:
+               Match mProjectNumber;
+               if ((mProjectNumber = rProjectNumber.Match(logLine)).Success)
+               {
+                  return mProjectNumber.Result("${ProjectNumber}");
+               }
+               break;
+            case LogLineType.WorkUnitCoreShutdown:
+               Match mCoreShutdown;
+               if ((mCoreShutdown = rCoreShutdown.Match(logLine)).Success)
+               {
+                  return UnitInfo.WorkUnitResultFromString(mCoreShutdown.Result("${UnitResult}"));
+               }
+               break;
+            case LogLineType.ClientNumberOfUnitsCompleted:
+               Match mCompletedWUs;
+               if ((mCompletedWUs = rCompletedWUs.Match(logLine)).Success)
+               {
+                  return Int32.Parse(mCompletedWUs.Result("${Completed}"));
+               }
+               break;
+         }
+         
+         return null;
+      }
+
+      public override string ToString()
+      {
+         return _LineRaw;
       }
    }
 }

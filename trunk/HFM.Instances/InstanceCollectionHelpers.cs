@@ -77,6 +77,9 @@ namespace HFM.Instances
       /// </summary>
       public static void FindDuplicates(List<string> DuplicateUserID, List<string> DuplicateProjects, ICollection<ClientInstance> Instances)
       {
+         // If no instances stub out
+         if (Instances == null) return;
+
          DateTime Start = HfmTrace.ExecStart;
 
          DuplicateUserID.Clear();
@@ -128,7 +131,7 @@ namespace HFM.Instances
             }
          }
 
-         HfmTrace.WriteToHfmConsole(TraceLevel.Info, Start);
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
       }
    }
 }

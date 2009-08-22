@@ -19,7 +19,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 using HFM.Instrumentation;
@@ -34,6 +33,14 @@ namespace HFM.Proteins
       SMP,
       GPU
    } 
+   
+   public enum WorkUnitResult
+   {
+      Unknown,
+      FinishedUnit,
+      EarlyUnitEnd,
+      UnstableMachine
+   }
    #endregion
 
    /// <summary>
@@ -42,16 +49,23 @@ namespace HFM.Proteins
    [Serializable]
    public class UnitInfo
    {
-      public const String UsernameDefault = "Unknown";
-      public const Int32 TeamDefault = 0;
+      #region Const
+      public const string UsernameDefault = "Unknown";
+      public const int TeamDefault = 0;
+      
+      private const string FinishedUnit = "FINISHED_UNIT";
+      private const string EarlyUnitEnd = "EARLY_UNIT_END";
+      private const string UnstableMachine = "UNSTABLE_MACHINE";
+      #endregion
    
       #region CTOR
       /// <summary>
       /// Overload Constructor
       /// </summary>
-      public UnitInfo(string ownerName, string ownerPath) : this(ownerName, ownerPath, UsernameDefault, TeamDefault)
+      public UnitInfo(string ownerName, string ownerPath)
+         : this(ownerName, ownerPath, UsernameDefault, TeamDefault)
       {
-         
+
       }
 
       /// <summary>
@@ -65,6 +79,7 @@ namespace HFM.Proteins
          _Team = team;
          
          Clear();
+         ClearFrameData();
       } 
       #endregion
 
@@ -416,15 +431,16 @@ namespace HFM.Proteins
       }
 
       /// <summary>
-      /// List of current log file text lines
+      /// The Result of this Work Unit
       /// </summary>
-      private readonly List<string> _CurrentLogText = new List<string>();
+      private WorkUnitResult _UnitResult;
       /// <summary>
-      /// List of current log file text lines
+      /// The Result of this Work Unit
       /// </summary>
-      public List<string> CurrentLogText
+      public WorkUnitResult UnitResult
       {
-         get { return _CurrentLogText; }
+         get { return _UnitResult; }
+         set { _UnitResult = value; }
       }
 
       /// <summary>
@@ -439,7 +455,8 @@ namespace HFM.Proteins
          get { return _CurrentProtein; }
          set 
          {
-            _CurrentProtein = value; 
+            _CurrentProtein = value;
+            ClearFrameData();
          }
       }
 
@@ -619,7 +636,7 @@ namespace HFM.Proteins
       /// <summary>
       /// Frame Data for this Unit
       /// </summary>
-      private UnitFrame[] _UnitFrames = new UnitFrame[101];
+      private UnitFrame[] _UnitFrames = null;
       /// <summary>
       /// Frame Data for this Unit
       /// </summary>
@@ -636,8 +653,6 @@ namespace HFM.Proteins
       #region Clear UnitInfo and Clear Time Based Values
       private void Clear()
       {
-         //FoldingID = UsernameDefault;
-         //Team = TeamDefault;
          TypeOfClient = ClientType.Unknown;
          CoreVersion = String.Empty;
          DownloadTime = DateTime.MinValue;
@@ -652,7 +667,7 @@ namespace HFM.Proteins
          ProteinTag = String.Empty;
          RawFramesComplete = 0;
          RawFramesTotal = 0;
-         _CurrentLogText.Clear();
+         UnitResult = WorkUnitResult.Unknown;
          CurrentProtein = new Protein();
 
          ClearTimeBasedValues();
@@ -708,7 +723,7 @@ namespace HFM.Proteins
       {
          _FramesObserved = 0;
          _CurrentFrame = null;
-         _UnitFrames = new UnitFrame[101];
+         _UnitFrames = new UnitFrame[CurrentProtein.Frames + 1]; //[101];
       }
       #endregion
 
@@ -814,5 +829,24 @@ namespace HFM.Proteins
          return tDelta;
       }
       #endregion
+      
+      /// <summary>
+      /// Get the WorkUnitResult Enum representation of the given result string.
+      /// </summary>
+      /// <param name="result">Work Unit Result as String.</param>
+      public static WorkUnitResult WorkUnitResultFromString(string result)
+      {
+         switch (result)
+         {
+            case FinishedUnit:
+               return WorkUnitResult.FinishedUnit;
+            case EarlyUnitEnd:
+               return WorkUnitResult.EarlyUnitEnd;
+            case UnstableMachine:
+               return WorkUnitResult.UnstableMachine;
+            default:
+               return WorkUnitResult.Unknown;
+         }
+      }
    }
 }

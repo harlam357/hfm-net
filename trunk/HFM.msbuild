@@ -30,7 +30,7 @@
   <Target Name="Compile" DependsOnTargets="Version">
     <MSBuild Projects="HFM.sln"
              Targets="Rebuild"
-             Properties="Configuration=Release" />
+             Properties="Configuration=ScriptedRelease" />
   </Target>
 
   <Target Name="Build" DependsOnTargets="Compile">

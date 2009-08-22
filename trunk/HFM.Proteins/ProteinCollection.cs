@@ -49,7 +49,7 @@ namespace HFM.Proteins
    public class ProteinCollection : Dictionary<Int32, Protein>
    {
       private static ProteinCollection _Instance;
-      private readonly static Object classLock = typeof(ProteinCollection);
+      private readonly static object _classLock = typeof(ProteinCollection);
 
       private readonly string _LocalProjectInfoFile = Path.Combine(PreferenceSet.Instance.AppDataPath, "ProjectInfo.tab");
 
@@ -85,7 +85,7 @@ namespace HFM.Proteins
       {
          get
          {
-            lock (classLock)
+            lock (_classLock)
             {
                if (_Instance == null)
                {
@@ -162,20 +162,21 @@ namespace HFM.Proteins
 
          return true;
       }
+      
+      private delegate void DownloadFromStanfordDelegate();
 
-      public void DownloadFromStanford()
+      public IAsyncResult BeginDownloadFromStanford()
       {
-         System.Threading.ThreadPool.QueueUserWorkItem(DownloadFromStanford, null);
+         return new DownloadFromStanfordDelegate(DownloadFromStanford).BeginInvoke(null, null);
       }
       
       /// <summary>
       /// Download project information from Stanford University (psummaryC.html)
       /// </summary>
-      /// <param name="State">Null in this implementation</param>
-      public void DownloadFromStanford(Object State /* null */)
+      public void DownloadFromStanford()
       {
          DateTime Start = HfmTrace.ExecStart;
-         lock (this)
+         lock (_classLock)
          {
             PreferenceSet Prefs = PreferenceSet.Instance;
 
@@ -239,18 +240,29 @@ namespace HFM.Proteins
                if (oChunk.sTag.ToLower() == "tr")
                {
                   Protein p = new Protein();
-                  while (((oChunk = pSummary.ParseNext()) != null) && (oChunk.sTag.ToLower() != "td"))
+                  while ((oChunk = pSummary.ParseNext()) != null && oChunk.sTag.ToLower() != "td")
                   {
                      // Do nothing!
                   }
 
                   // Skip the empty attributes
                   oChunk = pSummary.ParseNext();
+                  if (oChunk == null) 
+                     continue;
+                  
                   try
                   {
                      #region Parse Code for HTML Table
                      // Suck out the project number
-                     p.ProjectNumber = Int32.Parse(oChunk.oHTML);
+                     int ProjectNumber;
+                     if (Int32.TryParse(oChunk.oHTML, out ProjectNumber))
+                     {
+                        p.ProjectNumber = ProjectNumber;   
+                     }
+                     else
+                     {
+                        continue;
+                     }
 
                      // Skip the closing tag, opening tags and attributes
                      oChunk = pSummary.ParseNext();
@@ -376,7 +388,7 @@ namespace HFM.Proteins
          }
 
          File.WriteAllLines(_LocalProjectInfoFile, CSVData, Encoding.ASCII);
-         HfmTrace.WriteToHfmConsole(TraceLevel.Info, Start);
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
       }
    }
 }

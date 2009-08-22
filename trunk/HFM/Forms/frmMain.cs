@@ -43,11 +43,6 @@ namespace HFM.Forms
    {
       #region Private Variables
       /// <summary>
-      /// Conversion factor - minutes to milli-seconds
-      /// </summary>
-      private const int MinToMillisec = 60000;
-
-      /// <summary>
       /// Collection of host instances
       /// </summary>
       private readonly FoldingInstanceCollection HostInstances = new FoldingInstanceCollection();
@@ -73,16 +68,6 @@ namespace HFM.Forms
       private bool InApplySort = false;
       
       /// <summary>
-      /// Retrieval Timer Object (init 10 minutes)
-      /// </summary>
-      private readonly System.Timers.Timer workTimer = new System.Timers.Timer(600000);
-
-      /// <summary>
-      /// WebGen Timer Object (init 15 minutes)
-      /// </summary>
-      private readonly System.Timers.Timer webTimer = new System.Timers.Timer(900000);
-      
-      /// <summary>
       /// Messages Form
       /// </summary>
       private readonly frmMessages _frmMessages = null;
@@ -91,35 +76,6 @@ namespace HFM.Forms
       /// Notify Icon for frmMain
       /// </summary>
       private NotifyIcon notifyIcon = null;
-
-      /// <summary>
-      /// Local time that denotes when a full retrieve started (only accessed by the RetrieveInProgress property)
-      /// </summary>
-      private DateTime _RetrieveExecStart;
-      /// <summary>
-      /// Local flag that denotes a full retrieve already in progress (only accessed by the RetrieveInProgress property)
-      /// </summary>
-      private bool _RetrievalInProgress = false;
-      /// <summary>
-      /// Local flag that denotes a full retrieve already in progress
-      /// </summary>
-      private bool RetrievalInProgress
-      {
-         get { return _RetrievalInProgress; }
-         set 
-         { 
-            if (value)
-            {
-               _RetrieveExecStart = HfmTrace.ExecStart;
-               _RetrievalInProgress = value;
-            }
-            else
-            {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Total Retrieval Execution Time: {0}", HfmTrace.GetExecTime(_RetrieveExecStart)));
-               _RetrievalInProgress = value;
-            }
-         }
-      }
       #endregion
 
       #region Form Constructor / functionality
@@ -132,7 +88,7 @@ namespace HFM.Forms
          InitializeComponent();
 
          // Set Main Form Text
-         base.Text += String.Format(" v{0} - Beta", PlatformOps.GetApplicationLabelVersion());
+         base.Text += String.Format(" v{0} - Beta", PlatformOps.ApplicationLabelVersion);
 
          // Create Messages Window
          _frmMessages = new frmMessages();
@@ -142,10 +98,6 @@ namespace HFM.Forms
          
          // Hook up Protein Collection Updated Event Handler
          ProteinCollection.Instance.ProjectInfoUpdated += Instance_ProjectInfoUpdated;
-         // Hook up Background Timer Event Handler
-         workTimer.Elapsed += bgWorkTimer_Tick;
-         // Hook up WebGen Timer Event Handler
-         webTimer.Elapsed += webGenTimer_Tick;
          
          // Clear the Log File Cache Folder
          ClearCacheFolder();
@@ -162,13 +114,14 @@ namespace HFM.Forms
          dataGridView1.AutoGenerateColumns = false;
          dataGridView1.DataSource = HostInstances.GetDisplayCollection();
          HostInstances.CollectionChanged += HostInstances_CollectionChanged;
-         HostInstances.CollectionLoaded += HostInstances_CollectionLoaded;
+         //HostInstances.CollectionLoaded += HostInstances_CollectionLoaded;
          //HostInstances.CollectionSaved += HostInstances_CollectionSaved;
          HostInstances.InstanceAdded += HostInstances_InstanceDataChanged;
          HostInstances.InstanceEdited += HostInstances_InstanceDataChanged;
          HostInstances.InstanceRemoved += HostInstances_InstanceDataChanged;
          HostInstances.InstanceRetrieved += HostInstances_InstanceRetrieved;
          HostInstances.DuplicatesFound += HostInstances_DuplicatesFound;
+         HostInstances.RefreshUserStatsData += HostInstances_RefreshUserStatsData;
 
          // Hook-up PreferenceSet Event Handlers
          PreferenceSet Prefs = PreferenceSet.Instance;
@@ -178,6 +131,7 @@ namespace HFM.Forms
          PreferenceSet_OfflineLastChanged(this, EventArgs.Empty);
          Prefs.MessageLevelChanged += PreferenceSet_MessageLevelChanged;
          Prefs.DuplicateCheckChanged += PreferenceSet_DuplicateCheckChanged;
+         Prefs.ColorLogFileChanged += PreferenceSet_ColorLogFileChanged;
       }
 
       /// <summary>
@@ -394,23 +348,22 @@ namespace HFM.Forms
             ClientInstance Instance;
             if (HostInstances.InstanceCollection.TryGetValue(InstanceName, out Instance))
             {
-               //ClientInstance Instance =
-               //   HostInstances.InstanceCollection[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
-
-               string[] logText = Instance.CurrentUnitInfo.CurrentLogText.ToArray();
-
                statusLabelLeft.Text = Instance.Path;
 
-               if (logText.Length > 0)
+               if (Instance.CurrentLogLines.Count > 0)
                {
-                  txtLogFile.Lines = logText;
-                  txtLogFile.SelectionStart = txtLogFile.Text.Length;
-                  txtLogFile.ScrollToCaret();
+                  //if (txtLogFile.Lines.Length != Instance.CurrentLogLines.Count)
+                  //{
+                     txtLogFile.SetLogLines(Instance.CurrentLogLines);
+                     PreferenceSet_ColorLogFileChanged(sender, EventArgs.Empty);
+                  //}
                }
                else
                {
-                  txtLogFile.Text = "No Log Available";
+                  txtLogFile.SetNoLogLines();
                }
+
+               txtLogFile.ScrollToBottom();
             }
             else // this should only happen when this fires in the middle of an 'Edit' operation that changes the Client Name
             {
@@ -928,7 +881,7 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void mnuFileNew_Click(object sender, EventArgs e)
       {
-         if (RetrievalInProgress)
+         if (HostInstances.RetrievalInProgress)
          {
             MessageBox.Show(this, "Retrieval in progress... please wait to create a new config file.", 
                Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -948,7 +901,7 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void mnuFileOpen_Click(object sender, EventArgs e)
       {
-         if (RetrievalInProgress)
+         if (HostInstances.RetrievalInProgress)
          {
             MessageBox.Show(this, "Retrieval in progress... please wait to open another config file.",
                Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1008,7 +961,7 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void mnuFileImportFahMon_Click(object sender, EventArgs e)
       {
-         if (RetrievalInProgress)
+         if (HostInstances.RetrievalInProgress)
          {
             MessageBox.Show(this, "Retrieval in progress... please wait to open another config file.",
                Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1053,7 +1006,7 @@ namespace HFM.Forms
          frmPreferences prefDialog = new frmPreferences();
          if (prefDialog.ShowDialog() == DialogResult.OK)
          {
-            SetTimerState();
+            HostInstances.SetTimerState();
             
             // If the PPD Calculation style changed, we need to do a new Retrieval
             if (currentPpdCalc.Equals(PreferenceSet.Instance.PpdCalculation))
@@ -1062,7 +1015,7 @@ namespace HFM.Forms
             }
             else
             {
-               QueueNewRetrieval();
+               HostInstances.QueueNewRetrieval();
             }
          }
       }
@@ -1304,7 +1257,7 @@ namespace HFM.Forms
       /// </summary>
       private void mnuClientsRefreshAll_Click(object sender, EventArgs e)
       {
-         QueueNewRetrieval();
+         HostInstances.QueueNewRetrieval();
       }
 
       /// <summary>
@@ -1483,7 +1436,7 @@ namespace HFM.Forms
 
       private void mnuWebRefreshUserStats_Click(object sender, EventArgs e)
       {
-         ForceRefreshUserStatsData();
+         RefreshUserStatsData(true);
       }
 
       private void mnuWebHFMGoogleCode_Click(object sender, EventArgs e)
@@ -1503,204 +1456,6 @@ namespace HFM.Forms
 
       #region Background Work Routines
       /// <summary>
-      /// Disable and enable the background work timers
-      /// </summary>
-      private void SetTimerState()
-      {
-         // Disable timers if no hosts
-         if (HostInstances.HasInstances == false)
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, "No Hosts - Stopping Both Background Timer Loops");
-            workTimer.Stop();
-            webTimer.Stop();
-            return;
-         }
-
-         // Enable the data retrieval timer
-         if (PreferenceSet.Instance.SyncOnSchedule)
-         {
-            StartBackgroundTimer();
-         }
-         else
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping Background Timer Loop");
-            workTimer.Stop();
-         }
-
-         // Enable the web generation timer
-         if (PreferenceSet.Instance.GenerateWeb && PreferenceSet.Instance.WebGenAfterRefresh == false)
-         {
-            StartWebGenTimer();
-         }
-         else
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping WebGen Timer Loop");
-            webTimer.Stop();
-         }
-      }
-
-      /// <summary>
-      /// When the host refresh timer expires, refresh all the hosts
-      /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
-      private void bgWorkTimer_Tick(object sender, EventArgs e)
-      {
-         HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Running Background Timer...");
-         QueueNewRetrieval();
-      }
-
-      /// <summary>
-      /// When the web gen timer expires, refresh the website files
-      /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
-      private void webGenTimer_Tick(object sender, EventArgs e)
-      {
-         if (PreferenceSet.Instance.GenerateWeb == false) return;
-
-         DateTime Start = HfmTrace.ExecStart;
-
-         if (webTimer.Enabled)
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping WebGen Timer Loop");
-         }
-         webTimer.Stop();
-
-         HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Starting WebGen.", HfmTrace.FunctionName));
-
-         PreferenceSet Prefs = PreferenceSet.Instance;
-         Match match = StringOps.MatchFtpWithUserPassUrl(Prefs.WebRoot);
-         
-         try
-         {
-            if (match.Success)
-            {
-               ClientInstance[] instances = HostInstances.GetCurrentInstanceArray();
-               XMLGen.DoHtmlGeneration(Path.GetTempPath(), instances);
-
-               string Server = match.Result("${domain}");
-               string FtpPath = match.Result("${file}");
-               string Username = match.Result("${username}");
-               string Password = match.Result("${password}");
-
-               XMLGen.DoWebFtpUpload(Server, FtpPath, Username, Password, instances);
-            }
-            else
-            {
-               // Create the web folder (just in case)
-               if (Directory.Exists(PreferenceSet.Instance.WebRoot) == false)
-               {
-                  Directory.CreateDirectory(Prefs.WebRoot);
-               }
-
-               // Copy the CSS file to the output directory
-               string sCSSFileName = Path.Combine(Path.Combine(PreferenceSet.AppPath, "CSS"), Prefs.CSSFileName);
-               if (File.Exists(sCSSFileName))
-               {
-                  File.Copy(sCSSFileName, Path.Combine(Prefs.WebRoot, Prefs.CSSFileName), true);
-               }
-
-               XMLGen.DoHtmlGeneration(Prefs.WebRoot, HostInstances.GetCurrentInstanceArray());
-            }
-         }
-         catch (Exception ex)
-         {
-            HfmTrace.WriteToHfmConsole(ex);
-         }
-         finally
-         {
-            StartWebGenTimer();
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, Start);
-         }
-      }
-
-      /// <summary>
-      /// Start the Web Generation Timer
-      /// </summary>
-      private void StartWebGenTimer()
-      {
-         if (PreferenceSet.Instance.GenerateWeb && PreferenceSet.Instance.WebGenAfterRefresh == false)
-         {
-            webTimer.Interval = Convert.ToInt32(PreferenceSet.Instance.GenerateInterval) * MinToMillisec;
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Starting WebGen Timer Loop: {0} Minutes",
-                                                                       PreferenceSet.Instance.GenerateInterval));
-            webTimer.Start();
-         }
-      }
-
-      /// <summary>
-      /// Stick each Instance in the background thread queue to retrieve the info for a given Instance
-      /// </summary>
-      private void QueueNewRetrieval()
-      {
-         // don't fire this process twice
-         if (RetrievalInProgress)
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Retrieval Already In Progress...", HfmTrace.FunctionName));
-            return;
-         }
-         
-         // only fire if there are Hosts
-         if (HostInstances.HasInstances)
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping Background Timer Loop");
-            workTimer.Stop();
-         
-            // set full retrieval flag
-            RetrievalInProgress = true;
-
-            // fire the retrieval wrapper thread (basically a wait thread off the UI thread)
-            new MethodInvoker(DoRetrievalWrapper).BeginInvoke(null, null);
-         }
-      }
-      
-      /// <summary>
-      /// Wraps the DoRetrieval function on a seperate thread and fires post retrieval processes
-      /// </summary>
-      private void DoRetrievalWrapper()
-      {
-         // fire the actual retrieval thread
-         IAsyncResult async = new MethodInvoker(HostInstances.DoRetrieval).BeginInvoke(null, null);
-         // wait for completion
-         async.AsyncWaitHandle.WaitOne();
-
-         PreferenceSet Prefs = PreferenceSet.Instance;
-         
-         // run post retrieval processes
-         if (Prefs.GenerateWeb && Prefs.WebGenAfterRefresh)
-         {
-            // do a web gen
-            webGenTimer_Tick(null, null);
-         }
-
-         if (Prefs.ShowUserStats)
-         {
-            RefreshUserStatsData();
-         }
-
-         // Enable the data retrieval timer
-         if (Prefs.SyncOnSchedule)
-         {
-            StartBackgroundTimer();
-         }
-
-         // clear full retrieval flag
-         RetrievalInProgress = false;
-      }
-
-      /// <summary>
-      /// Starts Retrieval Timer Loop
-      /// </summary>
-      private void StartBackgroundTimer()
-      {
-         workTimer.Interval = Convert.ToInt32(PreferenceSet.Instance.SyncTimeMinutes) * MinToMillisec;
-         HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Starting Background Timer Loop: {0} Minutes",
-                                                                    PreferenceSet.Instance.SyncTimeMinutes));
-         workTimer.Start();
-      }
-
-      /// <summary>
       /// Refresh the Form
       /// </summary>
       private void RefreshDisplay()
@@ -1713,6 +1468,8 @@ namespace HFM.Forms
                CurrencyManager cm = (CurrencyManager) dataGridView1.BindingContext[dataGridView1.DataSource];
                if (cm != null)
                {
+                  // Remove the RowEnter handler when doing currency refresh
+                  dataGridView1.RowEnter -= dataGridView1_RowEnter;
                   if (InvokeRequired)
                   {
                      BeginInvoke(new MethodInvoker(cm.Refresh));
@@ -1721,6 +1478,9 @@ namespace HFM.Forms
                   {
                      cm.Refresh();
                   }
+                  // Add the RowEnter handler back after refresh
+                  // This removes the "stuttering log" effect seen as each client is refreshed
+                  dataGridView1.RowEnter += dataGridView1_RowEnter;
                }
 
                ApplySort();
@@ -1867,7 +1627,7 @@ namespace HFM.Forms
       private void Instance_ProjectInfoUpdated(object sender, ProjectInfoUpdatedEventArgs e)
       {
          // Do Retrieve on all clients after Project Info is updated (this is confirmed needed)
-         QueueNewRetrieval();
+         HostInstances.QueueNewRetrieval();
       }
       #endregion
 
@@ -2117,7 +1877,7 @@ namespace HFM.Forms
          // Clear the list of host instances
          HostInstances.Clear();
          // This will disable the timers, we have no hosts
-         SetTimerState();
+         HostInstances.SetTimerState();
       }
 
       /// <summary>
@@ -2217,17 +1977,9 @@ namespace HFM.Forms
       /// <summary>
       /// Refresh User Stats from external source
       /// </summary>
-      private void RefreshUserStatsData()
+      private void HostInstances_RefreshUserStatsData(object sender, EventArgs e)
       {
          RefreshUserStatsData(false);
-      }
-
-      /// <summary>
-      /// Force Refresh User Stats from external source
-      /// </summary>
-      private void ForceRefreshUserStatsData()
-      {
-         RefreshUserStatsData(true);
       }
 
       /// <summary>
@@ -2257,8 +2009,6 @@ namespace HFM.Forms
       /// <summary>
       /// Forces a screen refresh when the instance collection is changed
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void HostInstances_CollectionChanged(object sender, EventArgs e)
       {
          // Update the UI (this is confirmed needed)
@@ -2268,21 +2018,6 @@ namespace HFM.Forms
       /// <summary>
       /// 
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
-      private void HostInstances_CollectionLoaded(object sender, EventArgs e)
-      {
-         // Get client logs         
-         QueueNewRetrieval();
-         // Start Retrieval and WebGen Timers
-         SetTimerState();
-      }
-
-      /// <summary>
-      /// 
-      /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void HostInstances_InstanceDataChanged(object sender, EventArgs e)
       {
          if (PreferenceSet.Instance.AutoSaveConfig)
@@ -2294,8 +2029,6 @@ namespace HFM.Forms
       /// <summary>
       /// 
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void HostInstances_InstanceRetrieved(object sender, EventArgs e)
       {
          // Update the UI (this is confirmed needed)
@@ -2305,8 +2038,6 @@ namespace HFM.Forms
       /// <summary>
       /// 
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void HostInstances_DuplicatesFound(object sender, EventArgs e)
       {
          // Update the UI (this is confirmed needed)
@@ -2325,7 +2056,7 @@ namespace HFM.Forms
          {
             mnuWebRefreshUserStats.Visible = true;
             mnuWebSep2.Visible = true;
-            RefreshUserStatsData();
+            RefreshUserStatsData(false);
          }
          else
          {
@@ -2368,6 +2099,21 @@ namespace HFM.Forms
       private void PreferenceSet_DuplicateCheckChanged(object sender, EventArgs e)
       {
          HostInstances.FindDuplicates(); // Issue 81
+      }
+      
+      /// <summary>
+      /// Sets the Log Color option after change
+      /// </summary>
+      private void PreferenceSet_ColorLogFileChanged(object sender, EventArgs e)
+      {
+         if (PreferenceSet.Instance.ColorLogFile)
+         {
+            txtLogFile.HighlightLines();
+         }
+         else
+         {
+            txtLogFile.RemoveHighlight();
+         }
       }
       #endregion
       
