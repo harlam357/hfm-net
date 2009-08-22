@@ -300,7 +300,7 @@
 goto End
 
 :Deploy
-call ..\..\..\Deploy.bat ..\..\..\$(ConfigurationName)
+call ..\..\..\Deploy.bat ..\..\..\Release
 :End</PostBuildEvent>
     <PreBuildEvent>if $(ConfigurationName)==ScriptedRelease goto BuildAsmInfo
 goto End
