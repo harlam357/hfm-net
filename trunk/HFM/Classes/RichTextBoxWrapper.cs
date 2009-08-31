@@ -24,23 +24,30 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 using HFM.Instances;
+using HFM.Preferences;
 
 namespace HFM.Classes
 {
    public partial class RichTextBoxWrapper : RichTextBox
    {
-      IList<LogLine> _LogLines = null;
+      private IList<LogLine> _LogLines = null;
+      private string _LogOwnedByInstanceName = String.Empty;
+      public string LogOwnedByInstanceName
+      {
+         get { return _LogOwnedByInstanceName; }
+      }
    
       public RichTextBoxWrapper()
       {
          InitializeComponent();
       }
       
-      public void SetLogLines(IList<LogLine> lines)
+      public void SetLogLines(IList<LogLine> lines, string LogOwnedByInstance)
       {
          _LogLines = lines;
+         _LogOwnedByInstanceName = LogOwnedByInstance;
       
-         List<string> logLines = new List<string>();
+         List<string> logLines = new List<string>(lines.Count);
          foreach (LogLine line in lines)
          {
             logLines.Add(line.LineRaw);
@@ -128,7 +135,7 @@ namespace HFM.Classes
       {
          SelectionStart = TextLength;
       
-         if (Helpers.PlatformOps.IsRunningOnMono())
+         if (PlatformOps.IsRunningOnMono())
          {
             ScrollToCaret();
          }
@@ -140,7 +147,7 @@ namespace HFM.Classes
 
       public void ScrollToTop()
       {
-         if (Helpers.PlatformOps.IsRunningOnMono())
+         if (PlatformOps.IsRunningOnMono())
          {
             throw new NotImplementedException("This function is not implemented when running under the Mono Runtime.");
          }
@@ -152,7 +159,7 @@ namespace HFM.Classes
 
       public void ScrollLineDown()
       {
-         if (Helpers.PlatformOps.IsRunningOnMono())
+         if (PlatformOps.IsRunningOnMono())
          {
             throw new NotImplementedException("This function is not implemented when running under the Mono Runtime.");
          }
@@ -164,7 +171,7 @@ namespace HFM.Classes
 
       public void ScrollLineUp()
       {
-         if (Helpers.PlatformOps.IsRunningOnMono())
+         if (PlatformOps.IsRunningOnMono())
          {
             throw new NotImplementedException("This function is not implemented when running under the Mono Runtime.");
          }

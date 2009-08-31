@@ -32,6 +32,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\HFM.Instances\bin\Release\HFM.Instances.dll</HintPath>
     </Reference>
+    <Reference Include="HFM.Preferences, Version=0.2.2.42, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\HFM.Instances\bin\Release\HFM.Preferences.dll</HintPath>
+    </Reference>
     <Reference Include="HFM.Proteins, Version=0.2.2.41, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\HFM.Instances\bin\Release\HFM.Proteins.dll</HintPath>
@@ -45,13 +49,17 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="ClientInstanceTests.cs" />
     <Compile Include="LogReaderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="TestFiles\GPU Test FAHlog 2.txt" />
+    <Content Include="TestFiles\GPU Test FAHlog 3 EUE Pause.txt" />
     <Content Include="TestFiles\SMP Test FAHlog 1.txt" />
     <Content Include="TestFiles\GPU Test FAHlog 1.txt" />
+    <Content Include="TestFiles\SMP Test FAHlog 2.txt" />
+    <Content Include="TestFiles\SMP Test FAHlog 3.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -142,7 +142,7 @@ namespace HFM.Instances
          Protein protein;
          ProteinCollection.Instance.TryGetValue(_ProjectID, out protein);
 
-         List<string> output = new List<string>(10);
+         List<string> output = new List<string>(12);
 
          if (protein != null)
          {

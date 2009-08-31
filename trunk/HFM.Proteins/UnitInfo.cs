@@ -22,6 +22,7 @@ using System;
 using System.Diagnostics;
 
 using HFM.Instrumentation;
+using HFM.Preferences;
 
 namespace HFM.Proteins
 {
@@ -134,16 +135,16 @@ namespace HFM.Proteins
       {
          get
          {
-            switch (Preferences.PreferenceSet.Instance.PpdCalculation)
+            switch (PreferenceSet.Instance.PpdCalculation)
             {
-               case Preferences.ePpdCalculation.LastFrame:
-                  return _RawTimePerLastSection;
-               case Preferences.ePpdCalculation.LastThreeFrames:
-                  return _RawTimePerThreeSections;
-               case Preferences.ePpdCalculation.AllFrames:
-                  return _RawTimePerAllSections;
-               case Preferences.ePpdCalculation.EffectiveRate:
-                  return _RawTimePerUnitDownload;
+               case ePpdCalculation.LastFrame:
+                  return RawTimePerLastSection;
+               case ePpdCalculation.LastThreeFrames:
+                  return RawTimePerThreeSections;
+               case ePpdCalculation.AllFrames:
+                  return RawTimePerAllSections;
+               case ePpdCalculation.EffectiveRate:
+                  return RawTimePerUnitDownload;
             }
 
             return 0;
@@ -256,19 +257,6 @@ namespace HFM.Proteins
       }
 
       /// <summary>
-      /// Core Version Number
-      /// </summary>
-      private string _CoreVersion = String.Empty;
-      /// <summary>
-      /// Core Version Number
-      /// </summary>
-      public string CoreVersion
-      {
-         get { return _CoreVersion; }
-         set { _CoreVersion = value; }
-      }
-
-      /// <summary>
       /// Date/time the unit was downloaded
       /// </summary>
       private DateTime _DownloadTime;
@@ -295,22 +283,9 @@ namespace HFM.Proteins
       }
 
       /// <summary>
-      /// Frame progress of the unit
-      /// </summary>
-      private Int32 _FramesComplete;
-      /// <summary>
-      /// Frame progress of the unit
-      /// </summary>
-      public Int32 FramesComplete
-      {
-         get { return _FramesComplete; }
-         set { _FramesComplete = value; }
-      }
-
-      /// <summary>
       /// Unit Start Time Stamp
       /// </summary>
-      private TimeSpan _UnitStartTime;
+      private TimeSpan _UnitStartTime = TimeSpan.Zero;
       /// <summary>
       /// Unit Start Time Stamp
       /// </summary>
@@ -318,6 +293,19 @@ namespace HFM.Proteins
       {
          get { return _UnitStartTime; }
          set { _UnitStartTime = value; }
+      }
+
+      /// <summary>
+      /// Core Version Number
+      /// </summary>
+      private string _CoreVersion = String.Empty;
+      /// <summary>
+      /// Core Version Number
+      /// </summary>
+      public string CoreVersion
+      {
+         get { return _CoreVersion; }
+         set { _CoreVersion = value; }
       }
 
       /// <summary>
@@ -462,6 +450,19 @@ namespace HFM.Proteins
 
       #region Time Based Values
       /// <summary>
+      /// Frame progress of the unit
+      /// </summary>
+      private Int32 _FramesComplete;
+      /// <summary>
+      /// Frame progress of the unit
+      /// </summary>
+      public Int32 FramesComplete
+      {
+         get { return _FramesComplete; }
+         set { _FramesComplete = value; }
+      }
+      
+      /// <summary>
       /// Current progress (percentage) of the unit
       /// </summary>
       private Int32 _PercentComplete;
@@ -546,64 +547,73 @@ namespace HFM.Proteins
       /// <summary>
       /// Average frame time since unit download
       /// </summary>
-      private Int32 _RawTimePerUnitDownload;
-      /// <summary>
-      /// Average frame time since unit download
-      /// </summary>
       public Int32 RawTimePerUnitDownload
       {
-         get { return _RawTimePerUnitDownload; }
-         set
+         get 
          {
-            _RawTimePerUnitDownload = value;
+            if (FramesObserved > 0)
+            {
+               // Make sure CurrentFramePercent is greater than 0 to avoid DivideByZeroException - Issue 34
+               if (DownloadTime.Equals(DateTime.MinValue) == false && CurrentFrame.FramePercent > 0)
+               {
+                  TimeSpan timeSinceUnitDownload = DateTime.Now.Subtract(DownloadTime);
+                  return (Convert.ToInt32(timeSinceUnitDownload.TotalSeconds) / CurrentFrame.FramePercent);
+               }
+               
+               return 0;
+            }
+
+            return 0;
          }
       }
       
       /// <summary>
       /// Average frame time over all sections
       /// </summary>
-      private Int32 _RawTimePerAllSections = 0;
-      /// <summary>
-      /// Average frame time over all sections
-      /// </summary>
       public Int32 RawTimePerAllSections
       {
-         get { return _RawTimePerAllSections; }
-         set
+         get 
          {
-            _RawTimePerAllSections = value;
+            if (FramesObserved > 0)
+            {
+               return GetDuration(FramesObserved);
+            }
+            
+            return 0;
          }
       }
 
-      /// <summary>
-      /// Average frame time over the last three sections
-      /// </summary>
-      private Int32 _RawTimePerThreeSections = 0;
       /// <summary>
       /// Average frame time over the last three sections
       /// </summary>
       public Int32 RawTimePerThreeSections
       {
-         get { return _RawTimePerThreeSections; }
-         set
+         get 
          {
-            _RawTimePerThreeSections = value;
+            // time is valid for 3 "sets" ago
+            if (FramesObserved > 3)
+            {
+               return GetDuration(3);
+            }
+            
+            return 0;
          }
       }
 
       /// <summary>
       /// Frame time of the last section
       /// </summary>
-      private Int32 _RawTimePerLastSection = 0;
-      /// <summary>
-      /// Frame time of the last section
-      /// </summary>
       public Int32 RawTimePerLastSection
       {
-         get { return _RawTimePerLastSection; }
-         set
+         get 
          {
-            _RawTimePerLastSection = value;
+            // time is valid for 1 "set" ago
+            if (FramesObserved > 1)
+            {
+               return Convert.ToInt32(_CurrentFrame.FrameDuration.TotalSeconds);
+            }
+            
+            return 0;
          }
       }
       #endregion
@@ -674,22 +684,71 @@ namespace HFM.Proteins
       }
       
       /// <summary>
+      /// Sets the time based values (FramesComplete, PercentComplete, TimePerFrame, UPD, PPD, ETA)
+      /// </summary>
+      public void SetTimeBasedValues(ClientStatus Status, TimeSpan BenchmarkAverageTimePerFrame)
+      {
+         if (RawTimePerSection != 0 && Status.Equals(ClientStatus.Running))
+         {
+            try
+            {
+               Int32 FramesTotal = ProteinCollection.Instance[ProjectID].Frames;
+               Int32 RawScaleFactor = RawFramesTotal / FramesTotal;
+
+               FramesComplete = RawFramesComplete / RawScaleFactor;
+               PercentComplete = FramesComplete * 100 / FramesTotal;
+               TimePerFrame = new TimeSpan(0, 0, Convert.ToInt32(RawTimePerSection));
+
+               UPD = ProteinCollection.Instance[ProjectID].GetUPD(TimePerFrame);
+               PPD = ProteinCollection.Instance[ProjectID].GetPPD(TimePerFrame);
+               ETA = new TimeSpan((100 - PercentComplete) * TimePerFrame.Ticks);
+            }
+            catch (Exception ex)
+            {
+               HfmTrace.WriteToHfmConsole(ex);
+            }
+         }
+         else if (Status.Equals(ClientStatus.RunningNoFrameTimes))
+         {
+            // If we have frames but no section time, try pulling the percent complete from the UnitFrame data
+            if (PercentComplete == 0)
+            {
+               // Only if we didn't get a reading from the unitinfo.txt parse
+               PercentComplete = LastUnitFramePercent;
+            }
+
+            if (BenchmarkAverageTimePerFrame.Equals(TimeSpan.Zero) == false)
+            {
+               TimePerFrame = BenchmarkAverageTimePerFrame;
+               UPD = ProteinCollection.Instance[ProjectID].GetUPD(TimePerFrame);
+               PPD = ProteinCollection.Instance[ProjectID].GetPPD(TimePerFrame);
+               ETA = new TimeSpan((100 - PercentComplete) * TimePerFrame.Ticks);
+            }
+         }
+         else
+         {
+            ClearTimeBasedValues();
+         }
+      }
+      
+      /// <summary>
       /// Clear only the time based values for this instance
       /// </summary>
       public void ClearTimeBasedValues()
       {
          // Set in SetTimeBasedValues()
+         FramesComplete = 0;
          PercentComplete = 0;
          TimePerFrame = TimeSpan.Zero;
          UPD = 0.0;
          PPD = 0.0;
          ETA = TimeSpan.Zero;
 
-         // Set in SetFrameTimes()
-         RawTimePerUnitDownload = 0;
-         RawTimePerAllSections = 0;
-         RawTimePerThreeSections = 0;
-         RawTimePerLastSection = 0;
+         //// Set in SetFrameTimes()
+         //RawTimePerUnitDownload = 0;
+         //RawTimePerAllSections = 0;
+         //RawTimePerThreeSections = 0;
+         //RawTimePerLastSection = 0;
       }
       #endregion
 
@@ -714,6 +773,10 @@ namespace HFM.Proteins
                CurrentFrame.FrameDuration = GetDelta(CurrentFrame.TimeOfFrame, UnitFrames[CurrentFrame.FramePercent - 1].TimeOfFrame);
             }
          }
+         else
+         {
+            //TODO: Trace write... saw same frame percent twice.
+         }
       }
 
       /// <summary>
@@ -723,57 +786,72 @@ namespace HFM.Proteins
       {
          _FramesObserved = 0;
          _CurrentFrame = null;
-         _UnitFrames = new UnitFrame[CurrentProtein.Frames + 1]; //[101];
+         // Frames (Percentage) will always need exactly 101 slots
+         // If the log output changes from showing completion as
+         // percentage, this logic will need revaluated
+         _UnitFrames = new UnitFrame[101];
       }
       #endregion
 
       #region Calculate Frame Time Variations
-      /// <summary>
-      /// Sets Frame Time Variations based on the observed frames
-      /// </summary>
-      public void SetFrameTimes()
-      {
-         RawTimePerLastSection = 0;
-         RawTimePerThreeSections = 0;
-         RawTimePerAllSections = 0;
-         RawTimePerUnitDownload = 0;
+      ///// <summary>
+      ///// Sets Frame Time Variations based on the observed frames
+      ///// </summary>
+      //public void SetFrameTimes()
+      //{
+      //   RawTimePerLastSection = 0;
+      //   RawTimePerThreeSections = 0;
+      //   RawTimePerAllSections = 0;
+      //   RawTimePerUnitDownload = 0;
          
-         if (FramesObserved > 0)
-         {
-            // time is valid for 1 "set" ago
-            if (_FramesObserved > 1)
-            {
-               RawTimePerLastSection = Convert.ToInt32(_CurrentFrame.FrameDuration.TotalSeconds);
-            }
+      //   if (FramesObserved > 0)
+      //   {
+      //      // time is valid for 1 "set" ago
+      //      if (_FramesObserved > 1)
+      //      {
+      //         RawTimePerLastSection = Convert.ToInt32(_CurrentFrame.FrameDuration.TotalSeconds);
+      //      }
             
-            // time is valid for 3 "sets" ago
-            if (_FramesObserved > 3)
-            {
-               RawTimePerThreeSections = GetDuration(3);
-            }
+      //      // time is valid for 3 "sets" ago
+      //      if (_FramesObserved > 3)
+      //      {
+      //         RawTimePerThreeSections = GetDuration(3);
+      //      }
 
-            RawTimePerAllSections = GetDuration(FramesObserved);
+      //      RawTimePerAllSections = GetDuration(FramesObserved);
 
-            // Make sure CurrentFramePercent is greater than 0 to avoid DivideByZeroException - Issue 34
-            if (DownloadTime.Equals(DateTime.MinValue) == false && CurrentFrame.FramePercent > 0)
-            {
-               TimeSpan timeSinceUnitDownload = DateTime.Now.Subtract(DownloadTime);
-               RawTimePerUnitDownload = (Convert.ToInt32(timeSinceUnitDownload.TotalSeconds) / CurrentFrame.FramePercent);
-            }
-         }
-      }
+      //      // Make sure CurrentFramePercent is greater than 0 to avoid DivideByZeroException - Issue 34
+      //      if (DownloadTime.Equals(DateTime.MinValue) == false && CurrentFrame.FramePercent > 0)
+      //      {
+      //         TimeSpan timeSinceUnitDownload = DateTime.Now.Subtract(DownloadTime);
+      //         RawTimePerUnitDownload = (Convert.ToInt32(timeSinceUnitDownload.TotalSeconds) / CurrentFrame.FramePercent);
+      //      }
+      //   }
+      //}
       
       /// <summary>
       /// Get the total duration over the specified number of most recent frames
       /// </summary>
       /// <param name="numberOfFrames">Number of most recent frames</param>
-      public int GetDuration(int numberOfFrames)
+      private int GetDuration(int numberOfFrames)
       {
+         // No Frames have been captured yet, just return 0.
+         if (CurrentFrame == null || UnitFrames == null)
+         {
+            return 0;
+         }
+
+         if (numberOfFrames < 1)
+         {
+            throw new ArgumentOutOfRangeException("numberOfFrames", "Argument 'numberOfFrames' must be greater than 0.");
+         }
+
          int TotalSeconds = 0;
-         int frameNumber = CurrentFrame.FramePercent;
          
          try
          {
+            int frameNumber = CurrentFrame.FramePercent;
+         
             // Make sure we only add frame durations greater than a Zero TimeSpan
             // The first frame will always have a Zero TimeSpan for frame duration
             // we don't want to take this frame into account when calculating 'AllFrames' - Issue 23

@@ -523,5 +523,77 @@ namespace HFM.Preferences.Properties {
                 this["ColorLogFile"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EmailReportingToAddress {
+            get {
+                return ((string)(this["EmailReportingToAddress"]));
+            }
+            set {
+                this["EmailReportingToAddress"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EmailReportingFromAddress {
+            get {
+                return ((string)(this["EmailReportingFromAddress"]));
+            }
+            set {
+                this["EmailReportingFromAddress"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EmailReportingServerAddress {
+            get {
+                return ((string)(this["EmailReportingServerAddress"]));
+            }
+            set {
+                this["EmailReportingServerAddress"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EmailReportingEnabled {
+            get {
+                return ((bool)(this["EmailReportingEnabled"]));
+            }
+            set {
+                this["EmailReportingEnabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EmailReportingServerUsername {
+            get {
+                return ((string)(this["EmailReportingServerUsername"]));
+            }
+            set {
+                this["EmailReportingServerUsername"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EmailReportingServerPassword {
+            get {
+                return ((string)(this["EmailReportingServerPassword"]));
+            }
+            set {
+                this["EmailReportingServerPassword"] = value;
+            }
+        }
     }
 }

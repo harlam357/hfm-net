@@ -22,6 +22,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Cache;
+using System.Net.Mail;
 using System.Text;
 
 using HFM.Preferences;
@@ -59,6 +60,21 @@ namespace HFM.Helpers
       /// <exception cref="ArgumentException">Throws if Server, FtpPath, or LocalFilePath is Null or Empty.</exception>
       public static void FtpUploadHelper(string Server, string FtpPath, string LocalFilePath, string Username, string Password)
       {
+         FtpUploadHelper(Server, FtpPath, LocalFilePath, Username, Password, true);
+      }
+
+      /// <summary>
+      /// Upload a File via Ftp.
+      /// </summary>
+      /// <param name="Server">Server Name or IP.</param>
+      /// <param name="FtpPath">Path to upload to on remote Ftp server.</param>
+      /// <param name="LocalFilePath">Path to local file.</param>
+      /// <param name="Username">Ftp Login Username.</param>
+      /// <param name="Password">Ftp Login Password.</param>
+      /// <param name="PassiveMode">Passive FTP Mode.</param>
+      /// <exception cref="ArgumentException">Throws if Server, FtpPath, or LocalFilePath is Null or Empty.</exception>
+      public static void FtpUploadHelper(string Server, string FtpPath, string LocalFilePath, string Username, string Password, bool PassiveMode)
+      {
          if (String.IsNullOrEmpty(Server) || String.IsNullOrEmpty(FtpPath) || String.IsNullOrEmpty(LocalFilePath))
          {
             throw new ArgumentException("Arguments 'Server', 'FtpPath', and 'LocalFilePath' cannot be a null or empty string.");
@@ -67,9 +83,11 @@ namespace HFM.Helpers
          FtpWebRequest request = (FtpWebRequest)FtpWebRequest.Create(new Uri(String.Format("ftp://{0}{1}{2}", Server, FtpPath, Path.GetFileName(LocalFilePath))));
          request.Method = WebRequestMethods.Ftp.UploadFile;
          request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+         request.UsePassive = PassiveMode;
 
          SetNetworkCredentials(request, Username, Password);
-         SetProxy(request);
+         // Don't Set Proxy on FtpWebRequest, Proxy is for Http calls only.
+         //SetProxy(request);
          
          using (StreamReader sr1 = new StreamReader(LocalFilePath))
          {
@@ -105,7 +123,8 @@ namespace HFM.Helpers
          request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
 
          SetNetworkCredentials(request, Username, Password);
-         SetProxy(request);
+         // Don't Set Proxy on FtpWebRequest, Proxy is for Http calls only.
+         //SetProxy(request);
 
          FtpWebResponse ftpr1 = (FtpWebResponse)request.GetResponse();
 
@@ -201,7 +220,7 @@ namespace HFM.Helpers
          }
 
          // Stub out if the given URL is an Unassigned Description
-         if (Url.Equals(HFM.Proteins.Protein.UnassignedDescription)) return Url;
+         if (Url.Equals(PreferenceSet.UnassignedDescription)) return Url;
       
          return ProteinDescriptionFromUrl(new Uri(Url));
       }
@@ -279,6 +298,47 @@ namespace HFM.Helpers
       }
 
       /// <summary>
+      /// Sends an e-mail message
+      /// </summary>
+      /// <param name="MessageFrom"></param>
+      /// <param name="MessageTo"></param>
+      /// <param name="MessageSubject"></param>
+      /// <param name="MessageBody"></param>
+      /// <param name="SmtpHost"></param>
+      public static void SendEmail(string MessageFrom, string MessageTo, string MessageSubject, string MessageBody, string SmtpHost, string SmtpHostUsername, string SmtpHostPassword)
+      {
+         if (String.IsNullOrEmpty(MessageFrom))
+         {
+            MessageFrom = "no-reply@hfm.net";
+         }
+
+         MailMessage message = new MailMessage(MessageFrom, MessageTo, MessageSubject, MessageBody);
+         SmtpClient client = new SmtpClient(SmtpHost);
+         client.Credentials = GetNetworkCredential(SmtpHostUsername, SmtpHostPassword);
+         client.EnableSsl = true;
+
+         try
+         {
+            try
+            {
+               client.Send(message);
+            }
+            catch (SmtpException ex) // try again with SSL off
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
+               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Trying again with SSL disabled...", true);
+               
+               client.EnableSsl = false;
+               client.Send(message);
+            }
+         }
+         catch (Exception ex)
+         {
+            HfmTrace.WriteToHfmConsole(ex);
+         }
+      }
+
+      /// <summary>
       /// Set WebRequest Username and Password.
       /// </summary>
       /// <param name="Request">Makes a request to a Uniform Resource Identifier (URI).</param>
@@ -290,29 +350,10 @@ namespace HFM.Helpers
       {
          if (Request == null) throw new ArgumentNullException("Request", "Argument 'Request' cannot be null.");
 
-         if (String.IsNullOrEmpty(Username) && String.IsNullOrEmpty(Password))
+         NetworkCredential credentials = GetNetworkCredential(Username, Password);
+         if (credentials != null)
          {
-            // No Credentials Given
-            return;
-         }
-         if (String.IsNullOrEmpty(Username) == false && String.IsNullOrEmpty(Password))
-         {
-            throw new ArgumentException("Password must also be specified when specifying Username.");
-         }
-         if (String.IsNullOrEmpty(Username) && String.IsNullOrEmpty(Password) == false)
-         {
-            throw new ArgumentException("Username must also be specified when specifying Password.");
-         }
-         
-         if (Username.Contains("\\"))
-         {
-            String[] UserParts = Username.Split('\\');
-            Request.Credentials = new NetworkCredential(UserParts[1], Password, UserParts[0]);
-         }
-         else
-         {
-            Request.Credentials = new NetworkCredential(Username, Password);
-            //Request.Credentials = new NetworkCredential("anonymous", "somepass");
+            Request.Credentials = credentials;
          }
       }
 
@@ -322,7 +363,7 @@ namespace HFM.Helpers
       /// <param name="Request">Makes a request to a Uniform Resource Identifier (URI).</param>
       private static void SetProxy(WebRequest Request)
       {
-         System.Diagnostics.Debug.Assert(Request != null);
+         Debug.Assert(Request != null);
       
          PreferenceSet Prefs = PreferenceSet.Instance;
          if (Prefs.UseProxy)
@@ -330,10 +371,34 @@ namespace HFM.Helpers
             Request.Proxy = new WebProxy(Prefs.ProxyServer, Prefs.ProxyPort);
             if (Prefs.UseProxyAuth)
             {
-               Request.Proxy.Credentials = new NetworkCredential(Prefs.ProxyUser, Prefs.ProxyPass);
+               Request.Proxy.Credentials = GetNetworkCredential(Prefs.ProxyUser, Prefs.ProxyPass);
             }
          }
          // Don't set request.Proxy = null - Issue 49
+      }
+      
+      /// <summary>
+      /// Creates and Returns a new Network Credential object.
+      /// </summary>
+      /// <param name="Username">Network Credential Username or Domain\Username</param>
+      /// <param name="Password">Network Credential Password</param>
+      private static NetworkCredential GetNetworkCredential(string Username, string Password)
+      {
+         if (StringOps.ValidateUsernamePasswordPair(Username, Password))
+         {
+            if (Username.Contains("\\"))
+            {
+               String[] UserParts = Username.Split('\\');
+               return new NetworkCredential(UserParts[1], Password, UserParts[0]);
+            }
+            else
+            {
+               return new NetworkCredential(Username, Password);
+               //return new NetworkCredential("anonymous", "somepass");
+            }
+         }
+         
+         return null;
       }
    }
 }

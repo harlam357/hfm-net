@@ -54,7 +54,10 @@ namespace HFM.Forms
          this.locateWebFolder = new System.Windows.Forms.FolderBrowserDialog();
          this.tabControl1 = new System.Windows.Forms.TabControl();
          this.tabSchdTasks = new System.Windows.Forms.TabPage();
+         this.grpAutoRun = new HFM.Classes.GroupBoxWrapper();
+         this.chkAutoRun = new HFM.Classes.CheckBoxWrapper();
          this.grpUpdateData = new HFM.Classes.GroupBoxWrapper();
+         this.chkColorLog = new HFM.Classes.CheckBoxWrapper();
          this.chkDuplicateProject = new HFM.Classes.CheckBoxWrapper();
          this.chkDuplicateUserID = new HFM.Classes.CheckBoxWrapper();
          this.chkShowUserStats = new HFM.Classes.CheckBoxWrapper();
@@ -96,6 +99,19 @@ namespace HFM.Forms
          this.btnBrowseConfigFile = new HFM.Classes.ButtonWrapper();
          this.txtDefaultConfigFile = new HFM.Classes.TextBoxWrapper();
          this.label1 = new HFM.Classes.LabelWrapper();
+         this.tabReporting = new System.Windows.Forms.TabPage();
+         this.grpEmailSettings = new HFM.Classes.GroupBoxWrapper();
+         this.txtSmtpPassword = new HFM.Classes.TextBoxWrapper();
+         this.txtSmtpUsername = new HFM.Classes.TextBoxWrapper();
+         this.labelWrapper4 = new HFM.Classes.LabelWrapper();
+         this.labelWrapper5 = new HFM.Classes.LabelWrapper();
+         this.lblFromEmailAddress = new HFM.Classes.LabelWrapper();
+         this.txtFromEmailAddress = new HFM.Classes.TextBoxWrapper();
+         this.chkEnableEmail = new HFM.Classes.CheckBoxWrapper();
+         this.lblSmtpServer = new HFM.Classes.LabelWrapper();
+         this.lblToAddress = new HFM.Classes.LabelWrapper();
+         this.txtSmtpServer = new HFM.Classes.TextBoxWrapper();
+         this.txtToEmailAddress = new HFM.Classes.TextBoxWrapper();
          this.tabWeb = new System.Windows.Forms.TabPage();
          this.grpProjectDownload = new HFM.Classes.GroupBoxWrapper();
          this.txtProjectDownloadUrl = new HFM.Classes.TextBoxWrapper();
@@ -128,9 +144,9 @@ namespace HFM.Forms
          this.toolTipPrefs = new System.Windows.Forms.ToolTip(this.components);
          this.btnOK = new HFM.Classes.ButtonWrapper();
          this.btnCancel = new HFM.Classes.ButtonWrapper();
-         this.chkColorLog = new HFM.Classes.CheckBoxWrapper();
          this.tabControl1.SuspendLayout();
          this.tabSchdTasks.SuspendLayout();
+         this.grpAutoRun.SuspendLayout();
          this.grpUpdateData.SuspendLayout();
          this.grpHTMLOutput.SuspendLayout();
          this.tabDefaults.SuspendLayout();
@@ -140,6 +156,8 @@ namespace HFM.Forms
          this.grpFileExplorer.SuspendLayout();
          this.grpLogFileViewer.SuspendLayout();
          this.grpDefaultConfig.SuspendLayout();
+         this.tabReporting.SuspendLayout();
+         this.grpEmailSettings.SuspendLayout();
          this.tabWeb.SuspendLayout();
          this.grpProjectDownload.SuspendLayout();
          this.grpWebStats.SuspendLayout();
@@ -169,6 +187,7 @@ namespace HFM.Forms
          // 
          this.tabControl1.Controls.Add(this.tabSchdTasks);
          this.tabControl1.Controls.Add(this.tabDefaults);
+         this.tabControl1.Controls.Add(this.tabReporting);
          this.tabControl1.Controls.Add(this.tabWeb);
          this.tabControl1.Controls.Add(this.tabVisStyles);
          this.tabControl1.HotTrack = true;
@@ -183,6 +202,7 @@ namespace HFM.Forms
          // tabSchdTasks
          // 
          this.tabSchdTasks.BackColor = System.Drawing.SystemColors.Control;
+         this.tabSchdTasks.Controls.Add(this.grpAutoRun);
          this.tabSchdTasks.Controls.Add(this.grpUpdateData);
          this.tabSchdTasks.Controls.Add(this.grpHTMLOutput);
          this.tabSchdTasks.Location = new System.Drawing.Point(4, 22);
@@ -192,6 +212,26 @@ namespace HFM.Forms
          this.tabSchdTasks.TabIndex = 2;
          this.tabSchdTasks.Text = "Scheduled Tasks";
          this.tabSchdTasks.UseVisualStyleBackColor = true;
+         // 
+         // grpAutoRun
+         // 
+         this.grpAutoRun.Controls.Add(this.chkAutoRun);
+         this.grpAutoRun.Location = new System.Drawing.Point(6, 245);
+         this.grpAutoRun.Name = "grpAutoRun";
+         this.grpAutoRun.Size = new System.Drawing.Size(241, 50);
+         this.grpAutoRun.TabIndex = 2;
+         this.grpAutoRun.TabStop = false;
+         this.grpAutoRun.Text = "Auto Run";
+         // 
+         // chkAutoRun
+         // 
+         this.chkAutoRun.AutoSize = true;
+         this.chkAutoRun.Location = new System.Drawing.Point(10, 20);
+         this.chkAutoRun.Name = "chkAutoRun";
+         this.chkAutoRun.Size = new System.Drawing.Size(170, 17);
+         this.chkAutoRun.TabIndex = 0;
+         this.chkAutoRun.Text = "Auto Run on Windows Startup";
+         this.chkAutoRun.UseVisualStyleBackColor = true;
          // 
          // grpUpdateData
          // 
@@ -213,6 +253,16 @@ namespace HFM.Forms
          this.grpUpdateData.TabIndex = 0;
          this.grpUpdateData.TabStop = false;
          this.grpUpdateData.Text = "Update Data";
+         // 
+         // chkColorLog
+         // 
+         this.chkColorLog.AutoSize = true;
+         this.chkColorLog.Location = new System.Drawing.Point(270, 118);
+         this.chkColorLog.Name = "chkColorLog";
+         this.chkColorLog.Size = new System.Drawing.Size(126, 17);
+         this.chkColorLog.TabIndex = 11;
+         this.chkColorLog.Text = "Color the FAHlog text";
+         this.chkColorLog.UseVisualStyleBackColor = true;
          // 
          // chkDuplicateProject
          // 
@@ -239,9 +289,9 @@ namespace HFM.Forms
          this.chkShowUserStats.AutoSize = true;
          this.chkShowUserStats.Location = new System.Drawing.Point(270, 66);
          this.chkShowUserStats.Name = "chkShowUserStats";
-         this.chkShowUserStats.Size = new System.Drawing.Size(126, 17);
+         this.chkShowUserStats.Size = new System.Drawing.Size(190, 17);
          this.chkShowUserStats.TabIndex = 6;
-         this.chkShowUserStats.Text = "Show EOC user stats";
+         this.chkShowUserStats.Text = "Retrieve and Show EOC user stats";
          this.chkShowUserStats.UseVisualStyleBackColor = true;
          // 
          // label2
@@ -336,7 +386,7 @@ namespace HFM.Forms
          this.grpHTMLOutput.Controls.Add(this.txtWebSiteBase);
          this.grpHTMLOutput.Controls.Add(this.lbl2WebSiteDir);
          this.grpHTMLOutput.Controls.Add(this.chkWebSiteGenerator);
-         this.grpHTMLOutput.Location = new System.Drawing.Point(6, 165);
+         this.grpHTMLOutput.Location = new System.Drawing.Point(6, 166);
          this.grpHTMLOutput.Name = "grpHTMLOutput";
          this.grpHTMLOutput.Size = new System.Drawing.Size(489, 76);
          this.grpHTMLOutput.TabIndex = 1;
@@ -425,7 +475,7 @@ namespace HFM.Forms
          // chkWebSiteGenerator
          // 
          this.chkWebSiteGenerator.AutoSize = true;
-         this.chkWebSiteGenerator.Location = new System.Drawing.Point(7, 20);
+         this.chkWebSiteGenerator.Location = new System.Drawing.Point(10, 20);
          this.chkWebSiteGenerator.Name = "chkWebSiteGenerator";
          this.chkWebSiteGenerator.Size = new System.Drawing.Size(113, 17);
          this.chkWebSiteGenerator.TabIndex = 0;
@@ -643,6 +693,143 @@ namespace HFM.Forms
          this.label1.TabIndex = 1;
          this.label1.Text = "Filename:";
          // 
+         // tabReporting
+         // 
+         this.tabReporting.Controls.Add(this.grpEmailSettings);
+         this.tabReporting.Location = new System.Drawing.Point(4, 22);
+         this.tabReporting.Name = "tabReporting";
+         this.tabReporting.Size = new System.Drawing.Size(501, 303);
+         this.tabReporting.TabIndex = 5;
+         this.tabReporting.Text = "Reporting";
+         this.tabReporting.UseVisualStyleBackColor = true;
+         // 
+         // grpEmailSettings
+         // 
+         this.grpEmailSettings.Controls.Add(this.txtSmtpPassword);
+         this.grpEmailSettings.Controls.Add(this.txtSmtpUsername);
+         this.grpEmailSettings.Controls.Add(this.labelWrapper4);
+         this.grpEmailSettings.Controls.Add(this.labelWrapper5);
+         this.grpEmailSettings.Controls.Add(this.lblFromEmailAddress);
+         this.grpEmailSettings.Controls.Add(this.txtFromEmailAddress);
+         this.grpEmailSettings.Controls.Add(this.chkEnableEmail);
+         this.grpEmailSettings.Controls.Add(this.lblSmtpServer);
+         this.grpEmailSettings.Controls.Add(this.lblToAddress);
+         this.grpEmailSettings.Controls.Add(this.txtSmtpServer);
+         this.grpEmailSettings.Controls.Add(this.txtToEmailAddress);
+         this.grpEmailSettings.Location = new System.Drawing.Point(6, 9);
+         this.grpEmailSettings.Name = "grpEmailSettings";
+         this.grpEmailSettings.Size = new System.Drawing.Size(489, 164);
+         this.grpEmailSettings.TabIndex = 0;
+         this.grpEmailSettings.TabStop = false;
+         this.grpEmailSettings.Text = "Email Settings";
+         // 
+         // txtSmtpPassword
+         // 
+         this.txtSmtpPassword.Enabled = false;
+         this.txtSmtpPassword.Location = new System.Drawing.Point(314, 129);
+         this.txtSmtpPassword.Name = "txtSmtpPassword";
+         this.txtSmtpPassword.ReadOnly = true;
+         this.txtSmtpPassword.Size = new System.Drawing.Size(155, 20);
+         this.txtSmtpPassword.TabIndex = 10;
+         this.txtSmtpPassword.UseSystemPasswordChar = true;
+         this.txtSmtpPassword.Validating += new System.ComponentModel.CancelEventHandler(this.txtSmtpPassword_Validating);
+         // 
+         // txtSmtpUsername
+         // 
+         this.txtSmtpUsername.Enabled = false;
+         this.txtSmtpUsername.Location = new System.Drawing.Point(92, 129);
+         this.txtSmtpUsername.Name = "txtSmtpUsername";
+         this.txtSmtpUsername.ReadOnly = true;
+         this.txtSmtpUsername.Size = new System.Drawing.Size(155, 20);
+         this.txtSmtpUsername.TabIndex = 8;
+         this.txtSmtpUsername.Validating += new System.ComponentModel.CancelEventHandler(this.txtSmtpUsername_Validating);
+         // 
+         // labelWrapper4
+         // 
+         this.labelWrapper4.AutoSize = true;
+         this.labelWrapper4.Location = new System.Drawing.Point(253, 132);
+         this.labelWrapper4.Name = "labelWrapper4";
+         this.labelWrapper4.Size = new System.Drawing.Size(56, 13);
+         this.labelWrapper4.TabIndex = 9;
+         this.labelWrapper4.Text = "Password:";
+         // 
+         // labelWrapper5
+         // 
+         this.labelWrapper5.AutoSize = true;
+         this.labelWrapper5.Location = new System.Drawing.Point(27, 132);
+         this.labelWrapper5.Name = "labelWrapper5";
+         this.labelWrapper5.Size = new System.Drawing.Size(58, 13);
+         this.labelWrapper5.TabIndex = 7;
+         this.labelWrapper5.Text = "Username:";
+         // 
+         // lblFromEmailAddress
+         // 
+         this.lblFromEmailAddress.AutoSize = true;
+         this.lblFromEmailAddress.Location = new System.Drawing.Point(11, 80);
+         this.lblFromEmailAddress.Name = "lblFromEmailAddress";
+         this.lblFromEmailAddress.Size = new System.Drawing.Size(74, 13);
+         this.lblFromEmailAddress.TabIndex = 3;
+         this.lblFromEmailAddress.Text = "From Address:";
+         // 
+         // txtFromEmailAddress
+         // 
+         this.txtFromEmailAddress.Enabled = false;
+         this.txtFromEmailAddress.Location = new System.Drawing.Point(92, 77);
+         this.txtFromEmailAddress.Name = "txtFromEmailAddress";
+         this.txtFromEmailAddress.ReadOnly = true;
+         this.txtFromEmailAddress.Size = new System.Drawing.Size(377, 20);
+         this.txtFromEmailAddress.TabIndex = 4;
+         this.txtFromEmailAddress.Validating += new System.ComponentModel.CancelEventHandler(this.txtFromEmailAddress_Validating);
+         // 
+         // chkEnableEmail
+         // 
+         this.chkEnableEmail.AutoSize = true;
+         this.chkEnableEmail.Location = new System.Drawing.Point(13, 22);
+         this.chkEnableEmail.Name = "chkEnableEmail";
+         this.chkEnableEmail.Size = new System.Drawing.Size(136, 17);
+         this.chkEnableEmail.TabIndex = 0;
+         this.chkEnableEmail.Text = "Enable Email Reporting";
+         this.chkEnableEmail.UseVisualStyleBackColor = true;
+         this.chkEnableEmail.CheckedChanged += new System.EventHandler(this.chkEnableEmail_CheckedChanged);
+         // 
+         // lblSmtpServer
+         // 
+         this.lblSmtpServer.AutoSize = true;
+         this.lblSmtpServer.Location = new System.Drawing.Point(11, 106);
+         this.lblSmtpServer.Name = "lblSmtpServer";
+         this.lblSmtpServer.Size = new System.Drawing.Size(74, 13);
+         this.lblSmtpServer.TabIndex = 5;
+         this.lblSmtpServer.Text = "SMTP Server:";
+         // 
+         // lblToAddress
+         // 
+         this.lblToAddress.AutoSize = true;
+         this.lblToAddress.Location = new System.Drawing.Point(21, 54);
+         this.lblToAddress.Name = "lblToAddress";
+         this.lblToAddress.Size = new System.Drawing.Size(64, 13);
+         this.lblToAddress.TabIndex = 1;
+         this.lblToAddress.Text = "To Address:";
+         // 
+         // txtSmtpServer
+         // 
+         this.txtSmtpServer.Enabled = false;
+         this.txtSmtpServer.Location = new System.Drawing.Point(92, 103);
+         this.txtSmtpServer.Name = "txtSmtpServer";
+         this.txtSmtpServer.ReadOnly = true;
+         this.txtSmtpServer.Size = new System.Drawing.Size(377, 20);
+         this.txtSmtpServer.TabIndex = 6;
+         this.txtSmtpServer.Validating += new System.ComponentModel.CancelEventHandler(this.txtSmtpServer_Validating);
+         // 
+         // txtToEmailAddress
+         // 
+         this.txtToEmailAddress.Enabled = false;
+         this.txtToEmailAddress.Location = new System.Drawing.Point(92, 51);
+         this.txtToEmailAddress.Name = "txtToEmailAddress";
+         this.txtToEmailAddress.ReadOnly = true;
+         this.txtToEmailAddress.Size = new System.Drawing.Size(377, 20);
+         this.txtToEmailAddress.TabIndex = 2;
+         this.txtToEmailAddress.Validating += new System.ComponentModel.CancelEventHandler(this.txtToEmailAddress_Validating);
+         // 
          // tabWeb
          // 
          this.tabWeb.BackColor = System.Drawing.SystemColors.Control;
@@ -664,7 +851,7 @@ namespace HFM.Forms
          this.grpProjectDownload.Location = new System.Drawing.Point(6, 117);
          this.grpProjectDownload.Name = "grpProjectDownload";
          this.grpProjectDownload.Size = new System.Drawing.Size(489, 53);
-         this.grpProjectDownload.TabIndex = 10;
+         this.grpProjectDownload.TabIndex = 1;
          this.grpProjectDownload.TabStop = false;
          this.grpProjectDownload.Text = "Project Download URL";
          // 
@@ -699,7 +886,7 @@ namespace HFM.Forms
          this.grpWebStats.Location = new System.Drawing.Point(6, 9);
          this.grpWebStats.Name = "grpWebStats";
          this.grpWebStats.Size = new System.Drawing.Size(489, 102);
-         this.grpWebStats.TabIndex = 9;
+         this.grpWebStats.TabIndex = 0;
          this.grpWebStats.TabStop = false;
          this.grpWebStats.Text = "Web Statistics";
          // 
@@ -803,7 +990,7 @@ namespace HFM.Forms
          this.grpWebProxy.Location = new System.Drawing.Point(6, 176);
          this.grpWebProxy.Name = "grpWebProxy";
          this.grpWebProxy.Size = new System.Drawing.Size(489, 122);
-         this.grpWebProxy.TabIndex = 9;
+         this.grpWebProxy.TabIndex = 2;
          this.grpWebProxy.TabStop = false;
          this.grpWebProxy.Text = "Web Proxy Settings";
          // 
@@ -839,6 +1026,7 @@ namespace HFM.Forms
          this.txtProxyPass.Size = new System.Drawing.Size(155, 20);
          this.txtProxyPass.TabIndex = 9;
          this.txtProxyPass.UseSystemPasswordChar = true;
+         this.txtProxyPass.Validating += new System.ComponentModel.CancelEventHandler(this.txtProxyPass_Validating);
          // 
          // txtProxyUser
          // 
@@ -848,6 +1036,7 @@ namespace HFM.Forms
          this.txtProxyUser.ReadOnly = true;
          this.txtProxyUser.Size = new System.Drawing.Size(155, 20);
          this.txtProxyUser.TabIndex = 7;
+         this.txtProxyUser.Validating += new System.ComponentModel.CancelEventHandler(this.txtProxyUser_Validating);
          // 
          // txtProxyPort
          // 
@@ -859,6 +1048,7 @@ namespace HFM.Forms
          this.txtProxyPort.Size = new System.Drawing.Size(94, 20);
          this.txtProxyPort.TabIndex = 4;
          this.txtProxyPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
+         this.txtProxyPort.Validating += new System.ComponentModel.CancelEventHandler(this.txtProxyPort_Validating);
          // 
          // lbl3ProxyPass
          // 
@@ -877,6 +1067,7 @@ namespace HFM.Forms
          this.txtProxyServer.ReadOnly = true;
          this.txtProxyServer.Size = new System.Drawing.Size(250, 20);
          this.txtProxyServer.TabIndex = 2;
+         this.txtProxyServer.Validating += new System.ComponentModel.CancelEventHandler(this.txtProxyServer_Validating);
          // 
          // lbl3ProxyUser
          // 
@@ -964,16 +1155,6 @@ namespace HFM.Forms
          this.btnCancel.UseVisualStyleBackColor = true;
          this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
          // 
-         // chkColorLog
-         // 
-         this.chkColorLog.AutoSize = true;
-         this.chkColorLog.Location = new System.Drawing.Point(270, 118);
-         this.chkColorLog.Name = "chkColorLog";
-         this.chkColorLog.Size = new System.Drawing.Size(126, 17);
-         this.chkColorLog.TabIndex = 11;
-         this.chkColorLog.Text = "Color the FAHlog text";
-         this.chkColorLog.UseVisualStyleBackColor = true;
-         // 
          // frmPreferences
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -994,6 +1175,8 @@ namespace HFM.Forms
          this.Shown += new System.EventHandler(this.frmPreferences_Shown);
          this.tabControl1.ResumeLayout(false);
          this.tabSchdTasks.ResumeLayout(false);
+         this.grpAutoRun.ResumeLayout(false);
+         this.grpAutoRun.PerformLayout();
          this.grpUpdateData.ResumeLayout(false);
          this.grpUpdateData.PerformLayout();
          this.grpHTMLOutput.ResumeLayout(false);
@@ -1010,6 +1193,9 @@ namespace HFM.Forms
          this.grpLogFileViewer.PerformLayout();
          this.grpDefaultConfig.ResumeLayout(false);
          this.grpDefaultConfig.PerformLayout();
+         this.tabReporting.ResumeLayout(false);
+         this.grpEmailSettings.ResumeLayout(false);
+         this.grpEmailSettings.PerformLayout();
          this.tabWeb.ResumeLayout(false);
          this.grpProjectDownload.ResumeLayout(false);
          this.grpProjectDownload.PerformLayout();
@@ -1104,5 +1290,20 @@ namespace HFM.Forms
       private HFM.Classes.CheckBoxWrapper chkDuplicateProject;
       private HFM.Classes.CheckBoxWrapper chkDuplicateUserID;
       private HFM.Classes.CheckBoxWrapper chkColorLog;
+      private HFM.Classes.GroupBoxWrapper grpAutoRun;
+      private HFM.Classes.CheckBoxWrapper chkAutoRun;
+      private System.Windows.Forms.TabPage tabReporting;
+      private HFM.Classes.GroupBoxWrapper grpEmailSettings;
+      private HFM.Classes.LabelWrapper lblSmtpServer;
+      private HFM.Classes.LabelWrapper lblToAddress;
+      private HFM.Classes.TextBoxWrapper txtSmtpServer;
+      private HFM.Classes.TextBoxWrapper txtToEmailAddress;
+      private HFM.Classes.CheckBoxWrapper chkEnableEmail;
+      private HFM.Classes.LabelWrapper lblFromEmailAddress;
+      private HFM.Classes.TextBoxWrapper txtFromEmailAddress;
+      private HFM.Classes.TextBoxWrapper txtSmtpPassword;
+      private HFM.Classes.TextBoxWrapper txtSmtpUsername;
+      private HFM.Classes.LabelWrapper labelWrapper4;
+      private HFM.Classes.LabelWrapper labelWrapper5;
    }
 }

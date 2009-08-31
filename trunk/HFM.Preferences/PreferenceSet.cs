@@ -21,8 +21,12 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
+
+using harlam357.Security;
+using harlam357.Security.Encryption;
 
 using HFM.Preferences.Properties;
 using HFM.Instrumentation;
@@ -42,18 +46,30 @@ namespace HFM.Preferences
    {
       Standard,
       Formatted
-   } 
+   }
+
+   public enum ClientStatus
+   {
+      Unknown,
+      Offline,
+      Stopped,
+      EuePause,
+      Hung,
+      Paused,
+      RunningNoFrameTimes,
+      Running
+   }
    #endregion
 
    public class PreferenceSet
    {
       #region Public Const
-      public const String ExeName = "HFM";
-      
-      public const String EOCUserXmlURL = "http://folding.extremeoverclocking.com/xml/user_summary.php?u=";
-      public const String EOCUserBaseURL = "http://folding.extremeoverclocking.com/user_summary.php?s=&u=";
-      public const String EOCTeamBaseURL = "http://folding.extremeoverclocking.com/team_summary.php?s=&t=";
-      public const String StanfordBaseURL = "http://fah-web.stanford.edu/cgi-bin/main.py?qtype=userpage&username=";
+      public const string ExeName = "HFM";
+
+      public const string EOCUserXmlURL = "http://folding.extremeoverclocking.com/xml/user_summary.php?u=";
+      public const string EOCUserBaseURL = "http://folding.extremeoverclocking.com/user_summary.php?s=&u=";
+      public const string EOCTeamBaseURL = "http://folding.extremeoverclocking.com/team_summary.php?s=&t=";
+      public const string StanfordBaseURL = "http://fah-web.stanford.edu/cgi-bin/main.py?qtype=userpage&username=";
 
       public const Int32 MinDecimalPlaces = 0;
       public const Int32 MaxDecimalPlaces = 5;
@@ -62,7 +78,12 @@ namespace HFM.Preferences
       public const Int32 MaxMinutes = 180;
       
       public const Int32 MinutesDefault = 15;
-      public const Int32 ProxyPortDefault = 8080; 
+      public const Int32 ProxyPortDefault = 8080;
+
+      public const string UnassignedDescription = "Unassigned Description";
+
+      private const string IV = "WN`f,cgvR{iDY^[=mS>0[0#BL;/7.td7aV=3p1O#:68n/$`]qyIF)e*@7qZ{RTUS";
+      private const string SymmetricKey = "TJ5[7EB;L:Enmw#Y'5Q.P81v^o,06!Hf_4f&hNBC$9Rh*tK}pnNK7D&<r]Fq#%Hy";
       #endregion
 
       #region Public Properties and associated Private Variables
@@ -441,6 +462,48 @@ namespace HFM.Preferences
          }
       } 
       #endregion
+      
+      private bool _EmailReportingEnabled;
+      public bool EmailReportingEnabled
+      {
+         get { return _EmailReportingEnabled; }
+         set { _EmailReportingEnabled = value; }
+      }
+      
+      private string _EmailReportingToAddress;
+      public string EmailReportingToAddress
+      {
+         get { return _EmailReportingToAddress; }
+         set { _EmailReportingToAddress = value; }
+      }
+
+      private string _EmailReportingFromAddress;
+      public string EmailReportingFromAddress
+      {
+         get { return _EmailReportingFromAddress; }
+         set { _EmailReportingFromAddress = value; }
+      }
+
+      private string _EmailReportingServerAddress;
+      public string EmailReportingServerAddress
+      {
+         get { return _EmailReportingServerAddress; }
+         set { _EmailReportingServerAddress = value; }
+      }
+
+      private string _EmailReportingServerUsername;
+      public string EmailReportingServerUsername
+      {
+         get { return _EmailReportingServerUsername; }
+         set { _EmailReportingServerUsername = value; }
+      }
+
+      private string _EmailReportingServerPassword;
+      public string EmailReportingServerPassword
+      {
+         get { return _EmailReportingServerPassword; }
+         set { _EmailReportingServerPassword = value; }
+      }
 
       public static String AppPath
       {
@@ -525,6 +588,10 @@ namespace HFM.Preferences
          DateTime Start = HfmTrace.ExecStart;
 
          UpgradeUserSettings();
+         
+         Symmetric SymetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
+         SymetricProvider.IntializationVector = new Data(IV);
+         SymetricProvider.Key = new Data(SymmetricKey);
 
          _CSSFile = Settings.Default.CSSFile;
 
@@ -550,7 +617,20 @@ namespace HFM.Preferences
             _SyncTimeMinutes = MinutesDefault;
          }
 
-         _WebRoot = Settings.Default.WebRoot;
+         _WebRoot = String.Empty;
+         if (Settings.Default.WebRoot.Length > 0)
+         {
+            try
+            {
+               _WebRoot = SymetricProvider.Decrypt(new Data(Settings.Default.WebRoot)).ToString();
+            }
+            catch (CryptographicException)
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Cannot decrypt WebGen Root Folder... loading clear value.", true);
+               _WebRoot = Settings.Default.WebRoot;
+            }
+         }
+         
          _EOCUserID = Settings.Default.EOCUserID;
          _StanfordID = Settings.Default.StanfordID;
          _TeamID = Settings.Default.TeamID;
@@ -560,7 +640,20 @@ namespace HFM.Preferences
          _ProxyPort = Settings.Default.ProxyPort;
          _UseProxyAuth = Settings.Default.UseProxyAuth;
          _ProxyUser = Settings.Default.ProxyUser;
-         _ProxyPass = Settings.Default.ProxyPass;
+         
+         _ProxyPass = String.Empty;
+         if (Settings.Default.ProxyPass.Length > 0)
+         {
+            try
+            {
+               _ProxyPass = SymetricProvider.Decrypt(new Data(Settings.Default.ProxyPass)).ToString();
+            }
+            catch (CryptographicException)
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Cannot decrypt Proxy Password... loading clear value.", true);
+               _ProxyPass = Settings.Default.ProxyPass;
+            }
+         }
 
          _CacheFolder = Settings.Default.CacheFolder;
          _FormLogVisible = Settings.Default.FormLogVisible;
@@ -633,6 +726,25 @@ namespace HFM.Preferences
          _DuplicateUserIDCheck = Settings.Default.DuplicateUserIDCheck;
          _DuplicateProjectCheck = Settings.Default.DuplicateProjectCheck;
          _ColorLogFile = Settings.Default.ColorLogFile;
+         _EmailReportingEnabled = Settings.Default.EmailReportingEnabled;
+         _EmailReportingToAddress = Settings.Default.EmailReportingToAddress;
+         _EmailReportingFromAddress = Settings.Default.EmailReportingFromAddress;
+         _EmailReportingServerAddress = Settings.Default.EmailReportingServerAddress;
+         _EmailReportingServerUsername = Settings.Default.EmailReportingServerUsername;
+         _EmailReportingServerPassword = String.Empty;
+         if (Settings.Default.EmailReportingServerPassword.Length > 0)
+         {
+            try
+            {
+               _EmailReportingServerPassword =
+                  SymetricProvider.Decrypt(new Data(Settings.Default.EmailReportingServerPassword)).ToString();
+            }
+            catch (CryptographicException)
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Cannot decrypt Stmp Server Password... loading clear value.", true);
+               _EmailReportingServerPassword = Settings.Default.EmailReportingServerPassword;
+            }
+         }
          
          _AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
          _AppDataPath = Path.Combine(_AppDataPath, ExeName);
@@ -646,8 +758,9 @@ namespace HFM.Preferences
 
       private static void UpgradeUserSettings()
       {
-         System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
-         string appVersionString = asm.GetName().Version.ToString();
+         // Only store Major.Minor.Build, Changes to Settings will
+         // only be made when these numbers change, not Revision!!!
+         string appVersionString = PlatformOps.ApplicationVersion;
 
          if (Settings.Default.ApplicationVersion != appVersionString)
          {
@@ -672,6 +785,10 @@ namespace HFM.Preferences
       {
          DateTime Start = HfmTrace.ExecStart;
 
+         Symmetric SymetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
+         SymetricProvider.IntializationVector = new Data(IV);
+         SymetricProvider.Key = new Data(SymmetricKey);
+
          try
          {
             Settings.Default.CSSFile = _CSSFile;
@@ -680,7 +797,20 @@ namespace HFM.Preferences
             Settings.Default.SyncOnLoad = _SyncOnLoad;
             Settings.Default.SyncOnSchedule = _SyncOnSchedule;
             Settings.Default.SyncTimeMinutes = _SyncTimeMinutes.ToString();
-            Settings.Default.WebRoot = _WebRoot;
+            Settings.Default.WebRoot = String.Empty;
+            if (_WebRoot.Length > 0)
+            {
+               try
+               {
+                  Settings.Default.WebRoot = SymetricProvider.Encrypt(new Data(_WebRoot)).ToString();
+               }
+               catch (CryptographicException)
+               {
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Failed to encrypt WebGen Root Folder... saving clear value.");
+                  Settings.Default.WebRoot = _WebRoot;
+               }
+            }
+            
             Settings.Default.EOCUserID = _EOCUserID;
             Settings.Default.StanfordID = _StanfordID;
             Settings.Default.TeamID = _TeamID;
@@ -691,7 +821,19 @@ namespace HFM.Preferences
             Settings.Default.ProxyPort = _ProxyPort;
             Settings.Default.UseProxyAuth = _UseProxyAuth;
             Settings.Default.ProxyUser = _ProxyUser;
-            Settings.Default.ProxyPass = _ProxyPass;
+            Settings.Default.ProxyPass = String.Empty;
+            if (_ProxyPass.Length > 0)
+            {
+               try
+               {
+                  Settings.Default.ProxyPass = SymetricProvider.Encrypt(new Data(_ProxyPass)).ToString();
+               }
+               catch (CryptographicException)
+               {
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Failed to encrypt Proxy Password... saving clear value.");
+                  Settings.Default.ProxyPass = _ProxyPass;
+               }
+            }
 
             Settings.Default.CacheFolder = _CacheFolder;
             Settings.Default.FormLogVisible = _FormLogVisible;
@@ -731,6 +873,25 @@ namespace HFM.Preferences
             #endregion
 
             Settings.Default.ColorLogFile = _ColorLogFile;
+            Settings.Default.EmailReportingEnabled = _EmailReportingEnabled;
+            Settings.Default.EmailReportingToAddress = _EmailReportingToAddress;
+            Settings.Default.EmailReportingFromAddress = _EmailReportingFromAddress;
+            Settings.Default.EmailReportingServerAddress = _EmailReportingServerAddress;
+            Settings.Default.EmailReportingServerUsername = _EmailReportingServerUsername;
+            Settings.Default.EmailReportingServerPassword = String.Empty;
+            if (_EmailReportingServerPassword.Length > 0)
+            {
+               try
+               {
+                  Settings.Default.EmailReportingServerPassword =
+                     SymetricProvider.Encrypt(new Data(_EmailReportingServerPassword)).ToString();
+               }
+               catch (CryptographicException)
+               {
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Failed to encrypt Smtp Server Password... saving clear value.");
+                  Settings.Default.EmailReportingServerPassword = _EmailReportingServerPassword;
+               }
+            }
 
             Settings.Default.Save();
          }

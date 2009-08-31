@@ -111,9 +111,9 @@ namespace HFM.Instrumentation
       private static readonly object _lockTraceWrite = typeof(Trace);
 
       #region Static
-      public static void WriteToHfmConsole(object message)
+      public static void WriteToHfmConsole(string message)
       {
-         Instance.DoWrite(TraceLevel.Off, message);
+         Instance.DoWrite(TraceLevel.Off, message, false);
       }
 
       public static void WriteToHfmConsole(Exception ex)
@@ -125,28 +125,36 @@ namespace HFM.Instrumentation
          }
       }
 
-      public static void WriteToHfmConsole(string InstanceName, Exception ex)
+      public static void WriteToHfmConsole(string subMessage, Exception ex)
       {
          TraceLevel level = TraceLevel.Error;
          if (level.CompareTo(TraceLevelSwitch.GetTraceLevelSwitch().Level) < 1)
          {
-            Instance.DoWrite(level, InstanceName, ex);
+            Instance.DoWrite(level, subMessage, ex);
          }
       }
 
-      public static void WriteToHfmConsole(TraceLevel level, object message)
-      {
-         if (level.CompareTo(TraceLevelSwitch.GetTraceLevelSwitch().Level) < 1)
-         {
-            Instance.DoWrite(level, message);
-         }
-      }
-      
       public static void WriteToHfmConsole(TraceLevel level, ICollection messages)
       {
          if (level.CompareTo(TraceLevelSwitch.GetTraceLevelSwitch().Level) < 1)
          {
             Instance.DoWrite(level, messages);
+         }
+      }
+
+      public static void WriteToHfmConsole(TraceLevel level, string message)
+      {
+         if (level.CompareTo(TraceLevelSwitch.GetTraceLevelSwitch().Level) < 1)
+         {
+            Instance.DoWrite(level, message, false);
+         }
+      }
+
+      public static void WriteToHfmConsole(TraceLevel level, string message, bool showFunctionName)
+      {
+         if (level.CompareTo(TraceLevelSwitch.GetTraceLevelSwitch().Level) < 1)
+         {
+            Instance.DoWrite(level, message, showFunctionName);
          }
       }
 
@@ -165,20 +173,28 @@ namespace HFM.Instrumentation
             Instance.DoWrite(level, Start);
          }
       }
-      
-      public static void WriteToHfmConsole(TraceLevel level, string InstanceName, Exception ex)
+
+      public static void WriteToHfmConsole(TraceLevel level, string subMessage, string message)
       {
          if (level.CompareTo(TraceLevelSwitch.GetTraceLevelSwitch().Level) < 1)
          {
-            Instance.DoWrite(level, InstanceName, ex);
+            Instance.DoWrite(level, subMessage, message);
          }
       }
 
-      public static void WriteToHfmConsole(TraceLevel level, string InstanceName, DateTime Start)
+      public static void WriteToHfmConsole(TraceLevel level, string subMessage, Exception ex)
       {
          if (level.CompareTo(TraceLevelSwitch.GetTraceLevelSwitch().Level) < 1)
          {
-            Instance.DoWrite(level, InstanceName, Start);
+            Instance.DoWrite(level, subMessage, ex);
+         }
+      }
+
+      public static void WriteToHfmConsole(TraceLevel level, string subMessage, DateTime Start)
+      {
+         if (level.CompareTo(TraceLevelSwitch.GetTraceLevelSwitch().Level) < 1)
+         {
+            Instance.DoWrite(level, subMessage, Start);
          }
       }
 
@@ -211,16 +227,6 @@ namespace HFM.Instrumentation
       #endregion
 
       #region Private Instance
-      private void DoWrite(TraceLevel level, object message)
-      {
-         lock (_lockTraceWrite)
-         {
-            string traceString = FormatTraceString(level, message);
-            Trace.WriteLine(traceString);
-            OnTextMessage(new TextMessageEventArgs(traceString));
-         }
-      }
-
       private void DoWrite(TraceLevel level, IEnumerable messages)
       {
          lock (_lockTraceWrite)
@@ -231,6 +237,24 @@ namespace HFM.Instrumentation
                Trace.WriteLine(traceString);
                OnTextMessage(new TextMessageEventArgs(traceString));
             }
+         }
+      }
+
+      private void DoWrite(TraceLevel level, string message, bool showFunctionName)
+      {
+         lock (_lockTraceWrite)
+         {
+            string traceString;
+            if (showFunctionName)
+            {
+               traceString = FormatTraceString(level, String.Format("{0} {1}", GParentFunctionName, message));
+            }
+            else
+            {
+               traceString = FormatTraceString(level, message);
+            }
+            Trace.WriteLine(traceString);
+            OnTextMessage(new TextMessageEventArgs(traceString));
          }
       }
 
@@ -256,23 +280,33 @@ namespace HFM.Instrumentation
          }
       }
 
-      private void DoWrite(TraceLevel level, string InstanceName, Exception ex)
+      private void DoWrite(TraceLevel level, string subMessage, string message)
       {
          lock (_lockTraceWrite)
          {
-            string traceString = FormatTraceString(level, String.Format("{0} ({1}) Threw Exception: {2}", GParentFunctionName, InstanceName, ex));
+            string traceString = FormatTraceString(level, String.Format("{0} ({1}) {2}", GParentFunctionName, subMessage, message));
+            Trace.WriteLine(traceString);
+            OnTextMessage(new TextMessageEventArgs(traceString));
+         }
+      }
+
+      private void DoWrite(TraceLevel level, string subMessage, Exception ex)
+      {
+         lock (_lockTraceWrite)
+         {
+            string traceString = FormatTraceString(level, String.Format("{0} ({1}) Threw Exception: {2}", GParentFunctionName, subMessage, ex));
             Trace.WriteLine(traceString);
 
-            string consoleString = FormatTraceString(level, String.Format("{0} ({1}) Threw Exception: {2}", GParentFunctionName, InstanceName, ex.Message));
+            string consoleString = FormatTraceString(level, String.Format("{0} ({1}) Threw Exception: {2}", GParentFunctionName, subMessage, ex.Message));
             OnTextMessage(new TextMessageEventArgs(consoleString));
          }
       }
 
-      private void DoWrite(TraceLevel level, string InstanceName, DateTime Start)
+      private void DoWrite(TraceLevel level, string subMessage, DateTime Start)
       {
          lock (_lockTraceWrite)
          {
-            string traceString = FormatTraceString(level, String.Format("{0} ({1}) Execution Time: {2}", GParentFunctionName, InstanceName, GetExecTime(Start)));
+            string traceString = FormatTraceString(level, String.Format("{0} ({1}) Execution Time: {2}", GParentFunctionName, subMessage, GetExecTime(Start)));
             Trace.WriteLine(traceString);
             OnTextMessage(new TextMessageEventArgs(traceString));
          }

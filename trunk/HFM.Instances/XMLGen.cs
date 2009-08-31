@@ -104,22 +104,36 @@ namespace HFM.Instances
       /// <param name="Instances">Client Instance Collection</param>
       public static void DoWebFtpUpload(string Server, string FtpPath, string Username, string Password, ICollection<ClientInstance> Instances)
       {
+         DoWebFtpUpload(Server, FtpPath, Username, Password, Instances, true);
+      }
+
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="Server">Server Name</param>
+      /// <param name="FtpPath">Path from FTP Server Root</param>
+      /// <param name="Username">FTP Server Username</param>
+      /// <param name="Password">FTP Server Password</param>
+      /// <param name="Instances">Client Instance Collection</param>
+      /// <param name="PassiveMode">Passive FTP Mode</param>
+      public static void DoWebFtpUpload(string Server, string FtpPath, string Username, string Password, ICollection<ClientInstance> Instances, bool PassiveMode)
+      {
          // Time FTP Upload Conversation - Issue 52
          DateTime Start = HfmTrace.ExecStart;
 
          try
          {
-            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.Combine(PreferenceSet.AppPath, "CSS"), PreferenceSet.Instance.CSSFileName), Username, Password);
-            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "index.html"), Username, Password);
-            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "summary.html"), Username, Password);
-            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "mobile.html"), Username, Password);
-            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "mobilesummary.html"), Username, Password);
+            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.Combine(PreferenceSet.AppPath, "CSS"), PreferenceSet.Instance.CSSFileName), Username, Password, PassiveMode);
+            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "index.html"), Username, Password, PassiveMode);
+            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "summary.html"), Username, Password, PassiveMode);
+            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "mobile.html"), Username, Password, PassiveMode);
+            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "mobilesummary.html"), Username, Password, PassiveMode);
 
             foreach (ClientInstance instance in Instances)
             {
                   NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(),
                                              Path.ChangeExtension(instance.InstanceName, ".html")),
-                                             Username, Password);
+                                             Username, Password, PassiveMode);
             }
          }
          finally
@@ -150,19 +164,14 @@ namespace HFM.Instances
 
          xmlData.SetAttribute("Name", Instance.InstanceName);
 
-         XMLOps.setXmlNode(xmlData, "HFMVersion", PlatformOps.ApplicationVersion);
+         XMLOps.setXmlNode(xmlData, "HFMVersion", PlatformOps.ApplicationVersionStringWithRevision);
 
          XMLOps.setXmlNode(xmlData, "UnitInfo/DateStarted", Instance.CurrentUnitInfo.DownloadTime.ToString("d MMMM yyyy hh:mm tt"));
          XMLOps.setXmlNode(xmlData, "UnitInfo/FramesComplete", String.Format("{0}", Instance.CurrentUnitInfo.FramesComplete));
          XMLOps.setXmlNode(xmlData, "UnitInfo/PercentComplete", String.Format("{0}", Instance.CurrentUnitInfo.PercentComplete));
          XMLOps.setXmlNode(xmlData, "UnitInfo/TimePerFrame", String.Format("{0}h, {1}m, {2}s", Instance.CurrentUnitInfo.TimePerFrame.Hours, Instance.CurrentUnitInfo.TimePerFrame.Minutes, Instance.CurrentUnitInfo.TimePerFrame.Seconds));
 
-         TimeSpan TotalCalcTime = new TimeSpan(Instance.CurrentUnitInfo.TimePerFrame.Hours * (Instance.CurrentUnitInfo.CurrentProtein.Frames - Instance.CurrentUnitInfo.FramesComplete),
-                                               Instance.CurrentUnitInfo.TimePerFrame.Minutes * (Instance.CurrentUnitInfo.CurrentProtein.Frames - Instance.CurrentUnitInfo.FramesComplete),
-                                               Instance.CurrentUnitInfo.TimePerFrame.Seconds * (Instance.CurrentUnitInfo.CurrentProtein.Frames - Instance.CurrentUnitInfo.FramesComplete));
-         //TODO: Fix this issue with TimeOfLastFrame when fixing XML web output
-         DateTime CompleteTime = DateTime.Today.Add(Instance.CurrentUnitInfo.TimeOfLastFrame);
-         CompleteTime.Add(TotalCalcTime);
+         DateTime CompleteTime = DateTime.Now.Add(Instance.CurrentUnitInfo.ETA);
          XMLOps.setXmlNode(xmlData, "UnitInfo/ExpectedCompletionDate", CompleteTime.ToLongDateString() + " at " + CompleteTime.ToLongTimeString());
 
          //    <Computer>
@@ -233,7 +242,7 @@ namespace HFM.Instances
          xmlDoc.Load(Path.Combine(Path.Combine(PreferenceSet.AppPath, "XML"), "Summary.xml"));
          XmlElement xmlRootData = xmlDoc.DocumentElement;
          
-         XMLOps.setXmlNode(xmlRootData, "HFMVersion", PlatformOps.ApplicationVersion);
+         XMLOps.setXmlNode(xmlRootData, "HFMVersion", PlatformOps.ApplicationVersionStringWithRevision);
 
          List<string> duplicateUserID = new List<string>(Instances.Length);
          List<string> duplicateProjects = new List<string>(Instances.Length);
@@ -322,7 +331,7 @@ namespace HFM.Instances
          xmlDoc.Load(Path.Combine(Path.Combine(PreferenceSet.AppPath, "XML"), "Overview.xml"));
          XmlElement xmlData = xmlDoc.DocumentElement;
 
-         XMLOps.setXmlNode(xmlData, "HFMVersion", PlatformOps.ApplicationVersion);
+         XMLOps.setXmlNode(xmlData, "HFMVersion", PlatformOps.ApplicationVersionStringWithRevision);
 
          //<Overview>
          //    <TotalHosts>0</TotalHosts>

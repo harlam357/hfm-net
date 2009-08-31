@@ -37,9 +37,9 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="RegistryOps.cs" />
     <Compile Include="UserStatsDataContainer.cs" />
     <Compile Include="NetworkOps.cs" />
-    <Compile Include="PlatformOps.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringOps.cs" />
     <Compile Include="XMLOps.cs" />
@@ -52,10 +52,6 @@
     <ProjectReference Include="..\HFM.Instrumentation\HFM.Instrumentation.csproj">
       <Project>{7D6B604A-5C4A-4E97-A6D4-9C927ABBD74A}</Project>
       <Name>HFM.Instrumentation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HFM.Proteins\HFM.Proteins.csproj">
-      <Project>{7500A8CA-521D-4397-892B-27C6917847E1}</Project>
-      <Name>HFM.Proteins</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

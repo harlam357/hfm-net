@@ -157,4 +157,28 @@
   <data name="ProcessStartError" xml:space="preserve">
     <value>Error occurred while attempting to show {0}.</value>
   </data>
+  <data name="HostFileNameInvalidChars" xml:space="preserve">
+    <value>File name contains invalid characters.</value>
+  </data>
+  <data name="HostFtpPathInvalidTooltip" xml:space="preserve">
+    <value>FTP path should be the full path{0}to the folder containing the{0}FAHlog.txt and unitinfo.txt{0}files (including the trailing /).</value>
+  </data>
+  <data name="HostFtpServerInvalidTooltip" xml:space="preserve">
+    <value>FTP server must be a valid{0}host name or IP address.</value>
+  </data>
+  <data name="HostHttpUrlInvalidTooltip" xml:space="preserve">
+    <value>URL must be a valid URL and be{0}the path to the folder containing{0}the FAHlog.txt and unitinfo.txt files.</value>
+  </data>
+  <data name="HostLocalPathInvalidTooltip" xml:space="preserve">
+    <value>Log Folder must be a valid local{0}or network (UNC) path.</value>
+  </data>
+  <data name="HostNameToolTip" xml:space="preserve">
+    <value>Instance name can contain only letters, numbers,{0}and basic symbols (+=-_$&amp;^.[]). It must be at{0}least three characters long and must not begin or{0}end with a dot (.) or a space.</value>
+  </data>
+  <data name="HostProcessorMhzGreaterThanZero" xml:space="preserve">
+    <value>Client Processor Megahertz must be greater than zero.</value>
+  </data>
+  <data name="HostProcessorMhzNumeric" xml:space="preserve">
+    <value>Client Processor Megahertz must be numeric.</value>
+  </data>
 </root>

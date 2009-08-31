@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -88,7 +89,7 @@ namespace HFM.Forms
          InitializeComponent();
 
          // Set Main Form Text
-         base.Text += String.Format(" v{0} - Beta", PlatformOps.ApplicationLabelVersion);
+         base.Text += String.Format(" {0} - Beta", PlatformOps.ApplicationVersionString);
 
          // Create Messages Window
          _frmMessages = new frmMessages();
@@ -337,8 +338,6 @@ namespace HFM.Forms
       /// <summary>
       /// When entering row, show the FAH Log text if available.
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void dataGridView1_RowEnter(object sender, DataGridViewCellEventArgs e)
       {
          if (HostInstances.HasInstances)
@@ -350,13 +349,44 @@ namespace HFM.Forms
             {
                statusLabelLeft.Text = Instance.Path;
 
-               if (Instance.CurrentLogLines.Count > 0)
+               if (Instance.CurrentLogLines.Count > 0) /*** Checked LogLine Count ***/
                {
-                  //if (txtLogFile.Lines.Length != Instance.CurrentLogLines.Count)
-                  //{
-                     txtLogFile.SetLogLines(Instance.CurrentLogLines);
+                  // Different Client... Load LogLines.
+                  if (txtLogFile.LogOwnedByInstanceName.Equals(Instance.InstanceName) == false)
+                  {
+                     txtLogFile.SetLogLines(Instance.CurrentLogLines, Instance.InstanceName);
                      PreferenceSet_ColorLogFileChanged(sender, EventArgs.Empty);
-                  //}
+                  }
+                  // Textbox has text lines
+                  else if (txtLogFile.Lines.Length > 0)
+                  {
+                     string lastLogLine = String.Empty;
+                     
+                     try // to get the last LogLine from the Instance
+                     {
+                        lastLogLine = Instance.CurrentLogLines[Instance.CurrentLogLines.Count - 1].ToString();
+                     }
+                     catch (ArgumentOutOfRangeException ex)
+                     {
+                        // even though i've checked the count above, it could have changed in between then
+                        // and now... and if the count is 0 it will yield this exception.  Log It!!!
+                        HfmTrace.WriteToHfmConsole(TraceLevel.Warning, Instance.InstanceName, ex);
+                     } 
+
+                     // If the last text line in the textbox DOES NOT equal the last LogLine Text... Load LogLines.
+                     // Otherwise, the log has not changed, don't update and perform the log "flicker".
+                     if (txtLogFile.Lines[txtLogFile.Lines.Length - 1].Equals(lastLogLine) == false)
+                     {
+                        txtLogFile.SetLogLines(Instance.CurrentLogLines, Instance.InstanceName);
+                        PreferenceSet_ColorLogFileChanged(sender, EventArgs.Empty);
+                     }
+                  }
+                  // Nothing in the Textbox... Load LogLines.
+                  else
+                  {
+                     txtLogFile.SetLogLines(Instance.CurrentLogLines, Instance.InstanceName);
+                     PreferenceSet_ColorLogFileChanged(sender, EventArgs.Empty);
+                  }
                }
                else
                {
@@ -375,8 +405,6 @@ namespace HFM.Forms
       /// <summary>
       /// Update Form Level Sorting Fields
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void dataGridView1_Sorted(object sender, EventArgs e)
       {
          if (InApplySort == false)
@@ -394,8 +422,6 @@ namespace HFM.Forms
       /// <summary>
       /// 
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void dataGridView1_MouseMove(object sender, MouseEventArgs e)
       {
          DataGridView.HitTestInfo info = dataGridView1.HitTest(e.X, e.Y);
@@ -451,8 +477,6 @@ namespace HFM.Forms
       /// <summary>
       /// Override painting in the Status column
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
       {
          if (e.RowIndex >= 0)
@@ -1367,7 +1391,7 @@ namespace HFM.Forms
       /// </summary>
       private void mnuToolsDownloadProjects_Click(object sender, EventArgs e)
       {
-         ProteinCollection.Instance.DownloadFromStanford();
+         ProteinCollection.Instance.BeginDownloadFromStanford();
       }
 
       /// <summary>

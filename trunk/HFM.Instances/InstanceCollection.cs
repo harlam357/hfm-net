@@ -22,6 +22,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.ComponentModel;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
@@ -140,6 +141,11 @@ namespace HFM.Instances
       /// Internal variable storing whether New, Open, Quit should prompt for saving the config first
       /// </summary>
       private bool _ChangedAfterSave = false;
+
+      /// <summary>
+      /// Passive FTP Web Upload
+      /// </summary>
+      private bool _PassiveFtpWebUpload = true;
       #endregion
 
       #region CTOR
@@ -784,7 +790,26 @@ namespace HFM.Instances
                string Username = match.Result("${username}");
                string Password = match.Result("${password}");
 
-               XMLGen.DoWebFtpUpload(Server, FtpPath, Username, Password, instances);
+               try
+               {
+                  XMLGen.DoWebFtpUpload(Server, FtpPath, Username, Password, instances, _PassiveFtpWebUpload);
+               }
+               catch (WebException ex)
+               {
+                  //TODO: Relying on this exception message is bad... if the app is ever localized, this message
+                  //      will be in the localized language.  Should probably add a setting to just turn this
+                  //      on or off.  Will do so at a later time.
+                  if (ex.Message.Contains("The remote server returned an error: 227 Entering Passive Mode"))
+                  {
+                     HfmTrace.WriteToHfmConsole(String.Format("{0} Passive FTP transfer failed... trying Non-Passive transfer.", HfmTrace.FunctionName));
+                     XMLGen.DoWebFtpUpload(Server, FtpPath, Username, Password, instances, false);
+                     _PassiveFtpWebUpload = false;
+                  }
+                  else
+                  {
+                     throw;
+                  }
+               }
             }
             else
             {

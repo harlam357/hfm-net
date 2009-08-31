@@ -43,6 +43,9 @@ namespace HFM.Instances
       {
          // no progress has been made so stub out
          if (startingFrame > endingFrame) return;
+         
+         // project is not known, don't add to benchmark data
+         if (unit.ProjectIsUnknown) return;
 
          InstanceProteinBenchmark findBenchmark = FindBenchmark(unit);
 
@@ -69,7 +72,7 @@ namespace HFM.Instances
                benchmark.SetFrameTime(unit.UnitFrames[i].FrameDuration);
                if (unit.UnitFrames[i].FramePercent == 100)
                {
-                  UnitInfoCollection.Instance.WriteCompletedUnitInfo(unit);
+                  UnitInfoCollection.WriteCompletedUnitInfo(unit);
                }
             }
             else

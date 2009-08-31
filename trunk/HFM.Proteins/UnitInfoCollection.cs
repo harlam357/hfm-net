@@ -64,8 +64,10 @@ namespace HFM.Proteins
       #endregion
 
       #region Write Completed Unit Info
-      public void WriteCompletedUnitInfo(UnitInfo unit)
+      public static void WriteCompletedUnitInfo(UnitInfo unit)
       {
+         UpgradeUnitInfoCsvFile();
+      
          // Open CSV file and append completed unit info to file
          StreamWriter csvFile = null;
          try
@@ -99,6 +101,43 @@ namespace HFM.Proteins
             }
          }
       }
+      
+      private static void UpgradeUnitInfoCsvFile()
+      {
+         StreamReader csvFile = null;
+         try
+         {
+            string fileName = Path.Combine(PreferenceSet.AppPath, CompletedUnitsCSV);
+            if (File.Exists(fileName))
+            {
+               // Open the current file and read the first line (header)
+               csvFile = new StreamReader(fileName);
+               string headerLine = csvFile.ReadLine();
+               csvFile.Close();
+               csvFile = null;
+               
+               // Split the line on Comma and check the resulting array length
+               string[] headerSplit = headerLine.Split(new string[] { COMMA }, StringSplitOptions.None);
+               // If less than 19 items this file was created before v0.3.0, last release version
+               // before v0.3.0 is v0.2.2.  Rename the current file with last release version.
+               if (headerSplit.Length < 19)
+               {
+                  File.Move(fileName, fileName.Replace(".csv", ".0_2_2.csv"));
+               }
+            }
+         }
+         catch (Exception ex)
+         {
+            HfmTrace.WriteToHfmConsole(ex);
+         }
+         finally
+         {
+            if (csvFile != null)
+            {
+               csvFile.Close();
+            }
+         }
+      }
 
       private static string GetUnitCsvHeader()
       {
@@ -117,7 +156,11 @@ namespace HFM.Proteins
          sbldr.Append(COMMA);
          sbldr.Append("Client Type");
          sbldr.Append(COMMA);
-         sbldr.Append("Frame Time");
+         sbldr.Append("Core Name");
+         sbldr.Append(COMMA);
+         sbldr.Append("Core Version");
+         sbldr.Append(COMMA);
+         sbldr.Append("Frame Time (Average)");
          sbldr.Append(COMMA);
          sbldr.Append("PPD");
          sbldr.Append(COMMA);
@@ -142,6 +185,9 @@ namespace HFM.Proteins
 
       private static string GetUnitCsvLine(UnitInfo unit)
       {
+         // Issue 43 - Use Time Per All Sections and not unit.PPD
+         int RawTimePerAllSections = unit.RawTimePerAllSections;
+      
          StringBuilder sbldr = new StringBuilder();
          sbldr.Append(unit.ProjectID);
          sbldr.Append(COMMA);
@@ -157,9 +203,14 @@ namespace HFM.Proteins
          sbldr.Append(COMMA);
          sbldr.Append(unit.TypeOfClient.ToString());
          sbldr.Append(COMMA);
-         sbldr.Append(TimeSpan.FromSeconds(unit.RawTimePerSection).ToString());
+         sbldr.Append(unit.CurrentProtein.Core);
          sbldr.Append(COMMA);
-         sbldr.Append(Math.Round(unit.PPD, 1));
+         sbldr.Append(unit.CoreVersion);
+         sbldr.Append(COMMA);
+         sbldr.Append(TimeSpan.FromSeconds(RawTimePerAllSections).ToString());  
+         sbldr.Append(COMMA);
+         sbldr.Append(Math.Round(ProteinCollection.Instance[unit.ProjectID].GetPPD(TimeSpan.FromSeconds(RawTimePerAllSections)), 1));
+         //sbldr.Append(Math.Round(unit.PPD, 1));
          sbldr.Append(COMMA);
          sbldr.Append(unit.DownloadTime.ToShortDateString());
          sbldr.Append(COMMA);

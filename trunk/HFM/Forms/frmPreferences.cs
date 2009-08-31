@@ -47,7 +47,12 @@ namespace HFM.Forms
       {
          InitializeComponent();
 
-         if (PlatformOps.IsRunningOnMono() == false)
+         if (PlatformOps.IsRunningOnMono())
+         {
+            chkAutoRun.Checked = false;
+            grpAutoRun.Enabled = false;
+         }
+         else
          {
             wbCssSample = new WebBrowser();
 
@@ -69,6 +74,7 @@ namespace HFM.Forms
       {
          LoadScheduledTasksTab();
          LoadDefaultsTab();
+         LoadReportingTab();
          LoadWebTab();
          LoadVisualStyleTab();
       }
@@ -95,15 +101,7 @@ namespace HFM.Forms
          cboPpdCalc.Items.Add(ePpdCalculation.AllFrames);
          cboPpdCalc.Items.Add(ePpdCalculation.EffectiveRate);
          cboPpdCalc.Text = Prefs.PpdCalculation.ToString();
-         chkWebSiteGenerator.Checked = Prefs.GenerateWeb;
-         if (Prefs.WebGenAfterRefresh)
-         {
-            radioFullRefresh.Checked = true;
-         }
-         else
-         {
-            radioSchedule.Checked = true;
-         }
+
          if (PreferenceSet.ValidateMinutes(Prefs.GenerateInterval))
          {
             txtWebGenMinutes.Text = Prefs.GenerateInterval.ToString();
@@ -113,6 +111,20 @@ namespace HFM.Forms
             txtWebGenMinutes.Text = PreferenceSet.MinutesDefault.ToString();
          }
          txtWebSiteBase.Text = Prefs.WebRoot;
+         chkWebSiteGenerator.Checked = Prefs.GenerateWeb;
+         if (Prefs.WebGenAfterRefresh)
+         {
+            radioFullRefresh.Checked = true;
+         }
+         else
+         {
+            radioSchedule.Checked = true;
+         }
+         
+         if (PlatformOps.IsRunningOnMono() == false)
+         {
+            chkAutoRun.Checked = RegistryOps.IsHfmAutoRunSet();
+         }
       }
 
       private void LoadDefaultsTab()
@@ -139,6 +151,17 @@ namespace HFM.Forms
          udDecimalPlaces.Maximum = PreferenceSet.MaxDecimalPlaces;
          udDecimalPlaces.Value = Prefs.DecimalPlaces;
       }
+      
+      private void LoadReportingTab()
+      {
+         txtToEmailAddress.Text = Prefs.EmailReportingToAddress;
+         txtFromEmailAddress.Text = Prefs.EmailReportingFromAddress;
+         txtSmtpServer.Text = Prefs.EmailReportingServerAddress;
+         txtSmtpUsername.Text = Prefs.EmailReportingServerUsername;
+         txtSmtpPassword.Text = Prefs.EmailReportingServerPassword;
+         
+         chkEnableEmail.Checked = Prefs.EmailReportingEnabled;
+      }
 
       private void LoadWebTab()
       {
@@ -146,12 +169,14 @@ namespace HFM.Forms
          txtStanfordUserID.Text = Prefs.StanfordID;
          txtStanfordTeamID.Text = Prefs.TeamID.ToString();
          txtProjectDownloadUrl.Text = Prefs.ProjectDownloadUrl;
-         chkUseProxy.Checked = Prefs.UseProxy;
+
          txtProxyServer.Text = Prefs.ProxyServer;
          txtProxyPort.Text = Prefs.ProxyPort.ToString();
-         chkUseProxyAuth.Checked = Prefs.UseProxyAuth;
+         chkUseProxy.Checked = Prefs.UseProxy;
+
          txtProxyUser.Text = Prefs.ProxyUser;
          txtProxyPass.Text = Prefs.ProxyPass;
+         chkUseProxyAuth.Checked = Prefs.UseProxyAuth;
       }
       
       private void LoadVisualStyleTab()
@@ -200,30 +225,46 @@ namespace HFM.Forms
       {
          if (chkWebSiteGenerator.Checked)
          {
+            foreach (Control ctrl in grpHTMLOutput.Controls)
+            {
+               ctrl.CausesValidation = true;
+            }
+         
             radioSchedule.Enabled = true;
-            radioSchedule_CheckedChanged(sender, e);
             lbl2MinutesToGen.Enabled = true;
+            radioSchedule_CheckedChanged(sender, e);
             radioFullRefresh.Enabled = true;
+            
             txtWebSiteBase.Enabled = true;
             txtWebSiteBase.ReadOnly = false;
+            txtWebSiteBase.BackColor = SystemColors.Window;
+            txtWebSiteBase_Validating(null, null);
+            
             btnBrowseWebFolder.Enabled = true;
          }
          else
          {
+            foreach (Control ctrl in grpHTMLOutput.Controls)
+            {
+               ctrl.CausesValidation = false;
+            }
+         
             radioSchedule.Enabled = false;
-            txtWebGenMinutes.Enabled = false;
-            txtWebGenMinutes.ReadOnly = true;
             lbl2MinutesToGen.Enabled = false;
+            radioSchedule_CheckedChanged(sender, e);
             radioFullRefresh.Enabled = false;
+            
             txtWebSiteBase.Enabled = false;
+            txtWebSiteBase.BackColor = SystemColors.Control;
             txtWebSiteBase.ReadOnly = true;
+            
             btnBrowseWebFolder.Enabled = false;
          }
       }
 
       private void radioSchedule_CheckedChanged(object sender, EventArgs e)
       {
-         if (radioSchedule.Checked)
+         if (radioSchedule.Checked && radioSchedule.Enabled)
          {
             txtWebGenMinutes.Enabled = true;
             txtWebGenMinutes.ReadOnly = false;
@@ -329,6 +370,194 @@ namespace HFM.Forms
          }
       } 
       #endregion
+      
+      #region Reporting Tab
+      private void chkEnableEmail_CheckedChanged(object sender, EventArgs e)
+      {
+         if (chkEnableEmail.Checked)
+         {
+            EnableEmailReporting();
+         }
+         else
+         {
+            DisableEmailReporting();
+         }
+      }
+      
+      private void EnableEmailReporting()
+      {
+         foreach (Control ctrl in grpEmailSettings.Controls)
+         {
+            ctrl.CausesValidation = true;
+         }
+
+         txtToEmailAddress.Enabled = true;
+         txtToEmailAddress.ReadOnly = false;
+         txtToEmailAddress.BackColor = SystemColors.Window;
+         txtToEmailAddress_Validating(null, null);
+
+         txtFromEmailAddress.Enabled = true;
+         txtFromEmailAddress.ReadOnly = false;
+         txtToEmailAddress.BackColor = SystemColors.Window;
+         txtFromEmailAddress_Validating(null, null);
+
+         txtSmtpServer.Enabled = true;
+         txtSmtpServer.ReadOnly = false;
+         txtToEmailAddress.BackColor = SystemColors.Window;
+         txtSmtpServer_Validating(null, null);
+
+         txtSmtpUsername.Enabled = true;
+         txtSmtpUsername.ReadOnly = false;
+         txtSmtpUsername.BackColor = SystemColors.Window;
+
+         txtSmtpPassword.Enabled = true;
+         txtSmtpPassword.ReadOnly = false;
+         txtSmtpPassword.BackColor = SystemColors.Window;
+
+         DoSmtpCredentialValidation();
+      }
+      
+      private void DisableEmailReporting()
+      {
+         foreach (Control ctrl in grpEmailSettings.Controls)
+         {
+            ctrl.CausesValidation = false;
+         }
+
+         txtToEmailAddress.Enabled = false;
+         txtToEmailAddress.BackColor = SystemColors.Control;
+         txtToEmailAddress.ReadOnly = true;
+
+         txtFromEmailAddress.Enabled = false;
+         txtFromEmailAddress.BackColor = SystemColors.Control;
+         txtFromEmailAddress.ReadOnly = true;
+
+         txtSmtpServer.Enabled = false;
+         txtSmtpServer.BackColor = SystemColors.Control;
+         txtSmtpServer.ReadOnly = true;
+
+         txtSmtpUsername.Enabled = false;
+         txtSmtpUsername.BackColor = SystemColors.Control;
+         txtSmtpUsername.ReadOnly = true;
+
+         txtSmtpPassword.Enabled = false;
+         txtSmtpPassword.BackColor = SystemColors.Control;
+         txtSmtpPassword.ReadOnly = true;
+      }
+
+      private void txtToEmailAddress_Validating(object sender, CancelEventArgs e)
+      {
+         bool bAddress = StringOps.ValidateEmailAddress(txtToEmailAddress.Text);
+
+         if (txtToEmailAddress.Text.Length == 0)
+         {
+            SetToEmailAddressError();
+         }
+         else if (txtToEmailAddress.Text.Length > 0 && bAddress != true)
+         {
+            SetToEmailAddressError();
+         }
+         else
+         {
+            txtToEmailAddress.BackColor = SystemColors.Window;
+            toolTipPrefs.Hide(txtToEmailAddress);
+         }
+      }
+
+      private void SetToEmailAddressError()
+      {
+         txtToEmailAddress.BackColor = Color.Yellow;
+         txtToEmailAddress.Focus();
+         toolTipPrefs.Show("Must be a valid e-mail address.",
+            txtToEmailAddress.Parent, txtToEmailAddress.Location.X + 5, txtToEmailAddress.Location.Y - 20, 5000);
+      }
+
+      private void txtFromEmailAddress_Validating(object sender, CancelEventArgs e)
+      {
+         bool bAddress = StringOps.ValidateEmailAddress(txtToEmailAddress.Text);
+
+         if (txtFromEmailAddress.Text.Length > 0 && bAddress != true)
+         {
+            SetFromEmailAddressError();
+         }
+         else
+         {
+            txtFromEmailAddress.BackColor = SystemColors.Window;
+            toolTipPrefs.Hide(txtFromEmailAddress);
+         }
+      }
+
+      private void SetFromEmailAddressError()
+      {
+         txtFromEmailAddress.BackColor = Color.Yellow;
+         txtFromEmailAddress.Focus();
+         toolTipPrefs.Show("Must be a valid e-mail address or blank to use default.",
+            txtFromEmailAddress.Parent, txtFromEmailAddress.Location.X + 5, txtFromEmailAddress.Location.Y - 20, 5000);
+      }
+
+      private void txtSmtpServer_Validating(object sender, CancelEventArgs e)
+      {
+         bool bServerName = StringOps.ValidateServerName(txtSmtpServer.Text);
+
+         if (txtSmtpServer.Text.Length == 0)
+         {
+            SetSmtpServerError();
+         }
+         else if (txtSmtpServer.Text.Length > 0 && bServerName != true)
+         {
+            SetSmtpServerError();
+         }
+         else
+         {
+            txtSmtpServer.BackColor = SystemColors.Window;
+            toolTipPrefs.Hide(txtSmtpServer);
+         }
+      }
+
+      private void SetSmtpServerError()
+      {
+         txtSmtpServer.BackColor = Color.Yellow;
+         txtSmtpServer.Focus();
+         toolTipPrefs.Show("Must be a valid server name.",
+            txtToEmailAddress.Parent, txtToEmailAddress.Location.X + 5, txtToEmailAddress.Location.Y - 20, 5000);
+      }
+
+      private void txtSmtpUsername_Validating(object sender, CancelEventArgs e)
+      {
+         DoSmtpCredentialValidation();
+      }
+
+      private void txtSmtpPassword_Validating(object sender, CancelEventArgs e)
+      {
+         DoSmtpCredentialValidation();
+      }
+      
+      private void DoSmtpCredentialValidation()
+      {
+         try
+         {
+            // This will violate FxCop rule (rule ID)
+            StringOps.ValidateUsernamePasswordPair(txtSmtpUsername.Text, txtSmtpPassword.Text);
+
+            txtSmtpUsername.BackColor = SystemColors.Window;
+            toolTipPrefs.Hide(txtSmtpUsername);
+            txtSmtpPassword.BackColor = SystemColors.Window;
+            toolTipPrefs.Hide(txtSmtpPassword);
+         }
+         catch (ArgumentException ex)
+         {
+            SetSmtpUsernamePasswordError(ex.Message);
+         }
+      }
+
+      private void SetSmtpUsernamePasswordError(string Message)
+      {
+         txtSmtpUsername.BackColor = Color.Yellow;
+         txtSmtpPassword.BackColor = Color.Yellow;
+         toolTipPrefs.Show(Message,
+            txtSmtpUsername.Parent, txtSmtpUsername.Location.X + 5, txtSmtpUsername.Location.Y - 20, 5000);
+      }
+      #endregion
 
       #region Web Tab
       private void linkEOC_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -407,9 +636,93 @@ namespace HFM.Forms
          }
       }
 
+      private void EnableProxy()
+      {
+         txtProxyServer.Enabled = true;
+         txtProxyServer.ReadOnly = false;
+         txtProxyServer.BackColor = SystemColors.Window;
+         txtProxyServer.CausesValidation = true;
+
+         txtProxyPort.Enabled = true;
+         txtProxyPort.ReadOnly = false;
+         txtProxyPort.BackColor = SystemColors.Window;
+         txtProxyPort.CausesValidation = true;
+
+         DoProxyServerPortValidation();
+         
+         chkUseProxyAuth.Enabled = true;
+      }
+
+      private void DisableProxy()
+      {
+         txtProxyServer.Enabled = false;
+         txtProxyServer.ReadOnly = true;
+         txtProxyServer.BackColor = SystemColors.Control;
+         txtProxyServer.CausesValidation = false;
+            
+         txtProxyPort.Enabled = false;
+         txtProxyPort.ReadOnly = true;
+         txtProxyPort.BackColor = SystemColors.Control;
+         txtProxyPort.CausesValidation = false;
+         
+         chkUseProxyAuth.Enabled = false;
+         DisableProxyAuth();
+      }
+
+      private void txtProxyServer_Validating(object sender, CancelEventArgs e)
+      {
+         DoProxyServerPortValidation();
+      }
+
+      private void txtProxyPort_Validating(object sender, CancelEventArgs e)
+      {
+         DoProxyServerPortValidation();
+      }
+
+      private void DoProxyServerPortValidation()
+      {
+         try
+         {
+            ValidateProxyServerPort(txtProxyServer.Text, txtProxyPort.Text);
+
+            txtProxyServer.BackColor = SystemColors.Window;
+            toolTipPrefs.Hide(txtProxyServer);
+            txtProxyPort.BackColor = SystemColors.Window;
+            toolTipPrefs.Hide(txtProxyPort);
+         }
+         catch (ArgumentException ex)
+         {
+            SetProxyServerPortError(ex.Message);
+         }
+      }
+      
+      private static void ValidateProxyServerPort(string ProxyServer, string ProxyPort)
+      {
+         if (String.IsNullOrEmpty(ProxyServer) && String.IsNullOrEmpty(ProxyPort))
+         {
+            throw new ArgumentException("Proxy Server and Port must be specified.");
+         }
+         if (String.IsNullOrEmpty(ProxyServer) == false && String.IsNullOrEmpty(ProxyPort))
+         {
+            throw new ArgumentException("Proxy Port must also be specified when specifying Proxy Server.");
+         }
+         else if (String.IsNullOrEmpty(ProxyServer) && String.IsNullOrEmpty(ProxyPort) == false)
+         {
+            throw new ArgumentException("Proxy Server must also be specified when specifying Proxy Port.");
+         }
+      }
+
+      private void SetProxyServerPortError(string Message)
+      {
+         txtProxyServer.BackColor = Color.Yellow;
+         txtProxyPort.BackColor = Color.Yellow;
+         toolTipPrefs.Show(Message,
+            txtProxyServer.Parent, txtProxyServer.Location.X + 5, txtProxyServer.Location.Y - 20, 5000);
+      }
+
       private void chkUseProxyAuth_CheckedChanged(object sender, EventArgs e)
       {
-         if (chkUseProxyAuth.Checked)
+         if (chkUseProxyAuth.Checked && chkUseProxyAuth.Enabled)
          {
             EnableProxyAuth();
          }
@@ -419,39 +732,68 @@ namespace HFM.Forms
          }
       }
 
-      private void EnableProxy()
-      {
-         txtProxyServer.Enabled = true;
-         txtProxyPort.Enabled = true;
-         txtProxyServer.ReadOnly = false;
-         txtProxyPort.ReadOnly = false;
-         chkUseProxyAuth.Enabled = true;
-      }
-
-      private void DisableProxy()
-      {
-         txtProxyServer.Enabled = false;
-         txtProxyPort.Enabled = false;
-         txtProxyServer.ReadOnly = true;
-         txtProxyPort.ReadOnly = true;
-         chkUseProxyAuth.Enabled = false;
-         DisableProxyAuth();
-      }
-
       private void EnableProxyAuth()
       {
          txtProxyUser.Enabled = true;
          txtProxyUser.ReadOnly = false;
+         txtProxyUser.BackColor = SystemColors.Window;
+         txtProxyUser.CausesValidation = true;
+         
          txtProxyPass.Enabled = true;
          txtProxyPass.ReadOnly = false;
+         txtProxyPass.BackColor = SystemColors.Window;
+         txtProxyPass.CausesValidation = true;
+         
+         DoProxyCredentialValidation();
       }
 
       private void DisableProxyAuth()
       {
          txtProxyUser.Enabled = false;
          txtProxyUser.ReadOnly = true;
+         txtProxyUser.BackColor = SystemColors.Control;
+         txtProxyUser.CausesValidation = false;
+         
          txtProxyPass.Enabled = false;
          txtProxyPass.ReadOnly = true;
+         txtProxyPass.BackColor = SystemColors.Control;
+         txtProxyPass.CausesValidation = false;
+      }
+
+      private void txtProxyUser_Validating(object sender, CancelEventArgs e)
+      {
+         DoProxyCredentialValidation();
+      }
+
+      private void txtProxyPass_Validating(object sender, CancelEventArgs e)
+      {
+         DoProxyCredentialValidation();
+      }
+
+      private void DoProxyCredentialValidation()
+      {
+         try
+         {
+            // This will violate FxCop rule (rule ID)
+            StringOps.ValidateUsernamePasswordPair(txtProxyUser.Text, txtProxyPass.Text);
+
+            txtProxyUser.BackColor = SystemColors.Window;
+            toolTipPrefs.Hide(txtProxyUser);
+            txtProxyPass.BackColor = SystemColors.Window;
+            toolTipPrefs.Hide(txtProxyPass);
+         }
+         catch (ArgumentException ex)
+         {
+            SetProxyUsernamePasswordError(ex.Message);
+         }
+      }
+
+      private void SetProxyUsernamePasswordError(string Message)
+      {
+         txtProxyUser.BackColor = Color.Yellow;
+         txtProxyPass.BackColor = Color.Yellow;
+         toolTipPrefs.Show(Message,
+            txtProxyUser.Parent, txtProxyUser.Location.X + 5, txtProxyUser.Location.Y - 20, 5000);
       }
       #endregion
 
@@ -503,21 +845,55 @@ namespace HFM.Forms
       
       private void btnOK_Click(object sender, EventArgs e)
       {
-         // Check for error conditions
-         if (txtCollectMinutes.BackColor == Color.Yellow) return;
-         if (txtWebGenMinutes.BackColor == Color.Yellow) return;
-         if (txtWebSiteBase.BackColor == Color.Yellow) return;
-         if (txtProjectDownloadUrl.BackColor == Color.Yellow) return;
+         if (CheckForErrorConditions())
+         {
+            GetDataScheduledTasksTab();
+            GetDataDefaultsTab();
+            GetReportingTab();
+            GetDataWebSettingsTab();
+            GetDataVisualStylesTab();
 
-         GetDataScheduledTasksTab();
-         GetDataDefaultsTab();
-         GetDataWebSettingsTab();
-         GetDataVisualStylesTab();
+            Prefs.Save();
 
-         Prefs.Save();
+            DialogResult = System.Windows.Forms.DialogResult.OK;
+            Close();
+         }
+      }
+      
+      private bool CheckForErrorConditions()
+      {
+         // Check for error conditions on Scheduled Tasks Tab
+         if (txtCollectMinutes.BackColor == Color.Yellow ||
+             txtWebGenMinutes.BackColor == Color.Yellow ||
+             txtWebSiteBase.BackColor == Color.Yellow)
+         {
+            tabControl1.SelectedTab = tabSchdTasks;
+            return false;
+         }
 
-         DialogResult = System.Windows.Forms.DialogResult.OK;
-         Close();
+         // Check for error conditions on Reporting Tab
+         if (txtToEmailAddress.BackColor == Color.Yellow ||
+             txtFromEmailAddress.BackColor == Color.Yellow ||
+             txtSmtpServer.BackColor == Color.Yellow ||
+             txtSmtpUsername.BackColor == Color.Yellow ||
+             txtSmtpPassword.BackColor == Color.Yellow)
+         {
+            tabControl1.SelectedTab = tabReporting;
+            return false;
+         }
+
+         // Check for error conditions on Web Settings Tab
+         if (txtProjectDownloadUrl.BackColor == Color.Yellow ||
+             txtProxyServer.BackColor == Color.Yellow ||
+             txtProxyPort.BackColor == Color.Yellow ||
+             txtProxyUser.BackColor == Color.Yellow ||
+             txtProxyPass.BackColor == Color.Yellow)
+         {
+            tabControl1.SelectedTab = tabWeb;
+            return false;
+         }
+         
+         return true;
       }
 
       private void GetDataScheduledTasksTab()
@@ -542,6 +918,26 @@ namespace HFM.Forms
          Prefs.PpdCalculation = (ePpdCalculation)cboPpdCalc.SelectedItem;
          Prefs.SyncTimeMinutes = Int32.Parse(txtCollectMinutes.Text);
          Prefs.WebRoot = txtWebSiteBase.Text;
+         if (PlatformOps.IsRunningOnMono() == false)
+         {
+            try
+            {
+               if (chkAutoRun.Checked)
+               {
+                  RegistryOps.SetHfmAutoRun(Application.ExecutablePath);
+               }
+               else
+               {
+                  RegistryOps.SetHfmAutoRun(String.Empty);
+               }
+            }
+            catch (InvalidOperationException ex)
+            {
+               HfmTrace.WriteToHfmConsole(ex);
+               MessageBox.Show(this, "Failed to save HFM.NET Auto Run Registry Value.  Please see the Messages Windows for detailed error information.",
+                  Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+         }
       }
 
       private void GetDataDefaultsTab()
@@ -560,6 +956,16 @@ namespace HFM.Forms
          Prefs.FileExplorer = txtFileExplorer.Text;
          Prefs.MessageLevel = cboMessageLevel.SelectedIndex;
          Prefs.DecimalPlaces = Convert.ToInt32(udDecimalPlaces.Value);
+      }
+      
+      private void GetReportingTab()
+      {
+         Prefs.EmailReportingEnabled = chkEnableEmail.Checked;
+         Prefs.EmailReportingToAddress = txtToEmailAddress.Text;
+         Prefs.EmailReportingFromAddress = txtFromEmailAddress.Text;
+         Prefs.EmailReportingServerAddress = txtSmtpServer.Text;
+         Prefs.EmailReportingServerUsername = txtSmtpUsername.Text;
+         Prefs.EmailReportingServerPassword = txtSmtpPassword.Text;
       }
 
       private void GetDataWebSettingsTab()

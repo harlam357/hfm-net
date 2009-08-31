@@ -81,14 +81,14 @@ namespace HFM.Forms
          // 
          this.lblCopyrights.Location = new System.Drawing.Point(10, 37);
          this.lblCopyrights.Name = "lblCopyrights";
-         this.lblCopyrights.Size = new System.Drawing.Size(497, 126);
+         this.lblCopyrights.Size = new System.Drawing.Size(497, 132);
          this.lblCopyrights.TabIndex = 3;
          this.lblCopyrights.Text = resources.GetString("lblCopyrights.Text");
          // 
          // lblLinkOrig
          // 
          this.lblLinkOrig.LinkArea = new System.Windows.Forms.LinkArea(29, 15);
-         this.lblLinkOrig.Location = new System.Drawing.Point(10, 169);
+         this.lblLinkOrig.Location = new System.Drawing.Point(10, 180);
          this.lblLinkOrig.Name = "lblLinkOrig";
          this.lblLinkOrig.Size = new System.Drawing.Size(497, 22);
          this.lblLinkOrig.TabIndex = 5;
@@ -102,7 +102,7 @@ namespace HFM.Forms
          // 
          this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
          this.btnClose.DialogResult = System.Windows.Forms.DialogResult.OK;
-         this.btnClose.Location = new System.Drawing.Point(465, 202);
+         this.btnClose.Location = new System.Drawing.Point(465, 210);
          this.btnClose.Name = "btnClose";
          this.btnClose.Size = new System.Drawing.Size(75, 23);
          this.btnClose.TabIndex = 0;
@@ -123,9 +123,9 @@ namespace HFM.Forms
          // 
          // lblGPL
          // 
-         this.lblGPL.Location = new System.Drawing.Point(10, 197);
+         this.lblGPL.Location = new System.Drawing.Point(10, 208);
          this.lblGPL.Name = "lblGPL";
-         this.lblGPL.Size = new System.Drawing.Size(497, 37);
+         this.lblGPL.Size = new System.Drawing.Size(497, 27);
          this.lblGPL.TabIndex = 6;
          this.lblGPL.Text = "This program is free software; you can redistribute it and/or modify it under the" +
              " terms of the\r\nGNU General Public License, version 2, as published by the Free S" +
@@ -136,7 +136,7 @@ namespace HFM.Forms
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.CancelButton = this.btnClose;
-         this.ClientSize = new System.Drawing.Size(552, 235);
+         this.ClientSize = new System.Drawing.Size(552, 243);
          this.Controls.Add(this.btnClose);
          this.Controls.Add(this.lblGPL);
          this.Controls.Add(this.lblLinkOrig);

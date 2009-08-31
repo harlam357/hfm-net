@@ -27,6 +27,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 
+using HFM.Instrumentation;
+using HFM.Preferences;
+
 namespace HFM.Instances
 {
    [Serializable]
@@ -207,58 +210,62 @@ namespace HFM.Instances
 
          public int Compare(TKey xVal, TKey yVal)
          {
-            /* Get property values */
-            object xValue = GetPropertyValue(xVal, _property);
-            object yValue = GetPropertyValue(yVal, _property);
-            object xStatusValue = GetPropertyValue(xVal, _statusProperty);
-            object yStatusValue = GetPropertyValue(yVal, _statusProperty);
-            object xNameValue = GetPropertyValue(xVal, _nameProperty);
-            object yNameValue = GetPropertyValue(yVal, _nameProperty);
-
-            //if (xValue.Equals(yValue))
-            //{
-            //   int returnValue1 = CompareAscending(xNameValue, yNameValue);
-            //   if (returnValue1 != 0)
-            //   {
-            //      return returnValue1;
-            //   }
-
-            //   return 0;
-            //}
-            if (_offlineClientsLast)
+            try
             {
-               if (((ClientStatus)xStatusValue).Equals(ClientStatus.Offline) && 
-                   ((ClientStatus)yStatusValue).Equals(ClientStatus.Offline) == false)
+               /* Get property values */
+               object xValue = GetPropertyValue(xVal, _property);
+               object yValue = GetPropertyValue(yVal, _property);
+               object xStatusValue = GetPropertyValue(xVal, _statusProperty);
+               object yStatusValue = GetPropertyValue(yVal, _statusProperty);
+               object xNameValue = GetPropertyValue(xVal, _nameProperty);
+               object yNameValue = GetPropertyValue(yVal, _nameProperty);
+
+               if (_offlineClientsLast)
                {
-                  return 1;
-               }
-               if (((ClientStatus)yStatusValue).Equals(ClientStatus.Offline) &&
-                   ((ClientStatus)xStatusValue).Equals(ClientStatus.Offline) == false)
-               {
-                  return -1;
-               }
-            }
-            if (xValue.Equals(yValue))
-            {
-               int returnValue1 = CompareAscending(xNameValue, yNameValue);
-               if (returnValue1 != 0)
-               {
-                  return returnValue1;
+                  if (((ClientStatus)xStatusValue).Equals(ClientStatus.Offline) && 
+                      ((ClientStatus)yStatusValue).Equals(ClientStatus.Offline) == false)
+                  {
+                     return 1;
+                  }
+                  if (((ClientStatus)yStatusValue).Equals(ClientStatus.Offline) &&
+                      ((ClientStatus)xStatusValue).Equals(ClientStatus.Offline) == false)
+                  {
+                     return -1;
+                  }
                }
 
-               return 0;
-            }
+               if (xValue.Equals(yValue))
+               {
+                  int returnValue1 = CompareAscending(xNameValue, yNameValue);
+                  if (returnValue1 != 0)
+                  {
+                     return returnValue1;
+                  }
 
-            /* Determine sort order */
-            if (_direction == ListSortDirection.Ascending)
-            {
-               int returnValue = CompareAscending(xValue, yValue);
-               return returnValue;
+                  return 0;
+               }
+
+               /* Determine sort order */
+               if (_direction == ListSortDirection.Ascending)
+               {
+                  int returnValue = CompareAscending(xValue, yValue);
+                  return returnValue;
+               }
+               else
+               {
+                  int returnValue = CompareDescending(xValue, yValue);
+                  return returnValue;
+               }
             }
-            else
+            /*** This Try Catch block is to see if I can ever log or reproduce the error sent in by Atlas Folder.
+             *   See GMail message from July 30th, 2009.  I cannot reproduce this with live data, but I believe
+             *   it is a threading issue with the current DisplayInstance from which comparison values are being
+             *   pulled.  Maybe I make a true copy of the two items (DisplayInstance) that are being compared
+             *   before calling items.Sort(pc) in ApplySortCore() above. ***/
+            catch (NullReferenceException ex)
             {
-               int returnValue = CompareDescending(xValue, yValue);
-               return returnValue;
+               HfmTrace.WriteToHfmConsole(ex);
+               return 0; // return as if the values are equal
             }
          }
 

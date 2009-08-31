@@ -173,7 +173,7 @@ namespace HFM.Forms
          {
             txtName.BackColor = Color.Yellow;
             txtName.Focus();
-            toolTipCore.Show("Instance name can contain only letters, numbers,\r\nand basic symbols (+=-_$&^.[]). It must be at\r\nleast three characters long and must not begin or\r\nend with a dot (.) or a space.", txtName, 5000);
+            toolTipCore.Show(String.Format(Properties.Resources.HostNameToolTip, Environment.NewLine), txtName, 5000);
          }
          else
          {
@@ -194,15 +194,13 @@ namespace HFM.Forms
          {
             txtClientMegahertz.BackColor = Color.Yellow;
             txtClientMegahertz.Focus();
-            toolTipCore.Show("Client Processor Megahertz must be numeric.",
-               txtClientMegahertz, 5000);
+            toolTipCore.Show(Properties.Resources.HostProcessorMhzNumeric, txtClientMegahertz, 5000);
          }
          else if (mhz < 1)
          {
             txtClientMegahertz.BackColor = Color.Yellow;
             txtClientMegahertz.Focus();
-            toolTipCore.Show("Client Processor Megahertz must be greater than zero.",
-               txtClientMegahertz, 5000);
+            toolTipCore.Show(Properties.Resources.HostProcessorMhzGreaterThanZero, txtClientMegahertz, 5000);
          }
          else
          {
@@ -222,7 +220,7 @@ namespace HFM.Forms
          {
             txtLogFileName.BackColor = Color.Yellow;
             txtLogFileName.Focus();
-            toolTipCore.Show("File name contains invalid characters.", txtLogFileName, 5000);
+            toolTipCore.Show(Properties.Resources.HostFileNameInvalidChars, txtLogFileName, 5000);
          }
          else
          {
@@ -242,7 +240,7 @@ namespace HFM.Forms
          {
             txtUnitFileName.BackColor = Color.Yellow;
             txtUnitFileName.Focus();
-            toolTipCore.Show("File name contains invalid characters.", txtUnitFileName, 5000);
+            toolTipCore.Show(Properties.Resources.HostFileNameInvalidChars, txtUnitFileName, 5000);
          }
          else
          {
@@ -276,13 +274,13 @@ namespace HFM.Forms
          {
             txtLocalPath.BackColor = Color.Yellow;
             //txtLocalPath.Focus();
-            toolTipCore.Show("Log Folder must be a valid local\r\nor network (UNC) path.", txtLocalPath, 5000);
+            toolTipCore.Show(String.Format(Properties.Resources.HostLocalPathInvalidTooltip, Environment.NewLine), txtLocalPath, 5000);
          }
          else if (txtLocalPath.Text.Length > 2 && (bPath || bPathWithSlash) != true)
          {
             txtLocalPath.BackColor = Color.Yellow;
             //txtLocalPath.Focus();
-            toolTipCore.Show("Log Folder must be a valid local\r\nor network (UNC) path.", txtLocalPath, 5000);
+            toolTipCore.Show(String.Format(Properties.Resources.HostLocalPathInvalidTooltip, Environment.NewLine), txtLocalPath, 5000);
          }
          else
          {
@@ -308,13 +306,13 @@ namespace HFM.Forms
          {
             txtFTPServer.BackColor = Color.Yellow;
             //txtFTPServer.Focus();
-            toolTipCore.Show("FTP server must be a valid\r\nhost name or IP address.", txtFTPServer, 5000);
+            toolTipCore.Show(String.Format(Properties.Resources.HostFtpServerInvalidTooltip, Environment.NewLine), txtFTPServer, 5000);
          }
-         else if (txtFTPServer.Text.Length > 0 && StringOps.ValidateFtpServerName(txtFTPServer.Text) == false)
+         else if (txtFTPServer.Text.Length > 0 && StringOps.ValidateServerName(txtFTPServer.Text) == false)
          {
             txtFTPServer.BackColor = Color.Yellow;
             //txtFTPServer.Focus();
-            toolTipCore.Show("FTP server must be a valid\r\nhost name or IP address.", txtFTPServer, 5000);
+            toolTipCore.Show(String.Format(Properties.Resources.HostFtpServerInvalidTooltip, Environment.NewLine), txtFTPServer, 5000);
          }
          else
          {
@@ -354,7 +352,7 @@ namespace HFM.Forms
          {
             txtFTPPath.BackColor = Color.Yellow;
             //txtFTPPath.Focus();
-            toolTipCore.Show("FTP path should be the full\r\npath to the folder that\r\ncontains the log and Unit Info\r\nfiles (including the trailing /).", txtFTPPath, 5000);
+            toolTipCore.Show(String.Format(Properties.Resources.HostFtpPathInvalidTooltip, Environment.NewLine), txtFTPPath, 5000);
          }
          else
          {
@@ -417,13 +415,13 @@ namespace HFM.Forms
          {
             txtWebURL.BackColor = Color.Yellow;
             //txtWebURL.Focus();
-            toolTipCore.Show("URL must be a valid URL and be\r\nthe path to the folder containing\r\nunitinfo.txt and FAHlog.txt.", txtWebURL, 5000);
+            toolTipCore.Show(String.Format(Properties.Resources.HostHttpUrlInvalidTooltip, Environment.NewLine), txtWebURL, 5000);
          }
          else if (txtWebURL.Text.Length > 0 && StringOps.ValidateHttpURL(txtWebURL.Text) == false)
          {
             txtWebURL.BackColor = Color.Yellow;
             //txtWebURL.Focus();
-            toolTipCore.Show("URL must be a valid URL and be\r\nthe path to the folder containing\r\nunitinfo.txt and FAHlog.txt.", txtWebURL, 5000);
+            toolTipCore.Show(String.Format(Properties.Resources.HostHttpUrlInvalidTooltip, Environment.NewLine), txtWebURL, 5000);
          }
          else
          {

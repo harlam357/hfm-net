@@ -1,51 +1,70 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
 
-  <PropertyGroup>
-    <Major>0</Major>
-    <Minor>2</Minor>
-    <Build>2</Build>
-    <Revision>0</Revision>
-  </PropertyGroup>
+   <PropertyGroup>
+      <Major>0</Major>
+      <Minor>3</Minor>
+      <Build>0</Build>
+      <Revision>0</Revision>
+   </PropertyGroup>
 
-  <ItemGroup>
-    <ZipFiles Include=".\Release\**\*.*" />
-  </ItemGroup>
+   <PropertyGroup>
+      <FxCopPath>&quot;$(ProgramFiles)\Microsoft FxCop 1.36\FxCopCmd.exe&quot;</FxCopPath>
+      <NCoverPath>&quot;$(ProgramFiles)\NCover\NCover.Console.exe&quot;</NCoverPath>
+      <NCoverExcludeList>System.Runtime.CompilerServices.CompilerGeneratedAttribute</NCoverExcludeList>
+      <NCoverExpPath>&quot;$(ProgramFiles)\NCoverExplorer\NCoverExplorer.Console.exe&quot;</NCoverExpPath>
+      <NUnitPath>&quot;$(ProgramFiles)\NUnit 2.4.8\bin\nunit-console.exe&quot;</NUnitPath>
+      <NUnitAsmList>HFM.Helpers;HFM.Instances;HFM.Instrumentation;HFM.Preferences;HFM.Proteins</NUnitAsmList>
+   </PropertyGroup>
 
-  <Target Name="Version">
-    <SvnVersion LocalPath="." ToolPath="$(ProgramFiles)\CollabNet Subversion Client">
-      <Output TaskParameter="Revision" PropertyName="Revision" />
-    </SvnVersion>
+   <ItemGroup>
+      <ZipFiles Include=".\Release\**\*.*" />
+   </ItemGroup>
 
-    <Message Text="Version: $(Major).$(Minor).$(Build).$(Revision)"/>
+   <Target Name="Version">
+      <SvnVersion LocalPath="." ToolPath="$(ProgramFiles)\CollabNet Subversion Client">
+         <Output TaskParameter="Revision" PropertyName="Revision" />
+      </SvnVersion>
 
-    <AssemblyInfo CodeLanguage="CS"
-      OutputFile="AssemblyVersion.cs"
-      AssemblyVersion="$(Major).$(Minor).$(Build).$(Revision)"
-      AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
-      Condition="$(Revision) != '0' "/>
-  </Target>
+      <Message Text="Version: $(Major).$(Minor).$(Build).$(Revision)"/>
 
-  <Target Name="Compile" DependsOnTargets="Version">
-    <MSBuild Projects="HFM.sln"
-             Targets="Rebuild"
-             Properties="Configuration=ScriptedRelease" />
-  </Target>
+      <AssemblyInfo CodeLanguage="CS"
+        OutputFile="AssemblyVersion.cs"
+        AssemblyVersion="$(Major).$(Minor).$(Build).$(Revision)"
+        AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
+        Condition="$(Revision) != '0' "/>
+   </Target>
 
-  <Target Name="Build" DependsOnTargets="Compile">
-    <Message Text="HFM.NET Build Complete"/>
-  </Target>
+   <Target Name="Compile" DependsOnTargets="Version">
+      <MSBuild Projects="HFM.sln"
+               Targets="Rebuild"
+               Properties="Configuration=ScriptedRelease" />
 
-  <Target Name="FxCop">
-    <Exec Command="&quot;$(ProgramFiles)\Microsoft FxCop 1.36\FxCopCmd.exe&quot; /project:HFM.FxCop /out:FxCopReport.xml" />
-  </Target>
+      <MSBuild Projects="HFM.Tests.sln"
+               Targets="Rebuild"
+               Properties="Configuration=Release" />
+   </Target>
 
-  <Target Name="Zip">
-    <Zip Files="@(ZipFiles)"
-         WorkingDirectory=".\Release"
-         ZipFileName="HFM Release $(Major).$(Minor).$(Build).$(Revision).zip" />
-  </Target>
+   <Target Name="Build" DependsOnTargets="Compile">
+      <Message Text="HFM.NET Build Complete"/>
+   </Target>
+
+   <Target Name="NUnit">
+      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Helpers.Tests\bin\Release\HFM.Helpers.Tests.dll /xml=HFM.Helpers.Tests.Results.xml //a $(NUnitAsmList) //ea $(NCoverExcludeList) //x HFM.Helpers.Tests.Coverage.xml" />
+      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Instances.Tests\bin\Release\HFM.Instances.Tests.dll /xml=HFM.Instances.Tests.Results.xml //a $(NUnitAsmList) //ea $(NCoverExcludeList) //x HFM.Instances.Tests.Coverage.xml" />
+      <Exec Command="$(NCoverExpPath) *.Tests.Coverage.xml /s:Coverage.xml" />
+   </Target>
+
+   <Target Name="FxCop">
+      <Exec Command="$(FxCopPath) /project:HFM.FxCop /out:FxCopReport.xml" />
+   </Target>
+
+   <Target Name="Zip">
+      <Zip Files="@(ZipFiles)"
+           WorkingDirectory=".\Release"
+           ZipFileName="HFM Release $(Major).$(Minor).$(Build).$(Revision).zip" />
+   </Target>
 
    <Target Name ="CopyZip" Condition="'$(ZipDestination)' != ''">
       <Copy SourceFiles="HFM Release $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(ZipDestination)" />

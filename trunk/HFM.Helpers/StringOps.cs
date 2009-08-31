@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -28,18 +29,20 @@ namespace HFM.Helpers
       private const string ValidNameFirst =  "[a-zA-Z0-9\\+=\\-_\\$&^\\[\\]]";
       private const string ValidNameMiddle = "[a-zA-Z0-9\\+=\\-_\\$&^\\[\\] \\.]";
       private const string ValidNameLast =   "[a-zA-Z0-9\\+=\\-_\\$&^\\[\\]]";
-      
-      private const string ValidFileName = @"[^\\/:*?""<>|\r\n]*";
+
+      private const string ValidFileName = @"^[^\\/:*?""<>|\r\n]*$";
 
       private const string ValidWinPath = @"(?:\b[a-z]:|\\\\[a-z0-9.$_-]+\\[a-z0-9.`~!@#$%^&()_-]+)\\(?:[^\\/:*?""<>|\r\n]+\\)*";
       private const string ValidUnixPath = @"^(?:/[a-z0-9\-._~%!$&'()*+,;=:@/]*/)*$";
       
-      private const string ValidFtpServer = @"^[a-z0-9\-._%]+$";
+      private const string ValidServer = @"^[a-z0-9\-._%]+$";
       
       private const string ValidHttpURL = "(https?|file|smb)://[-A-Z0-9+&@#/%?=~_|$!:,.;]*/";
 
       private const string ValidMatchHttpOrFtpUrl =       @"\b(?<protocol>https?|ftp)://(?<domain>[-A-Z0-9.]+)(?<file>/[-A-Z0-9+&@#/%=~_|!:,.;]*)";
       private const string ValidMatchFtpWithUserPassUrl = @"\b(?<protocol>ftp)://(?<username>[A-Z0-9+&@#/%=~_|!:,.;]+):(?<password>[A-Z0-9+&@#/%=~_|!:,.;]+)@(?<domain>[-A-Z0-9.]+)(?<file>/[-A-Z0-9+&@#/%=~_|!:,.;]*)";
+      
+      private const string ValidEmailAddress = @"^[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}$";
       #endregion
    
       #region Methods
@@ -122,11 +125,11 @@ namespace HFM.Helpers
       /// Validate FTP Server Name
       /// </summary>
       /// <param name="val">String to validate</param>
-      public static bool ValidateFtpServerName(string val)
+      public static bool ValidateServerName(string val)
       {
-         Regex rValidFtpServer = new Regex(ValidFtpServer, RegexOptions.Singleline | RegexOptions.IgnoreCase);
+         Regex rValidServer = new Regex(ValidServer, RegexOptions.Singleline | RegexOptions.IgnoreCase);
          
-         return rValidFtpServer.IsMatch(val);
+         return rValidServer.IsMatch(val);
       }
 
       /// <summary>
@@ -174,12 +177,47 @@ namespace HFM.Helpers
       /// <summary>
       /// Match FTP URL String with Username and Password
       /// </summary>
-      /// <param name="val"></param>
+      /// <param name="val">String to validate</param>
       public static Match MatchFtpWithUserPassUrl(string val)
       {
          Regex rValidFtpWithUserPassUrl = new Regex(ValidMatchFtpWithUserPassUrl, RegexOptions.Singleline | RegexOptions.IgnoreCase);
 
          return rValidFtpWithUserPassUrl.Match(val);
+      }
+      
+      /// <summary>
+      /// Validate Email Address String
+      /// </summary>
+      /// <param name="val">String to validate</param>
+      public static bool ValidateEmailAddress(string val)
+      {
+         Regex rValidEmailAddress = new Regex(ValidEmailAddress, RegexOptions.Singleline | RegexOptions.IgnoreCase);
+
+         return rValidEmailAddress.IsMatch(val);
+      }
+      
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="Username"></param>
+      /// <param name="Password"></param>
+      /// <exception cref="ArgumentException">Throws when either Username or Password is Null or Empty but not the other.</exception>
+      public static bool ValidateUsernamePasswordPair(string Username, string Password)
+      {
+         if (String.IsNullOrEmpty(Username) && String.IsNullOrEmpty(Password))
+         {
+            return false;
+         }
+         if (String.IsNullOrEmpty(Username) == false && String.IsNullOrEmpty(Password))
+         {
+            throw new ArgumentException("Password must also be specified when specifying Username.");
+         }
+         else if (String.IsNullOrEmpty(Username) && String.IsNullOrEmpty(Password) == false)
+         {
+            throw new ArgumentException("Username must also be specified when specifying Password.");
+         }
+        
+         return true; 
       }
       #endregion
    }

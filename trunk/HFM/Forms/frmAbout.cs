@@ -22,7 +22,7 @@ using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-using HFM.Helpers;
+using HFM.Preferences;
 using HFM.Instrumentation;
 
 namespace HFM.Forms
@@ -34,7 +34,7 @@ namespace HFM.Forms
       {
          InitializeComponent();
 
-         lblVersion.Text = String.Format("Version {0}", PlatformOps.ApplicationLabelVersion);
+         lblVersion.Text = PlatformOps.ApplicationVersionStringWithRevisionLabel;
       } 
       #endregion
 

@@ -88,6 +88,78 @@ namespace HFM.Properties {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to File name contains invalid characters..
+        /// </summary>
+        internal static string HostFileNameInvalidChars {
+            get {
+                return ResourceManager.GetString("HostFileNameInvalidChars", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FTP path should be the full path{0}to the folder containing the{0}FAHlog.txt and unitinfo.txt{0}files (including the trailing /)..
+        /// </summary>
+        internal static string HostFtpPathInvalidTooltip {
+            get {
+                return ResourceManager.GetString("HostFtpPathInvalidTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FTP server must be a valid{0}host name or IP address..
+        /// </summary>
+        internal static string HostFtpServerInvalidTooltip {
+            get {
+                return ResourceManager.GetString("HostFtpServerInvalidTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to URL must be a valid URL and be{0}the path to the folder containing{0}the FAHlog.txt and unitinfo.txt files..
+        /// </summary>
+        internal static string HostHttpUrlInvalidTooltip {
+            get {
+                return ResourceManager.GetString("HostHttpUrlInvalidTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log Folder must be a valid local{0}or network (UNC) path..
+        /// </summary>
+        internal static string HostLocalPathInvalidTooltip {
+            get {
+                return ResourceManager.GetString("HostLocalPathInvalidTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Instance name can contain only letters, numbers,{0}and basic symbols (+=-_$&amp;^.[]). It must be at{0}least three characters long and must not begin or{0}end with a dot (.) or a space..
+        /// </summary>
+        internal static string HostNameToolTip {
+            get {
+                return ResourceManager.GetString("HostNameToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Client Processor Megahertz must be greater than zero..
+        /// </summary>
+        internal static string HostProcessorMhzGreaterThanZero {
+            get {
+                return ResourceManager.GetString("HostProcessorMhzGreaterThanZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Client Processor Megahertz must be numeric..
+        /// </summary>
+        internal static string HostProcessorMhzNumeric {
+            get {
+                return ResourceManager.GetString("HostProcessorMhzNumeric", resourceCulture);
+            }
+        }
+        
         internal static System.Drawing.Bitmap Maximize {
             get {
                 object obj = ResourceManager.GetObject("Maximize", resourceCulture);

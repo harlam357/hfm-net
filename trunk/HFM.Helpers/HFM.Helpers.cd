@@ -5,21 +5,14 @@
     <Position X="5.25" Y="0.5" Width="2" />
     <TypeIdentifier>
       <FileName>NetworkOps.cs</FileName>
-      <HashCode>AAAAABAAAAAACAAAAAIAAAAAAIAAAACAAAABAAAAEAA=</HashCode>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="HFM.Helpers.PlatformOps">
-    <Position X="7.5" Y="2.5" Width="2" />
-    <TypeIdentifier>
-      <FileName>PlatformOps.cs</FileName>
-      <HashCode>AAAAAAAAAAAAAAAgAAAAQAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAABAAAAAACAAgAAIAAAAAAoAAAACAAAABAAAAEAA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="HFM.Helpers.StringOps">
     <Position X="2.75" Y="0.5" Width="2.25" />
     <TypeIdentifier>
       <FileName>StringOps.cs</FileName>
-      <HashCode>gAAgEAQAEAQEAAAAYhAQEIAAAAAAEAAABSIAAQAAAAA=</HashCode>
+      <HashCode>gAAgEAQAEAQAAAAAYhAQEIAQAAAAEAAABQICAQgAAAQ=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="HFM.Helpers.UserStatsDataContainer">
@@ -36,8 +29,15 @@
       <HashCode>AAAAAAAAAAAAAAAAAAAAAIQAAAAAAIAAAAAAAAABAgA=</HashCode>
     </TypeIdentifier>
   </Class>
+  <Class Name="HFM.Helpers.RegistryOps">
+    <Position X="7.5" Y="2.5" Width="2" />
+    <TypeIdentifier>
+      <FileName>RegistryOps.cs</FileName>
+      <HashCode>AAAAIAACIAAAAAAAAAAAAAAAAAAAAAQCAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
   <Enum Name="HFM.Helpers.DownloadType">
-    <Position X="5.5" Y="3" Width="1.5" />
+    <Position X="5.5" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <FileName>NetworkOps.cs</FileName>
       <HashCode>AAAAAAAAAAAIAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>

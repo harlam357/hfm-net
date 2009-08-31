@@ -25,6 +25,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Security.Cryptography;
+
+using harlam357.Security;
+using harlam357.Security.Encryption;
 
 using HFM.Helpers;
 using HFM.Instrumentation;
@@ -34,17 +38,17 @@ using HFM.Preferences;
 namespace HFM.Instances
 {
    #region Enum
-   public enum ClientStatus
-   {
-      Unknown,
-      Offline,
-      Stopped,
-      EuePause,
-      Hung,
-      Paused,
-      RunningNoFrameTimes,
-      Running
-   }
+   //public enum ClientStatus
+   //{
+   //   Unknown,
+   //   Offline,
+   //   Stopped,
+   //   EuePause,
+   //   Hung,
+   //   Paused,
+   //   RunningNoFrameTimes,
+   //   Running
+   //}
 
    public enum InstanceType
    {
@@ -76,7 +80,10 @@ namespace HFM.Instances
       public const string LocalUnitInfo = "unitinfo.txt";
       
       public const string DefaultUserID = "";
-      public const int DefaultMachineID = 0; 
+      public const int DefaultMachineID = 0;
+
+      private const string IV = "0=<'p`T.tymQGo&e!E](_$K>El.rcIm2TrIu}PY;3PM/03lT4.)g^dxi;XG}Fmx9";
+      private const string SymmetricKey = "6}&Y%@dXk#X/L9kaszfHrt8_&)N,d4iQoPG[<%'&STR(K0.mfHE+=DS]=?5(LZ^T";
       #endregion
       
       #region Public Events
@@ -134,8 +141,19 @@ namespace HFM.Instances
       #endregion
 
       #region Public Properties and Related Private Members
-
-      #region Retrieval In Progress Flag
+      /// <summary>
+      /// Local flag set when retrieval acts on the status returned from parse
+      /// </summary>
+      private bool _HandleStatusOnRetrieve = true;
+      /// <summary>
+      /// Local flag set when retrieval acts on the status returned from parse
+      /// </summary>
+      public bool HandleStatusOnRetrieve
+      {
+         get { return _HandleStatusOnRetrieve; }
+         set { _HandleStatusOnRetrieve = value; }
+      } 
+      
       /// <summary>
       /// Local flag set when log retrieval is in progress
       /// </summary>
@@ -147,7 +165,6 @@ namespace HFM.Instances
       {
          get { return _RetrievalInProgress; }
       } 
-      #endregion
       
       #region User Specified Values (from the frmHost dialog)
       /// <summary>
@@ -343,6 +360,19 @@ namespace HFM.Instances
       } 
       #endregion
 
+      /// <summary>
+      /// List of current log file lines
+      /// </summary>
+      private IList<LogLine> _CurrentLogLines = new List<LogLine>();
+      /// <summary>
+      /// List of current log file text lines
+      /// </summary>
+      public IList<LogLine> CurrentLogLines
+      {
+         get { return _CurrentLogLines; }
+         set { _CurrentLogLines = value; }
+      }
+
       #region Values captured during log file parse
       /// <summary>
       /// Status of this client
@@ -354,19 +384,14 @@ namespace HFM.Instances
       public ClientStatus Status
       {
          get { return _Status; }
-         set { _Status = value; }
-      }
-
-      /// <summary>
-      /// List of current log file lines
-      /// </summary>
-      private IList<LogLine> _CurrentLogLines = new List<LogLine>();
-      /// <summary>
-      /// List of current log file text lines
-      /// </summary>
-      public IList<LogLine> CurrentLogLines
-      {
-         get { return _CurrentLogLines; }
+         set 
+         { 
+            if (_Status != value)
+            {
+               _Status = value;
+               //OnStatusChanged(EventArgs.Empty);
+            }
+         }
       }
 
       /// <summary>
@@ -570,56 +595,7 @@ namespace HFM.Instances
       /// </summary>
       public void SetTimeBasedValues()
       {
-         SetTimeBasedValues(CurrentUnitInfo);
-      }
-
-      /// <summary>
-      /// Sets the time based values (FramesComplete, PercentComplete, TimePerFrame, UPD, PPD, ETA)
-      /// </summary>
-      public void SetTimeBasedValues(UnitInfo unit)
-      {
-         //if ((unit.RawFramesTotal != 0) && (unit.RawFramesComplete != 0))
-         //{
-            if (unit.RawTimePerSection != 0)
-            {
-               try
-               {
-                  Int32 FramesTotal = ProteinCollection.Instance[unit.ProjectID].Frames;
-                  Int32 RawScaleFactor = unit.RawFramesTotal / FramesTotal;
-
-                  //TODO: FramesComplete is pretty isolated here... can it be moved into this routine and not exposed at the class level?
-                  unit.FramesComplete = unit.RawFramesComplete / RawScaleFactor;
-                  unit.PercentComplete = unit.FramesComplete * 100 / FramesTotal;
-                  unit.TimePerFrame = new TimeSpan(0, 0, Convert.ToInt32(unit.RawTimePerSection));
-
-                  unit.UPD = ProteinCollection.Instance[unit.ProjectID].GetUPD(unit.TimePerFrame);
-                  unit.PPD = ProteinCollection.Instance[unit.ProjectID].GetPPD(unit.TimePerFrame);
-                  unit.ETA = new TimeSpan((100 - unit.PercentComplete) * unit.TimePerFrame.Ticks);
-               }
-               catch (Exception ex)
-               {
-                  HfmTrace.WriteToHfmConsole(ex);
-               }
-            }
-            else if (Status.Equals(ClientStatus.RunningNoFrameTimes))
-            {
-               // If we have frames but no section time, try pulling the percent complete from the UnitFrame data
-               if (unit.PercentComplete == 0)
-               {
-                  // Only if we didn't get a reading from the unitinfo.txt parse
-                  unit.PercentComplete = unit.LastUnitFramePercent;
-               }
-
-               TimeSpan benchmarkAverageTimePerFrame = ProteinBenchmarkCollection.Instance.GetBenchmarkAverageFrameTime(unit);
-               if (benchmarkAverageTimePerFrame.Equals(TimeSpan.Zero) == false)
-               {
-                  unit.TimePerFrame = benchmarkAverageTimePerFrame;
-                  unit.UPD = ProteinCollection.Instance[unit.ProjectID].GetUPD(unit.TimePerFrame);
-                  unit.PPD = ProteinCollection.Instance[unit.ProjectID].GetPPD(unit.TimePerFrame);
-                  unit.ETA = new TimeSpan((100 - unit.PercentComplete) * unit.TimePerFrame.Ticks);
-               }
-            }
-         //}
+         CurrentUnitInfo.SetTimeBasedValues(Status, ProteinBenchmarkCollection.Instance.GetBenchmarkAverageFrameTime(CurrentUnitInfo));
       }
 
       /// <summary>
@@ -641,15 +617,37 @@ namespace HFM.Instances
       }
 
       /// <summary>
-      /// Determines what values to feed the DetermineStatus routine and then calls it
+      /// Handles the Client Status Returned by Log Parsing and then determines what values to feed the DetermineStatus routine.
       /// </summary>
-      /// <param name="Instance">Client Instance</param>
-      private static void DetermineStatusWrapper(ClientInstance Instance)
+      /// <param name="returnedStatus">Client Status</param>
+      private void HandleReturnedStatus(ClientStatus returnedStatus)
       {
-         // if we have a frame time, use it
-         if (Instance.CurrentUnitInfo.RawTimePerSection > 0)
+         // If the returned status is EuePause and current status is not
+         if (returnedStatus.Equals(ClientStatus.EuePause) && Status.Equals(ClientStatus.EuePause) == false)
          {
-            Instance.Status = DetermineStatus(Instance, Instance.CurrentUnitInfo.TimeOfLastFrame, Instance.CurrentUnitInfo.RawTimePerSection);
+            SendEuePauseEmail();
+         }
+
+         switch (returnedStatus)
+         {
+            case ClientStatus.Running:
+            case ClientStatus.RunningNoFrameTimes:
+               break;
+            case ClientStatus.Unknown:
+            case ClientStatus.Offline:
+            case ClientStatus.Stopped:
+            case ClientStatus.Paused:
+            case ClientStatus.EuePause:
+            case ClientStatus.Hung:
+               // Update Client Status - don't call Determine Status
+               Status = returnedStatus;
+               return;
+         }
+      
+         // if we have a frame time, use it
+         if (CurrentUnitInfo.RawTimePerSection > 0)
+         {
+            Status = DetermineStatus(this, CurrentUnitInfo.TimeOfLastFrame, CurrentUnitInfo.RawTimePerSection);
          }
 
          // no frame time based on the current PPD calculation selection ('LastFrame', 'LastThreeFrames', etc)
@@ -658,20 +656,24 @@ namespace HFM.Instances
          else 
          {
             // if we have a frame time stamp, use it
-            TimeSpan frameTime = Instance.CurrentUnitInfo.TimeOfLastFrame;
+            TimeSpan frameTime = CurrentUnitInfo.TimeOfLastFrame;
             if (frameTime == TimeSpan.Zero)
             {
                // otherwise, use the unit start time
-               frameTime = Instance.CurrentUnitInfo.UnitStartTime;
+               frameTime = CurrentUnitInfo.UnitStartTime;
             }
 
             // get the average frame time for this client and project id
-            TimeSpan averageFrameTime = ProteinBenchmarkCollection.Instance.GetBenchmarkAverageFrameTime(Instance.CurrentUnitInfo);
+            TimeSpan averageFrameTime = ProteinBenchmarkCollection.Instance.GetBenchmarkAverageFrameTime(CurrentUnitInfo);
             if (averageFrameTime > TimeSpan.Zero)
             {
-               if (DetermineStatus(Instance, frameTime, Convert.ToInt32(averageFrameTime.TotalSeconds)).Equals(ClientStatus.Hung))
+               if (DetermineStatus(this, frameTime, Convert.ToInt32(averageFrameTime.TotalSeconds)).Equals(ClientStatus.Hung))
                {
-                  Instance.Status = ClientStatus.Hung;
+                  Status = ClientStatus.Hung;
+               }
+               else
+               {
+                  Status = returnedStatus;
                }
             }
 
@@ -679,24 +681,33 @@ namespace HFM.Instances
             // we want to give the client plenty of time to show progress but don't want it to sit idle for days
             else 
             {
-               if (Instance.CurrentUnitInfo.TypeOfClient.Equals(ClientType.GPU))
+               // CPU: use 1 hour (3600 seconds) as a base frame time
+               int SectionTime = 3600;
+               if (CurrentUnitInfo.TypeOfClient.Equals(ClientType.GPU))
                {
-                  // GPU: use 5 minutes (300 seconds) as a base frame time
-                  if (DetermineStatus(Instance, frameTime, 300).Equals(ClientStatus.Hung))
-                  {
-                     Instance.Status = ClientStatus.Hung;
-                  }
+                  // GPU: use 10 minutes (600 seconds) as a base frame time
+                  SectionTime = 600;
+               }
+
+               if (DetermineStatus(this, frameTime, SectionTime).Equals(ClientStatus.Hung))
+               {
+                  Status = ClientStatus.Hung;
                }
                else
                {
-                  // CPU: use 1 hour (3600 seconds) as a base frame time
-                  if (DetermineStatus(Instance, frameTime, 3600).Equals(ClientStatus.Hung))
-                  {
-                     Instance.Status = ClientStatus.Hung;
-                  }
-               } 
+                  Status = returnedStatus;
+               }
             }
          }
+      }
+
+      private void SendEuePauseEmail()
+      {
+         string messageBody = String.Format("HFM.NET detected Client {0} has entered a 24 hour EUE Pause state.", InstanceName);
+         
+         PreferenceSet Prefs = PreferenceSet.Instance;
+         NetworkOps.SendEmail(Prefs.EmailReportingFromAddress, Prefs.EmailReportingToAddress, "HFM.NET EUE Pause Error", messageBody, 
+                              Prefs.EmailReportingServerAddress, Prefs.EmailReportingServerUsername, Prefs.EmailReportingServerPassword);
       }
       
       /// <summary>
@@ -813,95 +824,123 @@ namespace HFM.Instances
       {
          DateTime Start = HfmTrace.ExecStart;
 
-         UnitInfo parsedUnitInfo = null;
-
          LogReader lr = new LogReader();
          lr.ReadLogText(this, System.IO.Path.Combine(BaseDirectory, CachedFAHLogName));
          lr.ScanFAHLog(this);
          
-         LogParser lp = new LogParser();
+         UnitInfo parsedUnitInfo;
+         ClientStatus returnedStatus;
          
+         #region Parse Previous Work Unit and Update Benchmarks
+         
+         // Make sure we have a previous log lines to parse. 
+         // We don't want to write trace errors if there is not.
          IList<LogLine> logLines = lr.PreviousWorkUnitLogLines;
          if (logLines != null)
          {
             parsedUnitInfo = new UnitInfo(InstanceName, Path, FoldingID, Team);
-            lp.ParseFAHLog(this, logLines, parsedUnitInfo);
-            
-            // check this against the CurrentUnitInfo
-            if (IsUnitInfoCurrentUnitInfo(parsedUnitInfo))
+            returnedStatus = ProcessWorkUnitLogLines(logLines, parsedUnitInfo);
+
+            // Make sure we have a client status and the project (r/c/g) is known
+            // This will halt unknown projects from being added to the benchmark data
+            if (returnedStatus.Equals(ClientStatus.Unknown) == false && parsedUnitInfo.ProjectIsUnknown == false)
             {
-               // current frame has already been recorded, increment to the next frame
-               int previousFramePercent = CurrentUnitInfo.LastUnitFramePercent + 1;
+               // check this against the CurrentUnitInfo
+               if (IsUnitInfoCurrentUnitInfo(parsedUnitInfo))
+               {
+                  // current frame has already been recorded, increment to the next frame
+                  int previousFramePercent = CurrentUnitInfo.LastUnitFramePercent + 1;
 
-               // update the UnitFrames
-               CurrentUnitInfo.UnitFrames = parsedUnitInfo.UnitFrames;
-               CurrentUnitInfo.CurrentFrame = parsedUnitInfo.CurrentFrame;
-               CurrentUnitInfo.FramesObserved = parsedUnitInfo.FramesObserved;
+                  // update the UnitFrames
+                  CurrentUnitInfo.UnitFrames = parsedUnitInfo.UnitFrames;
+                  CurrentUnitInfo.CurrentFrame = parsedUnitInfo.CurrentFrame;
+                  CurrentUnitInfo.FramesObserved = parsedUnitInfo.FramesObserved;
+                  
+                  // update FoldingID and Team - user could have stopped HFM and restarted later with
+                  // a different FoldingID and Team.  Since these values are written to the CompletedUnits.csv
+                  // file on unit completion, we should make sure we update the current with what was most
+                  // recently parsed.
+                  CurrentUnitInfo.FoldingID = parsedUnitInfo.FoldingID;
+                  CurrentUnitInfo.Team = parsedUnitInfo.Team;
 
-               // set the frame times and calculate values
-               CurrentUnitInfo.SetFrameTimes();
-               SetTimeBasedValues();
-               ProteinBenchmarkCollection.Instance.UpdateBenchmarkData(CurrentUnitInfo, previousFramePercent, CurrentUnitInfo.LastUnitFramePercent);
-            }
-         }
-         
-         logLines = lr.CurrentWorkUnitLogLines;
-         if (logLines != null)
-         {
-            _CurrentLogLines = logLines;
-            
-            Status = ClientStatus.RunningNoFrameTimes;
-
-            parsedUnitInfo = new UnitInfo(InstanceName, Path, FoldingID, Team);
-            if (lp.ParseUnitInfoFile(System.IO.Path.Combine(BaseDirectory, CachedUnitInfoName), this, parsedUnitInfo) == false)
-            {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} ({1}) unitinfo parse failed.", HfmTrace.FunctionName, InstanceName));
-            }
-            lp.ParseFAHLog(this, logLines, parsedUnitInfo);
-
-            int currentFrames = 0;
-            // check this against the CurrentUnitInfo
-            if (IsUnitInfoCurrentUnitInfo(parsedUnitInfo))
-            {
-               // current frame has already been recorded, increment to the next frame
-               currentFrames = CurrentUnitInfo.LastUnitFramePercent + 1;
-            }
-
-            // set the frame times and calculate values
-            parsedUnitInfo.SetFrameTimes();
-            SetTimeBasedValues(parsedUnitInfo);
-            ProteinBenchmarkCollection.Instance.UpdateBenchmarkData(parsedUnitInfo, currentFrames, parsedUnitInfo.LastUnitFramePercent);
-         }
-
-         if (parsedUnitInfo != null)
-         {
-            // Parsed is now Current
-            CurrentUnitInfo = parsedUnitInfo;
-
-            if (Status == ClientStatus.Stopped ||
-                Status == ClientStatus.EuePause ||
-                Status == ClientStatus.Paused)
-            {
-               // client is stopped or paused, clear PPD values
-               CurrentUnitInfo.ClearTimeBasedValues();
+                  // Update benchmarks
+                  ProteinBenchmarkCollection.Instance.UpdateBenchmarkData(CurrentUnitInfo, previousFramePercent, CurrentUnitInfo.LastUnitFramePercent);
+               }
             }
             else
             {
-               DetermineStatusWrapper(this);
-               if (Status.Equals(ClientStatus.Hung))
-               {
-                  // client is hung, clear PPD values
-                  CurrentUnitInfo.ClearTimeBasedValues();
-               }
+               HfmTrace.WriteToHfmConsole(TraceLevel.Error, String.Format("Unable to Parse Previous Work Unit for Client '{0}'", InstanceName), true);
+            }
+         }
+         
+         #endregion
+
+         #region Parse Current Work Unit and Update Benchmarks
+
+         // There should always be a list of current work unit log lines
+         parsedUnitInfo = new UnitInfo(InstanceName, Path, FoldingID, Team);
+         returnedStatus = ProcessWorkUnitLogLines(lr.CurrentWorkUnitLogLines, parsedUnitInfo, true);
+
+         // Make sure we have a client status and the project (r/c/g) is known
+         // This will halt unknown projects from being added to the benchmark data
+         if (returnedStatus.Equals(ClientStatus.Unknown) == false && parsedUnitInfo.ProjectIsUnknown == false)
+         {
+            int previousFramePercent = 0;
+            // check this against the CurrentUnitInfo
+            if (IsUnitInfoCurrentUnitInfo(parsedUnitInfo))
+            {
+               // current frame has already been recorded, increment to the next frame
+               previousFramePercent = CurrentUnitInfo.LastUnitFramePercent + 1;
+            }
+
+            // Parsed is now Current
+            CurrentUnitInfo = parsedUnitInfo;
+            // Update benchmarks
+            ProteinBenchmarkCollection.Instance.UpdateBenchmarkData(CurrentUnitInfo, previousFramePercent, CurrentUnitInfo.LastUnitFramePercent);
+            
+            /*** Setting this flag false aids in Unit Test since the results of *
+             *   determining status are relative to the current time of day. ***/
+            if (HandleStatusOnRetrieve)
+            {
+               // Handle the status retured from the log parse
+               HandleReturnedStatus(returnedStatus);
+            }
+            else
+            {
+               Status = returnedStatus;
             }
          }
          else
          {
-            // Clear the time based values when log parsing fails
-            CurrentUnitInfo.ClearTimeBasedValues();
+            Status = ClientStatus.Offline;
+            HfmTrace.WriteToHfmConsole(TraceLevel.Error, String.Format("Unable to Parse Current Work Unit for Client '{0}'", InstanceName), true);
          }
+         
+         #endregion
+         
+         //TODO: Make check here for work unit log viewing option
+         _CurrentLogLines = lr.CurrentWorkUnitLogLines;
 
          HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, Start);
+      }
+
+      private ClientStatus ProcessWorkUnitLogLines(IList<LogLine> LogLines, UnitInfo parsedUnitInfo)
+      {
+         return ProcessWorkUnitLogLines(LogLines, parsedUnitInfo, false);
+      }
+
+      private ClientStatus ProcessWorkUnitLogLines(IList<LogLine> LogLines, UnitInfo parsedUnitInfo, bool ReadUnitInfoFile)
+      {
+         LogParser lp = new LogParser(this, parsedUnitInfo);
+         if (ReadUnitInfoFile)
+         {
+            if (lp.ParseUnitInfoFile(System.IO.Path.Combine(BaseDirectory, CachedUnitInfoName)) == false)
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, "unitinfo parse failed.");
+            }
+         }
+
+         return lp.ParseFAHLog(LogLines);
       }
 
       /// <summary>
@@ -940,9 +979,6 @@ namespace HFM.Instances
          {
             Status = ClientStatus.Offline;
             HfmTrace.WriteToHfmConsole(InstanceName, ex);
-
-            // Clear the time based values when log retrieval fails
-            CurrentUnitInfo.ClearTimeBasedValues();
          }
          finally
          {
@@ -1130,7 +1166,25 @@ namespace HFM.Instances
             xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropPath, Path));
             xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropServ, Server));
             xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropUser, Username));
-            xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropPass, Password));
+
+            Symmetric SymetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
+            SymetricProvider.IntializationVector = new Data(IV);
+            SymetricProvider.Key = new Data(SymmetricKey);
+            
+            string encryptedPassword = String.Empty;
+            if (Password.Length > 0)
+            {
+               try
+               {
+                  encryptedPassword = SymetricProvider.Encrypt(new Data(Password)).ToString();
+               }
+               catch (CryptographicException)
+               {
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, "Failed to encrypt Server Password... saving clear value.");
+                  encryptedPassword = Password;
+               }
+            }
+            xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropPass, encryptedPassword));
             
             return xmlData;
          }
@@ -1249,13 +1303,28 @@ namespace HFM.Instances
             HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Cannot load Server Username."));
          }
          
+         Symmetric SymetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
+         SymetricProvider.IntializationVector = new Data(IV);
+         SymetricProvider.Key = new Data(SymmetricKey);
+         
          try
          {
-            Password = xmlData.SelectSingleNode(xmlPropPass).InnerText;
+            Password = String.Empty;
+            if (xmlData.SelectSingleNode(xmlPropPass).InnerText.Length > 0)
+            {
+               try
+               {
+                  Password = SymetricProvider.Decrypt(new Data(xmlData.SelectSingleNode(xmlPropPass).InnerText)).ToString();
+               }
+               catch (CryptographicException)
+               {
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, "Cannot decrypt Server Password... loading clear value.");
+                  Password = xmlData.SelectSingleNode(xmlPropPass).InnerText;
+               }
+            }
          }
          catch (NullReferenceException)
          {
-            Password = String.Empty;
             HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Cannot load Server Password."));
          }
 

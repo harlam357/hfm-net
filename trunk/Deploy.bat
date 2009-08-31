@@ -14,6 +14,7 @@ copy /Y HFM.Instrumentation.dll %1
 copy /Y HFM.Preferences.dll %1
 copy /Y HFM.Proteins.dll %1
 copy /Y HTMLparser.dll %1
+copy /Y harlam357.Security.dll %1
 
 echo Copying Support Files and Folders...
 copy /Y GPLv2.TXT %1
