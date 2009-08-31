@@ -14,7 +14,7 @@
       <NCoverPath>&quot;$(ProgramFiles)\NCover\NCover.Console.exe&quot;</NCoverPath>
       <NCoverExcludeList>System.Runtime.CompilerServices.CompilerGeneratedAttribute</NCoverExcludeList>
       <NCoverExpPath>&quot;$(ProgramFiles)\NCoverExplorer\NCoverExplorer.Console.exe&quot;</NCoverExpPath>
-      <NUnitPath>&quot;$(ProgramFiles)\NUnit 2.4.8\bin\nunit-console.exe&quot;</NUnitPath>
+      <NUnitPath>&quot;$(ProgramFiles)\NUnit 2.4.8\bin\nunit-console-x86.exe&quot;</NUnitPath>
       <NUnitAsmList>HFM.Helpers;HFM.Instances;HFM.Instrumentation;HFM.Preferences;HFM.Proteins</NUnitAsmList>
    </PropertyGroup>
 
