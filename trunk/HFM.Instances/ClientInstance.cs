@@ -82,8 +82,8 @@ namespace HFM.Instances
       public const string DefaultUserID = "";
       public const int DefaultMachineID = 0;
 
-      private const string IV = "0=<'p`T.tymQGo&e!E](_$K>El.rcIm2TrIu}PY;3PM/03lT4.)g^dxi;XG}Fmx9";
-      private const string SymmetricKey = "6}&Y%@dXk#X/L9kaszfHrt8_&)N,d4iQoPG[<%'&STR(K0.mfHE+=DS]=?5(LZ^T";
+      private const string IV = "zX!1=D,^7K@u33+d";
+      private const string SymmetricKey = "cNx/7+,?%ubm*?j8";
       #endregion
       
       #region Public Events

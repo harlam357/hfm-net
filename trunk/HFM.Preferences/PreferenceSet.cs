@@ -82,8 +82,8 @@ namespace HFM.Preferences
 
       public const string UnassignedDescription = "Unassigned Description";
 
-      private const string IV = "WN`f,cgvR{iDY^[=mS>0[0#BL;/7.td7aV=3p1O#:68n/$`]qyIF)e*@7qZ{RTUS";
-      private const string SymmetricKey = "TJ5[7EB;L:Enmw#Y'5Q.P81v^o,06!Hf_4f&hNBC$9Rh*tK}pnNK7D&<r]Fq#%Hy";
+      private const string IV = "3k1vKL=Cz6!wZS`I";
+      private const string SymmetricKey = "%`Bb9ega;$.GUDaf";
       #endregion
 
       #region Public Properties and associated Private Variables
