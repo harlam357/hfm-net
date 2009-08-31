@@ -703,12 +703,16 @@ namespace HFM.Instances
 
       private void SendEuePauseEmail()
       {
-         string messageBody = String.Format("HFM.NET detected Client {0} has entered a 24 hour EUE Pause state.", InstanceName);
-         
          PreferenceSet Prefs = PreferenceSet.Instance;
-         NetworkOps.SendEmail(Prefs.EmailReportingFromAddress, Prefs.EmailReportingToAddress, "HFM.NET EUE Pause Error", messageBody, 
-                              Prefs.EmailReportingServerAddress, Prefs.EmailReportingServerUsername, Prefs.EmailReportingServerPassword);
+
+         if (Prefs.EmailReportingEnabled) 
+         {
+            string messageBody = String.Format("HFM.NET detected that Client '{0}' has entered a 24 hour EUE Pause state.", InstanceName);
+            NetworkOps.SendEmail(Prefs.EmailReportingFromAddress, Prefs.EmailReportingToAddress, "HFM.NET - Client EUE Pause Error",
+                                 messageBody, Prefs.EmailReportingServerAddress, Prefs.EmailReportingServerUsername,
+                                 Prefs.EmailReportingServerPassword);
       }
+   }
       
       /// <summary>
       /// Determine Client Status
