@@ -82,8 +82,8 @@ namespace HFM.Preferences
 
       public const string UnassignedDescription = "Unassigned Description";
 
-      private const string IV = "3k1vKL=Cz6!wZS`I";
-      private const string SymmetricKey = "%`Bb9ega;$.GUDaf";
+      private readonly Data IV = new Data("3k1vKL=Cz6!wZS`I");
+      private readonly Data SymmetricKey = new Data("%`Bb9ega;$.GUDaf");
       #endregion
 
       #region Public Properties and associated Private Variables
@@ -586,12 +586,9 @@ namespace HFM.Preferences
       public void Load()
       {
          DateTime Start = HfmTrace.ExecStart;
+         Symmetric SymmetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
 
          UpgradeUserSettings();
-         
-         Symmetric SymetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
-         SymetricProvider.IntializationVector = new Data(IV);
-         SymetricProvider.Key = new Data(SymmetricKey);
 
          _CSSFile = Settings.Default.CSSFile;
 
@@ -622,7 +619,13 @@ namespace HFM.Preferences
          {
             try
             {
-               _WebRoot = SymetricProvider.Decrypt(new Data(Settings.Default.WebRoot)).ToString();
+               SymmetricProvider.IntializationVector = IV;
+               _WebRoot = SymmetricProvider.Decrypt(new Data(Utils.FromBase64(Settings.Default.WebRoot)), SymmetricKey).ToString();
+            }
+            catch (FormatException)
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "WebGen Root Folder is not Base64 encoded... loading clear value.", true);
+               _WebRoot = Settings.Default.WebRoot;
             }
             catch (CryptographicException)
             {
@@ -646,7 +649,13 @@ namespace HFM.Preferences
          {
             try
             {
-               _ProxyPass = SymetricProvider.Decrypt(new Data(Settings.Default.ProxyPass)).ToString();
+               SymmetricProvider.IntializationVector = IV;
+               _ProxyPass = SymmetricProvider.Decrypt(new Data(Utils.FromBase64(Settings.Default.ProxyPass)), SymmetricKey).ToString();
+            }
+            catch (FormatException)
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Proxy Password is not Base64 encoded... loading clear value.", true);
+               _ProxyPass = Settings.Default.ProxyPass;
             }
             catch (CryptographicException)
             {
@@ -736,8 +745,14 @@ namespace HFM.Preferences
          {
             try
             {
+               SymmetricProvider.IntializationVector = IV;
                _EmailReportingServerPassword =
-                  SymetricProvider.Decrypt(new Data(Settings.Default.EmailReportingServerPassword)).ToString();
+                  SymmetricProvider.Decrypt(new Data(Utils.FromBase64(Settings.Default.EmailReportingServerPassword)), SymmetricKey).ToString();
+            }
+            catch (FormatException)
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Stmp Server Password is not Base64 encoded... loading clear value.", true);
+               _EmailReportingServerPassword = Settings.Default.EmailReportingServerPassword;
             }
             catch (CryptographicException)
             {
@@ -758,9 +773,7 @@ namespace HFM.Preferences
 
       private static void UpgradeUserSettings()
       {
-         // Only store Major.Minor.Build, Changes to Settings will
-         // only be made when these numbers change, not Revision!!!
-         string appVersionString = PlatformOps.ApplicationVersion;
+         string appVersionString = PlatformOps.ApplicationVersionWithRevision;
 
          if (Settings.Default.ApplicationVersion != appVersionString)
          {
@@ -785,9 +798,7 @@ namespace HFM.Preferences
       {
          DateTime Start = HfmTrace.ExecStart;
 
-         Symmetric SymetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
-         SymetricProvider.IntializationVector = new Data(IV);
-         SymetricProvider.Key = new Data(SymmetricKey);
+         Symmetric SymmetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
 
          try
          {
@@ -802,7 +813,8 @@ namespace HFM.Preferences
             {
                try
                {
-                  Settings.Default.WebRoot = SymetricProvider.Encrypt(new Data(_WebRoot)).ToString();
+                  SymmetricProvider.IntializationVector = IV;
+                  Settings.Default.WebRoot = SymmetricProvider.Encrypt(new Data(_WebRoot), SymmetricKey).ToBase64();
                }
                catch (CryptographicException)
                {
@@ -826,7 +838,8 @@ namespace HFM.Preferences
             {
                try
                {
-                  Settings.Default.ProxyPass = SymetricProvider.Encrypt(new Data(_ProxyPass)).ToString();
+                  SymmetricProvider.IntializationVector = IV;
+                  Settings.Default.ProxyPass = SymmetricProvider.Encrypt(new Data(_ProxyPass), SymmetricKey).ToBase64();
                }
                catch (CryptographicException)
                {
@@ -883,8 +896,9 @@ namespace HFM.Preferences
             {
                try
                {
+                  SymmetricProvider.IntializationVector = IV;
                   Settings.Default.EmailReportingServerPassword =
-                     SymetricProvider.Encrypt(new Data(_EmailReportingServerPassword)).ToString();
+                     SymmetricProvider.Encrypt(new Data(_EmailReportingServerPassword), SymmetricKey).ToBase64();
                }
                catch (CryptographicException)
                {

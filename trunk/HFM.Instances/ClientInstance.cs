@@ -82,8 +82,8 @@ namespace HFM.Instances
       public const string DefaultUserID = "";
       public const int DefaultMachineID = 0;
 
-      private const string IV = "zX!1=D,^7K@u33+d";
-      private const string SymmetricKey = "cNx/7+,?%ubm*?j8";
+      private readonly Data IV = new Data("zX!1=D,^7K@u33+d");
+      private readonly Data SymmetricKey = new Data("cNx/7+,?%ubm*?j8");
       #endregion
       
       #region Public Events
@@ -1172,15 +1172,14 @@ namespace HFM.Instances
             xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropUser, Username));
 
             Symmetric SymetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
-            SymetricProvider.IntializationVector = new Data(IV);
-            SymetricProvider.Key = new Data(SymmetricKey);
             
             string encryptedPassword = String.Empty;
             if (Password.Length > 0)
             {
                try
                {
-                  encryptedPassword = SymetricProvider.Encrypt(new Data(Password)).ToString();
+                  SymetricProvider.IntializationVector = IV;
+                  encryptedPassword = SymetricProvider.Encrypt(new Data(Password), SymmetricKey).ToBase64();
                }
                catch (CryptographicException)
                {
@@ -1308,8 +1307,6 @@ namespace HFM.Instances
          }
          
          Symmetric SymetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
-         SymetricProvider.IntializationVector = new Data(IV);
-         SymetricProvider.Key = new Data(SymmetricKey);
          
          try
          {
@@ -1318,7 +1315,13 @@ namespace HFM.Instances
             {
                try
                {
-                  Password = SymetricProvider.Decrypt(new Data(xmlData.SelectSingleNode(xmlPropPass).InnerText)).ToString();
+                  SymetricProvider.IntializationVector = IV;
+                  Password = SymetricProvider.Decrypt(new Data(Utils.FromBase64(xmlData.SelectSingleNode(xmlPropPass).InnerText)), SymmetricKey).ToString();
+               }
+               catch (FormatException)
+               {
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, "Server Password is not Base64 encoded... loading clear value.");
+                  Password = xmlData.SelectSingleNode(xmlPropPass).InnerText;
                }
                catch (CryptographicException)
                {
