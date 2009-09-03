@@ -155,7 +155,7 @@ namespace HFM.Instances
          XmlElement xmlData = xmlDoc.DocumentElement;
 
          //    <UnitInfo>
-         //        <DateStarted>10 August 09:37:33</DateStarted>
+         //        <DownloadTime>10 August 09:37:33</DownloadTime>
          //        <FramesComplete>35</FramesComplete>
          //        <PercentComplete>35</PercentComplete>
          //        <TimePerFrame>1h 15m 44s</TimePerFrame>
@@ -166,13 +166,27 @@ namespace HFM.Instances
 
          XMLOps.setXmlNode(xmlData, "HFMVersion", PlatformOps.ApplicationVersionStringWithRevision);
 
-         XMLOps.setXmlNode(xmlData, "UnitInfo/DateStarted", Instance.CurrentUnitInfo.DownloadTime.ToString("d MMMM yyyy hh:mm tt"));
+         if (Instance.CurrentUnitInfo.DownloadTime.Equals(DateTime.MinValue))
+         {
+            XMLOps.setXmlNode(xmlData, "UnitInfo/DownloadTime", "Unknown");
+         }
+         else
+         {
+            XMLOps.setXmlNode(xmlData, "UnitInfo/DownloadTime", Instance.CurrentUnitInfo.DownloadTime.ToString("d MMMM yyyy hh:mm tt"));
+         }
          XMLOps.setXmlNode(xmlData, "UnitInfo/FramesComplete", String.Format("{0}", Instance.CurrentUnitInfo.FramesComplete));
          XMLOps.setXmlNode(xmlData, "UnitInfo/PercentComplete", String.Format("{0}", Instance.CurrentUnitInfo.PercentComplete));
          XMLOps.setXmlNode(xmlData, "UnitInfo/TimePerFrame", String.Format("{0}h, {1}m, {2}s", Instance.CurrentUnitInfo.TimePerFrame.Hours, Instance.CurrentUnitInfo.TimePerFrame.Minutes, Instance.CurrentUnitInfo.TimePerFrame.Seconds));
 
-         DateTime CompleteTime = DateTime.Now.Add(Instance.CurrentUnitInfo.ETA);
-         XMLOps.setXmlNode(xmlData, "UnitInfo/ExpectedCompletionDate", CompleteTime.ToLongDateString() + " at " + CompleteTime.ToLongTimeString());
+         if (Instance.CurrentUnitInfo.ETA.Equals(TimeSpan.Zero))
+         {
+            XMLOps.setXmlNode(xmlData, "UnitInfo/ExpectedCompletionDate", "Unknown");
+         }
+         else
+         {
+            DateTime CompleteTime = DateTime.Now.Add(Instance.CurrentUnitInfo.ETA);
+            XMLOps.setXmlNode(xmlData, "UnitInfo/ExpectedCompletionDate", CompleteTime.ToLongDateString() + " at " + CompleteTime.ToLongTimeString());
+         }
 
          //    <Computer>
          //        <EstPPD>82.36</EstPPD>
@@ -300,8 +314,22 @@ namespace HFM.Instances
             XMLOps.setXmlNode(xmlData, "Failed", Instance.NumberOfFailedUnitsSinceLastStart.ToString());
             XMLOps.setXmlNode(xmlData, "Username", String.Format("{0} ({1})", Instance.CurrentUnitInfo.FoldingID, Instance.CurrentUnitInfo.Team));
             XMLOps.setXmlNode(xmlData, "UsernameMatch", Instance.IsUsernameOk().ToString()); //Issue 51
-            XMLOps.setXmlNode(xmlData, "DownloadTime", String.Format("{0} {1}", Instance.CurrentUnitInfo.DownloadTime.ToShortDateString(), Instance.CurrentUnitInfo.DownloadTime.ToShortTimeString()));
-            XMLOps.setXmlNode(xmlData, "Deadline", String.Format("{0} {1}", Instance.CurrentUnitInfo.Deadline.ToShortDateString(), Instance.CurrentUnitInfo.Deadline.ToShortTimeString()));
+            if (Instance.CurrentUnitInfo.DownloadTime.Equals(DateTime.MinValue))
+            {
+               XMLOps.setXmlNode(xmlData, "DownloadTime", "Unknown");
+            }
+            else
+            {
+               XMLOps.setXmlNode(xmlData, "DownloadTime", String.Format("{0} {1}", Instance.CurrentUnitInfo.DownloadTime.ToShortDateString(), Instance.CurrentUnitInfo.DownloadTime.ToShortTimeString()));
+            }
+            if (Instance.CurrentUnitInfo.Deadline.Equals(DateTime.MinValue))
+            {
+               XMLOps.setXmlNode(xmlData, "Deadline", "Unknown");
+            }
+            else
+            {
+               XMLOps.setXmlNode(xmlData, "Deadline", String.Format("{0} {1}", Instance.CurrentUnitInfo.Deadline.ToShortDateString(), Instance.CurrentUnitInfo.Deadline.ToShortTimeString()));
+            }
 
             XmlNode xImpNode = xmlDoc.ImportNode(xmlFrag.ChildNodes[0], true);
             xmlRootData.AppendChild(xImpNode);

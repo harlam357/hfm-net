@@ -69,10 +69,10 @@
    <xsl:template match="UnitInfo">
       <tr>
          <td class="AltLeftCol">
-            Date<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Started
+            Download<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Time
          </td>
          <td class="AltRightCol">
-            <xsl:value-of select="DateStarted"/>
+            <xsl:value-of select="DownloadTime"/>
          </td>
       </tr>
       <tr>

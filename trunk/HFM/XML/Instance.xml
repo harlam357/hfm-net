@@ -2,7 +2,7 @@
 <Instance Name="MyMachine">
    <HFMVersion>0</HFMVersion>
    <UnitInfo>
-      <DateStarted>10 August 09:37:33</DateStarted>
+      <DownloadTime>10 August 09:37:33</DownloadTime>
       <FramesComplete>35</FramesComplete>
       <PercentComplete>35</PercentComplete>
       <TimePerFrame>1h 15m 44s</TimePerFrame>
