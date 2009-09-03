@@ -100,7 +100,10 @@ namespace HFM.Forms
          this.txtDefaultConfigFile = new HFM.Classes.TextBoxWrapper();
          this.label1 = new HFM.Classes.LabelWrapper();
          this.tabReporting = new System.Windows.Forms.TabPage();
+         this.grpReportSelections = new HFM.Classes.GroupBoxWrapper();
+         this.chkClientEuePause = new HFM.Classes.CheckBoxWrapper();
          this.grpEmailSettings = new HFM.Classes.GroupBoxWrapper();
+         this.btnTestEmail = new HFM.Classes.ButtonWrapper();
          this.txtSmtpPassword = new HFM.Classes.TextBoxWrapper();
          this.txtSmtpUsername = new HFM.Classes.TextBoxWrapper();
          this.labelWrapper4 = new HFM.Classes.LabelWrapper();
@@ -157,6 +160,7 @@ namespace HFM.Forms
          this.grpLogFileViewer.SuspendLayout();
          this.grpDefaultConfig.SuspendLayout();
          this.tabReporting.SuspendLayout();
+         this.grpReportSelections.SuspendLayout();
          this.grpEmailSettings.SuspendLayout();
          this.tabWeb.SuspendLayout();
          this.grpProjectDownload.SuspendLayout();
@@ -695,6 +699,7 @@ namespace HFM.Forms
          // 
          // tabReporting
          // 
+         this.tabReporting.Controls.Add(this.grpReportSelections);
          this.tabReporting.Controls.Add(this.grpEmailSettings);
          this.tabReporting.Location = new System.Drawing.Point(4, 22);
          this.tabReporting.Name = "tabReporting";
@@ -703,8 +708,31 @@ namespace HFM.Forms
          this.tabReporting.Text = "Reporting";
          this.tabReporting.UseVisualStyleBackColor = true;
          // 
+         // grpReportSelections
+         // 
+         this.grpReportSelections.Controls.Add(this.chkClientEuePause);
+         this.grpReportSelections.Enabled = false;
+         this.grpReportSelections.Location = new System.Drawing.Point(6, 179);
+         this.grpReportSelections.Name = "grpReportSelections";
+         this.grpReportSelections.Size = new System.Drawing.Size(489, 115);
+         this.grpReportSelections.TabIndex = 1;
+         this.grpReportSelections.TabStop = false;
+         this.grpReportSelections.Text = "Report Selections";
+         // 
+         // chkClientEuePause
+         // 
+         this.chkClientEuePause.AutoSize = true;
+         this.chkClientEuePause.Enabled = false;
+         this.chkClientEuePause.Location = new System.Drawing.Point(13, 22);
+         this.chkClientEuePause.Name = "chkClientEuePause";
+         this.chkClientEuePause.Size = new System.Drawing.Size(166, 17);
+         this.chkClientEuePause.TabIndex = 0;
+         this.chkClientEuePause.Text = "Client EUE Pause Notification";
+         this.chkClientEuePause.UseVisualStyleBackColor = true;
+         // 
          // grpEmailSettings
          // 
+         this.grpEmailSettings.Controls.Add(this.btnTestEmail);
          this.grpEmailSettings.Controls.Add(this.txtSmtpPassword);
          this.grpEmailSettings.Controls.Add(this.txtSmtpUsername);
          this.grpEmailSettings.Controls.Add(this.labelWrapper4);
@@ -722,6 +750,16 @@ namespace HFM.Forms
          this.grpEmailSettings.TabIndex = 0;
          this.grpEmailSettings.TabStop = false;
          this.grpEmailSettings.Text = "Email Settings";
+         // 
+         // btnTestEmail
+         // 
+         this.btnTestEmail.Location = new System.Drawing.Point(350, 15);
+         this.btnTestEmail.Name = "btnTestEmail";
+         this.btnTestEmail.Size = new System.Drawing.Size(119, 26);
+         this.btnTestEmail.TabIndex = 11;
+         this.btnTestEmail.Text = "Send Test Email";
+         this.btnTestEmail.UseVisualStyleBackColor = true;
+         this.btnTestEmail.Click += new System.EventHandler(this.btnTestEmail_Click);
          // 
          // txtSmtpPassword
          // 
@@ -779,6 +817,7 @@ namespace HFM.Forms
          this.txtFromEmailAddress.ReadOnly = true;
          this.txtFromEmailAddress.Size = new System.Drawing.Size(377, 20);
          this.txtFromEmailAddress.TabIndex = 4;
+         this.txtFromEmailAddress.MouseHover += new System.EventHandler(this.txtFromEmailAddress_MouseHover);
          this.txtFromEmailAddress.Validating += new System.ComponentModel.CancelEventHandler(this.txtFromEmailAddress_Validating);
          // 
          // chkEnableEmail
@@ -1194,6 +1233,8 @@ namespace HFM.Forms
          this.grpDefaultConfig.ResumeLayout(false);
          this.grpDefaultConfig.PerformLayout();
          this.tabReporting.ResumeLayout(false);
+         this.grpReportSelections.ResumeLayout(false);
+         this.grpReportSelections.PerformLayout();
          this.grpEmailSettings.ResumeLayout(false);
          this.grpEmailSettings.PerformLayout();
          this.tabWeb.ResumeLayout(false);
@@ -1305,5 +1346,8 @@ namespace HFM.Forms
       private HFM.Classes.TextBoxWrapper txtSmtpUsername;
       private HFM.Classes.LabelWrapper labelWrapper4;
       private HFM.Classes.LabelWrapper labelWrapper5;
+      private HFM.Classes.ButtonWrapper btnTestEmail;
+      private HFM.Classes.GroupBoxWrapper grpReportSelections;
+      private HFM.Classes.CheckBoxWrapper chkClientEuePause;
    }
 }

@@ -89,7 +89,7 @@ namespace HFM.Forms
          InitializeComponent();
 
          // Set Main Form Text
-         base.Text += String.Format(" {0} - Beta", PlatformOps.ApplicationVersionString);
+         base.Text = String.Format("HFM.NET {0} - Beta", PlatformOps.ApplicationVersionString);
 
          // Create Messages Window
          _frmMessages = new frmMessages();
@@ -155,11 +155,16 @@ namespace HFM.Forms
          Trace.Listeners.Add(listener);
          Trace.AutoFlush = true;
          
-         TraceLevelSwitch.Instance.Level = (TraceLevel)PreferenceSet.Instance.MessageLevel;
+         // Set Level to Warning to catch any errors that come from loading the preferences
+         TraceLevelSwitch.Instance.Level = TraceLevel.Warning;
 
          HfmTrace.Instance.TextMessage += HfmTrace_TextMessage;
-         HfmTrace.WriteToHfmConsole(String.Format("Starting - {0}", base.Text));
          HfmTrace.WriteToHfmConsole(String.Empty);
+         HfmTrace.WriteToHfmConsole(String.Format("Starting - HFM.NET {0}", PlatformOps.ApplicationVersionStringWithRevision));
+         HfmTrace.WriteToHfmConsole(String.Empty);
+         
+         // Get the actual TraceLevel from the preferences
+         TraceLevelSwitch.Instance.Level = (TraceLevel)PreferenceSet.Instance.MessageLevel;
       }
 
       /// <summary>
@@ -683,7 +688,59 @@ namespace HFM.Forms
                   else if (dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex)
                   {
                      DateTime date = (DateTime)e.Value;
-                     if (date.Equals(DateTime.MinValue) == false)
+                     //if (date.Equals(DateTime.MinValue) == false)
+                     //{
+                        e.Graphics.DrawString(GetFormattedDownloadTimeString(date), e.CellStyle.Font,
+                           textColor, e.CellBounds.X + 2,
+                           e.CellBounds.Y + 2, StringFormat.GenericDefault);
+
+                        e.Handled = true;
+                     //}
+                  }
+                  else if (dataGridView1.Columns["Deadline"].Index == e.ColumnIndex)
+                  {
+                     DateTime date = (DateTime)e.Value;
+                     //if (date.Equals(DateTime.MinValue) == false)
+                     //{
+                        e.Graphics.DrawString(GetFormattedDeadlineString(date), e.CellStyle.Font,
+                           textColor, e.CellBounds.X + 2,
+                           e.CellBounds.Y + 2, StringFormat.GenericDefault);
+
+                        e.Handled = true;
+                     //}
+                  }
+               }
+            }
+         }
+         else if (dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex ||
+                  dataGridView1.Columns["Deadline"].Index == e.ColumnIndex)
+         {
+         
+            using (Brush gridBrush = new SolidBrush(dataGridView1.GridColor),
+                         backColorBrush = new SolidBrush(e.CellStyle.BackColor),
+                         selectionColorBrush = new SolidBrush(e.CellStyle.SelectionBackColor))
+            {
+               using (Pen gridLinePen = new Pen(gridBrush))
+               {
+                  if (dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex)
+                  {
+                     // Erase the cell.
+                     e.Graphics.FillRectangle(backColorBrush, e.CellBounds);
+                     Brush textColor = Brushes.Black;
+
+                     if (dataGridView1.Rows[e.RowIndex].Selected)
+                     {
+                        e.Graphics.FillRectangle(selectionColorBrush, e.CellBounds);
+                        textColor = Brushes.White;
+                     }
+
+                     // Draw the bottom grid line
+                     e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
+                                         e.CellBounds.Bottom - 1, e.CellBounds.Right,
+                                         e.CellBounds.Bottom - 1);
+                                         
+                     DateTime date = (DateTime)e.Value;
+                     if (date.Equals(DateTime.MinValue))
                      {
                         e.Graphics.DrawString(GetFormattedDownloadTimeString(date), e.CellStyle.Font,
                            textColor, e.CellBounds.X + 2,
@@ -694,8 +751,23 @@ namespace HFM.Forms
                   }
                   else if (dataGridView1.Columns["Deadline"].Index == e.ColumnIndex)
                   {
+                     // Erase the cell.
+                     e.Graphics.FillRectangle(backColorBrush, e.CellBounds);
+                     Brush textColor = Brushes.Black;
+
+                     if (dataGridView1.Rows[e.RowIndex].Selected)
+                     {
+                        e.Graphics.FillRectangle(selectionColorBrush, e.CellBounds);
+                        textColor = Brushes.White;
+                     }
+
+                     // Draw the bottom grid line
+                     e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
+                                         e.CellBounds.Bottom - 1, e.CellBounds.Right,
+                                         e.CellBounds.Bottom - 1);
+                  
                      DateTime date = (DateTime)e.Value;
-                     if (date.Equals(DateTime.MinValue) == false)
+                     if (date.Equals(DateTime.MinValue))
                      {
                         e.Graphics.DrawString(GetFormattedDeadlineString(date), e.CellStyle.Font,
                            textColor, e.CellBounds.X + 2,
@@ -813,7 +885,7 @@ namespace HFM.Forms
       {
          if (date.Equals(DateTime.MinValue))
          {
-            return String.Empty;
+            return "Unknown";
          }
 
          TimeSpan span = DateTime.Now.Subtract(date);
@@ -830,7 +902,7 @@ namespace HFM.Forms
       {
          if (date.Equals(DateTime.MinValue))
          {
-            return String.Empty;
+            return "Unknown";
          }
 
          TimeSpan span = date.Subtract(DateTime.Now);

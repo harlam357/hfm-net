@@ -263,13 +263,16 @@ namespace HFM.Helpers
             {
                str = reader.ReadToEnd();
             }
-            
-            int index = str.IndexOf("<TABLE", StringComparison.InvariantCulture);
+
+            // FxCop: CA1307 (Specify StringComparison)
+            //        CA1309 (For non-linguistic comparisons, StringComparison.Ordinal or StringComparison.OrdinalIgnoreCase)
+
+            int index = str.IndexOf("<TABLE", StringComparison.Ordinal);
             int length = str.LastIndexOf("</TABLE>");
             
             str = str.Substring(index, (length - index) + 8);
-            length = str.IndexOf("<FORM ", StringComparison.InvariantCulture);
-            index = str.IndexOf("</FORM>", StringComparison.InvariantCulture);
+            length = str.IndexOf("<FORM ", StringComparison.Ordinal);
+            index = str.IndexOf("</FORM>", StringComparison.Ordinal);
             
             if ((index >= 0) && (length >= 0))
             {
@@ -278,8 +281,8 @@ namespace HFM.Helpers
                str = str2 + str3;
             }
 
-            index = str.IndexOf("<font", StringComparison.InvariantCulture);
-            length = str.IndexOf(">", index, StringComparison.InvariantCulture);
+            index = str.IndexOf("<font", StringComparison.Ordinal);
+            length = str.IndexOf(">", index, StringComparison.Ordinal);
             
             if ((index >= 0) && (length >= 0))
             {
@@ -307,11 +310,6 @@ namespace HFM.Helpers
       /// <param name="SmtpHost"></param>
       public static void SendEmail(string MessageFrom, string MessageTo, string MessageSubject, string MessageBody, string SmtpHost, string SmtpHostUsername, string SmtpHostPassword)
       {
-         if (String.IsNullOrEmpty(MessageFrom))
-         {
-            MessageFrom = "no-reply@hfm.net";
-         }
-
          MailMessage message = new MailMessage(MessageFrom, MessageTo, MessageSubject, MessageBody);
          SmtpClient client = new SmtpClient(SmtpHost);
          client.Credentials = GetNetworkCredential(SmtpHostUsername, SmtpHostPassword);
@@ -319,22 +317,15 @@ namespace HFM.Helpers
 
          try
          {
-            try
-            {
-               client.Send(message);
-            }
-            catch (SmtpException ex) // try again with SSL off
-            {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
-               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Trying again with SSL disabled...", true);
-               
-               client.EnableSsl = false;
-               client.Send(message);
-            }
+            client.Send(message);
          }
-         catch (Exception ex)
+         catch (SmtpException ex) // try again with SSL off
          {
-            HfmTrace.WriteToHfmConsole(ex);
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
+            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Trying again with SSL disabled...", true);
+            
+            client.EnableSsl = false;
+            client.Send(message);
          }
       }
 

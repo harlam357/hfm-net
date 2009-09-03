@@ -158,7 +158,12 @@ namespace HFM.Proteins
       {
          get 
          {
-            return DownloadTime.AddDays(CurrentProtein.PreferredDays);
+            if (DownloadTime.Equals(DateTime.MinValue) == false)
+            {
+               return DownloadTime.AddDays(CurrentProtein.PreferredDays);
+            }
+            
+            return DateTime.MinValue;
          }
       }
       

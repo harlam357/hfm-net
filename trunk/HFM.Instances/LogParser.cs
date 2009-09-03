@@ -226,6 +226,10 @@ namespace HFM.Instances
             {
                _returnStatus = ClientStatus.EuePause;
             }
+            else if (logLine.LineType.Equals(LogLineType.ClientAttemptGetWorkPacket))
+            {
+               _returnStatus = ClientStatus.GettingWorkPacket;
+            }
             else if (logLine.LineType.Equals(LogLineType.ClientShutdown))
             {
                _returnStatus = ClientStatus.Stopped;

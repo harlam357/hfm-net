@@ -56,6 +56,7 @@ namespace HFM.Preferences
       EuePause,
       Hung,
       Paused,
+      GettingWorkPacket,
       RunningNoFrameTimes,
       Running
    }
@@ -505,6 +506,13 @@ namespace HFM.Preferences
          set { _EmailReportingServerPassword = value; }
       }
 
+      private bool _ReportEuePause;
+      public bool ReportEuePause
+      {
+         get { return _ReportEuePause; }
+         set { _ReportEuePause = value; }
+      }
+
       public static String AppPath
       {
          get
@@ -760,6 +768,7 @@ namespace HFM.Preferences
                _EmailReportingServerPassword = Settings.Default.EmailReportingServerPassword;
             }
          }
+         _ReportEuePause = Settings.Default.ReportEuePause;
          
          _AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
          _AppDataPath = Path.Combine(_AppDataPath, ExeName);
@@ -906,6 +915,7 @@ namespace HFM.Preferences
                   Settings.Default.EmailReportingServerPassword = _EmailReportingServerPassword;
                }
             }
+            Settings.Default.ReportEuePause = _ReportEuePause;
 
             Settings.Default.Save();
          }

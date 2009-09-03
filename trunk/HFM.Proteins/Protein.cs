@@ -26,32 +26,16 @@ namespace HFM.Proteins
    [Serializable]
    public class Protein
    {
-      public Protein()
-      {
-         // Initialize
-         ProjectNumber = 0;
-         ServerIP = "0.0.0.0";
-         WorkUnitName = "Unassigned Protein";
-         NumAtoms = 0;
-         PreferredDays = 0;
-         MaxDays = 0;
-         Credit = 0;
-         Frames = 100;
-         Core = "Unassigned Core";
-         Description = PreferenceSet.UnassignedDescription;
-         Contact = "Unassigned Contact";
-      }
-
       private int _ProjectNumber = 0;
       public int ProjectNumber
       {
          get { return _ProjectNumber; }
          set
          {
-            if (value < 0)
+            if (value < 1)
             {
                _ProjectNumber = 0;
-               throw new ArgumentOutOfRangeException("ProjectNumber", "Project Number must be greater than or equal to 0");
+               throw new ArgumentException("Project Number must be greater than 0.");
             }
             else
             {
@@ -60,21 +44,21 @@ namespace HFM.Proteins
          }
       }
 
-      private String _ServerIP;
+      private String _ServerIP = "0.0.0.0";
       public String ServerIP
       {
          get { return _ServerIP; }
          set { _ServerIP = value; }
       }
 
-      private String _WorkUnitName;
+      private String _WorkUnitName = "Unknown";
       public String WorkUnitName
       {
          get { return _WorkUnitName; }
          set { _WorkUnitName = value; }
       }
 
-      private int _NumAtoms;
+      private int _NumAtoms = 0;
       public int NumAtoms
       {
          get { return _NumAtoms; }
@@ -83,7 +67,7 @@ namespace HFM.Proteins
             if (value < 0)
             {
                _NumAtoms = 0;
-               throw new ArgumentOutOfRangeException("NumAtoms", "Number of Atoms must be greater than or equal to 0");
+               throw new ArgumentException("Number of Atoms must be greater than or equal to 0.");
             }
             else
             {
@@ -92,7 +76,7 @@ namespace HFM.Proteins
          }
       }
 
-      private int _PreferredDays;
+      private int _PreferredDays = 0;
       public int PreferredDays
       {
          get { return _PreferredDays; }
@@ -101,7 +85,7 @@ namespace HFM.Proteins
             if (value < 0)
             {
                _PreferredDays = 0;
-               throw new ArgumentOutOfRangeException("PreferredDays", "Preferred Days must be greater than 0, or 0 for Timeless units");
+               throw new ArgumentException("Preferred Days must be greater than 0, or 0 for Timeless units.");
             }
             else
             {
@@ -110,7 +94,7 @@ namespace HFM.Proteins
          }
       }
 
-      private int _MaxDays;
+      private int _MaxDays = 0;
       public int MaxDays
       {
          get { return _MaxDays; }
@@ -119,7 +103,7 @@ namespace HFM.Proteins
             if (value < 0)
             {
                _MaxDays = 0;
-               throw new ArgumentOutOfRangeException("MaxDays", "Maximum Days must be greater than 0, or 0 for Timeless units");
+               throw new ArgumentException("Maximum Days must be greater than 0, or 0 for Timeless units.");
             }
             else
             {
@@ -128,16 +112,16 @@ namespace HFM.Proteins
          }
       }
 
-      private int _Credit;
+      private int _Credit = 0;
       public int Credit
       {
          get { return _Credit; }
          set
          {
-            if (value < 0)
+            if (value < 1)
             {
                _Credit = 0;
-               throw new ArgumentOutOfRangeException("Credit", "Credit must be greater than or equal to 0");
+               throw new ArgumentException("Credit must be greater than 0.");
             }
             else
             {
@@ -146,16 +130,16 @@ namespace HFM.Proteins
          }
       }
 
-      private int _Frames;
+      private int _Frames = 100;
       public int Frames
       {
          get { return _Frames; }
          set
          {
-            if (value < 0)
+            if (value < 1)
             {
                _Frames = 0;
-               throw new ArgumentOutOfRangeException("Frames", "Number of frames must be greater than or equal to 0");
+               throw new ArgumentException("Number of frames must be greater than 0.");
             }
             else
             {
@@ -164,21 +148,21 @@ namespace HFM.Proteins
          }
       }
 
-      private String _Core;
+      private String _Core = "Unknown";
       public String Core
       {
          get { return _Core; }
          set { _Core = value; }
       }
 
-      private String _Description;
+      private String _Description = PreferenceSet.UnassignedDescription;
       public String Description
       {
          get { return _Description; }
          set { _Description = value; }
       }
 
-      private String _Contact;
+      private String _Contact = "Unknown";
       public String Contact
       {
          get { return _Contact; }

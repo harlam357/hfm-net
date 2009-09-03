@@ -161,6 +161,8 @@ namespace HFM.Forms
          txtSmtpPassword.Text = Prefs.EmailReportingServerPassword;
          
          chkEnableEmail.Checked = Prefs.EmailReportingEnabled;
+         
+         chkClientEuePause.Checked = Prefs.ReportEuePause;
       }
 
       private void LoadWebTab()
@@ -415,6 +417,17 @@ namespace HFM.Forms
          txtSmtpPassword.BackColor = SystemColors.Window;
 
          DoSmtpCredentialValidation();
+
+         btnTestEmail.Enabled = true;
+         
+         grpReportSelections.Enabled = true;
+         foreach (Control ctrl in grpReportSelections.Controls)
+         {
+            if (ctrl is CheckBox)
+            {
+               ctrl.Enabled = true;
+            }
+         }
       }
       
       private void DisableEmailReporting()
@@ -443,6 +456,17 @@ namespace HFM.Forms
          txtSmtpPassword.Enabled = false;
          txtSmtpPassword.BackColor = SystemColors.Control;
          txtSmtpPassword.ReadOnly = true;
+
+         btnTestEmail.Enabled = false;
+
+         grpReportSelections.Enabled = false;
+         foreach (Control ctrl in grpReportSelections.Controls)
+         {
+            if (ctrl is CheckBox)
+            {
+               ctrl.Enabled = false;
+            }
+         }
       }
 
       private void txtToEmailAddress_Validating(object sender, CancelEventArgs e)
@@ -474,9 +498,13 @@ namespace HFM.Forms
 
       private void txtFromEmailAddress_Validating(object sender, CancelEventArgs e)
       {
-         bool bAddress = StringOps.ValidateEmailAddress(txtToEmailAddress.Text);
+         bool bAddress = StringOps.ValidateEmailAddress(txtFromEmailAddress.Text);
 
-         if (txtFromEmailAddress.Text.Length > 0 && bAddress != true)
+         if (txtFromEmailAddress.Text.Length == 0)
+         {
+            SetFromEmailAddressError();
+         }
+         else if (txtFromEmailAddress.Text.Length > 0 && bAddress != true)
          {
             SetFromEmailAddressError();
          }
@@ -491,8 +519,17 @@ namespace HFM.Forms
       {
          txtFromEmailAddress.BackColor = Color.Yellow;
          txtFromEmailAddress.Focus();
-         toolTipPrefs.Show("Must be a valid e-mail address or blank to use default.",
+         toolTipPrefs.Show("Must be a valid e-mail address.",
             txtFromEmailAddress.Parent, txtFromEmailAddress.Location.X + 5, txtFromEmailAddress.Location.Y - 20, 5000);
+      }
+
+      private void txtFromEmailAddress_MouseHover(object sender, EventArgs e)
+      {
+         if (txtFromEmailAddress.BackColor.Equals(Color.Yellow)) return;
+
+         toolTipPrefs.RemoveAll();
+         toolTipPrefs.Show(String.Format("Depending on your SMTP server, this 'From Address' field may or may not be of consequence.{0}If you are required to enter credentials to send Email through the SMTP server, the server will{0}likely use the Email Address tied to those credentials as the sender or 'From Address'.{0}Regardless of this limitation, a valid Email Address must still be specified here.", Environment.NewLine), 
+            txtFromEmailAddress.Parent, txtFromEmailAddress.Location.X + 5, txtFromEmailAddress.Location.Y - 55, 10000);
       }
 
       private void txtSmtpServer_Validating(object sender, CancelEventArgs e)
@@ -556,6 +593,29 @@ namespace HFM.Forms
          txtSmtpPassword.BackColor = Color.Yellow;
          toolTipPrefs.Show(Message,
             txtSmtpUsername.Parent, txtSmtpUsername.Location.X + 5, txtSmtpUsername.Location.Y - 20, 5000);
+      }
+
+      private void btnTestEmail_Click(object sender, EventArgs e)
+      {
+         if (CheckForReportingTabErrors())
+         {
+            MessageBox.Show(this, "Please correct error conditions before sending a Test Email.", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+         }
+         else
+         {
+            try
+            {
+               NetworkOps.SendEmail(txtFromEmailAddress.Text, txtToEmailAddress.Text, "HFM.NET - Test Email",
+                                    "HFM.NET - Test Email", txtSmtpServer.Text, txtSmtpUsername.Text, txtSmtpPassword.Text);
+               MessageBox.Show(this, "Test Email sent successfully.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
+               MessageBox.Show(this, String.Format("Test Email failed to send.  Please check your Email settings.{0}{0}Error: {1}", Environment.NewLine, ex.Message), 
+                  Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+         }
       }
       #endregion
 
@@ -845,7 +905,7 @@ namespace HFM.Forms
       
       private void btnOK_Click(object sender, EventArgs e)
       {
-         if (CheckForErrorConditions())
+         if (CheckForErrorConditions() == false)
          {
             GetDataScheduledTasksTab();
             GetDataDefaultsTab();
@@ -862,15 +922,42 @@ namespace HFM.Forms
       
       private bool CheckForErrorConditions()
       {
+         if (CheckForScheduledTasksTabErrors())
+         {
+            tabControl1.SelectedTab = tabSchdTasks;
+            return true;
+         }
+
+         if (CheckForReportingTabErrors())
+         {
+            tabControl1.SelectedTab = tabReporting;
+            return true;
+         }
+
+         if (CheckForWebSettingsTabErrors())
+         {
+            tabControl1.SelectedTab = tabWeb;
+            return true;
+         }
+         
+         return false;
+      }
+      
+      private bool CheckForScheduledTasksTabErrors()
+      {
          // Check for error conditions on Scheduled Tasks Tab
          if (txtCollectMinutes.BackColor == Color.Yellow ||
              txtWebGenMinutes.BackColor == Color.Yellow ||
              txtWebSiteBase.BackColor == Color.Yellow)
          {
-            tabControl1.SelectedTab = tabSchdTasks;
-            return false;
+            return true;
          }
-
+         
+         return false;
+      }
+      
+      private bool CheckForReportingTabErrors()
+      {
          // Check for error conditions on Reporting Tab
          if (txtToEmailAddress.BackColor == Color.Yellow ||
              txtFromEmailAddress.BackColor == Color.Yellow ||
@@ -878,10 +965,14 @@ namespace HFM.Forms
              txtSmtpUsername.BackColor == Color.Yellow ||
              txtSmtpPassword.BackColor == Color.Yellow)
          {
-            tabControl1.SelectedTab = tabReporting;
-            return false;
+            return true;
          }
-
+         
+         return false;
+      }
+      
+      private bool CheckForWebSettingsTabErrors()
+      {
          // Check for error conditions on Web Settings Tab
          if (txtProjectDownloadUrl.BackColor == Color.Yellow ||
              txtProxyServer.BackColor == Color.Yellow ||
@@ -889,11 +980,10 @@ namespace HFM.Forms
              txtProxyUser.BackColor == Color.Yellow ||
              txtProxyPass.BackColor == Color.Yellow)
          {
-            tabControl1.SelectedTab = tabWeb;
-            return false;
+            return true;
          }
          
-         return true;
+         return false;
       }
 
       private void GetDataScheduledTasksTab()
@@ -960,12 +1050,15 @@ namespace HFM.Forms
       
       private void GetReportingTab()
       {
-         Prefs.EmailReportingEnabled = chkEnableEmail.Checked;
          Prefs.EmailReportingToAddress = txtToEmailAddress.Text;
          Prefs.EmailReportingFromAddress = txtFromEmailAddress.Text;
          Prefs.EmailReportingServerAddress = txtSmtpServer.Text;
          Prefs.EmailReportingServerUsername = txtSmtpUsername.Text;
          Prefs.EmailReportingServerPassword = txtSmtpPassword.Text;
+
+         Prefs.EmailReportingEnabled = chkEnableEmail.Checked;
+         
+         Prefs.ReportEuePause = chkClientEuePause.Checked;
       }
 
       private void GetDataWebSettingsTab()

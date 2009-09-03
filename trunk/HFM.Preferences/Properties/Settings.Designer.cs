@@ -595,5 +595,17 @@ namespace HFM.Preferences.Properties {
                 this["EmailReportingServerPassword"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ReportEuePause {
+            get {
+                return ((bool)(this["ReportEuePause"]));
+            }
+            set {
+                this["ReportEuePause"] = value;
+            }
+        }
     }
 }

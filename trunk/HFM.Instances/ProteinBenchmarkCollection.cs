@@ -108,13 +108,35 @@ namespace HFM.Instances
 
       public int[] GetBenchmarkProjects()
       {
+         // List of Project Numbers to sort and return
          List<int> Projects = new List<int>();
+         // TODO: Bad Benchmarks.  Remove this check when enhancing the Benchmarks Form.
+         // List of Benchmarks that contain ProjectID == 0.  These benchmarks are bad data
+         // generated prior to v0.3.0 and need removed from the List.
+         List<InstanceProteinBenchmark> BadBenchmarks = new List<InstanceProteinBenchmark>(3);
+
          foreach (InstanceProteinBenchmark benchmark in _benchmarkList)
          {
-            if (Projects.Contains(benchmark.ProjectID) == false)
+            if (benchmark.ProjectID == 0)
+            {
+               BadBenchmarks.Add(benchmark);
+            }
+            else if (Projects.Contains(benchmark.ProjectID) == false)
             {
                Projects.Add(benchmark.ProjectID);
             }
+         }
+
+         // TODO: Bad Benchmarks.  Remove this check when enhancing the Benchmarks Form.
+         if (BadBenchmarks.Count > 0)
+         {
+            // Remove all benchmarks that have been flagged as bad data
+            foreach (InstanceProteinBenchmark badBenchmark in BadBenchmarks)
+            {
+               _benchmarkList.Remove(badBenchmark);
+            }
+            
+            Serialize();
          }
 
          int[] returnArray = Projects.ToArray();

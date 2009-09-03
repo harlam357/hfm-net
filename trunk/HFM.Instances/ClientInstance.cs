@@ -636,9 +636,10 @@ namespace HFM.Instances
             case ClientStatus.Unknown:
             case ClientStatus.Offline:
             case ClientStatus.Stopped:
-            case ClientStatus.Paused:
             case ClientStatus.EuePause:
             case ClientStatus.Hung:
+            case ClientStatus.Paused:
+            case ClientStatus.GettingWorkPacket:
                // Update Client Status - don't call Determine Status
                Status = returnedStatus;
                return;
@@ -705,13 +706,20 @@ namespace HFM.Instances
       {
          PreferenceSet Prefs = PreferenceSet.Instance;
 
-         if (Prefs.EmailReportingEnabled) 
+         if (Prefs.EmailReportingEnabled && Prefs.ReportEuePause) 
          {
             string messageBody = String.Format("HFM.NET detected that Client '{0}' has entered a 24 hour EUE Pause state.", InstanceName);
-            NetworkOps.SendEmail(Prefs.EmailReportingFromAddress, Prefs.EmailReportingToAddress, "HFM.NET - Client EUE Pause Error",
-                                 messageBody, Prefs.EmailReportingServerAddress, Prefs.EmailReportingServerUsername,
-                                 Prefs.EmailReportingServerPassword);
-      }
+            try
+            {
+               NetworkOps.SendEmail(Prefs.EmailReportingFromAddress, Prefs.EmailReportingToAddress,
+                                    "HFM.NET - Client EUE Pause Error", messageBody, Prefs.EmailReportingServerAddress, 
+                                    Prefs.EmailReportingServerUsername, Prefs.EmailReportingServerPassword);
+            }
+            catch (Exception ex)
+            {
+               HfmTrace.WriteToHfmConsole(ex);
+            }
+         }
    }
       
       /// <summary>
@@ -1389,6 +1397,8 @@ namespace HFM.Instances
                return ColorTranslator.ToHtml(Color.White);
             case ClientStatus.Paused:
                return ColorTranslator.ToHtml(Color.Black);
+            case ClientStatus.GettingWorkPacket:
+               return ColorTranslator.ToHtml(Color.White);
             case ClientStatus.Offline:
                return ColorTranslator.ToHtml(Color.Black);
             default:
@@ -1415,6 +1425,8 @@ namespace HFM.Instances
                return Color.DarkRed;
             case ClientStatus.Paused:
                return Color.Orange;
+            case ClientStatus.GettingWorkPacket:
+               return Color.Purple;
             case ClientStatus.Offline:
                return Color.Gray;
             default:

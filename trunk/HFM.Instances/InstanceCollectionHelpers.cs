@@ -51,19 +51,6 @@ namespace HFM.Instances
                case ClientStatus.RunningNoFrameTimes:
                   totals.WorkingClients++;
                   break;
-               //case ClientStatus.Paused:
-               //   newPausedHosts++;
-               //   break;
-               //case ClientStatus.Hung:
-               //   newHungHosts++;
-               //   break;
-               //case ClientStatus.Stopped:
-               //   newStoppedHosts++;
-               //   break;
-               //case ClientStatus.Offline:
-               //case ClientStatus.Unknown:
-               //   newOfflineUnknownHosts++;
-               //   break;
             }
          }
 

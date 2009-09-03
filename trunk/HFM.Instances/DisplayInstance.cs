@@ -42,11 +42,11 @@ namespace HFM.Instances
       /// <summary>
       /// Private member holding the percentage progress of the unit
       /// </summary>
-      private string _Progress;
+      private float _Progress;
       /// <summary>
       /// Current progress (percentage) of the unit
       /// </summary>
-      public string Progress
+      public float Progress
       {
          get { return _Progress; }
       }
@@ -255,7 +255,7 @@ namespace HFM.Instances
       public void Load(ClientInstance Instance)
       {
          _Status = Instance.Status;
-         _Progress = String.Format("{0:00}%", Instance.CurrentUnitInfo.PercentComplete);
+         _Progress = ((float)Instance.CurrentUnitInfo.PercentComplete) / 100;
          _InstanceName = Instance.InstanceName;
          _ClientType = Instance.CurrentUnitInfo.TypeOfClient;
          _TimePerFrame = Instance.CurrentUnitInfo.TimePerFrame;
@@ -286,6 +286,9 @@ namespace HFM.Instances
          dataGridView1.Columns["Status"].DataPropertyName = "Status";
          dataGridView1.Columns.Add("Progress", "Progress");
          dataGridView1.Columns["Progress"].DataPropertyName = "Progress";
+         DataGridViewCellStyle ProgressStyle = new DataGridViewCellStyle();
+         ProgressStyle.Format = "00%";
+         dataGridView1.Columns["Progress"].DefaultCellStyle = ProgressStyle;
          dataGridView1.Columns.Add("Name", "Name");
          dataGridView1.Columns["Name"].DataPropertyName = "Name";
          dataGridView1.Columns.Add("ClientType", "Client Type");
