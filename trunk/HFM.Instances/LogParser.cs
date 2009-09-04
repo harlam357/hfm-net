@@ -230,7 +230,8 @@ namespace HFM.Instances
             {
                _returnStatus = ClientStatus.GettingWorkPacket;
             }
-            else if (logLine.LineType.Equals(LogLineType.ClientShutdown))
+            else if (logLine.LineType.Equals(LogLineType.ClientShutdown) ||
+                     logLine.LineType.Equals(LogLineType.ClientCoreCommunicationsErrorShutdown))
             {
                _returnStatus = ClientStatus.Stopped;
                break; //we found a Shutdown message, quit parsing

@@ -40,7 +40,8 @@ namespace HFM.Proteins
       Unknown,
       FinishedUnit,
       EarlyUnitEnd,
-      UnstableMachine
+      UnstableMachine,
+      Interrupted
    }
    #endregion
 
@@ -57,6 +58,7 @@ namespace HFM.Proteins
       private const string FinishedUnit = "FINISHED_UNIT";
       private const string EarlyUnitEnd = "EARLY_UNIT_END";
       private const string UnstableMachine = "UNSTABLE_MACHINE";
+      private const string Interrupted = "INTERRUPTED";
       #endregion
    
       #region CTOR
@@ -927,6 +929,8 @@ namespace HFM.Proteins
                return WorkUnitResult.EarlyUnitEnd;
             case UnstableMachine:
                return WorkUnitResult.UnstableMachine;
+            case Interrupted:
+               return WorkUnitResult.Interrupted;
             default:
                return WorkUnitResult.Unknown;
          }

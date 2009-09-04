@@ -22,13 +22,11 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 using HFM.Classes;
@@ -1635,7 +1633,7 @@ namespace HFM.Forms
          double TotalPPD = totals.PPD;
          int GoodHosts = totals.WorkingClients;
          
-         SetNotifyIconText(String.Format("{0} Clients Working{3}{1} Clients Offline{3}{2:" + PreferenceSet.GetPPDFormatString() + "} PPD",
+         SetNotifyIconText(String.Format("{0} Working Clients{3}{1} Non-Working Clients{3}{2:" + PreferenceSet.GetPPDFormatString() + "} PPD",
                                          GoodHosts, totals.NonWorkingClients, TotalPPD, Environment.NewLine));
          RefreshStatusLabels(GoodHosts, TotalPPD);
       }

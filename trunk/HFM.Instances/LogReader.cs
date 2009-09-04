@@ -64,6 +64,7 @@ namespace HFM.Instances
       WorkUnitShuttingDownCore,
       WorkUnitCoreShutdown,
       ClientNumberOfUnitsCompleted,
+      ClientCoreCommunicationsErrorShutdown,
       ClientEuePauseState,
       ClientShutdown
    }
@@ -398,7 +399,9 @@ namespace HFM.Instances
                {
                   LastClientRun.NumberOfCompletedUnits++;
                }
-               if (logLine.LineData.Equals(WorkUnitResult.EarlyUnitEnd) || logLine.LineData.Equals(WorkUnitResult.UnstableMachine))
+               else if (logLine.LineData.Equals(WorkUnitResult.EarlyUnitEnd) || 
+                        logLine.LineData.Equals(WorkUnitResult.UnstableMachine) ||
+                        logLine.LineData.Equals(WorkUnitResult.Interrupted))
                {
                   LastClientRun.NumberOfFailedUnits++;
                }
@@ -604,6 +607,10 @@ namespace HFM.Instances
          else if (logLine.Contains("] + Number of Units Completed:"))
          {
             return LogLineType.ClientNumberOfUnitsCompleted;
+         }
+         else if (logLine.Contains("] This is a sign of more serious problems, shutting down."))
+         {
+            return LogLineType.ClientCoreCommunicationsErrorShutdown;
          }
          else if (logLine.Contains("] EUE limit exceeded. Pausing 24 hours."))
          {

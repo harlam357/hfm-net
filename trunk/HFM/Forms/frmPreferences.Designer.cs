@@ -753,6 +753,7 @@ namespace HFM.Forms
          // 
          // btnTestEmail
          // 
+         this.btnTestEmail.Enabled = false;
          this.btnTestEmail.Location = new System.Drawing.Point(350, 15);
          this.btnTestEmail.Name = "btnTestEmail";
          this.btnTestEmail.Size = new System.Drawing.Size(119, 26);
