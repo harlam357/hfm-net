@@ -1,6 +1,17 @@
 #summary HFM.NET Version History
 #labels Featured
 
+=Change Log - Version: 0.2.2 - Build 31 - Beta=
+
+  * Fix: Issue with Save As... function not using the file name supplied by the user in the Save As... Dialog.  Was using current config file name instead... which in the case of a new configuration would result in an unhandled exception - Thanks augie!!!
+
+  * Change: Messages Window can now be closed using F7 key.
+  * Change: Now a single instance application (attempting to start HFM.exe again won't yield an exception, just a dialog telling you the app is already running).
+  * Change: User specific UI settings like log file splitter location, column indexes, and column sort are now being saved at the time they are changed... not just on application shutdown.
+
+  * Enhancement: HTML Summary now respects the 'Allways List Offline Clients Last' option.
+  * Enhancement: Add options to turn on/off the search for Duplicate User/Machine ID and Project (R/C/G) (HTML Summary reflects these changes as well).
+
 =Change Log - Version: 0.2.2 - Build 30 - Beta=
 
   * Fix: FTP Client Type Download on Linux (Mono).  
