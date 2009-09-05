@@ -505,14 +505,28 @@ namespace HFM.Instances
       
          if (ClientIsOnVirtualMachine)
          {
-            // set parse style to maintain universal
-            style = System.Globalization.DateTimeStyles.NoCurrentDateDefault;
+            if (PlatformOps.IsRunningOnMono())
+            {
+               style = System.Globalization.DateTimeStyles.None;
+            }
+            else
+            {
+               // set parse style to maintain universal
+               style = System.Globalization.DateTimeStyles.NoCurrentDateDefault;
+            }
          }
          else
          {
-            // set parse style to parse local
-            style = System.Globalization.DateTimeStyles.NoCurrentDateDefault |
-                    System.Globalization.DateTimeStyles.AssumeUniversal;
+            if (PlatformOps.IsRunningOnMono())
+            {
+               style = System.Globalization.DateTimeStyles.AssumeUniversal;
+            }
+            else
+            {
+               // set parse style to parse local
+               style = System.Globalization.DateTimeStyles.NoCurrentDateDefault |
+                       System.Globalization.DateTimeStyles.AssumeUniversal;
+            }
          }
          
          return style;

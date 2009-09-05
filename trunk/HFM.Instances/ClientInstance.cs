@@ -511,15 +511,17 @@ namespace HFM.Instances
       public ClientInstance(InstanceType type)
       {
          // When Instance Host Type Changes, Clear the User Specified Values
-         InstanceHostTypeChanged += ClearUserSpecifiedValues;
+         InstanceHostTypeChanged += ClientInstance_InstanceHostTypeChanged;
          // When Client is on VM Changes, Clear the Unit Frame Data
          // The captured TimeOfFrame values will no longer be valid
-         ClientIsOnVirtualMachineChanged += ClearFrameData;
+         ClientIsOnVirtualMachineChanged += ClientInstance_ClientIsOnVirtualMachineChanged; //ClearFrameData;
          
          // Set the Host Type
          _InstanceHostType = type;
-         // Clear Instance Specific Values
+         // Clear (Init) Instance Values
          Clear();
+         // Clear (Init) User Specified Instance Values
+         ClearUserSpecifiedValues();
          // Create a fresh UnitInfo
          _UnitInfo = new UnitInfo(InstanceName, Path);
       }
@@ -568,12 +570,17 @@ namespace HFM.Instances
          NumberOfFailedUnitsSinceLastStart = 0;
       }
 
+      private void ClientInstance_ClientIsOnVirtualMachineChanged(object sender, EventArgs e)
+      {
+         ClearUnitFrameData();
+      }
+
       /// <summary>
       /// Clear the Unit Frame Data from the Current Unit Info
       /// </summary>
-      private void ClearFrameData(object sender, EventArgs e)
+      private void ClearUnitFrameData()
       {
-         CurrentUnitInfo.ClearFrameData();
+         CurrentUnitInfo.ClearUnitFrameData();
       }
       
       /// <summary>
@@ -599,14 +606,22 @@ namespace HFM.Instances
       }
 
       /// <summary>
+      /// Handles the InstanceHostTypeChanged Event
+      /// </summary>
+      private void ClientInstance_InstanceHostTypeChanged(object sender, EventArgs e)
+      {
+         ClearUserSpecifiedValues();
+      }
+
+      /// <summary>
       /// Clear the user specified values that define this instance
       /// </summary>
-      private void ClearUserSpecifiedValues(object sender, EventArgs e)
+      private void ClearUserSpecifiedValues()
       {
          InstanceName = String.Empty;
          ClientProcessorMegahertz = 1;
-         RemoteFAHLogFilename = String.Empty;
-         RemoteUnitInfoFilename = String.Empty;
+         RemoteFAHLogFilename = LocalFAHLog;
+         RemoteUnitInfoFilename = LocalUnitInfo;
          ClientIsOnVirtualMachine = false;
          ClientTimeOffset = 0;
 

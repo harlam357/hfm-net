@@ -82,7 +82,7 @@ namespace HFM.Proteins
          _Team = team;
          
          Clear();
-         ClearFrameData();
+         ClearUnitFrameData();
       } 
       #endregion
 
@@ -451,7 +451,7 @@ namespace HFM.Proteins
          set 
          {
             _CurrentProtein = value;
-            ClearFrameData();
+            ClearUnitFrameData();
          }
       }
 
@@ -789,7 +789,7 @@ namespace HFM.Proteins
       /// <summary>
       /// Clear the Observed Count, Current Frame Pointer, and the UnitFrames Array
       /// </summary>
-      public void ClearFrameData()
+      public void ClearUnitFrameData()
       {
          _FramesObserved = 0;
          _CurrentFrame = null;

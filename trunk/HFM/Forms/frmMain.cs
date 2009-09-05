@@ -119,7 +119,7 @@ namespace HFM.Forms
          HostInstances.InstanceEdited += HostInstances_InstanceDataChanged;
          HostInstances.InstanceRemoved += HostInstances_InstanceDataChanged;
          HostInstances.InstanceRetrieved += HostInstances_InstanceRetrieved;
-         HostInstances.DuplicatesFound += HostInstances_DuplicatesFound;
+         HostInstances.DuplicatesFoundOrChanged += HostInstances_DuplicatesFoundOrChanged;
          HostInstances.RefreshUserStatsData += HostInstances_RefreshUserStatsData;
 
          // Hook-up PreferenceSet Event Handlers
@@ -2132,7 +2132,7 @@ namespace HFM.Forms
       /// <summary>
       /// 
       /// </summary>
-      private void HostInstances_DuplicatesFound(object sender, EventArgs e)
+      private void HostInstances_DuplicatesFoundOrChanged(object sender, EventArgs e)
       {
          // Update the UI (this is confirmed needed)
          RefreshDisplay();

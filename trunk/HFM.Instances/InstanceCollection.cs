@@ -57,7 +57,7 @@ namespace HFM.Instances
       public event EventHandler InstanceEdited;
       public event EventHandler InstanceRemoved;
       public event EventHandler InstanceRetrieved;
-      public event EventHandler DuplicatesFound;
+      public event EventHandler DuplicatesFoundOrChanged;
       
       public event EventHandler RefreshUserStatsData;
       #endregion
@@ -223,11 +223,11 @@ namespace HFM.Instances
          }
       }
 
-      private void OnDuplicatesFound(EventArgs e)
+      private void OnDuplicatesFoundOrChanged(EventArgs e)
       {
-         if (DuplicatesFound != null)
+         if (DuplicatesFoundOrChanged != null)
          {
-            DuplicatesFound(this, e);
+            DuplicatesFoundOrChanged(this, e);
          }
       }
 
@@ -1187,11 +1187,15 @@ namespace HFM.Instances
       /// </summary>
       public void FindDuplicates() // Issue 19
       {
+         int previousDuplicateUserIDCount = _duplicateUserID.Count;
+         int previousDuplicateProjectsCount = _duplicateProjects.Count;
+      
          InstanceCollectionHelpers.FindDuplicates(_duplicateUserID, _duplicateProjects, CurrentInstanceArray);
 
-         if (_duplicateUserID.Count > 0 || _duplicateProjects.Count > 0)
+         if (_duplicateUserID.Count > 0 || _duplicateProjects.Count > 0 ||
+             _duplicateUserID.Count != previousDuplicateUserIDCount || _duplicateProjects.Count != previousDuplicateProjectsCount)
          {
-            OnDuplicatesFound(EventArgs.Empty);
+            OnDuplicatesFoundOrChanged(EventArgs.Empty);
          }
       }
 
