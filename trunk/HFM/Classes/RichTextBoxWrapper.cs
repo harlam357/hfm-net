@@ -82,6 +82,7 @@ namespace HFM.Classes
                DoLineHighlight(i, Color.Green);
             }
             else if (line.LineType.Equals(LogLineType.ClientShutdown) ||
+                     line.LineType.Equals(LogLineType.ClientCoreCommunicationsErrorShutdown) ||
                      line.LineType.Equals(LogLineType.ClientEuePauseState) ||
                      line.LineType.Equals(LogLineType.WorkUnitCoreShutdown))
             {
