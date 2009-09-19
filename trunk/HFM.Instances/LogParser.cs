@@ -218,7 +218,7 @@ namespace HFM.Instances
                _bUnitStart = false;
                SetUnitStartTimeStamp(logLine.LineRaw); 
             }
-            else if (logLine.LineType.Equals(LogLineType.WorkUnitCoreShutdown))
+            else if (logLine.LineType.Equals(LogLineType.WorkUnitCoreShutdown) && logLine.LineData != null)
             {
                _parsedUnitInfo.UnitResult = (WorkUnitResult)logLine.LineData;
             }
@@ -280,7 +280,7 @@ namespace HFM.Instances
       /// <param name="logLine">Log Line</param>
       private void CheckForCoreVersion(LogLine logLine)
       {
-         if (_bCoreFound == false && logLine.LineType.Equals(LogLineType.WorkUnitCoreVersion))
+         if (_bCoreFound == false && logLine.LineType.Equals(LogLineType.WorkUnitCoreVersion) && logLine.LineData != null)
          {
             _parsedUnitInfo.CoreVersion = logLine.LineData.ToString();
             _bCoreFound = true;
@@ -293,7 +293,7 @@ namespace HFM.Instances
       /// <param name="logLine">Log Line</param>
       private void CheckForProjectID(LogLine logLine)
       {
-         if (_bProjectFound == false && logLine.LineType.Equals(LogLineType.WorkUnitProject))
+         if (_bProjectFound == false && logLine.LineType.Equals(LogLineType.WorkUnitProject) && logLine.LineData != null)
          {
             try
             {
