@@ -1,0 +1,575 @@
+
+
+--- Opening Log file [September 7 06:48:53 UTC] 
+
+
+# Linux SMP Console Edition ###################################################
+###############################################################################
+
+                       Folding@Home Client Version 6.24beta
+
+                          http://folding.stanford.edu
+
+###############################################################################
+###############################################################################
+
+Launch directory: /home/harlarw/FAH
+Executable: ./fah6
+Arguments: -smp -verbosity 9 
+
+[06:48:53] - Ask before connecting: No
+[06:48:53] - User name: harlam357 (Team 32)
+[06:48:53] - User ID: 75B5B5EE3198996B
+[06:48:53] - Machine ID: 1
+[06:48:53] 
+[06:48:53] Loaded queue successfully.
+[06:48:53] - Autosending finished units... [September 7 06:48:53 UTC]
+[06:48:53] Trying to send all finished work units
+[06:48:53] + No unsent completed units remaining.
+[06:48:53] - Autosend completed
+[06:48:53] 
+[06:48:53] + Processing work unit
+[06:48:53] At least 4 processors must be requested.Core required: FahCore_a2.exe
+[06:48:53] Core found.
+[06:48:53] Working on queue slot 08 [September 7 06:48:53 UTC]
+[06:48:53] + Working ...
+[06:48:53] - Calling './mpiexec -np 4 -host 127.0.0.1 ./FahCore_a2.exe -dir work/ -suffix 08 -checkpoint 30 -verbose -lifeline 26708 -version 624'
+
+[06:48:53] 
+[06:48:53] *------------------------------*
+[06:48:53] Folding@Home Gromacs SMP Core
+[06:48:53] Version 2.10 (Sun Aug 30 03:43:28 CEST 2009)
+[06:48:53] 
+[06:48:53] Preparing to commence simulation
+[06:48:53] - Ensuring status. Please wait.
+[06:48:54] Called DecompressByteArray: compressed_data_size=4843974 data_size=24003985, decompressed_data_size=24003985 diff=0
+[06:48:54] - Digital signature verified
+[06:48:54] 
+[06:48:54] Project: 2669 (Run 3, Clone 172, Gen 133)
+[06:48:54] 
+[06:48:54] Assembly optimizations on if available.
+[06:48:54] Entering M.D.
+[06:49:00] Using Gromacs checkpoints
+[06:49:04] 
+[06:49:04] Entering M.D.
+[06:49:10] Using Gromacs checkpoints
+[06:49:13] data_08.log
+[06:49:13] Verified work/wudata_08.trr
+[06:49:13] Verified work/wudata_08.xtc
+[06:49:13] Verified work/wudata_08.edr
+[06:49:14] Completed 122178 out of 250000 steps  (48%)
+[06:50:48] Completed 122500 out of 250000 steps  (49%)
+[07:03:01] Completed 125000 out of 250000 steps  (50%)
+[07:14:58] Completed 127500 out of 250000 steps  (51%)
+[07:26:56] Completed 130000 out of 250000 steps  (52%)
+[07:37:44] Completed 132500 out of 250000 steps  (53%)
+[07:48:08] Completed 135000 out of 250000 steps  (54%)
+[07:58:39] Completed 137500 out of 250000 steps  (55%)
+[08:09:36] Completed 140000 out of 250000 steps  (56%)
+[08:20:02] Completed 142500 out of 250000 steps  (57%)
+[08:30:25] Completed 145000 out of 250000 steps  (58%)
+[08:42:21] Completed 147500 out of 250000 steps  (59%)
+[08:54:23] Completed 150000 out of 250000 steps  (60%)
+[09:06:20] Completed 152500 out of 250000 steps  (61%)
+[09:18:15] Completed 155000 out of 250000 steps  (62%)
+[09:30:08] Completed 157500 out of 250000 steps  (63%)
+[09:42:02] Completed 160000 out of 250000 steps  (64%)
+[09:54:02] Completed 162500 out of 250000 steps  (65%)
+[10:06:00] Completed 165000 out of 250000 steps  (66%)
+[10:17:24] Completed 167500 out of 250000 steps  (67%)
+[10:29:15] Completed 170000 out of 250000 steps  (68%)
+[10:41:05] Completed 172500 out of 250000 steps  (69%)
+[10:53:01] Completed 175000 out of 250000 steps  (70%)
+[11:04:55] Completed 177500 out of 250000 steps  (71%)
+[11:16:50] Completed 180000 out of 250000 steps  (72%)
+[11:27:36] Completed 182500 out of 250000 steps  (73%)
+[11:38:04] Completed 185000 out of 250000 steps  (74%)
+[11:50:15] Completed 187500 out of 250000 steps  (75%)
+[12:02:21] Completed 190000 out of 250000 steps  (76%)
+[12:13:22] Completed 192500 out of 250000 steps  (77%)
+[12:24:42] Completed 195000 out of 250000 steps  (78%)
+[12:36:14] Completed 197500 out of 250000 steps  (79%)
+[12:48:43] Completed 200000 out of 250000 steps  (80%)
+[12:48:53] - Autosending finished units... [September 7 12:48:53 UTC]
+[12:48:53] Trying to send all finished work units
+[12:48:53] + No unsent completed units remaining.
+[12:48:53] - Autosend completed
+[13:01:16] Completed 202500 out of 250000 steps  (81%)
+[13:13:19] Completed 205000 out of 250000 steps  (82%)
+[13:25:27] Completed 207500 out of 250000 steps  (83%)
+[13:37:42] Completed 210000 out of 250000 steps  (84%)
+[13:49:58] Completed 212500 out of 250000 steps  (85%)
+[14:01:52] Completed 215000 out of 250000 steps  (86%)
+[14:13:48] Completed 217500 out of 250000 steps  (87%)
+[14:25:17] Completed 220000 out of 250000 steps  (88%)
+[14:36:09] Completed 222500 out of 250000 steps  (89%)
+[14:46:45] Completed 225000 out of 250000 steps  (90%)
+[14:57:39] Completed 227500 out of 250000 steps  (91%)
+[15:10:01] Completed 230000 out of 250000 steps  (92%)
+[15:21:25] Completed 232500 out of 250000 steps  (93%)
+[15:32:21] Completed 235000 out of 250000 steps  (94%)
+[15:43:17] Completed 237500 out of 250000 steps  (95%)
+[15:54:43] Completed 240000 out of 250000 steps  (96%)
+[16:07:08] Completed 242500 out of 250000 steps  (97%)
+[16:19:36] Completed 245000 out of 250000 steps  (98%)
+[16:31:57] Completed 247500 out of 250000 steps  (99%)
+[16:44:11] Completed 250000 out of 250000 steps  (100%)
+[16:44:14] DynamicWrapper: Finished Work Unit: sleep=10000
+[16:44:24] 
+[16:44:24] Finished Work Unit:
+[16:44:24] - Reading up to 21148416 from "work/wudata_08.trr": Read 21148416
+[16:44:24] trr file hash check passed.
+[16:44:24] - Reading up to 4428860 from "work/wudata_08.xtc": Read 4428860
+[16:44:24] xtc file hash check passed.
+[16:44:24] edr file hash check passed.
+[16:44:24] logfile size: 186744
+[16:44:24] Leaving Run
+[16:44:28] - Writing 25914156 bytes of core data to disk...
+[16:44:29]   ... Done.
+[16:44:33] - Shutting down core
+[16:44:33] 
+[16:44:33] Folding@home Core Shutdown: FINISHED_UNIT
+[16:47:50] CoreStatus = 64 (100)
+[16:47:50] Unit 8 finished with 49 percent of time to deadline remaining.
+[16:47:50] Updated performance fraction: 0.676359
+[16:47:50] Sending work to server
+[16:47:50] Project: 2669 (Run 3, Clone 172, Gen 133)
+
+
+[16:47:50] + Attempting to send results [September 7 16:47:50 UTC]
+[16:47:50] - Reading file work/wuresults_08.dat from core
+[16:47:50]   (Read 25914156 bytes from disk)
+[16:47:50] Connecting to http://171.64.65.56:8080/
+[16:50:56] Posted data.
+[16:50:57] Initial: 0000; - Uploaded at ~116 kB/s
+[16:51:28] - Averaged speed for that direction ~174 kB/s
+[16:51:28] + Results successfully sent
+[16:51:28] Thank you for your contribution to Folding@Home.
+[16:51:28] + Number of Units Completed: 255
+
+[16:51:30] - Warning: Could not delete all work unit files (8): Core file absent
+[16:51:30] Trying to send all finished work units
+[16:51:30] + No unsent completed units remaining.
+[16:51:30] - Preparing to get new work unit...
+[16:51:30] + Attempting to get work packet
+[16:51:30] - Will indicate memory of 685 MB
+[16:51:30] - Connecting to assignment server
+[16:51:30] Connecting to http://assign.stanford.edu:8080/
+[16:51:31] Posted data.
+[16:51:31] Initial: 40AB; - Successful: assigned to (171.64.65.56).
+[16:51:31] + News From Folding@Home: Welcome to Folding@Home
+[16:51:31] Loaded queue successfully.
+[16:51:31] Connecting to http://171.64.65.56:8080/
+[16:51:39] Posted data.
+[16:51:39] Initial: 0000; - Receiving payload (expected size: 1502238)
+[16:51:44] - Downloaded at ~293 kB/s
+[16:51:44] - Averaged speed for that direction ~329 kB/s
+[16:51:44] + Received work.
+[16:51:44] Trying to send all finished work units
+[16:51:44] + No unsent completed units remaining.
+[16:51:44] + Closed connections
+[16:51:44] 
+[16:51:44] + Processing work unit
+[16:51:44] At least 4 processors must be requested.Core required: FahCore_a2.exe
+[16:51:44] Core found.
+[16:51:44] Working on queue slot 09 [September 7 16:51:44 UTC]
+[16:51:44] + Working ...
+[16:51:44] - Calling './mpiexec -np 4 -host 127.0.0.1 ./FahCore_a2.exe -dir work/ -suffix 09 -checkpoint 30 -verbose -lifeline 26708 -version 624'
+
+[16:51:45] 
+[16:51:45] *------------------------------*
+[16:51:45] Folding@Home Gromacs SMP Core
+[16:51:45] Version 2.10 (Sun Aug 30 03:43:28 CEST 2009)
+[16:51:45] 
+[16:51:45] Preparing to commence simulation
+[16:51:45] - Ensuring status. Please wait.
+[16:51:45] Called DecompressByteArray: compressed_data_size=1501726 data_size=24039037, decompressed_data_size=24039037 diff=0
+[16:51:46] - Digital signature verified
+[16:51:46] 
+[16:51:46] Project: 2677 (Run 34, Clone 40, Gen 30)
+[16:51:46] 
+[16:51:46] Assembly optimizations on if available.
+[16:51:46] Entering M.D.
+[16:51:56] Run 34, Clone 40, Gen 30)
+[16:51:56] 
+[16:51:56] Entering M.D.
+[16:52:36] CoreStatus = FF (255)
+[16:52:36] Sending work to server
+[16:52:36] Project: 2677 (Run 34, Clone 40, Gen 30)
+[16:52:36] - Error: Could not get length of results file work/wuresults_09.dat
+[16:52:36] - Error: Could not read unit 09 file. Removing from queue.
+[16:52:36] Trying to send all finished work units
+[16:52:36] + No unsent completed units remaining.
+[16:52:36] - Preparing to get new work unit...
+[16:52:36] + Attempting to get work packet
+[16:52:36] - Will indicate memory of 685 MB
+[16:52:36] - Connecting to assignment server
+[16:52:36] Connecting to http://assign.stanford.edu:8080/
+[16:52:37] Posted data.
+[16:52:37] Initial: 40AB; - Successful: assigned to (171.64.65.56).
+[16:52:37] + News From Folding@Home: Welcome to Folding@Home
+[16:52:37] Loaded queue successfully.
+[16:52:37] Connecting to http://171.64.65.56:8080/
+[16:52:45] Posted data.
+[16:52:45] Initial: 0000; - Receiving payload (expected size: 1502238)
+[16:52:50] - Downloaded at ~293 kB/s
+[16:52:50] - Averaged speed for that direction ~322 kB/s
+[16:52:50] + Received work.
+[16:52:50] Trying to send all finished work units
+[16:52:50] + No unsent completed units remaining.
+[16:52:50] + Closed connections
+[16:52:55] 
+[16:52:55] + Processing work unit
+[16:52:55] At least 4 processors must be requested.Core required: FahCore_a2.exe
+[16:52:55] Core found.
+[16:52:55] Working on queue slot 00 [September 7 16:52:55 UTC]
+[16:52:55] + Working ...
+[16:52:55] - Calling './mpiexec -np 4 -host 127.0.0.1 ./FahCore_a2.exe -dir work/ -suffix 00 -checkpoint 30 -verbose -lifeline 26708 -version 624'
+
+[16:52:55] 
+[16:52:55] *------------------------------*
+[16:52:55] Folding@Home Gromacs SMP Core
+[16:52:55] Version 2.10 (Sun Aug 30 03:43:28 CEST 2009)
+[16:52:55] 
+[16:52:55] Preparing to commence simulation
+[16:52:55] - Ensuring status. Please wait.
+[16:53:05] - Looking at optimizations...
+[16:53:05] - Working with standard loops on this execution.
+[16:53:05] - Files status OK
+[16:53:06] - Expanded 1501726 -> 24039037 (decompressed 1600.7 percent)
+[16:53:06] Called DecompressByteArray: compressed_data_size=1501726 data_size=24039037, decompressed_data_size=24039037 diff=0
+[16:53:06] - Digital signature verified
+[16:53:06] 
+[16:53:06] Project: 2677 (Run 34, Clone 40, Gen 30)
+[16:53:06] 
+[16:53:06] Entering M.D.
+[16:53:41] Completed 0 out of 250000 steps  (0%)
+[16:53:41] 
+[16:53:41] Folding@home Core Shutdown: INTERRUPTED
+[16:53:46] CoreStatus = FF (255)
+[16:53:46] Sending work to server
+[16:53:46] Project: 2677 (Run 34, Clone 40, Gen 30)
+[16:53:46] - Error: Could not get length of results file work/wuresults_00.dat
+[16:53:46] - Error: Could not read unit 00 file. Removing from queue.
+[16:53:46] Trying to send all finished work units
+[16:53:46] + No unsent completed units remaining.
+[16:53:46] - Preparing to get new work unit...
+[16:53:46] + Attempting to get work packet
+[16:53:46] - Will indicate memory of 685 MB
+[16:53:46] - Connecting to assignment server
+[16:53:46] Connecting to http://assign.stanford.edu:8080/
+[16:53:46] Posted data.
+[16:53:46] Initial: 40AB; - Successful: assigned to (171.64.65.56).
+[16:53:46] + News From Folding@Home: Welcome to Folding@Home
+[16:53:47] Loaded queue successfully.
+[16:53:47] Connecting to http://171.64.65.56:8080/
+[16:53:53] Posted data.
+[16:53:53] Initial: 0000; - Receiving payload (expected size: 1502238)
+[16:53:59] - Downloaded at ~244 kB/s
+[16:53:59] - Averaged speed for that direction ~306 kB/s
+[16:53:59] + Received work.
+[16:53:59] Trying to send all finished work units
+[16:53:59] + No unsent completed units remaining.
+[16:53:59] + Closed connections
+[16:54:04] 
+[16:54:04] + Processing work unit
+[16:54:04] At least 4 processors must be requested.Core required: FahCore_a2.exe
+[16:54:04] Core found.
+[16:54:04] Working on queue slot 01 [September 7 16:54:04 UTC]
+[16:54:04] + Working ...
+[16:54:04] - Calling './mpiexec -np 4 -host 127.0.0.1 ./FahCore_a2.exe -dir work/ -suffix 01 -checkpoint 30 -verbose -lifeline 26708 -version 624'
+
+[16:54:04] 
+[16:54:04] *------------------------------*
+[16:54:04] Folding@Home Gromacs SMP Core
+[16:54:04] Version 2.10 (Sun Aug 30 03:43:28 CEST 2009)
+[16:54:04] 
+[16:54:04] Preparing to commence simulation
+[16:54:04] - Ensuring status. Please wait.
+[16:54:04] Called DecompressByteArray: compressed_data_size=1501726 data_size=24039037, decompressed_data_size=24039037 diff=0
+[16:54:04] - Digital signature verified
+[16:54:05] 
+[16:54:05] Project: 2677 (Run 34, Clone 40, Gen 30)
+[16:54:05] 
+[16:54:05] Assembly optimizations on if available.
+[16:54:05] Entering M.D.
+[16:54:14] Run 34, Clone 40, Gen 30)
+[16:54:14] 
+[16:54:14] Entering M.D.
+[16:54:49] lding@home Core Shutdown: INTERRUPTED
+[16:54:53] CoreStatus = FF (255)
+[16:54:53] Sending work to server
+[16:54:53] Project: 2677 (Run 34, Clone 40, Gen 30)
+[16:54:53] - Error: Could not get length of results file work/wuresults_01.dat
+[16:54:53] - Error: Could not read unit 01 file. Removing from queue.
+[16:54:53] Trying to send all finished work units
+[16:54:53] + No unsent completed units remaining.
+[16:54:53] - Preparing to get new work unit...
+[16:54:53] + Attempting to get work packet
+[16:54:53] - Will indicate memory of 685 MB
+[16:54:53] - Connecting to assignment server
+[16:54:53] Connecting to http://assign.stanford.edu:8080/
+[16:54:59] Posted data.
+[16:54:59] Initial: 40AB; - Successful: assigned to (171.64.65.56).
+[16:54:59] + News From Folding@Home: Welcome to Folding@Home
+[16:55:00] Loaded queue successfully.
+[16:55:00] Connecting to http://171.64.65.56:8080/
+[16:55:00] Posted data.
+[16:55:00] Initial: 0000; - Error: Bad packet type from server, expected work assignment
+[16:55:01] - Attempt #1  to get work failed, and no other work to do.
+Waiting before retry.
+[16:55:06] + Attempting to get work packet
+[16:55:06] - Will indicate memory of 685 MB
+[16:55:06] - Connecting to assignment server
+[16:55:06] Connecting to http://assign.stanford.edu:8080/
+[16:55:07] Posted data.
+[16:55:07] Initial: 40AB; - Successful: assigned to (171.64.65.56).
+[16:55:07] + News From Folding@Home: Welcome to Folding@Home
+[16:55:07] Loaded queue successfully.
+[16:55:07] Connecting to http://171.64.65.56:8080/
+[16:55:15] Posted data.
+[16:55:15] Initial: 0000; - Receiving payload (expected size: 1502238)
+[16:55:20] - Downloaded at ~293 kB/s
+[16:55:20] - Averaged speed for that direction ~303 kB/s
+[16:55:20] + Received work.
+[16:55:20] Trying to send all finished work units
+[16:55:20] + No unsent completed units remaining.
+[16:55:20] + Closed connections
+[16:55:25] 
+[16:55:25] + Processing work unit
+[16:55:25] At least 4 processors must be requested.Core required: FahCore_a2.exe
+[16:55:25] Core found.
+[16:55:25] Working on queue slot 02 [September 7 16:55:25 UTC]
+[16:55:25] + Working ...
+[16:55:25] - Calling './mpiexec -np 4 -host 127.0.0.1 ./FahCore_a2.exe -dir work/ -suffix 02 -checkpoint 30 -verbose -lifeline 26708 -version 624'
+
+[16:55:25] 
+[16:55:25] *------------------------------*
+[16:55:25] Folding@Home Gromacs SMP Core
+[16:55:25] Version 2.10 (Sun Aug 30 03:43:28 CEST 2009)
+[16:55:25] 
+[16:55:25] Preparing to commence simulation
+[16:55:25] - Ensuring status. Please wait.
+[16:55:25] Called DecompressByteArray: compressed_data_size=1501726 data_size=24039037, decompressed_data_size=24039037 diff=0
+[16:55:26] - Digital signature verified
+[16:55:26] 
+[16:55:26] Project: 2677 (Run 34, Clone 40, Gen 30)
+[16:55:26] 
+[16:55:26] Assembly optimizations on if available.
+[16:55:26] Entering M.D.
+[16:55:35] Run 34, Clone 40, Gen 30)
+[16:55:35] 
+[16:55:35] Entering M.D.
+[16:56:15] CoreStatus = FF (255)
+[16:56:15] Sending work to server
+[16:56:15] Project: 2677 (Run 34, Clone 40, Gen 30)
+[16:56:15] - Error: Could not get length of results file work/wuresults_02.dat
+[16:56:15] - Error: Could not read unit 02 file. Removing from queue.
+[16:56:15] Trying to send all finished work units
+[16:56:15] + No unsent completed units remaining.
+[16:56:15] - Preparing to get new work unit...
+[16:56:15] + Attempting to get work packet
+[16:56:15] - Will indicate memory of 685 MB
+[16:56:15] - Connecting to assignment server
+[16:56:15] Connecting to http://assign.stanford.edu:8080/
+[16:56:16] Posted data.
+[16:56:16] Initial: 40AB; - Successful: assigned to (171.64.65.56).
+[16:56:16] + News From Folding@Home: Welcome to Folding@Home
+[16:56:16] Loaded queue successfully.
+[16:56:16] Connecting to http://171.64.65.56:8080/
+[16:56:23] Posted data.
+[16:56:23] Initial: 0000; - Receiving payload (expected size: 1502238)
+[16:56:28] - Downloaded at ~293 kB/s
+[16:56:28] - Averaged speed for that direction ~301 kB/s
+[16:56:28] + Received work.
+[16:56:28] Trying to send all finished work units
+[16:56:28] + No unsent completed units remaining.
+[16:56:28] + Closed connections
+[16:56:33] 
+[16:56:33] + Processing work unit
+[16:56:33] At least 4 processors must be requested.Core required: FahCore_a2.exe
+[16:56:33] Core found.
+[16:56:33] Working on queue slot 03 [September 7 16:56:33 UTC]
+[16:56:33] + Working ...
+[16:56:33] - Calling './mpiexec -np 4 -host 127.0.0.1 ./FahCore_a2.exe -dir work/ -suffix 03 -checkpoint 30 -verbose -lifeline 26708 -version 624'
+
+[16:56:34] - Looking at optimizations...
+[16:56:43] - Working with standard loops on this execution.
+[16:56:43] - Files status OK
+[16:56:44] - Expanded 1501726 -> 24039037 (decompressed 1600.7 percent)
+[16:56:44] Called DecompressByteArray: compressed_data_size=1501726 data_size=24039037, decompressed_data_size=24039037 diff=0
+[16:56:45] - Digital signature verified
+[16:56:45] 
+[16:56:45] Project: 2677 (Run 34, Clone 40, Gen 30)
+[16:56:45] 
+[16:56:45] Entering M.D.
+[16:57:19] Completed 0 out of 250000 steps  (0%)
+[16:57:19] 
+[16:57:19] Folding@home Core Shutdown: INTERRUPTED
+[16:57:23] CoreStatus = FF (255)
+[16:57:23] Sending work to server
+[16:57:23] Project: 2677 (Run 34, Clone 40, Gen 30)
+[16:57:23] - Error: Could not get length of results file work/wuresults_03.dat
+[16:57:23] - Error: Could not read unit 03 file. Removing from queue.
+[16:57:23] Trying to send all finished work units
+[16:57:23] + No unsent completed units remaining.
+[16:57:23] - Preparing to get new work unit...
+[16:57:23] + Attempting to get work packet
+[16:57:23] - Will indicate memory of 685 MB
+[16:57:23] - Connecting to assignment server
+[16:57:23] Connecting to http://assign.stanford.edu:8080/
+[16:57:24] Posted data.
+[16:57:24] Initial: 40AB; - Successful: assigned to (171.64.65.56).
+[16:57:24] + News From Folding@Home: Welcome to Folding@Home
+[16:57:25] Loaded queue successfully.
+[16:57:25] Connecting to http://171.64.65.56:8080/
+[16:57:34] Posted data.
+[16:57:34] Initial: 0000; - Receiving payload (expected size: 1502238)
+[16:57:39] - Downloaded at ~293 kB/s
+[16:57:39] - Averaged speed for that direction ~300 kB/s
+[16:57:39] + Received work.
+[16:57:39] Trying to send all finished work units
+[16:57:39] + No unsent completed units remaining.
+[16:57:39] + Closed connections
+[16:57:44] 
+[16:57:44] + Processing work unit
+[16:57:44] At least 4 processors must be requested.Core required: FahCore_a2.exe
+[16:57:44] Core found.
+[16:57:44] Working on queue slot 04 [September 7 16:57:44 UTC]
+[16:57:44] + Working ...
+[16:57:44] - Calling './mpiexec -np 4 -host 127.0.0.1 ./FahCore_a2.exe -dir work/ -suffix 04 -checkpoint 30 -verbose -lifeline 26708 -version 624'
+
+[16:57:44] 
+[16:57:44] *------------------------------*
+[16:57:44] Folding@Home Gromacs SMP Core
+[16:57:44] Version 2.10 (Sun Aug 30 03:43:28 CEST 2009)
+[16:57:44] 
+[16:57:44] Preparing to commence simulation
+[16:57:44] - Ensuring status. Please wait.
+[16:57:45] Called DecompressByteArray: compressed_data_size=1501726 data_size=24039037, decompressed_data_size=24039037 diff=0
+[16:57:45] - Digital signature verified
+[16:57:45] 
+[16:57:45] Project: 2677 (Run 34, Clone 40, Gen 30)
+[16:57:45] 
+[16:57:45] Assembly optimizations on if available.
+[16:57:45] Entering M.D.
+[16:57:55] Run 34, Clone 40, Gen 30)
+[16:57:55] 
+[16:57:55] Entering M.D.
+[16:58:29] lding@home Core Shutdown: INTERRUPTED
+[16:58:33] CoreStatus = FF (255)
+[16:58:33] Sending work to server
+[16:58:33] Project: 2677 (Run 34, Clone 40, Gen 30)
+[16:58:33] - Error: Could not get length of results file work/wuresults_04.dat
+[16:58:33] - Error: Could not read unit 04 file. Removing from queue.
+[16:58:33] Trying to send all finished work units
+[16:58:33] + No unsent completed units remaining.
+[16:58:33] - Preparing to get new work unit...
+[16:58:33] + Attempting to get work packet
+[16:58:33] - Will indicate memory of 685 MB
+[16:58:33] - Connecting to assignment server
+[16:58:33] Connecting to http://assign.stanford.edu:8080/
+[16:58:37] Posted data.
+[16:58:37] Initial: 40AB; - Successful: assigned to (171.64.65.56).
+[16:58:37] + News From Folding@Home: Welcome to Folding@Home
+[16:58:37] Loaded queue successfully.
+[16:58:37] Connecting to http://171.64.65.56:8080/
+[16:58:37] Posted data.
+[16:58:37] Initial: 0000; - Error: Bad packet type from server, expected work assignment
+[16:58:38] - Attempt #1  to get work failed, and no other work to do.
+Waiting before retry.
+[16:58:55] + Attempting to get work packet
+[16:58:55] - Will indicate memory of 685 MB
+[16:58:55] - Connecting to assignment server
+[16:58:55] Connecting to http://assign.stanford.edu:8080/
+[16:58:55] Posted data.
+[16:58:55] Initial: 40AB; - Successful: assigned to (171.64.65.56).
+[16:58:55] + News From Folding@Home: Welcome to Folding@Home
+[16:58:56] Loaded queue successfully.
+[16:58:56] Connecting to http://171.64.65.56:8080/
+[16:59:04] Posted data.
+[16:59:04] Initial: 0000; - Receiving payload (expected size: 4838451)
+[16:59:15] - Downloaded at ~429 kB/s
+[16:59:15] - Averaged speed for that direction ~326 kB/s
+[16:59:15] + Received work.
+[16:59:15] Trying to send all finished work units
+[16:59:15] + No unsent completed units remaining.
+[16:59:15] + Closed connections
+[16:59:20] 
+[16:59:20] + Processing work unit
+[16:59:20] At least 4 processors must be requested.Core required: FahCore_a2.exe
+[16:59:20] Core found.
+[16:59:20] Working on queue slot 05 [September 7 16:59:20 UTC]
+[16:59:20] + Working ...
+[16:59:20] - Calling './mpiexec -np 4 -host 127.0.0.1 ./FahCore_a2.exe -dir work/ -suffix 05 -checkpoint 30 -verbose -lifeline 26708 -version 624'
+
+[16:59:20] 
+[16:59:20] *------------------------------*
+[16:59:20] Folding@Home Gromacs SMP Core
+[16:59:20] Version 2.10 (Sun Aug 30 03:43:28 CEST 2009)
+[16:59:20] 
+[16:59:20] Preparing to commence simulation
+[16:59:20] - Ensuring status. Please wait.
+[16:59:21] Called DecompressByteArray: compressed_data_size=4837939 data_size=24029389, decompressed_data_size=24029389 diff=0
+[16:59:21] - Digital signature verified
+[16:59:21] 
+[16:59:21] Project: 2677 (Run 28, Clone 77, Gen 45)
+[16:59:21] 
+[16:59:21] Assembly optimizations on if available.
+[16:59:21] Entering M.D.
+[16:59:31] Run 28, Clone 77, Gen 45)
+[16:59:31] 
+[16:59:32] Entering M.D.
+[17:11:53] pleted 2500 out of 250000 steps  (1%)
+[17:23:20] Completed 5000 out of 250000 steps  (2%)
+[17:34:50] Completed 7500 out of 250000 steps  (3%)
+[17:46:22] Completed 10000 out of 250000 steps  (4%)
+[17:58:30] Completed 12500 out of 250000 steps  (5%)
+[18:11:01] Completed 15000 out of 250000 steps  (6%)
+[18:23:40] Completed 17500 out of 250000 steps  (7%)
+[18:36:16] Completed 20000 out of 250000 steps  (8%)
+[18:48:48] Completed 22500 out of 250000 steps  (9%)
+[18:48:53] - Autosending finished units... [September 7 18:48:53 UTC]
+[18:48:53] Trying to send all finished work units
+[18:48:53] + No unsent completed units remaining.
+[18:48:53] - Autosend completed
+[19:01:21] Completed 25000 out of 250000 steps  (10%)
+[19:13:25] Completed 27500 out of 250000 steps  (11%)
+[19:25:41] Completed 30000 out of 250000 steps  (12%)
+[19:37:26] Completed 32500 out of 250000 steps  (13%)
+[19:50:05] Completed 35000 out of 250000 steps  (14%)
+[20:02:31] Completed 37500 out of 250000 steps  (15%)
+[20:14:38] Completed 40000 out of 250000 steps  (16%)
+[20:26:39] Completed 42500 out of 250000 steps  (17%)
+[20:38:01] Completed 45000 out of 250000 steps  (18%)
+[20:48:21] Completed 47500 out of 250000 steps  (19%)
+[20:59:49] Completed 50000 out of 250000 steps  (20%)
+[21:11:48] Completed 52500 out of 250000 steps  (21%)
+[21:23:46] Completed 55000 out of 250000 steps  (22%)
+[21:34:30] Completed 57500 out of 250000 steps  (23%)
+[21:46:07] Completed 60000 out of 250000 steps  (24%)
+[21:58:06] Completed 62500 out of 250000 steps  (25%)
+[22:10:05] Completed 65000 out of 250000 steps  (26%)
+[22:21:22] Completed 67500 out of 250000 steps  (27%)
+[22:31:47] Completed 70000 out of 250000 steps  (28%)
+[22:43:45] Completed 72500 out of 250000 steps  (29%)
+[22:55:49] Completed 75000 out of 250000 steps  (30%)
+[23:07:57] Completed 77500 out of 250000 steps  (31%)
+[23:20:05] Completed 80000 out of 250000 steps  (32%)
+[23:31:03] Completed 82500 out of 250000 steps  (33%)
+[23:41:26] Completed 85000 out of 250000 steps  (34%)
+[23:52:29] Completed 87500 out of 250000 steps  (35%)
+[00:04:06] Completed 90000 out of 250000 steps  (36%)
+[00:16:43] Completed 92500 out of 250000 steps  (37%)
+[00:29:20] Completed 95000 out of 250000 steps  (38%)
+[00:41:01] Completed 97500 out of 250000 steps  (39%)
+[00:48:53] - Autosending finished units... [September 8 00:48:53 UTC]
+[00:48:53] Trying to send all finished work units
+[00:48:53] + No unsent completed units remaining.
+[00:48:53] - Autosend completed
+[00:51:57] Completed 100000 out of 250000 steps  (40%)
+[01:02:55] Completed 102500 out of 250000 steps  (41%)
+[01:14:33] Completed 105000 out of 250000 steps  (42%)
+[01:25:13] Completed 107500 out of 250000 steps  (43%)
+[01:36:44] Completed 110000 out of 250000 steps  (44%)
+[01:48:52] Completed 112500 out of 250000 steps  (45%)

@@ -1,8 +1,8 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C3D60E2F-E00D-485B-8B78-F285132AA229}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -52,6 +52,7 @@
     <Compile Include="ClientInstanceTests.cs" />
     <Compile Include="LogReaderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueueReaderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="TestFiles\GPU Test FAHlog 2.txt" />
@@ -60,6 +61,14 @@
     <Content Include="TestFiles\GPU Test FAHlog 1.txt" />
     <Content Include="TestFiles\SMP Test FAHlog 2.txt" />
     <Content Include="TestFiles\SMP Test FAHlog 3.txt" />
+    <Content Include="TestFiles\SMP Test INTERRUPTED Bad WUs FAHlog 2.txt" />
+    <Content Include="TestFiles\SMP Test INTERRUPTED Bad WUs FAHlog.txt" />
+    <Content Include="TestFiles\Standard Test FAHlog 1.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TestFiles\GPU2 6.23 queue.dat" />
+    <None Include="TestFiles\Linux SMP 6.24 queue.dat" />
+    <None Include="TestFiles\WinSMP 6.24R3 queue.dat" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

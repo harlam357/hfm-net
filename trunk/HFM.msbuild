@@ -4,7 +4,7 @@
 
    <PropertyGroup>
       <Major>0</Major>
-      <Minor>3</Minor>
+      <Minor>4</Minor>
       <Build>0</Build>
       <Revision>0</Revision>
    </PropertyGroup>
@@ -44,9 +44,14 @@
       <MSBuild Projects="HFM.Tests.sln"
                Targets="Rebuild"
                Properties="Configuration=Release" />
+
+      <MSBuild Projects="HFM.Setup.sln"
+               Targets="Rebuild"
+               Properties="Configuration=ScriptedRelease" />
    </Target>
 
    <Target Name="Build" DependsOnTargets="Compile">
+      <CallTarget Targets="ZipRelease;MsiRelease" />
       <Message Text="HFM.NET Build Complete"/>
    </Target>
 
@@ -60,13 +65,18 @@
       <Exec Command="$(FxCopPath) /project:HFM.FxCop /out:FxCopReport.xml" />
    </Target>
 
-   <Target Name="Zip">
+   <Target Name="ZipRelease">
       <Zip Files="@(ZipFiles)"
            WorkingDirectory=".\Release"
            ZipFileName="HFM Release $(Major).$(Minor).$(Build).$(Revision).zip" />
    </Target>
 
-   <Target Name ="CopyZip" Condition="'$(ZipDestination)' != ''">
-      <Copy SourceFiles="HFM Release $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(ZipDestination)" />
+   <Target Name="MsiRelease">
+      <Copy SourceFiles=".\HFM.Setup\bin\ScriptedRelease\HFM.Setup.msi" DestinationFiles="HFM Release $(Major).$(Minor).$(Build).$(Revision).msi" />
+   </Target>
+
+   <Target Name ="CopyTargets" Condition="'$(TargetDestination)' != ''">
+      <Copy SourceFiles="HFM Release $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(TargetDestination)" />
+      <Copy SourceFiles="HFM Release $(Major).$(Minor).$(Build).$(Revision).msi" DestinationFolder="$(TargetDestination)" />
    </Target>
 </Project>
