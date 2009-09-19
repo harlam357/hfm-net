@@ -52,20 +52,9 @@ namespace HFM.Preferences
       }
 
       /// <summary>
-      /// Formatted vMajor.Minor.Build
-      /// </summary>
-      public static string ApplicationVersionString
-      {
-         get
-         {
-            return GetVersionString("v{0}.{1}.{2}");
-         }
-      }
-
-      /// <summary>
       /// Formatted vMajor.Minor.Build.Revision
       /// </summary>
-      public static string ApplicationVersionStringWithRevision
+      public static string ShortFormattedApplicationVersionWithRevision
       {
          get
          {
@@ -76,7 +65,7 @@ namespace HFM.Preferences
       /// <summary>
       /// Formatted Version Major.Minor.Build - Revision
       /// </summary>
-      public static string ApplicationVersionStringWithRevisionLabel
+      public static string LongFormattedApplicationVersionWithRevision
       {
          get
          {
@@ -84,12 +73,16 @@ namespace HFM.Preferences
          }
       }
       
-      public static long GetVersionLong()
+      public static long VersionNumber
       {
-         // Example: 0.3.1.50 == 30010045 / 1.3.4.75 == 1030040075
-         FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location);
-         return GetVersionLongFromArray(fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart, 
-                                        fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
+         get
+         {
+            // Example: 0.3.1.50 == 30010045 / 1.3.4.75 == 1030040075
+            FileVersionInfo fileVersionInfo =
+               FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            return GetVersionLongFromArray(fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
+                                           fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
+         }
       }
       
       /// <summary>

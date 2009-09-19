@@ -36,6 +36,16 @@ namespace HFM.Instances
       public static InstanceTotals GetInstanceTotals(ICollection<ClientInstance> Instances)
       {
          InstanceTotals totals = new InstanceTotals();
+         
+         // If no instance collection, return initialized totals.
+         // Added this check because this function is now being passed a copy of the client 
+         // instances references using GetCurrentInstanceArray() and not the collection 
+         // directly, since the "live" collection can change at any time.
+         if (Instances == null)
+         {
+            return totals;
+         }
+
          totals.TotalClients = Instances.Count;
 
          foreach (ClientInstance instance in Instances)

@@ -20,7 +20,7 @@
 
 using System;
 using System.Diagnostics;
-
+using System.Diagnostics.CodeAnalysis;
 using HFM.Instrumentation;
 using HFM.Preferences;
 
@@ -657,6 +657,7 @@ namespace HFM.Proteins
       /// <summary>
       /// Frame Data for this Unit
       /// </summary>
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public UnitFrame[] UnitFrames
       {
          get { return _UnitFrames; }
