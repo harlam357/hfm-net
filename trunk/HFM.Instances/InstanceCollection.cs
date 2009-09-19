@@ -20,6 +20,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.ComponentModel;
 using System.Net;
@@ -47,7 +48,7 @@ namespace HFM.Instances
       public Int32 TotalFailedUnits;
    }
 
-   public sealed class FoldingInstanceCollection
+   public sealed class InstanceCollection : IDisposable
    {
       #region Events
       public event EventHandler CollectionChanged;
@@ -152,7 +153,7 @@ namespace HFM.Instances
       /// <summary>
       /// Default Constructor
       /// </summary>
-      public FoldingInstanceCollection()
+      public InstanceCollection()
       {
          _instanceCollection = new Dictionary<string, ClientInstance>();
          _displayCollection = new SortableBindingList<DisplayInstance>();
@@ -244,28 +245,9 @@ namespace HFM.Instances
       /// <summary>
       /// Client Instance Collection
       /// </summary>
-      public Dictionary<string, ClientInstance> InstanceCollection
+      public Dictionary<string, ClientInstance> Instances
       {
          get { return _instanceCollection; }
-      }
-
-      /// <summary>
-      /// Get Array Representation of Current Client Instance objects in Collection
-      /// </summary>
-      public ClientInstance[] CurrentInstanceArray
-      {
-         get
-         {
-            if (Count > 0)
-            {
-               ClientInstance[] instances = new ClientInstance[Count];
-               _instanceCollection.Values.CopyTo(instances, 0);
-
-               return instances;
-            }
-            
-            return null;
-         }
       }
 
       /// <summary>
@@ -467,7 +449,7 @@ namespace HFM.Instances
                line = line.Trim();
 
                // Check for commented or empty line
-               if (line.Equals(String.Empty) == false && line.StartsWith("#") == false)
+               if (String.IsNullOrEmpty(line) == false && line.StartsWith("#") == false)
                {
                   // Tokenize the line
                   string[] tokens = line.Split(new char[] {'\t'});
@@ -782,7 +764,7 @@ namespace HFM.Instances
          {
             if (match.Success)
             {
-               ClientInstance[] instances = CurrentInstanceArray;
+               ClientInstance[] instances = GetCurrentInstanceArray();
                XMLGen.DoHtmlGeneration(Path.GetTempPath(), instances);
 
                string Server = match.Result("${domain}");
@@ -826,7 +808,7 @@ namespace HFM.Instances
                   File.Copy(sCSSFileName, Path.Combine(Prefs.WebRoot, Prefs.CSSFileName), true);
                }
 
-               XMLGen.DoHtmlGeneration(Prefs.WebRoot, CurrentInstanceArray);
+               XMLGen.DoHtmlGeneration(Prefs.WebRoot, GetCurrentInstanceArray());
             }
          }
          catch (Exception ex)
@@ -959,7 +941,7 @@ namespace HFM.Instances
          FindDuplicates();
 
          // Save the benchmark collection
-         ProteinBenchmarkCollection.Instance.Serialize();
+         ProteinBenchmarkCollection.Serialize();
       }
 
       /// <summary>
@@ -1024,7 +1006,7 @@ namespace HFM.Instances
             FindDuplicates();
 
             // Save the benchmark collection
-            ProteinBenchmarkCollection.Instance.Serialize();
+            ProteinBenchmarkCollection.Serialize();
          }
       }
 
@@ -1127,7 +1109,7 @@ namespace HFM.Instances
             }
          }
 
-         collection.Serialize();
+         UnitInfoCollection.Serialize();
 
          HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
       }
@@ -1138,6 +1120,7 @@ namespace HFM.Instances
       /// Get Display Collection For Binding
       /// </summary>
       /// <returns>List of Display Instances</returns>
+      [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
       public BindingList<DisplayInstance> GetDisplayCollection()
       {
          RefreshDisplayCollection();
@@ -1189,8 +1172,8 @@ namespace HFM.Instances
       {
          int previousDuplicateUserIDCount = _duplicateUserID.Count;
          int previousDuplicateProjectsCount = _duplicateProjects.Count;
-      
-         InstanceCollectionHelpers.FindDuplicates(_duplicateUserID, _duplicateProjects, CurrentInstanceArray);
+
+         InstanceCollectionHelpers.FindDuplicates(_duplicateUserID, _duplicateProjects, GetCurrentInstanceArray());
 
          if (_duplicateUserID.Count > 0 || _duplicateProjects.Count > 0 ||
              _duplicateUserID.Count != previousDuplicateUserIDCount || _duplicateProjects.Count != previousDuplicateProjectsCount)
@@ -1220,12 +1203,29 @@ namespace HFM.Instances
 
       #region Helper Functions
       /// <summary>
+      /// Get Array Representation of Current Client Instance objects in Collection
+      /// </summary>
+      public ClientInstance[] GetCurrentInstanceArray()
+      {
+         if (Count > 0)
+         {
+            ClientInstance[] instances = new ClientInstance[Count];
+            _instanceCollection.Values.CopyTo(instances, 0);
+
+            return instances;
+         }
+
+         return null;
+      }
+      
+      /// <summary>
       /// Get Totals for all loaded Client Instances
       /// </summary>
       /// <returns>Totals for all Instances (InstanceTotals Structure)</returns>
+      [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
       public InstanceTotals GetInstanceTotals()
       {
-         return InstanceCollectionHelpers.GetInstanceTotals(_instanceCollection.Values);
+         return InstanceCollectionHelpers.GetInstanceTotals(GetCurrentInstanceArray());
       }
 
       /// <summary>
@@ -1241,6 +1241,40 @@ namespace HFM.Instances
                                                                return displayInstance.Name == Key;
                                                             });
       }
+      #endregion
+      
+      #region IDisposable Members
+      /// <summary>
+      /// Performs application-defined tasks associated with freeing, releasing, or
+      /// resetting unmanaged resources.
+      /// </summary>
+      public void Dispose()
+      {
+         Dispose(true);
+         GC.SuppressFinalize(this);
+      }
+
+      /// <summary>
+      /// Disposes the object.
+      /// </summary>
+      private void Dispose(bool disposing)
+      {
+         if (false == _disposed)
+         {
+            // clean native resources        
+            
+            if (disposing)
+            {
+               // clean managed resources
+               workTimer.Dispose();
+               webTimer.Dispose();
+            }
+
+            _disposed = true;
+         }
+      }
+
+      private bool _disposed;
       #endregion
    }
 }

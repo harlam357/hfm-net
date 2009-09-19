@@ -25,10 +25,16 @@ using HFM.Instrumentation;
 
 namespace HFM.Helpers
 {
-   public class RegistryOps
+   public sealed class RegistryOps
    {
       private const string DefaultHfmAutoRunName = "HFM.NET";
       private const string HkCuAutoRunSubKey = "Software\\Microsoft\\Windows\\CurrentVersion\\Run";
+      
+      // FxCop: CA1053 - StaticHolderTypesShouldNotHaveConstructors
+      private RegistryOps()
+      {
+      
+      }
    
       /// <summary>
       /// Does an Auto Run Value Exist?
@@ -62,7 +68,7 @@ namespace HFM.Helpers
          }
          // if it's an empty string, try to remove the value
          // the value should exist with something or than an empty string, or it should not exist at all
-         else if (CurrentHfmAutoRunValue.ToString().Equals(String.Empty))
+         else if (CurrentHfmAutoRunValue.ToString().Length == 0) // FxCop: CA1820
          {
             try
             {

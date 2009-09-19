@@ -164,7 +164,7 @@ namespace HFM.Instances
 
          xmlData.SetAttribute("Name", Instance.InstanceName);
 
-         XMLOps.setXmlNode(xmlData, "HFMVersion", PlatformOps.ApplicationVersionStringWithRevision);
+         XMLOps.setXmlNode(xmlData, "HFMVersion", PlatformOps.ShortFormattedApplicationVersionWithRevision);
 
          if (Instance.CurrentUnitInfo.DownloadTime.Equals(DateTime.MinValue))
          {
@@ -196,11 +196,11 @@ namespace HFM.Instances
          //        <TotalProjects>243</TotalProjects>
          //    </Computer>
 
-         string PPDFormatString = PreferenceSet.GetPPDFormatString();
-         XMLOps.setXmlNode(xmlData, "Computer/EstPPD", String.Format("{0:" + PPDFormatString + "}", Instance.CurrentUnitInfo.PPD));
-         XMLOps.setXmlNode(xmlData, "Computer/EstPPW", String.Format("{0:" + PPDFormatString + "}", Instance.CurrentUnitInfo.PPD * 7));
-         XMLOps.setXmlNode(xmlData, "Computer/EstUPD", String.Format("{0:" + PPDFormatString + "}", Instance.CurrentUnitInfo.UPD));
-         XMLOps.setXmlNode(xmlData, "Computer/EstUPW", String.Format("{0:" + PPDFormatString + "}", Instance.CurrentUnitInfo.UPD * 7));
+         string PpdFormatString = PreferenceSet.PpdFormatString;
+         XMLOps.setXmlNode(xmlData, "Computer/EstPPD", String.Format("{0:" + PpdFormatString + "}", Instance.CurrentUnitInfo.PPD));
+         XMLOps.setXmlNode(xmlData, "Computer/EstPPW", String.Format("{0:" + PpdFormatString + "}", Instance.CurrentUnitInfo.PPD * 7));
+         XMLOps.setXmlNode(xmlData, "Computer/EstUPD", String.Format("{0:" + PpdFormatString + "}", Instance.CurrentUnitInfo.UPD));
+         XMLOps.setXmlNode(xmlData, "Computer/EstUPW", String.Format("{0:" + PpdFormatString + "}", Instance.CurrentUnitInfo.UPD * 7));
          XMLOps.setXmlNode(xmlData, "Computer/TotalProjects", Instance.TotalUnits.ToString());
 
          //    <Protein>
@@ -226,7 +226,7 @@ namespace HFM.Instances
          XMLOps.setXmlNode(xmlData, "Protein/Credit", Instance.CurrentUnitInfo.CurrentProtein.Credit.ToString());
          XMLOps.setXmlNode(xmlData, "Protein/Frames", Instance.CurrentUnitInfo.CurrentProtein.Frames.ToString());
          XMLOps.setXmlNode(xmlData, "Protein/Core", Instance.CurrentUnitInfo.CurrentProtein.Core);
-         XMLOps.setXmlNode(xmlData, "Protein/Description", NetworkOps.ProteinDescriptionFromUrl(Instance.CurrentUnitInfo.CurrentProtein.Description));
+         XMLOps.setXmlNode(xmlData, "Protein/Description", NetworkOps.GetProteinDescription(Instance.CurrentUnitInfo.CurrentProtein.Description));
          XMLOps.setXmlNode(xmlData, "Protein/Contact", Instance.CurrentUnitInfo.CurrentProtein.Contact);
 
          //    <LastUpdatedDate>10 August 2006</LastUpdatedDate>
@@ -256,7 +256,7 @@ namespace HFM.Instances
          xmlDoc.Load(Path.Combine(Path.Combine(PreferenceSet.AppPath, "XML"), "Summary.xml"));
          XmlElement xmlRootData = xmlDoc.DocumentElement;
          
-         XMLOps.setXmlNode(xmlRootData, "HFMVersion", PlatformOps.ApplicationVersionStringWithRevision);
+         XMLOps.setXmlNode(xmlRootData, "HFMVersion", PlatformOps.ShortFormattedApplicationVersionWithRevision);
 
          List<string> duplicateUserID = new List<string>(Instances.Length);
          List<string> duplicateProjects = new List<string>(Instances.Length);
@@ -300,7 +300,7 @@ namespace HFM.Instances
             XMLOps.setXmlNode(xmlData, "UserIDDuplicate", duplicateUserID.Contains(Instance.UserAndMachineID).ToString());
             XMLOps.setXmlNode(xmlData, "ClientType", Instance.CurrentUnitInfo.TypeOfClient.ToString());
             XMLOps.setXmlNode(xmlData, "TPF", Instance.CurrentUnitInfo.TimePerFrame.ToString());
-            XMLOps.setXmlNode(xmlData, "PPD", String.Format("{0:" + PreferenceSet.GetPPDFormatString() + "}", Instance.CurrentUnitInfo.PPD));
+            XMLOps.setXmlNode(xmlData, "PPD", String.Format("{0:" + PreferenceSet.PpdFormatString + "}", Instance.CurrentUnitInfo.PPD));
             XMLOps.setXmlNode(xmlData, "UPD", String.Format("{0:0.00}", Instance.CurrentUnitInfo.UPD));
             XMLOps.setXmlNode(xmlData, "MHz", Instance.ClientProcessorMegahertz.ToString());
             XMLOps.setXmlNode(xmlData, "PPDMHz", String.Format("{0:0.000}", Instance.CurrentUnitInfo.PPD / Instance.ClientProcessorMegahertz));
@@ -359,7 +359,7 @@ namespace HFM.Instances
          xmlDoc.Load(Path.Combine(Path.Combine(PreferenceSet.AppPath, "XML"), "Overview.xml"));
          XmlElement xmlData = xmlDoc.DocumentElement;
 
-         XMLOps.setXmlNode(xmlData, "HFMVersion", PlatformOps.ApplicationVersionStringWithRevision);
+         XMLOps.setXmlNode(xmlData, "HFMVersion", PlatformOps.ShortFormattedApplicationVersionWithRevision);
 
          //<Overview>
          //    <TotalHosts>0</TotalHosts>
@@ -375,12 +375,12 @@ namespace HFM.Instances
          //    <EstPPW>0.00</EstPPW>
          //    <EstUPD>0.00</EstUPD>
          //    <EstUPW>0.00</EstUPW>
-         
-         string PPDFormatString = PreferenceSet.GetPPDFormatString();
-         XMLOps.setXmlNode(xmlData, "EstPPD", String.Format("{0:" + PPDFormatString + "}", Totals.PPD));
-         XMLOps.setXmlNode(xmlData, "EstPPW", String.Format("{0:" + PPDFormatString + "}", Totals.PPD * 7));
-         XMLOps.setXmlNode(xmlData, "EstUPD", String.Format("{0:" + PPDFormatString + "}", Totals.UPD));
-         XMLOps.setXmlNode(xmlData, "EstUPW", String.Format("{0:" + PPDFormatString + "}", Totals.UPD * 7));
+
+         string PpdFormatString = PreferenceSet.PpdFormatString;
+         XMLOps.setXmlNode(xmlData, "EstPPD", String.Format("{0:" + PpdFormatString + "}", Totals.PPD));
+         XMLOps.setXmlNode(xmlData, "EstPPW", String.Format("{0:" + PpdFormatString + "}", Totals.PPD * 7));
+         XMLOps.setXmlNode(xmlData, "EstUPD", String.Format("{0:" + PpdFormatString + "}", Totals.UPD));
+         XMLOps.setXmlNode(xmlData, "EstUPW", String.Format("{0:" + PpdFormatString + "}", Totals.UPD * 7));
 
          //    <AvEstPPD>0.00</AvEstPPD>
          //    <AvEstPPW>0.00</AvEstPPW>
@@ -389,10 +389,10 @@ namespace HFM.Instances
 
          if (Totals.WorkingClients > 0)
          {
-            XMLOps.setXmlNode(xmlData, "AvEstPPD", String.Format("{0:" + PPDFormatString + "}", Totals.PPD / Totals.WorkingClients));
-            XMLOps.setXmlNode(xmlData, "AvEstPPW", String.Format("{0:" + PPDFormatString + "}", Totals.PPD * 7 / Totals.WorkingClients));
-            XMLOps.setXmlNode(xmlData, "AvEstUPD", String.Format("{0:" + PPDFormatString + "}", Totals.UPD / Totals.WorkingClients));
-            XMLOps.setXmlNode(xmlData, "AvEstUPW", String.Format("{0:" + PPDFormatString + "}", Totals.UPD * 7 / Totals.WorkingClients));
+            XMLOps.setXmlNode(xmlData, "AvEstPPD", String.Format("{0:" + PpdFormatString + "}", Totals.PPD / Totals.WorkingClients));
+            XMLOps.setXmlNode(xmlData, "AvEstPPW", String.Format("{0:" + PpdFormatString + "}", Totals.PPD * 7 / Totals.WorkingClients));
+            XMLOps.setXmlNode(xmlData, "AvEstUPD", String.Format("{0:" + PpdFormatString + "}", Totals.UPD / Totals.WorkingClients));
+            XMLOps.setXmlNode(xmlData, "AvEstUPW", String.Format("{0:" + PpdFormatString + "}", Totals.UPD * 7 / Totals.WorkingClients));
          }
          else
          {

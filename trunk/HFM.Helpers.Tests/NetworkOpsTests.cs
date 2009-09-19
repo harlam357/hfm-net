@@ -57,10 +57,10 @@ namespace HFM.Helpers.Tests
       }
 
       [Test]
-      public void ProteinDescriptionFromUrl_HostNameDoesNotExistTest()
+      public void GetProteinDescription_HostNameDoesNotExistTest()
       {
          string Url = "http://notexistservername/page.html";
-         Assert.AreEqual(Url, NetworkOps.ProteinDescriptionFromUrl(Url));
+         Assert.AreEqual(Url, NetworkOps.GetProteinDescription(Url));
       }
 
       [Test]

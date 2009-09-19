@@ -44,7 +44,7 @@ namespace HFM.Forms
       /// <summary>
       /// Collection of host instances
       /// </summary>
-      private readonly FoldingInstanceCollection HostInstances = new FoldingInstanceCollection();
+      private readonly InstanceCollection ClientInstances = new InstanceCollection();
       
       /// <summary>
       /// Holds the state of the window before it is hidden (minimise to tray behaviour)
@@ -87,7 +87,7 @@ namespace HFM.Forms
          InitializeComponent();
 
          // Set Main Form Text
-         base.Text = String.Format("HFM.NET {0} - Beta", PlatformOps.ApplicationVersionString);
+         base.Text = String.Format("HFM.NET v{0} - Beta", PlatformOps.ApplicationVersion);
 
          // Create Messages Window
          _frmMessages = new frmMessages();
@@ -111,16 +111,16 @@ namespace HFM.Forms
 
          // Hook-up Instance Collection Event Handlers
          dataGridView1.AutoGenerateColumns = false;
-         dataGridView1.DataSource = HostInstances.GetDisplayCollection();
-         HostInstances.CollectionChanged += HostInstances_CollectionChanged;
-         //HostInstances.CollectionLoaded += HostInstances_CollectionLoaded;
-         //HostInstances.CollectionSaved += HostInstances_CollectionSaved;
-         HostInstances.InstanceAdded += HostInstances_InstanceDataChanged;
-         HostInstances.InstanceEdited += HostInstances_InstanceDataChanged;
-         HostInstances.InstanceRemoved += HostInstances_InstanceDataChanged;
-         HostInstances.InstanceRetrieved += HostInstances_InstanceRetrieved;
-         HostInstances.DuplicatesFoundOrChanged += HostInstances_DuplicatesFoundOrChanged;
-         HostInstances.RefreshUserStatsData += HostInstances_RefreshUserStatsData;
+         dataGridView1.DataSource = ClientInstances.GetDisplayCollection();
+         ClientInstances.CollectionChanged += ClientInstances_CollectionChanged;
+         //ClientInstances.CollectionLoaded += ClientInstances_CollectionLoaded;
+         //ClientInstances.CollectionSaved += ClientInstances_CollectionSaved;
+         ClientInstances.InstanceAdded += ClientInstances_InstanceDataChanged;
+         ClientInstances.InstanceEdited += ClientInstances_InstanceDataChanged;
+         ClientInstances.InstanceRemoved += ClientInstances_InstanceDataChanged;
+         ClientInstances.InstanceRetrieved += ClientInstances_InstanceRetrieved;
+         ClientInstances.DuplicatesFoundOrChanged += ClientInstances_DuplicatesFoundOrChanged;
+         ClientInstances.RefreshUserStatsData += ClientInstances_RefreshUserStatsData;
 
          // Hook-up PreferenceSet Event Handlers
          PreferenceSet Prefs = PreferenceSet.Instance;
@@ -158,7 +158,7 @@ namespace HFM.Forms
 
          HfmTrace.Instance.TextMessage += HfmTrace_TextMessage;
          HfmTrace.WriteToHfmConsole(String.Empty);
-         HfmTrace.WriteToHfmConsole(String.Format("Starting - HFM.NET {0}", PlatformOps.ApplicationVersionStringWithRevision));
+         HfmTrace.WriteToHfmConsole(String.Format("Starting - HFM.NET v{0}", PlatformOps.ApplicationVersionWithRevision));
          HfmTrace.WriteToHfmConsole(String.Empty);
          
          // Get the actual TraceLevel from the preferences
@@ -275,9 +275,9 @@ namespace HFM.Forms
          Prefs.Save();
          
          // Save the data on current WUs in progress
-         HostInstances.SaveCurrentUnitInfo();
+         ClientInstances.SaveCurrentUnitInfo();
          // Save the benchmark collection
-         ProteinBenchmarkCollection.Instance.Serialize();
+         ProteinBenchmarkCollection.Serialize();
 
          HfmTrace.WriteToHfmConsole("----------");
          HfmTrace.WriteToHfmConsole("Exiting...");
@@ -317,7 +317,7 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void dataGridView1_ColumnDisplayIndexChanged(object sender, DataGridViewColumnEventArgs e)
       {
-         if (dataGridView1.Columns.Count == FoldingInstanceCollection.NumberOfDisplayFields)
+         if (dataGridView1.Columns.Count == InstanceCollection.NumberOfDisplayFields)
          {
             foreach (DataGridViewColumn column in dataGridView1.Columns)
             {
@@ -343,12 +343,12 @@ namespace HFM.Forms
       /// </summary>
       private void dataGridView1_RowEnter(object sender, DataGridViewCellEventArgs e)
       {
-         if (HostInstances.HasInstances)
+         if (ClientInstances.HasInstances)
          {
             string InstanceName = dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString();
          
             ClientInstance Instance;
-            if (HostInstances.InstanceCollection.TryGetValue(InstanceName, out Instance))
+            if (ClientInstances.Instances.TryGetValue(InstanceName, out Instance))
             {
                statusLabelLeft.Text = Instance.Path;
 
@@ -431,13 +431,13 @@ namespace HFM.Forms
 
          if (dataGridView1.Columns["Status"].Index == info.ColumnIndex && info.RowIndex > -1)
          {
-            ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.Rows[info.RowIndex].Cells["Name"].Value.ToString()];
+            ClientInstance Instance = ClientInstances.Instances[dataGridView1.Rows[info.RowIndex].Cells["Name"].Value.ToString()];
 
             toolTipGrid.Show(Instance.Status.ToString(), dataGridView1, e.X + 15, e.Y);
          }
          else if (dataGridView1.Columns["Username"].Index == info.ColumnIndex && info.RowIndex > -1)
          {
-            ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.Rows[info.RowIndex].Cells["Name"].Value.ToString()];
+            ClientInstance Instance = ClientInstances.Instances[dataGridView1.Rows[info.RowIndex].Cells["Name"].Value.ToString()];
             if (Instance.IsUsernameOk() == false)
             {
                toolTipGrid.Show("Client's User Name does not match the configured User Name", dataGridView1, e.X + 15, e.Y);
@@ -449,8 +449,8 @@ namespace HFM.Forms
          }
          else if (dataGridView1.Columns["ProjectRunCloneGen"].Index == info.ColumnIndex && info.RowIndex > -1)
          {
-            ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.Rows[info.RowIndex].Cells["Name"].Value.ToString()];
-            if (HostInstances.IsDuplicateProject(Instance.CurrentUnitInfo.ProjectRunCloneGen))
+            ClientInstance Instance = ClientInstances.Instances[dataGridView1.Rows[info.RowIndex].Cells["Name"].Value.ToString()];
+            if (ClientInstances.IsDuplicateProject(Instance.CurrentUnitInfo.ProjectRunCloneGen))
             {
                toolTipGrid.Show("Client is working on the same work unit as another client", dataGridView1, e.X + 15, e.Y);
             }
@@ -461,8 +461,8 @@ namespace HFM.Forms
          }
          else if (dataGridView1.Columns["Name"].Index == info.ColumnIndex && info.RowIndex > -1)
          {
-            ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.Rows[info.RowIndex].Cells["Name"].Value.ToString()];
-            if (HostInstances.IsDuplicateUserAndMachineID(Instance.UserAndMachineID))
+            ClientInstance Instance = ClientInstances.Instances[dataGridView1.Rows[info.RowIndex].Cells["Name"].Value.ToString()];
+            if (ClientInstances.IsDuplicateUserAndMachineID(Instance.UserAndMachineID))
             {
                toolTipGrid.Show("Client is working with the same User and Machine ID as another client", dataGridView1, e.X + 15, e.Y);
             }
@@ -525,7 +525,7 @@ namespace HFM.Forms
             else if (dataGridView1.Columns["Username"].Index == e.ColumnIndex)
             {
                #region Username Incorrect Custom Paint
-               ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
+               ClientInstance Instance = ClientInstances.Instances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
                if (Instance.IsUsernameOk() == false)
                {
                   using (Brush gridBrush = new SolidBrush(dataGridView1.GridColor))
@@ -557,8 +557,8 @@ namespace HFM.Forms
             else if (dataGridView1.Columns["ProjectRunCloneGen"].Index == e.ColumnIndex)
             {
                #region Username Incorrect Custom Paint
-               ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
-               if (HostInstances.IsDuplicateProject(Instance.CurrentUnitInfo.ProjectRunCloneGen))
+               ClientInstance Instance = ClientInstances.Instances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
+               if (ClientInstances.IsDuplicateProject(Instance.CurrentUnitInfo.ProjectRunCloneGen))
                {
                   using (Brush gridBrush = new SolidBrush(dataGridView1.GridColor))
                   {
@@ -589,8 +589,8 @@ namespace HFM.Forms
             else if (dataGridView1.Columns["Name"].Index == e.ColumnIndex)
             {
                #region Username Incorrect Custom Paint
-               ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
-               if (HostInstances.IsDuplicateUserAndMachineID(Instance.UserAndMachineID))
+               ClientInstance Instance = ClientInstances.Instances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
+               if (ClientInstances.IsDuplicateUserAndMachineID(Instance.UserAndMachineID))
                {
                   using (Brush gridBrush = new SolidBrush(dataGridView1.GridColor))
                   {
@@ -930,7 +930,7 @@ namespace HFM.Forms
 
                dataGridView1.Rows[hti.RowIndex].Cells[hti.ColumnIndex].Selected = true;
 
-               ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.Rows[dataGridView1.CurrentRow.Index].Cells["Name"].Value.ToString()];
+               ClientInstance Instance = ClientInstances.Instances[dataGridView1.Rows[dataGridView1.CurrentRow.Index].Cells["Name"].Value.ToString()];
                if (Instance.InstanceHostType.Equals(InstanceType.PathInstance))
                {
                   mnuContextClientsViewClientFiles.Visible = true;
@@ -947,7 +947,7 @@ namespace HFM.Forms
             if (hti.Type == DataGridViewHitTestType.Cell && dataGridView1.SelectedRows.Count > 0)
             {
                ClientInstance Instance =
-                  HostInstances.InstanceCollection[dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString()];
+                  ClientInstances.Instances[dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString()];
 
                if (Instance.InstanceHostType.Equals(InstanceType.PathInstance))
                {
@@ -975,7 +975,7 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void mnuFileNew_Click(object sender, EventArgs e)
       {
-         if (HostInstances.RetrievalInProgress)
+         if (ClientInstances.RetrievalInProgress)
          {
             MessageBox.Show(this, "Retrieval in progress... please wait to create a new config file.", 
                Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -995,7 +995,7 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void mnuFileOpen_Click(object sender, EventArgs e)
       {
-         if (HostInstances.RetrievalInProgress)
+         if (ClientInstances.RetrievalInProgress)
          {
             MessageBox.Show(this, "Retrieval in progress... please wait to open another config file.",
                Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1006,7 +1006,7 @@ namespace HFM.Forms
          {
             openConfigDialog.DefaultExt = "hfm";
             openConfigDialog.Filter = "HFM Configuration Files|*.hfm";
-            openConfigDialog.FileName = HostInstances.ConfigFilename;
+            openConfigDialog.FileName = ClientInstances.ConfigFilename;
             openConfigDialog.RestoreDirectory = true;
             if (openConfigDialog.ShowDialog() == DialogResult.OK)
             {
@@ -1022,13 +1022,13 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void mnuFileSave_Click(object sender, EventArgs e)
       {
-         if (HostInstances.HasConfigFilename == false)
+         if (ClientInstances.HasConfigFilename == false)
          {
             mnuFileSaveas_Click(sender, e);
          }
          else
          {
-            HostInstances.ToXml();
+            ClientInstances.ToXml();
          }
       }
 
@@ -1040,11 +1040,11 @@ namespace HFM.Forms
       private void mnuFileSaveas_Click(object sender, EventArgs e)
       {
          // No Config File and no Instances, stub out
-         if (HostInstances.HasConfigFilename == false && HostInstances.HasInstances == false) return;
+         if (ClientInstances.HasConfigFilename == false && ClientInstances.HasInstances == false) return;
       
          if (saveConfigDialog.ShowDialog() == DialogResult.OK)
          {
-            HostInstances.ToXml(saveConfigDialog.FileName); // Issue 75
+            ClientInstances.ToXml(saveConfigDialog.FileName); // Issue 75
          }
       }
 
@@ -1055,7 +1055,7 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void mnuFileImportFahMon_Click(object sender, EventArgs e)
       {
-         if (HostInstances.RetrievalInProgress)
+         if (ClientInstances.RetrievalInProgress)
          {
             MessageBox.Show(this, "Retrieval in progress... please wait to open another config file.",
                Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1100,7 +1100,7 @@ namespace HFM.Forms
          frmPreferences prefDialog = new frmPreferences();
          if (prefDialog.ShowDialog() == DialogResult.OK)
          {
-            HostInstances.SetTimerState();
+            ClientInstances.SetTimerState();
             
             // If the PPD Calculation style changed, we need to do a new Retrieval
             if (currentPpdCalc.Equals(PreferenceSet.Instance.PpdCalculation))
@@ -1109,7 +1109,7 @@ namespace HFM.Forms
             }
             else
             {
-               HostInstances.QueueNewRetrieval();
+               ClientInstances.QueueNewRetrieval();
             }
          }
       }
@@ -1162,7 +1162,7 @@ namespace HFM.Forms
 
          if (newHost.ShowDialog() == DialogResult.OK)
          {
-            if (HostInstances.ContainsName(newHost.txtName.Text))
+            if (ClientInstances.ContainsName(newHost.txtName.Text))
             {
                MessageBox.Show(String.Format("Client Name '{0}' already exists.", newHost.txtName.Text));
                return;
@@ -1200,7 +1200,7 @@ namespace HFM.Forms
             Debug.Assert(xHost != null);
             
             // Add the new Host Instance
-            HostInstances.Add(xHost);
+            ClientInstances.Add(xHost);
          }
       }
 
@@ -1215,7 +1215,7 @@ namespace HFM.Forms
       
          frmHost editHost = new frmHost();
 
-         ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString()];
+         ClientInstance Instance = ClientInstances.Instances[dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString()];
 
          editHost.txtName.Text = Instance.InstanceName;
          editHost.txtLogFileName.Text = Instance.RemoteFAHLogFilename;
@@ -1253,7 +1253,7 @@ namespace HFM.Forms
          {
             if (Instance.InstanceName != editHost.txtName.Text)
             {
-               if (HostInstances.ContainsName(editHost.txtName.Text))
+               if (ClientInstances.ContainsName(editHost.txtName.Text))
                {
                   MessageBox.Show(String.Format("Client Name '{0}' already exists.", editHost.txtName.Text));
                   return;
@@ -1299,7 +1299,7 @@ namespace HFM.Forms
                Instance.Password = editHost.txtFTPPass.Text;
             }
 
-            HostInstances.Edit(oldName, oldPath, Instance);
+            ClientInstances.Edit(oldName, oldPath, Instance);
          }
       }
 
@@ -1333,7 +1333,7 @@ namespace HFM.Forms
       {
          if (dataGridView1.SelectedRows.Count == 0) return;
          
-         HostInstances.Remove(dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString());
+         ClientInstances.Remove(dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString());
       }
 
       /// <summary>
@@ -1343,7 +1343,7 @@ namespace HFM.Forms
       {
          if (dataGridView1.SelectedRows.Count == 0) return;
       
-         HostInstances.RetrieveSingleClient(dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString());
+         ClientInstances.RetrieveSingleClient(dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString());
       }
 
       /// <summary>
@@ -1351,7 +1351,7 @@ namespace HFM.Forms
       /// </summary>
       private void mnuClientsRefreshAll_Click(object sender, EventArgs e)
       {
-         HostInstances.QueueNewRetrieval();
+         ClientInstances.QueueNewRetrieval();
       }
 
       /// <summary>
@@ -1363,9 +1363,9 @@ namespace HFM.Forms
       {
          if (dataGridView1.SelectedRows.Count == 0) return;
          
-         ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString()];
+         ClientInstance Instance = ClientInstances.Instances[dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString()];
          
-         string logPath = Path.Combine(Instance.BaseDirectory, Instance.CachedFAHLogName);
+         string logPath = Path.Combine(ClientInstance.BaseDirectory, Instance.CachedFAHLogName);
          if (File.Exists(logPath))
          {
             try
@@ -1394,7 +1394,7 @@ namespace HFM.Forms
       {
          if (dataGridView1.SelectedRows.Count == 0) return;
          
-         ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString()];
+         ClientInstance Instance = ClientInstances.Instances[dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString()];
 
          if (Instance.InstanceHostType.Equals(InstanceType.PathInstance))
          {
@@ -1474,11 +1474,11 @@ namespace HFM.Forms
          // Make sure we have a selected client in the data grid view - Issue 33
          if (dataGridView1.SelectedRows.Count > 0)
          {
-            ClientInstance Instance = HostInstances.InstanceCollection[dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString()];
+            ClientInstance Instance = ClientInstances.Instances[dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString()];
             ProjectID = Instance.CurrentUnitInfo.ProjectID;
          }
          
-         frmBenchmarks frm = new frmBenchmarks(HostInstances, ProjectID);
+         frmBenchmarks frm = new frmBenchmarks(ClientInstances, ProjectID);
          frm.StartPosition = FormStartPosition.Manual;
          frm.Location = new Point(Location.X + 50, Location.Y + 50);
          frm.Show();
@@ -1490,7 +1490,7 @@ namespace HFM.Forms
       {
          try
          {
-            Process.Start(PreferenceSet.Instance.EOCUserURL);
+            Process.Start(PreferenceSet.Instance.EOCUserUrl.AbsoluteUri);
          }
          catch (Exception ex)
          {
@@ -1504,7 +1504,7 @@ namespace HFM.Forms
       {
          try
          {
-            Process.Start(PreferenceSet.Instance.StanfordUserURL);
+            Process.Start(PreferenceSet.Instance.StanfordUserUrl.AbsoluteUri);
          }
          catch (Exception ex)
          {
@@ -1518,7 +1518,7 @@ namespace HFM.Forms
       {
          try
          {
-            Process.Start(PreferenceSet.Instance.EOCTeamURL);
+            Process.Start(PreferenceSet.Instance.EOCTeamUrl.AbsoluteUri);
          }
          catch (Exception ex)
          {
@@ -1556,7 +1556,7 @@ namespace HFM.Forms
       {
          try 
          {
-            HostInstances.RefreshDisplayCollection();
+            ClientInstances.RefreshDisplayCollection();
             if (dataGridView1.DataSource != null)
             {
                CurrencyManager cm = (CurrencyManager) dataGridView1.BindingContext[dataGridView1.DataSource];
@@ -1628,12 +1628,12 @@ namespace HFM.Forms
       /// </summary>
       private void RefreshControls()
       {
-         InstanceTotals totals = HostInstances.GetInstanceTotals();
+         InstanceTotals totals = ClientInstances.GetInstanceTotals();
 
          double TotalPPD = totals.PPD;
          int GoodHosts = totals.WorkingClients;
-         
-         SetNotifyIconText(String.Format("{0} Working Clients{3}{1} Non-Working Clients{3}{2:" + PreferenceSet.GetPPDFormatString() + "} PPD",
+
+         SetNotifyIconText(String.Format("{0} Working Clients{3}{1} Non-Working Clients{3}{2:" + PreferenceSet.PpdFormatString + "} PPD",
                                          GoodHosts, totals.NonWorkingClients, TotalPPD, Environment.NewLine));
          RefreshStatusLabels(GoodHosts, TotalPPD);
       }
@@ -1682,7 +1682,7 @@ namespace HFM.Forms
             SetStatusLabelHostsText(String.Format("{0} Clients", GoodHosts));
          }
 
-         SetStatusLabelPPDText(String.Format("{0:" + PreferenceSet.GetPPDFormatString() + "} PPD", TotalPPD));
+         SetStatusLabelPPDText(String.Format("{0:" + PreferenceSet.PpdFormatString + "} PPD", TotalPPD));
       }
 
       /// <summary>
@@ -1721,7 +1721,7 @@ namespace HFM.Forms
       private void Instance_ProjectInfoUpdated(object sender, ProjectInfoUpdatedEventArgs e)
       {
          // Do Retrieve on all clients after Project Info is updated (this is confirmed needed)
-         HostInstances.QueueNewRetrieval();
+         ClientInstances.QueueNewRetrieval();
       }
       #endregion
 
@@ -1933,14 +1933,14 @@ namespace HFM.Forms
       /// <returns>Whether or not a destructive operation can be performed</returns>
       private bool CanContinueDestructiveOp(object sender, EventArgs e)
       {
-         if (HostInstances.ChangedAfterSave)
+         if (ClientInstances.ChangedAfterSave)
          {
             DialogResult qResult = MessageBox.Show(this, String.Format("There are changes to the configuration that have not been saved.  Would you like to save these changes?{0}{0}Yes - Continue and save the changes / No - Continue and do not save the changes / Cancel - Do not continue", Environment.NewLine), base.Text, MessageBoxButtons.YesNoCancel);
             switch (qResult)
             {
                case DialogResult.Yes:
                   mnuFileSave_Click(sender, e);
-                  if (HostInstances.ChangedAfterSave)
+                  if (ClientInstances.ChangedAfterSave)
                   {
                      return false;
                   }
@@ -1969,9 +1969,9 @@ namespace HFM.Forms
          // clear the log text
          txtLogFile.Text = String.Empty;
          // Clear the list of host instances
-         HostInstances.Clear();
+         ClientInstances.Clear();
          // This will disable the timers, we have no hosts
-         HostInstances.SetTimerState();
+         ClientInstances.SetTimerState();
       }
 
       /// <summary>
@@ -2008,9 +2008,9 @@ namespace HFM.Forms
          // Clear the UI
          ClearUI();
          // Read the config file
-         HostInstances.FromXml(Filename);
+         ClientInstances.FromXml(Filename);
 
-         if (HostInstances.HasInstances == false)
+         if (ClientInstances.HasInstances == false)
          {
             MessageBox.Show(this, "No client configurations were loaded from the given config file.",
                Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -2026,9 +2026,9 @@ namespace HFM.Forms
          // Clear the UI
          ClearUI();
          // Read the config file
-         HostInstances.FromFahMonClientsTab(filename);
+         ClientInstances.FromFahMonClientsTab(filename);
 
-         if (HostInstances.HasInstances == false)
+         if (ClientInstances.HasInstances == false)
          {
             MessageBox.Show(this, String.Format("No client configurations were imported from the given config file.{0}{0}Possibly because the file is in an older FahMon format (not tab delimited).{0}{0}Later versions of FahMon write a clientstab.txt file in tab delimited format.", Environment.NewLine), 
                Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -2071,7 +2071,7 @@ namespace HFM.Forms
       /// <summary>
       /// Refresh User Stats from external source
       /// </summary>
-      private void HostInstances_RefreshUserStatsData(object sender, EventArgs e)
+      private void ClientInstances_RefreshUserStatsData(object sender, EventArgs e)
       {
          RefreshUserStatsData(false);
       }
@@ -2103,7 +2103,7 @@ namespace HFM.Forms
       /// <summary>
       /// Forces a screen refresh when the instance collection is changed
       /// </summary>
-      private void HostInstances_CollectionChanged(object sender, EventArgs e)
+      private void ClientInstances_CollectionChanged(object sender, EventArgs e)
       {
          // Update the UI (this is confirmed needed)
          RefreshDisplay();
@@ -2112,7 +2112,7 @@ namespace HFM.Forms
       /// <summary>
       /// 
       /// </summary>
-      private void HostInstances_InstanceDataChanged(object sender, EventArgs e)
+      private void ClientInstances_InstanceDataChanged(object sender, EventArgs e)
       {
          if (PreferenceSet.Instance.AutoSaveConfig)
          {
@@ -2123,7 +2123,7 @@ namespace HFM.Forms
       /// <summary>
       /// 
       /// </summary>
-      private void HostInstances_InstanceRetrieved(object sender, EventArgs e)
+      private void ClientInstances_InstanceRetrieved(object sender, EventArgs e)
       {
          // Update the UI (this is confirmed needed)
          RefreshDisplay();
@@ -2132,7 +2132,7 @@ namespace HFM.Forms
       /// <summary>
       /// 
       /// </summary>
-      private void HostInstances_DuplicatesFoundOrChanged(object sender, EventArgs e)
+      private void ClientInstances_DuplicatesFoundOrChanged(object sender, EventArgs e)
       {
          // Update the UI (this is confirmed needed)
          RefreshDisplay();
@@ -2167,11 +2167,11 @@ namespace HFM.Forms
       }
 
       /// <summary>
-      /// Sets OfflineLast Property on HostInstances Collection
+      /// Sets OfflineLast Property on ClientInstances Collection
       /// </summary>
       private void PreferenceSet_OfflineLastChanged(object sender, EventArgs e)
       {
-         HostInstances.OfflineClientsLast = PreferenceSet.Instance.OfflineLast;
+         ClientInstances.OfflineClientsLast = PreferenceSet.Instance.OfflineLast;
       }
 
       /// <summary>
@@ -2192,7 +2192,7 @@ namespace HFM.Forms
       /// </summary>
       private void PreferenceSet_DuplicateCheckChanged(object sender, EventArgs e)
       {
-         HostInstances.FindDuplicates(); // Issue 81
+         ClientInstances.FindDuplicates(); // Issue 81
       }
       
       /// <summary>

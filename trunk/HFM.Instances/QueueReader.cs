@@ -19,6 +19,7 @@
 
 using System;
 using System.IO;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -29,40 +30,118 @@ namespace HFM.Instances
    public struct Queue
    {
       /* 0000 Queue (client) version (v2.17 and above) */
-      public UInt32 Version;
+      private UInt32 _Version;
+      /// <summary>
+      /// Queue (client) version
+      /// </summary>
+      public UInt32 Version
+      {
+         get { return _Version; }
+      }
 
       /* 0004 Current index number */
-      public UInt32 CurrentIndex;
+      private UInt32 _CurrentIndex;
+      /// <summary>
+      /// Current index number
+      /// </summary>
+      public UInt32 CurrentIndex
+      {
+         get { return _CurrentIndex; }
+      }
 
       /* 0008 Array of ten queue entries */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 10)]
-      public Entry[] Entries;
+      private Entry[] _Entries;
+      /// <summary>
+      /// Array of ten queue entries
+      /// </summary>
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public Entry[] Entries
+      {
+         get { return _Entries; }
+      }
 
       /* 7128 Performance fraction (as of v3.24) */
-      public float PerformanceFraction;
+      private float _PerformanceFraction;
+      /// <summary>
+      /// Performance fraction
+      /// </summary>
+      public float PerformanceFraction
+      {
+         get { return _PerformanceFraction; }
+      }
       
       /* 7132 Performance fraction unit weight (as of v3.24) */
-      public UInt32 PerformanceFractionUnitWeight;
+      private UInt32 _PerformanceFractionUnitWeight;
+      /// <summary>
+      /// Performance fraction unit weight
+      /// </summary>
+      public UInt32 PerformanceFractionUnitWeight
+      {
+         get { return _PerformanceFractionUnitWeight; }
+      }
       
       /* 7136 Download rate sliding average (as of v4.00) */
-      public UInt32 DownloadRateAverage;
-      
+      private UInt32 _DownloadRateAverage;
+      /// <summary>
+      /// Download rate sliding average
+      /// </summary>
+      public UInt32 DownloadRateAverage
+      {
+         get { return _DownloadRateAverage; }
+      }
+     
       /* 7140 Download rate unit weight (as of v4.00) */
-      public UInt32 DownloadRateUnitWeight;
+      private UInt32 _DownloadRateUnitWeight;
+      /// <summary>
+      /// Download rate unit weight
+      /// </summary>
+      public UInt32 DownloadRateUnitWeight
+      {
+         get { return _DownloadRateUnitWeight; }
+      }
       
       /* 7144 Upload rate sliding average (as of v4.00) */
-      public UInt32 UploadRateAverage;
+      private UInt32 _UploadRateAverage;
+      /// <summary>
+      /// Upload rate sliding average
+      /// </summary>
+      public UInt32 UploadRateAverage
+      {
+         get { return _UploadRateAverage; }
+      }
       
       /* 7148 Upload rate unit weight (as of v4.00) */
-      public UInt32 UploadRateUnitWeight;
+      private UInt32 _UploadRateUnitWeight;
+      /// <summary>
+      /// Upload rate unit weight
+      /// </summary>
+      public UInt32 UploadRateUnitWeight
+      {
+         get { return _UploadRateUnitWeight; }
+      }
       
       /* 7152 Results successfully sent (after upload failures) (as of v5.00) (LE) */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
-      public string ResultsSent;
+      private string _ResultsSent;
+      /// <summary>
+      /// Results successfully sent (after upload failures)
+      /// </summary>
+      public string ResultsSent
+      {
+         get { return _ResultsSent; }
+      }
       
       /* 7156 (as of v5.00) ...all zeros after queue conversion... */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 12)]
-      public string z7156;
+      private string _z7156;
+      /// <summary>
+      /// (as of v5.00) ...all zeros after queue conversion...
+      /// </summary>
+      public string z7156
+      {
+         get { return _z7156; }
+      }
    }
 
    [CLSCompliant(false)]
@@ -76,10 +155,24 @@ namespace HFM.Instances
        *   4 = Fetching from Server
        ***/ 
       /* 000 Status */
-      public UInt32 Status; 
+      private UInt32 _Status;
+      /// <summary>
+      /// Status (0 = Empty, Deleted, Finished, or Garbage / 1 = Folding Now or Queued / 2 = Ready for Upload / 3 = Abandonded (Ignore is found) / 4 = Fetching from Server)
+      /// </summary>
+      public UInt32 Status
+      {
+         get { return _Status; }
+      }
 
       /* 004 Pad for Windows, others as of v4.01, as of v6.01 number of SMP Cores to use (LE) */
-      public UInt32 UseCores;
+      private UInt32 _UseCores;
+      /// <summary>
+      /// Pad for Windows, others as of v4.01, as of v6.01 number of SMP Cores to use
+      /// </summary>
+      public UInt32 UseCores
+      {
+         get { return _UseCores; }
+      }
 
       /*** 0 = Begin Time
        *   4 = End Time 
@@ -87,38 +180,104 @@ namespace HFM.Instances
        ***/
       /* 008 Time data (epoch 0000 1jan00 UTC) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
-      public UInt32[] TimeData; 
+      private UInt32[] _TimeData;
+      /// <summary>
+      /// Time data (epoch 0000 1jan00 UTC)
+      /// </summary>
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public UInt32[] TimeData
+      {
+         get { return _TimeData; }
+      }
 
       /* 040 Server IP address (until v3.0) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      public byte[] OldServerIP; /*** Ignore this value ***/
+      private byte[] _OldServerIP; /*** Ignore this value ***/
+      /// <summary>
+      /// Server IP address (until v3.0 - Ignore this value)
+      /// </summary>
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] OldServerIP
+      {
+         get { return _OldServerIP; }
+      }
 
       /***
        * 0 = Not Uploaded
        * 1 = Uploaded
        ***/
-      /* 044 Upload status */ 
-      public UInt32 UploadStatus; 
+      /* 044 Upload status */
+      private UInt32 _UploadStatus;
+      /// <summary>
+      /// Upload status (0 = Not Uploaded / 1 = Uploaded)
+      /// </summary>
+      public UInt32 UploadStatus
+      {
+         get { return _UploadStatus; }
+      }
 
       /* 048 Web address for core downloads */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
-      public string CoreDownloadUrl;
+      private string _CoreDownloadUrl;
+      /// <summary>
+      /// Web address for core downloads
+      /// </summary>
+      [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings")]
+      public string CoreDownloadUrl
+      {
+         get { return _CoreDownloadUrl; }
+      }
 
       /* 176 Misc1a */
-      public UInt32 Misc1a;
+      private UInt32 _Misc1a;
+      /// <summary>
+      /// Misc1a
+      /// </summary>
+      public UInt32 Misc1a
+      {
+         get { return _Misc1a; }
+      }
       
       /* 180 Core_xx number (hex) */
-      public UInt32 CoreNumber; /*** Convert to Hex ***/
+      private UInt32 _CoreNumber; /*** Convert to Hex ***/
+      /// <summary>
+      /// Core_xx number
+      /// </summary>
+      public UInt32 CoreNumber
+      {
+         get { return _CoreNumber; }
+      }
 
       /* 184 Misc1b */
-      public UInt32 Misc1b;
+      private UInt32 _Misc1b;
+      /// <summary>
+      /// Misc1b
+      /// </summary>
+      public UInt32 Misc1b
+      {
+         get { return _Misc1b; }
+      }
       
       /* 188 wudata_xx.dat file size */
-      public UInt32 WuDataFileSize;
+      private UInt32 _WuDataFileSize;
+      /// <summary>
+      /// wudata_xx.dat file size
+      /// </summary>
+      public UInt32 WuDataFileSize
+      {
+         get { return _WuDataFileSize; }
+      }
 
       /* 192 */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
-      public string z192;
+      private string _z192;
+      /// <summary>
+      /// z192
+      /// </summary>
+      public string z192
+      {
+         get { return _z192; }
+      }
 
       /* 208 Project number (LE) */
       //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 2)]
@@ -142,122 +301,355 @@ namespace HFM.Instances
 
       /* 208-223 Project R/C/G (see above) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
-      public byte[] Project; /*** Needs post read processing ***/
+      private byte[] _Project; /*** Needs post read processing ***/
+      /// <summary>
+      /// Project R/C/G
+      /// </summary>
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] Project
+      {
+         get { return _Project; }
+      }
 
       /* 224 */ 
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 36)]
-      public string z224;
+      private string _z224;
+      /// <summary>
+      /// z224
+      /// </summary>
+      public string z224
+      {
+         get { return _z224; }
+      }
 
       /* 260 Machine ID (LE) */
-      public UInt32 MachineID;
+      private UInt32 _MachineID;
+      /// <summary>
+      /// Machine ID
+      /// </summary>
+      public UInt32 MachineID
+      {
+         get { return _MachineID; }
+      }
 
       /* 264 Server IP address */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      public byte[] ServerIP; /*** Needs post read processing ***/
+      private byte[] _ServerIP; /*** Needs post read processing ***/
+      /// <summary>
+      /// Server IP address
+      /// </summary>
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] ServerIP
+      {
+         get { return _ServerIP; }
+      }
 
       /* 268 Server port number */
-      public UInt32 ServerPort;
+      private UInt32 _ServerPort;
+      /// <summary>
+      /// Server port number
+      /// </summary>
+      public UInt32 ServerPort
+      {
+         get { return _ServerPort; }
+      }
 
       /* 272 Work unit type */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
-      public string WorkUnitType;
+      private string _WorkUnitType;
+      /// <summary>
+      /// Work unit type
+      /// </summary>
+      public string WorkUnitType
+      {
+         get { return _WorkUnitType; }
+      }
 
       /* 336 User Name */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
-      public string UserName;
+      private string _UserName;
+      /// <summary>
+      /// User Name
+      /// </summary>
+      public string UserName
+      {
+         get { return _UserName; }
+      }
 
       /* 400 Team Number */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
-      public string TeamNumber;
+      private string _TeamNumber;
+      /// <summary>
+      /// Team Number
+      /// </summary>
+      public string TeamNumber
+      {
+         get { return _TeamNumber; }
+      }
 
       /* 464 Stored ID for unit (UserID + MachineID) (LE or BE, usually BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
-      public byte[] UserAndMachineID; /*** Needs post read processing ***/
+      private byte[] _UserAndMachineID; /*** Needs post read processing ***/
+      /// <summary>
+      /// Stored ID for unit (UserID + MachineID)
+      /// </summary>
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] UserAndMachineID
+      {
+         get { return _UserAndMachineID; }
+      }
 
-      /* 472 Benchmark (as of v3.24) (LE) */
-      public UInt32 OldBenchmark; /*** Ignore this value ***/
+      /* 472 Benchmark (until v3.24) (LE) */
+      private UInt32 _OldBenchmark; /*** Ignore this value ***/
+      /// <summary>
+      /// Benchmark (until v3.24 - Ignore this value)
+      /// </summary>
+      public UInt32 OldBenchmark
+      {
+         get { return _OldBenchmark; }
+      }
 
       /* 476 Misc3b (unused as of v3.24) (LE); Benchmark (as of v5.00) (BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      public byte[] Benchmark; /*** Needs post read processing ***/
+      private byte[] _Benchmark; /*** Needs post read processing ***/
+      /// <summary>
+      /// Benchmark (as of v5.00)
+      /// </summary>
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] Benchmark
+      {
+         get { return _Benchmark; }
+      }
 
       /* 480 CPU type (LE or BE, sometimes 0) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      public byte[] CpuType;
+      private byte[] _CpuType;
+      /// <summary>
+      /// CPU type
+      /// </summary>
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] CpuType
+      {
+         get { return _CpuType; }
+      }
 
       /* 484 OS type (LE or BE, sometimes 0) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      public byte[] OsType;
+      private byte[] _OsType;
+      /// <summary>
+      /// OS type
+      /// </summary>
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] OsType
+      {
+         get { return _OsType; }
+      }
 
       /* 488 CPU species (LE or BE, sometimes 0) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      public byte[] CpuSpecies;
+      private byte[] _CpuSpecies;
+      /// <summary>
+      /// CPU species
+      /// </summary>
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] CpuSpecies
+      {
+         get { return _CpuSpecies; }
+      }
 
       /* 492 OS species (LE or BE, sometimes 0) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      public byte[] OsSpecies;
+      private byte[] _OsSpecies;
+      /// <summary>
+      /// OS species
+      /// </summary>
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] OsSpecies
+      {
+         get { return _OsSpecies; }
+      }
 
       /* 496 Allowed time to return (seconds) */
-      public UInt32 ExpirationInSeconds; /*** Final Deadline Length ***/
+      private UInt32 _ExpirationInSeconds; /*** Final Deadline ***/
+      /// <summary>
+      /// Allowed time to return (seconds) - Final Deadline
+      /// </summary>
+      public UInt32 ExpirationInSeconds
+      {
+         get { return _ExpirationInSeconds; }
+      }
 
       /* 500 */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 8)]
-      public string z500;
+      private string _z500;
+      /// <summary>
+      /// z500
+      /// </summary>
+      public string z500
+      {
+         get { return _z500; }
+      }
 
       /* 508 Assignment info present flag (LE or BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      public byte[] AssignmentInfoPresent;
+      private byte[] _AssignmentInfoPresent;
+      /// <summary>
+      /// Assignment info present flag
+      /// </summary>
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] AssignmentInfoPresent
+      {
+         get { return _AssignmentInfoPresent; }
+      }
 
       /* 512 Assignment timestamp (LE or BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      public byte[] AssignmentTimeStamp;
+      private byte[] _AssignmentTimeStamp;
+      /// <summary>
+      /// Assignment timestamp
+      /// </summary>
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] AssignmentTimeStamp
+      {
+         get { return _AssignmentTimeStamp; }
+      }
 
-      /* 516 Assignment info (LE or BE) */
+      /* 516 Assignment info checksum (LE or BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      public byte[] AssignmentInfoChecksum;
+      private byte[] _AssignmentInfoChecksum;
+      /// <summary>
+      /// Assignment info checksum
+      /// </summary>
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] AssignmentInfoChecksum
+      {
+         get { return _AssignmentInfoChecksum; }
+      }
 
       /* 520 Collection server IP address (as of v5.00) (LE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      public byte[] CollectionServerIP; /*** Needs post read processing ***/
+      private byte[] _CollectionServerIP; /*** Needs post read processing ***/
+      /// <summary>
+      /// Collection server IP address
+      /// </summary>
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] CollectionServerIP
+      {
+         get { return _CollectionServerIP; }
+      }
 
       /* 524 Download started time (as of v5.00) (BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      public byte[] DownloadStartedTime;
+      private byte[] _DownloadStartedTime;
+      /// <summary>
+      /// Download started time
+      /// </summary>
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] DownloadStartedTime
+      {
+         get { return _DownloadStartedTime; }
+      }
 
       /* 528 */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
-      public string z528;
+      private string _z528;
+      /// <summary>
+      /// z528
+      /// </summary>
+      public string z528
+      {
+         get { return _z528; }
+      }
 
       /* 544 Number of SMP cores (as of v5.91) (BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      public byte[] NumberOfSmpCores; /*** Needs post read processing ***/
+      private byte[] _NumberOfSmpCores; /*** Needs post read processing ***/
+      /// <summary>
+      /// Number of SMP cores
+      /// </summary>
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] NumberOfSmpCores
+      {
+         get { return _NumberOfSmpCores; }
+      }
 
       /* 548 Tag of Work Unit (as of v5.00) */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
-      public string WorkUnitTag;
+      private string _WorkUnitTag;
+      /// <summary>
+      /// Tag of Work Unit
+      /// </summary>
+      public string WorkUnitTag
+      {
+         get { return _WorkUnitTag; }
+      }
 
       /* 564 */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
-      public string z564;
+      private string _z564;
+      /// <summary>
+      /// z564
+      /// </summary>
+      public string z564
+      {
+         get { return _z564; }
+      }
 
       /* 580 Passkey (as of v6.00) */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
-      public string Passkey;
+      private string _Passkey;
+      /// <summary>
+      /// Passkey
+      /// </summary>
+      public string Passkey
+      {
+         get { return _Passkey; }
+      }
 
       /* 612 Flops per CPU (core) (as of v6.00) (BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      public byte[] Flops; /*** Needs post read processing ***/
+      private byte[] _Flops; /*** Needs post read processing ***/
+      /// <summary>
+      /// Flops per CPU (core)
+      /// </summary>
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] Flops
+      {
+         get { return _Flops; }
+      }
 
       /* 616 Available memory (as of v6.00) (BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      public byte[] Memory; /*** Needs post read processing ***/
+      private byte[] _Memory; /*** Needs post read processing ***/
+      /// <summary>
+      /// Available memory (as of v6.00)
+      /// </summary>
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] Memory
+      {
+         get { return _Memory; }
+      }
 
       /* 620 Available GPU memory (as of v6.20) (LE) */
-      public UInt32 GpuMemory;
+      private UInt32 _GpuMemory;
+      /// <summary>
+      /// Available GPU memory (as of v6.20)
+      /// </summary>
+      public UInt32 GpuMemory
+      {
+         get { return _GpuMemory; }
+      }
 
       /* 624 */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
-      public string z624;
+      private string _z624;
+      /// <summary>
+      /// z624
+      /// </summary>
+      public string z624
+      {
+         get { return _z624; }
+      }
 
       /***
        * 0 = Due Date - This time is calculated by the client when it downloads a unit.
@@ -266,13 +658,35 @@ namespace HFM.Instances
        ***/                
       /* 688 WU expiration time */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      public UInt32[] ExpirationTime;
+      private UInt32[] _ExpirationTime;
+      /// <summary>
+      /// WU expiration time (0 = Due Date / 1-3 = Unknown)
+      /// </summary>
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public UInt32[] ExpirationTime
+      {
+         get { return _ExpirationTime; }
+      }
 
       /* 704 Packet size limit (as of v5.00) */
-      public UInt32 PacketSizeLimit;
+      private UInt32 _PacketSizeLimit;
+      /// <summary>
+      /// Packet size limit
+      /// </summary>
+      public UInt32 PacketSizeLimit
+      {
+         get { return _PacketSizeLimit; }
+      }
       
       /* 708 Number of upload failures (as of v5.00) */
-      public UInt32 NumberOfUploadFailures;
+      private UInt32 _NumberOfUploadFailures;
+      /// <summary>
+      /// Number of upload failures
+      /// </summary>
+      public UInt32 NumberOfUploadFailures
+      {
+         get { return _NumberOfUploadFailures; }
+      }
    }
 
    #region struct layout from qd.c (9/10/2009) (http://linuxminded.nl/?target=software-qd-tools.plc)
@@ -387,7 +801,6 @@ namespace HFM.Instances
          }
       }
 
-
       public DateTime EndTimeUtc
       {
          get
@@ -410,9 +823,9 @@ namespace HFM.Instances
          get { return _qEntry.UploadStatus; }
       }
 
-      public string CoreDownloadUrl
+      public Uri CoreDownloadUrl
       {
-         get { return String.Format("http://{0}/Core_{1}.fah", _qEntry.CoreDownloadUrl, CoreNumber); }
+         get { return new Uri(String.Format("http://{0}/Core_{1}.fah", _qEntry.CoreDownloadUrl, CoreNumber)); }
       }
 
       public UInt32 Misc1a

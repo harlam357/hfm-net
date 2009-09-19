@@ -31,12 +31,12 @@ namespace HFM.Forms
    public partial class frmBenchmarks : Classes.FormWrapper
    {
       #region Members
-      private readonly FoldingInstanceCollection _clientInstances;
+      private readonly InstanceCollection _clientInstances;
       private readonly int _initialProjectID; 
       #endregion
 
       #region Form Constructor / functionality
-      public frmBenchmarks(FoldingInstanceCollection clientInstances, int projectID)
+      public frmBenchmarks(InstanceCollection clientInstances, int projectID)
       {
          _clientInstances = clientInstances;
          _initialProjectID = projectID;
@@ -70,7 +70,7 @@ namespace HFM.Forms
          foreach (InstanceProteinBenchmark benchmark in list)
          {
             ClientInstance instance;
-            _clientInstances.InstanceCollection.TryGetValue(benchmark.OwningInstanceName, out instance);
+            _clientInstances.Instances.TryGetValue(benchmark.OwningInstanceName, out instance);
             UpdateBenchmarkText(benchmark.ToMultiLineString(instance));
          }
       }

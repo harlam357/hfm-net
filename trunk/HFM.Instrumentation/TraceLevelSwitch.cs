@@ -22,10 +22,16 @@ using System.Diagnostics;
 
 namespace HFM.Instrumentation
 {
-   public class TraceLevelSwitch
+   public sealed class TraceLevelSwitch
    {
       private static TraceSwitch _Instance;
       private static readonly Object classLock = typeof(TraceSwitch);
+
+      // FxCop: CA1053 - StaticHolderTypesShouldNotHaveConstructors
+      private TraceLevelSwitch()
+      {
+      
+      }
 
       public static TraceSwitch Instance
       {
@@ -42,9 +48,9 @@ namespace HFM.Instrumentation
          }
       }
 
-      public static TraceSwitch GetTraceLevelSwitch()
+      public static TraceSwitch Switch
       {
-         return Instance;
+         get { return Instance; }
       }
    }
 }

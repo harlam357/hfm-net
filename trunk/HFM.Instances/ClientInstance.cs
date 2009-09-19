@@ -102,7 +102,7 @@ namespace HFM.Instances
       /// <summary>
       /// Log File Cache Directory
       /// </summary>
-      public string BaseDirectory
+      public static string BaseDirectory
       {
          get { return System.IO.Path.Combine(PreferenceSet.Instance.AppDataPath, PreferenceSet.Instance.CacheFolder); }
       }
@@ -205,7 +205,7 @@ namespace HFM.Instances
          get { return _RemoteFAHLogFilename; }
          set
          {
-            if (value == String.Empty)
+            if (String.IsNullOrEmpty(value))
             {
                _RemoteFAHLogFilename = LocalFAHLog;
             }
@@ -229,7 +229,7 @@ namespace HFM.Instances
          get { return _RemoteUnitInfoFilename; }
          set
          {
-            if (value == String.Empty)
+            if (String.IsNullOrEmpty(value))
             {
                _RemoteUnitInfoFilename = LocalUnitInfo;
             }
@@ -817,7 +817,7 @@ namespace HFM.Instances
          #endregion
 
          #region Write Verbose Trace
-         if (TraceLevelSwitch.GetTraceLevelSwitch().TraceVerbose)
+         if (TraceLevelSwitch.Switch.TraceVerbose)
          {
             List<string> messages = new List<string>(10);
 

@@ -128,14 +128,14 @@ namespace HFM.Helpers
             if (ForceRefresh)
             {
                UserStatsData.LastUpdated = DateTime.UtcNow;
-               UserStatsData.Serialize();
+               UserStatsDataContainer.Serialize();
             }
             // if container's LastUpdated is now greater, we updated... otherwise, if the update 
             // status is current we should assume the data is current but did not change - Issue 67
             else if (UserStatsData.LastUpdated > LastUpdated || Update_Status == "Current")
             {
                UserStatsData.LastUpdated = DateTime.UtcNow;
-               UserStatsData.Serialize();
+               UserStatsDataContainer.Serialize();
             }
 
             HfmTrace.WriteToHfmConsole(TraceLevel.Info, Start);

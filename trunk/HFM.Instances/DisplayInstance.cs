@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 using HFM.Preferences;
 using HFM.Proteins;
@@ -245,6 +246,7 @@ namespace HFM.Instances
          get { return _Deadline; }
       }
 
+      [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
       public string Dummy
       {
          get { return String.Empty; }

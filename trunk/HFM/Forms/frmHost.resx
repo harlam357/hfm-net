@@ -124,7 +124,7 @@
     <value>This option only needs checked if the
 client reports local time as UTC.  This
 is typically the case with VMs that cannot
-be configured with a timezone offset.
+be configured with a time zone offset.
 
 example: notfred's Virtual Appliance</value>
   </data>

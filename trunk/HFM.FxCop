@@ -18,7 +18,7 @@
   <CustomDictionaries SearchFxCopDir="True" SearchUserProfile="True" SearchProjectDir="True" />
   <SearchGlobalAssemblyCache>False</SearchGlobalAssemblyCache>
   <DeadlockDetectionTimeout>120</DeadlockDetectionTimeout>
-  <IgnoreGeneratedCode>False</IgnoreGeneratedCode>
+  <IgnoreGeneratedCode>True</IgnoreGeneratedCode>
   <TargetFrameworkVersion>2.0</TargetFrameworkVersion>
  </ProjectOptions>
  <Targets>
@@ -35,8 +35,6 @@
     <Rule Name="AbstractTypesShouldNotHaveConstructors" Enabled="True" />
     <Rule Name="AvoidEmptyInterfaces" Enabled="True" />
     <Rule Name="AvoidExcessiveParametersOnGenericTypes" Enabled="True" />
-    <Rule Name="AvoidNamespacesWithFewTypes" Enabled="True" />
-    <Rule Name="AvoidOutParameters" Enabled="True" />
     <Rule Name="CollectionsShouldImplementGenericInterface" Enabled="True" />
     <Rule Name="ConsiderPassingBaseTypesAsParameters" Enabled="True" />
     <Rule Name="DeclareEventHandlersCorrectly" Enabled="True" />
@@ -47,12 +45,10 @@
     <Rule Name="DoNotDeclareStaticMembersOnGenericTypes" Enabled="True" />
     <Rule Name="DoNotDeclareVirtualMembersInSealedTypes" Enabled="True" />
     <Rule Name="DoNotDeclareVisibleInstanceFields" Enabled="True" />
-    <Rule Name="DoNotExposeGenericLists" Enabled="True" />
     <Rule Name="DoNotHideBaseClassMethods" Enabled="True" />
     <Rule Name="DoNotNestGenericTypesInMemberSignatures" Enabled="True" />
     <Rule Name="DoNotOverloadOperatorEqualsOnReferenceTypes" Enabled="True" />
     <Rule Name="DoNotPassTypesByReference" Enabled="True" />
-    <Rule Name="DoNotRaiseExceptionsInUnexpectedLocations" Enabled="True" />
     <Rule Name="EnumeratorsShouldBeStronglyTyped" Enabled="True" />
     <Rule Name="EnumsShouldHaveZeroValue" Enabled="True" />
     <Rule Name="EnumStorageShouldBeInt32" Enabled="True" />
@@ -94,16 +90,12 @@
    </RuleFile>
    <RuleFile Name="$(FxCopDir)\Rules\GlobalizationRules.dll" Enabled="True" AllRulesEnabled="False">
     <Rule Name="AvoidDuplicateAccelerators" Enabled="True" />
-    <Rule Name="DoNotHardcodeLocaleSpecificStrings" Enabled="True" />
-    <Rule Name="NormalizeStringsToUppercase" Enabled="True" />
     <Rule Name="SetLocaleForDataTypes" Enabled="True" />
-    <Rule Name="SpecifyCultureInfo" Enabled="True" />
     <Rule Name="SpecifyMarshalingForPInvokeStringArguments" Enabled="True" />
-    <Rule Name="SpecifyStringComparison" Enabled="True" />
     <Rule Name="UseOrdinalStringComparison" Enabled="True" />
    </RuleFile>
    <RuleFile Name="$(FxCopDir)\Rules\InteroperabilityRules.dll" Enabled="True" AllRulesEnabled="True" />
-   <RuleFile Name="$(FxCopDir)\Rules\MobilityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\MobilityRules.dll" Enabled="False" AllRulesEnabled="False" />
    <RuleFile Name="$(FxCopDir)\Rules\NamingRules.dll" Enabled="True" AllRulesEnabled="False">
     <Rule Name="DoNotNameEnumValuesReserved" Enabled="True" />
     <Rule Name="DoNotPrefixEnumValuesWithTypeName" Enabled="True" />
@@ -111,12 +103,8 @@
     <Rule Name="FlagsEnumsShouldHavePluralNames" Enabled="True" />
     <Rule Name="IdentifiersShouldDifferByMoreThanCase" Enabled="True" />
     <Rule Name="IdentifiersShouldHaveCorrectPrefix" Enabled="True" />
-    <Rule Name="IdentifiersShouldNotContainTypeNames" Enabled="True" />
-    <Rule Name="IdentifiersShouldNotContainUnderscores" Enabled="True" />
     <Rule Name="IdentifiersShouldNotHaveIncorrectPrefix" Enabled="True" />
     <Rule Name="IdentifiersShouldNotMatchKeywords" Enabled="True" />
-    <Rule Name="OnlyFlagsEnumsShouldHavePluralNames" Enabled="True" />
-    <Rule Name="ParameterNamesShouldMatchBaseDeclaration" Enabled="True" />
     <Rule Name="ParameterNamesShouldNotMatchMemberNames" Enabled="True" />
     <Rule Name="PropertyNamesShouldNotMatchGetMethods" Enabled="True" />
     <Rule Name="ResourceStringCompoundWordsShouldBeCasedCorrectly" Enabled="True" />
@@ -124,7 +112,24 @@
     <Rule Name="TypeNamesShouldNotMatchNamespaces" Enabled="True" />
     <Rule Name="UsePreferredTerms" Enabled="True" />
    </RuleFile>
-   <RuleFile Name="$(FxCopDir)\Rules\PerformanceRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\PerformanceRules.dll" Enabled="True" AllRulesEnabled="False">
+    <Rule Name="AvoidUncalledPrivateCode" Enabled="True" />
+    <Rule Name="AvoidUninstantiatedInternalClasses" Enabled="True" />
+    <Rule Name="AvoidUnsealedAttributes" Enabled="True" />
+    <Rule Name="AvoidUnusedPrivateFields" Enabled="True" />
+    <Rule Name="DoNotCastUnnecessarily" Enabled="True" />
+    <Rule Name="DoNotInitializeUnnecessarily" Enabled="True" />
+    <Rule Name="InitializeReferenceTypeStaticFieldsInline" Enabled="True" />
+    <Rule Name="MarkAssembliesWithNeutralResourcesLanguage" Enabled="True" />
+    <Rule Name="MarkMembersAsStatic" Enabled="True" />
+    <Rule Name="OverrideEqualsAndOperatorEqualsOnValueTypes" Enabled="True" />
+    <Rule Name="PreferJaggedArraysOverMultidimensional" Enabled="True" />
+    <Rule Name="PropertiesShouldNotReturnArrays" Enabled="True" />
+    <Rule Name="RemoveEmptyFinalizers" Enabled="True" />
+    <Rule Name="RemoveUnusedLocals" Enabled="True" />
+    <Rule Name="TestForEmptyStringsUsingStringLength" Enabled="True" />
+    <Rule Name="UseLiteralsWhereAppropriate" Enabled="True" />
+   </RuleFile>
    <RuleFile Name="$(FxCopDir)\Rules\PortabilityRules.dll" Enabled="True" AllRulesEnabled="True" />
    <RuleFile Name="$(FxCopDir)\Rules\SecurityRules.dll" Enabled="True" AllRulesEnabled="True" />
    <RuleFile Name="$(FxCopDir)\Rules\UsageRules.dll" Enabled="True" AllRulesEnabled="True" />

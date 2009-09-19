@@ -119,7 +119,7 @@ namespace HFM.Instrumentation
       public static void WriteToHfmConsole(Exception ex)
       {
          TraceLevel level = TraceLevel.Error;
-         if (level.CompareTo(TraceLevelSwitch.GetTraceLevelSwitch().Level) < 1)
+         if (level.CompareTo(TraceLevelSwitch.Switch.Level) < 1)
          {
             Instance.DoWrite(level, ex);
          }
@@ -128,7 +128,7 @@ namespace HFM.Instrumentation
       public static void WriteToHfmConsole(string subMessage, Exception ex)
       {
          TraceLevel level = TraceLevel.Error;
-         if (level.CompareTo(TraceLevelSwitch.GetTraceLevelSwitch().Level) < 1)
+         if (level.CompareTo(TraceLevelSwitch.Switch.Level) < 1)
          {
             Instance.DoWrite(level, subMessage, ex);
          }
@@ -136,7 +136,7 @@ namespace HFM.Instrumentation
 
       public static void WriteToHfmConsole(TraceLevel level, ICollection messages)
       {
-         if (level.CompareTo(TraceLevelSwitch.GetTraceLevelSwitch().Level) < 1)
+         if (level.CompareTo(TraceLevelSwitch.Switch.Level) < 1)
          {
             Instance.DoWrite(level, messages);
          }
@@ -144,7 +144,7 @@ namespace HFM.Instrumentation
 
       public static void WriteToHfmConsole(TraceLevel level, string message)
       {
-         if (level.CompareTo(TraceLevelSwitch.GetTraceLevelSwitch().Level) < 1)
+         if (level.CompareTo(TraceLevelSwitch.Switch.Level) < 1)
          {
             Instance.DoWrite(level, message, false);
          }
@@ -152,7 +152,7 @@ namespace HFM.Instrumentation
 
       public static void WriteToHfmConsole(TraceLevel level, string message, bool showFunctionName)
       {
-         if (level.CompareTo(TraceLevelSwitch.GetTraceLevelSwitch().Level) < 1)
+         if (level.CompareTo(TraceLevelSwitch.Switch.Level) < 1)
          {
             Instance.DoWrite(level, message, showFunctionName);
          }
@@ -160,7 +160,7 @@ namespace HFM.Instrumentation
 
       public static void WriteToHfmConsole(TraceLevel level, Exception ex)
       {
-         if (level.CompareTo(TraceLevelSwitch.GetTraceLevelSwitch().Level) < 1)
+         if (level.CompareTo(TraceLevelSwitch.Switch.Level) < 1)
          {
             Instance.DoWrite(level, ex);
          }
@@ -168,7 +168,7 @@ namespace HFM.Instrumentation
 
       public static void WriteToHfmConsole(TraceLevel level, DateTime Start)
       {
-         if (level.CompareTo(TraceLevelSwitch.GetTraceLevelSwitch().Level) < 1)
+         if (level.CompareTo(TraceLevelSwitch.Switch.Level) < 1)
          {
             Instance.DoWrite(level, Start);
          }
@@ -176,7 +176,7 @@ namespace HFM.Instrumentation
 
       public static void WriteToHfmConsole(TraceLevel level, string subMessage, string message)
       {
-         if (level.CompareTo(TraceLevelSwitch.GetTraceLevelSwitch().Level) < 1)
+         if (level.CompareTo(TraceLevelSwitch.Switch.Level) < 1)
          {
             Instance.DoWrite(level, subMessage, message);
          }
@@ -184,7 +184,7 @@ namespace HFM.Instrumentation
 
       public static void WriteToHfmConsole(TraceLevel level, string subMessage, Exception ex)
       {
-         if (level.CompareTo(TraceLevelSwitch.GetTraceLevelSwitch().Level) < 1)
+         if (level.CompareTo(TraceLevelSwitch.Switch.Level) < 1)
          {
             Instance.DoWrite(level, subMessage, ex);
          }
@@ -192,7 +192,7 @@ namespace HFM.Instrumentation
 
       public static void WriteToHfmConsole(TraceLevel level, string subMessage, DateTime Start)
       {
-         if (level.CompareTo(TraceLevelSwitch.GetTraceLevelSwitch().Level) < 1)
+         if (level.CompareTo(TraceLevelSwitch.Switch.Level) < 1)
          {
             Instance.DoWrite(level, subMessage, Start);
          }
@@ -316,9 +316,7 @@ namespace HFM.Instrumentation
       #endregion
 
       #region Text Message Event
-      public delegate void TextMessageEventHandler(object sender, TextMessageEventArgs e);
-
-      public event TextMessageEventHandler TextMessage;
+      public event EventHandler<TextMessageEventArgs> TextMessage;
 
       private void OnTextMessage(TextMessageEventArgs e)
       {

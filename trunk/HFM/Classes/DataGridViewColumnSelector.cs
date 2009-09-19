@@ -34,7 +34,7 @@ namespace HFM.Classes
     /// the cell origin a popup, containing a list of checkbox and column names, is
     /// shown. 
     /// </summary>
-    class DataGridViewColumnSelector
+    class DataGridViewColumnSelector : IDisposable
     {
         // the DataGridView to which the DataGridViewColumnSelector is attached
         private DataGridView mDataGridView = null;
@@ -47,10 +47,11 @@ namespace HFM.Classes
         /// The max height of the popup
         /// </summary>
         public int MaxHeight = 300;
-        /// <summary>
-        /// The width of the popup
-        /// </summary>
-        public int Width = 200;
+
+        ///// <summary>
+        ///// The width of the popup
+        ///// </summary>
+        //public int Width = 200;
 
         /// <summary>
         /// Gets or sets the DataGridView to which the DataGridViewColumnSelector is attached
@@ -81,7 +82,7 @@ namespace HFM.Classes
                 mCheckedListBox.Items.Clear();
                 foreach (DataGridViewColumn c in mDataGridView.Columns)
                 {
-                    if (c.HeaderText == String.Empty)
+                    if (c.HeaderText.Length == 0) // FxCop: CA1820
                     {
                        mCheckedListBox.Items.Add("(Dummy Column)", c.Visible);
                     }
@@ -131,5 +132,39 @@ namespace HFM.Classes
         {
             mDataGridView.Columns[e.Index].Visible = (e.NewValue == CheckState.Checked);
         }
+
+        #region IDisposable Members
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or
+        /// resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+           Dispose(true);
+           GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Disposes the object.
+        /// </summary>
+        private void Dispose(bool disposing)
+        {
+           if (false == _disposed)
+           {
+              // clean native resources        
+
+              if (disposing)
+              {
+                 // clean managed resources
+                 mCheckedListBox.Dispose();
+                 mPopup.Dispose();
+              }
+
+              _disposed = true;
+           }
+        }
+
+        private bool _disposed;
+        #endregion
     }
 }

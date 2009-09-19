@@ -37,29 +37,25 @@ namespace HFM.Proteins
    /// </summary>
    public class ProjectInfoUpdatedEventArgs : EventArgs
    {
+   
    }
-
-   public delegate void ProjectInfoUpdatedEventHandler(object sender, ProjectInfoUpdatedEventArgs e);
 
    /// <summary>
    /// Protein Collection is a Generic Dictionary based on a string key and a Protein value.
    /// The protein collection is Singleton pattern for efficiency (imagine 60 instances downloading
    /// protein information simultaneously)
    /// </summary>
-   public class ProteinCollection : Dictionary<Int32, Protein>
+   [Serializable]
+   public sealed class ProteinCollection : Dictionary<Int32, Protein>
    {
       private static ProteinCollection _Instance;
       private readonly static object _classLock = typeof(ProteinCollection);
 
       private readonly string _LocalProjectInfoFile = Path.Combine(PreferenceSet.Instance.AppDataPath, "ProjectInfo.tab");
 
-      public event ProjectInfoUpdatedEventHandler ProjectInfoUpdated;
+      public event EventHandler<ProjectInfoUpdatedEventArgs> ProjectInfoUpdated;
 
-      /// <summary>
-      /// Event thrower.
-      /// </summary>
-      /// <param name="e"></param>
-      protected virtual void OnProjectInfoUpdated(ProjectInfoUpdatedEventArgs e)
+      private void OnProjectInfoUpdated(ProjectInfoUpdatedEventArgs e)
       {
          if (ProjectInfoUpdated != null)
          {
@@ -351,7 +347,7 @@ namespace HFM.Proteins
             }
             if (Count > 0)
             {
-               SaveToTabDelimitedFile(_LocalProjectInfoFile);
+               SaveToTabDelimitedFile();
 
                HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Loaded {1} Proteins from Stanford.", HfmTrace.FunctionName, Count));
                OnProjectInfoUpdated(new ProjectInfoUpdatedEventArgs());
@@ -365,8 +361,7 @@ namespace HFM.Proteins
       /// <summary>
       /// Save the current protein collection to CSV file (for reload next execution)
       /// </summary>
-      /// <param name="ExtraNFOFile">Fully qualified filename to write</param>
-      public void SaveToTabDelimitedFile(String ExtraNFOFile)
+      public void SaveToTabDelimitedFile()
       {
          DateTime Start = HfmTrace.ExecStart;
 

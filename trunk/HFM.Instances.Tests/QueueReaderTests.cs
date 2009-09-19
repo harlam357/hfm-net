@@ -51,7 +51,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(new DateTime(2009, 9, 12, 11, 7, 37, DateTimeKind.Local), entry8.EndTimeLocal);
          Assert.AreEqual(new DateTime(2009, 9, 15, 13, 34, 56, DateTimeKind.Local), entry8.DueDateLocal);
          //preferred
-         Assert.AreEqual("http://www.stanford.edu/~pande/Win32/x86/Core_a1.fah", entry8.CoreDownloadUrl);
+         Assert.AreEqual("http://www.stanford.edu/~pande/Win32/x86/Core_a1.fah", entry8.CoreDownloadUrl.AbsoluteUri);
          Assert.AreEqual("a1", entry8.CoreNumber);
          //core name
          Assert.AreEqual(1, entry8.CpuType);
@@ -104,7 +104,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc), entry4.EndTimeUtc); //Utc
          Assert.AreEqual(new DateTime(2009, 9, 16, 21, 38, 21, DateTimeKind.Local), entry4.DueDateLocal);
          //preferred
-         Assert.AreEqual("http://www.stanford.edu/~pande/Linux/AMD64/Core_a2.fah", entry4.CoreDownloadUrl);
+         Assert.AreEqual("http://www.stanford.edu/~pande/Linux/AMD64/Core_a2.fah", entry4.CoreDownloadUrl.AbsoluteUri);
          Assert.AreEqual("a2", entry4.CoreNumber);
          //core name
          Assert.AreEqual(16, entry4.CpuType);
@@ -156,7 +156,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(new DateTime(2009, 9, 13, 21, 46, 30, DateTimeKind.Local), entry7.EndTimeLocal);
          Assert.AreEqual(new DateTime(2009, 9, 28, 19, 45, 30, DateTimeKind.Local), entry7.DueDateLocal);
          //preferred
-         Assert.AreEqual("http://www.stanford.edu/~pande/Win32/x86/NVIDIA/G80/Core_11.fah", entry7.CoreDownloadUrl);
+         Assert.AreEqual("http://www.stanford.edu/~pande/Win32/x86/NVIDIA/G80/Core_11.fah", entry7.CoreDownloadUrl.AbsoluteUri);
          Assert.AreEqual("11", entry7.CoreNumber);
          //core name
          Assert.AreEqual(1, entry7.CpuType);

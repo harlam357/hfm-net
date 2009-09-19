@@ -212,7 +212,7 @@ namespace HFM.Instances
       #endregion
 
       #region Serialization Support
-      public void Serialize()
+      public static void Serialize()
       {
          Serialize(Instance, Path.Combine(PreferenceSet.AppPath, DataStoreFilename));
       }

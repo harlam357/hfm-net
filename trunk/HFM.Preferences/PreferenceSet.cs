@@ -20,6 +20,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -67,10 +68,10 @@ namespace HFM.Preferences
       #region Public Const
       public const string ExeName = "HFM";
 
-      public const string EOCUserXmlURL = "http://folding.extremeoverclocking.com/xml/user_summary.php?u=";
-      public const string EOCUserBaseURL = "http://folding.extremeoverclocking.com/user_summary.php?s=&u=";
-      public const string EOCTeamBaseURL = "http://folding.extremeoverclocking.com/team_summary.php?s=&t=";
-      public const string StanfordBaseURL = "http://fah-web.stanford.edu/cgi-bin/main.py?qtype=userpage&username=";
+      public const string EOCUserXmlUrl = "http://folding.extremeoverclocking.com/xml/user_summary.php?u=";
+      public const string EOCUserBaseUrl = "http://folding.extremeoverclocking.com/user_summary.php?s=&u=";
+      public const string EOCTeamBaseUrl = "http://folding.extremeoverclocking.com/team_summary.php?s=&t=";
+      public const string StanfordBaseUrl = "http://fah-web.stanford.edu/cgi-bin/main.py?qtype=userpage&username=";
 
       public const Int32 MinDecimalPlaces = 0;
       public const Int32 MaxDecimalPlaces = 5;
@@ -330,6 +331,7 @@ namespace HFM.Preferences
       }
       
       private string _ProjectDownloadUrl;
+      [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings")]
       public string ProjectDownloadUrl
       {
          get { return _ProjectDownloadUrl; }
@@ -525,31 +527,31 @@ namespace HFM.Preferences
       {
          get 
          { 
-            return String.Concat(EOCUserXmlURL, EOCUserID);
+            return String.Concat(EOCUserXmlUrl, EOCUserID);
          }
       }
 
-      public string EOCUserURL
+      public Uri EOCUserUrl
       {
          get
          {
-            return String.Concat(EOCUserBaseURL, EOCUserID);
+            return new Uri(String.Concat(EOCUserBaseUrl, EOCUserID));
          }
       }
 
-      public string EOCTeamURL
+      public Uri EOCTeamUrl
       {
          get
          {
-            return String.Concat(EOCTeamBaseURL, TeamID);
+            return new Uri(String.Concat(EOCTeamBaseUrl, TeamID));
          }
       }
 
-      public string StanfordUserURL
+      public Uri StanfordUserUrl
       {
          get
          {
-            return String.Concat(StanfordBaseURL + StanfordID);
+            return new Uri(String.Concat(StanfordBaseUrl + StanfordID));
          }
       }
 
@@ -951,21 +953,24 @@ namespace HFM.Preferences
       #endregion
       
       #region Preference Formatting
-      public static string GetPPDFormatString()
+      public static string PpdFormatString
       {
-         int DecimalPlaces = Instance.DecimalPlaces;
-      
-         StringBuilder sbldr = new StringBuilder("###,###,##0");
-         if (DecimalPlaces > 0)
+         get
          {
-            sbldr.Append(".");
-            for (int i = 0; i < DecimalPlaces; i++)
+            int DecimalPlaces = Instance.DecimalPlaces;
+
+            StringBuilder sbldr = new StringBuilder("###,###,##0");
+            if (DecimalPlaces > 0)
             {
-               sbldr.Append("0");
+               sbldr.Append(".");
+               for (int i = 0; i < DecimalPlaces; i++)
+               {
+                  sbldr.Append("0");
+               }
             }
+
+            return sbldr.ToString();
          }
-         
-         return sbldr.ToString();
       }
       #endregion
    }

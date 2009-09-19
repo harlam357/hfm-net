@@ -19,6 +19,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net;
 using System.Net.Cache;
@@ -212,7 +213,7 @@ namespace HFM.Helpers
       /// </summary>
       /// <param name="Url">Http Url of remote file.</param>
       /// <exception cref="ArgumentException">Throws if Url is Null or Empty.</exception>
-      public static string ProteinDescriptionFromUrl(string Url)
+      public static string GetProteinDescription(string Url)
       {
          if (String.IsNullOrEmpty(Url))
          {
@@ -222,16 +223,16 @@ namespace HFM.Helpers
          // Stub out if the given URL is an Unassigned Description
          if (Url.Equals(PreferenceSet.UnassignedDescription)) return Url;
       
-         return ProteinDescriptionFromUrl(new Uri(Url));
+         return GetProteinDescription(new Uri(Url));
       }
 
       /// <summary>
       /// Get the Protein Description from the Url.
       /// </summary>
       /// <param name="Url">Http Url of remote file.</param>
-      public static string ProteinDescriptionFromUrl(Uri Url)
+      public static string GetProteinDescription(Uri Url)
       {
-         return ProteinDescriptionFromUrl(Url, String.Empty, String.Empty);
+         return GetProteinDescription(Url, String.Empty, String.Empty);
       }
 
       /// <summary>
@@ -241,7 +242,7 @@ namespace HFM.Helpers
       /// <param name="Username">Http Login Username.</param>
       /// <param name="Password">Http Login Password.</param>
       /// <exception cref="ArgumentNullException">Throws if Url is Null.</exception>
-      public static string ProteinDescriptionFromUrl(Uri Url, string Username, string Password)
+      public static string GetProteinDescription(Uri Url, string Username, string Password)
       {
          if (Url == null) throw new ArgumentNullException("Url", "Argument 'Url' cannot be null.");
 

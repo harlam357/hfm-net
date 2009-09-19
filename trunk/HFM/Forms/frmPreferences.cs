@@ -184,22 +184,26 @@ namespace HFM.Forms
       private void LoadVisualStyleTab()
       {
          DirectoryInfo di = new DirectoryInfo(Path.Combine(PreferenceSet.AppPath, CssFolder));
-         StyleList.Items.Clear();
-         foreach (FileInfo fi in di.GetFiles())
+         
+         if (di.Exists)
          {
-            if (fi.Name.EndsWith(CssExtension))
+            StyleList.Items.Clear();
+            foreach (FileInfo fi in di.GetFiles())
             {
-               StyleList.Items.Add(fi.Name.Replace(CssExtension, String.Empty));
+               if (fi.Name.EndsWith(CssExtension))
+               {
+                  StyleList.Items.Add(fi.Name.Replace(CssExtension, String.Empty));
+               }
             }
-         }
 
-         for (int i = 0; i < StyleList.Items.Count; i++)
-         {
-            object item = StyleList.Items[i];
-
-            if (item.ToString().ToLower().Equals(Prefs.CSSFileName.ToLower().Replace(CssExtension, String.Empty)))
+            for (int i = 0; i < StyleList.Items.Count; i++)
             {
-               StyleList.SelectedItem = item;
+               object item = StyleList.Items[i];
+
+               if (item.ToString().ToLower().Equals(Prefs.CSSFileName.ToLower().Replace(CssExtension, String.Empty)))
+               {
+                  StyleList.SelectedItem = item;
+               }
             }
          }
       }
@@ -344,7 +348,7 @@ namespace HFM.Forms
 
       private void btnBrowseWebFolder_Click(object sender, EventArgs e)
       {
-         if (txtWebSiteBase.Text != String.Empty)
+         if (txtWebSiteBase.Text.Length != 0) // FxCop: CA1820
          {
             locateWebFolder.SelectedPath = txtWebSiteBase.Text;
          }
@@ -624,7 +628,7 @@ namespace HFM.Forms
       {
          try
          {
-            Process.Start(String.Concat(PreferenceSet.EOCUserBaseURL, txtEOCUserID.Text));
+            Process.Start(String.Concat(PreferenceSet.EOCUserBaseUrl, txtEOCUserID.Text));
          }
          catch (Exception ex)
          {
@@ -637,7 +641,7 @@ namespace HFM.Forms
       {
          try
          {
-            Process.Start(String.Concat(PreferenceSet.StanfordBaseURL, txtStanfordUserID.Text));
+            Process.Start(String.Concat(PreferenceSet.StanfordBaseUrl, txtStanfordUserID.Text));
          }
          catch (Exception ex)
          {
@@ -650,7 +654,7 @@ namespace HFM.Forms
       {
          try
          {
-            Process.Start(String.Concat(PreferenceSet.EOCTeamBaseURL, txtStanfordTeamID.Text));
+            Process.Start(String.Concat(PreferenceSet.EOCTeamBaseUrl, txtStanfordTeamID.Text));
          }
          catch (Exception ex)
          {
