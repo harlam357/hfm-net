@@ -25,48 +25,48 @@ using System.Text;
 namespace HFM.Instances
 {
    [CLSCompliant(false)]
-   [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Ansi, Size = 7168)]
+   [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Size = 7168)]
    public struct Queue
    {
-      [FieldOffset(0)] /* 0000 Queue (client) version (v2.17 and above) */
+      /* 0000 Queue (client) version (v2.17 and above) */
       public UInt32 Version;
 
-      [FieldOffset(4)] /* 0004 Current index number */
+      /* 0004 Current index number */
       public UInt32 CurrentIndex;
 
-      [FieldOffset(8)] /* 0008 Array of ten queue entries */
+      /* 0008 Array of ten queue entries */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 10)]
       public Entry[] Entries;
 
-      [FieldOffset(7128)] /* 7128 Performance fraction (as of v3.24) */
+      /* 7128 Performance fraction (as of v3.24) */
       public float PerformanceFraction;
       
-      [FieldOffset(7132)] /* 7132 Performance fraction unit weight (as of v3.24) */
+      /* 7132 Performance fraction unit weight (as of v3.24) */
       public UInt32 PerformanceFractionUnitWeight;
       
-      [FieldOffset(7136)] /* 7136 Download rate sliding average (as of v4.00) */
+      /* 7136 Download rate sliding average (as of v4.00) */
       public UInt32 DownloadRateAverage;
       
-      [FieldOffset(7140)] /* 7140 Download rate unit weight (as of v4.00) */
+      /* 7140 Download rate unit weight (as of v4.00) */
       public UInt32 DownloadRateUnitWeight;
       
-      [FieldOffset(7144)] /* 7144 Upload rate sliding average (as of v4.00) */
+      /* 7144 Upload rate sliding average (as of v4.00) */
       public UInt32 UploadRateAverage;
       
-      [FieldOffset(7148)] /* 7148 Upload rate unit weight (as of v4.00) */
+      /* 7148 Upload rate unit weight (as of v4.00) */
       public UInt32 UploadRateUnitWeight;
       
-      [FieldOffset(7152)] /* 7152 Results successfully sent (after upload failures) (as of v5.00) (LE) */
+      /* 7152 Results successfully sent (after upload failures) (as of v5.00) (LE) */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
       public string ResultsSent;
       
-      [FieldOffset(7156)] /* 7156 (as of v5.00) ...all zeros after queue conversion... */
+      /* 7156 (as of v5.00) ...all zeros after queue conversion... */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 12)]
       public string z7156;
    }
 
    [CLSCompliant(false)]
-   [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Ansi, Size = 712)]
+   [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Size = 712)]
    public struct Entry
    {
       /*** 0 = Empty, Deleted, Finished, or Garbage 
@@ -75,21 +75,21 @@ namespace HFM.Instances
        *   3 = Abandonded (Ignore is found)
        *   4 = Fetching from Server
        ***/ 
-      [FieldOffset(0)] /* 000 Status */
+      /* 000 Status */
       public UInt32 Status; 
 
-      [FieldOffset(4)] /* 004 Pad for Windows, others as of v4.01, as of v6.01 number of SMP Cores to use (LE) */
+      /* 004 Pad for Windows, others as of v4.01, as of v6.01 number of SMP Cores to use (LE) */
       public UInt32 UseCores;
 
       /*** 0 = Begin Time
        *   4 = End Time 
        *   Others = Unknown 
        ***/
-      [FieldOffset(8)] /* 008 Time data (epoch 0000 1jan00 UTC) */
+      /* 008 Time data (epoch 0000 1jan00 UTC) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
       public UInt32[] TimeData; 
 
-      [FieldOffset(40)] /* 040 Server IP address (until v3.0) */
+      /* 040 Server IP address (until v3.0) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
       public byte[] OldServerIP; /*** Ignore this value ***/
 
@@ -97,165 +97,165 @@ namespace HFM.Instances
        * 0 = Not Uploaded
        * 1 = Uploaded
        ***/
-      [FieldOffset(44)] /* 044 Upload status */ 
+      /* 044 Upload status */ 
       public UInt32 UploadStatus; 
 
-      [FieldOffset(48)] /* 048 Web address for core downloads */
+      /* 048 Web address for core downloads */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
       public string CoreDownloadUrl;
 
-      [FieldOffset(176)] /* 176 Misc1a */
+      /* 176 Misc1a */
       public UInt32 Misc1a;
       
-      [FieldOffset(180)] /* 180 Core_xx number (hex) */
+      /* 180 Core_xx number (hex) */
       public UInt32 CoreNumber; /*** Convert to Hex ***/
 
-      [FieldOffset(184)] /* 184 Misc1b */
+      /* 184 Misc1b */
       public UInt32 Misc1b;
       
-      [FieldOffset(188)] /* 188 wudata_xx.dat file size */
+      /* 188 wudata_xx.dat file size */
       public UInt32 WuDataFileSize;
 
-      [FieldOffset(192)]
+      /* 192 */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
       public string z192;
 
-      //[FieldOffset(208)] /* 208 Project number (LE) */
+      /* 208 Project number (LE) */
       //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 2)]
       //public string ProjectNumber;
 
-      //[FieldOffset(210)] /* 210 Run (LE) */
+      /* 210 Run (LE) */
       //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 2)]
       //public string ProjectRun;
 
-      //[FieldOffset(212)] /* 212 Clone (LE) */
+      /* 212 Clone (LE) */
       //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 2)]
       //public string ProjectClone;
 
-      //[FieldOffset(214)] /* 214 Generation (LE) */
+      /* 214 Generation (LE) */
       //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 2)]
       //public string ProjectGen;
 
-      //[FieldOffset(216)] /* 216 WU issue time (LE) */
+      /* 216 WU issue time (LE) */
       //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 8)]
       //public string ProjectIssued;
 
-      [FieldOffset(208)] /* 208-223 Project R/C/G (see above) */
+      /* 208-223 Project R/C/G (see above) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
       public byte[] Project; /*** Needs post read processing ***/
-      
-      [FieldOffset(224)]
+
+      /* 224 */ 
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 36)]
       public string z224;
 
-      [FieldOffset(260)] /* 260 Machine ID (LE) */
+      /* 260 Machine ID (LE) */
       public UInt32 MachineID;
 
-      [FieldOffset(264)] /* 264 Server IP address */
+      /* 264 Server IP address */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
       public byte[] ServerIP; /*** Needs post read processing ***/
 
-      [FieldOffset(268)] /* 268 Server port number */
+      /* 268 Server port number */
       public UInt32 ServerPort;
 
-      [FieldOffset(272)] /* 272 Work unit type */
+      /* 272 Work unit type */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
       public string WorkUnitType;
 
-      [FieldOffset(336)] /* 336 User Name */
+      /* 336 User Name */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
       public string UserName;
 
-      [FieldOffset(400)] /* 400 Team Number */
+      /* 400 Team Number */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
       public string TeamNumber;
 
-      [FieldOffset(464)] /* 464 Stored ID for unit (UserID + MachineID) (LE or BE, usually BE) */
+      /* 464 Stored ID for unit (UserID + MachineID) (LE or BE, usually BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
       public byte[] UserAndMachineID; /*** Needs post read processing ***/
 
-      [FieldOffset(472)] /* 472 Benchmark (as of v3.24) (LE) */
+      /* 472 Benchmark (as of v3.24) (LE) */
       public UInt32 OldBenchmark; /*** Ignore this value ***/
 
-      [FieldOffset(476)] /* 476 Misc3b (unused as of v3.24) (LE); Benchmark (as of v5.00) (BE) */
+      /* 476 Misc3b (unused as of v3.24) (LE); Benchmark (as of v5.00) (BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
       public byte[] Benchmark; /*** Needs post read processing ***/
 
-      [FieldOffset(480)] /* 480 CPU type (LE or BE, sometimes 0) */
+      /* 480 CPU type (LE or BE, sometimes 0) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
       public byte[] CpuType;
 
-      [FieldOffset(484)] /* 484 OS type (LE or BE, sometimes 0) */
+      /* 484 OS type (LE or BE, sometimes 0) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
       public byte[] OsType;
 
-      [FieldOffset(488)] /* 488 CPU species (LE or BE, sometimes 0) */
+      /* 488 CPU species (LE or BE, sometimes 0) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
       public byte[] CpuSpecies;
 
-      [FieldOffset(492)] /* 492 OS species (LE or BE, sometimes 0) */
+      /* 492 OS species (LE or BE, sometimes 0) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
       public byte[] OsSpecies;
 
-      [FieldOffset(496)] /* 496 Allowed time to return (seconds) */
+      /* 496 Allowed time to return (seconds) */
       public UInt32 ExpirationInSeconds; /*** Final Deadline Length ***/
 
-      [FieldOffset(500)]
+      /* 500 */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 8)]
       public string z500;
 
-      [FieldOffset(508)] /* 508 Assignment info present flag (LE or BE) */
+      /* 508 Assignment info present flag (LE or BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
       public byte[] AssignmentInfoPresent;
 
-      [FieldOffset(512)] /* 512 Assignment timestamp (LE or BE) */
+      /* 512 Assignment timestamp (LE or BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
       public byte[] AssignmentTimeStamp;
 
-      [FieldOffset(516)] /* 516 Assignment info (LE or BE) */
+      /* 516 Assignment info (LE or BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
       public byte[] AssignmentInfoChecksum;
 
-      [FieldOffset(520)] /* 520 Collection server IP address (as of v5.00) (LE) */
+      /* 520 Collection server IP address (as of v5.00) (LE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
       public byte[] CollectionServerIP; /*** Needs post read processing ***/
 
-      [FieldOffset(524)] /* 524 Download started time (as of v5.00) (BE) */
+      /* 524 Download started time (as of v5.00) (BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
       public byte[] DownloadStartedTime;
 
-      [FieldOffset(528)]
+      /* 528 */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
       public string z528;
 
-      [FieldOffset(544)] /* 544 Number of SMP cores (as of v5.91) (BE) */
+      /* 544 Number of SMP cores (as of v5.91) (BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
       public byte[] NumberOfSmpCores; /*** Needs post read processing ***/
 
-      [FieldOffset(548)] /* 548 Tag of Work Unit (as of v5.00) */
+      /* 548 Tag of Work Unit (as of v5.00) */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
       public string WorkUnitTag;
 
-      [FieldOffset(564)]
+      /* 564 */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
       public string z564;
 
-      [FieldOffset(580)] /* 580 Passkey (as of v6.00) */
+      /* 580 Passkey (as of v6.00) */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
       public string Passkey;
 
-      [FieldOffset(612)] /* 612 Flops per CPU (core) (as of v6.00) (BE) */
+      /* 612 Flops per CPU (core) (as of v6.00) (BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
       public byte[] Flops; /*** Needs post read processing ***/
 
-      [FieldOffset(616)] /* 616 Available memory (as of v6.00) (BE) */
+      /* 616 Available memory (as of v6.00) (BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
       public byte[] Memory; /*** Needs post read processing ***/
 
-      [FieldOffset(620)] /* 620 Available GPU memory (as of v6.20) (LE) */
+      /* 620 Available GPU memory (as of v6.20) (LE) */
       public UInt32 GpuMemory;
 
-      [FieldOffset(624)]
+      /* 624 */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
       public string z624;
 
@@ -264,14 +264,14 @@ namespace HFM.Instances
        *                It is determined by adding the "begin" time to the expiration period.
        * 1-3 = Unknown
        ***/                
-      [FieldOffset(688)] /* 688 WU expiration time */
+      /* 688 WU expiration time */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
       public UInt32[] ExpirationTime;
 
-      [FieldOffset(704)] /* 704 Packet size limit (as of v5.00) */
+      /* 704 Packet size limit (as of v5.00) */
       public UInt32 PacketSizeLimit;
       
-      [FieldOffset(708)] /* 708 Number of upload failures (as of v5.00) */
+      /* 708 Number of upload failures (as of v5.00) */
       public UInt32 NumberOfUploadFailures;
    }
 
