@@ -25,6 +25,23 @@ using System.Text;
 
 namespace HFM.Instances
 {
+   /// <summary>
+   /// The Queue Entry Status
+   /// </summary>
+   public enum QueueEntryStatus
+   {
+      Unknown = -1,
+      Empty,
+      Deleted,
+      Finished,
+      Garbage,
+      FoldingNow,
+      Queued,
+      ReadyForUpload,
+      Abandonded,
+      FetchingFromServer
+   }
+   
    [CLSCompliant(false)]
    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Size = 7168)]
    public struct Queue
@@ -122,12 +139,12 @@ namespace HFM.Instances
       }
       
       /* 7152 Results successfully sent (after upload failures) (as of v5.00) (LE) */
-      [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
-      private string _ResultsSent;
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+      private byte[] _ResultsSent;
       /// <summary>
       /// Results successfully sent (after upload failures)
       /// </summary>
-      public string ResultsSent
+      public byte[] ResultsSent
       {
          get { return _ResultsSent; }
       }
@@ -157,7 +174,7 @@ namespace HFM.Instances
       /* 000 Status */
       private UInt32 _Status;
       /// <summary>
-      /// Status (0 = Empty, Deleted, Finished, or Garbage / 1 = Folding Now or Queued / 2 = Ready for Upload / 3 = Abandonded (Ignore is found) / 4 = Fetching from Server)
+      /// Status (0) Empty / (1) Active or (1) Ready / (2) Ready for Upload / (3) = Abandonded (Ignore if found) / (4) Fetching from Server
       /// </summary>
       public UInt32 Status
       {
@@ -281,7 +298,7 @@ namespace HFM.Instances
 
       /* 208 Project number (LE) */
       //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 2)]
-      //public string ProjectNumber;
+      //public string ProjectID;
 
       /* 210 Run (LE) */
       //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 2)]
@@ -303,7 +320,7 @@ namespace HFM.Instances
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
       private byte[] _Project; /*** Needs post read processing ***/
       /// <summary>
-      /// Project R/C/G
+      /// Project R/C/G and Issued Time
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] Project
@@ -367,24 +384,24 @@ namespace HFM.Instances
 
       /* 336 User Name */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
-      private string _UserName;
+      private string _FoldingID;
       /// <summary>
-      /// User Name
+      /// The Folding ID (Username) attached to this queue entry
       /// </summary>
-      public string UserName
+      public string FoldingID
       {
-         get { return _UserName; }
+         get { return _FoldingID; }
       }
 
       /* 400 Team Number */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
-      private string _TeamNumber;
+      private string _Team;
       /// <summary>
-      /// Team Number
+      /// The Team number attached to this queue entry
       /// </summary>
-      public string TeamNumber
+      public string Team
       {
-         get { return _TeamNumber; }
+         get { return _Team; }
       }
 
       /* 464 Stored ID for unit (UserID + MachineID) (LE or BE, usually BE) */
@@ -767,23 +784,110 @@ namespace HFM.Instances
    [CLSCompliant(false)]
    public class QueueEntry
    {
+      /// <summary>
+      /// Wrapped Entry Structure
+      /// </summary>
       private Entry _qEntry;
+      /// <summary>
+      /// This Entry Index
+      /// </summary>
+      private readonly UInt32 _thisIndex;
+      /// <summary>
+      /// Current Entry Index
+      /// </summary>
+      private readonly UInt32 _currentIndex;
    
-      public QueueEntry(Entry qEntry)
+      /// <summary>
+      /// Primary Constructor
+      /// </summary>
+      /// <param name="qEntry">Entry Structure</param>
+      /// <param name="thisIndex">This Entry Index</param>
+      /// <param name="currentIndex">Current Entry Index</param>
+      public QueueEntry(Entry qEntry, UInt32 thisIndex, UInt32 currentIndex)
       {
          _qEntry = qEntry;
+         _thisIndex = thisIndex;
+         _currentIndex = currentIndex;
       }
-      
+
+      /// <summary>
+      /// Status (0) Empty / (1) Active or (1) Ready / (2) Ready for Upload / (3) = Abandonded (Ignore if found) / (4) Fetching from Server
+      /// </summary>
       public UInt32 Status
       {
          get { return _qEntry.Status; }
       } 
+      
+      /// <summary>
+      /// Status Enumeration
+      /// </summary>
+      public QueueEntryStatus EntryStatus
+      {
+         get
+         {
+            switch (_qEntry.Status)
+            {
+               case 0:
+                  if (ProjectID == 0)
+                  {
+                     /* The queue entry has never been used, or has been completely cleared. */
+                     return QueueEntryStatus.Empty;
+                  }
+                  else if (UploadStatus == 0)
+                  {
+                     /* The unit was explicitly deleted. */
+                     return QueueEntryStatus.Deleted;
+                  }
+                  else if (UploadStatus == 1)
+                  {
+                     /* The unit has been uploaded.  The queue entry is just history. */
+                     return QueueEntryStatus.Finished;
+                  }
+                  else
+                  {
+                     /* The queue entry is available, but its history is unintelligible. */
+                     return QueueEntryStatus.Garbage;
+                  }
+               case 1:
+                  if (_thisIndex == _currentIndex)
+                  {
+                     /* The unit is in progress.  Presumably the core is running. */
+                     return QueueEntryStatus.FoldingNow;
+                  }
+                  else
+                  {
+                     /* The unit has been downloaded but processing hasn't begun yet. */
+                     return QueueEntryStatus.Queued;
+                  }
+               case 2:
+                  /* The core has finished the unit, but it is still in the queue. */
+                  return QueueEntryStatus.ReadyForUpload;
+               case 3: /* Bug before V3b5, neglected to post status (1). */
+                  return QueueEntryStatus.Abandonded;
+               case 4:
+                  /* Client presently contacting the server, or something failed in download.
+			          * If this state persists past the current unit, the queue entry will be
+			          * unusable, but otherwise things will go on as usual.
+			          */
+                  return QueueEntryStatus.FetchingFromServer;
+               default:
+                  /* Something other than 0 to 4. */
+                  return QueueEntryStatus.Unknown;
+            }
+         }
+      }
 
+      /// <summary>
+      /// Pad for Windows, others as of v4.01, as of v6.01 number of SMP Cores to use
+      /// </summary>
       public UInt32 UseCores
       {
          get { return _qEntry.UseCores; }
       } 
 
+      /// <summary>
+      /// Begin Time (UTC)
+      /// </summary>
       public DateTime BeginTimeUtc
       {
          get 
@@ -793,6 +897,9 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// Begin Time (Local)
+      /// </summary>
       public DateTime BeginTimeLocal
       {
          get
@@ -801,6 +908,9 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// End Time (UTC)
+      /// </summary>
       public DateTime EndTimeUtc
       {
          get
@@ -810,6 +920,9 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// End Time (Local)
+      /// </summary>
       public DateTime EndTimeLocal
       {
          get
@@ -818,37 +931,58 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// Upload status (0 = Not Uploaded / 1 = Uploaded)
+      /// </summary>
       public UInt32 UploadStatus
       {
          get { return _qEntry.UploadStatus; }
       }
 
+      /// <summary>
+      /// Web address for core downloads
+      /// </summary>
       public Uri CoreDownloadUrl
       {
          get { return new Uri(String.Format("http://{0}/Core_{1}.fah", _qEntry.CoreDownloadUrl, CoreNumber)); }
       }
 
+      /// <summary>
+      /// Misc1a
+      /// </summary>
       public UInt32 Misc1a
       {
          get { return _qEntry.Misc1a; }
       }
-      
+
+      /// <summary>
+      /// Core_xx number
+      /// </summary>
       public string CoreNumber
       {
          get { return _qEntry.CoreNumber.ToString("x"); }
       }
 
+      /// <summary>
+      /// Misc1b
+      /// </summary>
       public UInt32 Misc1b
       {
          get { return _qEntry.Misc1b; }
       }
-      
+
+      /// <summary>
+      /// wudata_xx.dat file size
+      /// </summary>
       public UInt32 WuDataFileSize
       {
          get { return _qEntry.WuDataFileSize; }
       }
 
-      public UInt16 ProjectNumber
+      /// <summary>
+      /// Project ID
+      /// </summary>
+      public UInt16 ProjectID
       {
          get 
          { 
@@ -858,6 +992,9 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// Project Run
+      /// </summary>
       public UInt16 ProjectRun
       {
          get 
@@ -868,6 +1005,9 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// Project Clone
+      /// </summary>
       public UInt16 ProjectClone
       {
          get 
@@ -878,6 +1018,9 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// Project Gen
+      /// </summary>
       public UInt16 ProjectGen
       {
          get 
@@ -888,6 +1031,23 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// Formatted Project (Run, Clone, Gen) Information
+      /// </summary>
+      public string ProjectRunCloneGen
+      {
+         get
+         {
+            return String.Format("P{0} (R{1}, C{2}, G{3})", ProjectID,
+                                                            ProjectRun,
+                                                            ProjectClone,
+                                                            ProjectGen);
+         }
+      }
+
+      /// <summary>
+      /// Project Issued Time (UTC)
+      /// </summary>
       public DateTime ProjectIssuedUtc
       {
          get
@@ -900,6 +1060,9 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// Project Issued Time (Local)
+      /// </summary>
       public DateTime ProjectIssuedLocal
       {
          get
@@ -907,12 +1070,18 @@ namespace HFM.Instances
             return ProjectIssuedUtc.ToLocalTime();
          }
       }
-      
+
+      /// <summary>
+      /// Machine ID
+      /// </summary>
       public UInt32 MachineID
       {
          get { return _qEntry.MachineID; }
       }
-      
+
+      /// <summary>
+      /// Server IP address
+      /// </summary>
       public string ServerIP
       {
          get
@@ -922,26 +1091,41 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// Server port number
+      /// </summary>
       public UInt32 ServerPort
       {
          get { return _qEntry.ServerPort; }
       }
 
+      /// <summary>
+      /// Work unit type
+      /// </summary>
       public string WorkUnitType
       {
          get { return _qEntry.WorkUnitType; }
       }
 
-      public string UserName
+      /// <summary>
+      /// The Folding ID (Username) attached to this queue entry
+      /// </summary>
+      public string FoldingID
       {
-         get { return _qEntry.UserName; }
+         get { return _qEntry.FoldingID; }
       }
 
-      public string TeamNumber
+      /// <summary>
+      /// The Team number attached to this queue entry
+      /// </summary>
+      public string Team
       {
-         get { return _qEntry.TeamNumber; }
+         get { return _qEntry.Team; }
       }
 
+      /// <summary>
+      /// User ID associated with this queue entry
+      /// </summary>
       public string UserID
       {
          get
@@ -955,6 +1139,9 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// Benchmark (as of v5.00)
+      /// </summary>
       public UInt32 Benchmark
       {
          get 
@@ -966,6 +1153,9 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// CPU type
+      /// </summary>
       public UInt32 CpuType
       {
          get
@@ -974,6 +1164,9 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// OS type
+      /// </summary>
       public UInt32 OsType
       {
          get
@@ -982,6 +1175,9 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// CPU species
+      /// </summary>
       public UInt32 CpuSpecies
       {
          get
@@ -990,6 +1186,9 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// OS species
+      /// </summary>
       public UInt32 OsSpecies
       {
          get
@@ -997,37 +1196,58 @@ namespace HFM.Instances
             return GetCpuOrOsNumber(_qEntry.OsSpecies);
          }
       }
-      
+
+      /// <summary>
+      /// CPU type (string)
+      /// </summary>
       public string CpuString
       {
          get { return GetCpuString(_qEntry.CpuType, _qEntry.CpuSpecies); }
       }
-      
+
+      /// <summary>
+      /// OS type (string)
+      /// </summary>
       public string OsString
       {
          get { return GetOsString(_qEntry.OsType, _qEntry.OsSpecies); }
       }
 
+      /// <summary>
+      /// Allowed time to return (seconds) - Final Deadline
+      /// </summary>
       public UInt32 ExpirationInSeconds
       {
          get { return _qEntry.ExpirationInSeconds; }
       }
 
+      /// <summary>
+      /// Allowed time to return (minutes) - Final Deadline
+      /// </summary>
       public UInt32 ExpirationInMinutes
       {
          get { return ExpirationInSeconds / 60; }
       }
 
+      /// <summary>
+      /// Allowed time to return (hours) - Final Deadline
+      /// </summary>
       public UInt32 ExpirationInHours
       {
          get { return ExpirationInMinutes / 60; }
       }
 
+      /// <summary>
+      /// Allowed time to return (days) - Final Deadline
+      /// </summary>
       public UInt32 ExpirationInDays
       {
          get { return ExpirationInHours / 24; }
       }
 
+      /// <summary>
+      /// Assignment info present flag
+      /// </summary>
       public bool AssignmentInfoPresent
       {
          get 
@@ -1044,6 +1264,9 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// Assignment timestamp (UTC)
+      /// </summary>
       public DateTime AssignmentTimeStampUtc
       {
          get
@@ -1068,6 +1291,9 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// Assignment timestamp (Local)
+      /// </summary>
       public DateTime AssignmentTimeStampLocal
       {
          get
@@ -1076,6 +1302,9 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// Assignment info checksum
+      /// </summary>
       public string AssignmentInfoChecksum
       {
          get
@@ -1102,6 +1331,9 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// Collection server IP address
+      /// </summary>
       public string CollectionServerIP
       {
          get
@@ -1111,6 +1343,9 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// Number of SMP cores
+      /// </summary>
       public UInt32 NumberOfSmpCores
       {
          get 
@@ -1121,17 +1356,26 @@ namespace HFM.Instances
             return BitConverter.ToUInt32(b, 0);
          }
       }
-     
+
+      /// <summary>
+      /// Tag of Work Unit
+      /// </summary>
       public string WorkUnitTag
       {
          get { return _qEntry.WorkUnitTag; }
       }
 
+      /// <summary>
+      /// Passkey
+      /// </summary>
       public string Passkey
       {
          get { return _qEntry.Passkey; }
       }
 
+      /// <summary>
+      /// Flops per CPU (core)
+      /// </summary>
       public UInt32 Flops
       {
          get 
@@ -1142,7 +1386,10 @@ namespace HFM.Instances
             return BitConverter.ToUInt32(b, 0);
          }
       }
-      
+
+      /// <summary>
+      /// MegaFlops per CPU (core)
+      /// </summary>
       public double MegaFlops
       {
          get 
@@ -1151,6 +1398,9 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// Available memory (as of v6.00)
+      /// </summary>
       public UInt32 Memory
       {
          get 
@@ -1162,11 +1412,17 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// Available GPU memory (as of v6.20)
+      /// </summary>
       public UInt32 GpuMemory
       {
          get { return _qEntry.GpuMemory; }
       }
 
+      /// <summary>
+      /// WU expiration time (UTC)
+      /// </summary>
       public DateTime DueDateUtc
       {
          get 
@@ -1175,17 +1431,26 @@ namespace HFM.Instances
             return d.AddSeconds(_qEntry.ExpirationTime[0]); 
          }
       }
-      
+
+      /// <summary>
+      /// WU expiration time (Local)
+      /// </summary>
       public DateTime DueDateLocal
       {
          get { return DueDateUtc.ToLocalTime(); }
       }
 
+      /// <summary>
+      /// Packet size limit
+      /// </summary>
       public UInt32 PacketSizeLimit
       {
          get { return _qEntry.PacketSizeLimit; }
       }
-      
+
+      /// <summary>
+      /// Number of upload failures
+      /// </summary>
       public UInt32 NumberOfUploadFailures
       {
          get { return _qEntry.NumberOfUploadFailures; }
@@ -1322,34 +1587,96 @@ namespace HFM.Instances
    [CLSCompliant(false)]
    public class QueueReader
    {
+      /// <summary>
+      /// Queue Structure
+      /// </summary>
       private Queue _q;
+      /// <summary>
+      /// queue.dat File Path
+      /// </summary>
       private string _queueFilePath;
       
+      /// <summary>
+      /// queue.dat File Path
+      /// </summary>
       public string QueueFilePath
       {
          get { return _queueFilePath; }
       }
-      
+
+      /// <summary>
+      /// Queue (client) version
+      /// </summary>
       public UInt32 Version
       {
          get { return _q.Version; }
       }
-      
+
+      /// <summary>
+      /// Performance fraction
+      /// </summary>
       public float PerformanceFraction
       {
          get { return _q.PerformanceFraction; }
       }
 
+      /// <summary>
+      /// Performance fraction unit weight
+      /// </summary>
       public UInt32 PerformanceFractionUnitWeight
       {
          get { return _q.PerformanceFractionUnitWeight; }
       }
-   
-      //public QueueReader()
-      //{
-         
-      //}
+
+      /// <summary>
+      /// Download rate sliding average
+      /// </summary>
+      public float DownloadRateAverage
+      {
+         get { return (float)_q.DownloadRateAverage / 1000; }
+      }
+
+      /// <summary>
+      /// Download rate unit weight
+      /// </summary>
+      public UInt32 DownloadRateUnitWeight
+      {
+         get { return _q.DownloadRateUnitWeight; }
+      }
+
+      /// <summary>
+      /// Upload rate sliding average
+      /// </summary>
+      public float UploadRateAverage
+      {
+         get { return (float)_q.UploadRateAverage / 1000; }
+      }
+
+      /// <summary>
+      /// Upload rate unit weight
+      /// </summary>
+      public UInt32 UploadRateUnitWeight
+      {
+         get { return _q.UploadRateUnitWeight; }
+      }
+
+      /// <summary>
+      /// Results successfully sent (after upload failures)
+      /// </summary>
+      public UInt32 ResultsSent
+      {
+         get 
+         {
+            byte[] b = new byte[_q.ResultsSent.Length];
+            Array.Copy(_q.ResultsSent, b, _q.ResultsSent.Length);
+            return BitConverter.ToUInt32(b, 0);
+         }
+      }
       
+      /// <summary>
+      /// Read queue.dat file
+      /// </summary>
+      /// <param name="FilePath">Path to queue.dat file</param>
       public void ReadQueue(string FilePath)
       {
          BinaryReader reader = new BinaryReader(new FileStream(FilePath, FileMode.Open, FileAccess.Read, FileShare.Read));
@@ -1372,9 +1699,14 @@ namespace HFM.Instances
          return q;
       }
       
-      public QueueEntry GetQueueEntry(int Index)
+      /// <summary>
+      /// Get the QueueEntry at the specified Index.
+      /// </summary>
+      /// <param name="Index">Queue Entry Index</param>
+      /// <exception cref="IndexOutOfRangeException">Throws when Index is less than 0 or greater than 9.</exception>
+      public QueueEntry GetQueueEntry(uint Index)
       {
-         return new QueueEntry(_q.Entries[Index]);
+         return new QueueEntry(_q.Entries[Index], Index, _q.CurrentIndex);
       }
    }
 }

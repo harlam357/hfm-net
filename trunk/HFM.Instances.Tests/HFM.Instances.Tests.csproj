@@ -68,6 +68,7 @@
   <ItemGroup>
     <None Include="TestFiles\GPU2 6.23 queue.dat" />
     <None Include="TestFiles\Linux SMP 6.24 queue.dat" />
+    <None Include="TestFiles\Linux SMP 6.24 Waiting Upload queue.dat" />
     <None Include="TestFiles\WinSMP 6.24R3 queue.dat" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -34,15 +34,23 @@ namespace HFM.Instances.Tests
          QueueReader queue = new QueueReader();
          queue.ReadQueue("..\\..\\TestFiles\\WinSMP 6.24R3 queue.dat");
          Assert.AreEqual(600, queue.Version);
+         Assert.AreEqual(0.7884074f, queue.PerformanceFraction);
+         Assert.AreEqual(4, queue.PerformanceFractionUnitWeight);
+         Assert.AreEqual(232.941f, queue.DownloadRateAverage);
+         Assert.AreEqual(4, queue.DownloadRateUnitWeight);
+         Assert.AreEqual(179.357f, queue.UploadRateAverage);
+         Assert.AreEqual(4, queue.UploadRateUnitWeight);
+         Assert.AreEqual(0, queue.ResultsSent);
          
          QueueEntry entry8 = queue.GetQueueEntry(8);
-         //finished
+         Assert.AreEqual(QueueEntryStatus.Finished, entry8.EntryStatus);
          Assert.AreEqual("171.64.65.64", entry8.ServerIP);
          Assert.AreEqual(8080, entry8.ServerPort);
-         Assert.AreEqual(2653, entry8.ProjectNumber);
+         Assert.AreEqual(2653, entry8.ProjectID);
          Assert.AreEqual(3, entry8.ProjectRun);
          Assert.AreEqual(71, entry8.ProjectClone);
          Assert.AreEqual(119, entry8.ProjectGen);
+         Assert.AreEqual("P2653 (R3, C71, G119)", entry8.ProjectRunCloneGen);
          Assert.AreEqual(0, entry8.Benchmark);
          Assert.AreEqual(500, entry8.Misc1a);
          Assert.AreEqual(200, entry8.Misc1b);
@@ -69,11 +77,11 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(1534, entry8.Memory);
          Assert.AreEqual(true, entry8.AssignmentInfoPresent);
          Assert.AreEqual(new DateTime(2009, 9, 11, 13, 34, 20, DateTimeKind.Local), entry8.AssignmentTimeStampLocal);
-         //Assert.AreEqual("B9645213", entry8.AssignmentInfoChecksum); // why is my value reversed?
+         //Assert.AreEqual("", entry8.AssignmentInfoChecksum); // why is my value reversed?
          Assert.AreEqual("171.67.108.25", entry8.CollectionServerIP);
          Assert.AreEqual(524286976, entry8.PacketSizeLimit);
-         Assert.AreEqual("harlam357", entry8.UserName);
-         Assert.AreEqual("32", entry8.TeamNumber);
+         Assert.AreEqual("harlam357", entry8.FoldingID);
+         Assert.AreEqual("32", entry8.Team);
          Assert.AreEqual("2A73A923B9D2FA7A", entry8.UserID);
          Assert.AreEqual(1, entry8.MachineID);
          Assert.AreEqual(2432236, entry8.WuDataFileSize);
@@ -86,15 +94,23 @@ namespace HFM.Instances.Tests
          QueueReader queue = new QueueReader();
          queue.ReadQueue("..\\..\\TestFiles\\Linux SMP 6.24 queue.dat");
          Assert.AreEqual(600, queue.Version);
+         Assert.AreEqual(0.724012256f, queue.PerformanceFraction);
+         Assert.AreEqual(4, queue.PerformanceFractionUnitWeight);
+         Assert.AreEqual(300.335f, queue.DownloadRateAverage);
+         Assert.AreEqual(4, queue.DownloadRateUnitWeight);
+         Assert.AreEqual(184.095f, queue.UploadRateAverage);
+         Assert.AreEqual(4, queue.UploadRateUnitWeight);
+         Assert.AreEqual(0, queue.ResultsSent);
 
          QueueEntry entry4 = queue.GetQueueEntry(4);
-         //finished
+         Assert.AreEqual(QueueEntryStatus.FoldingNow, entry4.EntryStatus);
          Assert.AreEqual("171.64.65.56", entry4.ServerIP);
          Assert.AreEqual(8080, entry4.ServerPort);
-         Assert.AreEqual(2677, entry4.ProjectNumber);
+         Assert.AreEqual(2677, entry4.ProjectID);
          Assert.AreEqual(33, entry4.ProjectRun);
          Assert.AreEqual(19, entry4.ProjectClone);
          Assert.AreEqual(44, entry4.ProjectGen);
+         Assert.AreEqual("P2677 (R33, C19, G44)", entry4.ProjectRunCloneGen);
          Assert.AreEqual(0, entry4.Benchmark);
          Assert.AreEqual(500, entry4.Misc1a);
          Assert.AreEqual(200, entry4.Misc1b);
@@ -122,15 +138,75 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(685, entry4.Memory);
          Assert.AreEqual(true, entry4.AssignmentInfoPresent);
          Assert.AreEqual(new DateTime(2009, 9, 13, 21, 36, 31, DateTimeKind.Local), entry4.AssignmentTimeStampLocal);
-         //Assert.AreEqual("B9645213", entry4.AssignmentInfoChecksum); // why is my value reversed?
+         //Assert.AreEqual("", entry4.AssignmentInfoChecksum); // why is my value reversed?
          Assert.AreEqual("171.67.108.25", entry4.CollectionServerIP);
          Assert.AreEqual(524286976, entry4.PacketSizeLimit);
-         Assert.AreEqual("harlam357", entry4.UserName);
-         Assert.AreEqual("32", entry4.TeamNumber);
+         Assert.AreEqual("harlam357", entry4.FoldingID);
+         Assert.AreEqual("32", entry4.Team);
          Assert.AreEqual("9B1ED93B634D9D3D", entry4.UserID);
          Assert.AreEqual(1, entry4.MachineID);
          Assert.AreEqual(4838584, entry4.WuDataFileSize);
          Assert.AreEqual("Folding@Home", entry4.WorkUnitType);
+      }
+
+      [Test, Category("SMP")]
+      public void LinuxSmpWaitingUploadQueueTest_624()
+      {
+         QueueReader queue = new QueueReader();
+         queue.ReadQueue("..\\..\\TestFiles\\Linux SMP 6.24 Waiting Upload queue.dat");
+         Assert.AreEqual(600, queue.Version);
+         Assert.AreEqual(0.7182704f, queue.PerformanceFraction);
+         Assert.AreEqual(4, queue.PerformanceFractionUnitWeight);
+         Assert.AreEqual(273.766f, queue.DownloadRateAverage);
+         Assert.AreEqual(4, queue.DownloadRateUnitWeight);
+         Assert.AreEqual(183.91f, queue.UploadRateAverage);
+         Assert.AreEqual(4, queue.UploadRateUnitWeight);
+         Assert.AreEqual(0, queue.ResultsSent);
+
+         QueueEntry entry6 = queue.GetQueueEntry(6);
+         Assert.AreEqual(QueueEntryStatus.ReadyForUpload, entry6.EntryStatus);
+         Assert.AreEqual("171.64.65.56", entry6.ServerIP);
+         Assert.AreEqual(8080, entry6.ServerPort);
+         Assert.AreEqual(2669, entry6.ProjectID);
+         Assert.AreEqual(2, entry6.ProjectRun);
+         Assert.AreEqual(112, entry6.ProjectClone);
+         Assert.AreEqual(164, entry6.ProjectGen);
+         Assert.AreEqual("P2669 (R2, C112, G164)", entry6.ProjectRunCloneGen);
+         Assert.AreEqual(0, entry6.Benchmark);
+         Assert.AreEqual(500, entry6.Misc1a);
+         Assert.AreEqual(200, entry6.Misc1b);
+         Assert.AreEqual(new DateTime(2009, 9, 25, 10, 29, 46, DateTimeKind.Local), entry6.ProjectIssuedLocal);
+         Assert.AreEqual(new DateTime(2009, 9, 25, 10, 30, 32, DateTimeKind.Local), entry6.BeginTimeLocal);
+         Assert.AreEqual(new DateTime(2009, 9, 26, 9, 38, 6, DateTimeKind.Local), entry6.EndTimeUtc);
+         Assert.AreEqual(new DateTime(2009, 9, 28, 10, 30, 32, DateTimeKind.Local), entry6.DueDateLocal);
+         //preferred
+         Assert.AreEqual("http://www.stanford.edu/~pande/Linux/AMD64/Core_a2.fah", entry6.CoreDownloadUrl.AbsoluteUri);
+         Assert.AreEqual("a2", entry6.CoreNumber);
+         //core name
+         Assert.AreEqual(16, entry6.CpuType);
+         Assert.AreEqual(0, entry6.CpuSpecies);
+         Assert.AreEqual("AMD64", entry6.CpuString);
+         Assert.AreEqual(4, entry6.OsType);
+         Assert.AreEqual(0, entry6.OsSpecies);
+         Assert.AreEqual("Linux", entry6.OsString);
+         Assert.AreEqual(2, entry6.NumberOfSmpCores);
+         Assert.AreEqual(2, entry6.UseCores);
+         Assert.AreEqual("P2669R2C112G164", entry6.WorkUnitTag);
+         Assert.AreEqual(1060500841, entry6.Flops);
+         Assert.AreEqual(1060.500841, entry6.MegaFlops);
+         Assert.AreEqual("1060.500841", entry6.MegaFlops.ToString());
+         Assert.AreEqual(685, entry6.Memory);
+         Assert.AreEqual(true, entry6.AssignmentInfoPresent);
+         Assert.AreEqual(new DateTime(2009, 9, 25, 10, 29, 42, DateTimeKind.Local), entry6.AssignmentTimeStampLocal);
+         //Assert.AreEqual("", entry6.AssignmentInfoChecksum); // why is my value reversed?
+         Assert.AreEqual("171.67.108.25", entry6.CollectionServerIP);
+         Assert.AreEqual(524286976, entry6.PacketSizeLimit);
+         Assert.AreEqual("harlam357", entry6.FoldingID);
+         Assert.AreEqual("32", entry6.Team);
+         Assert.AreEqual("21EE6D43B3860603", entry6.UserID);
+         Assert.AreEqual(1, entry6.MachineID);
+         Assert.AreEqual(4836605, entry6.WuDataFileSize);
+         Assert.AreEqual("Folding@Home", entry6.WorkUnitType);
       }
 
       [Test, Category("GPU")]
@@ -139,15 +215,23 @@ namespace HFM.Instances.Tests
          QueueReader queue = new QueueReader();
          queue.ReadQueue("..\\..\\TestFiles\\GPU2 6.23 queue.dat");
          Assert.AreEqual(600, queue.Version);
+         Assert.AreEqual(0.990233958f, queue.PerformanceFraction);
+         Assert.AreEqual(4, queue.PerformanceFractionUnitWeight);
+         Assert.AreEqual(64.48f, queue.DownloadRateAverage);
+         Assert.AreEqual(4, queue.DownloadRateUnitWeight);
+         Assert.AreEqual(99.712f, queue.UploadRateAverage);
+         Assert.AreEqual(4, queue.UploadRateUnitWeight);
+         Assert.AreEqual(305567834, queue.ResultsSent); // This number makes no sense
 
          QueueEntry entry7 = queue.GetQueueEntry(7);
-         //finished
+         Assert.AreEqual(QueueEntryStatus.Finished, entry7.EntryStatus);
          Assert.AreEqual("171.64.65.106", entry7.ServerIP);
          Assert.AreEqual(8080, entry7.ServerPort);
-         Assert.AreEqual(5790, entry7.ProjectNumber);
+         Assert.AreEqual(5790, entry7.ProjectID);
          Assert.AreEqual(5, entry7.ProjectRun);
          Assert.AreEqual(360, entry7.ProjectClone);
          Assert.AreEqual(1, entry7.ProjectGen);
+         Assert.AreEqual("P5790 (R5, C360, G1)", entry7.ProjectRunCloneGen);
          Assert.AreEqual(0, entry7.Benchmark);
          Assert.AreEqual(500, entry7.Misc1a);
          Assert.AreEqual(200, entry7.Misc1b);
@@ -174,11 +258,11 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(4094, entry7.Memory);
          Assert.AreEqual(true, entry7.AssignmentInfoPresent);
          Assert.AreEqual(new DateTime(2009, 9, 13, 19, 45, 26, DateTimeKind.Local), entry7.AssignmentTimeStampLocal);
-         //Assert.AreEqual("B9645213", entry7.AssignmentInfoChecksum); // why is my value reversed?
+         //Assert.AreEqual("", entry7.AssignmentInfoChecksum); // why is my value reversed?
          Assert.AreEqual("171.67.108.25", entry7.CollectionServerIP);
          Assert.AreEqual(524286976, entry7.PacketSizeLimit);
-         Assert.AreEqual("harlam357", entry7.UserName);
-         Assert.AreEqual("32", entry7.TeamNumber);
+         Assert.AreEqual("harlam357", entry7.FoldingID);
+         Assert.AreEqual("32", entry7.Team);
          Assert.AreEqual("492A106C0885F10C", entry7.UserID);
          Assert.AreEqual(2, entry7.MachineID);
          Assert.AreEqual(67869, entry7.WuDataFileSize);
