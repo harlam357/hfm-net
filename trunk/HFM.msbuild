@@ -45,13 +45,10 @@
                Targets="Rebuild"
                Properties="Configuration=Release" />
 
-      <MSBuild Projects="HFM.Setup.sln"
-               Targets="Rebuild"
-               Properties="Configuration=ScriptedRelease" />
+      <CallTarget Targets="NUnit" />
    </Target>
 
    <Target Name="Build" DependsOnTargets="Compile">
-      <CallTarget Targets="ZipRelease;MsiRelease" />
       <Message Text="HFM.NET Build Complete"/>
    </Target>
 
@@ -72,6 +69,9 @@
    </Target>
 
    <Target Name="MsiRelease">
+      <MSBuild Projects="HFM.Setup.sln"
+               Targets="Rebuild"
+               Properties="Configuration=ScriptedRelease" />
       <Copy SourceFiles=".\HFM.Setup\bin\ScriptedRelease\HFM.Setup.msi" DestinationFiles="HFM Release $(Major).$(Minor).$(Build).$(Revision).msi" />
    </Target>
 

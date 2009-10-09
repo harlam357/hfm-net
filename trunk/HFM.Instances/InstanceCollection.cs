@@ -342,7 +342,7 @@ namespace HFM.Instances
                UnitInfo restoreUnitInfo = UnitInfoCollection.Instance.RetrieveUnitInfo(instance.InstanceName, instance.Path);
                if (restoreUnitInfo != null)
                {
-                  instance.CurrentUnitInfo = restoreUnitInfo;
+                  instance.RestoreUnitInfo(restoreUnitInfo);
                   HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Restored UnitInfo for Instance '{1}'.", HfmTrace.FunctionName, instance.InstanceName));
                }
                Add(instance, false);

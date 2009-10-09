@@ -84,10 +84,12 @@ namespace HFM.Forms
          this.txtLogFileName = new HFM.Classes.TextBoxWrapper();
          this.lblLogFileName = new HFM.Classes.LabelWrapper();
          this.txtUnitFileName = new HFM.Classes.TextBoxWrapper();
-         this.lblUnitInfoName = new HFM.Classes.LabelWrapper();
+         this.lblUnitFileName = new HFM.Classes.LabelWrapper();
          this.lblClientMegahertz = new HFM.Classes.LabelWrapper();
          this.txtClientMegahertz = new HFM.Classes.TextBoxWrapper();
          this.label1 = new HFM.Classes.LabelWrapper();
+         this.lblQueueFileName = new HFM.Classes.LabelWrapper();
+         this.txtQueueFileName = new HFM.Classes.TextBoxWrapper();
          this.grpLocal.SuspendLayout();
          this.grpFTP.SuspendLayout();
          this.grpHTTP.SuspendLayout();
@@ -97,10 +99,10 @@ namespace HFM.Forms
          // btnOK
          // 
          this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-         this.btnOK.Location = new System.Drawing.Point(214, 498);
+         this.btnOK.Location = new System.Drawing.Point(212, 325);
          this.btnOK.Name = "btnOK";
          this.btnOK.Size = new System.Drawing.Size(81, 25);
-         this.btnOK.TabIndex = 14;
+         this.btnOK.TabIndex = 19;
          this.btnOK.Text = "OK";
          this.btnOK.UseVisualStyleBackColor = true;
          this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
@@ -110,20 +112,20 @@ namespace HFM.Forms
          this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
          this.btnCancel.CausesValidation = false;
          this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-         this.btnCancel.Location = new System.Drawing.Point(306, 498);
+         this.btnCancel.Location = new System.Drawing.Point(304, 325);
          this.btnCancel.Name = "btnCancel";
          this.btnCancel.Size = new System.Drawing.Size(81, 25);
-         this.btnCancel.TabIndex = 15;
+         this.btnCancel.TabIndex = 20;
          this.btnCancel.Text = "Cancel";
          this.btnCancel.UseVisualStyleBackColor = true;
          // 
          // txtLocalPath
          // 
          this.txtLocalPath.Anchor = System.Windows.Forms.AnchorStyles.Left;
-         this.txtLocalPath.Location = new System.Drawing.Point(80, 19);
+         this.txtLocalPath.Location = new System.Drawing.Point(11, 35);
          this.txtLocalPath.Name = "txtLocalPath";
          this.txtLocalPath.ReadOnly = true;
-         this.txtLocalPath.Size = new System.Drawing.Size(249, 20);
+         this.txtLocalPath.Size = new System.Drawing.Size(320, 20);
          this.txtLocalPath.TabIndex = 1;
          this.txtLocalPath.Validating += new System.ComponentModel.CancelEventHandler(this.txtLocalPath_Validating);
          // 
@@ -132,7 +134,7 @@ namespace HFM.Forms
          this.btnBrowseLocal.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.btnBrowseLocal.CausesValidation = false;
          this.btnBrowseLocal.Enabled = false;
-         this.btnBrowseLocal.Location = new System.Drawing.Point(335, 16);
+         this.btnBrowseLocal.Location = new System.Drawing.Point(337, 33);
          this.btnBrowseLocal.Name = "btnBrowseLocal";
          this.btnBrowseLocal.Size = new System.Drawing.Size(30, 24);
          this.btnBrowseLocal.TabIndex = 2;
@@ -144,20 +146,20 @@ namespace HFM.Forms
          // 
          this.radioLocal.AutoSize = true;
          this.radioLocal.CausesValidation = false;
-         this.radioLocal.Location = new System.Drawing.Point(9, 123);
+         this.radioLocal.Location = new System.Drawing.Point(10, 146);
          this.radioLocal.Name = "radioLocal";
-         this.radioLocal.Size = new System.Drawing.Size(202, 17);
-         this.radioLocal.TabIndex = 6;
-         this.radioLocal.Text = "Use local file path or network file path";
+         this.radioLocal.Size = new System.Drawing.Size(131, 17);
+         this.radioLocal.TabIndex = 10;
+         this.radioLocal.Text = "Local or Network Path";
          this.radioLocal.UseVisualStyleBackColor = true;
          this.radioLocal.CheckedChanged += new System.EventHandler(this.radioButtonSet_CheckedChanged);
          // 
          // txtName
          // 
-         this.txtName.Location = new System.Drawing.Point(214, 12);
+         this.txtName.Location = new System.Drawing.Point(146, 12);
          this.txtName.MaxLength = 100;
          this.txtName.Name = "txtName";
-         this.txtName.Size = new System.Drawing.Size(173, 20);
+         this.txtName.Size = new System.Drawing.Size(237, 20);
          this.txtName.TabIndex = 1;
          this.txtName.Validating += new System.ComponentModel.CancelEventHandler(this.txtName_Validating);
          // 
@@ -166,19 +168,19 @@ namespace HFM.Forms
          this.lblInstanceName.AutoSize = true;
          this.lblInstanceName.Location = new System.Drawing.Point(6, 15);
          this.lblInstanceName.Name = "lblInstanceName";
-         this.lblInstanceName.Size = new System.Drawing.Size(138, 13);
+         this.lblInstanceName.Size = new System.Drawing.Size(82, 13);
          this.lblInstanceName.TabIndex = 0;
-         this.lblInstanceName.Text = "Computer / Instance Name:";
+         this.lblInstanceName.Text = "Instance Name:";
          // 
          // radioFTP
          // 
          this.radioFTP.AutoSize = true;
          this.radioFTP.CausesValidation = false;
-         this.radioFTP.Location = new System.Drawing.Point(9, 193);
+         this.radioFTP.Location = new System.Drawing.Point(256, 146);
          this.radioFTP.Name = "radioFTP";
-         this.radioFTP.Size = new System.Drawing.Size(153, 17);
-         this.radioFTP.TabIndex = 8;
-         this.radioFTP.Text = "Download from FTP Server";
+         this.radioFTP.Size = new System.Drawing.Size(79, 17);
+         this.radioFTP.TabIndex = 12;
+         this.radioFTP.Text = "FTP Server";
          this.radioFTP.UseVisualStyleBackColor = true;
          this.radioFTP.CheckedChanged += new System.EventHandler(this.radioButtonSet_CheckedChanged);
          // 
@@ -186,7 +188,7 @@ namespace HFM.Forms
          // 
          this.lblFTPServer.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblFTPServer.AutoSize = true;
-         this.lblFTPServer.Location = new System.Drawing.Point(5, 22);
+         this.lblFTPServer.Location = new System.Drawing.Point(11, 18);
          this.lblFTPServer.Name = "lblFTPServer";
          this.lblFTPServer.Size = new System.Drawing.Size(116, 13);
          this.lblFTPServer.TabIndex = 0;
@@ -194,7 +196,7 @@ namespace HFM.Forms
          // 
          // txtFTPServer
          // 
-         this.txtFTPServer.Location = new System.Drawing.Point(154, 19);
+         this.txtFTPServer.Location = new System.Drawing.Point(152, 15);
          this.txtFTPServer.Name = "txtFTPServer";
          this.txtFTPServer.ReadOnly = true;
          this.txtFTPServer.Size = new System.Drawing.Size(215, 20);
@@ -205,7 +207,7 @@ namespace HFM.Forms
          // 
          this.lblFTPPath.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblFTPPath.AutoSize = true;
-         this.lblFTPPath.Location = new System.Drawing.Point(5, 49);
+         this.lblFTPPath.Location = new System.Drawing.Point(11, 45);
          this.lblFTPPath.Name = "lblFTPPath";
          this.lblFTPPath.Size = new System.Drawing.Size(104, 13);
          this.lblFTPPath.TabIndex = 2;
@@ -213,7 +215,7 @@ namespace HFM.Forms
          // 
          // txtFTPPath
          // 
-         this.txtFTPPath.Location = new System.Drawing.Point(154, 46);
+         this.txtFTPPath.Location = new System.Drawing.Point(152, 42);
          this.txtFTPPath.Name = "txtFTPPath";
          this.txtFTPPath.ReadOnly = true;
          this.txtFTPPath.Size = new System.Drawing.Size(215, 20);
@@ -224,11 +226,11 @@ namespace HFM.Forms
          // 
          this.radioHTTP.AutoSize = true;
          this.radioHTTP.CausesValidation = false;
-         this.radioHTTP.Location = new System.Drawing.Point(9, 341);
+         this.radioHTTP.Location = new System.Drawing.Point(159, 146);
          this.radioHTTP.Name = "radioHTTP";
-         this.radioHTTP.Size = new System.Drawing.Size(156, 17);
-         this.radioHTTP.TabIndex = 10;
-         this.radioHTTP.Text = "Download from Web Server";
+         this.radioHTTP.Size = new System.Drawing.Size(82, 17);
+         this.radioHTTP.TabIndex = 11;
+         this.radioHTTP.Text = "Web Server";
          this.radioHTTP.UseVisualStyleBackColor = true;
          this.radioHTTP.CheckedChanged += new System.EventHandler(this.radioButtonSet_CheckedChanged);
          // 
@@ -236,17 +238,17 @@ namespace HFM.Forms
          // 
          this.txtWebURL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                      | System.Windows.Forms.AnchorStyles.Right)));
-         this.txtWebURL.Location = new System.Drawing.Point(151, 19);
+         this.txtWebURL.Location = new System.Drawing.Point(152, 15);
          this.txtWebURL.Name = "txtWebURL";
          this.txtWebURL.ReadOnly = true;
-         this.txtWebURL.Size = new System.Drawing.Size(218, 20);
+         this.txtWebURL.Size = new System.Drawing.Size(215, 20);
          this.txtWebURL.TabIndex = 1;
          this.txtWebURL.Validating += new System.ComponentModel.CancelEventHandler(this.txtWebURL_Validating);
          // 
          // lblWebURL
          // 
          this.lblWebURL.AutoSize = true;
-         this.lblWebURL.Location = new System.Drawing.Point(5, 22);
+         this.lblWebURL.Location = new System.Drawing.Point(11, 18);
          this.lblWebURL.Name = "lblWebURL";
          this.lblWebURL.Size = new System.Drawing.Size(110, 13);
          this.lblWebURL.TabIndex = 0;
@@ -254,7 +256,7 @@ namespace HFM.Forms
          // 
          // txtFTPUser
          // 
-         this.txtFTPUser.Location = new System.Drawing.Point(154, 73);
+         this.txtFTPUser.Location = new System.Drawing.Point(152, 69);
          this.txtFTPUser.Name = "txtFTPUser";
          this.txtFTPUser.ReadOnly = true;
          this.txtFTPUser.Size = new System.Drawing.Size(215, 20);
@@ -264,7 +266,7 @@ namespace HFM.Forms
          // 
          this.lblFTPUser.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblFTPUser.AutoSize = true;
-         this.lblFTPUser.Location = new System.Drawing.Point(5, 76);
+         this.lblFTPUser.Location = new System.Drawing.Point(11, 72);
          this.lblFTPUser.Name = "lblFTPUser";
          this.lblFTPUser.Size = new System.Drawing.Size(81, 13);
          this.lblFTPUser.TabIndex = 4;
@@ -272,7 +274,7 @@ namespace HFM.Forms
          // 
          // txtFTPPass
          // 
-         this.txtFTPPass.Location = new System.Drawing.Point(154, 100);
+         this.txtFTPPass.Location = new System.Drawing.Point(152, 96);
          this.txtFTPPass.Name = "txtFTPPass";
          this.txtFTPPass.ReadOnly = true;
          this.txtFTPPass.Size = new System.Drawing.Size(215, 20);
@@ -283,7 +285,7 @@ namespace HFM.Forms
          // 
          this.lblFTPPass.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblFTPPass.AutoSize = true;
-         this.lblFTPPass.Location = new System.Drawing.Point(5, 103);
+         this.lblFTPPass.Location = new System.Drawing.Point(11, 99);
          this.lblFTPPass.Name = "lblFTPPass";
          this.lblFTPPass.Size = new System.Drawing.Size(79, 13);
          this.lblFTPPass.TabIndex = 6;
@@ -293,28 +295,28 @@ namespace HFM.Forms
          // 
          this.txtWebUser.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                      | System.Windows.Forms.AnchorStyles.Right)));
-         this.txtWebUser.Location = new System.Drawing.Point(151, 45);
+         this.txtWebUser.Location = new System.Drawing.Point(152, 42);
          this.txtWebUser.Name = "txtWebUser";
          this.txtWebUser.ReadOnly = true;
-         this.txtWebUser.Size = new System.Drawing.Size(218, 20);
+         this.txtWebUser.Size = new System.Drawing.Size(215, 20);
          this.txtWebUser.TabIndex = 3;
          // 
          // txtWebPass
          // 
          this.txtWebPass.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                      | System.Windows.Forms.AnchorStyles.Right)));
-         this.txtWebPass.Location = new System.Drawing.Point(151, 71);
+         this.txtWebPass.Location = new System.Drawing.Point(152, 69);
          this.txtWebPass.Name = "txtWebPass";
          this.txtWebPass.PasswordChar = '#';
          this.txtWebPass.ReadOnly = true;
-         this.txtWebPass.Size = new System.Drawing.Size(218, 20);
+         this.txtWebPass.Size = new System.Drawing.Size(215, 20);
          this.txtWebPass.TabIndex = 5;
          this.txtWebPass.UseSystemPasswordChar = true;
          // 
          // lblWebUser
          // 
          this.lblWebUser.AutoSize = true;
-         this.lblWebUser.Location = new System.Drawing.Point(5, 48);
+         this.lblWebUser.Location = new System.Drawing.Point(11, 45);
          this.lblWebUser.Name = "lblWebUser";
          this.lblWebUser.Size = new System.Drawing.Size(118, 13);
          this.lblWebUser.TabIndex = 2;
@@ -323,7 +325,7 @@ namespace HFM.Forms
          // lblWebPass
          // 
          this.lblWebPass.AutoSize = true;
-         this.lblWebPass.Location = new System.Drawing.Point(5, 74);
+         this.lblWebPass.Location = new System.Drawing.Point(11, 72);
          this.lblWebPass.Name = "lblWebPass";
          this.lblWebPass.Size = new System.Drawing.Size(116, 13);
          this.lblWebPass.TabIndex = 4;
@@ -334,17 +336,17 @@ namespace HFM.Forms
          this.grpLocal.Controls.Add(this.btnBrowseLocal);
          this.grpLocal.Controls.Add(this.txtLocalPath);
          this.grpLocal.Controls.Add(this.lblLogFolder);
-         this.grpLocal.Location = new System.Drawing.Point(9, 138);
+         this.grpLocal.Location = new System.Drawing.Point(7, 166);
          this.grpLocal.Name = "grpLocal";
-         this.grpLocal.Size = new System.Drawing.Size(378, 51);
-         this.grpLocal.TabIndex = 7;
+         this.grpLocal.Size = new System.Drawing.Size(378, 69);
+         this.grpLocal.TabIndex = 13;
          this.grpLocal.TabStop = false;
          // 
          // lblLogFolder
          // 
          this.lblLogFolder.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblLogFolder.AutoSize = true;
-         this.lblLogFolder.Location = new System.Drawing.Point(5, 22);
+         this.lblLogFolder.Location = new System.Drawing.Point(11, 16);
          this.lblLogFolder.Name = "lblLogFolder";
          this.lblLogFolder.Size = new System.Drawing.Size(60, 13);
          this.lblLogFolder.TabIndex = 0;
@@ -360,10 +362,10 @@ namespace HFM.Forms
          this.grpFTP.Controls.Add(this.lblFTPPass);
          this.grpFTP.Controls.Add(this.txtFTPPath);
          this.grpFTP.Controls.Add(this.txtFTPUser);
-         this.grpFTP.Location = new System.Drawing.Point(9, 208);
+         this.grpFTP.Location = new System.Drawing.Point(7, 166);
          this.grpFTP.Name = "grpFTP";
-         this.grpFTP.Size = new System.Drawing.Size(378, 129);
-         this.grpFTP.TabIndex = 9;
+         this.grpFTP.Size = new System.Drawing.Size(378, 126);
+         this.grpFTP.TabIndex = 15;
          this.grpFTP.TabStop = false;
          // 
          // grpHTTP
@@ -374,10 +376,10 @@ namespace HFM.Forms
          this.grpHTTP.Controls.Add(this.lblWebPass);
          this.grpHTTP.Controls.Add(this.lblWebUser);
          this.grpHTTP.Controls.Add(this.lblWebURL);
-         this.grpHTTP.Location = new System.Drawing.Point(9, 356);
+         this.grpHTTP.Location = new System.Drawing.Point(7, 166);
          this.grpHTTP.Name = "grpHTTP";
-         this.grpHTTP.Size = new System.Drawing.Size(378, 110);
-         this.grpHTTP.TabIndex = 11;
+         this.grpHTTP.Size = new System.Drawing.Size(378, 99);
+         this.grpHTTP.TabIndex = 14;
          this.grpHTTP.TabStop = false;
          // 
          // toolTipCore
@@ -390,18 +392,20 @@ namespace HFM.Forms
          // 
          // chkClientVM
          // 
+         this.chkClientVM.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
          this.chkClientVM.AutoSize = true;
-         this.chkClientVM.Location = new System.Drawing.Point(9, 472);
+         this.chkClientVM.Location = new System.Drawing.Point(12, 301);
          this.chkClientVM.Name = "chkClientVM";
          this.chkClientVM.Size = new System.Drawing.Size(301, 17);
-         this.chkClientVM.TabIndex = 11;
+         this.chkClientVM.TabIndex = 16;
          this.chkClientVM.Text = "Client is on Virtual Machine (and reports UTC as local time)";
          this.toolTipCore.SetToolTip(this.chkClientVM, resources.GetString("chkClientVM.ToolTip"));
          this.chkClientVM.UseVisualStyleBackColor = true;
          // 
          // numOffset
          // 
-         this.numOffset.Location = new System.Drawing.Point(9, 499);
+         this.numOffset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+         this.numOffset.Location = new System.Drawing.Point(8, 327);
          this.numOffset.Maximum = new decimal(new int[] {
             720,
             0,
@@ -414,7 +418,7 @@ namespace HFM.Forms
             -2147483648});
          this.numOffset.Name = "numOffset";
          this.numOffset.Size = new System.Drawing.Size(54, 20);
-         this.numOffset.TabIndex = 12;
+         this.numOffset.TabIndex = 17;
          this.toolTipCore.SetToolTip(this.numOffset, resources.GetString("numOffset.ToolTip"));
          // 
          // openLogFolder
@@ -423,11 +427,11 @@ namespace HFM.Forms
          // 
          // txtLogFileName
          // 
-         this.txtLogFileName.Location = new System.Drawing.Point(214, 64);
+         this.txtLogFileName.Location = new System.Drawing.Point(146, 64);
          this.txtLogFileName.MaxLength = 100;
          this.txtLogFileName.Name = "txtLogFileName";
-         this.txtLogFileName.Size = new System.Drawing.Size(173, 20);
-         this.txtLogFileName.TabIndex = 3;
+         this.txtLogFileName.Size = new System.Drawing.Size(237, 20);
+         this.txtLogFileName.TabIndex = 5;
          this.txtLogFileName.Validating += new System.ComponentModel.CancelEventHandler(this.txtLogFileName_Validating);
          // 
          // lblLogFileName
@@ -436,26 +440,26 @@ namespace HFM.Forms
          this.lblLogFileName.Location = new System.Drawing.Point(6, 67);
          this.lblLogFileName.Name = "lblLogFileName";
          this.lblLogFileName.Size = new System.Drawing.Size(116, 13);
-         this.lblLogFileName.TabIndex = 2;
+         this.lblLogFileName.TabIndex = 4;
          this.lblLogFileName.Text = "Filename for FAHlog.txt";
          // 
          // txtUnitFileName
          // 
-         this.txtUnitFileName.Location = new System.Drawing.Point(214, 90);
+         this.txtUnitFileName.Location = new System.Drawing.Point(146, 90);
          this.txtUnitFileName.MaxLength = 100;
          this.txtUnitFileName.Name = "txtUnitFileName";
-         this.txtUnitFileName.Size = new System.Drawing.Size(173, 20);
-         this.txtUnitFileName.TabIndex = 4;
+         this.txtUnitFileName.Size = new System.Drawing.Size(237, 20);
+         this.txtUnitFileName.TabIndex = 7;
          this.txtUnitFileName.Validating += new System.ComponentModel.CancelEventHandler(this.txtUnitFileName_Validating);
          // 
-         // lblUnitInfoName
+         // lblUnitFileName
          // 
-         this.lblUnitInfoName.AutoSize = true;
-         this.lblUnitInfoName.Location = new System.Drawing.Point(6, 93);
-         this.lblUnitInfoName.Name = "lblUnitInfoName";
-         this.lblUnitInfoName.Size = new System.Drawing.Size(115, 13);
-         this.lblUnitInfoName.TabIndex = 4;
-         this.lblUnitInfoName.Text = "Filename for unitinfo.txt";
+         this.lblUnitFileName.AutoSize = true;
+         this.lblUnitFileName.Location = new System.Drawing.Point(6, 93);
+         this.lblUnitFileName.Name = "lblUnitFileName";
+         this.lblUnitFileName.Size = new System.Drawing.Size(115, 13);
+         this.lblUnitFileName.TabIndex = 6;
+         this.lblUnitFileName.Text = "Filename for unitinfo.txt";
          // 
          // lblClientMegahertz
          // 
@@ -463,33 +467,57 @@ namespace HFM.Forms
          this.lblClientMegahertz.Location = new System.Drawing.Point(6, 41);
          this.lblClientMegahertz.Name = "lblClientMegahertz";
          this.lblClientMegahertz.Size = new System.Drawing.Size(111, 13);
-         this.lblClientMegahertz.TabIndex = 15;
+         this.lblClientMegahertz.TabIndex = 2;
          this.lblClientMegahertz.Text = "Client Processor MHz:";
          // 
          // txtClientMegahertz
          // 
-         this.txtClientMegahertz.Location = new System.Drawing.Point(214, 38);
+         this.txtClientMegahertz.Location = new System.Drawing.Point(146, 38);
          this.txtClientMegahertz.MaxLength = 9;
          this.txtClientMegahertz.Name = "txtClientMegahertz";
-         this.txtClientMegahertz.Size = new System.Drawing.Size(173, 20);
-         this.txtClientMegahertz.TabIndex = 2;
+         this.txtClientMegahertz.Size = new System.Drawing.Size(237, 20);
+         this.txtClientMegahertz.TabIndex = 3;
          this.txtClientMegahertz.Text = "1";
          this.txtClientMegahertz.Validating += new System.ComponentModel.CancelEventHandler(this.txtClientMegahertz_Validating);
          // 
          // label1
          // 
+         this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
          this.label1.AutoSize = true;
-         this.label1.Location = new System.Drawing.Point(65, 502);
+         this.label1.Location = new System.Drawing.Point(64, 330);
          this.label1.Name = "label1";
          this.label1.Size = new System.Drawing.Size(136, 13);
-         this.label1.TabIndex = 13;
+         this.label1.TabIndex = 18;
          this.label1.Text = "Client Time Offset (Minutes)";
+         // 
+         // lblQueueFileName
+         // 
+         this.lblQueueFileName.AutoSize = true;
+         this.lblQueueFileName.Location = new System.Drawing.Point(6, 119);
+         this.lblQueueFileName.Name = "lblQueueFileName";
+         this.lblQueueFileName.Size = new System.Drawing.Size(115, 13);
+         this.lblQueueFileName.TabIndex = 8;
+         this.lblQueueFileName.Text = "Filename for queue.dat";
+         // 
+         // txtQueueFileName
+         // 
+         this.txtQueueFileName.Location = new System.Drawing.Point(146, 116);
+         this.txtQueueFileName.MaxLength = 100;
+         this.txtQueueFileName.Name = "txtQueueFileName";
+         this.txtQueueFileName.Size = new System.Drawing.Size(237, 20);
+         this.txtQueueFileName.TabIndex = 9;
+         this.txtQueueFileName.Validating += new System.ComponentModel.CancelEventHandler(this.txtQueueFileName_Validating);
          // 
          // frmHost
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(394, 533);
+         this.ClientSize = new System.Drawing.Size(392, 360);
+         this.Controls.Add(this.txtQueueFileName);
+         this.Controls.Add(this.lblQueueFileName);
+         this.Controls.Add(this.grpLocal);
+         this.Controls.Add(this.grpHTTP);
+         this.Controls.Add(this.grpFTP);
          this.Controls.Add(this.label1);
          this.Controls.Add(this.numOffset);
          this.Controls.Add(this.txtClientMegahertz);
@@ -500,23 +528,20 @@ namespace HFM.Forms
          this.Controls.Add(this.txtName);
          this.Controls.Add(this.lblLogFileName);
          this.Controls.Add(this.btnOK);
-         this.Controls.Add(this.lblUnitInfoName);
+         this.Controls.Add(this.lblUnitFileName);
          this.Controls.Add(this.txtLogFileName);
-         this.Controls.Add(this.grpHTTP);
          this.Controls.Add(this.txtUnitFileName);
          this.Controls.Add(this.radioHTTP);
-         this.Controls.Add(this.grpFTP);
          this.Controls.Add(this.radioFTP);
          this.Controls.Add(this.radioLocal);
-         this.Controls.Add(this.grpLocal);
          this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+         this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
          this.MaximizeBox = false;
          this.MinimizeBox = false;
          this.Name = "frmHost";
-         this.ShowIcon = false;
          this.ShowInTaskbar = false;
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-         this.Text = "Add / Modify Folding Instance";
+         this.Text = "Folding Instance Setup";
          this.grpLocal.ResumeLayout(false);
          this.grpLocal.PerformLayout();
          this.grpFTP.ResumeLayout(false);
@@ -540,15 +565,15 @@ namespace HFM.Forms
       private Classes.LabelWrapper lblFTPPass;
       private Classes.LabelWrapper lblWebUser;
       private Classes.LabelWrapper lblWebPass;
-      public Classes.TextBoxWrapper txtLocalPath;
-      public Classes.TextBoxWrapper txtName;
-      public Classes.TextBoxWrapper txtFTPServer;
-      public Classes.TextBoxWrapper txtFTPPath;
-      public Classes.TextBoxWrapper txtWebURL;
-      public Classes.TextBoxWrapper txtFTPUser;
-      public Classes.TextBoxWrapper txtFTPPass;
-      public Classes.TextBoxWrapper txtWebUser;
-      public Classes.TextBoxWrapper txtWebPass;
+      private Classes.TextBoxWrapper txtLocalPath;
+      private Classes.TextBoxWrapper txtName;
+      private Classes.TextBoxWrapper txtFTPServer;
+      private Classes.TextBoxWrapper txtFTPPath;
+      private Classes.TextBoxWrapper txtWebURL;
+      private Classes.TextBoxWrapper txtFTPUser;
+      private Classes.TextBoxWrapper txtFTPPass;
+      private Classes.TextBoxWrapper txtWebUser;
+      private Classes.TextBoxWrapper txtWebPass;
       private Classes.GroupBoxWrapper grpLocal;
       private Classes.LabelWrapper lblLogFolder;
       private Classes.GroupBoxWrapper grpFTP;
@@ -557,18 +582,20 @@ namespace HFM.Forms
 
       #endregion
       private System.Windows.Forms.FolderBrowserDialog openLogFolder;
-      public Classes.TextBoxWrapper txtLogFileName;
+      private Classes.TextBoxWrapper txtLogFileName;
       private Classes.LabelWrapper lblLogFileName;
-      public Classes.TextBoxWrapper txtUnitFileName;
-      private Classes.LabelWrapper lblUnitInfoName;
-      internal Classes.RadioButtonWrapper radioLocal;
-      internal Classes.RadioButtonWrapper radioFTP;
-      internal Classes.RadioButtonWrapper radioHTTP;
-      internal Classes.CheckBoxWrapper chkClientVM;
+      private Classes.TextBoxWrapper txtUnitFileName;
+      private Classes.LabelWrapper lblUnitFileName;
+      private Classes.CheckBoxWrapper chkClientVM;
       private Classes.LabelWrapper lblClientMegahertz;
-      public Classes.TextBoxWrapper txtClientMegahertz;
+      private Classes.TextBoxWrapper txtClientMegahertz;
       private Classes.LabelWrapper label1;
-      internal System.Windows.Forms.NumericUpDown numOffset;
+      private System.Windows.Forms.NumericUpDown numOffset;
+      private Classes.RadioButtonWrapper radioLocal;
+      private Classes.RadioButtonWrapper radioFTP;
+      private Classes.RadioButtonWrapper radioHTTP;
+      private Classes.LabelWrapper lblQueueFileName;
+      private Classes.TextBoxWrapper txtQueueFileName;
 
    }
 }

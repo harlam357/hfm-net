@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A032015C-AA3F-4610-A107-46FB89E41485}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -100,6 +100,12 @@
     </Compile>
     <Compile Include="Classes\LabelWrapper.Designer.cs">
       <DependentUpon>LabelWrapper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\QueueControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Classes\QueueControl.Designer.cs">
+      <DependentUpon>QueueControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Classes\RadioButtonWrapper.cs">
       <SubType>Component</SubType>
@@ -210,6 +216,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Classes\QueueControl.resx">
+      <DependentUpon>QueueControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmBenchmarks.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmBenchmarks.cs</DependentUpon>

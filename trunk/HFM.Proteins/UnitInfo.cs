@@ -21,6 +21,7 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+
 using HFM.Instrumentation;
 using HFM.Preferences;
 
@@ -170,6 +171,22 @@ namespace HFM.Proteins
       }
       
       /// <summary>
+      /// Flag specifying if Download Time value is Unknown
+      /// </summary>
+      public bool DownloadTimeUnknown
+      {
+         get { return DownloadTime.Equals(DateTime.MinValue); }
+      }
+
+      /// <summary>
+      /// Flag specifying if Due Time value is Unknown
+      /// </summary>
+      public bool DueTimeUnknown
+      {
+         get { return DueTime.Equals(DateTime.MinValue); }
+      }
+      
+      /// <summary>
       /// Returns true if Project (R/C/G) has not been identified
       /// </summary>
       public bool ProjectIsUnknown
@@ -181,6 +198,14 @@ namespace HFM.Proteins
                    ProjectClone == 0 &&
                    ProjectGen ==0;
          }
+      }
+
+      /// <summary>
+      /// Flag specifying if Protein Tag value is Unknown
+      /// </summary>
+      public bool ProteinTagUnknown
+      {
+         get { return ProteinTag.Length == 0; }
       }
 
       #region Values Based on UnitFrame Data
@@ -253,7 +278,7 @@ namespace HFM.Proteins
       /// <summary>
       /// Client Type for this work unit
       /// </summary>
-      private ClientType _TypeOfClient;
+      private ClientType _TypeOfClient = ClientType.Unknown;
       /// <summary>
       /// Client Type for this work unit
       /// </summary>
@@ -266,7 +291,7 @@ namespace HFM.Proteins
       /// <summary>
       /// Date/time the unit was downloaded
       /// </summary>
-      private DateTime _DownloadTime;
+      private DateTime _DownloadTime = DateTime.MinValue;
       /// <summary>
       /// Date/time the unit was downloaded
       /// </summary>
@@ -279,7 +304,7 @@ namespace HFM.Proteins
       /// <summary>
       /// Date/time the unit is due (preferred deadline)
       /// </summary>
-      private DateTime _DueTime;
+      private DateTime _DueTime = DateTime.MinValue;
       /// <summary>
       /// Date/time the unit is due (preferred deadline)
       /// </summary>
@@ -287,6 +312,19 @@ namespace HFM.Proteins
       {
          get { return _DueTime; }
          set { _DueTime = value; }
+      }
+
+      /// <summary>
+      /// Date/time the unit finished
+      /// </summary>
+      private DateTime _FinishedTime = DateTime.MinValue;
+      /// <summary>
+      /// Date/time the unit finished
+      /// </summary>
+      public DateTime FinishedTime
+      {
+         get { return _FinishedTime; }
+         set { _FinishedTime = value; }
       }
 
       /// <summary>
@@ -428,7 +466,7 @@ namespace HFM.Proteins
       /// <summary>
       /// The Result of this Work Unit
       /// </summary>
-      private WorkUnitResult _UnitResult;
+      private WorkUnitResult _UnitResult = WorkUnitResult.Unknown;
       /// <summary>
       /// The Result of this Work Unit
       /// </summary>
@@ -496,7 +534,7 @@ namespace HFM.Proteins
       /// <summary>
       /// Time per frame (TPF) of the unit
       /// </summary>
-      private TimeSpan _TimePerFrame;
+      private TimeSpan _TimePerFrame = TimeSpan.Zero;
       /// <summary>
       /// Time per frame (TPF) of the unit
       /// </summary>
@@ -541,7 +579,7 @@ namespace HFM.Proteins
       /// <summary>
       /// Esimated time of arrival (ETA) for this protein
       /// </summary>
-      private TimeSpan _ETA;
+      private TimeSpan _ETA = TimeSpan.Zero;
       /// <summary>
       /// Esimated time of arrival (ETA) for this protein
       /// </summary>
@@ -672,11 +710,11 @@ namespace HFM.Proteins
       private void Clear()
       {
          TypeOfClient = ClientType.Unknown;
-         CoreVersion = String.Empty;
          DownloadTime = DateTime.MinValue;
          DueTime = DateTime.MinValue;
-         FramesComplete = 0;
-         PercentComplete = 0;
+         FinishedTime = DateTime.MinValue;
+         UnitStartTime = TimeSpan.Zero;
+         CoreVersion = String.Empty;
          ProjectID = 0;
          ProjectRun = 0;
          ProjectClone = 0;
@@ -686,6 +724,7 @@ namespace HFM.Proteins
          RawFramesComplete = 0;
          RawFramesTotal = 0;
          UnitResult = WorkUnitResult.Unknown;
+
          CurrentProtein = new Protein();
 
          ClearTimeBasedValues();
@@ -934,6 +973,41 @@ namespace HFM.Proteins
                return WorkUnitResult.Interrupted;
             default:
                return WorkUnitResult.Unknown;
+         }
+      }
+
+      /// <summary>
+      /// Determine the client type based on the current protein core
+      /// </summary>
+      /// <param name="CurrentProtein">Current Instance Protein</param>
+      /// <returns>Client Type</returns>
+      public static ClientType GetClientTypeFromProtein(Protein CurrentProtein)
+      {
+         switch (CurrentProtein.Core)
+         {
+            case "GROMACS":
+            case "DGROMACS":
+            case "GBGROMACS":
+            case "AMBER":
+            case "QMD":
+            case "GROMACS33":
+            case "GROST":
+            case "GROSIMT":
+            case "DGROMACSB":
+            case "DGROMACSC":
+            case "GRO-A4":
+            case "TINKER":
+               return ClientType.Standard;
+            case "GRO-SMP":
+            case "GROCVS":
+               return ClientType.SMP;
+            case "GROGPU2":
+            case "GROGPU2-MT":
+            case "ATI-DEV":
+            case "NVIDIA-DEV":
+               return ClientType.GPU;
+            default:
+               return ClientType.Unknown;
          }
       }
    }

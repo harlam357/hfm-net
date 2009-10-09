@@ -515,6 +515,13 @@ namespace HFM.Preferences
          set { _ReportEuePause = value; }
       }
 
+      private bool _QueueViewerVisible;
+      public bool QueueViewerVisible
+      {
+         get { return _QueueViewerVisible; }
+         set { _QueueViewerVisible = value; }
+      }
+
       public static String AppPath
       {
          get
@@ -771,6 +778,7 @@ namespace HFM.Preferences
             }
          }
          _ReportEuePause = Settings.Default.ReportEuePause;
+         _QueueViewerVisible = Settings.Default.QueueViewerVisible;
          
          _AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
          _AppDataPath = Path.Combine(_AppDataPath, ExeName);
@@ -918,6 +926,7 @@ namespace HFM.Preferences
                }
             }
             Settings.Default.ReportEuePause = _ReportEuePause;
+            Settings.Default.QueueViewerVisible = _QueueViewerVisible;
 
             Settings.Default.Save();
          }

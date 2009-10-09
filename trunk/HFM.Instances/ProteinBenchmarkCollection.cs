@@ -41,12 +41,12 @@ namespace HFM.Instances
       #region Implementation
       public void UpdateBenchmarkData(UnitInfo unit, int startingFrame, int endingFrame)
       {
+         // project is not known, don't add to benchmark data
+         if (unit.ProjectIsUnknown) return;
+      
          // no progress has been made so stub out
          if (startingFrame > endingFrame) return;
          
-         // project is not known, don't add to benchmark data
-         if (unit.ProjectIsUnknown) return;
-
          InstanceProteinBenchmark findBenchmark = FindBenchmark(unit);
 
          if (findBenchmark == null)
@@ -54,8 +54,10 @@ namespace HFM.Instances
             InstanceProteinBenchmark newBenchmark =
                new InstanceProteinBenchmark(unit.OwningInstanceName, unit.OwningInstancePath, unit.ProjectID);
 
-            SetFrames(unit, newBenchmark, startingFrame, endingFrame);
-            _benchmarkList.Add(newBenchmark);
+            if (SetFrames(unit, newBenchmark, startingFrame, endingFrame))
+            {
+               _benchmarkList.Add(newBenchmark);
+            }
          }
          else
          {
@@ -63,13 +65,18 @@ namespace HFM.Instances
          }
       }
 
-      private static void SetFrames(UnitInfo unit, InstanceProteinBenchmark benchmark, int startingFrame, int endingFrame)
+      private static bool SetFrames(UnitInfo unit, InstanceProteinBenchmark benchmark, int startingFrame, int endingFrame)
       {
+         bool result = false;
+      
          for (int i = startingFrame; i <= endingFrame; i++)
          {
             if (unit.UnitFrames[i] != null)
             {
-               benchmark.SetFrameTime(unit.UnitFrames[i].FrameDuration);
+               if (benchmark.SetFrameTime(unit.UnitFrames[i].FrameDuration))
+               {
+                  result = true;
+               }
                if (unit.UnitFrames[i].FramePercent == 100)
                {
                   UnitInfoCollection.WriteCompletedUnitInfo(unit);
@@ -77,11 +84,13 @@ namespace HFM.Instances
             }
             else
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
+               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
                                           String.Format("{0} ({1}) FrameID '{2}' Not Found ({3})",
                                                         HfmTrace.FunctionName, unit.OwningInstanceName, i, unit.ProjectRunCloneGen));
             }
          }
+         
+         return result;
       }
 
       public TimeSpan GetBenchmarkAverageFrameTime(UnitInfo unit)

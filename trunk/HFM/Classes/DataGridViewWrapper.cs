@@ -17,15 +17,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 
 namespace HFM.Classes
 {
    public partial class DataGridViewWrapper : DataGridView
    {
+      private bool _FreezeRowEnter;
+      
+      public bool FreezeRowEnter
+      {
+         get { return _FreezeRowEnter; }
+         set { _FreezeRowEnter = value; }
+      }
+
       public DataGridViewWrapper()
       {
          InitializeComponent();
+      }
+
+      [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate")]
+      public void FireRowEnter(int columnIndex, int rowIndex)
+      {
+         OnRowEnter(new DataGridViewCellEventArgs(columnIndex, rowIndex));
+      }
+
+      ///<summary>
+      ///Raises the <see cref="E:System.Windows.Forms.DataGridView.RowEnter"></see> event.
+      ///</summary>
+      ///<param name="e">A <see cref="T:System.Windows.Forms.DataGridViewCellEventArgs"></see> that contains the event data.</param>
+      protected override void OnRowEnter(DataGridViewCellEventArgs e)
+      {
+         if (FreezeRowEnter) return;
+      
+         base.OnRowEnter(e);
       }
    }
 }

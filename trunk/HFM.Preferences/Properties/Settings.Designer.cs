@@ -607,5 +607,17 @@ namespace HFM.Preferences.Properties {
                 this["ReportEuePause"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool QueueViewerVisible {
+            get {
+                return ((bool)(this["QueueViewerVisible"]));
+            }
+            set {
+                this["QueueViewerVisible"] = value;
+            }
+        }
     }
 }

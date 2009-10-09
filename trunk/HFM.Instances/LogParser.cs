@@ -30,7 +30,7 @@ using HFM.Instrumentation;
 
 namespace HFM.Instances
 {
-   public class LogParser
+   internal sealed class LogParser
    {
       #region Members
       private readonly ClientInstance _Instance;
@@ -44,9 +44,6 @@ namespace HFM.Instances
       private readonly Regex rProjectNumberFromTag =
             new Regex("P(?<ProjectNumber>.*)R(?<Run>.*)C(?<Clone>.*)G(?<Gen>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
-      private readonly Regex rProteinID =
-            new Regex(@"(?<ProjectNumber>.*) \(Run (?<Run>.*), Clone (?<Clone>.*), Gen (?<Gen>.*)\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
-
       private readonly Regex rFramesCompleted =
             new Regex("\\[(?<Timestamp>.*)\\] Completed (?<Completed>.*) out of (?<Total>.*) steps  \\((?<Percent>.*)\\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
@@ -59,9 +56,9 @@ namespace HFM.Instances
       private readonly Regex rPercent2 =
             new Regex("(?<Percent>.*)%", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
-      private bool _bUnitStart = false;
-      private bool _bCoreFound = false;
-      private bool _bProjectFound = false;
+      private bool _bUnitStart;
+      private bool _bCoreFound;
+      private bool _bProjectFound;
       #endregion
 
       /// <summary>
@@ -94,23 +91,31 @@ namespace HFM.Instances
             while (tr.Peek() != -1)
             {
                String sData = tr.ReadLine();
+               /* Name (Only Read Here) */
                if (sData.StartsWith("Name: "))
                {
                   _parsedUnitInfo.ProteinName = sData.Substring(6);
                }
-               else if (sData.StartsWith("Tag:"))
+               /* Tag (Could be read here or Previously by through the queue.dat) */
+               else if (sData.StartsWith("Tag: ") && _parsedUnitInfo.ProteinTagUnknown)
                {
                   _parsedUnitInfo.ProteinTag = sData.Substring(5);
-                  try 
+                  
+                  // If we don't know the ProjectID yet
+                  if (_parsedUnitInfo.ProjectIsUnknown)
                   {
-                     DoProjectIDMatch(_parsedUnitInfo, rProjectNumberFromTag.Match(_parsedUnitInfo.ProteinTag), _parsedUnitInfo.ProteinTag);
-                  }
-                  catch (FormatException ex)
-                  {
-                     HfmTrace.WriteToHfmConsole(TraceLevel.Warning, _Instance.InstanceName, ex);
+                     try
+                     {
+                        ClientInstance.DoProjectIDMatch(_parsedUnitInfo, rProjectNumberFromTag.Match(_parsedUnitInfo.ProteinTag));
+                     }
+                     catch (FormatException ex)
+                     {
+                        HfmTrace.WriteToHfmConsole(TraceLevel.Warning, _Instance.InstanceName, ex);
+                     }
                   }
                }
-               else if (sData.StartsWith("Download time: "))
+               /* DownloadTime (Could be read here or Previously by through the queue.dat) */
+               else if (sData.StartsWith("Download time: ") && _parsedUnitInfo.DownloadTimeUnknown)
                {
                   if (_Instance.ClientIsOnVirtualMachine)
                   {
@@ -126,10 +131,24 @@ namespace HFM.Instances
                                             System.Globalization.DateTimeStyles.AssumeUniversal);
                   }
                }
-               else if (sData.StartsWith("Due time: "))
+               /* DueTime (Could be read here or Previously by through the queue.dat) */
+               else if (sData.StartsWith("Due time: ") && _parsedUnitInfo.DueTimeUnknown)
                {
-                  _parsedUnitInfo.DueTime = DateTime.ParseExact(sData.Substring(10), "MMMM d H:mm:ss", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.AssumeUniversal);
+                  if (_Instance.ClientIsOnVirtualMachine)
+                  {
+                     _parsedUnitInfo.DueTime =
+                        DateTime.ParseExact(sData.Substring(10), "MMMM d H:mm:ss",
+                                            System.Globalization.DateTimeFormatInfo.InvariantInfo);
+                  }
+                  else
+                  {
+                     _parsedUnitInfo.DueTime =
+                        DateTime.ParseExact(sData.Substring(10), "MMMM d H:mm:ss",
+                                            System.Globalization.DateTimeFormatInfo.InvariantInfo,
+                                            System.Globalization.DateTimeStyles.AssumeUniversal);
+                  }
                }
+               /* Progress (Supplemental Read - if progress percentage cannot be determined through FAHlog.txt) */
                else if (sData.StartsWith("Progress: "))
                {
                   _parsedUnitInfo.PercentComplete = Int32.Parse(sData.Substring(10, sData.IndexOf("%") - 10));
@@ -196,7 +215,11 @@ namespace HFM.Instances
                }
             }
 
-            if (logLine.LineType.Equals(LogLineType.WorkUnitStart))
+            if (_returnStatus.Equals(ClientStatus.Unknown) &&
+               (logLine.LineType.Equals(LogLineType.WorkUnitProcessing) ||
+                logLine.LineType.Equals(LogLineType.WorkUnitWorking) ||
+                logLine.LineType.Equals(LogLineType.WorkUnitStart)))
+                
             {
                _returnStatus = ClientStatus.RunningNoFrameTimes;
             }
@@ -297,110 +320,13 @@ namespace HFM.Instances
          {
             try
             {
-               DoProjectIDMatch(_parsedUnitInfo, rProteinID.Match(logLine.LineData.ToString()), logLine.LineData.ToString());
+               ClientInstance.DoProjectIDMatch(_parsedUnitInfo, (Match)logLine.LineData);
                _bProjectFound = true;
             }
             catch (FormatException ex)
             {
                HfmTrace.WriteToHfmConsole(TraceLevel.Warning, _parsedUnitInfo.OwningInstanceName, ex);
             }
-         }
-      }
-
-      /// <summary>
-      /// Attempts to Set Project ID with given Match.  If Project cannot be found in local cache, download again.
-      /// </summary>
-      /// <param name="parsedUnitInfo">Container for parsed information</param>
-      /// <param name="match">Regex Match containing Project data</param>
-      /// <param name="matchValue">String value being matched (for logging purposes)</param>
-      private static void DoProjectIDMatch(UnitInfo parsedUnitInfo, Match match, string matchValue)
-      {
-         try
-         {
-            SetProjectID(parsedUnitInfo, match, matchValue);
-         }
-         catch (KeyNotFoundException)
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
-                                       String.Format("{0} Project ID '{1}' not found in Protein Collection.",
-                                                     HfmTrace.FunctionName, parsedUnitInfo.ProjectID));
-
-            // If a Project cannot be identified using the local Project data, update Project data from Stanford. - Issue 4
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info,
-                                       String.Format("{0} Attempting to download new Project data...", HfmTrace.FunctionName));
-            ProteinCollection.Instance.DownloadFromStanford();
-            
-            try
-            {
-               SetProjectID(parsedUnitInfo, match, matchValue);
-            }
-            catch (KeyNotFoundException)
-            {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Error,
-                                          String.Format("{0} Project ID '{1}' not found on Stanford Web Project Summary.",
-                                                        HfmTrace.FunctionName, parsedUnitInfo.ProjectID));
-            }
-         }
-      }
-
-      /// <summary>
-      /// Sets the ProjectID and gets the Protein info from the Protein Collection (from Stanford)
-      /// </summary>
-      /// <param name="parsedUnitInfo">Container for parsed information</param>
-      /// <param name="match">Project string match</param>
-      /// <param name="matchValue">String value being matched (for logging purposes)</param>
-      /// <exception cref="System.Collections.Generic.KeyNotFoundException">Thrown when Project ID cannot be found in Protein Collection.</exception>
-      /// <exception cref="FormatException">Thrown when Project ID string fails to parse.</exception>
-      private static void SetProjectID(UnitInfo parsedUnitInfo, Match match, string matchValue)
-      {
-         if (match.Success)
-         {
-            parsedUnitInfo.ProjectID = Int32.Parse(match.Result("${ProjectNumber}"));
-            parsedUnitInfo.ProjectRun = Int32.Parse(match.Result("${Run}"));
-            parsedUnitInfo.ProjectClone = Int32.Parse(match.Result("${Clone}"));
-            parsedUnitInfo.ProjectGen = Int32.Parse(match.Result("${Gen}"));
-
-            parsedUnitInfo.CurrentProtein = ProteinCollection.Instance[parsedUnitInfo.ProjectID];
-            parsedUnitInfo.TypeOfClient = GetClientTypeFromProtein(parsedUnitInfo.CurrentProtein);
-         }
-         else
-         {
-            throw new FormatException(String.Format("Failed to parse the Project (R/C/G) values from '{0}'", matchValue));
-         }
-      }
-
-      /// <summary>
-      /// Determine the client type based on the current protein core
-      /// </summary>
-      /// <param name="CurrentProtein">Current Instance Protein</param>
-      /// <returns>Client Type</returns>
-      private static ClientType GetClientTypeFromProtein(Protein CurrentProtein)
-      {
-         switch (CurrentProtein.Core)
-         {
-            case "GROMACS":
-            case "DGROMACS":
-            case "GBGROMACS":
-            case "AMBER":
-            case "QMD":
-            case "GROMACS33":
-            case "GROST":
-            case "GROSIMT":
-            case "DGROMACSB":
-            case "DGROMACSC":
-            case "GRO-A4":
-            case "TINKER":
-               return ClientType.Standard;
-            case "GRO-SMP":
-            case "GROCVS":
-               return ClientType.SMP;
-            case "GROGPU2":
-            case "GROGPU2-MT":
-            case "ATI-DEV":
-            case "NVIDIA-DEV":
-               return ClientType.GPU;
-            default:
-               return ClientType.Unknown;
          }
       }
 

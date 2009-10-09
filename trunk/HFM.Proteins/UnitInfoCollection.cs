@@ -216,10 +216,22 @@ namespace HFM.Proteins
          sbldr.Append(COMMA);
          sbldr.Append(unit.DownloadTime.ToShortTimeString());
          sbldr.Append(COMMA);
-         sbldr.Append(DateTime.Now.ToShortDateString());
-         sbldr.Append(COMMA);
-         sbldr.Append(DateTime.Now.ToShortTimeString());
-         sbldr.Append(COMMA);
+         if (unit.FinishedTime.Equals(DateTime.MinValue))
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Writing CompletedUnitInfo using DateTime.Now.", true);
+            sbldr.Append(DateTime.Now.ToShortDateString());
+            sbldr.Append(COMMA);
+            sbldr.Append(DateTime.Now.ToShortTimeString());
+            sbldr.Append(COMMA);
+         }
+         else
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Writing CompletedUnitInfo using UnitInfo.FinishedTime.", true);
+            sbldr.Append(unit.FinishedTime.ToShortDateString());
+            sbldr.Append(COMMA);
+            sbldr.Append(unit.FinishedTime.ToShortTimeString());
+            sbldr.Append(COMMA);
+         }
          sbldr.Append(unit.CurrentProtein.Credit);
          sbldr.Append(COMMA);
          sbldr.Append(unit.CurrentProtein.Frames);

@@ -19,7 +19,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net;
 using System.Net.Cache;
@@ -37,7 +36,8 @@ namespace HFM.Helpers
    public enum DownloadType
    {
       FAHLog = 0,
-      UnitInfo
+      UnitInfo,
+      Queue
    }
 
    /// <summary>
@@ -112,7 +112,7 @@ namespace HFM.Helpers
       /// <param name="Username">Ftp Login Username.</param>
       /// <param name="Password">Ftp Login Password.</param>
       /// <exception cref="ArgumentException">Throws if Server, FtpPath, RemoteFileName, or LocalFilePath is Null or Empty.</exception>
-      public static void FtpDownloadHelper(string Server, string FtpPath, string RemoteFileName, string LocalFilePath, string Username, string Password)
+      public static void FtpDownloadHelper(string Server, string FtpPath, string RemoteFileName, string LocalFilePath, string Username, string Password, DownloadType type)
       {
          if (String.IsNullOrEmpty(Server) || String.IsNullOrEmpty(FtpPath) || String.IsNullOrEmpty(RemoteFileName) || String.IsNullOrEmpty(LocalFilePath))
          {
@@ -129,11 +129,32 @@ namespace HFM.Helpers
 
          FtpWebResponse ftpr1 = (FtpWebResponse)request.GetResponse();
 
-         using (StreamReader sr1 = new StreamReader(ftpr1.GetResponseStream(), Encoding.ASCII))
+         if (type.Equals(DownloadType.Queue))
          {
-            using (StreamWriter sw1 = new StreamWriter(LocalFilePath, false))
+            using (Stream sr1 = ftpr1.GetResponseStream())
             {
-               sw1.Write(sr1.ReadToEnd());
+               using (Stream sw1 = File.Create(LocalFilePath))
+               {
+                  byte[] buffer = new byte[1024];
+                  int bytesRead;
+
+                  do
+                  {
+                     bytesRead = sr1.Read(buffer, 0, buffer.Length);
+                     sw1.Write(buffer, 0, bytesRead);
+                  }
+                  while (bytesRead > 0);
+               }
+            }
+         }
+         else
+         {
+            using (StreamReader sr1 = new StreamReader(ftpr1.GetResponseStream(), Encoding.ASCII))
+            {
+               using (StreamWriter sw1 = new StreamWriter(LocalFilePath, false))
+               {
+                  sw1.Write(sr1.ReadToEnd());
+               }
             }
          }
       }
@@ -195,6 +216,24 @@ namespace HFM.Helpers
             HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
                                        String.Format("{0} ({1}) UnitInfo Http download (file is too big: {2} bytes).", HfmTrace.FunctionName,
                                                      InstanceName, r1.ContentLength));
+         }
+         else if (type.Equals(DownloadType.Queue))
+         {
+            using (Stream sr1 = r1.GetResponseStream())
+            {
+               using (Stream sw1 = File.Create(LocalFilePath))
+               {
+                  byte[] buffer = new byte[1024];
+                  int bytesRead;
+
+                  do
+                  {
+                     bytesRead = sr1.Read(buffer, 0, buffer.Length);
+                     sw1.Write(buffer, 0, bytesRead);
+                  } 
+                  while (bytesRead > 0);
+               }
+            }
          }
          else
          {

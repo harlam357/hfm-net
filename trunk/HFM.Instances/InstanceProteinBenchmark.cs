@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
+using HFM.Preferences;
 using HFM.Proteins;
 using HFM.Instrumentation;
 
@@ -119,7 +120,7 @@ namespace HFM.Instances
       #endregion
 
       #region Implementation
-      public void SetFrameTime(TimeSpan frameTime)
+      public bool SetFrameTime(TimeSpan frameTime)
       {
          if (frameTime > TimeSpan.Zero)
          {
@@ -134,10 +135,14 @@ namespace HFM.Instances
                _FrameTimes.Dequeue();
             }
             _FrameTimes.Enqueue(frameTime);
+            
+            return true;
          }
+         
+         return false;
       }
 
-      public string[] ToMultiLineString(ClientInstance instance)
+      public string[] ToMultiLineString(ClientInstance Instance)
       {
          Protein protein;
          ProteinCollection.Instance.TryGetValue(_ProjectID, out protein);
@@ -158,12 +163,13 @@ namespace HFM.Instances
             TimeSpan threeFrameTime = TimeSpan.Zero;
             TimeSpan allFrameTime = TimeSpan.Zero;
             TimeSpan effectFrameTime = TimeSpan.Zero;
-            if (instance != null && instance.CurrentUnitInfo.ProjectID == _ProjectID)
+            if (Instance != null && Instance.CurrentUnitInfo.ProjectID.Equals(_ProjectID) && 
+                                    Instance.Status.Equals(ClientStatus.Running))
             {
-               currentFrameTime = TimeSpan.FromSeconds(instance.CurrentUnitInfo.RawTimePerLastSection);
-               threeFrameTime = TimeSpan.FromSeconds(instance.CurrentUnitInfo.RawTimePerThreeSections);
-               allFrameTime = TimeSpan.FromSeconds(instance.CurrentUnitInfo.RawTimePerAllSections);
-               effectFrameTime = TimeSpan.FromSeconds(instance.CurrentUnitInfo.RawTimePerUnitDownload);
+               currentFrameTime = TimeSpan.FromSeconds(Instance.CurrentUnitInfo.RawTimePerLastSection);
+               threeFrameTime = TimeSpan.FromSeconds(Instance.CurrentUnitInfo.RawTimePerThreeSections);
+               allFrameTime = TimeSpan.FromSeconds(Instance.CurrentUnitInfo.RawTimePerAllSections);
+               effectFrameTime = TimeSpan.FromSeconds(Instance.CurrentUnitInfo.RawTimePerUnitDownload);
             }
             output.Add(String.Format(" Cur. Time / Frame : {0} - {1} PPD", currentFrameTime, Math.Round(protein.GetPPD(currentFrameTime), 1)));
             output.Add(String.Format(" R3F. Time / Frame : {0} - {1} PPD", threeFrameTime, Math.Round(protein.GetPPD(threeFrameTime), 1)));

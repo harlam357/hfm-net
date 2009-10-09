@@ -109,6 +109,9 @@ namespace HFM.Forms
          this.toolTipGrid = new System.Windows.Forms.ToolTip(this.components);
          this.splitContainer1 = new HFM.Classes.SplitContainerWrapper();
          this.dataGridView1 = new HFM.Classes.DataGridViewWrapper();
+         this.splitContainer2 = new HFM.Classes.SplitContainerWrapper();
+         this.queueControl = new HFM.Classes.QueueControl();
+         this.btnQueue = new HFM.Classes.ButtonWrapper();
          this.txtLogFile = new HFM.Classes.RichTextBoxWrapper();
          this.statusStrip.SuspendLayout();
          this.notifyMenu.SuspendLayout();
@@ -118,6 +121,9 @@ namespace HFM.Forms
          this.splitContainer1.Panel2.SuspendLayout();
          this.splitContainer1.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+         this.splitContainer2.Panel1.SuspendLayout();
+         this.splitContainer2.Panel2.SuspendLayout();
+         this.splitContainer2.SuspendLayout();
          this.SuspendLayout();
          // 
          // statusStrip
@@ -504,20 +510,20 @@ namespace HFM.Forms
          // 
          this.mnuViewShowHideLog.Name = "mnuViewShowHideLog";
          this.mnuViewShowHideLog.ShortcutKeys = System.Windows.Forms.Keys.F8;
-         this.mnuViewShowHideLog.Size = new System.Drawing.Size(215, 22);
-         this.mnuViewShowHideLog.Text = "&Show/Hide Log File";
+         this.mnuViewShowHideLog.Size = new System.Drawing.Size(246, 22);
+         this.mnuViewShowHideLog.Text = "&Show/Hide Log/Queue Viewer";
          this.mnuViewShowHideLog.Click += new System.EventHandler(this.mnuViewShowHideLog_Click);
          // 
          // mnuViewSep1
          // 
          this.mnuViewSep1.Name = "mnuViewSep1";
-         this.mnuViewSep1.Size = new System.Drawing.Size(212, 6);
+         this.mnuViewSep1.Size = new System.Drawing.Size(243, 6);
          // 
          // mnuViewToggleDateTime
          // 
          this.mnuViewToggleDateTime.Name = "mnuViewToggleDateTime";
          this.mnuViewToggleDateTime.ShortcutKeys = System.Windows.Forms.Keys.F9;
-         this.mnuViewToggleDateTime.Size = new System.Drawing.Size(215, 22);
+         this.mnuViewToggleDateTime.Size = new System.Drawing.Size(246, 22);
          this.mnuViewToggleDateTime.Text = "Toggle &Date/Time Style";
          this.mnuViewToggleDateTime.Click += new System.EventHandler(this.mnuViewToggleDateTime_Click);
          // 
@@ -572,7 +578,7 @@ namespace HFM.Forms
          // 
          this.mnuWebEOCUser.Name = "mnuWebEOCUser";
          this.mnuWebEOCUser.ShortcutKeys = System.Windows.Forms.Keys.F2;
-         this.mnuWebEOCUser.Size = new System.Drawing.Size(226, 22);
+         this.mnuWebEOCUser.Size = new System.Drawing.Size(230, 22);
          this.mnuWebEOCUser.Text = "&EOC User Stats Page";
          this.mnuWebEOCUser.Click += new System.EventHandler(this.mnuWebEOCUser_Click);
          // 
@@ -580,7 +586,7 @@ namespace HFM.Forms
          // 
          this.mnuWebStanfordUser.Name = "mnuWebStanfordUser";
          this.mnuWebStanfordUser.ShortcutKeys = System.Windows.Forms.Keys.F3;
-         this.mnuWebStanfordUser.Size = new System.Drawing.Size(226, 22);
+         this.mnuWebStanfordUser.Size = new System.Drawing.Size(230, 22);
          this.mnuWebStanfordUser.Text = "&Stanford User Stats Page";
          this.mnuWebStanfordUser.Click += new System.EventHandler(this.mnuWebStanfordUser_Click);
          // 
@@ -588,14 +594,14 @@ namespace HFM.Forms
          // 
          this.mnuWebEOCTeam.Name = "mnuWebEOCTeam";
          this.mnuWebEOCTeam.ShortcutKeys = System.Windows.Forms.Keys.F4;
-         this.mnuWebEOCTeam.Size = new System.Drawing.Size(226, 22);
+         this.mnuWebEOCTeam.Size = new System.Drawing.Size(230, 22);
          this.mnuWebEOCTeam.Text = "EOC &Team Stats Page";
          this.mnuWebEOCTeam.Click += new System.EventHandler(this.mnuWebEOCTeam_Click);
          // 
          // mnuWebSep1
          // 
          this.mnuWebSep1.Name = "mnuWebSep1";
-         this.mnuWebSep1.Size = new System.Drawing.Size(223, 6);
+         this.mnuWebSep1.Size = new System.Drawing.Size(227, 6);
          // 
          // mnuWebRefreshUserStats
          // 
@@ -607,12 +613,12 @@ namespace HFM.Forms
          // mnuWebSep2
          // 
          this.mnuWebSep2.Name = "mnuWebSep2";
-         this.mnuWebSep2.Size = new System.Drawing.Size(223, 6);
+         this.mnuWebSep2.Size = new System.Drawing.Size(227, 6);
          // 
          // mnuWebHFMGoogleCode
          // 
          this.mnuWebHFMGoogleCode.Name = "mnuWebHFMGoogleCode";
-         this.mnuWebHFMGoogleCode.Size = new System.Drawing.Size(226, 22);
+         this.mnuWebHFMGoogleCode.Size = new System.Drawing.Size(230, 22);
          this.mnuWebHFMGoogleCode.Text = "HFM.NET on Google Code";
          this.mnuWebHFMGoogleCode.Click += new System.EventHandler(this.mnuWebHFMGoogleCode_Click);
          // 
@@ -750,7 +756,7 @@ namespace HFM.Forms
          // 
          // splitContainer1.Panel2
          // 
-         this.splitContainer1.Panel2.Controls.Add(this.txtLogFile);
+         this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
          this.splitContainer1.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
          this.splitContainer1.Size = new System.Drawing.Size(988, 720);
          this.splitContainer1.SplitterDistance = 360;
@@ -784,6 +790,7 @@ namespace HFM.Forms
          dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
          this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle3;
          this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.dataGridView1.FreezeRowEnter = false;
          this.dataGridView1.Location = new System.Drawing.Point(0, 0);
          this.dataGridView1.MultiSelect = false;
          this.dataGridView1.Name = "dataGridView1";
@@ -801,6 +808,51 @@ namespace HFM.Forms
          this.dataGridView1.ColumnDividerDoubleClick += new System.Windows.Forms.DataGridViewColumnDividerDoubleClickEventHandler(this.dataGridView1_ColumnDividerDoubleClick);
          this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
          // 
+         // splitContainer2
+         // 
+         this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+         this.splitContainer2.IsSplitterFixed = true;
+         this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+         this.splitContainer2.Name = "splitContainer2";
+         // 
+         // splitContainer2.Panel1
+         // 
+         this.splitContainer2.Panel1.Controls.Add(this.queueControl);
+         this.splitContainer2.Panel1.Controls.Add(this.btnQueue);
+         this.splitContainer2.Panel1MinSize = 20;
+         // 
+         // splitContainer2.Panel2
+         // 
+         this.splitContainer2.Panel2.Controls.Add(this.txtLogFile);
+         this.splitContainer2.Size = new System.Drawing.Size(988, 356);
+         this.splitContainer2.SplitterDistance = 289;
+         this.splitContainer2.TabIndex = 2;
+         // 
+         // queueControl
+         // 
+         this.queueControl.BackColor = System.Drawing.SystemColors.Window;
+         this.queueControl.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+         this.queueControl.Dock = System.Windows.Forms.DockStyle.Right;
+         this.queueControl.Location = new System.Drawing.Point(31, 0);
+         this.queueControl.Name = "queueControl";
+         this.queueControl.Size = new System.Drawing.Size(258, 356);
+         this.queueControl.TabIndex = 1;
+         this.queueControl.QueueIndexChanged += new System.EventHandler<HFM.Classes.QueueIndexChangedEventArgs>(this.queueControl_QueueIndexChanged);
+         // 
+         // btnQueue
+         // 
+         this.btnQueue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                     | System.Windows.Forms.AnchorStyles.Left)));
+         this.btnQueue.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+         this.btnQueue.Location = new System.Drawing.Point(2, 0);
+         this.btnQueue.Name = "btnQueue";
+         this.btnQueue.Size = new System.Drawing.Size(25, 355);
+         this.btnQueue.TabIndex = 0;
+         this.btnQueue.Text = "H\r\ni\r\nd\r\ne\r\n\r\nQ\r\nu\r\ne\r\nu\r\ne";
+         this.btnQueue.UseVisualStyleBackColor = true;
+         this.btnQueue.Click += new System.EventHandler(this.btnQueue_Click);
+         // 
          // txtLogFile
          // 
          this.txtLogFile.BackColor = System.Drawing.Color.White;
@@ -809,7 +861,7 @@ namespace HFM.Forms
          this.txtLogFile.Name = "txtLogFile";
          this.txtLogFile.ReadOnly = true;
          this.txtLogFile.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-         this.txtLogFile.Size = new System.Drawing.Size(988, 356);
+         this.txtLogFile.Size = new System.Drawing.Size(695, 356);
          this.txtLogFile.TabIndex = 1;
          this.txtLogFile.Text = "";
          // 
@@ -838,6 +890,9 @@ namespace HFM.Forms
          this.splitContainer1.Panel2.ResumeLayout(false);
          this.splitContainer1.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+         this.splitContainer2.Panel1.ResumeLayout(false);
+         this.splitContainer2.Panel2.ResumeLayout(false);
+         this.splitContainer2.ResumeLayout(false);
          this.ResumeLayout(false);
          this.PerformLayout();
 
@@ -921,5 +976,8 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripStatusLabel statusLabelMiddle;
       private System.Windows.Forms.ToolStripSeparator mnuWebSep2;
       private System.Windows.Forms.ToolStripMenuItem mnuWebRefreshUserStats;
+      private HFM.Classes.SplitContainerWrapper splitContainer2;
+      private HFM.Classes.ButtonWrapper btnQueue;
+      private HFM.Classes.QueueControl queueControl;
    }
 }

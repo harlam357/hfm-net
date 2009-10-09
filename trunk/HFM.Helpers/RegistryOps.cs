@@ -25,17 +25,11 @@ using HFM.Instrumentation;
 
 namespace HFM.Helpers
 {
-   public sealed class RegistryOps
+   public static class RegistryOps
    {
       private const string DefaultHfmAutoRunName = "HFM.NET";
       private const string HkCuAutoRunSubKey = "Software\\Microsoft\\Windows\\CurrentVersion\\Run";
       
-      // FxCop: CA1053 - StaticHolderTypesShouldNotHaveConstructors
-      private RegistryOps()
-      {
-      
-      }
-   
       /// <summary>
       /// Does an Auto Run Value Exist?
       /// </summary>

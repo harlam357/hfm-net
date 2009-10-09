@@ -113,6 +113,51 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(ClientStatus.RunningNoFrameTimes, Instance.Status);
       }
 
+      [Test, Category("SMP")]
+      public void TestSmpPathInstance3()
+      {
+         // Setup Test Instance
+         ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
+         Instance.HandleStatusOnRetrieve = false;
+         Instance.InstanceName = "SMP Test 4";
+         Instance.Path = "..\\..\\TestFiles";
+         Instance.RemoteFAHLogFilename = "SMP Test 4 FAHlog.txt";
+         Instance.RemoteQueueFilename = "SMP Test 4 queue.dat";
+         Instance.RemoteUnitInfoFilename = "SMP Test 4 unitinfo.txt";
+
+         // Retrieve Log File and Assert Results
+         Instance.Retrieve();
+         Assert.IsNotNull(Instance.CurrentLogLines);
+         Assert.AreEqual(false, Instance.UserIDUnknown);
+         Assert.AreEqual("25932070F496A89", Instance.UserID);
+         Assert.AreEqual(String.Format("{0} ({1})", Instance.UserID, Instance.MachineID), Instance.UserAndMachineID);
+         Assert.AreEqual(true, Instance.IsUsernameOk()); // Prefs default is harlam357 (32)
+         Assert.Greater(Instance.LastRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
+
+         Assert.IsNotNull(Instance.CurrentUnitInfo);
+
+         // Check Client Type and Owning Instance Properties
+         Assert.AreEqual(ClientType.SMP, Instance.CurrentUnitInfo.TypeOfClient);
+         Assert.AreEqual("SMP Test 4", Instance.CurrentUnitInfo.OwningInstanceName);
+         Assert.AreEqual("..\\..\\TestFiles", Instance.CurrentUnitInfo.OwningInstancePath);
+
+         Assert.AreEqual(false, Instance.CurrentUnitInfo.ProjectIsUnknown);
+         Assert.IsNotNull(Instance.CurrentUnitInfo.UnitFrames);
+         Assert.AreEqual(31, Instance.CurrentUnitInfo.FramesObserved);
+         Assert.AreEqual(0, Instance.CurrentUnitInfo.FramesComplete);
+         Assert.AreEqual(0, Instance.CurrentUnitInfo.PercentComplete);
+         Assert.AreEqual(32, Instance.CurrentUnitInfo.LastUnitFramePercent);
+         Assert.AreEqual(80000, Instance.CurrentUnitInfo.RawFramesComplete);
+         Assert.AreEqual(250000, Instance.CurrentUnitInfo.RawFramesTotal);
+
+         //Assert.AreEqual(0, Instance.CurrentUnitInfo.RawTimePerUnitDownload);
+         Assert.AreEqual(814, Instance.CurrentUnitInfo.RawTimePerAllSections);
+         Assert.AreEqual(758, Instance.CurrentUnitInfo.RawTimePerThreeSections);
+         Assert.AreEqual(788, Instance.CurrentUnitInfo.RawTimePerLastSection);
+
+         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, Instance.Status);
+      }
+
       [Test, Category("GPU")]
       public void TestGpuPathInstance()
       {

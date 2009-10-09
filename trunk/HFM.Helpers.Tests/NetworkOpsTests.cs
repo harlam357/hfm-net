@@ -46,7 +46,7 @@ namespace HFM.Helpers.Tests
       [ExpectedException(typeof(WebException))]
       public void FtpDownloadHelper_HostNameDoesNotExistTest()
       {
-         NetworkOps.FtpDownloadHelper("notexistservername", "/rootsub/subfolder", "FAHlog.txt", "FAHlog.txt", String.Empty, String.Empty);
+         NetworkOps.FtpDownloadHelper("notexistservername", "/rootsub/subfolder", "FAHlog.txt", "FAHlog.txt", String.Empty, String.Empty, DownloadType.UnitInfo);
       }
 
       [Test]

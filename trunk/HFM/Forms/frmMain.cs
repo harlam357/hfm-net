@@ -22,10 +22,12 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
@@ -270,6 +272,7 @@ namespace HFM.Forms
          }
 
          Prefs.FormLogVisible = txtLogFile.Visible;
+         Prefs.QueueViewerVisible = queueControl.Visible;
 
          // Save the data
          Prefs.Save();
@@ -351,58 +354,97 @@ namespace HFM.Forms
             if (ClientInstances.Instances.TryGetValue(InstanceName, out Instance))
             {
                statusLabelLeft.Text = Instance.Path;
+               queueControl.SetQueue(Instance.ClientQueue, Instance.CurrentUnitInfo.TypeOfClient, Instance.ClientIsOnVirtualMachine);
 
-               if (Instance.CurrentLogLines.Count > 0) /*** Checked LogLine Count ***/
-               {
-                  // Different Client... Load LogLines.
-                  if (txtLogFile.LogOwnedByInstanceName.Equals(Instance.InstanceName) == false)
-                  {
-                     txtLogFile.SetLogLines(Instance.CurrentLogLines, Instance.InstanceName);
-                     PreferenceSet_ColorLogFileChanged(sender, EventArgs.Empty);
-                  }
-                  // Textbox has text lines
-                  else if (txtLogFile.Lines.Length > 0)
-                  {
-                     string lastLogLine = String.Empty;
-                     
-                     try // to get the last LogLine from the Instance
-                     {
-                        lastLogLine = Instance.CurrentLogLines[Instance.CurrentLogLines.Count - 1].ToString();
-                     }
-                     catch (ArgumentOutOfRangeException ex)
-                     {
-                        // even though i've checked the count above, it could have changed in between then
-                        // and now... and if the count is 0 it will yield this exception.  Log It!!!
-                        HfmTrace.WriteToHfmConsole(TraceLevel.Warning, Instance.InstanceName, ex);
-                     } 
+               // if we've got a good queue read, let queueControl_QueueIndexChanged()
+               // handle populating the log lines.
+               if (Instance.ClientQueue.QueueReadOk) return;
 
-                     // If the last text line in the textbox DOES NOT equal the last LogLine Text... Load LogLines.
-                     // Otherwise, the log has not changed, don't update and perform the log "flicker".
-                     if (txtLogFile.Lines[txtLogFile.Lines.Length - 1].Equals(lastLogLine) == false)
-                     {
-                        txtLogFile.SetLogLines(Instance.CurrentLogLines, Instance.InstanceName);
-                        PreferenceSet_ColorLogFileChanged(sender, EventArgs.Empty);
-                     }
-                  }
-                  // Nothing in the Textbox... Load LogLines.
-                  else
-                  {
-                     txtLogFile.SetLogLines(Instance.CurrentLogLines, Instance.InstanceName);
-                     PreferenceSet_ColorLogFileChanged(sender, EventArgs.Empty);
-                  }
-               }
-               else
-               {
-                  txtLogFile.SetNoLogLines();
-               }
-
-               txtLogFile.ScrollToBottom();
+               SetLogLines(Instance, Instance.CurrentLogLines);
             }
             else // this should only happen when this fires in the middle of an 'Edit' operation that changes the Client Name
             {
                Debug.WriteLine(String.Format("{0} could not find Client Name '{1}'.", HfmTrace.FunctionName, InstanceName));
             }
          }
+      }
+
+      private void queueControl_QueueIndexChanged(object sender, QueueIndexChangedEventArgs e)
+      {
+         if (e.Index == -1)
+         {
+            txtLogFile.SetNoLogLines();
+            return;
+         }
+
+         if (ClientInstances.HasInstances && dataGridView1.SelectedRows.Count > 0)
+         {
+            string InstanceName = dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString();
+
+            ClientInstance Instance;
+            if (ClientInstances.Instances.TryGetValue(InstanceName, out Instance))
+            {
+               //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("Changed Queue Index ({0} - {1})", InstanceName, e.Index));
+            
+               SetLogLines(Instance, Instance.GetLogLinesForQueueIndex(e.Index));
+            }
+            else // this should only happen when this fires in the middle of an 'Edit' operation that changes the Client Name
+            {
+               Debug.WriteLine(String.Format("{0} could not find Client Name '{1}'.", HfmTrace.FunctionName, InstanceName));
+            }
+         }
+      }
+
+      private void SetLogLines(ClientInstance Instance, IList<LogLine> logLines)
+      {
+         /*** Checked LogLine Count ***/
+         if (logLines != null && logLines.Count > 0) 
+         {
+            // Different Client... Load LogLines
+            if (txtLogFile.LogOwnedByInstanceName.Equals(Instance.InstanceName) == false)
+            {
+               txtLogFile.SetLogLines(logLines, Instance.InstanceName);
+               PreferenceSet_ColorLogFileChanged(null, EventArgs.Empty);
+               //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("Set Log Lines (Changed Client - {0})", Instance.InstanceName));
+            }
+            // Textbox has text lines
+            else if (txtLogFile.Lines.Length > 0)
+            {
+               string lastLogLine = String.Empty;
+
+               try // to get the last LogLine from the Instance
+               {
+                  lastLogLine = logLines[logLines.Count - 1].ToString();
+               }
+               catch (ArgumentOutOfRangeException ex)
+               {
+                  // even though i've checked the count above, it could have changed in between then
+                  // and now... and if the count is 0 it will yield this exception.  Log It!!!
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, Instance.InstanceName, ex);
+               }
+
+               // If the last text line in the textbox DOES NOT equal the last LogLine Text... Load LogLines.
+               // Otherwise, the log has not changed, don't update and perform the log "flicker".
+               if (txtLogFile.Lines[txtLogFile.Lines.Length - 1].Equals(lastLogLine) == false)
+               {
+                  txtLogFile.SetLogLines(logLines, Instance.InstanceName);
+                  PreferenceSet_ColorLogFileChanged(null, EventArgs.Empty);
+                  //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Set Log Lines (log lines different)");
+               }
+            }
+            // Nothing in the Textbox... Load LogLines
+            else
+            {
+               txtLogFile.SetLogLines(logLines, Instance.InstanceName);
+               PreferenceSet_ColorLogFileChanged(null, EventArgs.Empty);
+            }
+         }
+         else
+         {
+            txtLogFile.SetNoLogLines();
+         }
+
+         txtLogFile.ScrollToBottom();
       }
 
       /// <summary>
@@ -1156,52 +1198,8 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void mnuClientsAdd_Click(object sender, EventArgs e)
       {
-         frmHost newHost = new frmHost();
-         newHost.radioLocal.Checked = true;
-         newHost.chkClientVM.Checked = false;
-
-         if (newHost.ShowDialog() == DialogResult.OK)
-         {
-            if (ClientInstances.ContainsName(newHost.txtName.Text))
-            {
-               MessageBox.Show(String.Format("Client Name '{0}' already exists.", newHost.txtName.Text));
-               return;
-            }
-
-            ClientInstance xHost = null;
-            if (newHost.radioLocal.Checked)
-            {
-               xHost = new ClientInstance(InstanceType.PathInstance);
-               SetInstanceBasicInfo(newHost, xHost);
-               
-               xHost.Path = newHost.txtLocalPath.Text;
-            }
-            else if (newHost.radioHTTP.Checked)
-            {
-               xHost = new ClientInstance(InstanceType.HTTPInstance);
-               SetInstanceBasicInfo(newHost, xHost);
-               
-               xHost.Path = newHost.txtWebURL.Text;
-               xHost.Username = newHost.txtWebUser.Text;
-               xHost.Password = newHost.txtWebPass.Text;
-            }
-            else if (newHost.radioFTP.Checked)
-            {
-               xHost = new ClientInstance(InstanceType.FTPInstance);
-               SetInstanceBasicInfo(newHost, xHost);
-               
-               xHost.Server = newHost.txtFTPServer.Text;
-               xHost.Path = newHost.txtFTPPath.Text;
-               xHost.Username = newHost.txtFTPUser.Text;
-               xHost.Password = newHost.txtFTPPass.Text;
-            }
-
-            // xHost should not be null at this point
-            Debug.Assert(xHost != null);
-            
-            // Add the new Host Instance
-            ClientInstances.Add(xHost);
-         }
+         frmHost newHost = new frmHost(ClientInstances);
+         newHost.ShowDialog();
       }
 
       /// <summary>
@@ -1212,118 +1210,11 @@ namespace HFM.Forms
       private void mnuClientsEdit_Click(object sender, EventArgs e)
       {
          if (dataGridView1.SelectedRows.Count == 0) return;
-      
-         frmHost editHost = new frmHost();
 
          ClientInstance Instance = ClientInstances.Instances[dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString()];
-
-         editHost.txtName.Text = Instance.InstanceName;
-         editHost.txtLogFileName.Text = Instance.RemoteFAHLogFilename;
-         editHost.txtUnitFileName.Text = Instance.RemoteUnitInfoFilename;
-         editHost.txtClientMegahertz.Text = Instance.ClientProcessorMegahertz.ToString();
-         editHost.chkClientVM.Checked = Instance.ClientIsOnVirtualMachine;
-         editHost.numOffset.Value = Instance.ClientTimeOffset;
-
-         if (Instance.InstanceHostType.Equals(InstanceType.PathInstance))
-         {
-            editHost.radioLocal.Select();
-            editHost.txtLocalPath.Text = Instance.Path;
-         }
-         else if (Instance.InstanceHostType.Equals(InstanceType.FTPInstance))
-         {
-            editHost.radioFTP.Select();
-            editHost.txtFTPPath.Text = Instance.Path;
-            editHost.txtFTPServer.Text = Instance.Server;
-            editHost.txtFTPUser.Text = Instance.Username;
-            editHost.txtFTPPass.Text = Instance.Password;
-         }
-         else if (Instance.InstanceHostType.Equals(InstanceType.HTTPInstance))
-         {
-            editHost.radioHTTP.Select();
-            editHost.txtWebURL.Text = Instance.Path;
-            editHost.txtWebUser.Text = Instance.Username;
-            editHost.txtWebPass.Text = Instance.Password;
-         }
-         else
-         {
-            throw new NotImplementedException("The instance type was not located as expected");
-         }
-
-         if (editHost.ShowDialog() == DialogResult.OK)
-         {
-            if (Instance.InstanceName != editHost.txtName.Text)
-            {
-               if (ClientInstances.ContainsName(editHost.txtName.Text))
-               {
-                  MessageBox.Show(String.Format("Client Name '{0}' already exists.", editHost.txtName.Text));
-                  return;
-               }
-            }
-            
-            string oldName = Instance.InstanceName;
-            string oldPath = Instance.Path;
-
-            if (editHost.radioLocal.Checked)
-            {
-               if (Instance.InstanceHostType.Equals(InstanceType.PathInstance) == false)
-               {
-                  Instance.InstanceHostType = InstanceType.PathInstance;
-               }
-
-               SetInstanceBasicInfo(editHost, Instance);
-               Instance.Path = editHost.txtLocalPath.Text;
-            }
-            else if (editHost.radioHTTP.Checked)
-            {
-               if (Instance.InstanceHostType.Equals(InstanceType.HTTPInstance) == false)
-               {
-                  Instance.InstanceHostType = InstanceType.HTTPInstance;
-               }
-            
-               SetInstanceBasicInfo(editHost, Instance);
-               Instance.Path = editHost.txtWebURL.Text;
-               Instance.Username = editHost.txtWebUser.Text;
-               Instance.Password = editHost.txtWebPass.Text;
-            }
-            else if (editHost.radioFTP.Checked)
-            {
-               if (Instance.InstanceHostType.Equals(InstanceType.FTPInstance) == false)
-               {
-                  Instance.InstanceHostType = InstanceType.FTPInstance;
-               }
-            
-               SetInstanceBasicInfo(editHost, Instance);
-               Instance.Path = editHost.txtFTPPath.Text;
-               Instance.Server = editHost.txtFTPServer.Text;
-               Instance.Username = editHost.txtFTPUser.Text;
-               Instance.Password = editHost.txtFTPPass.Text;
-            }
-
-            ClientInstances.Edit(oldName, oldPath, Instance);
-         }
-      }
-
-      /// <summary>
-      /// Gets basic client info from the frmHost and sets in the given Client Instance
-      /// </summary>
-      /// <param name="hostForm">frmHost object</param>
-      /// <param name="Instance">Client Instance</param>
-      private static void SetInstanceBasicInfo(frmHost hostForm, ClientInstance Instance)
-      {
-         Instance.InstanceName = hostForm.txtName.Text;
-         Instance.RemoteFAHLogFilename = hostForm.txtLogFileName.Text;
-         Instance.RemoteUnitInfoFilename = hostForm.txtUnitFileName.Text;
-         int mhz;
-         if (int.TryParse(hostForm.txtClientMegahertz.Text, out mhz))
-         {
-            Instance.ClientProcessorMegahertz = mhz;
-         }
-         else
-         {
-            Instance.ClientProcessorMegahertz = 1;
-         }
-         Instance.ClientIsOnVirtualMachine = hostForm.chkClientVM.Checked;
-         Instance.ClientTimeOffset = Convert.ToInt32(hostForm.numOffset.Value);
+      
+         frmHost editHost = new frmHost(ClientInstances, Instance);
+         editHost.ShowDialog();
       }
 
       /// <summary>
@@ -1419,6 +1310,30 @@ namespace HFM.Forms
       private void mnuViewShowHideLog_Click(object sender, EventArgs e)
       {
          ShowHideLog(!txtLogFile.Visible);
+      }
+
+      /// <summary>
+      /// Show or Hide the Queue Viewer
+      /// </summary>
+      private void btnQueue_Click(object sender, EventArgs e)
+      {
+         ShowHideQueue(!queueControl.Visible);
+      }
+      
+      private void ShowHideQueue(bool show)
+      {
+         if (show == false)
+         {
+            queueControl.Visible = false;
+            btnQueue.Text = String.Format(CultureInfo.CurrentUICulture, "S{0}h{0}o{0}w{0}{0}Q{0}u{0}e{0}u{0}e", Environment.NewLine);
+            splitContainer2.SplitterDistance = 27;
+         }
+         else
+         {
+            queueControl.Visible = true;
+            btnQueue.Text = String.Format(CultureInfo.CurrentUICulture, "H{0}i{0}d{0}e{0}{0}Q{0}u{0}e{0}u{0}e", Environment.NewLine);
+            splitContainer2.SplitterDistance = 289;
+         }
       }
 
       /// <summary>
@@ -1559,25 +1474,36 @@ namespace HFM.Forms
             ClientInstances.RefreshDisplayCollection();
             if (dataGridView1.DataSource != null)
             {
+               //// Remove the RowEnter handler when doing currency refresh
+               //dataGridView1.RowEnter -= dataGridView1_RowEnter;
+               dataGridView1.FreezeRowEnter = true;
+            
                CurrencyManager cm = (CurrencyManager) dataGridView1.BindingContext[dataGridView1.DataSource];
                if (cm != null)
                {
-                  // Remove the RowEnter handler when doing currency refresh
-                  dataGridView1.RowEnter -= dataGridView1_RowEnter;
+                  //// Remove the RowEnter handler when doing currency refresh
+                  //dataGridView1.RowEnter -= dataGridView1_RowEnter;
                   if (InvokeRequired)
                   {
-                     BeginInvoke(new MethodInvoker(cm.Refresh));
+                     Invoke(new MethodInvoker(cm.Refresh));
                   }
                   else
                   {
                      cm.Refresh();
                   }
-                  // Add the RowEnter handler back after refresh
-                  // This removes the "stuttering log" effect seen as each client is refreshed
-                  dataGridView1.RowEnter += dataGridView1_RowEnter;
+                  //// Add the RowEnter handler back after refresh
+                  //// This removes the "stuttering log" effect seen as each client is refreshed
+                  //dataGridView1.RowEnter += dataGridView1_RowEnter;
                }
 
                ApplySort();
+
+               //// Add the RowEnter handler back after refresh
+               //// This removes the "stuttering log" effect seen as each client is refreshed
+               //dataGridView1.RowEnter += dataGridView1_RowEnter;
+               dataGridView1.FreezeRowEnter = false;
+               
+               Invoke(new MethodInvoker(DoRowEnter));
             }
 
             RefreshControls();
@@ -1592,6 +1518,14 @@ namespace HFM.Forms
          }
       }
 
+      private void DoRowEnter()
+      {
+         if (dataGridView1.CurrentCell != null)
+         {
+            dataGridView1.FireRowEnter(dataGridView1.CurrentCell.ColumnIndex, dataGridView1.CurrentCell.RowIndex);
+         }
+      }
+
       /// <summary>
       /// Apply Sort to Data Grid View
       /// </summary>
@@ -1599,7 +1533,7 @@ namespace HFM.Forms
       {
          if (InvokeRequired)
          {
-            BeginInvoke(new MethodInvoker(ApplySort), null);
+            Invoke(new MethodInvoker(ApplySort), null);
          }
          else
          {
@@ -1856,6 +1790,11 @@ namespace HFM.Forms
          {
             ShowHideLog(false);
          }
+         
+         if (Prefs.QueueViewerVisible == false)
+         {
+            ShowHideQueue(false);
+         }
 
          //if (Prefs.FormSortColumn != String.Empty &&
          //    Prefs.FormSortOrder != SortOrder.None)
@@ -1968,6 +1907,8 @@ namespace HFM.Forms
       {
          // clear the log text
          txtLogFile.Text = String.Empty;
+         // clear the queue control
+         queueControl.SetQueue(null);
          // Clear the list of host instances
          ClientInstances.Clear();
          // This will disable the timers, we have no hosts

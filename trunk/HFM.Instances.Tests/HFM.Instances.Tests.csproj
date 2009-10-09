@@ -64,11 +64,16 @@
     <Content Include="TestFiles\SMP Test INTERRUPTED Bad WUs FAHlog 2.txt" />
     <Content Include="TestFiles\SMP Test INTERRUPTED Bad WUs FAHlog.txt" />
     <Content Include="TestFiles\Standard Test FAHlog 1.txt" />
+    <Content Include="TestFiles\SMP Test 4 FAHlog.txt" />
+    <Content Include="TestFiles\SMP Test 4 unitinfo.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TestFiles\GPU2 6.23 queue.dat" />
     <None Include="TestFiles\Linux SMP 6.24 queue.dat" />
     <None Include="TestFiles\Linux SMP 6.24 Waiting Upload queue.dat" />
+    <None Include="TestFiles\Standard PPC 6.xx queue.dat" />
+    <None Include="TestFiles\Standard PPC 5.01 queue.dat" />
+    <None Include="TestFiles\SMP Test 4 queue.dat" />
     <None Include="TestFiles\WinSMP 6.24R3 queue.dat" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -58,6 +58,7 @@
     <Compile Include="LogReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProteinBenchmarkCollection.cs" />
+    <Compile Include="QueueParser.cs" />
     <Compile Include="QueueReader.cs" />
     <Compile Include="SortableBindingList.cs" />
     <Compile Include="XMLGen.cs">

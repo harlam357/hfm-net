@@ -18,6 +18,8 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
@@ -43,25 +45,29 @@ namespace HFM.Instances
    }
    
    [CLSCompliant(false)]
-   [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Size = 7168)]
+   [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Size = QueueReader.QueueLength)]
    public struct Queue
    {
       /* 0000 Queue (client) version (v2.17 and above) */
-      private UInt32 _Version;
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+      private byte[] _Version;
       /// <summary>
       /// Queue (client) version
       /// </summary>
-      public UInt32 Version
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] Version
       {
          get { return _Version; }
       }
 
       /* 0004 Current index number */
-      private UInt32 _CurrentIndex;
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+      private byte[] _CurrentIndex;
       /// <summary>
       /// Current index number
       /// </summary>
-      public UInt32 CurrentIndex
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] CurrentIndex
       {
          get { return _CurrentIndex; }
       }
@@ -79,61 +85,73 @@ namespace HFM.Instances
       }
 
       /* 7128 Performance fraction (as of v3.24) */
-      private float _PerformanceFraction;
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+      private byte[] _PerformanceFraction;
       /// <summary>
       /// Performance fraction
       /// </summary>
-      public float PerformanceFraction
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] PerformanceFraction
       {
          get { return _PerformanceFraction; }
       }
       
       /* 7132 Performance fraction unit weight (as of v3.24) */
-      private UInt32 _PerformanceFractionUnitWeight;
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+      private byte[] _PerformanceFractionUnitWeight;
       /// <summary>
       /// Performance fraction unit weight
       /// </summary>
-      public UInt32 PerformanceFractionUnitWeight
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] PerformanceFractionUnitWeight
       {
          get { return _PerformanceFractionUnitWeight; }
       }
       
       /* 7136 Download rate sliding average (as of v4.00) */
-      private UInt32 _DownloadRateAverage;
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+      private byte[] _DownloadRateAverage;
       /// <summary>
       /// Download rate sliding average
       /// </summary>
-      public UInt32 DownloadRateAverage
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] DownloadRateAverage
       {
          get { return _DownloadRateAverage; }
       }
      
       /* 7140 Download rate unit weight (as of v4.00) */
-      private UInt32 _DownloadRateUnitWeight;
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+      private byte[] _DownloadRateUnitWeight;
       /// <summary>
       /// Download rate unit weight
       /// </summary>
-      public UInt32 DownloadRateUnitWeight
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] DownloadRateUnitWeight
       {
          get { return _DownloadRateUnitWeight; }
       }
       
       /* 7144 Upload rate sliding average (as of v4.00) */
-      private UInt32 _UploadRateAverage;
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+      private byte[] _UploadRateAverage;
       /// <summary>
       /// Upload rate sliding average
       /// </summary>
-      public UInt32 UploadRateAverage
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] UploadRateAverage
       {
          get { return _UploadRateAverage; }
       }
       
       /* 7148 Upload rate unit weight (as of v4.00) */
-      private UInt32 _UploadRateUnitWeight;
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+      private byte[] _UploadRateUnitWeight;
       /// <summary>
       /// Upload rate unit weight
       /// </summary>
-      public UInt32 UploadRateUnitWeight
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] UploadRateUnitWeight
       {
          get { return _UploadRateUnitWeight; }
       }
@@ -144,6 +162,7 @@ namespace HFM.Instances
       /// <summary>
       /// Results successfully sent (after upload failures)
       /// </summary>
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] ResultsSent
       {
          get { return _ResultsSent; }
@@ -162,7 +181,7 @@ namespace HFM.Instances
    }
 
    [CLSCompliant(false)]
-   [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Size = 712)]
+   [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Size = QueueReader.QueueEntryLength)]
    public struct Entry
    {
       /*** 0 = Empty, Deleted, Finished, or Garbage 
@@ -172,11 +191,13 @@ namespace HFM.Instances
        *   4 = Fetching from Server
        ***/ 
       /* 000 Status */
-      private UInt32 _Status;
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+      private byte[] _Status;
       /// <summary>
       /// Status (0) Empty / (1) Active or (1) Ready / (2) Ready for Upload / (3) = Abandonded (Ignore if found) / (4) Fetching from Server
       /// </summary>
-      public UInt32 Status
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] Status
       {
          get { return _Status; }
       }
@@ -224,11 +245,13 @@ namespace HFM.Instances
        * 1 = Uploaded
        ***/
       /* 044 Upload status */
-      private UInt32 _UploadStatus;
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+      private byte[] _UploadStatus;
       /// <summary>
       /// Upload status (0 = Not Uploaded / 1 = Uploaded)
       /// </summary>
-      public UInt32 UploadStatus
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] UploadStatus
       {
          get { return _UploadStatus; }
       }
@@ -246,41 +269,49 @@ namespace HFM.Instances
       }
 
       /* 176 Misc1a */
-      private UInt32 _Misc1a;
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+      private byte[] _Misc1a;
       /// <summary>
       /// Misc1a
       /// </summary>
-      public UInt32 Misc1a
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] Misc1a
       {
          get { return _Misc1a; }
       }
       
       /* 180 Core_xx number (hex) */
-      private UInt32 _CoreNumber; /*** Convert to Hex ***/
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+      private byte[] _CoreNumber; /*** Convert to Hex ***/
       /// <summary>
       /// Core_xx number
       /// </summary>
-      public UInt32 CoreNumber
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] CoreNumber
       {
          get { return _CoreNumber; }
       }
 
       /* 184 Misc1b */
-      private UInt32 _Misc1b;
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+      private byte[] _Misc1b;
       /// <summary>
       /// Misc1b
       /// </summary>
-      public UInt32 Misc1b
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] Misc1b
       {
          get { return _Misc1b; }
       }
       
       /* 188 wudata_xx.dat file size */
-      private UInt32 _WuDataFileSize;
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+      private byte[] _WuDataFileSize;
       /// <summary>
       /// wudata_xx.dat file size
       /// </summary>
-      public UInt32 WuDataFileSize
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] WuDataFileSize
       {
          get { return _WuDataFileSize; }
       }
@@ -318,7 +349,7 @@ namespace HFM.Instances
 
       /* 208-223 Project R/C/G (see above) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
-      private byte[] _Project; /*** Needs post read processing ***/
+      private byte[] _Project;
       /// <summary>
       /// Project R/C/G and Issued Time
       /// </summary>
@@ -351,7 +382,7 @@ namespace HFM.Instances
 
       /* 264 Server IP address */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _ServerIP; /*** Needs post read processing ***/
+      private byte[] _ServerIP;
       /// <summary>
       /// Server IP address
       /// </summary>
@@ -362,11 +393,13 @@ namespace HFM.Instances
       }
 
       /* 268 Server port number */
-      private UInt32 _ServerPort;
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+      private byte[] _ServerPort;
       /// <summary>
       /// Server port number
       /// </summary>
-      public UInt32 ServerPort
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] ServerPort
       {
          get { return _ServerPort; }
       }
@@ -406,7 +439,7 @@ namespace HFM.Instances
 
       /* 464 Stored ID for unit (UserID + MachineID) (LE or BE, usually BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
-      private byte[] _UserAndMachineID; /*** Needs post read processing ***/
+      private byte[] _UserAndMachineID;
       /// <summary>
       /// Stored ID for unit (UserID + MachineID)
       /// </summary>
@@ -428,7 +461,7 @@ namespace HFM.Instances
 
       /* 476 Misc3b (unused as of v3.24) (LE); Benchmark (as of v5.00) (BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _Benchmark; /*** Needs post read processing ***/
+      private byte[] _Benchmark;
       /// <summary>
       /// Benchmark (as of v5.00)
       /// </summary>
@@ -487,11 +520,13 @@ namespace HFM.Instances
       }
 
       /* 496 Allowed time to return (seconds) */
-      private UInt32 _ExpirationInSeconds; /*** Final Deadline ***/
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+      private byte[] _ExpirationInSeconds; /*** Final Deadline ***/
       /// <summary>
       /// Allowed time to return (seconds) - Final Deadline
       /// </summary>
-      public UInt32 ExpirationInSeconds
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] ExpirationInSeconds
       {
          get { return _ExpirationInSeconds; }
       }
@@ -545,7 +580,7 @@ namespace HFM.Instances
 
       /* 520 Collection server IP address (as of v5.00) (LE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _CollectionServerIP; /*** Needs post read processing ***/
+      private byte[] _CollectionServerIP;
       /// <summary>
       /// Collection server IP address
       /// </summary>
@@ -580,7 +615,7 @@ namespace HFM.Instances
 
       /* 544 Number of SMP cores (as of v5.91) (BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _NumberOfSmpCores; /*** Needs post read processing ***/
+      private byte[] _NumberOfSmpCores;
       /// <summary>
       /// Number of SMP cores
       /// </summary>
@@ -591,12 +626,13 @@ namespace HFM.Instances
       }
 
       /* 548 Tag of Work Unit (as of v5.00) */
-      [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
-      private string _WorkUnitTag;
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
+      private byte[] _WorkUnitTag;
       /// <summary>
       /// Tag of Work Unit
       /// </summary>
-      public string WorkUnitTag
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] WorkUnitTag
       {
          get { return _WorkUnitTag; }
       }
@@ -625,7 +661,7 @@ namespace HFM.Instances
 
       /* 612 Flops per CPU (core) (as of v6.00) (BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _Flops; /*** Needs post read processing ***/
+      private byte[] _Flops;
       /// <summary>
       /// Flops per CPU (core)
       /// </summary>
@@ -637,7 +673,7 @@ namespace HFM.Instances
 
       /* 616 Available memory (as of v6.00) (BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _Memory; /*** Needs post read processing ***/
+      private byte[] _Memory;
       /// <summary>
       /// Available memory (as of v6.00)
       /// </summary>
@@ -686,11 +722,13 @@ namespace HFM.Instances
       }
 
       /* 704 Packet size limit (as of v5.00) */
-      private UInt32 _PacketSizeLimit;
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+      private byte[] _PacketSizeLimit;
       /// <summary>
       /// Packet size limit
       /// </summary>
-      public UInt32 PacketSizeLimit
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] PacketSizeLimit
       {
          get { return _PacketSizeLimit; }
       }
@@ -796,6 +834,10 @@ namespace HFM.Instances
       /// Current Entry Index
       /// </summary>
       private readonly UInt32 _currentIndex;
+      /// <summary>
+      /// The QueueReader that Created this QueueEntry
+      /// </summary>
+      private readonly QueueReader _qReader;
    
       /// <summary>
       /// Primary Constructor
@@ -803,11 +845,13 @@ namespace HFM.Instances
       /// <param name="qEntry">Entry Structure</param>
       /// <param name="thisIndex">This Entry Index</param>
       /// <param name="currentIndex">Current Entry Index</param>
-      public QueueEntry(Entry qEntry, UInt32 thisIndex, UInt32 currentIndex)
+      /// <param name="qReader">The QueueReader that Created this QueueEntry</param>
+      public QueueEntry(Entry qEntry, UInt32 thisIndex, UInt32 currentIndex, QueueReader qReader)
       {
          _qEntry = qEntry;
          _thisIndex = thisIndex;
          _currentIndex = currentIndex;
+         _qReader = qReader;
       }
 
       /// <summary>
@@ -815,7 +859,11 @@ namespace HFM.Instances
       /// </summary>
       public UInt32 Status
       {
-         get { return _qEntry.Status; }
+         get
+         {
+            byte[] b = _qReader.GetSystemBytes(_qEntry.Status);
+            return BitConverter.ToUInt32(b, 0);
+         }
       } 
       
       /// <summary>
@@ -825,7 +873,7 @@ namespace HFM.Instances
       {
          get
          {
-            switch (_qEntry.Status)
+            switch (Status)
             {
                case 0:
                   if (ProjectID == 0)
@@ -878,6 +926,23 @@ namespace HFM.Instances
       }
 
       /// <summary>
+      /// Specifies a Factor Value denoting the Speed of Completion in relationship to the Maximum Expiration Time.
+      /// </summary>
+      public double SpeedFactor
+      {
+         get 
+         { 
+            if (EntryStatus.Equals(QueueEntryStatus.Finished) ||
+                EntryStatus.Equals(QueueEntryStatus.ReadyForUpload))
+            {
+               return Math.Round(ExpirationInSeconds / EndTimeUtc.Subtract(BeginTimeUtc).TotalSeconds, 2, MidpointRounding.AwayFromZero);
+            }
+            
+            return 0;
+         }
+      }
+
+      /// <summary>
       /// Pad for Windows, others as of v4.01, as of v6.01 number of SMP Cores to use
       /// </summary>
       public UInt32 UseCores
@@ -893,6 +958,13 @@ namespace HFM.Instances
          get 
          {
             DateTime d = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            if (_qReader.System.Equals(SystemType.PPC))
+            {
+               byte[] b = BitConverter.GetBytes(_qEntry.TimeData[1]);
+               byte[] bytes = _qReader.GetSystemBytes(b);
+               UInt32 seconds = BitConverter.ToUInt32(bytes, 0);
+               return d.AddSeconds(seconds);
+            }
             return d.AddSeconds(_qEntry.TimeData[0]);
          }
       }
@@ -916,6 +988,13 @@ namespace HFM.Instances
          get
          {
             DateTime d = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            if (_qReader.System.Equals(SystemType.PPC))
+            {
+               byte[] b = BitConverter.GetBytes(_qEntry.TimeData[5]);
+               byte[] bytes = _qReader.GetSystemBytes(b);
+               UInt32 seconds = BitConverter.ToUInt32(bytes, 0);
+               return d.AddSeconds(seconds);
+            }
             return d.AddSeconds(_qEntry.TimeData[4]);
          }
       }
@@ -936,7 +1015,11 @@ namespace HFM.Instances
       /// </summary>
       public UInt32 UploadStatus
       {
-         get { return _qEntry.UploadStatus; }
+         get 
+         { 
+            byte[] b = _qReader.GetSystemBytes(_qEntry.UploadStatus);
+            return BitConverter.ToUInt32(b, 0);
+         }
       }
 
       /// <summary>
@@ -952,7 +1035,11 @@ namespace HFM.Instances
       /// </summary>
       public UInt32 Misc1a
       {
-         get { return _qEntry.Misc1a; }
+         get
+         {
+            byte[] b = _qReader.GetSystemBytes(_qEntry.Misc1a);
+            return BitConverter.ToUInt32(b, 0);
+         }
       }
 
       /// <summary>
@@ -960,7 +1047,11 @@ namespace HFM.Instances
       /// </summary>
       public string CoreNumber
       {
-         get { return _qEntry.CoreNumber.ToString("x"); }
+         get
+         {
+            byte[] b = _qReader.GetSystemBytes(_qEntry.CoreNumber);
+            return BitConverter.ToUInt32(b, 0).ToString("x");
+         }
       }
 
       /// <summary>
@@ -968,7 +1059,11 @@ namespace HFM.Instances
       /// </summary>
       public UInt32 Misc1b
       {
-         get { return _qEntry.Misc1b; }
+         get
+         {
+            byte[] b = _qReader.GetSystemBytes(_qEntry.Misc1b);
+            return BitConverter.ToUInt32(b, 0);
+         }
       }
 
       /// <summary>
@@ -976,7 +1071,11 @@ namespace HFM.Instances
       /// </summary>
       public UInt32 WuDataFileSize
       {
-         get { return _qEntry.WuDataFileSize; }
+         get
+         {
+            byte[] b = _qReader.GetSystemBytes(_qEntry.WuDataFileSize);
+            return BitConverter.ToUInt32(b, 0);
+         }
       }
 
       /// <summary>
@@ -1086,6 +1185,12 @@ namespace HFM.Instances
       {
          get
          {
+            if (_qReader.System.Equals(SystemType.PPC))
+            {
+               return String.Format("{0}.{1}.{2}.{3}", _qEntry.ServerIP[0], _qEntry.ServerIP[1],
+                                                       _qEntry.ServerIP[2], _qEntry.ServerIP[3]);
+            }
+            
             return String.Format("{0}.{1}.{2}.{3}", _qEntry.ServerIP[3], _qEntry.ServerIP[2], 
                                                     _qEntry.ServerIP[1], _qEntry.ServerIP[0]);
          }
@@ -1096,7 +1201,11 @@ namespace HFM.Instances
       /// </summary>
       public UInt32 ServerPort
       {
-         get { return _qEntry.ServerPort; }
+         get
+         {
+            byte[] b = _qReader.GetSystemBytes(_qEntry.ServerPort);
+            return BitConverter.ToUInt32(b, 0);
+         }
       }
 
       /// <summary>
@@ -1124,9 +1233,26 @@ namespace HFM.Instances
       }
 
       /// <summary>
-      /// User ID associated with this queue entry
+      /// The Team number attached to this queue entry
       /// </summary>
-      public string UserID
+      public UInt32 TeamNumber
+      {
+         get 
+         { 
+            UInt32 team;
+            if (UInt32.TryParse(_qEntry.Team, out team))
+            {
+               return team;
+            }
+            
+            return 0;
+         }
+      }
+
+      /// <summary>
+      /// ID associated with this queue entry
+      /// </summary>
+      public string ID
       {
          get
          {
@@ -1136,6 +1262,28 @@ namespace HFM.Instances
                sb.AppendFormat("{0:X2}", b);
             }
             return sb.ToString();
+         }
+      }
+
+      /// <summary>
+      /// UserID associated with this queue entry
+      /// </summary>
+      public string UserID
+      {
+         get
+         {
+            byte[] bytes = new byte[_qEntry.UserAndMachineID.Length];
+            Array.Copy(_qEntry.UserAndMachineID, bytes, _qEntry.UserAndMachineID.Length);
+            // remove the MachineID from the value
+            bytes[0] = Convert.ToByte(Convert.ToUInt32(bytes[0]) - _qEntry.MachineID);
+            Array.Reverse(bytes);
+
+            StringBuilder sb = new StringBuilder(_qEntry.UserAndMachineID.Length * 2);
+            foreach (byte b in bytes)
+            {
+               sb.AppendFormat("{0:X2}", b);
+            }
+            return sb.ToString().TrimStart('0');
          }
       }
 
@@ -1218,7 +1366,11 @@ namespace HFM.Instances
       /// </summary>
       public UInt32 ExpirationInSeconds
       {
-         get { return _qEntry.ExpirationInSeconds; }
+         get
+         {
+            byte[] b = _qReader.GetSystemBytes(_qEntry.ExpirationInSeconds);
+            return BitConverter.ToUInt32(b, 0);
+         }
       }
 
       /// <summary>
@@ -1255,7 +1407,7 @@ namespace HFM.Instances
             byte[] b = new byte[_qEntry.AssignmentInfoPresent.Length];
             Array.Copy(_qEntry.AssignmentInfoPresent, b, 4);
          
-            if (IsBigEndian(_qEntry.AssignmentInfoPresent))
+            if (QueueReader.IsBigEndian(_qEntry.AssignmentInfoPresent))
             {
                Array.Reverse(b);
             }
@@ -1278,7 +1430,7 @@ namespace HFM.Instances
                byte[] b = new byte[_qEntry.AssignmentTimeStamp.Length];
                Array.Copy(_qEntry.AssignmentTimeStamp, b, 4);
 
-               if (IsBigEndian(_qEntry.AssignmentInfoPresent))
+               if (QueueReader.IsBigEndian(_qEntry.AssignmentInfoPresent))
                {
                   Array.Reverse(b);
                }
@@ -1314,7 +1466,11 @@ namespace HFM.Instances
                byte[] bytes = new byte[_qEntry.AssignmentInfoChecksum.Length];
                Array.Copy(_qEntry.AssignmentInfoChecksum, bytes, 4);
 
-               if (IsBigEndian(_qEntry.AssignmentInfoPresent))
+               // Reverse this value if 'AssignmentInfoPresent' IS NOT Big Endian
+               // qd.c prints the bytes in reverse order so it stands to reason 
+               // that if 'AssignmentInfoPresent' IS Big Endian then the bytes
+               // would not need reversed.  This theory is UNTESTED.
+               if (QueueReader.IsBigEndian(_qEntry.AssignmentInfoPresent) == false)
                {
                   Array.Reverse(bytes);
                }
@@ -1338,6 +1494,11 @@ namespace HFM.Instances
       {
          get
          {
+            if (_qReader.System.Equals(SystemType.PPC))
+            {
+               return String.Format("{0}.{1}.{2}.{3}", _qEntry.CollectionServerIP[0], _qEntry.CollectionServerIP[1],
+                                                       _qEntry.CollectionServerIP[2], _qEntry.CollectionServerIP[3]);
+            }
             return String.Format("{0}.{1}.{2}.{3}", _qEntry.CollectionServerIP[3], _qEntry.CollectionServerIP[2], 
                                                     _qEntry.CollectionServerIP[1], _qEntry.CollectionServerIP[0]);
          }
@@ -1362,7 +1523,18 @@ namespace HFM.Instances
       /// </summary>
       public string WorkUnitTag
       {
-         get { return _qEntry.WorkUnitTag; }
+         get
+         {
+            int i = Array.IndexOf(_qEntry.WorkUnitTag, (byte)0);
+            if (i >= 0)
+            {
+               return ASCIIEncoding.ASCII.GetString(_qEntry.WorkUnitTag, 0, i);
+            }
+            else
+            {
+               return ASCIIEncoding.ASCII.GetString(_qEntry.WorkUnitTag, 0, _qEntry.WorkUnitTag.Length);
+            }
+         }
       }
 
       /// <summary>
@@ -1423,11 +1595,18 @@ namespace HFM.Instances
       /// <summary>
       /// WU expiration time (UTC)
       /// </summary>
-      public DateTime DueDateUtc
+      public DateTime DueTimeUtc
       {
          get 
          {
             DateTime d = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            if (_qReader.System.Equals(SystemType.PPC))
+            {
+               byte[] b = BitConverter.GetBytes(_qEntry.ExpirationTime[1]);
+               byte[] bytes = _qReader.GetSystemBytes(b);
+               UInt32 seconds = BitConverter.ToUInt32(bytes, 0);
+               return d.AddSeconds(seconds);
+            }
             return d.AddSeconds(_qEntry.ExpirationTime[0]); 
          }
       }
@@ -1435,9 +1614,9 @@ namespace HFM.Instances
       /// <summary>
       /// WU expiration time (Local)
       /// </summary>
-      public DateTime DueDateLocal
+      public DateTime DueTimeLocal
       {
-         get { return DueDateUtc.ToLocalTime(); }
+         get { return DueTimeUtc.ToLocalTime(); }
       }
 
       /// <summary>
@@ -1445,7 +1624,11 @@ namespace HFM.Instances
       /// </summary>
       public UInt32 PacketSizeLimit
       {
-         get { return _qEntry.PacketSizeLimit; }
+         get
+         {
+            byte[] b = _qReader.GetSystemBytes(_qEntry.PacketSizeLimit);
+            return BitConverter.ToUInt32(b, 0);
+         }
       }
 
       /// <summary>
@@ -1570,46 +1753,86 @@ namespace HFM.Instances
          
          return value;
       }
-      
-      private static bool IsBigEndian(byte[] b)
-      {
-         UInt32 value = BitConverter.ToUInt32(b, 0);
-
-         if (value > UInt16.MaxValue)
-         {
-            return true;
-         }
-
-         return false;
-      }
+   }
+   
+   /// <summary>
+   /// Represents the System (CPU) Type
+   /// </summary>
+   internal enum SystemType
+   {
+      x86 = 0,
+      PPC
    }
 
    [CLSCompliant(false)]
    public class QueueReader
    {
+      public const int QueueLength = 7168;
+      public const int QueueEntryLength = 712;
+
       /// <summary>
       /// Queue Structure
       /// </summary>
       private Queue _q;
+
       /// <summary>
       /// queue.dat File Path
       /// </summary>
-      private string _queueFilePath;
-      
+      private string _QueueFilePath;
       /// <summary>
       /// queue.dat File Path
       /// </summary>
       public string QueueFilePath
       {
-         get { return _queueFilePath; }
+         get { return _QueueFilePath; }
       }
-
+      
+      /// <summary>
+      /// Queue Read Ok Flag
+      /// </summary>
+      private bool _QueueReadOk;
+      /// <summary>
+      /// Queue Read Ok Flag
+      /// </summary>
+      public bool QueueReadOk
+      {
+         get { return _QueueReadOk; }
+      }
+      
+      /// <summary>
+      /// The System (CPU) Type
+      /// </summary>
+      private SystemType _System = SystemType.x86;
+      /// <summary>
+      /// The System (CPU) Type
+      /// </summary>
+      internal SystemType System
+      {
+         get { return _System; }
+      }
+      
       /// <summary>
       /// Queue (client) version
       /// </summary>
       public UInt32 Version
       {
-         get { return _q.Version; }
+         get
+         {
+            byte[] b = GetSystemBytes(_q.Version);
+            return BitConverter.ToUInt32(b, 0);
+         }
+      }
+
+      /// <summary>
+      /// Current index number
+      /// </summary>
+      public UInt32 CurrentIndex
+      {
+         get
+         {
+            byte[] b = GetSystemBytes(_q.CurrentIndex);
+            return BitConverter.ToUInt32(b, 0);
+         }
       }
 
       /// <summary>
@@ -1617,7 +1840,11 @@ namespace HFM.Instances
       /// </summary>
       public float PerformanceFraction
       {
-         get { return _q.PerformanceFraction; }
+         get
+         {
+            byte[] b = GetSystemBytes(_q.PerformanceFraction);
+            return BitConverter.ToSingle(b, 0);
+         }
       }
 
       /// <summary>
@@ -1625,7 +1852,11 @@ namespace HFM.Instances
       /// </summary>
       public UInt32 PerformanceFractionUnitWeight
       {
-         get { return _q.PerformanceFractionUnitWeight; }
+         get
+         {
+            byte[] b = GetSystemBytes(_q.PerformanceFractionUnitWeight);
+            return BitConverter.ToUInt32(b, 0);
+         }
       }
 
       /// <summary>
@@ -1633,7 +1864,11 @@ namespace HFM.Instances
       /// </summary>
       public float DownloadRateAverage
       {
-         get { return (float)_q.DownloadRateAverage / 1000; }
+         get
+         {
+            byte[] b = GetSystemBytes(_q.DownloadRateAverage);
+            return (BitConverter.ToUInt32(b, 0) / 1000f);
+         }
       }
 
       /// <summary>
@@ -1641,7 +1876,11 @@ namespace HFM.Instances
       /// </summary>
       public UInt32 DownloadRateUnitWeight
       {
-         get { return _q.DownloadRateUnitWeight; }
+         get
+         {
+            byte[] b = GetSystemBytes(_q.DownloadRateUnitWeight);
+            return BitConverter.ToUInt32(b, 0);
+         }
       }
 
       /// <summary>
@@ -1649,7 +1888,11 @@ namespace HFM.Instances
       /// </summary>
       public float UploadRateAverage
       {
-         get { return (float)_q.UploadRateAverage / 1000; }
+         get
+         {
+            byte[] b = GetSystemBytes(_q.UploadRateAverage);
+            return (BitConverter.ToUInt32(b, 0) / 1000f);
+         }
       }
 
       /// <summary>
@@ -1657,7 +1900,11 @@ namespace HFM.Instances
       /// </summary>
       public UInt32 UploadRateUnitWeight
       {
-         get { return _q.UploadRateUnitWeight; }
+         get
+         {
+            byte[] b = GetSystemBytes(_q.UploadRateUnitWeight);
+            return BitConverter.ToUInt32(b, 0);
+         }
       }
 
       /// <summary>
@@ -1667,9 +1914,9 @@ namespace HFM.Instances
       {
          get 
          {
-            byte[] b = new byte[_q.ResultsSent.Length];
-            Array.Copy(_q.ResultsSent, b, _q.ResultsSent.Length);
-            return BitConverter.ToUInt32(b, 0);
+            //byte[] b = new byte[_q.ResultsSent.Length];
+            //Array.Copy(_q.ResultsSent, b, _q.ResultsSent.Length);
+            return BitConverter.ToUInt32(_q.ResultsSent, 0);
          }
       }
       
@@ -1677,28 +1924,98 @@ namespace HFM.Instances
       /// Read queue.dat file
       /// </summary>
       /// <param name="FilePath">Path to queue.dat file</param>
+      /// <exception cref="ArgumentException">Throws if FileName is Null or Empty.</exception>
       public void ReadQueue(string FilePath)
       {
-         BinaryReader reader = new BinaryReader(new FileStream(FilePath, FileMode.Open, FileAccess.Read, FileShare.Read));
-         _q = FromBinaryReaderBlock(reader);
-         _queueFilePath = FilePath;
+         if (String.IsNullOrEmpty(FilePath)) throw new ArgumentException("Argument 'FilePath' cannot be a null or empty string.");
+      
+         _QueueFilePath = FilePath;
+      
+         try
+         {
+            BinaryReader reader = new BinaryReader(new FileStream(FilePath, FileMode.Open, FileAccess.Read, FileShare.Read));
+            _q = FromBinaryReaderBlock(reader);
+            
+            // at this point we know we've read a file of expected length
+            // and no exceptions were thrown in the process
+            if (QueueReadOk)
+            {
+               // determine system type based on the version field
+               if (IsBigEndian(_q.Version))
+               {
+                  _System = SystemType.PPC;
+               }
+
+               // If version is less than 5.xx, don't trust this data
+               // this class is not setup to handle legacy clients
+               // If version is greater than 6.xx, don't trust this data
+               // this class has not been tested with clients beyond 6.xx
+               if (Version < 500 || Version > 699)
+               {
+                  ClearQueue();
+               }
+            }
+         }
+         catch (Exception)
+         {
+            ClearQueue();
+            
+            throw;
+         }
       }
 
-      private static Queue FromBinaryReaderBlock(BinaryReader br)
+      private Queue FromBinaryReaderBlock(BinaryReader br)
       {
+         Debug.Assert(br != null);
+      
          // Read byte array
          byte[] buff = br.ReadBytes(Marshal.SizeOf(typeof(Queue)));
-         
-         // Make sure that the Garbage Collector doesn't move our buffer 
-         GCHandle handle = GCHandle.Alloc(buff, GCHandleType.Pinned);
-         
-         // Marshal the bytes
-         Queue q = (Queue)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(Queue));
-         handle.Free(); //Give control of the buffer back to the GC 
 
-         return q;
+         if (buff.Length == QueueLength)
+         {
+            _QueueReadOk = true;
+
+            // Make sure that the Garbage Collector doesn't move our buffer 
+            GCHandle handle = GCHandle.Alloc(buff, GCHandleType.Pinned);
+
+            // Marshal the bytes
+            Queue q = (Queue)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(Queue));
+            handle.Free(); //Give control of the buffer back to the GC 
+
+            return q;
+         }
+
+         _QueueReadOk = false;
+         return new Queue();
       }
       
+      /// <summary>
+      /// Clear the Queue Structure and Set Read Flag False
+      /// </summary>
+      public void ClearQueue()
+      {
+         _QueueReadOk = false;
+         _q = new Queue();
+      }
+
+      /// <summary>
+      /// Collection used to populate UI Controls
+      /// </summary>
+      public ICollection<string> EntryNameCollection
+      {
+         get
+         {
+            List<string> list = new List<string>(10);
+
+            for (uint i = 0; i < 10; i++)
+            {
+               list.Add(String.Format("{0} - {1}", i, GetQueueEntry(i).ProjectRunCloneGen));
+            }
+
+            return list;
+         }
+      }
+
       /// <summary>
       /// Get the QueueEntry at the specified Index.
       /// </summary>
@@ -1706,7 +2023,46 @@ namespace HFM.Instances
       /// <exception cref="IndexOutOfRangeException">Throws when Index is less than 0 or greater than 9.</exception>
       public QueueEntry GetQueueEntry(uint Index)
       {
-         return new QueueEntry(_q.Entries[Index], Index, _q.CurrentIndex);
+         return new QueueEntry(_q.Entries[Index], Index, CurrentIndex, this);
+      }
+
+      /// <summary>
+      /// Populate FoldingID, Team, UserID, and MachineID from Current QueueEntry
+      /// </summary>
+      /// <param name="Instance">ClientInstance to populate</param>
+      public void PopulateUserAndMachineData(ClientInstance Instance)
+      {
+         QueueEntry entry = GetQueueEntry(CurrentIndex);
+
+         Instance.FoldingID = entry.FoldingID;
+         Instance.Team = (int)entry.TeamNumber;
+
+         Instance.UserID = entry.UserID;
+         Instance.MachineID = (int)entry.MachineID;
+      }
+
+      internal byte[] GetSystemBytes(byte[] b)
+      {
+         byte[] bytes = new byte[b.Length];
+         Array.Copy(b, bytes, b.Length);
+
+         if (System.Equals(SystemType.PPC))
+         {
+            Array.Reverse(bytes);
+         }
+         return bytes;
+      }
+
+      internal static bool IsBigEndian(byte[] b)
+      {
+         UInt32 value = BitConverter.ToUInt32(b, 0);
+
+         if (value > UInt16.MaxValue)
+         {
+            return true;
+         }
+
+         return false;
       }
    }
 }
