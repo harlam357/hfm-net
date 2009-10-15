@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+   <xsl:output method="html" encoding="utf-8" doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" doctype-system="http://www.w3.org/TR/html4/loose.dtd" />
    <xsl:template match="Instance">
       <html>
          <head>
+            <title>Client Instance Data</title>
             <meta http-equiv="Pragma" content="no-cache" />
             <meta http-equiv="Cache-Control" content="no-cache" />
-            <title>Folding Data for Host</title>
             <link rel="stylesheet" type="text/css" href="$CSSFILE" />
          </head>
          <body>
@@ -43,11 +44,9 @@
                </tr>
                <xsl:apply-templates select="Protein" />
                <tr>
-                  <td class="Empty">
-                     <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                  <td class="Plain" colspan="2" align="center">
                   </td>
-                  <td class="Empty">
-                     <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                  <td class="Plain" colspan="2" align="center">
                   </td>
                </tr>
                <tr>

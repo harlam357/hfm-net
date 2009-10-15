@@ -307,10 +307,12 @@ namespace HFM.Helpers
             // FxCop: CA1307 (Specify StringComparison)
             //        CA1309 (For non-linguistic comparisons, StringComparison.Ordinal or StringComparison.OrdinalIgnoreCase)
 
+            // Get the <TABLE> to </TABLE> section of the HTML
             int index = str.IndexOf("<TABLE", StringComparison.Ordinal);
             int length = str.LastIndexOf("</TABLE>");
-            
             str = str.Substring(index, (length - index) + 8);
+            
+            // Strip the <FORM> to </FORM> section from the HTML
             length = str.IndexOf("<FORM ", StringComparison.Ordinal);
             index = str.IndexOf("</FORM>", StringComparison.Ordinal);
             
@@ -318,9 +320,10 @@ namespace HFM.Helpers
             {
                str2 = str.Substring(0, length);
                str3 = str.Substring(index + 7);
-               str = str2 + str3;
+               str = String.Concat(str2, str3);
             }
 
+            // Change the <font> tag size to 3
             index = str.IndexOf("<font", StringComparison.Ordinal);
             length = str.IndexOf(">", index, StringComparison.Ordinal);
             
@@ -328,8 +331,11 @@ namespace HFM.Helpers
             {
                str2 = str.Substring(0, index);
                str3 = str.Substring(length + 1);
-               str = str2 + "<font size=\"3\">" + str3;
+               str = String.Concat(str2, "<font size=\"3\">", str3);
             }
+            
+            // Remove the <p> tag that doesn't conform to HTML 4.01 Transitional
+            str = str.Replace("<p align=left>", String.Empty);
          }
          catch (Exception ex)
          {

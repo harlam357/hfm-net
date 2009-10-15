@@ -75,21 +75,22 @@ namespace HFM.Helpers
       /// <returns>Result of XML document after transform is applied</returns>
       public static String Transform(XmlDocument xmlDoc, String xslFile)
       {
-         XslCompiledTransform xslt = new XslCompiledTransform();
+         // Create XmlReaderSettings and XmlReader
          XmlReaderSettings xsltSettings = new XmlReaderSettings();
          xsltSettings.ProhibitDtd = false;
          XmlReader xmlReader = XmlReader.Create(Path.Combine(Path.Combine(PreferenceSet.AppPath, "XSL"), xslFile), xsltSettings);
+
+         // Create the XslCompiledTransform and Load the XmlReader
+         XslCompiledTransform xslt = new XslCompiledTransform();
          xslt.Load(xmlReader);
 
-         StringBuilder sb = new StringBuilder();
-         TextWriter tw = new StringWriter(sb);
-
-         // Transform the XML data to an in memory stream - which happens to be a string
-         xslt.Transform(xmlDoc, null, tw);
-
+         // Transform the XML data to an in memory stream
+         MemoryStream ms = new MemoryStream();
+         xslt.Transform(xmlDoc, null, ms);
+         
          // Return the transformed XML
-         string sWebPage = sb.ToString();
-         sWebPage = sWebPage.Replace("$APPPATH", PreferenceSet.AppPath);
+         string sWebPage = Encoding.UTF8.GetString(ms.ToArray());
+         //sWebPage = sWebPage.Replace("$APPPATH", PreferenceSet.AppPath);
          sWebPage = sWebPage.Replace("$CSSFILE", PreferenceSet.Instance.CSSFileName);
          return sWebPage;
       }

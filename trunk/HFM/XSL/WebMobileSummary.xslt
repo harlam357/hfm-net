@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+   <xsl:output method="html" encoding="utf-8" doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" doctype-system="http://www.w3.org/TR/html4/loose.dtd" />
    <xsl:template match="Overview">
       <html>
          <head>
+            <title>Folding Client Summary (mobile)</title>
             <meta http-equiv="Pragma" content="no-cache" />
             <meta http-equiv="Cache-Control" content="no-cache" />
-            <title>Mobile System Summary</title>
             <link rel="stylesheet" type="text/css" href="$CSSFILE" />
          </head>
          <body>
@@ -24,7 +25,8 @@
                </tr>
                <xsl:apply-templates select="Instance" />
                <tr>
-                  <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                  <td class="Plain" colspan="4" align="center">
+                  </td>
                </tr>
                <tr>
                   <td class="Plain" colspan="4" align="center">
