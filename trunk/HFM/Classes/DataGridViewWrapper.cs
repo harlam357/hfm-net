@@ -17,41 +17,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 
 namespace HFM.Classes
 {
    public partial class DataGridViewWrapper : DataGridView
    {
-      private bool _FreezeRowEnter;
-      
-      public bool FreezeRowEnter
+      /// <summary>
+      /// Local Flag That Halts the SelectionChanged Event
+      /// </summary>
+      private bool _FreezeSelectionChanged;
+      /// <summary>
+      /// Local Flag That Halts the SelectionChanged Event
+      /// </summary>
+      public bool FreezeSelectionChanged
       {
-         get { return _FreezeRowEnter; }
-         set { _FreezeRowEnter = value; }
+         get { return _FreezeSelectionChanged; }
+         set { _FreezeSelectionChanged = value; }
       }
 
+      /// <summary>
+      /// Constructor
+      /// </summary>
       public DataGridViewWrapper()
       {
          InitializeComponent();
       }
 
-      [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate")]
-      public void FireRowEnter(int columnIndex, int rowIndex)
+      /// <summary>
+      /// Raises the System.Windows.Forms.DataGridView.SelectionChanged event.
+      /// </summary>
+      protected override void OnSelectionChanged(System.EventArgs e)
       {
-         OnRowEnter(new DataGridViewCellEventArgs(columnIndex, rowIndex));
-      }
-
-      ///<summary>
-      ///Raises the <see cref="E:System.Windows.Forms.DataGridView.RowEnter"></see> event.
-      ///</summary>
-      ///<param name="e">A <see cref="T:System.Windows.Forms.DataGridViewCellEventArgs"></see> that contains the event data.</param>
-      protected override void OnRowEnter(DataGridViewCellEventArgs e)
-      {
-         if (FreezeRowEnter) return;
+         if (FreezeSelectionChanged) return;
       
-         base.OnRowEnter(e);
+         base.OnSelectionChanged(e);
       }
    }
 }

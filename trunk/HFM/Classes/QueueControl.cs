@@ -99,7 +99,7 @@ namespace HFM.Classes
          
             QueueEntry entry = _qr.GetQueueEntry((uint)cboQueueIndex.SelectedIndex);
             txtStatus.Text = entry.EntryStatus.ToString();
-            txtCredit.Text = ProteinCollection.Instance.ContainsKey(entry.ProjectID) ? ProteinCollection.Instance[entry.ProjectID].Credit.ToString(CultureInfo.CurrentUICulture) : "0";
+            txtCredit.Text = ProteinCollection.Instance.ContainsKey(entry.ProjectID) ? ProteinCollection.Instance[entry.ProjectID].Credit.ToString(CultureInfo.CurrentCulture) : "0";
             if (_ClientIsOnVirtualMachine)
             {
                txtBeginDate.Text = String.Format("{0} {1}", entry.BeginTimeUtc.ToShortDateString(), entry.BeginTimeUtc.ToShortTimeString());
@@ -124,21 +124,21 @@ namespace HFM.Classes
                }
                
             }
-            txtSpeedFactor.Text = String.Format(CultureInfo.CurrentUICulture, "{0} x min speed", entry.SpeedFactor);
-            txtPerformanceFraction.Text = String.Format(CultureInfo.CurrentUICulture, "{0} (u={1})", _qr.PerformanceFraction, _qr.PerformanceFractionUnitWeight);
-            txtMegaFlops.Text = String.Format(CultureInfo.CurrentUICulture, "{0:f}", entry.MegaFlops);
+            txtSpeedFactor.Text = String.Format(CultureInfo.CurrentCulture, "{0} x min speed", entry.SpeedFactor);
+            txtPerformanceFraction.Text = String.Format(CultureInfo.CurrentCulture, "{0} (u={1})", _qr.PerformanceFraction, _qr.PerformanceFractionUnitWeight);
+            txtMegaFlops.Text = String.Format(CultureInfo.CurrentCulture, "{0:f}", entry.MegaFlops);
             txtServer.Text = entry.ServerIP;
-            txtAverageDownloadRate.Text = String.Format(CultureInfo.CurrentUICulture, "{0} KB/s (u={1})", _qr.DownloadRateAverage, _qr.DownloadRateUnitWeight);
-            txtAverageUploadRate.Text = String.Format(CultureInfo.CurrentUICulture, "{0} KB/s (u={1})", _qr.UploadRateAverage, _qr.UploadRateUnitWeight);
+            txtAverageDownloadRate.Text = String.Format(CultureInfo.CurrentCulture, "{0} KB/s (u={1})", _qr.DownloadRateAverage, _qr.DownloadRateUnitWeight);
+            txtAverageUploadRate.Text = String.Format(CultureInfo.CurrentCulture, "{0} KB/s (u={1})", _qr.UploadRateAverage, _qr.UploadRateUnitWeight);
             txtCpuType.Text = entry.CpuString;
             txtOsType.Text = entry.OsString;
-            txtMemory.Text = entry.Memory.ToString(CultureInfo.CurrentUICulture);
-            txtGpuMemory.Text = entry.GpuMemory.ToString(CultureInfo.CurrentUICulture);
-            txtBenchmark.Text = entry.Benchmark.ToString(CultureInfo.CurrentUICulture);
-            txtSmpCores.Text = entry.NumberOfSmpCores.ToString(CultureInfo.CurrentUICulture);
-            txtCoresToUse.Text = entry.UseCores.ToString(CultureInfo.CurrentUICulture);
+            txtMemory.Text = entry.Memory.ToString(CultureInfo.CurrentCulture);
+            txtGpuMemory.Text = entry.GpuMemory.ToString(CultureInfo.CurrentCulture);
+            txtBenchmark.Text = entry.Benchmark.ToString(CultureInfo.CurrentCulture);
+            txtSmpCores.Text = entry.NumberOfSmpCores.ToString(CultureInfo.CurrentCulture);
+            txtCoresToUse.Text = entry.UseCores.ToString(CultureInfo.CurrentCulture);
             txtUserID.Text = entry.UserID;
-            txtMachineID.Text = entry.MachineID.ToString(CultureInfo.CurrentUICulture);
+            txtMachineID.Text = entry.MachineID.ToString(CultureInfo.CurrentCulture);
             
             OnQueueIndexChanged(new QueueIndexChangedEventArgs(cboQueueIndex.SelectedIndex));
          }

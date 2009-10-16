@@ -967,61 +967,61 @@ namespace HFM.Instances
       /// Regular Expression to match User (Folding ID) and Team string.
       /// </summary>
       private static readonly Regex rUserTeam =
-         new Regex("\\[(?<Timestamp>.*)\\] - User name: (?<Username>.*) \\(Team (?<TeamNumber>.*)\\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+         new Regex("\\[(?<Timestamp>.{8})\\] - User name: (?<Username>.*) \\(Team (?<TeamNumber>.*)\\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       /// <summary>
       /// Regular Expression to match User ID string.
       /// </summary>
       private static readonly Regex rReceivedUserID =
-         new Regex("\\[(?<Timestamp>.*)\\].*- Received User ID = (?<UserID>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+         new Regex("\\[(?<Timestamp>.{8})\\].*- Received User ID = (?<UserID>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       /// <summary>
       /// Regular Expression to match User ID string.
       /// </summary>
       private static readonly Regex rUserID =
-         new Regex("\\[(?<Timestamp>.*)\\] - User ID: (?<UserID>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+         new Regex("\\[(?<Timestamp>.{8})\\] - User ID: (?<UserID>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       /// <summary>
       /// Regular Expression to match Machine ID string.
       /// </summary>
       private static readonly Regex rMachineID =
-         new Regex("\\[(?<Timestamp>.*)\\] - Machine ID: (?<MachineID>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+         new Regex("\\[(?<Timestamp>.{8})\\] - Machine ID: (?<MachineID>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       /// <summary>
       /// Regular Expression to match Unit Index string.
       /// </summary>
       private static readonly Regex rUnitIndex =
-         new Regex("\\[(?<Timestamp>.*)\\] Working on Unit 0(?<QueueIndex>[\\d]) \\[.*\\]", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+         new Regex("\\[(?<Timestamp>.{8})\\] Working on Unit 0(?<QueueIndex>[\\d]) \\[.*\\]", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       /// <summary>
       /// Regular Expression to match Unit Index string.
       /// </summary>
       private static readonly Regex rQueueIndex =
-         new Regex("\\[(?<Timestamp>.*)\\] Working on queue slot 0(?<QueueIndex>[\\d]) \\[.*\\]", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+         new Regex("\\[(?<Timestamp>.{8})\\] Working on queue slot 0(?<QueueIndex>[\\d]) \\[.*\\]", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       /// <summary>
       /// Regular Expression to match Core Version string.
       /// </summary>
       private static readonly Regex rCoreVersion =
-         new Regex("\\[(?<Timestamp>.*)\\] Version (?<CoreVer>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+         new Regex("\\[(?<Timestamp>.{8})\\] Version (?<CoreVer>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       /// <summary>
       /// Regular Expression to match Work Unit Project string.
       /// </summary>
       private static readonly Regex rProjectID =
-         new Regex("\\[(?<Timestamp>.*)\\] Project: (?<ProjectNumber>.*) \\(Run (?<Run>.*), Clone (?<Clone>.*), Gen (?<Gen>.*)\\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+         new Regex("\\[(?<Timestamp>.{8})\\] Project: (?<ProjectNumber>.*) \\(Run (?<Run>.*), Clone (?<Clone>.*), Gen (?<Gen>.*)\\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       /// <summary>
       /// Regular Expression to match Machine ID string.
       /// </summary>
       private static readonly Regex rCoreShutdown =
-         new Regex("\\[(?<Timestamp>.*)\\] Folding@home Core Shutdown: (?<UnitResult>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+         new Regex("\\[(?<Timestamp>.{8})\\] Folding@home Core Shutdown: (?<UnitResult>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       /// <summary>
       /// Regular Expression to match Completed Work Units string.
       /// </summary>
       private static readonly Regex rCompletedWUs =
-         new Regex("\\[(?<Timestamp>.*)\\] \\+ Number of Units Completed: (?<Completed>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);  
+         new Regex("\\[(?<Timestamp>.{8})\\] \\+ Number of Units Completed: (?<Completed>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);  
       #endregion
 
       #region Members

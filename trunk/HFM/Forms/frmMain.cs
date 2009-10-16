@@ -40,13 +40,20 @@ using HFM.Preferences;
 
 namespace HFM.Forms
 {
+   internal enum PaintCell
+   {
+      Status,
+      Time,
+      Warning
+   }
+
    public partial class frmMain : FormWrapper
    {
       #region Private Variables
       /// <summary>
       /// Collection of host instances
       /// </summary>
-      private readonly InstanceCollection ClientInstances = new InstanceCollection();
+      private readonly InstanceCollection ClientInstances;
       
       /// <summary>
       /// Holds the state of the window before it is hidden (minimise to tray behaviour)
@@ -64,6 +71,16 @@ namespace HFM.Forms
       private SortOrder SortColumnOrder = SortOrder.None;
       
       /// <summary>
+      /// Holds Current Mouse Over Row Index
+      /// </summary>
+      private Int32 CurrentMouseOverRow = -1;
+      
+      /// <summary>
+      /// Holds Current Mouse Over Column Index
+      /// </summary>
+      private Int32 CurrentMouseOverColumn = -1;
+      
+      /// <summary>
       /// True when in the ApplySort() routine
       /// </summary>
       private bool InApplySort = false;
@@ -71,7 +88,7 @@ namespace HFM.Forms
       /// <summary>
       /// Messages Form
       /// </summary>
-      private readonly frmMessages _frmMessages = null;
+      private readonly frmMessages _frmMessages = new frmMessages();
 
       /// <summary>
       /// Notify Icon for frmMain
@@ -91,17 +108,10 @@ namespace HFM.Forms
          // Set Main Form Text
          base.Text = String.Format("HFM.NET v{0} - Beta", PlatformOps.ApplicationVersion);
 
-         // Create Messages Window
-         _frmMessages = new frmMessages();
-         
          // Setup Log File and Messages Window handlers
          SetupTraceListeners();
-         
-         // Hook up Protein Collection Updated Event Handler
-         ProteinCollection.Instance.ProjectInfoUpdated += Instance_ProjectInfoUpdated;
-         
-         // Clear the Log File Cache Folder
-         ClearCacheFolder();
+         // Create Instance Collection
+         ClientInstances = new InstanceCollection();
          // Manually Create the Columns - Issue 41
          DisplayInstance.SetupDataGridViewColumns(dataGridView1);
          // Clear the UI
@@ -121,6 +131,7 @@ namespace HFM.Forms
          ClientInstances.InstanceEdited += ClientInstances_InstanceDataChanged;
          ClientInstances.InstanceRemoved += ClientInstances_InstanceDataChanged;
          ClientInstances.InstanceRetrieved += ClientInstances_InstanceRetrieved;
+         ClientInstances.SelectedInstanceChanged += ClientInstances_SelectedInstanceChanged;
          ClientInstances.DuplicatesFoundOrChanged += ClientInstances_DuplicatesFoundOrChanged;
          ClientInstances.RefreshUserStatsData += ClientInstances_RefreshUserStatsData;
 
@@ -342,33 +353,42 @@ namespace HFM.Forms
       }
 
       /// <summary>
-      /// When entering row, show the FAH Log text if available.
+      /// When Grid Selection Changes
       /// </summary>
-      private void dataGridView1_RowEnter(object sender, DataGridViewCellEventArgs e)
+      private void dataGridView1_SelectionChanged(object sender, EventArgs e)
       {
-         if (ClientInstances.HasInstances)
+         ClientInstances.SetCurrentInstance(dataGridView1.SelectedRows);
+      }
+      
+      /// <summary>
+      /// When ClientInstances SelectedInstance Changes
+      /// </summary>
+      private void ClientInstances_SelectedInstanceChanged(object sender, EventArgs e)
+      {
+         if (ClientInstances.SelectedInstance != null)
          {
-            string InstanceName = dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString();
-         
-            ClientInstance Instance;
-            if (ClientInstances.Instances.TryGetValue(InstanceName, out Instance))
-            {
-               statusLabelLeft.Text = Instance.Path;
-               queueControl.SetQueue(Instance.ClientQueue, Instance.CurrentUnitInfo.TypeOfClient, Instance.ClientIsOnVirtualMachine);
+            statusLabelLeft.Text = String.Format(CultureInfo.CurrentCulture, "{0} ({1})", 
+               ClientInstances.SelectedInstance.Path, ClientInstances.SelectedInstance.Arguments);
+            
+            queueControl.SetQueue(ClientInstances.SelectedInstance.ClientQueue, 
+               ClientInstances.SelectedInstance.CurrentUnitInfo.TypeOfClient, 
+               ClientInstances.SelectedInstance.ClientIsOnVirtualMachine);
 
-               // if we've got a good queue read, let queueControl_QueueIndexChanged()
-               // handle populating the log lines.
-               if (Instance.ClientQueue.QueueReadOk) return;
+            // if we've got a good queue read, let queueControl_QueueIndexChanged()
+            // handle populating the log lines.
+            if (ClientInstances.SelectedInstance.ClientQueue.QueueReadOk) return;
 
-               SetLogLines(Instance, Instance.CurrentLogLines);
-            }
-            else // this should only happen when this fires in the middle of an 'Edit' operation that changes the Client Name
-            {
-               Debug.WriteLine(String.Format("{0} could not find Client Name '{1}'.", HfmTrace.FunctionName, InstanceName));
-            }
+            SetLogLines(ClientInstances.SelectedInstance, ClientInstances.SelectedInstance.CurrentLogLines);
+         }
+         else
+         {
+            ClearLogAndQueueViewer();
          }
       }
 
+      /// <summary>
+      /// When Queue Control QueueIndex Changes
+      /// </summary>
       private void queueControl_QueueIndexChanged(object sender, QueueIndexChangedEventArgs e)
       {
          if (e.Index == -1)
@@ -377,24 +397,23 @@ namespace HFM.Forms
             return;
          }
 
-         if (ClientInstances.HasInstances && dataGridView1.SelectedRows.Count > 0)
+         if (ClientInstances.SelectedInstance != null)
          {
-            string InstanceName = dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString();
+            //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("Changed Queue Index ({0} - {1})", InstanceName, e.Index));
 
-            ClientInstance Instance;
-            if (ClientInstances.Instances.TryGetValue(InstanceName, out Instance))
-            {
-               //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("Changed Queue Index ({0} - {1})", InstanceName, e.Index));
-            
-               SetLogLines(Instance, Instance.GetLogLinesForQueueIndex(e.Index));
-            }
-            else // this should only happen when this fires in the middle of an 'Edit' operation that changes the Client Name
-            {
-               Debug.WriteLine(String.Format("{0} could not find Client Name '{1}'.", HfmTrace.FunctionName, InstanceName));
-            }
+            SetLogLines(ClientInstances.SelectedInstance, ClientInstances.SelectedInstance.GetLogLinesForQueueIndex(e.Index));
+         }
+         else
+         {
+            ClearLogAndQueueViewer();
          }
       }
 
+      /// <summary>
+      /// Populates the Log Viewer with the given LogLine List.
+      /// </summary>
+      /// <param name="Instance">Client Instance</param>
+      /// <param name="logLines">List of LogLines</param>
       private void SetLogLines(ClientInstance Instance, IList<LogLine> logLines)
       {
          /*** Checked LogLine Count ***/
@@ -405,6 +424,7 @@ namespace HFM.Forms
             {
                txtLogFile.SetLogLines(logLines, Instance.InstanceName);
                PreferenceSet_ColorLogFileChanged(null, EventArgs.Empty);
+               
                //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("Set Log Lines (Changed Client - {0})", Instance.InstanceName));
             }
             // Textbox has text lines
@@ -429,6 +449,7 @@ namespace HFM.Forms
                {
                   txtLogFile.SetLogLines(logLines, Instance.InstanceName);
                   PreferenceSet_ColorLogFileChanged(null, EventArgs.Empty);
+                  
                   //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Set Log Lines (log lines different)");
                }
             }
@@ -470,57 +491,66 @@ namespace HFM.Forms
       private void dataGridView1_MouseMove(object sender, MouseEventArgs e)
       {
          DataGridView.HitTestInfo info = dataGridView1.HitTest(e.X, e.Y);
-
-         if (dataGridView1.Columns["Status"].Index == info.ColumnIndex && info.RowIndex > -1)
+         
+         //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format(CultureInfo.CurrentCulture,
+         //   "MouseMove x:{0} y:{1} / row:{2} column:{3}", e.X, e.Y, info.RowIndex, info.ColumnIndex));
+         
+         // Only draw Tooltips if we've actually changed cells - Issue 99
+         if (info.RowIndex == CurrentMouseOverRow && info.ColumnIndex == CurrentMouseOverColumn)
          {
-            ClientInstance Instance = ClientInstances.Instances[dataGridView1.Rows[info.RowIndex].Cells["Name"].Value.ToString()];
-
-            toolTipGrid.Show(Instance.Status.ToString(), dataGridView1, e.X + 15, e.Y);
-         }
-         else if (dataGridView1.Columns["Username"].Index == info.ColumnIndex && info.RowIndex > -1)
-         {
-            ClientInstance Instance = ClientInstances.Instances[dataGridView1.Rows[info.RowIndex].Cells["Name"].Value.ToString()];
-            if (Instance.IsUsernameOk() == false)
-            {
-               toolTipGrid.Show("Client's User Name does not match the configured User Name", dataGridView1, e.X + 15, e.Y);
-            }
-            else
-            {
-               toolTipGrid.Hide(dataGridView1);
-            }
-         }
-         else if (dataGridView1.Columns["ProjectRunCloneGen"].Index == info.ColumnIndex && info.RowIndex > -1)
-         {
-            ClientInstance Instance = ClientInstances.Instances[dataGridView1.Rows[info.RowIndex].Cells["Name"].Value.ToString()];
-            if (ClientInstances.IsDuplicateProject(Instance.CurrentUnitInfo.ProjectRunCloneGen))
-            {
-               toolTipGrid.Show("Client is working on the same work unit as another client", dataGridView1, e.X + 15, e.Y);
-            }
-            else
-            {
-               toolTipGrid.Hide(dataGridView1);
-            }
-         }
-         else if (dataGridView1.Columns["Name"].Index == info.ColumnIndex && info.RowIndex > -1)
-         {
-            ClientInstance Instance = ClientInstances.Instances[dataGridView1.Rows[info.RowIndex].Cells["Name"].Value.ToString()];
-            if (ClientInstances.IsDuplicateUserAndMachineID(Instance.UserAndMachineID))
-            {
-               toolTipGrid.Show("Client is working with the same User and Machine ID as another client", dataGridView1, e.X + 15, e.Y);
-            }
-            else
-            {
-               toolTipGrid.Hide(dataGridView1);
-            }
+            return;
          }
          else
          {
-            toolTipGrid.Hide(dataGridView1);
+            // Update the current cell indexes
+            CurrentMouseOverRow = info.RowIndex;
+            CurrentMouseOverColumn = info.ColumnIndex;
          }
+
+         #region Draw or Hide the Tooltip
+         if (info.RowIndex > -1)
+         {
+            ClientInstance Instance =
+               ClientInstances.Instances[dataGridView1.Rows[info.RowIndex].Cells["Name"].Value.ToString()];
+
+            if (dataGridView1.Columns["Status"].Index == info.ColumnIndex)
+            {
+               //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Drawing Status Tooltip...");
+               toolTipGrid.Show(Instance.Status.ToString(), dataGridView1, e.X + 15, e.Y);
+               return;
+            }
+            else if (dataGridView1.Columns["Username"].Index == info.ColumnIndex)
+            {
+               if (Instance.IsUsernameOk() == false)
+               {
+                  toolTipGrid.Show("Client's User Name does not match the configured User Name", dataGridView1, e.X + 15, e.Y);
+                  return;
+               }
+            }
+            else if (dataGridView1.Columns["ProjectRunCloneGen"].Index == info.ColumnIndex)
+            {
+               if (ClientInstances.IsDuplicateProject(Instance.CurrentUnitInfo.ProjectRunCloneGen))
+               {
+                  toolTipGrid.Show("Client is working on the same work unit as another client", dataGridView1, e.X + 15, e.Y);
+                  return;
+               }
+            }
+            else if (dataGridView1.Columns["Name"].Index == info.ColumnIndex)
+            {
+               if (ClientInstances.IsDuplicateUserAndMachineID(Instance.UserAndMachineID))
+               {
+                  toolTipGrid.Show("Client is working with the same User and Machine ID as another client", dataGridView1, e.X + 15, e.Y);
+                  return;
+               }
+            }
+         }
+
+         toolTipGrid.Hide(dataGridView1);
+         #endregion
       }
 
       /// <summary>
-      /// Override painting in the Status column
+      /// Override Cell Painting in the DataGridView
       /// </summary>
       private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
       {
@@ -528,39 +558,27 @@ namespace HFM.Forms
          {
             if (dataGridView1.Columns["Status"].Index == e.ColumnIndex)
             {
-               #region Status Column Custom Paint
-               Rectangle newRect = new Rectangle(e.CellBounds.X + 4,
-                                                 e.CellBounds.Y + 4, e.CellBounds.Width - 10,
-                                                 e.CellBounds.Height - 10);
+               PaintGridCell(PaintCell.Status, e);
+            }
+            else if (dataGridView1.Columns["Name"].Index == e.ColumnIndex)
+            {
+               #region Duplicate User and Machine ID Custom Paint
+               ClientInstance Instance = ClientInstances.Instances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
 
-               using (Brush gridBrush = new SolidBrush(dataGridView1.GridColor),
-                            backColorBrush = new SolidBrush(e.CellStyle.BackColor))
+               if (ClientInstances.IsDuplicateUserAndMachineID(Instance.UserAndMachineID))
                {
-                  using (Pen gridLinePen = new Pen(gridBrush))
-                  {
-                     // Erase the cell.
-                     e.Graphics.FillRectangle(backColorBrush, e.CellBounds);
+                  PaintGridCell(PaintCell.Warning, e);
+               }
+               #endregion
+            }
+            else if (dataGridView1.Columns["ProjectRunCloneGen"].Index == e.ColumnIndex)
+            {
+               #region Duplicate Project Custom Paint
+               ClientInstance Instance = ClientInstances.Instances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
 
-                     // Draw the bottom grid line
-                     e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
-                                         e.CellBounds.Bottom - 1, e.CellBounds.Right,
-                                         e.CellBounds.Bottom - 1);
-
-                     // Draw the inset highlight box.
-                     ClientStatus status = (ClientStatus)e.Value;
-                     e.Graphics.DrawRectangle(ClientInstance.GetStatusPen(status), newRect);
-                     e.Graphics.FillRectangle(ClientInstance.GetStatusBrush(status), newRect);
-
-                     //Draw the text content of the cell, ignoring alignment.
-                     //if (e.Value != null)
-                     //{
-                     //   e.Graphics.DrawString(e.Value.ToString(), e.CellStyle.Font,
-                     //                         Brushes.Black, e.CellBounds.X + 2,
-                     //                         e.CellBounds.Y + 2, StringFormat.GenericDefault);
-                     //}
-
-                     e.Handled = true;
-                  }
+               if (ClientInstances.IsDuplicateProject(Instance.CurrentUnitInfo.ProjectRunCloneGen))
+               {
+                  PaintGridCell(PaintCell.Warning, e);
                }
                #endregion
             }
@@ -568,264 +586,167 @@ namespace HFM.Forms
             {
                #region Username Incorrect Custom Paint
                ClientInstance Instance = ClientInstances.Instances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
+
                if (Instance.IsUsernameOk() == false)
                {
-                  using (Brush gridBrush = new SolidBrush(dataGridView1.GridColor))
-                  {
-                     using (Pen gridLinePen = new Pen(gridBrush))
-                     {
-                        // Erase the cell.
-                        e.Graphics.FillRectangle(Brushes.Orange, e.CellBounds);
-
-                        // Draw the bottom grid line
-                        e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
-                                            e.CellBounds.Bottom - 1, e.CellBounds.Right,
-                                            e.CellBounds.Bottom - 1);
-
-                        // Draw the text content of the cell, ignoring alignment.
-                        if (e.Value != null)
-                        {
-                           e.Graphics.DrawString(e.Value.ToString(), e.CellStyle.Font,
-                                                 Brushes.Black, e.CellBounds.X + 2,
-                                                 e.CellBounds.Y + 2, StringFormat.GenericDefault);
-                        }
-
-                        e.Handled = true;
-                     }
-                  }
+                  PaintGridCell(PaintCell.Warning, e);
                }
                #endregion
             }
-            else if (dataGridView1.Columns["ProjectRunCloneGen"].Index == e.ColumnIndex)
+            else if ((dataGridView1.Columns["TPF"].Index == e.ColumnIndex ||
+                      dataGridView1.Columns["ETA"].Index == e.ColumnIndex ||
+                      dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex ||
+                      dataGridView1.Columns["Deadline"].Index == e.ColumnIndex) &&
+                      PreferenceSet.Instance.TimeStyle.Equals(eTimeStyle.Formatted))
             {
-               #region Username Incorrect Custom Paint
-               ClientInstance Instance = ClientInstances.Instances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
-               if (ClientInstances.IsDuplicateProject(Instance.CurrentUnitInfo.ProjectRunCloneGen))
+               PaintGridCell(PaintCell.Time, e);
+            }
+            else if (dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex ||
+                     dataGridView1.Columns["Deadline"].Index == e.ColumnIndex)
+            {
+               DateTime date = (DateTime)e.Value;
+               if (date.Equals(DateTime.MinValue))
                {
-                  using (Brush gridBrush = new SolidBrush(dataGridView1.GridColor))
-                  {
-                     using (Pen gridLinePen = new Pen(gridBrush))
-                     {
-                        // Erase the cell.
-                        e.Graphics.FillRectangle(Brushes.Orange, e.CellBounds);
-
-                        // Draw the bottom grid line
-                        e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
-                                            e.CellBounds.Bottom - 1, e.CellBounds.Right,
-                                            e.CellBounds.Bottom - 1);
-
-                        // Draw the text content of the cell, ignoring alignment.
-                        if (e.Value != null)
-                        {
-                           e.Graphics.DrawString(e.Value.ToString(), e.CellStyle.Font,
-                                                 Brushes.Black, e.CellBounds.X + 2,
-                                                 e.CellBounds.Y + 2, StringFormat.GenericDefault);
-                        }
-
-                        e.Handled = true;
-                     }
-                  }
+                  PaintGridCell(PaintCell.Time, e);
                }
-               #endregion
-            }
-            else if (dataGridView1.Columns["Name"].Index == e.ColumnIndex)
-            {
-               #region Username Incorrect Custom Paint
-               ClientInstance Instance = ClientInstances.Instances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
-               if (ClientInstances.IsDuplicateUserAndMachineID(Instance.UserAndMachineID))
-               {
-                  using (Brush gridBrush = new SolidBrush(dataGridView1.GridColor))
-                  {
-                     using (Pen gridLinePen = new Pen(gridBrush))
-                     {
-                        // Erase the cell.
-                        e.Graphics.FillRectangle(Brushes.Orange, e.CellBounds);
-
-                        // Draw the bottom grid line
-                        e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
-                                            e.CellBounds.Bottom - 1, e.CellBounds.Right,
-                                            e.CellBounds.Bottom - 1);
-
-                        // Draw the text content of the cell, ignoring alignment.
-                        if (e.Value != null)
-                        {
-                           e.Graphics.DrawString(e.Value.ToString(), e.CellStyle.Font,
-                                                 Brushes.Black, e.CellBounds.X + 2,
-                                                 e.CellBounds.Y + 2, StringFormat.GenericDefault);
-                        }
-
-                        e.Handled = true;
-                     }
-                  }
-               }
-               #endregion
-            }
-            else
-            {
-               PaintTimeBasedCell(e);
             }
          }
       }
 
       /// <summary>
-      /// Paint the Time based cells with the custom time format
+      /// Custom Paint Grid Cells
       /// </summary>
-      /// <param name="e"></param>
-      private void PaintTimeBasedCell(DataGridViewCellPaintingEventArgs e)
+      private void PaintGridCell(PaintCell paint, DataGridViewCellPaintingEventArgs e)
       {
-         if ((dataGridView1.Columns["TPF"].Index == e.ColumnIndex || 
-              dataGridView1.Columns["ETA"].Index == e.ColumnIndex ||
-              dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex ||
-              dataGridView1.Columns["Deadline"].Index == e.ColumnIndex) && 
-              PreferenceSet.Instance.TimeStyle.Equals(eTimeStyle.Formatted) &&
-              e.Value != null)
+         using (Brush gridBrush = new SolidBrush(dataGridView1.GridColor),
+                      backColorBrush = new SolidBrush(e.CellStyle.BackColor),
+                      selectionColorBrush = new SolidBrush(e.CellStyle.SelectionBackColor))
          {
-            using (Brush gridBrush = new SolidBrush(dataGridView1.GridColor),
-                         backColorBrush = new SolidBrush(e.CellStyle.BackColor),
-                         selectionColorBrush = new SolidBrush(e.CellStyle.SelectionBackColor))
+            using (Pen gridLinePen = new Pen(gridBrush))
             {
-               using (Pen gridLinePen = new Pen(gridBrush))
+               #region Erase (Set BackColor) the Cell and Choose Text Color
+               Brush textColor = Brushes.Black;
+               
+               if (paint.Equals(PaintCell.Status))
                {
-                  // Erase the cell.
                   e.Graphics.FillRectangle(backColorBrush, e.CellBounds);
-                  Brush textColor = Brushes.Black;
-
+               }
+               else if (paint.Equals(PaintCell.Time))
+               {
                   if (dataGridView1.Rows[e.RowIndex].Selected)
                   {
                      e.Graphics.FillRectangle(selectionColorBrush, e.CellBounds);
                      textColor = Brushes.White;
                   }
-
-                  // Draw the bottom grid line
-                  e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
-                                      e.CellBounds.Bottom - 1, e.CellBounds.Right,
-                                      e.CellBounds.Bottom - 1);
-                                      
-                  if (dataGridView1.Columns["TPF"].Index == e.ColumnIndex)
+                  else
                   {
-                     TimeSpan span = (TimeSpan)e.Value;
-                     if (span.Equals(TimeSpan.MinValue) == false)
-                     {
-                        e.Graphics.DrawString(GetFormattedTpfString(span), e.CellStyle.Font,
-                           textColor, e.CellBounds.X + 2,
-                           e.CellBounds.Y + 2, StringFormat.GenericDefault);
-
-                        e.Handled = true;
-                     }
-                  }
-                  else if (dataGridView1.Columns["ETA"].Index == e.ColumnIndex)
-                  {
-                     TimeSpan span = (TimeSpan)e.Value;
-                     if (span.Equals(TimeSpan.MinValue) == false)
-                     {
-                        e.Graphics.DrawString(GetFormattedEtaString(span), e.CellStyle.Font,
-                           textColor, e.CellBounds.X + 2,
-                           e.CellBounds.Y + 2, StringFormat.GenericDefault);
-
-                        e.Handled = true;
-                     }
-                  }
-                  else if (dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex)
-                  {
-                     DateTime date = (DateTime)e.Value;
-                     //if (date.Equals(DateTime.MinValue) == false)
-                     //{
-                        e.Graphics.DrawString(GetFormattedDownloadTimeString(date), e.CellStyle.Font,
-                           textColor, e.CellBounds.X + 2,
-                           e.CellBounds.Y + 2, StringFormat.GenericDefault);
-
-                        e.Handled = true;
-                     //}
-                  }
-                  else if (dataGridView1.Columns["Deadline"].Index == e.ColumnIndex)
-                  {
-                     DateTime date = (DateTime)e.Value;
-                     //if (date.Equals(DateTime.MinValue) == false)
-                     //{
-                        e.Graphics.DrawString(GetFormattedDeadlineString(date), e.CellStyle.Font,
-                           textColor, e.CellBounds.X + 2,
-                           e.CellBounds.Y + 2, StringFormat.GenericDefault);
-
-                        e.Handled = true;
-                     //}
+                     e.Graphics.FillRectangle(backColorBrush, e.CellBounds);
                   }
                }
+               else if (paint.Equals(PaintCell.Warning))
+               {
+                  if (dataGridView1.Rows[e.RowIndex].Selected)
+                  {
+                     e.Graphics.FillRectangle(selectionColorBrush, e.CellBounds);
+                     textColor = Brushes.White;
+                  }
+                  else
+                  {
+                     e.Graphics.FillRectangle(Brushes.Orange, e.CellBounds);
+                  }
+               }
+               else
+               {
+                  throw new NotImplementedException(String.Format(CultureInfo.CurrentCulture,
+                     "PaintCell Type '{0}' is not implemented", paint));
+               }
+               #endregion
+
+               #region Draw the bottom grid line
+               e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
+                                   e.CellBounds.Bottom - 1, e.CellBounds.Right,
+                                   e.CellBounds.Bottom - 1);
+               #endregion
+
+               #region Draw Cell Content (Text or Shapes)
+               if (paint.Equals(PaintCell.Status))
+               {
+                  Rectangle newRect = new Rectangle(e.CellBounds.X + 4, e.CellBounds.Y + 4,
+                                                    e.CellBounds.Width - 10, e.CellBounds.Height - 10);
+
+                  // Draw the inset highlight box.
+                  ClientStatus status = (ClientStatus)e.Value;
+                  e.Graphics.DrawRectangle(ClientInstance.GetStatusPen(status), newRect);
+                  e.Graphics.FillRectangle(ClientInstance.GetStatusBrush(status), newRect);
+               }
+               else if (paint.Equals(PaintCell.Time))
+               {
+                  if (e.Value != null)
+                  {
+                     PaintTimeBasedCellValue(textColor, e);
+                  }
+               }
+               else if (paint.Equals(PaintCell.Warning))
+               {
+                  // Draw the text content of the cell, ignoring alignment.
+                  if (e.Value != null)
+                  {
+                     e.Graphics.DrawString(e.Value.ToString(), e.CellStyle.Font,
+                                           textColor, e.CellBounds.X + 2,
+                                           e.CellBounds.Y + 2, StringFormat.GenericDefault);
+                  }
+               }
+               else
+               {
+                  throw new NotImplementedException(String.Format(CultureInfo.CurrentCulture,
+                     "PaintCell Type '{0}' is not implemented", paint));
+               }
+               #endregion
+
+               e.Handled = true;
             }
          }
-         else if (dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex ||
-                  dataGridView1.Columns["Deadline"].Index == e.ColumnIndex)
+      }
+      
+      /// <summary>
+      /// Paint the Time based cells with the custom time format
+      /// </summary>
+      private void PaintTimeBasedCellValue(Brush textColor, DataGridViewCellPaintingEventArgs e)
+      {
+         string DrawString = String.Empty;
+      
+         if (dataGridView1.Columns["TPF"].Index == e.ColumnIndex)
          {
+            TimeSpan span = (TimeSpan)e.Value;
+            DrawString = GetFormattedTpfString(span);
+         }
+         else if (dataGridView1.Columns["ETA"].Index == e.ColumnIndex)
+         {
+            TimeSpan span = (TimeSpan)e.Value;
+            DrawString = GetFormattedEtaString(span);
+         }
+         else if (dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex)
+         {
+            DateTime date = (DateTime)e.Value;
+            DrawString = GetFormattedDownloadTimeString(date);
+         }
+         else if (dataGridView1.Columns["Deadline"].Index == e.ColumnIndex)
+         {
+            DateTime date = (DateTime)e.Value;
+            DrawString = GetFormattedDeadlineString(date);
+         }
          
-            using (Brush gridBrush = new SolidBrush(dataGridView1.GridColor),
-                         backColorBrush = new SolidBrush(e.CellStyle.BackColor),
-                         selectionColorBrush = new SolidBrush(e.CellStyle.SelectionBackColor))
-            {
-               using (Pen gridLinePen = new Pen(gridBrush))
-               {
-                  if (dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex)
-                  {
-                     // Erase the cell.
-                     e.Graphics.FillRectangle(backColorBrush, e.CellBounds);
-                     Brush textColor = Brushes.Black;
-
-                     if (dataGridView1.Rows[e.RowIndex].Selected)
-                     {
-                        e.Graphics.FillRectangle(selectionColorBrush, e.CellBounds);
-                        textColor = Brushes.White;
-                     }
-
-                     // Draw the bottom grid line
-                     e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
-                                         e.CellBounds.Bottom - 1, e.CellBounds.Right,
-                                         e.CellBounds.Bottom - 1);
-                                         
-                     DateTime date = (DateTime)e.Value;
-                     if (date.Equals(DateTime.MinValue))
-                     {
-                        e.Graphics.DrawString(GetFormattedDownloadTimeString(date), e.CellStyle.Font,
-                           textColor, e.CellBounds.X + 2,
-                           e.CellBounds.Y + 2, StringFormat.GenericDefault);
-
-                        e.Handled = true;
-                     }
-                  }
-                  else if (dataGridView1.Columns["Deadline"].Index == e.ColumnIndex)
-                  {
-                     // Erase the cell.
-                     e.Graphics.FillRectangle(backColorBrush, e.CellBounds);
-                     Brush textColor = Brushes.Black;
-
-                     if (dataGridView1.Rows[e.RowIndex].Selected)
-                     {
-                        e.Graphics.FillRectangle(selectionColorBrush, e.CellBounds);
-                        textColor = Brushes.White;
-                     }
-
-                     // Draw the bottom grid line
-                     e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
-                                         e.CellBounds.Bottom - 1, e.CellBounds.Right,
-                                         e.CellBounds.Bottom - 1);
-                  
-                     DateTime date = (DateTime)e.Value;
-                     if (date.Equals(DateTime.MinValue))
-                     {
-                        e.Graphics.DrawString(GetFormattedDeadlineString(date), e.CellStyle.Font,
-                           textColor, e.CellBounds.X + 2,
-                           e.CellBounds.Y + 2, StringFormat.GenericDefault);
-
-                        e.Handled = true;
-                     }
-                  }
-               }
-            }
+         if (DrawString.Length != 0)
+         {
+            e.Graphics.DrawString(DrawString, e.CellStyle.Font,
+                  textColor, e.CellBounds.X + 2,
+                  e.CellBounds.Y + 2, StringFormat.GenericDefault);
          }
       }
 
       /// <summary>
       /// Measure Text and set Column Width on Double-Click
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void dataGridView1_ColumnDividerDoubleClick(object sender, DataGridViewColumnDividerDoubleClickEventArgs e)
       {
          Font font = new Font(dataGridView1.DefaultCellStyle.Font, FontStyle.Regular);
@@ -834,17 +755,18 @@ namespace HFM.Forms
          SizeF s;
          int width = 0;
 
-         if ((dataGridView1.Columns["TPF"].Index == e.ColumnIndex || 
-              dataGridView1.Columns["ETA"].Index == e.ColumnIndex ||
-              dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex ||
-              dataGridView1.Columns["Deadline"].Index == e.ColumnIndex) &&
-              PreferenceSet.Instance.TimeStyle.Equals(eTimeStyle.Formatted))
+         for (int i = 0; i < dataGridView1.Rows.Count; i++)
          {
-            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            if (dataGridView1.Rows[i].Cells[e.ColumnIndex].Value != null)
             {
-               if (dataGridView1.Rows[i].Cells[e.ColumnIndex].Value != null)
+               string formattedString = String.Empty;
+               
+               if ((dataGridView1.Columns["TPF"].Index == e.ColumnIndex || 
+                    dataGridView1.Columns["ETA"].Index == e.ColumnIndex ||
+                    dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex ||
+                    dataGridView1.Columns["Deadline"].Index == e.ColumnIndex) &&
+                    PreferenceSet.Instance.TimeStyle.Equals(eTimeStyle.Formatted))
                {
-                  string formattedString = String.Empty;
                   if (dataGridView1.Columns["TPF"].Index == e.ColumnIndex)
                   {
                      formattedString =
@@ -865,37 +787,32 @@ namespace HFM.Forms
                      formattedString =
                         GetFormattedDeadlineString((DateTime)dataGridView1.Rows[i].Cells[e.ColumnIndex].Value);
                   }
-
-                  //s = g.MeasureString(formattedString, font);
-                  s = TextRenderer.MeasureText(formattedString, font);
-
-                  if (width < s.Width)
-                  {
-                     width = (int)(s.Width + 1);
-                  }
                }
-            }
+               else if (dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex ||
+                        dataGridView1.Columns["Deadline"].Index == e.ColumnIndex)
+               {
+                  formattedString = 
+                     GetFormattedDateStringForMeasurement((DateTime)dataGridView1.Rows[i].Cells[e.ColumnIndex].Value,
+                                                                    dataGridView1.Rows[i].Cells[e.ColumnIndex].FormattedValue.ToString());
+               }
+               else
+               {
+                  formattedString = dataGridView1.Rows[i].Cells[e.ColumnIndex].FormattedValue.ToString();
+               }
 
-            dataGridView1.Columns[e.ColumnIndex].Width = width;
-
-            e.Handled = true;
-         }
-         else
-         {
-            for (int i = 0; i < dataGridView1.Rows.Count; i++)
-            {
-               s = TextRenderer.MeasureText(dataGridView1.Rows[i].Cells[e.ColumnIndex].FormattedValue.ToString(), font);
+               s = TextRenderer.MeasureText(formattedString, font);
+               //s = g.MeasureString(formattedString, font);
 
                if (width < s.Width)
                {
                   width = (int)(s.Width + 1);
                }
             }
-
-            dataGridView1.Columns[e.ColumnIndex].Width = width;
-
-            e.Handled = true;
          }
+
+         dataGridView1.Columns[e.ColumnIndex].Width = width;
+
+         e.Handled = true;
       }
 
       #region Custom String Formatting Helpers
@@ -954,6 +871,16 @@ namespace HFM.Forms
 
          return String.Format(formatString, span.Days, span.Hours, span.Minutes);
       } 
+      
+      private static string GetFormattedDateStringForMeasurement(IEquatable<DateTime> date, string formattedValue)
+      {
+         if (date.Equals(DateTime.MinValue))
+         {
+            return "Unknown";
+         }
+         
+         return formattedValue;
+      }
       #endregion
 
       /// <summary>
@@ -969,11 +896,12 @@ namespace HFM.Forms
             if (hti.Type == DataGridViewHitTestType.Cell)
             {
                dataGridView1.ClearSelection();
-
                dataGridView1.Rows[hti.RowIndex].Cells[hti.ColumnIndex].Selected = true;
 
-               ClientInstance Instance = ClientInstances.Instances[dataGridView1.Rows[dataGridView1.CurrentRow.Index].Cells["Name"].Value.ToString()];
-               if (Instance.InstanceHostType.Equals(InstanceType.PathInstance))
+               // Check for SelectedInstance, and get out if not found
+               if (ClientInstances.SelectedInstance == null) return;
+
+               if (ClientInstances.SelectedInstance.InstanceHostType.Equals(InstanceType.PathInstance))
                {
                   mnuContextClientsViewClientFiles.Visible = true;
                }
@@ -986,22 +914,24 @@ namespace HFM.Forms
          }
          if (e.Button == System.Windows.Forms.MouseButtons.Left && e.Clicks == 2)
          {
-            if (hti.Type == DataGridViewHitTestType.Cell && dataGridView1.SelectedRows.Count > 0)
+            if (hti.Type == DataGridViewHitTestType.Cell)
             {
-               ClientInstance Instance =
-                  ClientInstances.Instances[dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString()];
+               // Check for SelectedInstance, and get out if not found
+               if (ClientInstances.SelectedInstance == null) return;
 
-               if (Instance.InstanceHostType.Equals(InstanceType.PathInstance))
+               if (ClientInstances.SelectedInstance.InstanceHostType.Equals(InstanceType.PathInstance))
                {
                   try
                   {
-                     StartFileBrowser(Instance.Path);
+                     StartFileBrowser(ClientInstances.SelectedInstance.Path);
                   }
                   catch (Exception ex)
                   {
                      HfmTrace.WriteToHfmConsole(ex);
                      
-                     MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, String.Format("client '{0}' files.{1}{1}Please check the current File Explorer defined in the Preferences", Instance.InstanceName, Environment.NewLine)));
+                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError,
+                        String.Format(CultureInfo.CurrentCulture, "client '{0}' files.{1}{1}Please check the current File Explorer defined in the Preferences",
+                        ClientInstances.SelectedInstance.InstanceName, Environment.NewLine)));
                   }
                }
             }
@@ -1209,11 +1139,10 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void mnuClientsEdit_Click(object sender, EventArgs e)
       {
-         if (dataGridView1.SelectedRows.Count == 0) return;
+         // Check for SelectedInstance, and get out if not found
+         if (ClientInstances.SelectedInstance == null) return;
 
-         ClientInstance Instance = ClientInstances.Instances[dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString()];
-      
-         frmHost editHost = new frmHost(ClientInstances, Instance);
+         frmHost editHost = new frmHost(ClientInstances, ClientInstances.SelectedInstance);
          editHost.ShowDialog();
       }
 
@@ -1222,9 +1151,10 @@ namespace HFM.Forms
       /// </summary>
       private void mnuClientsDelete_Click(object sender, EventArgs e)
       {
-         if (dataGridView1.SelectedRows.Count == 0) return;
+         // Check for SelectedInstance, and get out if not found
+         if (ClientInstances.SelectedInstance == null) return;
          
-         ClientInstances.Remove(dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString());
+         ClientInstances.Remove(ClientInstances.SelectedInstance.InstanceName);
       }
 
       /// <summary>
@@ -1232,9 +1162,10 @@ namespace HFM.Forms
       /// </summary>
       private void mnuClientsRefreshSelected_Click(object sender, EventArgs e)
       {
-         if (dataGridView1.SelectedRows.Count == 0) return;
+         // Check for SelectedInstance, and get out if not found
+         if (ClientInstances.SelectedInstance == null) return;
       
-         ClientInstances.RetrieveSingleClient(dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString());
+         ClientInstances.RetrieveSingleClient(ClientInstances.SelectedInstance.InstanceName);
       }
 
       /// <summary>
@@ -1248,15 +1179,12 @@ namespace HFM.Forms
       /// <summary>
       /// Fire process to show the cached FAHLog file
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void mnuClientsViewCachedLog_Click(object sender, EventArgs e)
       {
-         if (dataGridView1.SelectedRows.Count == 0) return;
-         
-         ClientInstance Instance = ClientInstances.Instances[dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString()];
-         
-         string logPath = Path.Combine(ClientInstance.BaseDirectory, Instance.CachedFAHLogName);
+         // Check for SelectedInstance, and get out if not found
+         if (ClientInstances.SelectedInstance == null) return;
+
+         string logPath = Path.Combine(ClientInstance.BaseDirectory, ClientInstances.SelectedInstance.CachedFAHLogName);
          if (File.Exists(logPath))
          {
             try
@@ -1267,37 +1195,38 @@ namespace HFM.Forms
             {
                HfmTrace.WriteToHfmConsole(ex);
                
-               MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, String.Format("client '{0}' FAHlog file.{1}{1}Please check the current Log File Viewer defined in the Preferences", Instance.InstanceName, Environment.NewLine)));
+               MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError,
+                  String.Format(CultureInfo.CurrentCulture, "client '{0}' FAHlog file.{1}{1}Please check the current Log File Viewer defined in the Preferences",
+                  ClientInstances.SelectedInstance.InstanceName, Environment.NewLine)));
             }
          }
          else
          {
-            MessageBox.Show(String.Format("Cannot find client '{0}' FAHlog file.", Instance.InstanceName));
+            MessageBox.Show(String.Format("Cannot find client '{0}' FAHlog.txt file.", ClientInstances.SelectedInstance.InstanceName));
          }
       }
 
       /// <summary>
       /// Fire process to show the current client file directory (Local Clients Only)
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void mnuClientsViewClientFiles_Click(object sender, EventArgs e)
       {
-         if (dataGridView1.SelectedRows.Count == 0) return;
-         
-         ClientInstance Instance = ClientInstances.Instances[dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString()];
+         // Check for SelectedInstance, and get out if not found
+         if (ClientInstances.SelectedInstance == null) return;
 
-         if (Instance.InstanceHostType.Equals(InstanceType.PathInstance))
+         if (ClientInstances.SelectedInstance.InstanceHostType.Equals(InstanceType.PathInstance))
          {
             try
             {
-               StartFileBrowser(Instance.Path);
+               StartFileBrowser(ClientInstances.SelectedInstance.Path);
             }
             catch (Exception ex)
             {
                HfmTrace.WriteToHfmConsole(ex);
                
-               MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, String.Format("client '{0}' files.{1}{1}Please check the current File Explorer defined in the Preferences", Instance.InstanceName, Environment.NewLine)));
+               MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError,
+                  String.Format(CultureInfo.CurrentCulture, "client '{0}' files.{1}{1}Please check the current File Explorer defined in the Preferences",
+                  ClientInstances.SelectedInstance.InstanceName, Environment.NewLine)));
             }
          }
       }
@@ -1325,13 +1254,13 @@ namespace HFM.Forms
          if (show == false)
          {
             queueControl.Visible = false;
-            btnQueue.Text = String.Format(CultureInfo.CurrentUICulture, "S{0}h{0}o{0}w{0}{0}Q{0}u{0}e{0}u{0}e", Environment.NewLine);
+            btnQueue.Text = String.Format(CultureInfo.CurrentCulture, "S{0}h{0}o{0}w{0}{0}Q{0}u{0}e{0}u{0}e", Environment.NewLine);
             splitContainer2.SplitterDistance = 27;
          }
          else
          {
             queueControl.Visible = true;
-            btnQueue.Text = String.Format(CultureInfo.CurrentUICulture, "H{0}i{0}d{0}e{0}{0}Q{0}u{0}e{0}u{0}e", Environment.NewLine);
+            btnQueue.Text = String.Format(CultureInfo.CurrentCulture, "H{0}i{0}d{0}e{0}{0}Q{0}u{0}e{0}u{0}e", Environment.NewLine);
             splitContainer2.SplitterDistance = 289;
          }
       }
@@ -1386,11 +1315,10 @@ namespace HFM.Forms
       {
          int ProjectID = 0;
       
-         // Make sure we have a selected client in the data grid view - Issue 33
-         if (dataGridView1.SelectedRows.Count > 0)
+         // Check for SelectedInstance, and if found... load its ProjectID.
+         if (ClientInstances.SelectedInstance != null)
          {
-            ClientInstance Instance = ClientInstances.Instances[dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString()];
-            ProjectID = Instance.CurrentUnitInfo.ProjectID;
+            ProjectID = ClientInstances.SelectedInstance.CurrentUnitInfo.ProjectID;
          }
          
          frmBenchmarks frm = new frmBenchmarks(ClientInstances, ProjectID);
@@ -1474,15 +1402,12 @@ namespace HFM.Forms
             ClientInstances.RefreshDisplayCollection();
             if (dataGridView1.DataSource != null)
             {
-               //// Remove the RowEnter handler when doing currency refresh
-               //dataGridView1.RowEnter -= dataGridView1_RowEnter;
-               dataGridView1.FreezeRowEnter = true;
+               // Freeze the SelectionChanged Event when doing currency refresh
+               dataGridView1.FreezeSelectionChanged = true;
             
                CurrencyManager cm = (CurrencyManager) dataGridView1.BindingContext[dataGridView1.DataSource];
                if (cm != null)
                {
-                  //// Remove the RowEnter handler when doing currency refresh
-                  //dataGridView1.RowEnter -= dataGridView1_RowEnter;
                   if (InvokeRequired)
                   {
                      Invoke(new MethodInvoker(cm.Refresh));
@@ -1491,19 +1416,15 @@ namespace HFM.Forms
                   {
                      cm.Refresh();
                   }
-                  //// Add the RowEnter handler back after refresh
-                  //// This removes the "stuttering log" effect seen as each client is refreshed
-                  //dataGridView1.RowEnter += dataGridView1_RowEnter;
                }
 
                ApplySort();
 
-               //// Add the RowEnter handler back after refresh
-               //// This removes the "stuttering log" effect seen as each client is refreshed
-               //dataGridView1.RowEnter += dataGridView1_RowEnter;
-               dataGridView1.FreezeRowEnter = false;
+               // Unfreeze the SelectionChanged Event after refresh
+               // This removes the "stuttering log" effect seen as each client is refreshed
+               dataGridView1.FreezeSelectionChanged = false;
                
-               Invoke(new MethodInvoker(DoRowEnter));
+               Invoke(new MethodInvoker(DoSetSelectedInstance));
             }
 
             RefreshControls();
@@ -1518,11 +1439,12 @@ namespace HFM.Forms
          }
       }
 
-      private void DoRowEnter()
+      private void DoSetSelectedInstance()
       {
          if (dataGridView1.CurrentCell != null)
          {
-            dataGridView1.FireRowEnter(dataGridView1.CurrentCell.ColumnIndex, dataGridView1.CurrentCell.RowIndex);
+            dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Selected = true;
+            ClientInstances.RaiseSelectedInstanceChanged();
          }
       }
 
@@ -1648,15 +1570,6 @@ namespace HFM.Forms
          
          statusLabelPPW.Text = val;
       }
-
-      /// <summary>
-      /// Forces a log and screen refresh when the Stanford info is updated
-      /// </summary>
-      private void Instance_ProjectInfoUpdated(object sender, ProjectInfoUpdatedEventArgs e)
-      {
-         // Do Retrieve on all clients after Project Info is updated (this is confirmed needed)
-         ClientInstances.QueueNewRetrieval();
-      }
       #endregion
 
       #region System Tray Icon Routines
@@ -1726,39 +1639,6 @@ namespace HFM.Forms
 
       #region Helper Routines
       
-      /// <summary>
-      /// Clears the log cache folder specified by the CacheFolder setting
-      /// </summary>
-      private static void ClearCacheFolder()
-      {
-         DateTime Start = HfmTrace.ExecStart;
-      
-         string cacheFolder = Path.Combine(PreferenceSet.Instance.AppDataPath,
-                                           PreferenceSet.Instance.CacheFolder);
-
-         DirectoryInfo di = new DirectoryInfo(cacheFolder);
-         if (di.Exists == false)
-         {
-            di.Create();
-         }
-         else
-         {
-            foreach (FileInfo fi in di.GetFiles())
-            {
-               try
-               {
-                  fi.Delete();
-               }
-               catch (IOException)
-               {
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} Failed to Clear Cache File '{1}'.", HfmTrace.FunctionName, fi.Name));
-               }
-            }
-         }
-
-         HfmTrace.WriteToHfmConsole(TraceLevel.Info, Start);
-      }
-
       /// <summary>
       /// Restore Form State
       /// </summary>
@@ -1905,14 +1785,19 @@ namespace HFM.Forms
       /// </summary>
       private void ClearUI()
       {
+         // Clear the instances controller
+         ClientInstances.Clear();
+      }
+      
+      /// <summary>
+      /// Clear the Log File and Queue Viewers
+      /// </summary>
+      private void ClearLogAndQueueViewer()
+      {
          // clear the log text
-         txtLogFile.Text = String.Empty;
+         txtLogFile.SetNoLogLines();
          // clear the queue control
          queueControl.SetQueue(null);
-         // Clear the list of host instances
-         ClientInstances.Clear();
-         // This will disable the timers, we have no hosts
-         ClientInstances.SetTimerState();
       }
 
       /// <summary>
@@ -1929,14 +1814,14 @@ namespace HFM.Forms
          {
             HfmTrace.WriteToHfmConsole(TraceLevel.Warning, fnfe);
 
-            MessageBox.Show(fnfe.Message, base.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(fnfe.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
          }
          catch (Exception ex)
          {
             // OK now this could be anything (even permissions)
             HfmTrace.WriteToHfmConsole(ex);
 
-            MessageBox.Show(ex.Message, base.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
          }
       }
 

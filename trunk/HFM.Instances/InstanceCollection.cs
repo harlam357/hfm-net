@@ -19,6 +19,7 @@
  */
 
 using System;
+using System.Collections;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -58,6 +59,7 @@ namespace HFM.Instances
       public event EventHandler InstanceEdited;
       public event EventHandler InstanceRemoved;
       public event EventHandler InstanceRetrieved;
+      public event EventHandler SelectedInstanceChanged;
       public event EventHandler DuplicatesFoundOrChanged;
       
       public event EventHandler RefreshUserStatsData;
@@ -124,6 +126,11 @@ namespace HFM.Instances
       private readonly SortableBindingList<DisplayInstance> _displayCollection;
       
       /// <summary>
+      /// Currently Selected Client Instance
+      /// </summary>
+      private ClientInstance _SelectedInstance = null;
+      
+      /// <summary>
       /// List of Duplicate Project (R/C/G)
       /// </summary>
       private readonly List<string> _duplicateProjects;
@@ -164,6 +171,12 @@ namespace HFM.Instances
          workTimer.Elapsed += bgWorkTimer_Tick;
          // Hook up WebGen Timer Event Handler
          webTimer.Elapsed += webGenTimer_Tick;
+
+         // Hook up Protein Collection Updated Event Handler
+         ProteinCollection.Instance.ProjectInfoUpdated += ProteinCollection_ProjectInfoUpdated;
+
+         // Clear the Log File Cache Folder
+         ClearCacheFolder();
       }
       #endregion
 
@@ -232,6 +245,26 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// Force Raises the SelectedInstanceChanged event.
+      /// </summary>
+      //[SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate")]
+      public void RaiseSelectedInstanceChanged()
+      {
+         OnSelectedInstanceChanged(EventArgs.Empty);
+      }
+
+      /// <summary>
+      /// Raises the SelectedInstanceChanged event.
+      /// </summary>
+      private void OnSelectedInstanceChanged(EventArgs e)
+      {
+         if (SelectedInstanceChanged != null)
+         {
+            SelectedInstanceChanged(this, e);
+         }
+      }
+
       private void OnRefreshUserStatsData(EventArgs e)
       {
          if (RefreshUserStatsData != null)
@@ -248,6 +281,22 @@ namespace HFM.Instances
       public Dictionary<string, ClientInstance> Instances
       {
          get { return _instanceCollection; }
+      }
+
+      /// <summary>
+      /// Currently Selected Client Instance
+      /// </summary>
+      public ClientInstance SelectedInstance
+      {
+         get { return _SelectedInstance; }
+         private set 
+         { 
+            if (_SelectedInstance != value)
+            {
+               _SelectedInstance = value;
+               OnSelectedInstanceChanged(EventArgs.Empty);
+            }
+         }
       }
 
       /// <summary>
@@ -708,6 +757,8 @@ namespace HFM.Instances
          _ConfigFilename = String.Empty;
          // collection has not changed
          _ChangedAfterSave = false;
+         // This will disable the timers, we have no hosts
+         SetTimerState();
          
          OnCollectionChanged(EventArgs.Empty);
       }
@@ -823,6 +874,15 @@ namespace HFM.Instances
       }
 
       /// <summary>
+      /// Forces a log and screen refresh when the Stanford info is updated
+      /// </summary>
+      private void ProteinCollection_ProjectInfoUpdated(object sender, ProjectInfoUpdatedEventArgs e)
+      {
+         // Do Retrieve on all clients after Project Info is updated (this is confirmed needed)
+         QueueNewRetrieval();
+      }
+
+      /// <summary>
       /// Stick each Instance in the background thread queue to retrieve the info for a given Instance
       /// </summary>
       public void QueueNewRetrieval()
@@ -906,7 +966,8 @@ namespace HFM.Instances
          {
             waitHandleList.Clear();
             // loop through the instances (can only handle up to 64 wait handles at a time)
-            for (int j = 0; j < 64 && i < numInstances; j++)
+            // limiting to 20 to reduce threadpool starvation
+            for (int j = 0; j < 20 && i < numInstances; j++)
             {
                // try to get the key value from the collection, if the value is not found then
                // the user removed a client in the middle of a retrieve process, ignore the key
@@ -1202,6 +1263,40 @@ namespace HFM.Instances
       #endregion
 
       #region Helper Functions
+      public void SetCurrentInstance(IList SelectedClients)
+      {
+         if (SelectedClients.Count > 0)
+         {
+            Debug.Assert(SelectedClients.Count == 1);
+            
+            if (SelectedClients[0] is DataGridViewRow)
+            {
+               object NameColumnValue = ((DataGridViewRow) SelectedClients[0]).Cells["Name"].Value;
+               if (NameColumnValue != null)
+               {
+                  string InstanceName = NameColumnValue.ToString();
+                  ClientInstance Instance;
+                  if (Instances.TryGetValue(InstanceName, out Instance))
+                  {
+                     SelectedInstance = Instance;
+                  }
+                  else
+                  {
+                     SelectedInstance = null;
+                  }
+               }
+               else
+               {
+                  SelectedInstance = null;
+               }
+            }
+         }
+         else
+         {
+            SelectedInstance = null;
+         }
+      }
+
       /// <summary>
       /// Get Array Representation of Current Client Instance objects in Collection
       /// </summary>
@@ -1240,6 +1335,39 @@ namespace HFM.Instances
                                                             {
                                                                return displayInstance.Name == Key;
                                                             });
+      }
+
+      /// <summary>
+      /// Clears the log cache folder specified by the CacheFolder setting
+      /// </summary>
+      private static void ClearCacheFolder()
+      {
+         DateTime Start = HfmTrace.ExecStart;
+
+         string cacheFolder = Path.Combine(PreferenceSet.Instance.AppDataPath,
+                                           PreferenceSet.Instance.CacheFolder);
+
+         DirectoryInfo di = new DirectoryInfo(cacheFolder);
+         if (di.Exists == false)
+         {
+            di.Create();
+         }
+         else
+         {
+            foreach (FileInfo fi in di.GetFiles())
+            {
+               try
+               {
+                  fi.Delete();
+               }
+               catch (IOException)
+               {
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} Failed to Clear Cache File '{1}'.", HfmTrace.FunctionName, fi.Name));
+               }
+            }
+         }
+
+         HfmTrace.WriteToHfmConsole(TraceLevel.Info, Start);
       }
       #endregion
       

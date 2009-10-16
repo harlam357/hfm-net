@@ -42,9 +42,8 @@ namespace HFM.Proteins
 
    /// <summary>
    /// Protein Collection is a Generic Dictionary based on a string key and a Protein value.
-   /// The protein collection is Singleton pattern for efficiency (imagine 60 instances downloading
-   /// protein information simultaneously)
    /// </summary>
+   //[Serializable]
    public sealed class ProteinCollection : Dictionary<Int32, Protein>
    {
       private static ProteinCollection _Instance;

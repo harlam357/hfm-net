@@ -39,16 +39,16 @@ namespace HFM.Instances
       private ClientStatus _returnStatus;
       
       private readonly Regex rTimeStamp =
-            new Regex("\\[(?<Timestamp>.*)\\]", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+            new Regex("\\[(?<Timestamp>.{8})\\]", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
       
       private readonly Regex rProjectNumberFromTag =
             new Regex("P(?<ProjectNumber>.*)R(?<Run>.*)C(?<Clone>.*)G(?<Gen>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       private readonly Regex rFramesCompleted =
-            new Regex("\\[(?<Timestamp>.*)\\] Completed (?<Completed>.*) out of (?<Total>.*) steps  \\((?<Percent>.*)\\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+            new Regex("\\[(?<Timestamp>.{8})\\] Completed (?<Completed>.*) out of (?<Total>.*) steps  \\((?<Percent>.*)\\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       private readonly Regex rFramesCompletedGpu =
-            new Regex("\\[(?<Timestamp>.*)\\] Completed (?<Percent>.*)%", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+            new Regex("\\[(?<Timestamp>.{8})\\] Completed (?<Percent>.*)%", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       private readonly Regex rPercent1 =
             new Regex("(?<Percent>.*) percent", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
@@ -376,22 +376,34 @@ namespace HFM.Instances
             Match mPercent1 = rPercent1.Match(percentString);
             Match mPercent2 = rPercent2.Match(percentString);
 
-            int percent;
+            int framePercent;
             if (mPercent1.Success)
             {
-               percent = Int32.Parse(mPercent1.Result("${Percent}"));
+               framePercent = Int32.Parse(mPercent1.Result("${Percent}"));
             }
             else if (mPercent2.Success)
             {
-               percent = Int32.Parse(mPercent2.Result("${Percent}"));
+               framePercent = Int32.Parse(mPercent2.Result("${Percent}"));
             }
             // Try to parse a percentage from in between the parentheses (for older single core clients like v5.02) - Issue 36
-            else if (Int32.TryParse(percentString, out percent) == false)
+            else if (Int32.TryParse(percentString, out framePercent) == false)
             {
                throw new FormatException(String.Format("{0} Failed to parse frame percent from '{1}'.", HfmTrace.FunctionName, logLine));
             }
-
-            SetTimeStamp(mFramesCompleted.Result("${Timestamp}"), percent);
+            
+            // Validate the steps are in tolerance with the detected frame percent - Issue 98
+            double calculatedPercent = ((double)_parsedUnitInfo.RawFramesComplete / _parsedUnitInfo.RawFramesTotal) * 100;
+            // ex. [00:19:40] Completed 82499 out of 250000 steps  (33%) - Would Validate
+            //     [00:19:40] Completed 82750 out of 250000 steps  (33%) - Would Validate
+            // 10% frame step tolerance. In the example the completed must be within 250 steps.
+            if (Math.Abs(calculatedPercent - framePercent) <= 0.1)
+            {
+               SetTimeStamp(mFramesCompleted.Result("${Timestamp}"), framePercent);
+            }
+            else
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("Not on percent boundry '{0}' (this is not a problem).", logLine), true);
+            }
          }
       }
 

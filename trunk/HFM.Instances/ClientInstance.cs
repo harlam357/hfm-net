@@ -1209,7 +1209,7 @@ namespace HFM.Instances
          {
             HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
                                        String.Format("{0} Project ID '{1}' not found in Protein Collection.",
-                                                     HfmTrace.FunctionName, parsedUnitInfo.ProjectID));
+                                                     HfmTrace.FunctionName, ProjectID[0]));
 
             // If a Project cannot be identified using the local Project data, update Project data from Stanford. - Issue 4
             HfmTrace.WriteToHfmConsole(TraceLevel.Info,
@@ -1224,7 +1224,7 @@ namespace HFM.Instances
             {
                HfmTrace.WriteToHfmConsole(TraceLevel.Error,
                                           String.Format("{0} Project ID '{1}' not found on Stanford Web Project Summary.",
-                                                        HfmTrace.FunctionName, parsedUnitInfo.ProjectID));
+                                                        HfmTrace.FunctionName, ProjectID[0]));
             }
          }
       }
