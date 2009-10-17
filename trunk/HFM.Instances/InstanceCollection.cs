@@ -694,12 +694,12 @@ namespace HFM.Instances
             Remove(PreviousName, false);
             Add(Instance, false);
             
-            ProteinBenchmarkCollection.Instance.UpdateInstanceName(PreviousName, Instance.InstanceName);
+            ProteinBenchmarkCollection.Instance.UpdateInstanceName(new BenchmarkClient(PreviousName, Instance.Path), Instance.InstanceName);
          }
          // if the path changed, update the paths in the benchmark collection
          if (PreviousPath != Instance.Path)
          {
-            ProteinBenchmarkCollection.Instance.UpdateInstancePath(Instance.InstanceName, Instance.Path);
+            ProteinBenchmarkCollection.Instance.UpdateInstancePath(new BenchmarkClient(Instance.InstanceName, PreviousPath), Instance.Path);
          }
          
          RetrieveSingleClient(Instance);

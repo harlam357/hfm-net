@@ -102,7 +102,7 @@ namespace HFM.Forms
                SetHTTPClientInfo(Instance);
                break;
             default:
-               throw new NotImplementedException(String.Format(CultureInfo.CurrentUICulture,
+               throw new NotImplementedException(String.Format(CultureInfo.CurrentCulture,
                   "Instance type '{0}' has not been implemented.", Instance.InstanceHostType));
          }
       }
@@ -121,7 +121,7 @@ namespace HFM.Forms
                radioHTTP.Checked = true;
                break;
             default: 
-               throw new NotImplementedException(String.Format(CultureInfo.CurrentUICulture,
+               throw new NotImplementedException(String.Format(CultureInfo.CurrentCulture,
                   "Instance type '{0}' has not been implemented.", type));
          }
       }
@@ -174,7 +174,7 @@ namespace HFM.Forms
                GetHTTPClientInfo(NewInstance);
                break;
             default:
-               throw new NotImplementedException(String.Format(CultureInfo.CurrentUICulture,
+               throw new NotImplementedException(String.Format(CultureInfo.CurrentCulture,
                   "Instance type '{0}' has not been implemented.", NewInstance.InstanceHostType));
          }
          
@@ -828,7 +828,7 @@ namespace HFM.Forms
                EditClient();
                break;
             default:
-               throw new NotImplementedException(String.Format(CultureInfo.CurrentUICulture,
+               throw new NotImplementedException(String.Format(CultureInfo.CurrentCulture,
                   "Host action '{0}' has not been implemented.", _Action));
          }
       }

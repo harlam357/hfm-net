@@ -367,8 +367,7 @@ namespace HFM.Forms
       {
          if (ClientInstances.SelectedInstance != null)
          {
-            statusLabelLeft.Text = String.Format(CultureInfo.CurrentCulture, "{0} ({1})", 
-               ClientInstances.SelectedInstance.Path, ClientInstances.SelectedInstance.Arguments);
+            statusLabelLeft.Text = ClientInstances.SelectedInstance.ClientPathAndArguments;
             
             queueControl.SetQueue(ClientInstances.SelectedInstance.ClientQueue, 
                ClientInstances.SelectedInstance.CurrentUnitInfo.TypeOfClient, 

@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
+using HFM.Helpers;
 using HFM.Preferences;
 using HFM.Proteins;
 using HFM.Instrumentation;
@@ -28,7 +29,7 @@ using HFM.Instrumentation;
 namespace HFM.Instances
 {
    [Serializable]
-   public class InstanceProteinBenchmark
+   public class InstanceProteinBenchmark : IOwnedByClientInstance
    {
       #region Members & Read Only Properties
 
@@ -118,6 +119,14 @@ namespace HFM.Instances
          _FrameTimes = new Queue<TimeSpan>(MaxFrames);
       } 
       #endregion
+      
+      public BenchmarkClient Client
+      {
+         get 
+         { 
+            return new BenchmarkClient(OwningInstanceName, OwningInstancePath);
+         }
+      }
 
       #region Implementation
       public bool SetFrameTime(TimeSpan frameTime)
@@ -140,6 +149,23 @@ namespace HFM.Instances
          }
          
          return false;
+      }
+
+      public void RefreshBenchmarkMinimumFrameTime()
+      {
+         TimeSpan minimumFrameTime = TimeSpan.Zero;
+         foreach (TimeSpan frameTime in FrameTimes)
+         {
+            if (frameTime < minimumFrameTime || minimumFrameTime.Equals(TimeSpan.Zero) )
+            {
+               minimumFrameTime = frameTime;
+            }
+         }
+
+         if (minimumFrameTime.Equals(TimeSpan.Zero) == false)
+         {
+            _MinimumFrameTime = minimumFrameTime;
+         }
       }
 
       public string[] ToMultiLineString(ClientInstance Instance)

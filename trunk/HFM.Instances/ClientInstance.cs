@@ -157,6 +157,22 @@ namespace HFM.Instances
       {
          get { return UserID.Length == 0; }
       }
+      
+      /// <summary>
+      /// Client Path and Arguments (if arguments exist)
+      /// </summary>
+      public string ClientPathAndArguments
+      {
+         get 
+         {
+            if (Arguments.Length == 0)
+            {
+               return Path;   
+            }
+
+            return String.Format(CultureInfo.CurrentCulture, "{0} ({1})", Path, Arguments);
+         }
+      }
       #endregion
 
       #region Public Properties and Related Private Members
@@ -439,7 +455,7 @@ namespace HFM.Instances
       /// <summary>
       /// Client Startup Arguments
       /// </summary>
-      private string _Arguments;
+      private string _Arguments = String.Empty;
       /// <summary>
       /// Client Startup Arguments
       /// </summary>
@@ -1844,6 +1860,17 @@ namespace HFM.Instances
          }
 
          return true;
+      }
+      
+      public bool Owns(IOwnedByClientInstance value)
+      {
+         if (value.OwningInstanceName.Equals(InstanceName) &&
+             value.OwningInstancePath.Equals(Path))
+         {
+            return true;
+         }
+         
+         return false;
       }
       #endregion
    }

@@ -30,11 +30,8 @@ namespace HFM.Forms
       /// </summary>
       private void InitializeComponent()
       {
+         this.components = new System.ComponentModel.Container();
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBenchmarks));
-         this.splitContainerBench = new HFM.Classes.SplitContainerWrapper();
-         this.listBox1 = new System.Windows.Forms.ListBox();
-         this.txtBenchmarks = new HFM.Classes.TextBoxWrapper();
-         this.btnExit = new HFM.Classes.ButtonWrapper();
          this.grpProjectInfo = new HFM.Classes.GroupBoxWrapper();
          this.txtServerIP = new HFM.Classes.TextBoxWrapper();
          this.txtContact = new HFM.Classes.TextBoxWrapper();
@@ -57,72 +54,33 @@ namespace HFM.Forms
          this.lblDescription = new HFM.Classes.LabelWrapper();
          this.lblProjectID = new HFM.Classes.LabelWrapper();
          this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+         this.splitContainerBench = new HFM.Classes.SplitContainerWrapper();
+         this.listBox1 = new System.Windows.Forms.ListBox();
+         this.txtBenchmarks = new HFM.Classes.TextBoxWrapper();
+         this.btnExit = new HFM.Classes.ButtonWrapper();
+         this.grpClients = new HFM.Classes.GroupBoxWrapper();
+         this.picDeleteClient = new System.Windows.Forms.PictureBox();
+         this.cboClients = new HFM.Classes.ComboBoxWrapper();
+         this.listBox1ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+         this.mnuContextRefreshMinimum = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuContextDeleteProject = new System.Windows.Forms.ToolStripMenuItem();
+         this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+         this.grpProjectInfo.SuspendLayout();
+         this.tableLayoutPanel1.SuspendLayout();
          this.splitContainerBench.Panel1.SuspendLayout();
          this.splitContainerBench.Panel2.SuspendLayout();
          this.splitContainerBench.SuspendLayout();
-         this.grpProjectInfo.SuspendLayout();
-         this.tableLayoutPanel1.SuspendLayout();
+         this.grpClients.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.picDeleteClient)).BeginInit();
+         this.listBox1ContextMenuStrip.SuspendLayout();
          this.SuspendLayout();
-         // 
-         // splitContainerBench
-         // 
-         this.splitContainerBench.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.splitContainerBench.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-         this.splitContainerBench.Location = new System.Drawing.Point(0, 0);
-         this.splitContainerBench.Margin = new System.Windows.Forms.Padding(0);
-         this.splitContainerBench.Name = "splitContainerBench";
-         // 
-         // splitContainerBench.Panel1
-         // 
-         this.splitContainerBench.Panel1.Controls.Add(this.listBox1);
-         // 
-         // splitContainerBench.Panel2
-         // 
-         this.splitContainerBench.Panel2.Controls.Add(this.txtBenchmarks);
-         this.splitContainerBench.Panel2.Controls.Add(this.btnExit);
-         this.splitContainerBench.Size = new System.Drawing.Size(556, 342);
-         this.splitContainerBench.SplitterDistance = 65;
-         this.splitContainerBench.TabIndex = 2;
-         // 
-         // listBox1
-         // 
-         this.listBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.listBox1.FormattingEnabled = true;
-         this.listBox1.Location = new System.Drawing.Point(0, 0);
-         this.listBox1.Name = "listBox1";
-         this.listBox1.Size = new System.Drawing.Size(65, 342);
-         this.listBox1.TabIndex = 0;
-         this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
-         // 
-         // txtBenchmarks
-         // 
-         this.txtBenchmarks.BackColor = System.Drawing.Color.White;
-         this.txtBenchmarks.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtBenchmarks.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         this.txtBenchmarks.Location = new System.Drawing.Point(0, 0);
-         this.txtBenchmarks.Multiline = true;
-         this.txtBenchmarks.Name = "txtBenchmarks";
-         this.txtBenchmarks.ReadOnly = true;
-         this.txtBenchmarks.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-         this.txtBenchmarks.Size = new System.Drawing.Size(487, 342);
-         this.txtBenchmarks.TabIndex = 0;
-         // 
-         // btnExit
-         // 
-         this.btnExit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-         this.btnExit.Location = new System.Drawing.Point(385, 182);
-         this.btnExit.Name = "btnExit";
-         this.btnExit.Size = new System.Drawing.Size(56, 39);
-         this.btnExit.TabIndex = 11;
-         this.btnExit.Text = "Exit";
-         this.btnExit.UseVisualStyleBackColor = true;
-         this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
          // 
          // grpProjectInfo
          // 
          this.grpProjectInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                      | System.Windows.Forms.AnchorStyles.Left)
                      | System.Windows.Forms.AnchorStyles.Right)));
+         this.grpProjectInfo.BackColor = System.Drawing.SystemColors.Control;
          this.grpProjectInfo.Controls.Add(this.txtServerIP);
          this.grpProjectInfo.Controls.Add(this.txtContact);
          this.grpProjectInfo.Controls.Add(this.txtMaximumDays);
@@ -143,7 +101,7 @@ namespace HFM.Forms
          this.grpProjectInfo.Controls.Add(this.lblCredit);
          this.grpProjectInfo.Controls.Add(this.lblDescription);
          this.grpProjectInfo.Controls.Add(this.lblProjectID);
-         this.grpProjectInfo.Location = new System.Drawing.Point(10, 352);
+         this.grpProjectInfo.Location = new System.Drawing.Point(10, 465);
          this.grpProjectInfo.Margin = new System.Windows.Forms.Padding(10);
          this.grpProjectInfo.Name = "grpProjectInfo";
          this.grpProjectInfo.Size = new System.Drawing.Size(536, 120);
@@ -335,25 +293,143 @@ namespace HFM.Forms
          // 
          // tableLayoutPanel1
          // 
+         this.tableLayoutPanel1.BackColor = System.Drawing.SystemColors.Control;
          this.tableLayoutPanel1.ColumnCount = 1;
          this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-         this.tableLayoutPanel1.Controls.Add(this.grpProjectInfo, 0, 1);
-         this.tableLayoutPanel1.Controls.Add(this.splitContainerBench, 0, 0);
+         this.tableLayoutPanel1.Controls.Add(this.grpProjectInfo, 0, 2);
+         this.tableLayoutPanel1.Controls.Add(this.splitContainerBench, 0, 1);
+         this.tableLayoutPanel1.Controls.Add(this.grpClients, 0, 0);
          this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
          this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
          this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-         this.tableLayoutPanel1.RowCount = 2;
+         this.tableLayoutPanel1.RowCount = 3;
+         this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
          this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
          this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 140F));
-         this.tableLayoutPanel1.Size = new System.Drawing.Size(556, 482);
+         this.tableLayoutPanel1.Size = new System.Drawing.Size(556, 595);
          this.tableLayoutPanel1.TabIndex = 3;
+         // 
+         // splitContainerBench
+         // 
+         this.splitContainerBench.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.splitContainerBench.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+         this.splitContainerBench.Location = new System.Drawing.Point(0, 60);
+         this.splitContainerBench.Margin = new System.Windows.Forms.Padding(0);
+         this.splitContainerBench.Name = "splitContainerBench";
+         // 
+         // splitContainerBench.Panel1
+         // 
+         this.splitContainerBench.Panel1.Controls.Add(this.listBox1);
+         // 
+         // splitContainerBench.Panel2
+         // 
+         this.splitContainerBench.Panel2.Controls.Add(this.txtBenchmarks);
+         this.splitContainerBench.Panel2.Controls.Add(this.btnExit);
+         this.splitContainerBench.Size = new System.Drawing.Size(556, 395);
+         this.splitContainerBench.SplitterDistance = 65;
+         this.splitContainerBench.TabIndex = 2;
+         // 
+         // listBox1
+         // 
+         this.listBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.listBox1.FormattingEnabled = true;
+         this.listBox1.Location = new System.Drawing.Point(0, 0);
+         this.listBox1.Name = "listBox1";
+         this.listBox1.Size = new System.Drawing.Size(65, 394);
+         this.listBox1.TabIndex = 0;
+         this.listBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseUp);
+         this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
+         this.listBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDown);
+         // 
+         // txtBenchmarks
+         // 
+         this.txtBenchmarks.BackColor = System.Drawing.Color.White;
+         this.txtBenchmarks.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.txtBenchmarks.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         this.txtBenchmarks.Location = new System.Drawing.Point(0, 0);
+         this.txtBenchmarks.Multiline = true;
+         this.txtBenchmarks.Name = "txtBenchmarks";
+         this.txtBenchmarks.ReadOnly = true;
+         this.txtBenchmarks.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+         this.txtBenchmarks.Size = new System.Drawing.Size(487, 395);
+         this.txtBenchmarks.TabIndex = 0;
+         // 
+         // btnExit
+         // 
+         this.btnExit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+         this.btnExit.Location = new System.Drawing.Point(385, 182);
+         this.btnExit.Name = "btnExit";
+         this.btnExit.Size = new System.Drawing.Size(56, 39);
+         this.btnExit.TabIndex = 11;
+         this.btnExit.Text = "Exit";
+         this.btnExit.UseVisualStyleBackColor = true;
+         this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
+         // 
+         // grpClients
+         // 
+         this.grpClients.BackColor = System.Drawing.SystemColors.Control;
+         this.grpClients.Controls.Add(this.picDeleteClient);
+         this.grpClients.Controls.Add(this.cboClients);
+         this.grpClients.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.grpClients.Location = new System.Drawing.Point(3, 3);
+         this.grpClients.Name = "grpClients";
+         this.grpClients.Size = new System.Drawing.Size(550, 54);
+         this.grpClients.TabIndex = 3;
+         this.grpClients.TabStop = false;
+         this.grpClients.Text = "Benchmark Clients";
+         // 
+         // picDeleteClient
+         // 
+         this.picDeleteClient.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+         this.picDeleteClient.Image = global::HFM.Properties.Resources.Quit;
+         this.picDeleteClient.Location = new System.Drawing.Point(528, 21);
+         this.picDeleteClient.Name = "picDeleteClient";
+         this.picDeleteClient.Size = new System.Drawing.Size(16, 16);
+         this.picDeleteClient.TabIndex = 2;
+         this.picDeleteClient.TabStop = false;
+         this.toolTip1.SetToolTip(this.picDeleteClient, "Delete Client Benchmarks");
+         this.picDeleteClient.Click += new System.EventHandler(this.picDeleteClient_Click);
+         // 
+         // cboClients
+         // 
+         this.cboClients.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                     | System.Windows.Forms.AnchorStyles.Right)));
+         this.cboClients.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+         this.cboClients.FormattingEnabled = true;
+         this.cboClients.Location = new System.Drawing.Point(7, 19);
+         this.cboClients.Name = "cboClients";
+         this.cboClients.Size = new System.Drawing.Size(518, 21);
+         this.cboClients.TabIndex = 0;
+         this.cboClients.SelectedIndexChanged += new System.EventHandler(this.cboClients_SelectedIndexChanged);
+         // 
+         // listBox1ContextMenuStrip
+         // 
+         this.listBox1ContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuContextRefreshMinimum,
+            this.mnuContextDeleteProject});
+         this.listBox1ContextMenuStrip.Name = "listBox1ContextMenuStrip";
+         this.listBox1ContextMenuStrip.Size = new System.Drawing.Size(225, 48);
+         // 
+         // mnuContextRefreshMinimum
+         // 
+         this.mnuContextRefreshMinimum.Name = "mnuContextRefreshMinimum";
+         this.mnuContextRefreshMinimum.Size = new System.Drawing.Size(224, 22);
+         this.mnuContextRefreshMinimum.Text = "Refresh Minimum Frame Time";
+         this.mnuContextRefreshMinimum.Click += new System.EventHandler(this.mnuContextRefreshMinimum_Click);
+         // 
+         // mnuContextDeleteProject
+         // 
+         this.mnuContextDeleteProject.Name = "mnuContextDeleteProject";
+         this.mnuContextDeleteProject.Size = new System.Drawing.Size(224, 22);
+         this.mnuContextDeleteProject.Text = "Delete This Project";
+         this.mnuContextDeleteProject.Click += new System.EventHandler(this.mnuContextDeleteProject_Click);
          // 
          // frmBenchmarks
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.CancelButton = this.btnExit;
-         this.ClientSize = new System.Drawing.Size(556, 482);
+         this.ClientSize = new System.Drawing.Size(556, 595);
          this.Controls.Add(this.tableLayoutPanel1);
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
          this.MinimumSize = new System.Drawing.Size(564, 200);
@@ -361,23 +437,22 @@ namespace HFM.Forms
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
          this.Text = "Benchmarks";
          this.Shown += new System.EventHandler(this.frmBenchmarks_Shown);
+         this.grpProjectInfo.ResumeLayout(false);
+         this.grpProjectInfo.PerformLayout();
+         this.tableLayoutPanel1.ResumeLayout(false);
          this.splitContainerBench.Panel1.ResumeLayout(false);
          this.splitContainerBench.Panel2.ResumeLayout(false);
          this.splitContainerBench.Panel2.PerformLayout();
          this.splitContainerBench.ResumeLayout(false);
-         this.grpProjectInfo.ResumeLayout(false);
-         this.grpProjectInfo.PerformLayout();
-         this.tableLayoutPanel1.ResumeLayout(false);
+         this.grpClients.ResumeLayout(false);
+         ((System.ComponentModel.ISupportInitialize)(this.picDeleteClient)).EndInit();
+         this.listBox1ContextMenuStrip.ResumeLayout(false);
          this.ResumeLayout(false);
 
       }
 
       #endregion
 
-      private SplitContainerWrapper splitContainerBench;
-      private ButtonWrapper btnExit;
-      private TextBoxWrapper txtBenchmarks;
-      private System.Windows.Forms.ListBox listBox1;
       private GroupBoxWrapper grpProjectInfo;
       private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
       private TextBoxWrapper txtServerIP;
@@ -400,6 +475,17 @@ namespace HFM.Forms
       private LabelWrapper lblCredit;
       private LabelWrapper lblDescription;
       private LabelWrapper lblProjectID;
+      private SplitContainerWrapper splitContainerBench;
+      private System.Windows.Forms.ListBox listBox1;
+      private TextBoxWrapper txtBenchmarks;
+      private ButtonWrapper btnExit;
+      private GroupBoxWrapper grpClients;
+      private ComboBoxWrapper cboClients;
+      private System.Windows.Forms.PictureBox picDeleteClient;
+      private System.Windows.Forms.ContextMenuStrip listBox1ContextMenuStrip;
+      private System.Windows.Forms.ToolStripMenuItem mnuContextRefreshMinimum;
+      private System.Windows.Forms.ToolStripMenuItem mnuContextDeleteProject;
+      private System.Windows.Forms.ToolTip toolTip1;
 
 
    }

@@ -24,6 +24,7 @@ using System.Diagnostics.CodeAnalysis;
 
 using HFM.Instrumentation;
 using HFM.Preferences;
+using HFM.Helpers;
 
 namespace HFM.Proteins
 {
@@ -50,7 +51,7 @@ namespace HFM.Proteins
    /// Contains the state of a protein in progress
    /// </summary>
    [Serializable]
-   public class UnitInfo
+   public class UnitInfo : IOwnedByClientInstance
    {
       #region Const
       public const string UsernameDefault = "Unknown";
