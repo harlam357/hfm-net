@@ -28,6 +28,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HFM.Helpers, Version=0.4.0.64, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\HFM.Helpers\bin\Release\HFM.Helpers.dll</HintPath>
+    </Reference>
     <Reference Include="HFM.Instances, Version=0.2.2.41, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\HFM.Instances\bin\Release\HFM.Instances.dll</HintPath>
