@@ -33,7 +33,7 @@ namespace HFM.Instances
    {
       #region Members & Read Only Properties
 
-      private const Int32 MaxFrames = 300;
+      private const Int32 DefaultMaxFrames = 300;
       
       #region Owner Data Properties
       /// <summary>
@@ -81,6 +81,19 @@ namespace HFM.Instances
             return _MinimumFrameTime;
          }
       }
+      
+      public double MinimumFrameTimePPD
+      {
+         get 
+         { 
+            if (Protein != null)
+            {
+               return Protein.GetPPD(MinimumFrameTime);
+            }
+            
+            return 0;
+         }
+      }
 
       public TimeSpan AverageFrameTime
       {
@@ -101,6 +114,19 @@ namespace HFM.Instances
          }
       }
 
+      public double AverageFrameTimePPD
+      {
+         get
+         {
+            if (Protein != null)
+            {
+               return Protein.GetPPD(AverageFrameTime);
+            }
+
+            return 0;
+         }
+      }
+
       private readonly Queue<TimeSpan> _FrameTimes;
       public Queue<TimeSpan> FrameTimes
       {
@@ -116,7 +142,7 @@ namespace HFM.Instances
          _OwningInstancePath = ownerPath;
          _ProjectID = proteinID;
          _MinimumFrameTime = TimeSpan.Zero;
-         _FrameTimes = new Queue<TimeSpan>(MaxFrames);
+         _FrameTimes = new Queue<TimeSpan>(DefaultMaxFrames);
       } 
       #endregion
       
@@ -125,6 +151,17 @@ namespace HFM.Instances
          get 
          { 
             return new BenchmarkClient(OwningInstanceName, OwningInstancePath);
+         }
+      }
+      
+      public Protein Protein
+      {
+         get
+         {
+            Protein protein;
+            ProteinCollection.Instance.TryGetValue(_ProjectID, out protein);
+
+            return protein;
          }
       }
 
@@ -139,7 +176,7 @@ namespace HFM.Instances
             }
 
             // Dequeue once we have the Maximum number of frame times
-            if (_FrameTimes.Count == MaxFrames)
+            if (_FrameTimes.Count == DefaultMaxFrames)
             {
                _FrameTimes.Dequeue();
             }
@@ -170,37 +207,34 @@ namespace HFM.Instances
 
       public string[] ToMultiLineString(ClientInstance Instance)
       {
-         Protein protein;
-         ProteinCollection.Instance.TryGetValue(_ProjectID, out protein);
-
          List<string> output = new List<string>(12);
 
-         if (protein != null)
+         Protein theProtein = Protein;
+         if (theProtein != null)
          {
             output.Add(String.Empty);
-            output.Add(String.Format(" Name: {0}", _OwningInstanceName));
-            output.Add(String.Format(" Path: {0}", _OwningInstancePath));
-            output.Add(String.Format(" Number of Frames Observed: {0}", _FrameTimes.Count));
+            output.Add(String.Format(" Name: {0}", OwningInstanceName));
+            output.Add(String.Format(" Path: {0}", OwningInstancePath));
+            output.Add(String.Format(" Number of Frames Observed: {0}", FrameTimes.Count));
             output.Add(String.Empty);
-            output.Add(String.Format(" Min. Time / Frame : {0} - {1} PPD", _MinimumFrameTime, Math.Round(protein.GetPPD(_MinimumFrameTime), 1)));
-            output.Add(String.Format(" Avg. Time / Frame : {0} - {1} PPD", AverageFrameTime, Math.Round(protein.GetPPD(AverageFrameTime), 1)));
+            output.Add(String.Format(" Min. Time / Frame : {0} - {1:" + PreferenceSet.PpdFormatString + "} PPD", 
+               MinimumFrameTime, MinimumFrameTimePPD));
+            output.Add(String.Format(" Avg. Time / Frame : {0} - {1:" + PreferenceSet.PpdFormatString + "} PPD", 
+               AverageFrameTime, AverageFrameTimePPD));
 
-            TimeSpan currentFrameTime = TimeSpan.Zero;
-            TimeSpan threeFrameTime = TimeSpan.Zero;
-            TimeSpan allFrameTime = TimeSpan.Zero;
-            TimeSpan effectFrameTime = TimeSpan.Zero;
-            if (Instance != null && Instance.CurrentUnitInfo.ProjectID.Equals(_ProjectID) && 
-                                    Instance.Status.Equals(ClientStatus.Running))
+            if (Instance != null && Instance.CurrentUnitInfo.CurrentProtein.ProjectNumber.Equals(theProtein.ProjectNumber) &&
+                                    Instance.ProductionValuesOk)
             {
-               currentFrameTime = TimeSpan.FromSeconds(Instance.CurrentUnitInfo.RawTimePerLastSection);
-               threeFrameTime = TimeSpan.FromSeconds(Instance.CurrentUnitInfo.RawTimePerThreeSections);
-               allFrameTime = TimeSpan.FromSeconds(Instance.CurrentUnitInfo.RawTimePerAllSections);
-               effectFrameTime = TimeSpan.FromSeconds(Instance.CurrentUnitInfo.RawTimePerUnitDownload);
+               output.Add(String.Format(" Cur. Time / Frame : {0} - {1:" + PreferenceSet.PpdFormatString + "} PPD", 
+                  Instance.CurrentUnitInfo.TimePerLastSection, Instance.CurrentUnitInfo.PPDPerLastSection));
+               output.Add(String.Format(" R3F. Time / Frame : {0} - {1:" + PreferenceSet.PpdFormatString + "} PPD",
+                  Instance.CurrentUnitInfo.TimePerThreeSections, Instance.CurrentUnitInfo.PPDPerThreeSections));
+               output.Add(String.Format(" All  Time / Frame : {0} - {1:" + PreferenceSet.PpdFormatString + "} PPD",
+                  Instance.CurrentUnitInfo.TimePerAllSections, Instance.CurrentUnitInfo.PPDPerAllSections));
+               output.Add(String.Format(" Eff. Time / Frame : {0} - {1:" + PreferenceSet.PpdFormatString + "} PPD",
+                  Instance.CurrentUnitInfo.TimePerUnitDownload, Instance.CurrentUnitInfo.PPDPerUnitDownload));
             }
-            output.Add(String.Format(" Cur. Time / Frame : {0} - {1} PPD", currentFrameTime, Math.Round(protein.GetPPD(currentFrameTime), 1)));
-            output.Add(String.Format(" R3F. Time / Frame : {0} - {1} PPD", threeFrameTime, Math.Round(protein.GetPPD(threeFrameTime), 1)));
-            output.Add(String.Format(" All  Time / Frame : {0} - {1} PPD", allFrameTime, Math.Round(protein.GetPPD(allFrameTime), 1)));
-            output.Add(String.Format(" Eff. Time / Frame : {0} - {1} PPD", effectFrameTime, Math.Round(protein.GetPPD(effectFrameTime), 1)));
+            
             output.Add(String.Empty);
          }
          else

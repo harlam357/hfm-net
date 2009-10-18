@@ -19,7 +19,9 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Windows.Forms;
+
 using HFM.Preferences;
 using HFM.Proteins;
 
@@ -257,21 +259,21 @@ namespace HFM.Instances
       public void Load(ClientInstance Instance)
       {
          _Status = Instance.Status;
-         _Progress = ((float)Instance.CurrentUnitInfo.PercentComplete) / 100;
+         _Progress = ((float)Instance.PercentComplete) / 100;
          _InstanceName = Instance.InstanceName;
          _ClientType = Instance.CurrentUnitInfo.TypeOfClient;
-         _TimePerFrame = Instance.CurrentUnitInfo.TimePerFrame;
-         _PPD = Math.Round(Instance.CurrentUnitInfo.PPD, PreferenceSet.Instance.DecimalPlaces);
+         _TimePerFrame = Instance.TimePerFrame;
+         _PPD = Math.Round(Instance.PPD, PreferenceSet.Instance.DecimalPlaces);
          _MHz = Instance.ClientProcessorMegahertz;
-         _PPD_MHz = Math.Round(Instance.CurrentUnitInfo.PPD / Instance.ClientProcessorMegahertz, 3);
-         _ETA = Instance.CurrentUnitInfo.ETA;
+         _PPD_MHz = Math.Round(Instance.PPD / Instance.ClientProcessorMegahertz, 3);
+         _ETA = Instance.ETA;
          _Core = Instance.CurrentUnitInfo.CurrentProtein.Core;
          _CoreVersion = Instance.CurrentUnitInfo.CoreVersion;
          _ProjectRunCloneGen = Instance.CurrentUnitInfo.ProjectRunCloneGen;
          _Credit = Instance.CurrentUnitInfo.CurrentProtein.Credit;
          _Complete = Instance.NumberOfCompletedUnitsSinceLastStart;
          _Failed = Instance.NumberOfFailedUnitsSinceLastStart;
-         _Username = String.Format("{0} ({1})", Instance.CurrentUnitInfo.FoldingID, Instance.CurrentUnitInfo.Team);
+         _Username = String.Format(CultureInfo.CurrentCulture, "{0} ({1})", Instance.FoldingID, Instance.Team);
          _DownloadTime = Instance.CurrentUnitInfo.DownloadTime;
          _Deadline = Instance.CurrentUnitInfo.Deadline;
       }

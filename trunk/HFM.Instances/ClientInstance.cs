@@ -57,6 +57,14 @@ namespace HFM.Instances
       FTPInstance,
       HTTPInstance
    }
+
+   public enum ClientType
+   {
+      Unknown,
+      Standard,
+      SMP,
+      GPU
+   } 
    #endregion
 
    public class ClientInstance
@@ -173,9 +181,127 @@ namespace HFM.Instances
             return String.Format(CultureInfo.CurrentCulture, "{0} ({1})", Path, Arguments);
          }
       }
+      
+      /// <summary>
+      /// Flag denoting if Progress, Production, and Time based values are OK to Display
+      /// </summary>
+      public bool ProductionValuesOk
+      {
+         get 
+         { 
+            if (Status.Equals(ClientStatus.Running) ||
+                Status.Equals(ClientStatus.RunningNoFrameTimes))
+            {
+               return true;
+            }
+            
+            return false;
+         }
+      }
+      
+      #region CurrentUnitInfo Values
+      /// <summary>
+      /// Frame progress of the unit
+      /// </summary>
+      public Int32 FramesComplete
+      {
+         get
+         {
+            if (ProductionValuesOk)
+            {
+               return CurrentUnitInfo.FramesComplete;
+            }
+            
+            return 0;
+         }
+      }
+
+      /// <summary>
+      /// Current progress (percentage) of the unit
+      /// </summary>
+      public Int32 PercentComplete
+      {
+         get
+         {
+            if (ProductionValuesOk)
+            {
+               return CurrentUnitInfo.PercentComplete;
+            }
+
+            return 0;
+         }
+      }
+
+      /// <summary>
+      /// Time per frame (TPF) of the unit
+      /// </summary>
+      public TimeSpan TimePerFrame
+      {
+         get
+         {
+            if (ProductionValuesOk)
+            {
+               return CurrentUnitInfo.TimePerFrame;
+            }
+
+            return TimeSpan.Zero;
+         }
+      }
+
+      /// <summary>
+      /// Units per day (UPD) rating for this instance
+      /// </summary>
+      public Double UPD
+      {
+         get
+         {
+            if (ProductionValuesOk)
+            {
+               return CurrentUnitInfo.UPD;
+            }
+
+            return 0;
+         }
+      }
+
+      /// <summary>
+      /// Points per day (PPD) rating for this instance
+      /// </summary>
+      public Double PPD
+      {
+         get
+         {
+            if (ProductionValuesOk)
+            {
+               return CurrentUnitInfo.PPD;
+            }
+
+            return 0;
+         }
+      }
+
+      /// <summary>
+      /// Esimated time of arrival (ETA) for this protein
+      /// </summary>
+      public TimeSpan ETA
+      {
+         get
+         {
+            if (ProductionValuesOk)
+            {
+               return CurrentUnitInfo.ETA;
+            }
+
+            return TimeSpan.Zero;
+         }
+      }
+      #endregion
+
       #endregion
 
       #region Public Properties and Related Private Members
+
+      #region Retrieval Properties
       /// <summary>
       /// Local flag set when retrieval acts on the status returned from parse
       /// </summary>
@@ -199,7 +325,20 @@ namespace HFM.Instances
       public bool RetrievalInProgress
       {
          get { return _RetrievalInProgress; }
-      } 
+      }
+
+      /// <summary>
+      /// When the log files were last successfully retrieved
+      /// </summary>
+      private DateTime _LastRetrievalTime = DateTime.MinValue;
+      /// <summary>
+      /// When the log files were last successfully retrieved
+      /// </summary>
+      public DateTime LastRetrievalTime
+      {
+         get { return _LastRetrievalTime; }
+      }
+      #endregion
       
       #region User Specified Values (from the frmHost dialog)
       /// <summary>
@@ -404,33 +543,6 @@ namespace HFM.Instances
       } 
       #endregion
 
-      #region Log Retrieval Timestamps
-      /// <summary>
-      /// When the log files were last successfully retrieved
-      /// </summary>
-      private DateTime _LastRetrievalTime = DateTime.MinValue;
-      /// <summary>
-      /// When the log files were last successfully retrieved
-      /// </summary>
-      public DateTime LastRetrievalTime
-      {
-         get { return _LastRetrievalTime; }
-      } 
-      #endregion
-
-      /// <summary>
-      /// List of current log file lines
-      /// </summary>
-      private IList<LogLine> _CurrentLogLines = new List<LogLine>();
-      /// <summary>
-      /// List of current log file text lines
-      /// </summary>
-      public IList<LogLine> CurrentLogLines
-      {
-         get { return _CurrentLogLines; }
-         //set { _CurrentLogLines = value; }
-      }
-
       #region Values captured during log file parse
       /// <summary>
       /// Status of this client
@@ -576,6 +688,19 @@ namespace HFM.Instances
       /// Array of LogLine Lists - Used to hold QueueEntry LogLines
       /// </summary>
       private IList<LogLine>[] _QueueLogLines;
+
+      /// <summary>
+      /// List of current log file lines
+      /// </summary>
+      private IList<LogLine> _CurrentLogLines = new List<LogLine>();
+      /// <summary>
+      /// List of current log file text lines
+      /// </summary>
+      public IList<LogLine> CurrentLogLines
+      {
+         get { return _CurrentLogLines; }
+         //set { _CurrentLogLines = value; }
+      }
       #endregion
 
       #endregion
@@ -692,14 +817,6 @@ namespace HFM.Instances
          return false;
       }
       
-      /// <summary>
-      /// Sets the time based values on the Current Unit Info
-      /// </summary>
-      public void SetTimeBasedValues()
-      {
-         CurrentUnitInfo.SetTimeBasedValues(Status, ProteinBenchmarkCollection.Instance.GetBenchmarkAverageFrameTime(CurrentUnitInfo));
-      }
-
       /// <summary>
       /// Handles the InstanceHostTypeChanged Event
       /// </summary>

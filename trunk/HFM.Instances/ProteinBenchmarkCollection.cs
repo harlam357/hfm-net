@@ -506,9 +506,9 @@ namespace HFM.Instances
 
       public override bool Equals(object obj)
       {
-         if (obj is BenchmarkClient)
+         BenchmarkClient client = obj as BenchmarkClient;
+         if (client != null)
          {
-            BenchmarkClient client = (BenchmarkClient)obj;
             if (Name.Equals(client.Name) &&
                 Path.Equals(client.Path) &&
                 AllClients.Equals(client.AllClients))
@@ -545,5 +545,25 @@ namespace HFM.Instances
 
          return 1;
       }
+
+      //public static bool operator == (BenchmarkClient bc1, BenchmarkClient bc2)
+      //{
+      //   return bc1.Equals(bc2);
+      //}
+      
+      //public static bool operator != (BenchmarkClient bc1, BenchmarkClient bc2)
+      //{
+      //   return !(bc1 == bc2);
+      //}
+      
+      //public static bool operator < (BenchmarkClient bc1, BenchmarkClient bc2)
+      //{
+      //   return (bc1.CompareTo(bc2) < 0);
+      //}
+      
+      //public static bool operator > (BenchmarkClient bc1, BenchmarkClient bc2)
+      //{
+      //   return (bc1.CompareTo(bc2) > 0);
+      //}
    }
 }

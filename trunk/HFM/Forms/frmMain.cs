@@ -1071,16 +1071,14 @@ namespace HFM.Forms
          frmPreferences prefDialog = new frmPreferences();
          if (prefDialog.ShowDialog() == DialogResult.OK)
          {
+            //TODO: Do this only if the times change
             ClientInstances.SetTimerState();
             
             // If the PPD Calculation style changed, we need to do a new Retrieval
-            if (currentPpdCalc.Equals(PreferenceSet.Instance.PpdCalculation))
+            //TODO: This should be done in response to a Preferences "Changed" event
+            if (currentPpdCalc.Equals(PreferenceSet.Instance.PpdCalculation) == false)
             {
                RefreshDisplay();
-            }
-            else
-            {
-               ClientInstances.QueueNewRetrieval();
             }
          }
       }

@@ -21,7 +21,6 @@ using System;
 
 using NUnit.Framework;
 
-using HFM.Proteins;
 using HFM.Preferences;
 
 namespace HFM.Instances.Tests
@@ -99,8 +98,8 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(false, Instance.CurrentUnitInfo.ProjectIsUnknown);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitFrames);
          Assert.AreEqual(6, Instance.CurrentUnitInfo.FramesObserved);
-         Assert.AreEqual(0, Instance.CurrentUnitInfo.FramesComplete);
-         Assert.AreEqual(0, Instance.CurrentUnitInfo.PercentComplete);
+         Assert.AreEqual(7, Instance.CurrentUnitInfo.FramesComplete);
+         Assert.AreEqual(7, Instance.CurrentUnitInfo.PercentComplete);
          Assert.AreEqual(7, Instance.CurrentUnitInfo.LastUnitFramePercent);
          Assert.AreEqual(140000, Instance.CurrentUnitInfo.RawFramesComplete);
          Assert.AreEqual(2000000, Instance.CurrentUnitInfo.RawFramesTotal);
@@ -144,8 +143,8 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(false, Instance.CurrentUnitInfo.ProjectIsUnknown);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitFrames);
          Assert.AreEqual(31, Instance.CurrentUnitInfo.FramesObserved);
-         Assert.AreEqual(0, Instance.CurrentUnitInfo.FramesComplete);
-         Assert.AreEqual(0, Instance.CurrentUnitInfo.PercentComplete);
+         Assert.AreEqual(32, Instance.CurrentUnitInfo.FramesComplete);
+         Assert.AreEqual(32, Instance.CurrentUnitInfo.PercentComplete);
          Assert.AreEqual(32, Instance.CurrentUnitInfo.LastUnitFramePercent);
          Assert.AreEqual(80000, Instance.CurrentUnitInfo.RawFramesComplete);
          Assert.AreEqual(250000, Instance.CurrentUnitInfo.RawFramesTotal);
@@ -186,8 +185,8 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(false, Instance.CurrentUnitInfo.ProjectIsUnknown);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitFrames);
          Assert.AreEqual(4, Instance.CurrentUnitInfo.FramesObserved);
-         Assert.AreEqual(0, Instance.CurrentUnitInfo.FramesComplete);
-         Assert.AreEqual(0, Instance.CurrentUnitInfo.PercentComplete);
+         Assert.AreEqual(4, Instance.CurrentUnitInfo.FramesComplete);
+         Assert.AreEqual(4, Instance.CurrentUnitInfo.PercentComplete);
          Assert.AreEqual(4, Instance.CurrentUnitInfo.LastUnitFramePercent);
          Assert.AreEqual(4, Instance.CurrentUnitInfo.RawFramesComplete);
          Assert.AreEqual(100, Instance.CurrentUnitInfo.RawFramesTotal);

@@ -37,7 +37,7 @@ namespace HFM.Instances
       {
          InstanceTotals totals = new InstanceTotals();
          
-         // If no instance collection, return initialized totals.
+         // If no Instance Collection, return initialized totals.
          // Added this check because this function is now being passed a copy of the client 
          // instances references using GetCurrentInstanceArray() and not the collection 
          // directly, since the "live" collection can change at any time.
@@ -48,19 +48,16 @@ namespace HFM.Instances
 
          totals.TotalClients = Instances.Count;
 
-         foreach (ClientInstance instance in Instances)
+         foreach (ClientInstance Instance in Instances)
          {
-            totals.PPD += instance.CurrentUnitInfo.PPD;
-            totals.UPD += instance.CurrentUnitInfo.UPD;
-            totals.TotalCompletedUnits += instance.NumberOfCompletedUnitsSinceLastStart;
-            totals.TotalFailedUnits += instance.NumberOfFailedUnitsSinceLastStart;
+            totals.PPD += Instance.PPD;
+            totals.UPD += Instance.UPD;
+            totals.TotalCompletedUnits += Instance.NumberOfCompletedUnitsSinceLastStart;
+            totals.TotalFailedUnits += Instance.NumberOfFailedUnitsSinceLastStart;
 
-            switch (instance.Status)
+            if (Instance.ProductionValuesOk)
             {
-               case ClientStatus.Running:
-               case ClientStatus.RunningNoFrameTimes:
-                  totals.WorkingClients++;
-                  break;
+               totals.WorkingClients++;
             }
          }
 
@@ -91,11 +88,11 @@ namespace HFM.Instances
          Hashtable userHash = new Hashtable(Instances.Count);
          Hashtable projectHash = new Hashtable(Instances.Count);
 
-         foreach (ClientInstance instance in Instances)
+         foreach (ClientInstance Instance in Instances)
          {
             if (Prefs.DuplicateProjectCheck)
             {
-               string PRCG = instance.CurrentUnitInfo.ProjectRunCloneGen;
+               string PRCG = Instance.CurrentUnitInfo.ProjectRunCloneGen;
                if (projectHash.Contains(PRCG))
                {
                   DuplicateProjects.Add(PRCG);
@@ -103,16 +100,16 @@ namespace HFM.Instances
                else
                {
                   // don't add an unknown project
-                  if (instance.CurrentUnitInfo.ProjectIsUnknown == false)
+                  if (Instance.CurrentUnitInfo.ProjectIsUnknown == false)
                   {
-                     projectHash.Add(instance.CurrentUnitInfo.ProjectRunCloneGen, null);
+                     projectHash.Add(Instance.CurrentUnitInfo.ProjectRunCloneGen, null);
                   }
                }
             }
 
             if (Prefs.DuplicateUserIDCheck)
             {
-               string UserAndMachineID = instance.UserAndMachineID;
+               string UserAndMachineID = Instance.UserAndMachineID;
                if (userHash.Contains(UserAndMachineID))
                {
                   DuplicateUserID.Add(UserAndMachineID);
@@ -120,7 +117,7 @@ namespace HFM.Instances
                else
                {
                   // don't add an unknown User ID
-                  if (instance.UserIDUnknown == false)
+                  if (Instance.UserIDUnknown == false)
                   {
                      userHash.Add(UserAndMachineID, null);
                   }

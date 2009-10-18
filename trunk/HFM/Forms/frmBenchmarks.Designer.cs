@@ -56,7 +56,11 @@ namespace HFM.Forms
          this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
          this.splitContainerBench = new HFM.Classes.SplitContainerWrapper();
          this.listBox1 = new System.Windows.Forms.ListBox();
+         this.tabControl1 = new System.Windows.Forms.TabControl();
+         this.tabTextBenchmark = new System.Windows.Forms.TabPage();
          this.txtBenchmarks = new HFM.Classes.TextBoxWrapper();
+         this.tabGraphBenchmark = new System.Windows.Forms.TabPage();
+         this.zg1 = new ZedGraph.ZedGraphControl();
          this.btnExit = new HFM.Classes.ButtonWrapper();
          this.grpClients = new HFM.Classes.GroupBoxWrapper();
          this.picDeleteClient = new System.Windows.Forms.PictureBox();
@@ -70,6 +74,9 @@ namespace HFM.Forms
          this.splitContainerBench.Panel1.SuspendLayout();
          this.splitContainerBench.Panel2.SuspendLayout();
          this.splitContainerBench.SuspendLayout();
+         this.tabControl1.SuspendLayout();
+         this.tabTextBenchmark.SuspendLayout();
+         this.tabGraphBenchmark.SuspendLayout();
          this.grpClients.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.picDeleteClient)).BeginInit();
          this.listBox1ContextMenuStrip.SuspendLayout();
@@ -323,7 +330,7 @@ namespace HFM.Forms
          // 
          // splitContainerBench.Panel2
          // 
-         this.splitContainerBench.Panel2.Controls.Add(this.txtBenchmarks);
+         this.splitContainerBench.Panel2.Controls.Add(this.tabControl1);
          this.splitContainerBench.Panel2.Controls.Add(this.btnExit);
          this.splitContainerBench.Size = new System.Drawing.Size(556, 395);
          this.splitContainerBench.SplitterDistance = 65;
@@ -341,18 +348,66 @@ namespace HFM.Forms
          this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
          this.listBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDown);
          // 
+         // tabControl1
+         // 
+         this.tabControl1.Controls.Add(this.tabTextBenchmark);
+         this.tabControl1.Controls.Add(this.tabGraphBenchmark);
+         this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.tabControl1.Location = new System.Drawing.Point(0, 0);
+         this.tabControl1.Name = "tabControl1";
+         this.tabControl1.SelectedIndex = 0;
+         this.tabControl1.Size = new System.Drawing.Size(487, 395);
+         this.tabControl1.TabIndex = 12;
+         // 
+         // tabTextBenchmark
+         // 
+         this.tabTextBenchmark.Controls.Add(this.txtBenchmarks);
+         this.tabTextBenchmark.Location = new System.Drawing.Point(4, 22);
+         this.tabTextBenchmark.Name = "tabTextBenchmark";
+         this.tabTextBenchmark.Padding = new System.Windows.Forms.Padding(3);
+         this.tabTextBenchmark.Size = new System.Drawing.Size(479, 369);
+         this.tabTextBenchmark.TabIndex = 0;
+         this.tabTextBenchmark.Text = "Text";
+         this.tabTextBenchmark.UseVisualStyleBackColor = true;
+         // 
          // txtBenchmarks
          // 
          this.txtBenchmarks.BackColor = System.Drawing.Color.White;
          this.txtBenchmarks.Dock = System.Windows.Forms.DockStyle.Fill;
          this.txtBenchmarks.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         this.txtBenchmarks.Location = new System.Drawing.Point(0, 0);
+         this.txtBenchmarks.Location = new System.Drawing.Point(3, 3);
          this.txtBenchmarks.Multiline = true;
          this.txtBenchmarks.Name = "txtBenchmarks";
          this.txtBenchmarks.ReadOnly = true;
          this.txtBenchmarks.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-         this.txtBenchmarks.Size = new System.Drawing.Size(487, 395);
+         this.txtBenchmarks.Size = new System.Drawing.Size(473, 363);
          this.txtBenchmarks.TabIndex = 0;
+         // 
+         // tabGraphBenchmark
+         // 
+         this.tabGraphBenchmark.Controls.Add(this.zg1);
+         this.tabGraphBenchmark.Location = new System.Drawing.Point(4, 22);
+         this.tabGraphBenchmark.Name = "tabGraphBenchmark";
+         this.tabGraphBenchmark.Padding = new System.Windows.Forms.Padding(3);
+         this.tabGraphBenchmark.Size = new System.Drawing.Size(479, 369);
+         this.tabGraphBenchmark.TabIndex = 1;
+         this.tabGraphBenchmark.Text = "Graph";
+         this.tabGraphBenchmark.UseVisualStyleBackColor = true;
+         // 
+         // zg1
+         // 
+         this.zg1.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.zg1.Location = new System.Drawing.Point(3, 3);
+         this.zg1.Name = "zg1";
+         this.zg1.ScrollGrace = 0;
+         this.zg1.ScrollMaxX = 0;
+         this.zg1.ScrollMaxY = 0;
+         this.zg1.ScrollMaxY2 = 0;
+         this.zg1.ScrollMinX = 0;
+         this.zg1.ScrollMinY = 0;
+         this.zg1.ScrollMinY2 = 0;
+         this.zg1.Size = new System.Drawing.Size(473, 363);
+         this.zg1.TabIndex = 0;
          // 
          // btnExit
          // 
@@ -432,7 +487,7 @@ namespace HFM.Forms
          this.ClientSize = new System.Drawing.Size(556, 595);
          this.Controls.Add(this.tableLayoutPanel1);
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-         this.MinimumSize = new System.Drawing.Size(564, 200);
+         this.MinimumSize = new System.Drawing.Size(564, 300);
          this.Name = "frmBenchmarks";
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
          this.Text = "Benchmarks";
@@ -442,8 +497,11 @@ namespace HFM.Forms
          this.tableLayoutPanel1.ResumeLayout(false);
          this.splitContainerBench.Panel1.ResumeLayout(false);
          this.splitContainerBench.Panel2.ResumeLayout(false);
-         this.splitContainerBench.Panel2.PerformLayout();
          this.splitContainerBench.ResumeLayout(false);
+         this.tabControl1.ResumeLayout(false);
+         this.tabTextBenchmark.ResumeLayout(false);
+         this.tabTextBenchmark.PerformLayout();
+         this.tabGraphBenchmark.ResumeLayout(false);
          this.grpClients.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.picDeleteClient)).EndInit();
          this.listBox1ContextMenuStrip.ResumeLayout(false);
@@ -486,6 +544,10 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripMenuItem mnuContextRefreshMinimum;
       private System.Windows.Forms.ToolStripMenuItem mnuContextDeleteProject;
       private System.Windows.Forms.ToolTip toolTip1;
+      private System.Windows.Forms.TabControl tabControl1;
+      private System.Windows.Forms.TabPage tabTextBenchmark;
+      private System.Windows.Forms.TabPage tabGraphBenchmark;
+      private ZedGraph.ZedGraphControl zg1;
 
 
    }

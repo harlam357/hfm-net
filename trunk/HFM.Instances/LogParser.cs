@@ -149,10 +149,10 @@ namespace HFM.Instances
                   }
                }
                /* Progress (Supplemental Read - if progress percentage cannot be determined through FAHlog.txt) */
-               else if (sData.StartsWith("Progress: "))
-               {
-                  _parsedUnitInfo.PercentComplete = Int32.Parse(sData.Substring(10, sData.IndexOf("%") - 10));
-               }
+               //else if (sData.StartsWith("Progress: "))
+               //{
+               //   _parsedUnitInfo.PercentComplete = Int32.Parse(sData.Substring(10, sData.IndexOf("%") - 10));
+               //}
             }
          }
          catch (Exception ex)

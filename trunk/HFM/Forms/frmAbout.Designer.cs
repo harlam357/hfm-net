@@ -81,14 +81,15 @@ namespace HFM.Forms
          // 
          this.lblCopyrights.Location = new System.Drawing.Point(10, 37);
          this.lblCopyrights.Name = "lblCopyrights";
-         this.lblCopyrights.Size = new System.Drawing.Size(497, 132);
+         this.lblCopyrights.Size = new System.Drawing.Size(497, 143);
          this.lblCopyrights.TabIndex = 3;
          this.lblCopyrights.Text = resources.GetString("lblCopyrights.Text");
          // 
          // lblLinkOrig
          // 
+         this.lblLinkOrig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
          this.lblLinkOrig.LinkArea = new System.Windows.Forms.LinkArea(29, 15);
-         this.lblLinkOrig.Location = new System.Drawing.Point(10, 180);
+         this.lblLinkOrig.Location = new System.Drawing.Point(10, 199);
          this.lblLinkOrig.Name = "lblLinkOrig";
          this.lblLinkOrig.Size = new System.Drawing.Size(497, 22);
          this.lblLinkOrig.TabIndex = 5;
@@ -102,7 +103,7 @@ namespace HFM.Forms
          // 
          this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
          this.btnClose.DialogResult = System.Windows.Forms.DialogResult.OK;
-         this.btnClose.Location = new System.Drawing.Point(465, 210);
+         this.btnClose.Location = new System.Drawing.Point(465, 229);
          this.btnClose.Name = "btnClose";
          this.btnClose.Size = new System.Drawing.Size(75, 23);
          this.btnClose.TabIndex = 0;
@@ -123,7 +124,8 @@ namespace HFM.Forms
          // 
          // lblGPL
          // 
-         this.lblGPL.Location = new System.Drawing.Point(10, 208);
+         this.lblGPL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+         this.lblGPL.Location = new System.Drawing.Point(10, 227);
          this.lblGPL.Name = "lblGPL";
          this.lblGPL.Size = new System.Drawing.Size(497, 27);
          this.lblGPL.TabIndex = 6;
@@ -136,7 +138,7 @@ namespace HFM.Forms
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.CancelButton = this.btnClose;
-         this.ClientSize = new System.Drawing.Size(552, 243);
+         this.ClientSize = new System.Drawing.Size(552, 262);
          this.Controls.Add(this.btnClose);
          this.Controls.Add(this.lblGPL);
          this.Controls.Add(this.lblLinkOrig);

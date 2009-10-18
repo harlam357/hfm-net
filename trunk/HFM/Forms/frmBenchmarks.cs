@@ -22,11 +22,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.Text;
 using System.Windows.Forms;
 
 using HFM.Instances;
+using HFM.Preferences;
 using HFM.Proteins;
 using HFM.Instrumentation;
+using ZedGraph;
 
 namespace HFM.Forms
 {
@@ -92,6 +95,8 @@ namespace HFM.Forms
             }
             UpdateBenchmarkText(benchmark.ToMultiLineString(Instance));
          }
+
+         CreatePpdGraph(zg1, lines, list);
       }
 
       private void listBox1_MouseDown(object sender, MouseEventArgs e)
@@ -154,8 +159,9 @@ namespace HFM.Forms
          if (MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture, "Are you sure you want to delete {0}?", _currentBenchmarkClient.NameAndPath),
                      Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
          {
+            int currentIndex = cboClients.SelectedIndex;
             ProteinBenchmarkCollection.Instance.Delete(_currentBenchmarkClient);
-            UpdateClientsComboBinding();
+            UpdateClientsComboBinding(currentIndex);
          }
       }
 
@@ -210,10 +216,27 @@ namespace HFM.Forms
 
       private void UpdateClientsComboBinding()
       {
+         UpdateClientsComboBinding(-1);
+      }
+
+      private void UpdateClientsComboBinding(int index)
+      {
          cboClients.DataBindings.Clear();
          cboClients.DataSource = ProteinBenchmarkCollection.Instance.GetBenchmarkClients();
          cboClients.DisplayMember = "NameAndPath";
          cboClients.ValueMember = "Client";
+         
+         if (index > -1 && cboClients.Items.Count > 0)
+         {
+            if (index < cboClients.Items.Count)
+            {
+               cboClients.SelectedIndex = index;
+            }
+            else if (index == cboClients.Items.Count)
+            {
+               cboClients.SelectedIndex = index - 1;
+            }
+         }
       }
 
       private void UpdateProjectListBoxBinding()
@@ -232,12 +255,138 @@ namespace HFM.Forms
          {
             listBox1.DataSource = ProteinBenchmarkCollection.Instance.GetBenchmarkProjects(_currentBenchmarkClient);
          }
+         
          int index = listBox1.Items.IndexOf(InitialProjectID);
          if (index > -1)
          {
             listBox1.SelectedIndex = index;
          }
       }
+
+      /// <summary>
+      /// Build The GraphPane
+      /// </summary>
+      /// <param name="zg">ZedGraph Control</param>
+      /// <param name="benchmarks">Benchmarks Collection to Plot</param>
+      private static void CreatePpdGraph(ZedGraphControl zg, string[] ProjectInfo, IEnumerable<InstanceProteinBenchmark> benchmarks)
+      {
+         // get a reference to the GraphPane
+         GraphPane myPane = zg.GraphPane;
+         
+         // Clear the bars
+         myPane.CurveList.Clear();
+         // Clear the bar labels
+         myPane.GraphObjList.Clear();
+
+         // Scale YAxis In Thousands?
+         bool InThousands = false;
+         
+         // Create the bars for each benchmark
+         int i = 0;
+         foreach (InstanceProteinBenchmark benchmark in benchmarks)
+         {
+            if (benchmark.MinimumFrameTimePPD >= 1000 || benchmark.AverageFrameTimePPD >= 1000)
+            {
+               InThousands = true;
+            }
+
+            double[] yPoints = new double[2];
+            yPoints[0] = Math.Round(benchmark.MinimumFrameTimePPD, PreferenceSet.Instance.DecimalPlaces);
+            yPoints[1] = Math.Round(benchmark.AverageFrameTimePPD, PreferenceSet.Instance.DecimalPlaces);
+
+            CreateBar(i, myPane, benchmark.OwningInstanceName, yPoints);
+            i++;
+         }
+
+         // Create the bar labels
+         BarItem.CreateBarLabels(myPane, true, String.Empty, zg.Font.Name, zg.Font.Size, Color.Black, true, false, false);
+
+         // Set the Titles
+         myPane.Title.Text = "HFM.NET - Client Benchmarks";
+         StringBuilder sb = new StringBuilder();
+         for (i = 0; i < ProjectInfo.Length - 2; i++)
+         {
+            sb.Append(ProjectInfo[i]);
+            sb.Append(" / ");
+         }
+         sb.Append(ProjectInfo[i]);
+         myPane.XAxis.Title.Text = sb.ToString();
+         myPane.YAxis.Title.Text = "PPD";
+
+         // Draw the X tics between the labels instead of at the labels
+         myPane.XAxis.MajorTic.IsBetweenLabels = true;
+         // Set the XAxis labels
+         string[] labels = new string[] { "Min. Frame Time", "Avg. Frame Time" };
+         myPane.XAxis.Scale.TextLabels = labels;
+         // Set the XAxis to Text type
+         myPane.XAxis.Type = AxisType.Text;
+
+         // Don't show YAxis.Scale as 10^3         
+         myPane.YAxis.Scale.MagAuto = false;
+         // Set the YAxis Steps
+         if (InThousands)
+         {
+            myPane.YAxis.Scale.MajorStep = 1000;
+            myPane.YAxis.Scale.MinorStep = 500;
+         }
+         else
+         {
+            myPane.YAxis.Scale.MajorStep = 100;
+            myPane.YAxis.Scale.MinorStep = 10;
+         }
+
+         // Fill the Axis and Pane backgrounds
+         myPane.Chart.Fill = new Fill(Color.White, Color.FromArgb(255, 255, 166), 90F);
+         myPane.Fill = new Fill(Color.FromArgb(250, 250, 255));
+
+         // Tell ZedGraph to refigure the
+         // axes since the data have changed
+         zg.AxisChange();
+         // Refresh the control
+         zg.Refresh();
+      }
+      
+      private static void CreateBar(int index, GraphPane myPane, string InstanceName, double[] y)
+      {
+         Color barColor;
+         switch (index % 6)
+         {
+            case 0:
+               barColor = Color.Red;
+               break;
+            case 1:
+               barColor = Color.Blue;
+               break;
+            case 2:
+               barColor = Color.Green;
+               break;
+            case 3:
+               barColor = Color.Maroon;
+               break;
+            case 4:
+               barColor = Color.DarkSlateBlue;
+               break;
+            case 5:
+               barColor = Color.MediumAquamarine;
+               break;
+            case 6:
+               barColor = Color.DarkViolet;
+               break;
+            case 7:
+               barColor = Color.DeepSkyBlue;
+               break;
+            case 8:
+               barColor = Color.DarkTurquoise;
+               break;
+            default:
+               throw new InvalidOperationException("Logic Error in Bar Color selection.");
+         }
+
+         // Generate a bar with the Instance Name in the legend
+         BarItem myBar = myPane.AddBar(InstanceName, null, y, barColor);
+         myBar.Bar.Fill = new Fill(barColor, Color.White, barColor);
+      }
+
       #endregion
    }
 }

@@ -19,7 +19,7 @@
 
 using System;
 
-namespace HFM.Proteins
+namespace HFM.Instances
 {
    [Serializable]
    public class UnitFrame

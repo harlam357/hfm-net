@@ -248,7 +248,7 @@ namespace HFM.Instances
       /// <summary>
       /// Force Raises the SelectedInstanceChanged event.
       /// </summary>
-      //[SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate")]
+      [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate")]
       public void RaiseSelectedInstanceChanged()
       {
          OnSelectedInstanceChanged(EventArgs.Empty);
@@ -1197,7 +1197,6 @@ namespace HFM.Instances
          {
             foreach (ClientInstance instance in _instanceCollection.Values)
             {
-               instance.SetTimeBasedValues();
                DisplayInstance findInstance = FindDisplayInstance(_displayCollection, instance.InstanceName);
                if (findInstance != null)
                {

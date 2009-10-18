@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="HFM.Instances.DisplayInstance">
-    <Position X="3.5" Y="0.5" Width="2" />
+  <Class Name="HFM.Instances.DisplayInstance" Collapsed="true">
+    <Position X="8" Y="1.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>IAkAg4AMAAAAAAYBBYJgEEQAAERAAQAAABsECAiAhAQ=</HashCode>
       <FileName>DisplayInstance.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="HFM.Instances.InstanceCollection">
-    <Position X="5.75" Y="0.5" Width="2" />
+  <Class Name="HFM.Instances.InstanceCollection" Collapsed="true">
+    <Position X="0.5" Y="2.75" Width="2.75" />
     <NestedTypes>
       <Delegate Name="HFM.Instances.InstanceCollection.RetrieveInstanceDelegate" Collapsed="true">
         <TypeIdentifier>
@@ -17,18 +17,19 @@
       </Delegate>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>QUPSghAICRgxoAAAAAgEjIQkASxoCDHGYShAEhBuABE=</HashCode>
+      <HashCode>QUPSghAICTk1oABEAAgEjIQkAQxoCDHGYS5AFhBuEBE=</HashCode>
       <FileName>InstanceCollection.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
-  <Class Name="HFM.Instances.LogParser">
-    <Position X="10.5" Y="0.5" Width="2" />
+  <Class Name="HFM.Instances.LogParser" Collapsed="true">
+    <Position X="3.5" Y="0.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>oQQAACABAAABCAAAAQgUCIAABUAAQAAAEIAAQgAACAA=</HashCode>
+      <HashCode>oQQAACABAAABCAAAAAgUCIAABUAAAAAAAIAAQgAACAA=</HashCode>
       <FileName>LogParser.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="HFM.Instances.SortableBindingList&lt;T&gt;" BaseTypeListCollapsed="true">
+  <Class Name="HFM.Instances.SortableBindingList&lt;T&gt;" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="8" Y="0.5" Width="2.25" />
     <Compartments>
       <Compartment Name="Nested Types" Collapsed="false" />
@@ -45,76 +46,148 @@
       <HashCode>AAAAAgAAAAAABEAAACAQAABIAAkIAAgIBgAAQAQAACQ=</HashCode>
       <FileName>SortableBindingList.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
+    <Lollipop Position="0.2" />
   </Class>
-  <Class Name="HFM.Instances.XMLGen">
-    <Position X="3.75" Y="12.5" Width="1.5" />
+  <Class Name="HFM.Instances.XMLGen" Collapsed="true">
+    <Position X="8" Y="2" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AACAAAAEAAAAJAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
       <FileName>XMLGen.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="HFM.Instances.ClientInstance">
+  <Class Name="HFM.Instances.ClientInstance" Collapsed="true">
     <Position X="0.5" Y="0.5" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>1LRjDBRVAQh4BE6AiXbEEKk5ggAwCAYGFChAA3bCnlU=</HashCode>
+      <HashCode>1L5jDBR1Cwh4BE6AzXZEFqs5gkIyioYGNKhAA3bmnlU=</HashCode>
       <FileName>ClientInstance.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="HFM.Instances.InstanceProteinBenchmark">
-    <Position X="3.5" Y="8.5" Width="2" />
+  <Class Name="HFM.Instances.InstanceProteinBenchmark" Collapsed="true">
+    <Position X="0.5" Y="5" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>BAAACIQAAAAAAAAAAAAABABCRCAAAAgAAAAiAAAAAAA=</HashCode>
+      <HashCode>AAAACIQCAACAAAAAAAAABABCRCAAAIgACAAjAAAAAAQ=</HashCode>
       <FileName>InstanceProteinBenchmark.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
-  <Class Name="HFM.Instances.ProteinBenchmarkCollection">
-    <Position X="8" Y="9" Width="2.25" />
+  <Class Name="HFM.Instances.ProteinBenchmarkCollection" Collapsed="true">
+    <Position X="0.5" Y="5.75" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAIAAAAAgQAAARAAAAAMABACICBAAEQAQIAAAAAAAAA=</HashCode>
+      <HashCode>AAIAAAAAgAEAABAAAAEcAhACICFAAEQAQIAAAAAAAAA=</HashCode>
       <FileName>ProteinBenchmarkCollection.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="HFM.Instances.LogReader">
-    <Position X="10.5" Y="5.5" Width="2" />
+  <Class Name="HFM.Instances.LogReader" Collapsed="true">
+    <Position X="3.5" Y="1.25" Width="2" />
     <TypeIdentifier>
-      <HashCode>ABIAAIAAAEAAAAEAAAAgAAEAAAAAAAAAACAAAQABAAA=</HashCode>
+      <HashCode>ABgAAIAAoEAAIAEAAAAgAAEAQAAAAAAAAiAAgAAAAAA=</HashCode>
       <FileName>LogReader.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="HFM.Instances.ClientRunPositionsList">
-    <Position X="10.5" Y="9.5" Width="2" />
+  <Class Name="HFM.Instances.InstanceCollectionHelpers" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AIAAAAAACAAAAAAAAQAAAEAAAAAAABBAAACAEAIAAAA=</HashCode>
-      <FileName>LogReader.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAQAAAAAAAAA=</HashCode>
+      <FileName>InstanceCollectionHelpers.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="HFM.Instances.ClientRunPositions">
-    <Position X="10.5" Y="12.5" Width="2" />
+  <Class Name="HFM.Instances.QueueParser" Collapsed="true">
+    <Position X="5.75" Y="0.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAABAAAAAAAgAAAAAAAAAAAAAAAAAAAAAgAAAE=</HashCode>
-      <FileName>LogReader.cs</FileName>
+      <HashCode>AAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>QueueParser.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Enum Name="HFM.Instances.InstanceType">
-    <Position X="6" Y="11.5" Width="1.5" />
+  <Class Name="HFM.Instances.QueueEntry" Collapsed="true">
+    <Position X="5.75" Y="5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>wGgbiIBMAwCCoQGIUiRAIAgARAAIQCgAPg0HFQRyCAA=</HashCode>
+      <FileName>QueueReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HFM.Instances.QueueReader" Collapsed="true">
+    <Position X="5.75" Y="1.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>IAgAAACAAMCAEAAABAACgMBBABAAAAQIASVQACAAAUA=</HashCode>
+      <FileName>QueueReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HFM.Instances.UnitFrame" Collapsed="true">
+    <Position X="3.5" Y="6.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAICAAAAAABAAAAABEAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UnitFrame.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HFM.Instances.UnitInfoCollection" Collapsed="true">
+    <Position X="3.5" Y="7.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAIAABQAgAgAgCAAAAAEARAAACBAAAAAQCAAAABAAAA=</HashCode>
+      <FileName>UnitInfoCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HFM.Instances.UnitInfo" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3.5" Y="5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>ANjElqRIhAQiDBgJkwNABEAiDGKIBGBLEgEGgFhoEJE=</HashCode>
+      <FileName>UnitInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Struct Name="HFM.Instances.Queue" Collapsed="true">
+    <Position X="5.75" Y="3.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>oAABAAAAAQCAACAAABgA4IgAABAAEAAAEABYACAgAEA=</HashCode>
+      <FileName>QueueReader.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="HFM.Instances.Entry" Collapsed="true">
+    <Position X="5.75" Y="4.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>0KgbQCNEgwOCUYWZCABQGSCMQkwYACAiFgUHtBwoWBI=</HashCode>
+      <FileName>QueueReader.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="HFM.Instances.InstanceType" Collapsed="true">
+    <Position X="0.5" Y="1.25" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAACAAAAAAAAAQAAAAAAAAAEAAAAAAAAAA=</HashCode>
       <FileName>ClientInstance.cs</FileName>
     </TypeIdentifier>
   </Enum>
-  <Enum Name="HFM.Instances.ClientStatus">
-    <Position X="6" Y="12.75" Width="1.5" />
+  <Enum Name="HFM.Instances.LogLineType" Collapsed="true">
+    <Position X="3.5" Y="2" Width="2" />
     <TypeIdentifier>
-      <HashCode>QAAgAAAAAAIAAAEAAAgAAAAAAAAAAAAIAAAAAAAAABA=</HashCode>
-      <FileName>ClientInstance.cs</FileName>
+      <HashCode>AAAAIAAAwCAECCACQARkggKMkBAABDAAAAJAQAgAIlI=</HashCode>
+      <FileName>LogReader.cs</FileName>
     </TypeIdentifier>
   </Enum>
-  <Enum Name="HFM.Instances.LogLineType">
-    <Position X="8.5" Y="13" Width="1.5" />
+  <Enum Name="HFM.Instances.QueueEntryStatus" Collapsed="true">
+    <Position X="5.75" Y="2" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAIAAAwCAECCACQARgggKMkBAABDAAAAJAQAgAIFI=</HashCode>
-      <FileName>LogReader.cs</FileName>
+      <HashCode>AAAAAAAAADAAAAAAAAYAEAAAQAIAAABBAAAAAAAAABA=</HashCode>
+      <FileName>QueueReader.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="HFM.Instances.SystemType" Collapsed="true">
+    <Position X="5.75" Y="2.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>QueueReader.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="HFM.Instances.WorkUnitResult" Collapsed="true">
+    <Position X="3.5" Y="5.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAgBAAAAAIAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>UnitInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="HFM.Instances.ClientType" Collapsed="true">
+    <Position X="0.5" Y="2" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAQAAIAIAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>ClientInstance.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="Tahoma" Size="8.25" />

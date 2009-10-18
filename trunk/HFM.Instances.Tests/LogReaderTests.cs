@@ -22,8 +22,6 @@ using System.Collections.Generic;
 
 using NUnit.Framework;
 
-using HFM.Proteins;
-
 namespace HFM.Instances.Tests
 {
    [TestFixture]

@@ -174,17 +174,17 @@ namespace HFM.Instances
          {
             XMLOps.setXmlNode(xmlData, "UnitInfo/DownloadTime", Instance.CurrentUnitInfo.DownloadTime.ToString("d MMMM yyyy hh:mm tt"));
          }
-         XMLOps.setXmlNode(xmlData, "UnitInfo/FramesComplete", String.Format("{0}", Instance.CurrentUnitInfo.FramesComplete));
-         XMLOps.setXmlNode(xmlData, "UnitInfo/PercentComplete", String.Format("{0}", Instance.CurrentUnitInfo.PercentComplete));
-         XMLOps.setXmlNode(xmlData, "UnitInfo/TimePerFrame", String.Format("{0}h, {1}m, {2}s", Instance.CurrentUnitInfo.TimePerFrame.Hours, Instance.CurrentUnitInfo.TimePerFrame.Minutes, Instance.CurrentUnitInfo.TimePerFrame.Seconds));
+         XMLOps.setXmlNode(xmlData, "UnitInfo/FramesComplete", String.Format("{0}", Instance.FramesComplete));
+         XMLOps.setXmlNode(xmlData, "UnitInfo/PercentComplete", String.Format("{0}", Instance.PercentComplete));
+         XMLOps.setXmlNode(xmlData, "UnitInfo/TimePerFrame", String.Format("{0}h, {1}m, {2}s", Instance.TimePerFrame.Hours, Instance.TimePerFrame.Minutes, Instance.TimePerFrame.Seconds));
 
-         if (Instance.CurrentUnitInfo.ETA.Equals(TimeSpan.Zero))
+         if (Instance.ETA.Equals(TimeSpan.Zero))
          {
             XMLOps.setXmlNode(xmlData, "UnitInfo/ExpectedCompletionDate", "Unknown");
          }
          else
          {
-            DateTime CompleteTime = DateTime.Now.Add(Instance.CurrentUnitInfo.ETA);
+            DateTime CompleteTime = DateTime.Now.Add(Instance.ETA);
             XMLOps.setXmlNode(xmlData, "UnitInfo/ExpectedCompletionDate", CompleteTime.ToLongDateString() + " at " + CompleteTime.ToLongTimeString());
          }
 
@@ -197,10 +197,10 @@ namespace HFM.Instances
          //    </Computer>
 
          string PpdFormatString = PreferenceSet.PpdFormatString;
-         XMLOps.setXmlNode(xmlData, "Computer/EstPPD", String.Format("{0:" + PpdFormatString + "}", Instance.CurrentUnitInfo.PPD));
-         XMLOps.setXmlNode(xmlData, "Computer/EstPPW", String.Format("{0:" + PpdFormatString + "}", Instance.CurrentUnitInfo.PPD * 7));
-         XMLOps.setXmlNode(xmlData, "Computer/EstUPD", String.Format("{0:" + PpdFormatString + "}", Instance.CurrentUnitInfo.UPD));
-         XMLOps.setXmlNode(xmlData, "Computer/EstUPW", String.Format("{0:" + PpdFormatString + "}", Instance.CurrentUnitInfo.UPD * 7));
+         XMLOps.setXmlNode(xmlData, "Computer/EstPPD", String.Format("{0:" + PpdFormatString + "}", Instance.PPD));
+         XMLOps.setXmlNode(xmlData, "Computer/EstPPW", String.Format("{0:" + PpdFormatString + "}", Instance.PPD * 7));
+         XMLOps.setXmlNode(xmlData, "Computer/EstUPD", String.Format("{0:" + PpdFormatString + "}", Instance.UPD));
+         XMLOps.setXmlNode(xmlData, "Computer/EstUPW", String.Format("{0:" + PpdFormatString + "}", Instance.UPD * 7));
          XMLOps.setXmlNode(xmlData, "Computer/TotalProjects", Instance.TotalUnits.ToString());
 
          //    <Protein>
@@ -295,16 +295,16 @@ namespace HFM.Instances
             XMLOps.setXmlNode(xmlData, "Status", Instance.Status.ToString());
             XMLOps.setXmlNode(xmlData, "StatusColor", ClientInstance.GetStatusHtmlColor(Instance.Status));
             XMLOps.setXmlNode(xmlData, "StatusFontColor", ClientInstance.GetStatusHtmlFontColor(Instance.Status));
-            XMLOps.setXmlNode(xmlData, "PercentComplete", Instance.CurrentUnitInfo.PercentComplete.ToString());
+            XMLOps.setXmlNode(xmlData, "PercentComplete", Instance.PercentComplete.ToString());
             XMLOps.setXmlNode(xmlData, "Name", Instance.InstanceName);
             XMLOps.setXmlNode(xmlData, "UserIDDuplicate", duplicateUserID.Contains(Instance.UserAndMachineID).ToString());
             XMLOps.setXmlNode(xmlData, "ClientType", Instance.CurrentUnitInfo.TypeOfClient.ToString());
-            XMLOps.setXmlNode(xmlData, "TPF", Instance.CurrentUnitInfo.TimePerFrame.ToString());
-            XMLOps.setXmlNode(xmlData, "PPD", String.Format("{0:" + PreferenceSet.PpdFormatString + "}", Instance.CurrentUnitInfo.PPD));
-            XMLOps.setXmlNode(xmlData, "UPD", String.Format("{0:0.00}", Instance.CurrentUnitInfo.UPD));
+            XMLOps.setXmlNode(xmlData, "TPF", Instance.TimePerFrame.ToString());
+            XMLOps.setXmlNode(xmlData, "PPD", String.Format("{0:" + PreferenceSet.PpdFormatString + "}", Instance.PPD));
+            XMLOps.setXmlNode(xmlData, "UPD", String.Format("{0:0.00}", Instance.UPD));
             XMLOps.setXmlNode(xmlData, "MHz", Instance.ClientProcessorMegahertz.ToString());
-            XMLOps.setXmlNode(xmlData, "PPDMHz", String.Format("{0:0.000}", Instance.CurrentUnitInfo.PPD / Instance.ClientProcessorMegahertz));
-            XMLOps.setXmlNode(xmlData, "ETA", Instance.CurrentUnitInfo.ETA.ToString());
+            XMLOps.setXmlNode(xmlData, "PPDMHz", String.Format("{0:0.000}", Instance.PPD / Instance.ClientProcessorMegahertz));
+            XMLOps.setXmlNode(xmlData, "ETA", Instance.ETA.ToString());
             XMLOps.setXmlNode(xmlData, "Core", Instance.CurrentUnitInfo.CurrentProtein.Core);
             XMLOps.setXmlNode(xmlData, "CoreVersion", Instance.CurrentUnitInfo.CoreVersion);
             XMLOps.setXmlNode(xmlData, "ProjectRunCloneGen", Instance.CurrentUnitInfo.ProjectRunCloneGen);
@@ -312,7 +312,7 @@ namespace HFM.Instances
             XMLOps.setXmlNode(xmlData, "Credit", String.Format("{0:0}", Instance.CurrentUnitInfo.CurrentProtein.Credit));
             XMLOps.setXmlNode(xmlData, "Completed", Instance.NumberOfCompletedUnitsSinceLastStart.ToString());
             XMLOps.setXmlNode(xmlData, "Failed", Instance.NumberOfFailedUnitsSinceLastStart.ToString());
-            XMLOps.setXmlNode(xmlData, "Username", String.Format("{0} ({1})", Instance.CurrentUnitInfo.FoldingID, Instance.CurrentUnitInfo.Team));
+            XMLOps.setXmlNode(xmlData, "Username", String.Format("{0} ({1})", Instance.FoldingID, Instance.Team));
             XMLOps.setXmlNode(xmlData, "UsernameMatch", Instance.IsUsernameOk().ToString()); //Issue 51
             if (Instance.CurrentUnitInfo.DownloadTime.Equals(DateTime.MinValue))
             {

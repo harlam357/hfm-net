@@ -61,6 +61,9 @@
     <Compile Include="QueueParser.cs" />
     <Compile Include="QueueReader.cs" />
     <Compile Include="SortableBindingList.cs" />
+    <Compile Include="UnitFrame.cs" />
+    <Compile Include="UnitInfo.cs" />
+    <Compile Include="UnitInfoCollection.cs" />
     <Compile Include="XMLGen.cs">
       <SubType>Code</SubType>
     </Compile>

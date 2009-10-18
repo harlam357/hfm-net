@@ -28,7 +28,7 @@ using HFM.Proteins;
 using HFM.Preferences;
 using HFM.Instrumentation;
 
-namespace HFM.Proteins
+namespace HFM.Instances
 {
    [Serializable]
    public class UnitInfoCollection

@@ -19,6 +19,7 @@
  */
 
 using System;
+
 using HFM.Preferences;
 
 namespace HFM.Proteins
@@ -169,6 +170,11 @@ namespace HFM.Proteins
          set { _Contact = value; }
       }
       
+      public bool IsUnknown
+      {
+         get { return ProjectNumber == 0; }
+      }
+
       /// <summary>
       /// Get Points Per Day based on given Frame Time
       /// </summary>
