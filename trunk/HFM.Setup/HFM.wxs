@@ -32,6 +32,7 @@
             <File Id="file8" Name="HFM.Proteins.dll" Source="..\Release\HFM.Proteins.dll" />
             <File Id="file9" Name="HTMLparser License.txt" Source="..\Release\HTMLparser License.txt" />
             <File Id="file10" Name="HTMLparser.dll" Source="..\Release\HTMLparser.dll" />
+            <File Id="file28" Name="ZedGraph.dll" Source="..\Release\ZedGraph.dll" />
          </Component>
          <Directory Id="directory0" Name="CSS">
             <Component Id="component1" Guid="923D5A99-1933-4796-A3EA-04078B5AB62F" DiskId="1">
