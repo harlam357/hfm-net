@@ -619,5 +619,28 @@ namespace HFM.Preferences.Properties {
                 this["QueueViewerVisible"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <string>Red</string>
+  <string>Green</string>
+  <string>Blue</string>
+  <string>Chocolate</string>
+  <string>Teal</string>
+  <string>MidnightBlue</string>
+  <string>Maroon</string>
+  <string>DarkOliveGreen</string>
+  <string>Indigo</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection GraphColors {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["GraphColors"]));
+            }
+            set {
+                this["GraphColors"] = value;
+            }
+        }
     }
 }

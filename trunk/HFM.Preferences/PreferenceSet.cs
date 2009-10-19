@@ -19,8 +19,11 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -522,6 +525,13 @@ namespace HFM.Preferences
          set { _QueueViewerVisible = value; }
       }
 
+      private List<Color> _GraphColors;
+      public List<Color> GraphColors
+      {
+         get { return _GraphColors; }
+         set { _GraphColors = value; }
+      }
+
       public static String AppPath
       {
          get
@@ -779,6 +789,15 @@ namespace HFM.Preferences
          }
          _ReportEuePause = Settings.Default.ReportEuePause;
          _QueueViewerVisible = Settings.Default.QueueViewerVisible;
+         _GraphColors = new List<Color>();
+         foreach (string color in Settings.Default.GraphColors)
+         {
+            Color realColor = Color.FromName(color);
+            if (realColor.IsEmpty == false)
+            {
+               _GraphColors.Add(realColor);
+            }
+         }
          
          _AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
          _AppDataPath = Path.Combine(_AppDataPath, ExeName);
@@ -927,6 +946,13 @@ namespace HFM.Preferences
             }
             Settings.Default.ReportEuePause = _ReportEuePause;
             Settings.Default.QueueViewerVisible = _QueueViewerVisible;
+            
+            StringCollection col = new StringCollection();
+            foreach (Color color in _GraphColors)
+            {
+               col.Add(color.Name);
+            }
+            Settings.Default.GraphColors = col;
 
             Settings.Default.Save();
          }

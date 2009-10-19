@@ -269,6 +269,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\hfm_logo.png" />
+    <None Include="Resources\UpArrow.png" />
+    <None Include="Resources\Color.png" />
+    <None Include="Resources\Delete.png" />
+    <None Include="Resources\DownArrow.png" />
     <Content Include="XML\Overview.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

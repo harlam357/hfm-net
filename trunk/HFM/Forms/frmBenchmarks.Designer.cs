@@ -59,8 +59,17 @@ namespace HFM.Forms
          this.tabControl1 = new System.Windows.Forms.TabControl();
          this.tabTextBenchmark = new System.Windows.Forms.TabPage();
          this.txtBenchmarks = new HFM.Classes.TextBoxWrapper();
-         this.tabGraphBenchmark = new System.Windows.Forms.TabPage();
-         this.zg1 = new ZedGraph.ZedGraphControl();
+         this.tabGraphFrameTime = new System.Windows.Forms.TabPage();
+         this.zgFrameTime = new ZedGraph.ZedGraphControl();
+         this.tabGraphPPD = new System.Windows.Forms.TabPage();
+         this.zgPpd = new ZedGraph.ZedGraphControl();
+         this.tabGraphColors = new System.Windows.Forms.TabPage();
+         this.picColorPreview = new System.Windows.Forms.PictureBox();
+         this.btnMoveColorDown = new HFM.Classes.ButtonWrapper();
+         this.btnMoveColorUp = new HFM.Classes.ButtonWrapper();
+         this.btnDeleteColor = new HFM.Classes.ButtonWrapper();
+         this.btnAddColor = new HFM.Classes.ButtonWrapper();
+         this.lstColors = new System.Windows.Forms.ListBox();
          this.btnExit = new HFM.Classes.ButtonWrapper();
          this.grpClients = new HFM.Classes.GroupBoxWrapper();
          this.picDeleteClient = new System.Windows.Forms.PictureBox();
@@ -76,7 +85,10 @@ namespace HFM.Forms
          this.splitContainerBench.SuspendLayout();
          this.tabControl1.SuspendLayout();
          this.tabTextBenchmark.SuspendLayout();
-         this.tabGraphBenchmark.SuspendLayout();
+         this.tabGraphFrameTime.SuspendLayout();
+         this.tabGraphPPD.SuspendLayout();
+         this.tabGraphColors.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.picColorPreview)).BeginInit();
          this.grpClients.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.picDeleteClient)).BeginInit();
          this.listBox1ContextMenuStrip.SuspendLayout();
@@ -112,7 +124,7 @@ namespace HFM.Forms
          this.grpProjectInfo.Margin = new System.Windows.Forms.Padding(10);
          this.grpProjectInfo.Name = "grpProjectInfo";
          this.grpProjectInfo.Size = new System.Drawing.Size(536, 120);
-         this.grpProjectInfo.TabIndex = 0;
+         this.grpProjectInfo.TabIndex = 2;
          this.grpProjectInfo.TabStop = false;
          this.grpProjectInfo.Text = "Project Information";
          // 
@@ -122,7 +134,8 @@ namespace HFM.Forms
          this.txtServerIP.Name = "txtServerIP";
          this.txtServerIP.ReadOnly = true;
          this.txtServerIP.Size = new System.Drawing.Size(95, 20);
-         this.txtServerIP.TabIndex = 19;
+         this.txtServerIP.TabIndex = 18;
+         this.txtServerIP.TabStop = false;
          this.txtServerIP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
          // txtContact
@@ -131,7 +144,8 @@ namespace HFM.Forms
          this.txtContact.Name = "txtContact";
          this.txtContact.ReadOnly = true;
          this.txtContact.Size = new System.Drawing.Size(95, 20);
-         this.txtContact.TabIndex = 18;
+         this.txtContact.TabIndex = 17;
+         this.txtContact.TabStop = false;
          this.txtContact.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
          // txtMaximumDays
@@ -140,7 +154,8 @@ namespace HFM.Forms
          this.txtMaximumDays.Name = "txtMaximumDays";
          this.txtMaximumDays.ReadOnly = true;
          this.txtMaximumDays.Size = new System.Drawing.Size(95, 20);
-         this.txtMaximumDays.TabIndex = 17;
+         this.txtMaximumDays.TabIndex = 16;
+         this.txtMaximumDays.TabStop = false;
          this.txtMaximumDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
          // txtPreferredDays
@@ -149,7 +164,8 @@ namespace HFM.Forms
          this.txtPreferredDays.Name = "txtPreferredDays";
          this.txtPreferredDays.ReadOnly = true;
          this.txtPreferredDays.Size = new System.Drawing.Size(95, 20);
-         this.txtPreferredDays.TabIndex = 16;
+         this.txtPreferredDays.TabIndex = 15;
+         this.txtPreferredDays.TabStop = false;
          this.txtPreferredDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
          // txtCore
@@ -158,7 +174,8 @@ namespace HFM.Forms
          this.txtCore.Name = "txtCore";
          this.txtCore.ReadOnly = true;
          this.txtCore.Size = new System.Drawing.Size(122, 20);
-         this.txtCore.TabIndex = 15;
+         this.txtCore.TabIndex = 8;
+         this.txtCore.TabStop = false;
          this.txtCore.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
          // txtAtoms
@@ -167,7 +184,8 @@ namespace HFM.Forms
          this.txtAtoms.Name = "txtAtoms";
          this.txtAtoms.ReadOnly = true;
          this.txtAtoms.Size = new System.Drawing.Size(92, 20);
-         this.txtAtoms.TabIndex = 14;
+         this.txtAtoms.TabIndex = 10;
+         this.txtAtoms.TabStop = false;
          this.txtAtoms.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
          // txtFrames
@@ -176,7 +194,8 @@ namespace HFM.Forms
          this.txtFrames.Name = "txtFrames";
          this.txtFrames.ReadOnly = true;
          this.txtFrames.Size = new System.Drawing.Size(92, 20);
-         this.txtFrames.TabIndex = 13;
+         this.txtFrames.TabIndex = 7;
+         this.txtFrames.TabStop = false;
          this.txtFrames.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
          // txtCredit
@@ -185,7 +204,8 @@ namespace HFM.Forms
          this.txtCredit.Name = "txtCredit";
          this.txtCredit.ReadOnly = true;
          this.txtCredit.Size = new System.Drawing.Size(122, 20);
-         this.txtCredit.TabIndex = 12;
+         this.txtCredit.TabIndex = 5;
+         this.txtCredit.TabStop = false;
          this.txtCredit.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
          // txtProjectID
@@ -194,7 +214,8 @@ namespace HFM.Forms
          this.txtProjectID.Name = "txtProjectID";
          this.txtProjectID.ReadOnly = true;
          this.txtProjectID.Size = new System.Drawing.Size(250, 20);
-         this.txtProjectID.TabIndex = 11;
+         this.txtProjectID.TabIndex = 4;
+         this.txtProjectID.TabStop = false;
          this.txtProjectID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
          // linkDescription
@@ -202,10 +223,8 @@ namespace HFM.Forms
          this.linkDescription.AutoSize = true;
          this.linkDescription.Location = new System.Drawing.Point(76, 92);
          this.linkDescription.Name = "linkDescription";
-         this.linkDescription.Size = new System.Drawing.Size(55, 13);
-         this.linkDescription.TabIndex = 10;
-         this.linkDescription.TabStop = true;
-         this.linkDescription.Text = "linkLabel1";
+         this.linkDescription.Size = new System.Drawing.Size(0, 13);
+         this.linkDescription.TabIndex = 19;
          this.linkDescription.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkDescription_LinkClicked);
          // 
          // lblServerIP
@@ -214,7 +233,7 @@ namespace HFM.Forms
          this.lblServerIP.Location = new System.Drawing.Point(369, 92);
          this.lblServerIP.Name = "lblServerIP";
          this.lblServerIP.Size = new System.Drawing.Size(54, 13);
-         this.lblServerIP.TabIndex = 9;
+         this.lblServerIP.TabIndex = 14;
          this.lblServerIP.Text = "Server IP:";
          // 
          // lblContact
@@ -223,7 +242,7 @@ namespace HFM.Forms
          this.lblContact.Location = new System.Drawing.Point(376, 69);
          this.lblContact.Name = "lblContact";
          this.lblContact.Size = new System.Drawing.Size(47, 13);
-         this.lblContact.TabIndex = 8;
+         this.lblContact.TabIndex = 13;
          this.lblContact.Text = "Contact:";
          // 
          // lblCore
@@ -232,7 +251,7 @@ namespace HFM.Forms
          this.lblCore.Location = new System.Drawing.Point(12, 69);
          this.lblCore.Name = "lblCore";
          this.lblCore.Size = new System.Drawing.Size(32, 13);
-         this.lblCore.TabIndex = 7;
+         this.lblCore.TabIndex = 2;
          this.lblCore.Text = "Core:";
          // 
          // lblMaxDays
@@ -241,7 +260,7 @@ namespace HFM.Forms
          this.lblMaxDays.Location = new System.Drawing.Point(342, 44);
          this.lblMaxDays.Name = "lblMaxDays";
          this.lblMaxDays.Size = new System.Drawing.Size(81, 13);
-         this.lblMaxDays.TabIndex = 6;
+         this.lblMaxDays.TabIndex = 12;
          this.lblMaxDays.Text = "Maximum Days:";
          // 
          // lblPreferred
@@ -250,7 +269,7 @@ namespace HFM.Forms
          this.lblPreferred.Location = new System.Drawing.Point(343, 20);
          this.lblPreferred.Name = "lblPreferred";
          this.lblPreferred.Size = new System.Drawing.Size(80, 13);
-         this.lblPreferred.TabIndex = 5;
+         this.lblPreferred.TabIndex = 11;
          this.lblPreferred.Text = "Preferred Days:";
          // 
          // lblAtoms
@@ -259,7 +278,7 @@ namespace HFM.Forms
          this.lblAtoms.Location = new System.Drawing.Point(188, 69);
          this.lblAtoms.Name = "lblAtoms";
          this.lblAtoms.Size = new System.Drawing.Size(39, 13);
-         this.lblAtoms.TabIndex = 4;
+         this.lblAtoms.TabIndex = 9;
          this.lblAtoms.Text = "Atoms:";
          // 
          // lblFrames
@@ -268,7 +287,7 @@ namespace HFM.Forms
          this.lblFrames.Location = new System.Drawing.Point(183, 44);
          this.lblFrames.Name = "lblFrames";
          this.lblFrames.Size = new System.Drawing.Size(44, 13);
-         this.lblFrames.TabIndex = 3;
+         this.lblFrames.TabIndex = 6;
          this.lblFrames.Text = "Frames:";
          // 
          // lblCredit
@@ -277,7 +296,7 @@ namespace HFM.Forms
          this.lblCredit.Location = new System.Drawing.Point(12, 44);
          this.lblCredit.Name = "lblCredit";
          this.lblCredit.Size = new System.Drawing.Size(37, 13);
-         this.lblCredit.TabIndex = 2;
+         this.lblCredit.TabIndex = 1;
          this.lblCredit.Text = "Credit:";
          // 
          // lblDescription
@@ -286,7 +305,7 @@ namespace HFM.Forms
          this.lblDescription.Location = new System.Drawing.Point(12, 92);
          this.lblDescription.Name = "lblDescription";
          this.lblDescription.Size = new System.Drawing.Size(63, 13);
-         this.lblDescription.TabIndex = 1;
+         this.lblDescription.TabIndex = 3;
          this.lblDescription.Text = "Description:";
          // 
          // lblProjectID
@@ -314,7 +333,7 @@ namespace HFM.Forms
          this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
          this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 140F));
          this.tableLayoutPanel1.Size = new System.Drawing.Size(556, 595);
-         this.tableLayoutPanel1.TabIndex = 3;
+         this.tableLayoutPanel1.TabIndex = 0;
          // 
          // splitContainerBench
          // 
@@ -334,7 +353,7 @@ namespace HFM.Forms
          this.splitContainerBench.Panel2.Controls.Add(this.btnExit);
          this.splitContainerBench.Size = new System.Drawing.Size(556, 395);
          this.splitContainerBench.SplitterDistance = 65;
-         this.splitContainerBench.TabIndex = 2;
+         this.splitContainerBench.TabIndex = 1;
          // 
          // listBox1
          // 
@@ -351,13 +370,15 @@ namespace HFM.Forms
          // tabControl1
          // 
          this.tabControl1.Controls.Add(this.tabTextBenchmark);
-         this.tabControl1.Controls.Add(this.tabGraphBenchmark);
+         this.tabControl1.Controls.Add(this.tabGraphFrameTime);
+         this.tabControl1.Controls.Add(this.tabGraphPPD);
+         this.tabControl1.Controls.Add(this.tabGraphColors);
          this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
          this.tabControl1.Location = new System.Drawing.Point(0, 0);
          this.tabControl1.Name = "tabControl1";
          this.tabControl1.SelectedIndex = 0;
          this.tabControl1.Size = new System.Drawing.Size(487, 395);
-         this.tabControl1.TabIndex = 12;
+         this.tabControl1.TabIndex = 0;
          // 
          // tabTextBenchmark
          // 
@@ -383,31 +404,136 @@ namespace HFM.Forms
          this.txtBenchmarks.Size = new System.Drawing.Size(473, 363);
          this.txtBenchmarks.TabIndex = 0;
          // 
-         // tabGraphBenchmark
+         // tabGraphFrameTime
          // 
-         this.tabGraphBenchmark.Controls.Add(this.zg1);
-         this.tabGraphBenchmark.Location = new System.Drawing.Point(4, 22);
-         this.tabGraphBenchmark.Name = "tabGraphBenchmark";
-         this.tabGraphBenchmark.Padding = new System.Windows.Forms.Padding(3);
-         this.tabGraphBenchmark.Size = new System.Drawing.Size(479, 369);
-         this.tabGraphBenchmark.TabIndex = 1;
-         this.tabGraphBenchmark.Text = "Graph";
-         this.tabGraphBenchmark.UseVisualStyleBackColor = true;
+         this.tabGraphFrameTime.Controls.Add(this.zgFrameTime);
+         this.tabGraphFrameTime.Location = new System.Drawing.Point(4, 22);
+         this.tabGraphFrameTime.Name = "tabGraphFrameTime";
+         this.tabGraphFrameTime.Padding = new System.Windows.Forms.Padding(3);
+         this.tabGraphFrameTime.Size = new System.Drawing.Size(479, 369);
+         this.tabGraphFrameTime.TabIndex = 2;
+         this.tabGraphFrameTime.Text = "Graph - Frame Time";
+         this.tabGraphFrameTime.UseVisualStyleBackColor = true;
          // 
-         // zg1
+         // zgFrameTime
          // 
-         this.zg1.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.zg1.Location = new System.Drawing.Point(3, 3);
-         this.zg1.Name = "zg1";
-         this.zg1.ScrollGrace = 0;
-         this.zg1.ScrollMaxX = 0;
-         this.zg1.ScrollMaxY = 0;
-         this.zg1.ScrollMaxY2 = 0;
-         this.zg1.ScrollMinX = 0;
-         this.zg1.ScrollMinY = 0;
-         this.zg1.ScrollMinY2 = 0;
-         this.zg1.Size = new System.Drawing.Size(473, 363);
-         this.zg1.TabIndex = 0;
+         this.zgFrameTime.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.zgFrameTime.Location = new System.Drawing.Point(3, 3);
+         this.zgFrameTime.Name = "zgFrameTime";
+         this.zgFrameTime.ScrollGrace = 0;
+         this.zgFrameTime.ScrollMaxX = 0;
+         this.zgFrameTime.ScrollMaxY = 0;
+         this.zgFrameTime.ScrollMaxY2 = 0;
+         this.zgFrameTime.ScrollMinX = 0;
+         this.zgFrameTime.ScrollMinY = 0;
+         this.zgFrameTime.ScrollMinY2 = 0;
+         this.zgFrameTime.Size = new System.Drawing.Size(473, 363);
+         this.zgFrameTime.TabIndex = 0;
+         // 
+         // tabGraphPPD
+         // 
+         this.tabGraphPPD.Controls.Add(this.zgPpd);
+         this.tabGraphPPD.Location = new System.Drawing.Point(4, 22);
+         this.tabGraphPPD.Name = "tabGraphPPD";
+         this.tabGraphPPD.Padding = new System.Windows.Forms.Padding(3);
+         this.tabGraphPPD.Size = new System.Drawing.Size(479, 369);
+         this.tabGraphPPD.TabIndex = 1;
+         this.tabGraphPPD.Text = "Graph - PPD";
+         this.tabGraphPPD.UseVisualStyleBackColor = true;
+         // 
+         // zgPpd
+         // 
+         this.zgPpd.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.zgPpd.Location = new System.Drawing.Point(3, 3);
+         this.zgPpd.Name = "zgPpd";
+         this.zgPpd.ScrollGrace = 0;
+         this.zgPpd.ScrollMaxX = 0;
+         this.zgPpd.ScrollMaxY = 0;
+         this.zgPpd.ScrollMaxY2 = 0;
+         this.zgPpd.ScrollMinX = 0;
+         this.zgPpd.ScrollMinY = 0;
+         this.zgPpd.ScrollMinY2 = 0;
+         this.zgPpd.Size = new System.Drawing.Size(473, 363);
+         this.zgPpd.TabIndex = 0;
+         // 
+         // tabGraphColors
+         // 
+         this.tabGraphColors.Controls.Add(this.picColorPreview);
+         this.tabGraphColors.Controls.Add(this.btnMoveColorDown);
+         this.tabGraphColors.Controls.Add(this.btnMoveColorUp);
+         this.tabGraphColors.Controls.Add(this.btnDeleteColor);
+         this.tabGraphColors.Controls.Add(this.btnAddColor);
+         this.tabGraphColors.Controls.Add(this.lstColors);
+         this.tabGraphColors.Location = new System.Drawing.Point(4, 22);
+         this.tabGraphColors.Name = "tabGraphColors";
+         this.tabGraphColors.Size = new System.Drawing.Size(479, 369);
+         this.tabGraphColors.TabIndex = 3;
+         this.tabGraphColors.Text = "Graph Colors";
+         this.tabGraphColors.UseVisualStyleBackColor = true;
+         // 
+         // picColorPreview
+         // 
+         this.picColorPreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+         this.picColorPreview.Location = new System.Drawing.Point(170, 12);
+         this.picColorPreview.Name = "picColorPreview";
+         this.picColorPreview.Size = new System.Drawing.Size(66, 66);
+         this.picColorPreview.TabIndex = 5;
+         this.picColorPreview.TabStop = false;
+         // 
+         // btnMoveColorDown
+         // 
+         this.btnMoveColorDown.Image = global::HFM.Properties.Resources.DownArrow;
+         this.btnMoveColorDown.Location = new System.Drawing.Point(123, 48);
+         this.btnMoveColorDown.Name = "btnMoveColorDown";
+         this.btnMoveColorDown.Size = new System.Drawing.Size(30, 30);
+         this.btnMoveColorDown.TabIndex = 2;
+         this.toolTip1.SetToolTip(this.btnMoveColorDown, "Move Color Down");
+         this.btnMoveColorDown.UseVisualStyleBackColor = true;
+         this.btnMoveColorDown.Click += new System.EventHandler(this.btnMoveColorDown_Click);
+         // 
+         // btnMoveColorUp
+         // 
+         this.btnMoveColorUp.Image = global::HFM.Properties.Resources.UpArrow;
+         this.btnMoveColorUp.Location = new System.Drawing.Point(123, 12);
+         this.btnMoveColorUp.Name = "btnMoveColorUp";
+         this.btnMoveColorUp.Size = new System.Drawing.Size(30, 30);
+         this.btnMoveColorUp.TabIndex = 1;
+         this.toolTip1.SetToolTip(this.btnMoveColorUp, "Move Color Up");
+         this.btnMoveColorUp.UseVisualStyleBackColor = true;
+         this.btnMoveColorUp.Click += new System.EventHandler(this.btnMoveColorUp_Click);
+         // 
+         // btnDeleteColor
+         // 
+         this.btnDeleteColor.Image = global::HFM.Properties.Resources.Delete;
+         this.btnDeleteColor.Location = new System.Drawing.Point(123, 120);
+         this.btnDeleteColor.Name = "btnDeleteColor";
+         this.btnDeleteColor.Size = new System.Drawing.Size(30, 30);
+         this.btnDeleteColor.TabIndex = 4;
+         this.toolTip1.SetToolTip(this.btnDeleteColor, "Delete Color");
+         this.btnDeleteColor.UseVisualStyleBackColor = true;
+         this.btnDeleteColor.Click += new System.EventHandler(this.btnDeleteColor_Click);
+         // 
+         // btnAddColor
+         // 
+         this.btnAddColor.Image = global::HFM.Properties.Resources.Color;
+         this.btnAddColor.Location = new System.Drawing.Point(123, 84);
+         this.btnAddColor.Name = "btnAddColor";
+         this.btnAddColor.Size = new System.Drawing.Size(30, 30);
+         this.btnAddColor.TabIndex = 3;
+         this.toolTip1.SetToolTip(this.btnAddColor, "Add Color");
+         this.btnAddColor.UseVisualStyleBackColor = true;
+         this.btnAddColor.Click += new System.EventHandler(this.btnAddColor_Click);
+         // 
+         // lstColors
+         // 
+         this.lstColors.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                     | System.Windows.Forms.AnchorStyles.Left)));
+         this.lstColors.FormattingEnabled = true;
+         this.lstColors.Location = new System.Drawing.Point(3, 6);
+         this.lstColors.Name = "lstColors";
+         this.lstColors.Size = new System.Drawing.Size(111, 355);
+         this.lstColors.TabIndex = 0;
+         this.lstColors.SelectedIndexChanged += new System.EventHandler(this.lstColors_SelectedIndexChanged);
          // 
          // btnExit
          // 
@@ -415,7 +541,8 @@ namespace HFM.Forms
          this.btnExit.Location = new System.Drawing.Point(385, 182);
          this.btnExit.Name = "btnExit";
          this.btnExit.Size = new System.Drawing.Size(56, 39);
-         this.btnExit.TabIndex = 11;
+         this.btnExit.TabIndex = 1;
+         this.btnExit.TabStop = false;
          this.btnExit.Text = "Exit";
          this.btnExit.UseVisualStyleBackColor = true;
          this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
@@ -429,7 +556,7 @@ namespace HFM.Forms
          this.grpClients.Location = new System.Drawing.Point(3, 3);
          this.grpClients.Name = "grpClients";
          this.grpClients.Size = new System.Drawing.Size(550, 54);
-         this.grpClients.TabIndex = 3;
+         this.grpClients.TabIndex = 0;
          this.grpClients.TabStop = false;
          this.grpClients.Text = "Benchmark Clients";
          // 
@@ -501,7 +628,10 @@ namespace HFM.Forms
          this.tabControl1.ResumeLayout(false);
          this.tabTextBenchmark.ResumeLayout(false);
          this.tabTextBenchmark.PerformLayout();
-         this.tabGraphBenchmark.ResumeLayout(false);
+         this.tabGraphFrameTime.ResumeLayout(false);
+         this.tabGraphPPD.ResumeLayout(false);
+         this.tabGraphColors.ResumeLayout(false);
+         ((System.ComponentModel.ISupportInitialize)(this.picColorPreview)).EndInit();
          this.grpClients.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.picDeleteClient)).EndInit();
          this.listBox1ContextMenuStrip.ResumeLayout(false);
@@ -546,8 +676,17 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolTip toolTip1;
       private System.Windows.Forms.TabControl tabControl1;
       private System.Windows.Forms.TabPage tabTextBenchmark;
-      private System.Windows.Forms.TabPage tabGraphBenchmark;
-      private ZedGraph.ZedGraphControl zg1;
+      private System.Windows.Forms.TabPage tabGraphPPD;
+      private ZedGraph.ZedGraphControl zgPpd;
+      private System.Windows.Forms.TabPage tabGraphFrameTime;
+      private ZedGraph.ZedGraphControl zgFrameTime;
+      private System.Windows.Forms.TabPage tabGraphColors;
+      private ButtonWrapper btnMoveColorDown;
+      private ButtonWrapper btnMoveColorUp;
+      private ButtonWrapper btnDeleteColor;
+      private ButtonWrapper btnAddColor;
+      private System.Windows.Forms.ListBox lstColors;
+      private System.Windows.Forms.PictureBox picColorPreview;
 
 
    }

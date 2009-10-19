@@ -55,6 +55,7 @@ namespace HFM.Forms
       {
          UpdateClientsComboBinding();
          UpdateProjectListBoxBinding(_initialProjectID);
+         lstColors.DataSource = PreferenceSet.Instance.GraphColors;
       }
       #endregion
 
@@ -84,6 +85,10 @@ namespace HFM.Forms
          UpdateBenchmarkText(lines);
 
          List<InstanceProteinBenchmark> list = ProteinBenchmarkCollection.Instance.GetBenchmarks(_currentBenchmarkClient, ProjectID);
+         list.Sort(delegate(InstanceProteinBenchmark benchmark1, InstanceProteinBenchmark benchmark2)
+         {
+            return benchmark1.OwningInstanceName.CompareTo(benchmark2.OwningInstanceName);
+         });
 
          foreach (InstanceProteinBenchmark benchmark in list)
          {
@@ -96,7 +101,8 @@ namespace HFM.Forms
             UpdateBenchmarkText(benchmark.ToMultiLineString(Instance));
          }
 
-         CreatePpdGraph(zg1, lines, list);
+         CreateFrameTimeGraph(zgFrameTime, lines, list);
+         CreatePpdGraph(zgPpd, lines, list);
       }
 
       private void listBox1_MouseDown(object sender, MouseEventArgs e)
@@ -162,6 +168,98 @@ namespace HFM.Forms
             int currentIndex = cboClients.SelectedIndex;
             ProteinBenchmarkCollection.Instance.Delete(_currentBenchmarkClient);
             UpdateClientsComboBinding(currentIndex);
+         }
+      }
+
+      private void lstColors_SelectedIndexChanged(object sender, EventArgs e)
+      {
+         if (lstColors.SelectedIndex == -1) return;
+         
+         picColorPreview.BackColor = PreferenceSet.Instance.GraphColors[lstColors.SelectedIndex];
+      }
+
+      private void btnMoveColorUp_Click(object sender, EventArgs e)
+      {
+         if (lstColors.SelectedIndex == -1)
+         {
+            MessageBox.Show(this, "No Color Selected.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+         }
+
+         List<Color> GraphColors = PreferenceSet.Instance.GraphColors;
+
+         if (lstColors.SelectedIndex == 0) return;
+
+         int index = lstColors.SelectedIndex;
+         Color moveColor = GraphColors[index];
+         GraphColors.RemoveAt(index);
+         GraphColors.Insert(index - 1, moveColor);
+         UpdateGraphColorsBinding();
+         lstColors.SelectedIndex = index - 1;
+      }
+
+      private void btnMoveColorDown_Click(object sender, EventArgs e)
+      {
+         if (lstColors.SelectedIndex == -1)
+         {
+            MessageBox.Show(this, "No Color Selected.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+         }
+
+         List<Color> GraphColors = PreferenceSet.Instance.GraphColors;
+
+         if (lstColors.SelectedIndex == GraphColors.Count - 1) return;
+         
+         int index = lstColors.SelectedIndex;
+         Color moveColor = GraphColors[index];
+         GraphColors.RemoveAt(index);
+         GraphColors.Insert(index + 1, moveColor);
+         UpdateGraphColorsBinding();
+         lstColors.SelectedIndex = index + 1;
+      }
+
+      private void btnAddColor_Click(object sender, EventArgs e)
+      {
+         ColorDialog dlg = new ColorDialog();
+         dlg.SolidColorOnly = true;
+         if (dlg.ShowDialog(this).Equals(DialogResult.OK))
+         {
+            List<Color> GraphColors = PreferenceSet.Instance.GraphColors;
+            Color addColor = FindNearestKnown(dlg.Color).Color;
+            if (GraphColors.Contains(addColor))
+            {
+               MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture, "{0} is already a graph color.", addColor.Name), 
+                  Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+               return;
+            }
+
+            GraphColors.Add(addColor);
+            UpdateGraphColorsBinding();
+            lstColors.SelectedIndex = PreferenceSet.Instance.GraphColors.Count - 1;
+         }
+      }
+
+      private void btnDeleteColor_Click(object sender, EventArgs e)
+      {
+         if (lstColors.SelectedIndex == -1)
+         {
+            MessageBox.Show(this, "No Color Selected.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+         }
+
+         List<Color> GraphColors = PreferenceSet.Instance.GraphColors;
+         if (GraphColors.Count <= 3)
+         {
+            MessageBox.Show(this, "Must have at least three colors.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+         }
+
+         int index = lstColors.SelectedIndex;
+         GraphColors.RemoveAt(index);
+         UpdateGraphColorsBinding();
+         if (index == GraphColors.Count)
+         {
+            lstColors.SelectedIndex = GraphColors.Count - 1;
          }
       }
 
@@ -263,10 +361,17 @@ namespace HFM.Forms
          }
       }
 
+      private void UpdateGraphColorsBinding()
+      {
+         CurrencyManager cm = (CurrencyManager)lstColors.BindingContext[lstColors.DataSource];
+         cm.Refresh();
+      }
+
       /// <summary>
-      /// Build The GraphPane
+      /// Build The PPD GraphPane
       /// </summary>
       /// <param name="zg">ZedGraph Control</param>
+      /// <param name="ProjectInfo">Project Info Array</param>
       /// <param name="benchmarks">Benchmarks Collection to Plot</param>
       private static void CreatePpdGraph(ZedGraphControl zg, string[] ProjectInfo, IEnumerable<InstanceProteinBenchmark> benchmarks)
       {
@@ -346,47 +451,107 @@ namespace HFM.Forms
          zg.Refresh();
       }
       
+      /// <summary>
+      /// Build The Frame Time GraphPane
+      /// </summary>
+      /// <param name="zg">ZedGraph Control</param>
+      /// <param name="ProjectInfo">Project Info Array</param>
+      /// <param name="benchmarks">Benchmarks Collection to Plot</param>
+      private static void CreateFrameTimeGraph(ZedGraphControl zg, string[] ProjectInfo, IEnumerable<InstanceProteinBenchmark> benchmarks)
+      {
+         // get a reference to the GraphPane
+         GraphPane myPane = zg.GraphPane;
+
+         // Clear the bars
+         myPane.CurveList.Clear();
+         // Clear the bar labels
+         myPane.GraphObjList.Clear();
+         
+         // Create the bars for each benchmark
+         int i = 0;
+         foreach (InstanceProteinBenchmark benchmark in benchmarks)
+         {
+            double[] yPoints = new double[2];
+            yPoints[0] = benchmark.MinimumFrameTime.TotalSeconds;
+            yPoints[1] = benchmark.AverageFrameTime.TotalSeconds;
+
+            CreateBar(i, myPane, benchmark.OwningInstanceName, yPoints);
+            i++;
+         }
+
+         // Create the bar labels
+         BarItem.CreateBarLabels(myPane, true, String.Empty, zg.Font.Name, zg.Font.Size, Color.Black, true, false, false);
+
+         // Set the Titles
+         myPane.Title.Text = "HFM.NET - Client Benchmarks";
+         StringBuilder sb = new StringBuilder();
+         for (i = 0; i < ProjectInfo.Length - 2; i++)
+         {
+            sb.Append(ProjectInfo[i]);
+            sb.Append(" / ");
+         }
+         sb.Append(ProjectInfo[i]);
+         myPane.XAxis.Title.Text = sb.ToString();
+         myPane.YAxis.Title.Text = "Frame Time (Seconds)";
+
+         // Draw the X tics between the labels instead of at the labels
+         myPane.XAxis.MajorTic.IsBetweenLabels = true;
+         // Set the XAxis labels
+         string[] labels = new string[] { "Min. Frame Time", "Avg. Frame Time" };
+         myPane.XAxis.Scale.TextLabels = labels;
+         // Set the XAxis to Text type
+         myPane.XAxis.Type = AxisType.Text;
+
+         // Fill the Axis and Pane backgrounds
+         myPane.Chart.Fill = new Fill(Color.White, Color.FromArgb(255, 255, 166), 90F);
+         myPane.Fill = new Fill(Color.FromArgb(250, 250, 255));
+
+         // Tell ZedGraph to refigure the
+         // axes since the data have changed
+         zg.AxisChange();
+         // Refresh the control
+         zg.Refresh();
+      }
+
       private static void CreateBar(int index, GraphPane myPane, string InstanceName, double[] y)
       {
-         Color barColor;
-         switch (index % 6)
-         {
-            case 0:
-               barColor = Color.Red;
-               break;
-            case 1:
-               barColor = Color.Blue;
-               break;
-            case 2:
-               barColor = Color.Green;
-               break;
-            case 3:
-               barColor = Color.Maroon;
-               break;
-            case 4:
-               barColor = Color.DarkSlateBlue;
-               break;
-            case 5:
-               barColor = Color.MediumAquamarine;
-               break;
-            case 6:
-               barColor = Color.DarkViolet;
-               break;
-            case 7:
-               barColor = Color.DeepSkyBlue;
-               break;
-            case 8:
-               barColor = Color.DarkTurquoise;
-               break;
-            default:
-               throw new InvalidOperationException("Logic Error in Bar Color selection.");
-         }
+         List<Color> GraphColors = PreferenceSet.Instance.GraphColors;
+         int ColorIndex = index % GraphColors.Count;
+         Color barColor = GraphColors[ColorIndex];
 
          // Generate a bar with the Instance Name in the legend
          BarItem myBar = myPane.AddBar(InstanceName, null, y, barColor);
          myBar.Bar.Fill = new Fill(barColor, Color.White, barColor);
       }
 
+      private static ColorName FindNearestKnown(Color c)
+      {
+         ColorName best = new ColorName();
+         best.Name = null;
+
+         foreach (string colorName in Enum.GetNames(typeof(KnownColor)))
+         {
+            Color known = Color.FromName(colorName);
+            int dist;
+            dist = Math.Abs(c.R - known.R) + Math.Abs(c.G - known.G) + Math.Abs(c.B - known.B);
+
+            if (best.Name == null || dist < best.Distance)
+            {
+               best.Color = known;
+               best.Name = colorName;
+               best.Distance = dist;
+            }
+         }
+
+         return best;
+      }
       #endregion
+   }
+
+   internal struct ColorName
+   {
+      internal Color Color;
+      internal string Name;
+      internal int Distance;
    }
 }

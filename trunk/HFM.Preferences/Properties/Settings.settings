@@ -152,5 +152,19 @@
     <Setting Name="QueueViewerVisible" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="GraphColors" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;Red&lt;/string&gt;
+  &lt;string&gt;Green&lt;/string&gt;
+  &lt;string&gt;Blue&lt;/string&gt;
+  &lt;string&gt;Chocolate&lt;/string&gt;
+  &lt;string&gt;Teal&lt;/string&gt;
+  &lt;string&gt;MidnightBlue&lt;/string&gt;
+  &lt;string&gt;Maroon&lt;/string&gt;
+  &lt;string&gt;DarkOliveGreen&lt;/string&gt;
+  &lt;string&gt;Indigo&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
