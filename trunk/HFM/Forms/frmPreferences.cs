@@ -47,12 +47,7 @@ namespace HFM.Forms
       {
          InitializeComponent();
 
-         if (PlatformOps.IsRunningOnMono())
-         {
-            chkAutoRun.Checked = false;
-            grpAutoRun.Enabled = false;
-         }
-         else
+         if (PlatformOps.IsRunningOnMono() == false)
          {
             wbCssSample = new WebBrowser();
 
@@ -125,6 +120,12 @@ namespace HFM.Forms
          {
             chkAutoRun.Checked = RegistryOps.IsHfmAutoRunSet();
          }
+         else
+         {
+            // No AutoRun under Mono
+            chkAutoRun.Enabled = false;
+         }
+         chkRunMinimized.Checked = Prefs.RunMinimized;
       }
 
       private void LoadDefaultsTab()
@@ -1032,6 +1033,7 @@ namespace HFM.Forms
                   Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
          }
+         Prefs.RunMinimized = chkRunMinimized.Checked;
       }
 
       private void GetDataDefaultsTab()

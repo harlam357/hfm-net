@@ -1642,6 +1642,10 @@ namespace HFM.Forms
       private void RestoreFormPreferences()
       {
          PreferenceSet Prefs = PreferenceSet.Instance;
+         if (Prefs.RunMinimized)
+         {
+            WindowState = FormWindowState.Minimized;
+         }
 
          // Restore state data
          Point location = Prefs.FormLocation;

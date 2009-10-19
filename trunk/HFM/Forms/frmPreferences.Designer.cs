@@ -54,7 +54,8 @@ namespace HFM.Forms
          this.locateWebFolder = new System.Windows.Forms.FolderBrowserDialog();
          this.tabControl1 = new System.Windows.Forms.TabControl();
          this.tabSchdTasks = new System.Windows.Forms.TabPage();
-         this.grpAutoRun = new HFM.Classes.GroupBoxWrapper();
+         this.grpStartup = new HFM.Classes.GroupBoxWrapper();
+         this.chkRunMinimized = new HFM.Classes.CheckBoxWrapper();
          this.chkAutoRun = new HFM.Classes.CheckBoxWrapper();
          this.grpUpdateData = new HFM.Classes.GroupBoxWrapper();
          this.chkColorLog = new HFM.Classes.CheckBoxWrapper();
@@ -149,7 +150,7 @@ namespace HFM.Forms
          this.btnCancel = new HFM.Classes.ButtonWrapper();
          this.tabControl1.SuspendLayout();
          this.tabSchdTasks.SuspendLayout();
-         this.grpAutoRun.SuspendLayout();
+         this.grpStartup.SuspendLayout();
          this.grpUpdateData.SuspendLayout();
          this.grpHTMLOutput.SuspendLayout();
          this.tabDefaults.SuspendLayout();
@@ -206,7 +207,7 @@ namespace HFM.Forms
          // tabSchdTasks
          // 
          this.tabSchdTasks.BackColor = System.Drawing.SystemColors.Control;
-         this.tabSchdTasks.Controls.Add(this.grpAutoRun);
+         this.tabSchdTasks.Controls.Add(this.grpStartup);
          this.tabSchdTasks.Controls.Add(this.grpUpdateData);
          this.tabSchdTasks.Controls.Add(this.grpHTMLOutput);
          this.tabSchdTasks.Location = new System.Drawing.Point(4, 22);
@@ -217,15 +218,26 @@ namespace HFM.Forms
          this.tabSchdTasks.Text = "Scheduled Tasks";
          this.tabSchdTasks.UseVisualStyleBackColor = true;
          // 
-         // grpAutoRun
+         // grpStartup
          // 
-         this.grpAutoRun.Controls.Add(this.chkAutoRun);
-         this.grpAutoRun.Location = new System.Drawing.Point(6, 245);
-         this.grpAutoRun.Name = "grpAutoRun";
-         this.grpAutoRun.Size = new System.Drawing.Size(241, 50);
-         this.grpAutoRun.TabIndex = 2;
-         this.grpAutoRun.TabStop = false;
-         this.grpAutoRun.Text = "Auto Run";
+         this.grpStartup.Controls.Add(this.chkRunMinimized);
+         this.grpStartup.Controls.Add(this.chkAutoRun);
+         this.grpStartup.Location = new System.Drawing.Point(6, 245);
+         this.grpStartup.Name = "grpStartup";
+         this.grpStartup.Size = new System.Drawing.Size(489, 50);
+         this.grpStartup.TabIndex = 2;
+         this.grpStartup.TabStop = false;
+         this.grpStartup.Text = "Startup";
+         // 
+         // chkRunMinimized
+         // 
+         this.chkRunMinimized.AutoSize = true;
+         this.chkRunMinimized.Location = new System.Drawing.Point(196, 20);
+         this.chkRunMinimized.Name = "chkRunMinimized";
+         this.chkRunMinimized.Size = new System.Drawing.Size(95, 17);
+         this.chkRunMinimized.TabIndex = 1;
+         this.chkRunMinimized.Text = "Run Minimized";
+         this.chkRunMinimized.UseVisualStyleBackColor = true;
          // 
          // chkAutoRun
          // 
@@ -1215,8 +1227,8 @@ namespace HFM.Forms
          this.Shown += new System.EventHandler(this.frmPreferences_Shown);
          this.tabControl1.ResumeLayout(false);
          this.tabSchdTasks.ResumeLayout(false);
-         this.grpAutoRun.ResumeLayout(false);
-         this.grpAutoRun.PerformLayout();
+         this.grpStartup.ResumeLayout(false);
+         this.grpStartup.PerformLayout();
          this.grpUpdateData.ResumeLayout(false);
          this.grpUpdateData.PerformLayout();
          this.grpHTMLOutput.ResumeLayout(false);
@@ -1332,7 +1344,7 @@ namespace HFM.Forms
       private HFM.Classes.CheckBoxWrapper chkDuplicateProject;
       private HFM.Classes.CheckBoxWrapper chkDuplicateUserID;
       private HFM.Classes.CheckBoxWrapper chkColorLog;
-      private HFM.Classes.GroupBoxWrapper grpAutoRun;
+      private HFM.Classes.GroupBoxWrapper grpStartup;
       private HFM.Classes.CheckBoxWrapper chkAutoRun;
       private System.Windows.Forms.TabPage tabReporting;
       private HFM.Classes.GroupBoxWrapper grpEmailSettings;
@@ -1350,5 +1362,6 @@ namespace HFM.Forms
       private HFM.Classes.ButtonWrapper btnTestEmail;
       private HFM.Classes.GroupBoxWrapper grpReportSelections;
       private HFM.Classes.CheckBoxWrapper chkClientEuePause;
+      private HFM.Classes.CheckBoxWrapper chkRunMinimized;
    }
 }

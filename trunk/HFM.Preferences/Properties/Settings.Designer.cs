@@ -642,5 +642,17 @@ namespace HFM.Preferences.Properties {
                 this["GraphColors"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RunMinimized {
+            get {
+                return ((bool)(this["RunMinimized"]));
+            }
+            set {
+                this["RunMinimized"] = value;
+            }
+        }
     }
 }

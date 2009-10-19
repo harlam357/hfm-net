@@ -217,22 +217,22 @@ namespace HFM.Preferences
          set { _CacheFolder = value; }
       }
 
-      private System.Drawing.Point _FormLocation;
-      public System.Drawing.Point FormLocation
+      private Point _FormLocation;
+      public Point FormLocation
       {
          get { return _FormLocation; }
          set { _FormLocation = value; }
       }
 
-      private System.Drawing.Size _FormSize;
-      public System.Drawing.Size FormSize
+      private Size _FormSize;
+      public Size FormSize
       {
          get { return _FormSize; }
          set { _FormSize = value; }
       }
 
-      private System.Collections.Specialized.StringCollection _FormColumns;
-      public System.Collections.Specialized.StringCollection FormColumns
+      private StringCollection _FormColumns;
+      public StringCollection FormColumns
       {
          get { return _FormColumns; }
          set { _FormColumns = value; }
@@ -532,6 +532,13 @@ namespace HFM.Preferences
          set { _GraphColors = value; }
       }
 
+      private bool _RunMinimized;
+      public bool RunMinimized
+      {
+         get { return _RunMinimized; }
+         set { _RunMinimized = value; }
+      }
+
       public static String AppPath
       {
          get
@@ -798,6 +805,7 @@ namespace HFM.Preferences
                _GraphColors.Add(realColor);
             }
          }
+         _RunMinimized = Settings.Default.RunMinimized;
          
          _AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
          _AppDataPath = Path.Combine(_AppDataPath, ExeName);
@@ -953,6 +961,7 @@ namespace HFM.Preferences
                col.Add(color.Name);
             }
             Settings.Default.GraphColors = col;
+            Settings.Default.RunMinimized = _RunMinimized;
 
             Settings.Default.Save();
          }
