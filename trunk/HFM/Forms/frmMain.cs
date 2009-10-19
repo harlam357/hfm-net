@@ -186,6 +186,10 @@ namespace HFM.Forms
       private void frmMain_Shown(object sender, EventArgs e)
       {
          PreferenceSet Prefs = PreferenceSet.Instance;
+         if (Prefs.RunMinimized)
+         {
+            WindowState = FormWindowState.Minimized;
+         }
       
          String Filename = String.Empty;
 
@@ -1642,10 +1646,15 @@ namespace HFM.Forms
       private void RestoreFormPreferences()
       {
          PreferenceSet Prefs = PreferenceSet.Instance;
-         if (Prefs.RunMinimized)
-         {
-            WindowState = FormWindowState.Minimized;
-         }
+         //TODO: Would like to do this here in lieu of in frmMain_Shown() event.
+         // There is some drawing error that if Minimized here, the first time the
+         // Form is restored from the system tray, the DataGridView is drawn with
+         // a big black box on the right hand side.  Like it didn't get initialized
+         // properly when the Form was created.
+         //if (Prefs.RunMinimized)
+         //{
+         //   WindowState = FormWindowState.Minimized;
+         //}
 
          // Restore state data
          Point location = Prefs.FormLocation;

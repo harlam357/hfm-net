@@ -23,7 +23,6 @@ using System.Globalization;
 using System.Windows.Forms;
 
 using HFM.Preferences;
-using HFM.Proteins;
 
 namespace HFM.Instances
 {
