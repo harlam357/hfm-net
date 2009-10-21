@@ -290,7 +290,7 @@ namespace HFM.Forms
          Prefs.QueueViewerVisible = queueControl.Visible;
 
          // Save the data
-         Prefs.Save();
+         PreferenceSet.Instance.Save();
          
          // Save the data on current WUs in progress
          ClientInstances.SaveCurrentUnitInfo();
@@ -309,12 +309,10 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
       {
-         PreferenceSet Prefs = PreferenceSet.Instance;
-
          // When the log file window (Panel2) is visible, this event will fire.
          // Update the split location directly from the split panel control. - Issue 8
-         Prefs.FormSplitLocation = splitContainer1.SplitterDistance;
-         Prefs.Save();
+         PreferenceSet.Instance.FormSplitLocation = splitContainer1.SplitterDistance;
+         PreferenceSet.Instance.Save();
       }
 
       /// <summary>
@@ -349,10 +347,8 @@ namespace HFM.Forms
                }
             }
 
-            PreferenceSet Prefs = PreferenceSet.Instance;
-
-            SaveColumnSettings(Prefs); // Save Column Settings - Issue 73
-            Prefs.Save();
+            SaveColumnSettings(PreferenceSet.Instance); // Save Column Settings - Issue 73
+            PreferenceSet.Instance.Save();
          }
       }
 
@@ -481,10 +477,8 @@ namespace HFM.Forms
             SortColumnName = dataGridView1.SortedColumn.Name;
             SortColumnOrder = dataGridView1.SortOrder;
 
-            PreferenceSet Prefs = PreferenceSet.Instance;
-
-            SaveSortColumn(Prefs); // Save Column Sort Order - Issue 73
-            Prefs.Save();
+            SaveSortColumn(PreferenceSet.Instance); // Save Column Sort Order - Issue 73
+            PreferenceSet.Instance.Save();
          }
       }
 
@@ -1296,6 +1290,22 @@ namespace HFM.Forms
          }
          else
          {
+            // Restore state data
+            PreferenceSet Prefs = PreferenceSet.Instance;
+            Point location = Prefs.MessagesFormLocation;
+            Size size = Prefs.MessagesFormSize;
+
+            if (location.X != 0 && location.Y != 0)
+            {
+               _frmMessages.StartPosition = FormStartPosition.Manual;
+               _frmMessages.Location = location;
+            }
+
+            if (size.Width != 0 && size.Height != 0)
+            {
+               _frmMessages.Size = size;
+            }
+         
             _frmMessages.Show();
             _frmMessages.ScrollToEnd();
          }
@@ -1324,7 +1334,26 @@ namespace HFM.Forms
          
          frmBenchmarks frm = new frmBenchmarks(ClientInstances, ProjectID);
          frm.StartPosition = FormStartPosition.Manual;
-         frm.Location = new Point(Location.X + 50, Location.Y + 50);
+
+         // Restore state data
+         PreferenceSet Prefs = PreferenceSet.Instance;
+         Point location = Prefs.BenchmarksFormLocation;
+         Size size = Prefs.BenchmarksFormSize;
+
+         if (location.X != 0 && location.Y != 0)
+         {
+            frm.Location = location;
+         }
+         else
+         {
+            frm.Location = new Point(Location.X + 50, Location.Y + 50);
+         }
+         
+         if (size.Width != 0 && size.Height != 0)
+         {
+            frm.Size = size;
+         }
+         
          frm.Show();
       }
       #endregion

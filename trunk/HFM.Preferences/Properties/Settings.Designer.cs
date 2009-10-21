@@ -654,5 +654,49 @@ namespace HFM.Preferences.Properties {
                 this["RunMinimized"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Drawing.Point BenchmarksFormLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["BenchmarksFormLocation"]));
+            }
+            set {
+                this["BenchmarksFormLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Drawing.Size BenchmarksFormSize {
+            get {
+                return ((global::System.Drawing.Size)(this["BenchmarksFormSize"]));
+            }
+            set {
+                this["BenchmarksFormSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Drawing.Point MessagesFormLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["MessagesFormLocation"]));
+            }
+            set {
+                this["MessagesFormLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Drawing.Size MessagesFormSize {
+            get {
+                return ((global::System.Drawing.Size)(this["MessagesFormSize"]));
+            }
+            set {
+                this["MessagesFormSize"] = value;
+            }
+        }
     }
 }

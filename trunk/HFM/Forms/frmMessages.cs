@@ -19,6 +19,8 @@
 
 using System.Collections.Generic;
 
+using HFM.Preferences;
+
 namespace HFM.Forms
 {
    public partial class frmMessages : Classes.FormWrapper
@@ -77,6 +79,11 @@ namespace HFM.Forms
 
       protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
       {
+         // Save state data
+         PreferenceSet.Instance.MessagesFormLocation = Location;
+         PreferenceSet.Instance.MessagesFormSize = Size;
+         PreferenceSet.Instance.Save();
+      
          Hide();
          e.Cancel = true;
          base.OnClosing(e);

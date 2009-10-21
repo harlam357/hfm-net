@@ -57,6 +57,14 @@ namespace HFM.Forms
          UpdateProjectListBoxBinding(_initialProjectID);
          lstColors.DataSource = PreferenceSet.Instance.GraphColors;
       }
+
+      private void frmBenchmarks_FormClosing(object sender, FormClosingEventArgs e)
+      {
+         // Save state data
+         PreferenceSet.Instance.BenchmarksFormLocation = Location;
+         PreferenceSet.Instance.BenchmarksFormSize = Size;
+         PreferenceSet.Instance.Save();
+      }
       #endregion
 
       #region Event Handlers

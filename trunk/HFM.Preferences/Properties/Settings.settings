@@ -169,5 +169,17 @@
     <Setting Name="RunMinimized" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="BenchmarksFormLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="BenchmarksFormSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="MessagesFormLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="MessagesFormSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

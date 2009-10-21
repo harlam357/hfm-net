@@ -539,6 +539,34 @@ namespace HFM.Preferences
          set { _RunMinimized = value; }
       }
 
+      private Point _BenchmarksFormLocation;
+      public Point BenchmarksFormLocation
+      {
+         get { return _BenchmarksFormLocation; }
+         set { _BenchmarksFormLocation = value; }
+      }
+
+      private Size _BenchmarksFormSize;
+      public Size BenchmarksFormSize
+      {
+         get { return _BenchmarksFormSize; }
+         set { _BenchmarksFormSize = value; }
+      }
+
+      private Point _MessagesFormLocation;
+      public Point MessagesFormLocation
+      {
+         get { return _MessagesFormLocation; }
+         set { _MessagesFormLocation = value; }
+      }
+
+      private Size _MessagesFormSize;
+      public Size MessagesFormSize
+      {
+         get { return _MessagesFormSize; }
+         set { _MessagesFormSize = value; }
+      }
+
       public static String AppPath
       {
          get
@@ -806,6 +834,20 @@ namespace HFM.Preferences
             }
          }
          _RunMinimized = Settings.Default.RunMinimized;
+         try
+         {
+            _BenchmarksFormLocation = Settings.Default.BenchmarksFormLocation;
+            _BenchmarksFormSize = Settings.Default.BenchmarksFormSize;
+         }
+         catch (NullReferenceException)
+         { }
+         try
+         {
+            _MessagesFormLocation = Settings.Default.MessagesFormLocation;
+            _MessagesFormSize = Settings.Default.MessagesFormSize;
+         }
+         catch (NullReferenceException)
+         { }
          
          _AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
          _AppDataPath = Path.Combine(_AppDataPath, ExeName);
@@ -962,6 +1004,10 @@ namespace HFM.Preferences
             }
             Settings.Default.GraphColors = col;
             Settings.Default.RunMinimized = _RunMinimized;
+            Settings.Default.BenchmarksFormLocation = _BenchmarksFormLocation;
+            Settings.Default.BenchmarksFormSize = _BenchmarksFormSize;
+            Settings.Default.MessagesFormLocation = _MessagesFormLocation;
+            Settings.Default.MessagesFormSize = _MessagesFormSize;
 
             Settings.Default.Save();
          }

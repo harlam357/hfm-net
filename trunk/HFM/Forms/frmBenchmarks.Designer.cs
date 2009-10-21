@@ -619,6 +619,7 @@ namespace HFM.Forms
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
          this.Text = "Benchmarks";
          this.Shown += new System.EventHandler(this.frmBenchmarks_Shown);
+         this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmBenchmarks_FormClosing);
          this.grpProjectInfo.ResumeLayout(false);
          this.grpProjectInfo.PerformLayout();
          this.tableLayoutPanel1.ResumeLayout(false);
