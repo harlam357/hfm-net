@@ -24,7 +24,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections.Generic;
 using System.Text;
 
-using HFM.Proteins;
 using HFM.Preferences;
 using HFM.Instrumentation;
 
@@ -185,9 +184,6 @@ namespace HFM.Instances
 
       private static string GetUnitCsvLine(UnitInfo unit)
       {
-         // Issue 43 - Use Time Per All Sections and not unit.PPD
-         int RawTimePerAllSections = unit.RawTimePerAllSections;
-      
          StringBuilder sbldr = new StringBuilder();
          sbldr.Append(unit.ProjectID);
          sbldr.Append(COMMA);
@@ -207,10 +203,11 @@ namespace HFM.Instances
          sbldr.Append(COMMA);
          sbldr.Append(unit.CoreVersion);
          sbldr.Append(COMMA);
-         sbldr.Append(TimeSpan.FromSeconds(RawTimePerAllSections).ToString());  
+         // Issue 43 - Use Time Per All Sections and not unit.PPD
+         sbldr.Append(unit.TimePerAllSections.ToString());
          sbldr.Append(COMMA);
-         sbldr.Append(Math.Round(ProteinCollection.Instance[unit.ProjectID].GetPPD(TimeSpan.FromSeconds(RawTimePerAllSections)), 1));
-         //sbldr.Append(Math.Round(unit.PPD, 1));
+         // Issue 43 - Use Time Per All Sections and not unit.PPD
+         sbldr.AppendFormat("{0:" + PreferenceSet.PpdFormatString + "}", unit.PPDPerAllSections);
          sbldr.Append(COMMA);
          sbldr.Append(unit.DownloadTime.ToShortDateString());
          sbldr.Append(COMMA);

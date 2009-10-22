@@ -813,10 +813,10 @@ namespace HFM.Instances
          
          try
          {
+            ClientInstance[] CurrentInstances = GetCurrentInstanceArray();
             if (match.Success)
             {
-               ClientInstance[] instances = GetCurrentInstanceArray();
-               XMLGen.DoHtmlGeneration(Path.GetTempPath(), instances);
+               XMLGen.DoHtmlGeneration(Path.GetTempPath(), CurrentInstances);
 
                string Server = match.Result("${domain}");
                string FtpPath = match.Result("${file}");
@@ -825,7 +825,7 @@ namespace HFM.Instances
 
                try
                {
-                  XMLGen.DoWebFtpUpload(Server, FtpPath, Username, Password, instances, _PassiveFtpWebUpload);
+                  XMLGen.DoWebFtpUpload(Server, FtpPath, Username, Password, CurrentInstances, _PassiveFtpWebUpload);
                }
                catch (WebException ex)
                {
@@ -835,7 +835,7 @@ namespace HFM.Instances
                   if (ex.Message.Contains("The remote server returned an error: 227 Entering Passive Mode"))
                   {
                      HfmTrace.WriteToHfmConsole(String.Format("{0} Passive FTP transfer failed... trying Non-Passive transfer.", HfmTrace.FunctionName));
-                     XMLGen.DoWebFtpUpload(Server, FtpPath, Username, Password, instances, false);
+                     XMLGen.DoWebFtpUpload(Server, FtpPath, Username, Password, CurrentInstances, false);
                      _PassiveFtpWebUpload = false;
                   }
                   else
@@ -847,7 +847,7 @@ namespace HFM.Instances
             else
             {
                // Create the web folder (just in case)
-               if (Directory.Exists(PreferenceSet.Instance.WebRoot) == false)
+               if (Directory.Exists(Prefs.WebRoot) == false)
                {
                   Directory.CreateDirectory(Prefs.WebRoot);
                }
@@ -859,7 +859,16 @@ namespace HFM.Instances
                   File.Copy(sCSSFileName, Path.Combine(Prefs.WebRoot, Prefs.CSSFileName), true);
                }
 
-               XMLGen.DoHtmlGeneration(Prefs.WebRoot, GetCurrentInstanceArray());
+               XMLGen.DoHtmlGeneration(Prefs.WebRoot, CurrentInstances);
+               
+               foreach (ClientInstance Instance in CurrentInstances)
+               {
+                  string CachedFAHlogPath = Path.Combine(PreferenceSet.CacheDirectory, Instance.CachedFAHLogName);
+                  if (File.Exists(CachedFAHlogPath))
+                  {
+                     File.Copy(CachedFAHlogPath, Path.Combine(Prefs.WebRoot, Instance.CachedFAHLogName), true);
+                  }
+               }
             }
          }
          catch (Exception ex)

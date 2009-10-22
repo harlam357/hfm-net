@@ -25,7 +25,6 @@ using System.IO;
 using System.Text.RegularExpressions;
 
 using HFM.Preferences;
-using HFM.Proteins;
 using HFM.Instrumentation;
 
 namespace HFM.Instances

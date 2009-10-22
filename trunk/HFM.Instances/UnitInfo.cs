@@ -60,8 +60,8 @@ namespace HFM.Instances
       /// <summary>
       /// Overload Constructor
       /// </summary>
-      public UnitInfo(string ownerName, string ownerPath)
-         : this(ownerName, ownerPath, UsernameDefault, TeamDefault)
+      public UnitInfo(string ownerName, string ownerPath, DateTime unitRetrievalTime)
+         : this(ownerName, ownerPath, unitRetrievalTime, UsernameDefault, TeamDefault)
       {
 
       }
@@ -69,10 +69,11 @@ namespace HFM.Instances
       /// <summary>
       /// Primary Constructor
       /// </summary>
-      public UnitInfo(string ownerName, string ownerPath, string foldingID, int team)
+      public UnitInfo(string ownerName, string ownerPath, DateTime unitRetrievalTime, string foldingID, int team)
       {
          _OwningInstanceName = ownerName;
          _OwningInstancePath = ownerPath;
+         _UnitRetrievalTime = unitRetrievalTime;
          _FoldingID = foldingID;
          _Team = team;
          
@@ -243,6 +244,18 @@ namespace HFM.Instances
 
       #region Public Properties and Related Private Members
       
+      /// <summary>
+      /// When the the used to generate this UnitInfo was retrieved
+      /// </summary>
+      private readonly DateTime _UnitRetrievalTime;
+      /// <summary>
+      /// When the log files were last successfully retrieved
+      /// </summary>
+      public DateTime UnitRetrievalTime
+      {
+         get { return _UnitRetrievalTime; }
+      }
+
       /// <summary>
       /// The Folding ID (Username) attached to this work unit
       /// </summary>
@@ -595,8 +608,11 @@ namespace HFM.Instances
                // Make sure CurrentFramePercent is greater than 0 to avoid DivideByZeroException - Issue 34
                if (DownloadTime.Equals(DateTime.MinValue) == false && CurrentFrame.FramePercent > 0)
                {
-                  TimeSpan timeSinceUnitDownload = DateTime.Now.Subtract(DownloadTime);
-                  return (Convert.ToInt32(timeSinceUnitDownload.TotalSeconds) / CurrentFrame.FramePercent);
+                  // Use UnitRetrievalTime (sourced from ClientInstance.LastRetrievalTime) as basis for
+                  // TimeSinceUnitDownload.  This removes the use of the "floating" value DateTime.Now
+                  // as a basis for the calculation. - Issue 92
+                  TimeSpan TimeSinceUnitDownload = UnitRetrievalTime.Subtract(DownloadTime);
+                  return (Convert.ToInt32(TimeSinceUnitDownload.TotalSeconds) / CurrentFrame.FramePercent);
                }
                
                return 0;
@@ -967,6 +983,7 @@ namespace HFM.Instances
       }
       #endregion
       
+      #region Static Helpers
       /// <summary>
       /// Get the WorkUnitResult Enum representation of the given result string.
       /// </summary>
@@ -1022,5 +1039,6 @@ namespace HFM.Instances
                return ClientType.Unknown;
          }
       }
+      #endregion
    }
 }

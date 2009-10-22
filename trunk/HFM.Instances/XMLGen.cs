@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Xml;
 
 using HFM.Instrumentation;
@@ -129,11 +130,17 @@ namespace HFM.Instances
             NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "mobile.html"), Username, Password, PassiveMode);
             NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "mobilesummary.html"), Username, Password, PassiveMode);
 
-            foreach (ClientInstance instance in Instances)
+            foreach (ClientInstance Instance in Instances)
             {
                   NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(),
-                                             Path.ChangeExtension(instance.InstanceName, ".html")),
+                                             Path.ChangeExtension(Instance.InstanceName, ".html")),
                                              Username, Password, PassiveMode);
+
+                  string CachedFAHlogPath = Path.Combine(PreferenceSet.CacheDirectory, Instance.CachedFAHLogName);
+                  if (File.Exists(CachedFAHlogPath))
+                  {
+                     NetworkOps.FtpUploadHelper(Server, FtpPath, CachedFAHlogPath, Username, Password, PassiveMode);
+                  }
             }
          }
          finally
@@ -228,6 +235,17 @@ namespace HFM.Instances
          XMLOps.setXmlNode(xmlData, "Protein/Core", Instance.CurrentUnitInfo.CurrentProtein.Core);
          XMLOps.setXmlNode(xmlData, "Protein/Description", NetworkOps.GetProteinDescription(Instance.CurrentUnitInfo.CurrentProtein.Description));
          XMLOps.setXmlNode(xmlData, "Protein/Contact", Instance.CurrentUnitInfo.CurrentProtein.Contact);
+         
+         StringBuilder sb = new StringBuilder();
+         foreach (LogLine line in Instance.CurrentLogLines)
+         {
+            sb.Append(line.LineRaw);
+            sb.Append("<BR>");
+            sb.Append(Environment.NewLine);
+         }
+
+         XMLOps.setXmlNode(xmlData, "UnitLog/Text", sb.ToString());
+         XMLOps.setXmlNode(xmlData, "UnitLog/FullLogFile", Instance.CachedFAHLogName);
 
          //    <LastUpdatedDate>10 August 2006</LastUpdatedDate>
          //    <LastUpdatedTime>9:25:23 pm</LastUpdatedTime>

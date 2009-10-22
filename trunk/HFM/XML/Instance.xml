@@ -28,6 +28,10 @@
       <Description>This is the BLAH</Description>
       <Contact>spark7</Contact>
    </Protein>
+   <UnitLog>
+      <Text>Some log text</Text>
+      <FullLogFile>FAHlog.txt</FullLogFile>
+   </UnitLog>
    <LastUpdatedDate>10 August 2006</LastUpdatedDate>
    <LastUpdatedTime>9:25:23 pm</LastUpdatedTime>
    <LastRetrievedDate>10 August 2006</LastRetrievedDate>

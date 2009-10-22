@@ -38,6 +38,26 @@
                </tr>
                <tr>
                   <td class="Heading">
+                     Log<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>File
+                  </td>
+                  <td class="Plain" align="right">
+                     <a>
+                        <xsl:attribute name="href"><xsl:value-of select="UnitLog/FullLogFile"/></xsl:attribute>
+                        FAHlog<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>File
+                     </a>
+                  </td>
+               </tr>
+               <xsl:apply-templates select="UnitLog" />
+               <tr>
+                  <td class="Empty">
+                     <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                  </td>
+                  <td class="Empty">
+                     <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                  </td>
+               </tr>
+               <tr>
+                  <td class="Heading">
                      <xsl:value-of select="Protein/WorkUnit"/>
                   </td>
                   <td class="Blank"> </td>
@@ -96,6 +116,13 @@
          </td>
          <td class="RightCol">
             <xsl:value-of select="ExpectedCompletionDate"/>
+         </td>
+      </tr>
+   </xsl:template>
+   <xsl:template match="UnitLog">
+      <tr>
+         <td class="LeftCol" colspan="2">
+            <xsl:value-of select="Text" disable-output-escaping="yes"/>
          </td>
       </tr>
    </xsl:template>

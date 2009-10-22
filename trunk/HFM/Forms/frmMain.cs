@@ -1179,7 +1179,7 @@ namespace HFM.Forms
          // Check for SelectedInstance, and get out if not found
          if (ClientInstances.SelectedInstance == null) return;
 
-         string logPath = Path.Combine(ClientInstance.BaseDirectory, ClientInstances.SelectedInstance.CachedFAHLogName);
+         string logPath = Path.Combine(PreferenceSet.CacheDirectory, ClientInstances.SelectedInstance.CachedFAHLogName);
          if (File.Exists(logPath))
          {
             try

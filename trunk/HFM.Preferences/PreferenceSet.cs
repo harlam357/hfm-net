@@ -574,6 +574,14 @@ namespace HFM.Preferences
             return Path.GetDirectoryName(Application.ExecutablePath);
          }
       }
+
+      /// <summary>
+      /// Log File Cache Directory
+      /// </summary>
+      public static string CacheDirectory
+      {
+         get { return Path.Combine(Instance.AppDataPath, Instance.CacheFolder); }
+      }
       
       public string EOCUserXml
       {

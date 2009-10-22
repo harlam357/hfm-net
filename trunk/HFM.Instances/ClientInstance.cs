@@ -118,13 +118,7 @@ namespace HFM.Instances
       #endregion
 
       #region Public Readonly Properties
-      /// <summary>
-      /// Log File Cache Directory
-      /// </summary>
-      public static string BaseDirectory
-      {
-         get { return System.IO.Path.Combine(PreferenceSet.Instance.AppDataPath, PreferenceSet.Instance.CacheFolder); }
-      }
+      
 
       /// <summary>
       /// Cached FAHlog Filename for this instance
@@ -724,7 +718,7 @@ namespace HFM.Instances
          // Clear (Init) User Specified Instance Values
          ClearUserSpecifiedValues();
          // Create a fresh UnitInfo
-         _CurrentUnitInfo = new UnitInfo(InstanceName, Path);
+         _CurrentUnitInfo = new UnitInfo(InstanceName, Path, DateTime.Now);
       }
       #endregion
 
@@ -1068,7 +1062,7 @@ namespace HFM.Instances
          ClientStatus returnedStatus = ClientStatus.Unknown;
 
          LogReader lr = new LogReader();
-         lr.ScanFAHLog(this, System.IO.Path.Combine(BaseDirectory, CachedFAHLogName));
+         lr.ScanFAHLog(this, System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedFAHLogName));
          
          lr.PopulateClientStartupArgumentData(this);
          lr.PopulateWorkUnitCountData(this);
@@ -1184,7 +1178,7 @@ namespace HFM.Instances
          // just catch, log, and continue with parsing log files
          try
          {
-            _qr.ReadQueue(System.IO.Path.Combine(BaseDirectory, CachedQueueName));
+            _qr.ReadQueue(System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedQueueName));
             if (_qr.QueueReadOk)
             {
                units = new UnitInfo[10];
@@ -1192,7 +1186,7 @@ namespace HFM.Instances
                // process entries
                for (int i = 0; i < 10; i++)
                {
-                  UnitInfo parsedUnitInfo = new UnitInfo(InstanceName, Path);
+                  UnitInfo parsedUnitInfo = new UnitInfo(InstanceName, Path, LastRetrievalTime);
                   QueueParser.ParseQueueEntry(_qr.GetQueueEntry((uint)i), parsedUnitInfo, ClientIsOnVirtualMachine);
                   units[i] = parsedUnitInfo;
                }
@@ -1219,8 +1213,8 @@ namespace HFM.Instances
 
          lr.PopulateUserAndMachineData(this);
 
-         parsedUnits[0] = new UnitInfo(InstanceName, Path, FoldingID, Team);
-         parsedUnits[1] = new UnitInfo(InstanceName, Path, FoldingID, Team);
+         parsedUnits[0] = new UnitInfo(InstanceName, Path, LastRetrievalTime, FoldingID, Team);
+         parsedUnits[1] = new UnitInfo(InstanceName, Path, LastRetrievalTime, FoldingID, Team);
 
          ProcessPreviousWorkUnitLogLines(lr.PreviousWorkUnitLogLines, parsedUnits[0]);
          return ProcessCurrentWorkUnitLogLines(lr.CurrentWorkUnitLogLines, parsedUnits[1]);
@@ -1274,7 +1268,7 @@ namespace HFM.Instances
          LogParser lp = new LogParser(this, parsedUnitInfo);
          if (ReadUnitInfoFile)
          {
-            if (lp.ParseUnitInfoFile(System.IO.Path.Combine(BaseDirectory, CachedUnitInfoName)) == false)
+            if (lp.ParseUnitInfoFile(System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedUnitInfoName)) == false)
             {
                HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, "unitinfo parse failed.");
             }
@@ -1448,7 +1442,7 @@ namespace HFM.Instances
          try
          {
             FileInfo fiLog = new FileInfo(System.IO.Path.Combine(Path, RemoteFAHLogFilename));
-            string FAHLog_txt = System.IO.Path.Combine(BaseDirectory, CachedFAHLogName);
+            string FAHLog_txt = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedFAHLogName);
             FileInfo fiCachedLog = new FileInfo(FAHLog_txt);
 
             HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
@@ -1479,7 +1473,7 @@ namespace HFM.Instances
 
             // Retrieve unitinfo.txt (or equivalent)
             FileInfo fiUI = new FileInfo(System.IO.Path.Combine(Path, RemoteUnitInfoFilename));
-            string UnitInfo_txt = System.IO.Path.Combine(BaseDirectory, CachedUnitInfoName);
+            string UnitInfo_txt = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedUnitInfoName);
 
             HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
                                        String.Format("{0} ({1}) UnitInfo copy (start)", HfmTrace.FunctionName, InstanceName));
@@ -1522,7 +1516,7 @@ namespace HFM.Instances
 
             // Retrieve queue.dat (or equivalent)
             FileInfo fiQueue = new FileInfo(System.IO.Path.Combine(Path, RemoteQueueFilename));
-            string Queue_dat = System.IO.Path.Combine(BaseDirectory, CachedQueueName);
+            string Queue_dat = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedQueueName);
 
             HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
                                        String.Format("{0} ({1}) Queue copy (start)", HfmTrace.FunctionName, InstanceName));
@@ -1568,13 +1562,13 @@ namespace HFM.Instances
          try
          {
             string HttpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Path, "/", RemoteFAHLogFilename);
-            string LocalFile = System.IO.Path.Combine(BaseDirectory, CachedFAHLogName);
+            string LocalFile = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedFAHLogName);
             NetworkOps.HttpDownloadHelper(HttpPath, LocalFile, InstanceName, Username, Password, DownloadType.FAHLog);
             
             try
             {
                HttpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Path, "/", RemoteUnitInfoFilename);
-               LocalFile = System.IO.Path.Combine(BaseDirectory, CachedUnitInfoName);
+               LocalFile = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedUnitInfoName);
                NetworkOps.HttpDownloadHelper(HttpPath, LocalFile, InstanceName, Username, Password, DownloadType.UnitInfo);
             }
             /*** Remove Requirement for UnitInfo to be Present ***/
@@ -1591,7 +1585,7 @@ namespace HFM.Instances
             try
             {
                HttpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Path, "/", RemoteQueueFilename);
-               LocalFile = System.IO.Path.Combine(BaseDirectory, CachedQueueName);
+               LocalFile = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedQueueName);
                NetworkOps.HttpDownloadHelper(HttpPath, LocalFile, InstanceName, Username, Password, DownloadType.Queue);
             }
             /*** Remove Requirement for Queue to be Present ***/
@@ -1622,12 +1616,12 @@ namespace HFM.Instances
 
          try
          {
-            string LocalFilePath = System.IO.Path.Combine(BaseDirectory, CachedFAHLogName);
+            string LocalFilePath = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedFAHLogName);
             NetworkOps.FtpDownloadHelper(Server, Path, RemoteFAHLogFilename, LocalFilePath, Username, Password, DownloadType.FAHLog);
             
             try
             {
-               LocalFilePath = System.IO.Path.Combine(BaseDirectory, CachedUnitInfoName);
+               LocalFilePath = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedUnitInfoName);
                NetworkOps.FtpDownloadHelper(Server, Path, RemoteUnitInfoFilename, LocalFilePath, Username, Password, DownloadType.UnitInfo);
             }
             /*** Remove Requirement for UnitInfo to be Present ***/
@@ -1643,7 +1637,7 @@ namespace HFM.Instances
 
             try
             {
-               LocalFilePath = System.IO.Path.Combine(BaseDirectory, CachedQueueName);
+               LocalFilePath = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedQueueName);
                NetworkOps.FtpDownloadHelper(Server, Path, RemoteQueueFilename, LocalFilePath, Username, Password, DownloadType.Queue);
             }
             /*** Remove Requirement for Queue to be Present ***/
