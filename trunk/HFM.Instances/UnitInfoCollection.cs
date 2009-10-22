@@ -207,7 +207,7 @@ namespace HFM.Instances
          sbldr.Append(unit.TimePerAllSections.ToString());
          sbldr.Append(COMMA);
          // Issue 43 - Use Time Per All Sections and not unit.PPD
-         sbldr.AppendFormat("{0:" + PreferenceSet.PpdFormatString + "}", unit.PPDPerAllSections);
+         sbldr.Append(Math.Round(unit.PPDPerAllSections, PreferenceSet.Instance.DecimalPlaces));
          sbldr.Append(COMMA);
          sbldr.Append(unit.DownloadTime.ToShortDateString());
          sbldr.Append(COMMA);

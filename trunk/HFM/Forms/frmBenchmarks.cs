@@ -229,7 +229,6 @@ namespace HFM.Forms
       private void btnAddColor_Click(object sender, EventArgs e)
       {
          ColorDialog dlg = new ColorDialog();
-         dlg.SolidColorOnly = true;
          if (dlg.ShowDialog(this).Equals(DialogResult.OK))
          {
             List<Color> GraphColors = PreferenceSet.Instance.GraphColors;
