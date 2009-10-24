@@ -317,7 +317,7 @@
 goto End
 
 :Deploy
-call ..\..\..\Deploy.bat ..\..\..\Release
+call ..\..\..\Deploy.bat ..\..\..\HFM.NET
 :End</PostBuildEvent>
     <PreBuildEvent>if $(ConfigurationName)==ScriptedRelease goto BuildAsmInfo
 goto End

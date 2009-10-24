@@ -13,7 +13,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>Debug;HFM.TargetPath=..\HFM\bin\Debug\HFM.exe</DefineConstants>
+    <DefineConstants>Debug;HFM.TargetPath=..\HFM\bin\Debug</DefineConstants>
     <Cultures>en-US</Cultures>
     <WixVariables>WixUILicenseRtf=GPLv2.rtf;WixUIDialogBmp=Background.bmp;WixUIBannerBmp=Banner.bmp</WixVariables>
   </PropertyGroup>
@@ -21,12 +21,12 @@
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <Cultures>en-US</Cultures>
-    <DefineConstants>HFM.TargetPath=..\HFM\bin\Release\HFM.exe</DefineConstants>
+    <DefineConstants>HFM.TargetPath=..\HFM\bin\Release</DefineConstants>
     <WixVariables>WixUILicenseRtf=GPLv2.rtf;WixUIDialogBmp=Background.bmp;WixUIBannerBmp=Banner.bmp</WixVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ScriptedRelease|x86' ">
     <Cultures>en-US</Cultures>
-    <DefineConstants>HFM.TargetPath=..\Release\HFM.exe</DefineConstants>
+    <DefineConstants>HFM.TargetPath=..\HFM.NET</DefineConstants>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
     <WixVariables>WixUILicenseRtf=GPLv2.rtf;WixUIDialogBmp=Background.bmp;WixUIBannerBmp=Banner.bmp</WixVariables>
@@ -50,6 +50,9 @@
       <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
     </WixExtension>
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="HFM1.PARAFFIN" />
+  </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <!--
 	To modify your build process, add your task inside one of the targets below and uncomment it.
@@ -62,5 +65,6 @@
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
+    <PreBuildEvent>paraffin -update ..\..\HFM1.PARAFFIN</PreBuildEvent>
   </PropertyGroup>
 </Project>

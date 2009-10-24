@@ -1,78 +1,56 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 
-   <?define ProductName="$(fileVersion.ProductName($(var.HFM.TargetPath)))" ?>
-   <?define CompanyName="$(fileVersion.CompanyName($(var.HFM.TargetPath)))" ?>
-   <?define ProductVersion="$(fileVersion.ProductVersion($(var.HFM.TargetPath)))" ?>
+   <?define ProductName="$(fileVersion.ProductName($(var.HFM.TargetPath)\HFM.exe))" ?>
+   <?define CompanyName="$(fileVersion.CompanyName($(var.HFM.TargetPath)\HFM.exe))" ?>
+   <?define ProductVersion="$(fileVersion.ProductVersion($(var.HFM.TargetPath)\HFM.exe))" ?>
 
-   <Product Id="bfe4b7a5-94ee-434e-a0fa-a2c29276255f" 
-            Name="$(var.ProductName) $(var.ProductVersion)" Language="1033" 
-            Version="$(var.ProductVersion)" Manufacturer="$(var.CompanyName)" 
-            UpgradeCode="a59b0b64-31d2-42d0-b30e-b1e6dc74c1e0">
-		<Package InstallerVersion="200" Compressed="yes" />
+   <Product Name="$(var.ProductName) $(var.ProductVersion)" Id="*" UpgradeCode="FF322DDA-7E89-4552-9455-CE7917FD7D91"
+     Language="1033" Version="$(var.ProductVersion)" Manufacturer="$(var.CompanyName)">
 
-		<Media Id="1" Cabinet="HFM1.cab" EmbedCab="yes" />
+      <Package Id="*" Keywords="Installer" Description="HFM.NET $(var.ProductVersion) Installer"
+        Manufacturer="$(var.CompanyName)"
+        InstallerVersion="200" Languages="1033" Compressed="yes" />
+           
+      <Property Id="ARPPRODUCTICON" Value="HFM.exe" />
+      <Property Id="ARPHELPLINK" Value="http://code.google.com/p/hfm-net/" />
 
-		<Directory Id="TARGETDIR" Name="SourceDir">
-			<Directory Id="ProgramFilesFolder">
-            <Directory Id="APPLICATIONROOTDIRECTORY" Name="HFM.NET"/>
-			</Directory>
-		</Directory>
+      <Upgrade Id="FF322DDA-7E89-4552-9455-CE7917FD7D91">
+         <UpgradeVersion OnlyDetect="no" Property="PREVIOUSFOUND" 
+                         Minimum="0.3.0" Maximum="$(var.ProductVersion)" IncludeMaximum="no" />
+      </Upgrade>
 
-      <DirectoryRef Id="APPLICATIONROOTDIRECTORY">
-         <Component Id="component0" Guid="00A07EA0-A528-4DF5-9140-BAD51E64A783" DiskId="1">
-            <File Id="file0" Name="GPLv2.TXT" Source="..\Release\GPLv2.TXT" />
-            <File Id="file1" Name="harlam357.Security.dll" Source="..\Release\harlam357.Security.dll" />
-            <File Id="file2" Name="HFM.exe" Source="..\Release\HFM.exe" />
-            <File Id="file3" Name="HFM.exe.config" Source="..\Release\HFM.exe.config" />
-            <File Id="file4" Name="HFM.Helpers.dll" Source="..\Release\HFM.Helpers.dll" />
-            <File Id="file5" Name="HFM.Instances.dll" Source="..\Release\HFM.Instances.dll" />
-            <File Id="file6" Name="HFM.Instrumentation.dll" Source="..\Release\HFM.Instrumentation.dll" />
-            <File Id="file7" Name="HFM.Preferences.dll" Source="..\Release\HFM.Preferences.dll" />
-            <File Id="file8" Name="HFM.Proteins.dll" Source="..\Release\HFM.Proteins.dll" />
-            <File Id="file9" Name="HTMLparser License.txt" Source="..\Release\HTMLparser License.txt" />
-            <File Id="file10" Name="HTMLparser.dll" Source="..\Release\HTMLparser.dll" />
-            <File Id="file28" Name="ZedGraph.dll" Source="..\Release\ZedGraph.dll" />
-         </Component>
-         <Directory Id="directory0" Name="CSS">
-            <Component Id="component1" Guid="923D5A99-1933-4796-A3EA-04078B5AB62F" DiskId="1">
-               <File Id="file11" Name="Blue.css" Source="..\Release\CSS\Blue.css" />
-               <File Id="file12" Name="BlueTwo.css" Source="..\Release\CSS\BlueTwo.css" />
-               <File Id="file13" Name="Green.css" Source="..\Release\CSS\Green.css" />
-               <File Id="file14" Name="Grey.css" Source="..\Release\CSS\Grey.css" />
-               <File Id="file15" Name="Orange.css" Source="..\Release\CSS\Orange.css" />
-               <File Id="file16" Name="Purple.css" Source="..\Release\CSS\Purple.css" />
-               <File Id="file17" Name="Red.css" Source="..\Release\CSS\Red.css" />
-               <File Id="file18" Name="Yellow.css" Source="..\Release\CSS\Yellow.css" />
-            </Component>
+      <Media Id="1" Cabinet="HFM1.cab" EmbedCab="yes" />
+
+      <Directory Id="TARGETDIR" Name="SourceDir">
+         <Directory Id="AppDataFolder" />
+         <Directory Id="DesktopFolder" />
+         <Directory Id="ProgramMenuFolder" Name="Programs">
+            <Directory Id="ProgramMenuDir" Name="HFM.NET">
+               <Component Id="ProgramMenuDir" Guid="26828A71-9B34-4086-A233-5972639553D6">
+                  <RemoveFolder Id='ProgramMenuDir' On='uninstall' />
+                  <RegistryValue Root='HKCU' Key='Software\[Manufacturer]\[ProductName]' Type='string' Value='' KeyPath='yes' />
+               </Component>
+            </Directory>
          </Directory>
-         <Directory Id="directory1" Name="XML">
-            <Component Id="component2" Guid="BAF457C6-B56A-4A24-8BB4-B3FBB44E4ED5" DiskId="1">
-               <File Id="file19" Name="Instance.xml" Source="..\Release\XML\Instance.xml" />
-               <File Id="file20" Name="Overview.xml" Source="..\Release\XML\Overview.xml" />
-               <File Id="file21" Name="Summary.xml" Source="..\Release\XML\Summary.xml" />
-               <File Id="file22" Name="SummaryFrag.xml" Source="..\Release\XML\SummaryFrag.xml" />
-            </Component>
-         </Directory>
-         <Directory Id="directory2" Name="XSL">
-            <Component Id="component3" Guid="CBF0599A-9B6B-437F-A622-DAD3ECC3F314" DiskId="1">
-               <File Id="file23" Name="WebInstance.xslt" Source="..\Release\XSL\WebInstance.xslt" />
-               <File Id="file24" Name="WebMobileOverview.xslt" Source="..\Release\XSL\WebMobileOverview.xslt" />
-               <File Id="file25" Name="WebMobileSummary.xslt" Source="..\Release\XSL\WebMobileSummary.xslt" />
-               <File Id="file26" Name="WebOverview.xslt" Source="..\Release\XSL\WebOverview.xslt" />
-               <File Id="file27" Name="WebSummary.xslt" Source="..\Release\XSL\WebSummary.xslt" />
-            </Component>
-         </Directory>
-      </DirectoryRef>
 
-      <Feature Id="ProductFeature" Title="HFM.NET Base Program" Level="1">
-			<ComponentRef Id="component0" />
-         <ComponentRef Id="component1" />
-         <ComponentRef Id="component2" />
-         <ComponentRef Id="component3" />
+         <Directory Id="ProgramFilesFolder">
+            <Directory Id="INSTALLDIR" Name="HFM.NET" />
+         </Directory>
+      </Directory>
+
+      <Feature Id="Complete" Title="HFM.NET" Level="1">
+         <ComponentGroupRef Id="group_hfm" />
+         <ComponentRef Id="ProgramMenuDir" />
       </Feature>
 
-      <Property Id="WIXUI_INSTALLDIR" Value="APPLICATIONROOTDIRECTORY" ></Property>
+      <InstallExecuteSequence>
+         <RemoveExistingProducts After="InstallInitialize" />
+      </InstallExecuteSequence>
+
+      <Icon Id="HFM.exe" SourceFile="..\HFM.NET\HFM.exe" />
+
+      <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" ></Property>
       <UIRef Id="WixUI_InstallDir"/>
    </Product>
 </Wix>
