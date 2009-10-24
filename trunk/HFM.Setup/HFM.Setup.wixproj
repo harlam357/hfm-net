@@ -13,7 +13,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>Debug;HFM.TargetPath=..\HFM\bin\Debug</DefineConstants>
+    <DefineConstants>Debug;HFM.TargetPath=..\HFM.NET</DefineConstants>
     <Cultures>en-US</Cultures>
     <WixVariables>WixUILicenseRtf=GPLv2.rtf;WixUIDialogBmp=Background.bmp;WixUIBannerBmp=Banner.bmp</WixVariables>
   </PropertyGroup>
@@ -21,23 +21,8 @@
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <Cultures>en-US</Cultures>
-    <DefineConstants>HFM.TargetPath=..\HFM\bin\Release</DefineConstants>
-    <WixVariables>WixUILicenseRtf=GPLv2.rtf;WixUIDialogBmp=Background.bmp;WixUIBannerBmp=Banner.bmp</WixVariables>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ScriptedRelease|x86' ">
-    <Cultures>en-US</Cultures>
     <DefineConstants>HFM.TargetPath=..\HFM.NET</DefineConstants>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
     <WixVariables>WixUILicenseRtf=GPLv2.rtf;WixUIDialogBmp=Background.bmp;WixUIBannerBmp=Banner.bmp</WixVariables>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ScriptedRelease|AnyCPU' ">
-    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ScriptedRelease|Any CPU' ">
-    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="HFM.wxs" />

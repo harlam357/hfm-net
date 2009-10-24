@@ -71,8 +71,8 @@
    <Target Name="MsiRelease">
       <MSBuild Projects="HFM.Setup.sln"
                Targets="Rebuild"
-               Properties="Configuration=ScriptedRelease" />
-      <Copy SourceFiles=".\HFM.Setup\bin\ScriptedRelease\HFM.Setup.msi" DestinationFiles="HFM Release $(Major).$(Minor).$(Build).$(Revision).msi" />
+               Properties="Configuration=Release" />
+      <Copy SourceFiles=".\HFM.Setup\bin\Release\HFM.Setup.msi" DestinationFiles="HFM Release $(Major).$(Minor).$(Build).$(Revision).msi" />
    </Target>
 
    <Target Name ="CopyTargets" Condition="'$(TargetDestination)' != ''">

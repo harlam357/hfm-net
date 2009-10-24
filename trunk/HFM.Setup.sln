@@ -7,15 +7,12 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
 		Release|x86 = Release|x86
-		ScriptedRelease|x86 = ScriptedRelease|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{CCDB70B7-BC0F-4DC2-B7F8-CC7B3A98C7F1}.Debug|x86.ActiveCfg = Debug|x86
 		{CCDB70B7-BC0F-4DC2-B7F8-CC7B3A98C7F1}.Debug|x86.Build.0 = Debug|x86
 		{CCDB70B7-BC0F-4DC2-B7F8-CC7B3A98C7F1}.Release|x86.ActiveCfg = Release|x86
 		{CCDB70B7-BC0F-4DC2-B7F8-CC7B3A98C7F1}.Release|x86.Build.0 = Release|x86
-		{CCDB70B7-BC0F-4DC2-B7F8-CC7B3A98C7F1}.ScriptedRelease|x86.ActiveCfg = ScriptedRelease|x86
-		{CCDB70B7-BC0F-4DC2-B7F8-CC7B3A98C7F1}.ScriptedRelease|x86.Build.0 = ScriptedRelease|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
