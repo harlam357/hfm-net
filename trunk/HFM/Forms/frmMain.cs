@@ -210,7 +210,7 @@ namespace HFM.Forms
 
          if (String.IsNullOrEmpty(Filename) == false)
          {
-            DoLoadFile(Filename);
+            LoadFile(Filename);
          }
          
          // Add the Index Changed Handler here after everything is shown
@@ -984,7 +984,7 @@ namespace HFM.Forms
             openConfigDialog.RestoreDirectory = true;
             if (openConfigDialog.ShowDialog() == DialogResult.OK)
             {
-               DoLoadFile(openConfigDialog.FileName);
+               LoadFile(openConfigDialog.FileName);
             }
          }
       }
@@ -1002,7 +1002,17 @@ namespace HFM.Forms
          }
          else
          {
-            ClientInstances.ToXml();
+            try
+            {
+               ClientInstances.ToXml();
+            }
+            catch (Exception ex)
+            {
+               HfmTrace.WriteToHfmConsole(ex);
+               MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture,
+                  "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message),
+                  Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
          }
       }
 
@@ -1018,7 +1028,17 @@ namespace HFM.Forms
       
          if (saveConfigDialog.ShowDialog() == DialogResult.OK)
          {
-            ClientInstances.ToXml(saveConfigDialog.FileName); // Issue 75
+            try
+            {
+               ClientInstances.ToXml(saveConfigDialog.FileName); // Issue 75
+            }
+            catch (Exception ex)
+            {
+               HfmTrace.WriteToHfmConsole(ex);
+               MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture,
+                  "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message),
+                  Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
          }
       }
 
@@ -1834,31 +1854,6 @@ namespace HFM.Forms
       }
 
       /// <summary>
-      /// Call LoadFile() and handle any thrown exceptions
-      /// </summary>
-      /// <param name="Filename">File to load</param>
-      private void DoLoadFile(string Filename)
-      {
-         try
-         {
-            LoadFile(Filename);
-         }
-         catch (FileNotFoundException fnfe)
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, fnfe);
-
-            MessageBox.Show(fnfe.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-         }
-         catch (Exception ex)
-         {
-            // OK now this could be anything (even permissions)
-            HfmTrace.WriteToHfmConsole(ex);
-
-            MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-         }
-      }
-
-      /// <summary>
       /// Loads a configuration file into memory
       /// </summary>
       /// <param name="Filename">File to load</param>
@@ -1866,12 +1861,23 @@ namespace HFM.Forms
       {
          // Clear the UI
          ClearUI();
-         // Read the config file
-         ClientInstances.FromXml(Filename);
-
-         if (ClientInstances.HasInstances == false)
+      
+         try
          {
-            MessageBox.Show(this, "No client configurations were loaded from the given config file.",
+            // Read the config file
+            ClientInstances.FromXml(Filename);
+
+            if (ClientInstances.HasInstances == false)
+            {
+               MessageBox.Show(this, "No client configurations were loaded from the given config file.",
+                  Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+         }
+         catch (Exception ex)
+         {
+            HfmTrace.WriteToHfmConsole(ex);
+            MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture,
+               "No client configurations were loaded from the given config file.{0}{0}{1}", Environment.NewLine, ex.Message),
                Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
          }
       }
@@ -1884,12 +1890,24 @@ namespace HFM.Forms
       {
          // Clear the UI
          ClearUI();
-         // Read the config file
-         ClientInstances.FromFahMonClientsTab(filename);
-
-         if (ClientInstances.HasInstances == false)
+         
+         try
          {
-            MessageBox.Show(this, String.Format("No client configurations were imported from the given config file.{0}{0}Possibly because the file is in an older FahMon format (not tab delimited).{0}{0}Later versions of FahMon write a clientstab.txt file in tab delimited format.", Environment.NewLine), 
+            // Read the config file
+            ClientInstances.FromFahMonClientsTab(filename);
+
+            if (ClientInstances.HasInstances == false)
+            {
+               MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture, 
+                  "No client configurations were imported from the given config file.{0}{0}Possibly because the file is in an older FahMon format (not tab delimited).{0}{0}Later versions of FahMon write a clientstab.txt file in tab delimited format.", Environment.NewLine),
+                  Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+         }
+         catch (Exception ex)
+         {
+            HfmTrace.WriteToHfmConsole(ex);
+            MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture,
+               "No client configurations were imported from the given config file.{0}{0}{1}", Environment.NewLine, ex.Message),
                Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
          }
       }
