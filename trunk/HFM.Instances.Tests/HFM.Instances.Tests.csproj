@@ -78,6 +78,7 @@
     <None Include="TestFiles\Standard PPC 6.xx queue.dat" />
     <None Include="TestFiles\Standard PPC 5.01 queue.dat" />
     <None Include="TestFiles\SMP Test 4 queue.dat" />
+    <None Include="TestFiles\Standard x86 6.xx queue.dat" />
     <None Include="TestFiles\WinSMP 6.24R3 queue.dat" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -370,17 +370,79 @@ namespace HFM.Instances
       {
          get
          {
+            #region Benchmark File Migration Code (v0.3.0 => v0.4.0)
             lock (classLock)
             {
+               string oldfile = Path.Combine(PreferenceSet.AppPath, DataStoreFilename);
+               string newfile = Path.Combine(PreferenceSet.Instance.AppDataPath, DataStoreFilename);
+
+               // Look for file in new location first
                if (_Instance == null)
                {
-                  _Instance = Deserialize(Path.Combine(PreferenceSet.AppPath, DataStoreFilename));
+                  try
+                  {
+                     _Instance = Deserialize(newfile);
+                  }
+                  catch (UnauthorizedAccessException ex)
+                  {
+                      HfmTrace.WriteToHfmConsole(ex);
+                  }
                }
+               
+               // If not found, look for old file location
+               if (_Instance == null)
+               {
+                  // If it exists
+                  if (File.Exists(oldfile))
+                  {
+                     try
+                     {
+                        try
+                        {
+                           // Try and deserialize it
+                           _Instance = Deserialize(oldfile);
+                           // If that succeeds, delete the old file
+                           File.Delete(oldfile);
+                        }
+                        catch (UnauthorizedAccessException)
+                        {
+                           // If file permissions stop us from deserializing
+                           // Copy the old file to the new location
+                           File.Copy(oldfile, newfile, false);
+
+                           // Try and deserialize from the new location
+                           _Instance = Deserialize(newfile);
+                        }
+                     }
+                     catch (Exception ex)
+                     {
+                        HfmTrace.WriteToHfmConsole(ex);
+                     }
+                  }
+               }
+               
+               // If all else fails or no benchmark file exists, create a new collection
                if (_Instance == null)
                {
                   _Instance = new ProteinBenchmarkCollection();
                }
             }
+            #endregion
+
+            #region Standard Code (commented)
+            //lock (classLock)
+            //{
+            //   if (_Instance == null)
+            //   {
+            //      _Instance = Deserialize(Path.Combine(PreferenceSet.Instance.AppDataPath, DataStoreFilename));
+            //   }
+            //   if (_Instance == null)
+            //   {
+            //      _Instance = new ProteinBenchmarkCollection();
+            //   }
+            //}
+            #endregion
+            
             return _Instance;
          }
       }
@@ -389,7 +451,7 @@ namespace HFM.Instances
       #region Serialization Support
       public static void Serialize()
       {
-         Serialize(Instance, Path.Combine(PreferenceSet.AppPath, DataStoreFilename));
+         Serialize(Instance, Path.Combine(PreferenceSet.Instance.AppDataPath, DataStoreFilename));
       }
 
       private static ProteinBenchmarkCollection Deserialize(string filePath)
@@ -405,6 +467,12 @@ namespace HFM.Instances
             fileStream = new FileStream(filePath, FileMode.Open);
             collection = (ProteinBenchmarkCollection)formatter.Deserialize(fileStream);
          }
+         /*** Throw for Benchmark File Migration (Remove With Migration Code) ***/
+         catch (UnauthorizedAccessException)
+         {
+            throw;
+         }
+         /*** Throw for Benchmark File Migration (Remove With Migration Code) ***/
          catch (Exception ex)
          {
             HfmTrace.WriteToHfmConsole(ex);

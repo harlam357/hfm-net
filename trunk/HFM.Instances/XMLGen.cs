@@ -65,8 +65,12 @@ namespace HFM.Instances
             sw.Write(XMLOps.Transform(OverviewXml, "WebMobileOverview.xslt"));
             sw.Close();
 
+            List<string> duplicateUserID = new List<string>(Instances.Length);
+            List<string> duplicateProjects = new List<string>(Instances.Length);
+            InstanceCollectionHelpers.FindDuplicates(duplicateUserID, duplicateProjects, Instances);
+
             // Generate the summart page XML
-            XmlDocument SummaryXml = CreateSummaryXml(Instances);
+            XmlDocument SummaryXml = CreateSummaryXml(Instances, duplicateUserID, duplicateProjects);
 
             // Generate the summary page
             sw = new StreamWriter(Path.Combine(FolderPath, "summary.html"), false);
@@ -267,19 +271,16 @@ namespace HFM.Instances
       /// This allows the same summary method to generate the website page and the app page.
       /// </summary>
       /// <param name="Instances">Array of folding instances</param>
+      /// <param name="duplicateUserID">List of Duplicate UserID strings</param>
+      /// <param name="duplicateProjects">List of Duplicate ProjectRCG strings</param>
       /// <returns>Generated Xml Document</returns>
-      private static XmlDocument CreateSummaryXml(ClientInstance[] Instances)
+      private static XmlDocument CreateSummaryXml(ClientInstance[] Instances, ICollection<string> duplicateUserID, ICollection<string> duplicateProjects)
       {
          XmlDocument xmlDoc = new XmlDocument();
          xmlDoc.Load(Path.Combine(Path.Combine(PreferenceSet.AppPath, "XML"), "Summary.xml"));
          XmlElement xmlRootData = xmlDoc.DocumentElement;
          
          XMLOps.setXmlNode(xmlRootData, "HFMVersion", PlatformOps.ShortFormattedApplicationVersionWithRevision);
-
-         List<string> duplicateUserID = new List<string>(Instances.Length);
-         List<string> duplicateProjects = new List<string>(Instances.Length);
-         
-         InstanceCollectionHelpers.FindDuplicates(duplicateUserID, duplicateProjects, Instances);
 
          Array.Sort(Instances, delegate(ClientInstance instance1, ClientInstance instance2)
                                {
@@ -432,5 +433,67 @@ namespace HFM.Instances
 
          return xmlDoc;
       }
+      
+      //public static void CreateHfmWebDataSet(ClientInstance[] Instances, List<string> duplicateUserID, List<string> duplicateProjects)
+      //{
+      //   HfmWebDataSet data = new HfmWebDataSet();
+      //   HfmWebDataSet.tblGlobalsRow globals = data.tblGlobals.NewtblGlobalsRow();
+      //   globals.HFMVersion = PlatformOps.ApplicationVersionWithRevision;
+      //   globals.LastUpdateDateTime = DateTime.Now;
+      //   data.tblGlobals.Rows.Add(globals);
+
+      //   // Generate a page per instance
+      //   foreach (ClientInstance instance in Instances)
+      //   {
+      //      HfmWebDataSet.tblClientSummaryRow row = data.tblClientSummary.NewtblClientSummaryRow();
+      //      row.Status = instance.Status.ToString();
+      //      row.PercentComplete = instance.PercentComplete;
+      //      row.Name = instance.InstanceName;
+      //      row.UserIDDuplicate = duplicateUserID.Contains(instance.UserAndMachineID);
+      //      row.ClientType = instance.CurrentUnitInfo.TypeOfClient.ToString();
+      //      row.TPF = instance.TimePerFrame;
+      //      row.PPD = instance.PPD;
+      //      row.UPD = instance.UPD;
+      //      row.MHz = instance.ClientProcessorMegahertz;
+      //      row.ETA = instance.ETA;
+      //      row.Core = instance.CurrentUnitInfo.CurrentProtein.Core;
+      //      row.CoreVersion = instance.CurrentUnitInfo.CoreVersion;
+      //      row.ProjectNumber = instance.CurrentUnitInfo.ProjectID;
+      //      row.ProjectRun = instance.CurrentUnitInfo.ProjectRun;
+      //      row.ProjectClone = instance.CurrentUnitInfo.ProjectClone;
+      //      row.ProjectGen = instance.CurrentUnitInfo.ProjectGen;
+      //      row.ProjectDuplicate = duplicateProjects.Contains(instance.CurrentUnitInfo.ProjectRunCloneGen);
+      //      row.Credit = instance.CurrentUnitInfo.CurrentProtein.Credit;
+      //      row.Completed = instance.NumberOfCompletedUnitsSinceLastStart;
+      //      row.Failed = instance.NumberOfFailedUnitsSinceLastStart;
+      //      row.Username = instance.FoldingID;
+      //      row.Team = instance.Team;
+      //      row.UsernameMatch = instance.IsUsernameOk();
+      //      row.DownloadDateTime = instance.CurrentUnitInfo.DownloadTime;
+      //      row.DeadlineDateTime = instance.CurrentUnitInfo.DueTime;
+      //      row.ServerIP = instance.CurrentUnitInfo.CurrentProtein.ServerIP;
+      //      row.WorkUnitName = instance.CurrentUnitInfo.CurrentProtein.WorkUnitName;
+      //      row.NumberOfAtoms = instance.CurrentUnitInfo.CurrentProtein.NumAtoms;
+      //      row.PreferredDays = instance.CurrentUnitInfo.CurrentProtein.PreferredDays;
+      //      row.MaximumDays = instance.CurrentUnitInfo.CurrentProtein.MaxDays;
+      //      row.Frames = instance.CurrentUnitInfo.CurrentProtein.Frames;
+      //      row.ProjectDescriptionUrl = instance.CurrentUnitInfo.CurrentProtein.Description;
+      //      row.Contact = instance.CurrentUnitInfo.CurrentProtein.Contact;
+
+      //      StringBuilder sb = new StringBuilder();
+      //      foreach (LogLine line in instance.CurrentLogLines)
+      //      {
+      //         sb.Append(line.LineRaw);
+      //         sb.Append(Environment.NewLine);
+      //      }
+
+      //      row.CurrentUnitLogText = sb.ToString();
+      //      row.FullLogFileName = instance.CachedFAHLogName;
+
+      //      data.tblClientSummary.Rows.Add(row);
+      //   }
+
+      //   data.WriteXml("TestData.xml");
+      //}
    }
 }

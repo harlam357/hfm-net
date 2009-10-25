@@ -94,6 +94,9 @@ namespace HFM.Forms
       /// Notify Icon for frmMain
       /// </summary>
       private NotifyIcon notifyIcon = null;
+      
+      private const string HfmLogFileName = "HFM.log";
+      private const string HfmPrevLogFileName = "HFM-prev.log";
       #endregion
 
       #region Form Constructor / functionality
@@ -133,17 +136,16 @@ namespace HFM.Forms
          ClientInstances.InstanceRetrieved += ClientInstances_InstanceRetrieved;
          ClientInstances.SelectedInstanceChanged += ClientInstances_SelectedInstanceChanged;
          ClientInstances.DuplicatesFoundOrChanged += ClientInstances_DuplicatesFoundOrChanged;
+         ClientInstances.OfflineLastChanged += ClientInstances_OfflineLastChanged;
          ClientInstances.RefreshUserStatsData += ClientInstances_RefreshUserStatsData;
 
          // Hook-up PreferenceSet Event Handlers
          PreferenceSet Prefs = PreferenceSet.Instance;
          Prefs.ShowUserStatsChanged += PreferenceSet_ShowUserStatsChanged;
          PreferenceSet_ShowUserStatsChanged(this, EventArgs.Empty);
-         Prefs.OfflineLastChanged += PreferenceSet_OfflineLastChanged;
-         PreferenceSet_OfflineLastChanged(this, EventArgs.Empty);
          Prefs.MessageLevelChanged += PreferenceSet_MessageLevelChanged;
-         Prefs.DuplicateCheckChanged += PreferenceSet_DuplicateCheckChanged;
          Prefs.ColorLogFileChanged += PreferenceSet_ColorLogFileChanged;
+         Prefs.PpdCalculationChanged += Prefs_PpdCalculationChanged;
       }
 
       /// <summary>
@@ -151,18 +153,21 @@ namespace HFM.Forms
       /// </summary>
       private void SetupTraceListeners()
       {
-         FileInfo fi = new FileInfo("HFM.log");
+         string logFilePath = Path.Combine(PreferenceSet.Instance.AppDataPath, HfmLogFileName);
+         string prevLogFilePath = Path.Combine(PreferenceSet.Instance.AppDataPath, HfmPrevLogFileName);
+
+         FileInfo fi = new FileInfo(logFilePath);
          if (fi.Exists && fi.Length > 512000)
          {
-            FileInfo fi2 = new FileInfo("HFM-prev.log");
+            FileInfo fi2 = new FileInfo(prevLogFilePath);
             if (fi2.Exists)
             {
                fi2.Delete();
             }
-            fi.MoveTo("HFM-prev.log");
+            fi.MoveTo(prevLogFilePath);
          }
 
-         TextWriterTraceListener listener = new TextWriterTraceListener("HFM.log");
+         TextWriterTraceListener listener = new TextWriterTraceListener(logFilePath);
          Trace.Listeners.Add(listener);
          Trace.AutoFlush = true;
          
@@ -1064,21 +1069,10 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void mnuEditPreferences_Click(object sender, EventArgs e)
       {
-         ePpdCalculation currentPpdCalc = PreferenceSet.Instance.PpdCalculation;
-      
          frmPreferences prefDialog = new frmPreferences();
-         if (prefDialog.ShowDialog() == DialogResult.OK)
-         {
-            //TODO: Do this only if the times change
-            ClientInstances.SetTimerState();
-            
-            // If the PPD Calculation style changed, we need to do a new Retrieval
-            //TODO: This should be done in response to a Preferences "Changed" event
-            if (currentPpdCalc.Equals(PreferenceSet.Instance.PpdCalculation) == false)
-            {
-               RefreshDisplay();
-            }
-         }
+         prefDialog.ShowDialog();
+         
+         dataGridView1.Invalidate();
       }
       #endregion
 
@@ -2002,6 +1996,14 @@ namespace HFM.Forms
          // Update the UI (this is confirmed needed)
          RefreshDisplay();
       }
+
+      /// <summary>
+      /// 
+      /// </summary>
+      private void ClientInstances_OfflineLastChanged(object sender, EventArgs e)
+      {
+         ApplySort();
+      }
       #endregion
 
       #region PreferenceSet Event Handlers
@@ -2032,14 +2034,6 @@ namespace HFM.Forms
       }
 
       /// <summary>
-      /// Sets OfflineLast Property on ClientInstances Collection
-      /// </summary>
-      private void PreferenceSet_OfflineLastChanged(object sender, EventArgs e)
-      {
-         ClientInstances.OfflineClientsLast = PreferenceSet.Instance.OfflineLast;
-      }
-
-      /// <summary>
       /// Sets Debug Message Level on Trace Level Switch
       /// </summary>
       private static void PreferenceSet_MessageLevelChanged(object sender, EventArgs e)
@@ -2053,14 +2047,6 @@ namespace HFM.Forms
       }
 
       /// <summary>
-      /// Checks for Duplicates after Duplicate Check Preferences have changed
-      /// </summary>
-      private void PreferenceSet_DuplicateCheckChanged(object sender, EventArgs e)
-      {
-         ClientInstances.FindDuplicates(); // Issue 81
-      }
-      
-      /// <summary>
       /// Sets the Log Color option after change
       /// </summary>
       private void PreferenceSet_ColorLogFileChanged(object sender, EventArgs e)
@@ -2073,6 +2059,11 @@ namespace HFM.Forms
          {
             txtLogFile.RemoveHighlight();
          }
+      }
+
+      private void Prefs_PpdCalculationChanged(object sender, EventArgs e)
+      {
+         RefreshDisplay();
       }
       #endregion
       

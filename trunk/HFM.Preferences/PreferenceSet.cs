@@ -127,6 +127,15 @@ namespace HFM.Preferences
          set { _GenerateInterval = value; }
       }
 
+      public event EventHandler TimerSettingsChanged;
+      protected void OnTimerSettingsChanged(EventArgs e)
+      {
+         if (TimerSettingsChanged != null)
+         {
+            TimerSettingsChanged(this, e);
+         }
+      }
+
       private String _WebRoot;
       public String WebRoot
       {
@@ -304,13 +313,31 @@ namespace HFM.Preferences
          get { return _AutoSaveConfig; }
          set { _AutoSaveConfig = value; }
       }
-      
+
+      #region PpdCalculation
+      public event EventHandler PpdCalculationChanged;
       private ePpdCalculation _PpdCalculation;
       public ePpdCalculation PpdCalculation
       {
          get { return _PpdCalculation; }
-         set { _PpdCalculation = value; }
+         set
+         {
+            if (_PpdCalculation != value)
+            {
+               _PpdCalculation = value;
+               OnPpdCalculationChanged(EventArgs.Empty);
+            }
+         }
       }
+
+      protected void OnPpdCalculationChanged(EventArgs e)
+      {
+         if (PpdCalculationChanged != null)
+         {
+            PpdCalculationChanged(this, e);
+         }
+      }
+      #endregion
       
       private eTimeStyle _TimeStyle;
       public eTimeStyle TimeStyle
@@ -899,11 +926,26 @@ namespace HFM.Preferences
          try
          {
             Settings.Default.CSSFile = _CSSFile;
-            Settings.Default.GenerateInterval = _GenerateInterval.ToString();
-            Settings.Default.GenerateWeb = _GenerateWeb;
             Settings.Default.SyncOnLoad = _SyncOnLoad;
+
+            bool RaiseTimerSettingsChanged = false;
+            if (Settings.Default.GenerateWeb != _GenerateWeb ||
+                Settings.Default.GenerateInterval != _GenerateInterval.ToString() ||
+                Settings.Default.WebGenAfterRefresh != _WebGenAfterRefresh ||
+                Settings.Default.SyncOnSchedule != _SyncOnSchedule ||
+                Settings.Default.SyncTimeMinutes != _SyncTimeMinutes.ToString())
+            {
+               RaiseTimerSettingsChanged = true;
+            }
+
+            Settings.Default.GenerateWeb = _GenerateWeb;
+            Settings.Default.GenerateInterval = _GenerateInterval.ToString();
+            Settings.Default.WebGenAfterRefresh = _WebGenAfterRefresh;
             Settings.Default.SyncOnSchedule = _SyncOnSchedule;
             Settings.Default.SyncTimeMinutes = _SyncTimeMinutes.ToString();
+            
+            if (RaiseTimerSettingsChanged) OnTimerSettingsChanged(EventArgs.Empty);
+            
             Settings.Default.WebRoot = String.Empty;
             if (_WebRoot.Length > 0)
             {
@@ -962,7 +1004,6 @@ namespace HFM.Preferences
             Settings.Default.LogFileViewer = _LogFileViewer;
             Settings.Default.FileExplorer = _FileExplorer;
             Settings.Default.ProjectDownloadUrl = _ProjectDownloadUrl;
-            Settings.Default.WebGenAfterRefresh = _WebGenAfterRefresh;
             Settings.Default.MessageLevel = _MessageLevel;
             Settings.Default.DecimalPlaces = _DecimalPlaces;
             Settings.Default.ShowUserStats = _ShowUserStats;

@@ -61,6 +61,7 @@ namespace HFM.Instances
       public event EventHandler InstanceRetrieved;
       public event EventHandler SelectedInstanceChanged;
       public event EventHandler DuplicatesFoundOrChanged;
+      public event EventHandler OfflineLastChanged;
       
       public event EventHandler RefreshUserStatsData;
       #endregion
@@ -175,8 +176,17 @@ namespace HFM.Instances
          // Hook up Protein Collection Updated Event Handler
          ProteinCollection.Instance.ProjectInfoUpdated += ProteinCollection_ProjectInfoUpdated;
 
+         // Set Offline Clients Sort Flag
+         OfflineClientsLast = PreferenceSet.Instance.OfflineLast;
+
          // Clear the Log File Cache Folder
          ClearCacheFolder();
+
+         // Hook-up PreferenceSet Event Handlers
+         PreferenceSet Prefs = PreferenceSet.Instance;
+         Prefs.OfflineLastChanged += PreferenceSet_OfflineLastChanged;
+         Prefs.TimerSettingsChanged += Prefs_TimerSettingsChanged;
+         Prefs.DuplicateCheckChanged += PreferenceSet_DuplicateCheckChanged;
       }
       #endregion
 
@@ -242,6 +252,14 @@ namespace HFM.Instances
          if (DuplicatesFoundOrChanged != null)
          {
             DuplicatesFoundOrChanged(this, e);
+         }
+      }
+
+      private void OnOfflineLastChanged(EventArgs e)
+      {
+         if (OfflineLastChanged != null)
+         {
+            OfflineLastChanged(this, e);
          }
       }
 
@@ -345,7 +363,14 @@ namespace HFM.Instances
       public bool OfflineClientsLast
       {
          get { return _displayCollection.OfflineClientsLast; }
-         set { _displayCollection.OfflineClientsLast = value; }
+         set 
+         { 
+            if (_displayCollection.OfflineClientsLast != value)
+            {
+               _displayCollection.OfflineClientsLast = value;
+               OnOfflineLastChanged(EventArgs.Empty);
+            }
+         }
       }
       #endregion
 
@@ -1376,6 +1401,27 @@ namespace HFM.Instances
          }
 
          HfmTrace.WriteToHfmConsole(TraceLevel.Info, Start);
+      }
+
+      /// <summary>
+      /// Sets OfflineLast Property on ClientInstances Collection
+      /// </summary>
+      private void PreferenceSet_OfflineLastChanged(object sender, EventArgs e)
+      {
+         OfflineClientsLast = PreferenceSet.Instance.OfflineLast;
+      }
+
+      /// <summary>
+      /// Checks for Duplicates after Duplicate Check Preferences have changed
+      /// </summary>
+      private void PreferenceSet_DuplicateCheckChanged(object sender, EventArgs e)
+      {
+         FindDuplicates(); // Issue 81
+      }
+
+      private void Prefs_TimerSettingsChanged(object sender, EventArgs e)
+      {
+         SetTimerState();
       }
       #endregion
       

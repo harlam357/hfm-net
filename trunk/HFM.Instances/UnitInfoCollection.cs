@@ -73,7 +73,7 @@ namespace HFM.Instances
          {
             bool bWriteHeader = false;
 
-            string fileName = Path.Combine(PreferenceSet.AppPath, CompletedUnitsCSV);
+            string fileName = Path.Combine(PreferenceSet.Instance.AppDataPath, CompletedUnitsCSV);
             if (File.Exists(fileName) == false)
             {
                bWriteHeader = true;
@@ -103,14 +103,31 @@ namespace HFM.Instances
       
       private static void UpgradeUnitInfoCsvFile()
       {
+         string oldFilePath = Path.Combine(PreferenceSet.AppPath, CompletedUnitsCSV);
+         string newFilePath = Path.Combine(PreferenceSet.Instance.AppDataPath, CompletedUnitsCSV);
+         
+         // If file does not exist in new location but does exist in old location
+         if (File.Exists(newFilePath) == false && File.Exists(oldFilePath))
+         {
+            try
+            {
+               // Try to copy it from the old to the new
+               File.Copy(oldFilePath, newFilePath);
+            }
+            catch (Exception ex)
+            {
+               HfmTrace.WriteToHfmConsole(ex);
+            }
+         }
+
          StreamReader csvFile = null;
          try
          {
-            string fileName = Path.Combine(PreferenceSet.AppPath, CompletedUnitsCSV);
-            if (File.Exists(fileName))
+
+            if (File.Exists(newFilePath))
             {
                // Open the current file and read the first line (header)
-               csvFile = new StreamReader(fileName);
+               csvFile = new StreamReader(newFilePath);
                string headerLine = csvFile.ReadLine();
                csvFile.Close();
                csvFile = null;
@@ -121,7 +138,7 @@ namespace HFM.Instances
                // before v0.3.0 is v0.2.2.  Rename the current file with last release version.
                if (headerSplit.Length < 19)
                {
-                  File.Move(fileName, fileName.Replace(".csv", ".0_2_2.csv"));
+                  File.Move(newFilePath, newFilePath.Replace(".csv", ".0_2_2.csv"));
                }
             }
          }

@@ -1272,18 +1272,7 @@ namespace HFM.Instances
       {
          get
          {
-            byte[] bytes = new byte[_qEntry.UserAndMachineID.Length];
-            Array.Copy(_qEntry.UserAndMachineID, bytes, _qEntry.UserAndMachineID.Length);
-            // remove the MachineID from the value
-            bytes[0] = Convert.ToByte(Convert.ToUInt32(bytes[0]) - _qEntry.MachineID);
-            Array.Reverse(bytes);
-
-            StringBuilder sb = new StringBuilder(_qEntry.UserAndMachineID.Length * 2);
-            foreach (byte b in bytes)
-            {
-               sb.AppendFormat("{0:X2}", b);
-            }
-            return sb.ToString().TrimStart('0');
+            return GetUserIDFromUserAndMachineID(_qEntry.UserAndMachineID, _qEntry.MachineID);
          }
       }
 
@@ -1637,6 +1626,47 @@ namespace HFM.Instances
       public UInt32 NumberOfUploadFailures
       {
          get { return _qEntry.NumberOfUploadFailures; }
+      }
+
+      public static byte[] HexToData(string hexString)
+      {
+         if (hexString == null) throw new ArgumentNullException("hexString", "Argument 'hexString' cannot be null.");
+
+         if (hexString.Length % 2 == 1)
+         {
+            hexString = '0' + hexString; // Pad the first byte
+         }
+
+         byte[] data = new byte[hexString.Length / 2];
+
+         for (int i = 0; i < data.Length; i++)
+         {
+            data[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
+         }
+
+         return data;
+      }
+
+      public static string GetUserIDFromUserAndMachineID(byte[] UserAndMachineID, UInt32 MachineID)
+      {
+         Debug.Assert(UserAndMachineID.Length == 8);
+         
+         /*** Remove the MachineID from UserAndMachineID ***/
+         
+         // Convert to 64bit integer
+         UInt64 value = BitConverter.ToUInt64(UserAndMachineID, 0);
+         value = value - MachineID;
+         // Convert back to bytes after MachineID has been subtracted
+         byte[] bytes = BitConverter.GetBytes(value);
+         // Reverse the bytes so we show the most significant byte first
+         Array.Reverse(bytes);
+
+         StringBuilder sb = new StringBuilder(UserAndMachineID.Length * 2);
+         foreach (byte b in bytes)
+         {
+            sb.AppendFormat("{0:X2}", b);
+         }
+         return sb.ToString().TrimStart('0');
       }
 
       private static string GetCpuString(byte[] CpuType, byte[] CpuSpecies)
