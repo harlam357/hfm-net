@@ -104,7 +104,9 @@ namespace HFM.Instances
       private static void UpgradeUnitInfoCsvFile()
       {
          string oldFilePath = Path.Combine(PreferenceSet.AppPath, CompletedUnitsCSV);
+         string oldFilePath022 = Path.Combine(PreferenceSet.AppPath, CompletedUnitsCSV.Replace(".csv", ".0_2_2.csv"));
          string newFilePath = Path.Combine(PreferenceSet.Instance.AppDataPath, CompletedUnitsCSV);
+         string newFilePath022 = Path.Combine(PreferenceSet.Instance.AppDataPath, CompletedUnitsCSV.Replace(".csv", ".0_2_2.csv"));
          
          // If file does not exist in new location but does exist in old location
          if (File.Exists(newFilePath) == false && File.Exists(oldFilePath))
@@ -113,6 +115,22 @@ namespace HFM.Instances
             {
                // Try to copy it from the old to the new
                File.Copy(oldFilePath, newFilePath);
+               File.Delete(oldFilePath);
+            }
+            catch (Exception ex)
+            {
+               HfmTrace.WriteToHfmConsole(ex);
+            }
+         }
+
+         // If file does not exist in new location but does exist in old location
+         if (File.Exists(newFilePath022) == false && File.Exists(oldFilePath022))
+         {
+            try
+            {
+               // Try to copy it from the old to the new
+               File.Copy(oldFilePath022, newFilePath022);
+               File.Delete(oldFilePath022);
             }
             catch (Exception ex)
             {
@@ -123,7 +141,6 @@ namespace HFM.Instances
          StreamReader csvFile = null;
          try
          {
-
             if (File.Exists(newFilePath))
             {
                // Open the current file and read the first line (header)
