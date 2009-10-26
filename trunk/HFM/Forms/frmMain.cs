@@ -146,6 +146,16 @@ namespace HFM.Forms
          Prefs.MessageLevelChanged += PreferenceSet_MessageLevelChanged;
          Prefs.ColorLogFileChanged += PreferenceSet_ColorLogFileChanged;
          Prefs.PpdCalculationChanged += Prefs_PpdCalculationChanged;
+
+         // If Mono, use the RowEnter Event (which was what 0.3.0 and prior used)
+         // to set the CurrentInstance selection.  Obviously Mono doesn't fire the
+         // DataGridView.SelectionChanged Event.
+         if (PlatformOps.IsRunningOnMono())
+         {
+            dataGridView1.RowEnter += delegate {
+               ClientInstances.SetCurrentInstance(dataGridView1.SelectedRows);
+            };
+         }
       }
 
       /// <summary>
