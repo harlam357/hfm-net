@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 
@@ -29,25 +28,42 @@ namespace HFM.Classes
 {
    public sealed partial class QueueControl : UserControl
    {
+      private enum QueueControlRows
+      {
+         IndexCombo = 0,
+         Blank1,
+         Status,
+         Credit,
+         BeginDate,
+         EndDate,
+         SpeedFactor,
+         PerfFraction,
+         MegaFlops,
+         Server,
+         AvgDownload,
+         AvgUpload,
+         CpuType,
+         OS,
+         Memory,
+         GpuMemory,
+         Benchmark,
+         SmpCores,
+         CoresToUse,
+         UserId,
+         MachineId
+      }
+   
       public event EventHandler<QueueIndexChangedEventArgs> QueueIndexChanged;
    
       private QueueReader _qr = null;
       private ClientType _ClientType = ClientType.Unknown;
       private bool _ClientIsOnVirtualMachine;
       
-      private readonly Point _UserIdLabelLocation;
-      private readonly Point _UserIdTextboxLocation;
-      private readonly Point _MachineIdLabelLocation;
-      private readonly Point _MachineTextboxLocation;
+      private const int DefaultRowHeight = 23;
    
       public QueueControl()
       {
          InitializeComponent();
-         
-         _UserIdLabelLocation = lblUserID.Location;
-         _UserIdTextboxLocation = txtUserID.Location;
-         _MachineIdLabelLocation = lblMachineID.Location;
-         _MachineTextboxLocation = txtMachineID.Location;
       }
       
       private void OnQueueIndexChanged(QueueIndexChangedEventArgs e)
@@ -174,21 +190,19 @@ namespace HFM.Classes
          txtCpuType.Visible = visible;
          txtOsType.Visible = visible;
          txtMemory.Visible = visible;
+         txtGpuMemory.Visible = visible;
+         txtBenchmark.Visible = visible;
+         txtSmpCores.Visible = visible;
+         txtCoresToUse.Visible = visible;
+         txtUserID.Visible = visible;
+         txtMachineID.Visible = visible;
          
          if (visible == false)
          {
-            lblGpuMemory.Visible = false;
-            txtGpuMemory.Visible = false;
-            lblBenchmark.Visible = true;
-            txtBenchmark.Visible = false;
-            lblSmpCores.Visible = false;
-            txtSmpCores.Visible = false;
-            lblCoresToUse.Visible = false;
-            txtCoresToUse.Visible = false;
-            lblUserID.Location = new Point(_UserIdLabelLocation.X, _UserIdLabelLocation.Y - 23);
-            txtUserID.Location = new Point(_UserIdTextboxLocation.X, _UserIdTextboxLocation.Y - 23);
-            lblMachineID.Location = new Point(_MachineIdLabelLocation.X, _MachineIdLabelLocation.Y - 23);
-            txtMachineID.Location = new Point(_MachineTextboxLocation.X, _MachineTextboxLocation.Y - 23);
+            tableLayoutPanel1.RowStyles[(int)QueueControlRows.GpuMemory].Height = 0;
+            tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = DefaultRowHeight;
+            tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = 0;
+            tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = 0;
          }
          else
          {
@@ -196,52 +210,25 @@ namespace HFM.Classes
             {
                case ClientType.Unknown:
                case ClientType.Standard:
-                  lblGpuMemory.Visible = false;
-                  txtGpuMemory.Visible = false;
-                  lblBenchmark.Visible = true;
-                  txtBenchmark.Visible = true;
-                  lblSmpCores.Visible = false;
-                  txtSmpCores.Visible = false;
-                  lblCoresToUse.Visible = false;
-                  txtCoresToUse.Visible = false;
-                  lblUserID.Location = new Point(_UserIdLabelLocation.X, _UserIdLabelLocation.Y - 23);
-                  txtUserID.Location = new Point(_UserIdTextboxLocation.X, _UserIdTextboxLocation.Y - 23);
-                  lblMachineID.Location = new Point(_MachineIdLabelLocation.X, _MachineIdLabelLocation.Y - 23);
-                  txtMachineID.Location = new Point(_MachineTextboxLocation.X, _MachineTextboxLocation.Y - 23);
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.GpuMemory].Height = 0;
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = DefaultRowHeight;
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = 0;
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = 0;
                   break;
                case ClientType.GPU:
-                  lblGpuMemory.Visible = true;
-                  txtGpuMemory.Visible = true;
-                  lblBenchmark.Visible = false;
-                  txtBenchmark.Visible = false;
-                  lblSmpCores.Visible = false;
-                  txtSmpCores.Visible = false;
-                  lblCoresToUse.Visible = false;
-                  txtCoresToUse.Visible = false;
-                  lblUserID.Location = new Point(_UserIdLabelLocation.X, _UserIdLabelLocation.Y - 23);
-                  txtUserID.Location = new Point(_UserIdTextboxLocation.X, _UserIdTextboxLocation.Y - 23);
-                  lblMachineID.Location = new Point(_MachineIdLabelLocation.X, _MachineIdLabelLocation.Y - 23);
-                  txtMachineID.Location = new Point(_MachineTextboxLocation.X, _MachineTextboxLocation.Y - 23);
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.GpuMemory].Height = DefaultRowHeight;
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = 0;
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = 0;
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = 0;
                   break;
                case ClientType.SMP:
-                  lblGpuMemory.Visible = false;
-                  txtGpuMemory.Visible = false;
-                  lblBenchmark.Visible = false;
-                  txtBenchmark.Visible = false;
-                  lblSmpCores.Visible = true;
-                  txtSmpCores.Visible = true;
-                  lblCoresToUse.Visible = true;
-                  txtCoresToUse.Visible = true;
-                  lblUserID.Location = _UserIdLabelLocation;
-                  txtUserID.Location = _UserIdTextboxLocation;
-                  lblMachineID.Location = _MachineIdLabelLocation;
-                  txtMachineID.Location = _MachineTextboxLocation;
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.GpuMemory].Height = 0;
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = 0;
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = DefaultRowHeight;
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = DefaultRowHeight;
                   break;
             }
          }
-
-         txtUserID.Visible = visible;
-         txtMachineID.Visible = visible;
       }
    }
    

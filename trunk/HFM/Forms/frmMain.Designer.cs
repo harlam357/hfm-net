@@ -812,7 +812,6 @@ namespace HFM.Forms
          // 
          this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
          this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-         this.splitContainer2.IsSplitterFixed = true;
          this.splitContainer2.Location = new System.Drawing.Point(0, 0);
          this.splitContainer2.Name = "splitContainer2";
          // 
@@ -831,9 +830,11 @@ namespace HFM.Forms
          // 
          // queueControl
          // 
+         this.queueControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                     | System.Windows.Forms.AnchorStyles.Left)
+                     | System.Windows.Forms.AnchorStyles.Right)));
          this.queueControl.BackColor = System.Drawing.SystemColors.Window;
          this.queueControl.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-         this.queueControl.Dock = System.Windows.Forms.DockStyle.Right;
          this.queueControl.Location = new System.Drawing.Point(31, 0);
          this.queueControl.Name = "queueControl";
          this.queueControl.Size = new System.Drawing.Size(258, 356);

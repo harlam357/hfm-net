@@ -118,12 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="lblCopyrights.Text" xml:space="preserve">
-    <value>Copyright (c) Ryan Harlamert (harlam357) 2009.
-Copyright (c) David Rawling 2006-2007.
-
-All Rights Reserved.
-
-Security Library based on code by Jeff Atwood.
+    <value>Security Library based on code by Jeff Atwood.
 DataGridView Column Selector by Vincenzo Rossi.
 Benchmark Graphs use the ZedGraph Control by JChampion.
 Sortable Binding List by Joe Stegman - Microsoft Corporation.
