@@ -156,6 +156,28 @@ namespace HFM.Classes
             txtUserID.Text = entry.UserID;
             txtMachineID.Text = entry.MachineID.ToString(CultureInfo.CurrentCulture);
             
+            #region Test TextBox Code (commented)
+            //txtStatus.Text = "Status";
+            //txtCredit.Text = "Credit";
+            //txtBeginDate.Text = "BeginDate";
+            //txtEndDate.Text = "EndDate";
+            //txtSpeedFactor.Text = "SpeedFactor";
+            //txtPerformanceFraction.Text = "PerfFraction";
+            //txtMegaFlops.Text = "MegaFlops";
+            //txtServer.Text = "Server";
+            //txtAverageDownloadRate.Text = "AvgDownload";
+            //txtAverageUploadRate.Text = "AvgUpload";
+            //txtCpuType.Text = "CpuType";
+            //txtOsType.Text = "OsType";
+            //txtMemory.Text = "Memory";
+            //txtGpuMemory.Text = "GpuMemory";
+            //txtBenchmark.Text = "Benchmark";
+            //txtSmpCores.Text = "SmpCores";
+            //txtCoresToUse.Text = "CoresToUse";
+            //txtUserID.Text = "UserID";
+            //txtMachineID.Text = "MachineID";
+            #endregion
+            
             OnQueueIndexChanged(new QueueIndexChangedEventArgs(cboQueueIndex.SelectedIndex));
          }
          else
@@ -214,18 +236,30 @@ namespace HFM.Classes
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = DefaultRowHeight;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = 0;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = 0;
+                  txtGpuMemory.Visible = false;
+                  txtBenchmark.Visible = true;
+                  txtSmpCores.Visible = false;
+                  txtCoresToUse.Visible = false;
                   break;
                case ClientType.GPU:
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.GpuMemory].Height = DefaultRowHeight;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = 0;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = 0;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = 0;
+                  txtGpuMemory.Visible = true;
+                  txtBenchmark.Visible = false;
+                  txtSmpCores.Visible = false;
+                  txtCoresToUse.Visible = false;
                   break;
                case ClientType.SMP:
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.GpuMemory].Height = 0;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = 0;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = DefaultRowHeight;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = DefaultRowHeight;
+                  txtGpuMemory.Visible = false;
+                  txtBenchmark.Visible = false;
+                  txtSmpCores.Visible = true;
+                  txtCoresToUse.Visible = true;
                   break;
             }
          }
