@@ -1498,6 +1498,14 @@ namespace HFM.Forms
          if (dataGridView1.CurrentCell != null)
          {
             dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Selected = true;
+            // If Mono, go ahead and set the CurrentInstance here.  Under .NET the selection
+            // setter above causes this same operation, but since Mono won't fire the 
+            // DataGridView.SelectionChanged Event, the result of that event needs to be
+            // forced here instead.
+            if (PlatformOps.IsRunningOnMono())
+            {
+               ClientInstances.SetCurrentInstance(dataGridView1.SelectedRows);
+            }
             ClientInstances.RaiseSelectedInstanceChanged();
          }
       }
