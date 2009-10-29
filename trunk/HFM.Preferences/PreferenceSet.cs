@@ -594,6 +594,13 @@ namespace HFM.Preferences
          set { _MessagesFormSize = value; }
       }
 
+      private bool _WebGenCopyFAHlog;
+      public bool WebGenCopyFAHlog
+      {
+         get { return _WebGenCopyFAHlog; }
+         set { _WebGenCopyFAHlog = value; }
+      }
+
       public static String AppPath
       {
          get
@@ -883,6 +890,7 @@ namespace HFM.Preferences
          }
          catch (NullReferenceException)
          { }
+         _WebGenCopyFAHlog = Settings.Default.WebGenCopyFAHlog;
          
          _AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
          _AppDataPath = Path.Combine(_AppDataPath, ExeName);
@@ -1057,6 +1065,7 @@ namespace HFM.Preferences
             Settings.Default.BenchmarksFormSize = _BenchmarksFormSize;
             Settings.Default.MessagesFormLocation = _MessagesFormLocation;
             Settings.Default.MessagesFormSize = _MessagesFormSize;
+            Settings.Default.WebGenCopyFAHlog = _WebGenCopyFAHlog;
 
             Settings.Default.Save();
          }

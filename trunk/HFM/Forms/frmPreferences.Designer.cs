@@ -54,9 +54,6 @@ namespace HFM.Forms
          this.locateWebFolder = new System.Windows.Forms.FolderBrowserDialog();
          this.tabControl1 = new System.Windows.Forms.TabControl();
          this.tabSchdTasks = new System.Windows.Forms.TabPage();
-         this.grpStartup = new HFM.Classes.GroupBoxWrapper();
-         this.chkRunMinimized = new HFM.Classes.CheckBoxWrapper();
-         this.chkAutoRun = new HFM.Classes.CheckBoxWrapper();
          this.grpUpdateData = new HFM.Classes.GroupBoxWrapper();
          this.chkColorLog = new HFM.Classes.CheckBoxWrapper();
          this.chkDuplicateProject = new HFM.Classes.CheckBoxWrapper();
@@ -71,6 +68,7 @@ namespace HFM.Forms
          this.chkScheduled = new HFM.Classes.CheckBoxWrapper();
          this.chkSynchronous = new HFM.Classes.CheckBoxWrapper();
          this.grpHTMLOutput = new HFM.Classes.GroupBoxWrapper();
+         this.chkFAHlog = new HFM.Classes.CheckBoxWrapper();
          this.radioFullRefresh = new HFM.Classes.RadioButtonWrapper();
          this.radioSchedule = new HFM.Classes.RadioButtonWrapper();
          this.txtWebGenMinutes = new HFM.Classes.TextBoxWrapper();
@@ -79,6 +77,10 @@ namespace HFM.Forms
          this.txtWebSiteBase = new HFM.Classes.TextBoxWrapper();
          this.lbl2WebSiteDir = new HFM.Classes.LabelWrapper();
          this.chkWebSiteGenerator = new HFM.Classes.CheckBoxWrapper();
+         this.tabStartup = new System.Windows.Forms.TabPage();
+         this.grpStartup = new HFM.Classes.GroupBoxWrapper();
+         this.checkBoxWrapper1 = new HFM.Classes.CheckBoxWrapper();
+         this.checkBoxWrapper2 = new HFM.Classes.CheckBoxWrapper();
          this.tabDefaults = new System.Windows.Forms.TabPage();
          this.grpDecimalPlaces = new HFM.Classes.GroupBoxWrapper();
          this.udDecimalPlaces = new System.Windows.Forms.NumericUpDown();
@@ -148,11 +150,14 @@ namespace HFM.Forms
          this.toolTipPrefs = new System.Windows.Forms.ToolTip(this.components);
          this.btnOK = new HFM.Classes.ButtonWrapper();
          this.btnCancel = new HFM.Classes.ButtonWrapper();
+         this.chkRunMinimized = new HFM.Classes.CheckBoxWrapper();
+         this.chkAutoRun = new HFM.Classes.CheckBoxWrapper();
          this.tabControl1.SuspendLayout();
          this.tabSchdTasks.SuspendLayout();
-         this.grpStartup.SuspendLayout();
          this.grpUpdateData.SuspendLayout();
          this.grpHTMLOutput.SuspendLayout();
+         this.tabStartup.SuspendLayout();
+         this.grpStartup.SuspendLayout();
          this.tabDefaults.SuspendLayout();
          this.grpDecimalPlaces.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.udDecimalPlaces)).BeginInit();
@@ -191,6 +196,7 @@ namespace HFM.Forms
          // tabControl1
          // 
          this.tabControl1.Controls.Add(this.tabSchdTasks);
+         this.tabControl1.Controls.Add(this.tabStartup);
          this.tabControl1.Controls.Add(this.tabDefaults);
          this.tabControl1.Controls.Add(this.tabReporting);
          this.tabControl1.Controls.Add(this.tabWeb);
@@ -207,7 +213,6 @@ namespace HFM.Forms
          // tabSchdTasks
          // 
          this.tabSchdTasks.BackColor = System.Drawing.SystemColors.Control;
-         this.tabSchdTasks.Controls.Add(this.grpStartup);
          this.tabSchdTasks.Controls.Add(this.grpUpdateData);
          this.tabSchdTasks.Controls.Add(this.grpHTMLOutput);
          this.tabSchdTasks.Location = new System.Drawing.Point(4, 22);
@@ -217,37 +222,6 @@ namespace HFM.Forms
          this.tabSchdTasks.TabIndex = 2;
          this.tabSchdTasks.Text = "Scheduled Tasks";
          this.tabSchdTasks.UseVisualStyleBackColor = true;
-         // 
-         // grpStartup
-         // 
-         this.grpStartup.Controls.Add(this.chkRunMinimized);
-         this.grpStartup.Controls.Add(this.chkAutoRun);
-         this.grpStartup.Location = new System.Drawing.Point(6, 245);
-         this.grpStartup.Name = "grpStartup";
-         this.grpStartup.Size = new System.Drawing.Size(489, 50);
-         this.grpStartup.TabIndex = 2;
-         this.grpStartup.TabStop = false;
-         this.grpStartup.Text = "Startup";
-         // 
-         // chkRunMinimized
-         // 
-         this.chkRunMinimized.AutoSize = true;
-         this.chkRunMinimized.Location = new System.Drawing.Point(196, 20);
-         this.chkRunMinimized.Name = "chkRunMinimized";
-         this.chkRunMinimized.Size = new System.Drawing.Size(95, 17);
-         this.chkRunMinimized.TabIndex = 1;
-         this.chkRunMinimized.Text = "Run Minimized";
-         this.chkRunMinimized.UseVisualStyleBackColor = true;
-         // 
-         // chkAutoRun
-         // 
-         this.chkAutoRun.AutoSize = true;
-         this.chkAutoRun.Location = new System.Drawing.Point(10, 20);
-         this.chkAutoRun.Name = "chkAutoRun";
-         this.chkAutoRun.Size = new System.Drawing.Size(170, 17);
-         this.chkAutoRun.TabIndex = 0;
-         this.chkAutoRun.Text = "Auto Run on Windows Startup";
-         this.chkAutoRun.UseVisualStyleBackColor = true;
          // 
          // grpUpdateData
          // 
@@ -349,7 +323,7 @@ namespace HFM.Forms
          // 
          // txtCollectMinutes
          // 
-         this.txtCollectMinutes.Location = new System.Drawing.Point(320, 38);
+         this.txtCollectMinutes.Location = new System.Drawing.Point(323, 38);
          this.txtCollectMinutes.MaxLength = 3;
          this.txtCollectMinutes.Name = "txtCollectMinutes";
          this.txtCollectMinutes.Size = new System.Drawing.Size(48, 20);
@@ -362,11 +336,11 @@ namespace HFM.Forms
          // lbl2SchedExplain
          // 
          this.lbl2SchedExplain.AutoSize = true;
-         this.lbl2SchedExplain.Location = new System.Drawing.Point(369, 41);
+         this.lbl2SchedExplain.Location = new System.Drawing.Point(375, 41);
          this.lbl2SchedExplain.Name = "lbl2SchedExplain";
-         this.lbl2SchedExplain.Size = new System.Drawing.Size(108, 13);
+         this.lbl2SchedExplain.Size = new System.Drawing.Size(44, 13);
          this.lbl2SchedExplain.TabIndex = 4;
-         this.lbl2SchedExplain.Text = "minutes while running";
+         this.lbl2SchedExplain.Text = "Minutes";
          this.lbl2SchedExplain.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
          // 
          // chkScheduled
@@ -394,6 +368,7 @@ namespace HFM.Forms
          // 
          // grpHTMLOutput
          // 
+         this.grpHTMLOutput.Controls.Add(this.chkFAHlog);
          this.grpHTMLOutput.Controls.Add(this.radioFullRefresh);
          this.grpHTMLOutput.Controls.Add(this.radioSchedule);
          this.grpHTMLOutput.Controls.Add(this.txtWebGenMinutes);
@@ -404,10 +379,21 @@ namespace HFM.Forms
          this.grpHTMLOutput.Controls.Add(this.chkWebSiteGenerator);
          this.grpHTMLOutput.Location = new System.Drawing.Point(6, 166);
          this.grpHTMLOutput.Name = "grpHTMLOutput";
-         this.grpHTMLOutput.Size = new System.Drawing.Size(489, 76);
+         this.grpHTMLOutput.Size = new System.Drawing.Size(489, 131);
          this.grpHTMLOutput.TabIndex = 1;
          this.grpHTMLOutput.TabStop = false;
          this.grpHTMLOutput.Text = "HTML Output";
+         // 
+         // chkFAHlog
+         // 
+         this.chkFAHlog.AutoSize = true;
+         this.chkFAHlog.Enabled = false;
+         this.chkFAHlog.Location = new System.Drawing.Point(10, 76);
+         this.chkFAHlog.Name = "chkFAHlog";
+         this.chkFAHlog.Size = new System.Drawing.Size(123, 17);
+         this.chkFAHlog.TabIndex = 8;
+         this.chkFAHlog.Text = "Copy FAHlog.txt files";
+         this.chkFAHlog.UseVisualStyleBackColor = true;
          // 
          // radioFullRefresh
          // 
@@ -498,6 +484,48 @@ namespace HFM.Forms
          this.chkWebSiteGenerator.Text = "Create a Web Site";
          this.chkWebSiteGenerator.UseVisualStyleBackColor = true;
          this.chkWebSiteGenerator.CheckedChanged += new System.EventHandler(this.chkWebSiteGenerator_CheckedChanged);
+         // 
+         // tabStartup
+         // 
+         this.tabStartup.Controls.Add(this.grpStartup);
+         this.tabStartup.Location = new System.Drawing.Point(4, 22);
+         this.tabStartup.Name = "tabStartup";
+         this.tabStartup.Padding = new System.Windows.Forms.Padding(3);
+         this.tabStartup.Size = new System.Drawing.Size(501, 303);
+         this.tabStartup.TabIndex = 6;
+         this.tabStartup.Text = "Startup";
+         this.tabStartup.UseVisualStyleBackColor = true;
+         // 
+         // grpStartup
+         // 
+         this.grpStartup.Controls.Add(this.checkBoxWrapper1);
+         this.grpStartup.Controls.Add(this.checkBoxWrapper2);
+         this.grpStartup.Location = new System.Drawing.Point(6, 9);
+         this.grpStartup.Name = "grpStartup";
+         this.grpStartup.Size = new System.Drawing.Size(489, 50);
+         this.grpStartup.TabIndex = 3;
+         this.grpStartup.TabStop = false;
+         this.grpStartup.Text = "Startup";
+         // 
+         // checkBoxWrapper1
+         // 
+         this.checkBoxWrapper1.AutoSize = true;
+         this.checkBoxWrapper1.Location = new System.Drawing.Point(196, 20);
+         this.checkBoxWrapper1.Name = "checkBoxWrapper1";
+         this.checkBoxWrapper1.Size = new System.Drawing.Size(95, 17);
+         this.checkBoxWrapper1.TabIndex = 1;
+         this.checkBoxWrapper1.Text = "Run Minimized";
+         this.checkBoxWrapper1.UseVisualStyleBackColor = true;
+         // 
+         // checkBoxWrapper2
+         // 
+         this.checkBoxWrapper2.AutoSize = true;
+         this.checkBoxWrapper2.Location = new System.Drawing.Point(10, 20);
+         this.checkBoxWrapper2.Name = "checkBoxWrapper2";
+         this.checkBoxWrapper2.Size = new System.Drawing.Size(170, 17);
+         this.checkBoxWrapper2.TabIndex = 0;
+         this.checkBoxWrapper2.Text = "Auto Run on Windows Startup";
+         this.checkBoxWrapper2.UseVisualStyleBackColor = true;
          // 
          // tabDefaults
          // 
@@ -1207,6 +1235,26 @@ namespace HFM.Forms
          this.btnCancel.UseVisualStyleBackColor = true;
          this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
          // 
+         // chkRunMinimized
+         // 
+         this.chkRunMinimized.AutoSize = true;
+         this.chkRunMinimized.Location = new System.Drawing.Point(196, 20);
+         this.chkRunMinimized.Name = "chkRunMinimized";
+         this.chkRunMinimized.Size = new System.Drawing.Size(95, 17);
+         this.chkRunMinimized.TabIndex = 1;
+         this.chkRunMinimized.Text = "Run Minimized";
+         this.chkRunMinimized.UseVisualStyleBackColor = true;
+         // 
+         // chkAutoRun
+         // 
+         this.chkAutoRun.AutoSize = true;
+         this.chkAutoRun.Location = new System.Drawing.Point(10, 20);
+         this.chkAutoRun.Name = "chkAutoRun";
+         this.chkAutoRun.Size = new System.Drawing.Size(170, 17);
+         this.chkAutoRun.TabIndex = 0;
+         this.chkAutoRun.Text = "Auto Run on Windows Startup";
+         this.chkAutoRun.UseVisualStyleBackColor = true;
+         // 
          // frmPreferences
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1227,12 +1275,13 @@ namespace HFM.Forms
          this.Shown += new System.EventHandler(this.frmPreferences_Shown);
          this.tabControl1.ResumeLayout(false);
          this.tabSchdTasks.ResumeLayout(false);
-         this.grpStartup.ResumeLayout(false);
-         this.grpStartup.PerformLayout();
          this.grpUpdateData.ResumeLayout(false);
          this.grpUpdateData.PerformLayout();
          this.grpHTMLOutput.ResumeLayout(false);
          this.grpHTMLOutput.PerformLayout();
+         this.tabStartup.ResumeLayout(false);
+         this.grpStartup.ResumeLayout(false);
+         this.grpStartup.PerformLayout();
          this.tabDefaults.ResumeLayout(false);
          this.grpDecimalPlaces.ResumeLayout(false);
          this.grpDecimalPlaces.PerformLayout();
@@ -1344,8 +1393,6 @@ namespace HFM.Forms
       private HFM.Classes.CheckBoxWrapper chkDuplicateProject;
       private HFM.Classes.CheckBoxWrapper chkDuplicateUserID;
       private HFM.Classes.CheckBoxWrapper chkColorLog;
-      private HFM.Classes.GroupBoxWrapper grpStartup;
-      private HFM.Classes.CheckBoxWrapper chkAutoRun;
       private System.Windows.Forms.TabPage tabReporting;
       private HFM.Classes.GroupBoxWrapper grpEmailSettings;
       private HFM.Classes.LabelWrapper lblSmtpServer;
@@ -1362,6 +1409,12 @@ namespace HFM.Forms
       private HFM.Classes.ButtonWrapper btnTestEmail;
       private HFM.Classes.GroupBoxWrapper grpReportSelections;
       private HFM.Classes.CheckBoxWrapper chkClientEuePause;
+      private System.Windows.Forms.TabPage tabStartup;
+      private HFM.Classes.GroupBoxWrapper grpStartup;
+      private HFM.Classes.CheckBoxWrapper checkBoxWrapper1;
+      private HFM.Classes.CheckBoxWrapper checkBoxWrapper2;
       private HFM.Classes.CheckBoxWrapper chkRunMinimized;
+      private HFM.Classes.CheckBoxWrapper chkAutoRun;
+      private HFM.Classes.CheckBoxWrapper chkFAHlog;
    }
 }

@@ -1018,17 +1018,18 @@ namespace HFM.Instances
             case "DGROMACS":
             case "GBGROMACS":
             case "AMBER":
-            case "QMD":
+            //case "QMD":
             case "GROMACS33":
             case "GROST":
             case "GROSIMT":
             case "DGROMACSB":
             case "DGROMACSC":
             case "GRO-A4":
-            case "TINKER":
+            //case "TINKER":
                return ClientType.Standard;
             case "GRO-SMP":
             case "GROCVS":
+            case "GRO-A3":
                return ClientType.SMP;
             case "GROGPU2":
             case "GROGPU2-MT":

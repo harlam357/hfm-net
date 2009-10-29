@@ -698,5 +698,17 @@ namespace HFM.Preferences.Properties {
                 this["MessagesFormSize"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool WebGenCopyFAHlog {
+            get {
+                return ((bool)(this["WebGenCopyFAHlog"]));
+            }
+            set {
+                this["WebGenCopyFAHlog"] = value;
+            }
+        }
     }
 }

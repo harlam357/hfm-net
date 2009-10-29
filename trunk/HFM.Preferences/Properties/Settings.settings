@@ -181,5 +181,8 @@
     <Setting Name="MessagesFormSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="WebGenCopyFAHlog" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

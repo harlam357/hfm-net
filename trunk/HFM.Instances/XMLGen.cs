@@ -141,7 +141,7 @@ namespace HFM.Instances
                                              Username, Password, PassiveMode);
 
                   string CachedFAHlogPath = Path.Combine(PreferenceSet.CacheDirectory, Instance.CachedFAHLogName);
-                  if (File.Exists(CachedFAHlogPath))
+                  if (PreferenceSet.Instance.WebGenCopyFAHlog && File.Exists(CachedFAHlogPath))
                   {
                      NetworkOps.FtpUploadHelper(Server, FtpPath, CachedFAHlogPath, Username, Password, PassiveMode);
                   }
@@ -249,7 +249,14 @@ namespace HFM.Instances
          }
 
          XMLOps.setXmlNode(xmlData, "UnitLog/Text", sb.ToString());
-         XMLOps.setXmlNode(xmlData, "UnitLog/FullLogFile", Instance.CachedFAHLogName);
+         if (PreferenceSet.Instance.WebGenCopyFAHlog)
+         {
+            XMLOps.setXmlNode(xmlData, "UnitLog/FullLogFile", Instance.CachedFAHLogName);
+         }
+         else
+         {
+            XMLOps.setXmlNode(xmlData, "UnitLog/FullLogFile", String.Empty);
+         }
 
          //    <LastUpdatedDate>10 August 2006</LastUpdatedDate>
          //    <LastUpdatedTime>9:25:23 pm</LastUpdatedTime>

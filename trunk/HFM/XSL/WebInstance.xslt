@@ -41,10 +41,17 @@
                      Log<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>File
                   </td>
                   <td class="Plain" align="right">
-                     <a>
-                        <xsl:attribute name="href"><xsl:value-of select="UnitLog/FullLogFile"/></xsl:attribute>
-                        FAHlog<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>File
-                     </a>
+                     <xsl:choose>
+                        <xsl:when test="UnitLog/FullLogFile=''">
+                           <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                        </xsl:when>
+                        <xsl:otherwise>
+                           <a>
+                              <xsl:attribute name="href"><xsl:value-of select="UnitLog/FullLogFile"/></xsl:attribute>
+                              FAHlog<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>File
+                           </a>
+                        </xsl:otherwise>
+                     </xsl:choose>
                   </td>
                </tr>
                <xsl:apply-templates select="UnitLog" />

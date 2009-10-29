@@ -68,6 +68,7 @@ namespace HFM.Forms
       private void frmPreferences_Shown(object sender, EventArgs e)
       {
          LoadScheduledTasksTab();
+         LoadStartupTab();
          LoadDefaultsTab();
          LoadReportingTab();
          LoadWebTab();
@@ -115,7 +116,11 @@ namespace HFM.Forms
          {
             radioSchedule.Checked = true;
          }
-         
+         chkFAHlog.Checked = Prefs.WebGenCopyFAHlog;
+      }
+      
+      private void LoadStartupTab()
+      {
          if (PlatformOps.IsRunningOnMono() == false)
          {
             chkAutoRun.Checked = RegistryOps.IsHfmAutoRunSet();
@@ -248,6 +253,7 @@ namespace HFM.Forms
             txtWebSiteBase_Validating(null, null);
             
             btnBrowseWebFolder.Enabled = true;
+            chkFAHlog.Enabled = true;
          }
          else
          {
@@ -266,6 +272,7 @@ namespace HFM.Forms
             txtWebSiteBase.ReadOnly = true;
             
             btnBrowseWebFolder.Enabled = false;
+            chkFAHlog.Enabled = false;
          }
       }
 
@@ -913,6 +920,7 @@ namespace HFM.Forms
          if (CheckForErrorConditions() == false)
          {
             GetDataScheduledTasksTab();
+            GetStartupTab();
             GetDataDefaultsTab();
             GetReportingTab();
             GetDataWebSettingsTab();
@@ -1013,6 +1021,11 @@ namespace HFM.Forms
          Prefs.PpdCalculation = (ePpdCalculation)cboPpdCalc.SelectedItem;
          Prefs.SyncTimeMinutes = Int32.Parse(txtCollectMinutes.Text);
          Prefs.WebRoot = txtWebSiteBase.Text;
+         Prefs.WebGenCopyFAHlog = chkFAHlog.Checked;
+      }
+      
+      private void GetStartupTab()
+      {
          if (PlatformOps.IsRunningOnMono() == false)
          {
             try
