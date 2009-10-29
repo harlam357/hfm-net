@@ -1393,9 +1393,9 @@ namespace HFM.Instances
                {
                   fi.Delete();
                }
-               catch (IOException)
+               catch (Exception ex)
                {
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} Failed to Clear Cache File '{1}'.", HfmTrace.FunctionName, fi.Name));
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("Failed to Clear Cache File '{0}'.", fi.Name), ex);
                }
             }
          }
