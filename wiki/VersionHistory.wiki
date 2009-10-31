@@ -1,6 +1,34 @@
 #summary HFM.NET Version History
 #labels Featured
 
+=Change Log - Version: 0.3.0 - Revision 53 - Beta=
+
+  * Enhancement: Log Parsing... Log Parsing... Log Parsing... a new approach, more being identified, just a huge improvement in reliability and future enhancements.
+  * Enhancement: Add support for 'GettingWorkPacket' Status (Purple Status Color).
+  * Enhancement: Email Reporting - Configure a reporting Email Address and SMTP Server and option to report clients detected in a 24hr. EUE Pause state (not yet tested on live data).
+  * Enhancement: Encrypt sensetive data before storing in XML.  This includes Host Server Passwords (encrypted the next time the configuration file is saved) and the following preferences fields: Proxy Server Password, SMTP Server Password, & HTML Output Folder or FTP URL (these fields will be encrypted on the first run of HFM v0.3.0).
+  * Enhancement: Support for Log Text Coloring.  Current Color Key: Blue="Key" Line / Green=Frame Progress Line / Red=Core and Client Shutdown / Grey=Not Identified
+  * Enhancement: Add Auto-Run on Windows Startup option (tied to user account via reg key in HKCU).
+  * Enhancement: Update code to write Core Name and Core Version, Average Frame Time based on all frames, and upgrade support from previous file layout for CompletedUnits.csv.
+  * Enhancement: Indentify a Core Shutdown Result of "INTERRUPTED" and add these to the failed WU count.  
+
+
+  * Fix: Altered code to use DateTimeStyle values specifically for Mono Framework.  Mono does not appear to like the NoCurrentDateDefault style, which results in the DateTime.ParseExact method returning a DateTime equivalent to DateTime.MinValue.  This yields a TimeOfDay equal to TimeSpan.Zero, which results in no frame durations being calculated.  The bottom line... I BELIEVE THIS FIXES THE LOG PARSING ISSUES ON MONO!!!
+  * Fix: Use local volatile list in Messages Form to hold current Debug messages in lieu of accessing the current message lines from the TextBox.  This appears to have solved the problem with messages that go "missing" from the Messages Form (most evident when running under the Mono Framework).
+  * Fix: Unhandled exception when double-clicking a client with the Ctrl key held down - Thanks ixor!
+  * Fix: Progress Column sorting.  The value 100% was not being sorted properly (sorting was based on text value, now based on float value) - Thanks ixor!
+  * Fix: Benchmarks Form to use TableLayoutPanel.  Now scales properly when using Large Fonts (120 DPI) - Thanks ixor!
+  * Fix: Project ID has to be known before any work unit data is added to the benchmarks data.  Any data added by previous versions with a Project ID of 0 will be deleted upon entering the Benchmarks Form.
+  * Fix: Fixed a long standing bug that output an incorrect Expected Completion time on Instance web pages.
+  * Fix: Correct spelling of "occurred" in process start error messages (ProcessStartError Resource String).
+  * Fix: File name validation (as used by the Host Configuration Dialog).  FAHlog.txt and unitinfo.txt file names could be entered with grossly unacceptable values.
+
+
+  * Change: Remove requirement for unitinfo.txt file to be present for log parsing to run.  
+  * Change: Update Main Form and HTML Summary to draw "Unknown" when Download Time or Deadline is DateTime.MinValue.
+  * Change: SysTray Icon ToolTip to read "x Working Clients" and "x Non-Working Clients" to use the same nomenclature as the HTML Output.
+  * Change (for anyone building from source): ScriptedRelease config is the only config that runs Pre or Post Build events.  It is to be used for CruiseControl.NET CI Server Builds.  The standard Debug and Release configs are available to use without any third-party dependencies (MSBuild Community Tasks, NUnit, NCover, FxCop, etc).  Set AssemblyVersion.cs Revision number to 0, only official releases should contain the Revision number.  This file will be updated only with Major.Minor.Build from now on.
+
 =Change Log - Version: 0.2.2 - Build 31 - Beta=
 
   * Fix: Issue with Save As... function not using the file name supplied by the user in the Save As... Dialog.  Was using current config file name instead... which in the case of a new configuration would result in an unhandled exception - Thanks augie!!!
