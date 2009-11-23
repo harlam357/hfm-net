@@ -96,7 +96,7 @@ namespace HFM.Instances
                {
                   result = true;
                }
-               if (unit.UnitFrames[i].FramePercent == 100)
+               if (unit.UnitFrames[i].FrameID == unit.CurrentProtein.Frames)
                {
                   UnitInfoCollection.WriteCompletedUnitInfo(unit);
                }

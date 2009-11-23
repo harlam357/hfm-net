@@ -910,7 +910,7 @@ namespace HFM.Instances
       /// <summary>
       /// Forces a log and screen refresh when the Stanford info is updated
       /// </summary>
-      private void ProteinCollection_ProjectInfoUpdated(object sender, ProjectInfoUpdatedEventArgs e)
+      private void ProteinCollection_ProjectInfoUpdated(object sender, EventArgs e)
       {
          // Do Retrieve on all clients after Project Info is updated (this is confirmed needed)
          QueueNewRetrieval();

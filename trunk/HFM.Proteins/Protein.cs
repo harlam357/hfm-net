@@ -77,8 +77,8 @@ namespace HFM.Proteins
          }
       }
 
-      private int _PreferredDays = 0;
-      public int PreferredDays
+      private double _PreferredDays = 0;
+      public double PreferredDays
       {
          get { return _PreferredDays; }
          set
@@ -95,8 +95,8 @@ namespace HFM.Proteins
          }
       }
 
-      private int _MaxDays = 0;
-      public int MaxDays
+      private double _MaxDays = 0;
+      public double MaxDays
       {
          get { return _MaxDays; }
          set
@@ -113,8 +113,8 @@ namespace HFM.Proteins
          }
       }
 
-      private int _Credit = 0;
-      public int Credit
+      private double _Credit = 0;
+      public double Credit
       {
          get { return _Credit; }
          set
@@ -139,7 +139,7 @@ namespace HFM.Proteins
          {
             if (value < 1)
             {
-               _Frames = 0;
+               _Frames = 100;
                throw new ArgumentException("Number of frames must be greater than 0.");
             }
             else
@@ -170,6 +170,13 @@ namespace HFM.Proteins
          set { _Contact = value; }
       }
       
+      private double _KFactor = 0;
+      public double KFactor
+      {
+         get { return _KFactor; }
+         set { _KFactor = value; }
+      }
+      
       public bool IsUnknown
       {
          get { return ProjectNumber == 0; }
@@ -181,11 +188,24 @@ namespace HFM.Proteins
       /// <param name="frameTime">Frame Time</param>
       public double GetPPD(TimeSpan frameTime)
       {
+         return GetPPD(frameTime, TimeSpan.Zero);
+      }
+      
+      /// <summary>
+      /// Get Points Per Day based on given Frame Time
+      /// </summary>
+      /// <param name="frameTime">Frame Time</param>
+      /// <param name="EstTimeOfUnit">Estimated Time of the Unit</param>
+      public double GetPPD(TimeSpan frameTime, TimeSpan EstTimeOfUnit)
+      {
          if (frameTime.Equals(TimeSpan.Zero))
          {
             return 0.0;
          }
-         return Math.Round(GetUPD(frameTime) * Credit, PreferenceSet.MaxDecimalPlaces);
+         
+         double basePPD = GetUPD(frameTime) * Credit;
+         double bonusMulti = GetBonusMultiplier(EstTimeOfUnit);
+         return Math.Round((basePPD * bonusMulti), PreferenceSet.MaxDecimalPlaces);
       }
 
       /// <summary>
@@ -199,6 +219,33 @@ namespace HFM.Proteins
             return 0.0;
          }
          return 86400 / (frameTime.TotalSeconds * Frames);
+      }
+      
+      /// <summary>
+      /// Get the Credit of the Unit (including bonus)
+      /// </summary>
+      /// <param name="EstTimeOfUnit">Estimated Time of the Unit</param>
+      public double GetCredit(TimeSpan EstTimeOfUnit)
+      {
+         double bonusMulti = GetBonusMultiplier(EstTimeOfUnit);
+         return Math.Round((Credit * bonusMulti), 0);
+      }
+
+      /// <summary>
+      /// Get the Bonus Multiplier
+      /// </summary>
+      /// <param name="EstTimeOfUnit">Estimated Time of the Unit</param>
+      private double GetBonusMultiplier(TimeSpan EstTimeOfUnit)
+      {
+         if (KFactor > 0 && EstTimeOfUnit.Equals(TimeSpan.Zero) == false)
+         {
+            if (EstTimeOfUnit <= TimeSpan.FromDays(PreferredDays))
+            {
+               return Math.Sqrt((MaxDays * KFactor) / EstTimeOfUnit.TotalDays);
+            }
+         }
+         
+         return 1;
       }
    }
 }

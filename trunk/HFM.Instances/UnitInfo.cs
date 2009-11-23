@@ -21,6 +21,7 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 using HFM.Instrumentation;
 using HFM.Preferences;
@@ -77,8 +78,30 @@ namespace HFM.Instances
          _FoldingID = foldingID;
          _Team = team;
          
-         Clear();
-         ClearUnitFrameData();
+         Init();
+         // Init sets the CurrentProtein Property, which calls ClearUnitFrameData()
+         //ClearUnitFrameData();
+      } 
+
+      private void Init()
+      {
+         TypeOfClient = ClientType.Unknown;
+         DownloadTime = DateTime.MinValue;
+         DueTime = DateTime.MinValue;
+         FinishedTime = DateTime.MinValue;
+         UnitStartTime = TimeSpan.Zero;
+         CoreVersion = String.Empty;
+         ProjectID = 0;
+         ProjectRun = 0;
+         ProjectClone = 0;
+         ProjectGen = 0;
+         ProteinName = String.Empty;
+         ProteinTag = String.Empty;
+         RawFramesComplete = 0;
+         RawFramesTotal = 0;
+         UnitResult = WorkUnitResult.Unknown;
+
+         CurrentProtein = new Protein();
       } 
       #endregion
 
@@ -191,7 +214,7 @@ namespace HFM.Instances
             return ProjectID == 0 &&
                    ProjectRun == 0 &&
                    ProjectClone == 0 &&
-                   ProjectGen ==0;
+                   ProjectGen == 0;
          }
       }
 
@@ -221,17 +244,17 @@ namespace HFM.Instances
       }
 
       /// <summary>
-      /// Last frame percent based on UnitFrame Data
+      /// Last Frame ID based on UnitFrame Data
       /// </summary>
-      public Int32 LastUnitFramePercent
+      public Int32 LastUnitFrameID
       {
          get
          {
-            for (int i = 100; i >= 0; i--)
+            for (int i = CurrentProtein.Frames; i >= 0; i--)
             {
                if (UnitFrames[i] != null)
                {
-                  return UnitFrames[i].FramePercent;
+                  return UnitFrames[i].FrameID;
                }
             }
 
@@ -439,11 +462,11 @@ namespace HFM.Instances
       }
 
       /// <summary>
-      /// Raw number of frames complete (this is not always a percent value)
+      /// Raw number of steps complete
       /// </summary>
       private Int32 _RawFramesComplete;
       /// <summary>
-      /// Raw number of frames complete (this is not always a percent value)
+      /// Raw number of steps complete
       /// </summary>
       public Int32 RawFramesComplete
       {
@@ -455,11 +478,11 @@ namespace HFM.Instances
       }
 
       /// <summary>
-      /// Raw total number of frames (this is not always 100)
+      /// Raw total number of steps
       /// </summary>
       private Int32 _RawFramesTotal;
       /// <summary>
-      /// Raw total number of frames (this is not always 100)
+      /// Raw total number of steps
       /// </summary>
       public Int32 RawFramesTotal
       {
@@ -508,13 +531,11 @@ namespace HFM.Instances
       {
          get
          {
-            if (CurrentProtein.IsUnknown == false)
+            // Report Frame Progress even if CurrentProtein.IsUnknown - 11/22/09
+            Int32 RawScaleFactor = RawFramesTotal / CurrentProtein.Frames;
+            if (RawScaleFactor > 0)
             {
-               Int32 RawScaleFactor = RawFramesTotal / CurrentProtein.Frames;
-               if (RawScaleFactor > 0)
-               {
-                  return RawFramesComplete / RawScaleFactor;
-               }
+               return RawFramesComplete / RawScaleFactor;
             }
             
             return 0;
@@ -528,12 +549,8 @@ namespace HFM.Instances
       {
          get 
          {
-            if (CurrentProtein.IsUnknown == false)
-            {
-               return FramesComplete * 100 / CurrentProtein.Frames;
-            }
-            
-            return 0;
+            // Report Percent Progress even if CurrentProtein.IsUnknown - 11/22/09
+            return FramesComplete * 100 / CurrentProtein.Frames;
          }
       }
       
@@ -578,7 +595,7 @@ namespace HFM.Instances
          {
             if (CurrentProtein.IsUnknown == false)
             {
-               return CurrentProtein.GetPPD(TimePerFrame);
+               return CurrentProtein.GetPPD(TimePerFrame, EFT);
             }
 
             return 0;
@@ -592,7 +609,18 @@ namespace HFM.Instances
       {
          get
          {
-            return new TimeSpan((100 - PercentComplete) * TimePerFrame.Ticks);
+            return new TimeSpan((CurrentProtein.Frames - FramesComplete) * TimePerFrame.Ticks);
+         }
+      }
+
+      /// <summary>
+      /// Esimated Finishing Time for this unit
+      /// </summary>
+      public TimeSpan EFT
+      {
+         get 
+         { 
+            return UnitRetrievalTime.Add(ETA).Subtract(DownloadTime);
          }
       }
 
@@ -606,13 +634,13 @@ namespace HFM.Instances
             if (FramesObserved > 0)
             {
                // Make sure CurrentFramePercent is greater than 0 to avoid DivideByZeroException - Issue 34
-               if (DownloadTime.Equals(DateTime.MinValue) == false && CurrentFrame.FramePercent > 0)
+               if (DownloadTime.Equals(DateTime.MinValue) == false && CurrentFrame.FrameID > 0)
                {
                   // Use UnitRetrievalTime (sourced from ClientInstance.LastRetrievalTime) as basis for
                   // TimeSinceUnitDownload.  This removes the use of the "floating" value DateTime.Now
                   // as a basis for the calculation. - Issue 92
                   TimeSpan TimeSinceUnitDownload = UnitRetrievalTime.Subtract(DownloadTime);
-                  return (Convert.ToInt32(TimeSinceUnitDownload.TotalSeconds) / CurrentFrame.FramePercent);
+                  return (Convert.ToInt32(TimeSinceUnitDownload.TotalSeconds) / CurrentFrame.FrameID);
                }
                
                return 0;
@@ -642,7 +670,7 @@ namespace HFM.Instances
          {
             if (CurrentProtein.IsUnknown == false)
             {
-               return CurrentProtein.GetPPD(TimePerUnitDownload);
+               return CurrentProtein.GetPPD(TimePerUnitDownload, EFT);
             }
             
             return 0;
@@ -685,7 +713,7 @@ namespace HFM.Instances
          {
             if (CurrentProtein.IsUnknown == false)
             {
-               return CurrentProtein.GetPPD(TimePerAllSections);
+               return CurrentProtein.GetPPD(TimePerAllSections, EFT);
             }
 
             return 0;
@@ -729,7 +757,7 @@ namespace HFM.Instances
          {
             if (CurrentProtein.IsUnknown == false)
             {
-               return CurrentProtein.GetPPD(TimePerThreeSections);
+               return CurrentProtein.GetPPD(TimePerThreeSections, EFT);
             }
 
             return 0;
@@ -779,7 +807,7 @@ namespace HFM.Instances
          {
             if (CurrentProtein.IsUnknown == false)
             {
-               return CurrentProtein.GetPPD(TimePerLastSection);
+               return CurrentProtein.GetPPD(TimePerLastSection, EFT);
             }
 
             return 0;
@@ -830,53 +858,49 @@ namespace HFM.Instances
       
       #endregion
 
-      #region Clear UnitInfo and Clear Time Based Values
-      private void Clear()
-      {
-         TypeOfClient = ClientType.Unknown;
-         DownloadTime = DateTime.MinValue;
-         DueTime = DateTime.MinValue;
-         FinishedTime = DateTime.MinValue;
-         UnitStartTime = TimeSpan.Zero;
-         CoreVersion = String.Empty;
-         ProjectID = 0;
-         ProjectRun = 0;
-         ProjectClone = 0;
-         ProjectGen = 0;
-         ProteinName = String.Empty;
-         ProteinTag = String.Empty;
-         RawFramesComplete = 0;
-         RawFramesTotal = 0;
-         UnitResult = WorkUnitResult.Unknown;
-
-         CurrentProtein = new Protein();
-      }
-      #endregion
-
       #region Set Frame and Clear Frame Data
       /// <summary>
       /// Set the Current Work Unit Frame
       /// </summary>
-      /// <param name="frame">Current Work Unit Frame</param>
-      public void SetCurrentFrame(UnitFrame frame)
+      public void SetCurrentFrame(LogLine logLine, DateTimeStyles style)
       {
-         if (_UnitFrames[frame.FramePercent] == null)
+         // Check for FrameData
+         FrameData frame = logLine.LineData as FrameData;
+         if (frame == null)
+         {
+            // If not found, clear the LineType and get out
+            logLine.LineType = LogLineType.Unknown;
+            return;
+         }
+      
+         // Parse TimeStamp
+         DateTime timeStamp = DateTime.ParseExact(frame.TimeStampString, "HH:mm:ss",
+                              DateTimeFormatInfo.InvariantInfo, style);
+
+         // Set Raw Frame Values                                       
+         RawFramesComplete = frame.RawFramesComplete;
+         RawFramesTotal = frame.RawFramesTotal;
+         // Create new UnitFrame
+         UnitFrame unitFrame = new UnitFrame(frame.FrameID, timeStamp.TimeOfDay);                           
+      
+         if (_UnitFrames[frame.FrameID] == null)
          {
             // increment observed count
             _FramesObserved++;
          
-            CurrentFrame = frame;
-            UnitFrames[CurrentFrame.FramePercent] = CurrentFrame;
+            CurrentFrame = unitFrame;
+            UnitFrames[CurrentFrame.FrameID] = CurrentFrame;
             
             CurrentFrame.FrameDuration = TimeSpan.Zero;
-            if (CurrentFrame.FramePercent > 0 && UnitFrames[CurrentFrame.FramePercent - 1] != null && FramesObserved > 1)
+            if (CurrentFrame.FrameID > 0 && UnitFrames[CurrentFrame.FrameID - 1] != null && FramesObserved > 1)
             {
-               CurrentFrame.FrameDuration = GetDelta(CurrentFrame.TimeOfFrame, UnitFrames[CurrentFrame.FramePercent - 1].TimeOfFrame);
+               CurrentFrame.FrameDuration = GetDelta(CurrentFrame.TimeOfFrame, UnitFrames[CurrentFrame.FrameID - 1].TimeOfFrame);
             }
          }
          else
          {
-            //TODO: Trace write... saw same frame percent twice.
+            // FrameID already exists, clear the LineType
+            logLine.LineType = LogLineType.Unknown;
          }
       }
 
@@ -887,10 +911,8 @@ namespace HFM.Instances
       {
          _FramesObserved = 0;
          _CurrentFrame = null;
-         // Frames (Percentage) will always need exactly 101 slots
-         // If the log output changes from showing completion as
-         // percentage, this logic will need revaluated
-         _UnitFrames = new UnitFrame[101];
+         // Now based on CurrentProtein.Frames - not 101 hard code - 11/22/09
+         _UnitFrames = new UnitFrame[CurrentProtein.Frames + 1];
       }
       #endregion
 
@@ -907,7 +929,7 @@ namespace HFM.Instances
             return 0;
          }
 
-         if (numberOfFrames < 1) // || numberOfFrames > 100) TODO: possibly add an upper bound check here
+         if (numberOfFrames < 1) //TODO: possibly add an upper bound check here
          {
             throw new ArgumentOutOfRangeException("numberOfFrames", "Argument 'numberOfFrames' must be greater than 0.");
          }
@@ -916,7 +938,7 @@ namespace HFM.Instances
          
          try
          {
-            int frameNumber = CurrentFrame.FramePercent;
+            int frameNumber = CurrentFrame.FrameID;
          
             // Make sure we only add frame durations greater than a Zero TimeSpan
             // The first frame will always have a Zero TimeSpan for frame duration
@@ -1026,6 +1048,11 @@ namespace HFM.Instances
             case "DGROMACSC":
             case "GRO-A4":
             //case "TINKER":
+            /*** ProtoMol Only */
+            // This is just a guess at what this core
+            // will be listed as on the psummary.
+            //case "PROTOMOL":
+            /*******************/
                return ClientType.Standard;
             case "GRO-SMP":
             case "GROCVS":

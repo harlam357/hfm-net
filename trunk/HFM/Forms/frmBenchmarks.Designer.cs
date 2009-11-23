@@ -33,6 +33,8 @@ namespace HFM.Forms
          this.components = new System.ComponentModel.Container();
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBenchmarks));
          this.grpProjectInfo = new HFM.Classes.GroupBoxWrapper();
+         this.txtKFactor = new HFM.Classes.TextBoxWrapper();
+         this.lblKFactor = new HFM.Classes.LabelWrapper();
          this.txtServerIP = new HFM.Classes.TextBoxWrapper();
          this.txtContact = new HFM.Classes.TextBoxWrapper();
          this.txtMaximumDays = new HFM.Classes.TextBoxWrapper();
@@ -100,6 +102,8 @@ namespace HFM.Forms
                      | System.Windows.Forms.AnchorStyles.Left)
                      | System.Windows.Forms.AnchorStyles.Right)));
          this.grpProjectInfo.BackColor = System.Drawing.SystemColors.Control;
+         this.grpProjectInfo.Controls.Add(this.txtKFactor);
+         this.grpProjectInfo.Controls.Add(this.lblKFactor);
          this.grpProjectInfo.Controls.Add(this.txtServerIP);
          this.grpProjectInfo.Controls.Add(this.txtContact);
          this.grpProjectInfo.Controls.Add(this.txtMaximumDays);
@@ -128,13 +132,32 @@ namespace HFM.Forms
          this.grpProjectInfo.TabStop = false;
          this.grpProjectInfo.Text = "Project Information";
          // 
+         // txtKFactor
+         // 
+         this.txtKFactor.Location = new System.Drawing.Point(179, 41);
+         this.txtKFactor.Name = "txtKFactor";
+         this.txtKFactor.ReadOnly = true;
+         this.txtKFactor.Size = new System.Drawing.Size(48, 20);
+         this.txtKFactor.TabIndex = 7;
+         this.txtKFactor.TabStop = false;
+         this.txtKFactor.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+         // 
+         // lblKFactor
+         // 
+         this.lblKFactor.AutoSize = true;
+         this.lblKFactor.Location = new System.Drawing.Point(130, 44);
+         this.lblKFactor.Name = "lblKFactor";
+         this.lblKFactor.Size = new System.Drawing.Size(47, 13);
+         this.lblKFactor.TabIndex = 6;
+         this.lblKFactor.Text = "KFactor:";
+         // 
          // txtServerIP
          // 
          this.txtServerIP.Location = new System.Drawing.Point(429, 89);
          this.txtServerIP.Name = "txtServerIP";
          this.txtServerIP.ReadOnly = true;
          this.txtServerIP.Size = new System.Drawing.Size(95, 20);
-         this.txtServerIP.TabIndex = 18;
+         this.txtServerIP.TabIndex = 20;
          this.txtServerIP.TabStop = false;
          this.txtServerIP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
@@ -144,7 +167,7 @@ namespace HFM.Forms
          this.txtContact.Name = "txtContact";
          this.txtContact.ReadOnly = true;
          this.txtContact.Size = new System.Drawing.Size(95, 20);
-         this.txtContact.TabIndex = 17;
+         this.txtContact.TabIndex = 19;
          this.txtContact.TabStop = false;
          this.txtContact.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
@@ -154,7 +177,7 @@ namespace HFM.Forms
          this.txtMaximumDays.Name = "txtMaximumDays";
          this.txtMaximumDays.ReadOnly = true;
          this.txtMaximumDays.Size = new System.Drawing.Size(95, 20);
-         this.txtMaximumDays.TabIndex = 16;
+         this.txtMaximumDays.TabIndex = 18;
          this.txtMaximumDays.TabStop = false;
          this.txtMaximumDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
@@ -164,17 +187,17 @@ namespace HFM.Forms
          this.txtPreferredDays.Name = "txtPreferredDays";
          this.txtPreferredDays.ReadOnly = true;
          this.txtPreferredDays.Size = new System.Drawing.Size(95, 20);
-         this.txtPreferredDays.TabIndex = 15;
+         this.txtPreferredDays.TabIndex = 17;
          this.txtPreferredDays.TabStop = false;
          this.txtPreferredDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
          // txtCore
          // 
-         this.txtCore.Location = new System.Drawing.Point(55, 66);
+         this.txtCore.Location = new System.Drawing.Point(51, 66);
          this.txtCore.Name = "txtCore";
          this.txtCore.ReadOnly = true;
          this.txtCore.Size = new System.Drawing.Size(122, 20);
-         this.txtCore.TabIndex = 8;
+         this.txtCore.TabIndex = 10;
          this.txtCore.TabStop = false;
          this.txtCore.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
@@ -184,26 +207,26 @@ namespace HFM.Forms
          this.txtAtoms.Name = "txtAtoms";
          this.txtAtoms.ReadOnly = true;
          this.txtAtoms.Size = new System.Drawing.Size(92, 20);
-         this.txtAtoms.TabIndex = 10;
+         this.txtAtoms.TabIndex = 12;
          this.txtAtoms.TabStop = false;
          this.txtAtoms.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
          // txtFrames
          // 
-         this.txtFrames.Location = new System.Drawing.Point(233, 41);
+         this.txtFrames.Location = new System.Drawing.Point(277, 41);
          this.txtFrames.Name = "txtFrames";
          this.txtFrames.ReadOnly = true;
-         this.txtFrames.Size = new System.Drawing.Size(92, 20);
-         this.txtFrames.TabIndex = 7;
+         this.txtFrames.Size = new System.Drawing.Size(48, 20);
+         this.txtFrames.TabIndex = 9;
          this.txtFrames.TabStop = false;
          this.txtFrames.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
          // txtCredit
          // 
-         this.txtCredit.Location = new System.Drawing.Point(55, 41);
+         this.txtCredit.Location = new System.Drawing.Point(51, 41);
          this.txtCredit.Name = "txtCredit";
          this.txtCredit.ReadOnly = true;
-         this.txtCredit.Size = new System.Drawing.Size(122, 20);
+         this.txtCredit.Size = new System.Drawing.Size(76, 20);
          this.txtCredit.TabIndex = 5;
          this.txtCredit.TabStop = false;
          this.txtCredit.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -224,7 +247,7 @@ namespace HFM.Forms
          this.linkDescription.Location = new System.Drawing.Point(76, 92);
          this.linkDescription.Name = "linkDescription";
          this.linkDescription.Size = new System.Drawing.Size(0, 13);
-         this.linkDescription.TabIndex = 19;
+         this.linkDescription.TabIndex = 21;
          this.linkDescription.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkDescription_LinkClicked);
          // 
          // lblServerIP
@@ -233,7 +256,7 @@ namespace HFM.Forms
          this.lblServerIP.Location = new System.Drawing.Point(369, 92);
          this.lblServerIP.Name = "lblServerIP";
          this.lblServerIP.Size = new System.Drawing.Size(54, 13);
-         this.lblServerIP.TabIndex = 14;
+         this.lblServerIP.TabIndex = 16;
          this.lblServerIP.Text = "Server IP:";
          // 
          // lblContact
@@ -242,7 +265,7 @@ namespace HFM.Forms
          this.lblContact.Location = new System.Drawing.Point(376, 69);
          this.lblContact.Name = "lblContact";
          this.lblContact.Size = new System.Drawing.Size(47, 13);
-         this.lblContact.TabIndex = 13;
+         this.lblContact.TabIndex = 15;
          this.lblContact.Text = "Contact:";
          // 
          // lblCore
@@ -260,7 +283,7 @@ namespace HFM.Forms
          this.lblMaxDays.Location = new System.Drawing.Point(342, 44);
          this.lblMaxDays.Name = "lblMaxDays";
          this.lblMaxDays.Size = new System.Drawing.Size(81, 13);
-         this.lblMaxDays.TabIndex = 12;
+         this.lblMaxDays.TabIndex = 14;
          this.lblMaxDays.Text = "Maximum Days:";
          // 
          // lblPreferred
@@ -269,25 +292,25 @@ namespace HFM.Forms
          this.lblPreferred.Location = new System.Drawing.Point(343, 20);
          this.lblPreferred.Name = "lblPreferred";
          this.lblPreferred.Size = new System.Drawing.Size(80, 13);
-         this.lblPreferred.TabIndex = 11;
+         this.lblPreferred.TabIndex = 13;
          this.lblPreferred.Text = "Preferred Days:";
          // 
          // lblAtoms
          // 
          this.lblAtoms.AutoSize = true;
-         this.lblAtoms.Location = new System.Drawing.Point(188, 69);
+         this.lblAtoms.Location = new System.Drawing.Point(189, 69);
          this.lblAtoms.Name = "lblAtoms";
          this.lblAtoms.Size = new System.Drawing.Size(39, 13);
-         this.lblAtoms.TabIndex = 9;
+         this.lblAtoms.TabIndex = 11;
          this.lblAtoms.Text = "Atoms:";
          // 
          // lblFrames
          // 
          this.lblFrames.AutoSize = true;
-         this.lblFrames.Location = new System.Drawing.Point(183, 44);
+         this.lblFrames.Location = new System.Drawing.Point(232, 44);
          this.lblFrames.Name = "lblFrames";
          this.lblFrames.Size = new System.Drawing.Size(44, 13);
-         this.lblFrames.TabIndex = 6;
+         this.lblFrames.TabIndex = 8;
          this.lblFrames.Text = "Frames:";
          // 
          // lblCredit
@@ -688,6 +711,8 @@ namespace HFM.Forms
       private ButtonWrapper btnAddColor;
       private System.Windows.Forms.ListBox lstColors;
       private System.Windows.Forms.PictureBox picColorPreview;
+      private TextBoxWrapper txtKFactor;
+      private LabelWrapper lblKFactor;
 
 
    }

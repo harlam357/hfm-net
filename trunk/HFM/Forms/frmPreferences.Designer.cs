@@ -79,8 +79,6 @@ namespace HFM.Forms
          this.chkWebSiteGenerator = new HFM.Classes.CheckBoxWrapper();
          this.tabStartup = new System.Windows.Forms.TabPage();
          this.grpStartup = new HFM.Classes.GroupBoxWrapper();
-         this.checkBoxWrapper1 = new HFM.Classes.CheckBoxWrapper();
-         this.checkBoxWrapper2 = new HFM.Classes.CheckBoxWrapper();
          this.tabDefaults = new System.Windows.Forms.TabPage();
          this.grpDecimalPlaces = new HFM.Classes.GroupBoxWrapper();
          this.udDecimalPlaces = new System.Windows.Forms.NumericUpDown();
@@ -498,34 +496,14 @@ namespace HFM.Forms
          // 
          // grpStartup
          // 
-         this.grpStartup.Controls.Add(this.checkBoxWrapper1);
-         this.grpStartup.Controls.Add(this.checkBoxWrapper2);
+         this.grpStartup.Controls.Add(this.chkAutoRun);
+         this.grpStartup.Controls.Add(this.chkRunMinimized);
          this.grpStartup.Location = new System.Drawing.Point(6, 9);
          this.grpStartup.Name = "grpStartup";
          this.grpStartup.Size = new System.Drawing.Size(489, 50);
          this.grpStartup.TabIndex = 3;
          this.grpStartup.TabStop = false;
          this.grpStartup.Text = "Startup";
-         // 
-         // checkBoxWrapper1
-         // 
-         this.checkBoxWrapper1.AutoSize = true;
-         this.checkBoxWrapper1.Location = new System.Drawing.Point(196, 20);
-         this.checkBoxWrapper1.Name = "checkBoxWrapper1";
-         this.checkBoxWrapper1.Size = new System.Drawing.Size(95, 17);
-         this.checkBoxWrapper1.TabIndex = 1;
-         this.checkBoxWrapper1.Text = "Run Minimized";
-         this.checkBoxWrapper1.UseVisualStyleBackColor = true;
-         // 
-         // checkBoxWrapper2
-         // 
-         this.checkBoxWrapper2.AutoSize = true;
-         this.checkBoxWrapper2.Location = new System.Drawing.Point(10, 20);
-         this.checkBoxWrapper2.Name = "checkBoxWrapper2";
-         this.checkBoxWrapper2.Size = new System.Drawing.Size(170, 17);
-         this.checkBoxWrapper2.TabIndex = 0;
-         this.checkBoxWrapper2.Text = "Auto Run on Windows Startup";
-         this.checkBoxWrapper2.UseVisualStyleBackColor = true;
          // 
          // tabDefaults
          // 
@@ -1386,35 +1364,33 @@ namespace HFM.Forms
       private Classes.LabelWrapper label6;
       private Classes.CheckBoxWrapper chkAutoSave;
       private System.Windows.Forms.ToolTip toolTipPrefs;
-      private HFM.Classes.GroupBoxWrapper grpDecimalPlaces;
-      private HFM.Classes.LabelWrapper labelWrapper1;
+      private Classes.GroupBoxWrapper grpDecimalPlaces;
+      private Classes.LabelWrapper labelWrapper1;
       private System.Windows.Forms.NumericUpDown udDecimalPlaces;
-      private HFM.Classes.CheckBoxWrapper chkShowUserStats;
-      private HFM.Classes.CheckBoxWrapper chkDuplicateProject;
-      private HFM.Classes.CheckBoxWrapper chkDuplicateUserID;
-      private HFM.Classes.CheckBoxWrapper chkColorLog;
+      private Classes.CheckBoxWrapper chkShowUserStats;
+      private Classes.CheckBoxWrapper chkDuplicateProject;
+      private Classes.CheckBoxWrapper chkDuplicateUserID;
+      private Classes.CheckBoxWrapper chkColorLog;
       private System.Windows.Forms.TabPage tabReporting;
-      private HFM.Classes.GroupBoxWrapper grpEmailSettings;
-      private HFM.Classes.LabelWrapper lblSmtpServer;
-      private HFM.Classes.LabelWrapper lblToAddress;
-      private HFM.Classes.TextBoxWrapper txtSmtpServer;
-      private HFM.Classes.TextBoxWrapper txtToEmailAddress;
-      private HFM.Classes.CheckBoxWrapper chkEnableEmail;
-      private HFM.Classes.LabelWrapper lblFromEmailAddress;
-      private HFM.Classes.TextBoxWrapper txtFromEmailAddress;
-      private HFM.Classes.TextBoxWrapper txtSmtpPassword;
-      private HFM.Classes.TextBoxWrapper txtSmtpUsername;
-      private HFM.Classes.LabelWrapper labelWrapper4;
-      private HFM.Classes.LabelWrapper labelWrapper5;
-      private HFM.Classes.ButtonWrapper btnTestEmail;
-      private HFM.Classes.GroupBoxWrapper grpReportSelections;
-      private HFM.Classes.CheckBoxWrapper chkClientEuePause;
+      private Classes.GroupBoxWrapper grpEmailSettings;
+      private Classes.LabelWrapper lblSmtpServer;
+      private Classes.LabelWrapper lblToAddress;
+      private Classes.TextBoxWrapper txtSmtpServer;
+      private Classes.TextBoxWrapper txtToEmailAddress;
+      private Classes.CheckBoxWrapper chkEnableEmail;
+      private Classes.LabelWrapper lblFromEmailAddress;
+      private Classes.TextBoxWrapper txtFromEmailAddress;
+      private Classes.TextBoxWrapper txtSmtpPassword;
+      private Classes.TextBoxWrapper txtSmtpUsername;
+      private Classes.LabelWrapper labelWrapper4;
+      private Classes.LabelWrapper labelWrapper5;
+      private Classes.ButtonWrapper btnTestEmail;
+      private Classes.GroupBoxWrapper grpReportSelections;
+      private Classes.CheckBoxWrapper chkClientEuePause;
       private System.Windows.Forms.TabPage tabStartup;
-      private HFM.Classes.GroupBoxWrapper grpStartup;
-      private HFM.Classes.CheckBoxWrapper checkBoxWrapper1;
-      private HFM.Classes.CheckBoxWrapper checkBoxWrapper2;
-      private HFM.Classes.CheckBoxWrapper chkRunMinimized;
-      private HFM.Classes.CheckBoxWrapper chkAutoRun;
-      private HFM.Classes.CheckBoxWrapper chkFAHlog;
+      private Classes.GroupBoxWrapper grpStartup;
+      private Classes.CheckBoxWrapper chkRunMinimized;
+      private Classes.CheckBoxWrapper chkAutoRun;
+      private Classes.CheckBoxWrapper chkFAHlog;
    }
 }

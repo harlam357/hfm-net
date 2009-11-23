@@ -42,7 +42,7 @@ namespace HFM.Helpers
       /// Does an Auto Run Value Exist?
       /// </summary>
       /// <param name="name">Name of Key Value to check.</param>
-      public static bool IsHfmAutoRunSet(string name)
+      private static bool IsHfmAutoRunSet(string name)
       {
          object CurrentHfmAutoRunValue;
          try
@@ -61,7 +61,7 @@ namespace HFM.Helpers
             return false;
          }
          // if it's an empty string, try to remove the value
-         // the value should exist with something or than an empty string, or it should not exist at all
+         // the value should exist with something other than an empty string, or it should not exist at all
          else if (CurrentHfmAutoRunValue.ToString().Length == 0) // FxCop: CA1820
          {
             try
@@ -96,9 +96,9 @@ namespace HFM.Helpers
       /// <param name="FilePath">File Path to HFM.exe executable.</param>
       /// <param name="name">Name of Value to add to the HKCU Run RegistryKey.</param>
       /// <exception cref="InvalidOperationException">When Auto Run value cannot be set.</exception>
-      public static void SetHfmAutoRun(string FilePath, string name)
+      private static void SetHfmAutoRun(string FilePath, string name)
       {
-         RegistryKey regHkCuRun = GetHkCuAutoRunKey();
+         RegistryKey regHkCuRun = GetHkCuAutoRunKey(true);
          
          try
          {
@@ -123,6 +123,15 @@ namespace HFM.Helpers
       /// <exception cref="InvalidOperationException">When Registry Key cannot be opened.</exception>
       private static RegistryKey GetHkCuAutoRunKey()
       {
+         return GetHkCuAutoRunKey(false);
+      }
+
+      /// <summary>
+      /// Gets the HKCU Run RegistryKey.
+      /// </summary>
+      /// <exception cref="InvalidOperationException">When Registry Key cannot be opened.</exception>
+      private static RegistryKey GetHkCuAutoRunKey(bool createIfNotExist)
+      {
          RegistryKey regHkCuRun;
       
          try
@@ -134,9 +143,20 @@ namespace HFM.Helpers
             throw new InvalidOperationException("Registry could not be opened.  Please check your user permissions.", ex);
          }
          
-         if (regHkCuRun == null)
+         if (regHkCuRun == null && createIfNotExist)
          {
-            throw new InvalidOperationException("Registry could not be opened.  Please check your user permissions.");
+            try
+            {
+               regHkCuRun = Registry.CurrentUser.CreateSubKey(HkCuAutoRunSubKey, RegistryKeyPermissionCheck.ReadWriteSubTree);
+               if (regHkCuRun == null)
+               {
+                  throw new InvalidOperationException("Registry could not be opened.  Please check your user permissions.");
+               }
+            }
+            catch (Exception ex)
+            {
+               throw new InvalidOperationException("Registry could not be opened.  Please check your user permissions.", ex);
+            }
          }
          
          return regHkCuRun;   

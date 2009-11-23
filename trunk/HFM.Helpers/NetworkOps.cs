@@ -35,6 +35,7 @@ namespace HFM.Helpers
    /// </summary>
    public enum DownloadType
    {
+      General = -1,
       FAHLog = 0,
       UnitInfo,
       Queue
@@ -111,6 +112,7 @@ namespace HFM.Helpers
       /// <param name="LocalFilePath">Path to local file.</param>
       /// <param name="Username">Ftp Login Username.</param>
       /// <param name="Password">Ftp Login Password.</param>
+      /// <param name="type">Type of Download.</param>
       /// <exception cref="ArgumentException">Throws if Server, FtpPath, RemoteFileName, or LocalFilePath is Null or Empty.</exception>
       public static void FtpDownloadHelper(string Server, string FtpPath, string RemoteFileName, string LocalFilePath, string Username, string Password, DownloadType type)
       {
@@ -163,6 +165,16 @@ namespace HFM.Helpers
       /// Download a File via Http.
       /// </summary>
       /// <param name="Url">Http Url of remote file.</param>
+      public static Stream HttpDownloadHelper(Uri Url)
+      {
+         WebResponse r1 = HttpDownloadHelper(Url, null, null, null, null, DownloadType.General);
+         return r1.GetResponseStream();
+      }
+
+      /// <summary>
+      /// Download a File via Http.
+      /// </summary>
+      /// <param name="Url">Http Url of remote file.</param>
       /// <param name="LocalFilePath">Path to local file.</param>
       /// <param name="InstanceName">Name of the Instance object that called this method.</param>
       /// <param name="Username">Http Login Username.</param>
@@ -176,37 +188,7 @@ namespace HFM.Helpers
             throw new ArgumentException("Argument 'Url' cannot be a null or empty string.");
          }
       
-         HttpDownloadHelper(new Uri(Url), LocalFilePath, InstanceName, Username, Password, type);
-      }
-
-      /// <summary>
-      /// Download a File via Http.
-      /// </summary>
-      /// <param name="Url">Http Url of remote file.</param>
-      /// <param name="LocalFilePath">Path to local file.</param>
-      /// <param name="InstanceName">Name of the Instance object that called this method.</param>
-      /// <param name="Username">Http Login Username.</param>
-      /// <param name="Password">Http Login Password.</param>
-      /// <param name="type">Type of Download.</param>
-      /// <exception cref="ArgumentNullException">Throws if Url is Null.</exception>
-      /// <exception cref="ArgumentException">Throws if LocalFilePath or InstanceName is Null or Empty.</exception>
-      public static void HttpDownloadHelper(Uri Url, string LocalFilePath, string InstanceName, string Username, string Password, DownloadType type)
-      {
-         if (Url == null) throw new ArgumentNullException("Url", "Argument 'Url' cannot be null.");
-      
-         if (String.IsNullOrEmpty(LocalFilePath) || String.IsNullOrEmpty(InstanceName))
-         {
-            throw new ArgumentException("Arguments 'Url', 'LocalFilePath', and 'InstanceName' cannot be a null or empty string.");
-         }
-      
-         WebRequest request = WebRequest.Create(Url);
-         request.Method = WebRequestMethods.Http.Get;
-         request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-
-         SetNetworkCredentials(request, Username, Password);
-         SetProxy(request);
-
-         WebResponse r1 = request.GetResponse();
+         WebResponse r1 = HttpDownloadHelper(new Uri(Url), LocalFilePath, InstanceName, Username, Password, type);
          if (type.Equals(DownloadType.UnitInfo) && r1.ContentLength >= UnitInfoMax)
          {
             if (File.Exists(LocalFilePath))
@@ -216,6 +198,16 @@ namespace HFM.Helpers
             HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
                                        String.Format("{0} ({1}) UnitInfo Http download (file is too big: {2} bytes).", HfmTrace.FunctionName,
                                                      InstanceName, r1.ContentLength));
+         }
+         else if (type.Equals(DownloadType.FAHLog) || type.Equals(DownloadType.UnitInfo))
+         {
+            using (StreamReader sr1 = new StreamReader(r1.GetResponseStream(), Encoding.ASCII))
+            {
+               using (StreamWriter sw1 = new StreamWriter(LocalFilePath, false))
+               {
+                  sw1.Write(sr1.ReadToEnd());
+               }
+            }
          }
          else if (type.Equals(DownloadType.Queue))
          {
@@ -230,21 +222,44 @@ namespace HFM.Helpers
                   {
                      bytesRead = sr1.Read(buffer, 0, buffer.Length);
                      sw1.Write(buffer, 0, bytesRead);
-                  } 
+                  }
                   while (bytesRead > 0);
                }
             }
          }
-         else
+      }
+
+      /// <summary>
+      /// Download a File via Http.
+      /// </summary>
+      /// <param name="Url">Http Url of remote file.</param>
+      /// <param name="LocalFilePath">Path to local file.</param>
+      /// <param name="InstanceName">Name of the Instance object that called this method.</param>
+      /// <param name="Username">Http Login Username.</param>
+      /// <param name="Password">Http Login Password.</param>
+      /// <param name="type">Type of Download.</param>
+      /// <exception cref="ArgumentNullException">Throws if Url is Null.</exception>
+      /// <exception cref="ArgumentException">Throws if LocalFilePath or InstanceName is Null or Empty.</exception>
+      private static WebResponse HttpDownloadHelper(Uri Url, string LocalFilePath, string InstanceName, string Username, string Password, DownloadType type)
+      {
+         if (Url == null) throw new ArgumentNullException("Url", "Argument 'Url' cannot be null.");
+         
+         if (type.Equals(DownloadType.General) == false)
          {
-            using (StreamReader sr1 = new StreamReader(r1.GetResponseStream(), Encoding.ASCII))
+            if (String.IsNullOrEmpty(LocalFilePath) || String.IsNullOrEmpty(InstanceName))
             {
-               using (StreamWriter sw1 = new StreamWriter(LocalFilePath, false))
-               {
-                  sw1.Write(sr1.ReadToEnd());
-               }
+               throw new ArgumentException("Arguments 'LocalFilePath' and 'InstanceName' cannot be a null or empty string.");
             }
          }
+
+         WebRequest request = WebRequest.Create(Url);
+         request.Method = WebRequestMethods.Http.Get;
+         request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+
+         SetNetworkCredentials(request, Username, Password);
+         SetProxy(request);
+
+         return request.GetResponse();
       }
 
       /// <summary>
@@ -354,6 +369,8 @@ namespace HFM.Helpers
       /// <param name="MessageSubject"></param>
       /// <param name="MessageBody"></param>
       /// <param name="SmtpHost"></param>
+      /// <param name="SmtpHostUsername"></param>
+      /// <param name="SmtpHostPassword"></param>
       public static void SendEmail(string MessageFrom, string MessageTo, string MessageSubject, string MessageBody, string SmtpHost, string SmtpHostUsername, string SmtpHostPassword)
       {
          MailMessage message = new MailMessage(MessageFrom, MessageTo, MessageSubject, MessageBody);

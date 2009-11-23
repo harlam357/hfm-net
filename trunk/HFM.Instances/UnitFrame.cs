@@ -24,8 +24,11 @@ namespace HFM.Instances
    [Serializable]
    public class UnitFrame
    {
+      // Would have liked to change the member to _FrameID, bitten by the BinaryFormatter
+      // Look into migrating these pieces of data into something using data-contracts.
       private readonly Int32 _FramePercent;
-      public Int32 FramePercent
+      // Changed the Property Name to FrameID - 11/22/09
+      public Int32 FrameID
       {
          get { return _FramePercent; }
       }

@@ -856,6 +856,11 @@ namespace HFM.Instances
             case ClientStatus.RunningNoFrameTimes:
                break;
             case ClientStatus.Unknown:
+               HfmTrace.WriteToHfmConsole(TraceLevel.Error,
+                                          String.Format("Unable to Determine Status for Client '{0}'", InstanceName), true);
+               // Update Client Status - don't call Determine Status
+               Status = returnedStatus;
+               return;
             case ClientStatus.Offline:
             case ClientStatus.Stopped:
             case ClientStatus.EuePause:
@@ -1051,125 +1056,80 @@ namespace HFM.Instances
          }
       }
 
+      #region Queue and Log Processing Functions
       /// <summary>
       /// Process the cached log files that exist on this machine
       /// </summary>
       public ClientStatus ProcessExisting()
       {
+         // Exec Start
          DateTime Start = HfmTrace.ExecStart;
          
+         // Read and Parse the queue.dat file
          UnitInfo[] parsedUnits = ParseQueueFile();
-         ClientStatus returnedStatus = ClientStatus.Unknown;
-
+         // Read and Scan the FAHlog file
          LogReader lr = new LogReader();
          lr.ScanFAHLog(this, System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedFAHLogName));
          
+         // Get the Client Status from the Current Work Unit
+         ClientStatus CurrentWorkUnitStatus = LogReader.GetStatusFromLogLines(lr.CurrentWorkUnitLogLines);
+         
+         // Populate Startup Arguments and Work Unit Count Data into this ClientInstance.
+         // This data can only be gathered from the FAHlog, it does not exist in the queue.
          lr.PopulateClientStartupArgumentData(this);
          lr.PopulateWorkUnitCountData(this);
+         
+         // Default Index to 1 - which is we want if only parsing previous and current logs
+         int BenchmarkUpdateIndex = 1;
 
+         // Decision Time: If Queue Read Failed parsedUnits will be null
          if (parsedUnits == null)
          {
-            parsedUnits = new UnitInfo[2];
-            returnedStatus = ParseCurrentAndPreviousUnitsFromLogsOnly(parsedUnits, lr);
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, 
+               "Queue unavailable or failed read.  Parsing logs without queue.");
+         
+            parsedUnits = ParseCurrentAndPreviousUnitsFromLogsOnly(lr);
          }
          else
          {
-            #region Parse Log Data Into UnitInfo Created From Queue Data
+            // Populate User (Team) and User/Machine IDs from the Queue
             _qr.PopulateUserAndMachineData(this);
+            // Set the Index to the Current Queue Index
+            BenchmarkUpdateIndex = (int)_qr.CurrentIndex;
 
-            int outputArrayIndex = 0;
-            _QueueLogLines = new IList<LogLine>[10];
-            UnitInfo[] units = new UnitInfo[10];
-
-            int queueIndex = (int)_qr.CurrentIndex;
-            // Set index for the oldest unit in the queue
-            if (queueIndex == 9)
+            if (ParseLogLinesBasedOnQueueIndex(parsedUnits, lr, CurrentWorkUnitStatus) == false)
             {
-               queueIndex = 0;
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture,
+                  "Could not verify log section for current queue entry ({0}). Parsing logs without queue.", _qr.CurrentIndex));
+            
+               BenchmarkUpdateIndex = 1;
+               parsedUnits = ParseCurrentAndPreviousUnitsFromLogsOnly(lr);
             }
-            else
-            {
-               queueIndex++;
-            }
-
-            while (queueIndex != -1)
-            {
-               // Get the Log Lines for this queue position from the reader
-               IList<LogLine> logLines = lr.GetLogLinesFromQueueIndex(queueIndex);
-               _QueueLogLines[queueIndex] = logLines;
-
-               // Make sure we have lines and that the Project (R/C/G) from the Queue matches what is found in the log lines
-               if (_qr.CurrentIndex == queueIndex)
-               {
-                  if (ValidateQueueEntryMatchesLogLines(logLines, parsedUnits[queueIndex]))
-                  {
-                     returnedStatus = ProcessCurrentWorkUnitLogLines(logLines, parsedUnits[queueIndex]);
-                  }
-                  else
-                  {
-                     HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format("Could not find or verify log section for queue entry {0} (current - parsing logs without queue).", queueIndex));
-
-                     parsedUnits = new UnitInfo[2];
-                     returnedStatus = ParseCurrentAndPreviousUnitsFromLogsOnly(parsedUnits, lr);
-
-                     units = null;
-                     _qr.ClearQueue();
-                     break;
-                  }
-               }
-               else
-               {
-                  if (ValidateQueueEntryMatchesLogLines(logLines, parsedUnits[queueIndex]))
-                  {
-                     ProcessPreviousWorkUnitLogLines(logLines, parsedUnits[queueIndex]);
-                  }
-                  else
-                  {
-                     HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, String.Format("Could not find or verify log section for queue entry {0} (this is not a problem).", queueIndex));
-                  }
-               }
-
-               units[outputArrayIndex] = parsedUnits[queueIndex];
-               outputArrayIndex++;
-
-               if (queueIndex == (int)_qr.CurrentIndex)
-               {
-                  queueIndex = -1;
-               }
-               else if (queueIndex == 9)
-               {
-                  queueIndex = 0;
-               }
-               else
-               {
-                  queueIndex++;
-               }
-            }
-
-            if (units != null)
-            {
-               // update parsed units with reordered array
-               parsedUnits = units; 
-            }
-            #endregion
          }
 
          // *** THIS HAS TO BE DONE BEFORE UPDATING THE _CurrentUnitInfo ***
-         // Update Benchmarks from units array 
-         UpdateBenchmarkData(parsedUnits);
+         // Update Benchmarks from parsedUnits array 
+         UpdateBenchmarkData(parsedUnits, BenchmarkUpdateIndex);
 
-         if (returnedStatus.Equals(ClientStatus.Unknown) == false)
+         // Update the CurrentUnitInfo if we have a Status
+         if (CurrentWorkUnitStatus.Equals(ClientStatus.Unknown) == false)
          {
-            _CurrentUnitInfo = parsedUnits[parsedUnits.Length - 1];
+            _CurrentUnitInfo = parsedUnits[BenchmarkUpdateIndex];
          }
 
+         // Update the CurrentLogLines
          _CurrentLogLines = lr.CurrentWorkUnitLogLines;
          
          HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, Start);
          
-         return returnedStatus;
+         // Return the Status
+         return CurrentWorkUnitStatus;
       }
 
+      /// <summary>
+      /// Read the queue.dat file and Parse Queue Entries from QueueReader into UnitInfo Array.
+      /// </summary>
+      /// <returns>Parsed UnitInfo Array or null on Failure.</returns>
       private UnitInfo[] ParseQueueFile()
       {
          UnitInfo[] units = null;
@@ -1198,28 +1158,95 @@ namespace HFM.Instances
          }
          catch (Exception ex)
          {
+            units = null;
             HfmTrace.WriteToHfmConsole(TraceLevel.Error, InstanceName, ex);
          }
          
          return units;
       }
 
-      private ClientStatus ParseCurrentAndPreviousUnitsFromLogsOnly(UnitInfo[] parsedUnits, LogReader lr)
+      /// <summary>
+      /// Parse Log Line Sections from Queue Positions into UnitInfo .
+      /// </summary>
+      /// <param name="parsedUnits">Parsed UnitInfo Array</param>
+      /// <param name="lr">LogReader Instance</param>
+      /// <param name="CurrentWorkUnitStatus">Current Status Based on LogReader.CurrentLogLines</param>
+      private bool ParseLogLinesBasedOnQueueIndex(UnitInfo[] parsedUnits, LogReader lr, ClientStatus CurrentWorkUnitStatus)
       {
-         // Make sure we've got an array of 2
-         Debug.Assert(parsedUnits.Length == 2);
+         Debug.Assert(parsedUnits.Length == 10);
 
-         _QueueLogLines = null;
+         _QueueLogLines = new IList<LogLine>[10];
+      
+         for (int queueIndex = 0; queueIndex < parsedUnits.Length; queueIndex++)
+         {
+            // Get the Log Lines for this queue position from the reader
+            IList<LogLine> logLines = lr.GetLogLinesFromQueueIndex(queueIndex);
+
+            // Could not validate Project Matches Queue Position
+            if (ValidateQueueEntryMatchesLogLines(logLines, parsedUnits[queueIndex]) == false)
+            {
+               // If the current index
+               if (_qr.CurrentIndex == queueIndex)
+               {
+                  if (CurrentWorkUnitStatus.Equals(ClientStatus.GettingWorkPacket))
+                  {
+                     // Remove the Log Lines for the Current Queue Index and maintain the Queue information
+                     _QueueLogLines[queueIndex] = null;
+                  }
+                  else
+                  {
+                     // Remove the Queue LogLines array
+                     _QueueLogLines = null;
+                     // And clear the Queue data itself
+                     _qr.ClearQueue();
+                     return false;
+                  }
+               }
+               
+               // Otherwise, just skip this unit and continue
+               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, String.Format(CultureInfo.CurrentCulture,
+                  "Could not find or verify log section for queue entry {0} (this is not a problem).", queueIndex));
+               continue;
+            }
+            
+            _QueueLogLines[queueIndex] = logLines;
+
+            ParseWorkUnitLogLines(this, logLines, parsedUnits[queueIndex], _qr.CurrentIndex == queueIndex);
+         }
+         
+         return true;
+      }
+
+      /// <summary>
+      /// Parse Log Line Sections from Last Two Units based on LogReader.
+      /// </summary>
+      /// <param name="lr">LogReader Instance</param>
+      private UnitInfo[] ParseCurrentAndPreviousUnitsFromLogsOnly(LogReader lr)
+      {
+         Debug.Assert(lr != null);
+
+         UnitInfo[] parsedUnits = new UnitInfo[2];
 
          lr.PopulateUserAndMachineData(this);
 
          parsedUnits[0] = new UnitInfo(InstanceName, Path, LastRetrievalTime, FoldingID, Team);
          parsedUnits[1] = new UnitInfo(InstanceName, Path, LastRetrievalTime, FoldingID, Team);
 
-         ProcessPreviousWorkUnitLogLines(lr.PreviousWorkUnitLogLines, parsedUnits[0]);
-         return ProcessCurrentWorkUnitLogLines(lr.CurrentWorkUnitLogLines, parsedUnits[1]);
+         IList<LogLine> PreviousLogLines = lr.PreviousWorkUnitLogLines;
+         if (PreviousLogLines != null)
+         {
+            ParseWorkUnitLogLines(this, lr.PreviousWorkUnitLogLines, parsedUnits[0]);
+         }
+         ParseWorkUnitLogLines(this, lr.CurrentWorkUnitLogLines, parsedUnits[1], true);
+         
+         return parsedUnits;
       }
       
+      /// <summary>
+      /// Validate that the Project (R/C/G) from the Log Lines matches the Project (R/C/G) in the given UnitInfo.
+      /// </summary>
+      /// <param name="logLines">Log Lines to process.</param>
+      /// <param name="parsedUnitInfo">UnitInfo object to validate.</param>
       private static bool ValidateQueueEntryMatchesLogLines(ICollection<LogLine> logLines, UnitInfo parsedUnitInfo)
       {
          if (logLines != null &&
@@ -1232,127 +1259,127 @@ namespace HFM.Instances
          return false;
       }
 
-      private void ProcessPreviousWorkUnitLogLines(IList<LogLine> logLines, UnitInfo parsedUnitInfo)
+      /// <summary>
+      /// Parse Log Lines into UnitInfo object
+      /// </summary>
+      /// <param name="Instance">Client Instance doing the processing.</param>
+      /// <param name="logLines">Log Lines to process.</param>
+      /// <param name="parsedUnitInfo">UnitInfo object to populate.</param>
+      private static void ParseWorkUnitLogLines(ClientInstance Instance, IList<LogLine> logLines, UnitInfo parsedUnitInfo)
       {
-         // Make sure we have a previous log lines to parse. 
-         // We don't want to write trace errors if there are no lines.
-         if (logLines != null)
-         {
-            ProcessWorkUnitLogLines(logLines, parsedUnitInfo, false);
-         }
+         ParseWorkUnitLogLines(Instance, logLines, parsedUnitInfo, false);
       }
 
-      private ClientStatus ProcessCurrentWorkUnitLogLines(IList<LogLine> logLines, UnitInfo parsedUnitInfo)
+      /// <summary>
+      /// Parse Log Lines into UnitInfo object
+      /// </summary>
+      /// <param name="Instance">Client Instance doing the processing.</param>
+      /// <param name="logLines">Log Lines to process.</param>
+      /// <param name="parsedUnitInfo">UnitInfo object to populate.</param>
+      /// <param name="ReadUnitInfoFile">Flag - Read the unitinfo.txt file.</param>
+      private static void ParseWorkUnitLogLines(ClientInstance Instance, IList<LogLine> logLines, UnitInfo parsedUnitInfo, bool ReadUnitInfoFile)
       {
-         // We have to have a FAHlog to parse and current log lines by this point
-         Debug.Assert(logLines != null);
-      
-         return ProcessWorkUnitLogLines(logLines, parsedUnitInfo, true);
-      }
-
-      private ClientStatus ProcessWorkUnitLogLines(IList<LogLine> logLines, UnitInfo parsedUnitInfo, bool ReadUnitInfoFile)
-      {
-         // There should always be a list of current work unit log lines
-         ClientStatus returnedStatus = ParseWorkUnitLogLines(logLines, parsedUnitInfo, ReadUnitInfoFile);
-
-         if (returnedStatus.Equals(ClientStatus.Unknown))
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Error,
-                                       String.Format("Unable to Parse Work Unit for Client '{0}'", InstanceName), true);
-         }
-         return returnedStatus;
-      }
-
-      private ClientStatus ParseWorkUnitLogLines(IList<LogLine> LogLines, UnitInfo parsedUnitInfo, bool ReadUnitInfoFile)
-      {
-         LogParser lp = new LogParser(this, parsedUnitInfo);
+         LogParser lp = new LogParser(Instance, parsedUnitInfo);
          if (ReadUnitInfoFile)
          {
-            if (lp.ParseUnitInfoFile(System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedUnitInfoName)) == false)
+            if (lp.ParseUnitInfoFile(System.IO.Path.Combine(PreferenceSet.CacheDirectory, Instance.CachedUnitInfoName)) == false)
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, "unitinfo parse failed.");
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, Instance.InstanceName, "unitinfo parse failed.");
             }
          }
 
-         return lp.ParseFAHLog(LogLines);
+         lp.ParseFAHLog(logLines);
       }
 
       /// <summary>
       /// Update Project Benchmarks
       /// </summary>
-      /// <param name="parsedUnits">Array of parsed UnitInfo objects.  Must be in order from oldest (0) to newest (9) work unit.</param>
-      private void UpdateBenchmarkData(UnitInfo[] parsedUnits)
+      /// <param name="parsedUnits">Parsed UnitInfo Array</param>
+      /// <param name="BenchmarkUpdateIndex">Index of Current UnitInfo</param>
+      private void UpdateBenchmarkData(UnitInfo[] parsedUnits, int BenchmarkUpdateIndex)
       {
          bool FoundCurrent = false;
          
-         for (int i = 0; i < parsedUnits.Length; i++)
+         int index = BenchmarkUpdateIndex;
+         // Set index for the oldest unit in the array
+         if (index == parsedUnits.Length - 1)
          {
-            if (FoundCurrent == false && IsUnitInfoCurrentUnitInfo(parsedUnits[i]))
+            index = 0;
+         }
+         else
+         {
+            index++;
+         }
+
+         while (index != -1)
+         {
+            if (FoundCurrent == false && IsUnitInfoCurrentUnitInfo(parsedUnits[index]))
             {
                FoundCurrent = true;
             }
             
-            if (FoundCurrent || i == (parsedUnits.Length - 1))
+            if (FoundCurrent || index == BenchmarkUpdateIndex)
             {
-               int previousFramePercent = 0;
+               int previousFrameID = 0;
                // check this against the CurrentUnitInfo
-               if (IsUnitInfoCurrentUnitInfo(parsedUnits[i]))
+               if (IsUnitInfoCurrentUnitInfo(parsedUnits[index]))
                {
                   // current frame has already been recorded, increment to the next frame
-                  previousFramePercent = CurrentUnitInfo.LastUnitFramePercent + 1;
+                  previousFrameID = CurrentUnitInfo.LastUnitFrameID + 1;
                }
 
                // Update benchmarks
-               ProteinBenchmarkCollection.Instance.UpdateBenchmarkData(parsedUnits[i], previousFramePercent,
-                                                                       parsedUnits[i].LastUnitFramePercent);
+               ProteinBenchmarkCollection.Instance.UpdateBenchmarkData(parsedUnits[index], previousFrameID,
+                                                                       parsedUnits[index].LastUnitFrameID);
+            }
+
+            if (index == BenchmarkUpdateIndex)
+            {
+               index = -1;
+            }
+            else if (index == parsedUnits.Length - 1)
+            {
+               index = 0;
+            }
+            else
+            {
+               index++;
             }
          }
       }
+      #endregion
 
+      #region Project and Protein Matching
       /// <summary>
-      /// Attempts to Set Project ID with given Match.  If Project cannot be found in local cache, download again.
+      /// Attempts to set the Protein based on the given Project data.
       /// </summary>
       /// <param name="parsedUnitInfo">Container for parsed information</param>
-      /// <param name="match">Regex Match containing Project data</param>
+      /// <param name="match">Regex Match containing Project values</param>
       internal static void DoProjectIDMatch(UnitInfo parsedUnitInfo, Match match)
       {
          List<int> ProjectID = new List<int>(4);
-      
+
          ProjectID.Add(Int32.Parse(match.Result("${ProjectNumber}")));
          ProjectID.Add(Int32.Parse(match.Result("${Run}")));
          ProjectID.Add(Int32.Parse(match.Result("${Clone}")));
          ProjectID.Add(Int32.Parse(match.Result("${Gen}")));
-         
+
          DoProjectIDMatch(parsedUnitInfo, ProjectID);
       }
 
+      /// <summary>
+      /// Attempts to set the Protein based on the given Project data.
+      /// </summary>
+      /// <param name="parsedUnitInfo">Container for parsed information</param>
+      /// <param name="ProjectID">List of Project (R/C/G) values</param>
       internal static void DoProjectIDMatch(UnitInfo parsedUnitInfo, IList<int> ProjectID)
       {
-         if (ProteinCollection.Instance.ContainsKey(ProjectID[0]))
-         {
-            SetProjectAndClientType(parsedUnitInfo, ProjectID);
-         }
-         else
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
-                                       String.Format("{0} Project ID '{1}' not found in Protein Collection.",
-                                                     HfmTrace.FunctionName, ProjectID[0]));
+         Debug.Assert(ProjectID.Count == 4);
 
-            // If a Project cannot be identified using the local Project data, update Project data from Stanford. - Issue 4
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info,
-                                       String.Format("{0} Attempting to download new Project data...", HfmTrace.FunctionName));
-            ProteinCollection.Instance.DownloadFromStanford();
-
-            if (ProteinCollection.Instance.ContainsKey(ProjectID[0]))
-            {
-               SetProjectAndClientType(parsedUnitInfo, ProjectID);
-            }
-            else
-            {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Error,
-                                          String.Format("{0} Project ID '{1}' not found on Stanford Web Project Summary.",
-                                                        HfmTrace.FunctionName, ProjectID[0]));
-            }
+         Protein protein = ProteinCollection.Instance.GetProtein(ProjectID[0]);
+         if (protein.IsUnknown == false)
+         {
+            SetProjectAndClientType(parsedUnitInfo, protein, ProjectID);
          }
       }
 
@@ -1360,9 +1387,10 @@ namespace HFM.Instances
       /// Sets the ProjectID and gets the Protein info from the Protein Collection (from Stanford)
       /// </summary>
       /// <param name="parsedUnitInfo">Container for parsed information</param>
-      /// <param name="ProjectID">List of ProjectID values</param>
+      /// <param name="protein">Unit Protein</param>
+      /// <param name="ProjectID">List of Project (R/C/G) values</param>
       /// <exception cref="System.Collections.Generic.KeyNotFoundException">Thrown when Project ID cannot be found in Protein Collection.</exception>
-      private static void SetProjectAndClientType(UnitInfo parsedUnitInfo, IList<int> ProjectID)
+      private static void SetProjectAndClientType(UnitInfo parsedUnitInfo, Protein protein, IList<int> ProjectID)
       {
          Debug.Assert(ProjectID.Count == 4);
 
@@ -1371,9 +1399,10 @@ namespace HFM.Instances
          parsedUnitInfo.ProjectClone = ProjectID[2];
          parsedUnitInfo.ProjectGen = ProjectID[3];
 
-         parsedUnitInfo.CurrentProtein = ProteinCollection.Instance[parsedUnitInfo.ProjectID];
+         parsedUnitInfo.CurrentProtein = protein;
          parsedUnitInfo.TypeOfClient = UnitInfo.GetClientTypeFromProtein(parsedUnitInfo.CurrentProtein);
-      }
+      } 
+      #endregion
 
       /// <summary>
       /// Retrieve Instance Log Files based on Instance Type

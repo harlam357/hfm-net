@@ -178,11 +178,11 @@ namespace HFM.Instances
       /// <summary>
       /// 
       /// </summary>
-      private int _Credit;
+      private double _Credit;
       /// <summary>
       /// 
       /// </summary>
-      public int Credit
+      public double Credit
       {
          get { return _Credit; }
       }
@@ -269,7 +269,7 @@ namespace HFM.Instances
          _Core = Instance.CurrentUnitInfo.CurrentProtein.Core;
          _CoreVersion = Instance.CurrentUnitInfo.CoreVersion;
          _ProjectRunCloneGen = Instance.CurrentUnitInfo.ProjectRunCloneGen;
-         _Credit = Instance.CurrentUnitInfo.CurrentProtein.Credit;
+         _Credit = Instance.CurrentUnitInfo.CurrentProtein.GetCredit(Instance.CurrentUnitInfo.EFT);
          _Complete = Instance.NumberOfCompletedUnitsSinceLastStart;
          _Failed = Instance.NumberOfFailedUnitsSinceLastStart;
          _Username = String.Format(CultureInfo.CurrentCulture, "{0} ({1})", Instance.FoldingID, Instance.Team);

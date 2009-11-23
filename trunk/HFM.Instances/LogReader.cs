@@ -24,7 +24,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 
-using HFM.Proteins;
+using HFM.Preferences;
 using HFM.Instrumentation;
 
 namespace HFM.Instances
@@ -236,6 +236,12 @@ namespace HFM.Instances
       {
          foreach (LogLine line in logLines)
          {
+            // If we encounter a work unit frame, we should have
+            // already seen the Project Information, stop looking
+            if (line.LineType.Equals(LogLineType.WorkUnitFrame))
+            {
+               break;
+            }
             if (line.LineType.Equals(LogLineType.WorkUnitProject))
             {
                return LogLine.GetProjectString(line);
@@ -243,6 +249,49 @@ namespace HFM.Instances
          }
 
          return String.Empty;
+      }
+
+      /// <summary>
+      /// Get the ClientStatus based on the given collection of Log Lines.
+      /// </summary>
+      /// <param name="logLines">Log Lines to search</param>
+      public static ClientStatus GetStatusFromLogLines(ICollection<LogLine> logLines)
+      {
+         ClientStatus returnStatus = ClientStatus.Unknown;
+      
+         foreach (LogLine line in logLines)
+         {
+            if (returnStatus.Equals(ClientStatus.Unknown) &&
+               (line.LineType.Equals(LogLineType.WorkUnitProcessing) ||
+                line.LineType.Equals(LogLineType.WorkUnitWorking) ||
+                line.LineType.Equals(LogLineType.WorkUnitStart)))
+            {
+               returnStatus = ClientStatus.RunningNoFrameTimes;
+            }
+            else if (line.LineType.Equals(LogLineType.WorkUnitPaused)) // || line.LineRaw.Contains("+ Running on battery power"))
+            {
+               returnStatus = ClientStatus.Paused;
+            }
+            else if (line.LineType.Equals(LogLineType.WorkUnitWorking) && returnStatus.Equals(ClientStatus.Paused))
+            {
+               returnStatus = ClientStatus.RunningNoFrameTimes;
+            }
+            else if (line.LineType.Equals(LogLineType.ClientAttemptGetWorkPacket))
+            {
+               returnStatus = ClientStatus.GettingWorkPacket;
+            }
+            else if (line.LineType.Equals(LogLineType.ClientEuePauseState))
+            {
+               returnStatus = ClientStatus.EuePause;
+            }
+            else if (line.LineType.Equals(LogLineType.ClientShutdown) ||
+                     line.LineType.Equals(LogLineType.ClientCoreCommunicationsErrorShutdown))
+            {
+               returnStatus = ClientStatus.Stopped;
+            }
+         }
+         
+         return returnStatus;
       }
 
       /// <summary>
@@ -887,6 +936,12 @@ namespace HFM.Instances
          {
             return LogLineType.WorkUnitStart;
          }
+         /*** ProtoMol Only */
+         else if (logLine.Contains("] ******************* Folding@Home Core *******************"))
+         {
+            return LogLineType.WorkUnitStart;
+         }
+         /*******************/
          else if (logLine.Contains("] Version"))
          {
             return LogLineType.WorkUnitCoreVersion;
@@ -898,6 +953,10 @@ namespace HFM.Instances
          else if (logLine.Contains("] Project:"))
          {
             return LogLineType.WorkUnitProject;
+         }
+         else if (logLine.Contains("] Completed "))
+         {
+            return LogLineType.WorkUnitFrame;
          }
          else if (logLine.Contains("] + Paused"))
          {
@@ -951,6 +1010,12 @@ namespace HFM.Instances
          {
             return true;
          }
+         /*** ProtoMol Only */
+         else if (logLine.Contains("] Digital signatures verified"))
+         {
+            return true;
+         }
+         /*******************/
          else if (logLine.Contains("] Entering M.D."))
          {
             return true;
@@ -1012,6 +1077,36 @@ namespace HFM.Instances
          new Regex("\\[(?<Timestamp>.{8})\\] Project: (?<ProjectNumber>.*) \\(Run (?<Run>.*), Clone (?<Clone>.*), Gen (?<Gen>.*)\\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       /// <summary>
+      /// Regular Expression to match Standard and SMP Clients Frame Completion Lines (Gromacs Style).
+      /// </summary>
+      private static readonly Regex rFramesCompleted =
+         new Regex("\\[(?<Timestamp>.{8})\\] Completed (?<Completed>.*) out of (?<Total>.*) steps  \\((?<Percent>.*)\\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+
+      /// <summary>
+      /// Regular Expression to match Percent Style 1
+      /// </summary>
+      private static readonly Regex rPercent1 =
+         new Regex("(?<Percent>.*) percent", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+
+      /// <summary>
+      /// Regular Expression to match Percent Style 2
+      /// </summary>
+      private static readonly Regex rPercent2 =
+            new Regex("(?<Percent>.*)%", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+
+      ///// <summary>
+      ///// Regular Expression to match Standard Client Frame Completion Lines (ProtoMol Style - Experimental)
+      ///// </summary>
+      //private static readonly Regex rFramesCompletedProtomol =
+      //      new Regex("\\[(?<Timestamp>.{8})\\] Completed (?<Completed>.*) out of (?<Total>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+
+      /// <summary>
+      /// Regular Expression to match GPU2 Client Frame Completion Lines
+      /// </summary>
+      private static readonly Regex rFramesCompletedGpu =
+            new Regex("\\[(?<Timestamp>.{8})\\] Completed (?<Percent>[0-9]{1,3})%", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+
+      /// <summary>
       /// Regular Expression to match Machine ID string.
       /// </summary>
       private static readonly Regex rCoreShutdown =
@@ -1059,7 +1154,7 @@ namespace HFM.Instances
             _LineType = type;
             _LineIndex = index;
             _LineRaw = logLine;
-            _LineData = GetLineData(type, logLine);
+            _LineData = GetLineData(this);
          }
          catch (Exception ex)
          {
@@ -1071,15 +1166,15 @@ namespace HFM.Instances
       #endregion
 
       #region Methods
-      private static object GetLineData(LogLineType type, string logLine)
+      private static object GetLineData(LogLine logLine)
       {
-         switch (type)
+         switch (logLine.LineType)
          {
             case LogLineType.ClientArguments:
-               return logLine.Substring(10).Trim();
+               return logLine.LineRaw.Substring(10).Trim();
             case LogLineType.ClientUserNameTeam:
                Match mUserTeam;
-               if ((mUserTeam = rUserTeam.Match(logLine)).Success)
+               if ((mUserTeam = rUserTeam.Match(logLine.LineRaw)).Success)
                {
                   ArrayList list = new ArrayList(2);
                   list.Add(mUserTeam.Result("${Username}"));
@@ -1088,61 +1183,61 @@ namespace HFM.Instances
                }
                else
                {
-                  throw new FormatException(String.Format("Failed to parse User Name and Team values from '{0}'", logLine));
+                  throw new FormatException(String.Format("Failed to parse User Name and Team values from '{0}'", logLine.LineRaw));
                }
             case LogLineType.ClientReceivedUserID:
                Match mReceivedUserID;
-               if ((mReceivedUserID = rReceivedUserID.Match(logLine)).Success)
+               if ((mReceivedUserID = rReceivedUserID.Match(logLine.LineRaw)).Success)
                {
                   return mReceivedUserID.Result("${UserID}");
                }
                else
                {
-                  throw new FormatException(String.Format("Failed to parse User ID value from '{0}'", logLine));
+                  throw new FormatException(String.Format("Failed to parse User ID value from '{0}'", logLine.LineRaw));
                }
             case LogLineType.ClientUserID:
                Match mUserID;
-               if ((mUserID = rUserID.Match(logLine)).Success)
+               if ((mUserID = rUserID.Match(logLine.LineRaw)).Success)
                {
                   return mUserID.Result("${UserID}");
                }
                else
                {
-                  throw new FormatException(String.Format("Failed to parse User ID value from '{0}'", logLine));
+                  throw new FormatException(String.Format("Failed to parse User ID value from '{0}'", logLine.LineRaw));
                }
             case LogLineType.ClientMachineID:
                Match mMachineID;
-               if ((mMachineID = rMachineID.Match(logLine)).Success)
+               if ((mMachineID = rMachineID.Match(logLine.LineRaw)).Success)
                {
                   return Int32.Parse(mMachineID.Result("${MachineID}"));
                }
                else
                {
-                  throw new FormatException(String.Format("Failed to parse Machine ID value from '{0}'", logLine));
+                  throw new FormatException(String.Format("Failed to parse Machine ID value from '{0}'", logLine.LineRaw));
                }
             case LogLineType.WorkUnitIndex:
                Match mUnitIndex;
-               if ((mUnitIndex = rUnitIndex.Match(logLine)).Success)
+               if ((mUnitIndex = rUnitIndex.Match(logLine.LineRaw)).Success)
                {
                   return Int32.Parse(mUnitIndex.Result("${QueueIndex}"));
                }
                else
                {
-                  throw new FormatException(String.Format("Failed to parse Work Unit Queue Index from '{0}'", logLine));
+                  throw new FormatException(String.Format("Failed to parse Work Unit Queue Index from '{0}'", logLine.LineRaw));
                }
             case LogLineType.WorkUnitQueueIndex:
                Match mQueueIndex;
-               if ((mQueueIndex = rQueueIndex.Match(logLine)).Success)
+               if ((mQueueIndex = rQueueIndex.Match(logLine.LineRaw)).Success)
                {
                   return Int32.Parse(mQueueIndex.Result("${QueueIndex}"));
                }
                else
                {
-                  throw new FormatException(String.Format("Failed to parse Work Unit Queue Index from '{0}'", logLine));
+                  throw new FormatException(String.Format("Failed to parse Work Unit Queue Index from '{0}'", logLine.LineRaw));
                }
             case LogLineType.WorkUnitCoreVersion:
                Match mCoreVer;
-               if ((mCoreVer = rCoreVersion.Match(logLine)).Success)
+               if ((mCoreVer = rCoreVersion.Match(logLine.LineRaw)).Success)
                {
                   string sCoreVer = mCoreVer.Result("${CoreVer}");
                   if (sCoreVer.IndexOf(" ") > 1)
@@ -1156,37 +1251,51 @@ namespace HFM.Instances
                }
                else
                {
-                  throw new FormatException(String.Format("Failed to parse Core Version value from '{0}'", logLine));
+                  throw new FormatException(String.Format("Failed to parse Core Version value from '{0}'", logLine.LineRaw));
                }
             case LogLineType.WorkUnitProject:
                Match mProjectID;
-               if ((mProjectID = rProjectID.Match(logLine)).Success)
+               if ((mProjectID = rProjectID.Match(logLine.LineRaw)).Success)
                {
                   return mProjectID;
                }
                else
                {
-                  throw new FormatException(String.Format("Failed to parse Project (R/C/G) values from '{0}'", logLine));
+                  throw new FormatException(String.Format("Failed to parse Project (R/C/G) values from '{0}'", logLine.LineRaw));
+               }
+            case LogLineType.WorkUnitFrame:
+               FrameData frame = new FrameData();
+               if (CheckForCompletedFrame(logLine, frame))
+               {
+                  return frame;
+               }
+               else if (CheckForCompletedGpuFrame(logLine, frame))
+               {
+                  return frame;
+               }
+               else
+               {
+                  throw new FormatException(String.Format("Failed to parse Frame Data from '{0}'", logLine.LineRaw));
                }
             case LogLineType.WorkUnitCoreShutdown:
                Match mCoreShutdown;
-               if ((mCoreShutdown = rCoreShutdown.Match(logLine)).Success)
+               if ((mCoreShutdown = rCoreShutdown.Match(logLine.LineRaw)).Success)
                {
                   return UnitInfo.WorkUnitResultFromString(mCoreShutdown.Result("${UnitResult}"));
                }
                else
                {
-                  throw new FormatException(String.Format("Failed to parse Work Unit Result value from '{0}'", logLine));
+                  throw new FormatException(String.Format("Failed to parse Work Unit Result value from '{0}'", logLine.LineRaw));
                }
             case LogLineType.ClientNumberOfUnitsCompleted:
                Match mCompletedWUs;
-               if ((mCompletedWUs = rCompletedWUs.Match(logLine)).Success)
+               if ((mCompletedWUs = rCompletedWUs.Match(logLine.LineRaw)).Success)
                {
                   return Int32.Parse(mCompletedWUs.Result("${Completed}"));
                }
                else
                {
-                  throw new FormatException(String.Format("Failed to parse Units Completed value from '{0}'", logLine));
+                  throw new FormatException(String.Format("Failed to parse Units Completed value from '{0}'", logLine.LineRaw));
                }
          }
 
@@ -1233,10 +1342,157 @@ namespace HFM.Instances
          throw new ArgumentException(String.Format("Log line is not of type '{0}'", LogLineType.WorkUnitProject), "line");
       }
 
+      /// <summary>
+      /// Check the given log line for Completed Frame information (All other clients).
+      /// </summary>
+      /// <param name="logLine">Log Line</param>
+      /// <param name="frame">Frame Data</param>
+      private static bool CheckForCompletedFrame(LogLine logLine, FrameData frame)
+      {
+         Match mFramesCompleted = rFramesCompleted.Match(logLine.LineRaw);
+         if (mFramesCompleted.Success)
+         {
+            try
+            {
+               frame.RawFramesComplete = Int32.Parse(mFramesCompleted.Result("${Completed}"));
+               frame.RawFramesTotal = Int32.Parse(mFramesCompleted.Result("${Total}"));
+            }
+            catch (FormatException ex)
+            {
+               throw new FormatException(String.Format("{0} Failed to parse raw frame values from '{1}'.", HfmTrace.FunctionName, logLine), ex);
+            }
+
+            string percentString = mFramesCompleted.Result("${Percent}");
+
+            Match mPercent1 = rPercent1.Match(percentString);
+            Match mPercent2 = rPercent2.Match(percentString);
+
+            int framePercent;
+            if (mPercent1.Success)
+            {
+               framePercent = Int32.Parse(mPercent1.Result("${Percent}"));
+            }
+            else if (mPercent2.Success)
+            {
+               framePercent = Int32.Parse(mPercent2.Result("${Percent}"));
+            }
+            // Try to parse a percentage from in between the parentheses (for older single core clients like v5.02) - Issue 36
+            else if (Int32.TryParse(percentString, out framePercent) == false)
+            {
+               throw new FormatException(String.Format("Failed to parse frame percent from '{0}'.", logLine));
+            }
+
+            // Validate the steps are in tolerance with the detected frame percent - Issue 98
+            double calculatedPercent = ((double)frame.RawFramesComplete / frame.RawFramesTotal) * 100;
+            // ex. [00:19:40] Completed 82499 out of 250000 steps  (33%) - Would Validate
+            //     [00:19:40] Completed 82750 out of 250000 steps  (33%) - Would Validate
+            // 10% frame step tolerance. In the example the completed must be within 250 steps.
+            if (Math.Abs(calculatedPercent - framePercent) <= 0.1)
+            {
+               frame.TimeStampString = mFramesCompleted.Result("${Timestamp}");
+               frame.FrameID = framePercent;
+               
+               return true;
+            }
+            else
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("Not on percent boundry '{0}' (this is not a problem).", logLine), true);
+               return false;
+            }
+         }
+         /*** ProtoMol Only */
+         //else
+         //{
+         //   Match mFramesCompletedProtomol = rFramesCompletedProtomol.Match(logLine.LineRaw);
+         //   if (mFramesCompletedProtomol.Success)
+         //   {
+         //      try
+         //      {
+         //         frame.RawFramesComplete = Int32.Parse(mFramesCompletedProtomol.Result("${Completed}"));
+         //         frame.RawFramesTotal = Int32.Parse(mFramesCompletedProtomol.Result("${Total}"));
+         //      }
+         //      catch (FormatException ex)
+         //      {
+         //         throw new FormatException(String.Format("Failed to parse raw frame values from '{0}'.", logLine), ex);
+         //      }
+
+         //      double calculatedPercent = ((double)frame.RawFramesComplete / frame.RawFramesTotal) * 100;
+         //      int framePercent = (int)Math.Floor(calculatedPercent);
+               
+         //      frame.TimeStampString = mFramesCompletedProtomol.Result("${Timestamp}");
+         //      frame.FrameID = framePercent;
+               
+         //      return true;
+         //   }
+            
+         //   return false;
+         //}
+         /*******************/
+         
+         return false;
+      }
+
+      /// <summary>
+      /// Check the given log line for Completed Frame information (GPU Only).
+      /// </summary>
+      /// <param name="logLine">Log Line</param>
+      /// <param name="frame">Frame Data</param>
+      private static bool CheckForCompletedGpuFrame(LogLine logLine, FrameData frame)
+      {
+         Match mFramesCompletedGpu = rFramesCompletedGpu.Match(logLine.LineRaw);
+         if (mFramesCompletedGpu.Success)
+         {
+            logLine.LineType = LogLineType.WorkUnitFrame;
+
+            frame.RawFramesComplete = Int32.Parse(mFramesCompletedGpu.Result("${Percent}"));
+            frame.RawFramesTotal = 100; //Instance.CurrentProtein.Frames
+            //TODO: Hard code here, 100 GPU Frames. Could I get this from the Project Data?
+            //I could but what's the point, 100% is 100%.
+
+            frame.TimeStampString = mFramesCompletedGpu.Result("${Timestamp}");
+            frame.FrameID = frame.RawFramesComplete;
+            
+            return true;
+         }
+         
+         return false;
+      }
+
       public override string ToString()
       {
          return _LineRaw;
       } 
       #endregion
+   }
+   
+   internal class FrameData
+   {
+      private string _TimeStampString;
+      public string TimeStampString
+      {
+         get { return _TimeStampString; }
+         set { _TimeStampString = value; }
+      }
+   
+      private int _RawFramesComplete;
+      public int RawFramesComplete
+      {
+         get { return _RawFramesComplete; }
+         set { _RawFramesComplete = value; }
+      }
+
+      private int _RawFramesTotal;
+      public int RawFramesTotal
+      {
+         get { return _RawFramesTotal; }
+         set { _RawFramesTotal = value; }
+      }
+
+      private int _FrameID;
+      public int FrameID
+      {
+         get { return _FrameID; }
+         set { _FrameID = value; }
+      }
    }
 }

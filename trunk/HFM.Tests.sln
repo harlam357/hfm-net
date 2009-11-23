@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Helpers.Tests", "HFM.He
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Instances.Tests", "HFM.Instances.Tests\HFM.Instances.Tests.csproj", "{C3D60E2F-E00D-485B-8B78-F285132AA229}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Proteins.Tests", "HFM.Proteins.Tests\HFM.Proteins.Tests.csproj", "{04744056-F956-4E20-B229-28E2FC154509}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{C3D60E2F-E00D-485B-8B78-F285132AA229}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3D60E2F-E00D-485B-8B78-F285132AA229}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3D60E2F-E00D-485B-8B78-F285132AA229}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04744056-F956-4E20-B229-28E2FC154509}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04744056-F956-4E20-B229-28E2FC154509}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04744056-F956-4E20-B229-28E2FC154509}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04744056-F956-4E20-B229-28E2FC154509}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

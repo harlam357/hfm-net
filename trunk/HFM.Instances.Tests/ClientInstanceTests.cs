@@ -21,6 +21,7 @@ using System;
 
 using NUnit.Framework;
 
+using HFM.Proteins;
 using HFM.Preferences;
 
 namespace HFM.Instances.Tests
@@ -33,7 +34,19 @@ namespace HFM.Instances.Tests
       {
          // Setup Test Instance
          ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
+         // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
+         // Inject our own delegate for getting the Protein
+         // to isolate from what's actually available in the
+         // ProteinCollection Cache (or psummary).
+         ProteinCollection.GetProteinHandler = delegate()
+         {
+            Protein p = new Protein();
+            p.ProjectNumber = 2677;
+            p.Core = "GROCVS";
+            return p;
+         };
+         
          Instance.InstanceName = "SMP Test FAHlog 3";
          Instance.Path = "..\\..\\TestFiles";
          Instance.RemoteFAHLogFilename = "SMP Test FAHlog 3.txt";
@@ -58,7 +71,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(1, Instance.CurrentUnitInfo.FramesObserved);
          Assert.AreEqual(0, Instance.CurrentUnitInfo.FramesComplete);
          Assert.AreEqual(0, Instance.CurrentUnitInfo.PercentComplete);
-         Assert.AreEqual(0, Instance.CurrentUnitInfo.LastUnitFramePercent);
+         Assert.AreEqual(0, Instance.CurrentUnitInfo.LastUnitFrameID);
          Assert.AreEqual(0, Instance.CurrentUnitInfo.RawFramesComplete);
          Assert.AreEqual(250000, Instance.CurrentUnitInfo.RawFramesTotal);
          
@@ -75,7 +88,19 @@ namespace HFM.Instances.Tests
       {
          // Setup Test Instance
          ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
+         // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
+         // Inject our own delegate for getting the Protein
+         // to isolate from what's actually available in the
+         // ProteinCollection Cache (or psummary).
+         ProteinCollection.GetProteinHandler = delegate()
+         {
+            Protein p = new Protein();
+            p.ProjectNumber = 5101;
+            p.Core = "GRO-SMP";
+            return p;
+         };
+         
          Instance.InstanceName = "SMP Test FAHlog INTERRUPTED Bad WUs 2";
          Instance.Path = "..\\..\\TestFiles";
          Instance.RemoteFAHLogFilename = "SMP Test INTERRUPTED Bad WUs FAHlog 2.txt";
@@ -100,7 +125,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(6, Instance.CurrentUnitInfo.FramesObserved);
          Assert.AreEqual(7, Instance.CurrentUnitInfo.FramesComplete);
          Assert.AreEqual(7, Instance.CurrentUnitInfo.PercentComplete);
-         Assert.AreEqual(7, Instance.CurrentUnitInfo.LastUnitFramePercent);
+         Assert.AreEqual(7, Instance.CurrentUnitInfo.LastUnitFrameID);
          Assert.AreEqual(140000, Instance.CurrentUnitInfo.RawFramesComplete);
          Assert.AreEqual(2000000, Instance.CurrentUnitInfo.RawFramesTotal);
 
@@ -117,7 +142,19 @@ namespace HFM.Instances.Tests
       {
          // Setup Test Instance
          ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
+         // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
+         // Inject our own delegate for getting the Protein
+         // to isolate from what's actually available in the
+         // ProteinCollection Cache (or psummary).
+         ProteinCollection.GetProteinHandler = delegate()
+         {
+            Protein p = new Protein();
+            p.ProjectNumber = 2669;
+            p.Core = "GROCVS";
+            return p;
+         };
+         
          Instance.InstanceName = "SMP Test 4";
          Instance.Path = "..\\..\\TestFiles";
          Instance.RemoteFAHLogFilename = "SMP Test 4 FAHlog.txt";
@@ -145,7 +182,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(31, Instance.CurrentUnitInfo.FramesObserved);
          Assert.AreEqual(32, Instance.CurrentUnitInfo.FramesComplete);
          Assert.AreEqual(32, Instance.CurrentUnitInfo.PercentComplete);
-         Assert.AreEqual(32, Instance.CurrentUnitInfo.LastUnitFramePercent);
+         Assert.AreEqual(32, Instance.CurrentUnitInfo.LastUnitFrameID);
          Assert.AreEqual(80000, Instance.CurrentUnitInfo.RawFramesComplete);
          Assert.AreEqual(250000, Instance.CurrentUnitInfo.RawFramesTotal);
 
@@ -162,7 +199,19 @@ namespace HFM.Instances.Tests
       {
          // Setup Test Instance
          ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
+         // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
+         // Inject our own delegate for getting the Protein
+         // to isolate from what's actually available in the
+         // ProteinCollection Cache (or psummary).
+         ProteinCollection.GetProteinHandler = delegate()
+         {
+            Protein p = new Protein();
+            p.ProjectNumber = 5756;
+            p.Core = "GROGPU2";
+            return p;
+         };
+         
          Instance.InstanceName = "GPU Test FAHlog 3 EUE Pause";
          Instance.Path = "..\\..\\TestFiles";
          Instance.RemoteFAHLogFilename = "GPU Test FAHlog 3 EUE Pause.txt";
@@ -187,7 +236,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(4, Instance.CurrentUnitInfo.FramesObserved);
          Assert.AreEqual(4, Instance.CurrentUnitInfo.FramesComplete);
          Assert.AreEqual(4, Instance.CurrentUnitInfo.PercentComplete);
-         Assert.AreEqual(4, Instance.CurrentUnitInfo.LastUnitFramePercent);
+         Assert.AreEqual(4, Instance.CurrentUnitInfo.LastUnitFrameID);
          Assert.AreEqual(4, Instance.CurrentUnitInfo.RawFramesComplete);
          Assert.AreEqual(100, Instance.CurrentUnitInfo.RawFramesTotal);
 

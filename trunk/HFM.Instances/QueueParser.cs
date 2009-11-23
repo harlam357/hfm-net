@@ -19,8 +19,6 @@
 
 using System.Collections.Generic;
 
-using HFM.Proteins;
-
 namespace HFM.Instances
 {
    internal static class QueueParser
@@ -33,11 +31,10 @@ namespace HFM.Instances
       /// <param name="ClientIsOnVirtualMachine">Client on VM (Times as UTC) Flag</param>
       internal static void ParseQueueEntry(QueueEntry entry, UnitInfo parsedUnitInfo, bool ClientIsOnVirtualMachine)
       {
-         if (entry.EntryStatus.Equals(QueueEntryStatus.Finished) ||
-             entry.EntryStatus.Equals(QueueEntryStatus.FoldingNow) ||
-             entry.EntryStatus.Equals(QueueEntryStatus.Queued) ||
-             entry.EntryStatus.Equals(QueueEntryStatus.ReadyForUpload) ||
-             entry.EntryStatus.Equals(QueueEntryStatus.FetchingFromServer))
+         if ((entry.EntryStatus.Equals(QueueEntryStatus.Unknown) ||
+              entry.EntryStatus.Equals(QueueEntryStatus.Empty) ||
+              entry.EntryStatus.Equals(QueueEntryStatus.Garbage) ||
+              entry.EntryStatus.Equals(QueueEntryStatus.Abandonded)) == false)
          {
             /* Tag (Could be read here or through the unitinfo.txt file) */
             parsedUnitInfo.ProteinTag = entry.WorkUnitTag;

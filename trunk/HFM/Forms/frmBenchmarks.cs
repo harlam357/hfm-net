@@ -295,6 +295,7 @@ namespace HFM.Forms
          {
             txtProjectID.Text = protein.WorkUnitName;
             txtCredit.Text = protein.Credit.ToString();
+            txtKFactor.Text = protein.KFactor.ToString();
             txtFrames.Text = protein.Frames.ToString();
             txtAtoms.Text = protein.NumAtoms.ToString();
             txtCore.Text = protein.Core;
@@ -382,80 +383,95 @@ namespace HFM.Forms
       /// <param name="benchmarks">Benchmarks Collection to Plot</param>
       private static void CreatePpdGraph(ZedGraphControl zg, string[] ProjectInfo, IEnumerable<InstanceProteinBenchmark> benchmarks)
       {
-         // get a reference to the GraphPane
-         GraphPane myPane = zg.GraphPane;
+         Debug.Assert(zg != null);
          
-         // Clear the bars
-         myPane.CurveList.Clear();
-         // Clear the bar labels
-         myPane.GraphObjList.Clear();
-
-         // Scale YAxis In Thousands?
-         bool InThousands = false;
-         
-         // Create the bars for each benchmark
-         int i = 0;
-         foreach (InstanceProteinBenchmark benchmark in benchmarks)
+         try
          {
-            if (benchmark.MinimumFrameTimePPD >= 1000 || benchmark.AverageFrameTimePPD >= 1000)
+            // get a reference to the GraphPane
+            GraphPane myPane = zg.GraphPane;
+
+            // Clear the bars
+            myPane.CurveList.Clear();
+            // Clear the bar labels
+            myPane.GraphObjList.Clear();
+            // Clear the XAxis Project Information
+            myPane.XAxis.Title.Text = String.Empty;
+
+            // If no Project Information, get out
+            if (ProjectInfo.Length == 0)
             {
-               InThousands = true;
+               return;
             }
 
-            double[] yPoints = new double[2];
-            yPoints[0] = Math.Round(benchmark.MinimumFrameTimePPD, PreferenceSet.Instance.DecimalPlaces);
-            yPoints[1] = Math.Round(benchmark.AverageFrameTimePPD, PreferenceSet.Instance.DecimalPlaces);
+            // Scale YAxis In Thousands?
+            bool InThousands = false;
 
-            CreateBar(i, myPane, benchmark.OwningInstanceName, yPoints);
-            i++;
-         }
+            // Create the bars for each benchmark
+            int i = 0;
+            foreach (InstanceProteinBenchmark benchmark in benchmarks)
+            {
+               if (benchmark.MinimumFrameTimePPD >= 1000 || benchmark.AverageFrameTimePPD >= 1000)
+               {
+                  InThousands = true;
+               }
 
-         // Create the bar labels
-         BarItem.CreateBarLabels(myPane, true, String.Empty, zg.Font.Name, zg.Font.Size, Color.Black, true, false, false);
+               double[] yPoints = new double[2];
+               yPoints[0] = Math.Round(benchmark.MinimumFrameTimePPD, PreferenceSet.Instance.DecimalPlaces);
+               yPoints[1] = Math.Round(benchmark.AverageFrameTimePPD, PreferenceSet.Instance.DecimalPlaces);
 
-         // Set the Titles
-         myPane.Title.Text = "HFM.NET - Client Benchmarks";
-         StringBuilder sb = new StringBuilder();
-         for (i = 0; i < ProjectInfo.Length - 2; i++)
-         {
+               CreateBar(i, myPane, benchmark.OwningInstanceName, yPoints);
+               i++;
+            }
+
+            // Create the bar labels
+            BarItem.CreateBarLabels(myPane, true, String.Empty, zg.Font.Name, zg.Font.Size, Color.Black, true, false, false);
+
+            // Set the Titles
+            myPane.Title.Text = "HFM.NET - Client Benchmarks";
+            StringBuilder sb = new StringBuilder();
+            for (i = 0; i < ProjectInfo.Length - 2; i++)
+            {
+               sb.Append(ProjectInfo[i]);
+               sb.Append(" / ");
+            }
             sb.Append(ProjectInfo[i]);
-            sb.Append(" / ");
+            myPane.XAxis.Title.Text = sb.ToString();
+            myPane.YAxis.Title.Text = "PPD";
+
+            // Draw the X tics between the labels instead of at the labels
+            myPane.XAxis.MajorTic.IsBetweenLabels = true;
+            // Set the XAxis labels
+            string[] labels = new string[] {"Min. Frame Time", "Avg. Frame Time"};
+            myPane.XAxis.Scale.TextLabels = labels;
+            // Set the XAxis to Text type
+            myPane.XAxis.Type = AxisType.Text;
+
+            // Don't show YAxis.Scale as 10^3         
+            myPane.YAxis.Scale.MagAuto = false;
+            // Set the YAxis Steps
+            if (InThousands)
+            {
+               myPane.YAxis.Scale.MajorStep = 1000;
+               myPane.YAxis.Scale.MinorStep = 500;
+            }
+            else
+            {
+               myPane.YAxis.Scale.MajorStep = 100;
+               myPane.YAxis.Scale.MinorStep = 10;
+            }
+
+            // Fill the Axis and Pane backgrounds
+            myPane.Chart.Fill = new Fill(Color.White, Color.FromArgb(255, 255, 166), 90F);
+            myPane.Fill = new Fill(Color.FromArgb(250, 250, 255));
          }
-         sb.Append(ProjectInfo[i]);
-         myPane.XAxis.Title.Text = sb.ToString();
-         myPane.YAxis.Title.Text = "PPD";
-
-         // Draw the X tics between the labels instead of at the labels
-         myPane.XAxis.MajorTic.IsBetweenLabels = true;
-         // Set the XAxis labels
-         string[] labels = new string[] { "Min. Frame Time", "Avg. Frame Time" };
-         myPane.XAxis.Scale.TextLabels = labels;
-         // Set the XAxis to Text type
-         myPane.XAxis.Type = AxisType.Text;
-
-         // Don't show YAxis.Scale as 10^3         
-         myPane.YAxis.Scale.MagAuto = false;
-         // Set the YAxis Steps
-         if (InThousands)
+         finally
          {
-            myPane.YAxis.Scale.MajorStep = 1000;
-            myPane.YAxis.Scale.MinorStep = 500;
+            // Tell ZedGraph to refigure the
+            // axes since the data have changed
+            zg.AxisChange();
+            // Refresh the control
+            zg.Refresh();
          }
-         else
-         {
-            myPane.YAxis.Scale.MajorStep = 100;
-            myPane.YAxis.Scale.MinorStep = 10;
-         }
-
-         // Fill the Axis and Pane backgrounds
-         myPane.Chart.Fill = new Fill(Color.White, Color.FromArgb(255, 255, 166), 90F);
-         myPane.Fill = new Fill(Color.FromArgb(250, 250, 255));
-
-         // Tell ZedGraph to refigure the
-         // axes since the data have changed
-         zg.AxisChange();
-         // Refresh the control
-         zg.Refresh();
       }
       
       /// <summary>
@@ -466,58 +482,73 @@ namespace HFM.Forms
       /// <param name="benchmarks">Benchmarks Collection to Plot</param>
       private static void CreateFrameTimeGraph(ZedGraphControl zg, string[] ProjectInfo, IEnumerable<InstanceProteinBenchmark> benchmarks)
       {
-         // get a reference to the GraphPane
-         GraphPane myPane = zg.GraphPane;
+         Debug.Assert(zg != null);
 
-         // Clear the bars
-         myPane.CurveList.Clear();
-         // Clear the bar labels
-         myPane.GraphObjList.Clear();
-         
-         // Create the bars for each benchmark
-         int i = 0;
-         foreach (InstanceProteinBenchmark benchmark in benchmarks)
+         try
          {
-            double[] yPoints = new double[2];
-            yPoints[0] = benchmark.MinimumFrameTime.TotalSeconds;
-            yPoints[1] = benchmark.AverageFrameTime.TotalSeconds;
+            // get a reference to the GraphPane
+            GraphPane myPane = zg.GraphPane;
 
-            CreateBar(i, myPane, benchmark.OwningInstanceName, yPoints);
-            i++;
-         }
+            // Clear the bars
+            myPane.CurveList.Clear();
+            // Clear the bar labels
+            myPane.GraphObjList.Clear();
+            // Clear the XAxis Project Information
+            myPane.XAxis.Title.Text = String.Empty;
 
-         // Create the bar labels
-         BarItem.CreateBarLabels(myPane, true, String.Empty, zg.Font.Name, zg.Font.Size, Color.Black, true, false, false);
+            // If no Project Information, get out
+            if (ProjectInfo.Length == 0)
+            {
+               return;
+            }
 
-         // Set the Titles
-         myPane.Title.Text = "HFM.NET - Client Benchmarks";
-         StringBuilder sb = new StringBuilder();
-         for (i = 0; i < ProjectInfo.Length - 2; i++)
-         {
+            // Create the bars for each benchmark
+            int i = 0;
+            foreach (InstanceProteinBenchmark benchmark in benchmarks)
+            {
+               double[] yPoints = new double[2];
+               yPoints[0] = benchmark.MinimumFrameTime.TotalSeconds;
+               yPoints[1] = benchmark.AverageFrameTime.TotalSeconds;
+
+               CreateBar(i, myPane, benchmark.OwningInstanceName, yPoints);
+               i++;
+            }
+
+            // Create the bar labels
+            BarItem.CreateBarLabels(myPane, true, String.Empty, zg.Font.Name, zg.Font.Size, Color.Black, true, false, false);
+
+            // Set the Titles
+            myPane.Title.Text = "HFM.NET - Client Benchmarks";
+            StringBuilder sb = new StringBuilder();
+            for (i = 0; i < ProjectInfo.Length - 2; i++)
+            {
+               sb.Append(ProjectInfo[i]);
+               sb.Append(" / ");
+            }
             sb.Append(ProjectInfo[i]);
-            sb.Append(" / ");
+            myPane.XAxis.Title.Text = sb.ToString();
+            myPane.YAxis.Title.Text = "Frame Time (Seconds)";
+
+            // Draw the X tics between the labels instead of at the labels
+            myPane.XAxis.MajorTic.IsBetweenLabels = true;
+            // Set the XAxis labels
+            string[] labels = new string[] {"Min. Frame Time", "Avg. Frame Time"};
+            myPane.XAxis.Scale.TextLabels = labels;
+            // Set the XAxis to Text type
+            myPane.XAxis.Type = AxisType.Text;
+
+            // Fill the Axis and Pane backgrounds
+            myPane.Chart.Fill = new Fill(Color.White, Color.FromArgb(255, 255, 166), 90F);
+            myPane.Fill = new Fill(Color.FromArgb(250, 250, 255));
          }
-         sb.Append(ProjectInfo[i]);
-         myPane.XAxis.Title.Text = sb.ToString();
-         myPane.YAxis.Title.Text = "Frame Time (Seconds)";
-
-         // Draw the X tics between the labels instead of at the labels
-         myPane.XAxis.MajorTic.IsBetweenLabels = true;
-         // Set the XAxis labels
-         string[] labels = new string[] { "Min. Frame Time", "Avg. Frame Time" };
-         myPane.XAxis.Scale.TextLabels = labels;
-         // Set the XAxis to Text type
-         myPane.XAxis.Type = AxisType.Text;
-
-         // Fill the Axis and Pane backgrounds
-         myPane.Chart.Fill = new Fill(Color.White, Color.FromArgb(255, 255, 166), 90F);
-         myPane.Fill = new Fill(Color.FromArgb(250, 250, 255));
-
-         // Tell ZedGraph to refigure the
-         // axes since the data have changed
-         zg.AxisChange();
-         // Refresh the control
-         zg.Refresh();
+         finally
+         {
+            // Tell ZedGraph to refigure the
+            // axes since the data have changed
+            zg.AxisChange();
+            // Refresh the control
+            zg.Refresh();
+         }
       }
 
       private static void CreateBar(int index, GraphPane myPane, string InstanceName, double[] y)
