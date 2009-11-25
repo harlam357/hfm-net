@@ -96,7 +96,7 @@ namespace HFM.Instances
                {
                   result = true;
                }
-               if (unit.UnitFrames[i].FrameID == unit.CurrentProtein.Frames)
+               if (unit.UnitFrames[i].FrameID == unit.Frames)
                {
                   UnitInfoCollection.WriteCompletedUnitInfo(unit);
                }

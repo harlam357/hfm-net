@@ -2,19 +2,19 @@
 <Instance Name="MyMachine">
    <HFMVersion>0</HFMVersion>
    <UnitInfo>
-      <DownloadTime>10 August 09:37:33</DownloadTime>
       <FramesComplete>35</FramesComplete>
       <PercentComplete>35</PercentComplete>
       <TimePerFrame>1h 15m 44s</TimePerFrame>
-      <ExpectedCompletionDate>16 August 2006 1:46 am</ExpectedCompletionDate>
-   </UnitInfo>
-   <Computer>
       <EstPPD>82.36</EstPPD>
       <EstPPW>576.54</EstPPW>
       <EstUPD>0.46</EstUPD>
       <EstUPW>3.77</EstUPW>
+      <CompletedProjects>5</CompletedProjects>
+      <FailedProjects>0</FailedProjects>
       <TotalProjects>243</TotalProjects>
-   </Computer>
+      <DownloadTime>10 August 09:37:33</DownloadTime>
+      <ExpectedCompletionDate>16 August 2006 1:46 am</ExpectedCompletionDate>
+   </UnitInfo>
    <Protein>
       <ProjectNumber>1814</ProjectNumber>
       <ServerIP>171.65.103.158 </ServerIP>
@@ -23,9 +23,10 @@
       <PreferredDays>30</PreferredDays>
       <MaxDays>44</MaxDays>
       <Credit>153</Credit>
+      <KFactor>0</KFactor>
       <Frames>100</Frames>
       <Core>Amber</Core>
-      <Description>This is the BLAH</Description>
+      <Description>Project Description</Description>
       <Contact>spark7</Contact>
    </Protein>
    <UnitLog>

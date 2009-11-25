@@ -77,14 +77,14 @@ namespace HFM.Instances
             parsedUnitInfo.Team = (int)entry.TeamNumber;
 
             /* Project (R/C/G) Match */
-            List<int> ProjectID = new List<int>(4);
-      
-            ProjectID.Add(entry.ProjectID);
-            ProjectID.Add(entry.ProjectRun);
-            ProjectID.Add(entry.ProjectClone);
-            ProjectID.Add(entry.ProjectGen);
-            
-            ClientInstance.DoProjectIDMatch(parsedUnitInfo, ProjectID);
+            List<int> ProjectRCG = new List<int>(4);
+
+            ProjectRCG.Add(entry.ProjectID);
+            ProjectRCG.Add(entry.ProjectRun);
+            ProjectRCG.Add(entry.ProjectClone);
+            ProjectRCG.Add(entry.ProjectGen);
+
+            parsedUnitInfo.DoProjectIDMatch(ProjectRCG);
          }
       }
    }

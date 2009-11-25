@@ -19,9 +19,11 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 using HFM.Instrumentation;
 using HFM.Preferences;
@@ -42,27 +44,99 @@ namespace HFM.Instances
    #endregion
 
    /// <summary>
-   /// Contains the state of a protein in progress
+   /// Contains the State of the Work Unit in Progress
    /// </summary>
    [Serializable]
    public class UnitInfo : IOwnedByClientInstance
    {
       #region Const
-      public const string UsernameDefault = "Unknown";
-      public const int TeamDefault = 0;
+      // Folding ID and Team Defaults
+      internal const string FoldingIDDefault = "Unknown";
+      internal const int TeamDefault = 0;
       
+      // Work Unit Result Strings
       private const string FinishedUnit = "FINISHED_UNIT";
       private const string EarlyUnitEnd = "EARLY_UNIT_END";
       private const string UnstableMachine = "UNSTABLE_MACHINE";
       private const string Interrupted = "INTERRUPTED";
       #endregion
+
+      #region Owner Data Properties
+      /// <summary>
+      /// Name of the Client Instance that owns this UnitInfo
+      /// </summary>
+      private readonly string _OwningInstanceName;
+      /// <summary>
+      /// Name of the Client Instance that owns this UnitInfo
+      /// </summary>
+      public string OwningInstanceName
+      {
+         get { return _OwningInstanceName; }
+         //set { _OwningInstanceName = value; }
+      }
+
+      /// <summary>
+      /// Path of the Client Instance that owns this UnitInfo
+      /// </summary>
+      private readonly string _OwningInstancePath;
+      /// <summary>
+      /// Path of the Client Instance that owns this UnitInfo
+      /// </summary>
+      public string OwningInstancePath
+      {
+         get { return _OwningInstancePath; }
+         //set { _OwningInstancePath = value; }
+      }
+      #endregion
+
+      #region Retrieval Time Property
+      /// <summary>
+      /// Local time the logs used to generate this UnitInfo were retrieved
+      /// </summary>
+      private readonly DateTime _UnitRetrievalTime;
+      /// <summary>
+      /// Local time the logs used to generate this UnitInfo were retrieved
+      /// </summary>
+      internal DateTime UnitRetrievalTime
+      {
+         get { return _UnitRetrievalTime; }
+      } 
+      #endregion
+
+      #region Folding ID and Team Properties
+      /// <summary>
+      /// The Folding ID (Username) attached to this work unit
+      /// </summary>
+      private string _FoldingID;
+      /// <summary>
+      /// The Folding ID (Username) attached to this work unit
+      /// </summary>
+      internal string FoldingID
+      {
+         get { return _FoldingID; }
+         set { _FoldingID = value; }
+      }
+
+      /// <summary>
+      /// The Team number attached to this work unit
+      /// </summary>
+      private Int32 _Team;
+      /// <summary>
+      /// The Team number attached to this work unit
+      /// </summary>
+      internal Int32 Team
+      {
+         get { return _Team; }
+         set { _Team = value; }
+      }
+      #endregion
    
-      #region CTOR
+      #region Constructors
       /// <summary>
       /// Overload Constructor
       /// </summary>
       public UnitInfo(string ownerName, string ownerPath, DateTime unitRetrievalTime)
-         : this(ownerName, ownerPath, unitRetrievalTime, UsernameDefault, TeamDefault)
+         : this(ownerName, ownerPath, unitRetrievalTime, FoldingIDDefault, TeamDefault)
       {
 
       }
@@ -88,8 +162,8 @@ namespace HFM.Instances
          TypeOfClient = ClientType.Unknown;
          DownloadTime = DateTime.MinValue;
          DueTime = DateTime.MinValue;
+         UnitStartTimeStamp = TimeSpan.Zero;
          FinishedTime = DateTime.MinValue;
-         UnitStartTime = TimeSpan.Zero;
          CoreVersion = String.Empty;
          ProjectID = 0;
          ProjectRun = 0;
@@ -97,214 +171,16 @@ namespace HFM.Instances
          ProjectGen = 0;
          ProteinName = String.Empty;
          ProteinTag = String.Empty;
-         RawFramesComplete = 0;
-         RawFramesTotal = 0;
          UnitResult = WorkUnitResult.Unknown;
 
          CurrentProtein = new Protein();
+
+         RawFramesComplete = 0;
+         RawFramesTotal = 0;
       } 
       #endregion
 
-      #region Owner Data Properties
-      /// <summary>
-      /// Name of the Client Instance that owns this UnitInfo
-      /// </summary>
-      private string _OwningInstanceName;
-      /// <summary>
-      /// Name of the Client Instance that owns this UnitInfo
-      /// </summary>
-      public string OwningInstanceName
-      {
-         get { return _OwningInstanceName; }
-         set { _OwningInstanceName = value; }
-      }
-
-      /// <summary>
-      /// Path of the Client Instance that owns this UnitInfo
-      /// </summary>
-      private string _OwningInstancePath;
-      /// <summary>
-      /// Path of the Client Instance that owns this UnitInfo
-      /// </summary>
-      public string OwningInstancePath
-      {
-         get { return _OwningInstancePath; }
-         set { _OwningInstancePath = value; }
-      }
-      #endregion
-
-      #region Read Only Properties
-      
-      /// <summary>
-      /// Formatted Project (Run, Clone, Gen) Information
-      /// </summary>
-      public string ProjectRunCloneGen
-      {
-         get
-         {
-            return String.Format("P{0} (R{1}, C{2}, G{3})", ProjectID,
-                                                            ProjectRun,
-                                                            ProjectClone,
-                                                            ProjectGen);
-         }
-      }
-
-      /// <summary>
-      /// Time per section based on current PPD calculation setting (readonly)
-      /// </summary>
-      public Int32 RawTimePerSection
-      {
-         get
-         {
-            switch (PreferenceSet.Instance.PpdCalculation)
-            {
-               case ePpdCalculation.LastFrame:
-                  return RawTimePerLastSection;
-               case ePpdCalculation.LastThreeFrames:
-                  return RawTimePerThreeSections;
-               case ePpdCalculation.AllFrames:
-                  return RawTimePerAllSections;
-               case ePpdCalculation.EffectiveRate:
-                  return RawTimePerUnitDownload;
-            }
-
-            return 0;
-         }
-      }
-      
-      /// <summary>
-      /// Work unit deadline
-      /// </summary>
-      public DateTime Deadline
-      {
-         get 
-         {
-            if (DownloadTime.Equals(DateTime.MinValue) == false)
-            {
-               return DownloadTime.AddDays(CurrentProtein.PreferredDays);
-            }
-            
-            return DateTime.MinValue;
-         }
-      }
-      
-      /// <summary>
-      /// Flag specifying if Download Time value is Unknown
-      /// </summary>
-      public bool DownloadTimeUnknown
-      {
-         get { return DownloadTime.Equals(DateTime.MinValue); }
-      }
-
-      /// <summary>
-      /// Flag specifying if Due Time value is Unknown
-      /// </summary>
-      public bool DueTimeUnknown
-      {
-         get { return DueTime.Equals(DateTime.MinValue); }
-      }
-      
-      /// <summary>
-      /// Returns true if Project (R/C/G) has not been identified
-      /// </summary>
-      public bool ProjectIsUnknown
-      {
-         get 
-         {
-            return ProjectID == 0 &&
-                   ProjectRun == 0 &&
-                   ProjectClone == 0 &&
-                   ProjectGen == 0;
-         }
-      }
-
-      /// <summary>
-      /// Flag specifying if Protein Tag value is Unknown
-      /// </summary>
-      public bool ProteinTagUnknown
-      {
-         get { return ProteinTag.Length == 0; }
-      }
-
-      #region Values Based on UnitFrame Data
-      /// <summary>
-      /// Timestamp from the last completed frame
-      /// </summary>
-      public TimeSpan TimeOfLastFrame
-      {
-         get
-         {
-            if (_CurrentFrame != null)
-            {
-               return _CurrentFrame.TimeOfFrame;
-            }
-
-            return TimeSpan.Zero;
-         }
-      }
-
-      /// <summary>
-      /// Last Frame ID based on UnitFrame Data
-      /// </summary>
-      public Int32 LastUnitFrameID
-      {
-         get
-         {
-            for (int i = CurrentProtein.Frames; i >= 0; i--)
-            {
-               if (UnitFrames[i] != null)
-               {
-                  return UnitFrames[i].FrameID;
-               }
-            }
-
-            return 0;
-         }
-      }
-      #endregion
-      
-      #endregion
-
-      #region Public Properties and Related Private Members
-      
-      /// <summary>
-      /// When the the used to generate this UnitInfo was retrieved
-      /// </summary>
-      private readonly DateTime _UnitRetrievalTime;
-      /// <summary>
-      /// When the log files were last successfully retrieved
-      /// </summary>
-      public DateTime UnitRetrievalTime
-      {
-         get { return _UnitRetrievalTime; }
-      }
-
-      /// <summary>
-      /// The Folding ID (Username) attached to this work unit
-      /// </summary>
-      private string _FoldingID;
-      /// <summary>
-      /// The Folding ID (Username) attached to this work unit
-      /// </summary>
-      public string FoldingID
-      {
-         get { return _FoldingID; }
-         set { _FoldingID = value; }
-      }
-
-      /// <summary>
-      /// The Team number attached to this work unit
-      /// </summary>
-      private Int32 _Team;
-      /// <summary>
-      /// The Team number attached to this work unit
-      /// </summary>
-      public Int32 Team
-      {
-         get { return _Team; }
-         set { _Team = value; }
-      }
-      
+      #region Unit Level Members
       /// <summary>
       /// Client Type for this work unit
       /// </summary>
@@ -325,23 +201,102 @@ namespace HFM.Instances
       /// <summary>
       /// Date/time the unit was downloaded
       /// </summary>
-      public DateTime DownloadTime
+      internal DateTime DownloadTime
       {
          get { return _DownloadTime; }
          set { _DownloadTime = value; }
       }
 
       /// <summary>
-      /// Date/time the unit is due (preferred deadline)
+      /// Flag specifying if Download Time is Unknown
+      /// </summary>
+      internal bool DownloadTimeUnknown
+      {
+         get { return DownloadTime.Equals(DateTime.MinValue); }
+      }
+
+      /// <summary>
+      /// Work Unit Preferred Deadline
+      /// </summary>
+      internal DateTime PreferredDeadline
+      {
+         get
+         {
+            if (DownloadTimeUnknown == false)
+            {
+               return DownloadTime.AddDays(CurrentProtein.PreferredDays);
+            }
+
+            return DateTime.MinValue;
+         }
+      }
+
+      /// <summary>
+      /// Flag specifying if Preferred Deadline is Unknown
+      /// </summary>
+      internal bool PreferredDeadlineUnknown
+      {
+         get { return PreferredDeadline.Equals(DateTime.MinValue); }
+      }
+
+      /// <summary>
+      /// Work Unit Preferred Deadline
+      /// </summary>
+      internal DateTime FinalDeadline
+      {
+         get
+         {
+            if (DownloadTimeUnknown == false)
+            {
+               return DownloadTime.AddDays(CurrentProtein.MaxDays);
+            }
+
+            return DateTime.MinValue;
+         }
+      }
+
+      /// <summary>
+      /// Flag specifying if Final Deadline is Unknown
+      /// </summary>
+      internal bool FinalDeadlineUnknown
+      {
+         get { return FinalDeadline.Equals(DateTime.MinValue); }
+      }
+
+      /// <summary>
+      /// Date/time the unit is due (Final Deadline)
       /// </summary>
       private DateTime _DueTime = DateTime.MinValue;
       /// <summary>
       /// Date/time the unit is due (preferred deadline)
       /// </summary>
-      public DateTime DueTime
+      internal DateTime DueTime
       {
          get { return _DueTime; }
          set { _DueTime = value; }
+      }
+
+      /// <summary>
+      /// Flag specifying if Due Time is Unknown
+      /// </summary>
+      internal bool DueTimeUnknown
+      {
+         get { return DueTime.Equals(DateTime.MinValue); }
+      }
+
+      /// <summary>
+      /// Unit Start Time Stamp (Time Stamp from First Parsable Line in LogLines)
+      /// </summary>
+      /// <remarks>Used to Determine Status when a LogLine Time Stamp is not available - See ClientInstance.HandleReturnedStatus</remarks>
+      private TimeSpan _UnitStartTime = TimeSpan.Zero;
+      /// <summary>
+      /// Unit Start Time Stamp (Time Stamp from First Parsable Line in LogLines)
+      /// </summary>
+      /// <remarks>Used to Determine Status when a LogLine Time Stamp is not available - See ClientInstance.HandleReturnedStatus</remarks>
+      internal TimeSpan UnitStartTimeStamp
+      {
+         get { return _UnitStartTime; }
+         set { _UnitStartTime = value; }
       }
 
       /// <summary>
@@ -351,23 +306,10 @@ namespace HFM.Instances
       /// <summary>
       /// Date/time the unit finished
       /// </summary>
-      public DateTime FinishedTime
+      internal DateTime FinishedTime
       {
          get { return _FinishedTime; }
          set { _FinishedTime = value; }
-      }
-
-      /// <summary>
-      /// Unit Start Time Stamp
-      /// </summary>
-      private TimeSpan _UnitStartTime = TimeSpan.Zero;
-      /// <summary>
-      /// Unit Start Time Stamp
-      /// </summary>
-      public TimeSpan UnitStartTime
-      {
-         get { return _UnitStartTime; }
-         set { _UnitStartTime = value; }
       }
 
       /// <summary>
@@ -377,7 +319,7 @@ namespace HFM.Instances
       /// <summary>
       /// Core Version Number
       /// </summary>
-      public string CoreVersion
+      internal string CoreVersion
       {
          get { return _CoreVersion; }
          set { _CoreVersion = value; }
@@ -434,6 +376,34 @@ namespace HFM.Instances
          get { return _ProjectGen; }
          set { _ProjectGen = value; }
       }
+
+      /// <summary>
+      /// Returns true if Project (R/C/G) has not been identified
+      /// </summary>
+      public bool ProjectIsUnknown
+      {
+         get
+         {
+            return ProjectID == 0 &&
+                   ProjectRun == 0 &&
+                   ProjectClone == 0 &&
+                   ProjectGen == 0;
+         }
+      }
+
+      /// <summary>
+      /// Formatted Project (Run, Clone, Gen) Information
+      /// </summary>
+      public string ProjectRunCloneGen
+      {
+         get
+         {
+            return String.Format("P{0} (R{1}, C{2}, G{3})", ProjectID,
+                                                            ProjectRun,
+                                                            ProjectClone,
+                                                            ProjectGen);
+         }
+      }
       
       /// <summary>
       /// Name of the unit
@@ -442,7 +412,7 @@ namespace HFM.Instances
       /// <summary>
       /// Name of the unit
       /// </summary>
-      public String ProteinName
+      internal String ProteinName
       {
          get { return _ProteinName; }
          set { _ProteinName = value; }
@@ -455,15 +425,52 @@ namespace HFM.Instances
       /// <summary>
       /// Tag string as read from the UnitInfo.txt file
       /// </summary>
-      public string ProteinTag
+      internal string ProteinTag
       {
          get { return _ProteinTag; }
          set { _ProteinTag = value; }
       }
 
       /// <summary>
-      /// Raw number of steps complete
+      /// Flag specifying if Protein Tag value is Unknown
       /// </summary>
+      internal bool ProteinTagUnknown
+      {
+         get { return ProteinTag.Length == 0; }
+      }
+
+      /// <summary>
+      /// The Result of this Work Unit
+      /// </summary>
+      private WorkUnitResult _UnitResult = WorkUnitResult.Unknown;
+      /// <summary>
+      /// The Result of this Work Unit
+      /// </summary>
+      internal WorkUnitResult UnitResult
+      {
+         get { return _UnitResult; }
+         set { _UnitResult = value; }
+      }
+
+      /// <summary>
+      /// Class member containing info on the currently running protein
+      /// </summary>
+      private Protein _CurrentProtein;
+      /// <summary>
+      /// Class member containing info on the currently running protein
+      /// </summary>
+      protected Protein CurrentProtein
+      {
+         get { return _CurrentProtein; }
+         set 
+         {
+            _CurrentProtein = value;
+            ClearUnitFrameData();
+         }
+      }
+      #endregion
+
+      #region Frames/Percent Completed Unit Level Members
       private Int32 _RawFramesComplete;
       /// <summary>
       /// Raw number of steps complete
@@ -477,9 +484,6 @@ namespace HFM.Instances
          }
       }
 
-      /// <summary>
-      /// Raw total number of steps
-      /// </summary>
       private Int32 _RawFramesTotal;
       /// <summary>
       /// Raw total number of steps
@@ -492,38 +496,7 @@ namespace HFM.Instances
             _RawFramesTotal = value;
          }
       }
-
-      /// <summary>
-      /// The Result of this Work Unit
-      /// </summary>
-      private WorkUnitResult _UnitResult = WorkUnitResult.Unknown;
-      /// <summary>
-      /// The Result of this Work Unit
-      /// </summary>
-      public WorkUnitResult UnitResult
-      {
-         get { return _UnitResult; }
-         set { _UnitResult = value; }
-      }
-
-      /// <summary>
-      /// Class member containing info on the currently running protein
-      /// </summary>
-      private Protein _CurrentProtein;
-      /// <summary>
-      /// Class member containing info on the currently running protein
-      /// </summary>
-      public Protein CurrentProtein
-      {
-         get { return _CurrentProtein; }
-         set 
-         {
-            _CurrentProtein = value;
-            ClearUnitFrameData();
-         }
-      }
-
-      #region Time Based Values
+      
       /// <summary>
       /// Frame progress of the unit
       /// </summary>
@@ -553,11 +526,13 @@ namespace HFM.Instances
             return FramesComplete * 100 / CurrentProtein.Frames;
          }
       }
+      #endregion
       
+      #region Production Value Properties
       /// <summary>
       /// Time per frame (TPF) of the unit
       /// </summary>
-      public TimeSpan TimePerFrame
+      internal TimeSpan TimePerFrame
       {
          get 
          { 
@@ -573,7 +548,7 @@ namespace HFM.Instances
       /// <summary>
       /// Units per day (UPD) rating for this unit
       /// </summary>
-      public Double UPD
+      internal Double UPD
       {
          get
          {
@@ -589,7 +564,7 @@ namespace HFM.Instances
       /// <summary>
       /// Points per day (PPD) rating for this unit
       /// </summary>
-      public Double PPD
+      internal Double PPD
       {
          get
          {
@@ -605,7 +580,7 @@ namespace HFM.Instances
       /// <summary>
       /// Esimated time of arrival (ETA) for this unit
       /// </summary>
-      public TimeSpan ETA
+      internal TimeSpan ETA
       {
          get
          {
@@ -616,210 +591,76 @@ namespace HFM.Instances
       /// <summary>
       /// Esimated Finishing Time for this unit
       /// </summary>
-      public TimeSpan EFT
-      {
-         get 
-         { 
-            return UnitRetrievalTime.Add(ETA).Subtract(DownloadTime);
-         }
-      }
-
-      /// <summary>
-      /// Average frame time since unit download
-      /// </summary>
-      public Int32 RawTimePerUnitDownload
+      internal TimeSpan EFT
       {
          get 
          {
-            if (FramesObserved > 0)
+            if (DownloadTime.Equals(DateTime.MinValue) == false)
             {
-               // Make sure CurrentFramePercent is greater than 0 to avoid DivideByZeroException - Issue 34
-               if (DownloadTime.Equals(DateTime.MinValue) == false && CurrentFrame.FrameID > 0)
+               if (FinishedTime.Equals(DateTime.MinValue))
                {
-                  // Use UnitRetrievalTime (sourced from ClientInstance.LastRetrievalTime) as basis for
-                  // TimeSinceUnitDownload.  This removes the use of the "floating" value DateTime.Now
-                  // as a basis for the calculation. - Issue 92
-                  TimeSpan TimeSinceUnitDownload = UnitRetrievalTime.Subtract(DownloadTime);
-                  return (Convert.ToInt32(TimeSinceUnitDownload.TotalSeconds) / CurrentFrame.FrameID);
+                  return UnitRetrievalTime.Add(ETA).Subtract(DownloadTime);
                }
-               
-               return 0;
-            }
 
-            return 0;
-         }
-      }
-      
-      /// <summary>
-      /// Average frame time since unit download
-      /// </summary>
-      public TimeSpan TimePerUnitDownload
-      {
-         get 
-         { 
-            return TimeSpan.FromSeconds(RawTimePerUnitDownload);
-         }
-      }
-
-      /// <summary>
-      /// PPD based on average frame time since unit download
-      /// </summary>
-      public double PPDPerUnitDownload
-      {
-         get
-         {
-            if (CurrentProtein.IsUnknown == false)
-            {
-               return CurrentProtein.GetPPD(TimePerUnitDownload, EFT);
+               return FinishedTime.Subtract(DownloadTime);
             }
             
-            return 0;
-         }
-      }
-      
-      /// <summary>
-      /// Average frame time over all sections
-      /// </summary>
-      public Int32 RawTimePerAllSections
-      {
-         get 
-         {
-            if (FramesObserved > 0)
-            {
-               return GetDurationInSeconds(FramesObserved);
-            }
-            
-            return 0;
-         }
-      }
-
-      /// <summary>
-      /// Average frame time over all sections
-      /// </summary>
-      public TimeSpan TimePerAllSections
-      {
-         get
-         {
-            return TimeSpan.FromSeconds(RawTimePerAllSections);
-         }
-      }
-
-      /// <summary>
-      /// PPD based on average frame time over all sections
-      /// </summary>
-      public double PPDPerAllSections
-      {
-         get
-         {
-            if (CurrentProtein.IsUnknown == false)
-            {
-               return CurrentProtein.GetPPD(TimePerAllSections, EFT);
-            }
-
-            return 0;
-         }
-      }
-
-      /// <summary>
-      /// Average frame time over the last three sections
-      /// </summary>
-      public Int32 RawTimePerThreeSections
-      {
-         get 
-         {
-            // time is valid for 3 "sets" ago
-            if (FramesObserved > 3)
-            {
-               return GetDurationInSeconds(3);
-            }
-            
-            return 0;
-         }
-      }
-
-      /// <summary>
-      /// Average frame time over the last three sections
-      /// </summary>
-      public TimeSpan TimePerThreeSections
-      {
-         get
-         {
-            return TimeSpan.FromSeconds(RawTimePerThreeSections);
-         }
-      }
-
-      /// <summary>
-      /// PPD based on average frame time over the last three sections
-      /// </summary>
-      public double PPDPerThreeSections
-      {
-         get
-         {
-            if (CurrentProtein.IsUnknown == false)
-            {
-               return CurrentProtein.GetPPD(TimePerThreeSections, EFT);
-            }
-
-            return 0;
-         }
-      }
-
-      /// <summary>
-      /// Frame time of the last section
-      /// </summary>
-      public Int32 RawTimePerLastSection
-      {
-         get 
-         {
-            // time is valid for 1 "set" ago
-            if (FramesObserved > 1)
-            {
-               return Convert.ToInt32(_CurrentFrame.FrameDuration.TotalSeconds);
-            }
-            
-            return 0;
-         }
-      }
-
-      /// <summary>
-      /// Frame time of the last section
-      /// </summary>
-      public TimeSpan TimePerLastSection
-      {
-         get
-         {
-            // time is valid for 1 "set" ago
-            if (FramesObserved > 1)
-            {
-               return _CurrentFrame.FrameDuration;
-            }
-
             return TimeSpan.Zero;
          }
       }
+      #endregion
 
-      /// <summary>
-      /// PPD based on frame time of the last section
-      /// </summary>
-      public double PPDPerLastSection
+      #region CurrentProtein Pass-Through Properties/Methods
+      internal string WorkUnitName
       {
          get
          {
-            if (CurrentProtein.IsUnknown == false)
-            {
-               return CurrentProtein.GetPPD(TimePerLastSection, EFT);
-            }
+            return CurrentProtein.WorkUnitName;
+         }
+      }
+      
+      internal double NumAtoms
+      {
+         get
+         {
+            return CurrentProtein.Credit;
+         }
+      }
+      
+      internal double Credit
+      {
+         get 
+         {
+            return CurrentProtein.Credit;
+         }
+      }
 
-            return 0;
+      /// <summary>
+      /// Get the Credit of the Unit (including bonus)
+      /// </summary>
+      internal double GetCredit()
+      {
+         return CurrentProtein.GetCredit(EFT);
+      }
+
+      internal double Frames
+      {
+         get
+         {
+            return CurrentProtein.Frames;
+         }
+      }
+      
+      internal string Core
+      {
+         get
+         {
+            return CurrentProtein.Core;
          }
       }
       #endregion
 
       #region Frame (UnitFrame) Data Variables
-
-      /// <summary>
-      /// Number of Frames Observed on this Unit
-      /// </summary>
       private Int32 _FramesObserved = 0;
       /// <summary>
       /// Number of Frames Observed on this Unit
@@ -827,19 +668,56 @@ namespace HFM.Instances
       public Int32 FramesObserved
       {
          get { return _FramesObserved; }
-         set { _FramesObserved = value; }
+         protected set { _FramesObserved = value; }
       }
-      
+
+      private UnitFrame _CurrentFrame = null;
       /// <summary>
       /// Last Observed Frame on this Unit
       /// </summary>
-      private UnitFrame _CurrentFrame = null;
-      public UnitFrame CurrentFrame
+      internal UnitFrame CurrentFrame
       {
          get { return _CurrentFrame; }
-         set { _CurrentFrame = value; }
       }
-      
+
+      /// <summary>
+      /// Timestamp from the last completed frame
+      /// </summary>
+      internal TimeSpan TimeOfLastFrame
+      {
+         get
+         {
+            if (CurrentFrame != null)
+            {
+               return CurrentFrame.TimeOfFrame;
+            }
+
+            return TimeSpan.Zero;
+         }
+      }
+
+      /// <summary>
+      /// Last Frame ID based on UnitFrame Data
+      /// </summary>
+      public Int32 LastUnitFrameID
+      {
+         get
+         {
+            // This Property is handled differently than TimeOfLastFrame
+            // above because we want the most recent FrameID even if the
+            // CurrentFrame Property returns null.
+            for (int i = CurrentProtein.Frames; i >= 0; i--)
+            {
+               if (UnitFrames[i] != null)
+               {
+                  return UnitFrames[i].FrameID;
+               }
+            }
+
+            return 0;
+         }
+      }
+
       /// <summary>
       /// Frame Data for this Unit
       /// </summary>
@@ -851,18 +729,14 @@ namespace HFM.Instances
       public UnitFrame[] UnitFrames
       {
          get { return _UnitFrames; }
-         set { _UnitFrames = value; }
       }
-      
-      #endregion
-      
       #endregion
 
-      #region Set Frame and Clear Frame Data
+      #region Set and Clear Frame Data
       /// <summary>
       /// Set the Current Work Unit Frame
       /// </summary>
-      public void SetCurrentFrame(LogLine logLine, DateTimeStyles style)
+      internal void SetCurrentFrame(LogLine logLine, DateTimeStyles style)
       {
          // Check for FrameData
          FrameData frame = logLine.LineData as FrameData;
@@ -883,12 +757,12 @@ namespace HFM.Instances
          // Create new UnitFrame
          UnitFrame unitFrame = new UnitFrame(frame.FrameID, timeStamp.TimeOfDay);                           
       
-         if (_UnitFrames[frame.FrameID] == null)
+         if (UnitFrames[frame.FrameID] == null)
          {
             // increment observed count
-            _FramesObserved++;
+            FramesObserved++;
          
-            CurrentFrame = unitFrame;
+            _CurrentFrame = unitFrame;
             UnitFrames[CurrentFrame.FrameID] = CurrentFrame;
             
             CurrentFrame.FrameDuration = TimeSpan.Zero;
@@ -907,16 +781,239 @@ namespace HFM.Instances
       /// <summary>
       /// Clear the Observed Count, Current Frame Pointer, and the UnitFrames Array
       /// </summary>
-      public void ClearUnitFrameData()
+      internal void ClearUnitFrameData()
       {
-         _FramesObserved = 0;
-         _CurrentFrame = null;
+         ClearCurrentFrame();
          // Now based on CurrentProtein.Frames - not 101 hard code - 11/22/09
          _UnitFrames = new UnitFrame[CurrentProtein.Frames + 1];
       }
+
+      /// <summary>
+      /// Clear the Observed Count and Current Frame Pointer
+      /// </summary>
+      internal void ClearCurrentFrame()
+      {
+         FramesObserved = 0;
+         _CurrentFrame = null;
+      }
       #endregion
 
-      #region Calculate Frame Time Variations
+      #region Unit Production Variations
+      /// <summary>
+      /// Average frame time since unit download
+      /// </summary>
+      public Int32 RawTimePerUnitDownload
+      {
+         get
+         {
+            if (FramesObserved > 0)
+            {
+               // Make sure CurrentFramePercent is greater than 0 to avoid DivideByZeroException - Issue 34
+               if (DownloadTime.Equals(DateTime.MinValue) == false && CurrentFrame.FrameID > 0)
+               {
+                  // Use UnitRetrievalTime (sourced from ClientInstance.LastRetrievalTime) as basis for
+                  // TimeSinceUnitDownload.  This removes the use of the "floating" value DateTime.Now
+                  // as a basis for the calculation. - Issue 92
+                  TimeSpan TimeSinceUnitDownload = UnitRetrievalTime.Subtract(DownloadTime);
+                  return (Convert.ToInt32(TimeSinceUnitDownload.TotalSeconds) / CurrentFrame.FrameID);
+               }
+
+               return 0;
+            }
+
+            return 0;
+         }
+      }
+
+      /// <summary>
+      /// Average frame time since unit download
+      /// </summary>
+      internal TimeSpan TimePerUnitDownload
+      {
+         get
+         {
+            return TimeSpan.FromSeconds(RawTimePerUnitDownload);
+         }
+      }
+
+      /// <summary>
+      /// PPD based on average frame time since unit download
+      /// </summary>
+      internal double PPDPerUnitDownload
+      {
+         get
+         {
+            if (CurrentProtein.IsUnknown == false)
+            {
+               return CurrentProtein.GetPPD(TimePerUnitDownload, EFT);
+            }
+
+            return 0;
+         }
+      }
+
+      /// <summary>
+      /// Average frame time over all sections
+      /// </summary>
+      public Int32 RawTimePerAllSections
+      {
+         get
+         {
+            if (FramesObserved > 0)
+            {
+               return GetDurationInSeconds(FramesObserved);
+            }
+
+            return 0;
+         }
+      }
+
+      /// <summary>
+      /// Average frame time over all sections
+      /// </summary>
+      internal TimeSpan TimePerAllSections
+      {
+         get
+         {
+            return TimeSpan.FromSeconds(RawTimePerAllSections);
+         }
+      }
+
+      /// <summary>
+      /// PPD based on average frame time over all sections
+      /// </summary>
+      internal double PPDPerAllSections
+      {
+         get
+         {
+            if (CurrentProtein.IsUnknown == false)
+            {
+               return CurrentProtein.GetPPD(TimePerAllSections, EFT);
+            }
+
+            return 0;
+         }
+      }
+
+      /// <summary>
+      /// Average frame time over the last three sections
+      /// </summary>
+      public Int32 RawTimePerThreeSections
+      {
+         get
+         {
+            // time is valid for 3 "sets" ago
+            if (FramesObserved > 3)
+            {
+               return GetDurationInSeconds(3);
+            }
+
+            return 0;
+         }
+      }
+
+      /// <summary>
+      /// Average frame time over the last three sections
+      /// </summary>
+      internal TimeSpan TimePerThreeSections
+      {
+         get
+         {
+            return TimeSpan.FromSeconds(RawTimePerThreeSections);
+         }
+      }
+
+      /// <summary>
+      /// PPD based on average frame time over the last three sections
+      /// </summary>
+      internal double PPDPerThreeSections
+      {
+         get
+         {
+            if (CurrentProtein.IsUnknown == false)
+            {
+               return CurrentProtein.GetPPD(TimePerThreeSections, EFT);
+            }
+
+            return 0;
+         }
+      }
+
+      /// <summary>
+      /// Frame time of the last section
+      /// </summary>
+      public Int32 RawTimePerLastSection
+      {
+         get
+         {
+            // time is valid for 1 "set" ago
+            if (FramesObserved > 1)
+            {
+               return Convert.ToInt32(CurrentFrame.FrameDuration.TotalSeconds);
+            }
+
+            return 0;
+         }
+      }
+
+      /// <summary>
+      /// Frame time of the last section
+      /// </summary>
+      internal TimeSpan TimePerLastSection
+      {
+         get
+         {
+            // time is valid for 1 "set" ago
+            if (FramesObserved > 1)
+            {
+               return CurrentFrame.FrameDuration;
+            }
+
+            return TimeSpan.Zero;
+         }
+      }
+
+      /// <summary>
+      /// PPD based on frame time of the last section
+      /// </summary>
+      internal double PPDPerLastSection
+      {
+         get
+         {
+            if (CurrentProtein.IsUnknown == false)
+            {
+               return CurrentProtein.GetPPD(TimePerLastSection, EFT);
+            }
+
+            return 0;
+         }
+      }
+
+      /// <summary>
+      /// Frame Time per section based on current PPD calculation setting (readonly)
+      /// </summary>
+      internal Int32 RawTimePerSection
+      {
+         get
+         {
+            switch (PreferenceSet.Instance.PpdCalculation)
+            {
+               case ePpdCalculation.LastFrame:
+                  return RawTimePerLastSection;
+               case ePpdCalculation.LastThreeFrames:
+                  return RawTimePerThreeSections;
+               case ePpdCalculation.AllFrames:
+                  return RawTimePerAllSections;
+               case ePpdCalculation.EffectiveRate:
+                  return RawTimePerUnitDownload;
+            }
+
+            return 0;
+         }
+      }
+      #endregion
+
+      #region Calculate Production Variations
       /// <summary>
       /// Get the average duration over the specified number of most recent frames
       /// </summary>
@@ -969,15 +1066,6 @@ namespace HFM.Instances
 
          return AverageSeconds;
       }
-      
-      ///// <summary>
-      ///// Get the average duration over the specified number of most recent frames
-      ///// </summary>
-      ///// <param name="numberOfFrames">Number of most recent frames</param>
-      //private TimeSpan GetDurationTimeSpan(int numberOfFrames)
-      //{
-      //   return TimeSpan.FromSeconds(GetDurationInSeconds(numberOfFrames));
-      //}
 
       /// <summary>
       /// Get Time Delta between given frames
@@ -1004,13 +1092,65 @@ namespace HFM.Instances
          return tDelta;
       }
       #endregion
+
+      #region Project to Protein Matching
+      /// <summary>
+      /// Attempts to set the Protein based on the given Project data.
+      /// </summary>
+      /// <param name="match">Regex Match containing Project values</param>
+      internal void DoProjectIDMatch(Match match)
+      {
+         List<int> ProjectRCG = new List<int>(4);
+
+         ProjectRCG.Add(Int32.Parse(match.Result("${ProjectNumber}")));
+         ProjectRCG.Add(Int32.Parse(match.Result("${Run}")));
+         ProjectRCG.Add(Int32.Parse(match.Result("${Clone}")));
+         ProjectRCG.Add(Int32.Parse(match.Result("${Gen}")));
+
+         DoProjectIDMatch(ProjectRCG);
+      }
+
+      /// <summary>
+      /// Attempts to set the Protein based on the given Project data.
+      /// </summary>
+      /// <param name="ProjectRCG">List of Project (R/C/G) values</param>
+      internal void DoProjectIDMatch(IList<int> ProjectRCG)
+      {
+         Debug.Assert(ProjectRCG.Count == 4);
+
+         Protein protein = ProteinCollection.Instance.GetProtein(ProjectRCG[0]);
+         if (protein.IsUnknown == false)
+         {
+            SetProjectAndClientType(protein, ProjectRCG);
+         }
+      }
+
+      /// <summary>
+      /// Sets the ProjectID and gets the Protein info from the Protein Collection (from Stanford)
+      /// </summary>
+      /// <param name="protein">Unit Protein</param>
+      /// <param name="ProjectRCG">List of Project (R/C/G) values</param>
+      /// <exception cref="System.Collections.Generic.KeyNotFoundException">Thrown when Project ID cannot be found in Protein Collection.</exception>
+      private void SetProjectAndClientType(Protein protein, IList<int> ProjectRCG)
+      {
+         Debug.Assert(ProjectRCG.Count == 4);
+
+         ProjectID = ProjectRCG[0];
+         ProjectRun = ProjectRCG[1];
+         ProjectClone = ProjectRCG[2];
+         ProjectGen = ProjectRCG[3];
+
+         CurrentProtein = protein;
+         TypeOfClient = GetClientTypeFromProtein(CurrentProtein);
+      }
+      #endregion
       
       #region Static Helpers
       /// <summary>
       /// Get the WorkUnitResult Enum representation of the given result string.
       /// </summary>
       /// <param name="result">Work Unit Result as String.</param>
-      public static WorkUnitResult WorkUnitResultFromString(string result)
+      internal static WorkUnitResult WorkUnitResultFromString(string result)
       {
          switch (result)
          {
@@ -1032,7 +1172,7 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="CurrentProtein">Current Instance Protein</param>
       /// <returns>Client Type</returns>
-      public static ClientType GetClientTypeFromProtein(Protein CurrentProtein)
+      private static ClientType GetClientTypeFromProtein(Protein CurrentProtein)
       {
          switch (CurrentProtein.Core)
          {

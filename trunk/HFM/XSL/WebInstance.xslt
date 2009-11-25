@@ -21,12 +21,6 @@
                      <a href="summary.html">Summary Page</a>
                   </td>
                </tr>
-               <tr>
-                  <td class="LeftCol">Protein</td>
-                  <td class="RightCol">
-                     <xsl:value-of select="Protein/WorkUnit"/>
-                  </td>
-               </tr>
                <xsl:apply-templates select="UnitInfo" />
                <tr>
                   <td class="Empty">
@@ -65,7 +59,7 @@
                </tr>
                <tr>
                   <td class="Heading">
-                     <xsl:value-of select="Protein/WorkUnit"/>
+                     Project
                   </td>
                   <td class="Blank"> </td>
                </tr>
@@ -95,33 +89,57 @@
    <xsl:template match="UnitInfo">
       <tr>
          <td class="AltLeftCol">
-            Download<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Time
+            Current<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Progress
          </td>
          <td class="AltRightCol">
-            <xsl:value-of select="DownloadTime"/>
+            <xsl:value-of select="FramesComplete"/> Frames Complete (<xsl:value-of select="PercentComplete"/>%)
          </td>
       </tr>
       <tr>
          <td class="LeftCol">
-            Current<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Progress
-         </td>
-         <td class="RightCol">
-            <xsl:value-of select="FramesComplete"/> frames complete (<xsl:value-of select="PercentComplete"/>%)
-         </td>
-      </tr>
-      <tr>
-         <td class="AltLeftCol">
             Time<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Per<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Frame
          </td>
-         <td class="AltRightCol">
+         <td class="RightCol">
             <xsl:value-of select="TimePerFrame"/>
          </td>
       </tr>
       <tr>
+         <td class="AltLeftCol">
+            PPD
+         </td>
+         <td class="AltRightCol">
+            <xsl:value-of select="EstPPD"/> (<xsl:value-of select="EstUPD"/> WUs)
+         </td>
+      </tr>
+      <tr>
          <td class="LeftCol">
-            Expected<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Completion
+            PPW
          </td>
          <td class="RightCol">
+            <xsl:value-of select="EstPPW"/> (<xsl:value-of select="EstUPW"/> WUs)
+         </td>
+      </tr>
+      <tr>
+         <td class="AltLeftCol">
+            Work<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Units
+         </td>
+         <td class="AltRightCol">
+            Completed: <xsl:value-of select="CompletedProjects"/> - Failed: <xsl:value-of select="FailedProjects"/> - Total: <xsl:value-of select="TotalProjects"/>
+         </td>
+      </tr>
+      <tr>
+         <td class="LeftCol">
+            Download<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Time
+         </td>
+         <td class="RightCol">
+            <xsl:value-of select="DownloadTime"/>
+         </td>
+      </tr>
+      <tr>
+         <td class="AltLeftCol">
+            Expected<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Completion
+         </td>
+         <td class="AltRightCol">
             <xsl:value-of select="ExpectedCompletionDate"/>
          </td>
       </tr>
@@ -135,6 +153,14 @@
    </xsl:template>
    <xsl:template match="Protein">
       <tr>
+         <td class="AltLeftCol">
+            Project<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>ID
+         </td>
+         <td class="AltRightCol">
+            <xsl:value-of select="ProjectNumber"/>
+         </td>
+      </tr>
+      <tr>
          <td class="LeftCol">Work Unit</td>
          <td class="RightCol">
             <xsl:value-of select="WorkUnit"/>
@@ -142,50 +168,18 @@
       </tr>
       <tr>
          <td class="AltLeftCol">
-            Project<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Number
+            Credit
          </td>
          <td class="AltRightCol">
-            <xsl:value-of select="ProjectNumber"/>
-         </td>
-      </tr>
-      <tr>
-         <td class="LeftCol">
-            Server<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Address
-         </td>
-         <td class="RightCol">
-            <xsl:value-of select="ServerIP"/>
-         </td>
-      </tr>
-      <tr>
-         <td class="AltLeftCol">
-            Number<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>of<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Atoms
-         </td>
-         <td class="AltRightCol">
-            <xsl:value-of select="NumAtoms"/>
-         </td>
-      </tr>
-      <tr>
-         <td class="LeftCol">
-            Preferred<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Deadline
-         </td>
-         <td class="RightCol">
-            <xsl:value-of select="PreferredDays"/> days
-         </td>
-      </tr>
-      <tr>
-         <td class="AltLeftCol">
-            Final<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Deadline
-         </td>
-         <td class="AltRightCol">
-            <xsl:value-of select="MaxDays"/> days
-         </td>
-      </tr>
-      <tr>
-         <td class="LeftCol">
-            Points<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Credit
-         </td>
-         <td class="RightCol">
             <xsl:value-of select="Credit"/>
+         </td>
+      </tr>
+      <tr>
+         <td class="LeftCol">
+            KFactor
+         </td>
+         <td class="RightCol">
+            <xsl:value-of select="KFactor"/>
          </td>
       </tr>
       <tr>
@@ -204,10 +198,42 @@
       </tr>
       <tr>
          <td class="AltLeftCol">
-            Contact<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Person
+            Number<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>of<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Atoms
          </td>
          <td class="AltRightCol">
+            <xsl:value-of select="NumAtoms"/>
+         </td>
+      </tr>
+      <tr>
+         <td class="LeftCol">
+            Preferred<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Deadline
+         </td>
+         <td class="RightCol">
+            <xsl:value-of select="PreferredDays"/> Days
+         </td>
+      </tr>
+      <tr>
+         <td class="AltLeftCol">
+            Final<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Deadline
+         </td>
+         <td class="AltRightCol">
+            <xsl:value-of select="MaxDays"/> Days
+         </td>
+      </tr>
+      <tr>
+         <td class="LeftCol">
+            Contact<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Person
+         </td>
+         <td class="RightCol">
             <xsl:value-of select="Contact"/>
+         </td>
+      </tr>
+      <tr>
+         <td class="AltLeftCol">
+            Server<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>IP
+         </td>
+         <td class="AltRightCol">
+            <xsl:value-of select="ServerIP"/>
          </td>
       </tr>
       <tr>

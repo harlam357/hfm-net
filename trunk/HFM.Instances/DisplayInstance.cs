@@ -266,15 +266,15 @@ namespace HFM.Instances
          _MHz = Instance.ClientProcessorMegahertz;
          _PPD_MHz = Math.Round(Instance.PPD / Instance.ClientProcessorMegahertz, 3);
          _ETA = Instance.ETA;
-         _Core = Instance.CurrentUnitInfo.CurrentProtein.Core;
+         _Core = Instance.CurrentUnitInfo.Core;
          _CoreVersion = Instance.CurrentUnitInfo.CoreVersion;
          _ProjectRunCloneGen = Instance.CurrentUnitInfo.ProjectRunCloneGen;
-         _Credit = Instance.CurrentUnitInfo.CurrentProtein.GetCredit(Instance.CurrentUnitInfo.EFT);
+         _Credit = Instance.Credit;
          _Complete = Instance.NumberOfCompletedUnitsSinceLastStart;
          _Failed = Instance.NumberOfFailedUnitsSinceLastStart;
-         _Username = String.Format(CultureInfo.CurrentCulture, "{0} ({1})", Instance.FoldingID, Instance.Team);
+         _Username = Instance.FoldingIDAndTeam;
          _DownloadTime = Instance.CurrentUnitInfo.DownloadTime;
-         _Deadline = Instance.CurrentUnitInfo.Deadline;
+         _Deadline = Instance.CurrentUnitInfo.PreferredDeadline;
       }
 
       public void UpdateName(string Key)

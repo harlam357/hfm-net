@@ -222,7 +222,7 @@ namespace HFM.Instances
             output.Add(String.Format(" Avg. Time / Frame : {0} - {1:" + PreferenceSet.PpdFormatString + "} PPD", 
                AverageFrameTime, AverageFrameTimePPD));
 
-            if (Instance != null && Instance.CurrentUnitInfo.CurrentProtein.ProjectNumber.Equals(theProtein.ProjectNumber) &&
+            if (Instance != null && Instance.CurrentUnitInfo.ProjectID.Equals(theProtein.ProjectNumber) &&
                                     Instance.ProductionValuesOk)
             {
                output.Add(String.Format(" Cur. Time / Frame : {0} - {1:" + PreferenceSet.PpdFormatString + "} PPD", 

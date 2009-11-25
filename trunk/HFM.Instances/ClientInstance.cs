@@ -26,30 +26,30 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Security.Cryptography;
-using System.Text.RegularExpressions;
 
 using harlam357.Security;
 using harlam357.Security.Encryption;
 
 using HFM.Helpers;
 using HFM.Instrumentation;
-using HFM.Proteins;
 using HFM.Preferences;
 
 namespace HFM.Instances
 {
    #region Enum
-   //public enum ClientStatus
-   //{
-   //   Unknown,
-   //   Offline,
-   //   Stopped,
-   //   EuePause,
-   //   Hung,
-   //   Paused,
-   //   RunningNoFrameTimes,
-   //   Running
-   //}
+   public enum ClientStatus
+   {
+      Unknown,
+      Offline,
+      Stopped,
+      EuePause,
+      Hung,
+      Paused,
+      SendingWorkPacket,
+      GettingWorkPacket,
+      RunningNoFrameTimes,
+      Running
+   }
 
    public enum InstanceType
    {
@@ -90,21 +90,30 @@ namespace HFM.Instances
       public const string LocalUnitInfo = "unitinfo.txt";
       public const string LocalQueue = "queue.dat";
       
+      // Default ID Constants
       public const string DefaultUserID = "";
       public const int DefaultMachineID = 0;
 
+      // Encryption Key and Initialization Vector
       private readonly Data IV = new Data("zX!1=D,^7K@u33+d");
       private readonly Data SymmetricKey = new Data("cNx/7+,?%ubm*?j8");
       #endregion
 
+      #region Queue Reader Instance
+      /// <summary>
+      /// Queue Reader for this Client Instance
+      /// </summary>
       private readonly QueueReader _qr = new QueueReader();
-      
+      /// <summary>
+      /// Queue Reader for this Client Instance
+      /// </summary>
       [CLSCompliant(false)]
       public QueueReader ClientQueue
       {
          get { return _qr; }
-      }
-      
+      } 
+      #endregion
+
       #region Public Events
       /// <summary>
       /// Raised when Instance Host Type is Changed
@@ -117,9 +126,330 @@ namespace HFM.Instances
       public event EventHandler ClientIsOnVirtualMachineChanged;
       #endregion
 
-      #region Public Readonly Properties
-      
+      #region Protected Event Wrappers
+      /// <summary>
+      /// Call when InstanceHostType Changes
+      /// </summary>
+      protected void OnInstanceHostTypeChanged(EventArgs e)
+      {
+         if (InstanceHostTypeChanged != null)
+         {
+            InstanceHostTypeChanged(this, e);
+         }
+      }
 
+      /// <summary>
+      /// Call when ClientIsOnVirtualMachine Changes
+      /// </summary>
+      protected void OnClientIsOnVirtualMachineChanged(EventArgs e)
+      {
+         if (ClientIsOnVirtualMachineChanged != null)
+         {
+            ClientIsOnVirtualMachineChanged(this, e);
+         }
+      }
+      #endregion
+      
+      #region Private Event Handlers
+      /// <summary>
+      /// Handles the InstanceHostTypeChanged Event
+      /// </summary>
+      private void ClientInstance_InstanceHostTypeChanged(object sender, EventArgs e)
+      {
+         InitUserSpecifiedMembers();
+      }
+      
+      /// <summary>
+      /// Handles the ClientIsOnVirtualMachineChanged Event
+      /// </summary>
+      private void ClientInstance_ClientIsOnVirtualMachineChanged(object sender, EventArgs e)
+      {
+         CurrentUnitInfo.ClearUnitFrameData();
+      }
+      #endregion
+
+      #region Constructor
+      /// <summary>
+      /// Primary Constructor
+      /// </summary>
+      public ClientInstance(InstanceType type)
+      {
+         // When Instance Host Type Changes, Clear the User Specified Values
+         InstanceHostTypeChanged += ClientInstance_InstanceHostTypeChanged;
+         // When Client is on VM Changes, Clear the Unit Frame Data
+         // The captured TimeOfFrame values will no longer be valid
+         ClientIsOnVirtualMachineChanged += ClientInstance_ClientIsOnVirtualMachineChanged;
+
+         // Set the Host Type
+         _InstanceHostType = type;
+         // Init Client Level Members
+         Init();
+         // Init User Specified Client Level Members
+         InitUserSpecifiedMembers();
+         // Create a fresh UnitInfo
+         CurrentUnitInfo = new UnitInfo(InstanceName, Path, DateTime.Now);
+      }
+      #endregion
+
+      #region Client Level Members
+      private ClientStatus _Status;
+      /// <summary>
+      /// Status of this client
+      /// </summary>
+      public ClientStatus Status
+      {
+         get { return _Status; }
+         protected set
+         {
+            if (_Status != value)
+            {
+               _Status = value;
+               //OnStatusChanged(EventArgs.Empty);
+            }
+         }
+      }
+
+      /// <summary>
+      /// Flag denoting if Progress, Production, and Time based values are OK to Display
+      /// </summary>
+      public bool ProductionValuesOk
+      {
+         get
+         {
+            if (Status.Equals(ClientStatus.Running) ||
+                Status.Equals(ClientStatus.RunningNoFrameTimes))
+            {
+               return true;
+            }
+
+            return false;
+         }
+      }
+
+      private string _Arguments;
+      /// <summary>
+      /// Client Startup Arguments
+      /// </summary>
+      public string Arguments
+      {
+         get { return _Arguments; }
+         set { _Arguments = value; }
+      }
+
+      /// <summary>
+      /// Client Path and Arguments (If Arguments Exist)
+      /// </summary>
+      public string ClientPathAndArguments
+      {
+         get
+         {
+            if (Arguments.Length == 0)
+            {
+               return Path;
+            }
+
+            return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Path, Arguments);
+         }
+      }
+
+      private string _UserID;
+      /// <summary>
+      /// User ID associated with this client
+      /// </summary>
+      public string UserID
+      {
+         get { return _UserID; }
+         set { _UserID = value; }
+      }
+
+      /// <summary>
+      /// True if User ID is Unknown
+      /// </summary>
+      public bool UserIDUnknown
+      {
+         get { return UserID.Length == 0; }
+      }
+
+      private int _MachineID;
+      /// <summary>
+      /// Machine ID associated with this client
+      /// </summary>
+      public int MachineID
+      {
+         get { return _MachineID; }
+         set { _MachineID = value; }
+      }
+
+      /// <summary>
+      /// Combined User ID and Machine ID String
+      /// </summary>
+      public string UserAndMachineID
+      {
+         get { return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", UserID, MachineID); }
+      }
+
+      private string _FoldingID;
+      /// <summary>
+      /// The Folding ID (Username) attached to this client
+      /// </summary>
+      public string FoldingID
+      {
+         get { return _FoldingID; }
+         set { _FoldingID = value; }
+      }
+
+      private Int32 _Team;
+      /// <summary>
+      /// The Team number attached to this client
+      /// </summary>
+      public Int32 Team
+      {
+         get { return _Team; }
+         set { _Team = value; }
+      }
+
+      /// <summary>
+      /// Combined Folding ID and Team String
+      /// </summary>
+      public string FoldingIDAndTeam
+      {
+         get { return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", FoldingID, Team); }
+      }
+
+      private Int32 _NumberOfCompletedUnitsSinceLastStart;
+      /// <summary>
+      /// Number of completed units since the last client start
+      /// </summary>
+      public Int32 NumberOfCompletedUnitsSinceLastStart
+      {
+         get { return _NumberOfCompletedUnitsSinceLastStart; }
+         set { _NumberOfCompletedUnitsSinceLastStart = value; }
+      }
+
+      private Int32 _NumberOfFailedUnitsSinceLastStart;
+      /// <summary>
+      /// Number of failed units since the last client start
+      /// </summary>
+      public Int32 NumberOfFailedUnitsSinceLastStart
+      {
+         get { return _NumberOfFailedUnitsSinceLastStart; }
+         set { _NumberOfFailedUnitsSinceLastStart = value; }
+      }
+
+      private Int32 _TotalUnits;
+      /// <summary>
+      /// Total Units Completed for lifetime of the client (read from log file)
+      /// </summary>
+      public Int32 TotalUnits
+      {
+         get { return _TotalUnits; }
+         set { _TotalUnits = value; }
+      }
+
+      private UnitInfo _CurrentUnitInfo;
+      /// <summary>
+      /// Class member containing info specific to the current work unit
+      /// </summary>
+      public UnitInfo CurrentUnitInfo
+      {
+         get { return _CurrentUnitInfo; }
+         protected set
+         {
+            _CurrentUnitInfo = value;
+         }
+      }
+
+      private IList<LogLine> _CurrentLogLines;
+      /// <summary>
+      /// List of current log file text lines
+      /// </summary>
+      public IList<LogLine> CurrentLogLines
+      {
+         get { return _CurrentLogLines; }
+         protected set
+         {
+            _CurrentLogLines = value;
+         }
+      }
+
+      private IList<LogLine>[] _QueueLogLines;
+      /// <summary>
+      /// Array of LogLine Lists - Used to hold QueueEntry LogLines
+      /// </summary>
+      public IList<LogLine>[] QueueLogLines
+      {
+         get { return _QueueLogLines; }
+         protected set
+         {
+            _QueueLogLines = value;
+         }
+      }
+
+      /// <summary>
+      /// Init Client Level Members
+      /// </summary>
+      private void Init()
+      {
+         Arguments = String.Empty;
+         UserID = DefaultUserID;
+         MachineID = DefaultMachineID;
+         FoldingID = UnitInfo.FoldingIDDefault;
+         Team = UnitInfo.TeamDefault;
+         NumberOfCompletedUnitsSinceLastStart = 0;
+         NumberOfFailedUnitsSinceLastStart = 0;
+         TotalUnits = 0;
+
+         CurrentLogLines = new List<LogLine>();
+         QueueLogLines = null;
+      }
+
+      /// <summary>
+      /// Return LogLine List for Specified Queue Index
+      /// </summary>
+      /// <param name="QueueIndex">Index in Queue</param>
+      public IList<LogLine> GetLogLinesForQueueIndex(int QueueIndex)
+      {
+         if (QueueLogLines != null && QueueLogLines[QueueIndex] != null)
+         {
+            return QueueLogLines[QueueIndex];
+         }
+
+         return null;
+      }
+      #endregion
+
+      #region User Specified Client Level Members
+      /// <summary>
+      /// Client host type (Path, FTP, or HTTP)
+      /// </summary>
+      private InstanceType _InstanceHostType;
+      /// <summary>
+      /// Client host type (Path, FTP, or HTTP)
+      /// </summary>
+      public InstanceType InstanceHostType
+      {
+         get { return _InstanceHostType; }
+         set
+         {
+            if (_InstanceHostType != value)
+            {
+               _InstanceHostType = value;
+               OnInstanceHostTypeChanged(EventArgs.Empty);
+            }
+         }
+      }
+      
+      private string _InstanceName;
+      /// <summary>
+      /// The name assigned to this client instance
+      /// </summary>
+      public string InstanceName
+      {
+         get { return _InstanceName; }
+         set { _InstanceName = value; }
+      }
+
+      #region Cached Log File Name Properties
       /// <summary>
       /// Cached FAHlog Filename for this instance
       /// </summary>
@@ -134,66 +464,177 @@ namespace HFM.Instances
       public string CachedUnitInfoName
       {
          get { return String.Format("{0}-{1}", InstanceName, LocalUnitInfo); }
-      } 
-      
+      }
+
       /// <summary>
       /// Cached Queue Filename for this instance
       /// </summary>
       public string CachedQueueName
       {
          get { return String.Format("{0}-{1}", InstanceName, LocalQueue); }
-      } 
-      
-      /// <summary>
-      /// Combined UserID and MachineID string
-      /// </summary>
-      public string UserAndMachineID
-      {
-         get { return String.Format("{0} ({1})", UserID, MachineID); }
       }
-      
+      #endregion
+
+      private Int32 _ClientProcessorMegahertz;
       /// <summary>
-      /// Returns true if UserID is unknown
+      /// The number of processor megahertz for this client instance
       /// </summary>
-      public bool UserIDUnknown
+      public Int32 ClientProcessorMegahertz
       {
-         get { return UserID.Length == 0; }
+         get { return _ClientProcessorMegahertz; }
+         set { _ClientProcessorMegahertz = value; }
       }
-      
+
+      private string _RemoteFAHLogFilename;
       /// <summary>
-      /// Client Path and Arguments (if arguments exist)
+      /// Remote client log file name
       /// </summary>
-      public string ClientPathAndArguments
+      public string RemoteFAHLogFilename
       {
-         get 
+         get { return _RemoteFAHLogFilename; }
+         set
          {
-            if (Arguments.Length == 0)
+            if (String.IsNullOrEmpty(value))
             {
-               return Path;   
+               _RemoteFAHLogFilename = LocalFAHLog;
+            }
+            else
+            {
+               _RemoteFAHLogFilename = value;
             }
 
-            return String.Format(CultureInfo.CurrentCulture, "{0} ({1})", Path, Arguments);
          }
       }
-      
+
+      private string _RemoteUnitInfoFilename;
       /// <summary>
-      /// Flag denoting if Progress, Production, and Time based values are OK to Display
+      /// Remote client unit info log file name
       /// </summary>
-      public bool ProductionValuesOk
+      public string RemoteUnitInfoFilename
       {
-         get 
-         { 
-            if (Status.Equals(ClientStatus.Running) ||
-                Status.Equals(ClientStatus.RunningNoFrameTimes))
+         get { return _RemoteUnitInfoFilename; }
+         set
+         {
+            if (String.IsNullOrEmpty(value))
             {
-               return true;
+               _RemoteUnitInfoFilename = LocalUnitInfo;
             }
-            
-            return false;
+            else
+            {
+               _RemoteUnitInfoFilename = value;
+            }
          }
       }
-      
-      #region CurrentUnitInfo Values
+
+      private string _RemoteQueueFilename;
+      /// <summary>
+      /// Remote client queue.dat file name
+      /// </summary>
+      public string RemoteQueueFilename
+      {
+         get { return _RemoteQueueFilename; }
+         set
+         {
+            if (String.IsNullOrEmpty(value))
+            {
+               _RemoteQueueFilename = LocalQueue;
+            }
+            else
+            {
+               _RemoteQueueFilename = value;
+            }
+         }
+      }
+
+      private string _Path;
+      /// <summary>
+      /// Location of log files for this instance
+      /// </summary>
+      public string Path
+      {
+         get { return _Path; }
+         set { _Path = value; }
+      }
+
+      private string _Server;
+      /// <summary>
+      /// FTP Server name or IP Address
+      /// </summary>
+      public string Server
+      {
+         get { return _Server; }
+         set { _Server = value; }
+      }
+
+      private string _Username;
+      /// <summary>
+      /// Username on remote server
+      /// </summary>
+      public string Username
+      {
+         get { return _Username; }
+         set { _Username = value; }
+      }
+
+      private string _Password;
+      /// <summary>
+      /// Password on remote server
+      /// </summary>
+      public string Password
+      {
+         get { return _Password; }
+         set { _Password = value; }
+      }
+
+      private bool _ClientIsOnVirtualMachine;
+      /// <summary>
+      /// Specifies that this client is on a VM that reports local time as UTC
+      /// </summary>
+      public bool ClientIsOnVirtualMachine
+      {
+         get { return _ClientIsOnVirtualMachine; }
+         set
+         {
+            if (_ClientIsOnVirtualMachine != value)
+            {
+               _ClientIsOnVirtualMachine = value;
+               OnClientIsOnVirtualMachineChanged(EventArgs.Empty);
+            }
+         }
+      }
+
+      private Int32 _ClientTimeOffset;
+      /// <summary>
+      /// Specifies the number of minutes (+/-) this client's clock differentiates
+      /// </summary>
+      public Int32 ClientTimeOffset
+      {
+         get { return _ClientTimeOffset; }
+         set { _ClientTimeOffset = value; }
+      }
+
+      /// <summary>
+      /// Init User Specified Client Level Members that Define this Instance
+      /// </summary>
+      private void InitUserSpecifiedMembers()
+      {
+         InstanceName = String.Empty;
+         ClientProcessorMegahertz = 1;
+         RemoteFAHLogFilename = LocalFAHLog;
+         RemoteUnitInfoFilename = LocalUnitInfo;
+         RemoteQueueFilename = LocalQueue;
+
+         Path = String.Empty;
+         Server = String.Empty;
+         Username = String.Empty;
+         Password = String.Empty;
+
+         ClientIsOnVirtualMachine = false;
+         ClientTimeOffset = 0;
+      }
+      #endregion
+
+      #region CurrentUnitInfo Pass-Through Properties
       /// <summary>
       /// Frame progress of the unit
       /// </summary>
@@ -289,16 +730,38 @@ namespace HFM.Instances
             return TimeSpan.Zero;
          }
       }
-      #endregion
 
-      #endregion
+      ///// <summary>
+      ///// Esimated Finishing Time for this unit
+      ///// </summary>
+      //public TimeSpan EFT
+      //{
+      //   get
+      //   {
+      //      if (ProductionValuesOk)
+      //      {
+      //         return CurrentUnitInfo.EFT;
+      //      }
 
-      #region Public Properties and Related Private Members
+      //      return TimeSpan.Zero;
+      //   }
+      //}
+
+      internal double Credit
+      {
+         get
+         {
+            if (ProductionValuesOk)
+            {
+               return CurrentUnitInfo.GetCredit();
+            }
+
+            return CurrentUnitInfo.Credit;
+         }
+      }
+      #endregion
 
       #region Retrieval Properties
-      /// <summary>
-      /// Local flag set when retrieval acts on the status returned from parse
-      /// </summary>
       private bool _HandleStatusOnRetrieve = true;
       /// <summary>
       /// Local flag set when retrieval acts on the status returned from parse
@@ -307,11 +770,8 @@ namespace HFM.Instances
       {
          get { return _HandleStatusOnRetrieve; }
          set { _HandleStatusOnRetrieve = value; }
-      } 
-      
-      /// <summary>
-      /// Local flag set when log retrieval is in progress
-      /// </summary>
+      }
+
       private volatile bool _RetrievalInProgress = false;
       /// <summary>
       /// Local flag set when log retrieval is in progress
@@ -319,11 +779,12 @@ namespace HFM.Instances
       public bool RetrievalInProgress
       {
          get { return _RetrievalInProgress; }
+         protected set 
+         { 
+            _RetrievalInProgress = value;
+         }
       }
 
-      /// <summary>
-      /// When the log files were last successfully retrieved
-      /// </summary>
       private DateTime _LastRetrievalTime = DateTime.MinValue;
       /// <summary>
       /// When the log files were last successfully retrieved
@@ -331,470 +792,594 @@ namespace HFM.Instances
       public DateTime LastRetrievalTime
       {
          get { return _LastRetrievalTime; }
+         protected set
+         {
+            _LastRetrievalTime = value;
+         }
       }
       #endregion
-      
-      #region User Specified Values (from the frmHost dialog)
-      /// <summary>
-      /// The name assigned to this client instance
-      /// </summary>
-      private string _InstanceName;
-      /// <summary>
-      /// The name assigned to this client instance
-      /// </summary>
-      public string InstanceName
-      {
-         get { return _InstanceName; }
-         set { _InstanceName = value; }
-      }
 
+      #region Retrieval Methods
       /// <summary>
-      /// The number of processor megahertz for this client instance
+      /// Retrieve Instance Log Files based on Instance Type
       /// </summary>
-      private Int32 _ClientProcessorMegahertz = 1;
-      /// <summary>
-      /// The number of processor megahertz for this client instance
-      /// </summary>
-      public Int32 ClientProcessorMegahertz
+      public void Retrieve()
       {
-         get { return _ClientProcessorMegahertz; }
-         set { _ClientProcessorMegahertz = value; }
-      }
+         // Don't allow this to fire more than once at a time
+         if (RetrievalInProgress) return;
 
-      /// <summary>
-      /// Remote client log file name
-      /// </summary>
-      private string _RemoteFAHLogFilename = LocalFAHLog;
-      /// <summary>
-      /// Remote client log file name
-      /// </summary>
-      public string RemoteFAHLogFilename
-      {
-         get { return _RemoteFAHLogFilename; }
-         set
+         try
          {
-            if (String.IsNullOrEmpty(value))
+            RetrievalInProgress = true;
+
+            switch (InstanceHostType)
             {
-               _RemoteFAHLogFilename = LocalFAHLog;
+               case InstanceType.PathInstance:
+                  RetrievePathInstance();
+                  break;
+               case InstanceType.HTTPInstance:
+                  RetrieveHTTPInstance();
+                  break;
+               case InstanceType.FTPInstance:
+                  RetrieveFTPInstance();
+                  break;
+               default:
+                  throw new NotImplementedException(String.Format(CultureInfo.CurrentCulture,
+                     "Instance Type '{0}' is not implemented", InstanceHostType));
+            }
+
+            // Re-Init Client Level Members Before Processing
+            Init();
+            // Process the retrieved logs
+            ClientStatus returnedStatus = ProcessExisting();
+
+            /*** Setting this flag false aids in Unit Test since the results of *
+             *   determining status are relative to the current time of day. ***/
+            if (HandleStatusOnRetrieve)
+            {
+               // Handle the status retured from the log parse
+               HandleReturnedStatus(returnedStatus);
             }
             else
             {
-               _RemoteFAHLogFilename = value;
+               Status = returnedStatus;
             }
-
          }
+         catch (Exception ex)
+         {
+            Status = ClientStatus.Offline;
+            HfmTrace.WriteToHfmConsole(InstanceName, ex);
+         }
+         finally
+         {
+            RetrievalInProgress = false;
+         }
+
+         HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Client Status: {2}", HfmTrace.FunctionName, InstanceName, Status));
       }
 
       /// <summary>
-      /// Remote client unit info log file name
+      /// Retrieve the log and unit info files from the configured Local path
       /// </summary>
-      private string _RemoteUnitInfoFilename = LocalUnitInfo;
-      /// <summary>
-      /// Remote client unit info log file name
-      /// </summary>
-      public string RemoteUnitInfoFilename
+      private void RetrievePathInstance()
       {
-         get { return _RemoteUnitInfoFilename; }
-         set
+         DateTime Start = HfmTrace.ExecStart;
+
+         try
          {
-            if (String.IsNullOrEmpty(value))
+            FileInfo fiLog = new FileInfo(System.IO.Path.Combine(Path, RemoteFAHLogFilename));
+            string FAHLog_txt = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedFAHLogName);
+            FileInfo fiCachedLog = new FileInfo(FAHLog_txt);
+
+            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
+                                       String.Format("{0} ({1}) FAHlog copy (start)", HfmTrace.FunctionName, InstanceName));
+            if (fiLog.Exists)
             {
-               _RemoteUnitInfoFilename = LocalUnitInfo;
+               if (fiCachedLog.Exists == false || fiLog.Length != fiCachedLog.Length)
+               {
+                  fiLog.CopyTo(FAHLog_txt, true);
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
+                                             String.Format("{0} ({1}) FAHlog copy (success)", HfmTrace.FunctionName, InstanceName));
+               }
+               else
+               {
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
+                                             String.Format("{0} ({1}) FAHlog copy (file has not changed)", HfmTrace.FunctionName, InstanceName));
+               }
             }
             else
             {
-               _RemoteUnitInfoFilename = value;
+               //Status = ClientStatus.Offline;
+               //HfmTrace.WriteToHfmConsole(TraceLevel.Error,
+               //                           String.Format("{0} ({1}) The path {2} is inaccessible.", HfmTrace.FunctionName, InstanceName, fiLog.FullName));
+               //return false;
+
+               throw new FileNotFoundException(String.Format("The path {0} is inaccessible.", fiLog.FullName));
             }
+
+            // Retrieve unitinfo.txt (or equivalent)
+            FileInfo fiUI = new FileInfo(System.IO.Path.Combine(Path, RemoteUnitInfoFilename));
+            string UnitInfo_txt = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedUnitInfoName);
+
+            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
+                                       String.Format("{0} ({1}) UnitInfo copy (start)", HfmTrace.FunctionName, InstanceName));
+            if (fiUI.Exists)
+            {
+               // If file size is too large, do not copy it and delete the current cached copy - Issue 2
+               if (fiUI.Length < NetworkOps.UnitInfoMax)
+               {
+                  fiUI.CopyTo(UnitInfo_txt, true);
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
+                                             String.Format("{0} ({1}) UnitInfo copy (success)", HfmTrace.FunctionName, InstanceName));
+               }
+               else
+               {
+                  if (File.Exists(UnitInfo_txt))
+                  {
+                     File.Delete(UnitInfo_txt);
+                  }
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
+                                             String.Format("{0} ({1}) UnitInfo copy (file is too big: {2} bytes)", HfmTrace.FunctionName, InstanceName, fiUI.Length));
+               }
+            }
+            /*** Remove Requirement for UnitInfo to be Present ***/
+            //else
+            //{
+            //   Status = ClientStatus.Offline;
+            //   HfmTrace.WriteToHfmConsole(TraceLevel.Error,
+            //                              String.Format("{0} ({1}) The path {2} is inaccessible.", HfmTrace.FunctionName, InstanceName, fiUI.FullName));
+            //   return false;
+            //}
+            else
+            {
+               if (File.Exists(UnitInfo_txt))
+               {
+                  File.Delete(UnitInfo_txt);
+               }
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
+                                          String.Format("{0} ({1}) The path {2} is inaccessible.", HfmTrace.FunctionName, InstanceName, fiUI.FullName));
+            }
+
+            // Retrieve queue.dat (or equivalent)
+            FileInfo fiQueue = new FileInfo(System.IO.Path.Combine(Path, RemoteQueueFilename));
+            string Queue_dat = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedQueueName);
+
+            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
+                                       String.Format("{0} ({1}) Queue copy (start)", HfmTrace.FunctionName, InstanceName));
+            if (fiQueue.Exists)
+            {
+               fiQueue.CopyTo(Queue_dat, true);
+               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
+                                          String.Format("{0} ({1}) Queue copy (success)", HfmTrace.FunctionName, InstanceName));
+            }
+            /*** Remove Requirement for Queue to be Present ***/
+            //else
+            //{
+            //   Status = ClientStatus.Offline;
+            //   HfmTrace.WriteToHfmConsole(TraceLevel.Error,
+            //                              String.Format("{0} ({1}) The path {2} is inaccessible.", HfmTrace.FunctionName, InstanceName, fiQueue.FullName));
+            //   return false;
+            //}
+            else
+            {
+               if (File.Exists(Queue_dat))
+               {
+                  File.Delete(Queue_dat);
+               }
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
+                                          String.Format("{0} ({1}) The path {2} is inaccessible.", HfmTrace.FunctionName, InstanceName, fiQueue.FullName));
+            }
+
+            LastRetrievalTime = DateTime.Now;
+         }
+         finally
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, InstanceName, Start);
          }
       }
 
       /// <summary>
-      /// Remote client queue.dat file name
+      /// Retrieve the log and unit info files from the configured HTTP location
       /// </summary>
-      private string _RemoteQueueFilename = LocalQueue;
-      /// <summary>
-      /// Remote client queue.dat file name
-      /// </summary>
-      public string RemoteQueueFilename
+      private void RetrieveHTTPInstance()
       {
-         get { return _RemoteQueueFilename; }
-         set
+         DateTime Start = HfmTrace.ExecStart;
+
+         try
          {
-            if (String.IsNullOrEmpty(value))
+            string HttpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Path, "/", RemoteFAHLogFilename);
+            string LocalFile = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedFAHLogName);
+            NetworkOps.HttpDownloadHelper(HttpPath, LocalFile, InstanceName, Username, Password, DownloadType.FAHLog);
+
+            try
             {
-               _RemoteQueueFilename = LocalQueue;
+               HttpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Path, "/", RemoteUnitInfoFilename);
+               LocalFile = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedUnitInfoName);
+               NetworkOps.HttpDownloadHelper(HttpPath, LocalFile, InstanceName, Username, Password, DownloadType.UnitInfo);
+            }
+            /*** Remove Requirement for UnitInfo to be Present ***/
+            catch (WebException ex)
+            {
+               if (File.Exists(LocalFile))
+               {
+                  File.Delete(LocalFile);
+               }
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
+                                          String.Format("{0} ({1}) Unitinfo Download Threw Exception: {2}.", HfmTrace.FunctionName, InstanceName, ex.Message));
+            }
+
+            try
+            {
+               HttpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Path, "/", RemoteQueueFilename);
+               LocalFile = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedQueueName);
+               NetworkOps.HttpDownloadHelper(HttpPath, LocalFile, InstanceName, Username, Password, DownloadType.Queue);
+            }
+            /*** Remove Requirement for Queue to be Present ***/
+            catch (WebException ex)
+            {
+               if (File.Exists(LocalFile))
+               {
+                  File.Delete(LocalFile);
+               }
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
+                                          String.Format("{0} ({1}) Queue Download Threw Exception: {2}.", HfmTrace.FunctionName, InstanceName, ex.Message));
+            }
+
+            LastRetrievalTime = DateTime.Now;
+         }
+         finally
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, InstanceName, Start);
+         }
+      }
+
+      /// <summary>
+      /// Retrieve the log and unit info files from the configured FTP location
+      /// </summary>
+      private void RetrieveFTPInstance()
+      {
+         DateTime Start = HfmTrace.ExecStart;
+
+         try
+         {
+            string LocalFilePath = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedFAHLogName);
+            NetworkOps.FtpDownloadHelper(Server, Path, RemoteFAHLogFilename, LocalFilePath, Username, Password, DownloadType.FAHLog);
+
+            try
+            {
+               LocalFilePath = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedUnitInfoName);
+               NetworkOps.FtpDownloadHelper(Server, Path, RemoteUnitInfoFilename, LocalFilePath, Username, Password, DownloadType.UnitInfo);
+            }
+            /*** Remove Requirement for UnitInfo to be Present ***/
+            catch (WebException ex)
+            {
+               if (File.Exists(LocalFilePath))
+               {
+                  File.Delete(LocalFilePath);
+               }
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
+                                          String.Format("{0} ({1}) Unitinfo Download Threw Exception: {2}.", HfmTrace.FunctionName, InstanceName, ex.Message));
+            }
+
+            try
+            {
+               LocalFilePath = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedQueueName);
+               NetworkOps.FtpDownloadHelper(Server, Path, RemoteQueueFilename, LocalFilePath, Username, Password, DownloadType.Queue);
+            }
+            /*** Remove Requirement for Queue to be Present ***/
+            catch (WebException ex)
+            {
+               if (File.Exists(LocalFilePath))
+               {
+                  File.Delete(LocalFilePath);
+               }
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
+                                          String.Format("{0} ({1}) Queue Download Threw Exception: {2}.", HfmTrace.FunctionName, InstanceName, ex.Message));
+            }
+
+            LastRetrievalTime = DateTime.Now;
+         }
+         finally
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, InstanceName, Start);
+         }
+      }
+      #endregion
+
+      #region Queue and Log Processing Functions
+      /// <summary>
+      /// Process the cached log files that exist on this machine
+      /// </summary>
+      public ClientStatus ProcessExisting()
+      {
+         // Exec Start
+         DateTime Start = HfmTrace.ExecStart;
+
+         // Read and Parse the queue.dat file
+         UnitInfo[] parsedUnits = ParseQueueFile();
+         // Read and Scan the FAHlog file
+         LogReader lr = new LogReader();
+         lr.ScanFAHLog(this, System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedFAHLogName));
+
+         // Get the Client Status from the Current Work Unit
+         ClientStatus CurrentWorkUnitStatus = LogReader.GetStatusFromLogLines(lr.CurrentWorkUnitLogLines);
+
+         // Populate Startup Arguments and Work Unit Count Data into this ClientInstance.
+         // This data can only be gathered from the FAHlog, it does not exist in the queue.
+         lr.PopulateClientStartupArgumentData(this);
+         lr.PopulateWorkUnitCountData(this);
+
+         // Default Index to 1 - which is we want if only parsing previous and current logs
+         int CurrentUnitIndex = 1;
+
+         // Decision Time: If Queue Read Failed parsedUnits will be null
+         if (parsedUnits == null)
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName,
+               "Queue unavailable or failed read.  Parsing logs without queue.");
+
+            parsedUnits = ParseCurrentAndPreviousUnitsFromLogsOnly(lr);
+         }
+         else
+         {
+            // Populate User (Team) and User/Machine IDs from the Queue
+            _qr.PopulateUserAndMachineData(this);
+            // Set the Index to the Current Queue Index
+            CurrentUnitIndex = (int)_qr.CurrentIndex;
+
+            if (ParseLogLinesBasedOnQueueIndex(parsedUnits, lr, CurrentWorkUnitStatus) == false)
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture,
+                  "Could not verify log section for current queue entry ({0}). Parsing logs without queue.", CurrentUnitIndex));
+
+               CurrentUnitIndex = 1;
+               parsedUnits = ParseCurrentAndPreviousUnitsFromLogsOnly(lr);
+            }
+         }
+
+         // *** THIS HAS TO BE DONE BEFORE UPDATING THE CurrentUnitInfo ***
+         // Update Benchmarks from parsedUnits array 
+         UpdateBenchmarkData(parsedUnits, CurrentUnitIndex);
+
+         // Update the CurrentUnitInfo if we have a Status
+         if (CurrentWorkUnitStatus.Equals(ClientStatus.Unknown) == false)
+         {
+            CurrentUnitInfo = parsedUnits[CurrentUnitIndex];
+         }
+
+         // Update the CurrentLogLines
+         CurrentLogLines = lr.CurrentWorkUnitLogLines;
+
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, Start);
+
+         // Return the Status
+         return CurrentWorkUnitStatus;
+      }
+
+      /// <summary>
+      /// Read the queue.dat file and Parse Queue Entries from QueueReader into UnitInfo Array.
+      /// </summary>
+      /// <returns>Parsed UnitInfo Array or null on Failure.</returns>
+      private UnitInfo[] ParseQueueFile()
+      {
+         UnitInfo[] units = null;
+
+         // queue.dat is not required to get a reading, if something goes wrong
+         // just catch, log, and continue with parsing log files
+         try
+         {
+            _qr.ReadQueue(System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedQueueName));
+            if (_qr.QueueReadOk)
+            {
+               units = new UnitInfo[10];
+
+               // process entries
+               for (int i = 0; i < 10; i++)
+               {
+                  UnitInfo parsedUnitInfo = new UnitInfo(InstanceName, Path, LastRetrievalTime);
+                  QueueParser.ParseQueueEntry(_qr.GetQueueEntry((uint)i), parsedUnitInfo, ClientIsOnVirtualMachine);
+                  units[i] = parsedUnitInfo;
+               }
             }
             else
             {
-               _RemoteQueueFilename = value;
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format("{0} read failed.", _qr.QueueFilePath));
             }
          }
+         catch (Exception ex)
+         {
+            units = null;
+            HfmTrace.WriteToHfmConsole(TraceLevel.Error, InstanceName, ex);
+         }
+
+         return units;
       }
 
       /// <summary>
-      /// Client host type (Path, FTP, or HTTP)
+      /// Parse Log Line Sections from Queue Positions into UnitInfo .
       /// </summary>
-      private InstanceType _InstanceHostType;
-      /// <summary>
-      /// Client host type (Path, FTP, or HTTP)
-      /// </summary>
-      public InstanceType InstanceHostType
+      /// <param name="parsedUnits">Parsed UnitInfo Array</param>
+      /// <param name="lr">LogReader Instance</param>
+      /// <param name="CurrentWorkUnitStatus">Current Status Based on LogReader.CurrentLogLines</param>
+      private bool ParseLogLinesBasedOnQueueIndex(UnitInfo[] parsedUnits, LogReader lr, ClientStatus CurrentWorkUnitStatus)
       {
-         get { return _InstanceHostType; }
-         set
+         Debug.Assert(parsedUnits.Length == 10);
+
+         QueueLogLines = new IList<LogLine>[10];
+
+         for (int queueIndex = 0; queueIndex < parsedUnits.Length; queueIndex++)
          {
-            if (_InstanceHostType != value)
+            // Get the Log Lines for this queue position from the reader
+            IList<LogLine> logLines = lr.GetLogLinesFromQueueIndex(queueIndex);
+
+            // Could not validate Project Matches Queue Position
+            if (ValidateQueueEntryMatchesLogLines(logLines, parsedUnits[queueIndex]) == false)
             {
-               _InstanceHostType = value;
-               OnInstanceHostTypeChanged(EventArgs.Empty);
+               // If the current index
+               if (_qr.CurrentIndex == queueIndex)
+               {
+                  if (CurrentWorkUnitStatus.Equals(ClientStatus.GettingWorkPacket))
+                  {
+                     // Remove the Log Lines for the Current Queue Index and maintain the Queue information
+                     QueueLogLines[queueIndex] = null;
+                  }
+                  else
+                  {
+                     // Remove the Queue LogLines array
+                     QueueLogLines = null;
+                     // And clear the Queue data itself
+                     _qr.ClearQueue();
+                     return false;
+                  }
+               }
+
+               // Otherwise, just skip this unit and continue
+               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, String.Format(CultureInfo.CurrentCulture,
+                  "Could not find or verify log section for queue entry {0} (this is not a problem).", queueIndex));
+               continue;
             }
+
+            QueueLogLines[queueIndex] = logLines;
+
+            ParseWorkUnitLogLines(this, logLines, parsedUnits[queueIndex], _qr.CurrentIndex == queueIndex);
          }
+
+         return true;
       }
 
       /// <summary>
-      /// Location of log files for this instance
+      /// Validate that the Project (R/C/G) from the Log Lines matches the Project (R/C/G) in the given UnitInfo.
       /// </summary>
-      private string _Path;
-      /// <summary>
-      /// Location of log files for this instance
-      /// </summary>
-      public string Path
+      /// <param name="logLines">Log Lines to process.</param>
+      /// <param name="parsedUnitInfo">UnitInfo object to validate.</param>
+      private static bool ValidateQueueEntryMatchesLogLines(ICollection<LogLine> logLines, UnitInfo parsedUnitInfo)
       {
-         get { return _Path; }
-         set { _Path = value; }
-      }
-
-      /// <summary>
-      /// FTP Server name or IP Address
-      /// </summary>
-      private string _Server;
-      /// <summary>
-      /// FTP Server name or IP Address
-      /// </summary>
-      public string Server
-      {
-         get { return _Server; }
-         set { _Server = value; }
-      }
-
-      /// <summary>
-      /// Username on remote server
-      /// </summary>
-      private string _Username;
-      /// <summary>
-      /// Username on remote server
-      /// </summary>
-      public string Username
-      {
-         get { return _Username; }
-         set { _Username = value; }
-      }
-
-      /// <summary>
-      /// Password on remote server
-      /// </summary>
-      private string _Password;
-      /// <summary>
-      /// Password on remote server
-      /// </summary>
-      public string Password
-      {
-         get { return _Password; }
-         set { _Password = value; }
-      }
-
-      /// <summary>
-      /// Specifies that this client is on a VM that reports local time as UTC
-      /// </summary>
-      private bool _ClientIsOnVirtualMachine;
-      /// <summary>
-      /// Specifies that this client is on a VM that reports local time as UTC
-      /// </summary>
-      public bool ClientIsOnVirtualMachine
-      {
-         get { return _ClientIsOnVirtualMachine; }
-         set 
+         if (logLines != null &&
+             parsedUnitInfo.ProjectIsUnknown == false &&
+             parsedUnitInfo.ProjectRunCloneGen.Equals(LogReader.GetProjectFromLogLines(logLines)))
          {
-            if (_ClientIsOnVirtualMachine != value)
+            return true;
+         }
+
+         return false;
+      }
+
+      /// <summary>
+      /// Parse Log Line Sections from Last Two Units based on LogReader.
+      /// </summary>
+      /// <param name="lr">LogReader Instance</param>
+      private UnitInfo[] ParseCurrentAndPreviousUnitsFromLogsOnly(LogReader lr)
+      {
+         Debug.Assert(lr != null);
+
+         UnitInfo[] parsedUnits = new UnitInfo[2];
+
+         lr.PopulateUserAndMachineData(this);
+
+         parsedUnits[0] = new UnitInfo(InstanceName, Path, LastRetrievalTime, FoldingID, Team);
+         parsedUnits[1] = new UnitInfo(InstanceName, Path, LastRetrievalTime, FoldingID, Team);
+
+         IList<LogLine> PreviousLogLines = lr.PreviousWorkUnitLogLines;
+         if (PreviousLogLines != null)
+         {
+            ParseWorkUnitLogLines(this, lr.PreviousWorkUnitLogLines, parsedUnits[0]);
+         }
+         ParseWorkUnitLogLines(this, lr.CurrentWorkUnitLogLines, parsedUnits[1], true);
+
+         return parsedUnits;
+      }
+
+      /// <summary>
+      /// Parse Log Lines into UnitInfo object
+      /// </summary>
+      /// <param name="Instance">Client Instance doing the processing.</param>
+      /// <param name="logLines">Log Lines to process.</param>
+      /// <param name="parsedUnitInfo">UnitInfo object to populate.</param>
+      private static void ParseWorkUnitLogLines(ClientInstance Instance, IList<LogLine> logLines, UnitInfo parsedUnitInfo)
+      {
+         ParseWorkUnitLogLines(Instance, logLines, parsedUnitInfo, false);
+      }
+
+      /// <summary>
+      /// Parse Log Lines into UnitInfo object
+      /// </summary>
+      /// <param name="Instance">Client Instance doing the processing.</param>
+      /// <param name="logLines">Log Lines to process.</param>
+      /// <param name="parsedUnitInfo">UnitInfo object to populate.</param>
+      /// <param name="ReadUnitInfoFile">Flag - Read the unitinfo.txt file.</param>
+      private static void ParseWorkUnitLogLines(ClientInstance Instance, IList<LogLine> logLines, UnitInfo parsedUnitInfo, bool ReadUnitInfoFile)
+      {
+         LogParser lp = new LogParser(Instance, parsedUnitInfo);
+         lp.ParseFAHLog(logLines);
+
+         if (ReadUnitInfoFile)
+         {
+            if (lp.ParseUnitInfoFile(System.IO.Path.Combine(PreferenceSet.CacheDirectory, Instance.CachedUnitInfoName)) == false)
             {
-               _ClientIsOnVirtualMachine = value;
-               OnClientIsOnVirtualMachineChanged(EventArgs.Empty);
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, Instance.InstanceName, "unitinfo parse failed.");
             }
          }
       }
 
       /// <summary>
-      /// Specifies the number of minutes (+/-) this client's clock differentiates
+      /// Update Project Benchmarks
       /// </summary>
-      private Int32 _ClientTimeOffset;
-      /// <summary>
-      /// Specifies the number of minutes (+/-) this client's clock differentiates
-      /// </summary>
-      public Int32 ClientTimeOffset
+      /// <param name="parsedUnits">Parsed UnitInfo Array</param>
+      /// <param name="BenchmarkUpdateIndex">Index of Current UnitInfo</param>
+      private void UpdateBenchmarkData(UnitInfo[] parsedUnits, int BenchmarkUpdateIndex)
       {
-         get { return _ClientTimeOffset; }
-         set { _ClientTimeOffset = value; }
-      } 
-      #endregion
+         bool FoundCurrent = false;
 
-      #region Values captured during log file parse
-      /// <summary>
-      /// Status of this client
-      /// </summary>
-      private ClientStatus _Status;
-      /// <summary>
-      /// Status of this client
-      /// </summary>
-      public ClientStatus Status
-      {
-         get { return _Status; }
-         set 
-         { 
-            if (_Status != value)
+         int index = BenchmarkUpdateIndex;
+         // Set index for the oldest unit in the array
+         if (index == parsedUnits.Length - 1)
+         {
+            index = 0;
+         }
+         else
+         {
+            index++;
+         }
+
+         while (index != -1)
+         {
+            if (FoundCurrent == false && IsUnitInfoCurrentUnitInfo(parsedUnits[index]))
             {
-               _Status = value;
-               //OnStatusChanged(EventArgs.Empty);
+               FoundCurrent = true;
+            }
+
+            if (FoundCurrent || index == BenchmarkUpdateIndex)
+            {
+               int previousFrameID = 0;
+               // check this against the CurrentUnitInfo
+               if (IsUnitInfoCurrentUnitInfo(parsedUnits[index]))
+               {
+                  // current frame has already been recorded, increment to the next frame
+                  previousFrameID = CurrentUnitInfo.LastUnitFrameID + 1;
+               }
+
+               // Update benchmarks
+               ProteinBenchmarkCollection.Instance.UpdateBenchmarkData(parsedUnits[index], previousFrameID,
+                                                                       parsedUnits[index].LastUnitFrameID);
+            }
+
+            if (index == BenchmarkUpdateIndex)
+            {
+               index = -1;
+            }
+            else if (index == parsedUnits.Length - 1)
+            {
+               index = 0;
+            }
+            else
+            {
+               index++;
             }
          }
       }
 
       /// <summary>
-      /// Client Startup Arguments
-      /// </summary>
-      private string _Arguments = String.Empty;
-      /// <summary>
-      /// Client Startup Arguments
-      /// </summary>
-      public string Arguments
-      {
-         get { return _Arguments; }
-         set { _Arguments = value; }
-      }
-
-      /// <summary>
-      /// User ID associated with this client
-      /// </summary>
-      private string _UserID;
-      /// <summary>
-      /// User ID associated with this client
-      /// </summary>
-      public string UserID
-      {
-         get { return _UserID; }
-         set { _UserID = value; }
-      }
-
-      /// <summary>
-      /// Machine ID associated with this client
-      /// </summary>
-      private int _MachineID;
-      /// <summary>
-      /// Machine ID associated with this client
-      /// </summary>
-      public int MachineID
-      {
-         get { return _MachineID; }
-         set { _MachineID = value; }
-      }
-      
-      /// <summary>
-      /// Total Units Completed for lifetime of the client (read from log file)
-      /// </summary>
-      private Int32 _TotalUnits;
-      /// <summary>
-      /// Total Units Completed for lifetime of the client (read from log file)
-      /// </summary>
-      public Int32 TotalUnits
-      {
-         get { return _TotalUnits; }
-         set { _TotalUnits = value; }
-      }
-
-      /// <summary>
-      /// The Folding ID (Username) attached to this client
-      /// </summary>
-      private string _FoldingID;
-      /// <summary>
-      /// The Folding ID (Username) attached to this client
-      /// </summary>
-      public string FoldingID
-      {
-         get { return _FoldingID; }
-         set { _FoldingID = value; }
-      }
-
-      /// <summary>
-      /// The Team number attached to this client
-      /// </summary>
-      private Int32 _Team;
-      /// <summary>
-      /// The Team number attached to this client
-      /// </summary>
-      public Int32 Team
-      {
-         get { return _Team; }
-         set { _Team = value; }
-      }
-
-      /// <summary>
-      /// Number of completed units since the last client start
-      /// </summary>
-      private Int32 _NumberOfCompletedUnitsSinceLastStart;
-      /// <summary>
-      /// Number of completed units since the last client start
-      /// </summary>
-      public Int32 NumberOfCompletedUnitsSinceLastStart
-      {
-         get { return _NumberOfCompletedUnitsSinceLastStart; }
-         set { _NumberOfCompletedUnitsSinceLastStart = value; }
-      }
-
-      /// <summary>
-      /// Number of failed units since the last client start
-      /// </summary>
-      private Int32 _NumberOfFailedUnitsSinceLastStart;
-      /// <summary>
-      /// Number of failed units since the last client start
-      /// </summary>
-      public Int32 NumberOfFailedUnitsSinceLastStart
-      {
-         get { return _NumberOfFailedUnitsSinceLastStart; }
-         set { _NumberOfFailedUnitsSinceLastStart = value; }
-      }
-
-      /// <summary>
-      /// Class member containing info specific to the current work unit
-      /// </summary>
-      private UnitInfo _CurrentUnitInfo;
-      /// <summary>
-      /// Class member containing info specific to the current work unit
-      /// </summary>
-      public UnitInfo CurrentUnitInfo
-      {
-         get { return _CurrentUnitInfo; }
-         //set 
-         //{ 
-         //   _CurrentUnitInfo = value;
-         //}
-      } 
-      
-      /// <summary>
-      /// Array of LogLine Lists - Used to hold QueueEntry LogLines
-      /// </summary>
-      private IList<LogLine>[] _QueueLogLines;
-
-      /// <summary>
-      /// List of current log file lines
-      /// </summary>
-      private IList<LogLine> _CurrentLogLines = new List<LogLine>();
-      /// <summary>
-      /// List of current log file text lines
-      /// </summary>
-      public IList<LogLine> CurrentLogLines
-      {
-         get { return _CurrentLogLines; }
-         //set { _CurrentLogLines = value; }
-      }
-      #endregion
-
-      #endregion
-
-      #region Constructor
-      /// <summary>
-      /// Primary Constructor
-      /// </summary>
-      public ClientInstance(InstanceType type)
-      {
-         // When Instance Host Type Changes, Clear the User Specified Values
-         InstanceHostTypeChanged += ClientInstance_InstanceHostTypeChanged;
-         // When Client is on VM Changes, Clear the Unit Frame Data
-         // The captured TimeOfFrame values will no longer be valid
-         ClientIsOnVirtualMachineChanged += ClientInstance_ClientIsOnVirtualMachineChanged;
-         
-         // Set the Host Type
-         _InstanceHostType = type;
-         // Clear (Init) Instance Values
-         Clear();
-         // Clear (Init) User Specified Instance Values
-         ClearUserSpecifiedValues();
-         // Create a fresh UnitInfo
-         _CurrentUnitInfo = new UnitInfo(InstanceName, Path, DateTime.Now);
-      }
-      #endregion
-
-      #region Protected Event Wrappers
-      /// <summary>
-      /// Call when changing Host Type
-      /// </summary>
-      protected void OnInstanceHostTypeChanged(EventArgs e)
-      {
-         if (InstanceHostTypeChanged != null)
-         {
-            InstanceHostTypeChanged(this, e);
-         }
-      }
-
-      /// <summary>
-      /// Call when changing Client is on VM
-      /// </summary>
-      protected void OnClientIsOnVirtualMachineChanged(EventArgs e)
-      {
-         if (ClientIsOnVirtualMachineChanged != null)
-         {
-            ClientIsOnVirtualMachineChanged(this, e);
-         }
-      } 
-      #endregion
-
-      #region Data Processing
-      /// <summary>
-      /// Clear Client Instance and UnitInfo Values
-      /// </summary>
-      private void Clear()
-      {
-         // reset client level values
-         _CurrentLogLines = new List<LogLine>();
-         
-         FoldingID = UnitInfo.UsernameDefault;
-         Team = UnitInfo.TeamDefault;
-         UserID = DefaultUserID;
-         MachineID = DefaultMachineID;
-
-         TotalUnits = 0;
-         NumberOfCompletedUnitsSinceLastStart = 0;
-         NumberOfFailedUnitsSinceLastStart = 0;
-      }
-      
-      public void RestoreUnitInfo(UnitInfo unit)
-      {
-         _CurrentUnitInfo = unit;
-      }
-
-      public IList<LogLine> GetLogLinesForQueueIndex(int QueueIndex)
-      {
-         if (_QueueLogLines != null && _QueueLogLines[QueueIndex] != null)
-         {
-            return _QueueLogLines[QueueIndex];
-         }
-
-         return null;
-      }
-
-      private void ClientInstance_ClientIsOnVirtualMachineChanged(object sender, EventArgs e)
-      {
-         ClearUnitFrameData();
-      }
-
-      /// <summary>
-      /// Clear the Unit Frame Data from the Current Unit Info
-      /// </summary>
-      private void ClearUnitFrameData()
-      {
-         CurrentUnitInfo.ClearUnitFrameData();
-      }
-      
-      /// <summary>
-      /// 
+      /// Does the given UnitInfo.ProjectRunCloneGen match the CurrentUnitInfo.ProjectRunCloneGen?
       /// </summary>
       private bool IsUnitInfoCurrentUnitInfo(UnitInfo parsedUnitInfo)
       {
@@ -810,34 +1395,10 @@ namespace HFM.Instances
 
          return false;
       }
+      #endregion
+
+      #region Status Handling and Determination
       
-      /// <summary>
-      /// Handles the InstanceHostTypeChanged Event
-      /// </summary>
-      private void ClientInstance_InstanceHostTypeChanged(object sender, EventArgs e)
-      {
-         ClearUserSpecifiedValues();
-      }
-
-      /// <summary>
-      /// Clear the user specified values that define this instance
-      /// </summary>
-      private void ClearUserSpecifiedValues()
-      {
-         InstanceName = String.Empty;
-         ClientProcessorMegahertz = 1;
-         RemoteFAHLogFilename = LocalFAHLog;
-         RemoteUnitInfoFilename = LocalUnitInfo;
-         RemoteQueueFilename = LocalQueue;
-         ClientIsOnVirtualMachine = false;
-         ClientTimeOffset = 0;
-
-         Path = String.Empty;
-         Server = String.Empty;
-         Username = String.Empty;
-         Password = String.Empty;
-      }
-
       /// <summary>
       /// Handles the Client Status Returned by Log Parsing and then determines what values to feed the DetermineStatus routine.
       /// </summary>
@@ -866,12 +1427,13 @@ namespace HFM.Instances
             case ClientStatus.EuePause:
             case ClientStatus.Hung:
             case ClientStatus.Paused:
+            case ClientStatus.SendingWorkPacket:
             case ClientStatus.GettingWorkPacket:
                // Update Client Status - don't call Determine Status
                Status = returnedStatus;
                return;
          }
-      
+
          // if we have a frame time, use it
          if (CurrentUnitInfo.RawTimePerSection > 0)
          {
@@ -881,14 +1443,14 @@ namespace HFM.Instances
          // no frame time based on the current PPD calculation selection ('LastFrame', 'LastThreeFrames', etc)
          // this section attempts to give DetermineStats values to detect Hung clients before they have a valid
          // frame time - Issue 10
-         else 
+         else
          {
             // if we have a frame time stamp, use it
             TimeSpan frameTime = CurrentUnitInfo.TimeOfLastFrame;
             if (frameTime == TimeSpan.Zero)
             {
                // otherwise, use the unit start time
-               frameTime = CurrentUnitInfo.UnitStartTime;
+               frameTime = CurrentUnitInfo.UnitStartTimeStamp;
             }
 
             // get the average frame time for this client and project id
@@ -907,7 +1469,7 @@ namespace HFM.Instances
 
             // no benchmarked average frame time, use some arbitrary (and large) values for the frame time
             // we want to give the client plenty of time to show progress but don't want it to sit idle for days
-            else 
+            else
             {
                // CPU: use 1 hour (3600 seconds) as a base frame time
                int SectionTime = 3600;
@@ -929,17 +1491,20 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// Send EuePause Status Email
+      /// </summary>
       private void SendEuePauseEmail()
       {
          PreferenceSet Prefs = PreferenceSet.Instance;
 
-         if (Prefs.EmailReportingEnabled && Prefs.ReportEuePause) 
+         if (Prefs.EmailReportingEnabled && Prefs.ReportEuePause)
          {
             string messageBody = String.Format("HFM.NET detected that Client '{0}' has entered a 24 hour EUE Pause state.", InstanceName);
             try
             {
                NetworkOps.SendEmail(Prefs.EmailReportingFromAddress, Prefs.EmailReportingToAddress,
-                                    "HFM.NET - Client EUE Pause Error", messageBody, Prefs.EmailReportingServerAddress, 
+                                    "HFM.NET - Client EUE Pause Error", messageBody, Prefs.EmailReportingServerAddress,
                                     Prefs.EmailReportingServerUsername, Prefs.EmailReportingServerPassword);
             }
             catch (Exception ex)
@@ -947,8 +1512,8 @@ namespace HFM.Instances
                HfmTrace.WriteToHfmConsole(ex);
             }
          }
-   }
-      
+      }
+
       /// <summary>
       /// Determine Client Status
       /// </summary>
@@ -1056,642 +1621,101 @@ namespace HFM.Instances
          }
       }
 
-      #region Queue and Log Processing Functions
+      #region Status Color Helper Functions
       /// <summary>
-      /// Process the cached log files that exist on this machine
+      /// Gets Status Color Pen Object
       /// </summary>
-      public ClientStatus ProcessExisting()
+      /// <param name="status">Client Status</param>
+      /// <returns>Status Color (Pen)</returns>
+      public static Pen GetStatusPen(ClientStatus status)
       {
-         // Exec Start
-         DateTime Start = HfmTrace.ExecStart;
-         
-         // Read and Parse the queue.dat file
-         UnitInfo[] parsedUnits = ParseQueueFile();
-         // Read and Scan the FAHlog file
-         LogReader lr = new LogReader();
-         lr.ScanFAHLog(this, System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedFAHLogName));
-         
-         // Get the Client Status from the Current Work Unit
-         ClientStatus CurrentWorkUnitStatus = LogReader.GetStatusFromLogLines(lr.CurrentWorkUnitLogLines);
-         
-         // Populate Startup Arguments and Work Unit Count Data into this ClientInstance.
-         // This data can only be gathered from the FAHlog, it does not exist in the queue.
-         lr.PopulateClientStartupArgumentData(this);
-         lr.PopulateWorkUnitCountData(this);
-         
-         // Default Index to 1 - which is we want if only parsing previous and current logs
-         int BenchmarkUpdateIndex = 1;
-
-         // Decision Time: If Queue Read Failed parsedUnits will be null
-         if (parsedUnits == null)
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, 
-               "Queue unavailable or failed read.  Parsing logs without queue.");
-         
-            parsedUnits = ParseCurrentAndPreviousUnitsFromLogsOnly(lr);
-         }
-         else
-         {
-            // Populate User (Team) and User/Machine IDs from the Queue
-            _qr.PopulateUserAndMachineData(this);
-            // Set the Index to the Current Queue Index
-            BenchmarkUpdateIndex = (int)_qr.CurrentIndex;
-
-            if (ParseLogLinesBasedOnQueueIndex(parsedUnits, lr, CurrentWorkUnitStatus) == false)
-            {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture,
-                  "Could not verify log section for current queue entry ({0}). Parsing logs without queue.", _qr.CurrentIndex));
-            
-               BenchmarkUpdateIndex = 1;
-               parsedUnits = ParseCurrentAndPreviousUnitsFromLogsOnly(lr);
-            }
-         }
-
-         // *** THIS HAS TO BE DONE BEFORE UPDATING THE _CurrentUnitInfo ***
-         // Update Benchmarks from parsedUnits array 
-         UpdateBenchmarkData(parsedUnits, BenchmarkUpdateIndex);
-
-         // Update the CurrentUnitInfo if we have a Status
-         if (CurrentWorkUnitStatus.Equals(ClientStatus.Unknown) == false)
-         {
-            _CurrentUnitInfo = parsedUnits[BenchmarkUpdateIndex];
-         }
-
-         // Update the CurrentLogLines
-         _CurrentLogLines = lr.CurrentWorkUnitLogLines;
-         
-         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, Start);
-         
-         // Return the Status
-         return CurrentWorkUnitStatus;
+         return new Pen(GetStatusColor(status));
       }
 
       /// <summary>
-      /// Read the queue.dat file and Parse Queue Entries from QueueReader into UnitInfo Array.
+      /// Gets Status Color Brush Object
       /// </summary>
-      /// <returns>Parsed UnitInfo Array or null on Failure.</returns>
-      private UnitInfo[] ParseQueueFile()
+      /// <param name="status">Client Status</param>
+      /// <returns>Status Color (Brush)</returns>
+      public static SolidBrush GetStatusBrush(ClientStatus status)
       {
-         UnitInfo[] units = null;
-         
-         // queue.dat is not required to get a reading, if something goes wrong
-         // just catch, log, and continue with parsing log files
-         try
-         {
-            _qr.ReadQueue(System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedQueueName));
-            if (_qr.QueueReadOk)
-            {
-               units = new UnitInfo[10];
-            
-               // process entries
-               for (int i = 0; i < 10; i++)
-               {
-                  UnitInfo parsedUnitInfo = new UnitInfo(InstanceName, Path, LastRetrievalTime);
-                  QueueParser.ParseQueueEntry(_qr.GetQueueEntry((uint)i), parsedUnitInfo, ClientIsOnVirtualMachine);
-                  units[i] = parsedUnitInfo;
-               }
-            }
-            else
-            {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format("{0} read failed.", _qr.QueueFilePath));
-            }
-         }
-         catch (Exception ex)
-         {
-            units = null;
-            HfmTrace.WriteToHfmConsole(TraceLevel.Error, InstanceName, ex);
-         }
-         
-         return units;
+         return new SolidBrush(GetStatusColor(status));
       }
 
       /// <summary>
-      /// Parse Log Line Sections from Queue Positions into UnitInfo .
+      /// Gets Status Html Color String
       /// </summary>
-      /// <param name="parsedUnits">Parsed UnitInfo Array</param>
-      /// <param name="lr">LogReader Instance</param>
-      /// <param name="CurrentWorkUnitStatus">Current Status Based on LogReader.CurrentLogLines</param>
-      private bool ParseLogLinesBasedOnQueueIndex(UnitInfo[] parsedUnits, LogReader lr, ClientStatus CurrentWorkUnitStatus)
+      /// <param name="status">Client Status</param>
+      /// <returns>Status Html Color (String)</returns>
+      public static string GetStatusHtmlColor(ClientStatus status)
       {
-         Debug.Assert(parsedUnits.Length == 10);
-
-         _QueueLogLines = new IList<LogLine>[10];
-      
-         for (int queueIndex = 0; queueIndex < parsedUnits.Length; queueIndex++)
-         {
-            // Get the Log Lines for this queue position from the reader
-            IList<LogLine> logLines = lr.GetLogLinesFromQueueIndex(queueIndex);
-
-            // Could not validate Project Matches Queue Position
-            if (ValidateQueueEntryMatchesLogLines(logLines, parsedUnits[queueIndex]) == false)
-            {
-               // If the current index
-               if (_qr.CurrentIndex == queueIndex)
-               {
-                  if (CurrentWorkUnitStatus.Equals(ClientStatus.GettingWorkPacket))
-                  {
-                     // Remove the Log Lines for the Current Queue Index and maintain the Queue information
-                     _QueueLogLines[queueIndex] = null;
-                  }
-                  else
-                  {
-                     // Remove the Queue LogLines array
-                     _QueueLogLines = null;
-                     // And clear the Queue data itself
-                     _qr.ClearQueue();
-                     return false;
-                  }
-               }
-               
-               // Otherwise, just skip this unit and continue
-               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, String.Format(CultureInfo.CurrentCulture,
-                  "Could not find or verify log section for queue entry {0} (this is not a problem).", queueIndex));
-               continue;
-            }
-            
-            _QueueLogLines[queueIndex] = logLines;
-
-            ParseWorkUnitLogLines(this, logLines, parsedUnits[queueIndex], _qr.CurrentIndex == queueIndex);
-         }
-         
-         return true;
+         return ColorTranslator.ToHtml(GetStatusColor(status));
       }
 
       /// <summary>
-      /// Parse Log Line Sections from Last Two Units based on LogReader.
+      /// Gets Status Html Font Color String
       /// </summary>
-      /// <param name="lr">LogReader Instance</param>
-      private UnitInfo[] ParseCurrentAndPreviousUnitsFromLogsOnly(LogReader lr)
+      /// <param name="status">Client Status</param>
+      /// <returns>Status Html Font Color (String)</returns>
+      public static string GetStatusHtmlFontColor(ClientStatus status)
       {
-         Debug.Assert(lr != null);
-
-         UnitInfo[] parsedUnits = new UnitInfo[2];
-
-         lr.PopulateUserAndMachineData(this);
-
-         parsedUnits[0] = new UnitInfo(InstanceName, Path, LastRetrievalTime, FoldingID, Team);
-         parsedUnits[1] = new UnitInfo(InstanceName, Path, LastRetrievalTime, FoldingID, Team);
-
-         IList<LogLine> PreviousLogLines = lr.PreviousWorkUnitLogLines;
-         if (PreviousLogLines != null)
+         switch (status)
          {
-            ParseWorkUnitLogLines(this, lr.PreviousWorkUnitLogLines, parsedUnits[0]);
+            case ClientStatus.Running:
+               return ColorTranslator.ToHtml(Color.White);
+            case ClientStatus.RunningNoFrameTimes:
+               return ColorTranslator.ToHtml(Color.Black);
+            case ClientStatus.Stopped:
+            case ClientStatus.EuePause:
+            case ClientStatus.Hung:
+               return ColorTranslator.ToHtml(Color.White);
+            case ClientStatus.Paused:
+               return ColorTranslator.ToHtml(Color.Black);
+            case ClientStatus.SendingWorkPacket:
+            case ClientStatus.GettingWorkPacket:
+               return ColorTranslator.ToHtml(Color.White);
+            case ClientStatus.Offline:
+               return ColorTranslator.ToHtml(Color.Black);
+            default:
+               return ColorTranslator.ToHtml(Color.Black);
          }
-         ParseWorkUnitLogLines(this, lr.CurrentWorkUnitLogLines, parsedUnits[1], true);
-         
-         return parsedUnits;
-      }
-      
-      /// <summary>
-      /// Validate that the Project (R/C/G) from the Log Lines matches the Project (R/C/G) in the given UnitInfo.
-      /// </summary>
-      /// <param name="logLines">Log Lines to process.</param>
-      /// <param name="parsedUnitInfo">UnitInfo object to validate.</param>
-      private static bool ValidateQueueEntryMatchesLogLines(ICollection<LogLine> logLines, UnitInfo parsedUnitInfo)
-      {
-         if (logLines != null &&
-             parsedUnitInfo.ProjectIsUnknown == false &&
-             parsedUnitInfo.ProjectRunCloneGen.Equals(LogReader.GetProjectFromLogLines(logLines)))
-         {
-            return true;
-         }
-         
-         return false;
       }
 
       /// <summary>
-      /// Parse Log Lines into UnitInfo object
+      /// Gets Status Color Object
       /// </summary>
-      /// <param name="Instance">Client Instance doing the processing.</param>
-      /// <param name="logLines">Log Lines to process.</param>
-      /// <param name="parsedUnitInfo">UnitInfo object to populate.</param>
-      private static void ParseWorkUnitLogLines(ClientInstance Instance, IList<LogLine> logLines, UnitInfo parsedUnitInfo)
+      /// <param name="status">Client Status</param>
+      /// <returns>Status Color (Color)</returns>
+      public static Color GetStatusColor(ClientStatus status)
       {
-         ParseWorkUnitLogLines(Instance, logLines, parsedUnitInfo, false);
-      }
-
-      /// <summary>
-      /// Parse Log Lines into UnitInfo object
-      /// </summary>
-      /// <param name="Instance">Client Instance doing the processing.</param>
-      /// <param name="logLines">Log Lines to process.</param>
-      /// <param name="parsedUnitInfo">UnitInfo object to populate.</param>
-      /// <param name="ReadUnitInfoFile">Flag - Read the unitinfo.txt file.</param>
-      private static void ParseWorkUnitLogLines(ClientInstance Instance, IList<LogLine> logLines, UnitInfo parsedUnitInfo, bool ReadUnitInfoFile)
-      {
-         LogParser lp = new LogParser(Instance, parsedUnitInfo);
-         if (ReadUnitInfoFile)
+         switch (status)
          {
-            if (lp.ParseUnitInfoFile(System.IO.Path.Combine(PreferenceSet.CacheDirectory, Instance.CachedUnitInfoName)) == false)
-            {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, Instance.InstanceName, "unitinfo parse failed.");
-            }
-         }
-
-         lp.ParseFAHLog(logLines);
-      }
-
-      /// <summary>
-      /// Update Project Benchmarks
-      /// </summary>
-      /// <param name="parsedUnits">Parsed UnitInfo Array</param>
-      /// <param name="BenchmarkUpdateIndex">Index of Current UnitInfo</param>
-      private void UpdateBenchmarkData(UnitInfo[] parsedUnits, int BenchmarkUpdateIndex)
-      {
-         bool FoundCurrent = false;
-         
-         int index = BenchmarkUpdateIndex;
-         // Set index for the oldest unit in the array
-         if (index == parsedUnits.Length - 1)
-         {
-            index = 0;
-         }
-         else
-         {
-            index++;
-         }
-
-         while (index != -1)
-         {
-            if (FoundCurrent == false && IsUnitInfoCurrentUnitInfo(parsedUnits[index]))
-            {
-               FoundCurrent = true;
-            }
-            
-            if (FoundCurrent || index == BenchmarkUpdateIndex)
-            {
-               int previousFrameID = 0;
-               // check this against the CurrentUnitInfo
-               if (IsUnitInfoCurrentUnitInfo(parsedUnits[index]))
-               {
-                  // current frame has already been recorded, increment to the next frame
-                  previousFrameID = CurrentUnitInfo.LastUnitFrameID + 1;
-               }
-
-               // Update benchmarks
-               ProteinBenchmarkCollection.Instance.UpdateBenchmarkData(parsedUnits[index], previousFrameID,
-                                                                       parsedUnits[index].LastUnitFrameID);
-            }
-
-            if (index == BenchmarkUpdateIndex)
-            {
-               index = -1;
-            }
-            else if (index == parsedUnits.Length - 1)
-            {
-               index = 0;
-            }
-            else
-            {
-               index++;
-            }
+            case ClientStatus.Running:
+               return Color.Green; // Issue 45
+            case ClientStatus.RunningNoFrameTimes:
+               return Color.Yellow;
+            case ClientStatus.Stopped:
+            case ClientStatus.EuePause:
+            case ClientStatus.Hung:
+               return Color.DarkRed;
+            case ClientStatus.Paused:
+               return Color.Orange;
+            case ClientStatus.SendingWorkPacket:
+            case ClientStatus.GettingWorkPacket:
+               return Color.Purple;
+            case ClientStatus.Offline:
+               return Color.Gray;
+            default:
+               return Color.Gray;
          }
       }
       #endregion
-
-      #region Project and Protein Matching
-      /// <summary>
-      /// Attempts to set the Protein based on the given Project data.
-      /// </summary>
-      /// <param name="parsedUnitInfo">Container for parsed information</param>
-      /// <param name="match">Regex Match containing Project values</param>
-      internal static void DoProjectIDMatch(UnitInfo parsedUnitInfo, Match match)
-      {
-         List<int> ProjectID = new List<int>(4);
-
-         ProjectID.Add(Int32.Parse(match.Result("${ProjectNumber}")));
-         ProjectID.Add(Int32.Parse(match.Result("${Run}")));
-         ProjectID.Add(Int32.Parse(match.Result("${Clone}")));
-         ProjectID.Add(Int32.Parse(match.Result("${Gen}")));
-
-         DoProjectIDMatch(parsedUnitInfo, ProjectID);
-      }
-
-      /// <summary>
-      /// Attempts to set the Protein based on the given Project data.
-      /// </summary>
-      /// <param name="parsedUnitInfo">Container for parsed information</param>
-      /// <param name="ProjectID">List of Project (R/C/G) values</param>
-      internal static void DoProjectIDMatch(UnitInfo parsedUnitInfo, IList<int> ProjectID)
-      {
-         Debug.Assert(ProjectID.Count == 4);
-
-         Protein protein = ProteinCollection.Instance.GetProtein(ProjectID[0]);
-         if (protein.IsUnknown == false)
-         {
-            SetProjectAndClientType(parsedUnitInfo, protein, ProjectID);
-         }
-      }
-
-      /// <summary>
-      /// Sets the ProjectID and gets the Protein info from the Protein Collection (from Stanford)
-      /// </summary>
-      /// <param name="parsedUnitInfo">Container for parsed information</param>
-      /// <param name="protein">Unit Protein</param>
-      /// <param name="ProjectID">List of Project (R/C/G) values</param>
-      /// <exception cref="System.Collections.Generic.KeyNotFoundException">Thrown when Project ID cannot be found in Protein Collection.</exception>
-      private static void SetProjectAndClientType(UnitInfo parsedUnitInfo, Protein protein, IList<int> ProjectID)
-      {
-         Debug.Assert(ProjectID.Count == 4);
-
-         parsedUnitInfo.ProjectID = ProjectID[0];
-         parsedUnitInfo.ProjectRun = ProjectID[1];
-         parsedUnitInfo.ProjectClone = ProjectID[2];
-         parsedUnitInfo.ProjectGen = ProjectID[3];
-
-         parsedUnitInfo.CurrentProtein = protein;
-         parsedUnitInfo.TypeOfClient = UnitInfo.GetClientTypeFromProtein(parsedUnitInfo.CurrentProtein);
-      } 
-      #endregion
-
-      /// <summary>
-      /// Retrieve Instance Log Files based on Instance Type
-      /// </summary>
-      public void Retrieve()
-      {
-         // Don't allow this to fire more than once at a time
-         if (_RetrievalInProgress) return;
-
-         try
-         {
-            _RetrievalInProgress = true;
-         
-            switch (InstanceHostType)
-            {
-               case InstanceType.PathInstance:
-                  RetrievePathInstance();
-                  break;
-               case InstanceType.HTTPInstance:
-                  RetrieveHTTPInstance();
-                  break;
-               case InstanceType.FTPInstance:
-                  RetrieveFTPInstance();
-                  break;
-               default:
-                  throw new NotImplementedException(String.Format("Instance Type '{0}' is not implemented", InstanceHostType));
-            }
-
-            // Clear the Instance Level values before processing
-            Clear();
-            // Process the retrieved logs
-            ClientStatus returnedStatus = ProcessExisting();
-
-            /*** Setting this flag false aids in Unit Test since the results of *
-             *   determining status are relative to the current time of day. ***/
-            if (HandleStatusOnRetrieve)
-            {
-               // Handle the status retured from the log parse
-               HandleReturnedStatus(returnedStatus);
-            }
-            else
-            {
-               Status = returnedStatus;
-            }
-         }
-         catch (Exception ex)
-         {
-            Status = ClientStatus.Offline;
-            HfmTrace.WriteToHfmConsole(InstanceName, ex);
-         }
-         finally
-         {
-            _RetrievalInProgress = false;
-         }
-
-         HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Client Status: {2}", HfmTrace.FunctionName, InstanceName, Status));
-      }
-
-      /// <summary>
-      /// Retrieve the log and unit info files from the configured Local path
-      /// </summary>
-      private void RetrievePathInstance()
-      {
-         DateTime Start = HfmTrace.ExecStart;
-
-         try
-         {
-            FileInfo fiLog = new FileInfo(System.IO.Path.Combine(Path, RemoteFAHLogFilename));
-            string FAHLog_txt = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedFAHLogName);
-            FileInfo fiCachedLog = new FileInfo(FAHLog_txt);
-
-            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
-                                       String.Format("{0} ({1}) FAHlog copy (start)", HfmTrace.FunctionName, InstanceName));
-            if (fiLog.Exists)
-            {
-               if (fiCachedLog.Exists == false || fiLog.Length != fiCachedLog.Length)
-               {
-                  fiLog.CopyTo(FAHLog_txt, true);
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
-                                             String.Format("{0} ({1}) FAHlog copy (success)", HfmTrace.FunctionName, InstanceName));
-               }
-               else
-               {
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
-                                             String.Format("{0} ({1}) FAHlog copy (file has not changed)", HfmTrace.FunctionName, InstanceName));
-               }
-            }
-            else
-            {
-               //Status = ClientStatus.Offline;
-               //HfmTrace.WriteToHfmConsole(TraceLevel.Error,
-               //                           String.Format("{0} ({1}) The path {2} is inaccessible.", HfmTrace.FunctionName, InstanceName, fiLog.FullName));
-               //return false;
-               
-               throw new FileNotFoundException(String.Format("The path {0} is inaccessible.", fiLog.FullName));
-            }
-
-            // Retrieve unitinfo.txt (or equivalent)
-            FileInfo fiUI = new FileInfo(System.IO.Path.Combine(Path, RemoteUnitInfoFilename));
-            string UnitInfo_txt = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedUnitInfoName);
-
-            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
-                                       String.Format("{0} ({1}) UnitInfo copy (start)", HfmTrace.FunctionName, InstanceName));
-            if (fiUI.Exists)
-            {
-               // If file size is too large, do not copy it and delete the current cached copy - Issue 2
-               if (fiUI.Length < NetworkOps.UnitInfoMax)
-               {
-                  fiUI.CopyTo(UnitInfo_txt, true);
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
-                                             String.Format("{0} ({1}) UnitInfo copy (success)", HfmTrace.FunctionName, InstanceName));
-               }
-               else
-               {
-                  if (File.Exists(UnitInfo_txt))
-                  {
-                     File.Delete(UnitInfo_txt);
-                  }
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
-                                             String.Format("{0} ({1}) UnitInfo copy (file is too big: {2} bytes)", HfmTrace.FunctionName, InstanceName, fiUI.Length));
-               }
-            }
-            /*** Remove Requirement for UnitInfo to be Present ***/
-            //else
-            //{
-            //   Status = ClientStatus.Offline;
-            //   HfmTrace.WriteToHfmConsole(TraceLevel.Error,
-            //                              String.Format("{0} ({1}) The path {2} is inaccessible.", HfmTrace.FunctionName, InstanceName, fiUI.FullName));
-            //   return false;
-            //}
-            else
-            {
-               if (File.Exists(UnitInfo_txt))
-               {
-                  File.Delete(UnitInfo_txt);
-               }
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
-                                          String.Format("{0} ({1}) The path {2} is inaccessible.", HfmTrace.FunctionName, InstanceName, fiUI.FullName));
-            }
-
-            // Retrieve queue.dat (or equivalent)
-            FileInfo fiQueue = new FileInfo(System.IO.Path.Combine(Path, RemoteQueueFilename));
-            string Queue_dat = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedQueueName);
-
-            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
-                                       String.Format("{0} ({1}) Queue copy (start)", HfmTrace.FunctionName, InstanceName));
-            if (fiQueue.Exists)
-            {
-               fiQueue.CopyTo(Queue_dat, true);
-               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
-                                          String.Format("{0} ({1}) Queue copy (success)", HfmTrace.FunctionName, InstanceName));
-            }
-            /*** Remove Requirement for Queue to be Present ***/
-            //else
-            //{
-            //   Status = ClientStatus.Offline;
-            //   HfmTrace.WriteToHfmConsole(TraceLevel.Error,
-            //                              String.Format("{0} ({1}) The path {2} is inaccessible.", HfmTrace.FunctionName, InstanceName, fiUI.FullName));
-            //   return false;
-            //}
-            else
-            {
-               if (File.Exists(Queue_dat))
-               {
-                  File.Delete(Queue_dat);
-               }
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
-                                          String.Format("{0} ({1}) The path {2} is inaccessible.", HfmTrace.FunctionName, InstanceName, fiUI.FullName));
-            }
-
-            _LastRetrievalTime = DateTime.Now;
-         }
-         finally
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, InstanceName, Start);
-         }
-      }
-
-      /// <summary>
-      /// Retrieve the log and unit info files from the configured HTTP location
-      /// </summary>
-      private void RetrieveHTTPInstance()
-      {
-         DateTime Start = HfmTrace.ExecStart;
-
-         try
-         {
-            string HttpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Path, "/", RemoteFAHLogFilename);
-            string LocalFile = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedFAHLogName);
-            NetworkOps.HttpDownloadHelper(HttpPath, LocalFile, InstanceName, Username, Password, DownloadType.FAHLog);
-            
-            try
-            {
-               HttpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Path, "/", RemoteUnitInfoFilename);
-               LocalFile = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedUnitInfoName);
-               NetworkOps.HttpDownloadHelper(HttpPath, LocalFile, InstanceName, Username, Password, DownloadType.UnitInfo);
-            }
-            /*** Remove Requirement for UnitInfo to be Present ***/
-            catch (WebException ex)
-            {
-               if (File.Exists(LocalFile))
-               {
-                  File.Delete(LocalFile);
-               }
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
-                                          String.Format("{0} ({1}) Unitinfo Download Threw Exception: {2}.", HfmTrace.FunctionName, InstanceName, ex.Message));
-            }
-
-            try
-            {
-               HttpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Path, "/", RemoteQueueFilename);
-               LocalFile = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedQueueName);
-               NetworkOps.HttpDownloadHelper(HttpPath, LocalFile, InstanceName, Username, Password, DownloadType.Queue);
-            }
-            /*** Remove Requirement for Queue to be Present ***/
-            catch (WebException ex)
-            {
-               if (File.Exists(LocalFile))
-               {
-                  File.Delete(LocalFile);
-               }
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
-                                          String.Format("{0} ({1}) Queue Download Threw Exception: {2}.", HfmTrace.FunctionName, InstanceName, ex.Message));
-            }
-
-            _LastRetrievalTime = DateTime.Now;
-         }
-         finally
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, InstanceName, Start);
-         }
-      }
-
-      /// <summary>
-      /// Retrieve the log and unit info files from the configured FTP location
-      /// </summary>
-      private void RetrieveFTPInstance()
-      {
-         DateTime Start = HfmTrace.ExecStart;
-
-         try
-         {
-            string LocalFilePath = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedFAHLogName);
-            NetworkOps.FtpDownloadHelper(Server, Path, RemoteFAHLogFilename, LocalFilePath, Username, Password, DownloadType.FAHLog);
-            
-            try
-            {
-               LocalFilePath = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedUnitInfoName);
-               NetworkOps.FtpDownloadHelper(Server, Path, RemoteUnitInfoFilename, LocalFilePath, Username, Password, DownloadType.UnitInfo);
-            }
-            /*** Remove Requirement for UnitInfo to be Present ***/
-            catch (WebException ex)
-            {
-               if (File.Exists(LocalFilePath))
-               {
-                  File.Delete(LocalFilePath);
-               }
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
-                                          String.Format("{0} ({1}) Unitinfo Download Threw Exception: {2}.", HfmTrace.FunctionName, InstanceName, ex.Message));
-            }
-
-            try
-            {
-               LocalFilePath = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedQueueName);
-               NetworkOps.FtpDownloadHelper(Server, Path, RemoteQueueFilename, LocalFilePath, Username, Password, DownloadType.Queue);
-            }
-            /*** Remove Requirement for Queue to be Present ***/
-            catch (WebException ex)
-            {
-               if (File.Exists(LocalFilePath))
-               {
-                  File.Delete(LocalFilePath);
-               }
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
-                                          String.Format("{0} ({1}) Queue Download Threw Exception: {2}.", HfmTrace.FunctionName, InstanceName, ex.Message));
-            }
-
-            _LastRetrievalTime = DateTime.Now;
-         }
-         finally
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, InstanceName, Start);
-         }
-      }
+      
       #endregion
 
       #region XML Serialization
       /// <summary>
-      /// Serialize this client instance to Xml
+      /// Serialize this Client Instance to Xml
       /// </summary>
       public System.Xml.XmlDocument ToXml()
       {
@@ -1749,7 +1773,7 @@ namespace HFM.Instances
       }
 
       /// <summary>
-      /// Deserialize into this instance based on the given XmlNode data
+      /// Deserialize Xml data into this Client Instance
       /// </summary>
       /// <param name="xmlData">XmlNode containing the client instance data</param>
       public void FromXml(System.Xml.XmlNode xmlData)
@@ -1892,93 +1916,14 @@ namespace HFM.Instances
 
          HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, Start);
       }
-      #endregion
-      
-      #region Status Color Helper Functions
-      /// <summary>
-      /// Gets Status Color Pen Object
-      /// </summary>
-      /// <param name="status">Client Status</param>
-      /// <returns>Status Color (Pen)</returns>
-      public static Pen GetStatusPen(ClientStatus status)
-      {
-         return new Pen(GetStatusColor(status));
-      }
 
       /// <summary>
-      /// Gets Status Color Brush Object
+      /// Restore the given UnitInfo into this Client Instance
       /// </summary>
-      /// <param name="status">Client Status</param>
-      /// <returns>Status Color (Brush)</returns>
-      public static SolidBrush GetStatusBrush(ClientStatus status)
+      /// <param name="unitInfo">UnitInfo Object to Restore</param>
+      public void RestoreUnitInfo(UnitInfo unitInfo)
       {
-         return new SolidBrush(GetStatusColor(status));
-      }
-
-      /// <summary>
-      /// Gets Status Html Color String
-      /// </summary>
-      /// <param name="status">Client Status</param>
-      /// <returns>Status Html Color (String)</returns>
-      public static string GetStatusHtmlColor(ClientStatus status)
-      {
-         return ColorTranslator.ToHtml(GetStatusColor(status));
-      }
-
-      /// <summary>
-      /// Gets Status Html Font Color String
-      /// </summary>
-      /// <param name="status">Client Status</param>
-      /// <returns>Status Html Font Color (String)</returns>
-      public static string GetStatusHtmlFontColor(ClientStatus status)
-      {
-         switch (status)
-         {
-            case ClientStatus.Running:
-               return ColorTranslator.ToHtml(Color.White);
-            case ClientStatus.RunningNoFrameTimes:
-               return ColorTranslator.ToHtml(Color.Black);
-            case ClientStatus.Stopped:
-            case ClientStatus.EuePause:
-            case ClientStatus.Hung:
-               return ColorTranslator.ToHtml(Color.White);
-            case ClientStatus.Paused:
-               return ColorTranslator.ToHtml(Color.Black);
-            case ClientStatus.GettingWorkPacket:
-               return ColorTranslator.ToHtml(Color.White);
-            case ClientStatus.Offline:
-               return ColorTranslator.ToHtml(Color.Black);
-            default:
-               return ColorTranslator.ToHtml(Color.Black);
-         }
-      }
-
-      /// <summary>
-      /// Gets Status Color Object
-      /// </summary>
-      /// <param name="status">Client Status</param>
-      /// <returns>Status Color (Color)</returns>
-      public static Color GetStatusColor(ClientStatus status)
-      {
-         switch (status)
-         {
-            case ClientStatus.Running:
-               return Color.Green; // Issue 45
-            case ClientStatus.RunningNoFrameTimes:
-               return Color.Yellow;
-            case ClientStatus.Stopped:
-            case ClientStatus.EuePause:
-            case ClientStatus.Hung:
-               return Color.DarkRed;
-            case ClientStatus.Paused:
-               return Color.Orange;
-            case ClientStatus.GettingWorkPacket:
-               return Color.Purple;
-            case ClientStatus.Offline:
-               return Color.Gray;
-            default:
-               return Color.Gray;
-         }
+         CurrentUnitInfo = unitInfo;
       }
       #endregion
 
@@ -1986,7 +1931,7 @@ namespace HFM.Instances
       public bool IsUsernameOk()
       {
          // if these are the default assigned values, don't check otherwise and just return true
-         if (CurrentUnitInfo.FoldingID == UnitInfo.UsernameDefault && CurrentUnitInfo.Team == UnitInfo.TeamDefault)
+         if (CurrentUnitInfo.FoldingID == UnitInfo.FoldingIDDefault && CurrentUnitInfo.Team == UnitInfo.TeamDefault)
          {
             return true;
          }

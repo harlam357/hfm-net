@@ -36,6 +36,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\HFM.Instances\bin\Release\HFM.Instances.dll</HintPath>
     </Reference>
+    <Reference Include="HFM.Instrumentation, Version=0.4.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\HFM.Instrumentation\bin\Release\HFM.Instrumentation.dll</HintPath>
+    </Reference>
     <Reference Include="HFM.Preferences, Version=0.4.1.88, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\HFM.Preferences\bin\Release\HFM.Preferences.dll</HintPath>
@@ -61,6 +65,8 @@
   <ItemGroup>
     <Content Include="TestFiles\GPU Test FAHlog 2.txt" />
     <Content Include="TestFiles\GPU Test FAHlog 3 EUE Pause.txt" />
+    <Content Include="TestFiles\SMP Test 5 FAHlog.txt" />
+    <Content Include="TestFiles\SMP Test 5 unitinfo.txt" />
     <Content Include="TestFiles\SMP Test FAHlog 1.txt" />
     <Content Include="TestFiles\GPU Test FAHlog 1.txt" />
     <Content Include="TestFiles\SMP Test FAHlog 2.txt" />
@@ -75,6 +81,7 @@
     <None Include="TestFiles\GPU2 6.23 queue.dat" />
     <None Include="TestFiles\Linux SMP 6.24 queue.dat" />
     <None Include="TestFiles\Linux SMP 6.24 Waiting Upload queue.dat" />
+    <None Include="TestFiles\SMP Test 5 queue.dat" />
     <None Include="TestFiles\Standard PPC 6.xx queue.dat" />
     <None Include="TestFiles\Standard PPC 5.01 queue.dat" />
     <None Include="TestFiles\SMP Test 4 queue.dat" />

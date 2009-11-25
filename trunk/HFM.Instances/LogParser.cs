@@ -90,7 +90,7 @@ namespace HFM.Instances
                   {
                      try
                      {
-                        ClientInstance.DoProjectIDMatch(_parsedUnitInfo, rProjectNumberFromTag.Match(_parsedUnitInfo.ProteinTag));
+                        _parsedUnitInfo.DoProjectIDMatch(rProjectNumberFromTag.Match(_parsedUnitInfo.ProteinTag));
                      }
                      catch (FormatException ex)
                      {
@@ -169,14 +169,15 @@ namespace HFM.Instances
          DateTime Start = HfmTrace.ExecStart;
 
          _bCoreFound = false;
-         _bProjectFound = false;
+         // Set Flag based on if Project is already Known
+         _bProjectFound = !(_parsedUnitInfo.ProjectIsUnknown);
          
          bool ClientWasPaused = false;
 
          // start the parse loop where the client started last
          foreach (LogLine logLine in FAHLog)
          {
-            if (_parsedUnitInfo.UnitStartTime.Equals(TimeSpan.Zero))
+            if (_parsedUnitInfo.UnitStartTimeStamp.Equals(TimeSpan.Zero))
             {
                SetUnitStartTimeStamp(logLine.LineRaw);
             }
@@ -191,13 +192,11 @@ namespace HFM.Instances
             else if (logLine.LineType.Equals(LogLineType.WorkUnitWorking) && ClientWasPaused)
             {
                ClientWasPaused = false;
-               
-               // Reset Frames Observed, Current Frame, and Unit Start Time after Pause. 
+
+               // Clear the Current Frame (Also Resets Frames Observed Count)
                // This will cause the Instance to only use frames beyond this point to 
                // set frame times and determine status - Issue 13 (Revised)
-               _parsedUnitInfo.CurrentFrame = null;
-               _parsedUnitInfo.FramesObserved = 0;
-
+               _parsedUnitInfo.ClearCurrentFrame();
                // Reset the Unit Start Time
                SetUnitStartTimeStamp(logLine.LineRaw); 
             }
@@ -227,11 +226,11 @@ namespace HFM.Instances
                                                         System.Globalization.DateTimeFormatInfo.InvariantInfo,
                                                         GetDateTimeStyle(_Instance.ClientIsOnVirtualMachine));
 
-               _parsedUnitInfo.UnitStartTime = timeStamp.TimeOfDay;
+               _parsedUnitInfo.UnitStartTimeStamp = timeStamp.TimeOfDay;
             }
             catch (FormatException)
             {
-               _parsedUnitInfo.UnitStartTime = TimeSpan.Zero;
+               _parsedUnitInfo.UnitStartTimeStamp = TimeSpan.Zero;
                HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} ({1}) Failed to get 'UnitStartTime' from {2}.",
                   HfmTrace.FunctionName, _Instance.InstanceName, logLine));
             }
@@ -261,7 +260,7 @@ namespace HFM.Instances
          {
             try
             {
-               ClientInstance.DoProjectIDMatch(_parsedUnitInfo, (Match)logLine.LineData);
+               _parsedUnitInfo.DoProjectIDMatch((Match)logLine.LineData);
                _bProjectFound = true;
             }
             catch (FormatException ex)

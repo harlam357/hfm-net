@@ -44,15 +44,34 @@ namespace HFM.Helpers
       /// <param name="name">Name of Key Value to check.</param>
       private static bool IsHfmAutoRunSet(string name)
       {
-         object CurrentHfmAutoRunValue;
+         RegistryKey regHkCuRun = null;
+         object CurrentHfmAutoRunValue = null;
+      
          try
          {
-            CurrentHfmAutoRunValue = GetHkCuAutoRunKey().GetValue(name);
+            regHkCuRun = GetHkCuAutoRunKey();
+            if (regHkCuRun == null)
+            {
+               return false;
+            }
+         
+            CurrentHfmAutoRunValue = regHkCuRun.GetValue(name);
+         }
+         catch (InvalidOperationException ex)
+         {
+            // just write a warning if this fails 
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
          }
          catch (Exception ex)
          {
             HfmTrace.WriteToHfmConsole(ex);
-            return false;
+         }
+         finally
+         {
+            if (regHkCuRun != null)
+            {
+               regHkCuRun.Close();
+            }
          }
 
          // value should be null
@@ -98,22 +117,31 @@ namespace HFM.Helpers
       /// <exception cref="InvalidOperationException">When Auto Run value cannot be set.</exception>
       private static void SetHfmAutoRun(string FilePath, string name)
       {
-         RegistryKey regHkCuRun = GetHkCuAutoRunKey(true);
+         RegistryKey regHkCuRun = null;
          
          try
          {
+            regHkCuRun = GetHkCuAutoRunKey(true);
+         
             if (String.IsNullOrEmpty(FilePath))
             {
                regHkCuRun.DeleteValue(name, false);
             }
             else
             {
-               regHkCuRun.SetValue(name, FilePath, RegistryValueKind.String);
+               regHkCuRun.SetValue(name, WrapInQuotes(FilePath), RegistryValueKind.String);
             }
          }
          catch (Exception ex)
          {
             throw new InvalidOperationException("HFM.NET Auto Run value could not be set.", ex);
+         }
+         finally
+         {
+            if (regHkCuRun != null)
+            {
+               regHkCuRun.Close();
+            }
          }
       }
 
@@ -160,6 +188,14 @@ namespace HFM.Helpers
          }
          
          return regHkCuRun;   
+      }
+      
+      /// <summary>
+      /// Wrap the given string in quotes
+      /// </summary>
+      private static string WrapInQuotes(string value)
+      {
+         return String.Concat("\"", value, "\"");
       }
    }
 }

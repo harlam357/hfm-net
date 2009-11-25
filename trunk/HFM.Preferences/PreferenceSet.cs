@@ -51,19 +51,6 @@ namespace HFM.Preferences
       Standard,
       Formatted
    }
-
-   public enum ClientStatus
-   {
-      Unknown,
-      Offline,
-      Stopped,
-      EuePause,
-      Hung,
-      Paused,
-      GettingWorkPacket,
-      RunningNoFrameTimes,
-      Running
-   }
    #endregion
 
    public class PreferenceSet

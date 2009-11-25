@@ -221,7 +221,7 @@ namespace HFM.Instances
          StringBuilder sbldr = new StringBuilder();
          sbldr.Append(unit.ProjectID);
          sbldr.Append(COMMA);
-         sbldr.Append(unit.CurrentProtein.WorkUnitName);
+         sbldr.Append(unit.WorkUnitName);
          sbldr.Append(COMMA);
          sbldr.Append(unit.OwningInstanceName);
          sbldr.Append(COMMA);
@@ -233,7 +233,7 @@ namespace HFM.Instances
          sbldr.Append(COMMA);
          sbldr.Append(unit.TypeOfClient.ToString());
          sbldr.Append(COMMA);
-         sbldr.Append(unit.CurrentProtein.Core);
+         sbldr.Append(unit.Core);
          sbldr.Append(COMMA);
          sbldr.Append(unit.CoreVersion);
          sbldr.Append(COMMA);
@@ -263,11 +263,12 @@ namespace HFM.Instances
             sbldr.Append(unit.FinishedTime.ToShortTimeString());
             sbldr.Append(COMMA);
          }
-         sbldr.Append(unit.CurrentProtein.Credit);
+         // Write Bonus Credit (if applicable)
+         sbldr.Append(unit.GetCredit());
          sbldr.Append(COMMA);
-         sbldr.Append(unit.CurrentProtein.Frames);
+         sbldr.Append(unit.Frames);
          sbldr.Append(COMMA);
-         sbldr.Append(unit.CurrentProtein.NumAtoms);
+         sbldr.Append(unit.NumAtoms);
          sbldr.Append(COMMA);
          sbldr.Append(String.Format("({0}/{1}/{2})", unit.ProjectRun, unit.ProjectClone, unit.ProjectGen));
 

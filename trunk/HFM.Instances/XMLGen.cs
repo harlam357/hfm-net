@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -28,6 +29,7 @@ using System.Xml;
 using HFM.Instrumentation;
 using HFM.Preferences;
 using HFM.Helpers;
+using HFM.Proteins;
 
 namespace HFM.Instances
 {
@@ -166,16 +168,34 @@ namespace HFM.Instances
          XmlElement xmlData = xmlDoc.DocumentElement;
 
          //    <UnitInfo>
-         //        <DownloadTime>10 August 09:37:33</DownloadTime>
          //        <FramesComplete>35</FramesComplete>
          //        <PercentComplete>35</PercentComplete>
          //        <TimePerFrame>1h 15m 44s</TimePerFrame>
+         //        <EstPPD>82.36</EstPPD>
+         //        <EstPPW>576.54</EstPPW>
+         //        <EstUPD>0.46</EstUPD>
+         //        <EstUPW>3.77</EstUPW>
+         //        <CompletedProjects>5</CompletedProjects>
+         //        <FailedProjects>0</FailedProjects>
+         //        <TotalProjects>243</TotalProjects>
+         //        <DownloadTime>10 August 09:37:33</DownloadTime>
          //        <ExpectedCompletionDate>16 August 2006 1:46 am</ExpectedCompletionDate>
          //    </UnitInfo>
 
          xmlData.SetAttribute("Name", Instance.InstanceName);
-
          XMLOps.setXmlNode(xmlData, "HFMVersion", PlatformOps.ShortFormattedApplicationVersionWithRevision);
+         XMLOps.setXmlNode(xmlData, "UnitInfo/FramesComplete", String.Format("{0}", Instance.FramesComplete));
+         XMLOps.setXmlNode(xmlData, "UnitInfo/PercentComplete", String.Format("{0}", Instance.PercentComplete));
+         XMLOps.setXmlNode(xmlData, "UnitInfo/TimePerFrame", String.Format("{0}h, {1}m, {2}s", Instance.TimePerFrame.Hours, Instance.TimePerFrame.Minutes, Instance.TimePerFrame.Seconds));
+         
+         string PpdFormatString = PreferenceSet.PpdFormatString;
+         XMLOps.setXmlNode(xmlData, "UnitInfo/EstPPD", String.Format("{0:" + PpdFormatString + "}", Instance.PPD));
+         XMLOps.setXmlNode(xmlData, "UnitInfo/EstPPW", String.Format("{0:" + PpdFormatString + "}", Instance.PPD * 7));
+         XMLOps.setXmlNode(xmlData, "UnitInfo/EstUPD", String.Format("{0:0.00}", Instance.UPD));
+         XMLOps.setXmlNode(xmlData, "UnitInfo/EstUPW", String.Format("{0:0.00}", Instance.UPD * 7));
+         XMLOps.setXmlNode(xmlData, "UnitInfo/CompletedProjects", Instance.NumberOfCompletedUnitsSinceLastStart.ToString());
+         XMLOps.setXmlNode(xmlData, "UnitInfo/FailedProjects", Instance.NumberOfFailedUnitsSinceLastStart.ToString());
+         XMLOps.setXmlNode(xmlData, "UnitInfo/TotalProjects", Instance.TotalUnits.ToString());
 
          if (Instance.CurrentUnitInfo.DownloadTime.Equals(DateTime.MinValue))
          {
@@ -183,12 +203,10 @@ namespace HFM.Instances
          }
          else
          {
-            XMLOps.setXmlNode(xmlData, "UnitInfo/DownloadTime", Instance.CurrentUnitInfo.DownloadTime.ToString("d MMMM yyyy hh:mm tt"));
+            DateTime DownloadTime = Instance.CurrentUnitInfo.DownloadTime;
+            XMLOps.setXmlNode(xmlData, "UnitInfo/DownloadTime", String.Format(CultureInfo.CurrentCulture, "{0} at {1}", DownloadTime.ToLongDateString(), DownloadTime.ToLongTimeString()));
          }
-         XMLOps.setXmlNode(xmlData, "UnitInfo/FramesComplete", String.Format("{0}", Instance.FramesComplete));
-         XMLOps.setXmlNode(xmlData, "UnitInfo/PercentComplete", String.Format("{0}", Instance.PercentComplete));
-         XMLOps.setXmlNode(xmlData, "UnitInfo/TimePerFrame", String.Format("{0}h, {1}m, {2}s", Instance.TimePerFrame.Hours, Instance.TimePerFrame.Minutes, Instance.TimePerFrame.Seconds));
-
+         
          if (Instance.ETA.Equals(TimeSpan.Zero))
          {
             XMLOps.setXmlNode(xmlData, "UnitInfo/ExpectedCompletionDate", "Unknown");
@@ -196,23 +214,8 @@ namespace HFM.Instances
          else
          {
             DateTime CompleteTime = DateTime.Now.Add(Instance.ETA);
-            XMLOps.setXmlNode(xmlData, "UnitInfo/ExpectedCompletionDate", CompleteTime.ToLongDateString() + " at " + CompleteTime.ToLongTimeString());
+            XMLOps.setXmlNode(xmlData, "UnitInfo/ExpectedCompletionDate", String.Format(CultureInfo.CurrentCulture, "{0} at {1}", CompleteTime.ToLongDateString(), CompleteTime.ToLongTimeString()));
          }
-
-         //    <Computer>
-         //        <EstPPD>82.36</EstPPD>
-         //        <EstPPW>576.54</EstPPW>
-         //        <EstUPD>0.46</EstUPD>
-         //        <EstUPW>3.77</EstUPW>
-         //        <TotalProjects>243</TotalProjects>
-         //    </Computer>
-
-         string PpdFormatString = PreferenceSet.PpdFormatString;
-         XMLOps.setXmlNode(xmlData, "Computer/EstPPD", String.Format("{0:" + PpdFormatString + "}", Instance.PPD));
-         XMLOps.setXmlNode(xmlData, "Computer/EstPPW", String.Format("{0:" + PpdFormatString + "}", Instance.PPD * 7));
-         XMLOps.setXmlNode(xmlData, "Computer/EstUPD", String.Format("{0:" + PpdFormatString + "}", Instance.UPD));
-         XMLOps.setXmlNode(xmlData, "Computer/EstUPW", String.Format("{0:" + PpdFormatString + "}", Instance.UPD * 7));
-         XMLOps.setXmlNode(xmlData, "Computer/TotalProjects", Instance.TotalUnits.ToString());
 
          //    <Protein>
          //        <ProjectNumber>1814</ProjectNumber>
@@ -222,23 +225,30 @@ namespace HFM.Instances
          //        <PreferredDays>30</PreferredDays>
          //        <MaxDays>44</MaxDays>
          //        <Credit>153</Credit>
+         //        <KFactor>0</KFactor>
          //        <Frames>100</Frames>
          //        <Core>Amber</Core>
-         //        <Description>This is the BLAH</Description>
+         //        <Description>Project Description</Description>
          //        <Contact>spark7</Contact>
          //    </Protein>
 
-         XMLOps.setXmlNode(xmlData, "Protein/ProjectNumber", Instance.CurrentUnitInfo.CurrentProtein.ProjectNumber.ToString());
-         XMLOps.setXmlNode(xmlData, "Protein/ServerIP", Instance.CurrentUnitInfo.CurrentProtein.ServerIP);
-         XMLOps.setXmlNode(xmlData, "Protein/WorkUnit", Instance.CurrentUnitInfo.ProteinName);
-         XMLOps.setXmlNode(xmlData, "Protein/NumAtoms", Instance.CurrentUnitInfo.CurrentProtein.NumAtoms.ToString());
-         XMLOps.setXmlNode(xmlData, "Protein/PreferredDays", Instance.CurrentUnitInfo.CurrentProtein.PreferredDays.ToString());
-         XMLOps.setXmlNode(xmlData, "Protein/MaxDays", Instance.CurrentUnitInfo.CurrentProtein.MaxDays.ToString());
-         XMLOps.setXmlNode(xmlData, "Protein/Credit", Instance.CurrentUnitInfo.CurrentProtein.Credit.ToString());
-         XMLOps.setXmlNode(xmlData, "Protein/Frames", Instance.CurrentUnitInfo.CurrentProtein.Frames.ToString());
-         XMLOps.setXmlNode(xmlData, "Protein/Core", Instance.CurrentUnitInfo.CurrentProtein.Core);
-         XMLOps.setXmlNode(xmlData, "Protein/Description", NetworkOps.GetProteinDescription(Instance.CurrentUnitInfo.CurrentProtein.Description));
-         XMLOps.setXmlNode(xmlData, "Protein/Contact", Instance.CurrentUnitInfo.CurrentProtein.Contact);
+         Protein p = new Protein();
+         if (ProteinCollection.Instance.ContainsKey(Instance.CurrentUnitInfo.ProjectID))
+         {
+            p = ProteinCollection.Instance[Instance.CurrentUnitInfo.ProjectID];
+         }
+         XMLOps.setXmlNode(xmlData, "Protein/ProjectNumber", p.ProjectNumber.ToString());
+         XMLOps.setXmlNode(xmlData, "Protein/ServerIP", p.ServerIP);
+         XMLOps.setXmlNode(xmlData, "Protein/WorkUnit", p.WorkUnitName);
+         XMLOps.setXmlNode(xmlData, "Protein/NumAtoms", p.NumAtoms.ToString());
+         XMLOps.setXmlNode(xmlData, "Protein/PreferredDays", p.PreferredDays.ToString());
+         XMLOps.setXmlNode(xmlData, "Protein/MaxDays", p.MaxDays.ToString());
+         XMLOps.setXmlNode(xmlData, "Protein/Credit", p.Credit.ToString());
+         XMLOps.setXmlNode(xmlData, "Protein/KFactor", p.KFactor.ToString());
+         XMLOps.setXmlNode(xmlData, "Protein/Frames", p.Frames.ToString());
+         XMLOps.setXmlNode(xmlData, "Protein/Core", p.Core);
+         XMLOps.setXmlNode(xmlData, "Protein/Description", NetworkOps.GetProteinDescription(p.Description));
+         XMLOps.setXmlNode(xmlData, "Protein/Contact", p.Contact);
          
          StringBuilder sb = new StringBuilder();
          foreach (LogLine line in Instance.CurrentLogLines)
@@ -331,16 +341,16 @@ namespace HFM.Instances
             XMLOps.setXmlNode(xmlData, "MHz", Instance.ClientProcessorMegahertz.ToString());
             XMLOps.setXmlNode(xmlData, "PPDMHz", String.Format("{0:0.000}", Instance.PPD / Instance.ClientProcessorMegahertz));
             XMLOps.setXmlNode(xmlData, "ETA", Instance.ETA.ToString());
-            XMLOps.setXmlNode(xmlData, "Core", Instance.CurrentUnitInfo.CurrentProtein.Core);
+            XMLOps.setXmlNode(xmlData, "Core", Instance.CurrentUnitInfo.Core);
             XMLOps.setXmlNode(xmlData, "CoreVersion", Instance.CurrentUnitInfo.CoreVersion);
             XMLOps.setXmlNode(xmlData, "ProjectRunCloneGen", Instance.CurrentUnitInfo.ProjectRunCloneGen);
             XMLOps.setXmlNode(xmlData, "ProjectDuplicate", duplicateProjects.Contains(Instance.CurrentUnitInfo.ProjectRunCloneGen).ToString());
-            XMLOps.setXmlNode(xmlData, "Credit", String.Format("{0:0}", Instance.CurrentUnitInfo.CurrentProtein.Credit));
+            XMLOps.setXmlNode(xmlData, "Credit", String.Format("{0:0}", Instance.Credit));
             XMLOps.setXmlNode(xmlData, "Completed", Instance.NumberOfCompletedUnitsSinceLastStart.ToString());
             XMLOps.setXmlNode(xmlData, "Failed", Instance.NumberOfFailedUnitsSinceLastStart.ToString());
             XMLOps.setXmlNode(xmlData, "Username", String.Format("{0} ({1})", Instance.FoldingID, Instance.Team));
             XMLOps.setXmlNode(xmlData, "UsernameMatch", Instance.IsUsernameOk().ToString()); //Issue 51
-            if (Instance.CurrentUnitInfo.DownloadTime.Equals(DateTime.MinValue))
+            if (Instance.CurrentUnitInfo.DownloadTimeUnknown)
             {
                XMLOps.setXmlNode(xmlData, "DownloadTime", "Unknown");
             }
@@ -348,13 +358,13 @@ namespace HFM.Instances
             {
                XMLOps.setXmlNode(xmlData, "DownloadTime", String.Format("{0} {1}", Instance.CurrentUnitInfo.DownloadTime.ToShortDateString(), Instance.CurrentUnitInfo.DownloadTime.ToShortTimeString()));
             }
-            if (Instance.CurrentUnitInfo.Deadline.Equals(DateTime.MinValue))
+            if (Instance.CurrentUnitInfo.PreferredDeadlineUnknown)
             {
                XMLOps.setXmlNode(xmlData, "Deadline", "Unknown");
             }
             else
             {
-               XMLOps.setXmlNode(xmlData, "Deadline", String.Format("{0} {1}", Instance.CurrentUnitInfo.Deadline.ToShortDateString(), Instance.CurrentUnitInfo.Deadline.ToShortTimeString()));
+               XMLOps.setXmlNode(xmlData, "Deadline", String.Format("{0} {1}", Instance.CurrentUnitInfo.PreferredDeadline.ToShortDateString(), Instance.CurrentUnitInfo.PreferredDeadline.ToShortTimeString()));
             }
 
             XmlNode xImpNode = xmlDoc.ImportNode(xmlFrag.ChildNodes[0], true);

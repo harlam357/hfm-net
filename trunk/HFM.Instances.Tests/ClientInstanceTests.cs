@@ -18,17 +18,24 @@
  */
 
 using System;
+using System.Diagnostics;
 
 using NUnit.Framework;
 
 using HFM.Proteins;
-using HFM.Preferences;
+using HFM.Instrumentation;
 
 namespace HFM.Instances.Tests
 {
    [TestFixture]
    public class ClientInstanceTests
    {
+      [SetUp]
+      public void Init()
+      {
+         TraceLevelSwitch.Instance.Level = TraceLevel.Verbose;
+      }
+
       [Test, Category("SMP")]
       public void TestSmpPathInstance()
       {
@@ -39,7 +46,7 @@ namespace HFM.Instances.Tests
          // Inject our own delegate for getting the Protein
          // to isolate from what's actually available in the
          // ProteinCollection Cache (or psummary).
-         ProteinCollection.GetProteinHandler = delegate()
+         ProteinCollection.GetProteinHandler = delegate
          {
             Protein p = new Protein();
             p.ProjectNumber = 2677;
@@ -93,7 +100,7 @@ namespace HFM.Instances.Tests
          // Inject our own delegate for getting the Protein
          // to isolate from what's actually available in the
          // ProteinCollection Cache (or psummary).
-         ProteinCollection.GetProteinHandler = delegate()
+         ProteinCollection.GetProteinHandler = delegate
          {
             Protein p = new Protein();
             p.ProjectNumber = 5101;
@@ -147,7 +154,7 @@ namespace HFM.Instances.Tests
          // Inject our own delegate for getting the Protein
          // to isolate from what's actually available in the
          // ProteinCollection Cache (or psummary).
-         ProteinCollection.GetProteinHandler = delegate()
+         ProteinCollection.GetProteinHandler = delegate
          {
             Protein p = new Protein();
             p.ProjectNumber = 2669;
@@ -194,6 +201,104 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(ClientStatus.RunningNoFrameTimes, Instance.Status);
       }
 
+      [Test, Category("SMP")]
+      public void TestSmpPathInstance5()
+      {
+         /*** The Test below shows us that because there is no Project information available
+          *   in the FAHlog for the current WU, the CurrentLogLines cannot be matched against
+          *   the Current Queue Entry, so the Queue Entries are thrown out and we're left with
+          *   only the FAHlog to parse.  Since the CurrentLogLines contain no Project information
+          *   and the unitinfo file is unavailable, the TypeOfClient is Unknown, since the
+          *   Project cannot be determined.
+          ***/
+      
+         // Setup Test Instance
+         ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
+         // Don't Handle Status
+         Instance.HandleStatusOnRetrieve = false;
+         /*** Return a new Protein since the Project information
+          *   is unavailable.
+          ***/
+         ProteinCollection.GetProteinHandler = delegate
+         {
+            return new Protein();
+         };
+
+         Instance.InstanceName = "SMP Test 5";
+         Instance.Path = "..\\..\\TestFiles";
+         Instance.RemoteFAHLogFilename = "SMP Test 5 FAHlog.txt";
+         Instance.RemoteQueueFilename = "SMP Test 5 queue.dat";
+         //Instance.RemoteUnitInfoFilename = "SMP Test 5 unitinfo.txt";
+
+         // Retrieve Log File and Assert Results
+         Instance.Retrieve();
+         Assert.IsNotNull(Instance.CurrentLogLines);
+         Assert.AreEqual(false, Instance.UserIDUnknown);
+         Assert.AreEqual("775112477C3C55C2", Instance.UserID);
+         Assert.AreEqual(String.Format("{0} ({1})", Instance.UserID, Instance.MachineID), Instance.UserAndMachineID);
+         Assert.AreEqual(true, Instance.IsUsernameOk()); // Prefs default is harlam357 (32)
+         Assert.Greater(Instance.LastRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
+
+         Assert.IsNotNull(Instance.CurrentUnitInfo);
+
+         // Check Client Type and Owning Instance Properties
+         Assert.AreEqual(ClientType.Unknown, Instance.CurrentUnitInfo.TypeOfClient); /* Unknown */
+         Assert.AreEqual("SMP Test 5", Instance.CurrentUnitInfo.OwningInstanceName);
+         Assert.AreEqual("..\\..\\TestFiles", Instance.CurrentUnitInfo.OwningInstancePath);
+
+         Assert.AreEqual(true, Instance.CurrentUnitInfo.ProjectIsUnknown);
+         Assert.IsNotNull(Instance.CurrentUnitInfo.UnitFrames);
+         Assert.AreEqual(0, Instance.CurrentUnitInfo.FramesObserved);
+         Assert.AreEqual(0, Instance.CurrentUnitInfo.FramesComplete);
+         Assert.AreEqual(0, Instance.CurrentUnitInfo.PercentComplete);
+         Assert.AreEqual(0, Instance.CurrentUnitInfo.LastUnitFrameID);
+         Assert.AreEqual(0, Instance.CurrentUnitInfo.RawFramesComplete);
+         Assert.AreEqual(0, Instance.CurrentUnitInfo.RawFramesTotal);
+
+         Assert.AreEqual(0, Instance.CurrentUnitInfo.RawTimePerUnitDownload);
+         Assert.AreEqual(0, Instance.CurrentUnitInfo.RawTimePerAllSections);
+         Assert.AreEqual(0, Instance.CurrentUnitInfo.RawTimePerThreeSections);
+         Assert.AreEqual(0, Instance.CurrentUnitInfo.RawTimePerLastSection);
+
+         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, Instance.Status);
+      }
+      
+      [Test, Category("SMP")]
+      public void TestSmpPathInstance5_1()
+      {
+         /*** The Test below now gives us access to the unitinfo file, which will
+          *   result in Project information becoming available.  Return the proper
+          *   Protein and allow the TypeOfClient to be set correctly.
+          ***/
+
+         // Setup Test Instance
+         ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
+         // Don't Handle Status
+         Instance.HandleStatusOnRetrieve = false;
+         /*** Return the Protein that matches the data in the
+          *   unitinfo file since it will be available.
+          ***/
+         ProteinCollection.GetProteinHandler = delegate
+         {
+            Protein p = new Protein();
+            p.ProjectNumber = 2683;
+            p.Core = "GROCVS";
+            return p;
+         };
+
+         Instance.InstanceName = "SMP Test 5_1";
+         Instance.Path = "..\\..\\TestFiles";
+         Instance.RemoteFAHLogFilename = "SMP Test 5 FAHlog.txt";
+         //Instance.RemoteQueueFilename = "SMP Test 5 queue.dat";
+         // Make the unitinfo available for parsing
+         Instance.RemoteUnitInfoFilename = "SMP Test 5 unitinfo.txt";
+         // Retrieve Log File and Assert Results
+         Instance.Retrieve();
+         // Because Project information was found in the unitinfo file, we were
+         // able to assign the correct TypeOfClient
+         Assert.AreEqual(ClientType.SMP, Instance.CurrentUnitInfo.TypeOfClient);
+      }
+
       [Test, Category("GPU")]
       public void TestGpuPathInstance()
       {
@@ -204,7 +309,7 @@ namespace HFM.Instances.Tests
          // Inject our own delegate for getting the Protein
          // to isolate from what's actually available in the
          // ProteinCollection Cache (or psummary).
-         ProteinCollection.GetProteinHandler = delegate()
+         ProteinCollection.GetProteinHandler = delegate
          {
             Protein p = new Protein();
             p.ProjectNumber = 5756;

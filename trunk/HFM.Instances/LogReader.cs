@@ -24,7 +24,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 
-using HFM.Preferences;
 using HFM.Instrumentation;
 
 namespace HFM.Instances
@@ -37,6 +36,7 @@ namespace HFM.Instances
       Unknown = -1,
       LogOpen = 0,
       LogHeader,
+      ClientSendWorkToServer,
       ClientAutosendStart,
       ClientAutosendComplete,
       ClientSendStart,
@@ -275,6 +275,10 @@ namespace HFM.Instances
             else if (line.LineType.Equals(LogLineType.WorkUnitWorking) && returnStatus.Equals(ClientStatus.Paused))
             {
                returnStatus = ClientStatus.RunningNoFrameTimes;
+            }
+            else if (line.LineType.Equals(LogLineType.ClientSendWorkToServer))
+            {
+               returnStatus = ClientStatus.SendingWorkPacket;
             }
             else if (line.LineType.Equals(LogLineType.ClientAttemptGetWorkPacket))
             {
@@ -851,6 +855,10 @@ namespace HFM.Instances
          else if (logLine.Contains("###############################################################################"))
          {
             return LogLineType.LogHeader;
+         }
+         else if (logLine.Contains("] Sending work to server"))
+         {
+            return LogLineType.ClientSendWorkToServer;
          }
          else if (logLine.Contains("] - Autosending finished units..."))
          {
