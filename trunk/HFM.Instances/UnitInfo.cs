@@ -222,7 +222,7 @@ namespace HFM.Instances
       {
          get
          {
-            if (DownloadTimeUnknown == false)
+            if (DownloadTimeUnknown == false && CurrentProtein.IsUnknown == false)
             {
                return DownloadTime.AddDays(CurrentProtein.PreferredDays);
             }
@@ -246,7 +246,7 @@ namespace HFM.Instances
       {
          get
          {
-            if (DownloadTimeUnknown == false)
+            if (DownloadTimeUnknown == false && CurrentProtein.IsUnknown == false)
             {
                return DownloadTime.AddDays(CurrentProtein.MaxDays);
             }
@@ -1119,10 +1119,13 @@ namespace HFM.Instances
          Debug.Assert(ProjectRCG.Count == 4);
 
          Protein protein = ProteinCollection.Instance.GetProtein(ProjectRCG[0]);
-         if (protein.IsUnknown == false)
-         {
+         // If Protein is Unknown, set the Project values anyway.  We still want
+         // to see the Project (R/C/G) values, we just won't get any production
+         // readings from this UnitInfo.
+         //if (protein.IsUnknown == false)
+         //{
             SetProjectAndClientType(protein, ProjectRCG);
-         }
+         //}
       }
 
       /// <summary>

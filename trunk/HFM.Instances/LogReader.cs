@@ -234,6 +234,8 @@ namespace HFM.Instances
       /// <param name="logLines">Log Lines to search</param>
       public static string GetProjectFromLogLines(ICollection<LogLine> logLines)
       {
+         if (logLines == null) return String.Empty;
+      
          foreach (LogLine line in logLines)
          {
             // If we encounter a work unit frame, we should have
@@ -1088,7 +1090,7 @@ namespace HFM.Instances
       /// Regular Expression to match Standard and SMP Clients Frame Completion Lines (Gromacs Style).
       /// </summary>
       private static readonly Regex rFramesCompleted =
-         new Regex("\\[(?<Timestamp>.{8})\\] Completed (?<Completed>.*) out of (?<Total>.*) steps  \\((?<Percent>.*)\\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+         new Regex("\\[(?<Timestamp>.{8})\\] Completed (?<Completed>.*) out of (?<Total>.*) steps {1,2}\\((?<Percent>.*)\\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       /// <summary>
       /// Regular Expression to match Percent Style 1
@@ -1408,34 +1410,6 @@ namespace HFM.Instances
                return false;
             }
          }
-         /*** ProtoMol Only */
-         //else
-         //{
-         //   Match mFramesCompletedProtomol = rFramesCompletedProtomol.Match(logLine.LineRaw);
-         //   if (mFramesCompletedProtomol.Success)
-         //   {
-         //      try
-         //      {
-         //         frame.RawFramesComplete = Int32.Parse(mFramesCompletedProtomol.Result("${Completed}"));
-         //         frame.RawFramesTotal = Int32.Parse(mFramesCompletedProtomol.Result("${Total}"));
-         //      }
-         //      catch (FormatException ex)
-         //      {
-         //         throw new FormatException(String.Format("Failed to parse raw frame values from '{0}'.", logLine), ex);
-         //      }
-
-         //      double calculatedPercent = ((double)frame.RawFramesComplete / frame.RawFramesTotal) * 100;
-         //      int framePercent = (int)Math.Floor(calculatedPercent);
-               
-         //      frame.TimeStampString = mFramesCompletedProtomol.Result("${Timestamp}");
-         //      frame.FrameID = framePercent;
-               
-         //      return true;
-         //   }
-            
-         //   return false;
-         //}
-         /*******************/
          
          return false;
       }

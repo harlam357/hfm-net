@@ -48,6 +48,7 @@ namespace HFM.Instances
       SendingWorkPacket,
       GettingWorkPacket,
       RunningNoFrameTimes,
+      RunningAsync,
       Running
    }
 
@@ -187,7 +188,7 @@ namespace HFM.Instances
          // Init User Specified Client Level Members
          InitUserSpecifiedMembers();
          // Create a fresh UnitInfo
-         CurrentUnitInfo = new UnitInfo(InstanceName, Path, DateTime.Now);
+         _CurrentUnitInfo = new UnitInfo(InstanceName, Path, DateTime.Now);
       }
       #endregion
 
@@ -217,6 +218,7 @@ namespace HFM.Instances
          get
          {
             if (Status.Equals(ClientStatus.Running) ||
+                Status.Equals(ClientStatus.RunningAsync) ||
                 Status.Equals(ClientStatus.RunningNoFrameTimes))
             {
                return true;
@@ -355,6 +357,7 @@ namespace HFM.Instances
          get { return _CurrentUnitInfo; }
          protected set
          {
+            UpdateTimeOfLastProgress(value);
             _CurrentUnitInfo = value;
          }
       }
@@ -632,6 +635,28 @@ namespace HFM.Instances
          ClientIsOnVirtualMachine = false;
          ClientTimeOffset = 0;
       }
+      #endregion
+
+      #region Unit Progress Client Level Members
+      private DateTime _TimeOfLastUnitStart = DateTime.MinValue;
+      /// <summary>
+      /// Local Time when this Client last detected Frame Progress
+      /// </summary>
+      internal DateTime TimeOfLastUnitStart
+      {
+         get { return _TimeOfLastUnitStart; }
+         set { _TimeOfLastUnitStart = value; }
+      }
+
+      private DateTime _TimeOfLastFrameProgress = DateTime.MinValue;
+      /// <summary>
+      /// Local Time when this Client last detected Frame Progress
+      /// </summary>
+      internal DateTime TimeOfLastFrameProgress
+      {
+         get { return _TimeOfLastFrameProgress; }
+         set { _TimeOfLastFrameProgress = value; }
+      } 
       #endregion
 
       #region CurrentUnitInfo Pass-Through Properties
@@ -1196,7 +1221,7 @@ namespace HFM.Instances
       }
 
       /// <summary>
-      /// Parse Log Line Sections from Queue Positions into UnitInfo .
+      /// Parse Log Line Sections from Queue Positions into UnitInfo.
       /// </summary>
       /// <param name="parsedUnits">Parsed UnitInfo Array</param>
       /// <param name="lr">LogReader Instance</param>
@@ -1212,16 +1237,26 @@ namespace HFM.Instances
             // Get the Log Lines for this queue position from the reader
             IList<LogLine> logLines = lr.GetLogLinesFromQueueIndex(queueIndex);
 
+            // Get the Project (R/C/G) from the Log Lines
+            string ProjectRunCloneGen = LogReader.GetProjectFromLogLines(logLines);
             // Could not validate Project Matches Queue Position
-            if (ValidateQueueEntryMatchesLogLines(logLines, parsedUnits[queueIndex]) == false)
+            if (parsedUnits[queueIndex].ProjectRunCloneGen.Equals(ProjectRunCloneGen) == false)
             {
                // If the current index
                if (_qr.CurrentIndex == queueIndex)
                {
+                  // Issue 103 - If the Current Status is 'GettingWorkPacket' don't clear the Queue.
+                  // In most cases the log section matching the new Queue Entry does not contain any 
+                  // information regarding the Project because it hasn't been written yet.
+                  //TODO: Get an SMP Client FAHlog and queue files exhibiting this state so a test can be written.
                   if (CurrentWorkUnitStatus.Equals(ClientStatus.GettingWorkPacket))
                   {
-                     // Remove the Log Lines for the Current Queue Index and maintain the Queue information
-                     QueueLogLines[queueIndex] = null;
+                     // If Project Info is Present, it did not match, clear the Log section for this Queue Entry
+                     if (ProjectRunCloneGen.Length != 0)
+                     {
+                        // Remove the Log Lines for the Current Queue Index and maintain the Queue information
+                        QueueLogLines[queueIndex] = null;
+                     }
                   }
                   else
                   {
@@ -1245,23 +1280,6 @@ namespace HFM.Instances
          }
 
          return true;
-      }
-
-      /// <summary>
-      /// Validate that the Project (R/C/G) from the Log Lines matches the Project (R/C/G) in the given UnitInfo.
-      /// </summary>
-      /// <param name="logLines">Log Lines to process.</param>
-      /// <param name="parsedUnitInfo">UnitInfo object to validate.</param>
-      private static bool ValidateQueueEntryMatchesLogLines(ICollection<LogLine> logLines, UnitInfo parsedUnitInfo)
-      {
-         if (logLines != null &&
-             parsedUnitInfo.ProjectIsUnknown == false &&
-             parsedUnitInfo.ProjectRunCloneGen.Equals(LogReader.GetProjectFromLogLines(logLines)))
-         {
-            return true;
-         }
-
-         return false;
       }
 
       /// <summary>
@@ -1379,10 +1397,43 @@ namespace HFM.Instances
       }
 
       /// <summary>
+      /// Update Time of Last Frame Progress based on Current and Parsed UnitInfo
+      /// </summary>
+      private void UpdateTimeOfLastProgress(UnitInfo parsedUnitInfo)
+      {
+         // Same UnitInfo (based on Project (R/C/G)
+         if (IsUnitInfoCurrentUnitInfo(parsedUnitInfo))
+         {
+            // If the Unit Start Time Stamp is no longer the same as the CurrentUnitInfo
+            if (parsedUnitInfo.UnitStartTimeStamp.Equals(TimeSpan.Zero) == false &&
+                CurrentUnitInfo.UnitStartTimeStamp.Equals(TimeSpan.Zero) == false &&
+                parsedUnitInfo.UnitStartTimeStamp.Equals(CurrentUnitInfo.UnitStartTimeStamp) == false)
+            {
+               TimeOfLastUnitStart = DateTime.Now;
+            }
+         
+            // If the Last Unit Frame ID is greater than the CurrentUnitInfo Last Unit Frame ID
+            if (parsedUnitInfo.LastUnitFrameID > CurrentUnitInfo.LastUnitFrameID)
+            {
+               // Update the Time Of Last Frame Progress
+               TimeOfLastFrameProgress = DateTime.Now;
+            }
+         }
+         else // Different UnitInfo - Update the Time Of Last 
+              // Unit Start and Clear Frame Progress Value
+         {
+            TimeOfLastUnitStart = DateTime.Now;
+            TimeOfLastFrameProgress = DateTime.MinValue;
+         }
+      }
+
+      /// <summary>
       /// Does the given UnitInfo.ProjectRunCloneGen match the CurrentUnitInfo.ProjectRunCloneGen?
       /// </summary>
       private bool IsUnitInfoCurrentUnitInfo(UnitInfo parsedUnitInfo)
       {
+         Debug.Assert(CurrentUnitInfo != null);
+      
          // if the parsed Project is known
          if (parsedUnitInfo.ProjectIsUnknown == false)
          {
@@ -1413,7 +1464,8 @@ namespace HFM.Instances
 
          switch (returnedStatus)
          {
-            case ClientStatus.Running:
+            case ClientStatus.Running:      // at this point, we should not see Running Status
+            case ClientStatus.RunningAsync: // at this point, we should not see RunningAsync Status
             case ClientStatus.RunningNoFrameTimes:
                break;
             case ClientStatus.Unknown:
@@ -1438,6 +1490,10 @@ namespace HFM.Instances
          if (CurrentUnitInfo.RawTimePerSection > 0)
          {
             Status = DetermineStatus(this, CurrentUnitInfo.TimeOfLastFrame, CurrentUnitInfo.RawTimePerSection);
+            if (Status.Equals(ClientStatus.Hung))
+            {
+               Status = DetermineAsyncStatus(this, CurrentUnitInfo.RawTimePerSection);
+            }
          }
 
          // no frame time based on the current PPD calculation selection ('LastFrame', 'LastThreeFrames', etc)
@@ -1446,48 +1502,52 @@ namespace HFM.Instances
          else
          {
             // if we have a frame time stamp, use it
-            TimeSpan frameTime = CurrentUnitInfo.TimeOfLastFrame;
-            if (frameTime == TimeSpan.Zero)
+            TimeSpan TimeOfLastFrame = CurrentUnitInfo.TimeOfLastFrame;
+            if (TimeOfLastFrame == TimeSpan.Zero)
             {
                // otherwise, use the unit start time
-               frameTime = CurrentUnitInfo.UnitStartTimeStamp;
+               TimeOfLastFrame = CurrentUnitInfo.UnitStartTimeStamp;
             }
-
-            // get the average frame time for this client and project id
-            TimeSpan averageFrameTime = ProteinBenchmarkCollection.Instance.GetBenchmarkAverageFrameTime(CurrentUnitInfo);
-            if (averageFrameTime > TimeSpan.Zero)
+            
+            int FrameTime = GetBaseFrameTime();
+            if (DetermineStatus(this, TimeOfLastFrame, FrameTime).Equals(ClientStatus.Hung) &&
+                DetermineAsyncStatus(this, FrameTime).Equals(ClientStatus.Hung))
             {
-               if (DetermineStatus(this, frameTime, Convert.ToInt32(averageFrameTime.TotalSeconds)).Equals(ClientStatus.Hung))
-               {
-                  Status = ClientStatus.Hung;
-               }
-               else
-               {
-                  Status = returnedStatus;
-               }
+               Status = ClientStatus.Hung;
             }
-
-            // no benchmarked average frame time, use some arbitrary (and large) values for the frame time
-            // we want to give the client plenty of time to show progress but don't want it to sit idle for days
             else
             {
-               // CPU: use 1 hour (3600 seconds) as a base frame time
-               int SectionTime = 3600;
-               if (CurrentUnitInfo.TypeOfClient.Equals(ClientType.GPU))
-               {
-                  // GPU: use 10 minutes (600 seconds) as a base frame time
-                  SectionTime = 600;
-               }
-
-               if (DetermineStatus(this, frameTime, SectionTime).Equals(ClientStatus.Hung))
-               {
-                  Status = ClientStatus.Hung;
-               }
-               else
-               {
-                  Status = returnedStatus;
-               }
+               Status = returnedStatus;
             }
+         }
+      }
+      
+      private int GetBaseFrameTime()
+      {
+         // no frame time based on the current PPD calculation selection ('LastFrame', 'LastThreeFrames', etc)
+         // this section attempts to give DetermineStats values to detect Hung clients before they have a valid
+         // frame time - Issue 10
+
+         // get the average frame time for this client and project id
+         TimeSpan averageFrameTime = ProteinBenchmarkCollection.Instance.GetBenchmarkAverageFrameTime(CurrentUnitInfo);
+         if (averageFrameTime > TimeSpan.Zero)
+         {
+            return Convert.ToInt32(averageFrameTime.TotalSeconds);
+         }
+
+         // no benchmarked average frame time, use some arbitrary (and large) values for the frame time
+         // we want to give the client plenty of time to show progress but don't want it to sit idle for days
+         else
+         {
+            // CPU: use 1 hour (3600 seconds) as a base frame time
+            int BaseFrameTime = 3600;
+            if (CurrentUnitInfo.TypeOfClient.Equals(ClientType.GPU))
+            {
+               // GPU: use 10 minutes (600 seconds) as a base frame time
+               BaseFrameTime = 600;
+            }
+
+            return BaseFrameTime;
          }
       }
 
@@ -1519,8 +1579,8 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="Instance">Client Instance</param>
       /// <param name="TimeOfLastFrame">Time Stamp from Last Recorded Frame</param>
-      /// <param name="SectionTime">The Current Frame Time (in seconds)</param>
-      private static ClientStatus DetermineStatus(ClientInstance Instance, TimeSpan TimeOfLastFrame, int SectionTime)
+      /// <param name="FrameTime">The Current Frame Time (in seconds)</param>
+      private static ClientStatus DetermineStatus(ClientInstance Instance, TimeSpan TimeOfLastFrame, int FrameTime)
       {
          #region Get Terminal Time
          // Terminal Time - defined as last retrieval time minus twice (7 times for GPU) the current Raw Time per Section.
@@ -1529,11 +1589,11 @@ namespace HFM.Instances
 
          if (Instance.CurrentUnitInfo.TypeOfClient.Equals(ClientType.GPU))
          {
-            terminalDateTime = Instance.LastRetrievalTime.Subtract(TimeSpan.FromSeconds(SectionTime * 7));
+            terminalDateTime = Instance.LastRetrievalTime.Subtract(TimeSpan.FromSeconds(FrameTime * 7));
          }
          else
          {
-            terminalDateTime = Instance.LastRetrievalTime.Subtract(TimeSpan.FromSeconds(SectionTime * 2));
+            terminalDateTime = Instance.LastRetrievalTime.Subtract(TimeSpan.FromSeconds(FrameTime * 2));
          }
          #endregion
 
@@ -1621,6 +1681,63 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// Determine Client Status
+      /// </summary>
+      /// <param name="Instance">Client Instance</param>
+      /// <param name="FrameTime">The Current Frame Time (in seconds)</param>
+      private static ClientStatus DetermineAsyncStatus(ClientInstance Instance, int FrameTime)
+      {
+         #region Get Terminal Time
+         // Terminal Time - defined as last retrieval time minus twice (7 times for GPU) the current Raw Time per Section.
+         // if a new frame has not completed in twice the amount of time it should take to complete we should deem this client Hung.
+         DateTime terminalDateTime;
+
+         if (Instance.CurrentUnitInfo.TypeOfClient.Equals(ClientType.GPU))
+         {
+            terminalDateTime = Instance.LastRetrievalTime.Subtract(TimeSpan.FromSeconds(FrameTime * 7));
+         }
+         else
+         {
+            terminalDateTime = Instance.LastRetrievalTime.Subtract(TimeSpan.FromSeconds(FrameTime * 2));
+         }
+         #endregion
+
+         #region Determine Unit Progress Value to Use
+         Debug.Assert(Instance.TimeOfLastUnitStart.Equals(DateTime.MinValue) == false);
+
+         DateTime LastProgress = Instance.TimeOfLastUnitStart;
+         if (Instance.TimeOfLastFrameProgress > Instance.TimeOfLastUnitStart)
+         {
+            LastProgress = Instance.TimeOfLastFrameProgress;
+         } 
+         #endregion
+         
+         #region Write Verbose Trace
+         if (TraceLevelSwitch.Switch.TraceVerbose)
+         {
+            List<string> messages = new List<string>(4);
+
+            messages.Add(String.Format("{0} ({1})", HfmTrace.FunctionName, Instance.InstanceName));
+            messages.Add(String.Format(" - Retrieval Time (Date) ------- : {0}", Instance.LastRetrievalTime));
+            messages.Add(String.Format(" - Time Of Last Unit Start ----- : {0}", Instance.TimeOfLastUnitStart));
+            messages.Add(String.Format(" - Time Of Last Frame Progress - : {0}", Instance.TimeOfLastFrameProgress));
+            messages.Add(String.Format(" - Terminal Time (Date) -------- : {0}", terminalDateTime));
+
+            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, messages);
+         }
+         #endregion
+
+         if (LastProgress > terminalDateTime)
+         {
+            return ClientStatus.RunningAsync;
+         }
+         else // time of last progress is less than terminal time
+         {
+            return ClientStatus.Hung;
+         }
+      }
+
       #region Status Color Helper Functions
       /// <summary>
       /// Gets Status Color Pen Object
@@ -1663,6 +1780,8 @@ namespace HFM.Instances
          {
             case ClientStatus.Running:
                return ColorTranslator.ToHtml(Color.White);
+            case ClientStatus.RunningAsync:
+               return ColorTranslator.ToHtml(Color.White);
             case ClientStatus.RunningNoFrameTimes:
                return ColorTranslator.ToHtml(Color.Black);
             case ClientStatus.Stopped:
@@ -1692,6 +1811,8 @@ namespace HFM.Instances
          {
             case ClientStatus.Running:
                return Color.Green; // Issue 45
+            case ClientStatus.RunningAsync:
+               return Color.Blue;
             case ClientStatus.RunningNoFrameTimes:
                return Color.Yellow;
             case ClientStatus.Stopped:

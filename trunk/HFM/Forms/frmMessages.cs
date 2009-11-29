@@ -18,6 +18,7 @@
  */
 
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 using HFM.Preferences;
 
@@ -80,9 +81,12 @@ namespace HFM.Forms
       protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
       {
          // Save state data
-         PreferenceSet.Instance.MessagesFormLocation = Location;
-         PreferenceSet.Instance.MessagesFormSize = Size;
-         PreferenceSet.Instance.Save();
+         if (WindowState == FormWindowState.Normal)
+         {
+            PreferenceSet.Instance.MessagesFormLocation = Location;
+            PreferenceSet.Instance.MessagesFormSize = Size;
+            PreferenceSet.Instance.Save();
+         }
       
          Hide();
          e.Cancel = true;
