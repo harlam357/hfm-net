@@ -123,6 +123,13 @@
                </tr>
                <tr>
                   <td class="Plain" colspan="2" align="center">
+                     <a href="mobile.html">
+                        Mobile<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Version
+                     </a>
+                  </td>
+               </tr>
+               <tr>
+                  <td class="Plain" colspan="2" align="center">
                   </td>
                </tr>
                <tr>

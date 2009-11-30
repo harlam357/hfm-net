@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -49,6 +50,9 @@ namespace HFM.Proteins
          get { return _GetProteinHandler; }
          set { _GetProteinHandler = value; }
       }
+
+      // Date and Time of Last psummary download attempt. See BeginDownloadFromStanford() and DownloadFromStanford().
+      private DateTime _LastDownloadTime = DateTime.MinValue;
 
       // List of Projects that were not found after a download attempt.  See GetProtein().
       // If a Project is added to this list, it will not trigger another download attempt for 1 Day, unless
@@ -223,6 +227,8 @@ namespace HFM.Proteins
       {
          // Clear - see notes above list declaration
          _ProjectsNotFound.Clear();
+         // Clear the Last Download Time
+         _LastDownloadTime = DateTime.MinValue;
          return new System.Windows.Forms.MethodInvoker(DownloadFromStanford).BeginInvoke(null, null);
       }
       
@@ -231,7 +237,22 @@ namespace HFM.Proteins
       /// </summary>
       private void DownloadFromStanford()
       {
-         DownloadFromStanford(new Uri(PreferenceSet.Instance.ProjectDownloadUrl));
+         // if an auto download was attempted in the last hour, don't execute again
+         TimeSpan LastDownloadDifference = DateTime.Now.Subtract(_LastDownloadTime);
+         if (LastDownloadDifference.TotalHours > 1)
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info,
+                                       "Attempting to Download new Project data...", true);
+         
+            _LastDownloadTime = DateTime.Now;
+            DownloadFromStanford(new Uri(PreferenceSet.Instance.ProjectDownloadUrl));
+         }
+         else
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info,
+                                       String.Format(CultureInfo.CurrentCulture, "Download executed {0:0} minutes ago.", 
+                                       LastDownloadDifference.TotalMinutes), true);
+         }
       }
 
       /// <summary>
@@ -468,7 +489,7 @@ namespace HFM.Proteins
       /// <summary>
       /// Get Protein (should be called from worker thread)
       /// </summary>
-      /// <param name="ProjectID"></param>
+      /// <param name="ProjectID">Project ID</param>
       public Protein GetProtein(int ProjectID)
       {
          // Substitute an external delegate
@@ -488,14 +509,11 @@ namespace HFM.Proteins
          {
             // If it has been less than one day since this Project triggered an
             // automatic download attempt, just return a "blank" Protein.
-            if (DateTime.Now.Subtract(_ProjectsNotFound[ProjectID]).Days == 0)
+            if (DateTime.Now.Subtract(_ProjectsNotFound[ProjectID]).TotalDays < 1)
             {
                return new Protein();
             }
          }
-         
-         HfmTrace.WriteToHfmConsole(TraceLevel.Info,
-                                    "Attempting to Download new Project data...", true);
          
          // Execute a Download
          DownloadFromStanford();
@@ -507,12 +525,18 @@ namespace HFM.Proteins
             _ProjectsNotFound.Remove(ProjectID);
             return this[ProjectID];
          }
-         
-         // If not already on the Not Found List
-         if (_ProjectsNotFound.ContainsKey(ProjectID) == false)
+         else
          {
-            // Add it
-            _ProjectsNotFound.Add(ProjectID, DateTime.Now);
+            // If already on the Not Found List
+            if (_ProjectsNotFound.ContainsKey(ProjectID))
+            {
+               // Update the Last Download Attempt Date
+               _ProjectsNotFound[ProjectID] = DateTime.Now;
+            }
+            else // Add it
+            {
+               _ProjectsNotFound.Add(ProjectID, DateTime.Now);
+            }
             
             HfmTrace.WriteToHfmConsole(TraceLevel.Error,
                                        String.Format("Project ID '{0}' not found on Stanford Web Project Summary.", ProjectID), true);

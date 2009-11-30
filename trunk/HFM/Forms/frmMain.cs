@@ -1310,7 +1310,7 @@ namespace HFM.Forms
       {
          if (_frmMessages.Visible)
          {
-            _frmMessages.Hide();
+            _frmMessages.Close();
          }
          else
          {

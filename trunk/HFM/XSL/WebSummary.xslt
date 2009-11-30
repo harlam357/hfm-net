@@ -42,6 +42,17 @@
                <xsl:apply-templates select="Instance" />
                <tr>
                   <td class="Plain" colspan="18" align="center">
+                     <a href="mobilesummary.html">
+                        Mobile<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Version
+                     </a>
+                  </td>
+               </tr>
+               <tr>
+                  <td class="Plain" colspan="18" align="center">
+                  </td>
+               </tr>
+               <tr>
+                  <td class="Plain" colspan="18" align="center">
                      Page rendered by <a href="http://code.google.com/p/hfm-net/">HFM.NET</a><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="HFMVersion"/> on <xsl:value-of select="LastUpdatedDate"/>
                      at <xsl:value-of select="LastUpdatedTime"/>
                   </td>
