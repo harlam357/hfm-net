@@ -1,6 +1,41 @@
 #summary HFM.NET Version History
 #labels Featured
 
+=Change Log - Version: 0.4.0 - Revision 86 - Beta=
+
+  * Enhancement: HFM.NET is now also delivered in an MSI Installer Package.  This is now the preferred method for installing HFM.NET on Windows.
+  * Enhancement: Queue Viewer - for viewing information contained within the F@H client queue.dat file.
+  * Enhancement: Benchmarks Upgrades
+    * Minimum & Avgerage Frame Time Graphs (bar colors user configurable).
+    * Ability to remove all benchmarks associated with a specific Client ("X" next to client names).
+    * Ability to remove all benchmarks associated with a specific Project (right-click on Projects).
+    * Ability to refresh the Minimum Frame Time based on current cache of 300 Frame Durations (right-click on Projects).
+    * Save Benchmark Graphs to file (png, jpeg, gif, tiff). - Note: emf file type crashes under Mono
+  * Enhancement: HTML Output Instance Pages - include the FAHlog.txt section for the active work unit.
+  * Enhancement: HTML Output Instance Pages - include a link to the full FAHlog.txt file.
+    * Note: The option enable or disable the copy/upload of the FAHlog.txt files is available in the Preferences.
+  * Enhancement: Benchmarks and Messages Forms now save their Size and Position from session to session.
+  * Enhancement: Option to run the application minimized to the system tray.
+
+
+  * Fix: Bug causing partial cpu client frames to be detected as a full frame.
+  * Fix: HTML Output pages are now correctly marked as utf-8 and have their DOCTYPE set to HTML 4.01 TRANSITIONAL.
+  * Fix: (Mostly) Compatibility issues with GUI layout under 120DPI fonts (Windows only).  There are still some small alignment issues with the queue viewer show/hide functionality.
+  * Fix: Grid Tooltip paints when entering a cell the first time, not continually. This fixes high cpu usage on Windows 7 (and probably Vista) due to continual redraw.
+
+
+  * Change: Text benchmark output only shows production lines when the client is running the benchmark project.
+  * Change: Reduced the number of simultaneous log retrieval threads from 64 to 20 (I believe I was starving the thread pool with too many threads).
+  * Change: Effective Rate is no longer based on a sliding value (current Date and Time).  It is now based on the last log retrieval time for each client, yielding a fixed value between data refresh cycles.
+  * Change: VERY IMPORTANT!!!!
+    * Due to UAC rules for installed applications under Vista & Windows 7 this version will move your BenchmarkCache.dat, CompletedUnits.csv, & CompletedUnits.0_2_2.csv files to your user's HFM.NET Application Data Folder. `*`
+
+ `*` HFM.NET Application Data Folder (example locations)
+
+ Windows XP: C:\Documents and Settings\`<username>`\Application Data\HFM
+
+ Vista / Windows 7: C:\Users\`<username>`\AppData\Roaming\HFM
+
 =Change Log - Version: 0.3.0 - Revision 53 - Beta=
 
   * Enhancement: Log Parsing... Log Parsing... Log Parsing... a new approach, more being identified, just a huge improvement in reliability and future enhancements.
