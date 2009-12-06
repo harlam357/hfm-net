@@ -776,7 +776,8 @@ namespace HFM.Instances
       {
          get
          {
-            if (ProductionValuesOk)
+            // Issue 125
+            if (ProductionValuesOk && PreferenceSet.Instance.CalculateBonus)
             {
                return CurrentUnitInfo.GetCredit();
             }
@@ -1490,7 +1491,7 @@ namespace HFM.Instances
          if (CurrentUnitInfo.RawTimePerSection > 0)
          {
             Status = DetermineStatus(this, CurrentUnitInfo.TimeOfLastFrame, CurrentUnitInfo.RawTimePerSection);
-            if (Status.Equals(ClientStatus.Hung))
+            if (Status.Equals(ClientStatus.Hung) && PreferenceSet.Instance.AllowRunningAsync) // Issue 124
             {
                Status = DetermineAsyncStatus(this, CurrentUnitInfo.RawTimePerSection);
             }
@@ -1510,9 +1511,21 @@ namespace HFM.Instances
             }
             
             int FrameTime = GetBaseFrameTime();
-            if (DetermineStatus(this, TimeOfLastFrame, FrameTime).Equals(ClientStatus.Hung) &&
-                DetermineAsyncStatus(this, FrameTime).Equals(ClientStatus.Hung))
+            if (DetermineStatus(this, TimeOfLastFrame, FrameTime).Equals(ClientStatus.Hung))
             {
+               // Issue 124
+               if (PreferenceSet.Instance.AllowRunningAsync)
+               {
+                  if (DetermineAsyncStatus(this, FrameTime).Equals(ClientStatus.Hung))
+                  {
+                     Status = ClientStatus.Hung;
+                  }
+                  else
+                  {
+                     Status = returnedStatus;
+                  }
+               }
+               
                Status = ClientStatus.Hung;
             }
             else

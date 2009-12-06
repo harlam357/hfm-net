@@ -477,6 +477,20 @@ namespace HFM.Preferences
          get { return _WebGenCopyFAHlog; }
          set { _WebGenCopyFAHlog = value; }
       }
+      
+      private bool _CalculateBonus;
+      public bool CalculateBonus
+      {
+         get { return _CalculateBonus; }
+         set { _CalculateBonus = value; }
+      }
+
+      private bool _AllowRunningAsync;
+      public bool AllowRunningAsync
+      {
+         get { return _AllowRunningAsync; }
+         set { _AllowRunningAsync = value; }
+      }
 
       public static String AppPath
       {
@@ -768,6 +782,8 @@ namespace HFM.Preferences
          catch (NullReferenceException)
          { }
          _WebGenCopyFAHlog = Settings.Default.WebGenCopyFAHlog;
+         _CalculateBonus = Settings.Default.CalculateBonus;
+         _AllowRunningAsync = Settings.Default.AllowRunningAsync;
          
          _AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
          _AppDataPath = Path.Combine(_AppDataPath, ExeName);
@@ -971,6 +987,12 @@ namespace HFM.Preferences
             Settings.Default.MessagesFormLocation = _MessagesFormLocation;
             Settings.Default.MessagesFormSize = _MessagesFormSize;
             Settings.Default.WebGenCopyFAHlog = _WebGenCopyFAHlog;
+            if (Settings.Default.CalculateBonus != _CalculateBonus)
+            {
+               Settings.Default.CalculateBonus = _CalculateBonus;
+               OnCalculateBonusChanges(EventArgs.Empty);
+            }
+            Settings.Default.AllowRunningAsync = _AllowRunningAsync;
 
             Settings.Default.Save();
          }
@@ -1053,6 +1075,15 @@ namespace HFM.Preferences
          if (ColorLogFileChanged != null)
          {
             ColorLogFileChanged(this, e);
+         }
+      } 
+
+      public event EventHandler CalculateBonusChanged;
+      private void OnCalculateBonusChanges(EventArgs e)
+      {
+         if (CalculateBonusChanged != null)
+         {
+            CalculateBonusChanged(this, e);
          }
       } 
       #endregion

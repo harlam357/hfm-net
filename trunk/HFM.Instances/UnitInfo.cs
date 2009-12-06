@@ -572,7 +572,13 @@ namespace HFM.Instances
          {
             if (CurrentProtein.IsUnknown == false)
             {
-               return CurrentProtein.GetPPD(TimePerFrame, EFT);
+               // Issue 125
+               if (PreferenceSet.Instance.CalculateBonus)
+               {
+                  return CurrentProtein.GetPPD(TimePerFrame, EFT);
+               }
+               
+               return CurrentProtein.GetPPD(TimePerFrame);
             }
 
             return 0;
@@ -847,7 +853,13 @@ namespace HFM.Instances
          {
             if (CurrentProtein.IsUnknown == false)
             {
-               return CurrentProtein.GetPPD(TimePerUnitDownload, EFT);
+               // Issue 125
+               if (PreferenceSet.Instance.CalculateBonus)
+               {
+                  return CurrentProtein.GetPPD(TimePerUnitDownload, EFT);
+               }
+               
+               return CurrentProtein.GetPPD(TimePerUnitDownload);
             }
 
             return 0;
@@ -890,7 +902,13 @@ namespace HFM.Instances
          {
             if (CurrentProtein.IsUnknown == false)
             {
-               return CurrentProtein.GetPPD(TimePerAllSections, EFT);
+               // Issue 125
+               if (PreferenceSet.Instance.CalculateBonus)
+               {
+                  return CurrentProtein.GetPPD(TimePerAllSections, EFT);
+               }
+               
+               return CurrentProtein.GetPPD(TimePerAllSections);
             }
 
             return 0;
@@ -934,7 +952,13 @@ namespace HFM.Instances
          {
             if (CurrentProtein.IsUnknown == false)
             {
-               return CurrentProtein.GetPPD(TimePerThreeSections, EFT);
+               // Issue 125
+               if (PreferenceSet.Instance.CalculateBonus)
+               {
+                  return CurrentProtein.GetPPD(TimePerThreeSections, EFT);
+               }
+               
+               return CurrentProtein.GetPPD(TimePerThreeSections);
             }
 
             return 0;
@@ -984,7 +1008,13 @@ namespace HFM.Instances
          {
             if (CurrentProtein.IsUnknown == false)
             {
-               return CurrentProtein.GetPPD(TimePerLastSection, EFT);
+               // Issue 125
+               if (PreferenceSet.Instance.CalculateBonus)
+               {
+                  return CurrentProtein.GetPPD(TimePerLastSection, EFT);
+               }
+               
+               return CurrentProtein.GetPPD(TimePerLastSection);
             }
 
             return 0;

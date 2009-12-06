@@ -88,6 +88,13 @@ namespace HFM.Instances
          { 
             if (Protein != null)
             {
+               // Issue 125 & 129
+               if (PreferenceSet.Instance.CalculateBonus)
+               {
+                  TimeSpan FinishTime = TimeSpan.FromMilliseconds(MinimumFrameTime.TotalMilliseconds * Protein.Frames);
+                  return Protein.GetPPD(MinimumFrameTime, FinishTime);
+               }
+
                return Protein.GetPPD(MinimumFrameTime);
             }
             
@@ -120,6 +127,13 @@ namespace HFM.Instances
          {
             if (Protein != null)
             {
+               // Issue 125 & 129
+               if (PreferenceSet.Instance.CalculateBonus)
+               {
+                  TimeSpan FinishTime = TimeSpan.FromMilliseconds(AverageFrameTime.TotalMilliseconds * Protein.Frames);
+                  return Protein.GetPPD(AverageFrameTime, FinishTime);
+               }
+
                return Protein.GetPPD(AverageFrameTime);
             }
 

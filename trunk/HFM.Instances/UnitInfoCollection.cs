@@ -263,8 +263,15 @@ namespace HFM.Instances
             sbldr.Append(unit.FinishedTime.ToShortTimeString());
             sbldr.Append(COMMA);
          }
-         // Write Bonus Credit (if applicable)
-         sbldr.Append(unit.GetCredit());
+         // Write Bonus Credit if enabled - Issue 125
+         if (PreferenceSet.Instance.CalculateBonus)
+         {
+            sbldr.Append(unit.GetCredit());
+         }
+         else
+         {
+            sbldr.Append(unit.Credit);
+         }
          sbldr.Append(COMMA);
          sbldr.Append(unit.Frames);
          sbldr.Append(COMMA);

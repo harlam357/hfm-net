@@ -237,7 +237,8 @@ namespace HFM.Proteins
       /// <param name="EstTimeOfUnit">Estimated Time of the Unit</param>
       private double GetBonusMultiplier(TimeSpan EstTimeOfUnit)
       {
-         if (KFactor > 0 && EstTimeOfUnit.Equals(TimeSpan.Zero) == false)
+         // Make sure the given TimeSpan is not negative
+         if (KFactor > 0 && EstTimeOfUnit.CompareTo(TimeSpan.Zero) > 0)
          {
             if (EstTimeOfUnit <= TimeSpan.FromDays(PreferredDays))
             {

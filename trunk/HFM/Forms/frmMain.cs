@@ -147,6 +147,7 @@ namespace HFM.Forms
          Prefs.ColorLogFileChanged += PreferenceSet_ColorLogFileChanged;
          Prefs.PpdCalculationChanged += delegate { RefreshDisplay(); };
          Prefs.DecimalPlacesChanged += delegate { RefreshDisplay(); };
+         Prefs.CalculateBonusChanged += delegate { RefreshDisplay(); };
 
          // If Mono, use the RowEnter Event (which was what 0.3.0 and prior used)
          // to set the CurrentInstance selection.  Obviously Mono doesn't fire the

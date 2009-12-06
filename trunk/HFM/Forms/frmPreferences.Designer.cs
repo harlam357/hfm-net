@@ -51,16 +51,18 @@ namespace HFM.Forms
       private void InitializeComponent()
       {
          this.components = new System.ComponentModel.Container();
+         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPreferences));
          this.pnl1CSSSample = new System.Windows.Forms.Panel();
          this.StyleList = new System.Windows.Forms.ListBox();
          this.locateWebFolder = new System.Windows.Forms.FolderBrowserDialog();
          this.tabControl1 = new System.Windows.Forms.TabControl();
          this.tabSchdTasks = new System.Windows.Forms.TabPage();
          this.grpUpdateData = new HFM.Classes.GroupBoxWrapper();
+         this.chkAllowRunningAsync = new HFM.Classes.CheckBoxWrapper();
          this.chkDuplicateProject = new HFM.Classes.CheckBoxWrapper();
          this.chkDuplicateUserID = new HFM.Classes.CheckBoxWrapper();
          this.chkShowUserStats = new HFM.Classes.CheckBoxWrapper();
-         this.txtCollectMinutes = new ValidatingTextBox();
+         this.txtCollectMinutes = new harlam357.Windows.Forms.ValidatingTextBox();
          this.toolTipPrefs = new System.Windows.Forms.ToolTip(this.components);
          this.lbl2SchedExplain = new HFM.Classes.LabelWrapper();
          this.chkScheduled = new HFM.Classes.CheckBoxWrapper();
@@ -69,23 +71,24 @@ namespace HFM.Forms
          this.chkFAHlog = new HFM.Classes.CheckBoxWrapper();
          this.radioFullRefresh = new HFM.Classes.RadioButtonWrapper();
          this.radioSchedule = new HFM.Classes.RadioButtonWrapper();
-         this.txtWebGenMinutes = new ValidatingTextBox();
+         this.txtWebGenMinutes = new harlam357.Windows.Forms.ValidatingTextBox();
          this.lbl2MinutesToGen = new HFM.Classes.LabelWrapper();
          this.btnBrowseWebFolder = new HFM.Classes.ButtonWrapper();
-         this.txtWebSiteBase = new ValidatingTextBox();
+         this.txtWebSiteBase = new harlam357.Windows.Forms.ValidatingTextBox();
          this.lbl2WebSiteDir = new HFM.Classes.LabelWrapper();
          this.chkWebSiteGenerator = new HFM.Classes.CheckBoxWrapper();
          this.tabStartup = new System.Windows.Forms.TabPage();
          this.grpDefaultConfig = new HFM.Classes.GroupBoxWrapper();
          this.chkDefaultConfig = new HFM.Classes.CheckBoxWrapper();
          this.btnBrowseConfigFile = new HFM.Classes.ButtonWrapper();
-         this.txtDefaultConfigFile = new ValidatingTextBox();
+         this.txtDefaultConfigFile = new harlam357.Windows.Forms.ValidatingTextBox();
          this.label1 = new HFM.Classes.LabelWrapper();
          this.grpStartup = new HFM.Classes.GroupBoxWrapper();
          this.chkAutoRun = new HFM.Classes.CheckBoxWrapper();
          this.chkRunMinimized = new HFM.Classes.CheckBoxWrapper();
          this.tabOptions = new System.Windows.Forms.TabPage();
          this.grpInteractiveOptions = new HFM.Classes.GroupBoxWrapper();
+         this.chkCalcBonus = new HFM.Classes.CheckBoxWrapper();
          this.label2 = new HFM.Classes.LabelWrapper();
          this.cboPpdCalc = new HFM.Classes.ComboBoxWrapper();
          this.chkOffline = new HFM.Classes.CheckBoxWrapper();
@@ -99,49 +102,49 @@ namespace HFM.Forms
          this.grpFileExplorer = new HFM.Classes.GroupBoxWrapper();
          this.btnBrowseFileExplorer = new HFM.Classes.ButtonWrapper();
          this.label4 = new HFM.Classes.LabelWrapper();
-         this.txtFileExplorer = new ValidatingTextBox();
+         this.txtFileExplorer = new harlam357.Windows.Forms.ValidatingTextBox();
          this.grpLogFileViewer = new HFM.Classes.GroupBoxWrapper();
          this.btnBrowseLogViewer = new HFM.Classes.ButtonWrapper();
          this.label3 = new HFM.Classes.LabelWrapper();
-         this.txtLogFileViewer = new ValidatingTextBox();
+         this.txtLogFileViewer = new harlam357.Windows.Forms.ValidatingTextBox();
          this.tabReporting = new System.Windows.Forms.TabPage();
          this.grpReportSelections = new HFM.Classes.GroupBoxWrapper();
          this.chkClientEuePause = new HFM.Classes.CheckBoxWrapper();
          this.grpEmailSettings = new HFM.Classes.GroupBoxWrapper();
          this.btnTestEmail = new HFM.Classes.ButtonWrapper();
-         this.txtSmtpPassword = new ValidatingTextBox();
-         this.txtSmtpUsername = new ValidatingTextBox();
+         this.txtSmtpPassword = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.txtSmtpUsername = new harlam357.Windows.Forms.ValidatingTextBox();
          this.labelWrapper4 = new HFM.Classes.LabelWrapper();
          this.labelWrapper5 = new HFM.Classes.LabelWrapper();
          this.lblFromEmailAddress = new HFM.Classes.LabelWrapper();
-         this.txtFromEmailAddress = new ValidatingTextBox();
+         this.txtFromEmailAddress = new harlam357.Windows.Forms.ValidatingTextBox();
          this.chkEnableEmail = new HFM.Classes.CheckBoxWrapper();
          this.lblSmtpServer = new HFM.Classes.LabelWrapper();
          this.lblToAddress = new HFM.Classes.LabelWrapper();
-         this.txtSmtpServer = new ValidatingTextBox();
-         this.txtToEmailAddress = new ValidatingTextBox();
+         this.txtSmtpServer = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.txtToEmailAddress = new harlam357.Windows.Forms.ValidatingTextBox();
          this.tabWeb = new System.Windows.Forms.TabPage();
          this.grpProjectDownload = new HFM.Classes.GroupBoxWrapper();
-         this.txtProjectDownloadUrl = new ValidatingTextBox();
+         this.txtProjectDownloadUrl = new harlam357.Windows.Forms.ValidatingTextBox();
          this.label5 = new HFM.Classes.LabelWrapper();
          this.grpWebStats = new HFM.Classes.GroupBoxWrapper();
          this.lbl3EOCUserID = new HFM.Classes.LabelWrapper();
          this.lbl3StanfordUserID = new HFM.Classes.LabelWrapper();
          this.linkTeam = new System.Windows.Forms.LinkLabel();
-         this.txtEOCUserID = new ValidatingTextBox();
-         this.txtStanfordTeamID = new ValidatingTextBox();
+         this.txtEOCUserID = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.txtStanfordTeamID = new harlam357.Windows.Forms.ValidatingTextBox();
          this.lbl3StanfordTeamID = new HFM.Classes.LabelWrapper();
          this.linkStanford = new System.Windows.Forms.LinkLabel();
-         this.txtStanfordUserID = new ValidatingTextBox();
+         this.txtStanfordUserID = new harlam357.Windows.Forms.ValidatingTextBox();
          this.linkEOC = new System.Windows.Forms.LinkLabel();
          this.grpWebProxy = new HFM.Classes.GroupBoxWrapper();
          this.chkUseProxy = new HFM.Classes.CheckBoxWrapper();
          this.chkUseProxyAuth = new HFM.Classes.CheckBoxWrapper();
-         this.txtProxyPass = new ValidatingTextBox();
-         this.txtProxyUser = new ValidatingTextBox();
-         this.txtProxyPort = new ValidatingTextBox();
+         this.txtProxyPass = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.txtProxyUser = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.txtProxyPort = new harlam357.Windows.Forms.ValidatingTextBox();
          this.lbl3ProxyPass = new HFM.Classes.LabelWrapper();
-         this.txtProxyServer = new ValidatingTextBox();
+         this.txtProxyServer = new harlam357.Windows.Forms.ValidatingTextBox();
          this.lbl3ProxyUser = new HFM.Classes.LabelWrapper();
          this.lbl3Port = new HFM.Classes.LabelWrapper();
          this.lbl3Proxy = new HFM.Classes.LabelWrapper();
@@ -224,6 +227,7 @@ namespace HFM.Forms
          // 
          // grpUpdateData
          // 
+         this.grpUpdateData.Controls.Add(this.chkAllowRunningAsync);
          this.grpUpdateData.Controls.Add(this.chkDuplicateProject);
          this.grpUpdateData.Controls.Add(this.chkDuplicateUserID);
          this.grpUpdateData.Controls.Add(this.chkShowUserStats);
@@ -237,6 +241,16 @@ namespace HFM.Forms
          this.grpUpdateData.TabIndex = 0;
          this.grpUpdateData.TabStop = false;
          this.grpUpdateData.Text = "Refresh Client Data";
+         // 
+         // chkAllowRunningAsync
+         // 
+         this.chkAllowRunningAsync.AutoSize = true;
+         this.chkAllowRunningAsync.Location = new System.Drawing.Point(270, 46);
+         this.chkAllowRunningAsync.Name = "chkAllowRunningAsync";
+         this.chkAllowRunningAsync.Size = new System.Drawing.Size(156, 17);
+         this.chkAllowRunningAsync.TabIndex = 9;
+         this.chkAllowRunningAsync.Text = "Allow Asynchronous Clocks";
+         this.chkAllowRunningAsync.UseVisualStyleBackColor = true;
          // 
          // chkDuplicateProject
          // 
@@ -261,7 +275,7 @@ namespace HFM.Forms
          // chkShowUserStats
          // 
          this.chkShowUserStats.AutoSize = true;
-         this.chkShowUserStats.Location = new System.Drawing.Point(270, 46);
+         this.chkShowUserStats.Location = new System.Drawing.Point(270, 72);
          this.chkShowUserStats.Name = "chkShowUserStats";
          this.chkShowUserStats.Size = new System.Drawing.Size(194, 17);
          this.chkShowUserStats.TabIndex = 6;
@@ -283,9 +297,9 @@ namespace HFM.Forms
          this.txtCollectMinutes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          this.txtCollectMinutes.ToolTip = this.toolTipPrefs;
          this.txtCollectMinutes.ToolTipText = "";
-         this.txtCollectMinutes.ValidationType = ValidationType.Custom;
+         this.txtCollectMinutes.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
          this.txtCollectMinutes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
-         this.txtCollectMinutes.CustomValidation += new CustomValidationEventHandler(this.txtMinutes_CustomValidation);
+         this.txtCollectMinutes.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtMinutes_CustomValidation);
          // 
          // lbl2SchedExplain
          // 
@@ -386,9 +400,9 @@ namespace HFM.Forms
          this.txtWebGenMinutes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          this.txtWebGenMinutes.ToolTip = this.toolTipPrefs;
          this.txtWebGenMinutes.ToolTipText = "";
-         this.txtWebGenMinutes.ValidationType = ValidationType.Custom;
+         this.txtWebGenMinutes.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
          this.txtWebGenMinutes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
-         this.txtWebGenMinutes.CustomValidation += new CustomValidationEventHandler(this.txtMinutes_CustomValidation);
+         this.txtWebGenMinutes.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtMinutes_CustomValidation);
          // 
          // lbl2MinutesToGen
          // 
@@ -423,8 +437,8 @@ namespace HFM.Forms
          this.txtWebSiteBase.TabIndex = 6;
          this.txtWebSiteBase.ToolTip = this.toolTipPrefs;
          this.txtWebSiteBase.ToolTipText = "HTML Output Folder must be a valid local path, network (UNC) path, or FTP URL.";
-         this.txtWebSiteBase.ValidationType = ValidationType.Custom;
-         this.txtWebSiteBase.CustomValidation += new CustomValidationEventHandler(this.txtWebSiteBase_CustomValidation);
+         this.txtWebSiteBase.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtWebSiteBase.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtWebSiteBase_CustomValidation);
          // 
          // lbl2WebSiteDir
          // 
@@ -504,7 +518,7 @@ namespace HFM.Forms
          this.txtDefaultConfigFile.TabIndex = 2;
          this.txtDefaultConfigFile.ToolTip = null;
          this.txtDefaultConfigFile.ToolTipText = "";
-         this.txtDefaultConfigFile.ValidationType = ValidationType.None;
+         this.txtDefaultConfigFile.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // label1
          // 
@@ -561,6 +575,7 @@ namespace HFM.Forms
          // 
          // grpInteractiveOptions
          // 
+         this.grpInteractiveOptions.Controls.Add(this.chkCalcBonus);
          this.grpInteractiveOptions.Controls.Add(this.label2);
          this.grpInteractiveOptions.Controls.Add(this.cboPpdCalc);
          this.grpInteractiveOptions.Controls.Add(this.chkOffline);
@@ -575,10 +590,20 @@ namespace HFM.Forms
          this.grpInteractiveOptions.TabStop = false;
          this.grpInteractiveOptions.Text = "Interactive Options";
          // 
+         // chkCalcBonus
+         // 
+         this.chkCalcBonus.AutoSize = true;
+         this.chkCalcBonus.Location = new System.Drawing.Point(256, 72);
+         this.chkCalcBonus.Name = "chkCalcBonus";
+         this.chkCalcBonus.Size = new System.Drawing.Size(179, 17);
+         this.chkCalcBonus.TabIndex = 16;
+         this.chkCalcBonus.Text = "Calculate Bonus Credit and PPD";
+         this.chkCalcBonus.UseVisualStyleBackColor = true;
+         // 
          // label2
          // 
          this.label2.AutoSize = true;
-         this.label2.Location = new System.Drawing.Point(235, 47);
+         this.label2.Location = new System.Drawing.Point(235, 21);
          this.label2.Name = "label2";
          this.label2.Size = new System.Drawing.Size(126, 13);
          this.label2.TabIndex = 14;
@@ -588,7 +613,7 @@ namespace HFM.Forms
          // 
          this.cboPpdCalc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
          this.cboPpdCalc.FormattingEnabled = true;
-         this.cboPpdCalc.Location = new System.Drawing.Point(367, 42);
+         this.cboPpdCalc.Location = new System.Drawing.Point(367, 16);
          this.cboPpdCalc.Name = "cboPpdCalc";
          this.cboPpdCalc.Size = new System.Drawing.Size(109, 21);
          this.cboPpdCalc.TabIndex = 15;
@@ -615,7 +640,7 @@ namespace HFM.Forms
          // 
          // udDecimalPlaces
          // 
-         this.udDecimalPlaces.Location = new System.Drawing.Point(367, 69);
+         this.udDecimalPlaces.Location = new System.Drawing.Point(367, 43);
          this.udDecimalPlaces.Name = "udDecimalPlaces";
          this.udDecimalPlaces.Size = new System.Drawing.Size(39, 20);
          this.udDecimalPlaces.TabIndex = 1;
@@ -633,7 +658,7 @@ namespace HFM.Forms
          // labelWrapper1
          // 
          this.labelWrapper1.AutoSize = true;
-         this.labelWrapper1.Location = new System.Drawing.Point(253, 73);
+         this.labelWrapper1.Location = new System.Drawing.Point(253, 47);
          this.labelWrapper1.Name = "labelWrapper1";
          this.labelWrapper1.Size = new System.Drawing.Size(108, 13);
          this.labelWrapper1.TabIndex = 0;
@@ -708,7 +733,7 @@ namespace HFM.Forms
          this.txtFileExplorer.TabIndex = 1;
          this.txtFileExplorer.ToolTip = null;
          this.txtFileExplorer.ToolTipText = "";
-         this.txtFileExplorer.ValidationType = ValidationType.None;
+         this.txtFileExplorer.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // grpLogFileViewer
          // 
@@ -750,7 +775,7 @@ namespace HFM.Forms
          this.txtLogFileViewer.TabIndex = 1;
          this.txtLogFileViewer.ToolTip = null;
          this.txtLogFileViewer.ToolTipText = "";
-         this.txtLogFileViewer.ValidationType = ValidationType.None;
+         this.txtLogFileViewer.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // tabReporting
          // 
@@ -831,8 +856,8 @@ namespace HFM.Forms
          this.txtSmtpPassword.ToolTip = this.toolTipPrefs;
          this.txtSmtpPassword.ToolTipText = "";
          this.txtSmtpPassword.UseSystemPasswordChar = true;
-         this.txtSmtpPassword.ValidationType = ValidationType.Custom;
-         this.txtSmtpPassword.CustomValidation += new CustomValidationEventHandler(this.txtSmtpCredentials_CustomValidation);
+         this.txtSmtpPassword.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtSmtpPassword.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtSmtpCredentials_CustomValidation);
          // 
          // txtSmtpUsername
          // 
@@ -847,8 +872,8 @@ namespace HFM.Forms
          this.txtSmtpUsername.TabIndex = 8;
          this.txtSmtpUsername.ToolTip = this.toolTipPrefs;
          this.txtSmtpUsername.ToolTipText = "";
-         this.txtSmtpUsername.ValidationType = ValidationType.Custom;
-         this.txtSmtpUsername.CustomValidation += new CustomValidationEventHandler(this.txtSmtpCredentials_CustomValidation);
+         this.txtSmtpUsername.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtSmtpUsername.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtSmtpCredentials_CustomValidation);
          // 
          // labelWrapper4
          // 
@@ -890,9 +915,9 @@ namespace HFM.Forms
          this.txtFromEmailAddress.TabIndex = 4;
          this.txtFromEmailAddress.ToolTip = this.toolTipPrefs;
          this.txtFromEmailAddress.ToolTipText = "Must be a valid e-mail address.";
-         this.txtFromEmailAddress.ValidationType = ValidationType.Custom;
+         this.txtFromEmailAddress.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
          this.txtFromEmailAddress.MouseHover += new System.EventHandler(this.txtFromEmailAddress_MouseHover);
-         this.txtFromEmailAddress.CustomValidation += new CustomValidationEventHandler(this.txtEmailAddress_CustomValidation);
+         this.txtFromEmailAddress.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtEmailAddress_CustomValidation);
          // 
          // chkEnableEmail
          // 
@@ -936,8 +961,8 @@ namespace HFM.Forms
          this.txtSmtpServer.TabIndex = 6;
          this.txtSmtpServer.ToolTip = this.toolTipPrefs;
          this.txtSmtpServer.ToolTipText = "Must be a valid server name.";
-         this.txtSmtpServer.ValidationType = ValidationType.Custom;
-         this.txtSmtpServer.CustomValidation += new CustomValidationEventHandler(this.txtSmtpServer_CustomValidation);
+         this.txtSmtpServer.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtSmtpServer.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtSmtpServer_CustomValidation);
          // 
          // txtToEmailAddress
          // 
@@ -952,8 +977,8 @@ namespace HFM.Forms
          this.txtToEmailAddress.TabIndex = 2;
          this.txtToEmailAddress.ToolTip = this.toolTipPrefs;
          this.txtToEmailAddress.ToolTipText = "Must be a valid e-mail address.";
-         this.txtToEmailAddress.ValidationType = ValidationType.Custom;
-         this.txtToEmailAddress.CustomValidation += new CustomValidationEventHandler(this.txtEmailAddress_CustomValidation);
+         this.txtToEmailAddress.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtToEmailAddress.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtEmailAddress_CustomValidation);
          // 
          // tabWeb
          // 
@@ -989,8 +1014,8 @@ namespace HFM.Forms
          this.txtProjectDownloadUrl.TabIndex = 1;
          this.txtProjectDownloadUrl.ToolTip = this.toolTipPrefs;
          this.txtProjectDownloadUrl.ToolTipText = "URL must be a valid URL and the path to a valid Stanford Project Summary page.";
-         this.txtProjectDownloadUrl.ValidationType = ValidationType.Custom;
-         this.txtProjectDownloadUrl.CustomValidation += new CustomValidationEventHandler(this.txtProjectDownloadUrl_CustomValidation);
+         this.txtProjectDownloadUrl.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtProjectDownloadUrl.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtProjectDownloadUrl_CustomValidation);
          // 
          // label5
          // 
@@ -1058,7 +1083,7 @@ namespace HFM.Forms
          this.txtEOCUserID.TabIndex = 3;
          this.txtEOCUserID.ToolTip = null;
          this.txtEOCUserID.ToolTipText = "";
-         this.txtEOCUserID.ValidationType = ValidationType.None;
+         this.txtEOCUserID.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          this.txtEOCUserID.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
          // 
          // txtStanfordTeamID
@@ -1071,7 +1096,7 @@ namespace HFM.Forms
          this.txtStanfordTeamID.TabIndex = 5;
          this.txtStanfordTeamID.ToolTip = null;
          this.txtStanfordTeamID.ToolTipText = "";
-         this.txtStanfordTeamID.ValidationType = ValidationType.None;
+         this.txtStanfordTeamID.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          this.txtStanfordTeamID.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
          // 
          // lbl3StanfordTeamID
@@ -1103,7 +1128,7 @@ namespace HFM.Forms
          this.txtStanfordUserID.TabIndex = 4;
          this.txtStanfordUserID.ToolTip = null;
          this.txtStanfordUserID.ToolTipText = "";
-         this.txtStanfordUserID.ValidationType = ValidationType.None;
+         this.txtStanfordUserID.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // linkEOC
          // 
@@ -1171,8 +1196,8 @@ namespace HFM.Forms
          this.txtProxyPass.ToolTip = this.toolTipPrefs;
          this.txtProxyPass.ToolTipText = "";
          this.txtProxyPass.UseSystemPasswordChar = true;
-         this.txtProxyPass.ValidationType = ValidationType.Custom;
-         this.txtProxyPass.CustomValidation += new CustomValidationEventHandler(this.txtProxyCredentials_CustomValidation);
+         this.txtProxyPass.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtProxyPass.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtProxyCredentials_CustomValidation);
          // 
          // txtProxyUser
          // 
@@ -1186,8 +1211,8 @@ namespace HFM.Forms
          this.txtProxyUser.TabIndex = 7;
          this.txtProxyUser.ToolTip = this.toolTipPrefs;
          this.txtProxyUser.ToolTipText = "";
-         this.txtProxyUser.ValidationType = ValidationType.Custom;
-         this.txtProxyUser.CustomValidation += new CustomValidationEventHandler(this.txtProxyCredentials_CustomValidation);
+         this.txtProxyUser.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtProxyUser.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtProxyCredentials_CustomValidation);
          // 
          // txtProxyPort
          // 
@@ -1202,9 +1227,9 @@ namespace HFM.Forms
          this.txtProxyPort.TabIndex = 4;
          this.txtProxyPort.ToolTip = this.toolTipPrefs;
          this.txtProxyPort.ToolTipText = "";
-         this.txtProxyPort.ValidationType = ValidationType.Custom;
+         this.txtProxyPort.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
          this.txtProxyPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
-         this.txtProxyPort.CustomValidation += new CustomValidationEventHandler(this.txtProxyServerPort_CustomValidation);
+         this.txtProxyPort.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtProxyServerPort_CustomValidation);
          // 
          // lbl3ProxyPass
          // 
@@ -1227,8 +1252,8 @@ namespace HFM.Forms
          this.txtProxyServer.TabIndex = 2;
          this.txtProxyServer.ToolTip = this.toolTipPrefs;
          this.txtProxyServer.ToolTipText = "";
-         this.txtProxyServer.ValidationType = ValidationType.Custom;
-         this.txtProxyServer.CustomValidation += new CustomValidationEventHandler(this.txtProxyServerPort_CustomValidation);
+         this.txtProxyServer.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtProxyServer.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtProxyServerPort_CustomValidation);
          // 
          // lbl3ProxyUser
          // 
@@ -1325,10 +1350,10 @@ namespace HFM.Forms
          this.Controls.Add(this.btnOK);
          this.Controls.Add(this.btnCancel);
          this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+         this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
          this.MaximizeBox = false;
          this.MinimizeBox = false;
          this.Name = "frmPreferences";
-         this.ShowIcon = false;
          this.ShowInTaskbar = false;
          this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -1475,5 +1500,7 @@ namespace HFM.Forms
       private Classes.CheckBoxWrapper chkOffline;
       private Classes.LabelWrapper label2;
       private Classes.ComboBoxWrapper cboPpdCalc;
+      private HFM.Classes.CheckBoxWrapper chkCalcBonus;
+      private HFM.Classes.CheckBoxWrapper chkAllowRunningAsync;
    }
 }

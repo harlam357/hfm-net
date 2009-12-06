@@ -111,6 +111,7 @@ namespace HFM.Forms
          // Finally, add the CheckBox.Checked Binding
          chkScheduled.DataBindings.Add("Checked", Prefs, "SyncOnSchedule", false, DataSourceUpdateMode.OnPropertyChanged);
 
+         chkAllowRunningAsync.DataBindings.Add("Checked", Prefs, "AllowRunningAsync", false, DataSourceUpdateMode.OnPropertyChanged);
          chkShowUserStats.DataBindings.Add("Checked", Prefs, "ShowUserStats", false, DataSourceUpdateMode.OnPropertyChanged);
          #endregion
 
@@ -179,6 +180,8 @@ namespace HFM.Forms
          udDecimalPlaces.Minimum = PreferenceSet.MinDecimalPlaces;
          udDecimalPlaces.Maximum = PreferenceSet.MaxDecimalPlaces;
          udDecimalPlaces.DataBindings.Add("Value", Prefs, "DecimalPlaces", false, DataSourceUpdateMode.OnPropertyChanged);
+
+         chkCalcBonus.DataBindings.Add("Checked", Prefs, "CalculateBonus", false, DataSourceUpdateMode.OnPropertyChanged);
          #endregion
 
          #region External Programs

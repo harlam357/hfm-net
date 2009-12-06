@@ -710,5 +710,29 @@ namespace HFM.Preferences.Properties {
                 this["WebGenCopyFAHlog"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool CalculateBonus {
+            get {
+                return ((bool)(this["CalculateBonus"]));
+            }
+            set {
+                this["CalculateBonus"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AllowRunningAsync {
+            get {
+                return ((bool)(this["AllowRunningAsync"]));
+            }
+            set {
+                this["AllowRunningAsync"] = value;
+            }
+        }
     }
 }
