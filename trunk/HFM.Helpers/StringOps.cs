@@ -204,17 +204,58 @@ namespace HFM.Helpers
       /// <exception cref="ArgumentException">Throws when either Username or Password is Null or Empty but not the other.</exception>
       public static bool ValidateUsernamePasswordPair(string Username, string Password)
       {
-         if (String.IsNullOrEmpty(Username) && String.IsNullOrEmpty(Password))
+         return ValidateValuePair(Username, "Password must also be specified when specifying Username.",
+                                  Password, "Username must also be specified when specifying Password.",
+                                  false, String.Empty);
+      }
+
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="Username"></param>
+      /// <param name="Password"></param>
+      /// <param name="throwOnEmpty"></param>
+      /// <exception cref="ArgumentException">Throws when either Username or Password is Null or Empty but not the other.</exception>
+      public static bool ValidateUsernamePasswordPair(string Username, string Password, bool throwOnEmpty)
+      {
+         return ValidateValuePair(Username, "Password must also be specified when specifying Username.",
+                                  Password, "Username must also be specified when specifying Password.",
+                                  true, "Username and Password must be specified.");
+      }
+
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="Server"></param>
+      /// <param name="Port"></param>
+      /// <exception cref="ArgumentException">Throws when either Username or Password is Null or Empty but not the other.</exception>
+      public static bool ValidateServerPortPair(string Server, string Port)
+      {
+         return ValidateValuePair(Server, "Proxy Port must also be specified when specifying Proxy Server.",
+                                  Port, "Proxy Server must also be specified when specifying Proxy Port.",
+                                  true, "Proxy Server and Port must be specified.");
+      }
+      
+      /// <summary>
+      /// 
+      /// </summary>
+      private static bool ValidateValuePair(string Value1, string Value1Message, string Value2, string Value2Message, bool throwOnEmpty, string throwOnEmptyMessage)
+      {
+         if (String.IsNullOrEmpty(Value1) && String.IsNullOrEmpty(Value2))
          {
+            if (throwOnEmpty)
+            {
+               throw new ArgumentException(throwOnEmptyMessage);
+            }
             return false;
          }
-         if (String.IsNullOrEmpty(Username) == false && String.IsNullOrEmpty(Password))
+         if (String.IsNullOrEmpty(Value1) == false && String.IsNullOrEmpty(Value2))
          {
-            throw new ArgumentException("Password must also be specified when specifying Username.");
+            throw new ArgumentException(Value1Message);
          }
-         else if (String.IsNullOrEmpty(Username) && String.IsNullOrEmpty(Password) == false)
+         else if (String.IsNullOrEmpty(Value1) && String.IsNullOrEmpty(Value2) == false)
          {
-            throw new ArgumentException("Username must also be specified when specifying Password.");
+            throw new ArgumentException(Value2Message);
          }
         
          return true; 

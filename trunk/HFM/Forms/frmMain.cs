@@ -145,7 +145,8 @@ namespace HFM.Forms
          PreferenceSet_ShowUserStatsChanged(this, EventArgs.Empty);
          Prefs.MessageLevelChanged += PreferenceSet_MessageLevelChanged;
          Prefs.ColorLogFileChanged += PreferenceSet_ColorLogFileChanged;
-         Prefs.PpdCalculationChanged += Prefs_PpdCalculationChanged;
+         Prefs.PpdCalculationChanged += delegate { RefreshDisplay(); };
+         Prefs.DecimalPlacesChanged += delegate { RefreshDisplay(); };
 
          // If Mono, use the RowEnter Event (which was what 0.3.0 and prior used)
          // to set the CurrentInstance selection.  Obviously Mono doesn't fire the
@@ -2095,11 +2096,6 @@ namespace HFM.Forms
          {
             txtLogFile.RemoveHighlight();
          }
-      }
-
-      private void Prefs_PpdCalculationChanged(object sender, EventArgs e)
-      {
-         RefreshDisplay();
       }
       #endregion
       

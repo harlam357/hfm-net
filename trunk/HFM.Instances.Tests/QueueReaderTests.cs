@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Globalization;
 
 using NUnit.Framework;
 
@@ -76,7 +77,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual("P2653R3C71G119", entry8.WorkUnitTag);
          Assert.AreEqual(1061857101, entry8.Flops);
          Assert.AreEqual(1061.857101, entry8.MegaFlops);
-         Assert.AreEqual("1061.857101", entry8.MegaFlops.ToString());
+         Assert.AreEqual("1061.857101", entry8.MegaFlops.ToString(CultureInfo.InvariantCulture));
          Assert.AreEqual(1534, entry8.Memory);
          Assert.AreEqual(0, entry8.GpuMemory);
          Assert.AreEqual(true, entry8.AssignmentInfoPresent);
@@ -142,7 +143,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual("P2677R33C19G44", entry4.WorkUnitTag);
          Assert.AreEqual(1060722910, entry4.Flops);
          Assert.AreEqual(1060.722910, entry4.MegaFlops);
-         Assert.AreEqual("1060.72291", entry4.MegaFlops.ToString());
+         Assert.AreEqual("1060.72291", entry4.MegaFlops.ToString(CultureInfo.InvariantCulture));
          Assert.AreEqual(685, entry4.Memory);
          Assert.AreEqual(0, entry4.GpuMemory);
          Assert.AreEqual(true, entry4.AssignmentInfoPresent);
@@ -207,7 +208,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual("P2669R2C112G164", entry6.WorkUnitTag);
          Assert.AreEqual(1060500841, entry6.Flops);
          Assert.AreEqual(1060.500841, entry6.MegaFlops);
-         Assert.AreEqual("1060.500841", entry6.MegaFlops.ToString());
+         Assert.AreEqual("1060.500841", entry6.MegaFlops.ToString(CultureInfo.InvariantCulture));
          Assert.AreEqual(685, entry6.Memory);
          Assert.AreEqual(0, entry6.GpuMemory);
          Assert.AreEqual(true, entry6.AssignmentInfoPresent);
@@ -272,7 +273,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual("P5790R5C360G1", entry7.WorkUnitTag);
          Assert.AreEqual(1065171903, entry7.Flops);
          Assert.AreEqual(1065.171903, entry7.MegaFlops);
-         Assert.AreEqual("1065.171903", entry7.MegaFlops.ToString());
+         Assert.AreEqual("1065.171903", entry7.MegaFlops.ToString(CultureInfo.InvariantCulture));
          Assert.AreEqual(4094, entry7.Memory);
          Assert.AreEqual(258, entry7.GpuMemory);
          Assert.AreEqual(true, entry7.AssignmentInfoPresent);
@@ -340,7 +341,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual("P2611R1C518G185", entry1.WorkUnitTag);
          Assert.AreEqual(0, entry1.Flops);
          Assert.AreEqual(0, entry1.MegaFlops);
-         Assert.AreEqual("0", entry1.MegaFlops.ToString());
+         Assert.AreEqual("0", entry1.MegaFlops.ToString(CultureInfo.InvariantCulture));
          Assert.AreEqual(2048, entry1.Memory);
          Assert.AreEqual(0, entry1.GpuMemory);
          Assert.AreEqual(true, entry1.AssignmentInfoPresent);
@@ -390,7 +391,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual("P2613R32C0G169", entry2.WorkUnitTag);
          Assert.AreEqual(1063808819, entry2.Flops);
          Assert.AreEqual(1063.808819, entry2.MegaFlops);
-         Assert.AreEqual("1063.808819", entry2.MegaFlops.ToString());
+         Assert.AreEqual("1063.808819", entry2.MegaFlops.ToString(CultureInfo.InvariantCulture));
          Assert.AreEqual(2048, entry2.Memory);
          Assert.AreEqual(0, entry2.GpuMemory);
          Assert.AreEqual(true, entry2.AssignmentInfoPresent);
@@ -455,7 +456,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual("P3046R0C505G74", entry1.WorkUnitTag);
          Assert.AreEqual(0, entry1.Flops);
          Assert.AreEqual(0, entry1.MegaFlops);
-         Assert.AreEqual("0", entry1.MegaFlops.ToString());
+         Assert.AreEqual("0", entry1.MegaFlops.ToString(CultureInfo.InvariantCulture));
          Assert.AreEqual(0, entry1.Memory);
          Assert.AreEqual(0, entry1.GpuMemory);
          Assert.AreEqual(true, entry1.AssignmentInfoPresent);
@@ -525,7 +526,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual("P2498R204C8G16", entry1.WorkUnitTag);
          Assert.AreEqual(0, entry1.Flops);
          Assert.AreEqual(0, entry1.MegaFlops);
-         Assert.AreEqual("0", entry1.MegaFlops.ToString());
+         Assert.AreEqual("0", entry1.MegaFlops.ToString(CultureInfo.InvariantCulture));
          Assert.AreEqual(1022, entry1.Memory);
          Assert.AreEqual(0, entry1.GpuMemory);
          Assert.AreEqual(true, entry1.AssignmentInfoPresent);

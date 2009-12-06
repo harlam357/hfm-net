@@ -162,14 +162,14 @@ namespace HFM.Proteins
                   // Parse the current line from the CSV file
                   Protein p = new Protein();
                   String[] lineData = sLine.Split(new char[] { '\t' }, StringSplitOptions.None);
-                  p.ProjectNumber = Int32.Parse(lineData[0]);
+                  p.ProjectNumber = Int32.Parse(lineData[0], CultureInfo.InvariantCulture);
                   p.ServerIP = lineData[1].Trim();
                   p.WorkUnitName = lineData[2].Trim();
-                  p.NumAtoms = Int32.Parse(lineData[3]);
-                  p.PreferredDays = Double.Parse(lineData[4]);
-                  p.MaxDays = Double.Parse(lineData[5]);
-                  p.Credit = Double.Parse(lineData[6]);
-                  p.Frames = Int32.Parse(lineData[7]);
+                  p.NumAtoms = Int32.Parse(lineData[3], CultureInfo.InvariantCulture);
+                  p.PreferredDays = Double.Parse(lineData[4], CultureInfo.InvariantCulture);
+                  p.MaxDays = Double.Parse(lineData[5], CultureInfo.InvariantCulture);
+                  p.Credit = Double.Parse(lineData[6], CultureInfo.InvariantCulture);
+                  p.Frames = Int32.Parse(lineData[7], CultureInfo.InvariantCulture);
                   p.Core = lineData[8];
                   p.Description = lineData[9];
                   p.Contact = lineData[10];
@@ -178,7 +178,7 @@ namespace HFM.Proteins
                   // Newer versions download and parse the KFactor
                   if (lineData.Length > 11)
                   {
-                     p.KFactor = Double.Parse(lineData[11]);
+                     p.KFactor = Double.Parse(lineData[11], CultureInfo.InvariantCulture);
                   }
                   else
                   {
@@ -339,7 +339,7 @@ namespace HFM.Proteins
          try
          {
             int ProjectNumber;
-            if (Int32.TryParse(GetNextTdValue(pSummary), out ProjectNumber))
+            if (Int32.TryParse(GetNextTdValue(pSummary), NumberStyles.Integer, CultureInfo.InvariantCulture, out ProjectNumber))
             {
                p.ProjectNumber = ProjectNumber;
             }
@@ -351,20 +351,20 @@ namespace HFM.Proteins
             p.WorkUnitName = GetNextTdValue(pSummary);
             try
             {
-               p.NumAtoms = Int32.Parse(GetNextTdValue(pSummary));
+               p.NumAtoms = Int32.Parse(GetNextTdValue(pSummary), CultureInfo.InvariantCulture);
             }
             catch (FormatException)
             {
                p.NumAtoms = 0;
             }
-            p.PreferredDays = Double.Parse(GetNextTdValue(pSummary));
-            p.MaxDays = Double.Parse(GetNextTdValue(pSummary));
-            p.Credit = Double.Parse(GetNextTdValue(pSummary));
-            p.Frames = Int32.Parse(GetNextTdValue(pSummary));
+            p.PreferredDays = Double.Parse(GetNextTdValue(pSummary), CultureInfo.InvariantCulture);
+            p.MaxDays = Double.Parse(GetNextTdValue(pSummary), CultureInfo.InvariantCulture);
+            p.Credit = Double.Parse(GetNextTdValue(pSummary), CultureInfo.InvariantCulture);
+            p.Frames = Int32.Parse(GetNextTdValue(pSummary), CultureInfo.InvariantCulture);
             p.Core = GetNextTdValue(pSummary);
             p.Description = GetNextTdValue(pSummary, "href");
             p.Contact = GetNextTdValue(pSummary);
-            p.KFactor = Double.Parse(GetNextTdValue(pSummary));
+            p.KFactor = Double.Parse(GetNextTdValue(pSummary), CultureInfo.InvariantCulture);
             
             return p;
          }
@@ -472,7 +472,8 @@ namespace HFM.Proteins
             // Project Number, Server IP, Work Unit Name, Number of Atoms, Preferred (days),
             // Final Deadline (days), Credit, Frames, Code, Description, Contact, KFactor
 
-            CSVData[i++] = String.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}",
+            CSVData[i++] = String.Format(CultureInfo.InvariantCulture, 
+                                         "{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}",
                /*  0 */ kvp.Value.ProjectNumber,    /*  1 */ kvp.Value.ServerIP,
                /*  2 */ kvp.Value.WorkUnitName,     /*  3 */ kvp.Value.NumAtoms,
                /*  4 */ kvp.Value.PreferredDays,    /*  5 */ kvp.Value.MaxDays,

@@ -26,7 +26,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 using HFM.Instrumentation;
 using HFM.Preferences;
-using HFM.Proteins;
 
 namespace HFM.Instances
 {

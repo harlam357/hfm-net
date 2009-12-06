@@ -1935,6 +1935,10 @@ namespace HFM.Instances
          try
          {
             ClientProcessorMegahertz = int.Parse(xmlData.SelectSingleNode(xmlNodeClientMHz).InnerText);
+            if (ClientProcessorMegahertz < 1)
+            {
+               ClientProcessorMegahertz = 1;
+            }
          }
          catch (NullReferenceException)
          {

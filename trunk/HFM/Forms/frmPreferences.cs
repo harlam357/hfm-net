@@ -19,12 +19,14 @@
  */
 
 using System;
-using System.ComponentModel;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+
+using harlam357.Windows.Forms;
 
 using HFM.Helpers;
 using HFM.Instrumentation;
@@ -42,7 +44,7 @@ namespace HFM.Forms
       private const string CssFolder = "CSS"; 
       #endregion
 
-      #region Form Constructor / functionality
+      #region Constructor And Binding/Load Methods
       public frmPreferences()
       {
          InitializeComponent();
@@ -61,66 +63,81 @@ namespace HFM.Forms
             wbCssSample.TabIndex = 0;
             wbCssSample.TabStop = false;
          }
+         
+         txtCollectMinutes.ToolTipText = String.Format("Minutes must be a value from {0} to {1}.", PreferenceSet.MinMinutes, PreferenceSet.MaxMinutes);
+         txtWebGenMinutes.ToolTipText = String.Format("Minutes must be a value from {0} to {1}.", PreferenceSet.MinMinutes, PreferenceSet.MaxMinutes);
 
          Prefs = PreferenceSet.Instance;
+      }
+
+      private void frmPreferences_Load(object sender, EventArgs e)
+      {
+         // Cycle through Tabs to create all controls and Bind data
+         for (int i = 0; i < tabControl1.TabPages.Count; i++)
+         {
+            tabControl1.SelectTab(i);
+         }
+
+         tabControl1.SelectTab(0);
       }
 
       private void frmPreferences_Shown(object sender, EventArgs e)
       {
          LoadScheduledTasksTab();
          LoadStartupTab();
-         LoadDefaultsTab();
+         LoadOptionsTab();
          LoadReportingTab();
-         LoadWebTab();
-         LoadVisualStyleTab();
+         LoadWebSettingsTab();
+         LoadVisualStylesTab();
       }
 
       private void LoadScheduledTasksTab()
       {
-         chkSynchronous.Checked = Prefs.SyncOnLoad;
-         chkScheduled.Checked = Prefs.SyncOnSchedule;
-         if (PreferenceSet.ValidateMinutes(Prefs.SyncTimeMinutes))
-         {
-            txtCollectMinutes.Text = Prefs.SyncTimeMinutes.ToString();
-         }
-         else
-         {
-            txtCollectMinutes.Text = PreferenceSet.MinutesDefault.ToString();
-         }
-         chkOffline.Checked = Prefs.OfflineLast;
-         chkShowUserStats.Checked = Prefs.ShowUserStats;
-         chkDuplicateUserID.Checked = Prefs.DuplicateUserIDCheck;
-         chkDuplicateProject.Checked = Prefs.DuplicateProjectCheck;
-         chkColorLog.Checked = Prefs.ColorLogFile;
-         cboPpdCalc.Items.Add(ePpdCalculation.LastFrame);
-         cboPpdCalc.Items.Add(ePpdCalculation.LastThreeFrames);
-         cboPpdCalc.Items.Add(ePpdCalculation.AllFrames);
-         cboPpdCalc.Items.Add(ePpdCalculation.EffectiveRate);
-         cboPpdCalc.Text = Prefs.PpdCalculation.ToString();
+         #region Refresh Data
+         chkSynchronous.DataBindings.Add("Checked", Prefs, "SyncOnLoad", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkDuplicateProject.DataBindings.Add("Checked", Prefs, "DuplicateProjectCheck", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkDuplicateUserID.DataBindings.Add("Checked", Prefs, "DuplicateUserIDCheck", false, DataSourceUpdateMode.OnPropertyChanged);
 
-         if (PreferenceSet.ValidateMinutes(Prefs.GenerateInterval))
+         // Always Add Bindings for CheckBoxes that control input TextBoxes after
+         // the data has been bound to the TextBox
+         if (PreferenceSet.ValidateMinutes(Prefs.SyncTimeMinutes) == false)
          {
-            txtWebGenMinutes.Text = Prefs.GenerateInterval.ToString();
+            Prefs.SyncTimeMinutes = PreferenceSet.MinutesDefault;
          }
-         else
+         // Add the CheckBox.Checked => TextBox.Enabled Binding
+         txtCollectMinutes.DataBindings.Add("Enabled", chkScheduled, "Checked", false, DataSourceUpdateMode.OnPropertyChanged);
+         // Bind the value to the TextBox
+         txtCollectMinutes.DataBindings.Add("Text", Prefs, "SyncTimeMinutes", false, DataSourceUpdateMode.OnValidation);
+         // Finally, add the CheckBox.Checked Binding
+         chkScheduled.DataBindings.Add("Checked", Prefs, "SyncOnSchedule", false, DataSourceUpdateMode.OnPropertyChanged);
+
+         chkShowUserStats.DataBindings.Add("Checked", Prefs, "ShowUserStats", false, DataSourceUpdateMode.OnPropertyChanged);
+         #endregion
+
+         #region Web Generation
+         // Always Add Bindings for CheckBoxes that control input TextBoxes after
+         // the data has been bound to the TextBox
+         if (PreferenceSet.ValidateMinutes(Prefs.GenerateInterval) == false)
          {
-            txtWebGenMinutes.Text = PreferenceSet.MinutesDefault.ToString();
+            Prefs.GenerateInterval = PreferenceSet.MinutesDefault;
          }
-         txtWebSiteBase.Text = Prefs.WebRoot;
-         chkWebSiteGenerator.Checked = Prefs.GenerateWeb;
-         if (Prefs.WebGenAfterRefresh)
-         {
-            radioFullRefresh.Checked = true;
-         }
-         else
-         {
-            radioSchedule.Checked = true;
-         }
-         chkFAHlog.Checked = Prefs.WebGenCopyFAHlog;
+         // Bind the value to the TextBox
+         txtWebGenMinutes.DataBindings.Add("Text", Prefs, "GenerateInterval", false, DataSourceUpdateMode.OnValidation);
+         // Finally, add the RadioButton.Checked Binding
+         radioFullRefresh.DataBindings.Add("Checked", Prefs, "WebGenAfterRefresh", false, DataSourceUpdateMode.OnPropertyChanged);
+
+         txtWebSiteBase.DataBindings.Add("Text", Prefs, "WebRoot", false, DataSourceUpdateMode.OnValidation);
+         chkFAHlog.DataBindings.Add("Checked", Prefs, "WebGenCopyFAHlog", false, DataSourceUpdateMode.OnPropertyChanged);
+
+         // Finally, add the CheckBox.Checked Binding
+         chkWebSiteGenerator.DataBindings.Add("Checked", Prefs, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
+         #endregion
       }
       
       private void LoadStartupTab()
       {
+         #region Startup
+         /*** Auto-Run Is Not DataBound ***/
          if (PlatformOps.IsRunningOnMono() == false)
          {
             chkAutoRun.Checked = RegistryOps.IsHfmAutoRunSet();
@@ -130,64 +147,121 @@ namespace HFM.Forms
             // No AutoRun under Mono
             chkAutoRun.Enabled = false;
          }
-         chkRunMinimized.Checked = Prefs.RunMinimized;
+         
+         chkRunMinimized.DataBindings.Add("Checked", Prefs, "RunMinimized", false, DataSourceUpdateMode.OnPropertyChanged);
+         #endregion
+
+         #region Configuration File
+         txtDefaultConfigFile.DataBindings.Add("Enabled", chkDefaultConfig, "Checked", false, DataSourceUpdateMode.OnPropertyChanged);
+         btnBrowseConfigFile.DataBindings.Add("Enabled", chkDefaultConfig, "Checked", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtDefaultConfigFile.DataBindings.Add("Text", Prefs, "DefaultConfigFile", false, DataSourceUpdateMode.OnPropertyChanged);
+         
+         chkDefaultConfig.DataBindings.Add("Checked", Prefs, "UseDefaultConfigFile", false, DataSourceUpdateMode.OnPropertyChanged);
+         #endregion
       }
 
-      private void LoadDefaultsTab()
+      private void LoadOptionsTab()
       {
-         chkDefaultConfig.Checked = Prefs.UseDefaultConfigFile;
-         txtDefaultConfigFile.Text = Prefs.DefaultConfigFile;
-         chkAutoSave.Checked = Prefs.AutoSaveConfig;
-         txtLogFileViewer.Text = Prefs.LogFileViewer;
-         txtFileExplorer.Text = Prefs.FileExplorer;
-         cboMessageLevel.Items.Add(TraceLevel.Off.ToString());
-         cboMessageLevel.Items.Add(TraceLevel.Error.ToString());
-         cboMessageLevel.Items.Add(TraceLevel.Warning.ToString());
-         cboMessageLevel.Items.Add(TraceLevel.Info.ToString());
-         cboMessageLevel.Items.Add(TraceLevel.Verbose.ToString());
+         #region Interactive Options
+         chkOffline.DataBindings.Add("Checked", Prefs, "OfflineLast", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkColorLog.DataBindings.Add("Checked", Prefs, "ColorLogFile", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkAutoSave.DataBindings.Add("Checked", Prefs, "AutoSaveConfig", false, DataSourceUpdateMode.OnPropertyChanged);
+
+         /*** PPD Calculation Is Not DataBound ***/
+         IList<ePpdCalculation> ppdList = new List<ePpdCalculation>();
+         ppdList.Add(ePpdCalculation.LastFrame);
+         ppdList.Add(ePpdCalculation.LastThreeFrames);
+         ppdList.Add(ePpdCalculation.AllFrames);
+         ppdList.Add(ePpdCalculation.EffectiveRate);
+         cboPpdCalc.DataSource = ppdList;
+         cboPpdCalc.SelectedItem = Prefs.PpdCalculation;
+
+         udDecimalPlaces.Minimum = PreferenceSet.MinDecimalPlaces;
+         udDecimalPlaces.Maximum = PreferenceSet.MaxDecimalPlaces;
+         udDecimalPlaces.DataBindings.Add("Value", Prefs, "DecimalPlaces", false, DataSourceUpdateMode.OnPropertyChanged);
+         #endregion
+
+         #region External Programs
+         txtLogFileViewer.DataBindings.Add("Text", Prefs, "LogFileViewer", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtFileExplorer.DataBindings.Add("Text", Prefs, "FileExplorer", false, DataSourceUpdateMode.OnPropertyChanged);
+         #endregion
+
+         #region Debug Message Level
+         /*** Message Level Is Not DataBound ***/
+         IList<TraceLevel> traceList = new List<TraceLevel>();
+         traceList.Add(TraceLevel.Off);
+         traceList.Add(TraceLevel.Error);
+         traceList.Add(TraceLevel.Warning);
+         traceList.Add(TraceLevel.Info);
+         traceList.Add(TraceLevel.Verbose);
+         cboMessageLevel.DataSource = traceList;
          if (Prefs.MessageLevel >= 0 && Prefs.MessageLevel <= 4)
          {
             cboMessageLevel.SelectedIndex = Prefs.MessageLevel;
          }
          else
          {
-            cboMessageLevel.SelectedIndex = (int)TraceLevel.Info;
-         }
-         udDecimalPlaces.Minimum = PreferenceSet.MinDecimalPlaces;
-         udDecimalPlaces.Maximum = PreferenceSet.MaxDecimalPlaces;
-         udDecimalPlaces.Value = Prefs.DecimalPlaces;
+            cboMessageLevel.SelectedItem = TraceLevel.Info;
+         } 
+         #endregion
       }
       
       private void LoadReportingTab()
       {
-         txtToEmailAddress.Text = Prefs.EmailReportingToAddress;
-         txtFromEmailAddress.Text = Prefs.EmailReportingFromAddress;
-         txtSmtpServer.Text = Prefs.EmailReportingServerAddress;
-         txtSmtpUsername.Text = Prefs.EmailReportingServerUsername;
-         txtSmtpPassword.Text = Prefs.EmailReportingServerPassword;
+         #region Email Settings
+         // Always Add Bindings for CheckBoxes that control input TextBoxes after
+         // the data has been bound to the TextBox
+         txtToEmailAddress.DataBindings.Add("Text", Prefs, "EmailReportingToAddress", false, DataSourceUpdateMode.OnValidation);
+         txtFromEmailAddress.DataBindings.Add("Text", Prefs, "EmailReportingFromAddress", false, DataSourceUpdateMode.OnValidation);
+         txtSmtpServer.DataBindings.Add("Text", Prefs, "EmailReportingServerAddress", false, DataSourceUpdateMode.OnValidation);
+         txtSmtpUsername.DataBindings.Add("Text", Prefs, "EmailReportingServerUsername", false, DataSourceUpdateMode.OnValidation);
+         txtSmtpUsername.CompanionControls.Add(txtSmtpPassword);
+         txtSmtpPassword.DataBindings.Add("Text", Prefs, "EmailReportingServerPassword", false, DataSourceUpdateMode.OnValidation);
+         txtSmtpPassword.CompanionControls.Add(txtSmtpUsername);
+
+         // Finally, add the CheckBox.Checked Binding
+         chkEnableEmail.DataBindings.Add("Checked", Prefs, "EmailReportingEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+         #endregion
          
-         chkEnableEmail.Checked = Prefs.EmailReportingEnabled;
-         
-         chkClientEuePause.Checked = Prefs.ReportEuePause;
+         #region Report Selections
+         chkClientEuePause.DataBindings.Add("Checked", Prefs, "ReportEuePause", false, DataSourceUpdateMode.OnPropertyChanged);
+         #endregion
       }
 
-      private void LoadWebTab()
+      private void LoadWebSettingsTab()
       {
-         txtEOCUserID.Text = Prefs.EOCUserID.ToString();
-         txtStanfordUserID.Text = Prefs.StanfordID;
-         txtStanfordTeamID.Text = Prefs.TeamID.ToString();
-         txtProjectDownloadUrl.Text = Prefs.ProjectDownloadUrl;
+         #region Web Statistics
+         txtEOCUserID.DataBindings.Add("Text", Prefs, "EOCUserID", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtStanfordUserID.DataBindings.Add("Text", Prefs, "StanfordID", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtStanfordTeamID.DataBindings.Add("Text", Prefs, "TeamID", false, DataSourceUpdateMode.OnPropertyChanged);
+         #endregion
+         
+         #region Project Download URL
+         txtProjectDownloadUrl.DataBindings.Add("Text", Prefs, "ProjectDownloadUrl", false, DataSourceUpdateMode.OnValidation);
+         #endregion
 
-         txtProxyServer.Text = Prefs.ProxyServer;
-         txtProxyPort.Text = Prefs.ProxyPort.ToString();
-         chkUseProxy.Checked = Prefs.UseProxy;
+         #region Web Proxy Settings
+         // Always Add Bindings for CheckBoxes that control input TextBoxes after
+         // the data has been bound to the TextBox
+         txtProxyServer.DataBindings.Add("Text", Prefs, "ProxyServer", false, DataSourceUpdateMode.OnValidation);
+         txtProxyServer.CompanionControls.Add(txtProxyPort);
+         txtProxyPort.DataBindings.Add("Text", Prefs, "ProxyPort", false, DataSourceUpdateMode.OnValidation);
+         txtProxyPort.CompanionControls.Add(txtProxyServer);
+         // Finally, add the CheckBox.Checked Binding
+         chkUseProxy.DataBindings.Add("Checked", Prefs, "UseProxy", false, DataSourceUpdateMode.OnPropertyChanged);
 
-         txtProxyUser.Text = Prefs.ProxyUser;
-         txtProxyPass.Text = Prefs.ProxyPass;
-         chkUseProxyAuth.Checked = Prefs.UseProxyAuth;
+         // Always Add Bindings for CheckBoxes that control input TextBoxes after
+         // the data has been bound to the TextBox
+         txtProxyUser.DataBindings.Add("Text", Prefs, "ProxyUser", false, DataSourceUpdateMode.OnValidation);
+         txtProxyUser.CompanionControls.Add(txtProxyPass);
+         txtProxyPass.DataBindings.Add("Text", Prefs, "ProxyPass", false, DataSourceUpdateMode.OnValidation);
+         txtProxyPass.CompanionControls.Add(txtProxyUser);
+         // Finally, add the CheckBox.Checked Binding
+         chkUseProxyAuth.DataBindings.Add("Checked", Prefs, "UseProxyAuth", false, DataSourceUpdateMode.OnPropertyChanged);
+         #endregion
       }
       
-      private void LoadVisualStyleTab()
+      private void LoadVisualStylesTab()
       {
          DirectoryInfo di = new DirectoryInfo(Path.Combine(PreferenceSet.AppPath, CssFolder));
          
@@ -221,59 +295,27 @@ namespace HFM.Forms
       #endregion
 
       #region Scheduled Tasks Tab
-      private void chkScheduled_CheckedChanged(object sender, EventArgs e)
-      {
-         if (chkScheduled.Checked)
-         {
-            txtCollectMinutes.ReadOnly = false;
-         }
-         else
-         {
-            txtCollectMinutes.ReadOnly = true;
-         }
-      }
-
       private void chkWebSiteGenerator_CheckedChanged(object sender, EventArgs e)
       {
-         if (chkWebSiteGenerator.Checked)
+         SetWebGenerator(chkWebSiteGenerator.Checked);
+      }
+      
+      private void SetWebGenerator(bool value)
+      {
+         foreach (Control ctrl in grpHTMLOutput.Controls)
          {
-            foreach (Control ctrl in grpHTMLOutput.Controls)
-            {
-               ctrl.CausesValidation = true;
-            }
-         
-            radioSchedule.Enabled = true;
-            lbl2MinutesToGen.Enabled = true;
-            radioSchedule_CheckedChanged(sender, e);
-            radioFullRefresh.Enabled = true;
-            
-            txtWebSiteBase.Enabled = true;
-            txtWebSiteBase.ReadOnly = false;
-            txtWebSiteBase.BackColor = SystemColors.Window;
-            txtWebSiteBase_Validating(null, null);
-            
-            btnBrowseWebFolder.Enabled = true;
-            chkFAHlog.Enabled = true;
+            ctrl.CausesValidation = value;
          }
-         else
-         {
-            foreach (Control ctrl in grpHTMLOutput.Controls)
-            {
-               ctrl.CausesValidation = false;
-            }
-         
-            radioSchedule.Enabled = false;
-            lbl2MinutesToGen.Enabled = false;
-            radioSchedule_CheckedChanged(sender, e);
-            radioFullRefresh.Enabled = false;
-            
-            txtWebSiteBase.Enabled = false;
-            txtWebSiteBase.BackColor = SystemColors.Control;
-            txtWebSiteBase.ReadOnly = true;
-            
-            btnBrowseWebFolder.Enabled = false;
-            chkFAHlog.Enabled = false;
-         }
+
+         radioSchedule.Enabled = value;
+         lbl2MinutesToGen.Enabled = value;
+         radioSchedule_CheckedChanged(null, EventArgs.Empty);
+         radioFullRefresh.Enabled = value;
+
+         txtWebSiteBase.Enabled = value;
+         btnBrowseWebFolder.Enabled = value;
+
+         chkFAHlog.Enabled = value;
       }
 
       private void radioSchedule_CheckedChanged(object sender, EventArgs e)
@@ -281,77 +323,36 @@ namespace HFM.Forms
          if (radioSchedule.Checked && radioSchedule.Enabled)
          {
             txtWebGenMinutes.Enabled = true;
-            txtWebGenMinutes.ReadOnly = false;
          }
          else
          {
             txtWebGenMinutes.Enabled = false;
-            txtWebGenMinutes.ReadOnly = true;
          }
       }
 
-      private void txtMinutes_Validating(object sender, CancelEventArgs e)
-      {
-         Control textBox = (Control)sender;
-
-         int Minutes;
-         if (int.TryParse(textBox.Text, out Minutes) == false)
-         {
-            SetMinutesError(textBox);
-         }
-         else if (PreferenceSet.ValidateMinutes(Minutes) == false)
-         {
-            SetMinutesError(textBox);
-         }
-         else
-         {
-            textBox.BackColor = SystemColors.Window;
-            toolTipPrefs.Hide(textBox.Parent);
-         }
-      }
-      
-      private void SetMinutesError(Control textBox)
-      {
-         textBox.BackColor = Color.Yellow;
-         textBox.Focus();
-         if (textBox.Visible)
-         {
-            toolTipPrefs.Show(String.Format("Minutes must be a value from {0} to {1}", PreferenceSet.MinMinutes, PreferenceSet.MaxMinutes),
-                              textBox.Parent, textBox.Location.X + 5, textBox.Location.Y - 20, 5000);
-         }
-      }
-
-      private void txtWebSiteBase_Validating(object sender, CancelEventArgs e)
+      private bool txtWebSiteBase_CustomValidation(object sender, CustomValidationEventArgs e)
       {
          bool bPath = StringOps.ValidatePathInstancePath(txtWebSiteBase.Text);
          bool bPathWithSlash = StringOps.ValidatePathInstancePath(String.Concat(txtWebSiteBase.Text, Path.DirectorySeparatorChar));
          bool bIsFtpUrl = StringOps.ValidateFtpWithUserPassUrl(txtWebSiteBase.Text);
 
-         if (txtWebSiteBase.Text.Length == 0)
+         if (e.Text.Length == 0)
          {
-            SetWebFolderError();
+            return false;
          }
-         else if (txtWebSiteBase.Text.Length > 2 && (bPath || bPathWithSlash || bIsFtpUrl) != true)
+         else if (e.Text.Length > 2 && (bPath || bPathWithSlash || bIsFtpUrl) != true)
          {
-            SetWebFolderError();
+            return false;
          }
-         else
-         {
-            if (bPath == false && bPathWithSlash)
-            {
-               txtWebSiteBase.Text += Path.DirectorySeparatorChar;
-            }
-            txtWebSiteBase.BackColor = SystemColors.Window;
-            toolTipPrefs.Hide(txtWebSiteBase);
-         }
-      }
 
-      private void SetWebFolderError()
-      {
-         txtWebSiteBase.BackColor = Color.Yellow;
-         txtWebSiteBase.Focus();
-         toolTipPrefs.Show("HTML Output Folder must be a valid local path, network (UNC) path, or FTP URL",
-            txtWebSiteBase.Parent, txtWebSiteBase.Location.X + 5, txtWebSiteBase.Location.Y - 20, 5000);
+         // This PathWithSlash Code seems to be defunct by the current
+         // Path Regex in use.  It could probably be removed.
+         if (bPath == false && bPathWithSlash)
+         {
+            e.Text += Path.DirectorySeparatorChar;
+         }
+         
+         return true;
       }
 
       private void btnBrowseWebFolder_Click(object sender, EventArgs e)
@@ -365,174 +366,68 @@ namespace HFM.Forms
             txtWebSiteBase.Text = locateWebFolder.SelectedPath;
          }
       }
-      #endregion
- 
-      #region Defaults Tab
-      private void chkDefaultConfig_CheckedChanged(object sender, EventArgs e)
+
+      private bool txtMinutes_CustomValidation(object sender, CustomValidationEventArgs e)
       {
-         if (chkDefaultConfig.Checked)
+         int Minutes;
+         if (Int32.TryParse(e.Text, out Minutes) == false)
          {
-            txtDefaultConfigFile.Enabled = true;
-            txtDefaultConfigFile.ReadOnly = false;
-            btnBrowseConfigFile.Enabled = true;
+            return false;
          }
-         else
+         else if (PreferenceSet.ValidateMinutes(Minutes) == false)
          {
-            txtDefaultConfigFile.Enabled = false;
-            txtDefaultConfigFile.ReadOnly = true;
-            btnBrowseConfigFile.Enabled = false;
+            return false;
          }
-      } 
+
+         return true;
+      }
       #endregion
       
       #region Reporting Tab
       private void chkEnableEmail_CheckedChanged(object sender, EventArgs e)
       {
-         if (chkEnableEmail.Checked)
-         {
-            EnableEmailReporting();
-         }
-         else
-         {
-            DisableEmailReporting();
-         }
+         SetEmailReporting(chkEnableEmail.Checked);
       }
       
-      private void EnableEmailReporting()
+      private void SetEmailReporting(bool value)
       {
          foreach (Control ctrl in grpEmailSettings.Controls)
          {
-            ctrl.CausesValidation = true;
+            ctrl.CausesValidation = value;
          }
 
-         txtToEmailAddress.Enabled = true;
-         txtToEmailAddress.ReadOnly = false;
-         txtToEmailAddress.BackColor = SystemColors.Window;
-         txtToEmailAddress_Validating(null, null);
+         txtToEmailAddress.Enabled = value;
+         txtFromEmailAddress.Enabled = value;
+         txtSmtpServer.Enabled = value;
+         txtSmtpUsername.Enabled = value;
+         txtSmtpPassword.Enabled = value;
 
-         txtFromEmailAddress.Enabled = true;
-         txtFromEmailAddress.ReadOnly = false;
-         txtToEmailAddress.BackColor = SystemColors.Window;
-         txtFromEmailAddress_Validating(null, null);
+         btnTestEmail.Enabled = value;
 
-         txtSmtpServer.Enabled = true;
-         txtSmtpServer.ReadOnly = false;
-         txtToEmailAddress.BackColor = SystemColors.Window;
-         txtSmtpServer_Validating(null, null);
+         grpReportSelections.Enabled = value;
+         foreach (Control ctrl in grpReportSelections.Controls)
+         {
+            if (ctrl is CheckBox)
+            {
+               ctrl.Enabled = value;
+            }
+         }
+      }
 
-         txtSmtpUsername.Enabled = true;
-         txtSmtpUsername.ReadOnly = false;
-         txtSmtpUsername.BackColor = SystemColors.Window;
+      private bool txtEmailAddress_CustomValidation(object sender, CustomValidationEventArgs e)
+      {
+         bool bAddress = StringOps.ValidateEmailAddress(e.Text);
 
-         txtSmtpPassword.Enabled = true;
-         txtSmtpPassword.ReadOnly = false;
-         txtSmtpPassword.BackColor = SystemColors.Window;
-
-         DoSmtpCredentialValidation();
-
-         btnTestEmail.Enabled = true;
+         if (e.Text.Length == 0)
+         {
+            return false;
+         }
+         else if (e.Text.Length > 0 && bAddress != true)
+         {
+            return false;
+         }
          
-         grpReportSelections.Enabled = true;
-         foreach (Control ctrl in grpReportSelections.Controls)
-         {
-            if (ctrl is CheckBox)
-            {
-               ctrl.Enabled = true;
-            }
-         }
-      }
-      
-      private void DisableEmailReporting()
-      {
-         foreach (Control ctrl in grpEmailSettings.Controls)
-         {
-            ctrl.CausesValidation = false;
-         }
-
-         txtToEmailAddress.Enabled = false;
-         txtToEmailAddress.BackColor = SystemColors.Control;
-         txtToEmailAddress.ReadOnly = true;
-
-         txtFromEmailAddress.Enabled = false;
-         txtFromEmailAddress.BackColor = SystemColors.Control;
-         txtFromEmailAddress.ReadOnly = true;
-
-         txtSmtpServer.Enabled = false;
-         txtSmtpServer.BackColor = SystemColors.Control;
-         txtSmtpServer.ReadOnly = true;
-
-         txtSmtpUsername.Enabled = false;
-         txtSmtpUsername.BackColor = SystemColors.Control;
-         txtSmtpUsername.ReadOnly = true;
-
-         txtSmtpPassword.Enabled = false;
-         txtSmtpPassword.BackColor = SystemColors.Control;
-         txtSmtpPassword.ReadOnly = true;
-
-         btnTestEmail.Enabled = false;
-
-         grpReportSelections.Enabled = false;
-         foreach (Control ctrl in grpReportSelections.Controls)
-         {
-            if (ctrl is CheckBox)
-            {
-               ctrl.Enabled = false;
-            }
-         }
-      }
-
-      private void txtToEmailAddress_Validating(object sender, CancelEventArgs e)
-      {
-         bool bAddress = StringOps.ValidateEmailAddress(txtToEmailAddress.Text);
-
-         if (txtToEmailAddress.Text.Length == 0)
-         {
-            SetToEmailAddressError();
-         }
-         else if (txtToEmailAddress.Text.Length > 0 && bAddress != true)
-         {
-            SetToEmailAddressError();
-         }
-         else
-         {
-            txtToEmailAddress.BackColor = SystemColors.Window;
-            toolTipPrefs.Hide(txtToEmailAddress);
-         }
-      }
-
-      private void SetToEmailAddressError()
-      {
-         txtToEmailAddress.BackColor = Color.Yellow;
-         txtToEmailAddress.Focus();
-         toolTipPrefs.Show("Must be a valid e-mail address.",
-            txtToEmailAddress.Parent, txtToEmailAddress.Location.X + 5, txtToEmailAddress.Location.Y - 20, 5000);
-      }
-
-      private void txtFromEmailAddress_Validating(object sender, CancelEventArgs e)
-      {
-         bool bAddress = StringOps.ValidateEmailAddress(txtFromEmailAddress.Text);
-
-         if (txtFromEmailAddress.Text.Length == 0)
-         {
-            SetFromEmailAddressError();
-         }
-         else if (txtFromEmailAddress.Text.Length > 0 && bAddress != true)
-         {
-            SetFromEmailAddressError();
-         }
-         else
-         {
-            txtFromEmailAddress.BackColor = SystemColors.Window;
-            toolTipPrefs.Hide(txtFromEmailAddress);
-         }
-      }
-
-      private void SetFromEmailAddressError()
-      {
-         txtFromEmailAddress.BackColor = Color.Yellow;
-         txtFromEmailAddress.Focus();
-         toolTipPrefs.Show("Must be a valid e-mail address.",
-            txtFromEmailAddress.Parent, txtFromEmailAddress.Location.X + 5, txtFromEmailAddress.Location.Y - 20, 5000);
+         return true;
       }
 
       private void txtFromEmailAddress_MouseHover(object sender, EventArgs e)
@@ -544,67 +439,36 @@ namespace HFM.Forms
             txtFromEmailAddress.Parent, txtFromEmailAddress.Location.X + 5, txtFromEmailAddress.Location.Y - 55, 10000);
       }
 
-      private void txtSmtpServer_Validating(object sender, CancelEventArgs e)
+      private bool txtSmtpServer_CustomValidation(object sender, CustomValidationEventArgs e)
       {
-         bool bServerName = StringOps.ValidateServerName(txtSmtpServer.Text);
+         bool bServerName = StringOps.ValidateServerName(e.Text);
 
-         if (txtSmtpServer.Text.Length == 0)
+         if (e.Text.Length == 0)
          {
-            SetSmtpServerError();
+            return false;
          }
-         else if (txtSmtpServer.Text.Length > 0 && bServerName != true)
+         else if (e.Text.Length > 0 && bServerName != true)
          {
-            SetSmtpServerError();
+            return false;
          }
-         else
-         {
-            txtSmtpServer.BackColor = SystemColors.Window;
-            toolTipPrefs.Hide(txtSmtpServer);
-         }
+         
+         return true;
       }
 
-      private void SetSmtpServerError()
-      {
-         txtSmtpServer.BackColor = Color.Yellow;
-         txtSmtpServer.Focus();
-         toolTipPrefs.Show("Must be a valid server name.",
-            txtToEmailAddress.Parent, txtToEmailAddress.Location.X + 5, txtToEmailAddress.Location.Y - 20, 5000);
-      }
-
-      private void txtSmtpUsername_Validating(object sender, CancelEventArgs e)
-      {
-         DoSmtpCredentialValidation();
-      }
-
-      private void txtSmtpPassword_Validating(object sender, CancelEventArgs e)
-      {
-         DoSmtpCredentialValidation();
-      }
-      
-      private void DoSmtpCredentialValidation()
+      private bool txtSmtpCredentials_CustomValidation(object sender, CustomValidationEventArgs e)
       {
          try
          {
             // This will violate FxCop rule (rule ID)
             StringOps.ValidateUsernamePasswordPair(txtSmtpUsername.Text, txtSmtpPassword.Text);
-
-            txtSmtpUsername.BackColor = SystemColors.Window;
-            toolTipPrefs.Hide(txtSmtpUsername);
-            txtSmtpPassword.BackColor = SystemColors.Window;
-            toolTipPrefs.Hide(txtSmtpPassword);
          }
          catch (ArgumentException ex)
          {
-            SetSmtpUsernamePasswordError(ex.Message);
+            e.Message = ex.Message;
+            return false;
          }
-      }
-
-      private void SetSmtpUsernamePasswordError(string Message)
-      {
-         txtSmtpUsername.BackColor = Color.Yellow;
-         txtSmtpPassword.BackColor = Color.Yellow;
-         toolTipPrefs.Show(Message,
-            txtSmtpUsername.Parent, txtSmtpUsername.Location.X + 5, txtSmtpUsername.Location.Y - 20, 5000);
+         
+         return true;
       }
 
       private void btnTestEmail_Click(object sender, EventArgs e)
@@ -671,25 +535,9 @@ namespace HFM.Forms
          }
       }
 
-      private void txtProjectDownloadUrl_Validating(object sender, CancelEventArgs e)
+      private bool txtProjectDownloadUrl_CustomValidation(object sender, CustomValidationEventArgs e)
       {
-         Control textBox = (Control)sender;
-
-         if (StringOps.ValidateHttpURL(txtProjectDownloadUrl.Text) == false)
-         {
-            txtProjectDownloadUrl.BackColor = Color.Yellow;
-            if (txtProjectDownloadUrl.Visible)
-            {
-               txtProjectDownloadUrl.Focus();
-               toolTipPrefs.Show("URL must be a valid URL and the path to a valid Stanford Project Summary page",
-                                 textBox.Parent, textBox.Location.X + 5, textBox.Location.Y - 20, 5000);
-            }
-         }
-         else
-         {
-            txtProjectDownloadUrl.BackColor = SystemColors.Window;
-            toolTipPrefs.Hide(textBox.Parent);
-         }
+         return StringOps.ValidateHttpURL(txtProjectDownloadUrl.Text);
       }
 
       private void chkUseProxy_CheckedChanged(object sender, EventArgs e)
@@ -699,7 +547,7 @@ namespace HFM.Forms
             EnableProxy();
             if (chkUseProxyAuth.Checked)
             {
-               EnableProxyAuth();
+               SetProxyAuth(true);
             }
          }
          else
@@ -711,16 +559,7 @@ namespace HFM.Forms
       private void EnableProxy()
       {
          txtProxyServer.Enabled = true;
-         txtProxyServer.ReadOnly = false;
-         txtProxyServer.BackColor = SystemColors.Window;
-         txtProxyServer.CausesValidation = true;
-
          txtProxyPort.Enabled = true;
-         txtProxyPort.ReadOnly = false;
-         txtProxyPort.BackColor = SystemColors.Window;
-         txtProxyPort.CausesValidation = true;
-
-         DoProxyServerPortValidation();
          
          chkUseProxyAuth.Enabled = true;
       }
@@ -728,144 +567,61 @@ namespace HFM.Forms
       private void DisableProxy()
       {
          txtProxyServer.Enabled = false;
-         txtProxyServer.ReadOnly = true;
-         txtProxyServer.BackColor = SystemColors.Control;
-         txtProxyServer.CausesValidation = false;
-            
          txtProxyPort.Enabled = false;
-         txtProxyPort.ReadOnly = true;
-         txtProxyPort.BackColor = SystemColors.Control;
-         txtProxyPort.CausesValidation = false;
          
          chkUseProxyAuth.Enabled = false;
-         DisableProxyAuth();
+         
+         SetProxyAuth(false);
       }
 
-      private void txtProxyServer_Validating(object sender, CancelEventArgs e)
-      {
-         DoProxyServerPortValidation();
-      }
-
-      private void txtProxyPort_Validating(object sender, CancelEventArgs e)
-      {
-         DoProxyServerPortValidation();
-      }
-
-      private void DoProxyServerPortValidation()
+      private bool txtProxyServerPort_CustomValidation(object sender, CustomValidationEventArgs e)
       {
          try
          {
-            ValidateProxyServerPort(txtProxyServer.Text, txtProxyPort.Text);
-
-            txtProxyServer.BackColor = SystemColors.Window;
-            toolTipPrefs.Hide(txtProxyServer);
-            txtProxyPort.BackColor = SystemColors.Window;
-            toolTipPrefs.Hide(txtProxyPort);
+            // This will violate FxCop rule (rule ID)
+            StringOps.ValidateServerPortPair(txtProxyServer.Text, txtProxyPort.Text);
          }
          catch (ArgumentException ex)
          {
-            SetProxyServerPortError(ex.Message);
+            e.Message = ex.Message;
+            return false;
          }
-      }
-      
-      private static void ValidateProxyServerPort(string ProxyServer, string ProxyPort)
-      {
-         if (String.IsNullOrEmpty(ProxyServer) && String.IsNullOrEmpty(ProxyPort))
-         {
-            throw new ArgumentException("Proxy Server and Port must be specified.");
-         }
-         if (String.IsNullOrEmpty(ProxyServer) == false && String.IsNullOrEmpty(ProxyPort))
-         {
-            throw new ArgumentException("Proxy Port must also be specified when specifying Proxy Server.");
-         }
-         else if (String.IsNullOrEmpty(ProxyServer) && String.IsNullOrEmpty(ProxyPort) == false)
-         {
-            throw new ArgumentException("Proxy Server must also be specified when specifying Proxy Port.");
-         }
-      }
-
-      private void SetProxyServerPortError(string Message)
-      {
-         txtProxyServer.BackColor = Color.Yellow;
-         txtProxyPort.BackColor = Color.Yellow;
-         toolTipPrefs.Show(Message,
-            txtProxyServer.Parent, txtProxyServer.Location.X + 5, txtProxyServer.Location.Y - 20, 5000);
+         
+         return true;
       }
 
       private void chkUseProxyAuth_CheckedChanged(object sender, EventArgs e)
       {
          if (chkUseProxyAuth.Checked && chkUseProxyAuth.Enabled)
          {
-            EnableProxyAuth();
+            SetProxyAuth(true);
          }
          else
          {
-            DisableProxyAuth();
+            SetProxyAuth(false);
          }
       }
 
-      private void EnableProxyAuth()
+      private void SetProxyAuth(bool value)
       {
-         txtProxyUser.Enabled = true;
-         txtProxyUser.ReadOnly = false;
-         txtProxyUser.BackColor = SystemColors.Window;
-         txtProxyUser.CausesValidation = true;
-         
-         txtProxyPass.Enabled = true;
-         txtProxyPass.ReadOnly = false;
-         txtProxyPass.BackColor = SystemColors.Window;
-         txtProxyPass.CausesValidation = true;
-         
-         DoProxyCredentialValidation();
+         txtProxyUser.Enabled = value;
+         txtProxyPass.Enabled = value;
       }
 
-      private void DisableProxyAuth()
-      {
-         txtProxyUser.Enabled = false;
-         txtProxyUser.ReadOnly = true;
-         txtProxyUser.BackColor = SystemColors.Control;
-         txtProxyUser.CausesValidation = false;
-         
-         txtProxyPass.Enabled = false;
-         txtProxyPass.ReadOnly = true;
-         txtProxyPass.BackColor = SystemColors.Control;
-         txtProxyPass.CausesValidation = false;
-      }
-
-      private void txtProxyUser_Validating(object sender, CancelEventArgs e)
-      {
-         DoProxyCredentialValidation();
-      }
-
-      private void txtProxyPass_Validating(object sender, CancelEventArgs e)
-      {
-         DoProxyCredentialValidation();
-      }
-
-      private void DoProxyCredentialValidation()
+      private bool txtProxyCredentials_CustomValidation(object sender, CustomValidationEventArgs e)
       {
          try
          {
             // This will violate FxCop rule (rule ID)
-            StringOps.ValidateUsernamePasswordPair(txtProxyUser.Text, txtProxyPass.Text);
-
-            txtProxyUser.BackColor = SystemColors.Window;
-            toolTipPrefs.Hide(txtProxyUser);
-            txtProxyPass.BackColor = SystemColors.Window;
-            toolTipPrefs.Hide(txtProxyPass);
+            StringOps.ValidateUsernamePasswordPair(txtProxyUser.Text, txtProxyPass.Text, true);
          }
          catch (ArgumentException ex)
          {
-            SetProxyUsernamePasswordError(ex.Message);
+            e.Message = ex.Message;
+            return false;
          }
-      }
-
-      private void SetProxyUsernamePasswordError(string Message)
-      {
-         txtProxyUser.BackColor = Color.Yellow;
-         txtProxyPass.BackColor = Color.Yellow;
-         toolTipPrefs.Show(Message,
-            txtProxyUser.Parent, txtProxyUser.Location.X + 5, txtProxyUser.Location.Y - 20, 5000);
+         
+         return true;
       }
       #endregion
 
@@ -919,12 +675,9 @@ namespace HFM.Forms
       {
          if (CheckForErrorConditions() == false)
          {
-            GetDataScheduledTasksTab();
             GetStartupTab();
-            GetDataDefaultsTab();
-            GetReportingTab();
-            GetDataWebSettingsTab();
-            GetDataVisualStylesTab();
+            GetOptionsTab();
+            GetVisualStylesTab();
 
             Prefs.Save();
 
@@ -959,9 +712,9 @@ namespace HFM.Forms
       private bool CheckForScheduledTasksTabErrors()
       {
          // Check for error conditions on Scheduled Tasks Tab
-         if (txtCollectMinutes.BackColor == Color.Yellow ||
-             txtWebGenMinutes.BackColor == Color.Yellow ||
-             txtWebSiteBase.BackColor == Color.Yellow)
+         if (txtCollectMinutes.Error ||
+             txtWebGenMinutes.Error ||
+             txtWebSiteBase.Error)
          {
             return true;
          }
@@ -972,11 +725,11 @@ namespace HFM.Forms
       private bool CheckForReportingTabErrors()
       {
          // Check for error conditions on Reporting Tab
-         if (txtToEmailAddress.BackColor == Color.Yellow ||
-             txtFromEmailAddress.BackColor == Color.Yellow ||
-             txtSmtpServer.BackColor == Color.Yellow ||
-             txtSmtpUsername.BackColor == Color.Yellow ||
-             txtSmtpPassword.BackColor == Color.Yellow)
+         if (txtToEmailAddress.Error ||
+             txtFromEmailAddress.Error ||
+             txtSmtpServer.Error ||
+             txtSmtpUsername.Error ||
+             txtSmtpPassword.Error)
          {
             return true;
          }
@@ -987,11 +740,11 @@ namespace HFM.Forms
       private bool CheckForWebSettingsTabErrors()
       {
          // Check for error conditions on Web Settings Tab
-         if (txtProjectDownloadUrl.BackColor == Color.Yellow ||
-             txtProxyServer.BackColor == Color.Yellow ||
-             txtProxyPort.BackColor == Color.Yellow ||
-             txtProxyUser.BackColor == Color.Yellow ||
-             txtProxyPass.BackColor == Color.Yellow)
+         if (txtProjectDownloadUrl.Error ||
+             txtProxyServer.Error ||
+             txtProxyPort.Error ||
+             txtProxyUser.Error ||
+             txtProxyPass.Error)
          {
             return true;
          }
@@ -999,33 +752,9 @@ namespace HFM.Forms
          return false;
       }
 
-      private void GetDataScheduledTasksTab()
-      {
-         Prefs.GenerateInterval = Int32.Parse(txtWebGenMinutes.Text);
-         Prefs.GenerateWeb = chkWebSiteGenerator.Checked;
-         if (radioFullRefresh.Checked)
-         {
-            Prefs.WebGenAfterRefresh = true;
-         }
-         else
-         {
-            Prefs.WebGenAfterRefresh = false;
-         }
-         Prefs.SyncOnLoad = chkSynchronous.Checked;
-         Prefs.SyncOnSchedule = chkScheduled.Checked;
-         Prefs.OfflineLast = chkOffline.Checked;
-         Prefs.ShowUserStats = chkShowUserStats.Checked;
-         Prefs.DuplicateUserIDCheck = chkDuplicateUserID.Checked;
-         Prefs.DuplicateProjectCheck = chkDuplicateProject.Checked;
-         Prefs.ColorLogFile = chkColorLog.Checked;
-         Prefs.PpdCalculation = (ePpdCalculation)cboPpdCalc.SelectedItem;
-         Prefs.SyncTimeMinutes = Int32.Parse(txtCollectMinutes.Text);
-         Prefs.WebRoot = txtWebSiteBase.Text;
-         Prefs.WebGenCopyFAHlog = chkFAHlog.Checked;
-      }
-      
       private void GetStartupTab()
       {
+         #region Auto-Run
          if (PlatformOps.IsRunningOnMono() == false)
          {
             try
@@ -1046,76 +775,21 @@ namespace HFM.Forms
                   Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
          }
-         Prefs.RunMinimized = chkRunMinimized.Checked;
+         #endregion
       }
 
-      private void GetDataDefaultsTab()
+      private void GetOptionsTab()
       {
-         Prefs.DefaultConfigFile = txtDefaultConfigFile.Text;
-         if (String.IsNullOrEmpty(Prefs.DefaultConfigFile))
-         {
-            Prefs.UseDefaultConfigFile = false;
-         }
-         else
-         {
-            Prefs.UseDefaultConfigFile = chkDefaultConfig.Checked;
-         }
-         Prefs.AutoSaveConfig = chkAutoSave.Checked;
-         Prefs.LogFileViewer = txtLogFileViewer.Text;
-         Prefs.FileExplorer = txtFileExplorer.Text;
+         #region PPD Calculation
+         Prefs.PpdCalculation = (ePpdCalculation)cboPpdCalc.SelectedItem;
+         #endregion
+
+         #region Debug Message Level
          Prefs.MessageLevel = cboMessageLevel.SelectedIndex;
-         Prefs.DecimalPlaces = Convert.ToInt32(udDecimalPlaces.Value);
+         #endregion
       }
       
-      private void GetReportingTab()
-      {
-         Prefs.EmailReportingToAddress = txtToEmailAddress.Text;
-         Prefs.EmailReportingFromAddress = txtFromEmailAddress.Text;
-         Prefs.EmailReportingServerAddress = txtSmtpServer.Text;
-         Prefs.EmailReportingServerUsername = txtSmtpUsername.Text;
-         Prefs.EmailReportingServerPassword = txtSmtpPassword.Text;
-
-         Prefs.EmailReportingEnabled = chkEnableEmail.Checked;
-         
-         Prefs.ReportEuePause = chkClientEuePause.Checked;
-      }
-
-      private void GetDataWebSettingsTab()
-      {
-         if (txtEOCUserID.Text.Length > 0)
-         {
-            Prefs.EOCUserID = Int32.Parse(txtEOCUserID.Text);
-         }
-         else
-         {
-            Prefs.EOCUserID = 0;
-         }
-         Prefs.StanfordID = txtStanfordUserID.Text;
-         if (txtStanfordTeamID.Text.Length > 0)
-         {
-            Prefs.TeamID = Int32.Parse(txtStanfordTeamID.Text);
-         }
-         else
-         {
-            Prefs.TeamID = 0;
-         }
-         Prefs.ProjectDownloadUrl = txtProjectDownloadUrl.Text;
-         Prefs.UseProxy = chkUseProxy.Checked;
-         Prefs.UseProxyAuth = chkUseProxyAuth.Checked;
-         Prefs.ProxyServer = txtProxyServer.Text;
-         if (txtProxyPort.Text.Length > 0)
-         {
-            Prefs.ProxyPort = Int32.Parse(txtProxyPort.Text);
-         }
-         else
-         {
-            Prefs.ProxyPort = PreferenceSet.ProxyPortDefault;
-         }
-         Prefs.ProxyUser = txtProxyUser.Text;
-         Prefs.ProxyPass = txtProxyPass.Text;
-      }
-
-      private void GetDataVisualStylesTab()
+      private void GetVisualStylesTab()
       {
          Prefs.CSSFileName = String.Concat(StyleList.SelectedItem, CssExtension);
       }

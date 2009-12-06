@@ -689,7 +689,8 @@ namespace HFM.Instances
                }
                else if (logLine.LineData.Equals(WorkUnitResult.EarlyUnitEnd) ||
                         logLine.LineData.Equals(WorkUnitResult.UnstableMachine) ||
-                        logLine.LineData.Equals(WorkUnitResult.Interrupted))
+                        logLine.LineData.Equals(WorkUnitResult.Interrupted) ||
+                        logLine.LineData.Equals(WorkUnitResult.CoreOutdated)) 
                {
                   LastClientRun.NumberOfFailedUnits++;
                }
@@ -989,6 +990,10 @@ namespace HFM.Instances
             return LogLineType.ClientCoreCommunicationsErrorShutdown;
          }
          else if (logLine.Contains("] EUE limit exceeded. Pausing 24 hours."))
+         {
+            return LogLineType.ClientEuePauseState;
+         }
+         else if (logLine.Contains("] Folding@Home will go to sleep for 1 day"))
          {
             return LogLineType.ClientEuePauseState;
          }

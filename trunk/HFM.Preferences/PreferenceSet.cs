@@ -78,7 +78,7 @@ namespace HFM.Preferences
       private readonly Data SymmetricKey = new Data("%`Bb9ega;$.GUDaf");
       #endregion
 
-      #region Public Properties and associated Private Variables
+      #region Properties
       private Boolean _SyncOnLoad;
       public Boolean SyncOnLoad
       {
@@ -112,15 +112,6 @@ namespace HFM.Preferences
       {
          get { return _GenerateInterval; }
          set { _GenerateInterval = value; }
-      }
-
-      public event EventHandler TimerSettingsChanged;
-      protected void OnTimerSettingsChanged(EventArgs e)
-      {
-         if (TimerSettingsChanged != null)
-         {
-            TimerSettingsChanged(this, e);
-         }
       }
 
       private String _WebRoot;
@@ -255,30 +246,12 @@ namespace HFM.Preferences
          set { _FormSortOrder = value; }
       }
 
-      #region OfflineLast
-      public event EventHandler OfflineLastChanged;
       private bool _OfflineLast;
       public bool OfflineLast
       {
          get { return _OfflineLast; }
-         set 
-         {
-            if (_OfflineLast != value)
-            { 
-               _OfflineLast = value; 
-               OnOfflineLastChanged(EventArgs.Empty);
-            }
-         }
+         set { _OfflineLast = value; } 
       }
-      
-      protected void OnOfflineLastChanged(EventArgs e)
-      {
-         if (OfflineLastChanged != null)
-         {
-            OfflineLastChanged(this, e);
-         }
-      }
-      #endregion
 
       private string _DefaultConfigFile;
       public string DefaultConfigFile
@@ -301,31 +274,13 @@ namespace HFM.Preferences
          set { _AutoSaveConfig = value; }
       }
 
-      #region PpdCalculation
-      public event EventHandler PpdCalculationChanged;
       private ePpdCalculation _PpdCalculation;
       public ePpdCalculation PpdCalculation
       {
          get { return _PpdCalculation; }
-         set
-         {
-            if (_PpdCalculation != value)
-            {
-               _PpdCalculation = value;
-               OnPpdCalculationChanged(EventArgs.Empty);
-            }
-         }
+         set { _PpdCalculation = value; } 
       }
 
-      protected void OnPpdCalculationChanged(EventArgs e)
-      {
-         if (PpdCalculationChanged != null)
-         {
-            PpdCalculationChanged(this, e);
-         }
-      }
-      #endregion
-      
       private eTimeStyle _TimeStyle;
       public eTimeStyle TimeStyle
       {
@@ -362,30 +317,12 @@ namespace HFM.Preferences
          set { _WebGenAfterRefresh = value; }
       }
       
-      #region MessageLevel
-      public event EventHandler MessageLevelChanged;
       private int _MessageLevel;
       public int MessageLevel
       {
          get { return _MessageLevel; }
-         set 
-         {
-            if (_MessageLevel != value)
-            {
-               _MessageLevel = value; 
-               OnMessageLevelChanged(EventArgs.Empty);
-            }
-         }
+         set { _MessageLevel = value; } 
       }
-      
-      protected void OnMessageLevelChanged(EventArgs e)
-      {
-         if (MessageLevelChanged != null)
-         {
-            MessageLevelChanged(this, e);
-         }
-      }
-      #endregion
 
       private int _FormSplitLocation;
       public int FormSplitLocation
@@ -408,33 +345,13 @@ namespace HFM.Preferences
          set { _DecimalPlaces = value; }
       }
       
-      #region ShowUserStats
-      public event EventHandler ShowUserStatsChanged;
       private bool _ShowUserStats;
       public bool ShowUserStats
       {
          get { return _ShowUserStats; }
-         set 
-         { 
-            if (_ShowUserStats != value)
-            {
-               _ShowUserStats = value;
-               OnShowUserStatsChanged(EventArgs.Empty);
-            }
-         }
+         set { _ShowUserStats = value; } 
       }
       
-      protected void OnShowUserStatsChanged(EventArgs e)
-      {
-         if (ShowUserStatsChanged != null)
-         {
-            ShowUserStatsChanged(this, e);
-         }
-      }
-      #endregion
-      
-      #region Duplicate Checks
-      public event EventHandler DuplicateCheckChanged;
       private bool _DuplicateUserIDCheck;
       public bool DuplicateUserIDCheck
       {
@@ -448,41 +365,14 @@ namespace HFM.Preferences
          get { return _DuplicateProjectCheck; }
          set { _DuplicateProjectCheck = value; }
       }
-      
-      protected void OnDuplicateCheckChanged(EventArgs e)
-      {
-         if (DuplicateCheckChanged != null)
-         {
-            DuplicateCheckChanged(this, e);
-         }
-      }
-      #endregion
 
-      #region Color Log File
-      public event EventHandler ColorLogFileChanged;
       private bool _ColorLogFile;
       public bool ColorLogFile
       {
          get { return _ColorLogFile; }
-         set 
-         { 
-            if (_ColorLogFile != value)
-            {
-               _ColorLogFile = value;
-               OnColorLogFileChanged(EventArgs.Empty);
-            }
-         }
+         set { _ColorLogFile = value; } 
       }
 
-      protected void OnColorLogFileChanged(EventArgs e)
-      {
-         if (ColorLogFileChanged != null)
-         {
-            ColorLogFileChanged(this, e);
-         }
-      } 
-      #endregion
-      
       private bool _EmailReportingEnabled;
       public bool EmailReportingEnabled
       {
@@ -990,18 +880,42 @@ namespace HFM.Preferences
             Settings.Default.FormSortOrder = _FormSortOrder;
             Settings.Default.FormSplitLocation = _FormSplitLocation;
             Settings.Default.FormLogWindowHeight = _FormLogWindowHeight;
-            Settings.Default.OfflineLast = _OfflineLast;
+            if (Settings.Default.OfflineLast != _OfflineLast)
+            {
+               Settings.Default.OfflineLast = _OfflineLast;
+               OnOfflineLastChanged(EventArgs.Empty);
+            }
             Settings.Default.DefaultConfigFile = _DefaultConfigFile;
             Settings.Default.AutoSaveConfig = _AutoSaveConfig;
+            if (Settings.Default.DefaultConfigFile.Length == 0)
+            {
+               _UseDefaultConfigFile = false;
+            }
             Settings.Default.UseDefaultConfigFile = _UseDefaultConfigFile;
-            Settings.Default.PpdCalculation = _PpdCalculation.ToString();
+            if (Settings.Default.PpdCalculation != _PpdCalculation.ToString())
+            {
+               Settings.Default.PpdCalculation = _PpdCalculation.ToString();
+               OnPpdCalculationChanged(EventArgs.Empty);
+            }
             Settings.Default.TimeStyle = _TimeStyle.ToString();
             Settings.Default.LogFileViewer = _LogFileViewer;
             Settings.Default.FileExplorer = _FileExplorer;
             Settings.Default.ProjectDownloadUrl = _ProjectDownloadUrl;
-            Settings.Default.MessageLevel = _MessageLevel;
-            Settings.Default.DecimalPlaces = _DecimalPlaces;
-            Settings.Default.ShowUserStats = _ShowUserStats;
+            if (Settings.Default.MessageLevel != _MessageLevel)
+            {
+               Settings.Default.MessageLevel = _MessageLevel;
+               OnMessageLevelChanged(EventArgs.Empty);
+            }
+            if (Settings.Default.DecimalPlaces != _DecimalPlaces)
+            {
+               Settings.Default.DecimalPlaces = _DecimalPlaces;
+               OnDecimalPlacesChanged(EventArgs.Empty);
+            }
+            if (Settings.Default.ShowUserStats != _ShowUserStats)
+            {
+               Settings.Default.ShowUserStats = _ShowUserStats;
+               OnShowUserStatsChanged(EventArgs.Empty);
+            }
             
             #region Duplicate Checks
             bool RaiseDuplicateCheckChanged = false;
@@ -1017,7 +931,11 @@ namespace HFM.Preferences
             if (RaiseDuplicateCheckChanged) OnDuplicateCheckChanged(EventArgs.Empty);
             #endregion
 
-            Settings.Default.ColorLogFile = _ColorLogFile;
+            if (Settings.Default.ColorLogFile != _ColorLogFile)
+            {
+               Settings.Default.ColorLogFile = _ColorLogFile;
+               OnColorLogFileChanged(EventArgs.Empty);
+            }
             Settings.Default.EmailReportingEnabled = _EmailReportingEnabled;
             Settings.Default.EmailReportingToAddress = _EmailReportingToAddress;
             Settings.Default.EmailReportingFromAddress = _EmailReportingFromAddress;
@@ -1062,6 +980,80 @@ namespace HFM.Preferences
          }
 
          Debug.WriteLine(String.Format("{0} Execution Time: {1}", HfmTrace.FunctionName, HfmTrace.GetExecTime(Start)));
+      } 
+      #endregion
+      
+      #region Event Wrappers
+      public event EventHandler TimerSettingsChanged;
+      protected void OnTimerSettingsChanged(EventArgs e)
+      {
+         if (TimerSettingsChanged != null)
+         {
+            TimerSettingsChanged(this, e);
+         }
+      }
+
+      public event EventHandler OfflineLastChanged;
+      protected void OnOfflineLastChanged(EventArgs e)
+      {
+         if (OfflineLastChanged != null)
+         {
+            OfflineLastChanged(this, e);
+         }
+      }
+
+      public event EventHandler PpdCalculationChanged;
+      protected void OnPpdCalculationChanged(EventArgs e)
+      {
+         if (PpdCalculationChanged != null)
+         {
+            PpdCalculationChanged(this, e);
+         }
+      }
+
+      public event EventHandler MessageLevelChanged;
+      protected void OnMessageLevelChanged(EventArgs e)
+      {
+         if (MessageLevelChanged != null)
+         {
+            MessageLevelChanged(this, e);
+         }
+      }
+
+      public event EventHandler DecimalPlacesChanged;
+      protected void OnDecimalPlacesChanged(EventArgs e)
+      {
+         if (DecimalPlacesChanged != null)
+         {
+            DecimalPlacesChanged(this, e);
+         }
+      }
+
+      public event EventHandler ShowUserStatsChanged;
+      protected void OnShowUserStatsChanged(EventArgs e)
+      {
+         if (ShowUserStatsChanged != null)
+         {
+            ShowUserStatsChanged(this, e);
+         }
+      }
+
+      public event EventHandler DuplicateCheckChanged;
+      protected void OnDuplicateCheckChanged(EventArgs e)
+      {
+         if (DuplicateCheckChanged != null)
+         {
+            DuplicateCheckChanged(this, e);
+         }
+      }
+
+      public event EventHandler ColorLogFileChanged;
+      protected void OnColorLogFileChanged(EventArgs e)
+      {
+         if (ColorLogFileChanged != null)
+         {
+            ColorLogFileChanged(this, e);
+         }
       } 
       #endregion
 

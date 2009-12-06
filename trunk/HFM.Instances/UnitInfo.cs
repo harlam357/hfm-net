@@ -39,7 +39,8 @@ namespace HFM.Instances
       FinishedUnit,
       EarlyUnitEnd,
       UnstableMachine,
-      Interrupted
+      Interrupted,
+      CoreOutdated
    }
    #endregion
 
@@ -59,6 +60,7 @@ namespace HFM.Instances
       private const string EarlyUnitEnd = "EARLY_UNIT_END";
       private const string UnstableMachine = "UNSTABLE_MACHINE";
       private const string Interrupted = "INTERRUPTED";
+      private const string CoreOutdated = "CORE_OUTDATED";
       #endregion
 
       #region Owner Data Properties
@@ -1165,6 +1167,8 @@ namespace HFM.Instances
                return WorkUnitResult.UnstableMachine;
             case Interrupted:
                return WorkUnitResult.Interrupted;
+            case CoreOutdated:
+               return WorkUnitResult.CoreOutdated;
             default:
                return WorkUnitResult.Unknown;
          }

@@ -313,6 +313,18 @@ namespace HFM.Forms
          }
          else
          {
+            txtProjectID.Text = String.Empty;
+            txtCredit.Text = String.Empty;
+            txtKFactor.Text = String.Empty;
+            txtFrames.Text = String.Empty;
+            txtAtoms.Text = String.Empty;
+            txtCore.Text = String.Empty;
+            linkDescription.Text = String.Empty;
+            txtPreferredDays.Text = String.Empty;
+            txtMaximumDays.Text = String.Empty;
+            txtContact.Text = String.Empty;
+            txtServerIP.Text = String.Empty;
+         
             HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
                                        String.Format("{0} could not find Project ID '{1}'.", HfmTrace.FunctionName, ProjectID));
          }
