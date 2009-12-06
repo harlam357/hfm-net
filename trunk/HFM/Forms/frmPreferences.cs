@@ -333,19 +333,21 @@ namespace HFM.Forms
          }
       }
 
-      private bool txtWebSiteBase_CustomValidation(object sender, CustomValidationEventArgs e)
+      private void txtWebSiteBase_CustomValidation(object sender, CustomValidationEventArgs e)
       {
+         e.Result = true;
+      
          bool bPath = StringOps.ValidatePathInstancePath(txtWebSiteBase.Text);
          bool bPathWithSlash = StringOps.ValidatePathInstancePath(String.Concat(txtWebSiteBase.Text, Path.DirectorySeparatorChar));
          bool bIsFtpUrl = StringOps.ValidateFtpWithUserPassUrl(txtWebSiteBase.Text);
 
          if (e.Text.Length == 0)
          {
-            return false;
+            e.Result = false;
          }
          else if (e.Text.Length > 2 && (bPath || bPathWithSlash || bIsFtpUrl) != true)
          {
-            return false;
+            e.Result = false;
          }
 
          // This PathWithSlash Code seems to be defunct by the current
@@ -354,8 +356,6 @@ namespace HFM.Forms
          {
             e.Text += Path.DirectorySeparatorChar;
          }
-         
-         return true;
       }
 
       private void btnBrowseWebFolder_Click(object sender, EventArgs e)
@@ -370,19 +370,19 @@ namespace HFM.Forms
          }
       }
 
-      private bool txtMinutes_CustomValidation(object sender, CustomValidationEventArgs e)
+      private void txtMinutes_CustomValidation(object sender, CustomValidationEventArgs e)
       {
+         e.Result = true;
+      
          int Minutes;
          if (Int32.TryParse(e.Text, out Minutes) == false)
          {
-            return false;
+            e.Result = false;
          }
          else if (PreferenceSet.ValidateMinutes(Minutes) == false)
          {
-            return false;
+            e.Result = false;
          }
-
-         return true;
       }
       #endregion
       
@@ -417,20 +417,19 @@ namespace HFM.Forms
          }
       }
 
-      private bool txtEmailAddress_CustomValidation(object sender, CustomValidationEventArgs e)
+      private void txtEmailAddress_CustomValidation(object sender, CustomValidationEventArgs e)
       {
+         e.Result = true;
          bool bAddress = StringOps.ValidateEmailAddress(e.Text);
 
          if (e.Text.Length == 0)
          {
-            return false;
+            e.Result = false;
          }
          else if (e.Text.Length > 0 && bAddress != true)
          {
-            return false;
+            e.Result = false;
          }
-         
-         return true;
       }
 
       private void txtFromEmailAddress_MouseHover(object sender, EventArgs e)
@@ -442,24 +441,25 @@ namespace HFM.Forms
             txtFromEmailAddress.Parent, txtFromEmailAddress.Location.X + 5, txtFromEmailAddress.Location.Y - 55, 10000);
       }
 
-      private bool txtSmtpServer_CustomValidation(object sender, CustomValidationEventArgs e)
+      private void txtSmtpServer_CustomValidation(object sender, CustomValidationEventArgs e)
       {
+         e.Result = true;
          bool bServerName = StringOps.ValidateServerName(e.Text);
 
          if (e.Text.Length == 0)
          {
-            return false;
+            e.Result = false;
          }
          else if (e.Text.Length > 0 && bServerName != true)
          {
-            return false;
+            e.Result = false;
          }
-         
-         return true;
       }
 
-      private bool txtSmtpCredentials_CustomValidation(object sender, CustomValidationEventArgs e)
+      private void txtSmtpCredentials_CustomValidation(object sender, CustomValidationEventArgs e)
       {
+         e.Result = true;
+         
          try
          {
             // This will violate FxCop rule (rule ID)
@@ -467,11 +467,9 @@ namespace HFM.Forms
          }
          catch (ArgumentException ex)
          {
-            e.Message = ex.Message;
-            return false;
+            e.ToolTipText = ex.Message;
+            e.Result = false;
          }
-         
-         return true;
       }
 
       private void btnTestEmail_Click(object sender, EventArgs e)
@@ -538,9 +536,9 @@ namespace HFM.Forms
          }
       }
 
-      private bool txtProjectDownloadUrl_CustomValidation(object sender, CustomValidationEventArgs e)
+      private void txtProjectDownloadUrl_CustomValidation(object sender, CustomValidationEventArgs e)
       {
-         return StringOps.ValidateHttpURL(txtProjectDownloadUrl.Text);
+         e.Result = StringOps.ValidateHttpURL(txtProjectDownloadUrl.Text);
       }
 
       private void chkUseProxy_CheckedChanged(object sender, EventArgs e)
@@ -577,8 +575,10 @@ namespace HFM.Forms
          SetProxyAuth(false);
       }
 
-      private bool txtProxyServerPort_CustomValidation(object sender, CustomValidationEventArgs e)
+      private void txtProxyServerPort_CustomValidation(object sender, CustomValidationEventArgs e)
       {
+         e.Result = true;
+      
          try
          {
             // This will violate FxCop rule (rule ID)
@@ -586,11 +586,9 @@ namespace HFM.Forms
          }
          catch (ArgumentException ex)
          {
-            e.Message = ex.Message;
-            return false;
+            e.ToolTipText = ex.Message;
+            e.Result = false;
          }
-         
-         return true;
       }
 
       private void chkUseProxyAuth_CheckedChanged(object sender, EventArgs e)
@@ -611,8 +609,10 @@ namespace HFM.Forms
          txtProxyPass.Enabled = value;
       }
 
-      private bool txtProxyCredentials_CustomValidation(object sender, CustomValidationEventArgs e)
+      private void txtProxyCredentials_CustomValidation(object sender, CustomValidationEventArgs e)
       {
+         e.Result = true;
+      
          try
          {
             // This will violate FxCop rule (rule ID)
@@ -620,11 +620,9 @@ namespace HFM.Forms
          }
          catch (ArgumentException ex)
          {
-            e.Message = ex.Message;
-            return false;
+            e.ToolTipText = ex.Message;
+            e.Result = false;
          }
-         
-         return true;
       }
       #endregion
 

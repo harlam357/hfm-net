@@ -17,11 +17,10 @@ namespace harlam357.Windows.Forms
       Empty,
       Custom
    }
-   public delegate bool CustomValidationEventHandler(object sender, CustomValidationEventArgs e);
 
    public partial class ValidatingTextBox : TextBox
    {
-      public event CustomValidationEventHandler CustomValidation;
+      public event EventHandler<CustomValidationEventArgs> CustomValidation;
 
       #region Properties
       private ToolTip _ToolTip = null;
@@ -196,10 +195,10 @@ namespace harlam357.Windows.Forms
                   return false;
                }
                CustomValidationEventArgs e = new CustomValidationEventArgs(Text, ToolTipText);
-               bool result = CustomValidation(this, e);
+               CustomValidation(this, e);
                Text = e.Text;
-               ToolTipText = e.Message;
-               return result;
+               ToolTipText = e.ToolTipText;
+               return e.Result;
             default:
                throw new NotImplementedException();
          }
@@ -216,17 +215,24 @@ namespace harlam357.Windows.Forms
          set { _Text = value; }
       }
 
-      private string _Message;
-      public string Message
+      private string _ToolTipText;
+      public string ToolTipText
       {
-         get { return _Message; }
-         set { _Message = value; }
+         get { return _ToolTipText; }
+         set { _ToolTipText = value; }
+      }
+      
+      private bool _Result;
+      public bool Result
+      {
+         get { return _Result; }
+         set { _Result = value; }
       }
 
-      public CustomValidationEventArgs(string TextValue, string MessageValue)
+      public CustomValidationEventArgs(string TextValue, string ToolTipTextValue)
       {
          Text = TextValue;
-         Message = MessageValue;
+         ToolTipText = ToolTipTextValue;
       }
    }
 }

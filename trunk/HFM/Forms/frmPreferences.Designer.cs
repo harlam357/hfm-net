@@ -18,6 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System;
 using harlam357.Windows.Forms;
 
 namespace HFM.Forms
@@ -299,7 +300,7 @@ namespace HFM.Forms
          this.txtCollectMinutes.ToolTipText = "";
          this.txtCollectMinutes.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
          this.txtCollectMinutes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
-         this.txtCollectMinutes.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtMinutes_CustomValidation);
+         this.txtCollectMinutes.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtMinutes_CustomValidation);
          // 
          // lbl2SchedExplain
          // 
@@ -402,7 +403,7 @@ namespace HFM.Forms
          this.txtWebGenMinutes.ToolTipText = "";
          this.txtWebGenMinutes.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
          this.txtWebGenMinutes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
-         this.txtWebGenMinutes.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtMinutes_CustomValidation);
+         this.txtWebGenMinutes.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtMinutes_CustomValidation);
          // 
          // lbl2MinutesToGen
          // 
@@ -438,7 +439,7 @@ namespace HFM.Forms
          this.txtWebSiteBase.ToolTip = this.toolTipPrefs;
          this.txtWebSiteBase.ToolTipText = "HTML Output Folder must be a valid local path, network (UNC) path, or FTP URL.";
          this.txtWebSiteBase.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtWebSiteBase.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtWebSiteBase_CustomValidation);
+         this.txtWebSiteBase.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtWebSiteBase_CustomValidation);
          // 
          // lbl2WebSiteDir
          // 
@@ -857,7 +858,7 @@ namespace HFM.Forms
          this.txtSmtpPassword.ToolTipText = "";
          this.txtSmtpPassword.UseSystemPasswordChar = true;
          this.txtSmtpPassword.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtSmtpPassword.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtSmtpCredentials_CustomValidation);
+         this.txtSmtpPassword.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtSmtpCredentials_CustomValidation);
          // 
          // txtSmtpUsername
          // 
@@ -873,7 +874,7 @@ namespace HFM.Forms
          this.txtSmtpUsername.ToolTip = this.toolTipPrefs;
          this.txtSmtpUsername.ToolTipText = "";
          this.txtSmtpUsername.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtSmtpUsername.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtSmtpCredentials_CustomValidation);
+         this.txtSmtpUsername.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtSmtpCredentials_CustomValidation);
          // 
          // labelWrapper4
          // 
@@ -917,7 +918,7 @@ namespace HFM.Forms
          this.txtFromEmailAddress.ToolTipText = "Must be a valid e-mail address.";
          this.txtFromEmailAddress.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
          this.txtFromEmailAddress.MouseHover += new System.EventHandler(this.txtFromEmailAddress_MouseHover);
-         this.txtFromEmailAddress.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtEmailAddress_CustomValidation);
+         this.txtFromEmailAddress.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtEmailAddress_CustomValidation);
          // 
          // chkEnableEmail
          // 
@@ -962,7 +963,7 @@ namespace HFM.Forms
          this.txtSmtpServer.ToolTip = this.toolTipPrefs;
          this.txtSmtpServer.ToolTipText = "Must be a valid server name.";
          this.txtSmtpServer.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtSmtpServer.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtSmtpServer_CustomValidation);
+         this.txtSmtpServer.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtSmtpServer_CustomValidation);
          // 
          // txtToEmailAddress
          // 
@@ -978,7 +979,7 @@ namespace HFM.Forms
          this.txtToEmailAddress.ToolTip = this.toolTipPrefs;
          this.txtToEmailAddress.ToolTipText = "Must be a valid e-mail address.";
          this.txtToEmailAddress.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtToEmailAddress.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtEmailAddress_CustomValidation);
+         this.txtToEmailAddress.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtEmailAddress_CustomValidation);
          // 
          // tabWeb
          // 
@@ -1015,7 +1016,7 @@ namespace HFM.Forms
          this.txtProjectDownloadUrl.ToolTip = this.toolTipPrefs;
          this.txtProjectDownloadUrl.ToolTipText = "URL must be a valid URL and the path to a valid Stanford Project Summary page.";
          this.txtProjectDownloadUrl.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtProjectDownloadUrl.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtProjectDownloadUrl_CustomValidation);
+         this.txtProjectDownloadUrl.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtProjectDownloadUrl_CustomValidation);
          // 
          // label5
          // 
@@ -1197,7 +1198,7 @@ namespace HFM.Forms
          this.txtProxyPass.ToolTipText = "";
          this.txtProxyPass.UseSystemPasswordChar = true;
          this.txtProxyPass.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtProxyPass.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtProxyCredentials_CustomValidation);
+         this.txtProxyPass.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtProxyCredentials_CustomValidation);
          // 
          // txtProxyUser
          // 
@@ -1212,7 +1213,7 @@ namespace HFM.Forms
          this.txtProxyUser.ToolTip = this.toolTipPrefs;
          this.txtProxyUser.ToolTipText = "";
          this.txtProxyUser.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtProxyUser.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtProxyCredentials_CustomValidation);
+         this.txtProxyUser.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtProxyCredentials_CustomValidation);
          // 
          // txtProxyPort
          // 
@@ -1229,7 +1230,7 @@ namespace HFM.Forms
          this.txtProxyPort.ToolTipText = "";
          this.txtProxyPort.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
          this.txtProxyPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
-         this.txtProxyPort.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtProxyServerPort_CustomValidation);
+         this.txtProxyPort.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtProxyServerPort_CustomValidation);
          // 
          // lbl3ProxyPass
          // 
@@ -1253,7 +1254,7 @@ namespace HFM.Forms
          this.txtProxyServer.ToolTip = this.toolTipPrefs;
          this.txtProxyServer.ToolTipText = "";
          this.txtProxyServer.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtProxyServer.CustomValidation += new harlam357.Windows.Forms.CustomValidationEventHandler(this.txtProxyServerPort_CustomValidation);
+         this.txtProxyServer.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtProxyServerPort_CustomValidation);
          // 
          // lbl3ProxyUser
          // 
