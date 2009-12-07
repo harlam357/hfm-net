@@ -1457,13 +1457,38 @@ namespace HFM.Instances
       /// <param name="returnedStatus">Client Status</param>
       private void HandleReturnedStatus(ClientStatus returnedStatus)
       {
+         StatusData statusData = new StatusData();
+         statusData.InstanceName = InstanceName;
+         statusData.TypeOfClient = CurrentUnitInfo.TypeOfClient;
+         statusData.LastRetrievalTime = LastRetrievalTime;
+         statusData.ClientIsOnVirtualMachine = ClientIsOnVirtualMachine;
+         statusData.ClientTimeOffset = ClientTimeOffset;
+         statusData.TimeOfLastUnitStart = TimeOfLastUnitStart;
+         statusData.TimeOfLastFrameProgress = TimeOfLastFrameProgress;
+         statusData.CurrentStatus = Status;
+         statusData.ReturnedStatus = returnedStatus;
+         statusData.FrameTime = CurrentUnitInfo.RawTimePerSection;
+         statusData.AverageFrameTime = ProteinBenchmarkCollection.Instance.GetBenchmarkAverageFrameTime(CurrentUnitInfo);
+         statusData.TimeOfLastFrame = CurrentUnitInfo.TimeOfLastFrame;
+         statusData.UnitStartTimeStamp = CurrentUnitInfo.UnitStartTimeStamp;
+         statusData.AllowRunningAsync = PreferenceSet.Instance.AllowRunningAsync;
+      
+         Status = HandleReturnedStatus(statusData);
+      }
+
+      /// <summary>
+      /// Handles the Client Status Returned by Log Parsing and then determines what values to feed the DetermineStatus routine.
+      /// </summary>
+      /// <param name="statusData">Client Status Data</param>
+      public static ClientStatus HandleReturnedStatus(StatusData statusData)
+      {
          // If the returned status is EuePause and current status is not
-         if (returnedStatus.Equals(ClientStatus.EuePause) && Status.Equals(ClientStatus.EuePause) == false)
+         if (statusData.ReturnedStatus.Equals(ClientStatus.EuePause) && statusData.CurrentStatus.Equals(ClientStatus.EuePause) == false)
          {
-            SendEuePauseEmail();
+            SendEuePauseEmail(statusData.InstanceName);
          }
 
-         switch (returnedStatus)
+         switch (statusData.ReturnedStatus)
          {
             case ClientStatus.Running:      // at this point, we should not see Running Status
             case ClientStatus.RunningAsync: // at this point, we should not see RunningAsync Status
@@ -1471,10 +1496,9 @@ namespace HFM.Instances
                break;
             case ClientStatus.Unknown:
                HfmTrace.WriteToHfmConsole(TraceLevel.Error,
-                                          String.Format("Unable to Determine Status for Client '{0}'", InstanceName), true);
+                                          String.Format("Unable to Determine Status for Client '{0}'", statusData.InstanceName), true);
                // Update Client Status - don't call Determine Status
-               Status = returnedStatus;
-               return;
+               return statusData.ReturnedStatus;
             case ClientStatus.Offline:
             case ClientStatus.Stopped:
             case ClientStatus.EuePause:
@@ -1483,18 +1507,19 @@ namespace HFM.Instances
             case ClientStatus.SendingWorkPacket:
             case ClientStatus.GettingWorkPacket:
                // Update Client Status - don't call Determine Status
-               Status = returnedStatus;
-               return;
+               return statusData.ReturnedStatus;
          }
 
          // if we have a frame time, use it
-         if (CurrentUnitInfo.RawTimePerSection > 0)
+         if (statusData.FrameTime > 0)
          {
-            Status = DetermineStatus(this, CurrentUnitInfo.TimeOfLastFrame, CurrentUnitInfo.RawTimePerSection);
-            if (Status.Equals(ClientStatus.Hung) && PreferenceSet.Instance.AllowRunningAsync) // Issue 124
+            ClientStatus Status = DetermineStatus(statusData);
+            if (Status.Equals(ClientStatus.Hung) && statusData.AllowRunningAsync) // Issue 124
             {
-               Status = DetermineAsyncStatus(this, CurrentUnitInfo.RawTimePerSection);
+               return DetermineAsyncStatus(statusData);
             }
+            
+            return Status;
          }
 
          // no frame time based on the current PPD calculation selection ('LastFrame', 'LastThreeFrames', etc)
@@ -1502,47 +1527,45 @@ namespace HFM.Instances
          // frame time - Issue 10
          else
          {
-            // if we have a frame time stamp, use it
-            TimeSpan TimeOfLastFrame = CurrentUnitInfo.TimeOfLastFrame;
-            if (TimeOfLastFrame == TimeSpan.Zero)
+            // if we have no time stamp
+            if (statusData.TimeOfLastFrame == TimeSpan.Zero)
             {
-               // otherwise, use the unit start time
-               TimeOfLastFrame = CurrentUnitInfo.UnitStartTimeStamp;
+               // use the unit start time
+               statusData.TimeOfLastFrame = statusData.UnitStartTimeStamp;
             }
-            
-            int FrameTime = GetBaseFrameTime();
-            if (DetermineStatus(this, TimeOfLastFrame, FrameTime).Equals(ClientStatus.Hung))
+
+            statusData.FrameTime = GetBaseFrameTime(statusData.AverageFrameTime, statusData.TypeOfClient);
+            if (DetermineStatus(statusData).Equals(ClientStatus.Hung))
             {
                // Issue 124
-               if (PreferenceSet.Instance.AllowRunningAsync)
+               if (statusData.AllowRunningAsync)
                {
-                  if (DetermineAsyncStatus(this, FrameTime).Equals(ClientStatus.Hung))
+                  if (DetermineAsyncStatus(statusData).Equals(ClientStatus.Hung))
                   {
-                     Status = ClientStatus.Hung;
+                     return ClientStatus.Hung;
                   }
                   else
                   {
-                     Status = returnedStatus;
+                     return statusData.ReturnedStatus;
                   }
                }
                
-               Status = ClientStatus.Hung;
+               return ClientStatus.Hung;
             }
             else
             {
-               Status = returnedStatus;
+               return statusData.ReturnedStatus;
             }
          }
       }
       
-      private int GetBaseFrameTime()
+      private static int GetBaseFrameTime(TimeSpan averageFrameTime, ClientType TypeOfClient)
       {
          // no frame time based on the current PPD calculation selection ('LastFrame', 'LastThreeFrames', etc)
          // this section attempts to give DetermineStats values to detect Hung clients before they have a valid
          // frame time - Issue 10
 
          // get the average frame time for this client and project id
-         TimeSpan averageFrameTime = ProteinBenchmarkCollection.Instance.GetBenchmarkAverageFrameTime(CurrentUnitInfo);
          if (averageFrameTime > TimeSpan.Zero)
          {
             return Convert.ToInt32(averageFrameTime.TotalSeconds);
@@ -1554,7 +1577,7 @@ namespace HFM.Instances
          {
             // CPU: use 1 hour (3600 seconds) as a base frame time
             int BaseFrameTime = 3600;
-            if (CurrentUnitInfo.TypeOfClient.Equals(ClientType.GPU))
+            if (TypeOfClient.Equals(ClientType.GPU))
             {
                // GPU: use 10 minutes (600 seconds) as a base frame time
                BaseFrameTime = 600;
@@ -1567,7 +1590,7 @@ namespace HFM.Instances
       /// <summary>
       /// Send EuePause Status Email
       /// </summary>
-      private void SendEuePauseEmail()
+      private static void SendEuePauseEmail(string InstanceName)
       {
          PreferenceSet Prefs = PreferenceSet.Instance;
 
@@ -1590,44 +1613,42 @@ namespace HFM.Instances
       /// <summary>
       /// Determine Client Status
       /// </summary>
-      /// <param name="Instance">Client Instance</param>
-      /// <param name="TimeOfLastFrame">Time Stamp from Last Recorded Frame</param>
-      /// <param name="FrameTime">The Current Frame Time (in seconds)</param>
-      private static ClientStatus DetermineStatus(ClientInstance Instance, TimeSpan TimeOfLastFrame, int FrameTime)
+      /// <param name="statusData">Client Status Data</param>
+      private static ClientStatus DetermineStatus(StatusData statusData)
       {
          #region Get Terminal Time
          // Terminal Time - defined as last retrieval time minus twice (7 times for GPU) the current Raw Time per Section.
          // if a new frame has not completed in twice the amount of time it should take to complete we should deem this client Hung.
          DateTime terminalDateTime;
 
-         if (Instance.CurrentUnitInfo.TypeOfClient.Equals(ClientType.GPU))
+         if (statusData.TypeOfClient.Equals(ClientType.GPU))
          {
-            terminalDateTime = Instance.LastRetrievalTime.Subtract(TimeSpan.FromSeconds(FrameTime * 7));
+            terminalDateTime = statusData.LastRetrievalTime.Subtract(TimeSpan.FromSeconds(statusData.FrameTime * 7));
          }
          else
          {
-            terminalDateTime = Instance.LastRetrievalTime.Subtract(TimeSpan.FromSeconds(FrameTime * 2));
+            terminalDateTime = statusData.LastRetrievalTime.Subtract(TimeSpan.FromSeconds(statusData.FrameTime * 2));
          }
          #endregion
 
          #region Get Last Retrieval Time Date
          DateTime currentFrameDateTime;
 
-         if (Instance.ClientIsOnVirtualMachine)
+         if (statusData.ClientIsOnVirtualMachine)
          {
             // get only the date from the last retrieval time (in universal), we'll add the current time below
-            currentFrameDateTime = new DateTime(Instance.LastRetrievalTime.Date.Ticks, DateTimeKind.Utc);
+            currentFrameDateTime = new DateTime(statusData.LastRetrievalTime.Date.Ticks, DateTimeKind.Utc);
          }
          else
          {
             // get only the date from the last retrieval time, we'll add the current time below
-            currentFrameDateTime = Instance.LastRetrievalTime.Date;
+            currentFrameDateTime = statusData.LastRetrievalTime.Date;
          }
          #endregion
 
          #region Apply Frame Time Offset and Set Current Frame Time Date
-         TimeSpan offset = TimeSpan.FromMinutes(Instance.ClientTimeOffset);
-         TimeSpan adjustedFrameTime = TimeOfLastFrame.Subtract(offset);
+         TimeSpan offset = TimeSpan.FromMinutes(statusData.ClientTimeOffset);
+         TimeSpan adjustedFrameTime = statusData.TimeOfLastFrame.Subtract(offset);
 
          // client time has already rolled over to the next day. the offset correction has 
          // caused the adjusted frame time span to be negetive.  take the that negetive span
@@ -1656,8 +1677,8 @@ namespace HFM.Instances
          // this should only happen after midnight time on the machine running HFM when the monitored client has 
          // not completed a frame since the local machine time rolled over to the next day, otherwise the time
          // stamps between HFM and the client are too far off, a positive offset should be set to correct.
-         if (currentFrameDateTime.TimeOfDay.Hours > Instance.LastRetrievalTime.TimeOfDay.Hours &&
-             currentFrameDateTime.TimeOfDay.Subtract(Instance.LastRetrievalTime.TimeOfDay).Hours > 0)
+         if (currentFrameDateTime.TimeOfDay.Hours > statusData.LastRetrievalTime.TimeOfDay.Hours &&
+             currentFrameDateTime.TimeOfDay.Subtract(statusData.LastRetrievalTime.TimeOfDay).Hours > 0)
          {
             priorDayAdjust = true;
 
@@ -1671,10 +1692,10 @@ namespace HFM.Instances
          {
             List<string> messages = new List<string>(10);
 
-            messages.Add(String.Format("{0} ({1})", HfmTrace.FunctionName, Instance.InstanceName));
-            messages.Add(String.Format(" - Retrieval Time (Date) ------- : {0}", Instance.LastRetrievalTime));
-            messages.Add(String.Format(" - Time Of Last Frame (TimeSpan) : {0}", TimeOfLastFrame));
-            messages.Add(String.Format(" - Offset (Minutes) ------------ : {0}", Instance.ClientTimeOffset));
+            messages.Add(String.Format("{0} ({1})", HfmTrace.FunctionName, statusData.InstanceName));
+            messages.Add(String.Format(" - Retrieval Time (Date) ------- : {0}", statusData.LastRetrievalTime));
+            messages.Add(String.Format(" - Time Of Last Frame (TimeSpan) : {0}", statusData.TimeOfLastFrame));
+            messages.Add(String.Format(" - Offset (Minutes) ------------ : {0}", statusData.ClientTimeOffset));
             messages.Add(String.Format(" - Time Of Last Frame (Adjusted) : {0}", adjustedFrameTime));
             messages.Add(String.Format(" - Prior Day Adjustment -------- : {0}", priorDayAdjust));
             messages.Add(String.Format(" - Time Of Last Frame (Date) --- : {0}", currentFrameDateTime));
@@ -1697,32 +1718,31 @@ namespace HFM.Instances
       /// <summary>
       /// Determine Client Status
       /// </summary>
-      /// <param name="Instance">Client Instance</param>
-      /// <param name="FrameTime">The Current Frame Time (in seconds)</param>
-      private static ClientStatus DetermineAsyncStatus(ClientInstance Instance, int FrameTime)
+      /// <param name="statusData">Client Status Data</param>
+      private static ClientStatus DetermineAsyncStatus(StatusData statusData)
       {
          #region Get Terminal Time
          // Terminal Time - defined as last retrieval time minus twice (7 times for GPU) the current Raw Time per Section.
          // if a new frame has not completed in twice the amount of time it should take to complete we should deem this client Hung.
          DateTime terminalDateTime;
 
-         if (Instance.CurrentUnitInfo.TypeOfClient.Equals(ClientType.GPU))
+         if (statusData.TypeOfClient.Equals(ClientType.GPU))
          {
-            terminalDateTime = Instance.LastRetrievalTime.Subtract(TimeSpan.FromSeconds(FrameTime * 7));
+            terminalDateTime = statusData.LastRetrievalTime.Subtract(TimeSpan.FromSeconds(statusData.FrameTime * 7));
          }
          else
          {
-            terminalDateTime = Instance.LastRetrievalTime.Subtract(TimeSpan.FromSeconds(FrameTime * 2));
+            terminalDateTime = statusData.LastRetrievalTime.Subtract(TimeSpan.FromSeconds(statusData.FrameTime * 2));
          }
          #endregion
 
          #region Determine Unit Progress Value to Use
-         Debug.Assert(Instance.TimeOfLastUnitStart.Equals(DateTime.MinValue) == false);
+         Debug.Assert(statusData.TimeOfLastUnitStart.Equals(DateTime.MinValue) == false);
 
-         DateTime LastProgress = Instance.TimeOfLastUnitStart;
-         if (Instance.TimeOfLastFrameProgress > Instance.TimeOfLastUnitStart)
+         DateTime LastProgress = statusData.TimeOfLastUnitStart;
+         if (statusData.TimeOfLastFrameProgress > statusData.TimeOfLastUnitStart)
          {
-            LastProgress = Instance.TimeOfLastFrameProgress;
+            LastProgress = statusData.TimeOfLastFrameProgress;
          } 
          #endregion
          
@@ -1731,10 +1751,10 @@ namespace HFM.Instances
          {
             List<string> messages = new List<string>(4);
 
-            messages.Add(String.Format("{0} ({1})", HfmTrace.FunctionName, Instance.InstanceName));
-            messages.Add(String.Format(" - Retrieval Time (Date) ------- : {0}", Instance.LastRetrievalTime));
-            messages.Add(String.Format(" - Time Of Last Unit Start ----- : {0}", Instance.TimeOfLastUnitStart));
-            messages.Add(String.Format(" - Time Of Last Frame Progress - : {0}", Instance.TimeOfLastFrameProgress));
+            messages.Add(String.Format("{0} ({1})", HfmTrace.FunctionName, statusData.InstanceName));
+            messages.Add(String.Format(" - Retrieval Time (Date) ------- : {0}", statusData.LastRetrievalTime));
+            messages.Add(String.Format(" - Time Of Last Unit Start ----- : {0}", statusData.TimeOfLastUnitStart));
+            messages.Add(String.Format(" - Time Of Last Frame Progress - : {0}", statusData.TimeOfLastFrameProgress));
             messages.Add(String.Format(" - Terminal Time (Date) -------- : {0}", terminalDateTime));
 
             HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, messages);
@@ -2096,5 +2116,106 @@ namespace HFM.Instances
          return false;
       }
       #endregion
+   }
+
+   public class StatusData
+   {
+      private string _InstanceName;
+      public string InstanceName
+      {
+         get { return _InstanceName; }
+         set { _InstanceName = value; }
+      }
+
+      private ClientType _TypeOfClient;
+      public ClientType TypeOfClient
+      {
+         get { return _TypeOfClient; }
+         set { _TypeOfClient = value; }
+      }
+
+      private DateTime _LastRetrievalTime;
+      public DateTime LastRetrievalTime
+      {
+         get { return _LastRetrievalTime; }
+         set { _LastRetrievalTime = value; }
+      }
+
+      private bool _ClientIsOnVirtualMachine;
+      public bool ClientIsOnVirtualMachine
+      {
+         get { return _ClientIsOnVirtualMachine; }
+         set { _ClientIsOnVirtualMachine = value; }
+      }
+
+      private int _ClientTimeOffset;
+      public int ClientTimeOffset
+      {
+         get { return _ClientTimeOffset; }
+         set { _ClientTimeOffset = value; }
+      }
+
+      private DateTime _TimeOfLastUnitStart;
+      public DateTime TimeOfLastUnitStart
+      {
+         get { return _TimeOfLastUnitStart; }
+         set { _TimeOfLastUnitStart = value; }
+      }
+
+      private DateTime _TimeOfLastFrameProgress;
+      public DateTime TimeOfLastFrameProgress
+      {
+         get { return _TimeOfLastFrameProgress; }
+         set { _TimeOfLastFrameProgress = value; }
+      }
+
+      private ClientStatus _CurrentStatus;
+      public ClientStatus CurrentStatus
+      {
+         get { return _CurrentStatus; }
+         set { _CurrentStatus = value; }
+      }
+
+      private ClientStatus _ReturnedStatus;
+      public ClientStatus ReturnedStatus
+      {
+         get { return _ReturnedStatus; }
+         set { _ReturnedStatus = value; }
+      }
+
+      private int _FrameTime;
+      public int FrameTime
+      {
+         get { return _FrameTime; }
+         set { _FrameTime = value; }
+      }
+
+      private TimeSpan _AverageFrameTime;
+      public TimeSpan AverageFrameTime
+      {
+         get { return _AverageFrameTime; }
+         set { _AverageFrameTime = value; }
+      }
+
+      private TimeSpan _TimeOfLastFrame;
+      public TimeSpan TimeOfLastFrame
+      {
+         get { return _TimeOfLastFrame; }
+         set { _TimeOfLastFrame = value; }
+      }
+
+      private TimeSpan _UnitStartTimeStamp;
+      public TimeSpan UnitStartTimeStamp
+      {
+         get { return _UnitStartTimeStamp; }
+         set { _UnitStartTimeStamp = value; }
+      }
+
+      private bool _AllowRunningAsync = true;
+      public bool AllowRunningAsync
+      {
+         get { return _AllowRunningAsync; }
+         set { _AllowRunningAsync = value; }
+      }
    }
 }
