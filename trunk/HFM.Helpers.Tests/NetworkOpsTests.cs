@@ -18,53 +18,197 @@
  */
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Net;
 
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace HFM.Helpers.Tests
 {
    [TestFixture]
    public class NetworkOpsTests
    {
-      [Test]
-      [ExpectedException(typeof(FileNotFoundException))]
-      public void FtpUploadHelper_LocalFileDoesNotExistTest()
+      private readonly string TestFilesFolder = String.Format(CultureInfo.InvariantCulture, "..{0}..{0}TestFiles", Path.DirectorySeparatorChar);
+      private readonly string TestFilesWorkFolder = String.Format(CultureInfo.InvariantCulture, "..{0}..{0}TestFiles{0}Work", Path.DirectorySeparatorChar);
+   
+      [SetUp]
+      public void Init()
       {
-         NetworkOps.FtpUploadHelper("notexistservername", "/rootsub/subfolder", "page.html", String.Empty, String.Empty);
+         DirectoryInfo di = new DirectoryInfo(TestFilesWorkFolder);
+         if (di.Exists)
+         {
+            di.Delete(true);
+         }
+         
+         di.Create();
       }
       
-      [Test]
-      [ExpectedException(typeof(WebException))]
-      public void FtpUploadHelper_HostNameDoesNotExistTest()
+      [TearDown]
+      public void CleanUp()
       {
-         NetworkOps.FtpUploadHelper("notexistservername", "/rootsub/subfolder", Path.Combine("TestFiles", "test.html"), String.Empty, String.Empty);
+         DirectoryInfo di = new DirectoryInfo(TestFilesWorkFolder);
+         if (di.Exists)
+         {
+            di.Delete(true);
+         }
       }
 
       [Test]
-      [ExpectedException(typeof(WebException))]
-      public void FtpDownloadHelper_HostNameDoesNotExistTest()
+      public void FtpUploadHelper()
       {
-         NetworkOps.FtpDownloadHelper("notexistservername", "/rootsub/subfolder", "FAHlog.txt", "FAHlog.txt", String.Empty, String.Empty, DownloadType.UnitInfo);
+         MockRepository mocks = new MockRepository();
+         FtpWebRequest Request = mocks.DynamicMock<FtpWebRequest>();
+         
+         using (FileStream stream = new FileStream(Path.Combine(TestFilesWorkFolder, "upload.html"), FileMode.Create))
+         {
+            Expect.Call(Request.GetRequestStream()).Return(stream);
+            mocks.ReplayAll();
+
+            NetworkOps.FtpUploadHelper(Request, Path.Combine(TestFilesFolder, "test.html"), 
+               String.Empty, String.Empty, true);
+
+            mocks.VerifyAll();
+         }
+
+         Assert.IsTrue(File.Exists(Path.Combine(TestFilesWorkFolder, "upload.html")));
       }
 
       [Test]
-      [ExpectedException(typeof(WebException))]
-      public void HttpDownloadHelper_HostNameDoesNotExistTest()
+      public void FtpDownloadHelper_BinaryDownload()
       {
-         NetworkOps.HttpDownloadHelper("http://notexistservername/unitinfo.txt", "unitinfo.txt", "InstanceName", String.Empty, String.Empty, DownloadType.UnitInfo);
+         MockRepository mocks = new MockRepository();
+         FtpWebRequest Request = mocks.DynamicMock<FtpWebRequest>();
+         FtpWebResponse Response = mocks.DynamicMock<FtpWebResponse>();
+         Expect.Call(Request.GetResponse()).Return(Response);
+         
+         using (FileStream stream = new FileStream(Path.Combine(TestFilesFolder, "test.html"), FileMode.Open))
+         {
+            Expect.Call(Response.GetResponseStream()).Return(stream);
+            mocks.ReplayAll();
+
+            NetworkOps.FtpDownloadHelper(Request, Path.Combine(TestFilesWorkFolder, "ftp_download_binary.html"), 
+               String.Empty, String.Empty, DownloadType.Binary);
+
+            mocks.VerifyAll();
+         }
+
+         Assert.IsTrue(File.Exists(Path.Combine(TestFilesWorkFolder, "ftp_download_binary.html")));
       }
 
       [Test]
-      public void GetProteinDescription_HostNameDoesNotExistTest()
+      public void FtpDownloadHelper_TextDownload()
       {
-         string Url = "http://notexistservername/page.html";
-         Assert.AreEqual(Url, NetworkOps.GetProteinDescription(Url));
+         MockRepository mocks = new MockRepository();
+         FtpWebRequest Request = mocks.DynamicMock<FtpWebRequest>();
+         FtpWebResponse Response = mocks.DynamicMock<FtpWebResponse>();
+         Expect.Call(Request.GetResponse()).Return(Response);
+
+         using (FileStream stream = new FileStream(Path.Combine(TestFilesFolder, "test.html"), FileMode.Open))
+         {
+            Expect.Call(Response.GetResponseStream()).Return(stream);
+            mocks.ReplayAll();
+
+            NetworkOps.FtpDownloadHelper(Request, Path.Combine(TestFilesWorkFolder, "ftp_download_text.html"), 
+               String.Empty, String.Empty, DownloadType.ASCII);
+
+            mocks.VerifyAll();
+         }
+
+         Assert.IsTrue(File.Exists(Path.Combine(TestFilesWorkFolder, "ftp_download_text.html")));
       }
 
       [Test]
-      public void SetNetworkCredentials_CredentialsCreationTest()
+      public void HttpDownloadHelper_BinaryDownload()
+      {
+         MockRepository mocks = new MockRepository();
+         WebRequest Request = mocks.DynamicMock<WebRequest>();
+         WebResponse Response = mocks.DynamicMock<WebResponse>();
+         Expect.Call(Request.GetResponse()).Return(Response);
+
+         using (FileStream stream = new FileStream(Path.Combine(TestFilesFolder, "test.html"), FileMode.Open))
+         {
+            Expect.Call(Response.GetResponseStream()).Return(stream);
+            mocks.ReplayAll();
+
+            NetworkOps.HttpDownloadHelper(Request, Path.Combine(TestFilesWorkFolder, "http_download_binary.html"), 
+               "InstanceName", String.Empty, String.Empty, DownloadType.Binary);
+
+            mocks.VerifyAll();
+         }
+
+         Assert.IsTrue(File.Exists(Path.Combine(TestFilesWorkFolder, "http_download_binary.html")));
+      }
+
+      [Test]
+      public void HttpDownloadHelper_TextDownload()
+      {
+         MockRepository mocks = new MockRepository();
+         WebRequest Request = mocks.DynamicMock<WebRequest>();
+         WebResponse Response = mocks.DynamicMock<WebResponse>();
+         Expect.Call(Request.GetResponse()).Return(Response);
+
+         using (FileStream stream = new FileStream(Path.Combine(TestFilesFolder, "test.html"), FileMode.Open))
+         {
+            Expect.Call(Response.GetResponseStream()).Return(stream);
+            mocks.ReplayAll();
+
+            NetworkOps.HttpDownloadHelper(Request, Path.Combine(TestFilesWorkFolder, "http_download_text.html"),
+               "InstanceName", String.Empty, String.Empty, DownloadType.ASCII);
+
+            mocks.VerifyAll();
+         }
+
+         Assert.IsTrue(File.Exists(Path.Combine(TestFilesWorkFolder, "http_download_text.html")));
+      }
+
+      [Test]
+      public void HttpDownloadHelper_UnitInfoTooBig()
+      {
+         MockRepository mocks = new MockRepository();
+         WebRequest Request = mocks.DynamicMock<WebRequest>();
+         WebResponse Response = mocks.DynamicMock<WebResponse>();
+         Expect.Call(Request.GetResponse()).Return(Response);
+         Expect.Call(Response.ContentLength).Return(1050000);
+         
+         File.CreateText(Path.Combine(TestFilesWorkFolder, "unitinfo.txt")).Close();
+
+         mocks.ReplayAll();
+
+         NetworkOps.HttpDownloadHelper(Request, Path.Combine(TestFilesWorkFolder, "unitinfo.txt"),
+            "InstanceName", String.Empty, String.Empty, DownloadType.UnitInfo);
+
+         mocks.VerifyAll();
+
+         Assert.IsFalse(File.Exists(Path.Combine(TestFilesWorkFolder, "unitinfo.txt")));
+      }
+
+      [Test]
+      public void GetProteinDescription()
+      {
+         MockRepository mocks = new MockRepository();
+         WebRequest Request = mocks.DynamicMock<WebRequest>();
+         WebResponse Response = mocks.DynamicMock<WebResponse>();
+         Expect.Call(Request.GetResponse()).Return(Response);
+
+         string Description;
+         using (FileStream stream = new FileStream(Path.Combine(TestFilesFolder, "fahproject2669.html"), FileMode.Open))
+         {
+            Expect.Call(Response.GetResponseStream()).Return(stream);
+            mocks.ReplayAll();
+
+            Description = NetworkOps.GetProteinDescription(Request, String.Empty, String.Empty);
+
+            mocks.VerifyAll();
+         }
+
+         Assert.AreEqual("<TABLE align=center width=650 border=0 cellpadding=2 >\n<TR><TD><font size=\"3\"><b><A name = 2669>Project 2669</A></b></font></TD></TR><TR><TD><center>\n<br>\nThese projects study how influenza virus recognizes and infects cells.  We are developing new simulation methods to better understand these processes.\n<br><br>\n</center>\n<BR><BR><BR></TD></TR><TR><TD></TD></TR></TABLE>", 
+                         Description);
+      }
+
+      [Test]
+      public void SetNetworkCredentials()
       {
          WebRequest request = WebRequest.Create("http://www.google.com");
          Assert.IsNull(request.Credentials);
@@ -72,6 +216,13 @@ namespace HFM.Helpers.Tests
          Assert.IsNull(request.Credentials);
          NetworkOps.SetNetworkCredentials(request, "username", "password");
          Assert.IsNotNull(request.Credentials);
+
+         WebRequest request2 = WebRequest.Create("http://www.google.com");
+         Assert.IsNull(request2.Credentials);
+         NetworkOps.SetNetworkCredentials(request2, String.Empty, String.Empty);
+         Assert.IsNull(request2.Credentials);
+         NetworkOps.SetNetworkCredentials(request2, "domain\\username", "password");
+         Assert.IsNotNull(request2.Credentials);
       }
    }
 }

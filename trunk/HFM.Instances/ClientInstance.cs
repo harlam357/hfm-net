@@ -1015,7 +1015,7 @@ namespace HFM.Instances
          {
             string HttpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Path, "/", RemoteFAHLogFilename);
             string LocalFile = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedFAHLogName);
-            NetworkOps.HttpDownloadHelper(HttpPath, LocalFile, InstanceName, Username, Password, DownloadType.FAHLog);
+            NetworkOps.HttpDownloadHelper(HttpPath, LocalFile, InstanceName, Username, Password, DownloadType.ASCII);
 
             try
             {
@@ -1038,7 +1038,7 @@ namespace HFM.Instances
             {
                HttpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Path, "/", RemoteQueueFilename);
                LocalFile = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedQueueName);
-               NetworkOps.HttpDownloadHelper(HttpPath, LocalFile, InstanceName, Username, Password, DownloadType.Queue);
+               NetworkOps.HttpDownloadHelper(HttpPath, LocalFile, InstanceName, Username, Password, DownloadType.Binary);
             }
             /*** Remove Requirement for Queue to be Present ***/
             catch (WebException ex)
@@ -1069,7 +1069,7 @@ namespace HFM.Instances
          try
          {
             string LocalFilePath = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedFAHLogName);
-            NetworkOps.FtpDownloadHelper(Server, Path, RemoteFAHLogFilename, LocalFilePath, Username, Password, DownloadType.FAHLog);
+            NetworkOps.FtpDownloadHelper(Server, Path, RemoteFAHLogFilename, LocalFilePath, Username, Password, DownloadType.ASCII);
 
             try
             {
@@ -1090,7 +1090,7 @@ namespace HFM.Instances
             try
             {
                LocalFilePath = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedQueueName);
-               NetworkOps.FtpDownloadHelper(Server, Path, RemoteQueueFilename, LocalFilePath, Username, Password, DownloadType.Queue);
+               NetworkOps.FtpDownloadHelper(Server, Path, RemoteQueueFilename, LocalFilePath, Username, Password, DownloadType.Binary);
             }
             /*** Remove Requirement for Queue to be Present ***/
             catch (WebException ex)

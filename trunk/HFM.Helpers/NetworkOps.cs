@@ -19,6 +19,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Cache;
@@ -35,10 +36,9 @@ namespace HFM.Helpers
    /// </summary>
    public enum DownloadType
    {
-      General = -1,
-      FAHLog = 0,
-      UnitInfo,
-      Queue
+      ASCII = 0,
+      Binary,
+      UnitInfo
    }
 
    /// <summary>
@@ -81,13 +81,32 @@ namespace HFM.Helpers
          {
             throw new ArgumentException("Arguments 'Server', 'FtpPath', and 'LocalFilePath' cannot be a null or empty string.");
          }
+         
+         FtpUploadHelper((FtpWebRequest)FtpWebRequest.Create(new Uri(String.Format(CultureInfo.InvariantCulture, 
+            "ftp://{0}{1}{2}", Server, FtpPath, Path.GetFileName(LocalFilePath)))), LocalFilePath, Username, Password, PassiveMode);
+      }
 
-         FtpWebRequest request = (FtpWebRequest)FtpWebRequest.Create(new Uri(String.Format("ftp://{0}{1}{2}", Server, FtpPath, Path.GetFileName(LocalFilePath))));
-         request.Method = WebRequestMethods.Ftp.UploadFile;
-         request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-         request.UsePassive = PassiveMode;
+      /// <summary>
+      /// Upload a File via Ftp.
+      /// </summary>
+      /// <param name="Request">Ftp Web Request.</param>
+      /// <param name="LocalFilePath">Path to local file.</param>
+      /// <param name="Username">Ftp Login Username.</param>
+      /// <param name="Password">Ftp Login Password.</param>
+      /// <param name="PassiveMode">Passive FTP Mode.</param>
+      /// <exception cref="ArgumentException">Throws if LocalFilePath is Null or Empty.</exception>
+      public static void FtpUploadHelper(FtpWebRequest Request, string LocalFilePath, string Username, string Password, bool PassiveMode)
+      {
+         if (String.IsNullOrEmpty(LocalFilePath))
+         {
+            throw new ArgumentException("Argument 'LocalFilePath' cannot be a null or empty string.");
+         }
+      
+         Request.Method = WebRequestMethods.Ftp.UploadFile;
+         Request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+         Request.UsePassive = PassiveMode;
 
-         SetNetworkCredentials(request, Username, Password);
+         SetNetworkCredentials(Request, Username, Password);
          // Don't Set Proxy on FtpWebRequest, Proxy is for Http calls only.
          //SetProxy(request);
          
@@ -95,8 +114,8 @@ namespace HFM.Helpers
          {
             byte[] fileContents = Encoding.UTF8.GetBytes(sr1.ReadToEnd());
             //request.ContentLength = fileContents.Length;
-            
-            using (Stream requestStream = request.GetRequestStream())
+
+            using (Stream requestStream = Request.GetRequestStream())
             {
                requestStream.Write(fileContents, 0, fileContents.Length);
             }
@@ -116,22 +135,41 @@ namespace HFM.Helpers
       /// <exception cref="ArgumentException">Throws if Server, FtpPath, RemoteFileName, or LocalFilePath is Null or Empty.</exception>
       public static void FtpDownloadHelper(string Server, string FtpPath, string RemoteFileName, string LocalFilePath, string Username, string Password, DownloadType type)
       {
-         if (String.IsNullOrEmpty(Server) || String.IsNullOrEmpty(FtpPath) || String.IsNullOrEmpty(RemoteFileName) || String.IsNullOrEmpty(LocalFilePath))
+         if (String.IsNullOrEmpty(Server) || String.IsNullOrEmpty(FtpPath) || String.IsNullOrEmpty(RemoteFileName))
          {
-            throw new ArgumentException("Arguments 'Server', 'FtpPath', 'RemoteFileName', and 'LocalFilePath' cannot be a null or empty string.");
+            throw new ArgumentException("Arguments 'Server', 'FtpPath', and 'RemoteFileName'cannot be a null or empty string.");
          }
       
-         FtpWebRequest request = (FtpWebRequest)FtpWebRequest.Create(new Uri(String.Format("ftp://{0}{1}{2}", Server, FtpPath, RemoteFileName)));
-         request.Method = WebRequestMethods.Ftp.DownloadFile;
-         request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+         FtpDownloadHelper((FtpWebRequest)FtpWebRequest.Create(new Uri(String.Format(CultureInfo.InvariantCulture, 
+            "ftp://{0}{1}{2}", Server, FtpPath, RemoteFileName))), LocalFilePath, Username, Password, type);
+      }
 
-         SetNetworkCredentials(request, Username, Password);
+      /// <summary>
+      /// Download a File via Ftp.
+      /// </summary>
+      /// <param name="Request">Ftp Web Request.</param>
+      /// <param name="LocalFilePath">Path to local file.</param>
+      /// <param name="Username">Ftp Login Username.</param>
+      /// <param name="Password">Ftp Login Password.</param>
+      /// <param name="type">Type of Download.</param>
+      /// <exception cref="ArgumentException">Throws if Server, FtpPath, RemoteFileName, or LocalFilePath is Null or Empty.</exception>
+      public static void FtpDownloadHelper(FtpWebRequest Request, string LocalFilePath, string Username, string Password, DownloadType type)
+      {
+         if (String.IsNullOrEmpty(LocalFilePath))
+         {
+            throw new ArgumentException("Argument 'LocalFilePath' cannot be a null or empty string.");
+         }
+
+         Request.Method = WebRequestMethods.Ftp.DownloadFile;
+         Request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+
+         SetNetworkCredentials(Request, Username, Password);
          // Don't Set Proxy on FtpWebRequest, Proxy is for Http calls only.
          //SetProxy(request);
 
-         FtpWebResponse ftpr1 = (FtpWebResponse)request.GetResponse();
+         FtpWebResponse ftpr1 = (FtpWebResponse)Request.GetResponse();
 
-         if (type.Equals(DownloadType.Queue))
+         if (type.Equals(DownloadType.Binary))
          {
             using (Stream sr1 = ftpr1.GetResponseStream())
             {
@@ -165,9 +203,12 @@ namespace HFM.Helpers
       /// Download a File via Http.
       /// </summary>
       /// <param name="Url">Http Url of remote file.</param>
+      /// <exception cref="ArgumentNullException">Throws if Url is Null.</exception>
       public static Stream HttpDownloadHelper(Uri Url)
       {
-         WebResponse r1 = HttpDownloadHelper(Url, null, null, null, null, DownloadType.General);
+         if (Url == null) throw new ArgumentNullException("Url", "Argument 'Url' cannot be null.");
+      
+         WebResponse r1 = HttpDownloadHelper(WebRequest.Create(Url), null, null);
          return r1.GetResponseStream();
       }
 
@@ -180,26 +221,46 @@ namespace HFM.Helpers
       /// <param name="Username">Http Login Username.</param>
       /// <param name="Password">Http Login Password.</param>
       /// <param name="type">Type of Download.</param>
-      /// <exception cref="ArgumentException">Throws if Url, LocalFilePath, or InstanceName is Null or Empty.</exception>
+      /// <exception cref="ArgumentException">Throws if Url is Null or Empty.</exception>
       public static void HttpDownloadHelper(string Url, string LocalFilePath, string InstanceName, string Username, string Password, DownloadType type)
       {
          if (String.IsNullOrEmpty(Url))
          {
             throw new ArgumentException("Argument 'Url' cannot be a null or empty string.");
          }
+         
+         HttpDownloadHelper(WebRequest.Create(Url), LocalFilePath, InstanceName, Username, Password, type);
+      }
+
+      /// <summary>
+      /// Download a File via Http.
+      /// </summary>
+      /// <param name="Request">Web Request.</param>
+      /// <param name="LocalFilePath">Path to local file.</param>
+      /// <param name="InstanceName">Name of the Instance object that called this method.</param>
+      /// <param name="Username">Http Login Username.</param>
+      /// <param name="Password">Http Login Password.</param>
+      /// <param name="type">Type of Download.</param>
+      /// <exception cref="ArgumentException">Throws if Url, LocalFilePath, or InstanceName is Null or Empty.</exception>
+      public static void HttpDownloadHelper(WebRequest Request, string LocalFilePath, string InstanceName, string Username, string Password, DownloadType type)
+      {
+         if (String.IsNullOrEmpty(LocalFilePath) || String.IsNullOrEmpty(InstanceName))
+         {
+            throw new ArgumentException("Arguments 'LocalFilePath' and 'InstanceName' cannot be a null or empty string.");
+         }
       
-         WebResponse r1 = HttpDownloadHelper(new Uri(Url), LocalFilePath, InstanceName, Username, Password, type);
+         WebResponse r1 = HttpDownloadHelper(Request, Username, Password);
          if (type.Equals(DownloadType.UnitInfo) && r1.ContentLength >= UnitInfoMax)
          {
             if (File.Exists(LocalFilePath))
             {
                File.Delete(LocalFilePath);
             }
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
-                                       String.Format("{0} ({1}) UnitInfo Http download (file is too big: {2} bytes).", HfmTrace.FunctionName,
-                                                     InstanceName, r1.ContentLength));
+            
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture, 
+               "Http download (file is too big: {0} bytes).", r1.ContentLength));
          }
-         else if (type.Equals(DownloadType.FAHLog) || type.Equals(DownloadType.UnitInfo))
+         else if (type.Equals(DownloadType.ASCII) || type.Equals(DownloadType.UnitInfo))
          {
             using (StreamReader sr1 = new StreamReader(r1.GetResponseStream(), Encoding.ASCII))
             {
@@ -209,7 +270,7 @@ namespace HFM.Helpers
                }
             }
          }
-         else if (type.Equals(DownloadType.Queue))
+         else if (type.Equals(DownloadType.Binary))
          {
             using (Stream sr1 = r1.GetResponseStream())
             {
@@ -232,34 +293,21 @@ namespace HFM.Helpers
       /// <summary>
       /// Download a File via Http.
       /// </summary>
-      /// <param name="Url">Http Url of remote file.</param>
-      /// <param name="LocalFilePath">Path to local file.</param>
-      /// <param name="InstanceName">Name of the Instance object that called this method.</param>
+      /// <param name="Request">Web Request.</param>
       /// <param name="Username">Http Login Username.</param>
       /// <param name="Password">Http Login Password.</param>
-      /// <param name="type">Type of Download.</param>
       /// <exception cref="ArgumentNullException">Throws if Url is Null.</exception>
-      /// <exception cref="ArgumentException">Throws if LocalFilePath or InstanceName is Null or Empty.</exception>
-      private static WebResponse HttpDownloadHelper(Uri Url, string LocalFilePath, string InstanceName, string Username, string Password, DownloadType type)
+      private static WebResponse HttpDownloadHelper(WebRequest Request, string Username, string Password)
       {
-         if (Url == null) throw new ArgumentNullException("Url", "Argument 'Url' cannot be null.");
-         
-         if (type.Equals(DownloadType.General) == false)
-         {
-            if (String.IsNullOrEmpty(LocalFilePath) || String.IsNullOrEmpty(InstanceName))
-            {
-               throw new ArgumentException("Arguments 'LocalFilePath' and 'InstanceName' cannot be a null or empty string.");
-            }
-         }
+         if (Request == null) throw new ArgumentNullException("Request", "Argument 'Request' cannot be null.");
 
-         WebRequest request = WebRequest.Create(Url);
-         request.Method = WebRequestMethods.Http.Get;
-         request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+         Request.Method = WebRequestMethods.Http.Get;
+         Request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
 
-         SetNetworkCredentials(request, Username, Password);
-         SetProxy(request);
+         SetNetworkCredentials(Request, Username, Password);
+         SetProxy(Request);
 
-         return request.GetResponse();
+         return Request.GetResponse();
       }
 
       /// <summary>
@@ -284,6 +332,7 @@ namespace HFM.Helpers
       /// Get the Protein Description from the Url.
       /// </summary>
       /// <param name="Url">Http Url of remote file.</param>
+      /// <exception cref="ArgumentNullException">Throws if Url is Null.</exception>
       public static string GetProteinDescription(Uri Url)
       {
          return GetProteinDescription(Url, String.Empty, String.Empty);
@@ -299,64 +348,74 @@ namespace HFM.Helpers
       public static string GetProteinDescription(Uri Url, string Username, string Password)
       {
          if (Url == null) throw new ArgumentNullException("Url", "Argument 'Url' cannot be null.");
-
+      
          string str;
-
+         
          try
          {
-            WebRequest request = WebRequest.Create(Url);
-            request.Method = WebRequestMethods.Http.Get;
-            request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.CacheIfAvailable);
-
-            SetNetworkCredentials(request, Username, Password);
-            SetProxy(request);
-
-            string str2;
-            string str3;
-            
-            using (StreamReader reader = new StreamReader(request.GetResponse().GetResponseStream(), Encoding.ASCII))
-            {
-               str = reader.ReadToEnd();
-            }
-
-            // FxCop: CA1307 (Specify StringComparison)
-            //        CA1309 (For non-linguistic comparisons, StringComparison.Ordinal or StringComparison.OrdinalIgnoreCase)
-
-            // Get the <TABLE> to </TABLE> section of the HTML
-            int index = str.IndexOf("<TABLE", StringComparison.Ordinal);
-            int length = str.LastIndexOf("</TABLE>");
-            str = str.Substring(index, (length - index) + 8);
-            
-            // Strip the <FORM> to </FORM> section from the HTML
-            length = str.IndexOf("<FORM ", StringComparison.Ordinal);
-            index = str.IndexOf("</FORM>", StringComparison.Ordinal);
-            
-            if ((index >= 0) && (length >= 0))
-            {
-               str2 = str.Substring(0, length);
-               str3 = str.Substring(index + 7);
-               str = String.Concat(str2, str3);
-            }
-
-            // Change the <font> tag size to 3
-            index = str.IndexOf("<font", StringComparison.Ordinal);
-            length = str.IndexOf(">", index, StringComparison.Ordinal);
-            
-            if ((index >= 0) && (length >= 0))
-            {
-               str2 = str.Substring(0, index);
-               str3 = str.Substring(length + 1);
-               str = String.Concat(str2, "<font size=\"3\">", str3);
-            }
-            
-            // Remove the <p> tag that doesn't conform to HTML 4.01 Transitional
-            str = str.Replace("<p align=left>", String.Empty);
+            str = GetProteinDescription(WebRequest.Create(Url), Username, Password);
          }
          catch (Exception ex)
          {
             HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
             str = Url.AbsoluteUri;
          }
+         
+         return str;
+      }
+
+      /// <summary>
+      /// Get the Protein Description from the Url.
+      /// </summary>
+      /// <param name="Request">Web Request.</param>
+      /// <param name="Username">Http Login Username.</param>
+      /// <param name="Password">Http Login Password.</param>
+      /// <exception cref="ArgumentNullException">Throws if Request is Null.</exception>
+      public static string GetProteinDescription(WebRequest Request, string Username, string Password)
+      {
+         if (Request == null) throw new ArgumentNullException("Request", "Argument 'Request' cannot be null.");
+
+         string str;
+         string str2;
+         string str3;
+
+         using (StreamReader reader = new StreamReader(HttpDownloadHelper(Request, Username, Password).GetResponseStream(), Encoding.ASCII))
+         {
+            str = reader.ReadToEnd();
+         }
+
+         // FxCop: CA1307 (Specify StringComparison)
+         //        CA1309 (For non-linguistic comparisons, StringComparison.Ordinal or StringComparison.OrdinalIgnoreCase)
+
+         // Get the <TABLE> to </TABLE> section of the HTML
+         int index = str.IndexOf("<TABLE", StringComparison.Ordinal);
+         int length = str.LastIndexOf("</TABLE>");
+         str = str.Substring(index, (length - index) + 8);
+         
+         // Strip the <FORM> to </FORM> section from the HTML
+         length = str.IndexOf("<FORM ", StringComparison.Ordinal);
+         index = str.IndexOf("</FORM>", StringComparison.Ordinal);
+         
+         if ((index >= 0) && (length >= 0))
+         {
+            str2 = str.Substring(0, length);
+            str3 = str.Substring(index + 7);
+            str = String.Concat(str2, str3);
+         }
+
+         // Change the <font> tag size to 3
+         index = str.IndexOf("<font", StringComparison.Ordinal);
+         length = str.IndexOf(">", index, StringComparison.Ordinal);
+         
+         if ((index >= 0) && (length >= 0))
+         {
+            str2 = str.Substring(0, index);
+            str3 = str.Substring(length + 1);
+            str = String.Concat(str2, "<font size=\"3\">", str3);
+         }
+         
+         // Remove the <p> tag that doesn't conform to HTML 4.01 Transitional
+         str = str.Replace("<p align=left>", String.Empty);
 
          return str;
       }
@@ -448,7 +507,6 @@ namespace HFM.Helpers
             else
             {
                return new NetworkCredential(Username, Password);
-               //return new NetworkCredential("anonymous", "somepass");
             }
          }
          

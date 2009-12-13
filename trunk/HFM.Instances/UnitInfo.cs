@@ -631,7 +631,7 @@ namespace HFM.Instances
       {
          get
          {
-            return CurrentProtein.Credit;
+            return CurrentProtein.NumAtoms;
          }
       }
       
