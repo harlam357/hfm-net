@@ -1,5 +1,5 @@
 /*
- * HFM.NET - Benchmark Collection Helper Class
+ * HFM.NET - Benchmark Collection Class
  * Copyright (C) 2009 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -32,12 +32,14 @@ namespace HFM.Instances
    [Serializable]
    public class ProteinBenchmarkCollection
    {
-      #region Members
+      #region Constants
       /// <summary>
       /// Benchmark Data File Name
       /// </summary>
       private const string DataStoreFilename = "BenchmarkCache.dat";
+      #endregion
 
+      #region Members
       /// <summary>
       /// Benchmark List
       /// </summary>
@@ -522,26 +524,49 @@ namespace HFM.Instances
       #endregion
    }
 
-   public class BenchmarkClient : IComparable<BenchmarkClient>
+   /// <summary>
+   /// Container Class used to Bind Benchmark Client Data to the Benchmarks Form
+   /// </summary>
+   public class BenchmarkClient : IComparable<BenchmarkClient>, IEquatable<BenchmarkClient>
    {
+      /// <summary>
+      /// Self Referencing Property
+      /// </summary>
+      public BenchmarkClient Client
+      {
+         get { return this; }
+      }
+   
       private readonly string _Name = String.Empty;
+      /// <summary>
+      /// Client Name
+      /// </summary>
       public string Name
       {
          get { return _Name; }
       }
 
       private readonly string _Path = String.Empty;
+      /// <summary>
+      /// Client Path
+      /// </summary>
       public string Path
       {
          get { return _Path; }
       }
 
       private readonly bool _AllClients;
+      /// <summary>
+      /// Value Indicates if this Benchmark Client represents 'All Clients'
+      /// </summary>
       public bool AllClients
       {
          get { return _AllClients; }
       }
 
+      /// <summary>
+      /// Concatenated Name and Path Value
+      /// </summary>
       public string NameAndPath
       {
          get
@@ -551,53 +576,100 @@ namespace HFM.Instances
                return "All Clients";
             }
 
-            return String.Format(CultureInfo.CurrentCulture, "{0} ({1})", Name, Path);
+            return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Name, Path);
          }
       }
 
-      public BenchmarkClient Client
-      {
-         get { return this; }
-      }
-
+      #region Constructors
+      /// <summary>
+      /// Create BenchmarkClient Instance (All Clients)
+      /// </summary>
       public BenchmarkClient()
       {
          _AllClients = true;
       }
 
+      /// <summary>
+      /// Create BenchmarkClient Instance (Individual Clients)
+      /// </summary>
       public BenchmarkClient(string ClientName, string ClientPath)
       {
          _Name = ClientName;
          _Path = ClientPath;
       }
+      #endregion
 
+      ///<summary>
+      ///Serves as a hash function for a particular type. <see cref="M:System.Object.GetHashCode"></see> is suitable for use in hashing algorithms and data structures like a hash table.
+      ///</summary>
+      ///<returns>
+      ///A hash code for the current <see cref="T:System.Object"></see>.
+      ///</returns>
+      ///<filterpriority>2</filterpriority>
+      public override int GetHashCode()
+      {
+         return Name.GetHashCode() ^
+                Path.GetHashCode() ^
+                AllClients.GetHashCode();
+      }
+
+      ///<summary>
+      ///Determines whether the specified <see cref="T:System.Object"></see> is equal to the current <see cref="T:System.Object"></see>.
+      ///</summary>
+      ///<returns>
+      ///true if the specified <see cref="T:System.Object"></see> is equal to the current <see cref="T:System.Object"></see>; otherwise, false.
+      ///</returns>
+      ///<param name="obj">The <see cref="T:System.Object"></see> to compare with the current <see cref="T:System.Object"></see>.</param>
+      ///<filterpriority>2</filterpriority>
       public override bool Equals(object obj)
       {
          BenchmarkClient client = obj as BenchmarkClient;
          if (client != null)
          {
-            if (Name.Equals(client.Name) &&
-                Path.Equals(client.Path) &&
-                AllClients.Equals(client.AllClients))
-            {
-               return true;
-            }
-
-            return false;
+            return Equals(client);
          }
 
          return base.Equals(obj);
       }
 
-      public override int GetHashCode()
+      ///<summary>
+      ///Determines whether the specified <see cref="T:HFM.Instances.BenchmarkClient"></see> is equal to the current <see cref="T:HFM.Instances.BenchmarkClient"></see>.
+      ///</summary>
+      ///<returns>
+      ///true if the specified <see cref="T:HFM.Instances.BenchmarkClient"></see> is equal to the current <see cref="T:HFM.Instances.BenchmarkClient"></see>; otherwise, false.
+      ///</returns>
+      ///<param name="client">The <see cref="T:HFM.Instances.BenchmarkClient"></see> to compare with the current <see cref="T:HFM.Instances.BenchmarkClient"></see>.</param>
+      public bool Equals(BenchmarkClient client)
       {
-         return (Name.GetHashCode() +
-                 Path.GetHashCode() +
-                 AllClients.GetHashCode());
+         if (client == null)
+         {
+            return false;
+         }
+
+         if (Name.Equals(client.Name) &&
+             Path.Equals(client.Path) &&
+             AllClients.Equals(client.AllClients))
+         {
+            return true;
+         }
+
+         return false;
       }
 
+      ///<summary>
+      ///Compares the current object with another object of the same type.
+      ///</summary>
+      ///<returns>
+      ///A 32-bit signed integer that indicates the relative order of the objects being compared. The return value has the following meanings: Value Meaning Less than zero This object is less than the other parameter.Zero This object is equal to other. Greater than zero This object is greater than other. 
+      ///</returns>
+      ///<param name="other">An object to compare with this object.</param>
       public int CompareTo(BenchmarkClient other)
       {
+         if (other == null)
+         {
+            return 1;
+         }
+
          if (AllClients.Equals(other.AllClients))
          {
             if (Name.Equals(other.Name))
@@ -613,24 +685,14 @@ namespace HFM.Instances
          return 1;
       }
 
-      //public static bool operator == (BenchmarkClient bc1, BenchmarkClient bc2)
-      //{
-      //   return bc1.Equals(bc2);
-      //}
-      
-      //public static bool operator != (BenchmarkClient bc1, BenchmarkClient bc2)
-      //{
-      //   return !(bc1 == bc2);
-      //}
-      
-      //public static bool operator < (BenchmarkClient bc1, BenchmarkClient bc2)
-      //{
-      //   return (bc1.CompareTo(bc2) < 0);
-      //}
-      
-      //public static bool operator > (BenchmarkClient bc1, BenchmarkClient bc2)
-      //{
-      //   return (bc1.CompareTo(bc2) > 0);
-      //}
+      public static bool operator < (BenchmarkClient bc1, BenchmarkClient bc2)
+      {
+         return (bc1.CompareTo(bc2) < 0);
+      }
+
+      public static bool operator > (BenchmarkClient bc1, BenchmarkClient bc2)
+      {
+         return (bc1.CompareTo(bc2) > 0);
+      }
    }
 }
