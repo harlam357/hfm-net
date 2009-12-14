@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -33,11 +34,11 @@ namespace HFM.Helpers
       private const string ValidFileName = @"^[^\\/:*?""<>|\r\n]*$";
 
       private const string ValidWinPath = @"(?:\b[a-z]:|\\\\[a-z0-9.$_-]+\\[a-z0-9.`~!@#$%^&()_-]+)\\(?:[^\\/:*?""<>|\r\n]+\\)*";
-      private const string ValidUnixPath = @"^(?:/[a-z0-9\-._~%!$&'()*+,;=:@/]*/)*$";
+      private const string ValidUnixPath = @"^(?:(/|~)[a-z0-9\-._~%!$&'()*+,;=:@/]*)*$";
       
       private const string ValidServer = @"^[a-z0-9\-._%]+$";
       
-      private const string ValidHttpURL = "(https?|file|smb)://[-A-Z0-9+&@#/%?=~_|$!:,.;]*/";
+      private const string ValidHttpURL = "(https?|file|smb)://[-A-Z0-9+&@#/%?=~_|$!:,.;]*";
 
       private const string ValidMatchHttpOrFtpUrl =       @"\b(?<protocol>https?|ftp)://(?<domain>[-A-Z0-9.]+)(?<file>/[-A-Z0-9+&@#/%=~_|!:,.;]*)";
       private const string ValidMatchFtpWithUserPassUrl = @"\b(?<protocol>ftp)://(?<username>[A-Z0-9+&@#/%=~_|!:,.;]+):(?<password>[A-Z0-9+&@#/%=~_|!:,.;]+)@(?<domain>[-A-Z0-9.]+)(?<file>/[-A-Z0-9+&@#/%=~_|!:,.;]*)";
@@ -52,7 +53,8 @@ namespace HFM.Helpers
       /// <param name="val">String to validate</param>
       public static bool ValidateInstanceName(string val)
       {
-         Regex rValidName = new Regex(string.Format("^{0}{1}+{2}$", ValidNameFirst, ValidNameMiddle, ValidNameLast), RegexOptions.Singleline);
+         Regex rValidName = new Regex(String.Format(CultureInfo.InvariantCulture, 
+            "^{0}{1}+{2}$", ValidNameFirst, ValidNameMiddle, ValidNameLast), RegexOptions.Singleline);
          return rValidName.IsMatch(val);
       }
 
@@ -113,7 +115,7 @@ namespace HFM.Helpers
       /// <param name="val">String to validate</param>
       public static bool ValidatePathInstancePath(string val)
       {
-         System.Diagnostics.Debug.WriteLine(System.Environment.OSVersion.VersionString);
+         System.Diagnostics.Debug.WriteLine(Environment.OSVersion.VersionString);
          
          Regex rValidPathWin = new Regex(ValidWinPath, RegexOptions.Singleline | RegexOptions.IgnoreCase);
          Regex rValidPathUnix = new Regex(ValidUnixPath, RegexOptions.Singleline | RegexOptions.IgnoreCase);
@@ -153,7 +155,16 @@ namespace HFM.Helpers
 
          return rValidHttpURL.IsMatch(val);
       }
-      
+
+      /// <summary>
+      /// Validate Http or Ftp URL
+      /// </summary>
+      /// <param name="val">String to validate</param>
+      public static bool ValidateHttpOrFtpUrl(string val)
+      {
+         return MatchHttpOrFtpUrl(val).Success;
+      }
+
       /// <summary>
       /// Match HTTP or FTP URL String
       /// </summary>
@@ -197,10 +208,10 @@ namespace HFM.Helpers
       }
       
       /// <summary>
-      /// 
+      /// Validate that both Username and Password have been specified
       /// </summary>
-      /// <param name="Username"></param>
-      /// <param name="Password"></param>
+      /// <param name="Username">Username Value</param>
+      /// <param name="Password">Password Value</param>
       /// <exception cref="ArgumentException">Throws when either Username or Password is Null or Empty but not the other.</exception>
       public static bool ValidateUsernamePasswordPair(string Username, string Password)
       {
@@ -210,11 +221,11 @@ namespace HFM.Helpers
       }
 
       /// <summary>
-      /// 
+      /// Validate that both Username and Password have been specified
       /// </summary>
-      /// <param name="Username"></param>
-      /// <param name="Password"></param>
-      /// <param name="throwOnEmpty"></param>
+      /// <param name="Username">Username Value</param>
+      /// <param name="Password">Password Value</param>
+      /// <param name="throwOnEmpty">Throw Exception if both Values are Empty</param>
       /// <exception cref="ArgumentException">Throws when either Username or Password is Null or Empty but not the other.</exception>
       public static bool ValidateUsernamePasswordPair(string Username, string Password, bool throwOnEmpty)
       {
@@ -224,11 +235,11 @@ namespace HFM.Helpers
       }
 
       /// <summary>
-      /// 
+      /// Validate that both Server and Port have been specified
       /// </summary>
-      /// <param name="Server"></param>
-      /// <param name="Port"></param>
-      /// <exception cref="ArgumentException">Throws when either Username or Password is Null or Empty but not the other.</exception>
+      /// <param name="Server">Server Value</param>
+      /// <param name="Port">Port Value</param>
+      /// <exception cref="ArgumentException">Throws when either Server or Port is Null or Empty but not the other.</exception>
       public static bool ValidateServerPortPair(string Server, string Port)
       {
          return ValidateValuePair(Server, "Proxy Port must also be specified when specifying Proxy Server.",
@@ -237,7 +248,7 @@ namespace HFM.Helpers
       }
       
       /// <summary>
-      /// 
+      /// Validate a Value Pair
       /// </summary>
       private static bool ValidateValuePair(string Value1, string Value1Message, string Value2, string Value2Message, bool throwOnEmpty, string throwOnEmptyMessage)
       {
