@@ -27,7 +27,15 @@ namespace HFM.Helpers.Tests
    public class UserStatsDataContainerTests
    {
       [Test]
-      public void GetNextUpdateTime_TestCalculations()
+      public void TimeForNextUpdate()
+      {
+         Assert.IsTrue(UserStatsDataContainer.TimeForNextUpdate(DateTime.MinValue, DateTime.UtcNow, DateTime.Now.IsDaylightSavingTime()));
+         Assert.IsTrue(UserStatsDataContainer.TimeForNextUpdate(DateTime.UtcNow.Date, DateTime.UtcNow.Date.AddHours(4), false));
+         Assert.IsFalse(UserStatsDataContainer.TimeForNextUpdate(DateTime.UtcNow.Date, DateTime.UtcNow.Date.AddHours(2), false));
+      }
+
+      [Test]
+      public void GetNextUpdateTime()
       {
          DateTime NowUtc = DateTime.UtcNow.Date;
       

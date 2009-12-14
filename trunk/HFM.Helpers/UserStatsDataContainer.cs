@@ -19,6 +19,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -30,11 +31,15 @@ namespace HFM.Helpers
    [Serializable]
    public class UserStatsDataContainer
    {
+      #region Constants
       private const string DataStoreFilename = "UserStatsCache.dat";
+      #endregion
    
       #region Members
       private DateTime _LastUpdated = DateTime.MinValue;
-
+      /// <summary>
+      /// Stats Last Updated
+      /// </summary>
       public DateTime LastUpdated
       {
          get { return _LastUpdated; }
@@ -42,7 +47,9 @@ namespace HFM.Helpers
       }
 
       private long _User24hrAvg;
-
+      /// <summary>
+      /// User 24 Hour Points Average
+      /// </summary>
       public long User24hrAvg
       {
          get { return _User24hrAvg; }
@@ -57,7 +64,9 @@ namespace HFM.Helpers
       }
 
       private long _UserPointsToday;
-
+      /// <summary>
+      /// User Points Today
+      /// </summary>
       public long UserPointsToday
       {
          get { return _UserPointsToday; }
@@ -72,7 +81,9 @@ namespace HFM.Helpers
       }
 
       private long _UserPointsWeek;
-
+      /// <summary>
+      /// User Points Week
+      /// </summary>
       public long UserPointsWeek
       {
          get { return _UserPointsWeek; }
@@ -87,7 +98,9 @@ namespace HFM.Helpers
       }
 
       private long _UserPointsTotal;
-
+      /// <summary>
+      /// User Points Total
+      /// </summary>
       public long UserPointsTotal
       {
          get { return _UserPointsTotal; }
@@ -102,7 +115,9 @@ namespace HFM.Helpers
       }
 
       private long _UserWUsTotal;
-
+      /// <summary>
+      /// User Work Units Total
+      /// </summary>
       public long UserWUsTotal
       {
          get { return _UserWUsTotal; }
@@ -116,30 +131,40 @@ namespace HFM.Helpers
          }
       }
       #endregion
-
+      
+      #region Methods
+      /// <summary>
+      /// Is it Time for a Stats Update?
+      /// </summary>
       public bool TimeForUpdate()
       {
+         return TimeForNextUpdate(LastUpdated, DateTime.UtcNow, DateTime.Now.IsDaylightSavingTime());
+      }
+
+      /// <summary>
+      /// Is it Time for a Stats Update?
+      /// </summary>
+      public static bool TimeForNextUpdate(DateTime LastUpdated, DateTime UtcNow, bool IsDaylightSavingTime)
+      {
+         // No Last Updated Value
          if (LastUpdated.Equals(DateTime.MinValue))
          {
             return true;
          }
 
-         DateTime CurrentTime = DateTime.UtcNow;
-         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Current Time: {1} (UTC)", HfmTrace.FunctionName, CurrentTime));
-         DateTime NextUpdateTime = GetNextUpdateTime(LastUpdated);
-         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Next Update Time: {1} (UTC)", HfmTrace.FunctionName, NextUpdateTime));
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format(CultureInfo.CurrentCulture,
+            "{0} Current Time: {1} (UTC)", HfmTrace.FunctionName, UtcNow));
 
-         if (CurrentTime > NextUpdateTime)
+         DateTime NextUpdateTime = GetNextUpdateTime(LastUpdated, IsDaylightSavingTime);
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format(CultureInfo.CurrentCulture,
+            "{0} Next Update Time: {1} (UTC)", HfmTrace.FunctionName, NextUpdateTime));
+
+         if (UtcNow > NextUpdateTime)
          {
             return true;
          }
 
          return false;
-      }
-
-      public static DateTime GetNextUpdateTime(DateTime LastUpdated)
-      {
-         return GetNextUpdateTime(LastUpdated, DateTime.Now.IsDaylightSavingTime());
       }
 
       public static DateTime GetNextUpdateTime(DateTime LastUpdated, bool IsDaylightSavingTime)
@@ -169,6 +194,7 @@ namespace HFM.Helpers
 
          return nextUpdateTime;
       }
+      #endregion
 
       #region Singleton Support
       private static UserStatsDataContainer _Instance;
