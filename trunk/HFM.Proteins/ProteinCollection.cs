@@ -395,12 +395,34 @@ namespace HFM.Proteins
       [CLSCompliant(false)]
       public static string GetNextTdValue(HTMLparser pSummary, string ParamName)
       {
+         return GetNextValue(pSummary, "td", ParamName);
+      }
+
+      /// <summary>
+      /// Return the value enclosed in the HTML Table Heading Column (th).
+      /// </summary>
+      /// <param name="pSummary">HTMLparser Instance</param>
+      [CLSCompliant(false)]
+      public static string GetNextThValue(HTMLparser pSummary)
+      {
+         return GetNextValue(pSummary, "th", String.Empty);
+      }
+
+      /// <summary>
+      /// Return the value enclosed in the HTML Table Column (td).
+      /// </summary>
+      /// <param name="pSummary">HTMLparser Instance</param>
+      /// <param name="TagName">Name of Tag to Search for</param>
+      /// <param name="ParamName">Name of Tag Parameter to Return</param>
+      [CLSCompliant(false)]
+      public static string GetNextValue(HTMLparser pSummary, string TagName, string ParamName)
+      {
          HTMLchunk oChunk;
          while ((oChunk = pSummary.ParseNext()) != null)
          {
-            // Look for an Open "td" Tag
+            // Look for an Open Tag matching the given Tag Name
             if (oChunk.oType.Equals(HTMLchunkType.OpenTag) &&
-                oChunk.sTag.ToLower() == "td")
+                oChunk.sTag.ToLower() == TagName)
             {
                // If not looking for a Tag Parameter
                if (ParamName.Length == 0)
@@ -423,12 +445,6 @@ namespace HFM.Proteins
                            return oChunk.oHTML.Trim();
                         }
                      }
-                     // If it's a Close "td" Tag, return Empty String
-                     else if (oChunk.oType.Equals(HTMLchunkType.CloseTag) &&
-                              oChunk.sTag.ToLower() == "td")
-                     {
-                        return String.Empty;
-                     }
                      // If it's Text, return it
                      else if (oChunk.oType.Equals(HTMLchunkType.Text))
                      {
@@ -444,12 +460,17 @@ namespace HFM.Proteins
                   
                   // If it's an Open Tag
                   if (oChunk != null &&
-                      oChunk.oType.Equals(HTMLchunkType.OpenTag))
+                      oChunk.oType.Equals(HTMLchunkType.OpenTag) &&
+                      oChunk.oParams.Contains(ParamName))
                   {
                      // Return the specified Parameter Name
                      return oChunk.oParams[ParamName].ToString();
                   }
                }
+               
+               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Could not find psummary column value.  Returning an empty string.", true);
+               
+               return String.Empty;
             }
          }
          

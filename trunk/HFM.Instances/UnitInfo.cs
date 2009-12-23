@@ -1211,7 +1211,7 @@ namespace HFM.Instances
       /// <returns>Client Type</returns>
       private static ClientType GetClientTypeFromProtein(Protein CurrentProtein)
       {
-         switch (CurrentProtein.Core)
+         switch (CurrentProtein.Core.ToUpperInvariant())
          {
             case "GROMACS":
             case "DGROMACS":
@@ -1226,9 +1226,7 @@ namespace HFM.Instances
             case "GRO-A4":
             //case "TINKER":
             /*** ProtoMol Only */
-            // This is just a guess at what this core
-            // will be listed as on the psummary.
-            //case "PROTOMOL":
+            case "PROTOMOL":
             /*******************/
                return ClientType.Standard;
             case "GRO-SMP":

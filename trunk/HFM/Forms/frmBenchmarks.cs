@@ -133,8 +133,10 @@ namespace HFM.Forms
 
       private void mnuContextRefreshMinimum_Click(object sender, EventArgs e)
       {
-         if (MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture, "Are you sure you want to refresh {0} - Project {1} minimum frame time?", _currentBenchmarkClient.NameAndPath, listBox1.SelectedItem),
-                              Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
+         if (MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture, 
+            "Are you sure you want to refresh {0} - Project {1} minimum frame time?", 
+               _currentBenchmarkClient.NameAndPath, listBox1.SelectedItem),
+                  Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
          {
             ProteinBenchmarkCollection.Instance.RefreshMinimumFrameTime(_currentBenchmarkClient, (int)listBox1.SelectedItem);
             listBox1_SelectedIndexChanged(sender, e);
@@ -143,8 +145,10 @@ namespace HFM.Forms
 
       private void mnuContextDeleteProject_Click(object sender, EventArgs e)
       {
-         if (MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture, "Are you sure you want to delete {0} - Project {1}?", _currentBenchmarkClient.NameAndPath, listBox1.SelectedItem),
-                              Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
+         if (MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture, 
+            "Are you sure you want to delete {0} - Project {1}?", 
+               _currentBenchmarkClient.NameAndPath, listBox1.SelectedItem),
+                  Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
          {
             ProteinBenchmarkCollection.Instance.Delete(_currentBenchmarkClient, (int)listBox1.SelectedItem);
             UpdateProjectListBoxBinding();
@@ -232,7 +236,7 @@ namespace HFM.Forms
          if (dlg.ShowDialog(this).Equals(DialogResult.OK))
          {
             List<Color> GraphColors = PreferenceSet.Instance.GraphColors;
-            Color addColor = FindNearestKnown(dlg.Color).Color;
+            Color addColor = FindNearestKnown(dlg.Color);
             if (GraphColors.Contains(addColor))
             {
                MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture, "{0} is already a graph color.", addColor.Name), 
@@ -574,7 +578,7 @@ namespace HFM.Forms
          myBar.Bar.Fill = new Fill(barColor, Color.White, barColor);
       }
 
-      private static ColorName FindNearestKnown(Color c)
+      private static Color FindNearestKnown(Color c)
       {
          ColorName best = new ColorName();
          best.Name = null;
@@ -582,8 +586,7 @@ namespace HFM.Forms
          foreach (string colorName in Enum.GetNames(typeof(KnownColor)))
          {
             Color known = Color.FromName(colorName);
-            int dist;
-            dist = Math.Abs(c.R - known.R) + Math.Abs(c.G - known.G) + Math.Abs(c.B - known.B);
+            int dist = Math.Abs(c.R - known.R) + Math.Abs(c.G - known.G) + Math.Abs(c.B - known.B);
 
             if (best.Name == null || dist < best.Distance)
             {
@@ -593,11 +596,14 @@ namespace HFM.Forms
             }
          }
 
-         return best;
+         return best.Color;
       }
       #endregion
    }
 
+   /// <summary>
+   /// Container for Color, Name, 
+   /// </summary>
    internal struct ColorName
    {
       internal Color Color;

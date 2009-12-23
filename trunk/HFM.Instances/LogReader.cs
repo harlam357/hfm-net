@@ -948,7 +948,7 @@ namespace HFM.Instances
             return LogLineType.WorkUnitStart;
          }
          /*** ProtoMol Only */
-         else if (logLine.Contains("] ******************* Folding@Home Core *******************"))
+         else if (logLine.Contains("] ************************** ProtoMol Folding@Home Core **************************"))
          {
             return LogLineType.WorkUnitStart;
          }
@@ -957,6 +957,12 @@ namespace HFM.Instances
          {
             return LogLineType.WorkUnitCoreVersion;
          }
+         /*** ProtoMol Only */
+         else if (logLine.Contains("]   Version:"))
+         {
+            return LogLineType.WorkUnitCoreVersion;
+         }
+         /*******************/
          else if (IsLineTypeWorkUnitStarted(logLine))
          {
             return LogLineType.WorkUnitRunning;
@@ -1084,6 +1090,14 @@ namespace HFM.Instances
       /// </summary>
       private static readonly Regex rCoreVersion =
          new Regex("\\[(?<Timestamp>.{8})\\] Version (?<CoreVer>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+
+      /*** ProtoMol Only */
+      /// <summary>
+      /// Regular Expression to match ProtoMol Core Version string.
+      /// </summary>
+      private static readonly Regex rProtoMolCoreVersion =
+         new Regex("\\[(?<Timestamp>.{8})\\]   Version: (?<CoreVer>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+      /*******************/
 
       /// <summary>
       /// Regular Expression to match Work Unit Project string.
@@ -1264,6 +1278,12 @@ namespace HFM.Instances
                      return sCoreVer;
                   }
                }
+               /*** ProtoMol Only */
+               else if ((mCoreVer = rProtoMolCoreVersion.Match(logLine.LineRaw)).Success)
+               {
+                  return mCoreVer.Result("${CoreVer}");
+               }
+               /*******************/
                else
                {
                   throw new FormatException(String.Format("Failed to parse Core Version value from '{0}'", logLine.LineRaw));

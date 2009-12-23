@@ -33,12 +33,12 @@ namespace HFM.Proteins.Tests
       public void DownloadFromStanfordTest()
       {
          Uri baseUri = new Uri(Environment.CurrentDirectory);
-         Uri fileUri = new Uri(baseUri, "..\\TestFiles\\psummary.html");
+         Uri fileUri = new Uri(baseUri, "..\\TestFiles\\psummaryC.html");
       
          ProteinCollection.ProjectLoadLocation = fileUri;
          ProteinCollection Proteins = ProteinCollection.Instance;
          
-         Assert.AreEqual(196, Proteins.Count);
+         Assert.AreEqual(345, Proteins.Count);
          
          Protein p = Proteins.GetProtein(2483);
          Assert.AreEqual(false, p.IsUnknown);
@@ -52,8 +52,25 @@ namespace HFM.Proteins.Tests
       [Test]
       public void ValidatePsummaryTableLayout()
       {
+         ValidatePsummaryTableLayout("..\\TestFiles\\psummary.html");
+      }
+
+      [Test]
+      public void ValidatePsummaryBTableLayout()
+      {
+         ValidatePsummaryTableLayout("..\\TestFiles\\psummaryB.html");
+      }
+
+      [Test]
+      public void ValidatePsummaryCTableLayout()
+      {
+         ValidatePsummaryTableLayout("..\\TestFiles\\psummaryC.html");
+      }
+
+      public void ValidatePsummaryTableLayout(string FilePath)
+      {
          Uri baseUri = new Uri(Environment.CurrentDirectory);
-         Uri fileUri = new Uri(baseUri, "..\\TestFiles\\psummary.html");
+         Uri fileUri = new Uri(baseUri, FilePath);
 
          HTMLparser pSummary = ProteinCollection.InitHTMLparser(fileUri);
          HTMLchunk oChunk;
@@ -65,18 +82,18 @@ namespace HFM.Proteins.Tests
             if (oChunk.oType.Equals(HTMLchunkType.OpenTag) &&
                 oChunk.sTag.ToLower() == "tr")
             {
-               Assert.AreEqual("Project Number", ProteinCollection.GetNextTdValue(pSummary));
-               Assert.AreEqual("Server IP", ProteinCollection.GetNextTdValue(pSummary));
-               Assert.AreEqual("Work Unit Name", ProteinCollection.GetNextTdValue(pSummary));
-               Assert.AreEqual("Number of Atoms", ProteinCollection.GetNextTdValue(pSummary));
-               Assert.AreEqual("Preferred (days)", ProteinCollection.GetNextTdValue(pSummary));
-               Assert.AreEqual("Final deadline (days)", ProteinCollection.GetNextTdValue(pSummary));
-               Assert.AreEqual("Credit", ProteinCollection.GetNextTdValue(pSummary));
-               Assert.AreEqual("Frames", ProteinCollection.GetNextTdValue(pSummary));
-               Assert.AreEqual("Code", ProteinCollection.GetNextTdValue(pSummary));
-               Assert.AreEqual("Description", ProteinCollection.GetNextTdValue(pSummary));
-               Assert.AreEqual("Contact", ProteinCollection.GetNextTdValue(pSummary));
-               Assert.AreEqual("Kfactor", ProteinCollection.GetNextTdValue(pSummary));
+               Assert.AreEqual("Project Number", ProteinCollection.GetNextThValue(pSummary));
+               Assert.AreEqual("Server IP", ProteinCollection.GetNextThValue(pSummary));
+               Assert.AreEqual("Work Unit Name", ProteinCollection.GetNextThValue(pSummary));
+               Assert.AreEqual("Number of Atoms", ProteinCollection.GetNextThValue(pSummary));
+               Assert.AreEqual("Preferred (days)", ProteinCollection.GetNextThValue(pSummary));
+               Assert.AreEqual("Final deadline (days)", ProteinCollection.GetNextThValue(pSummary));
+               Assert.AreEqual("Credit", ProteinCollection.GetNextThValue(pSummary));
+               Assert.AreEqual("Frames", ProteinCollection.GetNextThValue(pSummary));
+               Assert.AreEqual("Code", ProteinCollection.GetNextThValue(pSummary));
+               Assert.AreEqual("Description", ProteinCollection.GetNextThValue(pSummary));
+               Assert.AreEqual("Contact", ProteinCollection.GetNextThValue(pSummary));
+               Assert.AreEqual("Kfactor", ProteinCollection.GetNextThValue(pSummary));
                
                return;
             }

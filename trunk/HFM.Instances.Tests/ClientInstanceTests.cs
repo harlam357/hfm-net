@@ -352,5 +352,61 @@ namespace HFM.Instances.Tests
 
          Assert.AreEqual(ClientStatus.EuePause, Instance.Status);
       }
+
+      [Test, Category("GPU")]
+      public void TestGpuPathInstance4()
+      {
+         // Setup Test Instance
+         ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
+         // Don't Handle Status
+         Instance.HandleStatusOnRetrieve = false;
+         // Inject our own delegate for getting the Protein
+         // to isolate from what's actually available in the
+         // ProteinCollection Cache (or psummary).
+         ProteinCollection.GetProteinHandler = delegate
+         {
+            Protein p = new Protein();
+            p.ProjectNumber = 5770;
+            p.Core = "GROGPU2";
+            return p;
+         };
+
+         Instance.InstanceName = "GPU Test 4";
+         Instance.Path = "..\\..\\TestFiles";
+         Instance.RemoteFAHLogFilename = "GPU Test 4 FAHlog.txt";
+         Instance.RemoteUnitInfoFilename = "GPU Test 4 unitinfo.txt";
+         Instance.RemoteQueueFilename = "GPU Test 4 queue.dat";
+
+         // Retrieve Log File and Assert Results
+         Instance.Retrieve();
+         Assert.IsNotNull(Instance.CurrentLogLines);
+         Assert.AreEqual(false, Instance.UserIDUnknown);
+         Assert.AreEqual(String.Format("{0} ({1})", Instance.UserID, Instance.MachineID), Instance.UserAndMachineID);
+         Assert.AreEqual(true, Instance.IsUsernameOk()); // Prefs default is harlam357 (32)
+         Assert.Greater(Instance.LastRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
+
+         Assert.IsNotNull(Instance.CurrentUnitInfo);
+
+         // Check Client Type and Owning Instance Properties
+         Assert.AreEqual(ClientType.GPU, Instance.CurrentUnitInfo.TypeOfClient);
+         Assert.AreEqual("GPU Test 4", Instance.CurrentUnitInfo.OwningInstanceName);
+         Assert.AreEqual("..\\..\\TestFiles", Instance.CurrentUnitInfo.OwningInstancePath);
+
+         Assert.AreEqual(false, Instance.CurrentUnitInfo.ProjectIsUnknown);
+         Assert.IsNotNull(Instance.CurrentUnitInfo.UnitFrames);
+         Assert.AreEqual(100, Instance.CurrentUnitInfo.FramesObserved);
+         Assert.AreEqual(100, Instance.CurrentUnitInfo.FramesComplete);
+         Assert.AreEqual(100, Instance.CurrentUnitInfo.PercentComplete);
+         Assert.AreEqual(100, Instance.CurrentUnitInfo.LastUnitFrameID);
+         Assert.AreEqual(100, Instance.CurrentUnitInfo.RawFramesComplete);
+         Assert.AreEqual(100, Instance.CurrentUnitInfo.RawFramesTotal);
+
+         //Assert.AreEqual(0, Instance.CurrentUnitInfo.RawTimePerUnitDownload);
+         Assert.AreEqual(36, Instance.CurrentUnitInfo.RawTimePerAllSections);
+         Assert.AreEqual(38, Instance.CurrentUnitInfo.RawTimePerThreeSections);
+         Assert.AreEqual(38, Instance.CurrentUnitInfo.RawTimePerLastSection);
+
+         Assert.AreEqual(ClientStatus.GettingWorkPacket, Instance.Status);
+      }
    }
 }

@@ -78,7 +78,7 @@ namespace HFM.Forms
          this.lblVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
          this.lblVersion.Location = new System.Drawing.Point(128, 6);
          this.lblVersion.Name = "lblVersion";
-         this.lblVersion.Size = new System.Drawing.Size(227, 28);
+         this.lblVersion.Size = new System.Drawing.Size(245, 28);
          this.lblVersion.TabIndex = 2;
          this.lblVersion.Text = "[Version]";
          // 
