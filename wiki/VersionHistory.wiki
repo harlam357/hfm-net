@@ -1,6 +1,28 @@
 #summary HFM.NET Version History
 #labels Featured
 
+=Change Log - Version: 0.4.6 - Revision 99 - Beta=
+
+  * Fix: Problem Determining Async Status when there is no frame time based on the user selection.
+  * Add: Some Unit Tests for the Status Determination code (so this little bug won't slip by again). 
+
+=Change Log - Version: 0.4.5 - Revision 97 - Beta=
+
+  * Enhancement: Issue 124 - Add option to enable/disable 'RunningAsync' detection.
+  * Enhancement: Issue 125 - Add option to enable/disable Bonus Credit and PPD Calculation.
+  * Enhancement: Issue 129 - Enable Bonus Calculations for Minimum and Average Frame Time Benchmarks.
+  * Enhancement: Rework the Preferences Dialog and Underlying PreferenceSet Class now using DataBinding and new ValidatingTextBox Control found in harlam357.Windows.Forms.dll.
+  * Enhancement: Issue 127 & Issue 128 - Add detection of CPU Client 'EuePause' Message and WorkUnitResult.CoreOutDataed (CORE_OUTDATED).
+
+  * Fix: Issue 130 - Project Summary Download - was using culture sensetive parsing to parse double values from the HTML, specify InvariantCulture for parsing and persistence.
+  * Fix: Validate the read MHz value of Client Instances is 1 or greater.
+  * Fix: Clear Project Information in the Benchmarks Dialog when the associated Protein is unavailable (not cached or available on the psummary).
+
+  * Change: Add sanity check to Protein.GetBonusMultiplier() - make sure the given Unit Time is a positive TimeSpan, not just a non-Zero value.
+
+  * File Addition: Adding a ProjectInfo Folder to the source tree - this folder will be used to source an externally available (and much more complete) ProjectInfo.tab file.
+    * http://hfm-net.googlecode.com/svn/trunk/ProjectInfo/ProjectInfo.tab
+
 =Change Log - Version: 0.4.2 - Revision 92 - Beta=
 
   * Enhancement: Issue 94  - Add logic to Determine 'RunningAsync' Status (Blue).
