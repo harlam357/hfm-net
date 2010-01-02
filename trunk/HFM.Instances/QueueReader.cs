@@ -370,12 +370,14 @@ namespace HFM.Instances
          get { return _z224; }
       }
 
-      /* 260 Machine ID (LE) */
-      private UInt32 _MachineID;
+      /* 260 Machine ID (LE or BE) */
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+      private byte[] _MachineID;
       /// <summary>
       /// Machine ID
       /// </summary>
-      public UInt32 MachineID
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] MachineID
       {
          get { return _MachineID; }
       }
@@ -1175,7 +1177,29 @@ namespace HFM.Instances
       /// </summary>
       public UInt32 MachineID
       {
-         get { return _qEntry.MachineID; }
+         get 
+         {
+            if (IsMachineIDBigEndian)
+            {
+               byte[] b = new byte[4];
+               Array.Copy(_qEntry.MachineID, b, _qEntry.MachineID.Length);
+               Array.Reverse(b);
+               return BitConverter.ToUInt32(b, 0);
+            }
+
+            return BitConverter.ToUInt32(_qEntry.MachineID, 0);
+         }
+      }
+      
+      /// <summary>
+      /// Denotes Byte Order of Machine ID Field
+      /// </summary>
+      public bool IsMachineIDBigEndian
+      {
+         get 
+         {
+            return QueueReader.IsBigEndian(_qEntry.MachineID);
+         }
       }
 
       /// <summary>
@@ -1256,8 +1280,15 @@ namespace HFM.Instances
       {
          get
          {
+            byte[] bytes = new byte[_qEntry.UserAndMachineID.Length];
+            Array.Copy(_qEntry.UserAndMachineID, bytes, _qEntry.UserAndMachineID.Length);
+            if (IsMachineIDBigEndian == false)
+            {
+               Array.Reverse(bytes);   
+            }
+            
             StringBuilder sb = new StringBuilder(_qEntry.UserAndMachineID.Length * 2);
-            foreach (byte b in _qEntry.UserAndMachineID)
+            foreach (byte b in bytes)
             {
                sb.AppendFormat("{0:X2}", b);
             }
@@ -1272,7 +1303,7 @@ namespace HFM.Instances
       {
          get
          {
-            return GetUserIDFromUserAndMachineID(_qEntry.UserAndMachineID, _qEntry.MachineID);
+            return GetUserIDFromUserAndMachineID(_qEntry.UserAndMachineID, MachineID, IsMachineIDBigEndian);
          }
       }
 
@@ -1647,17 +1678,25 @@ namespace HFM.Instances
          return data;
       }
 
-      public static string GetUserIDFromUserAndMachineID(byte[] UserAndMachineID, UInt32 MachineID)
+      public static string GetUserIDFromUserAndMachineID(byte[] UserAndMachineID, UInt32 MachineID, bool IsMachineIDBigEndian)
       {
          Debug.Assert(UserAndMachineID.Length == 8);
          
          /*** Remove the MachineID from UserAndMachineID ***/
          
+         byte[] bytes = new byte[UserAndMachineID.Length];
+         Array.Copy(UserAndMachineID, bytes, UserAndMachineID.Length);
+         if (IsMachineIDBigEndian)
+         {
+            // Reverse the bytes so we get the least significant byte first
+            Array.Reverse(bytes);
+         }
+
          // Convert to 64bit integer
-         UInt64 value = BitConverter.ToUInt64(UserAndMachineID, 0);
+         UInt64 value = BitConverter.ToUInt64(bytes, 0);
          value = value - MachineID;
          // Convert back to bytes after MachineID has been subtracted
-         byte[] bytes = BitConverter.GetBytes(value);
+         bytes = BitConverter.GetBytes(value);
          // Reverse the bytes so we show the most significant byte first
          Array.Reverse(bytes);
 

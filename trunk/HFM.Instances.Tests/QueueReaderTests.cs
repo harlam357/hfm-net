@@ -87,7 +87,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(524286976, entry8.PacketSizeLimit);
          Assert.AreEqual("harlam357", entry8.FoldingID);
          Assert.AreEqual("32", entry8.Team);
-         Assert.AreEqual("2A73A923B9D2FA7A", entry8.ID);
+         Assert.AreEqual("7AFAD2B923A9732A", entry8.ID);
          Assert.AreEqual("7AFAD2B923A97329", entry8.UserID);
          Assert.AreEqual(1, entry8.MachineID);
          Assert.AreEqual(2432236, entry8.WuDataFileSize);
@@ -153,7 +153,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(524286976, entry4.PacketSizeLimit);
          Assert.AreEqual("harlam357", entry4.FoldingID);
          Assert.AreEqual("32", entry4.Team);
-         Assert.AreEqual("9B1ED93B634D9D3D", entry4.ID);
+         Assert.AreEqual("3D9D4D633BD91E9B", entry4.ID);
          Assert.AreEqual("3D9D4D633BD91E9A", entry4.UserID);
          Assert.AreEqual(1, entry4.MachineID);
          Assert.AreEqual(4838584, entry4.WuDataFileSize);
@@ -218,8 +218,8 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(524286976, entry6.PacketSizeLimit);
          Assert.AreEqual("harlam357", entry6.FoldingID);
          Assert.AreEqual("32", entry6.Team);
-         Assert.AreEqual("21EE6D43B3860603", entry6.ID);
-         Assert.AreEqual("30686B3436DEE20", entry6.UserID);
+         Assert.AreEqual("030686B3436DEE21", entry6.ID);
+         Assert.AreEqual( "30686B3436DEE20", entry6.UserID);
          Assert.AreEqual(1, entry6.MachineID);
          Assert.AreEqual(4836605, entry6.WuDataFileSize);
          Assert.AreEqual("Folding@Home", entry6.WorkUnitType);
@@ -283,8 +283,8 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(524286976, entry7.PacketSizeLimit);
          Assert.AreEqual("harlam357", entry7.FoldingID);
          Assert.AreEqual("32", entry7.Team);
-         Assert.AreEqual("492A106C0885F10C", entry7.ID);
-         Assert.AreEqual("CF185086C102A47", entry7.UserID);
+         Assert.AreEqual("0CF185086C102A49", entry7.ID);
+         Assert.AreEqual( "CF185086C102A47", entry7.UserID);
          Assert.AreEqual(2, entry7.MachineID);
          Assert.AreEqual(67869, entry7.WuDataFileSize);
          Assert.AreEqual("Folding@Home", entry7.WorkUnitType);
@@ -351,7 +351,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(524286976, entry1.PacketSizeLimit);
          Assert.AreEqual("surferseth", entry1.FoldingID);
          Assert.AreEqual("32", entry1.Team);
-         Assert.AreEqual("990D49073792355C", entry1.ID);
+         Assert.AreEqual("5C35923707490D99", entry1.ID);
          Assert.AreEqual("5C35923707490D98", entry1.UserID);
          Assert.AreEqual(1, entry1.MachineID);
          Assert.AreEqual(3872181, entry1.WuDataFileSize);
@@ -401,7 +401,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(524286976, entry2.PacketSizeLimit);
          Assert.AreEqual("surferseth", entry2.FoldingID);
          Assert.AreEqual("32", entry2.Team);
-         Assert.AreEqual("990D49073792355C", entry2.ID);
+         Assert.AreEqual("5C35923707490D99", entry2.ID);
          Assert.AreEqual("5C35923707490D98", entry2.UserID);
          Assert.AreEqual(1, entry2.MachineID);
          Assert.AreEqual(9256122, entry2.WuDataFileSize);
@@ -466,7 +466,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(5241856, entry1.PacketSizeLimit);
          Assert.AreEqual("susato", entry1.FoldingID);
          Assert.AreEqual("1971", entry1.Team);
-         Assert.AreEqual("A43758419B21B433", entry1.ID);
+         Assert.AreEqual("33B4219B415837A4", entry1.ID);
          Assert.AreEqual("33B4219B415837A3", entry1.UserID);
          Assert.AreEqual(1, entry1.MachineID);
          Assert.AreEqual(283826, entry1.WuDataFileSize);
@@ -536,11 +536,76 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(524286976, entry1.PacketSizeLimit);
          Assert.AreEqual("harlam357", entry1.FoldingID);
          Assert.AreEqual("32", entry1.Team);
-         Assert.AreEqual("CAE6B725063F6B3F", entry1.ID);
+         Assert.AreEqual("3F6B3F0625B7E6CA", entry1.ID);
          Assert.AreEqual("3F6B3F0625B7E6BA", entry1.UserID);
          Assert.AreEqual(16, entry1.MachineID);
          Assert.AreEqual(2972889, entry1.WuDataFileSize);
          Assert.AreEqual("Folding@Home", entry1.WorkUnitType);
+      }
+
+      [Test, Category("GPU")]
+      public void QueueTest_GPU2_2()
+      {
+         QueueReader queue = new QueueReader();
+         queue.ReadQueue("..\\..\\TestFiles\\GPU2_2\\queue.dat");
+         Assert.AreEqual(600, queue.Version);
+         Assert.AreEqual(9, queue.CurrentIndex);
+         Assert.AreEqual(0.974022746f, queue.PerformanceFraction);
+         Assert.AreEqual(4, queue.PerformanceFractionUnitWeight);
+         Assert.AreEqual(89.939f, queue.DownloadRateAverage);
+         Assert.AreEqual(4, queue.DownloadRateUnitWeight);
+         Assert.AreEqual(109.226f, queue.UploadRateAverage);
+         Assert.AreEqual(4, queue.UploadRateUnitWeight);
+         Assert.AreEqual(315582117, queue.ResultsSent); // This number makes no sense
+
+         QueueEntry entry9 = queue.GetQueueEntry(9);
+         Assert.AreEqual(QueueEntryStatus.FoldingNow, entry9.EntryStatus);
+         Assert.AreEqual(0.0, entry9.SpeedFactor);
+         Assert.AreEqual("171.64.65.71", entry9.ServerIP);
+         Assert.AreEqual(8080, entry9.ServerPort);
+         Assert.AreEqual(10101, entry9.ProjectID);
+         Assert.AreEqual(266, entry9.ProjectRun);
+         Assert.AreEqual(9, entry9.ProjectClone);
+         Assert.AreEqual(11, entry9.ProjectGen);
+         Assert.AreEqual("P10101 (R266, C9, G11)", entry9.ProjectRunCloneGen);
+         Assert.AreEqual(0, entry9.Benchmark);
+         Assert.AreEqual(500, entry9.Misc1a);
+         Assert.AreEqual(119, entry9.Misc1b); //***
+         Assert.AreEqual(new DateTime(1969, 12, 31, 18, 00, 00, DateTimeKind.Local), entry9.ProjectIssuedLocal);
+         Assert.AreEqual(new DateTime(2010, 1, 2, 14, 35, 41, DateTimeKind.Local), entry9.BeginTimeLocal);
+         Assert.AreEqual(new DateTime(1999, 12, 31, 18, 00, 00, DateTimeKind.Local), entry9.EndTimeLocal);
+         Assert.AreEqual(new DateTime(2010, 1, 5, 14, 35, 41, DateTimeKind.Local), entry9.DueTimeLocal);
+         Assert.AreEqual(3, entry9.ExpirationInDays);
+         //preferred
+         Assert.AreEqual("http://www.stanford.edu/~pande/Win32/x86/NVIDIA/G80/Core_11.fah", entry9.CoreDownloadUrl.AbsoluteUri);
+         Assert.AreEqual("11", entry9.CoreNumber);
+         //core name
+         Assert.AreEqual(1, entry9.CpuType);
+         Assert.AreEqual(687, entry9.CpuSpecies);
+         Assert.AreEqual("Pentium II/III", entry9.CpuString);
+         Assert.AreEqual(1, entry9.OsType);
+         Assert.AreEqual(0, entry9.OsSpecies);
+         Assert.AreEqual("Windows", entry9.OsString);
+         Assert.AreEqual(0, entry9.NumberOfSmpCores);
+         Assert.AreEqual(0, entry9.UseCores);
+         Assert.AreEqual("", entry9.WorkUnitTag); //***
+         Assert.AreEqual(1064917390, entry9.Flops);
+         Assert.AreEqual(1064.91739, entry9.MegaFlops);
+         Assert.AreEqual("1064.91739", entry9.MegaFlops.ToString(CultureInfo.InvariantCulture));
+         Assert.AreEqual(6141, entry9.Memory);
+         Assert.AreEqual(258, entry9.GpuMemory);
+         Assert.AreEqual(true, entry9.AssignmentInfoPresent);
+         Assert.AreEqual(new DateTime(2010, 1, 2, 14, 35, 35, DateTimeKind.Local), entry9.AssignmentTimeStampLocal);
+         Assert.AreEqual("B98B6C2F", entry9.AssignmentInfoChecksum);
+         Assert.AreEqual("171.67.108.26", entry9.CollectionServerIP);
+         Assert.AreEqual(524286976, entry9.PacketSizeLimit);
+         Assert.AreEqual("harlam357", entry9.FoldingID);
+         Assert.AreEqual("32", entry9.Team);
+         Assert.AreEqual("524BA6317A0D763D", entry9.ID);
+         Assert.AreEqual("524BA6317A0D763A", entry9.UserID);
+         Assert.AreEqual(3, entry9.MachineID);
+         Assert.AreEqual(89249, entry9.WuDataFileSize);
+         Assert.AreEqual("Folding@Home", entry9.WorkUnitType);
       }
       
       [Test]
@@ -548,7 +613,15 @@ namespace HFM.Instances.Tests
       {
          byte[] b = QueueEntry.HexToData("99D3CF222E1FA00");
          Array.Reverse(b);
-         string UserID = QueueEntry.GetUserIDFromUserAndMachineID(b, 16);
+         string UserID = QueueEntry.GetUserIDFromUserAndMachineID(b, 16, false);
+         Assert.AreEqual("99D3CF222E1F9F0", UserID);
+         
+         b = QueueEntry.HexToData("00FAE122F23C9D09");
+         UserID = QueueEntry.GetUserIDFromUserAndMachineID(b, 16, false);
+         Assert.AreEqual("99D3CF222E1F9F0", UserID);
+
+         b = QueueEntry.HexToData("99D3CF222E1FA00");
+         UserID = QueueEntry.GetUserIDFromUserAndMachineID(b, 16, true);
          Assert.AreEqual("99D3CF222E1F9F0", UserID);
       }
    }
