@@ -8,11 +8,14 @@ del /S /Q %1\*.*
 echo Deploying Assemblies...
 copy /y HFM.exe %1
 copy /y HFM.exe.config %1
+copy /y HFM.Framework.dll %1
 copy /Y HFM.Helpers.dll %1
 copy /Y HFM.Instances.dll %1
 copy /Y HFM.Instrumentation.dll %1
+copy /Y HFM.Log.dll %1
 copy /Y HFM.Preferences.dll %1
 copy /Y HFM.Proteins.dll %1
+copy /Y HFM.Queue.dll %1
 copy /Y HTMLparser.dll %1
 copy /Y harlam357.Security.dll %1
 copy /Y harlam357.Windows.Forms.dll %1

@@ -5,7 +5,7 @@
    <PropertyGroup>
       <Major>0</Major>
       <Minor>4</Minor>
-      <Build>7</Build>
+      <Build>8</Build>
       <Revision>0</Revision>
    </PropertyGroup>
 
@@ -15,7 +15,7 @@
       <NCoverExcludeList>System.Runtime.CompilerServices.CompilerGeneratedAttribute</NCoverExcludeList>
       <NCoverExpPath>&quot;$(ProgramFiles)\NCoverExplorer\NCoverExplorer.Console.exe&quot;</NCoverExpPath>
       <NUnitPath>&quot;$(ProgramFiles)\NUnit 2.4.8\bin\nunit-console-x86.exe&quot;</NUnitPath>
-      <NUnitAsmList>HFM.Helpers;HFM.Instances;HFM.Instrumentation;HFM.Preferences;HFM.Proteins</NUnitAsmList>
+      <NUnitAsmList>HFM.Helpers;HFM.Instances;HFM.Instrumentation;HFM.Log;HFM.Preferences;HFM.Proteins;HFM.Queue</NUnitAsmList>
    </PropertyGroup>
 
    <ItemGroup>
@@ -55,7 +55,9 @@
    <Target Name="NUnit">
       <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Helpers.Tests\bin\Release\HFM.Helpers.Tests.dll /xml=HFM.Helpers.Tests.Results.xml //a $(NUnitAsmList) //ea $(NCoverExcludeList) //x HFM.Helpers.Tests.Coverage.xml" />
       <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Instances.Tests\bin\Release\HFM.Instances.Tests.dll /xml=HFM.Instances.Tests.Results.xml //a $(NUnitAsmList) //ea $(NCoverExcludeList) //x HFM.Instances.Tests.Coverage.xml" />
+      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Log.Tests\bin\Release\HFM.Log.Tests.dll /xml=HFM.Log.Tests.Results.xml //a $(NUnitAsmList) //ea $(NCoverExcludeList) //x HFM.Log.Tests.Coverage.xml" />
       <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Proteins.Tests\bin\Release\HFM.Proteins.Tests.dll /xml=HFM.Proteins.Tests.Results.xml //a $(NUnitAsmList) //ea $(NCoverExcludeList) //x HFM.Proteins.Tests.Coverage.xml" />
+      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Queue.Tests\bin\Release\HFM.Queue.Tests.dll /xml=HFM.Queue.Tests.Results.xml //a $(NUnitAsmList) //ea $(NCoverExcludeList) //x HFM.Queue.Tests.Coverage.xml" />
       <Exec Command="$(NCoverExpPath) *.Tests.Coverage.xml /s:Coverage.xml" />
    </Target>
 
