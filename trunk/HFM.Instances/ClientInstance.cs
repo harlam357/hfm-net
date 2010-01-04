@@ -1161,13 +1161,20 @@ namespace HFM.Instances
       /// <returns>Parsed UnitInfo Array or null on Failure.</returns>
       private UnitInfo[] ParseQueueFile()
       {
+         // Make sure the queue file exists first.  Would like to avoid the exception overhead.
+         string CachedQueueFilePath = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedQueueName);
+         if (File.Exists(CachedQueueFilePath) == false)
+         {
+            return null;
+         }
+
          UnitInfo[] units = null;
 
          // queue.dat is not required to get a reading, if something goes wrong
          // just catch, log, and continue with parsing log files
          try
          {
-            _qr.ReadQueue(System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedQueueName));
+            _qr.ReadQueue(CachedQueueFilePath);
             if (_qr.QueueReadOk)
             {
                units = new UnitInfo[10];
