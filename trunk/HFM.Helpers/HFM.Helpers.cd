@@ -10,7 +10,7 @@
   <Class Name="HFM.Helpers.StringOps">
     <Position X="2.75" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>gAAgEAQAEAQAAAAAYhAQEIAQAAAAEAAABQICAQgAAAQ=</HashCode>
+      <HashCode>gEAgFAQAEAQgBAAAYhIQFIAQAgAAEAAABQIGAQgAAAQ=</HashCode>
       <FileName>StringOps.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -31,21 +31,14 @@
   <Class Name="HFM.Helpers.RegistryOps">
     <Position X="7.5" Y="2.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAIAACIAAAAAAAAAAAAAAAAAAAAAQCAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAIAACIAAAAAAAAAAAAAAAAAAAAAQCAAAAAAAACAA=</HashCode>
       <FileName>RegistryOps.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Interface Name="HFM.Helpers.IOwnedByClientInstance">
-    <Position X="7.5" Y="4.75" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAABAAAACAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>IOwnedByClientInstance.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
   <Enum Name="HFM.Helpers.DownloadType">
     <Position X="5.5" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAIAAAAAAAAAAAAQAQAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAEAAAAAEIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>NetworkOps.cs</FileName>
     </TypeIdentifier>
   </Enum>

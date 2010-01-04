@@ -92,6 +92,7 @@ namespace HFM.Classes
          // 
          // tableLayoutPanel1
          // 
+         this.tableLayoutPanel1.AutoScroll = true;
          this.tableLayoutPanel1.ColumnCount = 2;
          this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 90F));
          this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -137,7 +138,7 @@ namespace HFM.Classes
          this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
          this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
          this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-         this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(5);
+         this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(7, 5, 9, 5);
          this.tableLayoutPanel1.RowCount = 22;
          this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
          this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
@@ -160,7 +161,7 @@ namespace HFM.Classes
          this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
          this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
          this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
-         this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+         this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
          this.tableLayoutPanel1.Size = new System.Drawing.Size(236, 486);
          this.tableLayoutPanel1.TabIndex = 35;
          // 
@@ -170,19 +171,19 @@ namespace HFM.Classes
          this.cboQueueIndex.Dock = System.Windows.Forms.DockStyle.Fill;
          this.cboQueueIndex.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
          this.cboQueueIndex.FormattingEnabled = true;
-         this.cboQueueIndex.Location = new System.Drawing.Point(8, 8);
+         this.cboQueueIndex.Location = new System.Drawing.Point(10, 8);
          this.cboQueueIndex.Name = "cboQueueIndex";
-         this.cboQueueIndex.Size = new System.Drawing.Size(220, 21);
+         this.cboQueueIndex.Size = new System.Drawing.Size(214, 21);
          this.cboQueueIndex.TabIndex = 0;
          this.cboQueueIndex.SelectedIndexChanged += new System.EventHandler(this.cboQueueIndex_SelectedIndexChanged);
          // 
          // txtMachineID
          // 
          this.txtMachineID.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtMachineID.Location = new System.Drawing.Point(98, 457);
+         this.txtMachineID.Location = new System.Drawing.Point(100, 457);
          this.txtMachineID.Name = "txtMachineID";
          this.txtMachineID.ReadOnly = true;
-         this.txtMachineID.Size = new System.Drawing.Size(130, 20);
+         this.txtMachineID.Size = new System.Drawing.Size(124, 20);
          this.txtMachineID.TabIndex = 34;
          this.txtMachineID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
@@ -190,7 +191,7 @@ namespace HFM.Classes
          // 
          this.labelWrapper1.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.labelWrapper1.AutoSize = true;
-         this.labelWrapper1.Location = new System.Drawing.Point(8, 45);
+         this.labelWrapper1.Location = new System.Drawing.Point(10, 45);
          this.labelWrapper1.Name = "labelWrapper1";
          this.labelWrapper1.Size = new System.Drawing.Size(40, 13);
          this.labelWrapper1.TabIndex = 1;
@@ -200,7 +201,7 @@ namespace HFM.Classes
          // 
          this.lblMachineID.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblMachineID.AutoSize = true;
-         this.lblMachineID.Location = new System.Drawing.Point(8, 459);
+         this.lblMachineID.Location = new System.Drawing.Point(10, 459);
          this.lblMachineID.Name = "lblMachineID";
          this.lblMachineID.Size = new System.Drawing.Size(65, 13);
          this.lblMachineID.TabIndex = 17;
@@ -209,30 +210,30 @@ namespace HFM.Classes
          // txtStatus
          // 
          this.txtStatus.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtStatus.Location = new System.Drawing.Point(98, 43);
+         this.txtStatus.Location = new System.Drawing.Point(100, 43);
          this.txtStatus.Name = "txtStatus";
          this.txtStatus.ReadOnly = true;
-         this.txtStatus.Size = new System.Drawing.Size(130, 20);
+         this.txtStatus.Size = new System.Drawing.Size(124, 20);
          this.txtStatus.TabIndex = 18;
          this.txtStatus.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
          // txtUserID
          // 
          this.txtUserID.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtUserID.Location = new System.Drawing.Point(98, 434);
+         this.txtUserID.Location = new System.Drawing.Point(100, 434);
          this.txtUserID.Name = "txtUserID";
          this.txtUserID.ReadOnly = true;
-         this.txtUserID.Size = new System.Drawing.Size(130, 20);
+         this.txtUserID.Size = new System.Drawing.Size(124, 20);
          this.txtUserID.TabIndex = 33;
          this.txtUserID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
          // txtCoresToUse
          // 
          this.txtCoresToUse.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtCoresToUse.Location = new System.Drawing.Point(98, 411);
+         this.txtCoresToUse.Location = new System.Drawing.Point(100, 411);
          this.txtCoresToUse.Name = "txtCoresToUse";
          this.txtCoresToUse.ReadOnly = true;
-         this.txtCoresToUse.Size = new System.Drawing.Size(130, 20);
+         this.txtCoresToUse.Size = new System.Drawing.Size(124, 20);
          this.txtCoresToUse.TabIndex = 32;
          this.txtCoresToUse.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
@@ -240,7 +241,7 @@ namespace HFM.Classes
          // 
          this.lblUserID.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblUserID.AutoSize = true;
-         this.lblUserID.Location = new System.Drawing.Point(8, 436);
+         this.lblUserID.Location = new System.Drawing.Point(10, 436);
          this.lblUserID.Name = "lblUserID";
          this.lblUserID.Size = new System.Drawing.Size(46, 13);
          this.lblUserID.TabIndex = 16;
@@ -249,20 +250,20 @@ namespace HFM.Classes
          // txtGpuMemory
          // 
          this.txtGpuMemory.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtGpuMemory.Location = new System.Drawing.Point(98, 342);
+         this.txtGpuMemory.Location = new System.Drawing.Point(100, 342);
          this.txtGpuMemory.Name = "txtGpuMemory";
          this.txtGpuMemory.ReadOnly = true;
-         this.txtGpuMemory.Size = new System.Drawing.Size(130, 20);
+         this.txtGpuMemory.Size = new System.Drawing.Size(124, 20);
          this.txtGpuMemory.TabIndex = 31;
          this.txtGpuMemory.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
          // txtSmpCores
          // 
          this.txtSmpCores.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtSmpCores.Location = new System.Drawing.Point(98, 388);
+         this.txtSmpCores.Location = new System.Drawing.Point(100, 388);
          this.txtSmpCores.Name = "txtSmpCores";
          this.txtSmpCores.ReadOnly = true;
-         this.txtSmpCores.Size = new System.Drawing.Size(130, 20);
+         this.txtSmpCores.Size = new System.Drawing.Size(124, 20);
          this.txtSmpCores.TabIndex = 26;
          this.txtSmpCores.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
@@ -270,7 +271,7 @@ namespace HFM.Classes
          // 
          this.lblCoresToUse.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblCoresToUse.AutoSize = true;
-         this.lblCoresToUse.Location = new System.Drawing.Point(8, 413);
+         this.lblCoresToUse.Location = new System.Drawing.Point(10, 413);
          this.lblCoresToUse.Name = "lblCoresToUse";
          this.lblCoresToUse.Size = new System.Drawing.Size(75, 13);
          this.lblCoresToUse.TabIndex = 15;
@@ -279,10 +280,10 @@ namespace HFM.Classes
          // txtAverageUploadRate
          // 
          this.txtAverageUploadRate.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtAverageUploadRate.Location = new System.Drawing.Point(98, 250);
+         this.txtAverageUploadRate.Location = new System.Drawing.Point(100, 250);
          this.txtAverageUploadRate.Name = "txtAverageUploadRate";
          this.txtAverageUploadRate.ReadOnly = true;
-         this.txtAverageUploadRate.Size = new System.Drawing.Size(130, 20);
+         this.txtAverageUploadRate.Size = new System.Drawing.Size(124, 20);
          this.txtAverageUploadRate.TabIndex = 27;
          this.txtAverageUploadRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
@@ -290,7 +291,7 @@ namespace HFM.Classes
          // 
          this.lblGpuMemory.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblGpuMemory.AutoSize = true;
-         this.lblGpuMemory.Location = new System.Drawing.Point(8, 344);
+         this.lblGpuMemory.Location = new System.Drawing.Point(10, 344);
          this.lblGpuMemory.Name = "lblGpuMemory";
          this.lblGpuMemory.Size = new System.Drawing.Size(73, 13);
          this.lblGpuMemory.TabIndex = 14;
@@ -300,7 +301,7 @@ namespace HFM.Classes
          // 
          this.lblCredit.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblCredit.AutoSize = true;
-         this.lblCredit.Location = new System.Drawing.Point(8, 68);
+         this.lblCredit.Location = new System.Drawing.Point(10, 68);
          this.lblCredit.Name = "lblCredit";
          this.lblCredit.Size = new System.Drawing.Size(37, 13);
          this.lblCredit.TabIndex = 2;
@@ -310,7 +311,7 @@ namespace HFM.Classes
          // 
          this.lblBenchmark.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblBenchmark.AutoSize = true;
-         this.lblBenchmark.Location = new System.Drawing.Point(8, 367);
+         this.lblBenchmark.Location = new System.Drawing.Point(10, 367);
          this.lblBenchmark.Name = "lblBenchmark";
          this.lblBenchmark.Size = new System.Drawing.Size(64, 13);
          this.lblBenchmark.TabIndex = 11;
@@ -320,7 +321,7 @@ namespace HFM.Classes
          // 
          this.lblSmpCores.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblSmpCores.AutoSize = true;
-         this.lblSmpCores.Location = new System.Drawing.Point(8, 390);
+         this.lblSmpCores.Location = new System.Drawing.Point(10, 390);
          this.lblSmpCores.Name = "lblSmpCores";
          this.lblSmpCores.Size = new System.Drawing.Size(63, 13);
          this.lblSmpCores.TabIndex = 12;
@@ -329,10 +330,10 @@ namespace HFM.Classes
          // txtMemory
          // 
          this.txtMemory.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtMemory.Location = new System.Drawing.Point(98, 319);
+         this.txtMemory.Location = new System.Drawing.Point(100, 319);
          this.txtMemory.Name = "txtMemory";
          this.txtMemory.ReadOnly = true;
-         this.txtMemory.Size = new System.Drawing.Size(130, 20);
+         this.txtMemory.Size = new System.Drawing.Size(124, 20);
          this.txtMemory.TabIndex = 30;
          this.txtMemory.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
@@ -340,7 +341,7 @@ namespace HFM.Classes
          // 
          this.lblAverageUploadRate.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblAverageUploadRate.AutoSize = true;
-         this.lblAverageUploadRate.Location = new System.Drawing.Point(8, 252);
+         this.lblAverageUploadRate.Location = new System.Drawing.Point(10, 252);
          this.lblAverageUploadRate.Name = "lblAverageUploadRate";
          this.lblAverageUploadRate.Size = new System.Drawing.Size(69, 13);
          this.lblAverageUploadRate.TabIndex = 10;
@@ -349,30 +350,30 @@ namespace HFM.Classes
          // txtAverageDownloadRate
          // 
          this.txtAverageDownloadRate.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtAverageDownloadRate.Location = new System.Drawing.Point(98, 227);
+         this.txtAverageDownloadRate.Location = new System.Drawing.Point(100, 227);
          this.txtAverageDownloadRate.Name = "txtAverageDownloadRate";
          this.txtAverageDownloadRate.ReadOnly = true;
-         this.txtAverageDownloadRate.Size = new System.Drawing.Size(130, 20);
+         this.txtAverageDownloadRate.Size = new System.Drawing.Size(124, 20);
          this.txtAverageDownloadRate.TabIndex = 26;
          this.txtAverageDownloadRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
          // txtCredit
          // 
          this.txtCredit.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtCredit.Location = new System.Drawing.Point(98, 66);
+         this.txtCredit.Location = new System.Drawing.Point(100, 66);
          this.txtCredit.Name = "txtCredit";
          this.txtCredit.ReadOnly = true;
-         this.txtCredit.Size = new System.Drawing.Size(130, 20);
+         this.txtCredit.Size = new System.Drawing.Size(124, 20);
          this.txtCredit.TabIndex = 19;
          this.txtCredit.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
          // txtOsType
          // 
          this.txtOsType.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtOsType.Location = new System.Drawing.Point(98, 296);
+         this.txtOsType.Location = new System.Drawing.Point(100, 296);
          this.txtOsType.Name = "txtOsType";
          this.txtOsType.ReadOnly = true;
-         this.txtOsType.Size = new System.Drawing.Size(130, 20);
+         this.txtOsType.Size = new System.Drawing.Size(124, 20);
          this.txtOsType.TabIndex = 29;
          this.txtOsType.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
@@ -380,7 +381,7 @@ namespace HFM.Classes
          // 
          this.lblBeginDate.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblBeginDate.AutoSize = true;
-         this.lblBeginDate.Location = new System.Drawing.Point(8, 91);
+         this.lblBeginDate.Location = new System.Drawing.Point(10, 91);
          this.lblBeginDate.Name = "lblBeginDate";
          this.lblBeginDate.Size = new System.Drawing.Size(63, 13);
          this.lblBeginDate.TabIndex = 3;
@@ -390,7 +391,7 @@ namespace HFM.Classes
          // 
          this.lblMemory.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblMemory.AutoSize = true;
-         this.lblMemory.Location = new System.Drawing.Point(8, 321);
+         this.lblMemory.Location = new System.Drawing.Point(10, 321);
          this.lblMemory.Name = "lblMemory";
          this.lblMemory.Size = new System.Drawing.Size(47, 13);
          this.lblMemory.TabIndex = 13;
@@ -399,10 +400,10 @@ namespace HFM.Classes
          // txtCpuType
          // 
          this.txtCpuType.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtCpuType.Location = new System.Drawing.Point(98, 273);
+         this.txtCpuType.Location = new System.Drawing.Point(100, 273);
          this.txtCpuType.Name = "txtCpuType";
          this.txtCpuType.ReadOnly = true;
-         this.txtCpuType.Size = new System.Drawing.Size(130, 20);
+         this.txtCpuType.Size = new System.Drawing.Size(124, 20);
          this.txtCpuType.TabIndex = 28;
          this.txtCpuType.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
@@ -410,7 +411,7 @@ namespace HFM.Classes
          // 
          this.lblAverageDownloadRate.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblAverageDownloadRate.AutoSize = true;
-         this.lblAverageDownloadRate.Location = new System.Drawing.Point(8, 229);
+         this.lblAverageDownloadRate.Location = new System.Drawing.Point(10, 229);
          this.lblAverageDownloadRate.Name = "lblAverageDownloadRate";
          this.lblAverageDownloadRate.Size = new System.Drawing.Size(83, 13);
          this.lblAverageDownloadRate.TabIndex = 9;
@@ -419,20 +420,20 @@ namespace HFM.Classes
          // txtBeginDate
          // 
          this.txtBeginDate.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtBeginDate.Location = new System.Drawing.Point(98, 89);
+         this.txtBeginDate.Location = new System.Drawing.Point(100, 89);
          this.txtBeginDate.Name = "txtBeginDate";
          this.txtBeginDate.ReadOnly = true;
-         this.txtBeginDate.Size = new System.Drawing.Size(130, 20);
+         this.txtBeginDate.Size = new System.Drawing.Size(124, 20);
          this.txtBeginDate.TabIndex = 20;
          this.txtBeginDate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
          // txtPerformanceFraction
          // 
          this.txtPerformanceFraction.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtPerformanceFraction.Location = new System.Drawing.Point(98, 158);
+         this.txtPerformanceFraction.Location = new System.Drawing.Point(100, 158);
          this.txtPerformanceFraction.Name = "txtPerformanceFraction";
          this.txtPerformanceFraction.ReadOnly = true;
-         this.txtPerformanceFraction.Size = new System.Drawing.Size(130, 20);
+         this.txtPerformanceFraction.Size = new System.Drawing.Size(124, 20);
          this.txtPerformanceFraction.TabIndex = 23;
          this.txtPerformanceFraction.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
@@ -440,7 +441,7 @@ namespace HFM.Classes
          // 
          this.lblEndDate.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblEndDate.AutoSize = true;
-         this.lblEndDate.Location = new System.Drawing.Point(8, 114);
+         this.lblEndDate.Location = new System.Drawing.Point(10, 114);
          this.lblEndDate.Name = "lblEndDate";
          this.lblEndDate.Size = new System.Drawing.Size(55, 13);
          this.lblEndDate.TabIndex = 4;
@@ -450,7 +451,7 @@ namespace HFM.Classes
          // 
          this.lblOsType.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblOsType.AutoSize = true;
-         this.lblOsType.Location = new System.Drawing.Point(8, 298);
+         this.lblOsType.Location = new System.Drawing.Point(10, 298);
          this.lblOsType.Name = "lblOsType";
          this.lblOsType.Size = new System.Drawing.Size(25, 13);
          this.lblOsType.TabIndex = 12;
@@ -460,7 +461,7 @@ namespace HFM.Classes
          // 
          this.lblPerformanceFraction.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblPerformanceFraction.AutoSize = true;
-         this.lblPerformanceFraction.Location = new System.Drawing.Point(8, 160);
+         this.lblPerformanceFraction.Location = new System.Drawing.Point(10, 160);
          this.lblPerformanceFraction.Name = "lblPerformanceFraction";
          this.lblPerformanceFraction.Size = new System.Drawing.Size(73, 13);
          this.lblPerformanceFraction.TabIndex = 6;
@@ -469,20 +470,20 @@ namespace HFM.Classes
          // txtMegaFlops
          // 
          this.txtMegaFlops.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtMegaFlops.Location = new System.Drawing.Point(98, 181);
+         this.txtMegaFlops.Location = new System.Drawing.Point(100, 181);
          this.txtMegaFlops.Name = "txtMegaFlops";
          this.txtMegaFlops.ReadOnly = true;
-         this.txtMegaFlops.Size = new System.Drawing.Size(130, 20);
+         this.txtMegaFlops.Size = new System.Drawing.Size(124, 20);
          this.txtMegaFlops.TabIndex = 24;
          this.txtMegaFlops.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
          // txtEndDate
          // 
          this.txtEndDate.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtEndDate.Location = new System.Drawing.Point(98, 112);
+         this.txtEndDate.Location = new System.Drawing.Point(100, 112);
          this.txtEndDate.Name = "txtEndDate";
          this.txtEndDate.ReadOnly = true;
-         this.txtEndDate.Size = new System.Drawing.Size(130, 20);
+         this.txtEndDate.Size = new System.Drawing.Size(124, 20);
          this.txtEndDate.TabIndex = 21;
          this.txtEndDate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
@@ -490,7 +491,7 @@ namespace HFM.Classes
          // 
          this.lblCpuType.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblCpuType.AutoSize = true;
-         this.lblCpuType.Location = new System.Drawing.Point(8, 275);
+         this.lblCpuType.Location = new System.Drawing.Point(10, 275);
          this.lblCpuType.Name = "lblCpuType";
          this.lblCpuType.Size = new System.Drawing.Size(59, 13);
          this.lblCpuType.TabIndex = 11;
@@ -500,7 +501,7 @@ namespace HFM.Classes
          // 
          this.lblSpeedFactor.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblSpeedFactor.AutoSize = true;
-         this.lblSpeedFactor.Location = new System.Drawing.Point(8, 137);
+         this.lblSpeedFactor.Location = new System.Drawing.Point(10, 137);
          this.lblSpeedFactor.Name = "lblSpeedFactor";
          this.lblSpeedFactor.Size = new System.Drawing.Size(74, 13);
          this.lblSpeedFactor.TabIndex = 5;
@@ -509,10 +510,10 @@ namespace HFM.Classes
          // txtSpeedFactor
          // 
          this.txtSpeedFactor.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtSpeedFactor.Location = new System.Drawing.Point(98, 135);
+         this.txtSpeedFactor.Location = new System.Drawing.Point(100, 135);
          this.txtSpeedFactor.Name = "txtSpeedFactor";
          this.txtSpeedFactor.ReadOnly = true;
-         this.txtSpeedFactor.Size = new System.Drawing.Size(130, 20);
+         this.txtSpeedFactor.Size = new System.Drawing.Size(124, 20);
          this.txtSpeedFactor.TabIndex = 22;
          this.txtSpeedFactor.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
@@ -520,7 +521,7 @@ namespace HFM.Classes
          // 
          this.lblMegaFlops.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblMegaFlops.AutoSize = true;
-         this.lblMegaFlops.Location = new System.Drawing.Point(8, 183);
+         this.lblMegaFlops.Location = new System.Drawing.Point(10, 183);
          this.lblMegaFlops.Name = "lblMegaFlops";
          this.lblMegaFlops.Size = new System.Drawing.Size(62, 13);
          this.lblMegaFlops.TabIndex = 7;
@@ -530,7 +531,7 @@ namespace HFM.Classes
          // 
          this.lblServer.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblServer.AutoSize = true;
-         this.lblServer.Location = new System.Drawing.Point(8, 206);
+         this.lblServer.Location = new System.Drawing.Point(10, 206);
          this.lblServer.Name = "lblServer";
          this.lblServer.Size = new System.Drawing.Size(41, 13);
          this.lblServer.TabIndex = 8;
@@ -539,20 +540,20 @@ namespace HFM.Classes
          // txtServer
          // 
          this.txtServer.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtServer.Location = new System.Drawing.Point(98, 204);
+         this.txtServer.Location = new System.Drawing.Point(100, 204);
          this.txtServer.Name = "txtServer";
          this.txtServer.ReadOnly = true;
-         this.txtServer.Size = new System.Drawing.Size(130, 20);
+         this.txtServer.Size = new System.Drawing.Size(124, 20);
          this.txtServer.TabIndex = 25;
          this.txtServer.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
          // txtBenchmark
          // 
          this.txtBenchmark.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtBenchmark.Location = new System.Drawing.Point(98, 365);
+         this.txtBenchmark.Location = new System.Drawing.Point(100, 365);
          this.txtBenchmark.Name = "txtBenchmark";
          this.txtBenchmark.ReadOnly = true;
-         this.txtBenchmark.Size = new System.Drawing.Size(130, 20);
+         this.txtBenchmark.Size = new System.Drawing.Size(124, 20);
          this.txtBenchmark.TabIndex = 25;
          this.txtBenchmark.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 

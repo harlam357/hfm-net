@@ -1,38 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Font Name="Tahoma" Size="8.25" />
   <Class Name="HFM.Preferences.PreferenceSet">
     <Position X="0.5" Y="0.5" Width="2" />
     <TypeIdentifier>
+      <HashCode>EBa0yNDls7Tb0oX0L4M/DaCCnsa1GCYH+NiQ1SCjwWc=</HashCode>
       <FileName>PreferenceSet.cs</FileName>
-      <HashCode>ARakgNDlM7TLwoT0LoEXBaCCpoa1GDYG+NiAxSGjwWc=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="HFM.Preferences.Properties.Settings">
     <Position X="2.75" Y="0.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>ABCAgADkITAKgoBUCgARICECggARACYGgBCAQAAigAQ=</HashCode>
+      <HashCode>ABCQgADkITAbgoFUCgIRISECigAVACYGgBCAQAAigAQ=</HashCode>
     </TypeIdentifier>
   </Class>
   <Enum Name="HFM.Preferences.ePpdCalculation">
     <Position X="4.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <FileName>PreferenceSet.cs</FileName>
       <HashCode>AAAAAAAABAAAAAAAAAAAAAAAAAgAQAAAAAAAAAAAAAI=</HashCode>
+      <FileName>PreferenceSet.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="HFM.Preferences.eTimeStyle">
     <Position X="4.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <FileName>PreferenceSet.cs</FileName>
       <HashCode>AAAAAAAAAAABAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
-    </TypeIdentifier>
-  </Enum>
-  <Enum Name="HFM.Preferences.ClientStatus">
-    <Position X="4.75" Y="3.25" Width="1.5" />
-    <TypeIdentifier>
       <FileName>PreferenceSet.cs</FileName>
-      <HashCode>QAAgAACAAAIAAAEAAAgAAAAAAAAAAAAIgAAAAAAAABA=</HashCode>
     </TypeIdentifier>
   </Enum>
+  <Font Name="Tahoma" Size="8.25" />
 </ClassDiagram>

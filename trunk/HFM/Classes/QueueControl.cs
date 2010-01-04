@@ -233,34 +233,40 @@ namespace HFM.Classes
             {
                case ClientType.Unknown:
                case ClientType.Standard:
-                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.GpuMemory].Height = 0;
-                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = DefaultRowHeight;
-                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = 0;
-                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = 0;
+                  // Set Rows to Zero Height and Hide Labels First
                   txtGpuMemory.Visible = false;
-                  txtBenchmark.Visible = true;
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.GpuMemory].Height = 0;
                   txtSmpCores.Visible = false;
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = 0;
                   txtCoresToUse.Visible = false;
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = 0;
+                  // Then Show the Client Specific Queue Row(s)
+                  txtBenchmark.Visible = true;
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = DefaultRowHeight;
                   break;
                case ClientType.GPU:
-                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.GpuMemory].Height = DefaultRowHeight;
-                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = 0;
-                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = 0;
-                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = 0;
-                  txtGpuMemory.Visible = true;
+                  // Set Rows to Zero Height and Hide Labels First
                   txtBenchmark.Visible = false;
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = 0;
                   txtSmpCores.Visible = false;
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = 0;
                   txtCoresToUse.Visible = false;
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = 0;
+                  // Then Show the Client Specific Queue Row(s)
+                  txtGpuMemory.Visible = true;
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.GpuMemory].Height = DefaultRowHeight;
                   break;
                case ClientType.SMP:
-                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.GpuMemory].Height = 0;
-                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = 0;
-                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = DefaultRowHeight;
-                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = DefaultRowHeight;
+                  // Set Rows to Zero Height and Hide Labels First
                   txtGpuMemory.Visible = false;
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.GpuMemory].Height = 0;
                   txtBenchmark.Visible = false;
-                  txtSmpCores.Visible = true;
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = 0;
+                  // Then Show the Client Specific Queue Row(s)
                   txtCoresToUse.Visible = true;
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = DefaultRowHeight;
+                  txtSmpCores.Visible = true;
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = DefaultRowHeight;
                   break;
             }
          }
