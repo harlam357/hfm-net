@@ -26,6 +26,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 
+using HFM.Framework;
 using HFM.Instrumentation;
 using HFM.Preferences;
 using HFM.Helpers;
@@ -251,7 +252,7 @@ namespace HFM.Instances
          XMLOps.setXmlNode(xmlData, "Protein/Contact", p.Contact);
          
          StringBuilder sb = new StringBuilder();
-         foreach (LogLine line in Instance.CurrentLogLines)
+         foreach (ILogLine line in Instance.CurrentLogLines)
          {
             sb.Append(line.LineRaw);
             sb.Append("<BR>");

@@ -31,6 +31,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Collections.Generic;
 
+using HFM.Framework;
 using HFM.Helpers;
 using HFM.Preferences;
 using HFM.Proteins;

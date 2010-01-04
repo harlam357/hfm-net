@@ -1,7 +1,7 @@
 /*
  * HFM.NET - Unit Info Class
  * Copyright (C) 2006 David Rawling
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,42 +25,23 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
+using HFM.Framework;
 using HFM.Instrumentation;
 using HFM.Preferences;
-using HFM.Helpers;
 using HFM.Proteins;
 
 namespace HFM.Instances
 {
-   #region Enum
-   public enum WorkUnitResult
-   {
-      Unknown,
-      FinishedUnit,
-      EarlyUnitEnd,
-      UnstableMachine,
-      Interrupted,
-      CoreOutdated
-   }
-   #endregion
-
    /// <summary>
    /// Contains the State of the Work Unit in Progress
    /// </summary>
    [Serializable]
-   public class UnitInfo : IOwnedByClientInstance
+   public class UnitInfo : IUnitInfo
    {
       #region Const
       // Folding ID and Team Defaults
       internal const string FoldingIDDefault = "Unknown";
       internal const int TeamDefault = 0;
-      
-      // Work Unit Result Strings
-      private const string FinishedUnit = "FINISHED_UNIT";
-      private const string EarlyUnitEnd = "EARLY_UNIT_END";
-      private const string UnstableMachine = "UNSTABLE_MACHINE";
-      private const string Interrupted = "INTERRUPTED";
-      private const string CoreOutdated = "CORE_OUTDATED";
       #endregion
 
       #region Owner Data Properties
@@ -99,7 +80,7 @@ namespace HFM.Instances
       /// <summary>
       /// Local time the logs used to generate this UnitInfo were retrieved
       /// </summary>
-      internal DateTime UnitRetrievalTime
+      public DateTime UnitRetrievalTime
       {
          get { return _UnitRetrievalTime; }
       } 
@@ -113,7 +94,7 @@ namespace HFM.Instances
       /// <summary>
       /// The Folding ID (Username) attached to this work unit
       /// </summary>
-      internal string FoldingID
+      public string FoldingID
       {
          get { return _FoldingID; }
          set { _FoldingID = value; }
@@ -126,7 +107,7 @@ namespace HFM.Instances
       /// <summary>
       /// The Team number attached to this work unit
       /// </summary>
-      internal Int32 Team
+      public Int32 Team
       {
          get { return _Team; }
          set { _Team = value; }
@@ -155,8 +136,6 @@ namespace HFM.Instances
          _Team = team;
          
          Init();
-         // Init sets the CurrentProtein Property, which calls ClearUnitFrameData()
-         //ClearUnitFrameData();
       } 
 
       private void Init()
@@ -203,7 +182,7 @@ namespace HFM.Instances
       /// <summary>
       /// Date/time the unit was downloaded
       /// </summary>
-      internal DateTime DownloadTime
+      public DateTime DownloadTime
       {
          get { return _DownloadTime; }
          set { _DownloadTime = value; }
@@ -212,7 +191,7 @@ namespace HFM.Instances
       /// <summary>
       /// Flag specifying if Download Time is Unknown
       /// </summary>
-      internal bool DownloadTimeUnknown
+      public bool DownloadTimeUnknown
       {
          get { return DownloadTime.Equals(DateTime.MinValue); }
       }
@@ -220,7 +199,7 @@ namespace HFM.Instances
       /// <summary>
       /// Work Unit Preferred Deadline
       /// </summary>
-      internal DateTime PreferredDeadline
+      public DateTime PreferredDeadline
       {
          get
          {
@@ -236,7 +215,7 @@ namespace HFM.Instances
       /// <summary>
       /// Flag specifying if Preferred Deadline is Unknown
       /// </summary>
-      internal bool PreferredDeadlineUnknown
+      public bool PreferredDeadlineUnknown
       {
          get { return PreferredDeadline.Equals(DateTime.MinValue); }
       }
@@ -244,7 +223,7 @@ namespace HFM.Instances
       /// <summary>
       /// Work Unit Preferred Deadline
       /// </summary>
-      internal DateTime FinalDeadline
+      public DateTime FinalDeadline
       {
          get
          {
@@ -260,7 +239,7 @@ namespace HFM.Instances
       /// <summary>
       /// Flag specifying if Final Deadline is Unknown
       /// </summary>
-      internal bool FinalDeadlineUnknown
+      public bool FinalDeadlineUnknown
       {
          get { return FinalDeadline.Equals(DateTime.MinValue); }
       }
@@ -272,7 +251,7 @@ namespace HFM.Instances
       /// <summary>
       /// Date/time the unit is due (preferred deadline)
       /// </summary>
-      internal DateTime DueTime
+      public DateTime DueTime
       {
          get { return _DueTime; }
          set { _DueTime = value; }
@@ -281,7 +260,7 @@ namespace HFM.Instances
       /// <summary>
       /// Flag specifying if Due Time is Unknown
       /// </summary>
-      internal bool DueTimeUnknown
+      public bool DueTimeUnknown
       {
          get { return DueTime.Equals(DateTime.MinValue); }
       }
@@ -295,7 +274,7 @@ namespace HFM.Instances
       /// Unit Start Time Stamp (Time Stamp from First Parsable Line in LogLines)
       /// </summary>
       /// <remarks>Used to Determine Status when a LogLine Time Stamp is not available - See ClientInstance.HandleReturnedStatus</remarks>
-      internal TimeSpan UnitStartTimeStamp
+      public TimeSpan UnitStartTimeStamp
       {
          get { return _UnitStartTime; }
          set { _UnitStartTime = value; }
@@ -308,7 +287,7 @@ namespace HFM.Instances
       /// <summary>
       /// Date/time the unit finished
       /// </summary>
-      internal DateTime FinishedTime
+      public DateTime FinishedTime
       {
          get { return _FinishedTime; }
          set { _FinishedTime = value; }
@@ -321,7 +300,7 @@ namespace HFM.Instances
       /// <summary>
       /// Core Version Number
       /// </summary>
-      internal string CoreVersion
+      public string CoreVersion
       {
          get { return _CoreVersion; }
          set { _CoreVersion = value; }
@@ -414,7 +393,7 @@ namespace HFM.Instances
       /// <summary>
       /// Name of the unit
       /// </summary>
-      internal String ProteinName
+      public String ProteinName
       {
          get { return _ProteinName; }
          set { _ProteinName = value; }
@@ -427,7 +406,7 @@ namespace HFM.Instances
       /// <summary>
       /// Tag string as read from the UnitInfo.txt file
       /// </summary>
-      internal string ProteinTag
+      public string ProteinTag
       {
          get { return _ProteinTag; }
          set { _ProteinTag = value; }
@@ -436,7 +415,7 @@ namespace HFM.Instances
       /// <summary>
       /// Flag specifying if Protein Tag value is Unknown
       /// </summary>
-      internal bool ProteinTagUnknown
+      public bool ProteinTagUnknown
       {
          get { return ProteinTag.Length == 0; }
       }
@@ -448,7 +427,7 @@ namespace HFM.Instances
       /// <summary>
       /// The Result of this Work Unit
       /// </summary>
-      internal WorkUnitResult UnitResult
+      public WorkUnitResult UnitResult
       {
          get { return _UnitResult; }
          set { _UnitResult = value; }
@@ -466,8 +445,27 @@ namespace HFM.Instances
          get { return _CurrentProtein; }
          set 
          {
+            if (value == null)
+            {
+               throw new ArgumentException("The given value cannot be null.");
+            }
+         
+            // Get a Reference to the Old Protein
+            Protein OldProtein = CurrentProtein;
+            // Set the New Protein
             _CurrentProtein = value;
-            ClearUnitFrameData();
+            // The Current Protein controls the length of the Unit Frame
+            // Data Array.  Resize if the frame values are not the same.
+            // We don't just want to clear the Array as there may be valid
+            // Unit Frame Data already stored within it.
+            if (OldProtein == null)
+            {
+               ClearUnitFrameData();
+            }
+            else if (OldProtein.Frames != CurrentProtein.Frames)
+            {
+               ResizeUnitFrameData();
+            }
          }
       }
       #endregion
@@ -534,7 +532,7 @@ namespace HFM.Instances
       /// <summary>
       /// Time per frame (TPF) of the unit
       /// </summary>
-      internal TimeSpan TimePerFrame
+      public TimeSpan TimePerFrame
       {
          get 
          { 
@@ -550,7 +548,7 @@ namespace HFM.Instances
       /// <summary>
       /// Units per day (UPD) rating for this unit
       /// </summary>
-      internal Double UPD
+      public Double UPD
       {
          get
          {
@@ -566,7 +564,7 @@ namespace HFM.Instances
       /// <summary>
       /// Points per day (PPD) rating for this unit
       /// </summary>
-      internal Double PPD
+      public Double PPD
       {
          get
          {
@@ -588,7 +586,7 @@ namespace HFM.Instances
       /// <summary>
       /// Esimated time of arrival (ETA) for this unit
       /// </summary>
-      internal TimeSpan ETA
+      public TimeSpan ETA
       {
          get
          {
@@ -599,7 +597,7 @@ namespace HFM.Instances
       /// <summary>
       /// Esimated Finishing Time for this unit
       /// </summary>
-      internal TimeSpan EFT
+      public TimeSpan EFT
       {
          get 
          {
@@ -619,7 +617,7 @@ namespace HFM.Instances
       #endregion
 
       #region CurrentProtein Pass-Through Properties/Methods
-      internal string WorkUnitName
+      public string WorkUnitName
       {
          get
          {
@@ -627,7 +625,7 @@ namespace HFM.Instances
          }
       }
       
-      internal double NumAtoms
+      public double NumAtoms
       {
          get
          {
@@ -635,7 +633,7 @@ namespace HFM.Instances
          }
       }
       
-      internal double Credit
+      public double Credit
       {
          get 
          {
@@ -646,12 +644,12 @@ namespace HFM.Instances
       /// <summary>
       /// Get the Credit of the Unit (including bonus)
       /// </summary>
-      internal double GetCredit()
+      public double GetCredit()
       {
          return CurrentProtein.GetCredit(EFT);
       }
 
-      internal double Frames
+      public double Frames
       {
          get
          {
@@ -659,7 +657,7 @@ namespace HFM.Instances
          }
       }
       
-      internal string Core
+      public string Core
       {
          get
          {
@@ -679,11 +677,11 @@ namespace HFM.Instances
          protected set { _FramesObserved = value; }
       }
 
-      private UnitFrame _CurrentFrame = null;
+      private IUnitFrame _CurrentFrame = null;
       /// <summary>
       /// Last Observed Frame on this Unit
       /// </summary>
-      internal UnitFrame CurrentFrame
+      public IUnitFrame CurrentFrame
       {
          get { return _CurrentFrame; }
       }
@@ -691,7 +689,7 @@ namespace HFM.Instances
       /// <summary>
       /// Timestamp from the last completed frame
       /// </summary>
-      internal TimeSpan TimeOfLastFrame
+      public TimeSpan TimeOfLastFrame
       {
          get
          {
@@ -729,25 +727,25 @@ namespace HFM.Instances
       /// <summary>
       /// Frame Data for this Unit
       /// </summary>
-      private UnitFrame[] _UnitFrames = null;
+      private IUnitFrame[] _UnitFrames = null;
       /// <summary>
       /// Frame Data for this Unit
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-      public UnitFrame[] UnitFrames
+      public IUnitFrame[] UnitFrames
       {
          get { return _UnitFrames; }
       }
       #endregion
 
-      #region Set and Clear Frame Data
+      #region Frame Data Methods
       /// <summary>
       /// Set the Current Work Unit Frame
       /// </summary>
-      internal void SetCurrentFrame(LogLine logLine, DateTimeStyles style)
+      public void SetCurrentFrame(ILogLine logLine, DateTimeStyles style)
       {
          // Check for FrameData
-         FrameData frame = logLine.LineData as FrameData;
+         IFrameData frame = logLine.LineData as IFrameData;
          if (frame == null)
          {
             // If not found, clear the LineType and get out
@@ -789,7 +787,7 @@ namespace HFM.Instances
       /// <summary>
       /// Clear the Observed Count, Current Frame Pointer, and the UnitFrames Array
       /// </summary>
-      internal void ClearUnitFrameData()
+      public void ClearUnitFrameData()
       {
          ClearCurrentFrame();
          // Now based on CurrentProtein.Frames - not 101 hard code - 11/22/09
@@ -799,10 +797,35 @@ namespace HFM.Instances
       /// <summary>
       /// Clear the Observed Count and Current Frame Pointer
       /// </summary>
-      internal void ClearCurrentFrame()
+      public void ClearCurrentFrame()
       {
          FramesObserved = 0;
          _CurrentFrame = null;
+      }
+      
+      /// <summary>
+      /// Resize the Unit Frame Data based on the Current Protein
+      /// </summary>
+      private void ResizeUnitFrameData()
+      {
+         if (_UnitFrames != null)
+         {
+            // Get Reference to Previous Array
+            IUnitFrame[] OldUnitFrames = _UnitFrames;
+            // Create New Array based on Current Protein Frame Count
+            _UnitFrames = new UnitFrame[CurrentProtein.Frames + 1];
+            
+            // We want to copy all the data from the old array to the new array.
+            // But we need to be sure that all the data will fit.  Probably won't
+            // run into this situation, but it's defensive programming.
+            int CopyLength = OldUnitFrames.Length;
+            if (_UnitFrames.Length < OldUnitFrames.Length)
+            {
+               CopyLength = _UnitFrames.Length;
+            }
+            
+            Array.Copy(OldUnitFrames, 0, _UnitFrames, 0, CopyLength);
+         }
       }
       #endregion
 
@@ -836,7 +859,7 @@ namespace HFM.Instances
       /// <summary>
       /// Average frame time since unit download
       /// </summary>
-      internal TimeSpan TimePerUnitDownload
+      public TimeSpan TimePerUnitDownload
       {
          get
          {
@@ -847,7 +870,7 @@ namespace HFM.Instances
       /// <summary>
       /// PPD based on average frame time since unit download
       /// </summary>
-      internal double PPDPerUnitDownload
+      public double PPDPerUnitDownload
       {
          get
          {
@@ -885,7 +908,7 @@ namespace HFM.Instances
       /// <summary>
       /// Average frame time over all sections
       /// </summary>
-      internal TimeSpan TimePerAllSections
+      public TimeSpan TimePerAllSections
       {
          get
          {
@@ -896,7 +919,7 @@ namespace HFM.Instances
       /// <summary>
       /// PPD based on average frame time over all sections
       /// </summary>
-      internal double PPDPerAllSections
+      public double PPDPerAllSections
       {
          get
          {
@@ -935,7 +958,7 @@ namespace HFM.Instances
       /// <summary>
       /// Average frame time over the last three sections
       /// </summary>
-      internal TimeSpan TimePerThreeSections
+      public TimeSpan TimePerThreeSections
       {
          get
          {
@@ -946,7 +969,7 @@ namespace HFM.Instances
       /// <summary>
       /// PPD based on average frame time over the last three sections
       /// </summary>
-      internal double PPDPerThreeSections
+      public double PPDPerThreeSections
       {
          get
          {
@@ -985,7 +1008,7 @@ namespace HFM.Instances
       /// <summary>
       /// Frame time of the last section
       /// </summary>
-      internal TimeSpan TimePerLastSection
+      public TimeSpan TimePerLastSection
       {
          get
          {
@@ -1002,7 +1025,7 @@ namespace HFM.Instances
       /// <summary>
       /// PPD based on frame time of the last section
       /// </summary>
-      internal double PPDPerLastSection
+      public double PPDPerLastSection
       {
          get
          {
@@ -1024,7 +1047,7 @@ namespace HFM.Instances
       /// <summary>
       /// Frame Time per section based on current PPD calculation setting (readonly)
       /// </summary>
-      internal Int32 RawTimePerSection
+      public Int32 RawTimePerSection
       {
          get
          {
@@ -1130,7 +1153,7 @@ namespace HFM.Instances
       /// Attempts to set the Protein based on the given Project data.
       /// </summary>
       /// <param name="match">Regex Match containing Project values</param>
-      internal void DoProjectIDMatch(Match match)
+      public void DoProjectIDMatch(Match match)
       {
          List<int> ProjectRCG = new List<int>(4);
 
@@ -1146,7 +1169,7 @@ namespace HFM.Instances
       /// Attempts to set the Protein based on the given Project data.
       /// </summary>
       /// <param name="ProjectRCG">List of Project (R/C/G) values</param>
-      internal void DoProjectIDMatch(IList<int> ProjectRCG)
+      public void DoProjectIDMatch(IList<int> ProjectRCG)
       {
          Debug.Assert(ProjectRCG.Count == 4);
 
@@ -1181,29 +1204,6 @@ namespace HFM.Instances
       #endregion
       
       #region Static Helpers
-      /// <summary>
-      /// Get the WorkUnitResult Enum representation of the given result string.
-      /// </summary>
-      /// <param name="result">Work Unit Result as String.</param>
-      internal static WorkUnitResult WorkUnitResultFromString(string result)
-      {
-         switch (result)
-         {
-            case FinishedUnit:
-               return WorkUnitResult.FinishedUnit;
-            case EarlyUnitEnd:
-               return WorkUnitResult.EarlyUnitEnd;
-            case UnstableMachine:
-               return WorkUnitResult.UnstableMachine;
-            case Interrupted:
-               return WorkUnitResult.Interrupted;
-            case CoreOutdated:
-               return WorkUnitResult.CoreOutdated;
-            default:
-               return WorkUnitResult.Unknown;
-         }
-      }
-
       /// <summary>
       /// Determine the client type based on the current protein core
       /// </summary>

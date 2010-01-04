@@ -36,10 +36,9 @@
       <HintPath>..\harlam357.Security\harlam357.Security.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyVersion.cs">
@@ -54,12 +53,8 @@
     </Compile>
     <Compile Include="InstanceCollectionHelpers.cs" />
     <Compile Include="InstanceProteinBenchmark.cs" />
-    <Compile Include="LogParser.cs" />
-    <Compile Include="LogReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProteinBenchmarkCollection.cs" />
-    <Compile Include="QueueParser.cs" />
-    <Compile Include="QueueReader.cs" />
     <Compile Include="SortableBindingList.cs" />
     <Compile Include="UnitFrame.cs" />
     <Compile Include="UnitInfo.cs" />
@@ -69,9 +64,24 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="HFM.Instances.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HFM.Framework\HFM.Framework.csproj">
+      <Project>{FFFF3DE4-8620-4C13-A968-ADF58133146B}</Project>
+      <Name>HFM.Framework</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HFM.Helpers\HFM.Helpers.csproj">
       <Project>{4A9D010E-BAEA-4818-9216-8E0DBD7D5570}</Project>
       <Name>HFM.Helpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Instrumentation\HFM.Instrumentation.csproj">
+      <Project>{7D6B604A-5C4A-4E97-A6D4-9C927ABBD74A}</Project>
+      <Name>HFM.Instrumentation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Log\HFM.Log.csproj">
+      <Project>{2C3EA8A1-D17F-419D-A76A-970550FB5A09}</Project>
+      <Name>HFM.Log</Name>
     </ProjectReference>
     <ProjectReference Include="..\HFM.Preferences\HFM.Preferences.csproj">
       <Project>{0CAF91A3-D5F1-44C9-BAEB-FB81DFBF9C47}</Project>
@@ -81,13 +91,10 @@
       <Project>{7500A8CA-521D-4397-892B-27C6917847E1}</Project>
       <Name>HFM.Proteins</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HFM.Instrumentation\HFM.Instrumentation.csproj">
-      <Project>{7D6B604A-5C4A-4E97-A6D4-9C927ABBD74A}</Project>
-      <Name>HFM.Instrumentation</Name>
+    <ProjectReference Include="..\HFM.Queue\HFM.Queue.csproj">
+      <Project>{44AC27F2-833D-4BF2-9E17-C35D38C7BD67}</Project>
+      <Name>HFM.Queue</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="HFM.Instances.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

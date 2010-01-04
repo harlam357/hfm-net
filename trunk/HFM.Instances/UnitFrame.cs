@@ -1,6 +1,6 @@
 /*
- * HFM.NET - Unit Frame Data Class
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * HFM.NET - Unit Frame Class
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,10 +19,12 @@
 
 using System;
 
+using HFM.Framework;
+
 namespace HFM.Instances
 {
    [Serializable]
-   public class UnitFrame
+   public class UnitFrame : IUnitFrame
    {
       // Would have liked to change the member to _FrameID, bitten by the BinaryFormatter
       // Look into migrating these pieces of data into something using data-contracts.

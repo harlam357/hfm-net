@@ -30,44 +30,15 @@ using System.Security.Cryptography;
 using harlam357.Security;
 using harlam357.Security.Encryption;
 
+using HFM.Framework;
+using HFM.Log;
+using HFM.Queue;
 using HFM.Helpers;
 using HFM.Instrumentation;
 using HFM.Preferences;
 
 namespace HFM.Instances
 {
-   #region Enum
-   public enum ClientStatus
-   {
-      Unknown,
-      Offline,
-      Stopped,
-      EuePause,
-      Hung,
-      Paused,
-      SendingWorkPacket,
-      GettingWorkPacket,
-      RunningNoFrameTimes,
-      RunningAsync,
-      Running
-   }
-
-   public enum InstanceType
-   {
-      PathInstance,
-      FTPInstance,
-      HTTPInstance
-   }
-
-   public enum ClientType
-   {
-      Unknown,
-      Standard,
-      SMP,
-      GPU
-   } 
-   #endregion
-
    public class ClientInstance
    {
       #region Constants
@@ -362,11 +333,11 @@ namespace HFM.Instances
          }
       }
 
-      private IList<LogLine> _CurrentLogLines;
+      private IList<ILogLine> _CurrentLogLines;
       /// <summary>
       /// List of current log file text lines
       /// </summary>
-      public IList<LogLine> CurrentLogLines
+      public IList<ILogLine> CurrentLogLines
       {
          get { return _CurrentLogLines; }
          protected set
@@ -375,11 +346,11 @@ namespace HFM.Instances
          }
       }
 
-      private IList<LogLine>[] _QueueLogLines;
+      private IList<ILogLine>[] _QueueLogLines;
       /// <summary>
       /// Array of LogLine Lists - Used to hold QueueEntry LogLines
       /// </summary>
-      public IList<LogLine>[] QueueLogLines
+      public IList<ILogLine>[] QueueLogLines
       {
          get { return _QueueLogLines; }
          protected set
@@ -402,7 +373,7 @@ namespace HFM.Instances
          NumberOfFailedUnitsSinceLastStart = 0;
          TotalUnits = 0;
 
-         CurrentLogLines = new List<LogLine>();
+         CurrentLogLines = new List<ILogLine>();
          QueueLogLines = null;
       }
 
@@ -410,7 +381,7 @@ namespace HFM.Instances
       /// Return LogLine List for Specified Queue Index
       /// </summary>
       /// <param name="QueueIndex">Index in Queue</param>
-      public IList<LogLine> GetLogLinesForQueueIndex(int QueueIndex)
+      public IList<ILogLine> GetLogLinesForQueueIndex(int QueueIndex)
       {
          if (QueueLogLines != null && QueueLogLines[QueueIndex] != null)
          {
@@ -1125,15 +1096,17 @@ namespace HFM.Instances
          UnitInfo[] parsedUnits = ParseQueueFile();
          // Read and Scan the FAHlog file
          LogReader lr = new LogReader();
-         lr.ScanFAHLog(this, System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedFAHLogName));
+         lr.ScanFAHLog(InstanceName, System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedFAHLogName));
 
          // Get the Client Status from the Current Work Unit
          ClientStatus CurrentWorkUnitStatus = LogReader.GetStatusFromLogLines(lr.CurrentWorkUnitLogLines);
 
          // Populate Startup Arguments and Work Unit Count Data into this ClientInstance.
          // This data can only be gathered from the FAHlog, it does not exist in the queue.
-         lr.PopulateClientStartupArgumentData(this);
-         lr.PopulateWorkUnitCountData(this);
+         Arguments = lr.ClientRunList[lr.ClientRunList.Count - 1].Arguments;
+         NumberOfCompletedUnitsSinceLastStart = lr.ClientRunList[lr.ClientRunList.Count - 1].NumberOfCompletedUnits;
+         NumberOfFailedUnitsSinceLastStart = lr.ClientRunList[lr.ClientRunList.Count - 1].NumberOfFailedUnits;
+         TotalUnits = lr.ClientRunList[lr.ClientRunList.Count - 1].NumberOfTotalUnitsCompleted;
 
          // Default Index to 1 - which is we want if only parsing previous and current logs
          int CurrentUnitIndex = 1;
@@ -1149,7 +1122,7 @@ namespace HFM.Instances
          else
          {
             // Populate User (Team) and User/Machine IDs from the Queue
-            _qr.PopulateUserAndMachineData(this);
+            PopulateUserAndMachineData(_qr.GetQueueEntry(_qr.CurrentIndex));
             // Set the Index to the Current Queue Index
             CurrentUnitIndex = (int)_qr.CurrentIndex;
 
@@ -1231,12 +1204,12 @@ namespace HFM.Instances
       {
          Debug.Assert(parsedUnits.Length == 10);
 
-         QueueLogLines = new IList<LogLine>[10];
+         QueueLogLines = new IList<ILogLine>[10];
 
          for (int queueIndex = 0; queueIndex < parsedUnits.Length; queueIndex++)
          {
             // Get the Log Lines for this queue position from the reader
-            IList<LogLine> logLines = lr.GetLogLinesFromQueueIndex(queueIndex);
+            IList<ILogLine> logLines = lr.GetLogLinesFromQueueIndex(queueIndex);
 
             // Get the Project (R/C/G) from the Log Lines
             string ProjectRunCloneGen = LogReader.GetProjectFromLogLines(logLines);
@@ -1293,12 +1266,12 @@ namespace HFM.Instances
 
          UnitInfo[] parsedUnits = new UnitInfo[2];
 
-         lr.PopulateUserAndMachineData(this);
+         PopulateUserAndMachineData(lr.ClientRunList[lr.ClientRunList.Count - 1]);
 
          parsedUnits[0] = new UnitInfo(InstanceName, Path, LastRetrievalTime, FoldingID, Team);
          parsedUnits[1] = new UnitInfo(InstanceName, Path, LastRetrievalTime, FoldingID, Team);
 
-         IList<LogLine> PreviousLogLines = lr.PreviousWorkUnitLogLines;
+         IList<ILogLine> PreviousLogLines = lr.PreviousWorkUnitLogLines;
          if (PreviousLogLines != null)
          {
             ParseWorkUnitLogLines(this, lr.PreviousWorkUnitLogLines, parsedUnits[0]);
@@ -1314,7 +1287,7 @@ namespace HFM.Instances
       /// <param name="Instance">Client Instance doing the processing.</param>
       /// <param name="logLines">Log Lines to process.</param>
       /// <param name="parsedUnitInfo">UnitInfo object to populate.</param>
-      private static void ParseWorkUnitLogLines(ClientInstance Instance, IList<LogLine> logLines, UnitInfo parsedUnitInfo)
+      private static void ParseWorkUnitLogLines(ClientInstance Instance, IList<ILogLine> logLines, IUnitInfo parsedUnitInfo)
       {
          ParseWorkUnitLogLines(Instance, logLines, parsedUnitInfo, false);
       }
@@ -1326,9 +1299,9 @@ namespace HFM.Instances
       /// <param name="logLines">Log Lines to process.</param>
       /// <param name="parsedUnitInfo">UnitInfo object to populate.</param>
       /// <param name="ReadUnitInfoFile">Flag - Read the unitinfo.txt file.</param>
-      private static void ParseWorkUnitLogLines(ClientInstance Instance, IList<LogLine> logLines, UnitInfo parsedUnitInfo, bool ReadUnitInfoFile)
+      private static void ParseWorkUnitLogLines(ClientInstance Instance, IList<ILogLine> logLines, IUnitInfo parsedUnitInfo, bool ReadUnitInfoFile)
       {
-         LogParser lp = new LogParser(Instance, parsedUnitInfo);
+         LogParser lp = new LogParser(Instance.InstanceName, Instance.ClientIsOnVirtualMachine, parsedUnitInfo);
          lp.ParseFAHLog(logLines);
 
          if (ReadUnitInfoFile)
@@ -1338,6 +1311,32 @@ namespace HFM.Instances
                HfmTrace.WriteToHfmConsole(TraceLevel.Warning, Instance.InstanceName, "unitinfo parse failed.");
             }
          }
+      }
+
+      /// <summary>
+      /// Populate FoldingID, Team, UserID, and MachineID.
+      /// </summary>
+      /// <param name="entry">Queue Entry to Populate from</param>
+      private void PopulateUserAndMachineData(QueueEntry entry)
+      {
+         FoldingID = entry.FoldingID;
+         Team = (int)entry.TeamNumber;
+
+         UserID = entry.UserID;
+         MachineID = (int)entry.MachineID;
+      }
+
+      /// <summary>
+      /// Populate FoldingID, Team, UserID, and MachineID.
+      /// </summary>
+      /// <param name="run">Client Run to Populate from</param>
+      public void PopulateUserAndMachineData(ClientRun run)
+      {
+         FoldingID = run.FoldingID;
+         Team = run.Team;
+
+         UserID = run.UserID;
+         MachineID = run.MachineID;
       }
 
       /// <summary>

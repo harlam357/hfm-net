@@ -19,9 +19,9 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Windows.Forms;
 
+using HFM.Framework;
 using HFM.Preferences;
 
 namespace HFM.Instances

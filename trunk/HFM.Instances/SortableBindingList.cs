@@ -27,8 +27,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 
+using HFM.Framework;
 using HFM.Instrumentation;
-using HFM.Preferences;
 
 namespace HFM.Instances
 {
