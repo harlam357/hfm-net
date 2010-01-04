@@ -29,15 +29,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyVersion.cs">
       <Link>AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="IOwnedByClientInstance.cs" />
     <Compile Include="RegistryOps.cs" />
     <Compile Include="UserStatsDataContainer.cs" />
     <Compile Include="NetworkOps.cs" />
@@ -46,13 +43,17 @@
     <Compile Include="XMLOps.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HFM.Preferences\HFM.Preferences.csproj">
-      <Project>{0CAF91A3-D5F1-44C9-BAEB-FB81DFBF9C47}</Project>
-      <Name>HFM.Preferences</Name>
+    <ProjectReference Include="..\HFM.Framework\HFM.Framework.csproj">
+      <Project>{FFFF3DE4-8620-4C13-A968-ADF58133146B}</Project>
+      <Name>HFM.Framework</Name>
     </ProjectReference>
     <ProjectReference Include="..\HFM.Instrumentation\HFM.Instrumentation.csproj">
       <Project>{7D6B604A-5C4A-4E97-A6D4-9C927ABBD74A}</Project>
       <Name>HFM.Instrumentation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Preferences\HFM.Preferences.csproj">
+      <Project>{0CAF91A3-D5F1-44C9-BAEB-FB81DFBF9C47}</Project>
+      <Name>HFM.Preferences</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
