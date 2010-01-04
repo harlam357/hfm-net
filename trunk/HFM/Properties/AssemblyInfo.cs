@@ -1,7 +1,7 @@
 ﻿/*
  * HFM.NET - Application Assembly Configuration
  * Copyright (C) 2006-2007 David Rawling
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,7 +31,7 @@ using System.Resources;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("harlam357")]
 [assembly: AssemblyProduct("HFM.NET")]
-[assembly: AssemblyCopyright("Copyright © Ryan Harlamert 2009.")]
+[assembly: AssemblyCopyright("Copyright © Ryan Harlamert 2009-2010.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
