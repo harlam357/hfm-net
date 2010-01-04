@@ -167,7 +167,7 @@ namespace HFM.Instances.Tests
             return new Protein();
          };
 
-         Instance.InstanceName = "SMP_8";
+         Instance.InstanceName = "SMP_8_1";
          Instance.Path = "..\\..\\..\\TestFiles\\SMP_8";
          Instance.RemoteUnitInfoFilename = "wrong_file_name.txt";
 
@@ -184,7 +184,7 @@ namespace HFM.Instances.Tests
 
          // Check Client Type and Owning Instance Properties
          Assert.AreEqual(ClientType.Unknown, Instance.CurrentUnitInfo.TypeOfClient); /* Unknown */
-         Assert.AreEqual("SMP_8", Instance.CurrentUnitInfo.OwningInstanceName);
+         Assert.AreEqual("SMP_8_1", Instance.CurrentUnitInfo.OwningInstanceName);
          Assert.AreEqual("..\\..\\..\\TestFiles\\SMP_8", Instance.CurrentUnitInfo.OwningInstancePath);
 
          Assert.AreEqual(true, Instance.CurrentUnitInfo.ProjectIsUnknown);
@@ -227,7 +227,7 @@ namespace HFM.Instances.Tests
             return p;
          };
 
-         Instance.InstanceName = "SMP_8";
+         Instance.InstanceName = "SMP_8_2";
          Instance.Path = "..\\..\\..\\TestFiles\\SMP_8";
          // Make the queue.dat unavailable for parsing
          Instance.RemoteQueueFilename = "wrong_file_name.dat";
