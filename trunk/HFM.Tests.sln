@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Instances.Tests", "HFM.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Proteins.Tests", "HFM.Proteins.Tests\HFM.Proteins.Tests.csproj", "{04744056-F956-4E20-B229-28E2FC154509}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Log.Tests", "HFM.Log.Tests\HFM.Log.Tests.csproj", "{9EA57D40-ECE3-4F75-AD89-72960B847F1F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Queue.Tests", "HFM.Queue.Tests\HFM.Queue.Tests.csproj", "{E46CE8E6-13F3-4B74-A95E-2C29A5CDBE95}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +29,14 @@ Global
 		{04744056-F956-4E20-B229-28E2FC154509}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04744056-F956-4E20-B229-28E2FC154509}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04744056-F956-4E20-B229-28E2FC154509}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EA57D40-ECE3-4F75-AD89-72960B847F1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EA57D40-ECE3-4F75-AD89-72960B847F1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EA57D40-ECE3-4F75-AD89-72960B847F1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EA57D40-ECE3-4F75-AD89-72960B847F1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E46CE8E6-13F3-4B74-A95E-2C29A5CDBE95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E46CE8E6-13F3-4B74-A95E-2C29A5CDBE95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E46CE8E6-13F3-4B74-A95E-2C29A5CDBE95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E46CE8E6-13F3-4B74-A95E-2C29A5CDBE95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

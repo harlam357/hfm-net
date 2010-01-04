@@ -51,11 +51,8 @@
       <HintPath>..\harlam357.Windows.Forms\harlam357.Windows.Forms.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
     <Reference Include="ZedGraph, Version=5.1.5.28844, Culture=neutral, PublicKeyToken=02a83cbd123fcd60, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ZedGraph\zedgraph_dll_v5.1.5\ZedGraph.dll</HintPath>
@@ -201,28 +198,6 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HFM.Helpers\HFM.Helpers.csproj">
-      <Project>{4A9D010E-BAEA-4818-9216-8E0DBD7D5570}</Project>
-      <Name>HFM.Helpers</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HFM.Instances\HFM.Instances.csproj">
-      <Project>{B8614309-B90A-4B86-97FF-3A9E64B9658F}</Project>
-      <Name>HFM.Instances</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HFM.Preferences\HFM.Preferences.csproj">
-      <Project>{0CAF91A3-D5F1-44C9-BAEB-FB81DFBF9C47}</Project>
-      <Name>HFM.Preferences</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HFM.Proteins\HFM.Proteins.csproj">
-      <Project>{7500A8CA-521D-4397-892B-27C6917847E1}</Project>
-      <Name>HFM.Proteins</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HFM.Instrumentation\HFM.Instrumentation.csproj">
-      <Project>{7D6B604A-5C4A-4E97-A6D4-9C927ABBD74A}</Project>
-      <Name>HFM.Instrumentation</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Classes\QueueControl.resx">
       <DependentUpon>QueueControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -303,6 +278,36 @@
     <Content Include="XML\Summary.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HFM.Framework\HFM.Framework.csproj">
+      <Project>{FFFF3DE4-8620-4C13-A968-ADF58133146B}</Project>
+      <Name>HFM.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Helpers\HFM.Helpers.csproj">
+      <Project>{4A9D010E-BAEA-4818-9216-8E0DBD7D5570}</Project>
+      <Name>HFM.Helpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Instances\HFM.Instances.csproj">
+      <Project>{B8614309-B90A-4B86-97FF-3A9E64B9658F}</Project>
+      <Name>HFM.Instances</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Instrumentation\HFM.Instrumentation.csproj">
+      <Project>{7D6B604A-5C4A-4E97-A6D4-9C927ABBD74A}</Project>
+      <Name>HFM.Instrumentation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Preferences\HFM.Preferences.csproj">
+      <Project>{0CAF91A3-D5F1-44C9-BAEB-FB81DFBF9C47}</Project>
+      <Name>HFM.Preferences</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Proteins\HFM.Proteins.csproj">
+      <Project>{7500A8CA-521D-4397-892B-27C6917847E1}</Project>
+      <Name>HFM.Proteins</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Queue\HFM.Queue.csproj">
+      <Project>{44AC27F2-833D-4BF2-9E17-C35D38C7BD67}</Project>
+      <Name>HFM.Queue</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Help\" />

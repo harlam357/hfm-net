@@ -23,14 +23,13 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-using HFM.Instances;
-using HFM.Preferences;
+using HFM.Framework;
 
 namespace HFM.Classes
 {
    public partial class RichTextBoxWrapper : RichTextBox
    {
-      private IList<LogLine> _LogLines = null;
+      private IList<ILogLine> _LogLines = null;
       private string _LogOwnedByInstanceName = String.Empty;
       public string LogOwnedByInstanceName
       {
@@ -41,14 +40,14 @@ namespace HFM.Classes
       {
          InitializeComponent();
       }
-      
-      public void SetLogLines(IList<LogLine> lines, string LogOwnedByInstance)
+
+      public void SetLogLines(IList<ILogLine> lines, string LogOwnedByInstance)
       {
          _LogLines = lines;
          _LogOwnedByInstanceName = LogOwnedByInstance;
       
          List<string> logLines = new List<string>(lines.Count);
-         foreach (LogLine line in lines)
+         foreach (ILogLine line in lines)
          {
             logLines.Add(line.LineRaw);
          }
@@ -76,7 +75,7 @@ namespace HFM.Classes
 
          for (int i = 0; i < _LogLines.Count; i++)
          {
-            LogLine line = _LogLines[i];
+            ILogLine line = _LogLines[i];
             if (line.LineType.Equals(LogLineType.WorkUnitFrame))
             {
                DoLineHighlight(i, Color.Green);

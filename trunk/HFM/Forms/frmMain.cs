@@ -32,6 +32,7 @@ using System.IO;
 using System.Windows.Forms;
 
 using HFM.Classes;
+using HFM.Framework;
 using HFM.Helpers;
 using HFM.Instances;
 using HFM.Instrumentation;
@@ -430,7 +431,7 @@ namespace HFM.Forms
       /// </summary>
       /// <param name="Instance">Client Instance</param>
       /// <param name="logLines">List of LogLines</param>
-      private void SetLogLines(ClientInstance Instance, IList<LogLine> logLines)
+      private void SetLogLines(ClientInstance Instance, IList<ILogLine> logLines)
       {
          /*** Checked LogLine Count ***/
          if (logLines != null && logLines.Count > 0) 

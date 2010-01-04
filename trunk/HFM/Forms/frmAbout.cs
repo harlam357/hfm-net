@@ -22,7 +22,7 @@ using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-using HFM.Preferences;
+using HFM.Framework;
 using HFM.Instrumentation;
 
 namespace HFM.Forms

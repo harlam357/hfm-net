@@ -32,6 +32,7 @@ using System.Windows.Forms;
 using harlam357.Security;
 using harlam357.Security.Encryption;
 
+using HFM.Framework;
 using HFM.Preferences.Properties;
 using HFM.Instrumentation;
 

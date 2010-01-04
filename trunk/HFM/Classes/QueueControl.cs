@@ -21,7 +21,8 @@ using System;
 using System.Globalization;
 using System.Windows.Forms;
 
-using HFM.Instances;
+using HFM.Framework;
+using HFM.Queue;
 using HFM.Proteins;
 
 namespace HFM.Classes
