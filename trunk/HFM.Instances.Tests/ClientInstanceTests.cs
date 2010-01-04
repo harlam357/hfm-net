@@ -22,6 +22,7 @@ using System.Diagnostics;
 
 using NUnit.Framework;
 
+using HFM.Framework;
 using HFM.Proteins;
 using HFM.Instrumentation;
 
@@ -37,7 +38,7 @@ namespace HFM.Instances.Tests
       }
 
       [Test, Category("SMP")]
-      public void TestSmpPathInstance()
+      public void SMP_3()
       {
          // Setup Test Instance
          ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
@@ -54,9 +55,8 @@ namespace HFM.Instances.Tests
             return p;
          };
          
-         Instance.InstanceName = "SMP Test FAHlog 3";
-         Instance.Path = "..\\..\\TestFiles";
-         Instance.RemoteFAHLogFilename = "SMP Test FAHlog 3.txt";
+         Instance.InstanceName = "SMP_3";
+         Instance.Path = "..\\..\\..\\TestFiles\\SMP_3";
          
          // Retrieve Log File and Assert Results
          Instance.Retrieve();
@@ -70,8 +70,8 @@ namespace HFM.Instances.Tests
          
          // Check Client Type and Owning Instance Properties
          Assert.AreEqual(ClientType.SMP, Instance.CurrentUnitInfo.TypeOfClient);
-         Assert.AreEqual("SMP Test FAHlog 3", Instance.CurrentUnitInfo.OwningInstanceName);
-         Assert.AreEqual("..\\..\\TestFiles", Instance.CurrentUnitInfo.OwningInstancePath);
+         Assert.AreEqual("SMP_3", Instance.CurrentUnitInfo.OwningInstanceName);
+         Assert.AreEqual("..\\..\\..\\TestFiles\\SMP_3", Instance.CurrentUnitInfo.OwningInstancePath);
 
          Assert.AreEqual(false, Instance.CurrentUnitInfo.ProjectIsUnknown);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitFrames);
@@ -91,61 +91,7 @@ namespace HFM.Instances.Tests
       }
 
       [Test, Category("SMP")]
-      public void TestSmpPathInstance2()
-      {
-         // Setup Test Instance
-         ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
-         // Don't Handle Status
-         Instance.HandleStatusOnRetrieve = false;
-         // Inject our own delegate for getting the Protein
-         // to isolate from what's actually available in the
-         // ProteinCollection Cache (or psummary).
-         ProteinCollection.GetProteinHandler = delegate
-         {
-            Protein p = new Protein();
-            p.ProjectNumber = 5101;
-            p.Core = "GRO-SMP";
-            return p;
-         };
-         
-         Instance.InstanceName = "SMP Test FAHlog INTERRUPTED Bad WUs 2";
-         Instance.Path = "..\\..\\TestFiles";
-         Instance.RemoteFAHLogFilename = "SMP Test INTERRUPTED Bad WUs FAHlog 2.txt";
-
-         // Retrieve Log File and Assert Results
-         Instance.Retrieve();
-         Assert.IsNotNull(Instance.CurrentLogLines);
-         Assert.AreEqual(false, Instance.UserIDUnknown);
-         Assert.AreEqual(String.Format("{0} ({1})", Instance.UserID, Instance.MachineID), Instance.UserAndMachineID);
-         Assert.AreEqual(true, Instance.IsUsernameOk()); // Prefs default is harlam357 (32)
-         Assert.Greater(Instance.LastRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
-
-         Assert.IsNotNull(Instance.CurrentUnitInfo);
-
-         // Check Client Type and Owning Instance Properties
-         Assert.AreEqual(ClientType.SMP, Instance.CurrentUnitInfo.TypeOfClient);
-         Assert.AreEqual("SMP Test FAHlog INTERRUPTED Bad WUs 2", Instance.CurrentUnitInfo.OwningInstanceName);
-         Assert.AreEqual("..\\..\\TestFiles", Instance.CurrentUnitInfo.OwningInstancePath);
-
-         Assert.AreEqual(false, Instance.CurrentUnitInfo.ProjectIsUnknown);
-         Assert.IsNotNull(Instance.CurrentUnitInfo.UnitFrames);
-         Assert.AreEqual(6, Instance.CurrentUnitInfo.FramesObserved);
-         Assert.AreEqual(7, Instance.CurrentUnitInfo.FramesComplete);
-         Assert.AreEqual(7, Instance.CurrentUnitInfo.PercentComplete);
-         Assert.AreEqual(7, Instance.CurrentUnitInfo.LastUnitFrameID);
-         Assert.AreEqual(140000, Instance.CurrentUnitInfo.RawFramesComplete);
-         Assert.AreEqual(2000000, Instance.CurrentUnitInfo.RawFramesTotal);
-
-         Assert.AreEqual(0, Instance.CurrentUnitInfo.RawTimePerUnitDownload);
-         Assert.AreEqual(1180, Instance.CurrentUnitInfo.RawTimePerAllSections);
-         Assert.AreEqual(1179, Instance.CurrentUnitInfo.RawTimePerThreeSections);
-         Assert.AreEqual(1179, Instance.CurrentUnitInfo.RawTimePerLastSection);
-
-         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, Instance.Status);
-      }
-
-      [Test, Category("SMP")]
-      public void TestSmpPathInstance3()
+      public void SMP_7()
       {
          // Setup Test Instance
          ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
@@ -162,11 +108,8 @@ namespace HFM.Instances.Tests
             return p;
          };
          
-         Instance.InstanceName = "SMP Test 4";
-         Instance.Path = "..\\..\\TestFiles";
-         Instance.RemoteFAHLogFilename = "SMP Test 4 FAHlog.txt";
-         Instance.RemoteQueueFilename = "SMP Test 4 queue.dat";
-         Instance.RemoteUnitInfoFilename = "SMP Test 4 unitinfo.txt";
+         Instance.InstanceName = "SMP_7";
+         Instance.Path = "..\\..\\..\\TestFiles\\SMP_7";
 
          // Retrieve Log File and Assert Results
          Instance.Retrieve();
@@ -181,8 +124,8 @@ namespace HFM.Instances.Tests
 
          // Check Client Type and Owning Instance Properties
          Assert.AreEqual(ClientType.SMP, Instance.CurrentUnitInfo.TypeOfClient);
-         Assert.AreEqual("SMP Test 4", Instance.CurrentUnitInfo.OwningInstanceName);
-         Assert.AreEqual("..\\..\\TestFiles", Instance.CurrentUnitInfo.OwningInstancePath);
+         Assert.AreEqual("SMP_7", Instance.CurrentUnitInfo.OwningInstanceName);
+         Assert.AreEqual("..\\..\\..\\TestFiles\\SMP_7", Instance.CurrentUnitInfo.OwningInstancePath);
 
          Assert.AreEqual(false, Instance.CurrentUnitInfo.ProjectIsUnknown);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitFrames);
@@ -202,7 +145,7 @@ namespace HFM.Instances.Tests
       }
 
       [Test, Category("SMP")]
-      public void TestSmpPathInstance5()
+      public void SMP_8_1()
       {
          /*** The Test below shows us that because there is no Project information available
           *   in the FAHlog for the current WU, the CurrentLogLines cannot be matched against
@@ -224,11 +167,9 @@ namespace HFM.Instances.Tests
             return new Protein();
          };
 
-         Instance.InstanceName = "SMP Test 5";
-         Instance.Path = "..\\..\\TestFiles";
-         Instance.RemoteFAHLogFilename = "SMP Test 5 FAHlog.txt";
-         Instance.RemoteQueueFilename = "SMP Test 5 queue.dat";
-         //Instance.RemoteUnitInfoFilename = "SMP Test 5 unitinfo.txt";
+         Instance.InstanceName = "SMP_8";
+         Instance.Path = "..\\..\\..\\TestFiles\\SMP_8";
+         Instance.RemoteUnitInfoFilename = "wrong_file_name.txt";
 
          // Retrieve Log File and Assert Results
          Instance.Retrieve();
@@ -243,8 +184,8 @@ namespace HFM.Instances.Tests
 
          // Check Client Type and Owning Instance Properties
          Assert.AreEqual(ClientType.Unknown, Instance.CurrentUnitInfo.TypeOfClient); /* Unknown */
-         Assert.AreEqual("SMP Test 5", Instance.CurrentUnitInfo.OwningInstanceName);
-         Assert.AreEqual("..\\..\\TestFiles", Instance.CurrentUnitInfo.OwningInstancePath);
+         Assert.AreEqual("SMP_8", Instance.CurrentUnitInfo.OwningInstanceName);
+         Assert.AreEqual("..\\..\\..\\TestFiles\\SMP_8", Instance.CurrentUnitInfo.OwningInstancePath);
 
          Assert.AreEqual(true, Instance.CurrentUnitInfo.ProjectIsUnknown);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitFrames);
@@ -264,7 +205,7 @@ namespace HFM.Instances.Tests
       }
       
       [Test, Category("SMP")]
-      public void TestSmpPathInstance5_1()
+      public void SMP_8_2()
       {
          /*** The Test below now gives us access to the unitinfo file, which will
           *   result in Project information becoming available.  Return the proper
@@ -286,12 +227,11 @@ namespace HFM.Instances.Tests
             return p;
          };
 
-         Instance.InstanceName = "SMP Test 5_1";
-         Instance.Path = "..\\..\\TestFiles";
-         Instance.RemoteFAHLogFilename = "SMP Test 5 FAHlog.txt";
-         //Instance.RemoteQueueFilename = "SMP Test 5 queue.dat";
-         // Make the unitinfo available for parsing
-         Instance.RemoteUnitInfoFilename = "SMP Test 5 unitinfo.txt";
+         Instance.InstanceName = "SMP_8";
+         Instance.Path = "..\\..\\..\\TestFiles\\SMP_8";
+         // Make the queue.dat unavailable for parsing
+         Instance.RemoteQueueFilename = "wrong_file_name.dat";
+
          // Retrieve Log File and Assert Results
          Instance.Retrieve();
          // Because Project information was found in the unitinfo file, we were
@@ -300,7 +240,7 @@ namespace HFM.Instances.Tests
       }
 
       [Test, Category("GPU")]
-      public void TestGpuPathInstance()
+      public void GPU2_3()
       {
          // Setup Test Instance
          ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
@@ -317,9 +257,8 @@ namespace HFM.Instances.Tests
             return p;
          };
          
-         Instance.InstanceName = "GPU Test FAHlog 3 EUE Pause";
-         Instance.Path = "..\\..\\TestFiles";
-         Instance.RemoteFAHLogFilename = "GPU Test FAHlog 3 EUE Pause.txt";
+         Instance.InstanceName = "GPU2_3";
+         Instance.Path = "..\\..\\..\\TestFiles\\GPU2_3";
 
          // Retrieve Log File and Assert Results
          Instance.Retrieve();
@@ -333,8 +272,8 @@ namespace HFM.Instances.Tests
 
          // Check Client Type and Owning Instance Properties
          Assert.AreEqual(ClientType.GPU, Instance.CurrentUnitInfo.TypeOfClient);
-         Assert.AreEqual("GPU Test FAHlog 3 EUE Pause", Instance.CurrentUnitInfo.OwningInstanceName);
-         Assert.AreEqual("..\\..\\TestFiles", Instance.CurrentUnitInfo.OwningInstancePath);
+         Assert.AreEqual("GPU2_3", Instance.CurrentUnitInfo.OwningInstanceName);
+         Assert.AreEqual("..\\..\\..\\TestFiles\\GPU2_3", Instance.CurrentUnitInfo.OwningInstancePath);
 
          Assert.AreEqual(false, Instance.CurrentUnitInfo.ProjectIsUnknown);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitFrames);
@@ -354,7 +293,7 @@ namespace HFM.Instances.Tests
       }
 
       [Test, Category("GPU")]
-      public void TestGpuPathInstance4()
+      public void GPU2_6()
       {
          // Setup Test Instance
          ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
@@ -371,11 +310,8 @@ namespace HFM.Instances.Tests
             return p;
          };
 
-         Instance.InstanceName = "GPU Test 4";
-         Instance.Path = "..\\..\\TestFiles";
-         Instance.RemoteFAHLogFilename = "GPU Test 4 FAHlog.txt";
-         Instance.RemoteUnitInfoFilename = "GPU Test 4 unitinfo.txt";
-         Instance.RemoteQueueFilename = "GPU Test 4 queue.dat";
+         Instance.InstanceName = "GPU2_6";
+         Instance.Path = "..\\..\\..\\TestFiles\\GPU2_6";
 
          // Retrieve Log File and Assert Results
          Instance.Retrieve();
@@ -389,8 +325,8 @@ namespace HFM.Instances.Tests
 
          // Check Client Type and Owning Instance Properties
          Assert.AreEqual(ClientType.GPU, Instance.CurrentUnitInfo.TypeOfClient);
-         Assert.AreEqual("GPU Test 4", Instance.CurrentUnitInfo.OwningInstanceName);
-         Assert.AreEqual("..\\..\\TestFiles", Instance.CurrentUnitInfo.OwningInstancePath);
+         Assert.AreEqual("GPU2_6", Instance.CurrentUnitInfo.OwningInstanceName);
+         Assert.AreEqual("..\\..\\..\\TestFiles\\GPU2_6", Instance.CurrentUnitInfo.OwningInstancePath);
 
          Assert.AreEqual(false, Instance.CurrentUnitInfo.ProjectIsUnknown);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitFrames);

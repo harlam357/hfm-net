@@ -18,9 +18,10 @@
  */
 
 using System;
-using HFM.Preferences;
+
 using NUnit.Framework;
 
+using HFM.Framework;
 using HFM.Instances;
 
 namespace HFM.Instances.Tests
