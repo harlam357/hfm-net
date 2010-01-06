@@ -22,7 +22,6 @@ using System.Globalization;
 using System.Windows.Forms;
 
 using HFM.Framework;
-using HFM.Queue;
 using HFM.Proteins;
 
 namespace HFM.Classes
@@ -56,7 +55,7 @@ namespace HFM.Classes
    
       public event EventHandler<QueueIndexChangedEventArgs> QueueIndexChanged;
    
-      private QueueReader _qr = null;
+      private IQueueBase _qBase = null;
       private ClientType _ClientType = ClientType.Unknown;
       private bool _ClientIsOnVirtualMachine;
       
@@ -76,30 +75,30 @@ namespace HFM.Classes
       }
       
       [CLSCompliant(false)]
-      public void SetQueue(QueueReader qr)
+      public void SetQueue(IQueueBase qBase)
       {
-         SetQueue(qr, ClientType.Unknown, false);
+         SetQueue(qBase, ClientType.Unknown, false);
       }
 
       [CLSCompliant(false)]
-      public void SetQueue(QueueReader qr, ClientType type, bool vm)
+      public void SetQueue(IQueueBase qBase, ClientType type, bool vm)
       {
-         if (qr != null && qr.QueueReadOk)
+         if (qBase != null && qBase.DataPopulated)
          {
-            _qr = qr;
+            _qBase = qBase;
             _ClientType = type;
             _ClientIsOnVirtualMachine = vm;
             
             cboQueueIndex.SelectedIndexChanged -= cboQueueIndex_SelectedIndexChanged;
-            cboQueueIndex.DataSource = _qr.EntryNameCollection;
+            cboQueueIndex.DataSource = _qBase.EntryNameCollection;
             cboQueueIndex.SelectedIndex = -1;
             cboQueueIndex.SelectedIndexChanged += cboQueueIndex_SelectedIndexChanged;
-            
-            cboQueueIndex.SelectedIndex = (int)_qr.CurrentIndex;
+
+            cboQueueIndex.SelectedIndex = (int)_qBase.CurrentIndex;
          }
          else
          {
-            _qr = null;
+            _qBase = null;
             _ClientType = ClientType.Unknown;
             _ClientIsOnVirtualMachine = false;
             SetControlsVisible(false);
@@ -108,13 +107,13 @@ namespace HFM.Classes
 
       private void cboQueueIndex_SelectedIndexChanged(object sender, EventArgs e)
       {
-         if ((_qr != null && _qr.QueueReadOk) == false) return;
+         if ((_qBase != null && _qBase.DataPopulated) == false) return;
       
          if (cboQueueIndex.SelectedIndex > -1)
          {
             SetControlsVisible(true);
-         
-            QueueEntry entry = _qr.GetQueueEntry((uint)cboQueueIndex.SelectedIndex);
+
+            IQueueEntry entry = _qBase.GetQueueEntry((uint)cboQueueIndex.SelectedIndex);
             txtStatus.Text = entry.EntryStatus.ToString();
             txtCredit.Text = ProteinCollection.Instance.ContainsKey(entry.ProjectID) ? ProteinCollection.Instance[entry.ProjectID].Credit.ToString(CultureInfo.CurrentCulture) : "0";
             if (_ClientIsOnVirtualMachine)
@@ -142,11 +141,11 @@ namespace HFM.Classes
                
             }
             txtSpeedFactor.Text = String.Format(CultureInfo.CurrentCulture, "{0} x min speed", entry.SpeedFactor);
-            txtPerformanceFraction.Text = String.Format(CultureInfo.CurrentCulture, "{0} (u={1})", _qr.PerformanceFraction, _qr.PerformanceFractionUnitWeight);
+            txtPerformanceFraction.Text = String.Format(CultureInfo.CurrentCulture, "{0} (u={1})", _qBase.PerformanceFraction, _qBase.PerformanceFractionUnitWeight);
             txtMegaFlops.Text = String.Format(CultureInfo.CurrentCulture, "{0:f}", entry.MegaFlops);
             txtServer.Text = entry.ServerIP;
-            txtAverageDownloadRate.Text = String.Format(CultureInfo.CurrentCulture, "{0} KB/s (u={1})", _qr.DownloadRateAverage, _qr.DownloadRateUnitWeight);
-            txtAverageUploadRate.Text = String.Format(CultureInfo.CurrentCulture, "{0} KB/s (u={1})", _qr.UploadRateAverage, _qr.UploadRateUnitWeight);
+            txtAverageDownloadRate.Text = String.Format(CultureInfo.CurrentCulture, "{0} KB/s (u={1})", _qBase.DownloadRateAverage, _qBase.DownloadRateUnitWeight);
+            txtAverageUploadRate.Text = String.Format(CultureInfo.CurrentCulture, "{0} KB/s (u={1})", _qBase.UploadRateAverage, _qBase.UploadRateUnitWeight);
             txtCpuType.Text = entry.CpuString;
             txtOsType.Text = entry.OsString;
             txtMemory.Text = entry.Memory.ToString(CultureInfo.CurrentCulture);

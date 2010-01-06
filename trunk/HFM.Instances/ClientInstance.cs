@@ -75,14 +75,14 @@ namespace HFM.Instances
       /// <summary>
       /// Queue Reader for this Client Instance
       /// </summary>
-      private readonly QueueReader _qr = new QueueReader();
+      private IQueueBase _qBase = QueueBase.CreateInstance();
       /// <summary>
       /// Queue Reader for this Client Instance
       /// </summary>
       [CLSCompliant(false)]
-      public QueueReader ClientQueue
+      public IQueueBase ClientQueue
       {
-         get { return _qr; }
+         get { return _qBase; }
       } 
       #endregion
 
@@ -1122,9 +1122,9 @@ namespace HFM.Instances
          else
          {
             // Populate User (Team) and User/Machine IDs from the Queue
-            PopulateUserAndMachineData(_qr.GetQueueEntry(_qr.CurrentIndex));
+            PopulateUserAndMachineData(_qBase.GetQueueEntry(_qBase.CurrentIndex));
             // Set the Index to the Current Queue Index
-            CurrentUnitIndex = (int)_qr.CurrentIndex;
+            CurrentUnitIndex = (int)_qBase.CurrentIndex;
 
             if (ParseLogLinesBasedOnQueueIndex(parsedUnits, lr, CurrentWorkUnitStatus) == false)
             {
@@ -1174,22 +1174,24 @@ namespace HFM.Instances
          // just catch, log, and continue with parsing log files
          try
          {
-            _qr.ReadQueue(CachedQueueFilePath);
-            if (_qr.QueueReadOk)
+            QueueReader reader = new QueueReader();
+            reader.ReadQueue(CachedQueueFilePath);
+            if (reader.QueueReadOk)
             {
+               _qBase = reader.Queue;
                units = new UnitInfo[10];
 
                // process entries
                for (int i = 0; i < 10; i++)
                {
                   UnitInfo parsedUnitInfo = new UnitInfo(InstanceName, Path, LastRetrievalTime);
-                  QueueParser.ParseQueueEntry(_qr.GetQueueEntry((uint)i), parsedUnitInfo, ClientIsOnVirtualMachine);
+                  QueueParser.ParseQueueEntry(_qBase.GetQueueEntry((uint)i), parsedUnitInfo, ClientIsOnVirtualMachine);
                   units[i] = parsedUnitInfo;
                }
             }
             else
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format("{0} read failed.", _qr.QueueFilePath));
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format("{0} read failed.", reader.QueueFilePath));
             }
          }
          catch (Exception ex)
@@ -1224,7 +1226,7 @@ namespace HFM.Instances
             if (parsedUnits[queueIndex].ProjectRunCloneGen.Equals(ProjectRunCloneGen) == false)
             {
                // If the current index
-               if (_qr.CurrentIndex == queueIndex)
+               if (_qBase.CurrentIndex == queueIndex)
                {
                   // Issue 103 - If the Current Status is 'GettingWorkPacket' don't clear the Queue.
                   // In most cases the log section matching the new Queue Entry does not contain any 
@@ -1244,7 +1246,7 @@ namespace HFM.Instances
                      // Remove the Queue LogLines array
                      QueueLogLines = null;
                      // And clear the Queue data itself
-                     _qr.ClearQueue();
+                     _qBase = _qBase.Create();
                      return false;
                   }
                }
@@ -1257,7 +1259,7 @@ namespace HFM.Instances
 
             QueueLogLines[queueIndex] = logLines;
 
-            ParseWorkUnitLogLines(this, logLines, parsedUnits[queueIndex], _qr.CurrentIndex == queueIndex);
+            ParseWorkUnitLogLines(this, logLines, parsedUnits[queueIndex], _qBase.CurrentIndex == queueIndex);
          }
 
          return true;
@@ -1324,7 +1326,7 @@ namespace HFM.Instances
       /// Populate FoldingID, Team, UserID, and MachineID.
       /// </summary>
       /// <param name="entry">Queue Entry to Populate from</param>
-      private void PopulateUserAndMachineData(QueueEntry entry)
+      private void PopulateUserAndMachineData(IQueueEntry entry)
       {
          FoldingID = entry.FoldingID;
          Team = (int)entry.TeamNumber;
@@ -1406,7 +1408,7 @@ namespace HFM.Instances
       /// <summary>
       /// Update Time of Last Frame Progress based on Current and Parsed UnitInfo
       /// </summary>
-      private void UpdateTimeOfLastProgress(UnitInfo parsedUnitInfo)
+      private void UpdateTimeOfLastProgress(IUnitInfo parsedUnitInfo)
       {
          // Same UnitInfo (based on Project (R/C/G)
          if (IsUnitInfoCurrentUnitInfo(parsedUnitInfo))
@@ -1437,7 +1439,7 @@ namespace HFM.Instances
       /// <summary>
       /// Does the given UnitInfo.ProjectRunCloneGen match the CurrentUnitInfo.ProjectRunCloneGen?
       /// </summary>
-      private bool IsUnitInfoCurrentUnitInfo(UnitInfo parsedUnitInfo)
+      private bool IsUnitInfoCurrentUnitInfo(IUnitInfo parsedUnitInfo)
       {
          Debug.Assert(CurrentUnitInfo != null);
       

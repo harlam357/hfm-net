@@ -393,7 +393,7 @@ namespace HFM.Forms
 
             // if we've got a good queue read, let queueControl_QueueIndexChanged()
             // handle populating the log lines.
-            if (ClientInstances.SelectedInstance.ClientQueue.QueueReadOk) return;
+            if (ClientInstances.SelectedInstance.ClientQueue.DataPopulated) return;
 
             SetLogLines(ClientInstances.SelectedInstance, ClientInstances.SelectedInstance.CurrentLogLines);
          }

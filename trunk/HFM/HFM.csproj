@@ -304,10 +304,6 @@
       <Project>{7500A8CA-521D-4397-892B-27C6917847E1}</Project>
       <Name>HFM.Proteins</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HFM.Queue\HFM.Queue.csproj">
-      <Project>{44AC27F2-833D-4BF2-9E17-C35D38C7BD67}</Project>
-      <Name>HFM.Queue</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Help\" />

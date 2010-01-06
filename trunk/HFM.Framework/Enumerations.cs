@@ -64,6 +64,23 @@ namespace HFM.Framework
    #endregion
 
    /// <summary>
+   /// The Queue Entry Status
+   /// </summary>
+   public enum QueueEntryStatus
+   {
+      Unknown = -1,
+      Empty,
+      Deleted,
+      Finished,
+      Garbage,
+      FoldingNow,
+      Queued,
+      ReadyForUpload,
+      Abandonded,
+      FetchingFromServer
+   }
+
+   /// <summary>
    /// Log Line Types
    /// </summary>
    public enum LogLineType

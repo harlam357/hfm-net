@@ -22,6 +22,8 @@ using System.Globalization;
 
 using NUnit.Framework;
 
+using HFM.Framework;
+
 namespace HFM.Queue.Tests
 {
    [TestFixture]
@@ -30,8 +32,9 @@ namespace HFM.Queue.Tests
       [Test, Category("SMP")]
       public void SMP_4_queue() // WinSMP v6.24R3
       {
-         QueueReader queue = new QueueReader();
-         queue.ReadQueue("..\\..\\..\\TestFiles\\SMP_4\\queue.dat");
+         QueueReader reader = new QueueReader();
+         reader.ReadQueue("..\\..\\..\\TestFiles\\SMP_4\\queue.dat");
+         IQueueBase queue = reader.Queue;
          Assert.AreEqual(600, queue.Version);
          Assert.AreEqual(9, queue.CurrentIndex);
          Assert.AreEqual(0.7884074f, queue.PerformanceFraction);
@@ -42,7 +45,7 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(4, queue.UploadRateUnitWeight);
          Assert.AreEqual(0, queue.ResultsSent);
          
-         QueueEntry entry8 = queue.GetQueueEntry(8);
+         IQueueEntry entry8 = queue.GetQueueEntry(8);
          Assert.AreEqual(QueueEntryStatus.Finished, entry8.EntryStatus);
          Assert.AreEqual(4.46, entry8.SpeedFactor);
          Assert.AreEqual("171.64.65.64", entry8.ServerIP);
@@ -95,8 +98,9 @@ namespace HFM.Queue.Tests
       [Test, Category("SMP")]
       public void SMP_5_queue() // Linux SMP v6.24
       {
-         QueueReader queue = new QueueReader();
-         queue.ReadQueue("..\\..\\..\\TestFiles\\SMP_5\\queue.dat");
+         QueueReader reader = new QueueReader();
+         reader.ReadQueue("..\\..\\..\\TestFiles\\SMP_5\\queue.dat");
+         IQueueBase queue = reader.Queue;
          Assert.AreEqual(600, queue.Version);
          Assert.AreEqual(4, queue.CurrentIndex);
          Assert.AreEqual(0.724012256f, queue.PerformanceFraction);
@@ -107,7 +111,7 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(4, queue.UploadRateUnitWeight);
          Assert.AreEqual(0, queue.ResultsSent);
 
-         QueueEntry entry4 = queue.GetQueueEntry(4);
+         IQueueEntry entry4 = queue.GetQueueEntry(4);
          Assert.AreEqual(QueueEntryStatus.FoldingNow, entry4.EntryStatus);
          Assert.AreEqual(0, entry4.SpeedFactor);
          Assert.AreEqual("171.64.65.56", entry4.ServerIP);
@@ -161,8 +165,9 @@ namespace HFM.Queue.Tests
       [Test, Category("SMP")]
       public void SMP_6_queue() // Linux SMP v6.24 - Waiting Upload
       {
-         QueueReader queue = new QueueReader();
-         queue.ReadQueue("..\\..\\..\\TestFiles\\SMP_6\\queue.dat");
+         QueueReader reader = new QueueReader();
+         reader.ReadQueue("..\\..\\..\\TestFiles\\SMP_6\\queue.dat");
+         IQueueBase queue = reader.Queue;
          Assert.AreEqual(600, queue.Version);
          Assert.AreEqual(7, queue.CurrentIndex);
          Assert.AreEqual(0.7182704f, queue.PerformanceFraction);
@@ -173,7 +178,7 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(4, queue.UploadRateUnitWeight);
          Assert.AreEqual(0, queue.ResultsSent);
 
-         QueueEntry entry6 = queue.GetQueueEntry(6);
+         IQueueEntry entry6 = queue.GetQueueEntry(6);
          Assert.AreEqual(QueueEntryStatus.ReadyForUpload, entry6.EntryStatus);
          Assert.AreEqual(3.97, entry6.SpeedFactor);
          Assert.AreEqual("171.64.65.56", entry6.ServerIP);
@@ -226,8 +231,9 @@ namespace HFM.Queue.Tests
       [Test, Category("GPU")]
       public void GPU2_4_queue() // GPU2 v6.23
       {
-         QueueReader queue = new QueueReader();
-         queue.ReadQueue("..\\..\\..\\TestFiles\\GPU2_4\\queue.dat");
+         QueueReader reader = new QueueReader();
+         reader.ReadQueue("..\\..\\..\\TestFiles\\GPU2_4\\queue.dat");
+         IQueueBase queue = reader.Queue;
          Assert.AreEqual(600, queue.Version);
          Assert.AreEqual(8, queue.CurrentIndex);
          Assert.AreEqual(0.990233958f, queue.PerformanceFraction);
@@ -238,7 +244,7 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(4, queue.UploadRateUnitWeight);
          Assert.AreEqual(305567834, queue.ResultsSent); // This number makes no sense
 
-         QueueEntry entry7 = queue.GetQueueEntry(7);
+         IQueueEntry entry7 = queue.GetQueueEntry(7);
          Assert.AreEqual(QueueEntryStatus.Finished, entry7.EntryStatus);
          Assert.AreEqual(178.51, entry7.SpeedFactor);
          Assert.AreEqual("171.64.65.106", entry7.ServerIP);
@@ -291,8 +297,9 @@ namespace HFM.Queue.Tests
       [Test, Category("GPU")]
       public void GPU2_5_queue() // GPU2 v6.23 - ID value for p10xxx Projects is written Big Endian
       {
-         QueueReader queue = new QueueReader();
-         queue.ReadQueue("..\\..\\..\\TestFiles\\GPU2_5\\queue.dat");
+         QueueReader reader = new QueueReader();
+         reader.ReadQueue("..\\..\\..\\TestFiles\\GPU2_5\\queue.dat");
+         IQueueBase queue = reader.Queue;
          Assert.AreEqual(600, queue.Version);
          Assert.AreEqual(9, queue.CurrentIndex);
          Assert.AreEqual(0.974022746f, queue.PerformanceFraction);
@@ -303,7 +310,7 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(4, queue.UploadRateUnitWeight);
          Assert.AreEqual(315582117, queue.ResultsSent); // This number makes no sense
 
-         QueueEntry entry9 = queue.GetQueueEntry(9);
+         IQueueEntry entry9 = queue.GetQueueEntry(9);
          Assert.AreEqual(QueueEntryStatus.FoldingNow, entry9.EntryStatus);
          Assert.AreEqual(0.0, entry9.SpeedFactor);
          Assert.AreEqual("171.64.65.71", entry9.ServerIP);
@@ -356,8 +363,9 @@ namespace HFM.Queue.Tests
       [Test, Category("Standard")]
       public void Standard_2_queue() // Standard PPC v6.xx
       {
-         QueueReader queue = new QueueReader();
-         queue.ReadQueue("..\\..\\..\\TestFiles\\Standard_2\\queue.dat");
+         QueueReader reader = new QueueReader();
+         reader.ReadQueue("..\\..\\..\\TestFiles\\Standard_2\\queue.dat");
+         IQueueBase queue = reader.Queue;
          Assert.AreEqual(600, queue.Version);
          Assert.AreEqual(2, queue.CurrentIndex);
          Assert.AreEqual(0.907946765f, queue.PerformanceFraction);
@@ -368,10 +376,10 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(1, queue.UploadRateUnitWeight);
          Assert.AreEqual(0, queue.ResultsSent);
          
-         QueueEntry entry0 = queue.GetQueueEntry(0);
+         IQueueEntry entry0 = queue.GetQueueEntry(0);
          Assert.AreEqual(QueueEntryStatus.Empty, entry0.EntryStatus);
 
-         QueueEntry entry1 = queue.GetQueueEntry(1);
+         IQueueEntry entry1 = queue.GetQueueEntry(1);
          Assert.AreEqual(QueueEntryStatus.Finished, entry1.EntryStatus);
          Assert.AreEqual(10.86, entry1.SpeedFactor);
          Assert.AreEqual("171.64.65.65", entry1.ServerIP);
@@ -420,7 +428,7 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(3872181, entry1.WuDataFileSize);
          Assert.AreEqual("Folding@Home", entry1.WorkUnitType);
 
-         QueueEntry entry2 = queue.GetQueueEntry(2);
+         IQueueEntry entry2 = queue.GetQueueEntry(2);
          Assert.AreEqual(QueueEntryStatus.FoldingNow, entry2.EntryStatus);
          Assert.AreEqual(0, entry2.SpeedFactor);
          Assert.AreEqual("171.64.65.65", entry2.ServerIP);
@@ -474,8 +482,9 @@ namespace HFM.Queue.Tests
       [Test, Category("Standard")]
       public void Standard_3_queue() // Standard PPC v5.01
       {
-         QueueReader queue = new QueueReader();
-         queue.ReadQueue("..\\..\\..\\TestFiles\\Standard_3\\queue.dat");
+         QueueReader reader = new QueueReader();
+         reader.ReadQueue("..\\..\\..\\TestFiles\\Standard_3\\queue.dat");
+         IQueueBase queue = reader.Queue;
          Assert.AreEqual(501, queue.Version);
          Assert.AreEqual(2, queue.CurrentIndex);
          Assert.AreEqual(0.823216438f, queue.PerformanceFraction);
@@ -486,7 +495,7 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(4, queue.UploadRateUnitWeight);
          Assert.AreEqual(0, queue.ResultsSent);
 
-         QueueEntry entry1 = queue.GetQueueEntry(1);
+         IQueueEntry entry1 = queue.GetQueueEntry(1);
          Assert.AreEqual(QueueEntryStatus.Finished, entry1.EntryStatus);
          Assert.AreEqual(8.44, entry1.SpeedFactor);
          Assert.AreEqual("171.64.65.58", entry1.ServerIP);
@@ -539,8 +548,9 @@ namespace HFM.Queue.Tests
       [Test, Category("Standard")]
       public void Standard_4_queue() // Standard x86 v6.xx
       {
-         QueueReader queue = new QueueReader();
-         queue.ReadQueue("..\\..\\..\\TestFiles\\Standard_4\\queue.dat");
+         QueueReader reader = new QueueReader();
+         reader.ReadQueue("..\\..\\..\\TestFiles\\Standard_4\\queue.dat");
+         IQueueBase queue = reader.Queue;
          Assert.AreEqual(600, queue.Version);
          Assert.AreEqual(1, queue.CurrentIndex);
          Assert.AreEqual(0.0f, queue.PerformanceFraction);
@@ -551,10 +561,10 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(0, queue.UploadRateUnitWeight);
          Assert.AreEqual(0, queue.ResultsSent);
 
-         QueueEntry entry0 = queue.GetQueueEntry(0);
+         IQueueEntry entry0 = queue.GetQueueEntry(0);
          Assert.AreEqual(QueueEntryStatus.Empty, entry0.EntryStatus);
 
-         QueueEntry entry1 = queue.GetQueueEntry(1);
+         IQueueEntry entry1 = queue.GetQueueEntry(1);
          Assert.AreEqual(QueueEntryStatus.FoldingNow, entry1.EntryStatus);
          Assert.AreEqual(0.0, entry1.SpeedFactor);
          Assert.AreEqual("171.65.103.162", entry1.ServerIP);

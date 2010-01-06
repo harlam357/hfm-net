@@ -41,6 +41,8 @@
     <Compile Include="IFrameData.cs" />
     <Compile Include="ILogLine.cs" />
     <Compile Include="IOwnedByClientInstance.cs" />
+    <Compile Include="IQueueBase.cs" />
+    <Compile Include="IQueueEntry.cs" />
     <Compile Include="IUnitFrame.cs" />
     <Compile Include="IUnitInfo.cs" />
     <Compile Include="PlatformOps.cs" />

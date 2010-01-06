@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 
 using HFM.Framework;
-using HFM.Helpers;
 using HFM.Preferences;
 using HFM.Proteins;
 using HFM.Instrumentation;
