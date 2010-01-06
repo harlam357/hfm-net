@@ -59,7 +59,6 @@ namespace HFM.Queue
       internal QueueBase()
       {
          _q = new Queue();
-         _DataPopulated = false;
       }
 
       /// <summary>

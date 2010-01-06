@@ -162,6 +162,7 @@ namespace HFM.Helpers
 
          Request.Method = WebRequestMethods.Ftp.DownloadFile;
          Request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+         //Request.UsePassive = PassiveMode;
 
          SetNetworkCredentials(Request, Username, Password);
          // Don't Set Proxy on FtpWebRequest, Proxy is for Http calls only.

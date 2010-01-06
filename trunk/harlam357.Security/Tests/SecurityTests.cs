@@ -263,8 +263,11 @@ namespace harlam357.Security.Tests
 
          sym.IntializationVector = ivData;
          encryptedData = sym.Encrypt(new Data(TargetString), keyData);
+         string encryptedString = encryptedData.Base64;
+         
+         Data newEncryptedData = new Data(Utils.FromBase64(encryptedString));
          sym2.IntializationVector = ivData;
-         decryptedData = sym2.Decrypt(encryptedData, keyData);
+         decryptedData = sym2.Decrypt(newEncryptedData, keyData);
 
          ////-- the data will be padded to the encryption blocksize, so we need to trim it back down.
          //return decryptedData.ToString().Substring(0, _TargetData.Bytes.Length);

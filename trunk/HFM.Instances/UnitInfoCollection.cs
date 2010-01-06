@@ -266,7 +266,7 @@ namespace HFM.Instances
          // Write Bonus Credit if enabled - Issue 125
          if (PreferenceSet.Instance.CalculateBonus)
          {
-            sbldr.Append(unit.GetCredit());
+            sbldr.Append(unit.GetBonusCredit());
          }
          else
          {

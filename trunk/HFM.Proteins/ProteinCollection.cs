@@ -33,6 +33,8 @@ using HFM.Instrumentation;
 
 namespace HFM.Proteins
 {
+   public delegate Protein GetProteinDelegate();
+
    /// <summary>
    /// Protein Collection is a Generic Dictionary based on a string key and a Protein value.
    /// </summary>
@@ -43,8 +45,7 @@ namespace HFM.Proteins
       // Would like to make this a const
       private readonly string _LocalProjectInfoFile = Path.Combine(PreferenceSet.Instance.AppDataPath, "ProjectInfo.tab");
       
-      public delegate Protein GetProteinDelegate();
-      private static GetProteinDelegate _GetProteinHandler = null;
+      private static GetProteinDelegate _GetProteinHandler;
       public static GetProteinDelegate GetProteinHandler
       {
          get { return _GetProteinHandler; }

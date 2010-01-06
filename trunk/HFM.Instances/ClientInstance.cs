@@ -19,6 +19,7 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Drawing;
 using System.Collections.Generic;
@@ -350,6 +351,7 @@ namespace HFM.Instances
       /// <summary>
       /// Array of LogLine Lists - Used to hold QueueEntry LogLines
       /// </summary>
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public IList<ILogLine>[] QueueLogLines
       {
          get { return _QueueLogLines; }
@@ -750,7 +752,7 @@ namespace HFM.Instances
             // Issue 125
             if (ProductionValuesOk && PreferenceSet.Instance.CalculateBonus)
             {
-               return CurrentUnitInfo.GetCredit();
+               return CurrentUnitInfo.GetBonusCredit();
             }
 
             return CurrentUnitInfo.Credit;

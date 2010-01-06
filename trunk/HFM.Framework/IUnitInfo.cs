@@ -217,7 +217,8 @@ namespace HFM.Framework
       /// <summary>
       /// Get the Credit of the Unit (including bonus)
       /// </summary>
-      double GetCredit();
+      [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+      double GetBonusCredit();
 
       double Frames { get; }
 

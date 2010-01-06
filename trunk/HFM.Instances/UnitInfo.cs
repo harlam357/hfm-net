@@ -644,9 +644,10 @@ namespace HFM.Instances
       /// <summary>
       /// Get the Credit of the Unit (including bonus)
       /// </summary>
-      public double GetCredit()
+      [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+      public double GetBonusCredit()
       {
-         return CurrentProtein.GetCredit(EFT);
+         return CurrentProtein.GetBonusCredit(EFT);
       }
 
       public double Frames

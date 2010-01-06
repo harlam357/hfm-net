@@ -225,7 +225,7 @@ namespace HFM.Proteins
       /// Get the Credit of the Unit (including bonus)
       /// </summary>
       /// <param name="EstTimeOfUnit">Estimated Time of the Unit</param>
-      public double GetCredit(TimeSpan EstTimeOfUnit)
+      public double GetBonusCredit(TimeSpan EstTimeOfUnit)
       {
          double bonusMulti = GetBonusMultiplier(EstTimeOfUnit);
          return Math.Round((Credit * bonusMulti), 0);
