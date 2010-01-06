@@ -20,14 +20,18 @@
 
 using System;
 
+using HFM.Framework;
 using HFM.Preferences;
 
 namespace HFM.Proteins
 {
    [Serializable]
-   public class Protein
+   public class Protein : IProtein
    {
       private int _ProjectNumber = 0;
+      /// <summary>
+      /// Project Number
+      /// </summary>
       public int ProjectNumber
       {
          get { return _ProjectNumber; }
@@ -46,6 +50,9 @@ namespace HFM.Proteins
       }
 
       private String _ServerIP = "0.0.0.0";
+      /// <summary>
+      /// Server IP Address
+      /// </summary>
       public String ServerIP
       {
          get { return _ServerIP; }
@@ -53,6 +60,9 @@ namespace HFM.Proteins
       }
 
       private String _WorkUnitName = "Unknown";
+      /// <summary>
+      /// Work Unit Name
+      /// </summary>
       public String WorkUnitName
       {
          get { return _WorkUnitName; }
@@ -60,6 +70,9 @@ namespace HFM.Proteins
       }
 
       private int _NumAtoms = 0;
+      /// <summary>
+      /// Number of Atoms
+      /// </summary>
       public int NumAtoms
       {
          get { return _NumAtoms; }
@@ -78,6 +91,9 @@ namespace HFM.Proteins
       }
 
       private double _PreferredDays = 0;
+      /// <summary>
+      /// Deadline - Preferred Days
+      /// </summary>
       public double PreferredDays
       {
          get { return _PreferredDays; }
@@ -96,6 +112,9 @@ namespace HFM.Proteins
       }
 
       private double _MaxDays = 0;
+      /// <summary>
+      /// Deadline - Maximum Days
+      /// </summary>
       public double MaxDays
       {
          get { return _MaxDays; }
@@ -114,6 +133,9 @@ namespace HFM.Proteins
       }
 
       private double _Credit = 0;
+      /// <summary>
+      /// Work Unit Credit
+      /// </summary>
       public double Credit
       {
          get { return _Credit; }
@@ -132,6 +154,9 @@ namespace HFM.Proteins
       }
 
       private int _Frames = 100;
+      /// <summary>
+      /// Number of Frames
+      /// </summary>
       public int Frames
       {
          get { return _Frames; }
@@ -150,6 +175,9 @@ namespace HFM.Proteins
       }
 
       private String _Core = "Unknown";
+      /// <summary>
+      /// Core Identification String
+      /// </summary>
       public String Core
       {
          get { return _Core; }
@@ -157,6 +185,9 @@ namespace HFM.Proteins
       }
 
       private String _Description = PreferenceSet.UnassignedDescription;
+      /// <summary>
+      /// Project Description (usually a URL)
+      /// </summary>
       public String Description
       {
          get { return _Description; }
@@ -164,6 +195,9 @@ namespace HFM.Proteins
       }
 
       private String _Contact = "Unknown";
+      /// <summary>
+      /// Project Research Contact
+      /// </summary>
       public String Contact
       {
          get { return _Contact; }
@@ -171,12 +205,18 @@ namespace HFM.Proteins
       }
       
       private double _KFactor = 0;
+      /// <summary>
+      /// Bonus (K) Factor
+      /// </summary>
       public double KFactor
       {
          get { return _KFactor; }
          set { _KFactor = value; }
       }
       
+      /// <summary>
+      /// Flag Denoting if Project Number is Unknown
+      /// </summary>
       public bool IsUnknown
       {
          get { return ProjectNumber == 0; }

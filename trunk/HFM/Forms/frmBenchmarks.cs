@@ -25,11 +25,13 @@ using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
 
+using ZedGraph;
+
+using HFM.Framework;
 using HFM.Instances;
 using HFM.Preferences;
 using HFM.Proteins;
 using HFM.Instrumentation;
-using ZedGraph;
 
 namespace HFM.Forms
 {
@@ -292,7 +294,7 @@ namespace HFM.Forms
       {
          List<string> lines = new List<string>(5);
 
-         Protein protein;
+         IProtein protein;
          ProteinCollection.Instance.TryGetValue(ProjectID, out protein);
 
          if (protein != null)

@@ -233,7 +233,7 @@ namespace HFM.Instances
          //        <Contact>spark7</Contact>
          //    </Protein>
 
-         Protein p = new Protein();
+         IProtein p = new Protein();
          if (ProteinCollection.Instance.ContainsKey(Instance.CurrentUnitInfo.ProjectID))
          {
             p = ProteinCollection.Instance[Instance.CurrentUnitInfo.ProjectID];

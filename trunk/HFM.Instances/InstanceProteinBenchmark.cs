@@ -168,11 +168,11 @@ namespace HFM.Instances
          }
       }
       
-      public Protein Protein
+      public IProtein Protein
       {
          get
          {
-            Protein protein;
+            IProtein protein;
             ProteinCollection.Instance.TryGetValue(_ProjectID, out protein);
 
             return protein;
@@ -223,7 +223,7 @@ namespace HFM.Instances
       {
          List<string> output = new List<string>(12);
 
-         Protein theProtein = Protein;
+         IProtein theProtein = Protein;
          if (theProtein != null)
          {
             output.Add(String.Empty);

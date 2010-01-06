@@ -27,19 +27,20 @@ using System.Text;
 
 using Majestic12;
 
+using HFM.Framework;
 using HFM.Helpers;
 using HFM.Preferences;
 using HFM.Instrumentation;
 
 namespace HFM.Proteins
 {
-   public delegate Protein GetProteinDelegate();
+   public delegate IProtein GetProteinDelegate();
 
    /// <summary>
    /// Protein Collection is a Generic Dictionary based on a string key and a Protein value.
    /// </summary>
    //[Serializable]
-   public sealed class ProteinCollection : SortedDictionary<Int32, Protein>
+   public sealed class ProteinCollection : SortedDictionary<Int32, IProtein>
    {
       #region Members
       // Would like to make this a const
@@ -489,7 +490,7 @@ namespace HFM.Proteins
          String[] CSVData = new String[Count];
          Int32 i = 0;
          
-         foreach (KeyValuePair<Int32, Protein> kvp in this)
+         foreach (KeyValuePair<Int32, IProtein> kvp in this)
          {
             // Project Number, Server IP, Work Unit Name, Number of Atoms, Preferred (days),
             // Final Deadline (days), Credit, Frames, Code, Description, Contact, KFactor
@@ -513,7 +514,7 @@ namespace HFM.Proteins
       /// Get Protein (should be called from worker thread)
       /// </summary>
       /// <param name="ProjectID">Project ID</param>
-      public Protein GetProtein(int ProjectID)
+      public IProtein GetProtein(int ProjectID)
       {
          // Substitute an external delegate
          if (_GetProteinHandler != null)

@@ -22,6 +22,7 @@ using NUnit.Framework;
 
 using Majestic12;
 
+using HFM.Framework;
 using HFM.Proteins;
 
 namespace HFM.Proteins.Tests
@@ -40,7 +41,7 @@ namespace HFM.Proteins.Tests
          
          Assert.AreEqual(345, Proteins.Count);
          
-         Protein p = Proteins.GetProtein(2483);
+         IProtein p = Proteins.GetProtein(2483);
          Assert.AreEqual(false, p.IsUnknown);
          p = Proteins.GetProtein(2482);
          Assert.AreEqual(true, p.IsUnknown);

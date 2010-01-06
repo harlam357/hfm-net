@@ -436,11 +436,11 @@ namespace HFM.Instances
       /// <summary>
       /// Class member containing info on the currently running protein
       /// </summary>
-      private Protein _CurrentProtein;
+      private IProtein _CurrentProtein;
       /// <summary>
       /// Class member containing info on the currently running protein
       /// </summary>
-      protected Protein CurrentProtein
+      protected IProtein CurrentProtein
       {
          get { return _CurrentProtein; }
          set 
@@ -451,7 +451,7 @@ namespace HFM.Instances
             }
          
             // Get a Reference to the Old Protein
-            Protein OldProtein = CurrentProtein;
+            IProtein OldProtein = CurrentProtein;
             // Set the New Protein
             _CurrentProtein = value;
             // The Current Protein controls the length of the Unit Frame
@@ -1174,7 +1174,7 @@ namespace HFM.Instances
       {
          Debug.Assert(ProjectRCG.Count == 4);
 
-         Protein protein = ProteinCollection.Instance.GetProtein(ProjectRCG[0]);
+         IProtein protein = ProteinCollection.Instance.GetProtein(ProjectRCG[0]);
          // If Protein is Unknown, set the Project values anyway.  We still want
          // to see the Project (R/C/G) values, we just won't get any production
          // readings from this UnitInfo.
@@ -1190,7 +1190,7 @@ namespace HFM.Instances
       /// <param name="protein">Unit Protein</param>
       /// <param name="ProjectRCG">List of Project (R/C/G) values</param>
       /// <exception cref="System.Collections.Generic.KeyNotFoundException">Thrown when Project ID cannot be found in Protein Collection.</exception>
-      private void SetProjectAndClientType(Protein protein, IList<int> ProjectRCG)
+      private void SetProjectAndClientType(IProtein protein, IList<int> ProjectRCG)
       {
          Debug.Assert(ProjectRCG.Count == 4);
 
@@ -1210,7 +1210,7 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="CurrentProtein">Current Instance Protein</param>
       /// <returns>Client Type</returns>
-      private static ClientType GetClientTypeFromProtein(Protein CurrentProtein)
+      private static ClientType GetClientTypeFromProtein(IProtein CurrentProtein)
       {
          switch (CurrentProtein.Core.ToUpperInvariant())
          {
