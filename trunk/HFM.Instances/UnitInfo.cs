@@ -28,7 +28,6 @@ using System.Text.RegularExpressions;
 using HFM.Framework;
 using HFM.Instrumentation;
 using HFM.Preferences;
-using HFM.Proteins;
 
 namespace HFM.Instances
 {
@@ -154,7 +153,8 @@ namespace HFM.Instances
          ProteinTag = String.Empty;
          UnitResult = WorkUnitResult.Unknown;
 
-         CurrentProtein = new Protein();
+         IProteinCollection proteinCollection = InstanceProvider.GetInstance<IProteinCollection>();
+         CurrentProtein = proteinCollection.GetNewProtein();
 
          RawFramesComplete = 0;
          RawFramesTotal = 0;
@@ -1174,7 +1174,8 @@ namespace HFM.Instances
       {
          Debug.Assert(ProjectRCG.Count == 4);
 
-         IProtein protein = ProteinCollection.Instance.GetProtein(ProjectRCG[0]);
+         IProteinCollection proteinCollection = InstanceProvider.GetInstance<IProteinCollection>();
+         IProtein protein = proteinCollection.GetProtein(ProjectRCG[0]);
          // If Protein is Unknown, set the Project values anyway.  We still want
          // to see the Project (R/C/G) values, we just won't get any production
          // readings from this UnitInfo.

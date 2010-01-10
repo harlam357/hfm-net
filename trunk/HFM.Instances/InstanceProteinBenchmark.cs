@@ -23,7 +23,6 @@ using System.Diagnostics;
 
 using HFM.Framework;
 using HFM.Preferences;
-using HFM.Proteins;
 using HFM.Instrumentation;
 
 namespace HFM.Instances
@@ -172,8 +171,10 @@ namespace HFM.Instances
       {
          get
          {
+            IProteinCollection proteinCollection = InstanceProvider.GetInstance<IProteinCollection>();
+
             IProtein protein;
-            ProteinCollection.Instance.TryGetValue(_ProjectID, out protein);
+            proteinCollection.TryGetValue(_ProjectID, out protein);
 
             return protein;
          }

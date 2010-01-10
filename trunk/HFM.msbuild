@@ -37,13 +37,9 @@
    </Target>
 
    <Target Name="Compile" DependsOnTargets="Version">
-      <MSBuild Projects="HFM.sln"
-               Targets="Rebuild"
-               Properties="Configuration=ScriptedRelease" />
-
       <MSBuild Projects="HFM.Tests.sln"
                Targets="Rebuild"
-               Properties="Configuration=Release" />
+               Properties="Configuration=ScriptedRelease" />
 
       <CallTarget Targets="NUnit" />
    </Target>

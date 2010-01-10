@@ -22,7 +22,6 @@ using System.Globalization;
 using System.Windows.Forms;
 
 using HFM.Framework;
-using HFM.Proteins;
 
 namespace HFM.Classes
 {
@@ -55,7 +54,9 @@ namespace HFM.Classes
    
       public event EventHandler<QueueIndexChangedEventArgs> QueueIndexChanged;
    
-      private IQueueBase _qBase = null;
+      private IQueueBase _qBase;
+      private IProteinCollection _proteinCollection;
+      
       private ClientType _ClientType = ClientType.Unknown;
       private bool _ClientIsOnVirtualMachine;
       
@@ -66,6 +67,11 @@ namespace HFM.Classes
          InitializeComponent();
       }
       
+      public void SetProteinCollection(IProteinCollection proteinCollection)
+      {
+         _proteinCollection = proteinCollection;
+      }
+
       private void OnQueueIndexChanged(QueueIndexChangedEventArgs e)
       {
          if (QueueIndexChanged != null)
@@ -115,7 +121,7 @@ namespace HFM.Classes
 
             IQueueEntry entry = _qBase.GetQueueEntry((uint)cboQueueIndex.SelectedIndex);
             txtStatus.Text = entry.EntryStatus.ToString();
-            txtCredit.Text = ProteinCollection.Instance.ContainsKey(entry.ProjectID) ? ProteinCollection.Instance[entry.ProjectID].Credit.ToString(CultureInfo.CurrentCulture) : "0";
+            txtCredit.Text = _proteinCollection.ContainsKey(entry.ProjectID) ? _proteinCollection[entry.ProjectID].Credit.ToString(CultureInfo.CurrentCulture) : "0";
             if (_ClientIsOnVirtualMachine)
             {
                txtBeginDate.Text = String.Format("{0} {1}", entry.BeginTimeUtc.ToShortDateString(), entry.BeginTimeUtc.ToShortTimeString());

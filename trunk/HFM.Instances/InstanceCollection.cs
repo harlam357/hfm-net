@@ -34,7 +34,6 @@ using System.Collections.Generic;
 using HFM.Framework;
 using HFM.Helpers;
 using HFM.Preferences;
-using HFM.Proteins;
 using HFM.Instrumentation;
 
 namespace HFM.Instances
@@ -175,7 +174,8 @@ namespace HFM.Instances
          webTimer.Elapsed += webGenTimer_Tick;
 
          // Hook up Protein Collection Updated Event Handler
-         ProteinCollection.Instance.ProjectInfoUpdated += ProteinCollection_ProjectInfoUpdated;
+         IProteinCollection proteinCollection = InstanceProvider.GetInstance<IProteinCollection>();
+         proteinCollection.ProjectInfoUpdated += ProteinCollection_ProjectInfoUpdated;
 
          // Set Offline Clients Sort Flag
          OfflineClientsLast = PreferenceSet.Instance.OfflineLast;

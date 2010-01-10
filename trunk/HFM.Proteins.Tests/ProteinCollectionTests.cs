@@ -36,8 +36,8 @@ namespace HFM.Proteins.Tests
          Uri baseUri = new Uri(Environment.CurrentDirectory);
          Uri fileUri = new Uri(baseUri, "..\\TestFiles\\psummaryC.html");
       
-         ProteinCollection.ProjectLoadLocation = fileUri;
-         ProteinCollection Proteins = ProteinCollection.Instance;
+         ProteinCollection Proteins = new ProteinCollection();
+         Proteins.ReadFromProjectSummaryHtml(fileUri);
          
          Assert.AreEqual(345, Proteins.Count);
          

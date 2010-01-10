@@ -21,6 +21,12 @@
 using System;
 using System.Windows.Forms;
 
+using Castle.Windsor;
+using Castle.Windsor.Configuration.Interpreters;
+using Castle.Core.Resource;
+
+using HFM.Framework;
+
 namespace HFM
 {
    static class Program
@@ -43,6 +49,10 @@ namespace HFM
             MessageBox.Show("Another instance of HFM.NET is already running.");
             return;
          }
+
+         InstanceProvider.SetContainer(
+            new WindsorContainer(
+               new XmlInterpreter(new ConfigResource("castle"))));
 
          cmdArgs = argv;
          Application.EnableVisualStyles();

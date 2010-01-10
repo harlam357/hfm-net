@@ -36,7 +36,6 @@ using HFM.Framework;
 using HFM.Helpers;
 using HFM.Instances;
 using HFM.Instrumentation;
-using HFM.Proteins;
 using HFM.Preferences;
 
 namespace HFM.Forms
@@ -108,6 +107,10 @@ namespace HFM.Forms
       {
          // This call is Required by the Windows Form Designer
          InitializeComponent();
+
+         IProteinCollection proteinCollection = InstanceProvider.GetInstance<IProteinCollection>();
+         proteinCollection.Load();
+         queueControl.SetProteinCollection(proteinCollection);
 
          // Set Main Form Text
          base.Text = String.Format("HFM.NET v{0} - Beta", PlatformOps.ApplicationVersion);
@@ -1343,7 +1346,8 @@ namespace HFM.Forms
       /// </summary>
       private void mnuToolsDownloadProjects_Click(object sender, EventArgs e)
       {
-         ProteinCollection.Instance.BeginDownloadFromStanford();
+         IProteinCollection proteinCollection = InstanceProvider.GetInstance<IProteinCollection>();
+         proteinCollection.BeginDownloadFromStanford();
       }
 
       /// <summary>
@@ -1359,7 +1363,7 @@ namespace HFM.Forms
             ProjectID = ClientInstances.SelectedInstance.CurrentUnitInfo.ProjectID;
          }
          
-         frmBenchmarks frm = new frmBenchmarks(ClientInstances, ProjectID);
+         frmBenchmarks frm = new frmBenchmarks(InstanceProvider.GetInstance<IProteinCollection>(), ClientInstances, ProjectID);
          frm.StartPosition = FormStartPosition.Manual;
 
          // Restore state data

@@ -20,6 +20,7 @@
 using System;
 using System.Diagnostics;
 
+using Castle.Windsor;
 using NUnit.Framework;
 
 using HFM.Framework;
@@ -31,29 +32,30 @@ namespace HFM.Instances.Tests
    [TestFixture]
    public class ClientInstanceTests
    {
+      private IWindsorContainer container = new WindsorContainer();
+   
       [SetUp]
       public void Init()
       {
          TraceLevelSwitch.Instance.Level = TraceLevel.Verbose;
+         container = new WindsorContainer();
+         container.AddComponent("ProteinCollection", typeof(IProteinCollection), typeof(ProteinCollection));
+         InstanceProvider.SetContainer(container);
       }
 
       [Test, Category("SMP")]
       public void SMP_3()
       {
+         IProteinCollection proteinCollection = (IProteinCollection)container["ProteinCollection"];
+         Protein p = new Protein();
+         p.ProjectNumber = 2677;
+         p.Core = "GROCVS";
+         proteinCollection.Add(2677, (IProtein)p);
+      
          // Setup Test Instance
          ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
-         // Inject our own delegate for getting the Protein
-         // to isolate from what's actually available in the
-         // ProteinCollection Cache (or psummary).
-         ProteinCollection.GetProteinHandler = delegate
-         {
-            Protein p = new Protein();
-            p.ProjectNumber = 2677;
-            p.Core = "GROCVS";
-            return p;
-         };
          
          Instance.InstanceName = "SMP_3";
          Instance.Path = "..\\..\\..\\TestFiles\\SMP_3";
@@ -93,20 +95,16 @@ namespace HFM.Instances.Tests
       [Test, Category("SMP")]
       public void SMP_7()
       {
+         IProteinCollection proteinCollection = (IProteinCollection)container["ProteinCollection"];
+         Protein p = new Protein();
+         p.ProjectNumber = 2669;
+         p.Core = "GROCVS";
+         proteinCollection.Add(2669, (IProtein)p);
+      
          // Setup Test Instance
          ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
-         // Inject our own delegate for getting the Protein
-         // to isolate from what's actually available in the
-         // ProteinCollection Cache (or psummary).
-         ProteinCollection.GetProteinHandler = delegate
-         {
-            Protein p = new Protein();
-            p.ProjectNumber = 2669;
-            p.Core = "GROCVS";
-            return p;
-         };
          
          Instance.InstanceName = "SMP_7";
          Instance.Path = "..\\..\\..\\TestFiles\\SMP_7";
@@ -159,13 +157,6 @@ namespace HFM.Instances.Tests
          ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
-         /*** Return a new Protein since the Project information
-          *   is unavailable.
-          ***/
-         ProteinCollection.GetProteinHandler = delegate
-         {
-            return new Protein();
-         };
 
          Instance.InstanceName = "SMP_8_1";
          Instance.Path = "..\\..\\..\\TestFiles\\SMP_8";
@@ -212,20 +203,16 @@ namespace HFM.Instances.Tests
           *   Protein and allow the TypeOfClient to be set correctly.
           ***/
 
+         IProteinCollection proteinCollection = (IProteinCollection)container["ProteinCollection"];
+         Protein p = new Protein();
+         p.ProjectNumber = 2683;
+         p.Core = "GROCVS";
+         proteinCollection.Add(2683, (IProtein)p);
+
          // Setup Test Instance
          ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
-         /*** Return the Protein that matches the data in the
-          *   unitinfo file since it will be available.
-          ***/
-         ProteinCollection.GetProteinHandler = delegate
-         {
-            Protein p = new Protein();
-            p.ProjectNumber = 2683;
-            p.Core = "GROCVS";
-            return p;
-         };
 
          Instance.InstanceName = "SMP_8_2";
          Instance.Path = "..\\..\\..\\TestFiles\\SMP_8";
@@ -242,20 +229,16 @@ namespace HFM.Instances.Tests
       [Test, Category("GPU")]
       public void GPU2_3()
       {
+         IProteinCollection proteinCollection = (IProteinCollection)container["ProteinCollection"];
+         Protein p = new Protein();
+         p.ProjectNumber = 5756;
+         p.Core = "GROGPU2";
+         proteinCollection.Add(5756, (IProtein)p);
+      
          // Setup Test Instance
          ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
-         // Inject our own delegate for getting the Protein
-         // to isolate from what's actually available in the
-         // ProteinCollection Cache (or psummary).
-         ProteinCollection.GetProteinHandler = delegate
-         {
-            Protein p = new Protein();
-            p.ProjectNumber = 5756;
-            p.Core = "GROGPU2";
-            return p;
-         };
          
          Instance.InstanceName = "GPU2_3";
          Instance.Path = "..\\..\\..\\TestFiles\\GPU2_3";
@@ -295,20 +278,16 @@ namespace HFM.Instances.Tests
       [Test, Category("GPU")]
       public void GPU2_6()
       {
+         IProteinCollection proteinCollection = (IProteinCollection)container["ProteinCollection"];
+         Protein p = new Protein();
+         p.ProjectNumber = 5770;
+         p.Core = "GROGPU2";
+         proteinCollection.Add(5770, (IProtein)p);
+      
          // Setup Test Instance
          ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
-         // Inject our own delegate for getting the Protein
-         // to isolate from what's actually available in the
-         // ProteinCollection Cache (or psummary).
-         ProteinCollection.GetProteinHandler = delegate
-         {
-            Protein p = new Protein();
-            p.ProjectNumber = 5770;
-            p.Core = "GROGPU2";
-            return p;
-         };
 
          Instance.InstanceName = "GPU2_6";
          Instance.Path = "..\\..\\..\\TestFiles\\GPU2_6";

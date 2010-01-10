@@ -1,7 +1,7 @@
 /*
  * HFM.NET - Protein Collection Class
  * Copyright (C) 2006 David Rawling
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,48 +34,57 @@ using HFM.Instrumentation;
 
 namespace HFM.Proteins
 {
-   public delegate IProtein GetProteinDelegate();
-
    /// <summary>
-   /// Protein Collection is a Generic Dictionary based on a string key and a Protein value.
+   /// Protein Collection
    /// </summary>
    //[Serializable]
-   public sealed class ProteinCollection : SortedDictionary<Int32, IProtein>
+   public sealed class ProteinCollection : SortedDictionary<Int32, IProtein>, IProteinCollection
    {
       #region Members
-      // Would like to make this a const
-      private readonly string _LocalProjectInfoFile = Path.Combine(PreferenceSet.Instance.AppDataPath, "ProjectInfo.tab");
+      /// <summary>
+      /// Collection Load Class Lock
+      /// </summary>
+      private readonly static object _classLock = typeof(ProteinCollection);
       
-      private static GetProteinDelegate _GetProteinHandler;
-      public static GetProteinDelegate GetProteinHandler
-      {
-         get { return _GetProteinHandler; }
-         set { _GetProteinHandler = value; }
-      }
-
-      // Date and Time of Last psummary download attempt. See BeginDownloadFromStanford() and DownloadFromStanford().
+      /// <summary>
+      /// Date and Time of Last psummary download attempt.
+      /// </summary>
+      /// <remarks>See BeginDownloadFromStanford() and DownloadFromStanford().</remarks>
       private DateTime _LastDownloadTime = DateTime.MinValue;
 
-      // List of Projects that were not found after a download attempt.  See GetProtein().
-      // If a Project is added to this list, it will not trigger another download attempt for 1 Day, unless
-      // the user manually initiates a Project Download.  In which case, all Project on this list will be 
-      // cleared. See BeginDownloadFromStanford().
+      /// <summary>
+      /// List of Projects that were not found after a download attempt.
+      /// </summary>
+      /// <remarks>See GetProtein() and BeginDownloadFromStanford().</remarks>
       private readonly Dictionary<Int32, DateTime> _ProjectsNotFound = new Dictionary<Int32, DateTime>(); 
       #endregion
 
       #region Properties
-      private static Uri _ProjectLoadLocation;
-      
-      public static Uri ProjectLoadLocation
+      private readonly string _ProjectInfoLocation = Path.Combine(PreferenceSet.Instance.AppDataPath, "ProjectInfo.tab");
+      /// <summary>
+      /// ProjectInfo.tab File Location
+      /// </summary>
+      public string ProjectInfoLocation
       {
-         get { return _ProjectLoadLocation; }
-         set { _ProjectLoadLocation = value; }
+         get { return _ProjectInfoLocation; }
+      }
+      
+      private Uri _ProjectSummaryLocationn;
+      /// <summary>
+      /// Project Summary HTML File Location
+      /// </summary>
+      public Uri ProjectSummaryLocation
+      {
+         get { return _ProjectSummaryLocationn; }
+         set { _ProjectSummaryLocationn = value; }
       } 
       #endregion
 
       #region Events and Event Wrappers
+      /// <summary>
+      /// Project (Protein) Data has been Updated
+      /// </summary>
       public event EventHandler ProjectInfoUpdated;
-
       private void OnProjectInfoUpdated(EventArgs e)
       {
          if (ProjectInfoUpdated != null)
@@ -85,138 +94,107 @@ namespace HFM.Proteins
       } 
       #endregion
 
-      #region Constructor
+      #region Methods
       /// <summary>
-      /// Private constructor - only called via the Instance property
+      /// Execute Primary Collection Load Sequence
       /// </summary>
-      private ProteinCollection()
+      public void Load()
       {
-         if (ProjectLoadLocation == null)
+         if (LoadFromTabDelimitedFile() == false)
          {
-            if (LoadFromTabDelimitedFile() == false)
-            {
-               DownloadFromStanford();
-            }
-         }
-         else
-         {
-            DownloadFromStanford(ProjectLoadLocation);
-         }
-      } 
-      #endregion
-
-      #region Singleton Support
-      // Instance and Class Lock
-      private static ProteinCollection _Instance;
-      private readonly static object _classLock = typeof(ProteinCollection);
-      
-      /// <summary>
-      /// Thread-safe, static, Singleton initialize/return
-      /// </summary>
-      public static ProteinCollection Instance
-      {
-         get
-         {
-            lock (_classLock)
-            {
-               if (_Instance == null)
-               {
-                  _Instance = new ProteinCollection();
-               }
-            }
-            return _Instance;
+            DownloadFromStanford();
          }
       }
-      #endregion
 
-      #region Methods
       /// <summary>
       /// Load the Protein Collection from Tab Delimited File
       /// </summary>
-      private bool LoadFromTabDelimitedFile()
+      public bool LoadFromTabDelimitedFile()
       {
-         return LoadFromTabDelimitedFile(_LocalProjectInfoFile);
+         return LoadFromTabDelimitedFile(_ProjectInfoLocation);
       }
 
       /// <summary>
       /// Load the Protein Collection from Tab Delimited File
       /// </summary>
       /// <param name="ProjectInfoFilePath">Path to File</param>
-      private bool LoadFromTabDelimitedFile(string ProjectInfoFilePath)
+      public bool LoadFromTabDelimitedFile(string ProjectInfoFilePath)
       {
          DateTime Start = HfmTrace.ExecStart;
-
-         try
+         lock (_classLock)
          {
-            // If this is set to true, then it signals that the Project load
-            // was successful but all expected data was not present.  We now
-            // need to Download the psummary and update currently running
-            // Projects with current data. Old Projects not found on the 
-            // psummary will be left in the collection for historical purposes
-            // and the missing values defaulted.
-            bool BackwardCompatibleDownload = false;
-         
-            String[] CSVData = File.ReadAllLines(ProjectInfoFilePath);
-            foreach (String sLine in CSVData)
+            try
             {
-               try
-               {
-                  // Parse the current line from the CSV file
-                  Protein p = new Protein();
-                  String[] lineData = sLine.Split(new char[] { '\t' }, StringSplitOptions.None);
-                  p.ProjectNumber = Int32.Parse(lineData[0], CultureInfo.InvariantCulture);
-                  p.ServerIP = lineData[1].Trim();
-                  p.WorkUnitName = lineData[2].Trim();
-                  p.NumAtoms = Int32.Parse(lineData[3], CultureInfo.InvariantCulture);
-                  p.PreferredDays = Double.Parse(lineData[4], CultureInfo.InvariantCulture);
-                  p.MaxDays = Double.Parse(lineData[5], CultureInfo.InvariantCulture);
-                  p.Credit = Double.Parse(lineData[6], CultureInfo.InvariantCulture);
-                  p.Frames = Int32.Parse(lineData[7], CultureInfo.InvariantCulture);
-                  p.Core = lineData[8];
-                  p.Description = lineData[9];
-                  p.Contact = lineData[10];
-                  
-                  // Backward Compatibility with v0.4.0 or prior
-                  // Newer versions download and parse the KFactor
-                  if (lineData.Length > 11)
-                  {
-                     p.KFactor = Double.Parse(lineData[11], CultureInfo.InvariantCulture);
-                  }
-                  else
-                  {
-                     BackwardCompatibleDownload = true;
-                     p.KFactor = 0;
-                  }
+               // If this is set to true, then it signals that the Project load
+               // was successful but all expected data was not present.  We now
+               // need to Download the psummary and update currently running
+               // Projects with current data. Old Projects not found on the 
+               // psummary will be left in the collection for historical purposes
+               // and the missing values defaulted.
+               bool BackwardCompatibleDownload = false;
 
-                  if (ContainsKey(p.ProjectNumber))
+               String[] CSVData = File.ReadAllLines(ProjectInfoFilePath);
+               foreach (String sLine in CSVData)
+               {
+                  try
                   {
-                     this[p.ProjectNumber] = p;
+                     // Parse the current line from the CSV file
+                     Protein p = new Protein();
+                     String[] lineData = sLine.Split(new char[] {'\t'}, StringSplitOptions.None);
+                     p.ProjectNumber = Int32.Parse(lineData[0], CultureInfo.InvariantCulture);
+                     p.ServerIP = lineData[1].Trim();
+                     p.WorkUnitName = lineData[2].Trim();
+                     p.NumAtoms = Int32.Parse(lineData[3], CultureInfo.InvariantCulture);
+                     p.PreferredDays = Double.Parse(lineData[4], CultureInfo.InvariantCulture);
+                     p.MaxDays = Double.Parse(lineData[5], CultureInfo.InvariantCulture);
+                     p.Credit = Double.Parse(lineData[6], CultureInfo.InvariantCulture);
+                     p.Frames = Int32.Parse(lineData[7], CultureInfo.InvariantCulture);
+                     p.Core = lineData[8];
+                     p.Description = lineData[9];
+                     p.Contact = lineData[10];
+
+                     // Backward Compatibility with v0.4.0 or prior
+                     // Newer versions download and parse the KFactor
+                     if (lineData.Length > 11)
+                     {
+                        p.KFactor = Double.Parse(lineData[11], CultureInfo.InvariantCulture);
+                     }
+                     else
+                     {
+                        BackwardCompatibleDownload = true;
+                        p.KFactor = 0;
+                     }
+
+                     if (ContainsKey(p.ProjectNumber))
+                     {
+                        this[p.ProjectNumber] = p;
+                     }
+                     else
+                     {
+                        Add(p.ProjectNumber, p);
+                     }
                   }
-                  else
+                  catch (Exception ex)
                   {
-                     Add(p.ProjectNumber, p);
+                     HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
                   }
                }
-               catch (Exception ex)
+
+               if (BackwardCompatibleDownload)
                {
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
+                  // Signal the caller to Download and update from the psummary
+                  return false;
                }
             }
-            
-            if (BackwardCompatibleDownload)
+            catch (Exception ex)
             {
-               // Signal the caller to Download and update from the psummary
+               HfmTrace.WriteToHfmConsole(ex);
                return false;
             }
-         }
-         catch (Exception ex)
-         {
-            HfmTrace.WriteToHfmConsole(ex);
-            return false;
-         }
-         finally
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, Start);
+            finally
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Info, Start);
+            }
          }
 
          return true;
@@ -237,7 +215,7 @@ namespace HFM.Proteins
       /// <summary>
       /// Download project information from Stanford University (psummary.html)
       /// </summary>
-      private void DownloadFromStanford()
+      public void DownloadFromStanford()
       {
          // if an auto download was attempted in the last hour, don't execute again
          TimeSpan LastDownloadDifference = DateTime.Now.Subtract(_LastDownloadTime);
@@ -245,9 +223,23 @@ namespace HFM.Proteins
          {
             HfmTrace.WriteToHfmConsole(TraceLevel.Info,
                                        "Attempting to Download new Project data...", true);
-         
-            _LastDownloadTime = DateTime.Now;
-            DownloadFromStanford(new Uri(PreferenceSet.Instance.ProjectDownloadUrl));
+            try
+            {
+               ReadFromProjectSummaryHtml(new Uri(PreferenceSet.Instance.ProjectDownloadUrl));
+               _LastDownloadTime = DateTime.Now;
+
+               if (Count > 0)
+               {
+                  SaveToTabDelimitedFile();
+
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Loaded {0} Proteins from Stanford.", Count), true);
+                  OnProjectInfoUpdated(EventArgs.Empty);
+               }
+            }
+            catch (Exception ex)
+            {
+               HfmTrace.WriteToHfmConsole(ex);
+            }
          }
          else
          {
@@ -258,16 +250,18 @@ namespace HFM.Proteins
       }
 
       /// <summary>
-      /// Download project information from Stanford University (psummary.html)
+      /// Read Project Information from HTML (psummary.html)
       /// </summary>
-      private void DownloadFromStanford(Uri ProjectDownloadUri)
+      public void ReadFromProjectSummaryHtml(Uri location)
       {
+         ProjectSummaryLocation = location;
+      
          DateTime Start = HfmTrace.ExecStart;
          lock (_classLock)
          {
             try
             {
-               HTMLparser pSummary = InitHTMLparser(ProjectDownloadUri);
+               HTMLparser pSummary = InitHTMLparser(ProjectSummaryLocation);
                HTMLchunk oChunk;
 
                // Parse until returned oChunk is null indicating we reached end of parsing
@@ -291,17 +285,6 @@ namespace HFM.Proteins
                      }
                   }
                }
-               if (Count > 0)
-               {
-                  SaveToTabDelimitedFile();
-
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Loaded {0} Proteins from Stanford.", Count), true);
-                  OnProjectInfoUpdated(EventArgs.Empty);
-               }
-            }
-            catch (Exception ex)
-            {
-               HfmTrace.WriteToHfmConsole(ex);
             }
             finally
             {
@@ -505,23 +488,17 @@ namespace HFM.Proteins
                /* 10 */ kvp.Value.Contact,          /* 11 */ kvp.Value.KFactor);
          }
 
-         File.WriteAllLines(_LocalProjectInfoFile, CSVData, Encoding.ASCII);
+         File.WriteAllLines(_ProjectInfoLocation, CSVData, Encoding.ASCII);
          
          HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
       }
       
       /// <summary>
-      /// Get Protein (should be called from worker thread)
+      /// Get Protein from Collection (should be called from worker thread)
       /// </summary>
       /// <param name="ProjectID">Project ID</param>
       public IProtein GetProtein(int ProjectID)
       {
-         // Substitute an external delegate
-         if (_GetProteinHandler != null)
-         {
-            return _GetProteinHandler();
-         }
-
          // If Project is Found, return it
          if (ContainsKey(ProjectID)) return this[ProjectID];
          
@@ -567,6 +544,14 @@ namespace HFM.Proteins
          }
          
          // Return a "blank" Protein
+         return new Protein();
+      }
+      
+      /// <summary>
+      /// Get a New Protein from the Collection
+      /// </summary>
+      public IProtein GetNewProtein()
+      {
          return new Protein();
       }
       #endregion

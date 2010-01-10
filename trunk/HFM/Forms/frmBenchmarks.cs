@@ -30,7 +30,6 @@ using ZedGraph;
 using HFM.Framework;
 using HFM.Instances;
 using HFM.Preferences;
-using HFM.Proteins;
 using HFM.Instrumentation;
 
 namespace HFM.Forms
@@ -38,6 +37,7 @@ namespace HFM.Forms
    public partial class frmBenchmarks : Classes.FormWrapper
    {
       #region Members
+      private readonly IProteinCollection _proteinCollection;
       private readonly InstanceCollection _clientInstances;
       private readonly int _initialProjectID; 
       
@@ -45,8 +45,9 @@ namespace HFM.Forms
       #endregion
 
       #region Form Constructor / functionality
-      public frmBenchmarks(InstanceCollection clientInstances, int projectID)
+      public frmBenchmarks(IProteinCollection proteinCollection, InstanceCollection clientInstances, int projectID)
       {
+         _proteinCollection = proteinCollection;
          _clientInstances = clientInstances;
          _initialProjectID = projectID;
       
@@ -295,7 +296,7 @@ namespace HFM.Forms
          List<string> lines = new List<string>(5);
 
          IProtein protein;
-         ProteinCollection.Instance.TryGetValue(ProjectID, out protein);
+         _proteinCollection.TryGetValue(ProjectID, out protein);
 
          if (protein != null)
          {

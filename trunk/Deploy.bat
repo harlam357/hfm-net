@@ -20,10 +20,15 @@ copy /Y HTMLparser.dll %1
 copy /Y harlam357.Security.dll %1
 copy /Y harlam357.Windows.Forms.dll %1
 copy /Y ZedGraph.dll %1
+copy /Y Castle.Core.dll %1
+copy /Y Castle.DynamicProxy2.dll %1
+copy /Y Castle.MicroKernel.dll %1
+copy /Y Castle.Windsor.dll %1
 
 echo Copying Support Files and Folders...
 copy /Y GPLv2.TXT %1
 copy /Y "HTMLparser License.txt" %1
+copy /Y "Windsor License.txt" %1
 
 if not exist %1\CSS md %1\CSS
 if errorlevel 1 goto Error

@@ -30,7 +30,6 @@ using HFM.Framework;
 using HFM.Instrumentation;
 using HFM.Preferences;
 using HFM.Helpers;
-using HFM.Proteins;
 
 namespace HFM.Instances
 {
@@ -233,10 +232,12 @@ namespace HFM.Instances
          //        <Contact>spark7</Contact>
          //    </Protein>
 
-         IProtein p = new Protein();
-         if (ProteinCollection.Instance.ContainsKey(Instance.CurrentUnitInfo.ProjectID))
+         IProteinCollection proteinCollection = InstanceProvider.GetInstance<IProteinCollection>();
+
+         IProtein p = proteinCollection.GetNewProtein();
+         if (proteinCollection.ContainsKey(Instance.CurrentUnitInfo.ProjectID))
          {
-            p = ProteinCollection.Instance[Instance.CurrentUnitInfo.ProjectID];
+            p = proteinCollection[Instance.CurrentUnitInfo.ProjectID];
          }
          XMLOps.setXmlNode(xmlData, "Protein/ProjectNumber", p.ProjectNumber.ToString());
          XMLOps.setXmlNode(xmlData, "Protein/ServerIP", p.ServerIP);

@@ -46,6 +46,22 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Castle Windsor 1.0.3\bin\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.DynamicProxy2, Version=2.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Castle Windsor 1.0.3\bin\Castle.DynamicProxy2.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.MicroKernel, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Castle Windsor 1.0.3\bin\Castle.MicroKernel.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Castle Windsor 1.0.3\bin\Castle.Windsor.dll</HintPath>
+    </Reference>
     <Reference Include="harlam357.Windows.Forms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\harlam357.Windows.Forms\harlam357.Windows.Forms.dll</HintPath>
@@ -213,6 +229,10 @@
       <SubType>Designer</SubType>
       <DependentUpon>frmMessages.cs</DependentUpon>
     </EmbeddedResource>
+    <Content Include="..\Castle Windsor 1.0.3\Windsor License.txt">
+      <Link>Windsor License.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\GPLv2.TXT">
       <Link>GPLv2.TXT</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
