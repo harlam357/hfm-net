@@ -31,14 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HFM.Framework, Version=0.4.7.106, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\HFM.Log\bin\Release\HFM.Framework.dll</HintPath>
-    </Reference>
-    <Reference Include="HFM.Log, Version=0.4.7.106, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\HFM.Log\bin\Release\HFM.Log.dll</HintPath>
-    </Reference>
     <Reference Include="nunit.framework, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
     <Reference Include="System" />
   </ItemGroup>
@@ -48,6 +40,16 @@
     </Compile>
     <Compile Include="LogReaderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HFM.Framework\HFM.Framework.csproj">
+      <Project>{FFFF3DE4-8620-4C13-A968-ADF58133146B}</Project>
+      <Name>HFM.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Log\HFM.Log.csproj">
+      <Project>{2C3EA8A1-D17F-419D-A76A-970550FB5A09}</Project>
+      <Name>HFM.Log</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

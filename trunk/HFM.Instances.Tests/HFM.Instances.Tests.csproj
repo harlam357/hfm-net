@@ -28,21 +28,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HFM.Framework, Version=0.4.8.110, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Castle.Core, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\HFM.Instances\bin\Release\HFM.Framework.dll</HintPath>
+      <HintPath>..\Castle Windsor 1.0.3\bin\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="HFM.Instances, Version=0.4.8.110, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Castle.DynamicProxy2, Version=2.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\HFM.Instances\bin\Release\HFM.Instances.dll</HintPath>
+      <HintPath>..\Castle Windsor 1.0.3\bin\Castle.DynamicProxy2.dll</HintPath>
     </Reference>
-    <Reference Include="HFM.Instrumentation, Version=0.4.8.110, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Castle.MicroKernel, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\HFM.Instances\bin\Release\HFM.Instrumentation.dll</HintPath>
+      <HintPath>..\Castle Windsor 1.0.3\bin\Castle.MicroKernel.dll</HintPath>
     </Reference>
-    <Reference Include="HFM.Proteins, Version=0.4.8.110, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Castle.Windsor, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\HFM.Instances\bin\Release\HFM.Proteins.dll</HintPath>
+      <HintPath>..\Castle Windsor 1.0.3\bin\Castle.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
     <Reference Include="System" />
@@ -55,6 +55,24 @@
     <Compile Include="ProteinBenchmarkCollectionTests.cs" />
     <Compile Include="StatusTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HFM.Framework\HFM.Framework.csproj">
+      <Project>{FFFF3DE4-8620-4C13-A968-ADF58133146B}</Project>
+      <Name>HFM.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Instances\HFM.Instances.csproj">
+      <Project>{B8614309-B90A-4B86-97FF-3A9E64B9658F}</Project>
+      <Name>HFM.Instances</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Instrumentation\HFM.Instrumentation.csproj">
+      <Project>{7D6B604A-5C4A-4E97-A6D4-9C927ABBD74A}</Project>
+      <Name>HFM.Instrumentation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Proteins\HFM.Proteins.csproj">
+      <Project>{7500A8CA-521D-4397-892B-27C6917847E1}</Project>
+      <Name>HFM.Proteins</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

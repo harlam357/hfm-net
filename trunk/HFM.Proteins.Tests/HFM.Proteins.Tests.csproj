@@ -31,14 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HFM.Framework, Version=0.4.8.120, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\HFM.Proteins\bin\Release\HFM.Framework.dll</HintPath>
-    </Reference>
-    <Reference Include="HFM.Proteins, Version=0.4.8.110, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\HFM.Proteins\bin\Release\HFM.Proteins.dll</HintPath>
-    </Reference>
     <Reference Include="HTMLparser, Version=3.1.4.41868, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\HTMLparser2\HTMLparser.dll</HintPath>
@@ -57,6 +49,16 @@
     <Content Include="TestFiles\psummary.html" />
     <Content Include="TestFiles\psummaryB.html" />
     <Content Include="TestFiles\psummaryC.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HFM.Framework\HFM.Framework.csproj">
+      <Project>{FFFF3DE4-8620-4C13-A968-ADF58133146B}</Project>
+      <Name>HFM.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Proteins\HFM.Proteins.csproj">
+      <Project>{7500A8CA-521D-4397-892B-27C6917847E1}</Project>
+      <Name>HFM.Proteins</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
