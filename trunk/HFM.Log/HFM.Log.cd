@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="HFM.Log.FrameData" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="4.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAgAAAAAAkACAEAAAAAEAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>FrameData.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="HFM.Log.LogLine" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="3.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>gQQIIDAFAAZQAQgEAQsAAACAAABAAAAAAoBAQACAAAg=</HashCode>
+      <FileName>LogLine.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="HFM.Log.LogParser">
+    <Position X="5.5" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>IQAAAAABAAABAAAAAAAQCAAAB0AAAAAAAIAAAgAADAA=</HashCode>
+      <FileName>LogParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HFM.Log.LogReader">
+    <Position X="3" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>ABAAAIAAIEAAIAEAAAAgAAEAAAAACAAAAiAAgAAAAAA=</HashCode>
+      <FileName>LogReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HFM.Log.ClientRunList" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAACAAAAIAIABACAAEBAAAAAEBBAAACAEAIAAAA=</HashCode>
+      <FileName>LogReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HFM.Log.UnitStartContainer">
+    <Position X="3" Y="4" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAACAQAAAAAEAAAAAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>LogReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HFM.Log.ClientRun" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>gAQAAABAEAgAAAAAQAkgAAgCAAAAAAQCMAAAABgAEBE=</HashCode>
+      <FileName>LogReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HFM.Log.ClientLogLineList" Collapsed="true">
+    <Position X="0.5" Y="2.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAABAAAAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>LogReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>

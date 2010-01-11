@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 
 using NUnit.Framework;
 
@@ -400,7 +399,7 @@ namespace HFM.Log.Tests
          Assert.AreEqual(reader.ClientLogLines[433].LineData, WorkUnitResult.FinishedUnit);
       }
       
-      private static void DoClientRunCheck(ClientRun run, ClientRun expectedRun)
+      private static void DoClientRunCheck(IClientRun run, IClientRun expectedRun)
       {
          Assert.AreEqual(run.ClientStartIndex, expectedRun.ClientStartIndex);
          // The Unit Start and Unit Queue Index Lists should have the same

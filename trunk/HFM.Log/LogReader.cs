@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Log Reader Class
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,7 +30,7 @@ namespace HFM.Log
    /// <summary>
    /// Reads FAHlog.txt files, determines log positions, and does run level detection.
    /// </summary>
-   public class LogReader
+   public class LogReader : ILogReader
    {
       #region Members
       /// <summary>
@@ -60,14 +60,22 @@ namespace HFM.Log
 
       #region Properties
       /// <summary>
+      /// Returns the last client run data.
+      /// </summary>
+      public IClientRun LastClientRun
+      {
+         get { return _ClientRunList.LastClientRun; }
+      }
+      
+      /// <summary>
       /// Returns log text of the previous work unit.
       /// </summary>
       public IList<ILogLine> PreviousWorkUnitLogLines
       {
          get
          {
-            ClientRun lastClientRun = _ClientRunList.LastClientRun;
-            if (lastClientRun.UnitStartIndex.Count > 1)
+            IClientRun lastClientRun = LastClientRun;
+            if (lastClientRun != null && lastClientRun.UnitStartIndex.Count > 1)
             {
                int start = lastClientRun.UnitStartIndex[lastClientRun.UnitStartIndex.Count - 2];
                int end = lastClientRun.UnitStartIndex[lastClientRun.UnitStartIndex.Count - 1];
@@ -92,8 +100,8 @@ namespace HFM.Log
       {
          get
          {
-            ClientRun lastClientRun = _ClientRunList.LastClientRun;
-            if (lastClientRun.UnitStartIndex.Count > 0)
+            IClientRun lastClientRun = LastClientRun;
+            if (lastClientRun != null && lastClientRun.UnitStartIndex.Count > 0)
             {
                int start = lastClientRun.UnitStartIndex[lastClientRun.UnitStartIndex.Count - 1];
                int end = _ClientLogLines.Count;
@@ -188,7 +196,7 @@ namespace HFM.Log
       /// Find the WorkUnitProject Line in the given collection and return it's value.
       /// </summary>
       /// <param name="logLines">Log Lines to search</param>
-      public static string GetProjectFromLogLines(ICollection<ILogLine> logLines)
+      public string GetProjectFromLogLines(ICollection<ILogLine> logLines)
       {
          if (logLines == null) return String.Empty;
       
@@ -213,7 +221,7 @@ namespace HFM.Log
       /// Get the ClientStatus based on the given collection of Log Lines.
       /// </summary>
       /// <param name="logLines">Log Lines to search</param>
-      public static ClientStatus GetStatusFromLogLines(ICollection<ILogLine> logLines)
+      public ClientStatus GetStatusFromLogLines(ICollection<ILogLine> logLines)
       {
          ClientStatus returnStatus = ClientStatus.Unknown;
       
@@ -345,7 +353,7 @@ namespace HFM.Log
    /// <summary>
    /// List of Client Runs.
    /// </summary>
-   public class ClientRunList : List<ClientRun>
+   public class ClientRunList : List<IClientRun>
    {
       #region Members
       /// <summary>
@@ -363,7 +371,7 @@ namespace HFM.Log
       /// <summary>
       /// Returns the most recent client run if available, otherwise null.
       /// </summary>
-      public ClientRun LastClientRun
+      public IClientRun LastClientRun
       {
          get
          {
@@ -619,118 +627,10 @@ namespace HFM.Log
       internal int WorkUnitStartIndex = -1; 
       #endregion
    }
-   
+
    /// <summary>
-   /// Holds Positions (Index) for a Single Client Run.
+   /// List of Client Log Lines.
    /// </summary>
-   public class ClientRun
-   {
-      #region Members
-      private string _Arguments = String.Empty;
-      public string Arguments
-      {
-         get { return _Arguments; }
-         set { _Arguments = value; }
-      }
-
-      private string _FoldingID = String.Empty;
-      public string FoldingID
-      {
-         get { return _FoldingID; }
-         set { _FoldingID = value; }
-      }
-      
-      private int _Team;
-      public int Team
-      {
-         get { return _Team; }
-         set { _Team = value; }
-      }
-
-      private string _UserID = String.Empty;
-      public string UserID
-      {
-         get { return _UserID; }
-         set { _UserID = value; }
-      }
-      
-      private int _MachineID;
-      public int MachineID
-      {
-         get { return _MachineID; }
-         set { _MachineID = value; }
-      }
-      
-      private int _NumberOfCompletedUnits = 0;
-      public int NumberOfCompletedUnits
-      {
-         get { return _NumberOfCompletedUnits; }
-         set { _NumberOfCompletedUnits = value; }
-      }
-
-      private int _NumberOfFailedUnits = 0;
-      public int NumberOfFailedUnits
-      {
-         get { return _NumberOfFailedUnits; }
-         set { _NumberOfFailedUnits = value; }
-      }
-
-      private int _NumberOfTotalUnitsCompleted = 0;
-      public int NumberOfTotalUnitsCompleted
-      {
-         get { return _NumberOfTotalUnitsCompleted; }
-         set { _NumberOfTotalUnitsCompleted = value; }
-      }
-
-      /// <summary>
-      /// Line index of client start position.
-      /// </summary>
-      private readonly int _ClientStartPosition;
-      /// <summary>
-      /// Line index of client start position.
-      /// </summary>
-      public int ClientStartIndex
-      {
-         get { return _ClientStartPosition; }
-      }
-
-      /// <summary>
-      /// List of work unit start positions for this client run.
-      /// </summary>
-      private readonly List<int> _UnitStartIndex = new List<int>();
-      /// <summary>
-      /// List of work unit start positions for this client run.
-      /// </summary>
-      public List<int> UnitStartIndex
-      {
-         get { return _UnitStartIndex; }
-      }
-
-      /// <summary>
-      /// List of Queue Indexes that correspond to the Unit Start Indexes for this client run.
-      /// </summary>
-      private readonly List<int> _UnitQueueIndex = new List<int>();
-      /// <summary>
-      /// List of Queue Indexes that correspond to the Unit Start Indexes for this client run.
-      /// </summary>
-      public List<int> UnitQueueIndex
-      {
-         get { return _UnitQueueIndex; }
-      } 
-      #endregion
-
-      #region CTOR
-      /// <summary>
-      /// Primary Constructor
-      /// </summary>
-      /// <param name="ClientStartIndex">Line index of client start.</param>
-      public ClientRun(int ClientStartIndex)
-      {
-         _ClientStartPosition = ClientStartIndex;
-      } 
-      #endregion
-   }
-   
    public class ClientLogLineList : List<ILogLine>
    {
       public void HandleLogLine(int index, string logLine)

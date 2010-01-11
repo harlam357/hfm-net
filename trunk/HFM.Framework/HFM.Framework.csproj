@@ -56,14 +56,17 @@
       <Link>AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Enumerations.cs" />
+    <Compile Include="IClientRun.cs" />
     <Compile Include="IFrameData.cs" />
     <Compile Include="ILogLine.cs" />
+    <Compile Include="ILogReader.cs" />
     <Compile Include="InstanceProvider.cs" />
     <Compile Include="IOwnedByClientInstance.cs" />
     <Compile Include="IProtein.cs" />
     <Compile Include="IProteinCollection.cs" />
     <Compile Include="IQueueBase.cs" />
     <Compile Include="IQueueEntry.cs" />
+    <Compile Include="IQueueReader.cs" />
     <Compile Include="IUnitFrame.cs" />
     <Compile Include="IUnitInfo.cs" />
     <Compile Include="PlatformOps.cs" />

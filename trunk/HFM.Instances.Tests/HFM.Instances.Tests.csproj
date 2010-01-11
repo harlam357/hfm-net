@@ -45,6 +45,10 @@
       <HintPath>..\Castle Windsor 1.0.3\bin\Castle.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
+    <Reference Include="Rhino.Mocks, Version=3.5.0.1337, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Rhino Mocks\Rhino.Mocks.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
@@ -69,9 +73,13 @@
       <Project>{7D6B604A-5C4A-4E97-A6D4-9C927ABBD74A}</Project>
       <Name>HFM.Instrumentation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HFM.Proteins\HFM.Proteins.csproj">
-      <Project>{7500A8CA-521D-4397-892B-27C6917847E1}</Project>
-      <Name>HFM.Proteins</Name>
+    <ProjectReference Include="..\HFM.Log\HFM.Log.csproj">
+      <Project>{2C3EA8A1-D17F-419D-A76A-970550FB5A09}</Project>
+      <Name>HFM.Log</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Queue\HFM.Queue.csproj">
+      <Project>{44AC27F2-833D-4BF2-9E17-C35D38C7BD67}</Project>
+      <Name>HFM.Queue</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

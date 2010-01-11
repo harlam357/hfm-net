@@ -22,9 +22,11 @@ using System.Diagnostics;
 
 using Castle.Windsor;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 using HFM.Framework;
-using HFM.Proteins;
+using HFM.Log;
+using HFM.Queue;
 using HFM.Instrumentation;
 
 namespace HFM.Instances.Tests
@@ -33,35 +35,35 @@ namespace HFM.Instances.Tests
    public class ClientInstanceTests
    {
       private IWindsorContainer container = new WindsorContainer();
+      private MockRepository mocks;
    
       [SetUp]
       public void Init()
       {
          TraceLevelSwitch.Instance.Level = TraceLevel.Verbose;
          container = new WindsorContainer();
-         container.AddComponent("ProteinCollection", typeof(IProteinCollection), typeof(ProteinCollection));
+         container.AddComponent("LogReader", typeof(ILogReader), typeof(LogReader));
+         container.AddComponent("QueueReader", typeof(IQueueReader), typeof(QueueReader));
          InstanceProvider.SetContainer(container);
       }
 
       [Test, Category("SMP")]
       public void SMP_3()
       {
-         IProteinCollection proteinCollection = (IProteinCollection)container["ProteinCollection"];
-         Protein p = new Protein();
-         p.ProjectNumber = 2677;
-         p.Core = "GROCVS";
-         proteinCollection.Add(2677, (IProtein)p);
+         mocks = new MockRepository();
+         SetupMockProteinCollectionAndAddToContainer("GROCVS", 100);
+         mocks.ReplayAll();
       
          // Setup Test Instance
          ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
-         
          Instance.InstanceName = "SMP_3";
          Instance.Path = "..\\..\\..\\TestFiles\\SMP_3";
          
          // Retrieve Log File and Assert Results
          Instance.Retrieve();
+         
          Assert.IsNotNull(Instance.CurrentLogLines);
          Assert.AreEqual(true, Instance.UserIDUnknown);  // UserID is Unknown (notfred's instance does not log request of UserID)
          Assert.AreEqual(String.Format("{0} ({1})", Instance.UserID, Instance.MachineID), Instance.UserAndMachineID);
@@ -90,22 +92,21 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(0, Instance.CurrentUnitInfo.RawTimePerLastSection);
 
          Assert.AreEqual(ClientStatus.RunningNoFrameTimes, Instance.Status);
+
+         mocks.VerifyAll();
       }
 
       [Test, Category("SMP")]
       public void SMP_7()
       {
-         IProteinCollection proteinCollection = (IProteinCollection)container["ProteinCollection"];
-         Protein p = new Protein();
-         p.ProjectNumber = 2669;
-         p.Core = "GROCVS";
-         proteinCollection.Add(2669, (IProtein)p);
+         mocks = new MockRepository();
+         SetupMockProteinCollectionAndAddToContainer("GROCVS", 100);
+         mocks.ReplayAll();
       
          // Setup Test Instance
          ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
-         
          Instance.InstanceName = "SMP_7";
          Instance.Path = "..\\..\\..\\TestFiles\\SMP_7";
 
@@ -140,6 +141,8 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(788, Instance.CurrentUnitInfo.RawTimePerLastSection);
 
          Assert.AreEqual(ClientStatus.RunningNoFrameTimes, Instance.Status);
+
+         mocks.VerifyAll();
       }
 
       [Test, Category("SMP")]
@@ -152,12 +155,15 @@ namespace HFM.Instances.Tests
           *   and the unitinfo file is unavailable, the TypeOfClient is Unknown, since the
           *   Project cannot be determined.
           ***/
+
+         mocks = new MockRepository();
+         SetupMockProteinCollectionAndAddToContainer("GROCVS", 100);
+         mocks.ReplayAll();
       
          // Setup Test Instance
          ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
-
          Instance.InstanceName = "SMP_8_1";
          Instance.Path = "..\\..\\..\\TestFiles\\SMP_8";
          Instance.RemoteUnitInfoFilename = "wrong_file_name.txt";
@@ -193,6 +199,8 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(0, Instance.CurrentUnitInfo.RawTimePerLastSection);
 
          Assert.AreEqual(ClientStatus.RunningNoFrameTimes, Instance.Status);
+
+         mocks.VerifyAll();
       }
       
       [Test, Category("SMP")]
@@ -203,17 +211,14 @@ namespace HFM.Instances.Tests
           *   Protein and allow the TypeOfClient to be set correctly.
           ***/
 
-         IProteinCollection proteinCollection = (IProteinCollection)container["ProteinCollection"];
-         Protein p = new Protein();
-         p.ProjectNumber = 2683;
-         p.Core = "GROCVS";
-         proteinCollection.Add(2683, (IProtein)p);
+         mocks = new MockRepository();
+         SetupMockProteinCollectionAndAddToContainer("GROCVS", 100);
+         mocks.ReplayAll();
 
          // Setup Test Instance
          ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
-
          Instance.InstanceName = "SMP_8_2";
          Instance.Path = "..\\..\\..\\TestFiles\\SMP_8";
          // Make the queue.dat unavailable for parsing
@@ -224,22 +229,21 @@ namespace HFM.Instances.Tests
          // Because Project information was found in the unitinfo file, we were
          // able to assign the correct TypeOfClient
          Assert.AreEqual(ClientType.SMP, Instance.CurrentUnitInfo.TypeOfClient);
+
+         mocks.VerifyAll();
       }
 
       [Test, Category("GPU")]
       public void GPU2_3()
       {
-         IProteinCollection proteinCollection = (IProteinCollection)container["ProteinCollection"];
-         Protein p = new Protein();
-         p.ProjectNumber = 5756;
-         p.Core = "GROGPU2";
-         proteinCollection.Add(5756, (IProtein)p);
+         mocks = new MockRepository();
+         SetupMockProteinCollectionAndAddToContainer("GROGPU2", 100);
+         mocks.ReplayAll();
       
          // Setup Test Instance
          ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
-         
          Instance.InstanceName = "GPU2_3";
          Instance.Path = "..\\..\\..\\TestFiles\\GPU2_3";
 
@@ -273,22 +277,21 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(94, Instance.CurrentUnitInfo.RawTimePerLastSection);
 
          Assert.AreEqual(ClientStatus.EuePause, Instance.Status);
+
+         mocks.VerifyAll();
       }
 
       [Test, Category("GPU")]
       public void GPU2_6()
       {
-         IProteinCollection proteinCollection = (IProteinCollection)container["ProteinCollection"];
-         Protein p = new Protein();
-         p.ProjectNumber = 5770;
-         p.Core = "GROGPU2";
-         proteinCollection.Add(5770, (IProtein)p);
+         mocks = new MockRepository();
+         SetupMockProteinCollectionAndAddToContainer("GROGPU2", 100);
+         mocks.ReplayAll();
       
          // Setup Test Instance
          ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
-
          Instance.InstanceName = "GPU2_6";
          Instance.Path = "..\\..\\..\\TestFiles\\GPU2_6";
 
@@ -322,6 +325,24 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(38, Instance.CurrentUnitInfo.RawTimePerLastSection);
 
          Assert.AreEqual(ClientStatus.GettingWorkPacket, Instance.Status);
+
+         mocks.VerifyAll();
+      }
+
+      private void SetupMockProteinCollectionAndAddToContainer(string Core, int Frames)
+      {
+         IProtein currentProtein = mocks.DynamicMock<IProtein>();
+         Expect.Call(currentProtein.Core).Return(Core).Repeat.Any();
+         Expect.Call(currentProtein.Frames).Return(Frames).Repeat.Any();
+
+         IProtein newProtein = mocks.DynamicMock<IProtein>();
+         Expect.Call(newProtein.Frames).Return(Frames).Repeat.Any();
+
+         IProteinCollection proteinCollection = mocks.DynamicMock<IProteinCollection>();
+         Expect.Call(proteinCollection.GetProtein(0)).Return(currentProtein).IgnoreArguments().Repeat.Any();
+         Expect.Call(proteinCollection.GetNewProtein()).Return(newProtein).Repeat.Any();
+
+         container.Kernel.AddComponentInstance<IProteinCollection>(typeof(IProteinCollection), proteinCollection);
       }
    }
 }

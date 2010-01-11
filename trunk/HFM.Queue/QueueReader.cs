@@ -26,7 +26,8 @@ using HFM.Framework;
 
 namespace HFM.Queue
 {
-   public class QueueReader
+   [CLSCompliant(false)]
+   public class QueueReader : IQueueReader
    {
       public const int QueueLength = 7168;
       public const int QueueEntryLength = 712;
@@ -38,7 +39,6 @@ namespace HFM.Queue
       /// <summary>
       /// Queue Base Class
       /// </summary>
-      [CLSCompliant(false)]
       public IQueueBase Queue
       {
          get { return _qBase; }

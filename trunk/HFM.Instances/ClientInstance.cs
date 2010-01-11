@@ -1097,18 +1097,18 @@ namespace HFM.Instances
          // Read and Parse the queue.dat file
          UnitInfo[] parsedUnits = ParseQueueFile();
          // Read and Scan the FAHlog file
-         LogReader lr = new LogReader();
+         ILogReader lr = InstanceProvider.GetInstance<ILogReader>();
          lr.ScanFAHLog(InstanceName, System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedFAHLogName));
 
          // Get the Client Status from the Current Work Unit
-         ClientStatus CurrentWorkUnitStatus = LogReader.GetStatusFromLogLines(lr.CurrentWorkUnitLogLines);
+         ClientStatus CurrentWorkUnitStatus = lr.GetStatusFromLogLines(lr.CurrentWorkUnitLogLines);
 
          // Populate Startup Arguments and Work Unit Count Data into this ClientInstance.
          // This data can only be gathered from the FAHlog, it does not exist in the queue.
-         Arguments = lr.ClientRunList[lr.ClientRunList.Count - 1].Arguments;
-         NumberOfCompletedUnitsSinceLastStart = lr.ClientRunList[lr.ClientRunList.Count - 1].NumberOfCompletedUnits;
-         NumberOfFailedUnitsSinceLastStart = lr.ClientRunList[lr.ClientRunList.Count - 1].NumberOfFailedUnits;
-         TotalUnits = lr.ClientRunList[lr.ClientRunList.Count - 1].NumberOfTotalUnitsCompleted;
+         Arguments = lr.LastClientRun.Arguments;
+         NumberOfCompletedUnitsSinceLastStart = lr.LastClientRun.NumberOfCompletedUnits;
+         NumberOfFailedUnitsSinceLastStart = lr.LastClientRun.NumberOfFailedUnits;
+         TotalUnits = lr.LastClientRun.NumberOfTotalUnitsCompleted;
 
          // Default Index to 1 - which is we want if only parsing previous and current logs
          int CurrentUnitIndex = 1;
@@ -1176,7 +1176,7 @@ namespace HFM.Instances
          // just catch, log, and continue with parsing log files
          try
          {
-            QueueReader reader = new QueueReader();
+            IQueueReader reader = InstanceProvider.GetInstance<IQueueReader>();
             reader.ReadQueue(CachedQueueFilePath);
             if (reader.QueueReadOk)
             {
@@ -1211,7 +1211,7 @@ namespace HFM.Instances
       /// <param name="parsedUnits">Parsed UnitInfo Array</param>
       /// <param name="lr">LogReader Instance</param>
       /// <param name="CurrentWorkUnitStatus">Current Status Based on LogReader.CurrentLogLines</param>
-      private bool ParseLogLinesBasedOnQueueIndex(UnitInfo[] parsedUnits, LogReader lr, ClientStatus CurrentWorkUnitStatus)
+      private bool ParseLogLinesBasedOnQueueIndex(UnitInfo[] parsedUnits, ILogReader lr, ClientStatus CurrentWorkUnitStatus)
       {
          Debug.Assert(parsedUnits.Length == 10);
 
@@ -1223,7 +1223,7 @@ namespace HFM.Instances
             IList<ILogLine> logLines = lr.GetLogLinesFromQueueIndex(queueIndex);
 
             // Get the Project (R/C/G) from the Log Lines
-            string ProjectRunCloneGen = LogReader.GetProjectFromLogLines(logLines);
+            string ProjectRunCloneGen = lr.GetProjectFromLogLines(logLines);
             // Could not validate Project Matches Queue Position
             if (parsedUnits[queueIndex].ProjectRunCloneGen.Equals(ProjectRunCloneGen) == false)
             {
@@ -1271,13 +1271,13 @@ namespace HFM.Instances
       /// Parse Log Line Sections from Last Two Units based on LogReader.
       /// </summary>
       /// <param name="lr">LogReader Instance</param>
-      private UnitInfo[] ParseCurrentAndPreviousUnitsFromLogsOnly(LogReader lr)
+      private UnitInfo[] ParseCurrentAndPreviousUnitsFromLogsOnly(ILogReader lr)
       {
          Debug.Assert(lr != null);
 
          UnitInfo[] parsedUnits = new UnitInfo[2];
 
-         PopulateUserAndMachineData(lr.ClientRunList[lr.ClientRunList.Count - 1]);
+         PopulateUserAndMachineData(lr.LastClientRun);
 
          parsedUnits[0] = new UnitInfo(InstanceName, Path, LastRetrievalTime, FoldingID, Team);
          parsedUnits[1] = new UnitInfo(InstanceName, Path, LastRetrievalTime, FoldingID, Team);
@@ -1341,7 +1341,7 @@ namespace HFM.Instances
       /// Populate FoldingID, Team, UserID, and MachineID.
       /// </summary>
       /// <param name="run">Client Run to Populate from</param>
-      public void PopulateUserAndMachineData(ClientRun run)
+      public void PopulateUserAndMachineData(IClientRun run)
       {
          FoldingID = run.FoldingID;
          Team = run.Team;
