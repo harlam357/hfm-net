@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 
+using Castle.Windsor;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -33,16 +34,22 @@ namespace HFM.Proteins.Tests
    [TestFixture]
    public class ProteinCollectionTests
    {
+      private IWindsorContainer container;
       private MockRepository mocks;
+      
       private IPreferenceSet _Prefs;
    
       [SetUp]
       public void Init()
       {
+         container = new WindsorContainer();
          mocks = new MockRepository();
+         
          _Prefs = mocks.DynamicMock<IPreferenceSet>();
          Expect.Call(_Prefs.GetPreference<bool>(Preference.UseProxy)).Return(false).Repeat.Any();
          Expect.Call(_Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath)).Return(String.Empty).Repeat.Any();
+         container.Kernel.AddComponentInstance<IPreferenceSet>(typeof(IPreferenceSet), _Prefs);
+         InstanceProvider.SetContainer(container);
       }
 
       [Test]
