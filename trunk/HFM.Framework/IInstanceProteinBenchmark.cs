@@ -1,5 +1,5 @@
-﻿/*
- * HFM.NET - Instance Provider Class
+/*
+ * HFM.NET - Benchmark Data Class
  * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -17,22 +17,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using Castle.Windsor;
+using System;
+using System.Collections.Generic;
 
 namespace HFM.Framework
 {
-   public static class InstanceProvider
+   public interface IInstanceProteinBenchmark : IOwnedByClientInstance
    {
-      private static IWindsorContainer _container;
-   
-      public static void SetContainer(IWindsorContainer container)
-      {
-         _container = container;
-      }
+      Int32 ProjectID { get; }
 
-      public static T GetInstance<T>()
-      {
-         return (T)_container[typeof(T)];
-      }
+      TimeSpan MinimumFrameTime { get; }
+
+      double MinimumFrameTimePPD { get; }
+
+      TimeSpan AverageFrameTime { get; }
+
+      double AverageFrameTimePPD { get; }
+
+      Queue<TimeSpan> FrameTimes { get; }
+
+      IBenchmarkClient Client { get; }
+
+      IProtein Protein { get; }
+
+      bool SetFrameTime(TimeSpan frameTime);
+      
+      void RefreshBenchmarkMinimumFrameTime();
+
+      string[] ToMultiLineString(IUnitInfo UnitInfo, string PpdFormatString, bool ProductionValuesOk);
    }
 }

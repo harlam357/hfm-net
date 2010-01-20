@@ -91,9 +91,11 @@ namespace HFM.Forms
          this.mnuWebSep2 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuWebHFMGoogleCode = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuHelpHfmGroup = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuHelpSep1 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuHelpContents = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuHelpIndex = new System.Windows.Forms.ToolStripMenuItem();
-         this.mnuHelpSep1 = new System.Windows.Forms.ToolStripSeparator();
+         this.mnuHelpSep2 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
          this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
          this.saveConfigDialog = new System.Windows.Forms.SaveFileDialog();
@@ -625,19 +627,33 @@ namespace HFM.Forms
          // mnuHelp
          // 
          this.mnuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuHelpHfmGroup,
+            this.mnuHelpSep1,
             this.mnuHelpContents,
             this.mnuHelpIndex,
-            this.mnuHelpSep1,
+            this.mnuHelpSep2,
             this.mnuHelpAbout});
          this.mnuHelp.Name = "mnuHelp";
          this.mnuHelp.Size = new System.Drawing.Size(40, 20);
          this.mnuHelp.Text = "&Help";
          // 
+         // mnuHelpHfmGroup
+         // 
+         this.mnuHelpHfmGroup.Name = "mnuHelpHfmGroup";
+         this.mnuHelpHfmGroup.Size = new System.Drawing.Size(197, 22);
+         this.mnuHelpHfmGroup.Text = "HFM.NET Google Group";
+         this.mnuHelpHfmGroup.Click += new System.EventHandler(this.mnuHelpHfmGroup_Click);
+         // 
+         // mnuHelpSep1
+         // 
+         this.mnuHelpSep1.Name = "mnuHelpSep1";
+         this.mnuHelpSep1.Size = new System.Drawing.Size(194, 6);
+         // 
          // mnuHelpContents
          // 
          this.mnuHelpContents.Image = global::HFM.Properties.Resources.HelpContents;
          this.mnuHelpContents.Name = "mnuHelpContents";
-         this.mnuHelpContents.Size = new System.Drawing.Size(129, 22);
+         this.mnuHelpContents.Size = new System.Drawing.Size(197, 22);
          this.mnuHelpContents.Text = "&Contents";
          this.mnuHelpContents.Visible = false;
          this.mnuHelpContents.Click += new System.EventHandler(this.mnuHelpContents_Click);
@@ -645,22 +661,22 @@ namespace HFM.Forms
          // mnuHelpIndex
          // 
          this.mnuHelpIndex.Name = "mnuHelpIndex";
-         this.mnuHelpIndex.Size = new System.Drawing.Size(129, 22);
+         this.mnuHelpIndex.Size = new System.Drawing.Size(197, 22);
          this.mnuHelpIndex.Text = "&Index";
          this.mnuHelpIndex.Visible = false;
          this.mnuHelpIndex.Click += new System.EventHandler(this.mnuHelpIndex_Click);
          // 
-         // mnuHelpSep1
+         // mnuHelpSep2
          // 
-         this.mnuHelpSep1.Name = "mnuHelpSep1";
-         this.mnuHelpSep1.Size = new System.Drawing.Size(126, 6);
-         this.mnuHelpSep1.Visible = false;
+         this.mnuHelpSep2.Name = "mnuHelpSep2";
+         this.mnuHelpSep2.Size = new System.Drawing.Size(194, 6);
+         this.mnuHelpSep2.Visible = false;
          // 
          // mnuHelpAbout
          // 
          this.mnuHelpAbout.Image = global::HFM.Properties.Resources.About;
          this.mnuHelpAbout.Name = "mnuHelpAbout";
-         this.mnuHelpAbout.Size = new System.Drawing.Size(129, 22);
+         this.mnuHelpAbout.Size = new System.Drawing.Size(197, 22);
          this.mnuHelpAbout.Text = "&About";
          this.mnuHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
          // 
@@ -980,5 +996,7 @@ namespace HFM.Forms
       private HFM.Classes.SplitContainerWrapper splitContainer2;
       private HFM.Classes.ButtonWrapper btnQueue;
       private HFM.Classes.QueueControl queueControl;
+      private System.Windows.Forms.ToolStripMenuItem mnuHelpHfmGroup;
+      private System.Windows.Forms.ToolStripSeparator mnuHelpSep2;
    }
 }

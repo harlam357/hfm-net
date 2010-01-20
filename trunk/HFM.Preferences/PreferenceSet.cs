@@ -1,7 +1,7 @@
 /*
- * HFM.NET - User Preferences
+ * HFM.NET - User Preferences Class
  * Copyright (C) 2006-2007 David Rawling
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,8 +22,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -38,462 +38,17 @@ using HFM.Instrumentation;
 
 namespace HFM.Preferences
 {
-   #region Enum
-   public enum ePpdCalculation
+   public sealed class PreferenceSet : IPreferenceSet
    {
-      LastFrame,
-      LastThreeFrames,
-      AllFrames,
-      EffectiveRate
-   }
-
-   public enum eTimeStyle
-   {
-      Standard,
-      Formatted
-   }
-   #endregion
-
-   public class PreferenceSet
-   {
-      #region Public Const
-      public const string ExeName = "HFM";
-
-      public const string EOCUserXmlUrl = "http://folding.extremeoverclocking.com/xml/user_summary.php?u=";
-      public const string EOCUserBaseUrl = "http://folding.extremeoverclocking.com/user_summary.php?s=&u=";
-      public const string EOCTeamBaseUrl = "http://folding.extremeoverclocking.com/team_summary.php?s=&t=";
-      public const string StanfordBaseUrl = "http://fah-web.stanford.edu/cgi-bin/main.py?qtype=userpage&username=";
-
-      public const Int32 MinDecimalPlaces = 0;
-      public const Int32 MaxDecimalPlaces = 5;
-      
-      public const Int32 MinMinutes = 1;
-      public const Int32 MaxMinutes = 180;
-      
-      public const Int32 MinutesDefault = 15;
-      public const Int32 ProxyPortDefault = 8080;
-
-      public const string UnassignedDescription = "Unassigned Description";
-
+      #region Members
       private readonly Data IV = new Data("3k1vKL=Cz6!wZS`I");
       private readonly Data SymmetricKey = new Data("%`Bb9ega;$.GUDaf");
+
+      private readonly Dictionary<Preference, IMetadata> _Preferences = new Dictionary<Preference, IMetadata>();
       #endregion
 
       #region Properties
-      private Boolean _SyncOnLoad;
-      public Boolean SyncOnLoad
-      {
-         get { return _SyncOnLoad; }
-         set { _SyncOnLoad = value; }
-      }
-
-      private Boolean _SyncOnSchedule;
-      public Boolean SyncOnSchedule
-      {
-         get { return _SyncOnSchedule; }
-         set { _SyncOnSchedule = value; }
-      }
-
-      private Int32 _SyncTimeMinutes;
-      public Int32 SyncTimeMinutes
-      {
-         get { return _SyncTimeMinutes; }
-         set { _SyncTimeMinutes = value; }
-      }
-
-      private Boolean _GenerateWeb;
-      public Boolean GenerateWeb
-      {
-         get { return _GenerateWeb; }
-         set { _GenerateWeb = value; }
-      }
-
-      private Int32 _GenerateInterval;
-      public Int32 GenerateInterval
-      {
-         get { return _GenerateInterval; }
-         set { _GenerateInterval = value; }
-      }
-
-      private String _WebRoot;
-      public String WebRoot
-      {
-         get { return _WebRoot; }
-         set { _WebRoot = value; }
-      }
-
-      private String _CSSFile;
-      public String CSSFileName
-      {
-         get { return _CSSFile; }
-         set { _CSSFile = value; }
-      }
-
-      private Int32 _EOCUserID;
-      public Int32 EOCUserID
-      {
-         get { return _EOCUserID; }
-         set { _EOCUserID = value; }
-      }
-
-      private String _StanfordID;
-      public String StanfordID
-      {
-         get { return _StanfordID; }
-         set { _StanfordID = value; }
-      }
-
-      private String _AppDataPath;
-      public String AppDataPath
-      {
-         get { return _AppDataPath; }
-      }
-
-      private Int32 _TeamID;
-      public Int32 TeamID
-      {
-         get { return _TeamID; }
-         set { _TeamID = value; }
-      }
-
-      private Boolean _UseProxy;
-      public Boolean UseProxy
-      {
-         get { return _UseProxy; }
-         set { _UseProxy = value; }
-      }
-
-      private String _ProxyServer;
-      public String ProxyServer
-      {
-         get { return _ProxyServer; }
-         set { _ProxyServer = value; }
-      }
-
-      private Int32 _ProxyPort;
-      public Int32 ProxyPort
-      {
-         get { return _ProxyPort; }
-         set { _ProxyPort = value; }
-      }
-
-      private Boolean _UseProxyAuth;
-      public Boolean UseProxyAuth
-      {
-         get { return _UseProxyAuth; }
-         set { _UseProxyAuth = value; }
-      }
-
-      private String _ProxyUser;
-      public String ProxyUser
-      {
-         get { return _ProxyUser; }
-         set { _ProxyUser = value; }
-      }
-
-      private String _ProxyPass;
-      public String ProxyPass
-      {
-         get { return _ProxyPass; }
-         set { _ProxyPass = value; }
-      }
-
-      private string _CacheFolder;
-      public string CacheFolder
-      {
-         get { return _CacheFolder; }
-         set { _CacheFolder = value; }
-      }
-
-      private Point _FormLocation;
-      public Point FormLocation
-      {
-         get { return _FormLocation; }
-         set { _FormLocation = value; }
-      }
-
-      private Size _FormSize;
-      public Size FormSize
-      {
-         get { return _FormSize; }
-         set { _FormSize = value; }
-      }
-
-      private StringCollection _FormColumns;
-      public StringCollection FormColumns
-      {
-         get { return _FormColumns; }
-         set { _FormColumns = value; }
-      }
-
-      private bool _FormLogVisible;
-      public bool FormLogVisible
-      {
-         get { return _FormLogVisible; }
-         set { _FormLogVisible = value; }
-      }
-
-      private string _FormSortColumn;
-      public string FormSortColumn
-      {
-         get { return _FormSortColumn; }
-         set { _FormSortColumn = value; }
-      }
-
-      private SortOrder _FormSortOrder;
-      public SortOrder FormSortOrder
-      {
-         get { return _FormSortOrder; }
-         set { _FormSortOrder = value; }
-      }
-
-      private bool _OfflineLast;
-      public bool OfflineLast
-      {
-         get { return _OfflineLast; }
-         set { _OfflineLast = value; } 
-      }
-
-      private string _DefaultConfigFile;
-      public string DefaultConfigFile
-      {
-         get { return _DefaultConfigFile; }
-         set { _DefaultConfigFile = value; }
-      }
-
-      private bool _UseDefaultConfigFile;
-      public bool UseDefaultConfigFile
-      {
-         get { return _UseDefaultConfigFile; }
-         set { _UseDefaultConfigFile = value; }
-      }
-      
-      private bool _AutoSaveConfig;
-      public bool AutoSaveConfig
-      {
-         get { return _AutoSaveConfig; }
-         set { _AutoSaveConfig = value; }
-      }
-
-      private ePpdCalculation _PpdCalculation;
-      public ePpdCalculation PpdCalculation
-      {
-         get { return _PpdCalculation; }
-         set { _PpdCalculation = value; } 
-      }
-
-      private eTimeStyle _TimeStyle;
-      public eTimeStyle TimeStyle
-      {
-         get { return _TimeStyle; }
-         set { _TimeStyle = value; }
-      }
-      
-      private string _LogFileViewer;
-      public string LogFileViewer
-      {
-         get { return _LogFileViewer; }
-         set { _LogFileViewer = value; }
-      }
-
-      private string _FileExplorer;
-      public string FileExplorer
-      {
-         get { return _FileExplorer; }
-         set { _FileExplorer = value; }
-      }
-      
-      private string _ProjectDownloadUrl;
-      [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings")]
-      public string ProjectDownloadUrl
-      {
-         get { return _ProjectDownloadUrl; }
-         set { _ProjectDownloadUrl = value; }
-      }
-      
-      private bool _WebGenAfterRefresh;
-      public bool WebGenAfterRefresh
-      {
-         get { return _WebGenAfterRefresh; }
-         set { _WebGenAfterRefresh = value; }
-      }
-      
-      private int _MessageLevel;
-      public int MessageLevel
-      {
-         get { return _MessageLevel; }
-         set { _MessageLevel = value; } 
-      }
-
-      private int _FormSplitLocation;
-      public int FormSplitLocation
-      {
-         get { return _FormSplitLocation; }
-         set { _FormSplitLocation = value; }
-      }
-      
-      private int _FormLogWindowHeight;
-      public int FormLogWindowHeight
-      {
-         get { return _FormLogWindowHeight; }
-         set { _FormLogWindowHeight = value; }
-      }
-      
-      private int _DecimalPlaces;
-      public int DecimalPlaces
-      {
-         get { return _DecimalPlaces; }
-         set { _DecimalPlaces = value; }
-      }
-      
-      private bool _ShowUserStats;
-      public bool ShowUserStats
-      {
-         get { return _ShowUserStats; }
-         set { _ShowUserStats = value; } 
-      }
-      
-      private bool _DuplicateUserIDCheck;
-      public bool DuplicateUserIDCheck
-      {
-         get { return _DuplicateUserIDCheck; }
-         set { _DuplicateUserIDCheck = value; }
-      }
-
-      private bool _DuplicateProjectCheck;
-      public bool DuplicateProjectCheck
-      {
-         get { return _DuplicateProjectCheck; }
-         set { _DuplicateProjectCheck = value; }
-      }
-
-      private bool _ColorLogFile;
-      public bool ColorLogFile
-      {
-         get { return _ColorLogFile; }
-         set { _ColorLogFile = value; } 
-      }
-
-      private bool _EmailReportingEnabled;
-      public bool EmailReportingEnabled
-      {
-         get { return _EmailReportingEnabled; }
-         set { _EmailReportingEnabled = value; }
-      }
-      
-      private string _EmailReportingToAddress;
-      public string EmailReportingToAddress
-      {
-         get { return _EmailReportingToAddress; }
-         set { _EmailReportingToAddress = value; }
-      }
-
-      private string _EmailReportingFromAddress;
-      public string EmailReportingFromAddress
-      {
-         get { return _EmailReportingFromAddress; }
-         set { _EmailReportingFromAddress = value; }
-      }
-
-      private string _EmailReportingServerAddress;
-      public string EmailReportingServerAddress
-      {
-         get { return _EmailReportingServerAddress; }
-         set { _EmailReportingServerAddress = value; }
-      }
-
-      private string _EmailReportingServerUsername;
-      public string EmailReportingServerUsername
-      {
-         get { return _EmailReportingServerUsername; }
-         set { _EmailReportingServerUsername = value; }
-      }
-
-      private string _EmailReportingServerPassword;
-      public string EmailReportingServerPassword
-      {
-         get { return _EmailReportingServerPassword; }
-         set { _EmailReportingServerPassword = value; }
-      }
-
-      private bool _ReportEuePause;
-      public bool ReportEuePause
-      {
-         get { return _ReportEuePause; }
-         set { _ReportEuePause = value; }
-      }
-
-      private bool _QueueViewerVisible;
-      public bool QueueViewerVisible
-      {
-         get { return _QueueViewerVisible; }
-         set { _QueueViewerVisible = value; }
-      }
-
-      private List<Color> _GraphColors;
-      public List<Color> GraphColors
-      {
-         get { return _GraphColors; }
-         set { _GraphColors = value; }
-      }
-
-      private bool _RunMinimized;
-      public bool RunMinimized
-      {
-         get { return _RunMinimized; }
-         set { _RunMinimized = value; }
-      }
-
-      private Point _BenchmarksFormLocation;
-      public Point BenchmarksFormLocation
-      {
-         get { return _BenchmarksFormLocation; }
-         set { _BenchmarksFormLocation = value; }
-      }
-
-      private Size _BenchmarksFormSize;
-      public Size BenchmarksFormSize
-      {
-         get { return _BenchmarksFormSize; }
-         set { _BenchmarksFormSize = value; }
-      }
-
-      private Point _MessagesFormLocation;
-      public Point MessagesFormLocation
-      {
-         get { return _MessagesFormLocation; }
-         set { _MessagesFormLocation = value; }
-      }
-
-      private Size _MessagesFormSize;
-      public Size MessagesFormSize
-      {
-         get { return _MessagesFormSize; }
-         set { _MessagesFormSize = value; }
-      }
-
-      private bool _WebGenCopyFAHlog;
-      public bool WebGenCopyFAHlog
-      {
-         get { return _WebGenCopyFAHlog; }
-         set { _WebGenCopyFAHlog = value; }
-      }
-      
-      private bool _CalculateBonus;
-      public bool CalculateBonus
-      {
-         get { return _CalculateBonus; }
-         set { _CalculateBonus = value; }
-      }
-
-      private bool _AllowRunningAsync;
-      public bool AllowRunningAsync
-      {
-         get { return _AllowRunningAsync; }
-         set { _AllowRunningAsync = value; }
-      }
-
-      public static String AppPath
+      public string ApplicationPath
       {
          get
          {
@@ -504,62 +59,53 @@ namespace HFM.Preferences
       /// <summary>
       /// Log File Cache Directory
       /// </summary>
-      public static string CacheDirectory
+      public string CacheDirectory
       {
-         get { return Path.Combine(Instance.AppDataPath, Instance.CacheFolder); }
+         get { return Path.Combine(GetPreference<string>(Preference.ApplicationDataFolderPath), 
+                                   GetPreference<string>(Preference.CacheFolder)); }
       }
       
-      public string EOCUserXml
+      /// <summary>
+      /// Url to EOC User Xml File
+      /// </summary>
+      public string EocUserXml
       {
          get 
          { 
-            return String.Concat(EOCUserXmlUrl, EOCUserID);
+            return String.Concat(Constants.EOCUserXmlUrl, GetPreference<int>(Preference.EocUserID));
          }
       }
 
-      public Uri EOCUserUrl
+      /// <summary>
+      /// Url to EOC User Page
+      /// </summary>
+      public Uri EocUserUrl
       {
          get
          {
-            return new Uri(String.Concat(EOCUserBaseUrl, EOCUserID));
+            return new Uri(String.Concat(Constants.EOCUserBaseUrl, GetPreference<int>(Preference.EocUserID)));
          }
       }
 
-      public Uri EOCTeamUrl
+      /// <summary>
+      /// Url to EOC Team Page
+      /// </summary>
+      public Uri EocTeamUrl
       {
          get
          {
-            return new Uri(String.Concat(EOCTeamBaseUrl, TeamID));
+            return new Uri(String.Concat(Constants.EOCTeamBaseUrl, GetPreference<int>(Preference.TeamID)));
          }
       }
 
+      /// <summary>
+      /// Url to Stanford User Page
+      /// </summary>
       public Uri StanfordUserUrl
       {
          get
          {
-            return new Uri(String.Concat(StanfordBaseUrl + StanfordID));
-         }
-      }
-
-      #endregion
-
-      #region Singleton Support
-
-      private static PreferenceSet _Instance;
-      private static readonly Object classLock = typeof(PreferenceSet);
-
-      public static PreferenceSet Instance
-      {
-         get
-         {
-            lock (classLock)
-            {
-               if (_Instance == null)
-               {
-                  _Instance = new PreferenceSet();
-               }
-            }
-            return _Instance;
+            return new Uri(String.Concat(Constants.StanfordBaseUrl, GetPreference<string>(Preference.StanfordID)));
          }
       }
 
@@ -567,17 +113,137 @@ namespace HFM.Preferences
 
       #region Constructor
       /// <summary>
-      /// Private Constructor to enforce Singleton pattern; loads preferences
+      /// Construct a PreferenceSet Instance
       /// </summary>
-      private PreferenceSet()
+      public PreferenceSet()
       {
+         SetupDictionary();
          Load();
       } 
       #endregion
 
       #region Implementation
       /// <summary>
-      /// Load the current set of preferences and adjust for sanity
+      /// Get a Preference of Type T
+      /// </summary>
+      /// <typeparam name="T">Preference Data Type</typeparam>
+      /// <param name="key">Preference Key</param>
+      public T GetPreference<T>(Preference key)
+      {
+         if (_Preferences[key].DataType == typeof(T))
+         {
+            return (T) _Preferences[key].Data;
+         }
+         
+         throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, 
+            "Preference '{0}' of Type '{1}' does not exist.", key, typeof(T)));
+      }
+
+      /// <summary>
+      /// Set a Preference of Type T
+      /// </summary>
+      /// <typeparam name="T">Preference Data Type</typeparam>
+      /// <param name="key">Preference Key</param>
+      /// <param name="value">Preference Value</param>
+      public void SetPreference<T>(Preference key, T value)
+      {
+         if (_Preferences[key].DataType == typeof(T))
+         {
+            ((Metadata<T>)_Preferences[key]).Data = value;
+            return;
+         }
+         else if (_Preferences[key].DataType == typeof(int))
+         {
+            string stringValue = value as string;
+            if (stringValue != null)
+            {
+               ((Metadata<int>)_Preferences[key]).Data = Int32.Parse(stringValue);
+               return;
+            }
+         }
+
+         throw new ArgumentException(String.Format(CultureInfo.CurrentCulture,
+            "Preference '{0}' of Type '{1}' does not exist.", key, typeof(T)));
+      }
+
+      private void SetupDictionary()
+      {
+         DateTime Start = HfmTrace.ExecStart;
+      
+         _Preferences.Add(Preference.FormLocation, new Metadata<Point>());
+         _Preferences.Add(Preference.FormSize, new Metadata<Size>());
+         _Preferences.Add(Preference.FormColumns, new Metadata<StringCollection>());
+         _Preferences.Add(Preference.FormSortColumn, new Metadata<string>());
+         _Preferences.Add(Preference.FormSortOrder, new Metadata<SortOrder>());
+         _Preferences.Add(Preference.FormSplitLocation, new Metadata<int>());
+         _Preferences.Add(Preference.FormLogWindowHeight, new Metadata<int>());
+         _Preferences.Add(Preference.FormLogVisible, new Metadata<bool>());
+         _Preferences.Add(Preference.QueueViewerVisible, new Metadata<bool>());
+         _Preferences.Add(Preference.TimeStyle, new Metadata<TimeStyleType>());
+
+         _Preferences.Add(Preference.BenchmarksFormLocation, new Metadata<Point>());
+         _Preferences.Add(Preference.BenchmarksFormSize, new Metadata<Size>());
+         _Preferences.Add(Preference.GraphColors, new Metadata<List<Color>>());
+
+         _Preferences.Add(Preference.MessagesFormLocation, new Metadata<Point>());
+         _Preferences.Add(Preference.MessagesFormSize, new Metadata<Size>());
+
+         _Preferences.Add(Preference.SyncOnLoad, new Metadata<bool>());
+         _Preferences.Add(Preference.SyncOnSchedule, new Metadata<bool>());
+         _Preferences.Add(Preference.SyncTimeMinutes, new Metadata<int>());
+         _Preferences.Add(Preference.DuplicateUserIDCheck, new Metadata<bool>());
+         _Preferences.Add(Preference.DuplicateProjectCheck, new Metadata<bool>());
+         _Preferences.Add(Preference.AllowRunningAsync, new Metadata<bool>());
+         _Preferences.Add(Preference.ShowUserStats, new Metadata<bool>());
+
+         _Preferences.Add(Preference.GenerateWeb, new Metadata<bool>());
+         _Preferences.Add(Preference.GenerateInterval, new Metadata<int>());
+         _Preferences.Add(Preference.WebGenAfterRefresh, new Metadata<bool>());
+         _Preferences.Add(Preference.WebRoot, new Metadata<string>());
+         _Preferences.Add(Preference.WebGenCopyFAHlog, new Metadata<bool>());
+         _Preferences.Add(Preference.CssFile, new Metadata<string>());
+
+         _Preferences.Add(Preference.RunMinimized, new Metadata<bool>());
+         _Preferences.Add(Preference.UseDefaultConfigFile, new Metadata<bool>());
+         _Preferences.Add(Preference.DefaultConfigFile, new Metadata<string>());
+
+         _Preferences.Add(Preference.OfflineLast, new Metadata<bool>());
+         _Preferences.Add(Preference.ColorLogFile, new Metadata<bool>());
+         _Preferences.Add(Preference.AutoSaveConfig, new Metadata<bool>());
+         _Preferences.Add(Preference.PpdCalculation, new Metadata<PpdCalculationType>());
+         _Preferences.Add(Preference.DecimalPlaces, new Metadata<int>());
+         _Preferences.Add(Preference.CalculateBonus, new Metadata<bool>());
+         _Preferences.Add(Preference.LogFileViewer, new Metadata<string>());
+         _Preferences.Add(Preference.FileExplorer, new Metadata<string>());
+         _Preferences.Add(Preference.MessageLevel, new Metadata<int>());
+
+         _Preferences.Add(Preference.EmailReportingEnabled, new Metadata<bool>());
+         _Preferences.Add(Preference.EmailReportingToAddress, new Metadata<string>());
+         _Preferences.Add(Preference.EmailReportingFromAddress, new Metadata<string>());
+         _Preferences.Add(Preference.EmailReportingServerAddress, new Metadata<string>());
+         _Preferences.Add(Preference.EmailReportingServerUsername, new Metadata<string>());
+         _Preferences.Add(Preference.EmailReportingServerPassword, new Metadata<string>());
+         _Preferences.Add(Preference.ReportEuePause, new Metadata<bool>());
+
+         _Preferences.Add(Preference.EocUserID, new Metadata<int>());
+         _Preferences.Add(Preference.StanfordID, new Metadata<string>());
+         _Preferences.Add(Preference.TeamID, new Metadata<int>());
+         _Preferences.Add(Preference.ProjectDownloadUrl, new Metadata<string>());
+         _Preferences.Add(Preference.UseProxy, new Metadata<bool>());
+         _Preferences.Add(Preference.ProxyServer, new Metadata<string>());
+         _Preferences.Add(Preference.ProxyPort, new Metadata<int>());
+         _Preferences.Add(Preference.UseProxyAuth, new Metadata<bool>());
+         _Preferences.Add(Preference.ProxyUser, new Metadata<string>());
+         _Preferences.Add(Preference.ProxyPass, new Metadata<string>());
+
+         _Preferences.Add(Preference.CacheFolder, new Metadata<string>(Settings.Default.CacheFolder));
+         _Preferences.Add(Preference.ApplicationDataFolderPath, new Metadata<string>(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Constants.ExeName)));
+
+         Debug.WriteLine(String.Format("{0} Execution Time: {1}", HfmTrace.FunctionName, HfmTrace.GetExecTime(Start)));
+      }
+
+      /// <summary>
+      /// Load the Preferences Set
       /// </summary>
       public void Load()
       {
@@ -586,216 +252,86 @@ namespace HFM.Preferences
 
          UpgradeUserSettings();
 
-         _CSSFile = Settings.Default.CSSFile;
+         Point location = new Point();
+         Size size = new Size();
+         StringCollection columns = null;
+         GetFormStateValues(ref location, ref size, ref columns);
+         SetPreference(Preference.FormLocation, location);
+         SetPreference(Preference.FormSize, size);
+         SetPreference(Preference.FormColumns, columns);
+         SetPreference(Preference.FormSortColumn, Settings.Default.FormSortColumn);
+         SetPreference(Preference.FormSortOrder, GetFormSortOrder());
+         SetPreference(Preference.FormSplitLocation, Settings.Default.FormSplitLocation);
+         SetPreference(Preference.FormLogWindowHeight, Settings.Default.FormLogWindowHeight);
+         SetPreference(Preference.FormLogVisible, Settings.Default.FormLogVisible);
+         SetPreference(Preference.QueueViewerVisible, Settings.Default.QueueViewerVisible);
+         SetPreference(Preference.TimeStyle, GetTimeStyle());
 
-         if (Int32.TryParse(Settings.Default.GenerateInterval, out _GenerateInterval) == false)
-         {
-            _GenerateInterval = MinutesDefault;
-         }
-         else if (ValidateMinutes(_GenerateInterval) == false)
-         {
-            _GenerateInterval = MinutesDefault;
-         }
+         location = new Point();
+         size = new Size();
+         GetBenchmarksFormStateValues(ref location, ref size);
+         SetPreference(Preference.BenchmarksFormLocation, location);
+         SetPreference(Preference.BenchmarksFormSize, size);
+         SetPreference(Preference.GraphColors, GetGraphColorsList());
 
-         _GenerateWeb = Settings.Default.GenerateWeb;
-         _SyncOnLoad = Settings.Default.SyncOnLoad;
-         _SyncOnSchedule = Settings.Default.SyncOnSchedule;
+         location = new Point();
+         size = new Size();
+         GetMessagesFormStateValues(ref location, ref size);
+         SetPreference(Preference.MessagesFormLocation, location);
+         SetPreference(Preference.MessagesFormSize, size);
 
-         if (Int32.TryParse(Settings.Default.SyncTimeMinutes, out _SyncTimeMinutes) == false)
-         {
-            _SyncTimeMinutes = MinutesDefault;
-         }
-         else if (ValidateMinutes(_SyncTimeMinutes) == false)
-         {
-            _SyncTimeMinutes = MinutesDefault;
-         }
+         SetPreference(Preference.SyncOnLoad, Settings.Default.SyncOnLoad);
+         SetPreference(Preference.SyncOnSchedule, Settings.Default.SyncOnSchedule);
+         SetPreference(Preference.SyncTimeMinutes, GetValidNumeric(Settings.Default.SyncTimeMinutes, Constants.MinutesDefault));
+         SetPreference(Preference.DuplicateUserIDCheck, Settings.Default.DuplicateUserIDCheck);
+         SetPreference(Preference.DuplicateProjectCheck, Settings.Default.DuplicateProjectCheck);
+         SetPreference(Preference.AllowRunningAsync, Settings.Default.AllowRunningAsync);
+         SetPreference(Preference.ShowUserStats, Settings.Default.ShowUserStats);
+        
+         SetPreference(Preference.GenerateWeb, Settings.Default.GenerateWeb);
+         SetPreference(Preference.GenerateInterval, GetValidNumeric(Settings.Default.GenerateInterval, Constants.MinutesDefault));
+         SetPreference(Preference.WebGenAfterRefresh, Settings.Default.WebGenAfterRefresh);
+         SetPreference(Preference.WebRoot, DecryptWebRoot(Settings.Default.WebRoot, SymmetricProvider, IV, SymmetricKey));
+         SetPreference(Preference.WebGenCopyFAHlog, Settings.Default.WebGenCopyFAHlog);
+         SetPreference(Preference.CssFile, Settings.Default.CSSFile);
 
-         _WebRoot = String.Empty;
-         if (Settings.Default.WebRoot.Length > 0)
-         {
-            try
-            {
-               SymmetricProvider.IntializationVector = IV;
-               _WebRoot = SymmetricProvider.Decrypt(new Data(Utils.FromBase64(Settings.Default.WebRoot)), SymmetricKey).ToString();
-            }
-            catch (FormatException)
-            {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "WebGen Root Folder is not Base64 encoded... loading clear value.", true);
-               _WebRoot = Settings.Default.WebRoot;
-            }
-            catch (CryptographicException)
-            {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Cannot decrypt WebGen Root Folder... loading clear value.", true);
-               _WebRoot = Settings.Default.WebRoot;
-            }
-         }
+         SetPreference(Preference.RunMinimized, Settings.Default.RunMinimized);
+         SetPreference(Preference.UseDefaultConfigFile, Settings.Default.UseDefaultConfigFile);
+         SetPreference(Preference.DefaultConfigFile, Settings.Default.DefaultConfigFile);
+
+         SetPreference(Preference.OfflineLast, Settings.Default.OfflineLast);
+         SetPreference(Preference.ColorLogFile, Settings.Default.ColorLogFile);
+         SetPreference(Preference.AutoSaveConfig, Settings.Default.AutoSaveConfig);
+         SetPreference(Preference.PpdCalculation, GetPpdCalculation());
+         SetPreference(Preference.DecimalPlaces, Settings.Default.DecimalPlaces);
+         SetPreference(Preference.CalculateBonus, Settings.Default.CalculateBonus);
+         SetPreference(Preference.LogFileViewer, Settings.Default.LogFileViewer);
+         SetPreference(Preference.FileExplorer, Settings.Default.FileExplorer);
+         SetPreference(Preference.MessageLevel, Settings.Default.MessageLevel);
+
+         SetPreference(Preference.EmailReportingEnabled, Settings.Default.EmailReportingEnabled);
+         SetPreference(Preference.EmailReportingToAddress, Settings.Default.EmailReportingToAddress);
+         SetPreference(Preference.EmailReportingFromAddress, Settings.Default.EmailReportingFromAddress);
+         SetPreference(Preference.EmailReportingServerAddress, Settings.Default.EmailReportingServerAddress);
+         SetPreference(Preference.EmailReportingServerUsername, Settings.Default.EmailReportingServerUsername);
+         SetPreference(Preference.EmailReportingServerPassword, DecryptEmailReportingServerPassword(Settings.Default.EmailReportingServerPassword, SymmetricProvider, IV, SymmetricKey));
+         SetPreference(Preference.ReportEuePause, Settings.Default.ReportEuePause);
          
-         _EOCUserID = Settings.Default.EOCUserID;
-         _StanfordID = Settings.Default.StanfordID;
-         _TeamID = Settings.Default.TeamID;
-
-         _UseProxy = Settings.Default.UseProxy;
-         _ProxyServer = Settings.Default.ProxyServer;
-         _ProxyPort = Settings.Default.ProxyPort;
-         _UseProxyAuth = Settings.Default.UseProxyAuth;
-         _ProxyUser = Settings.Default.ProxyUser;
+         SetPreference(Preference.EocUserID, Settings.Default.EOCUserID);
+         SetPreference(Preference.StanfordID, Settings.Default.StanfordID);
+         SetPreference(Preference.TeamID, Settings.Default.TeamID);
+         SetPreference(Preference.ProjectDownloadUrl, Settings.Default.ProjectDownloadUrl);
+         SetPreference(Preference.UseProxy, Settings.Default.UseProxy);
+         SetPreference(Preference.ProxyServer, Settings.Default.ProxyServer);
+         SetPreference(Preference.ProxyPort, Settings.Default.ProxyPort);
+         SetPreference(Preference.UseProxyAuth, Settings.Default.UseProxyAuth);
+         SetPreference(Preference.ProxyUser, Settings.Default.ProxyUser);
+         SetPreference(Preference.ProxyPass, DecryptProxyPass(Settings.Default.ProxyPass, SymmetricProvider, IV, SymmetricKey));
          
-         _ProxyPass = String.Empty;
-         if (Settings.Default.ProxyPass.Length > 0)
-         {
-            try
-            {
-               SymmetricProvider.IntializationVector = IV;
-               _ProxyPass = SymmetricProvider.Decrypt(new Data(Utils.FromBase64(Settings.Default.ProxyPass)), SymmetricKey).ToString();
-            }
-            catch (FormatException)
-            {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Proxy Password is not Base64 encoded... loading clear value.", true);
-               _ProxyPass = Settings.Default.ProxyPass;
-            }
-            catch (CryptographicException)
-            {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Cannot decrypt Proxy Password... loading clear value.", true);
-               _ProxyPass = Settings.Default.ProxyPass;
-            }
-         }
-
-         _CacheFolder = Settings.Default.CacheFolder;
-         _FormLogVisible = Settings.Default.FormLogVisible;
-
-         try
-         {
-            _FormLocation = Settings.Default.FormLocation;
-            _FormSize = Settings.Default.FormSize;
-            _FormColumns = Settings.Default.FormColumns;
-         }
-         catch (NullReferenceException)
-         { }
-
-         _FormSortColumn = Settings.Default.FormSortColumn;
-         try
-         {
-            _FormSortOrder = Settings.Default.FormSortOrder;
-         }
-         catch (NullReferenceException)
-         {
-            _FormSortOrder = SortOrder.None;
-         }
-         _FormSplitLocation = Settings.Default.FormSplitLocation;
-         _FormLogWindowHeight = Settings.Default.FormLogWindowHeight;
-
-         _OfflineLast = Settings.Default.OfflineLast;
-         _DefaultConfigFile = Settings.Default.DefaultConfigFile;
-         _UseDefaultConfigFile = Settings.Default.UseDefaultConfigFile;
-         _AutoSaveConfig = Settings.Default.AutoSaveConfig;
-
-         switch (Settings.Default.PpdCalculation)
-         {
-            case "LastFrame":
-               _PpdCalculation = ePpdCalculation.LastFrame;
-               break;
-            case "LastThreeFrames":
-               _PpdCalculation = ePpdCalculation.LastThreeFrames;
-               break;
-            case "AllFrames":
-               _PpdCalculation = ePpdCalculation.AllFrames;
-               break;
-            case "EffectiveRate":
-               _PpdCalculation = ePpdCalculation.EffectiveRate;
-               break;               
-            default:
-               _PpdCalculation = ePpdCalculation.LastThreeFrames;
-               break;
-         }
-
-         switch (Settings.Default.TimeStyle)
-         {
-            case "Standard":
-               _TimeStyle = eTimeStyle.Standard;
-               break;
-            case "Formatted":
-               _TimeStyle = eTimeStyle.Formatted;
-               break;
-            default:
-               _TimeStyle = eTimeStyle.Standard;
-               break;
-         }
-
-         _LogFileViewer = Settings.Default.LogFileViewer;
-         _FileExplorer = Settings.Default.FileExplorer;
-         _ProjectDownloadUrl = Settings.Default.ProjectDownloadUrl;
-         _WebGenAfterRefresh = Settings.Default.WebGenAfterRefresh;
-         _MessageLevel = Settings.Default.MessageLevel;
-         _DecimalPlaces = Settings.Default.DecimalPlaces;
-         _ShowUserStats = Settings.Default.ShowUserStats;
-         _DuplicateUserIDCheck = Settings.Default.DuplicateUserIDCheck;
-         _DuplicateProjectCheck = Settings.Default.DuplicateProjectCheck;
-         _ColorLogFile = Settings.Default.ColorLogFile;
-         _EmailReportingEnabled = Settings.Default.EmailReportingEnabled;
-         _EmailReportingToAddress = Settings.Default.EmailReportingToAddress;
-         _EmailReportingFromAddress = Settings.Default.EmailReportingFromAddress;
-         _EmailReportingServerAddress = Settings.Default.EmailReportingServerAddress;
-         _EmailReportingServerUsername = Settings.Default.EmailReportingServerUsername;
-         _EmailReportingServerPassword = String.Empty;
-         if (Settings.Default.EmailReportingServerPassword.Length > 0)
-         {
-            try
-            {
-               SymmetricProvider.IntializationVector = IV;
-               _EmailReportingServerPassword =
-                  SymmetricProvider.Decrypt(new Data(Utils.FromBase64(Settings.Default.EmailReportingServerPassword)), SymmetricKey).ToString();
-            }
-            catch (FormatException)
-            {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Stmp Server Password is not Base64 encoded... loading clear value.", true);
-               _EmailReportingServerPassword = Settings.Default.EmailReportingServerPassword;
-            }
-            catch (CryptographicException)
-            {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Cannot decrypt Stmp Server Password... loading clear value.", true);
-               _EmailReportingServerPassword = Settings.Default.EmailReportingServerPassword;
-            }
-         }
-         _ReportEuePause = Settings.Default.ReportEuePause;
-         _QueueViewerVisible = Settings.Default.QueueViewerVisible;
-         _GraphColors = new List<Color>();
-         foreach (string color in Settings.Default.GraphColors)
-         {
-            Color realColor = Color.FromName(color);
-            if (realColor.IsEmpty == false)
-            {
-               _GraphColors.Add(realColor);
-            }
-         }
-         _RunMinimized = Settings.Default.RunMinimized;
-         try
-         {
-            _BenchmarksFormLocation = Settings.Default.BenchmarksFormLocation;
-            _BenchmarksFormSize = Settings.Default.BenchmarksFormSize;
-         }
-         catch (NullReferenceException)
-         { }
-         try
-         {
-            _MessagesFormLocation = Settings.Default.MessagesFormLocation;
-            _MessagesFormSize = Settings.Default.MessagesFormSize;
-         }
-         catch (NullReferenceException)
-         { }
-         _WebGenCopyFAHlog = Settings.Default.WebGenCopyFAHlog;
-         _CalculateBonus = Settings.Default.CalculateBonus;
-         _AllowRunningAsync = Settings.Default.AllowRunningAsync;
-         
-         _AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-         _AppDataPath = Path.Combine(_AppDataPath, ExeName);
-         if (Directory.Exists(_AppDataPath) == false)
-         {
-            Directory.CreateDirectory(_AppDataPath);
-         }
-
          Debug.WriteLine(String.Format("{0} Execution Time: {1}", HfmTrace.FunctionName, HfmTrace.GetExecTime(Start)));
       }
 
+      #region Load Support Methods
       private static void UpgradeUserSettings()
       {
          string appVersionString = PlatformOps.ApplicationVersionWithRevision;
@@ -808,6 +344,175 @@ namespace HFM.Preferences
          }
       }
 
+      private static void GetFormStateValues(ref Point location, ref Size size, ref StringCollection columns)
+      {
+         try
+         {
+            location = Settings.Default.FormLocation;
+            size = Settings.Default.FormSize;
+            columns = Settings.Default.FormColumns;
+         }
+         catch (NullReferenceException)
+         { }
+      }
+
+      private static SortOrder GetFormSortOrder()
+      {
+         SortOrder order = SortOrder.None;
+         try
+         {
+            order = Settings.Default.FormSortOrder;
+         }
+         catch (NullReferenceException)
+         { }
+
+         return order;
+      }
+
+      private static TimeStyleType GetTimeStyle()
+      {
+         switch (Settings.Default.TimeStyle)
+         {
+            case "Standard":
+               return TimeStyleType.Standard;
+            case "Formatted":
+               return TimeStyleType.Formatted;
+            default:
+               return TimeStyleType.Standard;
+         }
+      }
+
+      private static void GetBenchmarksFormStateValues(ref Point location, ref Size size)
+      {
+         try
+         {
+            location = Settings.Default.BenchmarksFormLocation;
+            size = Settings.Default.BenchmarksFormSize;
+         }
+         catch (NullReferenceException)
+         { }
+      }
+
+      private static List<Color> GetGraphColorsList()
+      {
+         List<Color> GraphColors = new List<Color>();
+         foreach (string color in Settings.Default.GraphColors)
+         {
+            Color realColor = Color.FromName(color);
+            if (realColor.IsEmpty == false)
+            {
+               GraphColors.Add(realColor);
+            }
+         }
+
+         return GraphColors;
+      }
+
+      private static void GetMessagesFormStateValues(ref Point location, ref Size size)
+      {
+         try
+         {
+            location = Settings.Default.MessagesFormLocation;
+            size = Settings.Default.MessagesFormSize;
+         }
+         catch (NullReferenceException)
+         { }
+      }
+
+      private static string DecryptWebRoot(string encrypted, Symmetric SymmetricProvider, Data IV, Data SymmetricKey)
+      {
+         string WebRoot = String.Empty;
+         if (Settings.Default.WebRoot.Length > 0)
+         {
+            try
+            {
+               SymmetricProvider.IntializationVector = IV;
+               WebRoot = SymmetricProvider.Decrypt(new Data(Utils.FromBase64(encrypted)), SymmetricKey).ToString();
+            }
+            catch (FormatException)
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "WebGen Root Folder is not Base64 encoded... loading clear value.", true);
+               WebRoot = Settings.Default.WebRoot;
+            }
+            catch (CryptographicException)
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Cannot decrypt WebGen Root Folder... loading clear value.", true);
+               WebRoot = Settings.Default.WebRoot;
+            }
+         }
+
+         return WebRoot;
+      }
+
+      private static PpdCalculationType GetPpdCalculation()
+      {
+         switch (Settings.Default.PpdCalculation)
+         {
+            case "LastFrame":
+               return PpdCalculationType.LastFrame;
+            case "LastThreeFrames":
+               return PpdCalculationType.LastThreeFrames;
+            case "AllFrames":
+               return PpdCalculationType.AllFrames;
+            case "EffectiveRate":
+               return PpdCalculationType.EffectiveRate;
+            default:
+               return PpdCalculationType.LastThreeFrames;
+         }
+      }
+
+      private static string DecryptEmailReportingServerPassword(string encrypted, Symmetric SymmetricProvider, Data IV, Data SymmetricKey)
+      {
+         string EmailReportingServerPassword = String.Empty;
+         if (Settings.Default.EmailReportingServerPassword.Length > 0)
+         {
+            try
+            {
+               SymmetricProvider.IntializationVector = IV;
+               EmailReportingServerPassword =
+                  SymmetricProvider.Decrypt(new Data(Utils.FromBase64(encrypted)), SymmetricKey).ToString();
+            }
+            catch (FormatException)
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Stmp Server Password is not Base64 encoded... loading clear value.", true);
+               EmailReportingServerPassword = Settings.Default.EmailReportingServerPassword;
+            }
+            catch (CryptographicException)
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Cannot decrypt Stmp Server Password... loading clear value.", true);
+               EmailReportingServerPassword = Settings.Default.EmailReportingServerPassword;
+            }
+         }
+         
+         return EmailReportingServerPassword;
+      }
+
+      private static string DecryptProxyPass(string encrypted, Symmetric SymmetricProvider, Data IV, Data SymmetricKey)
+      {
+         string ProxyPass = String.Empty;
+         if (Settings.Default.ProxyPass.Length > 0)
+         {
+            try
+            {
+               SymmetricProvider.IntializationVector = IV;
+               ProxyPass = SymmetricProvider.Decrypt(new Data(Utils.FromBase64(encrypted)), SymmetricKey).ToString();
+            }
+            catch (FormatException)
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Proxy Password is not Base64 encoded... loading clear value.", true);
+               ProxyPass = Settings.Default.ProxyPass;
+            }
+            catch (CryptographicException)
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Cannot decrypt Proxy Password... loading clear value.", true);
+               ProxyPass = Settings.Default.ProxyPass;
+            }
+         }
+
+         return ProxyPass;
+      }
+      #endregion
+
       /// <summary>
       /// Revert to the previously saved settings
       /// </summary>
@@ -817,7 +522,7 @@ namespace HFM.Preferences
       }
 
       /// <summary>
-      /// Save the current settings
+      /// Save the Preferences Set
       /// </summary>
       public void Save()
       {
@@ -827,173 +532,140 @@ namespace HFM.Preferences
 
          try
          {
-            Settings.Default.CSSFile = _CSSFile;
-            Settings.Default.SyncOnLoad = _SyncOnLoad;
+            Settings.Default.FormLocation = GetPreference<Point>(Preference.FormLocation);
+            Settings.Default.FormSize = GetPreference<Size>(Preference.FormSize);
+            Settings.Default.FormColumns = GetPreference<StringCollection>(Preference.FormColumns);
+            Settings.Default.FormSortColumn = GetPreference<string>(Preference.FormSortColumn);
+            Settings.Default.FormSortOrder = GetPreference<SortOrder>(Preference.FormSortOrder);
+            Settings.Default.FormSplitLocation = GetPreference<int>(Preference.FormSplitLocation);
+            Settings.Default.FormLogWindowHeight = GetPreference<int>(Preference.FormLogWindowHeight);
+            Settings.Default.FormLogVisible = GetPreference<bool>(Preference.FormLogVisible);
+            Settings.Default.QueueViewerVisible = GetPreference<bool>(Preference.QueueViewerVisible);
+            Settings.Default.TimeStyle = GetPreference<TimeStyleType>(Preference.TimeStyle).ToString();
 
+            Settings.Default.BenchmarksFormLocation = GetPreference<Point>(Preference.BenchmarksFormLocation);
+            Settings.Default.BenchmarksFormSize = GetPreference<Size>(Preference.BenchmarksFormSize);
+            Settings.Default.GraphColors = GetGraphColorsStringCollection(GetPreference<List<Color>>(Preference.GraphColors));
+
+            Settings.Default.MessagesFormLocation = GetPreference<Point>(Preference.MessagesFormLocation);
+            Settings.Default.MessagesFormSize = GetPreference<Size>(Preference.MessagesFormSize);
+
+            Settings.Default.SyncOnLoad = GetPreference<bool>(Preference.SyncOnLoad);
             bool RaiseTimerSettingsChanged = false;
-            if (Settings.Default.GenerateWeb != _GenerateWeb ||
-                Settings.Default.GenerateInterval != _GenerateInterval.ToString() ||
-                Settings.Default.WebGenAfterRefresh != _WebGenAfterRefresh ||
-                Settings.Default.SyncOnSchedule != _SyncOnSchedule ||
-                Settings.Default.SyncTimeMinutes != _SyncTimeMinutes.ToString())
+            if (Settings.Default.SyncOnSchedule != GetPreference<bool>(Preference.SyncOnSchedule) ||
+                Settings.Default.SyncTimeMinutes != GetPreference<int>(Preference.SyncTimeMinutes).ToString())
             {
                RaiseTimerSettingsChanged = true;
             }
-
-            Settings.Default.GenerateWeb = _GenerateWeb;
-            Settings.Default.GenerateInterval = _GenerateInterval.ToString();
-            Settings.Default.WebGenAfterRefresh = _WebGenAfterRefresh;
-            Settings.Default.SyncOnSchedule = _SyncOnSchedule;
-            Settings.Default.SyncTimeMinutes = _SyncTimeMinutes.ToString();
-            
-            if (RaiseTimerSettingsChanged) OnTimerSettingsChanged(EventArgs.Empty);
-            
-            Settings.Default.WebRoot = String.Empty;
-            if (_WebRoot.Length > 0)
-            {
-               try
-               {
-                  SymmetricProvider.IntializationVector = IV;
-                  Settings.Default.WebRoot = SymmetricProvider.Encrypt(new Data(_WebRoot), SymmetricKey).ToBase64();
-               }
-               catch (CryptographicException)
-               {
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Failed to encrypt WebGen Root Folder... saving clear value.");
-                  Settings.Default.WebRoot = _WebRoot;
-               }
-            }
-            
-            Settings.Default.EOCUserID = _EOCUserID;
-            Settings.Default.StanfordID = _StanfordID;
-            Settings.Default.TeamID = _TeamID;
-
-            // Proxy Settings
-            Settings.Default.UseProxy = _UseProxy;
-            Settings.Default.ProxyServer = _ProxyServer;
-            Settings.Default.ProxyPort = _ProxyPort;
-            Settings.Default.UseProxyAuth = _UseProxyAuth;
-            Settings.Default.ProxyUser = _ProxyUser;
-            Settings.Default.ProxyPass = String.Empty;
-            if (_ProxyPass.Length > 0)
-            {
-               try
-               {
-                  SymmetricProvider.IntializationVector = IV;
-                  Settings.Default.ProxyPass = SymmetricProvider.Encrypt(new Data(_ProxyPass), SymmetricKey).ToBase64();
-               }
-               catch (CryptographicException)
-               {
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Failed to encrypt Proxy Password... saving clear value.");
-                  Settings.Default.ProxyPass = _ProxyPass;
-               }
-            }
-
-            Settings.Default.CacheFolder = _CacheFolder;
-            Settings.Default.FormLogVisible = _FormLogVisible;
-            Settings.Default.FormLocation = _FormLocation;
-            Settings.Default.FormSize = _FormSize;
-            Settings.Default.FormColumns = _FormColumns;
-            Settings.Default.FormSortColumn = _FormSortColumn;
-            Settings.Default.FormSortOrder = _FormSortOrder;
-            Settings.Default.FormSplitLocation = _FormSplitLocation;
-            Settings.Default.FormLogWindowHeight = _FormLogWindowHeight;
-            if (Settings.Default.OfflineLast != _OfflineLast)
-            {
-               Settings.Default.OfflineLast = _OfflineLast;
-               OnOfflineLastChanged(EventArgs.Empty);
-            }
-            Settings.Default.DefaultConfigFile = _DefaultConfigFile;
-            Settings.Default.AutoSaveConfig = _AutoSaveConfig;
-            if (Settings.Default.DefaultConfigFile.Length == 0)
-            {
-               _UseDefaultConfigFile = false;
-            }
-            Settings.Default.UseDefaultConfigFile = _UseDefaultConfigFile;
-            if (Settings.Default.PpdCalculation != _PpdCalculation.ToString())
-            {
-               Settings.Default.PpdCalculation = _PpdCalculation.ToString();
-               OnPpdCalculationChanged(EventArgs.Empty);
-            }
-            Settings.Default.TimeStyle = _TimeStyle.ToString();
-            Settings.Default.LogFileViewer = _LogFileViewer;
-            Settings.Default.FileExplorer = _FileExplorer;
-            Settings.Default.ProjectDownloadUrl = _ProjectDownloadUrl;
-            if (Settings.Default.MessageLevel != _MessageLevel)
-            {
-               Settings.Default.MessageLevel = _MessageLevel;
-               OnMessageLevelChanged(EventArgs.Empty);
-            }
-            if (Settings.Default.DecimalPlaces != _DecimalPlaces)
-            {
-               Settings.Default.DecimalPlaces = _DecimalPlaces;
-               OnDecimalPlacesChanged(EventArgs.Empty);
-            }
-            if (Settings.Default.ShowUserStats != _ShowUserStats)
-            {
-               Settings.Default.ShowUserStats = _ShowUserStats;
-               OnShowUserStatsChanged(EventArgs.Empty);
-            }
-            
-            #region Duplicate Checks
+            Settings.Default.SyncOnSchedule = GetPreference<bool>(Preference.SyncOnSchedule);
+            Settings.Default.SyncTimeMinutes = GetPreference<int>(Preference.SyncTimeMinutes).ToString();
             bool RaiseDuplicateCheckChanged = false;
-            if (Settings.Default.DuplicateUserIDCheck != _DuplicateUserIDCheck ||
-                Settings.Default.DuplicateProjectCheck != _DuplicateProjectCheck)
+            if (Settings.Default.DuplicateUserIDCheck != GetPreference<bool>(Preference.DuplicateUserIDCheck) ||
+                Settings.Default.DuplicateProjectCheck != GetPreference<bool>(Preference.DuplicateProjectCheck))
             {
                RaiseDuplicateCheckChanged = true;
             }
+            Settings.Default.DuplicateUserIDCheck = GetPreference<bool>(Preference.DuplicateUserIDCheck);
+            Settings.Default.DuplicateProjectCheck = GetPreference<bool>(Preference.DuplicateProjectCheck);
+            Settings.Default.AllowRunningAsync = GetPreference<bool>(Preference.AllowRunningAsync);
+            bool RaiseShowUserStatsChanged = false;
+            if (Settings.Default.ShowUserStats != GetPreference<bool>(Preference.ShowUserStats))
+            {
+               RaiseShowUserStatsChanged = true;
+            }
+            Settings.Default.ShowUserStats = GetPreference<bool>(Preference.ShowUserStats);
 
-            Settings.Default.DuplicateUserIDCheck = _DuplicateUserIDCheck;
-            Settings.Default.DuplicateProjectCheck = _DuplicateProjectCheck;
+            if (Settings.Default.GenerateWeb != GetPreference<bool>(Preference.GenerateWeb) ||
+                Settings.Default.GenerateInterval != GetPreference<int>(Preference.GenerateInterval).ToString() ||
+                Settings.Default.WebGenAfterRefresh != GetPreference<bool>(Preference.WebGenAfterRefresh))
+            {
+               RaiseTimerSettingsChanged = true;
+            }
+            Settings.Default.GenerateWeb = GetPreference<bool>(Preference.GenerateWeb);
+            Settings.Default.GenerateInterval = GetPreference<int>(Preference.GenerateInterval).ToString();
+            Settings.Default.WebGenAfterRefresh = GetPreference<bool>(Preference.WebGenAfterRefresh);
+            Settings.Default.WebRoot = EncryptWebRoot(GetPreference<string>(Preference.WebRoot), SymmetricProvider, IV, SymmetricKey);
+            Settings.Default.WebGenCopyFAHlog = GetPreference<bool>(Preference.WebGenCopyFAHlog);
+            Settings.Default.CSSFile = GetPreference<string>(Preference.CssFile);
+
+            Settings.Default.RunMinimized = GetPreference<bool>(Preference.RunMinimized);
+            Settings.Default.UseDefaultConfigFile = GetPreference<bool>(Preference.UseDefaultConfigFile);
+            Settings.Default.DefaultConfigFile = GetPreference<string>(Preference.DefaultConfigFile);
+            // if config file name is nothing, automatically set default config to false
+            if (Settings.Default.DefaultConfigFile.Length == 0)
+            {
+               SetPreference(Preference.UseDefaultConfigFile, false);
+               Settings.Default.UseDefaultConfigFile = false;
+            }
+
+            bool RaiseOfflineLastChanged = false;
+            if (Settings.Default.OfflineLast != GetPreference<bool>(Preference.OfflineLast))
+            {
+               RaiseOfflineLastChanged = true;
+            }
+            Settings.Default.OfflineLast = GetPreference<bool>(Preference.OfflineLast);
+            bool RaiseColorLogFileChanged = false;
+            if (Settings.Default.ColorLogFile != GetPreference<bool>(Preference.ColorLogFile))
+            {
+               RaiseColorLogFileChanged = true;
+            }
+            Settings.Default.ColorLogFile = GetPreference<bool>(Preference.ColorLogFile);
+            Settings.Default.AutoSaveConfig = GetPreference<bool>(Preference.AutoSaveConfig);
+            bool RaisePpdCalculationChanged = false;
+            if (Settings.Default.PpdCalculation != GetPreference<PpdCalculationType>(Preference.PpdCalculation).ToString())
+            {
+               RaisePpdCalculationChanged = true;
+            }
+            Settings.Default.PpdCalculation = GetPreference<PpdCalculationType>(Preference.PpdCalculation).ToString();
+            bool RaiseDecimalPlacesChanged = false;
+            if (Settings.Default.DecimalPlaces != GetPreference<int>(Preference.DecimalPlaces))
+            {
+               RaiseDecimalPlacesChanged = true;
+            }
+            Settings.Default.DecimalPlaces = GetPreference<int>(Preference.DecimalPlaces);
+            bool RaiseCalculateBonusChanged = false;
+            if (Settings.Default.CalculateBonus != GetPreference<bool>(Preference.CalculateBonus))
+            {
+               RaiseCalculateBonusChanged = true;
+            }
+            Settings.Default.CalculateBonus = GetPreference<bool>(Preference.CalculateBonus);
+            Settings.Default.LogFileViewer = GetPreference<string>(Preference.LogFileViewer);
+            Settings.Default.FileExplorer = GetPreference<string>(Preference.FileExplorer);
+            bool RaiseMessageLevelChanged = false;
+            if (Settings.Default.MessageLevel != GetPreference<int>(Preference.MessageLevel))
+            {
+               RaiseMessageLevelChanged = true;
+            }
+            Settings.Default.MessageLevel = GetPreference<int>(Preference.MessageLevel);
+
+            Settings.Default.EmailReportingEnabled = GetPreference<bool>(Preference.EmailReportingEnabled);
+            Settings.Default.EmailReportingToAddress = GetPreference<string>(Preference.EmailReportingToAddress);
+            Settings.Default.EmailReportingFromAddress = GetPreference<string>(Preference.EmailReportingFromAddress);
+            Settings.Default.EmailReportingServerAddress = GetPreference<string>(Preference.EmailReportingServerAddress);
+            Settings.Default.EmailReportingServerUsername = GetPreference<string>(Preference.EmailReportingServerUsername);
+            Settings.Default.EmailReportingServerPassword = EncryptEmailReportingServerPassword(GetPreference<string>(Preference.EmailReportingServerPassword), SymmetricProvider, IV, SymmetricKey);
+            Settings.Default.ReportEuePause = GetPreference<bool>(Preference.ReportEuePause);
+
+            Settings.Default.EOCUserID = GetPreference<int>(Preference.EocUserID);
+            Settings.Default.StanfordID = GetPreference<string>(Preference.StanfordID);
+            Settings.Default.TeamID = GetPreference<int>(Preference.TeamID);
+            Settings.Default.ProjectDownloadUrl = GetPreference<string>(Preference.ProjectDownloadUrl);
+            Settings.Default.UseProxy = GetPreference<bool>(Preference.UseProxy);
+            Settings.Default.ProxyServer = GetPreference<string>(Preference.ProxyServer);
+            Settings.Default.ProxyPort = GetPreference<int>(Preference.ProxyPort);
+            Settings.Default.UseProxyAuth = GetPreference<bool>(Preference.UseProxyAuth);
+            Settings.Default.ProxyUser = GetPreference<string>(Preference.ProxyUser);
+            Settings.Default.ProxyPass = EncryptProxyPass(GetPreference<string>(Preference.ProxyPass), SymmetricProvider, IV, SymmetricKey);
             
+            if (RaiseTimerSettingsChanged) OnTimerSettingsChanged(EventArgs.Empty);
             if (RaiseDuplicateCheckChanged) OnDuplicateCheckChanged(EventArgs.Empty);
-            #endregion
-
-            if (Settings.Default.ColorLogFile != _ColorLogFile)
-            {
-               Settings.Default.ColorLogFile = _ColorLogFile;
-               OnColorLogFileChanged(EventArgs.Empty);
-            }
-            Settings.Default.EmailReportingEnabled = _EmailReportingEnabled;
-            Settings.Default.EmailReportingToAddress = _EmailReportingToAddress;
-            Settings.Default.EmailReportingFromAddress = _EmailReportingFromAddress;
-            Settings.Default.EmailReportingServerAddress = _EmailReportingServerAddress;
-            Settings.Default.EmailReportingServerUsername = _EmailReportingServerUsername;
-            Settings.Default.EmailReportingServerPassword = String.Empty;
-            if (_EmailReportingServerPassword.Length > 0)
-            {
-               try
-               {
-                  SymmetricProvider.IntializationVector = IV;
-                  Settings.Default.EmailReportingServerPassword =
-                     SymmetricProvider.Encrypt(new Data(_EmailReportingServerPassword), SymmetricKey).ToBase64();
-               }
-               catch (CryptographicException)
-               {
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Failed to encrypt Smtp Server Password... saving clear value.");
-                  Settings.Default.EmailReportingServerPassword = _EmailReportingServerPassword;
-               }
-            }
-            Settings.Default.ReportEuePause = _ReportEuePause;
-            Settings.Default.QueueViewerVisible = _QueueViewerVisible;
-            
-            StringCollection col = new StringCollection();
-            foreach (Color color in _GraphColors)
-            {
-               col.Add(color.Name);
-            }
-            Settings.Default.GraphColors = col;
-            Settings.Default.RunMinimized = _RunMinimized;
-            Settings.Default.BenchmarksFormLocation = _BenchmarksFormLocation;
-            Settings.Default.BenchmarksFormSize = _BenchmarksFormSize;
-            Settings.Default.MessagesFormLocation = _MessagesFormLocation;
-            Settings.Default.MessagesFormSize = _MessagesFormSize;
-            Settings.Default.WebGenCopyFAHlog = _WebGenCopyFAHlog;
-            if (Settings.Default.CalculateBonus != _CalculateBonus)
-            {
-               Settings.Default.CalculateBonus = _CalculateBonus;
-               OnCalculateBonusChanges(EventArgs.Empty);
-            }
-            Settings.Default.AllowRunningAsync = _AllowRunningAsync;
+            if (RaiseShowUserStatsChanged) OnShowUserStatsChanged(EventArgs.Empty);
+            if (RaiseOfflineLastChanged) OnOfflineLastChanged(EventArgs.Empty);
+            if (RaiseColorLogFileChanged) OnColorLogFileChanged(EventArgs.Empty);
+            if (RaisePpdCalculationChanged) OnPpdCalculationChanged(EventArgs.Empty);
+            if (RaiseDecimalPlacesChanged) OnDecimalPlacesChanged(EventArgs.Empty);
+            if (RaiseCalculateBonusChanged) OnCalculateBonusChanged(EventArgs.Empty);
+            if (RaiseMessageLevelChanged) OnMessageLevelChanged(EventArgs.Empty);
 
             Settings.Default.Save();
          }
@@ -1003,12 +675,88 @@ namespace HFM.Preferences
          }
 
          Debug.WriteLine(String.Format("{0} Execution Time: {1}", HfmTrace.FunctionName, HfmTrace.GetExecTime(Start)));
-      } 
+      }
+
+      #region Save Support Methods
+      private static StringCollection GetGraphColorsStringCollection(IEnumerable<Color> collection)
+      {
+         StringCollection col = new StringCollection();
+         foreach (Color color in collection)
+         {
+            col.Add(color.Name);
+         }
+         return col;
+      }
+
+      private static string EncryptWebRoot(string clear, Symmetric SymmetricProvider, Data IV, Data SymmetricKey)
+      {
+         string WebRoot = String.Empty;
+         if (clear.Length > 0)
+         {
+            try
+            {
+               SymmetricProvider.IntializationVector = IV;
+               WebRoot = SymmetricProvider.Encrypt(new Data(clear), SymmetricKey).ToBase64();
+            }
+            catch (CryptographicException)
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Failed to encrypt WebGen Root Folder... saving clear value.");
+               WebRoot = clear;
+            }
+         }
+         
+         return WebRoot;
+      }
+
+      private static string EncryptEmailReportingServerPassword(string clear, Symmetric SymmetricProvider, Data IV, Data SymmetricKey)
+      {
+         string EmailReportingServerPassword = String.Empty;
+         if (clear.Length > 0)
+         {
+            try
+            {
+               SymmetricProvider.IntializationVector = IV;
+               EmailReportingServerPassword = SymmetricProvider.Encrypt(new Data(clear), SymmetricKey).ToBase64();
+            }
+            catch (CryptographicException)
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Failed to encrypt Smtp Server Password... saving clear value.");
+               EmailReportingServerPassword = clear;
+            }
+         }
+         
+         return EmailReportingServerPassword;
+      }
+
+      private static string EncryptProxyPass(string clear, Symmetric SymmetricProvider, Data IV, Data SymmetricKey)
+      {
+         string ProxyPass = String.Empty;
+         if (clear.Length > 0)
+         {
+            try
+            {
+               SymmetricProvider.IntializationVector = IV;
+               ProxyPass = SymmetricProvider.Encrypt(new Data(clear), SymmetricKey).ToBase64();
+            }
+            catch (CryptographicException)
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Failed to encrypt Proxy Password... saving clear value.");
+               ProxyPass = clear;
+            }
+         }
+
+         return ProxyPass;
+      }
       #endregion
       
+      #endregion
+
       #region Event Wrappers
+      /// <summary>
+      /// Background Timer (Refresh or Web) Settings Changed
+      /// </summary>
       public event EventHandler TimerSettingsChanged;
-      protected void OnTimerSettingsChanged(EventArgs e)
+      private void OnTimerSettingsChanged(EventArgs e)
       {
          if (TimerSettingsChanged != null)
          {
@@ -1016,8 +764,11 @@ namespace HFM.Preferences
          }
       }
 
+      /// <summary>
+      /// Offline Last Setting Changed
+      /// </summary>
       public event EventHandler OfflineLastChanged;
-      protected void OnOfflineLastChanged(EventArgs e)
+      private void OnOfflineLastChanged(EventArgs e)
       {
          if (OfflineLastChanged != null)
          {
@@ -1025,8 +776,11 @@ namespace HFM.Preferences
          }
       }
 
+      /// <summary>
+      /// PPD Calculation Type Changed
+      /// </summary>
       public event EventHandler PpdCalculationChanged;
-      protected void OnPpdCalculationChanged(EventArgs e)
+      private void OnPpdCalculationChanged(EventArgs e)
       {
          if (PpdCalculationChanged != null)
          {
@@ -1034,8 +788,11 @@ namespace HFM.Preferences
          }
       }
 
+      /// <summary>
+      /// Debug Message Level Changed
+      /// </summary>
       public event EventHandler MessageLevelChanged;
-      protected void OnMessageLevelChanged(EventArgs e)
+      private void OnMessageLevelChanged(EventArgs e)
       {
          if (MessageLevelChanged != null)
          {
@@ -1043,8 +800,11 @@ namespace HFM.Preferences
          }
       }
 
+      /// <summary>
+      /// PPD Decimal Places Setting Changed
+      /// </summary>
       public event EventHandler DecimalPlacesChanged;
-      protected void OnDecimalPlacesChanged(EventArgs e)
+      private void OnDecimalPlacesChanged(EventArgs e)
       {
          if (DecimalPlacesChanged != null)
          {
@@ -1052,8 +812,11 @@ namespace HFM.Preferences
          }
       }
 
+      /// <summary>
+      /// Show User Statistics Setting Changed
+      /// </summary>
       public event EventHandler ShowUserStatsChanged;
-      protected void OnShowUserStatsChanged(EventArgs e)
+      private void OnShowUserStatsChanged(EventArgs e)
       {
          if (ShowUserStatsChanged != null)
          {
@@ -1061,8 +824,11 @@ namespace HFM.Preferences
          }
       }
 
+      /// <summary>
+      /// Duplicate (Client ID or Project (R/C/G)) Check Settings Changed
+      /// </summary>
       public event EventHandler DuplicateCheckChanged;
-      protected void OnDuplicateCheckChanged(EventArgs e)
+      private void OnDuplicateCheckChanged(EventArgs e)
       {
          if (DuplicateCheckChanged != null)
          {
@@ -1070,8 +836,11 @@ namespace HFM.Preferences
          }
       }
 
+      /// <summary>
+      /// Color Log File Setting Changed
+      /// </summary>
       public event EventHandler ColorLogFileChanged;
-      protected void OnColorLogFileChanged(EventArgs e)
+      private void OnColorLogFileChanged(EventArgs e)
       {
          if (ColorLogFileChanged != null)
          {
@@ -1079,8 +848,11 @@ namespace HFM.Preferences
          }
       } 
 
+      /// <summary>
+      /// Calculate Bonus Credit and PPD Setting Changed
+      /// </summary>
       public event EventHandler CalculateBonusChanged;
-      private void OnCalculateBonusChanges(EventArgs e)
+      private void OnCalculateBonusChanged(EventArgs e)
       {
          if (CalculateBonusChanged != null)
          {
@@ -1090,9 +862,24 @@ namespace HFM.Preferences
       #endregion
 
       #region Preference Validation
+      private static int GetValidNumeric(string input, int defaultValue)
+      {
+         int output;
+         if (Int32.TryParse(input, out output) == false)
+         {
+            output = defaultValue;
+         }
+         else if (ValidateMinutes(output) == false)
+         {
+            output = defaultValue;
+         }
+         
+         return output;
+      }
+      
       public static bool ValidateMinutes(int Minutes)
       {
-         if ((Minutes > MaxMinutes) || (Minutes < MinMinutes))
+         if ((Minutes > Constants.MaxMinutes) || (Minutes < Constants.MinMinutes))
          {
             return false;
          }
@@ -1112,11 +899,14 @@ namespace HFM.Preferences
       #endregion
       
       #region Preference Formatting
-      public static string PpdFormatString
+      /// <summary>
+      /// PPD String Formatter
+      /// </summary>
+      public string PpdFormatString
       {
          get
          {
-            int DecimalPlaces = Instance.DecimalPlaces;
+            int DecimalPlaces = GetPreference<int>(Preference.DecimalPlaces);
 
             StringBuilder sbldr = new StringBuilder("###,###,##0");
             if (DecimalPlaces > 0)

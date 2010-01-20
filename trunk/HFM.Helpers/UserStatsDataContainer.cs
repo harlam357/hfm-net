@@ -23,7 +23,7 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-using HFM.Preferences;
+using HFM.Framework;
 using HFM.Instrumentation;
 
 namespace HFM.Helpers
@@ -208,7 +208,8 @@ namespace HFM.Helpers
             {
                if (_Instance == null)
                {
-                  _Instance = Deserialize(Path.Combine(PreferenceSet.Instance.AppDataPath, DataStoreFilename));
+                  _Instance = Deserialize(Path.Combine(InstanceProvider.GetInstance<IPreferenceSet>().GetPreference<string>(
+                                                          Preference.ApplicationDataFolderPath), DataStoreFilename));
                }
                if (_Instance == null)
                {
@@ -233,7 +234,8 @@ namespace HFM.Helpers
       #region Serialization Support
       public static void Serialize()
       {
-         Serialize(Instance, Path.Combine(PreferenceSet.Instance.AppDataPath, DataStoreFilename));
+         Serialize(Instance, Path.Combine(InstanceProvider.GetInstance<IPreferenceSet>().GetPreference<string>(
+                                             Preference.ApplicationDataFolderPath), DataStoreFilename));
       }
 
       private static UserStatsDataContainer Deserialize(string filePath)

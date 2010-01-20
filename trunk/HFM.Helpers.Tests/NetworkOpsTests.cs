@@ -22,8 +22,11 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 
+using Castle.Windsor;
 using NUnit.Framework;
 using Rhino.Mocks;
+
+using HFM.Framework;
 
 namespace HFM.Helpers.Tests
 {
@@ -32,6 +35,9 @@ namespace HFM.Helpers.Tests
    {
       private readonly string TestFilesFolder = String.Format(CultureInfo.InvariantCulture, "..{0}..{0}TestFiles", Path.DirectorySeparatorChar);
       private readonly string TestFilesWorkFolder = String.Format(CultureInfo.InvariantCulture, "..{0}..{0}TestFiles{0}Work", Path.DirectorySeparatorChar);
+
+      private IWindsorContainer container;
+      private MockRepository mocks;
    
       [SetUp]
       public void Init()
@@ -43,6 +49,14 @@ namespace HFM.Helpers.Tests
          }
          
          di.Create();
+
+         container = new WindsorContainer();
+         mocks = new MockRepository();
+         
+         IPreferenceSet Prefs = mocks.DynamicMock<IPreferenceSet>();
+         Expect.Call(Prefs.GetPreference<bool>(Preference.UseProxy)).Return(false).Repeat.Any();
+         container.Kernel.AddComponentInstance<IPreferenceSet>(typeof(IPreferenceSet), Prefs);
+         InstanceProvider.SetContainer(container);
       }
       
       [TearDown]
@@ -58,7 +72,6 @@ namespace HFM.Helpers.Tests
       [Test]
       public void FtpUploadHelper()
       {
-         MockRepository mocks = new MockRepository();
          FtpWebRequest Request = mocks.DynamicMock<FtpWebRequest>();
          
          using (FileStream stream = new FileStream(Path.Combine(TestFilesWorkFolder, "upload.html"), FileMode.Create))
@@ -78,7 +91,6 @@ namespace HFM.Helpers.Tests
       [Test]
       public void FtpDownloadHelper_BinaryDownload()
       {
-         MockRepository mocks = new MockRepository();
          FtpWebRequest Request = mocks.DynamicMock<FtpWebRequest>();
          FtpWebResponse Response = mocks.DynamicMock<FtpWebResponse>();
          Expect.Call(Request.GetResponse()).Return(Response);
@@ -100,7 +112,6 @@ namespace HFM.Helpers.Tests
       [Test]
       public void FtpDownloadHelper_TextDownload()
       {
-         MockRepository mocks = new MockRepository();
          FtpWebRequest Request = mocks.DynamicMock<FtpWebRequest>();
          FtpWebResponse Response = mocks.DynamicMock<FtpWebResponse>();
          Expect.Call(Request.GetResponse()).Return(Response);
@@ -122,7 +133,6 @@ namespace HFM.Helpers.Tests
       [Test]
       public void HttpDownloadHelper_BinaryDownload()
       {
-         MockRepository mocks = new MockRepository();
          WebRequest Request = mocks.DynamicMock<WebRequest>();
          WebResponse Response = mocks.DynamicMock<WebResponse>();
          Expect.Call(Request.GetResponse()).Return(Response);
@@ -144,7 +154,6 @@ namespace HFM.Helpers.Tests
       [Test]
       public void HttpDownloadHelper_TextDownload()
       {
-         MockRepository mocks = new MockRepository();
          WebRequest Request = mocks.DynamicMock<WebRequest>();
          WebResponse Response = mocks.DynamicMock<WebResponse>();
          Expect.Call(Request.GetResponse()).Return(Response);
@@ -166,7 +175,6 @@ namespace HFM.Helpers.Tests
       [Test]
       public void HttpDownloadHelper_UnitInfoTooBig()
       {
-         MockRepository mocks = new MockRepository();
          WebRequest Request = mocks.DynamicMock<WebRequest>();
          WebResponse Response = mocks.DynamicMock<WebResponse>();
          Expect.Call(Request.GetResponse()).Return(Response);
@@ -187,7 +195,6 @@ namespace HFM.Helpers.Tests
       [Test]
       public void GetProteinDescription()
       {
-         MockRepository mocks = new MockRepository();
          WebRequest Request = mocks.DynamicMock<WebRequest>();
          WebResponse Response = mocks.DynamicMock<WebResponse>();
          Expect.Call(Request.GetResponse()).Return(Response);

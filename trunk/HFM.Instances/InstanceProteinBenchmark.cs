@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Benchmark Data Class
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,13 +22,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 
 using HFM.Framework;
-using HFM.Preferences;
 using HFM.Instrumentation;
 
 namespace HFM.Instances
 {
    [Serializable]
-   public class InstanceProteinBenchmark : IOwnedByClientInstance
+   public class InstanceProteinBenchmark : IInstanceProteinBenchmark
    {
       #region Members & Read Only Properties
 
@@ -88,7 +87,7 @@ namespace HFM.Instances
             if (Protein != null)
             {
                // Issue 125 & 129
-               if (PreferenceSet.Instance.CalculateBonus)
+               if (InstanceProvider.GetInstance<IPreferenceSet>().GetPreference<bool>(Preference.CalculateBonus))
                {
                   TimeSpan FinishTime = TimeSpan.FromMilliseconds(MinimumFrameTime.TotalMilliseconds * Protein.Frames);
                   return Protein.GetPPD(MinimumFrameTime, FinishTime);
@@ -127,7 +126,7 @@ namespace HFM.Instances
             if (Protein != null)
             {
                // Issue 125 & 129
-               if (PreferenceSet.Instance.CalculateBonus)
+               if (InstanceProvider.GetInstance<IPreferenceSet>().GetPreference<bool>(Preference.CalculateBonus))
                {
                   TimeSpan FinishTime = TimeSpan.FromMilliseconds(AverageFrameTime.TotalMilliseconds * Protein.Frames);
                   return Protein.GetPPD(AverageFrameTime, FinishTime);
@@ -159,7 +158,7 @@ namespace HFM.Instances
       } 
       #endregion
       
-      public BenchmarkClient Client
+      public IBenchmarkClient Client
       {
          get 
          { 
@@ -171,10 +170,8 @@ namespace HFM.Instances
       {
          get
          {
-            IProteinCollection proteinCollection = InstanceProvider.GetInstance<IProteinCollection>();
-
             IProtein protein;
-            proteinCollection.TryGetValue(_ProjectID, out protein);
+            InstanceProvider.GetInstance<IProteinCollection>().TryGetValue(_ProjectID, out protein);
 
             return protein;
          }
@@ -220,7 +217,7 @@ namespace HFM.Instances
          }
       }
 
-      public string[] ToMultiLineString(ClientInstance Instance)
+      public string[] ToMultiLineString(IUnitInfo UnitInfo, string PpdFormatString, bool ProductionValuesOk)
       {
          List<string> output = new List<string>(12);
 
@@ -232,22 +229,22 @@ namespace HFM.Instances
             output.Add(String.Format(" Path: {0}", OwningInstancePath));
             output.Add(String.Format(" Number of Frames Observed: {0}", FrameTimes.Count));
             output.Add(String.Empty);
-            output.Add(String.Format(" Min. Time / Frame : {0} - {1:" + PreferenceSet.PpdFormatString + "} PPD", 
+            output.Add(String.Format(" Min. Time / Frame : {0} - {1:" + PpdFormatString + "} PPD", 
                MinimumFrameTime, MinimumFrameTimePPD));
-            output.Add(String.Format(" Avg. Time / Frame : {0} - {1:" + PreferenceSet.PpdFormatString + "} PPD", 
+            output.Add(String.Format(" Avg. Time / Frame : {0} - {1:" + PpdFormatString + "} PPD", 
                AverageFrameTime, AverageFrameTimePPD));
 
-            if (Instance != null && Instance.CurrentUnitInfo.ProjectID.Equals(theProtein.ProjectNumber) &&
-                                    Instance.ProductionValuesOk)
+            if (UnitInfo != null && UnitInfo.ProjectID.Equals(theProtein.ProjectNumber) &&
+                                    ProductionValuesOk)
             {
-               output.Add(String.Format(" Cur. Time / Frame : {0} - {1:" + PreferenceSet.PpdFormatString + "} PPD", 
-                  Instance.CurrentUnitInfo.TimePerLastSection, Instance.CurrentUnitInfo.PPDPerLastSection));
-               output.Add(String.Format(" R3F. Time / Frame : {0} - {1:" + PreferenceSet.PpdFormatString + "} PPD",
-                  Instance.CurrentUnitInfo.TimePerThreeSections, Instance.CurrentUnitInfo.PPDPerThreeSections));
-               output.Add(String.Format(" All  Time / Frame : {0} - {1:" + PreferenceSet.PpdFormatString + "} PPD",
-                  Instance.CurrentUnitInfo.TimePerAllSections, Instance.CurrentUnitInfo.PPDPerAllSections));
-               output.Add(String.Format(" Eff. Time / Frame : {0} - {1:" + PreferenceSet.PpdFormatString + "} PPD",
-                  Instance.CurrentUnitInfo.TimePerUnitDownload, Instance.CurrentUnitInfo.PPDPerUnitDownload));
+               output.Add(String.Format(" Cur. Time / Frame : {0} - {1:" + PpdFormatString + "} PPD",
+                  UnitInfo.TimePerLastSection, UnitInfo.PPDPerLastSection));
+               output.Add(String.Format(" R3F. Time / Frame : {0} - {1:" + PpdFormatString + "} PPD",
+                  UnitInfo.TimePerThreeSections, UnitInfo.PPDPerThreeSections));
+               output.Add(String.Format(" All  Time / Frame : {0} - {1:" + PpdFormatString + "} PPD",
+                  UnitInfo.TimePerAllSections, UnitInfo.PPDPerAllSections));
+               output.Add(String.Format(" Eff. Time / Frame : {0} - {1:" + PpdFormatString + "} PPD",
+                  UnitInfo.TimePerUnitDownload, UnitInfo.PPDPerUnitDownload));
             }
             
             output.Add(String.Empty);

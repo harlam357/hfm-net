@@ -122,4 +122,81 @@ namespace HFM.Framework
       ClientEuePauseState,
       ClientShutdown
    }
+
+   public enum PpdCalculationType
+   {
+      LastFrame,
+      LastThreeFrames,
+      AllFrames,
+      EffectiveRate
+   }
+
+   public enum TimeStyleType
+   {
+      Standard,
+      Formatted
+   }
+   
+   public enum Preference
+   {
+      FormLocation,
+      FormSize,
+      FormColumns,
+      FormSortColumn,
+      FormSortOrder,
+      FormSplitLocation,
+      FormLogWindowHeight,
+      FormLogVisible,
+      QueueViewerVisible,
+      TimeStyle,
+      BenchmarksFormLocation,
+      BenchmarksFormSize,
+      GraphColors,
+      MessagesFormLocation,
+      MessagesFormSize,
+      SyncOnLoad,
+      SyncOnSchedule,
+      SyncTimeMinutes,
+      DuplicateUserIDCheck,
+      DuplicateProjectCheck,
+      AllowRunningAsync,
+      ShowUserStats,
+      GenerateWeb,
+      GenerateInterval,
+      WebGenAfterRefresh,
+      WebRoot,
+      WebGenCopyFAHlog,
+      CssFile,
+      RunMinimized,
+      UseDefaultConfigFile,
+      DefaultConfigFile,
+      OfflineLast,
+      ColorLogFile,
+      AutoSaveConfig,
+      PpdCalculation,
+      DecimalPlaces,
+      CalculateBonus,
+      LogFileViewer,
+      FileExplorer,
+      MessageLevel,
+      EmailReportingEnabled,
+      EmailReportingToAddress,
+      EmailReportingFromAddress,
+      EmailReportingServerAddress,
+      EmailReportingServerUsername,
+      EmailReportingServerPassword,
+      ReportEuePause,
+      EocUserID,
+      StanfordID,
+      TeamID,
+      ProjectDownloadUrl,
+      UseProxy,
+      ProxyServer,
+      ProxyPort,
+      UseProxyAuth,
+      ProxyUser,
+      ProxyPass,
+      CacheFolder,
+      ApplicationDataFolderPath 
+   }
 }

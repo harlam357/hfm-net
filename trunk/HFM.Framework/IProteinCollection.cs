@@ -29,14 +29,12 @@ namespace HFM.Framework
       string ProjectInfoLocation { get; }
 
       /// <summary>
-      /// Project Summary HTML File Location
+      /// Project Summary Downloader Interface
       /// </summary>
-      Uri ProjectSummaryLocation { get; set; }
-
-      /// <summary>
-      /// Project (Protein) Data has been Updated
-      /// </summary>
-      event EventHandler ProjectInfoUpdated;
+      IProjectSummaryDownloader Downloader
+      {
+         get;
+      }
 
       /// <summary>
       /// Execute Primary Collection Load Sequence
@@ -55,19 +53,14 @@ namespace HFM.Framework
       bool LoadFromTabDelimitedFile(string ProjectInfoFilePath);
 
       /// <summary>
+      /// Clear the Projects not found cache
+      /// </summary>
+      void ClearProjectsNotFoundCache();
+
+      /// <summary>
       /// Download project information from Stanford University (psummary.html)
       /// </summary>
       IAsyncResult BeginDownloadFromStanford();
-
-      /// <summary>
-      /// Download project information from Stanford University (psummary.html)
-      /// </summary>
-      void DownloadFromStanford();
-
-      /// <summary>
-      /// Read Project Information from HTML (psummary.html)
-      /// </summary>
-      void ReadFromProjectSummaryHtml(Uri location);
 
       /// <summary>
       /// Get Protein (should be called from worker thread)
@@ -80,6 +73,7 @@ namespace HFM.Framework
       /// </summary>
       IProtein GetNewProtein();
 
+      #region Want to get rid of these direct collection accessors
       void Add(int key, IProtein value);
       bool Remove(int key);
       void Clear();
@@ -90,6 +84,8 @@ namespace HFM.Framework
       bool TryGetValue(int key, out IProtein value);
       
       IProtein this[int key] { get; set; }
+      #endregion
+
       int Count { get; }
    }
 }

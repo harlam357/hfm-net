@@ -36,7 +36,6 @@ using HFM.Log;
 using HFM.Queue;
 using HFM.Helpers;
 using HFM.Instrumentation;
-using HFM.Preferences;
 
 namespace HFM.Instances
 {
@@ -140,12 +139,17 @@ namespace HFM.Instances
          CurrentUnitInfo.ClearUnitFrameData();
       }
       #endregion
+      
+      /// <summary>
+      /// PreferenceSet Interface
+      /// </summary>
+      private readonly IPreferenceSet _Prefs;
 
       #region Constructor
       /// <summary>
       /// Primary Constructor
       /// </summary>
-      public ClientInstance(InstanceType type)
+      public ClientInstance(IPreferenceSet Prefs, InstanceType type)
       {
          // When Instance Host Type Changes, Clear the User Specified Values
          InstanceHostTypeChanged += ClientInstance_InstanceHostTypeChanged;
@@ -153,6 +157,7 @@ namespace HFM.Instances
          // The captured TimeOfFrame values will no longer be valid
          ClientIsOnVirtualMachineChanged += ClientInstance_ClientIsOnVirtualMachineChanged;
 
+         _Prefs = Prefs;
          // Set the Host Type
          _InstanceHostType = type;
          // Init Client Level Members
@@ -160,7 +165,7 @@ namespace HFM.Instances
          // Init User Specified Client Level Members
          InitUserSpecifiedMembers();
          // Create a fresh UnitInfo
-         _CurrentUnitInfo = new UnitInfo(InstanceName, Path, DateTime.Now);
+         _CurrentUnitInfo = new UnitInfo(_Prefs, InstanceName, Path, DateTime.Now);
       }
       #endregion
 
@@ -750,7 +755,7 @@ namespace HFM.Instances
          get
          {
             // Issue 125
-            if (ProductionValuesOk && PreferenceSet.Instance.CalculateBonus)
+            if (ProductionValuesOk && _Prefs.GetPreference<bool>(Preference.CalculateBonus))
             {
                return CurrentUnitInfo.GetBonusCredit();
             }
@@ -867,7 +872,7 @@ namespace HFM.Instances
          try
          {
             FileInfo fiLog = new FileInfo(System.IO.Path.Combine(Path, RemoteFAHLogFilename));
-            string FAHLog_txt = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedFAHLogName);
+            string FAHLog_txt = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedFAHLogName);
             FileInfo fiCachedLog = new FileInfo(FAHLog_txt);
 
             HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
@@ -898,7 +903,7 @@ namespace HFM.Instances
 
             // Retrieve unitinfo.txt (or equivalent)
             FileInfo fiUI = new FileInfo(System.IO.Path.Combine(Path, RemoteUnitInfoFilename));
-            string UnitInfo_txt = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedUnitInfoName);
+            string UnitInfo_txt = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedUnitInfoName);
 
             HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
                                        String.Format("{0} ({1}) UnitInfo copy (start)", HfmTrace.FunctionName, InstanceName));
@@ -941,7 +946,7 @@ namespace HFM.Instances
 
             // Retrieve queue.dat (or equivalent)
             FileInfo fiQueue = new FileInfo(System.IO.Path.Combine(Path, RemoteQueueFilename));
-            string Queue_dat = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedQueueName);
+            string Queue_dat = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedQueueName);
 
             HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
                                        String.Format("{0} ({1}) Queue copy (start)", HfmTrace.FunctionName, InstanceName));
@@ -987,13 +992,13 @@ namespace HFM.Instances
          try
          {
             string HttpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Path, "/", RemoteFAHLogFilename);
-            string LocalFile = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedFAHLogName);
+            string LocalFile = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedFAHLogName);
             NetworkOps.HttpDownloadHelper(HttpPath, LocalFile, InstanceName, Username, Password, DownloadType.ASCII);
 
             try
             {
                HttpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Path, "/", RemoteUnitInfoFilename);
-               LocalFile = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedUnitInfoName);
+               LocalFile = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedUnitInfoName);
                NetworkOps.HttpDownloadHelper(HttpPath, LocalFile, InstanceName, Username, Password, DownloadType.UnitInfo);
             }
             /*** Remove Requirement for UnitInfo to be Present ***/
@@ -1010,7 +1015,7 @@ namespace HFM.Instances
             try
             {
                HttpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Path, "/", RemoteQueueFilename);
-               LocalFile = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedQueueName);
+               LocalFile = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedQueueName);
                NetworkOps.HttpDownloadHelper(HttpPath, LocalFile, InstanceName, Username, Password, DownloadType.Binary);
             }
             /*** Remove Requirement for Queue to be Present ***/
@@ -1041,12 +1046,12 @@ namespace HFM.Instances
 
          try
          {
-            string LocalFilePath = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedFAHLogName);
+            string LocalFilePath = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedFAHLogName);
             NetworkOps.FtpDownloadHelper(Server, Path, RemoteFAHLogFilename, LocalFilePath, Username, Password, DownloadType.ASCII);
 
             try
             {
-               LocalFilePath = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedUnitInfoName);
+               LocalFilePath = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedUnitInfoName);
                NetworkOps.FtpDownloadHelper(Server, Path, RemoteUnitInfoFilename, LocalFilePath, Username, Password, DownloadType.UnitInfo);
             }
             /*** Remove Requirement for UnitInfo to be Present ***/
@@ -1062,7 +1067,7 @@ namespace HFM.Instances
 
             try
             {
-               LocalFilePath = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedQueueName);
+               LocalFilePath = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedQueueName);
                NetworkOps.FtpDownloadHelper(Server, Path, RemoteQueueFilename, LocalFilePath, Username, Password, DownloadType.Binary);
             }
             /*** Remove Requirement for Queue to be Present ***/
@@ -1098,7 +1103,7 @@ namespace HFM.Instances
          UnitInfo[] parsedUnits = ParseQueueFile();
          // Read and Scan the FAHlog file
          ILogReader lr = InstanceProvider.GetInstance<ILogReader>();
-         lr.ScanFAHLog(InstanceName, System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedFAHLogName));
+         lr.ScanFAHLog(InstanceName, System.IO.Path.Combine(_Prefs.CacheDirectory, CachedFAHLogName));
 
          // Get the Client Status from the Current Work Unit
          ClientStatus CurrentWorkUnitStatus = lr.GetStatusFromLogLines(lr.CurrentWorkUnitLogLines);
@@ -1164,7 +1169,7 @@ namespace HFM.Instances
       private UnitInfo[] ParseQueueFile()
       {
          // Make sure the queue file exists first.  Would like to avoid the exception overhead.
-         string CachedQueueFilePath = System.IO.Path.Combine(PreferenceSet.CacheDirectory, CachedQueueName);
+         string CachedQueueFilePath = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedQueueName);
          if (File.Exists(CachedQueueFilePath) == false)
          {
             return null;
@@ -1186,7 +1191,7 @@ namespace HFM.Instances
                // process entries
                for (int i = 0; i < 10; i++)
                {
-                  UnitInfo parsedUnitInfo = new UnitInfo(InstanceName, Path, LastRetrievalTime);
+                  UnitInfo parsedUnitInfo = new UnitInfo(_Prefs, InstanceName, Path, LastRetrievalTime);
                   QueueParser.ParseQueueEntry(_qBase.GetQueueEntry((uint)i), parsedUnitInfo, ClientIsOnVirtualMachine);
                   units[i] = parsedUnitInfo;
                }
@@ -1279,8 +1284,8 @@ namespace HFM.Instances
 
          PopulateUserAndMachineData(lr.LastClientRun);
 
-         parsedUnits[0] = new UnitInfo(InstanceName, Path, LastRetrievalTime, FoldingID, Team);
-         parsedUnits[1] = new UnitInfo(InstanceName, Path, LastRetrievalTime, FoldingID, Team);
+         parsedUnits[0] = new UnitInfo(_Prefs, InstanceName, Path, LastRetrievalTime, FoldingID, Team);
+         parsedUnits[1] = new UnitInfo(_Prefs, InstanceName, Path, LastRetrievalTime, FoldingID, Team);
 
          IList<ILogLine> PreviousLogLines = lr.PreviousWorkUnitLogLines;
          if (PreviousLogLines != null)
@@ -1298,7 +1303,7 @@ namespace HFM.Instances
       /// <param name="Instance">Client Instance doing the processing.</param>
       /// <param name="logLines">Log Lines to process.</param>
       /// <param name="parsedUnitInfo">UnitInfo object to populate.</param>
-      private static void ParseWorkUnitLogLines(ClientInstance Instance, IList<ILogLine> logLines, IUnitInfo parsedUnitInfo)
+      private void ParseWorkUnitLogLines(ClientInstance Instance, IList<ILogLine> logLines, IUnitInfo parsedUnitInfo)
       {
          ParseWorkUnitLogLines(Instance, logLines, parsedUnitInfo, false);
       }
@@ -1310,14 +1315,14 @@ namespace HFM.Instances
       /// <param name="logLines">Log Lines to process.</param>
       /// <param name="parsedUnitInfo">UnitInfo object to populate.</param>
       /// <param name="ReadUnitInfoFile">Flag - Read the unitinfo.txt file.</param>
-      private static void ParseWorkUnitLogLines(ClientInstance Instance, IList<ILogLine> logLines, IUnitInfo parsedUnitInfo, bool ReadUnitInfoFile)
+      private void ParseWorkUnitLogLines(ClientInstance Instance, IList<ILogLine> logLines, IUnitInfo parsedUnitInfo, bool ReadUnitInfoFile)
       {
          LogParser lp = new LogParser(Instance.InstanceName, Instance.ClientIsOnVirtualMachine, parsedUnitInfo);
          lp.ParseFAHLog(logLines);
 
          if (ReadUnitInfoFile)
          {
-            if (lp.ParseUnitInfoFile(System.IO.Path.Combine(PreferenceSet.CacheDirectory, Instance.CachedUnitInfoName)) == false)
+            if (lp.ParseUnitInfoFile(System.IO.Path.Combine(_Prefs.CacheDirectory, Instance.CachedUnitInfoName)) == false)
             {
                HfmTrace.WriteToHfmConsole(TraceLevel.Warning, Instance.InstanceName, "unitinfo parse failed.");
             }
@@ -1388,8 +1393,8 @@ namespace HFM.Instances
                }
 
                // Update benchmarks
-               ProteinBenchmarkCollection.Instance.UpdateBenchmarkData(parsedUnits[index], previousFrameID,
-                                                                       parsedUnits[index].LastUnitFrameID);
+               InstanceProvider.GetInstance<IProteinBenchmarkCollection>().UpdateBenchmarkData(parsedUnits[index], previousFrameID,
+                                                                                               parsedUnits[index].LastUnitFrameID);
             }
 
             if (index == BenchmarkUpdateIndex)
@@ -1481,21 +1486,26 @@ namespace HFM.Instances
          statusData.AverageFrameTime = ProteinBenchmarkCollection.Instance.GetBenchmarkAverageFrameTime(CurrentUnitInfo);
          statusData.TimeOfLastFrame = CurrentUnitInfo.TimeOfLastFrame;
          statusData.UnitStartTimeStamp = CurrentUnitInfo.UnitStartTimeStamp;
-         statusData.AllowRunningAsync = PreferenceSet.Instance.AllowRunningAsync;
+         statusData.AllowRunningAsync = _Prefs.GetPreference<bool>(Preference.AllowRunningAsync);
       
-         Status = HandleReturnedStatus(statusData);
+         Status = HandleReturnedStatus(statusData, _Prefs);
       }
 
       /// <summary>
       /// Handles the Client Status Returned by Log Parsing and then determines what values to feed the DetermineStatus routine.
       /// </summary>
       /// <param name="statusData">Client Status Data</param>
-      public static ClientStatus HandleReturnedStatus(StatusData statusData)
+      /// <param name="Prefs">PreferenceSet Interface</param>
+      public static ClientStatus HandleReturnedStatus(StatusData statusData, IPreferenceSet Prefs)
       {
          // If the returned status is EuePause and current status is not
          if (statusData.ReturnedStatus.Equals(ClientStatus.EuePause) && statusData.CurrentStatus.Equals(ClientStatus.EuePause) == false)
          {
-            SendEuePauseEmail(statusData.InstanceName);
+            if (Prefs.GetPreference<bool>(Preference.EmailReportingEnabled) && 
+                Prefs.GetPreference<bool>(Preference.ReportEuePause))
+            {
+               SendEuePauseEmail(statusData.InstanceName, Prefs);
+            }
          }
 
          switch (statusData.ReturnedStatus)
@@ -1600,23 +1610,21 @@ namespace HFM.Instances
       /// <summary>
       /// Send EuePause Status Email
       /// </summary>
-      private static void SendEuePauseEmail(string InstanceName)
+      private static void SendEuePauseEmail(string InstanceName, IPreferenceSet Prefs)
       {
-         PreferenceSet Prefs = PreferenceSet.Instance;
-
-         if (Prefs.EmailReportingEnabled && Prefs.ReportEuePause)
+         string messageBody = String.Format("HFM.NET detected that Client '{0}' has entered a 24 hour EUE Pause state.", InstanceName);
+         try
          {
-            string messageBody = String.Format("HFM.NET detected that Client '{0}' has entered a 24 hour EUE Pause state.", InstanceName);
-            try
-            {
-               NetworkOps.SendEmail(Prefs.EmailReportingFromAddress, Prefs.EmailReportingToAddress,
-                                    "HFM.NET - Client EUE Pause Error", messageBody, Prefs.EmailReportingServerAddress,
-                                    Prefs.EmailReportingServerUsername, Prefs.EmailReportingServerPassword);
-            }
-            catch (Exception ex)
-            {
-               HfmTrace.WriteToHfmConsole(ex);
-            }
+            NetworkOps.SendEmail(Prefs.GetPreference<string>(Preference.EmailReportingFromAddress), 
+                                 Prefs.GetPreference<string>(Preference.EmailReportingToAddress),
+                                 "HFM.NET - Client EUE Pause Error", messageBody, 
+                                 Prefs.GetPreference<string>(Preference.EmailReportingServerAddress),
+                                 Prefs.GetPreference<string>(Preference.EmailReportingServerUsername), 
+                                 Prefs.GetPreference<string>(Preference.EmailReportingServerPassword));
+         }
+         catch (Exception ex)
+         {
+            HfmTrace.WriteToHfmConsole(ex);
          }
       }
 
@@ -2104,9 +2112,8 @@ namespace HFM.Instances
             return true;
          }
 
-         PreferenceSet Prefs = PreferenceSet.Instance;
-
-         if ((CurrentUnitInfo.FoldingID != Prefs.StanfordID || CurrentUnitInfo.Team != Prefs.TeamID) &&
+         if ((CurrentUnitInfo.FoldingID != _Prefs.GetPreference<string>(Preference.StanfordID) || 
+              CurrentUnitInfo.Team != _Prefs.GetPreference<int>(Preference.TeamID)) &&
              (Status.Equals(ClientStatus.Unknown) == false && Status.Equals(ClientStatus.Offline) == false))
          {
             return false;
@@ -2126,106 +2133,5 @@ namespace HFM.Instances
          return false;
       }
       #endregion
-   }
-
-   public class StatusData
-   {
-      private string _InstanceName;
-      public string InstanceName
-      {
-         get { return _InstanceName; }
-         set { _InstanceName = value; }
-      }
-
-      private ClientType _TypeOfClient;
-      public ClientType TypeOfClient
-      {
-         get { return _TypeOfClient; }
-         set { _TypeOfClient = value; }
-      }
-
-      private DateTime _LastRetrievalTime;
-      public DateTime LastRetrievalTime
-      {
-         get { return _LastRetrievalTime; }
-         set { _LastRetrievalTime = value; }
-      }
-
-      private bool _ClientIsOnVirtualMachine;
-      public bool ClientIsOnVirtualMachine
-      {
-         get { return _ClientIsOnVirtualMachine; }
-         set { _ClientIsOnVirtualMachine = value; }
-      }
-
-      private int _ClientTimeOffset;
-      public int ClientTimeOffset
-      {
-         get { return _ClientTimeOffset; }
-         set { _ClientTimeOffset = value; }
-      }
-
-      private DateTime _TimeOfLastUnitStart;
-      public DateTime TimeOfLastUnitStart
-      {
-         get { return _TimeOfLastUnitStart; }
-         set { _TimeOfLastUnitStart = value; }
-      }
-
-      private DateTime _TimeOfLastFrameProgress;
-      public DateTime TimeOfLastFrameProgress
-      {
-         get { return _TimeOfLastFrameProgress; }
-         set { _TimeOfLastFrameProgress = value; }
-      }
-
-      private ClientStatus _CurrentStatus;
-      public ClientStatus CurrentStatus
-      {
-         get { return _CurrentStatus; }
-         set { _CurrentStatus = value; }
-      }
-
-      private ClientStatus _ReturnedStatus;
-      public ClientStatus ReturnedStatus
-      {
-         get { return _ReturnedStatus; }
-         set { _ReturnedStatus = value; }
-      }
-
-      private int _FrameTime;
-      public int FrameTime
-      {
-         get { return _FrameTime; }
-         set { _FrameTime = value; }
-      }
-
-      private TimeSpan _AverageFrameTime;
-      public TimeSpan AverageFrameTime
-      {
-         get { return _AverageFrameTime; }
-         set { _AverageFrameTime = value; }
-      }
-
-      private TimeSpan _TimeOfLastFrame;
-      public TimeSpan TimeOfLastFrame
-      {
-         get { return _TimeOfLastFrame; }
-         set { _TimeOfLastFrame = value; }
-      }
-
-      private TimeSpan _UnitStartTimeStamp;
-      public TimeSpan UnitStartTimeStamp
-      {
-         get { return _UnitStartTimeStamp; }
-         set { _UnitStartTimeStamp = value; }
-      }
-
-      private bool _AllowRunningAsync = true;
-      public bool AllowRunningAsync
-      {
-         get { return _AllowRunningAsync; }
-         set { _AllowRunningAsync = value; }
-      }
    }
 }

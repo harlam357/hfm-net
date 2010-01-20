@@ -18,7 +18,10 @@
  */
 
 using System;
+using System.Collections.Generic;
+
 using NUnit.Framework;
+using Rhino.Mocks;
 
 using Majestic12;
 
@@ -30,17 +33,45 @@ namespace HFM.Proteins.Tests
    [TestFixture]
    public class ProteinCollectionTests
    {
+      private MockRepository mocks;
+      private IPreferenceSet _Prefs;
+   
+      [SetUp]
+      public void Init()
+      {
+         mocks = new MockRepository();
+         _Prefs = mocks.DynamicMock<IPreferenceSet>();
+         Expect.Call(_Prefs.GetPreference<bool>(Preference.UseProxy)).Return(false).Repeat.Any();
+         Expect.Call(_Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath)).Return(String.Empty).Repeat.Any();
+      }
+
       [Test]
       public void DownloadFromStanfordTest()
       {
+         mocks.ReplayAll();
+      
          Uri baseUri = new Uri(Environment.CurrentDirectory);
          Uri fileUri = new Uri(baseUri, "..\\TestFiles\\psummaryC.html");
+
+         ProjectSummaryDownloader Downloader = new ProjectSummaryDownloader();
+         Downloader.Dictionary = new SortedDictionary<int, IProtein>();
+         Downloader.Prefs = _Prefs;
+         Downloader.ReadFromProjectSummaryHtml(fileUri);
+
+         Assert.AreEqual(345, Downloader.Dictionary.Count);
+
+         mocks.VerifyAll();
+      }
+
+      [Test]
+      public void GetProteinTest()
+      {
+         IProjectSummaryDownloader Downloader = mocks.Stub<IProjectSummaryDownloader>();
+         mocks.ReplayAll();
+         
+         ProteinCollection Proteins = new ProteinCollection(Downloader, _Prefs);
+         Proteins.Add(2483, new Protein(2483));
       
-         ProteinCollection Proteins = new ProteinCollection();
-         Proteins.ReadFromProjectSummaryHtml(fileUri);
-         
-         Assert.AreEqual(345, Proteins.Count);
-         
          IProtein p = Proteins.GetProtein(2483);
          Assert.AreEqual(false, p.IsUnknown);
          p = Proteins.GetProtein(2482);
@@ -48,6 +79,8 @@ namespace HFM.Proteins.Tests
          // Do it twice to exercise the Projects Not Found List
          p = Proteins.GetProtein(2482);
          Assert.AreEqual(true, p.IsUnknown);
+         
+         mocks.VerifyAll();
       }
 
       [Test]
@@ -70,10 +103,13 @@ namespace HFM.Proteins.Tests
 
       public void ValidatePsummaryTableLayout(string FilePath)
       {
+         ProjectSummaryDownloader Downloader = new ProjectSummaryDownloader();
+         Downloader.Prefs = _Prefs;
+         
          Uri baseUri = new Uri(Environment.CurrentDirectory);
          Uri fileUri = new Uri(baseUri, FilePath);
 
-         HTMLparser pSummary = ProteinCollection.InitHTMLparser(fileUri);
+         HTMLparser pSummary = Downloader.InitHTMLparser(fileUri);
          HTMLchunk oChunk;
 
          // Parse until returned oChunk is null indicating we reached end of parsing
@@ -83,18 +119,18 @@ namespace HFM.Proteins.Tests
             if (oChunk.oType.Equals(HTMLchunkType.OpenTag) &&
                 oChunk.sTag.ToLower() == "tr")
             {
-               Assert.AreEqual("Project Number", ProteinCollection.GetNextThValue(pSummary));
-               Assert.AreEqual("Server IP", ProteinCollection.GetNextThValue(pSummary));
-               Assert.AreEqual("Work Unit Name", ProteinCollection.GetNextThValue(pSummary));
-               Assert.AreEqual("Number of Atoms", ProteinCollection.GetNextThValue(pSummary));
-               Assert.AreEqual("Preferred (days)", ProteinCollection.GetNextThValue(pSummary));
-               Assert.AreEqual("Final deadline (days)", ProteinCollection.GetNextThValue(pSummary));
-               Assert.AreEqual("Credit", ProteinCollection.GetNextThValue(pSummary));
-               Assert.AreEqual("Frames", ProteinCollection.GetNextThValue(pSummary));
-               Assert.AreEqual("Code", ProteinCollection.GetNextThValue(pSummary));
-               Assert.AreEqual("Description", ProteinCollection.GetNextThValue(pSummary));
-               Assert.AreEqual("Contact", ProteinCollection.GetNextThValue(pSummary));
-               Assert.AreEqual("Kfactor", ProteinCollection.GetNextThValue(pSummary));
+               Assert.AreEqual("Project Number", ProjectSummaryDownloader.GetNextThValue(pSummary));
+               Assert.AreEqual("Server IP", ProjectSummaryDownloader.GetNextThValue(pSummary));
+               Assert.AreEqual("Work Unit Name", ProjectSummaryDownloader.GetNextThValue(pSummary));
+               Assert.AreEqual("Number of Atoms", ProjectSummaryDownloader.GetNextThValue(pSummary));
+               Assert.AreEqual("Preferred (days)", ProjectSummaryDownloader.GetNextThValue(pSummary));
+               Assert.AreEqual("Final deadline (days)", ProjectSummaryDownloader.GetNextThValue(pSummary));
+               Assert.AreEqual("Credit", ProjectSummaryDownloader.GetNextThValue(pSummary));
+               Assert.AreEqual("Frames", ProjectSummaryDownloader.GetNextThValue(pSummary));
+               Assert.AreEqual("Code", ProjectSummaryDownloader.GetNextThValue(pSummary));
+               Assert.AreEqual("Description", ProjectSummaryDownloader.GetNextThValue(pSummary));
+               Assert.AreEqual("Contact", ProjectSummaryDownloader.GetNextThValue(pSummary));
+               Assert.AreEqual("Kfactor", ProjectSummaryDownloader.GetNextThValue(pSummary));
                
                return;
             }

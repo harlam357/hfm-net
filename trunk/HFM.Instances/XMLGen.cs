@@ -28,7 +28,6 @@ using System.Xml;
 
 using HFM.Framework;
 using HFM.Instrumentation;
-using HFM.Preferences;
 using HFM.Helpers;
 
 namespace HFM.Instances
@@ -128,9 +127,11 @@ namespace HFM.Instances
          // Time FTP Upload Conversation - Issue 52
          DateTime Start = HfmTrace.ExecStart;
 
+         IPreferenceSet Prefs = InstanceProvider.GetInstance<IPreferenceSet>();
+
          try
          {
-            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.Combine(PreferenceSet.AppPath, "CSS"), PreferenceSet.Instance.CSSFileName), Username, Password, PassiveMode);
+            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.Combine(Prefs.ApplicationPath, "CSS"), Prefs.GetPreference<string>(Preference.CssFile)), Username, Password, PassiveMode);
             NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "index.html"), Username, Password, PassiveMode);
             NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "summary.html"), Username, Password, PassiveMode);
             NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "mobile.html"), Username, Password, PassiveMode);
@@ -142,8 +143,8 @@ namespace HFM.Instances
                                              Path.ChangeExtension(Instance.InstanceName, ".html")),
                                              Username, Password, PassiveMode);
 
-                  string CachedFAHlogPath = Path.Combine(PreferenceSet.CacheDirectory, Instance.CachedFAHLogName);
-                  if (PreferenceSet.Instance.WebGenCopyFAHlog && File.Exists(CachedFAHlogPath))
+                  string CachedFAHlogPath = Path.Combine(Prefs.CacheDirectory, Instance.CachedFAHLogName);
+                  if (Prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog) && File.Exists(CachedFAHlogPath))
                   {
                      NetworkOps.FtpUploadHelper(Server, FtpPath, CachedFAHlogPath, Username, Password, PassiveMode);
                   }
@@ -163,8 +164,10 @@ namespace HFM.Instances
       /// <returns>Generated Xml Document</returns>
       private static XmlDocument CreateInstanceXml(ClientInstance Instance)
       {
+         IPreferenceSet Prefs = InstanceProvider.GetInstance<IPreferenceSet>();
+      
          XmlDocument xmlDoc = new XmlDocument();
-         xmlDoc.Load(Path.Combine(Path.Combine(PreferenceSet.AppPath, "XML"), "Instance.xml"));
+         xmlDoc.Load(Path.Combine(Path.Combine(Prefs.ApplicationPath, "XML"), "Instance.xml"));
          XmlElement xmlData = xmlDoc.DocumentElement;
 
          //    <UnitInfo>
@@ -187,8 +190,8 @@ namespace HFM.Instances
          XMLOps.setXmlNode(xmlData, "UnitInfo/FramesComplete", String.Format("{0}", Instance.FramesComplete));
          XMLOps.setXmlNode(xmlData, "UnitInfo/PercentComplete", String.Format("{0}", Instance.PercentComplete));
          XMLOps.setXmlNode(xmlData, "UnitInfo/TimePerFrame", String.Format("{0}h, {1}m, {2}s", Instance.TimePerFrame.Hours, Instance.TimePerFrame.Minutes, Instance.TimePerFrame.Seconds));
-         
-         string PpdFormatString = PreferenceSet.PpdFormatString;
+
+         string PpdFormatString = Prefs.PpdFormatString;
          XMLOps.setXmlNode(xmlData, "UnitInfo/EstPPD", String.Format("{0:" + PpdFormatString + "}", Instance.PPD));
          XMLOps.setXmlNode(xmlData, "UnitInfo/EstPPW", String.Format("{0:" + PpdFormatString + "}", Instance.PPD * 7));
          XMLOps.setXmlNode(xmlData, "UnitInfo/EstUPD", String.Format("{0:0.00}", Instance.UPD));
@@ -261,7 +264,7 @@ namespace HFM.Instances
          }
 
          XMLOps.setXmlNode(xmlData, "UnitLog/Text", sb.ToString());
-         if (PreferenceSet.Instance.WebGenCopyFAHlog)
+         if (Prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog))
          {
             XMLOps.setXmlNode(xmlData, "UnitLog/FullLogFile", Instance.CachedFAHLogName);
          }
@@ -295,8 +298,10 @@ namespace HFM.Instances
       /// <returns>Generated Xml Document</returns>
       private static XmlDocument CreateSummaryXml(ClientInstance[] Instances, ICollection<string> duplicateUserID, ICollection<string> duplicateProjects)
       {
+         IPreferenceSet Prefs = InstanceProvider.GetInstance<IPreferenceSet>();
+      
          XmlDocument xmlDoc = new XmlDocument();
-         xmlDoc.Load(Path.Combine(Path.Combine(PreferenceSet.AppPath, "XML"), "Summary.xml"));
+         xmlDoc.Load(Path.Combine(Path.Combine(Prefs.ApplicationPath, "XML"), "Summary.xml"));
          XmlElement xmlRootData = xmlDoc.DocumentElement;
          
          XMLOps.setXmlNode(xmlRootData, "HFMVersion", PlatformOps.ShortFormattedApplicationVersionWithRevision);
@@ -304,7 +309,7 @@ namespace HFM.Instances
          Array.Sort(Instances, delegate(ClientInstance instance1, ClientInstance instance2)
                                {
                                   // Make the HTML Summary respect the 'List Office Clients Last' option - Issue 78
-                                  if (PreferenceSet.Instance.OfflineLast)
+                                  if (Prefs.GetPreference<bool>(Preference.OfflineLast))
                                   {
                                      if (instance1.Status.Equals(ClientStatus.Offline) &&
                                          instance2.Status.Equals(ClientStatus.Offline))
@@ -327,7 +332,7 @@ namespace HFM.Instances
          foreach (ClientInstance Instance in Instances)
          {
             XmlDocument xmlFrag = new XmlDocument();
-            xmlFrag.Load(Path.Combine(Path.Combine(PreferenceSet.AppPath, "XML"), "SummaryFrag.xml"));
+            xmlFrag.Load(Path.Combine(Path.Combine(Prefs.ApplicationPath, "XML"), "SummaryFrag.xml"));
             XmlElement xmlData = xmlFrag.DocumentElement;
 
             XMLOps.setXmlNode(xmlData, "Status", Instance.Status.ToString());
@@ -338,7 +343,7 @@ namespace HFM.Instances
             XMLOps.setXmlNode(xmlData, "UserIDDuplicate", duplicateUserID.Contains(Instance.UserAndMachineID).ToString());
             XMLOps.setXmlNode(xmlData, "ClientType", Instance.CurrentUnitInfo.TypeOfClient.ToString());
             XMLOps.setXmlNode(xmlData, "TPF", Instance.TimePerFrame.ToString());
-            XMLOps.setXmlNode(xmlData, "PPD", String.Format("{0:" + PreferenceSet.PpdFormatString + "}", Instance.PPD));
+            XMLOps.setXmlNode(xmlData, "PPD", String.Format("{0:" + Prefs.PpdFormatString + "}", Instance.PPD));
             XMLOps.setXmlNode(xmlData, "UPD", String.Format("{0:0.00}", Instance.UPD));
             XMLOps.setXmlNode(xmlData, "MHz", Instance.ClientProcessorMegahertz.ToString());
             XMLOps.setXmlNode(xmlData, "PPDMHz", String.Format("{0:0.000}", Instance.PPD / Instance.ClientProcessorMegahertz));
@@ -393,8 +398,10 @@ namespace HFM.Instances
       /// <returns>Generated Xml Document</returns>
       private static XmlDocument CreateOverviewXml(InstanceTotals Totals)
       {
+         IPreferenceSet Prefs = InstanceProvider.GetInstance<IPreferenceSet>();
+      
          XmlDocument xmlDoc = new XmlDocument();
-         xmlDoc.Load(Path.Combine(Path.Combine(PreferenceSet.AppPath, "XML"), "Overview.xml"));
+         xmlDoc.Load(Path.Combine(Path.Combine(Prefs.ApplicationPath, "XML"), "Overview.xml"));
          XmlElement xmlData = xmlDoc.DocumentElement;
 
          XMLOps.setXmlNode(xmlData, "HFMVersion", PlatformOps.ShortFormattedApplicationVersionWithRevision);
@@ -414,7 +421,7 @@ namespace HFM.Instances
          //    <EstUPD>0.00</EstUPD>
          //    <EstUPW>0.00</EstUPW>
 
-         string PpdFormatString = PreferenceSet.PpdFormatString;
+         string PpdFormatString = Prefs.PpdFormatString;
          XMLOps.setXmlNode(xmlData, "EstPPD", String.Format("{0:" + PpdFormatString + "}", Totals.PPD));
          XMLOps.setXmlNode(xmlData, "EstPPW", String.Format("{0:" + PpdFormatString + "}", Totals.PPD * 7));
          XMLOps.setXmlNode(xmlData, "EstUPD", String.Format("{0:" + PpdFormatString + "}", Totals.UPD));

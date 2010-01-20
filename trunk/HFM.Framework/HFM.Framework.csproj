@@ -55,20 +55,27 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Constants.cs" />
     <Compile Include="Enumerations.cs" />
+    <Compile Include="IBenchmarkClient.cs" />
     <Compile Include="IClientRun.cs" />
     <Compile Include="IFrameData.cs" />
+    <Compile Include="IInstanceProteinBenchmark.cs" />
     <Compile Include="ILogLine.cs" />
     <Compile Include="ILogReader.cs" />
     <Compile Include="InstanceProvider.cs" />
     <Compile Include="IOwnedByClientInstance.cs" />
+    <Compile Include="IPreferenceSet.cs" />
+    <Compile Include="IProjectSummaryDownloader.cs" />
     <Compile Include="IProtein.cs" />
+    <Compile Include="IProteinBenchmarkCollection.cs" />
     <Compile Include="IProteinCollection.cs" />
     <Compile Include="IQueueBase.cs" />
     <Compile Include="IQueueEntry.cs" />
     <Compile Include="IQueueReader.cs" />
     <Compile Include="IUnitFrame.cs" />
     <Compile Include="IUnitInfo.cs" />
+    <Compile Include="Metadata.cs" />
     <Compile Include="PlatformOps.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

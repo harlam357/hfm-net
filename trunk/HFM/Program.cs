@@ -1,7 +1,6 @@
 /*
- * HFM.NET - Application Shell
- * Copyright (C) 2006 David Rawling
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * HFM.NET - Application Entry Point
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,6 +25,7 @@ using Castle.Windsor.Configuration.Interpreters;
 using Castle.Core.Resource;
 
 using HFM.Framework;
+using HFM.Instances;
 
 namespace HFM
 {
@@ -50,14 +50,15 @@ namespace HFM
             return;
          }
 
-         InstanceProvider.SetContainer(
-            new WindsorContainer(
-               new XmlInterpreter(new ConfigResource("castle"))));
+         WindsorContainer container = new WindsorContainer(new XmlInterpreter(new ConfigResource("castle")));
+         InstanceProvider.SetContainer(container);
+         //TODO: Temporary Injection
+         container.Kernel.AddComponentInstance<IProteinBenchmarkCollection>(typeof(IProteinBenchmarkCollection), ProteinBenchmarkCollection.Instance);
 
          cmdArgs = argv;
          Application.EnableVisualStyles();
          Application.SetCompatibleTextRenderingDefault(false);
-         Application.Run(new Forms.frmMain());
+         Application.Run(new Forms.frmMain(InstanceProvider.GetInstance<IPreferenceSet>()));
 
          GC.KeepAlive(m);
       }

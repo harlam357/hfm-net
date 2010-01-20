@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Benchmark Collection Class
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,13 +24,13 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
+using HFM.Framework;
 using HFM.Instrumentation;
-using HFM.Preferences;
 
 namespace HFM.Instances
 {
    [Serializable]
-   public class ProteinBenchmarkCollection
+   public class ProteinBenchmarkCollection : IProteinBenchmarkCollection
    {
       #region Constants
       /// <summary>
@@ -53,7 +53,7 @@ namespace HFM.Instances
       /// <param name="unit">The UnitInfo containing the UnitFrame data</param>
       /// <param name="startingFrame">Starting Frame Index</param>
       /// <param name="endingFrame">Ending Frame Index</param>
-      public void UpdateBenchmarkData(UnitInfo unit, int startingFrame, int endingFrame)
+      public void UpdateBenchmarkData(IUnitInfo unit, int startingFrame, int endingFrame)
       {
          // project is not known, don't add to benchmark data
          if (unit.ProjectIsUnknown) return;
@@ -85,7 +85,7 @@ namespace HFM.Instances
       /// <param name="startingFrame">Starting Frame Index</param>
       /// <param name="endingFrame">Ending Frame Index</param>
       /// <param name="benchmark">The InstanceProteinBenchmark to Update</param>
-      private static bool UpdateBenchmarkFrames(UnitInfo unit, int startingFrame, int endingFrame, InstanceProteinBenchmark benchmark)
+      private static bool UpdateBenchmarkFrames(IUnitInfo unit, int startingFrame, int endingFrame, InstanceProteinBenchmark benchmark)
       {
          bool result = false;
       
@@ -117,7 +117,7 @@ namespace HFM.Instances
       /// Get the Benchmark Average frame time based on the Owner and Project info from the given UnitInfo
       /// </summary>
       /// <param name="unit">The UnitInfo containing the Owner and Project data</param>
-      public TimeSpan GetBenchmarkAverageFrameTime(UnitInfo unit)
+      public TimeSpan GetBenchmarkAverageFrameTime(IUnitInfo unit)
       {
          InstanceProteinBenchmark findBenchmark = FindBenchmark(unit);
          if (findBenchmark != null)
@@ -132,7 +132,7 @@ namespace HFM.Instances
       /// Find the Benchmark based on the Owner and Project info from the given UnitInfo
       /// </summary>
       /// <param name="unit">The UnitInfo containing the Owner and Project data</param>
-      private InstanceProteinBenchmark FindBenchmark(UnitInfo unit)
+      private InstanceProteinBenchmark FindBenchmark(IUnitInfo unit)
       {
          return _benchmarkList.Find(delegate(InstanceProteinBenchmark proteinBenchmark)
          {
@@ -146,7 +146,7 @@ namespace HFM.Instances
       /// Delete all Benchmarks for the given BenchmarkClient
       /// </summary>
       /// <param name="Client">BenchmarkClient containing Client Name and Path data</param>
-      public void Delete(BenchmarkClient Client)
+      public void Delete(IBenchmarkClient Client)
       {
          if (Client.AllClients) throw new InvalidOperationException("Cannot delete All Clients.");
       
@@ -163,7 +163,7 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="Client">BenchmarkClient containing Client Name and Path data</param>
       /// <param name="ProjectID">Project Number</param>
-      public void Delete(BenchmarkClient Client, int ProjectID)
+      public void Delete(IBenchmarkClient Client, int ProjectID)
       {
          _benchmarkList.RemoveAll(delegate(InstanceProteinBenchmark benchmark)
          {
@@ -190,7 +190,7 @@ namespace HFM.Instances
       /// Determine if the given BenchmarkClient exists in the Benchmarks data
       /// </summary>
       /// <param name="Client">BenchmarkClient containing Client Name and Path data</param>
-      public bool ContainsClient(BenchmarkClient Client)
+      public bool ContainsClient(IBenchmarkClient Client)
       {
          return _benchmarkList.Find(delegate(InstanceProteinBenchmark benchmark)
          {
@@ -217,7 +217,7 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="Client">BenchmarkClient containing Client Name and Path data</param>
       /// <param name="ProjectID">Project Number</param>
-      public void RefreshMinimumFrameTime(BenchmarkClient Client, int ProjectID)
+      public void RefreshMinimumFrameTime(IBenchmarkClient Client, int ProjectID)
       {
          List<InstanceProteinBenchmark> benchmarks = GetBenchmarks(Client, ProjectID);
          foreach (InstanceProteinBenchmark benchmark in benchmarks)
@@ -230,9 +230,9 @@ namespace HFM.Instances
       /// <summary>
       /// Get List of BenchmarkClients
       /// </summary>
-      public BenchmarkClient[] GetBenchmarkClients()
+      public IBenchmarkClient[] GetBenchmarkClients()
       {
-         List<BenchmarkClient> BenchmarkClients = new List<BenchmarkClient>();
+         List<IBenchmarkClient> BenchmarkClients = new List<IBenchmarkClient>();
          BenchmarkClients.Add(new BenchmarkClient());
          
          foreach (InstanceProteinBenchmark benchmark in _benchmarkList)
@@ -243,7 +243,7 @@ namespace HFM.Instances
             }
          }
          
-         BenchmarkClient[] returnArray = BenchmarkClients.ToArray();
+         IBenchmarkClient[] returnArray = BenchmarkClients.ToArray();
          Array.Sort(returnArray);
 
          return returnArray;
@@ -260,7 +260,7 @@ namespace HFM.Instances
       /// <summary>
       /// Get List of Benchmark Project Numbers
       /// </summary>
-      public int[] GetBenchmarkProjects(BenchmarkClient Client)
+      public int[] GetBenchmarkProjects(IBenchmarkClient Client)
       {
          List<int> Projects = new List<int>();
          
@@ -292,7 +292,7 @@ namespace HFM.Instances
       /// Get List of Benchmarks for the given BenchmarkClient
       /// </summary>
       /// <param name="Client">BenchmarkClient containing Client Name and Path data</param>
-      public List<InstanceProteinBenchmark> GetBenchmarks(BenchmarkClient Client)
+      public List<InstanceProteinBenchmark> GetBenchmarks(IBenchmarkClient Client)
       {
          return _benchmarkList.FindAll(delegate(InstanceProteinBenchmark benchmark)
          {
@@ -312,7 +312,7 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="Client">BenchmarkClient containing Client Name and Path data</param>
       /// <param name="ProjectID">Project Number</param>
-      public List<InstanceProteinBenchmark> GetBenchmarks(BenchmarkClient Client, int ProjectID)
+      public List<InstanceProteinBenchmark> GetBenchmarks(IBenchmarkClient Client, int ProjectID)
       {
          return _benchmarkList.FindAll(delegate(InstanceProteinBenchmark benchmark)
          {
@@ -337,7 +337,7 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="Client">BenchmarkClient containing Client Name and Path data</param>
       /// <param name="NewName">New Benchmark Owner Name</param>
-      public void UpdateInstanceName(BenchmarkClient Client, string NewName)
+      public void UpdateInstanceName(IBenchmarkClient Client, string NewName)
       {
          List<InstanceProteinBenchmark> benchmarks = GetBenchmarks(Client);
          foreach (InstanceProteinBenchmark benchmark in benchmarks)
@@ -352,7 +352,7 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="Client">BenchmarkClient containing Client Name and Path data</param>
       /// <param name="NewPath">New Benchmark Owner Path</param>
-      public void UpdateInstancePath(BenchmarkClient Client, string NewPath)
+      public void UpdateInstancePath(IBenchmarkClient Client, string NewPath)
       {
          List<InstanceProteinBenchmark> benchmarks = GetBenchmarks(Client);
          foreach (InstanceProteinBenchmark benchmark in benchmarks)
@@ -374,8 +374,9 @@ namespace HFM.Instances
             #region Benchmark File Migration Code (v0.3.0 => v0.4.0)
             lock (classLock)
             {
-               string oldfile = Path.Combine(PreferenceSet.AppPath, DataStoreFilename);
-               string newfile = Path.Combine(PreferenceSet.Instance.AppDataPath, DataStoreFilename);
+               IPreferenceSet Prefs = InstanceProvider.GetInstance<IPreferenceSet>();
+               string oldfile = Path.Combine(Prefs.ApplicationPath, DataStoreFilename);
+               string newfile = Path.Combine(Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), DataStoreFilename);
 
                // Look for file in new location first
                if (_Instance == null)
@@ -435,7 +436,7 @@ namespace HFM.Instances
             //{
             //   if (_Instance == null)
             //   {
-            //      _Instance = Deserialize(Path.Combine(PreferenceSet.Instance.AppDataPath, DataStoreFilename));
+            //      _Instance = Deserialize(Path.Combine(PreferenceSet.Instance.GetPreference<string>(Preference.ApplicationDataFolderPath), DataStoreFilename));
             //   }
             //   if (_Instance == null)
             //   {
@@ -452,7 +453,8 @@ namespace HFM.Instances
       #region Serialization Support
       public static void Serialize()
       {
-         Serialize(Instance, Path.Combine(PreferenceSet.Instance.AppDataPath, DataStoreFilename));
+         Serialize(Instance, Path.Combine(InstanceProvider.GetInstance<IPreferenceSet>().GetPreference<string>(
+                                             Preference.ApplicationDataFolderPath), DataStoreFilename));
       }
 
       private static ProteinBenchmarkCollection Deserialize(string filePath)
@@ -522,177 +524,5 @@ namespace HFM.Instances
          HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
       }
       #endregion
-   }
-
-   /// <summary>
-   /// Container Class used to Bind Benchmark Client Data to the Benchmarks Form
-   /// </summary>
-   public class BenchmarkClient : IComparable<BenchmarkClient>, IEquatable<BenchmarkClient>
-   {
-      /// <summary>
-      /// Self Referencing Property
-      /// </summary>
-      public BenchmarkClient Client
-      {
-         get { return this; }
-      }
-   
-      private readonly string _Name = String.Empty;
-      /// <summary>
-      /// Client Name
-      /// </summary>
-      public string Name
-      {
-         get { return _Name; }
-      }
-
-      private readonly string _Path = String.Empty;
-      /// <summary>
-      /// Client Path
-      /// </summary>
-      public string Path
-      {
-         get { return _Path; }
-      }
-
-      private readonly bool _AllClients;
-      /// <summary>
-      /// Value Indicates if this Benchmark Client represents 'All Clients'
-      /// </summary>
-      public bool AllClients
-      {
-         get { return _AllClients; }
-      }
-
-      /// <summary>
-      /// Concatenated Name and Path Value
-      /// </summary>
-      public string NameAndPath
-      {
-         get
-         {
-            if (_AllClients)
-            {
-               return "All Clients";
-            }
-
-            return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Name, Path);
-         }
-      }
-
-      #region Constructors
-      /// <summary>
-      /// Create BenchmarkClient Instance (All Clients)
-      /// </summary>
-      public BenchmarkClient()
-      {
-         _AllClients = true;
-      }
-
-      /// <summary>
-      /// Create BenchmarkClient Instance (Individual Clients)
-      /// </summary>
-      public BenchmarkClient(string ClientName, string ClientPath)
-      {
-         _Name = ClientName;
-         _Path = ClientPath;
-      }
-      #endregion
-
-      ///<summary>
-      ///Serves as a hash function for a particular type. <see cref="M:System.Object.GetHashCode"></see> is suitable for use in hashing algorithms and data structures like a hash table.
-      ///</summary>
-      ///<returns>
-      ///A hash code for the current <see cref="T:System.Object"></see>.
-      ///</returns>
-      ///<filterpriority>2</filterpriority>
-      public override int GetHashCode()
-      {
-         return Name.GetHashCode() ^
-                Path.GetHashCode() ^
-                AllClients.GetHashCode();
-      }
-
-      ///<summary>
-      ///Determines whether the specified <see cref="T:System.Object"></see> is equal to the current <see cref="T:System.Object"></see>.
-      ///</summary>
-      ///<returns>
-      ///true if the specified <see cref="T:System.Object"></see> is equal to the current <see cref="T:System.Object"></see>; otherwise, false.
-      ///</returns>
-      ///<param name="obj">The <see cref="T:System.Object"></see> to compare with the current <see cref="T:System.Object"></see>.</param>
-      ///<filterpriority>2</filterpriority>
-      public override bool Equals(object obj)
-      {
-         BenchmarkClient client = obj as BenchmarkClient;
-         if (client != null)
-         {
-            return Equals(client);
-         }
-
-         return base.Equals(obj);
-      }
-
-      ///<summary>
-      ///Determines whether the specified <see cref="T:HFM.Instances.BenchmarkClient"></see> is equal to the current <see cref="T:HFM.Instances.BenchmarkClient"></see>.
-      ///</summary>
-      ///<returns>
-      ///true if the specified <see cref="T:HFM.Instances.BenchmarkClient"></see> is equal to the current <see cref="T:HFM.Instances.BenchmarkClient"></see>; otherwise, false.
-      ///</returns>
-      ///<param name="client">The <see cref="T:HFM.Instances.BenchmarkClient"></see> to compare with the current <see cref="T:HFM.Instances.BenchmarkClient"></see>.</param>
-      public bool Equals(BenchmarkClient client)
-      {
-         if (client == null)
-         {
-            return false;
-         }
-
-         if (Name.Equals(client.Name) &&
-             Path.Equals(client.Path) &&
-             AllClients.Equals(client.AllClients))
-         {
-            return true;
-         }
-
-         return false;
-      }
-
-      ///<summary>
-      ///Compares the current object with another object of the same type.
-      ///</summary>
-      ///<returns>
-      ///A 32-bit signed integer that indicates the relative order of the objects being compared. The return value has the following meanings: Value Meaning Less than zero This object is less than the other parameter.Zero This object is equal to other. Greater than zero This object is greater than other. 
-      ///</returns>
-      ///<param name="other">An object to compare with this object.</param>
-      public int CompareTo(BenchmarkClient other)
-      {
-         if (other == null)
-         {
-            return 1;
-         }
-
-         if (AllClients.Equals(other.AllClients))
-         {
-            if (Name.Equals(other.Name))
-            {
-               return Path.CompareTo(other.Path);
-            }
-
-            return Name.CompareTo(other.Name);
-         }
-
-         if (AllClients) return -1;
-
-         return 1;
-      }
-
-      public static bool operator < (BenchmarkClient bc1, BenchmarkClient bc2)
-      {
-         return (bc1.CompareTo(bc2) < 0);
-      }
-
-      public static bool operator > (BenchmarkClient bc1, BenchmarkClient bc2)
-      {
-         return (bc1.CompareTo(bc2) > 0);
-      }
    }
 }

@@ -25,8 +25,8 @@ using System.Text;
 using System.Xml;
 using System.Xml.Xsl;
 
+using HFM.Framework;
 using HFM.Instrumentation;
-using HFM.Preferences;
 
 namespace HFM.Helpers
 {
@@ -75,10 +75,12 @@ namespace HFM.Helpers
       /// <returns>Result of XML document after transform is applied</returns>
       public static String Transform(XmlDocument xmlDoc, String xslFile)
       {
+         IPreferenceSet Prefs = InstanceProvider.GetInstance<IPreferenceSet>();
+      
          // Create XmlReaderSettings and XmlReader
          XmlReaderSettings xsltSettings = new XmlReaderSettings();
          xsltSettings.ProhibitDtd = false;
-         XmlReader xmlReader = XmlReader.Create(Path.Combine(Path.Combine(PreferenceSet.AppPath, "XSL"), xslFile), xsltSettings);
+         XmlReader xmlReader = XmlReader.Create(Path.Combine(Path.Combine(Prefs.ApplicationPath, "XSL"), xslFile), xsltSettings);
 
          // Create the XslCompiledTransform and Load the XmlReader
          XslCompiledTransform xslt = new XslCompiledTransform();
@@ -91,7 +93,7 @@ namespace HFM.Helpers
          // Return the transformed XML
          string sWebPage = Encoding.UTF8.GetString(ms.ToArray());
          //sWebPage = sWebPage.Replace("$APPPATH", PreferenceSet.AppPath);
-         sWebPage = sWebPage.Replace("$CSSFILE", PreferenceSet.Instance.CSSFileName);
+         sWebPage = sWebPage.Replace("$CSSFILE", Prefs.GetPreference<string>(Preference.CssFile));
          return sWebPage;
       }
 
@@ -110,7 +112,7 @@ namespace HFM.Helpers
 
             #region Get the XML Document
             XmlDocument xmlData = new XmlDocument();
-            xmlData.Load(PreferenceSet.Instance.EOCUserXml);
+            xmlData.Load(InstanceProvider.GetInstance<IPreferenceSet>().EocUserXml);
             xmlData.RemoveChild(xmlData.ChildNodes[0]);
 
             XmlNode eocNode = xmlData.SelectSingleNode("EOC_Folding_Stats");

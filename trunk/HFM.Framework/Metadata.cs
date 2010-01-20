@@ -1,6 +1,9 @@
 ﻿/*
- * HFM.NET - Instance Provider Class
+ * HFM.NET - Generic Metadata Class and Interface
  * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * 
+ * Based on code by Bryan Watts
+ * http://stackoverflow.com/questions/353126/c-multiple-generic-types-in-one-list/1351071
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,22 +20,49 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using Castle.Windsor;
+using System;
 
 namespace HFM.Framework
 {
-   public static class InstanceProvider
+   public interface IMetadata
    {
-      private static IWindsorContainer _container;
-   
-      public static void SetContainer(IWindsorContainer container)
+      Type DataType { get; }
+
+      object Data { get; }
+   }
+
+   public interface IMetadata<T> : IMetadata
+   {
+      new T Data { get; }
+   }
+
+   public class Metadata<T> : IMetadata<T>
+   {
+      public Metadata()
       {
-         _container = container;
+         Data = default(T);
       }
 
-      public static T GetInstance<T>()
+      public Metadata(T data)
       {
-         return (T)_container[typeof(T)];
+         Data = data;
+      }
+
+      public Type DataType
+      {
+         get { return typeof(T); }
+      }
+
+      object IMetadata.Data
+      {
+         get { return Data; }
+      }
+
+      private T _Data;
+      public T Data 
+      {
+         get { return _Data; }
+         set { _Data = value; }
       }
    }
 }

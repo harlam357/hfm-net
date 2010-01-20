@@ -27,7 +27,6 @@ using System.Text.RegularExpressions;
 
 using HFM.Framework;
 using HFM.Instrumentation;
-using HFM.Preferences;
 
 namespace HFM.Instances
 {
@@ -42,6 +41,9 @@ namespace HFM.Instances
       internal const string FoldingIDDefault = "Unknown";
       internal const int TeamDefault = 0;
       #endregion
+      
+      [NonSerialized]
+      private readonly IPreferenceSet _Prefs;
 
       #region Owner Data Properties
       /// <summary>
@@ -117,8 +119,8 @@ namespace HFM.Instances
       /// <summary>
       /// Overload Constructor
       /// </summary>
-      public UnitInfo(string ownerName, string ownerPath, DateTime unitRetrievalTime)
-         : this(ownerName, ownerPath, unitRetrievalTime, FoldingIDDefault, TeamDefault)
+      public UnitInfo(IPreferenceSet Prefs, string ownerName, string ownerPath, DateTime unitRetrievalTime)
+         : this(Prefs, ownerName, ownerPath, unitRetrievalTime, FoldingIDDefault, TeamDefault)
       {
 
       }
@@ -126,8 +128,10 @@ namespace HFM.Instances
       /// <summary>
       /// Primary Constructor
       /// </summary>
-      public UnitInfo(string ownerName, string ownerPath, DateTime unitRetrievalTime, string foldingID, int team)
+      public UnitInfo(IPreferenceSet Prefs, string ownerName, string ownerPath, DateTime unitRetrievalTime, string foldingID, int team)
       {
+         _Prefs = Prefs;
+      
          _OwningInstanceName = ownerName;
          _OwningInstancePath = ownerPath;
          _UnitRetrievalTime = unitRetrievalTime;
@@ -153,8 +157,7 @@ namespace HFM.Instances
          ProteinTag = String.Empty;
          UnitResult = WorkUnitResult.Unknown;
 
-         IProteinCollection proteinCollection = InstanceProvider.GetInstance<IProteinCollection>();
-         CurrentProtein = proteinCollection.GetNewProtein();
+         CurrentProtein = InstanceProvider.GetInstance<IProteinCollection>().GetNewProtein();
 
          RawFramesComplete = 0;
          RawFramesTotal = 0;
@@ -571,7 +574,7 @@ namespace HFM.Instances
             if (CurrentProtein.IsUnknown == false)
             {
                // Issue 125
-               if (PreferenceSet.Instance.CalculateBonus)
+               if (_Prefs.GetPreference<bool>(Preference.CalculateBonus))
                {
                   return CurrentProtein.GetPPD(TimePerFrame, EFT);
                }
@@ -878,7 +881,7 @@ namespace HFM.Instances
             if (CurrentProtein.IsUnknown == false)
             {
                // Issue 125
-               if (PreferenceSet.Instance.CalculateBonus)
+               if (_Prefs.GetPreference<bool>(Preference.CalculateBonus))
                {
                   return CurrentProtein.GetPPD(TimePerUnitDownload, EFT);
                }
@@ -927,7 +930,7 @@ namespace HFM.Instances
             if (CurrentProtein.IsUnknown == false)
             {
                // Issue 125
-               if (PreferenceSet.Instance.CalculateBonus)
+               if (_Prefs.GetPreference<bool>(Preference.CalculateBonus))
                {
                   return CurrentProtein.GetPPD(TimePerAllSections, EFT);
                }
@@ -977,7 +980,7 @@ namespace HFM.Instances
             if (CurrentProtein.IsUnknown == false)
             {
                // Issue 125
-               if (PreferenceSet.Instance.CalculateBonus)
+               if (_Prefs.GetPreference<bool>(Preference.CalculateBonus))
                {
                   return CurrentProtein.GetPPD(TimePerThreeSections, EFT);
                }
@@ -1033,7 +1036,7 @@ namespace HFM.Instances
             if (CurrentProtein.IsUnknown == false)
             {
                // Issue 125
-               if (PreferenceSet.Instance.CalculateBonus)
+               if (_Prefs.GetPreference<bool>(Preference.CalculateBonus))
                {
                   return CurrentProtein.GetPPD(TimePerLastSection, EFT);
                }
@@ -1052,15 +1055,15 @@ namespace HFM.Instances
       {
          get
          {
-            switch (PreferenceSet.Instance.PpdCalculation)
+            switch (_Prefs.GetPreference<PpdCalculationType>(Preference.PpdCalculation))
             {
-               case ePpdCalculation.LastFrame:
+               case PpdCalculationType.LastFrame:
                   return RawTimePerLastSection;
-               case ePpdCalculation.LastThreeFrames:
+               case PpdCalculationType.LastThreeFrames:
                   return RawTimePerThreeSections;
-               case ePpdCalculation.AllFrames:
+               case PpdCalculationType.AllFrames:
                   return RawTimePerAllSections;
-               case ePpdCalculation.EffectiveRate:
+               case PpdCalculationType.EffectiveRate:
                   return RawTimePerUnitDownload;
             }
 
@@ -1174,8 +1177,7 @@ namespace HFM.Instances
       {
          Debug.Assert(ProjectRCG.Count == 4);
 
-         IProteinCollection proteinCollection = InstanceProvider.GetInstance<IProteinCollection>();
-         IProtein protein = proteinCollection.GetProtein(ProjectRCG[0]);
+         IProtein protein = InstanceProvider.GetInstance<IProteinCollection>().GetProtein(ProjectRCG[0]);
          // If Protein is Unknown, set the Project values anyway.  We still want
          // to see the Project (R/C/G) values, we just won't get any production
          // readings from this UnitInfo.

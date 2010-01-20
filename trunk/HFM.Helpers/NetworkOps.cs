@@ -26,7 +26,7 @@ using System.Net.Cache;
 using System.Net.Mail;
 using System.Text;
 
-using HFM.Preferences;
+using HFM.Framework;
 using HFM.Instrumentation;
 
 namespace HFM.Helpers
@@ -242,7 +242,7 @@ namespace HFM.Helpers
       /// <param name="Username">Http Login Username.</param>
       /// <param name="Password">Http Login Password.</param>
       /// <param name="type">Type of Download.</param>
-      /// <exception cref="ArgumentException">Throws if Url, LocalFilePath, or InstanceName is Null or Empty.</exception>
+      /// <exception cref="ArgumentException">Throws if LocalFilePath or InstanceName is Null or Empty.</exception>
       public static void HttpDownloadHelper(WebRequest Request, string LocalFilePath, string InstanceName, string Username, string Password, DownloadType type)
       {
          if (String.IsNullOrEmpty(LocalFilePath) || String.IsNullOrEmpty(InstanceName))
@@ -297,7 +297,7 @@ namespace HFM.Helpers
       /// <param name="Request">Web Request.</param>
       /// <param name="Username">Http Login Username.</param>
       /// <param name="Password">Http Login Password.</param>
-      /// <exception cref="ArgumentNullException">Throws if Url is Null.</exception>
+      /// <exception cref="ArgumentNullException">Throws if Request is Null.</exception>
       private static WebResponse HttpDownloadHelper(WebRequest Request, string Username, string Password)
       {
          if (Request == null) throw new ArgumentNullException("Request", "Argument 'Request' cannot be null.");
@@ -324,7 +324,7 @@ namespace HFM.Helpers
          }
 
          // Stub out if the given URL is an Unassigned Description
-         if (Url.Equals(PreferenceSet.UnassignedDescription)) return Url;
+         if (Url.Equals(Constants.UnassignedDescription)) return Url;
       
          return GetProteinDescription(new Uri(Url));
       }
@@ -478,14 +478,16 @@ namespace HFM.Helpers
       private static void SetProxy(WebRequest Request)
       {
          Debug.Assert(Request != null);
+         IPreferenceSet Prefs = InstanceProvider.GetInstance<IPreferenceSet>();
       
-         PreferenceSet Prefs = PreferenceSet.Instance;
-         if (Prefs.UseProxy)
+         if (Prefs.GetPreference<bool>(Preference.UseProxy))
          {
-            Request.Proxy = new WebProxy(Prefs.ProxyServer, Prefs.ProxyPort);
-            if (Prefs.UseProxyAuth)
+            Request.Proxy = new WebProxy(Prefs.GetPreference<string>(Preference.ProxyServer), 
+                                         Prefs.GetPreference<int>(Preference.ProxyPort));
+            if (Prefs.GetPreference<bool>(Preference.UseProxyAuth))
             {
-               Request.Proxy.Credentials = GetNetworkCredential(Prefs.ProxyUser, Prefs.ProxyPass);
+               Request.Proxy.Credentials = GetNetworkCredential(Prefs.GetPreference<string>(Preference.ProxyUser), 
+                                                                Prefs.GetPreference<string>(Preference.ProxyPass));
             }
          }
          // Don't set request.Proxy = null - Issue 49

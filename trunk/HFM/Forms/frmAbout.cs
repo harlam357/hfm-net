@@ -20,6 +20,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Windows.Forms;
 
 using HFM.Framework;
@@ -49,7 +50,7 @@ namespace HFM.Forms
          catch (Exception ex)
          {
             HfmTrace.WriteToHfmConsole(ex);
-            MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, "FAHLogStats.NET Google Code page"));
+            MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "FAHLogStats.NET Google Code page"));
          }
       } 
       #endregion

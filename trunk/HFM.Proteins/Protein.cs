@@ -21,13 +21,22 @@
 using System;
 
 using HFM.Framework;
-using HFM.Preferences;
 
 namespace HFM.Proteins
 {
    [Serializable]
    public class Protein : IProtein
    {
+      public Protein()
+      {
+      
+      }
+
+      public Protein(int projectNumber)
+      {
+         _ProjectNumber = projectNumber;
+      }
+
       private int _ProjectNumber = 0;
       /// <summary>
       /// Project Number
@@ -184,7 +193,7 @@ namespace HFM.Proteins
          set { _Core = value; }
       }
 
-      private String _Description = PreferenceSet.UnassignedDescription;
+      private String _Description = Constants.UnassignedDescription;
       /// <summary>
       /// Project Description (usually a URL)
       /// </summary>
@@ -245,7 +254,7 @@ namespace HFM.Proteins
          
          double basePPD = GetUPD(frameTime) * Credit;
          double bonusMulti = GetBonusMultiplier(EstTimeOfUnit);
-         return Math.Round((basePPD * bonusMulti), PreferenceSet.MaxDecimalPlaces);
+         return Math.Round((basePPD * bonusMulti), Constants.MaxDecimalPlaces);
       }
 
       /// <summary>

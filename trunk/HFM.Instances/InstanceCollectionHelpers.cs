@@ -22,7 +22,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-using HFM.Preferences;
+using HFM.Framework;
 using HFM.Instrumentation;
 
 namespace HFM.Instances
@@ -79,18 +79,18 @@ namespace HFM.Instances
          DuplicateUserID.Clear();
          DuplicateProjects.Clear();
 
-         PreferenceSet Prefs = PreferenceSet.Instance;
+         IPreferenceSet Prefs = InstanceProvider.GetInstance<IPreferenceSet>();
 
          // If neither check is selected, just get out
-         if (Prefs.DuplicateProjectCheck == false &&
-             Prefs.DuplicateUserIDCheck == false) return;
+         if (Prefs.GetPreference<bool>(Preference.DuplicateProjectCheck) == false &&
+             Prefs.GetPreference<bool>(Preference.DuplicateUserIDCheck) == false) return;
 
          Hashtable userHash = new Hashtable(Instances.Count);
          Hashtable projectHash = new Hashtable(Instances.Count);
 
          foreach (ClientInstance Instance in Instances)
          {
-            if (Prefs.DuplicateProjectCheck)
+            if (Prefs.GetPreference<bool>(Preference.DuplicateProjectCheck))
             {
                string PRCG = Instance.CurrentUnitInfo.ProjectRunCloneGen;
                if (projectHash.Contains(PRCG))
@@ -107,7 +107,7 @@ namespace HFM.Instances
                }
             }
 
-            if (Prefs.DuplicateUserIDCheck)
+            if (Prefs.GetPreference<bool>(Preference.DuplicateUserIDCheck))
             {
                string UserAndMachineID = Instance.UserAndMachineID;
                if (userHash.Contains(UserAndMachineID))

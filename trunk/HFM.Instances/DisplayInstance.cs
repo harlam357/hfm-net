@@ -22,7 +22,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 
 using HFM.Framework;
-using HFM.Preferences;
 
 namespace HFM.Instances
 {
@@ -255,14 +254,14 @@ namespace HFM.Instances
       #endregion
 
       #region Implementation
-      public void Load(ClientInstance Instance)
+      public void Load(ClientInstance Instance, int DecimalPlaces)
       {
          _Status = Instance.Status;
          _Progress = ((float)Instance.PercentComplete) / 100;
          _InstanceName = Instance.InstanceName;
          _ClientType = Instance.CurrentUnitInfo.TypeOfClient;
          _TimePerFrame = Instance.TimePerFrame;
-         _PPD = Math.Round(Instance.PPD, PreferenceSet.Instance.DecimalPlaces);
+         _PPD = Math.Round(Instance.PPD, DecimalPlaces);
          _MHz = Instance.ClientProcessorMegahertz;
          _PPD_MHz = Math.Round(Instance.PPD / Instance.ClientProcessorMegahertz, 3);
          _ETA = Instance.ETA;

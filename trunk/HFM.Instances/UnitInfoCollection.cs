@@ -24,7 +24,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections.Generic;
 using System.Text;
 
-using HFM.Preferences;
+using HFM.Framework;
 using HFM.Instrumentation;
 
 namespace HFM.Instances
@@ -63,7 +63,7 @@ namespace HFM.Instances
       #endregion
 
       #region Write Completed Unit Info
-      public static void WriteCompletedUnitInfo(UnitInfo unit)
+      public static void WriteCompletedUnitInfo(IUnitInfo unit)
       {
          UpgradeUnitInfoCsvFile();
       
@@ -73,7 +73,9 @@ namespace HFM.Instances
          {
             bool bWriteHeader = false;
 
-            string fileName = Path.Combine(PreferenceSet.Instance.AppDataPath, CompletedUnitsCSV);
+            string fileName = Path.Combine(InstanceProvider.GetInstance<IPreferenceSet>().GetPreference<string>(
+                                              Preference.ApplicationDataFolderPath), CompletedUnitsCSV);
+                                              
             if (File.Exists(fileName) == false)
             {
                bWriteHeader = true;
@@ -103,10 +105,13 @@ namespace HFM.Instances
       
       private static void UpgradeUnitInfoCsvFile()
       {
-         string oldFilePath = Path.Combine(PreferenceSet.AppPath, CompletedUnitsCSV);
-         string oldFilePath022 = Path.Combine(PreferenceSet.AppPath, CompletedUnitsCSV.Replace(".csv", ".0_2_2.csv"));
-         string newFilePath = Path.Combine(PreferenceSet.Instance.AppDataPath, CompletedUnitsCSV);
-         string newFilePath022 = Path.Combine(PreferenceSet.Instance.AppDataPath, CompletedUnitsCSV.Replace(".csv", ".0_2_2.csv"));
+         IPreferenceSet Prefs = InstanceProvider.GetInstance<IPreferenceSet>();
+         string ApplicationDataFolderPath = Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath);
+
+         string oldFilePath = Path.Combine(Prefs.ApplicationPath, CompletedUnitsCSV);
+         string oldFilePath022 = Path.Combine(Prefs.ApplicationPath, CompletedUnitsCSV.Replace(".csv", ".0_2_2.csv"));
+         string newFilePath = Path.Combine(ApplicationDataFolderPath, CompletedUnitsCSV);
+         string newFilePath022 = Path.Combine(ApplicationDataFolderPath, CompletedUnitsCSV.Replace(".csv", ".0_2_2.csv"));
          
          // If file does not exist in new location but does exist in old location
          if (File.Exists(newFilePath) == false && File.Exists(oldFilePath))
@@ -216,8 +221,10 @@ namespace HFM.Instances
          return sbldr.ToString();
       }
 
-      private static string GetUnitCsvLine(UnitInfo unit)
+      private static string GetUnitCsvLine(IUnitInfo unit)
       {
+         IPreferenceSet Prefs = InstanceProvider.GetInstance<IPreferenceSet>();
+      
          StringBuilder sbldr = new StringBuilder();
          sbldr.Append(unit.ProjectID);
          sbldr.Append(COMMA);
@@ -241,7 +248,7 @@ namespace HFM.Instances
          sbldr.Append(unit.TimePerAllSections.ToString());
          sbldr.Append(COMMA);
          // Issue 43 - Use Time Per All Sections and not unit.PPD
-         sbldr.Append(Math.Round(unit.PPDPerAllSections, PreferenceSet.Instance.DecimalPlaces));
+         sbldr.Append(Math.Round(unit.PPDPerAllSections, Prefs.GetPreference<int>(Preference.DecimalPlaces)));
          sbldr.Append(COMMA);
          sbldr.Append(unit.DownloadTime.ToShortDateString());
          sbldr.Append(COMMA);
@@ -264,7 +271,7 @@ namespace HFM.Instances
             sbldr.Append(COMMA);
          }
          // Write Bonus Credit if enabled - Issue 125
-         if (PreferenceSet.Instance.CalculateBonus)
+         if (Prefs.GetPreference<bool>(Preference.CalculateBonus))
          {
             sbldr.Append(unit.GetBonusCredit());
          }
@@ -295,7 +302,8 @@ namespace HFM.Instances
             {
                if (_Instance == null)
                {
-                  _Instance = Deserialize(Path.Combine(PreferenceSet.Instance.AppDataPath, DataStoreFilename));
+                  _Instance = Deserialize(Path.Combine(InstanceProvider.GetInstance<IPreferenceSet>().GetPreference<string>(
+                                                          Preference.ApplicationDataFolderPath), DataStoreFilename));
                }
                if (_Instance == null)
                {
@@ -320,7 +328,8 @@ namespace HFM.Instances
       #region Serialization Support
       public static void Serialize()
       {
-         Serialize(Instance, Path.Combine(PreferenceSet.Instance.AppDataPath, DataStoreFilename));
+         Serialize(Instance, Path.Combine(InstanceProvider.GetInstance<IPreferenceSet>().GetPreference<string>(
+                                             Preference.ApplicationDataFolderPath), DataStoreFilename));
       }
 
       private static UnitInfoCollection Deserialize(string filePath)

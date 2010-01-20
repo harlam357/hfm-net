@@ -36,7 +36,6 @@ using HFM.Framework;
 using HFM.Helpers;
 using HFM.Instances;
 using HFM.Instrumentation;
-using HFM.Preferences;
 
 namespace HFM.Forms
 {
@@ -88,12 +87,17 @@ namespace HFM.Forms
       /// <summary>
       /// Messages Form
       /// </summary>
-      private readonly frmMessages _frmMessages = new frmMessages();
+      private readonly frmMessages _frmMessages;
 
       /// <summary>
       /// Notify Icon for frmMain
       /// </summary>
       private NotifyIcon notifyIcon = null;
+      
+      /// <summary>
+      /// 
+      /// </summary>
+      private readonly IPreferenceSet _Prefs;
       
       private const string HfmLogFileName = "HFM.log";
       private const string HfmPrevLogFileName = "HFM-prev.log";
@@ -103,8 +107,11 @@ namespace HFM.Forms
       /// <summary>
       /// Main form constructor
       /// </summary>
-      public frmMain()
+      public frmMain(IPreferenceSet Prefs)
       {
+         _Prefs = Prefs;
+         _frmMessages = new frmMessages(_Prefs);
+      
          // This call is Required by the Windows Form Designer
          InitializeComponent();
 
@@ -112,13 +119,19 @@ namespace HFM.Forms
          proteinCollection.Load();
          queueControl.SetProteinCollection(proteinCollection);
 
+         string ApplicationDataFolderPath = _Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath);
+         if (Directory.Exists(ApplicationDataFolderPath) == false)
+         {
+            Directory.CreateDirectory(ApplicationDataFolderPath);
+         }
+
          // Set Main Form Text
          base.Text = String.Format("HFM.NET v{0} - Beta", PlatformOps.ApplicationVersion);
 
          // Setup Log File and Messages Window handlers
          SetupTraceListeners();
          // Create Instance Collection
-         ClientInstances = new InstanceCollection();
+         ClientInstances = new InstanceCollection(_Prefs);
          // Manually Create the Columns - Issue 41
          DisplayInstance.SetupDataGridViewColumns(dataGridView1);
          // Clear the UI
@@ -144,14 +157,13 @@ namespace HFM.Forms
          ClientInstances.RefreshUserStatsData += ClientInstances_RefreshUserStatsData;
 
          // Hook-up PreferenceSet Event Handlers
-         PreferenceSet Prefs = PreferenceSet.Instance;
-         Prefs.ShowUserStatsChanged += PreferenceSet_ShowUserStatsChanged;
+         _Prefs.ShowUserStatsChanged += PreferenceSet_ShowUserStatsChanged;
          PreferenceSet_ShowUserStatsChanged(this, EventArgs.Empty);
-         Prefs.MessageLevelChanged += PreferenceSet_MessageLevelChanged;
-         Prefs.ColorLogFileChanged += PreferenceSet_ColorLogFileChanged;
-         Prefs.PpdCalculationChanged += delegate { RefreshDisplay(); };
-         Prefs.DecimalPlacesChanged += delegate { RefreshDisplay(); };
-         Prefs.CalculateBonusChanged += delegate { RefreshDisplay(); };
+         _Prefs.MessageLevelChanged += PreferenceSet_MessageLevelChanged;
+         _Prefs.ColorLogFileChanged += PreferenceSet_ColorLogFileChanged;
+         _Prefs.PpdCalculationChanged += delegate { RefreshDisplay(); };
+         _Prefs.DecimalPlacesChanged += delegate { RefreshDisplay(); };
+         _Prefs.CalculateBonusChanged += delegate { RefreshDisplay(); };
 
          // If Mono, use the RowEnter Event (which was what 0.3.0 and prior used)
          // to set the CurrentInstance selection.  Obviously Mono doesn't fire the
@@ -169,8 +181,8 @@ namespace HFM.Forms
       /// </summary>
       private void SetupTraceListeners()
       {
-         string logFilePath = Path.Combine(PreferenceSet.Instance.AppDataPath, HfmLogFileName);
-         string prevLogFilePath = Path.Combine(PreferenceSet.Instance.AppDataPath, HfmPrevLogFileName);
+         string logFilePath = Path.Combine(_Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), HfmLogFileName);
+         string prevLogFilePath = Path.Combine(_Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), HfmPrevLogFileName);
 
          FileInfo fi = new FileInfo(logFilePath);
          if (fi.Exists && fi.Length > 512000)
@@ -196,7 +208,7 @@ namespace HFM.Forms
          HfmTrace.WriteToHfmConsole(String.Empty);
          
          // Get the actual TraceLevel from the preferences
-         TraceLevelSwitch.Instance.Level = (TraceLevel)PreferenceSet.Instance.MessageLevel;
+         TraceLevelSwitch.Instance.Level = (TraceLevel)_Prefs.GetPreference<int>(Preference.MessageLevel);
       }
 
       /// <summary>
@@ -206,8 +218,7 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void frmMain_Shown(object sender, EventArgs e)
       {
-         PreferenceSet Prefs = PreferenceSet.Instance;
-         if (Prefs.RunMinimized)
+         if (_Prefs.GetPreference<bool>(Preference.RunMinimized))
          {
             WindowState = FormWindowState.Minimized;
          }
@@ -219,9 +230,9 @@ namespace HFM.Forms
             // Filename on command line - probably from Explorer
             Filename = Program.cmdArgs[0];
          }
-         else if (Prefs.UseDefaultConfigFile)
+         else if (_Prefs.GetPreference<bool>(Preference.UseDefaultConfigFile))
          {
-            Filename = Prefs.DefaultConfigFile;
+            Filename = _Prefs.GetPreference<string>(Preference.DefaultConfigFile);
          }
 
          if (String.IsNullOrEmpty(Filename) == false)
@@ -272,15 +283,13 @@ namespace HFM.Forms
          // changes based on the height of Panel1 - Issue 8
          if (Visible && splitContainer1.Panel2Collapsed)
          {
-            PreferenceSet.Instance.FormSplitLocation = splitContainer1.Panel1.Height;
+            _Prefs.SetPreference(Preference.FormSplitLocation, splitContainer1.Panel1.Height);
          }
       }
 
       /// <summary>
       /// Save Form State on before closing
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
       {
          if (CanContinueDestructiveOp(sender, e) == false)
@@ -288,30 +297,28 @@ namespace HFM.Forms
             e.Cancel = true;
             return;
          }
-      
-         PreferenceSet Prefs = PreferenceSet.Instance;
 
-         SaveColumnSettings(Prefs);
-         SaveSortColumn(Prefs);
+         SaveColumnSettings();
+         SaveSortColumn();
 
          // Save location and size data
          // RestoreBounds remembers normal position if minimized or maximized
          if (WindowState == FormWindowState.Normal)
          {
-            Prefs.FormLocation = Location;
-            Prefs.FormSize = Size;
+            _Prefs.SetPreference(Preference.FormLocation, Location);
+            _Prefs.SetPreference(Preference.FormSize, Size);
          }
          else
          {
-            Prefs.FormLocation = RestoreBounds.Location;
-            Prefs.FormSize = RestoreBounds.Size;
+            _Prefs.SetPreference(Preference.FormLocation, RestoreBounds.Location);
+            _Prefs.SetPreference(Preference.FormSize, RestoreBounds.Size);
          }
 
-         Prefs.FormLogVisible = txtLogFile.Visible;
-         Prefs.QueueViewerVisible = queueControl.Visible;
+         _Prefs.SetPreference(Preference.FormLogVisible, txtLogFile.Visible);
+         _Prefs.SetPreference(Preference.QueueViewerVisible, queueControl.Visible);
 
          // Save the data
-         PreferenceSet.Instance.Save();
+         _Prefs.Save();
          
          // Save the data on current WUs in progress
          ClientInstances.SaveCurrentUnitInfo();
@@ -332,8 +339,8 @@ namespace HFM.Forms
       {
          // When the log file window (Panel2) is visible, this event will fire.
          // Update the split location directly from the split panel control. - Issue 8
-         PreferenceSet.Instance.FormSplitLocation = splitContainer1.SplitterDistance;
-         PreferenceSet.Instance.Save();
+         _Prefs.SetPreference(Preference.FormSplitLocation, splitContainer1.SplitterDistance);
+         _Prefs.Save();
       }
 
       /// <summary>
@@ -368,8 +375,8 @@ namespace HFM.Forms
                }
             }
 
-            SaveColumnSettings(PreferenceSet.Instance); // Save Column Settings - Issue 73
-            PreferenceSet.Instance.Save();
+            SaveColumnSettings(); // Save Column Settings - Issue 73
+            _Prefs.Save();
          }
       }
 
@@ -498,8 +505,8 @@ namespace HFM.Forms
             SortColumnName = dataGridView1.SortedColumn.Name;
             SortColumnOrder = dataGridView1.SortOrder;
 
-            SaveSortColumn(PreferenceSet.Instance); // Save Column Sort Order - Issue 73
-            PreferenceSet.Instance.Save();
+            SaveSortColumn(); // Save Column Sort Order - Issue 73
+            _Prefs.Save();
          }
       }
 
@@ -615,7 +622,7 @@ namespace HFM.Forms
                       dataGridView1.Columns["ETA"].Index == e.ColumnIndex ||
                       dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex ||
                       dataGridView1.Columns["Deadline"].Index == e.ColumnIndex) &&
-                      PreferenceSet.Instance.TimeStyle.Equals(eTimeStyle.Formatted))
+                      _Prefs.GetPreference<TimeStyleType>(Preference.TimeStyle).Equals(TimeStyleType.Formatted))
             {
                PaintGridCell(PaintCell.Time, e);
             }
@@ -783,7 +790,7 @@ namespace HFM.Forms
                     dataGridView1.Columns["ETA"].Index == e.ColumnIndex ||
                     dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex ||
                     dataGridView1.Columns["Deadline"].Index == e.ColumnIndex) &&
-                    PreferenceSet.Instance.TimeStyle.Equals(eTimeStyle.Formatted))
+                    _Prefs.GetPreference<TimeStyleType>(Preference.TimeStyle).Equals(TimeStyleType.Formatted))
                {
                   if (dataGridView1.Columns["TPF"].Index == e.ColumnIndex)
                   {
@@ -1105,7 +1112,7 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void mnuEditPreferences_Click(object sender, EventArgs e)
       {
-         frmPreferences prefDialog = new frmPreferences();
+         frmPreferences prefDialog = new frmPreferences(_Prefs);
          prefDialog.ShowDialog();
          
          dataGridView1.Invalidate();
@@ -1113,11 +1120,23 @@ namespace HFM.Forms
       #endregion
 
       #region Help Menu Click Handlers
+      private void mnuHelpHfmGroup_Click(object sender, EventArgs e)
+      {
+         try
+         {
+            Process.Start("http://groups.google.com/group/hfm-net/");
+         }
+         catch (Exception ex)
+         {
+            HfmTrace.WriteToHfmConsole(ex);
+
+            MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "HFM.NET Google Group"));
+         }
+      }
+      
       /// <summary>
       /// Show the About dialog
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void mnuHelpAbout_Click(object sender, EventArgs e)
       {
          frmAbout newAbout = new frmAbout();
@@ -1127,8 +1146,6 @@ namespace HFM.Forms
       /// <summary>
       /// Show the help file at the contents tab
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void mnuHelpContents_Click(object sender, EventArgs e)
       {
          //Help.ShowHelp(this, helpProvider.HelpNamespace);
@@ -1137,8 +1154,6 @@ namespace HFM.Forms
       /// <summary>
       /// Show the help file at the index tab
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void mnuHelpIndex_Click(object sender, EventArgs e)
       {
          //Help.ShowHelpIndex(this, helpProvider.HelpNamespace);
@@ -1209,12 +1224,12 @@ namespace HFM.Forms
          // Check for SelectedInstance, and get out if not found
          if (ClientInstances.SelectedInstance == null) return;
 
-         string logPath = Path.Combine(PreferenceSet.CacheDirectory, ClientInstances.SelectedInstance.CachedFAHLogName);
+         string logPath = Path.Combine(_Prefs.CacheDirectory, ClientInstances.SelectedInstance.CachedFAHLogName);
          if (File.Exists(logPath))
          {
             try
             {
-               Process.Start(PreferenceSet.Instance.LogFileViewer, logPath);
+               Process.Start(_Prefs.GetPreference<string>(Preference.LogFileViewer), logPath);
             }
             catch (Exception ex)
             {
@@ -1295,13 +1310,13 @@ namespace HFM.Forms
       /// </summary>
       private void mnuViewToggleDateTime_Click(object sender, EventArgs e)
       {
-         if (PreferenceSet.Instance.TimeStyle.Equals(eTimeStyle.Standard))
+         if (_Prefs.GetPreference<TimeStyleType>(Preference.TimeStyle).Equals(TimeStyleType.Standard))
          {
-            PreferenceSet.Instance.TimeStyle = eTimeStyle.Formatted;
+            _Prefs.SetPreference(Preference.TimeStyle, TimeStyleType.Formatted);
          }
          else
          {
-            PreferenceSet.Instance.TimeStyle = eTimeStyle.Standard;
+            _Prefs.SetPreference(Preference.TimeStyle, TimeStyleType.Standard);
          }
 
          dataGridView1.Invalidate();
@@ -1321,9 +1336,8 @@ namespace HFM.Forms
          else
          {
             // Restore state data
-            PreferenceSet Prefs = PreferenceSet.Instance;
-            Point location = Prefs.MessagesFormLocation;
-            Size size = Prefs.MessagesFormSize;
+            Point location = _Prefs.GetPreference<Point>(Preference.MessagesFormLocation);
+            Size size = _Prefs.GetPreference<Size>(Preference.MessagesFormSize);
 
             if (location.X != 0 && location.Y != 0)
             {
@@ -1347,6 +1361,11 @@ namespace HFM.Forms
       private void mnuToolsDownloadProjects_Click(object sender, EventArgs e)
       {
          IProteinCollection proteinCollection = InstanceProvider.GetInstance<IProteinCollection>();
+
+         // Clear the Project Not Found Cache and Last Download Time
+         proteinCollection.ClearProjectsNotFoundCache();
+         proteinCollection.Downloader.ResetLastDownloadTime();
+         // Execute Asynchronous Download
          proteinCollection.BeginDownloadFromStanford();
       }
 
@@ -1362,14 +1381,13 @@ namespace HFM.Forms
          {
             ProjectID = ClientInstances.SelectedInstance.CurrentUnitInfo.ProjectID;
          }
-         
-         frmBenchmarks frm = new frmBenchmarks(InstanceProvider.GetInstance<IProteinCollection>(), ClientInstances, ProjectID);
+
+         frmBenchmarks frm = new frmBenchmarks(_Prefs, ClientInstances, ProjectID);
          frm.StartPosition = FormStartPosition.Manual;
 
          // Restore state data
-         PreferenceSet Prefs = PreferenceSet.Instance;
-         Point location = Prefs.BenchmarksFormLocation;
-         Size size = Prefs.BenchmarksFormSize;
+         Point location = _Prefs.GetPreference<Point>(Preference.BenchmarksFormLocation);
+         Size size = _Prefs.GetPreference<Size>(Preference.BenchmarksFormSize);
 
          if (location.X != 0 && location.Y != 0)
          {
@@ -1394,13 +1412,13 @@ namespace HFM.Forms
       {
          try
          {
-            Process.Start(PreferenceSet.Instance.EOCUserUrl.AbsoluteUri);
+            Process.Start(_Prefs.EocUserUrl.AbsoluteUri);
          }
          catch (Exception ex)
          {
             HfmTrace.WriteToHfmConsole(ex);
-            
-            MessageBox.Show(Properties.Resources.ProcessStartError, String.Format("EOC User Stats page"));
+
+            MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "EOC User Stats page"));
          }
       }
 
@@ -1408,13 +1426,13 @@ namespace HFM.Forms
       {
          try
          {
-            Process.Start(PreferenceSet.Instance.StanfordUserUrl.AbsoluteUri);
+            Process.Start(_Prefs.StanfordUserUrl.AbsoluteUri);
          }
          catch (Exception ex)
          {
             HfmTrace.WriteToHfmConsole(ex);
-            
-            MessageBox.Show(Properties.Resources.ProcessStartError, String.Format("Stanford User Stats page"));
+
+            MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "Stanford User Stats page"));
          }
       }
 
@@ -1422,13 +1440,13 @@ namespace HFM.Forms
       {
          try
          {
-            Process.Start(PreferenceSet.Instance.EOCTeamUrl.AbsoluteUri);
+            Process.Start(_Prefs.EocTeamUrl.AbsoluteUri);
          }
          catch (Exception ex)
          {
             HfmTrace.WriteToHfmConsole(ex);
-            
-            MessageBox.Show(Properties.Resources.ProcessStartError, String.Format("EOC Team Stats page"));
+
+            MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "EOC Team Stats page"));
          }
       }
 
@@ -1446,8 +1464,8 @@ namespace HFM.Forms
          catch (Exception ex)
          {
             HfmTrace.WriteToHfmConsole(ex);
-            
-            MessageBox.Show(Properties.Resources.ProcessStartError, String.Format("HFM.NET Google Code page"));
+
+            MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "HFM.NET Google Code page"));
          }
       }
       #endregion
@@ -1558,7 +1576,7 @@ namespace HFM.Forms
          double TotalPPD = totals.PPD;
          int GoodHosts = totals.WorkingClients;
 
-         SetNotifyIconText(String.Format("{0} Working Clients{3}{1} Non-Working Clients{3}{2:" + PreferenceSet.PpdFormatString + "} PPD",
+         SetNotifyIconText(String.Format("{0} Working Clients{3}{1} Non-Working Clients{3}{2:" + _Prefs.PpdFormatString + "} PPD",
                                          GoodHosts, totals.NonWorkingClients, TotalPPD, Environment.NewLine));
          RefreshStatusLabels(GoodHosts, TotalPPD);
       }
@@ -1607,7 +1625,7 @@ namespace HFM.Forms
             SetStatusLabelHostsText(String.Format("{0} Clients", GoodHosts));
          }
 
-         SetStatusLabelPPDText(String.Format("{0:" + PreferenceSet.PpdFormatString + "} PPD", TotalPPD));
+         SetStatusLabelPPDText(String.Format("{0:" + _Prefs.PpdFormatString + "} PPD", TotalPPD));
       }
 
       /// <summary>
@@ -1713,7 +1731,6 @@ namespace HFM.Forms
       /// </summary>
       private void RestoreFormPreferences()
       {
-         PreferenceSet Prefs = PreferenceSet.Instance;
          //TODO: Would like to do this here in lieu of in frmMain_Shown() event.
          // There is some drawing error that if Minimized here, the first time the
          // Form is restored from the system tray, the DataGridView is drawn with
@@ -1725,8 +1742,8 @@ namespace HFM.Forms
          //}
 
          // Restore state data
-         Point location = Prefs.FormLocation;
-         Size size = Prefs.FormSize;
+         Point location = _Prefs.GetPreference<Point>(Preference.FormLocation);
+         Size size = _Prefs.GetPreference<Size>(Preference.FormSize);
 
          if (location.X != 0 && location.Y != 0)
          {
@@ -1736,20 +1753,20 @@ namespace HFM.Forms
          }
          if (size.Width != 0 && size.Height != 0)
          {
-            if (Prefs.FormLogVisible == false)
+            if (_Prefs.GetPreference<bool>(Preference.FormLogVisible) == false)
             {
-               size = new Size(size.Width, size.Height + Prefs.FormLogWindowHeight);
+               size = new Size(size.Width, size.Height + _Prefs.GetPreference<int>(Preference.FormLogWindowHeight));
             }
             Size = size;
-            splitContainer1.SplitterDistance = Prefs.FormSplitLocation;
+            splitContainer1.SplitterDistance = _Prefs.GetPreference<int>(Preference.FormSplitLocation);
          }
 
-         if (Prefs.FormLogVisible == false)
+         if (_Prefs.GetPreference<bool>(Preference.FormLogVisible) == false)
          {
             ShowHideLog(false);
          }
-         
-         if (Prefs.QueueViewerVisible == false)
+
+         if (_Prefs.GetPreference<bool>(Preference.QueueViewerVisible) == false)
          {
             ShowHideQueue(false);
          }
@@ -1757,14 +1774,14 @@ namespace HFM.Forms
          //if (Prefs.FormSortColumn != String.Empty &&
          //    Prefs.FormSortOrder != SortOrder.None)
          //{
-            SortColumnName = Prefs.FormSortColumn;
-            SortColumnOrder = Prefs.FormSortOrder;
+            SortColumnName = _Prefs.GetPreference<string>(Preference.FormSortColumn);
+            SortColumnOrder = _Prefs.GetPreference<SortOrder>(Preference.FormSortOrder);
          //}
          
          try
          {
             // Restore the columns' state
-            StringCollection cols = PreferenceSet.Instance.FormColumns;
+            StringCollection cols = _Prefs.GetPreference<StringCollection>(Preference.FormColumns);
             string[] colsArray = new string[cols.Count];
             
             cols.CopyTo(colsArray, 0);
@@ -1791,8 +1808,7 @@ namespace HFM.Forms
       /// <summary>
       /// Save Column Index, Width, and Visibility
       /// </summary>
-      /// <param name="Prefs">Preferences Set</param>
-      private void SaveColumnSettings(PreferenceSet Prefs)
+      private void SaveColumnSettings()
       {
          // Save column state data
          // including order, column width and whether or not the column is visible
@@ -1809,17 +1825,16 @@ namespace HFM.Forms
                                     i++));
          }
 
-         Prefs.FormColumns = stringCollection;
+         _Prefs.SetPreference(Preference.FormColumns, stringCollection);
       }
 
       /// <summary>
       /// Save Sorted Column Name and Order
       /// </summary>
-      /// <param name="Prefs">Preferences Set</param>
-      private void SaveSortColumn(PreferenceSet Prefs)
+      private void SaveSortColumn()
       {
-         Prefs.FormSortColumn = SortColumnName;
-         Prefs.FormSortOrder = SortColumnOrder;
+         _Prefs.SetPreference(Preference.FormSortColumn, SortColumnName);
+         _Prefs.SetPreference(Preference.FormSortOrder, SortColumnOrder);
       }
 
       /// <summary>
@@ -1947,14 +1962,14 @@ namespace HFM.Forms
          {
             txtLogFile.Visible = false;
             splitContainer1.Panel2Collapsed = true;
-            PreferenceSet.Instance.FormLogWindowHeight = (splitContainer1.Height - splitContainer1.SplitterDistance);
-            Size = new Size(Size.Width, Size.Height - PreferenceSet.Instance.FormLogWindowHeight);
+            _Prefs.SetPreference(Preference.FormLogWindowHeight, (splitContainer1.Height - splitContainer1.SplitterDistance));
+            Size = new Size(Size.Width, Size.Height - _Prefs.GetPreference<int>(Preference.FormLogWindowHeight));
          }
          else
          {
             txtLogFile.Visible = true;
             Resize -= frmMain_Resize; // disable Form resize event for this operation
-            Size = new Size(Size.Width, Size.Height + PreferenceSet.Instance.FormLogWindowHeight);
+            Size = new Size(Size.Width, Size.Height + _Prefs.GetPreference<int>(Preference.FormLogWindowHeight));
             Resize += frmMain_Resize; // re-enable
             splitContainer1.Panel2Collapsed = false;
          }
@@ -1964,9 +1979,9 @@ namespace HFM.Forms
       /// Fire File Browser Process (wrap calls to this function in try catch)
       /// </summary>
       /// <param name="path">The Folder Path to browse</param>
-      private static void StartFileBrowser(string path)
+      private void StartFileBrowser(string path)
       {
-         Process.Start(PreferenceSet.Instance.FileExplorer, path);
+         Process.Start(_Prefs.GetPreference<string>(Preference.FileExplorer), path);
       }
 
       #region User Stats Data Methods
@@ -2016,7 +2031,7 @@ namespace HFM.Forms
       /// </summary>
       private void ClientInstances_InstanceDataChanged(object sender, EventArgs e)
       {
-         if (PreferenceSet.Instance.AutoSaveConfig)
+         if (_Prefs.GetPreference<bool>(Preference.AutoSaveConfig))
          {
             mnuFileSave_Click(sender, e);
          }
@@ -2055,7 +2070,7 @@ namespace HFM.Forms
       /// </summary>
       private void PreferenceSet_ShowUserStatsChanged(object sender, EventArgs e)
       {
-         bool show = PreferenceSet.Instance.ShowUserStats;
+         bool show = _Prefs.GetPreference<bool>(Preference.ShowUserStats);
          if (show)
          {
             mnuWebRefreshUserStats.Visible = true;
@@ -2079,9 +2094,9 @@ namespace HFM.Forms
       /// <summary>
       /// Sets Debug Message Level on Trace Level Switch
       /// </summary>
-      private static void PreferenceSet_MessageLevelChanged(object sender, EventArgs e)
+      private void PreferenceSet_MessageLevelChanged(object sender, EventArgs e)
       {
-         TraceLevel newLevel = (TraceLevel)PreferenceSet.Instance.MessageLevel;
+         TraceLevel newLevel = (TraceLevel)_Prefs.GetPreference<int>(Preference.MessageLevel);
          if (newLevel != TraceLevelSwitch.Instance.Level)
          {
             TraceLevelSwitch.Instance.Level = newLevel;
@@ -2094,7 +2109,7 @@ namespace HFM.Forms
       /// </summary>
       private void PreferenceSet_ColorLogFileChanged(object sender, EventArgs e)
       {
-         if (PreferenceSet.Instance.ColorLogFile)
+         if (_Prefs.GetPreference<bool>(Preference.ColorLogFile))
          {
             txtLogFile.HighlightLines();
          }

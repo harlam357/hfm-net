@@ -29,7 +29,6 @@ using ZedGraph;
 
 using HFM.Framework;
 using HFM.Instances;
-using HFM.Preferences;
 using HFM.Instrumentation;
 
 namespace HFM.Forms
@@ -37,17 +36,19 @@ namespace HFM.Forms
    public partial class frmBenchmarks : Classes.FormWrapper
    {
       #region Members
-      private readonly IProteinCollection _proteinCollection;
+      private readonly IPreferenceSet _Prefs;
+      private readonly List<Color> _GraphColors;
       private readonly InstanceCollection _clientInstances;
       private readonly int _initialProjectID; 
       
-      private BenchmarkClient _currentBenchmarkClient;
+      private IBenchmarkClient _currentBenchmarkClient;
       #endregion
 
       #region Form Constructor / functionality
-      public frmBenchmarks(IProteinCollection proteinCollection, InstanceCollection clientInstances, int projectID)
+      public frmBenchmarks(IPreferenceSet Prefs, InstanceCollection clientInstances, int projectID)
       {
-         _proteinCollection = proteinCollection;
+         _Prefs = Prefs;
+         _GraphColors = _Prefs.GetPreference<List<Color>>(Preference.GraphColors);
          _clientInstances = clientInstances;
          _initialProjectID = projectID;
       
@@ -58,22 +59,22 @@ namespace HFM.Forms
       {
          UpdateClientsComboBinding();
          UpdateProjectListBoxBinding(_initialProjectID);
-         lstColors.DataSource = PreferenceSet.Instance.GraphColors;
+         lstColors.DataSource = _GraphColors;
       }
 
       private void frmBenchmarks_FormClosing(object sender, FormClosingEventArgs e)
       {
          // Save state data
-         PreferenceSet.Instance.BenchmarksFormLocation = Location;
-         PreferenceSet.Instance.BenchmarksFormSize = Size;
-         PreferenceSet.Instance.Save();
+         _Prefs.SetPreference(Preference.BenchmarksFormLocation, Location);
+         _Prefs.SetPreference(Preference.BenchmarksFormSize, Size);
+         _Prefs.Save();
       }
       #endregion
 
       #region Event Handlers
       private void cboClients_SelectedIndexChanged(object sender, EventArgs e)
       {
-         _currentBenchmarkClient = (BenchmarkClient)cboClients.SelectedValue;
+         _currentBenchmarkClient = (IBenchmarkClient)cboClients.SelectedValue;
          if (_currentBenchmarkClient.AllClients)
          {
             picDeleteClient.Visible = false;
@@ -103,17 +104,21 @@ namespace HFM.Forms
 
          foreach (InstanceProteinBenchmark benchmark in list)
          {
+            IUnitInfo unit = null;
+            bool valuesOk = false;
+         
             ClientInstance Instance;
             _clientInstances.Instances.TryGetValue(benchmark.OwningInstanceName, out Instance);
-            if (Instance != null && Instance.Owns(benchmark) == false)
+            if (Instance != null && Instance.Owns(benchmark))
             {
-               Instance = null;
+               unit = Instance.CurrentUnitInfo;
+               valuesOk = Instance.ProductionValuesOk;
             }
-            UpdateBenchmarkText(benchmark.ToMultiLineString(Instance));
+            UpdateBenchmarkText(benchmark.ToMultiLineString(unit, _Prefs.PpdFormatString, valuesOk));
          }
 
-         CreateFrameTimeGraph(zgFrameTime, lines, list);
-         CreatePpdGraph(zgPpd, lines, list);
+         CreateFrameTimeGraph(zgFrameTime, lines, list, _GraphColors);
+         CreatePpdGraph(zgPpd, lines, list, _GraphColors, _Prefs.GetPreference<int>(Preference.DecimalPlaces));
       }
 
       private void listBox1_MouseDown(object sender, MouseEventArgs e)
@@ -171,7 +176,7 @@ namespace HFM.Forms
          catch (Exception ex)
          {
             HfmTrace.WriteToHfmConsole(ex);
-            MessageBox.Show(String.Format(Properties.Resources.ProcessStartError, "Project Description"));
+            MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "Project Description"));
          }
       }
 
@@ -190,7 +195,7 @@ namespace HFM.Forms
       {
          if (lstColors.SelectedIndex == -1) return;
          
-         picColorPreview.BackColor = PreferenceSet.Instance.GraphColors[lstColors.SelectedIndex];
+         picColorPreview.BackColor = _GraphColors[lstColors.SelectedIndex];
       }
 
       private void btnMoveColorUp_Click(object sender, EventArgs e)
@@ -201,14 +206,12 @@ namespace HFM.Forms
             return;
          }
 
-         List<Color> GraphColors = PreferenceSet.Instance.GraphColors;
-
          if (lstColors.SelectedIndex == 0) return;
 
          int index = lstColors.SelectedIndex;
-         Color moveColor = GraphColors[index];
-         GraphColors.RemoveAt(index);
-         GraphColors.Insert(index - 1, moveColor);
+         Color moveColor = _GraphColors[index];
+         _GraphColors.RemoveAt(index);
+         _GraphColors.Insert(index - 1, moveColor);
          UpdateGraphColorsBinding();
          lstColors.SelectedIndex = index - 1;
       }
@@ -221,14 +224,12 @@ namespace HFM.Forms
             return;
          }
 
-         List<Color> GraphColors = PreferenceSet.Instance.GraphColors;
-
-         if (lstColors.SelectedIndex == GraphColors.Count - 1) return;
+         if (lstColors.SelectedIndex == _GraphColors.Count - 1) return;
          
          int index = lstColors.SelectedIndex;
-         Color moveColor = GraphColors[index];
-         GraphColors.RemoveAt(index);
-         GraphColors.Insert(index + 1, moveColor);
+         Color moveColor = _GraphColors[index];
+         _GraphColors.RemoveAt(index);
+         _GraphColors.Insert(index + 1, moveColor);
          UpdateGraphColorsBinding();
          lstColors.SelectedIndex = index + 1;
       }
@@ -238,18 +239,17 @@ namespace HFM.Forms
          ColorDialog dlg = new ColorDialog();
          if (dlg.ShowDialog(this).Equals(DialogResult.OK))
          {
-            List<Color> GraphColors = PreferenceSet.Instance.GraphColors;
             Color addColor = FindNearestKnown(dlg.Color);
-            if (GraphColors.Contains(addColor))
+            if (_GraphColors.Contains(addColor))
             {
                MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture, "{0} is already a graph color.", addColor.Name), 
                   Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                return;
             }
 
-            GraphColors.Add(addColor);
+            _GraphColors.Add(addColor);
             UpdateGraphColorsBinding();
-            lstColors.SelectedIndex = PreferenceSet.Instance.GraphColors.Count - 1;
+            lstColors.SelectedIndex = _GraphColors.Count - 1;
          }
       }
 
@@ -261,19 +261,18 @@ namespace HFM.Forms
             return;
          }
 
-         List<Color> GraphColors = PreferenceSet.Instance.GraphColors;
-         if (GraphColors.Count <= 3)
+         if (_GraphColors.Count <= 3)
          {
             MessageBox.Show(this, "Must have at least three colors.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
          }
 
          int index = lstColors.SelectedIndex;
-         GraphColors.RemoveAt(index);
+         _GraphColors.RemoveAt(index);
          UpdateGraphColorsBinding();
-         if (index == GraphColors.Count)
+         if (index == _GraphColors.Count)
          {
-            lstColors.SelectedIndex = GraphColors.Count - 1;
+            lstColors.SelectedIndex = _GraphColors.Count - 1;
          }
       }
 
@@ -296,7 +295,7 @@ namespace HFM.Forms
          List<string> lines = new List<string>(5);
 
          IProtein protein;
-         _proteinCollection.TryGetValue(ProjectID, out protein);
+         InstanceProvider.GetInstance<IProteinCollection>().TryGetValue(ProjectID, out protein);
 
          if (protein != null)
          {
@@ -400,7 +399,10 @@ namespace HFM.Forms
       /// <param name="zg">ZedGraph Control</param>
       /// <param name="ProjectInfo">Project Info Array</param>
       /// <param name="benchmarks">Benchmarks Collection to Plot</param>
-      private static void CreatePpdGraph(ZedGraphControl zg, string[] ProjectInfo, IEnumerable<InstanceProteinBenchmark> benchmarks)
+      /// <param name="GraphColors">Graph Colors List</param>
+      /// <param name="DecimalPlaces">PPD Decimal Places</param>
+      private static void CreatePpdGraph(ZedGraphControl zg, string[] ProjectInfo, IEnumerable<InstanceProteinBenchmark> benchmarks, 
+                                         IList<Color> GraphColors, int DecimalPlaces)
       {
          Debug.Assert(zg != null);
          
@@ -435,10 +437,10 @@ namespace HFM.Forms
                }
 
                double[] yPoints = new double[2];
-               yPoints[0] = Math.Round(benchmark.MinimumFrameTimePPD, PreferenceSet.Instance.DecimalPlaces);
-               yPoints[1] = Math.Round(benchmark.AverageFrameTimePPD, PreferenceSet.Instance.DecimalPlaces);
+               yPoints[0] = Math.Round(benchmark.MinimumFrameTimePPD, DecimalPlaces);
+               yPoints[1] = Math.Round(benchmark.AverageFrameTimePPD, DecimalPlaces);
 
-               CreateBar(i, myPane, benchmark.OwningInstanceName, yPoints);
+               CreateBar(i, myPane, benchmark.OwningInstanceName, yPoints, GraphColors);
                i++;
             }
 
@@ -499,7 +501,9 @@ namespace HFM.Forms
       /// <param name="zg">ZedGraph Control</param>
       /// <param name="ProjectInfo">Project Info Array</param>
       /// <param name="benchmarks">Benchmarks Collection to Plot</param>
-      private static void CreateFrameTimeGraph(ZedGraphControl zg, string[] ProjectInfo, IEnumerable<InstanceProteinBenchmark> benchmarks)
+      /// <param name="GraphColors">Graph Colors List</param>
+      private static void CreateFrameTimeGraph(ZedGraphControl zg, string[] ProjectInfo, IEnumerable<InstanceProteinBenchmark> benchmarks,
+                                               IList<Color> GraphColors)
       {
          Debug.Assert(zg != null);
 
@@ -529,7 +533,7 @@ namespace HFM.Forms
                yPoints[0] = benchmark.MinimumFrameTime.TotalSeconds;
                yPoints[1] = benchmark.AverageFrameTime.TotalSeconds;
 
-               CreateBar(i, myPane, benchmark.OwningInstanceName, yPoints);
+               CreateBar(i, myPane, benchmark.OwningInstanceName, yPoints, GraphColors);
                i++;
             }
 
@@ -570,9 +574,8 @@ namespace HFM.Forms
          }
       }
 
-      private static void CreateBar(int index, GraphPane myPane, string InstanceName, double[] y)
+      private static void CreateBar(int index, GraphPane myPane, string InstanceName, double[] y, IList<Color> GraphColors)
       {
-         List<Color> GraphColors = PreferenceSet.Instance.GraphColors;
          int ColorIndex = index % GraphColors.Count;
          Color barColor = GraphColors[ColorIndex];
 

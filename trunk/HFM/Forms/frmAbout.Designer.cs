@@ -176,10 +176,10 @@ namespace HFM.Forms
          this.tableLayoutPanel1.SetColumnSpan(this.labelWrapper1, 2);
          this.labelWrapper1.Location = new System.Drawing.Point(3, 40);
          this.labelWrapper1.Name = "labelWrapper1";
-         this.labelWrapper1.Size = new System.Drawing.Size(230, 52);
+         this.labelWrapper1.Size = new System.Drawing.Size(257, 52);
          this.labelWrapper1.TabIndex = 5;
-         this.labelWrapper1.Text = "Copyright (c) Ryan Harlamert (harlam357) 2009.\r\nCopyright (c) David Rawling 2006-" +
-             "2007.\r\n\r\nAll Rights Reserved.";
+         this.labelWrapper1.Text = "Copyright (c) Ryan Harlamert (harlam357) 2009-2010.\r\nCopyright (c) David Rawling " +
+             "2006-2007.\r\n\r\nAll Rights Reserved.";
          // 
          // frmAbout
          // 

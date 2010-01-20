@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Client Instance Class Tests
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,14 +34,20 @@ namespace HFM.Instances.Tests
    [TestFixture]
    public class ClientInstanceTests
    {
-      private IWindsorContainer container = new WindsorContainer();
+      private IWindsorContainer container;
       private MockRepository mocks;
    
       [SetUp]
       public void Init()
       {
          TraceLevelSwitch.Instance.Level = TraceLevel.Verbose;
+
          container = new WindsorContainer();
+         mocks = new MockRepository();
+         
+         IProteinBenchmarkCollection benchmarkCollection = mocks.DynamicMock<IProteinBenchmarkCollection>();
+         container.Kernel.AddComponentInstance<IProteinBenchmarkCollection>(typeof(IProteinBenchmarkCollection), benchmarkCollection);
+      
          container.AddComponent("LogReader", typeof(ILogReader), typeof(LogReader));
          container.AddComponent("QueueReader", typeof(IQueueReader), typeof(QueueReader));
          InstanceProvider.SetContainer(container);
@@ -50,12 +56,12 @@ namespace HFM.Instances.Tests
       [Test, Category("SMP")]
       public void SMP_3()
       {
-         mocks = new MockRepository();
          SetupMockProteinCollectionAndAddToContainer("GROCVS", 100);
+         IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
          mocks.ReplayAll();
       
          // Setup Test Instance
-         ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
+         ClientInstance Instance = new ClientInstance(Prefs, InstanceType.PathInstance);
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
          Instance.InstanceName = "SMP_3";
@@ -67,7 +73,7 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentLogLines);
          Assert.AreEqual(true, Instance.UserIDUnknown);  // UserID is Unknown (notfred's instance does not log request of UserID)
          Assert.AreEqual(String.Format("{0} ({1})", Instance.UserID, Instance.MachineID), Instance.UserAndMachineID);
-         Assert.AreEqual(true, Instance.IsUsernameOk()); // Prefs default is harlam357 (32)
+         Assert.AreEqual(true, Instance.IsUsernameOk());
          Assert.Greater(Instance.LastRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
          
          Assert.IsNotNull(Instance.CurrentUnitInfo);
@@ -99,12 +105,12 @@ namespace HFM.Instances.Tests
       [Test, Category("SMP")]
       public void SMP_7()
       {
-         mocks = new MockRepository();
          SetupMockProteinCollectionAndAddToContainer("GROCVS", 100);
+         IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
          mocks.ReplayAll();
       
          // Setup Test Instance
-         ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
+         ClientInstance Instance = new ClientInstance(Prefs, InstanceType.PathInstance);
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
          Instance.InstanceName = "SMP_7";
@@ -116,7 +122,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(false, Instance.UserIDUnknown);
          Assert.AreEqual("25932070F496A89", Instance.UserID);
          Assert.AreEqual(String.Format("{0} ({1})", Instance.UserID, Instance.MachineID), Instance.UserAndMachineID);
-         Assert.AreEqual(true, Instance.IsUsernameOk()); // Prefs default is harlam357 (32)
+         Assert.AreEqual(true, Instance.IsUsernameOk());
          Assert.Greater(Instance.LastRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
 
          Assert.IsNotNull(Instance.CurrentUnitInfo);
@@ -156,12 +162,12 @@ namespace HFM.Instances.Tests
           *   Project cannot be determined.
           ***/
 
-         mocks = new MockRepository();
          SetupMockProteinCollectionAndAddToContainer("GROCVS", 100);
+         IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
          mocks.ReplayAll();
       
          // Setup Test Instance
-         ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
+         ClientInstance Instance = new ClientInstance(Prefs, InstanceType.PathInstance);
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
          Instance.InstanceName = "SMP_8_1";
@@ -174,7 +180,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(false, Instance.UserIDUnknown);
          Assert.AreEqual("775112477C3C55C2", Instance.UserID);
          Assert.AreEqual(String.Format("{0} ({1})", Instance.UserID, Instance.MachineID), Instance.UserAndMachineID);
-         Assert.AreEqual(true, Instance.IsUsernameOk()); // Prefs default is harlam357 (32)
+         Assert.AreEqual(true, Instance.IsUsernameOk());
          Assert.Greater(Instance.LastRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
 
          Assert.IsNotNull(Instance.CurrentUnitInfo);
@@ -211,12 +217,12 @@ namespace HFM.Instances.Tests
           *   Protein and allow the TypeOfClient to be set correctly.
           ***/
 
-         mocks = new MockRepository();
          SetupMockProteinCollectionAndAddToContainer("GROCVS", 100);
+         IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
          mocks.ReplayAll();
 
          // Setup Test Instance
-         ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
+         ClientInstance Instance = new ClientInstance(Prefs, InstanceType.PathInstance);
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
          Instance.InstanceName = "SMP_8_2";
@@ -236,12 +242,12 @@ namespace HFM.Instances.Tests
       [Test, Category("GPU")]
       public void GPU2_3()
       {
-         mocks = new MockRepository();
          SetupMockProteinCollectionAndAddToContainer("GROGPU2", 100);
+         IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
          mocks.ReplayAll();
       
          // Setup Test Instance
-         ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
+         ClientInstance Instance = new ClientInstance(Prefs, InstanceType.PathInstance);
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
          Instance.InstanceName = "GPU2_3";
@@ -284,12 +290,12 @@ namespace HFM.Instances.Tests
       [Test, Category("GPU")]
       public void GPU2_6()
       {
-         mocks = new MockRepository();
          SetupMockProteinCollectionAndAddToContainer("GROGPU2", 100);
+         IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
          mocks.ReplayAll();
       
          // Setup Test Instance
-         ClientInstance Instance = new ClientInstance(InstanceType.PathInstance);
+         ClientInstance Instance = new ClientInstance(Prefs, InstanceType.PathInstance);
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
          Instance.InstanceName = "GPU2_6";
@@ -300,7 +306,7 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentLogLines);
          Assert.AreEqual(false, Instance.UserIDUnknown);
          Assert.AreEqual(String.Format("{0} ({1})", Instance.UserID, Instance.MachineID), Instance.UserAndMachineID);
-         Assert.AreEqual(true, Instance.IsUsernameOk()); // Prefs default is harlam357 (32)
+         Assert.AreEqual(true, Instance.IsUsernameOk());
          Assert.Greater(Instance.LastRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
 
          Assert.IsNotNull(Instance.CurrentUnitInfo);
@@ -343,6 +349,15 @@ namespace HFM.Instances.Tests
          Expect.Call(proteinCollection.GetNewProtein()).Return(newProtein).Repeat.Any();
 
          container.Kernel.AddComponentInstance<IProteinCollection>(typeof(IProteinCollection), proteinCollection);
+      }
+
+      private IPreferenceSet SetupMockPreferenceSet(string Username, int Team)
+      {
+         IPreferenceSet Prefs = mocks.DynamicMock<IPreferenceSet>();
+         Expect.Call(Prefs.GetPreference<string>(Preference.StanfordID)).Return(Username).Repeat.Any();
+         Expect.Call(Prefs.GetPreference<int>(Preference.TeamID)).Return(Team).Repeat.Any();
+         Expect.Call(Prefs.CacheDirectory).Return(String.Empty).Repeat.Any();
+         return Prefs;
       }
    }
 }

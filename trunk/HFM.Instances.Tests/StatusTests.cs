@@ -20,6 +20,7 @@
 using System;
 
 using NUnit.Framework;
+using Rhino.Mocks;
 
 using HFM.Framework;
 using HFM.Instances;
@@ -29,9 +30,22 @@ namespace HFM.Instances.Tests
    [TestFixture]
    public class StatusTests
    {
+      private MockRepository mocks;
+      private IPreferenceSet _Prefs;
+   
+      [SetUp]
+      public void Init()
+      {
+         mocks = new MockRepository();
+         _Prefs = mocks.DynamicMock<IPreferenceSet>();
+         mocks.ReplayAll();
+      }
+
       [Test]
       public void StatusTestSet1_RunningNoFrameTimes()
       {
+         mocks.ReplayAll();
+      
          DateTime Date = DateTime.Now.Date;
 
          StatusData statusData = new StatusData();
@@ -53,12 +67,16 @@ namespace HFM.Instances.Tests
          statusData.FrameTime = 0;
          statusData.AverageFrameTime = new TimeSpan(0, 12, 35);
 
-         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, ClientInstance.HandleReturnedStatus(statusData));
+         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, ClientInstance.HandleReturnedStatus(statusData, _Prefs));
+         
+         mocks.VerifyAll();
       }
 
       [Test]
       public void StatusTestSet1_Running()
       {
+         mocks.ReplayAll();
+      
          DateTime Date = DateTime.Now.Date;
 
          StatusData statusData = new StatusData();
@@ -80,12 +98,16 @@ namespace HFM.Instances.Tests
          statusData.FrameTime = 750;
          statusData.AverageFrameTime = new TimeSpan(0, 12, 35);
 
-         Assert.AreEqual(ClientStatus.Running, ClientInstance.HandleReturnedStatus(statusData));
+         Assert.AreEqual(ClientStatus.Running, ClientInstance.HandleReturnedStatus(statusData, _Prefs));
+
+         mocks.VerifyAll();
       }
 
       [Test]
       public void StatusTestSet2_RunningNoFrameTimes_Async()
       {
+         mocks.ReplayAll();
+      
          DateTime Date = DateTime.Now.Date;
 
          StatusData statusData = new StatusData();
@@ -108,12 +130,16 @@ namespace HFM.Instances.Tests
          statusData.FrameTime = 0;
          statusData.AverageFrameTime = new TimeSpan(0, 12, 35);
 
-         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, ClientInstance.HandleReturnedStatus(statusData));
+         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, ClientInstance.HandleReturnedStatus(statusData, _Prefs));
+
+         mocks.VerifyAll();
       }
 
       [Test]
       public void StatusTestSet2_Hung_NoAsync()
       {
+         mocks.ReplayAll();
+      
          DateTime Date = DateTime.Now.Date;
 
          StatusData statusData = new StatusData();
@@ -137,12 +163,16 @@ namespace HFM.Instances.Tests
          statusData.AverageFrameTime = new TimeSpan(0, 12, 35);
 
          statusData.AllowRunningAsync = false;
-         Assert.AreEqual(ClientStatus.Hung, ClientInstance.HandleReturnedStatus(statusData));
+         Assert.AreEqual(ClientStatus.Hung, ClientInstance.HandleReturnedStatus(statusData, _Prefs));
+
+         mocks.VerifyAll();
       }
 
       [Test]
       public void StatusTestSet3_RunningAsync()
       {
+         mocks.ReplayAll();
+      
          DateTime Date = DateTime.Now.Date;
 
          StatusData statusData = new StatusData();
@@ -165,12 +195,16 @@ namespace HFM.Instances.Tests
          statusData.FrameTime = 633; // 10 Minutes 33 Seconds
          statusData.AverageFrameTime = new TimeSpan(0, 10, 25);
 
-         Assert.AreEqual(ClientStatus.RunningAsync, ClientInstance.HandleReturnedStatus(statusData));
+         Assert.AreEqual(ClientStatus.RunningAsync, ClientInstance.HandleReturnedStatus(statusData, _Prefs));
+
+         mocks.VerifyAll();
       }
 
       [Test]
       public void StatusTestSet3_AsyncHung()
       {
+         mocks.ReplayAll();
+      
          DateTime Date = DateTime.Now.Date;
 
          StatusData statusData = new StatusData();
@@ -193,12 +227,16 @@ namespace HFM.Instances.Tests
          statusData.FrameTime = 633; // 10 Minutes 33 Seconds
          statusData.AverageFrameTime = new TimeSpan(0, 10, 25);
 
-         Assert.AreEqual(ClientStatus.Hung, ClientInstance.HandleReturnedStatus(statusData));
+         Assert.AreEqual(ClientStatus.Hung, ClientInstance.HandleReturnedStatus(statusData, _Prefs));
+
+         mocks.VerifyAll();
       }
 
       [Test]
       public void StatusTestSet3_Hung_NoAsync()
       {
+         mocks.ReplayAll();
+      
          DateTime Date = DateTime.Now.Date;
 
          StatusData statusData = new StatusData();
@@ -222,7 +260,9 @@ namespace HFM.Instances.Tests
          statusData.AverageFrameTime = new TimeSpan(0, 10, 25);
 
          statusData.AllowRunningAsync = false;
-         Assert.AreEqual(ClientStatus.Hung, ClientInstance.HandleReturnedStatus(statusData));
+         Assert.AreEqual(ClientStatus.Hung, ClientInstance.HandleReturnedStatus(statusData, _Prefs));
+
+         mocks.VerifyAll();
       }
    }
 }

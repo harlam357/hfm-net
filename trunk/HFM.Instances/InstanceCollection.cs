@@ -33,7 +33,6 @@ using System.Collections.Generic;
 
 using HFM.Framework;
 using HFM.Helpers;
-using HFM.Preferences;
 using HFM.Instrumentation;
 
 namespace HFM.Instances
@@ -155,14 +154,21 @@ namespace HFM.Instances
       /// Passive FTP Web Upload
       /// </summary>
       private bool _PassiveFtpWebUpload = true;
+      
+      /// <summary>
+      /// Preferences Interface
+      /// </summary>
+      private readonly IPreferenceSet _Prefs;
       #endregion
 
       #region CTOR
       /// <summary>
       /// Default Constructor
       /// </summary>
-      public InstanceCollection()
+      public InstanceCollection(IPreferenceSet Prefs)
       {
+         _Prefs = Prefs;
+      
          _instanceCollection = new Dictionary<string, ClientInstance>();
          _displayCollection = new SortableBindingList<DisplayInstance>();
          _duplicateProjects = new List<string>();
@@ -174,20 +180,18 @@ namespace HFM.Instances
          webTimer.Elapsed += webGenTimer_Tick;
 
          // Hook up Protein Collection Updated Event Handler
-         IProteinCollection proteinCollection = InstanceProvider.GetInstance<IProteinCollection>();
-         proteinCollection.ProjectInfoUpdated += ProteinCollection_ProjectInfoUpdated;
+         InstanceProvider.GetInstance<IProteinCollection>().Downloader.ProjectInfoUpdated += ProteinCollection_ProjectInfoUpdated;
 
          // Set Offline Clients Sort Flag
-         OfflineClientsLast = PreferenceSet.Instance.OfflineLast;
+         OfflineClientsLast = _Prefs.GetPreference<bool>(Preference.OfflineLast);
 
          // Clear the Log File Cache Folder
          ClearCacheFolder();
 
          // Hook-up PreferenceSet Event Handlers
-         PreferenceSet Prefs = PreferenceSet.Instance;
-         Prefs.OfflineLastChanged += PreferenceSet_OfflineLastChanged;
-         Prefs.TimerSettingsChanged += Prefs_TimerSettingsChanged;
-         Prefs.DuplicateCheckChanged += PreferenceSet_DuplicateCheckChanged;
+         _Prefs.OfflineLastChanged += PreferenceSet_OfflineLastChanged;
+         _Prefs.TimerSettingsChanged += Prefs_TimerSettingsChanged;
+         _Prefs.DuplicateCheckChanged += PreferenceSet_DuplicateCheckChanged;
       }
       #endregion
 
@@ -399,7 +403,7 @@ namespace HFM.Instances
          }
          else
          {
-            xmlData.Load(Path.Combine(PreferenceSet.AppPath, xmlDocName));
+            xmlData.Load(Path.Combine(_Prefs.ApplicationPath, xmlDocName));
          }
 
          // xmlData now contains the collection of Nodes. Hopefully.
@@ -412,7 +416,7 @@ namespace HFM.Instances
             if (Enum.IsDefined(typeof(InstanceType), InstanceType))
             {
                InstanceType type = (InstanceType)Enum.Parse(typeof(InstanceType), InstanceType, false);
-               ClientInstance instance = new ClientInstance(type);
+               ClientInstance instance = new ClientInstance(_Prefs, type);
                instance.FromXml(xn);
                UnitInfo restoreUnitInfo = UnitInfoCollection.Instance.RetrieveUnitInfo(instance.InstanceName, instance.Path);
                if (restoreUnitInfo != null)
@@ -531,7 +535,7 @@ namespace HFM.Instances
 
                   if (tokens.Length > 1) // we should have at least name and path
                   {
-                     ClientInstance instance = GetNewInstance(tokens);
+                     ClientInstance instance = GetNewInstance(_Prefs, tokens);
                      if (instance != null)
                      {
                         // Check for Client is on Virtual Machine setting
@@ -590,7 +594,7 @@ namespace HFM.Instances
       /// create an HFM ClientInstance object based on those tokens
       /// </summary>
       /// <param name="tokens">Tokenized String (String Array)</param>
-      private static ClientInstance GetNewInstance(string[] tokens)
+      private static ClientInstance GetNewInstance(IPreferenceSet Prefs, string[] tokens)
       {
          // Get the instance name token and validate
          string instanceName = tokens[0].Replace("\"", String.Empty);
@@ -614,13 +618,13 @@ namespace HFM.Instances
          {
             if (instancePath.StartsWith("http"))
             {
-               instance = new ClientInstance(InstanceType.HTTPInstance);
+               instance = new ClientInstance(Prefs, InstanceType.HTTPInstance);
                instance.InstanceName = instanceName;
                instance.Path = instancePath;
             }
             else if (instancePath.StartsWith("ftp"))
             {
-               instance = new ClientInstance(InstanceType.FTPInstance);
+               instance = new ClientInstance(Prefs, InstanceType.FTPInstance);
                instance.InstanceName = instanceName;
                instance.Server = matchURL.Result("${domain}");
                instance.Path = matchURL.Result("${file}");
@@ -628,7 +632,7 @@ namespace HFM.Instances
          }
          else if (matchFTPUserPass.Success) // we have a valid FTP with User Pass
          {
-            instance = new ClientInstance(InstanceType.FTPInstance);
+            instance = new ClientInstance(Prefs, InstanceType.FTPInstance);
             instance.InstanceName = instanceName;
             instance.Server = matchFTPUserPass.Result("${domain}");
             instance.Path = matchFTPUserPass.Result("${file}");
@@ -639,13 +643,13 @@ namespace HFM.Instances
          {
             if (StringOps.ValidatePathInstancePath(instancePath))
             {
-               instance = new ClientInstance(InstanceType.PathInstance);
+               instance = new ClientInstance(Prefs, InstanceType.PathInstance);
                instance.InstanceName = instanceName;
                instance.Path = instancePath;
             }
             else if (StringOps.ValidatePathInstancePath(instancePath += Path.DirectorySeparatorChar))
             {
-               instance = new ClientInstance(InstanceType.PathInstance);
+               instance = new ClientInstance(Prefs, InstanceType.PathInstance);
                instance.InstanceName = instanceName;
                instance.Path = instancePath;
             }
@@ -822,7 +826,7 @@ namespace HFM.Instances
       /// <param name="e"></param>
       private void webGenTimer_Tick(object sender, EventArgs e)
       {
-         if (PreferenceSet.Instance.GenerateWeb == false) return;
+         if (_Prefs.GetPreference<bool>(Preference.GenerateWeb) == false) return;
 
          DateTime Start = HfmTrace.ExecStart;
 
@@ -834,8 +838,7 @@ namespace HFM.Instances
 
          HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Starting WebGen.", HfmTrace.FunctionName));
 
-         PreferenceSet Prefs = PreferenceSet.Instance;
-         Match match = StringOps.MatchFtpWithUserPassUrl(Prefs.WebRoot);
+         Match match = StringOps.MatchFtpWithUserPassUrl(_Prefs.GetPreference<string>(Preference.WebRoot));
          
          try
          {
@@ -873,26 +876,28 @@ namespace HFM.Instances
             else
             {
                // Create the web folder (just in case)
-               if (Directory.Exists(Prefs.WebRoot) == false)
+               string WebRoot = _Prefs.GetPreference<string>(Preference.WebRoot);
+               string CssFile = _Prefs.GetPreference<string>(Preference.CssFile);
+               if (Directory.Exists(WebRoot) == false)
                {
-                  Directory.CreateDirectory(Prefs.WebRoot);
+                  Directory.CreateDirectory(WebRoot);
                }
 
                // Copy the CSS file to the output directory
-               string sCSSFileName = Path.Combine(Path.Combine(PreferenceSet.AppPath, "CSS"), Prefs.CSSFileName);
+               string sCSSFileName = Path.Combine(Path.Combine(_Prefs.ApplicationPath, "CSS"), CssFile);
                if (File.Exists(sCSSFileName))
                {
-                  File.Copy(sCSSFileName, Path.Combine(Prefs.WebRoot, Prefs.CSSFileName), true);
+                  File.Copy(sCSSFileName, Path.Combine(WebRoot, CssFile), true);
                }
 
-               XMLGen.DoHtmlGeneration(Prefs.WebRoot, CurrentInstances);
+               XMLGen.DoHtmlGeneration(WebRoot, CurrentInstances);
                
                foreach (ClientInstance Instance in CurrentInstances)
                {
-                  string CachedFAHlogPath = Path.Combine(PreferenceSet.CacheDirectory, Instance.CachedFAHLogName);
+                  string CachedFAHlogPath = Path.Combine(_Prefs.CacheDirectory, Instance.CachedFAHLogName);
                   if (File.Exists(CachedFAHlogPath))
                   {
-                     File.Copy(CachedFAHlogPath, Path.Combine(Prefs.WebRoot, Instance.CachedFAHLogName), true);
+                     File.Copy(CachedFAHlogPath, Path.Combine(WebRoot, Instance.CachedFAHLogName), true);
                   }
                }
             }
@@ -955,22 +960,21 @@ namespace HFM.Instances
             // wait for completion
             async.AsyncWaitHandle.WaitOne();
 
-            PreferenceSet Prefs = PreferenceSet.Instance;
-
             // run post retrieval processes
-            if (Prefs.GenerateWeb && Prefs.WebGenAfterRefresh)
+            if (_Prefs.GetPreference<bool>(Preference.GenerateWeb) && 
+                _Prefs.GetPreference<bool>(Preference.WebGenAfterRefresh))
             {
                // do a web gen
                webGenTimer_Tick(null, null);
             }
 
-            if (Prefs.ShowUserStats)
+            if (_Prefs.GetPreference<bool>(Preference.ShowUserStats))
             {
                OnRefreshUserStatsData(EventArgs.Empty);
             }
 
             // Enable the data retrieval timer
-            if (Prefs.SyncOnSchedule)
+            if (_Prefs.GetPreference<bool>(Preference.SyncOnSchedule))
             {
                StartBackgroundTimer();
             }
@@ -989,7 +993,7 @@ namespace HFM.Instances
       {
          // get flag synchronous or asynchronous - we don't want this flag to change on us
          // in the middle of a retrieve, so grab it now and use the local copy
-         bool Synchronous = PreferenceSet.Instance.SyncOnLoad;
+         bool Synchronous = _Prefs.GetPreference<bool>(Preference.SyncOnLoad);
 
          // copy the current instance keys into local array
          int numInstances = _instanceCollection.Count;
@@ -1121,7 +1125,7 @@ namespace HFM.Instances
          }
 
          // Enable the data retrieval timer
-         if (PreferenceSet.Instance.SyncOnSchedule)
+         if (_Prefs.GetPreference<bool>(Preference.SyncOnSchedule))
          {
             if (RetrievalInProgress == false)
             {
@@ -1138,7 +1142,8 @@ namespace HFM.Instances
          }
 
          // Enable the web generation timer
-         if (PreferenceSet.Instance.GenerateWeb && PreferenceSet.Instance.WebGenAfterRefresh == false)
+         if (_Prefs.GetPreference<bool>(Preference.GenerateWeb) &&
+             _Prefs.GetPreference<bool>(Preference.WebGenAfterRefresh) == false)
          {
             StartWebGenTimer();
          }
@@ -1157,9 +1162,10 @@ namespace HFM.Instances
       /// </summary>
       private void StartBackgroundTimer()
       {
-         workTimer.Interval = Convert.ToInt32(PreferenceSet.Instance.SyncTimeMinutes) * MinToMillisec;
-         HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Starting Background Timer Loop: {0} Minutes",
-                                                                    PreferenceSet.Instance.SyncTimeMinutes));
+         int SyncTimeMinutes = _Prefs.GetPreference<int>(Preference.SyncTimeMinutes);
+         
+         workTimer.Interval = SyncTimeMinutes * MinToMillisec;
+         HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Starting Background Timer Loop: {0} Minutes", SyncTimeMinutes));
          workTimer.Start();
       }
 
@@ -1168,11 +1174,13 @@ namespace HFM.Instances
       /// </summary>
       private void StartWebGenTimer()
       {
-         if (PreferenceSet.Instance.GenerateWeb && PreferenceSet.Instance.WebGenAfterRefresh == false)
+         if (_Prefs.GetPreference<bool>(Preference.GenerateWeb) &&
+             _Prefs.GetPreference<bool>(Preference.WebGenAfterRefresh) == false)
          {
-            webTimer.Interval = Convert.ToInt32(PreferenceSet.Instance.GenerateInterval) * MinToMillisec;
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Starting WebGen Timer Loop: {0} Minutes",
-                                                                       PreferenceSet.Instance.GenerateInterval));
+            int GenerateInterval = _Prefs.GetPreference<int>(Preference.GenerateInterval);
+         
+            webTimer.Interval = GenerateInterval * MinToMillisec;
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Starting WebGen Timer Loop: {0} Minutes", GenerateInterval));
             webTimer.Start();
          }
       }
@@ -1233,14 +1241,15 @@ namespace HFM.Instances
             foreach (ClientInstance instance in _instanceCollection.Values)
             {
                DisplayInstance findInstance = FindDisplayInstance(_displayCollection, instance.InstanceName);
+               int DecimalPlaces = _Prefs.GetPreference<int>(Preference.DecimalPlaces);
                if (findInstance != null)
                {
-                  findInstance.Load(instance);
+                  findInstance.Load(instance, DecimalPlaces);
                }
                else
                {
                   DisplayInstance newInstance = new DisplayInstance();
-                  newInstance.Load(instance);
+                  newInstance.Load(instance, DecimalPlaces);
                   _displayCollection.Add(newInstance);
                }
             }
@@ -1378,8 +1387,9 @@ namespace HFM.Instances
       {
          DateTime Start = HfmTrace.ExecStart;
 
-         string cacheFolder = Path.Combine(PreferenceSet.Instance.AppDataPath,
-                                           PreferenceSet.Instance.CacheFolder);
+         IPreferenceSet Prefs = InstanceProvider.GetInstance<IPreferenceSet>();
+         string cacheFolder = Path.Combine(Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath),
+                                           Prefs.GetPreference<string>(Preference.CacheFolder));
 
          DirectoryInfo di = new DirectoryInfo(cacheFolder);
          if (di.Exists == false)
@@ -1409,7 +1419,7 @@ namespace HFM.Instances
       /// </summary>
       private void PreferenceSet_OfflineLastChanged(object sender, EventArgs e)
       {
-         OfflineClientsLast = PreferenceSet.Instance.OfflineLast;
+         OfflineClientsLast = _Prefs.GetPreference<bool>(Preference.OfflineLast);
       }
 
       /// <summary>

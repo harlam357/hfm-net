@@ -20,17 +20,20 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-using HFM.Preferences;
+using HFM.Framework;
 
 namespace HFM.Forms
 {
    public partial class frmMessages : Classes.FormWrapper
    {
+      private readonly IPreferenceSet _Prefs;
       private volatile List<string> _lines = new List<string>(500);
 
       #region Constructor
-      public frmMessages()
+      public frmMessages(IPreferenceSet Prefs)
       {
+         _Prefs = Prefs;
+      
          InitializeComponent();
       } 
       #endregion
@@ -83,9 +86,9 @@ namespace HFM.Forms
          // Save state data
          if (WindowState == FormWindowState.Normal)
          {
-            PreferenceSet.Instance.MessagesFormLocation = Location;
-            PreferenceSet.Instance.MessagesFormSize = Size;
-            PreferenceSet.Instance.Save();
+            _Prefs.SetPreference(Preference.MessagesFormLocation, Location);
+            _Prefs.SetPreference(Preference.MessagesFormSize, Size);
+            _Prefs.Save();
          }
       
          Hide();
