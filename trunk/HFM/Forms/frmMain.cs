@@ -95,9 +95,14 @@ namespace HFM.Forms
       private NotifyIcon notifyIcon = null;
       
       /// <summary>
-      /// 
+      /// Preferences Interface
       /// </summary>
       private readonly IPreferenceSet _Prefs;
+      
+      /// <summary>
+      /// Benchmark Container Interface
+      /// </summary>
+      private readonly IProteinBenchmarkContainer _Benchmark;
       
       private const string HfmLogFileName = "HFM.log";
       private const string HfmPrevLogFileName = "HFM-prev.log";
@@ -118,6 +123,9 @@ namespace HFM.Forms
          IProteinCollection proteinCollection = InstanceProvider.GetInstance<IProteinCollection>();
          proteinCollection.Load();
          queueControl.SetProteinCollection(proteinCollection);
+         
+         _Benchmark = InstanceProvider.GetInstance<IProteinBenchmarkContainer>();
+         _Benchmark.Read(); 
 
          string ApplicationDataFolderPath = _Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath);
          if (Directory.Exists(ApplicationDataFolderPath) == false)
@@ -323,7 +331,7 @@ namespace HFM.Forms
          // Save the data on current WUs in progress
          ClientInstances.SaveCurrentUnitInfo();
          // Save the benchmark collection
-         ProteinBenchmarkCollection.Serialize();
+         _Benchmark.Write();
 
          HfmTrace.WriteToHfmConsole("----------");
          HfmTrace.WriteToHfmConsole("Exiting...");
@@ -1382,7 +1390,7 @@ namespace HFM.Forms
             ProjectID = ClientInstances.SelectedInstance.CurrentUnitInfo.ProjectID;
          }
 
-         frmBenchmarks frm = new frmBenchmarks(_Prefs, ClientInstances, ProjectID);
+         frmBenchmarks frm = new frmBenchmarks(_Prefs, _Benchmark, ClientInstances, ProjectID);
          frm.StartPosition = FormStartPosition.Manual;
 
          // Restore state data

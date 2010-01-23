@@ -50,13 +50,16 @@
       <HintPath>C:\Program Files\Rhino Mocks\Rhino.Mocks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyVersion.cs">
       <Link>AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="BenchmarkClientTests.cs" />
     <Compile Include="ClientInstanceTests.cs" />
-    <Compile Include="ProteinBenchmarkCollectionTests.cs" />
+    <Compile Include="ProteinBenchmarkContainerTests.cs" />
     <Compile Include="StatusTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

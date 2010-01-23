@@ -22,7 +22,7 @@ namespace HFM.Framework
    public interface IOwnedByClientInstance
    {
       /// <summary>
-      /// Name of the Client Instance that owns this UnitInfo
+      /// Name of the Client Instance that owns this Object
       /// </summary>
       string OwningInstanceName
       {
@@ -30,7 +30,7 @@ namespace HFM.Framework
       }
 
       /// <summary>
-      /// Path of the Client Instance that owns this UnitInfo
+      /// Path of the Client Instance that owns this Object
       /// </summary>
       string OwningInstancePath
       {

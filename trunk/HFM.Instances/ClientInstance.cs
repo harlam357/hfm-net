@@ -1393,8 +1393,8 @@ namespace HFM.Instances
                }
 
                // Update benchmarks
-               InstanceProvider.GetInstance<IProteinBenchmarkCollection>().UpdateBenchmarkData(parsedUnits[index], previousFrameID,
-                                                                                               parsedUnits[index].LastUnitFrameID);
+               InstanceProvider.GetInstance<IProteinBenchmarkContainer>().UpdateBenchmarkData(parsedUnits[index], previousFrameID,
+                                                                                              parsedUnits[index].LastUnitFrameID);
             }
 
             if (index == BenchmarkUpdateIndex)
@@ -1483,7 +1483,7 @@ namespace HFM.Instances
          statusData.CurrentStatus = Status;
          statusData.ReturnedStatus = returnedStatus;
          statusData.FrameTime = CurrentUnitInfo.RawTimePerSection;
-         statusData.AverageFrameTime = ProteinBenchmarkCollection.Instance.GetBenchmarkAverageFrameTime(CurrentUnitInfo);
+         statusData.AverageFrameTime = InstanceProvider.GetInstance<IProteinBenchmarkContainer>().GetBenchmarkAverageFrameTime(CurrentUnitInfo);
          statusData.TimeOfLastFrame = CurrentUnitInfo.TimeOfLastFrame;
          statusData.UnitStartTimeStamp = CurrentUnitInfo.UnitStartTimeStamp;
          statusData.AllowRunningAsync = _Prefs.GetPreference<bool>(Preference.AllowRunningAsync);

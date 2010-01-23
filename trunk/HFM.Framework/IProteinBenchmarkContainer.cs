@@ -18,10 +18,11 @@
  */
 
 using System;
+using System.Collections.Generic;
 
 namespace HFM.Framework
 {
-   public interface IProteinBenchmarkCollection
+   public interface IProteinBenchmarkContainer
    {
       /// <summary>
       /// Update Benchmark Data from given UnitInfo and frame indexes
@@ -77,6 +78,19 @@ namespace HFM.Framework
       /// Get List of Benchmark Project Numbers
       /// </summary>
       int[] GetBenchmarkProjects(IBenchmarkClient Client);
+      
+      /// <summary>
+      /// Get List of Benchmarks for the given BenchmarkClient
+      /// </summary>
+      /// <param name="Client">BenchmarkClient containing Client Name and Path data</param>
+      List<IInstanceProteinBenchmark> GetBenchmarks(IBenchmarkClient Client);
+      
+      /// <summary>
+      /// Get List of Benchmarks for the given BenchmarkClient
+      /// </summary>
+      /// <param name="Client">BenchmarkClient containing Client Name and Path data</param>
+      /// <param name="ProjectID">Project Number</param>
+      List<IInstanceProteinBenchmark> GetBenchmarks(IBenchmarkClient Client, int ProjectID);
 
       /// <summary>
       /// Update the given BenchmarkClient benchmarks with the new Owning Instance Name
@@ -91,5 +105,35 @@ namespace HFM.Framework
       /// <param name="Client">BenchmarkClient containing Client Name and Path data</param>
       /// <param name="NewPath">New Benchmark Owner Path</param>
       void UpdateInstancePath(IBenchmarkClient Client, string NewPath);
+      
+      /// <summary>
+      /// Read Binary File
+      /// </summary>
+      void Read();
+      
+      /// <summary>
+      /// Read Binary File
+      /// </summary>
+      void Read(bool Merge);
+      
+      /// <summary>
+      /// Write Binary File
+      /// </summary>
+      void Write();
+
+      /// <summary>
+      /// Read Xml File
+      /// </summary>
+      void ReadXml(string FilePath);
+      
+      /// <summary>
+      /// Read Xml File
+      /// </summary>
+      void ReadXml(string FilePath, bool Merge);
+      
+      /// <summary>
+      /// Write Xml File
+      /// </summary>
+      void WriteXml(string FilePath);
    }
 }

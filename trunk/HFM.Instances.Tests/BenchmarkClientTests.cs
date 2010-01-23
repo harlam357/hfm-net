@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - Benchmark Collection Class Tests
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * HFM.NET - Benchmark Client Class Tests
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,20 +25,20 @@ using NUnit.Framework;
 namespace HFM.Instances.Tests
 {
    [TestFixture]
-   public class ProteinBenchmarkCollectionTests
+   public class BenchmarkClientTests
    {
       [Test]
-      public void BenchmarkClientTests()
+      public void BenchmarkClientComparisonTests()
       {
          BenchmarkClient bcAll = new BenchmarkClient();
          BenchmarkClient bcAllClone = new BenchmarkClient();
-         
+
          Assert.AreEqual(bcAll, bcAll.Client);
          Assert.AreEqual("All Clients", bcAll.NameAndPath);
-         
+
          BenchmarkClient bc1 = new BenchmarkClient("C1", @"\\server\share");
          BenchmarkClient bc1Clone = new BenchmarkClient("C1", @"\\server\share");
-         
+
          BenchmarkClient bc2 = new BenchmarkClient("C2", @"\\server\share");
          Assert.AreEqual(String.Format(CultureInfo.InvariantCulture, "{0} ({1})", bc2.Name, bc2.Path), bc2.NameAndPath);
 
@@ -47,13 +47,13 @@ namespace HFM.Instances.Tests
          Assert.IsFalse(bcAll.Equals(bc1));
          Assert.IsFalse(bcAll.Equals(bc1Clone));
          Assert.IsFalse(bcAll.Equals(bc2));
-         
+
          Assert.IsTrue(bc1.Equals(bc1Clone));
          Assert.IsFalse(bc1.Equals(bc2));
 
          Assert.IsFalse(bc1 < bc1Clone);
          Assert.IsFalse(bc1 > bc1Clone);
-         
+
          Assert.IsFalse(bc1 > bc2);
          Assert.IsTrue(bc1 < bc2);
          Assert.AreEqual(-1, bc1.CompareTo(bc2));
@@ -69,7 +69,7 @@ namespace HFM.Instances.Tests
          Assert.IsFalse(bc1 < bcAll);
          Assert.IsTrue(bc1 > bcAll);
          Assert.AreEqual(1, bc1.CompareTo(bcAll));
-         
+
          Assert.AreEqual(bc1.GetHashCode(), bc1Clone.GetHashCode());
       }
    }

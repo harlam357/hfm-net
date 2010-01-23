@@ -19,7 +19,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Xml.Serialization;
+
+using ProtoBuf;
 
 using HFM.Framework;
 using HFM.Instrumentation;
@@ -27,33 +31,36 @@ using HFM.Instrumentation;
 namespace HFM.Instances
 {
    [Serializable]
-   public class InstanceProteinBenchmark : IInstanceProteinBenchmark
+   [ProtoContract]
+   public sealed class InstanceProteinBenchmark : IInstanceProteinBenchmark
    {
-      #region Members & Read Only Properties
-
       private const Int32 DefaultMaxFrames = 300;
+   
+      #region Members
+
+      /// <summary>
+      /// Old .NET Based Frame Time Queue
+      /// </summary>
+      /// <remarks>Leave until ready to remove support for old Benchmarks Format</remarks>
+      private readonly Queue<TimeSpan> _FrameTimes = null;
       
       #region Owner Data Properties
-      /// <summary>
-      /// Name of the Client Instance that owns this UnitInfo
-      /// </summary>
       private string _OwningInstanceName;
       /// <summary>
-      /// Name of the Client Instance that owns this UnitInfo
+      /// Name of the Client Instance that owns this Benchmark
       /// </summary>
+      [ProtoMember(1)]
       public string OwningInstanceName
       {
          get { return _OwningInstanceName; }
          set { _OwningInstanceName = value; }
       }
 
-      /// <summary>
-      /// Path of the Client Instance that owns this UnitInfo
-      /// </summary>
       private string _OwningInstancePath;
       /// <summary>
-      /// Path of the Client Instance that owns this UnitInfo
+      /// Path of the Client Instance that owns this Benchmark
       /// </summary>
+      [ProtoMember(2)]
       public string OwningInstancePath
       {
          get { return _OwningInstancePath; }
@@ -61,13 +68,23 @@ namespace HFM.Instances
       }
       #endregion
 
-      private readonly Int32 _ProjectID;
+      private Int32 _ProjectID;
+      /// <summary>
+      /// Project ID
+      /// </summary>
+      [ProtoMember(3)]
       public Int32 ProjectID
       {
          get { return _ProjectID; }
+         set { _ProjectID = value; }
       }
 
       private TimeSpan _MinimumFrameTime;
+      /// <summary>
+      /// Minimum Frame Time
+      /// </summary>
+      [ProtoMember(4)]
+      [XmlIgnore]
       public TimeSpan MinimumFrameTime
       {
          get
@@ -78,8 +95,49 @@ namespace HFM.Instances
             }
             return _MinimumFrameTime;
          }
+         set { _MinimumFrameTime = value; }
+      }
+
+      [XmlElement("MinimumFrameTime")]
+      [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
+      /// <summary>
+      /// Minimum Frame Time (Ticks)
+      /// </summary>
+      public long MinimumFrameTimeTicks
+      {
+         get { return _MinimumFrameTime.Ticks; }
+         set { _MinimumFrameTime = new TimeSpan(value); }
       }
       
+      [NonSerialized]
+      private List<FrameTime> _FrameTimesList = new List<FrameTime>();
+      /// <summary>
+      /// Frame Times List
+      /// </summary>
+      [ProtoMember(5)]
+      public List<FrameTime> FrameTimes
+      {
+         get { return _FrameTimesList; }
+         set { _FrameTimesList = value; }
+      }
+
+      /// <summary>
+      /// Backward Compatibility - Convert .NET Serialized Queue to protobuf-net Serialized List
+      /// </summary>
+      public void ConvertQueueToList()
+      {
+         _FrameTimesList = new List<FrameTime>(_FrameTimes.Count);
+         foreach (TimeSpan span in _FrameTimes)
+         {
+            _FrameTimesList.Add(new FrameTime(span));
+         }
+      }
+      #endregion
+
+      #region Properties
+      /// <summary>
+      /// PPD based on Minimum Frame Time
+      /// </summary>
       public double MinimumFrameTimePPD
       {
          get 
@@ -100,25 +158,31 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// Average Frame Time
+      /// </summary>
       public TimeSpan AverageFrameTime
       {
          get
          {
-            if (_FrameTimes.Count > 0)
+            if (FrameTimes.Count > 0)
             {
                TimeSpan totalTime = TimeSpan.Zero;
-               foreach (TimeSpan time in _FrameTimes)
+               foreach (FrameTime time in FrameTimes)
                {
-                  totalTime = totalTime.Add(time);
+                  totalTime = totalTime.Add(time.Duration);
                }
 
-               return TimeSpan.FromSeconds((Convert.ToInt32(totalTime.TotalSeconds) / _FrameTimes.Count));
+               return TimeSpan.FromSeconds((Convert.ToInt32(totalTime.TotalSeconds) / FrameTimes.Count));
             }
 
             return TimeSpan.Zero;
          }
       }
 
+      /// <summary>
+      /// PPD based on Average Frame Time
+      /// </summary>
       public double AverageFrameTimePPD
       {
          get
@@ -138,26 +202,27 @@ namespace HFM.Instances
             return 0;
          }
       }
-
-      private readonly Queue<TimeSpan> _FrameTimes;
-      public Queue<TimeSpan> FrameTimes
-      {
-         get { return _FrameTimes; }
-      } 
-      
       #endregion
 
       #region Constructor
+      public InstanceProteinBenchmark()
+      {
+      
+      }
+
       public InstanceProteinBenchmark(string ownerName, string ownerPath, Int32 proteinID)
       {
          _OwningInstanceName = ownerName;
          _OwningInstancePath = ownerPath;
          _ProjectID = proteinID;
          _MinimumFrameTime = TimeSpan.Zero;
-         _FrameTimes = new Queue<TimeSpan>(DefaultMaxFrames);
+         _FrameTimesList = new List<FrameTime>(DefaultMaxFrames);
       } 
       #endregion
-      
+
+      /// <summary>
+      /// Benchmark Client Descriptor
+      /// </summary>
       public IBenchmarkClient Client
       {
          get 
@@ -165,7 +230,10 @@ namespace HFM.Instances
             return new BenchmarkClient(OwningInstanceName, OwningInstancePath);
          }
       }
-      
+
+      /// <summary>
+      /// Benchmark Protein
+      /// </summary>
       public IProtein Protein
       {
          get
@@ -178,6 +246,10 @@ namespace HFM.Instances
       }
 
       #region Implementation
+      /// <summary>
+      /// Set Next Frame Time
+      /// </summary>
+      /// <param name="frameTime">Frame Time</param>
       public bool SetFrameTime(TimeSpan frameTime)
       {
          if (frameTime > TimeSpan.Zero)
@@ -188,11 +260,13 @@ namespace HFM.Instances
             }
 
             // Dequeue once we have the Maximum number of frame times
-            if (_FrameTimes.Count == DefaultMaxFrames)
+            if (FrameTimes.Count == DefaultMaxFrames)
             {
-               _FrameTimes.Dequeue();
+               _FrameTimesList.RemoveAt(DefaultMaxFrames - 1);
+               //_FrameTimes.Dequeue();
             }
-            _FrameTimes.Enqueue(frameTime);
+            _FrameTimesList.Insert(0, new FrameTime(frameTime));
+            //_FrameTimes.Enqueue(frameTime);
             
             return true;
          }
@@ -200,14 +274,17 @@ namespace HFM.Instances
          return false;
       }
 
+      /// <summary>
+      /// Refresh the Minimum Frame Time for this Benchmark based on current List of Frame Times
+      /// </summary>
       public void RefreshBenchmarkMinimumFrameTime()
       {
          TimeSpan minimumFrameTime = TimeSpan.Zero;
-         foreach (TimeSpan frameTime in FrameTimes)
+         foreach (FrameTime frameTime in FrameTimes)
          {
-            if (frameTime < minimumFrameTime || minimumFrameTime.Equals(TimeSpan.Zero) )
+            if (frameTime.Duration < minimumFrameTime || minimumFrameTime.Equals(TimeSpan.Zero) )
             {
-               minimumFrameTime = frameTime;
+               minimumFrameTime = frameTime.Duration;
             }
          }
 
@@ -217,6 +294,12 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// Return Multi-Line String (Array)
+      /// </summary>
+      /// <param name="UnitInfo">Client Instance UnitInfo (null for unavailable)</param>
+      /// <param name="PpdFormatString">PPD Format String</param>
+      /// <param name="ProductionValuesOk">Client Instance Production Values Flag</param>
       public string[] ToMultiLineString(IUnitInfo UnitInfo, string PpdFormatString, bool ProductionValuesOk)
       {
          List<string> output = new List<string>(12);
@@ -258,5 +341,35 @@ namespace HFM.Instances
          return output.ToArray();
       } 
       #endregion
+   }
+   
+   [ProtoContract]
+   public sealed class FrameTime
+   {
+      public FrameTime()
+      {
+         
+      }
+
+      public FrameTime(TimeSpan duration)
+      {
+         _Duration = duration;
+      }
+
+      private TimeSpan _Duration;
+      [XmlIgnore]
+      public TimeSpan Duration
+      {
+         get { return _Duration; }
+      }
+      
+      [ProtoMember(1)]
+      [XmlAttribute("Duration")]
+      [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
+      public long DurationTicks
+      {
+         get { return _Duration.Ticks; }
+         set { _Duration = new TimeSpan(value); }
+      }
    }
 }

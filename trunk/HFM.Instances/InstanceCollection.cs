@@ -593,6 +593,7 @@ namespace HFM.Instances
       /// Inspects tokens gathered from FahMon ClientsTab.txt line and attempts to
       /// create an HFM ClientInstance object based on those tokens
       /// </summary>
+      /// <param name="Prefs">Preferences Interface</param>
       /// <param name="tokens">Tokenized String (String Array)</param>
       private static ClientInstance GetNewInstance(IPreferenceSet Prefs, string[] tokens)
       {
@@ -717,19 +718,21 @@ namespace HFM.Instances
       /// <param name="Instance">Client Instance</param>
       public void Edit(string PreviousName, string PreviousPath, ClientInstance Instance)
       {
+         IProteinBenchmarkContainer benchmarks = InstanceProvider.GetInstance<IProteinBenchmarkContainer>();
+      
          // if the host key changed
          if (PreviousName != Instance.InstanceName)
          {
             UpdateDisplayInstanceName(PreviousName, Instance.InstanceName);
             Remove(PreviousName, false);
             Add(Instance, false);
-            
-            ProteinBenchmarkCollection.Instance.UpdateInstanceName(new BenchmarkClient(PreviousName, Instance.Path), Instance.InstanceName);
+
+            benchmarks.UpdateInstanceName(new BenchmarkClient(PreviousName, Instance.Path), Instance.InstanceName);
          }
          // if the path changed, update the paths in the benchmark collection
          if (PreviousPath != Instance.Path)
          {
-            ProteinBenchmarkCollection.Instance.UpdateInstancePath(new BenchmarkClient(Instance.InstanceName, PreviousPath), Instance.Path);
+            benchmarks.UpdateInstancePath(new BenchmarkClient(Instance.InstanceName, PreviousPath), Instance.Path);
          }
          
          RetrieveSingleClient(Instance);
@@ -1041,7 +1044,7 @@ namespace HFM.Instances
          FindDuplicates();
 
          // Save the benchmark collection
-         ProteinBenchmarkCollection.Serialize();
+         InstanceProvider.GetInstance<IProteinBenchmarkContainer>().Write();
       }
 
       /// <summary>
@@ -1106,7 +1109,7 @@ namespace HFM.Instances
             FindDuplicates();
 
             // Save the benchmark collection
-            ProteinBenchmarkCollection.Serialize();
+            InstanceProvider.GetInstance<IProteinBenchmarkContainer>().Write();
          }
       }
 

@@ -52,8 +52,6 @@ namespace HFM
 
          WindsorContainer container = new WindsorContainer(new XmlInterpreter(new ConfigResource("castle")));
          InstanceProvider.SetContainer(container);
-         //TODO: Temporary Injection
-         container.Kernel.AddComponentInstance<IProteinBenchmarkCollection>(typeof(IProteinBenchmarkCollection), ProteinBenchmarkCollection.Instance);
 
          cmdArgs = argv;
          Application.EnableVisualStyles();

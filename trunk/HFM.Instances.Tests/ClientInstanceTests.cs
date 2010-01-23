@@ -44,9 +44,9 @@ namespace HFM.Instances.Tests
 
          container = new WindsorContainer();
          mocks = new MockRepository();
-         
-         IProteinBenchmarkCollection benchmarkCollection = mocks.DynamicMock<IProteinBenchmarkCollection>();
-         container.Kernel.AddComponentInstance<IProteinBenchmarkCollection>(typeof(IProteinBenchmarkCollection), benchmarkCollection);
+
+         IProteinBenchmarkContainer benchmarkCollection = mocks.DynamicMock<IProteinBenchmarkContainer>();
+         container.Kernel.AddComponentInstance<IProteinBenchmarkContainer>(typeof(IProteinBenchmarkContainer), benchmarkCollection);
       
          container.AddComponent("LogReader", typeof(ILogReader), typeof(LogReader));
          container.AddComponent("QueueReader", typeof(IQueueReader), typeof(QueueReader));

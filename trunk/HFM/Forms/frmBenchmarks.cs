@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Benchmarks Form Class
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -37,6 +37,7 @@ namespace HFM.Forms
    {
       #region Members
       private readonly IPreferenceSet _Prefs;
+      private readonly IProteinBenchmarkContainer _Benchmark;
       private readonly List<Color> _GraphColors;
       private readonly InstanceCollection _clientInstances;
       private readonly int _initialProjectID; 
@@ -45,9 +46,10 @@ namespace HFM.Forms
       #endregion
 
       #region Form Constructor / functionality
-      public frmBenchmarks(IPreferenceSet Prefs, InstanceCollection clientInstances, int projectID)
+      public frmBenchmarks(IPreferenceSet Prefs, IProteinBenchmarkContainer Benchmark, InstanceCollection clientInstances, int projectID)
       {
          _Prefs = Prefs;
+         _Benchmark = Benchmark;
          _GraphColors = _Prefs.GetPreference<List<Color>>(Preference.GraphColors);
          _clientInstances = clientInstances;
          _initialProjectID = projectID;
@@ -96,8 +98,8 @@ namespace HFM.Forms
 
          UpdateBenchmarkText(lines);
 
-         List<InstanceProteinBenchmark> list = ProteinBenchmarkCollection.Instance.GetBenchmarks(_currentBenchmarkClient, ProjectID);
-         list.Sort(delegate(InstanceProteinBenchmark benchmark1, InstanceProteinBenchmark benchmark2)
+         List<IInstanceProteinBenchmark> list = _Benchmark.GetBenchmarks(_currentBenchmarkClient, ProjectID);
+         list.Sort(delegate(IInstanceProteinBenchmark benchmark1, IInstanceProteinBenchmark benchmark2)
          {
             return benchmark1.OwningInstanceName.CompareTo(benchmark2.OwningInstanceName);
          });
@@ -146,7 +148,7 @@ namespace HFM.Forms
                _currentBenchmarkClient.NameAndPath, listBox1.SelectedItem),
                   Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
          {
-            ProteinBenchmarkCollection.Instance.RefreshMinimumFrameTime(_currentBenchmarkClient, (int)listBox1.SelectedItem);
+            _Benchmark.RefreshMinimumFrameTime(_currentBenchmarkClient, (int)listBox1.SelectedItem);
             listBox1_SelectedIndexChanged(sender, e);
          }
       }
@@ -158,9 +160,9 @@ namespace HFM.Forms
                _currentBenchmarkClient.NameAndPath, listBox1.SelectedItem),
                   Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
          {
-            ProteinBenchmarkCollection.Instance.Delete(_currentBenchmarkClient, (int)listBox1.SelectedItem);
+            _Benchmark.Delete(_currentBenchmarkClient, (int)listBox1.SelectedItem);
             UpdateProjectListBoxBinding();
-            if (ProteinBenchmarkCollection.Instance.ContainsClient(_currentBenchmarkClient) == false)
+            if (_Benchmark.ContainsClient(_currentBenchmarkClient) == false)
             {
                UpdateClientsComboBinding();
             }
@@ -186,7 +188,7 @@ namespace HFM.Forms
                      Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
          {
             int currentIndex = cboClients.SelectedIndex;
-            ProteinBenchmarkCollection.Instance.Delete(_currentBenchmarkClient);
+            _Benchmark.Delete(_currentBenchmarkClient);
             UpdateClientsComboBinding(currentIndex);
          }
       }
@@ -346,7 +348,7 @@ namespace HFM.Forms
       private void UpdateClientsComboBinding(int index)
       {
          cboClients.DataBindings.Clear();
-         cboClients.DataSource = ProteinBenchmarkCollection.Instance.GetBenchmarkClients();
+         cboClients.DataSource = _Benchmark.GetBenchmarkClients();
          cboClients.DisplayMember = "NameAndPath";
          cboClients.ValueMember = "Client";
          
@@ -373,11 +375,11 @@ namespace HFM.Forms
          listBox1.DataBindings.Clear();
          if (_currentBenchmarkClient.AllClients)
          {
-            listBox1.DataSource = ProteinBenchmarkCollection.Instance.GetBenchmarkProjects();
+            listBox1.DataSource = _Benchmark.GetBenchmarkProjects();
          }
          else
          {
-            listBox1.DataSource = ProteinBenchmarkCollection.Instance.GetBenchmarkProjects(_currentBenchmarkClient);
+            listBox1.DataSource = _Benchmark.GetBenchmarkProjects(_currentBenchmarkClient);
          }
          
          int index = listBox1.Items.IndexOf(InitialProjectID);
@@ -401,7 +403,7 @@ namespace HFM.Forms
       /// <param name="benchmarks">Benchmarks Collection to Plot</param>
       /// <param name="GraphColors">Graph Colors List</param>
       /// <param name="DecimalPlaces">PPD Decimal Places</param>
-      private static void CreatePpdGraph(ZedGraphControl zg, string[] ProjectInfo, IEnumerable<InstanceProteinBenchmark> benchmarks, 
+      private static void CreatePpdGraph(ZedGraphControl zg, string[] ProjectInfo, IEnumerable<IInstanceProteinBenchmark> benchmarks, 
                                          IList<Color> GraphColors, int DecimalPlaces)
       {
          Debug.Assert(zg != null);
@@ -502,7 +504,7 @@ namespace HFM.Forms
       /// <param name="ProjectInfo">Project Info Array</param>
       /// <param name="benchmarks">Benchmarks Collection to Plot</param>
       /// <param name="GraphColors">Graph Colors List</param>
-      private static void CreateFrameTimeGraph(ZedGraphControl zg, string[] ProjectInfo, IEnumerable<InstanceProteinBenchmark> benchmarks,
+      private static void CreateFrameTimeGraph(ZedGraphControl zg, string[] ProjectInfo, IEnumerable<IInstanceProteinBenchmark> benchmarks,
                                                IList<Color> GraphColors)
       {
          Debug.Assert(zg != null);

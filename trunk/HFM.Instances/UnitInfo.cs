@@ -544,7 +544,7 @@ namespace HFM.Instances
                return TimeSpan.FromSeconds(RawTimePerSection);
             }
 
-            return ProteinBenchmarkCollection.Instance.GetBenchmarkAverageFrameTime(this);
+            return InstanceProvider.GetInstance<IProteinBenchmarkContainer>().GetBenchmarkAverageFrameTime(this);
          }
       }
 
