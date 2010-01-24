@@ -28,7 +28,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="protobuf-net, Version=1.0.0.278, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\protobuf-net\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
@@ -36,11 +41,12 @@
       <Link>AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="RegistryOps.cs" />
-    <Compile Include="UserStatsDataContainer.cs" />
     <Compile Include="NetworkOps.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringOps.cs" />
     <Compile Include="XMLOps.cs" />
+    <Compile Include="XmlStatsDataContainer.cs" />
+    <Compile Include="XmlUserStatsData.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HFM.Framework\HFM.Framework.csproj">

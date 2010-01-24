@@ -380,6 +380,7 @@ namespace HFM.Helpers
          string str2;
          string str3;
 
+         Request.Timeout = 5000; // 5 second timeout
          using (StreamReader reader = new StreamReader(HttpDownloadHelper(Request, Username, Password).GetResponseStream(), Encoding.ASCII))
          {
             str = reader.ReadToEnd();

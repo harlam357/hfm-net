@@ -103,7 +103,7 @@ namespace HFM.Helpers
       /// <param name="UserStatsData">User Stats Data Container</param>
       /// <param name="ForceRefresh">Force Refresh or Allow to check for next update time</param>
       /// <returns>True if refresh succeeds.  False otherwise.</returns>
-      public static bool GetEOCXmlData(UserStatsDataContainer UserStatsData, bool ForceRefresh)
+      public static bool GetEOCXmlData(IXmlStatsDataContainer UserStatsData, bool ForceRefresh)
       {
          // if Forced or Time For an Update
          if (ForceRefresh || UserStatsData.TimeForUpdate())
@@ -123,22 +123,22 @@ namespace HFM.Helpers
             #endregion
 
             // Get the Last Updated Time
-            DateTime LastUpdated = UserStatsData.LastUpdated;
+            DateTime LastUpdated = UserStatsData.Data.LastUpdated;
             // Update the data container
             UpdateUserStatsDataContainer(UserStatsData, userNode);
 
             // if Forced, set Last Updated and Serialize
             if (ForceRefresh)
             {
-               UserStatsData.LastUpdated = DateTime.UtcNow;
-               UserStatsDataContainer.Serialize();
+               UserStatsData.Data.LastUpdated = DateTime.UtcNow;
+               UserStatsData.Write();
             }
             // if container's LastUpdated is now greater, we updated... otherwise, if the update 
             // status is current we should assume the data is current but did not change - Issue 67
-            else if (UserStatsData.LastUpdated > LastUpdated || Update_Status == "Current")
+            else if (UserStatsData.Data.LastUpdated > LastUpdated || Update_Status == "Current")
             {
-               UserStatsData.LastUpdated = DateTime.UtcNow;
-               UserStatsDataContainer.Serialize();
+               UserStatsData.Data.LastUpdated = DateTime.UtcNow;
+               UserStatsData.Write();
             }
 
             HfmTrace.WriteToHfmConsole(TraceLevel.Info, Start);
@@ -147,7 +147,7 @@ namespace HFM.Helpers
          }
 
          HfmTrace.WriteToHfmConsole(TraceLevel.Info, 
-                                    String.Format("{0} Last EOC Stats Update: {1} (UTC)", HfmTrace.FunctionName, UserStatsData.LastUpdated));
+                                    String.Format("{0} Last EOC Stats Update: {1} (UTC)", HfmTrace.FunctionName, UserStatsData.Data.LastUpdated));
          
          return false;
       }
@@ -157,13 +157,13 @@ namespace HFM.Helpers
       /// </summary>
       /// <param name="UserStatsData">User Stats Data Container</param>
       /// <param name="userNode">User Stats XmlNode</param>
-      private static void UpdateUserStatsDataContainer(UserStatsDataContainer UserStatsData, XmlNode userNode)
+      private static void UpdateUserStatsDataContainer(IXmlStatsDataContainer UserStatsData, XmlNode userNode)
       {
-         UserStatsData.User24hrAvg = Convert.ToInt64(userNode.SelectSingleNode("Points_24hr_Avg").InnerText);
-         UserStatsData.UserPointsToday = Convert.ToInt64(userNode.SelectSingleNode("Points_Today").InnerText);
-         UserStatsData.UserPointsWeek = Convert.ToInt64(userNode.SelectSingleNode("Points_Week").InnerText);
-         UserStatsData.UserPointsTotal = Convert.ToInt64(userNode.SelectSingleNode("Points").InnerText);
-         UserStatsData.UserWUsTotal = Convert.ToInt64(userNode.SelectSingleNode("WUs").InnerText);
+         UserStatsData.Data.TwentyFourHourAvgerage = Convert.ToInt64(userNode.SelectSingleNode("Points_24hr_Avg").InnerText);
+         UserStatsData.Data.PointsToday = Convert.ToInt64(userNode.SelectSingleNode("Points_Today").InnerText);
+         UserStatsData.Data.PointsWeek = Convert.ToInt64(userNode.SelectSingleNode("Points_Week").InnerText);
+         UserStatsData.Data.PointsTotal = Convert.ToInt64(userNode.SelectSingleNode("Points").InnerText);
+         UserStatsData.Data.WorkUnitsTotal = Convert.ToInt64(userNode.SelectSingleNode("WUs").InnerText);
       }
    }
 }

@@ -46,6 +46,13 @@ namespace HFM.Instances.Tests
          ValidateTestCollection(collection2);
       }
 
+      [Test]
+      public void ProtoBufDeserializeFileNotFoundTest()
+      {
+         UnitInfoCollection testCollection = UnitInfoContainer.Deserialize("FileNotFound.dat");
+         Assert.IsNull(testCollection);
+      }
+
       private static UnitInfoCollection LoadTestCollection()
       {
          UnitInfoCollection testCollection = new UnitInfoCollection();

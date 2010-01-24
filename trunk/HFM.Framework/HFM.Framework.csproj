@@ -47,10 +47,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Castle Windsor 1.0.3\bin\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="protobuf-net, Version=1.0.0.278, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\protobuf-net\protobuf-net.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -81,6 +77,8 @@
     <Compile Include="IUnitInfo.cs" />
     <Compile Include="IUnitInfoContainer.cs" />
     <Compile Include="IUnitInfoLogic.cs" />
+    <Compile Include="IXmlStatsData.cs" />
+    <Compile Include="IXmlStatsDataContainer.cs" />
     <Compile Include="Metadata.cs" />
     <Compile Include="PlatformOps.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

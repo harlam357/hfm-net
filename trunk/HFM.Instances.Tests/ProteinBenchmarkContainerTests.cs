@@ -45,6 +45,13 @@ namespace HFM.Instances.Tests
       }
 
       [Test]
+      public void ProtoBufDeserializeFileNotFoundTest()
+      {
+         ProteinBenchmarkCollection testCollection = ProteinBenchmarkContainer.Deserialize("FileNotFound.dat");
+         Assert.IsNull(testCollection);
+      }
+
+      [Test]
       public void XmlSerializationTest()
       {
          ProteinBenchmarkContainer.SerializeToXml(collection, "XmlTest.xml");

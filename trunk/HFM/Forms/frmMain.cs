@@ -104,6 +104,11 @@ namespace HFM.Forms
       /// </summary>
       private readonly IProteinBenchmarkContainer _benchmarkContainer;
       
+      /// <summary>
+      /// XML Stats Data Interface
+      /// </summary>
+      private readonly IXmlStatsDataContainer _statsData;
+      
       private const string HfmLogFileName = "HFM.log";
       private const string HfmPrevLogFileName = "HFM-prev.log";
       #endregion
@@ -125,7 +130,10 @@ namespace HFM.Forms
          queueControl.SetProteinCollection(proteinCollection);
 
          _benchmarkContainer = InstanceProvider.GetInstance<IProteinBenchmarkContainer>();
-         _benchmarkContainer.Read(); 
+         _benchmarkContainer.Read();
+         
+         _statsData = InstanceProvider.GetInstance<IXmlStatsDataContainer>();
+         _statsData.Read();
 
          string ApplicationDataFolderPath = _Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath);
          if (Directory.Exists(ApplicationDataFolderPath) == false)
@@ -2008,14 +2016,12 @@ namespace HFM.Forms
       {
          try
          {
-            UserStatsDataContainer UserStatsData = UserStatsDataContainer.Instance;
-         
-            XMLOps.GetEOCXmlData(UserStatsData, ForceRefresh);
-            statusLabel24hr.Text = String.Format("24hr: {0:###,###,##0}", UserStatsData.User24hrAvg);
-            statusLabelToday.Text = String.Format("Today: {0:###,###,##0}", UserStatsData.UserPointsToday);
-            statusLabelWeek.Text = String.Format("Week: {0:###,###,##0}", UserStatsData.UserPointsWeek);
-            statusLabelTotal.Text = String.Format("Total: {0:###,###,##0}", UserStatsData.UserPointsTotal);
-            statusLabelWUs.Text = String.Format("WUs: {0:###,###,##0}", UserStatsData.UserWUsTotal);
+            XMLOps.GetEOCXmlData(_statsData, ForceRefresh);
+            statusLabel24hr.Text = String.Format("24hr: {0:###,###,##0}", _statsData.Data.TwentyFourHourAvgerage);
+            statusLabelToday.Text = String.Format("Today: {0:###,###,##0}", _statsData.Data.PointsToday);
+            statusLabelWeek.Text = String.Format("Week: {0:###,###,##0}", _statsData.Data.PointsWeek);
+            statusLabelTotal.Text = String.Format("Total: {0:###,###,##0}", _statsData.Data.PointsTotal);
+            statusLabelWUs.Text = String.Format("WUs: {0:###,###,##0}", _statsData.Data.WorkUnitsTotal);
          }
          catch (Exception ex)
          {

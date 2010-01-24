@@ -604,16 +604,16 @@ namespace HFM.Instances
          DateTime Start = HfmTrace.ExecStart;
 
          ProteinBenchmarkCollection collection = null;
-         using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+         try
          {
-            try
+            using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
                collection = ProtoBuf.Serializer.Deserialize<ProteinBenchmarkCollection>(fileStream);
             }
-            catch (Exception ex)
-            {
-               HfmTrace.WriteToHfmConsole(ex);
-            }
+         }
+         catch (Exception ex)
+         {
+            HfmTrace.WriteToHfmConsole(ex);
          }
 
          HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
