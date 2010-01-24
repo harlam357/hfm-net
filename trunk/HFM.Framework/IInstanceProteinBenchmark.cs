@@ -75,6 +75,6 @@ namespace HFM.Framework
       /// <param name="UnitInfo">Client Instance UnitInfo (null for unavailable)</param>
       /// <param name="PpdFormatString">PPD Format String</param>
       /// <param name="ProductionValuesOk">Client Instance Production Values Flag</param>
-      string[] ToMultiLineString(IUnitInfo UnitInfo, string PpdFormatString, bool ProductionValuesOk);
+      string[] ToMultiLineString(IUnitInfoLogic UnitInfo, string PpdFormatString, bool ProductionValuesOk);
    }
 }

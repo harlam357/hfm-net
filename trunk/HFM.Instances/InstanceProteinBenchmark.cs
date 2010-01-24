@@ -300,7 +300,7 @@ namespace HFM.Instances
       /// <param name="UnitInfo">Client Instance UnitInfo (null for unavailable)</param>
       /// <param name="PpdFormatString">PPD Format String</param>
       /// <param name="ProductionValuesOk">Client Instance Production Values Flag</param>
-      public string[] ToMultiLineString(IUnitInfo UnitInfo, string PpdFormatString, bool ProductionValuesOk)
+      public string[] ToMultiLineString(IUnitInfoLogic UnitInfo, string PpdFormatString, bool ProductionValuesOk)
       {
          List<string> output = new List<string>(12);
 

@@ -102,7 +102,7 @@ namespace HFM.Forms
       /// <summary>
       /// Benchmark Container Interface
       /// </summary>
-      private readonly IProteinBenchmarkContainer _Benchmark;
+      private readonly IProteinBenchmarkContainer _benchmarkContainer;
       
       private const string HfmLogFileName = "HFM.log";
       private const string HfmPrevLogFileName = "HFM-prev.log";
@@ -123,9 +123,9 @@ namespace HFM.Forms
          IProteinCollection proteinCollection = InstanceProvider.GetInstance<IProteinCollection>();
          proteinCollection.Load();
          queueControl.SetProteinCollection(proteinCollection);
-         
-         _Benchmark = InstanceProvider.GetInstance<IProteinBenchmarkContainer>();
-         _Benchmark.Read(); 
+
+         _benchmarkContainer = InstanceProvider.GetInstance<IProteinBenchmarkContainer>();
+         _benchmarkContainer.Read(); 
 
          string ApplicationDataFolderPath = _Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath);
          if (Directory.Exists(ApplicationDataFolderPath) == false)
@@ -139,7 +139,7 @@ namespace HFM.Forms
          // Setup Log File and Messages Window handlers
          SetupTraceListeners();
          // Create Instance Collection
-         ClientInstances = new InstanceCollection(_Prefs);
+         ClientInstances = new InstanceCollection(_Prefs, proteinCollection, _benchmarkContainer);
          // Manually Create the Columns - Issue 41
          DisplayInstance.SetupDataGridViewColumns(dataGridView1);
          // Clear the UI
@@ -331,7 +331,7 @@ namespace HFM.Forms
          // Save the data on current WUs in progress
          ClientInstances.SaveCurrentUnitInfo();
          // Save the benchmark collection
-         _Benchmark.Write();
+         _benchmarkContainer.Write();
 
          HfmTrace.WriteToHfmConsole("----------");
          HfmTrace.WriteToHfmConsole("Exiting...");
@@ -1390,7 +1390,7 @@ namespace HFM.Forms
             ProjectID = ClientInstances.SelectedInstance.CurrentUnitInfo.ProjectID;
          }
 
-         frmBenchmarks frm = new frmBenchmarks(_Prefs, _Benchmark, ClientInstances, ProjectID);
+         frmBenchmarks frm = new frmBenchmarks(_Prefs, _benchmarkContainer, ClientInstances, ProjectID);
          frm.StartPosition = FormStartPosition.Manual;
 
          // Restore state data

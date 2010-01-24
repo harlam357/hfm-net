@@ -144,12 +144,22 @@ namespace HFM.Instances
       /// PreferenceSet Interface
       /// </summary>
       private readonly IPreferenceSet _Prefs;
+      
+      /// <summary>
+      /// Protein Collection Interface
+      /// </summary>
+      private readonly IProteinCollection _proteinCollection;
+      
+      /// <summary>
+      /// Protein Collection Interface
+      /// </summary>
+      private readonly IProteinBenchmarkContainer _benchmarkContainer;
 
       #region Constructor
       /// <summary>
       /// Primary Constructor
       /// </summary>
-      public ClientInstance(IPreferenceSet Prefs, InstanceType type)
+      public ClientInstance(IPreferenceSet Prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer, InstanceType type)
       {
          // When Instance Host Type Changes, Clear the User Specified Values
          InstanceHostTypeChanged += ClientInstance_InstanceHostTypeChanged;
@@ -158,6 +168,9 @@ namespace HFM.Instances
          ClientIsOnVirtualMachineChanged += ClientInstance_ClientIsOnVirtualMachineChanged;
 
          _Prefs = Prefs;
+         _proteinCollection = proteinCollection;
+         _benchmarkContainer = benchmarkContainer;
+         
          // Set the Host Type
          _InstanceHostType = type;
          // Init Client Level Members
@@ -165,7 +178,7 @@ namespace HFM.Instances
          // Init User Specified Client Level Members
          InitUserSpecifiedMembers();
          // Create a fresh UnitInfo
-         _CurrentUnitInfo = new UnitInfo(_Prefs, InstanceName, Path, DateTime.Now);
+         _CurrentUnitInfo = new UnitInfoLogic(_Prefs, _proteinCollection, new UnitInfo(), InstanceName, Path, DateTime.Now);
       }
       #endregion
 
@@ -325,11 +338,11 @@ namespace HFM.Instances
          set { _TotalUnits = value; }
       }
 
-      private UnitInfo _CurrentUnitInfo;
+      private UnitInfoLogic _CurrentUnitInfo;
       /// <summary>
       /// Class member containing info specific to the current work unit
       /// </summary>
-      public UnitInfo CurrentUnitInfo
+      public UnitInfoLogic CurrentUnitInfoConcrete
       {
          get { return _CurrentUnitInfo; }
          protected set
@@ -337,6 +350,14 @@ namespace HFM.Instances
             UpdateTimeOfLastProgress(value);
             _CurrentUnitInfo = value;
          }
+      }
+      
+      /// <summary>
+      /// Class member containing info specific to the current work unit
+      /// </summary>
+      public IUnitInfoLogic CurrentUnitInfo
+      {
+         get { return _CurrentUnitInfo; }
       }
 
       private IList<ILogLine> _CurrentLogLines;
@@ -374,8 +395,8 @@ namespace HFM.Instances
          Arguments = String.Empty;
          UserID = DefaultUserID;
          MachineID = DefaultMachineID;
-         FoldingID = UnitInfo.FoldingIDDefault;
-         Team = UnitInfo.TeamDefault;
+         FoldingID = Constants.FoldingIDDefault;
+         Team = Constants.TeamDefault;
          NumberOfCompletedUnitsSinceLastStart = 0;
          NumberOfFailedUnitsSinceLastStart = 0;
          TotalUnits = 0;
@@ -1100,7 +1121,7 @@ namespace HFM.Instances
          DateTime Start = HfmTrace.ExecStart;
 
          // Read and Parse the queue.dat file
-         UnitInfo[] parsedUnits = ParseQueueFile();
+         UnitInfoLogic[] parsedUnits = ParseQueueFile();
          // Read and Scan the FAHlog file
          ILogReader lr = InstanceProvider.GetInstance<ILogReader>();
          lr.ScanFAHLog(InstanceName, System.IO.Path.Combine(_Prefs.CacheDirectory, CachedFAHLogName));
@@ -1150,7 +1171,7 @@ namespace HFM.Instances
          // Update the CurrentUnitInfo if we have a Status
          if (CurrentWorkUnitStatus.Equals(ClientStatus.Unknown) == false)
          {
-            CurrentUnitInfo = parsedUnits[CurrentUnitIndex];
+            CurrentUnitInfoConcrete = parsedUnits[CurrentUnitIndex];
          }
 
          // Update the CurrentLogLines
@@ -1166,7 +1187,7 @@ namespace HFM.Instances
       /// Read the queue.dat file and Parse Queue Entries from QueueReader into UnitInfo Array.
       /// </summary>
       /// <returns>Parsed UnitInfo Array or null on Failure.</returns>
-      private UnitInfo[] ParseQueueFile()
+      private UnitInfoLogic[] ParseQueueFile()
       {
          // Make sure the queue file exists first.  Would like to avoid the exception overhead.
          string CachedQueueFilePath = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedQueueName);
@@ -1175,7 +1196,7 @@ namespace HFM.Instances
             return null;
          }
 
-         UnitInfo[] units = null;
+         UnitInfoLogic[] units = null;
 
          // queue.dat is not required to get a reading, if something goes wrong
          // just catch, log, and continue with parsing log files
@@ -1186,12 +1207,12 @@ namespace HFM.Instances
             if (reader.QueueReadOk)
             {
                _qBase = reader.Queue;
-               units = new UnitInfo[10];
+               units = new UnitInfoLogic[10];
 
                // process entries
                for (int i = 0; i < 10; i++)
                {
-                  UnitInfo parsedUnitInfo = new UnitInfo(_Prefs, InstanceName, Path, LastRetrievalTime);
+                  UnitInfoLogic parsedUnitInfo = new UnitInfoLogic(_Prefs, _proteinCollection, new UnitInfo(), InstanceName, Path, LastRetrievalTime);
                   QueueParser.ParseQueueEntry(_qBase.GetQueueEntry((uint)i), parsedUnitInfo, ClientIsOnVirtualMachine);
                   units[i] = parsedUnitInfo;
                }
@@ -1216,7 +1237,7 @@ namespace HFM.Instances
       /// <param name="parsedUnits">Parsed UnitInfo Array</param>
       /// <param name="lr">LogReader Instance</param>
       /// <param name="CurrentWorkUnitStatus">Current Status Based on LogReader.CurrentLogLines</param>
-      private bool ParseLogLinesBasedOnQueueIndex(UnitInfo[] parsedUnits, ILogReader lr, ClientStatus CurrentWorkUnitStatus)
+      private bool ParseLogLinesBasedOnQueueIndex(UnitInfoLogic[] parsedUnits, ILogReader lr, ClientStatus CurrentWorkUnitStatus)
       {
          Debug.Assert(parsedUnits.Length == 10);
 
@@ -1276,16 +1297,16 @@ namespace HFM.Instances
       /// Parse Log Line Sections from Last Two Units based on LogReader.
       /// </summary>
       /// <param name="lr">LogReader Instance</param>
-      private UnitInfo[] ParseCurrentAndPreviousUnitsFromLogsOnly(ILogReader lr)
+      private UnitInfoLogic[] ParseCurrentAndPreviousUnitsFromLogsOnly(ILogReader lr)
       {
          Debug.Assert(lr != null);
 
-         UnitInfo[] parsedUnits = new UnitInfo[2];
+         UnitInfoLogic[] parsedUnits = new UnitInfoLogic[2];
 
          PopulateUserAndMachineData(lr.LastClientRun);
 
-         parsedUnits[0] = new UnitInfo(_Prefs, InstanceName, Path, LastRetrievalTime, FoldingID, Team);
-         parsedUnits[1] = new UnitInfo(_Prefs, InstanceName, Path, LastRetrievalTime, FoldingID, Team);
+         parsedUnits[0] = new UnitInfoLogic(_Prefs, _proteinCollection, new UnitInfo(), InstanceName, Path, LastRetrievalTime, FoldingID, Team);
+         parsedUnits[1] = new UnitInfoLogic(_Prefs, _proteinCollection, new UnitInfo(), InstanceName, Path, LastRetrievalTime, FoldingID, Team);
 
          IList<ILogLine> PreviousLogLines = lr.PreviousWorkUnitLogLines;
          if (PreviousLogLines != null)
@@ -1303,7 +1324,7 @@ namespace HFM.Instances
       /// <param name="Instance">Client Instance doing the processing.</param>
       /// <param name="logLines">Log Lines to process.</param>
       /// <param name="parsedUnitInfo">UnitInfo object to populate.</param>
-      private void ParseWorkUnitLogLines(ClientInstance Instance, IList<ILogLine> logLines, IUnitInfo parsedUnitInfo)
+      private void ParseWorkUnitLogLines(ClientInstance Instance, IList<ILogLine> logLines, IUnitInfoLogic parsedUnitInfo)
       {
          ParseWorkUnitLogLines(Instance, logLines, parsedUnitInfo, false);
       }
@@ -1315,7 +1336,7 @@ namespace HFM.Instances
       /// <param name="logLines">Log Lines to process.</param>
       /// <param name="parsedUnitInfo">UnitInfo object to populate.</param>
       /// <param name="ReadUnitInfoFile">Flag - Read the unitinfo.txt file.</param>
-      private void ParseWorkUnitLogLines(ClientInstance Instance, IList<ILogLine> logLines, IUnitInfo parsedUnitInfo, bool ReadUnitInfoFile)
+      private void ParseWorkUnitLogLines(ClientInstance Instance, IList<ILogLine> logLines, IUnitInfoLogic parsedUnitInfo, bool ReadUnitInfoFile)
       {
          LogParser lp = new LogParser(Instance.InstanceName, Instance.ClientIsOnVirtualMachine, parsedUnitInfo);
          lp.ParseFAHLog(logLines);
@@ -1360,7 +1381,7 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="parsedUnits">Parsed UnitInfo Array</param>
       /// <param name="BenchmarkUpdateIndex">Index of Current UnitInfo</param>
-      private void UpdateBenchmarkData(UnitInfo[] parsedUnits, int BenchmarkUpdateIndex)
+      private void UpdateBenchmarkData(UnitInfoLogic[] parsedUnits, int BenchmarkUpdateIndex)
       {
          bool FoundCurrent = false;
 
@@ -1393,8 +1414,7 @@ namespace HFM.Instances
                }
 
                // Update benchmarks
-               InstanceProvider.GetInstance<IProteinBenchmarkContainer>().UpdateBenchmarkData(parsedUnits[index], previousFrameID,
-                                                                                              parsedUnits[index].LastUnitFrameID);
+               _benchmarkContainer.UpdateBenchmarkData(parsedUnits[index], previousFrameID, parsedUnits[index].LastUnitFrameID);
             }
 
             if (index == BenchmarkUpdateIndex)
@@ -1415,7 +1435,7 @@ namespace HFM.Instances
       /// <summary>
       /// Update Time of Last Frame Progress based on Current and Parsed UnitInfo
       /// </summary>
-      private void UpdateTimeOfLastProgress(IUnitInfo parsedUnitInfo)
+      private void UpdateTimeOfLastProgress(IUnitInfoLogic parsedUnitInfo)
       {
          // Same UnitInfo (based on Project (R/C/G)
          if (IsUnitInfoCurrentUnitInfo(parsedUnitInfo))
@@ -1446,7 +1466,7 @@ namespace HFM.Instances
       /// <summary>
       /// Does the given UnitInfo.ProjectRunCloneGen match the CurrentUnitInfo.ProjectRunCloneGen?
       /// </summary>
-      private bool IsUnitInfoCurrentUnitInfo(IUnitInfo parsedUnitInfo)
+      private bool IsUnitInfoCurrentUnitInfo(IUnitInfoLogic parsedUnitInfo)
       {
          Debug.Assert(CurrentUnitInfo != null);
       
@@ -2099,7 +2119,7 @@ namespace HFM.Instances
       /// <param name="unitInfo">UnitInfo Object to Restore</param>
       public void RestoreUnitInfo(UnitInfo unitInfo)
       {
-         CurrentUnitInfo = unitInfo;
+         CurrentUnitInfoConcrete = new UnitInfoLogic(_Prefs, _proteinCollection, unitInfo);
       }
       #endregion
 
@@ -2107,7 +2127,7 @@ namespace HFM.Instances
       public bool IsUsernameOk()
       {
          // if these are the default assigned values, don't check otherwise and just return true
-         if (CurrentUnitInfo.FoldingID == UnitInfo.FoldingIDDefault && CurrentUnitInfo.Team == UnitInfo.TeamDefault)
+         if (CurrentUnitInfo.FoldingID == Constants.FoldingIDDefault && CurrentUnitInfo.Team == Constants.TeamDefault)
          {
             return true;
          }

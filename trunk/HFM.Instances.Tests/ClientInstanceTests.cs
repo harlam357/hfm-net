@@ -36,6 +36,7 @@ namespace HFM.Instances.Tests
    {
       private IWindsorContainer container;
       private MockRepository mocks;
+      private IProteinBenchmarkContainer benchmarkCollection;
    
       [SetUp]
       public void Init()
@@ -44,9 +45,7 @@ namespace HFM.Instances.Tests
 
          container = new WindsorContainer();
          mocks = new MockRepository();
-
-         IProteinBenchmarkContainer benchmarkCollection = mocks.DynamicMock<IProteinBenchmarkContainer>();
-         container.Kernel.AddComponentInstance<IProteinBenchmarkContainer>(typeof(IProteinBenchmarkContainer), benchmarkCollection);
+         benchmarkCollection = mocks.DynamicMock<IProteinBenchmarkContainer>();
       
          container.AddComponent("LogReader", typeof(ILogReader), typeof(LogReader));
          container.AddComponent("QueueReader", typeof(IQueueReader), typeof(QueueReader));
@@ -56,12 +55,12 @@ namespace HFM.Instances.Tests
       [Test, Category("SMP")]
       public void SMP_3()
       {
-         SetupMockProteinCollectionAndAddToContainer("GROCVS", 100);
+         IProteinCollection proteinCollection = SetupMockProteinCollection("GROCVS", 100);
          IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
          mocks.ReplayAll();
       
          // Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, InstanceType.PathInstance);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection, InstanceType.PathInstance);
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
          Instance.InstanceName = "SMP_3";
@@ -105,12 +104,12 @@ namespace HFM.Instances.Tests
       [Test, Category("SMP")]
       public void SMP_7()
       {
-         SetupMockProteinCollectionAndAddToContainer("GROCVS", 100);
+         IProteinCollection proteinCollection = SetupMockProteinCollection("GROCVS", 100);
          IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
          mocks.ReplayAll();
       
          // Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, InstanceType.PathInstance);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection, InstanceType.PathInstance);
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
          Instance.InstanceName = "SMP_7";
@@ -162,12 +161,12 @@ namespace HFM.Instances.Tests
           *   Project cannot be determined.
           ***/
 
-         SetupMockProteinCollectionAndAddToContainer("GROCVS", 100);
+         IProteinCollection proteinCollection = SetupMockProteinCollection("GROCVS", 100);
          IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
          mocks.ReplayAll();
       
          // Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, InstanceType.PathInstance);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection, InstanceType.PathInstance);
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
          Instance.InstanceName = "SMP_8_1";
@@ -217,12 +216,12 @@ namespace HFM.Instances.Tests
           *   Protein and allow the TypeOfClient to be set correctly.
           ***/
 
-         SetupMockProteinCollectionAndAddToContainer("GROCVS", 100);
+         IProteinCollection proteinCollection = SetupMockProteinCollection("GROCVS", 100);
          IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
          mocks.ReplayAll();
 
          // Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, InstanceType.PathInstance);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection, InstanceType.PathInstance);
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
          Instance.InstanceName = "SMP_8_2";
@@ -242,12 +241,12 @@ namespace HFM.Instances.Tests
       [Test, Category("GPU")]
       public void GPU2_3()
       {
-         SetupMockProteinCollectionAndAddToContainer("GROGPU2", 100);
+         IProteinCollection proteinCollection = SetupMockProteinCollection("GROGPU2", 100);
          IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
          mocks.ReplayAll();
       
          // Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, InstanceType.PathInstance);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection, InstanceType.PathInstance);
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
          Instance.InstanceName = "GPU2_3";
@@ -290,12 +289,12 @@ namespace HFM.Instances.Tests
       [Test, Category("GPU")]
       public void GPU2_6()
       {
-         SetupMockProteinCollectionAndAddToContainer("GROGPU2", 100);
+         IProteinCollection proteinCollection = SetupMockProteinCollection("GROGPU2", 100);
          IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
          mocks.ReplayAll();
       
          // Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, InstanceType.PathInstance);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection, InstanceType.PathInstance);
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
          Instance.InstanceName = "GPU2_6";
@@ -335,7 +334,7 @@ namespace HFM.Instances.Tests
          mocks.VerifyAll();
       }
 
-      private void SetupMockProteinCollectionAndAddToContainer(string Core, int Frames)
+      private IProteinCollection SetupMockProteinCollection(string Core, int Frames)
       {
          IProtein currentProtein = mocks.DynamicMock<IProtein>();
          Expect.Call(currentProtein.Core).Return(Core).Repeat.Any();
@@ -348,7 +347,7 @@ namespace HFM.Instances.Tests
          Expect.Call(proteinCollection.GetProtein(0)).Return(currentProtein).IgnoreArguments().Repeat.Any();
          Expect.Call(proteinCollection.GetNewProtein()).Return(newProtein).Repeat.Any();
 
-         container.Kernel.AddComponentInstance<IProteinCollection>(typeof(IProteinCollection), proteinCollection);
+         return proteinCollection;
       }
 
       private IPreferenceSet SetupMockPreferenceSet(string Username, int Team)

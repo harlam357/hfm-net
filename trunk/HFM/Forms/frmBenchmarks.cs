@@ -106,7 +106,7 @@ namespace HFM.Forms
 
          foreach (InstanceProteinBenchmark benchmark in list)
          {
-            IUnitInfo unit = null;
+            IUnitInfoLogic unit = null;
             bool valuesOk = false;
          
             ClientInstance Instance;

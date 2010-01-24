@@ -34,7 +34,7 @@ namespace HFM.Log
       #region Members
       private readonly string _InstanceName;
       private readonly bool _ClientIsOnVirtualMachine;
-      private readonly IUnitInfo _parsedUnitInfo;
+      private readonly IUnitInfoLogic _parsedUnitInfo;
       
       private readonly Regex rTimeStamp =
             new Regex("\\[(?<Timestamp>.{8})\\]", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
@@ -52,7 +52,7 @@ namespace HFM.Log
       /// <param name="InstanceName">Client Instance Name that owns the log file we're parsing.</param>
       /// <param name="ClientIsOnVirtualMachine">Client on VM (Times as UTC) Flag.</param>
       /// <param name="parsedUnitInfo">Container for parsed information.</param>
-      public LogParser(string InstanceName, bool ClientIsOnVirtualMachine, IUnitInfo parsedUnitInfo)
+      public LogParser(string InstanceName, bool ClientIsOnVirtualMachine, IUnitInfoLogic parsedUnitInfo)
       {
          _InstanceName = InstanceName;
          _ClientIsOnVirtualMachine = ClientIsOnVirtualMachine;

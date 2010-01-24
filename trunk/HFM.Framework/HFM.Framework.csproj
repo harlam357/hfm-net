@@ -79,6 +79,8 @@
     <Compile Include="IQueueReader.cs" />
     <Compile Include="IUnitFrame.cs" />
     <Compile Include="IUnitInfo.cs" />
+    <Compile Include="IUnitInfoContainer.cs" />
+    <Compile Include="IUnitInfoLogic.cs" />
     <Compile Include="Metadata.cs" />
     <Compile Include="PlatformOps.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

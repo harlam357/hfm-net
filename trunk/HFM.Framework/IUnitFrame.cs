@@ -21,7 +21,7 @@ using System;
 
 namespace HFM.Framework
 {
-   public interface IUnitFrame
+   public interface IUnitFrame : IComparable<IUnitFrame>, IEquatable<IUnitFrame>
    {
       Int32 FrameID { get; }
 

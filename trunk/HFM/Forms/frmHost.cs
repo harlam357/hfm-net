@@ -160,7 +160,7 @@ namespace HFM.Forms
 
       private ClientInstance GetInstanceData()
       {
-         ClientInstance NewInstance = new ClientInstance(InstanceProvider.GetInstance<IPreferenceSet>(), GetInstanceType());
+         ClientInstance NewInstance = _ClientInstances.GetNewClientInstance(GetInstanceType());
          GetBasicClientInfo(NewInstance);
 
          switch (NewInstance.InstanceHostType)

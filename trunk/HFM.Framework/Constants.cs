@@ -41,6 +41,10 @@ namespace HFM.Framework
       public const Int32 ProxyPortDefault = 8080;
 
       public const string UnassignedDescription = "Unassigned Description";
+
+      // Folding ID and Team Defaults
+      public const string FoldingIDDefault = "Unknown";
+      public const int TeamDefault = 0;
       #endregion
    }
 }

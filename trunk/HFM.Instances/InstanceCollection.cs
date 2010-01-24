@@ -159,15 +159,35 @@ namespace HFM.Instances
       /// Preferences Interface
       /// </summary>
       private readonly IPreferenceSet _Prefs;
+
+      /// <summary>
+      /// Protein Collection Interface
+      /// </summary>
+      private readonly IProteinCollection _proteinCollection;
+
+      /// <summary>
+      /// Protein Collection Interface
+      /// </summary>
+      private readonly IProteinBenchmarkContainer _benchmarkContainer;
+      
+      /// <summary>
+      /// UnitInfo Container Interface
+      /// </summary>
+      private readonly IUnitInfoContainer _unitInfoContainer;
       #endregion
 
       #region CTOR
       /// <summary>
       /// Default Constructor
       /// </summary>
-      public InstanceCollection(IPreferenceSet Prefs)
+      public InstanceCollection(IPreferenceSet Prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer)
       {
          _Prefs = Prefs;
+         _proteinCollection = proteinCollection;
+         _benchmarkContainer = benchmarkContainer;
+         
+         _unitInfoContainer = InstanceProvider.GetInstance<IUnitInfoContainer>();
+         _unitInfoContainer.Read();
       
          _instanceCollection = new Dictionary<string, ClientInstance>();
          _displayCollection = new SortableBindingList<DisplayInstance>();
@@ -416,9 +436,9 @@ namespace HFM.Instances
             if (Enum.IsDefined(typeof(InstanceType), InstanceType))
             {
                InstanceType type = (InstanceType)Enum.Parse(typeof(InstanceType), InstanceType, false);
-               ClientInstance instance = new ClientInstance(_Prefs, type);
+               ClientInstance instance = new ClientInstance(_Prefs, _proteinCollection, _benchmarkContainer, type);
                instance.FromXml(xn);
-               UnitInfo restoreUnitInfo = UnitInfoCollection.Instance.RetrieveUnitInfo(instance.InstanceName, instance.Path);
+               UnitInfo restoreUnitInfo = (UnitInfo)_unitInfoContainer.RetrieveUnitInfo(instance.InstanceName, instance.Path);
                if (restoreUnitInfo != null)
                {
                   instance.RestoreUnitInfo(restoreUnitInfo);
@@ -535,7 +555,7 @@ namespace HFM.Instances
 
                   if (tokens.Length > 1) // we should have at least name and path
                   {
-                     ClientInstance instance = GetNewInstance(_Prefs, tokens);
+                     ClientInstance instance = GetNewInstance(_Prefs, _proteinCollection, _benchmarkContainer, tokens);
                      if (instance != null)
                      {
                         // Check for Client is on Virtual Machine setting
@@ -594,8 +614,10 @@ namespace HFM.Instances
       /// create an HFM ClientInstance object based on those tokens
       /// </summary>
       /// <param name="Prefs">Preferences Interface</param>
+      /// <param name="proteinCollection">Protein Collection Interface</param>
       /// <param name="tokens">Tokenized String (String Array)</param>
-      private static ClientInstance GetNewInstance(IPreferenceSet Prefs, string[] tokens)
+      private static ClientInstance GetNewInstance(IPreferenceSet Prefs, IProteinCollection proteinCollection, 
+                                                   IProteinBenchmarkContainer benchmarkContainer, string[] tokens)
       {
          // Get the instance name token and validate
          string instanceName = tokens[0].Replace("\"", String.Empty);
@@ -619,13 +641,13 @@ namespace HFM.Instances
          {
             if (instancePath.StartsWith("http"))
             {
-               instance = new ClientInstance(Prefs, InstanceType.HTTPInstance);
+               instance = new ClientInstance(Prefs, proteinCollection, benchmarkContainer, InstanceType.HTTPInstance);
                instance.InstanceName = instanceName;
                instance.Path = instancePath;
             }
             else if (instancePath.StartsWith("ftp"))
             {
-               instance = new ClientInstance(Prefs, InstanceType.FTPInstance);
+               instance = new ClientInstance(Prefs, proteinCollection, benchmarkContainer, InstanceType.FTPInstance);
                instance.InstanceName = instanceName;
                instance.Server = matchURL.Result("${domain}");
                instance.Path = matchURL.Result("${file}");
@@ -633,7 +655,7 @@ namespace HFM.Instances
          }
          else if (matchFTPUserPass.Success) // we have a valid FTP with User Pass
          {
-            instance = new ClientInstance(Prefs, InstanceType.FTPInstance);
+            instance = new ClientInstance(Prefs, proteinCollection, benchmarkContainer, InstanceType.FTPInstance);
             instance.InstanceName = instanceName;
             instance.Server = matchFTPUserPass.Result("${domain}");
             instance.Path = matchFTPUserPass.Result("${file}");
@@ -644,13 +666,13 @@ namespace HFM.Instances
          {
             if (StringOps.ValidatePathInstancePath(instancePath))
             {
-               instance = new ClientInstance(Prefs, InstanceType.PathInstance);
+               instance = new ClientInstance(Prefs, proteinCollection, benchmarkContainer, InstanceType.PathInstance);
                instance.InstanceName = instanceName;
                instance.Path = instancePath;
             }
             else if (StringOps.ValidatePathInstancePath(instancePath += Path.DirectorySeparatorChar))
             {
-               instance = new ClientInstance(Prefs, InstanceType.PathInstance);
+               instance = new ClientInstance(Prefs, proteinCollection, benchmarkContainer, InstanceType.PathInstance);
                instance.InstanceName = instanceName;
                instance.Path = instancePath;
             }
@@ -1200,9 +1222,7 @@ namespace HFM.Instances
          
          DateTime Start = HfmTrace.ExecStart;
 
-         UnitInfoCollection collection = UnitInfoCollection.Instance;
-
-         collection.Clear();
+         _unitInfoContainer.Clear();
          
          lock (_instanceCollection)
          {
@@ -1211,12 +1231,12 @@ namespace HFM.Instances
                // Don't save the UnitInfo object if the contained Project is Unknown
                if (instance.CurrentUnitInfo.ProjectIsUnknown == false)
                {
-                  collection.Add(instance.CurrentUnitInfo);
+                  _unitInfoContainer.Add(instance.CurrentUnitInfoConcrete.UnitInfoData);
                }
             }
          }
 
-         UnitInfoCollection.Serialize();
+         _unitInfoContainer.Write();
 
          HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
       }
@@ -1341,6 +1361,15 @@ namespace HFM.Instances
          {
             SelectedInstance = null;
          }
+      }
+      
+      /// <summary>
+      /// Get a new ClientInstance object
+      /// </summary>
+      /// <param name="type">Client Type</param>
+      public ClientInstance GetNewClientInstance(InstanceType type)
+      {
+         return new ClientInstance(_Prefs, _proteinCollection, _benchmarkContainer, type);
       }
 
       /// <summary>

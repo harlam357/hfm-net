@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Benchmark Collection Class
+ * HFM.NET - Benchmark Container Class
  * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -24,7 +24,6 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-using System.Xml;
 using System.Xml.Serialization;
 
 using HFM.Framework;
@@ -39,6 +38,10 @@ namespace HFM.Instances
       /// Benchmark Data File Name
       /// </summary>
       private const string DataStoreFilename = "BenchmarkCache.dat";
+      /// <summary>
+      /// Legacy Benchmark Data File Name
+      /// </summary>
+      private const string LegacyDataStoreFilename = "LegacyBenchmarkCache.dat";
       #endregion
 
       #region Members
@@ -66,7 +69,7 @@ namespace HFM.Instances
       /// <param name="unit">The UnitInfo containing the UnitFrame data</param>
       /// <param name="startingFrame">Starting Frame Index</param>
       /// <param name="endingFrame">Ending Frame Index</param>
-      public void UpdateBenchmarkData(IUnitInfo unit, int startingFrame, int endingFrame)
+      public void UpdateBenchmarkData(IUnitInfoLogic unit, int startingFrame, int endingFrame)
       {
          // project is not known, don't add to benchmark data
          if (unit.ProjectIsUnknown) return;
@@ -98,7 +101,7 @@ namespace HFM.Instances
       /// <param name="startingFrame">Starting Frame Index</param>
       /// <param name="endingFrame">Ending Frame Index</param>
       /// <param name="benchmark">The InstanceProteinBenchmark to Update</param>
-      private static bool UpdateBenchmarkFrames(IUnitInfo unit, int startingFrame, int endingFrame, IInstanceProteinBenchmark benchmark)
+      private static bool UpdateBenchmarkFrames(IUnitInfoLogic unit, int startingFrame, int endingFrame, IInstanceProteinBenchmark benchmark)
       {
          bool result = false;
 
@@ -112,7 +115,7 @@ namespace HFM.Instances
                }
                if (unit.UnitFrames[i].FrameID == unit.Frames)
                {
-                  UnitInfoCollection.WriteCompletedUnitInfo(unit);
+                  UnitInfoContainer.WriteCompletedUnitInfo(unit);
                }
             }
             else
@@ -130,7 +133,7 @@ namespace HFM.Instances
       /// Get the Benchmark Average frame time based on the Owner and Project info from the given UnitInfo
       /// </summary>
       /// <param name="unit">The UnitInfo containing the Owner and Project data</param>
-      public TimeSpan GetBenchmarkAverageFrameTime(IUnitInfo unit)
+      public TimeSpan GetBenchmarkAverageFrameTime(IUnitInfoLogic unit)
       {
          IInstanceProteinBenchmark findBenchmark = FindBenchmark(unit);
          if (findBenchmark != null)
@@ -145,7 +148,7 @@ namespace HFM.Instances
       /// Find the Benchmark based on the Owner and Project info from the given UnitInfo
       /// </summary>
       /// <param name="unit">The UnitInfo containing the Owner and Project data</param>
-      private IInstanceProteinBenchmark FindBenchmark(IUnitInfo unit)
+      private IInstanceProteinBenchmark FindBenchmark(IUnitInfoLogic unit)
       {
          return _collection.BenchmarkList.Find(delegate(InstanceProteinBenchmark proteinBenchmark)
          {
@@ -415,7 +418,11 @@ namespace HFM.Instances
          {
             collection = Deserialize(FilePath);
          }
-         
+         else
+         {
+            BackupNetSerializedDataFile(FilePath);
+         }
+
          if (Merge)
          {
             _collection = MergeCollections(_collection, collection);
@@ -475,6 +482,21 @@ namespace HFM.Instances
       public void WriteXml(string FilePath)
       {
          SerializeToXml(_collection, Path.Combine(_Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), FilePath));
+      }
+      
+      private void BackupNetSerializedDataFile(string FilePath)
+      {
+         string LegacyFilePath = Path.Combine(_Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), LegacyDataStoreFilename);
+
+         try
+         {
+            // Backward Compatibility - Backup .NET Serialized Data File
+            File.Copy(FilePath, LegacyFilePath);
+         }
+         catch (Exception ex)
+         {
+            HfmTrace.WriteToHfmConsole(ex);
+         }
       }
 
       /// <summary>

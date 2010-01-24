@@ -33,7 +33,7 @@ namespace HFM.Queue
       /// <param name="entry">QueueEntry to Parse</param>
       /// <param name="parsedUnitInfo">UnitInfo to Populate</param>
       /// <param name="ClientIsOnVirtualMachine">Client on VM (Times as UTC) Flag</param>
-      public static void ParseQueueEntry(IQueueEntry entry, IUnitInfo parsedUnitInfo, bool ClientIsOnVirtualMachine)
+      public static void ParseQueueEntry(IQueueEntry entry, IUnitInfoLogic parsedUnitInfo, bool ClientIsOnVirtualMachine)
       {
          if ((entry.EntryStatus.Equals(QueueEntryStatus.Unknown) ||
               entry.EntryStatus.Equals(QueueEntryStatus.Empty) ||

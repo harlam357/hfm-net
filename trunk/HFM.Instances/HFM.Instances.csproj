@@ -69,6 +69,8 @@
     <Compile Include="UnitFrame.cs" />
     <Compile Include="UnitInfo.cs" />
     <Compile Include="UnitInfoCollection.cs" />
+    <Compile Include="UnitInfoContainer.cs" />
+    <Compile Include="UnitInfoLogic.cs" />
     <Compile Include="XMLGen.cs">
       <SubType>Code</SubType>
     </Compile>

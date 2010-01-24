@@ -30,13 +30,13 @@ namespace HFM.Framework
       /// <param name="unit">The UnitInfo containing the UnitFrame data</param>
       /// <param name="startingFrame">Starting Frame Index</param>
       /// <param name="endingFrame">Ending Frame Index</param>
-      void UpdateBenchmarkData(IUnitInfo unit, int startingFrame, int endingFrame);
+      void UpdateBenchmarkData(IUnitInfoLogic unit, int startingFrame, int endingFrame);
 
       /// <summary>
       /// Get the Benchmark Average frame time based on the Owner and Project info from the given UnitInfo
       /// </summary>
       /// <param name="unit">The UnitInfo containing the Owner and Project data</param>
-      TimeSpan GetBenchmarkAverageFrameTime(IUnitInfo unit);
+      TimeSpan GetBenchmarkAverageFrameTime(IUnitInfoLogic unit);
 
       /// <summary>
       /// Delete all Benchmarks for the given BenchmarkClient
