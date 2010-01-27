@@ -184,6 +184,37 @@ namespace HFM.Instances
       }
       #endregion
 
+      #region BindingList<T> Find Overrides
+      protected override bool SupportsSearchingCore
+      {
+         get { return true; }
+      }
+
+      protected override int FindCore(PropertyDescriptor prop, object key)
+      {
+         if (key is String)
+         {
+            List<T> list = Items as List<T>;
+         
+            if ((null != list))
+            {
+               return list.FindIndex(delegate(T item)
+                                     {
+                                        if (prop.GetValue(item).Equals(key))
+                                        {
+                                           return true;
+                                        }
+                                        return false;
+                                     }); 
+            }
+            
+            return -1;
+         }
+
+         throw new NotSupportedException("Key must be of Type System.String.");
+      }
+      #endregion
+
       #region PropertyComparer<TKey>
       internal class PropertyComparer<TKey> : IComparer<TKey>
       {

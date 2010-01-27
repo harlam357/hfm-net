@@ -56,6 +56,7 @@ namespace HFM.Instances
       private const string xmlPropServ = "Server";
       private const string xmlPropUser = "Username";
       private const string xmlPropPass = "Password";
+      private const string xmlPropPassiveFtpMode = "PassiveFtpMode";
 
       // Log Filename Constants
       public const string LocalFAHLog = "FAHlog.txt";
@@ -588,6 +589,16 @@ namespace HFM.Instances
          set { _Password = value; }
       }
 
+      private FtpType _FtpMode;
+      /// <summary>
+      /// Specifies the FTP Communication Mode for this client
+      /// </summary>
+      public FtpType FtpMode
+      {
+         get { return _FtpMode; }
+         set { _FtpMode = value; }
+      }
+
       private bool _ClientIsOnVirtualMachine;
       /// <summary>
       /// Specifies that this client is on a VM that reports local time as UTC
@@ -1068,12 +1079,12 @@ namespace HFM.Instances
          try
          {
             string LocalFilePath = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedFAHLogName);
-            NetworkOps.FtpDownloadHelper(Server, Path, RemoteFAHLogFilename, LocalFilePath, Username, Password, DownloadType.ASCII);
+            NetworkOps.FtpDownloadHelper(Server, Path, RemoteFAHLogFilename, LocalFilePath, Username, Password, FtpMode, DownloadType.ASCII);
 
             try
             {
                LocalFilePath = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedUnitInfoName);
-               NetworkOps.FtpDownloadHelper(Server, Path, RemoteUnitInfoFilename, LocalFilePath, Username, Password, DownloadType.UnitInfo);
+               NetworkOps.FtpDownloadHelper(Server, Path, RemoteUnitInfoFilename, LocalFilePath, Username, Password, FtpMode, DownloadType.UnitInfo);
             }
             /*** Remove Requirement for UnitInfo to be Present ***/
             catch (WebException ex)
@@ -1089,7 +1100,7 @@ namespace HFM.Instances
             try
             {
                LocalFilePath = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedQueueName);
-               NetworkOps.FtpDownloadHelper(Server, Path, RemoteQueueFilename, LocalFilePath, Username, Password, DownloadType.Binary);
+               NetworkOps.FtpDownloadHelper(Server, Path, RemoteQueueFilename, LocalFilePath, Username, Password, FtpMode, DownloadType.Binary);
             }
             /*** Remove Requirement for Queue to be Present ***/
             catch (WebException ex)
@@ -1949,6 +1960,7 @@ namespace HFM.Instances
                }
             }
             xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropPass, encryptedPassword));
+            xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropPassiveFtpMode, FtpMode.ToString()));
             
             return xmlData;
          }
@@ -2108,6 +2120,22 @@ namespace HFM.Instances
          catch (NullReferenceException)
          {
             HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Cannot load Server Password."));
+         }
+
+         try
+         {
+            string FtpModeText = xmlData.SelectSingleNode(xmlPropPassiveFtpMode).InnerText;
+            FtpMode = (FtpType)Enum.Parse(typeof(FtpType), FtpModeText, false);
+         }
+         catch (NullReferenceException)
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Cannot load Ftp Mode Flag, defaulting to Passive."));
+            FtpMode = FtpType.Passive;
+         }
+         catch (InvalidCastException)
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Could not parse Ftp Mode Flag, defaulting to Passive."));
+            FtpMode = FtpType.Passive;
          }
 
          HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, Start);

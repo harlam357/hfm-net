@@ -287,7 +287,7 @@ namespace HFM.Forms
          // 
          this.txtCollectMinutes.BackColor = System.Drawing.SystemColors.Control;
          this.txtCollectMinutes.Enabled = false;
-         this.txtCollectMinutes.ErrorColor = System.Drawing.Color.Yellow;
+         this.txtCollectMinutes.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtCollectMinutes.Location = new System.Drawing.Point(323, 18);
          this.txtCollectMinutes.MaxLength = 3;
          this.txtCollectMinutes.Name = "txtCollectMinutes";
@@ -296,11 +296,11 @@ namespace HFM.Forms
          this.txtCollectMinutes.TabIndex = 3;
          this.txtCollectMinutes.Text = "15";
          this.txtCollectMinutes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-         this.txtCollectMinutes.ToolTip = this.toolTipPrefs;
-         this.txtCollectMinutes.ToolTipText = "";
+         this.txtCollectMinutes.ErrorToolTip = this.toolTipPrefs;
+         this.txtCollectMinutes.ErrorToolTipText = "";
          this.txtCollectMinutes.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
          this.txtCollectMinutes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
-         this.txtCollectMinutes.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtMinutes_CustomValidation);
+         this.txtCollectMinutes.CustomValidation += new EventHandler<ValidatingControlCustomValidationEventArgs>(this.txtMinutes_CustomValidation);
          // 
          // lbl2SchedExplain
          // 
@@ -390,7 +390,7 @@ namespace HFM.Forms
          // 
          this.txtWebGenMinutes.BackColor = System.Drawing.SystemColors.Control;
          this.txtWebGenMinutes.Enabled = false;
-         this.txtWebGenMinutes.ErrorColor = System.Drawing.Color.Yellow;
+         this.txtWebGenMinutes.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtWebGenMinutes.Location = new System.Drawing.Point(204, 18);
          this.txtWebGenMinutes.MaxLength = 3;
          this.txtWebGenMinutes.Name = "txtWebGenMinutes";
@@ -399,11 +399,11 @@ namespace HFM.Forms
          this.txtWebGenMinutes.TabIndex = 2;
          this.txtWebGenMinutes.Text = "15";
          this.txtWebGenMinutes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-         this.txtWebGenMinutes.ToolTip = this.toolTipPrefs;
-         this.txtWebGenMinutes.ToolTipText = "";
+         this.txtWebGenMinutes.ErrorToolTip = this.toolTipPrefs;
+         this.txtWebGenMinutes.ErrorToolTipText = "";
          this.txtWebGenMinutes.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
          this.txtWebGenMinutes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
-         this.txtWebGenMinutes.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtMinutes_CustomValidation);
+         this.txtWebGenMinutes.CustomValidation += new EventHandler<ValidatingControlCustomValidationEventArgs>(this.txtMinutes_CustomValidation);
          // 
          // lbl2MinutesToGen
          // 
@@ -430,16 +430,16 @@ namespace HFM.Forms
          // 
          this.txtWebSiteBase.BackColor = System.Drawing.SystemColors.Control;
          this.txtWebSiteBase.Enabled = false;
-         this.txtWebSiteBase.ErrorColor = System.Drawing.Color.Yellow;
+         this.txtWebSiteBase.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtWebSiteBase.Location = new System.Drawing.Point(119, 45);
          this.txtWebSiteBase.Name = "txtWebSiteBase";
          this.txtWebSiteBase.ReadOnly = true;
          this.txtWebSiteBase.Size = new System.Drawing.Size(332, 20);
          this.txtWebSiteBase.TabIndex = 6;
-         this.txtWebSiteBase.ToolTip = this.toolTipPrefs;
-         this.txtWebSiteBase.ToolTipText = "HTML Output Folder must be a valid local path, network (UNC) path, or FTP URL.";
+         this.txtWebSiteBase.ErrorToolTip = this.toolTipPrefs;
+         this.txtWebSiteBase.ErrorToolTipText = "HTML Output Folder must be a valid local path, network (UNC) path, or FTP URL.";
          this.txtWebSiteBase.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtWebSiteBase.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtWebSiteBase_CustomValidation);
+         this.txtWebSiteBase.CustomValidation += new EventHandler<ValidatingControlCustomValidationEventArgs>(this.txtWebSiteBase_CustomValidation);
          // 
          // lbl2WebSiteDir
          // 
@@ -511,14 +511,14 @@ namespace HFM.Forms
          // 
          this.txtDefaultConfigFile.BackColor = System.Drawing.SystemColors.Control;
          this.txtDefaultConfigFile.Enabled = false;
-         this.txtDefaultConfigFile.ErrorColor = System.Drawing.Color.Yellow;
+         this.txtDefaultConfigFile.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtDefaultConfigFile.Location = new System.Drawing.Point(88, 49);
          this.txtDefaultConfigFile.Name = "txtDefaultConfigFile";
          this.txtDefaultConfigFile.ReadOnly = true;
          this.txtDefaultConfigFile.Size = new System.Drawing.Size(327, 20);
          this.txtDefaultConfigFile.TabIndex = 2;
-         this.txtDefaultConfigFile.ToolTip = null;
-         this.txtDefaultConfigFile.ToolTipText = "";
+         this.txtDefaultConfigFile.ErrorToolTip = null;
+         this.txtDefaultConfigFile.ErrorToolTipText = "";
          this.txtDefaultConfigFile.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // label1
@@ -727,13 +727,13 @@ namespace HFM.Forms
          // 
          // txtFileExplorer
          // 
-         this.txtFileExplorer.ErrorColor = System.Drawing.Color.Yellow;
+         this.txtFileExplorer.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtFileExplorer.Location = new System.Drawing.Point(66, 21);
          this.txtFileExplorer.Name = "txtFileExplorer";
          this.txtFileExplorer.Size = new System.Drawing.Size(384, 20);
          this.txtFileExplorer.TabIndex = 1;
-         this.txtFileExplorer.ToolTip = null;
-         this.txtFileExplorer.ToolTipText = "";
+         this.txtFileExplorer.ErrorToolTip = null;
+         this.txtFileExplorer.ErrorToolTipText = "";
          this.txtFileExplorer.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // grpLogFileViewer
@@ -769,13 +769,13 @@ namespace HFM.Forms
          // 
          // txtLogFileViewer
          // 
-         this.txtLogFileViewer.ErrorColor = System.Drawing.Color.Yellow;
+         this.txtLogFileViewer.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtLogFileViewer.Location = new System.Drawing.Point(66, 21);
          this.txtLogFileViewer.Name = "txtLogFileViewer";
          this.txtLogFileViewer.Size = new System.Drawing.Size(384, 20);
          this.txtLogFileViewer.TabIndex = 1;
-         this.txtLogFileViewer.ToolTip = null;
-         this.txtLogFileViewer.ToolTipText = "";
+         this.txtLogFileViewer.ErrorToolTip = null;
+         this.txtLogFileViewer.ErrorToolTipText = "";
          this.txtLogFileViewer.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // tabReporting
@@ -847,34 +847,34 @@ namespace HFM.Forms
          // 
          this.txtSmtpPassword.BackColor = System.Drawing.SystemColors.Control;
          this.txtSmtpPassword.Enabled = false;
-         this.txtSmtpPassword.ErrorColor = System.Drawing.Color.Yellow;
+         this.txtSmtpPassword.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtSmtpPassword.Location = new System.Drawing.Point(314, 129);
          this.txtSmtpPassword.MaxLength = 100;
          this.txtSmtpPassword.Name = "txtSmtpPassword";
          this.txtSmtpPassword.ReadOnly = true;
          this.txtSmtpPassword.Size = new System.Drawing.Size(155, 20);
          this.txtSmtpPassword.TabIndex = 10;
-         this.txtSmtpPassword.ToolTip = this.toolTipPrefs;
-         this.txtSmtpPassword.ToolTipText = "";
+         this.txtSmtpPassword.ErrorToolTip = this.toolTipPrefs;
+         this.txtSmtpPassword.ErrorToolTipText = "";
          this.txtSmtpPassword.UseSystemPasswordChar = true;
          this.txtSmtpPassword.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtSmtpPassword.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtSmtpCredentials_CustomValidation);
+         this.txtSmtpPassword.CustomValidation += new EventHandler<ValidatingControlCustomValidationEventArgs>(this.txtSmtpCredentials_CustomValidation);
          // 
          // txtSmtpUsername
          // 
          this.txtSmtpUsername.BackColor = System.Drawing.SystemColors.Control;
          this.txtSmtpUsername.Enabled = false;
-         this.txtSmtpUsername.ErrorColor = System.Drawing.Color.Yellow;
+         this.txtSmtpUsername.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtSmtpUsername.Location = new System.Drawing.Point(92, 129);
          this.txtSmtpUsername.MaxLength = 100;
          this.txtSmtpUsername.Name = "txtSmtpUsername";
          this.txtSmtpUsername.ReadOnly = true;
          this.txtSmtpUsername.Size = new System.Drawing.Size(155, 20);
          this.txtSmtpUsername.TabIndex = 8;
-         this.txtSmtpUsername.ToolTip = this.toolTipPrefs;
-         this.txtSmtpUsername.ToolTipText = "";
+         this.txtSmtpUsername.ErrorToolTip = this.toolTipPrefs;
+         this.txtSmtpUsername.ErrorToolTipText = "";
          this.txtSmtpUsername.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtSmtpUsername.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtSmtpCredentials_CustomValidation);
+         this.txtSmtpUsername.CustomValidation += new EventHandler<ValidatingControlCustomValidationEventArgs>(this.txtSmtpCredentials_CustomValidation);
          // 
          // labelWrapper4
          // 
@@ -907,18 +907,18 @@ namespace HFM.Forms
          // 
          this.txtFromEmailAddress.BackColor = System.Drawing.SystemColors.Control;
          this.txtFromEmailAddress.Enabled = false;
-         this.txtFromEmailAddress.ErrorColor = System.Drawing.Color.Yellow;
+         this.txtFromEmailAddress.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtFromEmailAddress.Location = new System.Drawing.Point(92, 77);
          this.txtFromEmailAddress.MaxLength = 200;
          this.txtFromEmailAddress.Name = "txtFromEmailAddress";
          this.txtFromEmailAddress.ReadOnly = true;
          this.txtFromEmailAddress.Size = new System.Drawing.Size(377, 20);
          this.txtFromEmailAddress.TabIndex = 4;
-         this.txtFromEmailAddress.ToolTip = this.toolTipPrefs;
-         this.txtFromEmailAddress.ToolTipText = "Must be a valid e-mail address.";
+         this.txtFromEmailAddress.ErrorToolTip = this.toolTipPrefs;
+         this.txtFromEmailAddress.ErrorToolTipText = "Must be a valid e-mail address.";
          this.txtFromEmailAddress.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
          this.txtFromEmailAddress.MouseHover += new System.EventHandler(this.txtFromEmailAddress_MouseHover);
-         this.txtFromEmailAddress.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtEmailAddress_CustomValidation);
+         this.txtFromEmailAddress.CustomValidation += new EventHandler<ValidatingControlCustomValidationEventArgs>(this.txtEmailAddress_CustomValidation);
          // 
          // chkEnableEmail
          // 
@@ -953,33 +953,33 @@ namespace HFM.Forms
          // 
          this.txtSmtpServer.BackColor = System.Drawing.SystemColors.Control;
          this.txtSmtpServer.Enabled = false;
-         this.txtSmtpServer.ErrorColor = System.Drawing.Color.Yellow;
+         this.txtSmtpServer.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtSmtpServer.Location = new System.Drawing.Point(92, 103);
          this.txtSmtpServer.MaxLength = 200;
          this.txtSmtpServer.Name = "txtSmtpServer";
          this.txtSmtpServer.ReadOnly = true;
          this.txtSmtpServer.Size = new System.Drawing.Size(377, 20);
          this.txtSmtpServer.TabIndex = 6;
-         this.txtSmtpServer.ToolTip = this.toolTipPrefs;
-         this.txtSmtpServer.ToolTipText = "Must be a valid server name.";
+         this.txtSmtpServer.ErrorToolTip = this.toolTipPrefs;
+         this.txtSmtpServer.ErrorToolTipText = "Must be a valid server name.";
          this.txtSmtpServer.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtSmtpServer.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtSmtpServer_CustomValidation);
+         this.txtSmtpServer.CustomValidation += new EventHandler<ValidatingControlCustomValidationEventArgs>(this.txtSmtpServer_CustomValidation);
          // 
          // txtToEmailAddress
          // 
          this.txtToEmailAddress.BackColor = System.Drawing.SystemColors.Control;
          this.txtToEmailAddress.Enabled = false;
-         this.txtToEmailAddress.ErrorColor = System.Drawing.Color.Yellow;
+         this.txtToEmailAddress.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtToEmailAddress.Location = new System.Drawing.Point(92, 51);
          this.txtToEmailAddress.MaxLength = 200;
          this.txtToEmailAddress.Name = "txtToEmailAddress";
          this.txtToEmailAddress.ReadOnly = true;
          this.txtToEmailAddress.Size = new System.Drawing.Size(377, 20);
          this.txtToEmailAddress.TabIndex = 2;
-         this.txtToEmailAddress.ToolTip = this.toolTipPrefs;
-         this.txtToEmailAddress.ToolTipText = "Must be a valid e-mail address.";
+         this.txtToEmailAddress.ErrorToolTip = this.toolTipPrefs;
+         this.txtToEmailAddress.ErrorToolTipText = "Must be a valid e-mail address.";
          this.txtToEmailAddress.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtToEmailAddress.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtEmailAddress_CustomValidation);
+         this.txtToEmailAddress.CustomValidation += new EventHandler<ValidatingControlCustomValidationEventArgs>(this.txtEmailAddress_CustomValidation);
          // 
          // tabWeb
          // 
@@ -1008,15 +1008,15 @@ namespace HFM.Forms
          // 
          // txtProjectDownloadUrl
          // 
-         this.txtProjectDownloadUrl.ErrorColor = System.Drawing.Color.Yellow;
+         this.txtProjectDownloadUrl.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtProjectDownloadUrl.Location = new System.Drawing.Point(56, 19);
          this.txtProjectDownloadUrl.Name = "txtProjectDownloadUrl";
          this.txtProjectDownloadUrl.Size = new System.Drawing.Size(423, 20);
          this.txtProjectDownloadUrl.TabIndex = 1;
-         this.txtProjectDownloadUrl.ToolTip = this.toolTipPrefs;
-         this.txtProjectDownloadUrl.ToolTipText = "URL must be a valid URL and the path to a valid Stanford Project Summary page.";
+         this.txtProjectDownloadUrl.ErrorToolTip = this.toolTipPrefs;
+         this.txtProjectDownloadUrl.ErrorToolTipText = "URL must be a valid URL and the path to a valid Stanford Project Summary page.";
          this.txtProjectDownloadUrl.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtProjectDownloadUrl.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtProjectDownloadUrl_CustomValidation);
+         this.txtProjectDownloadUrl.CustomValidation += new EventHandler<ValidatingControlCustomValidationEventArgs>(this.txtProjectDownloadUrl_CustomValidation);
          // 
          // label5
          // 
@@ -1076,27 +1076,27 @@ namespace HFM.Forms
          // 
          // txtEOCUserID
          // 
-         this.txtEOCUserID.ErrorColor = System.Drawing.Color.Yellow;
+         this.txtEOCUserID.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtEOCUserID.Location = new System.Drawing.Point(194, 17);
          this.txtEOCUserID.MaxLength = 9;
          this.txtEOCUserID.Name = "txtEOCUserID";
          this.txtEOCUserID.Size = new System.Drawing.Size(138, 20);
          this.txtEOCUserID.TabIndex = 3;
-         this.txtEOCUserID.ToolTip = null;
-         this.txtEOCUserID.ToolTipText = "";
+         this.txtEOCUserID.ErrorToolTip = null;
+         this.txtEOCUserID.ErrorToolTipText = "";
          this.txtEOCUserID.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          this.txtEOCUserID.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
          // 
          // txtStanfordTeamID
          // 
-         this.txtStanfordTeamID.ErrorColor = System.Drawing.Color.Yellow;
+         this.txtStanfordTeamID.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtStanfordTeamID.Location = new System.Drawing.Point(194, 69);
          this.txtStanfordTeamID.MaxLength = 9;
          this.txtStanfordTeamID.Name = "txtStanfordTeamID";
          this.txtStanfordTeamID.Size = new System.Drawing.Size(138, 20);
          this.txtStanfordTeamID.TabIndex = 5;
-         this.txtStanfordTeamID.ToolTip = null;
-         this.txtStanfordTeamID.ToolTipText = "";
+         this.txtStanfordTeamID.ErrorToolTip = null;
+         this.txtStanfordTeamID.ErrorToolTipText = "";
          this.txtStanfordTeamID.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          this.txtStanfordTeamID.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
          // 
@@ -1122,13 +1122,13 @@ namespace HFM.Forms
          // 
          // txtStanfordUserID
          // 
-         this.txtStanfordUserID.ErrorColor = System.Drawing.Color.Yellow;
+         this.txtStanfordUserID.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtStanfordUserID.Location = new System.Drawing.Point(194, 43);
          this.txtStanfordUserID.Name = "txtStanfordUserID";
          this.txtStanfordUserID.Size = new System.Drawing.Size(138, 20);
          this.txtStanfordUserID.TabIndex = 4;
-         this.txtStanfordUserID.ToolTip = null;
-         this.txtStanfordUserID.ToolTipText = "";
+         this.txtStanfordUserID.ErrorToolTip = null;
+         this.txtStanfordUserID.ErrorToolTipText = "";
          this.txtStanfordUserID.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // linkEOC
@@ -1188,49 +1188,49 @@ namespace HFM.Forms
          // 
          this.txtProxyPass.BackColor = System.Drawing.SystemColors.Control;
          this.txtProxyPass.Enabled = false;
-         this.txtProxyPass.ErrorColor = System.Drawing.Color.Yellow;
+         this.txtProxyPass.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtProxyPass.Location = new System.Drawing.Point(327, 91);
          this.txtProxyPass.Name = "txtProxyPass";
          this.txtProxyPass.ReadOnly = true;
          this.txtProxyPass.Size = new System.Drawing.Size(155, 20);
          this.txtProxyPass.TabIndex = 9;
-         this.txtProxyPass.ToolTip = this.toolTipPrefs;
-         this.txtProxyPass.ToolTipText = "";
+         this.txtProxyPass.ErrorToolTip = this.toolTipPrefs;
+         this.txtProxyPass.ErrorToolTipText = "";
          this.txtProxyPass.UseSystemPasswordChar = true;
          this.txtProxyPass.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtProxyPass.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtProxyCredentials_CustomValidation);
+         this.txtProxyPass.CustomValidation += new EventHandler<ValidatingControlCustomValidationEventArgs>(this.txtProxyCredentials_CustomValidation);
          // 
          // txtProxyUser
          // 
          this.txtProxyUser.BackColor = System.Drawing.SystemColors.Control;
          this.txtProxyUser.Enabled = false;
-         this.txtProxyUser.ErrorColor = System.Drawing.Color.Yellow;
+         this.txtProxyUser.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtProxyUser.Location = new System.Drawing.Point(104, 91);
          this.txtProxyUser.Name = "txtProxyUser";
          this.txtProxyUser.ReadOnly = true;
          this.txtProxyUser.Size = new System.Drawing.Size(155, 20);
          this.txtProxyUser.TabIndex = 7;
-         this.txtProxyUser.ToolTip = this.toolTipPrefs;
-         this.txtProxyUser.ToolTipText = "";
+         this.txtProxyUser.ErrorToolTip = this.toolTipPrefs;
+         this.txtProxyUser.ErrorToolTipText = "";
          this.txtProxyUser.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtProxyUser.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtProxyCredentials_CustomValidation);
+         this.txtProxyUser.CustomValidation += new EventHandler<ValidatingControlCustomValidationEventArgs>(this.txtProxyCredentials_CustomValidation);
          // 
          // txtProxyPort
          // 
          this.txtProxyPort.BackColor = System.Drawing.SystemColors.Control;
          this.txtProxyPort.Enabled = false;
-         this.txtProxyPort.ErrorColor = System.Drawing.Color.Yellow;
+         this.txtProxyPort.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtProxyPort.Location = new System.Drawing.Point(389, 42);
          this.txtProxyPort.MaxLength = 5;
          this.txtProxyPort.Name = "txtProxyPort";
          this.txtProxyPort.ReadOnly = true;
          this.txtProxyPort.Size = new System.Drawing.Size(94, 20);
          this.txtProxyPort.TabIndex = 4;
-         this.txtProxyPort.ToolTip = this.toolTipPrefs;
-         this.txtProxyPort.ToolTipText = "";
+         this.txtProxyPort.ErrorToolTip = this.toolTipPrefs;
+         this.txtProxyPort.ErrorToolTipText = "";
          this.txtProxyPort.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
          this.txtProxyPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
-         this.txtProxyPort.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtProxyServerPort_CustomValidation);
+         this.txtProxyPort.CustomValidation += new EventHandler<ValidatingControlCustomValidationEventArgs>(this.txtProxyServerPort_CustomValidation);
          // 
          // lbl3ProxyPass
          // 
@@ -1245,16 +1245,16 @@ namespace HFM.Forms
          // 
          this.txtProxyServer.BackColor = System.Drawing.SystemColors.Control;
          this.txtProxyServer.Enabled = false;
-         this.txtProxyServer.ErrorColor = System.Drawing.Color.Yellow;
+         this.txtProxyServer.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtProxyServer.Location = new System.Drawing.Point(98, 42);
          this.txtProxyServer.Name = "txtProxyServer";
          this.txtProxyServer.ReadOnly = true;
          this.txtProxyServer.Size = new System.Drawing.Size(250, 20);
          this.txtProxyServer.TabIndex = 2;
-         this.txtProxyServer.ToolTip = this.toolTipPrefs;
-         this.txtProxyServer.ToolTipText = "";
+         this.txtProxyServer.ErrorToolTip = this.toolTipPrefs;
+         this.txtProxyServer.ErrorToolTipText = "";
          this.txtProxyServer.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtProxyServer.CustomValidation += new EventHandler<CustomValidationEventArgs>(this.txtProxyServerPort_CustomValidation);
+         this.txtProxyServer.CustomValidation += new EventHandler<ValidatingControlCustomValidationEventArgs>(this.txtProxyServerPort_CustomValidation);
          // 
          // lbl3ProxyUser
          // 
@@ -1501,7 +1501,7 @@ namespace HFM.Forms
       private Classes.CheckBoxWrapper chkOffline;
       private Classes.LabelWrapper label2;
       private Classes.ComboBoxWrapper cboPpdCalc;
-      private HFM.Classes.CheckBoxWrapper chkCalcBonus;
-      private HFM.Classes.CheckBoxWrapper chkAllowRunningAsync;
+      private Classes.CheckBoxWrapper chkCalcBonus;
+      private Classes.CheckBoxWrapper chkAllowRunningAsync;
    }
 }

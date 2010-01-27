@@ -55,6 +55,11 @@ namespace HFM.Forms
       private readonly InstanceCollection ClientInstances;
       
       /// <summary>
+      /// Display Collection Binding Source
+      /// </summary>
+      private readonly BindingSource _displayBindingSource;
+      
+      /// <summary>
       /// Holds the state of the window before it is hidden (minimise to tray behaviour)
       /// </summary>
       private FormWindowState originalState;
@@ -78,11 +83,6 @@ namespace HFM.Forms
       /// Holds Current Mouse Over Column Index
       /// </summary>
       private Int32 CurrentMouseOverColumn = -1;
-      
-      /// <summary>
-      /// True when in the ApplySort() routine
-      /// </summary>
-      private bool InApplySort = false;
       
       /// <summary>
       /// Messages Form
@@ -159,18 +159,20 @@ namespace HFM.Forms
 
          // Hook-up Instance Collection Event Handlers
          dataGridView1.AutoGenerateColumns = false;
-         dataGridView1.DataSource = ClientInstances.GetDisplayCollection();
-         ClientInstances.CollectionChanged += ClientInstances_CollectionChanged;
+         _displayBindingSource = new BindingSource();
+         _displayBindingSource.DataSource = ClientInstances.GetDisplayCollection();
+         dataGridView1.DataSource = _displayBindingSource;
+         ClientInstances.CollectionChanged += delegate { RefreshDisplay(); };
          //ClientInstances.CollectionLoaded += ClientInstances_CollectionLoaded;
          //ClientInstances.CollectionSaved += ClientInstances_CollectionSaved;
          ClientInstances.InstanceAdded += ClientInstances_InstanceDataChanged;
          ClientInstances.InstanceEdited += ClientInstances_InstanceDataChanged;
          ClientInstances.InstanceRemoved += ClientInstances_InstanceDataChanged;
-         ClientInstances.InstanceRetrieved += ClientInstances_InstanceRetrieved;
+         ClientInstances.InstanceRetrieved += delegate { RefreshDisplay(); };
          ClientInstances.SelectedInstanceChanged += ClientInstances_SelectedInstanceChanged;
-         ClientInstances.DuplicatesFoundOrChanged += ClientInstances_DuplicatesFoundOrChanged;
-         ClientInstances.OfflineLastChanged += ClientInstances_OfflineLastChanged;
-         ClientInstances.RefreshUserStatsData += ClientInstances_RefreshUserStatsData;
+         ClientInstances.DuplicatesFoundOrChanged += delegate { RefreshDisplay(); };
+         ClientInstances.OfflineLastChanged += delegate { ApplySort(); };
+         ClientInstances.RefreshUserStatsData += delegate { RefreshUserStatsData(false); };
 
          // Hook-up PreferenceSet Event Handlers
          _Prefs.ShowUserStatsChanged += PreferenceSet_ShowUserStatsChanged;
@@ -516,13 +518,17 @@ namespace HFM.Forms
       /// </summary>
       private void dataGridView1_Sorted(object sender, EventArgs e)
       {
-         if (InApplySort == false)
-         {
-            SortColumnName = dataGridView1.SortedColumn.Name;
-            SortColumnOrder = dataGridView1.SortOrder;
+         SortColumnName = dataGridView1.SortedColumn.Name;
+         SortColumnOrder = dataGridView1.SortOrder;
 
-            SaveSortColumn(); // Save Column Sort Order - Issue 73
-            _Prefs.Save();
+         SaveSortColumn(); // Save Column Sort Order - Issue 73
+         _Prefs.Save();
+
+         int row = _displayBindingSource.Find("Name", dataGridView1.CurrentRowKey);
+         if (row > -1 && row < dataGridView1.Rows.Count)
+         {
+            _displayBindingSource.Position = row;
+            dataGridView1.Rows[row].Selected = true;
          }
       }
 
@@ -1562,7 +1568,7 @@ namespace HFM.Forms
          }
          else
          {
-            InApplySort = true;
+            dataGridView1.FreezeSorted = true;
             
             if (String.IsNullOrEmpty(SortColumnName) == false && SortColumnOrder.Equals(SortOrder.None) == false)
             {
@@ -1577,8 +1583,8 @@ namespace HFM.Forms
                   dataGridView1.SortedColumn.HeaderCell.SortGlyphDirection = SortColumnOrder;
                }
             }
-            
-            InApplySort = false;
+
+            dataGridView1.FreezeSorted = false;
          }
       }
 
@@ -2004,14 +2010,6 @@ namespace HFM.Forms
       /// <summary>
       /// Refresh User Stats from external source
       /// </summary>
-      private void ClientInstances_RefreshUserStatsData(object sender, EventArgs e)
-      {
-         RefreshUserStatsData(false);
-      }
-
-      /// <summary>
-      /// Refresh User Stats from external source
-      /// </summary>
       private void RefreshUserStatsData(bool ForceRefresh)
       {
          try
@@ -2032,15 +2030,6 @@ namespace HFM.Forms
 
       #region Instance Collection Event Handlers
       /// <summary>
-      /// Forces a screen refresh when the instance collection is changed
-      /// </summary>
-      private void ClientInstances_CollectionChanged(object sender, EventArgs e)
-      {
-         // Update the UI (this is confirmed needed)
-         RefreshDisplay();
-      }
-
-      /// <summary>
       /// 
       /// </summary>
       private void ClientInstances_InstanceDataChanged(object sender, EventArgs e)
@@ -2049,24 +2038,6 @@ namespace HFM.Forms
          {
             mnuFileSave_Click(sender, e);
          }
-      }
-
-      /// <summary>
-      /// 
-      /// </summary>
-      private void ClientInstances_InstanceRetrieved(object sender, EventArgs e)
-      {
-         // Update the UI (this is confirmed needed)
-         RefreshDisplay();
-      }
-
-      /// <summary>
-      /// 
-      /// </summary>
-      private void ClientInstances_DuplicatesFoundOrChanged(object sender, EventArgs e)
-      {
-         // Update the UI (this is confirmed needed)
-         RefreshDisplay();
       }
 
       /// <summary>

@@ -68,8 +68,8 @@ namespace HFM.Forms
             wbCssSample.TabStop = false;
          }
 
-         txtCollectMinutes.ToolTipText = String.Format("Minutes must be a value from {0} to {1}.", Constants.MinMinutes, Constants.MaxMinutes);
-         txtWebGenMinutes.ToolTipText = String.Format("Minutes must be a value from {0} to {1}.", Constants.MinMinutes, Constants.MaxMinutes);
+         txtCollectMinutes.ErrorToolTipText = String.Format("Minutes must be a value from {0} to {1}.", Constants.MinMinutes, Constants.MaxMinutes);
+         txtWebGenMinutes.ErrorToolTipText = String.Format("Minutes must be a value from {0} to {1}.", Constants.MinMinutes, Constants.MaxMinutes);
       }
 
       private void frmPreferences_Load(object sender, EventArgs e)
@@ -335,28 +335,28 @@ namespace HFM.Forms
          }
       }
 
-      private void txtWebSiteBase_CustomValidation(object sender, CustomValidationEventArgs e)
+      private void txtWebSiteBase_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
       {
-         e.Result = true;
+         e.ValidationResult = true;
       
          bool bPath = StringOps.ValidatePathInstancePath(txtWebSiteBase.Text);
          bool bPathWithSlash = StringOps.ValidatePathInstancePath(String.Concat(txtWebSiteBase.Text, Path.DirectorySeparatorChar));
          bool bIsFtpUrl = StringOps.ValidateFtpWithUserPassUrl(txtWebSiteBase.Text);
 
-         if (e.Text.Length == 0)
+         if (e.ControlText.Length == 0)
          {
-            e.Result = false;
+            e.ValidationResult = false;
          }
-         else if (e.Text.Length > 2 && (bPath || bPathWithSlash || bIsFtpUrl) != true)
+         else if (e.ControlText.Length > 2 && (bPath || bPathWithSlash || bIsFtpUrl) != true)
          {
-            e.Result = false;
+            e.ValidationResult = false;
          }
 
          // This PathWithSlash Code seems to be defunct by the current
          // Path Regex in use.  It could probably be removed.
          if (bPath == false && bPathWithSlash)
          {
-            e.Text += Path.DirectorySeparatorChar;
+            e.ControlText += Path.DirectorySeparatorChar;
          }
       }
 
@@ -372,18 +372,18 @@ namespace HFM.Forms
          }
       }
 
-      private void txtMinutes_CustomValidation(object sender, CustomValidationEventArgs e)
+      private void txtMinutes_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
       {
-         e.Result = true;
+         e.ValidationResult = true;
       
          int Minutes;
-         if (Int32.TryParse(e.Text, out Minutes) == false)
+         if (Int32.TryParse(e.ControlText, out Minutes) == false)
          {
-            e.Result = false;
+            e.ValidationResult = false;
          }
          else if (PreferenceSet.ValidateMinutes(Minutes) == false)
          {
-            e.Result = false;
+            e.ValidationResult = false;
          }
       }
       #endregion
@@ -419,18 +419,18 @@ namespace HFM.Forms
          }
       }
 
-      private void txtEmailAddress_CustomValidation(object sender, CustomValidationEventArgs e)
+      private void txtEmailAddress_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
       {
-         e.Result = true;
-         bool bAddress = StringOps.ValidateEmailAddress(e.Text);
+         e.ValidationResult = true;
+         bool bAddress = StringOps.ValidateEmailAddress(e.ControlText);
 
-         if (e.Text.Length == 0)
+         if (e.ControlText.Length == 0)
          {
-            e.Result = false;
+            e.ValidationResult = false;
          }
-         else if (e.Text.Length > 0 && bAddress != true)
+         else if (e.ControlText.Length > 0 && bAddress != true)
          {
-            e.Result = false;
+            e.ValidationResult = false;
          }
       }
 
@@ -443,24 +443,24 @@ namespace HFM.Forms
             txtFromEmailAddress.Parent, txtFromEmailAddress.Location.X + 5, txtFromEmailAddress.Location.Y - 55, 10000);
       }
 
-      private void txtSmtpServer_CustomValidation(object sender, CustomValidationEventArgs e)
+      private void txtSmtpServer_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
       {
-         e.Result = true;
-         bool bServerName = StringOps.ValidateServerName(e.Text);
+         e.ValidationResult = true;
+         bool bServerName = StringOps.ValidateServerName(e.ControlText);
 
-         if (e.Text.Length == 0)
+         if (e.ControlText.Length == 0)
          {
-            e.Result = false;
+            e.ValidationResult = false;
          }
-         else if (e.Text.Length > 0 && bServerName != true)
+         else if (e.ControlText.Length > 0 && bServerName != true)
          {
-            e.Result = false;
+            e.ValidationResult = false;
          }
       }
 
-      private void txtSmtpCredentials_CustomValidation(object sender, CustomValidationEventArgs e)
+      private void txtSmtpCredentials_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
       {
-         e.Result = true;
+         e.ValidationResult = true;
          
          try
          {
@@ -469,8 +469,8 @@ namespace HFM.Forms
          }
          catch (ArgumentException ex)
          {
-            e.ToolTipText = ex.Message;
-            e.Result = false;
+            e.ErrorToolTipText = ex.Message;
+            e.ValidationResult = false;
          }
       }
 
@@ -538,9 +538,9 @@ namespace HFM.Forms
          }
       }
 
-      private void txtProjectDownloadUrl_CustomValidation(object sender, CustomValidationEventArgs e)
+      private void txtProjectDownloadUrl_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
       {
-         e.Result = StringOps.ValidateHttpURL(txtProjectDownloadUrl.Text);
+         e.ValidationResult = StringOps.ValidateHttpURL(txtProjectDownloadUrl.Text);
       }
 
       private void chkUseProxy_CheckedChanged(object sender, EventArgs e)
@@ -577,9 +577,9 @@ namespace HFM.Forms
          SetProxyAuth(false);
       }
 
-      private void txtProxyServerPort_CustomValidation(object sender, CustomValidationEventArgs e)
+      private void txtProxyServerPort_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
       {
-         e.Result = true;
+         e.ValidationResult = true;
       
          try
          {
@@ -588,8 +588,8 @@ namespace HFM.Forms
          }
          catch (ArgumentException ex)
          {
-            e.ToolTipText = ex.Message;
-            e.Result = false;
+            e.ErrorToolTipText = ex.Message;
+            e.ValidationResult = false;
          }
       }
 
@@ -611,9 +611,9 @@ namespace HFM.Forms
          txtProxyPass.Enabled = value;
       }
 
-      private void txtProxyCredentials_CustomValidation(object sender, CustomValidationEventArgs e)
+      private void txtProxyCredentials_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
       {
-         e.Result = true;
+         e.ValidationResult = true;
       
          try
          {
@@ -622,8 +622,8 @@ namespace HFM.Forms
          }
          catch (ArgumentException ex)
          {
-            e.ToolTipText = ex.Message;
-            e.Result = false;
+            e.ErrorToolTipText = ex.Message;
+            e.ValidationResult = false;
          }
       }
       #endregion
@@ -718,9 +718,9 @@ namespace HFM.Forms
       private bool CheckForScheduledTasksTabErrors()
       {
          // Check for error conditions on Scheduled Tasks Tab
-         if (txtCollectMinutes.Error ||
-             txtWebGenMinutes.Error ||
-             txtWebSiteBase.Error)
+         if (txtCollectMinutes.ErrorState ||
+             txtWebGenMinutes.ErrorState ||
+             txtWebSiteBase.ErrorState)
          {
             return true;
          }
@@ -731,11 +731,11 @@ namespace HFM.Forms
       private bool CheckForReportingTabErrors()
       {
          // Check for error conditions on Reporting Tab
-         if (txtToEmailAddress.Error ||
-             txtFromEmailAddress.Error ||
-             txtSmtpServer.Error ||
-             txtSmtpUsername.Error ||
-             txtSmtpPassword.Error)
+         if (txtToEmailAddress.ErrorState ||
+             txtFromEmailAddress.ErrorState ||
+             txtSmtpServer.ErrorState ||
+             txtSmtpUsername.ErrorState ||
+             txtSmtpPassword.ErrorState)
          {
             return true;
          }
@@ -746,11 +746,11 @@ namespace HFM.Forms
       private bool CheckForWebSettingsTabErrors()
       {
          // Check for error conditions on Web Settings Tab
-         if (txtProjectDownloadUrl.Error ||
-             txtProxyServer.Error ||
-             txtProxyPort.Error ||
-             txtProxyUser.Error ||
-             txtProxyPass.Error)
+         if (txtProjectDownloadUrl.ErrorState ||
+             txtProxyServer.ErrorState ||
+             txtProxyPort.ErrorState ||
+             txtProxyUser.ErrorState ||
+             txtProxyPass.ErrorState)
          {
             return true;
          }

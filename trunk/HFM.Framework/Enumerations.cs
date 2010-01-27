@@ -36,6 +36,12 @@ namespace HFM.Framework
    }
    #endregion
    
+   public enum FtpType
+   {
+      Passive,
+      Active
+   }
+   
    #region Client and Work Unit Status Types
    public enum ClientStatus
    {

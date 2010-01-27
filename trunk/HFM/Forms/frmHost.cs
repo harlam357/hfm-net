@@ -19,11 +19,12 @@
  */
 
 using System;
-using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
+
+using harlam357.Windows.Forms;
 
 using HFM.Framework;
 using HFM.Helpers;
@@ -39,12 +40,32 @@ namespace HFM.Forms
 
    public partial class frmHost : Classes.FormWrapper
    {
+      #region Members
+      /// <summary>
+      /// Maximum Dialog Height
+      /// </summary>
       private readonly int MaxHeight;
+
+      /// <summary>
+      /// Maximum Dialog Width
+      /// </summary>
       private readonly int MaxWidth;
       
+      /// <summary>
+      /// Instance Collection
+      /// </summary>
       private readonly InstanceCollection _ClientInstances;
+
+      /// <summary>
+      /// Client Instance being Edited
+      /// </summary>
       private readonly ClientInstance _Instance;
+
+      /// <summary>
+      /// Dialog Action Mode
+      /// </summary>
       private readonly HostAction _Action;
+      #endregion
    
       #region Constructor
       public frmHost(InstanceCollection ClientInstances) 
@@ -55,9 +76,6 @@ namespace HFM.Forms
          : this(ClientInstances, Instance, HostAction.Edit)
       { }
 
-      /// <summary>
-      /// Class constructor
-      /// </summary>
       private frmHost(InstanceCollection ClientInstances, ClientInstance Instance, HostAction Action)
       {
          _ClientInstances = ClientInstances;
@@ -65,6 +83,12 @@ namespace HFM.Forms
          _Action = Action;
       
          InitializeComponent();
+         
+         txtFTPUser.CompanionControls.Add(txtFTPPass);
+         txtFTPPass.CompanionControls.Add(txtFTPUser);
+         
+         txtWebUser.CompanionControls.Add(txtWebPass);
+         txtWebPass.CompanionControls.Add(txtWebUser);
          
          MaxHeight = Height;
          MaxWidth = Width;
@@ -84,6 +108,7 @@ namespace HFM.Forms
       }
       #endregion
       
+      #region Set Instance Data
       private void SetInstanceData(ClientInstance Instance)
       {
          if (Instance == null) throw new ArgumentNullException("Instance", "Argument 'Instance' cannot be null.");
@@ -149,6 +174,18 @@ namespace HFM.Forms
          txtFTPServer.Text = Instance.Server;
          txtFTPUser.Text = Instance.Username;
          txtFTPPass.Text = Instance.Password;
+         switch (Instance.FtpMode)
+         {
+            case FtpType.Passive:
+               radioPassive.Checked = true;
+               break;
+            case FtpType.Active:
+               radioActive.Checked = true;
+               break;
+            default:
+               radioPassive.Checked = true;
+               break;
+         }
       }
       
       private void SetHTTPClientInfo(ClientInstance Instance)
@@ -157,7 +194,9 @@ namespace HFM.Forms
          txtWebUser.Text = Instance.Username;
          txtWebPass.Text = Instance.Password;
       }
+      #endregion
 
+      #region Get Instance Data
       private ClientInstance GetInstanceData()
       {
          ClientInstance NewInstance = _ClientInstances.GetNewClientInstance(GetInstanceType());
@@ -191,10 +230,6 @@ namespace HFM.Forms
          throw new InvalidOperationException("No Instance type could be determined.");
       }
 
-      /// <summary>
-      /// Gets basic client info and sets in the given ClientInstance
-      /// </summary>
-      /// <param name="Instance">ClientInstance</param>
       private void GetBasicClientInfo(ClientInstance Instance)
       {
          Instance.InstanceName = txtName.Text;
@@ -225,6 +260,10 @@ namespace HFM.Forms
          Instance.Server = txtFTPServer.Text;
          Instance.Username = txtFTPUser.Text;
          Instance.Password = txtFTPPass.Text;
+         FtpType ftpType = FtpType.Passive;
+         if (radioPassive.Checked) ftpType = FtpType.Passive;
+         if (radioActive.Checked) ftpType = FtpType.Active;
+         Instance.FtpMode = ftpType;
       }
 
       private void GetHTTPClientInfo(ClientInstance Instance)
@@ -233,8 +272,9 @@ namespace HFM.Forms
          Instance.Username = txtWebUser.Text;
          Instance.Password = txtWebPass.Text;
       }
+      #endregion
 
-      #region Radio button management
+      #region Radio Button Management
       /// <summary>
       /// Enable the HTTP controls
       /// </summary>
@@ -243,12 +283,9 @@ namespace HFM.Forms
       {
          if (bState)
          {
-            Size = new Size(MaxWidth, MaxHeight - 27);
+            Size = new Size(MaxWidth, MaxHeight - 50);
          }
          grpHTTP.Visible = bState;
-         txtWebURL.ReadOnly = !bState;
-         txtWebUser.ReadOnly = !bState;
-         txtWebPass.ReadOnly = !bState;
          txtWebURL.Enabled = bState;
          txtWebUser.Enabled = bState;
          txtWebPass.Enabled = bState;
@@ -265,10 +302,6 @@ namespace HFM.Forms
             Size = new Size(MaxWidth, MaxHeight);
          }
          grpFTP.Visible = bState;
-         txtFTPServer.ReadOnly = !bState;
-         txtFTPPath.ReadOnly = !bState;
-         txtFTPUser.ReadOnly = !bState;
-         txtFTPPass.ReadOnly = !bState;
          txtFTPServer.Enabled = bState;
          txtFTPPath.Enabled = bState;
          txtFTPUser.Enabled = bState;
@@ -283,32 +316,10 @@ namespace HFM.Forms
       {
          if (bState)
          {
-            Size = new Size(MaxWidth, MaxHeight - 57);
+            Size = new Size(MaxWidth, MaxHeight - 78);
          }
          grpLocal.Visible = bState;
-         txtLocalPath.ReadOnly = !bState;
          txtLocalPath.Enabled = bState;
-         btnBrowseLocal.Enabled = bState;
-      }
-
-      /// <summary>
-      /// Clears validation colours from all text fields (on button change)
-      /// </summary>
-      private void ClearValidate()
-      {
-         txtName.BackColor = SystemColors.Window;
-         txtClientMegahertz.BackColor = SystemColors.Window;
-         txtLogFileName.BackColor = SystemColors.Window;
-         txtUnitFileName.BackColor = SystemColors.Window;
-         txtQueueFileName.BackColor = SystemColors.Window;
-         txtLocalPath.BackColor = SystemColors.Window;
-         txtFTPServer.BackColor = SystemColors.Window;
-         txtFTPPath.BackColor = SystemColors.Window;
-         txtFTPUser.BackColor = SystemColors.Window;
-         txtFTPPass.BackColor = SystemColors.Window;
-         txtWebURL.BackColor = SystemColors.Window;
-         txtWebUser.BackColor = SystemColors.Window;
-         txtWebPass.BackColor = SystemColors.Window;
       }
 
       /// <summary>
@@ -318,7 +329,6 @@ namespace HFM.Forms
       /// <param name="e"></param>
       private void radioButtonSet_CheckedChanged(object sender, EventArgs e)
       {
-         ClearValidate();
          if (radioLocal.Checked)
          {
             PathFieldsActive(true);
@@ -362,310 +372,185 @@ namespace HFM.Forms
             {
                txtLocalPath.Text += Path.DirectorySeparatorChar;
             }
-            txtLocalPath_Validating(sender, null);
+            txtLocalPath.ValidateControlText();
          }
       }
       #endregion
 
-      #region Text field validators
-      /// <summary>
-      /// Validate the contents of the Instance name textbox
-      /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
-      private void txtName_Validating(object sender, CancelEventArgs e)
+      #region Text Field Validators
+      private void txtName_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
       {
-         if (txtName.Text.Length > 0 && StringOps.ValidateInstanceName(txtName.Text) == false)
+         e.ValidationResult = true;
+         
+         if (e.ControlText.Length == 0)
          {
-            txtName.BackColor = Color.Yellow;
-            txtName.Focus();
-            toolTipCore.Show(String.Format(Properties.Resources.HostNameToolTip, Environment.NewLine), txtName, 5000);
+            e.ValidationResult = false;
          }
-         else
+         else if (StringOps.ValidateInstanceName(e.ControlText) == false)
          {
-            txtName.BackColor = SystemColors.Window;
-            toolTipCore.Hide(txtName);
+            e.ValidationResult = false;
          }
       }
 
-      /// <summary>
-      /// Validate the contents of the Client Megahertz textbox
-      /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
-      private void txtClientMegahertz_Validating(object sender, CancelEventArgs e)
+      private void txtClientMegahertz_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
       {
+         e.ValidationResult = true;
+      
          int mhz;
-         if (int.TryParse(txtClientMegahertz.Text, out mhz) == false)
+         if (int.TryParse(e.ControlText, out mhz) == false)
          {
-            txtClientMegahertz.BackColor = Color.Yellow;
-            txtClientMegahertz.Focus();
-            toolTipCore.Show(Properties.Resources.HostProcessorMhzNumeric, txtClientMegahertz, 5000);
+            e.ValidationResult = false;
          }
          else if (mhz < 1)
          {
-            txtClientMegahertz.BackColor = Color.Yellow;
-            txtClientMegahertz.Focus();
-            toolTipCore.Show(Properties.Resources.HostProcessorMhzGreaterThanZero, txtClientMegahertz, 5000);
-         }
-         else
-         {
-            txtClientMegahertz.BackColor = SystemColors.Window;
-            toolTipCore.Hide(txtClientMegahertz);
+            e.ValidationResult = false;
          }
       }
 
-      /// <summary>
-      /// Validate the contents of the FAHlog textbox
-      /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
-      private void txtLogFileName_Validating(object sender, CancelEventArgs e)
+      private void txtFileName_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
       {
-         if (txtLogFileName.Text.Length > 0 && StringOps.ValidateFileName(txtLogFileName.Text) == false)
+         e.ValidationResult = true;
+         
+         if (e.ControlText.Length == 0)
          {
-            txtLogFileName.BackColor = Color.Yellow;
-            txtLogFileName.Focus();
-            toolTipCore.Show(Properties.Resources.HostFileNameInvalidChars, txtLogFileName, 5000);
+            e.ValidationResult = false;
          }
-         else
+         else if (StringOps.ValidateFileName(e.ControlText) == false)
          {
-            txtLogFileName.BackColor = SystemColors.Window;
-            toolTipCore.Hide(txtLogFileName);
+            e.ValidationResult = false;
          }
       }
 
-      /// <summary>
-      /// Validate the contents of the unitinfo textbox
-      /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
-      private void txtUnitFileName_Validating(object sender, CancelEventArgs e)
+      private void txtLocalPath_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
       {
-         if (txtUnitFileName.Text.Length > 0 && StringOps.ValidateFileName(txtUnitFileName.Text) == false)
-         {
-            txtUnitFileName.BackColor = Color.Yellow;
-            txtUnitFileName.Focus();
-            toolTipCore.Show(Properties.Resources.HostFileNameInvalidChars, txtUnitFileName, 5000);
-         }
-         else
-         {
-            txtUnitFileName.BackColor = SystemColors.Window;
-            toolTipCore.Hide(txtUnitFileName);
-         }
-      }
+         e.ControlText = StripFahClientFileNames(e.ControlText);
 
-      /// <summary>
-      /// Validate the contents of the queue textbox
-      /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
-      private void txtQueueFileName_Validating(object sender, CancelEventArgs e)
-      {
-         if (txtQueueFileName.Text.Length > 0 && StringOps.ValidateFileName(txtQueueFileName.Text) == false)
-         {
-            txtQueueFileName.BackColor = Color.Yellow;
-            txtQueueFileName.Focus();
-            toolTipCore.Show(Properties.Resources.HostFileNameInvalidChars, txtQueueFileName, 5000);
-         }
-         else
-         {
-            txtQueueFileName.BackColor = SystemColors.Window;
-            toolTipCore.Hide(txtQueueFileName);
-         }
-      }
+         bool bPath = StringOps.ValidatePathInstancePath(e.ControlText);
+         bool bPathWithSlash = StringOps.ValidatePathInstancePath(String.Concat(e.ControlText, Path.DirectorySeparatorChar));
 
-      /// <summary>
-      /// Validate the contents of the Local File Path textbox
-      /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
-      private void txtLocalPath_Validating(object sender, CancelEventArgs e)
-      {
-         if (radioLocal.Checked == false) return;
-
-         if (txtLocalPath.Text.ToUpper().EndsWith("FAHLOG.TXT"))
+         if (e.ControlText.Length == 0)
          {
-            txtLocalPath.Text = txtLocalPath.Text.Substring(0, txtLocalPath.Text.Length - 10);
+            e.ValidationResult = false;
          }
-         if (txtLocalPath.Text.ToUpper().EndsWith("UNITINFO.TXT"))
+         else if (e.ControlText.Length > 2 && (bPath || bPathWithSlash) != true)
          {
-            txtLocalPath.Text = txtLocalPath.Text.Substring(0, txtLocalPath.Text.Length - 12);
-         }
-         if (txtLocalPath.Text.ToUpper().EndsWith("QUEUE.DAT"))
-         {
-            txtLocalPath.Text = txtLocalPath.Text.Substring(0, txtLocalPath.Text.Length - 9);
-         }
-
-         bool bPath = StringOps.ValidatePathInstancePath(txtLocalPath.Text);
-         bool bPathWithSlash = StringOps.ValidatePathInstancePath(String.Concat(txtLocalPath.Text, Path.DirectorySeparatorChar));
-
-         if (txtLocalPath.Text.Length == 0)
-         {
-            txtLocalPath.BackColor = Color.Yellow;
-            //txtLocalPath.Focus();
-            toolTipCore.Show(String.Format(Properties.Resources.HostLocalPathInvalidTooltip, Environment.NewLine), txtLocalPath, 5000);
-         }
-         else if (txtLocalPath.Text.Length > 2 && (bPath || bPathWithSlash) != true)
-         {
-            txtLocalPath.BackColor = Color.Yellow;
-            //txtLocalPath.Focus();
-            toolTipCore.Show(String.Format(Properties.Resources.HostLocalPathInvalidTooltip, Environment.NewLine), txtLocalPath, 5000);
+            e.ValidationResult = false;
          }
          else
          {
             if (bPath == false && bPathWithSlash)
             {
-               txtLocalPath.Text += Path.DirectorySeparatorChar;
+               e.ControlText += Path.DirectorySeparatorChar;
             }
-            txtLocalPath.BackColor = SystemColors.Window;
-            toolTipCore.Hide(txtLocalPath);
+            e.ValidationResult = true;
          }
       }
 
-      /// <summary>
-      /// Validate the contents of the FTP Server textbox
-      /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
-      private void txtFTPServer_Validating(object sender, CancelEventArgs e)
+      private void txtFTPServer_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
       {
-         if (radioFTP.Checked == false) return;
-
-         if (txtFTPServer.Text.Length == 0)
+         e.ValidationResult = true;
+      
+         if (e.ControlText.Length == 0)
          {
-            txtFTPServer.BackColor = Color.Yellow;
-            //txtFTPServer.Focus();
-            toolTipCore.Show(String.Format(Properties.Resources.HostFtpServerInvalidTooltip, Environment.NewLine), txtFTPServer, 5000);
+            e.ValidationResult = false;
          }
-         else if (txtFTPServer.Text.Length > 0 && StringOps.ValidateServerName(txtFTPServer.Text) == false)
+         else if (StringOps.ValidateServerName(e.ControlText) == false)
          {
-            txtFTPServer.BackColor = Color.Yellow;
-            //txtFTPServer.Focus();
-            toolTipCore.Show(String.Format(Properties.Resources.HostFtpServerInvalidTooltip, Environment.NewLine), txtFTPServer, 5000);
-         }
-         else
-         {
-            txtFTPServer.BackColor = SystemColors.Window;
-            toolTipCore.Hide(txtFTPServer);
+            e.ValidationResult = false;
          }
       }
 
-      /// <summary>
-      /// Validate the contents of the FTP Path textbox
-      /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
-      private void txtFTPPath_Validating(object sender, CancelEventArgs e)
+      private void txtFTPPath_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
       {
-         if (radioFTP.Checked == false) return;
-
-         if (txtFTPPath.Text.ToUpper().EndsWith("FAHLOG.TXT"))
+         e.ValidationResult = true;
+         e.ControlText = StripFahClientFileNames(e.ControlText);
+         
+         if (e.ControlText.EndsWith("/") == false)
          {
-            txtFTPPath.Text = txtFTPPath.Text.Substring(0, txtFTPPath.Text.Length - 10);
-         }
-         if (txtFTPPath.Text.ToUpper().EndsWith("UNITINFO.TXT"))
-         {
-            txtFTPPath.Text = txtFTPPath.Text.Substring(0, txtFTPPath.Text.Length - 12);
-         }
-         if (txtFTPPath.Text.ToUpper().EndsWith("QUEUE.DAT"))
-         {
-            txtFTPPath.Text = txtFTPPath.Text.Substring(0, txtFTPPath.Text.Length - 9);
-         }
-         if (txtFTPPath.Text.EndsWith("/") == false)
-         {
-            txtFTPPath.Text += "/";
+            e.ControlText += "/";
          }
 
-         if (txtFTPPath.Text == "/") // Root path, don't validate against Regex
+         if (e.ControlText != "/") // Root path, don't validate against Regex
          {
-            txtFTPPath.BackColor = SystemColors.Window;
-            toolTipCore.Hide(txtFTPPath);
-         }
-         else if (txtFTPPath.Text.Length > 0 && StringOps.ValidateFtpPath(txtFTPPath.Text) == false)
-         {
-            txtFTPPath.BackColor = Color.Yellow;
-            //txtFTPPath.Focus();
-            toolTipCore.Show(String.Format(Properties.Resources.HostFtpPathInvalidTooltip, Environment.NewLine), txtFTPPath, 5000);
-         }
-         else
-         {
-            txtFTPPath.BackColor = SystemColors.Window;
-            toolTipCore.Hide(txtFTPPath);
+            if (e.ControlText.Length == 0)
+            {
+               e.ValidationResult = false;
+            }
+            else if (StringOps.ValidateFtpPath(e.ControlText) == false)
+            {
+               e.ValidationResult = false;
+            }
          }
       }
 
-      ///// <summary>
-      ///// Validate the contents of the FTP User textbox
-      ///// </summary>
-      ///// <param name="sender"></param>
-      ///// <param name="e"></param>
-      //private void txtFTPUser_Validating(object sender, CancelEventArgs e)
-      //{
-      //   if (txtFTPUser.Text.Length > 0)
-      //   {
-      //      txtFTPUser.BackColor = SystemColors.Window;
-      //      toolTipCore.Hide(txtFTPUser);
-      //   }
-      //}
-
-      ///// <summary>
-      ///// Validate the contents of the FTP Password textbox
-      ///// </summary>
-      ///// <param name="sender"></param>
-      ///// <param name="e"></param>
-      //private void txtFTPPass_Validating(object sender, CancelEventArgs e)
-      //{
-      //   if (txtFTPPass.Text.Length > 0)
-      //   {
-      //      txtFTPPass.BackColor = SystemColors.Window;
-      //      toolTipCore.Hide(txtFTPPass);
-      //   }
-      //}
-
-      /// <summary>
-      /// Validate the contents of the Web URL textbox
-      /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
-      private void txtWebURL_Validating(object sender, CancelEventArgs e)
+      private void txtFtpCredentials_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
       {
-         if (radioHTTP.Checked == false) return;
+         e.ValidationResult = true;
 
-         if (txtWebURL.Text.ToUpper().EndsWith("FAHLOG.TXT"))
+         try
          {
-            txtWebURL.Text = txtWebURL.Text.Substring(0, txtWebURL.Text.Length - 10);
+            // This will violate FxCop rule (rule ID)
+            StringOps.ValidateUsernamePasswordPair(txtFTPUser.Text, txtFTPPass.Text, true);
          }
-         if (txtWebURL.Text.ToUpper().EndsWith("UNITINFO.TXT"))
+         catch (ArgumentException ex)
          {
-            txtWebURL.Text = txtWebURL.Text.Substring(0, txtWebURL.Text.Length - 12);
+            e.ErrorToolTipText = ex.Message;
+            e.ValidationResult = false;
          }
-         if (txtWebURL.Text.ToUpper().EndsWith("QUEUE.DAT"))
+      }
+
+      private void txtWebURL_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
+      {
+         e.ValidationResult = true;
+         e.ControlText = StripFahClientFileNames(e.ControlText);
+
+         if (e.ControlText.EndsWith("/") == false)
          {
-            txtWebURL.Text = txtWebURL.Text.Substring(0, txtWebURL.Text.Length - 9);
-         }
-         if (txtWebURL.Text.EndsWith("/") == false)
-         {
-            txtWebURL.Text += "/";
+            e.ControlText += "/";
          }
 
-         if (txtWebURL.Text.Length == 0)
+         if (e.ControlText.Length == 0)
          {
-            txtWebURL.BackColor = Color.Yellow;
-            //txtWebURL.Focus();
-            toolTipCore.Show(String.Format(Properties.Resources.HostHttpUrlInvalidTooltip, Environment.NewLine), txtWebURL, 5000);
+            e.ValidationResult = false;
          }
-         else if (txtWebURL.Text.Length > 0 && StringOps.ValidateHttpURL(txtWebURL.Text) == false)
+         else if (StringOps.ValidateHttpURL(e.ControlText) == false)
          {
-            txtWebURL.BackColor = Color.Yellow;
-            //txtWebURL.Focus();
-            toolTipCore.Show(String.Format(Properties.Resources.HostHttpUrlInvalidTooltip, Environment.NewLine), txtWebURL, 5000);
+            e.ValidationResult = false;
          }
-         else
+      }
+
+      private void txtHttpCredentials_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
+      {
+         e.ValidationResult = true;
+
+         try
          {
-            txtWebURL.BackColor = SystemColors.Window;
-            toolTipCore.Hide(txtWebURL);
+            // This will violate FxCop rule (rule ID)
+            StringOps.ValidateUsernamePasswordPair(txtWebUser.Text, txtWebPass.Text);
          }
+         catch (ArgumentException ex)
+         {
+            e.ErrorToolTipText = ex.Message;
+            e.ValidationResult = false;
+         }
+      }
+      
+      private string StripFahClientFileNames(string value)
+      {
+         if (value.ToUpperInvariant().EndsWith("FAHLOG.TXT"))
+         {
+            return value.Substring(0, txtLocalPath.Text.Length - 10);
+         }
+         if (value.ToUpperInvariant().EndsWith("UNITINFO.TXT"))
+         {
+            return value.Substring(0, txtLocalPath.Text.Length - 12);
+         }
+         if (value.ToUpperInvariant().EndsWith("QUEUE.DAT"))
+         {
+            return value.Substring(0, txtLocalPath.Text.Length - 9);
+         }
+         
+         return value;
       }
       #endregion
 
@@ -683,126 +568,48 @@ namespace HFM.Forms
       
       private bool ValidateAcceptance()
       {
-         if (txtName.Text.Length == 0)
-         {
-            txtName.BackColor = Color.Yellow;
-            txtName.Focus();
-            toolTipCore.Show("Instance Name is required.", txtName, 5000);
-            return false;
-         }
-
-         if (txtLogFileName.Text.Length == 0)
-         {
-            txtLogFileName.BackColor = Color.Yellow;
-            txtLogFileName.Focus();
-            toolTipCore.Show("FAHlog.txt File Name is required.", txtLogFileName, 5000);
-            return false;
-         }
-
-         if (txtUnitFileName.Text.Length == 0)
-         {
-            txtUnitFileName.BackColor = Color.Yellow;
-            txtUnitFileName.Focus();
-            toolTipCore.Show("unitinfo.txt File Name is required.", txtUnitFileName, 5000);
-            return false;
-         }
-
-         if (txtQueueFileName.Text.Length == 0)
-         {
-            txtQueueFileName.BackColor = Color.Yellow;
-            txtQueueFileName.Focus();
-            toolTipCore.Show("queue.dat File Name is required.", txtQueueFileName, 5000);
-            return false;
-         }
-
+         txtName.ValidateControlText();
+         txtLogFileName.ValidateControlText();
+         txtUnitFileName.ValidateControlText();
+         txtQueueFileName.ValidateControlText();
          if (radioLocal.Checked)
          {
-            if (txtLocalPath.Text.Length == 0)
-            {
-               txtLocalPath.BackColor = Color.Yellow;
-               txtLocalPath.Focus();
-               return false;
-            }
+            txtLocalPath.ValidateControlText();
          }
-
          else if (radioFTP.Checked)
          {
-            if (txtFTPServer.Text.Length == 0)
-            {
-               txtFTPServer.BackColor = Color.Yellow;
-               txtFTPServer.Focus();
-               return false;
-            }
-
-            if (txtFTPPath.Text.Length == 0)
-            {
-               txtFTPPath.BackColor = Color.Yellow;
-               txtFTPPath.Focus();
-               return false;
-            }
-
-            // Validate that the FTP user and password are specified (both are required)
-            txtFTPUser.BackColor = SystemColors.Window;
-            toolTipCore.Hide(txtFTPUser);
-            txtFTPPass.BackColor = SystemColors.Window;
-            toolTipCore.Hide(txtFTPPass);
-
-            if ((txtFTPUser.Text.Length < 1) && (txtFTPPass.Text.Length > 0))
-            {
-               txtFTPUser.BackColor = Color.Yellow;
-               txtFTPUser.Focus();
-               toolTipCore.Show("Username must be specified if password is set.", txtFTPUser, 5000);
-               return false;
-            }
-            else if ((txtFTPUser.Text.Length > 0) && (txtFTPPass.Text.Length < 1))
-            {
-               txtFTPPass.BackColor = Color.Yellow;
-               txtFTPPass.Focus();
-               toolTipCore.Show("Password must be specified if username is set.", txtFTPPass, 5000);
-               return false;
-            }
+            txtFTPServer.ValidateControlText();
+            txtFTPPath.ValidateControlText();
+            txtFTPUser.ValidateControlText();
+            txtFTPPass.ValidateControlText();
          }
          else if (radioHTTP.Checked)
          {
-            if (txtWebURL.Text.Length == 0)
-            {
-               txtWebURL.BackColor = Color.Yellow;
-               txtWebURL.Focus();
-               return false;
-            }
-
-            // Validate that the HTTP user and password are specified (both are required)
-            txtWebUser.BackColor = SystemColors.Window;
-            toolTipCore.Hide(txtWebUser);
-            txtWebPass.BackColor = SystemColors.Window;
-            toolTipCore.Hide(txtWebPass);
-
-            if ((txtWebUser.Text.Length < 1) && (txtWebPass.Text.Length > 0))
-            {
-               txtWebUser.BackColor = Color.Yellow;
-               txtWebUser.Focus();
-               toolTipCore.Show("Username must be specified if password is set.", txtWebUser, 5000);
-               return false;
-            }
-            else if ((txtWebUser.Text.Length > 0) && (txtWebPass.Text.Length < 1))
-            {
-               txtWebPass.BackColor = Color.Yellow;
-               txtWebPass.Focus();
-               toolTipCore.Show("Password must be specified if username is set.", txtWebPass, 5000);
-               return false;
-            }
+            txtWebURL.ValidateControlText();
+            txtWebUser.ValidateControlText();
+            txtWebPass.ValidateControlText();
          }
 
          // Check for error conditions
-         if (txtName.BackColor == Color.Yellow ||
-             txtClientMegahertz.BackColor == Color.Yellow ||
-             txtLogFileName.BackColor == Color.Yellow ||
-             txtUnitFileName.BackColor == Color.Yellow ||
-             txtQueueFileName.BackColor == Color.Yellow ||
-             txtLocalPath.BackColor == Color.Yellow ||
-             txtFTPServer.BackColor == Color.Yellow ||
-             txtFTPPath.BackColor == Color.Yellow ||
-             txtWebURL.BackColor == Color.Yellow)
+         if (txtName.ErrorState ||
+             txtClientMegahertz.ErrorState ||
+             txtLogFileName.ErrorState ||
+             txtUnitFileName.ErrorState ||
+             txtQueueFileName.ErrorState)
+         {
+            MessageBox.Show("There are validation errors.  Please correct the yellow highlighted fields.", "HFM.NET",
+               MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            return false;
+         }
+
+         if (txtLocalPath.ErrorState ||
+             txtFTPServer.ErrorState ||
+             txtFTPPath.ErrorState ||
+             txtFTPUser.ErrorState ||
+             txtFTPPass.ErrorState ||
+             txtWebURL.ErrorState ||
+             txtWebUser.ErrorState ||
+             txtWebPass.ErrorState)
          {
             if (MessageBox.Show("There are validation errors.  Do you wish to accept the input anyway?", "HFM.NET",
                   MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
@@ -877,10 +684,10 @@ namespace HFM.Forms
          _Instance.Server = EditInstance.Server;
          _Instance.Username = EditInstance.Username;
          _Instance.Password = EditInstance.Password;
+         _Instance.FtpMode = EditInstance.FtpMode;
 
          _ClientInstances.Edit(PreviousName, PreviousPath, _Instance);
       }
-
       #endregion
    }
 }

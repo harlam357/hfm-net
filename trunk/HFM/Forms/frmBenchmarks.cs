@@ -62,6 +62,9 @@ namespace HFM.Forms
          UpdateClientsComboBinding();
          UpdateProjectListBoxBinding(_initialProjectID);
          lstColors.DataSource = _GraphColors;
+         
+         // Issue 154 - make sure focus is on the projects list box
+         listBox1.Select();
       }
 
       private void frmBenchmarks_FormClosing(object sender, FormClosingEventArgs e)

@@ -101,7 +101,7 @@ namespace HFM.Helpers.Tests
             mocks.ReplayAll();
 
             NetworkOps.FtpDownloadHelper(Request, Path.Combine(TestFilesWorkFolder, "ftp_download_binary.html"), 
-               String.Empty, String.Empty, DownloadType.Binary);
+               String.Empty, String.Empty, FtpType.Passive, DownloadType.Binary);
 
             mocks.VerifyAll();
          }
@@ -121,8 +121,8 @@ namespace HFM.Helpers.Tests
             Expect.Call(Response.GetResponseStream()).Return(stream);
             mocks.ReplayAll();
 
-            NetworkOps.FtpDownloadHelper(Request, Path.Combine(TestFilesWorkFolder, "ftp_download_text.html"), 
-               String.Empty, String.Empty, DownloadType.ASCII);
+            NetworkOps.FtpDownloadHelper(Request, Path.Combine(TestFilesWorkFolder, "ftp_download_text.html"),
+               String.Empty, String.Empty, FtpType.Passive, DownloadType.ASCII);
 
             mocks.VerifyAll();
          }

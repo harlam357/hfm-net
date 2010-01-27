@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Network Operations Helper Class
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -133,15 +133,34 @@ namespace HFM.Helpers
       /// <param name="Password">Ftp Login Password.</param>
       /// <param name="type">Type of Download.</param>
       /// <exception cref="ArgumentException">Throws if Server, FtpPath, RemoteFileName, or LocalFilePath is Null or Empty.</exception>
-      public static void FtpDownloadHelper(string Server, string FtpPath, string RemoteFileName, string LocalFilePath, string Username, string Password, DownloadType type)
+      public static void FtpDownloadHelper(string Server, string FtpPath, string RemoteFileName, string LocalFilePath, 
+                                           string Username, string Password, DownloadType type)
+      {
+         FtpDownloadHelper(Server, FtpPath, RemoteFileName, LocalFilePath, Username, Password, FtpType.Passive, type);
+      }
+      
+      /// <summary>
+      /// Download a File via Ftp.
+      /// </summary>
+      /// <param name="Server">Server Name or IP.</param>
+      /// <param name="FtpPath">Path to download from on remote Ftp server.</param>
+      /// <param name="RemoteFileName">Remote file to download.</param>
+      /// <param name="LocalFilePath">Path to local file.</param>
+      /// <param name="Username">Ftp Login Username.</param>
+      /// <param name="Password">Ftp Login Password.</param>
+      /// <param name="ftpMode">Ftp Transfer Mode.</param>
+      /// <param name="type">Type of Download.</param>
+      /// <exception cref="ArgumentException">Throws if Server, FtpPath, RemoteFileName, or LocalFilePath is Null or Empty.</exception>
+      public static void FtpDownloadHelper(string Server, string FtpPath, string RemoteFileName, string LocalFilePath, 
+                                           string Username, string Password, FtpType ftpMode, DownloadType type)
       {
          if (String.IsNullOrEmpty(Server) || String.IsNullOrEmpty(FtpPath) || String.IsNullOrEmpty(RemoteFileName))
          {
             throw new ArgumentException("Arguments 'Server', 'FtpPath', and 'RemoteFileName'cannot be a null or empty string.");
          }
-      
-         FtpDownloadHelper((FtpWebRequest)FtpWebRequest.Create(new Uri(String.Format(CultureInfo.InvariantCulture, 
-            "ftp://{0}{1}{2}", Server, FtpPath, RemoteFileName))), LocalFilePath, Username, Password, type);
+
+         FtpDownloadHelper((FtpWebRequest)FtpWebRequest.Create(new Uri(String.Format(CultureInfo.InvariantCulture,
+            "ftp://{0}{1}{2}", Server, FtpPath, RemoteFileName))), LocalFilePath, Username, Password, ftpMode, type);
       }
 
       /// <summary>
@@ -151,9 +170,11 @@ namespace HFM.Helpers
       /// <param name="LocalFilePath">Path to local file.</param>
       /// <param name="Username">Ftp Login Username.</param>
       /// <param name="Password">Ftp Login Password.</param>
+      /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <param name="type">Type of Download.</param>
       /// <exception cref="ArgumentException">Throws if Server, FtpPath, RemoteFileName, or LocalFilePath is Null or Empty.</exception>
-      public static void FtpDownloadHelper(FtpWebRequest Request, string LocalFilePath, string Username, string Password, DownloadType type)
+      public static void FtpDownloadHelper(FtpWebRequest Request, string LocalFilePath, string Username, string Password, 
+                                           FtpType ftpMode, DownloadType type)
       {
          if (String.IsNullOrEmpty(LocalFilePath))
          {
@@ -162,7 +183,12 @@ namespace HFM.Helpers
 
          Request.Method = WebRequestMethods.Ftp.DownloadFile;
          Request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-         //Request.UsePassive = PassiveMode;
+
+         Request.UsePassive = true;
+         if (ftpMode.Equals(FtpType.Active))
+         {
+            Request.UsePassive = false;
+         }
 
          SetNetworkCredentials(Request, Username, Password);
          // Don't Set Proxy on FtpWebRequest, Proxy is for Http calls only.

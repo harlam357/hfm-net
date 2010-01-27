@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using harlam357.Windows.Forms;
+
 namespace HFM.Forms
 {
    partial class frmHost
@@ -52,54 +54,57 @@ namespace HFM.Forms
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmHost));
          this.btnOK = new HFM.Classes.ButtonWrapper();
          this.btnCancel = new HFM.Classes.ButtonWrapper();
-         this.txtLocalPath = new HFM.Classes.TextBoxWrapper();
+         this.txtLocalPath = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.toolTipHost = new System.Windows.Forms.ToolTip(this.components);
          this.btnBrowseLocal = new HFM.Classes.ButtonWrapper();
          this.radioLocal = new HFM.Classes.RadioButtonWrapper();
-         this.txtName = new HFM.Classes.TextBoxWrapper();
+         this.txtName = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.chkClientVM = new HFM.Classes.CheckBoxWrapper();
+         this.numOffset = new System.Windows.Forms.NumericUpDown();
          this.lblInstanceName = new HFM.Classes.LabelWrapper();
          this.radioFTP = new HFM.Classes.RadioButtonWrapper();
          this.lblFTPServer = new HFM.Classes.LabelWrapper();
-         this.txtFTPServer = new HFM.Classes.TextBoxWrapper();
+         this.txtFTPServer = new harlam357.Windows.Forms.ValidatingTextBox();
          this.lblFTPPath = new HFM.Classes.LabelWrapper();
-         this.txtFTPPath = new HFM.Classes.TextBoxWrapper();
+         this.txtFTPPath = new harlam357.Windows.Forms.ValidatingTextBox();
          this.radioHTTP = new HFM.Classes.RadioButtonWrapper();
-         this.txtWebURL = new HFM.Classes.TextBoxWrapper();
+         this.txtWebURL = new harlam357.Windows.Forms.ValidatingTextBox();
          this.lblWebURL = new HFM.Classes.LabelWrapper();
-         this.txtFTPUser = new HFM.Classes.TextBoxWrapper();
+         this.txtFTPUser = new harlam357.Windows.Forms.ValidatingTextBox();
          this.lblFTPUser = new HFM.Classes.LabelWrapper();
-         this.txtFTPPass = new HFM.Classes.TextBoxWrapper();
+         this.txtFTPPass = new harlam357.Windows.Forms.ValidatingTextBox();
          this.lblFTPPass = new HFM.Classes.LabelWrapper();
-         this.txtWebUser = new HFM.Classes.TextBoxWrapper();
-         this.txtWebPass = new HFM.Classes.TextBoxWrapper();
+         this.txtWebUser = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.txtWebPass = new harlam357.Windows.Forms.ValidatingTextBox();
          this.lblWebUser = new HFM.Classes.LabelWrapper();
          this.lblWebPass = new HFM.Classes.LabelWrapper();
          this.grpLocal = new HFM.Classes.GroupBoxWrapper();
          this.lblLogFolder = new HFM.Classes.LabelWrapper();
          this.grpFTP = new HFM.Classes.GroupBoxWrapper();
+         this.labelWrapper1 = new HFM.Classes.LabelWrapper();
+         this.radioActive = new HFM.Classes.RadioButtonWrapper();
+         this.radioPassive = new HFM.Classes.RadioButtonWrapper();
          this.grpHTTP = new HFM.Classes.GroupBoxWrapper();
-         this.toolTipCore = new System.Windows.Forms.ToolTip(this.components);
-         this.chkClientVM = new HFM.Classes.CheckBoxWrapper();
-         this.numOffset = new System.Windows.Forms.NumericUpDown();
          this.openLogFolder = new System.Windows.Forms.FolderBrowserDialog();
-         this.txtLogFileName = new HFM.Classes.TextBoxWrapper();
+         this.txtLogFileName = new harlam357.Windows.Forms.ValidatingTextBox();
          this.lblLogFileName = new HFM.Classes.LabelWrapper();
-         this.txtUnitFileName = new HFM.Classes.TextBoxWrapper();
+         this.txtUnitFileName = new harlam357.Windows.Forms.ValidatingTextBox();
          this.lblUnitFileName = new HFM.Classes.LabelWrapper();
          this.lblClientMegahertz = new HFM.Classes.LabelWrapper();
-         this.txtClientMegahertz = new HFM.Classes.TextBoxWrapper();
+         this.txtClientMegahertz = new harlam357.Windows.Forms.ValidatingTextBox();
          this.label1 = new HFM.Classes.LabelWrapper();
          this.lblQueueFileName = new HFM.Classes.LabelWrapper();
-         this.txtQueueFileName = new HFM.Classes.TextBoxWrapper();
+         this.txtQueueFileName = new harlam357.Windows.Forms.ValidatingTextBox();
+         ((System.ComponentModel.ISupportInitialize)(this.numOffset)).BeginInit();
          this.grpLocal.SuspendLayout();
          this.grpFTP.SuspendLayout();
          this.grpHTTP.SuspendLayout();
-         ((System.ComponentModel.ISupportInitialize)(this.numOffset)).BeginInit();
          this.SuspendLayout();
          // 
          // btnOK
          // 
          this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-         this.btnOK.Location = new System.Drawing.Point(212, 325);
+         this.btnOK.Location = new System.Drawing.Point(212, 350);
          this.btnOK.Name = "btnOK";
          this.btnOK.Size = new System.Drawing.Size(81, 25);
          this.btnOK.TabIndex = 19;
@@ -112,7 +117,7 @@ namespace HFM.Forms
          this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
          this.btnCancel.CausesValidation = false;
          this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-         this.btnCancel.Location = new System.Drawing.Point(304, 325);
+         this.btnCancel.Location = new System.Drawing.Point(304, 350);
          this.btnCancel.Name = "btnCancel";
          this.btnCancel.Size = new System.Drawing.Size(81, 25);
          this.btnCancel.TabIndex = 20;
@@ -122,18 +127,24 @@ namespace HFM.Forms
          // txtLocalPath
          // 
          this.txtLocalPath.Anchor = System.Windows.Forms.AnchorStyles.Left;
+         this.txtLocalPath.BackColor = System.Drawing.SystemColors.Window;
+         this.txtLocalPath.DoubleBuffered = true;
+         this.txtLocalPath.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtLocalPath.Location = new System.Drawing.Point(11, 35);
          this.txtLocalPath.Name = "txtLocalPath";
-         this.txtLocalPath.ReadOnly = true;
          this.txtLocalPath.Size = new System.Drawing.Size(320, 20);
          this.txtLocalPath.TabIndex = 1;
-         this.txtLocalPath.Validating += new System.ComponentModel.CancelEventHandler(this.txtLocalPath_Validating);
+         this.txtLocalPath.ErrorToolTip = this.toolTipHost;
+         this.txtLocalPath.ErrorToolTipDuration = 5000;
+         this.txtLocalPath.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.txtLocalPath.ErrorToolTipText = "Log Folder must be a valid local or network (UNC) path.";
+         this.txtLocalPath.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtLocalPath.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtLocalPath_CustomValidation);
          // 
          // btnBrowseLocal
          // 
          this.btnBrowseLocal.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.btnBrowseLocal.CausesValidation = false;
-         this.btnBrowseLocal.Enabled = false;
          this.btnBrowseLocal.Location = new System.Drawing.Point(337, 33);
          this.btnBrowseLocal.Name = "btnBrowseLocal";
          this.btnBrowseLocal.Size = new System.Drawing.Size(30, 24);
@@ -156,12 +167,51 @@ namespace HFM.Forms
          // 
          // txtName
          // 
+         this.txtName.BackColor = System.Drawing.SystemColors.Window;
+         this.txtName.DoubleBuffered = true;
+         this.txtName.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtName.Location = new System.Drawing.Point(146, 12);
          this.txtName.MaxLength = 100;
          this.txtName.Name = "txtName";
          this.txtName.Size = new System.Drawing.Size(237, 20);
          this.txtName.TabIndex = 1;
-         this.txtName.Validating += new System.ComponentModel.CancelEventHandler(this.txtName_Validating);
+         this.txtName.ErrorToolTip = this.toolTipHost;
+         this.txtName.ErrorToolTipDuration = 5000;
+         this.txtName.ErrorToolTipPoint = new System.Drawing.Point(230, -20);
+         this.txtName.ErrorToolTipText = "Instance name can contain only letters, numbers,\r\nand basic symbols (+=-_$&^.[])." +
+             " It must be at\r\nleast three characters long and must not begin or\r\nend with a do" +
+             "t (.) or a space.";
+         this.txtName.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtName.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtName_CustomValidation);
+         // 
+         // chkClientVM
+         // 
+         this.chkClientVM.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+         this.chkClientVM.AutoSize = true;
+         this.chkClientVM.Location = new System.Drawing.Point(12, 326);
+         this.chkClientVM.Name = "chkClientVM";
+         this.chkClientVM.Size = new System.Drawing.Size(301, 17);
+         this.chkClientVM.TabIndex = 16;
+         this.chkClientVM.Text = "Client is on Virtual Machine (and reports UTC as local time)";
+         this.chkClientVM.UseVisualStyleBackColor = true;
+         // 
+         // numOffset
+         // 
+         this.numOffset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+         this.numOffset.Location = new System.Drawing.Point(8, 352);
+         this.numOffset.Maximum = new decimal(new int[] {
+            720,
+            0,
+            0,
+            0});
+         this.numOffset.Minimum = new decimal(new int[] {
+            720,
+            0,
+            0,
+            -2147483648});
+         this.numOffset.Name = "numOffset";
+         this.numOffset.Size = new System.Drawing.Size(54, 20);
+         this.numOffset.TabIndex = 17;
          // 
          // lblInstanceName
          // 
@@ -186,7 +236,6 @@ namespace HFM.Forms
          // 
          // lblFTPServer
          // 
-         this.lblFTPServer.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblFTPServer.AutoSize = true;
          this.lblFTPServer.Location = new System.Drawing.Point(11, 18);
          this.lblFTPServer.Name = "lblFTPServer";
@@ -196,16 +245,22 @@ namespace HFM.Forms
          // 
          // txtFTPServer
          // 
+         this.txtFTPServer.BackColor = System.Drawing.SystemColors.Window;
+         this.txtFTPServer.DoubleBuffered = true;
+         this.txtFTPServer.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtFTPServer.Location = new System.Drawing.Point(152, 15);
          this.txtFTPServer.Name = "txtFTPServer";
-         this.txtFTPServer.ReadOnly = true;
          this.txtFTPServer.Size = new System.Drawing.Size(215, 20);
          this.txtFTPServer.TabIndex = 1;
-         this.txtFTPServer.Validating += new System.ComponentModel.CancelEventHandler(this.txtFTPServer_Validating);
+         this.txtFTPServer.ErrorToolTip = this.toolTipHost;
+         this.txtFTPServer.ErrorToolTipDuration = 5000;
+         this.txtFTPServer.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.txtFTPServer.ErrorToolTipText = "FTP server must be a valid host name or IP address.";
+         this.txtFTPServer.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtFTPServer.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtFTPServer_CustomValidation);
          // 
          // lblFTPPath
          // 
-         this.lblFTPPath.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblFTPPath.AutoSize = true;
          this.lblFTPPath.Location = new System.Drawing.Point(11, 45);
          this.lblFTPPath.Name = "lblFTPPath";
@@ -215,12 +270,20 @@ namespace HFM.Forms
          // 
          // txtFTPPath
          // 
+         this.txtFTPPath.BackColor = System.Drawing.SystemColors.Window;
+         this.txtFTPPath.DoubleBuffered = true;
+         this.txtFTPPath.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtFTPPath.Location = new System.Drawing.Point(152, 42);
          this.txtFTPPath.Name = "txtFTPPath";
-         this.txtFTPPath.ReadOnly = true;
          this.txtFTPPath.Size = new System.Drawing.Size(215, 20);
          this.txtFTPPath.TabIndex = 3;
-         this.txtFTPPath.Validating += new System.ComponentModel.CancelEventHandler(this.txtFTPPath_Validating);
+         this.txtFTPPath.ErrorToolTip = this.toolTipHost;
+         this.txtFTPPath.ErrorToolTipDuration = 5000;
+         this.txtFTPPath.ErrorToolTipPoint = new System.Drawing.Point(10, -40);
+         this.txtFTPPath.ErrorToolTipText = "FTP path must be the full path to the folder\r\ncontaining the log files (including" +
+             " the trailing /).";
+         this.txtFTPPath.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtFTPPath.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtFTPPath_CustomValidation);
          // 
          // radioHTTP
          // 
@@ -238,12 +301,19 @@ namespace HFM.Forms
          // 
          this.txtWebURL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                      | System.Windows.Forms.AnchorStyles.Right)));
+         this.txtWebURL.BackColor = System.Drawing.SystemColors.Window;
+         this.txtWebURL.DoubleBuffered = true;
+         this.txtWebURL.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtWebURL.Location = new System.Drawing.Point(152, 15);
          this.txtWebURL.Name = "txtWebURL";
-         this.txtWebURL.ReadOnly = true;
          this.txtWebURL.Size = new System.Drawing.Size(215, 20);
          this.txtWebURL.TabIndex = 1;
-         this.txtWebURL.Validating += new System.ComponentModel.CancelEventHandler(this.txtWebURL_Validating);
+         this.txtWebURL.ErrorToolTip = this.toolTipHost;
+         this.txtWebURL.ErrorToolTipDuration = 5000;
+         this.txtWebURL.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.txtWebURL.ErrorToolTipText = "URL must be a the full path to the location containing the log files.";
+         this.txtWebURL.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtWebURL.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtWebURL_CustomValidation);
          // 
          // lblWebURL
          // 
@@ -256,15 +326,22 @@ namespace HFM.Forms
          // 
          // txtFTPUser
          // 
+         this.txtFTPUser.BackColor = System.Drawing.SystemColors.Window;
+         this.txtFTPUser.DoubleBuffered = true;
+         this.txtFTPUser.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtFTPUser.Location = new System.Drawing.Point(152, 69);
          this.txtFTPUser.Name = "txtFTPUser";
-         this.txtFTPUser.ReadOnly = true;
          this.txtFTPUser.Size = new System.Drawing.Size(215, 20);
          this.txtFTPUser.TabIndex = 5;
+         this.txtFTPUser.ErrorToolTip = this.toolTipHost;
+         this.txtFTPUser.ErrorToolTipDuration = 5000;
+         this.txtFTPUser.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.txtFTPUser.ErrorToolTipText = "";
+         this.txtFTPUser.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtFTPUser.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtFtpCredentials_CustomValidation);
          // 
          // lblFTPUser
          // 
-         this.lblFTPUser.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblFTPUser.AutoSize = true;
          this.lblFTPUser.Location = new System.Drawing.Point(11, 72);
          this.lblFTPUser.Name = "lblFTPUser";
@@ -274,16 +351,23 @@ namespace HFM.Forms
          // 
          // txtFTPPass
          // 
+         this.txtFTPPass.BackColor = System.Drawing.SystemColors.Window;
+         this.txtFTPPass.DoubleBuffered = true;
+         this.txtFTPPass.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtFTPPass.Location = new System.Drawing.Point(152, 96);
          this.txtFTPPass.Name = "txtFTPPass";
-         this.txtFTPPass.ReadOnly = true;
          this.txtFTPPass.Size = new System.Drawing.Size(215, 20);
          this.txtFTPPass.TabIndex = 7;
+         this.txtFTPPass.ErrorToolTip = this.toolTipHost;
+         this.txtFTPPass.ErrorToolTipDuration = 5000;
+         this.txtFTPPass.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.txtFTPPass.ErrorToolTipText = "";
          this.txtFTPPass.UseSystemPasswordChar = true;
+         this.txtFTPPass.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtFTPPass.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtFtpCredentials_CustomValidation);
          // 
          // lblFTPPass
          // 
-         this.lblFTPPass.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblFTPPass.AutoSize = true;
          this.lblFTPPass.Location = new System.Drawing.Point(11, 99);
          this.lblFTPPass.Name = "lblFTPPass";
@@ -295,23 +379,39 @@ namespace HFM.Forms
          // 
          this.txtWebUser.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                      | System.Windows.Forms.AnchorStyles.Right)));
+         this.txtWebUser.BackColor = System.Drawing.SystemColors.Window;
+         this.txtWebUser.DoubleBuffered = true;
+         this.txtWebUser.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtWebUser.Location = new System.Drawing.Point(152, 42);
          this.txtWebUser.Name = "txtWebUser";
-         this.txtWebUser.ReadOnly = true;
          this.txtWebUser.Size = new System.Drawing.Size(215, 20);
          this.txtWebUser.TabIndex = 3;
+         this.txtWebUser.ErrorToolTip = this.toolTipHost;
+         this.txtWebUser.ErrorToolTipDuration = 5000;
+         this.txtWebUser.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.txtWebUser.ErrorToolTipText = "";
+         this.txtWebUser.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtWebUser.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtHttpCredentials_CustomValidation);
          // 
          // txtWebPass
          // 
          this.txtWebPass.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                      | System.Windows.Forms.AnchorStyles.Right)));
+         this.txtWebPass.BackColor = System.Drawing.SystemColors.Window;
+         this.txtWebPass.DoubleBuffered = true;
+         this.txtWebPass.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtWebPass.Location = new System.Drawing.Point(152, 69);
          this.txtWebPass.Name = "txtWebPass";
          this.txtWebPass.PasswordChar = '#';
-         this.txtWebPass.ReadOnly = true;
          this.txtWebPass.Size = new System.Drawing.Size(215, 20);
          this.txtWebPass.TabIndex = 5;
+         this.txtWebPass.ErrorToolTip = this.toolTipHost;
+         this.txtWebPass.ErrorToolTipDuration = 5000;
+         this.txtWebPass.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.txtWebPass.ErrorToolTipText = "";
          this.txtWebPass.UseSystemPasswordChar = true;
+         this.txtWebPass.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtWebPass.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtHttpCredentials_CustomValidation);
          // 
          // lblWebUser
          // 
@@ -354,6 +454,9 @@ namespace HFM.Forms
          // 
          // grpFTP
          // 
+         this.grpFTP.Controls.Add(this.labelWrapper1);
+         this.grpFTP.Controls.Add(this.radioActive);
+         this.grpFTP.Controls.Add(this.radioPassive);
          this.grpFTP.Controls.Add(this.lblFTPServer);
          this.grpFTP.Controls.Add(this.lblFTPPath);
          this.grpFTP.Controls.Add(this.txtFTPPass);
@@ -364,9 +467,40 @@ namespace HFM.Forms
          this.grpFTP.Controls.Add(this.txtFTPUser);
          this.grpFTP.Location = new System.Drawing.Point(7, 166);
          this.grpFTP.Name = "grpFTP";
-         this.grpFTP.Size = new System.Drawing.Size(378, 126);
+         this.grpFTP.Size = new System.Drawing.Size(378, 152);
          this.grpFTP.TabIndex = 15;
          this.grpFTP.TabStop = false;
+         // 
+         // labelWrapper1
+         // 
+         this.labelWrapper1.AutoSize = true;
+         this.labelWrapper1.Location = new System.Drawing.Point(11, 126);
+         this.labelWrapper1.Name = "labelWrapper1";
+         this.labelWrapper1.Size = new System.Drawing.Size(60, 13);
+         this.labelWrapper1.TabIndex = 10;
+         this.labelWrapper1.Text = "FTP Mode:";
+         // 
+         // radioActive
+         // 
+         this.radioActive.AutoSize = true;
+         this.radioActive.Location = new System.Drawing.Point(220, 124);
+         this.radioActive.Name = "radioActive";
+         this.radioActive.Size = new System.Drawing.Size(55, 17);
+         this.radioActive.TabIndex = 9;
+         this.radioActive.Text = "Active";
+         this.radioActive.UseVisualStyleBackColor = true;
+         // 
+         // radioPassive
+         // 
+         this.radioPassive.AutoSize = true;
+         this.radioPassive.Checked = true;
+         this.radioPassive.Location = new System.Drawing.Point(152, 124);
+         this.radioPassive.Name = "radioPassive";
+         this.radioPassive.Size = new System.Drawing.Size(62, 17);
+         this.radioPassive.TabIndex = 8;
+         this.radioPassive.TabStop = true;
+         this.radioPassive.Text = "Passive";
+         this.radioPassive.UseVisualStyleBackColor = true;
          // 
          // grpHTTP
          // 
@@ -382,57 +516,25 @@ namespace HFM.Forms
          this.grpHTTP.TabIndex = 14;
          this.grpHTTP.TabStop = false;
          // 
-         // toolTipCore
-         // 
-         this.toolTipCore.AutoPopDelay = 8000;
-         this.toolTipCore.InitialDelay = 500;
-         this.toolTipCore.IsBalloon = true;
-         this.toolTipCore.ReshowDelay = 100;
-         this.toolTipCore.ToolTipTitle = "Quick Help";
-         // 
-         // chkClientVM
-         // 
-         this.chkClientVM.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-         this.chkClientVM.AutoSize = true;
-         this.chkClientVM.Location = new System.Drawing.Point(12, 301);
-         this.chkClientVM.Name = "chkClientVM";
-         this.chkClientVM.Size = new System.Drawing.Size(301, 17);
-         this.chkClientVM.TabIndex = 16;
-         this.chkClientVM.Text = "Client is on Virtual Machine (and reports UTC as local time)";
-         this.toolTipCore.SetToolTip(this.chkClientVM, resources.GetString("chkClientVM.ToolTip"));
-         this.chkClientVM.UseVisualStyleBackColor = true;
-         // 
-         // numOffset
-         // 
-         this.numOffset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-         this.numOffset.Location = new System.Drawing.Point(8, 327);
-         this.numOffset.Maximum = new decimal(new int[] {
-            720,
-            0,
-            0,
-            0});
-         this.numOffset.Minimum = new decimal(new int[] {
-            720,
-            0,
-            0,
-            -2147483648});
-         this.numOffset.Name = "numOffset";
-         this.numOffset.Size = new System.Drawing.Size(54, 20);
-         this.numOffset.TabIndex = 17;
-         this.toolTipCore.SetToolTip(this.numOffset, resources.GetString("numOffset.ToolTip"));
-         // 
          // openLogFolder
          // 
          this.openLogFolder.ShowNewFolderButton = false;
          // 
          // txtLogFileName
          // 
+         this.txtLogFileName.DoubleBuffered = true;
+         this.txtLogFileName.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtLogFileName.Location = new System.Drawing.Point(146, 64);
          this.txtLogFileName.MaxLength = 100;
          this.txtLogFileName.Name = "txtLogFileName";
          this.txtLogFileName.Size = new System.Drawing.Size(237, 20);
          this.txtLogFileName.TabIndex = 5;
-         this.txtLogFileName.Validating += new System.ComponentModel.CancelEventHandler(this.txtLogFileName_Validating);
+         this.txtLogFileName.ErrorToolTip = this.toolTipHost;
+         this.txtLogFileName.ErrorToolTipDuration = 5000;
+         this.txtLogFileName.ErrorToolTipPoint = new System.Drawing.Point(230, 0);
+         this.txtLogFileName.ErrorToolTipText = "File name contains invalid characters.";
+         this.txtLogFileName.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtLogFileName.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtFileName_CustomValidation);
          // 
          // lblLogFileName
          // 
@@ -445,12 +547,19 @@ namespace HFM.Forms
          // 
          // txtUnitFileName
          // 
+         this.txtUnitFileName.DoubleBuffered = true;
+         this.txtUnitFileName.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtUnitFileName.Location = new System.Drawing.Point(146, 90);
          this.txtUnitFileName.MaxLength = 100;
          this.txtUnitFileName.Name = "txtUnitFileName";
          this.txtUnitFileName.Size = new System.Drawing.Size(237, 20);
          this.txtUnitFileName.TabIndex = 7;
-         this.txtUnitFileName.Validating += new System.ComponentModel.CancelEventHandler(this.txtUnitFileName_Validating);
+         this.txtUnitFileName.ErrorToolTip = this.toolTipHost;
+         this.txtUnitFileName.ErrorToolTipDuration = 5000;
+         this.txtUnitFileName.ErrorToolTipPoint = new System.Drawing.Point(230, 0);
+         this.txtUnitFileName.ErrorToolTipText = "File name contains invalid characters.";
+         this.txtUnitFileName.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtUnitFileName.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtFileName_CustomValidation);
          // 
          // lblUnitFileName
          // 
@@ -472,19 +581,26 @@ namespace HFM.Forms
          // 
          // txtClientMegahertz
          // 
+         this.txtClientMegahertz.DoubleBuffered = true;
+         this.txtClientMegahertz.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtClientMegahertz.Location = new System.Drawing.Point(146, 38);
          this.txtClientMegahertz.MaxLength = 9;
          this.txtClientMegahertz.Name = "txtClientMegahertz";
          this.txtClientMegahertz.Size = new System.Drawing.Size(237, 20);
          this.txtClientMegahertz.TabIndex = 3;
          this.txtClientMegahertz.Text = "1";
-         this.txtClientMegahertz.Validating += new System.ComponentModel.CancelEventHandler(this.txtClientMegahertz_Validating);
+         this.txtClientMegahertz.ErrorToolTip = this.toolTipHost;
+         this.txtClientMegahertz.ErrorToolTipDuration = 5000;
+         this.txtClientMegahertz.ErrorToolTipPoint = new System.Drawing.Point(230, 0);
+         this.txtClientMegahertz.ErrorToolTipText = "Client Processor Megahertz must be numeric and greater than zero.";
+         this.txtClientMegahertz.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtClientMegahertz.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtClientMegahertz_CustomValidation);
          // 
          // label1
          // 
          this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
          this.label1.AutoSize = true;
-         this.label1.Location = new System.Drawing.Point(64, 330);
+         this.label1.Location = new System.Drawing.Point(64, 355);
          this.label1.Name = "label1";
          this.label1.Size = new System.Drawing.Size(136, 13);
          this.label1.TabIndex = 18;
@@ -501,23 +617,28 @@ namespace HFM.Forms
          // 
          // txtQueueFileName
          // 
+         this.txtQueueFileName.DoubleBuffered = true;
+         this.txtQueueFileName.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtQueueFileName.Location = new System.Drawing.Point(146, 116);
          this.txtQueueFileName.MaxLength = 100;
          this.txtQueueFileName.Name = "txtQueueFileName";
          this.txtQueueFileName.Size = new System.Drawing.Size(237, 20);
          this.txtQueueFileName.TabIndex = 9;
-         this.txtQueueFileName.Validating += new System.ComponentModel.CancelEventHandler(this.txtQueueFileName_Validating);
+         this.txtQueueFileName.ErrorToolTip = this.toolTipHost;
+         this.txtQueueFileName.ErrorToolTipDuration = 5000;
+         this.txtQueueFileName.ErrorToolTipPoint = new System.Drawing.Point(230, 0);
+         this.txtQueueFileName.ErrorToolTipText = "File name contains invalid characters.";
+         this.txtQueueFileName.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtQueueFileName.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtFileName_CustomValidation);
          // 
          // frmHost
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(392, 360);
+         this.ClientSize = new System.Drawing.Size(392, 385);
          this.Controls.Add(this.txtQueueFileName);
          this.Controls.Add(this.lblQueueFileName);
          this.Controls.Add(this.grpLocal);
-         this.Controls.Add(this.grpHTTP);
-         this.Controls.Add(this.grpFTP);
          this.Controls.Add(this.label1);
          this.Controls.Add(this.numOffset);
          this.Controls.Add(this.txtClientMegahertz);
@@ -534,6 +655,8 @@ namespace HFM.Forms
          this.Controls.Add(this.radioHTTP);
          this.Controls.Add(this.radioFTP);
          this.Controls.Add(this.radioLocal);
+         this.Controls.Add(this.grpHTTP);
+         this.Controls.Add(this.grpFTP);
          this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
          this.MaximizeBox = false;
@@ -542,13 +665,13 @@ namespace HFM.Forms
          this.ShowInTaskbar = false;
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
          this.Text = "Folding Instance Setup";
+         ((System.ComponentModel.ISupportInitialize)(this.numOffset)).EndInit();
          this.grpLocal.ResumeLayout(false);
          this.grpLocal.PerformLayout();
          this.grpFTP.ResumeLayout(false);
          this.grpFTP.PerformLayout();
          this.grpHTTP.ResumeLayout(false);
          this.grpHTTP.PerformLayout();
-         ((System.ComponentModel.ISupportInitialize)(this.numOffset)).EndInit();
          this.ResumeLayout(false);
          this.PerformLayout();
 
@@ -565,37 +688,40 @@ namespace HFM.Forms
       private Classes.LabelWrapper lblFTPPass;
       private Classes.LabelWrapper lblWebUser;
       private Classes.LabelWrapper lblWebPass;
-      private Classes.TextBoxWrapper txtLocalPath;
-      private Classes.TextBoxWrapper txtName;
-      private Classes.TextBoxWrapper txtFTPServer;
-      private Classes.TextBoxWrapper txtFTPPath;
-      private Classes.TextBoxWrapper txtWebURL;
-      private Classes.TextBoxWrapper txtFTPUser;
-      private Classes.TextBoxWrapper txtFTPPass;
-      private Classes.TextBoxWrapper txtWebUser;
-      private Classes.TextBoxWrapper txtWebPass;
+      private ValidatingTextBox txtLocalPath;
+      private ValidatingTextBox txtName;
+      private ValidatingTextBox txtFTPServer;
+      private ValidatingTextBox txtFTPPath;
+      private ValidatingTextBox txtWebURL;
+      private ValidatingTextBox txtFTPUser;
+      private ValidatingTextBox txtFTPPass;
+      private ValidatingTextBox txtWebUser;
+      private ValidatingTextBox txtWebPass;
       private Classes.GroupBoxWrapper grpLocal;
       private Classes.LabelWrapper lblLogFolder;
       private Classes.GroupBoxWrapper grpFTP;
       private Classes.GroupBoxWrapper grpHTTP;
-      private System.Windows.Forms.ToolTip toolTipCore;
 
       #endregion
       private System.Windows.Forms.FolderBrowserDialog openLogFolder;
-      private Classes.TextBoxWrapper txtLogFileName;
+      private ValidatingTextBox txtLogFileName;
       private Classes.LabelWrapper lblLogFileName;
-      private Classes.TextBoxWrapper txtUnitFileName;
+      private ValidatingTextBox txtUnitFileName;
       private Classes.LabelWrapper lblUnitFileName;
       private Classes.CheckBoxWrapper chkClientVM;
       private Classes.LabelWrapper lblClientMegahertz;
-      private Classes.TextBoxWrapper txtClientMegahertz;
+      private ValidatingTextBox txtClientMegahertz;
       private Classes.LabelWrapper label1;
       private System.Windows.Forms.NumericUpDown numOffset;
       private Classes.RadioButtonWrapper radioLocal;
       private Classes.RadioButtonWrapper radioFTP;
       private Classes.RadioButtonWrapper radioHTTP;
       private Classes.LabelWrapper lblQueueFileName;
-      private Classes.TextBoxWrapper txtQueueFileName;
+      private ValidatingTextBox txtQueueFileName;
+      private Classes.RadioButtonWrapper radioPassive;
+      private Classes.RadioButtonWrapper radioActive;
+      private Classes.LabelWrapper labelWrapper1;
+      private System.Windows.Forms.ToolTip toolTipHost;
 
    }
 }
