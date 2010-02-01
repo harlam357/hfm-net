@@ -43,6 +43,7 @@
     <Compile Include="FrameData.cs" />
     <Compile Include="LogLine.cs" />
     <Compile Include="LogReader.cs" />
+    <Compile Include="LogReaderFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 using Castle.Windsor;
 using NUnit.Framework;
@@ -28,6 +29,7 @@ using Majestic12;
 
 using HFM.Framework;
 using HFM.Proteins;
+using HFM.Instrumentation;
 
 namespace HFM.Proteins.Tests
 {
@@ -42,6 +44,8 @@ namespace HFM.Proteins.Tests
       [SetUp]
       public void Init()
       {
+         TraceLevelSwitch.Instance.Level = TraceLevel.Verbose;
+      
          container = new WindsorContainer();
          mocks = new MockRepository();
 
@@ -65,7 +69,7 @@ namespace HFM.Proteins.Tests
          Downloader.Prefs = Prefs;
          Downloader.ReadFromProjectSummaryHtml(fileUri);
 
-         Assert.AreEqual(345, Downloader.Dictionary.Count);
+         Assert.AreEqual(228, Downloader.Dictionary.Count);
 
          mocks.VerifyAll();
       }

@@ -48,7 +48,7 @@ namespace HFM.Instances.Tests
          benchmarkCollection = mocks.DynamicMock<IProteinBenchmarkContainer>();
       
          container.AddComponent("DataAggregator", typeof(IDataAggregator), typeof(DataAggregator));
-         container.AddComponent("LogReader", typeof(ILogReader), typeof(LogReader));
+         container.AddComponent("LogReader", typeof(ILogReaderFactory), typeof(LogReaderFactory));
          container.AddComponent("QueueReader", typeof(IQueueReader), typeof(QueueReader));
          container.AddComponent("UnitInfoFactory", typeof(IUnitInfoFactory), typeof(UnitInfoFactory));
          InstanceProvider.SetContainer(container);

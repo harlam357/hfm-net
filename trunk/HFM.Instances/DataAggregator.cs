@@ -32,8 +32,10 @@ namespace HFM.Instances
    public class DataAggregator : IDataAggregator
    {
       private readonly IQueueReader _queueReader;
-      private readonly ILogReader _logReader;
+      private readonly ILogReaderFactory _logReaderFactory;
       private readonly IUnitInfoFactory _unitInfoFactory;
+
+      private ILogReader _logReader = null;
 
       private string _InstanceName;
       /// <summary>
@@ -109,12 +111,13 @@ namespace HFM.Instances
          }
       }
 
+      private IClientRun _CurrentClientRun;
       /// <summary>
       /// Client Run Data for the Current Run
       /// </summary>
       public IClientRun CurrentClientRun
       {
-         get { return _logReader.CurrentClientRun; }
+         get { return _CurrentClientRun; }
       }
 
       private IFahLogUnitData _CurrentFahLogUnitData;
@@ -153,10 +156,10 @@ namespace HFM.Instances
       }
 
       [CLSCompliant(false)]
-      public DataAggregator(IQueueReader queueReader, ILogReader logReader, IUnitInfoFactory unitInfoFactory)
+      public DataAggregator(IQueueReader queueReader, ILogReaderFactory logReaderFactory, IUnitInfoFactory unitInfoFactory)
       {
          _queueReader = queueReader;
-         _logReader = logReader;
+         _logReaderFactory = logReaderFactory;
          _unitInfoFactory = unitInfoFactory;
       }
 
@@ -167,9 +170,12 @@ namespace HFM.Instances
       /// </summary>
       public IList<IUnitInfo> AggregateData()
       {
+         _logReader = _logReaderFactory.Create();
+      
          IList<IUnitInfo> parsedUnits;
 
          _logReader.ScanFAHLog(_InstanceName, _fahLogFilePath);
+         _CurrentClientRun = _logReader.CurrentClientRun;
          _CurrentFahLogUnitData = _logReader.GetFahLogDataFromLogLines(_logReader.CurrentWorkUnitLogLines);
 
          // Decision Time: If Queue Read fails parse from logs only
@@ -184,6 +190,8 @@ namespace HFM.Instances
 
             parsedUnits = GenerateUnitInfoDataFromLogs();
          }
+         
+         _logReader = null;
 
          return parsedUnits;
       }

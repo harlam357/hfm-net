@@ -205,6 +205,9 @@ namespace HFM.Proteins
       /// <param name="ProjectID">Project ID</param>
       public IProtein GetProtein(int ProjectID)
       {
+         // If Project Requested is 0, just return a "blank" Protein.
+         if (ProjectID == 0) return new Protein();
+      
          // If Project is Found, return it
          if (ContainsKey(ProjectID)) return this[ProjectID];
          
