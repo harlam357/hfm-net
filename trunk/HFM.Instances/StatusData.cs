@@ -46,11 +46,18 @@ namespace HFM.Instances
          set { _LastRetrievalTime = value; }
       }
 
-      private bool _ClientIsOnVirtualMachine;
-      public bool ClientIsOnVirtualMachine
+      private bool _IgnoreUtcOffset;
+      public bool IgnoreUtcOffset
       {
-         get { return _ClientIsOnVirtualMachine; }
-         set { _ClientIsOnVirtualMachine = value; }
+         get { return _IgnoreUtcOffset; }
+         set { _IgnoreUtcOffset = value; }
+      }
+      
+      private TimeSpan _UtcOffset;
+      public TimeSpan UtcOffset
+      {
+         get { return _UtcOffset; }
+         set { _UtcOffset = value; }
       }
 
       private int _ClientTimeOffset;

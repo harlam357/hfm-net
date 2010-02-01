@@ -25,7 +25,6 @@ using Castle.Windsor.Configuration.Interpreters;
 using Castle.Core.Resource;
 
 using HFM.Framework;
-using HFM.Instances;
 
 namespace HFM
 {

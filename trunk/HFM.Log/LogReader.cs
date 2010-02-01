@@ -22,6 +22,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text.RegularExpressions;
+
 using HFM.Framework;
 using HFM.Instrumentation;
 
@@ -33,6 +35,12 @@ namespace HFM.Log
    public class LogReader : ILogReader
    {
       #region Members
+      private readonly Regex rTimeStamp =
+            new Regex("\\[(?<Timestamp>.{8})\\]", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+
+      private readonly Regex rProjectNumberFromTag =
+            new Regex("P(?<ProjectNumber>.*)R(?<Run>.*)C(?<Clone>.*)G(?<Gen>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+      
       /// <summary>
       /// List of client run positions.
       /// </summary>
@@ -62,9 +70,9 @@ namespace HFM.Log
       /// <summary>
       /// Returns the last client run data.
       /// </summary>
-      public IClientRun LastClientRun
+      public IClientRun CurrentClientRun
       {
-         get { return _ClientRunList.LastClientRun; }
+         get { return ClientRunList.CurrentClientRun; }
       }
       
       /// <summary>
@@ -74,7 +82,7 @@ namespace HFM.Log
       {
          get
          {
-            IClientRun lastClientRun = LastClientRun;
+            ClientRun lastClientRun = _ClientRunList.CurrentClientRun;
             if (lastClientRun != null && lastClientRun.UnitStartIndex.Count > 1)
             {
                int start = lastClientRun.UnitStartIndex[lastClientRun.UnitStartIndex.Count - 2];
@@ -100,7 +108,7 @@ namespace HFM.Log
       {
          get
          {
-            IClientRun lastClientRun = LastClientRun;
+            ClientRun lastClientRun = _ClientRunList.CurrentClientRun;
             if (lastClientRun != null && lastClientRun.UnitStartIndex.Count > 0)
             {
                int start = lastClientRun.UnitStartIndex[lastClientRun.UnitStartIndex.Count - 1];
@@ -193,88 +201,321 @@ namespace HFM.Log
       }
 
       /// <summary>
-      /// Find the WorkUnitProject Line in the given collection and return it's value.
+      /// Get an Empty FAHlog Unit Data
       /// </summary>
-      /// <param name="logLines">Log Lines to search</param>
-      public string GetProjectFromLogLines(ICollection<ILogLine> logLines)
+      public IFahLogUnitData GetEmptyFahLogData()
       {
-         if (logLines == null) return String.Empty;
-      
-         foreach (ILogLine line in logLines)
-         {
-            // If we encounter a work unit frame, we should have
-            // already seen the Project Information, stop looking
-            if (line.LineType.Equals(LogLineType.WorkUnitFrame))
-            {
-               break;
-            }
-            if (line.LineType.Equals(LogLineType.WorkUnitProject))
-            {
-               return LogLine.GetProjectString(line);
-            }
-         }
-
-         return String.Empty;
+         return new FahLogUnitData();
       }
 
       /// <summary>
-      /// Get the ClientStatus based on the given collection of Log Lines.
+      /// Get FAHlog Unit Data from the given Log Lines
       /// </summary>
       /// <param name="logLines">Log Lines to search</param>
-      public ClientStatus GetStatusFromLogLines(ICollection<ILogLine> logLines)
+      public IFahLogUnitData GetFahLogDataFromLogLines(ICollection<ILogLine> logLines)
       {
-         ClientStatus returnStatus = ClientStatus.Unknown;
+         FahLogUnitData data = new FahLogUnitData();
+
+         if (logLines == null) return data;
+         
+         bool ClientWasPaused = false;
+         bool LookForProject = true;
       
          foreach (ILogLine line in logLines)
          {
-            if (returnStatus.Equals(ClientStatus.Unknown) &&
+            #region Unit Start
+            if (data.UnitStartTimeStamp.Equals(TimeSpan.MinValue))
+            {
+               data.UnitStartTimeStamp = GetLogLineTimeStamp(line);
+            }
+            
+            if (line.LineType.Equals(LogLineType.WorkUnitPaused)) // || logLine.LineRaw.Contains("+ Running on battery power"))
+            {
+               ClientWasPaused = true;
+            }
+            else if (line.LineType.Equals(LogLineType.WorkUnitWorking) && ClientWasPaused)
+            {
+               ClientWasPaused = false;
+
+               // Clear the Current Frame (Also Resets Frames Observed Count)
+               // This will cause the Instance to only use frames beyond this point to 
+               // set frame times and determine status - Issue 13 (Revised)
+               data.FramesObserved = 0;
+               // Reset the Unit Start Time
+               data.UnitStartTimeStamp = GetLogLineTimeStamp(line);
+            }
+            #endregion
+            
+            #region Frame Data
+            if (line.LineType.Equals(LogLineType.WorkUnitFrame))
+            {
+               IFrameData frame = line.LineData as IFrameData;
+               if (frame == null)
+               {
+                  // If not found, clear the LineType and get out
+                  line.LineType = LogLineType.Unknown;
+               }
+               else
+               {
+                  data.FramesObserved++;
+                  data.FrameDataList.Add(line);
+               }
+            }
+            #endregion
+
+            #region Core Version
+            if (data.CoreVersion.Length == 0)
+            {
+               if (line.LineType.Equals(LogLineType.WorkUnitCoreVersion) && line.LineData != null)
+               {
+                  data.CoreVersion = line.LineData.ToString();
+               }
+            }
+            #endregion
+
+            #region Project
+            if (LookForProject)
+            {
+               // If we encounter a work unit frame, we should have
+               // already seen the Project Information, stop looking
+               if (line.LineType.Equals(LogLineType.WorkUnitFrame))
+               {
+                  LookForProject = false;
+               }
+               if (line.LineType.Equals(LogLineType.WorkUnitProject))
+               {
+                  PopulateProjectData(line, data);
+                  LookForProject = false;
+               }
+            }
+            #endregion
+            
+            #region Unit Result
+            if (line.LineType.Equals(LogLineType.WorkUnitCoreShutdown) && line.LineData != null)
+            {
+               data.UnitResult = (WorkUnitResult)line.LineData;
+            }
+            #endregion
+
+            #region Client Status
+            if (data.Status.Equals(ClientStatus.Unknown) &&
                (line.LineType.Equals(LogLineType.WorkUnitProcessing) ||
                 line.LineType.Equals(LogLineType.WorkUnitWorking) ||
                 line.LineType.Equals(LogLineType.WorkUnitStart)))
             {
-               returnStatus = ClientStatus.RunningNoFrameTimes;
+               data.Status = ClientStatus.RunningNoFrameTimes;
             }
             else if (line.LineType.Equals(LogLineType.WorkUnitPaused)) // || line.LineRaw.Contains("+ Running on battery power"))
             {
-               returnStatus = ClientStatus.Paused;
+               data.Status = ClientStatus.Paused;
             }
-            else if (line.LineType.Equals(LogLineType.WorkUnitWorking) && returnStatus.Equals(ClientStatus.Paused))
+            else if (line.LineType.Equals(LogLineType.WorkUnitWorking) && data.Status.Equals(ClientStatus.Paused))
             {
-               returnStatus = ClientStatus.RunningNoFrameTimes;
+               data.Status = ClientStatus.RunningNoFrameTimes;
             }
             else if (line.LineType.Equals(LogLineType.ClientSendWorkToServer))
             {
-               returnStatus = ClientStatus.SendingWorkPacket;
+               data.Status = ClientStatus.SendingWorkPacket;
             }
             else if (line.LineType.Equals(LogLineType.ClientAttemptGetWorkPacket))
             {
-               returnStatus = ClientStatus.GettingWorkPacket;
+               data.Status = ClientStatus.GettingWorkPacket;
             }
             else if (line.LineType.Equals(LogLineType.ClientEuePauseState))
             {
-               returnStatus = ClientStatus.EuePause;
+               data.Status = ClientStatus.EuePause;
             }
             else if (line.LineType.Equals(LogLineType.ClientShutdown) ||
                      line.LineType.Equals(LogLineType.ClientCoreCommunicationsErrorShutdown))
             {
-               returnStatus = ClientStatus.Stopped;
+               data.Status = ClientStatus.Stopped;
             }
+            #endregion
          }
          
-         return returnStatus;
+         //TODO: Fix This! Convert back to Zero TimeSpan, calling code still expects this for now.
+         if (data.UnitStartTimeStamp.Equals(TimeSpan.MinValue))
+         {
+            data.UnitStartTimeStamp = TimeSpan.Zero;
+         }
+         
+         return data;
+      }
+
+      /// <summary>
+      /// Get the time stamp from this log line and set as the unit's start time
+      /// </summary>
+      /// <param name="logLine">Log Line</param>
+      private TimeSpan GetLogLineTimeStamp(ILogLine logLine)
+      {
+         Match mTimeStamp;
+         if ((mTimeStamp = rTimeStamp.Match(logLine.LineRaw)).Success)
+         {
+            try
+            {
+               DateTime timeStamp = DateTime.ParseExact(mTimeStamp.Result("${Timestamp}"), "HH:mm:ss",
+                                                        System.Globalization.DateTimeFormatInfo.InvariantInfo,
+                                                        PlatformOps.GetDateTimeStyle());
+
+               return timeStamp.TimeOfDay;
+            }
+            catch (FormatException)
+            { }
+         }
+         
+         return TimeSpan.MinValue;
+      }
+
+      private static void PopulateProjectData(ILogLine line, FahLogUnitData data)
+      {
+         if (line.LineType.Equals(LogLineType.WorkUnitProject))
+         {
+            Match match = (Match)line.LineData;
+
+            data.ProjectID = Int32.Parse(match.Result("${ProjectNumber}"));
+            data.ProjectRun = Int32.Parse(match.Result("${Run}"));
+            data.ProjectClone = Int32.Parse(match.Result("${Clone}"));
+            data.ProjectGen = Int32.Parse(match.Result("${Gen}"));
+         }
+         else
+         {
+            throw new ArgumentException(String.Format("Log line is not of type '{0}'", LogLineType.WorkUnitProject), "line");
+         }
+      }
+
+      /// <summary>
+      /// Parse the content from the unitinfo.txt file.
+      /// </summary>
+      /// <param name="LogFilePath">Path to the log file.</param>
+      public IUnitInfoLogData GetUnitInfoLogData(string LogFilePath)
+      {
+         return GetUnitInfoLogData(String.Empty, LogFilePath);
+      }
+
+      /// <summary>
+      /// Parse the content from the unitinfo.txt file.
+      /// </summary>
+      /// <param name="InstanceName">Name of the Client Instance that called this method.</param>
+      /// <param name="LogFilePath">Path to the log file.</param>
+      /// <exception cref="ArgumentNullException">Throws if InstanceName is Null.</exception>
+      /// <exception cref="ArgumentException">Throws if LogFilePath is Null or Empty.</exception>
+      public IUnitInfoLogData GetUnitInfoLogData(string InstanceName, string LogFilePath)
+      {
+         if (InstanceName == null) throw new ArgumentNullException("InstanceName", "Argument 'InstanceName' cannot be null.");
+
+         if (String.IsNullOrEmpty(LogFilePath))
+         {
+            throw new ArgumentException("Argument 'LogFileName' cannot be a null or empty string.");
+         }
+      
+         if (File.Exists(LogFilePath) == false) return null;
+
+         DateTime Start = HfmTrace.ExecStart;
+
+         UnitInfoLogData data = new UnitInfoLogData();
+
+         TextReader tr = null;
+         try
+         {
+            tr = File.OpenText(LogFilePath);
+
+            while (tr.Peek() != -1)
+            {
+               String sData = tr.ReadLine();
+               /* Name (Only Read Here) */
+               if (sData.StartsWith("Name: "))
+               {
+                  data.ProteinName = sData.Substring(6);
+               }
+               /* Tag (Could be read here or through the queue.dat) */
+               else if (sData.StartsWith("Tag: "))
+               {
+                  data.ProteinTag = sData.Substring(5);
+
+                  Match mProjectNumberFromTag;
+                  if ((mProjectNumberFromTag = rProjectNumberFromTag.Match(data.ProteinTag)).Success)
+                  {
+                     try
+                     {
+                        data.ProjectID = Int32.Parse(mProjectNumberFromTag.Result("${ProjectNumber}"));
+                        data.ProjectRun = Int32.Parse(mProjectNumberFromTag.Result("${Run}"));
+                        data.ProjectClone = Int32.Parse(mProjectNumberFromTag.Result("${Clone}"));
+                        data.ProjectGen = Int32.Parse(mProjectNumberFromTag.Result("${Gen}"));
+                     }
+                     catch (FormatException ex)
+                     {
+                        HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, ex);
+
+                        data.ProjectID = 0;
+                        data.ProjectRun = 0;
+                        data.ProjectClone = 0;
+                        data.ProjectGen = 0;
+                     }
+                  }
+               }
+               /* DownloadTime (Could be read here or through the queue.dat) */
+               else if (sData.StartsWith("Download time: "))
+               {
+                  data.DownloadTime = DateTime.ParseExact(sData.Substring(15), "MMMM d H:mm:ss",
+                                                          System.Globalization.DateTimeFormatInfo.InvariantInfo,
+                                                          PlatformOps.GetDateTimeStyle());
+               }
+               /* DueTime (Could be read here or through the queue.dat) */
+               else if (sData.StartsWith("Due time: "))
+               {
+                  data.DueTime = DateTime.ParseExact(sData.Substring(15), "MMMM d H:mm:ss",
+                                                     System.Globalization.DateTimeFormatInfo.InvariantInfo,
+                                                     PlatformOps.GetDateTimeStyle());
+               }
+               /* Progress (Supplemental Read - if progress percentage cannot be determined through FAHlog.txt) */
+               else if (sData.StartsWith("Progress: "))
+               {
+                  data.Progress = Int32.Parse(sData.Substring(10, sData.IndexOf("%") - 10));
+               }
+            }
+         }
+         catch (Exception ex)
+         {
+            HfmTrace.WriteToHfmConsole(InstanceName, ex);
+            return null;
+         }
+         finally
+         {
+            if (tr != null)
+            {
+               tr.Dispose();
+            }
+
+            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, Start);
+         }
+
+         return data;
       }
 
       /// <summary>
       /// Scan the FAHLog text lines to determine work unit boundries.
       /// </summary>
-      /// <param name="InstanceName">Client Instance Name that owns the log file we're parsing.</param>
       /// <param name="LogFilePath">Path to the log file.</param>
       /// <exception cref="ArgumentException">Throws if LogFileName is Null or Empty.</exception>
+      public void ScanFAHLog(string LogFilePath)
+      {
+         ScanFAHLog(String.Empty, LogFilePath);
+      }
+
+      /// <summary>
+      /// Scan the FAHLog text lines to determine work unit boundries.
+      /// </summary>
+      /// <param name="InstanceName">Name of the Client Instance that called this method.</param>
+      /// <param name="LogFilePath">Path to the log file.</param>
+      /// <exception cref="ArgumentNullException">Throws if InstanceName is Null.</exception>
+      /// <exception cref="ArgumentException">Throws if LogFilePath is Null or Empty.</exception>
       public void ScanFAHLog(string InstanceName, string LogFilePath)
       {
-         if (String.IsNullOrEmpty(InstanceName) || String.IsNullOrEmpty(LogFilePath))
+         if (InstanceName == null) throw new ArgumentNullException("InstanceName", "Argument 'InstanceName' cannot be null.");
+      
+         if (String.IsNullOrEmpty(LogFilePath))
          {
-            throw new ArgumentException("Arguments 'InstanceName' and 'LogFileName' cannot be a null or empty string.");
+            throw new ArgumentException("Argument 'LogFileName' cannot be a null or empty string.");
          }
 
          DateTime Start = HfmTrace.ExecStart;
@@ -353,7 +594,7 @@ namespace HFM.Log
    /// <summary>
    /// List of Client Runs.
    /// </summary>
-   public class ClientRunList : List<IClientRun>
+   public class ClientRunList : List<ClientRun>
    {
       #region Members
       /// <summary>
@@ -371,7 +612,7 @@ namespace HFM.Log
       /// <summary>
       /// Returns the most recent client run if available, otherwise null.
       /// </summary>
-      public IClientRun LastClientRun
+      public ClientRun CurrentClientRun
       {
          get
          {
@@ -536,28 +777,28 @@ namespace HFM.Log
       /// <remarks></remarks>
       private void HandleWorkUnitRunning()
       {
-         if (LastClientRun != null)
+         if (CurrentClientRun != null)
          {
             // If we've already seen a WorkUnitRunning line, ignore this one.
             if (_CurrentLineType.Equals(LogLineType.WorkUnitRunning)) return;
 
             if (_UnitStart.WorkUnitProcessingIndex > -1)
             {
-               LastClientRun.UnitStartIndex.Add(_UnitStart.WorkUnitProcessingIndex);
+               CurrentClientRun.UnitStartIndex.Add(_UnitStart.WorkUnitProcessingIndex);
                // Set the Queue Slot - we don't care if we found a valid slot or not
-               LastClientRun.UnitQueueIndex.Add(_UnitStart.WorkUnitQueueSlotIndex);
+               CurrentClientRun.UnitQueueIndex.Add(_UnitStart.WorkUnitQueueSlotIndex);
             }
             else if (_UnitStart.WorkUnitWorkingIndex > -1)
             {
-               LastClientRun.UnitStartIndex.Add(_UnitStart.WorkUnitWorkingIndex);
+               CurrentClientRun.UnitStartIndex.Add(_UnitStart.WorkUnitWorkingIndex);
                // Set the Queue Slot - we don't care if we found a valid slot or not
-               LastClientRun.UnitQueueIndex.Add(_UnitStart.WorkUnitQueueSlotIndex);
+               CurrentClientRun.UnitQueueIndex.Add(_UnitStart.WorkUnitQueueSlotIndex);
             }
             else if (_UnitStart.WorkUnitStartIndex > -1)
             {
-               LastClientRun.UnitStartIndex.Add(_UnitStart.WorkUnitStartIndex);
+               CurrentClientRun.UnitStartIndex.Add(_UnitStart.WorkUnitStartIndex);
                // Set the Queue Slot - we don't care if we found a valid slot or not
-               LastClientRun.UnitQueueIndex.Add(_UnitStart.WorkUnitQueueSlotIndex);
+               CurrentClientRun.UnitQueueIndex.Add(_UnitStart.WorkUnitQueueSlotIndex);
             }
             else
             {
@@ -583,18 +824,18 @@ namespace HFM.Log
       {
          if (_CurrentLineType.Equals(LogLineType.WorkUnitRunning))
          {
-            if (LastClientRun != null)
+            if (CurrentClientRun != null)
             {
                if (logLine.LineData.Equals(WorkUnitResult.FinishedUnit))
                {
-                  LastClientRun.NumberOfCompletedUnits++;
+                  CurrentClientRun.NumberOfCompletedUnits++;
                }
                else if (logLine.LineData.Equals(WorkUnitResult.EarlyUnitEnd) ||
                         logLine.LineData.Equals(WorkUnitResult.UnstableMachine) ||
                         logLine.LineData.Equals(WorkUnitResult.Interrupted) ||
                         logLine.LineData.Equals(WorkUnitResult.CoreOutdated)) 
                {
-                  LastClientRun.NumberOfFailedUnits++;
+                  CurrentClientRun.NumberOfFailedUnits++;
                }
             }
          }
@@ -606,9 +847,9 @@ namespace HFM.Log
       /// <param name="logLine">The given LogLine object.</param>
       private void HandleClientNumberOfUnitsCompleted(ILogLine logLine)
       {
-         if (LastClientRun != null)
+         if (CurrentClientRun != null)
          {
-            LastClientRun.NumberOfTotalUnitsCompleted = (int)logLine.LineData;
+            CurrentClientRun.NumberOfTotalUnitsCompleted = (int)logLine.LineData;
          }
       } 
       #endregion
@@ -837,6 +1078,202 @@ namespace HFM.Log
          }
 
          return false;
+      }
+   }
+   
+   public class FahLogUnitData : IFahLogUnitData
+   {
+      private TimeSpan _UnitStartTimeStamp = TimeSpan.MinValue;
+      /// <summary>
+      /// Unit Starting Time Stamp
+      /// </summary>
+      public TimeSpan UnitStartTimeStamp
+      {
+         get { return _UnitStartTimeStamp; }
+         set { _UnitStartTimeStamp = value; }
+      }
+
+      private IList<ILogLine> _FrameDataList = new List<ILogLine>(101);
+      /// <summary>
+      /// List of Log Lines containing Frame Data
+      /// </summary>
+      public IList<ILogLine> FrameDataList
+      {
+         get { return _FrameDataList; }
+         set { _FrameDataList = value; }
+      }
+
+      private Int32 _FramesObserved;
+      /// <summary>
+      /// Number of Frames Observed since Last Unit Start
+      /// </summary>
+      public Int32 FramesObserved
+      {
+         get { return _FramesObserved; }
+         set { _FramesObserved = value; }
+      }
+   
+      private string _CoreVersion = String.Empty;
+      /// <summary>
+      /// Core Version
+      /// </summary>
+      public string CoreVersion
+      {
+         get { return _CoreVersion; }
+         set { _CoreVersion = value; }
+      }
+   
+      private Int32 _ProjectID;
+      /// <summary>
+      /// Project ID Number
+      /// </summary>
+      public Int32 ProjectID
+      {
+         get { return _ProjectID; }
+         set { _ProjectID = value; }
+      }
+
+      private Int32 _ProjectRun;
+      /// <summary>
+      /// Project ID (Run)
+      /// </summary>
+      public Int32 ProjectRun
+      {
+         get { return _ProjectRun; }
+         set { _ProjectRun = value; }
+      }
+
+      private Int32 _ProjectClone;
+      /// <summary>
+      /// Project ID (Clone)
+      /// </summary>
+      public Int32 ProjectClone
+      {
+         get { return _ProjectClone; }
+         set { _ProjectClone = value; }
+      }
+
+      private Int32 _ProjectGen;
+      /// <summary>
+      /// Project ID (Gen)
+      /// </summary>
+      public Int32 ProjectGen
+      {
+         get { return _ProjectGen; }
+         set { _ProjectGen = value; }
+      }
+      
+      private WorkUnitResult _UnitResult = WorkUnitResult.Unknown;
+      /// <summary>
+      /// Work Unit Result
+      /// </summary>
+      public WorkUnitResult UnitResult
+      {
+         get { return _UnitResult; }
+         set { _UnitResult = value; }
+      }
+
+      private ClientStatus _Status = ClientStatus.Unknown;
+      /// <summary>
+      /// Client Status
+      /// </summary>
+      public ClientStatus Status
+      {
+         get { return _Status; }
+         set { _Status = value; }
+      }
+   }
+   
+   public class UnitInfoLogData : IUnitInfoLogData
+   {
+      private string _ProteinName;
+      /// <summary>
+      /// Protein Name
+      /// </summary>
+      public string ProteinName
+      {
+         get { return _ProteinName; }
+         set { _ProteinName = value; }
+      }
+      
+      private string _ProteinTag;
+      /// <summary>
+      /// Protein Tag
+      /// </summary>
+      public string ProteinTag
+      {
+         get { return _ProteinTag; }
+         set { _ProteinTag = value; }
+      }
+
+      private Int32 _ProjectID;
+      /// <summary>
+      /// Project ID Number
+      /// </summary>
+      public Int32 ProjectID
+      {
+         get { return _ProjectID; }
+         set { _ProjectID = value; }
+      }
+
+      private Int32 _ProjectRun;
+      /// <summary>
+      /// Project ID (Run)
+      /// </summary>
+      public Int32 ProjectRun
+      {
+         get { return _ProjectRun; }
+         set { _ProjectRun = value; }
+      }
+
+      private Int32 _ProjectClone;
+      /// <summary>
+      /// Project ID (Clone)
+      /// </summary>
+      public Int32 ProjectClone
+      {
+         get { return _ProjectClone; }
+         set { _ProjectClone = value; }
+      }
+
+      private Int32 _ProjectGen;
+      /// <summary>
+      /// Project ID (Gen)
+      /// </summary>
+      public Int32 ProjectGen
+      {
+         get { return _ProjectGen; }
+         set { _ProjectGen = value; }
+      }
+
+      private DateTime _DownloadTime;
+      /// <summary>
+      /// Download Time
+      /// </summary>
+      public DateTime DownloadTime
+      {
+         get { return _DownloadTime; }
+         set { _DownloadTime = value; }
+      }
+
+      private DateTime _DueTime;
+      /// <summary>
+      /// Due Time
+      /// </summary>
+      public DateTime DueTime
+      {
+         get { return _DueTime; }
+         set { _DueTime = value; }
+      }
+
+      private int _Progress;
+      /// <summary>
+      /// Progress Percentage
+      /// </summary>
+      public int Progress
+      {
+         get { return _Progress; }
+         set { _Progress = value; }
       }
    }
 }

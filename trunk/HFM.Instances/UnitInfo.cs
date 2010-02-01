@@ -19,7 +19,8 @@
  */
 
 using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
+using System.Globalization;
 
 using ProtoBuf;
 
@@ -69,7 +70,7 @@ namespace HFM.Instances
       #endregion
 
       #region Folding ID and Team Properties
-      private string _FoldingID;
+      private string _FoldingID = Constants.FoldingIDDefault;
       /// <summary>
       /// The Folding ID (Username) attached to this work unit
       /// </summary>
@@ -80,7 +81,7 @@ namespace HFM.Instances
          set { _FoldingID = value; }
       }
 
-      private Int32 _Team;
+      private Int32 _Team = Constants.TeamDefault;
       /// <summary>
       /// The Team number attached to this work unit
       /// </summary>
@@ -115,6 +116,14 @@ namespace HFM.Instances
          set { _DownloadTime = value; }
       }
 
+      /// <summary>
+      /// Flag specifying if Download Time is Unknown
+      /// </summary>
+      public bool DownloadTimeUnknown
+      {
+         get { return DownloadTime.Equals(DateTime.MinValue); }
+      }
+
       private DateTime _DueTime = DateTime.MinValue;
       /// <summary>
       /// Date/time the unit is due (preferred deadline)
@@ -124,6 +133,14 @@ namespace HFM.Instances
       {
          get { return _DueTime; }
          set { _DueTime = value; }
+      }
+
+      /// <summary>
+      /// Flag specifying if Due Time is Unknown
+      /// </summary>
+      public bool DueTimeUnknown
+      {
+         get { return DueTime.Equals(DateTime.MinValue); }
       }
 
       private TimeSpan _UnitStartTime = TimeSpan.Zero;
@@ -202,6 +219,20 @@ namespace HFM.Instances
       {
          get { return _ProjectGen; }
          set { _ProjectGen = value; }
+      }
+
+      /// <summary>
+      /// Returns true if Project (R/C/G) has not been identified
+      /// </summary>
+      public bool ProjectIsUnknown
+      {
+         get
+         {
+            return ProjectID == 0 &&
+                   ProjectRun == 0 &&
+                   ProjectClone == 0 &&
+                   ProjectGen == 0;
+         }
       }
 
       private String _ProteinName = String.Empty;
@@ -299,25 +330,105 @@ namespace HFM.Instances
          get { return _CurrentFrame; }
       }
 
-      private UnitFrame[] _UnitFrames = null;
+      private Dictionary<int, UnitFrame> _UnitFrames = new Dictionary<int, UnitFrame>();
       /// <summary>
       /// Frame Data for this Unit
       /// </summary>
       [ProtoMember(23)]
-      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-      public UnitFrame[] UnitFramesConcrete
+      public Dictionary<int, UnitFrame> UnitFrames
       {
          get { return _UnitFrames; }
          set { _UnitFrames = value; }
       }
+
+      /// <summary>
+      /// Set the Current Work Unit Frame
+      /// </summary>
+      /// <exception cref="ArgumentException">Throws if 'logLine' does not have LogLineType 'WorkUnitFrame'.</exception>
+      public void SetCurrentFrame(ILogLine logLine)
+      {
+         if (logLine.LineType.Equals(LogLineType.WorkUnitFrame) == false)
+         {
+            throw new ArgumentException("Argument 'logLine' must have LogLineType 'WorkUnitFrame'.");
+         }
+
+         // Check for FrameData
+         IFrameData frame = logLine.LineData as IFrameData;
+         if (frame == null)
+         {
+            // If not found, clear the LineType and get out
+            logLine.LineType = LogLineType.Unknown;
+            return;
+         }
+
+         // Parse TimeStamp
+         DateTime timeStamp = DateTime.ParseExact(frame.TimeStampString, "HH:mm:ss",
+                                                  DateTimeFormatInfo.InvariantInfo,
+                                                  PlatformOps.GetDateTimeStyle());
+
+         // Set Raw Frame Values                                       
+         RawFramesComplete = frame.RawFramesComplete;
+         RawFramesTotal = frame.RawFramesTotal;
+         // Create new UnitFrame
+         UnitFrame unitFrame = new UnitFrame(frame.FrameID, timeStamp.TimeOfDay);
+
+         if (UnitFrames.ContainsKey(frame.FrameID) == false)
+         {
+            CurrentFrameConcrete = unitFrame;
+            UnitFrames.Add(unitFrame.FrameID, unitFrame);
+
+            CurrentFrameConcrete.FrameDuration = TimeSpan.Zero;
+            if (CurrentFrameConcrete.FrameID > 0 &&
+                UnitFrames.ContainsKey(CurrentFrameConcrete.FrameID - 1) &&
+                FramesObserved > 1)
+            {
+               CurrentFrameConcrete.FrameDuration = GetDelta(CurrentFrameConcrete.TimeOfFrame,
+                                                             UnitFrames[CurrentFrameConcrete.FrameID - 1].TimeOfFrame);
+            }
+         }
+         else
+         {
+            // FrameID already exists, clear the LineType
+            logLine.LineType = LogLineType.Unknown;
+         }
+      }
+
+      /// <summary>
+      /// Get Time Delta between given frames
+      /// </summary>
+      /// <param name="timeLastFrame">Time of last frame</param>
+      /// <param name="timeCompareFrame">Time of a previous frame to compare</param>
+      private static TimeSpan GetDelta(TimeSpan timeLastFrame, TimeSpan timeCompareFrame)
+      {
+         TimeSpan tDelta;
+
+         // check for rollover back to 00:00:00 timeLastFrame will be less than previous timeCompareFrame reading
+         if (timeLastFrame < timeCompareFrame)
+         {
+            // get time before rollover
+            tDelta = TimeSpan.FromDays(1).Subtract(timeCompareFrame);
+            // add time from latest reading
+            tDelta = tDelta.Add(timeLastFrame);
+         }
+         else
+         {
+            tDelta = timeLastFrame.Subtract(timeCompareFrame);
+         }
+
+         return tDelta;
+      }
       
       /// <summary>
-      /// Frame Data for this Unit
+      /// Get the UnitFrame Interface for this FrameID
       /// </summary>
-      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-      public IUnitFrame[] UnitFrames
+      public IUnitFrame GetUnitFrame(int FrameID)
       {
-         get { return _UnitFrames; }
+         if (_UnitFrames.ContainsKey(FrameID))
+         {
+            return _UnitFrames[FrameID];
+         }
+         
+         return null;
       }
       #endregion
    }

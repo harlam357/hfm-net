@@ -1,7 +1,7 @@
-/*
- * HFM.NET - Client Run Interface
+﻿/*
+ * HFM.NET - Project Info Interface
  * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
@@ -14,27 +14,33 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
+
+using System;
 
 namespace HFM.Framework
 {
-   public interface IClientRun
+   public interface IProjectInfo
    {
-      string Arguments { get; set; }
+      /// <summary>
+      /// Project ID Number
+      /// </summary>
+      Int32 ProjectID { get; set; }
 
-      string FoldingID { get; set; }
+      /// <summary>
+      /// Project ID (Run)
+      /// </summary>
+      Int32 ProjectRun { get; set; }
 
-      int Team { get; set; }
+      /// <summary>
+      /// Project ID (Clone)
+      /// </summary>
+      Int32 ProjectClone { get; set; }
 
-      string UserID { get; set; }
-
-      int MachineID { get; set; }
-
-      int NumberOfCompletedUnits { get; set; }
-
-      int NumberOfFailedUnits { get; set; }
-
-      int NumberOfTotalUnitsCompleted { get; set; }
+      /// <summary>
+      /// Project ID (Gen)
+      /// </summary>
+      Int32 ProjectGen { get; set; }
    }
 }

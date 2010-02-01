@@ -18,15 +18,17 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace HFM.Framework
 {
-   public interface IUnitInfoLogic
+   public interface IUnitInfoLogic : IProjectInfo
    {
+      /// <summary>
+      /// Unit Info Data Class
+      /// </summary>
+      IUnitInfo UnitInfoData { get; }
+   
       /// <summary>
       /// Name of the Client Instance that owns this UnitInfo
       /// </summary>
@@ -45,12 +47,12 @@ namespace HFM.Framework
       /// <summary>
       /// The Folding ID (Username) attached to this work unit
       /// </summary>
-      string FoldingID { get; set; }
+      string FoldingID { get; }
 
       /// <summary>
       /// The Team number attached to this work unit
       /// </summary>
-      Int32 Team { get; set; }
+      Int32 Team { get; }
 
       /// <summary>
       /// Client Type for this work unit
@@ -60,7 +62,7 @@ namespace HFM.Framework
       /// <summary>
       /// Date/time the unit was downloaded
       /// </summary>
-      DateTime DownloadTime { get; set; }
+      DateTime DownloadTime { get; }
 
       /// <summary>
       /// Flag specifying if Download Time is Unknown
@@ -90,7 +92,7 @@ namespace HFM.Framework
       /// <summary>
       /// Date/time the unit is due (preferred deadline)
       /// </summary>
-      DateTime DueTime { get; set; }
+      DateTime DueTime { get; }
 
       /// <summary>
       /// Flag specifying if Due Time is Unknown
@@ -100,38 +102,17 @@ namespace HFM.Framework
       /// <summary>
       /// Unit Start Time Stamp (Time Stamp from First Parsable Line in LogLines)
       /// </summary>
-      /// <remarks>Used to Determine Status when a LogLine Time Stamp is not available - See ClientInstance.HandleReturnedStatus</remarks>
-      TimeSpan UnitStartTimeStamp { get; set; }
+      TimeSpan UnitStartTimeStamp { get; }
 
       /// <summary>
       /// Date/time the unit finished
       /// </summary>
-      DateTime FinishedTime { get; set; }
+      DateTime FinishedTime { get; }
 
       /// <summary>
       /// Core Version Number
       /// </summary>
-      string CoreVersion { get; set; }
-
-      /// <summary>
-      /// Project ID Number
-      /// </summary>
-      Int32 ProjectID { get; set; }
-
-      /// <summary>
-      /// Project ID (Run)
-      /// </summary>
-      Int32 ProjectRun { get; set; }
-
-      /// <summary>
-      /// Project ID (Clone)
-      /// </summary>
-      Int32 ProjectClone { get; set; }
-
-      /// <summary>
-      /// Project ID (Gen)
-      /// </summary>
-      Int32 ProjectGen { get; set; }
+      string CoreVersion { get; }
 
       /// <summary>
       /// Returns true if Project (R/C/G) has not been identified
@@ -146,22 +127,17 @@ namespace HFM.Framework
       /// <summary>
       /// Name of the unit
       /// </summary>
-      String ProteinName { get; set; }
+      String ProteinName { get; }
 
       /// <summary>
       /// Tag string as read from the UnitInfo.txt file
       /// </summary>
-      string ProteinTag { get; set; }
-
-      /// <summary>
-      /// Flag specifying if Protein Tag value is Unknown
-      /// </summary>
-      bool ProteinTagUnknown { get; }
+      string ProteinTag { get; }
 
       /// <summary>
       /// The Result of this Work Unit
       /// </summary>
-      WorkUnitResult UnitResult { get; set; }
+      WorkUnitResult UnitResult { get; }
 
       /// <summary>
       /// Class member containing info on the currently running protein
@@ -171,12 +147,12 @@ namespace HFM.Framework
       /// <summary>
       /// Raw number of steps complete
       /// </summary>
-      Int32 RawFramesComplete { get; set; }
+      Int32 RawFramesComplete { get; }
 
       /// <summary>
       /// Raw total number of steps
       /// </summary>
-      Int32 RawFramesTotal { get; set; }
+      Int32 RawFramesTotal { get; }
 
       /// <summary>
       /// Frame progress of the unit
@@ -232,7 +208,7 @@ namespace HFM.Framework
       /// <summary>
       /// Number of Frames Observed on this Unit
       /// </summary>
-      Int32 FramesObserved { get; set; }
+      Int32 FramesObserved { get; }
 
       /// <summary>
       /// Last Observed Frame on this Unit
@@ -248,27 +224,6 @@ namespace HFM.Framework
       /// Last Frame ID based on UnitFrame Data
       /// </summary>
       Int32 LastUnitFrameID { get; }
-
-      /// <summary>
-      /// Frame Data for this Unit
-      /// </summary>
-      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-      IUnitFrame[] UnitFrames { get; }
-
-      /// <summary>
-      /// Set the Current Work Unit Frame
-      /// </summary>
-      void SetCurrentFrame(ILogLine logLine, DateTimeStyles style);
-
-      /// <summary>
-      /// Clear the Observed Count, Current Frame Pointer, and the UnitFrames Array
-      /// </summary>
-      void ClearUnitFrameData();
-
-      /// <summary>
-      /// Clear the Observed Count and Current Frame Pointer
-      /// </summary>
-      void ClearCurrentFrame();
 
       /// <summary>
       /// Average frame time since unit download
@@ -334,17 +289,5 @@ namespace HFM.Framework
       /// Frame Time per section based on current PPD calculation setting (readonly)
       /// </summary>
       Int32 RawTimePerSection { get; }
-
-      /// <summary>
-      /// Attempts to set the Protein based on the given Project data.
-      /// </summary>
-      /// <param name="match">Regex Match containing Project values</param>
-      void DoProjectIDMatch(Match match);
-
-      /// <summary>
-      /// Attempts to set the Protein based on the given Project data.
-      /// </summary>
-      /// <param name="ProjectRCG">List of Project (R/C/G) values</param>
-      void DoProjectIDMatch(IList<int> ProjectRCG);
    }
 }

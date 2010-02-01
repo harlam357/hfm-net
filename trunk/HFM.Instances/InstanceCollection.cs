@@ -615,6 +615,7 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="Prefs">Preferences Interface</param>
       /// <param name="proteinCollection">Protein Collection Interface</param>
+      /// <param name="benchmarkContainer">Benchmark Container Interface</param>
       /// <param name="tokens">Tokenized String (String Array)</param>
       private static ClientInstance GetNewInstance(IPreferenceSet Prefs, IProteinCollection proteinCollection, 
                                                    IProteinBenchmarkContainer benchmarkContainer, string[] tokens)
@@ -917,12 +918,15 @@ namespace HFM.Instances
 
                XMLGen.DoHtmlGeneration(WebRoot, CurrentInstances);
                
-               foreach (ClientInstance Instance in CurrentInstances)
+               if (_Prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog))
                {
-                  string CachedFAHlogPath = Path.Combine(_Prefs.CacheDirectory, Instance.CachedFAHLogName);
-                  if (File.Exists(CachedFAHlogPath))
+                  foreach (ClientInstance Instance in CurrentInstances)
                   {
-                     File.Copy(CachedFAHlogPath, Path.Combine(WebRoot, Instance.CachedFAHLogName), true);
+                     string CachedFAHlogPath = Path.Combine(_Prefs.CacheDirectory, Instance.CachedFAHLogName);
+                     if (File.Exists(CachedFAHlogPath))
+                     {
+                        File.Copy(CachedFAHlogPath, Path.Combine(WebRoot, Instance.CachedFAHLogName), true);
+                     }
                   }
                }
             }

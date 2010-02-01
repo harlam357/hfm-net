@@ -415,15 +415,19 @@ namespace HFM.Forms
          {
             statusLabelLeft.Text = ClientInstances.SelectedInstance.ClientPathAndArguments;
             
-            queueControl.SetQueue(ClientInstances.SelectedInstance.ClientQueue, 
+            queueControl.SetQueue(ClientInstances.SelectedInstance.DataAggregator.Queue, 
                ClientInstances.SelectedInstance.CurrentUnitInfo.TypeOfClient, 
                ClientInstances.SelectedInstance.ClientIsOnVirtualMachine);
 
             // if we've got a good queue read, let queueControl_QueueIndexChanged()
             // handle populating the log lines.
-            if (ClientInstances.SelectedInstance.ClientQueue.DataPopulated) return;
+            IQueueBase qBase = ClientInstances.SelectedInstance.DataAggregator.Queue;
+            if (qBase != null && qBase.DataPopulated) return;
 
-            SetLogLines(ClientInstances.SelectedInstance, ClientInstances.SelectedInstance.CurrentLogLines);
+            if (ClientInstances.SelectedInstance.DataAggregator.UnitLogLines != null)
+            {
+               SetLogLines(ClientInstances.SelectedInstance, ClientInstances.SelectedInstance.DataAggregator.CurrentLogLines);
+            }
          }
          else
          {
@@ -2038,14 +2042,6 @@ namespace HFM.Forms
          {
             mnuFileSave_Click(sender, e);
          }
-      }
-
-      /// <summary>
-      /// 
-      /// </summary>
-      private void ClientInstances_OfflineLastChanged(object sender, EventArgs e)
-      {
-         ApplySort();
       }
       #endregion
 

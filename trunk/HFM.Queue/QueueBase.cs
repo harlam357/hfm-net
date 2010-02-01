@@ -215,10 +215,17 @@ namespace HFM.Queue
       }
 
       /// <summary>
+      /// Get the Current QueueEntry.
+      /// </summary>
+      public IQueueEntry CurrentQueueEntry
+      {
+         get { return new QueueEntry(_q.Entries[CurrentIndex], CurrentIndex, CurrentIndex, this); }
+      }
+
+      /// <summary>
       /// Get the QueueEntry at the specified Index.
       /// </summary>
       /// <param name="Index">Queue Entry Index</param>
-      /// <exception cref="IndexOutOfRangeException">Throws when Index is less than 0 or greater than 9.</exception>
       public IQueueEntry GetQueueEntry(uint Index)
       {
          return new QueueEntry(_q.Entries[Index], Index, CurrentIndex, this);

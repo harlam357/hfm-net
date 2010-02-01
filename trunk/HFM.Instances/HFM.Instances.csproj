@@ -68,8 +68,10 @@
     <Compile Include="StatusData.cs" />
     <Compile Include="UnitFrame.cs" />
     <Compile Include="UnitInfo.cs" />
+    <Compile Include="DataAggregator.cs" />
     <Compile Include="UnitInfoCollection.cs" />
     <Compile Include="UnitInfoContainer.cs" />
+    <Compile Include="UnitInfoFactory.cs" />
     <Compile Include="UnitInfoLogic.cs" />
     <Compile Include="XMLGen.cs">
       <SubType>Code</SubType>
@@ -91,17 +93,9 @@
       <Project>{7D6B604A-5C4A-4E97-A6D4-9C927ABBD74A}</Project>
       <Name>HFM.Instrumentation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HFM.Log\HFM.Log.csproj">
-      <Project>{2C3EA8A1-D17F-419D-A76A-970550FB5A09}</Project>
-      <Name>HFM.Log</Name>
-    </ProjectReference>
     <ProjectReference Include="..\HFM.Preferences\HFM.Preferences.csproj">
       <Project>{0CAF91A3-D5F1-44C9-BAEB-FB81DFBF9C47}</Project>
       <Name>HFM.Preferences</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HFM.Queue\HFM.Queue.csproj">
-      <Project>{44AC27F2-833D-4BF2-9E17-C35D38C7BD67}</Project>
-      <Name>HFM.Queue</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

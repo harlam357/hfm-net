@@ -47,8 +47,10 @@ namespace HFM.Instances.Tests
          mocks = new MockRepository();
          benchmarkCollection = mocks.DynamicMock<IProteinBenchmarkContainer>();
       
+         container.AddComponent("DataAggregator", typeof(IDataAggregator), typeof(DataAggregator));
          container.AddComponent("LogReader", typeof(ILogReader), typeof(LogReader));
          container.AddComponent("QueueReader", typeof(IQueueReader), typeof(QueueReader));
+         container.AddComponent("UnitInfoFactory", typeof(IUnitInfoFactory), typeof(UnitInfoFactory));
          InstanceProvider.SetContainer(container);
       }
 
@@ -69,7 +71,7 @@ namespace HFM.Instances.Tests
          // Retrieve Log File and Assert Results
          Instance.Retrieve();
          
-         Assert.IsNotNull(Instance.CurrentLogLines);
+         Assert.IsNotNull(Instance.DataAggregator.CurrentLogLines);
          Assert.AreEqual(true, Instance.UserIDUnknown);  // UserID is Unknown (notfred's instance does not log request of UserID)
          Assert.AreEqual(String.Format("{0} ({1})", Instance.UserID, Instance.MachineID), Instance.UserAndMachineID);
          Assert.AreEqual(true, Instance.IsUsernameOk());
@@ -83,7 +85,6 @@ namespace HFM.Instances.Tests
          Assert.AreEqual("..\\..\\..\\TestFiles\\SMP_3", Instance.CurrentUnitInfo.OwningInstancePath);
 
          Assert.AreEqual(false, Instance.CurrentUnitInfo.ProjectIsUnknown);
-         Assert.IsNotNull(Instance.CurrentUnitInfo.UnitFrames);
          Assert.AreEqual(1, Instance.CurrentUnitInfo.FramesObserved);
          Assert.AreEqual(0, Instance.CurrentUnitInfo.FramesComplete);
          Assert.AreEqual(0, Instance.CurrentUnitInfo.PercentComplete);
@@ -117,7 +118,7 @@ namespace HFM.Instances.Tests
 
          // Retrieve Log File and Assert Results
          Instance.Retrieve();
-         Assert.IsNotNull(Instance.CurrentLogLines);
+         Assert.IsNotNull(Instance.DataAggregator.CurrentLogLines);
          Assert.AreEqual(false, Instance.UserIDUnknown);
          Assert.AreEqual("25932070F496A89", Instance.UserID);
          Assert.AreEqual(String.Format("{0} ({1})", Instance.UserID, Instance.MachineID), Instance.UserAndMachineID);
@@ -132,7 +133,6 @@ namespace HFM.Instances.Tests
          Assert.AreEqual("..\\..\\..\\TestFiles\\SMP_7", Instance.CurrentUnitInfo.OwningInstancePath);
 
          Assert.AreEqual(false, Instance.CurrentUnitInfo.ProjectIsUnknown);
-         Assert.IsNotNull(Instance.CurrentUnitInfo.UnitFrames);
          Assert.AreEqual(31, Instance.CurrentUnitInfo.FramesObserved);
          Assert.AreEqual(32, Instance.CurrentUnitInfo.FramesComplete);
          Assert.AreEqual(32, Instance.CurrentUnitInfo.PercentComplete);
@@ -154,11 +154,10 @@ namespace HFM.Instances.Tests
       public void SMP_8_1()
       {
          /*** The Test below shows us that because there is no Project information available
-          *   in the FAHlog for the current WU, the CurrentLogLines cannot be matched against
-          *   the Current Queue Entry, so the Queue Entries are thrown out and we're left with
-          *   only the FAHlog to parse.  Since the CurrentLogLines contain no Project information
-          *   and the unitinfo file is unavailable, the TypeOfClient is Unknown, since the
-          *   Project cannot be determined.
+          *   in the FAHlog for the current WU, the UnitLogLines for the Current Queue Index 
+          *   cannot be matched against the Current Queue Entry.  As of 1/31/10 we Queue Entries 
+          *   are left in tact and the CurrentWorkUnitLogLines are force parsed to match the
+          *   Current Queue Index, so now we do know the TypeOfClient and the Project (R/C/G).
           ***/
 
          IProteinCollection proteinCollection = SetupMockProteinCollection("GROCVS", 100);
@@ -175,7 +174,7 @@ namespace HFM.Instances.Tests
 
          // Retrieve Log File and Assert Results
          Instance.Retrieve();
-         Assert.IsNotNull(Instance.CurrentLogLines);
+         Assert.IsNotNull(Instance.DataAggregator.CurrentLogLines);
          Assert.AreEqual(false, Instance.UserIDUnknown);
          Assert.AreEqual("775112477C3C55C2", Instance.UserID);
          Assert.AreEqual(String.Format("{0} ({1})", Instance.UserID, Instance.MachineID), Instance.UserAndMachineID);
@@ -185,12 +184,11 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo);
 
          // Check Client Type and Owning Instance Properties
-         Assert.AreEqual(ClientType.Unknown, Instance.CurrentUnitInfo.TypeOfClient); /* Unknown */
+         Assert.AreEqual(ClientType.SMP, Instance.CurrentUnitInfo.TypeOfClient);
          Assert.AreEqual("SMP_8_1", Instance.CurrentUnitInfo.OwningInstanceName);
          Assert.AreEqual("..\\..\\..\\TestFiles\\SMP_8", Instance.CurrentUnitInfo.OwningInstancePath);
 
-         Assert.AreEqual(true, Instance.CurrentUnitInfo.ProjectIsUnknown);
-         Assert.IsNotNull(Instance.CurrentUnitInfo.UnitFrames);
+         Assert.AreEqual(false, Instance.CurrentUnitInfo.ProjectIsUnknown);
          Assert.AreEqual(0, Instance.CurrentUnitInfo.FramesObserved);
          Assert.AreEqual(0, Instance.CurrentUnitInfo.FramesComplete);
          Assert.AreEqual(0, Instance.CurrentUnitInfo.PercentComplete);
@@ -254,7 +252,7 @@ namespace HFM.Instances.Tests
 
          // Retrieve Log File and Assert Results
          Instance.Retrieve();
-         Assert.IsNotNull(Instance.CurrentLogLines);
+         Assert.IsNotNull(Instance.DataAggregator.CurrentLogLines);
          Assert.AreEqual(false, Instance.UserIDUnknown);
          Assert.AreEqual(String.Format("{0} ({1})", Instance.UserID, Instance.MachineID), Instance.UserAndMachineID);
          Assert.AreEqual(false, Instance.IsUsernameOk()); // This log is from JollySwagman (32)
@@ -268,7 +266,6 @@ namespace HFM.Instances.Tests
          Assert.AreEqual("..\\..\\..\\TestFiles\\GPU2_3", Instance.CurrentUnitInfo.OwningInstancePath);
 
          Assert.AreEqual(false, Instance.CurrentUnitInfo.ProjectIsUnknown);
-         Assert.IsNotNull(Instance.CurrentUnitInfo.UnitFrames);
          Assert.AreEqual(4, Instance.CurrentUnitInfo.FramesObserved);
          Assert.AreEqual(4, Instance.CurrentUnitInfo.FramesComplete);
          Assert.AreEqual(4, Instance.CurrentUnitInfo.PercentComplete);
@@ -302,7 +299,7 @@ namespace HFM.Instances.Tests
 
          // Retrieve Log File and Assert Results
          Instance.Retrieve();
-         Assert.IsNotNull(Instance.CurrentLogLines);
+         Assert.IsNotNull(Instance.DataAggregator.CurrentLogLines);
          Assert.AreEqual(false, Instance.UserIDUnknown);
          Assert.AreEqual(String.Format("{0} ({1})", Instance.UserID, Instance.MachineID), Instance.UserAndMachineID);
          Assert.AreEqual(true, Instance.IsUsernameOk());
@@ -316,7 +313,6 @@ namespace HFM.Instances.Tests
          Assert.AreEqual("..\\..\\..\\TestFiles\\GPU2_6", Instance.CurrentUnitInfo.OwningInstancePath);
 
          Assert.AreEqual(false, Instance.CurrentUnitInfo.ProjectIsUnknown);
-         Assert.IsNotNull(Instance.CurrentUnitInfo.UnitFrames);
          Assert.AreEqual(100, Instance.CurrentUnitInfo.FramesObserved);
          Assert.AreEqual(100, Instance.CurrentUnitInfo.FramesComplete);
          Assert.AreEqual(100, Instance.CurrentUnitInfo.PercentComplete);

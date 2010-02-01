@@ -40,7 +40,7 @@ namespace HFM.Log.Tests
       public void SMP_1_FAHlog() // verbosity 9
       {
          // Scan
-         reader.ScanFAHLog("SMP_1", "..\\..\\..\\TestFiles\\SMP_1\\FAHlog.txt");
+         reader.ScanFAHLog("..\\..\\..\\TestFiles\\SMP_1\\FAHlog.txt");
          
          // Check Run 0 Positions
          ClientRun expectedRun = new ClientRun(2);
@@ -91,7 +91,7 @@ namespace HFM.Log.Tests
       public void SMP_2_FAHlog() // verbosity 9
       {
          // Scan
-         reader.ScanFAHLog("SMP_2", "..\\..\\..\\TestFiles\\SMP_2\\FAHlog.txt");
+         reader.ScanFAHLog("..\\..\\..\\TestFiles\\SMP_2\\FAHlog.txt");
 
          // Check Run 0 Positions
          ClientRun expectedRun = new ClientRun(2);
@@ -128,7 +128,7 @@ namespace HFM.Log.Tests
       public void SMP_3_FAHlog() // verbosity (normal) / Handles Core Download on Startup / notfred's instance
       {
          // Scan
-         reader.ScanFAHLog("SMP_3", "..\\..\\..\\TestFiles\\SMP_3\\FAHlog.txt");
+         reader.ScanFAHLog("..\\..\\..\\TestFiles\\SMP_3\\FAHlog.txt");
 
          // Check Run 0 Positions
          ClientRun expectedRun = new ClientRun(2);
@@ -164,7 +164,7 @@ namespace HFM.Log.Tests
       public void GPU2_1_FAHlog() // verbosity 9
       {
          // Scan
-         reader.ScanFAHLog("GPU2_1", "..\\..\\..\\TestFiles\\GPU2_1\\FAHlog.txt");
+         reader.ScanFAHLog("..\\..\\..\\TestFiles\\GPU2_1\\FAHlog.txt");
 
          // Check Run 0 Positions
          ClientRun expectedRun = new ClientRun(2);
@@ -245,7 +245,7 @@ namespace HFM.Log.Tests
       public void GPU2_2_FAHlog() // verbosity (normal)
       {
          // Scan
-         reader.ScanFAHLog("GPU2_2", "..\\..\\..\\TestFiles\\GPU2_2\\FAHlog.txt");
+         reader.ScanFAHLog("..\\..\\..\\TestFiles\\GPU2_2\\FAHlog.txt");
 
          // Check Run 0 Positions
          ClientRun expectedRun = new ClientRun(2);
@@ -281,7 +281,7 @@ namespace HFM.Log.Tests
       public void GPU2_3_FAHlog() // verbosity (normal) / EUE Pause Test
       {
          // Scan
-         reader.ScanFAHLog("GPU2_3", "..\\..\\..\\TestFiles\\GPU2_3\\FAHlog.txt");
+         reader.ScanFAHLog("..\\..\\..\\TestFiles\\GPU2_3\\FAHlog.txt");
 
          // Check Run 0 Positions
          ClientRun expectedRun = new ClientRun(0);
@@ -341,7 +341,7 @@ namespace HFM.Log.Tests
       public void Standard_1_FAHlog() // verbosity 9
       {
          // Scan
-         reader.ScanFAHLog("Standard_1", "..\\..\\..\\TestFiles\\Standard_1\\FAHlog.txt");
+         reader.ScanFAHLog("..\\..\\..\\TestFiles\\Standard_1\\FAHlog.txt");
 
          // Check Run 0 Positions
          ClientRun expectedRun = new ClientRun(2);
@@ -399,7 +399,7 @@ namespace HFM.Log.Tests
          Assert.AreEqual(reader.ClientLogLines[433].LineData, WorkUnitResult.FinishedUnit);
       }
       
-      private static void DoClientRunCheck(IClientRun run, IClientRun expectedRun)
+      private static void DoClientRunCheck(ClientRun run, ClientRun expectedRun)
       {
          Assert.AreEqual(run.ClientStartIndex, expectedRun.ClientStartIndex);
          // The Unit Start and Unit Queue Index Lists should have the same

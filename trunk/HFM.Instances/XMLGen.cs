@@ -200,7 +200,7 @@ namespace HFM.Instances
          XMLOps.setXmlNode(xmlData, "UnitInfo/FailedProjects", Instance.NumberOfFailedUnitsSinceLastStart.ToString());
          XMLOps.setXmlNode(xmlData, "UnitInfo/TotalProjects", Instance.TotalUnits.ToString());
 
-         if (Instance.CurrentUnitInfo.DownloadTime.Equals(DateTime.MinValue))
+         if (Instance.CurrentUnitInfo.DownloadTimeUnknown)
          {
             XMLOps.setXmlNode(xmlData, "UnitInfo/DownloadTime", "Unknown");
          }
@@ -256,7 +256,7 @@ namespace HFM.Instances
          XMLOps.setXmlNode(xmlData, "Protein/Contact", p.Contact);
          
          StringBuilder sb = new StringBuilder();
-         foreach (ILogLine line in Instance.CurrentLogLines)
+         foreach (ILogLine line in Instance.DataAggregator.CurrentLogLines)
          {
             sb.Append(line.LineRaw);
             sb.Append("<BR>");

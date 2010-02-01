@@ -59,6 +59,8 @@
     <Compile Include="Enumerations.cs" />
     <Compile Include="IBenchmarkClient.cs" />
     <Compile Include="IClientRun.cs" />
+    <Compile Include="IDataAggregator.cs" />
+    <Compile Include="IFahLogUnitData.cs" />
     <Compile Include="IFrameData.cs" />
     <Compile Include="IInstanceProteinBenchmark.cs" />
     <Compile Include="ILogLine.cs" />
@@ -66,6 +68,7 @@
     <Compile Include="InstanceProvider.cs" />
     <Compile Include="IOwnedByClientInstance.cs" />
     <Compile Include="IPreferenceSet.cs" />
+    <Compile Include="IProjectInfo.cs" />
     <Compile Include="IProjectSummaryDownloader.cs" />
     <Compile Include="IProtein.cs" />
     <Compile Include="IProteinBenchmarkContainer.cs" />
@@ -76,6 +79,8 @@
     <Compile Include="IUnitFrame.cs" />
     <Compile Include="IUnitInfo.cs" />
     <Compile Include="IUnitInfoContainer.cs" />
+    <Compile Include="IUnitInfoFactory.cs" />
+    <Compile Include="IUnitInfoLogData.cs" />
     <Compile Include="IUnitInfoLogic.cs" />
     <Compile Include="IXmlStatsData.cs" />
     <Compile Include="IXmlStatsDataContainer.cs" />

@@ -52,7 +52,8 @@ namespace HFM.Instances.Tests
          statusData.InstanceName = "Status Test";
          statusData.TypeOfClient = ClientType.SMP;
          statusData.ClientTimeOffset = 0;
-         statusData.ClientIsOnVirtualMachine = false;
+         statusData.IgnoreUtcOffset = false;
+         statusData.UtcOffset = TimeSpan.Zero;
 
          statusData.CurrentStatus = ClientStatus.GettingWorkPacket;
          statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
@@ -83,7 +84,8 @@ namespace HFM.Instances.Tests
          statusData.InstanceName = "Status Test";
          statusData.TypeOfClient = ClientType.SMP;
          statusData.ClientTimeOffset = 0;
-         statusData.ClientIsOnVirtualMachine = false;
+         statusData.IgnoreUtcOffset = false;
+         statusData.UtcOffset = TimeSpan.Zero;
 
          statusData.CurrentStatus = ClientStatus.Running;
          statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
@@ -104,6 +106,38 @@ namespace HFM.Instances.Tests
       }
 
       [Test]
+      public void StatusTestSet1_Running_UtcOffset()
+      {
+         mocks.ReplayAll();
+      
+         DateTime Date = DateTime.Now.Date;
+
+         StatusData statusData = new StatusData();
+         statusData.InstanceName = "Status Test";
+         statusData.TypeOfClient = ClientType.SMP;
+         statusData.ClientTimeOffset = 0;
+         statusData.IgnoreUtcOffset = false;
+         statusData.UtcOffset = TimeSpan.FromHours(-6);
+
+         statusData.CurrentStatus = ClientStatus.Running;
+         statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
+
+         statusData.LastRetrievalTime = Date.Add(new TimeSpan(3, 0, 0));
+
+         statusData.UnitStartTimeStamp = new TimeSpan(7, 55, 0);
+         statusData.TimeOfLastFrame = new TimeSpan(8, 50, 0);
+         statusData.TimeOfLastUnitStart = Date.Add(new TimeSpan(8, 0, 0));
+         statusData.TimeOfLastFrameProgress = Date.Add(new TimeSpan(9, 0, 0));
+
+         statusData.FrameTime = 750;
+         statusData.AverageFrameTime = new TimeSpan(0, 12, 35);
+
+         Assert.AreEqual(ClientStatus.Running, ClientInstance.HandleReturnedStatus(statusData, _Prefs));
+
+         mocks.VerifyAll();
+      }
+
+      [Test]
       public void StatusTestSet2_RunningNoFrameTimes_Async()
       {
          mocks.ReplayAll();
@@ -114,7 +148,8 @@ namespace HFM.Instances.Tests
          statusData.InstanceName = "Status Test";
          statusData.TypeOfClient = ClientType.SMP;
          statusData.ClientTimeOffset = 0;
-         statusData.ClientIsOnVirtualMachine = false;
+         statusData.IgnoreUtcOffset = false;
+         statusData.UtcOffset = TimeSpan.Zero;
 
          statusData.CurrentStatus = ClientStatus.GettingWorkPacket;
          statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
@@ -146,7 +181,8 @@ namespace HFM.Instances.Tests
          statusData.InstanceName = "Status Test";
          statusData.TypeOfClient = ClientType.SMP;
          statusData.ClientTimeOffset = 0;
-         statusData.ClientIsOnVirtualMachine = false;
+         statusData.IgnoreUtcOffset = false;
+         statusData.UtcOffset = TimeSpan.Zero;
 
          statusData.CurrentStatus = ClientStatus.GettingWorkPacket;
          statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
@@ -179,7 +215,8 @@ namespace HFM.Instances.Tests
          statusData.InstanceName = "Status Test";
          statusData.TypeOfClient = ClientType.SMP;
          statusData.ClientTimeOffset = 0;
-         statusData.ClientIsOnVirtualMachine = false;
+         statusData.IgnoreUtcOffset = false;
+         statusData.UtcOffset = TimeSpan.Zero;
 
          statusData.CurrentStatus = ClientStatus.RunningAsync;
          statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
@@ -211,7 +248,8 @@ namespace HFM.Instances.Tests
          statusData.InstanceName = "Status Test";
          statusData.TypeOfClient = ClientType.SMP;
          statusData.ClientTimeOffset = 0;
-         statusData.ClientIsOnVirtualMachine = false;
+         statusData.IgnoreUtcOffset = false;
+         statusData.UtcOffset = TimeSpan.Zero;
 
          statusData.CurrentStatus = ClientStatus.Hung;
          statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
@@ -243,7 +281,8 @@ namespace HFM.Instances.Tests
          statusData.InstanceName = "Status Test";
          statusData.TypeOfClient = ClientType.SMP;
          statusData.ClientTimeOffset = 0;
-         statusData.ClientIsOnVirtualMachine = false;
+         statusData.IgnoreUtcOffset = false;
+         statusData.UtcOffset = TimeSpan.Zero;
 
          statusData.CurrentStatus = ClientStatus.Hung;
          statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;

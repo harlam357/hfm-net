@@ -25,7 +25,7 @@ using HFM.Framework;
 namespace HFM.Log
 {
    /// <summary>
-   /// Holds Positions (Index) for a Single Client Run.
+   /// Holds Run Level Data for a Single Client Run.
    /// </summary>
    public class ClientRun : IClientRun
    {
@@ -65,21 +65,21 @@ namespace HFM.Log
          set { _MachineID = value; }
       }
 
-      private int _NumberOfCompletedUnits = 0;
+      private int _NumberOfCompletedUnits;
       public int NumberOfCompletedUnits
       {
          get { return _NumberOfCompletedUnits; }
          set { _NumberOfCompletedUnits = value; }
       }
 
-      private int _NumberOfFailedUnits = 0;
+      private int _NumberOfFailedUnits;
       public int NumberOfFailedUnits
       {
          get { return _NumberOfFailedUnits; }
          set { _NumberOfFailedUnits = value; }
       }
 
-      private int _NumberOfTotalUnitsCompleted = 0;
+      private int _NumberOfTotalUnitsCompleted;
       public int NumberOfTotalUnitsCompleted
       {
          get { return _NumberOfTotalUnitsCompleted; }

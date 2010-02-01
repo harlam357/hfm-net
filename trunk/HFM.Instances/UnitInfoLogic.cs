@@ -18,11 +18,8 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.Text.RegularExpressions;
 
 using HFM.Framework;
 using HFM.Instrumentation;
@@ -31,24 +28,31 @@ namespace HFM.Instances
 {
    public class UnitInfoLogic : IUnitInfoLogic
    {
+      #region Members
       /// <summary>
       /// Preferences Interface
       /// </summary>
       private readonly IPreferenceSet _Prefs;
+
       /// <summary>
       /// Protein Collection Interface
       /// </summary>
       private readonly IProteinCollection _proteinCollection;
-      
-      private UnitInfo _unitInfo;
+
+      private readonly UnitInfo _unitInfo;
       /// <summary>
       /// Unit Info Data Class
       /// </summary>
-      public UnitInfo UnitInfoData
+      public IUnitInfo UnitInfoData
       {
          get { return _unitInfo; }
-         set { _unitInfo = value; }
       }
+
+      /// <summary>
+      /// Use UTC Time Data as Local Time
+      /// </summary>
+      private readonly bool _UtcOffsetIsZero; 
+      #endregion
 
       #region Owner Data Properties
       /// <summary>
@@ -102,11 +106,12 @@ namespace HFM.Instances
       #endregion
 
       #region Constructors
-      public UnitInfoLogic(IPreferenceSet Prefs, IProteinCollection proteinCollection, UnitInfo unitInfo)
+      public UnitInfoLogic(IPreferenceSet Prefs, IProteinCollection proteinCollection, IUnitInfo unitInfo, bool UtcOffsetIsZero)
       {
          _Prefs = Prefs;
          _proteinCollection = proteinCollection;
-         _unitInfo = unitInfo;
+         _unitInfo = (UnitInfo)unitInfo;
+         _UtcOffsetIsZero = UtcOffsetIsZero;
          
          // This constructor is used when restoring a UnitInfo upon Load fro the UnitInfoContainer.
          // Since the ProjectID setter will not be called, we need to force the CurrentProtein 
@@ -114,49 +119,20 @@ namespace HFM.Instances
          SetCurrentProtein();
       }
 
-      public UnitInfoLogic(IPreferenceSet Prefs, IProteinCollection proteinCollection, UnitInfo unitInfo, 
-                              string ownerName, string ownerPath, DateTime unitRetrievalTime)
-         : this(Prefs, proteinCollection, unitInfo, ownerName, ownerPath, unitRetrievalTime, Constants.FoldingIDDefault, Constants.TeamDefault)
-      {
-
-      }
-      
-      public UnitInfoLogic(IPreferenceSet Prefs, IProteinCollection proteinCollection, UnitInfo unitInfo, 
-                              string ownerName, string ownerPath, DateTime unitRetrievalTime, string foldingID, int team)
+      public UnitInfoLogic(IPreferenceSet Prefs, IProteinCollection proteinCollection, IUnitInfo unitInfo, bool UtcOffsetIsZero, 
+                           string ownerName, string ownerPath, DateTime unitRetrievalTime)
       {
          _Prefs = Prefs;
          _proteinCollection = proteinCollection;
-         _unitInfo = unitInfo;
+         _unitInfo = (UnitInfo)unitInfo;
+         _UtcOffsetIsZero = UtcOffsetIsZero;
 
          OwningInstanceName = ownerName;
          OwningInstancePath = ownerPath;
          UnitRetrievalTime = unitRetrievalTime;
-         FoldingID = foldingID;
-         Team = team;
 
-         Init();
-      }
-
-      private void Init()
-      {
-         TypeOfClient = ClientType.Unknown;
-         DownloadTime = DateTime.MinValue;
-         DueTime = DateTime.MinValue;
-         UnitStartTimeStamp = TimeSpan.Zero;
-         FinishedTime = DateTime.MinValue;
-         CoreVersion = String.Empty;
-         ProjectID = 0;
-         ProjectRun = 0;
-         ProjectClone = 0;
-         ProjectGen = 0;
-         ProteinName = String.Empty;
-         ProteinTag = String.Empty;
-         UnitResult = WorkUnitResult.Unknown;
-
-         CurrentProtein = _proteinCollection.GetNewProtein();
-
-         RawFramesComplete = 0;
-         RawFramesTotal = 0;
+         SetCurrentProtein();
+         TypeOfClient = GetClientTypeFromProtein(CurrentProtein);
       }
       #endregion
 
@@ -175,8 +151,14 @@ namespace HFM.Instances
       /// </summary>
       public DateTime DownloadTime
       {
-         get { return _unitInfo.DownloadTime; }
-         set { _unitInfo.DownloadTime = value; }
+         get 
+         {
+            if (_UtcOffsetIsZero == false && _unitInfo.DownloadTime.Equals(DateTime.MinValue) == false)
+            {
+               return _unitInfo.DownloadTime.ToLocalTime();
+            }
+            return _unitInfo.DownloadTime; 
+         }
       }
 
       /// <summary>
@@ -184,7 +166,7 @@ namespace HFM.Instances
       /// </summary>
       public bool DownloadTimeUnknown
       {
-         get { return DownloadTime.Equals(DateTime.MinValue); }
+         get { return _unitInfo.DownloadTimeUnknown; }
       }
 
       /// <summary>
@@ -240,8 +222,14 @@ namespace HFM.Instances
       /// </summary>
       public DateTime DueTime
       {
-         get { return _unitInfo.DueTime; }
-         set { _unitInfo.DueTime = value; }
+         get 
+         {
+            if (_UtcOffsetIsZero == false && _unitInfo.DueTime.Equals(DateTime.MinValue) == false)
+            {
+               return _unitInfo.DueTime.ToLocalTime();
+            } 
+            return _unitInfo.DueTime; 
+         }
       }
 
       /// <summary>
@@ -249,7 +237,7 @@ namespace HFM.Instances
       /// </summary>
       public bool DueTimeUnknown
       {
-         get { return DueTime.Equals(DateTime.MinValue); }
+         get { return _unitInfo.DueTimeUnknown; }
       }
 
       /// <summary>
@@ -259,7 +247,6 @@ namespace HFM.Instances
       public TimeSpan UnitStartTimeStamp
       {
          get { return _unitInfo.UnitStartTimeStamp; }
-         set { _unitInfo.UnitStartTimeStamp = value; }
       }
 
       /// <summary>
@@ -267,8 +254,14 @@ namespace HFM.Instances
       /// </summary>
       public DateTime FinishedTime
       {
-         get { return _unitInfo.FinishedTime; }
-         set { _unitInfo.FinishedTime = value; }
+         get 
+         {
+            if (_UtcOffsetIsZero == false && _unitInfo.DueTime.Equals(DateTime.MinValue) == false)
+            {
+               return _unitInfo.FinishedTime.ToLocalTime();
+            } 
+            return _unitInfo.FinishedTime; 
+         }
       }
 
       /// <summary>
@@ -277,7 +270,6 @@ namespace HFM.Instances
       public string CoreVersion
       {
          get { return _unitInfo.CoreVersion; }
-         set { _unitInfo.CoreVersion = value; }
       }
 
       /// <summary>
@@ -332,13 +324,7 @@ namespace HFM.Instances
       /// </summary>
       public bool ProjectIsUnknown
       {
-         get
-         {
-            return ProjectID == 0 &&
-                   ProjectRun == 0 &&
-                   ProjectClone == 0 &&
-                   ProjectGen == 0;
-         }
+         get { return _unitInfo.ProjectIsUnknown; } 
       }
 
       /// <summary>
@@ -374,14 +360,6 @@ namespace HFM.Instances
       }
 
       /// <summary>
-      /// Flag specifying if Protein Tag value is Unknown
-      /// </summary>
-      public bool ProteinTagUnknown
-      {
-         get { return ProteinTag.Length == 0; }
-      }
-
-      /// <summary>
       /// The Result of this Work Unit
       /// </summary>
       public WorkUnitResult UnitResult
@@ -404,22 +382,8 @@ namespace HFM.Instances
                throw new ArgumentException("The given value cannot be null.");
             }
 
-            // Get a Reference to the Old Protein
-            IProtein OldProtein = CurrentProtein;
             // Set the New Protein
             _CurrentProtein = value;
-            // The Current Protein controls the length of the Unit Frame
-            // Data Array.  Resize if the frame values are not the same.
-            // We don't just want to clear the Array as there may be valid
-            // Unit Frame Data already stored within it.
-            if (OldProtein == null)
-            {
-               ClearUnitFrameData();
-            }
-            else if (OldProtein.Frames != CurrentProtein.Frames)
-            {
-               ResizeUnitFrameData();
-            }
          }
       }
       #endregion
@@ -454,7 +418,15 @@ namespace HFM.Instances
             Int32 RawScaleFactor = RawFramesTotal / CurrentProtein.Frames;
             if (RawScaleFactor > 0)
             {
-               return RawFramesComplete / RawScaleFactor;
+               int ComputedFramesComplete = RawFramesComplete / RawScaleFactor;
+               
+               // Make sure FramesComplete is 0 or greater but
+               // not greater than the CurrentProtein.Frames
+               if (ComputedFramesComplete >= 0 && 
+                   ComputedFramesComplete <= CurrentProtein.Frames)
+               {
+                  return ComputedFramesComplete;
+               }
             }
 
             return 0;
@@ -498,12 +470,15 @@ namespace HFM.Instances
       {
          get
          {
-            if (CurrentProtein.IsUnknown == false)
-            {
+            // The unknown protein frame count is 100.
+            // No need to check if we are working with
+            // a known or unknown protein here - 1/27/10
+            //if (CurrentProtein.IsUnknown == false)
+            //{
                return CurrentProtein.GetUPD(TimePerFrame);
-            }
+            //}
 
-            return 0;
+            //return 0;
          }
       }
 
@@ -549,12 +524,18 @@ namespace HFM.Instances
          {
             if (DownloadTime.Equals(DateTime.MinValue) == false)
             {
-               if (FinishedTime.Equals(DateTime.MinValue))
+               if (FinishedTime.Equals(DateTime.MinValue) == false)
                {
-                  return UnitRetrievalTime.Add(ETA).Subtract(DownloadTime);
+                  return FinishedTime.Subtract(DownloadTime);
                }
 
-               return FinishedTime.Subtract(DownloadTime);
+               // Issue 156 - ETA must be a positive TimeSpan
+               if (ETA.Equals(TimeSpan.Zero))
+               {
+                  return TimeSpan.Zero;
+               }
+
+               return UnitRetrievalTime.Add(ETA).Subtract(DownloadTime);
             }
 
             return TimeSpan.Zero;
@@ -659,113 +640,13 @@ namespace HFM.Instances
             // CurrentFrame Property returns null.
             for (int i = CurrentProtein.Frames; i >= 0; i--)
             {
-               if (UnitFrames[i] != null)
+               if (_unitInfo.UnitFrames.ContainsKey(i))
                {
-                  return UnitFrames[i].FrameID;
+                  return _unitInfo.UnitFrames[i].FrameID;
                }
             }
 
             return 0;
-         }
-      }
-
-      /// <summary>
-      /// Frame Data for this Unit
-      /// </summary>
-      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-      public IUnitFrame[] UnitFrames
-      {
-         get { return _unitInfo.UnitFrames; }
-      }
-      #endregion
-
-      #region Frame Data Methods
-      /// <summary>
-      /// Set the Current Work Unit Frame
-      /// </summary>
-      public void SetCurrentFrame(ILogLine logLine, DateTimeStyles style)
-      {
-         // Check for FrameData
-         IFrameData frame = logLine.LineData as IFrameData;
-         if (frame == null)
-         {
-            // If not found, clear the LineType and get out
-            logLine.LineType = LogLineType.Unknown;
-            return;
-         }
-
-         // Parse TimeStamp
-         DateTime timeStamp = DateTime.ParseExact(frame.TimeStampString, "HH:mm:ss",
-                              DateTimeFormatInfo.InvariantInfo, style);
-
-         // Set Raw Frame Values                                       
-         RawFramesComplete = frame.RawFramesComplete;
-         RawFramesTotal = frame.RawFramesTotal;
-         // Create new UnitFrame
-         UnitFrame unitFrame = new UnitFrame(frame.FrameID, timeStamp.TimeOfDay);
-
-         if (UnitFrames[frame.FrameID] == null)
-         {
-            // increment observed count
-            FramesObserved++;
-
-            _unitInfo.CurrentFrameConcrete = unitFrame;
-            UnitFrames[CurrentFrame.FrameID] = CurrentFrame;
-
-            CurrentFrame.FrameDuration = TimeSpan.Zero;
-            if (CurrentFrame.FrameID > 0 && UnitFrames[CurrentFrame.FrameID - 1] != null && FramesObserved > 1)
-            {
-               CurrentFrame.FrameDuration = GetDelta(CurrentFrame.TimeOfFrame, UnitFrames[CurrentFrame.FrameID - 1].TimeOfFrame);
-            }
-         }
-         else
-         {
-            // FrameID already exists, clear the LineType
-            logLine.LineType = LogLineType.Unknown;
-         }
-      }
-
-      /// <summary>
-      /// Clear the Observed Count, Current Frame Pointer, and the UnitFrames Array
-      /// </summary>
-      public void ClearUnitFrameData()
-      {
-         ClearCurrentFrame();
-         // Now based on CurrentProtein.Frames - not 101 hard code - 11/22/09
-         _unitInfo.UnitFramesConcrete = new UnitFrame[CurrentProtein.Frames + 1];
-      }
-
-      /// <summary>
-      /// Clear the Observed Count and Current Frame Pointer
-      /// </summary>
-      public void ClearCurrentFrame()
-      {
-         FramesObserved = 0;
-         _unitInfo.CurrentFrameConcrete = null;
-      }
-
-      /// <summary>
-      /// Resize the Unit Frame Data based on the Current Protein
-      /// </summary>
-      private void ResizeUnitFrameData()
-      {
-         if (_unitInfo.UnitFrames != null)
-         {
-            // Get Reference to Previous Array
-            UnitFrame[] OldUnitFrames = _unitInfo.UnitFramesConcrete;
-            // Create New Array based on Current Protein Frame Count
-            _unitInfo.UnitFramesConcrete = new UnitFrame[CurrentProtein.Frames + 1];
-
-            // We want to copy all the data from the old array to the new array.
-            // But we need to be sure that all the data will fit.  Probably won't
-            // run into this situation, but it's defensive programming.
-            int CopyLength = OldUnitFrames.Length;
-            if (_unitInfo.UnitFramesConcrete.Length < OldUnitFrames.Length)
-            {
-               CopyLength = _unitInfo.UnitFramesConcrete.Length;
-            }
-
-            Array.Copy(OldUnitFrames, 0, _unitInfo.UnitFramesConcrete, 0, CopyLength);
          }
       }
       #endregion
@@ -1017,7 +898,7 @@ namespace HFM.Instances
       private int GetDurationInSeconds(int numberOfFrames)
       {
          // No Frames have been captured yet, just return 0.
-         if (CurrentFrame == null || UnitFrames == null)
+         if (CurrentFrame == null || _unitInfo.UnitFrames == null)
          {
             return 0;
          }
@@ -1041,9 +922,9 @@ namespace HFM.Instances
 
             for (int i = 0; i < numberOfFrames; i++)
             {
-               if (UnitFrames[frameNumber].FrameDuration > TimeSpan.Zero)
+               if (_unitInfo.UnitFrames[frameNumber].FrameDuration > TimeSpan.Zero)
                {
-                  TotalTime = TotalTime.Add(UnitFrames[frameNumber].FrameDuration);
+                  TotalTime = TotalTime.Add(_unitInfo.UnitFrames[frameNumber].FrameDuration);
                   countFrames++;
                }
                frameNumber--;
@@ -1062,74 +943,14 @@ namespace HFM.Instances
 
          return AverageSeconds;
       }
-
-      /// <summary>
-      /// Get Time Delta between given frames
-      /// </summary>
-      /// <param name="timeLastFrame">Time of last frame</param>
-      /// <param name="timeCompareFrame">Time of a previous frame to compare</param>
-      private static TimeSpan GetDelta(TimeSpan timeLastFrame, TimeSpan timeCompareFrame)
-      {
-         TimeSpan tDelta;
-
-         // check for rollover back to 00:00:00 timeLastFrame will be less than previous timeCompareFrame reading
-         if (timeLastFrame < timeCompareFrame)
-         {
-            // get time before rollover
-            tDelta = TimeSpan.FromDays(1).Subtract(timeCompareFrame);
-            // add time from latest reading
-            tDelta = tDelta.Add(timeLastFrame);
-         }
-         else
-         {
-            tDelta = timeLastFrame.Subtract(timeCompareFrame);
-         }
-
-         return tDelta;
-      }
       #endregion
 
-      #region Project to Protein Matching
-      /// <summary>
-      /// Attempts to set the Protein based on the given Project data.
-      /// </summary>
-      /// <param name="match">Regex Match containing Project values</param>
-      public void DoProjectIDMatch(Match match)
-      {
-         IList<int> ProjectRCG = new List<int>(4);
-
-         ProjectRCG.Add(Int32.Parse(match.Result("${ProjectNumber}")));
-         ProjectRCG.Add(Int32.Parse(match.Result("${Run}")));
-         ProjectRCG.Add(Int32.Parse(match.Result("${Clone}")));
-         ProjectRCG.Add(Int32.Parse(match.Result("${Gen}")));
-
-         DoProjectIDMatch(ProjectRCG);
-      }
-
-      /// <summary>
-      /// Attempts to set the Protein based on the given Project data.
-      /// </summary>
-      /// <param name="ProjectRCG">List of Project (R/C/G) values</param>
-      public void DoProjectIDMatch(IList<int> ProjectRCG)
-      {
-         Debug.Assert(ProjectRCG.Count == 4);
-
-         ProjectID = ProjectRCG[0];
-         ProjectRun = ProjectRCG[1];
-         ProjectClone = ProjectRCG[2];
-         ProjectGen = ProjectRCG[3];
-
-         SetCurrentProtein();
-         TypeOfClient = GetClientTypeFromProtein(CurrentProtein);
-      }
-      
+      #region Helpers
       public void SetCurrentProtein()
       {
          CurrentProtein = _proteinCollection.GetProtein(ProjectID);
       }
-      #endregion
-
-      #region Static Helpers
+  
       /// <summary>
       /// Determine the client type based on the current protein core
       /// </summary>

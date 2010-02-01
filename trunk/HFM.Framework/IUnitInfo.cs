@@ -18,11 +18,10 @@
  */
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace HFM.Framework
 {
-   public interface IUnitInfo
+   public interface IUnitInfo : IProjectInfo
    {
       /// <summary>
       /// Name of the Client Instance that owns this UnitInfo
@@ -60,9 +59,19 @@ namespace HFM.Framework
       DateTime DownloadTime { get; set; }
 
       /// <summary>
+      /// Flag specifying if Download Time is Unknown
+      /// </summary>
+      bool DownloadTimeUnknown { get; }
+
+      /// <summary>
       /// Date/time the unit is due (preferred deadline)
       /// </summary>
       DateTime DueTime { get; set; }
+      
+      /// <summary>
+      /// Flag specifying if Due Time is Unknown
+      /// </summary>
+      bool DueTimeUnknown { get; }
 
       /// <summary>
       /// Unit Start Time Stamp (Time Stamp from First Parsable Line in LogLines)
@@ -81,24 +90,9 @@ namespace HFM.Framework
       string CoreVersion { get; set; }
 
       /// <summary>
-      /// Project ID Number
+      /// Returns true if Project (R/C/G) has not been identified
       /// </summary>
-      Int32 ProjectID { get; set; }
-
-      /// <summary>
-      /// Project ID (Run)
-      /// </summary>
-      Int32 ProjectRun { get; set; }
-
-      /// <summary>
-      /// Project ID (Clone)
-      /// </summary>
-      Int32 ProjectClone { get; set; }
-
-      /// <summary>
-      /// Project ID (Gen)
-      /// </summary>
-      Int32 ProjectGen { get; set; }
+      bool ProjectIsUnknown { get; }
 
       /// <summary>
       /// Name of the unit
@@ -128,17 +122,21 @@ namespace HFM.Framework
       /// <summary>
       /// Number of Frames Observed on this Unit
       /// </summary>
-      Int32 FramesObserved { get; }
+      Int32 FramesObserved { get; set; }
 
       /// <summary>
       /// Last Observed Frame on this Unit
       /// </summary>
       IUnitFrame CurrentFrame { get; }
+      
+      /// <summary>
+      /// Set the Current Work Unit Frame
+      /// </summary>
+      void SetCurrentFrame(ILogLine logLine);
 
       /// <summary>
-      /// Frame Data for this Unit
+      /// Get the UnitFrame Interface for this FrameID
       /// </summary>
-      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-      IUnitFrame[] UnitFrames { get; }
+      IUnitFrame GetUnitFrame(int FrameID);
    }
 }

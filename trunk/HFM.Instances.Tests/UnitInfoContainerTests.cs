@@ -81,12 +81,11 @@ namespace HFM.Instances.Tests
             unitInfo.RawFramesComplete = 2500;
             unitInfo.RawFramesTotal = 250000;
             
-            unitInfo.UnitFramesConcrete = new UnitFrame[4];
             UnitFrame unitFrame = null;
             for (int j = 0; j < 4; j++)
             {
                unitFrame = new UnitFrame(j, TimeSpan.FromMinutes(j + 1));
-               unitInfo.UnitFrames[j] = unitFrame;
+               unitInfo.UnitFrames.Add(j, unitFrame);
             }
             unitInfo.FramesObserved = 4;
             unitInfo.CurrentFrameConcrete = unitFrame;

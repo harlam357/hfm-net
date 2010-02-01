@@ -79,12 +79,16 @@ namespace HFM.Framework
       /// Results successfully sent (after upload failures)
       /// </summary>
       UInt32 ResultsSent { get; }
+      
+      /// <summary>
+      /// Get the Current QueueEntry.
+      /// </summary>
+      IQueueEntry CurrentQueueEntry { get; }
 
       /// <summary>
       /// Get the QueueEntry at the specified Index.
       /// </summary>
       /// <param name="Index">Queue Entry Index</param>
-      /// <exception cref="IndexOutOfRangeException">Throws when Index is less than 0 or greater than 9.</exception>
       IQueueEntry GetQueueEntry(uint Index);
 
       /// <summary>

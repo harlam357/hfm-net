@@ -40,7 +40,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueueBase.cs" />
     <Compile Include="QueueEntry.cs" />
-    <Compile Include="QueueParser.cs" />
     <Compile Include="QueueReader.cs" />
     <Compile Include="QueueStructs.cs" />
   </ItemGroup>

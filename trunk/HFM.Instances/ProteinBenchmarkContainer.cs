@@ -107,13 +107,14 @@ namespace HFM.Instances
 
          for (int i = startingFrame; i <= endingFrame; i++)
          {
-            if (unit.UnitFrames[i] != null)
+            IUnitFrame frame = unit.UnitInfoData.GetUnitFrame(i);
+            if (frame != null)
             {
-               if (benchmark.SetFrameTime(unit.UnitFrames[i].FrameDuration))
+               if (benchmark.SetFrameTime(frame.FrameDuration))
                {
                   result = true;
                }
-               if (unit.UnitFrames[i].FrameID == unit.Frames)
+               if (frame.FrameID == unit.Frames)
                {
                   UnitInfoContainer.WriteCompletedUnitInfo(unit);
                }

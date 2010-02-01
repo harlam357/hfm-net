@@ -1,7 +1,7 @@
 /*
- * HFM.NET - Base Instance Class
+ * HFM.NET - Client Instance Class
  * Copyright (C) 2006 David Rawling
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,7 +19,6 @@
  */
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Drawing;
 using System.Collections.Generic;
@@ -32,8 +31,6 @@ using harlam357.Security;
 using harlam357.Security.Encryption;
 
 using HFM.Framework;
-using HFM.Log;
-using HFM.Queue;
 using HFM.Helpers;
 using HFM.Instrumentation;
 
@@ -72,53 +69,19 @@ namespace HFM.Instances
       private readonly Data SymmetricKey = new Data("cNx/7+,?%ubm*?j8");
       #endregion
 
-      #region Queue Reader Instance
-      /// <summary>
-      /// Queue Reader for this Client Instance
-      /// </summary>
-      private IQueueBase _qBase = QueueBase.CreateInstance();
-      /// <summary>
-      /// Queue Reader for this Client Instance
-      /// </summary>
-      [CLSCompliant(false)]
-      public IQueueBase ClientQueue
-      {
-         get { return _qBase; }
-      } 
-      #endregion
-
-      #region Public Events
+      #region Events
       /// <summary>
       /// Raised when Instance Host Type is Changed
       /// </summary>
       public event EventHandler InstanceHostTypeChanged;
-
       /// <summary>
-      /// Raised when Client is on VM flag is Changed
-      /// </summary>
-      public event EventHandler ClientIsOnVirtualMachineChanged;
-      #endregion
-
-      #region Protected Event Wrappers
-      /// <summary>
-      /// Call when InstanceHostType Changes
+      /// Raised when Instance Host Type is Changed
       /// </summary>
       protected void OnInstanceHostTypeChanged(EventArgs e)
       {
          if (InstanceHostTypeChanged != null)
          {
             InstanceHostTypeChanged(this, e);
-         }
-      }
-
-      /// <summary>
-      /// Call when ClientIsOnVirtualMachine Changes
-      /// </summary>
-      protected void OnClientIsOnVirtualMachineChanged(EventArgs e)
-      {
-         if (ClientIsOnVirtualMachineChanged != null)
-         {
-            ClientIsOnVirtualMachineChanged(this, e);
          }
       }
       #endregion
@@ -130,14 +93,6 @@ namespace HFM.Instances
       private void ClientInstance_InstanceHostTypeChanged(object sender, EventArgs e)
       {
          InitUserSpecifiedMembers();
-      }
-      
-      /// <summary>
-      /// Handles the ClientIsOnVirtualMachineChanged Event
-      /// </summary>
-      private void ClientInstance_ClientIsOnVirtualMachineChanged(object sender, EventArgs e)
-      {
-         CurrentUnitInfo.ClearUnitFrameData();
       }
       #endregion
       
@@ -155,7 +110,17 @@ namespace HFM.Instances
       /// Protein Collection Interface
       /// </summary>
       private readonly IProteinBenchmarkContainer _benchmarkContainer;
-
+      
+      private readonly IDataAggregator _dataAggregator;
+      /// <summary>
+      /// Data Aggregator Interface
+      /// </summary>
+      [CLSCompliant(false)]
+      public IDataAggregator DataAggregator
+      {
+         get { return _dataAggregator; }
+      }
+      
       #region Constructor
       /// <summary>
       /// Primary Constructor
@@ -164,13 +129,11 @@ namespace HFM.Instances
       {
          // When Instance Host Type Changes, Clear the User Specified Values
          InstanceHostTypeChanged += ClientInstance_InstanceHostTypeChanged;
-         // When Client is on VM Changes, Clear the Unit Frame Data
-         // The captured TimeOfFrame values will no longer be valid
-         ClientIsOnVirtualMachineChanged += ClientInstance_ClientIsOnVirtualMachineChanged;
 
          _Prefs = Prefs;
          _proteinCollection = proteinCollection;
          _benchmarkContainer = benchmarkContainer;
+         _dataAggregator = InstanceProvider.GetInstance<IDataAggregator>();
          
          // Set the Host Type
          _InstanceHostType = type;
@@ -179,7 +142,7 @@ namespace HFM.Instances
          // Init User Specified Client Level Members
          InitUserSpecifiedMembers();
          // Create a fresh UnitInfo
-         _CurrentUnitInfo = new UnitInfoLogic(_Prefs, _proteinCollection, new UnitInfo(), InstanceName, Path, DateTime.Now);
+         _CurrentUnitInfo = new UnitInfoLogic(_Prefs, _proteinCollection, new UnitInfo(), false, InstanceName, Path, DateTime.Now);
       }
       #endregion
 
@@ -361,33 +324,6 @@ namespace HFM.Instances
          get { return _CurrentUnitInfo; }
       }
 
-      private IList<ILogLine> _CurrentLogLines;
-      /// <summary>
-      /// List of current log file text lines
-      /// </summary>
-      public IList<ILogLine> CurrentLogLines
-      {
-         get { return _CurrentLogLines; }
-         protected set
-         {
-            _CurrentLogLines = value;
-         }
-      }
-
-      private IList<ILogLine>[] _QueueLogLines;
-      /// <summary>
-      /// Array of LogLine Lists - Used to hold QueueEntry LogLines
-      /// </summary>
-      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-      public IList<ILogLine>[] QueueLogLines
-      {
-         get { return _QueueLogLines; }
-         protected set
-         {
-            _QueueLogLines = value;
-         }
-      }
-
       /// <summary>
       /// Init Client Level Members
       /// </summary>
@@ -401,9 +337,6 @@ namespace HFM.Instances
          NumberOfCompletedUnitsSinceLastStart = 0;
          NumberOfFailedUnitsSinceLastStart = 0;
          TotalUnits = 0;
-
-         CurrentLogLines = new List<ILogLine>();
-         QueueLogLines = null;
       }
 
       /// <summary>
@@ -412,9 +345,10 @@ namespace HFM.Instances
       /// <param name="QueueIndex">Index in Queue</param>
       public IList<ILogLine> GetLogLinesForQueueIndex(int QueueIndex)
       {
-         if (QueueLogLines != null && QueueLogLines[QueueIndex] != null)
+         if (_dataAggregator.UnitLogLines != null && 
+             _dataAggregator.UnitLogLines[QueueIndex] != null)
          {
-            return QueueLogLines[QueueIndex];
+            return _dataAggregator.UnitLogLines[QueueIndex];
          }
 
          return null;
@@ -606,14 +540,7 @@ namespace HFM.Instances
       public bool ClientIsOnVirtualMachine
       {
          get { return _ClientIsOnVirtualMachine; }
-         set
-         {
-            if (_ClientIsOnVirtualMachine != value)
-            {
-               _ClientIsOnVirtualMachine = value;
-               OnClientIsOnVirtualMachineChanged(EventArgs.Empty);
-            }
-         }
+         set { _ClientIsOnVirtualMachine = value; }
       }
 
       private Int32 _ClientTimeOffset;
@@ -1131,62 +1058,38 @@ namespace HFM.Instances
          // Exec Start
          DateTime Start = HfmTrace.ExecStart;
 
-         // Read and Parse the queue.dat file
-         UnitInfoLogic[] parsedUnits = ParseQueueFile();
-         // Read and Scan the FAHlog file
-         ILogReader lr = InstanceProvider.GetInstance<ILogReader>();
-         lr.ScanFAHLog(InstanceName, System.IO.Path.Combine(_Prefs.CacheDirectory, CachedFAHLogName));
-
-         // Get the Client Status from the Current Work Unit
-         ClientStatus CurrentWorkUnitStatus = lr.GetStatusFromLogLines(lr.CurrentWorkUnitLogLines);
-
-         // Populate Startup Arguments and Work Unit Count Data into this ClientInstance.
-         // This data can only be gathered from the FAHlog, it does not exist in the queue.
-         Arguments = lr.LastClientRun.Arguments;
-         NumberOfCompletedUnitsSinceLastStart = lr.LastClientRun.NumberOfCompletedUnits;
-         NumberOfFailedUnitsSinceLastStart = lr.LastClientRun.NumberOfFailedUnits;
-         TotalUnits = lr.LastClientRun.NumberOfTotalUnitsCompleted;
-
-         // Default Index to 1 - which is we want if only parsing previous and current logs
-         int CurrentUnitIndex = 1;
-
-         // Decision Time: If Queue Read Failed parsedUnits will be null
-         if (parsedUnits == null)
+         #region Setup UnitInfo Aggregator
+         _dataAggregator.InstanceName = InstanceName;
+         _dataAggregator.QueueFilePath = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedQueueName);
+         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedFAHLogName);
+         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedUnitInfoName); 
+         #endregion
+         
+         #region Run the Aggregator and Set ClientInstance Level Results
+         IList<IUnitInfo> units = _dataAggregator.AggregateData();
+         PopulateRunLevelData(_dataAggregator.CurrentClientRun);
+         #endregion
+         
+         UnitInfoLogic[] parsedUnits = new UnitInfoLogic[units.Count];
+         for (int i = 0; i < units.Count; i++)
          {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName,
-               "Queue unavailable or failed read.  Parsing logs without queue.");
-
-            parsedUnits = ParseCurrentAndPreviousUnitsFromLogsOnly(lr);
-         }
-         else
-         {
-            // Populate User (Team) and User/Machine IDs from the Queue
-            PopulateUserAndMachineData(_qBase.GetQueueEntry(_qBase.CurrentIndex));
-            // Set the Index to the Current Queue Index
-            CurrentUnitIndex = (int)_qBase.CurrentIndex;
-
-            if (ParseLogLinesBasedOnQueueIndex(parsedUnits, lr, CurrentWorkUnitStatus) == false)
+            if (units[i] != null)
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture,
-                  "Could not verify log section for current queue entry ({0}). Parsing logs without queue.", CurrentUnitIndex));
-
-               CurrentUnitIndex = 1;
-               parsedUnits = ParseCurrentAndPreviousUnitsFromLogsOnly(lr);
+               parsedUnits[i] = new UnitInfoLogic(_Prefs, _proteinCollection, units[i], ClientIsOnVirtualMachine, 
+                                                  InstanceName, Path, LastRetrievalTime);   
             }
          }
 
          // *** THIS HAS TO BE DONE BEFORE UPDATING THE CurrentUnitInfo ***
          // Update Benchmarks from parsedUnits array 
-         UpdateBenchmarkData(parsedUnits, CurrentUnitIndex);
+         UpdateBenchmarkData(parsedUnits, _dataAggregator.CurrentUnitIndex);
 
          // Update the CurrentUnitInfo if we have a Status
+         ClientStatus CurrentWorkUnitStatus = _dataAggregator.CurrentWorkUnitStatus;
          if (CurrentWorkUnitStatus.Equals(ClientStatus.Unknown) == false)
          {
-            CurrentUnitInfoConcrete = parsedUnits[CurrentUnitIndex];
+            CurrentUnitInfoConcrete = parsedUnits[_dataAggregator.CurrentUnitIndex];
          }
-
-         // Update the CurrentLogLines
-         CurrentLogLines = lr.CurrentWorkUnitLogLines;
 
          HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, Start);
 
@@ -1194,197 +1097,19 @@ namespace HFM.Instances
          return CurrentWorkUnitStatus;
       }
 
-      /// <summary>
-      /// Read the queue.dat file and Parse Queue Entries from QueueReader into UnitInfo Array.
-      /// </summary>
-      /// <returns>Parsed UnitInfo Array or null on Failure.</returns>
-      private UnitInfoLogic[] ParseQueueFile()
+      private void PopulateRunLevelData(IClientRun run)
       {
-         // Make sure the queue file exists first.  Would like to avoid the exception overhead.
-         string CachedQueueFilePath = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedQueueName);
-         if (File.Exists(CachedQueueFilePath) == false)
-         {
-            return null;
-         }
-
-         UnitInfoLogic[] units = null;
-
-         // queue.dat is not required to get a reading, if something goes wrong
-         // just catch, log, and continue with parsing log files
-         try
-         {
-            IQueueReader reader = InstanceProvider.GetInstance<IQueueReader>();
-            reader.ReadQueue(CachedQueueFilePath);
-            if (reader.QueueReadOk)
-            {
-               _qBase = reader.Queue;
-               units = new UnitInfoLogic[10];
-
-               // process entries
-               for (int i = 0; i < 10; i++)
-               {
-                  UnitInfoLogic parsedUnitInfo = new UnitInfoLogic(_Prefs, _proteinCollection, new UnitInfo(), InstanceName, Path, LastRetrievalTime);
-                  QueueParser.ParseQueueEntry(_qBase.GetQueueEntry((uint)i), parsedUnitInfo, ClientIsOnVirtualMachine);
-                  units[i] = parsedUnitInfo;
-               }
-            }
-            else
-            {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format("{0} read failed.", reader.QueueFilePath));
-            }
-         }
-         catch (Exception ex)
-         {
-            units = null;
-            HfmTrace.WriteToHfmConsole(TraceLevel.Error, InstanceName, ex);
-         }
-
-         return units;
-      }
-
-      /// <summary>
-      /// Parse Log Line Sections from Queue Positions into UnitInfo.
-      /// </summary>
-      /// <param name="parsedUnits">Parsed UnitInfo Array</param>
-      /// <param name="lr">LogReader Instance</param>
-      /// <param name="CurrentWorkUnitStatus">Current Status Based on LogReader.CurrentLogLines</param>
-      private bool ParseLogLinesBasedOnQueueIndex(UnitInfoLogic[] parsedUnits, ILogReader lr, ClientStatus CurrentWorkUnitStatus)
-      {
-         Debug.Assert(parsedUnits.Length == 10);
-
-         QueueLogLines = new IList<ILogLine>[10];
-
-         for (int queueIndex = 0; queueIndex < parsedUnits.Length; queueIndex++)
-         {
-            // Get the Log Lines for this queue position from the reader
-            IList<ILogLine> logLines = lr.GetLogLinesFromQueueIndex(queueIndex);
-
-            // Get the Project (R/C/G) from the Log Lines
-            string ProjectRunCloneGen = lr.GetProjectFromLogLines(logLines);
-            // Could not validate Project Matches Queue Position
-            if (parsedUnits[queueIndex].ProjectRunCloneGen.Equals(ProjectRunCloneGen) == false)
-            {
-               // If the current index
-               if (_qBase.CurrentIndex == queueIndex)
-               {
-                  // Issue 103 - If the Current Status is 'GettingWorkPacket' don't clear the Queue.
-                  // In most cases the log section matching the new Queue Entry does not contain any 
-                  // information regarding the Project because it hasn't been written yet.
-                  //TODO: Get an SMP Client FAHlog and queue files exhibiting this state so a test can be written.
-                  if (CurrentWorkUnitStatus.Equals(ClientStatus.GettingWorkPacket))
-                  {
-                     // If Project Info is Present, it did not match, clear the Log section for this Queue Entry
-                     if (ProjectRunCloneGen.Length != 0)
-                     {
-                        // Remove the Log Lines for the Current Queue Index and maintain the Queue information
-                        QueueLogLines[queueIndex] = null;
-                     }
-                  }
-                  else
-                  {
-                     // Remove the Queue LogLines array
-                     QueueLogLines = null;
-                     // And clear the Queue data itself
-                     _qBase = _qBase.Create();
-                     return false;
-                  }
-               }
-
-               // Otherwise, just skip this unit and continue
-               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, String.Format(CultureInfo.CurrentCulture,
-                  "Could not find or verify log section for queue entry {0} (this is not a problem).", queueIndex));
-               continue;
-            }
-
-            QueueLogLines[queueIndex] = logLines;
-
-            ParseWorkUnitLogLines(this, logLines, parsedUnits[queueIndex], _qBase.CurrentIndex == queueIndex);
-         }
-
-         return true;
-      }
-
-      /// <summary>
-      /// Parse Log Line Sections from Last Two Units based on LogReader.
-      /// </summary>
-      /// <param name="lr">LogReader Instance</param>
-      private UnitInfoLogic[] ParseCurrentAndPreviousUnitsFromLogsOnly(ILogReader lr)
-      {
-         Debug.Assert(lr != null);
-
-         UnitInfoLogic[] parsedUnits = new UnitInfoLogic[2];
-
-         PopulateUserAndMachineData(lr.LastClientRun);
-
-         parsedUnits[0] = new UnitInfoLogic(_Prefs, _proteinCollection, new UnitInfo(), InstanceName, Path, LastRetrievalTime, FoldingID, Team);
-         parsedUnits[1] = new UnitInfoLogic(_Prefs, _proteinCollection, new UnitInfo(), InstanceName, Path, LastRetrievalTime, FoldingID, Team);
-
-         IList<ILogLine> PreviousLogLines = lr.PreviousWorkUnitLogLines;
-         if (PreviousLogLines != null)
-         {
-            ParseWorkUnitLogLines(this, lr.PreviousWorkUnitLogLines, parsedUnits[0]);
-         }
-         ParseWorkUnitLogLines(this, lr.CurrentWorkUnitLogLines, parsedUnits[1], true);
-
-         return parsedUnits;
-      }
-
-      /// <summary>
-      /// Parse Log Lines into UnitInfo object
-      /// </summary>
-      /// <param name="Instance">Client Instance doing the processing.</param>
-      /// <param name="logLines">Log Lines to process.</param>
-      /// <param name="parsedUnitInfo">UnitInfo object to populate.</param>
-      private void ParseWorkUnitLogLines(ClientInstance Instance, IList<ILogLine> logLines, IUnitInfoLogic parsedUnitInfo)
-      {
-         ParseWorkUnitLogLines(Instance, logLines, parsedUnitInfo, false);
-      }
-
-      /// <summary>
-      /// Parse Log Lines into UnitInfo object
-      /// </summary>
-      /// <param name="Instance">Client Instance doing the processing.</param>
-      /// <param name="logLines">Log Lines to process.</param>
-      /// <param name="parsedUnitInfo">UnitInfo object to populate.</param>
-      /// <param name="ReadUnitInfoFile">Flag - Read the unitinfo.txt file.</param>
-      private void ParseWorkUnitLogLines(ClientInstance Instance, IList<ILogLine> logLines, IUnitInfoLogic parsedUnitInfo, bool ReadUnitInfoFile)
-      {
-         LogParser lp = new LogParser(Instance.InstanceName, Instance.ClientIsOnVirtualMachine, parsedUnitInfo);
-         lp.ParseFAHLog(logLines);
-
-         if (ReadUnitInfoFile)
-         {
-            if (lp.ParseUnitInfoFile(System.IO.Path.Combine(_Prefs.CacheDirectory, Instance.CachedUnitInfoName)) == false)
-            {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, Instance.InstanceName, "unitinfo parse failed.");
-            }
-         }
-      }
-
-      /// <summary>
-      /// Populate FoldingID, Team, UserID, and MachineID.
-      /// </summary>
-      /// <param name="entry">Queue Entry to Populate from</param>
-      private void PopulateUserAndMachineData(IQueueEntry entry)
-      {
-         FoldingID = entry.FoldingID;
-         Team = (int)entry.TeamNumber;
-
-         UserID = entry.UserID;
-         MachineID = (int)entry.MachineID;
-      }
-
-      /// <summary>
-      /// Populate FoldingID, Team, UserID, and MachineID.
-      /// </summary>
-      /// <param name="run">Client Run to Populate from</param>
-      public void PopulateUserAndMachineData(IClientRun run)
-      {
+         Arguments = run.Arguments;
+      
          FoldingID = run.FoldingID;
          Team = run.Team;
-
+         
          UserID = run.UserID;
          MachineID = run.MachineID;
+
+         NumberOfCompletedUnitsSinceLastStart = run.NumberOfCompletedUnits;
+         NumberOfFailedUnitsSinceLastStart = run.NumberOfFailedUnits;
+         TotalUnits = run.NumberOfTotalUnitsCompleted;
       }
 
       /// <summary>
@@ -1482,16 +1207,27 @@ namespace HFM.Instances
          Debug.Assert(CurrentUnitInfo != null);
       
          // if the parsed Project is known
-         if (parsedUnitInfo.ProjectIsUnknown == false)
+         if (parsedUnitInfo != null && parsedUnitInfo.ProjectIsUnknown == false)
          {
-            // and is the same as the current Project
-            if (parsedUnitInfo.ProjectRunCloneGen == CurrentUnitInfo.ProjectRunCloneGen)
+            // Matches the Current Project and Download Time
+            if (ProjectsMatch(parsedUnitInfo, CurrentUnitInfo) &&
+                parsedUnitInfo.DownloadTime.Equals(CurrentUnitInfo.DownloadTime))
             {
                return true;
             }
          }
 
          return false;
+      }
+
+      private static bool ProjectsMatch(IProjectInfo project1, IProjectInfo project2)
+      {
+         if (project1 == null || project2 == null) return false;
+
+         return (project1.ProjectID == project2.ProjectID &&
+                 project1.ProjectRun == project2.ProjectRun &&
+                 project1.ProjectClone == project2.ProjectClone &&
+                 project1.ProjectGen == project2.ProjectGen);
       }
       #endregion
 
@@ -1507,7 +1243,8 @@ namespace HFM.Instances
          statusData.InstanceName = InstanceName;
          statusData.TypeOfClient = CurrentUnitInfo.TypeOfClient;
          statusData.LastRetrievalTime = LastRetrievalTime;
-         statusData.ClientIsOnVirtualMachine = ClientIsOnVirtualMachine;
+         statusData.IgnoreUtcOffset = ClientIsOnVirtualMachine;
+         statusData.UtcOffset = TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
          statusData.ClientTimeOffset = ClientTimeOffset;
          statusData.TimeOfLastUnitStart = TimeOfLastUnitStart;
          statusData.TimeOfLastFrameProgress = TimeOfLastFrameProgress;
@@ -1683,7 +1420,7 @@ namespace HFM.Instances
          #region Get Last Retrieval Time Date
          DateTime currentFrameDateTime;
 
-         if (statusData.ClientIsOnVirtualMachine)
+         if (statusData.IgnoreUtcOffset)
          {
             // get only the date from the last retrieval time (in universal), we'll add the current time below
             currentFrameDateTime = new DateTime(statusData.LastRetrievalTime.Date.Ticks, DateTimeKind.Utc);
@@ -1697,7 +1434,12 @@ namespace HFM.Instances
 
          #region Apply Frame Time Offset and Set Current Frame Time Date
          TimeSpan offset = TimeSpan.FromMinutes(statusData.ClientTimeOffset);
-         TimeSpan adjustedFrameTime = statusData.TimeOfLastFrame.Subtract(offset);
+         TimeSpan adjustedFrameTime = statusData.TimeOfLastFrame;
+         if (statusData.IgnoreUtcOffset == false)
+         {
+            adjustedFrameTime = adjustedFrameTime.Add(statusData.UtcOffset);
+         }
+         adjustedFrameTime = adjustedFrameTime.Subtract(offset);
 
          // client time has already rolled over to the next day. the offset correction has 
          // caused the adjusted frame time span to be negetive.  take the that negetive span
@@ -2147,7 +1889,7 @@ namespace HFM.Instances
       /// <param name="unitInfo">UnitInfo Object to Restore</param>
       public void RestoreUnitInfo(UnitInfo unitInfo)
       {
-         CurrentUnitInfoConcrete = new UnitInfoLogic(_Prefs, _proteinCollection, unitInfo);
+         CurrentUnitInfoConcrete = new UnitInfoLogic(_Prefs, _proteinCollection, unitInfo, ClientIsOnVirtualMachine);
       }
       #endregion
 
