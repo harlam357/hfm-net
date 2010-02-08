@@ -17,6 +17,7 @@ copy /Y HFM.Preferences.dll %1
 copy /Y HFM.Proteins.dll %1
 copy /Y HFM.Queue.dll %1
 copy /Y HTMLparser.dll %1
+copy /Y harlam357.Net.dll %1
 copy /Y harlam357.Security.dll %1
 copy /Y harlam357.Windows.Forms.dll %1
 copy /Y ZedGraph.dll %1
