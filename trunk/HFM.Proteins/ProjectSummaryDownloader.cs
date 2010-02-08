@@ -211,11 +211,15 @@ namespace HFM.Proteins
       [CLSCompliant(false)]
       public HTMLparser InitHTMLparser(Uri ProjectDownloadUri)
       {
+         NetworkOps net = new NetworkOps();
+
+         string tempPath = Path.Combine(Path.GetTempPath(), "psummary.html");
+         net.HttpDownloadHelper(ProjectDownloadUri, tempPath, String.Empty, String.Empty);
+      
          string sSummaryPage;
-         using (StreamReader sr1 = new StreamReader(
-                NetworkOps.HttpDownloadHelper(ProjectDownloadUri), Encoding.ASCII))
+         using (StreamReader stream = File.OpenText(tempPath))
          {
-            sSummaryPage = sr1.ReadToEnd();
+            sSummaryPage = stream.ReadToEnd();
          }
 
          HTMLparser pSummary = new HTMLparser();

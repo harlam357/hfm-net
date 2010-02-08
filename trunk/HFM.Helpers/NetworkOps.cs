@@ -24,7 +24,8 @@ using System.IO;
 using System.Net;
 using System.Net.Cache;
 using System.Net.Mail;
-using System.Text;
+
+using harlam357.Net;
 
 using HFM.Framework;
 using HFM.Instrumentation;
@@ -41,28 +42,27 @@ namespace HFM.Helpers
       UnitInfo
    }
 
+   public delegate void FtpCheckConnectionDelegate(string Server, string FtpPath, string Username, string Password, FtpType ftpMode);
+   public delegate void HttpCheckConnectionDelegate(string Url, string Username, string Password);
+
    /// <summary>
    /// Network Operations Class
    /// </summary>
-   public static class NetworkOps
+   public class NetworkOps
    {
-      /// <summary>
-      /// UnitInfo Log File Maximum Download Size.
-      /// </summary>
-      public const int UnitInfoMax = 1048576; // 1 Megabyte
-
-      /// <summary>
-      /// Upload a File via Ftp.
-      /// </summary>
-      /// <param name="Server">Server Name or IP.</param>
-      /// <param name="FtpPath">Path to upload to on remote Ftp server.</param>
-      /// <param name="LocalFilePath">Path to local file.</param>
-      /// <param name="Username">Ftp Login Username.</param>
-      /// <param name="Password">Ftp Login Password.</param>
-      /// <exception cref="ArgumentException">Throws if Server, FtpPath, or LocalFilePath is Null or Empty.</exception>
-      public static void FtpUploadHelper(string Server, string FtpPath, string LocalFilePath, string Username, string Password)
+      private IFtpWebOperation _FtpWebOperation;
+      public IFtpWebOperation FtpOperation
       {
-         FtpUploadHelper(Server, FtpPath, LocalFilePath, Username, Password, true);
+         get { return _FtpWebOperation; }
+      }
+      
+      public event EventHandler<WebOperationProgressEventArgs> FtpWebOperationProgress;
+      protected void OnFtpWebOperationProgress(object sender, WebOperationProgressEventArgs e)
+      {
+         if (FtpWebOperationProgress != null)
+         {
+            FtpWebOperationProgress(this, e);
+         }
       }
 
       /// <summary>
@@ -73,72 +73,63 @@ namespace HFM.Helpers
       /// <param name="LocalFilePath">Path to local file.</param>
       /// <param name="Username">Ftp Login Username.</param>
       /// <param name="Password">Ftp Login Password.</param>
-      /// <param name="PassiveMode">Passive FTP Mode.</param>
-      /// <exception cref="ArgumentException">Throws if Server, FtpPath, or LocalFilePath is Null or Empty.</exception>
-      public static void FtpUploadHelper(string Server, string FtpPath, string LocalFilePath, string Username, string Password, bool PassiveMode)
+      /// <param name="ftpMode">Ftp Transfer Mode.</param>
+      /// <exception cref="ArgumentException">Throws if Server or FtpPath, or LocalFilePath is Null or Empty.</exception>
+      public void FtpUploadHelper(string Server, string FtpPath, string LocalFilePath, string Username, string Password, FtpType ftpMode)
       {
          if (String.IsNullOrEmpty(Server) || String.IsNullOrEmpty(FtpPath) || String.IsNullOrEmpty(LocalFilePath))
          {
             throw new ArgumentException("Arguments 'Server', 'FtpPath', and 'LocalFilePath' cannot be a null or empty string.");
          }
          
-         FtpUploadHelper((FtpWebRequest)FtpWebRequest.Create(new Uri(String.Format(CultureInfo.InvariantCulture, 
-            "ftp://{0}{1}{2}", Server, FtpPath, Path.GetFileName(LocalFilePath)))), LocalFilePath, Username, Password, PassiveMode);
+         FtpUploadHelper(new Uri(String.Format(CultureInfo.InvariantCulture, "ftp://{0}{1}{2}",
+            Server, FtpPath, Path.GetFileName(LocalFilePath))), LocalFilePath, Username, Password, ftpMode);
       }
 
       /// <summary>
       /// Upload a File via Ftp.
       /// </summary>
-      /// <param name="Request">Ftp Web Request.</param>
+      /// <param name="ResourceUri">Web Resource Uri.</param>
       /// <param name="LocalFilePath">Path to local file.</param>
       /// <param name="Username">Ftp Login Username.</param>
       /// <param name="Password">Ftp Login Password.</param>
-      /// <param name="PassiveMode">Passive FTP Mode.</param>
-      /// <exception cref="ArgumentException">Throws if LocalFilePath is Null or Empty.</exception>
-      public static void FtpUploadHelper(FtpWebRequest Request, string LocalFilePath, string Username, string Password, bool PassiveMode)
+      /// <param name="ftpMode">Ftp Transfer Mode.</param>
+      /// <exception cref="ArgumentNullException">Throws if ResourceUri is Null.</exception>
+      public void FtpUploadHelper(Uri ResourceUri, string LocalFilePath, string Username, string Password, FtpType ftpMode)
       {
+         if (ResourceUri == null) throw new ArgumentNullException("ResourceUri", "Argument 'ResourceUri' cannot be null.");
+      
+         FtpUploadHelper((FtpWebOperation)WebOperation.Create(ResourceUri), LocalFilePath, Username, Password, ftpMode);
+      }
+
+      /// <summary>
+      /// Upload a File via Ftp.
+      /// </summary>
+      /// <param name="ftpWebOperation">Web Operation.</param>
+      /// <param name="LocalFilePath">Path to local file.</param>
+      /// <param name="Username">Ftp Login Username.</param>
+      /// <param name="Password">Ftp Login Password.</param>
+      /// <param name="ftpMode">Ftp Transfer Mode.</param>
+      /// <exception cref="ArgumentNullException">Throws if ftpWebOperation is Null.</exception>
+      /// <exception cref="ArgumentException">Throws if LocalFilePath is Null or Empty.</exception>
+      public void FtpUploadHelper(IFtpWebOperation ftpWebOperation, string LocalFilePath, string Username, string Password, FtpType ftpMode)
+      {
+         if (ftpWebOperation == null) throw new ArgumentNullException("ftpWebOperation", "Argument 'ftpWebOperation' cannot be null.");
+
          if (String.IsNullOrEmpty(LocalFilePath))
          {
             throw new ArgumentException("Argument 'LocalFilePath' cannot be a null or empty string.");
          }
-      
-         Request.Method = WebRequestMethods.Ftp.UploadFile;
-         Request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-         Request.UsePassive = PassiveMode;
 
-         SetNetworkCredentials(Request, Username, Password);
-         // Don't Set Proxy on FtpWebRequest, Proxy is for Http calls only.
-         //SetProxy(request);
-         
-         using (StreamReader sr1 = new StreamReader(LocalFilePath))
-         {
-            byte[] fileContents = Encoding.UTF8.GetBytes(sr1.ReadToEnd());
-            //request.ContentLength = fileContents.Length;
+         _FtpWebOperation = ftpWebOperation;
+         _FtpWebOperation.WebOperationProgress += OnFtpWebOperationProgress;
+         _FtpWebOperation.OperationRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+         SetFtpMode(_FtpWebOperation.FtpOperationRequest, ftpMode);
 
-            using (Stream requestStream = Request.GetRequestStream())
-            {
-               requestStream.Write(fileContents, 0, fileContents.Length);
-            }
-         }
+         SetNetworkCredentials(_FtpWebOperation.OperationRequest.Request, Username, Password);
+         _FtpWebOperation.Upload(LocalFilePath);
       }
 
-      /// <summary>
-      /// Download a File via Ftp.
-      /// </summary>
-      /// <param name="Server">Server Name or IP.</param>
-      /// <param name="FtpPath">Path to download from on remote Ftp server.</param>
-      /// <param name="RemoteFileName">Remote file to download.</param>
-      /// <param name="LocalFilePath">Path to local file.</param>
-      /// <param name="Username">Ftp Login Username.</param>
-      /// <param name="Password">Ftp Login Password.</param>
-      /// <param name="type">Type of Download.</param>
-      /// <exception cref="ArgumentException">Throws if Server, FtpPath, RemoteFileName, or LocalFilePath is Null or Empty.</exception>
-      public static void FtpDownloadHelper(string Server, string FtpPath, string RemoteFileName, string LocalFilePath, 
-                                           string Username, string Password, DownloadType type)
-      {
-         FtpDownloadHelper(Server, FtpPath, RemoteFileName, LocalFilePath, Username, Password, FtpType.Passive, type);
-      }
-      
       /// <summary>
       /// Download a File via Ftp.
       /// </summary>
@@ -149,94 +140,133 @@ namespace HFM.Helpers
       /// <param name="Username">Ftp Login Username.</param>
       /// <param name="Password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
-      /// <param name="type">Type of Download.</param>
-      /// <exception cref="ArgumentException">Throws if Server, FtpPath, RemoteFileName, or LocalFilePath is Null or Empty.</exception>
-      public static void FtpDownloadHelper(string Server, string FtpPath, string RemoteFileName, string LocalFilePath, 
-                                           string Username, string Password, FtpType ftpMode, DownloadType type)
+      /// <exception cref="ArgumentException">Throws if Server, FtpPath, or RemoteFileName is Null or Empty.</exception>
+      public void FtpDownloadHelper(string Server, string FtpPath, string RemoteFileName, string LocalFilePath, 
+                                    string Username, string Password, FtpType ftpMode)
       {
          if (String.IsNullOrEmpty(Server) || String.IsNullOrEmpty(FtpPath) || String.IsNullOrEmpty(RemoteFileName))
          {
             throw new ArgumentException("Arguments 'Server', 'FtpPath', and 'RemoteFileName'cannot be a null or empty string.");
          }
 
-         FtpDownloadHelper((FtpWebRequest)FtpWebRequest.Create(new Uri(String.Format(CultureInfo.InvariantCulture,
-            "ftp://{0}{1}{2}", Server, FtpPath, RemoteFileName))), LocalFilePath, Username, Password, ftpMode, type);
+         FtpDownloadHelper(new Uri(String.Format(CultureInfo.InvariantCulture, "ftp://{0}{1}{2}",
+            Server, FtpPath, RemoteFileName)), LocalFilePath, Username, Password, ftpMode);
       }
 
       /// <summary>
       /// Download a File via Ftp.
       /// </summary>
-      /// <param name="Request">Ftp Web Request.</param>
+      /// <param name="ResourceUri">Web Resource Uri.</param>
       /// <param name="LocalFilePath">Path to local file.</param>
       /// <param name="Username">Ftp Login Username.</param>
       /// <param name="Password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
-      /// <param name="type">Type of Download.</param>
-      /// <exception cref="ArgumentException">Throws if Server, FtpPath, RemoteFileName, or LocalFilePath is Null or Empty.</exception>
-      public static void FtpDownloadHelper(FtpWebRequest Request, string LocalFilePath, string Username, string Password, 
-                                           FtpType ftpMode, DownloadType type)
+      /// <exception cref="ArgumentNullException">Throws if ResourceUri is Null.</exception>
+      public void FtpDownloadHelper(Uri ResourceUri, string LocalFilePath, string Username, string Password, FtpType ftpMode)
       {
+         if (ResourceUri == null) throw new ArgumentNullException("ResourceUri", "Argument 'ResourceUri' cannot be null.");
+      
+         FtpDownloadHelper((FtpWebOperation)WebOperation.Create(ResourceUri), LocalFilePath, Username, Password, ftpMode);
+      }
+
+      /// <summary>
+      /// Download a File via Ftp.
+      /// </summary>
+      /// <param name="ftpWebOperation">Web Operation.</param>
+      /// <param name="LocalFilePath">Path to local file.</param>
+      /// <param name="Username">Ftp Login Username.</param>
+      /// <param name="Password">Ftp Login Password.</param>
+      /// <param name="ftpMode">Ftp Transfer Mode.</param>
+      /// <exception cref="ArgumentNullException">Throws if ftpWebOperation is Null.</exception>
+      /// <exception cref="ArgumentException">Throws if LocalFilePath is Null or Empty.</exception>
+      public void FtpDownloadHelper(IFtpWebOperation ftpWebOperation, string LocalFilePath, string Username, string Password, FtpType ftpMode)
+      {
+         if (ftpWebOperation == null) throw new ArgumentNullException("ftpWebOperation", "Argument 'ftpWebOperation' cannot be null.");
+
          if (String.IsNullOrEmpty(LocalFilePath))
          {
             throw new ArgumentException("Argument 'LocalFilePath' cannot be a null or empty string.");
          }
 
-         Request.Method = WebRequestMethods.Ftp.DownloadFile;
-         Request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+         _FtpWebOperation = ftpWebOperation;
+         _FtpWebOperation.WebOperationProgress += OnFtpWebOperationProgress;
+         _FtpWebOperation.FtpOperationRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+         SetFtpMode(_FtpWebOperation.FtpOperationRequest, ftpMode);
 
-         Request.UsePassive = true;
-         if (ftpMode.Equals(FtpType.Active))
-         {
-            Request.UsePassive = false;
-         }
-
-         SetNetworkCredentials(Request, Username, Password);
-         // Don't Set Proxy on FtpWebRequest, Proxy is for Http calls only.
-         //SetProxy(request);
-
-         FtpWebResponse ftpr1 = (FtpWebResponse)Request.GetResponse();
-
-         if (type.Equals(DownloadType.Binary))
-         {
-            using (Stream sr1 = ftpr1.GetResponseStream())
-            {
-               using (Stream sw1 = File.Create(LocalFilePath))
-               {
-                  byte[] buffer = new byte[1024];
-                  int bytesRead;
-
-                  do
-                  {
-                     bytesRead = sr1.Read(buffer, 0, buffer.Length);
-                     sw1.Write(buffer, 0, bytesRead);
-                  }
-                  while (bytesRead > 0);
-               }
-            }
-         }
-         else
-         {
-            using (StreamReader sr1 = new StreamReader(ftpr1.GetResponseStream(), Encoding.ASCII))
-            {
-               using (StreamWriter sw1 = new StreamWriter(LocalFilePath, false))
-               {
-                  sw1.Write(sr1.ReadToEnd());
-               }
-            }
-         }
+         SetNetworkCredentials(_FtpWebOperation.OperationRequest.Request, Username, Password);
+         _FtpWebOperation.Download(LocalFilePath);
       }
 
       /// <summary>
-      /// Download a File via Http.
+      /// Get the Length of the Http Download.
       /// </summary>
-      /// <param name="Url">Http Url of remote file.</param>
-      /// <exception cref="ArgumentNullException">Throws if Url is Null.</exception>
-      public static Stream HttpDownloadHelper(Uri Url)
+      /// <param name="Server">Server Name or IP.</param>
+      /// <param name="FtpPath">Path to download from on remote Ftp server.</param>
+      /// <param name="RemoteFileName">Remote file to download.</param>
+      /// <param name="Username">Http Login Username.</param>
+      /// <param name="Password">Http Login Password.</param>
+      /// <param name="ftpMode">Ftp Transfer Mode.</param>
+      /// <exception cref="ArgumentException">Throws if Url is Null or Empty.</exception>
+      public long GetFtpDownloadLength(string Server, string FtpPath, string RemoteFileName, string Username, string Password, FtpType ftpMode)
       {
-         if (Url == null) throw new ArgumentNullException("Url", "Argument 'Url' cannot be null.");
-      
-         WebResponse r1 = HttpDownloadHelper(WebRequest.Create(Url), null, null);
-         return r1.GetResponseStream();
+         if (String.IsNullOrEmpty(Server) || String.IsNullOrEmpty(FtpPath) || String.IsNullOrEmpty(RemoteFileName))
+         {
+            throw new ArgumentException("Arguments 'Server', 'FtpPath', and 'RemoteFileName'cannot be a null or empty string.");
+         }
+
+         return GetFtpDownloadLength(new Uri(String.Format(CultureInfo.InvariantCulture, "ftp://{0}{1}{2}",
+            Server, FtpPath, RemoteFileName)), Username, Password, ftpMode);
+      }
+
+      /// <summary>
+      /// Get the Length of the Http Download.
+      /// </summary>
+      /// <param name="ResourceUri">Web Resource Uri.</param>
+      /// <param name="Username">Http Login Username.</param>
+      /// <param name="Password">Http Login Password.</param>
+      /// <param name="ftpMode">Ftp Transfer Mode.</param>
+      /// <exception cref="ArgumentNullException">Throws if ResourceUri is Null.</exception>
+      public long GetFtpDownloadLength(Uri ResourceUri, string Username, string Password, FtpType ftpMode)
+      {
+         if (ResourceUri == null) throw new ArgumentNullException("ResourceUri", "Argument 'ResourceUri' cannot be null.");
+
+         return GetFtpDownloadLength((IFtpWebOperation)WebOperation.Create(ResourceUri), Username, Password, ftpMode);
+      }
+
+      /// <summary>
+      /// Get the Length of the Http Download.
+      /// </summary>
+      /// <param name="ftpWebOperation">Web Operation.</param>
+      /// <param name="Username">Http Login Username.</param>
+      /// <param name="Password">Http Login Password.</param>
+      /// <param name="ftpMode">Ftp Transfer Mode.</param>
+      /// <exception cref="ArgumentNullException">Throws if ResourceUri is Null.</exception>
+      public long GetFtpDownloadLength(IFtpWebOperation ftpWebOperation, string Username, string Password, FtpType ftpMode)
+      {
+         if (ftpWebOperation == null) throw new ArgumentNullException("ftpWebOperation", "Argument 'httpWebOperation' cannot be null.");
+
+         _FtpWebOperation = ftpWebOperation;
+         _FtpWebOperation.WebOperationProgress += OnHttpWebOperationProgress;
+         _FtpWebOperation.OperationRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+         SetFtpMode(ftpWebOperation.FtpOperationRequest, ftpMode);
+
+         SetNetworkCredentials(_FtpWebOperation.OperationRequest.Request, Username, Password);
+         return _FtpWebOperation.GetDownloadLength();
+      }
+
+      private IWebOperation _HttpWebOperation;
+      public IWebOperation HttpOperation
+      {
+         get { return _HttpWebOperation; }
+      }
+
+      public event EventHandler<WebOperationProgressEventArgs> HttpWebOperationProgress;
+      protected void OnHttpWebOperationProgress(object sender, WebOperationProgressEventArgs e)
+      {
+         if (HttpWebOperationProgress != null)
+         {
+            HttpWebOperationProgress(this, e);
+         }
       }
 
       /// <summary>
@@ -244,105 +274,226 @@ namespace HFM.Helpers
       /// </summary>
       /// <param name="Url">Http Url of remote file.</param>
       /// <param name="LocalFilePath">Path to local file.</param>
-      /// <param name="InstanceName">Name of the Instance object that called this method.</param>
       /// <param name="Username">Http Login Username.</param>
       /// <param name="Password">Http Login Password.</param>
-      /// <param name="type">Type of Download.</param>
       /// <exception cref="ArgumentException">Throws if Url is Null or Empty.</exception>
-      public static void HttpDownloadHelper(string Url, string LocalFilePath, string InstanceName, string Username, string Password, DownloadType type)
+      public void HttpDownloadHelper(string Url, string LocalFilePath, string Username, string Password)
       {
          if (String.IsNullOrEmpty(Url))
          {
             throw new ArgumentException("Argument 'Url' cannot be a null or empty string.");
          }
          
-         HttpDownloadHelper(WebRequest.Create(Url), LocalFilePath, InstanceName, Username, Password, type);
+         HttpDownloadHelper(new Uri(Url), LocalFilePath, Username, Password);
       }
 
       /// <summary>
       /// Download a File via Http.
       /// </summary>
-      /// <param name="Request">Web Request.</param>
+      /// <param name="ResourceUri">Web Resource Uri.</param>
       /// <param name="LocalFilePath">Path to local file.</param>
-      /// <param name="InstanceName">Name of the Instance object that called this method.</param>
       /// <param name="Username">Http Login Username.</param>
       /// <param name="Password">Http Login Password.</param>
-      /// <param name="type">Type of Download.</param>
-      /// <exception cref="ArgumentException">Throws if LocalFilePath or InstanceName is Null or Empty.</exception>
-      public static void HttpDownloadHelper(WebRequest Request, string LocalFilePath, string InstanceName, string Username, string Password, DownloadType type)
+      /// <exception cref="ArgumentNullException">Throws if ResourceUri is Null.</exception>
+      /// <exception cref="ArgumentException">Throws if LocalFilePath is Null or Empty.</exception>
+      public void HttpDownloadHelper(Uri ResourceUri, string LocalFilePath, string Username, string Password)
       {
-         if (String.IsNullOrEmpty(LocalFilePath) || String.IsNullOrEmpty(InstanceName))
-         {
-            throw new ArgumentException("Arguments 'LocalFilePath' and 'InstanceName' cannot be a null or empty string.");
-         }
+         if (ResourceUri == null) throw new ArgumentNullException("ResourceUri", "Argument 'ResourceUri' cannot be null.");
       
-         WebResponse r1 = HttpDownloadHelper(Request, Username, Password);
-         if (type.Equals(DownloadType.UnitInfo) && r1.ContentLength >= UnitInfoMax)
-         {
-            if (File.Exists(LocalFilePath))
-            {
-               File.Delete(LocalFilePath);
-            }
-            
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture, 
-               "Http download (file is too big: {0} bytes).", r1.ContentLength));
-         }
-         else if (type.Equals(DownloadType.ASCII) || type.Equals(DownloadType.UnitInfo))
-         {
-            using (StreamReader sr1 = new StreamReader(r1.GetResponseStream(), Encoding.ASCII))
-            {
-               using (StreamWriter sw1 = new StreamWriter(LocalFilePath, false))
-               {
-                  sw1.Write(sr1.ReadToEnd());
-               }
-            }
-         }
-         else if (type.Equals(DownloadType.Binary))
-         {
-            using (Stream sr1 = r1.GetResponseStream())
-            {
-               using (Stream sw1 = File.Create(LocalFilePath))
-               {
-                  byte[] buffer = new byte[1024];
-                  int bytesRead;
-
-                  do
-                  {
-                     bytesRead = sr1.Read(buffer, 0, buffer.Length);
-                     sw1.Write(buffer, 0, bytesRead);
-                  }
-                  while (bytesRead > 0);
-               }
-            }
-         }
+         HttpDownloadHelper(WebOperation.Create(ResourceUri), LocalFilePath, Username, Password);
       }
 
       /// <summary>
       /// Download a File via Http.
       /// </summary>
-      /// <param name="Request">Web Request.</param>
+      /// <param name="httpWebOperation">Web Operation.</param>
+      /// <param name="LocalFilePath">Path to local file.</param>
       /// <param name="Username">Http Login Username.</param>
       /// <param name="Password">Http Login Password.</param>
-      /// <exception cref="ArgumentNullException">Throws if Request is Null.</exception>
-      private static WebResponse HttpDownloadHelper(WebRequest Request, string Username, string Password)
+      /// <exception cref="ArgumentNullException">Throws if ResourceUri is Null.</exception>
+      /// <exception cref="ArgumentException">Throws if LocalFilePath is Null or Empty.</exception>
+      public void HttpDownloadHelper(IWebOperation httpWebOperation, string LocalFilePath, string Username, string Password)
       {
-         if (Request == null) throw new ArgumentNullException("Request", "Argument 'Request' cannot be null.");
+         if (httpWebOperation == null) throw new ArgumentNullException("httpWebOperation", "Argument 'httpWebOperation' cannot be null.");
 
-         Request.Method = WebRequestMethods.Http.Get;
-         Request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+         if (String.IsNullOrEmpty(LocalFilePath))
+         {
+            throw new ArgumentException("Argument 'LocalFilePath' cannot be a null or empty string.");
+         }
 
-         SetNetworkCredentials(Request, Username, Password);
-         SetProxy(Request);
+         _HttpWebOperation = httpWebOperation;
+         _HttpWebOperation.WebOperationProgress += OnHttpWebOperationProgress;
+         _HttpWebOperation.OperationRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
 
-         return Request.GetResponse();
+         SetNetworkCredentials(_HttpWebOperation.OperationRequest.Request, Username, Password);
+         SetProxy(_HttpWebOperation.OperationRequest.Request);
+
+         _HttpWebOperation.Download(LocalFilePath);
       }
 
+      /// <summary>
+      /// Get the Length of the Http Download.
+      /// </summary>
+      /// <param name="Url">Http Url of remote file.</param>
+      /// <param name="Username">Http Login Username.</param>
+      /// <param name="Password">Http Login Password.</param>
+      /// <exception cref="ArgumentException">Throws if Url is Null or Empty.</exception>
+      public long GetHttpDownloadLength(string Url, string Username, string Password)
+      {
+         if (String.IsNullOrEmpty(Url))
+         {
+            throw new ArgumentException("Argument 'Url' cannot be a null or empty string.");
+         }
+
+         return GetHttpDownloadLength(new Uri(Url), Username, Password);
+      }
+      
+      /// <summary>
+      /// Get the Length of the Http Download.
+      /// </summary>
+      /// <param name="ResourceUri">Web Resource Uri.</param>
+      /// <param name="Username">Http Login Username.</param>
+      /// <param name="Password">Http Login Password.</param>
+      /// <exception cref="ArgumentNullException">Throws if ResourceUri is Null.</exception>
+      public long GetHttpDownloadLength(Uri ResourceUri, string Username, string Password)
+      {
+         if (ResourceUri == null) throw new ArgumentNullException("ResourceUri", "Argument 'ResourceUri' cannot be null.");
+      
+         return GetHttpDownloadLength(WebOperation.Create(ResourceUri), Username, Password);
+      }
+
+      /// <summary>
+      /// Get the Length of the Http Download.
+      /// </summary>
+      /// <param name="httpWebOperation">Web Operation.</param>
+      /// <param name="Username">Http Login Username.</param>
+      /// <param name="Password">Http Login Password.</param>
+      /// <exception cref="ArgumentNullException">Throws if ResourceUri is Null.</exception>
+      public long GetHttpDownloadLength(IWebOperation httpWebOperation, string Username, string Password)
+      {
+         if (httpWebOperation == null) throw new ArgumentNullException("httpWebOperation", "Argument 'httpWebOperation' cannot be null.");
+
+         _HttpWebOperation = httpWebOperation;
+         _HttpWebOperation.WebOperationProgress += OnHttpWebOperationProgress;
+         _HttpWebOperation.OperationRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+
+         SetNetworkCredentials(_HttpWebOperation.OperationRequest.Request, Username, Password);
+         SetProxy(_HttpWebOperation.OperationRequest.Request);
+
+         return _HttpWebOperation.GetDownloadLength();
+      }
+      
+      /// <summary>
+      /// Check an FTP Connection.
+      /// </summary>
+      /// <param name="Server">Server Name or IP.</param>
+      /// <param name="FtpPath">Path to upload to on remote Ftp server.</param>
+      /// <param name="Username">Ftp Login Username.</param>
+      /// <param name="Password">Ftp Login Password.</param>
+      /// <param name="ftpMode">Ftp Transfer Mode.</param>
+      /// <exception cref="ArgumentException">Throws if Server or FtpPath is Null or Empty.</exception>
+      public void FtpCheckConnection(string Server, string FtpPath, string Username, string Password, FtpType ftpMode)
+      {
+         if (String.IsNullOrEmpty(Server) || String.IsNullOrEmpty(FtpPath))
+         {
+            throw new ArgumentException("Arguments 'Server' and 'FtpPath' cannot be a null or empty string.");
+         }
+
+         FtpWebOperation ftpWebOperation = (FtpWebOperation)WebOperation.Create(new Uri(String.Format(CultureInfo.InvariantCulture, "ftp://{0}{1}", Server, FtpPath)));
+         FtpCheckConnection(ftpWebOperation, Username, Password, ftpMode);
+      }
+
+      /// <summary>
+      /// Check an FTP Connection.
+      /// </summary>
+      /// <param name="ftpWebOperation">Web Operation.</param>
+      /// <param name="Username">Ftp Login Username.</param>
+      /// <param name="Password">Ftp Login Password.</param>
+      /// <param name="ftpMode">Ftp Transfer Mode.</param>
+      /// <exception cref="ArgumentException">Throws if Server or FtpPath is Null or Empty.</exception>
+      public void FtpCheckConnection(IFtpWebOperation ftpWebOperation, string Username, string Password, FtpType ftpMode)
+      {
+         if (ftpWebOperation == null) throw new ArgumentNullException("ftpWebOperation", "Argument 'ftpWebOperation' cannot be null.");
+
+         ftpWebOperation.FtpOperationRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+         ftpWebOperation.FtpOperationRequest.KeepAlive = false; // Close the Request
+         ftpWebOperation.FtpOperationRequest.Timeout = 5000; // 5 second timeout
+         SetFtpMode(ftpWebOperation.FtpOperationRequest, ftpMode);
+
+         SetNetworkCredentials(ftpWebOperation.OperationRequest.Request, Username, Password);
+
+         ftpWebOperation.CheckConnection();
+      }
+
+      /// <summary>
+      /// Check an HTTP Connection.
+      /// </summary>
+      /// <param name="Url">Http Url of remote file.</param>
+      /// <param name="Username">Http Login Username.</param>
+      /// <param name="Password">Http Login Password.</param>
+      /// <exception cref="ArgumentException">Throws if Url is Null or Empty.</exception>
+      public void HttpCheckConnection(string Url, string Username, string Password)
+      {
+         if (String.IsNullOrEmpty(Url))
+         {
+            throw new ArgumentException("Argument 'Url' cannot be a null or empty string.");
+         }
+
+         WebOperation webOperation = WebOperation.Create(new Uri(Url));
+
+         webOperation.OperationRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+         webOperation.OperationRequest.Timeout = 5000; // 5 second timeout
+
+         SetNetworkCredentials(webOperation.OperationRequest.Request, Username, Password);
+         SetProxy(webOperation.OperationRequest.Request);
+
+         webOperation.CheckConnection();
+      }
+
+      /// <summary>
+      /// Check an HTTP Connection.
+      /// </summary>
+      /// <param name="httpWebOperation">Web Operation.</param>
+      /// <param name="Username">Http Login Username.</param>
+      /// <param name="Password">Http Login Password.</param>
+      /// <exception cref="ArgumentException">Throws if Url is Null or Empty.</exception>
+      public void HttpCheckConnection(IWebOperation httpWebOperation, string Username, string Password)
+      {
+         if (httpWebOperation == null) throw new ArgumentNullException("httpWebOperation", "Argument 'httpWebOperation' cannot be null.");
+
+         httpWebOperation.OperationRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+         httpWebOperation.OperationRequest.Timeout = 5000; // 5 second timeout
+
+         SetNetworkCredentials(httpWebOperation.OperationRequest.Request, Username, Password);
+         SetProxy(httpWebOperation.OperationRequest.Request);
+
+         httpWebOperation.CheckConnection();
+      }
+
+      private static void SetFtpMode(IFtpWebOperationRequest Request, FtpType ftpMode)
+      {
+         Debug.Assert(Request != null);
+      
+         switch (ftpMode)
+         {
+            case FtpType.Passive:
+               Request.UsePassive = true;
+               break;
+            case FtpType.Active:
+               Request.UsePassive = false;
+               break;
+            default:
+               throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
+                  "FTP Type '{0}' is not valid.", ftpMode));
+         }
+      }
+      
       /// <summary>
       /// Get the Protein Description from the Url.
       /// </summary>
       /// <param name="Url">Http Url of remote file.</param>
       /// <exception cref="ArgumentException">Throws if Url is Null or Empty.</exception>
-      public static string GetProteinDescription(string Url)
+      public string GetProteinDescription(string Url)
       {
          if (String.IsNullOrEmpty(Url))
          {
@@ -352,66 +503,57 @@ namespace HFM.Helpers
          // Stub out if the given URL is an Unassigned Description
          if (Url.Equals(Constants.UnassignedDescription)) return Url;
       
-         return GetProteinDescription(new Uri(Url));
+         return GetProteinDescription(WebOperation.Create(new Uri(Url)));
       }
 
       /// <summary>
       /// Get the Protein Description from the Url.
       /// </summary>
-      /// <param name="Url">Http Url of remote file.</param>
-      /// <exception cref="ArgumentNullException">Throws if Url is Null.</exception>
-      public static string GetProteinDescription(Uri Url)
+      /// <param name="httpWebOperation">Web Operation.</param>
+      /// <exception cref="ArgumentNullException">Throws if ResourceUri is Null.</exception>
+      public string GetProteinDescription(IWebOperation httpWebOperation)
       {
-         return GetProteinDescription(Url, String.Empty, String.Empty);
-      }
-
-      /// <summary>
-      /// Get the Protein Description from the Url.
-      /// </summary>
-      /// <param name="Url">Http Url of remote file.</param>
-      /// <param name="Username">Http Login Username.</param>
-      /// <param name="Password">Http Login Password.</param>
-      /// <exception cref="ArgumentNullException">Throws if Url is Null.</exception>
-      public static string GetProteinDescription(Uri Url, string Username, string Password)
-      {
-         if (Url == null) throw new ArgumentNullException("Url", "Argument 'Url' cannot be null.");
+         if (httpWebOperation == null) throw new ArgumentNullException("httpWebOperation", "Argument 'httpWebOperation' cannot be null.");
       
          string str;
-         
+
          try
          {
-            str = GetProteinDescription(WebRequest.Create(Url), Username, Password);
+            string tempPath = Path.Combine(Path.GetTempPath(), "protein.html");
+
+            httpWebOperation.OperationRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+            httpWebOperation.OperationRequest.Timeout = 5000; // 5 second timeout
+            httpWebOperation.Download(tempPath);
+
+            str = GetProteinDescriptionFromFile(tempPath);
          }
          catch (Exception ex)
          {
             HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
-            str = Url.AbsoluteUri;
+            str = httpWebOperation.OperationRequest.Request.RequestUri.AbsoluteUri;
          }
-         
+
          return str;
       }
 
       /// <summary>
       /// Get the Protein Description from the Url.
       /// </summary>
-      /// <param name="Request">Web Request.</param>
-      /// <param name="Username">Http Login Username.</param>
-      /// <param name="Password">Http Login Password.</param>
+      /// <param name="FilePath">Web Operation.</param>
       /// <exception cref="ArgumentNullException">Throws if Request is Null.</exception>
-      public static string GetProteinDescription(WebRequest Request, string Username, string Password)
+      public static string GetProteinDescriptionFromFile(string FilePath)
       {
-         if (Request == null) throw new ArgumentNullException("Request", "Argument 'Request' cannot be null.");
+         Debug.Assert(String.IsNullOrEmpty(FilePath) == false);
 
          string str;
          string str2;
          string str3;
 
-         Request.Timeout = 5000; // 5 second timeout
-         using (StreamReader reader = new StreamReader(HttpDownloadHelper(Request, Username, Password).GetResponseStream(), Encoding.ASCII))
+         using (StreamReader stream = File.OpenText(FilePath))
          {
-            str = reader.ReadToEnd();
+            str = stream.ReadToEnd();
          }
-
+         
          // FxCop: CA1307 (Specify StringComparison)
          //        CA1309 (For non-linguistic comparisons, StringComparison.Ordinal or StringComparison.OrdinalIgnoreCase)
 
@@ -486,7 +628,6 @@ namespace HFM.Helpers
       /// <param name="Username">Login Username.</param>
       /// <param name="Password">Login Password.</param>
       /// <exception cref="ArgumentNullException">Throws if Request is Null.</exception>
-      /// <exception cref="ArgumentException">Throws if either Username or Password is an Empty String but not the other.</exception>
       public static void SetNetworkCredentials(WebRequest Request, string Username, string Password)
       {
          if (Request == null) throw new ArgumentNullException("Request", "Argument 'Request' cannot be null.");

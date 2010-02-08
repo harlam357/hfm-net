@@ -108,46 +108,35 @@ namespace HFM.Instances
       /// <param name="Username">FTP Server Username</param>
       /// <param name="Password">FTP Server Password</param>
       /// <param name="Instances">Client Instance Collection</param>
-      public static void DoWebFtpUpload(string Server, string FtpPath, string Username, string Password, ICollection<ClientInstance> Instances)
-      {
-         DoWebFtpUpload(Server, FtpPath, Username, Password, Instances, true);
-      }
-
-      /// <summary>
-      /// 
-      /// </summary>
-      /// <param name="Server">Server Name</param>
-      /// <param name="FtpPath">Path from FTP Server Root</param>
-      /// <param name="Username">FTP Server Username</param>
-      /// <param name="Password">FTP Server Password</param>
-      /// <param name="Instances">Client Instance Collection</param>
-      /// <param name="PassiveMode">Passive FTP Mode</param>
-      public static void DoWebFtpUpload(string Server, string FtpPath, string Username, string Password, ICollection<ClientInstance> Instances, bool PassiveMode)
+      /// <param name="ftpMode">Ftp Transfer Mode.</param>
+      public static void DoWebFtpUpload(string Server, string FtpPath, string Username, string Password, ICollection<ClientInstance> Instances, FtpType ftpMode)
       {
          // Time FTP Upload Conversation - Issue 52
          DateTime Start = HfmTrace.ExecStart;
 
          IPreferenceSet Prefs = InstanceProvider.GetInstance<IPreferenceSet>();
 
+         NetworkOps net = new NetworkOps();
+
          try
          {
-            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.Combine(Prefs.ApplicationPath, "CSS"), Prefs.GetPreference<string>(Preference.CssFile)), Username, Password, PassiveMode);
-            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "index.html"), Username, Password, PassiveMode);
-            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "summary.html"), Username, Password, PassiveMode);
-            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "mobile.html"), Username, Password, PassiveMode);
-            NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "mobilesummary.html"), Username, Password, PassiveMode);
+            net.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.Combine(Prefs.ApplicationPath, "CSS"), Prefs.GetPreference<string>(Preference.CssFile)), Username, Password, ftpMode);
+            net.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "index.html"), Username, Password, ftpMode);
+            net.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "summary.html"), Username, Password, ftpMode);
+            net.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "mobile.html"), Username, Password, ftpMode);
+            net.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(), "mobilesummary.html"), Username, Password, ftpMode);
 
             foreach (ClientInstance Instance in Instances)
             {
-                  NetworkOps.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(),
-                                             Path.ChangeExtension(Instance.InstanceName, ".html")),
-                                             Username, Password, PassiveMode);
+               net.FtpUploadHelper(Server, FtpPath, Path.Combine(Path.GetTempPath(),
+                                   Path.ChangeExtension(Instance.InstanceName, ".html")),
+                                   Username, Password, ftpMode);
 
-                  string CachedFAHlogPath = Path.Combine(Prefs.CacheDirectory, Instance.CachedFAHLogName);
-                  if (Prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog) && File.Exists(CachedFAHlogPath))
-                  {
-                     NetworkOps.FtpUploadHelper(Server, FtpPath, CachedFAHlogPath, Username, Password, PassiveMode);
-                  }
+               string CachedFAHlogPath = Path.Combine(Prefs.CacheDirectory, Instance.CachedFAHLogName);
+               if (Prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog) && File.Exists(CachedFAHlogPath))
+               {
+                  net.FtpUploadHelper(Server, FtpPath, CachedFAHlogPath, Username, Password, ftpMode);
+               }
             }
          }
          finally
@@ -252,7 +241,8 @@ namespace HFM.Instances
          XMLOps.setXmlNode(xmlData, "Protein/KFactor", p.KFactor.ToString());
          XMLOps.setXmlNode(xmlData, "Protein/Frames", p.Frames.ToString());
          XMLOps.setXmlNode(xmlData, "Protein/Core", p.Core);
-         XMLOps.setXmlNode(xmlData, "Protein/Description", NetworkOps.GetProteinDescription(p.Description));
+         NetworkOps net = new NetworkOps();
+         XMLOps.setXmlNode(xmlData, "Protein/Description", net.GetProteinDescription(p.Description));
          XMLOps.setXmlNode(xmlData, "Protein/Contact", p.Contact);
          
          StringBuilder sb = new StringBuilder();

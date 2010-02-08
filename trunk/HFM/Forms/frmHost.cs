@@ -29,6 +29,7 @@ using harlam357.Windows.Forms;
 using HFM.Framework;
 using HFM.Helpers;
 using HFM.Instances;
+using HFM.Instrumentation;
 
 namespace HFM.Forms
 {
@@ -65,6 +66,11 @@ namespace HFM.Forms
       /// Dialog Action Mode
       /// </summary>
       private readonly HostAction _Action;
+      
+      /// <summary>
+      /// Network Operations Interface
+      /// </summary>
+      private NetworkOps net;
       #endregion
    
       #region Constructor
@@ -260,10 +266,14 @@ namespace HFM.Forms
          Instance.Server = txtFTPServer.Text;
          Instance.Username = txtFTPUser.Text;
          Instance.Password = txtFTPPass.Text;
+         Instance.FtpMode = GetFtpTypeFromControls();
+      }
+      
+      private FtpType GetFtpTypeFromControls()
+      {
          FtpType ftpType = FtpType.Passive;
-         if (radioPassive.Checked) ftpType = FtpType.Passive;
          if (radioActive.Checked) ftpType = FtpType.Active;
-         Instance.FtpMode = ftpType;
+         return ftpType;
       }
 
       private void GetHTTPClientInfo(ClientInstance Instance)
@@ -555,6 +565,100 @@ namespace HFM.Forms
       #endregion
 
       #region Button Event Handlers
+      private void btnTestConnection_Click(object sender, EventArgs e)
+      {
+         if (net == null)
+         {
+            net = new NetworkOps();
+         }
+
+         try
+         {
+            if (radioLocal.Checked)
+            {
+               if (Directory.Exists(txtLocalPath.Text) == false)
+               {
+                  throw new IOException(String.Format(CultureInfo.CurrentCulture,
+                     "Folder Path '{0}' does not exist.", txtLocalPath.Text));
+               }
+
+               ShowConnectionSucceededMessage();
+            }
+            else if (radioFTP.Checked)
+            {
+               FtpCheckConnectionDelegate del = net.FtpCheckConnection;
+               del.BeginInvoke(txtFTPServer.Text, txtFTPPath.Text, txtFTPUser.Text, txtFTPPass.Text, GetFtpTypeFromControls(), FtpCheckConnectionCallback, del);
+            }
+            else if (radioHTTP.Checked)
+            {
+               HttpCheckConnectionDelegate del = net.HttpCheckConnection;
+               del.BeginInvoke(txtWebURL.Text, txtWebUser.Text, txtWebPass.Text, HttpCheckConnectionCallback, del);
+            }
+         }
+         catch (Exception ex)
+         {
+            HfmTrace.WriteToHfmConsole(ex);
+            ShowConnectionFailedMessage(ex.Message);
+         }
+      }
+      
+      private void FtpCheckConnectionCallback(IAsyncResult result)
+      {
+         try
+         {
+            FtpCheckConnectionDelegate del = (FtpCheckConnectionDelegate)result.AsyncState;
+            del.EndInvoke(result);
+            ShowConnectionSucceededMessage();
+         }
+         catch (Exception ex)
+         {
+            HfmTrace.WriteToHfmConsole(ex);
+            ShowConnectionFailedMessage(ex.Message);
+         }
+      }
+
+      private void HttpCheckConnectionCallback(IAsyncResult result)
+      {
+         try
+         {
+            HttpCheckConnectionDelegate del = (HttpCheckConnectionDelegate)result.AsyncState;
+            del.EndInvoke(result);
+            ShowConnectionSucceededMessage();
+         }
+         catch (Exception ex)
+         {
+            HfmTrace.WriteToHfmConsole(ex);
+            ShowConnectionFailedMessage(ex.Message);
+         }
+      }
+      
+      private void ShowConnectionSucceededMessage()
+      {
+         if (InvokeRequired)
+         {
+            Invoke(new MethodInvoker(ShowConnectionSucceededMessage));
+            return;
+         }
+
+         MessageBox.Show(this, "Test Connection Succeeded", PlatformOps.ApplicationNameAndVersion,
+            MessageBoxButtons.OK, MessageBoxIcon.Information);
+      }
+      
+      private delegate void ShowConnectionFailedMessageDelegate(string message);
+
+      private void ShowConnectionFailedMessage(string message)
+      {
+         if (InvokeRequired)
+         {
+            Invoke(new ShowConnectionFailedMessageDelegate(ShowConnectionFailedMessage), message);
+            return;
+         }
+
+         MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture, "Test Connection Failed{0}{0}{1}",
+            Environment.NewLine, message), PlatformOps.ApplicationNameAndVersion, MessageBoxButtons.OK,
+               MessageBoxIcon.Error);
+      }
+
       private void btnOK_Click(object sender, EventArgs e)
       {
          if (ValidateAcceptance())

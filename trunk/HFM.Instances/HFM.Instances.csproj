@@ -31,6 +31,10 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="harlam357.Net, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\harlam357-net\net20\bin\Release\harlam357.Net.dll</HintPath>
+    </Reference>
     <Reference Include="harlam357.Security, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\harlam357.Security\harlam357.Security.dll</HintPath>

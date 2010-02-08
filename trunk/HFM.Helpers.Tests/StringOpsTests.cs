@@ -21,6 +21,7 @@ using System;
 
 using NUnit.Framework;
 
+using HFM.Framework;
 using HFM.Helpers;
 
 namespace HFM.Helpers.Tests
@@ -284,6 +285,17 @@ namespace HFM.Helpers.Tests
          }
          catch (ArgumentException)
          { }
+      }
+      
+      [Test]
+      public void WorkUnitResultFromString()
+      {
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, StringOps.WorkUnitResultFromString("FINISHED_UNIT"));
+         Assert.AreEqual(WorkUnitResult.EarlyUnitEnd, StringOps.WorkUnitResultFromString("EARLY_UNIT_END"));
+         Assert.AreEqual(WorkUnitResult.UnstableMachine, StringOps.WorkUnitResultFromString("UNSTABLE_MACHINE"));
+         Assert.AreEqual(WorkUnitResult.Interrupted, StringOps.WorkUnitResultFromString("INTERRUPTED"));
+         Assert.AreEqual(WorkUnitResult.CoreOutdated, StringOps.WorkUnitResultFromString("CORE_OUTDATED"));
+         Assert.AreEqual(WorkUnitResult.Unknown, StringOps.WorkUnitResultFromString("afasfdsafasdfas"));
       }
    }
 }

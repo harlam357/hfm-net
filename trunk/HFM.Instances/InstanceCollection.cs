@@ -151,9 +151,9 @@ namespace HFM.Instances
       private bool _ChangedAfterSave = false;
 
       /// <summary>
-      /// Passive FTP Web Upload
+      /// FTP Web Upload Type
       /// </summary>
-      private bool _PassiveFtpWebUpload = true;
+      private FtpType _FtpMode = FtpType.Passive;
       
       /// <summary>
       /// Preferences Interface
@@ -880,7 +880,7 @@ namespace HFM.Instances
 
                try
                {
-                  XMLGen.DoWebFtpUpload(Server, FtpPath, Username, Password, CurrentInstances, _PassiveFtpWebUpload);
+                  XMLGen.DoWebFtpUpload(Server, FtpPath, Username, Password, CurrentInstances, _FtpMode);
                }
                catch (WebException ex)
                {
@@ -889,9 +889,9 @@ namespace HFM.Instances
                   //      on or off.  Will do so at a later time.
                   if (ex.Message.Contains("The remote server returned an error: 227 Entering Passive Mode"))
                   {
-                     HfmTrace.WriteToHfmConsole(String.Format("{0} Passive FTP transfer failed... trying Non-Passive transfer.", HfmTrace.FunctionName));
-                     XMLGen.DoWebFtpUpload(Server, FtpPath, Username, Password, CurrentInstances, false);
-                     _PassiveFtpWebUpload = false;
+                     HfmTrace.WriteToHfmConsole(String.Format("{0} Passive FTP transfer failed... trying Active transfer.", HfmTrace.FunctionName));
+                     XMLGen.DoWebFtpUpload(Server, FtpPath, Username, Password, CurrentInstances, FtpType.Active);
+                     _FtpMode = FtpType.Active;
                   }
                   else
                   {

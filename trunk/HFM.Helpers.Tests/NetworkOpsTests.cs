@@ -21,10 +21,12 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Net;
-
+using System.Net.Cache;
 using Castle.Windsor;
 using NUnit.Framework;
 using Rhino.Mocks;
+
+using harlam357.Net;
 
 using HFM.Framework;
 
@@ -35,6 +37,8 @@ namespace HFM.Helpers.Tests
    {
       private readonly string TestFilesFolder = String.Format(CultureInfo.InvariantCulture, "..{0}..{0}TestFiles", Path.DirectorySeparatorChar);
       private readonly string TestFilesWorkFolder = String.Format(CultureInfo.InvariantCulture, "..{0}..{0}TestFiles{0}Work", Path.DirectorySeparatorChar);
+
+      private readonly NetworkOps net = new NetworkOps();
 
       private IWindsorContainer container;
       private MockRepository mocks;
@@ -72,146 +76,204 @@ namespace HFM.Helpers.Tests
       [Test]
       public void FtpUploadHelper()
       {
-         FtpWebRequest Request = mocks.DynamicMock<FtpWebRequest>();
+         IFtpWebOperation Operation = mocks.DynamicMock<IFtpWebOperation>();
+         Expect.Call(delegate { Operation.Upload("testpath"); });
          
-         using (FileStream stream = new FileStream(Path.Combine(TestFilesWorkFolder, "upload.html"), FileMode.Create))
-         {
-            Expect.Call(Request.GetRequestStream()).Return(stream);
-            mocks.ReplayAll();
-
-            NetworkOps.FtpUploadHelper(Request, Path.Combine(TestFilesFolder, "test.html"), 
-               String.Empty, String.Empty, true);
-
-            mocks.VerifyAll();
-         }
-
-         Assert.IsTrue(File.Exists(Path.Combine(TestFilesWorkFolder, "upload.html")));
-      }
-
-      [Test]
-      public void FtpDownloadHelper_BinaryDownload()
-      {
-         FtpWebRequest Request = mocks.DynamicMock<FtpWebRequest>();
-         FtpWebResponse Response = mocks.DynamicMock<FtpWebResponse>();
-         Expect.Call(Request.GetResponse()).Return(Response);
+         IFtpWebOperationRequest OperationRequest = mocks.Stub<IFtpWebOperationRequest>();
+         SetupResult.For(Operation.FtpOperationRequest).Return(OperationRequest);
+         SetupResult.For(Operation.OperationRequest).Return(OperationRequest);
          
-         using (FileStream stream = new FileStream(Path.Combine(TestFilesFolder, "test.html"), FileMode.Open))
-         {
-            Expect.Call(Response.GetResponseStream()).Return(stream);
-            mocks.ReplayAll();
-
-            NetworkOps.FtpDownloadHelper(Request, Path.Combine(TestFilesWorkFolder, "ftp_download_binary.html"), 
-               String.Empty, String.Empty, FtpType.Passive, DownloadType.Binary);
-
-            mocks.VerifyAll();
-         }
-
-         Assert.IsTrue(File.Exists(Path.Combine(TestFilesWorkFolder, "ftp_download_binary.html")));
-      }
-
-      [Test]
-      public void FtpDownloadHelper_TextDownload()
-      {
-         FtpWebRequest Request = mocks.DynamicMock<FtpWebRequest>();
-         FtpWebResponse Response = mocks.DynamicMock<FtpWebResponse>();
-         Expect.Call(Request.GetResponse()).Return(Response);
-
-         using (FileStream stream = new FileStream(Path.Combine(TestFilesFolder, "test.html"), FileMode.Open))
-         {
-            Expect.Call(Response.GetResponseStream()).Return(stream);
-            mocks.ReplayAll();
-
-            NetworkOps.FtpDownloadHelper(Request, Path.Combine(TestFilesWorkFolder, "ftp_download_text.html"),
-               String.Empty, String.Empty, FtpType.Passive, DownloadType.ASCII);
-
-            mocks.VerifyAll();
-         }
-
-         Assert.IsTrue(File.Exists(Path.Combine(TestFilesWorkFolder, "ftp_download_text.html")));
-      }
-
-      [Test]
-      public void HttpDownloadHelper_BinaryDownload()
-      {
-         WebRequest Request = mocks.DynamicMock<WebRequest>();
-         WebResponse Response = mocks.DynamicMock<WebResponse>();
-         Expect.Call(Request.GetResponse()).Return(Response);
-
-         using (FileStream stream = new FileStream(Path.Combine(TestFilesFolder, "test.html"), FileMode.Open))
-         {
-            Expect.Call(Response.GetResponseStream()).Return(stream);
-            mocks.ReplayAll();
-
-            NetworkOps.HttpDownloadHelper(Request, Path.Combine(TestFilesWorkFolder, "http_download_binary.html"), 
-               "InstanceName", String.Empty, String.Empty, DownloadType.Binary);
-
-            mocks.VerifyAll();
-         }
-
-         Assert.IsTrue(File.Exists(Path.Combine(TestFilesWorkFolder, "http_download_binary.html")));
-      }
-
-      [Test]
-      public void HttpDownloadHelper_TextDownload()
-      {
-         WebRequest Request = mocks.DynamicMock<WebRequest>();
-         WebResponse Response = mocks.DynamicMock<WebResponse>();
-         Expect.Call(Request.GetResponse()).Return(Response);
-
-         using (FileStream stream = new FileStream(Path.Combine(TestFilesFolder, "test.html"), FileMode.Open))
-         {
-            Expect.Call(Response.GetResponseStream()).Return(stream);
-            mocks.ReplayAll();
-
-            NetworkOps.HttpDownloadHelper(Request, Path.Combine(TestFilesWorkFolder, "http_download_text.html"),
-               "InstanceName", String.Empty, String.Empty, DownloadType.ASCII);
-
-            mocks.VerifyAll();
-         }
-
-         Assert.IsTrue(File.Exists(Path.Combine(TestFilesWorkFolder, "http_download_text.html")));
-      }
-
-      [Test]
-      public void HttpDownloadHelper_UnitInfoTooBig()
-      {
-         WebRequest Request = mocks.DynamicMock<WebRequest>();
-         WebResponse Response = mocks.DynamicMock<WebResponse>();
-         Expect.Call(Request.GetResponse()).Return(Response);
-         Expect.Call(Response.ContentLength).Return(1050000);
+         FtpWebRequest FtpRequest = mocks.DynamicMock<FtpWebRequest>();
+         SetupResult.For(OperationRequest.FtpRequest).Return(FtpRequest);
+         SetupResult.For(OperationRequest.Request).Return(FtpRequest);
          
-         File.CreateText(Path.Combine(TestFilesWorkFolder, "unitinfo.txt")).Close();
+         mocks.ReplayAll();
+         
+         net.FtpUploadHelper(Operation, "testpath", String.Empty, String.Empty, FtpType.Passive);
+
+         Assert.AreSame(Operation, net.FtpOperation);
+         Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, OperationRequest.CachePolicy.Level);
+         Assert.AreEqual(true, OperationRequest.UsePassive);
+         
+         mocks.VerifyAll();
+      }
+
+      [Test]
+      public void FtpDownloadHelper()
+      {
+         IFtpWebOperation Operation = mocks.DynamicMock<IFtpWebOperation>();
+         Expect.Call(delegate { Operation.Download("testpath"); });
+
+         IFtpWebOperationRequest OperationRequest = mocks.Stub<IFtpWebOperationRequest>();
+         SetupResult.For(Operation.FtpOperationRequest).Return(OperationRequest);
+         SetupResult.For(Operation.OperationRequest).Return(OperationRequest);
+
+         FtpWebRequest FtpRequest = mocks.DynamicMock<FtpWebRequest>();
+         SetupResult.For(OperationRequest.FtpRequest).Return(FtpRequest);
+         SetupResult.For(OperationRequest.Request).Return(FtpRequest);
 
          mocks.ReplayAll();
 
-         NetworkOps.HttpDownloadHelper(Request, Path.Combine(TestFilesWorkFolder, "unitinfo.txt"),
-            "InstanceName", String.Empty, String.Empty, DownloadType.UnitInfo);
+         net.FtpDownloadHelper(Operation, "testpath", String.Empty, String.Empty, FtpType.Active);
+
+         Assert.AreSame(Operation, net.FtpOperation);
+         Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, OperationRequest.CachePolicy.Level);
+         Assert.AreEqual(false, OperationRequest.UsePassive);
 
          mocks.VerifyAll();
+      }
 
-         Assert.IsFalse(File.Exists(Path.Combine(TestFilesWorkFolder, "unitinfo.txt")));
+      [Test]
+      public void GetFtpDownloadLength()
+      {
+         IFtpWebOperation Operation = mocks.DynamicMock<IFtpWebOperation>();
+         Expect.Call(Operation.GetDownloadLength()).Return(100);
+
+         IFtpWebOperationRequest OperationRequest = mocks.Stub<IFtpWebOperationRequest>();
+         SetupResult.For(Operation.FtpOperationRequest).Return(OperationRequest);
+         SetupResult.For(Operation.OperationRequest).Return(OperationRequest);
+
+         FtpWebRequest FtpRequest = mocks.DynamicMock<FtpWebRequest>();
+         SetupResult.For(OperationRequest.FtpRequest).Return(FtpRequest);
+         SetupResult.For(OperationRequest.Request).Return(FtpRequest);
+
+         mocks.ReplayAll();
+
+         long length = net.GetFtpDownloadLength(Operation, String.Empty, String.Empty, FtpType.Active);
+         Assert.AreEqual(100, length);
+
+         Assert.AreSame(Operation, net.FtpOperation);
+         Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, OperationRequest.CachePolicy.Level);
+         Assert.AreEqual(false, OperationRequest.UsePassive);
+
+         mocks.VerifyAll();
+      }
+
+      [Test]
+      public void HttpDownloadHelper()
+      {
+         IWebOperation Operation = mocks.DynamicMock<IWebOperation>();
+         Expect.Call(delegate { Operation.Download("testpath"); });
+
+         IWebOperationRequest OperationRequest = mocks.Stub<IWebOperationRequest>();
+         SetupResult.For(Operation.OperationRequest).Return(OperationRequest);
+
+         WebRequest Request = mocks.DynamicMock<WebRequest>();
+         SetupResult.For(OperationRequest.Request).Return(Request);
+
+         mocks.ReplayAll();
+
+         net.HttpDownloadHelper(Operation, "testpath", String.Empty, String.Empty);
+
+         Assert.AreSame(Operation, net.HttpOperation);
+         Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, OperationRequest.CachePolicy.Level);
+
+         mocks.VerifyAll();
+      }
+
+      [Test]
+      public void GetHttpDownloadLength()
+      {
+         IWebOperation Operation = mocks.DynamicMock<IWebOperation>();
+         Expect.Call(Operation.GetDownloadLength()).Return(100);
+
+         IWebOperationRequest OperationRequest = mocks.Stub<IWebOperationRequest>();
+         SetupResult.For(Operation.OperationRequest).Return(OperationRequest);
+
+         WebRequest Request = mocks.DynamicMock<WebRequest>();
+         SetupResult.For(OperationRequest.Request).Return(Request);
+
+         mocks.ReplayAll();
+
+         long length = net.GetHttpDownloadLength(Operation, String.Empty, String.Empty);
+         Assert.AreEqual(100, length);
+
+         Assert.AreSame(Operation, net.HttpOperation);
+         Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, OperationRequest.CachePolicy.Level);
+
+         mocks.VerifyAll();
+      }
+
+      [Test]
+      public void FtpCheckConnection()
+      {
+         IFtpWebOperation Operation = mocks.DynamicMock<IFtpWebOperation>();
+         Expect.Call(delegate { Operation.CheckConnection(); });
+
+         IFtpWebOperationRequest OperationRequest = mocks.Stub<IFtpWebOperationRequest>();
+         SetupResult.For(Operation.FtpOperationRequest).Return(OperationRequest);
+         SetupResult.For(Operation.OperationRequest).Return(OperationRequest);
+
+         FtpWebRequest FtpRequest = mocks.DynamicMock<FtpWebRequest>();
+         SetupResult.For(OperationRequest.FtpRequest).Return(FtpRequest);
+         SetupResult.For(OperationRequest.Request).Return(FtpRequest);
+
+         mocks.ReplayAll();
+
+         net.FtpCheckConnection(Operation, String.Empty, String.Empty, FtpType.Passive);
+
+         Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, OperationRequest.CachePolicy.Level);
+         Assert.AreEqual(false, OperationRequest.KeepAlive);
+         Assert.AreEqual(5000, OperationRequest.Timeout);
+         Assert.AreEqual(true, OperationRequest.UsePassive);
+
+         mocks.VerifyAll();
+      }
+
+      [Test]
+      public void HttpCheckConnection()
+      {
+         IWebOperation Operation = mocks.DynamicMock<IWebOperation>();
+         Expect.Call(delegate { Operation.CheckConnection(); });
+
+         IWebOperationRequest OperationRequest = mocks.Stub<IWebOperationRequest>();
+         SetupResult.For(Operation.OperationRequest).Return(OperationRequest);
+
+         WebRequest Request = mocks.DynamicMock<WebRequest>();
+         SetupResult.For(OperationRequest.Request).Return(Request);
+
+         mocks.ReplayAll();
+
+         net.HttpCheckConnection(Operation, String.Empty, String.Empty);
+
+         Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, OperationRequest.CachePolicy.Level);
+         Assert.AreEqual(5000, OperationRequest.Timeout);
+
+         mocks.VerifyAll();
       }
 
       [Test]
       public void GetProteinDescription()
       {
+         IWebOperation Operation = mocks.DynamicMock<IWebOperation>();
+         Expect.Call(delegate { Operation.Download("testpath"); })
+            .IgnoreArguments()
+            .Do(new DoTestCopyDelegate(DoTestCopy));
+
+         IWebOperationRequest OperationRequest = mocks.Stub<IWebOperationRequest>();
+         SetupResult.For(Operation.OperationRequest).Return(OperationRequest);
+
          WebRequest Request = mocks.DynamicMock<WebRequest>();
-         WebResponse Response = mocks.DynamicMock<WebResponse>();
-         Expect.Call(Request.GetResponse()).Return(Response);
+         SetupResult.For(OperationRequest.Request).Return(Request);
 
-         string Description;
-         using (FileStream stream = new FileStream(Path.Combine(TestFilesFolder, "fahproject2669.html"), FileMode.Open))
-         {
-            Expect.Call(Response.GetResponseStream()).Return(stream);
-            mocks.ReplayAll();
+         mocks.ReplayAll();
 
-            Description = NetworkOps.GetProteinDescription(Request, String.Empty, String.Empty);
+         string Description = net.GetProteinDescription(Operation);
 
-            mocks.VerifyAll();
-         }
+         Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, OperationRequest.CachePolicy.Level);
+         Assert.AreEqual(5000, OperationRequest.Timeout);
 
-         Assert.AreEqual("<TABLE align=center width=650 border=0 cellpadding=2 >\n<TR><TD><font size=\"3\"><b><A name = 2669>Project 2669</A></b></font></TD></TR><TR><TD><center>\n<br>\nThese projects study how influenza virus recognizes and infects cells.  We are developing new simulation methods to better understand these processes.\n<br><br>\n</center>\n<BR><BR><BR></TD></TR><TR><TD></TD></TR></TABLE>", 
+         mocks.VerifyAll();
+
+         Assert.AreEqual("<TABLE align=center width=650 border=0 cellpadding=2 >\n<TR><TD><font size=\"3\"><b><A name = 2669>Project 2669</A></b></font></TD></TR><TR><TD><center>\n<br>\nThese projects study how influenza virus recognizes and infects cells.  We are developing new simulation methods to better understand these processes.\n<br><br>\n</center>\n<BR><BR><BR></TD></TR><TR><TD></TD></TR></TABLE>",
                          Description);
+      }
+      
+      private delegate void DoTestCopyDelegate(string FilePath);
+      
+      private void DoTestCopy(string FilePath)
+      {
+         File.Copy(Path.Combine(TestFilesFolder, "fahproject2669.html"), FilePath, true);
       }
 
       [Test]

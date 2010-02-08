@@ -67,6 +67,11 @@ namespace HFM.Instances
       // Encryption Key and Initialization Vector
       private readonly Data IV = new Data("zX!1=D,^7K@u33+d");
       private readonly Data SymmetricKey = new Data("cNx/7+,?%ubm*?j8");
+
+      /// <summary>
+      /// UnitInfo Log File Maximum Download Size.
+      /// </summary>
+      private const int UnitInfoMax = 1048576; // 1 Megabyte
       #endregion
 
       #region Events
@@ -834,46 +839,39 @@ namespace HFM.Instances
             string FAHLog_txt = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedFAHLogName);
             FileInfo fiCachedLog = new FileInfo(FAHLog_txt);
 
-            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
-                                       String.Format("{0} ({1}) FAHlog copy (start)", HfmTrace.FunctionName, InstanceName));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, "FAHlog copy (start)");
+            
             if (fiLog.Exists)
             {
                if (fiCachedLog.Exists == false || fiLog.Length != fiCachedLog.Length)
                {
                   fiLog.CopyTo(FAHLog_txt, true);
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
-                                             String.Format("{0} ({1}) FAHlog copy (success)", HfmTrace.FunctionName, InstanceName));
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, "FAHlog copy (success)");
                }
                else
                {
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
-                                             String.Format("{0} ({1}) FAHlog copy (file has not changed)", HfmTrace.FunctionName, InstanceName));
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, "FAHlog copy (file has not changed)");
                }
             }
             else
             {
-               //Status = ClientStatus.Offline;
-               //HfmTrace.WriteToHfmConsole(TraceLevel.Error,
-               //                           String.Format("{0} ({1}) The path {2} is inaccessible.", HfmTrace.FunctionName, InstanceName, fiLog.FullName));
-               //return false;
-
-               throw new FileNotFoundException(String.Format("The path {0} is inaccessible.", fiLog.FullName));
+               throw new FileNotFoundException(String.Format(CultureInfo.CurrentCulture, 
+                  "The path {0} is inaccessible.", fiLog.FullName));
             }
 
             // Retrieve unitinfo.txt (or equivalent)
             FileInfo fiUI = new FileInfo(System.IO.Path.Combine(Path, RemoteUnitInfoFilename));
             string UnitInfo_txt = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedUnitInfoName);
 
-            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
-                                       String.Format("{0} ({1}) UnitInfo copy (start)", HfmTrace.FunctionName, InstanceName));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, "unitinfo copy (start)");
+            
             if (fiUI.Exists)
             {
                // If file size is too large, do not copy it and delete the current cached copy - Issue 2
-               if (fiUI.Length < NetworkOps.UnitInfoMax)
+               if (fiUI.Length < UnitInfoMax)
                {
                   fiUI.CopyTo(UnitInfo_txt, true);
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
-                                             String.Format("{0} ({1}) UnitInfo copy (success)", HfmTrace.FunctionName, InstanceName));
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, "unitinfo copy (success)");
                }
                else
                {
@@ -881,56 +879,41 @@ namespace HFM.Instances
                   {
                      File.Delete(UnitInfo_txt);
                   }
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
-                                             String.Format("{0} ({1}) UnitInfo copy (file is too big: {2} bytes)", HfmTrace.FunctionName, InstanceName, fiUI.Length));
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture, 
+                     "unitinfo copy (file is too big: {0} bytes).", fiUI.Length));
                }
             }
             /*** Remove Requirement for UnitInfo to be Present ***/
-            //else
-            //{
-            //   Status = ClientStatus.Offline;
-            //   HfmTrace.WriteToHfmConsole(TraceLevel.Error,
-            //                              String.Format("{0} ({1}) The path {2} is inaccessible.", HfmTrace.FunctionName, InstanceName, fiUI.FullName));
-            //   return false;
-            //}
             else
             {
                if (File.Exists(UnitInfo_txt))
                {
                   File.Delete(UnitInfo_txt);
                }
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
-                                          String.Format("{0} ({1}) The path {2} is inaccessible.", HfmTrace.FunctionName, InstanceName, fiUI.FullName));
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture, 
+                  "The path {0} is inaccessible.", fiUI.FullName));
             }
 
             // Retrieve queue.dat (or equivalent)
             FileInfo fiQueue = new FileInfo(System.IO.Path.Combine(Path, RemoteQueueFilename));
             string Queue_dat = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedQueueName);
 
-            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
-                                       String.Format("{0} ({1}) Queue copy (start)", HfmTrace.FunctionName, InstanceName));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, "queue copy (start)");
+            
             if (fiQueue.Exists)
             {
                fiQueue.CopyTo(Queue_dat, true);
-               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
-                                          String.Format("{0} ({1}) Queue copy (success)", HfmTrace.FunctionName, InstanceName));
+               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, "queue copy (success)");
             }
             /*** Remove Requirement for Queue to be Present ***/
-            //else
-            //{
-            //   Status = ClientStatus.Offline;
-            //   HfmTrace.WriteToHfmConsole(TraceLevel.Error,
-            //                              String.Format("{0} ({1}) The path {2} is inaccessible.", HfmTrace.FunctionName, InstanceName, fiQueue.FullName));
-            //   return false;
-            //}
             else
             {
                if (File.Exists(Queue_dat))
                {
                   File.Delete(Queue_dat);
                }
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
-                                          String.Format("{0} ({1}) The path {2} is inaccessible.", HfmTrace.FunctionName, InstanceName, fiQueue.FullName));
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture, 
+                  "The path {0} is inaccessible.", fiQueue.FullName));
             }
 
             LastRetrievalTime = DateTime.Now;
@@ -948,17 +931,34 @@ namespace HFM.Instances
       {
          DateTime Start = HfmTrace.ExecStart;
 
+         NetworkOps net = new NetworkOps();
+
          try
          {
             string HttpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Path, "/", RemoteFAHLogFilename);
             string LocalFile = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedFAHLogName);
-            NetworkOps.HttpDownloadHelper(HttpPath, LocalFile, InstanceName, Username, Password, DownloadType.ASCII);
+            net.HttpDownloadHelper(HttpPath, LocalFile, Username, Password);
 
             try
             {
                HttpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Path, "/", RemoteUnitInfoFilename);
                LocalFile = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedUnitInfoName);
-               NetworkOps.HttpDownloadHelper(HttpPath, LocalFile, InstanceName, Username, Password, DownloadType.UnitInfo);
+
+               long length = net.GetHttpDownloadLength(HttpPath, Username, Password);
+               if (length < UnitInfoMax)
+               {
+                  net.HttpDownloadHelper(HttpPath, LocalFile, Username, Password);
+               }
+               else
+               {
+                  if (File.Exists(LocalFile))
+                  {
+                     File.Delete(LocalFile);
+                  }
+
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture,
+                     "unitinfo download (file is too big: {0} bytes).", length));
+               }
             }
             /*** Remove Requirement for UnitInfo to be Present ***/
             catch (WebException ex)
@@ -967,15 +967,15 @@ namespace HFM.Instances
                {
                   File.Delete(LocalFile);
                }
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
-                                          String.Format("{0} ({1}) Unitinfo Download Threw Exception: {2}.", HfmTrace.FunctionName, InstanceName, ex.Message));
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture, 
+                  "unitinfo download failed: {0}", ex.Message));
             }
 
             try
             {
                HttpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Path, "/", RemoteQueueFilename);
                LocalFile = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedQueueName);
-               NetworkOps.HttpDownloadHelper(HttpPath, LocalFile, InstanceName, Username, Password, DownloadType.Binary);
+               net.HttpDownloadHelper(HttpPath, LocalFile, Username, Password);
             }
             /*** Remove Requirement for Queue to be Present ***/
             catch (WebException ex)
@@ -984,8 +984,8 @@ namespace HFM.Instances
                {
                   File.Delete(LocalFile);
                }
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
-                                          String.Format("{0} ({1}) Queue Download Threw Exception: {2}.", HfmTrace.FunctionName, InstanceName, ex.Message));
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture,
+                  "queue download failed: {0}", ex.Message));
             }
 
             LastRetrievalTime = DateTime.Now;
@@ -1003,15 +1003,32 @@ namespace HFM.Instances
       {
          DateTime Start = HfmTrace.ExecStart;
 
+         NetworkOps net = new NetworkOps();
+
          try
          {
             string LocalFilePath = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedFAHLogName);
-            NetworkOps.FtpDownloadHelper(Server, Path, RemoteFAHLogFilename, LocalFilePath, Username, Password, FtpMode, DownloadType.ASCII);
+            net.FtpDownloadHelper(Server, Path, RemoteFAHLogFilename, LocalFilePath, Username, Password, FtpMode);
 
             try
             {
                LocalFilePath = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedUnitInfoName);
-               NetworkOps.FtpDownloadHelper(Server, Path, RemoteUnitInfoFilename, LocalFilePath, Username, Password, FtpMode, DownloadType.UnitInfo);
+
+               long length = net.GetFtpDownloadLength(Server, Path, RemoteUnitInfoFilename, Username, Password, FtpMode);
+               if (length < UnitInfoMax)
+               {
+                  net.FtpDownloadHelper(Server, Path, RemoteUnitInfoFilename, LocalFilePath, Username, Password, FtpMode);
+               }
+               else
+               {
+                  if (File.Exists(LocalFilePath))
+                  {
+                     File.Delete(LocalFilePath);
+                  }
+
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture,
+                     "unitinfo download (file is too big: {0} bytes).", length));
+               }
             }
             /*** Remove Requirement for UnitInfo to be Present ***/
             catch (WebException ex)
@@ -1020,14 +1037,14 @@ namespace HFM.Instances
                {
                   File.Delete(LocalFilePath);
                }
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
-                                          String.Format("{0} ({1}) Unitinfo Download Threw Exception: {2}.", HfmTrace.FunctionName, InstanceName, ex.Message));
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture, 
+                  "unitinfo download failed: {0}.", ex.Message));
             }
 
             try
             {
                LocalFilePath = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedQueueName);
-               NetworkOps.FtpDownloadHelper(Server, Path, RemoteQueueFilename, LocalFilePath, Username, Password, FtpMode, DownloadType.Binary);
+               net.FtpDownloadHelper(Server, Path, RemoteQueueFilename, LocalFilePath, Username, Password, FtpMode);
             }
             /*** Remove Requirement for Queue to be Present ***/
             catch (WebException ex)
@@ -1036,8 +1053,8 @@ namespace HFM.Instances
                {
                   File.Delete(LocalFilePath);
                }
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
-                                          String.Format("{0} ({1}) Queue Download Threw Exception: {2}.", HfmTrace.FunctionName, InstanceName, ex.Message));
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture,
+                  "queue download failed: {0}", ex.Message));
             }
 
             LastRetrievalTime = DateTime.Now;
