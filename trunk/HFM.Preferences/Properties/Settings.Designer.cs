@@ -734,5 +734,17 @@ namespace HFM.Preferences.Properties {
                 this["AllowRunningAsync"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Passive")]
+        public string WebGenFtpMode {
+            get {
+                return ((string)(this["WebGenFtpMode"]));
+            }
+            set {
+                this["WebGenFtpMode"] = value;
+            }
+        }
     }
 }

@@ -172,6 +172,7 @@ namespace HFM.Framework
       WebGenAfterRefresh,
       WebRoot,
       WebGenCopyFAHlog,
+      WebGenFtpMode,
       CssFile,
       RunMinimized,
       UseDefaultConfigFile,

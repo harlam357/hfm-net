@@ -201,6 +201,7 @@ namespace HFM.Preferences
          _Preferences.Add(Preference.WebGenAfterRefresh, new Metadata<bool>());
          _Preferences.Add(Preference.WebRoot, new Metadata<string>());
          _Preferences.Add(Preference.WebGenCopyFAHlog, new Metadata<bool>());
+         _Preferences.Add(Preference.WebGenFtpMode, new Metadata<FtpType>());
          _Preferences.Add(Preference.CssFile, new Metadata<string>());
 
          _Preferences.Add(Preference.RunMinimized, new Metadata<bool>());
@@ -293,6 +294,7 @@ namespace HFM.Preferences
          SetPreference(Preference.WebGenAfterRefresh, Settings.Default.WebGenAfterRefresh);
          SetPreference(Preference.WebRoot, DecryptWebRoot(Settings.Default.WebRoot, SymmetricProvider, IV, SymmetricKey));
          SetPreference(Preference.WebGenCopyFAHlog, Settings.Default.WebGenCopyFAHlog);
+         SetPreference(Preference.WebGenFtpMode, GetFtpType());
          SetPreference(Preference.CssFile, Settings.Default.CSSFile);
 
          SetPreference(Preference.RunMinimized, Settings.Default.RunMinimized);
@@ -443,6 +445,19 @@ namespace HFM.Preferences
 
          return WebRoot;
       }
+      
+      private static FtpType GetFtpType()
+      {
+         switch (Settings.Default.WebGenFtpMode)
+         {
+            case "Passive":
+               return FtpType.Passive;
+            case "Active":
+               return FtpType.Active;
+            default:
+               return FtpType.Passive;
+         }
+      }
 
       private static PpdCalculationType GetPpdCalculation()
       {
@@ -586,6 +601,7 @@ namespace HFM.Preferences
             Settings.Default.WebGenAfterRefresh = GetPreference<bool>(Preference.WebGenAfterRefresh);
             Settings.Default.WebRoot = EncryptWebRoot(GetPreference<string>(Preference.WebRoot), SymmetricProvider, IV, SymmetricKey);
             Settings.Default.WebGenCopyFAHlog = GetPreference<bool>(Preference.WebGenCopyFAHlog);
+            Settings.Default.WebGenFtpMode = GetPreference<FtpType>(Preference.WebGenFtpMode).ToString();
             Settings.Default.CSSFile = GetPreference<string>(Preference.CssFile);
 
             Settings.Default.RunMinimized = GetPreference<bool>(Preference.RunMinimized);

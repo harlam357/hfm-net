@@ -190,5 +190,8 @@
     <Setting Name="AllowRunningAsync" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="WebGenFtpMode" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Passive</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

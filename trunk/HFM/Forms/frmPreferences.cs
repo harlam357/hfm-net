@@ -25,6 +25,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 using harlam357.Windows.Forms;
@@ -43,7 +44,12 @@ namespace HFM.Forms
       private readonly WebBrowser wbCssSample;
 
       private const string CssExtension = ".css";
-      private const string CssFolder = "CSS"; 
+      private const string CssFolder = "CSS";
+
+      /// <summary>
+      /// Network Operations Interface
+      /// </summary>
+      private NetworkOps net;
       #endregion
 
       #region Constructor And Binding/Load Methods
@@ -131,7 +137,19 @@ namespace HFM.Forms
 
          txtWebSiteBase.Text = _Prefs.GetPreference<string>(Preference.WebRoot);
          chkFAHlog.Checked = _Prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog);
-
+         switch (_Prefs.GetPreference<FtpType>(Preference.WebGenFtpMode))
+         {
+            case FtpType.Passive:
+               radioPassive.Checked = true;
+               break;
+            case FtpType.Active:
+               radioActive.Checked = true;
+               break;
+            default:
+               radioPassive.Checked = true;
+               break;
+         }
+         
          // Finally, add the CheckBox.Checked Binding
          chkWebSiteGenerator.Checked = _Prefs.GetPreference<bool>(Preference.GenerateWeb);
          #endregion
@@ -358,6 +376,13 @@ namespace HFM.Forms
          {
             e.ControlText += Path.DirectorySeparatorChar;
          }
+         
+         ShowFtpModeControls(e.ValidationResult && bIsFtpUrl);
+      }
+      
+      private void ShowFtpModeControls(bool value)
+      {
+         pnlFtpMode.Visible = value;
       }
 
       private void btnBrowseWebFolder_Click(object sender, EventArgs e)
@@ -673,6 +698,86 @@ namespace HFM.Forms
       #endregion
 
       #region Button Click Event Handlers
+
+      private void btnTestConnection_Click(object sender, EventArgs e)
+      {
+         if (net == null)
+         {
+            net = new NetworkOps();
+         }
+
+         try
+         {
+            Match mMatchFtpWithUserPassUrl = StringOps.MatchFtpWithUserPassUrl(txtWebSiteBase.Text);
+            if (mMatchFtpWithUserPassUrl.Success == false)
+            {
+               if (Directory.Exists(txtWebSiteBase.Text) == false)
+               {
+                  throw new IOException(String.Format(CultureInfo.CurrentCulture,
+                     "Folder Path '{0}' does not exist.", txtWebSiteBase.Text));
+               }
+
+               ShowConnectionSucceededMessage();
+            }
+            else
+            {
+               string server = mMatchFtpWithUserPassUrl.Result("${domain}");
+               string path = mMatchFtpWithUserPassUrl.Result("${file}");
+               string username = mMatchFtpWithUserPassUrl.Result("${username}");
+               string password = mMatchFtpWithUserPassUrl.Result("${password}");
+               
+               FtpCheckConnectionDelegate del = net.FtpCheckConnection;
+               del.BeginInvoke(server, path, username, password, GetFtpTypeFromControls(), FtpCheckConnectionCallback, del);
+            }
+         }
+         catch (Exception ex)
+         {
+            HfmTrace.WriteToHfmConsole(ex);
+            ShowConnectionFailedMessage(ex.Message);
+         }
+      }
+
+      private void FtpCheckConnectionCallback(IAsyncResult result)
+      {
+         try
+         {
+            FtpCheckConnectionDelegate del = (FtpCheckConnectionDelegate)result.AsyncState;
+            del.EndInvoke(result);
+            ShowConnectionSucceededMessage();
+         }
+         catch (Exception ex)
+         {
+            HfmTrace.WriteToHfmConsole(ex);
+            ShowConnectionFailedMessage(ex.Message);
+         }
+      }
+
+      private void ShowConnectionSucceededMessage()
+      {
+         if (InvokeRequired)
+         {
+            Invoke(new MethodInvoker(ShowConnectionSucceededMessage));
+            return;
+         }
+
+         MessageBox.Show(this, "Test Connection Succeeded", PlatformOps.ApplicationNameAndVersion,
+            MessageBoxButtons.OK, MessageBoxIcon.Information);
+      }
+
+      private delegate void ShowConnectionFailedMessageDelegate(string message);
+
+      private void ShowConnectionFailedMessage(string message)
+      {
+         if (InvokeRequired)
+         {
+            Invoke(new ShowConnectionFailedMessageDelegate(ShowConnectionFailedMessage), message);
+            return;
+         }
+
+         MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture, "Test Connection Failed{0}{0}{1}",
+            Environment.NewLine, message), PlatformOps.ApplicationNameAndVersion, MessageBoxButtons.OK,
+               MessageBoxIcon.Error);
+      }
       
       private void btnOK_Click(object sender, EventArgs e)
       {
@@ -778,9 +883,17 @@ namespace HFM.Forms
 
          _Prefs.SetPreference(Preference.WebRoot, txtWebSiteBase.Text);
          _Prefs.SetPreference(Preference.WebGenCopyFAHlog, chkFAHlog.Checked);
+         _Prefs.SetPreference(Preference.WebGenFtpMode, GetFtpTypeFromControls());
          
          _Prefs.SetPreference(Preference.GenerateWeb, chkWebSiteGenerator.Checked);
          #endregion
+      }
+
+      private FtpType GetFtpTypeFromControls()
+      {
+         FtpType ftpType = FtpType.Passive;
+         if (radioActive.Checked) ftpType = FtpType.Active;
+         return ftpType;
       }
 
       private void GetStartupTab()
