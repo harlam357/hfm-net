@@ -1,7 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Overview>
-   <!--Uncomment this line to enable a logo on the Overview Page-->
-   <!--<photo>http://(url to your logo)</photo>-->
    <HFMVersion>0</HFMVersion>
    <TotalHosts>0</TotalHosts>
    <GoodHosts>0</GoodHosts>

@@ -155,6 +155,21 @@ namespace HFM.Forms
          this.lbl3Port = new HFM.Classes.LabelWrapper();
          this.lbl3Proxy = new HFM.Classes.LabelWrapper();
          this.tabVisStyles = new System.Windows.Forms.TabPage();
+         this.btnMobileSummaryBrowse = new HFM.Classes.ButtonWrapper();
+         this.txtMobileSummary = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.lblMobileSummary = new HFM.Classes.LabelWrapper();
+         this.btnMobileOverviewBrowse = new HFM.Classes.ButtonWrapper();
+         this.txtMobileOverview = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.lblMobileOverview = new HFM.Classes.LabelWrapper();
+         this.btnInstanceBrowse = new HFM.Classes.ButtonWrapper();
+         this.txtInstance = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.lblInstance = new HFM.Classes.LabelWrapper();
+         this.btnSummaryBrowse = new HFM.Classes.ButtonWrapper();
+         this.txtSummary = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.lblSummary = new HFM.Classes.LabelWrapper();
+         this.btnOverviewBrowse = new HFM.Classes.ButtonWrapper();
+         this.txtOverview = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.lblOverview = new HFM.Classes.LabelWrapper();
          this.lbl1Preview = new HFM.Classes.LabelWrapper();
          this.lbl1Style = new HFM.Classes.LabelWrapper();
          this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
@@ -187,19 +202,19 @@ namespace HFM.Forms
          // pnl1CSSSample
          // 
          this.pnl1CSSSample.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-         this.pnl1CSSSample.Location = new System.Drawing.Point(132, 31);
+         this.pnl1CSSSample.Location = new System.Drawing.Point(132, 27);
          this.pnl1CSSSample.Name = "pnl1CSSSample";
-         this.pnl1CSSSample.Size = new System.Drawing.Size(358, 212);
-         this.pnl1CSSSample.TabIndex = 1;
+         this.pnl1CSSSample.Size = new System.Drawing.Size(358, 134);
+         this.pnl1CSSSample.TabIndex = 3;
          // 
          // StyleList
          // 
          this.StyleList.FormattingEnabled = true;
-         this.StyleList.Location = new System.Drawing.Point(6, 31);
+         this.StyleList.Location = new System.Drawing.Point(6, 27);
          this.StyleList.Name = "StyleList";
-         this.StyleList.Size = new System.Drawing.Size(120, 212);
+         this.StyleList.Size = new System.Drawing.Size(120, 134);
          this.StyleList.Sorted = true;
-         this.StyleList.TabIndex = 1;
+         this.StyleList.TabIndex = 2;
          this.StyleList.SelectedIndexChanged += new System.EventHandler(this.StyleList_SelectedIndexChanged);
          // 
          // tabControl1
@@ -1421,6 +1436,21 @@ namespace HFM.Forms
          // tabVisStyles
          // 
          this.tabVisStyles.BackColor = System.Drawing.SystemColors.Control;
+         this.tabVisStyles.Controls.Add(this.btnMobileSummaryBrowse);
+         this.tabVisStyles.Controls.Add(this.txtMobileSummary);
+         this.tabVisStyles.Controls.Add(this.lblMobileSummary);
+         this.tabVisStyles.Controls.Add(this.btnMobileOverviewBrowse);
+         this.tabVisStyles.Controls.Add(this.txtMobileOverview);
+         this.tabVisStyles.Controls.Add(this.lblMobileOverview);
+         this.tabVisStyles.Controls.Add(this.btnInstanceBrowse);
+         this.tabVisStyles.Controls.Add(this.txtInstance);
+         this.tabVisStyles.Controls.Add(this.lblInstance);
+         this.tabVisStyles.Controls.Add(this.btnSummaryBrowse);
+         this.tabVisStyles.Controls.Add(this.txtSummary);
+         this.tabVisStyles.Controls.Add(this.lblSummary);
+         this.tabVisStyles.Controls.Add(this.btnOverviewBrowse);
+         this.tabVisStyles.Controls.Add(this.txtOverview);
+         this.tabVisStyles.Controls.Add(this.lblOverview);
          this.tabVisStyles.Controls.Add(this.pnl1CSSSample);
          this.tabVisStyles.Controls.Add(this.lbl1Preview);
          this.tabVisStyles.Controls.Add(this.StyleList);
@@ -1432,12 +1462,197 @@ namespace HFM.Forms
          this.tabVisStyles.Text = "Web Visual Styles";
          this.tabVisStyles.UseVisualStyleBackColor = true;
          // 
+         // btnMobileSummaryBrowse
+         // 
+         this.btnMobileSummaryBrowse.Location = new System.Drawing.Point(466, 247);
+         this.btnMobileSummaryBrowse.Name = "btnMobileSummaryBrowse";
+         this.btnMobileSummaryBrowse.Size = new System.Drawing.Size(24, 23);
+         this.btnMobileSummaryBrowse.TabIndex = 15;
+         this.btnMobileSummaryBrowse.Text = "...";
+         this.btnMobileSummaryBrowse.UseVisualStyleBackColor = true;
+         this.btnMobileSummaryBrowse.Click += new System.EventHandler(this.btnMobileSummaryBrowse_Click);
+         // 
+         // txtMobileSummary
+         // 
+         this.txtMobileSummary.BackColor = System.Drawing.SystemColors.Control;
+         this.txtMobileSummary.DoubleBuffered = true;
+         this.txtMobileSummary.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.txtMobileSummary.ErrorState = false;
+         this.txtMobileSummary.ErrorToolTip = this.toolTipPrefs;
+         this.txtMobileSummary.ErrorToolTipDuration = 5000;
+         this.txtMobileSummary.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.txtMobileSummary.ErrorToolTipText = "HTML Output Folder must be a valid local path, network (UNC) path, or FTP URL.";
+         this.txtMobileSummary.Location = new System.Drawing.Point(132, 249);
+         this.txtMobileSummary.Name = "txtMobileSummary";
+         this.txtMobileSummary.ReadOnly = true;
+         this.txtMobileSummary.Size = new System.Drawing.Size(328, 20);
+         this.txtMobileSummary.TabIndex = 14;
+         this.txtMobileSummary.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         // 
+         // lblMobileSummary
+         // 
+         this.lblMobileSummary.AutoSize = true;
+         this.lblMobileSummary.Location = new System.Drawing.Point(9, 252);
+         this.lblMobileSummary.Name = "lblMobileSummary";
+         this.lblMobileSummary.Size = new System.Drawing.Size(117, 13);
+         this.lblMobileSummary.TabIndex = 13;
+         this.lblMobileSummary.Text = "Mobile Summary XSLT:";
+         this.lblMobileSummary.TextAlign = System.Drawing.ContentAlignment.TopRight;
+         // 
+         // btnMobileOverviewBrowse
+         // 
+         this.btnMobileOverviewBrowse.Location = new System.Drawing.Point(466, 195);
+         this.btnMobileOverviewBrowse.Name = "btnMobileOverviewBrowse";
+         this.btnMobileOverviewBrowse.Size = new System.Drawing.Size(24, 23);
+         this.btnMobileOverviewBrowse.TabIndex = 9;
+         this.btnMobileOverviewBrowse.Text = "...";
+         this.btnMobileOverviewBrowse.UseVisualStyleBackColor = true;
+         this.btnMobileOverviewBrowse.Click += new System.EventHandler(this.btnMobileOverviewBrowse_Click);
+         // 
+         // txtMobileOverview
+         // 
+         this.txtMobileOverview.BackColor = System.Drawing.SystemColors.Control;
+         this.txtMobileOverview.DoubleBuffered = true;
+         this.txtMobileOverview.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.txtMobileOverview.ErrorState = false;
+         this.txtMobileOverview.ErrorToolTip = this.toolTipPrefs;
+         this.txtMobileOverview.ErrorToolTipDuration = 5000;
+         this.txtMobileOverview.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.txtMobileOverview.ErrorToolTipText = "HTML Output Folder must be a valid local path, network (UNC) path, or FTP URL.";
+         this.txtMobileOverview.Location = new System.Drawing.Point(132, 197);
+         this.txtMobileOverview.Name = "txtMobileOverview";
+         this.txtMobileOverview.ReadOnly = true;
+         this.txtMobileOverview.Size = new System.Drawing.Size(328, 20);
+         this.txtMobileOverview.TabIndex = 8;
+         this.txtMobileOverview.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         // 
+         // lblMobileOverview
+         // 
+         this.lblMobileOverview.AutoSize = true;
+         this.lblMobileOverview.Location = new System.Drawing.Point(7, 200);
+         this.lblMobileOverview.Name = "lblMobileOverview";
+         this.lblMobileOverview.Size = new System.Drawing.Size(119, 13);
+         this.lblMobileOverview.TabIndex = 7;
+         this.lblMobileOverview.Text = "Mobile Overview XSLT:";
+         this.lblMobileOverview.TextAlign = System.Drawing.ContentAlignment.TopRight;
+         // 
+         // btnInstanceBrowse
+         // 
+         this.btnInstanceBrowse.Location = new System.Drawing.Point(466, 273);
+         this.btnInstanceBrowse.Name = "btnInstanceBrowse";
+         this.btnInstanceBrowse.Size = new System.Drawing.Size(24, 23);
+         this.btnInstanceBrowse.TabIndex = 18;
+         this.btnInstanceBrowse.Text = "...";
+         this.btnInstanceBrowse.UseVisualStyleBackColor = true;
+         this.btnInstanceBrowse.Click += new System.EventHandler(this.btnInstanceBrowse_Click);
+         // 
+         // txtInstance
+         // 
+         this.txtInstance.BackColor = System.Drawing.SystemColors.Control;
+         this.txtInstance.DoubleBuffered = true;
+         this.txtInstance.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.txtInstance.ErrorState = false;
+         this.txtInstance.ErrorToolTip = this.toolTipPrefs;
+         this.txtInstance.ErrorToolTipDuration = 5000;
+         this.txtInstance.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.txtInstance.ErrorToolTipText = "HTML Output Folder must be a valid local path, network (UNC) path, or FTP URL.";
+         this.txtInstance.Location = new System.Drawing.Point(132, 275);
+         this.txtInstance.Name = "txtInstance";
+         this.txtInstance.ReadOnly = true;
+         this.txtInstance.Size = new System.Drawing.Size(328, 20);
+         this.txtInstance.TabIndex = 17;
+         this.txtInstance.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         // 
+         // lblInstance
+         // 
+         this.lblInstance.AutoSize = true;
+         this.lblInstance.Location = new System.Drawing.Point(45, 278);
+         this.lblInstance.Name = "lblInstance";
+         this.lblInstance.Size = new System.Drawing.Size(81, 13);
+         this.lblInstance.TabIndex = 16;
+         this.lblInstance.Text = "Instance XSLT:";
+         this.lblInstance.TextAlign = System.Drawing.ContentAlignment.TopRight;
+         // 
+         // btnSummaryBrowse
+         // 
+         this.btnSummaryBrowse.Location = new System.Drawing.Point(466, 221);
+         this.btnSummaryBrowse.Name = "btnSummaryBrowse";
+         this.btnSummaryBrowse.Size = new System.Drawing.Size(24, 23);
+         this.btnSummaryBrowse.TabIndex = 12;
+         this.btnSummaryBrowse.Text = "...";
+         this.btnSummaryBrowse.UseVisualStyleBackColor = true;
+         this.btnSummaryBrowse.Click += new System.EventHandler(this.btnSummaryBrowse_Click);
+         // 
+         // txtSummary
+         // 
+         this.txtSummary.BackColor = System.Drawing.SystemColors.Control;
+         this.txtSummary.DoubleBuffered = true;
+         this.txtSummary.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.txtSummary.ErrorState = false;
+         this.txtSummary.ErrorToolTip = this.toolTipPrefs;
+         this.txtSummary.ErrorToolTipDuration = 5000;
+         this.txtSummary.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.txtSummary.ErrorToolTipText = "HTML Output Folder must be a valid local path, network (UNC) path, or FTP URL.";
+         this.txtSummary.Location = new System.Drawing.Point(132, 223);
+         this.txtSummary.Name = "txtSummary";
+         this.txtSummary.ReadOnly = true;
+         this.txtSummary.Size = new System.Drawing.Size(328, 20);
+         this.txtSummary.TabIndex = 11;
+         this.txtSummary.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         // 
+         // lblSummary
+         // 
+         this.lblSummary.AutoSize = true;
+         this.lblSummary.Location = new System.Drawing.Point(43, 226);
+         this.lblSummary.Name = "lblSummary";
+         this.lblSummary.Size = new System.Drawing.Size(83, 13);
+         this.lblSummary.TabIndex = 10;
+         this.lblSummary.Text = "Summary XSLT:";
+         this.lblSummary.TextAlign = System.Drawing.ContentAlignment.TopRight;
+         // 
+         // btnOverviewBrowse
+         // 
+         this.btnOverviewBrowse.Location = new System.Drawing.Point(466, 169);
+         this.btnOverviewBrowse.Name = "btnOverviewBrowse";
+         this.btnOverviewBrowse.Size = new System.Drawing.Size(24, 23);
+         this.btnOverviewBrowse.TabIndex = 6;
+         this.btnOverviewBrowse.Text = "...";
+         this.btnOverviewBrowse.UseVisualStyleBackColor = true;
+         this.btnOverviewBrowse.Click += new System.EventHandler(this.btnOverviewBrowse_Click);
+         // 
+         // txtOverview
+         // 
+         this.txtOverview.BackColor = System.Drawing.SystemColors.Control;
+         this.txtOverview.DoubleBuffered = true;
+         this.txtOverview.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.txtOverview.ErrorState = false;
+         this.txtOverview.ErrorToolTip = this.toolTipPrefs;
+         this.txtOverview.ErrorToolTipDuration = 5000;
+         this.txtOverview.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.txtOverview.ErrorToolTipText = "HTML Output Folder must be a valid local path, network (UNC) path, or FTP URL.";
+         this.txtOverview.Location = new System.Drawing.Point(132, 171);
+         this.txtOverview.Name = "txtOverview";
+         this.txtOverview.ReadOnly = true;
+         this.txtOverview.Size = new System.Drawing.Size(328, 20);
+         this.txtOverview.TabIndex = 5;
+         this.txtOverview.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         // 
+         // lblOverview
+         // 
+         this.lblOverview.AutoSize = true;
+         this.lblOverview.Location = new System.Drawing.Point(41, 174);
+         this.lblOverview.Name = "lblOverview";
+         this.lblOverview.Size = new System.Drawing.Size(85, 13);
+         this.lblOverview.TabIndex = 4;
+         this.lblOverview.Text = "Overview XSLT:";
+         this.lblOverview.TextAlign = System.Drawing.ContentAlignment.TopRight;
+         // 
          // lbl1Preview
          // 
          this.lbl1Preview.Location = new System.Drawing.Point(129, 6);
          this.lbl1Preview.Name = "lbl1Preview";
          this.lbl1Preview.Size = new System.Drawing.Size(67, 23);
-         this.lbl1Preview.TabIndex = 2;
+         this.lbl1Preview.TabIndex = 1;
          this.lbl1Preview.Text = "Preview";
          // 
          // lbl1Style
@@ -1532,6 +1747,7 @@ namespace HFM.Forms
          this.grpWebProxy.ResumeLayout(false);
          this.grpWebProxy.PerformLayout();
          this.tabVisStyles.ResumeLayout(false);
+         this.tabVisStyles.PerformLayout();
          this.ResumeLayout(false);
 
       }
@@ -1645,5 +1861,20 @@ namespace HFM.Forms
       private HFM.Classes.LabelWrapper lblFtpMode;
       private System.Windows.Forms.Panel pnlFtpMode;
       private HFM.Classes.ButtonWrapper btnTestConnection;
+      private HFM.Classes.ButtonWrapper btnInstanceBrowse;
+      private ValidatingTextBox txtInstance;
+      private HFM.Classes.LabelWrapper lblInstance;
+      private HFM.Classes.ButtonWrapper btnSummaryBrowse;
+      private ValidatingTextBox txtSummary;
+      private HFM.Classes.LabelWrapper lblSummary;
+      private HFM.Classes.ButtonWrapper btnOverviewBrowse;
+      private ValidatingTextBox txtOverview;
+      private HFM.Classes.LabelWrapper lblOverview;
+      private HFM.Classes.ButtonWrapper btnMobileOverviewBrowse;
+      private ValidatingTextBox txtMobileOverview;
+      private HFM.Classes.LabelWrapper lblMobileOverview;
+      private HFM.Classes.ButtonWrapper btnMobileSummaryBrowse;
+      private ValidatingTextBox txtMobileSummary;
+      private HFM.Classes.LabelWrapper lblMobileSummary;
    }
 }

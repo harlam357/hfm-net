@@ -80,7 +80,7 @@ namespace HFM.Helpers
          // Create XmlReaderSettings and XmlReader
          XmlReaderSettings xsltSettings = new XmlReaderSettings();
          xsltSettings.ProhibitDtd = false;
-         XmlReader xmlReader = XmlReader.Create(Path.Combine(Path.Combine(Prefs.ApplicationPath, "XSL"), xslFile), xsltSettings);
+         XmlReader xmlReader = XmlReader.Create(xslFile, xsltSettings);
 
          // Create the XslCompiledTransform and Load the XmlReader
          XslCompiledTransform xslt = new XslCompiledTransform();
@@ -92,7 +92,6 @@ namespace HFM.Helpers
          
          // Return the transformed XML
          string sWebPage = Encoding.UTF8.GetString(ms.ToArray());
-         //sWebPage = sWebPage.Replace("$APPPATH", PreferenceSet.AppPath);
          sWebPage = sWebPage.Replace("$CSSFILE", Prefs.GetPreference<string>(Preference.CssFile));
          return sWebPage;
       }

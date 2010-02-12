@@ -10,8 +10,6 @@
             <link rel="stylesheet" type="text/css" href="$CSSFILE" />
          </head>
          <body>
-            <!--Uncomment this line to enable a logo on the Overview Page-->
-            <!--<img style="float:left; margin-right:0px; margin-bottom:0px" src="{photo}" alt="" title="Home" />-->
             <table class="Overview" width="30%">
                <tr>
                   <td class="Heading" width="50%">Overview</td>

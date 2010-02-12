@@ -746,5 +746,65 @@ namespace HFM.Preferences.Properties {
                 this["WebGenFtpMode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("WebOverview.xslt")]
+        public string WebOverview {
+            get {
+                return ((string)(this["WebOverview"]));
+            }
+            set {
+                this["WebOverview"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("WebMobileOverview.xslt")]
+        public string WebMobileOverview {
+            get {
+                return ((string)(this["WebMobileOverview"]));
+            }
+            set {
+                this["WebMobileOverview"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("WebSummary.xslt")]
+        public string WebSummary {
+            get {
+                return ((string)(this["WebSummary"]));
+            }
+            set {
+                this["WebSummary"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("WebMobileSummary.xslt")]
+        public string WebMobileSummary {
+            get {
+                return ((string)(this["WebMobileSummary"]));
+            }
+            set {
+                this["WebMobileSummary"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("WebInstance.xslt")]
+        public string WebInstance {
+            get {
+                return ((string)(this["WebInstance"]));
+            }
+            set {
+                this["WebInstance"] = value;
+            }
+        }
     }
 }

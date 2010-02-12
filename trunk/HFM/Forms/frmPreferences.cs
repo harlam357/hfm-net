@@ -1,7 +1,7 @@
 /*
  * HFM.NET - User Preferences Form
  * Copyright (C) 2006-2007 David Rawling
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -309,6 +309,12 @@ namespace HFM.Forms
                }
             }
          }
+         
+         txtOverview.Text = _Prefs.GetPreference<string>(Preference.WebOverview);
+         txtMobileOverview.Text = _Prefs.GetPreference<string>(Preference.WebMobileOverview);
+         txtSummary.Text = _Prefs.GetPreference<string>(Preference.WebSummary);
+         txtMobileSummary.Text = _Prefs.GetPreference<string>(Preference.WebMobileSummary);
+         txtInstance.Text = _Prefs.GetPreference<string>(Preference.WebInstance);
       }
 
       private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
@@ -360,12 +366,13 @@ namespace HFM.Forms
          bool bPath = StringOps.ValidatePathInstancePath(txtWebSiteBase.Text);
          bool bPathWithSlash = StringOps.ValidatePathInstancePath(String.Concat(txtWebSiteBase.Text, Path.DirectorySeparatorChar));
          bool bIsFtpUrl = StringOps.ValidateFtpWithUserPassUrl(txtWebSiteBase.Text);
+         bool bIsFtpUrlWithSlash = StringOps.ValidateFtpWithUserPassUrl(String.Concat(txtWebSiteBase.Text, "/"));
 
          if (e.ControlText.Length == 0)
          {
             e.ValidationResult = false;
          }
-         else if (e.ControlText.Length > 2 && (bPath || bPathWithSlash || bIsFtpUrl) != true)
+         else if (e.ControlText.Length > 2 && (bPath || bPathWithSlash || bIsFtpUrl || bIsFtpUrlWithSlash) != true)
          {
             e.ValidationResult = false;
          }
@@ -376,7 +383,12 @@ namespace HFM.Forms
          {
             e.ControlText += Path.DirectorySeparatorChar;
          }
-         
+
+         if (bIsFtpUrl == false && bIsFtpUrlWithSlash)
+         {
+            e.ControlText += "/";
+         }
+
          ShowFtpModeControls(e.ValidationResult && bIsFtpUrl);
       }
       
@@ -993,6 +1005,11 @@ namespace HFM.Forms
       private void GetVisualStylesTab()
       {
          _Prefs.SetPreference(Preference.CssFile, String.Concat(StyleList.SelectedItem, CssExtension));
+         _Prefs.SetPreference(Preference.WebOverview, txtOverview.Text);
+         _Prefs.SetPreference(Preference.WebMobileOverview, txtMobileOverview.Text);
+         _Prefs.SetPreference(Preference.WebSummary, txtSummary.Text);
+         _Prefs.SetPreference(Preference.WebMobileSummary, txtMobileSummary.Text);
+         _Prefs.SetPreference(Preference.WebInstance, txtInstance.Text);
       }
 
       private void btnCancel_Click(object sender, EventArgs e)
@@ -1048,7 +1065,102 @@ namespace HFM.Forms
          {
             txt.Text = openConfigDialog.FileName;
          }
-      }  
+      }
+
+      private void btnOverviewBrowse_Click(object sender, EventArgs e)
+      {
+         string filename = DoXsltBrowse(txtOverview.Text, "xslt", "XML Transform (*.xslt;*.xsl)|*.xslt;*.xsl");
+         if (String.IsNullOrEmpty(filename) == false)
+         {
+            txtOverview.Text = filename;
+         }
+      }
+
+      private void btnMobileOverviewBrowse_Click(object sender, EventArgs e)
+      {
+         string filename = DoXsltBrowse(txtMobileOverview.Text, "xslt", "XML Transform (*.xslt;*.xsl)|*.xslt;*.xsl");
+         if (String.IsNullOrEmpty(filename) == false)
+         {
+            txtMobileOverview.Text = filename;
+         }
+      }
+
+      private void btnSummaryBrowse_Click(object sender, EventArgs e)
+      {
+         string filename = DoXsltBrowse(txtSummary.Text, "xslt", "XML Transform (*.xslt;*.xsl)|*.xslt;*.xsl");
+         if (String.IsNullOrEmpty(filename) == false)
+         {
+            txtSummary.Text = filename;
+         }
+      }
+
+      private void btnMobileSummaryBrowse_Click(object sender, EventArgs e)
+      {
+         string filename = DoXsltBrowse(txtMobileSummary.Text, "xslt", "XML Transform (*.xslt;*.xsl)|*.xslt;*.xsl");
+         if (String.IsNullOrEmpty(filename) == false)
+         {
+            txtSummary.Text = filename;
+         }
+      }
+
+      private void btnInstanceBrowse_Click(object sender, EventArgs e)
+      {
+         string filename = DoXsltBrowse(txtInstance.Text, "xslt", "XML Transform (*.xslt;*.xsl)|*.xslt;*.xsl");
+         if (String.IsNullOrEmpty(filename) == false)
+         {
+            txtInstance.Text = filename;
+         }
+      }
+
+      private string DoXsltBrowse(string filename, string extension, string filter)
+      {
+         if (String.IsNullOrEmpty(filename) == false)
+         {
+            FileInfo fileInfo = new FileInfo(filename);
+            string XsltPath = Path.Combine(_Prefs.ApplicationPath, "XSL");
+            
+            if (fileInfo.Exists)
+            {
+               openConfigDialog.InitialDirectory = fileInfo.DirectoryName;
+               openConfigDialog.FileName = fileInfo.Name;
+            }
+            else if (File.Exists(Path.Combine(XsltPath, filename)))
+            {
+               openConfigDialog.InitialDirectory = XsltPath;
+               openConfigDialog.FileName = filename;
+            }
+            else
+            {
+               DirectoryInfo dirInfo = new DirectoryInfo(filename);
+               if (dirInfo.Exists)
+               {
+                  openConfigDialog.InitialDirectory = dirInfo.FullName;
+                  openConfigDialog.FileName = String.Empty;
+               }
+            }
+         }
+         else
+         {
+            openConfigDialog.InitialDirectory = String.Empty;
+            openConfigDialog.FileName = String.Empty;
+         }
+
+         openConfigDialog.DefaultExt = extension;
+         openConfigDialog.Filter = filter;
+         if (openConfigDialog.ShowDialog() == DialogResult.OK)
+         {
+            // Check to see if the path for the file returned is the \HFM\XSL path
+            if (Path.Combine(_Prefs.ApplicationPath, "XSL").Equals(Path.GetDirectoryName(openConfigDialog.FileName)))
+            {
+               // If so, return the file name only
+               return Path.GetFileName(openConfigDialog.FileName);
+            }
+
+            return openConfigDialog.FileName;
+         }
+         
+         return null;
+      }
       #endregion
       
       #endregion

@@ -193,5 +193,20 @@
     <Setting Name="WebGenFtpMode" Type="System.String" Scope="User">
       <Value Profile="(Default)">Passive</Value>
     </Setting>
+    <Setting Name="WebOverview" Type="System.String" Scope="User">
+      <Value Profile="(Default)">WebOverview.xslt</Value>
+    </Setting>
+    <Setting Name="WebMobileOverview" Type="System.String" Scope="User">
+      <Value Profile="(Default)">WebMobileOverview.xslt</Value>
+    </Setting>
+    <Setting Name="WebSummary" Type="System.String" Scope="User">
+      <Value Profile="(Default)">WebSummary.xslt</Value>
+    </Setting>
+    <Setting Name="WebMobileSummary" Type="System.String" Scope="User">
+      <Value Profile="(Default)">WebMobileSummary.xslt</Value>
+    </Setting>
+    <Setting Name="WebInstance" Type="System.String" Scope="User">
+      <Value Profile="(Default)">WebInstance.xslt</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

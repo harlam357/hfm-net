@@ -39,7 +39,7 @@
          </Directory>
       </Directory>
 
-      <Feature Id="Complete" Title="HFM.NET" Level="1">
+      <Feature Id="Complete" Title="HFM.NET" Level="1" ConfigurableDirectory='INSTALLDIR'>
          <ComponentGroupRef Id="group_hfm" />
          <ComponentRef Id="ProgramMenuDir" />
       </Feature>

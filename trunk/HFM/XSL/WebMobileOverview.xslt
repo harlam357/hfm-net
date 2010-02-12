@@ -120,7 +120,14 @@
                   </td>
                </tr>
                <tr>
-                  <td class="Plain" colspan="4" align="center">
+                  <td class="Plain" colspan="2" align="center">
+                     <a href="index.html">
+                        Standard<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Version
+                     </a>
+                  </td>
+               </tr>
+               <tr>
+                  <td class="Plain" colspan="2" align="center">
                   </td>
                </tr>
                <tr>

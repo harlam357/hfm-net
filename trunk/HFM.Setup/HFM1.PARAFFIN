@@ -61,139 +61,137 @@
       <ComponentRef Id="comp_hfm_39" />
       <ComponentRef Id="comp_hfm_40" />
     </ComponentGroup>
-    <DirectoryRef Id="ProgramFilesFolder">
-      <Directory Id="dir_HFM_NET_0" Name="HFM.NET">
-        <Component Id="comp_hfm_33" DiskId="1" KeyPath="yes" Guid="822FB831-D5E5-4B58-A4BA-373EF2210A78">
-          <File Id="file_hfm_33" Checksum="yes" Source="..\..\..\HFM.NET\Castle.Core.dll" />
+    <DirectoryRef Id="INSTALLDIR">
+      <Component Id="comp_hfm_33" DiskId="1" KeyPath="yes" Guid="822FB831-D5E5-4B58-A4BA-373EF2210A78">
+        <File Id="file_hfm_33" Checksum="yes" Source="..\..\..\HFM.NET\Castle.Core.dll" />
+      </Component>
+      <Component Id="comp_hfm_34" DiskId="1" KeyPath="yes" Guid="64EFF45E-100F-4E40-8225-34C145A25613">
+        <File Id="file_hfm_34" Checksum="yes" Source="..\..\..\HFM.NET\Castle.DynamicProxy2.dll" />
+      </Component>
+      <Component Id="comp_hfm_35" DiskId="1" KeyPath="yes" Guid="A6651BF9-F05E-45AC-A4FD-7990BF3AB872">
+        <File Id="file_hfm_35" Checksum="yes" Source="..\..\..\HFM.NET\Castle.MicroKernel.dll" />
+      </Component>
+      <Component Id="comp_hfm_36" DiskId="1" KeyPath="yes" Guid="68C9D025-1AFE-4388-81FC-9E866CC86E70">
+        <File Id="file_hfm_36" Checksum="yes" Source="..\..\..\HFM.NET\Castle.Windsor.dll" />
+      </Component>
+      <Component Id="comp_hfm_0" DiskId="1" KeyPath="yes" Guid="AE3B54ED-7136-4240-8B60-DCB800B4625B">
+        <File Id="file_hfm_0" Source="..\..\..\HFM.NET\GPLv2.TXT" />
+      </Component>
+      <Component Id="comp_hfm_1" DiskId="1" KeyPath="yes" Guid="6C0038F1-3862-45C4-BB36-91F295D76D3D">
+        <File Id="file_hfm_1" Checksum="yes" Source="..\..\..\HFM.NET\harlam357.Security.dll" />
+      </Component>
+      <Component Id="comp_hfm_29" DiskId="1" KeyPath="yes" Guid="950C987F-9AF7-489C-8F37-6F7E75765D19">
+        <File Id="file_hfm_29" Checksum="yes" Source="..\..\..\HFM.NET\harlam357.Windows.Forms.dll" />
+      </Component>
+      <Component Id="comp_hfm_2" DiskId="1" Guid="E12A0E04-940C-4714-A260-F3751DEB8845">
+        <File Id="file_hfm_2" Checksum="yes" KeyPath="yes" Source="..\..\..\HFM.NET\HFM.exe" />
+        <Shortcut Id="startmenu_hfm_2" Directory="ProgramMenuDir" Name="HFM.NET" WorkingDirectory="INSTALLDIR" Icon="HFM.exe" IconIndex="0" Advertise="yes" />
+        <Shortcut Id="desktop_hfm_2" Directory="DesktopFolder" Name="HFM.NET" WorkingDirectory="INSTALLDIR" Icon="HFM.exe" IconIndex="0" Advertise="yes" />
+      </Component>
+      <Component Id="comp_hfm_3" DiskId="1" KeyPath="yes" Guid="3B7F09B3-AAAA-4CAA-954C-0E991D9BF69F">
+        <File Id="file_hfm_3" Source="..\..\..\HFM.NET\HFM.exe.config" />
+      </Component>
+      <Component Id="comp_hfm_30" DiskId="1" KeyPath="yes" Guid="D102779A-5A62-4F11-8EE9-F64DB3C9E2B8">
+        <File Id="file_hfm_30" Checksum="yes" Source="..\..\..\HFM.NET\HFM.Framework.dll" />
+      </Component>
+      <Component Id="comp_hfm_4" DiskId="1" KeyPath="yes" Guid="8684B08F-66BE-4AB2-BD0A-3F8F86F46061">
+        <File Id="file_hfm_4" Checksum="yes" Source="..\..\..\HFM.NET\HFM.Helpers.dll" />
+      </Component>
+      <Component Id="comp_hfm_5" DiskId="1" KeyPath="yes" Guid="94CD67FA-7089-494C-BA6B-A4E1DABDF79E">
+        <File Id="file_hfm_5" Checksum="yes" Source="..\..\..\HFM.NET\HFM.Instances.dll" />
+      </Component>
+      <Component Id="comp_hfm_6" DiskId="1" KeyPath="yes" Guid="F580439E-0551-46DA-8340-53204D46A217">
+        <File Id="file_hfm_6" Checksum="yes" Source="..\..\..\HFM.NET\HFM.Instrumentation.dll" />
+      </Component>
+      <Component Id="comp_hfm_31" DiskId="1" KeyPath="yes" Guid="B10DADB9-33EE-48D9-BCE8-7559697D792E">
+        <File Id="file_hfm_31" Checksum="yes" Source="..\..\..\HFM.NET\HFM.Log.dll" />
+      </Component>
+      <Component Id="comp_hfm_7" DiskId="1" KeyPath="yes" Guid="9D79DD1F-D840-4802-914D-9F050590DA0C">
+        <File Id="file_hfm_7" Checksum="yes" Source="..\..\..\HFM.NET\HFM.Preferences.dll" />
+      </Component>
+      <Component Id="comp_hfm_8" DiskId="1" KeyPath="yes" Guid="F974850A-6FE3-424E-ACED-A35B10769F30">
+        <File Id="file_hfm_8" Checksum="yes" Source="..\..\..\HFM.NET\HFM.Proteins.dll" />
+      </Component>
+      <Component Id="comp_hfm_32" DiskId="1" KeyPath="yes" Guid="4D3B9A2F-53E3-49E4-ACB3-F169FDB413A0">
+        <File Id="file_hfm_32" Checksum="yes" Source="..\..\..\HFM.NET\HFM.Queue.dll" />
+      </Component>
+      <Component Id="comp_hfm_9" DiskId="1" KeyPath="yes" Guid="A45149C1-D490-460C-963C-2D685B84F061">
+        <File Id="file_hfm_9" Source="..\..\..\HFM.NET\HTMLparser License.txt" />
+      </Component>
+      <Component Id="comp_hfm_10" DiskId="1" KeyPath="yes" Guid="F8B5D9F0-CC00-4A9C-AC99-A71781262D17">
+        <File Id="file_hfm_10" Checksum="yes" Source="..\..\..\HFM.NET\HTMLparser.dll" />
+      </Component>
+      <Component Id="comp_hfm_38" DiskId="1" KeyPath="yes" Guid="CE9C9F1B-CDDC-4706-9CDB-277D0684E4D8">
+        <File Id="file_hfm_38" Source="..\..\..\HFM.NET\protobuf-net Licence.txt" />
+      </Component>
+      <Component Id="comp_hfm_39" DiskId="1" KeyPath="yes" Guid="BD872ACD-A813-45ED-B0E0-92F837F5A242">
+        <File Id="file_hfm_39" Checksum="yes" Source="..\..\..\HFM.NET\protobuf-net.dll" />
+      </Component>
+      <Component Id="comp_hfm_40" DiskId="1" KeyPath="yes" Guid="5C2C9A6A-8993-4C34-B89F-1F08C332FBA8">
+        <File Id="file_hfm_40" Source="..\..\..\HFM.NET\protoc-license.txt" />
+      </Component>
+      <Component Id="comp_hfm_37" DiskId="1" KeyPath="yes" Guid="5B6F077C-D90D-4B23-810D-A1DC506AD09C">
+        <File Id="file_hfm_37" Source="..\..\..\HFM.NET\Windsor License.txt" />
+      </Component>
+      <Component Id="comp_hfm_11" DiskId="1" KeyPath="yes" Guid="DF20F8E5-DB1A-4B1A-A919-70333F07CECE">
+        <File Id="file_hfm_11" Checksum="yes" Source="..\..\..\HFM.NET\ZedGraph.dll" />
+      </Component>
+      <Directory Id="dir_HFM_NET_CSS_1" Name="CSS">
+        <Component Id="comp_hfm_12" DiskId="1" KeyPath="yes" Guid="53F86355-C556-4162-A086-F7DDC7441E46">
+          <File Id="file_hfm_12" Source="..\..\..\HFM.NET\CSS\Blue.css" />
         </Component>
-        <Component Id="comp_hfm_34" DiskId="1" KeyPath="yes" Guid="64EFF45E-100F-4E40-8225-34C145A25613">
-          <File Id="file_hfm_34" Checksum="yes" Source="..\..\..\HFM.NET\Castle.DynamicProxy2.dll" />
+        <Component Id="comp_hfm_13" DiskId="1" KeyPath="yes" Guid="87B3F08C-0BB7-490B-BB72-89A5CE642BAC">
+          <File Id="file_hfm_13" Source="..\..\..\HFM.NET\CSS\BlueTwo.css" />
         </Component>
-        <Component Id="comp_hfm_35" DiskId="1" KeyPath="yes" Guid="A6651BF9-F05E-45AC-A4FD-7990BF3AB872">
-          <File Id="file_hfm_35" Checksum="yes" Source="..\..\..\HFM.NET\Castle.MicroKernel.dll" />
+        <Component Id="comp_hfm_14" DiskId="1" KeyPath="yes" Guid="A4A99345-0BBB-4AD8-A9D4-B2FF94EE4468">
+          <File Id="file_hfm_14" Source="..\..\..\HFM.NET\CSS\Green.css" />
         </Component>
-        <Component Id="comp_hfm_36" DiskId="1" KeyPath="yes" Guid="68C9D025-1AFE-4388-81FC-9E866CC86E70">
-          <File Id="file_hfm_36" Checksum="yes" Source="..\..\..\HFM.NET\Castle.Windsor.dll" />
+        <Component Id="comp_hfm_15" DiskId="1" KeyPath="yes" Guid="3C91E6DE-E24E-4E79-883C-8C3F8B5D9208">
+          <File Id="file_hfm_15" Source="..\..\..\HFM.NET\CSS\Grey.css" />
         </Component>
-        <Component Id="comp_hfm_0" DiskId="1" KeyPath="yes" Guid="AE3B54ED-7136-4240-8B60-DCB800B4625B">
-          <File Id="file_hfm_0" Source="..\..\..\HFM.NET\GPLv2.TXT" />
+        <Component Id="comp_hfm_16" DiskId="1" KeyPath="yes" Guid="9F6A958D-346B-460C-AC93-18A00BF963F7">
+          <File Id="file_hfm_16" Source="..\..\..\HFM.NET\CSS\Orange.css" />
         </Component>
-        <Component Id="comp_hfm_1" DiskId="1" KeyPath="yes" Guid="6C0038F1-3862-45C4-BB36-91F295D76D3D">
-          <File Id="file_hfm_1" Checksum="yes" Source="..\..\..\HFM.NET\harlam357.Security.dll" />
+        <Component Id="comp_hfm_17" DiskId="1" KeyPath="yes" Guid="3B422B67-6D59-4F4E-BDCA-89B284C7FB99">
+          <File Id="file_hfm_17" Source="..\..\..\HFM.NET\CSS\Purple.css" />
         </Component>
-        <Component Id="comp_hfm_29" DiskId="1" KeyPath="yes" Guid="950C987F-9AF7-489C-8F37-6F7E75765D19">
-          <File Id="file_hfm_29" Checksum="yes" Source="..\..\..\HFM.NET\harlam357.Windows.Forms.dll" />
+        <Component Id="comp_hfm_18" DiskId="1" KeyPath="yes" Guid="150498BA-7E5E-450C-A283-176619292751">
+          <File Id="file_hfm_18" Source="..\..\..\HFM.NET\CSS\Red.css" />
         </Component>
-        <Component Id="comp_hfm_2" DiskId="1" Guid="E12A0E04-940C-4714-A260-F3751DEB8845">
-          <File Id="file_hfm_2" Checksum="yes" KeyPath="yes" Source="..\..\..\HFM.NET\HFM.exe" />
-          <Shortcut Id="startmenu_hfm_2" Directory="ProgramMenuDir" Name="HFM.NET" WorkingDirectory="INSTALLDIR" Icon="HFM.exe" IconIndex="0" Advertise="yes" />
-          <Shortcut Id="desktop_hfm_2" Directory="DesktopFolder" Name="HFM.NET" WorkingDirectory="INSTALLDIR" Icon="HFM.exe" IconIndex="0" Advertise="yes" />
+        <Component Id="comp_hfm_19" DiskId="1" KeyPath="yes" Guid="650B4D9B-F2F6-4E31-B149-23C22F82C00F">
+          <File Id="file_hfm_19" Source="..\..\..\HFM.NET\CSS\Yellow.css" />
         </Component>
-        <Component Id="comp_hfm_3" DiskId="1" KeyPath="yes" Guid="3B7F09B3-AAAA-4CAA-954C-0E991D9BF69F">
-          <File Id="file_hfm_3" Source="..\..\..\HFM.NET\HFM.exe.config" />
+      </Directory>
+      <Directory Id="dir_HFM_NET_XML_2" Name="XML">
+        <Component Id="comp_hfm_20" DiskId="1" KeyPath="yes" Guid="9655D152-1079-47D8-A8E5-91B950CF373E">
+          <File Id="file_hfm_20" Source="..\..\..\HFM.NET\XML\Instance.xml" />
         </Component>
-        <Component Id="comp_hfm_30" DiskId="1" KeyPath="yes" Guid="D102779A-5A62-4F11-8EE9-F64DB3C9E2B8">
-          <File Id="file_hfm_30" Checksum="yes" Source="..\..\..\HFM.NET\HFM.Framework.dll" />
+        <Component Id="comp_hfm_21" DiskId="1" KeyPath="yes" Guid="164B5074-B0CA-4500-8335-8875E62D1B1C">
+          <File Id="file_hfm_21" Source="..\..\..\HFM.NET\XML\Overview.xml" />
         </Component>
-        <Component Id="comp_hfm_4" DiskId="1" KeyPath="yes" Guid="8684B08F-66BE-4AB2-BD0A-3F8F86F46061">
-          <File Id="file_hfm_4" Checksum="yes" Source="..\..\..\HFM.NET\HFM.Helpers.dll" />
+        <Component Id="comp_hfm_22" DiskId="1" KeyPath="yes" Guid="FAB967D8-2A6E-402D-8B81-3D9F1D24B81E">
+          <File Id="file_hfm_22" Source="..\..\..\HFM.NET\XML\Summary.xml" />
         </Component>
-        <Component Id="comp_hfm_5" DiskId="1" KeyPath="yes" Guid="94CD67FA-7089-494C-BA6B-A4E1DABDF79E">
-          <File Id="file_hfm_5" Checksum="yes" Source="..\..\..\HFM.NET\HFM.Instances.dll" />
+        <Component Id="comp_hfm_23" DiskId="1" KeyPath="yes" Guid="9CC0608C-641E-478B-BA2A-837E22660AF6">
+          <File Id="file_hfm_23" Source="..\..\..\HFM.NET\XML\SummaryFrag.xml" />
         </Component>
-        <Component Id="comp_hfm_6" DiskId="1" KeyPath="yes" Guid="F580439E-0551-46DA-8340-53204D46A217">
-          <File Id="file_hfm_6" Checksum="yes" Source="..\..\..\HFM.NET\HFM.Instrumentation.dll" />
+      </Directory>
+      <Directory Id="dir_HFM_NET_XSL_3" Name="XSL">
+        <Component Id="comp_hfm_24" DiskId="1" KeyPath="yes" Guid="C7278C68-8514-44F5-B9BD-CE201BCC417E">
+          <File Id="file_hfm_24" Source="..\..\..\HFM.NET\XSL\WebInstance.xslt" />
         </Component>
-        <Component Id="comp_hfm_31" DiskId="1" KeyPath="yes" Guid="B10DADB9-33EE-48D9-BCE8-7559697D792E">
-          <File Id="file_hfm_31" Checksum="yes" Source="..\..\..\HFM.NET\HFM.Log.dll" />
+        <Component Id="comp_hfm_25" DiskId="1" KeyPath="yes" Guid="D466FD88-57F9-4965-976F-9E43B532ACAB">
+          <File Id="file_hfm_25" Source="..\..\..\HFM.NET\XSL\WebMobileOverview.xslt" />
         </Component>
-        <Component Id="comp_hfm_7" DiskId="1" KeyPath="yes" Guid="9D79DD1F-D840-4802-914D-9F050590DA0C">
-          <File Id="file_hfm_7" Checksum="yes" Source="..\..\..\HFM.NET\HFM.Preferences.dll" />
+        <Component Id="comp_hfm_26" DiskId="1" KeyPath="yes" Guid="1FCFDB9B-1144-4EF2-BCAC-6CE03E030CAE">
+          <File Id="file_hfm_26" Source="..\..\..\HFM.NET\XSL\WebMobileSummary.xslt" />
         </Component>
-        <Component Id="comp_hfm_8" DiskId="1" KeyPath="yes" Guid="F974850A-6FE3-424E-ACED-A35B10769F30">
-          <File Id="file_hfm_8" Checksum="yes" Source="..\..\..\HFM.NET\HFM.Proteins.dll" />
+        <Component Id="comp_hfm_27" DiskId="1" KeyPath="yes" Guid="2C23FEB5-3DC3-4B3B-9065-2A8488815664">
+          <File Id="file_hfm_27" Source="..\..\..\HFM.NET\XSL\WebOverview.xslt" />
         </Component>
-        <Component Id="comp_hfm_32" DiskId="1" KeyPath="yes" Guid="4D3B9A2F-53E3-49E4-ACB3-F169FDB413A0">
-          <File Id="file_hfm_32" Checksum="yes" Source="..\..\..\HFM.NET\HFM.Queue.dll" />
+        <Component Id="comp_hfm_28" DiskId="1" KeyPath="yes" Guid="87628980-4AC4-48F7-AEAA-475F56520AC2">
+          <File Id="file_hfm_28" Source="..\..\..\HFM.NET\XSL\WebSummary.xslt" />
         </Component>
-        <Component Id="comp_hfm_9" DiskId="1" KeyPath="yes" Guid="A45149C1-D490-460C-963C-2D685B84F061">
-          <File Id="file_hfm_9" Source="..\..\..\HFM.NET\HTMLparser License.txt" />
-        </Component>
-        <Component Id="comp_hfm_10" DiskId="1" KeyPath="yes" Guid="F8B5D9F0-CC00-4A9C-AC99-A71781262D17">
-          <File Id="file_hfm_10" Checksum="yes" Source="..\..\..\HFM.NET\HTMLparser.dll" />
-        </Component>
-        <Component Id="comp_hfm_38" DiskId="1" KeyPath="yes" Guid="CE9C9F1B-CDDC-4706-9CDB-277D0684E4D8">
-          <File Id="file_hfm_38" Source="..\..\..\HFM.NET\protobuf-net Licence.txt" />
-        </Component>
-        <Component Id="comp_hfm_39" DiskId="1" KeyPath="yes" Guid="BD872ACD-A813-45ED-B0E0-92F837F5A242">
-          <File Id="file_hfm_39" Checksum="yes" Source="..\..\..\HFM.NET\protobuf-net.dll" />
-        </Component>
-        <Component Id="comp_hfm_40" DiskId="1" KeyPath="yes" Guid="5C2C9A6A-8993-4C34-B89F-1F08C332FBA8">
-          <File Id="file_hfm_40" Source="..\..\..\HFM.NET\protoc-license.txt" />
-        </Component>
-        <Component Id="comp_hfm_37" DiskId="1" KeyPath="yes" Guid="5B6F077C-D90D-4B23-810D-A1DC506AD09C">
-          <File Id="file_hfm_37" Source="..\..\..\HFM.NET\Windsor License.txt" />
-        </Component>
-        <Component Id="comp_hfm_11" DiskId="1" KeyPath="yes" Guid="DF20F8E5-DB1A-4B1A-A919-70333F07CECE">
-          <File Id="file_hfm_11" Checksum="yes" Source="..\..\..\HFM.NET\ZedGraph.dll" />
-        </Component>
-        <Directory Id="dir_HFM_NET_CSS_1" Name="CSS">
-          <Component Id="comp_hfm_12" DiskId="1" KeyPath="yes" Guid="53F86355-C556-4162-A086-F7DDC7441E46">
-            <File Id="file_hfm_12" Source="..\..\..\HFM.NET\CSS\Blue.css" />
-          </Component>
-          <Component Id="comp_hfm_13" DiskId="1" KeyPath="yes" Guid="87B3F08C-0BB7-490B-BB72-89A5CE642BAC">
-            <File Id="file_hfm_13" Source="..\..\..\HFM.NET\CSS\BlueTwo.css" />
-          </Component>
-          <Component Id="comp_hfm_14" DiskId="1" KeyPath="yes" Guid="A4A99345-0BBB-4AD8-A9D4-B2FF94EE4468">
-            <File Id="file_hfm_14" Source="..\..\..\HFM.NET\CSS\Green.css" />
-          </Component>
-          <Component Id="comp_hfm_15" DiskId="1" KeyPath="yes" Guid="3C91E6DE-E24E-4E79-883C-8C3F8B5D9208">
-            <File Id="file_hfm_15" Source="..\..\..\HFM.NET\CSS\Grey.css" />
-          </Component>
-          <Component Id="comp_hfm_16" DiskId="1" KeyPath="yes" Guid="9F6A958D-346B-460C-AC93-18A00BF963F7">
-            <File Id="file_hfm_16" Source="..\..\..\HFM.NET\CSS\Orange.css" />
-          </Component>
-          <Component Id="comp_hfm_17" DiskId="1" KeyPath="yes" Guid="3B422B67-6D59-4F4E-BDCA-89B284C7FB99">
-            <File Id="file_hfm_17" Source="..\..\..\HFM.NET\CSS\Purple.css" />
-          </Component>
-          <Component Id="comp_hfm_18" DiskId="1" KeyPath="yes" Guid="150498BA-7E5E-450C-A283-176619292751">
-            <File Id="file_hfm_18" Source="..\..\..\HFM.NET\CSS\Red.css" />
-          </Component>
-          <Component Id="comp_hfm_19" DiskId="1" KeyPath="yes" Guid="650B4D9B-F2F6-4E31-B149-23C22F82C00F">
-            <File Id="file_hfm_19" Source="..\..\..\HFM.NET\CSS\Yellow.css" />
-          </Component>
-        </Directory>
-        <Directory Id="dir_HFM_NET_XML_2" Name="XML">
-          <Component Id="comp_hfm_20" DiskId="1" KeyPath="yes" Guid="9655D152-1079-47D8-A8E5-91B950CF373E">
-            <File Id="file_hfm_20" Source="..\..\..\HFM.NET\XML\Instance.xml" />
-          </Component>
-          <Component Id="comp_hfm_21" DiskId="1" KeyPath="yes" Guid="164B5074-B0CA-4500-8335-8875E62D1B1C">
-            <File Id="file_hfm_21" Source="..\..\..\HFM.NET\XML\Overview.xml" />
-          </Component>
-          <Component Id="comp_hfm_22" DiskId="1" KeyPath="yes" Guid="FAB967D8-2A6E-402D-8B81-3D9F1D24B81E">
-            <File Id="file_hfm_22" Source="..\..\..\HFM.NET\XML\Summary.xml" />
-          </Component>
-          <Component Id="comp_hfm_23" DiskId="1" KeyPath="yes" Guid="9CC0608C-641E-478B-BA2A-837E22660AF6">
-            <File Id="file_hfm_23" Source="..\..\..\HFM.NET\XML\SummaryFrag.xml" />
-          </Component>
-        </Directory>
-        <Directory Id="dir_HFM_NET_XSL_3" Name="XSL">
-          <Component Id="comp_hfm_24" DiskId="1" KeyPath="yes" Guid="C7278C68-8514-44F5-B9BD-CE201BCC417E">
-            <File Id="file_hfm_24" Source="..\..\..\HFM.NET\XSL\WebInstance.xslt" />
-          </Component>
-          <Component Id="comp_hfm_25" DiskId="1" KeyPath="yes" Guid="D466FD88-57F9-4965-976F-9E43B532ACAB">
-            <File Id="file_hfm_25" Source="..\..\..\HFM.NET\XSL\WebMobileOverview.xslt" />
-          </Component>
-          <Component Id="comp_hfm_26" DiskId="1" KeyPath="yes" Guid="1FCFDB9B-1144-4EF2-BCAC-6CE03E030CAE">
-            <File Id="file_hfm_26" Source="..\..\..\HFM.NET\XSL\WebMobileSummary.xslt" />
-          </Component>
-          <Component Id="comp_hfm_27" DiskId="1" KeyPath="yes" Guid="2C23FEB5-3DC3-4B3B-9065-2A8488815664">
-            <File Id="file_hfm_27" Source="..\..\..\HFM.NET\XSL\WebOverview.xslt" />
-          </Component>
-          <Component Id="comp_hfm_28" DiskId="1" KeyPath="yes" Guid="87628980-4AC4-48F7-AEAA-475F56520AC2">
-            <File Id="file_hfm_28" Source="..\..\..\HFM.NET\XSL\WebSummary.xslt" />
-          </Component>
-        </Directory>
       </Directory>
     </DirectoryRef>
   </Fragment>

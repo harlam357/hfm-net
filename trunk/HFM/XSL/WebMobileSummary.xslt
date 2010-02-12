@@ -13,7 +13,7 @@
             <table class="Overview" width="85">
                <tr>
                   <td class="Heading" colspan="2">Mobile Summary</td>
-                  <td class="Plain" colspan="4" align="right">
+                  <td class="Plain" colspan="4">
                      <a href="mobile.html">Overview Page</a>
                   </td>
                </tr>
@@ -24,6 +24,13 @@
                   <td class="Heading" width="30">PPD</td>
                </tr>
                <xsl:apply-templates select="Instance" />
+               <tr>
+                  <td class="Plain" colspan="4" align="center">
+                     <a href="summary.html">
+                        Standard<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Version
+                     </a>
+                  </td>
+               </tr>
                <tr>
                   <td class="Plain" colspan="4" align="center">
                   </td>

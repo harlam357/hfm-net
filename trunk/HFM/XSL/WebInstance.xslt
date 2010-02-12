@@ -15,7 +15,7 @@
                   <td class="Heading">
                      <xsl:value-of select="@Name"/>
                   </td>
-                  <td class="Plain" colspan="2" align="right">
+                  <td class="Plain">
                      <a href="index.html">Overview Page</a>
                      <br />
                      <a href="summary.html">Summary Page</a>
@@ -23,18 +23,14 @@
                </tr>
                <xsl:apply-templates select="UnitInfo" />
                <tr>
-                  <td class="Empty">
-                     <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-                  </td>
-                  <td class="Empty">
-                     <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                  <td class="Plain" colspan="2" align="center">
                   </td>
                </tr>
                <tr>
                   <td class="Heading">
                      Log<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>File
                   </td>
-                  <td class="Plain" align="right">
+                  <td class="Plain">
                      <xsl:choose>
                         <xsl:when test="UnitLog/FullLogFile=''">
                            <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
@@ -50,11 +46,7 @@
                </tr>
                <xsl:apply-templates select="UnitLog" />
                <tr>
-                  <td class="Empty">
-                     <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-                  </td>
-                  <td class="Empty">
-                     <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                  <td class="Plain" colspan="2" align="center">
                   </td>
                </tr>
                <tr>
@@ -65,8 +57,6 @@
                </tr>
                <xsl:apply-templates select="Protein" />
                <tr>
-                  <td class="Plain" colspan="2" align="center">
-                  </td>
                   <td class="Plain" colspan="2" align="center">
                   </td>
                </tr>
@@ -153,39 +143,31 @@
    </xsl:template>
    <xsl:template match="Protein">
       <tr>
-         <td class="AltLeftCol">
-            Project<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>ID
-         </td>
+         <td class="AltLeftCol">Project<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>ID</td>
          <td class="AltRightCol">
             <xsl:value-of select="ProjectNumber"/>
          </td>
       </tr>
       <tr>
-         <td class="LeftCol">Work Unit</td>
+         <td class="LeftCol">Work<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Unit</td>
          <td class="RightCol">
             <xsl:value-of select="WorkUnit"/>
          </td>
       </tr>
       <tr>
-         <td class="AltLeftCol">
-            Credit
-         </td>
+         <td class="AltLeftCol">Credit</td>
          <td class="AltRightCol">
             <xsl:value-of select="Credit"/>
          </td>
       </tr>
       <tr>
-         <td class="LeftCol">
-            KFactor
-         </td>
+         <td class="LeftCol">KFactor</td>
          <td class="RightCol">
             <xsl:value-of select="KFactor"/>
          </td>
       </tr>
       <tr>
-         <td class="AltLeftCol">
-            Number<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>of<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Frames
-         </td>
+         <td class="AltLeftCol">Number<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>of<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Frames</td>
          <td class="AltRightCol">
             <xsl:value-of select="Frames"/>
          </td>
@@ -197,41 +179,31 @@
          </td>
       </tr>
       <tr>
-         <td class="AltLeftCol">
-            Number<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>of<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Atoms
-         </td>
+         <td class="AltLeftCol">Number<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>of<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Atoms</td>
          <td class="AltRightCol">
             <xsl:value-of select="NumAtoms"/>
          </td>
       </tr>
       <tr>
-         <td class="LeftCol">
-            Preferred<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Deadline
-         </td>
+         <td class="LeftCol">Preferred<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Deadline</td>
          <td class="RightCol">
             <xsl:value-of select="PreferredDays"/> Days
          </td>
       </tr>
       <tr>
-         <td class="AltLeftCol">
-            Final<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Deadline
-         </td>
+         <td class="AltLeftCol">Final<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Deadline</td>
          <td class="AltRightCol">
             <xsl:value-of select="MaxDays"/> Days
          </td>
       </tr>
       <tr>
-         <td class="LeftCol">
-            Contact<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Person
-         </td>
+         <td class="LeftCol">Contact<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Person</td>
          <td class="RightCol">
             <xsl:value-of select="Contact"/>
          </td>
       </tr>
       <tr>
-         <td class="AltLeftCol">
-            Server<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>IP
-         </td>
+         <td class="AltLeftCol">Server<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>IP</td>
          <td class="AltRightCol">
             <xsl:value-of select="ServerIP"/>
          </td>

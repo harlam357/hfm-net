@@ -17,17 +17,17 @@
    </UnitInfo>
    <Protein>
       <ProjectNumber>1814</ProjectNumber>
-      <ServerIP>171.65.103.158 </ServerIP>
       <WorkUnit>p1814_Collagen_POG10more_refolding</WorkUnit>
-      <NumAtoms>1116</NumAtoms>
-      <PreferredDays>30</PreferredDays>
-      <MaxDays>44</MaxDays>
       <Credit>153</Credit>
       <KFactor>0</KFactor>
       <Frames>100</Frames>
       <Core>Amber</Core>
-      <Description>Project Description</Description>
+      <NumAtoms>1116</NumAtoms>
+      <PreferredDays>30</PreferredDays>
+      <MaxDays>44</MaxDays>
       <Contact>spark7</Contact>
+      <ServerIP>171.65.103.158</ServerIP>
+      <Description>Project Description</Description>
    </Protein>
    <UnitLog>
       <Text>Some log text</Text>

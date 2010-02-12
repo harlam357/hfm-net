@@ -1,7 +1,7 @@
 /*
  * HFM.NET - XML Generation Helper Class
  * Copyright (C) 2006 David Rawling
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -58,12 +58,12 @@ namespace HFM.Instances
 
             // Generate the index page
             sw = new StreamWriter(Path.Combine(FolderPath, "index.html"), false);
-            sw.Write(XMLOps.Transform(OverviewXml, "WebOverview.xslt"));
+            sw.Write(XMLOps.Transform(OverviewXml, GetXsltFileName(Preference.WebOverview)));
             sw.Close();
 
             // Generate the mobile index page
             sw = new StreamWriter(Path.Combine(FolderPath, "mobile.html"), false);
-            sw.Write(XMLOps.Transform(OverviewXml, "WebMobileOverview.xslt"));
+            sw.Write(XMLOps.Transform(OverviewXml, GetXsltFileName(Preference.WebMobileOverview)));
             sw.Close();
 
             List<string> duplicateUserID = new List<string>(Instances.Length);
@@ -71,23 +71,24 @@ namespace HFM.Instances
             InstanceCollectionHelpers.FindDuplicates(duplicateUserID, duplicateProjects, Instances);
 
             // Generate the summart page XML
-            XmlDocument SummaryXml = CreateSummaryXml(Instances, duplicateUserID, duplicateProjects);
+            XmlDocument SummaryXml = CreateSummaryXml(OverviewXml, Instances, duplicateUserID, duplicateProjects);
 
             // Generate the summary page
             sw = new StreamWriter(Path.Combine(FolderPath, "summary.html"), false);
-            sw.Write(XMLOps.Transform(SummaryXml, "WebSummary.xslt"));
+            sw.Write(XMLOps.Transform(SummaryXml, GetXsltFileName(Preference.WebSummary)));
             sw.Close();
 
             // Generate the mobile summary page
             sw = new StreamWriter(Path.Combine(FolderPath, "mobilesummary.html"), false);
-            sw.Write(XMLOps.Transform(SummaryXml, "WebMobileSummary.xslt"));
+            sw.Write(XMLOps.Transform(SummaryXml, GetXsltFileName(Preference.WebMobileSummary)));
             sw.Close();
 
+            string InstanceXslt = GetXsltFileName(Preference.WebInstance);
             // Generate a page per instance
             foreach (ClientInstance instance in Instances)
             {
                sw = new StreamWriter(Path.Combine(FolderPath, Path.ChangeExtension(instance.InstanceName, ".html")), false);
-               sw.Write(XMLOps.Transform(CreateInstanceXml(instance), "WebInstance.xslt"));
+               sw.Write(XMLOps.Transform(CreateInstanceXml(instance), InstanceXslt));
                sw.Close();
             }
          }
@@ -98,6 +99,31 @@ namespace HFM.Instances
                sw.Close();
             }
          }
+      }
+      
+      private static string GetXsltFileName(Preference p)
+      {
+         IPreferenceSet Prefs = InstanceProvider.GetInstance<IPreferenceSet>();
+         string xslt = Prefs.GetPreference<string>(p);
+
+         if (Path.IsPathRooted(xslt))
+         {
+            if (File.Exists(xslt))
+            {
+               return xslt;
+            }
+         }
+         else
+         {
+            string XsltFileName = Path.Combine(Path.Combine(Prefs.ApplicationPath, "XSL"), xslt);
+            if (File.Exists(XsltFileName))
+            {
+               return XsltFileName;
+            }
+         }
+         
+         throw new FileNotFoundException(String.Format(CultureInfo.CurrentCulture,
+            "XSLT File '{0}' cannot be found.", xslt));
       }
 
       /// <summary>
@@ -147,7 +173,7 @@ namespace HFM.Instances
       }
    
       /// <summary>
-      /// Generates and transforms data for an Instance
+      /// Generates XML Data for a Client Instance page.
       /// </summary>
       /// <param name="Instance">Instance to use as data source</param>
       /// <returns>Generated Xml Document</returns>
@@ -279,23 +305,16 @@ namespace HFM.Instances
       }
 
       /// <summary>
-      /// Generates the Summary page. xslTransform allows the calling method to select the appropriate transform.
-      /// This allows the same summary method to generate the website page and the app page.
+      /// Generates XML Data for the Summary page.
       /// </summary>
+      /// <param name="xmlDoc">XML Document to Append Summary Information</param>
       /// <param name="Instances">Array of folding instances</param>
       /// <param name="duplicateUserID">List of Duplicate UserID strings</param>
       /// <param name="duplicateProjects">List of Duplicate ProjectRCG strings</param>
       /// <returns>Generated Xml Document</returns>
-      private static XmlDocument CreateSummaryXml(ClientInstance[] Instances, ICollection<string> duplicateUserID, ICollection<string> duplicateProjects)
+      private static XmlDocument CreateSummaryXml(XmlDocument xmlDoc, ClientInstance[] Instances, ICollection<string> duplicateUserID, ICollection<string> duplicateProjects)
       {
          IPreferenceSet Prefs = InstanceProvider.GetInstance<IPreferenceSet>();
-      
-         XmlDocument xmlDoc = new XmlDocument();
-         xmlDoc.Load(Path.Combine(Path.Combine(Prefs.ApplicationPath, "XML"), "Summary.xml"));
-         XmlElement xmlRootData = xmlDoc.DocumentElement;
-         
-         XMLOps.setXmlNode(xmlRootData, "HFMVersion", PlatformOps.ShortFormattedApplicationVersionWithRevision);
-
          Array.Sort(Instances, delegate(ClientInstance instance1, ClientInstance instance2)
                                {
                                   // Make the HTML Summary respect the 'List Office Clients Last' option - Issue 78
@@ -319,6 +338,7 @@ namespace HFM.Instances
                                   return instance1.InstanceName.CompareTo(instance2.InstanceName);
                                });
 
+         XmlElement xmlRootData = xmlDoc.DocumentElement;
          foreach (ClientInstance Instance in Instances)
          {
             XmlDocument xmlFrag = new XmlDocument();
@@ -368,15 +388,6 @@ namespace HFM.Instances
             xmlRootData.AppendChild(xImpNode);
          }
 
-         XmlNode xLastUpdDate = xmlDoc.CreateNode(XmlNodeType.Element, "LastUpdatedDate", null);
-         xLastUpdDate.InnerText = DateTime.Now.ToLongDateString();
-
-         XmlNode xLastUpdTime = xmlDoc.CreateNode(XmlNodeType.Element, "LastUpdatedTime", null);
-         xLastUpdTime.InnerText = DateTime.Now.ToLongTimeString();
-
-         xmlRootData.AppendChild(xLastUpdDate);
-         xmlRootData.AppendChild(xLastUpdTime);
-
          return xmlDoc;
       }
 
@@ -395,32 +406,15 @@ namespace HFM.Instances
          XmlElement xmlData = xmlDoc.DocumentElement;
 
          XMLOps.setXmlNode(xmlData, "HFMVersion", PlatformOps.ShortFormattedApplicationVersionWithRevision);
-
-         //<Overview>
-         //    <TotalHosts>0</TotalHosts>
-         //    <GoodHosts>0</GoodHosts>
-         //    <BadHosts>0</BadHosts>
-         //</Overview>
-
          XMLOps.setXmlNode(xmlData, "TotalHosts", Totals.TotalClients.ToString());
          XMLOps.setXmlNode(xmlData, "GoodHosts", Totals.WorkingClients.ToString());
          XMLOps.setXmlNode(xmlData, "BadHosts", Totals.NonWorkingClients.ToString());
-
-         //    <EstPPD>0.00</EstPPD>
-         //    <EstPPW>0.00</EstPPW>
-         //    <EstUPD>0.00</EstUPD>
-         //    <EstUPW>0.00</EstUPW>
 
          string PpdFormatString = Prefs.PpdFormatString;
          XMLOps.setXmlNode(xmlData, "EstPPD", String.Format("{0:" + PpdFormatString + "}", Totals.PPD));
          XMLOps.setXmlNode(xmlData, "EstPPW", String.Format("{0:" + PpdFormatString + "}", Totals.PPD * 7));
          XMLOps.setXmlNode(xmlData, "EstUPD", String.Format("{0:" + PpdFormatString + "}", Totals.UPD));
          XMLOps.setXmlNode(xmlData, "EstUPW", String.Format("{0:" + PpdFormatString + "}", Totals.UPD * 7));
-
-         //    <AvEstPPD>0.00</AvEstPPD>
-         //    <AvEstPPW>0.00</AvEstPPW>
-         //    <AvEstUPD>0.00</AvEstUPD>
-         //    <AvEstUPW>0.00</AvEstUPW>
 
          if (Totals.WorkingClients > 0)
          {
@@ -437,11 +431,6 @@ namespace HFM.Instances
             XMLOps.setXmlNode(xmlData, "AvEstUPW", "N/A");
          }
 
-         //    <TotalCompleted>0</TotalCompleted>
-         //    <TotalFailed>0</TotalFailed>
-         //    <LastUpdatedDate>Now</LastUpdatedDate>
-         //    <LastUpdatedTime>Now</LastUpdatedTime>
-
          XMLOps.setXmlNode(xmlData, "TotalCompleted", Totals.TotalCompletedUnits.ToString());
          XMLOps.setXmlNode(xmlData, "TotalFailed", Totals.TotalFailedUnits.ToString());
          XMLOps.setXmlNode(xmlData, "LastUpdatedDate", DateTime.Now.ToLongDateString());
@@ -449,67 +438,5 @@ namespace HFM.Instances
 
          return xmlDoc;
       }
-      
-      //public static void CreateHfmWebDataSet(ClientInstance[] Instances, List<string> duplicateUserID, List<string> duplicateProjects)
-      //{
-      //   HfmWebDataSet data = new HfmWebDataSet();
-      //   HfmWebDataSet.tblGlobalsRow globals = data.tblGlobals.NewtblGlobalsRow();
-      //   globals.HFMVersion = PlatformOps.ApplicationVersionWithRevision;
-      //   globals.LastUpdateDateTime = DateTime.Now;
-      //   data.tblGlobals.Rows.Add(globals);
-
-      //   // Generate a page per instance
-      //   foreach (ClientInstance instance in Instances)
-      //   {
-      //      HfmWebDataSet.tblClientSummaryRow row = data.tblClientSummary.NewtblClientSummaryRow();
-      //      row.Status = instance.Status.ToString();
-      //      row.PercentComplete = instance.PercentComplete;
-      //      row.Name = instance.InstanceName;
-      //      row.UserIDDuplicate = duplicateUserID.Contains(instance.UserAndMachineID);
-      //      row.ClientType = instance.CurrentUnitInfo.TypeOfClient.ToString();
-      //      row.TPF = instance.TimePerFrame;
-      //      row.PPD = instance.PPD;
-      //      row.UPD = instance.UPD;
-      //      row.MHz = instance.ClientProcessorMegahertz;
-      //      row.ETA = instance.ETA;
-      //      row.Core = instance.CurrentUnitInfo.CurrentProtein.Core;
-      //      row.CoreVersion = instance.CurrentUnitInfo.CoreVersion;
-      //      row.ProjectNumber = instance.CurrentUnitInfo.ProjectID;
-      //      row.ProjectRun = instance.CurrentUnitInfo.ProjectRun;
-      //      row.ProjectClone = instance.CurrentUnitInfo.ProjectClone;
-      //      row.ProjectGen = instance.CurrentUnitInfo.ProjectGen;
-      //      row.ProjectDuplicate = duplicateProjects.Contains(instance.CurrentUnitInfo.ProjectRunCloneGen);
-      //      row.Credit = instance.CurrentUnitInfo.CurrentProtein.Credit;
-      //      row.Completed = instance.NumberOfCompletedUnitsSinceLastStart;
-      //      row.Failed = instance.NumberOfFailedUnitsSinceLastStart;
-      //      row.Username = instance.FoldingID;
-      //      row.Team = instance.Team;
-      //      row.UsernameMatch = instance.IsUsernameOk();
-      //      row.DownloadDateTime = instance.CurrentUnitInfo.DownloadTime;
-      //      row.DeadlineDateTime = instance.CurrentUnitInfo.DueTime;
-      //      row.ServerIP = instance.CurrentUnitInfo.CurrentProtein.ServerIP;
-      //      row.WorkUnitName = instance.CurrentUnitInfo.CurrentProtein.WorkUnitName;
-      //      row.NumberOfAtoms = instance.CurrentUnitInfo.CurrentProtein.NumAtoms;
-      //      row.PreferredDays = instance.CurrentUnitInfo.CurrentProtein.PreferredDays;
-      //      row.MaximumDays = instance.CurrentUnitInfo.CurrentProtein.MaxDays;
-      //      row.Frames = instance.CurrentUnitInfo.CurrentProtein.Frames;
-      //      row.ProjectDescriptionUrl = instance.CurrentUnitInfo.CurrentProtein.Description;
-      //      row.Contact = instance.CurrentUnitInfo.CurrentProtein.Contact;
-
-      //      StringBuilder sb = new StringBuilder();
-      //      foreach (LogLine line in instance.CurrentLogLines)
-      //      {
-      //         sb.Append(line.LineRaw);
-      //         sb.Append(Environment.NewLine);
-      //      }
-
-      //      row.CurrentUnitLogText = sb.ToString();
-      //      row.FullLogFileName = instance.CachedFAHLogName;
-
-      //      data.tblClientSummary.Rows.Add(row);
-      //   }
-
-      //   data.WriteXml("TestData.xml");
-      //}
    }
 }

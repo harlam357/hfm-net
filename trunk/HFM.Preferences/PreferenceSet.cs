@@ -203,6 +203,11 @@ namespace HFM.Preferences
          _Preferences.Add(Preference.WebGenCopyFAHlog, new Metadata<bool>());
          _Preferences.Add(Preference.WebGenFtpMode, new Metadata<FtpType>());
          _Preferences.Add(Preference.CssFile, new Metadata<string>());
+         _Preferences.Add(Preference.WebOverview, new Metadata<string>());
+         _Preferences.Add(Preference.WebMobileOverview, new Metadata<string>());
+         _Preferences.Add(Preference.WebSummary, new Metadata<string>());
+         _Preferences.Add(Preference.WebMobileSummary, new Metadata<string>());
+         _Preferences.Add(Preference.WebInstance, new Metadata<string>());
 
          _Preferences.Add(Preference.RunMinimized, new Metadata<bool>());
          _Preferences.Add(Preference.UseDefaultConfigFile, new Metadata<bool>());
@@ -296,6 +301,11 @@ namespace HFM.Preferences
          SetPreference(Preference.WebGenCopyFAHlog, Settings.Default.WebGenCopyFAHlog);
          SetPreference(Preference.WebGenFtpMode, GetFtpType());
          SetPreference(Preference.CssFile, Settings.Default.CSSFile);
+         SetPreference(Preference.WebOverview, Settings.Default.WebOverview);
+         SetPreference(Preference.WebMobileOverview, Settings.Default.WebMobileOverview);
+         SetPreference(Preference.WebSummary, Settings.Default.WebSummary);
+         SetPreference(Preference.WebMobileSummary, Settings.Default.WebMobileSummary);
+         SetPreference(Preference.WebInstance, Settings.Default.WebInstance);
 
          SetPreference(Preference.RunMinimized, Settings.Default.RunMinimized);
          SetPreference(Preference.UseDefaultConfigFile, Settings.Default.UseDefaultConfigFile);
@@ -603,6 +613,11 @@ namespace HFM.Preferences
             Settings.Default.WebGenCopyFAHlog = GetPreference<bool>(Preference.WebGenCopyFAHlog);
             Settings.Default.WebGenFtpMode = GetPreference<FtpType>(Preference.WebGenFtpMode).ToString();
             Settings.Default.CSSFile = GetPreference<string>(Preference.CssFile);
+            Settings.Default.WebOverview = GetPreference<string>(Preference.WebOverview);
+            Settings.Default.WebMobileOverview = GetPreference<string>(Preference.WebMobileOverview);
+            Settings.Default.WebSummary = GetPreference<string>(Preference.WebSummary);
+            Settings.Default.WebMobileSummary = GetPreference<string>(Preference.WebMobileSummary);
+            Settings.Default.WebInstance = GetPreference<string>(Preference.WebInstance);
 
             Settings.Default.RunMinimized = GetPreference<bool>(Preference.RunMinimized);
             Settings.Default.UseDefaultConfigFile = GetPreference<bool>(Preference.UseDefaultConfigFile);

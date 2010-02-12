@@ -10,12 +10,10 @@
             <link rel="stylesheet" type="text/css" href="$CSSFILE" />
          </head>
          <body>
-            <!--Uncomment this line to enable a logo on the Summary Page-->
-            <!--<img style="float:left; width:100%; bgcolor:Black; fgcolor:black; margin-right:0px; margin-bottom:0px" src="{photo}" alt="" title="Home" />-->
             <table class="Overview" width="100%">
                <tr>
                   <td class="Heading" colspan="2">Summary</td>
-                  <td class="Plain" colspan="16" align="right">
+                  <td class="Plain" colspan="16">
                      <a href="index.html">Overview Page</a>
                   </td>
                </tr>
@@ -40,6 +38,24 @@
                   <td class="Heading">Deadline</td>
                </tr>
                <xsl:apply-templates select="Instance" />
+               <tr>
+                  <td class="Plain" colspan="18" align="center">
+                  </td>
+               </tr>
+               <tr>
+                  <td class="Heading" colspan="1">Totals</td>
+                  <td class="Plain" colspan="1"></td>
+                  <td class="Plain" colspan="16"></td>
+               </tr>
+               <tr>
+                  <td class="RightCol" colspan="1">
+                     <xsl:value-of select="GoodHosts"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Clients
+                  </td>
+                  <td class="RightCol" colspan="1">
+                     <xsl:value-of select="EstPPD"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPD
+                  </td>
+                  <td class="Plain" colspan="16"></td>
+               </tr>
                <tr>
                   <td class="Plain" colspan="18" align="center">
                      <a href="mobilesummary.html">
