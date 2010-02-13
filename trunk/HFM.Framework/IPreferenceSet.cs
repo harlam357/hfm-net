@@ -81,6 +81,11 @@ namespace HFM.Framework
       void Save();
 
       /// <summary>
+      /// Form Show Style Settings Changed
+      /// </summary>
+      event EventHandler FormShowStyleSettingsChanged;
+
+      /// <summary>
       /// Background Timer (Refresh or Web) Settings Changed
       /// </summary>
       event EventHandler TimerSettingsChanged;

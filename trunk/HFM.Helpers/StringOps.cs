@@ -251,9 +251,9 @@ namespace HFM.Helpers
       /// <exception cref="ArgumentException">Throws when either Server or Port is Null or Empty but not the other.</exception>
       public static bool ValidateServerPortPair(string Server, string Port)
       {
-         return ValidateValuePair(Server, "Proxy Port must also be specified when specifying Proxy Server.",
-                                  Port, "Proxy Server must also be specified when specifying Proxy Port.",
-                                  true, "Proxy Server and Port must be specified.");
+         return ValidateValuePair(Server, "Port must also be specified when specifying Server.",
+                                  Port, "Server must also be specified when specifying Port.",
+                                  true, "Server and Port must be specified.");
       }
       
       /// <summary>

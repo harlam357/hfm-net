@@ -32,16 +32,6 @@ using HFM.Instrumentation;
 
 namespace HFM.Helpers
 {
-   /// <summary>
-   /// Log Download Type
-   /// </summary>
-   public enum DownloadType
-   {
-      ASCII = 0,
-      Binary,
-      UnitInfo
-   }
-
    public delegate void FtpCheckConnectionDelegate(string Server, string FtpPath, string Username, string Password, FtpType ftpMode);
    public delegate void HttpCheckConnectionDelegate(string Url, string Username, string Password);
 
@@ -593,32 +583,13 @@ namespace HFM.Helpers
       /// <summary>
       /// Sends an e-mail message
       /// </summary>
-      /// <param name="MessageFrom"></param>
-      /// <param name="MessageTo"></param>
-      /// <param name="MessageSubject"></param>
-      /// <param name="MessageBody"></param>
-      /// <param name="SmtpHost"></param>
-      /// <param name="SmtpHostUsername"></param>
-      /// <param name="SmtpHostPassword"></param>
-      public static void SendEmail(string MessageFrom, string MessageTo, string MessageSubject, string MessageBody, string SmtpHost, string SmtpHostUsername, string SmtpHostPassword)
+      public static void SendEmail(bool EnableSsl, string MessageFrom, string MessageTo, string MessageSubject, string MessageBody, string SmtpHost, int SmtpPort, string SmtpHostUsername, string SmtpHostPassword)
       {
          MailMessage message = new MailMessage(MessageFrom, MessageTo, MessageSubject, MessageBody);
-         SmtpClient client = new SmtpClient(SmtpHost);
+         SmtpClient client = new SmtpClient(SmtpHost, SmtpPort);
          client.Credentials = GetNetworkCredential(SmtpHostUsername, SmtpHostPassword);
-         client.EnableSsl = true;
-
-         try
-         {
-            client.Send(message);
-         }
-         catch (SmtpException ex) // try again with SSL off
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
-            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Trying again with SSL disabled...", true);
-            
-            client.EnableSsl = false;
-            client.Send(message);
-         }
+         client.EnableSsl = EnableSsl;
+         client.Send(message);
       }
 
       /// <summary>

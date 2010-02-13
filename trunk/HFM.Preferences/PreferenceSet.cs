@@ -180,6 +180,7 @@ namespace HFM.Preferences
          _Preferences.Add(Preference.FormLogVisible, new Metadata<bool>());
          _Preferences.Add(Preference.QueueViewerVisible, new Metadata<bool>());
          _Preferences.Add(Preference.TimeStyle, new Metadata<TimeStyleType>());
+         _Preferences.Add(Preference.FormShowStyle, new Metadata<FormShowStyleType>());
 
          _Preferences.Add(Preference.BenchmarksFormLocation, new Metadata<Point>());
          _Preferences.Add(Preference.BenchmarksFormSize, new Metadata<Size>());
@@ -224,9 +225,11 @@ namespace HFM.Preferences
          _Preferences.Add(Preference.MessageLevel, new Metadata<int>());
 
          _Preferences.Add(Preference.EmailReportingEnabled, new Metadata<bool>());
+         _Preferences.Add(Preference.EmailReportingServerSecure, new Metadata<bool>());
          _Preferences.Add(Preference.EmailReportingToAddress, new Metadata<string>());
          _Preferences.Add(Preference.EmailReportingFromAddress, new Metadata<string>());
          _Preferences.Add(Preference.EmailReportingServerAddress, new Metadata<string>());
+         _Preferences.Add(Preference.EmailReportingServerPort, new Metadata<int>());
          _Preferences.Add(Preference.EmailReportingServerUsername, new Metadata<string>());
          _Preferences.Add(Preference.EmailReportingServerPassword, new Metadata<string>());
          _Preferences.Add(Preference.ReportEuePause, new Metadata<bool>());
@@ -272,6 +275,7 @@ namespace HFM.Preferences
          SetPreference(Preference.FormLogVisible, Settings.Default.FormLogVisible);
          SetPreference(Preference.QueueViewerVisible, Settings.Default.QueueViewerVisible);
          SetPreference(Preference.TimeStyle, GetTimeStyle());
+         SetPreference(Preference.FormShowStyle, GetFormShowStyle());
 
          location = new Point();
          size = new Size();
@@ -322,9 +326,11 @@ namespace HFM.Preferences
          SetPreference(Preference.MessageLevel, Settings.Default.MessageLevel);
 
          SetPreference(Preference.EmailReportingEnabled, Settings.Default.EmailReportingEnabled);
+         SetPreference(Preference.EmailReportingServerSecure, Settings.Default.EmailReportingServerSecure);
          SetPreference(Preference.EmailReportingToAddress, Settings.Default.EmailReportingToAddress);
          SetPreference(Preference.EmailReportingFromAddress, Settings.Default.EmailReportingFromAddress);
          SetPreference(Preference.EmailReportingServerAddress, Settings.Default.EmailReportingServerAddress);
+         SetPreference(Preference.EmailReportingServerPort, Settings.Default.EmailReportingServerPort);
          SetPreference(Preference.EmailReportingServerUsername, Settings.Default.EmailReportingServerUsername);
          SetPreference(Preference.EmailReportingServerPassword, DecryptEmailReportingServerPassword(Settings.Default.EmailReportingServerPassword, SymmetricProvider, IV, SymmetricKey));
          SetPreference(Preference.ReportEuePause, Settings.Default.ReportEuePause);
@@ -391,6 +397,21 @@ namespace HFM.Preferences
                return TimeStyleType.Formatted;
             default:
                return TimeStyleType.Standard;
+         }
+      }
+
+      private static FormShowStyleType GetFormShowStyle()
+      {
+         switch (Settings.Default.FormShowStyle)
+         {
+            case "SystemTray":
+               return FormShowStyleType.SystemTray;
+            case "TaskBar":
+               return FormShowStyleType.TaskBar;
+            case "Both":
+               return FormShowStyleType.Both;
+            default:
+               return FormShowStyleType.SystemTray;
          }
       }
 
@@ -567,6 +588,12 @@ namespace HFM.Preferences
             Settings.Default.FormLogVisible = GetPreference<bool>(Preference.FormLogVisible);
             Settings.Default.QueueViewerVisible = GetPreference<bool>(Preference.QueueViewerVisible);
             Settings.Default.TimeStyle = GetPreference<TimeStyleType>(Preference.TimeStyle).ToString();
+            bool RaiseFormShowStyleChanged = false;
+            if (Settings.Default.FormShowStyle != GetPreference<FormShowStyleType>(Preference.FormShowStyle).ToString())
+            {
+               RaiseFormShowStyleChanged = true;
+            }
+            Settings.Default.FormShowStyle = GetPreference<FormShowStyleType>(Preference.FormShowStyle).ToString();
 
             Settings.Default.BenchmarksFormLocation = GetPreference<Point>(Preference.BenchmarksFormLocation);
             Settings.Default.BenchmarksFormSize = GetPreference<Size>(Preference.BenchmarksFormSize);
@@ -670,9 +697,11 @@ namespace HFM.Preferences
             Settings.Default.MessageLevel = GetPreference<int>(Preference.MessageLevel);
 
             Settings.Default.EmailReportingEnabled = GetPreference<bool>(Preference.EmailReportingEnabled);
+            Settings.Default.EmailReportingServerSecure = GetPreference<bool>(Preference.EmailReportingServerSecure);
             Settings.Default.EmailReportingToAddress = GetPreference<string>(Preference.EmailReportingToAddress);
             Settings.Default.EmailReportingFromAddress = GetPreference<string>(Preference.EmailReportingFromAddress);
             Settings.Default.EmailReportingServerAddress = GetPreference<string>(Preference.EmailReportingServerAddress);
+            Settings.Default.EmailReportingServerPort = GetPreference<int>(Preference.EmailReportingServerPort);
             Settings.Default.EmailReportingServerUsername = GetPreference<string>(Preference.EmailReportingServerUsername);
             Settings.Default.EmailReportingServerPassword = EncryptEmailReportingServerPassword(GetPreference<string>(Preference.EmailReportingServerPassword), SymmetricProvider, IV, SymmetricKey);
             Settings.Default.ReportEuePause = GetPreference<bool>(Preference.ReportEuePause);
@@ -688,6 +717,7 @@ namespace HFM.Preferences
             Settings.Default.ProxyUser = GetPreference<string>(Preference.ProxyUser);
             Settings.Default.ProxyPass = EncryptProxyPass(GetPreference<string>(Preference.ProxyPass), SymmetricProvider, IV, SymmetricKey);
             
+            if (RaiseFormShowStyleChanged) OnFormShowStyleSettingsChanged(EventArgs.Empty);
             if (RaiseTimerSettingsChanged) OnTimerSettingsChanged(EventArgs.Empty);
             if (RaiseDuplicateCheckChanged) OnDuplicateCheckChanged(EventArgs.Empty);
             if (RaiseShowUserStatsChanged) OnShowUserStatsChanged(EventArgs.Empty);
@@ -783,6 +813,18 @@ namespace HFM.Preferences
       #endregion
 
       #region Event Wrappers
+      /// <summary>
+      /// Form Show Style Settings Changed
+      /// </summary>
+      public event EventHandler FormShowStyleSettingsChanged;
+      private void OnFormShowStyleSettingsChanged(EventArgs e)
+      {
+         if (FormShowStyleSettingsChanged != null)
+         {
+            FormShowStyleSettingsChanged(this, e);
+         }
+      }
+      
       /// <summary>
       /// Background Timer (Refresh or Web) Settings Changed
       /// </summary>

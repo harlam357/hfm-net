@@ -806,5 +806,41 @@ namespace HFM.Preferences.Properties {
                 this["WebInstance"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SystemTray")]
+        public string FormShowStyle {
+            get {
+                return ((string)(this["FormShowStyle"]));
+            }
+            set {
+                this["FormShowStyle"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("25")]
+        public int EmailReportingServerPort {
+            get {
+                return ((int)(this["EmailReportingServerPort"]));
+            }
+            set {
+                this["EmailReportingServerPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EmailReportingServerSecure {
+            get {
+                return ((bool)(this["EmailReportingServerSecure"]));
+            }
+            set {
+                this["EmailReportingServerSecure"] = value;
+            }
+        }
     }
 }

@@ -26,6 +26,22 @@
                <xsl:apply-templates select="Instance" />
                <tr>
                   <td class="Plain" colspan="4" align="center">
+                  </td>
+               </tr>
+               <tr>
+                  <td class="Heading" colspan="2">Totals</td>
+                  <td class="Plain" colspan="2"></td>
+               </tr>
+               <tr>
+                  <td class="RightCol" colspan="2">
+                     <xsl:value-of select="GoodHosts"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Clients
+                  </td>
+                  <td class="RightCol" colspan="2">
+                     <xsl:value-of select="EstPPD"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPD
+                  </td>
+               </tr>
+               <tr>
+                  <td class="Plain" colspan="4" align="center">
                      <a href="summary.html">
                         Standard<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Version
                      </a>

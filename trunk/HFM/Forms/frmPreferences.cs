@@ -210,7 +210,6 @@ namespace HFM.Forms
          #endregion
 
          #region Debug Message Level
-         /*** Message Level Is Not DataBound ***/
          IList<TraceLevel> traceList = new List<TraceLevel>();
          traceList.Add(TraceLevel.Off);
          traceList.Add(TraceLevel.Error);
@@ -227,22 +226,32 @@ namespace HFM.Forms
             cboMessageLevel.SelectedItem = TraceLevel.Info;
          } 
          #endregion
+
+         #region Form Docking Style
+         IList<FormShowStyleType> showStyleList = new List<FormShowStyleType>();
+         showStyleList.Add(FormShowStyleType.SystemTray);
+         showStyleList.Add(FormShowStyleType.TaskBar);
+         showStyleList.Add(FormShowStyleType.Both);
+         cboShowStyle.DataSource = showStyleList;
+         cboShowStyle.SelectedItem = _Prefs.GetPreference<FormShowStyleType>(Preference.FormShowStyle);
+         #endregion
       }
       
       private void LoadReportingTab()
       {
          #region Email Settings
-         // Always Add Bindings for CheckBoxes that control input TextBoxes after
-         // the data has been bound to the TextBox
+         chkEmailSecure.Checked = _Prefs.GetPreference<bool>(Preference.EmailReportingServerSecure);
          txtToEmailAddress.Text = _Prefs.GetPreference<string>(Preference.EmailReportingToAddress);
          txtFromEmailAddress.Text = _Prefs.GetPreference<string>(Preference.EmailReportingFromAddress);
          txtSmtpServer.Text = _Prefs.GetPreference<string>(Preference.EmailReportingServerAddress);
+         txtSmtpServer.CompanionControls.Add(txtSmtpServerPort);
+         txtSmtpServerPort.Text = _Prefs.GetPreference<int>(Preference.EmailReportingServerPort).ToString();
+         txtSmtpServerPort.CompanionControls.Add(txtSmtpServer);
          txtSmtpUsername.Text = _Prefs.GetPreference<string>(Preference.EmailReportingServerUsername);
          txtSmtpUsername.CompanionControls.Add(txtSmtpPassword);
          txtSmtpPassword.Text = _Prefs.GetPreference<string>(Preference.EmailReportingServerPassword);
          txtSmtpPassword.CompanionControls.Add(txtSmtpUsername);
 
-         // Finally, add the CheckBox.Checked Binding
          chkEnableEmail.Checked = _Prefs.GetPreference<bool>(Preference.EmailReportingEnabled);
          #endregion
          
@@ -438,9 +447,11 @@ namespace HFM.Forms
             ctrl.CausesValidation = value;
          }
 
+         chkEmailSecure.Enabled = value;
          txtToEmailAddress.Enabled = value;
          txtFromEmailAddress.Enabled = value;
          txtSmtpServer.Enabled = value;
+         txtSmtpServerPort.Enabled = value;
          txtSmtpUsername.Enabled = value;
          txtSmtpPassword.Enabled = value;
 
@@ -483,14 +494,15 @@ namespace HFM.Forms
       private void txtSmtpServer_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
       {
          e.ValidationResult = true;
-         bool bServerName = StringOps.ValidateServerName(e.ControlText);
 
-         if (e.ControlText.Length == 0)
+         try
          {
-            e.ValidationResult = false;
+            // This will violate FxCop rule (rule ID)
+            StringOps.ValidateServerPortPair(txtSmtpServer.Text, txtSmtpServerPort.Text);
          }
-         else if (e.ControlText.Length > 0 && bServerName != true)
+         catch (ArgumentException ex)
          {
+            e.ErrorToolTipText = ex.Message;
             e.ValidationResult = false;
          }
       }
@@ -521,8 +533,8 @@ namespace HFM.Forms
          {
             try
             {
-               NetworkOps.SendEmail(txtFromEmailAddress.Text, txtToEmailAddress.Text, "HFM.NET - Test Email",
-                                    "HFM.NET - Test Email", txtSmtpServer.Text, txtSmtpUsername.Text, txtSmtpPassword.Text);
+               NetworkOps.SendEmail(chkEmailSecure.Checked, txtFromEmailAddress.Text, txtToEmailAddress.Text, "HFM.NET - Test Email",
+                  "HFM.NET - Test Email", txtSmtpServer.Text, int.Parse(txtSmtpServerPort.Text), txtSmtpUsername.Text, txtSmtpPassword.Text);
                MessageBox.Show(this, "Test Email sent successfully.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
@@ -851,6 +863,7 @@ namespace HFM.Forms
          if (txtToEmailAddress.ErrorState ||
              txtFromEmailAddress.ErrorState ||
              txtSmtpServer.ErrorState ||
+             txtSmtpServerPort.ErrorState ||
              txtSmtpUsername.ErrorState ||
              txtSmtpPassword.ErrorState)
          {
@@ -961,14 +974,20 @@ namespace HFM.Forms
          #region Debug Message Level
          _Prefs.SetPreference(Preference.MessageLevel, cboMessageLevel.SelectedIndex);
          #endregion
+         
+         #region Form Docking Style
+         _Prefs.SetPreference(Preference.FormShowStyle, (FormShowStyleType)cboShowStyle.SelectedItem);
+         #endregion
       }
 
       private void GetReportingTab()
       {
          #region Email Settings
+         _Prefs.SetPreference(Preference.EmailReportingServerSecure, chkEmailSecure.Checked);
          _Prefs.SetPreference(Preference.EmailReportingToAddress, txtToEmailAddress.Text);
          _Prefs.SetPreference(Preference.EmailReportingFromAddress, txtFromEmailAddress.Text);
          _Prefs.SetPreference(Preference.EmailReportingServerAddress, txtSmtpServer.Text);
+         _Prefs.SetPreference(Preference.EmailReportingServerPort, txtSmtpServerPort.Text);
          _Prefs.SetPreference(Preference.EmailReportingServerUsername, txtSmtpUsername.Text);
          _Prefs.SetPreference(Preference.EmailReportingServerPassword, txtSmtpPassword.Text);
 

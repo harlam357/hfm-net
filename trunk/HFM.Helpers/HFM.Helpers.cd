@@ -3,44 +3,46 @@
   <Class Name="HFM.Helpers.NetworkOps">
     <Position X="5.25" Y="0.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>QAAAAAAAAAAACAAgAAIAAAAAAoAAAACAAAABAAAAEAA=</HashCode>
+      <HashCode>QAAAQABAAAAgCAAgAgIiAAAAAoIAEgGAAEABAAICAAE=</HashCode>
       <FileName>NetworkOps.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="HFM.Helpers.StringOps">
-    <Position X="2.75" Y="0.5" Width="2.25" />
+    <Position X="0.5" Y="0.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>gEAgFAQAEAQgBAAAYhIQFIAQAgAAEAAABQIGAQgAAAQ=</HashCode>
       <FileName>StringOps.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="HFM.Helpers.UserStatsDataContainer">
-    <Position X="0.5" Y="0.5" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAIAAAAAiACIBABAAAAEABEAAKBIEAAAQMCAQAAAACA=</HashCode>
-      <FileName>UserStatsDataContainer.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="HFM.Helpers.XMLOps">
-    <Position X="7.5" Y="0.5" Width="2" />
+    <Position X="3" Y="0.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAIQAAAAAAIAAAAAAAAABAgA=</HashCode>
       <FileName>XMLOps.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="HFM.Helpers.RegistryOps">
-    <Position X="7.5" Y="2.5" Width="2" />
+    <Position X="3" Y="2.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAIAACIAAAAAAAAAAAAAAAAAAAAAQCAAAAAAAACAA=</HashCode>
       <FileName>RegistryOps.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Enum Name="HFM.Helpers.DownloadType">
-    <Position X="5.5" Y="3.25" Width="1.5" />
+  <Class Name="HFM.Helpers.XmlStatsData">
+    <Position X="7.5" Y="4.25" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAEAAAAAEIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>NetworkOps.cs</FileName>
+      <HashCode>AgAAAAAAAADAAEAEACAAAEEAAAAAAEAAAEEAAAAAAAE=</HashCode>
+      <FileName>XmlUserStatsData.cs</FileName>
     </TypeIdentifier>
-  </Enum>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="HFM.Helpers.XmlStatsDataContainer">
+    <Position X="7.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAhEAAAAAAAAAAABAgACBIEBAAAIAAAAEAAAA=</HashCode>
+      <FileName>XmlStatsDataContainer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
   <Font Name="Tahoma" Size="8.25" />
 </ClassDiagram>

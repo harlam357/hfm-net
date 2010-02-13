@@ -93,6 +93,9 @@ namespace HFM.Forms
          this.chkAutoRun = new HFM.Classes.CheckBoxWrapper();
          this.chkRunMinimized = new HFM.Classes.CheckBoxWrapper();
          this.tabOptions = new System.Windows.Forms.TabPage();
+         this.grpShowStyle = new HFM.Classes.GroupBoxWrapper();
+         this.cboShowStyle = new HFM.Classes.ComboBoxWrapper();
+         this.labelWrapper2 = new HFM.Classes.LabelWrapper();
          this.grpInteractiveOptions = new HFM.Classes.GroupBoxWrapper();
          this.chkCalcBonus = new HFM.Classes.CheckBoxWrapper();
          this.label2 = new HFM.Classes.LabelWrapper();
@@ -117,6 +120,9 @@ namespace HFM.Forms
          this.grpReportSelections = new HFM.Classes.GroupBoxWrapper();
          this.chkClientEuePause = new HFM.Classes.CheckBoxWrapper();
          this.grpEmailSettings = new HFM.Classes.GroupBoxWrapper();
+         this.txtSmtpServerPort = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.labelWrapper3 = new HFM.Classes.LabelWrapper();
+         this.chkEmailSecure = new HFM.Classes.CheckBoxWrapper();
          this.btnTestEmail = new HFM.Classes.ButtonWrapper();
          this.txtSmtpPassword = new harlam357.Windows.Forms.ValidatingTextBox();
          this.txtSmtpUsername = new harlam357.Windows.Forms.ValidatingTextBox();
@@ -184,6 +190,7 @@ namespace HFM.Forms
          this.grpDefaultConfig.SuspendLayout();
          this.grpStartup.SuspendLayout();
          this.tabOptions.SuspendLayout();
+         this.grpShowStyle.SuspendLayout();
          this.grpInteractiveOptions.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.udDecimalPlaces)).BeginInit();
          this.grpDebugMessageLevel.SuspendLayout();
@@ -270,7 +277,7 @@ namespace HFM.Forms
          this.chkAllowRunningAsync.Location = new System.Drawing.Point(270, 46);
          this.chkAllowRunningAsync.Name = "chkAllowRunningAsync";
          this.chkAllowRunningAsync.Size = new System.Drawing.Size(156, 17);
-         this.chkAllowRunningAsync.TabIndex = 9;
+         this.chkAllowRunningAsync.TabIndex = 6;
          this.chkAllowRunningAsync.Text = "Allow Asynchronous Clocks";
          this.chkAllowRunningAsync.UseVisualStyleBackColor = true;
          // 
@@ -280,7 +287,7 @@ namespace HFM.Forms
          this.chkDuplicateProject.Location = new System.Drawing.Point(10, 46);
          this.chkDuplicateProject.Name = "chkDuplicateProject";
          this.chkDuplicateProject.Size = new System.Drawing.Size(183, 17);
-         this.chkDuplicateProject.TabIndex = 8;
+         this.chkDuplicateProject.TabIndex = 1;
          this.chkDuplicateProject.Text = "Duplicate Project (R/C/G) Check";
          this.chkDuplicateProject.UseVisualStyleBackColor = true;
          // 
@@ -290,7 +297,7 @@ namespace HFM.Forms
          this.chkDuplicateUserID.Location = new System.Drawing.Point(10, 72);
          this.chkDuplicateUserID.Name = "chkDuplicateUserID";
          this.chkDuplicateUserID.Size = new System.Drawing.Size(190, 17);
-         this.chkDuplicateUserID.TabIndex = 7;
+         this.chkDuplicateUserID.TabIndex = 2;
          this.chkDuplicateUserID.Text = "Duplicate User/Machine ID Check";
          this.chkDuplicateUserID.UseVisualStyleBackColor = true;
          // 
@@ -300,7 +307,7 @@ namespace HFM.Forms
          this.chkShowUserStats.Location = new System.Drawing.Point(270, 72);
          this.chkShowUserStats.Name = "chkShowUserStats";
          this.chkShowUserStats.Size = new System.Drawing.Size(194, 17);
-         this.chkShowUserStats.TabIndex = 6;
+         this.chkShowUserStats.TabIndex = 7;
          this.chkShowUserStats.Text = "Retrieve and Show EOC User Stats";
          this.chkShowUserStats.UseVisualStyleBackColor = true;
          // 
@@ -320,7 +327,7 @@ namespace HFM.Forms
          this.txtCollectMinutes.Name = "txtCollectMinutes";
          this.txtCollectMinutes.ReadOnly = true;
          this.txtCollectMinutes.Size = new System.Drawing.Size(42, 20);
-         this.txtCollectMinutes.TabIndex = 3;
+         this.txtCollectMinutes.TabIndex = 4;
          this.txtCollectMinutes.Text = "15";
          this.txtCollectMinutes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          this.txtCollectMinutes.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
@@ -333,7 +340,7 @@ namespace HFM.Forms
          this.lbl2SchedExplain.Location = new System.Drawing.Point(368, 22);
          this.lbl2SchedExplain.Name = "lbl2SchedExplain";
          this.lbl2SchedExplain.Size = new System.Drawing.Size(44, 13);
-         this.lbl2SchedExplain.TabIndex = 4;
+         this.lbl2SchedExplain.TabIndex = 5;
          this.lbl2SchedExplain.Text = "Minutes";
          // 
          // chkScheduled
@@ -342,7 +349,7 @@ namespace HFM.Forms
          this.chkScheduled.Location = new System.Drawing.Point(270, 20);
          this.chkScheduled.Name = "chkScheduled";
          this.chkScheduled.Size = new System.Drawing.Size(53, 17);
-         this.chkScheduled.TabIndex = 2;
+         this.chkScheduled.TabIndex = 3;
          this.chkScheduled.Text = "Every";
          this.chkScheduled.UseVisualStyleBackColor = true;
          // 
@@ -352,7 +359,7 @@ namespace HFM.Forms
          this.chkSynchronous.Location = new System.Drawing.Point(10, 20);
          this.chkSynchronous.Name = "chkSynchronous";
          this.chkSynchronous.Size = new System.Drawing.Size(176, 17);
-         this.chkSynchronous.TabIndex = 1;
+         this.chkSynchronous.TabIndex = 0;
          this.chkSynchronous.Text = "In Series (synchronous retrieval)";
          this.chkSynchronous.UseVisualStyleBackColor = true;
          // 
@@ -372,7 +379,7 @@ namespace HFM.Forms
          this.grpHTMLOutput.Location = new System.Drawing.Point(6, 120);
          this.grpHTMLOutput.Name = "grpHTMLOutput";
          this.grpHTMLOutput.Size = new System.Drawing.Size(489, 113);
-         this.grpHTMLOutput.TabIndex = 1;
+         this.grpHTMLOutput.TabIndex = 0;
          this.grpHTMLOutput.TabStop = false;
          this.grpHTMLOutput.Text = "Web Generation";
          // 
@@ -381,7 +388,7 @@ namespace HFM.Forms
          this.btnTestConnection.Location = new System.Drawing.Point(383, 15);
          this.btnTestConnection.Name = "btnTestConnection";
          this.btnTestConnection.Size = new System.Drawing.Size(100, 24);
-         this.btnTestConnection.TabIndex = 14;
+         this.btnTestConnection.TabIndex = 8;
          this.btnTestConnection.Text = "Test Connection";
          this.btnTestConnection.UseVisualStyleBackColor = true;
          this.btnTestConnection.Click += new System.EventHandler(this.btnTestConnection_Click);
@@ -402,7 +409,7 @@ namespace HFM.Forms
          this.lblFtpMode.Location = new System.Drawing.Point(4, 6);
          this.lblFtpMode.Name = "lblFtpMode";
          this.lblFtpMode.Size = new System.Drawing.Size(60, 13);
-         this.lblFtpMode.TabIndex = 12;
+         this.lblFtpMode.TabIndex = 0;
          this.lblFtpMode.Text = "FTP Mode:";
          // 
          // radioPassive
@@ -412,7 +419,7 @@ namespace HFM.Forms
          this.radioPassive.Location = new System.Drawing.Point(70, 4);
          this.radioPassive.Name = "radioPassive";
          this.radioPassive.Size = new System.Drawing.Size(62, 17);
-         this.radioPassive.TabIndex = 10;
+         this.radioPassive.TabIndex = 1;
          this.radioPassive.TabStop = true;
          this.radioPassive.Text = "Passive";
          this.radioPassive.UseVisualStyleBackColor = true;
@@ -423,7 +430,7 @@ namespace HFM.Forms
          this.radioActive.Location = new System.Drawing.Point(138, 4);
          this.radioActive.Name = "radioActive";
          this.radioActive.Size = new System.Drawing.Size(55, 17);
-         this.radioActive.TabIndex = 11;
+         this.radioActive.TabIndex = 2;
          this.radioActive.Text = "Active";
          this.radioActive.UseVisualStyleBackColor = true;
          // 
@@ -434,7 +441,7 @@ namespace HFM.Forms
          this.chkFAHlog.Location = new System.Drawing.Point(10, 76);
          this.chkFAHlog.Name = "chkFAHlog";
          this.chkFAHlog.Size = new System.Drawing.Size(172, 17);
-         this.chkFAHlog.TabIndex = 8;
+         this.chkFAHlog.TabIndex = 9;
          this.chkFAHlog.Text = "Copy FAHlog.txt Files to Target";
          this.chkFAHlog.UseVisualStyleBackColor = true;
          // 
@@ -653,6 +660,7 @@ namespace HFM.Forms
          // 
          // tabOptions
          // 
+         this.tabOptions.Controls.Add(this.grpShowStyle);
          this.tabOptions.Controls.Add(this.grpInteractiveOptions);
          this.tabOptions.Controls.Add(this.grpDebugMessageLevel);
          this.tabOptions.Controls.Add(this.grpFileExplorer);
@@ -663,6 +671,35 @@ namespace HFM.Forms
          this.tabOptions.TabIndex = 4;
          this.tabOptions.Text = "Options";
          this.tabOptions.UseVisualStyleBackColor = true;
+         // 
+         // grpShowStyle
+         // 
+         this.grpShowStyle.Controls.Add(this.cboShowStyle);
+         this.grpShowStyle.Controls.Add(this.labelWrapper2);
+         this.grpShowStyle.Location = new System.Drawing.Point(254, 239);
+         this.grpShowStyle.Name = "grpShowStyle";
+         this.grpShowStyle.Size = new System.Drawing.Size(241, 54);
+         this.grpShowStyle.TabIndex = 4;
+         this.grpShowStyle.TabStop = false;
+         this.grpShowStyle.Text = "Docking Style";
+         // 
+         // cboShowStyle
+         // 
+         this.cboShowStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+         this.cboShowStyle.FormattingEnabled = true;
+         this.cboShowStyle.Location = new System.Drawing.Point(136, 19);
+         this.cboShowStyle.Name = "cboShowStyle";
+         this.cboShowStyle.Size = new System.Drawing.Size(89, 21);
+         this.cboShowStyle.TabIndex = 1;
+         // 
+         // labelWrapper2
+         // 
+         this.labelWrapper2.AutoSize = true;
+         this.labelWrapper2.Location = new System.Drawing.Point(13, 24);
+         this.labelWrapper2.Name = "labelWrapper2";
+         this.labelWrapper2.Size = new System.Drawing.Size(117, 13);
+         this.labelWrapper2.TabIndex = 0;
+         this.labelWrapper2.Text = "Show HFM.NET in the:";
          // 
          // grpInteractiveOptions
          // 
@@ -677,7 +714,7 @@ namespace HFM.Forms
          this.grpInteractiveOptions.Location = new System.Drawing.Point(6, 9);
          this.grpInteractiveOptions.Name = "grpInteractiveOptions";
          this.grpInteractiveOptions.Size = new System.Drawing.Size(489, 110);
-         this.grpInteractiveOptions.TabIndex = 5;
+         this.grpInteractiveOptions.TabIndex = 0;
          this.grpInteractiveOptions.TabStop = false;
          this.grpInteractiveOptions.Text = "Interactive Options";
          // 
@@ -687,7 +724,7 @@ namespace HFM.Forms
          this.chkCalcBonus.Location = new System.Drawing.Point(256, 72);
          this.chkCalcBonus.Name = "chkCalcBonus";
          this.chkCalcBonus.Size = new System.Drawing.Size(179, 17);
-         this.chkCalcBonus.TabIndex = 16;
+         this.chkCalcBonus.TabIndex = 7;
          this.chkCalcBonus.Text = "Calculate Bonus Credit and PPD";
          this.chkCalcBonus.UseVisualStyleBackColor = true;
          // 
@@ -697,7 +734,7 @@ namespace HFM.Forms
          this.label2.Location = new System.Drawing.Point(235, 21);
          this.label2.Name = "label2";
          this.label2.Size = new System.Drawing.Size(126, 13);
-         this.label2.TabIndex = 14;
+         this.label2.TabIndex = 3;
          this.label2.Text = "Calculate PPD based on:";
          // 
          // cboPpdCalc
@@ -707,7 +744,7 @@ namespace HFM.Forms
          this.cboPpdCalc.Location = new System.Drawing.Point(367, 16);
          this.cboPpdCalc.Name = "cboPpdCalc";
          this.cboPpdCalc.Size = new System.Drawing.Size(109, 21);
-         this.cboPpdCalc.TabIndex = 15;
+         this.cboPpdCalc.TabIndex = 4;
          // 
          // chkOffline
          // 
@@ -715,7 +752,7 @@ namespace HFM.Forms
          this.chkOffline.Location = new System.Drawing.Point(10, 20);
          this.chkOffline.Name = "chkOffline";
          this.chkOffline.Size = new System.Drawing.Size(132, 17);
-         this.chkOffline.TabIndex = 13;
+         this.chkOffline.TabIndex = 0;
          this.chkOffline.Text = "List Offline Clients Last";
          this.chkOffline.UseVisualStyleBackColor = true;
          // 
@@ -725,7 +762,7 @@ namespace HFM.Forms
          this.chkColorLog.Location = new System.Drawing.Point(10, 46);
          this.chkColorLog.Name = "chkColorLog";
          this.chkColorLog.Size = new System.Drawing.Size(165, 17);
-         this.chkColorLog.TabIndex = 12;
+         this.chkColorLog.TabIndex = 1;
          this.chkColorLog.Text = "Color the FAHlog Viewer Text";
          this.chkColorLog.UseVisualStyleBackColor = true;
          // 
@@ -734,7 +771,7 @@ namespace HFM.Forms
          this.udDecimalPlaces.Location = new System.Drawing.Point(367, 43);
          this.udDecimalPlaces.Name = "udDecimalPlaces";
          this.udDecimalPlaces.Size = new System.Drawing.Size(39, 20);
-         this.udDecimalPlaces.TabIndex = 1;
+         this.udDecimalPlaces.TabIndex = 6;
          // 
          // chkAutoSave
          // 
@@ -742,7 +779,7 @@ namespace HFM.Forms
          this.chkAutoSave.Location = new System.Drawing.Point(10, 72);
          this.chkAutoSave.Name = "chkAutoSave";
          this.chkAutoSave.Size = new System.Drawing.Size(216, 17);
-         this.chkAutoSave.TabIndex = 5;
+         this.chkAutoSave.TabIndex = 2;
          this.chkAutoSave.Text = "Auto Save Configuration when Changed";
          this.chkAutoSave.UseVisualStyleBackColor = true;
          // 
@@ -752,7 +789,7 @@ namespace HFM.Forms
          this.labelWrapper1.Location = new System.Drawing.Point(253, 47);
          this.labelWrapper1.Name = "labelWrapper1";
          this.labelWrapper1.Size = new System.Drawing.Size(108, 13);
-         this.labelWrapper1.TabIndex = 0;
+         this.labelWrapper1.TabIndex = 5;
          this.labelWrapper1.Text = "PPD Decimal Places:";
          // 
          // grpDebugMessageLevel
@@ -773,7 +810,7 @@ namespace HFM.Forms
          this.cboMessageLevel.Location = new System.Drawing.Point(139, 21);
          this.cboMessageLevel.Name = "cboMessageLevel";
          this.cboMessageLevel.Size = new System.Drawing.Size(75, 21);
-         this.cboMessageLevel.TabIndex = 2;
+         this.cboMessageLevel.TabIndex = 1;
          // 
          // label6
          // 
@@ -781,7 +818,7 @@ namespace HFM.Forms
          this.label6.Location = new System.Drawing.Point(16, 24);
          this.label6.Name = "label6";
          this.label6.Size = new System.Drawing.Size(117, 13);
-         this.label6.TabIndex = 1;
+         this.label6.TabIndex = 0;
          this.label6.Text = "Debug Message Level:";
          // 
          // grpFileExplorer
@@ -911,6 +948,9 @@ namespace HFM.Forms
          // 
          // grpEmailSettings
          // 
+         this.grpEmailSettings.Controls.Add(this.txtSmtpServerPort);
+         this.grpEmailSettings.Controls.Add(this.labelWrapper3);
+         this.grpEmailSettings.Controls.Add(this.chkEmailSecure);
          this.grpEmailSettings.Controls.Add(this.btnTestEmail);
          this.grpEmailSettings.Controls.Add(this.txtSmtpPassword);
          this.grpEmailSettings.Controls.Add(this.txtSmtpUsername);
@@ -930,13 +970,54 @@ namespace HFM.Forms
          this.grpEmailSettings.TabStop = false;
          this.grpEmailSettings.Text = "Email Settings";
          // 
+         // txtSmtpServerPort
+         // 
+         this.txtSmtpServerPort.BackColor = System.Drawing.SystemColors.Control;
+         this.txtSmtpServerPort.DoubleBuffered = true;
+         this.txtSmtpServerPort.Enabled = false;
+         this.txtSmtpServerPort.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.txtSmtpServerPort.ErrorState = false;
+         this.txtSmtpServerPort.ErrorToolTip = this.toolTipPrefs;
+         this.txtSmtpServerPort.ErrorToolTipDuration = 5000;
+         this.txtSmtpServerPort.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.txtSmtpServerPort.ErrorToolTipText = "";
+         this.txtSmtpServerPort.Location = new System.Drawing.Point(415, 103);
+         this.txtSmtpServerPort.MaxLength = 200;
+         this.txtSmtpServerPort.Name = "txtSmtpServerPort";
+         this.txtSmtpServerPort.ReadOnly = true;
+         this.txtSmtpServerPort.Size = new System.Drawing.Size(54, 20);
+         this.txtSmtpServerPort.TabIndex = 9;
+         this.txtSmtpServerPort.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtSmtpServerPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
+         this.txtSmtpServerPort.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtSmtpServer_CustomValidation);
+         // 
+         // labelWrapper3
+         // 
+         this.labelWrapper3.AutoSize = true;
+         this.labelWrapper3.Location = new System.Drawing.Point(380, 106);
+         this.labelWrapper3.Name = "labelWrapper3";
+         this.labelWrapper3.Size = new System.Drawing.Size(29, 13);
+         this.labelWrapper3.TabIndex = 8;
+         this.labelWrapper3.Text = "Port:";
+         // 
+         // chkEmailSecure
+         // 
+         this.chkEmailSecure.AutoSize = true;
+         this.chkEmailSecure.Enabled = false;
+         this.chkEmailSecure.Location = new System.Drawing.Point(152, 20);
+         this.chkEmailSecure.Name = "chkEmailSecure";
+         this.chkEmailSecure.Size = new System.Drawing.Size(168, 17);
+         this.chkEmailSecure.TabIndex = 1;
+         this.chkEmailSecure.Text = "Use Secure Connection (SSL)";
+         this.chkEmailSecure.UseVisualStyleBackColor = true;
+         // 
          // btnTestEmail
          // 
          this.btnTestEmail.Enabled = false;
          this.btnTestEmail.Location = new System.Drawing.Point(350, 15);
          this.btnTestEmail.Name = "btnTestEmail";
          this.btnTestEmail.Size = new System.Drawing.Size(119, 26);
-         this.btnTestEmail.TabIndex = 11;
+         this.btnTestEmail.TabIndex = 14;
          this.btnTestEmail.Text = "Send Test Email";
          this.btnTestEmail.UseVisualStyleBackColor = true;
          this.btnTestEmail.Click += new System.EventHandler(this.btnTestEmail_Click);
@@ -957,7 +1038,7 @@ namespace HFM.Forms
          this.txtSmtpPassword.Name = "txtSmtpPassword";
          this.txtSmtpPassword.ReadOnly = true;
          this.txtSmtpPassword.Size = new System.Drawing.Size(155, 20);
-         this.txtSmtpPassword.TabIndex = 10;
+         this.txtSmtpPassword.TabIndex = 13;
          this.txtSmtpPassword.UseSystemPasswordChar = true;
          this.txtSmtpPassword.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
          this.txtSmtpPassword.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtSmtpCredentials_CustomValidation);
@@ -978,7 +1059,7 @@ namespace HFM.Forms
          this.txtSmtpUsername.Name = "txtSmtpUsername";
          this.txtSmtpUsername.ReadOnly = true;
          this.txtSmtpUsername.Size = new System.Drawing.Size(155, 20);
-         this.txtSmtpUsername.TabIndex = 8;
+         this.txtSmtpUsername.TabIndex = 11;
          this.txtSmtpUsername.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
          this.txtSmtpUsername.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtSmtpCredentials_CustomValidation);
          // 
@@ -988,7 +1069,7 @@ namespace HFM.Forms
          this.labelWrapper4.Location = new System.Drawing.Point(253, 132);
          this.labelWrapper4.Name = "labelWrapper4";
          this.labelWrapper4.Size = new System.Drawing.Size(56, 13);
-         this.labelWrapper4.TabIndex = 9;
+         this.labelWrapper4.TabIndex = 12;
          this.labelWrapper4.Text = "Password:";
          // 
          // labelWrapper5
@@ -997,7 +1078,7 @@ namespace HFM.Forms
          this.labelWrapper5.Location = new System.Drawing.Point(27, 132);
          this.labelWrapper5.Name = "labelWrapper5";
          this.labelWrapper5.Size = new System.Drawing.Size(58, 13);
-         this.labelWrapper5.TabIndex = 7;
+         this.labelWrapper5.TabIndex = 10;
          this.labelWrapper5.Text = "Username:";
          // 
          // lblFromEmailAddress
@@ -1006,7 +1087,7 @@ namespace HFM.Forms
          this.lblFromEmailAddress.Location = new System.Drawing.Point(11, 80);
          this.lblFromEmailAddress.Name = "lblFromEmailAddress";
          this.lblFromEmailAddress.Size = new System.Drawing.Size(74, 13);
-         this.lblFromEmailAddress.TabIndex = 3;
+         this.lblFromEmailAddress.TabIndex = 4;
          this.lblFromEmailAddress.Text = "From Address:";
          // 
          // txtFromEmailAddress
@@ -1025,7 +1106,7 @@ namespace HFM.Forms
          this.txtFromEmailAddress.Name = "txtFromEmailAddress";
          this.txtFromEmailAddress.ReadOnly = true;
          this.txtFromEmailAddress.Size = new System.Drawing.Size(377, 20);
-         this.txtFromEmailAddress.TabIndex = 4;
+         this.txtFromEmailAddress.TabIndex = 5;
          this.txtFromEmailAddress.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
          this.txtFromEmailAddress.MouseHover += new System.EventHandler(this.txtFromEmailAddress_MouseHover);
          this.txtFromEmailAddress.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtEmailAddress_CustomValidation);
@@ -1047,7 +1128,7 @@ namespace HFM.Forms
          this.lblSmtpServer.Location = new System.Drawing.Point(11, 106);
          this.lblSmtpServer.Name = "lblSmtpServer";
          this.lblSmtpServer.Size = new System.Drawing.Size(74, 13);
-         this.lblSmtpServer.TabIndex = 5;
+         this.lblSmtpServer.TabIndex = 6;
          this.lblSmtpServer.Text = "SMTP Server:";
          // 
          // lblToAddress
@@ -1056,7 +1137,7 @@ namespace HFM.Forms
          this.lblToAddress.Location = new System.Drawing.Point(21, 54);
          this.lblToAddress.Name = "lblToAddress";
          this.lblToAddress.Size = new System.Drawing.Size(64, 13);
-         this.lblToAddress.TabIndex = 1;
+         this.lblToAddress.TabIndex = 2;
          this.lblToAddress.Text = "To Address:";
          // 
          // txtSmtpServer
@@ -1074,8 +1155,8 @@ namespace HFM.Forms
          this.txtSmtpServer.MaxLength = 200;
          this.txtSmtpServer.Name = "txtSmtpServer";
          this.txtSmtpServer.ReadOnly = true;
-         this.txtSmtpServer.Size = new System.Drawing.Size(377, 20);
-         this.txtSmtpServer.TabIndex = 6;
+         this.txtSmtpServer.Size = new System.Drawing.Size(282, 20);
+         this.txtSmtpServer.TabIndex = 7;
          this.txtSmtpServer.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
          this.txtSmtpServer.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtSmtpServer_CustomValidation);
          // 
@@ -1095,7 +1176,7 @@ namespace HFM.Forms
          this.txtToEmailAddress.Name = "txtToEmailAddress";
          this.txtToEmailAddress.ReadOnly = true;
          this.txtToEmailAddress.Size = new System.Drawing.Size(377, 20);
-         this.txtToEmailAddress.TabIndex = 2;
+         this.txtToEmailAddress.TabIndex = 3;
          this.txtToEmailAddress.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
          this.txtToEmailAddress.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtEmailAddress_CustomValidation);
          // 
@@ -1725,6 +1806,8 @@ namespace HFM.Forms
          this.grpStartup.ResumeLayout(false);
          this.grpStartup.PerformLayout();
          this.tabOptions.ResumeLayout(false);
+         this.grpShowStyle.ResumeLayout(false);
+         this.grpShowStyle.PerformLayout();
          this.grpInteractiveOptions.ResumeLayout(false);
          this.grpInteractiveOptions.PerformLayout();
          ((System.ComponentModel.ISupportInitialize)(this.udDecimalPlaces)).EndInit();
@@ -1876,5 +1959,11 @@ namespace HFM.Forms
       private HFM.Classes.ButtonWrapper btnMobileSummaryBrowse;
       private ValidatingTextBox txtMobileSummary;
       private HFM.Classes.LabelWrapper lblMobileSummary;
+      private HFM.Classes.GroupBoxWrapper grpShowStyle;
+      private HFM.Classes.ComboBoxWrapper cboShowStyle;
+      private HFM.Classes.LabelWrapper labelWrapper2;
+      private HFM.Classes.CheckBoxWrapper chkEmailSecure;
+      private ValidatingTextBox txtSmtpServerPort;
+      private HFM.Classes.LabelWrapper labelWrapper3;
    }
 }

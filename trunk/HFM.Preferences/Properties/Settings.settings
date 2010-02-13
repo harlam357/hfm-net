@@ -208,5 +208,14 @@
     <Setting Name="WebInstance" Type="System.String" Scope="User">
       <Value Profile="(Default)">WebInstance.xslt</Value>
     </Setting>
+    <Setting Name="FormShowStyle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SystemTray</Value>
+    </Setting>
+    <Setting Name="EmailReportingServerPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">25</Value>
+    </Setting>
+    <Setting Name="EmailReportingServerSecure" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -87,7 +87,7 @@ namespace HFM.Instances
             // Generate a page per instance
             foreach (ClientInstance instance in Instances)
             {
-               sw = new StreamWriter(Path.Combine(FolderPath, Path.ChangeExtension(instance.InstanceName, ".html")), false);
+               sw = new StreamWriter(Path.Combine(FolderPath, String.Concat(instance.InstanceName, ".html")), false);
                sw.Write(XMLOps.Transform(CreateInstanceXml(instance), InstanceXslt));
                sw.Close();
             }

@@ -143,6 +143,13 @@ namespace HFM.Framework
       Formatted
    }
    
+   public enum FormShowStyleType
+   {
+      SystemTray,
+      TaskBar,
+      Both
+   }
+   
    public enum Preference
    {
       FormLocation,
@@ -155,6 +162,7 @@ namespace HFM.Framework
       FormLogVisible,
       QueueViewerVisible,
       TimeStyle,
+      FormShowStyle,
       BenchmarksFormLocation,
       BenchmarksFormSize,
       GraphColors,
@@ -192,9 +200,11 @@ namespace HFM.Framework
       FileExplorer,
       MessageLevel,
       EmailReportingEnabled,
+      EmailReportingServerSecure,
       EmailReportingToAddress,
       EmailReportingFromAddress,
       EmailReportingServerAddress,
+      EmailReportingServerPort,
       EmailReportingServerUsername,
       EmailReportingServerPassword,
       ReportEuePause,

@@ -175,6 +175,7 @@ namespace HFM.Forms
          ClientInstances.RefreshUserStatsData += delegate { RefreshUserStatsData(false); };
 
          // Hook-up PreferenceSet Event Handlers
+         _Prefs.FormShowStyleSettingsChanged += PreferenceSet_FormShowStyleSettingsChanged;
          _Prefs.ShowUserStatsChanged += PreferenceSet_ShowUserStatsChanged;
          PreferenceSet_ShowUserStatsChanged(this, EventArgs.Empty);
          _Prefs.MessageLevelChanged += PreferenceSet_MessageLevelChanged;
@@ -272,7 +273,7 @@ namespace HFM.Forms
          notifyIcon.Icon = Icon;
          notifyIcon.Text = base.Text;
          notifyIcon.DoubleClick += notifyIcon_DoubleClick;
-         notifyIcon.Visible = true;
+         SetFormShowStyle();
       }
 
       /// <summary>
@@ -288,14 +289,11 @@ namespace HFM.Forms
             // ReApply Sort when restoring from the sys tray - Issue 32
             if (ShowInTaskbar == false)
             {
-               ShowInTaskbar = true;
                ApplySort();
             }
          }
-         else
-         {
-            ShowInTaskbar = false;
-         }
+         
+         SetFormShowStyle();
          
          // When the log file window (panel) is collapsed, get the split location
          // changes based on the height of Panel1 - Issue 8
@@ -2046,6 +2044,30 @@ namespace HFM.Forms
       #endregion
 
       #region PreferenceSet Event Handlers
+      private void PreferenceSet_FormShowStyleSettingsChanged(object sender, EventArgs e)
+      {
+         SetFormShowStyle();
+      }
+
+      private void SetFormShowStyle()
+      {
+         switch (_Prefs.GetPreference<FormShowStyleType>(Preference.FormShowStyle))
+         {
+            case FormShowStyleType.SystemTray:
+               if (notifyIcon != null) notifyIcon.Visible = true;
+               ShowInTaskbar = (WindowState != FormWindowState.Minimized);
+               break;
+            case FormShowStyleType.TaskBar:
+               if (notifyIcon != null) notifyIcon.Visible = false;
+               ShowInTaskbar = true;
+               break;
+            case FormShowStyleType.Both:
+               if (notifyIcon != null) notifyIcon.Visible = true;
+               ShowInTaskbar = true;
+               break;
+         }
+      }
+
       /// <summary>
       /// Show or Hide User Stats Controls based on user setting
       /// </summary>
