@@ -45,6 +45,16 @@ namespace HFM.Framework
       string CoreVersion { get; }
 
       /// <summary>
+      /// Project Info List Current Index
+      /// </summary>
+      Int32 ProjectInfoIndex { get; set; }
+
+      /// <summary>
+      /// Project Info List
+      /// </summary>
+      IList<IProjectInfo> ProjectInfoList { get; }
+
+      /// <summary>
       /// Work Unit Result
       /// </summary>
       WorkUnitResult UnitResult { get; }

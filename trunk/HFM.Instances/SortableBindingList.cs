@@ -192,6 +192,9 @@ namespace HFM.Instances
 
       protected override int FindCore(PropertyDescriptor prop, object key)
       {
+         // This key seems to always be null under Mono
+         if (key == null) return -1;
+      
          if (key is String)
          {
             List<T> list = Items as List<T>;

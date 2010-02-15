@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Project Info Interface
+ * HFM.NET - Project Info Class
  * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -19,28 +19,50 @@
 
 using System;
 
-namespace HFM.Framework
+using HFM.Framework;
+
+namespace HFM.Log
 {
-   public interface IProjectInfo
+   public class ProjectInfo : IProjectInfo
    {
+      private Int32 _ProjectID;
       /// <summary>
       /// Project ID Number
       /// </summary>
-      Int32 ProjectID { get; }
+      public Int32 ProjectID
+      {
+         get { return _ProjectID; }
+         set { _ProjectID = value; }
+      }
 
+      private Int32 _ProjectRun;
       /// <summary>
       /// Project ID (Run)
       /// </summary>
-      Int32 ProjectRun { get; }
+      public Int32 ProjectRun
+      {
+         get { return _ProjectRun; }
+         set { _ProjectRun = value; }
+      }
 
+      private Int32 _ProjectClone;
       /// <summary>
       /// Project ID (Clone)
       /// </summary>
-      Int32 ProjectClone { get; }
+      public Int32 ProjectClone
+      {
+         get { return _ProjectClone; }
+         set { _ProjectClone = value; }
+      }
 
+      private Int32 _ProjectGen;
       /// <summary>
       /// Project ID (Gen)
       /// </summary>
-      Int32 ProjectGen { get; }
+      public Int32 ProjectGen
+      {
+         get { return _ProjectGen; }
+         set { _ProjectGen = value; }
+      }
    }
 }

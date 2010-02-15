@@ -48,13 +48,18 @@ namespace HFM.Framework
       /// <summary>
       /// Get an Empty FAHlog Unit Data
       /// </summary>
-      IFahLogUnitData GetEmptyFahLogData();
+      IFahLogUnitData GetEmptyFahLogUnitData();
 
       /// <summary>
       /// Get FAHlog Unit Data from the given Log Lines
       /// </summary>
       /// <param name="logLines">Log Lines to search</param>
       IFahLogUnitData GetFahLogDataFromLogLines(ICollection<ILogLine> logLines);
+
+      /// <summary>
+      /// Get an Empty unitinfo Log Data
+      /// </summary>
+      IUnitInfoLogData GetEmptyUnitInfoLogData();
 
       /// <summary>
       /// Parse the content from the unitinfo.txt file.

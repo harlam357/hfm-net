@@ -159,7 +159,7 @@ namespace HFM.Instances
       public ClientStatus Status
       {
          get { return _Status; }
-         protected set
+         set
          {
             if (_Status != value)
             {
@@ -1084,7 +1084,13 @@ namespace HFM.Instances
          
          #region Run the Aggregator and Set ClientInstance Level Results
          IList<IUnitInfo> units = _dataAggregator.AggregateData();
+         // Issue 126 - Use the Folding ID, Team, User ID, and Machine ID from the FAHlog data.
+         // Use the Current Queue Entry as a backup data source.
          PopulateRunLevelData(_dataAggregator.CurrentClientRun);
+         if (_dataAggregator.Queue != null)
+         {
+            PopulateRunLevelData(_dataAggregator.Queue.CurrentQueueEntry);
+         }
          #endregion
          
          UnitInfoLogic[] parsedUnits = new UnitInfoLogic[units.Count];
@@ -1127,6 +1133,26 @@ namespace HFM.Instances
          NumberOfCompletedUnitsSinceLastStart = run.NumberOfCompletedUnits;
          NumberOfFailedUnitsSinceLastStart = run.NumberOfFailedUnits;
          TotalUnits = run.NumberOfTotalUnitsCompleted;
+      }
+
+      private void PopulateRunLevelData(IQueueEntry queueEntry)
+      {
+         if (FoldingID == Constants.FoldingIDDefault)
+         {
+            FoldingID = queueEntry.FoldingID;
+         }
+         if (Team == Constants.TeamDefault)
+         {
+            Team = (int)queueEntry.TeamNumber;
+         }
+         if (UserID == DefaultUserID)
+         {
+            UserID = queueEntry.UserID;
+         }
+         if (MachineID == DefaultMachineID)
+         {
+            MachineID = (int)queueEntry.MachineID;
+         }
       }
 
       /// <summary>
@@ -1916,13 +1942,13 @@ namespace HFM.Instances
       public bool IsUsernameOk()
       {
          // if these are the default assigned values, don't check otherwise and just return true
-         if (CurrentUnitInfo.FoldingID == Constants.FoldingIDDefault && CurrentUnitInfo.Team == Constants.TeamDefault)
+         if (FoldingID == Constants.FoldingIDDefault && Team == Constants.TeamDefault)
          {
             return true;
          }
 
-         if ((CurrentUnitInfo.FoldingID != _Prefs.GetPreference<string>(Preference.StanfordID) || 
-              CurrentUnitInfo.Team != _Prefs.GetPreference<int>(Preference.TeamID)) &&
+         if ((FoldingID != _Prefs.GetPreference<string>(Preference.StanfordID) || 
+              Team != _Prefs.GetPreference<int>(Preference.TeamID)) &&
              (Status.Equals(ClientStatus.Unknown) == false && Status.Equals(ClientStatus.Offline) == false))
          {
             return false;

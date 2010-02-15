@@ -257,8 +257,13 @@ namespace HFM.Instances
             _UnitLogLines[queueIndex] = _logReader.GetLogLinesFromQueueIndex(queueIndex);
             // Get the FAH Log Data from the Log Lines
             IFahLogUnitData fahLogUnitData = _logReader.GetFahLogDataFromLogLines(_UnitLogLines[queueIndex]);
+            IUnitInfoLogData unitInfoLogData = null;
+            if (queueIndex == _queueReader.Queue.CurrentIndex)
+            {
+               unitInfoLogData = _logReader.GetUnitInfoLogData(_InstanceName, _unitInfoLogFilePath);
+            }
 
-            parsedUnits[queueIndex] = BuildUnitInfo(_queueReader.Queue.GetQueueEntry((uint) queueIndex), fahLogUnitData, null);
+            parsedUnits[queueIndex] = BuildUnitInfo(_queueReader.Queue.GetQueueEntry((uint)queueIndex), fahLogUnitData, unitInfoLogData);
             if (parsedUnits[queueIndex] == null)
             {
                if (queueIndex == _queueReader.Queue.CurrentIndex)
@@ -271,10 +276,10 @@ namespace HFM.Instances
                   if (_CurrentFahLogUnitData.Status.Equals(ClientStatus.GettingWorkPacket))
                   {
                      _UnitLogLines[queueIndex] = null;
-                     fahLogUnitData = _logReader.GetEmptyFahLogData();
+                     fahLogUnitData = _logReader.GetEmptyFahLogUnitData();
+                     unitInfoLogData = _logReader.GetEmptyUnitInfoLogData();
                   }
-                  parsedUnits[queueIndex] = BuildUnitInfo(_queueReader.Queue.GetQueueEntry((uint) queueIndex), fahLogUnitData,
-                                                          _logReader.GetUnitInfoLogData(_InstanceName, _unitInfoLogFilePath), true);
+                  parsedUnits[queueIndex] = BuildUnitInfo(_queueReader.Queue.GetQueueEntry((uint) queueIndex), fahLogUnitData, unitInfoLogData, true);
                }
                else
                {
@@ -304,6 +309,7 @@ namespace HFM.Instances
          if (queueEntry != null)
          {
             PopulateUnitInfoFromQueueEntry(queueEntry, unit);
+            SearchFahLogUnitDataProjects(unit, fahLogUnitData);
             PopulateUnitInfoFromLogs(CurrentClientRun, fahLogUnitData, unitInfoLogData, unit);
 
             if (ProjectsMatch(unit, fahLogUnitData) ||
@@ -327,7 +333,18 @@ namespace HFM.Instances
          return unit;
       }
 
-      private static bool ProjectsMatch(IProjectInfo project1, IProjectInfo project2)
+      private static void SearchFahLogUnitDataProjects(IUnitInfo expected, IFahLogUnitData fahLogUnitData)
+      {
+         for (int i = 0; i < fahLogUnitData.ProjectInfoList.Count; i++)
+         {
+            if (ProjectsMatch(expected, fahLogUnitData.ProjectInfoList[i]))
+            {
+               fahLogUnitData.ProjectInfoIndex = i;
+            }
+         }
+      }
+
+      private static bool ProjectsMatch(IUnitInfo project1, IProjectInfo project2)
       {
          if (project1 == null || project2 == null) return false;
       

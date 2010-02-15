@@ -39,12 +39,17 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="FahLogUnitData.cs" />
+    <Compile Include="LogLineList.cs" />
     <Compile Include="ClientRun.cs" />
+    <Compile Include="ClientRunList.cs" />
     <Compile Include="FrameData.cs" />
     <Compile Include="LogLine.cs" />
     <Compile Include="LogReader.cs" />
     <Compile Include="LogReaderFactory.cs" />
+    <Compile Include="ProjectInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnitInfoLogData.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HFM.Framework\HFM.Framework.csproj">

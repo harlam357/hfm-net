@@ -20,6 +20,7 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 using HFM.Framework;
 using HFM.Instrumentation;
@@ -176,9 +177,14 @@ namespace HFM.Instances
       {
          get
          {
-            if (DownloadTimeUnknown == false && CurrentProtein.IsUnknown == false)
+            if (DownloadTimeUnknown == false)
             {
-               return DownloadTime.AddDays(CurrentProtein.PreferredDays);
+               if (CurrentProtein.IsUnknown == false)
+               {
+                  return DownloadTime.AddDays(CurrentProtein.PreferredDays);
+               }
+               
+               return DueTime;
             }
 
             return DateTime.MinValue;
@@ -334,10 +340,8 @@ namespace HFM.Instances
       {
          get
          {
-            return String.Format("P{0} (R{1}, C{2}, G{3})", ProjectID,
-                                                            ProjectRun,
-                                                            ProjectClone,
-                                                            ProjectGen);
+            return String.Format(CultureInfo.InvariantCulture, "P{0} (R{1}, C{2}, G{3})", 
+               ProjectID, ProjectRun, ProjectClone, ProjectGen);
          }
       }
 
@@ -390,24 +394,6 @@ namespace HFM.Instances
 
       #region Frames/Percent Completed Unit Level Members
       /// <summary>
-      /// Raw number of steps complete
-      /// </summary>
-      public Int32 RawFramesComplete
-      {
-         get { return _unitInfo.RawFramesComplete; }
-         set { _unitInfo.RawFramesComplete = value; }
-      }
-
-      /// <summary>
-      /// Raw total number of steps
-      /// </summary>
-      public Int32 RawFramesTotal
-      {
-         get { return _unitInfo.RawFramesTotal; }
-         set { _unitInfo.RawFramesTotal = value; }
-      }
-
-      /// <summary>
       /// Frame progress of the unit
       /// </summary>
       public Int32 FramesComplete
@@ -415,10 +401,10 @@ namespace HFM.Instances
          get
          {
             // Report Frame Progress even if CurrentProtein.IsUnknown - 11/22/09
-            Int32 RawScaleFactor = RawFramesTotal / CurrentProtein.Frames;
+            Int32 RawScaleFactor = _unitInfo.RawFramesTotal / CurrentProtein.Frames;
             if (RawScaleFactor > 0)
             {
-               int ComputedFramesComplete = RawFramesComplete / RawScaleFactor;
+               int ComputedFramesComplete = _unitInfo.RawFramesComplete / RawScaleFactor;
                
                // Make sure FramesComplete is 0 or greater but
                // not greater than the CurrentProtein.Frames

@@ -337,6 +337,50 @@ namespace HFM.Log.Tests
          Assert.AreEqual(reader.ClientLogLines[463].LineType, LogLineType.ClientEuePauseState);
       }
 
+      [Test, Category("GPU")]
+      public void GPU2_7_FAHlog() // verbosity (normal) / Project String After "+ Processing work unit"
+      {
+         // Scan
+         reader.ScanFAHLog("..\\..\\..\\TestFiles\\GPU2_7\\FAHlog.txt");
+
+         // Check Run 0 Positions
+         ClientRun expectedRun = new ClientRun(0);
+         expectedRun.UnitQueueIndex.Add(0);
+         expectedRun.UnitStartIndex.Add(24);
+         expectedRun.Arguments = String.Empty;
+         expectedRun.FoldingID = "Zagen30";
+         expectedRun.Team = 46301;
+         expectedRun.UserID = "xxxxxxxxxxxxxxxxxxx";
+         expectedRun.MachineID = 2;
+         expectedRun.NumberOfCompletedUnits = 0;
+         expectedRun.NumberOfFailedUnits = 0;
+         expectedRun.NumberOfTotalUnitsCompleted = 1994;
+
+         DoClientRunCheck(reader.ClientRunList[0], expectedRun);
+
+         // Verify LogLine Properties
+         Assert.IsNull(reader.PreviousWorkUnitLogLines);
+         Assert.IsNotNull(reader.CurrentWorkUnitLogLines);
+
+         // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
+         Assert.AreEqual(reader.ClientLogLines[28].LineData, 0);
+         Assert.AreEqual(reader.ClientLogLines[37].LineData, "1.31");
+         Assert.That(reader.ClientLogLines[50].ToString().Contains("Project: 5781 (Run 2, Clone 700, Gen 2)"));
+
+         IFahLogUnitData unitData = reader.GetFahLogDataFromLogLines(reader.CurrentWorkUnitLogLines);
+         Assert.AreEqual(new TimeSpan(1, 57, 21), unitData.UnitStartTimeStamp);
+         Assert.AreEqual(5, unitData.FrameDataList.Count);
+         Assert.AreEqual(5, unitData.FramesObserved);
+         Assert.AreEqual("1.31", unitData.CoreVersion);
+         Assert.AreEqual(2, unitData.ProjectInfoList.Count);
+         Assert.AreEqual(5781, unitData.ProjectInfoList[1].ProjectID);
+         Assert.AreEqual(2, unitData.ProjectInfoList[1].ProjectRun);
+         Assert.AreEqual(700, unitData.ProjectInfoList[1].ProjectClone);
+         Assert.AreEqual(2, unitData.ProjectInfoList[1].ProjectGen);
+         Assert.AreEqual(WorkUnitResult.Unknown, unitData.UnitResult);
+         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, unitData.Status);
+      }
+
       [Test, Category("Standard")]
       public void Standard_1_FAHlog() // verbosity 9
       {

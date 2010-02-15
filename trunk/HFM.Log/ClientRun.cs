@@ -37,14 +37,14 @@ namespace HFM.Log
          set { _Arguments = value; }
       }
 
-      private string _FoldingID = String.Empty;
+      private string _FoldingID = Constants.FoldingIDDefault;
       public string FoldingID
       {
          get { return _FoldingID; }
          set { _FoldingID = value; }
       }
 
-      private int _Team;
+      private int _Team = Constants.TeamDefault;
       public int Team
       {
          get { return _Team; }

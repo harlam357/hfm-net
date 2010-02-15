@@ -90,16 +90,6 @@ namespace HFM.Framework
       bool FinalDeadlineUnknown { get; }
 
       /// <summary>
-      /// Date/time the unit is due (preferred deadline)
-      /// </summary>
-      DateTime DueTime { get; }
-
-      /// <summary>
-      /// Flag specifying if Due Time is Unknown
-      /// </summary>
-      bool DueTimeUnknown { get; }
-
-      /// <summary>
       /// Unit Start Time Stamp (Time Stamp from First Parsable Line in LogLines)
       /// </summary>
       TimeSpan UnitStartTimeStamp { get; }
@@ -143,16 +133,6 @@ namespace HFM.Framework
       /// Class member containing info on the currently running protein
       /// </summary>
       IProtein CurrentProtein { get; }
-
-      /// <summary>
-      /// Raw number of steps complete
-      /// </summary>
-      Int32 RawFramesComplete { get; }
-
-      /// <summary>
-      /// Raw total number of steps
-      /// </summary>
-      Int32 RawFramesTotal { get; }
 
       /// <summary>
       /// Frame progress of the unit

@@ -21,7 +21,7 @@ using System;
 
 namespace HFM.Framework
 {
-   public interface IUnitInfo : IProjectInfo
+   public interface IUnitInfo
    {
       /// <summary>
       /// Name of the Client Instance that owns this UnitInfo
@@ -88,6 +88,26 @@ namespace HFM.Framework
       /// Core Version Number
       /// </summary>
       string CoreVersion { get; set; }
+
+      /// <summary>
+      /// Project ID Number
+      /// </summary>
+      Int32 ProjectID { get; set; }
+
+      /// <summary>
+      /// Project ID (Run)
+      /// </summary>
+      Int32 ProjectRun { get; set; }
+
+      /// <summary>
+      /// Project ID (Clone)
+      /// </summary>
+      Int32 ProjectClone { get; set; }
+
+      /// <summary>
+      /// Project ID (Gen)
+      /// </summary>
+      Int32 ProjectGen { get; set; }
 
       /// <summary>
       /// Returns true if Project (R/C/G) has not been identified

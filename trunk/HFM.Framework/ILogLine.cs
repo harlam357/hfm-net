@@ -28,7 +28,5 @@ namespace HFM.Framework
       string LineRaw { get; }
 
       object LineData { get; }
-
-      string ToString();
    }
 }
