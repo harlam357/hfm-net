@@ -348,8 +348,16 @@ namespace HFM.Instances
       /// Return LogLine List for Specified Queue Index
       /// </summary>
       /// <param name="QueueIndex">Index in Queue</param>
+      /// <exception cref="ArgumentOutOfRangeException">If QueueIndex is outside the bounds of the Log Lines Array</exception>
       public IList<ILogLine> GetLogLinesForQueueIndex(int QueueIndex)
       {
+         // Check the UnitLogLines array against the requested Queue Index - Issue 171
+         if (QueueIndex < 0 || QueueIndex > _dataAggregator.UnitLogLines.Length - 1)
+         {
+            throw new ArgumentOutOfRangeException(String.Format(CultureInfo.CurrentCulture, 
+               "Index is out of range.  Requested Index: {0}.  Array Length: {1}", QueueIndex, _dataAggregator.UnitLogLines.Length));
+         }
+
          if (_dataAggregator.UnitLogLines != null && 
              _dataAggregator.UnitLogLines[QueueIndex] != null)
          {

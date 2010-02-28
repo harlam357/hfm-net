@@ -448,7 +448,18 @@ namespace HFM.Forms
          {
             //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("Changed Queue Index ({0} - {1})", InstanceName, e.Index));
 
-            SetLogLines(ClientInstances.SelectedInstance, ClientInstances.SelectedInstance.GetLogLinesForQueueIndex(e.Index));
+            // Check the UnitLogLines array against the requested Queue Index - Issue 171
+            try
+            {
+               SetLogLines(ClientInstances.SelectedInstance,
+                           ClientInstances.SelectedInstance.GetLogLinesForQueueIndex(e.Index));
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+               HfmTrace.WriteToHfmConsole(ex);
+
+               txtLogFile.SetNoLogLines();
+            }
          }
          else
          {
