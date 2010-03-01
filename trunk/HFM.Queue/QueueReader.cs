@@ -81,22 +81,24 @@ namespace HFM.Queue
       
          try
          {
-            BinaryReader reader = new BinaryReader(new FileStream(FilePath, FileMode.Open, FileAccess.Read, FileShare.Read));
-            Queue q = FromBinaryReaderBlock(reader);
-            
-            // at this point we know we've read a file of expected length
-            // and no exceptions were thrown in the process
-            if (QueueReadOk)
+            using (BinaryReader reader = new BinaryReader(new FileStream(FilePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
             {
-               _qBase = new QueueBase(q);
-            
-               // If version is less than 5.xx, don't trust this data
-               // this class is not setup to handle legacy clients
-               // If version is greater than 6.xx, don't trust this data
-               // this class has not been tested with clients beyond 6.xx
-               if (_qBase.Version < 500 || _qBase.Version > 699)
+               Queue q = FromBinaryReaderBlock(reader);
+
+               // at this point we know we've read a file of expected length
+               // and no exceptions were thrown in the process
+               if (QueueReadOk)
                {
-                  ClearQueue();
+                  _qBase = new QueueBase(q);
+
+                  // If version is less than 5.xx, don't trust this data
+                  // this class is not setup to handle legacy clients
+                  // If version is greater than 6.xx, don't trust this data
+                  // this class has not been tested with clients beyond 6.xx
+                  if (_qBase.Version < 500 || _qBase.Version > 699)
+                  {
+                     ClearQueue();
+                  }
                }
             }
          }
