@@ -127,12 +127,6 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
          #endregion
 
-         //#region Unit Info Logic Values
-         //Assert.AreEqual(Instance.CurrentUnitInfo.DownloadTime, Instance.CurrentUnitInfo.UnitInfoData.DownloadTime);
-         //Assert.AreEqual(Instance.CurrentUnitInfo.DueTime, Instance.CurrentUnitInfo.UnitInfoData.DueTime);
-         //Assert.AreEqual(Instance.CurrentUnitInfo.FinishedTime, Instance.CurrentUnitInfo.UnitInfoData.FinishedTime);
-         //#endregion
-
          mocks.VerifyAll();
       }
 
@@ -215,12 +209,6 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(31, Instance.CurrentUnitInfo.UnitInfoData.FramesObserved);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
          #endregion
-
-         //#region Unit Info Logic Values
-         //Assert.AreEqual(Instance.CurrentUnitInfo.DownloadTime, Instance.CurrentUnitInfo.UnitInfoData.DownloadTime.ToLocalTime());
-         //Assert.AreEqual(Instance.CurrentUnitInfo.DueTime, Instance.CurrentUnitInfo.UnitInfoData.DueTime.ToLocalTime());
-         //Assert.AreEqual(Instance.CurrentUnitInfo.FinishedTime, Instance.CurrentUnitInfo.UnitInfoData.FinishedTime);
-         //#endregion
 
          mocks.VerifyAll();
       }
@@ -557,7 +545,7 @@ namespace HFM.Instances.Tests
       }
 
       [Test, Category("GPU")]
-      public void GPU2_6()
+      public void GPU2_6_1()
       {
          IProteinCollection proteinCollection = SetupMockProteinCollection("GROGPU2", 100);
          IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
@@ -568,7 +556,7 @@ namespace HFM.Instances.Tests
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
          Instance.ClientIsOnVirtualMachine = false;
-         Instance.InstanceName = "GPU2_6";
+         Instance.InstanceName = "GPU2_6_1";
          Instance.Path = "..\\..\\..\\TestFiles\\GPU2_6";
          #endregion
 
@@ -612,7 +600,7 @@ namespace HFM.Instances.Tests
          #region Check Unit Info Data Values
          Assert.IsNotNull(Instance.CurrentUnitInfo);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData);
-         Assert.AreEqual("GPU2_6", Instance.CurrentUnitInfo.UnitInfoData.OwningInstanceName);
+         Assert.AreEqual("GPU2_6_1", Instance.CurrentUnitInfo.UnitInfoData.OwningInstanceName);
          Assert.AreEqual("..\\..\\..\\TestFiles\\GPU2_6", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
          Assert.Greater(Instance.CurrentUnitInfo.UnitInfoData.UnitRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
          Assert.AreEqual("harlam357", Instance.CurrentUnitInfo.UnitInfoData.FoldingID);
@@ -635,6 +623,40 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(100, Instance.CurrentUnitInfo.UnitInfoData.FramesObserved);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
          #endregion         
+
+         mocks.VerifyAll();
+      }
+
+      [Test, Category("GPU")]
+      public void GPU2_6_2_QueueClearTest()
+      {
+         IProteinCollection proteinCollection = SetupMockProteinCollection("GROGPU2", 100);
+         IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
+         mocks.ReplayAll();
+
+         #region Setup Test Instance
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection, InstanceType.PathInstance);
+         // Don't Handle Status
+         Instance.HandleStatusOnRetrieve = false;
+         Instance.ClientIsOnVirtualMachine = false;
+         Instance.InstanceName = "GPU2_6_2";
+         Instance.Path = "..\\..\\..\\TestFiles\\GPU2_6";
+         #endregion
+
+         #region Retrieve Log Files
+         Instance.Retrieve();
+         Assert.Greater(Instance.LastRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
+         #endregion
+         
+         Assert.IsTrue(Instance.DataAggregator.Queue.DataPopulated);
+         Instance.RemoteQueueFilename = "wrong_file_name.dat";
+
+         #region Retrieve Log Files
+         Instance.Retrieve();
+         Assert.Greater(Instance.LastRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
+         #endregion
+         
+         Assert.IsNull(Instance.DataAggregator.Queue);
 
          mocks.VerifyAll();
       }

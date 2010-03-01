@@ -354,7 +354,7 @@ namespace HFM.Instances
          // Check the UnitLogLines array against the requested Queue Index - Issue 171
          if (QueueIndex < 0 || QueueIndex > _dataAggregator.UnitLogLines.Length - 1)
          {
-            throw new ArgumentOutOfRangeException(String.Format(CultureInfo.CurrentCulture, 
+            throw new ArgumentOutOfRangeException("QueueIndex", String.Format(CultureInfo.CurrentCulture, 
                "Index is out of range.  Requested Index: {0}.  Array Length: {1}", QueueIndex, _dataAggregator.UnitLogLines.Length));
          }
 

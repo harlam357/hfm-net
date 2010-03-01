@@ -227,6 +227,12 @@ namespace HFM.Instances
             }
          }
 
+         // If read is unsuccessful, clear the queue - Issue 171
+         if (success == false)
+         {
+            _queueReader.ClearQueue();
+         }
+
          return success;
       }
 
