@@ -349,11 +349,24 @@ namespace HFM.Forms
          lbl2MinutesToGen.Enabled = value;
          radioSchedule_CheckedChanged(null, EventArgs.Empty);
          radioFullRefresh.Enabled = value;
+         btnTestConnection.Enabled = value;
 
          txtWebSiteBase.Enabled = value;
          btnBrowseWebFolder.Enabled = value;
 
          chkFAHlog.Enabled = value;
+         
+         #region Enable FTP Mode Controls
+         //TODO: Stop gap - don't like how this is done.  Duplicate logic from txtWebSiteBase_CustomValidation() below
+         bool enable = false;
+         if (value)
+         {
+            enable = StringOps.ValidateFtpWithUserPassUrl(txtWebSiteBase.Text) ||
+                     StringOps.ValidateFtpWithUserPassUrl(String.Concat(txtWebSiteBase.Text, "/"));
+         }
+
+         EnableFtpModeControls(enable);
+         #endregion
       }
 
       private void radioSchedule_CheckedChanged(object sender, EventArgs e)
@@ -398,12 +411,12 @@ namespace HFM.Forms
             e.ControlText += "/";
          }
 
-         ShowFtpModeControls(e.ValidationResult && bIsFtpUrl);
+         EnableFtpModeControls(e.ValidationResult && bIsFtpUrl);
       }
       
-      private void ShowFtpModeControls(bool value)
+      private void EnableFtpModeControls(bool value)
       {
-         pnlFtpMode.Visible = value;
+         pnlFtpMode.Enabled = value;
       }
 
       private void btnBrowseWebFolder_Click(object sender, EventArgs e)
@@ -732,16 +745,12 @@ namespace HFM.Forms
 
          try
          {
+            SetWaitCursor();
             Match mMatchFtpWithUserPassUrl = StringOps.MatchFtpWithUserPassUrl(txtWebSiteBase.Text);
             if (mMatchFtpWithUserPassUrl.Success == false)
             {
-               if (Directory.Exists(txtWebSiteBase.Text) == false)
-               {
-                  throw new IOException(String.Format(CultureInfo.CurrentCulture,
-                     "Folder Path '{0}' does not exist.", txtWebSiteBase.Text));
-               }
-
-               ShowConnectionSucceededMessage();
+               CheckFileConnectionDelegate del = CheckFileConnection;
+               del.BeginInvoke(txtWebSiteBase.Text, CheckFileConnectionCallback, del);
             }
             else
             {
@@ -760,6 +769,36 @@ namespace HFM.Forms
             ShowConnectionFailedMessage(ex.Message);
          }
       }
+      
+      private delegate void CheckFileConnectionDelegate(string directory);
+      
+      public void CheckFileConnection(string directory)
+      {
+         if (Directory.Exists(directory) == false)
+         {
+            throw new IOException(String.Format(CultureInfo.CurrentCulture,
+               "Folder Path '{0}' does not exist.", directory));
+         }
+      }
+
+      private void CheckFileConnectionCallback(IAsyncResult result)
+      {
+         try
+         {
+            CheckFileConnectionDelegate del = (CheckFileConnectionDelegate)result.AsyncState;
+            del.EndInvoke(result);
+            ShowConnectionSucceededMessage();
+         }
+         catch (Exception ex)
+         {
+            HfmTrace.WriteToHfmConsole(ex);
+            ShowConnectionFailedMessage(ex.Message);
+         }
+         finally
+         {
+            SetDefaultCursor();
+         }
+      }
 
       private void FtpCheckConnectionCallback(IAsyncResult result)
       {
@@ -773,6 +812,10 @@ namespace HFM.Forms
          {
             HfmTrace.WriteToHfmConsole(ex);
             ShowConnectionFailedMessage(ex.Message);
+         }
+         finally
+         {
+            SetDefaultCursor();
          }
       }
 
@@ -803,6 +846,28 @@ namespace HFM.Forms
                MessageBoxIcon.Error);
       }
       
+      private void SetDefaultCursor()
+      {
+         if (InvokeRequired)
+         {
+            Invoke(new MethodInvoker(SetDefaultCursor));
+            return;
+         }
+         
+         Cursor = Cursors.Default;
+      }
+      
+      private void SetWaitCursor()
+      {
+         if (InvokeRequired)
+         {
+            Invoke(new MethodInvoker(SetWaitCursor));
+            return;
+         }
+
+         Cursor = Cursors.WaitCursor;
+      }
+
       private void btnOK_Click(object sender, EventArgs e)
       {
          if (CheckForErrorConditions() == false)

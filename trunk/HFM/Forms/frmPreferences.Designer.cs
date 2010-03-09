@@ -385,6 +385,7 @@ namespace HFM.Forms
          // 
          // btnTestConnection
          // 
+         this.btnTestConnection.Enabled = false;
          this.btnTestConnection.Location = new System.Drawing.Point(383, 15);
          this.btnTestConnection.Name = "btnTestConnection";
          this.btnTestConnection.Size = new System.Drawing.Size(100, 24);
@@ -398,6 +399,7 @@ namespace HFM.Forms
          this.pnlFtpMode.Controls.Add(this.lblFtpMode);
          this.pnlFtpMode.Controls.Add(this.radioPassive);
          this.pnlFtpMode.Controls.Add(this.radioActive);
+         this.pnlFtpMode.Enabled = false;
          this.pnlFtpMode.Location = new System.Drawing.Point(245, 71);
          this.pnlFtpMode.Name = "pnlFtpMode";
          this.pnlFtpMode.Size = new System.Drawing.Size(199, 26);

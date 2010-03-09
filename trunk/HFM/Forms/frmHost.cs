@@ -574,15 +574,11 @@ namespace HFM.Forms
 
          try
          {
+            SetWaitCursor();
             if (radioLocal.Checked)
             {
-               if (Directory.Exists(txtLocalPath.Text) == false)
-               {
-                  throw new IOException(String.Format(CultureInfo.CurrentCulture,
-                     "Folder Path '{0}' does not exist.", txtLocalPath.Text));
-               }
-
-               ShowConnectionSucceededMessage();
+               CheckFileConnectionDelegate del = CheckFileConnection;
+               del.BeginInvoke(txtLocalPath.Text, CheckFileConnectionCallback, del);
             }
             else if (radioFTP.Checked)
             {
@@ -601,6 +597,36 @@ namespace HFM.Forms
             ShowConnectionFailedMessage(ex.Message);
          }
       }
+
+      private delegate void CheckFileConnectionDelegate(string directory);
+
+      public void CheckFileConnection(string directory)
+      {
+         if (Directory.Exists(directory) == false)
+         {
+            throw new IOException(String.Format(CultureInfo.CurrentCulture,
+               "Folder Path '{0}' does not exist.", directory));
+         }
+      }
+
+      private void CheckFileConnectionCallback(IAsyncResult result)
+      {
+         try
+         {
+            CheckFileConnectionDelegate del = (CheckFileConnectionDelegate)result.AsyncState;
+            del.EndInvoke(result);
+            ShowConnectionSucceededMessage();
+         }
+         catch (Exception ex)
+         {
+            HfmTrace.WriteToHfmConsole(ex);
+            ShowConnectionFailedMessage(ex.Message);
+         }
+         finally
+         {
+            SetDefaultCursor();
+         }
+      }
       
       private void FtpCheckConnectionCallback(IAsyncResult result)
       {
@@ -614,6 +640,10 @@ namespace HFM.Forms
          {
             HfmTrace.WriteToHfmConsole(ex);
             ShowConnectionFailedMessage(ex.Message);
+         }
+         finally
+         {
+            SetDefaultCursor();
          }
       }
 
@@ -629,6 +659,10 @@ namespace HFM.Forms
          {
             HfmTrace.WriteToHfmConsole(ex);
             ShowConnectionFailedMessage(ex.Message);
+         }
+         finally
+         {
+            SetDefaultCursor();
          }
       }
       
@@ -657,6 +691,28 @@ namespace HFM.Forms
          MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture, "Test Connection Failed{0}{0}{1}",
             Environment.NewLine, message), PlatformOps.ApplicationNameAndVersion, MessageBoxButtons.OK,
                MessageBoxIcon.Error);
+      }
+
+      private void SetDefaultCursor()
+      {
+         if (InvokeRequired)
+         {
+            Invoke(new MethodInvoker(SetDefaultCursor));
+            return;
+         }
+
+         Cursor = Cursors.Default;
+      }
+
+      private void SetWaitCursor()
+      {
+         if (InvokeRequired)
+         {
+            Invoke(new MethodInvoker(SetWaitCursor));
+            return;
+         }
+
+         Cursor = Cursors.WaitCursor;
       }
 
       private void btnOK_Click(object sender, EventArgs e)

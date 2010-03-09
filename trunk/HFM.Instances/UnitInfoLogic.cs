@@ -262,7 +262,7 @@ namespace HFM.Instances
       {
          get 
          {
-            if (_UtcOffsetIsZero == false && _unitInfo.DueTime.Equals(DateTime.MinValue) == false)
+            if (_UtcOffsetIsZero == false && _unitInfo.FinishedTime.Equals(DateTime.MinValue) == false)
             {
                return _unitInfo.FinishedTime.ToLocalTime();
             } 

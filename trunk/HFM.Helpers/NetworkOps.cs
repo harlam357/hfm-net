@@ -400,7 +400,7 @@ namespace HFM.Helpers
       /// <param name="Username">Ftp Login Username.</param>
       /// <param name="Password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
-      /// <exception cref="ArgumentException">Throws if Server or FtpPath is Null or Empty.</exception>
+      /// <exception cref="ArgumentException">Throws if ftpWebOperation is Null.</exception>
       public void FtpCheckConnection(IFtpWebOperation ftpWebOperation, string Username, string Password, FtpType ftpMode)
       {
          if (ftpWebOperation == null) throw new ArgumentNullException("ftpWebOperation", "Argument 'ftpWebOperation' cannot be null.");
@@ -446,7 +446,7 @@ namespace HFM.Helpers
       /// <param name="httpWebOperation">Web Operation.</param>
       /// <param name="Username">Http Login Username.</param>
       /// <param name="Password">Http Login Password.</param>
-      /// <exception cref="ArgumentException">Throws if Url is Null or Empty.</exception>
+      /// <exception cref="ArgumentException">Throws if httpWebOperation is Null.</exception>
       public void HttpCheckConnection(IWebOperation httpWebOperation, string Username, string Password)
       {
          if (httpWebOperation == null) throw new ArgumentNullException("httpWebOperation", "Argument 'httpWebOperation' cannot be null.");
