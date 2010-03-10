@@ -114,10 +114,12 @@ namespace HFM.Instances
                {
                   result = true;
                }
-               if (frame.FrameID == unit.Frames)
-               {
-                  UnitInfoContainer.WriteCompletedUnitInfo(unit);
-               }
+
+               /*** Logic Moved to ClientInstance.UpdateBenchmarkData() ***/
+               //if (frame.FrameID == unit.Frames)
+               //{
+               //   UnitInfoContainer.WriteCompletedUnitInfo(unit);
+               //}
             }
             else
             {

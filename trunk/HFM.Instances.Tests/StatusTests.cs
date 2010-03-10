@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Status Tests
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -54,6 +54,7 @@ namespace HFM.Instances.Tests
          statusData.ClientTimeOffset = 0;
          statusData.IgnoreUtcOffset = false;
          statusData.UtcOffset = TimeSpan.Zero;
+         statusData.AllowRunningAsync = false;
 
          statusData.CurrentStatus = ClientStatus.GettingWorkPacket;
          statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
@@ -86,6 +87,7 @@ namespace HFM.Instances.Tests
          statusData.ClientTimeOffset = 0;
          statusData.IgnoreUtcOffset = false;
          statusData.UtcOffset = TimeSpan.Zero;
+         statusData.AllowRunningAsync = false;
 
          statusData.CurrentStatus = ClientStatus.Running;
          statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
@@ -118,6 +120,7 @@ namespace HFM.Instances.Tests
          statusData.ClientTimeOffset = 0;
          statusData.IgnoreUtcOffset = false;
          statusData.UtcOffset = TimeSpan.FromHours(-6);
+         statusData.AllowRunningAsync = false;
 
          statusData.CurrentStatus = ClientStatus.Running;
          statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
@@ -150,6 +153,7 @@ namespace HFM.Instances.Tests
          statusData.ClientTimeOffset = 0;
          statusData.IgnoreUtcOffset = false;
          statusData.UtcOffset = TimeSpan.Zero;
+         statusData.AllowRunningAsync = true;
 
          statusData.CurrentStatus = ClientStatus.GettingWorkPacket;
          statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
@@ -183,6 +187,7 @@ namespace HFM.Instances.Tests
          statusData.ClientTimeOffset = 0;
          statusData.IgnoreUtcOffset = false;
          statusData.UtcOffset = TimeSpan.Zero;
+         statusData.AllowRunningAsync = false;
 
          statusData.CurrentStatus = ClientStatus.GettingWorkPacket;
          statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
@@ -217,6 +222,7 @@ namespace HFM.Instances.Tests
          statusData.ClientTimeOffset = 0;
          statusData.IgnoreUtcOffset = false;
          statusData.UtcOffset = TimeSpan.Zero;
+         statusData.AllowRunningAsync = true;
 
          statusData.CurrentStatus = ClientStatus.RunningAsync;
          statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
@@ -250,6 +256,7 @@ namespace HFM.Instances.Tests
          statusData.ClientTimeOffset = 0;
          statusData.IgnoreUtcOffset = false;
          statusData.UtcOffset = TimeSpan.Zero;
+         statusData.AllowRunningAsync = true;
 
          statusData.CurrentStatus = ClientStatus.Hung;
          statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
@@ -283,6 +290,7 @@ namespace HFM.Instances.Tests
          statusData.ClientTimeOffset = 0;
          statusData.IgnoreUtcOffset = false;
          statusData.UtcOffset = TimeSpan.Zero;
+         statusData.AllowRunningAsync = false;
 
          statusData.CurrentStatus = ClientStatus.Hung;
          statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;

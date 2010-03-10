@@ -126,7 +126,7 @@ namespace HFM.Instances
          // Init User Specified Client Level Members
          InitUserSpecifiedMembers();
          // Create a fresh UnitInfo
-         _CurrentUnitInfo = new UnitInfoLogic(_Prefs, _proteinCollection, new UnitInfo(), false, InstanceName, Path, DateTime.Now);
+         _CurrentUnitInfo = new UnitInfoLogic(_Prefs, _proteinCollection, new UnitInfo(), false, 0, InstanceName, Path, DateTime.Now);
       }
       #endregion
 
@@ -1086,7 +1086,7 @@ namespace HFM.Instances
             if (units[i] != null)
             {
                parsedUnits[i] = new UnitInfoLogic(_Prefs, _proteinCollection, units[i], ClientIsOnVirtualMachine, 
-                                                  InstanceName, Path, LastRetrievalTime);   
+                                                  ClientTimeOffset, InstanceName, Path, LastRetrievalTime);   
             }
          }
 
@@ -1142,17 +1142,74 @@ namespace HFM.Instances
          }
       }
 
+      ///// <summary>
+      ///// Update Project Benchmarks
+      ///// </summary>
+      ///// <param name="parsedUnits">Parsed UnitInfo Array</param>
+      ///// <param name="BenchmarkUpdateIndex">Index of Current UnitInfo</param>
+      //private void UpdateBenchmarkData(UnitInfoLogic[] parsedUnits, int BenchmarkUpdateIndex)
+      //{
+      //   bool FoundCurrent = false;
+
+      //   int index = BenchmarkUpdateIndex;
+      //   // Set index for the oldest unit in the array
+      //   if (index == parsedUnits.Length - 1)
+      //   {
+      //      index = 0;
+      //   }
+      //   else
+      //   {
+      //      index++;
+      //   }
+
+      //   while (index != -1)
+      //   {
+      //      if (FoundCurrent == false && IsUnitInfoCurrentUnitInfo(parsedUnits[index]))
+      //      {
+      //         FoundCurrent = true;
+      //      }
+
+      //      if (FoundCurrent || index == BenchmarkUpdateIndex)
+      //      {
+      //         int previousFrameID = 0;
+      //         // check this against the CurrentUnitInfo
+      //         if (IsUnitInfoCurrentUnitInfo(parsedUnits[index]))
+      //         {
+      //            // current frame has already been recorded, increment to the next frame
+      //            previousFrameID = CurrentUnitInfo.LastUnitFrameID + 1;
+      //         }
+
+      //         // Update benchmarks
+      //         _benchmarkContainer.UpdateBenchmarkData(parsedUnits[index], previousFrameID, parsedUnits[index].LastUnitFrameID);
+      //      }
+
+      //      if (index == BenchmarkUpdateIndex)
+      //      {
+      //         index = -1;
+      //      }
+      //      else if (index == parsedUnits.Length - 1)
+      //      {
+      //         index = 0;
+      //      }
+      //      else
+      //      {
+      //         index++;
+      //      }
+      //   }
+      //}
+
       /// <summary>
       /// Update Project Benchmarks
       /// </summary>
       /// <param name="parsedUnits">Parsed UnitInfo Array</param>
-      /// <param name="BenchmarkUpdateIndex">Index of Current UnitInfo</param>
-      private void UpdateBenchmarkData(UnitInfoLogic[] parsedUnits, int BenchmarkUpdateIndex)
+      /// <param name="benchmarkUpdateIndex">Index of Current UnitInfo</param>
+      private void UpdateBenchmarkData(UnitInfoLogic[] parsedUnits, int benchmarkUpdateIndex)
       {
          bool FoundCurrent = false;
-
-         int index = BenchmarkUpdateIndex;
-         // Set index for the oldest unit in the array
+         bool ProcessUpdates = false;
+         int index = benchmarkUpdateIndex;
+         
+         #region Set index for the oldest unit in the array
          if (index == parsedUnits.Length - 1)
          {
             index = 0;
@@ -1161,29 +1218,47 @@ namespace HFM.Instances
          {
             index++;
          }
+         #endregion
 
          while (index != -1)
          {
-            if (FoundCurrent == false && IsUnitInfoCurrentUnitInfo(parsedUnits[index]))
+            // If Current has not been found, check the benchmarkUpdateIndex
+            // or try to match the Current Project and Raw Download Time
+            if (ProcessUpdates == false && (index == benchmarkUpdateIndex || IsUnitInfoCurrentUnitInfo(parsedUnits[index])))
             {
                FoundCurrent = true;
+               ProcessUpdates = true;
             }
 
-            if (FoundCurrent || index == BenchmarkUpdateIndex)
+            if (ProcessUpdates)
             {
                int previousFrameID = 0;
-               // check this against the CurrentUnitInfo
-               if (IsUnitInfoCurrentUnitInfo(parsedUnits[index]))
+               if (FoundCurrent)
                {
                   // current frame has already been recorded, increment to the next frame
                   previousFrameID = CurrentUnitInfo.LastUnitFrameID + 1;
+                  FoundCurrent = false;
                }
 
                // Update benchmarks
                _benchmarkContainer.UpdateBenchmarkData(parsedUnits[index], previousFrameID, parsedUnits[index].LastUnitFrameID);
+
+               // Write Completed Unit Info only for units that are NOT current (i.e. have moved into history)
+               // For some WUs (typically bigadv) all frames could be complete but the FinishedTime read from
+               // the queue.dat is not yet populated.  To write this units production using an accurate bonus
+               // multiplier that FinishedTime needs to be populated.
+               if (index != benchmarkUpdateIndex)
+               {
+                  // Make sure all Frames have been completed (not necessarily observed, but completed)
+                  if (parsedUnits[index].AllFramesAreCompleted)
+                  {
+                     UnitInfoContainer.WriteCompletedUnitInfo(parsedUnits[index]);
+                  }
+               }
             }
 
-            if (index == BenchmarkUpdateIndex)
+            #region Increment to the next unit or set terminal value
+            if (index == benchmarkUpdateIndex)
             {
                index = -1;
             }
@@ -1195,6 +1270,7 @@ namespace HFM.Instances
             {
                index++;
             }
+            #endregion
          }
       }
 
@@ -1203,7 +1279,7 @@ namespace HFM.Instances
       /// </summary>
       private void UpdateTimeOfLastProgress(IUnitInfoLogic parsedUnitInfo)
       {
-         // Same UnitInfo (based on Project (R/C/G)
+         // Matches the Current Project and Raw Download Time
          if (IsUnitInfoCurrentUnitInfo(parsedUnitInfo))
          {
             // If the Unit Start Time Stamp is no longer the same as the CurrentUnitInfo
@@ -1239,9 +1315,11 @@ namespace HFM.Instances
          // if the parsed Project is known
          if (parsedUnitInfo != null && parsedUnitInfo.ProjectIsUnknown == false)
          {
-            // Matches the Current Project and Download Time
+            // Matches the Current Project and Raw Download Time
+            // DownloadTime check should be made on the Raw DownloadTime
+            // value from the internal UnitInfoData data source object
             if (ProjectsMatch(parsedUnitInfo, CurrentUnitInfo) &&
-                parsedUnitInfo.DownloadTime.Equals(CurrentUnitInfo.DownloadTime))
+                parsedUnitInfo.UnitInfoData.DownloadTime.Equals(CurrentUnitInfo.UnitInfoData.DownloadTime))
             {
                return true;
             }
@@ -1697,7 +1775,7 @@ namespace HFM.Instances
       /// <param name="unitInfo">UnitInfo Object to Restore</param>
       public void RestoreUnitInfo(UnitInfo unitInfo)
       {
-         CurrentUnitInfoConcrete = new UnitInfoLogic(_Prefs, _proteinCollection, unitInfo, ClientIsOnVirtualMachine);
+         CurrentUnitInfoConcrete = new UnitInfoLogic(_Prefs, _proteinCollection, unitInfo, ClientIsOnVirtualMachine, ClientTimeOffset);
       }
       
       public bool IsUsernameOk()

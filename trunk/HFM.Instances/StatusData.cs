@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Status Data Class
+ * HFM.NET - Status Data Structure
  * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@ using HFM.Framework;
 
 namespace HFM.Instances
 {
-   public class StatusData
+   public struct StatusData
    {
       private string _InstanceName;
       public string InstanceName
@@ -123,7 +123,7 @@ namespace HFM.Instances
          set { _UnitStartTimeStamp = value; }
       }
 
-      private bool _AllowRunningAsync = true;
+      private bool _AllowRunningAsync;
       public bool AllowRunningAsync
       {
          get { return _AllowRunningAsync; }

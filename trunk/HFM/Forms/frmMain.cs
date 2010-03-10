@@ -955,8 +955,11 @@ namespace HFM.Forms
          {
             if (hti.Type == DataGridViewHitTestType.Cell)
             {
-               dataGridView1.ClearSelection();
-               dataGridView1.Rows[hti.RowIndex].Cells[hti.ColumnIndex].Selected = true;
+               if (dataGridView1.Rows[hti.RowIndex].Cells[hti.ColumnIndex].Selected == false)
+               {
+                  dataGridView1.ClearSelection();
+                  dataGridView1.Rows[hti.RowIndex].Cells[hti.ColumnIndex].Selected = true;
+               }
 
                // Check for SelectedInstance, and get out if not found
                if (ClientInstances.SelectedInstance == null) return;

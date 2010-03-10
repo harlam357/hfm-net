@@ -31,13 +31,13 @@ namespace HFM.Instances.Tests
    public class UnitInfoLogicTests
    {
       private MockRepository mocks;
-      private IProteinBenchmarkContainer benchmarkCollection;
+      //private IProteinBenchmarkContainer benchmarkCollection;
 
       [SetUp]
       public void Init()
       {
          mocks = new MockRepository();
-         benchmarkCollection = mocks.DynamicMock<IProteinBenchmarkContainer>();
+         //benchmarkCollection = mocks.DynamicMock<IProteinBenchmarkContainer>();
       }
    
       [Test]
@@ -49,7 +49,7 @@ namespace HFM.Instances.Tests
       
          UnitInfo unitInfo = new UnitInfo();
          UnitInfoLogic unitInfoLogic = new UnitInfoLogic(Prefs, proteinCollection, 
-            unitInfo, false, "Owner", "Path", DateTime.Now);
+            unitInfo, false, 0, "Owner", "Path", DateTime.Now);
 
          SetDateTimeProperties(unitInfo);
          AssertDateTimeProperties(unitInfoLogic, unitInfo.DownloadTime.ToLocalTime(),
@@ -69,7 +69,7 @@ namespace HFM.Instances.Tests
 
          UnitInfo unitInfo = new UnitInfo();
          UnitInfoLogic unitInfoLogic = new UnitInfoLogic(Prefs, proteinCollection,
-            unitInfo, true, "Owner", "Path", DateTime.Now);
+            unitInfo, true, 0, "Owner", "Path", DateTime.Now);
 
          SetDateTimeProperties(unitInfo);
          AssertDateTimeProperties(unitInfoLogic, unitInfo.DownloadTime,
@@ -139,8 +139,8 @@ namespace HFM.Instances.Tests
          mocks.ReplayAll();
 
          DateTime baseDate = new DateTime(2010, 1, 1);
-         UnitInfoLogic unitInfoLogic = new UnitInfoLogic(Prefs, proteinCollection, 
-            unitInfo, false, "Owner", "Path", baseDate.Add(TimeSpan.FromMinutes(30)));
+         UnitInfoLogic unitInfoLogic = new UnitInfoLogic(Prefs, proteinCollection,
+            unitInfo, false, 0, "Owner", "Path", baseDate.Add(TimeSpan.FromMinutes(30)));
 
          Assert.AreEqual(TimeSpan.Zero, unitInfoLogic.TimeOfLastFrame);
          unitInfo.FramesObserved = 4;
@@ -180,7 +180,7 @@ namespace HFM.Instances.Tests
 
          DateTime baseDate = new DateTime(2010, 1, 1);
          UnitInfoLogic unitInfoLogic = new UnitInfoLogic(Prefs, proteinCollection,
-            unitInfo, true, "Owner", "Path", baseDate.Add(TimeSpan.FromMinutes(90)));
+            unitInfo, true, 0, "Owner", "Path", baseDate.Add(TimeSpan.FromMinutes(90)));
 
          Assert.AreEqual(TimeSpan.Zero, unitInfoLogic.TimeOfLastFrame);
          unitInfo.FramesObserved = 5;
@@ -223,7 +223,7 @@ namespace HFM.Instances.Tests
 
          DateTime baseDate = new DateTime(2010, 1, 1);
          UnitInfoLogic unitInfoLogic = new UnitInfoLogic(Prefs, proteinCollection,
-            unitInfo, true, "Owner", "Path", baseDate.Add(TimeSpan.FromMinutes(90)));
+            unitInfo, true, 0, "Owner", "Path", baseDate.Add(TimeSpan.FromMinutes(90)));
 
          AssertRawTimesZero(unitInfoLogic);
 
@@ -262,7 +262,7 @@ namespace HFM.Instances.Tests
 
          DateTime baseDate = new DateTime(2010, 1, 1);
          UnitInfoLogic unitInfoLogic = new UnitInfoLogic(Prefs, proteinCollection,
-            unitInfo, true, "Owner", "Path", baseDate.Add(TimeSpan.FromMinutes(90)));
+            unitInfo, true, 0, "Owner", "Path", baseDate.Add(TimeSpan.FromMinutes(90)));
 
          AssertRawTimesZero(unitInfoLogic);
 

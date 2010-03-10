@@ -53,6 +53,11 @@ namespace HFM.Instances
       /// Use UTC Time Data as Local Time
       /// </summary>
       private readonly bool _UtcOffsetIsZero; 
+      
+      /// <summary>
+      /// Client Time Adjustment (apply to DateTime values)
+      /// </summary>
+      private readonly int _ClientTimeOffset;
       #endregion
 
       #region Owner Data Properties
@@ -107,12 +112,13 @@ namespace HFM.Instances
       #endregion
 
       #region Constructors
-      public UnitInfoLogic(IPreferenceSet Prefs, IProteinCollection proteinCollection, IUnitInfo unitInfo, bool UtcOffsetIsZero)
+      public UnitInfoLogic(IPreferenceSet Prefs, IProteinCollection proteinCollection, IUnitInfo unitInfo, bool UtcOffsetIsZero, int ClientTimeOffset)
       {
          _Prefs = Prefs;
          _proteinCollection = proteinCollection;
          _unitInfo = (UnitInfo)unitInfo;
          _UtcOffsetIsZero = UtcOffsetIsZero;
+         _ClientTimeOffset = ClientTimeOffset;
          
          // This constructor is used when restoring a UnitInfo upon Load fro the UnitInfoContainer.
          // Since the ProjectID setter will not be called, we need to force the CurrentProtein 
@@ -120,13 +126,14 @@ namespace HFM.Instances
          SetCurrentProtein();
       }
 
-      public UnitInfoLogic(IPreferenceSet Prefs, IProteinCollection proteinCollection, IUnitInfo unitInfo, bool UtcOffsetIsZero, 
+      public UnitInfoLogic(IPreferenceSet Prefs, IProteinCollection proteinCollection, IUnitInfo unitInfo, bool UtcOffsetIsZero, int ClientTimeOffset, 
                            string ownerName, string ownerPath, DateTime unitRetrievalTime)
       {
          _Prefs = Prefs;
          _proteinCollection = proteinCollection;
          _unitInfo = (UnitInfo)unitInfo;
          _UtcOffsetIsZero = UtcOffsetIsZero;
+         _ClientTimeOffset = ClientTimeOffset;
 
          OwningInstanceName = ownerName;
          OwningInstancePath = ownerPath;
@@ -154,10 +161,16 @@ namespace HFM.Instances
       {
          get 
          {
-            if (_UtcOffsetIsZero == false && _unitInfo.DownloadTime.Equals(DateTime.MinValue) == false)
+            if (_unitInfo.DownloadTime.Equals(DateTime.MinValue) == false)
             {
-               return _unitInfo.DownloadTime.ToLocalTime();
+               if (_UtcOffsetIsZero == false)
+               {
+                  return _unitInfo.DownloadTime.ToLocalTime().Subtract(TimeSpan.FromMinutes(_ClientTimeOffset));
+               }
+
+               return _unitInfo.DownloadTime.Subtract(TimeSpan.FromMinutes(_ClientTimeOffset)); 
             }
+            
             return _unitInfo.DownloadTime; 
          }
       }
@@ -230,10 +243,16 @@ namespace HFM.Instances
       {
          get 
          {
-            if (_UtcOffsetIsZero == false && _unitInfo.DueTime.Equals(DateTime.MinValue) == false)
+            if (_unitInfo.DueTime.Equals(DateTime.MinValue) == false)
             {
-               return _unitInfo.DueTime.ToLocalTime();
-            } 
+               if (_UtcOffsetIsZero == false)
+               {
+                  return _unitInfo.DueTime.ToLocalTime().Subtract(TimeSpan.FromMinutes(_ClientTimeOffset));
+               }
+
+               return _unitInfo.DueTime.Subtract(TimeSpan.FromMinutes(_ClientTimeOffset));
+            }
+
             return _unitInfo.DueTime; 
          }
       }
@@ -262,10 +281,16 @@ namespace HFM.Instances
       {
          get 
          {
-            if (_UtcOffsetIsZero == false && _unitInfo.FinishedTime.Equals(DateTime.MinValue) == false)
+            if (_unitInfo.FinishedTime.Equals(DateTime.MinValue) == false)
             {
-               return _unitInfo.FinishedTime.ToLocalTime();
-            } 
+               if (_UtcOffsetIsZero == false)
+               {
+                  return _unitInfo.FinishedTime.ToLocalTime().Subtract(TimeSpan.FromMinutes(_ClientTimeOffset));
+               }
+
+               return _unitInfo.FinishedTime.Subtract(TimeSpan.FromMinutes(_ClientTimeOffset));
+            }
+
             return _unitInfo.FinishedTime; 
          }
       }
@@ -502,6 +527,22 @@ namespace HFM.Instances
       }
 
       /// <summary>
+      /// Specifies if All Frames have been Completed
+      /// </summary>
+      public bool AllFramesAreCompleted
+      {
+         get
+         {
+            if (CurrentProtein.IsUnknown == false)
+            {
+               return CurrentProtein.Frames == FramesComplete;
+            }
+
+            return false;
+         }
+      }
+
+      /// <summary>
       /// Esimated Finishing Time for this unit
       /// </summary>
       public TimeSpan EFT
@@ -516,7 +557,15 @@ namespace HFM.Instances
                }
 
                // Issue 156 - ETA must be a positive TimeSpan
-               if (ETA.Equals(TimeSpan.Zero))
+               // Issue 134 - Since fixing Issue 156 it appears that once most 
+               // bigadv units finish their last frame they would be assigned a 
+               // Zero EFT since their ETA values would have been zero and they 
+               // had not yet written the FinishedTime to the queue.dat file.  
+               // In light of this I've added the AllFramesAreCompleted property.  
+               // Now, if ETA is Zero and AllFramesAreCompleted == false, the EFT 
+               // will be Zero.  Otherwise, if will be given a value of the 
+               // (UnitRetrievalTime plus ETA) minus the DownloadTime.
+               if (ETA.Equals(TimeSpan.Zero) && AllFramesAreCompleted == false)
                {
                   return TimeSpan.Zero;
                }
