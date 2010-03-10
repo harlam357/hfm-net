@@ -56,6 +56,8 @@
     <Compile Include="ClientInstance.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ClientInstanceFactory.cs" />
+    <Compile Include="ClientInstanceXmlSerializer.cs" />
     <Compile Include="DisplayInstance.cs" />
     <Compile Include="InstanceCollection.cs">
       <SubType>Code</SubType>

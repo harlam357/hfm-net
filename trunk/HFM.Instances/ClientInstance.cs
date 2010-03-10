@@ -25,10 +25,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Security.Cryptography;
-
-using harlam357.Security;
-using harlam357.Security.Encryption;
 
 using HFM.Framework;
 using HFM.Helpers;
@@ -36,37 +32,12 @@ using HFM.Instrumentation;
 
 namespace HFM.Instances
 {
-   public class ClientInstance
+   public class ClientInstance : IClientInstanceSettings
    {
       #region Constants
-      // Xml Serialization Constants
-      private const string xmlNodeInstance = "Instance";
-      private const string xmlAttrName = "Name";
-      private const string xmlNodeFAHLog = "FAHLogFile";
-      private const string xmlNodeUnitInfo = "UnitInfoFile";
-      private const string xmlNodeQueue = "QueueFile";
-      private const string xmlNodeClientMHz = "ClientMHz";
-      private const string xmlNodeClientVM = "ClientVM";
-      private const string xmlNodeClientOffset = "ClientOffset";
-      private const string xmlPropType = "HostType";
-      private const string xmlPropPath = "Path";
-      private const string xmlPropServ = "Server";
-      private const string xmlPropUser = "Username";
-      private const string xmlPropPass = "Password";
-      private const string xmlPropPassiveFtpMode = "PassiveFtpMode";
-
-      // Log Filename Constants
-      public const string LocalFAHLog = "FAHlog.txt";
-      public const string LocalUnitInfo = "unitinfo.txt";
-      public const string LocalQueue = "queue.dat";
-      
       // Default ID Constants
       public const string DefaultUserID = "";
       public const int DefaultMachineID = 0;
-
-      // Encryption Key and Initialization Vector
-      private readonly Data IV = new Data("zX!1=D,^7K@u33+d");
-      private readonly Data SymmetricKey = new Data("cNx/7+,?%ubm*?j8");
 
       /// <summary>
       /// UnitInfo Log File Maximum Download Size.
@@ -97,7 +68,17 @@ namespace HFM.Instances
       /// </summary>
       private void ClientInstance_InstanceHostTypeChanged(object sender, EventArgs e)
       {
-         InitUserSpecifiedMembers();
+         switch (InstanceHostType)
+         {
+            case InstanceType.PathInstance:
+               Server = String.Empty;
+               Username = String.Empty;
+               Path = String.Empty;
+               break;
+            case InstanceType.HTTPInstance:
+               Server = String.Empty;
+               break;
+         }
       }
       #endregion
       
@@ -130,7 +111,7 @@ namespace HFM.Instances
       /// <summary>
       /// Primary Constructor
       /// </summary>
-      public ClientInstance(IPreferenceSet Prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer, InstanceType type)
+      public ClientInstance(IPreferenceSet Prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer)
       {
          // When Instance Host Type Changes, Clear the User Specified Values
          InstanceHostTypeChanged += ClientInstance_InstanceHostTypeChanged;
@@ -140,8 +121,6 @@ namespace HFM.Instances
          _benchmarkContainer = benchmarkContainer;
          _dataAggregator = InstanceProvider.GetInstance<IDataAggregator>();
          
-         // Set the Host Type
-         _InstanceHostType = type;
          // Init Client Level Members
          Init();
          // Init User Specified Client Level Members
@@ -405,7 +384,7 @@ namespace HFM.Instances
       /// </summary>
       public string CachedFAHLogName
       {
-         get { return String.Format("{0}-{1}", InstanceName, LocalFAHLog); }
+         get { return String.Format("{0}-{1}", InstanceName, Constants.LocalFAHLog); }
       }
 
       /// <summary>
@@ -413,7 +392,7 @@ namespace HFM.Instances
       /// </summary>
       public string CachedUnitInfoName
       {
-         get { return String.Format("{0}-{1}", InstanceName, LocalUnitInfo); }
+         get { return String.Format("{0}-{1}", InstanceName, Constants.LocalUnitInfo); }
       }
 
       /// <summary>
@@ -421,7 +400,7 @@ namespace HFM.Instances
       /// </summary>
       public string CachedQueueName
       {
-         get { return String.Format("{0}-{1}", InstanceName, LocalQueue); }
+         get { return String.Format("{0}-{1}", InstanceName, Constants.LocalQueue); }
       }
       #endregion
 
@@ -446,7 +425,7 @@ namespace HFM.Instances
          {
             if (String.IsNullOrEmpty(value))
             {
-               _RemoteFAHLogFilename = LocalFAHLog;
+               _RemoteFAHLogFilename = Constants.LocalFAHLog;
             }
             else
             {
@@ -467,7 +446,7 @@ namespace HFM.Instances
          {
             if (String.IsNullOrEmpty(value))
             {
-               _RemoteUnitInfoFilename = LocalUnitInfo;
+               _RemoteUnitInfoFilename = Constants.LocalUnitInfo;
             }
             else
             {
@@ -487,7 +466,7 @@ namespace HFM.Instances
          {
             if (String.IsNullOrEmpty(value))
             {
-               _RemoteQueueFilename = LocalQueue;
+               _RemoteQueueFilename = Constants.LocalQueue;
             }
             else
             {
@@ -573,9 +552,9 @@ namespace HFM.Instances
       {
          InstanceName = String.Empty;
          ClientProcessorMegahertz = 1;
-         RemoteFAHLogFilename = LocalFAHLog;
-         RemoteUnitInfoFilename = LocalUnitInfo;
-         RemoteQueueFilename = LocalQueue;
+         RemoteFAHLogFilename = Constants.LocalFAHLog;
+         RemoteUnitInfoFilename = Constants.LocalUnitInfo;
+         RemoteQueueFilename = Constants.LocalQueue;
 
          Path = String.Empty;
          Server = String.Empty;
@@ -1711,231 +1690,7 @@ namespace HFM.Instances
       
       #endregion
 
-      #region XML Serialization
-      /// <summary>
-      /// Serialize this Client Instance to Xml
-      /// </summary>
-      public System.Xml.XmlDocument ToXml()
-      {
-         DateTime Start = HfmTrace.ExecStart;
-
-         try
-         {
-            System.Xml.XmlDocument xmlData = new System.Xml.XmlDocument();
-
-            System.Xml.XmlElement xmlRoot = xmlData.CreateElement(xmlNodeInstance);
-            xmlRoot.SetAttribute(xmlAttrName, InstanceName);
-            xmlData.AppendChild(xmlRoot);
-            
-            xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlNodeFAHLog, RemoteFAHLogFilename));
-            xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlNodeUnitInfo, RemoteUnitInfoFilename));
-            xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlNodeQueue, RemoteQueueFilename));
-            xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlNodeClientMHz, ClientProcessorMegahertz.ToString()));
-            xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlNodeClientVM, ClientIsOnVirtualMachine.ToString()));
-            xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlNodeClientOffset, ClientTimeOffset.ToString()));
-            xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropType, InstanceHostType.ToString()));
-            xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropPath, Path));
-            xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropServ, Server));
-            xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropUser, Username));
-
-            Symmetric SymetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
-            
-            string encryptedPassword = String.Empty;
-            if (Password.Length > 0)
-            {
-               try
-               {
-                  SymetricProvider.IntializationVector = IV;
-                  encryptedPassword = SymetricProvider.Encrypt(new Data(Password), SymmetricKey).ToBase64();
-               }
-               catch (CryptographicException)
-               {
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, "Failed to encrypt Server Password... saving clear value.");
-                  encryptedPassword = Password;
-               }
-            }
-            xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropPass, encryptedPassword));
-            xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropPassiveFtpMode, FtpMode.ToString()));
-            
-            return xmlData;
-         }
-         catch (Exception ex)
-         {
-            HfmTrace.WriteToHfmConsole(ex);
-         }
-         finally
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, InstanceName, Start);
-         }
-         
-         return null;
-      }
-
-      /// <summary>
-      /// Deserialize Xml data into this Client Instance
-      /// </summary>
-      /// <param name="xmlData">XmlNode containing the client instance data</param>
-      public void FromXml(System.Xml.XmlNode xmlData)
-      {
-         DateTime Start = HfmTrace.ExecStart;
-         
-         InstanceName = xmlData.Attributes[xmlAttrName].ChildNodes[0].Value;
-         try
-         {
-            RemoteFAHLogFilename = xmlData.SelectSingleNode(xmlNodeFAHLog).InnerText;
-         }
-         catch (NullReferenceException)
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Cannot load Remote FAHlog Filename."));
-            RemoteFAHLogFilename = LocalFAHLog;
-         }
-         
-         try
-         {
-            RemoteUnitInfoFilename = xmlData.SelectSingleNode(xmlNodeUnitInfo).InnerText;
-         }
-         catch (NullReferenceException)
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Cannot load Remote Unitinfo Filename."));
-            RemoteUnitInfoFilename = LocalUnitInfo;
-         }
-         
-         try
-         {
-            RemoteQueueFilename = xmlData.SelectSingleNode(xmlNodeQueue).InnerText;
-         }
-         catch (NullReferenceException)
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Cannot load Remote Queue Filename."));
-            RemoteQueueFilename = LocalQueue;
-         }
-         
-         try
-         {
-            ClientProcessorMegahertz = int.Parse(xmlData.SelectSingleNode(xmlNodeClientMHz).InnerText);
-            if (ClientProcessorMegahertz < 1)
-            {
-               ClientProcessorMegahertz = 1;
-            }
-         }
-         catch (NullReferenceException)
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Cannot load Client MHz, defaulting to 1 MHz."));
-            ClientProcessorMegahertz = 1;
-         }
-         catch (FormatException)
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Could not parse Client MHz, defaulting to 1 MHz."));
-            ClientProcessorMegahertz = 1;
-         }
-
-         try
-         {
-            ClientIsOnVirtualMachine = Convert.ToBoolean(xmlData.SelectSingleNode(xmlNodeClientVM).InnerText);
-         }
-         catch (NullReferenceException)
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Cannot load Client VM Flag, defaulting to false."));
-            ClientIsOnVirtualMachine = false;
-         }
-         catch (InvalidCastException)
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Could not parse Client VM Flag, defaulting to false."));
-            ClientIsOnVirtualMachine = false;
-         }
-
-         try
-         {
-            ClientTimeOffset = int.Parse(xmlData.SelectSingleNode(xmlNodeClientOffset).InnerText);
-         }
-         catch (NullReferenceException)
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Cannot load Client Time Offset, defaulting to 0."));
-            ClientTimeOffset = 0;
-         }
-         catch (FormatException)
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Could not parse Client Time Offset, defaulting to 0."));
-            ClientTimeOffset = 0;
-         }
-
-         try
-         {
-            Path = xmlData.SelectSingleNode(xmlPropPath).InnerText;
-         }
-         catch (NullReferenceException)
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Cannot load Client Path."));
-         }
-
-         try
-         {
-            Server = xmlData.SelectSingleNode(xmlPropServ).InnerText;
-         }
-         catch (NullReferenceException)
-         {
-            Server = String.Empty;
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Cannot load Client Server."));
-         }
-         
-         try
-         {
-            Username = xmlData.SelectSingleNode(xmlPropUser).InnerText;
-         }
-         catch (NullReferenceException)
-         {
-            Username = String.Empty;
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Cannot load Server Username."));
-         }
-         
-         Symmetric SymetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
-         
-         try
-         {
-            Password = String.Empty;
-            if (xmlData.SelectSingleNode(xmlPropPass).InnerText.Length > 0)
-            {
-               try
-               {
-                  SymetricProvider.IntializationVector = IV;
-                  Password = SymetricProvider.Decrypt(new Data(Utils.FromBase64(xmlData.SelectSingleNode(xmlPropPass).InnerText)), SymmetricKey).ToString();
-               }
-               catch (FormatException)
-               {
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, "Server Password is not Base64 encoded... loading clear value.");
-                  Password = xmlData.SelectSingleNode(xmlPropPass).InnerText;
-               }
-               catch (CryptographicException)
-               {
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, "Cannot decrypt Server Password... loading clear value.");
-                  Password = xmlData.SelectSingleNode(xmlPropPass).InnerText;
-               }
-            }
-         }
-         catch (NullReferenceException)
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Cannot load Server Password."));
-         }
-
-         try
-         {
-            string FtpModeText = xmlData.SelectSingleNode(xmlPropPassiveFtpMode).InnerText;
-            FtpMode = (FtpType)Enum.Parse(typeof(FtpType), FtpModeText, false);
-         }
-         catch (NullReferenceException)
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Cannot load Ftp Mode Flag, defaulting to Passive."));
-            FtpMode = FtpType.Passive;
-         }
-         catch (InvalidCastException)
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("{0} {1}.", HfmTrace.FunctionName, "Could not parse Ftp Mode Flag, defaulting to Passive."));
-            FtpMode = FtpType.Passive;
-         }
-
-         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, Start);
-      }
-
+      #region Other Helper Functions
       /// <summary>
       /// Restore the given UnitInfo into this Client Instance
       /// </summary>
@@ -1944,9 +1699,7 @@ namespace HFM.Instances
       {
          CurrentUnitInfoConcrete = new UnitInfoLogic(_Prefs, _proteinCollection, unitInfo, ClientIsOnVirtualMachine);
       }
-      #endregion
-
-      #region Other Helper Functions
+      
       public bool IsUsernameOk()
       {
          // if these are the default assigned values, don't check otherwise and just return true

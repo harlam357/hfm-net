@@ -63,7 +63,8 @@ namespace HFM.Instances.Tests
          mocks.ReplayAll();
       
          #region Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection, InstanceType.PathInstance);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection);
+         Instance.InstanceHostType = InstanceType.PathInstance;
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
          Instance.ClientIsOnVirtualMachine = true;
@@ -138,7 +139,8 @@ namespace HFM.Instances.Tests
          mocks.ReplayAll();
 
          #region Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection, InstanceType.PathInstance);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection);
+         Instance.InstanceHostType = InstanceType.PathInstance;
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
          Instance.ClientIsOnVirtualMachine = false;
@@ -228,7 +230,8 @@ namespace HFM.Instances.Tests
          mocks.ReplayAll();
 
          #region Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection, InstanceType.PathInstance);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection);
+         Instance.InstanceHostType = InstanceType.PathInstance;
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
          Instance.ClientIsOnVirtualMachine = false;
@@ -317,7 +320,8 @@ namespace HFM.Instances.Tests
          mocks.ReplayAll();
 
          #region Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection, InstanceType.PathInstance);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection);
+         Instance.InstanceHostType = InstanceType.PathInstance;
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
          Instance.ClientIsOnVirtualMachine = false;
@@ -394,7 +398,8 @@ namespace HFM.Instances.Tests
          mocks.ReplayAll();
 
          #region Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection, InstanceType.PathInstance);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection);
+         Instance.InstanceHostType = InstanceType.PathInstance;
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
          Instance.ClientIsOnVirtualMachine = false;
@@ -477,7 +482,8 @@ namespace HFM.Instances.Tests
          mocks.ReplayAll();
 
          #region Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection, InstanceType.PathInstance);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection);
+         Instance.InstanceHostType = InstanceType.PathInstance;
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
          Instance.ClientIsOnVirtualMachine = false;
@@ -552,7 +558,8 @@ namespace HFM.Instances.Tests
          mocks.ReplayAll();
 
          #region Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection, InstanceType.PathInstance);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection);
+         Instance.InstanceHostType = InstanceType.PathInstance;
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
          Instance.ClientIsOnVirtualMachine = false;
@@ -635,7 +642,8 @@ namespace HFM.Instances.Tests
          mocks.ReplayAll();
 
          #region Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection, InstanceType.PathInstance);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection);
+         Instance.InstanceHostType = InstanceType.PathInstance;
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
          Instance.ClientIsOnVirtualMachine = false;
@@ -669,7 +677,8 @@ namespace HFM.Instances.Tests
          mocks.ReplayAll();
 
          #region Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection, InstanceType.PathInstance);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection);
+         Instance.InstanceHostType = InstanceType.PathInstance;
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
          Instance.ClientIsOnVirtualMachine = false;
@@ -744,7 +753,8 @@ namespace HFM.Instances.Tests
          mocks.ReplayAll();
 
          // Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection, InstanceType.PathInstance);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection);
+         Instance.InstanceHostType = InstanceType.PathInstance;
 
          Assert.AreEqual(String.Empty, Instance.ClientPathAndArguments);
          Instance.Path = @"C:\ThePath\To\The\Files\";

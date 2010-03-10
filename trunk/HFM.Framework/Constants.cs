@@ -45,6 +45,11 @@ namespace HFM.Framework
       // Folding ID and Team Defaults
       public const string FoldingIDDefault = "Unknown";
       public const int TeamDefault = 0;
+
+      // Log Filename Constants
+      public const string LocalFAHLog = "FAHlog.txt";
+      public const string LocalUnitInfo = "unitinfo.txt";
+      public const string LocalQueue = "queue.dat";
       #endregion
    }
 }

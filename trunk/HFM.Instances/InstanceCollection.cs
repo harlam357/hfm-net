@@ -22,6 +22,7 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
@@ -407,43 +408,25 @@ namespace HFM.Instances
          }
 
          _ChangedAfterSave = false;
+      
+         ClientInstanceXmlSerializer serializer = new ClientInstanceXmlSerializer(
+            new ClientInstanceFactory(_Prefs, _proteinCollection, _benchmarkContainer));
 
-         XmlDocument xmlData = new XmlDocument();
-
-         // Load the XML file
-         if (Path.IsPathRooted(xmlDocName))
+         if (Path.IsPathRooted(xmlDocName) == false)
          {
-            xmlData.Load(xmlDocName);
+            xmlDocName = Path.Combine(_Prefs.ApplicationPath, xmlDocName);
          }
-         else
+            
+         IList<ClientInstance> list = serializer.Deserialize(xmlDocName);
+         foreach (ClientInstance instance in list)
          {
-            xmlData.Load(Path.Combine(_Prefs.ApplicationPath, xmlDocName));
-         }
-
-         // xmlData now contains the collection of Nodes. Hopefully.
-         xmlData.RemoveChild(xmlData.ChildNodes[0]);
-
-         foreach (XmlNode xn in xmlData.ChildNodes[0])
-         {
-            string InstanceType = xn.SelectSingleNode("HostType").InnerText;
-
-            if (Enum.IsDefined(typeof(InstanceType), InstanceType))
+            UnitInfo restoreUnitInfo = (UnitInfo)_unitInfoContainer.RetrieveUnitInfo(instance.InstanceName, instance.Path);
+            if (restoreUnitInfo != null)
             {
-               InstanceType type = (InstanceType)Enum.Parse(typeof(InstanceType), InstanceType, false);
-               ClientInstance instance = new ClientInstance(_Prefs, _proteinCollection, _benchmarkContainer, type);
-               instance.FromXml(xn);
-               UnitInfo restoreUnitInfo = (UnitInfo)_unitInfoContainer.RetrieveUnitInfo(instance.InstanceName, instance.Path);
-               if (restoreUnitInfo != null)
-               {
-                  instance.RestoreUnitInfo(restoreUnitInfo);
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("{0} Restored UnitInfo for Instance '{1}'.", HfmTrace.FunctionName, instance.InstanceName));
-               }
-               Add(instance, false);
+               instance.RestoreUnitInfo(restoreUnitInfo);
+               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, instance.InstanceName, "Restored UnitInfo.");
             }
-            else
-            {
-               MessageBox.Show(String.Format("Client {0} failed to load.", xn.Attributes["Name"].ChildNodes[0].Value));
-            }
+            Add(instance, false);
          }
 
          if (HasInstances)
@@ -474,46 +457,18 @@ namespace HFM.Instances
       /// if the path does not start with either ?: or \\</param>
       public void ToXml(string xmlDocName)
       {
-         if (String.IsNullOrEmpty(xmlDocName))
-         {
-            throw new ArgumentException("Argument 'xmlDocName' cannot be a null or empty string.", "xmlDocName");
-         }
-
-         XmlDocument xmlData = new XmlDocument();
-
-         // Create the XML Declaration (well formed)
-         XmlDeclaration xmlDeclaration = xmlData.CreateXmlDeclaration("1.0", "utf-8", null);
-         xmlData.InsertBefore(xmlDeclaration, xmlData.DocumentElement);
-
-         // Create the root element
-         XmlElement xmlRoot = xmlData.CreateElement("Hosts");
-
+         ClientInstanceXmlSerializer serializer = new ClientInstanceXmlSerializer(
+            new ClientInstanceFactory(_Prefs, _proteinCollection, _benchmarkContainer));
+         
+         ICollection<ClientInstance> collection;
          lock (_instanceCollection)
          {
-            // Loop through the collection and serialize the lot
-            foreach (ClientInstance instance in _instanceCollection.Values)
-            {
-               XmlDocument xmlDoc = instance.ToXml();
-               foreach (XmlNode xn in xmlDoc.ChildNodes)
-               {
-                  xmlRoot.AppendChild(xmlData.ImportNode(xn, true));
-               }
-            }
+            collection = new List<ClientInstance>(_instanceCollection.Values);
          }
          
-         xmlData.AppendChild(xmlRoot);
-
-         // Save the XML stream to the file
-         if (Path.IsPathRooted(xmlDocName))
-         {
-            xmlData.Save(xmlDocName);
-            _ConfigFilename = xmlDocName;
-         }
-         else
-         {
-            throw new ArgumentException(String.Format("Argument 'xmlDocName' must be a rooted path.  Given path '{0}'.", xmlDocName), "xmlDocName");
-         }
+         serializer.Serialize(xmlDocName, collection);
          
+         _ConfigFilename = xmlDocName;
          _ChangedAfterSave = false;
          OnCollectionSaved(EventArgs.Empty);
       }
@@ -636,13 +591,15 @@ namespace HFM.Instances
          {
             if (instancePath.StartsWith("http"))
             {
-               instance = new ClientInstance(Prefs, proteinCollection, benchmarkContainer, InstanceType.HTTPInstance);
+               instance = new ClientInstance(Prefs, proteinCollection, benchmarkContainer);
+               instance.InstanceHostType = InstanceType.HTTPInstance;
                instance.InstanceName = instanceName;
                instance.Path = instancePath;
             }
             else if (instancePath.StartsWith("ftp"))
             {
-               instance = new ClientInstance(Prefs, proteinCollection, benchmarkContainer, InstanceType.FTPInstance);
+               instance = new ClientInstance(Prefs, proteinCollection, benchmarkContainer);
+               instance.InstanceHostType = InstanceType.FTPInstance;
                instance.InstanceName = instanceName;
                instance.Server = matchURL.Result("${domain}");
                instance.Path = matchURL.Result("${file}");
@@ -650,7 +607,8 @@ namespace HFM.Instances
          }
          else if (matchFTPUserPass.Success) // we have a valid FTP with User Pass
          {
-            instance = new ClientInstance(Prefs, proteinCollection, benchmarkContainer, InstanceType.FTPInstance);
+            instance = new ClientInstance(Prefs, proteinCollection, benchmarkContainer);
+            instance.InstanceHostType = InstanceType.FTPInstance;
             instance.InstanceName = instanceName;
             instance.Server = matchFTPUserPass.Result("${domain}");
             instance.Path = matchFTPUserPass.Result("${file}");
@@ -661,13 +619,15 @@ namespace HFM.Instances
          {
             if (StringOps.ValidatePathInstancePath(instancePath))
             {
-               instance = new ClientInstance(Prefs, proteinCollection, benchmarkContainer, InstanceType.PathInstance);
+               instance = new ClientInstance(Prefs, proteinCollection, benchmarkContainer);
+               instance.InstanceHostType = InstanceType.PathInstance;
                instance.InstanceName = instanceName;
                instance.Path = instancePath;
             }
             else if (StringOps.ValidatePathInstancePath(instancePath += Path.DirectorySeparatorChar))
             {
-               instance = new ClientInstance(Prefs, proteinCollection, benchmarkContainer, InstanceType.PathInstance);
+               instance = new ClientInstance(Prefs, proteinCollection, benchmarkContainer);
+               instance.InstanceHostType = InstanceType.PathInstance;
                instance.InstanceName = instanceName;
                instance.Path = instancePath;
             }
@@ -1345,10 +1305,9 @@ namespace HFM.Instances
       /// <summary>
       /// Get a new ClientInstance object
       /// </summary>
-      /// <param name="type">Client Type</param>
-      public ClientInstance GetNewClientInstance(InstanceType type)
+      public ClientInstance GetNewClientInstance()
       {
-         return new ClientInstance(_Prefs, _proteinCollection, _benchmarkContainer, type);
+         return new ClientInstance(_Prefs, _proteinCollection, _benchmarkContainer);
       }
 
       /// <summary>

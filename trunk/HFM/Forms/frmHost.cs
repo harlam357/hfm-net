@@ -99,9 +99,9 @@ namespace HFM.Forms
          MaxHeight = Height;
          MaxWidth = Width;
 
-         txtLogFileName.Text = ClientInstance.LocalFAHLog;
-         txtUnitFileName.Text = ClientInstance.LocalUnitInfo;
-         txtQueueFileName.Text = ClientInstance.LocalQueue;
+         txtLogFileName.Text = Constants.LocalFAHLog;
+         txtUnitFileName.Text = Constants.LocalUnitInfo;
+         txtQueueFileName.Text = Constants.LocalQueue;
          
          if (Instance != null)
          {
@@ -205,7 +205,8 @@ namespace HFM.Forms
       #region Get Instance Data
       private ClientInstance GetInstanceData()
       {
-         ClientInstance NewInstance = _ClientInstances.GetNewClientInstance(GetInstanceType());
+         ClientInstance NewInstance = _ClientInstances.GetNewClientInstance();
+         NewInstance.InstanceHostType = GetInstanceType();
          GetBasicClientInfo(NewInstance);
 
          switch (NewInstance.InstanceHostType)

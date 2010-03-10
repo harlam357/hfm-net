@@ -59,6 +59,7 @@
     </Compile>
     <Compile Include="BenchmarkClientTests.cs" />
     <Compile Include="ClientInstanceTests.cs" />
+    <Compile Include="ClientInstanceXmlSerializerTests.cs" />
     <Compile Include="ProteinBenchmarkContainerTests.cs" />
     <Compile Include="StatusTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

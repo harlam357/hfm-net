@@ -58,6 +58,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Enumerations.cs" />
     <Compile Include="IBenchmarkClient.cs" />
+    <Compile Include="IClientInstanceSettings.cs" />
     <Compile Include="IClientRun.cs" />
     <Compile Include="IDataAggregator.cs" />
     <Compile Include="IFahLogUnitData.cs" />
