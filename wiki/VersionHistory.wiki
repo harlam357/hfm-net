@@ -1,12 +1,48 @@
 #summary HFM.NET Version History
 #labels Featured
 
+=Change Log - Version: 0.4.8 - Revision 121 - Beta=
+
+  * Release Date: January 17, 2010
+  
+  * Fixed: Issue 142 - Some Projects (looks like p10xxx - GPU2 and ProtoMol) write the Queue ID and MachineID values in Big Endian byte order - corrected code to compensate.
+  * Fixed: Issue 136 - Problem with SMP Clients reporting Hung when the Project string in the FAHlog file is crippled.
+
+  * Change: Make sure the queue.dat file exists before read attempt - would like to avoid the exception overhead.
+
+  * Enhancement:  Issue 119 - Enable Scrolling on QueueControl.
+
+  * Add: Framework, Log, and Queue Projects.
+
+=Change Log - Version: 0.4.7 - Revision 104 - Beta=
+
+  * Release Date: December 23, 2009
+  
+  * Fix: Detect ProtoMol work as 'Standard' Client Type.
+  * Fix: psummary download code to handle new format (and empty column values).
+  * Fix: Pass-Through Property in UnitInfo for Protein.NumAtoms was incorrectly pointing to Protein.Credit.  
+    * This was causing the Protein Credit to be written to the CompletedUnits.csv file in lieu of the Number of Atoms.
+
+  * Change: Update NetworkOps Unit Tests using Mock Object Injection (using Rhino Mocks).
+  * Change: Add StringOpsTests (100% Coverage)
+  * Change: Clean-up UserStatsDataContainer & Tests
+  * Change: Update BenchmarkClient Class Implementation and Add Unit Tests.
+
+  * Add: GPU Instance Test 4 (Status - GettingWorkPacket).
+  * Add: Validation Code for each psummary variant (Standard, B, & C).
+
+  * Update: ProjectInfo.tab file.
+
 =Change Log - Version: 0.4.6 - Revision 99 - Beta=
+
+  * Release Date: December 7, 2009
 
   * Fix: Problem Determining Async Status when there is no frame time based on the user selection.
   * Add: Some Unit Tests for the Status Determination code (so this little bug won't slip by again). 
 
 =Change Log - Version: 0.4.5 - Revision 97 - Beta=
+
+  * Release Date: December 6, 2009
 
   * Enhancement: Issue 124 - Add option to enable/disable 'RunningAsync' detection.
   * Enhancement: Issue 125 - Add option to enable/disable Bonus Credit and PPD Calculation.
@@ -24,6 +60,8 @@
     * http://hfm-net.googlecode.com/svn/trunk/ProjectInfo/ProjectInfo.tab
 
 =Change Log - Version: 0.4.2 - Revision 92 - Beta=
+
+  * Release Date: December 3, 2009
 
   * Enhancement: Issue 94  - Add logic to Determine 'RunningAsync' Status (Blue).
   * Enhancement: Issue 113 - Calculate Bonus Credit and PPD for Projects that specify a positive KFactor.  
@@ -43,6 +81,8 @@
   * Change: Don't compute Deadline (Preferred & Final) if the Project is unknown.
 
 =Change Log - Version: 0.4.0 - Revision 86 - Beta=
+
+  * Release Date: October 31, 2009
 
   * Enhancement: HFM.NET is now also delivered in an MSI Installer Package.  This is now the preferred method for installing HFM.NET on Windows.
   * Enhancement: Queue Viewer - for viewing information contained within the F@H client queue.dat file.
@@ -79,6 +119,8 @@
 
 =Change Log - Version: 0.3.0 - Revision 53 - Beta=
 
+  * Release Date: September 5, 2009
+
   * Enhancement: Log Parsing... Log Parsing... Log Parsing... a new approach, more being identified, just a huge improvement in reliability and future enhancements.
   * Enhancement: Add support for 'GettingWorkPacket' Status (Purple Status Color).
   * Enhancement: Email Reporting - Configure a reporting Email Address and SMTP Server and option to report clients detected in a 24hr. EUE Pause state (not yet tested on live data).
@@ -107,6 +149,8 @@
 
 =Change Log - Version: 0.2.2 - Build 31 - Beta=
 
+  * Release Date: July 26, 2009
+
   * Fix: Issue with Save As... function not using the file name supplied by the user in the Save As... Dialog.  Was using current config file name instead... which in the case of a new configuration would result in an unhandled exception - Thanks augie!!!
 
   * Change: Messages Window can now be closed using F7 key.
@@ -117,6 +161,8 @@
   * Enhancement: Add options to turn on/off the search for Duplicate User/Machine ID and Project (R/C/G) (HTML Summary reflects these changes as well).
 
 =Change Log - Version: 0.2.2 - Build 30 - Beta=
+
+  * Release Date: July 23, 2009
 
   * Fix: FTP Client Type Download on Linux (Mono).  
   * Fix: Frame calculations 'AllFrames' and 'EffectiveRate' were not persisting from session to session, would default back to 'LastThreeFrames'.  
@@ -138,6 +184,8 @@
 
 =Change Log - Version: 0.2.2 - Build 28 - Beta=
 
+  * Release Date: July 4, 2009
+
   * Enhancement: Add User Stats Data Display from EOC XML along with option to enable or disable the display.
   * Enhancement: HTML Summary - User Name cells as Orange background when User Name does not match the User Name configured in the Preferences.
   * Enhancement: Added five new style sheets for more Website color options.
@@ -151,6 +199,8 @@
   * Fix: Grid columns not appearing in default order on some users systems.  Manually create the columns and bind.  Allows column headers to be labeled in a more visually friendly manner (i.e. they can have spaces now).
 
 =Change Log - Version: 0.2.1 - Build 23 - Beta=
+
+  * Release Date: June 15, 2009
 
   * Enhancement: Major upgrade to the HTML Summary page.  Now outputs a table with the same columns as the main HFM UI including the proper status color.
   * Enhancement: Add Mobile Overview (mobile.html) and Mobile Summary (mobilesummary.html) Web Generation.  
@@ -171,6 +221,8 @@
 
 =Change Log - Version: 0.2.0 - Build 20 - Beta=
 
+  * Release Date: June 3, 2009
+
   * Fix: Only accumulate Completed and Failed counts on most recent unit parse.
   * Fix: Final fix for resuming from a long pause.  I think I've got it licked now.
   * Fix: Parsing of frame percentage from older clients like v5.02.  
@@ -181,6 +233,8 @@
   * Change: Patched the main Project Resources.resx file for case sensitivity.
 
 =Change Log - Version: 0.2.0 - Build 18 - Beta=
+
+  * Release Date: May 30, 2009
 
   * Fix: Fixed the problem with completed units being written to the CompletedUnits.csv file with no frame time or PPD.
   * Fix: Fixed problem with determining client 'Status' when a client resumes from a paused state (specifically a very long pause).
@@ -200,6 +254,8 @@
 
 =Change Log - Version: 0.2.0 - Build 17 - Beta=
 
+  * Release Date: May 24, 2009
+
   * Enhancement: MAJOR REWORK!!!  Added support for Benchmarking Work Units.  
   * Enhancement: Added ability to save the currently in progress UnitInfo objects on application exit.  This allows the state of the last known projects in progress to be restored the next time the application starts.  
   * Enhancement: Added output of completed units to CompletedUnits.csv file.  Allows external analysis of completed work.  Preliminary at this point, still needs a little work I think.
@@ -218,15 +274,21 @@
 
 =Change Log - Version: 0.1.1 - Build 14 - Beta=
 
+  * Release Date: May 13, 2009
+
   * Fix: Corrected on error in the log parsing that was causing SMP A1 Core (and likely Standard Client Cores) to fail parsing.  Resulting in the clients status staying yellow.
 
 =Change Log - Version: 0.1.1 - Build 13 - Beta=
+
+  * Release Date: May 13, 2009
 
   * Fix: Set DoubleBuffering on the DataGridView to fix extremely slow painting on XP while GPU2 is active.  If this doesn't fix the problem of slow UI response, then nothing will.
 
   * Change: Switch back to using GDI for text rendering. It just looks better.
 
 =Change Log - Version: 0.1.1 - Build 12 - Beta=
+
+  * Release Date: May 12, 2009
 
   * Fix: Change text rendering engine to GDI+.  This fixes the extreme lag issue experienced on XP.  Note: There is still some lag when GPU2 is active, but HFM is now totally usable while also running GPU2 on XP based on my testing.
 
@@ -237,6 +299,8 @@
   * Enhancement: Allow the log file window to be sized.
 
 =Change Log - Version: 0.1.1 - Build 11 - Beta=
+
+  * Release Date: May 5, 2009
 
   * Fix: "No Prompt on Exit" after configuration has changed when exiting via the "X" on the main window.
   * Fix: Large 'Progress' values being parsed from UnitInfo.txt file.
