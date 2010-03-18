@@ -267,8 +267,7 @@ namespace HFM.Instances
          XMLOps.setXmlNode(xmlData, "Protein/KFactor", p.KFactor.ToString());
          XMLOps.setXmlNode(xmlData, "Protein/Frames", p.Frames.ToString());
          XMLOps.setXmlNode(xmlData, "Protein/Core", p.Core);
-         NetworkOps net = new NetworkOps();
-         XMLOps.setXmlNode(xmlData, "Protein/Description", net.GetProteinDescription(p.Description));
+         XMLOps.setXmlNode(xmlData, "Protein/Description", p.Description);
          XMLOps.setXmlNode(xmlData, "Protein/Contact", p.Contact);
          
          StringBuilder sb = new StringBuilder();
