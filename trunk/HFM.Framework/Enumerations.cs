@@ -144,6 +144,12 @@ namespace HFM.Framework
       Formatted
    }
    
+   public enum CompletedCountDisplayType
+   {
+      ClientTotal,
+      CurrentClientRun
+   }
+   
    public enum FormShowStyleType
    {
       SystemTray,
@@ -163,6 +169,7 @@ namespace HFM.Framework
       FormLogVisible,
       QueueViewerVisible,
       TimeStyle,
+      CompletedCountDisplay,
       FormShowStyle,
       BenchmarksFormLocation,
       BenchmarksFormSize,

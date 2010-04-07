@@ -78,6 +78,7 @@ namespace HFM.Forms
          this.mnuViewShowHideLog = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuViewSep1 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuViewToggleDateTime = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuViewToggleCompletedCountStyle = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuToolsMessages = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuToolsBenchmarks = new System.Windows.Forms.ToolStripMenuItem();
@@ -503,7 +504,8 @@ namespace HFM.Forms
          this.mnuView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuViewShowHideLog,
             this.mnuViewSep1,
-            this.mnuViewToggleDateTime});
+            this.mnuViewToggleDateTime,
+            this.mnuViewToggleCompletedCountStyle});
          this.mnuView.Name = "mnuView";
          this.mnuView.Size = new System.Drawing.Size(41, 20);
          this.mnuView.Text = "&View";
@@ -512,22 +514,30 @@ namespace HFM.Forms
          // 
          this.mnuViewShowHideLog.Name = "mnuViewShowHideLog";
          this.mnuViewShowHideLog.ShortcutKeys = System.Windows.Forms.Keys.F8;
-         this.mnuViewShowHideLog.Size = new System.Drawing.Size(246, 22);
+         this.mnuViewShowHideLog.Size = new System.Drawing.Size(255, 22);
          this.mnuViewShowHideLog.Text = "&Show/Hide Log/Queue Viewer";
          this.mnuViewShowHideLog.Click += new System.EventHandler(this.mnuViewShowHideLog_Click);
          // 
          // mnuViewSep1
          // 
          this.mnuViewSep1.Name = "mnuViewSep1";
-         this.mnuViewSep1.Size = new System.Drawing.Size(243, 6);
+         this.mnuViewSep1.Size = new System.Drawing.Size(252, 6);
          // 
          // mnuViewToggleDateTime
          // 
          this.mnuViewToggleDateTime.Name = "mnuViewToggleDateTime";
          this.mnuViewToggleDateTime.ShortcutKeys = System.Windows.Forms.Keys.F9;
-         this.mnuViewToggleDateTime.Size = new System.Drawing.Size(246, 22);
+         this.mnuViewToggleDateTime.Size = new System.Drawing.Size(255, 22);
          this.mnuViewToggleDateTime.Text = "Toggle &Date/Time Style";
          this.mnuViewToggleDateTime.Click += new System.EventHandler(this.mnuViewToggleDateTime_Click);
+         // 
+         // mnuViewToggleCompletedCountStyle
+         // 
+         this.mnuViewToggleCompletedCountStyle.Name = "mnuViewToggleCompletedCountStyle";
+         this.mnuViewToggleCompletedCountStyle.ShortcutKeys = System.Windows.Forms.Keys.F10;
+         this.mnuViewToggleCompletedCountStyle.Size = new System.Drawing.Size(255, 22);
+         this.mnuViewToggleCompletedCountStyle.Text = "Toggle &Completed Count Style";
+         this.mnuViewToggleCompletedCountStyle.Click += new System.EventHandler(this.mnuViewToggleCompletedCountStyle_Click);
          // 
          // mnuTools
          // 
@@ -807,6 +817,7 @@ namespace HFM.Forms
          this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle3;
          this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
          this.dataGridView1.FreezeSelectionChanged = false;
+         this.dataGridView1.FreezeSorted = false;
          this.dataGridView1.Location = new System.Drawing.Point(0, 0);
          this.dataGridView1.MultiSelect = false;
          this.dataGridView1.Name = "dataGridView1";
@@ -998,5 +1009,6 @@ namespace HFM.Forms
       private HFM.Classes.QueueControl queueControl;
       private System.Windows.Forms.ToolStripMenuItem mnuHelpHfmGroup;
       private System.Windows.Forms.ToolStripSeparator mnuHelpSep2;
+      private System.Windows.Forms.ToolStripMenuItem mnuViewToggleCompletedCountStyle;
    }
 }

@@ -512,9 +512,9 @@ namespace HFM.Log
       /// </summary>
       /// <param name="logFilePath">Path to the log file.</param>
       /// <exception cref="ArgumentException">Throws if logFilePath is Null or Empty.</exception>
-      public void ScanFAHLog(string logFilePath)
+      public void ScanFahLog(string logFilePath)
       {
-         ScanFAHLog(String.Empty, logFilePath);
+         ScanFahLog(String.Empty, logFilePath);
       }
 
       /// <summary>
@@ -524,7 +524,7 @@ namespace HFM.Log
       /// <param name="logFilePath">Path to the log file.</param>
       /// <exception cref="ArgumentNullException">Throws if instanceName is Null.</exception>
       /// <exception cref="ArgumentException">Throws if logFilePath is Null or Empty.</exception>
-      public void ScanFAHLog(string instanceName, string logFilePath)
+      public void ScanFahLog(string instanceName, string logFilePath)
       {
          if (instanceName == null) throw new ArgumentNullException("instanceName", "Argument 'instanceName' cannot be null.");
       

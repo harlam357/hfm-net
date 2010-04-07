@@ -41,8 +41,8 @@ namespace HFM.Preferences
    public sealed class PreferenceSet : IPreferenceSet
    {
       #region Members
-      private readonly Data IV = new Data("3k1vKL=Cz6!wZS`I");
-      private readonly Data SymmetricKey = new Data("%`Bb9ega;$.GUDaf");
+      private readonly Data _iv = new Data("3k1vKL=Cz6!wZS`I");
+      private readonly Data _symmetricKey = new Data("%`Bb9ega;$.GUDaf");
 
       private readonly Dictionary<Preference, IMetadata> _Preferences = new Dictionary<Preference, IMetadata>();
       #endregion
@@ -168,7 +168,7 @@ namespace HFM.Preferences
 
       private void SetupDictionary()
       {
-         DateTime Start = HfmTrace.ExecStart;
+         DateTime start = HfmTrace.ExecStart;
       
          _Preferences.Add(Preference.FormLocation, new Metadata<Point>());
          _Preferences.Add(Preference.FormSize, new Metadata<Size>());
@@ -180,6 +180,7 @@ namespace HFM.Preferences
          _Preferences.Add(Preference.FormLogVisible, new Metadata<bool>());
          _Preferences.Add(Preference.QueueViewerVisible, new Metadata<bool>());
          _Preferences.Add(Preference.TimeStyle, new Metadata<TimeStyleType>());
+         _Preferences.Add(Preference.CompletedCountDisplay, new Metadata<CompletedCountDisplayType>());
          _Preferences.Add(Preference.FormShowStyle, new Metadata<FormShowStyleType>());
 
          _Preferences.Add(Preference.BenchmarksFormLocation, new Metadata<Point>());
@@ -248,7 +249,7 @@ namespace HFM.Preferences
          _Preferences.Add(Preference.CacheFolder, new Metadata<string>(Settings.Default.CacheFolder));
          _Preferences.Add(Preference.ApplicationDataFolderPath, new Metadata<string>(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Constants.ExeName)));
 
-         Debug.WriteLine(String.Format("{0} Execution Time: {1}", HfmTrace.FunctionName, HfmTrace.GetExecTime(Start)));
+         Debug.WriteLine(String.Format("{0} Execution Time: {1}", HfmTrace.FunctionName, HfmTrace.GetExecTime(start)));
       }
 
       /// <summary>
@@ -256,8 +257,8 @@ namespace HFM.Preferences
       /// </summary>
       public void Load()
       {
-         DateTime Start = HfmTrace.ExecStart;
-         Symmetric SymmetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
+         DateTime start = HfmTrace.ExecStart;
+         Symmetric symmetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
 
          UpgradeUserSettings();
 
@@ -275,6 +276,7 @@ namespace HFM.Preferences
          SetPreference(Preference.FormLogVisible, Settings.Default.FormLogVisible);
          SetPreference(Preference.QueueViewerVisible, Settings.Default.QueueViewerVisible);
          SetPreference(Preference.TimeStyle, GetTimeStyle());
+         SetPreference(Preference.CompletedCountDisplay, GetCompletedCountDisplay());
          SetPreference(Preference.FormShowStyle, GetFormShowStyle());
 
          location = new Point();
@@ -301,7 +303,7 @@ namespace HFM.Preferences
          SetPreference(Preference.GenerateWeb, Settings.Default.GenerateWeb);
          SetPreference(Preference.GenerateInterval, GetValidNumeric(Settings.Default.GenerateInterval, Constants.MinutesDefault));
          SetPreference(Preference.WebGenAfterRefresh, Settings.Default.WebGenAfterRefresh);
-         SetPreference(Preference.WebRoot, DecryptWebRoot(Settings.Default.WebRoot, SymmetricProvider, IV, SymmetricKey));
+         SetPreference(Preference.WebRoot, DecryptWebRoot(Settings.Default.WebRoot, symmetricProvider, _iv, _symmetricKey));
          SetPreference(Preference.WebGenCopyFAHlog, Settings.Default.WebGenCopyFAHlog);
          SetPreference(Preference.WebGenFtpMode, GetFtpType());
          SetPreference(Preference.CssFile, Settings.Default.CSSFile);
@@ -332,7 +334,7 @@ namespace HFM.Preferences
          SetPreference(Preference.EmailReportingServerAddress, Settings.Default.EmailReportingServerAddress);
          SetPreference(Preference.EmailReportingServerPort, Settings.Default.EmailReportingServerPort);
          SetPreference(Preference.EmailReportingServerUsername, Settings.Default.EmailReportingServerUsername);
-         SetPreference(Preference.EmailReportingServerPassword, DecryptEmailReportingServerPassword(Settings.Default.EmailReportingServerPassword, SymmetricProvider, IV, SymmetricKey));
+         SetPreference(Preference.EmailReportingServerPassword, DecryptEmailReportingServerPassword(Settings.Default.EmailReportingServerPassword, symmetricProvider, _iv, _symmetricKey));
          SetPreference(Preference.ReportEuePause, Settings.Default.ReportEuePause);
          
          SetPreference(Preference.EocUserID, Settings.Default.EOCUserID);
@@ -344,9 +346,9 @@ namespace HFM.Preferences
          SetPreference(Preference.ProxyPort, Settings.Default.ProxyPort);
          SetPreference(Preference.UseProxyAuth, Settings.Default.UseProxyAuth);
          SetPreference(Preference.ProxyUser, Settings.Default.ProxyUser);
-         SetPreference(Preference.ProxyPass, DecryptProxyPass(Settings.Default.ProxyPass, SymmetricProvider, IV, SymmetricKey));
+         SetPreference(Preference.ProxyPass, DecryptProxyPass(Settings.Default.ProxyPass, symmetricProvider, _iv, _symmetricKey));
          
-         Debug.WriteLine(String.Format("{0} Execution Time: {1}", HfmTrace.FunctionName, HfmTrace.GetExecTime(Start)));
+         Debug.WriteLine(String.Format("{0} Execution Time: {1}", HfmTrace.FunctionName, HfmTrace.GetExecTime(start)));
       }
 
       #region Load Support Methods
@@ -400,6 +402,19 @@ namespace HFM.Preferences
          }
       }
 
+      private static CompletedCountDisplayType GetCompletedCountDisplay()
+      {
+         switch (Settings.Default.CompletedCountDisplay)
+         {
+            case "ClientTotal":
+               return CompletedCountDisplayType.ClientTotal;
+            case "CurrentClientRun":
+               return CompletedCountDisplayType.CurrentClientRun;
+            default:
+               return CompletedCountDisplayType.CurrentClientRun;
+         }
+      }
+
       private static FormShowStyleType GetFormShowStyle()
       {
          switch (Settings.Default.FormShowStyle)
@@ -428,17 +443,17 @@ namespace HFM.Preferences
 
       private static List<Color> GetGraphColorsList()
       {
-         List<Color> GraphColors = new List<Color>();
+         List<Color> graphColors = new List<Color>();
          foreach (string color in Settings.Default.GraphColors)
          {
             Color realColor = Color.FromName(color);
             if (realColor.IsEmpty == false)
             {
-               GraphColors.Add(realColor);
+               graphColors.Add(realColor);
             }
          }
 
-         return GraphColors;
+         return graphColors;
       }
 
       private static void GetMessagesFormStateValues(ref Point location, ref Size size)
@@ -452,29 +467,29 @@ namespace HFM.Preferences
          { }
       }
 
-      private static string DecryptWebRoot(string encrypted, Symmetric SymmetricProvider, Data IV, Data SymmetricKey)
+      private static string DecryptWebRoot(string encrypted, Symmetric symmetricProvider, Data iv, Data symmetricKey)
       {
-         string WebRoot = String.Empty;
+         string webRoot = String.Empty;
          if (Settings.Default.WebRoot.Length > 0)
          {
             try
             {
-               SymmetricProvider.IntializationVector = IV;
-               WebRoot = SymmetricProvider.Decrypt(new Data(Utils.FromBase64(encrypted)), SymmetricKey).ToString();
+               symmetricProvider.IntializationVector = iv;
+               webRoot = symmetricProvider.Decrypt(new Data(Utils.FromBase64(encrypted)), symmetricKey).ToString();
             }
             catch (FormatException)
             {
                HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "WebGen Root Folder is not Base64 encoded... loading clear value.", true);
-               WebRoot = Settings.Default.WebRoot;
+               webRoot = Settings.Default.WebRoot;
             }
             catch (CryptographicException)
             {
                HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Cannot decrypt WebGen Root Folder... loading clear value.", true);
-               WebRoot = Settings.Default.WebRoot;
+               webRoot = Settings.Default.WebRoot;
             }
          }
 
-         return WebRoot;
+         return webRoot;
       }
       
       private static FtpType GetFtpType()
@@ -507,55 +522,55 @@ namespace HFM.Preferences
          }
       }
 
-      private static string DecryptEmailReportingServerPassword(string encrypted, Symmetric SymmetricProvider, Data IV, Data SymmetricKey)
+      private static string DecryptEmailReportingServerPassword(string encrypted, Symmetric symmetricProvider, Data iv, Data symmetricKey)
       {
-         string EmailReportingServerPassword = String.Empty;
+         string emailReportingServerPassword = String.Empty;
          if (Settings.Default.EmailReportingServerPassword.Length > 0)
          {
             try
             {
-               SymmetricProvider.IntializationVector = IV;
-               EmailReportingServerPassword =
-                  SymmetricProvider.Decrypt(new Data(Utils.FromBase64(encrypted)), SymmetricKey).ToString();
+               symmetricProvider.IntializationVector = iv;
+               emailReportingServerPassword =
+                  symmetricProvider.Decrypt(new Data(Utils.FromBase64(encrypted)), symmetricKey).ToString();
             }
             catch (FormatException)
             {
                HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Stmp Server Password is not Base64 encoded... loading clear value.", true);
-               EmailReportingServerPassword = Settings.Default.EmailReportingServerPassword;
+               emailReportingServerPassword = Settings.Default.EmailReportingServerPassword;
             }
             catch (CryptographicException)
             {
                HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Cannot decrypt Stmp Server Password... loading clear value.", true);
-               EmailReportingServerPassword = Settings.Default.EmailReportingServerPassword;
+               emailReportingServerPassword = Settings.Default.EmailReportingServerPassword;
             }
          }
          
-         return EmailReportingServerPassword;
+         return emailReportingServerPassword;
       }
 
-      private static string DecryptProxyPass(string encrypted, Symmetric SymmetricProvider, Data IV, Data SymmetricKey)
+      private static string DecryptProxyPass(string encrypted, Symmetric symmetricProvider, Data iv, Data symmetricKey)
       {
-         string ProxyPass = String.Empty;
+         string proxyPass = String.Empty;
          if (Settings.Default.ProxyPass.Length > 0)
          {
             try
             {
-               SymmetricProvider.IntializationVector = IV;
-               ProxyPass = SymmetricProvider.Decrypt(new Data(Utils.FromBase64(encrypted)), SymmetricKey).ToString();
+               symmetricProvider.IntializationVector = iv;
+               proxyPass = symmetricProvider.Decrypt(new Data(Utils.FromBase64(encrypted)), symmetricKey).ToString();
             }
             catch (FormatException)
             {
                HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Proxy Password is not Base64 encoded... loading clear value.", true);
-               ProxyPass = Settings.Default.ProxyPass;
+               proxyPass = Settings.Default.ProxyPass;
             }
             catch (CryptographicException)
             {
                HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Cannot decrypt Proxy Password... loading clear value.", true);
-               ProxyPass = Settings.Default.ProxyPass;
+               proxyPass = Settings.Default.ProxyPass;
             }
          }
 
-         return ProxyPass;
+         return proxyPass;
       }
       #endregion
 
@@ -572,10 +587,21 @@ namespace HFM.Preferences
       /// </summary>
       public void Save()
       {
-         DateTime Start = HfmTrace.ExecStart;
+         DateTime start = HfmTrace.ExecStart;
 
-         Symmetric SymmetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
+         Symmetric symmetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
 
+         bool raiseFormShowStyleChanged = false;
+         bool raiseTimerSettingsChanged = false;
+         bool raiseDuplicateCheckChanged = false;
+         bool raiseShowUserStatsChanged = false;
+         bool raiseOfflineLastChanged = false;
+         bool raiseColorLogFileChanged = false;
+         bool raisePpdCalculationChanged = false;
+         bool raiseDecimalPlacesChanged = false;
+         bool raiseCalculateBonusChanged = false;
+         bool raiseMessageLevelChanged = false;
+         
          try
          {
             Settings.Default.FormLocation = GetPreference<Point>(Preference.FormLocation);
@@ -588,10 +614,10 @@ namespace HFM.Preferences
             Settings.Default.FormLogVisible = GetPreference<bool>(Preference.FormLogVisible);
             Settings.Default.QueueViewerVisible = GetPreference<bool>(Preference.QueueViewerVisible);
             Settings.Default.TimeStyle = GetPreference<TimeStyleType>(Preference.TimeStyle).ToString();
-            bool RaiseFormShowStyleChanged = false;
+            Settings.Default.CompletedCountDisplay = GetPreference<CompletedCountDisplayType>(Preference.CompletedCountDisplay).ToString();
             if (Settings.Default.FormShowStyle != GetPreference<FormShowStyleType>(Preference.FormShowStyle).ToString())
             {
-               RaiseFormShowStyleChanged = true;
+               raiseFormShowStyleChanged = true;
             }
             Settings.Default.FormShowStyle = GetPreference<FormShowStyleType>(Preference.FormShowStyle).ToString();
 
@@ -603,27 +629,24 @@ namespace HFM.Preferences
             Settings.Default.MessagesFormSize = GetPreference<Size>(Preference.MessagesFormSize);
 
             Settings.Default.SyncOnLoad = GetPreference<bool>(Preference.SyncOnLoad);
-            bool RaiseTimerSettingsChanged = false;
             if (Settings.Default.SyncOnSchedule != GetPreference<bool>(Preference.SyncOnSchedule) ||
                 Settings.Default.SyncTimeMinutes != GetPreference<int>(Preference.SyncTimeMinutes).ToString())
             {
-               RaiseTimerSettingsChanged = true;
+               raiseTimerSettingsChanged = true;
             }
             Settings.Default.SyncOnSchedule = GetPreference<bool>(Preference.SyncOnSchedule);
             Settings.Default.SyncTimeMinutes = GetPreference<int>(Preference.SyncTimeMinutes).ToString();
-            bool RaiseDuplicateCheckChanged = false;
             if (Settings.Default.DuplicateUserIDCheck != GetPreference<bool>(Preference.DuplicateUserIDCheck) ||
                 Settings.Default.DuplicateProjectCheck != GetPreference<bool>(Preference.DuplicateProjectCheck))
             {
-               RaiseDuplicateCheckChanged = true;
+               raiseDuplicateCheckChanged = true;
             }
             Settings.Default.DuplicateUserIDCheck = GetPreference<bool>(Preference.DuplicateUserIDCheck);
             Settings.Default.DuplicateProjectCheck = GetPreference<bool>(Preference.DuplicateProjectCheck);
             Settings.Default.AllowRunningAsync = GetPreference<bool>(Preference.AllowRunningAsync);
-            bool RaiseShowUserStatsChanged = false;
             if (Settings.Default.ShowUserStats != GetPreference<bool>(Preference.ShowUserStats))
             {
-               RaiseShowUserStatsChanged = true;
+               raiseShowUserStatsChanged = true;
             }
             Settings.Default.ShowUserStats = GetPreference<bool>(Preference.ShowUserStats);
 
@@ -631,12 +654,12 @@ namespace HFM.Preferences
                 Settings.Default.GenerateInterval != GetPreference<int>(Preference.GenerateInterval).ToString() ||
                 Settings.Default.WebGenAfterRefresh != GetPreference<bool>(Preference.WebGenAfterRefresh))
             {
-               RaiseTimerSettingsChanged = true;
+               raiseTimerSettingsChanged = true;
             }
             Settings.Default.GenerateWeb = GetPreference<bool>(Preference.GenerateWeb);
             Settings.Default.GenerateInterval = GetPreference<int>(Preference.GenerateInterval).ToString();
             Settings.Default.WebGenAfterRefresh = GetPreference<bool>(Preference.WebGenAfterRefresh);
-            Settings.Default.WebRoot = EncryptWebRoot(GetPreference<string>(Preference.WebRoot), SymmetricProvider, IV, SymmetricKey);
+            Settings.Default.WebRoot = EncryptWebRoot(GetPreference<string>(Preference.WebRoot), symmetricProvider, _iv, _symmetricKey);
             Settings.Default.WebGenCopyFAHlog = GetPreference<bool>(Preference.WebGenCopyFAHlog);
             Settings.Default.WebGenFtpMode = GetPreference<FtpType>(Preference.WebGenFtpMode).ToString();
             Settings.Default.CSSFile = GetPreference<string>(Preference.CssFile);
@@ -656,43 +679,37 @@ namespace HFM.Preferences
                Settings.Default.UseDefaultConfigFile = false;
             }
 
-            bool RaiseOfflineLastChanged = false;
             if (Settings.Default.OfflineLast != GetPreference<bool>(Preference.OfflineLast))
             {
-               RaiseOfflineLastChanged = true;
+               raiseOfflineLastChanged = true;
             }
             Settings.Default.OfflineLast = GetPreference<bool>(Preference.OfflineLast);
-            bool RaiseColorLogFileChanged = false;
             if (Settings.Default.ColorLogFile != GetPreference<bool>(Preference.ColorLogFile))
             {
-               RaiseColorLogFileChanged = true;
+               raiseColorLogFileChanged = true;
             }
             Settings.Default.ColorLogFile = GetPreference<bool>(Preference.ColorLogFile);
             Settings.Default.AutoSaveConfig = GetPreference<bool>(Preference.AutoSaveConfig);
-            bool RaisePpdCalculationChanged = false;
             if (Settings.Default.PpdCalculation != GetPreference<PpdCalculationType>(Preference.PpdCalculation).ToString())
             {
-               RaisePpdCalculationChanged = true;
+               raisePpdCalculationChanged = true;
             }
             Settings.Default.PpdCalculation = GetPreference<PpdCalculationType>(Preference.PpdCalculation).ToString();
-            bool RaiseDecimalPlacesChanged = false;
             if (Settings.Default.DecimalPlaces != GetPreference<int>(Preference.DecimalPlaces))
             {
-               RaiseDecimalPlacesChanged = true;
+               raiseDecimalPlacesChanged = true;
             }
             Settings.Default.DecimalPlaces = GetPreference<int>(Preference.DecimalPlaces);
-            bool RaiseCalculateBonusChanged = false;
             if (Settings.Default.CalculateBonus != GetPreference<bool>(Preference.CalculateBonus))
             {
-               RaiseCalculateBonusChanged = true;
+               raiseCalculateBonusChanged = true;
             }
             Settings.Default.CalculateBonus = GetPreference<bool>(Preference.CalculateBonus);
             Settings.Default.LogFileViewer = GetPreference<string>(Preference.LogFileViewer);
             Settings.Default.FileExplorer = GetPreference<string>(Preference.FileExplorer);
-            bool RaiseMessageLevelChanged = false;
             if (Settings.Default.MessageLevel != GetPreference<int>(Preference.MessageLevel))
             {
-               RaiseMessageLevelChanged = true;
+               raiseMessageLevelChanged = true;
             }
             Settings.Default.MessageLevel = GetPreference<int>(Preference.MessageLevel);
 
@@ -703,7 +720,7 @@ namespace HFM.Preferences
             Settings.Default.EmailReportingServerAddress = GetPreference<string>(Preference.EmailReportingServerAddress);
             Settings.Default.EmailReportingServerPort = GetPreference<int>(Preference.EmailReportingServerPort);
             Settings.Default.EmailReportingServerUsername = GetPreference<string>(Preference.EmailReportingServerUsername);
-            Settings.Default.EmailReportingServerPassword = EncryptEmailReportingServerPassword(GetPreference<string>(Preference.EmailReportingServerPassword), SymmetricProvider, IV, SymmetricKey);
+            Settings.Default.EmailReportingServerPassword = EncryptEmailReportingServerPassword(GetPreference<string>(Preference.EmailReportingServerPassword), symmetricProvider, _iv, _symmetricKey);
             Settings.Default.ReportEuePause = GetPreference<bool>(Preference.ReportEuePause);
 
             Settings.Default.EOCUserID = GetPreference<int>(Preference.EocUserID);
@@ -715,18 +732,18 @@ namespace HFM.Preferences
             Settings.Default.ProxyPort = GetPreference<int>(Preference.ProxyPort);
             Settings.Default.UseProxyAuth = GetPreference<bool>(Preference.UseProxyAuth);
             Settings.Default.ProxyUser = GetPreference<string>(Preference.ProxyUser);
-            Settings.Default.ProxyPass = EncryptProxyPass(GetPreference<string>(Preference.ProxyPass), SymmetricProvider, IV, SymmetricKey);
+            Settings.Default.ProxyPass = EncryptProxyPass(GetPreference<string>(Preference.ProxyPass), symmetricProvider, _iv, _symmetricKey);
             
-            if (RaiseFormShowStyleChanged) OnFormShowStyleSettingsChanged(EventArgs.Empty);
-            if (RaiseTimerSettingsChanged) OnTimerSettingsChanged(EventArgs.Empty);
-            if (RaiseDuplicateCheckChanged) OnDuplicateCheckChanged(EventArgs.Empty);
-            if (RaiseShowUserStatsChanged) OnShowUserStatsChanged(EventArgs.Empty);
-            if (RaiseOfflineLastChanged) OnOfflineLastChanged(EventArgs.Empty);
-            if (RaiseColorLogFileChanged) OnColorLogFileChanged(EventArgs.Empty);
-            if (RaisePpdCalculationChanged) OnPpdCalculationChanged(EventArgs.Empty);
-            if (RaiseDecimalPlacesChanged) OnDecimalPlacesChanged(EventArgs.Empty);
-            if (RaiseCalculateBonusChanged) OnCalculateBonusChanged(EventArgs.Empty);
-            if (RaiseMessageLevelChanged) OnMessageLevelChanged(EventArgs.Empty);
+            if (raiseFormShowStyleChanged) OnFormShowStyleSettingsChanged(EventArgs.Empty);
+            if (raiseTimerSettingsChanged) OnTimerSettingsChanged(EventArgs.Empty);
+            if (raiseDuplicateCheckChanged) OnDuplicateCheckChanged(EventArgs.Empty);
+            if (raiseShowUserStatsChanged) OnShowUserStatsChanged(EventArgs.Empty);
+            if (raiseOfflineLastChanged) OnOfflineLastChanged(EventArgs.Empty);
+            if (raiseColorLogFileChanged) OnColorLogFileChanged(EventArgs.Empty);
+            if (raisePpdCalculationChanged) OnPpdCalculationChanged(EventArgs.Empty);
+            if (raiseDecimalPlacesChanged) OnDecimalPlacesChanged(EventArgs.Empty);
+            if (raiseCalculateBonusChanged) OnCalculateBonusChanged(EventArgs.Empty);
+            if (raiseMessageLevelChanged) OnMessageLevelChanged(EventArgs.Empty);
 
             Settings.Default.Save();
          }
@@ -735,7 +752,7 @@ namespace HFM.Preferences
             HfmTrace.WriteToHfmConsole(ex);
          }
 
-         Debug.WriteLine(String.Format("{0} Execution Time: {1}", HfmTrace.FunctionName, HfmTrace.GetExecTime(Start)));
+         Debug.WriteLine(String.Format("{0} Execution Time: {1}", HfmTrace.FunctionName, HfmTrace.GetExecTime(start)));
       }
 
       #region Save Support Methods
@@ -749,64 +766,64 @@ namespace HFM.Preferences
          return col;
       }
 
-      private static string EncryptWebRoot(string clear, Symmetric SymmetricProvider, Data IV, Data SymmetricKey)
+      private static string EncryptWebRoot(string clear, Symmetric symmetricProvider, Data iv, Data symmetricKey)
       {
-         string WebRoot = String.Empty;
+         string webRoot = String.Empty;
          if (clear.Length > 0)
          {
             try
             {
-               SymmetricProvider.IntializationVector = IV;
-               WebRoot = SymmetricProvider.Encrypt(new Data(clear), SymmetricKey).ToBase64();
+               symmetricProvider.IntializationVector = iv;
+               webRoot = symmetricProvider.Encrypt(new Data(clear), symmetricKey).ToBase64();
             }
             catch (CryptographicException)
             {
                HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Failed to encrypt WebGen Root Folder... saving clear value.");
-               WebRoot = clear;
+               webRoot = clear;
             }
          }
          
-         return WebRoot;
+         return webRoot;
       }
 
-      private static string EncryptEmailReportingServerPassword(string clear, Symmetric SymmetricProvider, Data IV, Data SymmetricKey)
+      private static string EncryptEmailReportingServerPassword(string clear, Symmetric symmetricProvider, Data iv, Data symmetricKey)
       {
-         string EmailReportingServerPassword = String.Empty;
+         string emailReportingServerPassword = String.Empty;
          if (clear.Length > 0)
          {
             try
             {
-               SymmetricProvider.IntializationVector = IV;
-               EmailReportingServerPassword = SymmetricProvider.Encrypt(new Data(clear), SymmetricKey).ToBase64();
+               symmetricProvider.IntializationVector = iv;
+               emailReportingServerPassword = symmetricProvider.Encrypt(new Data(clear), symmetricKey).ToBase64();
             }
             catch (CryptographicException)
             {
                HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Failed to encrypt Smtp Server Password... saving clear value.");
-               EmailReportingServerPassword = clear;
+               emailReportingServerPassword = clear;
             }
          }
          
-         return EmailReportingServerPassword;
+         return emailReportingServerPassword;
       }
 
-      private static string EncryptProxyPass(string clear, Symmetric SymmetricProvider, Data IV, Data SymmetricKey)
+      private static string EncryptProxyPass(string clear, Symmetric symmetricProvider, Data iv, Data symmetricKey)
       {
-         string ProxyPass = String.Empty;
+         string proxyPass = String.Empty;
          if (clear.Length > 0)
          {
             try
             {
-               SymmetricProvider.IntializationVector = IV;
-               ProxyPass = SymmetricProvider.Encrypt(new Data(clear), SymmetricKey).ToBase64();
+               symmetricProvider.IntializationVector = iv;
+               proxyPass = symmetricProvider.Encrypt(new Data(clear), symmetricKey).ToBase64();
             }
             catch (CryptographicException)
             {
                HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Failed to encrypt Proxy Password... saving clear value.");
-               ProxyPass = clear;
+               proxyPass = clear;
             }
          }
 
-         return ProxyPass;
+         return proxyPass;
       }
       #endregion
       
@@ -950,9 +967,9 @@ namespace HFM.Preferences
          return output;
       }
       
-      public static bool ValidateMinutes(int Minutes)
+      public static bool ValidateMinutes(int minutes)
       {
-         if ((Minutes > Constants.MaxMinutes) || (Minutes < Constants.MinMinutes))
+         if ((minutes > Constants.MaxMinutes) || (minutes < Constants.MinMinutes))
          {
             return false;
          }
@@ -979,13 +996,13 @@ namespace HFM.Preferences
       {
          get
          {
-            int DecimalPlaces = GetPreference<int>(Preference.DecimalPlaces);
+            int decimalPlaces = GetPreference<int>(Preference.DecimalPlaces);
 
             StringBuilder sbldr = new StringBuilder("###,###,##0");
-            if (DecimalPlaces > 0)
+            if (decimalPlaces > 0)
             {
                sbldr.Append(".");
-               for (int i = 0; i < DecimalPlaces; i++)
+               for (int i = 0; i < decimalPlaces; i++)
                {
                   sbldr.Append("0");
                }

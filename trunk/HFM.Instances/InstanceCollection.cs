@@ -1206,12 +1206,12 @@ namespace HFM.Instances
                int DecimalPlaces = _Prefs.GetPreference<int>(Preference.DecimalPlaces);
                if (findInstance != null)
                {
-                  findInstance.Load(instance, DecimalPlaces);
+                  findInstance.Load(instance, DecimalPlaces, _Prefs);
                }
                else
                {
                   DisplayInstance newInstance = new DisplayInstance();
-                  newInstance.Load(instance, DecimalPlaces);
+                  newInstance.Load(instance, DecimalPlaces, _Prefs);
                   _displayCollection.Add(newInstance);
                }
             }

@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Display Instance Class
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,6 +19,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Windows.Forms;
 
 using HFM.Framework;
@@ -28,223 +29,96 @@ namespace HFM.Instances
    public class DisplayInstance
    {
       #region Members & Read Only Properties
-      /// <summary>
-      /// 
-      /// </summary>
-      private ClientStatus _Status;
-      /// <summary>
-      /// 
-      /// </summary>
-      public ClientStatus Status
-      {
-         get { return _Status; }
-      }
 
       /// <summary>
-      /// Private member holding the percentage progress of the unit
+      /// 
       /// </summary>
-      private float _Progress;
+      public ClientStatus Status { get; private set; }
+
       /// <summary>
       /// Current progress (percentage) of the unit
       /// </summary>
-      public float Progress
-      {
-         get { return _Progress; }
-      }
+      public float Progress { get; private set; }
 
       /// <summary>
       /// 
       /// </summary>
-      private String _InstanceName;
-      /// <summary>
-      /// 
-      /// </summary>
-      public String Name
-      {
-         get { return _InstanceName; }
-      }
+      public String Name { get; private set; }
 
       /// <summary>
       /// 
       /// </summary>
-      private ClientType _ClientType;
+      public ClientType ClientType { get; private set; }
+
       /// <summary>
       /// 
       /// </summary>
-      public ClientType ClientType
-      {
-         get { return _ClientType; }
-      }
+      public TimeSpan TPF { get; private set; }
 
-      /// <summary>
-      /// Private member holding the time per frame of the unit
-      /// </summary>
-      private TimeSpan _TimePerFrame;
-      /// <summary>
-      /// 
-      /// </summary>
-      public TimeSpan TPF
-      {
-         get { return _TimePerFrame; }
-         set { _TimePerFrame = value; }
-      }
-
-      /// <summary>
-      /// Private variable holding the PPD rating for this instance
-      /// </summary>
-      private double _PPD;
       /// <summary>
       /// PPD rating for this instance
       /// </summary>
-      public double PPD
-      {
-         get { return _PPD; }
-      }
+      public double PPD { get; private set; }
 
       /// <summary>
       /// The number of processor megahertz for this client instance
       /// </summary>
-      private Int32 _MHz;
-      /// <summary>
-      /// The number of processor megahertz for this client instance
-      /// </summary>
-      public Int32 MHz
-      {
-         get { return _MHz; }
-      }
+      public Int32 MHz { get; private set; }
 
-      /// <summary>
-      /// Private variable holding the PPD rating for this instance
-      /// </summary>
-      private double _PPD_MHz;
       /// <summary>
       /// PPD rating for this instance
       /// </summary>
-      public double PPD_MHz
-      {
-         get { return _PPD_MHz; }
-      }
+      public double PPD_MHz { get; private set; }
 
-      /// <summary>
-      /// Private variable holding the ETA
-      /// </summary>
-      private TimeSpan _ETA;
       /// <summary>
       /// ETA for this instance
       /// </summary>
-      public TimeSpan ETA
-      {
-         get { return _ETA; }
-      }
+      public TimeSpan ETA { get; private set; }
 
       /// <summary>
       /// 
       /// </summary>
-      private String _Core;
-      /// <summary>
-      /// 
-      /// </summary>
-      public String Core
-      {
-         get { return _Core; }
-      }
+      public String Core { get; private set; }
 
       /// <summary>
       /// 
       /// </summary>
-      private string _CoreVersion;
-      /// <summary>
-      /// 
-      /// </summary>
-      public string CoreVersion
-      {
-         get { return _CoreVersion; }
-      }
+      public string CoreVersion { get; private set; }
 
       /// <summary>
       /// 
       /// </summary>
-      private string _ProjectRunCloneGen;
+      public string ProjectRunCloneGen { get; private set; }
 
       /// <summary>
       /// 
       /// </summary>
-      public string ProjectRunCloneGen
-      {
-         get { return _ProjectRunCloneGen; }
-      }
+      public double Credit { get; private set; }
 
       /// <summary>
       /// 
       /// </summary>
-      private double _Credit;
-      /// <summary>
-      /// 
-      /// </summary>
-      public double Credit
-      {
-         get { return _Credit; }
-      }
+      public int Complete { get; private set; }
 
       /// <summary>
       /// 
       /// </summary>
-      private int _Complete;
-      /// <summary>
-      /// 
-      /// </summary>
-      public int Complete
-      {
-         get { return _Complete; }
-      }
+      public int Failed { get; private set; }
 
       /// <summary>
       /// 
       /// </summary>
-      private int _Failed;
-      /// <summary>
-      /// 
-      /// </summary>
-      public int Failed
-      {
-         get { return _Failed; }
-      }
-      
-      /// <summary>
-      /// 
-      /// </summary>
-      private string _Username;
-      /// <summary>
-      /// 
-      /// </summary>
-      public string Username
-      {
-         get { return _Username; }
-      }
-      
-      /// <summary>
-      /// Private member holding the download time of the unit
-      /// </summary>
-      private DateTime _DownloadTime;
+      public string Username { get; private set; }
+
       /// <summary>
       /// Date/time the unit was downloaded
       /// </summary>
-      public DateTime DownloadTime
-      {
-         get { return _DownloadTime; }
-      }
+      public DateTime DownloadTime { get; private set; }
 
       /// <summary>
       /// 
       /// </summary>
-      private DateTime _Deadline;
-	   /// <summary>
-	   /// 
-	   /// </summary>
-      public DateTime Deadline
-      {
-         get { return _Deadline; }
-      }
+      public DateTime Deadline { get; private set; }
 
       [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
       public string Dummy
@@ -254,43 +128,43 @@ namespace HFM.Instances
       #endregion
 
       #region Implementation
-      public void Load(ClientInstance Instance, int DecimalPlaces)
+      public void Load(ClientInstance instance, int decimalPlaces, IPreferenceSet prefs)
       {
-         _Status = Instance.Status;
-         _Progress = ((float)Instance.PercentComplete) / 100;
-         _InstanceName = Instance.InstanceName;
-         _ClientType = Instance.CurrentUnitInfo.TypeOfClient;
-         _TimePerFrame = Instance.TimePerFrame;
-         _PPD = Math.Round(Instance.PPD, DecimalPlaces);
-         _MHz = Instance.ClientProcessorMegahertz;
-         _PPD_MHz = Math.Round(Instance.PPD / Instance.ClientProcessorMegahertz, 3);
-         _ETA = Instance.ETA;
-         _Core = Instance.CurrentUnitInfo.Core;
-         _CoreVersion = Instance.CurrentUnitInfo.CoreVersion;
-         _ProjectRunCloneGen = Instance.CurrentUnitInfo.ProjectRunCloneGen;
-         _Credit = Instance.Credit;
-         _Complete = Instance.NumberOfCompletedUnitsSinceLastStart;
-         _Failed = Instance.NumberOfFailedUnitsSinceLastStart;
-         _Username = Instance.FoldingIDAndTeam;
-         _DownloadTime = Instance.CurrentUnitInfo.DownloadTime;
-         _Deadline = Instance.CurrentUnitInfo.PreferredDeadline;
+         Status = instance.Status;
+         Progress = ((float)instance.PercentComplete) / 100;
+         Name = instance.InstanceName;
+         ClientType = instance.CurrentUnitInfo.TypeOfClient;
+         TPF = instance.TimePerFrame;
+         PPD = Math.Round(instance.PPD, decimalPlaces);
+         MHz = instance.ClientProcessorMegahertz;
+         PPD_MHz = Math.Round(instance.PPD / instance.ClientProcessorMegahertz, 3);
+         ETA = instance.ETA;
+         Core = instance.CurrentUnitInfo.Core;
+         CoreVersion = instance.CurrentUnitInfo.CoreVersion;
+         ProjectRunCloneGen = instance.CurrentUnitInfo.ProjectRunCloneGen;
+         Credit = instance.Credit;
+         Complete = prefs.GetPreference<CompletedCountDisplayType>(Preference.CompletedCountDisplay).Equals(CompletedCountDisplayType.ClientTotal) ? instance.TotalUnits : instance.NumberOfCompletedUnitsSinceLastStart;
+         Failed = instance.NumberOfFailedUnitsSinceLastStart;
+         Username = instance.FoldingIDAndTeam;
+         DownloadTime = instance.CurrentUnitInfo.DownloadTime;
+         Deadline = instance.CurrentUnitInfo.PreferredDeadline;
       }
 
-      public void UpdateName(string Key)
+      public void UpdateName(string key)
       {
-         _InstanceName = Key;
+         Name = key;
       } 
       #endregion
 
       public static void SetupDataGridViewColumns(DataGridView dataGridView1)
       {
+         // ReSharper disable PossibleNullReferenceException
          dataGridView1.Columns.Add("Status", "Status");
          dataGridView1.Columns["Status"].DataPropertyName = "Status";
          dataGridView1.Columns.Add("Progress", "Progress");
          dataGridView1.Columns["Progress"].DataPropertyName = "Progress";
-         DataGridViewCellStyle ProgressStyle = new DataGridViewCellStyle();
-         ProgressStyle.Format = "00%";
-         dataGridView1.Columns["Progress"].DefaultCellStyle = ProgressStyle;
+         DataGridViewCellStyle progressStyle = new DataGridViewCellStyle { Format = "00%" };
+         dataGridView1.Columns["Progress"].DefaultCellStyle = progressStyle;
          dataGridView1.Columns.Add("Name", "Name");
          dataGridView1.Columns["Name"].DataPropertyName = "Name";
          dataGridView1.Columns.Add("ClientType", "Client Type");
@@ -325,6 +199,7 @@ namespace HFM.Instances
          dataGridView1.Columns["Deadline"].DataPropertyName = "Deadline";
          dataGridView1.Columns.Add("Dummy", String.Empty);
          //dataGridView1.Columns["Dummy"].DataPropertyName = "Dummy";
+         // ReSharper restore PossibleNullReferenceException
       }
    }
 }

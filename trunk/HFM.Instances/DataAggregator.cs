@@ -164,7 +164,7 @@ namespace HFM.Instances
       
          IList<IUnitInfo> parsedUnits;
 
-         _logReader.ScanFAHLog(_instanceName, _fahLogFilePath);
+         _logReader.ScanFahLog(_instanceName, _fahLogFilePath);
          _currentClientRun = _logReader.CurrentClientRun;
          _currentFahLogUnitData = _logReader.GetFahLogDataFromLogLines(_logReader.CurrentWorkUnitLogLines);
 

@@ -42,8 +42,8 @@ namespace HFM.Framework
       /// <summary>
       /// Get a list of Log Lines that correspond to the given Queue Index.
       /// </summary>
-      /// <param name="QueueIndex">The Queue Index (0-9)</param>
-      IList<ILogLine> GetLogLinesFromQueueIndex(int QueueIndex);
+      /// <param name="queueIndex">The Queue Index (0-9)</param>
+      IList<ILogLine> GetLogLinesFromQueueIndex(int queueIndex);
 
       /// <summary>
       /// Get an Empty FAHlog Unit Data
@@ -64,29 +64,29 @@ namespace HFM.Framework
       /// <summary>
       /// Parse the content from the unitinfo.txt file.
       /// </summary>
-      /// <param name="LogFilePath">Path to the log file.</param>
-      IUnitInfoLogData GetUnitInfoLogData(string LogFilePath);
+      /// <param name="logFilePath">Path to the log file.</param>
+      IUnitInfoLogData GetUnitInfoLogData(string logFilePath);
 
       /// <summary>
       /// Parse the content from the unitinfo.txt file.
       /// </summary>
-      /// <param name="InstanceName">Name of the Client Instance that called this method.</param>
-      /// <param name="LogFilePath">Path to the log file.</param>
-      IUnitInfoLogData GetUnitInfoLogData(string InstanceName, string LogFilePath);
+      /// <param name="instanceName">Name of the Client Instance that called this method.</param>
+      /// <param name="logFilePath">Path to the log file.</param>
+      IUnitInfoLogData GetUnitInfoLogData(string instanceName, string logFilePath);
 
       /// <summary>
       /// Scan the FAHLog text lines to determine work unit boundries.
       /// </summary>
-      /// <param name="LogFilePath">Path to the log file.</param>
-      /// <exception cref="ArgumentException">Throws if LogFileName is Null or Empty.</exception>
-      void ScanFAHLog(string LogFilePath);
+      /// <param name="logFilePath">Path to the log file.</param>
+      /// <exception cref="ArgumentException">Throws if logFilePath is Null or Empty.</exception>
+      void ScanFahLog(string logFilePath);
 
       /// <summary>
       /// Scan the FAHLog text lines to determine work unit boundries.
       /// </summary>
-      /// <param name="InstanceName">Name of the Client Instance that called this method.</param>
-      /// <param name="LogFilePath">Path to the log file.</param>
-      /// <exception cref="ArgumentException">Throws if LogFileName is Null or Empty.</exception>
-      void ScanFAHLog(string InstanceName, string LogFilePath);
+      /// <param name="instanceName">Name of the Client Instance that called this method.</param>
+      /// <param name="logFilePath">Path to the log file.</param>
+      /// <exception cref="ArgumentException">Throws if logFilePath is Null or Empty.</exception>
+      void ScanFahLog(string instanceName, string logFilePath);
    }
 }

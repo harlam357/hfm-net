@@ -1360,6 +1360,20 @@ namespace HFM.Forms
 
          dataGridView1.Invalidate();
       }
+
+      private void mnuViewToggleCompletedCountStyle_Click(object sender, EventArgs e)
+      {
+         if (_Prefs.GetPreference<CompletedCountDisplayType>(Preference.CompletedCountDisplay).Equals(CompletedCountDisplayType.ClientTotal))
+         {
+            _Prefs.SetPreference(Preference.CompletedCountDisplay, CompletedCountDisplayType.CurrentClientRun);
+         }
+         else
+         {
+            _Prefs.SetPreference(Preference.CompletedCountDisplay, CompletedCountDisplayType.ClientTotal);
+         }
+
+         RefreshDisplay();
+      }
       #endregion
 
       #region Tools Menu Click Handlers

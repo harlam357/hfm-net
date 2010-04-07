@@ -40,7 +40,7 @@ namespace HFM.Log.Tests
       public void SMP_1_FAHlog() // verbosity 9
       {
          // Scan
-         reader.ScanFAHLog("..\\..\\..\\TestFiles\\SMP_1\\FAHlog.txt");
+         reader.ScanFahLog("..\\..\\..\\TestFiles\\SMP_1\\FAHlog.txt");
          
          // Check Run 0 Positions
          ClientRun expectedRun = new ClientRun(2);
@@ -91,7 +91,7 @@ namespace HFM.Log.Tests
       public void SMP_2_FAHlog() // verbosity 9
       {
          // Scan
-         reader.ScanFAHLog("..\\..\\..\\TestFiles\\SMP_2\\FAHlog.txt");
+         reader.ScanFahLog("..\\..\\..\\TestFiles\\SMP_2\\FAHlog.txt");
 
          // Check Run 0 Positions
          ClientRun expectedRun = new ClientRun(2);
@@ -128,7 +128,7 @@ namespace HFM.Log.Tests
       public void SMP_3_FAHlog() // verbosity (normal) / Handles Core Download on Startup / notfred's instance
       {
          // Scan
-         reader.ScanFAHLog("..\\..\\..\\TestFiles\\SMP_3\\FAHlog.txt");
+         reader.ScanFahLog("..\\..\\..\\TestFiles\\SMP_3\\FAHlog.txt");
 
          // Check Run 0 Positions
          ClientRun expectedRun = new ClientRun(2);
@@ -164,7 +164,7 @@ namespace HFM.Log.Tests
       public void SMP_10_FAHlog() // -smp 8 -bigadv verbosity 9 / Corrupted Log Section in Client Run Index 5
       {
          // Scan
-         reader.ScanFAHLog("..\\..\\..\\TestFiles\\SMP_10\\FAHlog.txt");
+         reader.ScanFahLog("..\\..\\..\\TestFiles\\SMP_10\\FAHlog.txt");
 
          // Check Run 0 Positions
          ClientRun expectedRun = new ClientRun(401);
@@ -194,7 +194,7 @@ namespace HFM.Log.Tests
       public void GPU2_1_FAHlog() // verbosity 9
       {
          // Scan
-         reader.ScanFAHLog("..\\..\\..\\TestFiles\\GPU2_1\\FAHlog.txt");
+         reader.ScanFahLog("..\\..\\..\\TestFiles\\GPU2_1\\FAHlog.txt");
 
          // Check Run 0 Positions
          ClientRun expectedRun = new ClientRun(2);
@@ -275,7 +275,7 @@ namespace HFM.Log.Tests
       public void GPU2_2_FAHlog() // verbosity (normal)
       {
          // Scan
-         reader.ScanFAHLog("..\\..\\..\\TestFiles\\GPU2_2\\FAHlog.txt");
+         reader.ScanFahLog("..\\..\\..\\TestFiles\\GPU2_2\\FAHlog.txt");
 
          // Check Run 0 Positions
          ClientRun expectedRun = new ClientRun(2);
@@ -311,7 +311,7 @@ namespace HFM.Log.Tests
       public void GPU2_3_FAHlog() // verbosity (normal) / EUE Pause Test
       {
          // Scan
-         reader.ScanFAHLog("..\\..\\..\\TestFiles\\GPU2_3\\FAHlog.txt");
+         reader.ScanFahLog("..\\..\\..\\TestFiles\\GPU2_3\\FAHlog.txt");
 
          // Check Run 0 Positions
          ClientRun expectedRun = new ClientRun(0);
@@ -371,7 +371,7 @@ namespace HFM.Log.Tests
       public void GPU2_7_FAHlog() // verbosity (normal) / Project String After "+ Processing work unit"
       {
          // Scan
-         reader.ScanFAHLog("..\\..\\..\\TestFiles\\GPU2_7\\FAHlog.txt");
+         reader.ScanFahLog("..\\..\\..\\TestFiles\\GPU2_7\\FAHlog.txt");
 
          // Check Run 0 Positions
          ClientRun expectedRun = new ClientRun(0);
@@ -415,7 +415,7 @@ namespace HFM.Log.Tests
       public void Standard_1_FAHlog() // verbosity 9
       {
          // Scan
-         reader.ScanFAHLog("..\\..\\..\\TestFiles\\Standard_1\\FAHlog.txt");
+         reader.ScanFahLog("..\\..\\..\\TestFiles\\Standard_1\\FAHlog.txt");
 
          // Check Run 0 Positions
          ClientRun expectedRun = new ClientRun(2);
@@ -477,7 +477,7 @@ namespace HFM.Log.Tests
       public void Standard_5_FAHlog() // verbosity 9
       {
          // Scan
-         reader.ScanFAHLog("..\\..\\..\\TestFiles\\Standard_5\\FAHlog.txt");
+         reader.ScanFahLog("..\\..\\..\\TestFiles\\Standard_5\\FAHlog.txt");
 
          // Check Run 3 Positions
          ClientRun expectedRun = new ClientRun(788);
