@@ -175,6 +175,9 @@ namespace HFM.Log
       {
          switch (logLine.LineType)
          {
+            case LogLineType.ClientVersion:
+               int versionIndex = logLine.LineRaw.IndexOf("Version", StringComparison.Ordinal) + 8;
+               return versionIndex < logLine.LineRaw.Length ? logLine.LineRaw.Substring(versionIndex) : String.Empty;
             case LogLineType.ClientArguments:
                return logLine.LineRaw.Substring(10).Trim();
             case LogLineType.ClientUserNameTeam:

@@ -30,6 +30,13 @@ namespace HFM.Log
    public class ClientRun : IClientRun
    {
       #region Members
+      private string _ClientVersion = String.Empty;
+      public string ClientVersion
+      {
+         get { return _ClientVersion; }
+         set { _ClientVersion = value; }
+      }
+      
       private string _Arguments = String.Empty;
       public string Arguments
       {

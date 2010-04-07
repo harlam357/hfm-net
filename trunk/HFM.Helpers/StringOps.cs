@@ -36,7 +36,7 @@ namespace HFM.Helpers
       private const string ValidFileName = @"^[^\\/:*?""<>|\r\n]*$";
 
       private const string ValidWinPath = @"(?:\b[a-z]:|\\\\[a-z0-9.$_-]+\\[a-z0-9.`~!@#$%^&()_-]+)\\(?:[^\\/:*?""<>|\r\n]+\\)*";
-      private const string ValidUnixPath = @"^(?:(/|~)[a-z0-9\-._~%!$&'()*+,;=:@/]*)*$";
+      private const string ValidUnixPath = @"^(?:(/|~)[a-z0-9\-\s._~%!$&'()*+,;=:@/]*)*$";
       
       private const string ValidServer = @"^[a-z0-9\-._%]+$";
       

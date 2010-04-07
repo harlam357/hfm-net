@@ -71,6 +71,8 @@ namespace HFM.Instances
       /// <param name="endingFrame">Ending Frame Index</param>
       public void UpdateBenchmarkData(IUnitInfoLogic unit, int startingFrame, int endingFrame)
       {
+         if (unit == null) throw new ArgumentNullException("unit", "Argument 'unit' cannot be null.");
+
          // project is not known, don't add to benchmark data
          if (unit.ProjectIsUnknown) return;
 

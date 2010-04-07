@@ -35,16 +35,16 @@ namespace HFM.Instances
       private readonly ILogReaderFactory _logReaderFactory;
       private readonly IUnitInfoFactory _unitInfoFactory;
 
-      private ILogReader _logReader = null;
+      private ILogReader _logReader;
 
-      private string _InstanceName;
+      private string _instanceName;
       /// <summary>
       /// Instance Name
       /// </summary>
       public string InstanceName
       {
-         get { return _InstanceName; }
-         set { _InstanceName = value; }
+         get { return _instanceName; }
+         set { _instanceName = value; }
       }
 
       private string _queueFilePath;
@@ -85,12 +85,7 @@ namespace HFM.Instances
       {
          get
          {
-            if (_queueReader.QueueReadOk)
-            {
-               return _queueReader.Queue;
-            }
-
-            return null;
+            return _queueReader.QueueReadOk ? _queueReader.Queue : null;
          }
       }
 
@@ -111,22 +106,22 @@ namespace HFM.Instances
          }
       }
 
-      private IClientRun _CurrentClientRun;
+      private IClientRun _currentClientRun;
       /// <summary>
       /// Client Run Data for the Current Run
       /// </summary>
       public IClientRun CurrentClientRun
       {
-         get { return _CurrentClientRun; }
+         get { return _currentClientRun; }
       }
 
-      private IFahLogUnitData _CurrentFahLogUnitData;
+      private IFahLogUnitData _currentFahLogUnitData;
       /// <summary>
       /// Current Work Unit Status based on LogReader CurrentWorkUnitLogLines
       /// </summary>
       public ClientStatus CurrentWorkUnitStatus
       {
-         get { return _CurrentFahLogUnitData.Status; }
+         get { return _currentFahLogUnitData.Status; }
       }
 
       /// <summary>
@@ -134,25 +129,20 @@ namespace HFM.Instances
       /// </summary>
       public IList<ILogLine> CurrentLogLines
       {
-         get 
-         { 
-            if (_UnitLogLines == null)
-            {
-               return new List<ILogLine>();
-            }
-            
-            return _UnitLogLines[CurrentUnitIndex]; 
+         get
+         {
+            return _unitLogLines == null ? new List<ILogLine>() : _unitLogLines[CurrentUnitIndex];
          }
       }
 
-      private IList<ILogLine>[] _UnitLogLines;
+      private IList<ILogLine>[] _unitLogLines;
       /// <summary>
       /// Array of LogLine Lists
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public IList<ILogLine>[] UnitLogLines
       {
-         get { return _UnitLogLines; }
+         get { return _unitLogLines; }
       }
 
       [CLSCompliant(false)]
@@ -174,9 +164,9 @@ namespace HFM.Instances
       
          IList<IUnitInfo> parsedUnits;
 
-         _logReader.ScanFAHLog(_InstanceName, _fahLogFilePath);
-         _CurrentClientRun = _logReader.CurrentClientRun;
-         _CurrentFahLogUnitData = _logReader.GetFahLogDataFromLogLines(_logReader.CurrentWorkUnitLogLines);
+         _logReader.ScanFAHLog(_instanceName, _fahLogFilePath);
+         _currentClientRun = _logReader.CurrentClientRun;
+         _currentFahLogUnitData = _logReader.GetFahLogDataFromLogLines(_logReader.CurrentWorkUnitLogLines);
 
          // Decision Time: If Queue Read fails parse from logs only
          if (ReadQueueFile())
@@ -185,7 +175,7 @@ namespace HFM.Instances
          }
          else
          {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, _InstanceName, 
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, _instanceName, 
                "Queue unavailable or failed read.  Parsing logs without queue.");
 
             parsedUnits = GenerateUnitInfoDataFromLogs();
@@ -217,13 +207,13 @@ namespace HFM.Instances
                }
                else
                {
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, _InstanceName, 
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, _instanceName, 
                      String.Format("{0} read failed.", _queueReader.QueueFilePath));
                }
             }
             catch (Exception ex)
             {
-               HfmTrace.WriteToHfmConsole(_InstanceName, ex);
+               HfmTrace.WriteToHfmConsole(_instanceName, ex);
             }
          }
 
@@ -239,15 +229,15 @@ namespace HFM.Instances
       private IUnitInfo[] GenerateUnitInfoDataFromLogs()
       {
          IUnitInfo[] parsedUnits = new IUnitInfo[2];
-         _UnitLogLines = new IList<ILogLine>[2];
+         _unitLogLines = new IList<ILogLine>[2];
 
          if (_logReader.PreviousWorkUnitLogLines != null)
          {
-            _UnitLogLines[0] = _logReader.PreviousWorkUnitLogLines;
+            _unitLogLines[0] = _logReader.PreviousWorkUnitLogLines;
             parsedUnits[0] = BuildUnitInfo(null, _logReader.GetFahLogDataFromLogLines(_logReader.PreviousWorkUnitLogLines), null);
          }
-         _UnitLogLines[1] = _logReader.CurrentWorkUnitLogLines;
-         parsedUnits[1] = BuildUnitInfo(null, _CurrentFahLogUnitData, _logReader.GetUnitInfoLogData(_InstanceName, _unitInfoLogFilePath));
+         _unitLogLines[1] = _logReader.CurrentWorkUnitLogLines;
+         parsedUnits[1] = BuildUnitInfo(null, _currentFahLogUnitData, _logReader.GetUnitInfoLogData(_instanceName, _unitInfoLogFilePath));
 
          return parsedUnits;
       }
@@ -255,18 +245,18 @@ namespace HFM.Instances
       private IUnitInfo[] GenerateUnitInfoDataFromQueue()
       {
          IUnitInfo[] parsedUnits = new IUnitInfo[10];
-         _UnitLogLines = new IList<ILogLine>[10];
+         _unitLogLines = new IList<ILogLine>[10];
 
          for (int queueIndex = 0; queueIndex < parsedUnits.Length; queueIndex++)
          {
             // Get the Log Lines for this queue position from the reader
-            _UnitLogLines[queueIndex] = _logReader.GetLogLinesFromQueueIndex(queueIndex);
+            _unitLogLines[queueIndex] = _logReader.GetLogLinesFromQueueIndex(queueIndex);
             // Get the FAH Log Data from the Log Lines
-            IFahLogUnitData fahLogUnitData = _logReader.GetFahLogDataFromLogLines(_UnitLogLines[queueIndex]);
+            IFahLogUnitData fahLogUnitData = _logReader.GetFahLogDataFromLogLines(_unitLogLines[queueIndex]);
             IUnitInfoLogData unitInfoLogData = null;
             if (queueIndex == _queueReader.Queue.CurrentIndex)
             {
-               unitInfoLogData = _logReader.GetUnitInfoLogData(_InstanceName, _unitInfoLogFilePath);
+               unitInfoLogData = _logReader.GetUnitInfoLogData(_instanceName, _unitInfoLogFilePath);
             }
 
             parsedUnits[queueIndex] = BuildUnitInfo(_queueReader.Queue.GetQueueEntry((uint)queueIndex), fahLogUnitData, unitInfoLogData);
@@ -274,14 +264,14 @@ namespace HFM.Instances
             {
                if (queueIndex == _queueReader.Queue.CurrentIndex)
                {
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, _InstanceName, String.Format(CultureInfo.CurrentCulture,
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, _instanceName, String.Format(CultureInfo.CurrentCulture,
                      "Could not verify log section for current queue entry ({0}). Trying to parse with most recent log section.", queueIndex));
 
-                  _UnitLogLines[queueIndex] = _logReader.CurrentWorkUnitLogLines;
-                  fahLogUnitData = _CurrentFahLogUnitData;
-                  if (_CurrentFahLogUnitData.Status.Equals(ClientStatus.GettingWorkPacket))
+                  _unitLogLines[queueIndex] = _logReader.CurrentWorkUnitLogLines;
+                  fahLogUnitData = _currentFahLogUnitData;
+                  if (_currentFahLogUnitData.Status.Equals(ClientStatus.GettingWorkPacket))
                   {
-                     _UnitLogLines[queueIndex] = null;
+                     _unitLogLines[queueIndex] = null;
                      fahLogUnitData = _logReader.GetEmptyFahLogUnitData();
                      unitInfoLogData = _logReader.GetEmptyUnitInfoLogData();
                   }
@@ -290,7 +280,7 @@ namespace HFM.Instances
                else
                {
                   // Just skip this unit and continue
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, _InstanceName, String.Format(CultureInfo.CurrentCulture,
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, _instanceName, String.Format(CultureInfo.CurrentCulture,
                      "Could not find or verify log section for queue entry {0} (this is not a problem).", queueIndex));
                }
             }
@@ -304,7 +294,7 @@ namespace HFM.Instances
          return BuildUnitInfo(queueEntry, fahLogUnitData, unitInfoLogData, false);
       }
 
-      private IUnitInfo BuildUnitInfo(IQueueEntry queueEntry, IFahLogUnitData fahLogUnitData, IUnitInfoLogData unitInfoLogData, bool MatchOverride)
+      private IUnitInfo BuildUnitInfo(IQueueEntry queueEntry, IFahLogUnitData fahLogUnitData, IUnitInfoLogData unitInfoLogData, bool matchOverride)
       {
          IUnitInfo unit = _unitInfoFactory.Create();
          unit.UnitStartTimeStamp = fahLogUnitData.UnitStartTimeStamp;
@@ -320,7 +310,7 @@ namespace HFM.Instances
 
             if (ProjectsMatch(unit, fahLogUnitData) ||
                 ProjectsMatch(unit, unitInfoLogData) ||
-                MatchOverride)
+                matchOverride)
             {
                // continue parsing the frame data
                ParseFrameData(fahLogUnitData.FrameDataList, unit);
@@ -395,10 +385,10 @@ namespace HFM.Instances
          }
       }
 
-      private static void PopulateUnitInfoFromLogs(IClientRun CurrentClientRun, IFahLogUnitData fahLogUnitData, 
+      private static void PopulateUnitInfoFromLogs(IClientRun currentClientRun, IFahLogUnitData fahLogUnitData, 
                                                    IUnitInfoLogData unitInfoLogData, IUnitInfo unit)
       {
-         Debug.Assert(CurrentClientRun != null);
+         Debug.Assert(currentClientRun != null);
          Debug.Assert(fahLogUnitData != null);
          Debug.Assert(unit != null);
 
@@ -448,11 +438,11 @@ namespace HFM.Instances
          /* FoldingID and Team from Last Client Run (Could have already been read through Queue) */
          if (unit.FoldingID.Equals(Constants.FoldingIDDefault))
          {
-            unit.FoldingID = CurrentClientRun.FoldingID;
+            unit.FoldingID = currentClientRun.FoldingID;
          }
          if (unit.Team == Constants.TeamDefault)
          {
-            unit.Team = CurrentClientRun.Team;
+            unit.Team = currentClientRun.Team;
          }
       }
 

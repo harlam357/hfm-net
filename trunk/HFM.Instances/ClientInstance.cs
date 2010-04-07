@@ -166,6 +166,11 @@ namespace HFM.Instances
          }
       }
 
+      /// <summary>
+      /// Client Version
+      /// </summary>
+      public string ClientVersion { get; set; }
+
       private string _Arguments;
       /// <summary>
       /// Client Startup Arguments
@@ -1109,6 +1114,7 @@ namespace HFM.Instances
 
       private void PopulateRunLevelData(IClientRun run)
       {
+         ClientVersion = run.ClientVersion;
          Arguments = run.Arguments;
       
          FoldingID = run.FoldingID;
@@ -1240,19 +1246,24 @@ namespace HFM.Instances
                   FoundCurrent = false;
                }
 
-               // Update benchmarks
-               _benchmarkContainer.UpdateBenchmarkData(parsedUnits[index], previousFrameID, parsedUnits[index].LastUnitFrameID);
-
-               // Write Completed Unit Info only for units that are NOT current (i.e. have moved into history)
-               // For some WUs (typically bigadv) all frames could be complete but the FinishedTime read from
-               // the queue.dat is not yet populated.  To write this units production using an accurate bonus
-               // multiplier that FinishedTime needs to be populated.
-               if (index != benchmarkUpdateIndex)
+               // Even though the CurrentUnitInfo has been found in the parsed UnitInfoLogic array doesn't
+               // mean that all entries in the array will be present.  See TestFiles\SMP_12\FAHlog.txt.
+               if (parsedUnits[index] != null)
                {
-                  // Make sure all Frames have been completed (not necessarily observed, but completed)
-                  if (parsedUnits[index].AllFramesAreCompleted)
+                  // Update benchmarks
+                  _benchmarkContainer.UpdateBenchmarkData(parsedUnits[index], previousFrameID, parsedUnits[index].LastUnitFrameID);
+
+                  // Write Completed Unit Info only for units that are NOT current (i.e. have moved into history)
+                  // For some WUs (typically bigadv) all frames could be complete but the FinishedTime read from
+                  // the queue.dat is not yet populated.  To write this units production using an accurate bonus
+                  // multiplier that FinishedTime needs to be populated.
+                  if (index != benchmarkUpdateIndex)
                   {
-                     UnitInfoContainer.WriteCompletedUnitInfo(parsedUnits[index]);
+                     // Make sure all Frames have been completed (not necessarily observed, but completed)
+                     if (parsedUnits[index].AllFramesAreCompleted)
+                     {
+                        UnitInfoContainer.WriteCompletedUnitInfo(parsedUnits[index]);
+                     }
                   }
                }
             }
@@ -1283,8 +1294,8 @@ namespace HFM.Instances
          if (IsUnitInfoCurrentUnitInfo(parsedUnitInfo))
          {
             // If the Unit Start Time Stamp is no longer the same as the CurrentUnitInfo
-            if (parsedUnitInfo.UnitStartTimeStamp.Equals(TimeSpan.Zero) == false &&
-                CurrentUnitInfo.UnitStartTimeStamp.Equals(TimeSpan.Zero) == false &&
+            if (parsedUnitInfo.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
+                CurrentUnitInfo.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
                 parsedUnitInfo.UnitStartTimeStamp.Equals(CurrentUnitInfo.UnitStartTimeStamp) == false)
             {
                TimeOfLastUnitStart = DateTime.Now;

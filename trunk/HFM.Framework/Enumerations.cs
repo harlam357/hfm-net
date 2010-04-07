@@ -94,6 +94,7 @@ namespace HFM.Framework
       Unknown = -1,
       LogOpen = 0,
       LogHeader,
+      ClientVersion,
       ClientSendWorkToServer,
       ClientAutosendStart,
       ClientAutosendComplete,

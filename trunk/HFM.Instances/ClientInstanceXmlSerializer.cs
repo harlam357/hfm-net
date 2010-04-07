@@ -230,7 +230,15 @@ namespace HFM.Instances
       {
          ClientInstance instance = _Factory.Create();
 
-         instance.InstanceName = xmlData.Attributes[xmlAttrName].ChildNodes[0].Value;
+         string instanceName = xmlData.Attributes[xmlAttrName].ChildNodes[0].Value;
+         if (StringOps.ValidateInstanceName(instanceName) == false)
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format(CultureInfo.CurrentCulture, 
+               "Instance Name '{0}' contains invalid characters... cleaning.", instanceName), true);
+            instanceName = StringOps.CleanInstanceName(instanceName);
+         }
+         instance.InstanceName = instanceName;
+         
          try
          {
             instance.RemoteFAHLogFilename = xmlData.SelectSingleNode(xmlNodeFAHLog).InnerText;

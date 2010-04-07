@@ -91,6 +91,8 @@ namespace HFM.Instances
       #region Write Completed Unit Info
       public static void WriteCompletedUnitInfo(IUnitInfoLogic unit)
       {
+         if (unit == null) throw new ArgumentNullException("unit", "Argument 'unit' cannot be null.");
+      
          UpgradeUnitInfoCsvFile();
 
          // Open CSV file and append completed unit info to file

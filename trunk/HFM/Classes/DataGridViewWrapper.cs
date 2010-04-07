@@ -24,34 +24,20 @@ namespace HFM.Classes
 {
    public partial class DataGridViewWrapper : DataGridView
    {
-      private bool _FreezeSelectionChanged;
       /// <summary>
       /// Local Flag That Halts the SelectionChanged Event
       /// </summary>
-      public bool FreezeSelectionChanged
-      {
-         get { return _FreezeSelectionChanged; }
-         set { _FreezeSelectionChanged = value; }
-      }
+      public bool FreezeSelectionChanged { get; set; }
 
-      private bool _FreezeSorted;
       /// <summary>
       /// Local Flag That Halts the Sorted Event
       /// </summary>
-      public bool FreezeSorted
-      {
-         get { return _FreezeSorted; }
-         set { _FreezeSorted = value; }
-      }
-      
-      private string _CurrentRowKey;
+      public bool FreezeSorted { get; set; }
+
       /// <summary>
       /// Key for the Currently Selected Row
       /// </summary>
-      public string CurrentRowKey
-      {
-         get { return _CurrentRowKey; }
-      }
+      public string CurrentRowKey { get; private set; }
 
       /// <summary>
       /// Constructor
@@ -82,7 +68,14 @@ namespace HFM.Classes
       {
          if (e.RowIndex == -1)
          {
-            _CurrentRowKey = SelectedRows[0].Cells["Name"].Value.ToString();
+            if (SelectedRows.Count != 0)
+            {
+               CurrentRowKey = SelectedRows[0].Cells["Name"].Value.ToString();
+            }
+            else
+            {
+               CurrentRowKey = String.Empty;
+            }
          }
       
          base.OnCellMouseDown(e);

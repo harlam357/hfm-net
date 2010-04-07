@@ -48,6 +48,10 @@ namespace HFM.Log
          {
             return LogLineType.LogHeader;
          }
+         else if (logLine.Contains("Folding@Home Client Version"))
+         {
+            return LogLineType.ClientVersion;
+         }
          else if (logLine.Contains("] Sending work to server"))
          {
             return LogLineType.ClientSendWorkToServer;

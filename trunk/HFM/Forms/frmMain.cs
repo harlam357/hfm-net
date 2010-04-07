@@ -422,10 +422,11 @@ namespace HFM.Forms
             IQueueBase qBase = ClientInstances.SelectedInstance.DataAggregator.Queue;
             if (qBase != null && qBase.DataPopulated) return;
 
-            if (ClientInstances.SelectedInstance.DataAggregator.UnitLogLines != null)
-            {
+            // I'm not sure why I ever wrote this check here - it makes no sense - 4/6/10
+            //if (ClientInstances.SelectedInstance.DataAggregator.UnitLogLines != null)
+            //{
                SetLogLines(ClientInstances.SelectedInstance, ClientInstances.SelectedInstance.DataAggregator.CurrentLogLines);
-            }
+            //}
          }
          else
          {
@@ -957,7 +958,7 @@ namespace HFM.Forms
             {
                if (dataGridView1.Rows[hti.RowIndex].Cells[hti.ColumnIndex].Selected == false)
                {
-                  dataGridView1.ClearSelection();
+                  //dataGridView1.ClearSelection();
                   dataGridView1.Rows[hti.RowIndex].Cells[hti.ColumnIndex].Selected = true;
                }
 

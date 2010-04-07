@@ -160,6 +160,36 @@ namespace HFM.Log.Tests
          Assert.AreEqual(reader.ClientLogLines[368].LineData, WorkUnitResult.FinishedUnit);
       }
 
+      [Test, Category("SMP")]
+      public void SMP_10_FAHlog() // -smp 8 -bigadv verbosity 9 / Corrupted Log Section in Client Run Index 5
+      {
+         // Scan
+         reader.ScanFAHLog("..\\..\\..\\TestFiles\\SMP_10\\FAHlog.txt");
+
+         // Check Run 0 Positions
+         ClientRun expectedRun = new ClientRun(401);
+         expectedRun.Arguments = "-configonly";
+         expectedRun.FoldingID = "sneakysnowman";
+         expectedRun.Team = 32;
+         expectedRun.UserID = "5D2DCEF06CE524B3";
+         expectedRun.MachineID = 1;
+         expectedRun.NumberOfCompletedUnits = 0;
+         expectedRun.NumberOfFailedUnits = 0;
+         expectedRun.NumberOfTotalUnitsCompleted = 0;
+
+         DoClientRunCheck(reader.ClientRunList[5], expectedRun);
+
+         // Verify LogLine Properties
+         Assert.IsNull(reader.PreviousWorkUnitLogLines);
+         Assert.IsNotNull(reader.CurrentWorkUnitLogLines);
+
+         // Spot Check Work Unit Data (Run Index 8 - Unit Index 0)
+         Assert.AreEqual(reader.ClientLogLines[610].LineData, 6);
+         Assert.AreEqual(reader.ClientLogLines[617].LineData, "2.10");
+         Assert.That(reader.ClientLogLines[628].ToString().Contains("Project: 2683 (Run 4, Clone 11, Gen 18)"));
+         Assert.AreEqual(reader.ClientLogLines[660].LineData, WorkUnitResult.FinishedUnit);
+      }
+
       [Test, Category("GPU")]
       public void GPU2_1_FAHlog() // verbosity 9
       {
@@ -441,6 +471,54 @@ namespace HFM.Log.Tests
          Assert.AreEqual(reader.ClientLogLines[189].LineData, "1.90");
          Assert.That(reader.ClientLogLines[197].ToString().Contains("Project: 4456 (Run 173, Clone 0, Gen 31)"));
          Assert.AreEqual(reader.ClientLogLines[433].LineData, WorkUnitResult.FinishedUnit);
+      }
+
+      [Test, Category("Standard")]
+      public void Standard_5_FAHlog() // verbosity 9
+      {
+         // Scan
+         reader.ScanFAHLog("..\\..\\..\\TestFiles\\Standard_5\\FAHlog.txt");
+
+         // Check Run 3 Positions
+         ClientRun expectedRun = new ClientRun(788);
+         expectedRun.UnitQueueIndex.Add(4);
+         expectedRun.UnitStartIndex.Add(820);
+         expectedRun.Arguments = "-oneunit -forceasm -verbosity 9";
+         expectedRun.FoldingID = "borden.b";
+         expectedRun.Team = 131;
+         expectedRun.UserID = "722723950C6887C2";
+         expectedRun.MachineID = 3;
+         expectedRun.NumberOfCompletedUnits = 0;
+         expectedRun.NumberOfFailedUnits = 0;
+         expectedRun.NumberOfTotalUnitsCompleted = 0;
+
+         DoClientRunCheck(reader.ClientRunList[3], expectedRun);
+
+         // Check Run 4 Positions
+         expectedRun = new ClientRun(927);
+         expectedRun.UnitQueueIndex.Add(4);
+         expectedRun.UnitStartIndex.Add(961);
+         expectedRun.Arguments = "-forceasm -verbosity 9 -oneunit";
+         expectedRun.FoldingID = "borden.b";
+         expectedRun.Team = 131;
+         expectedRun.UserID = "722723950C6887C2";
+         expectedRun.MachineID = 3;
+         expectedRun.NumberOfCompletedUnits = 0;
+         expectedRun.NumberOfFailedUnits = 0;
+         expectedRun.NumberOfTotalUnitsCompleted = 0;
+
+         DoClientRunCheck(reader.ClientRunList[4], expectedRun);
+
+         // Verify LogLine Properties
+         Assert.IsNull(reader.PreviousWorkUnitLogLines); // No Previous Log Lines for this Run
+         Assert.IsNotNull(reader.CurrentWorkUnitLogLines);
+
+         // Spot Check Work Unit Data (Run Index 4 - Unit Index 0)
+         Assert.AreEqual(reader.ClientLogLines[967].LineData, 4);
+         Assert.AreEqual(reader.ClientLogLines[978].LineData, "23");
+         Assert.That(reader.ClientLogLines[963].ToString().Contains("Project: 6501 (Run 13, Clone 0, Gen 0)"));
+         Assert.That(reader.ClientLogLines[971].ToString().Contains("Project: 6501 (Run 15, Clone 0, Gen 0)"));
+         Assert.That(reader.ClientLogLines[1006].ToString().Contains("Project: 10002 (Run 19, Clone 0, Gen 51)"));
       }
       
       private static void DoClientRunCheck(ClientRun run, ClientRun expectedRun)

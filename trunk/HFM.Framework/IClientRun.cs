@@ -21,6 +21,8 @@ namespace HFM.Framework
 {
    public interface IClientRun
    {
+      string ClientVersion { get; set; }
+   
       string Arguments { get; set; }
 
       string FoldingID { get; set; }
