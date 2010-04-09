@@ -228,12 +228,14 @@ namespace HFM.Log
             {
                data.UnitStartTimeStamp = GetLogLineTimeStamp(line);
             }
-            
-            if (line.LineType.Equals(LogLineType.WorkUnitPaused)) // || logLine.LineRaw.Contains("+ Running on battery power"))
+
+            if (line.LineType.Equals(LogLineType.WorkUnitPaused) || line.LineType.Equals(LogLineType.WorkUnitPausedForBattery))
             {
                clientWasPaused = true;
             }
-            else if (line.LineType.Equals(LogLineType.WorkUnitWorking) && clientWasPaused)
+            // another indication that the client has resumed would be a frame progress line (see below for same comment)
+            // think about adding a check here for that condition as well... as sort of a "backup"
+            else if ((line.LineType.Equals(LogLineType.WorkUnitWorking) || line.LineType.Equals(LogLineType.WorkUnitResumeFromBattery)) && clientWasPaused)
             {
                clientWasPaused = false;
 
@@ -304,7 +306,9 @@ namespace HFM.Log
             {
                data.Status = ClientStatus.RunningNoFrameTimes;
             }
-            else if (line.LineType.Equals(LogLineType.WorkUnitPaused)) // || line.LineRaw.Contains("+ Running on battery power"))
+            // another indication that the client has resumed would be a frame progress line (see above for same comment)
+            // think about adding a check here for that condition as well... as sort of a "backup"
+            else if (line.LineType.Equals(LogLineType.WorkUnitPaused) || line.LineType.Equals(LogLineType.WorkUnitPausedForBattery))
             {
                data.Status = ClientStatus.Paused;
             }

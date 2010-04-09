@@ -122,6 +122,8 @@ namespace HFM.Framework
       WorkUnitProject,
       WorkUnitFrame,
       WorkUnitPaused,
+      WorkUnitPausedForBattery,
+      WorkUnitResumeFromBattery,
       WorkUnitShuttingDownCore,
       WorkUnitCoreShutdown,
       ClientNumberOfUnitsCompleted,

@@ -172,6 +172,14 @@ namespace HFM.Log
          {
             return LogLineType.WorkUnitPaused;
          }
+         else if (logLine.Contains("] + Running on battery power"))
+         {
+            return LogLineType.WorkUnitPausedForBattery;
+         }
+         else if (logLine.Contains("] + Off battery, restarting core"))
+         {
+            return LogLineType.WorkUnitResumeFromBattery;
+         }
          else if (logLine.Contains("] - Shutting down core"))
          {
             return LogLineType.WorkUnitShuttingDownCore;
