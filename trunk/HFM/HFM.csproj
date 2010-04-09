@@ -14,6 +14,7 @@
     <ApplicationIcon>hfm_48_48.ico</ApplicationIcon>
     <Win32Resource>
     </Win32Resource>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -46,21 +47,21 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+    <Reference Include="Castle.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Castle Windsor 1.0.3\bin\Castle.Core.dll</HintPath>
+      <HintPath>..\Castle Windsor 2.0\bin\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.DynamicProxy2, Version=2.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+    <Reference Include="Castle.DynamicProxy2, Version=2.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Castle Windsor 1.0.3\bin\Castle.DynamicProxy2.dll</HintPath>
+      <HintPath>..\Castle Windsor 2.0\bin\Castle.DynamicProxy2.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.MicroKernel, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+    <Reference Include="Castle.MicroKernel, Version=2.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Castle Windsor 1.0.3\bin\Castle.MicroKernel.dll</HintPath>
+      <HintPath>..\Castle Windsor 2.0\bin\Castle.MicroKernel.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.Windsor, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+    <Reference Include="Castle.Windsor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Castle Windsor 1.0.3\bin\Castle.Windsor.dll</HintPath>
+      <HintPath>..\Castle Windsor 2.0\bin\Castle.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="harlam357.Net, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -71,6 +72,9 @@
       <HintPath>..\harlam357-net\net20\bin\Release\harlam357.Windows.Forms.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="ZedGraph, Version=5.1.5.28844, Culture=neutral, PublicKeyToken=02a83cbd123fcd60, processorArchitecture=MSIL">
@@ -233,7 +237,7 @@
       <SubType>Designer</SubType>
       <DependentUpon>frmMessages.cs</DependentUpon>
     </EmbeddedResource>
-    <Content Include="..\Castle Windsor 1.0.3\Windsor License.txt">
+    <Content Include="..\Castle Windsor 2.0\Windsor License.txt">
       <Link>Windsor License.txt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
