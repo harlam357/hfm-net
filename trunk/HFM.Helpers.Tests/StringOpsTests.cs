@@ -1,6 +1,6 @@
 /*
  * HFM.NET - String Operations Helper Class Tests
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -294,6 +294,7 @@ namespace HFM.Helpers.Tests
          Assert.AreEqual(WorkUnitResult.EarlyUnitEnd, StringOps.WorkUnitResultFromString("EARLY_UNIT_END"));
          Assert.AreEqual(WorkUnitResult.UnstableMachine, StringOps.WorkUnitResultFromString("UNSTABLE_MACHINE"));
          Assert.AreEqual(WorkUnitResult.Interrupted, StringOps.WorkUnitResultFromString("INTERRUPTED"));
+         Assert.AreEqual(WorkUnitResult.BadWorkUnit, StringOps.WorkUnitResultFromString("BAD_WORK_UNIT"));
          Assert.AreEqual(WorkUnitResult.CoreOutdated, StringOps.WorkUnitResultFromString("CORE_OUTDATED"));
          Assert.AreEqual(WorkUnitResult.Unknown, StringOps.WorkUnitResultFromString("afasfdsafasdfas"));
       }

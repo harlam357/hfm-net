@@ -1,7 +1,7 @@
 /*
  * HFM.NET - Instance Collection Class
  * Copyright (C) 2006-2007 David Rawling
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,6 +19,7 @@
  */
 
 using System;
+using System.Linq;
 using System.Collections;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -28,7 +29,6 @@ using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
-using System.Xml;
 using System.Collections.Generic;
 
 using HFM.Framework;
@@ -44,8 +44,9 @@ namespace HFM.Instances
       public Int32 TotalClients;
       public Int32 WorkingClients;
       public Int32 NonWorkingClients;
-      public Int32 TotalCompletedUnits;
-      public Int32 TotalFailedUnits;
+      public Int32 TotalRunCompletedUnits;
+      public Int32 TotalRunFailedUnits;
+      public Int32 TotalClientCompletedUnits;
    }
 
    public sealed class InstanceCollection : IDisposable
@@ -59,7 +60,7 @@ namespace HFM.Instances
       public event EventHandler InstanceRemoved;
       public event EventHandler InstanceRetrieved;
       public event EventHandler SelectedInstanceChanged;
-      public event EventHandler DuplicatesFoundOrChanged;
+      public event EventHandler FindDuplicatesComplete;
       public event EventHandler OfflineLastChanged;
       
       public event EventHandler RefreshUserStatsData;
@@ -77,7 +78,7 @@ namespace HFM.Instances
       private readonly System.Timers.Timer workTimer = new System.Timers.Timer(600000);
 
       /// <summary>
-      /// WebGen Timer Object (init 15 minutes)
+      /// Web Generation Timer Object (init 15 minutes)
       /// </summary>
       private readonly System.Timers.Timer webTimer = new System.Timers.Timer(900000);
 
@@ -88,7 +89,7 @@ namespace HFM.Instances
       /// <summary>
       /// Local flag that denotes a full retrieve already in progress (only accessed by the RetrieveInProgress property)
       /// </summary>
-      private volatile bool _RetrievalInProgress = false;
+      private volatile bool _RetrievalInProgress;
       /// <summary>
       /// Local flag that denotes a full retrieve already in progress
       /// </summary>
@@ -100,12 +101,12 @@ namespace HFM.Instances
             if (value)
             {
                _RetrieveExecStart = HfmTrace.ExecStart;
-               _RetrievalInProgress = value;
+               _RetrievalInProgress = true;
             }
             else
             {
                HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Total Retrieval Execution Time: {0}", HfmTrace.GetExecTime(_RetrieveExecStart)));
-               _RetrievalInProgress = value;
+               _RetrievalInProgress = false;
             }
          }
       }
@@ -128,7 +129,7 @@ namespace HFM.Instances
       /// <summary>
       /// Currently Selected Client Instance
       /// </summary>
-      private ClientInstance _SelectedInstance = null;
+      private ClientInstance _SelectedInstance;
       
       /// <summary>
       /// List of Duplicate Project (R/C/G)
@@ -138,7 +139,7 @@ namespace HFM.Instances
       /// <summary>
       /// List of Duplicate Client User and Machine ID combinations
       /// </summary>
-      private readonly List<string> _duplicateUserID;
+      private readonly List<string> _duplicateUserId;
 
       /// <summary>
       /// Internal filename
@@ -148,7 +149,17 @@ namespace HFM.Instances
       /// <summary>
       /// Internal variable storing whether New, Open, Quit should prompt for saving the config first
       /// </summary>
-      private bool _ChangedAfterSave = false;
+      private bool _ChangedAfterSave;
+
+      /// <summary>
+      /// Markup Generator Interface
+      /// </summary>
+      private IMarkupGenerator _markupGenerator;
+
+      /// <summary>
+      /// Network Operations Interface
+      /// </summary>
+      private NetworkOps _networkOps;
       
       /// <summary>
       /// Preferences Interface
@@ -175,9 +186,9 @@ namespace HFM.Instances
       /// <summary>
       /// Default Constructor
       /// </summary>
-      public InstanceCollection(IPreferenceSet Prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer)
+      public InstanceCollection(IPreferenceSet prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer)
       {
-         _Prefs = Prefs;
+         _Prefs = prefs;
          _proteinCollection = proteinCollection;
          _benchmarkContainer = benchmarkContainer;
          
@@ -187,11 +198,11 @@ namespace HFM.Instances
          _instanceCollection = new Dictionary<string, ClientInstance>();
          _displayCollection = new SortableBindingList<DisplayInstance>();
          _duplicateProjects = new List<string>();
-         _duplicateUserID = new List<string>();
+         _duplicateUserId = new List<string>();
 
-         // Hook up Background Timer Event Handler
+         // Hook up Retrieval Timer Event Handler
          workTimer.Elapsed += bgWorkTimer_Tick;
-         // Hook up WebGen Timer Event Handler
+         // Hook up Web Generation Timer Event Handler
          webTimer.Elapsed += webGenTimer_Tick;
 
          // Hook up Protein Collection Updated Event Handler
@@ -206,7 +217,6 @@ namespace HFM.Instances
          // Hook-up PreferenceSet Event Handlers
          _Prefs.OfflineLastChanged += PreferenceSet_OfflineLastChanged;
          _Prefs.TimerSettingsChanged += Prefs_TimerSettingsChanged;
-         _Prefs.DuplicateCheckChanged += PreferenceSet_DuplicateCheckChanged;
       }
       #endregion
 
@@ -267,11 +277,11 @@ namespace HFM.Instances
          }
       }
 
-      private void OnDuplicatesFoundOrChanged(EventArgs e)
+      private void OnFindDuplicatesComplete(EventArgs e)
       {
-         if (DuplicatesFoundOrChanged != null)
+         if (FindDuplicatesComplete != null)
          {
-            DuplicatesFoundOrChanged(this, e);
+            FindDuplicatesComplete(this, e);
          }
       }
 
@@ -435,7 +445,7 @@ namespace HFM.Instances
 
             // Get client logs         
             QueueNewRetrieval();
-            // Start Retrieval and WebGen Timers
+            // Start Retrieval and Web Generation Timers
             SetTimerState();
 
             OnCollectionLoaded(EventArgs.Empty);
@@ -500,7 +510,7 @@ namespace HFM.Instances
                if (String.IsNullOrEmpty(line) == false && line.StartsWith("#") == false)
                {
                   // Tokenize the line
-                  string[] tokens = line.Split(new char[] {'\t'});
+                  string[] tokens = line.Split(new[] {'\t'});
 
                   if (tokens.Length > 1) // we should have at least name and path
                   {
@@ -551,7 +561,7 @@ namespace HFM.Instances
 
             // Get client logs         
             QueueNewRetrieval();
-            // Start Retrieval and WebGen Timers
+            // Start Retrieval and Web Generation Timers
             SetTimerState();
 
             OnCollectionLoaded(EventArgs.Empty);
@@ -562,11 +572,11 @@ namespace HFM.Instances
       /// Inspects tokens gathered from FahMon ClientsTab.txt line and attempts to
       /// create an HFM ClientInstance object based on those tokens
       /// </summary>
-      /// <param name="Prefs">Preferences Interface</param>
+      /// <param name="prefs">Preferences Interface</param>
       /// <param name="proteinCollection">Protein Collection Interface</param>
       /// <param name="benchmarkContainer">Benchmark Container Interface</param>
       /// <param name="tokens">Tokenized String (String Array)</param>
-      private static ClientInstance GetNewInstance(IPreferenceSet Prefs, IProteinCollection proteinCollection, 
+      private static ClientInstance GetNewInstance(IPreferenceSet prefs, IProteinCollection proteinCollection, 
                                                    IProteinBenchmarkContainer benchmarkContainer, string[] tokens)
       {
          // Get the instance name token and validate
@@ -581,52 +591,52 @@ namespace HFM.Instances
 
          // Get the instance path token
          string instancePath = tokens[1].Replace("\"", String.Empty);
-         Match matchURL = StringOps.MatchHttpOrFtpUrl(instancePath);
-         Match matchFTPUserPass = StringOps.MatchFtpWithUserPassUrl(instancePath);
+         Match matchUrl = StringOps.MatchHttpOrFtpUrl(instancePath);
+         Match matchFtpUserPass = StringOps.MatchFtpWithUserPassUrl(instancePath);
 
          // Declare instance variable
          ClientInstance instance = null;
 
-         if (matchURL.Success) // we have a valid URL
+         if (matchUrl.Success) // we have a valid URL
          {
             if (instancePath.StartsWith("http"))
             {
-               instance = new ClientInstance(Prefs, proteinCollection, benchmarkContainer);
+               instance = new ClientInstance(prefs, proteinCollection, benchmarkContainer);
                instance.InstanceHostType = InstanceType.HTTPInstance;
                instance.InstanceName = instanceName;
                instance.Path = instancePath;
             }
             else if (instancePath.StartsWith("ftp"))
             {
-               instance = new ClientInstance(Prefs, proteinCollection, benchmarkContainer);
+               instance = new ClientInstance(prefs, proteinCollection, benchmarkContainer);
                instance.InstanceHostType = InstanceType.FTPInstance;
                instance.InstanceName = instanceName;
-               instance.Server = matchURL.Result("${domain}");
-               instance.Path = matchURL.Result("${file}");
+               instance.Server = matchUrl.Result("${domain}");
+               instance.Path = matchUrl.Result("${file}");
             }
          }
-         else if (matchFTPUserPass.Success) // we have a valid FTP with User Pass
+         else if (matchFtpUserPass.Success) // we have a valid FTP with User Pass
          {
-            instance = new ClientInstance(Prefs, proteinCollection, benchmarkContainer);
+            instance = new ClientInstance(prefs, proteinCollection, benchmarkContainer);
             instance.InstanceHostType = InstanceType.FTPInstance;
             instance.InstanceName = instanceName;
-            instance.Server = matchFTPUserPass.Result("${domain}");
-            instance.Path = matchFTPUserPass.Result("${file}");
-            instance.Username = matchFTPUserPass.Result("${username}");
-            instance.Password = matchFTPUserPass.Result("${password}");
+            instance.Server = matchFtpUserPass.Result("${domain}");
+            instance.Path = matchFtpUserPass.Result("${file}");
+            instance.Username = matchFtpUserPass.Result("${username}");
+            instance.Password = matchFtpUserPass.Result("${password}");
          }
          else // try to validate as a path instance
          {
             if (StringOps.ValidatePathInstancePath(instancePath))
             {
-               instance = new ClientInstance(Prefs, proteinCollection, benchmarkContainer);
+               instance = new ClientInstance(prefs, proteinCollection, benchmarkContainer);
                instance.InstanceHostType = InstanceType.PathInstance;
                instance.InstanceName = instanceName;
                instance.Path = instancePath;
             }
             else if (StringOps.ValidatePathInstancePath(instancePath += Path.DirectorySeparatorChar))
             {
-               instance = new ClientInstance(Prefs, proteinCollection, benchmarkContainer);
+               instance = new ClientInstance(prefs, proteinCollection, benchmarkContainer);
                instance.InstanceHostType = InstanceType.PathInstance;
                instance.InstanceName = instanceName;
                instance.Path = instancePath;
@@ -641,46 +651,46 @@ namespace HFM.Instances
       /// <summary>
       /// Add an Instance
       /// </summary>
-      /// <param name="Instance">Client Instance</param>
-      public void Add(ClientInstance Instance)
+      /// <param name="instance">Client Instance</param>
+      public void Add(ClientInstance instance)
       {
-         Add(Instance, true);
+         Add(instance, true);
       }
       
       /// <summary>
       /// Add an Instance
       /// </summary>
-      /// <param name="Instance">Client Instance</param>
-      /// <param name="FireAddedEvent">Specifies whether this call fires the InstanceAdded Event</param>
-      private void Add(ClientInstance Instance, bool FireAddedEvent)
+      /// <param name="instance">Client Instance</param>
+      /// <param name="fireAddedEvent">Specifies whether this call fires the InstanceAdded Event</param>
+      private void Add(ClientInstance instance, bool fireAddedEvent)
       {
-         Add(Instance.InstanceName, Instance, FireAddedEvent);
+         Add(instance.InstanceName, instance, fireAddedEvent);
       }
 
       /// <summary>
       /// Add an Instance with Key
       /// </summary>
-      /// <param name="Key">Instance Key</param>
-      /// <param name="Instance">Client Instance</param>
-      public void Add(string Key, ClientInstance Instance)
+      /// <param name="key">Instance Key</param>
+      /// <param name="instance">Client Instance</param>
+      public void Add(string key, ClientInstance instance)
       {
-         Add(Key, Instance, true);
+         Add(key, instance, true);
       }
 
       /// <summary>
       /// Add an Instance with Key
       /// </summary>
-      /// <param name="Key">Instance Key</param>
-      /// <param name="Instance">Client Instance</param>
-      /// <param name="FireAddedEvent">Specifies whether this call fires the InstanceAdded Event</param>
-      private void Add(string Key, ClientInstance Instance, bool FireAddedEvent)
+      /// <param name="key">Instance Key</param>
+      /// <param name="instance">Client Instance</param>
+      /// <param name="fireAddedEvent">Specifies whether this call fires the InstanceAdded Event</param>
+      private void Add(string key, ClientInstance instance, bool fireAddedEvent)
       {
-         _instanceCollection.Add(Key, Instance);
+         _instanceCollection.Add(key, instance);
          OnCollectionChanged(EventArgs.Empty);
          
-         if (FireAddedEvent)
+         if (fireAddedEvent)
          {
-            RetrieveSingleClient(Instance);
+            RetrieveSingleClient(instance);
 
             _ChangedAfterSave = true;
             OnInstanceAdded(EventArgs.Empty);
@@ -690,29 +700,29 @@ namespace HFM.Instances
       /// <summary>
       /// Edit the ClientInstance Name and Path
       /// </summary>
-      /// <param name="PreviousName">Previous Client Instance Name</param>
-      /// <param name="PreviousPath">Previous Client Instance Path</param>
-      /// <param name="Instance">Client Instance</param>
-      public void Edit(string PreviousName, string PreviousPath, ClientInstance Instance)
+      /// <param name="previousName">Previous Client Instance Name</param>
+      /// <param name="previousPath">Previous Client Instance Path</param>
+      /// <param name="instance">Client Instance</param>
+      public void Edit(string previousName, string previousPath, ClientInstance instance)
       {
          IProteinBenchmarkContainer benchmarks = InstanceProvider.GetInstance<IProteinBenchmarkContainer>();
       
          // if the host key changed
-         if (PreviousName != Instance.InstanceName)
+         if (previousName != instance.InstanceName)
          {
-            UpdateDisplayInstanceName(PreviousName, Instance.InstanceName);
-            Remove(PreviousName, false);
-            Add(Instance, false);
+            UpdateDisplayInstanceName(previousName, instance.InstanceName);
+            Remove(previousName, false);
+            Add(instance, false);
 
-            benchmarks.UpdateInstanceName(new BenchmarkClient(PreviousName, Instance.Path), Instance.InstanceName);
+            benchmarks.UpdateInstanceName(new BenchmarkClient(previousName, instance.Path), instance.InstanceName);
          }
          // if the path changed, update the paths in the benchmark collection
-         if (PreviousPath != Instance.Path)
+         if (previousPath != instance.Path)
          {
-            benchmarks.UpdateInstancePath(new BenchmarkClient(Instance.InstanceName, PreviousPath), Instance.Path);
+            benchmarks.UpdateInstancePath(new BenchmarkClient(instance.InstanceName, previousPath), instance.Path);
          }
          
-         RetrieveSingleClient(Instance);
+         RetrieveSingleClient(instance);
 
          _ChangedAfterSave = true;
          OnInstanceEdited(EventArgs.Empty);
@@ -721,25 +731,25 @@ namespace HFM.Instances
       /// <summary>
       /// Remove an Instance by Key
       /// </summary>
-      /// <param name="Key">Instance Key</param>
-      public void Remove(string Key)
+      /// <param name="key">Instance Key</param>
+      public void Remove(string key)
       {
-         Remove(Key, true);
+         Remove(key, true);
       }
 
       /// <summary>
       /// Remove an Instance by Key
       /// </summary>
-      /// <param name="Key">Instance Key</param>
-      /// <param name="FireRemovedEvent">Specifies whether this call fires the InstanceRemoved Event</param>
-      private void Remove(string Key, bool FireRemovedEvent)
+      /// <param name="key">Instance Key</param>
+      /// <param name="fireRemovedEvent">Specifies whether this call fires the InstanceRemoved Event</param>
+      private void Remove(string key, bool fireRemovedEvent)
       {
-         _instanceCollection.Remove(Key);
-         DisplayInstance findInstance = FindDisplayInstance(_displayCollection, Key);
+         _instanceCollection.Remove(key);
+         DisplayInstance findInstance = FindDisplayInstance(_displayCollection, key);
          _displayCollection.Remove(findInstance);
          OnCollectionChanged(EventArgs.Empty);
          
-         if (FireRemovedEvent)
+         if (fireRemovedEvent)
          {
             _ChangedAfterSave = true;
             OnInstanceRemoved(EventArgs.Empty);
@@ -761,7 +771,7 @@ namespace HFM.Instances
          _instanceCollection.Clear();
          _displayCollection.Clear();
          _duplicateProjects.Clear();
-         _duplicateUserID.Clear();
+         _duplicateUserId.Clear();
 
          // new config filename
          _ConfigFilename = String.Empty;
@@ -776,13 +786,11 @@ namespace HFM.Instances
       /// <summary>
       /// Collection Contains Name
       /// </summary>
-      /// <param name="InstanceName">Instance Name to search for</param>
-      public bool ContainsName(string InstanceName)
+      /// <param name="instanceName">Instance Name to search for</param>
+      public bool ContainsName(string instanceName)
       {
-         ClientInstance findInstance = new List<ClientInstance>(_instanceCollection.Values).Find(delegate(ClientInstance instance)
-                                                                {
-                                                                   return instance.InstanceName.ToUpper() == InstanceName.ToUpper();
-                                                                });
+         ClientInstance findInstance = new List<ClientInstance>(_instanceCollection.Values).Find(
+            instance => instance.InstanceName.ToUpper() == instanceName.ToUpper());
          return findInstance != null;
       }
       #endregion
@@ -791,89 +799,109 @@ namespace HFM.Instances
       /// <summary>
       /// When the host refresh timer expires, refresh all the hosts
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void bgWorkTimer_Tick(object sender, EventArgs e)
       {
-         HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Running Background Timer...");
+         HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Running Retrieval Process...");
          QueueNewRetrieval();
       }
 
       /// <summary>
       /// When the web gen timer expires, refresh the website files
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void webGenTimer_Tick(object sender, EventArgs e)
       {
-         if (_Prefs.GetPreference<bool>(Preference.GenerateWeb) == false) return;
-
-         DateTime Start = HfmTrace.ExecStart;
-
-         if (webTimer.Enabled)
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping WebGen Timer Loop");
-         }
+         Debug.Assert(_Prefs.GetPreference<bool>(Preference.GenerateWeb));
+         Debug.Assert(_Prefs.GetPreference<bool>(Preference.WebGenAfterRefresh) == false);
+      
+         HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping Web Generation Timer");
          webTimer.Stop();
-
-         HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Starting WebGen.", HfmTrace.FunctionName));
-
-         Match match = StringOps.MatchFtpWithUserPassUrl(_Prefs.GetPreference<string>(Preference.WebRoot));
          
+         DoWebGeneration();
+
+         StartWebGenTimer();
+      }
+      
+      private void DoWebGeneration()
+      {
+         Debug.Assert(_Prefs.GetPreference<bool>(Preference.GenerateWeb));
+
+         if (_markupGenerator == null)
+         {
+            _markupGenerator = new MarkupGenerator(_Prefs, _proteinCollection);
+         }
+
          try
          {
-            ClientInstance[] CurrentInstances = GetCurrentInstanceArray();
-            if (match.Success)
+            if (_markupGenerator.GenerationInProgress)
             {
-               XMLGen.DoHtmlGeneration(Path.GetTempPath(), CurrentInstances);
-
-               string Server = match.Result("${domain}");
-               string FtpPath = match.Result("${file}");
-               string Username = match.Result("${username}");
-               string Password = match.Result("${password}");
-
-               XMLGen.DoWebFtpUpload(Server, FtpPath, Username, Password, CurrentInstances, _Prefs.GetPreference<FtpType>(Preference.WebGenFtpMode));
+               HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Web Generation already in progress...");
             }
             else
             {
-               // Create the web folder (just in case)
-               string WebRoot = _Prefs.GetPreference<string>(Preference.WebRoot);
-               string CssFile = _Prefs.GetPreference<string>(Preference.CssFile);
-               if (Directory.Exists(WebRoot) == false)
-               {
-                  Directory.CreateDirectory(WebRoot);
-               }
-
-               // Copy the CSS file to the output directory
-               string sCSSFileName = Path.Combine(Path.Combine(_Prefs.ApplicationPath, "CSS"), CssFile);
-               if (File.Exists(sCSSFileName))
-               {
-                  File.Copy(sCSSFileName, Path.Combine(WebRoot, CssFile), true);
-               }
-
-               XMLGen.DoHtmlGeneration(WebRoot, CurrentInstances);
+               HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Starting Web Generation...");
                
-               if (_Prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog))
-               {
-                  foreach (ClientInstance Instance in CurrentInstances)
-                  {
-                     string CachedFAHlogPath = Path.Combine(_Prefs.CacheDirectory, Instance.CachedFAHLogName);
-                     if (File.Exists(CachedFAHlogPath))
-                     {
-                        File.Copy(CachedFAHlogPath, Path.Combine(WebRoot, Instance.CachedFAHLogName), true);
-                     }
-                  }
-               }
+               DateTime start = HfmTrace.ExecStart;
+               ClientInstance[] instances = GetCurrentInstanceArray();
+               _markupGenerator.GenerateHtml(instances);
+               DeployWebsite(instances);
+               HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format(CultureInfo.CurrentCulture, 
+                  "Total Web Generation Execution Time: {0}", HfmTrace.GetExecTime(start)));
             }
          }
          catch (Exception ex)
          {
             HfmTrace.WriteToHfmConsole(ex);
          }
-         finally
+      }
+      
+      private void DeployWebsite(ICollection<IClientInstance> instances)
+      {
+         Match match = StringOps.MatchFtpWithUserPassUrl(_Prefs.GetPreference<string>(Preference.WebRoot));
+
+         if (match.Success)
          {
-            StartWebGenTimer();
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, Start);
+            string server = match.Result("${domain}");
+            string ftpPath = match.Result("${file}");
+            string username = match.Result("${username}");
+            string password = match.Result("${password}");
+
+            if (_networkOps == null) _networkOps = new NetworkOps();
+            _networkOps.FtpWebUpload(server, ftpPath, username, password, _markupGenerator.HtmlFilePaths, instances, _Prefs);
+         }
+         else
+         {
+            string webRoot = _Prefs.GetPreference<string>(Preference.WebRoot);
+            string cssFile = _Prefs.GetPreference<string>(Preference.CssFile);
+
+            // Create the web folder (just in case)
+            if (Directory.Exists(webRoot) == false)
+            {
+               Directory.CreateDirectory(webRoot);
+            }
+
+            // Copy the CSS file to the output directory
+            string cssFilePath = Path.Combine(Path.Combine(_Prefs.ApplicationPath, Constants.CssFolderName), cssFile);
+            if (File.Exists(cssFilePath))
+            {
+               File.Copy(cssFilePath, Path.Combine(webRoot, cssFile), true);
+            }
+
+            foreach (string filePath in _markupGenerator.HtmlFilePaths)
+            {
+               File.Copy(filePath, Path.Combine(webRoot, Path.GetFileName(filePath)));
+            }
+
+            if (_Prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog))
+            {
+               foreach (ClientInstance instance in instances)
+               {
+                  string cachedFahlogPath = Path.Combine(_Prefs.CacheDirectory, instance.CachedFAHLogName);
+                  if (File.Exists(cachedFahlogPath))
+                  {
+                     File.Copy(cachedFahlogPath, Path.Combine(webRoot, instance.CachedFAHLogName), true);
+                  }
+               }
+            }
          }
       }
 
@@ -901,7 +929,7 @@ namespace HFM.Instances
          // only fire if there are Hosts
          if (HasInstances)
          {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping Background Timer Loop");
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping Retrieval Timer Loop");
             workTimer.Stop();
 
             // fire the retrieval wrapper thread (basically a wait thread off the UI thread)
@@ -928,8 +956,8 @@ namespace HFM.Instances
             if (_Prefs.GetPreference<bool>(Preference.GenerateWeb) && 
                 _Prefs.GetPreference<bool>(Preference.WebGenAfterRefresh))
             {
-               // do a web gen
-               webGenTimer_Tick(null, null);
+               // do a web gen (on another thread)
+               new MethodInvoker(DoWebGeneration).BeginInvoke(null, null);
             }
 
             if (_Prefs.GetPreference<bool>(Preference.ShowUserStats))
@@ -957,7 +985,7 @@ namespace HFM.Instances
       {
          // get flag synchronous or asynchronous - we don't want this flag to change on us
          // in the middle of a retrieve, so grab it now and use the local copy
-         bool Synchronous = _Prefs.GetPreference<bool>(Preference.SyncOnLoad);
+         bool synchronous = _Prefs.GetPreference<bool>(Preference.SyncOnLoad);
 
          // copy the current instance keys into local array
          int numInstances = _instanceCollection.Count;
@@ -974,16 +1002,16 @@ namespace HFM.Instances
             {
                // try to get the key value from the collection, if the value is not found then
                // the user removed a client in the middle of a retrieve process, ignore the key
-               ClientInstance Instance;
-               if (_instanceCollection.TryGetValue(instanceKeys[i], out Instance))
+               ClientInstance instance;
+               if (_instanceCollection.TryGetValue(instanceKeys[i], out instance))
                {
-                  if (Synchronous) // do the individual retrieves on a single thread
+                  if (synchronous) // do the individual retrieves on a single thread
                   {
-                     RetrieveInstance(Instance);
+                     RetrieveInstance(instance);
                   }
                   else // fire individual threads to do the their own retrieve simultaneously
                   {
-                     IAsyncResult async = QueueNewRetrieval(Instance);
+                     IAsyncResult async = QueueNewRetrieval(instance);
 
                      // get the wait handle for each invoked delegate
                      waitHandleList.Add(async.AsyncWaitHandle);
@@ -993,7 +1021,7 @@ namespace HFM.Instances
                i++; // increment the outer loop counter
             }
 
-            if (Synchronous == false)
+            if (synchronous == false)
             {
                WaitHandle[] waitHandles = waitHandleList.ToArray();
                // wait for all invoked threads to complete
@@ -1011,26 +1039,26 @@ namespace HFM.Instances
       /// <summary>
       /// Delegate used for asynchronous instance retrieval
       /// </summary>
-      /// <param name="Instance"></param>
-      private delegate void RetrieveInstanceDelegate(ClientInstance Instance);
+      /// <param name="instance"></param>
+      private delegate void RetrieveInstanceDelegate(ClientInstance instance);
 
       /// <summary>
       /// Stick this Instance in the background thread queue to retrieve the info for the given Instance
       /// </summary>
-      private IAsyncResult QueueNewRetrieval(ClientInstance Instance)
+      private IAsyncResult QueueNewRetrieval(ClientInstance instance)
       {
-         return new RetrieveInstanceDelegate(RetrieveInstance).BeginInvoke(Instance, null, null);
+         return new RetrieveInstanceDelegate(RetrieveInstance).BeginInvoke(instance, null, null);
       }
 
       /// <summary>
       /// Stub to execute retrieve and refresh display
       /// </summary>
-      /// <param name="Instance"></param>
-      private void RetrieveInstance(ClientInstance Instance)
+      /// <param name="instance"></param>
+      private void RetrieveInstance(ClientInstance instance)
       {
-         if (Instance.RetrievalInProgress == false)
+         if (instance.RetrievalInProgress == false)
          {
-            Instance.Retrieve();
+            instance.Retrieve();
             // This event should signal the UI to update
             OnInstanceRetrieved(EventArgs.Empty);
          }
@@ -1039,31 +1067,31 @@ namespace HFM.Instances
       /// <summary>
       /// Retrieve the given Client Instance
       /// </summary>
-      /// <param name="InstanceName">Client Instance Name</param>
-      public void RetrieveSingleClient(string InstanceName)
+      /// <param name="instanceName">Client Instance Name</param>
+      public void RetrieveSingleClient(string instanceName)
       {
-         RetrieveSingleClient(_instanceCollection[InstanceName]);
+         RetrieveSingleClient(_instanceCollection[instanceName]);
       }
 
       /// <summary>
       /// Retrieve the given Client Instance
       /// </summary>
-      /// <param name="Instance">Client Instance</param>
-      public void RetrieveSingleClient(ClientInstance Instance)
+      /// <param name="instance">Client Instance</param>
+      public void RetrieveSingleClient(ClientInstance instance)
       {
          // fire the actual retrieval thread
-         new RetrieveInstanceDelegate(DoSingleClientRetieval).BeginInvoke(Instance, null, null);
+         new RetrieveInstanceDelegate(DoSingleClientRetieval).BeginInvoke(instance, null, null);
       }
 
       /// <summary>
       /// Do a single retrieval operation on the given Client Instance
       /// </summary>
-      /// <param name="Instance">Client Instance</param>
-      private void DoSingleClientRetieval(ClientInstance Instance)
+      /// <param name="instance">Client Instance</param>
+      private void DoSingleClientRetieval(ClientInstance instance)
       {
-         if (Instance.RetrievalInProgress == false)
+         if (instance.RetrievalInProgress == false)
          {
-            IAsyncResult async = QueueNewRetrieval(Instance);
+            IAsyncResult async = QueueNewRetrieval(instance);
             async.AsyncWaitHandle.WaitOne();
 
             // check for clients with duplicate Project (Run, Clone, Gen) or UserID
@@ -1082,7 +1110,7 @@ namespace HFM.Instances
          // Disable timers if no hosts
          if (HasInstances == false)
          {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, "No Hosts - Stopping Both Background Timer Loops");
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, "No Hosts - Stopping All Background Timer Loops");
             workTimer.Stop();
             webTimer.Stop();
             return;
@@ -1100,7 +1128,7 @@ namespace HFM.Instances
          {
             if (workTimer.Enabled)
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping Background Timer Loop");
+               HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping Retrieval Timer Loop");
                workTimer.Stop();
             }
          }
@@ -1115,7 +1143,7 @@ namespace HFM.Instances
          {
             if (webTimer.Enabled)
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping WebGen Timer Loop");
+               HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping Web Generation Timer Loop");
                webTimer.Stop();
             }
          }
@@ -1126,10 +1154,10 @@ namespace HFM.Instances
       /// </summary>
       private void StartBackgroundTimer()
       {
-         int SyncTimeMinutes = _Prefs.GetPreference<int>(Preference.SyncTimeMinutes);
+         int syncTimeMinutes = _Prefs.GetPreference<int>(Preference.SyncTimeMinutes);
          
-         workTimer.Interval = SyncTimeMinutes * MinToMillisec;
-         HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Starting Background Timer Loop: {0} Minutes", SyncTimeMinutes));
+         workTimer.Interval = syncTimeMinutes * MinToMillisec;
+         HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Starting Retrieval Timer Loop: {0} Minutes", syncTimeMinutes));
          workTimer.Start();
       }
 
@@ -1138,15 +1166,15 @@ namespace HFM.Instances
       /// </summary>
       private void StartWebGenTimer()
       {
-         if (_Prefs.GetPreference<bool>(Preference.GenerateWeb) &&
-             _Prefs.GetPreference<bool>(Preference.WebGenAfterRefresh) == false)
-         {
-            int GenerateInterval = _Prefs.GetPreference<int>(Preference.GenerateInterval);
+         Debug.Assert(_Prefs.GetPreference<bool>(Preference.GenerateWeb));
+         Debug.Assert(_Prefs.GetPreference<bool>(Preference.WebGenAfterRefresh) == false);
          
-            webTimer.Interval = GenerateInterval * MinToMillisec;
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Starting WebGen Timer Loop: {0} Minutes", GenerateInterval));
-            webTimer.Start();
-         }
+         int generateInterval = _Prefs.GetPreference<int>(Preference.GenerateInterval);
+      
+         webTimer.Interval = generateInterval * MinToMillisec;
+         HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format(CultureInfo.CurrentCulture,
+            "Starting Web Generation Timer Loop: {0} Minutes", generateInterval));
+         webTimer.Start();
       }
       #endregion
 
@@ -1159,7 +1187,7 @@ namespace HFM.Instances
          // If no clients loaded, stub out
          if (HasInstances == false) return;
          
-         DateTime Start = HfmTrace.ExecStart;
+         DateTime start = HfmTrace.ExecStart;
 
          _unitInfoContainer.Clear();
          
@@ -1177,7 +1205,7 @@ namespace HFM.Instances
 
          _unitInfoContainer.Write();
 
-         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, start);
       }
       #endregion
 
@@ -1203,15 +1231,15 @@ namespace HFM.Instances
             foreach (ClientInstance instance in _instanceCollection.Values)
             {
                DisplayInstance findInstance = FindDisplayInstance(_displayCollection, instance.InstanceName);
-               int DecimalPlaces = _Prefs.GetPreference<int>(Preference.DecimalPlaces);
+               int decimalPlaces = _Prefs.GetPreference<int>(Preference.DecimalPlaces);
                if (findInstance != null)
                {
-                  findInstance.Load(instance, DecimalPlaces, _Prefs);
+                  findInstance.Load(instance, decimalPlaces, _Prefs);
                }
                else
                {
                   DisplayInstance newInstance = new DisplayInstance();
-                  newInstance.Load(instance, DecimalPlaces, _Prefs);
+                  newInstance.Load(instance, decimalPlaces, _Prefs);
                   _displayCollection.Add(newInstance);
                }
             }
@@ -1236,59 +1264,57 @@ namespace HFM.Instances
       /// </summary>
       public void FindDuplicates() // Issue 19
       {
-         int previousDuplicateUserIDCount = _duplicateUserID.Count;
-         int previousDuplicateProjectsCount = _duplicateProjects.Count;
+         var instances = GetCurrentInstanceArray();
+         FindDuplicateUserId(instances);
+         FindDuplicateProjects(instances);
 
-         InstanceCollectionHelpers.FindDuplicates(_duplicateUserID, _duplicateProjects, GetCurrentInstanceArray());
+         OnFindDuplicatesComplete(EventArgs.Empty);
+      }
 
-         if (_duplicateUserID.Count > 0 || _duplicateProjects.Count > 0 ||
-             _duplicateUserID.Count != previousDuplicateUserIDCount || _duplicateProjects.Count != previousDuplicateProjectsCount)
+      public void FindDuplicateUserId(IEnumerable<ClientInstance> instances)
+      {
+         var duplicates = (from x in instances
+                           group x by x.UserAndMachineId into g
+                           let count = g.Count()
+                           where count > 1 && g.First().UserIdUnknown == false
+                           select g.Key);
+
+         foreach (ClientInstance instance in instances)
          {
-            OnDuplicatesFoundOrChanged(EventArgs.Empty);
+            instance.UserIdIsDuplicate = duplicates.Contains(instance.UserAndMachineId);
          }
       }
 
-      /// <summary>
-      /// Look for given Project (R/C/G) in list of Duplicates
-      /// </summary>
-      /// <param name="PRCG">The Project (R/C/G) to look for</param>
-      public bool IsDuplicateProject(string PRCG)
+      public void FindDuplicateProjects(IEnumerable<ClientInstance> instances)
       {
-         return _duplicateProjects.Contains(PRCG);
-      }
+         var duplicates = (from x in instances
+                           group x by x.CurrentUnitInfo.ProjectRunCloneGen into g
+                           let count = g.Count()
+                           where count > 1 && g.First().CurrentUnitInfo.ProjectIsUnknown == false
+                           select g.Key);
 
-      /// <summary>
-      /// Look for given User and Machine ID combination in list of Duplicates
-      /// </summary>
-      /// <param name="UserAndMachineID">The User and Machine ID to look for</param>
-      public bool IsDuplicateUserAndMachineID(string UserAndMachineID)
-      {
-         return _duplicateUserID.Contains(UserAndMachineID);
+         foreach (ClientInstance instance in instances)
+         {
+            instance.CurrentUnitInfoConcrete.ProjectIsDuplicate = duplicates.Contains(instance.CurrentUnitInfo.ProjectRunCloneGen);
+         }
       }
       #endregion
 
       #region Helper Functions
-      public void SetCurrentInstance(IList SelectedClients)
+      public void SetCurrentInstance(IList selectedClients)
       {
-         if (SelectedClients.Count > 0)
+         if (selectedClients.Count > 0)
          {
-            Debug.Assert(SelectedClients.Count == 1);
+            Debug.Assert(selectedClients.Count == 1);
             
-            if (SelectedClients[0] is DataGridViewRow)
+            if (selectedClients[0] is DataGridViewRow)
             {
-               object NameColumnValue = ((DataGridViewRow) SelectedClients[0]).Cells["Name"].Value;
-               if (NameColumnValue != null)
+               object nameColumnValue = ((DataGridViewRow) selectedClients[0]).Cells["Name"].Value;
+               if (nameColumnValue != null)
                {
-                  string InstanceName = NameColumnValue.ToString();
-                  ClientInstance Instance;
-                  if (Instances.TryGetValue(InstanceName, out Instance))
-                  {
-                     SelectedInstance = Instance;
-                  }
-                  else
-                  {
-                     SelectedInstance = null;
-                  }
+                  string instanceName = nameColumnValue.ToString();
+                  ClientInstance instance;
+                  SelectedInstance = Instances.TryGetValue(instanceName, out instance) ? instance : null;
                }
                else
                {
@@ -1315,15 +1341,17 @@ namespace HFM.Instances
       /// </summary>
       public ClientInstance[] GetCurrentInstanceArray()
       {
-         if (Count > 0)
-         {
+         // Changing this to return an empty array instead of null
+         // Less hassle not having to possibly deal with a null reference - 4/17/10
+         //if (Count > 0)
+         //{
             ClientInstance[] instances = new ClientInstance[Count];
             _instanceCollection.Values.CopyTo(instances, 0);
 
             return instances;
-         }
+         //}
 
-         return null;
+         //return null;
       }
       
       /// <summary>
@@ -1340,14 +1368,11 @@ namespace HFM.Instances
       /// Finds the DisplayInstance by Key (Instance Name)
       /// </summary>
       /// <param name="collection">DisplayIntance Collection</param>
-      /// <param name="Key">Instance Name</param>
+      /// <param name="key">Instance Name</param>
       /// <returns></returns>
-      private static DisplayInstance FindDisplayInstance(IEnumerable<DisplayInstance> collection, string Key)
+      private static DisplayInstance FindDisplayInstance(IEnumerable<DisplayInstance> collection, string key)
       {
-         return new List<DisplayInstance>(collection).Find(delegate(DisplayInstance displayInstance)
-                                                            {
-                                                               return displayInstance.Name == Key;
-                                                            });
+         return new List<DisplayInstance>(collection).Find(displayInstance => displayInstance.Name == key);
       }
 
       /// <summary>
@@ -1355,11 +1380,11 @@ namespace HFM.Instances
       /// </summary>
       private static void ClearCacheFolder()
       {
-         DateTime Start = HfmTrace.ExecStart;
+         DateTime start = HfmTrace.ExecStart;
 
-         IPreferenceSet Prefs = InstanceProvider.GetInstance<IPreferenceSet>();
-         string cacheFolder = Path.Combine(Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath),
-                                           Prefs.GetPreference<string>(Preference.CacheFolder));
+         IPreferenceSet prefs = InstanceProvider.GetInstance<IPreferenceSet>();
+         string cacheFolder = Path.Combine(prefs.GetPreference<string>(Preference.ApplicationDataFolderPath),
+                                           prefs.GetPreference<string>(Preference.CacheFolder));
 
          DirectoryInfo di = new DirectoryInfo(cacheFolder);
          if (di.Exists == false)
@@ -1381,7 +1406,7 @@ namespace HFM.Instances
             }
          }
 
-         HfmTrace.WriteToHfmConsole(TraceLevel.Info, Start);
+         HfmTrace.WriteToHfmConsole(TraceLevel.Info, start);
       }
 
       /// <summary>
@@ -1390,14 +1415,6 @@ namespace HFM.Instances
       private void PreferenceSet_OfflineLastChanged(object sender, EventArgs e)
       {
          OfflineClientsLast = _Prefs.GetPreference<bool>(Preference.OfflineLast);
-      }
-
-      /// <summary>
-      /// Checks for Duplicates after Duplicate Check Preferences have changed
-      /// </summary>
-      private void PreferenceSet_DuplicateCheckChanged(object sender, EventArgs e)
-      {
-         FindDuplicates(); // Issue 81
       }
 
       private void Prefs_TimerSettingsChanged(object sender, EventArgs e)

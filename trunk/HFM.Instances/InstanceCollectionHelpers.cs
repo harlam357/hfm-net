@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Instance Collection Helper Class
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,13 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 using HFM.Framework;
-using HFM.Instrumentation;
 
 namespace HFM.Instances
 {
@@ -33,7 +29,7 @@ namespace HFM.Instances
       /// Get Totals for all Client Instances in given Collection
       /// </summary>
       /// <returns>Totals for all Instances (InstanceTotals Structure)</returns>
-      public static InstanceTotals GetInstanceTotals(ICollection<ClientInstance> Instances)
+      public static InstanceTotals GetInstanceTotals(ICollection<IClientInstance> instances)
       {
          InstanceTotals totals = new InstanceTotals();
          
@@ -41,21 +37,24 @@ namespace HFM.Instances
          // Added this check because this function is now being passed a copy of the client 
          // instances references using GetCurrentInstanceArray() and not the collection 
          // directly, since the "live" collection can change at any time.
-         if (Instances == null)
+         // 4/17/10 - GetCurrentInstanceArray() no longer returns null when there are no clients
+         //           it returns an empty collection.  However, leaving this check for now.
+         if (instances == null)
          {
             return totals;
          }
 
-         totals.TotalClients = Instances.Count;
+         totals.TotalClients = instances.Count;
 
-         foreach (ClientInstance Instance in Instances)
+         foreach (IClientInstance instance in instances)
          {
-            totals.PPD += Instance.PPD;
-            totals.UPD += Instance.UPD;
-            totals.TotalCompletedUnits += Instance.NumberOfCompletedUnitsSinceLastStart;
-            totals.TotalFailedUnits += Instance.NumberOfFailedUnitsSinceLastStart;
+            totals.PPD += instance.PPD;
+            totals.UPD += instance.UPD;
+            totals.TotalRunCompletedUnits += instance.NumberOfCompletedUnitsSinceLastStart;
+            totals.TotalRunFailedUnits += instance.NumberOfFailedUnitsSinceLastStart;
+            totals.TotalClientCompletedUnits += instance.TotalUnits;
 
-            if (Instance.ProductionValuesOk)
+            if (instance.ProductionValuesOk)
             {
                totals.WorkingClients++;
             }
@@ -64,68 +63,6 @@ namespace HFM.Instances
          totals.NonWorkingClients = totals.TotalClients - totals.WorkingClients;
 
          return totals;
-      }
-
-      /// <summary>
-      /// Find Clients with Duplicate UserIDs or Project (R/C/G)
-      /// </summary>
-      public static void FindDuplicates(List<string> DuplicateUserID, List<string> DuplicateProjects, ICollection<ClientInstance> Instances)
-      {
-         // If no instances stub out
-         if (Instances == null) return;
-
-         DateTime Start = HfmTrace.ExecStart;
-
-         DuplicateUserID.Clear();
-         DuplicateProjects.Clear();
-
-         IPreferenceSet Prefs = InstanceProvider.GetInstance<IPreferenceSet>();
-
-         // If neither check is selected, just get out
-         if (Prefs.GetPreference<bool>(Preference.DuplicateProjectCheck) == false &&
-             Prefs.GetPreference<bool>(Preference.DuplicateUserIDCheck) == false) return;
-
-         Hashtable userHash = new Hashtable(Instances.Count);
-         Hashtable projectHash = new Hashtable(Instances.Count);
-
-         foreach (ClientInstance Instance in Instances)
-         {
-            if (Prefs.GetPreference<bool>(Preference.DuplicateProjectCheck))
-            {
-               string PRCG = Instance.CurrentUnitInfo.ProjectRunCloneGen;
-               if (projectHash.Contains(PRCG))
-               {
-                  DuplicateProjects.Add(PRCG);
-               }
-               else
-               {
-                  // don't add an unknown project
-                  if (Instance.CurrentUnitInfo.ProjectIsUnknown == false)
-                  {
-                     projectHash.Add(Instance.CurrentUnitInfo.ProjectRunCloneGen, null);
-                  }
-               }
-            }
-
-            if (Prefs.GetPreference<bool>(Preference.DuplicateUserIDCheck))
-            {
-               string UserAndMachineID = Instance.UserAndMachineID;
-               if (userHash.Contains(UserAndMachineID))
-               {
-                  DuplicateUserID.Add(UserAndMachineID);
-               }
-               else
-               {
-                  // don't add an unknown User ID
-                  if (Instance.UserIDUnknown == false)
-                  {
-                     userHash.Add(UserAndMachineID, null);
-                  }
-               }
-            }
-         }
-
-         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
       }
    }
 }

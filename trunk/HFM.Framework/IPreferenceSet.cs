@@ -116,11 +116,6 @@ namespace HFM.Framework
       event EventHandler ShowUserStatsChanged;
 
       /// <summary>
-      /// Duplicate (Client ID or Project (R/C/G)) Check Settings Changed
-      /// </summary>
-      event EventHandler DuplicateCheckChanged;
-
-      /// <summary>
       /// Color Log File Setting Changed
       /// </summary>
       event EventHandler ColorLogFileChanged;

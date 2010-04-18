@@ -36,6 +36,7 @@
       <HintPath>..\harlam357-net\net20\bin\Release\harlam357.Security.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>

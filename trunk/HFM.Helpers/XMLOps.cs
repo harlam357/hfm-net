@@ -68,19 +68,17 @@ namespace HFM.Helpers
       }
 
       /// <summary>
-      /// Transforms an XML document using the specified XSL file
+      /// Transforms an XML Document using the given XSLT file
       /// </summary>
-      /// <param name="xmlDoc">XML source document</param>
-      /// <param name="xslFile">XSL transform to apply (filename only)</param>
-      /// <returns>Result of XML document after transform is applied</returns>
-      public static String Transform(XmlDocument xmlDoc, String xslFile)
+      /// <param name="xmlDoc">XML Source Document/Node</param>
+      /// <param name="xsltFilePath">Path to the XSL Transform to apply</param>
+      /// <param name="cssFileName">CSS file name to embed in the transformed XML</param>
+      public static string Transform(XmlNode xmlDoc, string xsltFilePath, string cssFileName)
       {
-         IPreferenceSet Prefs = InstanceProvider.GetInstance<IPreferenceSet>();
-      
          // Create XmlReaderSettings and XmlReader
          XmlReaderSettings xsltSettings = new XmlReaderSettings();
          xsltSettings.ProhibitDtd = false;
-         XmlReader xmlReader = XmlReader.Create(xslFile, xsltSettings);
+         XmlReader xmlReader = XmlReader.Create(xsltFilePath, xsltSettings);
 
          // Create the XslCompiledTransform and Load the XmlReader
          XslCompiledTransform xslt = new XslCompiledTransform();
@@ -92,7 +90,7 @@ namespace HFM.Helpers
          
          // Return the transformed XML
          string sWebPage = Encoding.UTF8.GetString(ms.ToArray());
-         sWebPage = sWebPage.Replace("$CSSFILE", Prefs.GetPreference<string>(Preference.CssFile));
+         sWebPage = sWebPage.Replace("$CSSFILE", cssFileName);
          return sWebPage;
       }
 

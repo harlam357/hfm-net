@@ -32,7 +32,7 @@ using HFM.Instrumentation;
 
 namespace HFM.Instances
 {
-   public class ClientInstance : IClientInstanceSettings
+   public class ClientInstance : IClientInstance
    {
       #region Constants
       // Default ID Constants
@@ -197,40 +197,35 @@ namespace HFM.Instances
          }
       }
 
-      private string _UserID;
       /// <summary>
       /// User ID associated with this client
       /// </summary>
-      public string UserID
-      {
-         get { return _UserID; }
-         set { _UserID = value; }
-      }
+      public string UserId { get; set; }
+      
+      /// <summary>
+      /// User ID is a Duplicate of another Client's User ID
+      /// </summary>
+      public bool UserIdIsDuplicate { get; set; }
 
       /// <summary>
       /// True if User ID is Unknown
       /// </summary>
-      public bool UserIDUnknown
+      public bool UserIdUnknown
       {
-         get { return UserID.Length == 0; }
+         get { return UserId.Length == 0; }
       }
 
-      private int _MachineID;
       /// <summary>
       /// Machine ID associated with this client
       /// </summary>
-      public int MachineID
-      {
-         get { return _MachineID; }
-         set { _MachineID = value; }
-      }
+      public int MachineId { get; set; }
 
       /// <summary>
       /// Combined User ID and Machine ID String
       /// </summary>
-      public string UserAndMachineID
+      public string UserAndMachineId
       {
-         get { return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", UserID, MachineID); }
+         get { return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", UserId, MachineId); }
       }
 
       private string _FoldingID;
@@ -319,8 +314,8 @@ namespace HFM.Instances
       private void Init()
       {
          Arguments = String.Empty;
-         UserID = DefaultUserID;
-         MachineID = DefaultMachineID;
+         UserId = DefaultUserID;
+         MachineId = DefaultMachineID;
          FoldingID = Constants.FoldingIDDefault;
          Team = Constants.TeamDefault;
          NumberOfCompletedUnitsSinceLastStart = 0;
@@ -706,7 +701,7 @@ namespace HFM.Instances
       //   }
       //}
 
-      internal double Credit
+      public double Credit
       {
          get
          {
@@ -732,7 +727,7 @@ namespace HFM.Instances
          set { _HandleStatusOnRetrieve = value; }
       }
 
-      private volatile bool _RetrievalInProgress = false;
+      private volatile bool _RetrievalInProgress;
       /// <summary>
       /// Local flag set when log retrieval is in progress
       /// </summary>
@@ -1120,8 +1115,8 @@ namespace HFM.Instances
          FoldingID = run.FoldingID;
          Team = run.Team;
          
-         UserID = run.UserID;
-         MachineID = run.MachineID;
+         UserId = run.UserID;
+         MachineId = run.MachineID;
 
          NumberOfCompletedUnitsSinceLastStart = run.NumberOfCompletedUnits;
          NumberOfFailedUnitsSinceLastStart = run.NumberOfFailedUnits;
@@ -1138,13 +1133,13 @@ namespace HFM.Instances
          {
             Team = (int)queueEntry.TeamNumber;
          }
-         if (UserID == DefaultUserID)
+         if (UserId == DefaultUserID)
          {
-            UserID = queueEntry.UserID;
+            UserId = queueEntry.UserID;
          }
-         if (MachineID == DefaultMachineID)
+         if (MachineId == DefaultMachineID)
          {
-            MachineID = (int)queueEntry.MachineID;
+            MachineId = (int)queueEntry.MachineID;
          }
       }
 

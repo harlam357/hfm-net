@@ -83,9 +83,7 @@
     <Compile Include="UnitInfoContainer.cs" />
     <Compile Include="UnitInfoFactory.cs" />
     <Compile Include="UnitInfoLogic.cs" />
-    <Compile Include="XMLGen.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="MarkupGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="HFM.Instances.cd" />

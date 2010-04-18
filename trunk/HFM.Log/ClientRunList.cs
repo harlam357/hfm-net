@@ -280,6 +280,7 @@ namespace HFM.Log
                else if (logLine.LineData.Equals(WorkUnitResult.EarlyUnitEnd) ||
                         logLine.LineData.Equals(WorkUnitResult.UnstableMachine) ||
                         logLine.LineData.Equals(WorkUnitResult.Interrupted) ||
+                        logLine.LineData.Equals(WorkUnitResult.BadWorkUnit) ||
                         logLine.LineData.Equals(WorkUnitResult.CoreOutdated)) 
                {
                   CurrentClientRun.NumberOfFailedUnits++;

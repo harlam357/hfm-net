@@ -65,6 +65,7 @@ namespace HFM.Framework
       EarlyUnitEnd,
       UnstableMachine,
       Interrupted,
+      BadWorkUnit,
       CoreOutdated
    }
    #endregion
@@ -181,7 +182,7 @@ namespace HFM.Framework
       SyncOnLoad,
       SyncOnSchedule,
       SyncTimeMinutes,
-      DuplicateUserIDCheck,
+      DuplicateUserIdCheck,
       DuplicateProjectCheck,
       AllowRunningAsync,
       ShowUserStats,

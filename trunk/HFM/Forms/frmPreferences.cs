@@ -44,7 +44,6 @@ namespace HFM.Forms
       private readonly WebBrowser wbCssSample;
 
       private const string CssExtension = ".css";
-      private const string CssFolder = "CSS";
 
       /// <summary>
       /// Network Operations Interface
@@ -104,7 +103,7 @@ namespace HFM.Forms
          #region Refresh Data
          chkSynchronous.Checked = _Prefs.GetPreference<bool>(Preference.SyncOnLoad);
          chkDuplicateProject.Checked = _Prefs.GetPreference<bool>(Preference.DuplicateProjectCheck);
-         chkDuplicateUserID.Checked = _Prefs.GetPreference<bool>(Preference.DuplicateUserIDCheck);
+         chkDuplicateUserID.Checked = _Prefs.GetPreference<bool>(Preference.DuplicateUserIdCheck);
 
          // Always Add Bindings for CheckBoxes that control input TextBoxes after
          // the data has been bound to the TextBox
@@ -295,7 +294,7 @@ namespace HFM.Forms
       
       private void LoadVisualStylesTab()
       {
-         DirectoryInfo di = new DirectoryInfo(Path.Combine(_Prefs.ApplicationPath, CssFolder));
+         DirectoryInfo di = new DirectoryInfo(Path.Combine(_Prefs.ApplicationPath, Constants.CssFolderName));
          
          if (di.Exists)
          {
@@ -693,7 +692,7 @@ namespace HFM.Forms
       #region Visual Style Tab
       private void StyleList_SelectedIndexChanged(object sender, EventArgs e)
       {
-         String sStylesheet = Path.Combine(Path.Combine(_Prefs.ApplicationPath, CssFolder), Path.ChangeExtension(StyleList.SelectedItem.ToString(), CssExtension));
+         String sStylesheet = Path.Combine(Path.Combine(_Prefs.ApplicationPath, Constants.CssFolderName), Path.ChangeExtension(StyleList.SelectedItem.ToString(), CssExtension));
          StringBuilder sb = new StringBuilder();
 
          sb.Append("<HTML><HEAD><TITLE>Test CSS File</TITLE>");
@@ -958,7 +957,7 @@ namespace HFM.Forms
          #region Refresh Data
          _Prefs.SetPreference(Preference.SyncOnLoad, chkSynchronous.Checked);
          _Prefs.SetPreference(Preference.DuplicateProjectCheck, chkDuplicateProject.Checked);
-         _Prefs.SetPreference(Preference.DuplicateUserIDCheck, chkDuplicateUserID.Checked);
+         _Prefs.SetPreference(Preference.DuplicateUserIdCheck, chkDuplicateUserID.Checked);
 
          _Prefs.SetPreference(Preference.SyncTimeMinutes, txtCollectMinutes.Text);
          _Prefs.SetPreference(Preference.SyncOnSchedule, chkScheduled.Checked);
@@ -1201,16 +1200,16 @@ namespace HFM.Forms
          if (String.IsNullOrEmpty(filename) == false)
          {
             FileInfo fileInfo = new FileInfo(filename);
-            string XsltPath = Path.Combine(_Prefs.ApplicationPath, "XSL");
+            string xsltPath = Path.Combine(_Prefs.ApplicationPath, Constants.XsltFolderName);
             
             if (fileInfo.Exists)
             {
                openConfigDialog.InitialDirectory = fileInfo.DirectoryName;
                openConfigDialog.FileName = fileInfo.Name;
             }
-            else if (File.Exists(Path.Combine(XsltPath, filename)))
+            else if (File.Exists(Path.Combine(xsltPath, filename)))
             {
-               openConfigDialog.InitialDirectory = XsltPath;
+               openConfigDialog.InitialDirectory = xsltPath;
                openConfigDialog.FileName = filename;
             }
             else
@@ -1234,7 +1233,7 @@ namespace HFM.Forms
          if (openConfigDialog.ShowDialog() == DialogResult.OK)
          {
             // Check to see if the path for the file returned is the \HFM\XSL path
-            if (Path.Combine(_Prefs.ApplicationPath, "XSL").Equals(Path.GetDirectoryName(openConfigDialog.FileName)))
+            if (Path.Combine(_Prefs.ApplicationPath, Constants.XsltFolderName).Equals(Path.GetDirectoryName(openConfigDialog.FileName)))
             {
                // If so, return the file name only
                return Path.GetFileName(openConfigDialog.FileName);

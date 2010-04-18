@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -458,6 +459,57 @@ namespace HFM.Helpers
          SetProxy(httpWebOperation.OperationRequest.Request);
 
          httpWebOperation.CheckConnection();
+      }
+
+      /// <summary>
+      /// Upload Web Site Files.
+      /// </summary>
+      /// <param name="server">Server Name</param>
+      /// <param name="ftpPath">Path from FTP Server Root</param>
+      /// <param name="username">FTP Server Username</param>
+      /// <param name="password">FTP Server Password</param>
+      /// <param name="htmlFilePaths">HTML File Paths</param>
+      /// <param name="instances">Client Instance Collection</param>
+      /// <param name="prefs">Preferences Interface</param>
+      public void FtpWebUpload(string server, string ftpPath, string username, string password, ICollection<string> htmlFilePaths, 
+                               ICollection<IClientInstance> instances, IPreferenceSet prefs)
+      {
+         // Time FTP Upload Conversation - Issue 52
+         DateTime start = HfmTrace.ExecStart;
+
+         try
+         {
+            // Get the FTP Type
+            FtpType ftpMode = prefs.GetPreference<FtpType>(Preference.WebGenFtpMode);
+
+            // Upload CSS File
+            FtpUploadHelper(server, ftpPath, Path.Combine(Path.Combine(prefs.ApplicationPath, Constants.CssFolderName), 
+               prefs.GetPreference<string>(Preference.CssFile)), username, password, ftpMode);
+
+            // Upload each HTML File
+            foreach (string filePath in htmlFilePaths)
+            {
+               FtpUploadHelper(server, ftpPath, filePath, username, password, ftpMode);
+            }
+
+            if (prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog))
+            {
+               // Upload the FAHlog.txt File for each Client Instance
+               foreach (IClientInstance instance in instances)
+               {
+                  string cachedFahlogPath = Path.Combine(prefs.CacheDirectory, instance.CachedFAHLogName);
+                  if (File.Exists(cachedFahlogPath))
+                  {
+                     FtpUploadHelper(server, ftpPath, cachedFahlogPath, username, password, ftpMode);
+                  }
+               }
+            }
+         }
+         finally
+         {
+            // Time FTP Upload Conversation - Issue 52
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, start);
+         }
       }
 
       private static void SetFtpMode(IFtpWebOperationRequest Request, FtpType ftpMode)

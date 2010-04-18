@@ -351,6 +351,11 @@ namespace HFM.Instances
       }
 
       /// <summary>
+      /// Project (R/C/G) is a Duplicate of another Client's Project (R/C/G)
+      /// </summary>
+      public bool ProjectIsDuplicate { get; set; }
+
+      /// <summary>
       /// Returns true if Project (R/C/G) has not been identified
       /// </summary>
       public bool ProjectIsUnknown

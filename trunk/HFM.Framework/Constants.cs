@@ -26,6 +26,9 @@ namespace HFM.Framework
       #region Public Const
       public const string ExeName = "HFM";
 
+      public const string CssFolderName = "CSS";
+      public const string XsltFolderName = "XSL";
+
       public const string EOCUserXmlUrl = "http://folding.extremeoverclocking.com/xml/user_summary.php?u=";
       public const string EOCUserBaseUrl = "http://folding.extremeoverclocking.com/user_summary.php?s=&u=";
       public const string EOCTeamBaseUrl = "http://folding.extremeoverclocking.com/team_summary.php?s=&t=";

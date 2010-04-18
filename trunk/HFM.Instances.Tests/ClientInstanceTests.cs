@@ -92,8 +92,8 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(ClientStatus.RunningNoFrameTimes, Instance.Status);
          Assert.AreEqual(true, Instance.ProductionValuesOk);
          Assert.AreEqual("-local -forceasm -smp 4", Instance.Arguments);
-         Assert.AreEqual("", Instance.UserID);
-         Assert.AreEqual(1, Instance.MachineID);
+         Assert.AreEqual("", Instance.UserId);
+         Assert.AreEqual(1, Instance.MachineId);
          Assert.AreEqual("harlam357", Instance.FoldingID);
          Assert.AreEqual(32, Instance.Team);
          Assert.AreEqual(1, Instance.NumberOfCompletedUnitsSinceLastStart);
@@ -176,8 +176,8 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(ClientStatus.RunningNoFrameTimes, Instance.Status);
          Assert.AreEqual(true, Instance.ProductionValuesOk);
          Assert.AreEqual("-smp -verbosity 9", Instance.Arguments);
-         Assert.AreEqual("25932070F496A89", Instance.UserID);
-         Assert.AreEqual(1, Instance.MachineID);
+         Assert.AreEqual("25932070F496A89", Instance.UserId);
+         Assert.AreEqual(1, Instance.MachineId);
          Assert.AreEqual("harlam357", Instance.FoldingID);
          Assert.AreEqual(32, Instance.Team);
          Assert.AreEqual(27, Instance.NumberOfCompletedUnitsSinceLastStart);
@@ -268,8 +268,8 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(ClientStatus.RunningNoFrameTimes, Instance.Status);
          Assert.AreEqual(true, Instance.ProductionValuesOk);
          Assert.AreEqual("-verbosity 9 -smp 8 -bigadv", Instance.Arguments);
-         Assert.AreEqual("775112477C3C55C2", Instance.UserID);
-         Assert.AreEqual(1, Instance.MachineID);
+         Assert.AreEqual("775112477C3C55C2", Instance.UserId);
+         Assert.AreEqual(1, Instance.MachineId);
          Assert.AreEqual("harlam357", Instance.FoldingID);
          Assert.AreEqual(32, Instance.Team);
          Assert.AreEqual(2, Instance.NumberOfCompletedUnitsSinceLastStart);
@@ -351,8 +351,8 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(ClientStatus.RunningNoFrameTimes, Instance.Status);
          Assert.AreEqual(true, Instance.ProductionValuesOk);
          Assert.AreEqual("-verbosity 9 -smp 8 -bigadv", Instance.Arguments);
-         Assert.AreEqual("775112477C3C55C2", Instance.UserID);
-         Assert.AreEqual(1, Instance.MachineID);
+         Assert.AreEqual("775112477C3C55C2", Instance.UserId);
+         Assert.AreEqual(1, Instance.MachineId);
          Assert.AreEqual("harlam357", Instance.FoldingID);
          Assert.AreEqual(32, Instance.Team);
          Assert.AreEqual(2, Instance.NumberOfCompletedUnitsSinceLastStart);
@@ -435,8 +435,8 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(ClientStatus.RunningNoFrameTimes, Instance.Status);
          Assert.AreEqual(true, Instance.ProductionValuesOk);
          Assert.AreEqual("-bigadv -smp 7", Instance.Arguments);
-         Assert.AreEqual("483863F0D7DA6E3", Instance.UserID);
-         Assert.AreEqual(1, Instance.MachineID);
+         Assert.AreEqual("483863F0D7DA6E3", Instance.UserId);
+         Assert.AreEqual(1, Instance.MachineId);
          Assert.AreEqual("coccola", Instance.FoldingID);
          Assert.AreEqual(86565, Instance.Team);
          Assert.AreEqual(1, Instance.NumberOfCompletedUnitsSinceLastStart);
@@ -519,8 +519,8 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(ClientStatus.RunningNoFrameTimes, Instance.Status);
          Assert.AreEqual(true, Instance.ProductionValuesOk);
          Assert.AreEqual("-smp 4 -verbosity 9", Instance.Arguments);
-         Assert.AreEqual("107E28DB39449FEF", Instance.UserID);
-         Assert.AreEqual(1, Instance.MachineID);
+         Assert.AreEqual("107E28DB39449FEF", Instance.UserId);
+         Assert.AreEqual(1, Instance.MachineId);
          Assert.AreEqual("Felix_Pasqualli", Instance.FoldingID);
          Assert.AreEqual(52523, Instance.Team);
          Assert.AreEqual(13, Instance.NumberOfCompletedUnitsSinceLastStart);
@@ -603,8 +603,8 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(ClientStatus.RunningNoFrameTimes, Instance.Status);
          Assert.AreEqual(true, Instance.ProductionValuesOk);
          Assert.AreEqual("-smp -verbosity 9 -forceasm", Instance.Arguments);
-         Assert.AreEqual("5E8F3E2C4E01B2DB", Instance.UserID);
-         Assert.AreEqual(1, Instance.MachineID);
+         Assert.AreEqual("5E8F3E2C4E01B2DB", Instance.UserId);
+         Assert.AreEqual(1, Instance.MachineId);
          Assert.AreEqual("harlam357", Instance.FoldingID);
          Assert.AreEqual(32, Instance.Team);
          Assert.AreEqual(118, Instance.NumberOfCompletedUnitsSinceLastStart);
@@ -679,8 +679,8 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(ClientStatus.EuePause, Instance.Status);
          Assert.AreEqual(false, Instance.ProductionValuesOk);
          Assert.AreEqual("", Instance.Arguments);
-         Assert.AreEqual("1D1493BB0A79C9AE", Instance.UserID);
-         Assert.AreEqual(2, Instance.MachineID);
+         Assert.AreEqual("1D1493BB0A79C9AE", Instance.UserId);
+         Assert.AreEqual(2, Instance.MachineId);
          Assert.AreEqual("JollySwagman", Instance.FoldingID);
          Assert.AreEqual(32, Instance.Team);
          Assert.AreEqual(1, Instance.NumberOfCompletedUnitsSinceLastStart);
@@ -763,8 +763,8 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(ClientStatus.GettingWorkPacket, Instance.Status);
          Assert.AreEqual(false, Instance.ProductionValuesOk);
          Assert.AreEqual("-gpu 1 -verbosity 9", Instance.Arguments);
-         Assert.AreEqual("5E8F3E2C4E01B2DB", Instance.UserID);
-         Assert.AreEqual(3, Instance.MachineID);
+         Assert.AreEqual("5E8F3E2C4E01B2DB", Instance.UserId);
+         Assert.AreEqual(3, Instance.MachineId);
          Assert.AreEqual("harlam357", Instance.FoldingID);
          Assert.AreEqual(32, Instance.Team);
          Assert.AreEqual(205, Instance.NumberOfCompletedUnitsSinceLastStart);
@@ -874,8 +874,8 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(ClientStatus.RunningNoFrameTimes, Instance.Status);
          Assert.AreEqual(true, Instance.ProductionValuesOk);
          Assert.AreEqual("", Instance.Arguments);
-         Assert.AreEqual("xxxxxxxxxxxxxxxxxxx", Instance.UserID);
-         Assert.AreEqual(2, Instance.MachineID);
+         Assert.AreEqual("xxxxxxxxxxxxxxxxxxx", Instance.UserId);
+         Assert.AreEqual(2, Instance.MachineId);
          Assert.AreEqual("Zagen30", Instance.FoldingID);
          Assert.AreEqual(46301, Instance.Team);
          Assert.AreEqual(0, Instance.NumberOfCompletedUnitsSinceLastStart);
@@ -958,8 +958,8 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(ClientStatus.RunningNoFrameTimes, Instance.Status);
          Assert.AreEqual(true, Instance.ProductionValuesOk);
          Assert.AreEqual("-forceasm -verbosity 9 -oneunit", Instance.Arguments);
-         Assert.AreEqual("722723950C6887C2", Instance.UserID);
-         Assert.AreEqual(3, Instance.MachineID);
+         Assert.AreEqual("722723950C6887C2", Instance.UserId);
+         Assert.AreEqual(3, Instance.MachineId);
          Assert.AreEqual("borden.b", Instance.FoldingID);
          Assert.AreEqual(131, Instance.Team);
          Assert.AreEqual(0, Instance.NumberOfCompletedUnitsSinceLastStart);
@@ -1014,14 +1014,14 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Instance.Path, Instance.Arguments),
                          Instance.ClientPathAndArguments);
                          
-         Assert.AreEqual(true, Instance.UserIDUnknown);
-         Instance.UserID = "SOMEUSERID";
-         Assert.AreEqual(false, Instance.UserIDUnknown);
+         Assert.AreEqual(true, Instance.UserIdUnknown);
+         Instance.UserId = "SOMEUSERID";
+         Assert.AreEqual(false, Instance.UserIdUnknown);
          
-         Assert.AreEqual(0, Instance.MachineID);
-         Instance.MachineID = 1;
-         Assert.AreEqual(String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Instance.UserID, Instance.MachineID), 
-                         Instance.UserAndMachineID);
+         Assert.AreEqual(0, Instance.MachineId);
+         Instance.MachineId = 1;
+         Assert.AreEqual(String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Instance.UserId, Instance.MachineId), 
+                         Instance.UserAndMachineId);
 
          // True if the defaults are in place
          Assert.AreEqual(true, Instance.IsUsernameOk());

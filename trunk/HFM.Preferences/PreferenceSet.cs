@@ -152,7 +152,7 @@ namespace HFM.Preferences
             ((Metadata<T>)_Preferences[key]).Data = value;
             return;
          }
-         else if (_Preferences[key].DataType == typeof(int))
+         if (_Preferences[key].DataType == typeof(int))
          {
             string stringValue = value as string;
             if (stringValue != null)
@@ -193,7 +193,7 @@ namespace HFM.Preferences
          _Preferences.Add(Preference.SyncOnLoad, new Metadata<bool>());
          _Preferences.Add(Preference.SyncOnSchedule, new Metadata<bool>());
          _Preferences.Add(Preference.SyncTimeMinutes, new Metadata<int>());
-         _Preferences.Add(Preference.DuplicateUserIDCheck, new Metadata<bool>());
+         _Preferences.Add(Preference.DuplicateUserIdCheck, new Metadata<bool>());
          _Preferences.Add(Preference.DuplicateProjectCheck, new Metadata<bool>());
          _Preferences.Add(Preference.AllowRunningAsync, new Metadata<bool>());
          _Preferences.Add(Preference.ShowUserStats, new Metadata<bool>());
@@ -295,7 +295,7 @@ namespace HFM.Preferences
          SetPreference(Preference.SyncOnLoad, Settings.Default.SyncOnLoad);
          SetPreference(Preference.SyncOnSchedule, Settings.Default.SyncOnSchedule);
          SetPreference(Preference.SyncTimeMinutes, GetValidNumeric(Settings.Default.SyncTimeMinutes, Constants.MinutesDefault));
-         SetPreference(Preference.DuplicateUserIDCheck, Settings.Default.DuplicateUserIDCheck);
+         SetPreference(Preference.DuplicateUserIdCheck, Settings.Default.DuplicateUserIDCheck);
          SetPreference(Preference.DuplicateProjectCheck, Settings.Default.DuplicateProjectCheck);
          SetPreference(Preference.AllowRunningAsync, Settings.Default.AllowRunningAsync);
          SetPreference(Preference.ShowUserStats, Settings.Default.ShowUserStats);
@@ -479,12 +479,12 @@ namespace HFM.Preferences
             }
             catch (FormatException)
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "WebGen Root Folder is not Base64 encoded... loading clear value.", true);
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Web Generation Root Folder is not Base64 encoded... loading clear value.", true);
                webRoot = Settings.Default.WebRoot;
             }
             catch (CryptographicException)
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Cannot decrypt WebGen Root Folder... loading clear value.", true);
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Cannot decrypt Web Generation Root Folder... loading clear value.", true);
                webRoot = Settings.Default.WebRoot;
             }
          }
@@ -593,7 +593,6 @@ namespace HFM.Preferences
 
          bool raiseFormShowStyleChanged = false;
          bool raiseTimerSettingsChanged = false;
-         bool raiseDuplicateCheckChanged = false;
          bool raiseShowUserStatsChanged = false;
          bool raiseOfflineLastChanged = false;
          bool raiseColorLogFileChanged = false;
@@ -636,12 +635,7 @@ namespace HFM.Preferences
             }
             Settings.Default.SyncOnSchedule = GetPreference<bool>(Preference.SyncOnSchedule);
             Settings.Default.SyncTimeMinutes = GetPreference<int>(Preference.SyncTimeMinutes).ToString();
-            if (Settings.Default.DuplicateUserIDCheck != GetPreference<bool>(Preference.DuplicateUserIDCheck) ||
-                Settings.Default.DuplicateProjectCheck != GetPreference<bool>(Preference.DuplicateProjectCheck))
-            {
-               raiseDuplicateCheckChanged = true;
-            }
-            Settings.Default.DuplicateUserIDCheck = GetPreference<bool>(Preference.DuplicateUserIDCheck);
+            Settings.Default.DuplicateUserIDCheck = GetPreference<bool>(Preference.DuplicateUserIdCheck);
             Settings.Default.DuplicateProjectCheck = GetPreference<bool>(Preference.DuplicateProjectCheck);
             Settings.Default.AllowRunningAsync = GetPreference<bool>(Preference.AllowRunningAsync);
             if (Settings.Default.ShowUserStats != GetPreference<bool>(Preference.ShowUserStats))
@@ -736,7 +730,6 @@ namespace HFM.Preferences
             
             if (raiseFormShowStyleChanged) OnFormShowStyleSettingsChanged(EventArgs.Empty);
             if (raiseTimerSettingsChanged) OnTimerSettingsChanged(EventArgs.Empty);
-            if (raiseDuplicateCheckChanged) OnDuplicateCheckChanged(EventArgs.Empty);
             if (raiseShowUserStatsChanged) OnShowUserStatsChanged(EventArgs.Empty);
             if (raiseOfflineLastChanged) OnOfflineLastChanged(EventArgs.Empty);
             if (raiseColorLogFileChanged) OnColorLogFileChanged(EventArgs.Empty);
@@ -778,7 +771,7 @@ namespace HFM.Preferences
             }
             catch (CryptographicException)
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Failed to encrypt WebGen Root Folder... saving clear value.");
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Failed to encrypt Web Generation Root Folder... saving clear value.");
                webRoot = clear;
             }
          }
@@ -911,18 +904,6 @@ namespace HFM.Preferences
          if (ShowUserStatsChanged != null)
          {
             ShowUserStatsChanged(this, e);
-         }
-      }
-
-      /// <summary>
-      /// Duplicate (Client ID or Project (R/C/G)) Check Settings Changed
-      /// </summary>
-      public event EventHandler DuplicateCheckChanged;
-      private void OnDuplicateCheckChanged(EventArgs e)
-      {
-         if (DuplicateCheckChanged != null)
-         {
-            DuplicateCheckChanged(this, e);
          }
       }
 

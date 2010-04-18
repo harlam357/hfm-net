@@ -52,6 +52,7 @@ namespace HFM.Helpers
       private const string EarlyUnitEnd = "EARLY_UNIT_END";
       private const string UnstableMachine = "UNSTABLE_MACHINE";
       private const string Interrupted = "INTERRUPTED";
+      private const string BadWorkUnit = "BAD_WORK_UNIT";
       private const string CoreOutdated = "CORE_OUTDATED";
       #endregion
    
@@ -297,6 +298,8 @@ namespace HFM.Helpers
                return WorkUnitResult.UnstableMachine;
             case Interrupted:
                return WorkUnitResult.Interrupted;
+            case BadWorkUnit:
+               return WorkUnitResult.BadWorkUnit;
             case CoreOutdated:
                return WorkUnitResult.CoreOutdated;
             default:

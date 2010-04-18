@@ -1,7 +1,7 @@
 /*
  * HFM.NET - Main UI Form
  * Copyright (C) 2006 David Rawling
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  * 
  * Form and DataGridView save state code by Ron Dunant, modified by harlam357.
  * http://www.codeproject.com/KB/grid/PersistentDataGridView.aspx
@@ -170,7 +170,7 @@ namespace HFM.Forms
          ClientInstances.InstanceRemoved += ClientInstances_InstanceDataChanged;
          ClientInstances.InstanceRetrieved += delegate { RefreshDisplay(); };
          ClientInstances.SelectedInstanceChanged += ClientInstances_SelectedInstanceChanged;
-         ClientInstances.DuplicatesFoundOrChanged += delegate { RefreshDisplay(); };
+         ClientInstances.FindDuplicatesComplete += delegate { RefreshDisplay(); };
          ClientInstances.OfflineLastChanged += delegate { ApplySort(); };
          ClientInstances.RefreshUserStatsData += delegate { RefreshUserStatsData(false); };
 
@@ -590,7 +590,7 @@ namespace HFM.Forms
             }
             else if (dataGridView1.Columns["ProjectRunCloneGen"].Index == info.ColumnIndex)
             {
-               if (ClientInstances.IsDuplicateProject(Instance.CurrentUnitInfo.ProjectRunCloneGen))
+               if (_Prefs.GetPreference<bool>(Preference.DuplicateProjectCheck) && Instance.CurrentUnitInfo.ProjectIsDuplicate)
                {
                   toolTipGrid.Show("Client is working on the same work unit as another client", dataGridView1, e.X + 15, e.Y);
                   return;
@@ -598,7 +598,7 @@ namespace HFM.Forms
             }
             else if (dataGridView1.Columns["Name"].Index == info.ColumnIndex)
             {
-               if (ClientInstances.IsDuplicateUserAndMachineID(Instance.UserAndMachineID))
+               if (_Prefs.GetPreference<bool>(Preference.DuplicateUserIdCheck) && Instance.UserIdIsDuplicate)
                {
                   toolTipGrid.Show("Client is working with the same User and Machine ID as another client", dataGridView1, e.X + 15, e.Y);
                   return;
@@ -624,9 +624,9 @@ namespace HFM.Forms
             else if (dataGridView1.Columns["Name"].Index == e.ColumnIndex)
             {
                #region Duplicate User and Machine ID Custom Paint
-               ClientInstance Instance = ClientInstances.Instances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
+               ClientInstance instance = ClientInstances.Instances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
 
-               if (ClientInstances.IsDuplicateUserAndMachineID(Instance.UserAndMachineID))
+               if (_Prefs.GetPreference<bool>(Preference.DuplicateUserIdCheck) && instance.UserIdIsDuplicate)
                {
                   PaintGridCell(PaintCell.Warning, e);
                }
@@ -635,9 +635,9 @@ namespace HFM.Forms
             else if (dataGridView1.Columns["ProjectRunCloneGen"].Index == e.ColumnIndex)
             {
                #region Duplicate Project Custom Paint
-               ClientInstance Instance = ClientInstances.Instances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
+               ClientInstance instance = ClientInstances.Instances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
 
-               if (ClientInstances.IsDuplicateProject(Instance.CurrentUnitInfo.ProjectRunCloneGen))
+               if (_Prefs.GetPreference<bool>(Preference.DuplicateProjectCheck) && instance.CurrentUnitInfo.ProjectIsDuplicate)
                {
                   PaintGridCell(PaintCell.Warning, e);
                }
