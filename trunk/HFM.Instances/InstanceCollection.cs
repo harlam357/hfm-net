@@ -888,7 +888,7 @@ namespace HFM.Instances
 
             foreach (string filePath in _markupGenerator.HtmlFilePaths)
             {
-               File.Copy(filePath, Path.Combine(webRoot, Path.GetFileName(filePath)));
+               File.Copy(filePath, Path.Combine(webRoot, Path.GetFileName(filePath)), true);
             }
 
             if (_Prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog))

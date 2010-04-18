@@ -147,7 +147,14 @@
             <xsl:value-of select="Credit"/>
          </td>
          <td width="4%" class="RightCol">
-            <xsl:value-of select="Completed"/>
+            <xsl:choose>
+               <xsl:when test="CompletedCountDisplay='ClientTotal'">
+                  <xsl:value-of select="TotalCompleted"/>
+               </xsl:when>
+               <xsl:otherwise>
+                  <xsl:value-of select="Completed"/>
+               </xsl:otherwise>
+            </xsl:choose>
          </td>
          <td width="3%" class="RightCol">
             <xsl:value-of select="Failed"/>

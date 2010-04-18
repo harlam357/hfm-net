@@ -9,9 +9,9 @@
       <EstPPW>576.54</EstPPW>
       <EstUPD>0.46</EstUPD>
       <EstUPW>3.77</EstUPW>
-      <CompletedProjects>5</CompletedProjects>
-      <FailedProjects>0</FailedProjects>
-      <TotalProjects>243</TotalProjects>
+      <Completed>5</Completed>
+      <Failed>0</Failed>
+      <TotalCompleted>243</TotalCompleted>
       <DownloadTime>10 August 09:37:33</DownloadTime>
       <ExpectedCompletionDate>16 August 2006 1:46 am</ExpectedCompletionDate>
    </UnitInfo>

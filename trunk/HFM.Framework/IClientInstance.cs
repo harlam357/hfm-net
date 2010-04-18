@@ -87,17 +87,17 @@ namespace HFM.Framework
       /// <summary>
       /// Number of completed units since the last client start
       /// </summary>
-      Int32 NumberOfCompletedUnitsSinceLastStart { get; }
+      Int32 TotalRunCompletedUnits { get; }
 
       /// <summary>
       /// Number of failed units since the last client start
       /// </summary>
-      Int32 NumberOfFailedUnitsSinceLastStart { get; }
+      Int32 TotalRunFailedUnits { get; }
 
       /// <summary>
       /// Total Units Completed for lifetime of the client (read from log file)
       /// </summary>
-      Int32 TotalUnits { get; }
+      Int32 TotalClientCompletedUnits { get; }
 
       /// <summary>
       /// Class member containing info specific to the current work unit

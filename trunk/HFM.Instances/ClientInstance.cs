@@ -260,7 +260,7 @@ namespace HFM.Instances
       /// <summary>
       /// Number of completed units since the last client start
       /// </summary>
-      public Int32 NumberOfCompletedUnitsSinceLastStart
+      public Int32 TotalRunCompletedUnits
       {
          get { return _NumberOfCompletedUnitsSinceLastStart; }
          set { _NumberOfCompletedUnitsSinceLastStart = value; }
@@ -270,7 +270,7 @@ namespace HFM.Instances
       /// <summary>
       /// Number of failed units since the last client start
       /// </summary>
-      public Int32 NumberOfFailedUnitsSinceLastStart
+      public Int32 TotalRunFailedUnits
       {
          get { return _NumberOfFailedUnitsSinceLastStart; }
          set { _NumberOfFailedUnitsSinceLastStart = value; }
@@ -280,7 +280,7 @@ namespace HFM.Instances
       /// <summary>
       /// Total Units Completed for lifetime of the client (read from log file)
       /// </summary>
-      public Int32 TotalUnits
+      public Int32 TotalClientCompletedUnits
       {
          get { return _TotalUnits; }
          set { _TotalUnits = value; }
@@ -318,9 +318,9 @@ namespace HFM.Instances
          MachineId = DefaultMachineID;
          FoldingID = Constants.FoldingIDDefault;
          Team = Constants.TeamDefault;
-         NumberOfCompletedUnitsSinceLastStart = 0;
-         NumberOfFailedUnitsSinceLastStart = 0;
-         TotalUnits = 0;
+         TotalRunCompletedUnits = 0;
+         TotalRunFailedUnits = 0;
+         TotalClientCompletedUnits = 0;
       }
 
       /// <summary>
@@ -1118,9 +1118,9 @@ namespace HFM.Instances
          UserId = run.UserID;
          MachineId = run.MachineID;
 
-         NumberOfCompletedUnitsSinceLastStart = run.NumberOfCompletedUnits;
-         NumberOfFailedUnitsSinceLastStart = run.NumberOfFailedUnits;
-         TotalUnits = run.NumberOfTotalUnitsCompleted;
+         TotalRunCompletedUnits = run.NumberOfCompletedUnits;
+         TotalRunFailedUnits = run.NumberOfFailedUnits;
+         TotalClientCompletedUnits = run.NumberOfTotalUnitsCompleted;
       }
 
       private void PopulateRunLevelData(IQueueEntry queueEntry)

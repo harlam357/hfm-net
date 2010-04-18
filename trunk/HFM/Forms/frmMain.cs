@@ -1365,7 +1365,7 @@ namespace HFM.Forms
       {
          if (_Prefs.GetPreference<CompletedCountDisplayType>(Preference.CompletedCountDisplay).Equals(CompletedCountDisplayType.ClientTotal))
          {
-            _Prefs.SetPreference(Preference.CompletedCountDisplay, CompletedCountDisplayType.CurrentClientRun);
+            _Prefs.SetPreference(Preference.CompletedCountDisplay, CompletedCountDisplayType.ClientRunTotal);
          }
          else
          {

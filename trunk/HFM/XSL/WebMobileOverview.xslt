@@ -110,13 +110,19 @@
                <tr>
                   <td class="AltLeftCol" width="60">Completed Units</td>
                   <td class="AltRightCol" width="25">
-                     <xsl:value-of select="TotalCompleted"/>
+                     <xsl:value-of select="Completed"/>
                   </td>
                </tr>
                <tr>
                   <td class="LeftCol" width="60">Failed Units</td>
                   <td class="RightCol" width="25">
-                     <xsl:value-of select="TotalFailed"/>
+                     <xsl:value-of select="Failed"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td class="AltLeftCol" width="60">Total Completed Units</td>
+                  <td class="AltRightCol" width="25">
+                     <xsl:value-of select="TotalCompleted"/>
                   </td>
                </tr>
                <tr>

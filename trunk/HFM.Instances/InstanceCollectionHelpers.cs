@@ -50,9 +50,9 @@ namespace HFM.Instances
          {
             totals.PPD += instance.PPD;
             totals.UPD += instance.UPD;
-            totals.TotalRunCompletedUnits += instance.NumberOfCompletedUnitsSinceLastStart;
-            totals.TotalRunFailedUnits += instance.NumberOfFailedUnitsSinceLastStart;
-            totals.TotalClientCompletedUnits += instance.TotalUnits;
+            totals.TotalRunCompletedUnits += instance.TotalRunCompletedUnits;
+            totals.TotalRunFailedUnits += instance.TotalRunFailedUnits;
+            totals.TotalClientCompletedUnits += instance.TotalClientCompletedUnits;
 
             if (instance.ProductionValuesOk)
             {

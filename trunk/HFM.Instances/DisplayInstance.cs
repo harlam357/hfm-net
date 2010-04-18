@@ -143,8 +143,8 @@ namespace HFM.Instances
          CoreVersion = instance.CurrentUnitInfo.CoreVersion;
          ProjectRunCloneGen = instance.CurrentUnitInfo.ProjectRunCloneGen;
          Credit = instance.Credit;
-         Complete = prefs.GetPreference<CompletedCountDisplayType>(Preference.CompletedCountDisplay).Equals(CompletedCountDisplayType.ClientTotal) ? instance.TotalUnits : instance.NumberOfCompletedUnitsSinceLastStart;
-         Failed = instance.NumberOfFailedUnitsSinceLastStart;
+         Complete = prefs.GetPreference<CompletedCountDisplayType>(Preference.CompletedCountDisplay).Equals(CompletedCountDisplayType.ClientTotal) ? instance.TotalClientCompletedUnits : instance.TotalRunCompletedUnits;
+         Failed = instance.TotalRunFailedUnits;
          Username = instance.FoldingIDAndTeam;
          DownloadTime = instance.CurrentUnitInfo.DownloadTime;
          Deadline = instance.CurrentUnitInfo.PreferredDeadline;

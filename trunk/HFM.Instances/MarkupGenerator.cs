@@ -307,9 +307,9 @@ namespace HFM.Instances
          XMLOps.setXmlNode(xmlData, "UnitInfo/EstPPW", String.Format("{0:" + ppdFormatString + "}", instance.PPD * 7));
          XMLOps.setXmlNode(xmlData, "UnitInfo/EstUPD", String.Format("{0:0.00}", instance.UPD));
          XMLOps.setXmlNode(xmlData, "UnitInfo/EstUPW", String.Format("{0:0.00}", instance.UPD * 7));
-         XMLOps.setXmlNode(xmlData, "UnitInfo/CompletedProjects", instance.NumberOfCompletedUnitsSinceLastStart.ToString());
-         XMLOps.setXmlNode(xmlData, "UnitInfo/FailedProjects", instance.NumberOfFailedUnitsSinceLastStart.ToString());
-         XMLOps.setXmlNode(xmlData, "UnitInfo/TotalProjects", instance.TotalUnits.ToString());
+         XMLOps.setXmlNode(xmlData, "UnitInfo/Completed", instance.TotalRunCompletedUnits.ToString());
+         XMLOps.setXmlNode(xmlData, "UnitInfo/Failed", instance.TotalRunFailedUnits.ToString());
+         XMLOps.setXmlNode(xmlData, "UnitInfo/TotalCompleted", instance.TotalClientCompletedUnits.ToString());
 
          if (instance.CurrentUnitInfo.DownloadTimeUnknown)
          {
@@ -423,6 +423,11 @@ namespace HFM.Instances
 
             return instance1.InstanceName.CompareTo(instance2.InstanceName);
          });
+
+         bool duplicateUserIdCheck = _prefs.GetPreference<bool>(Preference.DuplicateUserIdCheck);
+         bool duplicateProjectCheck = _prefs.GetPreference<bool>(Preference.DuplicateProjectCheck);
+         CompletedCountDisplayType completedCountDisplayType =
+            _prefs.GetPreference<CompletedCountDisplayType>(Preference.CompletedCountDisplay);
          
          XmlElement xmlRootData = xmlDoc.DocumentElement;
          foreach (IClientInstance instance in instances)
@@ -436,7 +441,7 @@ namespace HFM.Instances
             XMLOps.setXmlNode(xmlData, "StatusFontColor", ClientInstance.GetStatusHtmlFontColor(instance.Status));
             XMLOps.setXmlNode(xmlData, "PercentComplete", instance.PercentComplete.ToString());
             XMLOps.setXmlNode(xmlData, "Name", instance.InstanceName);
-            XMLOps.setXmlNode(xmlData, "UserIDDuplicate", (_prefs.GetPreference<bool>(Preference.DuplicateUserIdCheck) && instance.UserIdIsDuplicate).ToString());
+            XMLOps.setXmlNode(xmlData, "UserIDDuplicate", (duplicateUserIdCheck && instance.UserIdIsDuplicate).ToString());
             XMLOps.setXmlNode(xmlData, "ClientType", instance.CurrentUnitInfo.TypeOfClient.ToString());
             XMLOps.setXmlNode(xmlData, "TPF", instance.TimePerFrame.ToString());
             XMLOps.setXmlNode(xmlData, "PPD", String.Format("{0:" + _prefs.PpdFormatString + "}", instance.PPD));
@@ -447,10 +452,12 @@ namespace HFM.Instances
             XMLOps.setXmlNode(xmlData, "Core", instance.CurrentUnitInfo.Core);
             XMLOps.setXmlNode(xmlData, "CoreVersion", instance.CurrentUnitInfo.CoreVersion);
             XMLOps.setXmlNode(xmlData, "ProjectRunCloneGen", instance.CurrentUnitInfo.ProjectRunCloneGen);
-            XMLOps.setXmlNode(xmlData, "ProjectDuplicate", (_prefs.GetPreference<bool>(Preference.DuplicateProjectCheck) && instance.CurrentUnitInfo.ProjectIsDuplicate).ToString());
+            XMLOps.setXmlNode(xmlData, "ProjectDuplicate", (duplicateProjectCheck && instance.CurrentUnitInfo.ProjectIsDuplicate).ToString());
             XMLOps.setXmlNode(xmlData, "Credit", String.Format("{0:0}", instance.Credit));
-            XMLOps.setXmlNode(xmlData, "Completed", instance.NumberOfCompletedUnitsSinceLastStart.ToString());
-            XMLOps.setXmlNode(xmlData, "Failed", instance.NumberOfFailedUnitsSinceLastStart.ToString());
+            XMLOps.setXmlNode(xmlData, "Completed", instance.TotalRunCompletedUnits.ToString());
+            XMLOps.setXmlNode(xmlData, "Failed", instance.TotalRunFailedUnits.ToString());
+            XMLOps.setXmlNode(xmlData, "TotalCompleted", instance.TotalClientCompletedUnits.ToString());
+            XMLOps.setXmlNode(xmlData, "CompletedCountDisplay", completedCountDisplayType.ToString());
             XMLOps.setXmlNode(xmlData, "Username", String.Format("{0} ({1})", instance.FoldingID, instance.Team));
             XMLOps.setXmlNode(xmlData, "UsernameMatch", instance.IsUsernameOk().ToString()); //Issue 51
             if (instance.CurrentUnitInfo.DownloadTimeUnknown)
@@ -509,8 +516,9 @@ namespace HFM.Instances
             XMLOps.setXmlNode(xmlData, "AvEstUPW", "0");
          }
 
-         XMLOps.setXmlNode(xmlData, "TotalCompleted", totals.TotalRunCompletedUnits.ToString());
-         XMLOps.setXmlNode(xmlData, "TotalFailed", totals.TotalRunFailedUnits.ToString());
+         XMLOps.setXmlNode(xmlData, "Completed", totals.TotalRunCompletedUnits.ToString());
+         XMLOps.setXmlNode(xmlData, "Failed", totals.TotalRunFailedUnits.ToString());
+         XMLOps.setXmlNode(xmlData, "TotalCompleted", totals.TotalClientCompletedUnits.ToString());
          XMLOps.setXmlNode(xmlData, "LastUpdatedDate", DateTime.Now.ToLongDateString());
          XMLOps.setXmlNode(xmlData, "LastUpdatedTime", DateTime.Now.ToLongTimeString());
 

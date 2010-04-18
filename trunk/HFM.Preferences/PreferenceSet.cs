@@ -408,10 +408,10 @@ namespace HFM.Preferences
          {
             case "ClientTotal":
                return CompletedCountDisplayType.ClientTotal;
-            case "CurrentClientRun":
-               return CompletedCountDisplayType.CurrentClientRun;
+            case "ClientRunTotal":
+               return CompletedCountDisplayType.ClientRunTotal;
             default:
-               return CompletedCountDisplayType.CurrentClientRun;
+               return CompletedCountDisplayType.ClientRunTotal;
          }
       }
 

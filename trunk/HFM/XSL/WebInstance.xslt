@@ -114,7 +114,7 @@
             Work<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Units
          </td>
          <td class="AltRightCol">
-            Completed: <xsl:value-of select="CompletedProjects"/> - Failed: <xsl:value-of select="FailedProjects"/> - Total: <xsl:value-of select="TotalProjects"/>
+            Completed: <xsl:value-of select="Completed"/> - Failed: <xsl:value-of select="Failed"/> - Total: <xsl:value-of select="TotalCompleted"/>
          </td>
       </tr>
       <tr>

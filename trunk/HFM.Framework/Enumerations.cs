@@ -150,7 +150,7 @@ namespace HFM.Framework
    public enum CompletedCountDisplayType
    {
       ClientTotal,
-      CurrentClientRun
+      ClientRunTotal
    }
    
    public enum FormShowStyleType

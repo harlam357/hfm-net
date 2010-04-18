@@ -96,9 +96,9 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(1, Instance.MachineId);
          Assert.AreEqual("harlam357", Instance.FoldingID);
          Assert.AreEqual(32, Instance.Team);
-         Assert.AreEqual(1, Instance.NumberOfCompletedUnitsSinceLastStart);
-         Assert.AreEqual(0, Instance.NumberOfFailedUnitsSinceLastStart);
-         Assert.AreEqual(0, Instance.TotalUnits);
+         Assert.AreEqual(1, Instance.TotalRunCompletedUnits);
+         Assert.AreEqual(0, Instance.TotalRunFailedUnits);
+         Assert.AreEqual(0, Instance.TotalClientCompletedUnits);
          #endregion
 
          #region Check Unit Info Data Values
@@ -180,9 +180,9 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(1, Instance.MachineId);
          Assert.AreEqual("harlam357", Instance.FoldingID);
          Assert.AreEqual(32, Instance.Team);
-         Assert.AreEqual(27, Instance.NumberOfCompletedUnitsSinceLastStart);
-         Assert.AreEqual(0, Instance.NumberOfFailedUnitsSinceLastStart);
-         Assert.AreEqual(338, Instance.TotalUnits);
+         Assert.AreEqual(27, Instance.TotalRunCompletedUnits);
+         Assert.AreEqual(0, Instance.TotalRunFailedUnits);
+         Assert.AreEqual(338, Instance.TotalClientCompletedUnits);
          #endregion
 
          #region Check Unit Info Data Values
@@ -272,9 +272,9 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(1, Instance.MachineId);
          Assert.AreEqual("harlam357", Instance.FoldingID);
          Assert.AreEqual(32, Instance.Team);
-         Assert.AreEqual(2, Instance.NumberOfCompletedUnitsSinceLastStart);
-         Assert.AreEqual(0, Instance.NumberOfFailedUnitsSinceLastStart);
-         Assert.AreEqual(2, Instance.TotalUnits);
+         Assert.AreEqual(2, Instance.TotalRunCompletedUnits);
+         Assert.AreEqual(0, Instance.TotalRunFailedUnits);
+         Assert.AreEqual(2, Instance.TotalClientCompletedUnits);
          #endregion
 
          #region Check Unit Info Data Values
@@ -355,9 +355,9 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(1, Instance.MachineId);
          Assert.AreEqual("harlam357", Instance.FoldingID);
          Assert.AreEqual(32, Instance.Team);
-         Assert.AreEqual(2, Instance.NumberOfCompletedUnitsSinceLastStart);
-         Assert.AreEqual(0, Instance.NumberOfFailedUnitsSinceLastStart);
-         Assert.AreEqual(2, Instance.TotalUnits);
+         Assert.AreEqual(2, Instance.TotalRunCompletedUnits);
+         Assert.AreEqual(0, Instance.TotalRunFailedUnits);
+         Assert.AreEqual(2, Instance.TotalClientCompletedUnits);
          #endregion
 
          #region Check Unit Info Data Values
@@ -439,9 +439,9 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(1, Instance.MachineId);
          Assert.AreEqual("coccola", Instance.FoldingID);
          Assert.AreEqual(86565, Instance.Team);
-         Assert.AreEqual(1, Instance.NumberOfCompletedUnitsSinceLastStart);
-         Assert.AreEqual(0, Instance.NumberOfFailedUnitsSinceLastStart);
-         Assert.AreEqual(4, Instance.TotalUnits);
+         Assert.AreEqual(1, Instance.TotalRunCompletedUnits);
+         Assert.AreEqual(0, Instance.TotalRunFailedUnits);
+         Assert.AreEqual(4, Instance.TotalClientCompletedUnits);
          #endregion
 
          #region Check Unit Info Data Values
@@ -523,9 +523,9 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(1, Instance.MachineId);
          Assert.AreEqual("Felix_Pasqualli", Instance.FoldingID);
          Assert.AreEqual(52523, Instance.Team);
-         Assert.AreEqual(13, Instance.NumberOfCompletedUnitsSinceLastStart);
-         Assert.AreEqual(0, Instance.NumberOfFailedUnitsSinceLastStart);
-         Assert.AreEqual(52, Instance.TotalUnits);
+         Assert.AreEqual(13, Instance.TotalRunCompletedUnits);
+         Assert.AreEqual(0, Instance.TotalRunFailedUnits);
+         Assert.AreEqual(52, Instance.TotalClientCompletedUnits);
          #endregion
 
          #region Check Unit Info Data Values
@@ -607,9 +607,9 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(1, Instance.MachineId);
          Assert.AreEqual("harlam357", Instance.FoldingID);
          Assert.AreEqual(32, Instance.Team);
-         Assert.AreEqual(118, Instance.NumberOfCompletedUnitsSinceLastStart);
-         Assert.AreEqual(1, Instance.NumberOfFailedUnitsSinceLastStart);
-         Assert.AreEqual(118, Instance.TotalUnits);
+         Assert.AreEqual(118, Instance.TotalRunCompletedUnits);
+         Assert.AreEqual(1, Instance.TotalRunFailedUnits);
+         Assert.AreEqual(118, Instance.TotalClientCompletedUnits);
          #endregion
 
          #region Check Unit Info Data Values
@@ -683,9 +683,9 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(2, Instance.MachineId);
          Assert.AreEqual("JollySwagman", Instance.FoldingID);
          Assert.AreEqual(32, Instance.Team);
-         Assert.AreEqual(1, Instance.NumberOfCompletedUnitsSinceLastStart);
-         Assert.AreEqual(5, Instance.NumberOfFailedUnitsSinceLastStart);
-         Assert.AreEqual(224, Instance.TotalUnits);
+         Assert.AreEqual(1, Instance.TotalRunCompletedUnits);
+         Assert.AreEqual(5, Instance.TotalRunFailedUnits);
+         Assert.AreEqual(224, Instance.TotalClientCompletedUnits);
          #endregion
 
          #region Check Unit Info Data Values
@@ -767,9 +767,9 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(3, Instance.MachineId);
          Assert.AreEqual("harlam357", Instance.FoldingID);
          Assert.AreEqual(32, Instance.Team);
-         Assert.AreEqual(205, Instance.NumberOfCompletedUnitsSinceLastStart);
-         Assert.AreEqual(0, Instance.NumberOfFailedUnitsSinceLastStart);
-         Assert.AreEqual(4907, Instance.TotalUnits);
+         Assert.AreEqual(205, Instance.TotalRunCompletedUnits);
+         Assert.AreEqual(0, Instance.TotalRunFailedUnits);
+         Assert.AreEqual(4907, Instance.TotalClientCompletedUnits);
          #endregion
 
          #region Check Unit Info Data Values
@@ -878,9 +878,9 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(2, Instance.MachineId);
          Assert.AreEqual("Zagen30", Instance.FoldingID);
          Assert.AreEqual(46301, Instance.Team);
-         Assert.AreEqual(0, Instance.NumberOfCompletedUnitsSinceLastStart);
-         Assert.AreEqual(0, Instance.NumberOfFailedUnitsSinceLastStart);
-         Assert.AreEqual(1994, Instance.TotalUnits);
+         Assert.AreEqual(0, Instance.TotalRunCompletedUnits);
+         Assert.AreEqual(0, Instance.TotalRunFailedUnits);
+         Assert.AreEqual(1994, Instance.TotalClientCompletedUnits);
          #endregion
 
          #region Check Unit Info Data Values
@@ -962,9 +962,9 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(3, Instance.MachineId);
          Assert.AreEqual("borden.b", Instance.FoldingID);
          Assert.AreEqual(131, Instance.Team);
-         Assert.AreEqual(0, Instance.NumberOfCompletedUnitsSinceLastStart);
-         Assert.AreEqual(0, Instance.NumberOfFailedUnitsSinceLastStart);
-         Assert.AreEqual(0, Instance.TotalUnits);
+         Assert.AreEqual(0, Instance.TotalRunCompletedUnits);
+         Assert.AreEqual(0, Instance.TotalRunFailedUnits);
+         Assert.AreEqual(0, Instance.TotalClientCompletedUnits);
          #endregion
 
          #region Check Unit Info Data Values

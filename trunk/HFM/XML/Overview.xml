@@ -12,8 +12,9 @@
    <AvEstPPW>0.00</AvEstPPW>
    <AvEstUPD>0.00</AvEstUPD>
    <AvEstUPW>0.00</AvEstUPW>
+   <Completed>0</Completed>
+   <Failed>0</Failed>
    <TotalCompleted>0</TotalCompleted>
-   <TotalFailed>0</TotalFailed>
    <LastUpdatedDate>Now</LastUpdatedDate>
    <LastUpdatedTime>Now</LastUpdatedTime>
 </Overview>
