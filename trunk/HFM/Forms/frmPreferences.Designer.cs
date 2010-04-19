@@ -1293,7 +1293,7 @@ namespace HFM.Forms
          this.txtEOCUserID.Name = "txtEOCUserID";
          this.txtEOCUserID.Size = new System.Drawing.Size(138, 20);
          this.txtEOCUserID.TabIndex = 3;
-         this.txtEOCUserID.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         this.txtEOCUserID.ValidationType = harlam357.Windows.Forms.ValidationType.Empty;
          this.txtEOCUserID.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
          // 
          // txtStanfordTeamID
@@ -1310,7 +1310,7 @@ namespace HFM.Forms
          this.txtStanfordTeamID.Name = "txtStanfordTeamID";
          this.txtStanfordTeamID.Size = new System.Drawing.Size(138, 20);
          this.txtStanfordTeamID.TabIndex = 5;
-         this.txtStanfordTeamID.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         this.txtStanfordTeamID.ValidationType = harlam357.Windows.Forms.ValidationType.Empty;
          this.txtStanfordTeamID.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
          // 
          // lbl3StanfordTeamID
@@ -1346,7 +1346,7 @@ namespace HFM.Forms
          this.txtStanfordUserID.Name = "txtStanfordUserID";
          this.txtStanfordUserID.Size = new System.Drawing.Size(138, 20);
          this.txtStanfordUserID.TabIndex = 4;
-         this.txtStanfordUserID.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         this.txtStanfordUserID.ValidationType = harlam357.Windows.Forms.ValidationType.Empty;
          // 
          // linkEOC
          // 

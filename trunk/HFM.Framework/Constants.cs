@@ -26,7 +26,13 @@ namespace HFM.Framework
       #region Public Const
       public const string ExeName = "HFM";
 
+      public const string HfmLogFileName = "HFM.log";
+      public const string HfmPrevLogFileName = "HFM-prev.log";
+
+      public const string ProjectInfoFileName = "ProjectInfo.tab";
+
       public const string CssFolderName = "CSS";
+      public const string XmlFolderName = "XML";
       public const string XsltFolderName = "XSL";
 
       public const string EOCUserXmlUrl = "http://folding.extremeoverclocking.com/xml/user_summary.php?u=";

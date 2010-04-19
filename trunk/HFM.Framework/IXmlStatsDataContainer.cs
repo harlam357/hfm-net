@@ -32,6 +32,12 @@ namespace HFM.Framework
       bool TimeForUpdate();
 
       /// <summary>
+      /// Get Overall User Data from EOC XML
+      /// </summary>
+      /// <param name="forceRefresh">Force Refresh or allow to check for next update time</param>
+      void GetEocXmlData(bool forceRefresh);
+
+      /// <summary>
       /// Read Binary File
       /// </summary>
       void Read();

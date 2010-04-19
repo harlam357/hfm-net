@@ -278,7 +278,7 @@ namespace HFM.Instances
       private XmlDocument CreateInstanceXml(IClientInstance instance)
       {
          XmlDocument xmlDoc = new XmlDocument();
-         xmlDoc.Load(Path.Combine(Path.Combine(_prefs.ApplicationPath, "XML"), "Instance.xml"));
+         xmlDoc.Load(Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.XmlFolderName), "Instance.xml"));
          XmlElement xmlData = xmlDoc.DocumentElement;
 
          //    <UnitInfo>
@@ -433,7 +433,7 @@ namespace HFM.Instances
          foreach (IClientInstance instance in instances)
          {
             XmlDocument xmlFrag = new XmlDocument();
-            xmlFrag.Load(Path.Combine(Path.Combine(_prefs.ApplicationPath, "XML"), "SummaryFrag.xml"));
+            xmlFrag.Load(Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.XmlFolderName), "SummaryFrag.xml"));
             XmlElement xmlData = xmlFrag.DocumentElement;
 
             XMLOps.setXmlNode(xmlData, "Status", instance.Status.ToString());
@@ -487,7 +487,7 @@ namespace HFM.Instances
       private XmlDocument CreateOverviewXml(InstanceTotals totals)
       {
          XmlDocument xmlDoc = new XmlDocument();
-         xmlDoc.Load(Path.Combine(Path.Combine(_prefs.ApplicationPath, "XML"), "Overview.xml"));
+         xmlDoc.Load(Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.XmlFolderName), "Overview.xml"));
          XmlElement xmlData = xmlDoc.DocumentElement;
 
          XMLOps.setXmlNode(xmlData, "HFMVersion", PlatformOps.ShortFormattedApplicationVersionWithRevision);

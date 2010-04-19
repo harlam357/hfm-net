@@ -21,6 +21,7 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Xml;
 
 using HFM.Framework;
 using HFM.Instrumentation;
@@ -46,13 +47,13 @@ namespace HFM.Helpers
       /// <summary>
       /// Preferences Interface
       /// </summary>
-      private readonly IPreferenceSet _Prefs;
+      private readonly IPreferenceSet _prefs;
       #endregion
       
       #region Constructor
-      public XmlStatsDataContainer(IPreferenceSet Prefs)
+      public XmlStatsDataContainer(IPreferenceSet prefs)
       {
-         _Prefs = Prefs;
+         _prefs = prefs;
       }
       #endregion
       
@@ -68,22 +69,22 @@ namespace HFM.Helpers
       /// <summary>
       /// Is it Time for a Stats Update?
       /// </summary>
-      public static bool TimeForNextUpdate(DateTime LastUpdated, DateTime UtcNow, bool IsDaylightSavingTime)
+      public static bool TimeForNextUpdate(DateTime lastUpdated, DateTime utcNow, bool isDaylightSavingTime)
       {
          // No Last Updated Value
-         if (LastUpdated.Equals(DateTime.MinValue))
+         if (lastUpdated.Equals(DateTime.MinValue))
          {
             return true;
          }
 
          HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format(CultureInfo.CurrentCulture,
-            "{0} Current Time: {1} (UTC)", HfmTrace.FunctionName, UtcNow));
+            "{0} Current Time: {1} (UTC)", HfmTrace.FunctionName, utcNow));
 
-         DateTime NextUpdateTime = GetNextUpdateTime(LastUpdated, IsDaylightSavingTime);
+         DateTime nextUpdateTime = GetNextUpdateTime(lastUpdated, isDaylightSavingTime);
          HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format(CultureInfo.CurrentCulture,
-            "{0} Next Update Time: {1} (UTC)", HfmTrace.FunctionName, NextUpdateTime));
+            "{0} Next Update Time: {1} (UTC)", HfmTrace.FunctionName, nextUpdateTime));
 
-         if (UtcNow > NextUpdateTime)
+         if (utcNow > nextUpdateTime)
          {
             return true;
          }
@@ -91,23 +92,23 @@ namespace HFM.Helpers
          return false;
       }
 
-      public static DateTime GetNextUpdateTime(DateTime LastUpdated, bool IsDaylightSavingTime)
+      public static DateTime GetNextUpdateTime(DateTime lastUpdated, bool isDaylightSavingTime)
       {
          // What I really need to know is if it is Daylight Savings Time
          // in the Central Time Zone, not the local machines Time Zone.
 
          int offset = 0;
-         if (IsDaylightSavingTime)
+         if (isDaylightSavingTime)
          {
             offset = 1;
          }
 
-         DateTime nextUpdateTime = LastUpdated.Date;
+         DateTime nextUpdateTime = lastUpdated.Date;
 
          int hours = 24;
          for (int i = 0; i < 9; i++)
          {
-            if (LastUpdated.TimeOfDay >= TimeSpan.FromHours(hours - offset))
+            if (lastUpdated.TimeOfDay >= TimeSpan.FromHours(hours - offset))
             {
                nextUpdateTime = nextUpdateTime.Add(TimeSpan.FromHours(hours + 3 - offset));
                break;
@@ -118,6 +119,64 @@ namespace HFM.Helpers
 
          return nextUpdateTime;
       }
+
+      /// <summary>
+      /// Get Overall User Data from EOC XML
+      /// </summary>
+      /// <param name="forceRefresh">Force Refresh or allow to check for next update time</param>
+      public void GetEocXmlData(bool forceRefresh)
+      {
+         // if Forced or Time For an Update
+         if (forceRefresh || TimeForUpdate())
+         {
+            DateTime start = HfmTrace.ExecStart;
+
+            #region Get the XML Document
+            XmlDocument xmlData = new XmlDocument();
+            xmlData.Load(_prefs.EocUserXml);
+            xmlData.RemoveChild(xmlData.ChildNodes[0]);
+
+            XmlNode eocNode = xmlData.SelectSingleNode("EOC_Folding_Stats");
+            XmlNode userNode = eocNode.SelectSingleNode("user");
+            XmlNode statusNode = eocNode.SelectSingleNode("status");
+
+            string updateStatus = statusNode.SelectSingleNode("Update_Status").InnerText;
+            #endregion
+
+            // Get the Last Updated Time
+            DateTime lastUpdated = Data.LastUpdated;
+            // Update the data container
+            UpdateUserStatsDataContainer(this, userNode);
+
+            // if Forced, set Last Updated and Serialize or
+            // if container's LastUpdated is now greater, we updated... otherwise, if the update 
+            // status is current we should assume the data is current but did not change - Issue 67
+            if (forceRefresh || (Data.LastUpdated > lastUpdated || updateStatus == "Current"))
+            {
+               Data.LastUpdated = DateTime.UtcNow;
+               Write();
+            }
+
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, start);
+         }
+
+         HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format(CultureInfo.CurrentCulture,
+            "{0} Last EOC Stats Update: {1} (UTC)", HfmTrace.FunctionName, Data.LastUpdated));
+      }
+
+      /// <summary>
+      /// Updates the data container
+      /// </summary>
+      /// <param name="userStatsData">User Stats Data Container</param>
+      /// <param name="userNode">User Stats XmlNode</param>
+      private static void UpdateUserStatsDataContainer(IXmlStatsDataContainer userStatsData, XmlNode userNode)
+      {
+         userStatsData.Data.TwentyFourHourAvgerage = Convert.ToInt64(userNode.SelectSingleNode("Points_24hr_Avg").InnerText);
+         userStatsData.Data.PointsToday = Convert.ToInt64(userNode.SelectSingleNode("Points_Today").InnerText);
+         userStatsData.Data.PointsWeek = Convert.ToInt64(userNode.SelectSingleNode("Points_Week").InnerText);
+         userStatsData.Data.PointsTotal = Convert.ToInt64(userNode.SelectSingleNode("Points").InnerText);
+         userStatsData.Data.WorkUnitsTotal = Convert.ToInt64(userNode.SelectSingleNode("WUs").InnerText);
+      }
       #endregion
       
       #region Serialization Support
@@ -126,14 +185,8 @@ namespace HFM.Helpers
       /// </summary>
       public void Read()
       {
-         string FilePath = Path.Combine(_Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), DataStoreFilename);
-
-         _data = Deserialize(FilePath);
-
-         if (_data == null)
-         {
-            _data = new XmlStatsData();
-         }
+         string filePath = Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), DataStoreFilename);
+         _data = Deserialize(filePath) ?? new XmlStatsData();
       }
 
       /// <summary>
@@ -141,16 +194,16 @@ namespace HFM.Helpers
       /// </summary>
       public void Write()
       {
-         Serialize(_data, Path.Combine(_Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), DataStoreFilename));
+         Serialize(_data, Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), DataStoreFilename));
       }
       
-      private static readonly object _serializeLock = typeof(XmlStatsDataContainer);
+      private static readonly object SerializeLock = typeof(XmlStatsDataContainer);
 
       public static void Serialize(XmlStatsData data, string filePath)
       {
-         DateTime Start = HfmTrace.ExecStart;
+         DateTime start = HfmTrace.ExecStart;
 
-         lock (_serializeLock)
+         lock (SerializeLock)
          {
             using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
             {
@@ -165,12 +218,12 @@ namespace HFM.Helpers
             }
          }
 
-         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, start);
       }
 
       public static XmlStatsData Deserialize(string filePath)
       {
-         DateTime Start = HfmTrace.ExecStart;
+         DateTime start = HfmTrace.ExecStart;
 
          XmlStatsData data = null;
          try
@@ -185,7 +238,7 @@ namespace HFM.Helpers
             HfmTrace.WriteToHfmConsole(ex);
          }
 
-         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, start);
 
          return data;
       }

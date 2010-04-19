@@ -37,20 +37,20 @@ namespace HFM.Framework
       }
 
       /// <summary>
-      /// Execute Primary Collection Load Sequence
+      /// Execute Primary Collection Read Sequence
       /// </summary>
-      void Load();
+      void Read();
 
       /// <summary>
-      /// Load the Protein Collection from Tab Delimited File
+      /// Read the Protein Collection from Tab Delimited File
       /// </summary>
-      bool LoadFromTabDelimitedFile();
+      bool ReadFromTabDelimitedFile();
 
       /// <summary>
-      /// Load the Protein Collection from Tab Delimited File
+      /// Read the Protein Collection from Tab Delimited File
       /// </summary>
-      /// <param name="ProjectInfoFilePath">Path to File</param>
-      bool LoadFromTabDelimitedFile(string ProjectInfoFilePath);
+      /// <param name="projectInfoFilePath">Path to File</param>
+      bool ReadFromTabDelimitedFile(string projectInfoFilePath);
 
       /// <summary>
       /// Clear the Projects not found cache
@@ -65,8 +65,8 @@ namespace HFM.Framework
       /// <summary>
       /// Get Protein (should be called from worker thread)
       /// </summary>
-      /// <param name="ProjectID">Project ID</param>
-      IProtein GetProtein(int ProjectID);
+      /// <param name="projectId">Project ID</param>
+      IProtein GetProtein(int projectId);
 
       /// <summary>
       /// Get a New Protein from the Collection

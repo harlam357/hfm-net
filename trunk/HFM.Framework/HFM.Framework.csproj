@@ -72,6 +72,7 @@
     <Compile Include="ILogReader.cs" />
     <Compile Include="ILogReaderFactory.cs" />
     <Compile Include="IMarkupGenerator.cs" />
+    <Compile Include="IMessagesView.cs" />
     <Compile Include="InstanceProvider.cs" />
     <Compile Include="IOwnedByClientInstance.cs" />
     <Compile Include="IPreferenceSet.cs" />

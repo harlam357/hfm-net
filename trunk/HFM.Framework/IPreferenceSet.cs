@@ -51,6 +51,11 @@ namespace HFM.Framework
       Uri StanfordUserUrl { get; }
 
       /// <summary>
+      /// Initialize the Preferences
+      /// </summary>
+      void Initialize();
+
+      /// <summary>
       /// Get a Preference of Type T
       /// </summary>
       /// <typeparam name="T">Preference Data Type</typeparam>

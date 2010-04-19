@@ -16,7 +16,7 @@ namespace HFM.Forms
          if (disposing && (components != null))
          {
             components.Dispose();
-            ClientInstances.Dispose();
+            _clientInstances.Dispose();
          }
          base.Dispose(disposing);
       }

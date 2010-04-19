@@ -50,14 +50,25 @@ namespace HFM.Instances
       }
 
       /// <summary>
+      /// Owning Client Instance Interface
+      /// </summary>
+      private readonly IClientInstance _clientInstance;
+
+      /// <summary>
       /// Use UTC Time Data as Local Time
       /// </summary>
-      private readonly bool _UtcOffsetIsZero; 
+      private bool UtcOffsetIsZero
+      {
+         get { return _clientInstance.ClientIsOnVirtualMachine; }
+      }
       
       /// <summary>
       /// Client Time Adjustment (apply to DateTime values)
       /// </summary>
-      private readonly int _ClientTimeOffset;
+      private int ClientTimeOffset
+      {
+         get { return _clientInstance.ClientTimeOffset; }
+      }
       #endregion
 
       #region Owner Data Properties
@@ -112,32 +123,17 @@ namespace HFM.Instances
       #endregion
 
       #region Constructors
-      public UnitInfoLogic(IPreferenceSet Prefs, IProteinCollection proteinCollection, IUnitInfo unitInfo, bool UtcOffsetIsZero, int ClientTimeOffset)
+      [CLSCompliant(false)]
+      public UnitInfoLogic(IPreferenceSet prefs, IProteinCollection proteinCollection, IUnitInfo unitInfo, IClientInstance clientInstance)
       {
-         _Prefs = Prefs;
+         _Prefs = prefs;
          _proteinCollection = proteinCollection;
          _unitInfo = (UnitInfo)unitInfo;
-         _UtcOffsetIsZero = UtcOffsetIsZero;
-         _ClientTimeOffset = ClientTimeOffset;
-         
-         // This constructor is used when restoring a UnitInfo upon Load fro the UnitInfoContainer.
-         // Since the ProjectID setter will not be called, we need to force the CurrentProtein 
-         // property to be set.
-         SetCurrentProtein();
-      }
+         _clientInstance = clientInstance;
 
-      public UnitInfoLogic(IPreferenceSet Prefs, IProteinCollection proteinCollection, IUnitInfo unitInfo, bool UtcOffsetIsZero, int ClientTimeOffset, 
-                           string ownerName, string ownerPath, DateTime unitRetrievalTime)
-      {
-         _Prefs = Prefs;
-         _proteinCollection = proteinCollection;
-         _unitInfo = (UnitInfo)unitInfo;
-         _UtcOffsetIsZero = UtcOffsetIsZero;
-         _ClientTimeOffset = ClientTimeOffset;
-
-         OwningInstanceName = ownerName;
-         OwningInstancePath = ownerPath;
-         UnitRetrievalTime = unitRetrievalTime;
+         OwningInstanceName = _clientInstance.InstanceName;
+         OwningInstancePath = _clientInstance.Path;
+         UnitRetrievalTime = _clientInstance.LastRetrievalTime;
 
          SetCurrentProtein();
          TypeOfClient = GetClientTypeFromProtein(CurrentProtein);
@@ -163,12 +159,12 @@ namespace HFM.Instances
          {
             if (_unitInfo.DownloadTime.Equals(DateTime.MinValue) == false)
             {
-               if (_UtcOffsetIsZero == false)
+               if (UtcOffsetIsZero == false)
                {
-                  return _unitInfo.DownloadTime.ToLocalTime().Subtract(TimeSpan.FromMinutes(_ClientTimeOffset));
+                  return _unitInfo.DownloadTime.ToLocalTime().Subtract(TimeSpan.FromMinutes(ClientTimeOffset));
                }
 
-               return _unitInfo.DownloadTime.Subtract(TimeSpan.FromMinutes(_ClientTimeOffset)); 
+               return _unitInfo.DownloadTime.Subtract(TimeSpan.FromMinutes(ClientTimeOffset)); 
             }
             
             return _unitInfo.DownloadTime; 
@@ -245,12 +241,12 @@ namespace HFM.Instances
          {
             if (_unitInfo.DueTime.Equals(DateTime.MinValue) == false)
             {
-               if (_UtcOffsetIsZero == false)
+               if (UtcOffsetIsZero == false)
                {
-                  return _unitInfo.DueTime.ToLocalTime().Subtract(TimeSpan.FromMinutes(_ClientTimeOffset));
+                  return _unitInfo.DueTime.ToLocalTime().Subtract(TimeSpan.FromMinutes(ClientTimeOffset));
                }
 
-               return _unitInfo.DueTime.Subtract(TimeSpan.FromMinutes(_ClientTimeOffset));
+               return _unitInfo.DueTime.Subtract(TimeSpan.FromMinutes(ClientTimeOffset));
             }
 
             return _unitInfo.DueTime; 
@@ -283,12 +279,12 @@ namespace HFM.Instances
          {
             if (_unitInfo.FinishedTime.Equals(DateTime.MinValue) == false)
             {
-               if (_UtcOffsetIsZero == false)
+               if (UtcOffsetIsZero == false)
                {
-                  return _unitInfo.FinishedTime.ToLocalTime().Subtract(TimeSpan.FromMinutes(_ClientTimeOffset));
+                  return _unitInfo.FinishedTime.ToLocalTime().Subtract(TimeSpan.FromMinutes(ClientTimeOffset));
                }
 
-               return _unitInfo.FinishedTime.Subtract(TimeSpan.FromMinutes(_ClientTimeOffset));
+               return _unitInfo.FinishedTime.Subtract(TimeSpan.FromMinutes(ClientTimeOffset));
             }
 
             return _unitInfo.FinishedTime; 
@@ -464,6 +460,29 @@ namespace HFM.Instances
 
       #region Production Value Properties
       /// <summary>
+      /// Frame Time per section based on current PPD calculation setting (readonly)
+      /// </summary>
+      public Int32 RawTimePerSection
+      {
+         get
+         {
+            switch (_Prefs.GetPreference<PpdCalculationType>(Preference.PpdCalculation))
+            {
+               case PpdCalculationType.LastFrame:
+                  return RawTimePerLastSection;
+               case PpdCalculationType.LastThreeFrames:
+                  return RawTimePerThreeSections;
+               case PpdCalculationType.AllFrames:
+                  return RawTimePerAllSections;
+               case PpdCalculationType.EffectiveRate:
+                  return RawTimePerUnitDownload;
+            }
+
+            return 0;
+         }
+      }
+      
+      /// <summary>
       /// Time per frame (TPF) of the unit
       /// </summary>
       public TimeSpan TimePerFrame
@@ -505,18 +524,7 @@ namespace HFM.Instances
       {
          get
          {
-            if (CurrentProtein.IsUnknown == false)
-            {
-               // Issue 125
-               if (_Prefs.GetPreference<bool>(Preference.CalculateBonus))
-               {
-                  return CurrentProtein.GetPPD(TimePerFrame, EFT);
-               }
-
-               return CurrentProtein.GetPPD(TimePerFrame);
-            }
-
-            return 0;
+            return GetPPD(TimePerFrame);
          }
       }
 
@@ -550,7 +558,7 @@ namespace HFM.Instances
       /// <summary>
       /// Esimated Finishing Time for this unit
       /// </summary>
-      public TimeSpan EFT
+      public TimeSpan EftByDownloadTime
       {
          get
          {
@@ -568,7 +576,7 @@ namespace HFM.Instances
                // had not yet written the FinishedTime to the queue.dat file.  
                // In light of this I've added the AllFramesAreCompleted property.  
                // Now, if ETA is Zero and AllFramesAreCompleted == false, the EFT 
-               // will be Zero.  Otherwise, if will be given a value of the 
+               // will be Zero.  Otherwise, it will be given a value of the 
                // (UnitRetrievalTime plus ETA) minus the DownloadTime.
                if (ETA.Equals(TimeSpan.Zero) && AllFramesAreCompleted == false)
                {
@@ -576,6 +584,30 @@ namespace HFM.Instances
                }
 
                return UnitRetrievalTime.Add(ETA).Subtract(DownloadTime);
+            }
+
+            return TimeSpan.Zero;
+         }
+      }
+
+      /// <summary>
+      /// Esimated Finishing Time for this unit
+      /// </summary>
+      public TimeSpan EftByFrameTime
+      {
+         get
+         {
+            if (DownloadTime.Equals(DateTime.MinValue) == false)
+            {
+               if (FinishedTime.Equals(DateTime.MinValue) == false)
+               {
+                  return FinishedTime.Subtract(DownloadTime);
+               }
+            }
+
+            if (CurrentProtein.IsUnknown == false)
+            {
+               return TimeSpan.FromSeconds(RawTimePerSection * CurrentProtein.Frames);
             }
 
             return TimeSpan.Zero;
@@ -614,7 +646,14 @@ namespace HFM.Instances
       [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
       public double GetBonusCredit()
       {
-         return CurrentProtein.GetBonusCredit(EFT);
+         // Issue 183
+         if (_clientInstance.Status.Equals(ClientStatus.RunningAsync) ||
+             _clientInstance.Status.Equals(ClientStatus.RunningNoFrameTimes))
+         {
+            return CurrentProtein.GetBonusCredit(EftByFrameTime);
+         }
+         
+         return CurrentProtein.GetBonusCredit(EftByDownloadTime);
       }
 
       public double Frames
@@ -736,18 +775,7 @@ namespace HFM.Instances
       {
          get
          {
-            if (CurrentProtein.IsUnknown == false)
-            {
-               // Issue 125
-               if (_Prefs.GetPreference<bool>(Preference.CalculateBonus))
-               {
-                  return CurrentProtein.GetPPD(TimePerUnitDownload, EFT);
-               }
-
-               return CurrentProtein.GetPPD(TimePerUnitDownload);
-            }
-
-            return 0;
+            return GetPPD(TimePerUnitDownload);
          }
       }
 
@@ -785,18 +813,7 @@ namespace HFM.Instances
       {
          get
          {
-            if (CurrentProtein.IsUnknown == false)
-            {
-               // Issue 125
-               if (_Prefs.GetPreference<bool>(Preference.CalculateBonus))
-               {
-                  return CurrentProtein.GetPPD(TimePerAllSections, EFT);
-               }
-
-               return CurrentProtein.GetPPD(TimePerAllSections);
-            }
-
-            return 0;
+            return GetPPD(TimePerAllSections);
          }
       }
 
@@ -835,18 +852,7 @@ namespace HFM.Instances
       {
          get
          {
-            if (CurrentProtein.IsUnknown == false)
-            {
-               // Issue 125
-               if (_Prefs.GetPreference<bool>(Preference.CalculateBonus))
-               {
-                  return CurrentProtein.GetPPD(TimePerThreeSections, EFT);
-               }
-
-               return CurrentProtein.GetPPD(TimePerThreeSections);
-            }
-
-            return 0;
+            return GetPPD(TimePerThreeSections);
          }
       }
 
@@ -891,43 +897,33 @@ namespace HFM.Instances
       {
          get
          {
-            if (CurrentProtein.IsUnknown == false)
-            {
-               // Issue 125
-               if (_Prefs.GetPreference<bool>(Preference.CalculateBonus))
-               {
-                  return CurrentProtein.GetPPD(TimePerLastSection, EFT);
-               }
-
-               return CurrentProtein.GetPPD(TimePerLastSection);
-            }
-
-            return 0;
+            return GetPPD(TimePerLastSection);
          }
       }
-
-      /// <summary>
-      /// Frame Time per section based on current PPD calculation setting (readonly)
-      /// </summary>
-      public Int32 RawTimePerSection
+      
+      private double GetPPD(TimeSpan frameTime)
       {
-         get
+         if (CurrentProtein.IsUnknown == false)
          {
-            switch (_Prefs.GetPreference<PpdCalculationType>(Preference.PpdCalculation))
+            // Issue 125
+            if (_Prefs.GetPreference<bool>(Preference.CalculateBonus))
             {
-               case PpdCalculationType.LastFrame:
-                  return RawTimePerLastSection;
-               case PpdCalculationType.LastThreeFrames:
-                  return RawTimePerThreeSections;
-               case PpdCalculationType.AllFrames:
-                  return RawTimePerAllSections;
-               case PpdCalculationType.EffectiveRate:
-                  return RawTimePerUnitDownload;
+               // Issue 183
+               if (_clientInstance.Status.Equals(ClientStatus.RunningAsync) ||
+                   _clientInstance.Status.Equals(ClientStatus.RunningNoFrameTimes))
+               {
+                  return CurrentProtein.GetPPD(frameTime, EftByFrameTime);
+               }
+               
+               return CurrentProtein.GetPPD(frameTime, EftByDownloadTime);
             }
 
-            return 0;
+            return CurrentProtein.GetPPD(frameTime);
          }
+
+         return 0;
       }
+      
       #endregion
 
       #region Calculate Production Variations
@@ -994,11 +990,11 @@ namespace HFM.Instances
       /// <summary>
       /// Determine the client type based on the current protein core
       /// </summary>
-      /// <param name="CurrentProtein">Current Instance Protein</param>
+      /// <param name="currentProtein">Current Instance Protein</param>
       /// <returns>Client Type</returns>
-      private static ClientType GetClientTypeFromProtein(IProtein CurrentProtein)
+      private static ClientType GetClientTypeFromProtein(IProtein currentProtein)
       {
-         switch (CurrentProtein.Core.ToUpperInvariant())
+         switch (currentProtein.Core.ToUpperInvariant())
          {
             case "GROMACS":
             case "DGROMACS":

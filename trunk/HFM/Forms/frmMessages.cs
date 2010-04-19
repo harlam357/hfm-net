@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Messages Form Class
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,21 +18,22 @@
  */
 
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 using HFM.Framework;
 
 namespace HFM.Forms
 {
-   public partial class frmMessages : Classes.FormWrapper
+   public partial class frmMessages : Classes.FormWrapper, IMessagesView
    {
-      private readonly IPreferenceSet _Prefs;
+      private readonly IPreferenceSet _prefs;
       private volatile List<string> _lines = new List<string>(500);
 
       #region Constructor
-      public frmMessages(IPreferenceSet Prefs)
+      public frmMessages(IPreferenceSet prefs)
       {
-         _Prefs = Prefs;
+         _prefs = prefs;
       
          InitializeComponent();
       } 
@@ -56,6 +57,21 @@ namespace HFM.Forms
          txtMessages.SelectionStart = txtMessages.Text.Length;
          txtMessages.ScrollToCaret();
       }
+      
+      public void SetManualStartPosition()
+      {
+         StartPosition = FormStartPosition.Manual;
+      }
+      
+      public void SetLocation(int x, int y)
+      {
+         Location = new Point(x, y);
+      }
+      
+      public void SetSize(int width, int height)
+      {
+         Size = new Size(width, height);
+      }
 
       private delegate void UpdateMessagesDelegate(string[] lines);
 
@@ -73,9 +89,9 @@ namespace HFM.Forms
          ScrollToEnd();
       }
 
-      private void txtMessages_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+      private void txtMessages_KeyDown(object sender, KeyEventArgs e)
       {
-         if (e.KeyCode == System.Windows.Forms.Keys.F7) //Close on F7 - Issue 74
+         if (e.KeyCode == Keys.F7) //Close on F7 - Issue 74
          {
             Close();
          }
@@ -86,9 +102,9 @@ namespace HFM.Forms
          // Save state data
          if (WindowState == FormWindowState.Normal)
          {
-            _Prefs.SetPreference(Preference.MessagesFormLocation, Location);
-            _Prefs.SetPreference(Preference.MessagesFormSize, Size);
-            _Prefs.Save();
+            _prefs.SetPreference(Preference.MessagesFormLocation, Location);
+            _prefs.SetPreference(Preference.MessagesFormSize, Size);
+            _prefs.Save();
          }
       
          Hide();

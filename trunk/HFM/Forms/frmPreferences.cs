@@ -940,7 +940,11 @@ namespace HFM.Forms
       private bool CheckForWebSettingsTabErrors()
       {
          // Check for error conditions on Web Settings Tab
-         if (txtProjectDownloadUrl.ErrorState ||
+         // Issue 189 - Check for Empty User and Team ID Values
+         if (txtEOCUserID.ErrorState ||
+             txtStanfordUserID.ErrorState ||
+             txtStanfordTeamID.ErrorState ||
+             txtProjectDownloadUrl.ErrorState ||
              txtProxyServer.ErrorState ||
              txtProxyPort.ErrorState ||
              txtProxyUser.ErrorState ||

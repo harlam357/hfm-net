@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -111,18 +112,37 @@ namespace HFM.Preferences
 
       #endregion
 
-      #region Constructor
-      /// <summary>
-      /// Construct a PreferenceSet Instance
-      /// </summary>
-      public PreferenceSet()
+      #region Implementation
+      public void Initialize()
       {
          SetupDictionary();
          Load();
-      } 
-      #endregion
 
-      #region Implementation
+         //try
+         //{
+         //   Load();
+         //}
+         //catch (ConfigurationErrorsException ex)
+         //{
+         //   string filename = ex.Filename;
+         //   File.Delete(filename);
+
+         //   Settings.Default.Reset();
+         //   Load();
+         //}
+         //catch (Exception ex)
+         //{
+         //   ConfigurationErrorsException configurationErrorsException = ex.InnerException as ConfigurationErrorsException;
+         //   if (configurationErrorsException == null) throw;
+
+         //   string filename = ((ConfigurationErrorsException)ex.InnerException).Filename;
+         //   File.Delete(filename);
+
+         //   Settings.Default.Reset();
+         //   Load();
+         //}
+      }
+      
       /// <summary>
       /// Get a Preference of Type T
       /// </summary>
@@ -155,11 +175,9 @@ namespace HFM.Preferences
          if (_Preferences[key].DataType == typeof(int))
          {
             string stringValue = value as string;
-            if (stringValue != null)
-            {
-               ((Metadata<int>)_Preferences[key]).Data = Int32.Parse(stringValue);
-               return;
-            }
+            // Issue 189 - Use Default Value if String is Null or Empty
+            ((Metadata<int>) _Preferences[key]).Data = String.IsNullOrEmpty(stringValue) ? default(int) : Int32.Parse(stringValue);
+            return;
          }
 
          throw new ArgumentException(String.Format(CultureInfo.CurrentCulture,
@@ -246,8 +264,8 @@ namespace HFM.Preferences
          _Preferences.Add(Preference.ProxyUser, new Metadata<string>());
          _Preferences.Add(Preference.ProxyPass, new Metadata<string>());
 
-         _Preferences.Add(Preference.CacheFolder, new Metadata<string>(Settings.Default.CacheFolder));
-         _Preferences.Add(Preference.ApplicationDataFolderPath, new Metadata<string>(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Constants.ExeName)));
+         _Preferences.Add(Preference.CacheFolder, new Metadata<string>());
+         _Preferences.Add(Preference.ApplicationDataFolderPath, new Metadata<string>());
 
          Debug.WriteLine(String.Format("{0} Execution Time: {1}", HfmTrace.FunctionName, HfmTrace.GetExecTime(start)));
       }
@@ -347,7 +365,10 @@ namespace HFM.Preferences
          SetPreference(Preference.UseProxyAuth, Settings.Default.UseProxyAuth);
          SetPreference(Preference.ProxyUser, Settings.Default.ProxyUser);
          SetPreference(Preference.ProxyPass, DecryptProxyPass(Settings.Default.ProxyPass, symmetricProvider, _iv, _symmetricKey));
-         
+
+         SetPreference(Preference.CacheFolder, Settings.Default.CacheFolder);
+         SetPreference(Preference.ApplicationDataFolderPath, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Constants.ExeName));
+
          Debug.WriteLine(String.Format("{0} Execution Time: {1}", HfmTrace.FunctionName, HfmTrace.GetExecTime(start)));
       }
 

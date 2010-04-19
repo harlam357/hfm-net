@@ -126,7 +126,7 @@ namespace HFM.Instances
          // Init User Specified Client Level Members
          InitUserSpecifiedMembers();
          // Create a fresh UnitInfo
-         _CurrentUnitInfo = new UnitInfoLogic(_Prefs, _proteinCollection, new UnitInfo(), false, 0, InstanceName, Path, DateTime.Now);
+         _CurrentUnitInfo = new UnitInfoLogic(_Prefs, _proteinCollection, new UnitInfo(), this);
       }
       #endregion
 
@@ -1085,8 +1085,7 @@ namespace HFM.Instances
          {
             if (units[i] != null)
             {
-               parsedUnits[i] = new UnitInfoLogic(_Prefs, _proteinCollection, units[i], ClientIsOnVirtualMachine, 
-                                                  ClientTimeOffset, InstanceName, Path, LastRetrievalTime);   
+               parsedUnits[i] = new UnitInfoLogic(_Prefs, _proteinCollection, units[i], this);
             }
          }
 
@@ -1781,7 +1780,7 @@ namespace HFM.Instances
       /// <param name="unitInfo">UnitInfo Object to Restore</param>
       public void RestoreUnitInfo(UnitInfo unitInfo)
       {
-         CurrentUnitInfoConcrete = new UnitInfoLogic(_Prefs, _proteinCollection, unitInfo, ClientIsOnVirtualMachine, ClientTimeOffset);
+         CurrentUnitInfoConcrete = new UnitInfoLogic(_Prefs, _proteinCollection, unitInfo, this);
       }
       
       public bool IsUsernameOk()

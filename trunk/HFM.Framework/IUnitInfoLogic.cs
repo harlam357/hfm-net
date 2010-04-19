@@ -172,7 +172,12 @@ namespace HFM.Framework
       /// <summary>
       /// Esimated Finishing Time for this unit
       /// </summary>
-      TimeSpan EFT { get; }
+      TimeSpan EftByDownloadTime { get; }
+
+      /// <summary>
+      /// Esimated Finishing Time for this unit
+      /// </summary>
+      TimeSpan EftByFrameTime { get; }
 
       string WorkUnitName { get; }
 
