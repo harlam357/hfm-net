@@ -53,7 +53,7 @@ namespace HFM.Framework
       /// <summary>
       /// Initialize the Preferences
       /// </summary>
-      void Initialize();
+      bool Initialize();
 
       /// <summary>
       /// Get a Preference of Type T

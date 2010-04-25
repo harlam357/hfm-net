@@ -113,34 +113,46 @@ namespace HFM.Preferences
       #endregion
 
       #region Implementation
-      public void Initialize()
+      public bool Initialize()
       {
          SetupDictionary();
-         Load();
 
-         //try
-         //{
-         //   Load();
-         //}
-         //catch (ConfigurationErrorsException ex)
-         //{
-         //   string filename = ex.Filename;
-         //   File.Delete(filename);
+         try
+         {
+            // Issue 176
+            Load();
+         }
+         catch (Exception ex)
+         {
+            string filename = HandleConfigurationErrorsException(ex);
+            if (String.IsNullOrEmpty(filename)) throw;
+            
+            File.Delete(filename);
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("HFM.NET has detected that your user settings file has become");
+            sb.AppendLine("corrupted.  This may be due to a crash or improper exiting of");
+            sb.AppendLine("the program.  HFM.NET must reset your user settings in order");
+            sb.AppendLine("to continue.  The program will now exit.  Please restart.");
+            MessageBox.Show(sb.ToString(), PlatformOps.ApplicationNameAndVersion, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            
+            return false;
+         }
 
-         //   Settings.Default.Reset();
-         //   Load();
-         //}
-         //catch (Exception ex)
-         //{
-         //   ConfigurationErrorsException configurationErrorsException = ex.InnerException as ConfigurationErrorsException;
-         //   if (configurationErrorsException == null) throw;
+         return true;
+      }
+      
+      private static string HandleConfigurationErrorsException(Exception ex)
+      {
+         ConfigurationErrorsException configurationErrorsException = ex as ConfigurationErrorsException;
+         if (configurationErrorsException == null) return null;
 
-         //   string filename = ((ConfigurationErrorsException)ex.InnerException).Filename;
-         //   File.Delete(filename);
+         string filename = configurationErrorsException.Filename;
+         if (String.IsNullOrEmpty(filename))
+         {
+            filename = HandleConfigurationErrorsException(ex.InnerException);
+         }
 
-         //   Settings.Default.Reset();
-         //   Load();
-         //}
+         return filename;
       }
       
       /// <summary>

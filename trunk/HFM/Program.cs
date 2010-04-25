@@ -26,6 +26,8 @@ using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
 using Castle.Core.Resource;
 
+using harlam357.Windows.Forms;
+
 using HFM.Framework;
 using HFM.Forms;
 using HFM.Instrumentation;
@@ -57,6 +59,7 @@ namespace HFM
          Application.EnableVisualStyles();
          Application.SetCompatibleTextRenderingDefault(false);
 
+         #region Primary Initialization
          try
          {
             WindsorContainer container = new WindsorContainer(new XmlInterpreter(new ConfigResource("castle")));
@@ -64,43 +67,51 @@ namespace HFM
          }
          catch (Exception ex)
          {
-            // Windsor Container Failed to Initialize.  HFM.exe.config file is likely corrupt.
-            
-            // Display the above message and exception until I get a thread unhandled exception handler built in
-            MessageBox.Show(ex.ToString());
+            ExceptionDialog.ShowErrorDialog(ex, "Windsor Container Failed to Initialize.  The HFM.exe.config file is likely corrupt.",
+               "http://groups.google.com/group/hfm-net", PlatformOps.ApplicationNameAndVersion, true);
             return;
          }
 
          IPreferenceSet prefs;
-         IMessagesView messagesView;
          try
          {
             prefs = InstanceProvider.GetInstance<IPreferenceSet>();
-            prefs.Initialize();
+            if (prefs.Initialize() == false) return;
+         }
+         catch (Exception ex)
+         {
+            ExceptionDialog.ShowErrorDialog(ex, "Preferences Failed to Initialize.  The user.config file is likely corrupt.",
+               "http://groups.google.com/group/hfm-net", PlatformOps.ApplicationNameAndVersion, true);
+            return;
+         }
+
+         IMessagesView messagesView;
+         try
+         {
             messagesView = InstanceProvider.GetInstance<IMessagesView>();
             SetupTraceListeners(prefs, messagesView);
          }
          catch (Exception ex)
          {
-            // Preferences Failed to Initialize.  user.config file is likely corrupt.
-
-            // Display the above message and exception until I get a thread unhandled exception handler built in
-            MessageBox.Show(ex.ToString());
+            ExceptionDialog.ShowErrorDialog(ex, "Logging Failed to Initialize.",
+               "http://groups.google.com/group/hfm-net", PlatformOps.ApplicationNameAndVersion, true);
             return;
          }
 
          frmMain frm = new frmMain(prefs, messagesView);
-
          try
          {
             frm.Initialize();
          }
          catch (Exception ex)
          {
-            // Display the exception here until I get a thread unhandled exception handler built in
-            MessageBox.Show(ex.ToString());
+            ExceptionDialog.ShowErrorDialog(ex, "Primary UI Failed to Initialize.",
+               "http://groups.google.com/group/hfm-net", PlatformOps.ApplicationNameAndVersion, true);
+            return;
          }
+         #endregion
 
+         ExceptionDialog.RegisterForUnhandledExceptions(PlatformOps.ApplicationNameAndVersion, HfmTrace.WriteToHfmConsole);
          Application.Run(frm);
          GC.KeepAlive(m);
       }
