@@ -19,6 +19,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace HFM.Framework
 {
@@ -113,7 +114,7 @@ namespace HFM.Framework
          {
             // Example: 0.3.1.50 == 30010045 / 1.3.4.75 == 1030040075
             FileVersionInfo fileVersionInfo =
-               FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location);
+               FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
             return GetVersionLongFromArray(fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
                                            fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
          }
@@ -128,7 +129,7 @@ namespace HFM.Framework
       {
          int[] versionNumbers = new int[4];
       
-         string[] split = version.Split(new char[] { '.' }, 4, StringSplitOptions.None);
+         string[] split = version.Split(new[] { '.' }, 4, StringSplitOptions.None);
          for (int i = 0; i < split.Length; i++)
          {
             versionNumbers[i] = Int32.Parse(split[i]);
@@ -137,17 +138,48 @@ namespace HFM.Framework
          return GetVersionLongFromArray(versionNumbers);
       }
       
-      private static long GetVersionLongFromArray(params int[] VersionNumbers)
+      private static long GetVersionLongFromArray(params int[] versionNumbers)
       {
-         return (VersionNumbers[0] * 1000000000) + (VersionNumbers[1] * 10000000) +
-                (VersionNumbers[2] * 10000) + VersionNumbers[3];
+         return (versionNumbers[0] * 1000000000) + (versionNumbers[1] * 10000000) +
+                (versionNumbers[2] * 10000) + versionNumbers[3];
       }
 
-      private static string GetVersionString(string Format)
+      private static string GetVersionString(string format)
       {
-         FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location);
-         return String.Format(Format, fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
+         FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+         return String.Format(format, fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
                               fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
       }
+
+      public static string AssemblyGuid
+      {
+         get
+         {
+            object[] attributes = Assembly.GetEntryAssembly().GetCustomAttributes(typeof(System.Runtime.InteropServices.GuidAttribute), false);
+            if (attributes.Length == 0)
+            {
+               return String.Empty;
+            }
+            return ((System.Runtime.InteropServices.GuidAttribute)attributes[0]).Value;
+         }
+      }
+
+      public static string AssemblyTitle
+      {
+         get
+         {
+            object[] attributes = Assembly.GetEntryAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
+            if (attributes.Length > 0)
+            {
+               AssemblyTitleAttribute titleAttribute = (AssemblyTitleAttribute)attributes[0];
+               if (titleAttribute.Title != "")
+               {
+                  return titleAttribute.Title;
+               }
+            }
+            return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetEntryAssembly().CodeBase);
+         }
+      }
+
    }
 }

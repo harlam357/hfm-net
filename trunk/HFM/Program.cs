@@ -29,6 +29,7 @@ using Castle.Core.Resource;
 using harlam357.Windows.Forms;
 
 using HFM.Framework;
+using HFM.Classes;
 using HFM.Forms;
 using HFM.Instrumentation;
 
@@ -36,26 +37,22 @@ namespace HFM
 {
    static class Program
    {
-      private static System.Threading.Mutex m;
-
-      public static String[] cmdArgs;
+      public static string[] cmdArgs;
 
       /// <summary>
       /// The main entry point for the application.
       /// </summary>
       [STAThread]
-      static void Main(String[] argv)
+      static void Main(string[] args)
       {
-         bool ok;
-         m = new System.Threading.Mutex(true, "HFM", out ok);
-
-         if (ok == false)
+         // Issue 180 - Restore the already running instance to the screen.
+         if (!SingleInstanceHelper.Start())
          {
-            MessageBox.Show("Another instance of HFM.NET is already running.");
+            SingleInstanceHelper.ShowFirstInstance();
             return;
          }
 
-         cmdArgs = argv;
+         cmdArgs = args;
          Application.EnableVisualStyles();
          Application.SetCompatibleTextRenderingDefault(false);
 
@@ -98,9 +95,10 @@ namespace HFM
             return;
          }
 
-         frmMain frm = new frmMain(prefs, messagesView);
+         frmMain frm;
          try
          {
+            frm = new frmMain(prefs, messagesView);
             frm.Initialize();
          }
          catch (Exception ex)
@@ -113,7 +111,7 @@ namespace HFM
 
          ExceptionDialog.RegisterForUnhandledExceptions(PlatformOps.ApplicationNameAndVersion, HfmTrace.WriteToHfmConsole);
          Application.Run(frm);
-         GC.KeepAlive(m);
+         SingleInstanceHelper.Stop();
       }
 
       /// <summary>

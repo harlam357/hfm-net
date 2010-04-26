@@ -47,7 +47,13 @@ namespace HFM.Forms
 
    public partial class frmMain : FormWrapper
    {
-      #region Private Variables
+      #region Public Fields
+   
+      public static string FormTitle = String.Format("HFM.NET v{0} - Beta", PlatformOps.ApplicationVersion);
+      
+      #endregion
+   
+      #region Private Fields
       /// <summary>
       /// Holds the state of the window before it is hidden (minimise to tray behaviour)
       /// </summary>
@@ -104,7 +110,7 @@ namespace HFM.Forms
       private readonly BindingSource _displayBindingSource;
       #endregion
 
-      #region Form Constructor / functionality
+      #region Form Constructor / Functionality
       /// <summary>
       /// Main form constructor
       /// </summary>
@@ -123,7 +129,7 @@ namespace HFM.Forms
          _displayBindingSource = new BindingSource();
 
          // Set Main Form Text
-         base.Text = String.Format("HFM.NET v{0} - Beta", PlatformOps.ApplicationVersion);
+         base.Text = FormTitle;
       }
 
       public void Initialize()
@@ -428,27 +434,27 @@ namespace HFM.Forms
       /// <summary>
       /// Populates the Log Viewer with the given LogLine List.
       /// </summary>
-      /// <param name="Instance">Client Instance</param>
+      /// <param name="instance">Client Instance</param>
       /// <param name="logLines">List of LogLines</param>
-      private void SetLogLines(ClientInstance Instance, IList<ILogLine> logLines)
+      private void SetLogLines(IClientInstanceSettings instance, IList<ILogLine> logLines)
       {
          /*** Checked LogLine Count ***/
          if (logLines != null && logLines.Count > 0) 
          {
             // Different Client... Load LogLines
-            if (txtLogFile.LogOwnedByInstanceName.Equals(Instance.InstanceName) == false)
+            if (txtLogFile.LogOwnedByInstanceName.Equals(instance.InstanceName) == false)
             {
-               txtLogFile.SetLogLines(logLines, Instance.InstanceName);
+               txtLogFile.SetLogLines(logLines, instance.InstanceName);
                PreferenceSet_ColorLogFileChanged(null, EventArgs.Empty);
                
-               //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("Set Log Lines (Changed Client - {0})", Instance.InstanceName));
+               //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("Set Log Lines (Changed Client - {0})", instance.InstanceName));
             }
             // Textbox has text lines
             else if (txtLogFile.Lines.Length > 0)
             {
                string lastLogLine = String.Empty;
 
-               try // to get the last LogLine from the Instance
+               try // to get the last LogLine from the instance
                {
                   lastLogLine = logLines[logLines.Count - 1].ToString();
                }
@@ -456,14 +462,14 @@ namespace HFM.Forms
                {
                   // even though i've checked the count above, it could have changed in between then
                   // and now... and if the count is 0 it will yield this exception.  Log It!!!
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, Instance.InstanceName, ex);
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, instance.InstanceName, ex);
                }
 
                // If the last text line in the textbox DOES NOT equal the last LogLine Text... Load LogLines.
                // Otherwise, the log has not changed, don't update and perform the log "flicker".
                if (txtLogFile.Lines[txtLogFile.Lines.Length - 1].Equals(lastLogLine) == false)
                {
-                  txtLogFile.SetLogLines(logLines, Instance.InstanceName);
+                  txtLogFile.SetLogLines(logLines, instance.InstanceName);
                   PreferenceSet_ColorLogFileChanged(null, EventArgs.Empty);
                   
                   //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Set Log Lines (log lines different)");
@@ -472,7 +478,7 @@ namespace HFM.Forms
             // Nothing in the Textbox... Load LogLines
             else
             {
-               txtLogFile.SetLogLines(logLines, Instance.InstanceName);
+               txtLogFile.SetLogLines(logLines, instance.InstanceName);
                PreferenceSet_ColorLogFileChanged(null, EventArgs.Empty);
             }
          }

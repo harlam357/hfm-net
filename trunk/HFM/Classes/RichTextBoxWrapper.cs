@@ -1,6 +1,6 @@
 /*
  * HFM.NET - RichTextBox Wrapper Class
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,7 +20,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 using HFM.Framework;
@@ -29,11 +28,13 @@ namespace HFM.Classes
 {
    public partial class RichTextBoxWrapper : RichTextBox
    {
-      private IList<ILogLine> _LogLines = null;
-      private string _LogOwnedByInstanceName = String.Empty;
+      private IList<ILogLine> _logLines;
+      
+      private string _logOwnedByInstanceName = String.Empty;
+      
       public string LogOwnedByInstanceName
       {
-         get { return _LogOwnedByInstanceName; }
+         get { return _logOwnedByInstanceName; }
       }
    
       public RichTextBoxWrapper()
@@ -41,10 +42,10 @@ namespace HFM.Classes
          InitializeComponent();
       }
 
-      public void SetLogLines(IList<ILogLine> lines, string LogOwnedByInstance)
+      public void SetLogLines(IList<ILogLine> lines, string logOwnedByInstance)
       {
-         _LogLines = lines;
-         _LogOwnedByInstanceName = LogOwnedByInstance;
+         _logLines = lines;
+         _logOwnedByInstanceName = logOwnedByInstance;
       
          List<string> logLines = new List<string>(lines.Count);
          foreach (ILogLine line in lines)
@@ -57,7 +58,7 @@ namespace HFM.Classes
       
       public void SetNoLogLines()
       {
-         _LogLines = null;
+         _logLines = null;
       
          Text = "No Log Available";
          RemoveHighlight();
@@ -65,7 +66,7 @@ namespace HFM.Classes
 
       public void HighlightLines()
       {
-         if (_LogLines == null) return;
+         if (_logLines == null) return;
          
          SuspendLayout();
          
@@ -73,9 +74,9 @@ namespace HFM.Classes
          
          ForeColor = Color.SlateGray;
 
-         for (int i = 0; i < _LogLines.Count; i++)
+         for (int i = 0; i < _logLines.Count; i++)
          {
-            ILogLine line = _LogLines[i];
+            ILogLine line = _logLines[i];
             if (line.LineType.Equals(LogLineType.WorkUnitFrame))
             {
                DoLineHighlight(i, Color.Green);
@@ -118,18 +119,6 @@ namespace HFM.Classes
       }
 
       #region Native Scroll Messages (don't call under Mono)
-      [DllImport("user32.dll", CharSet = CharSet.Auto)]
-      private static extern IntPtr SendMessage(
-        IntPtr hWnd,
-        uint Msg,
-        IntPtr wParam,
-        IntPtr lParam);
-
-      private const int WM_VSCROLL = 277;
-      private const int SB_LINEUP = 0;
-      private const int SB_LINEDOWN = 1;
-      private const int SB_TOP = 6;
-      private const int SB_BOTTOM = 7;
 
       public void ScrollToBottom()
       {
@@ -141,7 +130,7 @@ namespace HFM.Classes
          }
          else
          {
-            SendMessage(Handle, WM_VSCROLL, new IntPtr(SB_BOTTOM), new IntPtr(0));
+            NativeMethods.SendMessage(Handle, NativeMethods.WM_VSCROLL, new IntPtr(NativeMethods.SB_BOTTOM), new IntPtr(0));
          }
       }
 
@@ -153,7 +142,7 @@ namespace HFM.Classes
          }
          else
          {
-            SendMessage(Handle, WM_VSCROLL, new IntPtr(SB_TOP), new IntPtr(0));
+            NativeMethods.SendMessage(Handle, NativeMethods.WM_VSCROLL, new IntPtr(NativeMethods.SB_TOP), new IntPtr(0));
          }
       }
 
@@ -165,7 +154,7 @@ namespace HFM.Classes
          }
          else
          {
-            SendMessage(Handle, WM_VSCROLL, new IntPtr(SB_LINEDOWN), new IntPtr(0));
+            NativeMethods.SendMessage(Handle, NativeMethods.WM_VSCROLL, new IntPtr(NativeMethods.SB_LINEDOWN), new IntPtr(0));
          }
       }
 
@@ -177,9 +166,10 @@ namespace HFM.Classes
          }
          else
          {
-            SendMessage(Handle, WM_VSCROLL, new IntPtr(SB_LINEUP), new IntPtr(0));
+            NativeMethods.SendMessage(Handle, NativeMethods.WM_VSCROLL, new IntPtr(NativeMethods.SB_LINEUP), new IntPtr(0));
          }
       }
+      
       #endregion
    }
 }

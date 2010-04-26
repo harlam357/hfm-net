@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -427,17 +428,17 @@ namespace HFM.Instances
          get
          {
             // Report Frame Progress even if CurrentProtein.IsUnknown - 11/22/09
-            Int32 RawScaleFactor = _unitInfo.RawFramesTotal / CurrentProtein.Frames;
-            if (RawScaleFactor > 0)
+            Int32 rawScaleFactor = _unitInfo.RawFramesTotal / CurrentProtein.Frames;
+            if (rawScaleFactor > 0)
             {
-               int ComputedFramesComplete = _unitInfo.RawFramesComplete / RawScaleFactor;
+               int computedFramesComplete = _unitInfo.RawFramesComplete / rawScaleFactor;
                
                // Make sure FramesComplete is 0 or greater but
                // not greater than the CurrentProtein.Frames
-               if (ComputedFramesComplete >= 0 && 
-                   ComputedFramesComplete <= CurrentProtein.Frames)
+               if (computedFramesComplete >= 0 && 
+                   computedFramesComplete <= CurrentProtein.Frames)
                {
-                  return ComputedFramesComplete;
+                  return computedFramesComplete;
                }
             }
 
@@ -746,8 +747,8 @@ namespace HFM.Instances
                   // Use UnitRetrievalTime (sourced from ClientInstance.LastRetrievalTime) as basis for
                   // TimeSinceUnitDownload.  This removes the use of the "floating" value DateTime.Now
                   // as a basis for the calculation. - Issue 92
-                  TimeSpan TimeSinceUnitDownload = UnitRetrievalTime.Subtract(DownloadTime);
-                  return (Convert.ToInt32(TimeSinceUnitDownload.TotalSeconds) / CurrentFrame.FrameID);
+                  TimeSpan timeSinceUnitDownload = UnitRetrievalTime.Subtract(DownloadTime);
+                  return (Convert.ToInt32(timeSinceUnitDownload.TotalSeconds) / CurrentFrame.FrameID);
                }
 
                return 0;
@@ -944,7 +945,7 @@ namespace HFM.Instances
             throw new ArgumentOutOfRangeException("numberOfFrames", "Argument 'numberOfFrames' must be greater than 0.");
          }
 
-         int AverageSeconds = 0;
+         int averageSeconds = 0;
 
          try
          {
@@ -953,14 +954,16 @@ namespace HFM.Instances
             // Make sure we only add frame durations greater than a Zero TimeSpan
             // The first frame will always have a Zero TimeSpan for frame duration
             // we don't want to take this frame into account when calculating 'AllFrames' - Issue 23
-            TimeSpan TotalTime = TimeSpan.Zero;
+            TimeSpan totalTime = TimeSpan.Zero;
             int countFrames = 0;
 
             for (int i = 0; i < numberOfFrames; i++)
             {
-               if (_unitInfo.UnitFrames[frameNumber].FrameDuration > TimeSpan.Zero)
+               // Issue 199
+               if (_unitInfo.UnitFrames.ContainsKey(frameNumber) &&
+                   _unitInfo.UnitFrames[frameNumber].FrameDuration > TimeSpan.Zero)
                {
-                  TotalTime = TotalTime.Add(_unitInfo.UnitFrames[frameNumber].FrameDuration);
+                  totalTime = totalTime.Add(_unitInfo.UnitFrames[frameNumber].FrameDuration);
                   countFrames++;
                }
                frameNumber--;
@@ -968,16 +971,17 @@ namespace HFM.Instances
 
             if (countFrames > 0)
             {
-               AverageSeconds = Convert.ToInt32(TotalTime.TotalSeconds) / countFrames;
+               averageSeconds = Convert.ToInt32(totalTime.TotalSeconds) / countFrames;
             }
          }
-         catch (NullReferenceException ex)
+         // Issue 199
+         catch (KeyNotFoundException ex)
          {
-            AverageSeconds = 0;
+            averageSeconds = 0;
             HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
          }
 
-         return AverageSeconds;
+         return averageSeconds;
       }
       #endregion
 
