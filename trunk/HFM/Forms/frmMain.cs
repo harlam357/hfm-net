@@ -207,6 +207,24 @@ namespace HFM.Forms
          _Prefs.CalculateBonusChanged += delegate { RefreshDisplay(); };
       }
 
+      public void SecondInstanceStarted(string[] args)
+      {
+         if (InvokeRequired)
+         {
+            BeginInvoke((MethodInvoker)(() => SecondInstanceStarted(args)));
+            return;
+         }
+      
+         if (WindowState == FormWindowState.Minimized)
+         {
+            WindowState = originalState;
+         }
+         else
+         {
+            Activate();
+         }
+      }
+
       /// <summary>
       /// Loads the appropriate file on initialisation - ie when showing the form
       /// </summary>

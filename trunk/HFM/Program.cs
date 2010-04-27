@@ -45,18 +45,27 @@ namespace HFM
       [STAThread]
       static void Main(string[] args)
       {
-         // Issue 180 - Restore the already running instance to the screen.
-         if (!SingleInstanceHelper.Start())
-         {
-            SingleInstanceHelper.ShowFirstInstance();
-            return;
-         }
-
          cmdArgs = args;
          Application.EnableVisualStyles();
          Application.SetCompatibleTextRenderingDefault(false);
 
          #region Primary Initialization
+         // Issue 180 - Restore the already running instance to the screen.
+         try
+         {
+            if (!SingleInstanceHelper.Start())
+            {
+               SingleInstanceHelper.SignalFirstInstance(args);
+               return;
+            }
+         }
+         catch (Exception ex)
+         {
+            ExceptionDialog.ShowErrorDialog(ex, "Single Instance Helper Failed to Start.",
+               "http://groups.google.com/group/hfm-net", PlatformOps.ApplicationNameAndVersion, true);
+            return;
+         }
+
          try
          {
             WindsorContainer container = new WindsorContainer(new XmlInterpreter(new ConfigResource("castle")));
@@ -109,7 +118,19 @@ namespace HFM
          }
          #endregion
 
+         try
+         {
+            SingleInstanceHelper.RegisterIpcChannel(frm);
+         }
+         catch (Exception ex)
+         {
+            ExceptionDialog.ShowErrorDialog(ex, "Single Instance IPC Channel Failed to Register.",
+               "http://groups.google.com/group/hfm-net", PlatformOps.ApplicationNameAndVersion, true);
+            return;
+         }
+
          ExceptionDialog.RegisterForUnhandledExceptions(PlatformOps.ApplicationNameAndVersion, HfmTrace.WriteToHfmConsole);
+         
          Application.Run(frm);
          SingleInstanceHelper.Stop();
       }

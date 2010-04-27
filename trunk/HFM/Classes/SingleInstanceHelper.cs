@@ -18,12 +18,15 @@
  */
 
 /*
- * Class based primarily on code from: http://www.codeproject.com/KB/cs/SingleInstanceAppMutex.aspx
+ * Class based primarily on code from: http://www.codeproject.com/KB/threads/SingleInstancingWithIpc.aspx
  */
 
 using System;
+using System.Globalization;
+using System.Runtime.Remoting;
+using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting.Channels.Ipc;
 using System.Threading;
-using System.Windows.Forms;
 
 using HFM.Forms;
 using HFM.Framework;
@@ -33,32 +36,64 @@ namespace HFM.Classes
    public static class SingleInstanceHelper
    {
       private static Mutex _mutex;
+      
+      private const string ObjectName = "SingleInstanceProxy";
+      private static readonly string MutexName = String.Format(CultureInfo.InvariantCulture, "Global\\{0}", PlatformOps.AssemblyGuid);
 
       public static bool Start()
       {
-         string mutexName = String.Format("Global\\{0}", PlatformOps.AssemblyGuid);
-
          bool onlyInstance;
-         _mutex = new Mutex(true, mutexName, out onlyInstance);
+         _mutex = new Mutex(true, MutexName, out onlyInstance);
          return onlyInstance;
       }
-
-      public static void ShowFirstInstance()
+      
+      public static void RegisterIpcChannel(frmMain frm)
       {
-         if (PlatformOps.IsRunningOnMono())
-         {
-            MessageBox.Show("Another instance of HFM.NET is already running.");
-         }
-         else
-         {
-            IntPtr hWnd = NativeMethods.FindWindow(null, frmMain.FormTitle);
-            NativeMethods.ShowToFront(hWnd);
-         }
+         IChannel ipcChannel = new IpcServerChannel(PlatformOps.AssemblyGuid);
+         ChannelServices.RegisterChannel(ipcChannel, false);
+         RemotingConfiguration.RegisterWellKnownServiceType(typeof(IpcObject), ObjectName, WellKnownObjectMode.Singleton);
+
+         IpcObject obj = new IpcObject(frm.SecondInstanceStarted);
+         RemotingServices.Marshal(obj, ObjectName);
+      }
+      
+      public static void SignalFirstInstance(string[] args)
+      {
+         string objectUri = String.Format(CultureInfo.InvariantCulture, "ipc://{0}/{1}", PlatformOps.AssemblyGuid, ObjectName);
+
+         IChannel ipcChannel = new IpcClientChannel();
+         ChannelServices.RegisterChannel(ipcChannel, false);
+
+         IpcObject obj = (IpcObject)Activator.GetObject(typeof(IpcObject), objectUri);
+         obj.SignalNewInstance(args);
       }
 
       public static void Stop()
       {
          _mutex.ReleaseMutex();
+      }
+   }
+
+   public delegate void NewInstanceHandler(string[] args);
+
+   public class IpcObject : MarshalByRefObject
+   {
+      public event NewInstanceHandler NewInstance;
+
+      public IpcObject(NewInstanceHandler handler)
+      {
+         NewInstance += handler;
+      }
+
+      public void SignalNewInstance(string[] args)
+      {
+         NewInstance(args);
+      }
+
+      // Make sure the object exists "forever"
+      public override object InitializeLifetimeService()
+      {
+         return null;
       }
    }
 }
