@@ -51,7 +51,6 @@ namespace HFM.Classes
       {
          IChannel ipcChannel = new IpcServerChannel(PlatformOps.AssemblyGuid);
          ChannelServices.RegisterChannel(ipcChannel, false);
-         RemotingConfiguration.RegisterWellKnownServiceType(typeof(IpcObject), ObjectName, WellKnownObjectMode.Singleton);
 
          IpcObject obj = new IpcObject(frm.SecondInstanceStarted);
          RemotingServices.Marshal(obj, ObjectName);
