@@ -116,9 +116,6 @@ namespace HFM.Forms
       /// </summary>
       public frmMain(IPreferenceSet prefs, IMessagesView messagesView)
       {
-         // This call is Required by the Windows Form Designer
-         InitializeComponent();
-
          _Prefs = prefs;
          _frmMessages = messagesView;
          _statsData = InstanceProvider.GetInstance<IXmlStatsDataContainer>();
@@ -127,6 +124,9 @@ namespace HFM.Forms
          _clientInstances = new InstanceCollection(_Prefs, InstanceProvider.GetInstance<IProteinCollection>(), 
                                                            InstanceProvider.GetInstance<IProteinBenchmarkContainer>());
          _displayBindingSource = new BindingSource();
+
+         // This call is Required by the Windows Form Designer
+         InitializeComponent();
 
          // Set Main Form Text
          base.Text = FormTitle;
