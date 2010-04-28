@@ -31,6 +31,7 @@ namespace HFM.Log
    public class LogLine : ILogLine
    {
       #region Regex (Static)
+      // ReSharper disable InconsistentNaming
       /// <summary>
       /// Regular Expression to match User (Folding ID) and Team string.
       /// </summary>
@@ -122,33 +123,19 @@ namespace HFM.Log
       /// </summary>
       private static readonly Regex rCompletedWUs =
          new Regex("\\[(?<Timestamp>.{8})\\] \\+ Number of Units Completed: (?<Completed>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+      // ReSharper restore InconsistentNaming
       #endregion
 
-      #region Members
-      private LogLineType _LineType;
-      public LogLineType LineType
-      {
-         get { return _LineType; }
-         set { _LineType = value; }
-      }
+      #region Properties
 
-      private readonly int _LineIndex;
-      public int LineIndex
-      {
-         get { return _LineIndex; }
-      }
+      public LogLineType LineType { get; set; }
 
-      private readonly string _LineRaw;
-      public string LineRaw
-      {
-         get { return _LineRaw; }
-      }
+      public int LineIndex { get; private set; }
 
-      private readonly object _LineData;
-      public object LineData
-      {
-         get { return _LineData; }
-      }
+      public string LineRaw { get; private set; }
+
+      public object LineData { get; private set; }
+
       #endregion
 
       #region CTOR
@@ -156,14 +143,14 @@ namespace HFM.Log
       {
          try
          {
-            _LineType = type;
-            _LineIndex = index;
-            _LineRaw = logLine;
-            _LineData = GetLineData(this);
+            LineType = type;
+            LineIndex = index;
+            LineRaw = logLine;
+            LineData = GetLineData(this);
          }
          catch (Exception ex)
          {
-            _LineType = LogLineType.Unknown;
+            LineType = LogLineType.Unknown;
 
             HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
          }
@@ -189,60 +176,42 @@ namespace HFM.Log
                   list.Add(Int32.Parse(mUserTeam.Result("${TeamNumber}")));
                   return list;
                }
-               else
-               {
-                  throw new FormatException(String.Format("Failed to parse User Name and Team values from '{0}'", logLine.LineRaw));
-               }
+               throw new FormatException(String.Format("Failed to parse User Name and Team values from '{0}'", logLine.LineRaw));
             case LogLineType.ClientReceivedUserID:
-               Match mReceivedUserID;
-               if ((mReceivedUserID = rReceivedUserID.Match(logLine.LineRaw)).Success)
+               Match receivedUserId;
+               if ((receivedUserId = rReceivedUserID.Match(logLine.LineRaw)).Success)
                {
-                  return mReceivedUserID.Result("${UserID}");
+                  return receivedUserId.Result("${UserID}");
                }
-               else
-               {
-                  throw new FormatException(String.Format("Failed to parse User ID value from '{0}'", logLine.LineRaw));
-               }
+               throw new FormatException(String.Format("Failed to parse User ID value from '{0}'", logLine.LineRaw));
             case LogLineType.ClientUserID:
-               Match mUserID;
-               if ((mUserID = rUserID.Match(logLine.LineRaw)).Success)
+               Match userId;
+               if ((userId = rUserID.Match(logLine.LineRaw)).Success)
                {
-                  return mUserID.Result("${UserID}");
+                  return userId.Result("${UserID}");
                }
-               else
-               {
-                  throw new FormatException(String.Format("Failed to parse User ID value from '{0}'", logLine.LineRaw));
-               }
+               throw new FormatException(String.Format("Failed to parse User ID value from '{0}'", logLine.LineRaw));
             case LogLineType.ClientMachineID:
-               Match mMachineID;
-               if ((mMachineID = rMachineID.Match(logLine.LineRaw)).Success)
+               Match machineId;
+               if ((machineId = rMachineID.Match(logLine.LineRaw)).Success)
                {
-                  return Int32.Parse(mMachineID.Result("${MachineID}"));
+                  return Int32.Parse(machineId.Result("${MachineID}"));
                }
-               else
-               {
-                  throw new FormatException(String.Format("Failed to parse Machine ID value from '{0}'", logLine.LineRaw));
-               }
+               throw new FormatException(String.Format("Failed to parse Machine ID value from '{0}'", logLine.LineRaw));
             case LogLineType.WorkUnitIndex:
                Match mUnitIndex;
                if ((mUnitIndex = rUnitIndex.Match(logLine.LineRaw)).Success)
                {
                   return Int32.Parse(mUnitIndex.Result("${QueueIndex}"));
                }
-               else
-               {
-                  throw new FormatException(String.Format("Failed to parse Work Unit Queue Index from '{0}'", logLine.LineRaw));
-               }
+               throw new FormatException(String.Format("Failed to parse Work Unit Queue Index from '{0}'", logLine.LineRaw));
             case LogLineType.WorkUnitQueueIndex:
                Match mQueueIndex;
                if ((mQueueIndex = rQueueIndex.Match(logLine.LineRaw)).Success)
                {
                   return Int32.Parse(mQueueIndex.Result("${QueueIndex}"));
                }
-               else
-               {
-                  throw new FormatException(String.Format("Failed to parse Work Unit Queue Index from '{0}'", logLine.LineRaw));
-               }
+               throw new FormatException(String.Format("Failed to parse Work Unit Queue Index from '{0}'", logLine.LineRaw));
             case LogLineType.WorkUnitCoreVersion:
                Match mCoreVer;
                if ((mCoreVer = rCoreVersion.Match(logLine.LineRaw)).Success)
@@ -252,65 +221,47 @@ namespace HFM.Log
                   {
                      return sCoreVer.Substring(0, sCoreVer.IndexOf(" "));
                   }
-                  else
-                  {
-                     return sCoreVer;
-                  }
+                  return sCoreVer;
                }
                /*** ProtoMol Only */
-               else if ((mCoreVer = rProtoMolCoreVersion.Match(logLine.LineRaw)).Success)
+               if ((mCoreVer = rProtoMolCoreVersion.Match(logLine.LineRaw)).Success)
                {
                   return mCoreVer.Result("${CoreVer}");
                }
                /*******************/
-               else
-               {
-                  throw new FormatException(String.Format("Failed to parse Core Version value from '{0}'", logLine.LineRaw));
-               }
+               throw new FormatException(String.Format("Failed to parse Core Version value from '{0}'", logLine.LineRaw));
             case LogLineType.WorkUnitProject:
-               Match mProjectID;
-               if ((mProjectID = rProjectID.Match(logLine.LineRaw)).Success)
+               Match projectId;
+               if ((projectId = rProjectID.Match(logLine.LineRaw)).Success)
                {
-                  return mProjectID;
+                  return projectId;
                }
-               else
-               {
-                  throw new FormatException(String.Format("Failed to parse Project (R/C/G) values from '{0}'", logLine.LineRaw));
-               }
+               throw new FormatException(String.Format("Failed to parse Project (R/C/G) values from '{0}'", logLine.LineRaw));
             case LogLineType.WorkUnitFrame:
                FrameData frame = new FrameData();
                if (CheckForCompletedFrame(logLine, frame))
                {
                   return frame;
                }
-               else if (CheckForCompletedGpuFrame(logLine, frame))
+               if (CheckForCompletedGpuFrame(logLine, frame))
                {
                   return frame;
                }
-               else
-               {
-                  throw new FormatException(String.Format("Failed to parse Frame Data from '{0}'", logLine.LineRaw));
-               }
+               throw new FormatException(String.Format("Failed to parse Frame Data from '{0}'", logLine.LineRaw));
             case LogLineType.WorkUnitCoreShutdown:
                Match mCoreShutdown;
                if ((mCoreShutdown = rCoreShutdown.Match(logLine.LineRaw)).Success)
                {
                   return StringOps.WorkUnitResultFromString(mCoreShutdown.Result("${UnitResult}"));
                }
-               else
-               {
-                  throw new FormatException(String.Format("Failed to parse Work Unit Result value from '{0}'", logLine.LineRaw));
-               }
+               throw new FormatException(String.Format("Failed to parse Work Unit Result value from '{0}'", logLine.LineRaw));
             case LogLineType.ClientNumberOfUnitsCompleted:
                Match mCompletedWUs;
                if ((mCompletedWUs = rCompletedWUs.Match(logLine.LineRaw)).Success)
                {
                   return Int32.Parse(mCompletedWUs.Result("${Completed}"));
                }
-               else
-               {
-                  throw new FormatException(String.Format("Failed to parse Units Completed value from '{0}'", logLine.LineRaw));
-               }
+               throw new FormatException(String.Format("Failed to parse Units Completed value from '{0}'", logLine.LineRaw));
          }
 
          return null;
@@ -322,15 +273,15 @@ namespace HFM.Log
          {
             Match match = (Match)line.LineData;
 
-            int ProjectID = Int32.Parse(match.Result("${ProjectNumber}"));
-            int ProjectRun = Int32.Parse(match.Result("${Run}"));
-            int ProjectClone = Int32.Parse(match.Result("${Clone}"));
-            int ProjectGen = Int32.Parse(match.Result("${Gen}"));
+            int projectId = Int32.Parse(match.Result("${ProjectNumber}"));
+            int projectRun = Int32.Parse(match.Result("${Run}"));
+            int projectClone = Int32.Parse(match.Result("${Clone}"));
+            int projectGen = Int32.Parse(match.Result("${Gen}"));
 
-            return String.Format("P{0} (R{1}, C{2}, G{3})", ProjectID,
-                                                            ProjectRun,
-                                                            ProjectClone,
-                                                            ProjectGen);
+            return String.Format("P{0} (R{1}, C{2}, G{3})", projectId,
+                                                            projectRun,
+                                                            projectClone,
+                                                            projectGen);
          }
 
          throw new ArgumentException(String.Format("Log line is not of type '{0}'", LogLineType.WorkUnitProject), "line");
@@ -342,15 +293,15 @@ namespace HFM.Log
          {
             Match match = (Match)line.LineData;
 
-            int ProjectID = Int32.Parse(match.Result("${ProjectNumber}"));
-            int ProjectRun = Int32.Parse(match.Result("${Run}"));
-            int ProjectClone = Int32.Parse(match.Result("${Clone}"));
-            int ProjectGen = Int32.Parse(match.Result("${Gen}"));
+            int projectId = Int32.Parse(match.Result("${ProjectNumber}"));
+            int projectRun = Int32.Parse(match.Result("${Run}"));
+            int projectClone = Int32.Parse(match.Result("${Clone}"));
+            int projectGen = Int32.Parse(match.Result("${Gen}"));
 
-            return String.Format("{0} (Run {1}, Clone {2}, Gen {3})", ProjectID,
-                                                                      ProjectRun,
-                                                                      ProjectClone,
-                                                                      ProjectGen);
+            return String.Format("{0} (Run {1}, Clone {2}, Gen {3})", projectId,
+                                                                      projectRun,
+                                                                      projectClone,
+                                                                      projectGen);
          }
 
          throw new ArgumentException(String.Format("Log line is not of type '{0}'", LogLineType.WorkUnitProject), "line");
@@ -411,11 +362,19 @@ namespace HFM.Log
 
                return true;
             }
-            else
+            /*** ProtoMol Only */
+            // Issue 191 - New ProtoMol Projects don't report frame progress on the precent boundry.
+            if (Math.Abs(calculatedPercent - (framePercent + 1)) <= 0.1)
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("Not on percent boundry '{0}' (this is not a problem).", logLine), true);
-               return false;
+               frame.TimeStampString = mFramesCompleted.Result("${Timestamp}");
+               frame.FrameID = framePercent + 1;
+
+               return true;
             }
+            /*******************/
+            
+            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("Not on percent boundry '{0}' (this is not a problem).", logLine), true);
+            return false;
          }
 
          return false;
@@ -452,7 +411,7 @@ namespace HFM.Log
 
       public override string ToString()
       {
-         return _LineRaw;
+         return LineRaw;
       }
       #endregion
    }

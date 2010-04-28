@@ -608,7 +608,7 @@ namespace HFM.Instances
 
             if (CurrentProtein.IsUnknown == false)
             {
-               return TimeSpan.FromSeconds(RawTimePerSection * CurrentProtein.Frames);
+               return TimeSpan.FromSeconds(TimePerFrame.TotalSeconds * CurrentProtein.Frames);
             }
 
             return TimeSpan.Zero;
