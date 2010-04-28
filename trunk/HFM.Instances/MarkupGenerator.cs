@@ -399,38 +399,13 @@ namespace HFM.Instances
 
       private XmlDocument CreateSummaryXml(XmlDocument xmlDoc, IEnumerable<IClientInstance> instanceCollection)
       {
-         List<IClientInstance> instances = new List<IClientInstance>(instanceCollection);
-
-         instances.Sort(delegate(IClientInstance instance1, IClientInstance instance2)
-         {
-            // Make the HTML Summary respect the 'List Office Clients Last' option - Issue 78
-            if (_prefs.GetPreference<bool>(Preference.OfflineLast))
-            {
-               if (instance1.Status.Equals(ClientStatus.Offline) &&
-                   instance2.Status.Equals(ClientStatus.Offline))
-               {
-                  return instance1.InstanceName.CompareTo(instance2.InstanceName);
-               }
-               if (instance1.Status.Equals(ClientStatus.Offline))
-               {
-                  return 1;
-               }
-               if (instance2.Status.Equals(ClientStatus.Offline))
-               {
-                  return -1;
-               }
-            }
-
-            return instance1.InstanceName.CompareTo(instance2.InstanceName);
-         });
-
          bool duplicateUserIdCheck = _prefs.GetPreference<bool>(Preference.DuplicateUserIdCheck);
          bool duplicateProjectCheck = _prefs.GetPreference<bool>(Preference.DuplicateProjectCheck);
          CompletedCountDisplayType completedCountDisplayType =
             _prefs.GetPreference<CompletedCountDisplayType>(Preference.CompletedCountDisplay);
          
          XmlElement xmlRootData = xmlDoc.DocumentElement;
-         foreach (IClientInstance instance in instances)
+         foreach (IClientInstance instance in instanceCollection)
          {
             XmlDocument xmlFrag = new XmlDocument();
             xmlFrag.Load(Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.XmlFolderName), "SummaryFrag.xml"));

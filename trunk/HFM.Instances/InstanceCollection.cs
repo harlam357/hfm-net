@@ -62,7 +62,6 @@ namespace HFM.Instances
       public event EventHandler SelectedInstanceChanged;
       public event EventHandler FindDuplicatesComplete;
       public event EventHandler OfflineLastChanged;
-      
       public event EventHandler RefreshUserStatsData;
       #endregion
       
@@ -841,7 +840,8 @@ namespace HFM.Instances
                HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Starting Web Generation...");
                
                DateTime start = HfmTrace.ExecStart;
-               ClientInstance[] instances = GetCurrentInstanceArray();
+               ICollection<IClientInstance> instances = GetCurrentInstanceArray();
+               instances = GetDisplaySortedInstanceCollection(instances);
                _markupGenerator.GenerateHtml(instances);
                DeployWebsite(instances);
                HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format(CultureInfo.CurrentCulture, 
@@ -852,6 +852,24 @@ namespace HFM.Instances
          {
             HfmTrace.WriteToHfmConsole(ex);
          }
+      }
+      
+      private ICollection<IClientInstance> GetDisplaySortedInstanceCollection(ICollection<IClientInstance> instances)
+      {
+         // Issue 166 - Make the Web Summary Page respect the current Sort Column and Direction.
+         var sortedCollection = new List<IClientInstance>(instances.Count);
+         var displayCollection = GetCurrentDisplayInstanceArray();
+         foreach (var d in displayCollection)
+         {
+            DisplayInstance displayInstance = d;
+            var instance = instances.Where(c => c.InstanceName == displayInstance.Name);
+            if (instance.Count() == 1)
+            {
+               sortedCollection.Add(instance.First());
+            }
+         }
+
+         return sortedCollection.AsReadOnly();
       }
       
       private void DeployWebsite(ICollection<IClientInstance> instances)
@@ -1339,7 +1357,7 @@ namespace HFM.Instances
       /// <summary>
       /// Get Array Representation of Current Client Instance objects in Collection
       /// </summary>
-      public ClientInstance[] GetCurrentInstanceArray()
+      private ClientInstance[] GetCurrentInstanceArray()
       {
          // Changing this to return an empty array instead of null
          // Less hassle not having to possibly deal with a null reference - 4/17/10
@@ -1352,6 +1370,14 @@ namespace HFM.Instances
          //}
 
          //return null;
+      }
+      
+      private DisplayInstance[] GetCurrentDisplayInstanceArray()
+      {
+         DisplayInstance[] displayInstances = new DisplayInstance[_displayCollection.Count];
+         _displayCollection.CopyTo(displayInstances, 0);
+
+         return displayInstances;
       }
       
       /// <summary>
