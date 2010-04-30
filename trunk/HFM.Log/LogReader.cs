@@ -74,6 +74,32 @@ namespace HFM.Log
       {
          get { return ClientRunList.CurrentClientRun; }
       }
+
+      /// <summary>
+      /// Returns log text of the current client run.
+      /// </summary>
+      public IList<ILogLine> CurrentClientRunLogLines
+      {
+         get
+         {
+            ClientRun lastClientRun = _clientRunList.CurrentClientRun;
+            if (lastClientRun != null)
+            {
+               int start = lastClientRun.ClientStartIndex;
+               int end = _clientLogLines.Count;
+
+               int length = end - start;
+
+               ILogLine[] logLines = new LogLine[length];
+
+               _clientLogLines.CopyTo(start, logLines, 0, length);
+
+               return logLines;
+            }
+
+            return null;
+         }
+      }
       
       /// <summary>
       /// Returns log text of the previous work unit.
@@ -224,18 +250,24 @@ namespace HFM.Log
          foreach (ILogLine line in logLines)
          {
             #region Unit Start
-            if (data.UnitStartTimeStamp.Equals(TimeSpan.MinValue))
+            if ((line.LineType.Equals(LogLineType.WorkUnitProcessing) ||
+                 line.LineType.Equals(LogLineType.WorkUnitWorking) ||
+                 line.LineType.Equals(LogLineType.WorkUnitStart) ||
+                 line.LineType.Equals(LogLineType.WorkUnitFrame)) &&
+                 data.UnitStartTimeStamp.Equals(TimeSpan.MinValue))
             {
                data.UnitStartTimeStamp = GetLogLineTimeStamp(line);
             }
 
-            if (line.LineType.Equals(LogLineType.WorkUnitPaused) || line.LineType.Equals(LogLineType.WorkUnitPausedForBattery))
+            if (line.LineType.Equals(LogLineType.WorkUnitPaused) || 
+                line.LineType.Equals(LogLineType.WorkUnitPausedForBattery))
             {
                clientWasPaused = true;
             }
-            // another indication that the client has resumed would be a frame progress line (see below for same comment)
-            // think about adding a check here for that condition as well... as sort of a "backup"
-            else if ((line.LineType.Equals(LogLineType.WorkUnitWorking) || line.LineType.Equals(LogLineType.WorkUnitResumeFromBattery)) && clientWasPaused)
+            else if ((line.LineType.Equals(LogLineType.WorkUnitWorking) ||
+                      line.LineType.Equals(LogLineType.WorkUnitResumeFromBattery) ||
+                      line.LineType.Equals(LogLineType.WorkUnitFrame)) &&
+                      clientWasPaused)
             {
                clientWasPaused = false;
 
@@ -299,22 +331,18 @@ namespace HFM.Log
             #endregion
 
             #region Client Status
-            if (data.Status.Equals(ClientStatus.Unknown) &&
-               (line.LineType.Equals(LogLineType.WorkUnitProcessing) ||
+            if (line.LineType.Equals(LogLineType.WorkUnitProcessing) ||
                 line.LineType.Equals(LogLineType.WorkUnitWorking) ||
-                line.LineType.Equals(LogLineType.WorkUnitStart)))
+                line.LineType.Equals(LogLineType.WorkUnitStart) ||
+                line.LineType.Equals(LogLineType.WorkUnitFrame) ||
+                line.LineType.Equals(LogLineType.WorkUnitResumeFromBattery))
             {
                data.Status = ClientStatus.RunningNoFrameTimes;
             }
-            // another indication that the client has resumed would be a frame progress line (see above for same comment)
-            // think about adding a check here for that condition as well... as sort of a "backup"
-            else if (line.LineType.Equals(LogLineType.WorkUnitPaused) || line.LineType.Equals(LogLineType.WorkUnitPausedForBattery))
+            else if (line.LineType.Equals(LogLineType.WorkUnitPaused) || 
+                     line.LineType.Equals(LogLineType.WorkUnitPausedForBattery))
             {
                data.Status = ClientStatus.Paused;
-            }
-            else if (line.LineType.Equals(LogLineType.WorkUnitWorking) && data.Status.Equals(ClientStatus.Paused))
-            {
-               data.Status = ClientStatus.RunningNoFrameTimes;
             }
             else if (line.LineType.Equals(LogLineType.ClientSendWorkToServer))
             {

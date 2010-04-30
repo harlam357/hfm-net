@@ -28,6 +28,11 @@ namespace HFM.Framework
       /// Returns the last client run data.
       /// </summary>
       IClientRun CurrentClientRun { get; }
+
+      /// <summary>
+      /// Returns log text of the current client run.
+      /// </summary>
+      IList<ILogLine> CurrentClientRunLogLines { get; }
       
       /// <summary>
       /// Returns log text of the previous work unit.

@@ -365,11 +365,15 @@ namespace HFM.Instances
          XMLOps.setXmlNode(xmlData, "Protein/Contact", p.Contact);
 
          StringBuilder sb = new StringBuilder();
-         foreach (ILogLine line in instance.DataAggregator.CurrentLogLines)
+         // Issue 201 - Web Generation Fails when a Client with no CurrentLogLines is encountered.
+         if (instance.DataAggregator.CurrentLogLines != null)
          {
-            sb.Append(line.LineRaw);
-            sb.Append("<BR>");
-            sb.Append(Environment.NewLine);
+            foreach (ILogLine line in instance.DataAggregator.CurrentLogLines)
+            {
+               sb.Append(line.LineRaw);
+               sb.Append("<BR>");
+               sb.Append(Environment.NewLine);
+            }
          }
 
          XMLOps.setXmlNode(xmlData, "UnitLog/Text", sb.ToString());

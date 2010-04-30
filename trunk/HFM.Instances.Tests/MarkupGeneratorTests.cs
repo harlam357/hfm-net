@@ -119,20 +119,24 @@ namespace HFM.Instances.Tests
          List<IClientInstance> instances = new List<IClientInstance>();
 
          IUnitInfoLogic unitInfoLogic = _mocks.Stub<IUnitInfoLogic>();
-         IDataAggregator dataAggregator = _mocks.Stub<IDataAggregator>();
-         SetupResult.For(dataAggregator.CurrentLogLines).Return(new List<ILogLine>());
+         IDataAggregator dataAggregator1 = _mocks.Stub<IDataAggregator>();
+         SetupResult.For(dataAggregator1.CurrentLogLines).Return(new List<ILogLine>());
+         IDataAggregator dataAggregator2 = _mocks.Stub<IDataAggregator>();
+         // Test For - Issue 201 - Web Generation Fails when a Client with no CurrentLogLines is encountered.
+         // Make sure we return null for CurrentLogLines in the second DataAggregator mock.
+         SetupResult.For(dataAggregator2.CurrentLogLines).Return(null);
          
          IClientInstance instance = _mocks.Stub<IClientInstance>();
          instance.InstanceName = "Test2";
          SetupResult.For(instance.CurrentUnitInfo).Return(unitInfoLogic);
-         SetupResult.For(instance.DataAggregator).Return(dataAggregator);         
+         SetupResult.For(instance.DataAggregator).Return(dataAggregator1);         
          
          instances.Add(instance);
 
          instance = _mocks.Stub<IClientInstance>();
          instance.InstanceName = "Test1";
          SetupResult.For(instance.CurrentUnitInfo).Return(unitInfoLogic);
-         SetupResult.For(instance.DataAggregator).Return(dataAggregator);
+         SetupResult.For(instance.DataAggregator).Return(dataAggregator2);
 
          instances.Add(instance);
 

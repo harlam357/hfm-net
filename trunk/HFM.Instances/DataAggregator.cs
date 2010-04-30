@@ -166,7 +166,6 @@ namespace HFM.Instances
 
          _logReader.ScanFahLog(_instanceName, _fahLogFilePath);
          _currentClientRun = _logReader.CurrentClientRun;
-         _currentFahLogUnitData = _logReader.GetFahLogDataFromLogLines(_logReader.CurrentWorkUnitLogLines);
 
          // Decision Time: If Queue Read fails parse from logs only
          if (ReadQueueFile())
@@ -236,8 +235,17 @@ namespace HFM.Instances
             _unitLogLines[0] = _logReader.PreviousWorkUnitLogLines;
             parsedUnits[0] = BuildUnitInfo(null, _logReader.GetFahLogDataFromLogLines(_logReader.PreviousWorkUnitLogLines), null);
          }
+
+         bool matchOverride = false;
          _unitLogLines[1] = _logReader.CurrentWorkUnitLogLines;
-         parsedUnits[1] = BuildUnitInfo(null, _currentFahLogUnitData, _logReader.GetUnitInfoLogData(_instanceName, _unitInfoLogFilePath));
+         if (_unitLogLines[1] == null)
+         {
+            matchOverride = true;
+            _unitLogLines[1] = _logReader.CurrentClientRunLogLines;
+         }
+         
+         _currentFahLogUnitData = _logReader.GetFahLogDataFromLogLines(_unitLogLines[1]);
+         parsedUnits[1] = BuildUnitInfo(null, _currentFahLogUnitData, _logReader.GetUnitInfoLogData(_instanceName, _unitInfoLogFilePath), matchOverride);
 
          return parsedUnits;
       }
@@ -254,9 +262,12 @@ namespace HFM.Instances
             // Get the FAH Log Data from the Log Lines
             IFahLogUnitData fahLogUnitData = _logReader.GetFahLogDataFromLogLines(_unitLogLines[queueIndex]);
             IUnitInfoLogData unitInfoLogData = null;
+            // On the Current Queue Index
             if (queueIndex == _queueReader.Queue.CurrentIndex)
             {
+               // Get the UnitInfo Log Data
                unitInfoLogData = _logReader.GetUnitInfoLogData(_instanceName, _unitInfoLogFilePath);
+               _currentFahLogUnitData = fahLogUnitData;
             }
 
             parsedUnits[queueIndex] = BuildUnitInfo(_queueReader.Queue.GetQueueEntry((uint)queueIndex), fahLogUnitData, unitInfoLogData);
@@ -268,7 +279,16 @@ namespace HFM.Instances
                      "Could not verify log section for current queue entry ({0}). Trying to parse with most recent log section.", queueIndex));
 
                   _unitLogLines[queueIndex] = _logReader.CurrentWorkUnitLogLines;
-                  fahLogUnitData = _currentFahLogUnitData;
+                  // If got no Work Unit Log Lines based on Current Work Unit Log Lines
+                  // then take the entire Current Client Run Log Lines - likely the run
+                  // was short and never contained any Work Unit Data.
+                  if (_unitLogLines[queueIndex] == null)
+                  {
+                     _unitLogLines[queueIndex] = _logReader.CurrentClientRunLogLines;
+                  }
+                  fahLogUnitData = _logReader.GetFahLogDataFromLogLines(_unitLogLines[queueIndex]);
+                  _currentFahLogUnitData = fahLogUnitData;
+
                   if (_currentFahLogUnitData.Status.Equals(ClientStatus.GettingWorkPacket))
                   {
                      _unitLogLines[queueIndex] = null;

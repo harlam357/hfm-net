@@ -52,13 +52,13 @@ namespace HFM.Instances
       /// <summary>
       /// Preferences Interface
       /// </summary>
-      private readonly IPreferenceSet _Prefs; 
+      private readonly IPreferenceSet _prefs; 
       #endregion
 
       #region Constructor
-      public ProteinBenchmarkContainer(IPreferenceSet Prefs)
+      public ProteinBenchmarkContainer(IPreferenceSet prefs)
       {
-         _Prefs = Prefs;
+         _prefs = prefs;
       } 
       #endregion
 
@@ -166,39 +166,39 @@ namespace HFM.Instances
       /// <summary>
       /// Delete all Benchmarks for the given BenchmarkClient
       /// </summary>
-      /// <param name="Client">BenchmarkClient containing Client Name and Path data</param>
-      public void Delete(IBenchmarkClient Client)
+      /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
+      public void Delete(IBenchmarkClient client)
       {
-         if (Client.AllClients) throw new InvalidOperationException("Cannot delete All Clients.");
+         if (client.AllClients) throw new InvalidOperationException("Cannot delete All Clients.");
 
          _collection.BenchmarkList.RemoveAll(delegate(InstanceProteinBenchmark benchmark)
          {
             BenchmarkClient benchmarkClient = new BenchmarkClient(benchmark.OwningInstanceName, benchmark.OwningInstancePath);
-            return benchmarkClient.Equals(Client);
+            return benchmarkClient.Equals(client);
          });
          Write();
       }
 
       /// <summary>
-      /// Delete all Benchmarks for the given BenchmarkClient and ProjectID
+      /// Delete all Benchmarks for the given BenchmarkClient and Project ID
       /// </summary>
-      /// <param name="Client">BenchmarkClient containing Client Name and Path data</param>
-      /// <param name="ProjectID">Project Number</param>
-      public void Delete(IBenchmarkClient Client, int ProjectID)
+      /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
+      /// <param name="projectId">Project Number</param>
+      public void Delete(IBenchmarkClient client, int projectId)
       {
          _collection.BenchmarkList.RemoveAll(delegate(InstanceProteinBenchmark benchmark)
          {
-            if (Client.AllClients)
+            if (client.AllClients)
             {
-               return benchmark.ProjectID.Equals(ProjectID);
+               return benchmark.ProjectID.Equals(projectId);
             }
             else
             {
                BenchmarkClient benchmarkClient =
                   new BenchmarkClient(benchmark.OwningInstanceName, benchmark.OwningInstancePath);
-               if (benchmarkClient.Equals(Client))
+               if (benchmarkClient.Equals(client))
                {
-                  return benchmark.ProjectID.Equals(ProjectID);
+                  return benchmark.ProjectID.Equals(projectId);
                }
 
                return false;
@@ -210,12 +210,12 @@ namespace HFM.Instances
       /// <summary>
       /// Determine if the given BenchmarkClient exists in the Benchmarks data
       /// </summary>
-      /// <param name="Client">BenchmarkClient containing Client Name and Path data</param>
-      public bool ContainsClient(IBenchmarkClient Client)
+      /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
+      public bool ContainsClient(IBenchmarkClient client)
       {
          return _collection.BenchmarkList.Find(delegate(InstanceProteinBenchmark benchmark)
          {
-            if (Client.AllClients)
+            if (client.AllClients)
             {
                return true;
             }
@@ -223,7 +223,7 @@ namespace HFM.Instances
             {
                BenchmarkClient benchmarkClient =
                   new BenchmarkClient(benchmark.OwningInstanceName, benchmark.OwningInstancePath);
-               if (benchmarkClient.Equals(Client))
+               if (benchmarkClient.Equals(client))
                {
                   return true;
                }
@@ -234,13 +234,13 @@ namespace HFM.Instances
       }
 
       /// <summary>
-      /// Refresh the Minimum Frame Time for the given BenchmarkClient and ProjectID
+      /// Refresh the Minimum Frame Time for the given BenchmarkClient and Project ID
       /// </summary>
-      /// <param name="Client">BenchmarkClient containing Client Name and Path data</param>
-      /// <param name="ProjectID">Project Number</param>
-      public void RefreshMinimumFrameTime(IBenchmarkClient Client, int ProjectID)
+      /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
+      /// <param name="projectId">Project Number</param>
+      public void RefreshMinimumFrameTime(IBenchmarkClient client, int projectId)
       {
-         IList<IInstanceProteinBenchmark> benchmarks = GetBenchmarks(Client, ProjectID);
+         IList<IInstanceProteinBenchmark> benchmarks = GetBenchmarks(client, projectId);
          foreach (InstanceProteinBenchmark benchmark in benchmarks)
          {
             benchmark.RefreshBenchmarkMinimumFrameTime();
@@ -253,18 +253,18 @@ namespace HFM.Instances
       /// </summary>
       public IBenchmarkClient[] GetBenchmarkClients()
       {
-         List<IBenchmarkClient> BenchmarkClients = new List<IBenchmarkClient>();
-         BenchmarkClients.Add(new BenchmarkClient());
+         List<IBenchmarkClient> benchmarkClients = new List<IBenchmarkClient>();
+         benchmarkClients.Add(new BenchmarkClient());
 
          foreach (InstanceProteinBenchmark benchmark in _collection.BenchmarkList)
          {
-            if (BenchmarkClients.Contains(benchmark.Client) == false)
+            if (benchmarkClients.Contains(benchmark.Client) == false)
             {
-               BenchmarkClients.Add(benchmark.Client);
+               benchmarkClients.Add(benchmark.Client);
             }
          }
 
-         IBenchmarkClient[] returnArray = BenchmarkClients.ToArray();
+         IBenchmarkClient[] returnArray = benchmarkClients.ToArray();
          Array.Sort(returnArray);
 
          return returnArray;
@@ -281,29 +281,29 @@ namespace HFM.Instances
       /// <summary>
       /// Get List of Benchmark Project Numbers
       /// </summary>
-      public int[] GetBenchmarkProjects(IBenchmarkClient Client)
+      public int[] GetBenchmarkProjects(IBenchmarkClient client)
       {
-         List<int> Projects = new List<int>();
+         List<int> projects = new List<int>();
 
          foreach (InstanceProteinBenchmark benchmark in _collection.BenchmarkList)
          {
-            if (Projects.Contains(benchmark.ProjectID) == false)
+            if (projects.Contains(benchmark.ProjectID) == false)
             {
-               if (Client.AllClients)
+               if (client.AllClients)
                {
-                  Projects.Add(benchmark.ProjectID);
+                  projects.Add(benchmark.ProjectID);
                }
                else
                {
-                  if (benchmark.Client.Equals(Client))
+                  if (benchmark.Client.Equals(client))
                   {
-                     Projects.Add(benchmark.ProjectID);
+                     projects.Add(benchmark.ProjectID);
                   }
                }
             }
          }
 
-         int[] returnArray = Projects.ToArray();
+         int[] returnArray = projects.ToArray();
          Array.Sort(returnArray);
 
          return returnArray;
@@ -312,27 +312,23 @@ namespace HFM.Instances
       /// <summary>
       /// Get List of Benchmarks for the given BenchmarkClient
       /// </summary>
-      /// <param name="Client">BenchmarkClient containing Client Name and Path data</param>
-      public List<IInstanceProteinBenchmark> GetBenchmarks(IBenchmarkClient Client)
+      /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
+      public List<IInstanceProteinBenchmark> GetBenchmarks(IBenchmarkClient client)
       {
          List<InstanceProteinBenchmark> list = _collection.BenchmarkList.FindAll(delegate(InstanceProteinBenchmark benchmark)
          {
-            if (Client.AllClients)
+            if (client.AllClients)
             {
                return true;
             }
             else
             {
-               return benchmark.Client.Equals(Client);
+               return benchmark.Client.Equals(client);
             }
          });
          
          List<IInstanceProteinBenchmark> interfaceList = 
-            list.ConvertAll(new Converter<InstanceProteinBenchmark, IInstanceProteinBenchmark>(
-               delegate(InstanceProteinBenchmark benchmark)
-               {
-                  return (IInstanceProteinBenchmark)benchmark;
-               }));
+            list.ConvertAll(benchmark => (IInstanceProteinBenchmark)benchmark);
                
          return interfaceList;
       }
@@ -340,21 +336,21 @@ namespace HFM.Instances
       /// <summary>
       /// Get List of Benchmarks for the given BenchmarkClient
       /// </summary>
-      /// <param name="Client">BenchmarkClient containing Client Name and Path data</param>
-      /// <param name="ProjectID">Project Number</param>
-      public List<IInstanceProteinBenchmark> GetBenchmarks(IBenchmarkClient Client, int ProjectID)
+      /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
+      /// <param name="projectId">Project Number</param>
+      public List<IInstanceProteinBenchmark> GetBenchmarks(IBenchmarkClient client, int projectId)
       {
          List<InstanceProteinBenchmark> list = _collection.BenchmarkList.FindAll(delegate(InstanceProteinBenchmark benchmark)
          {
-            if (Client.AllClients)
+            if (client.AllClients)
             {
-               return benchmark.ProjectID.Equals(ProjectID);
+               return benchmark.ProjectID.Equals(projectId);
             }
             else
             {
-               if (benchmark.Client.Equals(Client))
+               if (benchmark.Client.Equals(client))
                {
-                  return benchmark.ProjectID.Equals(ProjectID);
+                  return benchmark.ProjectID.Equals(projectId);
                }
 
                return false;
@@ -362,11 +358,7 @@ namespace HFM.Instances
          });
 
          List<IInstanceProteinBenchmark> interfaceList =
-            list.ConvertAll(new Converter<InstanceProteinBenchmark, IInstanceProteinBenchmark>(
-               delegate(InstanceProteinBenchmark benchmark)
-               {
-                  return (IInstanceProteinBenchmark)benchmark;
-               }));
+            list.ConvertAll(benchmark => (IInstanceProteinBenchmark)benchmark);
                
          return interfaceList;
       }
@@ -374,14 +366,14 @@ namespace HFM.Instances
       /// <summary>
       /// Update the given BenchmarkClient benchmarks with the new Owning Instance Name
       /// </summary>
-      /// <param name="Client">BenchmarkClient containing Client Name and Path data</param>
-      /// <param name="NewName">New Benchmark Owner Name</param>
-      public void UpdateInstanceName(IBenchmarkClient Client, string NewName)
+      /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
+      /// <param name="newName">New Benchmark Owner Name</param>
+      public void UpdateInstanceName(IBenchmarkClient client, string newName)
       {
-         IList<IInstanceProteinBenchmark> benchmarks = GetBenchmarks(Client);
+         IList<IInstanceProteinBenchmark> benchmarks = GetBenchmarks(client);
          foreach (InstanceProteinBenchmark benchmark in benchmarks)
          {
-            benchmark.OwningInstanceName = NewName;
+            benchmark.OwningInstanceName = newName;
          }
          Write();
       }
@@ -389,14 +381,14 @@ namespace HFM.Instances
       /// <summary>
       /// Update the given BenchmarkClient benchmarks with the new Owning Instance Path
       /// </summary>
-      /// <param name="Client">BenchmarkClient containing Client Name and Path data</param>
-      /// <param name="NewPath">New Benchmark Owner Path</param>
-      public void UpdateInstancePath(IBenchmarkClient Client, string NewPath)
+      /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
+      /// <param name="newPath">New Benchmark Owner Path</param>
+      public void UpdateInstancePath(IBenchmarkClient client, string newPath)
       {
-         IList<IInstanceProteinBenchmark> benchmarks = GetBenchmarks(Client);
+         IList<IInstanceProteinBenchmark> benchmarks = GetBenchmarks(client);
          foreach (InstanceProteinBenchmark benchmark in benchmarks)
          {
-            benchmark.OwningInstancePath = NewPath;
+            benchmark.OwningInstancePath = newPath;
          }
          Write();
       }
@@ -414,29 +406,21 @@ namespace HFM.Instances
       /// <summary>
       /// Read Binary File
       /// </summary>
-      public void Read(bool Merge)
+      public void Read(bool merge)
       {
-         string FilePath = Path.Combine(_Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), DataStoreFilename);
+         string filePath = Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), DataStoreFilename);
 
-         ProteinBenchmarkCollection collection = DeserializeLegacy(FilePath);
+         ProteinBenchmarkCollection collection = DeserializeLegacy(filePath);
          if (collection == null)
          {
-            collection = Deserialize(FilePath);
+            collection = Deserialize(filePath);
          }
          else
          {
-            BackupNetSerializedDataFile(FilePath);
+            BackupNetSerializedDataFile(filePath);
          }
 
-         if (Merge)
-         {
-            _collection = MergeCollections(_collection, collection);
-         }
-         else
-         {
-            _collection = collection;
-         }
-
+         _collection = merge ? MergeCollections(_collection, collection) : collection;
          if (_collection == null)
          {
             _collection = new ProteinBenchmarkCollection();
@@ -448,33 +432,25 @@ namespace HFM.Instances
       /// </summary>
       public void Write()
       {
-         Serialize(_collection, Path.Combine(_Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), DataStoreFilename));
+         Serialize(_collection, Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), DataStoreFilename));
       }
 
       /// <summary>
       /// Read Xml File
       /// </summary>
-      public void ReadXml(string FilePath)
+      public void ReadXml(string filePath)
       {
-         ReadXml(FilePath, false);
+         ReadXml(filePath, false);
       }
 
       /// <summary>
       /// Read Xml File
       /// </summary>
-      public void ReadXml(string FilePath, bool Merge)
+      public void ReadXml(string filePath, bool merge)
       {
-         ProteinBenchmarkCollection collection = DeserializeFromXml(Path.Combine(_Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), FilePath));
+         ProteinBenchmarkCollection collection = DeserializeFromXml(Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), filePath));
          
-         if (Merge)
-         {
-            _collection = MergeCollections(_collection, collection);
-         }
-         else
-         {
-            _collection = collection;
-         }
-
+         _collection = merge ? MergeCollections(_collection, collection) : collection;
          if (_collection == null)
          {
             _collection = new ProteinBenchmarkCollection();
@@ -484,19 +460,19 @@ namespace HFM.Instances
       /// <summary>
       /// Write Xml File
       /// </summary>
-      public void WriteXml(string FilePath)
+      public void WriteXml(string filePath)
       {
-         SerializeToXml(_collection, Path.Combine(_Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), FilePath));
+         SerializeToXml(_collection, Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), filePath));
       }
       
-      private void BackupNetSerializedDataFile(string FilePath)
+      private void BackupNetSerializedDataFile(string filePath)
       {
-         string LegacyFilePath = Path.Combine(_Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), LegacyDataStoreFilename);
+         string legacyFilePath = Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), LegacyDataStoreFilename);
 
          try
          {
             // Backward Compatibility - Backup .NET Serialized Data File
-            File.Copy(FilePath, LegacyFilePath);
+            File.Copy(filePath, legacyFilePath);
          }
          catch (Exception ex)
          {
@@ -538,33 +514,14 @@ namespace HFM.Instances
          return null;
       }
 
-      private static readonly object _serializeLock = typeof(ProteinBenchmarkCollection);
+      private static readonly object SerializeLock = typeof(ProteinBenchmarkCollection);
 
       public static void Serialize(ProteinBenchmarkCollection collection, string filePath)
       {
-         DateTime Start = HfmTrace.ExecStart;
+         DateTime start = HfmTrace.ExecStart;
 
-         lock (_serializeLock)
+         lock (SerializeLock)
          {
-            //FileStream fileStream = null;
-            //BinaryFormatter formatter = new BinaryFormatter();
-            //try
-            //{
-            //   fileStream = new FileStream(filePath, FileMode.Create);
-            //   formatter.Serialize(fileStream, collection);
-            //}
-            //catch (Exception ex)
-            //{
-            //   HfmTrace.WriteToHfmConsole(ex);
-            //}
-            //finally
-            //{
-            //   if (fileStream != null)
-            //   {
-            //      fileStream.Close();
-            //   }
-            //}
-
             using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
             {
                try
@@ -578,14 +535,14 @@ namespace HFM.Instances
             }
          }
 
-         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, start);
       }
 
       public static void SerializeToXml(ProteinBenchmarkCollection collection, string filePath)
       {
-         DateTime Start = HfmTrace.ExecStart;
+         DateTime start = HfmTrace.ExecStart;
 
-         lock (_serializeLock)
+         lock (SerializeLock)
          {
             using (TextWriter stream = new StreamWriter(filePath, false, Encoding.UTF8))
             {
@@ -601,12 +558,12 @@ namespace HFM.Instances
             }
          }
 
-         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, start);
       }
 
       public static ProteinBenchmarkCollection Deserialize(string filePath)
       {
-         DateTime Start = HfmTrace.ExecStart;
+         DateTime start = HfmTrace.ExecStart;
 
          ProteinBenchmarkCollection collection = null;
          try
@@ -621,14 +578,14 @@ namespace HFM.Instances
             HfmTrace.WriteToHfmConsole(ex);
          }
 
-         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, start);
 
          return collection;
       }
 
       public static ProteinBenchmarkCollection DeserializeLegacy(string filePath)
       {
-         DateTime Start = HfmTrace.ExecStart;
+         DateTime start = HfmTrace.ExecStart;
 
          ProteinBenchmarkCollection collection = null;
 
@@ -638,10 +595,7 @@ namespace HFM.Instances
          {
             fileStream = new FileStream(filePath, FileMode.Open);
             collection = (ProteinBenchmarkCollection)formatter.Deserialize(fileStream);
-            collection.BenchmarkList.ForEach(delegate(InstanceProteinBenchmark benchmark)
-                                             {
-                                                benchmark.ConvertQueueToList();
-                                             });
+            collection.BenchmarkList.ForEach(benchmark => benchmark.ConvertQueueToList());
          }
          catch (Exception ex)
          {
@@ -655,14 +609,14 @@ namespace HFM.Instances
             }
          }
 
-         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, start);
 
          return collection;
       }
 
       public static ProteinBenchmarkCollection DeserializeFromXml(string filePath)
       {
-         DateTime Start = HfmTrace.ExecStart;
+         DateTime start = HfmTrace.ExecStart;
 
          ProteinBenchmarkCollection collection = null;
          using (FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
@@ -678,7 +632,7 @@ namespace HFM.Instances
             }
          }
 
-         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, start);
          
          return collection;
       }

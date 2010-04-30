@@ -35,35 +35,36 @@ namespace HFM.Instances.Tests
    [TestFixture]
    public class ClientInstanceTests
    {
-      private IWindsorContainer container;
-      private MockRepository mocks;
-      private IProteinBenchmarkContainer benchmarkCollection;
+      private IWindsorContainer _container;
+      private MockRepository _mocks;
+      private IProteinBenchmarkContainer _benchmarkCollection;
    
       [SetUp]
       public void Init()
       {
          TraceLevelSwitch.Instance.Level = TraceLevel.Verbose;
 
-         container = new WindsorContainer();
-         mocks = new MockRepository();
-         benchmarkCollection = mocks.DynamicMock<IProteinBenchmarkContainer>();
+         _container = new WindsorContainer();
+         _mocks = new MockRepository();
+         _benchmarkCollection = _mocks.DynamicMock<IProteinBenchmarkContainer>();
       
-         container.AddComponent("DataAggregator", typeof(IDataAggregator), typeof(DataAggregator));
-         container.AddComponent("LogReader", typeof(ILogReaderFactory), typeof(LogReaderFactory));
-         container.AddComponent("QueueReader", typeof(IQueueReader), typeof(QueueReader));
-         container.AddComponent("UnitInfoFactory", typeof(IUnitInfoFactory), typeof(UnitInfoFactory));
-         InstanceProvider.SetContainer(container);
+         _container.AddComponent("DataAggregator", typeof(IDataAggregator), typeof(DataAggregator));
+         _container.AddComponent("LogReader", typeof(ILogReaderFactory), typeof(LogReaderFactory));
+         _container.AddComponent("QueueReader", typeof(IQueueReader), typeof(QueueReader));
+         _container.AddComponent("UnitInfoFactory", typeof(IUnitInfoFactory), typeof(UnitInfoFactory));
+         InstanceProvider.SetContainer(_container);
       }
 
+      // ReSharper disable InconsistentNaming
       [Test, Category("SMP")]
       public void SMP_3()
       {
          IProteinCollection proteinCollection = SetupMockProteinCollection("GROCVS", 100);
          IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
-         mocks.ReplayAll();
+         _mocks.ReplayAll();
       
          #region Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, _benchmarkCollection);
          Instance.InstanceHostType = InstanceType.PathInstance;
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
@@ -128,7 +129,7 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
          #endregion
 
-         mocks.VerifyAll();
+         _mocks.VerifyAll();
       }
 
       [Test, Category("SMP")]
@@ -136,10 +137,10 @@ namespace HFM.Instances.Tests
       {
          IProteinCollection proteinCollection = SetupMockProteinCollection("GROCVS", 100);
          IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
-         mocks.ReplayAll();
+         _mocks.ReplayAll();
 
          #region Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, _benchmarkCollection);
          Instance.InstanceHostType = InstanceType.PathInstance;
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
@@ -212,7 +213,7 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
          #endregion
 
-         mocks.VerifyAll();
+         _mocks.VerifyAll();
       }
 
       [Test, Category("SMP")]
@@ -227,10 +228,10 @@ namespace HFM.Instances.Tests
 
          IProteinCollection proteinCollection = SetupMockProteinCollection("GROCVS", 100);
          IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
-         mocks.ReplayAll();
+         _mocks.ReplayAll();
 
          #region Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, _benchmarkCollection);
          Instance.InstanceHostType = InstanceType.PathInstance;
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
@@ -304,7 +305,7 @@ namespace HFM.Instances.Tests
          Assert.IsNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
          #endregion
 
-         mocks.VerifyAll();
+         _mocks.VerifyAll();
       }
       
       [Test, Category("SMP")]
@@ -317,10 +318,10 @@ namespace HFM.Instances.Tests
 
          IProteinCollection proteinCollection = SetupMockProteinCollection("GROCVS", 100);
          IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
-         mocks.ReplayAll();
+         _mocks.ReplayAll();
 
          #region Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, _benchmarkCollection);
          Instance.InstanceHostType = InstanceType.PathInstance;
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
@@ -387,7 +388,7 @@ namespace HFM.Instances.Tests
          Assert.IsNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
          #endregion
 
-         mocks.VerifyAll();
+         _mocks.VerifyAll();
       }
 
       [Test, Category("SMP")]
@@ -395,10 +396,10 @@ namespace HFM.Instances.Tests
       {
          IProteinCollection proteinCollection = SetupMockProteinCollection("GROCVS", 100);
          IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
-         mocks.ReplayAll();
+         _mocks.ReplayAll();
 
          #region Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, _benchmarkCollection);
          Instance.InstanceHostType = InstanceType.PathInstance;
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
@@ -471,7 +472,7 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
          #endregion
 
-         mocks.VerifyAll();
+         _mocks.VerifyAll();
       }
 
       [Test, Category("SMP")]
@@ -479,10 +480,10 @@ namespace HFM.Instances.Tests
       {
          IProteinCollection proteinCollection = SetupMockProteinCollection("GROCVS", 100);
          IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
-         mocks.ReplayAll();
+         _mocks.ReplayAll();
 
          #region Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, _benchmarkCollection);
          Instance.InstanceHostType = InstanceType.PathInstance;
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
@@ -555,7 +556,7 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
          #endregion
 
-         mocks.VerifyAll();
+         _mocks.VerifyAll();
       }
 
       [Test, Category("SMP")]
@@ -563,10 +564,10 @@ namespace HFM.Instances.Tests
       {
          IProteinCollection proteinCollection = SetupMockProteinCollection("GRO-A3", 100);
          IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
-         mocks.ReplayAll();
+         _mocks.ReplayAll();
 
          #region Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, _benchmarkCollection);
          Instance.InstanceHostType = InstanceType.PathInstance;
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
@@ -639,7 +640,7 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
          #endregion
 
-         mocks.VerifyAll();
+         _mocks.VerifyAll();
       }
 
       [Test, Category("GPU")]
@@ -647,10 +648,10 @@ namespace HFM.Instances.Tests
       {
          IProteinCollection proteinCollection = SetupMockProteinCollection("GROGPU2", 100);
          IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
-         mocks.ReplayAll();
+         _mocks.ReplayAll();
 
          #region Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, _benchmarkCollection);
          Instance.InstanceHostType = InstanceType.PathInstance;
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
@@ -715,7 +716,7 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
          #endregion
 
-         mocks.VerifyAll();
+         _mocks.VerifyAll();
       }
 
       [Test, Category("GPU")]
@@ -723,10 +724,10 @@ namespace HFM.Instances.Tests
       {
          IProteinCollection proteinCollection = SetupMockProteinCollection("GROGPU2", 100);
          IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
-         mocks.ReplayAll();
+         _mocks.ReplayAll();
 
          #region Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, _benchmarkCollection);
          Instance.InstanceHostType = InstanceType.PathInstance;
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
@@ -799,7 +800,7 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
          #endregion         
 
-         mocks.VerifyAll();
+         _mocks.VerifyAll();
       }
 
       [Test, Category("GPU")]
@@ -807,10 +808,10 @@ namespace HFM.Instances.Tests
       {
          IProteinCollection proteinCollection = SetupMockProteinCollection("GROGPU2", 100);
          IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
-         mocks.ReplayAll();
+         _mocks.ReplayAll();
 
          #region Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, _benchmarkCollection);
          Instance.InstanceHostType = InstanceType.PathInstance;
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
@@ -834,7 +835,7 @@ namespace HFM.Instances.Tests
          
          Assert.IsNull(Instance.DataAggregator.Queue);
 
-         mocks.VerifyAll();
+         _mocks.VerifyAll();
       }
 
       [Test, Category("GPU")]
@@ -842,10 +843,10 @@ namespace HFM.Instances.Tests
       {
          IProteinCollection proteinCollection = SetupMockProteinCollection("GROGPU2", 100);
          IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
-         mocks.ReplayAll();
+         _mocks.ReplayAll();
 
          #region Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, _benchmarkCollection);
          Instance.InstanceHostType = InstanceType.PathInstance;
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
@@ -910,7 +911,169 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
          #endregion
 
-         mocks.VerifyAll();
+         _mocks.VerifyAll();
+      }
+
+      [Test, Category("GPU")]
+      public void GPU2_8_1()
+      {
+         IProteinCollection proteinCollection = SetupMockProteinCollection("GROGPU2", 100);
+         IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
+         _mocks.ReplayAll();
+
+         #region Setup Test Instance
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, _benchmarkCollection);
+         Instance.InstanceHostType = InstanceType.PathInstance;
+         // Don't Handle Status
+         Instance.HandleStatusOnRetrieve = false;
+         Instance.ClientIsOnVirtualMachine = false;
+         Instance.InstanceName = "GPU2_8_1";
+         Instance.Path = "..\\..\\..\\TestFiles\\GPU2_8";
+         #endregion
+
+         #region Retrieve Log Files
+         Instance.Retrieve();
+         Assert.Greater(Instance.LastRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
+         #endregion
+
+         #region Check Data Aggregator
+         Assert.IsNotNull(Instance.DataAggregator.Queue);
+         Assert.AreEqual(8, Instance.DataAggregator.CurrentUnitIndex);
+         Assert.IsNotNull(Instance.DataAggregator.CurrentClientRun);
+         Assert.AreEqual(ClientStatus.Stopped, Instance.DataAggregator.CurrentWorkUnitStatus);
+         Assert.IsNotNull(Instance.DataAggregator.CurrentLogLines);
+         Assert.IsNull(Instance.DataAggregator.UnitLogLines[0]);
+         Assert.IsNull(Instance.DataAggregator.UnitLogLines[1]);
+         Assert.IsNull(Instance.DataAggregator.UnitLogLines[2]);
+         Assert.IsNull(Instance.DataAggregator.UnitLogLines[3]);
+         Assert.IsNull(Instance.DataAggregator.UnitLogLines[4]);
+         Assert.IsNotNull(Instance.DataAggregator.UnitLogLines[5]);
+         Assert.IsNull(Instance.DataAggregator.UnitLogLines[6]);
+         Assert.IsNull(Instance.DataAggregator.UnitLogLines[7]);
+         Assert.IsNotNull(Instance.DataAggregator.UnitLogLines[8]);
+         Assert.IsNull(Instance.DataAggregator.UnitLogLines[9]);
+         Assert.AreEqual(Instance.DataAggregator.CurrentLogLines, Instance.DataAggregator.UnitLogLines[Instance.DataAggregator.CurrentUnitIndex]);
+         #endregion
+
+         #region Check Instance Level Values
+         Assert.AreEqual(ClientStatus.Stopped, Instance.Status);
+         Assert.AreEqual(false, Instance.ProductionValuesOk);
+         Assert.AreEqual("-send all -verbosity 9", Instance.Arguments);
+         Assert.AreEqual("6E4E78D7629BA4F9", Instance.UserId);
+         Assert.AreEqual(2, Instance.MachineId);
+         Assert.AreEqual("harlam357", Instance.FoldingID);
+         Assert.AreEqual(32, Instance.Team);
+         Assert.AreEqual(0, Instance.TotalRunCompletedUnits);
+         Assert.AreEqual(0, Instance.TotalRunFailedUnits);
+         Assert.AreEqual(7351, Instance.TotalClientCompletedUnits);
+         #endregion
+
+         #region Check Unit Info Data Values
+         Assert.IsNotNull(Instance.CurrentUnitInfo);
+         Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData);
+         Assert.AreEqual("GPU2_8_1", Instance.CurrentUnitInfo.UnitInfoData.OwningInstanceName);
+         Assert.AreEqual("..\\..\\..\\TestFiles\\GPU2_8", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
+         Assert.Greater(Instance.CurrentUnitInfo.UnitInfoData.UnitRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
+         Assert.AreEqual("harlam357", Instance.CurrentUnitInfo.UnitInfoData.FoldingID);
+         Assert.AreEqual(32, Instance.CurrentUnitInfo.UnitInfoData.Team);
+         Assert.AreEqual(ClientType.GPU, Instance.CurrentUnitInfo.UnitInfoData.TypeOfClient);
+         Assert.AreEqual(new DateTime(2010, 4, 28, 5, 5, 43), Instance.CurrentUnitInfo.UnitInfoData.DownloadTime);
+         Assert.AreEqual(new DateTime(2010, 5, 7, 5, 5, 43), Instance.CurrentUnitInfo.UnitInfoData.DueTime);
+         Assert.AreEqual(TimeSpan.MinValue, Instance.CurrentUnitInfo.UnitInfoData.UnitStartTimeStamp);
+         Assert.AreEqual(new DateTime(2010, 4, 28, 6, 17, 25), Instance.CurrentUnitInfo.UnitInfoData.FinishedTime);
+         Assert.AreEqual("", Instance.CurrentUnitInfo.UnitInfoData.CoreVersion);
+         Assert.AreEqual(6603, Instance.CurrentUnitInfo.UnitInfoData.ProjectID);
+         Assert.AreEqual(10, Instance.CurrentUnitInfo.UnitInfoData.ProjectRun);
+         Assert.AreEqual(601, Instance.CurrentUnitInfo.UnitInfoData.ProjectClone);
+         Assert.AreEqual(62, Instance.CurrentUnitInfo.UnitInfoData.ProjectGen);
+         Assert.AreEqual("", Instance.CurrentUnitInfo.UnitInfoData.ProteinName);
+         Assert.AreEqual("P6603R10C601G62", Instance.CurrentUnitInfo.UnitInfoData.ProteinTag);
+         Assert.AreEqual(WorkUnitResult.Unknown, Instance.CurrentUnitInfo.UnitInfoData.UnitResult);
+         Assert.AreEqual(0, Instance.CurrentUnitInfo.UnitInfoData.RawFramesComplete);
+         Assert.AreEqual(0, Instance.CurrentUnitInfo.UnitInfoData.RawFramesTotal);
+         Assert.AreEqual(0, Instance.CurrentUnitInfo.UnitInfoData.FramesObserved);
+         Assert.IsNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
+         #endregion
+
+         _mocks.VerifyAll();
+      }
+
+      [Test, Category("GPU")]
+      public void GPU2_8_2()
+      {
+         IProteinCollection proteinCollection = SetupMockProteinCollection("GROGPU2", 100);
+         IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
+         _mocks.ReplayAll();
+
+         #region Setup Test Instance
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, _benchmarkCollection);
+         Instance.InstanceHostType = InstanceType.PathInstance;
+         // Don't Handle Status
+         Instance.HandleStatusOnRetrieve = false;
+         Instance.ClientIsOnVirtualMachine = false;
+         Instance.InstanceName = "GPU2_8_2";
+         Instance.Path = "..\\..\\..\\TestFiles\\GPU2_8";
+         // Make the queue.dat unavailable for parsing
+         Instance.RemoteQueueFilename = "wrong_file_name.dat";
+         #endregion
+
+         #region Retrieve Log Files
+         Instance.Retrieve();
+         Assert.Greater(Instance.LastRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
+         #endregion
+
+         #region Check Data Aggregator
+         Assert.IsNull(Instance.DataAggregator.Queue);
+         Assert.AreEqual(1, Instance.DataAggregator.CurrentUnitIndex);
+         Assert.IsNotNull(Instance.DataAggregator.CurrentClientRun);
+         Assert.AreEqual(ClientStatus.Stopped, Instance.DataAggregator.CurrentWorkUnitStatus);
+         Assert.IsNotNull(Instance.DataAggregator.CurrentLogLines);
+         Assert.IsNull(Instance.DataAggregator.UnitLogLines[0]);
+         Assert.IsNotNull(Instance.DataAggregator.UnitLogLines[1]);
+         Assert.AreEqual(Instance.DataAggregator.CurrentLogLines, Instance.DataAggregator.UnitLogLines[Instance.DataAggregator.CurrentUnitIndex]);
+         #endregion
+
+         #region Check Instance Level Values
+         Assert.AreEqual(ClientStatus.Stopped, Instance.Status);
+         Assert.AreEqual(false, Instance.ProductionValuesOk);
+         Assert.AreEqual("-send all -verbosity 9", Instance.Arguments);
+         Assert.AreEqual("6E4E78D7629BA4F9", Instance.UserId);
+         Assert.AreEqual(2, Instance.MachineId);
+         Assert.AreEqual("harlam357", Instance.FoldingID);
+         Assert.AreEqual(32, Instance.Team);
+         Assert.AreEqual(0, Instance.TotalRunCompletedUnits);
+         Assert.AreEqual(0, Instance.TotalRunFailedUnits);
+         Assert.AreEqual(7351, Instance.TotalClientCompletedUnits);
+         #endregion
+
+         #region Check Unit Info Data Values
+         Assert.IsNotNull(Instance.CurrentUnitInfo);
+         Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData);
+         Assert.AreEqual("GPU2_8_2", Instance.CurrentUnitInfo.UnitInfoData.OwningInstanceName);
+         Assert.AreEqual("..\\..\\..\\TestFiles\\GPU2_8", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
+         Assert.Greater(Instance.CurrentUnitInfo.UnitInfoData.UnitRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
+         Assert.AreEqual("harlam357", Instance.CurrentUnitInfo.UnitInfoData.FoldingID);
+         Assert.AreEqual(32, Instance.CurrentUnitInfo.UnitInfoData.Team);
+         Assert.AreEqual(ClientType.GPU, Instance.CurrentUnitInfo.UnitInfoData.TypeOfClient);
+         Assert.AreEqual(DateTime.MinValue, Instance.CurrentUnitInfo.UnitInfoData.DownloadTime);
+         Assert.AreEqual(DateTime.MinValue, Instance.CurrentUnitInfo.UnitInfoData.DueTime);
+         Assert.AreEqual(TimeSpan.MinValue, Instance.CurrentUnitInfo.UnitInfoData.UnitStartTimeStamp);
+         Assert.AreEqual(DateTime.MinValue, Instance.CurrentUnitInfo.UnitInfoData.FinishedTime);
+         Assert.AreEqual("", Instance.CurrentUnitInfo.UnitInfoData.CoreVersion);
+         Assert.AreEqual(5770, Instance.CurrentUnitInfo.UnitInfoData.ProjectID); // assuming Project ID from FAHlog
+         Assert.AreEqual(1, Instance.CurrentUnitInfo.UnitInfoData.ProjectRun);
+         Assert.AreEqual(325, Instance.CurrentUnitInfo.UnitInfoData.ProjectClone);
+         Assert.AreEqual(376, Instance.CurrentUnitInfo.UnitInfoData.ProjectGen);
+         Assert.AreEqual("", Instance.CurrentUnitInfo.UnitInfoData.ProteinName);
+         Assert.AreEqual("", Instance.CurrentUnitInfo.UnitInfoData.ProteinTag);
+         Assert.AreEqual(WorkUnitResult.Unknown, Instance.CurrentUnitInfo.UnitInfoData.UnitResult);
+         Assert.AreEqual(0, Instance.CurrentUnitInfo.UnitInfoData.RawFramesComplete);
+         Assert.AreEqual(0, Instance.CurrentUnitInfo.UnitInfoData.RawFramesTotal);
+         Assert.AreEqual(0, Instance.CurrentUnitInfo.UnitInfoData.FramesObserved);
+         Assert.IsNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
+         #endregion
+
+         _mocks.VerifyAll();
       }
 
       [Test, Category("Standard")]
@@ -918,10 +1081,10 @@ namespace HFM.Instances.Tests
       {
          IProteinCollection proteinCollection = SetupMockProteinCollection("ProtoMol", 100);
          IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
-         mocks.ReplayAll();
+         _mocks.ReplayAll();
 
          #region Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, _benchmarkCollection);
          Instance.InstanceHostType = InstanceType.PathInstance;
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
@@ -994,7 +1157,7 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
          #endregion
 
-         mocks.VerifyAll();
+         _mocks.VerifyAll();
       }
 
       [Test, Category("Standard")]
@@ -1002,10 +1165,10 @@ namespace HFM.Instances.Tests
       {
          IProteinCollection proteinCollection = SetupMockProteinCollection("ProtoMol", 100);
          IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
-         mocks.ReplayAll();
+         _mocks.ReplayAll();
 
          #region Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection);
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, _benchmarkCollection);
          Instance.InstanceHostType = InstanceType.PathInstance;
          // Don't Handle Status
          Instance.HandleStatusOnRetrieve = false;
@@ -1070,75 +1233,152 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
          #endregion
 
-         mocks.VerifyAll();
+         _mocks.VerifyAll();
       }
+
+      [Test, Category("Standard")]
+      public void Standard_8() // Battery Pause w/SendingWorkPacket during pause
+      {
+         IProteinCollection proteinCollection = SetupMockProteinCollection("AMBER", 100);
+         IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
+         _mocks.ReplayAll();
+
+         #region Setup Test Instance
+         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, _benchmarkCollection);
+         Instance.InstanceHostType = InstanceType.PathInstance;
+         // Don't Handle Status
+         Instance.HandleStatusOnRetrieve = false;
+         Instance.ClientIsOnVirtualMachine = false;
+         Instance.InstanceName = "Standard_8";
+         Instance.Path = "..\\..\\..\\TestFiles\\Standard_8";
+         #endregion
+
+         #region Retrieve Log Files
+         Instance.Retrieve();
+         Assert.Greater(Instance.LastRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
+         #endregion
+
+         #region Check Data Aggregator
+         Assert.IsNull(Instance.DataAggregator.Queue);
+         Assert.AreEqual(1, Instance.DataAggregator.CurrentUnitIndex);
+         Assert.IsNotNull(Instance.DataAggregator.CurrentClientRun);
+         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, Instance.DataAggregator.CurrentWorkUnitStatus);
+         Assert.IsNotNull(Instance.DataAggregator.CurrentLogLines);
+         Assert.IsNotNull(Instance.DataAggregator.UnitLogLines[0]);
+         Assert.IsNotNull(Instance.DataAggregator.UnitLogLines[1]);
+         Assert.AreEqual(Instance.DataAggregator.CurrentLogLines, Instance.DataAggregator.UnitLogLines[Instance.DataAggregator.CurrentUnitIndex]);
+         #endregion
+
+         #region Check Instance Level Values
+         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, Instance.Status);
+         Assert.AreEqual(true, Instance.ProductionValuesOk);
+         Assert.AreEqual(String.Empty, Instance.Arguments);
+         Assert.AreEqual("1E19BD450434A6ED", Instance.UserId);
+         Assert.AreEqual(1, Instance.MachineId);
+         Assert.AreEqual("DrSpalding", Instance.FoldingID);
+         Assert.AreEqual(48083, Instance.Team);
+         Assert.AreEqual(10, Instance.TotalRunCompletedUnits);
+         Assert.AreEqual(0, Instance.TotalRunFailedUnits);
+         Assert.AreEqual(240, Instance.TotalClientCompletedUnits);
+         #endregion
+
+         #region Check Unit Info Data Values
+         Assert.IsNotNull(Instance.CurrentUnitInfo);
+         Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData);
+         Assert.AreEqual("Standard_8", Instance.CurrentUnitInfo.UnitInfoData.OwningInstanceName);
+         Assert.AreEqual("..\\..\\..\\TestFiles\\Standard_8", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
+         Assert.Greater(Instance.CurrentUnitInfo.UnitInfoData.UnitRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
+         Assert.AreEqual("DrSpalding", Instance.CurrentUnitInfo.UnitInfoData.FoldingID);
+         Assert.AreEqual(48083, Instance.CurrentUnitInfo.UnitInfoData.Team);
+         Assert.AreEqual(ClientType.Standard, Instance.CurrentUnitInfo.UnitInfoData.TypeOfClient);
+         Assert.AreEqual(DateTime.MinValue, Instance.CurrentUnitInfo.UnitInfoData.DownloadTime);
+         Assert.AreEqual(DateTime.MinValue, Instance.CurrentUnitInfo.UnitInfoData.DueTime);
+         Assert.AreEqual(new TimeSpan(01, 50, 48), Instance.CurrentUnitInfo.UnitInfoData.UnitStartTimeStamp);
+         Assert.AreEqual(DateTime.MinValue, Instance.CurrentUnitInfo.UnitInfoData.FinishedTime);
+         Assert.AreEqual("1.03", Instance.CurrentUnitInfo.UnitInfoData.CoreVersion);
+         Assert.AreEqual(4606, Instance.CurrentUnitInfo.UnitInfoData.ProjectID);
+         Assert.AreEqual(26, Instance.CurrentUnitInfo.UnitInfoData.ProjectRun);
+         Assert.AreEqual(185, Instance.CurrentUnitInfo.UnitInfoData.ProjectClone);
+         Assert.AreEqual(6, Instance.CurrentUnitInfo.UnitInfoData.ProjectGen);
+         Assert.AreEqual(String.Empty, Instance.CurrentUnitInfo.UnitInfoData.ProteinName);
+         Assert.AreEqual(String.Empty, Instance.CurrentUnitInfo.UnitInfoData.ProteinTag);
+         Assert.AreEqual(WorkUnitResult.Unknown, Instance.CurrentUnitInfo.UnitInfoData.UnitResult);
+         Assert.AreEqual(175000, Instance.CurrentUnitInfo.UnitInfoData.RawFramesComplete);
+         Assert.AreEqual(2500000, Instance.CurrentUnitInfo.UnitInfoData.RawFramesTotal);
+         Assert.AreEqual(5, Instance.CurrentUnitInfo.UnitInfoData.FramesObserved);
+         Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
+         #endregion
+
+         _mocks.VerifyAll();
+      }
+      // ReSharper restore InconsistentNaming
 
       [Test]
       public void ClientInstancePropertyTest()
       {
          IProteinCollection proteinCollection = SetupMockProteinCollection("GROCVS", 100);
-         IPreferenceSet Prefs = SetupMockPreferenceSet("harlam357", 32);
-         mocks.ReplayAll();
+         IPreferenceSet prefs = SetupMockPreferenceSet("harlam357", 32);
+         _mocks.ReplayAll();
 
          // Setup Test Instance
-         ClientInstance Instance = new ClientInstance(Prefs, proteinCollection, benchmarkCollection);
-         Instance.InstanceHostType = InstanceType.PathInstance;
+         ClientInstance instance = new ClientInstance(prefs, proteinCollection, _benchmarkCollection);
+         instance.InstanceHostType = InstanceType.PathInstance;
 
-         Assert.AreEqual(String.Empty, Instance.ClientPathAndArguments);
-         Instance.Path = @"C:\ThePath\To\The\Files\";
-         Instance.Arguments = "-some -flags";
-         Assert.AreEqual(String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Instance.Path, Instance.Arguments),
-                         Instance.ClientPathAndArguments);
+         Assert.AreEqual(String.Empty, instance.ClientPathAndArguments);
+         instance.Path = @"C:\ThePath\To\The\Files\";
+         instance.Arguments = "-some -flags";
+         Assert.AreEqual(String.Format(CultureInfo.InvariantCulture, "{0} ({1})", instance.Path, instance.Arguments),
+                         instance.ClientPathAndArguments);
                          
-         Assert.AreEqual(true, Instance.UserIdUnknown);
-         Instance.UserId = "SOMEUSERID";
-         Assert.AreEqual(false, Instance.UserIdUnknown);
+         Assert.AreEqual(true, instance.UserIdUnknown);
+         instance.UserId = "SOMEUSERID";
+         Assert.AreEqual(false, instance.UserIdUnknown);
          
-         Assert.AreEqual(0, Instance.MachineId);
-         Instance.MachineId = 1;
-         Assert.AreEqual(String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Instance.UserId, Instance.MachineId), 
-                         Instance.UserAndMachineId);
+         Assert.AreEqual(0, instance.MachineId);
+         instance.MachineId = 1;
+         Assert.AreEqual(String.Format(CultureInfo.InvariantCulture, "{0} ({1})", instance.UserId, instance.MachineId), 
+                         instance.UserAndMachineId);
 
          // True if the defaults are in place
-         Assert.AreEqual(true, Instance.IsUsernameOk());
+         Assert.AreEqual(true, instance.IsUsernameOk());
          
-         Instance.FoldingID = "user";
-         Instance.Team = 3232;
-         Assert.AreEqual(true, Instance.IsUsernameOk());
+         instance.FoldingID = "user";
+         instance.Team = 3232;
+         Assert.AreEqual(true, instance.IsUsernameOk());
          // Status must not be Unknown or Offline for function to evaluate false
-         Instance.Status = ClientStatus.RunningNoFrameTimes;
-         Assert.AreEqual(false, Instance.IsUsernameOk());
+         instance.Status = ClientStatus.RunningNoFrameTimes;
+         Assert.AreEqual(false, instance.IsUsernameOk());
          
-         Instance.FoldingID = "harlam357";
-         Instance.Team = 32;
-         Assert.AreEqual(true, Instance.IsUsernameOk());
-         Assert.AreEqual(String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Instance.FoldingID, Instance.Team),
-                         Instance.FoldingIDAndTeam);
+         instance.FoldingID = "harlam357";
+         instance.Team = 32;
+         Assert.AreEqual(true, instance.IsUsernameOk());
+         Assert.AreEqual(String.Format(CultureInfo.InvariantCulture, "{0} ({1})", instance.FoldingID, instance.Team),
+                         instance.FoldingIDAndTeam);
       }
 
-      private IProteinCollection SetupMockProteinCollection(string Core, int Frames)
+      private IProteinCollection SetupMockProteinCollection(string core, int frames)
       {
-         IProtein currentProtein = mocks.DynamicMock<IProtein>();
-         Expect.Call(currentProtein.Core).Return(Core).Repeat.Any();
-         Expect.Call(currentProtein.Frames).Return(Frames).Repeat.Any();
+         IProtein currentProtein = _mocks.DynamicMock<IProtein>();
+         Expect.Call(currentProtein.Core).Return(core).Repeat.Any();
+         Expect.Call(currentProtein.Frames).Return(frames).Repeat.Any();
 
-         IProtein newProtein = mocks.DynamicMock<IProtein>();
-         Expect.Call(newProtein.Frames).Return(Frames).Repeat.Any();
+         IProtein newProtein = _mocks.DynamicMock<IProtein>();
+         Expect.Call(newProtein.Frames).Return(frames).Repeat.Any();
 
-         IProteinCollection proteinCollection = mocks.DynamicMock<IProteinCollection>();
+         IProteinCollection proteinCollection = _mocks.DynamicMock<IProteinCollection>();
          Expect.Call(proteinCollection.GetProtein(0)).Return(currentProtein).IgnoreArguments().Repeat.Any();
          Expect.Call(proteinCollection.GetNewProtein()).Return(newProtein).Repeat.Any();
 
          return proteinCollection;
       }
 
-      private IPreferenceSet SetupMockPreferenceSet(string Username, int Team)
+      private IPreferenceSet SetupMockPreferenceSet(string username, int team)
       {
-         IPreferenceSet Prefs = mocks.DynamicMock<IPreferenceSet>();
-         Expect.Call(Prefs.GetPreference<string>(Preference.StanfordID)).Return(Username).Repeat.Any();
-         Expect.Call(Prefs.GetPreference<int>(Preference.TeamID)).Return(Team).Repeat.Any();
-         Expect.Call(Prefs.CacheDirectory).Return(String.Empty).Repeat.Any();
-         return Prefs;
+         IPreferenceSet prefs = _mocks.DynamicMock<IPreferenceSet>();
+         Expect.Call(prefs.GetPreference<string>(Preference.StanfordID)).Return(username).Repeat.Any();
+         Expect.Call(prefs.GetPreference<int>(Preference.TeamID)).Return(team).Repeat.Any();
+         Expect.Call(prefs.CacheDirectory).Return(String.Empty).Repeat.Any();
+         return prefs;
       }
    }
 }

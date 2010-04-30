@@ -151,11 +151,6 @@ namespace HFM.Instances
       private bool _ChangedAfterSave;
 
       /// <summary>
-      /// Markup Generator Interface
-      /// </summary>
-      private IMarkupGenerator _markupGenerator;
-
-      /// <summary>
       /// Network Operations Interface
       /// </summary>
       private NetworkOps _networkOps;
@@ -824,14 +819,12 @@ namespace HFM.Instances
       {
          Debug.Assert(_Prefs.GetPreference<bool>(Preference.GenerateWeb));
 
-         if (_markupGenerator == null)
-         {
-            _markupGenerator = new MarkupGenerator(_Prefs, _proteinCollection);
-         }
+         // lazy initialize
+         IMarkupGenerator markupGenerator = InstanceProvider.GetInstance<IMarkupGenerator>();
 
          try
          {
-            if (_markupGenerator.GenerationInProgress)
+            if (markupGenerator.GenerationInProgress)
             {
                HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Web Generation already in progress...");
             }
@@ -842,8 +835,8 @@ namespace HFM.Instances
                DateTime start = HfmTrace.ExecStart;
                ICollection<IClientInstance> instances = GetCurrentInstanceArray();
                instances = GetDisplaySortedInstanceCollection(instances);
-               _markupGenerator.GenerateHtml(instances);
-               DeployWebsite(instances);
+               markupGenerator.GenerateHtml(instances);
+               DeployWebsite(markupGenerator.HtmlFilePaths, instances);
                HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format(CultureInfo.CurrentCulture, 
                   "Total Web Generation Execution Time: {0}", HfmTrace.GetExecTime(start)));
             }
@@ -872,7 +865,7 @@ namespace HFM.Instances
          return sortedCollection.AsReadOnly();
       }
       
-      private void DeployWebsite(ICollection<IClientInstance> instances)
+      private void DeployWebsite(ICollection<string> htmlFilePaths, ICollection<IClientInstance> instances)
       {
          Match match = StringOps.MatchFtpWithUserPassUrl(_Prefs.GetPreference<string>(Preference.WebRoot));
 
@@ -884,7 +877,7 @@ namespace HFM.Instances
             string password = match.Result("${password}");
 
             if (_networkOps == null) _networkOps = new NetworkOps();
-            _networkOps.FtpWebUpload(server, ftpPath, username, password, _markupGenerator.HtmlFilePaths, instances, _Prefs);
+            _networkOps.FtpWebUpload(server, ftpPath, username, password, htmlFilePaths, instances, _Prefs);
          }
          else
          {
@@ -904,7 +897,7 @@ namespace HFM.Instances
                File.Copy(cssFilePath, Path.Combine(webRoot, cssFile), true);
             }
 
-            foreach (string filePath in _markupGenerator.HtmlFilePaths)
+            foreach (string filePath in htmlFilePaths)
             {
                File.Copy(filePath, Path.Combine(webRoot, Path.GetFileName(filePath)), true);
             }

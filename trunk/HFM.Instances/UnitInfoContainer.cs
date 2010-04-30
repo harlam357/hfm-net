@@ -32,8 +32,8 @@ namespace HFM.Instances
    {
       #region Constants
       private const string DataStoreFilename = "UnitInfoCache.dat";
-      private const string CompletedUnitsCSV = "CompletedUnits.csv";
-      private const string COMMA = ",";
+      private const string CompletedUnitsCsv = "CompletedUnits.csv";
+      private const string Comma = ",";
       #endregion
 
       #region Members
@@ -44,13 +44,13 @@ namespace HFM.Instances
       /// <summary>
       /// Preferences Interface
       /// </summary>
-      private readonly IPreferenceSet _Prefs; 
+      private readonly IPreferenceSet _prefs; 
       #endregion
       
       #region Constructor
-      public UnitInfoContainer(IPreferenceSet Prefs)
+      public UnitInfoContainer(IPreferenceSet prefs)
       {
-         _Prefs = Prefs;
+         _prefs = prefs;
       } 
       #endregion
 
@@ -79,11 +79,8 @@ namespace HFM.Instances
       /// <param name="instancePath">ClientInstance Path</param>
       public IUnitInfo RetrieveUnitInfo(string instanceName, string instancePath)
       {
-         UnitInfo findUnit = _collection.UnitInfoList.Find(delegate(UnitInfo unit)
-         {
-            return unit.OwningInstanceName == instanceName &&
-                   unit.OwningInstancePath == instancePath;
-         });
+         UnitInfo findUnit = _collection.UnitInfoList.Find(unit => unit.OwningInstanceName == instanceName &&
+                                                                   unit.OwningInstancePath == instancePath);
          return findUnit;
       }
       #endregion
@@ -102,7 +99,7 @@ namespace HFM.Instances
             bool bWriteHeader = false;
 
             string fileName = Path.Combine(InstanceProvider.GetInstance<IPreferenceSet>().GetPreference<string>(
-                                              Preference.ApplicationDataFolderPath), CompletedUnitsCSV);
+                                              Preference.ApplicationDataFolderPath), CompletedUnitsCsv);
 
             if (File.Exists(fileName) == false)
             {
@@ -133,13 +130,13 @@ namespace HFM.Instances
 
       private static void UpgradeUnitInfoCsvFile()
       {
-         IPreferenceSet Prefs = InstanceProvider.GetInstance<IPreferenceSet>();
-         string ApplicationDataFolderPath = Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath);
+         IPreferenceSet prefs = InstanceProvider.GetInstance<IPreferenceSet>();
+         string applicationDataFolderPath = prefs.GetPreference<string>(Preference.ApplicationDataFolderPath);
 
-         string oldFilePath = Path.Combine(Prefs.ApplicationPath, CompletedUnitsCSV);
-         string oldFilePath022 = Path.Combine(Prefs.ApplicationPath, CompletedUnitsCSV.Replace(".csv", ".0_2_2.csv"));
-         string newFilePath = Path.Combine(ApplicationDataFolderPath, CompletedUnitsCSV);
-         string newFilePath022 = Path.Combine(ApplicationDataFolderPath, CompletedUnitsCSV.Replace(".csv", ".0_2_2.csv"));
+         string oldFilePath = Path.Combine(prefs.ApplicationPath, CompletedUnitsCsv);
+         string oldFilePath022 = Path.Combine(prefs.ApplicationPath, CompletedUnitsCsv.Replace(".csv", ".0_2_2.csv"));
+         string newFilePath = Path.Combine(applicationDataFolderPath, CompletedUnitsCsv);
+         string newFilePath022 = Path.Combine(applicationDataFolderPath, CompletedUnitsCsv.Replace(".csv", ".0_2_2.csv"));
 
          // If file does not exist in new location but does exist in old location
          if (File.Exists(newFilePath) == false && File.Exists(oldFilePath))
@@ -183,7 +180,7 @@ namespace HFM.Instances
                csvFile = null;
 
                // Split the line on Comma and check the resulting array length
-               string[] headerSplit = headerLine.Split(new string[] { COMMA }, StringSplitOptions.None);
+               string[] headerSplit = headerLine.Split(new[] { Comma }, StringSplitOptions.None);
                // If less than 19 items this file was created before v0.3.0, last release version
                // before v0.3.0 is v0.2.2.  Rename the current file with last release version.
                if (headerSplit.Length < 19)
@@ -209,41 +206,41 @@ namespace HFM.Instances
       {
          StringBuilder sbldr = new StringBuilder();
          sbldr.Append("ProjectID");
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append("Work Unit Name");
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append("Instance Name");
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append("Instance Path");
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append("Username");
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append("Team");
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append("Client Type");
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append("Core Name");
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append("Core Version");
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append("Frame Time (Average)");
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append("PPD");
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append("Download Date");
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append("Download Time");
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append("Completion Date (Observed)");
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append("Completion Time (Observed)");
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append("Credit");
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append("Frames");
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append("Atoms");
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append("Run/Clone/Gen");
 
          return sbldr.ToString();
@@ -251,55 +248,55 @@ namespace HFM.Instances
 
       private static string GetUnitCsvLine(IUnitInfoLogic unit)
       {
-         IPreferenceSet Prefs = InstanceProvider.GetInstance<IPreferenceSet>();
+         IPreferenceSet prefs = InstanceProvider.GetInstance<IPreferenceSet>();
 
          StringBuilder sbldr = new StringBuilder();
          sbldr.Append(unit.ProjectID);
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append(unit.WorkUnitName);
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append(unit.OwningInstanceName);
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append(unit.OwningInstancePath);
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append(unit.FoldingID);
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append(unit.Team);
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append(unit.TypeOfClient.ToString());
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append(unit.Core);
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append(unit.CoreVersion);
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          // Issue 43 - Use Time Per All Sections and not unit.PPD
          sbldr.Append(unit.TimePerAllSections.ToString());
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          // Issue 43 - Use Time Per All Sections and not unit.PPD
-         sbldr.Append(Math.Round(unit.PPDPerAllSections, Prefs.GetPreference<int>(Preference.DecimalPlaces)));
-         sbldr.Append(COMMA);
+         sbldr.Append(Math.Round(unit.PPDPerAllSections, prefs.GetPreference<int>(Preference.DecimalPlaces)));
+         sbldr.Append(Comma);
          sbldr.Append(unit.DownloadTime.ToShortDateString());
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append(unit.DownloadTime.ToShortTimeString());
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          if (unit.FinishedTime.Equals(DateTime.MinValue))
          {
             HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Writing CompletedUnitInfo using DateTime.Now.", true);
             sbldr.Append(DateTime.Now.ToShortDateString());
-            sbldr.Append(COMMA);
+            sbldr.Append(Comma);
             sbldr.Append(DateTime.Now.ToShortTimeString());
-            sbldr.Append(COMMA);
+            sbldr.Append(Comma);
          }
          else
          {
             HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Writing CompletedUnitInfo using UnitInfo.FinishedTime.", true);
             sbldr.Append(unit.FinishedTime.ToShortDateString());
-            sbldr.Append(COMMA);
+            sbldr.Append(Comma);
             sbldr.Append(unit.FinishedTime.ToShortTimeString());
-            sbldr.Append(COMMA);
+            sbldr.Append(Comma);
          }
          // Write Bonus Credit if enabled - Issue 125
-         if (Prefs.GetPreference<bool>(Preference.CalculateBonus))
+         if (prefs.GetPreference<bool>(Preference.CalculateBonus))
          {
             sbldr.Append(unit.GetBonusCredit());
          }
@@ -307,11 +304,11 @@ namespace HFM.Instances
          {
             sbldr.Append(unit.Credit);
          }
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append(unit.Frames);
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append(unit.NumAtoms);
-         sbldr.Append(COMMA);
+         sbldr.Append(Comma);
          sbldr.Append(String.Format("({0}/{1}/{2})", unit.ProjectRun, unit.ProjectClone, unit.ProjectGen));
 
          return sbldr.ToString();
@@ -324,12 +321,12 @@ namespace HFM.Instances
       /// </summary>
       public void Read()
       {
-         string FilePath = Path.Combine(_Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), DataStoreFilename);
+         string filePath = Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), DataStoreFilename);
          
-         _collection = DeserializeLegacy(FilePath);
+         _collection = DeserializeLegacy(filePath);
          if (_collection == null)
          {
-            _collection = Deserialize(FilePath);
+            _collection = Deserialize(filePath);
          }
 
          if (_collection == null)
@@ -343,16 +340,16 @@ namespace HFM.Instances
       /// </summary>
       public void Write()
       {
-         Serialize(_collection, Path.Combine(_Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), DataStoreFilename));
+         Serialize(_collection, Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), DataStoreFilename));
       }
 
-      private static readonly object _serializeLock = typeof(UnitInfoCollection);
+      private static readonly object SerializeLock = typeof(UnitInfoCollection);
 
       public static void Serialize(UnitInfoCollection collection, string filePath)
       {
-         DateTime Start = HfmTrace.ExecStart;
+         DateTime start = HfmTrace.ExecStart;
 
-         lock (_serializeLock)
+         lock (SerializeLock)
          {
             using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
             {
@@ -367,12 +364,12 @@ namespace HFM.Instances
             }
          }
 
-         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, start);
       }
 
       public static UnitInfoCollection Deserialize(string filePath)
       {
-         DateTime Start = HfmTrace.ExecStart;
+         DateTime start = HfmTrace.ExecStart;
 
          UnitInfoCollection collection = null;
          try
@@ -387,14 +384,14 @@ namespace HFM.Instances
             HfmTrace.WriteToHfmConsole(ex);
          }
 
-         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, start);
 
          return collection;
       }
 
       public static UnitInfoCollection DeserializeLegacy(string filePath)
       {
-         DateTime Start = HfmTrace.ExecStart;
+         DateTime start = HfmTrace.ExecStart;
 
          UnitInfoCollection collection = null;
 
@@ -417,7 +414,7 @@ namespace HFM.Instances
             }
          }
 
-         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, start);
 
          return collection;
       }
