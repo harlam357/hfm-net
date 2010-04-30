@@ -221,7 +221,14 @@ namespace HFM.Forms
          }
          else
          {
-            Activate();
+            if (PlatformOps.IsRunningOnMono())
+            {
+               Activate();
+            }
+            else
+            {
+               NativeMethods.SetForegroundWindow(Handle);
+            }
          }
       }
 
