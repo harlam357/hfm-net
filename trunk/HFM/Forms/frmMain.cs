@@ -31,7 +31,6 @@ using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
-using harlam357.Net;
 using harlam357.Windows.Forms;
 
 using HFM.Classes;
@@ -302,10 +301,10 @@ namespace HFM.Forms
       
       private void CheckForUpdate(bool userInvoked)
       {
-         HfmTrace.WriteToHfmConsole("Checking for update...");
          if (_updateLogic == null) _updateLogic = new UpdateLogic(this, new MessageBoxView());
          if (_updateLogic.CheckInProgress == false)
          {
+            HfmTrace.WriteToHfmConsole("Checking for update...");
             _updateLogic.BeginCheckForUpdate(ShowUpdate, userInvoked);
          }
       }

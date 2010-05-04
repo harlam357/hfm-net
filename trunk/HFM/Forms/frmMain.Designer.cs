@@ -662,6 +662,7 @@ namespace HFM.Forms
          // 
          this.mnuHelpSep1.Name = "mnuHelpSep1";
          this.mnuHelpSep1.Size = new System.Drawing.Size(194, 6);
+         this.mnuHelpSep1.Visible = false;
          // 
          // mnuHelpContents
          // 
@@ -696,7 +697,6 @@ namespace HFM.Forms
          // 
          this.mnuHelpSep3.Name = "mnuHelpSep3";
          this.mnuHelpSep3.Size = new System.Drawing.Size(194, 6);
-         this.mnuHelpSep3.Visible = false;
          // 
          // mnuHelpAbout
          // 
