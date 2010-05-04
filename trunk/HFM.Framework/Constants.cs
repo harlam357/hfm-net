@@ -25,6 +25,7 @@ namespace HFM.Framework
    {
       #region Public Const
       public const string ExeName = "HFM";
+      public const string ApplicationName = "HFM.NET";
 
       public const string HfmLogFileName = "HFM.log";
       public const string HfmPrevLogFileName = "HFM-prev.log";

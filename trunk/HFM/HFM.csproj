@@ -126,6 +126,7 @@
     <Compile Include="Classes\GroupBoxWrapper.Designer.cs">
       <DependentUpon>GroupBoxWrapper.cs</DependentUpon>
     </Compile>
+    <Compile Include="Classes\UpdateLogic.cs" />
     <Compile Include="Classes\LabelWrapper.cs">
       <SubType>Component</SubType>
     </Compile>

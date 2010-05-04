@@ -97,6 +97,8 @@ namespace HFM.Forms
          this.mnuHelpContents = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuHelpIndex = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuHelpSep2 = new System.Windows.Forms.ToolStripSeparator();
+         this.mnuHelpCheckForUpdate = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuHelpSep3 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
          this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
          this.saveConfigDialog = new System.Windows.Forms.SaveFileDialog();
@@ -642,6 +644,8 @@ namespace HFM.Forms
             this.mnuHelpContents,
             this.mnuHelpIndex,
             this.mnuHelpSep2,
+            this.mnuHelpCheckForUpdate,
+            this.mnuHelpSep3,
             this.mnuHelpAbout});
          this.mnuHelp.Name = "mnuHelp";
          this.mnuHelp.Size = new System.Drawing.Size(40, 20);
@@ -680,7 +684,19 @@ namespace HFM.Forms
          // 
          this.mnuHelpSep2.Name = "mnuHelpSep2";
          this.mnuHelpSep2.Size = new System.Drawing.Size(194, 6);
-         this.mnuHelpSep2.Visible = false;
+         // 
+         // mnuHelpCheckForUpdate
+         // 
+         this.mnuHelpCheckForUpdate.Name = "mnuHelpCheckForUpdate";
+         this.mnuHelpCheckForUpdate.Size = new System.Drawing.Size(197, 22);
+         this.mnuHelpCheckForUpdate.Text = "Check For Update";
+         this.mnuHelpCheckForUpdate.Click += new System.EventHandler(this.mnuHelpCheckForUpdate_Click);
+         // 
+         // mnuHelpSep3
+         // 
+         this.mnuHelpSep3.Name = "mnuHelpSep3";
+         this.mnuHelpSep3.Size = new System.Drawing.Size(194, 6);
+         this.mnuHelpSep3.Visible = false;
          // 
          // mnuHelpAbout
          // 
@@ -1010,5 +1026,7 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripMenuItem mnuHelpHfmGroup;
       private System.Windows.Forms.ToolStripSeparator mnuHelpSep2;
       private System.Windows.Forms.ToolStripMenuItem mnuViewToggleCompletedCountStyle;
+      private System.Windows.Forms.ToolStripMenuItem mnuHelpCheckForUpdate;
+      private System.Windows.Forms.ToolStripSeparator mnuHelpSep3;
    }
 }

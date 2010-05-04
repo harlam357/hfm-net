@@ -242,6 +242,7 @@ namespace HFM.Preferences
          _Preferences.Add(Preference.WebInstance, new Metadata<string>());
 
          _Preferences.Add(Preference.RunMinimized, new Metadata<bool>());
+         _Preferences.Add(Preference.StartupCheckForUpdate, new Metadata<bool>());
          _Preferences.Add(Preference.UseDefaultConfigFile, new Metadata<bool>());
          _Preferences.Add(Preference.DefaultConfigFile, new Metadata<string>());
 
@@ -344,6 +345,7 @@ namespace HFM.Preferences
          SetPreference(Preference.WebInstance, Settings.Default.WebInstance);
 
          SetPreference(Preference.RunMinimized, Settings.Default.RunMinimized);
+         SetPreference(Preference.StartupCheckForUpdate, Settings.Default.StartupCheckForUpdate);
          SetPreference(Preference.UseDefaultConfigFile, Settings.Default.UseDefaultConfigFile);
          SetPreference(Preference.DefaultConfigFile, Settings.Default.DefaultConfigFile);
 
@@ -697,6 +699,7 @@ namespace HFM.Preferences
             Settings.Default.WebInstance = GetPreference<string>(Preference.WebInstance);
 
             Settings.Default.RunMinimized = GetPreference<bool>(Preference.RunMinimized);
+            Settings.Default.StartupCheckForUpdate = GetPreference<bool>(Preference.StartupCheckForUpdate);
             Settings.Default.UseDefaultConfigFile = GetPreference<bool>(Preference.UseDefaultConfigFile);
             Settings.Default.DefaultConfigFile = GetPreference<string>(Preference.DefaultConfigFile);
             // if config file name is nothing, automatically set default config to false

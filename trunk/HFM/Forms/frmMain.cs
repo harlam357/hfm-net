@@ -31,8 +31,12 @@ using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
+using harlam357.Net;
+using harlam357.Windows.Forms;
+
 using HFM.Classes;
 using HFM.Framework;
+using HFM.Helpers;
 using HFM.Instances;
 using HFM.Instrumentation;
 
@@ -83,6 +87,16 @@ namespace HFM.Forms
       /// Notify Icon for frmMain
       /// </summary>
       private NotifyIcon notifyIcon;
+      
+      /// <summary>
+      /// Update Logic Class
+      /// </summary>
+      private UpdateLogic _updateLogic;
+
+      /// <summary>
+      /// Path to the update file (MSI) to run on exit
+      /// </summary>
+      private string _updateFilePath;
       
       /// <summary>
       /// Preferences Interface
@@ -274,6 +288,54 @@ namespace HFM.Forms
          notifyIcon.Text = base.Text;
          notifyIcon.DoubleClick += notifyIcon_DoubleClick;
          SetFormShowStyle();
+
+         if (_Prefs.GetPreference<bool>(Preference.StartupCheckForUpdate))
+         {
+            CheckForUpdate();
+         }
+      }
+      
+      private void CheckForUpdate()
+      {
+         CheckForUpdate(false);
+      }
+      
+      private void CheckForUpdate(bool userInvoked)
+      {
+         HfmTrace.WriteToHfmConsole("Checking for update...");
+         if (_updateLogic == null) _updateLogic = new UpdateLogic(this, new MessageBoxView());
+         if (_updateLogic.CheckInProgress == false)
+         {
+            _updateLogic.BeginCheckForUpdate(ShowUpdate, userInvoked);
+         }
+      }
+      
+      private void ShowUpdate(ApplicationUpdate update)
+      {
+         if (InvokeRequired)
+         {
+            Invoke(new MethodInvoker(() => ShowUpdate(update)));
+            return;
+         }
+
+         UpdatePresenter updatePresenter = new UpdatePresenter(this, HfmTrace.WriteToHfmConsole,
+            update, NetworkOps.GetProxy(), Constants.ApplicationName, PlatformOps.ApplicationVersionWithRevision);
+         updatePresenter.ShowView();
+         HandleUpdatePresenterResults(updatePresenter);
+      }
+      
+      private void HandleUpdatePresenterResults(UpdatePresenter presenter)
+      {
+         if (presenter.UpdateReady && 
+             presenter.SelectedUpdate.UpdateType == 0 &&
+             PlatformOps.IsRunningOnMono() == false)
+         {
+            string message = String.Format(CultureInfo.CurrentCulture,
+                                           "{0} will install the new version when you exit the application.",
+                                           Constants.ApplicationName);
+            MessageBox.Show(this, message, Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            _updateFilePath = presenter.LocalFilePath;
+         }
       }
 
       /// <summary>
@@ -340,9 +402,32 @@ namespace HFM.Forms
          IProteinBenchmarkContainer benchmarkContainer = InstanceProvider.GetInstance<IProteinBenchmarkContainer>();
          benchmarkContainer.Write();
 
+         CheckForAndFireUpdateProcess();
+
          HfmTrace.WriteToHfmConsole("----------");
          HfmTrace.WriteToHfmConsole("Exiting...");
          HfmTrace.WriteToHfmConsole(String.Empty);
+      }
+      
+      private void CheckForAndFireUpdateProcess()
+      {
+         if (String.IsNullOrEmpty(_updateFilePath) == false)
+         {
+            HfmTrace.WriteToHfmConsole(String.Format(CultureInfo.CurrentCulture,
+               "Firing update file '{0}'...", _updateFilePath));
+            try
+            {
+               Process.Start(_updateFilePath);
+            }
+            catch (Exception ex)
+            {
+               HfmTrace.WriteToHfmConsole(ex);
+               string message = String.Format(CultureInfo.CurrentCulture,
+                                              "Update process failed to start with the following error:{0}{0}{1}",
+                                              Environment.NewLine, ex.Message);
+               MessageBox.Show(this, message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+         }
       }
 
       /// <summary>
@@ -1151,6 +1236,11 @@ namespace HFM.Forms
 
             MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "HFM.NET Google Group"));
          }
+      }
+      
+      private void mnuHelpCheckForUpdate_Click(object sender, EventArgs e)
+      {
+         CheckForUpdate(true);
       }
       
       /// <summary>

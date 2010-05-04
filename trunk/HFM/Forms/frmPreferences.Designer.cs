@@ -181,6 +181,7 @@ namespace HFM.Forms
          this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
          this.btnOK = new HFM.Classes.ButtonWrapper();
          this.btnCancel = new HFM.Classes.ButtonWrapper();
+         this.chkCheckForUpdate = new HFM.Classes.CheckBoxWrapper();
          this.tabControl1.SuspendLayout();
          this.tabSchdTasks.SuspendLayout();
          this.grpUpdateData.SuspendLayout();
@@ -631,6 +632,7 @@ namespace HFM.Forms
          // 
          // grpStartup
          // 
+         this.grpStartup.Controls.Add(this.chkCheckForUpdate);
          this.grpStartup.Controls.Add(this.chkAutoRun);
          this.grpStartup.Controls.Add(this.chkRunMinimized);
          this.grpStartup.Location = new System.Drawing.Point(6, 9);
@@ -1775,6 +1777,16 @@ namespace HFM.Forms
          this.btnCancel.UseVisualStyleBackColor = true;
          this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
          // 
+         // chkCheckForUpdate
+         // 
+         this.chkCheckForUpdate.AutoSize = true;
+         this.chkCheckForUpdate.Location = new System.Drawing.Point(310, 20);
+         this.chkCheckForUpdate.Name = "chkCheckForUpdate";
+         this.chkCheckForUpdate.Size = new System.Drawing.Size(110, 17);
+         this.chkCheckForUpdate.TabIndex = 2;
+         this.chkCheckForUpdate.Text = "Check for Update";
+         this.chkCheckForUpdate.UseVisualStyleBackColor = true;
+         // 
          // frmPreferences
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1967,5 +1979,6 @@ namespace HFM.Forms
       private HFM.Classes.CheckBoxWrapper chkEmailSecure;
       private ValidatingTextBox txtSmtpServerPort;
       private HFM.Classes.LabelWrapper labelWrapper3;
+      private HFM.Classes.CheckBoxWrapper chkCheckForUpdate;
    }
 }

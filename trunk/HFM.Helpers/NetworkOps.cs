@@ -665,23 +665,40 @@ namespace HFM.Helpers
       /// <summary>
       /// Set Proxy Information on WebRequest.
       /// </summary>
-      /// <param name="Request">Makes a request to a Uniform Resource Identifier (URI).</param>
-      private static void SetProxy(WebRequest Request)
+      /// <param name="request">Makes a request to a Uniform Resource Identifier (URI).</param>
+      private static void SetProxy(WebRequest request)
       {
-         Debug.Assert(Request != null);
-         IPreferenceSet Prefs = InstanceProvider.GetInstance<IPreferenceSet>();
-      
-         if (Prefs.GetPreference<bool>(Preference.UseProxy))
+         Debug.Assert(request != null);
+
+         IWebProxy proxy = GetProxy();
+         if (proxy != null)
          {
-            Request.Proxy = new WebProxy(Prefs.GetPreference<string>(Preference.ProxyServer), 
-                                         Prefs.GetPreference<int>(Preference.ProxyPort));
-            if (Prefs.GetPreference<bool>(Preference.UseProxyAuth))
-            {
-               Request.Proxy.Credentials = GetNetworkCredential(Prefs.GetPreference<string>(Preference.ProxyUser), 
-                                                                Prefs.GetPreference<string>(Preference.ProxyPass));
-            }
+            request.Proxy = proxy;
          }
          // Don't set request.Proxy = null - Issue 49
+      }
+      
+      /// <summary>
+      /// Get Web Proxy Interface based on Preferences.
+      /// </summary>
+      public static IWebProxy GetProxy()
+      {
+         IPreferenceSet prefs = InstanceProvider.GetInstance<IPreferenceSet>();
+
+         if (prefs.GetPreference<bool>(Preference.UseProxy))
+         {
+            IWebProxy proxy = new WebProxy(prefs.GetPreference<string>(Preference.ProxyServer),
+                                           prefs.GetPreference<int>(Preference.ProxyPort));
+            if (prefs.GetPreference<bool>(Preference.UseProxyAuth))
+            {
+               proxy.Credentials = GetNetworkCredential(prefs.GetPreference<string>(Preference.ProxyUser),
+                                                        prefs.GetPreference<string>(Preference.ProxyPass));
+            }
+
+            return proxy;
+         }
+
+         return null;
       }
       
       /// <summary>

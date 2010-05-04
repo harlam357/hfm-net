@@ -169,6 +169,7 @@ namespace HFM.Forms
          }
          
          chkRunMinimized.Checked = _Prefs.GetPreference<bool>(Preference.RunMinimized);
+         chkCheckForUpdate.Checked = _Prefs.GetPreference<bool>(Preference.StartupCheckForUpdate);
          #endregion
 
          #region Configuration File
@@ -1014,6 +1015,7 @@ namespace HFM.Forms
          }
 
          _Prefs.SetPreference(Preference.RunMinimized, chkRunMinimized.Checked);
+         _Prefs.SetPreference(Preference.StartupCheckForUpdate, chkCheckForUpdate.Checked);
          #endregion
 
          #region Configuration File

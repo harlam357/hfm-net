@@ -612,7 +612,8 @@ namespace HFM.Instances
       {
          get
          {
-            if (ProductionValuesOk)
+            if (ProductionValuesOk ||
+                Status.Equals(ClientStatus.Paused))
             {
                return CurrentUnitInfo.PercentComplete;
             }

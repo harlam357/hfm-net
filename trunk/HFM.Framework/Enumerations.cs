@@ -199,6 +199,7 @@ namespace HFM.Framework
       WebMobileSummary,
       WebInstance,
       RunMinimized,
+      StartupCheckForUpdate,
       UseDefaultConfigFile,
       DefaultConfigFile,
       OfflineLast,
