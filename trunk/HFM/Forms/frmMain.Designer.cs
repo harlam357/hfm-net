@@ -75,12 +75,12 @@ namespace HFM.Forms
          this.mnuClientsRefreshSelected = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuClientsRefreshAll = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuView = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuViewMessages = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuViewShowHideLog = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuViewSep1 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuViewToggleDateTime = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuViewToggleCompletedCountStyle = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
-         this.mnuToolsMessages = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuToolsBenchmarks = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuToolsDownloadProjects = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuWeb = new System.Windows.Forms.ToolStripMenuItem();
@@ -92,11 +92,13 @@ namespace HFM.Forms
          this.mnuWebSep2 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuWebHFMGoogleCode = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
-         this.mnuHelpHfmGroup = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuHelpHfmLogFile = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuHelpHfmDataFiles = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuHelpSep1 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuHelpContents = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuHelpIndex = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuHelpSep2 = new System.Windows.Forms.ToolStripSeparator();
+         this.mnuHelpHfmGroup = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuHelpCheckForUpdate = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuHelpSep3 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
@@ -400,7 +402,7 @@ namespace HFM.Forms
          this.mnuFileQuit.Image = global::HFM.Properties.Resources.Quit;
          this.mnuFileQuit.Name = "mnuFileQuit";
          this.mnuFileQuit.Size = new System.Drawing.Size(260, 22);
-         this.mnuFileQuit.Text = "&Quit";
+         this.mnuFileQuit.Text = "&Exit";
          this.mnuFileQuit.Click += new System.EventHandler(this.mnuFileQuit_Click);
          // 
          // mnuEdit
@@ -504,6 +506,7 @@ namespace HFM.Forms
          // mnuView
          // 
          this.mnuView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuViewMessages,
             this.mnuViewShowHideLog,
             this.mnuViewSep1,
             this.mnuViewToggleDateTime,
@@ -512,12 +515,20 @@ namespace HFM.Forms
          this.mnuView.Size = new System.Drawing.Size(41, 20);
          this.mnuView.Text = "&View";
          // 
+         // mnuViewMessages
+         // 
+         this.mnuViewMessages.Name = "mnuViewMessages";
+         this.mnuViewMessages.ShortcutKeys = System.Windows.Forms.Keys.F7;
+         this.mnuViewMessages.Size = new System.Drawing.Size(255, 22);
+         this.mnuViewMessages.Text = "Show/Hide &Messages Window";
+         this.mnuViewMessages.Click += new System.EventHandler(this.mnuViewMessages_Click);
+         // 
          // mnuViewShowHideLog
          // 
          this.mnuViewShowHideLog.Name = "mnuViewShowHideLog";
          this.mnuViewShowHideLog.ShortcutKeys = System.Windows.Forms.Keys.F8;
          this.mnuViewShowHideLog.Size = new System.Drawing.Size(255, 22);
-         this.mnuViewShowHideLog.Text = "&Show/Hide Log/Queue Viewer";
+         this.mnuViewShowHideLog.Text = "Show/Hide &Log/Queue Viewer";
          this.mnuViewShowHideLog.Click += new System.EventHandler(this.mnuViewShowHideLog_Click);
          // 
          // mnuViewSep1
@@ -544,34 +555,25 @@ namespace HFM.Forms
          // mnuTools
          // 
          this.mnuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuToolsMessages,
             this.mnuToolsBenchmarks,
             this.mnuToolsDownloadProjects});
          this.mnuTools.Name = "mnuTools";
          this.mnuTools.Size = new System.Drawing.Size(44, 20);
          this.mnuTools.Text = "&Tools";
          // 
-         // mnuToolsMessages
-         // 
-         this.mnuToolsMessages.Name = "mnuToolsMessages";
-         this.mnuToolsMessages.ShortcutKeys = System.Windows.Forms.Keys.F7;
-         this.mnuToolsMessages.Size = new System.Drawing.Size(246, 22);
-         this.mnuToolsMessages.Text = "Show/Hide &Messages Window";
-         this.mnuToolsMessages.Click += new System.EventHandler(this.mnuToolsMessages_Click);
-         // 
          // mnuToolsBenchmarks
          // 
          this.mnuToolsBenchmarks.Name = "mnuToolsBenchmarks";
          this.mnuToolsBenchmarks.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
          this.mnuToolsBenchmarks.Size = new System.Drawing.Size(246, 22);
-         this.mnuToolsBenchmarks.Text = "&Benchmarks";
+         this.mnuToolsBenchmarks.Text = "&Benchmarks Viewer";
          this.mnuToolsBenchmarks.Click += new System.EventHandler(this.mnuToolsBenchmarks_Click);
          // 
          // mnuToolsDownloadProjects
          // 
          this.mnuToolsDownloadProjects.Name = "mnuToolsDownloadProjects";
          this.mnuToolsDownloadProjects.Size = new System.Drawing.Size(246, 22);
-         this.mnuToolsDownloadProjects.Text = "Download Projects From Stanford";
+         this.mnuToolsDownloadProjects.Text = "Download &Projects From Stanford";
          this.mnuToolsDownloadProjects.Click += new System.EventHandler(this.mnuToolsDownloadProjects_Click);
          // 
          // mnuWeb
@@ -621,7 +623,7 @@ namespace HFM.Forms
          // 
          this.mnuWebRefreshUserStats.Name = "mnuWebRefreshUserStats";
          this.mnuWebRefreshUserStats.Size = new System.Drawing.Size(230, 22);
-         this.mnuWebRefreshUserStats.Text = "Force Refresh EOC User Stats";
+         this.mnuWebRefreshUserStats.Text = "Force &Refresh EOC User Stats";
          this.mnuWebRefreshUserStats.Click += new System.EventHandler(this.mnuWebRefreshUserStats_Click);
          // 
          // mnuWebSep2
@@ -633,17 +635,19 @@ namespace HFM.Forms
          // 
          this.mnuWebHFMGoogleCode.Name = "mnuWebHFMGoogleCode";
          this.mnuWebHFMGoogleCode.Size = new System.Drawing.Size(230, 22);
-         this.mnuWebHFMGoogleCode.Text = "HFM.NET on Google Code";
+         this.mnuWebHFMGoogleCode.Text = "HFM.NET on &Google Code";
          this.mnuWebHFMGoogleCode.Click += new System.EventHandler(this.mnuWebHFMGoogleCode_Click);
          // 
          // mnuHelp
          // 
          this.mnuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuHelpHfmGroup,
+            this.mnuHelpHfmLogFile,
+            this.mnuHelpHfmDataFiles,
             this.mnuHelpSep1,
             this.mnuHelpContents,
             this.mnuHelpIndex,
             this.mnuHelpSep2,
+            this.mnuHelpHfmGroup,
             this.mnuHelpCheckForUpdate,
             this.mnuHelpSep3,
             this.mnuHelpAbout});
@@ -651,24 +655,31 @@ namespace HFM.Forms
          this.mnuHelp.Size = new System.Drawing.Size(40, 20);
          this.mnuHelp.Text = "&Help";
          // 
-         // mnuHelpHfmGroup
+         // mnuHelpHfmLogFile
          // 
-         this.mnuHelpHfmGroup.Name = "mnuHelpHfmGroup";
-         this.mnuHelpHfmGroup.Size = new System.Drawing.Size(197, 22);
-         this.mnuHelpHfmGroup.Text = "HFM.NET Google Group";
-         this.mnuHelpHfmGroup.Click += new System.EventHandler(this.mnuHelpHfmGroup_Click);
+         this.mnuHelpHfmLogFile.Name = "mnuHelpHfmLogFile";
+         this.mnuHelpHfmLogFile.Size = new System.Drawing.Size(204, 22);
+         this.mnuHelpHfmLogFile.Text = "View HFM.NET &Log File";
+         this.mnuHelpHfmLogFile.Click += new System.EventHandler(this.mnuHelpHfmLogFile_Click);
+         // 
+         // mnuHelpHfmDataFiles
+         // 
+         this.mnuHelpHfmDataFiles.Name = "mnuHelpHfmDataFiles";
+         this.mnuHelpHfmDataFiles.Size = new System.Drawing.Size(204, 22);
+         this.mnuHelpHfmDataFiles.Text = "View HFM.NET &Data Files";
+         this.mnuHelpHfmDataFiles.Click += new System.EventHandler(this.mnuHelpHfmDataFiles_Click);
          // 
          // mnuHelpSep1
          // 
          this.mnuHelpSep1.Name = "mnuHelpSep1";
-         this.mnuHelpSep1.Size = new System.Drawing.Size(194, 6);
+         this.mnuHelpSep1.Size = new System.Drawing.Size(201, 6);
          this.mnuHelpSep1.Visible = false;
          // 
          // mnuHelpContents
          // 
          this.mnuHelpContents.Image = global::HFM.Properties.Resources.HelpContents;
          this.mnuHelpContents.Name = "mnuHelpContents";
-         this.mnuHelpContents.Size = new System.Drawing.Size(197, 22);
+         this.mnuHelpContents.Size = new System.Drawing.Size(204, 22);
          this.mnuHelpContents.Text = "&Contents";
          this.mnuHelpContents.Visible = false;
          this.mnuHelpContents.Click += new System.EventHandler(this.mnuHelpContents_Click);
@@ -676,7 +687,7 @@ namespace HFM.Forms
          // mnuHelpIndex
          // 
          this.mnuHelpIndex.Name = "mnuHelpIndex";
-         this.mnuHelpIndex.Size = new System.Drawing.Size(197, 22);
+         this.mnuHelpIndex.Size = new System.Drawing.Size(204, 22);
          this.mnuHelpIndex.Text = "&Index";
          this.mnuHelpIndex.Visible = false;
          this.mnuHelpIndex.Click += new System.EventHandler(this.mnuHelpIndex_Click);
@@ -684,25 +695,32 @@ namespace HFM.Forms
          // mnuHelpSep2
          // 
          this.mnuHelpSep2.Name = "mnuHelpSep2";
-         this.mnuHelpSep2.Size = new System.Drawing.Size(194, 6);
+         this.mnuHelpSep2.Size = new System.Drawing.Size(201, 6);
+         // 
+         // mnuHelpHfmGroup
+         // 
+         this.mnuHelpHfmGroup.Name = "mnuHelpHfmGroup";
+         this.mnuHelpHfmGroup.Size = new System.Drawing.Size(204, 22);
+         this.mnuHelpHfmGroup.Text = "HFM.NET &Google Group";
+         this.mnuHelpHfmGroup.Click += new System.EventHandler(this.mnuHelpHfmGroup_Click);
          // 
          // mnuHelpCheckForUpdate
          // 
          this.mnuHelpCheckForUpdate.Name = "mnuHelpCheckForUpdate";
-         this.mnuHelpCheckForUpdate.Size = new System.Drawing.Size(197, 22);
-         this.mnuHelpCheckForUpdate.Text = "Check For Update";
+         this.mnuHelpCheckForUpdate.Size = new System.Drawing.Size(204, 22);
+         this.mnuHelpCheckForUpdate.Text = "Check for &Updates...";
          this.mnuHelpCheckForUpdate.Click += new System.EventHandler(this.mnuHelpCheckForUpdate_Click);
          // 
          // mnuHelpSep3
          // 
          this.mnuHelpSep3.Name = "mnuHelpSep3";
-         this.mnuHelpSep3.Size = new System.Drawing.Size(194, 6);
+         this.mnuHelpSep3.Size = new System.Drawing.Size(201, 6);
          // 
          // mnuHelpAbout
          // 
          this.mnuHelpAbout.Image = global::HFM.Properties.Resources.About;
          this.mnuHelpAbout.Name = "mnuHelpAbout";
-         this.mnuHelpAbout.Size = new System.Drawing.Size(197, 22);
+         this.mnuHelpAbout.Size = new System.Drawing.Size(204, 22);
          this.mnuHelpAbout.Text = "&About";
          this.mnuHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
          // 
@@ -984,7 +1002,6 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripMenuItem mnuView;
       private System.Windows.Forms.ToolStripMenuItem mnuViewShowHideLog;
       private System.Windows.Forms.ToolStripMenuItem mnuTools;
-      private System.Windows.Forms.ToolStripMenuItem mnuToolsMessages;
       private System.Windows.Forms.ToolStripSeparator mnuClientsSep3;
       private System.Windows.Forms.ToolStripMenuItem mnuClientsViewCachedLog;
       private System.Windows.Forms.ToolStripMenuItem mnuToolsDownloadProjects;
@@ -1028,5 +1045,8 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripMenuItem mnuViewToggleCompletedCountStyle;
       private System.Windows.Forms.ToolStripMenuItem mnuHelpCheckForUpdate;
       private System.Windows.Forms.ToolStripSeparator mnuHelpSep3;
+      private System.Windows.Forms.ToolStripMenuItem mnuHelpHfmLogFile;
+      private System.Windows.Forms.ToolStripMenuItem mnuViewMessages;
+      private System.Windows.Forms.ToolStripMenuItem mnuHelpHfmDataFiles;
    }
 }

@@ -205,6 +205,7 @@ namespace HFM.Framework
       OfflineLast,
       ColorLogFile,
       AutoSaveConfig,
+      MaintainSelectedClient,
       PpdCalculation,
       DecimalPlaces,
       CalculateBonus,

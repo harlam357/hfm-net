@@ -179,6 +179,11 @@ namespace HFM.Forms
          
          chkDefaultConfig.Checked = _Prefs.GetPreference<bool>(Preference.UseDefaultConfigFile);
          #endregion
+
+         #region External Programs
+         txtLogFileViewer.Text = _Prefs.GetPreference<string>(Preference.LogFileViewer);
+         txtFileExplorer.Text = _Prefs.GetPreference<string>(Preference.FileExplorer);
+         #endregion
       }
 
       private void LoadOptionsTab()
@@ -187,6 +192,7 @@ namespace HFM.Forms
          chkOffline.Checked = _Prefs.GetPreference<bool>(Preference.OfflineLast);
          chkColorLog.Checked = _Prefs.GetPreference<bool>(Preference.ColorLogFile);
          chkAutoSave.Checked = _Prefs.GetPreference<bool>(Preference.AutoSaveConfig);
+         chkMaintainSelected.Checked = _Prefs.GetPreference<bool>(Preference.MaintainSelectedClient);
 
          /*** PPD Calculation Is Not DataBound ***/
          IList<PpdCalculationType> ppdList = new List<PpdCalculationType>();
@@ -202,11 +208,6 @@ namespace HFM.Forms
          udDecimalPlaces.Value = _Prefs.GetPreference<int>(Preference.DecimalPlaces);
 
          chkCalcBonus.Checked = _Prefs.GetPreference<bool>(Preference.CalculateBonus);
-         #endregion
-
-         #region External Programs
-         txtLogFileViewer.Text = _Prefs.GetPreference<string>(Preference.LogFileViewer);
-         txtFileExplorer.Text = _Prefs.GetPreference<string>(Preference.FileExplorer);
          #endregion
 
          #region Debug Message Level
@@ -1022,6 +1023,11 @@ namespace HFM.Forms
          _Prefs.SetPreference(Preference.DefaultConfigFile, txtDefaultConfigFile.Text);
          _Prefs.SetPreference(Preference.UseDefaultConfigFile, chkDefaultConfig.Checked);
          #endregion
+
+         #region External Programs
+         _Prefs.SetPreference(Preference.LogFileViewer, txtLogFileViewer.Text);
+         _Prefs.SetPreference(Preference.FileExplorer, txtFileExplorer.Text);
+         #endregion
       }
 
       private void GetOptionsTab()
@@ -1030,15 +1036,11 @@ namespace HFM.Forms
          _Prefs.SetPreference(Preference.OfflineLast, chkOffline.Checked);
          _Prefs.SetPreference(Preference.ColorLogFile, chkColorLog.Checked);
          _Prefs.SetPreference(Preference.AutoSaveConfig, chkAutoSave.Checked);
+         _Prefs.SetPreference(Preference.MaintainSelectedClient, chkMaintainSelected.Checked);
 
          _Prefs.SetPreference(Preference.PpdCalculation, (PpdCalculationType)cboPpdCalc.SelectedItem);
          _Prefs.SetPreference(Preference.DecimalPlaces, (int)udDecimalPlaces.Value);
          _Prefs.SetPreference(Preference.CalculateBonus, chkCalcBonus.Checked);
-         #endregion
-
-         #region External Programs
-         _Prefs.SetPreference(Preference.LogFileViewer, txtLogFileViewer.Text);
-         _Prefs.SetPreference(Preference.FileExplorer, txtFileExplorer.Text);
          #endregion
 
          #region Debug Message Level

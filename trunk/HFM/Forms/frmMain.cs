@@ -3,9 +3,6 @@
  * Copyright (C) 2006 David Rawling
  * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  * 
- * Form and DataGridView save state code by Ron Dunant, modified by harlam357.
- * http://www.codeproject.com/KB/grid/PersistentDataGridView.aspx
- *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
@@ -19,6 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+ 
+/*
+ * Form and DataGridView save state code by Ron Dunant, modified by harlam357.
+ * http://www.codeproject.com/KB/grid/PersistentDataGridView.aspx
  */
 
 using System;
@@ -610,12 +612,7 @@ namespace HFM.Forms
          SaveSortColumn(); // Save Column Sort Order - Issue 73
          _Prefs.Save();
 
-         int row = _displayBindingSource.Find("Name", dataGridView1.CurrentRowKey);
-         if (row > -1 && row < dataGridView1.Rows.Count)
-         {
-            _displayBindingSource.Position = row;
-            dataGridView1.Rows[row].Selected = true;
-         }
+         SelectCurrentRowKey();
       }
 
       /// <summary>
@@ -1223,6 +1220,40 @@ namespace HFM.Forms
       #endregion
 
       #region Help Menu Click Handlers
+      private void mnuHelpHfmLogFile_Click(object sender, EventArgs e)
+      {
+         string logPath = Path.Combine(_Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath),
+                                       Constants.HfmLogFileName);
+         try
+         {
+            Process.Start(_Prefs.GetPreference<string>(Preference.LogFileViewer), logPath);
+         }
+         catch (Exception ex)
+         {
+            HfmTrace.WriteToHfmConsole(ex);
+
+            MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, 
+               String.Format(CultureInfo.CurrentCulture, "the HFM.log file.{0}{0}Please check the current Log File Viewer defined in the Preferences",
+               Environment.NewLine)));
+         }
+      }
+
+      private void mnuHelpHfmDataFiles_Click(object sender, EventArgs e)
+      {
+         try
+         {
+            StartFileBrowser(_Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath));
+         }
+         catch (Exception ex)
+         {
+            HfmTrace.WriteToHfmConsole(ex);
+
+            MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError,
+               String.Format(CultureInfo.CurrentCulture, "the HFM.NET data files.{0}{0}Please check the current File Explorer defined in the Preferences",
+               Environment.NewLine)));
+         }
+      }
+
       private void mnuHelpHfmGroup_Click(object sender, EventArgs e)
       {
          try
@@ -1381,6 +1412,34 @@ namespace HFM.Forms
       #endregion
 
       #region View Menu Click Handlers
+      private void mnuViewMessages_Click(object sender, EventArgs e)
+      {
+         if (_frmMessages.Visible)
+         {
+            _frmMessages.Close();
+         }
+         else
+         {
+            // Restore state data
+            Point location = _Prefs.GetPreference<Point>(Preference.MessagesFormLocation);
+            Size size = _Prefs.GetPreference<Size>(Preference.MessagesFormSize);
+
+            if (location.X != 0 && location.Y != 0)
+            {
+               _frmMessages.SetManualStartPosition();
+               _frmMessages.SetLocation(location.X, location.Y);
+            }
+
+            if (size.Width != 0 && size.Height != 0)
+            {
+               _frmMessages.SetSize(size.Width, size.Height);
+            }
+
+            _frmMessages.Show();
+            _frmMessages.ScrollToEnd();
+         }
+      }
+      
       /// <summary>
       /// Show or Hide the FAH Log Window
       /// </summary>
@@ -1446,37 +1505,6 @@ namespace HFM.Forms
       #endregion
 
       #region Tools Menu Click Handlers
-      /// <summary>
-      /// Show or Hide the HFM Messages Window
-      /// </summary>
-      private void mnuToolsMessages_Click(object sender, EventArgs e)
-      {
-         if (_frmMessages.Visible)
-         {
-            _frmMessages.Close();
-         }
-         else
-         {
-            // Restore state data
-            Point location = _Prefs.GetPreference<Point>(Preference.MessagesFormLocation);
-            Size size = _Prefs.GetPreference<Size>(Preference.MessagesFormSize);
-
-            if (location.X != 0 && location.Y != 0)
-            {
-               _frmMessages.SetManualStartPosition();
-               _frmMessages.SetLocation(location.X, location.Y);
-            }
-
-            if (size.Width != 0 && size.Height != 0)
-            {
-               _frmMessages.SetSize(size.Width, size.Height);
-            }
-         
-            _frmMessages.Show();
-            _frmMessages.ScrollToEnd();
-         }
-      }
-
       /// <summary>
       /// Download Project Info From Stanford
       /// </summary>
@@ -1644,7 +1672,14 @@ namespace HFM.Forms
       {
          if (dataGridView1.CurrentCell != null)
          {
-            dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Selected = true;
+            if (_Prefs.GetPreference<bool>(Preference.MaintainSelectedClient))
+            {
+               SelectCurrentRowKey();
+            }
+            else
+            {
+               dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Selected = true;
+            }
             // If Mono, go ahead and set the CurrentInstance here.  Under .NET the selection
             // setter above causes this same operation, but since Mono won't fire the 
             // DataGridView.SelectionChanged Event, the result of that event needs to be
@@ -1654,6 +1689,16 @@ namespace HFM.Forms
                _clientInstances.SetCurrentInstance(dataGridView1.SelectedRows);
             }
             _clientInstances.RaiseSelectedInstanceChanged();
+         }
+      }
+      
+      private void SelectCurrentRowKey()
+      {
+         int row = _displayBindingSource.Find("Name", dataGridView1.CurrentRowKey);
+         if (row > -1 && row < dataGridView1.Rows.Count)
+         {
+            _displayBindingSource.Position = row;
+            dataGridView1.Rows[row].Selected = true;
          }
       }
 

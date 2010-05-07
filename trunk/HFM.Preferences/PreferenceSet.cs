@@ -249,6 +249,7 @@ namespace HFM.Preferences
          _Preferences.Add(Preference.OfflineLast, new Metadata<bool>());
          _Preferences.Add(Preference.ColorLogFile, new Metadata<bool>());
          _Preferences.Add(Preference.AutoSaveConfig, new Metadata<bool>());
+         _Preferences.Add(Preference.MaintainSelectedClient, new Metadata<bool>());
          _Preferences.Add(Preference.PpdCalculation, new Metadata<PpdCalculationType>());
          _Preferences.Add(Preference.DecimalPlaces, new Metadata<int>());
          _Preferences.Add(Preference.CalculateBonus, new Metadata<bool>());
@@ -352,6 +353,7 @@ namespace HFM.Preferences
          SetPreference(Preference.OfflineLast, Settings.Default.OfflineLast);
          SetPreference(Preference.ColorLogFile, Settings.Default.ColorLogFile);
          SetPreference(Preference.AutoSaveConfig, Settings.Default.AutoSaveConfig);
+         SetPreference(Preference.MaintainSelectedClient, Settings.Default.MaintainSelectedClient);
          SetPreference(Preference.PpdCalculation, GetPpdCalculation());
          SetPreference(Preference.DecimalPlaces, Settings.Default.DecimalPlaces);
          SetPreference(Preference.CalculateBonus, Settings.Default.CalculateBonus);
@@ -720,6 +722,7 @@ namespace HFM.Preferences
             }
             Settings.Default.ColorLogFile = GetPreference<bool>(Preference.ColorLogFile);
             Settings.Default.AutoSaveConfig = GetPreference<bool>(Preference.AutoSaveConfig);
+            Settings.Default.MaintainSelectedClient = GetPreference<bool>(Preference.MaintainSelectedClient);
             if (Settings.Default.PpdCalculation != GetPreference<PpdCalculationType>(Preference.PpdCalculation).ToString())
             {
                raisePpdCalculationChanged = true;

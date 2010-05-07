@@ -6,14 +6,20 @@
       <Recognized>
          <Word>Harlamert</Word>
          <Word>harlam</Word>
-         <Word>Stegman</Word>
-         <Word>Vincenzo</Word>
          <Word>notfred's</Word>
          <Word>Chudnovsky</Word>
          <Word>Rawling</Word>
          <Word>unitinfo</Word>
          <Word>Hlog</Word>
-         <Word>Sortable</Word>
+         <Word>Gravell</Word>
+         <Word>Lparser</Word>
+         <Word>castleproject</Word>
+         <Word>fahlogstats-net</Word>
+         <Word>htmlparser</Word>
+         <Word>php</Word>
+         <Word>protobuf</Word>
+         <Word>sourceforge</Word>
+         <Word>zedgraph</Word>
       </Recognized>
       <Deprecated>
          <!--<Term PreferredAlternate="EnterpriseServices">ComPlus</Term>-->

@@ -84,12 +84,21 @@ namespace HFM.Forms
          this.lbl2WebSiteDir = new HFM.Classes.LabelWrapper();
          this.chkWebSiteGenerator = new HFM.Classes.CheckBoxWrapper();
          this.tabStartup = new System.Windows.Forms.TabPage();
+         this.grpFileExplorer = new HFM.Classes.GroupBoxWrapper();
+         this.btnBrowseFileExplorer = new HFM.Classes.ButtonWrapper();
+         this.label4 = new HFM.Classes.LabelWrapper();
+         this.txtFileExplorer = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.grpLogFileViewer = new HFM.Classes.GroupBoxWrapper();
+         this.btnBrowseLogViewer = new HFM.Classes.ButtonWrapper();
+         this.label3 = new HFM.Classes.LabelWrapper();
+         this.txtLogFileViewer = new harlam357.Windows.Forms.ValidatingTextBox();
          this.grpDefaultConfig = new HFM.Classes.GroupBoxWrapper();
          this.chkDefaultConfig = new HFM.Classes.CheckBoxWrapper();
          this.btnBrowseConfigFile = new HFM.Classes.ButtonWrapper();
          this.txtDefaultConfigFile = new harlam357.Windows.Forms.ValidatingTextBox();
          this.label1 = new HFM.Classes.LabelWrapper();
          this.grpStartup = new HFM.Classes.GroupBoxWrapper();
+         this.chkCheckForUpdate = new HFM.Classes.CheckBoxWrapper();
          this.chkAutoRun = new HFM.Classes.CheckBoxWrapper();
          this.chkRunMinimized = new HFM.Classes.CheckBoxWrapper();
          this.tabOptions = new System.Windows.Forms.TabPage();
@@ -97,6 +106,7 @@ namespace HFM.Forms
          this.cboShowStyle = new HFM.Classes.ComboBoxWrapper();
          this.labelWrapper2 = new HFM.Classes.LabelWrapper();
          this.grpInteractiveOptions = new HFM.Classes.GroupBoxWrapper();
+         this.chkMaintainSelected = new HFM.Classes.CheckBoxWrapper();
          this.chkCalcBonus = new HFM.Classes.CheckBoxWrapper();
          this.label2 = new HFM.Classes.LabelWrapper();
          this.cboPpdCalc = new HFM.Classes.ComboBoxWrapper();
@@ -108,14 +118,6 @@ namespace HFM.Forms
          this.grpDebugMessageLevel = new HFM.Classes.GroupBoxWrapper();
          this.cboMessageLevel = new HFM.Classes.ComboBoxWrapper();
          this.label6 = new HFM.Classes.LabelWrapper();
-         this.grpFileExplorer = new HFM.Classes.GroupBoxWrapper();
-         this.btnBrowseFileExplorer = new HFM.Classes.ButtonWrapper();
-         this.label4 = new HFM.Classes.LabelWrapper();
-         this.txtFileExplorer = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.grpLogFileViewer = new HFM.Classes.GroupBoxWrapper();
-         this.btnBrowseLogViewer = new HFM.Classes.ButtonWrapper();
-         this.label3 = new HFM.Classes.LabelWrapper();
-         this.txtLogFileViewer = new harlam357.Windows.Forms.ValidatingTextBox();
          this.tabReporting = new System.Windows.Forms.TabPage();
          this.grpReportSelections = new HFM.Classes.GroupBoxWrapper();
          this.chkClientEuePause = new HFM.Classes.CheckBoxWrapper();
@@ -181,13 +183,14 @@ namespace HFM.Forms
          this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
          this.btnOK = new HFM.Classes.ButtonWrapper();
          this.btnCancel = new HFM.Classes.ButtonWrapper();
-         this.chkCheckForUpdate = new HFM.Classes.CheckBoxWrapper();
          this.tabControl1.SuspendLayout();
          this.tabSchdTasks.SuspendLayout();
          this.grpUpdateData.SuspendLayout();
          this.grpHTMLOutput.SuspendLayout();
          this.pnlFtpMode.SuspendLayout();
          this.tabStartup.SuspendLayout();
+         this.grpFileExplorer.SuspendLayout();
+         this.grpLogFileViewer.SuspendLayout();
          this.grpDefaultConfig.SuspendLayout();
          this.grpStartup.SuspendLayout();
          this.tabOptions.SuspendLayout();
@@ -195,8 +198,6 @@ namespace HFM.Forms
          this.grpInteractiveOptions.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.udDecimalPlaces)).BeginInit();
          this.grpDebugMessageLevel.SuspendLayout();
-         this.grpFileExplorer.SuspendLayout();
-         this.grpLogFileViewer.SuspendLayout();
          this.tabReporting.SuspendLayout();
          this.grpReportSelections.SuspendLayout();
          this.grpEmailSettings.SuspendLayout();
@@ -559,6 +560,8 @@ namespace HFM.Forms
          // 
          // tabStartup
          // 
+         this.tabStartup.Controls.Add(this.grpFileExplorer);
+         this.tabStartup.Controls.Add(this.grpLogFileViewer);
          this.tabStartup.Controls.Add(this.grpDefaultConfig);
          this.tabStartup.Controls.Add(this.grpStartup);
          this.tabStartup.Location = new System.Drawing.Point(4, 22);
@@ -566,274 +569,18 @@ namespace HFM.Forms
          this.tabStartup.Padding = new System.Windows.Forms.Padding(3);
          this.tabStartup.Size = new System.Drawing.Size(501, 303);
          this.tabStartup.TabIndex = 6;
-         this.tabStartup.Text = "Startup";
+         this.tabStartup.Text = "Startup & External";
          this.tabStartup.UseVisualStyleBackColor = true;
-         // 
-         // grpDefaultConfig
-         // 
-         this.grpDefaultConfig.Controls.Add(this.chkDefaultConfig);
-         this.grpDefaultConfig.Controls.Add(this.btnBrowseConfigFile);
-         this.grpDefaultConfig.Controls.Add(this.txtDefaultConfigFile);
-         this.grpDefaultConfig.Controls.Add(this.label1);
-         this.grpDefaultConfig.Location = new System.Drawing.Point(6, 65);
-         this.grpDefaultConfig.Name = "grpDefaultConfig";
-         this.grpDefaultConfig.Size = new System.Drawing.Size(489, 86);
-         this.grpDefaultConfig.TabIndex = 4;
-         this.grpDefaultConfig.TabStop = false;
-         this.grpDefaultConfig.Text = "Configuration File";
-         // 
-         // chkDefaultConfig
-         // 
-         this.chkDefaultConfig.AutoSize = true;
-         this.chkDefaultConfig.Location = new System.Drawing.Point(10, 22);
-         this.chkDefaultConfig.Name = "chkDefaultConfig";
-         this.chkDefaultConfig.Size = new System.Drawing.Size(134, 17);
-         this.chkDefaultConfig.TabIndex = 0;
-         this.chkDefaultConfig.Text = "Load Configuration File";
-         this.chkDefaultConfig.UseVisualStyleBackColor = true;
-         // 
-         // btnBrowseConfigFile
-         // 
-         this.btnBrowseConfigFile.Enabled = false;
-         this.btnBrowseConfigFile.Location = new System.Drawing.Point(421, 47);
-         this.btnBrowseConfigFile.Name = "btnBrowseConfigFile";
-         this.btnBrowseConfigFile.Size = new System.Drawing.Size(24, 23);
-         this.btnBrowseConfigFile.TabIndex = 3;
-         this.btnBrowseConfigFile.Text = "...";
-         this.btnBrowseConfigFile.UseVisualStyleBackColor = true;
-         this.btnBrowseConfigFile.Click += new System.EventHandler(this.btnBrowseConfigFile_Click);
-         // 
-         // txtDefaultConfigFile
-         // 
-         this.txtDefaultConfigFile.BackColor = System.Drawing.SystemColors.Control;
-         this.txtDefaultConfigFile.DoubleBuffered = true;
-         this.txtDefaultConfigFile.Enabled = false;
-         this.txtDefaultConfigFile.ErrorBackColor = System.Drawing.Color.Yellow;
-         this.txtDefaultConfigFile.ErrorState = false;
-         this.txtDefaultConfigFile.ErrorToolTip = null;
-         this.txtDefaultConfigFile.ErrorToolTipDuration = 5000;
-         this.txtDefaultConfigFile.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-         this.txtDefaultConfigFile.ErrorToolTipText = "";
-         this.txtDefaultConfigFile.Location = new System.Drawing.Point(88, 49);
-         this.txtDefaultConfigFile.Name = "txtDefaultConfigFile";
-         this.txtDefaultConfigFile.ReadOnly = true;
-         this.txtDefaultConfigFile.Size = new System.Drawing.Size(327, 20);
-         this.txtDefaultConfigFile.TabIndex = 2;
-         this.txtDefaultConfigFile.ValidationType = harlam357.Windows.Forms.ValidationType.None;
-         // 
-         // label1
-         // 
-         this.label1.AutoSize = true;
-         this.label1.Location = new System.Drawing.Point(30, 52);
-         this.label1.Name = "label1";
-         this.label1.Size = new System.Drawing.Size(52, 13);
-         this.label1.TabIndex = 1;
-         this.label1.Text = "Filename:";
-         // 
-         // grpStartup
-         // 
-         this.grpStartup.Controls.Add(this.chkCheckForUpdate);
-         this.grpStartup.Controls.Add(this.chkAutoRun);
-         this.grpStartup.Controls.Add(this.chkRunMinimized);
-         this.grpStartup.Location = new System.Drawing.Point(6, 9);
-         this.grpStartup.Name = "grpStartup";
-         this.grpStartup.Size = new System.Drawing.Size(489, 50);
-         this.grpStartup.TabIndex = 3;
-         this.grpStartup.TabStop = false;
-         this.grpStartup.Text = "Startup";
-         // 
-         // chkAutoRun
-         // 
-         this.chkAutoRun.AutoSize = true;
-         this.chkAutoRun.Location = new System.Drawing.Point(10, 20);
-         this.chkAutoRun.Name = "chkAutoRun";
-         this.chkAutoRun.Size = new System.Drawing.Size(170, 17);
-         this.chkAutoRun.TabIndex = 0;
-         this.chkAutoRun.Text = "Auto Run on Windows Startup";
-         this.chkAutoRun.UseVisualStyleBackColor = true;
-         // 
-         // chkRunMinimized
-         // 
-         this.chkRunMinimized.AutoSize = true;
-         this.chkRunMinimized.Location = new System.Drawing.Point(196, 20);
-         this.chkRunMinimized.Name = "chkRunMinimized";
-         this.chkRunMinimized.Size = new System.Drawing.Size(95, 17);
-         this.chkRunMinimized.TabIndex = 1;
-         this.chkRunMinimized.Text = "Run Minimized";
-         this.chkRunMinimized.UseVisualStyleBackColor = true;
-         // 
-         // tabOptions
-         // 
-         this.tabOptions.Controls.Add(this.grpShowStyle);
-         this.tabOptions.Controls.Add(this.grpInteractiveOptions);
-         this.tabOptions.Controls.Add(this.grpDebugMessageLevel);
-         this.tabOptions.Controls.Add(this.grpFileExplorer);
-         this.tabOptions.Controls.Add(this.grpLogFileViewer);
-         this.tabOptions.Location = new System.Drawing.Point(4, 22);
-         this.tabOptions.Name = "tabOptions";
-         this.tabOptions.Size = new System.Drawing.Size(501, 303);
-         this.tabOptions.TabIndex = 4;
-         this.tabOptions.Text = "Options";
-         this.tabOptions.UseVisualStyleBackColor = true;
-         // 
-         // grpShowStyle
-         // 
-         this.grpShowStyle.Controls.Add(this.cboShowStyle);
-         this.grpShowStyle.Controls.Add(this.labelWrapper2);
-         this.grpShowStyle.Location = new System.Drawing.Point(254, 239);
-         this.grpShowStyle.Name = "grpShowStyle";
-         this.grpShowStyle.Size = new System.Drawing.Size(241, 54);
-         this.grpShowStyle.TabIndex = 4;
-         this.grpShowStyle.TabStop = false;
-         this.grpShowStyle.Text = "Docking Style";
-         // 
-         // cboShowStyle
-         // 
-         this.cboShowStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-         this.cboShowStyle.FormattingEnabled = true;
-         this.cboShowStyle.Location = new System.Drawing.Point(136, 19);
-         this.cboShowStyle.Name = "cboShowStyle";
-         this.cboShowStyle.Size = new System.Drawing.Size(89, 21);
-         this.cboShowStyle.TabIndex = 1;
-         // 
-         // labelWrapper2
-         // 
-         this.labelWrapper2.AutoSize = true;
-         this.labelWrapper2.Location = new System.Drawing.Point(13, 24);
-         this.labelWrapper2.Name = "labelWrapper2";
-         this.labelWrapper2.Size = new System.Drawing.Size(117, 13);
-         this.labelWrapper2.TabIndex = 0;
-         this.labelWrapper2.Text = "Show HFM.NET in the:";
-         // 
-         // grpInteractiveOptions
-         // 
-         this.grpInteractiveOptions.Controls.Add(this.chkCalcBonus);
-         this.grpInteractiveOptions.Controls.Add(this.label2);
-         this.grpInteractiveOptions.Controls.Add(this.cboPpdCalc);
-         this.grpInteractiveOptions.Controls.Add(this.chkOffline);
-         this.grpInteractiveOptions.Controls.Add(this.chkColorLog);
-         this.grpInteractiveOptions.Controls.Add(this.udDecimalPlaces);
-         this.grpInteractiveOptions.Controls.Add(this.chkAutoSave);
-         this.grpInteractiveOptions.Controls.Add(this.labelWrapper1);
-         this.grpInteractiveOptions.Location = new System.Drawing.Point(6, 9);
-         this.grpInteractiveOptions.Name = "grpInteractiveOptions";
-         this.grpInteractiveOptions.Size = new System.Drawing.Size(489, 110);
-         this.grpInteractiveOptions.TabIndex = 0;
-         this.grpInteractiveOptions.TabStop = false;
-         this.grpInteractiveOptions.Text = "Interactive Options";
-         // 
-         // chkCalcBonus
-         // 
-         this.chkCalcBonus.AutoSize = true;
-         this.chkCalcBonus.Location = new System.Drawing.Point(256, 72);
-         this.chkCalcBonus.Name = "chkCalcBonus";
-         this.chkCalcBonus.Size = new System.Drawing.Size(179, 17);
-         this.chkCalcBonus.TabIndex = 7;
-         this.chkCalcBonus.Text = "Calculate Bonus Credit and PPD";
-         this.chkCalcBonus.UseVisualStyleBackColor = true;
-         // 
-         // label2
-         // 
-         this.label2.AutoSize = true;
-         this.label2.Location = new System.Drawing.Point(235, 21);
-         this.label2.Name = "label2";
-         this.label2.Size = new System.Drawing.Size(126, 13);
-         this.label2.TabIndex = 3;
-         this.label2.Text = "Calculate PPD based on:";
-         // 
-         // cboPpdCalc
-         // 
-         this.cboPpdCalc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-         this.cboPpdCalc.FormattingEnabled = true;
-         this.cboPpdCalc.Location = new System.Drawing.Point(367, 16);
-         this.cboPpdCalc.Name = "cboPpdCalc";
-         this.cboPpdCalc.Size = new System.Drawing.Size(109, 21);
-         this.cboPpdCalc.TabIndex = 4;
-         // 
-         // chkOffline
-         // 
-         this.chkOffline.AutoSize = true;
-         this.chkOffline.Location = new System.Drawing.Point(10, 20);
-         this.chkOffline.Name = "chkOffline";
-         this.chkOffline.Size = new System.Drawing.Size(132, 17);
-         this.chkOffline.TabIndex = 0;
-         this.chkOffline.Text = "List Offline Clients Last";
-         this.chkOffline.UseVisualStyleBackColor = true;
-         // 
-         // chkColorLog
-         // 
-         this.chkColorLog.AutoSize = true;
-         this.chkColorLog.Location = new System.Drawing.Point(10, 46);
-         this.chkColorLog.Name = "chkColorLog";
-         this.chkColorLog.Size = new System.Drawing.Size(165, 17);
-         this.chkColorLog.TabIndex = 1;
-         this.chkColorLog.Text = "Color the FAHlog Viewer Text";
-         this.chkColorLog.UseVisualStyleBackColor = true;
-         // 
-         // udDecimalPlaces
-         // 
-         this.udDecimalPlaces.Location = new System.Drawing.Point(367, 43);
-         this.udDecimalPlaces.Name = "udDecimalPlaces";
-         this.udDecimalPlaces.Size = new System.Drawing.Size(39, 20);
-         this.udDecimalPlaces.TabIndex = 6;
-         // 
-         // chkAutoSave
-         // 
-         this.chkAutoSave.AutoSize = true;
-         this.chkAutoSave.Location = new System.Drawing.Point(10, 72);
-         this.chkAutoSave.Name = "chkAutoSave";
-         this.chkAutoSave.Size = new System.Drawing.Size(216, 17);
-         this.chkAutoSave.TabIndex = 2;
-         this.chkAutoSave.Text = "Auto Save Configuration when Changed";
-         this.chkAutoSave.UseVisualStyleBackColor = true;
-         // 
-         // labelWrapper1
-         // 
-         this.labelWrapper1.AutoSize = true;
-         this.labelWrapper1.Location = new System.Drawing.Point(253, 47);
-         this.labelWrapper1.Name = "labelWrapper1";
-         this.labelWrapper1.Size = new System.Drawing.Size(108, 13);
-         this.labelWrapper1.TabIndex = 5;
-         this.labelWrapper1.Text = "PPD Decimal Places:";
-         // 
-         // grpDebugMessageLevel
-         // 
-         this.grpDebugMessageLevel.Controls.Add(this.cboMessageLevel);
-         this.grpDebugMessageLevel.Controls.Add(this.label6);
-         this.grpDebugMessageLevel.Location = new System.Drawing.Point(6, 239);
-         this.grpDebugMessageLevel.Name = "grpDebugMessageLevel";
-         this.grpDebugMessageLevel.Size = new System.Drawing.Size(241, 54);
-         this.grpDebugMessageLevel.TabIndex = 3;
-         this.grpDebugMessageLevel.TabStop = false;
-         this.grpDebugMessageLevel.Text = "Messages";
-         // 
-         // cboMessageLevel
-         // 
-         this.cboMessageLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-         this.cboMessageLevel.FormattingEnabled = true;
-         this.cboMessageLevel.Location = new System.Drawing.Point(139, 21);
-         this.cboMessageLevel.Name = "cboMessageLevel";
-         this.cboMessageLevel.Size = new System.Drawing.Size(75, 21);
-         this.cboMessageLevel.TabIndex = 1;
-         // 
-         // label6
-         // 
-         this.label6.AutoSize = true;
-         this.label6.Location = new System.Drawing.Point(16, 24);
-         this.label6.Name = "label6";
-         this.label6.Size = new System.Drawing.Size(117, 13);
-         this.label6.TabIndex = 0;
-         this.label6.Text = "Debug Message Level:";
          // 
          // grpFileExplorer
          // 
          this.grpFileExplorer.Controls.Add(this.btnBrowseFileExplorer);
          this.grpFileExplorer.Controls.Add(this.label4);
          this.grpFileExplorer.Controls.Add(this.txtFileExplorer);
-         this.grpFileExplorer.Location = new System.Drawing.Point(6, 181);
+         this.grpFileExplorer.Location = new System.Drawing.Point(6, 239);
          this.grpFileExplorer.Name = "grpFileExplorer";
          this.grpFileExplorer.Size = new System.Drawing.Size(489, 54);
-         this.grpFileExplorer.TabIndex = 2;
+         this.grpFileExplorer.TabIndex = 6;
          this.grpFileExplorer.TabStop = false;
          this.grpFileExplorer.Text = "External File Explorer";
          // 
@@ -876,10 +623,10 @@ namespace HFM.Forms
          this.grpLogFileViewer.Controls.Add(this.btnBrowseLogViewer);
          this.grpLogFileViewer.Controls.Add(this.label3);
          this.grpLogFileViewer.Controls.Add(this.txtLogFileViewer);
-         this.grpLogFileViewer.Location = new System.Drawing.Point(6, 123);
+         this.grpLogFileViewer.Location = new System.Drawing.Point(6, 181);
          this.grpLogFileViewer.Name = "grpLogFileViewer";
          this.grpLogFileViewer.Size = new System.Drawing.Size(489, 54);
-         this.grpLogFileViewer.TabIndex = 1;
+         this.grpLogFileViewer.TabIndex = 5;
          this.grpLogFileViewer.TabStop = false;
          this.grpLogFileViewer.Text = "External Log File Viewer";
          // 
@@ -916,6 +663,281 @@ namespace HFM.Forms
          this.txtLogFileViewer.Size = new System.Drawing.Size(384, 20);
          this.txtLogFileViewer.TabIndex = 1;
          this.txtLogFileViewer.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         // 
+         // grpDefaultConfig
+         // 
+         this.grpDefaultConfig.Controls.Add(this.chkDefaultConfig);
+         this.grpDefaultConfig.Controls.Add(this.btnBrowseConfigFile);
+         this.grpDefaultConfig.Controls.Add(this.txtDefaultConfigFile);
+         this.grpDefaultConfig.Controls.Add(this.label1);
+         this.grpDefaultConfig.Location = new System.Drawing.Point(6, 65);
+         this.grpDefaultConfig.Name = "grpDefaultConfig";
+         this.grpDefaultConfig.Size = new System.Drawing.Size(489, 86);
+         this.grpDefaultConfig.TabIndex = 4;
+         this.grpDefaultConfig.TabStop = false;
+         this.grpDefaultConfig.Text = "Configuration File";
+         // 
+         // chkDefaultConfig
+         // 
+         this.chkDefaultConfig.AutoSize = true;
+         this.chkDefaultConfig.Location = new System.Drawing.Point(10, 22);
+         this.chkDefaultConfig.Name = "chkDefaultConfig";
+         this.chkDefaultConfig.Size = new System.Drawing.Size(134, 17);
+         this.chkDefaultConfig.TabIndex = 0;
+         this.chkDefaultConfig.Text = "Load Configuration File";
+         this.chkDefaultConfig.UseVisualStyleBackColor = true;
+         // 
+         // btnBrowseConfigFile
+         // 
+         this.btnBrowseConfigFile.Enabled = false;
+         this.btnBrowseConfigFile.Location = new System.Drawing.Point(456, 47);
+         this.btnBrowseConfigFile.Name = "btnBrowseConfigFile";
+         this.btnBrowseConfigFile.Size = new System.Drawing.Size(24, 23);
+         this.btnBrowseConfigFile.TabIndex = 3;
+         this.btnBrowseConfigFile.Text = "...";
+         this.btnBrowseConfigFile.UseVisualStyleBackColor = true;
+         this.btnBrowseConfigFile.Click += new System.EventHandler(this.btnBrowseConfigFile_Click);
+         // 
+         // txtDefaultConfigFile
+         // 
+         this.txtDefaultConfigFile.BackColor = System.Drawing.SystemColors.Control;
+         this.txtDefaultConfigFile.DoubleBuffered = true;
+         this.txtDefaultConfigFile.Enabled = false;
+         this.txtDefaultConfigFile.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.txtDefaultConfigFile.ErrorState = false;
+         this.txtDefaultConfigFile.ErrorToolTip = null;
+         this.txtDefaultConfigFile.ErrorToolTipDuration = 5000;
+         this.txtDefaultConfigFile.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.txtDefaultConfigFile.ErrorToolTipText = "";
+         this.txtDefaultConfigFile.Location = new System.Drawing.Point(66, 49);
+         this.txtDefaultConfigFile.Name = "txtDefaultConfigFile";
+         this.txtDefaultConfigFile.ReadOnly = true;
+         this.txtDefaultConfigFile.Size = new System.Drawing.Size(384, 20);
+         this.txtDefaultConfigFile.TabIndex = 2;
+         this.txtDefaultConfigFile.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         // 
+         // label1
+         // 
+         this.label1.AutoSize = true;
+         this.label1.Location = new System.Drawing.Point(8, 52);
+         this.label1.Name = "label1";
+         this.label1.Size = new System.Drawing.Size(52, 13);
+         this.label1.TabIndex = 1;
+         this.label1.Text = "Filename:";
+         // 
+         // grpStartup
+         // 
+         this.grpStartup.Controls.Add(this.chkCheckForUpdate);
+         this.grpStartup.Controls.Add(this.chkAutoRun);
+         this.grpStartup.Controls.Add(this.chkRunMinimized);
+         this.grpStartup.Location = new System.Drawing.Point(6, 9);
+         this.grpStartup.Name = "grpStartup";
+         this.grpStartup.Size = new System.Drawing.Size(489, 50);
+         this.grpStartup.TabIndex = 3;
+         this.grpStartup.TabStop = false;
+         this.grpStartup.Text = "Startup";
+         // 
+         // chkCheckForUpdate
+         // 
+         this.chkCheckForUpdate.AutoSize = true;
+         this.chkCheckForUpdate.Location = new System.Drawing.Point(310, 20);
+         this.chkCheckForUpdate.Name = "chkCheckForUpdate";
+         this.chkCheckForUpdate.Size = new System.Drawing.Size(115, 17);
+         this.chkCheckForUpdate.TabIndex = 2;
+         this.chkCheckForUpdate.Text = "Check for Updates";
+         this.chkCheckForUpdate.UseVisualStyleBackColor = true;
+         // 
+         // chkAutoRun
+         // 
+         this.chkAutoRun.AutoSize = true;
+         this.chkAutoRun.Location = new System.Drawing.Point(10, 20);
+         this.chkAutoRun.Name = "chkAutoRun";
+         this.chkAutoRun.Size = new System.Drawing.Size(170, 17);
+         this.chkAutoRun.TabIndex = 0;
+         this.chkAutoRun.Text = "Auto Run on Windows Startup";
+         this.chkAutoRun.UseVisualStyleBackColor = true;
+         // 
+         // chkRunMinimized
+         // 
+         this.chkRunMinimized.AutoSize = true;
+         this.chkRunMinimized.Location = new System.Drawing.Point(196, 20);
+         this.chkRunMinimized.Name = "chkRunMinimized";
+         this.chkRunMinimized.Size = new System.Drawing.Size(95, 17);
+         this.chkRunMinimized.TabIndex = 1;
+         this.chkRunMinimized.Text = "Run Minimized";
+         this.chkRunMinimized.UseVisualStyleBackColor = true;
+         // 
+         // tabOptions
+         // 
+         this.tabOptions.Controls.Add(this.grpShowStyle);
+         this.tabOptions.Controls.Add(this.grpInteractiveOptions);
+         this.tabOptions.Controls.Add(this.grpDebugMessageLevel);
+         this.tabOptions.Location = new System.Drawing.Point(4, 22);
+         this.tabOptions.Name = "tabOptions";
+         this.tabOptions.Size = new System.Drawing.Size(501, 303);
+         this.tabOptions.TabIndex = 4;
+         this.tabOptions.Text = "Options";
+         this.tabOptions.UseVisualStyleBackColor = true;
+         // 
+         // grpShowStyle
+         // 
+         this.grpShowStyle.Controls.Add(this.cboShowStyle);
+         this.grpShowStyle.Controls.Add(this.labelWrapper2);
+         this.grpShowStyle.Location = new System.Drawing.Point(254, 239);
+         this.grpShowStyle.Name = "grpShowStyle";
+         this.grpShowStyle.Size = new System.Drawing.Size(241, 54);
+         this.grpShowStyle.TabIndex = 4;
+         this.grpShowStyle.TabStop = false;
+         this.grpShowStyle.Text = "Docking Style";
+         // 
+         // cboShowStyle
+         // 
+         this.cboShowStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+         this.cboShowStyle.FormattingEnabled = true;
+         this.cboShowStyle.Location = new System.Drawing.Point(136, 19);
+         this.cboShowStyle.Name = "cboShowStyle";
+         this.cboShowStyle.Size = new System.Drawing.Size(89, 21);
+         this.cboShowStyle.TabIndex = 1;
+         // 
+         // labelWrapper2
+         // 
+         this.labelWrapper2.AutoSize = true;
+         this.labelWrapper2.Location = new System.Drawing.Point(13, 24);
+         this.labelWrapper2.Name = "labelWrapper2";
+         this.labelWrapper2.Size = new System.Drawing.Size(117, 13);
+         this.labelWrapper2.TabIndex = 0;
+         this.labelWrapper2.Text = "Show HFM.NET in the:";
+         // 
+         // grpInteractiveOptions
+         // 
+         this.grpInteractiveOptions.Controls.Add(this.chkMaintainSelected);
+         this.grpInteractiveOptions.Controls.Add(this.chkCalcBonus);
+         this.grpInteractiveOptions.Controls.Add(this.label2);
+         this.grpInteractiveOptions.Controls.Add(this.cboPpdCalc);
+         this.grpInteractiveOptions.Controls.Add(this.chkOffline);
+         this.grpInteractiveOptions.Controls.Add(this.chkColorLog);
+         this.grpInteractiveOptions.Controls.Add(this.udDecimalPlaces);
+         this.grpInteractiveOptions.Controls.Add(this.chkAutoSave);
+         this.grpInteractiveOptions.Controls.Add(this.labelWrapper1);
+         this.grpInteractiveOptions.Location = new System.Drawing.Point(6, 9);
+         this.grpInteractiveOptions.Name = "grpInteractiveOptions";
+         this.grpInteractiveOptions.Size = new System.Drawing.Size(489, 127);
+         this.grpInteractiveOptions.TabIndex = 0;
+         this.grpInteractiveOptions.TabStop = false;
+         this.grpInteractiveOptions.Text = "Interactive Options";
+         // 
+         // chkMaintainSelected
+         // 
+         this.chkMaintainSelected.AutoSize = true;
+         this.chkMaintainSelected.Location = new System.Drawing.Point(10, 98);
+         this.chkMaintainSelected.Name = "chkMaintainSelected";
+         this.chkMaintainSelected.Size = new System.Drawing.Size(195, 17);
+         this.chkMaintainSelected.TabIndex = 3;
+         this.chkMaintainSelected.Text = "Maintain Selected Client on Refresh";
+         this.chkMaintainSelected.UseVisualStyleBackColor = true;
+         // 
+         // chkCalcBonus
+         // 
+         this.chkCalcBonus.AutoSize = true;
+         this.chkCalcBonus.Location = new System.Drawing.Point(256, 72);
+         this.chkCalcBonus.Name = "chkCalcBonus";
+         this.chkCalcBonus.Size = new System.Drawing.Size(179, 17);
+         this.chkCalcBonus.TabIndex = 8;
+         this.chkCalcBonus.Text = "Calculate Bonus Credit and PPD";
+         this.chkCalcBonus.UseVisualStyleBackColor = true;
+         // 
+         // label2
+         // 
+         this.label2.AutoSize = true;
+         this.label2.Location = new System.Drawing.Point(235, 21);
+         this.label2.Name = "label2";
+         this.label2.Size = new System.Drawing.Size(126, 13);
+         this.label2.TabIndex = 4;
+         this.label2.Text = "Calculate PPD based on:";
+         // 
+         // cboPpdCalc
+         // 
+         this.cboPpdCalc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+         this.cboPpdCalc.FormattingEnabled = true;
+         this.cboPpdCalc.Location = new System.Drawing.Point(367, 16);
+         this.cboPpdCalc.Name = "cboPpdCalc";
+         this.cboPpdCalc.Size = new System.Drawing.Size(109, 21);
+         this.cboPpdCalc.TabIndex = 5;
+         // 
+         // chkOffline
+         // 
+         this.chkOffline.AutoSize = true;
+         this.chkOffline.Location = new System.Drawing.Point(10, 20);
+         this.chkOffline.Name = "chkOffline";
+         this.chkOffline.Size = new System.Drawing.Size(132, 17);
+         this.chkOffline.TabIndex = 0;
+         this.chkOffline.Text = "List Offline Clients Last";
+         this.chkOffline.UseVisualStyleBackColor = true;
+         // 
+         // chkColorLog
+         // 
+         this.chkColorLog.AutoSize = true;
+         this.chkColorLog.Location = new System.Drawing.Point(10, 46);
+         this.chkColorLog.Name = "chkColorLog";
+         this.chkColorLog.Size = new System.Drawing.Size(165, 17);
+         this.chkColorLog.TabIndex = 1;
+         this.chkColorLog.Text = "Color the FAHlog Viewer Text";
+         this.chkColorLog.UseVisualStyleBackColor = true;
+         // 
+         // udDecimalPlaces
+         // 
+         this.udDecimalPlaces.Location = new System.Drawing.Point(367, 43);
+         this.udDecimalPlaces.Name = "udDecimalPlaces";
+         this.udDecimalPlaces.Size = new System.Drawing.Size(39, 20);
+         this.udDecimalPlaces.TabIndex = 7;
+         // 
+         // chkAutoSave
+         // 
+         this.chkAutoSave.AutoSize = true;
+         this.chkAutoSave.Location = new System.Drawing.Point(10, 72);
+         this.chkAutoSave.Name = "chkAutoSave";
+         this.chkAutoSave.Size = new System.Drawing.Size(216, 17);
+         this.chkAutoSave.TabIndex = 2;
+         this.chkAutoSave.Text = "Auto Save Configuration when Changed";
+         this.chkAutoSave.UseVisualStyleBackColor = true;
+         // 
+         // labelWrapper1
+         // 
+         this.labelWrapper1.AutoSize = true;
+         this.labelWrapper1.Location = new System.Drawing.Point(253, 47);
+         this.labelWrapper1.Name = "labelWrapper1";
+         this.labelWrapper1.Size = new System.Drawing.Size(108, 13);
+         this.labelWrapper1.TabIndex = 6;
+         this.labelWrapper1.Text = "PPD Decimal Places:";
+         // 
+         // grpDebugMessageLevel
+         // 
+         this.grpDebugMessageLevel.Controls.Add(this.cboMessageLevel);
+         this.grpDebugMessageLevel.Controls.Add(this.label6);
+         this.grpDebugMessageLevel.Location = new System.Drawing.Point(6, 239);
+         this.grpDebugMessageLevel.Name = "grpDebugMessageLevel";
+         this.grpDebugMessageLevel.Size = new System.Drawing.Size(241, 54);
+         this.grpDebugMessageLevel.TabIndex = 3;
+         this.grpDebugMessageLevel.TabStop = false;
+         this.grpDebugMessageLevel.Text = "Messages";
+         // 
+         // cboMessageLevel
+         // 
+         this.cboMessageLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+         this.cboMessageLevel.FormattingEnabled = true;
+         this.cboMessageLevel.Location = new System.Drawing.Point(139, 21);
+         this.cboMessageLevel.Name = "cboMessageLevel";
+         this.cboMessageLevel.Size = new System.Drawing.Size(75, 21);
+         this.cboMessageLevel.TabIndex = 1;
+         // 
+         // label6
+         // 
+         this.label6.AutoSize = true;
+         this.label6.Location = new System.Drawing.Point(16, 24);
+         this.label6.Name = "label6";
+         this.label6.Size = new System.Drawing.Size(117, 13);
+         this.label6.TabIndex = 0;
+         this.label6.Text = "Debug Message Level:";
          // 
          // tabReporting
          // 
@@ -1777,16 +1799,6 @@ namespace HFM.Forms
          this.btnCancel.UseVisualStyleBackColor = true;
          this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
          // 
-         // chkCheckForUpdate
-         // 
-         this.chkCheckForUpdate.AutoSize = true;
-         this.chkCheckForUpdate.Location = new System.Drawing.Point(310, 20);
-         this.chkCheckForUpdate.Name = "chkCheckForUpdate";
-         this.chkCheckForUpdate.Size = new System.Drawing.Size(110, 17);
-         this.chkCheckForUpdate.TabIndex = 2;
-         this.chkCheckForUpdate.Text = "Check for Update";
-         this.chkCheckForUpdate.UseVisualStyleBackColor = true;
-         // 
          // frmPreferences
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1815,6 +1827,10 @@ namespace HFM.Forms
          this.pnlFtpMode.ResumeLayout(false);
          this.pnlFtpMode.PerformLayout();
          this.tabStartup.ResumeLayout(false);
+         this.grpFileExplorer.ResumeLayout(false);
+         this.grpFileExplorer.PerformLayout();
+         this.grpLogFileViewer.ResumeLayout(false);
+         this.grpLogFileViewer.PerformLayout();
          this.grpDefaultConfig.ResumeLayout(false);
          this.grpDefaultConfig.PerformLayout();
          this.grpStartup.ResumeLayout(false);
@@ -1827,10 +1843,6 @@ namespace HFM.Forms
          ((System.ComponentModel.ISupportInitialize)(this.udDecimalPlaces)).EndInit();
          this.grpDebugMessageLevel.ResumeLayout(false);
          this.grpDebugMessageLevel.PerformLayout();
-         this.grpFileExplorer.ResumeLayout(false);
-         this.grpFileExplorer.PerformLayout();
-         this.grpLogFileViewer.ResumeLayout(false);
-         this.grpLogFileViewer.PerformLayout();
          this.tabReporting.ResumeLayout(false);
          this.grpReportSelections.ResumeLayout(false);
          this.grpReportSelections.PerformLayout();
@@ -1897,14 +1909,6 @@ namespace HFM.Forms
       private Classes.CheckBoxWrapper chkUseProxy;
       private System.Windows.Forms.TabPage tabOptions;
       private System.Windows.Forms.OpenFileDialog openConfigDialog;
-      private Classes.GroupBoxWrapper grpFileExplorer;
-      private Classes.LabelWrapper label4;
-      private ValidatingTextBox txtFileExplorer;
-      private Classes.GroupBoxWrapper grpLogFileViewer;
-      private Classes.LabelWrapper label3;
-      private ValidatingTextBox txtLogFileViewer;
-      private Classes.ButtonWrapper btnBrowseFileExplorer;
-      private Classes.ButtonWrapper btnBrowseLogViewer;
       private Classes.GroupBoxWrapper grpProjectDownload;
       private ValidatingTextBox txtProjectDownloadUrl;
       private Classes.LabelWrapper label5;
@@ -1980,5 +1984,14 @@ namespace HFM.Forms
       private ValidatingTextBox txtSmtpServerPort;
       private HFM.Classes.LabelWrapper labelWrapper3;
       private HFM.Classes.CheckBoxWrapper chkCheckForUpdate;
+      private HFM.Classes.GroupBoxWrapper grpFileExplorer;
+      private HFM.Classes.ButtonWrapper btnBrowseFileExplorer;
+      private HFM.Classes.LabelWrapper label4;
+      private ValidatingTextBox txtFileExplorer;
+      private HFM.Classes.GroupBoxWrapper grpLogFileViewer;
+      private HFM.Classes.ButtonWrapper btnBrowseLogViewer;
+      private HFM.Classes.LabelWrapper label3;
+      private ValidatingTextBox txtLogFileViewer;
+      private HFM.Classes.CheckBoxWrapper chkMaintainSelected;
    }
 }

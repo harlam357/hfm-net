@@ -1,6 +1,6 @@
 /*
  * HFM.NET - DataGridView Wrapper Class
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -48,15 +48,32 @@ namespace HFM.Classes
       }
 
       /// <summary>
-      /// Raises the System.Windows.Forms.DataGridView.SelectionChanged event.
+      /// Raises the <see cref="E:System.Windows.Forms.DataGridView.SelectionChanged"/> event.
       /// </summary>
+      /// <param name="e">An <see cref="T:System.EventArgs"/> that contains information about the event.
+      ///                 </param>
       protected override void OnSelectionChanged(EventArgs e)
       {
          if (FreezeSelectionChanged) return;
+
+         // Code moved here from OnCellMouseDown
+         if (SelectedRows.Count != 0)
+         {
+            CurrentRowKey = SelectedRows[0].Cells["Name"].Value.ToString();
+         }
+         else
+         {
+            CurrentRowKey = String.Empty;
+         }
       
          base.OnSelectionChanged(e);
       }
 
+      /// <summary>
+      /// Raises the <see cref="E:System.Windows.Forms.DataGridView.Sorted"/> event. 
+      /// </summary>
+      /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.
+      ///                 </param>
       protected override void OnSorted(EventArgs e)
       {
          if (FreezeSorted) return;
@@ -64,21 +81,21 @@ namespace HFM.Classes
          base.OnSorted(e);
       }
 
-      protected override void OnCellMouseDown(DataGridViewCellMouseEventArgs e)
-      {
-         if (e.RowIndex == -1)
-         {
-            if (SelectedRows.Count != 0)
-            {
-               CurrentRowKey = SelectedRows[0].Cells["Name"].Value.ToString();
-            }
-            else
-            {
-               CurrentRowKey = String.Empty;
-            }
-         }
+      //protected override void OnCellMouseDown(DataGridViewCellMouseEventArgs e)
+      //{
+      //   if (e.RowIndex == -1)
+      //   {
+      //      if (SelectedRows.Count != 0)
+      //      {
+      //         CurrentRowKey = SelectedRows[0].Cells["Name"].Value.ToString();
+      //      }
+      //      else
+      //      {
+      //         CurrentRowKey = String.Empty;
+      //      }
+      //   }
       
-         base.OnCellMouseDown(e);
-      }
+      //   base.OnCellMouseDown(e);
+      //}
    }
 }

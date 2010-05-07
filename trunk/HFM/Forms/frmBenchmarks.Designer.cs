@@ -640,7 +640,7 @@ namespace HFM.Forms
          this.MinimumSize = new System.Drawing.Size(564, 300);
          this.Name = "frmBenchmarks";
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-         this.Text = "Benchmarks";
+         this.Text = "Benchmarks Viewer";
          this.Shown += new System.EventHandler(this.frmBenchmarks_Shown);
          this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmBenchmarks_FormClosing);
          this.grpProjectInfo.ResumeLayout(false);

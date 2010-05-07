@@ -866,5 +866,17 @@ namespace HFM.Preferences.Properties {
                 this["StartupCheckForUpdate"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool MaintainSelectedClient {
+            get {
+                return ((bool)(this["MaintainSelectedClient"]));
+            }
+            set {
+                this["MaintainSelectedClient"] = value;
+            }
+        }
     }
 }
