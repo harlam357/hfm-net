@@ -1,7 +1,6 @@
 /*
  * HFM.NET - About Form
- * Copyright (C) 2006-2007 David Rawling
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,38 +20,66 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 
 using HFM.Framework;
-using HFM.Instrumentation;
 
 namespace HFM.Forms
 {
+   // ReSharper disable InconsistentNaming
    public partial class frmAbout : Classes.FormWrapper
+   // ReSharper restore InconsistentNaming
    {
       #region Constructor
       public frmAbout()
       {
          InitializeComponent();
-
          lblVersion.Text = PlatformOps.LongFormattedApplicationVersionWithRevision;
+         string assemblyLocation = Assembly.GetExecutingAssembly().Location;
+         if (String.IsNullOrEmpty(assemblyLocation) == false)
+         {
+            DateTime buildDate = new FileInfo(assemblyLocation).LastWriteTime;
+            lblDate.Text = "Built on: " + buildDate.ToLongDateString();
+         }
+         else
+         {
+            lblDate.Text = String.Empty;
+         }
       } 
       #endregion
 
-      #region Event Handlers
-      private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+      private void lnkHfmGoogleCode_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
       {
          try
          {
-            // Issue 28 - wrap process start in try catch
-            Process.Start("http://code.google.com/p/fahlogstats-net/");
+            Process.Start("http://code.google.com/p/hfm-net/");
          }
-         catch (Exception ex)
+         catch (Exception)
          {
-            HfmTrace.WriteToHfmConsole(ex);
-            MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "FAHLogStats.NET Google Code page"));
+            MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+               Properties.Resources.ProcessStartError, "HFM.NET Google Code page"));
          }
-      } 
-      #endregion
+      }
+
+      private void lnkHfmGoogleGroup_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+      {
+         try
+         {
+            Process.Start("http://groups.google.com/group/hfm-net/");
+         }
+         catch (Exception)
+         {
+            MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+               Properties.Resources.ProcessStartError, "HFM.NET Google Group"));
+         }
+      }
+
+      private void btnClose_Click(object sender, EventArgs e)
+      {
+         DialogResult = DialogResult.Cancel;
+         Close();
+      }
    }
 }

@@ -51,156 +51,139 @@ namespace HFM.Forms
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAbout));
          this.lblProduct = new HFM.Classes.LabelWrapper();
          this.lblVersion = new HFM.Classes.LabelWrapper();
-         this.lblCopyrights = new HFM.Classes.LabelWrapper();
-         this.lblLinkOrig = new System.Windows.Forms.LinkLabel();
          this.btnClose = new HFM.Classes.ButtonWrapper();
          this.pictureBox1 = new System.Windows.Forms.PictureBox();
-         this.lblGPL = new HFM.Classes.LabelWrapper();
-         this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-         this.labelWrapper1 = new HFM.Classes.LabelWrapper();
+         this.textBoxWrapper1 = new HFM.Classes.TextBoxWrapper();
+         this.lnkHfmGoogleCode = new System.Windows.Forms.LinkLabel();
+         this.lnkHfmGoogleGroup = new System.Windows.Forms.LinkLabel();
+         this.lblDate = new HFM.Classes.LabelWrapper();
          ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-         this.tableLayoutPanel1.SuspendLayout();
          this.SuspendLayout();
          // 
          // lblProduct
          // 
-         this.lblProduct.Anchor = System.Windows.Forms.AnchorStyles.Left;
-         this.lblProduct.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         this.lblProduct.Location = new System.Drawing.Point(3, 4);
+         this.lblProduct.BackColor = System.Drawing.Color.Gainsboro;
+         this.lblProduct.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+         this.lblProduct.Font = new System.Drawing.Font("Times New Roman", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         this.lblProduct.Location = new System.Drawing.Point(298, 11);
          this.lblProduct.Name = "lblProduct";
-         this.lblProduct.Size = new System.Drawing.Size(115, 32);
-         this.lblProduct.TabIndex = 1;
+         this.lblProduct.Size = new System.Drawing.Size(269, 42);
+         this.lblProduct.TabIndex = 0;
          this.lblProduct.Text = "HFM.NET";
+         this.lblProduct.TextAlign = System.Drawing.ContentAlignment.TopCenter;
          // 
          // lblVersion
          // 
-         this.lblVersion.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         this.lblVersion.Location = new System.Drawing.Point(128, 6);
+         this.lblVersion.ForeColor = System.Drawing.Color.White;
+         this.lblVersion.Location = new System.Drawing.Point(298, 59);
          this.lblVersion.Name = "lblVersion";
-         this.lblVersion.Size = new System.Drawing.Size(245, 28);
-         this.lblVersion.TabIndex = 2;
+         this.lblVersion.Size = new System.Drawing.Size(269, 28);
+         this.lblVersion.TabIndex = 1;
          this.lblVersion.Text = "[Version]";
-         // 
-         // lblCopyrights
-         // 
-         this.lblCopyrights.AutoSize = true;
-         this.tableLayoutPanel1.SetColumnSpan(this.lblCopyrights, 4);
-         this.lblCopyrights.Location = new System.Drawing.Point(3, 110);
-         this.lblCopyrights.Name = "lblCopyrights";
-         this.lblCopyrights.Size = new System.Drawing.Size(447, 78);
-         this.lblCopyrights.TabIndex = 3;
-         this.lblCopyrights.Text = resources.GetString("lblCopyrights.Text");
-         // 
-         // lblLinkOrig
-         // 
-         this.lblLinkOrig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-         this.tableLayoutPanel1.SetColumnSpan(this.lblLinkOrig, 4);
-         this.lblLinkOrig.LinkArea = new System.Windows.Forms.LinkArea(29, 15);
-         this.lblLinkOrig.Location = new System.Drawing.Point(3, 202);
-         this.lblLinkOrig.Name = "lblLinkOrig";
-         this.lblLinkOrig.Size = new System.Drawing.Size(497, 20);
-         this.lblLinkOrig.TabIndex = 5;
-         this.lblLinkOrig.TabStop = true;
-         this.lblLinkOrig.Text = "HFM.NET was derived from the FAHLogStats.NET code base.  The UI is inspired by Fa" +
-             "hMon.";
-         this.lblLinkOrig.UseCompatibleTextRendering = true;
-         this.lblLinkOrig.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
+         this.lblVersion.TextAlign = System.Drawing.ContentAlignment.TopCenter;
          // 
          // btnClose
          // 
-         this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-         this.btnClose.DialogResult = System.Windows.Forms.DialogResult.OK;
-         this.btnClose.Location = new System.Drawing.Point(481, 226);
+         this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+         this.btnClose.Location = new System.Drawing.Point(30, 30);
          this.btnClose.Name = "btnClose";
          this.btnClose.Size = new System.Drawing.Size(74, 23);
-         this.btnClose.TabIndex = 0;
+         this.btnClose.TabIndex = 5;
          this.btnClose.Text = "Close";
          this.btnClose.UseVisualStyleBackColor = false;
+         this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
          // 
          // pictureBox1
          // 
-         this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-         this.tableLayoutPanel1.SetColumnSpan(this.pictureBox1, 2);
-         this.pictureBox1.Image = global::HFM.Properties.Resources.aboutBox;
+         this.pictureBox1.Image = global::HFM.Properties.Resources.hfm_logo_large;
          this.pictureBox1.InitialImage = null;
-         this.pictureBox1.Location = new System.Drawing.Point(381, 3);
+         this.pictureBox1.Location = new System.Drawing.Point(12, 11);
          this.pictureBox1.Name = "pictureBox1";
-         this.tableLayoutPanel1.SetRowSpan(this.pictureBox1, 2);
-         this.pictureBox1.Size = new System.Drawing.Size(174, 104);
+         this.pictureBox1.Size = new System.Drawing.Size(280, 181);
          this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
          this.pictureBox1.TabIndex = 4;
          this.pictureBox1.TabStop = false;
          // 
-         // lblGPL
+         // textBoxWrapper1
          // 
-         this.lblGPL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-         this.tableLayoutPanel1.SetColumnSpan(this.lblGPL, 3);
-         this.lblGPL.Location = new System.Drawing.Point(3, 225);
-         this.lblGPL.Name = "lblGPL";
-         this.lblGPL.Size = new System.Drawing.Size(452, 27);
-         this.lblGPL.TabIndex = 6;
-         this.lblGPL.Text = "This program is free software; you can redistribute it and/or modify it under the" +
-             " terms of the\r\nGNU General Public License, version 2, as published by the Free S" +
-             "oftware Foundation.";
+         this.textBoxWrapper1.BackColor = System.Drawing.Color.Black;
+         this.textBoxWrapper1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+         this.textBoxWrapper1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         this.textBoxWrapper1.ForeColor = System.Drawing.Color.LightGray;
+         this.textBoxWrapper1.Location = new System.Drawing.Point(12, 199);
+         this.textBoxWrapper1.Multiline = true;
+         this.textBoxWrapper1.Name = "textBoxWrapper1";
+         this.textBoxWrapper1.ReadOnly = true;
+         this.textBoxWrapper1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+         this.textBoxWrapper1.Size = new System.Drawing.Size(555, 169);
+         this.textBoxWrapper1.TabIndex = 4;
+         this.textBoxWrapper1.Text = resources.GetString("textBoxWrapper1.Text");
+         this.textBoxWrapper1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
-         // tableLayoutPanel1
+         // lnkHfmGoogleCode
          // 
-         this.tableLayoutPanel1.ColumnCount = 4;
-         this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 125F));
-         this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-         this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-         this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-         this.tableLayoutPanel1.Controls.Add(this.lblProduct, 0, 0);
-         this.tableLayoutPanel1.Controls.Add(this.lblGPL, 0, 4);
-         this.tableLayoutPanel1.Controls.Add(this.btnClose, 3, 4);
-         this.tableLayoutPanel1.Controls.Add(this.lblLinkOrig, 0, 3);
-         this.tableLayoutPanel1.Controls.Add(this.lblVersion, 1, 0);
-         this.tableLayoutPanel1.Controls.Add(this.pictureBox1, 2, 0);
-         this.tableLayoutPanel1.Controls.Add(this.labelWrapper1, 0, 1);
-         this.tableLayoutPanel1.Controls.Add(this.lblCopyrights, 0, 2);
-         this.tableLayoutPanel1.Location = new System.Drawing.Point(7, 7);
-         this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-         this.tableLayoutPanel1.RowCount = 5;
-         this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-         this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 70F));
-         this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-         this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-         this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-         this.tableLayoutPanel1.Size = new System.Drawing.Size(558, 252);
-         this.tableLayoutPanel1.TabIndex = 7;
+         this.lnkHfmGoogleCode.AutoSize = true;
+         this.lnkHfmGoogleCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         this.lnkHfmGoogleCode.LinkColor = System.Drawing.Color.Goldenrod;
+         this.lnkHfmGoogleCode.Location = new System.Drawing.Point(313, 121);
+         this.lnkHfmGoogleCode.Name = "lnkHfmGoogleCode";
+         this.lnkHfmGoogleCode.Size = new System.Drawing.Size(209, 16);
+         this.lnkHfmGoogleCode.TabIndex = 2;
+         this.lnkHfmGoogleCode.TabStop = true;
+         this.lnkHfmGoogleCode.Text = "http://code.google.com/p/hfm-net/";
+         this.lnkHfmGoogleCode.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkHfmGoogleCode_LinkClicked);
          // 
-         // labelWrapper1
+         // lnkHfmGoogleGroup
          // 
-         this.labelWrapper1.AutoSize = true;
-         this.tableLayoutPanel1.SetColumnSpan(this.labelWrapper1, 2);
-         this.labelWrapper1.Location = new System.Drawing.Point(3, 40);
-         this.labelWrapper1.Name = "labelWrapper1";
-         this.labelWrapper1.Size = new System.Drawing.Size(257, 52);
-         this.labelWrapper1.TabIndex = 5;
-         this.labelWrapper1.Text = "Copyright (c) Ryan Harlamert (harlam357) 2009-2010.\r\nCopyright (c) David Rawling " +
-             "2006-2007.\r\n\r\nAll Rights Reserved.";
+         this.lnkHfmGoogleGroup.AutoSize = true;
+         this.lnkHfmGoogleGroup.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         this.lnkHfmGoogleGroup.LinkColor = System.Drawing.Color.Goldenrod;
+         this.lnkHfmGoogleGroup.Location = new System.Drawing.Point(313, 148);
+         this.lnkHfmGoogleGroup.Name = "lnkHfmGoogleGroup";
+         this.lnkHfmGoogleGroup.Size = new System.Drawing.Size(247, 16);
+         this.lnkHfmGoogleGroup.TabIndex = 3;
+         this.lnkHfmGoogleGroup.TabStop = true;
+         this.lnkHfmGoogleGroup.Text = "http://groups.google.com/group/hfm-net/";
+         this.lnkHfmGoogleGroup.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkHfmGoogleGroup_LinkClicked);
+         // 
+         // lblDate
+         // 
+         this.lblDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         this.lblDate.ForeColor = System.Drawing.Color.Gainsboro;
+         this.lblDate.Location = new System.Drawing.Point(298, 89);
+         this.lblDate.Name = "lblDate";
+         this.lblDate.Size = new System.Drawing.Size(269, 28);
+         this.lblDate.TabIndex = 6;
+         this.lblDate.Text = "[BuildDate]";
+         this.lblDate.TextAlign = System.Drawing.ContentAlignment.TopCenter;
          // 
          // frmAbout
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+         this.BackColor = System.Drawing.Color.Black;
          this.CancelButton = this.btnClose;
-         this.ClientSize = new System.Drawing.Size(571, 265);
-         this.Controls.Add(this.tableLayoutPanel1);
+         this.ClientSize = new System.Drawing.Size(579, 381);
+         this.Controls.Add(this.lblDate);
+         this.Controls.Add(this.lnkHfmGoogleGroup);
+         this.Controls.Add(this.lnkHfmGoogleCode);
+         this.Controls.Add(this.textBoxWrapper1);
+         this.Controls.Add(this.lblProduct);
+         this.Controls.Add(this.pictureBox1);
+         this.Controls.Add(this.lblVersion);
+         this.Controls.Add(this.btnClose);
          this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+         this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
          this.MaximizeBox = false;
          this.MinimizeBox = false;
          this.Name = "frmAbout";
          this.ShowInTaskbar = false;
-         this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
          this.Text = "About HFM.NET";
-         this.TopMost = true;
          ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-         this.tableLayoutPanel1.ResumeLayout(false);
-         this.tableLayoutPanel1.PerformLayout();
          this.ResumeLayout(false);
+         this.PerformLayout();
 
       }
 
@@ -208,13 +191,12 @@ namespace HFM.Forms
 
       private Classes.LabelWrapper lblProduct;
       private Classes.LabelWrapper lblVersion;
-      private Classes.LabelWrapper lblCopyrights;
       private System.Windows.Forms.PictureBox pictureBox1;
-      private System.Windows.Forms.LinkLabel lblLinkOrig;
       private Classes.ButtonWrapper btnClose;
-      private Classes.LabelWrapper lblGPL;
-      private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-      private HFM.Classes.LabelWrapper labelWrapper1;
+      private HFM.Classes.TextBoxWrapper textBoxWrapper1;
+      private System.Windows.Forms.LinkLabel lnkHfmGoogleCode;
+      private System.Windows.Forms.LinkLabel lnkHfmGoogleGroup;
+      private HFM.Classes.LabelWrapper lblDate;
 
    }
 }

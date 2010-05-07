@@ -293,6 +293,7 @@
     <None Include="Resources\Color.png" />
     <None Include="Resources\Delete.png" />
     <None Include="Resources\DownArrow.png" />
+    <None Include="Resources\hfm_logo_large.png" />
     <Content Include="XML\Overview.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
