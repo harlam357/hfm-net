@@ -19,7 +19,7 @@
   <SearchGlobalAssemblyCache>False</SearchGlobalAssemblyCache>
   <DeadlockDetectionTimeout>120</DeadlockDetectionTimeout>
   <IgnoreGeneratedCode>True</IgnoreGeneratedCode>
-  <TargetFrameworkVersion>2.0</TargetFrameworkVersion>
+  <TargetFrameworkVersion>3.5</TargetFrameworkVersion>
  </ProjectOptions>
  <Targets>
   <Target Name="$(ProjectDir)/HFM.NET/HFM.exe" Analyze="True" AnalyzeAllChildren="True" />
@@ -110,7 +110,6 @@
     <Rule Name="IdentifiersShouldNotMatchKeywords" Enabled="True" />
     <Rule Name="ParameterNamesShouldNotMatchMemberNames" Enabled="True" />
     <Rule Name="PropertyNamesShouldNotMatchGetMethods" Enabled="True" />
-    <Rule Name="ResourceStringCompoundWordsShouldBeCasedCorrectly" Enabled="True" />
     <Rule Name="ResourceStringsShouldBeSpelledCorrectly" Enabled="True" />
     <Rule Name="TypeNamesShouldNotMatchNamespaces" Enabled="True" />
     <Rule Name="UsePreferredTerms" Enabled="True" />

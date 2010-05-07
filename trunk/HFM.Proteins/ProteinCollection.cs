@@ -254,9 +254,9 @@ namespace HFM.Proteins
       }
       
       /// <summary>
-      /// Get a New Protein from the Collection
+      /// Create a New Protein
       /// </summary>
-      public IProtein GetNewProtein()
+      public IProtein CreateProtein()
       {
          return new Protein();
       }

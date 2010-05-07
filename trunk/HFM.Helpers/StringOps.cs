@@ -241,7 +241,7 @@ namespace HFM.Helpers
       {
          return ValidateValuePair(Username, "Password must also be specified when specifying Username.",
                                   Password, "Username must also be specified when specifying Password.",
-                                  true, "Username and Password must be specified.");
+                                  throwOnEmpty, "Username and Password must be specified.");
       }
 
       /// <summary>

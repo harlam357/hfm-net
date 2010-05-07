@@ -311,7 +311,7 @@ namespace HFM.Instances
             _unitInfo.ProjectID = value;
             if (_unitInfo.ProjectID == 0)
             {
-               CurrentProtein = _proteinCollection.GetNewProtein();
+               CurrentProtein = _proteinCollection.CreateProtein();
             }
             else
             {

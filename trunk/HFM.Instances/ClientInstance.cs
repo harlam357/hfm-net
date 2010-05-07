@@ -1779,7 +1779,7 @@ namespace HFM.Instances
       /// Restore the given UnitInfo into this Client Instance
       /// </summary>
       /// <param name="unitInfo">UnitInfo Object to Restore</param>
-      public void RestoreUnitInfo(UnitInfo unitInfo)
+      public void RestoreUnitInfo(IUnitInfo unitInfo)
       {
          CurrentUnitInfoConcrete = new UnitInfoLogic(_Prefs, _proteinCollection, unitInfo, this);
       }

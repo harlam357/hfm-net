@@ -53,7 +53,7 @@ namespace HFM.Framework
       /// <summary>
       /// Get an Empty FAHlog Unit Data
       /// </summary>
-      IFahLogUnitData GetEmptyFahLogUnitData();
+      IFahLogUnitData CreateFahLogUnitData();
 
       /// <summary>
       /// Get FAHlog Unit Data from the given Log Lines
@@ -64,7 +64,7 @@ namespace HFM.Framework
       /// <summary>
       /// Get an Empty unitinfo Log Data
       /// </summary>
-      IUnitInfoLogData GetEmptyUnitInfoLogData();
+      IUnitInfoLogData CreateUnitInfoLogData();
 
       /// <summary>
       /// Parse the content from the unitinfo.txt file.

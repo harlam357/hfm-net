@@ -346,7 +346,7 @@ namespace HFM.Instances
          //        <Contact>spark7</Contact>
          //    </Protein>
 
-         IProtein p = _proteinCollection.GetNewProtein();
+         IProtein p = _proteinCollection.CreateProtein();
          if (_proteinCollection.ContainsKey(instance.CurrentUnitInfo.ProjectID))
          {
             p = _proteinCollection[instance.CurrentUnitInfo.ProjectID];

@@ -229,7 +229,7 @@ namespace HFM.Log
       /// <summary>
       /// Get an Empty FAHlog Unit Data
       /// </summary>
-      public IFahLogUnitData GetEmptyFahLogUnitData()
+      public IFahLogUnitData CreateFahLogUnitData()
       {
          return new FahLogUnitData();
       }
@@ -425,7 +425,7 @@ namespace HFM.Log
       /// <summary>
       /// Get an Empty unitinfo Log Data
       /// </summary>
-      public IUnitInfoLogData GetEmptyUnitInfoLogData()
+      public IUnitInfoLogData CreateUnitInfoLogData()
       {
          return new UnitInfoLogData();
       }

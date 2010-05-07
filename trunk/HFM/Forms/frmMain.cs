@@ -52,13 +52,10 @@ namespace HFM.Forms
 
    public partial class frmMain : FormWrapper
    {
-      #region Public Fields
-   
-      public static string FormTitle = String.Format("HFM.NET v{0} - Beta", PlatformOps.ApplicationVersion);
-      
-      #endregion
-   
       #region Private Fields
+      
+      private static string FormTitle = String.Format("HFM.NET v{0} - Beta", PlatformOps.ApplicationVersion);
+      
       /// <summary>
       /// Holds the state of the window before it is hidden (minimise to tray behaviour)
       /// </summary>

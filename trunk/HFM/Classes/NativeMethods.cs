@@ -25,30 +25,30 @@ namespace HFM.Classes
    /// <summary>
    /// Contains P/Invoke methods for functions in the Windows API.
    /// </summary>
-   [CLSCompliant(false)]
-   public static class NativeMethods
+   internal static class NativeMethods
    {
       // ReSharper disable InconsistentNaming
-      public const int WM_VSCROLL = 277;
-      public const int SB_LINEUP = 0;
-      public const int SB_LINEDOWN = 1;
-      public const int SB_TOP = 6;
-      public const int SB_BOTTOM = 7;
+      internal const int WM_VSCROLL = 277;
+      internal const int SB_LINEUP = 0;
+      internal const int SB_LINEDOWN = 1;
+      internal const int SB_TOP = 6;
+      internal const int SB_BOTTOM = 7;
       // ReSharper restore InconsistentNaming
 
       [DllImport("user32.dll", CharSet = CharSet.Auto)]
-      public static extern IntPtr SendMessage(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+      internal static extern IntPtr SendMessage(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 
       //[DllImport("user32.dll")]
-      //public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+      //internal static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
       //[DllImport("user32.dll", SetLastError = true)]
-      //public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+      //internal static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 
       [DllImport("user32.dll")]
-      public static extern bool SetForegroundWindow(IntPtr hWnd);
+      [return: MarshalAs(UnmanagedType.Bool)]
+      internal static extern bool SetForegroundWindow(IntPtr hWnd);
 
-      //public static void ShowToFront(IntPtr hWnd)
+      //internal static void ShowToFront(IntPtr hWnd)
       //{
       //   ShowWindow(hWnd, 1);
       //   SetForegroundWindow(hWnd);

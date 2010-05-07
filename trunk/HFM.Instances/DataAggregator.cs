@@ -292,8 +292,8 @@ namespace HFM.Instances
                   if (_currentFahLogUnitData.Status.Equals(ClientStatus.GettingWorkPacket))
                   {
                      _unitLogLines[queueIndex] = null;
-                     fahLogUnitData = _logReader.GetEmptyFahLogUnitData();
-                     unitInfoLogData = _logReader.GetEmptyUnitInfoLogData();
+                     fahLogUnitData = _logReader.CreateFahLogUnitData();
+                     unitInfoLogData = _logReader.CreateUnitInfoLogData();
                   }
                   parsedUnits[queueIndex] = BuildUnitInfo(_queueReader.Queue.GetQueueEntry((uint) queueIndex), fahLogUnitData, unitInfoLogData, true);
                }

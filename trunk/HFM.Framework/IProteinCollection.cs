@@ -69,9 +69,9 @@ namespace HFM.Framework
       IProtein GetProtein(int projectId);
 
       /// <summary>
-      /// Get a New Protein from the Collection
+      /// Create a New Protein
       /// </summary>
-      IProtein GetNewProtein();
+      IProtein CreateProtein();
 
       #region Want to get rid of these direct collection accessors
       void Add(int key, IProtein value);

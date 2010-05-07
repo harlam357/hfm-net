@@ -1342,7 +1342,7 @@ namespace HFM.Instances
       /// <summary>
       /// Get a new ClientInstance object
       /// </summary>
-      public ClientInstance GetNewClientInstance()
+      public ClientInstance CreateClientInstance()
       {
          return new ClientInstance(_Prefs, _proteinCollection, _benchmarkContainer);
       }

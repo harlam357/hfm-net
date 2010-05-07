@@ -205,7 +205,7 @@ namespace HFM.Forms
       #region Get Instance Data
       private ClientInstance GetInstanceData()
       {
-         ClientInstance NewInstance = _ClientInstances.GetNewClientInstance();
+         ClientInstance NewInstance = _ClientInstances.CreateClientInstance();
          NewInstance.InstanceHostType = GetInstanceType();
          GetBasicClientInfo(NewInstance);
 

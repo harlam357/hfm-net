@@ -30,6 +30,7 @@ copy /Y protobuf-net.dll %1
 echo Copying Support Files and Folders...
 copy /Y GPLv2.TXT %1
 copy /Y "HTMLparser License.txt" %1
+copy /Y "ZedGraph License.txt" %1
 copy /Y "Windsor License.txt" %1
 copy /Y "protobuf-net Licence.txt" %1
 copy /Y "protoc-license.txt" %1
