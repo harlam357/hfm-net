@@ -1,6 +1,56 @@
 #summary HFM.NET Version History
 #labels Featured
 
+=Change Log - Version: 0.4.10 - Revision 156 - Beta=
+  
+  * Release Date: March 18, 2010
+
+  * Fix: Remove call to Stanford cgi-bin Project Pages.
+
+=Change Log - Version: 0.4.9 - Revision 154 - Beta=
+
+  * Release Date: March 11, 2010
+
+  * Enhancement: Issue 87 - Add FTP Mode (Passive, Active) option for FTP Instance Type.
+  * Enhancement: Issue 108 - Add option to specify SSL connection and SMTP server port for Email Reporting.
+  * Enhancement: Issue 123 - Add settings for specifying Custom XSLT files for Web Generation.
+  * Enhancement: Issue 123 - The XML available to both XSLT Summary variations now includes all the data available in Overview.xml.
+    * Removed Summary.xml from the package.  No longer used.  Summary pages get generated from the concatenation of Overview.xml and SummaryFrag.xml.  
+    * Zip install users: you may safely delete this file after upgrading to 0.4.9.
+    * MSI install users: the file will be automatically removed during upgrade installation.
+  * Enhancement: Issue 135 - Add option to control where HFM will be minimized - System Tray, Task Bar, or Both.
+  * Enhancement: Issue 144 - Add Test Connection Button on Client Instance Dialog.
+  * Enhancement: Issue 145 - Add Test Connection Button for Web Generation Target Folder/URL.
+  * Enhancement: Issue 160 - Added Total Working Clients and Total PPD to Summary HTML Pages.
+  * Enhancement: Time values (Download, Due, Finished) now take into consideration the user configured "Client Time Offset" value.
+    * This will allow users to adjust their Download Time to fix the calculated bonus multiplier which is contingent on the Download Time being correct.
+  * Enhancement: Added Links to Standard Overview and Summary from Mobile Versions.
+  * Enhancement: Add HFM.NET Google Group link to Help Menu.
+
+  * Fix: Issue 126 - Use the Folding ID, Team, User ID, and Machine ID from the FAHlog data.  Use the Current Queue Entry as a backup data source only.
+  * Fix: Issue 134 - Duplicate Units reported in CompletedUnits.csv file.  
+    * A unit must now become history (i.e. another unit must be downloaded and begin processing) before this data is written to the file.
+  * Fix: Issue 148 - Require FTP Style URL to end in a "/" character.
+  * Fix: Issue 149 - Follow the selected client when sorting the grid.  (Windows only - Mono DataGridView implemenation does not work the same)
+  * Fix: Issue 151 - Installer now obeys the user's directory selection.
+  * Fix: Issue 153 - Previously completed project recognized instead.  
+    * Capture all the Project strings encountered from beginning of WU till the log begins writing frames, not just the first.
+  * Fix: Issue 154 - Benchmarks Form: set focus to Projects List Box on Load.
+  * Fix: Issue 156 - Bonus (KFactor) calculations are not correct for Clients/Projects with no benchmark history.
+  * Fix: Issue 171 - Clear the Queue data if the next read is unsuccessful.
+  * Fix: Local Folder Web Generation was not respecting the "Copy FAHlog.txt File to Target" Preference.
+  * Fix: When Client Names contain a dot "." the generated HTML Instance Page name is truncated after the first dot.
+  * Fix: Bug with unitinfo.txt Due Time parsing (bad Substring Length).
+  * Fix: Primary Grid: halt reselecting an already selected client when right-click selecting.
+
+  * Change: Migrated all binary serialization to use Google Protocol Buffers format via protobuf-net.  
+    * BenchmarkCache.dat file is copied to LegacyBenchmarkCache.dat file before conversion.
+  * Change: Moved Navigation Links on Summary and Instance HTML Pages to Left Justified.
+
+  * Add: Third-Party Libraries Castle.Windsor and protobuf-net.  License files included but not yet included in About Dialog Credits.
+
+  * Update: ProjectInfo.tab file
+
 =Change Log - Version: 0.4.8 - Revision 121 - Beta=
 
   * Release Date: January 17, 2010
