@@ -318,7 +318,9 @@ namespace HFM.Instances
          else
          {
             DateTime downloadTime = instance.CurrentUnitInfo.DownloadTime;
-            XMLOps.setXmlNode(xmlData, "UnitInfo/DownloadTime", String.Format(CultureInfo.CurrentCulture, "{0} at {1}", downloadTime.ToLongDateString(), downloadTime.ToLongTimeString()));
+            // TODO: When localizing use ToString("format", CultureInfo.CurrentCulture) instead.
+            XMLOps.setXmlNode(xmlData, "UnitInfo/DownloadTime", String.Format(CultureInfo.InvariantCulture, "{0} at {1}", 
+               downloadTime.ToString("D", CultureInfo.InvariantCulture), downloadTime.ToString("h:mm:ss tt", CultureInfo.InvariantCulture)));
          }
 
          if (instance.ETA.Equals(TimeSpan.Zero))
@@ -328,7 +330,9 @@ namespace HFM.Instances
          else
          {
             DateTime completeTime = DateTime.Now.Add(instance.ETA);
-            XMLOps.setXmlNode(xmlData, "UnitInfo/ExpectedCompletionDate", String.Format(CultureInfo.CurrentCulture, "{0} at {1}", completeTime.ToLongDateString(), completeTime.ToLongTimeString()));
+            // TODO: When localizing use ToString("format", CultureInfo.CurrentCulture) instead.
+            XMLOps.setXmlNode(xmlData, "UnitInfo/ExpectedCompletionDate", String.Format(CultureInfo.InvariantCulture, "{0} at {1}",
+               completeTime.ToString("D", CultureInfo.InvariantCulture), completeTime.ToString("h:mm:ss tt", CultureInfo.InvariantCulture)));
          }
 
          //    <Protein>
@@ -390,13 +394,15 @@ namespace HFM.Instances
          //    <LastUpdatedTime>9:25:23 pm</LastUpdatedTime>
 
          XMLOps.setXmlNode(xmlData, "LastUpdatedDate", DateTime.Now.ToLongDateString());
-         XMLOps.setXmlNode(xmlData, "LastUpdatedTime", DateTime.Now.ToLongTimeString());
+         // TODO: When localizing use ToString("h:mm:ss tt zzz", CultureInfo.CurrentCulture) instead.
+         XMLOps.setXmlNode(xmlData, "LastUpdatedTime", DateTime.Now.ToString("h:mm:ss tt zzz", CultureInfo.InvariantCulture));
 
          //    <LastRetrievedDate>10 August 2006</LastRetrievedDate>
          //    <LastRetrievedTime>9:25:23 pm</LastRetrievedTime>
 
          XMLOps.setXmlNode(xmlData, "LastRetrievedDate", instance.LastRetrievalTime.ToLongDateString());
-         XMLOps.setXmlNode(xmlData, "LastRetrievedTime", instance.LastRetrievalTime.ToLongTimeString());
+         // TODO: When localizing use ToString("h:mm:ss tt zzz", CultureInfo.CurrentCulture) instead.
+         XMLOps.setXmlNode(xmlData, "LastRetrievedTime", instance.LastRetrievalTime.ToString("h:mm:ss tt zzz", CultureInfo.InvariantCulture));
 
          return xmlDoc;
       }
@@ -499,7 +505,8 @@ namespace HFM.Instances
          XMLOps.setXmlNode(xmlData, "Failed", totals.TotalRunFailedUnits.ToString());
          XMLOps.setXmlNode(xmlData, "TotalCompleted", totals.TotalClientCompletedUnits.ToString());
          XMLOps.setXmlNode(xmlData, "LastUpdatedDate", DateTime.Now.ToLongDateString());
-         XMLOps.setXmlNode(xmlData, "LastUpdatedTime", DateTime.Now.ToLongTimeString());
+         // TODO: When localizing use ToString("h:mm:ss tt zzz", CultureInfo.CurrentCulture) instead.
+         XMLOps.setXmlNode(xmlData, "LastUpdatedTime", DateTime.Now.ToString("h:mm:ss tt zzz", CultureInfo.InvariantCulture));
 
          return xmlDoc;
       }

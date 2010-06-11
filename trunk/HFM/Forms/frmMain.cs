@@ -876,6 +876,12 @@ namespace HFM.Forms
       /// </summary>
       private void dataGridView1_ColumnDividerDoubleClick(object sender, DataGridViewColumnDividerDoubleClickEventArgs e)
       {
+         AutoSizeColumn(e.ColumnIndex);
+         e.Handled = true;
+      }
+      
+      private void AutoSizeColumn(int columnIndex)
+      {
          Font font = new Font(dataGridView1.DefaultCellStyle.Font, FontStyle.Regular);
          //Graphics g = dataGridView1.CreateGraphics();
 
@@ -884,47 +890,47 @@ namespace HFM.Forms
 
          for (int i = 0; i < dataGridView1.Rows.Count; i++)
          {
-            if (dataGridView1.Rows[i].Cells[e.ColumnIndex].Value != null)
+            if (dataGridView1.Rows[i].Cells[columnIndex].Value != null)
             {
                string formattedString = String.Empty;
-               
-               if ((dataGridView1.Columns["TPF"].Index == e.ColumnIndex || 
-                    dataGridView1.Columns["ETA"].Index == e.ColumnIndex ||
-                    dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex ||
-                    dataGridView1.Columns["Deadline"].Index == e.ColumnIndex) &&
+
+               if ((dataGridView1.Columns["TPF"].Index == columnIndex ||
+                    dataGridView1.Columns["ETA"].Index == columnIndex ||
+                    dataGridView1.Columns["DownloadTime"].Index == columnIndex ||
+                    dataGridView1.Columns["Deadline"].Index == columnIndex) &&
                     _Prefs.GetPreference<TimeStyleType>(Preference.TimeStyle).Equals(TimeStyleType.Formatted))
                {
-                  if (dataGridView1.Columns["TPF"].Index == e.ColumnIndex)
+                  if (dataGridView1.Columns["TPF"].Index == columnIndex)
                   {
                      formattedString =
-                        GetFormattedTpfString((TimeSpan)dataGridView1.Rows[i].Cells[e.ColumnIndex].Value);
+                        GetFormattedTpfString((TimeSpan)dataGridView1.Rows[i].Cells[columnIndex].Value);
                   }
-                  else if (dataGridView1.Columns["ETA"].Index == e.ColumnIndex)
+                  else if (dataGridView1.Columns["ETA"].Index == columnIndex)
                   {
                      formattedString =
-                        GetFormattedEtaString((TimeSpan)dataGridView1.Rows[i].Cells[e.ColumnIndex].Value);
+                        GetFormattedEtaString((TimeSpan)dataGridView1.Rows[i].Cells[columnIndex].Value);
                   }
-                  else if (dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex)
+                  else if (dataGridView1.Columns["DownloadTime"].Index == columnIndex)
                   {
                      formattedString =
-                        GetFormattedDownloadTimeString((DateTime)dataGridView1.Rows[i].Cells[e.ColumnIndex].Value);
+                        GetFormattedDownloadTimeString((DateTime)dataGridView1.Rows[i].Cells[columnIndex].Value);
                   }
-                  else if (dataGridView1.Columns["Deadline"].Index == e.ColumnIndex)
+                  else if (dataGridView1.Columns["Deadline"].Index == columnIndex)
                   {
                      formattedString =
-                        GetFormattedDeadlineString((DateTime)dataGridView1.Rows[i].Cells[e.ColumnIndex].Value);
+                        GetFormattedDeadlineString((DateTime)dataGridView1.Rows[i].Cells[columnIndex].Value);
                   }
                }
-               else if (dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex ||
-                        dataGridView1.Columns["Deadline"].Index == e.ColumnIndex)
+               else if (dataGridView1.Columns["DownloadTime"].Index == columnIndex ||
+                        dataGridView1.Columns["Deadline"].Index == columnIndex)
                {
-                  formattedString = 
-                     GetFormattedDateStringForMeasurement((DateTime)dataGridView1.Rows[i].Cells[e.ColumnIndex].Value,
-                                                                    dataGridView1.Rows[i].Cells[e.ColumnIndex].FormattedValue.ToString());
+                  formattedString =
+                     GetFormattedDateStringForMeasurement((DateTime)dataGridView1.Rows[i].Cells[columnIndex].Value,
+                                                                    dataGridView1.Rows[i].Cells[columnIndex].FormattedValue.ToString());
                }
                else
                {
-                  formattedString = dataGridView1.Rows[i].Cells[e.ColumnIndex].FormattedValue.ToString();
+                  formattedString = dataGridView1.Rows[i].Cells[columnIndex].FormattedValue.ToString();
                }
 
                s = TextRenderer.MeasureText(formattedString, font);
@@ -932,14 +938,12 @@ namespace HFM.Forms
 
                if (width < s.Width)
                {
-                  width = (int)(s.Width + 1);
+                  width = (int)(s.Width + 3);
                }
             }
          }
 
-         dataGridView1.Columns[e.ColumnIndex].Width = width;
-
-         e.Handled = true;
+         dataGridView1.Columns[columnIndex].Width = width;
       }
 
       #region Custom String Formatting Helpers
@@ -1430,6 +1434,14 @@ namespace HFM.Forms
       #endregion
 
       #region View Menu Click Handlers
+      private void mnuViewAutoSizeGridColumns_Click(object sender, EventArgs e)
+      {
+         for (var i = 0; i < dataGridView1.Columns.Count; i++)
+         {
+            AutoSizeColumn(i);
+         }
+      }
+      
       private void mnuViewMessages_Click(object sender, EventArgs e)
       {
          if (_frmMessages.Visible)

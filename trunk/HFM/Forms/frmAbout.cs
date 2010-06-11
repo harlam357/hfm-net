@@ -41,7 +41,9 @@ namespace HFM.Forms
          if (String.IsNullOrEmpty(assemblyLocation) == false)
          {
             DateTime buildDate = new FileInfo(assemblyLocation).LastWriteTime;
-            lblDate.Text = "Built on: " + buildDate.ToLongDateString();
+            // TODO: When localizing use ToLongDateString() instead.
+            //lblDate.Text = "Built on: " + buildDate.ToLongDateString();
+            lblDate.Text = "Built on: " + buildDate.ToString("D", CultureInfo.InvariantCulture);
          }
          else
          {

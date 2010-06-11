@@ -20,7 +20,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -40,7 +39,7 @@ namespace HFM.Framework
       
       private const string ValidServer = @"^[a-z0-9\-._%]+$";
       
-      private const string ValidHttpURL = "(https?|file|smb)://[-A-Z0-9+&@#/%?=~_|$!:,.;]*";
+      private const string ValidHttpUrl = "(https?|file)://[-A-Z0-9+&@#/%?=~_|$!:,.;]*";
 
       private const string ValidMatchHttpOrFtpUrl =       @"\b(?<protocol>https?|ftp)://(?<domain>[-A-Z0-9.]+)(?<file>/[-A-Z0-9+&@#/%=~_|!:,.;]*)";
       private const string ValidMatchFtpWithUserPassUrl = @"\b(?<protocol>ftp)://(?<username>[A-Z0-9+&@#/%=~_|!:,.;]+):(?<password>[A-Z0-9+&@#/%=~_|!:,.;]+)@(?<domain>[-A-Z0-9.]+)(?<file>/[-A-Z0-9+&@#/%=~_|!:,.;]*/)";
@@ -162,9 +161,9 @@ namespace HFM.Framework
       /// Validate HttpInstance URL
       /// </summary>
       /// <param name="val">String to validate</param>
-      public static bool ValidateHttpURL(string val)
+      public static bool ValidateHttpUrl(string val)
       {
-         Regex rValidHttpURL = new Regex(ValidHttpURL, RegexOptions.Singleline | RegexOptions.IgnoreCase);
+         Regex rValidHttpURL = new Regex(ValidHttpUrl, RegexOptions.Singleline | RegexOptions.IgnoreCase);
 
          return rValidHttpURL.IsMatch(val);
       }
@@ -223,49 +222,49 @@ namespace HFM.Framework
       /// <summary>
       /// Validate that both Username and Password have been specified
       /// </summary>
-      /// <param name="Username">Username Value</param>
-      /// <param name="Password">Password Value</param>
-      /// <exception cref="ArgumentException">Throws when either Username or Password is Null or Empty but not the other.</exception>
-      public static bool ValidateUsernamePasswordPair(string Username, string Password)
+      /// <param name="username">Username Value</param>
+      /// <param name="password">Password Value</param>
+      /// <exception cref="ArgumentException">Throws when either username or password is null or empty but not the other.</exception>
+      public static bool ValidateUsernamePasswordPair(string username, string password)
       {
-         return ValidateValuePair(Username, "Password must also be specified when specifying Username.",
-                                  Password, "Username must also be specified when specifying Password.",
+         return ValidateValuePair(username, "Password must also be specified when specifying Username.",
+                                  password, "Username must also be specified when specifying Password.",
                                   false, String.Empty);
       }
 
       /// <summary>
       /// Validate that both Username and Password have been specified
       /// </summary>
-      /// <param name="Username">Username Value</param>
-      /// <param name="Password">Password Value</param>
-      /// <param name="throwOnEmpty">Throw Exception if both Values are Empty</param>
-      /// <exception cref="ArgumentException">Throws when either Username or Password is Null or Empty but not the other.</exception>
-      public static bool ValidateUsernamePasswordPair(string Username, string Password, bool throwOnEmpty)
+      /// <param name="username">Username Value</param>
+      /// <param name="password">Password Value</param>
+      /// <param name="throwOnEmpty">Throw Exception if both values are empty.</param>
+      /// <exception cref="ArgumentException">Throws when either username or password is null or empty but not the other.</exception>
+      public static bool ValidateUsernamePasswordPair(string username, string password, bool throwOnEmpty)
       {
-         return ValidateValuePair(Username, "Password must also be specified when specifying Username.",
-                                  Password, "Username must also be specified when specifying Password.",
+         return ValidateValuePair(username, "Password must also be specified when specifying Username.",
+                                  password, "Username must also be specified when specifying Password.",
                                   throwOnEmpty, "Username and Password must be specified.");
       }
 
       /// <summary>
       /// Validate that both Server and Port have been specified
       /// </summary>
-      /// <param name="Server">Server Value</param>
-      /// <param name="Port">Port Value</param>
-      /// <exception cref="ArgumentException">Throws when either Server or Port is Null or Empty but not the other.</exception>
-      public static bool ValidateServerPortPair(string Server, string Port)
+      /// <param name="server">Server Value</param>
+      /// <param name="port">Port Value</param>
+      /// <exception cref="ArgumentException">Throws when either server or port is null or empty but not the other.</exception>
+      public static bool ValidateServerPortPair(string server, string port)
       {
-         return ValidateValuePair(Server, "Port must also be specified when specifying Server.",
-                                  Port, "Server must also be specified when specifying Port.",
+         return ValidateValuePair(server, "Port must also be specified when specifying Server.",
+                                  port, "Server must also be specified when specifying Port.",
                                   true, "Server and Port must be specified.");
       }
       
       /// <summary>
       /// Validate a Value Pair
       /// </summary>
-      private static bool ValidateValuePair(string Value1, string Value1Message, string Value2, string Value2Message, bool throwOnEmpty, string throwOnEmptyMessage)
+      private static bool ValidateValuePair(string value1, string value1Message, string value2, string value2Message, bool throwOnEmpty, string throwOnEmptyMessage)
       {
-         if (String.IsNullOrEmpty(Value1) && String.IsNullOrEmpty(Value2))
+         if (String.IsNullOrEmpty(value1) && String.IsNullOrEmpty(value2))
          {
             if (throwOnEmpty)
             {
@@ -273,13 +272,13 @@ namespace HFM.Framework
             }
             return false;
          }
-         if (String.IsNullOrEmpty(Value1) == false && String.IsNullOrEmpty(Value2))
+         if (String.IsNullOrEmpty(value1) == false && String.IsNullOrEmpty(value2))
          {
-            throw new ArgumentException(Value1Message);
+            throw new ArgumentException(value1Message);
          }
-         if (String.IsNullOrEmpty(Value1) && String.IsNullOrEmpty(Value2) == false)
+         if (String.IsNullOrEmpty(value1) && String.IsNullOrEmpty(value2) == false)
          {
-            throw new ArgumentException(Value2Message);
+            throw new ArgumentException(value2Message);
          }
         
          return true; 

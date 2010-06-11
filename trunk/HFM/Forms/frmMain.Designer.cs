@@ -120,6 +120,8 @@ namespace HFM.Forms
          this.queueControl = new HFM.Classes.QueueControl();
          this.btnQueue = new HFM.Classes.ButtonWrapper();
          this.txtLogFile = new HFM.Classes.RichTextBoxWrapper();
+         this.mnuViewAutoSizeGridColumns = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuViewSep2 = new System.Windows.Forms.ToolStripSeparator();
          this.statusStrip.SuspendLayout();
          this.notifyMenu.SuspendLayout();
          this.AppMenu.SuspendLayout();
@@ -506,9 +508,11 @@ namespace HFM.Forms
          // mnuView
          // 
          this.mnuView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuViewAutoSizeGridColumns,
+            this.mnuViewSep1,
             this.mnuViewMessages,
             this.mnuViewShowHideLog,
-            this.mnuViewSep1,
+            this.mnuViewSep2,
             this.mnuViewToggleDateTime,
             this.mnuViewToggleCompletedCountStyle});
          this.mnuView.Name = "mnuView";
@@ -928,6 +932,18 @@ namespace HFM.Forms
          this.txtLogFile.Text = "";
          this.txtLogFile.WordWrap = false;
          // 
+         // mnuViewAutoSizeGridColumns
+         // 
+         this.mnuViewAutoSizeGridColumns.Name = "mnuViewAutoSizeGridColumns";
+         this.mnuViewAutoSizeGridColumns.Size = new System.Drawing.Size(255, 22);
+         this.mnuViewAutoSizeGridColumns.Text = "Auto Size &Grid Columns";
+         this.mnuViewAutoSizeGridColumns.Click += new System.EventHandler(this.mnuViewAutoSizeGridColumns_Click);
+         // 
+         // mnuViewSep2
+         // 
+         this.mnuViewSep2.Name = "mnuViewSep2";
+         this.mnuViewSep2.Size = new System.Drawing.Size(252, 6);
+         // 
          // frmMain
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1049,5 +1065,7 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripMenuItem mnuHelpHfmLogFile;
       private System.Windows.Forms.ToolStripMenuItem mnuViewMessages;
       private System.Windows.Forms.ToolStripMenuItem mnuHelpHfmDataFiles;
+      private System.Windows.Forms.ToolStripMenuItem mnuViewAutoSizeGridColumns;
+      private System.Windows.Forms.ToolStripSeparator mnuViewSep2;
    }
 }

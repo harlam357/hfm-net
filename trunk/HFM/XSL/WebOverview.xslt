@@ -10,7 +10,7 @@
             <link rel="stylesheet" type="text/css" href="$CSSFILE" />
          </head>
          <body>
-            <table class="Overview" width="30%">
+            <table class="Overview" width="32%">
                <tr>
                   <td class="Heading" width="50%">Overview</td>
                   <td class="Plain" width="50%">

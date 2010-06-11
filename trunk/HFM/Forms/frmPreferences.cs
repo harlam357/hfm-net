@@ -603,7 +603,7 @@ namespace HFM.Forms
 
       private void txtProjectDownloadUrl_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
       {
-         e.ValidationResult = StringOps.ValidateHttpURL(txtProjectDownloadUrl.Text);
+         e.ValidationResult = StringOps.ValidateHttpUrl(txtProjectDownloadUrl.Text);
       }
 
       private void chkUseProxy_CheckedChanged(object sender, EventArgs e)

@@ -79,6 +79,9 @@ namespace HFM.Framework.Tests
       [Test]
       public void ValidateFileName()
       {
+         Assert.IsFalse(StringOps.ValidateFileName(null));
+         Assert.IsFalse(StringOps.ValidateFileName(String.Empty));
+         Assert.IsFalse(StringOps.ValidateFileName("          "));
          Assert.IsTrue(StringOps.ValidateFileName("FAHlog.txt"));
          Assert.IsFalse(StringOps.ValidateFileName("FAHlog.t\\t"));
          Assert.IsFalse(StringOps.ValidateFileName("FAHlog.t/t"));
@@ -167,19 +170,17 @@ namespace HFM.Framework.Tests
       }
       
       [Test]
-      public void ValidateHttpURL()
+      public void ValidateHttpUrl()
       {
-         Assert.IsTrue(StringOps.ValidateHttpURL(@"http://www.domain.com/somesite/index.html"));
-         Assert.IsTrue(StringOps.ValidateHttpURL(@"https://some-server/serverfolder/dsfasfsdf"));
-         Assert.IsTrue(StringOps.ValidateHttpURL(@"https://some-server/serverfolder/dsfasfsdf/"));
-         Assert.IsFalse(StringOps.ValidateHttpURL(@"ftp://ftp.ftp.com/ftpfolder/"));
-         Assert.IsFalse(StringOps.ValidateHttpURL(@"ftp://user:pass@ftp.ftp.com/ftpfolder/"));
-         Assert.IsTrue(StringOps.ValidateHttpURL(@"file://c:/folder/subfolder"));
-         Assert.IsTrue(StringOps.ValidateHttpURL(@"file://c:/folder/subfolder/"));
-         Assert.IsTrue(StringOps.ValidateHttpURL(@"file://c:/folder/subfolder/myfile.txt"));
-         Assert.IsTrue(StringOps.ValidateHttpURL(@"smb://smb.smb.com"));
-         Assert.IsTrue(StringOps.ValidateHttpURL(@"smb://smb.smb.com/"));
-         Assert.IsTrue(StringOps.ValidateHttpURL(@"http://fah-web.stanford.edu/psummary.html"));
+         Assert.IsTrue(StringOps.ValidateHttpUrl(@"http://www.domain.com/somesite/index.html"));
+         Assert.IsTrue(StringOps.ValidateHttpUrl(@"https://some-server/serverfolder/dsfasfsdf"));
+         Assert.IsTrue(StringOps.ValidateHttpUrl(@"https://some-server/serverfolder/dsfasfsdf/"));
+         Assert.IsFalse(StringOps.ValidateHttpUrl(@"ftp://ftp.ftp.com/ftpfolder/"));
+         Assert.IsFalse(StringOps.ValidateHttpUrl(@"ftp://user:pass@ftp.ftp.com/ftpfolder/"));
+         Assert.IsTrue(StringOps.ValidateHttpUrl(@"file://c:/folder/subfolder"));
+         Assert.IsTrue(StringOps.ValidateHttpUrl(@"file://c:/folder/subfolder/"));
+         Assert.IsTrue(StringOps.ValidateHttpUrl(@"file://c:/folder/subfolder/myfile.txt"));
+         Assert.IsTrue(StringOps.ValidateHttpUrl(@"http://fah-web.stanford.edu/psummary.html"));
       }
 
       [Test]
@@ -294,6 +295,18 @@ namespace HFM.Framework.Tests
          Assert.AreEqual(WorkUnitResult.BadWorkUnit, StringOps.WorkUnitResultFromString("BAD_WORK_UNIT"));
          Assert.AreEqual(WorkUnitResult.CoreOutdated, StringOps.WorkUnitResultFromString("CORE_OUTDATED"));
          Assert.AreEqual(WorkUnitResult.Unknown, StringOps.WorkUnitResultFromString("afasfdsafasdfas"));
+      }
+      
+      [Test]
+      public void PathsEqualTest()
+      {
+         Assert.IsTrue(StringOps.PathsEqual(@"c:\folder\path", @"C:\FOLDER\PATH\"));
+         Assert.IsFalse(StringOps.PathsEqual(@"c:\folder\path", @"D:\FOLDER\PATH\"));
+         Assert.IsFalse(StringOps.PathsEqual(@"c:\folder\path/", @"C:\FOLDER\PATH\"));
+         Assert.IsTrue(StringOps.PathsEqual(@"folder\path", @"FOLDER\PATH\"));
+         Assert.IsTrue(StringOps.PathsEqual(@"folder/path", @"FOLDER/PATH/"));
+         Assert.IsFalse(StringOps.PathsEqual(@"/folder/path", @"FOLDER/PATH/"));
+         Assert.IsTrue(StringOps.PathsEqual(@"/folder/path", @"/FOLDER/PATH/"));
       }
    }
 }

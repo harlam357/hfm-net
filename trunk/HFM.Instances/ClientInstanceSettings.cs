@@ -251,7 +251,7 @@ namespace HFM.Instances
                   }
                   return !StringOps.ValidatePathInstancePath(Path);
                case InstanceType.HttpInstance:
-                  return !StringOps.ValidateHttpURL(Path);
+                  return !StringOps.ValidateHttpUrl(Path);
                case InstanceType.FtpInstance:
                   if (Path == "/")
                   {
