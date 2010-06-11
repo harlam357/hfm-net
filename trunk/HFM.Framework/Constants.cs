@@ -31,6 +31,8 @@ namespace HFM.Framework
       public const string HfmPrevLogFileName = "HFM-prev.log";
 
       public const string ProjectInfoFileName = "ProjectInfo.tab";
+      public const string UnitInfoCacheFileName = "UnitInfoCache.dat";
+      public const string CompletedUnitsCsvFileName = "CompletedUnits.csv";
 
       public const string CssFolderName = "CSS";
       public const string XmlFolderName = "XML";
@@ -46,6 +48,9 @@ namespace HFM.Framework
 
       public const Int32 MinMinutes = 1;
       public const Int32 MaxMinutes = 180;
+
+      public const Int32 MinOffsetMinutes = -720;
+      public const Int32 MaxOffsetMinutes = 720;
 
       public const Int32 MinutesDefault = 15;
       public const Int32 ProxyPortDefault = 8080;

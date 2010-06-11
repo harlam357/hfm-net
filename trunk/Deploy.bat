@@ -13,6 +13,7 @@ copy /Y HFM.Helpers.dll %1
 copy /Y HFM.Instances.dll %1
 copy /Y HFM.Instrumentation.dll %1
 copy /Y HFM.Log.dll %1
+copy /Y HFM.Plugins.dll %1
 copy /Y HFM.Preferences.dll %1
 copy /Y HFM.Proteins.dll %1
 copy /Y HFM.Queue.dll %1
