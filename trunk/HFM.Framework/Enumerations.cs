@@ -23,8 +23,8 @@ namespace HFM.Framework
    public enum InstanceType
    {
       PathInstance,
-      FTPInstance,
-      HTTPInstance
+      FtpInstance,
+      HttpInstance
    }
 
    public enum ClientType

@@ -413,18 +413,22 @@ namespace HFM.Instances
 
          _ChangedAfterSave = false;
       
-         ClientInstanceXmlSerializer serializer = new ClientInstanceXmlSerializer(
-            new ClientInstanceFactory(_Prefs, _proteinCollection, _benchmarkContainer));
-
          if (Path.IsPathRooted(xmlDocName) == false)
          {
             xmlDocName = Path.Combine(_Prefs.ApplicationPath, xmlDocName);
          }
-            
-         IList<ClientInstance> list = serializer.Deserialize(xmlDocName);
-         foreach (ClientInstance instance in list)
+
+         var serializer = new ClientInstanceXmlSerializer();
+         var collectionDataInterface = new InstanceCollectionDataInterface(GetCurrentInstanceArray());
+         serializer.DataInterface = collectionDataInterface;
+         serializer.Deserialize(xmlDocName);
+         
+         var builder = new ClientInstanceFactory(_Prefs, _proteinCollection, _benchmarkContainer);
+         ICollection<ClientInstance> instances = builder.HandleImportResults(collectionDataInterface.Settings);
+
+         foreach (ClientInstance instance in instances)
          {
-            UnitInfo restoreUnitInfo = (UnitInfo)_unitInfoContainer.RetrieveUnitInfo(instance.InstanceName, instance.Path);
+            var restoreUnitInfo = _unitInfoContainer.RetrieveUnitInfo(instance);
             if (restoreUnitInfo != null)
             {
                instance.RestoreUnitInfo(restoreUnitInfo);
@@ -461,16 +465,13 @@ namespace HFM.Instances
       /// if the path does not start with either ?: or \\</param>
       public void ToXml(string xmlDocName)
       {
-         ClientInstanceXmlSerializer serializer = new ClientInstanceXmlSerializer(
-            new ClientInstanceFactory(_Prefs, _proteinCollection, _benchmarkContainer));
-         
-         ICollection<ClientInstance> collection;
+         var serializer = new ClientInstanceXmlSerializer();
          lock (_instanceCollection)
          {
-            collection = new List<ClientInstance>(_instanceCollection.Values);
+            serializer.DataInterface = new InstanceCollectionDataInterface(GetCurrentInstanceArray());
          }
          
-         serializer.Serialize(xmlDocName, collection);
+         serializer.Serialize(xmlDocName);
          
          _ConfigFilename = xmlDocName;
          _ChangedAfterSave = false;
@@ -478,7 +479,6 @@ namespace HFM.Instances
       }
       #endregion
 
-      #region FahMon Import Support
       /// <summary>
       /// Read FahMon ClientsTab.txt file and import new instance collection
       /// </summary>
@@ -486,67 +486,18 @@ namespace HFM.Instances
       public void FromFahMonClientsTab(string filename)
       {
          _ChangedAfterSave = false;
+
+         var serializer = new ClientInstanceFahMonSerializer();
+         var collectionDataInterface = new InstanceCollectionDataInterface(GetCurrentInstanceArray());
+         serializer.DataInterface = collectionDataInterface;
+         serializer.Deserialize(filename);
          
-         StreamReader fileStream = null;
-         try
-         {
-            // Open File
-            fileStream = File.OpenText(filename);
+         var builder = new ClientInstanceFactory(_Prefs, _proteinCollection, _benchmarkContainer);
+         ICollection<ClientInstance> instances = builder.HandleImportResults(collectionDataInterface.Settings);
 
-            // Reader Loop
-            while (fileStream.Peek() != -1)
-            {
-               // Get the line and remove whitespace
-               string line = fileStream.ReadLine();
-               line = line.Trim();
-
-               // Check for commented or empty line
-               if (String.IsNullOrEmpty(line) == false && line.StartsWith("#") == false)
-               {
-                  // Tokenize the line
-                  string[] tokens = line.Split(new[] {'\t'});
-
-                  if (tokens.Length > 1) // we should have at least name and path
-                  {
-                     ClientInstance instance = GetNewInstance(_Prefs, _proteinCollection, _benchmarkContainer, tokens);
-                     if (instance != null)
-                     {
-                        // Check for Client is on Virtual Machine setting
-                        if (tokens.Length > 3)
-                        {
-                           if (tokens[3].Equals("*"))
-                           {
-                              instance.ClientIsOnVirtualMachine = true;
-                           }
-                        }
-                        Add(instance, false);
-                        HfmTrace.WriteToHfmConsole(TraceLevel.Info,
-                                                   String.Format("{0} Added FahMon Instance Name: {1}.", HfmTrace.FunctionName, instance.InstanceName));
-                     }
-                     else
-                     {
-                        HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
-                                                   String.Format("{0} Failed to add FahMon Instance: {1}.", HfmTrace.FunctionName, line));
-                     }
-                  }
-                  else
-                  {
-                     HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
-                                                String.Format("{0} Failed to add FahMon Instance (not tab delimited): {1}.", HfmTrace.FunctionName, line));
-                  }
-               }
-            }
-         }
-         catch (Exception ex)
+         foreach (ClientInstance instance in instances)
          {
-            HfmTrace.WriteToHfmConsole(ex);
-         }
-         finally
-         {
-            if (fileStream != null)
-            {
-               fileStream.Close();
-            }
+            Add(instance, false);
          }
 
          if (HasInstances)
@@ -562,92 +513,15 @@ namespace HFM.Instances
          }
       }
 
-      /// <summary>
-      /// Inspects tokens gathered from FahMon ClientsTab.txt line and attempts to
-      /// create an HFM ClientInstance object based on those tokens
-      /// </summary>
-      /// <param name="prefs">Preferences Interface</param>
-      /// <param name="proteinCollection">Protein Collection Interface</param>
-      /// <param name="benchmarkContainer">Benchmark Container Interface</param>
-      /// <param name="tokens">Tokenized String (String Array)</param>
-      private static ClientInstance GetNewInstance(IPreferenceSet prefs, IProteinCollection proteinCollection, 
-                                                   IProteinBenchmarkContainer benchmarkContainer, string[] tokens)
-      {
-         // Get the instance name token and validate
-         string instanceName = tokens[0].Replace("\"", String.Empty);
-         if (StringOps.ValidateInstanceName(instanceName) == false)
-         {
-            // Remove illegal characters
-            instanceName = StringOps.CleanInstanceName(instanceName);
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
-                                       String.Format("{0} Cleaned FahMon Instance Name: {1}.", HfmTrace.FunctionName, instanceName));
-         }
-
-         // Get the instance path token
-         string instancePath = tokens[1].Replace("\"", String.Empty);
-         Match matchUrl = StringOps.MatchHttpOrFtpUrl(instancePath);
-         Match matchFtpUserPass = StringOps.MatchFtpWithUserPassUrl(instancePath);
-
-         // Declare instance variable
-         ClientInstance instance = null;
-
-         if (matchUrl.Success) // we have a valid URL
-         {
-            if (instancePath.StartsWith("http"))
-            {
-               instance = new ClientInstance(prefs, proteinCollection, benchmarkContainer);
-               instance.InstanceHostType = InstanceType.HTTPInstance;
-               instance.InstanceName = instanceName;
-               instance.Path = instancePath;
-            }
-            else if (instancePath.StartsWith("ftp"))
-            {
-               instance = new ClientInstance(prefs, proteinCollection, benchmarkContainer);
-               instance.InstanceHostType = InstanceType.FTPInstance;
-               instance.InstanceName = instanceName;
-               instance.Server = matchUrl.Result("${domain}");
-               instance.Path = matchUrl.Result("${file}");
-            }
-         }
-         else if (matchFtpUserPass.Success) // we have a valid FTP with User Pass
-         {
-            instance = new ClientInstance(prefs, proteinCollection, benchmarkContainer);
-            instance.InstanceHostType = InstanceType.FTPInstance;
-            instance.InstanceName = instanceName;
-            instance.Server = matchFtpUserPass.Result("${domain}");
-            instance.Path = matchFtpUserPass.Result("${file}");
-            instance.Username = matchFtpUserPass.Result("${username}");
-            instance.Password = matchFtpUserPass.Result("${password}");
-         }
-         else // try to validate as a path instance
-         {
-            if (StringOps.ValidatePathInstancePath(instancePath))
-            {
-               instance = new ClientInstance(prefs, proteinCollection, benchmarkContainer);
-               instance.InstanceHostType = InstanceType.PathInstance;
-               instance.InstanceName = instanceName;
-               instance.Path = instancePath;
-            }
-            else if (StringOps.ValidatePathInstancePath(instancePath += Path.DirectorySeparatorChar))
-            {
-               instance = new ClientInstance(prefs, proteinCollection, benchmarkContainer);
-               instance.InstanceHostType = InstanceType.PathInstance;
-               instance.InstanceName = instanceName;
-               instance.Path = instancePath;
-            }
-         }
-         
-         return instance;
-      }
-      #endregion
-
       #region List Like Implementation (eventually implement IList or ICollection)
       /// <summary>
       /// Add an Instance
       /// </summary>
-      /// <param name="instance">Client Instance</param>
-      public void Add(ClientInstance instance)
+      /// <param name="settings">Client Instance Settings</param>
+      public void Add(IClientInstanceSettings settings)
       {
+         var builder = new ClientInstanceFactory(_Prefs, _proteinCollection, _benchmarkContainer);
+         var instance = builder.Create((ClientInstanceSettings)settings);
          Add(instance, true);
       }
       
@@ -658,28 +532,13 @@ namespace HFM.Instances
       /// <param name="fireAddedEvent">Specifies whether this call fires the InstanceAdded Event</param>
       private void Add(ClientInstance instance, bool fireAddedEvent)
       {
-         Add(instance.InstanceName, instance, fireAddedEvent);
-      }
+         if (ContainsName(instance.InstanceName))
+         {
+            throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
+               "Client Name '{0}' already exists.", instance.InstanceName));
+         }
 
-      /// <summary>
-      /// Add an Instance with Key
-      /// </summary>
-      /// <param name="key">Instance Key</param>
-      /// <param name="instance">Client Instance</param>
-      public void Add(string key, ClientInstance instance)
-      {
-         Add(key, instance, true);
-      }
-
-      /// <summary>
-      /// Add an Instance with Key
-      /// </summary>
-      /// <param name="key">Instance Key</param>
-      /// <param name="instance">Client Instance</param>
-      /// <param name="fireAddedEvent">Specifies whether this call fires the InstanceAdded Event</param>
-      private void Add(string key, ClientInstance instance, bool fireAddedEvent)
-      {
-         _instanceCollection.Add(key, instance);
+         _instanceCollection.Add(instance.InstanceName, instance);
          OnCollectionChanged(EventArgs.Empty);
          
          if (fireAddedEvent)
@@ -696,10 +555,17 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="previousName">Previous Client Instance Name</param>
       /// <param name="previousPath">Previous Client Instance Path</param>
-      /// <param name="instance">Client Instance</param>
-      public void Edit(string previousName, string previousPath, ClientInstance instance)
+      /// <param name="settings">Client Instance Settings</param>
+      public void Edit(string previousName, string previousPath, IClientInstanceSettings settings)
       {
-         IProteinBenchmarkContainer benchmarks = InstanceProvider.GetInstance<IProteinBenchmarkContainer>();
+         if (ContainsName(settings.InstanceName))
+         {
+            throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
+               "Client Name '{0}' already exists.", settings.InstanceName));
+         }
+      
+         ClientInstance instance = SelectedInstance;
+         instance.Settings.LoadSettings(settings);
       
          // if the host key changed
          if (previousName != instance.InstanceName)
@@ -708,12 +574,12 @@ namespace HFM.Instances
             Remove(previousName, false);
             Add(instance, false);
 
-            benchmarks.UpdateInstanceName(new BenchmarkClient(previousName, instance.Path), instance.InstanceName);
+            _benchmarkContainer.UpdateInstanceName(new BenchmarkClient(previousName, instance.Path), instance.InstanceName);
          }
          // if the path changed, update the paths in the benchmark collection
-         if (previousPath != instance.Path)
+         if (StringOps.PathsEqual(previousPath, instance.Path) == false)
          {
-            benchmarks.UpdateInstancePath(new BenchmarkClient(instance.InstanceName, previousPath), instance.Path);
+            _benchmarkContainer.UpdateInstancePath(new BenchmarkClient(instance.InstanceName, previousPath), instance.Path);
          }
          
          RetrieveSingleClient(instance);
@@ -783,8 +649,8 @@ namespace HFM.Instances
       /// <param name="instanceName">Instance Name to search for</param>
       public bool ContainsName(string instanceName)
       {
-         ClientInstance findInstance = new List<ClientInstance>(_instanceCollection.Values).Find(
-            instance => instance.InstanceName.ToUpper() == instanceName.ToUpper());
+         var findInstance = new List<ClientInstance>(_instanceCollection.Values).Find(
+            instance => instance.InstanceName.ToUpperInvariant() == instanceName.ToUpperInvariant());
          return findInstance != null;
       }
       #endregion
@@ -855,7 +721,7 @@ namespace HFM.Instances
          foreach (var d in displayCollection)
          {
             DisplayInstance displayInstance = d;
-            var instance = instances.Where(c => c.InstanceName == displayInstance.Name);
+            var instance = instances.Where(c => c.Settings.InstanceName == displayInstance.Name);
             if (instance.Count() == 1)
             {
                sortedCollection.Add(instance.First());
@@ -992,7 +858,7 @@ namespace HFM.Instances
       /// <summary>
       /// Do a full retrieval operation
       /// </summary>
-      public void DoRetrieval()
+      private void DoRetrieval()
       {
          // get flag synchronous or asynchronous - we don't want this flag to change on us
          // in the middle of a retrieve, so grab it now and use the local copy
@@ -1262,7 +1128,7 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="oldName">Old Instance Name</param>
       /// <param name="newName">New Instance Name</param>
-      public void UpdateDisplayInstanceName(string oldName, string newName)
+      private void UpdateDisplayInstanceName(string oldName, string newName)
       {
          DisplayInstance findInstance = FindDisplayInstance(_displayCollection, oldName);
          findInstance.UpdateName(newName);
@@ -1340,14 +1206,6 @@ namespace HFM.Instances
       }
       
       /// <summary>
-      /// Get a new ClientInstance object
-      /// </summary>
-      public ClientInstance CreateClientInstance()
-      {
-         return new ClientInstance(_Prefs, _proteinCollection, _benchmarkContainer);
-      }
-
-      /// <summary>
       /// Get Array Representation of Current Client Instance objects in Collection
       /// </summary>
       private ClientInstance[] GetCurrentInstanceArray()
@@ -1356,10 +1214,7 @@ namespace HFM.Instances
          // Less hassle not having to possibly deal with a null reference - 4/17/10
          //if (Count > 0)
          //{
-            ClientInstance[] instances = new ClientInstance[Count];
-            _instanceCollection.Values.CopyTo(instances, 0);
-
-            return instances;
+            return _instanceCollection.Values.ToArray();
          //}
 
          //return null;

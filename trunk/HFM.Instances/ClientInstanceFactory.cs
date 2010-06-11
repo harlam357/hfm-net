@@ -16,29 +16,113 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
- 
+
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Globalization;
+
 using HFM.Framework;
+using HFM.Instrumentation;
 
 namespace HFM.Instances
 {
    public class ClientInstanceFactory
    {
-      private readonly IPreferenceSet _Prefs;
-      
-      private readonly IProteinCollection _ProteinCollection;
-      
-      private readonly IProteinBenchmarkContainer _BenchmarkContainer;
-      
-      public ClientInstanceFactory(IPreferenceSet Prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer)
+      /// <summary>
+      /// PreferenceSet Interface
+      /// </summary>
+      private readonly IPreferenceSet _prefs;
+
+      /// <summary>
+      /// Protein Collection Interface
+      /// </summary>
+      private readonly IProteinCollection _proteinCollection;
+
+      /// <summary>
+      /// Protein Collection Interface
+      /// </summary>
+      private readonly IProteinBenchmarkContainer _benchmarkContainer;
+
+      public ClientInstanceFactory(IPreferenceSet prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer)
       {
-         _Prefs = Prefs;
-         _ProteinCollection = proteinCollection;
-         _BenchmarkContainer = benchmarkContainer;
+         _prefs = prefs;
+         _proteinCollection = proteinCollection;
+         _benchmarkContainer = benchmarkContainer;
+      }
+   
+      public ReadOnlyCollection<ClientInstance> HandleImportResults(ICollection<ClientInstanceSettings> results)
+      {
+         if (results == null) throw new ArgumentNullException("results");
+      
+         var clientInstances = new List<ClientInstance>(results.Count);
+         foreach (var settings in results)
+         {
+            if (String.IsNullOrEmpty(settings.ImportError) == false)
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Error, settings.ImportError);
+               continue;
+            }
+            var clientInstance = CreateWrapper(settings);
+            if (clientInstance != null)
+            {
+               clientInstances.Add(clientInstance);
+            }
+         }
+
+         return clientInstances.AsReadOnly();
       }
 
-      public ClientInstance Create()
+      private ClientInstance CreateWrapper(ClientInstanceSettings settings)
       {
-         return new ClientInstance(_Prefs, _ProteinCollection, _BenchmarkContainer);
+         try
+         {
+            return Create(settings);
+         }
+         catch (InvalidOperationException ex)
+         {
+            HfmTrace.WriteToHfmConsole(ex);
+            return null;
+         }
+      }
+      
+      public ClientInstance Create(ClientInstanceSettings settings)
+      {
+         if (settings == null) throw new ArgumentNullException("settings");
+         if (settings.InstanceNameEmpty)
+         {
+            throw new InvalidOperationException("No Instance Name is given.  Will not create Client Instance.");
+         }
+         
+         if (settings.PathEmpty)
+         {
+            throw new InvalidOperationException("No Instance Path is given.  Will not create Client Instance.");
+         }
+      
+         string preCleanInstanceName = settings.InstanceName;
+         ICollection<string> cleanupWarnings = settings.CleanupSettings();
+         if (settings.InstanceNameError)
+         {
+            throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, 
+               "Instance Name '{0}' is not valid after cleaning.  Will not create Client Instance.", preCleanInstanceName));
+         }
+         
+         if (cleanupWarnings.Count != 0)
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "------------------------");
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Client Settings Warnings");
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "------------------------");
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format(CultureInfo.CurrentCulture,
+                                                           "Instance Name: {0}", settings.InstanceName));
+
+            foreach (var error in cleanupWarnings)
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, error);
+            }
+         }
+
+         return new ClientInstance(_prefs, _proteinCollection, _benchmarkContainer, settings);
       }
    }
 }

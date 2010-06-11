@@ -21,9 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-using Castle.Windsor;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 using HFM.Framework;
 
@@ -32,35 +30,10 @@ namespace HFM.Instances.Tests
    [TestFixture]
    public class ClientInstanceXmlSerializerTests
    {
-      private IWindsorContainer container;
-      private MockRepository mocks;
-      private IPreferenceSet _Prefs;
-      private IProteinCollection _ProteinCollection;
-      private IProteinBenchmarkContainer _BenchmarkContainer;
-      private IDataAggregator _DataAggregator;
-   
-      [SetUp]
-      public void Init()
-      {
-         container = new WindsorContainer();
-         mocks = new MockRepository();
-         
-         _Prefs = mocks.DynamicMock<IPreferenceSet>();
-         _ProteinCollection = SetupMockProteinCollection();
-         _BenchmarkContainer = mocks.DynamicMock<IProteinBenchmarkContainer>();
-         _DataAggregator = mocks.DynamicMock<IDataAggregator>();
-         
-         mocks.ReplayAll();
-
-         container.Kernel.AddComponentInstance<IDataAggregator>(typeof(IDataAggregator), _DataAggregator);
-         InstanceProvider.SetContainer(container);
-      }
-
       [Test]
       public void SerializationTest()
       {
-         IClientInstanceSettings instance1 = new ClientInstance(_Prefs, _ProteinCollection, _BenchmarkContainer);
-         instance1.InstanceHostType = InstanceType.PathInstance;
+         var instance1 = new ClientInstanceSettings(InstanceType.PathInstance);
          instance1.InstanceName = "Test1";
          instance1.ClientProcessorMegahertz = 1000;
          instance1.RemoteFAHLogFilename = "FAHlog.txt";
@@ -74,8 +47,7 @@ namespace HFM.Instances.Tests
          instance1.ClientIsOnVirtualMachine = false;
          instance1.ClientTimeOffset = 60;
 
-         IClientInstanceSettings instance2 = new ClientInstance(_Prefs, _ProteinCollection, _BenchmarkContainer);
-         instance2.InstanceHostType = InstanceType.FTPInstance;
+         var instance2 = new ClientInstanceSettings(InstanceType.FtpInstance);
          instance2.InstanceName = "Test2";
          instance2.ClientProcessorMegahertz = 3800;
          instance2.RemoteFAHLogFilename = "FAHlog-Test2.txt";
@@ -89,16 +61,16 @@ namespace HFM.Instances.Tests
          instance2.ClientIsOnVirtualMachine = true;
          instance2.ClientTimeOffset = -180;
          
-         ClientInstanceXmlSerializer serializer = new ClientInstanceXmlSerializer(
-            new ClientInstanceFactory(_Prefs, _ProteinCollection, _BenchmarkContainer));
-         
-         ICollection<ClientInstance> collection1 = new List<ClientInstance>();
-         collection1.Add((ClientInstance)instance1);
-         collection1.Add((ClientInstance)instance2);
-         
-         serializer.Serialize(Path.Combine(Environment.CurrentDirectory, "Test.xml"), collection1);
+         ICollection<IClientInstanceSettings> collection1 = new List<IClientInstanceSettings>();
+         collection1.Add(instance1);
+         collection1.Add(instance2);
+         var serializer = new ClientInstanceXmlSerializer();
+         var dataInterface = new InstanceCollectionDataInterface(collection1);
+         serializer.DataInterface = dataInterface;
+         serializer.Serialize(Path.Combine(Environment.CurrentDirectory, "Test.xml"));
 
-         IList<ClientInstance> collection2 = serializer.Deserialize("Test.xml");
+         serializer.Deserialize("Test.xml");
+         var collection2 = dataInterface.Settings;
 
          IClientInstanceSettings instance3 = collection2[0];
          Assert.AreEqual("Test1", instance3.InstanceName);
@@ -121,7 +93,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual("FAHlog-Test2.txt", instance4.RemoteFAHLogFilename);
          Assert.AreEqual("unitinfo-Test2.txt", instance4.RemoteUnitInfoFilename);
          Assert.AreEqual("queue-Test2.dat", instance4.RemoteQueueFilename);
-         Assert.AreEqual(InstanceType.FTPInstance, instance4.InstanceHostType);
+         Assert.AreEqual(InstanceType.FtpInstance, instance4.InstanceHostType);
          Assert.AreEqual("/root/folder1/folder2/", instance4.Path);
          Assert.AreEqual("some.server.com", instance4.Server);
          Assert.AreEqual("user1", instance4.Username);
@@ -129,20 +101,6 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(FtpType.Active, instance4.FtpMode);
          Assert.AreEqual(true, instance4.ClientIsOnVirtualMachine);
          Assert.AreEqual(-180, instance4.ClientTimeOffset);
-         
-         mocks.VerifyAll();
-      }
-
-      private IProteinCollection SetupMockProteinCollection()
-      {
-         IProtein newProtein = mocks.DynamicMock<IProtein>();
-         Expect.Call(newProtein.Core).Return(String.Empty).Repeat.Any();
-
-         IProteinCollection proteinCollection = mocks.DynamicMock<IProteinCollection>();
-         Expect.Call(proteinCollection.GetProtein(0)).Return(newProtein).IgnoreArguments().Repeat.Any();
-         Expect.Call(proteinCollection.CreateProtein()).Return(newProtein).Repeat.Any();
-
-         return proteinCollection;
       }
    }
 }

@@ -37,31 +37,31 @@ namespace HFM.Instances
          get { return this; }
       }
 
-      private readonly string _Name = String.Empty;
+      private readonly string _name = String.Empty;
       /// <summary>
       /// Client Name
       /// </summary>
       public string Name
       {
-         get { return _Name; }
+         get { return _name; }
       }
 
-      private readonly string _Path = String.Empty;
+      private readonly string _path = String.Empty;
       /// <summary>
       /// Client Path
       /// </summary>
       public string Path
       {
-         get { return _Path; }
+         get { return _path; }
       }
 
-      private readonly bool _AllClients;
+      private readonly bool _allClients;
       /// <summary>
       /// Value Indicates if this Benchmark Client represents 'All Clients'
       /// </summary>
       public bool AllClients
       {
-         get { return _AllClients; }
+         get { return _allClients; }
       }
 
       /// <summary>
@@ -71,7 +71,7 @@ namespace HFM.Instances
       {
          get
          {
-            if (_AllClients)
+            if (_allClients)
             {
                return "All Clients";
             }
@@ -86,16 +86,16 @@ namespace HFM.Instances
       /// </summary>
       public BenchmarkClient()
       {
-         _AllClients = true;
+         _allClients = true;
       }
 
       /// <summary>
       /// Create BenchmarkClient Instance (Individual Clients)
       /// </summary>
-      public BenchmarkClient(string ClientName, string ClientPath)
+      public BenchmarkClient(string clientName, string clientPath)
       {
-         _Name = ClientName;
-         _Path = ClientPath;
+         _name = clientName;
+         _path = clientPath;
       }
       #endregion
 
@@ -147,7 +147,7 @@ namespace HFM.Instances
          }
 
          if (Name.Equals(client.Name) &&
-             Path.Equals(client.Path) &&
+             StringOps.PathsEqual(Path, client.Path) &&
              AllClients.Equals(client.AllClients))
          {
             return true;
@@ -174,6 +174,11 @@ namespace HFM.Instances
          {
             if (Name.Equals(other.Name))
             {
+               if (StringOps.PathsEqual(Path, other.Path))
+               {
+                  return 0;
+               }
+
                return Path.CompareTo(other.Path);
             }
 

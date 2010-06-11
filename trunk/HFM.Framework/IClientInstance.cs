@@ -22,12 +22,17 @@ using System;
 namespace HFM.Framework
 {
    [CLSCompliant(false)]
-   public interface IClientInstance : IClientInstanceSettings
+   public interface IClientInstance
    {
       /// <summary>
       /// Data Aggregator Interface
       /// </summary>
       IDataAggregator DataAggregator { get; }
+
+      /// <summary>
+      /// Client Instance Settings
+      /// </summary>
+      IClientInstanceSettings Settings { get; }
 
       /// <summary>
       /// Status of this client
@@ -157,5 +162,7 @@ namespace HFM.Framework
       DateTime LastRetrievalTime { get; }
 
       bool IsUsernameOk();
+      
+      bool Owns(IOwnedByClientInstance value);
    }
 }

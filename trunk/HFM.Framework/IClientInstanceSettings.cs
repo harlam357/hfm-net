@@ -18,11 +18,14 @@
  */
 
 using System;
+using System.ComponentModel;
 
 namespace HFM.Framework
 {
-   public interface IClientInstanceSettings
+   public interface IClientInstanceSettings : INotifyPropertyChanged
    {
+      bool Error { get; }
+   
       /// <summary>
       /// Client host type (Path, FTP, or HTTP)
       /// </summary>
@@ -33,35 +36,53 @@ namespace HFM.Framework
       /// </summary>
       string InstanceName { get; set; }
 
+      bool InstanceNameEmpty { get; }
+
+      bool InstanceNameError { get; }
+
       /// <summary>
       /// The number of processor megahertz for this client instance
       /// </summary>
       Int32 ClientProcessorMegahertz { get; set; }
+
+      bool ClientProcessorMegahertzError { get; }
 
       /// <summary>
       /// Remote client log file name
       /// </summary>
       string RemoteFAHLogFilename { get; set; }
 
+      bool RemoteFAHLogFilenameError { get; }
+
       /// <summary>
       /// Remote client unit info log file name
       /// </summary>
       string RemoteUnitInfoFilename { get; set; }
+
+      bool RemoteUnitInfoFilenameError { get; }
 
       /// <summary>
       /// Remote client queue.dat file name
       /// </summary>
       string RemoteQueueFilename { get; set; }
 
+      bool RemoteQueueFilenameError { get; }
+
       /// <summary>
       /// Location of log files for this instance
       /// </summary>
       string Path { get; set; }
 
+      bool PathEmpty { get; }
+
+      bool PathError { get; }
+
       /// <summary>
       /// FTP Server name or IP Address
       /// </summary>
       string Server { get; set; }
+
+      bool ServerError { get; }
 
       /// <summary>
       /// Username on remote server
@@ -72,6 +93,10 @@ namespace HFM.Framework
       /// Password on remote server
       /// </summary>
       string Password { get; set; }
+
+      bool CredentialsError { get; }
+
+      string CredentialsErrorMessage { get; }
 
       /// <summary>
       /// Specifies the FTP Communication Mode for this client
@@ -87,5 +112,13 @@ namespace HFM.Framework
       /// Specifies the number of minutes (+/-) this client's clock differentiates
       /// </summary>
       Int32 ClientTimeOffset { get; set; }
+
+      bool ClientTimeOffsetError { get; }
+      
+      string Dummy { get; }
+      
+      void LoadSettings(IClientInstanceSettings settings);
+      
+      IClientInstanceSettings Clone();
    }
 }

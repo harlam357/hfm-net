@@ -60,7 +60,7 @@ namespace HFM.Instances
       /// </summary>
       private bool UtcOffsetIsZero
       {
-         get { return _clientInstance.ClientIsOnVirtualMachine; }
+         get { return _clientInstance.Settings.ClientIsOnVirtualMachine; }
       }
       
       /// <summary>
@@ -68,7 +68,7 @@ namespace HFM.Instances
       /// </summary>
       private int ClientTimeOffset
       {
-         get { return _clientInstance.ClientTimeOffset; }
+         get { return _clientInstance.Settings.ClientTimeOffset; }
       }
       #endregion
 
@@ -132,8 +132,8 @@ namespace HFM.Instances
          _unitInfo = (UnitInfo)unitInfo;
          _clientInstance = clientInstance;
 
-         OwningInstanceName = _clientInstance.InstanceName;
-         OwningInstancePath = _clientInstance.Path;
+         OwningInstanceName = _clientInstance.Settings.InstanceName;
+         OwningInstancePath = _clientInstance.Settings.Path;
          UnitRetrievalTime = _clientInstance.LastRetrievalTime;
 
          SetCurrentProtein();

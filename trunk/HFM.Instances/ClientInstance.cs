@@ -45,47 +45,10 @@ namespace HFM.Instances
       private const int UnitInfoMax = 1048576; // 1 Megabyte
       #endregion
 
-      #region Events
-      /// <summary>
-      /// Raised when Instance Host Type is Changed
-      /// </summary>
-      public event EventHandler InstanceHostTypeChanged;
-      /// <summary>
-      /// Raised when Instance Host Type is Changed
-      /// </summary>
-      protected void OnInstanceHostTypeChanged(EventArgs e)
-      {
-         if (InstanceHostTypeChanged != null)
-         {
-            InstanceHostTypeChanged(this, e);
-         }
-      }
-      #endregion
-      
-      #region Private Event Handlers
-      /// <summary>
-      /// Handles the InstanceHostTypeChanged Event
-      /// </summary>
-      private void ClientInstance_InstanceHostTypeChanged(object sender, EventArgs e)
-      {
-         switch (InstanceHostType)
-         {
-            case InstanceType.PathInstance:
-               Server = String.Empty;
-               Username = String.Empty;
-               Path = String.Empty;
-               break;
-            case InstanceType.HTTPInstance:
-               Server = String.Empty;
-               break;
-         }
-      }
-      #endregion
-      
       /// <summary>
       /// PreferenceSet Interface
       /// </summary>
-      private readonly IPreferenceSet _Prefs;
+      private readonly IPreferenceSet _prefs;
       
       /// <summary>
       /// Protein Collection Interface
@@ -106,27 +69,57 @@ namespace HFM.Instances
       {
          get { return _dataAggregator; }
       }
+
+      private readonly ClientInstanceSettings _settings;
+      /// <summary>
+      /// Client Instance Settings
+      /// </summary>
+      public IClientInstanceSettings Settings
+      {
+         get { return _settings; }
+      }
+
+      /// <summary>
+      /// Client Instance Settings
+      /// </summary>
+      public ClientInstanceSettings SettingsConcrete
+      {
+         get { return _settings; }
+      }
       
       #region Constructor
       /// <summary>
       /// Primary Constructor
       /// </summary>
-      public ClientInstance(IPreferenceSet Prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer)
+      public ClientInstance(IPreferenceSet prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer)
+         : this(prefs, proteinCollection, benchmarkContainer, null)
       {
-         // When Instance Host Type Changes, Clear the User Specified Values
-         InstanceHostTypeChanged += ClientInstance_InstanceHostTypeChanged;
-
-         _Prefs = Prefs;
+         
+      }
+      
+      /// <summary>
+      /// Primary Constructor
+      /// </summary>
+      public ClientInstance(IPreferenceSet prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer, ClientInstanceSettings instanceSettings)
+      {
+         _prefs = prefs;
          _proteinCollection = proteinCollection;
          _benchmarkContainer = benchmarkContainer;
          _dataAggregator = InstanceProvider.GetInstance<IDataAggregator>();
+         // Init User Specified Client Level Members
+         if (instanceSettings == null)
+         {
+            _settings = new ClientInstanceSettings(InstanceType.PathInstance);
+         }
+         else
+         {
+            _settings = instanceSettings;
+         }
          
          // Init Client Level Members
          Init();
-         // Init User Specified Client Level Members
-         InitUserSpecifiedMembers();
          // Create a fresh UnitInfo
-         _CurrentUnitInfo = new UnitInfoLogic(_Prefs, _proteinCollection, new UnitInfo(), this);
+         _CurrentUnitInfo = new UnitInfoLogic(_prefs, _proteinCollection, new UnitInfo(), this);
       }
       #endregion
 
@@ -351,31 +344,19 @@ namespace HFM.Instances
       /// <summary>
       /// Client host type (Path, FTP, or HTTP)
       /// </summary>
-      private InstanceType _InstanceHostType;
-      /// <summary>
-      /// Client host type (Path, FTP, or HTTP)
-      /// </summary>
       public InstanceType InstanceHostType
       {
-         get { return _InstanceHostType; }
-         set
-         {
-            if (_InstanceHostType != value)
-            {
-               _InstanceHostType = value;
-               OnInstanceHostTypeChanged(EventArgs.Empty);
-            }
-         }
+         get { return Settings.InstanceHostType; }
+         set { Settings.InstanceHostType = value; }
       }
       
-      private string _InstanceName;
       /// <summary>
       /// The name assigned to this client instance
       /// </summary>
       public string InstanceName
       {
-         get { return _InstanceName; }
-         set { _InstanceName = value; }
+         get { return Settings.InstanceName; }
+         set { Settings.InstanceName = value; }
       }
 
       #region Cached Log File Name Properties
@@ -404,165 +385,103 @@ namespace HFM.Instances
       }
       #endregion
 
-      private Int32 _ClientProcessorMegahertz;
       /// <summary>
       /// The number of processor megahertz for this client instance
       /// </summary>
       public Int32 ClientProcessorMegahertz
       {
-         get { return _ClientProcessorMegahertz; }
-         set { _ClientProcessorMegahertz = value; }
+         get { return Settings.ClientProcessorMegahertz; }
+         set { Settings.ClientProcessorMegahertz = value; }
       }
 
-      private string _RemoteFAHLogFilename;
       /// <summary>
       /// Remote client log file name
       /// </summary>
       public string RemoteFAHLogFilename
       {
-         get { return _RemoteFAHLogFilename; }
-         set
-         {
-            if (String.IsNullOrEmpty(value))
-            {
-               _RemoteFAHLogFilename = Constants.LocalFAHLog;
-            }
-            else
-            {
-               _RemoteFAHLogFilename = value;
-            }
-
-         }
+         get { return Settings.RemoteFAHLogFilename; }
+         set { Settings.RemoteFAHLogFilename = value; }
       }
 
-      private string _RemoteUnitInfoFilename;
       /// <summary>
       /// Remote client unit info log file name
       /// </summary>
       public string RemoteUnitInfoFilename
       {
-         get { return _RemoteUnitInfoFilename; }
-         set
-         {
-            if (String.IsNullOrEmpty(value))
-            {
-               _RemoteUnitInfoFilename = Constants.LocalUnitInfo;
-            }
-            else
-            {
-               _RemoteUnitInfoFilename = value;
-            }
-         }
+         get { return Settings.RemoteUnitInfoFilename; }
+         set { Settings.RemoteUnitInfoFilename = value; }
       }
 
-      private string _RemoteQueueFilename;
       /// <summary>
       /// Remote client queue.dat file name
       /// </summary>
       public string RemoteQueueFilename
       {
-         get { return _RemoteQueueFilename; }
-         set
-         {
-            if (String.IsNullOrEmpty(value))
-            {
-               _RemoteQueueFilename = Constants.LocalQueue;
-            }
-            else
-            {
-               _RemoteQueueFilename = value;
-            }
-         }
+         get { return Settings.RemoteQueueFilename; }
+         set { Settings.RemoteQueueFilename = value; }
       }
 
-      private string _Path;
       /// <summary>
       /// Location of log files for this instance
       /// </summary>
       public string Path
       {
-         get { return _Path; }
-         set { _Path = value; }
+         get { return Settings.Path; }
+         set { Settings.Path = value; }
       }
 
-      private string _Server;
       /// <summary>
       /// FTP Server name or IP Address
       /// </summary>
       public string Server
       {
-         get { return _Server; }
-         set { _Server = value; }
+         get { return Settings.Server; }
+         set { Settings.Server = value; }
       }
 
-      private string _Username;
       /// <summary>
       /// Username on remote server
       /// </summary>
       public string Username
       {
-         get { return _Username; }
-         set { _Username = value; }
+         get { return Settings.Username; }
+         set { Settings.Username = value; }
       }
 
-      private string _Password;
       /// <summary>
       /// Password on remote server
       /// </summary>
       public string Password
       {
-         get { return _Password; }
-         set { _Password = value; }
+         get { return Settings.Password; }
+         set { Settings.Password = value; }
       }
 
-      private FtpType _FtpMode;
       /// <summary>
       /// Specifies the FTP Communication Mode for this client
       /// </summary>
       public FtpType FtpMode
       {
-         get { return _FtpMode; }
-         set { _FtpMode = value; }
+         get { return Settings.FtpMode; }
+         set { Settings.FtpMode = value; }
       }
 
-      private bool _ClientIsOnVirtualMachine;
       /// <summary>
       /// Specifies that this client is on a VM that reports local time as UTC
       /// </summary>
       public bool ClientIsOnVirtualMachine
       {
-         get { return _ClientIsOnVirtualMachine; }
-         set { _ClientIsOnVirtualMachine = value; }
+         get { return Settings.ClientIsOnVirtualMachine; }
+         set { Settings.ClientIsOnVirtualMachine = value; }
       }
 
-      private Int32 _ClientTimeOffset;
       /// <summary>
       /// Specifies the number of minutes (+/-) this client's clock differentiates
       /// </summary>
       public Int32 ClientTimeOffset
       {
-         get { return _ClientTimeOffset; }
-         set { _ClientTimeOffset = value; }
-      }
-
-      /// <summary>
-      /// Init User Specified Client Level Members that Define this Instance
-      /// </summary>
-      private void InitUserSpecifiedMembers()
-      {
-         InstanceName = String.Empty;
-         ClientProcessorMegahertz = 1;
-         RemoteFAHLogFilename = Constants.LocalFAHLog;
-         RemoteUnitInfoFilename = Constants.LocalUnitInfo;
-         RemoteQueueFilename = Constants.LocalQueue;
-
-         Path = String.Empty;
-         Server = String.Empty;
-         Username = String.Empty;
-         Password = String.Empty;
-
-         ClientIsOnVirtualMachine = false;
-         ClientTimeOffset = 0;
+         get { return Settings.ClientTimeOffset; }
+         set { Settings.ClientTimeOffset = value; }
       }
       #endregion
 
@@ -707,7 +626,7 @@ namespace HFM.Instances
          get
          {
             // Issue 125
-            if (ProductionValuesOk && _Prefs.GetPreference<bool>(Preference.CalculateBonus))
+            if (ProductionValuesOk && _prefs.GetPreference<bool>(Preference.CalculateBonus))
             {
                return CurrentUnitInfo.GetBonusCredit();
             }
@@ -773,10 +692,10 @@ namespace HFM.Instances
                case InstanceType.PathInstance:
                   RetrievePathInstance();
                   break;
-               case InstanceType.HTTPInstance:
+               case InstanceType.HttpInstance:
                   RetrieveHTTPInstance();
                   break;
-               case InstanceType.FTPInstance:
+               case InstanceType.FtpInstance:
                   RetrieveFTPInstance();
                   break;
                default:
@@ -824,7 +743,7 @@ namespace HFM.Instances
          try
          {
             FileInfo fiLog = new FileInfo(System.IO.Path.Combine(Path, RemoteFAHLogFilename));
-            string FAHLog_txt = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedFAHLogName);
+            string FAHLog_txt = System.IO.Path.Combine(_prefs.CacheDirectory, CachedFAHLogName);
             FileInfo fiCachedLog = new FileInfo(FAHLog_txt);
 
             HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, "FAHlog copy (start)");
@@ -849,7 +768,7 @@ namespace HFM.Instances
 
             // Retrieve unitinfo.txt (or equivalent)
             FileInfo fiUI = new FileInfo(System.IO.Path.Combine(Path, RemoteUnitInfoFilename));
-            string UnitInfo_txt = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedUnitInfoName);
+            string UnitInfo_txt = System.IO.Path.Combine(_prefs.CacheDirectory, CachedUnitInfoName);
 
             HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, "unitinfo copy (start)");
             
@@ -884,7 +803,7 @@ namespace HFM.Instances
 
             // Retrieve queue.dat (or equivalent)
             FileInfo fiQueue = new FileInfo(System.IO.Path.Combine(Path, RemoteQueueFilename));
-            string Queue_dat = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedQueueName);
+            string Queue_dat = System.IO.Path.Combine(_prefs.CacheDirectory, CachedQueueName);
 
             HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, "queue copy (start)");
             
@@ -924,13 +843,13 @@ namespace HFM.Instances
          try
          {
             string HttpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Path, "/", RemoteFAHLogFilename);
-            string LocalFile = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedFAHLogName);
+            string LocalFile = System.IO.Path.Combine(_prefs.CacheDirectory, CachedFAHLogName);
             net.HttpDownloadHelper(HttpPath, LocalFile, Username, Password);
 
             try
             {
                HttpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Path, "/", RemoteUnitInfoFilename);
-               LocalFile = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedUnitInfoName);
+               LocalFile = System.IO.Path.Combine(_prefs.CacheDirectory, CachedUnitInfoName);
 
                long length = net.GetHttpDownloadLength(HttpPath, Username, Password);
                if (length < UnitInfoMax)
@@ -962,7 +881,7 @@ namespace HFM.Instances
             try
             {
                HttpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Path, "/", RemoteQueueFilename);
-               LocalFile = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedQueueName);
+               LocalFile = System.IO.Path.Combine(_prefs.CacheDirectory, CachedQueueName);
                net.HttpDownloadHelper(HttpPath, LocalFile, Username, Password);
             }
             /*** Remove Requirement for Queue to be Present ***/
@@ -995,12 +914,12 @@ namespace HFM.Instances
 
          try
          {
-            string LocalFilePath = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedFAHLogName);
+            string LocalFilePath = System.IO.Path.Combine(_prefs.CacheDirectory, CachedFAHLogName);
             net.FtpDownloadHelper(Server, Path, RemoteFAHLogFilename, LocalFilePath, Username, Password, FtpMode);
 
             try
             {
-               LocalFilePath = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedUnitInfoName);
+               LocalFilePath = System.IO.Path.Combine(_prefs.CacheDirectory, CachedUnitInfoName);
 
                long length = net.GetFtpDownloadLength(Server, Path, RemoteUnitInfoFilename, Username, Password, FtpMode);
                if (length < UnitInfoMax)
@@ -1031,7 +950,7 @@ namespace HFM.Instances
 
             try
             {
-               LocalFilePath = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedQueueName);
+               LocalFilePath = System.IO.Path.Combine(_prefs.CacheDirectory, CachedQueueName);
                net.FtpDownloadHelper(Server, Path, RemoteQueueFilename, LocalFilePath, Username, Password, FtpMode);
             }
             /*** Remove Requirement for Queue to be Present ***/
@@ -1065,9 +984,9 @@ namespace HFM.Instances
 
          #region Setup UnitInfo Aggregator
          _dataAggregator.InstanceName = InstanceName;
-         _dataAggregator.QueueFilePath = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedQueueName);
-         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedFAHLogName);
-         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(_Prefs.CacheDirectory, CachedUnitInfoName); 
+         _dataAggregator.QueueFilePath = System.IO.Path.Combine(_prefs.CacheDirectory, CachedQueueName);
+         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(_prefs.CacheDirectory, CachedFAHLogName);
+         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(_prefs.CacheDirectory, CachedUnitInfoName); 
          #endregion
          
          #region Run the Aggregator and Set ClientInstance Level Results
@@ -1086,7 +1005,7 @@ namespace HFM.Instances
          {
             if (units[i] != null)
             {
-               parsedUnits[i] = new UnitInfoLogic(_Prefs, _proteinCollection, units[i], this);
+               parsedUnits[i] = new UnitInfoLogic(_prefs, _proteinCollection, units[i], this);
             }
          }
 
@@ -1368,9 +1287,9 @@ namespace HFM.Instances
          statusData.AverageFrameTime = InstanceProvider.GetInstance<IProteinBenchmarkContainer>().GetBenchmarkAverageFrameTime(CurrentUnitInfo);
          statusData.TimeOfLastFrame = CurrentUnitInfo.TimeOfLastFrame;
          statusData.UnitStartTimeStamp = CurrentUnitInfo.UnitStartTimeStamp;
-         statusData.AllowRunningAsync = _Prefs.GetPreference<bool>(Preference.AllowRunningAsync);
+         statusData.AllowRunningAsync = _prefs.GetPreference<bool>(Preference.AllowRunningAsync);
       
-         Status = HandleReturnedStatus(statusData, _Prefs);
+         Status = HandleReturnedStatus(statusData, _prefs);
       }
 
       /// <summary>
@@ -1781,7 +1700,7 @@ namespace HFM.Instances
       /// <param name="unitInfo">UnitInfo Object to Restore</param>
       public void RestoreUnitInfo(IUnitInfo unitInfo)
       {
-         CurrentUnitInfoConcrete = new UnitInfoLogic(_Prefs, _proteinCollection, unitInfo, this);
+         CurrentUnitInfoConcrete = new UnitInfoLogic(_prefs, _proteinCollection, unitInfo, this);
       }
       
       public bool IsUsernameOk()
@@ -1792,8 +1711,8 @@ namespace HFM.Instances
             return true;
          }
 
-         if ((FoldingID != _Prefs.GetPreference<string>(Preference.StanfordID) || 
-              Team != _Prefs.GetPreference<int>(Preference.TeamID)) &&
+         if ((FoldingID != _prefs.GetPreference<string>(Preference.StanfordID) || 
+              Team != _prefs.GetPreference<int>(Preference.TeamID)) &&
              (Status.Equals(ClientStatus.Unknown) == false && Status.Equals(ClientStatus.Offline) == false))
          {
             return false;
@@ -1805,7 +1724,7 @@ namespace HFM.Instances
       public bool Owns(IOwnedByClientInstance value)
       {
          if (value.OwningInstanceName.Equals(InstanceName) &&
-             value.OwningInstancePath.Equals(Path))
+             StringOps.PathsEqual(value.OwningInstancePath, Path))
          {
             return true;
          }

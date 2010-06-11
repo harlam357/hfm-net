@@ -926,6 +926,7 @@ namespace HFM.Forms
          this.txtLogFile.Size = new System.Drawing.Size(695, 356);
          this.txtLogFile.TabIndex = 1;
          this.txtLogFile.Text = "";
+         this.txtLogFile.WordWrap = false;
          // 
          // frmMain
          // 

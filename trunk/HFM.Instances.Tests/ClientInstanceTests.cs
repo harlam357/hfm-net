@@ -49,7 +49,7 @@ namespace HFM.Instances.Tests
          _benchmarkCollection = _mocks.DynamicMock<IProteinBenchmarkContainer>();
       
          _container.AddComponent("DataAggregator", typeof(IDataAggregator), typeof(DataAggregator));
-         _container.AddComponent("LogReader", typeof(ILogReaderFactory), typeof(LogReaderFactory));
+         _container.AddComponent("LogReaderFactory", typeof(ILogReaderFactory), typeof(LogReaderFactory));
          _container.AddComponent("QueueReader", typeof(IQueueReader), typeof(QueueReader));
          _container.AddComponent("UnitInfoFactory", typeof(IUnitInfoFactory), typeof(UnitInfoFactory));
          InstanceProvider.SetContainer(_container);
@@ -106,7 +106,7 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData);
          Assert.AreEqual("SMP_3", Instance.CurrentUnitInfo.UnitInfoData.OwningInstanceName);
-         Assert.AreEqual("..\\..\\..\\TestFiles\\SMP_3", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
+         Assert.AreEqual("..\\..\\..\\TestFiles\\SMP_3\\", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
          Assert.Greater(Instance.CurrentUnitInfo.UnitInfoData.UnitRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
          Assert.AreEqual("harlam357", Instance.CurrentUnitInfo.UnitInfoData.FoldingID);
          Assert.AreEqual(32, Instance.CurrentUnitInfo.UnitInfoData.Team);
@@ -190,7 +190,7 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData);
          Assert.AreEqual("SMP_7", Instance.CurrentUnitInfo.UnitInfoData.OwningInstanceName);
-         Assert.AreEqual("..\\..\\..\\TestFiles\\SMP_7", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
+         Assert.AreEqual("..\\..\\..\\TestFiles\\SMP_7\\", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
          Assert.Greater(Instance.CurrentUnitInfo.UnitInfoData.UnitRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
          Assert.AreEqual("harlam357", Instance.CurrentUnitInfo.UnitInfoData.FoldingID);
          Assert.AreEqual(32, Instance.CurrentUnitInfo.UnitInfoData.Team);
@@ -282,7 +282,7 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData);
          Assert.AreEqual("SMP_8_1", Instance.CurrentUnitInfo.UnitInfoData.OwningInstanceName);
-         Assert.AreEqual("..\\..\\..\\TestFiles\\SMP_8", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
+         Assert.AreEqual("..\\..\\..\\TestFiles\\SMP_8\\", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
          Assert.Greater(Instance.CurrentUnitInfo.UnitInfoData.UnitRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
          Assert.AreEqual("harlam357", Instance.CurrentUnitInfo.UnitInfoData.FoldingID);
          Assert.AreEqual(32, Instance.CurrentUnitInfo.UnitInfoData.Team);
@@ -365,7 +365,7 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData);
          Assert.AreEqual("SMP_8_2", Instance.CurrentUnitInfo.UnitInfoData.OwningInstanceName);
-         Assert.AreEqual("..\\..\\..\\TestFiles\\SMP_8", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
+         Assert.AreEqual("..\\..\\..\\TestFiles\\SMP_8\\", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
          Assert.Greater(Instance.CurrentUnitInfo.UnitInfoData.UnitRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
          Assert.AreEqual("harlam357", Instance.CurrentUnitInfo.UnitInfoData.FoldingID);
          Assert.AreEqual(32, Instance.CurrentUnitInfo.UnitInfoData.Team);
@@ -449,7 +449,7 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData);
          Assert.AreEqual("SMP_9", Instance.CurrentUnitInfo.UnitInfoData.OwningInstanceName);
-         Assert.AreEqual("..\\..\\..\\TestFiles\\SMP_9", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
+         Assert.AreEqual("..\\..\\..\\TestFiles\\SMP_9\\", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
          Assert.Greater(Instance.CurrentUnitInfo.UnitInfoData.UnitRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
          Assert.AreEqual("coccola", Instance.CurrentUnitInfo.UnitInfoData.FoldingID);
          Assert.AreEqual(86565, Instance.CurrentUnitInfo.UnitInfoData.Team);
@@ -533,7 +533,7 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData);
          Assert.AreEqual("SMP_11", Instance.CurrentUnitInfo.UnitInfoData.OwningInstanceName);
-         Assert.AreEqual("..\\..\\..\\TestFiles\\SMP_11", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
+         Assert.AreEqual("..\\..\\..\\TestFiles\\SMP_11\\", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
          Assert.Greater(Instance.CurrentUnitInfo.UnitInfoData.UnitRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
          Assert.AreEqual("Felix_Pasqualli", Instance.CurrentUnitInfo.UnitInfoData.FoldingID);
          Assert.AreEqual(52523, Instance.CurrentUnitInfo.UnitInfoData.Team);
@@ -617,7 +617,7 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData);
          Assert.AreEqual("SMP_12", Instance.CurrentUnitInfo.UnitInfoData.OwningInstanceName);
-         Assert.AreEqual("..\\..\\..\\TestFiles\\SMP_12", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
+         Assert.AreEqual("..\\..\\..\\TestFiles\\SMP_12\\", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
          Assert.Greater(Instance.CurrentUnitInfo.UnitInfoData.UnitRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
          Assert.AreEqual("harlam357", Instance.CurrentUnitInfo.UnitInfoData.FoldingID);
          Assert.AreEqual(32, Instance.CurrentUnitInfo.UnitInfoData.Team);
@@ -693,7 +693,7 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData);
          Assert.AreEqual("GPU2_3", Instance.CurrentUnitInfo.UnitInfoData.OwningInstanceName);
-         Assert.AreEqual("..\\..\\..\\TestFiles\\GPU2_3", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
+         Assert.AreEqual("..\\..\\..\\TestFiles\\GPU2_3\\", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
          Assert.Greater(Instance.CurrentUnitInfo.UnitInfoData.UnitRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
          Assert.AreEqual("JollySwagman", Instance.CurrentUnitInfo.UnitInfoData.FoldingID);
          Assert.AreEqual(32, Instance.CurrentUnitInfo.UnitInfoData.Team);
@@ -777,7 +777,7 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData);
          Assert.AreEqual("GPU2_6_1", Instance.CurrentUnitInfo.UnitInfoData.OwningInstanceName);
-         Assert.AreEqual("..\\..\\..\\TestFiles\\GPU2_6", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
+         Assert.AreEqual("..\\..\\..\\TestFiles\\GPU2_6\\", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
          Assert.Greater(Instance.CurrentUnitInfo.UnitInfoData.UnitRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
          Assert.AreEqual("harlam357", Instance.CurrentUnitInfo.UnitInfoData.FoldingID);
          Assert.AreEqual(32, Instance.CurrentUnitInfo.UnitInfoData.Team);
@@ -888,7 +888,7 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData);
          Assert.AreEqual("GPU2_7", Instance.CurrentUnitInfo.UnitInfoData.OwningInstanceName);
-         Assert.AreEqual("..\\..\\..\\TestFiles\\GPU2_7", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
+         Assert.AreEqual("..\\..\\..\\TestFiles\\GPU2_7\\", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
          Assert.Greater(Instance.CurrentUnitInfo.UnitInfoData.UnitRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
          Assert.AreEqual("Zagen30", Instance.CurrentUnitInfo.UnitInfoData.FoldingID);
          Assert.AreEqual(46301, Instance.CurrentUnitInfo.UnitInfoData.Team);
@@ -972,7 +972,7 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData);
          Assert.AreEqual("GPU2_8_1", Instance.CurrentUnitInfo.UnitInfoData.OwningInstanceName);
-         Assert.AreEqual("..\\..\\..\\TestFiles\\GPU2_8", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
+         Assert.AreEqual("..\\..\\..\\TestFiles\\GPU2_8\\", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
          Assert.Greater(Instance.CurrentUnitInfo.UnitInfoData.UnitRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
          Assert.AreEqual("harlam357", Instance.CurrentUnitInfo.UnitInfoData.FoldingID);
          Assert.AreEqual(32, Instance.CurrentUnitInfo.UnitInfoData.Team);
@@ -1050,7 +1050,7 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData);
          Assert.AreEqual("GPU2_8_2", Instance.CurrentUnitInfo.UnitInfoData.OwningInstanceName);
-         Assert.AreEqual("..\\..\\..\\TestFiles\\GPU2_8", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
+         Assert.AreEqual("..\\..\\..\\TestFiles\\GPU2_8\\", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
          Assert.Greater(Instance.CurrentUnitInfo.UnitInfoData.UnitRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
          Assert.AreEqual("harlam357", Instance.CurrentUnitInfo.UnitInfoData.FoldingID);
          Assert.AreEqual(32, Instance.CurrentUnitInfo.UnitInfoData.Team);
@@ -1134,7 +1134,7 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData);
          Assert.AreEqual("Standard_5", Instance.CurrentUnitInfo.UnitInfoData.OwningInstanceName);
-         Assert.AreEqual("..\\..\\..\\TestFiles\\Standard_5", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
+         Assert.AreEqual("..\\..\\..\\TestFiles\\Standard_5\\", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
          Assert.Greater(Instance.CurrentUnitInfo.UnitInfoData.UnitRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
          Assert.AreEqual("borden.b", Instance.CurrentUnitInfo.UnitInfoData.FoldingID);
          Assert.AreEqual(131, Instance.CurrentUnitInfo.UnitInfoData.Team);
@@ -1210,7 +1210,7 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData);
          Assert.AreEqual("Standard_7", Instance.CurrentUnitInfo.UnitInfoData.OwningInstanceName);
-         Assert.AreEqual("..\\..\\..\\TestFiles\\Standard_7", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
+         Assert.AreEqual("..\\..\\..\\TestFiles\\Standard_7\\", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
          Assert.Greater(Instance.CurrentUnitInfo.UnitInfoData.UnitRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
          Assert.AreEqual("NerdZone", Instance.CurrentUnitInfo.UnitInfoData.FoldingID);
          Assert.AreEqual(155945, Instance.CurrentUnitInfo.UnitInfoData.Team);
@@ -1286,7 +1286,7 @@ namespace HFM.Instances.Tests
          Assert.IsNotNull(Instance.CurrentUnitInfo);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData);
          Assert.AreEqual("Standard_8", Instance.CurrentUnitInfo.UnitInfoData.OwningInstanceName);
-         Assert.AreEqual("..\\..\\..\\TestFiles\\Standard_8", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
+         Assert.AreEqual("..\\..\\..\\TestFiles\\Standard_8\\", Instance.CurrentUnitInfo.UnitInfoData.OwningInstancePath);
          Assert.Greater(Instance.CurrentUnitInfo.UnitInfoData.UnitRetrievalTime, DateTime.Now.Subtract(TimeSpan.FromMinutes(5)));
          Assert.AreEqual("DrSpalding", Instance.CurrentUnitInfo.UnitInfoData.FoldingID);
          Assert.AreEqual(48083, Instance.CurrentUnitInfo.UnitInfoData.Team);

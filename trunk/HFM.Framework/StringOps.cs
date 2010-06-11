@@ -1,6 +1,6 @@
 /*
  * HFM.NET - String (Regex) Helper Class
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,13 +18,13 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
-using HFM.Framework;
-
-namespace HFM.Helpers
+namespace HFM.Framework
 {
    public static class StringOps
    {
@@ -114,6 +114,9 @@ namespace HFM.Helpers
       /// <param name="val">String to validate</param>
       public static bool ValidateFileName(string val)
       {
+         if (val == null) return false;
+         if (val.Trim().Length == 0) return false;
+      
          Regex rValidFileName = new Regex(ValidFileName, RegexOptions.Singleline | RegexOptions.IgnoreCase);
          
          return rValidFileName.IsMatch(val);
@@ -145,7 +148,7 @@ namespace HFM.Helpers
       }
 
       /// <summary>
-      /// Validate FTPInstance Path
+      /// Validate FtpInstance Path
       /// </summary>
       /// <param name="val">String to validate</param>
       public static bool ValidateFtpPath(string val)
@@ -156,7 +159,7 @@ namespace HFM.Helpers
       }
 
       /// <summary>
-      /// Validate HTTPInstance URL
+      /// Validate HttpInstance URL
       /// </summary>
       /// <param name="val">String to validate</param>
       public static bool ValidateHttpURL(string val)
@@ -274,7 +277,7 @@ namespace HFM.Helpers
          {
             throw new ArgumentException(Value1Message);
          }
-         else if (String.IsNullOrEmpty(Value1) && String.IsNullOrEmpty(Value2) == false)
+         if (String.IsNullOrEmpty(Value1) && String.IsNullOrEmpty(Value2) == false)
          {
             throw new ArgumentException(Value2Message);
          }
@@ -305,6 +308,43 @@ namespace HFM.Helpers
             default:
                return WorkUnitResult.Unknown;
          }
+      }
+      
+      /// <summary>
+      /// Are two Client Instance Paths Equal?
+      /// </summary>
+      public static bool PathsEqual(string path1, string path2)
+      {
+         ICollection<string> path1Variations = GetPathVariations(path1);
+         ICollection<string> path2Variations = GetPathVariations(path2);
+
+         foreach (var variation1 in path1Variations)
+         {
+            foreach (var variation2 in path2Variations)
+            {
+               if (variation1.Equals(variation2))
+               {
+                  return true;
+               }
+            }
+         }
+
+         return false;
+      }
+      
+      private static ICollection<string> GetPathVariations(string path)
+      {
+         var pathVariations = new List<string>(2);
+         if (path.EndsWith("\\") || path.EndsWith("/"))
+         {
+            pathVariations.Add(path.ToUpperInvariant());
+         }
+         else
+         {
+            pathVariations.Add(String.Concat(path.ToUpperInvariant(), "\\"));
+            pathVariations.Add(String.Concat(path.ToUpperInvariant(), "/"));
+         }
+         return pathVariations;
       }
       #endregion
    }

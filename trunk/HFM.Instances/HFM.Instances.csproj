@@ -60,12 +60,16 @@
     <Compile Include="ClientInstance.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ClientInstanceFahMonSerializer.cs" />
     <Compile Include="ClientInstanceFactory.cs" />
+    <Compile Include="ClientInstanceSettings.cs" />
+    <Compile Include="ClientInstanceSettingsDataInterface.cs" />
     <Compile Include="ClientInstanceXmlSerializer.cs" />
     <Compile Include="DisplayInstance.cs" />
     <Compile Include="InstanceCollection.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="InstanceCollectionDataInterface.cs" />
     <Compile Include="InstanceCollectionHelpers.cs" />
     <Compile Include="InstanceProteinBenchmark.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -100,6 +104,10 @@
     <ProjectReference Include="..\HFM.Instrumentation\HFM.Instrumentation.csproj">
       <Project>{7D6B604A-5C4A-4E97-A6D4-9C927ABBD74A}</Project>
       <Name>HFM.Instrumentation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Plugins\HFM.Plugins.csproj">
+      <Project>{E1415297-BD33-4508-A491-F3C13E5A5F7F}</Project>
+      <Name>HFM.Plugins</Name>
     </ProjectReference>
     <ProjectReference Include="..\HFM.Preferences\HFM.Preferences.csproj">
       <Project>{0CAF91A3-D5F1-44C9-BAEB-FB81DFBF9C47}</Project>

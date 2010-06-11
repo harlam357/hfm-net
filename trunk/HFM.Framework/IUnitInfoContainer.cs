@@ -17,8 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System;
+
 namespace HFM.Framework
 {
+   [CLSCompliant(false)]
    public interface IUnitInfoContainer
    {
       /// <summary>
@@ -35,9 +38,8 @@ namespace HFM.Framework
       /// <summary>
       /// Retrieve from the Container
       /// </summary>
-      /// <param name="instanceName">ClientInstance Name</param>
-      /// <param name="instancePath">ClientInstance Path</param>
-      IUnitInfo RetrieveUnitInfo(string instanceName, string instancePath);
+      /// <param name="instance">Client Instance Interface</param>
+      IUnitInfo RetrieveUnitInfo(IClientInstance instance);
 
       /// <summary>
       /// Read Binary File

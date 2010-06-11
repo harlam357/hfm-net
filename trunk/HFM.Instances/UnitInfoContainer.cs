@@ -31,8 +31,6 @@ namespace HFM.Instances
    public class UnitInfoContainer : IUnitInfoContainer
    {
       #region Constants
-      private const string DataStoreFilename = "UnitInfoCache.dat";
-      private const string CompletedUnitsCsv = "CompletedUnits.csv";
       private const string Comma = ",";
       #endregion
 
@@ -75,12 +73,11 @@ namespace HFM.Instances
       /// <summary>
       /// Retrieve from the Container
       /// </summary>
-      /// <param name="instanceName">ClientInstance Name</param>
-      /// <param name="instancePath">ClientInstance Path</param>
-      public IUnitInfo RetrieveUnitInfo(string instanceName, string instancePath)
+      /// <param name="instance">Client Instance</param>
+      [CLSCompliant(false)]
+      public IUnitInfo RetrieveUnitInfo(IClientInstance instance)
       {
-         UnitInfo findUnit = _collection.UnitInfoList.Find(unit => unit.OwningInstanceName == instanceName &&
-                                                                   unit.OwningInstancePath == instancePath);
+         UnitInfo findUnit = _collection.UnitInfoList.Find(instance.Owns);
          return findUnit;
       }
       #endregion
@@ -99,7 +96,7 @@ namespace HFM.Instances
             bool bWriteHeader = false;
 
             string fileName = Path.Combine(InstanceProvider.GetInstance<IPreferenceSet>().GetPreference<string>(
-                                              Preference.ApplicationDataFolderPath), CompletedUnitsCsv);
+                                              Preference.ApplicationDataFolderPath), Constants.CompletedUnitsCsvFileName);
 
             if (File.Exists(fileName) == false)
             {
@@ -133,10 +130,10 @@ namespace HFM.Instances
          IPreferenceSet prefs = InstanceProvider.GetInstance<IPreferenceSet>();
          string applicationDataFolderPath = prefs.GetPreference<string>(Preference.ApplicationDataFolderPath);
 
-         string oldFilePath = Path.Combine(prefs.ApplicationPath, CompletedUnitsCsv);
-         string oldFilePath022 = Path.Combine(prefs.ApplicationPath, CompletedUnitsCsv.Replace(".csv", ".0_2_2.csv"));
-         string newFilePath = Path.Combine(applicationDataFolderPath, CompletedUnitsCsv);
-         string newFilePath022 = Path.Combine(applicationDataFolderPath, CompletedUnitsCsv.Replace(".csv", ".0_2_2.csv"));
+         string oldFilePath = Path.Combine(prefs.ApplicationPath, Constants.CompletedUnitsCsvFileName);
+         string oldFilePath022 = Path.Combine(prefs.ApplicationPath, Constants.CompletedUnitsCsvFileName.Replace(".csv", ".0_2_2.csv"));
+         string newFilePath = Path.Combine(applicationDataFolderPath, Constants.CompletedUnitsCsvFileName);
+         string newFilePath022 = Path.Combine(applicationDataFolderPath, Constants.CompletedUnitsCsvFileName.Replace(".csv", ".0_2_2.csv"));
 
          // If file does not exist in new location but does exist in old location
          if (File.Exists(newFilePath) == false && File.Exists(oldFilePath))
@@ -321,7 +318,7 @@ namespace HFM.Instances
       /// </summary>
       public void Read()
       {
-         string filePath = Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), DataStoreFilename);
+         string filePath = Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), Constants.UnitInfoCacheFileName);
          
          _collection = DeserializeLegacy(filePath);
          if (_collection == null)
@@ -340,7 +337,7 @@ namespace HFM.Instances
       /// </summary>
       public void Write()
       {
-         Serialize(_collection, Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), DataStoreFilename));
+         Serialize(_collection, Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), Constants.UnitInfoCacheFileName));
       }
 
       private static readonly object SerializeLock = typeof(UnitInfoCollection);

@@ -62,6 +62,7 @@
       <Link>AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="BenchmarkClientTests.cs" />
+    <Compile Include="ClientInstanceFactoryTests.cs" />
     <Compile Include="ClientInstanceTests.cs" />
     <Compile Include="ClientInstanceXmlSerializerTests.cs" />
     <Compile Include="MarkupGeneratorTests.cs" />
@@ -88,6 +89,10 @@
     <ProjectReference Include="..\HFM.Log\HFM.Log.csproj">
       <Project>{2C3EA8A1-D17F-419D-A76A-970550FB5A09}</Project>
       <Name>HFM.Log</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Plugins\HFM.Plugins.csproj">
+      <Project>{E1415297-BD33-4508-A491-F3C13E5A5F7F}</Project>
+      <Name>HFM.Plugins</Name>
     </ProjectReference>
     <ProjectReference Include="..\HFM.Queue\HFM.Queue.csproj">
       <Project>{44AC27F2-833D-4BF2-9E17-C35D38C7BD67}</Project>

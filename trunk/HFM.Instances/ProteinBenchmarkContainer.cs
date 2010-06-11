@@ -116,12 +116,6 @@ namespace HFM.Instances
                {
                   result = true;
                }
-
-               /*** Logic Moved to ClientInstance.UpdateBenchmarkData() ***/
-               //if (frame.FrameID == unit.Frames)
-               //{
-               //   UnitInfoContainer.WriteCompletedUnitInfo(unit);
-               //}
             }
             else
             {
@@ -158,7 +152,7 @@ namespace HFM.Instances
          return _collection.BenchmarkList.Find(delegate(InstanceProteinBenchmark proteinBenchmark)
          {
             return proteinBenchmark.OwningInstanceName == unit.OwningInstanceName &&
-                   proteinBenchmark.OwningInstancePath == unit.OwningInstancePath &&
+                   StringOps.PathsEqual(proteinBenchmark.OwningInstancePath, unit.OwningInstancePath) &&
                    proteinBenchmark.ProjectID == unit.ProjectID;
          });
       }

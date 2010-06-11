@@ -496,7 +496,7 @@ namespace HFM.Forms
             // I'm not sure why I ever wrote this check here - it makes no sense - 4/6/10
             //if (_clientInstances.SelectedInstance.DataAggregator.UnitLogLines != null)
             //{
-               SetLogLines(_clientInstances.SelectedInstance, _clientInstances.SelectedInstance.DataAggregator.CurrentLogLines);
+               SetLogLines(_clientInstances.SelectedInstance.Settings, _clientInstances.SelectedInstance.DataAggregator.CurrentLogLines);
             //}
          }
          else
@@ -523,7 +523,7 @@ namespace HFM.Forms
             // Check the UnitLogLines array against the requested Queue Index - Issue 171
             try
             {
-               SetLogLines(_clientInstances.SelectedInstance,
+               SetLogLines(_clientInstances.SelectedInstance.Settings,
                            _clientInstances.SelectedInstance.GetLogLinesForQueueIndex(e.Index));
             }
             catch (ArgumentOutOfRangeException ex)
@@ -1018,7 +1018,7 @@ namespace HFM.Forms
       private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
       {
          DataGridView.HitTestInfo hti = dataGridView1.HitTest(e.X, e.Y);
-         if (e.Button == System.Windows.Forms.MouseButtons.Right)
+         if (e.Button == MouseButtons.Right)
          {
             if (hti.Type == DataGridViewHitTestType.Cell)
             {
@@ -1042,7 +1042,7 @@ namespace HFM.Forms
                gridContextMenuStrip.Show(dataGridView1.PointToScreen(new Point(e.X, e.Y)));
             }
          }
-         if (e.Button == System.Windows.Forms.MouseButtons.Left && e.Clicks == 2)
+         if (e.Button == MouseButtons.Left && e.Clicks == 2)
          {
             if (hti.Type == DataGridViewHitTestType.Cell)
             {
@@ -1300,26 +1300,47 @@ namespace HFM.Forms
       /// <summary>
       /// Add a new host to the configuration
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void mnuClientsAdd_Click(object sender, EventArgs e)
       {
-         frmHost newHost = new frmHost(_clientInstances);
-         newHost.ShowDialog();
+         var newHost = new frmHost(new ClientInstanceSettings(InstanceType.PathInstance));
+         if (newHost.ShowDialog().Equals(DialogResult.OK))
+         {
+            try
+            {
+               _clientInstances.Add(newHost.Settings);
+            }
+            catch (InvalidOperationException ex)
+            {
+               HfmTrace.WriteToHfmConsole(ex);
+               MessageBox.Show(this, ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error); 
+            }
+         }
       }
 
       /// <summary>
       /// Edits an existing host configuration
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void mnuClientsEdit_Click(object sender, EventArgs e)
       {
          // Check for SelectedInstance, and get out if not found
          if (_clientInstances.SelectedInstance == null) return;
 
-         frmHost editHost = new frmHost(_clientInstances, _clientInstances.SelectedInstance);
-         editHost.ShowDialog();
+         string previousName = _clientInstances.SelectedInstance.InstanceName;
+         string previousPath = _clientInstances.SelectedInstance.Path;
+
+         var editHost = new frmHost(_clientInstances.SelectedInstance.Settings.Clone());
+         if (editHost.ShowDialog().Equals(DialogResult.OK))
+         {
+            try
+            {
+               _clientInstances.Edit(previousName, previousPath, editHost.Settings);
+            }
+            catch (InvalidOperationException ex)
+            {
+               HfmTrace.WriteToHfmConsole(ex);
+               MessageBox.Show(this, ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error); 
+            }
+         }
       }
 
       /// <summary>

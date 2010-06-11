@@ -116,27 +116,33 @@ namespace HFM.Instances.Tests
       
       private ICollection<IClientInstance> SetupMockClientInstanceCollection()
       {
-         List<IClientInstance> instances = new List<IClientInstance>();
+         var instances = new List<IClientInstance>();
 
-         IUnitInfoLogic unitInfoLogic = _mocks.Stub<IUnitInfoLogic>();
-         IDataAggregator dataAggregator1 = _mocks.Stub<IDataAggregator>();
+         var unitInfoLogic = _mocks.Stub<IUnitInfoLogic>();
+         var dataAggregator1 = _mocks.Stub<IDataAggregator>();
          SetupResult.For(dataAggregator1.CurrentLogLines).Return(new List<ILogLine>());
-         IDataAggregator dataAggregator2 = _mocks.Stub<IDataAggregator>();
+         var dataAggregator2 = _mocks.Stub<IDataAggregator>();
          // Test For - Issue 201 - Web Generation Fails when a Client with no CurrentLogLines is encountered.
          // Make sure we return null for CurrentLogLines in the second DataAggregator mock.
          SetupResult.For(dataAggregator2.CurrentLogLines).Return(null);
-         
-         IClientInstance instance = _mocks.Stub<IClientInstance>();
-         instance.InstanceName = "Test2";
+
+         var settings = _mocks.Stub<IClientInstanceSettings>();
+         settings.InstanceName = "Test2";
+
+         var instance = _mocks.Stub<IClientInstance>();
          SetupResult.For(instance.CurrentUnitInfo).Return(unitInfoLogic);
-         SetupResult.For(instance.DataAggregator).Return(dataAggregator1);         
+         SetupResult.For(instance.DataAggregator).Return(dataAggregator1);
+         SetupResult.For(instance.Settings).Return(settings);       
          
          instances.Add(instance);
 
+         settings = _mocks.Stub<IClientInstanceSettings>();
+         settings.InstanceName = "Test1";
+
          instance = _mocks.Stub<IClientInstance>();
-         instance.InstanceName = "Test1";
          SetupResult.For(instance.CurrentUnitInfo).Return(unitInfoLogic);
          SetupResult.For(instance.DataAggregator).Return(dataAggregator2);
+         SetupResult.For(instance.Settings).Return(settings);       
 
          instances.Add(instance);
 

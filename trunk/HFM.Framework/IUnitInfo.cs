@@ -21,18 +21,8 @@ using System;
 
 namespace HFM.Framework
 {
-   public interface IUnitInfo
+   public interface IUnitInfo : IOwnedByClientInstance
    {
-      /// <summary>
-      /// Name of the Client Instance that owns this UnitInfo
-      /// </summary>
-      string OwningInstanceName { get; }
-
-      /// <summary>
-      /// Path of the Client Instance that owns this UnitInfo
-      /// </summary>
-      string OwningInstancePath { get; }
-
       /// <summary>
       /// Local time the logs used to generate this UnitInfo were retrieved
       /// </summary>

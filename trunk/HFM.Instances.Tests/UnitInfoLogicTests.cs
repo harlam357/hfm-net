@@ -338,13 +338,16 @@ namespace HFM.Instances.Tests
       private IClientInstance SetupMockClientInstance(ClientStatus status, bool utcOffsetIsZero, int clientTimeOffset,
                                                       string instanceName, string path, DateTime lastRetrievalTime)
       {
-         IClientInstance clientInstance = _mocks.Stub<IClientInstance>();
+         var settings = _mocks.Stub<IClientInstanceSettings>();
+         settings.ClientIsOnVirtualMachine = utcOffsetIsZero;
+         settings.ClientTimeOffset = clientTimeOffset;
+         settings.InstanceName = instanceName;
+         settings.Path = path;
+
+         var clientInstance = _mocks.Stub<IClientInstance>();
          SetupResult.For(clientInstance.Status).Return(status);
-         clientInstance.ClientIsOnVirtualMachine = utcOffsetIsZero;
-         clientInstance.ClientTimeOffset = clientTimeOffset;
-         clientInstance.InstanceName = instanceName;
-         clientInstance.Path = path;
          SetupResult.For(clientInstance.LastRetrievalTime).Return(lastRetrievalTime);
+         SetupResult.For(clientInstance.Settings).Return(settings);
 
          return clientInstance;
       }

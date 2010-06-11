@@ -151,9 +151,9 @@ namespace HFM.Instances
             // Generate a page per instance
             foreach (IClientInstance instance in instances)
             {
-               filePath = Path.Combine(folderPath, String.Concat(instance.InstanceName, ".html"));
+               filePath = Path.Combine(folderPath, String.Concat(instance.Settings.InstanceName, ".html"));
                sw = new StreamWriter(filePath, false);
-               sw.Write(XMLOps.Transform(FindInstanceNode(instancesXml, instance.InstanceName), instanceXslt, cssFileName));
+               sw.Write(XMLOps.Transform(FindInstanceNode(instancesXml, instance.Settings.InstanceName), instanceXslt, cssFileName));
                sw.Close();
                // Success, add it to the list
                fileList.Add(filePath);
@@ -296,7 +296,7 @@ namespace HFM.Instances
          //        <ExpectedCompletionDate>16 August 2006 1:46 am</ExpectedCompletionDate>
          //    </UnitInfo>
 
-         xmlData.SetAttribute("Name", instance.InstanceName);
+         xmlData.SetAttribute("Name", instance.Settings.InstanceName);
          XMLOps.setXmlNode(xmlData, "HFMVersion", PlatformOps.ShortFormattedApplicationVersionWithRevision);
          XMLOps.setXmlNode(xmlData, "UnitInfo/FramesComplete", String.Format("{0}", instance.FramesComplete));
          XMLOps.setXmlNode(xmlData, "UnitInfo/PercentComplete", String.Format("{0}", instance.PercentComplete));
@@ -419,14 +419,14 @@ namespace HFM.Instances
             XMLOps.setXmlNode(xmlData, "StatusColor", ClientInstance.GetStatusHtmlColor(instance.Status));
             XMLOps.setXmlNode(xmlData, "StatusFontColor", ClientInstance.GetStatusHtmlFontColor(instance.Status));
             XMLOps.setXmlNode(xmlData, "PercentComplete", instance.PercentComplete.ToString());
-            XMLOps.setXmlNode(xmlData, "Name", instance.InstanceName);
+            XMLOps.setXmlNode(xmlData, "Name", instance.Settings.InstanceName);
             XMLOps.setXmlNode(xmlData, "UserIDDuplicate", (duplicateUserIdCheck && instance.UserIdIsDuplicate).ToString());
             XMLOps.setXmlNode(xmlData, "ClientType", instance.CurrentUnitInfo.TypeOfClient.ToString());
             XMLOps.setXmlNode(xmlData, "TPF", instance.TimePerFrame.ToString());
             XMLOps.setXmlNode(xmlData, "PPD", String.Format("{0:" + _prefs.PpdFormatString + "}", instance.PPD));
             XMLOps.setXmlNode(xmlData, "UPD", String.Format("{0:0.00}", instance.UPD));
-            XMLOps.setXmlNode(xmlData, "MHz", instance.ClientProcessorMegahertz.ToString());
-            XMLOps.setXmlNode(xmlData, "PPDMHz", String.Format("{0:0.000}", instance.PPD / instance.ClientProcessorMegahertz));
+            XMLOps.setXmlNode(xmlData, "MHz", instance.Settings.ClientProcessorMegahertz.ToString());
+            XMLOps.setXmlNode(xmlData, "PPDMHz", String.Format("{0:0.000}", instance.PPD / instance.Settings.ClientProcessorMegahertz));
             XMLOps.setXmlNode(xmlData, "ETA", instance.ETA.ToString());
             XMLOps.setXmlNode(xmlData, "Core", instance.CurrentUnitInfo.Core);
             XMLOps.setXmlNode(xmlData, "CoreVersion", instance.CurrentUnitInfo.CoreVersion);
