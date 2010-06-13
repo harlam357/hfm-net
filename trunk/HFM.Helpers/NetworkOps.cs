@@ -512,6 +512,38 @@ namespace HFM.Helpers
          }
       }
 
+      /// <summary>
+      /// Upload XML Files.
+      /// </summary>
+      /// <param name="server">Server Name</param>
+      /// <param name="ftpPath">Path from FTP Server Root</param>
+      /// <param name="username">FTP Server Username</param>
+      /// <param name="password">FTP Server Password</param>
+      /// <param name="xmlFilePaths">XML File Paths</param>
+      /// <param name="prefs">Preferences Interface</param>
+      public void FtpXmlUpload(string server, string ftpPath, string username, string password, ICollection<string> xmlFilePaths, IPreferenceSet prefs)
+      {
+         // Time FTP Upload Conversation - Issue 52
+         DateTime start = HfmTrace.ExecStart;
+
+         try
+         {
+            // Get the FTP Type
+            FtpType ftpMode = prefs.GetPreference<FtpType>(Preference.WebGenFtpMode);
+
+            // Upload each XML File
+            foreach (string filePath in xmlFilePaths)
+            {
+               FtpUploadHelper(server, ftpPath, filePath, username, password, ftpMode);
+            }
+         }
+         finally
+         {
+            // Time FTP Upload Conversation - Issue 52
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, start);
+         }
+      }
+
       private static void SetFtpMode(IFtpWebOperationRequest Request, FtpType ftpMode)
       {
          Debug.Assert(Request != null);

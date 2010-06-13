@@ -553,32 +553,41 @@ namespace HFM.Instances
       /// <summary>
       /// Edit the ClientInstance Name and Path
       /// </summary>
-      /// <param name="previousName">Previous Client Instance Name</param>
-      /// <param name="previousPath">Previous Client Instance Path</param>
       /// <param name="settings">Client Instance Settings</param>
-      public void Edit(string previousName, string previousPath, IClientInstanceSettings settings)
+      public void Edit(IClientInstanceSettings settings)
       {
-         if (ContainsName(settings.InstanceName))
-         {
-            throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
-               "Client Name '{0}' already exists.", settings.InstanceName));
-         }
-      
-         ClientInstance instance = SelectedInstance;
-         instance.Settings.LoadSettings(settings);
-      
          // if the host key changed
-         if (previousName != instance.InstanceName)
+         if (SelectedInstance.InstanceName != settings.InstanceName)
          {
-            UpdateDisplayInstanceName(previousName, instance.InstanceName);
+            // check for a duplicate name
+            if (ContainsName(settings.InstanceName))
+            {
+               throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
+                  "Client Name '{0}' already exists.", settings.InstanceName));
+            }
+         }
+
+         // now get a handle on the Selected Instance and its Name and Path
+         var instance = SelectedInstance;
+         var previousName = SelectedInstance.Settings.InstanceName;
+         var previousPath = SelectedInstance.Settings.Path;
+         // load the new settings
+         instance.Settings.LoadSettings(settings);
+         // Instance Name changed but isn't an already existing key
+         if (previousName != instance.Settings.InstanceName)
+         {
+            // update InstanceCollection
+            UpdateDisplayInstanceName(SelectedInstance.InstanceName, instance.InstanceName);
             Remove(previousName, false);
             Add(instance, false);
 
+            // update the Names in the BenchmarkContainer
             _benchmarkContainer.UpdateInstanceName(new BenchmarkClient(previousName, instance.Path), instance.InstanceName);
          }
-         // if the path changed, update the paths in the benchmark collection
+         // the path changed
          if (StringOps.PathsEqual(previousPath, instance.Path) == false)
          {
+            // update the Paths in the BenchmarkContainer
             _benchmarkContainer.UpdateInstancePath(new BenchmarkClient(instance.InstanceName, previousPath), instance.Path);
          }
          
@@ -686,7 +695,7 @@ namespace HFM.Instances
          Debug.Assert(_Prefs.GetPreference<bool>(Preference.GenerateWeb));
 
          // lazy initialize
-         IMarkupGenerator markupGenerator = InstanceProvider.GetInstance<IMarkupGenerator>();
+         var markupGenerator = InstanceProvider.GetInstance<IMarkupGenerator>();
 
          try
          {
@@ -697,12 +706,23 @@ namespace HFM.Instances
             else
             {
                HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Starting Web Generation...");
-               
+
+               var uploadHtml = _Prefs.GetPreference<bool>(Preference.UploadHtml);
+               var uploadXml = _Prefs.GetPreference<bool>(Preference.UploadXml);
                DateTime start = HfmTrace.ExecStart;
                ICollection<IClientInstance> instances = GetCurrentInstanceArray();
                instances = GetDisplaySortedInstanceCollection(instances);
-               markupGenerator.GenerateHtml(instances);
-               DeployWebsite(markupGenerator.HtmlFilePaths, instances);
+               if (uploadHtml)
+               {
+                  markupGenerator.GenerateHtml(instances);
+               }
+               else if (uploadXml)
+               {
+                  markupGenerator.GenerateXml(instances);  
+               }
+
+               DeployWebsite(markupGenerator.HtmlFilePaths, markupGenerator.XmlFilePaths, instances);
+
                HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format(CultureInfo.CurrentCulture, 
                   "Total Web Generation Execution Time: {0}", HfmTrace.GetExecTime(start)));
             }
@@ -731,10 +751,15 @@ namespace HFM.Instances
          return sortedCollection.AsReadOnly();
       }
       
-      private void DeployWebsite(ICollection<string> htmlFilePaths, ICollection<IClientInstance> instances)
+      private void DeployWebsite(ICollection<string> htmlFilePaths, ICollection<string> xmlFilePaths,
+                                 ICollection<IClientInstance> instances)
       {
+         Debug.Assert(_Prefs.GetPreference<bool>(Preference.GenerateWeb));
+      
+         var uploadHtml = _Prefs.GetPreference<bool>(Preference.UploadHtml);
+         var uploadXml = _Prefs.GetPreference<bool>(Preference.UploadXml);
+      
          Match match = StringOps.MatchFtpWithUserPassUrl(_Prefs.GetPreference<string>(Preference.WebRoot));
-
          if (match.Success)
          {
             string server = match.Result("${domain}");
@@ -743,12 +768,20 @@ namespace HFM.Instances
             string password = match.Result("${password}");
 
             if (_networkOps == null) _networkOps = new NetworkOps();
-            _networkOps.FtpWebUpload(server, ftpPath, username, password, htmlFilePaths, instances, _Prefs);
+            
+            if (uploadHtml)
+            {
+               _networkOps.FtpWebUpload(server, ftpPath, username, password, htmlFilePaths, instances, _Prefs);
+            }
+            if (uploadXml)
+            {
+               _networkOps.FtpXmlUpload(server, ftpPath, username, password, xmlFilePaths, _Prefs);
+            }
          }
          else
          {
-            string webRoot = _Prefs.GetPreference<string>(Preference.WebRoot);
-            string cssFile = _Prefs.GetPreference<string>(Preference.CssFile);
+            var webRoot = _Prefs.GetPreference<string>(Preference.WebRoot);
+            var cssFile = _Prefs.GetPreference<string>(Preference.CssFile);
 
             // Create the web folder (just in case)
             if (Directory.Exists(webRoot) == false)
@@ -756,27 +789,37 @@ namespace HFM.Instances
                Directory.CreateDirectory(webRoot);
             }
 
-            // Copy the CSS file to the output directory
-            string cssFilePath = Path.Combine(Path.Combine(_Prefs.ApplicationPath, Constants.CssFolderName), cssFile);
-            if (File.Exists(cssFilePath))
+            if (uploadHtml)
             {
-               File.Copy(cssFilePath, Path.Combine(webRoot, cssFile), true);
-            }
-
-            foreach (string filePath in htmlFilePaths)
-            {
-               File.Copy(filePath, Path.Combine(webRoot, Path.GetFileName(filePath)), true);
-            }
-
-            if (_Prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog))
-            {
-               foreach (ClientInstance instance in instances)
+               // Copy the CSS file to the output directory
+               string cssFilePath = Path.Combine(Path.Combine(_Prefs.ApplicationPath, Constants.CssFolderName), cssFile);
+               if (File.Exists(cssFilePath))
                {
-                  string cachedFahlogPath = Path.Combine(_Prefs.CacheDirectory, instance.CachedFAHLogName);
-                  if (File.Exists(cachedFahlogPath))
+                  File.Copy(cssFilePath, Path.Combine(webRoot, cssFile), true);
+               }
+
+               foreach (string filePath in htmlFilePaths)
+               {
+                  File.Copy(filePath, Path.Combine(webRoot, Path.GetFileName(filePath)), true);
+               }
+
+               if (_Prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog))
+               {
+                  foreach (ClientInstance instance in instances)
                   {
-                     File.Copy(cachedFahlogPath, Path.Combine(webRoot, instance.CachedFAHLogName), true);
+                     string cachedFahlogPath = Path.Combine(_Prefs.CacheDirectory, instance.CachedFAHLogName);
+                     if (File.Exists(cachedFahlogPath))
+                     {
+                        File.Copy(cachedFahlogPath, Path.Combine(webRoot, instance.CachedFAHLogName), true);
+                     }
                   }
+               }
+            }
+            if (uploadXml)
+            {
+               foreach (string filePath in xmlFilePaths)
+               {
+                  File.Copy(filePath, Path.Combine(webRoot, Path.GetFileName(filePath)), true);
                }
             }
          }

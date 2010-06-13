@@ -192,6 +192,8 @@ namespace HFM.Framework
       WebRoot,
       WebGenCopyFAHlog,
       WebGenFtpMode,
+      UploadHtml,
+      UploadXml,
       CssFile,
       WebOverview,
       WebMobileOverview,

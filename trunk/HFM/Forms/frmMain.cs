@@ -1329,15 +1329,12 @@ namespace HFM.Forms
          // Check for SelectedInstance, and get out if not found
          if (_clientInstances.SelectedInstance == null) return;
 
-         string previousName = _clientInstances.SelectedInstance.InstanceName;
-         string previousPath = _clientInstances.SelectedInstance.Path;
-
          var editHost = new frmHost(_clientInstances.SelectedInstance.Settings.Clone());
          if (editHost.ShowDialog().Equals(DialogResult.OK))
          {
             try
             {
-               _clientInstances.Edit(previousName, previousPath, editHost.Settings);
+               _clientInstances.Edit(editHost.Settings);
             }
             catch (InvalidOperationException ex)
             {

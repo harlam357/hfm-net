@@ -878,5 +878,29 @@ namespace HFM.Preferences.Properties {
                 this["MaintainSelectedClient"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool UploadHtml {
+            get {
+                return ((bool)(this["UploadHtml"]));
+            }
+            set {
+                this["UploadHtml"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UploadXml {
+            get {
+                return ((bool)(this["UploadXml"]));
+            }
+            set {
+                this["UploadXml"] = value;
+            }
+        }
     }
 }

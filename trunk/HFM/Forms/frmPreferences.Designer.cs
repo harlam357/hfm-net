@@ -69,6 +69,8 @@ namespace HFM.Forms
          this.chkScheduled = new HFM.Classes.CheckBoxWrapper();
          this.chkSynchronous = new HFM.Classes.CheckBoxWrapper();
          this.grpHTMLOutput = new HFM.Classes.GroupBoxWrapper();
+         this.chkXml = new HFM.Classes.CheckBoxWrapper();
+         this.chkHtml = new HFM.Classes.CheckBoxWrapper();
          this.btnTestConnection = new HFM.Classes.ButtonWrapper();
          this.pnlFtpMode = new System.Windows.Forms.Panel();
          this.lblFtpMode = new HFM.Classes.LabelWrapper();
@@ -245,7 +247,7 @@ namespace HFM.Forms
          // 
          // tabSchdTasks
          // 
-         this.tabSchdTasks.BackColor = System.Drawing.SystemColors.Control;
+         this.tabSchdTasks.BackColor = System.Drawing.Color.Transparent;
          this.tabSchdTasks.Controls.Add(this.grpUpdateData);
          this.tabSchdTasks.Controls.Add(this.grpHTMLOutput);
          this.tabSchdTasks.Location = new System.Drawing.Point(4, 22);
@@ -367,6 +369,8 @@ namespace HFM.Forms
          // 
          // grpHTMLOutput
          // 
+         this.grpHTMLOutput.Controls.Add(this.chkXml);
+         this.grpHTMLOutput.Controls.Add(this.chkHtml);
          this.grpHTMLOutput.Controls.Add(this.btnTestConnection);
          this.grpHTMLOutput.Controls.Add(this.pnlFtpMode);
          this.grpHTMLOutput.Controls.Add(this.chkFAHlog);
@@ -380,10 +384,32 @@ namespace HFM.Forms
          this.grpHTMLOutput.Controls.Add(this.chkWebSiteGenerator);
          this.grpHTMLOutput.Location = new System.Drawing.Point(6, 120);
          this.grpHTMLOutput.Name = "grpHTMLOutput";
-         this.grpHTMLOutput.Size = new System.Drawing.Size(489, 113);
+         this.grpHTMLOutput.Size = new System.Drawing.Size(489, 173);
          this.grpHTMLOutput.TabIndex = 0;
          this.grpHTMLOutput.TabStop = false;
          this.grpHTMLOutput.Text = "Web Generation";
+         // 
+         // chkXml
+         // 
+         this.chkXml.AutoSize = true;
+         this.chkXml.Enabled = false;
+         this.chkXml.Location = new System.Drawing.Point(135, 75);
+         this.chkXml.Name = "chkXml";
+         this.chkXml.Size = new System.Drawing.Size(85, 17);
+         this.chkXml.TabIndex = 15;
+         this.chkXml.Text = "Upload XML";
+         this.chkXml.UseVisualStyleBackColor = true;
+         // 
+         // chkHtml
+         // 
+         this.chkHtml.AutoSize = true;
+         this.chkHtml.Enabled = false;
+         this.chkHtml.Location = new System.Drawing.Point(10, 75);
+         this.chkHtml.Name = "chkHtml";
+         this.chkHtml.Size = new System.Drawing.Size(93, 17);
+         this.chkHtml.TabIndex = 14;
+         this.chkHtml.Text = "Upload HTML";
+         this.chkHtml.UseVisualStyleBackColor = true;
          // 
          // btnTestConnection
          // 
@@ -442,7 +468,7 @@ namespace HFM.Forms
          // 
          this.chkFAHlog.AutoSize = true;
          this.chkFAHlog.Enabled = false;
-         this.chkFAHlog.Location = new System.Drawing.Point(10, 76);
+         this.chkFAHlog.Location = new System.Drawing.Point(10, 104);
          this.chkFAHlog.Name = "chkFAHlog";
          this.chkFAHlog.Size = new System.Drawing.Size(172, 17);
          this.chkFAHlog.TabIndex = 9;
@@ -605,6 +631,7 @@ namespace HFM.Forms
          // 
          // txtFileExplorer
          // 
+         this.txtFileExplorer.BackColor = System.Drawing.SystemColors.Window;
          this.txtFileExplorer.DoubleBuffered = true;
          this.txtFileExplorer.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtFileExplorer.ErrorState = false;
@@ -651,6 +678,7 @@ namespace HFM.Forms
          // 
          // txtLogFileViewer
          // 
+         this.txtLogFileViewer.BackColor = System.Drawing.SystemColors.Window;
          this.txtLogFileViewer.DoubleBuffered = true;
          this.txtLogFileViewer.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtLogFileViewer.ErrorState = false;
@@ -956,7 +984,7 @@ namespace HFM.Forms
          this.grpReportSelections.Enabled = false;
          this.grpReportSelections.Location = new System.Drawing.Point(6, 179);
          this.grpReportSelections.Name = "grpReportSelections";
-         this.grpReportSelections.Size = new System.Drawing.Size(489, 115);
+         this.grpReportSelections.Size = new System.Drawing.Size(489, 114);
          this.grpReportSelections.TabIndex = 1;
          this.grpReportSelections.TabStop = false;
          this.grpReportSelections.Text = "Report Selections";
@@ -1208,7 +1236,7 @@ namespace HFM.Forms
          // 
          // tabWeb
          // 
-         this.tabWeb.BackColor = System.Drawing.SystemColors.Control;
+         this.tabWeb.BackColor = System.Drawing.Color.Transparent;
          this.tabWeb.Controls.Add(this.grpProjectDownload);
          this.tabWeb.Controls.Add(this.grpWebStats);
          this.tabWeb.Controls.Add(this.grpWebProxy);
@@ -1233,6 +1261,7 @@ namespace HFM.Forms
          // 
          // txtProjectDownloadUrl
          // 
+         this.txtProjectDownloadUrl.BackColor = System.Drawing.SystemColors.Window;
          this.txtProjectDownloadUrl.DoubleBuffered = true;
          this.txtProjectDownloadUrl.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtProjectDownloadUrl.ErrorState = false;
@@ -1305,6 +1334,7 @@ namespace HFM.Forms
          // 
          // txtEOCUserID
          // 
+         this.txtEOCUserID.BackColor = System.Drawing.SystemColors.Window;
          this.txtEOCUserID.DoubleBuffered = true;
          this.txtEOCUserID.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtEOCUserID.ErrorState = false;
@@ -1322,6 +1352,7 @@ namespace HFM.Forms
          // 
          // txtStanfordTeamID
          // 
+         this.txtStanfordTeamID.BackColor = System.Drawing.SystemColors.Window;
          this.txtStanfordTeamID.DoubleBuffered = true;
          this.txtStanfordTeamID.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtStanfordTeamID.ErrorState = false;
@@ -1359,6 +1390,7 @@ namespace HFM.Forms
          // 
          // txtStanfordUserID
          // 
+         this.txtStanfordUserID.BackColor = System.Drawing.SystemColors.Window;
          this.txtStanfordUserID.DoubleBuffered = true;
          this.txtStanfordUserID.ErrorBackColor = System.Drawing.Color.Yellow;
          this.txtStanfordUserID.ErrorState = false;
@@ -1397,7 +1429,7 @@ namespace HFM.Forms
          this.grpWebProxy.Controls.Add(this.lbl3Proxy);
          this.grpWebProxy.Location = new System.Drawing.Point(6, 176);
          this.grpWebProxy.Name = "grpWebProxy";
-         this.grpWebProxy.Size = new System.Drawing.Size(489, 122);
+         this.grpWebProxy.Size = new System.Drawing.Size(489, 117);
          this.grpWebProxy.TabIndex = 2;
          this.grpWebProxy.TabStop = false;
          this.grpWebProxy.Text = "Web Proxy Settings";
@@ -1405,7 +1437,7 @@ namespace HFM.Forms
          // chkUseProxy
          // 
          this.chkUseProxy.AutoSize = true;
-         this.chkUseProxy.Location = new System.Drawing.Point(6, 19);
+         this.chkUseProxy.Location = new System.Drawing.Point(6, 17);
          this.chkUseProxy.Name = "chkUseProxy";
          this.chkUseProxy.Size = new System.Drawing.Size(117, 17);
          this.chkUseProxy.TabIndex = 0;
@@ -1417,7 +1449,7 @@ namespace HFM.Forms
          // 
          this.chkUseProxyAuth.AutoSize = true;
          this.chkUseProxyAuth.Enabled = false;
-         this.chkUseProxyAuth.Location = new System.Drawing.Point(25, 68);
+         this.chkUseProxyAuth.Location = new System.Drawing.Point(25, 66);
          this.chkUseProxyAuth.Name = "chkUseProxyAuth";
          this.chkUseProxyAuth.Size = new System.Drawing.Size(205, 17);
          this.chkUseProxyAuth.TabIndex = 5;
@@ -1436,7 +1468,7 @@ namespace HFM.Forms
          this.txtProxyPass.ErrorToolTipDuration = 5000;
          this.txtProxyPass.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
          this.txtProxyPass.ErrorToolTipText = "";
-         this.txtProxyPass.Location = new System.Drawing.Point(327, 91);
+         this.txtProxyPass.Location = new System.Drawing.Point(327, 89);
          this.txtProxyPass.Name = "txtProxyPass";
          this.txtProxyPass.ReadOnly = true;
          this.txtProxyPass.Size = new System.Drawing.Size(155, 20);
@@ -1456,7 +1488,7 @@ namespace HFM.Forms
          this.txtProxyUser.ErrorToolTipDuration = 5000;
          this.txtProxyUser.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
          this.txtProxyUser.ErrorToolTipText = "";
-         this.txtProxyUser.Location = new System.Drawing.Point(104, 91);
+         this.txtProxyUser.Location = new System.Drawing.Point(104, 89);
          this.txtProxyUser.Name = "txtProxyUser";
          this.txtProxyUser.ReadOnly = true;
          this.txtProxyUser.Size = new System.Drawing.Size(155, 20);
@@ -1475,7 +1507,7 @@ namespace HFM.Forms
          this.txtProxyPort.ErrorToolTipDuration = 5000;
          this.txtProxyPort.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
          this.txtProxyPort.ErrorToolTipText = "";
-         this.txtProxyPort.Location = new System.Drawing.Point(389, 42);
+         this.txtProxyPort.Location = new System.Drawing.Point(389, 40);
          this.txtProxyPort.MaxLength = 5;
          this.txtProxyPort.Name = "txtProxyPort";
          this.txtProxyPort.ReadOnly = true;
@@ -1488,7 +1520,7 @@ namespace HFM.Forms
          // lbl3ProxyPass
          // 
          this.lbl3ProxyPass.AutoSize = true;
-         this.lbl3ProxyPass.Location = new System.Drawing.Point(265, 94);
+         this.lbl3ProxyPass.Location = new System.Drawing.Point(265, 92);
          this.lbl3ProxyPass.Name = "lbl3ProxyPass";
          this.lbl3ProxyPass.Size = new System.Drawing.Size(56, 13);
          this.lbl3ProxyPass.TabIndex = 8;
@@ -1505,7 +1537,7 @@ namespace HFM.Forms
          this.txtProxyServer.ErrorToolTipDuration = 5000;
          this.txtProxyServer.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
          this.txtProxyServer.ErrorToolTipText = "";
-         this.txtProxyServer.Location = new System.Drawing.Point(98, 42);
+         this.txtProxyServer.Location = new System.Drawing.Point(98, 40);
          this.txtProxyServer.Name = "txtProxyServer";
          this.txtProxyServer.ReadOnly = true;
          this.txtProxyServer.Size = new System.Drawing.Size(250, 20);
@@ -1516,7 +1548,7 @@ namespace HFM.Forms
          // lbl3ProxyUser
          // 
          this.lbl3ProxyUser.AutoSize = true;
-         this.lbl3ProxyUser.Location = new System.Drawing.Point(40, 94);
+         this.lbl3ProxyUser.Location = new System.Drawing.Point(40, 92);
          this.lbl3ProxyUser.Name = "lbl3ProxyUser";
          this.lbl3ProxyUser.Size = new System.Drawing.Size(58, 13);
          this.lbl3ProxyUser.TabIndex = 6;
@@ -1525,7 +1557,7 @@ namespace HFM.Forms
          // lbl3Port
          // 
          this.lbl3Port.AutoSize = true;
-         this.lbl3Port.Location = new System.Drawing.Point(354, 45);
+         this.lbl3Port.Location = new System.Drawing.Point(354, 43);
          this.lbl3Port.Name = "lbl3Port";
          this.lbl3Port.Size = new System.Drawing.Size(29, 13);
          this.lbl3Port.TabIndex = 3;
@@ -1534,7 +1566,7 @@ namespace HFM.Forms
          // lbl3Proxy
          // 
          this.lbl3Proxy.AutoSize = true;
-         this.lbl3Proxy.Location = new System.Drawing.Point(22, 45);
+         this.lbl3Proxy.Location = new System.Drawing.Point(22, 43);
          this.lbl3Proxy.Name = "lbl3Proxy";
          this.lbl3Proxy.Size = new System.Drawing.Size(70, 13);
          this.lbl3Proxy.TabIndex = 1;
@@ -1542,7 +1574,7 @@ namespace HFM.Forms
          // 
          // tabVisStyles
          // 
-         this.tabVisStyles.BackColor = System.Drawing.SystemColors.Control;
+         this.tabVisStyles.BackColor = System.Drawing.Color.Transparent;
          this.tabVisStyles.Controls.Add(this.btnMobileSummaryBrowse);
          this.tabVisStyles.Controls.Add(this.txtMobileSummary);
          this.tabVisStyles.Controls.Add(this.lblMobileSummary);
@@ -1993,5 +2025,7 @@ namespace HFM.Forms
       private HFM.Classes.LabelWrapper label3;
       private ValidatingTextBox txtLogFileViewer;
       private HFM.Classes.CheckBoxWrapper chkMaintainSelected;
+      private HFM.Classes.CheckBoxWrapper chkHtml;
+      private HFM.Classes.CheckBoxWrapper chkXml;
    }
 }

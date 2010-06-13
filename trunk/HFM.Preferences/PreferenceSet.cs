@@ -234,6 +234,8 @@ namespace HFM.Preferences
          _Preferences.Add(Preference.WebRoot, new Metadata<string>());
          _Preferences.Add(Preference.WebGenCopyFAHlog, new Metadata<bool>());
          _Preferences.Add(Preference.WebGenFtpMode, new Metadata<FtpType>());
+         _Preferences.Add(Preference.UploadHtml, new Metadata<bool>());
+         _Preferences.Add(Preference.UploadXml, new Metadata<bool>());
          _Preferences.Add(Preference.CssFile, new Metadata<string>());
          _Preferences.Add(Preference.WebOverview, new Metadata<string>());
          _Preferences.Add(Preference.WebMobileOverview, new Metadata<string>());
@@ -338,6 +340,8 @@ namespace HFM.Preferences
          SetPreference(Preference.WebRoot, DecryptWebRoot(Settings.Default.WebRoot, symmetricProvider, _iv, _symmetricKey));
          SetPreference(Preference.WebGenCopyFAHlog, Settings.Default.WebGenCopyFAHlog);
          SetPreference(Preference.WebGenFtpMode, GetFtpType());
+         SetPreference(Preference.UploadHtml, Settings.Default.UploadHtml);
+         SetPreference(Preference.UploadXml, Settings.Default.UploadXml);
          SetPreference(Preference.CssFile, Settings.Default.CSSFile);
          SetPreference(Preference.WebOverview, Settings.Default.WebOverview);
          SetPreference(Preference.WebMobileOverview, Settings.Default.WebMobileOverview);
@@ -693,6 +697,8 @@ namespace HFM.Preferences
             Settings.Default.WebRoot = EncryptWebRoot(GetPreference<string>(Preference.WebRoot), symmetricProvider, _iv, _symmetricKey);
             Settings.Default.WebGenCopyFAHlog = GetPreference<bool>(Preference.WebGenCopyFAHlog);
             Settings.Default.WebGenFtpMode = GetPreference<FtpType>(Preference.WebGenFtpMode).ToString();
+            Settings.Default.UploadHtml = GetPreference<bool>(Preference.UploadHtml);
+            Settings.Default.UploadXml = GetPreference<bool>(Preference.UploadXml);
             Settings.Default.CSSFile = GetPreference<string>(Preference.CssFile);
             Settings.Default.WebOverview = GetPreference<string>(Preference.WebOverview);
             Settings.Default.WebMobileOverview = GetPreference<string>(Preference.WebMobileOverview);

@@ -135,6 +135,8 @@ namespace HFM.Forms
          radioFullRefresh.Checked = _Prefs.GetPreference<bool>(Preference.WebGenAfterRefresh);
 
          txtWebSiteBase.Text = _Prefs.GetPreference<string>(Preference.WebRoot);
+         chkHtml.Checked = _Prefs.GetPreference<bool>(Preference.UploadHtml);
+         chkXml.Checked = _Prefs.GetPreference<bool>(Preference.UploadXml);
          chkFAHlog.Checked = _Prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog);
          switch (_Prefs.GetPreference<FtpType>(Preference.WebGenFtpMode))
          {
@@ -355,6 +357,8 @@ namespace HFM.Forms
          txtWebSiteBase.Enabled = value;
          btnBrowseWebFolder.Enabled = value;
 
+         chkHtml.Enabled = value;
+         chkXml.Enabled = value;
          chkFAHlog.Enabled = value;
          
          #region Enable FTP Mode Controls
@@ -892,6 +896,13 @@ namespace HFM.Forms
          if (CheckForScheduledTasksTabErrors())
          {
             tabControl1.SelectedTab = tabSchdTasks;
+            // Don't like how this is done, making the same check in CheckForScheduledTasksTabErrors()
+            if (chkWebSiteGenerator.Checked &&
+                chkHtml.Checked == false &&
+                chkXml.Checked == false)
+            {
+               MessageBox.Show("You must select either HTML or XML output.", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }  
             return true;
          }
 
@@ -916,6 +927,14 @@ namespace HFM.Forms
          if (txtCollectMinutes.ErrorState ||
              txtWebGenMinutes.ErrorState ||
              txtWebSiteBase.ErrorState)
+         {
+            return true;
+         }
+         
+         // Don't like how this is done, making the same check in CheckForErrorConditions()
+         if (chkWebSiteGenerator.Checked &&
+             chkHtml.Checked == false &&
+             chkXml.Checked == false)
          {
             return true;
          }
@@ -977,6 +996,8 @@ namespace HFM.Forms
          _Prefs.SetPreference(Preference.WebGenAfterRefresh, radioFullRefresh.Checked);
 
          _Prefs.SetPreference(Preference.WebRoot, txtWebSiteBase.Text);
+         _Prefs.SetPreference(Preference.UploadHtml, chkHtml.Checked);
+         _Prefs.SetPreference(Preference.UploadXml, chkXml.Checked);
          _Prefs.SetPreference(Preference.WebGenCopyFAHlog, chkFAHlog.Checked);
          _Prefs.SetPreference(Preference.WebGenFtpMode, GetFtpTypeFromControls());
          
