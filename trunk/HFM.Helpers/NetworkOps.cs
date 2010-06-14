@@ -68,13 +68,29 @@ namespace HFM.Helpers
       /// <exception cref="ArgumentException">Throws if Server or FtpPath, or LocalFilePath is Null or Empty.</exception>
       public void FtpUploadHelper(string Server, string FtpPath, string LocalFilePath, string Username, string Password, FtpType ftpMode)
       {
+         FtpUploadHelper(Server, FtpPath, LocalFilePath, -1, Username, Password, ftpMode);
+      }
+
+      /// <summary>
+      /// Upload a File via Ftp.
+      /// </summary>
+      /// <param name="Server">Server Name or IP.</param>
+      /// <param name="FtpPath">Path to upload to on remote Ftp server.</param>
+      /// <param name="LocalFilePath">Path to local file.</param>
+      /// <param name="maximumLength"></param>
+      /// <param name="Username">Ftp Login Username.</param>
+      /// <param name="Password">Ftp Login Password.</param>
+      /// <param name="ftpMode">Ftp Transfer Mode.</param>
+      /// <exception cref="ArgumentException">Throws if Server or FtpPath, or LocalFilePath is Null or Empty.</exception>
+      public void FtpUploadHelper(string Server, string FtpPath, string LocalFilePath, int maximumLength, string Username, string Password, FtpType ftpMode)
+      {
          if (String.IsNullOrEmpty(Server) || String.IsNullOrEmpty(FtpPath) || String.IsNullOrEmpty(LocalFilePath))
          {
             throw new ArgumentException("Arguments 'Server', 'FtpPath', and 'LocalFilePath' cannot be a null or empty string.");
          }
-         
+
          FtpUploadHelper(new Uri(String.Format(CultureInfo.InvariantCulture, "ftp://{0}{1}{2}",
-            Server, FtpPath, Path.GetFileName(LocalFilePath))), LocalFilePath, Username, Password, ftpMode);
+            Server, FtpPath, Path.GetFileName(LocalFilePath))), LocalFilePath, maximumLength, Username, Password, ftpMode);
       }
 
       /// <summary>
@@ -88,9 +104,24 @@ namespace HFM.Helpers
       /// <exception cref="ArgumentNullException">Throws if ResourceUri is Null.</exception>
       public void FtpUploadHelper(Uri ResourceUri, string LocalFilePath, string Username, string Password, FtpType ftpMode)
       {
+         FtpUploadHelper(ResourceUri, LocalFilePath, -1, Username, Password, ftpMode);
+      }
+
+      /// <summary>
+      /// Upload a File via Ftp.
+      /// </summary>
+      /// <param name="ResourceUri">Web Resource Uri.</param>
+      /// <param name="LocalFilePath">Path to local file.</param>
+      /// <param name="maximumLength"></param>
+      /// <param name="Username">Ftp Login Username.</param>
+      /// <param name="Password">Ftp Login Password.</param>
+      /// <param name="ftpMode">Ftp Transfer Mode.</param>
+      /// <exception cref="ArgumentNullException">Throws if ResourceUri is Null.</exception>
+      public void FtpUploadHelper(Uri ResourceUri, string LocalFilePath, int maximumLength, string Username, string Password, FtpType ftpMode)
+      {
          if (ResourceUri == null) throw new ArgumentNullException("ResourceUri", "Argument 'ResourceUri' cannot be null.");
-      
-         FtpUploadHelper((FtpWebOperation)WebOperation.Create(ResourceUri), LocalFilePath, Username, Password, ftpMode);
+
+         FtpUploadHelper((FtpWebOperation)WebOperation.Create(ResourceUri), LocalFilePath, maximumLength, Username, Password, ftpMode);
       }
 
       /// <summary>
@@ -105,6 +136,22 @@ namespace HFM.Helpers
       /// <exception cref="ArgumentException">Throws if LocalFilePath is Null or Empty.</exception>
       public void FtpUploadHelper(IFtpWebOperation ftpWebOperation, string LocalFilePath, string Username, string Password, FtpType ftpMode)
       {
+         FtpUploadHelper(ftpWebOperation, LocalFilePath, -1, Username, Password, ftpMode);
+      }
+      
+      /// <summary>
+      /// Upload a File via Ftp.
+      /// </summary>
+      /// <param name="ftpWebOperation">Web Operation.</param>
+      /// <param name="LocalFilePath">Path to local file.</param>
+      /// <param name="maximumLength"></param>
+      /// <param name="Username">Ftp Login Username.</param>
+      /// <param name="Password">Ftp Login Password.</param>
+      /// <param name="ftpMode">Ftp Transfer Mode.</param>
+      /// <exception cref="ArgumentNullException">Throws if ftpWebOperation is Null.</exception>
+      /// <exception cref="ArgumentException">Throws if LocalFilePath is Null or Empty.</exception>
+      public void FtpUploadHelper(IFtpWebOperation ftpWebOperation, string LocalFilePath, int maximumLength, string Username, string Password, FtpType ftpMode)
+      {
          if (ftpWebOperation == null) throw new ArgumentNullException("ftpWebOperation", "Argument 'ftpWebOperation' cannot be null.");
 
          if (String.IsNullOrEmpty(LocalFilePath))
@@ -118,7 +165,7 @@ namespace HFM.Helpers
          SetFtpMode(_FtpWebOperation.FtpOperationRequest, ftpMode);
 
          SetNetworkCredentials(_FtpWebOperation.OperationRequest.Request, Username, Password);
-         _FtpWebOperation.Upload(LocalFilePath);
+         _FtpWebOperation.Upload(LocalFilePath, maximumLength);
       }
 
       /// <summary>
@@ -494,13 +541,16 @@ namespace HFM.Helpers
 
             if (prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog))
             {
+               int maximumLength = prefs.GetPreference<bool>(Preference.WebGenLimitLogSize)
+                                    ? prefs.GetPreference<int>(Preference.WebGenLimitLogSizeLength) * 1024
+                                    : -1;
                // Upload the FAHlog.txt File for each Client Instance
                foreach (IClientInstance instance in instances)
                {
                   string cachedFahlogPath = Path.Combine(prefs.CacheDirectory, instance.CachedFAHLogName);
                   if (File.Exists(cachedFahlogPath))
                   {
-                     FtpUploadHelper(server, ftpPath, cachedFahlogPath, username, password, ftpMode);
+                     FtpUploadHelper(server, ftpPath, cachedFahlogPath, maximumLength, username, password, ftpMode);
                   }
                }
             }

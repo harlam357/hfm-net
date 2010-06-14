@@ -135,8 +135,8 @@ namespace HFM.Forms
          radioFullRefresh.Checked = _Prefs.GetPreference<bool>(Preference.WebGenAfterRefresh);
 
          txtWebSiteBase.Text = _Prefs.GetPreference<string>(Preference.WebRoot);
-         chkHtml.Checked = _Prefs.GetPreference<bool>(Preference.UploadHtml);
-         chkXml.Checked = _Prefs.GetPreference<bool>(Preference.UploadXml);
+         chkHtml.Checked = _Prefs.GetPreference<bool>(Preference.WebGenCopyHtml);
+         chkXml.Checked = _Prefs.GetPreference<bool>(Preference.WebGenCopyXml);
          chkFAHlog.Checked = _Prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog);
          switch (_Prefs.GetPreference<FtpType>(Preference.WebGenFtpMode))
          {
@@ -150,6 +150,8 @@ namespace HFM.Forms
                radioPassive.Checked = true;
                break;
          }
+         chkLimitSize.Checked = _Prefs.GetPreference<bool>(Preference.WebGenLimitLogSize);
+         udLimitSize.Value = _Prefs.GetPreference<int>(Preference.WebGenLimitLogSizeLength);
          
          // Finally, add the CheckBox.Checked Binding
          chkWebSiteGenerator.Checked = _Prefs.GetPreference<bool>(Preference.GenerateWeb);
@@ -372,6 +374,16 @@ namespace HFM.Forms
 
          EnableFtpModeControls(enable);
          #endregion
+
+         //TODO: Stop gap - don't like how this is done.  Duplicate logic from txtWebSiteBase_CustomValidation() below
+         if (chkFAHlog.Enabled && chkFAHlog.Checked)
+         {
+            EnableLogLimitSizeControls(enable);
+         }
+         else
+         {
+            EnableLogLimitSizeControls(false);
+         }
       }
 
       private void radioSchedule_CheckedChanged(object sender, EventArgs e)
@@ -417,11 +429,43 @@ namespace HFM.Forms
          }
 
          EnableFtpModeControls(e.ValidationResult && bIsFtpUrl);
+
+         //TODO: Stop gap - don't like how this is done.  Duplicate logic from SetWebGenerator() above
+         if (chkFAHlog.Checked)
+         {
+            EnableLogLimitSizeControls(e.ValidationResult && bIsFtpUrl);
+         }
+         else
+         {
+            EnableLogLimitSizeControls(false);
+         }
       }
       
       private void EnableFtpModeControls(bool value)
       {
          pnlFtpMode.Enabled = value;
+      }
+
+      private void chkFAHlog_CheckedChanged(object sender, EventArgs e)
+      {
+         bool enable = StringOps.ValidateFtpWithUserPassUrl(txtWebSiteBase.Text) ||
+                       StringOps.ValidateFtpWithUserPassUrl(String.Concat(txtWebSiteBase.Text, "/"));
+
+         //TODO: Stop gap - don't like how this is done.  Duplicate logic from SetWebGenerator() above
+         if (chkFAHlog.Checked)
+         {
+            EnableLogLimitSizeControls(enable);
+         }
+         else
+         {
+            EnableLogLimitSizeControls(false);
+         }                      
+      }
+      
+      private void EnableLogLimitSizeControls(bool value)
+      {
+         chkLimitSize.Enabled = value;
+         udLimitSize.Enabled = value;
       }
 
       private void btnBrowseWebFolder_Click(object sender, EventArgs e)
@@ -996,10 +1040,12 @@ namespace HFM.Forms
          _Prefs.SetPreference(Preference.WebGenAfterRefresh, radioFullRefresh.Checked);
 
          _Prefs.SetPreference(Preference.WebRoot, txtWebSiteBase.Text);
-         _Prefs.SetPreference(Preference.UploadHtml, chkHtml.Checked);
-         _Prefs.SetPreference(Preference.UploadXml, chkXml.Checked);
+         _Prefs.SetPreference(Preference.WebGenCopyHtml, chkHtml.Checked);
+         _Prefs.SetPreference(Preference.WebGenCopyXml, chkXml.Checked);
          _Prefs.SetPreference(Preference.WebGenCopyFAHlog, chkFAHlog.Checked);
          _Prefs.SetPreference(Preference.WebGenFtpMode, GetFtpTypeFromControls());
+         _Prefs.SetPreference(Preference.WebGenLimitLogSize, chkLimitSize.Checked);
+         _Prefs.SetPreference(Preference.WebGenLimitLogSizeLength, (int)udLimitSize.Value);
          
          _Prefs.SetPreference(Preference.GenerateWeb, chkWebSiteGenerator.Checked);
          #endregion

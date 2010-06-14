@@ -707,8 +707,8 @@ namespace HFM.Instances
             {
                HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Starting Web Generation...");
 
-               var uploadHtml = _Prefs.GetPreference<bool>(Preference.UploadHtml);
-               var uploadXml = _Prefs.GetPreference<bool>(Preference.UploadXml);
+               var uploadHtml = _Prefs.GetPreference<bool>(Preference.WebGenCopyHtml);
+               var uploadXml = _Prefs.GetPreference<bool>(Preference.WebGenCopyXml);
                DateTime start = HfmTrace.ExecStart;
                ICollection<IClientInstance> instances = GetCurrentInstanceArray();
                instances = GetDisplaySortedInstanceCollection(instances);
@@ -756,8 +756,8 @@ namespace HFM.Instances
       {
          Debug.Assert(_Prefs.GetPreference<bool>(Preference.GenerateWeb));
       
-         var uploadHtml = _Prefs.GetPreference<bool>(Preference.UploadHtml);
-         var uploadXml = _Prefs.GetPreference<bool>(Preference.UploadXml);
+         var copyHtml = _Prefs.GetPreference<bool>(Preference.WebGenCopyHtml);
+         var copyXml = _Prefs.GetPreference<bool>(Preference.WebGenCopyXml);
       
          Match match = StringOps.MatchFtpWithUserPassUrl(_Prefs.GetPreference<string>(Preference.WebRoot));
          if (match.Success)
@@ -769,11 +769,11 @@ namespace HFM.Instances
 
             if (_networkOps == null) _networkOps = new NetworkOps();
             
-            if (uploadHtml)
+            if (copyHtml)
             {
                _networkOps.FtpWebUpload(server, ftpPath, username, password, htmlFilePaths, instances, _Prefs);
             }
-            if (uploadXml)
+            if (copyXml)
             {
                _networkOps.FtpXmlUpload(server, ftpPath, username, password, xmlFilePaths, _Prefs);
             }
@@ -789,7 +789,7 @@ namespace HFM.Instances
                Directory.CreateDirectory(webRoot);
             }
 
-            if (uploadHtml)
+            if (copyHtml)
             {
                // Copy the CSS file to the output directory
                string cssFilePath = Path.Combine(Path.Combine(_Prefs.ApplicationPath, Constants.CssFolderName), cssFile);
@@ -815,7 +815,7 @@ namespace HFM.Instances
                   }
                }
             }
-            if (uploadXml)
+            if (copyXml)
             {
                foreach (string filePath in xmlFilePaths)
                {

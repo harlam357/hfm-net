@@ -226,11 +226,17 @@
     <Setting Name="MaintainSelectedClient" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="UploadHtml" Type="System.Boolean" Scope="User">
+    <Setting Name="WebGenCopyHtml" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="UploadXml" Type="System.Boolean" Scope="User">
+    <Setting Name="WebGenCopyXml" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="WebGenLimitLogSize" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="WebGenLimitLogSizeLength" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1024</Value>
     </Setting>
   </Settings>
 </SettingsFile>

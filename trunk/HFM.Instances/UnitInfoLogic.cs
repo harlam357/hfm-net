@@ -1014,7 +1014,7 @@ namespace HFM.Instances
             //case "TINKER":
             /*** ProtoMol Only */
             case "PROTOMOL":
-               /*******************/
+            /*******************/
                return ClientType.Standard;
             case "GRO-SMP":
             case "GROCVS":
@@ -1022,6 +1022,7 @@ namespace HFM.Instances
                return ClientType.SMP;
             case "GROGPU2":
             case "GROGPU2-MT":
+            case "OPENMMGPU":
             case "ATI-DEV":
             case "NVIDIA-DEV":
                return ClientType.GPU;

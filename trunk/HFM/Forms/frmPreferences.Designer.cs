@@ -69,6 +69,8 @@ namespace HFM.Forms
          this.chkScheduled = new HFM.Classes.CheckBoxWrapper();
          this.chkSynchronous = new HFM.Classes.CheckBoxWrapper();
          this.grpHTMLOutput = new HFM.Classes.GroupBoxWrapper();
+         this.udLimitSize = new System.Windows.Forms.NumericUpDown();
+         this.chkLimitSize = new HFM.Classes.CheckBoxWrapper();
          this.chkXml = new HFM.Classes.CheckBoxWrapper();
          this.chkHtml = new HFM.Classes.CheckBoxWrapper();
          this.btnTestConnection = new HFM.Classes.ButtonWrapper();
@@ -189,6 +191,7 @@ namespace HFM.Forms
          this.tabSchdTasks.SuspendLayout();
          this.grpUpdateData.SuspendLayout();
          this.grpHTMLOutput.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.udLimitSize)).BeginInit();
          this.pnlFtpMode.SuspendLayout();
          this.tabStartup.SuspendLayout();
          this.grpFileExplorer.SuspendLayout();
@@ -330,7 +333,7 @@ namespace HFM.Forms
          this.txtCollectMinutes.MaxLength = 3;
          this.txtCollectMinutes.Name = "txtCollectMinutes";
          this.txtCollectMinutes.ReadOnly = true;
-         this.txtCollectMinutes.Size = new System.Drawing.Size(42, 20);
+         this.txtCollectMinutes.Size = new System.Drawing.Size(39, 20);
          this.txtCollectMinutes.TabIndex = 4;
          this.txtCollectMinutes.Text = "15";
          this.txtCollectMinutes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -341,7 +344,7 @@ namespace HFM.Forms
          // lbl2SchedExplain
          // 
          this.lbl2SchedExplain.AutoSize = true;
-         this.lbl2SchedExplain.Location = new System.Drawing.Point(368, 22);
+         this.lbl2SchedExplain.Location = new System.Drawing.Point(364, 22);
          this.lbl2SchedExplain.Name = "lbl2SchedExplain";
          this.lbl2SchedExplain.Size = new System.Drawing.Size(44, 13);
          this.lbl2SchedExplain.TabIndex = 5;
@@ -369,6 +372,8 @@ namespace HFM.Forms
          // 
          // grpHTMLOutput
          // 
+         this.grpHTMLOutput.Controls.Add(this.udLimitSize);
+         this.grpHTMLOutput.Controls.Add(this.chkLimitSize);
          this.grpHTMLOutput.Controls.Add(this.chkXml);
          this.grpHTMLOutput.Controls.Add(this.chkHtml);
          this.grpHTMLOutput.Controls.Add(this.btnTestConnection);
@@ -389,15 +394,49 @@ namespace HFM.Forms
          this.grpHTMLOutput.TabStop = false;
          this.grpHTMLOutput.Text = "Web Generation";
          // 
+         // udLimitSize
+         // 
+         this.udLimitSize.Enabled = false;
+         this.udLimitSize.Location = new System.Drawing.Point(346, 103);
+         this.udLimitSize.Maximum = new decimal(new int[] {
+            10240,
+            0,
+            0,
+            0});
+         this.udLimitSize.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+         this.udLimitSize.Name = "udLimitSize";
+         this.udLimitSize.Size = new System.Drawing.Size(62, 20);
+         this.udLimitSize.TabIndex = 17;
+         this.udLimitSize.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+         // 
+         // chkLimitSize
+         // 
+         this.chkLimitSize.AutoSize = true;
+         this.chkLimitSize.Enabled = false;
+         this.chkLimitSize.Location = new System.Drawing.Point(188, 104);
+         this.chkLimitSize.Name = "chkLimitSize";
+         this.chkLimitSize.Size = new System.Drawing.Size(158, 17);
+         this.chkLimitSize.TabIndex = 16;
+         this.chkLimitSize.Text = "Limit FAHlog.txt size to (KB):";
+         this.chkLimitSize.UseVisualStyleBackColor = true;
+         // 
          // chkXml
          // 
          this.chkXml.AutoSize = true;
          this.chkXml.Enabled = false;
-         this.chkXml.Location = new System.Drawing.Point(135, 75);
+         this.chkXml.Location = new System.Drawing.Point(143, 75);
          this.chkXml.Name = "chkXml";
-         this.chkXml.Size = new System.Drawing.Size(85, 17);
+         this.chkXml.Size = new System.Drawing.Size(121, 17);
          this.chkXml.TabIndex = 15;
-         this.chkXml.Text = "Upload XML";
+         this.chkXml.Text = "Copy XML to Target";
          this.chkXml.UseVisualStyleBackColor = true;
          // 
          // chkHtml
@@ -406,9 +445,9 @@ namespace HFM.Forms
          this.chkHtml.Enabled = false;
          this.chkHtml.Location = new System.Drawing.Point(10, 75);
          this.chkHtml.Name = "chkHtml";
-         this.chkHtml.Size = new System.Drawing.Size(93, 17);
+         this.chkHtml.Size = new System.Drawing.Size(129, 17);
          this.chkHtml.TabIndex = 14;
-         this.chkHtml.Text = "Upload HTML";
+         this.chkHtml.Text = "Copy HTML to Target";
          this.chkHtml.UseVisualStyleBackColor = true;
          // 
          // btnTestConnection
@@ -428,7 +467,7 @@ namespace HFM.Forms
          this.pnlFtpMode.Controls.Add(this.radioPassive);
          this.pnlFtpMode.Controls.Add(this.radioActive);
          this.pnlFtpMode.Enabled = false;
-         this.pnlFtpMode.Location = new System.Drawing.Point(245, 71);
+         this.pnlFtpMode.Location = new System.Drawing.Point(276, 71);
          this.pnlFtpMode.Name = "pnlFtpMode";
          this.pnlFtpMode.Size = new System.Drawing.Size(199, 26);
          this.pnlFtpMode.TabIndex = 13;
@@ -474,12 +513,13 @@ namespace HFM.Forms
          this.chkFAHlog.TabIndex = 9;
          this.chkFAHlog.Text = "Copy FAHlog.txt Files to Target";
          this.chkFAHlog.UseVisualStyleBackColor = true;
+         this.chkFAHlog.CheckedChanged += new System.EventHandler(this.chkFAHlog_CheckedChanged);
          // 
          // radioFullRefresh
          // 
          this.radioFullRefresh.AutoSize = true;
          this.radioFullRefresh.Enabled = false;
-         this.radioFullRefresh.Location = new System.Drawing.Point(270, 19);
+         this.radioFullRefresh.Location = new System.Drawing.Point(272, 19);
          this.radioFullRefresh.Name = "radioFullRefresh";
          this.radioFullRefresh.Size = new System.Drawing.Size(106, 17);
          this.radioFullRefresh.TabIndex = 4;
@@ -512,7 +552,7 @@ namespace HFM.Forms
          this.txtWebGenMinutes.ErrorToolTipDuration = 5000;
          this.txtWebGenMinutes.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
          this.txtWebGenMinutes.ErrorToolTipText = "";
-         this.txtWebGenMinutes.Location = new System.Drawing.Point(182, 18);
+         this.txtWebGenMinutes.Location = new System.Drawing.Point(181, 18);
          this.txtWebGenMinutes.MaxLength = 3;
          this.txtWebGenMinutes.Name = "txtWebGenMinutes";
          this.txtWebGenMinutes.ReadOnly = true;
@@ -528,7 +568,7 @@ namespace HFM.Forms
          // 
          this.lbl2MinutesToGen.AutoSize = true;
          this.lbl2MinutesToGen.Enabled = false;
-         this.lbl2MinutesToGen.Location = new System.Drawing.Point(220, 21);
+         this.lbl2MinutesToGen.Location = new System.Drawing.Point(222, 21);
          this.lbl2MinutesToGen.Name = "lbl2MinutesToGen";
          this.lbl2MinutesToGen.Size = new System.Drawing.Size(44, 13);
          this.lbl2MinutesToGen.TabIndex = 3;
@@ -1856,6 +1896,7 @@ namespace HFM.Forms
          this.grpUpdateData.PerformLayout();
          this.grpHTMLOutput.ResumeLayout(false);
          this.grpHTMLOutput.PerformLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.udLimitSize)).EndInit();
          this.pnlFtpMode.ResumeLayout(false);
          this.pnlFtpMode.PerformLayout();
          this.tabStartup.ResumeLayout(false);
@@ -2027,5 +2068,7 @@ namespace HFM.Forms
       private HFM.Classes.CheckBoxWrapper chkMaintainSelected;
       private HFM.Classes.CheckBoxWrapper chkHtml;
       private HFM.Classes.CheckBoxWrapper chkXml;
+      private System.Windows.Forms.NumericUpDown udLimitSize;
+      private HFM.Classes.CheckBoxWrapper chkLimitSize;
    }
 }

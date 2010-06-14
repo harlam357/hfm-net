@@ -882,24 +882,48 @@ namespace HFM.Preferences.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool UploadHtml {
+        public bool WebGenCopyHtml {
             get {
-                return ((bool)(this["UploadHtml"]));
+                return ((bool)(this["WebGenCopyHtml"]));
             }
             set {
-                this["UploadHtml"] = value;
+                this["WebGenCopyHtml"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool UploadXml {
+        public bool WebGenCopyXml {
             get {
-                return ((bool)(this["UploadXml"]));
+                return ((bool)(this["WebGenCopyXml"]));
             }
             set {
-                this["UploadXml"] = value;
+                this["WebGenCopyXml"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool WebGenLimitLogSize {
+            get {
+                return ((bool)(this["WebGenLimitLogSize"]));
+            }
+            set {
+                this["WebGenLimitLogSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1024")]
+        public int WebGenLimitLogSizeLength {
+            get {
+                return ((int)(this["WebGenLimitLogSizeLength"]));
+            }
+            set {
+                this["WebGenLimitLogSizeLength"] = value;
             }
         }
     }
