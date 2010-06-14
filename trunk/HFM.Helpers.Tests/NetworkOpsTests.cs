@@ -77,7 +77,7 @@ namespace HFM.Helpers.Tests
       public void FtpUploadHelper()
       {
          IFtpWebOperation Operation = mocks.DynamicMock<IFtpWebOperation>();
-         Expect.Call(delegate { Operation.Upload("testpath"); });
+         Expect.Call(delegate { Operation.Upload("testpath", -1); });
          
          IFtpWebOperationRequest OperationRequest = mocks.Stub<IFtpWebOperationRequest>();
          SetupResult.For(Operation.FtpOperationRequest).Return(OperationRequest);
