@@ -19,7 +19,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Windows.Forms;
 
 using HFM.Framework;
@@ -83,7 +82,7 @@ namespace HFM.Instances
       /// <summary>
       /// 
       /// </summary>
-      public string CoreVersion { get; private set; }
+      public string CoreId { get; private set; }
 
       /// <summary>
       /// 
@@ -140,10 +139,10 @@ namespace HFM.Instances
          PPD_MHz = Math.Round(instance.PPD / instance.ClientProcessorMegahertz, 3);
          ETA = instance.ETA;
          Core = instance.CurrentUnitInfo.Core;
-         CoreVersion = instance.CurrentUnitInfo.CoreVersion;
+         CoreId = instance.CurrentUnitInfo.UnitInfoData.CoreId;
          ProjectRunCloneGen = instance.CurrentUnitInfo.ProjectRunCloneGen;
          Credit = instance.Credit;
-         Complete = prefs.GetPreference<CompletedCountDisplayType>(Preference.CompletedCountDisplay).Equals(CompletedCountDisplayType.ClientTotal) ? instance.TotalClientCompletedUnits : instance.TotalRunCompletedUnits;
+         Complete = instance.TotalRunCompletedUnits;
          Failed = instance.TotalRunFailedUnits;
          Username = instance.FoldingIDAndTeam;
          DownloadTime = instance.CurrentUnitInfo.DownloadTime;
@@ -181,8 +180,8 @@ namespace HFM.Instances
          dataGridView1.Columns["ETA"].DataPropertyName = "ETA";
          dataGridView1.Columns.Add("Core", "Core");
          dataGridView1.Columns["Core"].DataPropertyName = "Core";
-         dataGridView1.Columns.Add("CoreVersion", "Core Version");
-         dataGridView1.Columns["CoreVersion"].DataPropertyName = "CoreVersion";
+         dataGridView1.Columns.Add("CoreId", "Core ID");
+         dataGridView1.Columns["CoreId"].DataPropertyName = "CoreId";
          dataGridView1.Columns.Add("ProjectRunCloneGen", "Project (Run, Clone, Gen)");
          dataGridView1.Columns["ProjectRunCloneGen"].DataPropertyName = "ProjectRunCloneGen";
          dataGridView1.Columns.Add("Credit", "Credit");

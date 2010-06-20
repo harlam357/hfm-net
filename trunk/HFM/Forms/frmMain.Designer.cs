@@ -75,9 +75,11 @@ namespace HFM.Forms
          this.mnuClientsRefreshSelected = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuClientsRefreshAll = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuView = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuViewAutoSizeGridColumns = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuViewSep1 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuViewMessages = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuViewShowHideLog = new System.Windows.Forms.ToolStripMenuItem();
-         this.mnuViewSep1 = new System.Windows.Forms.ToolStripSeparator();
+         this.mnuViewSep2 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuViewToggleDateTime = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuViewToggleCompletedCountStyle = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
@@ -120,8 +122,7 @@ namespace HFM.Forms
          this.queueControl = new HFM.Classes.QueueControl();
          this.btnQueue = new HFM.Classes.ButtonWrapper();
          this.txtLogFile = new HFM.Classes.RichTextBoxWrapper();
-         this.mnuViewAutoSizeGridColumns = new System.Windows.Forms.ToolStripMenuItem();
-         this.mnuViewSep2 = new System.Windows.Forms.ToolStripSeparator();
+         this.mnuViewToggleVersionInformation = new System.Windows.Forms.ToolStripMenuItem();
          this.statusStrip.SuspendLayout();
          this.notifyMenu.SuspendLayout();
          this.AppMenu.SuspendLayout();
@@ -418,7 +419,7 @@ namespace HFM.Forms
          // mnuEditPreferences
          // 
          this.mnuEditPreferences.Name = "mnuEditPreferences";
-         this.mnuEditPreferences.Size = new System.Drawing.Size(143, 22);
+         this.mnuEditPreferences.Size = new System.Drawing.Size(152, 22);
          this.mnuEditPreferences.Text = "&Preferences";
          this.mnuEditPreferences.Click += new System.EventHandler(this.mnuEditPreferences_Click);
          // 
@@ -514,10 +515,23 @@ namespace HFM.Forms
             this.mnuViewShowHideLog,
             this.mnuViewSep2,
             this.mnuViewToggleDateTime,
-            this.mnuViewToggleCompletedCountStyle});
+            this.mnuViewToggleCompletedCountStyle,
+            this.mnuViewToggleVersionInformation});
          this.mnuView.Name = "mnuView";
          this.mnuView.Size = new System.Drawing.Size(41, 20);
          this.mnuView.Text = "&View";
+         // 
+         // mnuViewAutoSizeGridColumns
+         // 
+         this.mnuViewAutoSizeGridColumns.Name = "mnuViewAutoSizeGridColumns";
+         this.mnuViewAutoSizeGridColumns.Size = new System.Drawing.Size(255, 22);
+         this.mnuViewAutoSizeGridColumns.Text = "Auto Size &Grid Columns";
+         this.mnuViewAutoSizeGridColumns.Click += new System.EventHandler(this.mnuViewAutoSizeGridColumns_Click);
+         // 
+         // mnuViewSep1
+         // 
+         this.mnuViewSep1.Name = "mnuViewSep1";
+         this.mnuViewSep1.Size = new System.Drawing.Size(252, 6);
          // 
          // mnuViewMessages
          // 
@@ -535,10 +549,10 @@ namespace HFM.Forms
          this.mnuViewShowHideLog.Text = "Show/Hide &Log/Queue Viewer";
          this.mnuViewShowHideLog.Click += new System.EventHandler(this.mnuViewShowHideLog_Click);
          // 
-         // mnuViewSep1
+         // mnuViewSep2
          // 
-         this.mnuViewSep1.Name = "mnuViewSep1";
-         this.mnuViewSep1.Size = new System.Drawing.Size(252, 6);
+         this.mnuViewSep2.Name = "mnuViewSep2";
+         this.mnuViewSep2.Size = new System.Drawing.Size(252, 6);
          // 
          // mnuViewToggleDateTime
          // 
@@ -932,17 +946,13 @@ namespace HFM.Forms
          this.txtLogFile.Text = "";
          this.txtLogFile.WordWrap = false;
          // 
-         // mnuViewAutoSizeGridColumns
+         // mnuViewToggleVersionInformation
          // 
-         this.mnuViewAutoSizeGridColumns.Name = "mnuViewAutoSizeGridColumns";
-         this.mnuViewAutoSizeGridColumns.Size = new System.Drawing.Size(255, 22);
-         this.mnuViewAutoSizeGridColumns.Text = "Auto Size &Grid Columns";
-         this.mnuViewAutoSizeGridColumns.Click += new System.EventHandler(this.mnuViewAutoSizeGridColumns_Click);
-         // 
-         // mnuViewSep2
-         // 
-         this.mnuViewSep2.Name = "mnuViewSep2";
-         this.mnuViewSep2.Size = new System.Drawing.Size(252, 6);
+         this.mnuViewToggleVersionInformation.Name = "mnuViewToggleVersionInformation";
+         this.mnuViewToggleVersionInformation.ShortcutKeys = System.Windows.Forms.Keys.F11;
+         this.mnuViewToggleVersionInformation.Size = new System.Drawing.Size(255, 22);
+         this.mnuViewToggleVersionInformation.Text = "Toggle &Version Information";
+         this.mnuViewToggleVersionInformation.Click += new System.EventHandler(this.mnuViewToggleVersionInformation_Click);
          // 
          // frmMain
          // 
@@ -1067,5 +1077,6 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripMenuItem mnuHelpHfmDataFiles;
       private System.Windows.Forms.ToolStripMenuItem mnuViewAutoSizeGridColumns;
       private System.Windows.Forms.ToolStripSeparator mnuViewSep2;
+      private System.Windows.Forms.ToolStripMenuItem mnuViewToggleVersionInformation;
    }
 }

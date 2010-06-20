@@ -138,15 +138,20 @@ namespace HFM.Framework
       /// Last Observed Frame on this Unit
       /// </summary>
       IUnitFrame CurrentFrame { get; }
-      
+
+      /// <summary>
+      /// Core ID (Hex) Value
+      /// </summary>
+      string CoreId { get; set; }
+
       /// <summary>
       /// Set the Current Work Unit Frame
       /// </summary>
       void SetCurrentFrame(ILogLine logLine);
 
       /// <summary>
-      /// Get the UnitFrame Interface for this FrameID
+      /// Get the UnitFrame Interface for this frameID
       /// </summary>
-      IUnitFrame GetUnitFrame(int FrameID);
+      IUnitFrame GetUnitFrame(int frameID);
    }
 }

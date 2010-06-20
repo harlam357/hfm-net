@@ -402,6 +402,9 @@ namespace HFM.Instances
             /* FoldingID and Team from Queue Entry */
             unit.FoldingID = entry.FoldingID;
             unit.Team = (int) entry.TeamNumber;
+            
+            /* Core ID */
+            unit.CoreId = entry.CoreNumber.ToUpperInvariant();
          }
       }
 

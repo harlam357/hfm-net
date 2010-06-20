@@ -541,6 +541,14 @@ namespace HFM.Instances
       }
 
       /// <summary>
+      /// Esimated time of arrival (ETA) for this unit
+      /// </summary>
+      public DateTime EtaDate
+      {
+         get { return DateTime.Now.Add(ETA); }
+      }
+
+      /// <summary>
       /// Specifies if All Frames have been Completed
       /// </summary>
       public bool AllFramesAreCompleted

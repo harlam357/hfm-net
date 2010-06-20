@@ -211,6 +211,7 @@ namespace HFM.Preferences
          _Preferences.Add(Preference.QueueViewerVisible, new Metadata<bool>());
          _Preferences.Add(Preference.TimeStyle, new Metadata<TimeStyleType>());
          _Preferences.Add(Preference.CompletedCountDisplay, new Metadata<CompletedCountDisplayType>());
+         _Preferences.Add(Preference.ShowVersions, new Metadata<bool>());
          _Preferences.Add(Preference.FormShowStyle, new Metadata<FormShowStyleType>());
 
          _Preferences.Add(Preference.BenchmarksFormLocation, new Metadata<Point>());
@@ -257,6 +258,7 @@ namespace HFM.Preferences
          _Preferences.Add(Preference.PpdCalculation, new Metadata<PpdCalculationType>());
          _Preferences.Add(Preference.DecimalPlaces, new Metadata<int>());
          _Preferences.Add(Preference.CalculateBonus, new Metadata<bool>());
+         _Preferences.Add(Preference.EtaDate, new Metadata<bool>());
          _Preferences.Add(Preference.LogFileViewer, new Metadata<string>());
          _Preferences.Add(Preference.FileExplorer, new Metadata<string>());
          _Preferences.Add(Preference.MessageLevel, new Metadata<int>());
@@ -313,6 +315,7 @@ namespace HFM.Preferences
          SetPreference(Preference.QueueViewerVisible, Settings.Default.QueueViewerVisible);
          SetPreference(Preference.TimeStyle, GetTimeStyle());
          SetPreference(Preference.CompletedCountDisplay, GetCompletedCountDisplay());
+         SetPreference(Preference.ShowVersions, Settings.Default.ShowVersions);
          SetPreference(Preference.FormShowStyle, GetFormShowStyle());
 
          location = new Point();
@@ -365,6 +368,7 @@ namespace HFM.Preferences
          SetPreference(Preference.PpdCalculation, GetPpdCalculation());
          SetPreference(Preference.DecimalPlaces, Settings.Default.DecimalPlaces);
          SetPreference(Preference.CalculateBonus, Settings.Default.CalculateBonus);
+         SetPreference(Preference.EtaDate, Settings.Default.EtaDate);
          SetPreference(Preference.LogFileViewer, Settings.Default.LogFileViewer);
          SetPreference(Preference.FileExplorer, Settings.Default.FileExplorer);
          SetPreference(Preference.MessageLevel, Settings.Default.MessageLevel);
@@ -659,6 +663,7 @@ namespace HFM.Preferences
             Settings.Default.QueueViewerVisible = GetPreference<bool>(Preference.QueueViewerVisible);
             Settings.Default.TimeStyle = GetPreference<TimeStyleType>(Preference.TimeStyle).ToString();
             Settings.Default.CompletedCountDisplay = GetPreference<CompletedCountDisplayType>(Preference.CompletedCountDisplay).ToString();
+            Settings.Default.ShowVersions = GetPreference<bool>(Preference.ShowVersions);
             if (Settings.Default.FormShowStyle != GetPreference<FormShowStyleType>(Preference.FormShowStyle).ToString())
             {
                raiseFormShowStyleChanged = true;
@@ -750,6 +755,7 @@ namespace HFM.Preferences
                raiseCalculateBonusChanged = true;
             }
             Settings.Default.CalculateBonus = GetPreference<bool>(Preference.CalculateBonus);
+            Settings.Default.EtaDate = GetPreference<bool>(Preference.EtaDate);
             Settings.Default.LogFileViewer = GetPreference<string>(Preference.LogFileViewer);
             Settings.Default.FileExplorer = GetPreference<string>(Preference.FileExplorer);
             if (Settings.Default.MessageLevel != GetPreference<int>(Preference.MessageLevel))

@@ -33,87 +33,87 @@ namespace HFM.Instances
    public class UnitInfo : IUnitInfo
    {
       #region Owner Data Properties
-      private string _OwningInstanceName;
+      private string _owningInstanceName;
       /// <summary>
       /// Name of the Client Instance that owns this UnitInfo
       /// </summary>
       [ProtoMember(1)]
       public string OwningInstanceName
       {
-         get { return _OwningInstanceName; }
-         set { _OwningInstanceName = value; }
+         get { return _owningInstanceName; }
+         set { _owningInstanceName = value; }
       }
 
-      private string _OwningInstancePath;
+      private string _owningInstancePath;
       /// <summary>
       /// Path of the Client Instance that owns this UnitInfo
       /// </summary>
       [ProtoMember(2)]
       public string OwningInstancePath
       {
-         get { return _OwningInstancePath; }
-         set { _OwningInstancePath = value; }
+         get { return _owningInstancePath; }
+         set { _owningInstancePath = value; }
       }
       #endregion
 
       #region Retrieval Time Property
-      private DateTime _UnitRetrievalTime;
+      private DateTime _unitRetrievalTime;
       /// <summary>
       /// Local time the logs used to generate this UnitInfo were retrieved
       /// </summary>
       [ProtoMember(3)]
       public DateTime UnitRetrievalTime
       {
-         get { return _UnitRetrievalTime; }
-         set { _UnitRetrievalTime = value; }
+         get { return _unitRetrievalTime; }
+         set { _unitRetrievalTime = value; }
       } 
       #endregion
 
       #region Folding ID and Team Properties
-      private string _FoldingID = Constants.FoldingIDDefault;
+      private string _foldingID = Constants.FoldingIDDefault;
       /// <summary>
       /// The Folding ID (Username) attached to this work unit
       /// </summary>
       [ProtoMember(4)]
       public string FoldingID
       {
-         get { return _FoldingID; }
-         set { _FoldingID = value; }
+         get { return _foldingID; }
+         set { _foldingID = value; }
       }
 
-      private Int32 _Team = Constants.TeamDefault;
+      private Int32 _team = Constants.TeamDefault;
       /// <summary>
       /// The Team number attached to this work unit
       /// </summary>
       [ProtoMember(5)]
       public Int32 Team
       {
-         get { return _Team; }
-         set { _Team = value; }
+         get { return _team; }
+         set { _team = value; }
       }
       #endregion
 
       #region Unit Level Members
-      private ClientType _TypeOfClient = ClientType.Unknown;
+      private ClientType _typeOfClient = ClientType.Unknown;
       /// <summary>
       /// Client Type for this work unit
       /// </summary>
       [ProtoMember(6)]
       public ClientType TypeOfClient
       {
-         get { return _TypeOfClient; }
-         set { _TypeOfClient = value; }
+         get { return _typeOfClient; }
+         set { _typeOfClient = value; }
       }
 
-      private DateTime _DownloadTime = DateTime.MinValue;
+      private DateTime _downloadTime = DateTime.MinValue;
       /// <summary>
       /// Date/time the unit was downloaded
       /// </summary>
       [ProtoMember(7)]
       public DateTime DownloadTime
       {
-         get { return _DownloadTime; }
-         set { _DownloadTime = value; }
+         get { return _downloadTime; }
+         set { _downloadTime = value; }
       }
 
       /// <summary>
@@ -124,15 +124,15 @@ namespace HFM.Instances
          get { return DownloadTime.Equals(DateTime.MinValue); }
       }
 
-      private DateTime _DueTime = DateTime.MinValue;
+      private DateTime _dueTime = DateTime.MinValue;
       /// <summary>
       /// Date/time the unit is due (preferred deadline)
       /// </summary>
       [ProtoMember(8)]
       public DateTime DueTime
       {
-         get { return _DueTime; }
-         set { _DueTime = value; }
+         get { return _dueTime; }
+         set { _dueTime = value; }
       }
 
       /// <summary>
@@ -143,7 +143,7 @@ namespace HFM.Instances
          get { return DueTime.Equals(DateTime.MinValue); }
       }
 
-      private TimeSpan _UnitStartTime = TimeSpan.Zero;
+      private TimeSpan _unitStartTime = TimeSpan.Zero;
       /// <summary>
       /// Unit Start Time Stamp (Time Stamp from First Parsable Line in LogLines)
       /// </summary>
@@ -151,74 +151,74 @@ namespace HFM.Instances
       [ProtoMember(9)]
       public TimeSpan UnitStartTimeStamp
       {
-         get { return _UnitStartTime; }
-         set { _UnitStartTime = value; }
+         get { return _unitStartTime; }
+         set { _unitStartTime = value; }
       }
 
-      private DateTime _FinishedTime = DateTime.MinValue;
+      private DateTime _finishedTime = DateTime.MinValue;
       /// <summary>
       /// Date/time the unit finished
       /// </summary>
       [ProtoMember(10)]
       public DateTime FinishedTime
       {
-         get { return _FinishedTime; }
-         set { _FinishedTime = value; }
+         get { return _finishedTime; }
+         set { _finishedTime = value; }
       }
 
-      private string _CoreVersion = String.Empty;
+      private string _coreVersion = String.Empty;
       /// <summary>
       /// Core Version Number
       /// </summary>
       [ProtoMember(11)]
       public string CoreVersion
       {
-         get { return _CoreVersion; }
-         set { _CoreVersion = value; }
+         get { return _coreVersion; }
+         set { _coreVersion = value; }
       }
 
-      private Int32 _ProjectID;
+      private Int32 _projectID;
       /// <summary>
       /// Project ID Number
       /// </summary>
       [ProtoMember(12)]
       public Int32 ProjectID
       {
-         get { return _ProjectID; }
-         set { _ProjectID = value; } 
+         get { return _projectID; }
+         set { _projectID = value; } 
       }
 
-      private Int32 _ProjectRun;
+      private Int32 _projectRun;
       /// <summary>
       /// Project ID (Run)
       /// </summary>
       [ProtoMember(13)]
       public Int32 ProjectRun
       {
-         get { return _ProjectRun; }
-         set { _ProjectRun = value; }
+         get { return _projectRun; }
+         set { _projectRun = value; }
       }
 
-      private Int32 _ProjectClone;
+      private Int32 _projectClone;
       /// <summary>
       /// Project ID (Clone)
       /// </summary>
       [ProtoMember(14)]
       public Int32 ProjectClone
       {
-         get { return _ProjectClone; }
-         set { _ProjectClone = value; }
+         get { return _projectClone; }
+         set { _projectClone = value; }
       }
 
-      private Int32 _ProjectGen;
+      private Int32 _projectGen;
       /// <summary>
       /// Project ID (Gen)
       /// </summary>
       [ProtoMember(15)]
       public Int32 ProjectGen
       {
-         get { return _ProjectGen; }
-         set { _ProjectGen = value; }
+         get { return _projectGen; }
+         set { _projectGen = value; }
       }
 
       /// <summary>
@@ -235,91 +235,91 @@ namespace HFM.Instances
          }
       }
 
-      private String _ProteinName = String.Empty;
+      private String _proteinName = String.Empty;
       /// <summary>
       /// Name of the unit
       /// </summary>
       [ProtoMember(16)]
       public String ProteinName
       {
-         get { return _ProteinName; }
-         set { _ProteinName = value; }
+         get { return _proteinName; }
+         set { _proteinName = value; }
       }
 
-      private string _ProteinTag = String.Empty;
+      private string _proteinTag = String.Empty;
       /// <summary>
       /// Tag string as read from the UnitInfo.txt file
       /// </summary>
       [ProtoMember(17)]
       public string ProteinTag
       {
-         get { return _ProteinTag; }
-         set { _ProteinTag = value; }
+         get { return _proteinTag; }
+         set { _proteinTag = value; }
       }
 
-      private WorkUnitResult _UnitResult = WorkUnitResult.Unknown;
+      private WorkUnitResult _unitResult = WorkUnitResult.Unknown;
       /// <summary>
       /// The Result of this Work Unit
       /// </summary>
       [ProtoMember(18)]
       public WorkUnitResult UnitResult
       {
-         get { return _UnitResult; }
-         set { _UnitResult = value; }
+         get { return _unitResult; }
+         set { _unitResult = value; }
       }
       #endregion
 
       #region Frames/Percent Completed Unit Level Members
-      private Int32 _RawFramesComplete;
+      private Int32 _rawFramesComplete;
       /// <summary>
       /// Raw number of steps complete
       /// </summary>
       [ProtoMember(19)]
       public Int32 RawFramesComplete
       {
-         get { return _RawFramesComplete; }
+         get { return _rawFramesComplete; }
          set
          {
-            _RawFramesComplete = value;
+            _rawFramesComplete = value;
          }
       }
 
-      private Int32 _RawFramesTotal;
+      private Int32 _rawFramesTotal;
       /// <summary>
       /// Raw total number of steps
       /// </summary>
       [ProtoMember(20)]
       public Int32 RawFramesTotal
       {
-         get { return _RawFramesTotal; }
+         get { return _rawFramesTotal; }
          set
          {
-            _RawFramesTotal = value;
+            _rawFramesTotal = value;
          }
       }
       #endregion
 
       #region Frame (UnitFrame) Data Variables
-      private Int32 _FramesObserved = 0;
+      private Int32 _framesObserved;
       /// <summary>
       /// Number of Frames Observed on this Unit
       /// </summary>
       [ProtoMember(21)]
       public Int32 FramesObserved
       {
-         get { return _FramesObserved; }
-         set { _FramesObserved = value; }
+         get { return _framesObserved; }
+         set { _framesObserved = value; }
       }
 
-      private UnitFrame _CurrentFrame = null;
+      private UnitFrame _currentFrame;
       /// <summary>
       /// Last Observed Frame on this Unit
       /// </summary>
       [ProtoMember(22)]
       public UnitFrame CurrentFrameConcrete
       {
-         get { return _CurrentFrame; }
-         set { _CurrentFrame = value; }
+         get { return _currentFrame; }
+         set { _currentFrame = value; }
       }
 
       /// <summary>
@@ -327,18 +327,29 @@ namespace HFM.Instances
       /// </summary>
       public IUnitFrame CurrentFrame
       {
-         get { return _CurrentFrame; }
+         get { return _currentFrame; }
       }
 
-      private Dictionary<int, UnitFrame> _UnitFrames = new Dictionary<int, UnitFrame>();
+      private Dictionary<int, UnitFrame> _unitFrames = new Dictionary<int, UnitFrame>();
       /// <summary>
       /// Frame Data for this Unit
       /// </summary>
       [ProtoMember(23)]
       public Dictionary<int, UnitFrame> UnitFrames
       {
-         get { return _UnitFrames; }
-         set { _UnitFrames = value; }
+         get { return _unitFrames; }
+         set { _unitFrames = value; }
+      }
+
+      private string _coreId = "Unknown";
+      /// <summary>
+      /// Core ID (Hex) Value
+      /// </summary>
+      [ProtoMember(24)]
+      public string CoreId
+      {
+         get { return _coreId; }
+         set { _coreId = value; }
       }
 
       /// <summary>
@@ -353,7 +364,7 @@ namespace HFM.Instances
          }
 
          // Check for FrameData
-         IFrameData frame = logLine.LineData as IFrameData;
+         var frame = logLine.LineData as IFrameData;
          if (frame == null)
          {
             // If not found, clear the LineType and get out
@@ -370,7 +381,7 @@ namespace HFM.Instances
          RawFramesComplete = frame.RawFramesComplete;
          RawFramesTotal = frame.RawFramesTotal;
          // Create new UnitFrame
-         UnitFrame unitFrame = new UnitFrame(frame.FrameID, timeStamp.TimeOfDay);
+         var unitFrame = new UnitFrame(frame.FrameID, timeStamp.TimeOfDay);
 
          if (UnitFrames.ContainsKey(frame.FrameID) == false)
          {
@@ -419,13 +430,13 @@ namespace HFM.Instances
       }
       
       /// <summary>
-      /// Get the UnitFrame Interface for this FrameID
+      /// Get the UnitFrame Interface for this frameID
       /// </summary>
-      public IUnitFrame GetUnitFrame(int FrameID)
+      public IUnitFrame GetUnitFrame(int frameID)
       {
-         if (_UnitFrames.ContainsKey(FrameID))
+         if (_unitFrames.ContainsKey(frameID))
          {
-            return _UnitFrames[FrameID];
+            return _unitFrames[frameID];
          }
          
          return null;

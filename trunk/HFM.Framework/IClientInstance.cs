@@ -154,6 +154,11 @@ namespace HFM.Framework
       /// </summary>
       TimeSpan ETA { get; }
 
+      /// <summary>
+      /// Esimated time of arrival (ETA) for this protein
+      /// </summary>
+      DateTime EtaDate { get; }
+
       double Credit { get; }
 
       /// <summary>

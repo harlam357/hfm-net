@@ -160,6 +160,11 @@ namespace HFM.Framework
       TimeSpan ETA { get; }
 
       /// <summary>
+      /// Esimated time of arrival (ETA) for this unit
+      /// </summary>
+      DateTime EtaDate { get; }
+
+      /// <summary>
       /// Esimated Finishing Time for this unit
       /// </summary>
       TimeSpan EftByDownloadTime { get; }

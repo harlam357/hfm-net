@@ -127,6 +127,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(250000, Instance.CurrentUnitInfo.UnitInfoData.RawFramesTotal);
          Assert.AreEqual(1, Instance.CurrentUnitInfo.UnitInfoData.FramesObserved);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
+         Assert.AreEqual("Unknown", Instance.CurrentUnitInfo.UnitInfoData.CoreId);
          #endregion
 
          _mocks.VerifyAll();
@@ -211,6 +212,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(250000, Instance.CurrentUnitInfo.UnitInfoData.RawFramesTotal);
          Assert.AreEqual(31, Instance.CurrentUnitInfo.UnitInfoData.FramesObserved);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
+         Assert.AreEqual("A2", Instance.CurrentUnitInfo.UnitInfoData.CoreId);
          #endregion
 
          _mocks.VerifyAll();
@@ -303,6 +305,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(0, Instance.CurrentUnitInfo.UnitInfoData.RawFramesTotal);
          Assert.AreEqual(0, Instance.CurrentUnitInfo.UnitInfoData.FramesObserved);
          Assert.IsNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
+         Assert.AreEqual("A2", Instance.CurrentUnitInfo.UnitInfoData.CoreId);
          #endregion
 
          _mocks.VerifyAll();
@@ -386,6 +389,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(0, Instance.CurrentUnitInfo.UnitInfoData.RawFramesTotal);
          Assert.AreEqual(0, Instance.CurrentUnitInfo.UnitInfoData.FramesObserved);
          Assert.IsNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
+         Assert.AreEqual("Unknown", Instance.CurrentUnitInfo.UnitInfoData.CoreId);
          #endregion
 
          _mocks.VerifyAll();
@@ -470,6 +474,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(250000, Instance.CurrentUnitInfo.UnitInfoData.RawFramesTotal);
          Assert.AreEqual(50, Instance.CurrentUnitInfo.UnitInfoData.FramesObserved);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
+         Assert.AreEqual("A2", Instance.CurrentUnitInfo.UnitInfoData.CoreId);
          #endregion
 
          _mocks.VerifyAll();
@@ -554,6 +559,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(250000, Instance.CurrentUnitInfo.UnitInfoData.RawFramesTotal);
          Assert.AreEqual(59, Instance.CurrentUnitInfo.UnitInfoData.FramesObserved);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
+         Assert.AreEqual("A2", Instance.CurrentUnitInfo.UnitInfoData.CoreId);
          #endregion
 
          _mocks.VerifyAll();
@@ -638,6 +644,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(500000, Instance.CurrentUnitInfo.UnitInfoData.RawFramesTotal);
          Assert.AreEqual(98, Instance.CurrentUnitInfo.UnitInfoData.FramesObserved);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
+         Assert.AreEqual("A3", Instance.CurrentUnitInfo.UnitInfoData.CoreId);
          #endregion
 
          _mocks.VerifyAll();
@@ -714,6 +721,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(100, Instance.CurrentUnitInfo.UnitInfoData.RawFramesTotal);
          Assert.AreEqual(4, Instance.CurrentUnitInfo.UnitInfoData.FramesObserved);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
+         Assert.AreEqual("Unknown", Instance.CurrentUnitInfo.UnitInfoData.CoreId);
          #endregion
 
          _mocks.VerifyAll();
@@ -798,6 +806,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(100, Instance.CurrentUnitInfo.UnitInfoData.RawFramesTotal);
          Assert.AreEqual(100, Instance.CurrentUnitInfo.UnitInfoData.FramesObserved);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
+         Assert.AreEqual("11", Instance.CurrentUnitInfo.UnitInfoData.CoreId);
          #endregion         
 
          _mocks.VerifyAll();
@@ -909,6 +918,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(100, Instance.CurrentUnitInfo.UnitInfoData.RawFramesTotal);
          Assert.AreEqual(5, Instance.CurrentUnitInfo.UnitInfoData.FramesObserved);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
+         Assert.AreEqual("Unknown", Instance.CurrentUnitInfo.UnitInfoData.CoreId);
          #endregion
 
          _mocks.VerifyAll();
@@ -993,6 +1003,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(0, Instance.CurrentUnitInfo.UnitInfoData.RawFramesTotal);
          Assert.AreEqual(0, Instance.CurrentUnitInfo.UnitInfoData.FramesObserved);
          Assert.IsNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
+         Assert.AreEqual("11", Instance.CurrentUnitInfo.UnitInfoData.CoreId);
          #endregion
 
          _mocks.VerifyAll();
@@ -1071,6 +1082,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(0, Instance.CurrentUnitInfo.UnitInfoData.RawFramesTotal);
          Assert.AreEqual(0, Instance.CurrentUnitInfo.UnitInfoData.FramesObserved);
          Assert.IsNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
+         Assert.AreEqual("Unknown", Instance.CurrentUnitInfo.UnitInfoData.CoreId);
          #endregion
 
          _mocks.VerifyAll();
@@ -1155,6 +1167,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(1000000, Instance.CurrentUnitInfo.UnitInfoData.RawFramesTotal);
          Assert.AreEqual(5, Instance.CurrentUnitInfo.UnitInfoData.FramesObserved);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
+         Assert.AreEqual("B4", Instance.CurrentUnitInfo.UnitInfoData.CoreId);
          #endregion
 
          _mocks.VerifyAll();
@@ -1231,6 +1244,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(499375, Instance.CurrentUnitInfo.UnitInfoData.RawFramesTotal);
          Assert.AreEqual(34, Instance.CurrentUnitInfo.UnitInfoData.FramesObserved);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
+         Assert.AreEqual("Unknown", Instance.CurrentUnitInfo.UnitInfoData.CoreId);
          #endregion
 
          _mocks.VerifyAll();
@@ -1307,6 +1321,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(2500000, Instance.CurrentUnitInfo.UnitInfoData.RawFramesTotal);
          Assert.AreEqual(5, Instance.CurrentUnitInfo.UnitInfoData.FramesObserved);
          Assert.IsNotNull(Instance.CurrentUnitInfo.UnitInfoData.CurrentFrame);
+         Assert.AreEqual("Unknown", Instance.CurrentUnitInfo.UnitInfoData.CoreId);
          #endregion
 
          _mocks.VerifyAll();

@@ -422,8 +422,8 @@ namespace HFM.Instances
             XmlElement xmlData = xmlFrag.DocumentElement;
 
             XMLOps.setXmlNode(xmlData, "Status", instance.Status.ToString());
-            XMLOps.setXmlNode(xmlData, "StatusColor", ClientInstance.GetStatusHtmlColor(instance.Status));
-            XMLOps.setXmlNode(xmlData, "StatusFontColor", ClientInstance.GetStatusHtmlFontColor(instance.Status));
+            XMLOps.setXmlNode(xmlData, "StatusColor", PlatformOps.GetStatusHtmlColor(instance.Status));
+            XMLOps.setXmlNode(xmlData, "StatusFontColor", PlatformOps.GetStatusHtmlFontColor(instance.Status));
             XMLOps.setXmlNode(xmlData, "PercentComplete", instance.PercentComplete.ToString());
             XMLOps.setXmlNode(xmlData, "Name", instance.Settings.InstanceName);
             XMLOps.setXmlNode(xmlData, "UserIDDuplicate", (duplicateUserIdCheck && instance.UserIdIsDuplicate).ToString());

@@ -128,6 +128,19 @@ namespace HFM.Models
          }
       }
       
+      public bool EtaDate
+      {
+         get { return _prefs.GetPreference<bool>(Preference.EtaDate); }
+         set
+         {
+            if (EtaDate != value)
+            {
+               _prefs.SetPreference(Preference.EtaDate, value);
+               OnPropertyChanged("EtaDate");
+            }
+         }
+      }
+      
       #endregion
 
       #region Debug Message Level

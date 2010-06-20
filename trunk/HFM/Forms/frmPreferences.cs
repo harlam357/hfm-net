@@ -334,6 +334,7 @@ namespace HFM.Forms
          cboPpdCalc.DataBindings.Add("SelectedValue", _optionsModel, "PpdCalculation", false, DataSourceUpdateMode.OnPropertyChanged);
          udDecimalPlaces.DataBindings.Add("Value", _optionsModel, "DecimalPlaces", false, DataSourceUpdateMode.OnPropertyChanged);
          chkCalcBonus.DataBindings.Add("Checked", _optionsModel, "CalculateBonus", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkEtaAsDate.DataBindings.Add("Checked", _optionsModel, "EtaDate", false, DataSourceUpdateMode.OnPropertyChanged);
          #endregion
 
          #region Debug Message Level

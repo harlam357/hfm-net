@@ -926,5 +926,29 @@ namespace HFM.Preferences.Properties {
                 this["WebGenLimitLogSizeLength"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowVersions {
+            get {
+                return ((bool)(this["ShowVersions"]));
+            }
+            set {
+                this["ShowVersions"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EtaDate {
+            get {
+                return ((bool)(this["EtaDate"]));
+            }
+            set {
+                this["EtaDate"] = value;
+            }
+        }
     }
 }

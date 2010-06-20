@@ -187,6 +187,7 @@ namespace HFM.Forms
          this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
          this.btnOK = new HFM.Classes.ButtonWrapper();
          this.btnCancel = new HFM.Classes.ButtonWrapper();
+         this.chkEtaAsDate = new HFM.Classes.CheckBoxWrapper();
          this.tabControl1.SuspendLayout();
          this.tabSchdTasks.SuspendLayout();
          this.grpUpdateData.SuspendLayout();
@@ -874,6 +875,7 @@ namespace HFM.Forms
          // 
          // grpInteractiveOptions
          // 
+         this.grpInteractiveOptions.Controls.Add(this.chkEtaAsDate);
          this.grpInteractiveOptions.Controls.Add(this.chkMaintainSelected);
          this.grpInteractiveOptions.Controls.Add(this.chkCalcBonus);
          this.grpInteractiveOptions.Controls.Add(this.label2);
@@ -1854,6 +1856,16 @@ namespace HFM.Forms
          this.btnCancel.UseVisualStyleBackColor = true;
          this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
          // 
+         // chkEtaAsDate
+         // 
+         this.chkEtaAsDate.AutoSize = true;
+         this.chkEtaAsDate.Location = new System.Drawing.Point(256, 98);
+         this.chkEtaAsDate.Name = "chkEtaAsDate";
+         this.chkEtaAsDate.Size = new System.Drawing.Size(202, 17);
+         this.chkEtaAsDate.TabIndex = 9;
+         this.chkEtaAsDate.Text = "Show ETA value as a Date and Time";
+         this.chkEtaAsDate.UseVisualStyleBackColor = true;
+         // 
          // frmPreferences
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2052,5 +2064,6 @@ namespace HFM.Forms
       private System.Windows.Forms.NumericUpDown udLimitSize;
       private HFM.Classes.CheckBoxWrapper chkLimitSize;
       private RadioPanel pnlFtpMode;
+      private HFM.Classes.CheckBoxWrapper chkEtaAsDate;
    }
 }

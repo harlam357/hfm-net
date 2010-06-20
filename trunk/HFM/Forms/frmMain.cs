@@ -43,13 +43,6 @@ using HFM.Instrumentation;
 
 namespace HFM.Forms
 {
-   internal enum PaintCell
-   {
-      Status,
-      Time,
-      Warning
-   }
-
    public partial class frmMain : FormWrapper
    {
       #region Private Fields
@@ -70,16 +63,6 @@ namespace HFM.Forms
       /// Holds current Sort Column Order
       /// </summary>
       private SortOrder SortColumnOrder = SortOrder.None;
-      
-      /// <summary>
-      /// Holds Current Mouse Over Row Index
-      /// </summary>
-      private Int32 CurrentMouseOverRow = -1;
-      
-      /// <summary>
-      /// Holds Current Mouse Over Column Index
-      /// </summary>
-      private Int32 CurrentMouseOverColumn = -1;
 
       /// <summary>
       /// Notify Icon for frmMain
@@ -529,7 +512,6 @@ namespace HFM.Forms
             catch (ArgumentOutOfRangeException ex)
             {
                HfmTrace.WriteToHfmConsole(ex);
-
                txtLogFile.SetNoLogLines();
             }
          }
@@ -611,408 +593,6 @@ namespace HFM.Forms
 
          SelectCurrentRowKey();
       }
-
-      /// <summary>
-      /// 
-      /// </summary>
-      private void dataGridView1_MouseMove(object sender, MouseEventArgs e)
-      {
-         DataGridView.HitTestInfo info = dataGridView1.HitTest(e.X, e.Y);
-         
-         //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format(CultureInfo.CurrentCulture,
-         //   "MouseMove x:{0} y:{1} / row:{2} column:{3}", e.X, e.Y, info.RowIndex, info.ColumnIndex));
-         
-         // Only draw Tooltips if we've actually changed cells - Issue 99
-         if (info.RowIndex == CurrentMouseOverRow && info.ColumnIndex == CurrentMouseOverColumn)
-         {
-            return;
-         }
-         else
-         {
-            // Update the current cell indexes
-            CurrentMouseOverRow = info.RowIndex;
-            CurrentMouseOverColumn = info.ColumnIndex;
-         }
-
-         #region Draw or Hide the Tooltip
-         if (info.RowIndex > -1)
-         {
-            ClientInstance Instance =
-               _clientInstances.Instances[dataGridView1.Rows[info.RowIndex].Cells["Name"].Value.ToString()];
-
-            if (dataGridView1.Columns["Status"].Index == info.ColumnIndex)
-            {
-               //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Drawing Status Tooltip...");
-               toolTipGrid.Show(Instance.Status.ToString(), dataGridView1, e.X + 15, e.Y);
-               return;
-            }
-            else if (dataGridView1.Columns["Username"].Index == info.ColumnIndex)
-            {
-               if (Instance.IsUsernameOk() == false)
-               {
-                  toolTipGrid.Show("Client's User Name does not match the configured User Name", dataGridView1, e.X + 15, e.Y);
-                  return;
-               }
-            }
-            else if (dataGridView1.Columns["ProjectRunCloneGen"].Index == info.ColumnIndex)
-            {
-               if (_Prefs.GetPreference<bool>(Preference.DuplicateProjectCheck) && Instance.CurrentUnitInfo.ProjectIsDuplicate)
-               {
-                  toolTipGrid.Show("Client is working on the same work unit as another client", dataGridView1, e.X + 15, e.Y);
-                  return;
-               }
-            }
-            else if (dataGridView1.Columns["Name"].Index == info.ColumnIndex)
-            {
-               if (_Prefs.GetPreference<bool>(Preference.DuplicateUserIdCheck) && Instance.UserIdIsDuplicate)
-               {
-                  toolTipGrid.Show("Client is working with the same User and Machine ID as another client", dataGridView1, e.X + 15, e.Y);
-                  return;
-               }
-            }
-         }
-
-         toolTipGrid.Hide(dataGridView1);
-         #endregion
-      }
-
-      /// <summary>
-      /// Override Cell Painting in the DataGridView
-      /// </summary>
-      private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
-      {
-         if (e.RowIndex >= 0)
-         {
-            if (dataGridView1.Columns["Status"].Index == e.ColumnIndex)
-            {
-               PaintGridCell(PaintCell.Status, e);
-            }
-            else if (dataGridView1.Columns["Name"].Index == e.ColumnIndex)
-            {
-               #region Duplicate User and Machine ID Custom Paint
-               ClientInstance instance = _clientInstances.Instances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
-
-               if (_Prefs.GetPreference<bool>(Preference.DuplicateUserIdCheck) && instance.UserIdIsDuplicate)
-               {
-                  PaintGridCell(PaintCell.Warning, e);
-               }
-               #endregion
-            }
-            else if (dataGridView1.Columns["ProjectRunCloneGen"].Index == e.ColumnIndex)
-            {
-               #region Duplicate Project Custom Paint
-               ClientInstance instance = _clientInstances.Instances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
-
-               if (_Prefs.GetPreference<bool>(Preference.DuplicateProjectCheck) && instance.CurrentUnitInfo.ProjectIsDuplicate)
-               {
-                  PaintGridCell(PaintCell.Warning, e);
-               }
-               #endregion
-            }
-            else if (dataGridView1.Columns["Username"].Index == e.ColumnIndex)
-            {
-               #region Username Incorrect Custom Paint
-               ClientInstance Instance = _clientInstances.Instances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
-
-               if (Instance.IsUsernameOk() == false)
-               {
-                  PaintGridCell(PaintCell.Warning, e);
-               }
-               #endregion
-            }
-            else if ((dataGridView1.Columns["TPF"].Index == e.ColumnIndex ||
-                      dataGridView1.Columns["ETA"].Index == e.ColumnIndex ||
-                      dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex ||
-                      dataGridView1.Columns["Deadline"].Index == e.ColumnIndex) &&
-                      _Prefs.GetPreference<TimeStyleType>(Preference.TimeStyle).Equals(TimeStyleType.Formatted))
-            {
-               PaintGridCell(PaintCell.Time, e);
-            }
-            else if (dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex ||
-                     dataGridView1.Columns["Deadline"].Index == e.ColumnIndex)
-            {
-               DateTime date = (DateTime)e.Value;
-               if (date.Equals(DateTime.MinValue))
-               {
-                  PaintGridCell(PaintCell.Time, e);
-               }
-            }
-         }
-      }
-
-      /// <summary>
-      /// Custom Paint Grid Cells
-      /// </summary>
-      private void PaintGridCell(PaintCell paint, DataGridViewCellPaintingEventArgs e)
-      {
-         using (Brush gridBrush = new SolidBrush(dataGridView1.GridColor),
-                      backColorBrush = new SolidBrush(e.CellStyle.BackColor),
-                      selectionColorBrush = new SolidBrush(e.CellStyle.SelectionBackColor))
-         {
-            using (Pen gridLinePen = new Pen(gridBrush))
-            {
-               #region Erase (Set BackColor) the Cell and Choose Text Color
-               Brush textColor = Brushes.Black;
-               
-               if (paint.Equals(PaintCell.Status))
-               {
-                  e.Graphics.FillRectangle(backColorBrush, e.CellBounds);
-               }
-               else if (paint.Equals(PaintCell.Time))
-               {
-                  if (dataGridView1.Rows[e.RowIndex].Selected)
-                  {
-                     e.Graphics.FillRectangle(selectionColorBrush, e.CellBounds);
-                     textColor = Brushes.White;
-                  }
-                  else
-                  {
-                     e.Graphics.FillRectangle(backColorBrush, e.CellBounds);
-                  }
-               }
-               else if (paint.Equals(PaintCell.Warning))
-               {
-                  if (dataGridView1.Rows[e.RowIndex].Selected)
-                  {
-                     e.Graphics.FillRectangle(selectionColorBrush, e.CellBounds);
-                     textColor = Brushes.White;
-                  }
-                  else
-                  {
-                     e.Graphics.FillRectangle(Brushes.Orange, e.CellBounds);
-                  }
-               }
-               else
-               {
-                  throw new NotImplementedException(String.Format(CultureInfo.CurrentCulture,
-                     "PaintCell Type '{0}' is not implemented", paint));
-               }
-               #endregion
-
-               #region Draw the bottom grid line
-               e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
-                                   e.CellBounds.Bottom - 1, e.CellBounds.Right,
-                                   e.CellBounds.Bottom - 1);
-               #endregion
-
-               #region Draw Cell Content (Text or Shapes)
-               if (paint.Equals(PaintCell.Status))
-               {
-                  Rectangle newRect = new Rectangle(e.CellBounds.X + 4, e.CellBounds.Y + 4,
-                                                    e.CellBounds.Width - 10, e.CellBounds.Height - 10);
-
-                  // Draw the inset highlight box.
-                  ClientStatus status = (ClientStatus)e.Value;
-                  e.Graphics.DrawRectangle(ClientInstance.GetStatusPen(status), newRect);
-                  e.Graphics.FillRectangle(ClientInstance.GetStatusBrush(status), newRect);
-               }
-               else if (paint.Equals(PaintCell.Time))
-               {
-                  if (e.Value != null)
-                  {
-                     PaintTimeBasedCellValue(textColor, e);
-                  }
-               }
-               else if (paint.Equals(PaintCell.Warning))
-               {
-                  // Draw the text content of the cell, ignoring alignment.
-                  if (e.Value != null)
-                  {
-                     e.Graphics.DrawString(e.Value.ToString(), e.CellStyle.Font,
-                                           textColor, e.CellBounds.X + 2,
-                                           e.CellBounds.Y + 2, StringFormat.GenericDefault);
-                  }
-               }
-               else
-               {
-                  throw new NotImplementedException(String.Format(CultureInfo.CurrentCulture,
-                     "PaintCell Type '{0}' is not implemented", paint));
-               }
-               #endregion
-
-               e.Handled = true;
-            }
-         }
-      }
-      
-      /// <summary>
-      /// Paint the Time based cells with the custom time format
-      /// </summary>
-      private void PaintTimeBasedCellValue(Brush textColor, DataGridViewCellPaintingEventArgs e)
-      {
-         string DrawString = String.Empty;
-      
-         if (dataGridView1.Columns["TPF"].Index == e.ColumnIndex)
-         {
-            TimeSpan span = (TimeSpan)e.Value;
-            DrawString = GetFormattedTpfString(span);
-         }
-         else if (dataGridView1.Columns["ETA"].Index == e.ColumnIndex)
-         {
-            TimeSpan span = (TimeSpan)e.Value;
-            DrawString = GetFormattedEtaString(span);
-         }
-         else if (dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex)
-         {
-            DateTime date = (DateTime)e.Value;
-            DrawString = GetFormattedDownloadTimeString(date);
-         }
-         else if (dataGridView1.Columns["Deadline"].Index == e.ColumnIndex)
-         {
-            DateTime date = (DateTime)e.Value;
-            DrawString = GetFormattedDeadlineString(date);
-         }
-         
-         if (DrawString.Length != 0)
-         {
-            e.Graphics.DrawString(DrawString, e.CellStyle.Font,
-                  textColor, e.CellBounds.X + 2,
-                  e.CellBounds.Y + 2, StringFormat.GenericDefault);
-         }
-      }
-
-      /// <summary>
-      /// Measure Text and set Column Width on Double-Click
-      /// </summary>
-      private void dataGridView1_ColumnDividerDoubleClick(object sender, DataGridViewColumnDividerDoubleClickEventArgs e)
-      {
-         AutoSizeColumn(e.ColumnIndex);
-         e.Handled = true;
-      }
-      
-      private void AutoSizeColumn(int columnIndex)
-      {
-         Font font = new Font(dataGridView1.DefaultCellStyle.Font, FontStyle.Regular);
-         //Graphics g = dataGridView1.CreateGraphics();
-
-         SizeF s;
-         int width = 0;
-
-         for (int i = 0; i < dataGridView1.Rows.Count; i++)
-         {
-            if (dataGridView1.Rows[i].Cells[columnIndex].Value != null)
-            {
-               string formattedString = String.Empty;
-
-               if ((dataGridView1.Columns["TPF"].Index == columnIndex ||
-                    dataGridView1.Columns["ETA"].Index == columnIndex ||
-                    dataGridView1.Columns["DownloadTime"].Index == columnIndex ||
-                    dataGridView1.Columns["Deadline"].Index == columnIndex) &&
-                    _Prefs.GetPreference<TimeStyleType>(Preference.TimeStyle).Equals(TimeStyleType.Formatted))
-               {
-                  if (dataGridView1.Columns["TPF"].Index == columnIndex)
-                  {
-                     formattedString =
-                        GetFormattedTpfString((TimeSpan)dataGridView1.Rows[i].Cells[columnIndex].Value);
-                  }
-                  else if (dataGridView1.Columns["ETA"].Index == columnIndex)
-                  {
-                     formattedString =
-                        GetFormattedEtaString((TimeSpan)dataGridView1.Rows[i].Cells[columnIndex].Value);
-                  }
-                  else if (dataGridView1.Columns["DownloadTime"].Index == columnIndex)
-                  {
-                     formattedString =
-                        GetFormattedDownloadTimeString((DateTime)dataGridView1.Rows[i].Cells[columnIndex].Value);
-                  }
-                  else if (dataGridView1.Columns["Deadline"].Index == columnIndex)
-                  {
-                     formattedString =
-                        GetFormattedDeadlineString((DateTime)dataGridView1.Rows[i].Cells[columnIndex].Value);
-                  }
-               }
-               else if (dataGridView1.Columns["DownloadTime"].Index == columnIndex ||
-                        dataGridView1.Columns["Deadline"].Index == columnIndex)
-               {
-                  formattedString =
-                     GetFormattedDateStringForMeasurement((DateTime)dataGridView1.Rows[i].Cells[columnIndex].Value,
-                                                                    dataGridView1.Rows[i].Cells[columnIndex].FormattedValue.ToString());
-               }
-               else
-               {
-                  formattedString = dataGridView1.Rows[i].Cells[columnIndex].FormattedValue.ToString();
-               }
-
-               s = TextRenderer.MeasureText(formattedString, font);
-               //s = g.MeasureString(formattedString, font);
-
-               if (width < s.Width)
-               {
-                  width = (int)(s.Width + 3);
-               }
-            }
-         }
-
-         dataGridView1.Columns[columnIndex].Width = width;
-      }
-
-      #region Custom String Formatting Helpers
-      private static string GetFormattedTpfString(TimeSpan span)
-      {
-         string formatString = "{1:00}min {2:00}sec";
-         if (span.Hours > 0)
-         {
-            formatString = "{0:00}hr {1:00}min {2:00}sec";
-         }
-
-         return String.Format(formatString, span.Hours, span.Minutes, span.Seconds);
-      }
-
-      private static string GetFormattedEtaString(TimeSpan span)
-      {
-         string formatString = "{1:00}hr {2:00}min";
-         if (span.Days > 0)
-         {
-            formatString = "{0}d {1:00}hr {2:00}min";
-         }
-
-         return String.Format(formatString, span.Days, span.Hours, span.Minutes);
-      }
-
-      private static string GetFormattedDownloadTimeString(DateTime date)
-      {
-         if (date.Equals(DateTime.MinValue))
-         {
-            return "Unknown";
-         }
-
-         TimeSpan span = DateTime.Now.Subtract(date);
-         string formatString = "{1:00}hr {2:00}min ago";
-         if (span.Days > 0)
-         {
-            formatString = "{0}d {1:00}hr {2:00}min ago";
-         }
-
-         return String.Format(formatString, span.Days, span.Hours, span.Minutes);
-      }
-
-      private static string GetFormattedDeadlineString(DateTime date)
-      {
-         if (date.Equals(DateTime.MinValue))
-         {
-            return "Unknown";
-         }
-
-         TimeSpan span = date.Subtract(DateTime.Now);
-         string formatString = "In {1:00}hr {2:00}min";
-         if (span.Days > 0)
-         {
-            formatString = "In {0}d {1:00}hr {2:00}min";
-         }
-
-         return String.Format(formatString, span.Days, span.Hours, span.Minutes);
-      } 
-      
-      private static string GetFormattedDateStringForMeasurement(IEquatable<DateTime> date, string formattedValue)
-      {
-         if (date.Equals(DateTime.MinValue))
-         {
-            return "Unknown";
-         }
-         
-         return formattedValue;
-      }
-      #endregion
 
       /// <summary>
       /// Handle Right-Click (Contest Menu) and Left Double-Click (File Browser)
@@ -1531,7 +1111,21 @@ namespace HFM.Forms
             _Prefs.SetPreference(Preference.CompletedCountDisplay, CompletedCountDisplayType.ClientTotal);
          }
 
-         RefreshDisplay();
+         dataGridView1.Invalidate();
+      }
+
+      private void mnuViewToggleVersionInformation_Click(object sender, EventArgs e)
+      {
+         if (_Prefs.GetPreference<bool>(Preference.ShowVersions))
+         {
+            _Prefs.SetPreference(Preference.ShowVersions, false);
+         }
+         else
+         {
+            _Prefs.SetPreference(Preference.ShowVersions, true);
+         }
+
+         dataGridView1.Invalidate();
       }
       #endregion
 
