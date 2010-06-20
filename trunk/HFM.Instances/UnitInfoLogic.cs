@@ -299,6 +299,11 @@ namespace HFM.Instances
       {
          get { return _unitInfo.CoreVersion; }
       }
+      
+      public string CoreId
+      {
+         get { return _unitInfo.CoreId; }
+      }
 
       /// <summary>
       /// Project ID Number

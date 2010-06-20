@@ -139,7 +139,7 @@ namespace HFM.Instances
          PPD_MHz = Math.Round(instance.PPD / instance.ClientProcessorMegahertz, 3);
          ETA = instance.ETA;
          Core = instance.CurrentUnitInfo.Core;
-         CoreId = instance.CurrentUnitInfo.UnitInfoData.CoreId;
+         CoreId = instance.CurrentUnitInfo.CoreId;
          ProjectRunCloneGen = instance.CurrentUnitInfo.ProjectRunCloneGen;
          Credit = instance.Credit;
          Complete = instance.TotalRunCompletedUnits;

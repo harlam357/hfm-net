@@ -94,6 +94,8 @@ namespace HFM.Framework
       /// </summary>
       string CoreVersion { get; }
 
+      string CoreId { get; }
+
       /// <summary>
       /// Returns true if Project (R/C/G) has not been identified
       /// </summary>
