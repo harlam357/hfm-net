@@ -36,11 +36,11 @@ namespace HFM.Framework
       private const string ValidFileName = @"^[^\\/:*?""<>|\r\n]*$";
 
       private const string ValidWinPath = @"(?:\b[a-z]:|\\\\[a-z0-9.$_-]+\\[a-z0-9.`~!@#$%^&()_-]+)\\(?:[^\\/:*?""<>|\r\n]+\\)*";
-      private const string ValidUnixPath = @"^(?:(/|~)[a-z0-9\-\s._~%!$&'()*+,;=:@/]*)*$";
+      private const string ValidUnixPath = @"^(?:(/|~)[a-z0-9\-\s._~%!$&'()*+,;=:@/]*)+$";
       
       private const string ValidServer = @"^[a-z0-9\-._%]+$";
       
-      private const string ValidHttpUrl = "(https?|file)://[-A-Z0-9+&@#/%?=~_|$!:,.;]*";
+      private const string ValidHttpUrl = "^(https?|file)://[-A-Z0-9+&@#/%?=~_|$!:,.;]+$";
 
       private const string ValidMatchHttpOrFtpUrl =       @"\b(?<protocol>https?|ftp)://(?<domain>[-A-Z0-9.]+)(?<file>/[-A-Z0-9+&@#/%=~_|!:,.;]*)";
       private const string ValidMatchFtpWithUserPassUrl = @"\b(?<protocol>ftp)://(?<username>[A-Z0-9+&@#/%=~_|!:,.;]+):(?<password>[A-Z0-9+&@#/%=~_|!:,.;]+)@(?<domain>[-A-Z0-9.]+)(?<file>/[-A-Z0-9+&@#/%=~_|!:,.;]*/)";

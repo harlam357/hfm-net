@@ -55,6 +55,14 @@ namespace HFM.Forms
       }
    
       #region Members
+
+      private const string XsltExt = "xslt";
+      private const string XsltFilter = "XML Transform (*.xslt;*.xsl)|*.xslt;*.xsl";
+      private const string HfmExt = "hfm";
+      private const string HfmFilter = "HFM Configuration Files|*.hfm";
+      private const string ExeExt = "exe";
+      private const string ExeFilter = "Program Files|*.exe";
+      
       private readonly IPreferenceSet _prefs;
       
       private readonly List<IValidatingControl>[] _validatingControls;
@@ -74,6 +82,7 @@ namespace HFM.Forms
       private readonly ReportingModel _reportingModel;
       private readonly WebSettingsModel _webSettingsModel;
       private readonly WebVisualStylesModel _webVisualStylesModel;
+      
       #endregion
 
       #region Constructor And Binding/Load Methods
@@ -164,17 +173,17 @@ namespace HFM.Forms
 
       private void ScheduledTasksPropertyChanged(object sender, PropertyChangedEventArgs e)
       {
-         SetPropertyErrorState((int)TabName.ScheduledTasks, e.PropertyName);
+         SetPropertyErrorState((int)TabName.ScheduledTasks, e.PropertyName, true);
       }
 
       private void ReportingPropertyChanged(object sender, PropertyChangedEventArgs e)
       {
-         SetPropertyErrorState((int)TabName.Reporting, e.PropertyName);
+         SetPropertyErrorState((int)TabName.Reporting, e.PropertyName, true);
       }
 
       private void WebSettingsChanged(object sender, PropertyChangedEventArgs e)
       {
-         SetPropertyErrorState((int)TabName.WebSettings, e.PropertyName);
+         SetPropertyErrorState((int)TabName.WebSettings, e.PropertyName, true);
       }
 
       private void SetPropertyErrorState()
@@ -183,27 +192,28 @@ namespace HFM.Forms
          {
             foreach (PropertyDescriptor property in _propertyCollection[index])
             {
-               SetPropertyErrorState(index, property.DisplayName);
+               SetPropertyErrorState(index, property.DisplayName, false);
             }
          }
       }
 
-      private void SetPropertyErrorState(int index, string boundProperty)
+      private void SetPropertyErrorState(int index, string boundProperty, bool showToolTip)
       {
          var errorProperty = _propertyCollection[index].Find(boundProperty + "Error", false);
          if (errorProperty != null)
          {
-            SetPropertyErrorState(index, boundProperty, errorProperty);
+            SetPropertyErrorState(index, boundProperty, errorProperty, showToolTip);
          }
       }
 
-      private void SetPropertyErrorState(int index, string boundProperty, PropertyDescriptor errorProperty)
+      private void SetPropertyErrorState(int index, string boundProperty, PropertyDescriptor errorProperty, bool showToolTip)
       {
          ICollection<IValidatingControl> validatingControls = FindBoundControls(index, boundProperty);
          var errorState = (bool)errorProperty.GetValue(_models[index]);
          foreach (var control in validatingControls)
          {
             control.ErrorState = errorState;
+            if (showToolTip) control.ShowToolTip();
          }
       }
 
@@ -745,6 +755,7 @@ namespace HFM.Forms
       {
          if (CheckForErrorConditions() == false)
          {
+            GetAutoRun();
             _prefs.Save();
 
             DialogResult = DialogResult.OK;
@@ -774,6 +785,30 @@ namespace HFM.Forms
          return false;
       }
 
+      private void GetAutoRun()
+      {
+         if (PlatformOps.IsRunningOnMono() == false)
+         {
+            try
+            {
+               if (chkAutoRun.Checked)
+               {
+                  RegistryOps.SetHfmAutoRun(Application.ExecutablePath);
+               }
+               else
+               {
+                  RegistryOps.SetHfmAutoRun(String.Empty);
+               }
+            }
+            catch (InvalidOperationException ex)
+            {
+               HfmTrace.WriteToHfmConsole(ex);
+               MessageBox.Show(this, "Failed to save HFM.NET Auto Run Registry Value.  Please see the Messages Windows for detailed error information.",
+                  Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+         }
+      }
+
       private void btnCancel_Click(object sender, EventArgs e)
       {
          _prefs.Discard();
@@ -782,24 +817,36 @@ namespace HFM.Forms
       #region Folder Browsing
       private void btnBrowseConfigFile_Click(object sender, EventArgs e)
       {
-         DoFolderBrowse(txtDefaultConfigFile, "hfm", "HFM Configuration Files|*.hfm");
+         string path = DoFolderBrowse(_startupAndExternalModel.DefaultConfigFile, HfmExt, HfmFilter);
+         if (String.IsNullOrEmpty(path) == false)
+         {
+            _startupAndExternalModel.DefaultConfigFile = path;
+         }
       }
 
       private void btnBrowseLogViewer_Click(object sender, EventArgs e)
       {
-         DoFolderBrowse(txtLogFileViewer, "exe", "Program Files|*.exe");
+         string path = DoFolderBrowse(_startupAndExternalModel.LogFileViewer, ExeExt, ExeFilter);
+         if (String.IsNullOrEmpty(path) == false)
+         {
+            _startupAndExternalModel.LogFileViewer = path;
+         }
       }
 
       private void btnBrowseFileExplorer_Click(object sender, EventArgs e)
       {
-         DoFolderBrowse(txtFileExplorer, "exe", "Program Files|*.exe");
+         string path = DoFolderBrowse(_startupAndExternalModel.FileExplorer, ExeExt, ExeFilter);
+         if (String.IsNullOrEmpty(path) == false)
+         {
+            _startupAndExternalModel.FileExplorer = path;
+         }
       }
 
-      private void DoFolderBrowse(Control txt, string extension, string filter)
+      private string DoFolderBrowse(string path, string extension, string filter)
       {
-         if (String.IsNullOrEmpty(txt.Text) == false)
+         if (String.IsNullOrEmpty(path) == false)
          {
-            var fileInfo = new FileInfo(txt.Text);
+            var fileInfo = new FileInfo(path);
             if (fileInfo.Exists)
             {
                openConfigDialog.InitialDirectory = fileInfo.DirectoryName;
@@ -807,7 +854,7 @@ namespace HFM.Forms
             }
             else
             {
-               var dirInfo = new DirectoryInfo(txt.Text);
+               var dirInfo = new DirectoryInfo(path);
                if (dirInfo.Exists)
                {
                   openConfigDialog.InitialDirectory = dirInfo.FullName;
@@ -825,60 +872,62 @@ namespace HFM.Forms
          openConfigDialog.Filter = filter;
          if (openConfigDialog.ShowDialog() == DialogResult.OK)
          {
-            txt.Text = openConfigDialog.FileName;
+            return openConfigDialog.FileName;
          }
+
+         return null;   
       }
 
       private void btnOverviewBrowse_Click(object sender, EventArgs e)
       {
-         string filename = DoXsltBrowse(txtOverview.Text, "xslt", "XML Transform (*.xslt;*.xsl)|*.xslt;*.xsl");
-         if (String.IsNullOrEmpty(filename) == false)
+         string path = DoXsltBrowse(_webVisualStylesModel.WebOverview, XsltExt, XsltFilter);
+         if (String.IsNullOrEmpty(path) == false)
          {
-            txtOverview.Text = filename;
+            _webVisualStylesModel.WebOverview = path;
          }
       }
 
       private void btnMobileOverviewBrowse_Click(object sender, EventArgs e)
       {
-         string filename = DoXsltBrowse(txtMobileOverview.Text, "xslt", "XML Transform (*.xslt;*.xsl)|*.xslt;*.xsl");
-         if (String.IsNullOrEmpty(filename) == false)
+         string path = DoXsltBrowse(_webVisualStylesModel.WebMobileOverview, XsltExt, XsltFilter);
+         if (String.IsNullOrEmpty(path) == false)
          {
-            txtMobileOverview.Text = filename;
+            _webVisualStylesModel.WebMobileOverview = path;
          }
       }
 
       private void btnSummaryBrowse_Click(object sender, EventArgs e)
       {
-         string filename = DoXsltBrowse(txtSummary.Text, "xslt", "XML Transform (*.xslt;*.xsl)|*.xslt;*.xsl");
-         if (String.IsNullOrEmpty(filename) == false)
+         string path = DoXsltBrowse(_webVisualStylesModel.WebSummary, XsltExt, XsltFilter);
+         if (String.IsNullOrEmpty(path) == false)
          {
-            txtSummary.Text = filename;
+            _webVisualStylesModel.WebSummary = path;
          }
       }
 
       private void btnMobileSummaryBrowse_Click(object sender, EventArgs e)
       {
-         string filename = DoXsltBrowse(txtMobileSummary.Text, "xslt", "XML Transform (*.xslt;*.xsl)|*.xslt;*.xsl");
-         if (String.IsNullOrEmpty(filename) == false)
+         string path = DoXsltBrowse(_webVisualStylesModel.WebMobileSummary, XsltExt, XsltFilter);
+         if (String.IsNullOrEmpty(path) == false)
          {
-            txtSummary.Text = filename;
+            _webVisualStylesModel.WebMobileSummary = path;
          }
       }
 
       private void btnInstanceBrowse_Click(object sender, EventArgs e)
       {
-         string filename = DoXsltBrowse(txtInstance.Text, "xslt", "XML Transform (*.xslt;*.xsl)|*.xslt;*.xsl");
-         if (String.IsNullOrEmpty(filename) == false)
+         string path = DoXsltBrowse(_webVisualStylesModel.WebInstance, XsltExt, XsltFilter);
+         if (String.IsNullOrEmpty(path) == false)
          {
-            txtInstance.Text = filename;
+            _webVisualStylesModel.WebInstance = path;
          }
       }
 
-      private string DoXsltBrowse(string filename, string extension, string filter)
+      private string DoXsltBrowse(string path, string extension, string filter)
       {
-         if (String.IsNullOrEmpty(filename) == false)
+         if (String.IsNullOrEmpty(path) == false)
          {
-            var fileInfo = new FileInfo(filename);
+            var fileInfo = new FileInfo(path);
             string xsltPath = Path.Combine(_prefs.ApplicationPath, Constants.XsltFolderName);
             
             if (fileInfo.Exists)
@@ -886,14 +935,14 @@ namespace HFM.Forms
                openConfigDialog.InitialDirectory = fileInfo.DirectoryName;
                openConfigDialog.FileName = fileInfo.Name;
             }
-            else if (File.Exists(Path.Combine(xsltPath, filename)))
+            else if (File.Exists(Path.Combine(xsltPath, path)))
             {
                openConfigDialog.InitialDirectory = xsltPath;
-               openConfigDialog.FileName = filename;
+               openConfigDialog.FileName = path;
             }
             else
             {
-               var dirInfo = new DirectoryInfo(filename);
+               var dirInfo = new DirectoryInfo(path);
                if (dirInfo.Exists)
                {
                   openConfigDialog.InitialDirectory = dirInfo.FullName;

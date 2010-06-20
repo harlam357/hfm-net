@@ -153,33 +153,34 @@ namespace HFM.Forms
 
       private void SettingsPropertyChanged(object sender, PropertyChangedEventArgs e)
       {
-         SetPropertyErrorState(e.PropertyName);
+         SetPropertyErrorState(e.PropertyName, true);
       }
       
       private void SetPropertyErrorState()
       {
          foreach (PropertyDescriptor property in _propertyCollection)
          {
-            SetPropertyErrorState(property.DisplayName);
+            SetPropertyErrorState(property.DisplayName, false);
          }
       }
       
-      private void SetPropertyErrorState(string boundProperty)
+      private void SetPropertyErrorState(string boundProperty, bool showToolTip)
       {
          var errorProperty = _propertyCollection.Find(boundProperty + "Error", false);
          if (errorProperty != null)
          {
-            SetPropertyErrorState(boundProperty, errorProperty);
+            SetPropertyErrorState(boundProperty, errorProperty, showToolTip);
          }
       }
 
-      private void SetPropertyErrorState(string boundProperty, PropertyDescriptor errorProperty)
+      private void SetPropertyErrorState(string boundProperty, PropertyDescriptor errorProperty, bool showToolTip)
       {
          ICollection<IValidatingControl> validatingControls = FindBoundControls(boundProperty);
          var errorState = (bool)errorProperty.GetValue(Settings);
          foreach (var control in validatingControls)
          {
             control.ErrorState = errorState;
+            if (showToolTip) control.ShowToolTip();
          }
       }
 
@@ -447,16 +448,16 @@ namespace HFM.Forms
              Settings.RemoteFAHLogFilenameError ||
              Settings.RemoteUnitInfoFilenameError ||
              Settings.RemoteQueueFilenameError ||
+             Settings.ServerError ||
+             Settings.CredentialsError ||
              Settings.PathEmpty)
          {
             MessageBox.Show("There are validation errors.  Please correct the yellow highlighted fields.", Constants.ApplicationName,
                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             return false;
          }
-
-         if (Settings.PathError ||
-             Settings.ServerError ||
-             Settings.CredentialsError)
+         
+         if (Settings.PathError)
          {
             if (MessageBox.Show("There are validation errors.  Do you wish to accept the input anyway?", Constants.ApplicationName,
                   MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
