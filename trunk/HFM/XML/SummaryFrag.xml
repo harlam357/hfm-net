@@ -6,6 +6,7 @@
    <Name>Instance</Name>
    <UserIDDuplicate>False</UserIDDuplicate>
    <ClientType>N/A</ClientType>
+   <ClientVersion>N/A</ClientVersion>
    <TPF>00:00:00</TPF>
    <PPD>N/A</PPD>
    <UPD>N/A</UPD>
@@ -14,6 +15,7 @@
    <ETA>00:00:00</ETA>
    <Core>N/A</Core>
    <CoreVersion>N/A</CoreVersion>
+   <CoreID>N/A</CoreID>
    <ProjectRunCloneGen>N/A</ProjectRunCloneGen>
    <ProjectDuplicate>False</ProjectDuplicate>
    <Credit>N/A</Credit>
@@ -23,6 +25,7 @@
    <CompletedCountDisplay>ClientRunTotal</CompletedCountDisplay>
    <Username>N/A</Username>
    <UsernameMatch>True</UsernameMatch>
+   <ShowVersions>False</ShowVersions>
    <DownloadTime>00:00:00</DownloadTime>
    <Deadline>00:00:00</Deadline>
 </Instance>

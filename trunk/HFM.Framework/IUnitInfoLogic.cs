@@ -95,11 +95,6 @@ namespace HFM.Framework
       string CoreVersion { get; }
 
       /// <summary>
-      /// Project (R/C/G) is a Duplicate of another Client's Project (R/C/G)
-      /// </summary>
-      bool ProjectIsDuplicate { get; }
-
-      /// <summary>
       /// Returns true if Project (R/C/G) has not been identified
       /// </summary>
       bool ProjectIsUnknown { get; }

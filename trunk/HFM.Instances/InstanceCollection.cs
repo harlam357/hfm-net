@@ -1215,7 +1215,7 @@ namespace HFM.Instances
 
          foreach (ClientInstance instance in instances)
          {
-            instance.CurrentUnitInfoConcrete.ProjectIsDuplicate = duplicates.Contains(instance.CurrentUnitInfo.ProjectRunCloneGen);
+            instance.ProjectIsDuplicate = duplicates.Contains(instance.CurrentUnitInfo.ProjectRunCloneGen);
          }
       }
       #endregion

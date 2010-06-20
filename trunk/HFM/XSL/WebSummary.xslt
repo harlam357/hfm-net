@@ -28,7 +28,7 @@
                   <td class="Heading">PPD/MHz</td>
                   <td class="Heading">ETA</td>
                   <td class="Heading">Core</td>
-                  <td class="Heading">Version</td>
+                  <td class="Heading">Core ID</td>
                   <td class="Heading">Project<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>(Run,<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Clone,<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Gen)</td>
                   <td class="Heading">Credit</td>
                   <td class="Heading">Completed</td>
@@ -79,7 +79,7 @@
    </xsl:template>
    <xsl:template match="Instance">
       <tr>
-         <td width="7%" class="StatusCol">
+         <td width="5%" class="StatusCol">
             <xsl:attribute name="bgcolor">
                <xsl:value-of select="StatusColor"/>
             </xsl:attribute>
@@ -90,10 +90,10 @@
                <xsl:value-of select="Status"/>
             </font>
          </td>
-         <td width="3%" class="RightCol">
+         <td width="2%" class="RightCol">
             <xsl:value-of select="PercentComplete"/>%
          </td>
-         <td width="14%">
+         <td width="12%">
             <xsl:choose>
                <xsl:when test="UserIDDuplicate='True'">
                   <xsl:attribute name="class">StatusCol</xsl:attribute>
@@ -107,13 +107,23 @@
                <xsl:attribute name="href"><xsl:value-of select="Name"/>.html</xsl:attribute><xsl:value-of select="Name"/>
             </a>
          </td>
-         <td width="4%" class="RightCol">
-            <xsl:value-of select="ClientType"/>
+         <td width="5%" class="RightCol">
+            <xsl:choose>
+               <xsl:when test="ShowVersions='True' and ClientVersion=''">
+                  <xsl:value-of select="ClientType"/>
+               </xsl:when>
+               <xsl:when test="ShowVersions='True'">
+                  <xsl:value-of select="ClientType"/> (<xsl:value-of select="ClientVersion"/>)
+               </xsl:when>
+               <xsl:otherwise>
+                  <xsl:value-of select="ClientType"/>
+               </xsl:otherwise>
+            </xsl:choose>
          </td>
-         <td width="4%" class="RightCol">
+         <td width="3%" class="RightCol">
             <xsl:value-of select="TPF"/>
          </td>
-         <td width="8%" class="RightCol"> <!--40%-->
+         <td width="8%" class="RightCol">
             <xsl:value-of select="PPD"/> (<xsl:value-of select="UPD"/> WUs)
          </td>
          <td width="3%" class="RightCol">
@@ -122,16 +132,26 @@
          <td width="3%" class="RightCol">
             <xsl:value-of select="PPDMHz"/>
          </td>
-         <td width="4%" class="RightCol">
+         <td width="8%" class="RightCol">
             <xsl:value-of select="ETA"/>
          </td>
-         <td width="4%" class="RightCol">
-            <xsl:value-of select="Core"/>
+         <td width="8%" class="RightCol">
+            <xsl:choose>
+               <xsl:when test="ShowVersions='True' and CoreVersion=''">
+                  <xsl:value-of select="Core"/>
+               </xsl:when>
+               <xsl:when test="ShowVersions='True'">
+                  <xsl:value-of select="Core"/> (<xsl:value-of select="CoreVersion"/>)
+               </xsl:when>
+               <xsl:otherwise>
+                  <xsl:value-of select="Core"/>
+               </xsl:otherwise>
+            </xsl:choose>
          </td>
-         <td width="3%" class="RightCol">
-            <xsl:value-of select="CoreVersion"/>
+         <td width="2%" class="RightCol">
+            <xsl:value-of select="CoreID"/>
          </td>
-         <td width="8%"> <!--65%-->
+         <td width="8%">
             <xsl:choose>
                <xsl:when test="ProjectDuplicate='True'">
                   <xsl:attribute name="class">StatusCol</xsl:attribute>
@@ -143,10 +163,10 @@
             </xsl:choose>
             <xsl:value-of select="ProjectRunCloneGen"/>
          </td>
-         <td width="4%" class="RightCol">
+         <td width="3%" class="RightCol">
             <xsl:value-of select="Credit"/>
          </td>
-         <td width="4%" class="RightCol">
+         <td width="3%" class="RightCol">
             <xsl:choose>
                <xsl:when test="CompletedCountDisplay='ClientTotal'">
                   <xsl:value-of select="TotalCompleted"/>

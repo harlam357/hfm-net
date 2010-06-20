@@ -89,7 +89,7 @@ namespace HFM.Forms
             }
             else if (dataGridView1.Columns["ProjectRunCloneGen"].Index == info.ColumnIndex)
             {
-               if (_Prefs.GetPreference<bool>(Preference.DuplicateProjectCheck) && instance.CurrentUnitInfo.ProjectIsDuplicate)
+               if (_Prefs.GetPreference<bool>(Preference.DuplicateProjectCheck) && instance.ProjectIsDuplicate)
                {
                   toolTipGrid.Show("Client is working on the same work unit as another client", dataGridView1, e.X + 15, e.Y);
                   return;
@@ -156,7 +156,7 @@ namespace HFM.Forms
                #region Duplicate Project Custom Paint
                IClientInstance instance = _clientInstances.Instances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
 
-               if (_Prefs.GetPreference<bool>(Preference.DuplicateProjectCheck) && instance.CurrentUnitInfo.ProjectIsDuplicate)
+               if (_Prefs.GetPreference<bool>(Preference.DuplicateProjectCheck) && instance.ProjectIsDuplicate)
                {
                   PaintGridCell(PaintCell.Warning, e);
                }

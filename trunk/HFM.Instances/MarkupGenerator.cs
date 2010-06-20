@@ -105,11 +105,11 @@ namespace HFM.Instances
             // Generate XML Files
             XmlFilePaths = DoXmlGeneration(folderPath, instances);
 
-            List<string> fileList = new List<string>(instances.Count + 4);
-            string cssFileName = _prefs.GetPreference<string>(Preference.CssFile);
+            var fileList = new List<string>(instances.Count + 4);
+            var cssFileName = _prefs.GetPreference<string>(Preference.CssFile);
          
             // Load the Overview XML
-            XmlDocument overviewXml = new XmlDocument();
+            var overviewXml = new XmlDocument();
             overviewXml.Load(XmlFilePaths[(int)XmlFileName.Overview]);
 
             // Generate the index page
@@ -146,7 +146,7 @@ namespace HFM.Instances
 
             string instanceXslt = GetXsltFileName(Preference.WebInstance);
             // Load the Instances XML
-            XmlDocument instancesXml = new XmlDocument();
+            var instancesXml = new XmlDocument();
             instancesXml.Load(XmlFilePaths[(int)XmlFileName.Instances]);
             // Generate a page per instance
             foreach (IClientInstance instance in instances)
@@ -172,7 +172,7 @@ namespace HFM.Instances
 
       private string GetXsltFileName(Preference p)
       {
-         string xslt = _prefs.GetPreference<string>(p);
+         var xslt = _prefs.GetPreference<string>(p);
          Debug.Assert(String.IsNullOrEmpty(xslt) == false);
 
          if (Path.IsPathRooted(xslt))
@@ -240,7 +240,7 @@ namespace HFM.Instances
          Debug.Assert(String.IsNullOrEmpty(folderPath) == false);
          Debug.Assert(instances != null);
       
-         string[] fileList = new string[2];
+         var fileList = new string[2];
       
          // Get instance totals
          InstanceTotals totals = InstanceCollectionHelpers.GetInstanceTotals(instances);
@@ -252,7 +252,7 @@ namespace HFM.Instances
          // Success, add it to the list
          fileList[(int)XmlFileName.Overview] = filePath;
 
-         XmlDocument instancesXml = new XmlDocument();
+         var instancesXml = new XmlDocument();
          // Write down the XML declaration
          XmlDeclaration xmlDeclaration = instancesXml.CreateXmlDeclaration("1.0", "utf-8", null);
          // Create the root element
@@ -277,7 +277,7 @@ namespace HFM.Instances
 
       private XmlDocument CreateInstanceXml(IClientInstance instance)
       {
-         XmlDocument xmlDoc = new XmlDocument();
+         var xmlDoc = new XmlDocument();
          xmlDoc.Load(Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.XmlFolderName), "Instance.xml"));
          XmlElement xmlData = xmlDoc.DocumentElement;
 
@@ -368,7 +368,7 @@ namespace HFM.Instances
          XMLOps.setXmlNode(xmlData, "Protein/Description", p.Description);
          XMLOps.setXmlNode(xmlData, "Protein/Contact", p.Contact);
 
-         StringBuilder sb = new StringBuilder();
+         var sb = new StringBuilder();
          // Issue 201 - Web Generation Fails when a Client with no CurrentLogLines is encountered.
          if (instance.DataAggregator.CurrentLogLines != null)
          {
@@ -409,15 +409,16 @@ namespace HFM.Instances
 
       private XmlDocument CreateSummaryXml(XmlDocument xmlDoc, IEnumerable<IClientInstance> instanceCollection)
       {
-         bool duplicateUserIdCheck = _prefs.GetPreference<bool>(Preference.DuplicateUserIdCheck);
-         bool duplicateProjectCheck = _prefs.GetPreference<bool>(Preference.DuplicateProjectCheck);
-         CompletedCountDisplayType completedCountDisplayType =
-            _prefs.GetPreference<CompletedCountDisplayType>(Preference.CompletedCountDisplay);
+         var duplicateUserIdCheck = _prefs.GetPreference<bool>(Preference.DuplicateUserIdCheck);
+         var duplicateProjectCheck = _prefs.GetPreference<bool>(Preference.DuplicateProjectCheck);
+         var etaDate = _prefs.GetPreference<bool>(Preference.EtaDate);
+         var completedCountDisplayType = _prefs.GetPreference<CompletedCountDisplayType>(Preference.CompletedCountDisplay);
+         var showVersions = _prefs.GetPreference<bool>(Preference.ShowVersions);
          
          XmlElement xmlRootData = xmlDoc.DocumentElement;
          foreach (IClientInstance instance in instanceCollection)
          {
-            XmlDocument xmlFrag = new XmlDocument();
+            var xmlFrag = new XmlDocument();
             xmlFrag.Load(Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.XmlFolderName), "SummaryFrag.xml"));
             XmlElement xmlData = xmlFrag.DocumentElement;
 
@@ -428,23 +429,40 @@ namespace HFM.Instances
             XMLOps.setXmlNode(xmlData, "Name", instance.Settings.InstanceName);
             XMLOps.setXmlNode(xmlData, "UserIDDuplicate", (duplicateUserIdCheck && instance.UserIdIsDuplicate).ToString());
             XMLOps.setXmlNode(xmlData, "ClientType", instance.CurrentUnitInfo.TypeOfClient.ToString());
+            XMLOps.setXmlNode(xmlData, "ClientVersion", instance.ClientVersion); // Issue 193
             XMLOps.setXmlNode(xmlData, "TPF", instance.TimePerFrame.ToString());
             XMLOps.setXmlNode(xmlData, "PPD", String.Format("{0:" + _prefs.PpdFormatString + "}", instance.PPD));
             XMLOps.setXmlNode(xmlData, "UPD", String.Format("{0:0.00}", instance.UPD));
             XMLOps.setXmlNode(xmlData, "MHz", instance.Settings.ClientProcessorMegahertz.ToString());
             XMLOps.setXmlNode(xmlData, "PPDMHz", String.Format("{0:0.000}", instance.PPD / instance.Settings.ClientProcessorMegahertz));
-            XMLOps.setXmlNode(xmlData, "ETA", instance.ETA.ToString());
+            if (etaDate)
+            {
+               if (instance.EtaDate.Equals(DateTime.MinValue))
+               {
+                  XMLOps.setXmlNode(xmlData, "ETA", "Unknown");
+               }
+               else
+               {
+                  XMLOps.setXmlNode(xmlData, "ETA", String.Format("{0} {1}", instance.EtaDate.ToShortDateString(), instance.EtaDate.ToShortTimeString()));
+               }             
+            }
+            else
+            {
+               XMLOps.setXmlNode(xmlData, "ETA", instance.ETA.ToString());
+            }
             XMLOps.setXmlNode(xmlData, "Core", instance.CurrentUnitInfo.Core);
             XMLOps.setXmlNode(xmlData, "CoreVersion", instance.CurrentUnitInfo.CoreVersion);
+            XMLOps.setXmlNode(xmlData, "CoreID", instance.CurrentUnitInfo.UnitInfoData.CoreId); // Issue 193
             XMLOps.setXmlNode(xmlData, "ProjectRunCloneGen", instance.CurrentUnitInfo.ProjectRunCloneGen);
-            XMLOps.setXmlNode(xmlData, "ProjectDuplicate", (duplicateProjectCheck && instance.CurrentUnitInfo.ProjectIsDuplicate).ToString());
+            XMLOps.setXmlNode(xmlData, "ProjectDuplicate", (duplicateProjectCheck && instance.ProjectIsDuplicate).ToString());
             XMLOps.setXmlNode(xmlData, "Credit", String.Format("{0:0}", instance.Credit));
             XMLOps.setXmlNode(xmlData, "Completed", instance.TotalRunCompletedUnits.ToString());
             XMLOps.setXmlNode(xmlData, "Failed", instance.TotalRunFailedUnits.ToString());
             XMLOps.setXmlNode(xmlData, "TotalCompleted", instance.TotalClientCompletedUnits.ToString());
             XMLOps.setXmlNode(xmlData, "CompletedCountDisplay", completedCountDisplayType.ToString());
             XMLOps.setXmlNode(xmlData, "Username", String.Format("{0} ({1})", instance.FoldingID, instance.Team));
-            XMLOps.setXmlNode(xmlData, "UsernameMatch", instance.IsUsernameOk().ToString()); //Issue 51
+            XMLOps.setXmlNode(xmlData, "UsernameMatch", instance.IsUsernameOk().ToString()); // Issue 51
+            XMLOps.setXmlNode(xmlData, "ShowVersions", showVersions.ToString()); // Issue 193
             if (instance.CurrentUnitInfo.DownloadTimeUnknown)
             {
                XMLOps.setXmlNode(xmlData, "DownloadTime", "Unknown");
@@ -471,7 +489,7 @@ namespace HFM.Instances
 
       private XmlDocument CreateOverviewXml(InstanceTotals totals)
       {
-         XmlDocument xmlDoc = new XmlDocument();
+         var xmlDoc = new XmlDocument();
          xmlDoc.Load(Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.XmlFolderName), "Overview.xml"));
          XmlElement xmlData = xmlDoc.DocumentElement;
 

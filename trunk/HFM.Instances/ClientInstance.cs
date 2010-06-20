@@ -201,6 +201,11 @@ namespace HFM.Instances
       public bool UserIdIsDuplicate { get; set; }
 
       /// <summary>
+      /// Project (R/C/G) is a Duplicate of another Client's Project (R/C/G)
+      /// </summary>
+      public bool ProjectIsDuplicate { get; set; }
+
+      /// <summary>
       /// True if User ID is Unknown
       /// </summary>
       public bool UserIdUnknown

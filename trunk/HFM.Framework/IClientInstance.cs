@@ -65,6 +65,11 @@ namespace HFM.Framework
       bool UserIdIsDuplicate { get; }
 
       /// <summary>
+      /// Project (R/C/G) is a Duplicate of another Client's Project (R/C/G)
+      /// </summary>
+      bool ProjectIsDuplicate { get; }
+
+      /// <summary>
       /// True if User ID is Unknown
       /// </summary>
       bool UserIdUnknown { get; }
