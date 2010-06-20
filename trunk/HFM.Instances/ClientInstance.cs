@@ -1711,8 +1711,8 @@ namespace HFM.Instances
             return true;
          }
 
-         if ((FoldingID != _prefs.GetPreference<string>(Preference.StanfordID) || 
-              Team != _prefs.GetPreference<int>(Preference.TeamID)) &&
+         if ((FoldingID != _prefs.GetPreference<string>(Preference.StanfordId) || 
+              Team != _prefs.GetPreference<int>(Preference.TeamId)) &&
              (Status.Equals(ClientStatus.Unknown) == false && Status.Equals(ClientStatus.Offline) == false))
          {
             return false;

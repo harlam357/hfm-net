@@ -73,7 +73,7 @@ namespace HFM.Preferences
       {
          get 
          { 
-            return String.Concat(Constants.EOCUserXmlUrl, GetPreference<int>(Preference.EocUserID));
+            return String.Concat(Constants.EOCUserXmlUrl, GetPreference<int>(Preference.EocUserId));
          }
       }
 
@@ -84,7 +84,7 @@ namespace HFM.Preferences
       {
          get
          {
-            return new Uri(String.Concat(Constants.EOCUserBaseUrl, GetPreference<int>(Preference.EocUserID)));
+            return new Uri(String.Concat(Constants.EOCUserBaseUrl, GetPreference<int>(Preference.EocUserId)));
          }
       }
 
@@ -95,7 +95,7 @@ namespace HFM.Preferences
       {
          get
          {
-            return new Uri(String.Concat(Constants.EOCTeamBaseUrl, GetPreference<int>(Preference.TeamID)));
+            return new Uri(String.Concat(Constants.EOCTeamBaseUrl, GetPreference<int>(Preference.TeamId)));
          }
       }
 
@@ -106,7 +106,7 @@ namespace HFM.Preferences
       {
          get
          {
-            return new Uri(String.Concat(Constants.StanfordBaseUrl, GetPreference<string>(Preference.StanfordID)));
+            return new Uri(String.Concat(Constants.StanfordBaseUrl, GetPreference<string>(Preference.StanfordId)));
          }
       }
 
@@ -271,9 +271,9 @@ namespace HFM.Preferences
          _Preferences.Add(Preference.EmailReportingServerPassword, new Metadata<string>());
          _Preferences.Add(Preference.ReportEuePause, new Metadata<bool>());
 
-         _Preferences.Add(Preference.EocUserID, new Metadata<int>());
-         _Preferences.Add(Preference.StanfordID, new Metadata<string>());
-         _Preferences.Add(Preference.TeamID, new Metadata<int>());
+         _Preferences.Add(Preference.EocUserId, new Metadata<int>());
+         _Preferences.Add(Preference.StanfordId, new Metadata<string>());
+         _Preferences.Add(Preference.TeamId, new Metadata<int>());
          _Preferences.Add(Preference.ProjectDownloadUrl, new Metadata<string>());
          _Preferences.Add(Preference.UseProxy, new Metadata<bool>());
          _Preferences.Add(Preference.ProxyServer, new Metadata<string>());
@@ -379,9 +379,9 @@ namespace HFM.Preferences
          SetPreference(Preference.EmailReportingServerPassword, DecryptEmailReportingServerPassword(Settings.Default.EmailReportingServerPassword, symmetricProvider, _iv, _symmetricKey));
          SetPreference(Preference.ReportEuePause, Settings.Default.ReportEuePause);
          
-         SetPreference(Preference.EocUserID, Settings.Default.EOCUserID);
-         SetPreference(Preference.StanfordID, Settings.Default.StanfordID);
-         SetPreference(Preference.TeamID, Settings.Default.TeamID);
+         SetPreference(Preference.EocUserId, Settings.Default.EOCUserID);
+         SetPreference(Preference.StanfordId, Settings.Default.StanfordID);
+         SetPreference(Preference.TeamId, Settings.Default.TeamID);
          SetPreference(Preference.ProjectDownloadUrl, Settings.Default.ProjectDownloadUrl);
          SetPreference(Preference.UseProxy, Settings.Default.UseProxy);
          SetPreference(Preference.ProxyServer, Settings.Default.ProxyServer);
@@ -768,9 +768,9 @@ namespace HFM.Preferences
             Settings.Default.EmailReportingServerPassword = EncryptEmailReportingServerPassword(GetPreference<string>(Preference.EmailReportingServerPassword), symmetricProvider, _iv, _symmetricKey);
             Settings.Default.ReportEuePause = GetPreference<bool>(Preference.ReportEuePause);
 
-            Settings.Default.EOCUserID = GetPreference<int>(Preference.EocUserID);
-            Settings.Default.StanfordID = GetPreference<string>(Preference.StanfordID);
-            Settings.Default.TeamID = GetPreference<int>(Preference.TeamID);
+            Settings.Default.EOCUserID = GetPreference<int>(Preference.EocUserId);
+            Settings.Default.StanfordID = GetPreference<string>(Preference.StanfordId);
+            Settings.Default.TeamID = GetPreference<int>(Preference.TeamId);
             Settings.Default.ProjectDownloadUrl = GetPreference<string>(Preference.ProjectDownloadUrl);
             Settings.Default.UseProxy = GetPreference<bool>(Preference.UseProxy);
             Settings.Default.ProxyServer = GetPreference<string>(Preference.ProxyServer);
@@ -991,23 +991,13 @@ namespace HFM.Preferences
          {
             output = defaultValue;
          }
-         else if (ValidateMinutes(output) == false)
+         else if (StringOps.ValidateMinutes(output) == false)
          {
             output = defaultValue;
          }
          
          return output;
       }
-      
-      public static bool ValidateMinutes(int minutes)
-      {
-         if ((minutes > Constants.MaxMinutes) || (minutes < Constants.MinMinutes))
-         {
-            return false;
-         }
-
-         return true;
-      } 
       
       //public static bool ValidateDecimalPlaces(int Places)
       //{

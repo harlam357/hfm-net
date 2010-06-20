@@ -148,7 +148,7 @@ namespace HFM.Forms
 
       private void GetModelProperties()
       {
-         _propertyCollection = TypeDescriptor.GetProperties(_settings);
+         _propertyCollection = TypeDescriptor.GetProperties(Settings);
       }
 
       private void SettingsPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -176,7 +176,7 @@ namespace HFM.Forms
       private void SetPropertyErrorState(string boundProperty, PropertyDescriptor errorProperty)
       {
          ICollection<IValidatingControl> validatingControls = FindBoundControls(boundProperty);
-         var errorState = (bool)errorProperty.GetValue(_settings);
+         var errorState = (bool)errorProperty.GetValue(Settings);
          foreach (var control in validatingControls)
          {
             control.ErrorState = errorState;
@@ -192,7 +192,7 @@ namespace HFM.Forms
       /// <summary>
       /// Enable the HTTP controls
       /// </summary>
-      private void HTTPFieldsActive(bool state)
+      private void HttpFieldsActive(bool state)
       {
          if (state)
          {
@@ -207,7 +207,7 @@ namespace HFM.Forms
       /// <summary>
       /// Enable/disable the FTP controls
       /// </summary>
-      private void FTPFieldsActive(bool state)
+      private void FtpFieldsActive(bool state)
       {
          if (state)
          {
@@ -241,20 +241,20 @@ namespace HFM.Forms
          if (radioLocal.Checked)
          {
             PathFieldsActive(true);
-            FTPFieldsActive(false);
-            HTTPFieldsActive(false);
+            FtpFieldsActive(false);
+            HttpFieldsActive(false);
          }
          else if (radioFTP.Checked)
          {
             PathFieldsActive(false);
-            FTPFieldsActive(true);
-            HTTPFieldsActive(false);
+            FtpFieldsActive(true);
+            HttpFieldsActive(false);
          }
          else if (radioHTTP.Checked)
          {
             PathFieldsActive(false);
-            FTPFieldsActive(false);
-            HTTPFieldsActive(true);
+            FtpFieldsActive(false);
+            HttpFieldsActive(true);
          }
       }
       #endregion
@@ -265,21 +265,15 @@ namespace HFM.Forms
       /// </summary>
       private void btnBrowseLocal_Click(object sender, EventArgs e)
       {
-         if (txtLocalPath.Text.Length > 0)
+         if (Settings.Path.Length > 0)
          {
-            openLogFolder.SelectedPath = txtLocalPath.Text;
+            openLogFolder.SelectedPath = Settings.Path;
          }
 
          openLogFolder.ShowDialog();
-
          if (openLogFolder.SelectedPath.Length > 0)
          {
-            txtLocalPath.Text = openLogFolder.SelectedPath;
-            if (txtLocalPath.Text.EndsWith(Path.DirectorySeparatorChar.ToString()) == false)
-            {
-               txtLocalPath.Text += Path.DirectorySeparatorChar;
-            }
-            txtLocalPath.ValidateControlText();
+            Settings.Path = openLogFolder.SelectedPath;
          }
       }
       #endregion
@@ -298,17 +292,17 @@ namespace HFM.Forms
             if (radioLocal.Checked)
             {
                CheckFileConnectionDelegate del = CheckFileConnection;
-               del.BeginInvoke(txtLocalPath.Text, CheckFileConnectionCallback, del);
+               del.BeginInvoke(Settings.Path, CheckFileConnectionCallback, del);
             }
             else if (radioFTP.Checked)
             {
                FtpCheckConnectionDelegate del = _net.FtpCheckConnection;
-               del.BeginInvoke(txtFTPServer.Text, txtFTPPath.Text, txtFTPUser.Text, txtFTPPass.Text, Settings.FtpMode, FtpCheckConnectionCallback, del);
+               del.BeginInvoke(Settings.Server, Settings.Path, Settings.Username, Settings.Password, Settings.FtpMode, FtpCheckConnectionCallback, del);
             }
             else if (radioHTTP.Checked)
             {
                HttpCheckConnectionDelegate del = _net.HttpCheckConnection;
-               del.BeginInvoke(txtWebURL.Text, txtWebUser.Text, txtWebPass.Text, HttpCheckConnectionCallback, del);
+               del.BeginInvoke(Settings.Path, Settings.Username, Settings.Password, HttpCheckConnectionCallback, del);
             }
          }
          catch (Exception ex)
@@ -448,21 +442,21 @@ namespace HFM.Forms
       {
          SetPropertyErrorState();
          // Check for error conditions
-         if (_settings.InstanceNameError ||
-             _settings.ClientProcessorMegahertzError ||
-             _settings.RemoteFAHLogFilenameError ||
-             _settings.RemoteUnitInfoFilenameError ||
-             _settings.RemoteQueueFilenameError ||
-             _settings.PathEmpty)
+         if (Settings.InstanceNameError ||
+             Settings.ClientProcessorMegahertzError ||
+             Settings.RemoteFAHLogFilenameError ||
+             Settings.RemoteUnitInfoFilenameError ||
+             Settings.RemoteQueueFilenameError ||
+             Settings.PathEmpty)
          {
             MessageBox.Show("There are validation errors.  Please correct the yellow highlighted fields.", Constants.ApplicationName,
                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             return false;
          }
 
-         if (_settings.PathError ||
-             _settings.ServerError ||
-             _settings.CredentialsError)
+         if (Settings.PathError ||
+             Settings.ServerError ||
+             Settings.CredentialsError)
          {
             if (MessageBox.Show("There are validation errors.  Do you wish to accept the input anyway?", Constants.ApplicationName,
                   MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)

@@ -1306,12 +1306,14 @@ namespace HFM.Forms
       /// </summary>
       private void mnuClientsAdd_Click(object sender, EventArgs e)
       {
-         var newHost = new frmHost(new ClientInstanceSettings(InstanceType.PathInstance));
-         if (newHost.ShowDialog().Equals(DialogResult.OK))
+         var settings = new ClientInstanceSettings();
+         var newHost = new frmHost(settings);
+         while (newHost.ShowDialog().Equals(DialogResult.OK))
          {
             try
             {
                _clientInstances.Add(newHost.Settings);
+               break;
             }
             catch (InvalidOperationException ex)
             {
@@ -1329,12 +1331,14 @@ namespace HFM.Forms
          // Check for SelectedInstance, and get out if not found
          if (_clientInstances.SelectedInstance == null) return;
 
-         var editHost = new frmHost(_clientInstances.SelectedInstance.Settings.Clone());
-         if (editHost.ShowDialog().Equals(DialogResult.OK))
+         var settings = _clientInstances.SelectedInstance.Settings.Clone();
+         var editHost = new frmHost(settings);
+         while (editHost.ShowDialog().Equals(DialogResult.OK))
          {
             try
             {
                _clientInstances.Edit(editHost.Settings);
+               break;
             }
             catch (InvalidOperationException ex)
             {

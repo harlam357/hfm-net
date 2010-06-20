@@ -1375,8 +1375,8 @@ namespace HFM.Instances.Tests
       private IPreferenceSet SetupMockPreferenceSet(string username, int team)
       {
          IPreferenceSet prefs = _mocks.DynamicMock<IPreferenceSet>();
-         Expect.Call(prefs.GetPreference<string>(Preference.StanfordID)).Return(username).Repeat.Any();
-         Expect.Call(prefs.GetPreference<int>(Preference.TeamID)).Return(team).Repeat.Any();
+         Expect.Call(prefs.GetPreference<string>(Preference.StanfordId)).Return(username).Repeat.Any();
+         Expect.Call(prefs.GetPreference<int>(Preference.TeamId)).Return(team).Repeat.Any();
          Expect.Call(prefs.CacheDirectory).Return(String.Empty).Repeat.Any();
          return prefs;
       }

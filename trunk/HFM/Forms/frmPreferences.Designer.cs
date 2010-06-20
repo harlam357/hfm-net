@@ -69,15 +69,15 @@ namespace HFM.Forms
          this.chkScheduled = new HFM.Classes.CheckBoxWrapper();
          this.chkSynchronous = new HFM.Classes.CheckBoxWrapper();
          this.grpHTMLOutput = new HFM.Classes.GroupBoxWrapper();
+         this.pnlFtpMode = new harlam357.Windows.Forms.RadioPanel();
+         this.radioActive = new HFM.Classes.RadioButtonWrapper();
+         this.radioPassive = new HFM.Classes.RadioButtonWrapper();
+         this.lblFtpMode = new HFM.Classes.LabelWrapper();
          this.udLimitSize = new System.Windows.Forms.NumericUpDown();
          this.chkLimitSize = new HFM.Classes.CheckBoxWrapper();
          this.chkXml = new HFM.Classes.CheckBoxWrapper();
          this.chkHtml = new HFM.Classes.CheckBoxWrapper();
          this.btnTestConnection = new HFM.Classes.ButtonWrapper();
-         this.pnlFtpMode = new System.Windows.Forms.Panel();
-         this.lblFtpMode = new HFM.Classes.LabelWrapper();
-         this.radioPassive = new HFM.Classes.RadioButtonWrapper();
-         this.radioActive = new HFM.Classes.RadioButtonWrapper();
          this.chkFAHlog = new HFM.Classes.CheckBoxWrapper();
          this.radioFullRefresh = new HFM.Classes.RadioButtonWrapper();
          this.radioSchedule = new HFM.Classes.RadioButtonWrapper();
@@ -191,8 +191,8 @@ namespace HFM.Forms
          this.tabSchdTasks.SuspendLayout();
          this.grpUpdateData.SuspendLayout();
          this.grpHTMLOutput.SuspendLayout();
-         ((System.ComponentModel.ISupportInitialize)(this.udLimitSize)).BeginInit();
          this.pnlFtpMode.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.udLimitSize)).BeginInit();
          this.tabStartup.SuspendLayout();
          this.grpFileExplorer.SuspendLayout();
          this.grpLogFileViewer.SuspendLayout();
@@ -337,9 +337,8 @@ namespace HFM.Forms
          this.txtCollectMinutes.TabIndex = 4;
          this.txtCollectMinutes.Text = "15";
          this.txtCollectMinutes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-         this.txtCollectMinutes.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtCollectMinutes.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          this.txtCollectMinutes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
-         this.txtCollectMinutes.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtMinutes_CustomValidation);
          // 
          // lbl2SchedExplain
          // 
@@ -372,12 +371,12 @@ namespace HFM.Forms
          // 
          // grpHTMLOutput
          // 
+         this.grpHTMLOutput.Controls.Add(this.pnlFtpMode);
          this.grpHTMLOutput.Controls.Add(this.udLimitSize);
          this.grpHTMLOutput.Controls.Add(this.chkLimitSize);
          this.grpHTMLOutput.Controls.Add(this.chkXml);
          this.grpHTMLOutput.Controls.Add(this.chkHtml);
          this.grpHTMLOutput.Controls.Add(this.btnTestConnection);
-         this.grpHTMLOutput.Controls.Add(this.pnlFtpMode);
          this.grpHTMLOutput.Controls.Add(this.chkFAHlog);
          this.grpHTMLOutput.Controls.Add(this.radioFullRefresh);
          this.grpHTMLOutput.Controls.Add(this.radioSchedule);
@@ -394,10 +393,54 @@ namespace HFM.Forms
          this.grpHTMLOutput.TabStop = false;
          this.grpHTMLOutput.Text = "Web Generation";
          // 
+         // pnlFtpMode
+         // 
+         this.pnlFtpMode.Controls.Add(this.radioActive);
+         this.pnlFtpMode.Controls.Add(this.radioPassive);
+         this.pnlFtpMode.Controls.Add(this.lblFtpMode);
+         this.pnlFtpMode.Location = new System.Drawing.Point(276, 71);
+         this.pnlFtpMode.Name = "pnlFtpMode";
+         this.pnlFtpMode.Size = new System.Drawing.Size(199, 26);
+         this.pnlFtpMode.TabIndex = 18;
+         this.pnlFtpMode.ValueMember = null;
+         // 
+         // radioActive
+         // 
+         this.radioActive.AutoSize = true;
+         this.radioActive.Location = new System.Drawing.Point(138, 4);
+         this.radioActive.Name = "radioActive";
+         this.radioActive.Size = new System.Drawing.Size(55, 17);
+         this.radioActive.TabIndex = 2;
+         this.radioActive.Tag = "1";
+         this.radioActive.Text = "Active";
+         this.radioActive.UseVisualStyleBackColor = true;
+         // 
+         // radioPassive
+         // 
+         this.radioPassive.AutoSize = true;
+         this.radioPassive.Checked = true;
+         this.radioPassive.Location = new System.Drawing.Point(70, 4);
+         this.radioPassive.Name = "radioPassive";
+         this.radioPassive.Size = new System.Drawing.Size(62, 17);
+         this.radioPassive.TabIndex = 1;
+         this.radioPassive.TabStop = true;
+         this.radioPassive.Tag = "0";
+         this.radioPassive.Text = "Passive";
+         this.radioPassive.UseVisualStyleBackColor = true;
+         // 
+         // lblFtpMode
+         // 
+         this.lblFtpMode.AutoSize = true;
+         this.lblFtpMode.Location = new System.Drawing.Point(4, 6);
+         this.lblFtpMode.Name = "lblFtpMode";
+         this.lblFtpMode.Size = new System.Drawing.Size(60, 13);
+         this.lblFtpMode.TabIndex = 0;
+         this.lblFtpMode.Text = "FTP Mode:";
+         // 
          // udLimitSize
          // 
          this.udLimitSize.Enabled = false;
-         this.udLimitSize.Location = new System.Drawing.Point(346, 103);
+         this.udLimitSize.Location = new System.Drawing.Point(322, 103);
          this.udLimitSize.Maximum = new decimal(new int[] {
             10240,
             0,
@@ -421,7 +464,7 @@ namespace HFM.Forms
          // 
          this.chkLimitSize.AutoSize = true;
          this.chkLimitSize.Enabled = false;
-         this.chkLimitSize.Location = new System.Drawing.Point(188, 104);
+         this.chkLimitSize.Location = new System.Drawing.Point(164, 104);
          this.chkLimitSize.Name = "chkLimitSize";
          this.chkLimitSize.Size = new System.Drawing.Size(158, 17);
          this.chkLimitSize.TabIndex = 16;
@@ -461,59 +504,16 @@ namespace HFM.Forms
          this.btnTestConnection.UseVisualStyleBackColor = true;
          this.btnTestConnection.Click += new System.EventHandler(this.btnTestConnection_Click);
          // 
-         // pnlFtpMode
-         // 
-         this.pnlFtpMode.Controls.Add(this.lblFtpMode);
-         this.pnlFtpMode.Controls.Add(this.radioPassive);
-         this.pnlFtpMode.Controls.Add(this.radioActive);
-         this.pnlFtpMode.Enabled = false;
-         this.pnlFtpMode.Location = new System.Drawing.Point(276, 71);
-         this.pnlFtpMode.Name = "pnlFtpMode";
-         this.pnlFtpMode.Size = new System.Drawing.Size(199, 26);
-         this.pnlFtpMode.TabIndex = 13;
-         // 
-         // lblFtpMode
-         // 
-         this.lblFtpMode.AutoSize = true;
-         this.lblFtpMode.Location = new System.Drawing.Point(4, 6);
-         this.lblFtpMode.Name = "lblFtpMode";
-         this.lblFtpMode.Size = new System.Drawing.Size(60, 13);
-         this.lblFtpMode.TabIndex = 0;
-         this.lblFtpMode.Text = "FTP Mode:";
-         // 
-         // radioPassive
-         // 
-         this.radioPassive.AutoSize = true;
-         this.radioPassive.Checked = true;
-         this.radioPassive.Location = new System.Drawing.Point(70, 4);
-         this.radioPassive.Name = "radioPassive";
-         this.radioPassive.Size = new System.Drawing.Size(62, 17);
-         this.radioPassive.TabIndex = 1;
-         this.radioPassive.TabStop = true;
-         this.radioPassive.Text = "Passive";
-         this.radioPassive.UseVisualStyleBackColor = true;
-         // 
-         // radioActive
-         // 
-         this.radioActive.AutoSize = true;
-         this.radioActive.Location = new System.Drawing.Point(138, 4);
-         this.radioActive.Name = "radioActive";
-         this.radioActive.Size = new System.Drawing.Size(55, 17);
-         this.radioActive.TabIndex = 2;
-         this.radioActive.Text = "Active";
-         this.radioActive.UseVisualStyleBackColor = true;
-         // 
          // chkFAHlog
          // 
          this.chkFAHlog.AutoSize = true;
          this.chkFAHlog.Enabled = false;
          this.chkFAHlog.Location = new System.Drawing.Point(10, 104);
          this.chkFAHlog.Name = "chkFAHlog";
-         this.chkFAHlog.Size = new System.Drawing.Size(172, 17);
+         this.chkFAHlog.Size = new System.Drawing.Size(148, 17);
          this.chkFAHlog.TabIndex = 9;
-         this.chkFAHlog.Text = "Copy FAHlog.txt Files to Target";
+         this.chkFAHlog.Text = "Copy FAHlog.txt to Target";
          this.chkFAHlog.UseVisualStyleBackColor = true;
-         this.chkFAHlog.CheckedChanged += new System.EventHandler(this.chkFAHlog_CheckedChanged);
          // 
          // radioFullRefresh
          // 
@@ -539,7 +539,6 @@ namespace HFM.Forms
          this.radioSchedule.TabStop = true;
          this.radioSchedule.Text = "Every";
          this.radioSchedule.UseVisualStyleBackColor = true;
-         this.radioSchedule.CheckedChanged += new System.EventHandler(this.radioSchedule_CheckedChanged);
          // 
          // txtWebGenMinutes
          // 
@@ -560,9 +559,8 @@ namespace HFM.Forms
          this.txtWebGenMinutes.TabIndex = 2;
          this.txtWebGenMinutes.Text = "15";
          this.txtWebGenMinutes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-         this.txtWebGenMinutes.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtWebGenMinutes.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          this.txtWebGenMinutes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
-         this.txtWebGenMinutes.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtMinutes_CustomValidation);
          // 
          // lbl2MinutesToGen
          // 
@@ -601,8 +599,7 @@ namespace HFM.Forms
          this.txtWebSiteBase.ReadOnly = true;
          this.txtWebSiteBase.Size = new System.Drawing.Size(332, 20);
          this.txtWebSiteBase.TabIndex = 6;
-         this.txtWebSiteBase.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtWebSiteBase.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtWebSiteBase_CustomValidation);
+         this.txtWebSiteBase.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // lbl2WebSiteDir
          // 
@@ -622,7 +619,6 @@ namespace HFM.Forms
          this.chkWebSiteGenerator.TabIndex = 0;
          this.chkWebSiteGenerator.Text = "Create a Web Site";
          this.chkWebSiteGenerator.UseVisualStyleBackColor = true;
-         this.chkWebSiteGenerator.CheckedChanged += new System.EventHandler(this.chkWebSiteGenerator_CheckedChanged);
          // 
          // tabStartup
          // 
@@ -929,7 +925,7 @@ namespace HFM.Forms
          this.cboPpdCalc.FormattingEnabled = true;
          this.cboPpdCalc.Location = new System.Drawing.Point(367, 16);
          this.cboPpdCalc.Name = "cboPpdCalc";
-         this.cboPpdCalc.Size = new System.Drawing.Size(109, 21);
+         this.cboPpdCalc.Size = new System.Drawing.Size(113, 21);
          this.cboPpdCalc.TabIndex = 5;
          // 
          // chkOffline
@@ -1028,6 +1024,7 @@ namespace HFM.Forms
          this.grpReportSelections.TabIndex = 1;
          this.grpReportSelections.TabStop = false;
          this.grpReportSelections.Text = "Report Selections";
+         this.grpReportSelections.EnabledChanged += new System.EventHandler(this.grpReportSelections_EnabledChanged);
          // 
          // chkClientEuePause
          // 
@@ -1081,9 +1078,8 @@ namespace HFM.Forms
          this.txtSmtpServerPort.ReadOnly = true;
          this.txtSmtpServerPort.Size = new System.Drawing.Size(54, 20);
          this.txtSmtpServerPort.TabIndex = 9;
-         this.txtSmtpServerPort.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtSmtpServerPort.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          this.txtSmtpServerPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
-         this.txtSmtpServerPort.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtSmtpServer_CustomValidation);
          // 
          // labelWrapper3
          // 
@@ -1134,8 +1130,7 @@ namespace HFM.Forms
          this.txtSmtpPassword.Size = new System.Drawing.Size(155, 20);
          this.txtSmtpPassword.TabIndex = 13;
          this.txtSmtpPassword.UseSystemPasswordChar = true;
-         this.txtSmtpPassword.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtSmtpPassword.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtSmtpCredentials_CustomValidation);
+         this.txtSmtpPassword.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // txtSmtpUsername
          // 
@@ -1154,8 +1149,7 @@ namespace HFM.Forms
          this.txtSmtpUsername.ReadOnly = true;
          this.txtSmtpUsername.Size = new System.Drawing.Size(155, 20);
          this.txtSmtpUsername.TabIndex = 11;
-         this.txtSmtpUsername.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtSmtpUsername.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtSmtpCredentials_CustomValidation);
+         this.txtSmtpUsername.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // labelWrapper4
          // 
@@ -1201,9 +1195,8 @@ namespace HFM.Forms
          this.txtFromEmailAddress.ReadOnly = true;
          this.txtFromEmailAddress.Size = new System.Drawing.Size(377, 20);
          this.txtFromEmailAddress.TabIndex = 5;
-         this.txtFromEmailAddress.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtFromEmailAddress.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          this.txtFromEmailAddress.MouseHover += new System.EventHandler(this.txtFromEmailAddress_MouseHover);
-         this.txtFromEmailAddress.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtEmailAddress_CustomValidation);
          // 
          // chkEnableEmail
          // 
@@ -1214,7 +1207,6 @@ namespace HFM.Forms
          this.chkEnableEmail.TabIndex = 0;
          this.chkEnableEmail.Text = "Enable Email Reporting";
          this.chkEnableEmail.UseVisualStyleBackColor = true;
-         this.chkEnableEmail.CheckedChanged += new System.EventHandler(this.chkEnableEmail_CheckedChanged);
          // 
          // lblSmtpServer
          // 
@@ -1251,8 +1243,7 @@ namespace HFM.Forms
          this.txtSmtpServer.ReadOnly = true;
          this.txtSmtpServer.Size = new System.Drawing.Size(282, 20);
          this.txtSmtpServer.TabIndex = 7;
-         this.txtSmtpServer.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtSmtpServer.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtSmtpServer_CustomValidation);
+         this.txtSmtpServer.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // txtToEmailAddress
          // 
@@ -1271,8 +1262,7 @@ namespace HFM.Forms
          this.txtToEmailAddress.ReadOnly = true;
          this.txtToEmailAddress.Size = new System.Drawing.Size(377, 20);
          this.txtToEmailAddress.TabIndex = 3;
-         this.txtToEmailAddress.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtToEmailAddress.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtEmailAddress_CustomValidation);
+         this.txtToEmailAddress.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // tabWeb
          // 
@@ -1313,8 +1303,7 @@ namespace HFM.Forms
          this.txtProjectDownloadUrl.Name = "txtProjectDownloadUrl";
          this.txtProjectDownloadUrl.Size = new System.Drawing.Size(423, 20);
          this.txtProjectDownloadUrl.TabIndex = 1;
-         this.txtProjectDownloadUrl.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtProjectDownloadUrl.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtProjectDownloadUrl_CustomValidation);
+         this.txtProjectDownloadUrl.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // label5
          // 
@@ -1387,7 +1376,7 @@ namespace HFM.Forms
          this.txtEOCUserID.Name = "txtEOCUserID";
          this.txtEOCUserID.Size = new System.Drawing.Size(138, 20);
          this.txtEOCUserID.TabIndex = 3;
-         this.txtEOCUserID.ValidationType = harlam357.Windows.Forms.ValidationType.Empty;
+         this.txtEOCUserID.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          this.txtEOCUserID.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
          // 
          // txtStanfordTeamID
@@ -1405,7 +1394,7 @@ namespace HFM.Forms
          this.txtStanfordTeamID.Name = "txtStanfordTeamID";
          this.txtStanfordTeamID.Size = new System.Drawing.Size(138, 20);
          this.txtStanfordTeamID.TabIndex = 5;
-         this.txtStanfordTeamID.ValidationType = harlam357.Windows.Forms.ValidationType.Empty;
+         this.txtStanfordTeamID.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          this.txtStanfordTeamID.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
          // 
          // lbl3StanfordTeamID
@@ -1442,7 +1431,7 @@ namespace HFM.Forms
          this.txtStanfordUserID.Name = "txtStanfordUserID";
          this.txtStanfordUserID.Size = new System.Drawing.Size(138, 20);
          this.txtStanfordUserID.TabIndex = 4;
-         this.txtStanfordUserID.ValidationType = harlam357.Windows.Forms.ValidationType.Empty;
+         this.txtStanfordUserID.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // linkEOC
          // 
@@ -1483,7 +1472,6 @@ namespace HFM.Forms
          this.chkUseProxy.TabIndex = 0;
          this.chkUseProxy.Text = "Use a Proxy Server";
          this.chkUseProxy.UseVisualStyleBackColor = true;
-         this.chkUseProxy.CheckedChanged += new System.EventHandler(this.chkUseProxy_CheckedChanged);
          // 
          // chkUseProxyAuth
          // 
@@ -1495,7 +1483,6 @@ namespace HFM.Forms
          this.chkUseProxyAuth.TabIndex = 5;
          this.chkUseProxyAuth.Text = "Authenticate to the Web Proxy Server";
          this.chkUseProxyAuth.UseVisualStyleBackColor = true;
-         this.chkUseProxyAuth.CheckedChanged += new System.EventHandler(this.chkUseProxyAuth_CheckedChanged);
          // 
          // txtProxyPass
          // 
@@ -1514,8 +1501,7 @@ namespace HFM.Forms
          this.txtProxyPass.Size = new System.Drawing.Size(155, 20);
          this.txtProxyPass.TabIndex = 9;
          this.txtProxyPass.UseSystemPasswordChar = true;
-         this.txtProxyPass.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtProxyPass.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtProxyCredentials_CustomValidation);
+         this.txtProxyPass.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // txtProxyUser
          // 
@@ -1533,8 +1519,7 @@ namespace HFM.Forms
          this.txtProxyUser.ReadOnly = true;
          this.txtProxyUser.Size = new System.Drawing.Size(155, 20);
          this.txtProxyUser.TabIndex = 7;
-         this.txtProxyUser.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtProxyUser.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtProxyCredentials_CustomValidation);
+         this.txtProxyUser.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // txtProxyPort
          // 
@@ -1553,9 +1538,8 @@ namespace HFM.Forms
          this.txtProxyPort.ReadOnly = true;
          this.txtProxyPort.Size = new System.Drawing.Size(94, 20);
          this.txtProxyPort.TabIndex = 4;
-         this.txtProxyPort.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
+         this.txtProxyPort.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          this.txtProxyPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
-         this.txtProxyPort.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtProxyServerPort_CustomValidation);
          // 
          // lbl3ProxyPass
          // 
@@ -1582,8 +1566,7 @@ namespace HFM.Forms
          this.txtProxyServer.ReadOnly = true;
          this.txtProxyServer.Size = new System.Drawing.Size(250, 20);
          this.txtProxyServer.TabIndex = 2;
-         this.txtProxyServer.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-         this.txtProxyServer.CustomValidation += new System.EventHandler<harlam357.Windows.Forms.ValidatingControlCustomValidationEventArgs>(this.txtProxyServerPort_CustomValidation);
+         this.txtProxyServer.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // lbl3ProxyUser
          // 
@@ -1889,16 +1872,15 @@ namespace HFM.Forms
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
          this.Text = "Preferences";
          this.Load += new System.EventHandler(this.frmPreferences_Load);
-         this.Shown += new System.EventHandler(this.frmPreferences_Shown);
          this.tabControl1.ResumeLayout(false);
          this.tabSchdTasks.ResumeLayout(false);
          this.grpUpdateData.ResumeLayout(false);
          this.grpUpdateData.PerformLayout();
          this.grpHTMLOutput.ResumeLayout(false);
          this.grpHTMLOutput.PerformLayout();
-         ((System.ComponentModel.ISupportInitialize)(this.udLimitSize)).EndInit();
          this.pnlFtpMode.ResumeLayout(false);
          this.pnlFtpMode.PerformLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.udLimitSize)).EndInit();
          this.tabStartup.ResumeLayout(false);
          this.grpFileExplorer.ResumeLayout(false);
          this.grpFileExplorer.PerformLayout();
@@ -2033,7 +2015,6 @@ namespace HFM.Forms
       private HFM.Classes.RadioButtonWrapper radioActive;
       private HFM.Classes.RadioButtonWrapper radioPassive;
       private HFM.Classes.LabelWrapper lblFtpMode;
-      private System.Windows.Forms.Panel pnlFtpMode;
       private HFM.Classes.ButtonWrapper btnTestConnection;
       private HFM.Classes.ButtonWrapper btnInstanceBrowse;
       private ValidatingTextBox txtInstance;
@@ -2070,5 +2051,6 @@ namespace HFM.Forms
       private HFM.Classes.CheckBoxWrapper chkXml;
       private System.Windows.Forms.NumericUpDown udLimitSize;
       private HFM.Classes.CheckBoxWrapper chkLimitSize;
+      private RadioPanel pnlFtpMode;
    }
 }

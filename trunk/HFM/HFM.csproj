@@ -208,6 +208,12 @@
       <DependentUpon>frmHost.cs</DependentUpon>
     </EmbeddedResource>
     <Compile Include="Classes\NativeMethods.cs" />
+    <Compile Include="Models\OptionsModel.cs" />
+    <Compile Include="Models\ReportingModel.cs" />
+    <Compile Include="Models\ScheduledTasksModel.cs" />
+    <Compile Include="Models\StartupAndExternalModel.cs" />
+    <Compile Include="Models\WebSettingsModel.cs" />
+    <Compile Include="Models\WebVisualStylesModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\frmPreferences.resx">

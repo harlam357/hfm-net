@@ -20,6 +20,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -33,62 +35,87 @@ using harlam357.Windows.Forms;
 using HFM.Framework;
 using HFM.Helpers;
 using HFM.Instrumentation;
-using HFM.Preferences;
+using HFM.Models;
 
 namespace HFM.Forms
 {
    public partial class frmPreferences : Classes.FormWrapper
    {
+      /// <summary>
+      /// Tab Name Enumeration (maintain in same order as tab pages)
+      /// </summary>
+      enum TabName
+      {
+         ScheduledTasks,
+         StartupAndExternal,
+         Options,
+         Reporting,
+         WebSettings,
+         WebVisualStyles
+      }
+   
       #region Members
-      private readonly IPreferenceSet _Prefs;
-      private readonly WebBrowser wbCssSample;
-
-      private const string CssExtension = ".css";
+      private readonly IPreferenceSet _prefs;
+      
+      private readonly List<IValidatingControl>[] _validatingControls;
+      private readonly PropertyDescriptorCollection[] _propertyCollection;
+      private readonly object[] _models;
+      
+      private readonly WebBrowser _cssSampleBrowser;
 
       /// <summary>
       /// Network Operations Interface
       /// </summary>
-      private NetworkOps net;
+      private NetworkOps _net;
+
+      private readonly ScheduledTasksModel _scheduledTasksModel;
+      private readonly StartupAndExternalModel _startupAndExternalModel;
+      private readonly OptionsModel _optionsModel;
+      private readonly ReportingModel _reportingModel;
+      private readonly WebSettingsModel _webSettingsModel;
+      private readonly WebVisualStylesModel _webVisualStylesModel;
       #endregion
 
       #region Constructor And Binding/Load Methods
-      public frmPreferences(IPreferenceSet Prefs)
+      public frmPreferences(IPreferenceSet prefs)
       {
-         _Prefs = Prefs;
+         _prefs = prefs;
       
          InitializeComponent();
 
+         udDecimalPlaces.Minimum = Constants.MinDecimalPlaces;
+         udDecimalPlaces.Maximum = Constants.MaxDecimalPlaces;
+
+         _validatingControls = new List<IValidatingControl>[tabControl1.TabCount];
+         _propertyCollection = new PropertyDescriptorCollection[tabControl1.TabCount];
+         _models = new object[tabControl1.TabCount];
          if (PlatformOps.IsRunningOnMono() == false)
          {
-            wbCssSample = new WebBrowser();
+            _cssSampleBrowser = new WebBrowser();
 
-            pnl1CSSSample.Controls.Add(wbCssSample);
+            pnl1CSSSample.Controls.Add(_cssSampleBrowser);
 
-            wbCssSample.Dock = DockStyle.Fill;
-            wbCssSample.Location = new Point(0, 0);
-            wbCssSample.MinimumSize = new Size(20, 20);
-            wbCssSample.Name = "wbCssSample";
-            wbCssSample.Size = new Size(354, 208);
-            wbCssSample.TabIndex = 0;
-            wbCssSample.TabStop = false;
+            _cssSampleBrowser.Dock = DockStyle.Fill;
+            _cssSampleBrowser.Location = new Point(0, 0);
+            _cssSampleBrowser.MinimumSize = new Size(20, 20);
+            _cssSampleBrowser.Name = "_cssSampleBrowser";
+            _cssSampleBrowser.Size = new Size(354, 208);
+            _cssSampleBrowser.TabIndex = 0;
+            _cssSampleBrowser.TabStop = false;
          }
 
          txtCollectMinutes.ErrorToolTipText = String.Format("Minutes must be a value from {0} to {1}.", Constants.MinMinutes, Constants.MaxMinutes);
          txtWebGenMinutes.ErrorToolTipText = String.Format("Minutes must be a value from {0} to {1}.", Constants.MinMinutes, Constants.MaxMinutes);
+
+         _scheduledTasksModel = new ScheduledTasksModel(prefs);
+         _startupAndExternalModel = new StartupAndExternalModel(prefs);
+         _optionsModel = new OptionsModel(prefs);
+         _reportingModel = new ReportingModel(prefs);
+         _webSettingsModel = new WebSettingsModel(prefs);
+         _webVisualStylesModel = new WebVisualStylesModel(prefs);
       }
 
       private void frmPreferences_Load(object sender, EventArgs e)
-      {
-         // Cycle through Tabs to create all controls and Bind data
-         for (int i = 0; i < tabControl1.TabPages.Count; i++)
-         {
-            tabControl1.SelectTab(i);
-         }
-
-         tabControl1.SelectTab(0);
-      }
-
-      private void frmPreferences_Shown(object sender, EventArgs e)
       {
          LoadScheduledTasksTab();
          LoadStartupTab();
@@ -96,70 +123,160 @@ namespace HFM.Forms
          LoadReportingTab();
          LoadWebSettingsTab();
          LoadVisualStylesTab();
+      
+         // Cycle through Tabs to create all controls and Bind data
+         for (int i = 0; i < tabControl1.TabPages.Count; i++)
+         {
+            tabControl1.SelectTab(i);
+            if (tabControl1.SelectedIndex == (int)TabName.WebVisualStyles)
+            {
+               ShowCssPreview();
+            }
+            _validatingControls[i] = FindValidatingControls(tabControl1.SelectedTab.Controls);
+         }
+         tabControl1.SelectTab(0);
+
+         _scheduledTasksModel.PropertyChanged += ScheduledTasksPropertyChanged;
+         //_startupAndExternalModel.PropertyChanged += StartupAndExternalPropertyChanged;
+         //_optionsModel.PropertyChanged += OptionsPropertyChanged;
+         _reportingModel.PropertyChanged += ReportingPropertyChanged;
+         _webSettingsModel.PropertyChanged += WebSettingsChanged;
+         //_webVisualStylesModel.PropertyChanged += WebVisualStylesPropertyChanged;
+      }
+      
+      private static List<IValidatingControl> FindValidatingControls(Control.ControlCollection controls)
+      {
+         var validatingControls = new List<IValidatingControl>();
+
+         foreach (Control control in controls)
+         {
+            var validatingControl = control as IValidatingControl;
+            if (validatingControl != null)
+            {
+               validatingControls.Add(validatingControl);
+            }
+
+            validatingControls.AddRange(FindValidatingControls(control.Controls));
+         }
+
+         return validatingControls;
+      }
+
+      private void ScheduledTasksPropertyChanged(object sender, PropertyChangedEventArgs e)
+      {
+         SetPropertyErrorState((int)TabName.ScheduledTasks, e.PropertyName);
+      }
+
+      private void ReportingPropertyChanged(object sender, PropertyChangedEventArgs e)
+      {
+         SetPropertyErrorState((int)TabName.Reporting, e.PropertyName);
+      }
+
+      private void WebSettingsChanged(object sender, PropertyChangedEventArgs e)
+      {
+         SetPropertyErrorState((int)TabName.WebSettings, e.PropertyName);
+      }
+
+      private void SetPropertyErrorState()
+      {
+         for (int index = 0; index < _propertyCollection.Length; index++)
+         {
+            foreach (PropertyDescriptor property in _propertyCollection[index])
+            {
+               SetPropertyErrorState(index, property.DisplayName);
+            }
+         }
+      }
+
+      private void SetPropertyErrorState(int index, string boundProperty)
+      {
+         var errorProperty = _propertyCollection[index].Find(boundProperty + "Error", false);
+         if (errorProperty != null)
+         {
+            SetPropertyErrorState(index, boundProperty, errorProperty);
+         }
+      }
+
+      private void SetPropertyErrorState(int index, string boundProperty, PropertyDescriptor errorProperty)
+      {
+         ICollection<IValidatingControl> validatingControls = FindBoundControls(index, boundProperty);
+         var errorState = (bool)errorProperty.GetValue(_models[index]);
+         foreach (var control in validatingControls)
+         {
+            control.ErrorState = errorState;
+         }
+      }
+
+      private ReadOnlyCollection<IValidatingControl> FindBoundControls(int index, string propertyName)
+      {
+         return _validatingControls[index].FindAll(x => x.DataBindings["Text"].BindingMemberInfo.BindingField == propertyName).AsReadOnly();
       }
 
       private void LoadScheduledTasksTab()
       {
+         _propertyCollection[(int)TabName.ScheduledTasks] = TypeDescriptor.GetProperties(_scheduledTasksModel);
+         _models[(int)TabName.ScheduledTasks] = _scheduledTasksModel;
+      
          #region Refresh Data
-         chkSynchronous.Checked = _Prefs.GetPreference<bool>(Preference.SyncOnLoad);
-         chkDuplicateProject.Checked = _Prefs.GetPreference<bool>(Preference.DuplicateProjectCheck);
-         chkDuplicateUserID.Checked = _Prefs.GetPreference<bool>(Preference.DuplicateUserIdCheck);
+         chkSynchronous.DataBindings.Add("Checked", _scheduledTasksModel, "SyncOnLoad", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkDuplicateProject.DataBindings.Add("Checked", _scheduledTasksModel, "DuplicateProjectCheck", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkDuplicateUserID.DataBindings.Add("Checked", _scheduledTasksModel, "DuplicateUserIdCheck", false, DataSourceUpdateMode.OnPropertyChanged);
 
          // Always Add Bindings for CheckBoxes that control input TextBoxes after
          // the data has been bound to the TextBox
-         if (PreferenceSet.ValidateMinutes(_Prefs.GetPreference<int>(Preference.SyncTimeMinutes)) == false)
-         {
-            _Prefs.SetPreference(Preference.SyncTimeMinutes, Constants.MinutesDefault);
-         }
+         
          // Add the CheckBox.Checked => TextBox.Enabled Binding
-         txtCollectMinutes.DataBindings.Add("Enabled", chkScheduled, "Checked", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtCollectMinutes.DataBindings.Add("Enabled", _scheduledTasksModel, "SyncOnSchedule", false, DataSourceUpdateMode.OnPropertyChanged);
          // Bind the value to the TextBox
-         txtCollectMinutes.Text = _Prefs.GetPreference<int>(Preference.SyncTimeMinutes).ToString();
+         txtCollectMinutes.DataBindings.Add("Text", _scheduledTasksModel, "SyncTimeMinutes", false, DataSourceUpdateMode.OnValidation);
          // Finally, add the CheckBox.Checked Binding
-         chkScheduled.Checked = _Prefs.GetPreference<bool>(Preference.SyncOnSchedule);
+         chkScheduled.DataBindings.Add("Checked", _scheduledTasksModel, "SyncOnSchedule", false, DataSourceUpdateMode.OnPropertyChanged);
 
-         chkAllowRunningAsync.Checked = _Prefs.GetPreference<bool>(Preference.AllowRunningAsync);
-         chkShowUserStats.Checked = _Prefs.GetPreference<bool>(Preference.ShowUserStats);
+         chkAllowRunningAsync.DataBindings.Add("Checked", _scheduledTasksModel, "AllowRunningAsync", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkShowUserStats.DataBindings.Add("Checked", _scheduledTasksModel, "ShowUserStats", false, DataSourceUpdateMode.OnPropertyChanged);
          #endregion
 
          #region Web Generation
          // Always Add Bindings for CheckBoxes that control input TextBoxes after
          // the data has been bound to the TextBox
-         if (PreferenceSet.ValidateMinutes(_Prefs.GetPreference<int>(Preference.GenerateInterval)) == false)
-         {
-            _Prefs.SetPreference(Preference.GenerateInterval, Constants.MinutesDefault);
-         }
-         // Bind the value to the TextBox
-         txtWebGenMinutes.Text = _Prefs.GetPreference<int>(Preference.GenerateInterval).ToString();
-         // Finally, add the RadioButton.Checked Binding
-         radioFullRefresh.Checked = _Prefs.GetPreference<bool>(Preference.WebGenAfterRefresh);
 
-         txtWebSiteBase.Text = _Prefs.GetPreference<string>(Preference.WebRoot);
-         chkHtml.Checked = _Prefs.GetPreference<bool>(Preference.WebGenCopyHtml);
-         chkXml.Checked = _Prefs.GetPreference<bool>(Preference.WebGenCopyXml);
-         chkFAHlog.Checked = _Prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog);
-         switch (_Prefs.GetPreference<FtpType>(Preference.WebGenFtpMode))
-         {
-            case FtpType.Passive:
-               radioPassive.Checked = true;
-               break;
-            case FtpType.Active:
-               radioActive.Checked = true;
-               break;
-            default:
-               radioPassive.Checked = true;
-               break;
-         }
-         chkLimitSize.Checked = _Prefs.GetPreference<bool>(Preference.WebGenLimitLogSize);
-         udLimitSize.Value = _Prefs.GetPreference<int>(Preference.WebGenLimitLogSizeLength);
+         radioSchedule.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
+         lbl2MinutesToGen.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
+         // Bind the value to the TextBox
+         txtWebGenMinutes.DataBindings.Add("Text", _scheduledTasksModel, "GenerateInterval", false, DataSourceUpdateMode.OnValidation);
+         txtWebGenMinutes.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateIntervalEnabled", false, DataSourceUpdateMode.OnValidation);
+         // Finally, add the RadioButton.Checked Binding
+         radioFullRefresh.DataBindings.Add("Checked", _scheduledTasksModel, "WebGenAfterRefresh", false, DataSourceUpdateMode.OnPropertyChanged);
+         radioFullRefresh.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
+
+         txtWebSiteBase.DataBindings.Add("Text", _scheduledTasksModel, "WebRoot", false, DataSourceUpdateMode.OnValidation);
+         txtWebSiteBase.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkHtml.DataBindings.Add("Checked", _scheduledTasksModel, "CopyHtml", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkHtml.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkXml.DataBindings.Add("Checked", _scheduledTasksModel, "CopyXml", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkXml.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkFAHlog.DataBindings.Add("Checked", _scheduledTasksModel, "CopyFAHlog", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkFAHlog.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
+         pnlFtpMode.DataSource = _scheduledTasksModel;
+         pnlFtpMode.ValueMember = "FtpMode";
+         pnlFtpMode.DataBindings.Add("Enabled", _scheduledTasksModel, "FtpModeEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkLimitSize.DataBindings.Add("Checked", _scheduledTasksModel, "LimitLogSize", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkLimitSize.DataBindings.Add("Enabled", _scheduledTasksModel, "LimitLogSizeEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+         udLimitSize.DataBindings.Add("Value", _scheduledTasksModel, "LimitLogSizeLength", false, DataSourceUpdateMode.OnPropertyChanged);
+         udLimitSize.DataBindings.Add("Enabled", _scheduledTasksModel, "LimitLogSizeLengthEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
          
          // Finally, add the CheckBox.Checked Binding
-         chkWebSiteGenerator.Checked = _Prefs.GetPreference<bool>(Preference.GenerateWeb);
+         btnTestConnection.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
+         btnBrowseWebFolder.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkWebSiteGenerator.DataBindings.Add("Checked", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
          #endregion
       }
       
       private void LoadStartupTab()
       {
+         _propertyCollection[(int)TabName.StartupAndExternal] = TypeDescriptor.GetProperties(_startupAndExternalModel);
+         _models[(int)TabName.StartupAndExternal] = _startupAndExternalModel;
+      
          #region Startup
          /*** Auto-Run Is Not DataBound ***/
          if (PlatformOps.IsRunningOnMono() == false)
@@ -172,378 +289,191 @@ namespace HFM.Forms
             chkAutoRun.Enabled = false;
          }
          
-         chkRunMinimized.Checked = _Prefs.GetPreference<bool>(Preference.RunMinimized);
-         chkCheckForUpdate.Checked = _Prefs.GetPreference<bool>(Preference.StartupCheckForUpdate);
+         chkRunMinimized.DataBindings.Add("Checked", _startupAndExternalModel, "RunMinimized", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkCheckForUpdate.DataBindings.Add("Checked", _startupAndExternalModel, "StartupCheckForUpdate", false, DataSourceUpdateMode.OnPropertyChanged);
          #endregion
 
          #region Configuration File
-         txtDefaultConfigFile.DataBindings.Add("Enabled", chkDefaultConfig, "Checked", false, DataSourceUpdateMode.OnPropertyChanged);
-         btnBrowseConfigFile.DataBindings.Add("Enabled", chkDefaultConfig, "Checked", false, DataSourceUpdateMode.OnPropertyChanged);
-         txtDefaultConfigFile.Text = _Prefs.GetPreference<string>(Preference.DefaultConfigFile);
+         txtDefaultConfigFile.DataBindings.Add("Enabled", _startupAndExternalModel, "UseDefaultConfigFile", false, DataSourceUpdateMode.OnPropertyChanged);
+         btnBrowseConfigFile.DataBindings.Add("Enabled", _startupAndExternalModel, "UseDefaultConfigFile", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtDefaultConfigFile.DataBindings.Add("Text", _startupAndExternalModel, "DefaultConfigFile", false, DataSourceUpdateMode.OnValidation);
          
-         chkDefaultConfig.Checked = _Prefs.GetPreference<bool>(Preference.UseDefaultConfigFile);
+         chkDefaultConfig.DataBindings.Add("Checked", _startupAndExternalModel, "UseDefaultConfigFile", false, DataSourceUpdateMode.OnPropertyChanged);
          #endregion
 
          #region External Programs
-         txtLogFileViewer.Text = _Prefs.GetPreference<string>(Preference.LogFileViewer);
-         txtFileExplorer.Text = _Prefs.GetPreference<string>(Preference.FileExplorer);
+         txtLogFileViewer.DataBindings.Add("Text", _startupAndExternalModel, "LogFileViewer", false, DataSourceUpdateMode.OnValidation);
+         txtFileExplorer.DataBindings.Add("Text", _startupAndExternalModel, "FileExplorer", false, DataSourceUpdateMode.OnValidation);
          #endregion
       }
 
       private void LoadOptionsTab()
       {
+         _propertyCollection[(int)TabName.Options] = TypeDescriptor.GetProperties(_optionsModel);
+         _models[(int)TabName.Options] = _optionsModel;
+      
          #region Interactive Options
-         chkOffline.Checked = _Prefs.GetPreference<bool>(Preference.OfflineLast);
-         chkColorLog.Checked = _Prefs.GetPreference<bool>(Preference.ColorLogFile);
-         chkAutoSave.Checked = _Prefs.GetPreference<bool>(Preference.AutoSaveConfig);
-         chkMaintainSelected.Checked = _Prefs.GetPreference<bool>(Preference.MaintainSelectedClient);
+         chkOffline.DataBindings.Add("Checked", _optionsModel, "OfflineLast", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkColorLog.DataBindings.Add("Checked", _optionsModel, "ColorLogFile", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkAutoSave.DataBindings.Add("Checked", _optionsModel, "AutoSaveConfig", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkMaintainSelected.DataBindings.Add("Checked", _optionsModel, "MaintainSelectedClient", false, DataSourceUpdateMode.OnPropertyChanged);
 
-         /*** PPD Calculation Is Not DataBound ***/
-         IList<PpdCalculationType> ppdList = new List<PpdCalculationType>();
-         ppdList.Add(PpdCalculationType.LastFrame);
-         ppdList.Add(PpdCalculationType.LastThreeFrames);
-         ppdList.Add(PpdCalculationType.AllFrames);
-         ppdList.Add(PpdCalculationType.EffectiveRate);
-         cboPpdCalc.DataSource = ppdList;
-         cboPpdCalc.SelectedItem = _Prefs.GetPreference<PpdCalculationType>(Preference.PpdCalculation);
-
-         udDecimalPlaces.Minimum = Constants.MinDecimalPlaces;
-         udDecimalPlaces.Maximum = Constants.MaxDecimalPlaces;
-         udDecimalPlaces.Value = _Prefs.GetPreference<int>(Preference.DecimalPlaces);
-
-         chkCalcBonus.Checked = _Prefs.GetPreference<bool>(Preference.CalculateBonus);
+         cboPpdCalc.DataSource = OptionsModel.PpdCalculationList;
+         cboPpdCalc.DisplayMember = "DisplayMember";
+         cboPpdCalc.ValueMember = "ValueMember";
+         cboPpdCalc.DataBindings.Add("SelectedValue", _optionsModel, "PpdCalculation", false, DataSourceUpdateMode.OnPropertyChanged);
+         udDecimalPlaces.DataBindings.Add("Value", _optionsModel, "DecimalPlaces", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkCalcBonus.DataBindings.Add("Checked", _optionsModel, "CalculateBonus", false, DataSourceUpdateMode.OnPropertyChanged);
          #endregion
 
          #region Debug Message Level
-         IList<TraceLevel> traceList = new List<TraceLevel>();
-         traceList.Add(TraceLevel.Off);
-         traceList.Add(TraceLevel.Error);
-         traceList.Add(TraceLevel.Warning);
-         traceList.Add(TraceLevel.Info);
-         traceList.Add(TraceLevel.Verbose);
-         cboMessageLevel.DataSource = traceList;
-         if (_Prefs.GetPreference<int>(Preference.MessageLevel) >= 0 && _Prefs.GetPreference<int>(Preference.MessageLevel) <= 4)
-         {
-            cboMessageLevel.SelectedIndex = _Prefs.GetPreference<int>(Preference.MessageLevel);
-         }
-         else
-         {
-            cboMessageLevel.SelectedItem = TraceLevel.Info;
-         } 
+         cboMessageLevel.DataSource = OptionsModel.DebugList;
+         cboMessageLevel.DisplayMember = "DisplayMember";
+         cboMessageLevel.ValueMember = "ValueMember";
+         cboMessageLevel.DataBindings.Add("SelectedValue", _optionsModel, "MessageLevel", false, DataSourceUpdateMode.OnPropertyChanged);
          #endregion
 
          #region Form Docking Style
-         IList<FormShowStyleType> showStyleList = new List<FormShowStyleType>();
-         showStyleList.Add(FormShowStyleType.SystemTray);
-         showStyleList.Add(FormShowStyleType.TaskBar);
-         showStyleList.Add(FormShowStyleType.Both);
-         cboShowStyle.DataSource = showStyleList;
-         cboShowStyle.SelectedItem = _Prefs.GetPreference<FormShowStyleType>(Preference.FormShowStyle);
+         cboShowStyle.DataSource = OptionsModel.DockingStyleList;
+         cboShowStyle.DisplayMember = "DisplayMember";
+         cboShowStyle.ValueMember = "ValueMember";
+         cboShowStyle.DataBindings.Add("SelectedValue", _optionsModel, "FormShowStyle", false, DataSourceUpdateMode.OnPropertyChanged);
          #endregion
       }
       
       private void LoadReportingTab()
       {
+         _propertyCollection[(int)TabName.Reporting] = TypeDescriptor.GetProperties(_reportingModel);
+         _models[(int)TabName.Reporting] = _reportingModel;
+      
          #region Email Settings
-         chkEmailSecure.Checked = _Prefs.GetPreference<bool>(Preference.EmailReportingServerSecure);
-         txtToEmailAddress.Text = _Prefs.GetPreference<string>(Preference.EmailReportingToAddress);
-         txtFromEmailAddress.Text = _Prefs.GetPreference<string>(Preference.EmailReportingFromAddress);
-         txtSmtpServer.Text = _Prefs.GetPreference<string>(Preference.EmailReportingServerAddress);
-         txtSmtpServer.CompanionControls.Add(txtSmtpServerPort);
-         txtSmtpServerPort.Text = _Prefs.GetPreference<int>(Preference.EmailReportingServerPort).ToString();
-         txtSmtpServerPort.CompanionControls.Add(txtSmtpServer);
-         txtSmtpUsername.Text = _Prefs.GetPreference<string>(Preference.EmailReportingServerUsername);
-         txtSmtpUsername.CompanionControls.Add(txtSmtpPassword);
-         txtSmtpPassword.Text = _Prefs.GetPreference<string>(Preference.EmailReportingServerPassword);
-         txtSmtpPassword.CompanionControls.Add(txtSmtpUsername);
+         chkEmailSecure.DataBindings.Add("Checked", _reportingModel, "ServerSecure", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkEmailSecure.DataBindings.Add("Enabled", _reportingModel, "ReportingEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
 
-         chkEnableEmail.Checked = _Prefs.GetPreference<bool>(Preference.EmailReportingEnabled);
+         btnTestEmail.DataBindings.Add("Enabled", _reportingModel, "ReportingEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+         
+         txtToEmailAddress.DataBindings.Add("Text", _reportingModel, "ToAddress", false, DataSourceUpdateMode.OnValidation);
+         txtToEmailAddress.DataBindings.Add("Enabled", _reportingModel, "ReportingEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+         
+         txtFromEmailAddress.DataBindings.Add("Text", _reportingModel, "FromAddress", false, DataSourceUpdateMode.OnValidation);
+         txtFromEmailAddress.DataBindings.Add("Enabled", _reportingModel, "ReportingEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+         
+         txtSmtpServer.DataBindings.Add("Text", _reportingModel, "ServerAddress", false, DataSourceUpdateMode.OnValidation);
+         txtSmtpServer.DataBindings.Add("ErrorToolTipText", _reportingModel, "ServerPortPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtSmtpServer.DataBindings.Add("Enabled", _reportingModel, "ReportingEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+         
+         txtSmtpServerPort.DataBindings.Add("Text", _reportingModel, "ServerPort", false, DataSourceUpdateMode.OnValidation);
+         txtSmtpServerPort.DataBindings.Add("ErrorToolTipText", _reportingModel, "ServerPortPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtSmtpServerPort.DataBindings.Add("Enabled", _reportingModel, "ReportingEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+         
+         txtSmtpUsername.DataBindings.Add("Text", _reportingModel, "ServerUsername", false, DataSourceUpdateMode.OnValidation);
+         txtSmtpUsername.DataBindings.Add("ErrorToolTipText", _reportingModel, "UsernamePasswordPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtSmtpUsername.DataBindings.Add("Enabled", _reportingModel, "ReportingEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+         
+         txtSmtpPassword.DataBindings.Add("Text", _reportingModel, "ServerPassword", false, DataSourceUpdateMode.OnValidation);
+         txtSmtpPassword.DataBindings.Add("ErrorToolTipText", _reportingModel, "UsernamePasswordPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtSmtpPassword.DataBindings.Add("Enabled", _reportingModel, "ReportingEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+
+         chkEnableEmail.DataBindings.Add("Checked", _reportingModel, "ReportingEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
          #endregion
          
          #region Report Selections
-         chkClientEuePause.Checked = _Prefs.GetPreference<bool>(Preference.ReportEuePause);
+         grpReportSelections.DataBindings.Add("Enabled", _reportingModel, "ReportingEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkClientEuePause.DataBindings.Add("Checked", _reportingModel, "ReportEuePause", false, DataSourceUpdateMode.OnPropertyChanged);
          #endregion
       }
 
       private void LoadWebSettingsTab()
       {
+         _propertyCollection[(int)TabName.WebSettings] = TypeDescriptor.GetProperties(_webSettingsModel);
+         _models[(int)TabName.WebSettings] = _webSettingsModel;
+      
          #region Web Statistics
-         txtEOCUserID.Text = _Prefs.GetPreference<int>(Preference.EocUserID).ToString();
-         txtStanfordUserID.Text = _Prefs.GetPreference<string>(Preference.StanfordID);
-         txtStanfordTeamID.Text = _Prefs.GetPreference<int>(Preference.TeamID).ToString();
+         txtEOCUserID.DataBindings.Add("Text", _webSettingsModel, "EocUserId", false, DataSourceUpdateMode.OnValidation);
+         txtStanfordUserID.DataBindings.Add("Text", _webSettingsModel, "StanfordId", false, DataSourceUpdateMode.OnValidation);
+         txtStanfordTeamID.DataBindings.Add("Text", _webSettingsModel, "TeamId", false, DataSourceUpdateMode.OnValidation);
          #endregion
          
          #region Project Download URL
-         txtProjectDownloadUrl.Text = _Prefs.GetPreference<string>(Preference.ProjectDownloadUrl);
+         txtProjectDownloadUrl.DataBindings.Add("Text", _webSettingsModel, "ProjectDownloadUrl", false, DataSourceUpdateMode.OnValidation);
          #endregion
 
          #region Web Proxy Settings
          // Always Add Bindings for CheckBoxes that control input TextBoxes after
          // the data has been bound to the TextBox
-         txtProxyServer.Text = _Prefs.GetPreference<string>(Preference.ProxyServer);
-         txtProxyServer.CompanionControls.Add(txtProxyPort);
-         txtProxyPort.Text = _Prefs.GetPreference<int>(Preference.ProxyPort).ToString();
-         txtProxyPort.CompanionControls.Add(txtProxyServer);
+         txtProxyServer.DataBindings.Add("Text", _webSettingsModel, "ProxyServer", false, DataSourceUpdateMode.OnValidation);
+         txtProxyServer.DataBindings.Add("ErrorToolTipText", _webSettingsModel, "ServerPortPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtProxyServer.DataBindings.Add("Enabled", _webSettingsModel, "UseProxy", false, DataSourceUpdateMode.OnPropertyChanged);
+
+         txtProxyPort.DataBindings.Add("Text", _webSettingsModel, "ProxyPort", false, DataSourceUpdateMode.OnValidation);
+         txtProxyPort.DataBindings.Add("ErrorToolTipText", _webSettingsModel, "ServerPortPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtProxyPort.DataBindings.Add("Enabled", _webSettingsModel, "UseProxy", false, DataSourceUpdateMode.OnPropertyChanged);
+
          // Finally, add the CheckBox.Checked Binding
-         chkUseProxy.Checked = _Prefs.GetPreference<bool>(Preference.UseProxy);
+         chkUseProxy.DataBindings.Add("Checked", _webSettingsModel, "UseProxy", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkUseProxyAuth.DataBindings.Add("Enabled", _webSettingsModel, "UseProxy", false, DataSourceUpdateMode.OnPropertyChanged);
 
          // Always Add Bindings for CheckBoxes that control input TextBoxes after
          // the data has been bound to the TextBox
-         txtProxyUser.Text = _Prefs.GetPreference<string>(Preference.ProxyUser);
-         txtProxyUser.CompanionControls.Add(txtProxyPass);
-         txtProxyPass.Text = _Prefs.GetPreference<string>(Preference.ProxyPass);
-         txtProxyPass.CompanionControls.Add(txtProxyUser);
+         txtProxyUser.DataBindings.Add("Text", _webSettingsModel, "ProxyUser", false, DataSourceUpdateMode.OnValidation);
+         txtProxyUser.DataBindings.Add("ErrorToolTipText", _webSettingsModel, "UsernamePasswordPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtProxyUser.DataBindings.Add("Enabled", _webSettingsModel, "ProxyAuthEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+
+         txtProxyPass.DataBindings.Add("Text", _webSettingsModel, "ProxyPass", false, DataSourceUpdateMode.OnValidation);
+         txtProxyPass.DataBindings.Add("ErrorToolTipText", _webSettingsModel, "UsernamePasswordPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtProxyPass.DataBindings.Add("Enabled", _webSettingsModel, "ProxyAuthEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+
          // Finally, add the CheckBox.Checked Binding
-         chkUseProxyAuth.Checked = _Prefs.GetPreference<bool>(Preference.UseProxyAuth);
+         chkUseProxyAuth.DataBindings.Add("Checked", _webSettingsModel, "UseProxyAuth", false, DataSourceUpdateMode.OnPropertyChanged);
          #endregion
       }
       
       private void LoadVisualStylesTab()
       {
-         DirectoryInfo di = new DirectoryInfo(Path.Combine(_Prefs.ApplicationPath, Constants.CssFolderName));
+         _propertyCollection[(int)TabName.WebVisualStyles] = TypeDescriptor.GetProperties(_webVisualStylesModel);
+         _models[(int)TabName.WebVisualStyles] = _webVisualStylesModel;
+      
+         StyleList.DataSource = _webVisualStylesModel.CssFileList;
+         StyleList.DisplayMember = "DisplayMember";
+         StyleList.ValueMember = "ValueMember";
+         StyleList.DataBindings.Add("SelectedValue", _webVisualStylesModel, "CssFile", false, DataSourceUpdateMode.OnPropertyChanged);
          
-         if (di.Exists)
-         {
-            StyleList.Items.Clear();
-            foreach (FileInfo fi in di.GetFiles())
-            {
-               if (fi.Name.EndsWith(CssExtension))
-               {
-                  StyleList.Items.Add(fi.Name.Replace(CssExtension, String.Empty));
-               }
-            }
-
-            for (int i = 0; i < StyleList.Items.Count; i++)
-            {
-               object item = StyleList.Items[i];
-
-               if (item.ToString().ToLower().Equals(_Prefs.GetPreference<string>(Preference.CssFile).ToLower().Replace(CssExtension, String.Empty)))
-               {
-                  StyleList.SelectedItem = item;
-               }
-            }
-         }
-         
-         txtOverview.Text = _Prefs.GetPreference<string>(Preference.WebOverview);
-         txtMobileOverview.Text = _Prefs.GetPreference<string>(Preference.WebMobileOverview);
-         txtSummary.Text = _Prefs.GetPreference<string>(Preference.WebSummary);
-         txtMobileSummary.Text = _Prefs.GetPreference<string>(Preference.WebMobileSummary);
-         txtInstance.Text = _Prefs.GetPreference<string>(Preference.WebInstance);
+         txtOverview.DataBindings.Add("Text", _webVisualStylesModel, "WebOverview", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtMobileOverview.DataBindings.Add("Text", _webVisualStylesModel, "WebMobileOverview", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtSummary.DataBindings.Add("Text", _webVisualStylesModel, "WebSummary", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtMobileSummary.DataBindings.Add("Text", _webVisualStylesModel, "WebMobileSummary", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtInstance.DataBindings.Add("Text", _webVisualStylesModel, "WebInstance", false, DataSourceUpdateMode.OnPropertyChanged);
       }
 
       private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
       {
          toolTipPrefs.RemoveAll();
+         
+         if (tabControl1.SelectedIndex == (int)TabName.WebVisualStyles)
+         {
+            if (_cssSampleBrowser.DocumentText.Length < 100)
+            {
+               ShowCssPreview();
+            }
+         }
       }
       #endregion
 
       #region Scheduled Tasks Tab
-      private void chkWebSiteGenerator_CheckedChanged(object sender, EventArgs e)
-      {
-         SetWebGenerator(chkWebSiteGenerator.Checked);
-      }
-      
-      private void SetWebGenerator(bool value)
-      {
-         foreach (Control ctrl in grpHTMLOutput.Controls)
-         {
-            ctrl.CausesValidation = value;
-         }
-
-         radioSchedule.Enabled = value;
-         lbl2MinutesToGen.Enabled = value;
-         radioSchedule_CheckedChanged(null, EventArgs.Empty);
-         radioFullRefresh.Enabled = value;
-         btnTestConnection.Enabled = value;
-
-         txtWebSiteBase.Enabled = value;
-         btnBrowseWebFolder.Enabled = value;
-
-         chkHtml.Enabled = value;
-         chkXml.Enabled = value;
-         chkFAHlog.Enabled = value;
-         
-         #region Enable FTP Mode Controls
-         //TODO: Stop gap - don't like how this is done.  Duplicate logic from txtWebSiteBase_CustomValidation() below
-         bool enable = false;
-         if (value)
-         {
-            enable = StringOps.ValidateFtpWithUserPassUrl(txtWebSiteBase.Text) ||
-                     StringOps.ValidateFtpWithUserPassUrl(String.Concat(txtWebSiteBase.Text, "/"));
-         }
-
-         EnableFtpModeControls(enable);
-         #endregion
-
-         //TODO: Stop gap - don't like how this is done.  Duplicate logic from txtWebSiteBase_CustomValidation() below
-         if (chkFAHlog.Enabled && chkFAHlog.Checked)
-         {
-            EnableLogLimitSizeControls(enable);
-         }
-         else
-         {
-            EnableLogLimitSizeControls(false);
-         }
-      }
-
-      private void radioSchedule_CheckedChanged(object sender, EventArgs e)
-      {
-         if (radioSchedule.Checked && radioSchedule.Enabled)
-         {
-            txtWebGenMinutes.Enabled = true;
-         }
-         else
-         {
-            txtWebGenMinutes.Enabled = false;
-         }
-      }
-
-      private void txtWebSiteBase_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
-      {
-         e.ValidationResult = true;
-      
-         bool bPath = StringOps.ValidatePathInstancePath(txtWebSiteBase.Text);
-         bool bPathWithSlash = StringOps.ValidatePathInstancePath(String.Concat(txtWebSiteBase.Text, Path.DirectorySeparatorChar));
-         bool bIsFtpUrl = StringOps.ValidateFtpWithUserPassUrl(txtWebSiteBase.Text);
-         bool bIsFtpUrlWithSlash = StringOps.ValidateFtpWithUserPassUrl(String.Concat(txtWebSiteBase.Text, "/"));
-
-         if (e.ControlText.Length == 0)
-         {
-            e.ValidationResult = false;
-         }
-         else if (e.ControlText.Length > 2 && (bPath || bPathWithSlash || bIsFtpUrl || bIsFtpUrlWithSlash) != true)
-         {
-            e.ValidationResult = false;
-         }
-
-         // This PathWithSlash Code seems to be defunct by the current
-         // Path Regex in use.  It could probably be removed.
-         if (bPath == false && bPathWithSlash)
-         {
-            e.ControlText += Path.DirectorySeparatorChar;
-         }
-
-         if (bIsFtpUrl == false && bIsFtpUrlWithSlash)
-         {
-            e.ControlText += "/";
-         }
-
-         EnableFtpModeControls(e.ValidationResult && bIsFtpUrl);
-
-         //TODO: Stop gap - don't like how this is done.  Duplicate logic from SetWebGenerator() above
-         if (chkFAHlog.Checked)
-         {
-            EnableLogLimitSizeControls(e.ValidationResult && bIsFtpUrl);
-         }
-         else
-         {
-            EnableLogLimitSizeControls(false);
-         }
-      }
-      
-      private void EnableFtpModeControls(bool value)
-      {
-         pnlFtpMode.Enabled = value;
-      }
-
-      private void chkFAHlog_CheckedChanged(object sender, EventArgs e)
-      {
-         bool enable = StringOps.ValidateFtpWithUserPassUrl(txtWebSiteBase.Text) ||
-                       StringOps.ValidateFtpWithUserPassUrl(String.Concat(txtWebSiteBase.Text, "/"));
-
-         //TODO: Stop gap - don't like how this is done.  Duplicate logic from SetWebGenerator() above
-         if (chkFAHlog.Checked)
-         {
-            EnableLogLimitSizeControls(enable);
-         }
-         else
-         {
-            EnableLogLimitSizeControls(false);
-         }                      
-      }
-      
-      private void EnableLogLimitSizeControls(bool value)
-      {
-         chkLimitSize.Enabled = value;
-         udLimitSize.Enabled = value;
-      }
-
       private void btnBrowseWebFolder_Click(object sender, EventArgs e)
       {
-         if (txtWebSiteBase.Text.Length != 0) // FxCop: CA1820
+         if (_scheduledTasksModel.WebRoot.Length != 0)
          {
-            locateWebFolder.SelectedPath = txtWebSiteBase.Text;
+            locateWebFolder.SelectedPath = _scheduledTasksModel.WebRoot;
          }
          if (locateWebFolder.ShowDialog() == DialogResult.OK)
          {
-            txtWebSiteBase.Text = locateWebFolder.SelectedPath;
-         }
-      }
-
-      private void txtMinutes_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
-      {
-         e.ValidationResult = true;
-      
-         int Minutes;
-         if (Int32.TryParse(e.ControlText, out Minutes) == false)
-         {
-            e.ValidationResult = false;
-         }
-         else if (PreferenceSet.ValidateMinutes(Minutes) == false)
-         {
-            e.ValidationResult = false;
+            _scheduledTasksModel.WebRoot = locateWebFolder.SelectedPath;
          }
       }
       #endregion
       
       #region Reporting Tab
-      private void chkEnableEmail_CheckedChanged(object sender, EventArgs e)
-      {
-         SetEmailReporting(chkEnableEmail.Checked);
-      }
-      
-      private void SetEmailReporting(bool value)
-      {
-         foreach (Control ctrl in grpEmailSettings.Controls)
-         {
-            ctrl.CausesValidation = value;
-         }
-
-         chkEmailSecure.Enabled = value;
-         txtToEmailAddress.Enabled = value;
-         txtFromEmailAddress.Enabled = value;
-         txtSmtpServer.Enabled = value;
-         txtSmtpServerPort.Enabled = value;
-         txtSmtpUsername.Enabled = value;
-         txtSmtpPassword.Enabled = value;
-
-         btnTestEmail.Enabled = value;
-
-         grpReportSelections.Enabled = value;
-         foreach (Control ctrl in grpReportSelections.Controls)
-         {
-            if (ctrl is CheckBox)
-            {
-               ctrl.Enabled = value;
-            }
-         }
-      }
-
-      private void txtEmailAddress_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
-      {
-         e.ValidationResult = true;
-         bool bAddress = StringOps.ValidateEmailAddress(e.ControlText);
-
-         if (e.ControlText.Length == 0)
-         {
-            e.ValidationResult = false;
-         }
-         else if (e.ControlText.Length > 0 && bAddress != true)
-         {
-            e.ValidationResult = false;
-         }
-      }
-
       private void txtFromEmailAddress_MouseHover(object sender, EventArgs e)
       {
          if (txtFromEmailAddress.BackColor.Equals(Color.Yellow)) return;
@@ -553,41 +483,9 @@ namespace HFM.Forms
             txtFromEmailAddress.Parent, txtFromEmailAddress.Location.X + 5, txtFromEmailAddress.Location.Y - 55, 10000);
       }
 
-      private void txtSmtpServer_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
-      {
-         e.ValidationResult = true;
-
-         try
-         {
-            // This will violate FxCop rule (rule ID)
-            StringOps.ValidateServerPortPair(txtSmtpServer.Text, txtSmtpServerPort.Text);
-         }
-         catch (ArgumentException ex)
-         {
-            e.ErrorToolTipText = ex.Message;
-            e.ValidationResult = false;
-         }
-      }
-
-      private void txtSmtpCredentials_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
-      {
-         e.ValidationResult = true;
-         
-         try
-         {
-            // This will violate FxCop rule (rule ID)
-            StringOps.ValidateUsernamePasswordPair(txtSmtpUsername.Text, txtSmtpPassword.Text);
-         }
-         catch (ArgumentException ex)
-         {
-            e.ErrorToolTipText = ex.Message;
-            e.ValidationResult = false;
-         }
-      }
-
       private void btnTestEmail_Click(object sender, EventArgs e)
       {
-         if (CheckForReportingTabErrors())
+         if (_reportingModel.Error)
          {
             MessageBox.Show(this, "Please correct error conditions before sending a Test Email.", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
          }
@@ -604,6 +502,17 @@ namespace HFM.Forms
                HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
                MessageBox.Show(this, String.Format("Test Email failed to send.  Please check your Email settings.{0}{0}Error: {1}", Environment.NewLine, ex.Message), 
                   Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+         }
+      }
+
+      private void grpReportSelections_EnabledChanged(object sender, EventArgs e)
+      {
+         foreach (Control ctrl in grpReportSelections.Controls)
+         {
+            if (ctrl is CheckBox)
+            {
+               ctrl.Enabled = grpReportSelections.Enabled;
             }
          }
       }
@@ -648,102 +557,20 @@ namespace HFM.Forms
             MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "EOC Team Stats page"));
          }
       }
-
-      private void txtProjectDownloadUrl_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
-      {
-         e.ValidationResult = StringOps.ValidateHttpUrl(txtProjectDownloadUrl.Text);
-      }
-
-      private void chkUseProxy_CheckedChanged(object sender, EventArgs e)
-      {
-         if (chkUseProxy.Checked)
-         {
-            EnableProxy();
-            if (chkUseProxyAuth.Checked)
-            {
-               SetProxyAuth(true);
-            }
-         }
-         else
-         {
-            DisableProxy();
-         }
-      }
-
-      private void EnableProxy()
-      {
-         txtProxyServer.Enabled = true;
-         txtProxyPort.Enabled = true;
-         
-         chkUseProxyAuth.Enabled = true;
-      }
-
-      private void DisableProxy()
-      {
-         txtProxyServer.Enabled = false;
-         txtProxyPort.Enabled = false;
-         
-         chkUseProxyAuth.Enabled = false;
-         
-         SetProxyAuth(false);
-      }
-
-      private void txtProxyServerPort_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
-      {
-         e.ValidationResult = true;
-      
-         try
-         {
-            // This will violate FxCop rule (rule ID)
-            StringOps.ValidateServerPortPair(txtProxyServer.Text, txtProxyPort.Text);
-         }
-         catch (ArgumentException ex)
-         {
-            e.ErrorToolTipText = ex.Message;
-            e.ValidationResult = false;
-         }
-      }
-
-      private void chkUseProxyAuth_CheckedChanged(object sender, EventArgs e)
-      {
-         if (chkUseProxyAuth.Checked && chkUseProxyAuth.Enabled)
-         {
-            SetProxyAuth(true);
-         }
-         else
-         {
-            SetProxyAuth(false);
-         }
-      }
-
-      private void SetProxyAuth(bool value)
-      {
-         txtProxyUser.Enabled = value;
-         txtProxyPass.Enabled = value;
-      }
-
-      private void txtProxyCredentials_CustomValidation(object sender, ValidatingControlCustomValidationEventArgs e)
-      {
-         e.ValidationResult = true;
-      
-         try
-         {
-            // This will violate FxCop rule (rule ID)
-            StringOps.ValidateUsernamePasswordPair(txtProxyUser.Text, txtProxyPass.Text, true);
-         }
-         catch (ArgumentException ex)
-         {
-            e.ErrorToolTipText = ex.Message;
-            e.ValidationResult = false;
-         }
-      }
       #endregion
 
       #region Visual Style Tab
       private void StyleList_SelectedIndexChanged(object sender, EventArgs e)
       {
-         String sStylesheet = Path.Combine(Path.Combine(_Prefs.ApplicationPath, Constants.CssFolderName), Path.ChangeExtension(StyleList.SelectedItem.ToString(), CssExtension));
-         StringBuilder sb = new StringBuilder();
+         ShowCssPreview();
+      }
+
+      private void ShowCssPreview()
+      {
+         if (PlatformOps.IsRunningOnMono()) return;
+         
+         string sStylesheet = Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.CssFolderName), _webVisualStylesModel.CssFile);
+         var sb = new StringBuilder();
 
          sb.Append("<HTML><HEAD><TITLE>Test CSS File</TITLE>");
          sb.Append("<LINK REL=\"Stylesheet\" TYPE=\"text/css\" href=\"file://" + sStylesheet + "\" />");
@@ -776,10 +603,7 @@ namespace HFM.Forms
          sb.Append("</table>");
          sb.Append("</BODY></HTML>");
 
-         if (PlatformOps.IsRunningOnMono() == false)
-         {
-            wbCssSample.DocumentText = sb.ToString();
-         }
+         _cssSampleBrowser.DocumentText = sb.ToString();
       }
       #endregion
 
@@ -787,9 +611,9 @@ namespace HFM.Forms
 
       private void btnTestConnection_Click(object sender, EventArgs e)
       {
-         if (net == null)
+         if (_net == null)
          {
-            net = new NetworkOps();
+            _net = new NetworkOps();
          }
 
          try
@@ -808,8 +632,8 @@ namespace HFM.Forms
                string username = mMatchFtpWithUserPassUrl.Result("${username}");
                string password = mMatchFtpWithUserPassUrl.Result("${password}");
                
-               FtpCheckConnectionDelegate del = net.FtpCheckConnection;
-               del.BeginInvoke(server, path, username, password, GetFtpTypeFromControls(), FtpCheckConnectionCallback, del);
+               FtpCheckConnectionDelegate del = _net.FtpCheckConnection;
+               del.BeginInvoke(server, path, username, password, _scheduledTasksModel.FtpMode, FtpCheckConnectionCallback, del);
             }
          }
          catch (Exception ex)
@@ -834,7 +658,7 @@ namespace HFM.Forms
       {
          try
          {
-            CheckFileConnectionDelegate del = (CheckFileConnectionDelegate)result.AsyncState;
+            var del = (CheckFileConnectionDelegate)result.AsyncState;
             del.EndInvoke(result);
             ShowConnectionSucceededMessage();
          }
@@ -853,7 +677,7 @@ namespace HFM.Forms
       {
          try
          {
-            FtpCheckConnectionDelegate del = (FtpCheckConnectionDelegate)result.AsyncState;
+            var del = (FtpCheckConnectionDelegate)result.AsyncState;
             del.EndInvoke(result);
             ShowConnectionSucceededMessage();
          }
@@ -921,42 +745,27 @@ namespace HFM.Forms
       {
          if (CheckForErrorConditions() == false)
          {
-            GetScheduledTasksTab();
-            GetStartupTab();
-            GetOptionsTab();
-            GetReportingTab();
-            GetWebSettingsTab();
-            GetVisualStylesTab();
+            _prefs.Save();
 
-            _Prefs.Save();
-
-            DialogResult = System.Windows.Forms.DialogResult.OK;
+            DialogResult = DialogResult.OK;
             Close();
          }
       }
       
       private bool CheckForErrorConditions()
       {
-         if (CheckForScheduledTasksTabErrors())
+         SetPropertyErrorState();
+         if (_scheduledTasksModel.Error)
          {
             tabControl1.SelectedTab = tabSchdTasks;
-            // Don't like how this is done, making the same check in CheckForScheduledTasksTabErrors()
-            if (chkWebSiteGenerator.Checked &&
-                chkHtml.Checked == false &&
-                chkXml.Checked == false)
-            {
-               MessageBox.Show("You must select either HTML or XML output.", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }  
             return true;
          }
-
-         if (CheckForReportingTabErrors())
+         if (_reportingModel.Error)
          {
             tabControl1.SelectedTab = tabReporting;
             return true;
          }
-
-         if (CheckForWebSettingsTabErrors())
+         if (_webSettingsModel.Error)
          {
             tabControl1.SelectedTab = tabWeb;
             return true;
@@ -964,215 +773,10 @@ namespace HFM.Forms
          
          return false;
       }
-      
-      private bool CheckForScheduledTasksTabErrors()
-      {
-         // Check for error conditions on Scheduled Tasks Tab
-         if (txtCollectMinutes.ErrorState ||
-             txtWebGenMinutes.ErrorState ||
-             txtWebSiteBase.ErrorState)
-         {
-            return true;
-         }
-         
-         // Don't like how this is done, making the same check in CheckForErrorConditions()
-         if (chkWebSiteGenerator.Checked &&
-             chkHtml.Checked == false &&
-             chkXml.Checked == false)
-         {
-            return true;
-         }
-         
-         return false;
-      }
-      
-      private bool CheckForReportingTabErrors()
-      {
-         // Check for error conditions on Reporting Tab
-         if (txtToEmailAddress.ErrorState ||
-             txtFromEmailAddress.ErrorState ||
-             txtSmtpServer.ErrorState ||
-             txtSmtpServerPort.ErrorState ||
-             txtSmtpUsername.ErrorState ||
-             txtSmtpPassword.ErrorState)
-         {
-            return true;
-         }
-         
-         return false;
-      }
-      
-      private bool CheckForWebSettingsTabErrors()
-      {
-         // Check for error conditions on Web Settings Tab
-         // Issue 189 - Check for Empty User and Team ID Values
-         if (txtEOCUserID.ErrorState ||
-             txtStanfordUserID.ErrorState ||
-             txtStanfordTeamID.ErrorState ||
-             txtProjectDownloadUrl.ErrorState ||
-             txtProxyServer.ErrorState ||
-             txtProxyPort.ErrorState ||
-             txtProxyUser.ErrorState ||
-             txtProxyPass.ErrorState)
-         {
-            return true;
-         }
-         
-         return false;
-      }
-
-      private void GetScheduledTasksTab()
-      {
-         #region Refresh Data
-         _Prefs.SetPreference(Preference.SyncOnLoad, chkSynchronous.Checked);
-         _Prefs.SetPreference(Preference.DuplicateProjectCheck, chkDuplicateProject.Checked);
-         _Prefs.SetPreference(Preference.DuplicateUserIdCheck, chkDuplicateUserID.Checked);
-
-         _Prefs.SetPreference(Preference.SyncTimeMinutes, txtCollectMinutes.Text);
-         _Prefs.SetPreference(Preference.SyncOnSchedule, chkScheduled.Checked);
-
-         _Prefs.SetPreference(Preference.AllowRunningAsync, chkAllowRunningAsync.Checked);
-         _Prefs.SetPreference(Preference.ShowUserStats, chkShowUserStats.Checked);
-         #endregion
-
-         #region Web Generation
-         _Prefs.SetPreference(Preference.GenerateInterval, txtWebGenMinutes.Text);
-         _Prefs.SetPreference(Preference.WebGenAfterRefresh, radioFullRefresh.Checked);
-
-         _Prefs.SetPreference(Preference.WebRoot, txtWebSiteBase.Text);
-         _Prefs.SetPreference(Preference.WebGenCopyHtml, chkHtml.Checked);
-         _Prefs.SetPreference(Preference.WebGenCopyXml, chkXml.Checked);
-         _Prefs.SetPreference(Preference.WebGenCopyFAHlog, chkFAHlog.Checked);
-         _Prefs.SetPreference(Preference.WebGenFtpMode, GetFtpTypeFromControls());
-         _Prefs.SetPreference(Preference.WebGenLimitLogSize, chkLimitSize.Checked);
-         _Prefs.SetPreference(Preference.WebGenLimitLogSizeLength, (int)udLimitSize.Value);
-         
-         _Prefs.SetPreference(Preference.GenerateWeb, chkWebSiteGenerator.Checked);
-         #endregion
-      }
-
-      private FtpType GetFtpTypeFromControls()
-      {
-         FtpType ftpType = FtpType.Passive;
-         if (radioActive.Checked) ftpType = FtpType.Active;
-         return ftpType;
-      }
-
-      private void GetStartupTab()
-      {
-         #region Startup
-         if (PlatformOps.IsRunningOnMono() == false)
-         {
-            try
-            {
-               if (chkAutoRun.Checked)
-               {
-                  RegistryOps.SetHfmAutoRun(Application.ExecutablePath);
-               }
-               else
-               {
-                  RegistryOps.SetHfmAutoRun(String.Empty);
-               }
-            }
-            catch (InvalidOperationException ex)
-            {
-               HfmTrace.WriteToHfmConsole(ex);
-               MessageBox.Show(this, "Failed to save HFM.NET Auto Run Registry Value.  Please see the Messages Windows for detailed error information.",
-                  Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-         }
-
-         _Prefs.SetPreference(Preference.RunMinimized, chkRunMinimized.Checked);
-         _Prefs.SetPreference(Preference.StartupCheckForUpdate, chkCheckForUpdate.Checked);
-         #endregion
-
-         #region Configuration File
-         _Prefs.SetPreference(Preference.DefaultConfigFile, txtDefaultConfigFile.Text);
-         _Prefs.SetPreference(Preference.UseDefaultConfigFile, chkDefaultConfig.Checked);
-         #endregion
-
-         #region External Programs
-         _Prefs.SetPreference(Preference.LogFileViewer, txtLogFileViewer.Text);
-         _Prefs.SetPreference(Preference.FileExplorer, txtFileExplorer.Text);
-         #endregion
-      }
-
-      private void GetOptionsTab()
-      {
-         #region Interactive Options
-         _Prefs.SetPreference(Preference.OfflineLast, chkOffline.Checked);
-         _Prefs.SetPreference(Preference.ColorLogFile, chkColorLog.Checked);
-         _Prefs.SetPreference(Preference.AutoSaveConfig, chkAutoSave.Checked);
-         _Prefs.SetPreference(Preference.MaintainSelectedClient, chkMaintainSelected.Checked);
-
-         _Prefs.SetPreference(Preference.PpdCalculation, (PpdCalculationType)cboPpdCalc.SelectedItem);
-         _Prefs.SetPreference(Preference.DecimalPlaces, (int)udDecimalPlaces.Value);
-         _Prefs.SetPreference(Preference.CalculateBonus, chkCalcBonus.Checked);
-         #endregion
-
-         #region Debug Message Level
-         _Prefs.SetPreference(Preference.MessageLevel, cboMessageLevel.SelectedIndex);
-         #endregion
-         
-         #region Form Docking Style
-         _Prefs.SetPreference(Preference.FormShowStyle, (FormShowStyleType)cboShowStyle.SelectedItem);
-         #endregion
-      }
-
-      private void GetReportingTab()
-      {
-         #region Email Settings
-         _Prefs.SetPreference(Preference.EmailReportingServerSecure, chkEmailSecure.Checked);
-         _Prefs.SetPreference(Preference.EmailReportingToAddress, txtToEmailAddress.Text);
-         _Prefs.SetPreference(Preference.EmailReportingFromAddress, txtFromEmailAddress.Text);
-         _Prefs.SetPreference(Preference.EmailReportingServerAddress, txtSmtpServer.Text);
-         _Prefs.SetPreference(Preference.EmailReportingServerPort, txtSmtpServerPort.Text);
-         _Prefs.SetPreference(Preference.EmailReportingServerUsername, txtSmtpUsername.Text);
-         _Prefs.SetPreference(Preference.EmailReportingServerPassword, txtSmtpPassword.Text);
-
-         _Prefs.SetPreference(Preference.EmailReportingEnabled, chkEnableEmail.Checked);
-         #endregion
-
-         #region Report Selections
-         _Prefs.SetPreference(Preference.ReportEuePause, chkClientEuePause.Checked);
-         #endregion
-      }
-
-      private void GetWebSettingsTab()
-      {
-         #region Web Statistics
-         _Prefs.SetPreference(Preference.EocUserID, txtEOCUserID.Text);
-         _Prefs.SetPreference(Preference.StanfordID, txtStanfordUserID.Text);
-         _Prefs.SetPreference(Preference.TeamID, txtStanfordTeamID.Text);
-         #endregion
-
-         #region Project Download URL
-         _Prefs.SetPreference(Preference.ProjectDownloadUrl, txtProjectDownloadUrl.Text);
-         #endregion
-
-         #region Web Proxy Settings
-         _Prefs.SetPreference(Preference.ProxyServer, txtProxyServer.Text);
-         _Prefs.SetPreference(Preference.ProxyPort, txtProxyPort.Text);
-         _Prefs.SetPreference(Preference.UseProxy, chkUseProxy.Checked);
-         _Prefs.SetPreference(Preference.ProxyUser, txtProxyUser.Text);
-         _Prefs.SetPreference(Preference.ProxyPass, txtProxyPass.Text);
-         _Prefs.SetPreference(Preference.UseProxyAuth, chkUseProxyAuth.Checked);
-         #endregion
-      }
-      
-      private void GetVisualStylesTab()
-      {
-         _Prefs.SetPreference(Preference.CssFile, String.Concat(StyleList.SelectedItem, CssExtension));
-         _Prefs.SetPreference(Preference.WebOverview, txtOverview.Text);
-         _Prefs.SetPreference(Preference.WebMobileOverview, txtMobileOverview.Text);
-         _Prefs.SetPreference(Preference.WebSummary, txtSummary.Text);
-         _Prefs.SetPreference(Preference.WebMobileSummary, txtMobileSummary.Text);
-         _Prefs.SetPreference(Preference.WebInstance, txtInstance.Text);
-      }
 
       private void btnCancel_Click(object sender, EventArgs e)
       {
-         _Prefs.Discard();
+         _prefs.Discard();
       }
 
       #region Folder Browsing
@@ -1195,7 +799,7 @@ namespace HFM.Forms
       {
          if (String.IsNullOrEmpty(txt.Text) == false)
          {
-            FileInfo fileInfo = new FileInfo(txt.Text);
+            var fileInfo = new FileInfo(txt.Text);
             if (fileInfo.Exists)
             {
                openConfigDialog.InitialDirectory = fileInfo.DirectoryName;
@@ -1203,7 +807,7 @@ namespace HFM.Forms
             }
             else
             {
-               DirectoryInfo dirInfo = new DirectoryInfo(txt.Text);
+               var dirInfo = new DirectoryInfo(txt.Text);
                if (dirInfo.Exists)
                {
                   openConfigDialog.InitialDirectory = dirInfo.FullName;
@@ -1274,8 +878,8 @@ namespace HFM.Forms
       {
          if (String.IsNullOrEmpty(filename) == false)
          {
-            FileInfo fileInfo = new FileInfo(filename);
-            string xsltPath = Path.Combine(_Prefs.ApplicationPath, Constants.XsltFolderName);
+            var fileInfo = new FileInfo(filename);
+            string xsltPath = Path.Combine(_prefs.ApplicationPath, Constants.XsltFolderName);
             
             if (fileInfo.Exists)
             {
@@ -1289,7 +893,7 @@ namespace HFM.Forms
             }
             else
             {
-               DirectoryInfo dirInfo = new DirectoryInfo(filename);
+               var dirInfo = new DirectoryInfo(filename);
                if (dirInfo.Exists)
                {
                   openConfigDialog.InitialDirectory = dirInfo.FullName;
@@ -1308,7 +912,7 @@ namespace HFM.Forms
          if (openConfigDialog.ShowDialog() == DialogResult.OK)
          {
             // Check to see if the path for the file returned is the \HFM\XSL path
-            if (Path.Combine(_Prefs.ApplicationPath, Constants.XsltFolderName).Equals(Path.GetDirectoryName(openConfigDialog.FileName)))
+            if (Path.Combine(_prefs.ApplicationPath, Constants.XsltFolderName).Equals(Path.GetDirectoryName(openConfigDialog.FileName)))
             {
                // If so, return the file name only
                return Path.GetFileName(openConfigDialog.FileName);

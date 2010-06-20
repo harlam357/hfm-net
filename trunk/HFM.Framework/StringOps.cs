@@ -25,6 +25,7 @@ using System.Text.RegularExpressions;
 
 namespace HFM.Framework
 {
+   //TODO: Change Class Name to Validators
    public static class StringOps
    {
       #region Constants
@@ -345,6 +346,16 @@ namespace HFM.Framework
          }
          return pathVariations;
       }
+
+      public static bool ValidateMinutes(int minutes)
+      {
+         if ((minutes > Constants.MaxMinutes) || (minutes < Constants.MinMinutes))
+         {
+            return false;
+         }
+
+         return true;
+      } 
       #endregion
    }
 }
