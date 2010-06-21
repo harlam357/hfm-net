@@ -19,6 +19,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Windows.Forms;
 
 using HFM.Framework;
@@ -27,6 +28,13 @@ namespace HFM.Instances
 {
    public class DisplayInstance
    {
+      private readonly IPreferenceSet _prefs;
+   
+      public DisplayInstance(IPreferenceSet prefs)
+      {
+         _prefs = prefs;
+      }
+   
       #region Members & Read Only Properties
 
       /// <summary>
@@ -44,10 +52,24 @@ namespace HFM.Instances
       /// </summary>
       public String Name { get; private set; }
 
+      private string _clientType;
+
+      private string _clientVersion;
+
       /// <summary>
       /// 
       /// </summary>
-      public ClientType ClientType { get; private set; }
+      public string ClientType
+      {
+         get
+         {
+            if (_prefs.GetPreference<bool>(Preference.ShowVersions) && String.IsNullOrEmpty(_clientVersion) == false)
+            {
+               return String.Format(CultureInfo.CurrentCulture, "{0} ({1})", _clientType, _clientVersion);
+            }
+            return _clientType;
+         }
+      }
 
       /// <summary>
       /// 
@@ -73,11 +95,25 @@ namespace HFM.Instances
       /// ETA for this instance
       /// </summary>
       public TimeSpan ETA { get; private set; }
+      
+      private string _core;
+
+      private string _coreVersion;
 
       /// <summary>
       /// 
       /// </summary>
-      public String Core { get; private set; }
+      public string Core
+      {
+         get
+         {
+            if (_prefs.GetPreference<bool>(Preference.ShowVersions) && String.IsNullOrEmpty(_coreVersion) == false)
+            {
+               return String.Format(CultureInfo.CurrentCulture, "{0} ({1})", _core, _coreVersion);
+            }
+            return _core;
+         }
+      }
 
       /// <summary>
       /// 
@@ -94,10 +130,24 @@ namespace HFM.Instances
       /// </summary>
       public double Credit { get; private set; }
 
+      private int _runCompleted;
+
+      private int _clientCompleted;
+
       /// <summary>
       /// 
       /// </summary>
-      public int Complete { get; private set; }
+      public int Complete
+      {
+         get
+         {
+            if (_prefs.GetPreference<CompletedCountDisplayType>(Preference.CompletedCountDisplay).Equals(CompletedCountDisplayType.ClientTotal))
+            {
+               return _clientCompleted;
+            }
+            return _runCompleted;
+         }
+      }
 
       /// <summary>
       /// 
@@ -127,22 +177,25 @@ namespace HFM.Instances
       #endregion
 
       #region Implementation
-      public void Load(ClientInstance instance, int decimalPlaces, IPreferenceSet prefs)
+      public void Load(ClientInstance instance, int decimalPlaces)
       {
          Status = instance.Status;
          Progress = ((float)instance.PercentComplete) / 100;
          Name = instance.InstanceName;
-         ClientType = instance.CurrentUnitInfo.TypeOfClient;
+         _clientType = instance.CurrentUnitInfo.TypeOfClient.ToString();
+         _clientVersion = instance.ClientVersion;
          TPF = instance.TimePerFrame;
          PPD = Math.Round(instance.PPD, decimalPlaces);
          MHz = instance.ClientProcessorMegahertz;
          PPD_MHz = Math.Round(instance.PPD / instance.ClientProcessorMegahertz, 3);
          ETA = instance.ETA;
-         Core = instance.CurrentUnitInfo.Core;
+         _core = instance.CurrentUnitInfo.Core;
+         _coreVersion = instance.CurrentUnitInfo.CoreVersion;
          CoreId = instance.CurrentUnitInfo.CoreId;
          ProjectRunCloneGen = instance.CurrentUnitInfo.ProjectRunCloneGen;
          Credit = instance.Credit;
-         Complete = instance.TotalRunCompletedUnits;
+         _runCompleted = instance.TotalRunCompletedUnits;
+         _clientCompleted = instance.TotalClientCompletedUnits;
          Failed = instance.TotalRunFailedUnits;
          Username = instance.FoldingIDAndTeam;
          DownloadTime = instance.CurrentUnitInfo.DownloadTime;

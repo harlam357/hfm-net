@@ -1151,15 +1151,15 @@ namespace HFM.Instances
             foreach (ClientInstance instance in _instanceCollection.Values)
             {
                DisplayInstance findInstance = FindDisplayInstance(_displayCollection, instance.InstanceName);
-               int decimalPlaces = _Prefs.GetPreference<int>(Preference.DecimalPlaces);
+               var decimalPlaces = _Prefs.GetPreference<int>(Preference.DecimalPlaces);
                if (findInstance != null)
                {
-                  findInstance.Load(instance, decimalPlaces, _Prefs);
+                  findInstance.Load(instance, decimalPlaces);
                }
                else
                {
-                  DisplayInstance newInstance = new DisplayInstance();
-                  newInstance.Load(instance, decimalPlaces, _Prefs);
+                  var newInstance = new DisplayInstance(_Prefs);
+                  newInstance.Load(instance, decimalPlaces);
                   _displayCollection.Add(newInstance);
                }
             }

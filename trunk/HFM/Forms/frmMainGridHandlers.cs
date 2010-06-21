@@ -32,9 +32,6 @@ namespace HFM.Forms
       Status,
       Time,
       Warning,
-      ClientVersion,
-      CoreVersion,
-      CompleteStyle,
       EtaDate
    }
 
@@ -126,57 +123,26 @@ namespace HFM.Forms
             {
                #region Duplicate User and Machine ID Custom Paint
                IClientInstance instance = _clientInstances.Instances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
-
                if (_Prefs.GetPreference<bool>(Preference.DuplicateUserIdCheck) && instance.UserIdIsDuplicate)
                {
                   PaintGridCell(PaintCell.Warning, e);
                }
                #endregion
             }
-            else if (dataGridView1.Columns["ClientType"].Index == e.ColumnIndex)
-            {
-               IClientInstance instance = _clientInstances.Instances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
-
-               if (_Prefs.GetPreference<bool>(Preference.ShowVersions) && String.IsNullOrEmpty(instance.ClientVersion) == false)
-               {
-                  PaintGridCell(PaintCell.ClientVersion, instance.ClientVersion, e);
-               }
-            }
-            else if (dataGridView1.Columns["Core"].Index == e.ColumnIndex)
-            {
-               IClientInstance instance = _clientInstances.Instances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
-
-               if (_Prefs.GetPreference<bool>(Preference.ShowVersions) && String.IsNullOrEmpty(instance.CurrentUnitInfo.CoreVersion) == false)
-               {
-                  PaintGridCell(PaintCell.CoreVersion, instance.CurrentUnitInfo.CoreVersion, e);
-               }
-            }
             else if (dataGridView1.Columns["ProjectRunCloneGen"].Index == e.ColumnIndex)
             {
                #region Duplicate Project Custom Paint
                IClientInstance instance = _clientInstances.Instances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
-
                if (_Prefs.GetPreference<bool>(Preference.DuplicateProjectCheck) && instance.ProjectIsDuplicate)
                {
                   PaintGridCell(PaintCell.Warning, e);
                }
                #endregion
             }
-            
-            else if (dataGridView1.Columns["Complete"].Index == e.ColumnIndex)
-            {
-               IClientInstance instance = _clientInstances.Instances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
-
-               if (_Prefs.GetPreference<CompletedCountDisplayType>(Preference.CompletedCountDisplay).Equals(CompletedCountDisplayType.ClientTotal))
-               {
-                  PaintGridCell(PaintCell.CompleteStyle, instance.TotalClientCompletedUnits.ToString(), e);
-               }
-            }
             else if (dataGridView1.Columns["Username"].Index == e.ColumnIndex)
             {
                #region Username Incorrect Custom Paint
                IClientInstance instance = _clientInstances.Instances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
-
                if (instance.IsUsernameOk() == false)
                {
                   PaintGridCell(PaintCell.Warning, e);
@@ -191,6 +157,16 @@ namespace HFM.Forms
             {
                PaintGridCell(PaintCell.Time, e);
             }
+            else if (dataGridView1.Columns["ETA"].Index == e.ColumnIndex)
+            {
+               #region ETA as Date Custom Paint
+               IClientInstance instance = _clientInstances.Instances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
+               if (_Prefs.GetPreference<bool>(Preference.EtaDate))
+               {
+                  PaintGridCell(PaintCell.EtaDate, instance.EtaDate, e);
+               }
+               #endregion
+            }
             else if (dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex ||
                      dataGridView1.Columns["Deadline"].Index == e.ColumnIndex)
             {
@@ -198,15 +174,6 @@ namespace HFM.Forms
                if (date.Equals(DateTime.MinValue))
                {
                   PaintGridCell(PaintCell.Time, e);
-               }
-            }
-            else if (dataGridView1.Columns["ETA"].Index == e.ColumnIndex)
-            {
-               IClientInstance instance = _clientInstances.Instances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
-
-               if (_Prefs.GetPreference<bool>(Preference.EtaDate))
-               {
-                  PaintGridCell(PaintCell.EtaDate, instance.EtaDate, e);
                }
             }
             // ReSharper restore PossibleNullReferenceException
@@ -233,22 +200,19 @@ namespace HFM.Forms
             using (var gridLinePen = new Pen(gridBrush))
             {
                #region Erase (Set BackColor) the Cell and Choose Text Color
-               Brush textColor = Brushes.Black;
                
+               Color textColor = Color.Black;
                if (paint.Equals(PaintCell.Status))
                {
                   e.Graphics.FillRectangle(backColorBrush, e.CellBounds);
                }
                else if (paint.Equals(PaintCell.Time) ||
-                        paint.Equals(PaintCell.ClientVersion) ||
-                        paint.Equals(PaintCell.CoreVersion) ||
-                        paint.Equals(PaintCell.CompleteStyle) ||
                         paint.Equals(PaintCell.EtaDate))
                {
                   if (dataGridView1.Rows[e.RowIndex].Selected)
                   {
                      e.Graphics.FillRectangle(selectionColorBrush, e.CellBounds);
-                     textColor = Brushes.White;
+                     textColor = Color.White;
                   }
                   else
                   {
@@ -260,7 +224,7 @@ namespace HFM.Forms
                   if (dataGridView1.Rows[e.RowIndex].Selected)
                   {
                      e.Graphics.FillRectangle(selectionColorBrush, e.CellBounds);
-                     textColor = Brushes.White;
+                     textColor = Color.White;
                   }
                   else
                   {
@@ -272,15 +236,19 @@ namespace HFM.Forms
                   throw new NotImplementedException(String.Format(CultureInfo.CurrentCulture,
                      "PaintCell Type '{0}' is not implemented", paint));
                }
+               
                #endregion
 
                #region Draw the bottom grid line
+               
                e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
                                    e.CellBounds.Bottom - 1, e.CellBounds.Right,
                                    e.CellBounds.Bottom - 1);
+                                   
                #endregion
 
                #region Draw Cell Content (Text or Shapes)
+               
                if (paint.Equals(PaintCell.Status))
                {
                   var newRect = new Rectangle(e.CellBounds.X + 4, e.CellBounds.Y + 4,
@@ -298,49 +266,20 @@ namespace HFM.Forms
                      PaintTimeBasedCellValue(textColor, e);
                   }
                }
-               else if (paint.Equals(PaintCell.ClientVersion) ||
-                        paint.Equals(PaintCell.CoreVersion))
-               {
-                  if (e.Value != null)
-                  {
-                     Debug.Assert(data != null);
-                     string value = GetVersionString(e.Value.ToString(), data.ToString());
-                     e.Graphics.DrawString(value, e.CellStyle.Font,
-                                           textColor, e.CellBounds.X + 1,
-                                           e.CellBounds.Y + 2, StringFormat.GenericDefault);
-                  }
-               }
-               else if (paint.Equals(PaintCell.CompleteStyle))
-               {
-                  if (e.Value != null)
-                  {
-                     Debug.Assert(data != null);
-                     e.Graphics.DrawString(data.ToString(), e.CellStyle.Font,
-                                           textColor, e.CellBounds.X + 1,
-                                           e.CellBounds.Y + 2, StringFormat.GenericDefault);
-                  }
-               }
                else if (paint.Equals(PaintCell.EtaDate))
                {
                   if (e.Value != null)
                   {
                      Debug.Assert(data != null);
-                     var dateTime = (DateTime)data;
-                     string value = GetFormattedDateStringForMeasurement(dateTime, String.Format(CultureInfo.CurrentCulture,
-                        "{0} {1}", dateTime.ToShortDateString(), dateTime.ToShortTimeString()));
-                     e.Graphics.DrawString(value, e.CellStyle.Font,
-                                           textColor, e.CellBounds.X + 1,
-                                           e.CellBounds.Y + 2, StringFormat.GenericDefault);
+                     DrawText(GetEtaDateString((DateTime)data), textColor, e);
                   }
                }
                else if (paint.Equals(PaintCell.Warning))
                {
-                  // Draw the text content of the cell, ignoring alignment.
+                  // Draw the text content of the cell
                   if (e.Value != null)
                   {
-                     e.Graphics.DrawString(e.Value.ToString(), e.CellStyle.Font,
-                                           textColor, e.CellBounds.X + 1,
-                                           e.CellBounds.Y + 2, StringFormat.GenericDefault);
+                     DrawText(e.Value.ToString(), textColor, e);
                   }
                }
                else
@@ -348,6 +287,7 @@ namespace HFM.Forms
                   throw new NotImplementedException(String.Format(CultureInfo.CurrentCulture,
                      "PaintCell Type '{0}' is not implemented", paint));
                }
+               
                #endregion
 
                e.Handled = true;
@@ -358,7 +298,7 @@ namespace HFM.Forms
       /// <summary>
       /// Paint the Time based cells with the custom time format
       /// </summary>
-      private void PaintTimeBasedCellValue(Brush textColor, DataGridViewCellPaintingEventArgs e)
+      private void PaintTimeBasedCellValue(Color textColor, DataGridViewCellPaintingEventArgs e)
       {
          string drawString = String.Empty;
 
@@ -387,10 +327,13 @@ namespace HFM.Forms
 
          if (drawString.Length != 0)
          {
-            e.Graphics.DrawString(drawString, e.CellStyle.Font,
-                  textColor, e.CellBounds.X + 1,
-                  e.CellBounds.Y + 2, StringFormat.GenericDefault);
+            DrawText(drawString, textColor, e);
          }
+      }
+
+      private static void DrawText(string value, Color color, DataGridViewCellPaintingEventArgs e)
+      {
+         TextRenderer.DrawText(e.Graphics, value, e.CellStyle.Font, new Point(e.CellBounds.X, e.CellBounds.Y + 2), color);
       }
 
       /// <summary>
@@ -443,37 +386,18 @@ namespace HFM.Forms
                         GetFormattedDeadlineString((DateTime)dataGridView1.Rows[i].Cells[columnIndex].Value);
                   }
                }
+               else if (dataGridView1.Columns["ETA"].Index == columnIndex &&
+                        _Prefs.GetPreference<bool>(Preference.EtaDate))
+               {
+                  IClientInstance instance = _clientInstances.Instances[dataGridView1.Rows[i].Cells["Name"].Value.ToString()];
+                  formattedString = GetEtaDateString(instance.EtaDate);
+               }
                else if (dataGridView1.Columns["DownloadTime"].Index == columnIndex ||
                         dataGridView1.Columns["Deadline"].Index == columnIndex)
                {
                   formattedString =
                      GetFormattedDateStringForMeasurement((DateTime)dataGridView1.Rows[i].Cells[columnIndex].Value,
                                                                     dataGridView1.Rows[i].Cells[columnIndex].FormattedValue.ToString());
-               }
-               else if (dataGridView1.Columns["ETA"].Index == columnIndex &&
-                        _Prefs.GetPreference<bool>(Preference.EtaDate))
-               {
-                  IClientInstance instance = _clientInstances.Instances[dataGridView1.Rows[i].Cells["Name"].Value.ToString()];
-                  formattedString = GetFormattedDateStringForMeasurement(instance.EtaDate, String.Format(CultureInfo.CurrentCulture, 
-                     "{0} {1}", instance.EtaDate.ToShortDateString(), instance.EtaDate.ToShortTimeString()));
-               }
-               else if (dataGridView1.Columns["ClientType"].Index == columnIndex &&
-                        _Prefs.GetPreference<bool>(Preference.ShowVersions))
-               {
-                  IClientInstance instance = _clientInstances.Instances[dataGridView1.Rows[i].Cells["Name"].Value.ToString()];
-                  formattedString = GetVersionString(dataGridView1.Rows[i].Cells[columnIndex].Value.ToString(), instance.ClientVersion);
-               }
-               else if (dataGridView1.Columns["Core"].Index == columnIndex &&
-                        _Prefs.GetPreference<bool>(Preference.ShowVersions))
-               {
-                  IClientInstance instance = _clientInstances.Instances[dataGridView1.Rows[i].Cells["Name"].Value.ToString()];
-                  formattedString = GetVersionString(dataGridView1.Rows[i].Cells[columnIndex].Value.ToString(), instance.CurrentUnitInfo.CoreVersion);
-               }
-               else if (dataGridView1.Columns["Complete"].Index == columnIndex &&
-                        _Prefs.GetPreference<CompletedCountDisplayType>(Preference.CompletedCountDisplay).Equals(CompletedCountDisplayType.ClientTotal))
-               {
-                  IClientInstance instance = _clientInstances.Instances[dataGridView1.Rows[i].Cells["Name"].Value.ToString()];
-                  formattedString = instance.TotalClientCompletedUnits.ToString(CultureInfo.CurrentCulture);
                }
                else
                {
@@ -551,17 +475,18 @@ namespace HFM.Forms
 
          return String.Format(formatString, span.Days, span.Hours, span.Minutes);
       }
+      
+      private static string GetEtaDateString(DateTime date)
+      {
+         return GetFormattedDateStringForMeasurement(date, String.Format(CultureInfo.CurrentCulture,
+                  "{0} {1}", date.ToShortDateString(), date.ToShortTimeString()));
+      }
 
       private static string GetFormattedDateStringForMeasurement(IEquatable<DateTime> date, string formattedValue)
       {
          return date.Equals(DateTime.MinValue) ? "Unknown" : formattedValue;
       }
 
-      private static string GetVersionString(string clientType, string version)
-      {
-         return String.Format(CultureInfo.CurrentCulture, "{0} ({1})", clientType, version);
-      }
-      
       #endregion
    }
 }
