@@ -912,12 +912,14 @@ namespace HFM.Forms
          if (_clientInstances.SelectedInstance == null) return;
 
          var settings = _clientInstances.SelectedInstance.Settings.Clone();
+         string previousName = settings.InstanceName;
+         string previousPath = settings.Path;
          var editHost = new frmHost(settings);
          while (editHost.ShowDialog().Equals(DialogResult.OK))
          {
             try
             {
-               _clientInstances.Edit(editHost.Settings);
+               _clientInstances.Edit(previousName, previousPath, editHost.Settings);
                break;
             }
             catch (InvalidOperationException ex)
@@ -1340,7 +1342,9 @@ namespace HFM.Forms
          {
             dataGridView1.FreezeSorted = true;
             
-            if (String.IsNullOrEmpty(SortColumnName) == false && SortColumnOrder.Equals(SortOrder.None) == false)
+            if (String.IsNullOrEmpty(SortColumnName) == false && 
+                dataGridView1.Columns.Contains(SortColumnName) &&
+                SortColumnOrder.Equals(SortOrder.None) == false)
             {
                if (SortColumnOrder.Equals(SortOrder.Ascending))
                {

@@ -520,6 +520,8 @@ namespace HFM.Instances
       /// <param name="settings">Client Instance Settings</param>
       public void Add(IClientInstanceSettings settings)
       {
+         if (settings == null) throw new ArgumentNullException("settings");
+
          var builder = new ClientInstanceFactory(_Prefs, _proteinCollection, _benchmarkContainer);
          var instance = builder.Create((ClientInstanceSettings)settings);
          Add(instance, true);
@@ -530,20 +532,21 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="instance">Client Instance</param>
       /// <param name="fireAddedEvent">Specifies whether this call fires the InstanceAdded Event</param>
-      private void Add(ClientInstance instance, bool fireAddedEvent)
+      private void Add(IClientInstance instance, bool fireAddedEvent)
       {
-         if (ContainsName(instance.InstanceName))
+         if (ContainsName(instance.Settings.InstanceName))
          {
             throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
-               "Client Name '{0}' already exists.", instance.InstanceName));
+               "Client Name '{0}' already exists.", instance.Settings.InstanceName));
          }
 
-         _instanceCollection.Add(instance.InstanceName, instance);
+         var concreteInstance = (ClientInstance)instance;
+         _instanceCollection.Add(instance.Settings.InstanceName, concreteInstance);
          OnCollectionChanged(EventArgs.Empty);
          
          if (fireAddedEvent)
          {
-            RetrieveSingleClient(instance);
+            RetrieveSingleClient(concreteInstance);
 
             _ChangedAfterSave = true;
             OnInstanceAdded(EventArgs.Empty);
@@ -553,11 +556,17 @@ namespace HFM.Instances
       /// <summary>
       /// Edit the ClientInstance Name and Path
       /// </summary>
+      /// <param name="previousName"></param>
+      /// <param name="previousPath"></param>
       /// <param name="settings">Client Instance Settings</param>
-      public void Edit(IClientInstanceSettings settings)
+      public void Edit(string previousName, string previousPath, IClientInstanceSettings settings)
       {
+         if (previousName == null) throw new ArgumentNullException("previousName");
+         if (previousPath == null) throw new ArgumentNullException("previousPath");
+         if (settings == null) throw new ArgumentNullException("settings");
+
          // if the host key changed
-         if (SelectedInstance.InstanceName != settings.InstanceName)
+         if (previousName != settings.InstanceName)
          {
             // check for a duplicate name
             if (ContainsName(settings.InstanceName))
@@ -567,28 +576,26 @@ namespace HFM.Instances
             }
          }
 
-         // now get a handle on the Selected Instance and its Name and Path
-         var instance = SelectedInstance;
-         var previousName = SelectedInstance.Settings.InstanceName;
-         var previousPath = SelectedInstance.Settings.Path;
+         Debug.Assert(_instanceCollection.ContainsKey(previousName));
+         var instance = _instanceCollection[previousName];
          // load the new settings
          instance.Settings.LoadSettings(settings);
          // Instance Name changed but isn't an already existing key
          if (previousName != instance.Settings.InstanceName)
          {
             // update InstanceCollection
-            UpdateDisplayInstanceName(SelectedInstance.InstanceName, instance.InstanceName);
+            UpdateDisplayInstanceName(previousName, instance.Settings.InstanceName);
             Remove(previousName, false);
             Add(instance, false);
 
             // update the Names in the BenchmarkContainer
-            _benchmarkContainer.UpdateInstanceName(new BenchmarkClient(previousName, instance.Path), instance.InstanceName);
+            _benchmarkContainer.UpdateInstanceName(new BenchmarkClient(previousName, instance.Settings.Path), instance.Settings.InstanceName);
          }
          // the path changed
-         if (StringOps.PathsEqual(previousPath, instance.Path) == false)
+         if (StringOps.PathsEqual(previousPath, instance.Settings.Path) == false)
          {
             // update the Paths in the BenchmarkContainer
-            _benchmarkContainer.UpdateInstancePath(new BenchmarkClient(instance.InstanceName, previousPath), instance.Path);
+            _benchmarkContainer.UpdateInstancePath(new BenchmarkClient(instance.Settings.InstanceName, previousPath), instance.Settings.Path);
          }
          
          RetrieveSingleClient(instance);

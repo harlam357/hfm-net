@@ -462,10 +462,7 @@ namespace HFM.Forms
          
          if (tabControl1.SelectedIndex == (int)TabName.WebVisualStyles)
          {
-            if (_cssSampleBrowser.DocumentText.Length < 100)
-            {
-               ShowCssPreview();
-            }
+            ShowCssPreview();
          }
       }
       #endregion
