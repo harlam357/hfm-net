@@ -201,6 +201,7 @@ namespace HFM.Models
             {
                _prefs.SetPreference(Preference.UseProxy, value);
                OnPropertyChanged("UseProxy");
+               OnPropertyChanged("ProxyAuthEnabled");
             }
          }
       }
@@ -277,6 +278,7 @@ namespace HFM.Models
             {
                _prefs.SetPreference(Preference.UseProxyAuth, value);
                OnPropertyChanged("UseProxyAuth");
+               OnPropertyChanged("ProxyAuthEnabled");
             }
          }
       }

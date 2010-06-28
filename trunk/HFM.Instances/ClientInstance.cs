@@ -20,7 +20,6 @@
 
 using System;
 using System.Globalization;
-using System.Drawing;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -119,23 +118,23 @@ namespace HFM.Instances
          // Init Client Level Members
          Init();
          // Create a fresh UnitInfo
-         _CurrentUnitInfo = new UnitInfoLogic(_prefs, _proteinCollection, new UnitInfo(), this);
+         _currentUnitInfo = new UnitInfoLogic(_prefs, _proteinCollection, _benchmarkContainer, new UnitInfo(), this);
       }
       #endregion
 
       #region Client Level Members
-      private ClientStatus _Status;
+      private ClientStatus _status;
       /// <summary>
       /// Status of this client
       /// </summary>
       public ClientStatus Status
       {
-         get { return _Status; }
+         get { return _status; }
          set
          {
-            if (_Status != value)
+            if (_status != value)
             {
-               _Status = value;
+               _status = value;
                //OnStatusChanged(EventArgs.Empty);
             }
          }
@@ -164,15 +163,10 @@ namespace HFM.Instances
       /// </summary>
       public string ClientVersion { get; set; }
 
-      private string _Arguments;
       /// <summary>
       /// Client Startup Arguments
       /// </summary>
-      public string Arguments
-      {
-         get { return _Arguments; }
-         set { _Arguments = value; }
-      }
+      public string Arguments { get; set; }
 
       /// <summary>
       /// Client Path and Arguments (If Arguments Exist)
@@ -226,25 +220,15 @@ namespace HFM.Instances
          get { return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", UserId, MachineId); }
       }
 
-      private string _FoldingID;
       /// <summary>
       /// The Folding ID (Username) attached to this client
       /// </summary>
-      public string FoldingID
-      {
-         get { return _FoldingID; }
-         set { _FoldingID = value; }
-      }
+      public string FoldingID { get; set; }
 
-      private Int32 _Team;
       /// <summary>
       /// The Team number attached to this client
       /// </summary>
-      public Int32 Team
-      {
-         get { return _Team; }
-         set { _Team = value; }
-      }
+      public int Team { get; set; }
 
       /// <summary>
       /// Combined Folding ID and Team String
@@ -254,47 +238,32 @@ namespace HFM.Instances
          get { return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", FoldingID, Team); }
       }
 
-      private Int32 _NumberOfCompletedUnitsSinceLastStart;
       /// <summary>
       /// Number of completed units since the last client start
       /// </summary>
-      public Int32 TotalRunCompletedUnits
-      {
-         get { return _NumberOfCompletedUnitsSinceLastStart; }
-         set { _NumberOfCompletedUnitsSinceLastStart = value; }
-      }
+      public int TotalRunCompletedUnits { get; set; }
 
-      private Int32 _NumberOfFailedUnitsSinceLastStart;
       /// <summary>
       /// Number of failed units since the last client start
       /// </summary>
-      public Int32 TotalRunFailedUnits
-      {
-         get { return _NumberOfFailedUnitsSinceLastStart; }
-         set { _NumberOfFailedUnitsSinceLastStart = value; }
-      }
+      public int TotalRunFailedUnits { get; set; }
 
-      private Int32 _TotalUnits;
       /// <summary>
       /// Total Units Completed for lifetime of the client (read from log file)
       /// </summary>
-      public Int32 TotalClientCompletedUnits
-      {
-         get { return _TotalUnits; }
-         set { _TotalUnits = value; }
-      }
+      public int TotalClientCompletedUnits { get; set; }
 
-      private UnitInfoLogic _CurrentUnitInfo;
+      private UnitInfoLogic _currentUnitInfo;
       /// <summary>
       /// Class member containing info specific to the current work unit
       /// </summary>
       public UnitInfoLogic CurrentUnitInfoConcrete
       {
-         get { return _CurrentUnitInfo; }
+         get { return _currentUnitInfo; }
          protected set
          {
             UpdateTimeOfLastProgress(value);
-            _CurrentUnitInfo = value;
+            _currentUnitInfo = value;
          }
       }
       
@@ -303,7 +272,7 @@ namespace HFM.Instances
       /// </summary>
       public IUnitInfoLogic CurrentUnitInfo
       {
-         get { return _CurrentUnitInfo; }
+         get { return _currentUnitInfo; }
       }
 
       /// <summary>
@@ -324,21 +293,21 @@ namespace HFM.Instances
       /// <summary>
       /// Return LogLine List for Specified Queue Index
       /// </summary>
-      /// <param name="QueueIndex">Index in Queue</param>
-      /// <exception cref="ArgumentOutOfRangeException">If QueueIndex is outside the bounds of the Log Lines Array</exception>
-      public IList<ILogLine> GetLogLinesForQueueIndex(int QueueIndex)
+      /// <param name="queueIndex">Index in Queue</param>
+      /// <exception cref="ArgumentOutOfRangeException">If queueIndex is outside the bounds of the Log Lines Array</exception>
+      public IList<ILogLine> GetLogLinesForQueueIndex(int queueIndex)
       {
          // Check the UnitLogLines array against the requested Queue Index - Issue 171
-         if (QueueIndex < 0 || QueueIndex > _dataAggregator.UnitLogLines.Length - 1)
+         if (queueIndex < 0 || queueIndex > _dataAggregator.UnitLogLines.Length - 1)
          {
             throw new ArgumentOutOfRangeException("QueueIndex", String.Format(CultureInfo.CurrentCulture, 
-               "Index is out of range.  Requested Index: {0}.  Array Length: {1}", QueueIndex, _dataAggregator.UnitLogLines.Length));
+               "Index is out of range.  Requested Index: {0}.  Array Length: {1}", queueIndex, _dataAggregator.UnitLogLines.Length));
          }
 
          if (_dataAggregator.UnitLogLines != null && 
-             _dataAggregator.UnitLogLines[QueueIndex] != null)
+             _dataAggregator.UnitLogLines[queueIndex] != null)
          {
-            return _dataAggregator.UnitLogLines[QueueIndex];
+            return _dataAggregator.UnitLogLines[queueIndex];
          }
 
          return null;
@@ -393,7 +362,7 @@ namespace HFM.Instances
       /// <summary>
       /// The number of processor megahertz for this client instance
       /// </summary>
-      public Int32 ClientProcessorMegahertz
+      public int ClientProcessorMegahertz
       {
          get { return Settings.ClientProcessorMegahertz; }
          set { Settings.ClientProcessorMegahertz = value; }
@@ -483,7 +452,7 @@ namespace HFM.Instances
       /// <summary>
       /// Specifies the number of minutes (+/-) this client's clock differentiates
       /// </summary>
-      public Int32 ClientTimeOffset
+      public int ClientTimeOffset
       {
          get { return Settings.ClientTimeOffset; }
          set { Settings.ClientTimeOffset = value; }
@@ -491,24 +460,24 @@ namespace HFM.Instances
       #endregion
 
       #region Unit Progress Client Level Members
-      private DateTime _TimeOfLastUnitStart = DateTime.MinValue;
+      private DateTime _timeOfLastUnitStart = DateTime.MinValue;
       /// <summary>
       /// Local Time when this Client last detected Frame Progress
       /// </summary>
       internal DateTime TimeOfLastUnitStart
       {
-         get { return _TimeOfLastUnitStart; }
-         set { _TimeOfLastUnitStart = value; }
+         get { return _timeOfLastUnitStart; }
+         set { _timeOfLastUnitStart = value; }
       }
 
-      private DateTime _TimeOfLastFrameProgress = DateTime.MinValue;
+      private DateTime _timeOfLastFrameProgress = DateTime.MinValue;
       /// <summary>
       /// Local Time when this Client last detected Frame Progress
       /// </summary>
       internal DateTime TimeOfLastFrameProgress
       {
-         get { return _TimeOfLastFrameProgress; }
-         set { _TimeOfLastFrameProgress = value; }
+         get { return _timeOfLastFrameProgress; }
+         set { _timeOfLastFrameProgress = value; }
       } 
       #endregion
 
@@ -516,7 +485,7 @@ namespace HFM.Instances
       /// <summary>
       /// Frame progress of the unit
       /// </summary>
-      public Int32 FramesComplete
+      public int FramesComplete
       {
          get
          {
@@ -532,7 +501,7 @@ namespace HFM.Instances
       /// <summary>
       /// Current progress (percentage) of the unit
       /// </summary>
-      public Int32 PercentComplete
+      public int PercentComplete
       {
          get
          {
@@ -565,7 +534,7 @@ namespace HFM.Instances
       /// <summary>
       /// Units per day (UPD) rating for this instance
       /// </summary>
-      public Double UPD
+      public double UPD
       {
          get
          {
@@ -581,7 +550,7 @@ namespace HFM.Instances
       /// <summary>
       /// Points per day (PPD) rating for this instance
       /// </summary>
-      public Double PPD
+      public double PPD
       {
          get
          {
@@ -668,29 +637,29 @@ namespace HFM.Instances
          set { _HandleStatusOnRetrieve = value; }
       }
 
-      private volatile bool _RetrievalInProgress;
+      private volatile bool _retrievalInProgress;
       /// <summary>
       /// Local flag set when log retrieval is in progress
       /// </summary>
       public bool RetrievalInProgress
       {
-         get { return _RetrievalInProgress; }
+         get { return _retrievalInProgress; }
          protected set 
          { 
-            _RetrievalInProgress = value;
+            _retrievalInProgress = value;
          }
       }
 
-      private DateTime _LastRetrievalTime = DateTime.MinValue;
+      private DateTime _lastRetrievalTime = DateTime.MinValue;
       /// <summary>
       /// When the log files were last successfully retrieved
       /// </summary>
       public DateTime LastRetrievalTime
       {
-         get { return _LastRetrievalTime; }
+         get { return _lastRetrievalTime; }
          protected set
          {
-            _LastRetrievalTime = value;
+            _lastRetrievalTime = value;
          }
       }
       #endregion
@@ -744,7 +713,7 @@ namespace HFM.Instances
          catch (Exception ex)
          {
             Status = ClientStatus.Offline;
-            HfmTrace.WriteToHfmConsole(InstanceName, ex);
+            HfmTrace.WriteToHfmConsole(Settings.InstanceName, ex);
          }
          finally
          {
@@ -759,7 +728,7 @@ namespace HFM.Instances
       /// </summary>
       private void RetrievePathInstance()
       {
-         DateTime Start = HfmTrace.ExecStart;
+         DateTime start = HfmTrace.ExecStart;
 
          try
          {
@@ -848,7 +817,7 @@ namespace HFM.Instances
          }
          finally
          {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, InstanceName, Start);
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, InstanceName, start);
          }
       }
 
@@ -857,7 +826,7 @@ namespace HFM.Instances
       /// </summary>
       private void RetrieveHTTPInstance()
       {
-         DateTime Start = HfmTrace.ExecStart;
+         DateTime start = HfmTrace.ExecStart;
 
          NetworkOps net = new NetworkOps();
 
@@ -920,7 +889,7 @@ namespace HFM.Instances
          }
          finally
          {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, InstanceName, Start);
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, InstanceName, start);
          }
       }
 
@@ -929,7 +898,7 @@ namespace HFM.Instances
       /// </summary>
       private void RetrieveFTPInstance()
       {
-         DateTime Start = HfmTrace.ExecStart;
+         DateTime start = HfmTrace.ExecStart;
 
          NetworkOps net = new NetworkOps();
 
@@ -989,7 +958,7 @@ namespace HFM.Instances
          }
          finally
          {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, InstanceName, Start);
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, InstanceName, start);
          }
       }
       #endregion
@@ -1001,7 +970,7 @@ namespace HFM.Instances
       public ClientStatus ProcessExisting()
       {
          // Exec Start
-         DateTime Start = HfmTrace.ExecStart;
+         DateTime start = HfmTrace.ExecStart;
 
          #region Setup UnitInfo Aggregator
          _dataAggregator.InstanceName = InstanceName;
@@ -1026,7 +995,7 @@ namespace HFM.Instances
          {
             if (units[i] != null)
             {
-               parsedUnits[i] = new UnitInfoLogic(_prefs, _proteinCollection, units[i], this);
+               parsedUnits[i] = new UnitInfoLogic(_prefs, _proteinCollection, _benchmarkContainer, units[i], this);
             }
          }
 
@@ -1035,16 +1004,17 @@ namespace HFM.Instances
          UpdateBenchmarkData(parsedUnits, _dataAggregator.CurrentUnitIndex);
 
          // Update the CurrentUnitInfo if we have a Status
-         ClientStatus CurrentWorkUnitStatus = _dataAggregator.CurrentWorkUnitStatus;
-         if (CurrentWorkUnitStatus.Equals(ClientStatus.Unknown) == false)
+         ClientStatus currentWorkUnitStatus = _dataAggregator.CurrentWorkUnitStatus;
+         if (currentWorkUnitStatus.Equals(ClientStatus.Unknown) == false)
          {
             CurrentUnitInfoConcrete = parsedUnits[_dataAggregator.CurrentUnitIndex];
          }
-
-         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, Start);
+         
+         CurrentUnitInfoConcrete.ShowPPDTrace();
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, start);
 
          // Return the Status
-         return CurrentWorkUnitStatus;
+         return currentWorkUnitStatus;
       }
 
       private void PopulateRunLevelData(IClientRun run)
@@ -1082,62 +1052,6 @@ namespace HFM.Instances
             MachineId = (int)queueEntry.MachineID;
          }
       }
-
-      ///// <summary>
-      ///// Update Project Benchmarks
-      ///// </summary>
-      ///// <param name="parsedUnits">Parsed UnitInfo Array</param>
-      ///// <param name="BenchmarkUpdateIndex">Index of Current UnitInfo</param>
-      //private void UpdateBenchmarkData(UnitInfoLogic[] parsedUnits, int BenchmarkUpdateIndex)
-      //{
-      //   bool FoundCurrent = false;
-
-      //   int index = BenchmarkUpdateIndex;
-      //   // Set index for the oldest unit in the array
-      //   if (index == parsedUnits.Length - 1)
-      //   {
-      //      index = 0;
-      //   }
-      //   else
-      //   {
-      //      index++;
-      //   }
-
-      //   while (index != -1)
-      //   {
-      //      if (FoundCurrent == false && IsUnitInfoCurrentUnitInfo(parsedUnits[index]))
-      //      {
-      //         FoundCurrent = true;
-      //      }
-
-      //      if (FoundCurrent || index == BenchmarkUpdateIndex)
-      //      {
-      //         int previousFrameID = 0;
-      //         // check this against the CurrentUnitInfo
-      //         if (IsUnitInfoCurrentUnitInfo(parsedUnits[index]))
-      //         {
-      //            // current frame has already been recorded, increment to the next frame
-      //            previousFrameID = CurrentUnitInfo.LastUnitFrameID + 1;
-      //         }
-
-      //         // Update benchmarks
-      //         _benchmarkContainer.UpdateBenchmarkData(parsedUnits[index], previousFrameID, parsedUnits[index].LastUnitFrameID);
-      //      }
-
-      //      if (index == BenchmarkUpdateIndex)
-      //      {
-      //         index = -1;
-      //      }
-      //      else if (index == parsedUnits.Length - 1)
-      //      {
-      //         index = 0;
-      //      }
-      //      else
-      //      {
-      //         index++;
-      //      }
-      //   }
-      //}
 
       /// <summary>
       /// Update Project Benchmarks
@@ -1432,19 +1346,19 @@ namespace HFM.Instances
       /// <summary>
       /// Send EuePause Status Email
       /// </summary>
-      private static void SendEuePauseEmail(string InstanceName, IPreferenceSet Prefs)
+      private static void SendEuePauseEmail(string instanceName, IPreferenceSet prefs)
       {
-         string messageBody = String.Format("HFM.NET detected that Client '{0}' has entered a 24 hour EUE Pause state.", InstanceName);
+         string messageBody = String.Format("HFM.NET detected that Client '{0}' has entered a 24 hour EUE Pause state.", instanceName);
          try
          {
-            NetworkOps.SendEmail(Prefs.GetPreference<bool>(Preference.EmailReportingServerSecure), 
-                                 Prefs.GetPreference<string>(Preference.EmailReportingFromAddress), 
-                                 Prefs.GetPreference<string>(Preference.EmailReportingToAddress),
+            NetworkOps.SendEmail(prefs.GetPreference<bool>(Preference.EmailReportingServerSecure), 
+                                 prefs.GetPreference<string>(Preference.EmailReportingFromAddress), 
+                                 prefs.GetPreference<string>(Preference.EmailReportingToAddress),
                                  "HFM.NET - Client EUE Pause Error", messageBody, 
-                                 Prefs.GetPreference<string>(Preference.EmailReportingServerAddress),
-                                 Prefs.GetPreference<int>(Preference.EmailReportingServerPort),
-                                 Prefs.GetPreference<string>(Preference.EmailReportingServerUsername), 
-                                 Prefs.GetPreference<string>(Preference.EmailReportingServerPassword));
+                                 prefs.GetPreference<string>(Preference.EmailReportingServerAddress),
+                                 prefs.GetPreference<int>(Preference.EmailReportingServerPort),
+                                 prefs.GetPreference<string>(Preference.EmailReportingServerUsername), 
+                                 prefs.GetPreference<string>(Preference.EmailReportingServerPassword));
          }
          catch (Exception ex)
          {
@@ -1627,7 +1541,7 @@ namespace HFM.Instances
       /// <param name="unitInfo">UnitInfo Object to Restore</param>
       public void RestoreUnitInfo(IUnitInfo unitInfo)
       {
-         CurrentUnitInfoConcrete = new UnitInfoLogic(_prefs, _proteinCollection, unitInfo, this);
+         CurrentUnitInfoConcrete = new UnitInfoLogic(_prefs, _proteinCollection, _benchmarkContainer, unitInfo, this);
       }
       
       public bool IsUsernameOk()
@@ -1639,7 +1553,7 @@ namespace HFM.Instances
          }
 
          if ((FoldingID != _prefs.GetPreference<string>(Preference.StanfordId) || 
-              Team != _prefs.GetPreference<int>(Preference.TeamId)) &&
+                   Team != _prefs.GetPreference<int>(Preference.TeamId)) &&
              (Status.Equals(ClientStatus.Unknown) == false && Status.Equals(ClientStatus.Offline) == false))
          {
             return false;

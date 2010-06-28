@@ -99,8 +99,23 @@ namespace HFM.Framework
       /// Get Points Per Day based on given Frame Time
       /// </summary>
       /// <param name="frameTime">Frame Time</param>
-      /// <param name="EstTimeOfUnit">Estimated Time of the Unit</param>
-      double GetPPD(TimeSpan frameTime, TimeSpan EstTimeOfUnit);
+      /// <param name="instanceName">Calling Instance Name</param>
+      double GetPPD(TimeSpan frameTime, string instanceName);
+
+      /// <summary>
+      /// Get Points Per Day based on given Frame Time
+      /// </summary>
+      /// <param name="frameTime">Frame Time</param>
+      /// <param name="estTimeOfUnit">Estimated Time of the Unit</param>
+      double GetPPD(TimeSpan frameTime, TimeSpan estTimeOfUnit);
+
+      /// <summary>
+      /// Get Points Per Day based on given Frame Time
+      /// </summary>
+      /// <param name="frameTime">Frame Time</param>
+      /// <param name="estTimeOfUnit">Estimated Time of the Unit</param>
+      /// <param name="instanceName">Calling Instance Name</param>
+      double GetPPD(TimeSpan frameTime, TimeSpan estTimeOfUnit, string instanceName);
 
       /// <summary>
       /// Get Units Per Day based on given Frame Time
@@ -111,7 +126,7 @@ namespace HFM.Framework
       /// <summary>
       /// Get the Credit of the Unit (including bonus)
       /// </summary>
-      /// <param name="EstTimeOfUnit">Estimated Time of the Unit</param>
-      double GetBonusCredit(TimeSpan EstTimeOfUnit);
+      /// <param name="estTimeOfUnit">Estimated Time of the Unit</param>
+      double GetBonusCredit(TimeSpan estTimeOfUnit);
    }
 }

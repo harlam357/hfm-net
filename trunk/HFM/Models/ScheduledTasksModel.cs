@@ -186,6 +186,7 @@ namespace HFM.Models
             {
                _prefs.SetPreference(Preference.WebGenAfterRefresh, value);
                OnPropertyChanged("WebGenAfterRefresh");
+               OnPropertyChanged("GenerateIntervalEnabled");
             }
          }
       }
@@ -213,6 +214,9 @@ namespace HFM.Models
                }
                _prefs.SetPreference(Preference.WebRoot, newValue);
                OnPropertyChanged("WebRoot");
+               OnPropertyChanged("FtpModeEnabled");
+               OnPropertyChanged("LimitLogSizeEnabled");
+               OnPropertyChanged("LimitLogSizeLengthEnabled");
             }
          }
       }
@@ -287,6 +291,8 @@ namespace HFM.Models
             {
                _prefs.SetPreference(Preference.WebGenCopyFAHlog, value);
                OnPropertyChanged("CopyFAHlog");
+               OnPropertyChanged("LimitLogSizeEnabled");
+               OnPropertyChanged("LimitLogSizeLengthEnabled");
             }
          }
       }
@@ -318,6 +324,8 @@ namespace HFM.Models
             {
                _prefs.SetPreference(Preference.WebGenLimitLogSize, value);
                OnPropertyChanged("LimitLogSize");
+               OnPropertyChanged("LimitLogSizeEnabled");
+               OnPropertyChanged("LimitLogSizeLengthEnabled");
             }
          }
       }
@@ -354,6 +362,10 @@ namespace HFM.Models
             {
                _prefs.SetPreference(Preference.GenerateWeb, value);
                OnPropertyChanged("GenerateWeb");
+               OnPropertyChanged("GenerateIntervalEnabled");
+               OnPropertyChanged("FtpModeEnabled");
+               OnPropertyChanged("LimitLogSizeEnabled");
+               OnPropertyChanged("LimitLogSizeLengthEnabled");
             }
          }
       }

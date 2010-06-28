@@ -92,22 +92,22 @@ namespace HFM.Framework
       /// <summary>
       /// The Team number attached to this client
       /// </summary>
-      Int32 Team { get; }
+      int Team { get; }
 
       /// <summary>
       /// Number of completed units since the last client start
       /// </summary>
-      Int32 TotalRunCompletedUnits { get; }
+      int TotalRunCompletedUnits { get; }
 
       /// <summary>
       /// Number of failed units since the last client start
       /// </summary>
-      Int32 TotalRunFailedUnits { get; }
+      int TotalRunFailedUnits { get; }
 
       /// <summary>
       /// Total Units Completed for lifetime of the client (read from log file)
       /// </summary>
-      Int32 TotalClientCompletedUnits { get; }
+      int TotalClientCompletedUnits { get; }
 
       /// <summary>
       /// Class member containing info specific to the current work unit
@@ -132,12 +132,12 @@ namespace HFM.Framework
       /// <summary>
       /// Frame progress of the unit
       /// </summary>
-      Int32 FramesComplete { get; }
+      int FramesComplete { get; }
 
       /// <summary>
       /// Current progress (percentage) of the unit
       /// </summary>
-      Int32 PercentComplete { get; }
+      int PercentComplete { get; }
 
       /// <summary>
       /// Time per frame (TPF) of the unit
@@ -147,12 +147,12 @@ namespace HFM.Framework
       /// <summary>
       /// Units per day (UPD) rating for this instance
       /// </summary>
-      Double UPD { get; }
+      double UPD { get; }
 
       /// <summary>
       /// Points per day (PPD) rating for this instance
       /// </summary>
-      Double PPD { get; }
+      double PPD { get; }
 
       /// <summary>
       /// Esimated time of arrival (ETA) for this protein

@@ -241,10 +241,19 @@ namespace HFM.Forms
 
                #region Draw the bottom grid line
                
-               e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
-                                   e.CellBounds.Bottom - 1, e.CellBounds.Right,
-                                   e.CellBounds.Bottom - 1);
-                                   
+               if (PlatformOps.IsRunningOnMono())
+               {
+                  e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
+                                      e.CellBounds.Top, e.CellBounds.Right,
+                                      e.CellBounds.Top);
+               }
+               else
+               {
+                  e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
+                                      e.CellBounds.Bottom - 1, e.CellBounds.Right,
+                                      e.CellBounds.Bottom - 1);
+               }
+
                #endregion
 
                #region Draw Cell Content (Text or Shapes)
@@ -415,7 +424,10 @@ namespace HFM.Forms
             }
          }
 
-         dataGridView1.Columns[columnIndex].Width = width;
+         if (width >= dataGridView1.Columns[columnIndex].MinimumWidth)
+         {
+            dataGridView1.Columns[columnIndex].Width = width;
+         }
       }
 
       #region Custom String Formatting Helpers

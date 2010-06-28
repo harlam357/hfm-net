@@ -64,6 +64,7 @@ namespace HFM.Forms
       private const string ExeFilter = "Program Files|*.exe";
       
       private readonly IPreferenceSet _prefs;
+      private readonly bool _isRunningOnMono;
       
       private readonly List<IValidatingControl>[] _validatingControls;
       private readonly PropertyDescriptorCollection[] _propertyCollection;
@@ -89,6 +90,7 @@ namespace HFM.Forms
       public frmPreferences(IPreferenceSet prefs)
       {
          _prefs = prefs;
+         _isRunningOnMono = PlatformOps.IsRunningOnMono();
       
          InitializeComponent();
 
@@ -146,7 +148,7 @@ namespace HFM.Forms
          tabControl1.SelectTab(0);
 
          _scheduledTasksModel.PropertyChanged += ScheduledTasksPropertyChanged;
-         //_startupAndExternalModel.PropertyChanged += StartupAndExternalPropertyChanged;
+         _startupAndExternalModel.PropertyChanged += StartupAndExternalPropertyChanged;
          //_optionsModel.PropertyChanged += OptionsPropertyChanged;
          _reportingModel.PropertyChanged += ReportingPropertyChanged;
          _webSettingsModel.PropertyChanged += WebSettingsChanged;
@@ -174,16 +176,102 @@ namespace HFM.Forms
       private void ScheduledTasksPropertyChanged(object sender, PropertyChangedEventArgs e)
       {
          SetPropertyErrorState((int)TabName.ScheduledTasks, e.PropertyName, true);
+         if (_isRunningOnMono) HandleScheduledTasksPropertyEnabledForMono(e.PropertyName);
+      }
+
+      private void HandleScheduledTasksPropertyEnabledForMono(string propertyName)
+      {
+         switch (propertyName)
+         {
+            case "SyncOnSchedule":
+               txtCollectMinutes.Enabled = _scheduledTasksModel.SyncOnSchedule;
+               break;
+            case "GenerateWeb":
+               radioSchedule.Enabled = _scheduledTasksModel.GenerateWeb;
+               lbl2MinutesToGen.Enabled = _scheduledTasksModel.GenerateWeb;
+               radioFullRefresh.Enabled = _scheduledTasksModel.GenerateWeb;
+               txtWebSiteBase.Enabled = _scheduledTasksModel.GenerateWeb;
+               chkHtml.Enabled = _scheduledTasksModel.GenerateWeb;
+               chkXml.Enabled = _scheduledTasksModel.GenerateWeb;
+               chkFAHlog.Enabled = _scheduledTasksModel.GenerateWeb;
+               btnTestConnection.Enabled = _scheduledTasksModel.GenerateWeb;
+               btnBrowseWebFolder.Enabled = _scheduledTasksModel.GenerateWeb;
+               break;
+            case "GenerateIntervalEnabled":
+               txtWebGenMinutes.Enabled = _scheduledTasksModel.GenerateIntervalEnabled;
+               break;
+            case "FtpModeEnabled":
+               pnlFtpMode.Enabled = _scheduledTasksModel.FtpModeEnabled;
+               break;
+            case "LimitLogSizeEnabled":
+               chkLimitSize.Enabled = _scheduledTasksModel.LimitLogSizeEnabled;
+               break;
+            case "LimitLogSizeLengthEnabled":
+               udLimitSize.Enabled = _scheduledTasksModel.LimitLogSizeLengthEnabled;
+               break;
+         }
+      }
+      
+      private void StartupAndExternalPropertyChanged(object sender, PropertyChangedEventArgs e)
+      {
+         if (_isRunningOnMono) HandleStartupAndExternalPropertyEnabledForMono(e.PropertyName);
+      }
+
+      private void HandleStartupAndExternalPropertyEnabledForMono(string propertyName)
+      {
+         switch (propertyName)
+         {
+            case "UseDefaultConfigFile":
+               txtDefaultConfigFile.Enabled = _startupAndExternalModel.UseDefaultConfigFile;
+               btnBrowseConfigFile.Enabled = _startupAndExternalModel.UseDefaultConfigFile;
+               break;
+         }
       }
 
       private void ReportingPropertyChanged(object sender, PropertyChangedEventArgs e)
       {
          SetPropertyErrorState((int)TabName.Reporting, e.PropertyName, true);
+         if (_isRunningOnMono) HandleReportingPropertyEnabledForMono(e.PropertyName);
+      }
+
+      private void HandleReportingPropertyEnabledForMono(string propertyName)
+      {
+         switch (propertyName)
+         {
+            case "ReportingEnabled":
+               chkEmailSecure.Enabled = _reportingModel.ReportingEnabled;
+               btnTestEmail.Enabled = _reportingModel.ReportingEnabled;
+               txtToEmailAddress.Enabled = _reportingModel.ReportingEnabled;
+               txtFromEmailAddress.Enabled = _reportingModel.ReportingEnabled;
+               txtSmtpServer.Enabled = _reportingModel.ReportingEnabled;
+               txtSmtpServerPort.Enabled = _reportingModel.ReportingEnabled;
+               txtSmtpUsername.Enabled = _reportingModel.ReportingEnabled;
+               txtSmtpPassword.Enabled = _reportingModel.ReportingEnabled;
+               grpReportSelections.Enabled = _reportingModel.ReportingEnabled;
+               break;
+         }
       }
 
       private void WebSettingsChanged(object sender, PropertyChangedEventArgs e)
       {
          SetPropertyErrorState((int)TabName.WebSettings, e.PropertyName, true);
+         if (_isRunningOnMono) HandleWebSettingsPropertyEnabledForMono(e.PropertyName);
+      }
+
+      private void HandleWebSettingsPropertyEnabledForMono(string propertyName)
+      {
+         switch (propertyName)
+         {
+            case "UseProxy":
+               txtProxyServer.Enabled = _webSettingsModel.UseProxy;
+               txtProxyPort.Enabled = _webSettingsModel.UseProxy;
+               chkUseProxyAuth.Enabled = _webSettingsModel.UseProxy;
+               break;
+            case "ProxyAuthEnabled":
+               txtProxyUser.Enabled = _webSettingsModel.ProxyAuthEnabled;
+               txtProxyPass.Enabled = _webSettingsModel.ProxyAuthEnabled;
+               break;
+         }
       }
 
       private void SetPropertyErrorState()

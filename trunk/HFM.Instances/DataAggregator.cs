@@ -349,25 +349,27 @@ namespace HFM.Instances
          return unit;
       }
 
-      private static void SearchFahLogUnitDataProjects(IUnitInfo expected, IFahLogUnitData fahLogUnitData)
+      private static void SearchFahLogUnitDataProjects(IUnitInfo unit, IFahLogUnitData fahLogUnitData)
       {
+         Debug.Assert(unit != null);
          for (int i = 0; i < fahLogUnitData.ProjectInfoList.Count; i++)
          {
-            if (ProjectsMatch(expected, fahLogUnitData.ProjectInfoList[i]))
+            if (ProjectsMatch(unit, fahLogUnitData.ProjectInfoList[i]))
             {
                fahLogUnitData.ProjectInfoIndex = i;
             }
          }
       }
 
-      private static bool ProjectsMatch(IUnitInfo project1, IProjectInfo project2)
+      private static bool ProjectsMatch(IUnitInfo unit, IProjectInfo projectInfo)
       {
-         if (project1 == null || project2 == null) return false;
+         Debug.Assert(unit != null);
+         if (unit.ProjectIsUnknown || projectInfo == null) return false;
       
-         return (project1.ProjectID == project2.ProjectID &&
-                 project1.ProjectRun == project2.ProjectRun &&
-                 project1.ProjectClone == project2.ProjectClone &&
-                 project1.ProjectGen == project2.ProjectGen);
+         return (unit.ProjectID == projectInfo.ProjectID &&
+                 unit.ProjectRun == projectInfo.ProjectRun &&
+                 unit.ProjectClone == projectInfo.ProjectClone &&
+                 unit.ProjectGen == projectInfo.ProjectGen);
       }
 
       #region Unit Population Methods

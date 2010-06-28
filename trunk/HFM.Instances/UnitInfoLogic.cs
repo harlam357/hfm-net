@@ -34,12 +34,17 @@ namespace HFM.Instances
       /// <summary>
       /// Preferences Interface
       /// </summary>
-      private readonly IPreferenceSet _Prefs;
+      private readonly IPreferenceSet _prefs;
 
       /// <summary>
       /// Protein Collection Interface
       /// </summary>
       private readonly IProteinCollection _proteinCollection;
+
+      /// <summary>
+      /// Protein Collection Interface
+      /// </summary>
+      private readonly IProteinBenchmarkContainer _benchmarkContainer;
 
       private readonly UnitInfo _unitInfo;
       /// <summary>
@@ -125,10 +130,12 @@ namespace HFM.Instances
 
       #region Constructors
       [CLSCompliant(false)]
-      public UnitInfoLogic(IPreferenceSet prefs, IProteinCollection proteinCollection, IUnitInfo unitInfo, IClientInstance clientInstance)
+      public UnitInfoLogic(IPreferenceSet prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer, 
+                           IUnitInfo unitInfo, IClientInstance clientInstance)
       {
-         _Prefs = prefs;
+         _prefs = prefs;
          _proteinCollection = proteinCollection;
+         _benchmarkContainer = benchmarkContainer;
          _unitInfo = (UnitInfo)unitInfo;
          _clientInstance = clientInstance;
 
@@ -467,7 +474,7 @@ namespace HFM.Instances
       {
          get
          {
-            switch (_Prefs.GetPreference<PpdCalculationType>(Preference.PpdCalculation))
+            switch (_prefs.GetPreference<PpdCalculationType>(Preference.PpdCalculation))
             {
                case PpdCalculationType.LastFrame:
                   return RawTimePerLastSection;
@@ -495,7 +502,7 @@ namespace HFM.Instances
                return TimeSpan.FromSeconds(RawTimePerSection);
             }
 
-            return InstanceProvider.GetInstance<IProteinBenchmarkContainer>().GetBenchmarkAverageFrameTime(this);
+            return _benchmarkContainer.GetBenchmarkAverageFrameTime(this);
          }
       }
 
@@ -912,25 +919,57 @@ namespace HFM.Instances
       
       private double GetPPD(TimeSpan frameTime)
       {
-         if (CurrentProtein.IsUnknown == false)
+         if (CurrentProtein.IsUnknown)
+         {
+            return 0;
+         }
+         
+         // Issue 125
+         if (_prefs.GetPreference<bool>(Preference.CalculateBonus))
+         {
+            // Issue 183
+            if (_clientInstance.Status.Equals(ClientStatus.RunningAsync) ||
+                _clientInstance.Status.Equals(ClientStatus.RunningNoFrameTimes))
+            {
+               return CurrentProtein.GetPPD(frameTime, EftByFrameTime);
+            }
+
+            return CurrentProtein.GetPPD(frameTime, EftByDownloadTime);
+         }
+
+         return CurrentProtein.GetPPD(frameTime);
+      }
+
+      public void ShowPPDTrace()
+      {
+         if (CurrentProtein.IsUnknown)
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, OwningInstanceName, "Current Protein is Unknown... 0 PPD.");
+         }
+         else
          {
             // Issue 125
-            if (_Prefs.GetPreference<bool>(Preference.CalculateBonus))
+            if (_prefs.GetPreference<bool>(Preference.CalculateBonus))
             {
                // Issue 183
                if (_clientInstance.Status.Equals(ClientStatus.RunningAsync) ||
                    _clientInstance.Status.Equals(ClientStatus.RunningNoFrameTimes))
                {
-                  return CurrentProtein.GetPPD(frameTime, EftByFrameTime);
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, OwningInstanceName, "Calculate Bonus PPD - EFT by Frame Time.");
+                  CurrentProtein.GetPPD(TimePerFrame, EftByFrameTime, OwningInstanceName);
                }
-               
-               return CurrentProtein.GetPPD(frameTime, EftByDownloadTime);
+               else
+               {
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, OwningInstanceName, "Calculate Bonus PPD - EFT by Download Time.");
+                  CurrentProtein.GetPPD(TimePerFrame, EftByDownloadTime, OwningInstanceName);
+               }
             }
-
-            return CurrentProtein.GetPPD(frameTime);
+            else
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, OwningInstanceName, "Calculate Standard PPD.");
+               CurrentProtein.GetPPD(TimePerFrame, OwningInstanceName);
+            }
          }
-
-         return 0;
       }
       
       #endregion

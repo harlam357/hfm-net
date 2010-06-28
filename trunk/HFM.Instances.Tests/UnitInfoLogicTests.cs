@@ -31,13 +31,13 @@ namespace HFM.Instances.Tests
    public class UnitInfoLogicTests
    {
       private MockRepository _mocks;
-      //private IProteinBenchmarkContainer benchmarkCollection;
+      private IProteinBenchmarkContainer _benchmarkContainer;
 
       [SetUp]
       public void Init()
       {
          _mocks = new MockRepository();
-         //benchmarkCollection = _mocks.DynamicMock<IProteinBenchmarkContainer>();
+         _benchmarkContainer = _mocks.DynamicMock<IProteinBenchmarkContainer>();
       }
    
       [Test]
@@ -49,7 +49,7 @@ namespace HFM.Instances.Tests
          _mocks.ReplayAll();
       
          UnitInfo unitInfo = new UnitInfo();
-         UnitInfoLogic unitInfoLogic = new UnitInfoLogic(prefs, proteinCollection, unitInfo, clientInstance);
+         UnitInfoLogic unitInfoLogic = new UnitInfoLogic(prefs, proteinCollection, _benchmarkContainer, unitInfo, clientInstance);
 
          SetDateTimeProperties(unitInfo);
          AssertDateTimeProperties(unitInfoLogic, unitInfo.DownloadTime.ToLocalTime(),
@@ -69,7 +69,7 @@ namespace HFM.Instances.Tests
          _mocks.ReplayAll();
 
          UnitInfo unitInfo = new UnitInfo();
-         UnitInfoLogic unitInfoLogic = new UnitInfoLogic(prefs, proteinCollection, unitInfo, clientInstance);
+         UnitInfoLogic unitInfoLogic = new UnitInfoLogic(prefs, proteinCollection, _benchmarkContainer, unitInfo, clientInstance);
 
          SetDateTimeProperties(unitInfo);
          AssertDateTimeProperties(unitInfoLogic, unitInfo.DownloadTime,
@@ -141,7 +141,7 @@ namespace HFM.Instances.Tests
          ILogLine line4 = MakeLogLine("00:15:00", 3, 7500, 250000);
          _mocks.ReplayAll();
 
-         UnitInfoLogic unitInfoLogic = new UnitInfoLogic(prefs, proteinCollection, unitInfo, clientInstance);
+         UnitInfoLogic unitInfoLogic = new UnitInfoLogic(prefs, proteinCollection, _benchmarkContainer, unitInfo, clientInstance);
 
          Assert.AreEqual(TimeSpan.Zero, unitInfoLogic.TimeOfLastFrame);
          unitInfo.FramesObserved = 4;
@@ -185,7 +185,7 @@ namespace HFM.Instances.Tests
          ILogLine line5 = MakeLogLine("00:24:00", 4, 4, 100);
          _mocks.ReplayAll();
 
-         UnitInfoLogic unitInfoLogic = new UnitInfoLogic(prefs, proteinCollection, unitInfo, clientInstance);
+         UnitInfoLogic unitInfoLogic = new UnitInfoLogic(prefs, proteinCollection, _benchmarkContainer, unitInfo, clientInstance);
 
          Assert.AreEqual(TimeSpan.Zero, unitInfoLogic.TimeOfLastFrame);
          unitInfo.FramesObserved = 5;
@@ -230,7 +230,7 @@ namespace HFM.Instances.Tests
          ILogLine line5 = MakeLogLine("00:24:00", 4, 4, 100);
          _mocks.ReplayAll();
 
-         UnitInfoLogic unitInfoLogic = new UnitInfoLogic(prefs, proteinCollection, unitInfo, clientInstance);
+         UnitInfoLogic unitInfoLogic = new UnitInfoLogic(prefs, proteinCollection, _benchmarkContainer, unitInfo, clientInstance);
 
          AssertRawTimesZero(unitInfoLogic);
 
@@ -270,7 +270,7 @@ namespace HFM.Instances.Tests
          ILogLine line5 = MakeLogLine("00:24:00", 4, 4, 100);
          _mocks.ReplayAll();
 
-         UnitInfoLogic unitInfoLogic = new UnitInfoLogic(prefs, proteinCollection, unitInfo, clientInstance);
+         UnitInfoLogic unitInfoLogic = new UnitInfoLogic(prefs, proteinCollection, _benchmarkContainer, unitInfo, clientInstance);
 
          AssertRawTimesZero(unitInfoLogic);
 
