@@ -433,7 +433,7 @@ namespace HFM.Instances
          InstanceHostType = hostType;
          InstanceName = String.Empty;
          ClientProcessorMegahertz = 1;
-         RemoteFAHLogFilename = Constants.LocalFAHLog;
+         RemoteFAHLogFilename = Constants.LocalFahLog;
          RemoteUnitInfoFilename = Constants.LocalUnitInfo;
          RemoteQueueFilename = Constants.LocalQueue;
          ClearAccessSettings();
@@ -494,7 +494,7 @@ namespace HFM.Instances
          if (RemoteFAHLogFilenameError)
          {
             warnings.Add("No remote FAHlog.txt filename, loading default.");
-            RemoteFAHLogFilename = Constants.LocalFAHLog;
+            RemoteFAHLogFilename = Constants.LocalFahLog;
          }
 
          if (RemoteUnitInfoFilenameError)
@@ -533,6 +533,34 @@ namespace HFM.Instances
          {
             PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
          }
+      }
+
+      #endregion
+
+      #region Cached Log File Name Properties
+
+      /// <summary>
+      /// Cached FAHlog Filename for this instance
+      /// </summary>
+      public string CachedFahLogName
+      {
+         get { return String.Format(CultureInfo.InvariantCulture, "{0}-{1}", InstanceName, Constants.LocalFahLog); }
+      }
+
+      /// <summary>
+      /// Cached UnitInfo Filename for this instance
+      /// </summary>
+      public string CachedUnitInfoName
+      {
+         get { return String.Format(CultureInfo.InvariantCulture, "{0}-{1}", InstanceName, Constants.LocalUnitInfo); }
+      }
+
+      /// <summary>
+      /// Cached Queue Filename for this instance
+      /// </summary>
+      public string CachedQueueName
+      {
+         get { return String.Format(CultureInfo.InvariantCulture, "{0}-{1}", InstanceName, Constants.LocalQueue); }
       }
 
       #endregion

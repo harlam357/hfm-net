@@ -23,7 +23,7 @@ using HFM.Framework;
 
 namespace HFM.Instances
 {
-   public static class InstanceCollectionHelpers
+   internal static class InstanceCollectionHelpers
    {
       /// <summary>
       /// Get Totals for all Client Instances in given Collection
@@ -31,7 +31,7 @@ namespace HFM.Instances
       /// <returns>Totals for all Instances (InstanceTotals Structure)</returns>
       public static InstanceTotals GetInstanceTotals(ICollection<IClientInstance> instances)
       {
-         InstanceTotals totals = new InstanceTotals();
+         var totals = new InstanceTotals();
          
          // If no Instance Collection, return initialized totals.
          // Added this check because this function is now being passed a copy of the client 
@@ -59,8 +59,6 @@ namespace HFM.Instances
                totals.WorkingClients++;
             }
          }
-
-         totals.NonWorkingClients = totals.TotalClients - totals.WorkingClients;
 
          return totals;
       }

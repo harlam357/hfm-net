@@ -547,7 +547,7 @@ namespace HFM.Helpers
                // Upload the FAHlog.txt File for each Client Instance
                foreach (IClientInstance instance in instances)
                {
-                  string cachedFahlogPath = Path.Combine(prefs.CacheDirectory, instance.CachedFAHLogName);
+                  string cachedFahlogPath = Path.Combine(prefs.CacheDirectory, instance.Settings.CachedFahLogName);
                   if (File.Exists(cachedFahlogPath))
                   {
                      FtpUploadHelper(server, ftpPath, cachedFahlogPath, maximumLength, username, password, ftpMode);

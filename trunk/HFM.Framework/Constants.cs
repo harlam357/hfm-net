@@ -17,8 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
-
 namespace HFM.Framework
 {
    public static class Constants
@@ -44,26 +42,40 @@ namespace HFM.Framework
       public const string StanfordBaseUrl = "http://fah-web.stanford.edu/cgi-bin/main.py?qtype=userpage&username=";
       public const string GoogleGroupUrl = "http://groups.google.com/group/hfm-net";
 
-      public const Int32 MinDecimalPlaces = 0;
-      public const Int32 MaxDecimalPlaces = 5;
+      /// <summary>
+      /// Conversion factor - minutes to milli-seconds
+      /// </summary>
+      public const int MinToMillisec = 60000;
 
-      public const Int32 MinMinutes = 1;
-      public const Int32 MaxMinutes = 180;
+      /// <summary>
+      /// UnitInfo Log File Maximum Download Size
+      /// </summary>
+      public const int UnitInfoMax = 1048576; // 1 Megabyte
 
-      public const Int32 MinOffsetMinutes = -720;
-      public const Int32 MaxOffsetMinutes = 720;
+      public const int MinDecimalPlaces = 0;
+      public const int MaxDecimalPlaces = 5;
 
-      public const Int32 MinutesDefault = 15;
-      public const Int32 ProxyPortDefault = 8080;
+      public const int MinMinutes = 1;
+      public const int MaxMinutes = 180;
+
+      public const int MinOffsetMinutes = -720;
+      public const int MaxOffsetMinutes = 720;
+
+      public const int MinutesDefault = 15;
+      public const int ProxyPortDefault = 8080;
 
       public const string UnassignedDescription = "Unassigned Description";
+
+      // Default ID Constants
+      public const string DefaultUserID = "";
+      public const int DefaultMachineID = 0;
 
       // Folding ID and Team Defaults
       public const string FoldingIDDefault = "Unknown";
       public const int TeamDefault = 0;
 
       // Log Filename Constants
-      public const string LocalFAHLog = "FAHlog.txt";
+      public const string LocalFahLog = "FAHlog.txt";
       public const string LocalUnitInfo = "unitinfo.txt";
       public const string LocalQueue = "queue.dat";
       #endregion

@@ -237,7 +237,7 @@ namespace HFM.Instances
          catch (NullReferenceException)
          {
             OnWarningMessage("Cannot load remote FAHlog.txt filename.");
-            dataInterface.SetSetting(ClientInstanceSettingsKeys.FahLogFileName, Constants.LocalFAHLog);
+            dataInterface.SetSetting(ClientInstanceSettingsKeys.FahLogFileName, Constants.LocalFahLog);
          }
 
          try

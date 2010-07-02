@@ -23,7 +23,6 @@ using System.Globalization;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 
 using HFM.Framework;
 using HFM.Helpers;
@@ -33,16 +32,7 @@ namespace HFM.Instances
 {
    public class ClientInstance : IClientInstance
    {
-      #region Constants
-      // Default ID Constants
-      public const string DefaultUserID = "";
-      public const int DefaultMachineID = 0;
-
-      /// <summary>
-      /// UnitInfo Log File Maximum Download Size.
-      /// </summary>
-      private const int UnitInfoMax = 1048576; // 1 Megabyte
-      #endregion
+      #region Fields
 
       /// <summary>
       /// PreferenceSet Interface
@@ -63,7 +53,12 @@ namespace HFM.Instances
       /// Status Logic Interface
       /// </summary>
       private readonly IStatusLogic _statusLogic;
-      
+
+      /// <summary>
+      /// Data Retriever Interface
+      /// </summary>
+      private readonly IDataRetriever _dataRetriever;
+
       private readonly IDataAggregator _dataAggregator;
       /// <summary>
       /// Data Aggregator Interface
@@ -91,14 +86,16 @@ namespace HFM.Instances
          get { return _settings; }
       }
       
+      #endregion
+      
       #region Constructor
       /// <summary>
       /// Primary Constructor
       /// </summary>
       [CLSCompliant(false)]
       public ClientInstance(IPreferenceSet prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer,
-                            IStatusLogic statusLogic, IDataAggregator dataAggregator)
-         : this(prefs, proteinCollection, benchmarkContainer, statusLogic, dataAggregator, null)
+                            IStatusLogic statusLogic, IDataRetriever dataRetriever, IDataAggregator dataAggregator)
+         : this(prefs, proteinCollection, benchmarkContainer, statusLogic, dataRetriever, dataAggregator, null)
       {
          
       }
@@ -108,12 +105,13 @@ namespace HFM.Instances
       /// </summary>
       [CLSCompliant(false)]
       public ClientInstance(IPreferenceSet prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer,
-                            IStatusLogic statusLogic, IDataAggregator dataAggregator, ClientInstanceSettings instanceSettings)
+                            IStatusLogic statusLogic, IDataRetriever dataRetriever, IDataAggregator dataAggregator, ClientInstanceSettings instanceSettings)
       {
          _prefs = prefs;
          _proteinCollection = proteinCollection;
          _benchmarkContainer = benchmarkContainer;
          _statusLogic = statusLogic;
+         _dataRetriever = dataRetriever;
          _dataAggregator = dataAggregator;
          // Init User Specified Client Level Members
          _settings = instanceSettings ?? new ClientInstanceSettings(InstanceType.PathInstance);
@@ -180,10 +178,10 @@ namespace HFM.Instances
          {
             if (Arguments.Length == 0)
             {
-               return Path;
+               return Settings.Path;
             }
 
-            return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Path, Arguments);
+            return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Settings.Path, Arguments);
          }
       }
 
@@ -284,8 +282,8 @@ namespace HFM.Instances
       private void Init()
       {
          Arguments = String.Empty;
-         UserId = DefaultUserID;
-         MachineId = DefaultMachineID;
+         UserId = Constants.DefaultUserID;
+         MachineId = Constants.DefaultMachineID;
          FoldingID = Constants.FoldingIDDefault;
          Team = Constants.TeamDefault;
          TotalRunCompletedUnits = 0;
@@ -300,6 +298,8 @@ namespace HFM.Instances
       /// <exception cref="ArgumentOutOfRangeException">If queueIndex is outside the bounds of the Log Lines Array</exception>
       public IList<ILogLine> GetLogLinesForQueueIndex(int queueIndex)
       {
+         if (_dataAggregator.UnitLogLines == null) return null;
+         
          // Check the UnitLogLines array against the requested Queue Index - Issue 171
          if (queueIndex < 0 || queueIndex > _dataAggregator.UnitLogLines.Length - 1)
          {
@@ -307,8 +307,7 @@ namespace HFM.Instances
                "Index is out of range.  Requested Index: {0}.  Array Length: {1}", queueIndex, _dataAggregator.UnitLogLines.Length));
          }
 
-         if (_dataAggregator.UnitLogLines != null && 
-             _dataAggregator.UnitLogLines[queueIndex] != null)
+         if (_dataAggregator.UnitLogLines[queueIndex] != null)
          {
             return _dataAggregator.UnitLogLines[queueIndex];
          }
@@ -317,152 +316,8 @@ namespace HFM.Instances
       }
       #endregion
 
-      #region User Specified Client Level Members
-      /// <summary>
-      /// Client host type (Path, FTP, or HTTP)
-      /// </summary>
-      public InstanceType InstanceHostType
-      {
-         get { return Settings.InstanceHostType; }
-         set { Settings.InstanceHostType = value; }
-      }
-      
-      /// <summary>
-      /// The name assigned to this client instance
-      /// </summary>
-      public string InstanceName
-      {
-         get { return Settings.InstanceName; }
-         set { Settings.InstanceName = value; }
-      }
-
-      #region Cached Log File Name Properties
-      /// <summary>
-      /// Cached FAHlog Filename for this instance
-      /// </summary>
-      public string CachedFAHLogName
-      {
-         get { return String.Format("{0}-{1}", InstanceName, Constants.LocalFAHLog); }
-      }
-
-      /// <summary>
-      /// Cached UnitInfo Filename for this instance
-      /// </summary>
-      public string CachedUnitInfoName
-      {
-         get { return String.Format("{0}-{1}", InstanceName, Constants.LocalUnitInfo); }
-      }
-
-      /// <summary>
-      /// Cached Queue Filename for this instance
-      /// </summary>
-      public string CachedQueueName
-      {
-         get { return String.Format("{0}-{1}", InstanceName, Constants.LocalQueue); }
-      }
-      #endregion
-
-      /// <summary>
-      /// The number of processor megahertz for this client instance
-      /// </summary>
-      public int ClientProcessorMegahertz
-      {
-         get { return Settings.ClientProcessorMegahertz; }
-         set { Settings.ClientProcessorMegahertz = value; }
-      }
-
-      /// <summary>
-      /// Remote client log file name
-      /// </summary>
-      public string RemoteFAHLogFilename
-      {
-         get { return Settings.RemoteFAHLogFilename; }
-         set { Settings.RemoteFAHLogFilename = value; }
-      }
-
-      /// <summary>
-      /// Remote client unit info log file name
-      /// </summary>
-      public string RemoteUnitInfoFilename
-      {
-         get { return Settings.RemoteUnitInfoFilename; }
-         set { Settings.RemoteUnitInfoFilename = value; }
-      }
-
-      /// <summary>
-      /// Remote client queue.dat file name
-      /// </summary>
-      public string RemoteQueueFilename
-      {
-         get { return Settings.RemoteQueueFilename; }
-         set { Settings.RemoteQueueFilename = value; }
-      }
-
-      /// <summary>
-      /// Location of log files for this instance
-      /// </summary>
-      public string Path
-      {
-         get { return Settings.Path; }
-         set { Settings.Path = value; }
-      }
-
-      /// <summary>
-      /// FTP Server name or IP Address
-      /// </summary>
-      public string Server
-      {
-         get { return Settings.Server; }
-         set { Settings.Server = value; }
-      }
-
-      /// <summary>
-      /// Username on remote server
-      /// </summary>
-      public string Username
-      {
-         get { return Settings.Username; }
-         set { Settings.Username = value; }
-      }
-
-      /// <summary>
-      /// Password on remote server
-      /// </summary>
-      public string Password
-      {
-         get { return Settings.Password; }
-         set { Settings.Password = value; }
-      }
-
-      /// <summary>
-      /// Specifies the FTP Communication Mode for this client
-      /// </summary>
-      public FtpType FtpMode
-      {
-         get { return Settings.FtpMode; }
-         set { Settings.FtpMode = value; }
-      }
-
-      /// <summary>
-      /// Specifies that this client is on a VM that reports local time as UTC
-      /// </summary>
-      public bool ClientIsOnVirtualMachine
-      {
-         get { return Settings.ClientIsOnVirtualMachine; }
-         set { Settings.ClientIsOnVirtualMachine = value; }
-      }
-
-      /// <summary>
-      /// Specifies the number of minutes (+/-) this client's clock differentiates
-      /// </summary>
-      public int ClientTimeOffset
-      {
-         get { return Settings.ClientTimeOffset; }
-         set { Settings.ClientTimeOffset = value; }
-      }
-      #endregion
-
       #region Unit Progress Client Level Members
+      
       private DateTime _timeOfLastUnitStart = DateTime.MinValue;
       /// <summary>
       /// Local Time when this Client last detected Frame Progress
@@ -482,9 +337,11 @@ namespace HFM.Instances
          get { return _timeOfLastFrameProgress; }
          set { _timeOfLastFrameProgress = value; }
       } 
+      
       #endregion
 
       #region CurrentUnitInfo Pass-Through Properties
+      
       /// <summary>
       /// Frame progress of the unit
       /// </summary>
@@ -627,9 +484,11 @@ namespace HFM.Instances
             return CurrentUnitInfo.Credit;
          }
       }
+      
       #endregion
 
       #region Retrieval Properties
+      
       private volatile bool _retrievalInProgress;
       /// <summary>
       /// Local flag set when log retrieval is in progress
@@ -655,9 +514,11 @@ namespace HFM.Instances
             _lastRetrievalTime = value;
          }
       }
+      
       #endregion
 
       #region Retrieval Methods
+      
       /// <summary>
       /// Retrieve Instance Log Files based on Instance Type
       /// </summary>
@@ -670,28 +531,29 @@ namespace HFM.Instances
          {
             RetrievalInProgress = true;
 
-            switch (InstanceHostType)
+            _dataRetriever.Settings = Settings;
+            switch (Settings.InstanceHostType)
             {
                case InstanceType.PathInstance:
-                  RetrievePathInstance();
+                  _dataRetriever.RetrievePathInstance();
                   break;
                case InstanceType.HttpInstance:
-                  RetrieveHTTPInstance();
+                  _dataRetriever.RetrieveHttpInstance();
                   break;
                case InstanceType.FtpInstance:
-                  RetrieveFTPInstance();
+                  _dataRetriever.RetrieveFtpInstance();
                   break;
                default:
                   throw new NotImplementedException(String.Format(CultureInfo.CurrentCulture,
-                     "Instance Type '{0}' is not implemented", InstanceHostType));
+                     "Instance Type '{0}' is not implemented", Settings.InstanceHostType));
             }
 
+            // Set successful Last Retrieval Time
+            LastRetrievalTime = DateTime.Now;
             // Re-Init Client Level Members Before Processing
             Init();
             // Process the retrieved logs
             ClientStatus returnedStatus = ProcessExisting();
-            
-            
 
             // Handle the status retured from the log parse
             HandleReturnedStatus(returnedStatus);
@@ -706,250 +568,13 @@ namespace HFM.Instances
             RetrievalInProgress = false;
          }
 
-         HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Client Status: {2}", HfmTrace.FunctionName, InstanceName, Status));
+         HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Client Status: {2}", HfmTrace.FunctionName, Settings.InstanceName, Status));
       }
-
-      /// <summary>
-      /// Retrieve the log and unit info files from the configured Local path
-      /// </summary>
-      private void RetrievePathInstance()
-      {
-         DateTime start = HfmTrace.ExecStart;
-
-         try
-         {
-            FileInfo fiLog = new FileInfo(System.IO.Path.Combine(Path, RemoteFAHLogFilename));
-            string FAHLog_txt = System.IO.Path.Combine(_prefs.CacheDirectory, CachedFAHLogName);
-            FileInfo fiCachedLog = new FileInfo(FAHLog_txt);
-
-            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, "FAHlog copy (start)");
-            
-            if (fiLog.Exists)
-            {
-               if (fiCachedLog.Exists == false || fiLog.Length != fiCachedLog.Length)
-               {
-                  fiLog.CopyTo(FAHLog_txt, true);
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, "FAHlog copy (success)");
-               }
-               else
-               {
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, "FAHlog copy (file has not changed)");
-               }
-            }
-            else
-            {
-               throw new FileNotFoundException(String.Format(CultureInfo.CurrentCulture, 
-                  "The path {0} is inaccessible.", fiLog.FullName));
-            }
-
-            // Retrieve unitinfo.txt (or equivalent)
-            FileInfo fiUI = new FileInfo(System.IO.Path.Combine(Path, RemoteUnitInfoFilename));
-            string UnitInfo_txt = System.IO.Path.Combine(_prefs.CacheDirectory, CachedUnitInfoName);
-
-            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, "unitinfo copy (start)");
-            
-            if (fiUI.Exists)
-            {
-               // If file size is too large, do not copy it and delete the current cached copy - Issue 2
-               if (fiUI.Length < UnitInfoMax)
-               {
-                  fiUI.CopyTo(UnitInfo_txt, true);
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, "unitinfo copy (success)");
-               }
-               else
-               {
-                  if (File.Exists(UnitInfo_txt))
-                  {
-                     File.Delete(UnitInfo_txt);
-                  }
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture, 
-                     "unitinfo copy (file is too big: {0} bytes).", fiUI.Length));
-               }
-            }
-            /*** Remove Requirement for UnitInfo to be Present ***/
-            else
-            {
-               if (File.Exists(UnitInfo_txt))
-               {
-                  File.Delete(UnitInfo_txt);
-               }
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture, 
-                  "The path {0} is inaccessible.", fiUI.FullName));
-            }
-
-            // Retrieve queue.dat (or equivalent)
-            FileInfo fiQueue = new FileInfo(System.IO.Path.Combine(Path, RemoteQueueFilename));
-            string Queue_dat = System.IO.Path.Combine(_prefs.CacheDirectory, CachedQueueName);
-
-            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, "queue copy (start)");
-            
-            if (fiQueue.Exists)
-            {
-               fiQueue.CopyTo(Queue_dat, true);
-               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, "queue copy (success)");
-            }
-            /*** Remove Requirement for Queue to be Present ***/
-            else
-            {
-               if (File.Exists(Queue_dat))
-               {
-                  File.Delete(Queue_dat);
-               }
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture, 
-                  "The path {0} is inaccessible.", fiQueue.FullName));
-            }
-
-            LastRetrievalTime = DateTime.Now;
-         }
-         finally
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, InstanceName, start);
-         }
-      }
-
-      /// <summary>
-      /// Retrieve the log and unit info files from the configured HTTP location
-      /// </summary>
-      private void RetrieveHTTPInstance()
-      {
-         DateTime start = HfmTrace.ExecStart;
-
-         NetworkOps net = new NetworkOps();
-
-         try
-         {
-            string HttpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Path, "/", RemoteFAHLogFilename);
-            string LocalFile = System.IO.Path.Combine(_prefs.CacheDirectory, CachedFAHLogName);
-            net.HttpDownloadHelper(HttpPath, LocalFile, Username, Password);
-
-            try
-            {
-               HttpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Path, "/", RemoteUnitInfoFilename);
-               LocalFile = System.IO.Path.Combine(_prefs.CacheDirectory, CachedUnitInfoName);
-
-               long length = net.GetHttpDownloadLength(HttpPath, Username, Password);
-               if (length < UnitInfoMax)
-               {
-                  net.HttpDownloadHelper(HttpPath, LocalFile, Username, Password);
-               }
-               else
-               {
-                  if (File.Exists(LocalFile))
-                  {
-                     File.Delete(LocalFile);
-                  }
-
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture,
-                     "unitinfo download (file is too big: {0} bytes).", length));
-               }
-            }
-            /*** Remove Requirement for UnitInfo to be Present ***/
-            catch (WebException ex)
-            {
-               if (File.Exists(LocalFile))
-               {
-                  File.Delete(LocalFile);
-               }
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture, 
-                  "unitinfo download failed: {0}", ex.Message));
-            }
-
-            try
-            {
-               HttpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Path, "/", RemoteQueueFilename);
-               LocalFile = System.IO.Path.Combine(_prefs.CacheDirectory, CachedQueueName);
-               net.HttpDownloadHelper(HttpPath, LocalFile, Username, Password);
-            }
-            /*** Remove Requirement for Queue to be Present ***/
-            catch (WebException ex)
-            {
-               if (File.Exists(LocalFile))
-               {
-                  File.Delete(LocalFile);
-               }
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture,
-                  "queue download failed: {0}", ex.Message));
-            }
-
-            LastRetrievalTime = DateTime.Now;
-         }
-         finally
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, InstanceName, start);
-         }
-      }
-
-      /// <summary>
-      /// Retrieve the log and unit info files from the configured FTP location
-      /// </summary>
-      private void RetrieveFTPInstance()
-      {
-         DateTime start = HfmTrace.ExecStart;
-
-         NetworkOps net = new NetworkOps();
-
-         try
-         {
-            string LocalFilePath = System.IO.Path.Combine(_prefs.CacheDirectory, CachedFAHLogName);
-            net.FtpDownloadHelper(Server, Path, RemoteFAHLogFilename, LocalFilePath, Username, Password, FtpMode);
-
-            try
-            {
-               LocalFilePath = System.IO.Path.Combine(_prefs.CacheDirectory, CachedUnitInfoName);
-
-               long length = net.GetFtpDownloadLength(Server, Path, RemoteUnitInfoFilename, Username, Password, FtpMode);
-               if (length < UnitInfoMax)
-               {
-                  net.FtpDownloadHelper(Server, Path, RemoteUnitInfoFilename, LocalFilePath, Username, Password, FtpMode);
-               }
-               else
-               {
-                  if (File.Exists(LocalFilePath))
-                  {
-                     File.Delete(LocalFilePath);
-                  }
-
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture,
-                     "unitinfo download (file is too big: {0} bytes).", length));
-               }
-            }
-            /*** Remove Requirement for UnitInfo to be Present ***/
-            catch (WebException ex)
-            {
-               if (File.Exists(LocalFilePath))
-               {
-                  File.Delete(LocalFilePath);
-               }
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture, 
-                  "unitinfo download failed: {0}.", ex.Message));
-            }
-
-            try
-            {
-               LocalFilePath = System.IO.Path.Combine(_prefs.CacheDirectory, CachedQueueName);
-               net.FtpDownloadHelper(Server, Path, RemoteQueueFilename, LocalFilePath, Username, Password, FtpMode);
-            }
-            /*** Remove Requirement for Queue to be Present ***/
-            catch (WebException ex)
-            {
-               if (File.Exists(LocalFilePath))
-               {
-                  File.Delete(LocalFilePath);
-               }
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture,
-                  "queue download failed: {0}", ex.Message));
-            }
-
-            LastRetrievalTime = DateTime.Now;
-         }
-         finally
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, InstanceName, start);
-         }
-      }
+      
       #endregion
 
       #region Queue and Log Processing Functions
+      
       /// <summary>
       /// Process the cached log files that exist on this machine
       /// </summary>
@@ -959,10 +584,10 @@ namespace HFM.Instances
          DateTime start = HfmTrace.ExecStart;
 
          #region Setup UnitInfo Aggregator
-         _dataAggregator.InstanceName = InstanceName;
-         _dataAggregator.QueueFilePath = System.IO.Path.Combine(_prefs.CacheDirectory, CachedQueueName);
-         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(_prefs.CacheDirectory, CachedFAHLogName);
-         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(_prefs.CacheDirectory, CachedUnitInfoName); 
+         _dataAggregator.InstanceName = Settings.InstanceName;
+         _dataAggregator.QueueFilePath = Path.Combine(_prefs.CacheDirectory, Settings.CachedQueueName);
+         _dataAggregator.FahLogFilePath = Path.Combine(_prefs.CacheDirectory, Settings.CachedFahLogName);
+         _dataAggregator.UnitInfoLogFilePath = Path.Combine(_prefs.CacheDirectory, Settings.CachedUnitInfoName); 
          #endregion
          
          #region Run the Aggregator and Set ClientInstance Level Results
@@ -976,7 +601,7 @@ namespace HFM.Instances
          }
          #endregion
          
-         UnitInfoLogic[] parsedUnits = new UnitInfoLogic[units.Count];
+         var parsedUnits = new UnitInfoLogic[units.Count];
          for (int i = 0; i < units.Count; i++)
          {
             if (units[i] != null)
@@ -997,7 +622,7 @@ namespace HFM.Instances
          }
          
          CurrentUnitInfoConcrete.ShowPPDTrace();
-         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, start);
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Settings.InstanceName, start);
 
          // Return the Status
          return currentWorkUnitStatus;
@@ -1029,11 +654,11 @@ namespace HFM.Instances
          {
             Team = (int)queueEntry.TeamNumber;
          }
-         if (UserId == DefaultUserID)
+         if (UserId == Constants.DefaultUserID)
          {
             UserId = queueEntry.UserID;
          }
-         if (MachineId == DefaultMachineID)
+         if (MachineId == Constants.DefaultMachineID)
          {
             MachineId = (int)queueEntry.MachineID;
          }
@@ -1046,8 +671,8 @@ namespace HFM.Instances
       /// <param name="benchmarkUpdateIndex">Index of Current UnitInfo</param>
       private void UpdateBenchmarkData(UnitInfoLogic[] parsedUnits, int benchmarkUpdateIndex)
       {
-         bool FoundCurrent = false;
-         bool ProcessUpdates = false;
+         bool foundCurrent = false;
+         bool processUpdates = false;
          int index = benchmarkUpdateIndex;
          
          #region Set index for the oldest unit in the array
@@ -1065,20 +690,20 @@ namespace HFM.Instances
          {
             // If Current has not been found, check the benchmarkUpdateIndex
             // or try to match the Current Project and Raw Download Time
-            if (ProcessUpdates == false && (index == benchmarkUpdateIndex || IsUnitInfoCurrentUnitInfo(parsedUnits[index])))
+            if (processUpdates == false && (index == benchmarkUpdateIndex || IsUnitInfoCurrentUnitInfo(parsedUnits[index])))
             {
-               FoundCurrent = true;
-               ProcessUpdates = true;
+               foundCurrent = true;
+               processUpdates = true;
             }
 
-            if (ProcessUpdates)
+            if (processUpdates)
             {
                int previousFrameID = 0;
-               if (FoundCurrent)
+               if (foundCurrent)
                {
                   // current frame has already been recorded, increment to the next frame
                   previousFrameID = CurrentUnitInfo.LastUnitFrameID + 1;
-                  FoundCurrent = false;
+                  foundCurrent = false;
                }
 
                // Even though the CurrentUnitInfo has been found in the parsed UnitInfoLogic array doesn't
@@ -1183,6 +808,7 @@ namespace HFM.Instances
                  project1.ProjectClone == project2.ProjectClone &&
                  project1.ProjectGen == project2.ProjectGen);
       }
+      
       #endregion
 
       #region Status Handling and Determination
@@ -1194,12 +820,12 @@ namespace HFM.Instances
       private void HandleReturnedStatus(ClientStatus returnedStatus)
       {
          var statusData = new StatusData();
-         statusData.InstanceName = InstanceName;
+         statusData.InstanceName = Settings.InstanceName;
          statusData.TypeOfClient = CurrentUnitInfo.TypeOfClient;
          statusData.LastRetrievalTime = LastRetrievalTime;
-         statusData.IgnoreUtcOffset = ClientIsOnVirtualMachine;
+         statusData.IgnoreUtcOffset = Settings.ClientIsOnVirtualMachine;
          statusData.UtcOffset = TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
-         statusData.ClientTimeOffset = ClientTimeOffset;
+         statusData.ClientTimeOffset = Settings.ClientTimeOffset;
          statusData.TimeOfLastUnitStart = TimeOfLastUnitStart;
          statusData.TimeOfLastFrameProgress = TimeOfLastFrameProgress;
          statusData.CurrentStatus = Status;
@@ -1249,6 +875,7 @@ namespace HFM.Instances
       #endregion
 
       #region Other Helper Functions
+      
       /// <summary>
       /// Restore the given UnitInfo into this Client Instance
       /// </summary>
@@ -1278,14 +905,15 @@ namespace HFM.Instances
       
       public bool Owns(IOwnedByClientInstance value)
       {
-         if (value.OwningInstanceName.Equals(InstanceName) &&
-             StringOps.PathsEqual(value.OwningInstancePath, Path))
+         if (value.OwningInstanceName.Equals(Settings.InstanceName) &&
+             StringOps.PathsEqual(value.OwningInstancePath, Settings.Path))
          {
             return true;
          }
          
          return false;
       }
+      
       #endregion
    }
 }

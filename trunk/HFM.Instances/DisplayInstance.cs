@@ -28,6 +28,8 @@ namespace HFM.Instances
 {
    public class DisplayInstance
    {
+      public const int NumberOfDisplayFields = 19;
+   
       private readonly IPreferenceSet _prefs;
    
       public DisplayInstance(IPreferenceSet prefs)
@@ -181,13 +183,13 @@ namespace HFM.Instances
       {
          Status = instance.Status;
          Progress = ((float)instance.PercentComplete) / 100;
-         Name = instance.InstanceName;
+         Name = instance.Settings.InstanceName;
          _clientType = instance.CurrentUnitInfo.TypeOfClient.ToString();
          _clientVersion = instance.ClientVersion;
          TPF = instance.TimePerFrame;
          PPD = Math.Round(instance.PPD, decimalPlaces);
-         MHz = instance.ClientProcessorMegahertz;
-         PPD_MHz = Math.Round(instance.PPD / instance.ClientProcessorMegahertz, 3);
+         MHz = instance.Settings.ClientProcessorMegahertz;
+         PPD_MHz = Math.Round(instance.PPD / instance.Settings.ClientProcessorMegahertz, 3);
          ETA = instance.ETA;
          _core = instance.CurrentUnitInfo.Core;
          _coreVersion = instance.CurrentUnitInfo.CoreVersion;

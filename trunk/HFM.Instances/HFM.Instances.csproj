@@ -65,6 +65,7 @@
     <Compile Include="ClientInstanceSettings.cs" />
     <Compile Include="ClientInstanceSettingsDataInterface.cs" />
     <Compile Include="ClientInstanceXmlSerializer.cs" />
+    <Compile Include="DataRetriever.cs" />
     <Compile Include="DisplayInstance.cs" />
     <Compile Include="IClientInstanceFactory.cs" />
     <Compile Include="InstanceCollection.cs">

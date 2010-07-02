@@ -116,9 +116,8 @@ namespace HFM.Forms
          {
             IUnitInfoLogic unit = null;
             bool valuesOk = false;
-         
-            ClientInstance instance;
-            _instanceCollection.Instances.TryGetValue(benchmark.OwningInstanceName, out instance);
+
+            var instance = _instanceCollection[benchmark.OwningInstanceName];
             if (instance != null && instance.Owns(benchmark))
             {
                unit = instance.CurrentUnitInfo;

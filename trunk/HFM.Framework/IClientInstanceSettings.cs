@@ -116,9 +116,24 @@ namespace HFM.Framework
       bool ClientTimeOffsetError { get; }
       
       string Dummy { get; }
-      
+
       void LoadSettings(IClientInstanceSettings settings);
       
       IClientInstanceSettings Clone();
+
+      /// <summary>
+      /// Cached FAHlog Filename for this instance
+      /// </summary>
+      string CachedFahLogName { get; }
+
+      /// <summary>
+      /// Cached UnitInfo Filename for this instance
+      /// </summary>
+      string CachedUnitInfoName { get; }
+
+      /// <summary>
+      /// Cached Queue Filename for this instance
+      /// </summary>
+      string CachedQueueName { get; }
    }
 }

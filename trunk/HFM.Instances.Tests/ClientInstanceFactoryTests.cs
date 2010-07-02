@@ -49,6 +49,7 @@ namespace HFM.Instances.Tests
          _mocks = new MockRepository();
 
          _container.Kernel.AddComponentInstance("dataAggregator", typeof(IDataAggregator), MockRepository.GenerateMock<IDataAggregator>());
+         _container.Kernel.AddComponentInstance("dataRetriever", typeof(IDataRetriever), MockRepository.GenerateMock<IDataRetriever>());
          InstanceProvider.SetContainer(_container);
 
          _prefs = _mocks.DynamicMock<IPreferenceSet>();

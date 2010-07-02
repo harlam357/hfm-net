@@ -18,6 +18,7 @@
  */
  
 using System;
+using System.Collections.Generic;
 
 namespace HFM.Framework
 {
@@ -53,6 +54,11 @@ namespace HFM.Framework
       /// Client Startup Arguments
       /// </summary>
       string Arguments { get; }
+
+      /// <summary>
+      /// Client Path and Arguments (If Arguments Exist)
+      /// </summary>
+      string ClientPathAndArguments { get; }
 
       /// <summary>
       /// User ID associated with this client
@@ -115,19 +121,11 @@ namespace HFM.Framework
       IUnitInfoLogic CurrentUnitInfo { get; }
 
       /// <summary>
-      /// Cached FAHlog Filename for this instance
+      /// Return LogLine List for Specified Queue Index
       /// </summary>
-      string CachedFAHLogName { get; }
-
-      /// <summary>
-      /// Cached UnitInfo Filename for this instance
-      /// </summary>
-      string CachedUnitInfoName { get; }
-
-      /// <summary>
-      /// Cached Queue Filename for this instance
-      /// </summary>
-      string CachedQueueName { get; }
+      /// <param name="queueIndex">Index in Queue</param>
+      /// <exception cref="ArgumentOutOfRangeException">If queueIndex is outside the bounds of the Log Lines Array</exception>
+      IList<ILogLine> GetLogLinesForQueueIndex(int queueIndex);
 
       /// <summary>
       /// Frame progress of the unit

@@ -383,7 +383,7 @@ namespace HFM.Instances
          XMLOps.setXmlNode(xmlData, "UnitLog/Text", sb.ToString());
          if (_prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog))
          {
-            XMLOps.setXmlNode(xmlData, "UnitLog/FullLogFile", instance.CachedFAHLogName);
+            XMLOps.setXmlNode(xmlData, "UnitLog/FullLogFile", instance.Settings.CachedFahLogName);
          }
          else
          {

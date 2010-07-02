@@ -130,6 +130,7 @@ namespace HFM.Instances
          }
 
          return new ClientInstance(_prefs, _proteinCollection, _benchmarkContainer, _statusLogic, 
+                                   InstanceProvider.GetInstance<IDataRetriever>(),
                                    InstanceProvider.GetInstance<IDataAggregator>(), settings);
       }
    }

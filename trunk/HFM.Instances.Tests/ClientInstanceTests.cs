@@ -40,8 +40,9 @@ namespace HFM.Instances.Tests
       private IPreferenceSet _prefs;
       private IProteinCollection _proteinCollection;
       private IProteinBenchmarkContainer _benchmarkContainer;
-      private IDataAggregator _dataAggregator;
       private IStatusLogic _statusLogic;
+      private IDataRetriever _dataRetriever;
+      private IDataAggregator _dataAggregator;
    
       [SetUp]
       public void Init()
@@ -52,8 +53,9 @@ namespace HFM.Instances.Tests
          _prefs = _mocks.DynamicMock<IPreferenceSet>();
          _proteinCollection = _mocks.DynamicMock<IProteinCollection>();
          _benchmarkContainer = _mocks.DynamicMock<IProteinBenchmarkContainer>();
-         _dataAggregator = _mocks.DynamicMock<IDataAggregator>();
          _statusLogic = _mocks.DynamicMock<IStatusLogic>();
+         _dataRetriever = _mocks.DynamicMock<IDataRetriever>();
+         _dataAggregator = _mocks.DynamicMock<IDataAggregator>();
       }
 
       [Test]
@@ -64,13 +66,13 @@ namespace HFM.Instances.Tests
          _mocks.ReplayAll();
 
          // Setup Test Instance
-         var instance = new ClientInstance(prefs, proteinCollection, _benchmarkContainer, _statusLogic, _dataAggregator);
-         Assert.AreEqual(InstanceType.PathInstance, instance.InstanceHostType);
+         var instance = new ClientInstance(prefs, proteinCollection, _benchmarkContainer, _statusLogic, _dataRetriever, _dataAggregator);
+         Assert.AreEqual(InstanceType.PathInstance, instance.Settings.InstanceHostType);
 
          Assert.AreEqual(String.Empty, instance.ClientPathAndArguments);
-         instance.Path = @"C:\ThePath\To\The\Files\";
+         instance.Settings.Path = @"C:\ThePath\To\The\Files\";
          instance.Arguments = "-some -flags";
-         Assert.AreEqual(String.Format(CultureInfo.InvariantCulture, "{0} ({1})", instance.Path, instance.Arguments),
+         Assert.AreEqual(String.Format(CultureInfo.InvariantCulture, "{0} ({1})", instance.Settings.Path, instance.Arguments),
                          instance.ClientPathAndArguments);
                          
          Assert.AreEqual(true, instance.UserIdUnknown);

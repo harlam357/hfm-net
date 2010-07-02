@@ -75,6 +75,7 @@
     <Compile Include="IMarkupGenerator.cs" />
     <Compile Include="IMessagesView.cs" />
     <Compile Include="InstanceProvider.cs" />
+    <Compile Include="InstanceTotals.cs" />
     <Compile Include="IOwnedByClientInstance.cs" />
     <Compile Include="IPreferenceSet.cs" />
     <Compile Include="IProjectInfo.cs" />

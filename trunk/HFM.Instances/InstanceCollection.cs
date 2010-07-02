@@ -37,40 +37,10 @@ using HFM.Instrumentation;
 
 namespace HFM.Instances
 {
-   public struct InstanceTotals
-   {
-      public double PPD;
-      public double UPD;
-      public Int32 TotalClients;
-      public Int32 WorkingClients;
-      public Int32 NonWorkingClients;
-      public Int32 TotalRunCompletedUnits;
-      public Int32 TotalRunFailedUnits;
-      public Int32 TotalClientCompletedUnits;
-   }
-
    public sealed class InstanceCollection : IDisposable
    {
-      #region Events
-      public event EventHandler CollectionChanged;
-      public event EventHandler CollectionLoaded;
-      public event EventHandler CollectionSaved;
-      public event EventHandler InstanceAdded;
-      public event EventHandler InstanceEdited;
-      public event EventHandler InstanceRemoved;
-      public event EventHandler InstanceRetrieved;
-      public event EventHandler SelectedInstanceChanged;
-      public event EventHandler FindDuplicatesComplete;
-      public event EventHandler OfflineLastChanged;
-      public event EventHandler RefreshUserStatsData;
-      #endregion
+      #region Fields
       
-      #region Members
-      /// <summary>
-      /// Conversion factor - minutes to milli-seconds
-      /// </summary>
-      private const int MinToMillisec = 60000;
-
       /// <summary>
       /// Retrieval Timer Object (init 10 minutes)
       /// </summary>
@@ -84,71 +54,114 @@ namespace HFM.Instances
       /// <summary>
       /// Local time that denotes when a full retrieve started (only accessed by the RetrieveInProgress property)
       /// </summary>
-      private DateTime _RetrieveExecStart;
+      private DateTime _retrieveExecStart;
       /// <summary>
       /// Local flag that denotes a full retrieve already in progress (only accessed by the RetrieveInProgress property)
       /// </summary>
-      private volatile bool _RetrievalInProgress;
+      private volatile bool _retrievalInProgress;
       /// <summary>
       /// Local flag that denotes a full retrieve already in progress
       /// </summary>
       public bool RetrievalInProgress
       {
-         get { return _RetrievalInProgress; }
+         get { return _retrievalInProgress; }
          private set
          {
             if (value)
             {
-               _RetrieveExecStart = HfmTrace.ExecStart;
-               _RetrievalInProgress = true;
+               _retrieveExecStart = HfmTrace.ExecStart;
+               _retrievalInProgress = true;
             }
             else
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Total Retrieval Execution Time: {0}", HfmTrace.GetExecTime(_RetrieveExecStart)));
-               _RetrievalInProgress = false;
+               HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Total Retrieval Execution Time: {0}", HfmTrace.GetExecTime(_retrieveExecStart)));
+               _retrievalInProgress = false;
             }
          }
       }
       
       /// <summary>
-      /// Total Number of Fields (Columns) available to the DataGridView
-      /// </summary>
-      public const int NumberOfDisplayFields = 19;
-      
-      /// <summary>
-      /// Main instance collection
+      /// Client Instance Collection
       /// </summary>
       private readonly Dictionary<string, ClientInstance> _instanceCollection;
+
+      /// <summary>
+      /// Client Instance Accessor
+      /// </summary>
+      /// <param name="key">Client Instance Name</param>
+      [CLSCompliant(false)]
+      public IClientInstance this[string key]
+      {
+         get { return _instanceCollection.ContainsKey(key) ? _instanceCollection[key] : null; }
+      }
+
+      /// <summary>
+      /// Returns true if Client Instance Count is greater than 0
+      /// </summary>
+      public bool HasInstances
+      {
+         get { return _instanceCollection.Count > 0; }
+      }
 
       /// <summary>
       /// Display instance collection (this is bound to the DataGridView)
       /// </summary>
       private readonly SortableBindingList<DisplayInstance> _displayCollection;
+
+      /// <summary>
+      /// Tells the SortableBindingList whether to sort Offline Clients Last
+      /// </summary>
+      private bool OfflineClientsLast
+      {
+         set
+         {
+            if (_displayCollection.OfflineClientsLast != value)
+            {
+               _displayCollection.OfflineClientsLast = value;
+               OnOfflineLastChanged(EventArgs.Empty);
+            }
+         }
+      }
       
       /// <summary>
       /// Currently Selected Client Instance
       /// </summary>
-      private ClientInstance _SelectedInstance;
-      
-      /// <summary>
-      /// List of Duplicate Project (R/C/G)
-      /// </summary>
-      private readonly List<string> _duplicateProjects;
+      private ClientInstance _selectedInstance;
 
       /// <summary>
-      /// List of Duplicate Client User and Machine ID combinations
+      /// Currently Selected Client Instance
       /// </summary>
-      private readonly List<string> _duplicateUserId;
+      [CLSCompliant(false)]
+      public IClientInstance SelectedInstance
+      {
+         get { return _selectedInstance; }
+         private set
+         {
+            if (_selectedInstance != value)
+            {
+               _selectedInstance = (ClientInstance)value;
+               OnSelectedInstanceChanged(EventArgs.Empty);
+            }
+         }
+      }
 
       /// <summary>
-      /// Internal filename
+      /// Client Configuration Filename
       /// </summary>
-      private string _ConfigFilename = String.Empty;
+      public string ConfigFilename { get; private set; }
 
       /// <summary>
-      /// Internal variable storing whether New, Open, Quit should prompt for saving the config first
+      /// Client Configuration has Filename defined
       /// </summary>
-      private bool _ChangedAfterSave;
+      public bool HasConfigFilename
+      {
+         get { return ConfigFilename.Length != 0; }
+      }
+
+      /// <summary>
+      /// Denotes the Saved State of the Current Client Configuration (false == saved, true == unsaved)
+      /// </summary>
+      public bool ChangedAfterSave { get; private set; }
 
       /// <summary>
       /// Network Operations Interface
@@ -200,8 +213,8 @@ namespace HFM.Instances
 
          _instanceCollection = new Dictionary<string, ClientInstance>();
          _displayCollection = new SortableBindingList<DisplayInstance>();
-         _duplicateProjects = new List<string>();
-         _duplicateUserId = new List<string>();
+
+         ConfigFilename = String.Empty;
       }
 
       public void Initialize()
@@ -223,12 +236,14 @@ namespace HFM.Instances
          ClearCacheFolder();
 
          // Hook-up PreferenceSet Event Handlers
-         _Prefs.OfflineLastChanged += PreferenceSet_OfflineLastChanged;
-         _Prefs.TimerSettingsChanged += Prefs_TimerSettingsChanged;
+         _Prefs.OfflineLastChanged += delegate { OfflineClientsLast = _Prefs.GetPreference<bool>(Preference.OfflineLast); };
+         _Prefs.TimerSettingsChanged += delegate { SetTimerState(); };
       }
       #endregion
 
-      #region Event Wrappers
+      #region Events
+
+      public event EventHandler CollectionChanged;
       private void OnCollectionChanged(EventArgs e)
       {
          if (CollectionChanged != null)
@@ -237,6 +252,7 @@ namespace HFM.Instances
          }
       }
 
+      public event EventHandler CollectionLoaded;
       private void OnCollectionLoaded(EventArgs e)
       {
          if (CollectionLoaded != null)
@@ -245,6 +261,7 @@ namespace HFM.Instances
          }
       }
 
+      public event EventHandler CollectionSaved;
       private void OnCollectionSaved(EventArgs e)
       {
          if (CollectionSaved != null)
@@ -253,6 +270,7 @@ namespace HFM.Instances
          }
       }
 
+      public event EventHandler InstanceAdded;
       private void OnInstanceAdded(EventArgs e)
       {
          if (InstanceAdded != null)
@@ -261,6 +279,7 @@ namespace HFM.Instances
          }
       }
 
+      public event EventHandler InstanceEdited;
       private void OnInstanceEdited(EventArgs e)
       {
          if (InstanceEdited != null)
@@ -269,6 +288,7 @@ namespace HFM.Instances
          }
       }
 
+      public event EventHandler InstanceRemoved;
       private void OnInstanceRemoved(EventArgs e)
       {
          if (InstanceRemoved != null)
@@ -277,6 +297,7 @@ namespace HFM.Instances
          }
       }
 
+      public event EventHandler InstanceRetrieved;
       private void OnInstanceRetrieved(EventArgs e)
       {
          if (InstanceRetrieved != null)
@@ -285,6 +306,7 @@ namespace HFM.Instances
          }
       }
 
+      public event EventHandler FindDuplicatesComplete;
       private void OnFindDuplicatesComplete(EventArgs e)
       {
          if (FindDuplicatesComplete != null)
@@ -293,6 +315,7 @@ namespace HFM.Instances
          }
       }
 
+      public event EventHandler OfflineLastChanged;
       private void OnOfflineLastChanged(EventArgs e)
       {
          if (OfflineLastChanged != null)
@@ -310,9 +333,7 @@ namespace HFM.Instances
          OnSelectedInstanceChanged(EventArgs.Empty);
       }
 
-      /// <summary>
-      /// Raises the SelectedInstanceChanged event.
-      /// </summary>
+      public event EventHandler SelectedInstanceChanged;
       private void OnSelectedInstanceChanged(EventArgs e)
       {
          if (SelectedInstanceChanged != null)
@@ -321,6 +342,7 @@ namespace HFM.Instances
          }
       }
 
+      public event EventHandler RefreshUserStatsData;
       private void OnRefreshUserStatsData(EventArgs e)
       {
          if (RefreshUserStatsData != null)
@@ -328,114 +350,33 @@ namespace HFM.Instances
             RefreshUserStatsData(this, e);
          }
       }
-      #endregion
-
-      #region Properties
-      /// <summary>
-      /// Client Instance Collection
-      /// </summary>
-      public Dictionary<string, ClientInstance> Instances
-      {
-         get { return _instanceCollection; }
-      }
-
-      /// <summary>
-      /// Currently Selected Client Instance
-      /// </summary>
-      public ClientInstance SelectedInstance
-      {
-         get { return _SelectedInstance; }
-         private set 
-         { 
-            if (_SelectedInstance != value)
-            {
-               _SelectedInstance = value;
-               OnSelectedInstanceChanged(EventArgs.Empty);
-            }
-         }
-      }
-
-      /// <summary>
-      /// Client Configuration Filename
-      /// </summary>
-      public string ConfigFilename
-      {
-         get { return _ConfigFilename; }
-      }
       
-      /// <summary>
-      /// Client Configuration has Filename defined
-      /// </summary>
-      public bool HasConfigFilename
-      {
-         get { return _ConfigFilename.Length > 0; }
-      }
-
-      /// <summary>
-      /// Denotes the Saved State of the Current Client Configuration (false == saved, true == unsaved)
-      /// </summary>
-      public bool ChangedAfterSave
-      {
-         get { return _ChangedAfterSave; }
-      }
-
-      /// <summary>
-      /// Client Instance Count
-      /// </summary>
-      public int Count
-      {
-         get { return _instanceCollection.Count; }
-      }
-
-      /// <summary>
-      /// Returns True if Client Instance Count is greater than 0
-      /// </summary>
-      public bool HasInstances
-      {
-         get { return Count > 0; }
-      }
-
-      /// <summary>
-      /// Tells the SortableBindingList whether to sort Offline Clients Last
-      /// </summary>
-      public bool OfflineClientsLast
-      {
-         get { return _displayCollection.OfflineClientsLast; }
-         set 
-         { 
-            if (_displayCollection.OfflineClientsLast != value)
-            {
-               _displayCollection.OfflineClientsLast = value;
-               OnOfflineLastChanged(EventArgs.Empty);
-            }
-         }
-      }
       #endregion
 
       #region Read and Write Xml
       /// <summary>
-      /// Loads a collection of Host Instances from disk
+      /// Loads a collection of Client Instances from file
       /// </summary>
-      /// <param name="xmlDocName">Filename (verbatim) to load data from - User AppData Path is prepended
-      /// if the path does not start with either ?: or \\</param>
-      public void FromXml(string xmlDocName)
+      /// <param name="filePath">Path to Config File</param>
+      public void FromXml(string filePath)
       {
-         if (String.IsNullOrEmpty(xmlDocName))
+         if (String.IsNullOrEmpty(filePath))
          {
-            throw new ArgumentException("Argument 'xmlDocName' cannot be a null or empty string.", "xmlDocName");
+            throw new ArgumentException("Argument 'filePath' cannot be a null or empty string.", "filePath");
          }
 
-         _ChangedAfterSave = false;
+         ChangedAfterSave = false;
       
-         if (Path.IsPathRooted(xmlDocName) == false)
-         {
-            xmlDocName = Path.Combine(_Prefs.ApplicationPath, xmlDocName);
-         }
+         // Why do I need this? 7/1/10
+         //if (Path.IsPathRooted(filePath) == false)
+         //{
+         //   filePath = Path.Combine(_Prefs.ApplicationPath, filePath);
+         //}
 
          var serializer = new ClientInstanceXmlSerializer();
          var collectionDataInterface = new InstanceCollectionDataInterface(GetCurrentInstanceArray());
          serializer.DataInterface = collectionDataInterface;
-         serializer.Deserialize(xmlDocName);
+         serializer.Deserialize(filePath);
          
          var instances = _instanceFactory.HandleImportResults(collectionDataInterface.Settings);
          foreach (var instance in instances)
@@ -451,7 +392,7 @@ namespace HFM.Instances
 
          if (HasInstances)
          {
-            _ConfigFilename = xmlDocName;
+            ConfigFilename = filePath;
 
             // Get client logs         
             QueueNewRetrieval();
@@ -463,7 +404,7 @@ namespace HFM.Instances
       }
 
       /// <summary>
-      /// Saves the current collection of Host Instances to disk
+      /// Saves the current collection of Client Instances to file
       /// </summary>
       public void ToXml()
       {
@@ -471,22 +412,26 @@ namespace HFM.Instances
       }
 
       /// <summary>
-      /// Saves the current collection of Host Instances to disk
+      /// Saves the current collection of Client Instances to file
       /// </summary>
-      /// <param name="xmlDocName">Filename (verbatim) to save data to - User AppData Path is prepended
-      /// if the path does not start with either ?: or \\</param>
-      public void ToXml(string xmlDocName)
+      /// <param name="filePath">Path to Config File</param>
+      public void ToXml(string filePath)
       {
+         if (String.IsNullOrEmpty(filePath))
+         {
+            throw new ArgumentException("Argument 'filePath' cannot be a null or empty string.", "filePath");
+         }
+         
          var serializer = new ClientInstanceXmlSerializer();
          lock (_instanceCollection)
          {
             serializer.DataInterface = new InstanceCollectionDataInterface(GetCurrentInstanceArray());
          }
          
-         serializer.Serialize(xmlDocName);
+         serializer.Serialize(filePath);
          
-         _ConfigFilename = xmlDocName;
-         _ChangedAfterSave = false;
+         ConfigFilename = filePath;
+         ChangedAfterSave = false;
          OnCollectionSaved(EventArgs.Empty);
       }
       #endregion
@@ -497,7 +442,7 @@ namespace HFM.Instances
       /// <param name="filename">Path of ClientsTab.txt to import</param>
       public void FromFahMonClientsTab(string filename)
       {
-         _ChangedAfterSave = false;
+         ChangedAfterSave = false;
 
          var serializer = new ClientInstanceFahMonSerializer();
          var collectionDataInterface = new InstanceCollectionDataInterface(GetCurrentInstanceArray());
@@ -512,7 +457,7 @@ namespace HFM.Instances
 
          if (HasInstances)
          {
-            _ChangedAfterSave = true;
+            ChangedAfterSave = true;
 
             // Get client logs         
             QueueNewRetrieval();
@@ -556,7 +501,7 @@ namespace HFM.Instances
          {
             RetrieveSingleClient(concreteInstance);
 
-            _ChangedAfterSave = true;
+            ChangedAfterSave = true;
             OnInstanceAdded(EventArgs.Empty);
          }
       }
@@ -608,7 +553,7 @@ namespace HFM.Instances
          
          RetrieveSingleClient(instance);
 
-         _ChangedAfterSave = true;
+         ChangedAfterSave = true;
          OnInstanceEdited(EventArgs.Empty);
       }
       
@@ -635,7 +580,7 @@ namespace HFM.Instances
          
          if (fireRemovedEvent)
          {
-            _ChangedAfterSave = true;
+            ChangedAfterSave = true;
             OnInstanceRemoved(EventArgs.Empty);
 
             FindDuplicates();
@@ -654,13 +599,11 @@ namespace HFM.Instances
       
          _instanceCollection.Clear();
          _displayCollection.Clear();
-         _duplicateProjects.Clear();
-         _duplicateUserId.Clear();
 
          // new config filename
-         _ConfigFilename = String.Empty;
+         ConfigFilename = String.Empty;
          // collection has not changed
-         _ChangedAfterSave = false;
+         ChangedAfterSave = false;
          // This will disable the timers, we have no hosts
          SetTimerState();
          
@@ -674,7 +617,7 @@ namespace HFM.Instances
       public bool ContainsName(string instanceName)
       {
          var findInstance = new List<ClientInstance>(_instanceCollection.Values).Find(
-            instance => instance.InstanceName.ToUpperInvariant() == instanceName.ToUpperInvariant());
+            instance => instance.Settings.InstanceName.ToUpperInvariant() == instanceName.ToUpperInvariant());
          return findInstance != null;
       }
       #endregion
@@ -822,10 +765,10 @@ namespace HFM.Instances
                {
                   foreach (ClientInstance instance in instances)
                   {
-                     string cachedFahlogPath = Path.Combine(_Prefs.CacheDirectory, instance.CachedFAHLogName);
+                     string cachedFahlogPath = Path.Combine(_Prefs.CacheDirectory, instance.Settings.CachedFahLogName);
                      if (File.Exists(cachedFahlogPath))
                      {
-                        File.Copy(cachedFahlogPath, Path.Combine(webRoot, instance.CachedFAHLogName), true);
+                        File.Copy(cachedFahlogPath, Path.Combine(webRoot, instance.Settings.CachedFahLogName), true);
                      }
                   }
                }
@@ -1091,7 +1034,7 @@ namespace HFM.Instances
       {
          int syncTimeMinutes = _Prefs.GetPreference<int>(Preference.SyncTimeMinutes);
          
-         workTimer.Interval = syncTimeMinutes * MinToMillisec;
+         workTimer.Interval = syncTimeMinutes * Constants.MinToMillisec;
          HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Starting Retrieval Timer Loop: {0} Minutes", syncTimeMinutes));
          workTimer.Start();
       }
@@ -1105,8 +1048,8 @@ namespace HFM.Instances
          Debug.Assert(_Prefs.GetPreference<bool>(Preference.WebGenAfterRefresh) == false);
          
          int generateInterval = _Prefs.GetPreference<int>(Preference.GenerateInterval);
-      
-         webTimer.Interval = generateInterval * MinToMillisec;
+
+         webTimer.Interval = generateInterval * Constants.MinToMillisec;
          HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format(CultureInfo.CurrentCulture,
             "Starting Web Generation Timer Loop: {0} Minutes", generateInterval));
          webTimer.Start();
@@ -1165,7 +1108,7 @@ namespace HFM.Instances
          {
             foreach (ClientInstance instance in _instanceCollection.Values)
             {
-               DisplayInstance findInstance = FindDisplayInstance(_displayCollection, instance.InstanceName);
+               DisplayInstance findInstance = FindDisplayInstance(_displayCollection, instance.Settings.InstanceName);
                var decimalPlaces = _Prefs.GetPreference<int>(Preference.DecimalPlaces);
                if (findInstance != null)
                {
@@ -1236,6 +1179,7 @@ namespace HFM.Instances
       #endregion
 
       #region Helper Functions
+      
       public void SetCurrentInstance(IList selectedClients)
       {
          if (selectedClients.Count > 0)
@@ -1249,7 +1193,7 @@ namespace HFM.Instances
                {
                   string instanceName = nameColumnValue.ToString();
                   ClientInstance instance;
-                  SelectedInstance = Instances.TryGetValue(instanceName, out instance) ? instance : null;
+                  SelectedInstance = _instanceCollection.TryGetValue(instanceName, out instance) ? instance : null;
                }
                else
                {
@@ -1277,10 +1221,13 @@ namespace HFM.Instances
 
          //return null;
       }
-      
+
+      /// <summary>
+      /// Get Array Representation of Current Display Instance objects in Collection
+      /// </summary>
       private DisplayInstance[] GetCurrentDisplayInstanceArray()
       {
-         DisplayInstance[] displayInstances = new DisplayInstance[_displayCollection.Count];
+         var displayInstances = new DisplayInstance[_displayCollection.Count];
          _displayCollection.CopyTo(displayInstances, 0);
 
          return displayInstances;
@@ -1340,18 +1287,6 @@ namespace HFM.Instances
          HfmTrace.WriteToHfmConsole(TraceLevel.Info, start);
       }
 
-      /// <summary>
-      /// Sets OfflineLast Property on ClientInstances Collection
-      /// </summary>
-      private void PreferenceSet_OfflineLastChanged(object sender, EventArgs e)
-      {
-         OfflineClientsLast = _Prefs.GetPreference<bool>(Preference.OfflineLast);
-      }
-
-      private void Prefs_TimerSettingsChanged(object sender, EventArgs e)
-      {
-         SetTimerState();
-      }
       #endregion
       
       #region IDisposable Members

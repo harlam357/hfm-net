@@ -437,11 +437,9 @@ namespace HFM.Forms
       /// <summary>
       /// When Column Index changes, set the last column to AutoSize Fill, the others to AutoSize None
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void dataGridView1_ColumnDisplayIndexChanged(object sender, DataGridViewColumnEventArgs e)
       {
-         if (dataGridView1.Columns.Count == InstanceCollection.NumberOfDisplayFields)
+         if (dataGridView1.Columns.Count == DisplayInstance.NumberOfDisplayFields)
          {
             foreach (DataGridViewColumn column in dataGridView1.Columns)
             {
@@ -479,7 +477,7 @@ namespace HFM.Forms
             
             queueControl.SetQueue(_clientInstances.SelectedInstance.DataAggregator.Queue, 
                _clientInstances.SelectedInstance.CurrentUnitInfo.TypeOfClient, 
-               _clientInstances.SelectedInstance.ClientIsOnVirtualMachine);
+               _clientInstances.SelectedInstance.Settings.ClientIsOnVirtualMachine);
 
             // if we've got a good queue read, let queueControl_QueueIndexChanged()
             // handle populating the log lines.
@@ -625,7 +623,7 @@ namespace HFM.Forms
                // Check for SelectedInstance, and get out if not found
                if (_clientInstances.SelectedInstance == null) return;
 
-               if (_clientInstances.SelectedInstance.InstanceHostType.Equals(InstanceType.PathInstance))
+               if (_clientInstances.SelectedInstance.Settings.InstanceHostType.Equals(InstanceType.PathInstance))
                {
                   mnuContextClientsViewClientFiles.Visible = true;
                }
@@ -643,11 +641,11 @@ namespace HFM.Forms
                // Check for SelectedInstance, and get out if not found
                if (_clientInstances.SelectedInstance == null) return;
 
-               if (_clientInstances.SelectedInstance.InstanceHostType.Equals(InstanceType.PathInstance))
+               if (_clientInstances.SelectedInstance.Settings.InstanceHostType.Equals(InstanceType.PathInstance))
                {
                   try
                   {
-                     StartFileBrowser(_clientInstances.SelectedInstance.Path);
+                     StartFileBrowser(_clientInstances.SelectedInstance.Settings.Path);
                   }
                   catch (Exception ex)
                   {
@@ -655,7 +653,7 @@ namespace HFM.Forms
                      
                      MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError,
                         String.Format(CultureInfo.CurrentCulture, "client '{0}' files.{1}{1}Please check the current File Explorer defined in the Preferences",
-                        _clientInstances.SelectedInstance.InstanceName, Environment.NewLine)));
+                        _clientInstances.SelectedInstance.Settings.InstanceName, Environment.NewLine)));
                   }
                }
             }
@@ -947,8 +945,8 @@ namespace HFM.Forms
       {
          // Check for SelectedInstance, and get out if not found
          if (_clientInstances.SelectedInstance == null) return;
-         
-         _clientInstances.Remove(_clientInstances.SelectedInstance.InstanceName);
+
+         _clientInstances.Remove(_clientInstances.SelectedInstance.Settings.InstanceName);
       }
 
       /// <summary>
@@ -958,8 +956,8 @@ namespace HFM.Forms
       {
          // Check for SelectedInstance, and get out if not found
          if (_clientInstances.SelectedInstance == null) return;
-      
-         _clientInstances.RetrieveSingleClient(_clientInstances.SelectedInstance.InstanceName);
+
+         _clientInstances.RetrieveSingleClient(_clientInstances.SelectedInstance.Settings.InstanceName);
       }
 
       /// <summary>
@@ -978,7 +976,7 @@ namespace HFM.Forms
          // Check for SelectedInstance, and get out if not found
          if (_clientInstances.SelectedInstance == null) return;
 
-         string logPath = Path.Combine(_Prefs.CacheDirectory, _clientInstances.SelectedInstance.CachedFAHLogName);
+         string logPath = Path.Combine(_Prefs.CacheDirectory, _clientInstances.SelectedInstance.Settings.CachedFahLogName);
          if (File.Exists(logPath))
          {
             try
@@ -991,12 +989,12 @@ namespace HFM.Forms
                
                MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError,
                   String.Format(CultureInfo.CurrentCulture, "client '{0}' FAHlog file.{1}{1}Please check the current Log File Viewer defined in the Preferences",
-                  _clientInstances.SelectedInstance.InstanceName, Environment.NewLine)));
+                  _clientInstances.SelectedInstance.Settings.InstanceName, Environment.NewLine)));
             }
          }
          else
          {
-            MessageBox.Show(String.Format("Cannot find client '{0}' FAHlog.txt file.", _clientInstances.SelectedInstance.InstanceName));
+            MessageBox.Show(String.Format("Cannot find client '{0}' FAHlog.txt file.", _clientInstances.SelectedInstance.Settings.InstanceName));
          }
       }
 
@@ -1008,11 +1006,11 @@ namespace HFM.Forms
          // Check for SelectedInstance, and get out if not found
          if (_clientInstances.SelectedInstance == null) return;
 
-         if (_clientInstances.SelectedInstance.InstanceHostType.Equals(InstanceType.PathInstance))
+         if (_clientInstances.SelectedInstance.Settings.InstanceHostType.Equals(InstanceType.PathInstance))
          {
             try
             {
-               StartFileBrowser(_clientInstances.SelectedInstance.Path);
+               StartFileBrowser(_clientInstances.SelectedInstance.Settings.Path);
             }
             catch (Exception ex)
             {
@@ -1020,7 +1018,7 @@ namespace HFM.Forms
                
                MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError,
                   String.Format(CultureInfo.CurrentCulture, "client '{0}' files.{1}{1}Please check the current File Explorer defined in the Preferences",
-                  _clientInstances.SelectedInstance.InstanceName, Environment.NewLine)));
+                  _clientInstances.SelectedInstance.Settings.InstanceName, Environment.NewLine)));
             }
          }
       }
@@ -1377,12 +1375,12 @@ namespace HFM.Forms
       {
          InstanceTotals totals = _clientInstances.GetInstanceTotals();
 
-         double TotalPPD = totals.PPD;
-         int GoodHosts = totals.WorkingClients;
+         double totalPPD = totals.PPD;
+         int goodHosts = totals.WorkingClients;
 
          SetNotifyIconText(String.Format("{0} Working Clients{3}{1} Non-Working Clients{3}{2:" + _Prefs.PpdFormatString + "} PPD",
-                                         GoodHosts, totals.NonWorkingClients, TotalPPD, Environment.NewLine));
-         RefreshStatusLabels(GoodHosts, TotalPPD);
+                                         goodHosts, totals.NonWorkingClients, totalPPD, Environment.NewLine));
+         RefreshStatusLabels(goodHosts, totalPPD);
       }
 
       /// <summary>
