@@ -174,33 +174,47 @@ namespace HFM.Instances
       /// UnitInfo Container Interface
       /// </summary>
       private readonly IUnitInfoContainer _unitInfoContainer;
+
+      /// <summary>
+      /// Client Instance Factory
+      /// </summary>
+      private readonly IClientInstanceFactory _instanceFactory;
       #endregion
 
       #region CTOR
       /// <summary>
       /// Default Constructor
       /// </summary>
-      public InstanceCollection(IPreferenceSet prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer)
+      [CLSCompliant(false)]
+      public InstanceCollection(IPreferenceSet prefs, 
+                                IProteinCollection proteinCollection, 
+                                IProteinBenchmarkContainer benchmarkContainer, 
+                                IUnitInfoContainer unitInfoContainer,
+                                IClientInstanceFactory instanceFactory)
       {
          _Prefs = prefs;
          _proteinCollection = proteinCollection;
          _benchmarkContainer = benchmarkContainer;
-         
-         _unitInfoContainer = InstanceProvider.GetInstance<IUnitInfoContainer>();
-         _unitInfoContainer.Read();
-      
+         _unitInfoContainer = unitInfoContainer;
+         _instanceFactory = instanceFactory;
+
          _instanceCollection = new Dictionary<string, ClientInstance>();
          _displayCollection = new SortableBindingList<DisplayInstance>();
          _duplicateProjects = new List<string>();
          _duplicateUserId = new List<string>();
+      }
 
+      public void Initialize()
+      {
+         _unitInfoContainer.Read();
+      
          // Hook up Retrieval Timer Event Handler
          workTimer.Elapsed += bgWorkTimer_Tick;
          // Hook up Web Generation Timer Event Handler
          webTimer.Elapsed += webGenTimer_Tick;
 
          // Hook up Protein Collection Updated Event Handler
-         InstanceProvider.GetInstance<IProteinCollection>().Downloader.ProjectInfoUpdated += ProteinCollection_ProjectInfoUpdated;
+         _proteinCollection.Downloader.ProjectInfoUpdated += ProteinCollection_ProjectInfoUpdated;
 
          // Set Offline Clients Sort Flag
          OfflineClientsLast = _Prefs.GetPreference<bool>(Preference.OfflineLast);
@@ -423,16 +437,14 @@ namespace HFM.Instances
          serializer.DataInterface = collectionDataInterface;
          serializer.Deserialize(xmlDocName);
          
-         var builder = new ClientInstanceFactory(_Prefs, _proteinCollection, _benchmarkContainer);
-         ICollection<ClientInstance> instances = builder.HandleImportResults(collectionDataInterface.Settings);
-
-         foreach (ClientInstance instance in instances)
+         var instances = _instanceFactory.HandleImportResults(collectionDataInterface.Settings);
+         foreach (var instance in instances)
          {
             var restoreUnitInfo = _unitInfoContainer.RetrieveUnitInfo(instance);
             if (restoreUnitInfo != null)
             {
                instance.RestoreUnitInfo(restoreUnitInfo);
-               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, instance.InstanceName, "Restored UnitInfo.");
+               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, instance.Settings.InstanceName, "Restored UnitInfo.");
             }
             Add(instance, false);
          }
@@ -492,10 +504,8 @@ namespace HFM.Instances
          serializer.DataInterface = collectionDataInterface;
          serializer.Deserialize(filename);
          
-         var builder = new ClientInstanceFactory(_Prefs, _proteinCollection, _benchmarkContainer);
-         ICollection<ClientInstance> instances = builder.HandleImportResults(collectionDataInterface.Settings);
-
-         foreach (ClientInstance instance in instances)
+         var instances = _instanceFactory.HandleImportResults(collectionDataInterface.Settings);
+         foreach (var instance in instances)
          {
             Add(instance, false);
          }
@@ -522,9 +532,7 @@ namespace HFM.Instances
       {
          if (settings == null) throw new ArgumentNullException("settings");
 
-         var builder = new ClientInstanceFactory(_Prefs, _proteinCollection, _benchmarkContainer);
-         var instance = builder.Create((ClientInstanceSettings)settings);
-         Add(instance, true);
+         Add(_instanceFactory.Create((ClientInstanceSettings)settings), true);
       }
       
       /// <summary>
@@ -960,7 +968,7 @@ namespace HFM.Instances
          FindDuplicates();
 
          // Save the benchmark collection
-         InstanceProvider.GetInstance<IProteinBenchmarkContainer>().Write();
+         _benchmarkContainer.Write();
       }
 
       /// <summary>
@@ -1025,7 +1033,7 @@ namespace HFM.Instances
             FindDuplicates();
 
             // Save the benchmark collection
-            InstanceProvider.GetInstance<IProteinBenchmarkContainer>().Write();
+            _benchmarkContainer.Write();
          }
       }
 
@@ -1302,15 +1310,14 @@ namespace HFM.Instances
       /// <summary>
       /// Clears the log cache folder specified by the CacheFolder setting
       /// </summary>
-      private static void ClearCacheFolder()
+      private void ClearCacheFolder()
       {
          DateTime start = HfmTrace.ExecStart;
 
-         IPreferenceSet prefs = InstanceProvider.GetInstance<IPreferenceSet>();
-         string cacheFolder = Path.Combine(prefs.GetPreference<string>(Preference.ApplicationDataFolderPath),
-                                           prefs.GetPreference<string>(Preference.CacheFolder));
+         string cacheFolder = Path.Combine(_Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath),
+                                           _Prefs.GetPreference<string>(Preference.CacheFolder));
 
-         DirectoryInfo di = new DirectoryInfo(cacheFolder);
+         var di = new DirectoryInfo(cacheFolder);
          if (di.Exists == false)
          {
             di.Create();

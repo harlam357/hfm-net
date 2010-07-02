@@ -28,7 +28,7 @@ using HFM.Instrumentation;
 
 namespace HFM.Instances
 {
-   public class ClientInstanceFactory
+   public class ClientInstanceFactory : IClientInstanceFactory
    {
       /// <summary>
       /// PreferenceSet Interface
@@ -45,11 +45,18 @@ namespace HFM.Instances
       /// </summary>
       private readonly IProteinBenchmarkContainer _benchmarkContainer;
 
-      public ClientInstanceFactory(IPreferenceSet prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer)
+      /// <summary>
+      /// Status Logic Interface
+      /// </summary>
+      private readonly IStatusLogic _statusLogic;
+
+      public ClientInstanceFactory(IPreferenceSet prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer,
+                                   IStatusLogic statusLogic)
       {
          _prefs = prefs;
          _proteinCollection = proteinCollection;
          _benchmarkContainer = benchmarkContainer;
+         _statusLogic = statusLogic;
       }
    
       public ReadOnlyCollection<ClientInstance> HandleImportResults(ICollection<ClientInstanceSettings> results)
@@ -122,7 +129,8 @@ namespace HFM.Instances
             }
          }
 
-         return new ClientInstance(_prefs, _proteinCollection, _benchmarkContainer, settings);
+         return new ClientInstance(_prefs, _proteinCollection, _benchmarkContainer, _statusLogic, 
+                                   InstanceProvider.GetInstance<IDataAggregator>(), settings);
       }
    }
 }

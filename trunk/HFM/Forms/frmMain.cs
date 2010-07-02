@@ -47,27 +47,27 @@ namespace HFM.Forms
    {
       #region Private Fields
       
-      private static string FormTitle = String.Format("HFM.NET v{0} - Beta", PlatformOps.ApplicationVersion);
+      private static readonly string FormTitle = String.Format("HFM.NET v{0} - Beta", PlatformOps.ApplicationVersion);
       
       /// <summary>
       /// Holds the state of the window before it is hidden (minimise to tray behaviour)
       /// </summary>
-      private FormWindowState originalState;
+      private FormWindowState _originalState;
 
       /// <summary>
       /// Holds current Sort Column Name
       /// </summary>
-      private string SortColumnName = String.Empty;
+      private string _sortColumnName = String.Empty;
 
       /// <summary>
       /// Holds current Sort Column Order
       /// </summary>
-      private SortOrder SortColumnOrder = SortOrder.None;
+      private SortOrder _sortColumnOrder = SortOrder.None;
 
       /// <summary>
       /// Notify Icon for frmMain
       /// </summary>
-      private NotifyIcon notifyIcon;
+      private NotifyIcon _notifyIcon;
       
       /// <summary>
       /// Update Logic Class
@@ -100,6 +100,16 @@ namespace HFM.Forms
       private readonly InstanceCollection _clientInstances;
 
       /// <summary>
+      /// Protein Collection Interface
+      /// </summary>
+      private readonly IProteinCollection _proteinCollection;
+
+      /// <summary>
+      /// Protein Benchmark Interface
+      /// </summary>
+      private readonly IProteinBenchmarkContainer _benchmarkContainer;
+
+      /// <summary>
       /// Display Collection Binding Source
       /// </summary>
       private readonly BindingSource _displayBindingSource;
@@ -109,15 +119,16 @@ namespace HFM.Forms
       /// <summary>
       /// Main form constructor
       /// </summary>
-      public frmMain(IPreferenceSet prefs, IMessagesView messagesView)
+      public frmMain(IPreferenceSet prefs, IMessagesView messagesView, IXmlStatsDataContainer statsData,
+                     InstanceCollection instanceCollection, IProteinCollection proteinCollection, 
+                     IProteinBenchmarkContainer benchmarkContainer)
       {
          _Prefs = prefs;
          _frmMessages = messagesView;
-         _statsData = InstanceProvider.GetInstance<IXmlStatsDataContainer>();
-
-         // Create Instance Collection
-         _clientInstances = new InstanceCollection(_Prefs, InstanceProvider.GetInstance<IProteinCollection>(), 
-                                                           InstanceProvider.GetInstance<IProteinBenchmarkContainer>());
+         _statsData = statsData;
+         _clientInstances = instanceCollection;
+         _proteinCollection = proteinCollection;
+         _benchmarkContainer = benchmarkContainer;
          _displayBindingSource = new BindingSource();
 
          // This call is Required by the Windows Form Designer
@@ -129,6 +140,13 @@ namespace HFM.Forms
 
       public void Initialize()
       {
+         // Read the User/Team stats data from disk
+         _statsData.Read();
+         // Set Stats Visibility and Refresh if necessary
+         XmlStatsVisible(_Prefs.GetPreference<bool>(Preference.ShowUserStats));
+         // Initialize the Instance Collection
+         _clientInstances.Initialize();
+      
          // Manually Create the Columns - Issue 41
          DisplayInstance.SetupDataGridViewColumns(dataGridView1);
          // Restore Form Preferences (MUST BE DONE AFTER DataGridView Columns are Setup)
@@ -136,19 +154,12 @@ namespace HFM.Forms
          SetupDataGridView();
 
          // Read the Protein Collection from disk
-         IProteinCollection proteinCollection = InstanceProvider.GetInstance<IProteinCollection>();
-         proteinCollection.Read();
+         _proteinCollection.Read();
          // Give the Queue Control access to the Protein Collection
-         queueControl.SetProteinCollection(proteinCollection);
+         queueControl.SetProteinCollection(_proteinCollection);
 
          // Read the Benchmarks from disk
-         IProteinBenchmarkContainer benchmarkContainer = InstanceProvider.GetInstance<IProteinBenchmarkContainer>();
-         benchmarkContainer.Read();
-         
-         // Read the User/Team stats data from disk
-         _statsData.Read();
-         // Set Stats Visibility and Refresh if necessary
-         XmlStatsVisible(_Prefs.GetPreference<bool>(Preference.ShowUserStats));
+         _benchmarkContainer.Read();
 
          SubscribeToInstanceCollectionEvents();
          SubscribeToPreferenceSetEvents();
@@ -212,7 +223,7 @@ namespace HFM.Forms
       
          if (WindowState == FormWindowState.Minimized)
          {
-            WindowState = originalState;
+            WindowState = _originalState;
          }
          else
          {
@@ -239,10 +250,10 @@ namespace HFM.Forms
       
          string fileName = String.Empty;
 
-         if (Program.cmdArgs.Length > 0)
+         if (Program.Args.Length > 0)
          {
             // Filename on command line - probably from Explorer
-            fileName = Program.cmdArgs[0];
+            fileName = Program.Args[0];
          }
          else if (_Prefs.GetPreference<bool>(Preference.UseDefaultConfigFile))
          {
@@ -261,13 +272,13 @@ namespace HFM.Forms
          // Add the Splitter Moved Handler here after everything is shown - Issue 8
          splitContainer1.SplitterMoved += splitContainer1_SplitterMoved;
 
-         notifyIcon = new NotifyIcon(components);
+         _notifyIcon = new NotifyIcon(components);
          
-         notifyIcon.BalloonTipIcon = ToolTipIcon.Info;
-         notifyIcon.ContextMenuStrip = notifyMenu;
-         notifyIcon.Icon = Icon;
-         notifyIcon.Text = base.Text;
-         notifyIcon.DoubleClick += notifyIcon_DoubleClick;
+         _notifyIcon.BalloonTipIcon = ToolTipIcon.Info;
+         _notifyIcon.ContextMenuStrip = notifyMenu;
+         _notifyIcon.Icon = Icon;
+         _notifyIcon.Text = base.Text;
+         _notifyIcon.DoubleClick += notifyIcon_DoubleClick;
          SetFormShowStyle();
 
          if (_Prefs.GetPreference<bool>(Preference.StartupCheckForUpdate))
@@ -326,7 +337,7 @@ namespace HFM.Forms
       {
          if (WindowState != FormWindowState.Minimized)
          {
-            originalState = WindowState;
+            _originalState = WindowState;
             // ReApply Sort when restoring from the sys tray - Issue 32
             if (ShowInTaskbar == false)
             {
@@ -380,8 +391,7 @@ namespace HFM.Forms
          // Save the data on current WUs in progress
          _clientInstances.SaveCurrentUnitInfo();
          // Save the benchmark collection
-         IProteinBenchmarkContainer benchmarkContainer = InstanceProvider.GetInstance<IProteinBenchmarkContainer>();
-         benchmarkContainer.Write();
+         _benchmarkContainer.Write();
 
          CheckForAndFireUpdateProcess();
 
@@ -585,8 +595,8 @@ namespace HFM.Forms
       /// </summary>
       private void dataGridView1_Sorted(object sender, EventArgs e)
       {
-         SortColumnName = dataGridView1.SortedColumn.Name;
-         SortColumnOrder = dataGridView1.SortOrder;
+         _sortColumnName = dataGridView1.SortedColumn.Name;
+         _sortColumnOrder = dataGridView1.SortOrder;
 
          SaveSortColumn(); // Save Column Sort Order - Issue 73
          _Prefs.Save();
@@ -1137,13 +1147,11 @@ namespace HFM.Forms
       /// </summary>
       private void mnuToolsDownloadProjects_Click(object sender, EventArgs e)
       {
-         IProteinCollection proteinCollection = InstanceProvider.GetInstance<IProteinCollection>();
-
          // Clear the Project Not Found Cache and Last Download Time
-         proteinCollection.ClearProjectsNotFoundCache();
-         proteinCollection.Downloader.ResetLastDownloadTime();
+         _proteinCollection.ClearProjectsNotFoundCache();
+         _proteinCollection.Downloader.ResetLastDownloadTime();
          // Execute Asynchronous Download
-         proteinCollection.BeginDownloadFromStanford();
+         _proteinCollection.BeginDownloadFromStanford();
       }
 
       /// <summary>
@@ -1159,12 +1167,12 @@ namespace HFM.Forms
             projectId = _clientInstances.SelectedInstance.CurrentUnitInfo.ProjectID;
          }
 
-         frmBenchmarks frm = new frmBenchmarks(_Prefs, InstanceProvider.GetInstance<IProteinBenchmarkContainer>(), _clientInstances, projectId);
+         var frm = new frmBenchmarks(_Prefs, _proteinCollection, _benchmarkContainer, _clientInstances, projectId);
          frm.StartPosition = FormStartPosition.Manual;
 
          // Restore state data
-         Point location = _Prefs.GetPreference<Point>(Preference.BenchmarksFormLocation);
-         Size size = _Prefs.GetPreference<Size>(Preference.BenchmarksFormSize);
+         var location = _Prefs.GetPreference<Point>(Preference.BenchmarksFormLocation);
+         var size = _Prefs.GetPreference<Size>(Preference.BenchmarksFormSize);
 
          if (location.X != 0 && location.Y != 0)
          {
@@ -1342,19 +1350,19 @@ namespace HFM.Forms
          {
             dataGridView1.FreezeSorted = true;
             
-            if (String.IsNullOrEmpty(SortColumnName) == false && 
-                dataGridView1.Columns.Contains(SortColumnName) &&
-                SortColumnOrder.Equals(SortOrder.None) == false)
+            if (String.IsNullOrEmpty(_sortColumnName) == false && 
+                dataGridView1.Columns.Contains(_sortColumnName) &&
+                _sortColumnOrder.Equals(SortOrder.None) == false)
             {
-               if (SortColumnOrder.Equals(SortOrder.Ascending))
+               if (_sortColumnOrder.Equals(SortOrder.Ascending))
                {
-                  dataGridView1.Sort(dataGridView1.Columns[SortColumnName], ListSortDirection.Ascending);
-                  dataGridView1.SortedColumn.HeaderCell.SortGlyphDirection = SortColumnOrder;
+                  dataGridView1.Sort(dataGridView1.Columns[_sortColumnName], ListSortDirection.Ascending);
+                  dataGridView1.SortedColumn.HeaderCell.SortGlyphDirection = _sortColumnOrder;
                }
-               else if (SortColumnOrder.Equals(SortOrder.Descending))
+               else if (_sortColumnOrder.Equals(SortOrder.Descending))
                {
-                  dataGridView1.Sort(dataGridView1.Columns[SortColumnName], ListSortDirection.Descending);
-                  dataGridView1.SortedColumn.HeaderCell.SortGlyphDirection = SortColumnOrder;
+                  dataGridView1.Sort(dataGridView1.Columns[_sortColumnName], ListSortDirection.Descending);
+                  dataGridView1.SortedColumn.HeaderCell.SortGlyphDirection = _sortColumnOrder;
                }
             }
 
@@ -1396,14 +1404,14 @@ namespace HFM.Forms
          }
          
          // make sure the object has been created
-         if (notifyIcon != null)
+         if (_notifyIcon != null)
          {
             if (val.Length > 64)
             {
                //if string is too long, remove the word Clients
                val = val.Replace("Clients", String.Empty);
             }
-            notifyIcon.Text = val;
+            _notifyIcon.Text = val;
          }
       }
 
@@ -1463,11 +1471,11 @@ namespace HFM.Forms
       {
          if (WindowState == FormWindowState.Minimized)
          {
-            WindowState = originalState;
+            WindowState = _originalState;
          }
          else
          {
-            originalState = WindowState;
+            _originalState = WindowState;
             WindowState = FormWindowState.Minimized;
          }
       }
@@ -1479,7 +1487,7 @@ namespace HFM.Forms
       {
          if (WindowState == FormWindowState.Minimized)
          {
-            WindowState = originalState;
+            WindowState = _originalState;
          }
          else if (WindowState == FormWindowState.Maximized)
          {
@@ -1494,7 +1502,7 @@ namespace HFM.Forms
       {
          if (WindowState != FormWindowState.Minimized)
          {
-            originalState = WindowState;
+            _originalState = WindowState;
             WindowState = FormWindowState.Minimized;
          }
       }
@@ -1507,7 +1515,7 @@ namespace HFM.Forms
          if (WindowState != FormWindowState.Maximized)
          {
             WindowState = FormWindowState.Maximized;
-            originalState = WindowState;
+            _originalState = WindowState;
          }
       }
       #endregion
@@ -1562,8 +1570,8 @@ namespace HFM.Forms
          //if (Prefs.FormSortColumn != String.Empty &&
          //    Prefs.FormSortOrder != SortOrder.None)
          //{
-            SortColumnName = _Prefs.GetPreference<string>(Preference.FormSortColumn);
-            SortColumnOrder = _Prefs.GetPreference<SortOrder>(Preference.FormSortOrder);
+            _sortColumnName = _Prefs.GetPreference<string>(Preference.FormSortColumn);
+            _sortColumnOrder = _Prefs.GetPreference<SortOrder>(Preference.FormSortOrder);
          //}
          
          try
@@ -1621,8 +1629,8 @@ namespace HFM.Forms
       /// </summary>
       private void SaveSortColumn()
       {
-         _Prefs.SetPreference(Preference.FormSortColumn, SortColumnName);
-         _Prefs.SetPreference(Preference.FormSortOrder, SortColumnOrder);
+         _Prefs.SetPreference(Preference.FormSortColumn, _sortColumnName);
+         _Prefs.SetPreference(Preference.FormSortOrder, _sortColumnOrder);
       }
 
       /// <summary>
@@ -1812,15 +1820,15 @@ namespace HFM.Forms
          switch (_Prefs.GetPreference<FormShowStyleType>(Preference.FormShowStyle))
          {
             case FormShowStyleType.SystemTray:
-               if (notifyIcon != null) notifyIcon.Visible = true;
+               if (_notifyIcon != null) _notifyIcon.Visible = true;
                ShowInTaskbar = (WindowState != FormWindowState.Minimized);
                break;
             case FormShowStyleType.TaskBar:
-               if (notifyIcon != null) notifyIcon.Visible = false;
+               if (_notifyIcon != null) _notifyIcon.Visible = false;
                ShowInTaskbar = true;
                break;
             case FormShowStyleType.Both:
-               if (notifyIcon != null) notifyIcon.Visible = true;
+               if (_notifyIcon != null) _notifyIcon.Visible = true;
                ShowInTaskbar = true;
                break;
          }

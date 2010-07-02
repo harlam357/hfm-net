@@ -27,8 +27,6 @@ using Rhino.Mocks;
 
 using HFM.Framework;
 using HFM.Instrumentation;
-using HFM.Log;
-using HFM.Queue;
 
 namespace HFM.Instances.Tests
 {
@@ -40,6 +38,7 @@ namespace HFM.Instances.Tests
       private IPreferenceSet _prefs;
       private IProteinCollection _proteinCollection;
       private IProteinBenchmarkContainer _benchmarkContainer;
+      private IStatusLogic _statusLogic;
    
       [SetUp]
       public void Init()
@@ -49,21 +48,19 @@ namespace HFM.Instances.Tests
          _container = new WindsorContainer();
          _mocks = new MockRepository();
 
-         _container.AddComponent("DataAggregator", typeof(IDataAggregator), typeof(DataAggregator));
-         _container.AddComponent("LogReaderFactory", typeof(ILogReaderFactory), typeof(LogReaderFactory));
-         _container.AddComponent("QueueReader", typeof(IQueueReader), typeof(QueueReader));
-         _container.AddComponent("UnitInfoFactory", typeof(IUnitInfoFactory), typeof(UnitInfoFactory));
+         _container.Kernel.AddComponentInstance("dataAggregator", typeof(IDataAggregator), MockRepository.GenerateMock<IDataAggregator>());
          InstanceProvider.SetContainer(_container);
 
          _prefs = _mocks.DynamicMock<IPreferenceSet>();
          _proteinCollection = SetupMockProteinCollection("GRO-A3", 100);
          _benchmarkContainer = _mocks.DynamicMock<IProteinBenchmarkContainer>();
+         _statusLogic = _mocks.DynamicMock<IStatusLogic>();
       }
       
       [Test]
       public void HandleImportResultsArgumentNullTest()
       {
-         var builder = new ClientInstanceFactory(_prefs, _proteinCollection, _benchmarkContainer);
+         var builder = new ClientInstanceFactory(_prefs, _proteinCollection, _benchmarkContainer, _statusLogic);
 
          try
          {
@@ -78,8 +75,8 @@ namespace HFM.Instances.Tests
       public void HandleImportResultsTest()
       {
          _mocks.ReplayAll();
-      
-         var builder = new ClientInstanceFactory(_prefs, _proteinCollection, _benchmarkContainer);
+
+         var builder = new ClientInstanceFactory(_prefs, _proteinCollection, _benchmarkContainer, _statusLogic);
          var result1 = new ClientInstanceSettings(InstanceType.PathInstance)
                        {
                           InstanceName = "Client 1",
@@ -102,7 +99,7 @@ namespace HFM.Instances.Tests
       [Test]
       public void CreateArgumentNullTest()
       {
-         var builder = new ClientInstanceFactory(_prefs, _proteinCollection, _benchmarkContainer);
+         var builder = new ClientInstanceFactory(_prefs, _proteinCollection, _benchmarkContainer, _statusLogic);
 
          try
          {
@@ -116,7 +113,7 @@ namespace HFM.Instances.Tests
       [Test]
       public void CreateNameEmptyTest()
       {
-         var builder = new ClientInstanceFactory(_prefs, _proteinCollection, _benchmarkContainer);
+         var builder = new ClientInstanceFactory(_prefs, _proteinCollection, _benchmarkContainer, _statusLogic);
 
          try
          {
@@ -130,7 +127,7 @@ namespace HFM.Instances.Tests
       [Test]
       public void CreateNameFailedCleanupTest()
       {
-         var builder = new ClientInstanceFactory(_prefs, _proteinCollection, _benchmarkContainer);
+         var builder = new ClientInstanceFactory(_prefs, _proteinCollection, _benchmarkContainer, _statusLogic);
 
          var invalidChars = System.IO.Path.GetInvalidFileNameChars();
          try
@@ -150,7 +147,7 @@ namespace HFM.Instances.Tests
       {
          _mocks.ReplayAll();
 
-         var builder = new ClientInstanceFactory(_prefs, _proteinCollection, _benchmarkContainer);
+         var builder = new ClientInstanceFactory(_prefs, _proteinCollection, _benchmarkContainer, _statusLogic);
          var settings = new ClientInstanceSettings(InstanceType.PathInstance)
                         {
                            InstanceName = "Client{ 1",
@@ -158,7 +155,7 @@ namespace HFM.Instances.Tests
                         };
          var instance = builder.Create(settings);
          Assert.IsNotNull(instance);
-         Assert.AreEqual("Client 1", instance.InstanceName);                       
+         Assert.AreEqual("Client 1", instance.Settings.InstanceName);                       
       }
 
       private IProteinCollection SetupMockProteinCollection(string core, int frames)

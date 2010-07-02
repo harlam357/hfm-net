@@ -79,6 +79,17 @@ namespace HFM.Framework
       /// <summary>
       /// Major.Minor.Build.Revision
       /// </summary>
+      public static string ApplicationNameAndVersionWithRevision
+      {
+         get
+         {
+            return String.Concat("HFM.NET v", GetVersionString("{0}.{1}.{2}.{3}"));
+         }
+      }
+
+      /// <summary>
+      /// Major.Minor.Build.Revision
+      /// </summary>
       public static string ApplicationVersionWithRevision
       {
          get

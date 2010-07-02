@@ -23,32 +23,28 @@ using NUnit.Framework;
 using Rhino.Mocks;
 
 using HFM.Framework;
-using HFM.Instances;
 
 namespace HFM.Instances.Tests
 {
    [TestFixture]
    public class StatusTests
    {
-      private MockRepository mocks;
-      private IPreferenceSet _Prefs;
+      private IPreferenceSet _prefs;
+      private IStatusLogic _statusLogic;
    
       [SetUp]
       public void Init()
       {
-         mocks = new MockRepository();
-         _Prefs = mocks.DynamicMock<IPreferenceSet>();
-         mocks.ReplayAll();
+         _prefs = MockRepository.GenerateMock<IPreferenceSet>();
+         _statusLogic = new StatusLogic(_prefs);
       }
 
       [Test]
       public void StatusTestSet1_RunningNoFrameTimes()
       {
-         mocks.ReplayAll();
-      
-         DateTime Date = DateTime.Now.Date;
+         DateTime date = DateTime.Now.Date;
 
-         StatusData statusData = new StatusData();
+         var statusData = new StatusData();
          statusData.InstanceName = "Status Test";
          statusData.TypeOfClient = ClientType.SMP;
          statusData.ClientTimeOffset = 0;
@@ -59,29 +55,25 @@ namespace HFM.Instances.Tests
          statusData.CurrentStatus = ClientStatus.GettingWorkPacket;
          statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
 
-         statusData.LastRetrievalTime = Date.Add(new TimeSpan(3, 0, 0));
+         statusData.LastRetrievalTime = date.Add(new TimeSpan(3, 0, 0));
 
          statusData.UnitStartTimeStamp = new TimeSpan(2, 55, 0);
          statusData.TimeOfLastFrame = TimeSpan.Zero;
-         statusData.TimeOfLastUnitStart = Date.Add(new TimeSpan(3, 0, 0));
+         statusData.TimeOfLastUnitStart = date.Add(new TimeSpan(3, 0, 0));
          statusData.TimeOfLastFrameProgress = DateTime.MinValue;
 
          statusData.FrameTime = 0;
          statusData.AverageFrameTime = new TimeSpan(0, 12, 35);
 
-         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, ClientInstance.HandleReturnedStatus(statusData, _Prefs));
-         
-         mocks.VerifyAll();
+         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _statusLogic.HandleStatusData(statusData));
       }
 
       [Test]
       public void StatusTestSet1_Running()
       {
-         mocks.ReplayAll();
-      
-         DateTime Date = DateTime.Now.Date;
+         DateTime date = DateTime.Now.Date;
 
-         StatusData statusData = new StatusData();
+         var statusData = new StatusData();
          statusData.InstanceName = "Status Test";
          statusData.TypeOfClient = ClientType.SMP;
          statusData.ClientTimeOffset = 0;
@@ -92,29 +84,25 @@ namespace HFM.Instances.Tests
          statusData.CurrentStatus = ClientStatus.Running;
          statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
 
-         statusData.LastRetrievalTime = Date.Add(new TimeSpan(3, 0, 0));
+         statusData.LastRetrievalTime = date.Add(new TimeSpan(3, 0, 0));
 
          statusData.UnitStartTimeStamp = new TimeSpan(1, 55, 0);
          statusData.TimeOfLastFrame = new TimeSpan(2, 50, 0);
-         statusData.TimeOfLastUnitStart = Date.Add(new TimeSpan(2, 0, 0));
-         statusData.TimeOfLastFrameProgress = Date.Add(new TimeSpan(3, 0, 0));
+         statusData.TimeOfLastUnitStart = date.Add(new TimeSpan(2, 0, 0));
+         statusData.TimeOfLastFrameProgress = date.Add(new TimeSpan(3, 0, 0));
 
          statusData.FrameTime = 750;
          statusData.AverageFrameTime = new TimeSpan(0, 12, 35);
 
-         Assert.AreEqual(ClientStatus.Running, ClientInstance.HandleReturnedStatus(statusData, _Prefs));
-
-         mocks.VerifyAll();
+         Assert.AreEqual(ClientStatus.Running, _statusLogic.HandleStatusData(statusData));
       }
 
       [Test]
       public void StatusTestSet1_Running_UtcOffset()
       {
-         mocks.ReplayAll();
-      
-         DateTime Date = DateTime.Now.Date;
+         DateTime date = DateTime.Now.Date;
 
-         StatusData statusData = new StatusData();
+         var statusData = new StatusData();
          statusData.InstanceName = "Status Test";
          statusData.TypeOfClient = ClientType.SMP;
          statusData.ClientTimeOffset = 0;
@@ -125,29 +113,25 @@ namespace HFM.Instances.Tests
          statusData.CurrentStatus = ClientStatus.Running;
          statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
 
-         statusData.LastRetrievalTime = Date.Add(new TimeSpan(3, 0, 0));
+         statusData.LastRetrievalTime = date.Add(new TimeSpan(3, 0, 0));
 
          statusData.UnitStartTimeStamp = new TimeSpan(7, 55, 0);
          statusData.TimeOfLastFrame = new TimeSpan(8, 50, 0);
-         statusData.TimeOfLastUnitStart = Date.Add(new TimeSpan(8, 0, 0));
-         statusData.TimeOfLastFrameProgress = Date.Add(new TimeSpan(9, 0, 0));
+         statusData.TimeOfLastUnitStart = date.Add(new TimeSpan(8, 0, 0));
+         statusData.TimeOfLastFrameProgress = date.Add(new TimeSpan(9, 0, 0));
 
          statusData.FrameTime = 750;
          statusData.AverageFrameTime = new TimeSpan(0, 12, 35);
 
-         Assert.AreEqual(ClientStatus.Running, ClientInstance.HandleReturnedStatus(statusData, _Prefs));
-
-         mocks.VerifyAll();
+         Assert.AreEqual(ClientStatus.Running, _statusLogic.HandleStatusData(statusData));
       }
 
       [Test]
       public void StatusTestSet2_RunningNoFrameTimes_Async()
       {
-         mocks.ReplayAll();
-      
-         DateTime Date = DateTime.Now.Date;
+         DateTime date = DateTime.Now.Date;
 
-         StatusData statusData = new StatusData();
+         var statusData = new StatusData();
          statusData.InstanceName = "Status Test";
          statusData.TypeOfClient = ClientType.SMP;
          statusData.ClientTimeOffset = 0;
@@ -158,30 +142,26 @@ namespace HFM.Instances.Tests
          statusData.CurrentStatus = ClientStatus.GettingWorkPacket;
          statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
 
-         statusData.LastRetrievalTime = Date.Add(new TimeSpan(3, 0, 0));
+         statusData.LastRetrievalTime = date.Add(new TimeSpan(3, 0, 0));
 
          // Client Clock is ~2 Hours Behind this machine
          statusData.UnitStartTimeStamp = new TimeSpan(0, 55, 0);
          statusData.TimeOfLastFrame = TimeSpan.Zero;
-         statusData.TimeOfLastUnitStart = Date.Add(new TimeSpan(3, 0, 0));
+         statusData.TimeOfLastUnitStart = date.Add(new TimeSpan(3, 0, 0));
          statusData.TimeOfLastFrameProgress = DateTime.MinValue;
 
          statusData.FrameTime = 0;
          statusData.AverageFrameTime = new TimeSpan(0, 12, 35);
 
-         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, ClientInstance.HandleReturnedStatus(statusData, _Prefs));
-
-         mocks.VerifyAll();
+         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _statusLogic.HandleStatusData(statusData));
       }
 
       [Test]
       public void StatusTestSet2_Hung_NoAsync()
       {
-         mocks.ReplayAll();
-      
-         DateTime Date = DateTime.Now.Date;
+         DateTime date = DateTime.Now.Date;
 
-         StatusData statusData = new StatusData();
+         var statusData = new StatusData();
          statusData.InstanceName = "Status Test";
          statusData.TypeOfClient = ClientType.SMP;
          statusData.ClientTimeOffset = 0;
@@ -192,31 +172,27 @@ namespace HFM.Instances.Tests
          statusData.CurrentStatus = ClientStatus.GettingWorkPacket;
          statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
 
-         statusData.LastRetrievalTime = Date.Add(new TimeSpan(3, 0, 0));
+         statusData.LastRetrievalTime = date.Add(new TimeSpan(3, 0, 0));
 
          // Client Clock is ~2 Hours Behind this machine
          statusData.UnitStartTimeStamp = new TimeSpan(0, 55, 0);
          statusData.TimeOfLastFrame = TimeSpan.Zero;
-         statusData.TimeOfLastUnitStart = Date.Add(new TimeSpan(3, 0, 0));
+         statusData.TimeOfLastUnitStart = date.Add(new TimeSpan(3, 0, 0));
          statusData.TimeOfLastFrameProgress = DateTime.MinValue;
 
          statusData.FrameTime = 0;
          statusData.AverageFrameTime = new TimeSpan(0, 12, 35);
 
          statusData.AllowRunningAsync = false;
-         Assert.AreEqual(ClientStatus.Hung, ClientInstance.HandleReturnedStatus(statusData, _Prefs));
-
-         mocks.VerifyAll();
+         Assert.AreEqual(ClientStatus.Hung, _statusLogic.HandleStatusData(statusData));
       }
 
       [Test]
       public void StatusTestSet3_RunningAsync()
       {
-         mocks.ReplayAll();
-      
-         DateTime Date = DateTime.Now.Date;
+         DateTime date = DateTime.Now.Date;
 
-         StatusData statusData = new StatusData();
+         var statusData = new StatusData();
          statusData.InstanceName = "Status Test";
          statusData.TypeOfClient = ClientType.SMP;
          statusData.ClientTimeOffset = 0;
@@ -227,30 +203,26 @@ namespace HFM.Instances.Tests
          statusData.CurrentStatus = ClientStatus.RunningAsync;
          statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
 
-         statusData.LastRetrievalTime = Date.Add(new TimeSpan(12, 0, 0));
+         statusData.LastRetrievalTime = date.Add(new TimeSpan(12, 0, 0));
 
          // Client Clock is 4 Hours Behind this machine
          statusData.UnitStartTimeStamp = new TimeSpan(6, 0, 0);
          statusData.TimeOfLastFrame = new TimeSpan(7, 50, 0);
-         statusData.TimeOfLastUnitStart = Date.Add(new TimeSpan(10, 0, 0));
-         statusData.TimeOfLastFrameProgress = Date.Add(new TimeSpan(11, 50, 0));
+         statusData.TimeOfLastUnitStart = date.Add(new TimeSpan(10, 0, 0));
+         statusData.TimeOfLastFrameProgress = date.Add(new TimeSpan(11, 50, 0));
 
          statusData.FrameTime = 633; // 10 Minutes 33 Seconds
          statusData.AverageFrameTime = new TimeSpan(0, 10, 25);
 
-         Assert.AreEqual(ClientStatus.RunningAsync, ClientInstance.HandleReturnedStatus(statusData, _Prefs));
-
-         mocks.VerifyAll();
+         Assert.AreEqual(ClientStatus.RunningAsync, _statusLogic.HandleStatusData(statusData));
       }
 
       [Test]
       public void StatusTestSet3_AsyncHung()
       {
-         mocks.ReplayAll();
-      
-         DateTime Date = DateTime.Now.Date;
+         DateTime date = DateTime.Now.Date;
 
-         StatusData statusData = new StatusData();
+         var statusData = new StatusData();
          statusData.InstanceName = "Status Test";
          statusData.TypeOfClient = ClientType.SMP;
          statusData.ClientTimeOffset = 0;
@@ -261,30 +233,26 @@ namespace HFM.Instances.Tests
          statusData.CurrentStatus = ClientStatus.Hung;
          statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
 
-         statusData.LastRetrievalTime = Date.Add(new TimeSpan(12, 0, 0));
+         statusData.LastRetrievalTime = date.Add(new TimeSpan(12, 0, 0));
 
          // Client Clock is 4 Hours Behind this machine
          statusData.UnitStartTimeStamp = new TimeSpan(6, 0, 0);
          statusData.TimeOfLastFrame = new TimeSpan(7, 50, 0);
-         statusData.TimeOfLastUnitStart = Date.Add(new TimeSpan(10, 0, 0));
-         statusData.TimeOfLastFrameProgress = Date.Add(new TimeSpan(10, 50, 0));
+         statusData.TimeOfLastUnitStart = date.Add(new TimeSpan(10, 0, 0));
+         statusData.TimeOfLastFrameProgress = date.Add(new TimeSpan(10, 50, 0));
 
          statusData.FrameTime = 633; // 10 Minutes 33 Seconds
          statusData.AverageFrameTime = new TimeSpan(0, 10, 25);
 
-         Assert.AreEqual(ClientStatus.Hung, ClientInstance.HandleReturnedStatus(statusData, _Prefs));
-
-         mocks.VerifyAll();
+         Assert.AreEqual(ClientStatus.Hung, _statusLogic.HandleStatusData(statusData));
       }
 
       [Test]
       public void StatusTestSet3_Hung_NoAsync()
       {
-         mocks.ReplayAll();
-      
-         DateTime Date = DateTime.Now.Date;
+         DateTime date = DateTime.Now.Date;
 
-         StatusData statusData = new StatusData();
+         var statusData = new StatusData();
          statusData.InstanceName = "Status Test";
          statusData.TypeOfClient = ClientType.SMP;
          statusData.ClientTimeOffset = 0;
@@ -295,21 +263,19 @@ namespace HFM.Instances.Tests
          statusData.CurrentStatus = ClientStatus.Hung;
          statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
 
-         statusData.LastRetrievalTime = Date.Add(new TimeSpan(12, 0, 0));
+         statusData.LastRetrievalTime = date.Add(new TimeSpan(12, 0, 0));
 
          // Client Clock is 4 Hours Behind this machine
          statusData.UnitStartTimeStamp = new TimeSpan(6, 0, 0);
          statusData.TimeOfLastFrame = new TimeSpan(7, 50, 0);
-         statusData.TimeOfLastUnitStart = Date.Add(new TimeSpan(10, 0, 0));
-         statusData.TimeOfLastFrameProgress = Date.Add(new TimeSpan(11, 50, 0));
+         statusData.TimeOfLastUnitStart = date.Add(new TimeSpan(10, 0, 0));
+         statusData.TimeOfLastFrameProgress = date.Add(new TimeSpan(11, 50, 0));
 
          statusData.FrameTime = 633; // 10 Minutes 33 Seconds
          statusData.AverageFrameTime = new TimeSpan(0, 10, 25);
 
          statusData.AllowRunningAsync = false;
-         Assert.AreEqual(ClientStatus.Hung, ClientInstance.HandleReturnedStatus(statusData, _Prefs));
-
-         mocks.VerifyAll();
+         Assert.AreEqual(ClientStatus.Hung, _statusLogic.HandleStatusData(statusData));
       }
    }
 }

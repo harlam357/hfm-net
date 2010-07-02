@@ -37,7 +37,7 @@ namespace HFM
 {
    static class Program
    {
-      public static string[] cmdArgs;
+      public static string[] Args;
 
       /// <summary>
       /// The main entry point for the application.
@@ -45,7 +45,7 @@ namespace HFM
       [STAThread]
       static void Main(string[] args)
       {
-         cmdArgs = args;
+         Args = args;
          Application.EnableVisualStyles();
          Application.SetCompatibleTextRenderingDefault(false);
 
@@ -62,19 +62,19 @@ namespace HFM
          catch (Exception ex)
          {
             ExceptionDialog.ShowErrorDialog(ex, "Single Instance Helper Failed to Start.",
-               "http://groups.google.com/group/hfm-net", PlatformOps.ApplicationNameAndVersion, true);
+               Constants.GoogleGroupUrl, PlatformOps.ApplicationNameAndVersionWithRevision, true);
             return;
          }
 
          try
          {
-            WindsorContainer container = new WindsorContainer(new XmlInterpreter(new ConfigResource("castle")));
+            var container = new WindsorContainer(new XmlInterpreter(new ConfigResource("castle")));
             InstanceProvider.SetContainer(container);
          }
          catch (Exception ex)
          {
             ExceptionDialog.ShowErrorDialog(ex, "Windsor Container Failed to Initialize.  The HFM.exe.config file is likely corrupt.",
-               "http://groups.google.com/group/hfm-net", PlatformOps.ApplicationNameAndVersion, true);
+               Constants.GoogleGroupUrl, PlatformOps.ApplicationNameAndVersionWithRevision, true);
             return;
          }
 
@@ -87,33 +87,31 @@ namespace HFM
          catch (Exception ex)
          {
             ExceptionDialog.ShowErrorDialog(ex, "Preferences Failed to Initialize.  The user.config file is likely corrupt.",
-               "http://groups.google.com/group/hfm-net", PlatformOps.ApplicationNameAndVersion, true);
+               Constants.GoogleGroupUrl, PlatformOps.ApplicationNameAndVersionWithRevision, true);
             return;
          }
 
-         IMessagesView messagesView;
          try
          {
-            messagesView = InstanceProvider.GetInstance<IMessagesView>();
-            SetupTraceListeners(prefs, messagesView);
+            SetupTraceListeners(prefs, InstanceProvider.GetInstance<IMessagesView>());
          }
          catch (Exception ex)
          {
             ExceptionDialog.ShowErrorDialog(ex, "Logging Failed to Initialize.",
-               "http://groups.google.com/group/hfm-net", PlatformOps.ApplicationNameAndVersion, true);
+               Constants.GoogleGroupUrl, PlatformOps.ApplicationNameAndVersionWithRevision, true);
             return;
          }
 
          frmMain frm;
          try
          {
-            frm = new frmMain(prefs, messagesView);
+            frm = InstanceProvider.GetInstance<frmMain>();
             frm.Initialize();
          }
          catch (Exception ex)
          {
             ExceptionDialog.ShowErrorDialog(ex, "Primary UI Failed to Initialize.",
-               "http://groups.google.com/group/hfm-net", PlatformOps.ApplicationNameAndVersion, true);
+               Constants.GoogleGroupUrl, PlatformOps.ApplicationNameAndVersionWithRevision, true);
             return;
          }
          #endregion
@@ -125,11 +123,11 @@ namespace HFM
          catch (Exception ex)
          {
             ExceptionDialog.ShowErrorDialog(ex, "Single Instance IPC Channel Failed to Register.",
-               "http://groups.google.com/group/hfm-net", PlatformOps.ApplicationNameAndVersion, true);
+               Constants.GoogleGroupUrl, PlatformOps.ApplicationNameAndVersionWithRevision, true);
             return;
          }
 
-         ExceptionDialog.RegisterForUnhandledExceptions(PlatformOps.ApplicationNameAndVersion, HfmTrace.WriteToHfmConsole);
+         ExceptionDialog.RegisterForUnhandledExceptions(PlatformOps.ApplicationNameAndVersionWithRevision, HfmTrace.WriteToHfmConsole);
          
          Application.Run(frm);
          SingleInstanceHelper.Stop();
@@ -141,7 +139,7 @@ namespace HFM
       private static void SetupTraceListeners(IPreferenceSet prefs, IMessagesView messagesView)
       {
          // Ensure the HFM User Application Data Folder Exists
-         string applicationDataFolderPath = prefs.GetPreference<string>(Preference.ApplicationDataFolderPath);
+         var applicationDataFolderPath = prefs.GetPreference<string>(Preference.ApplicationDataFolderPath);
          if (Directory.Exists(applicationDataFolderPath) == false)
          {
             Directory.CreateDirectory(applicationDataFolderPath);
@@ -150,10 +148,10 @@ namespace HFM
          string logFilePath = Path.Combine(applicationDataFolderPath, Constants.HfmLogFileName);
          string prevLogFilePath = Path.Combine(applicationDataFolderPath, Constants.HfmPrevLogFileName);
 
-         FileInfo fi = new FileInfo(logFilePath);
+         var fi = new FileInfo(logFilePath);
          if (fi.Exists && fi.Length > 512000)
          {
-            FileInfo fi2 = new FileInfo(prevLogFilePath);
+            var fi2 = new FileInfo(prevLogFilePath);
             if (fi2.Exists)
             {
                fi2.Delete();
@@ -161,7 +159,7 @@ namespace HFM
             fi.MoveTo(prevLogFilePath);
          }
 
-         TextWriterTraceListener listener = new TextWriterTraceListener(logFilePath);
+         var listener = new TextWriterTraceListener(logFilePath);
          Trace.Listeners.Add(listener);
          Trace.AutoFlush = true;
 

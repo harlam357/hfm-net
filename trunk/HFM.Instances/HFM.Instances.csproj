@@ -66,12 +66,14 @@
     <Compile Include="ClientInstanceSettingsDataInterface.cs" />
     <Compile Include="ClientInstanceXmlSerializer.cs" />
     <Compile Include="DisplayInstance.cs" />
+    <Compile Include="IClientInstanceFactory.cs" />
     <Compile Include="InstanceCollection.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="InstanceCollectionDataInterface.cs" />
     <Compile Include="InstanceCollectionHelpers.cs" />
     <Compile Include="InstanceProteinBenchmark.cs" />
+    <Compile Include="IStatusLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BenchmarkClient.cs" />
     <Compile Include="ProteinBenchmarkCollection.cs" />
@@ -80,6 +82,7 @@
     </Compile>
     <Compile Include="SortableBindingList.cs" />
     <Compile Include="StatusData.cs" />
+    <Compile Include="StatusLogic.cs" />
     <Compile Include="UnitFrame.cs" />
     <Compile Include="UnitInfo.cs" />
     <Compile Include="DataAggregator.cs" />
