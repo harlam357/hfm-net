@@ -72,7 +72,6 @@
     <Compile Include="ILogLine.cs" />
     <Compile Include="ILogReader.cs" />
     <Compile Include="ILogReaderFactory.cs" />
-    <Compile Include="IMarkupGenerator.cs" />
     <Compile Include="IMessagesView.cs" />
     <Compile Include="InstanceProvider.cs" />
     <Compile Include="InstanceTotals.cs" />

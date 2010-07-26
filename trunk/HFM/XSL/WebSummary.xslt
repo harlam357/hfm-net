@@ -133,7 +133,14 @@
             <xsl:value-of select="PPDMHz"/>
          </td>
          <td width="8%" class="RightCol">
-            <xsl:value-of select="ETA"/>
+            <xsl:choose>
+               <xsl:when test="ShowETADate='True'">
+                  <xsl:value-of select="ETADate"/>
+               </xsl:when>
+               <xsl:otherwise>
+                  <xsl:value-of select="ETA"/>
+               </xsl:otherwise>
+            </xsl:choose>
          </td>
          <td width="8%" class="RightCol">
             <xsl:choose>

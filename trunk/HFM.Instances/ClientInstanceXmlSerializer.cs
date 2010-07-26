@@ -372,9 +372,9 @@ namespace HFM.Instances
          get { return "hfm"; }
       }
 
-      public string FileTypeDescription
+      public string FileTypeFilter
       {
-         get { return "HFM Configuration Files"; }
+         get { return "HFM Configuration Files|*.hfm"; }
       }
 
       public IInstanceCollectionDataInterface DataInterface

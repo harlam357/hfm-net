@@ -13,6 +13,8 @@
    <MHz>1</MHz>
    <PPDMHz>N/A</PPDMHz>
    <ETA>00:00:00</ETA>
+   <ETADate>1/1/2000 00:00 AM</ETADate>
+   <ShowETADate>False</ShowETADate>
    <Core>N/A</Core>
    <CoreVersion>N/A</CoreVersion>
    <CoreID>N/A</CoreID>

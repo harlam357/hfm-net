@@ -19,6 +19,7 @@
  */
 
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Collections;
 using System.Diagnostics;
@@ -26,12 +27,15 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.ComponentModel;
+using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Collections.Generic;
 
 using HFM.Framework;
+using HFM.Plugins;
 using HFM.Helpers;
 using HFM.Instrumentation;
 
@@ -145,6 +149,29 @@ namespace HFM.Instances
          }
       }
 
+      private int _settingsPluginIndex;
+
+      private IList<IClientInstanceSettingsSerializer> _settingsPlugins;
+      
+      /// <summary>
+      /// String Representation of the File Type Filters used in an Open File Dialog
+      /// </summary>
+      public string FileTypeFilters
+      {
+         get
+         {
+            var sb = new StringBuilder();
+            foreach (var plugin in _settingsPlugins)
+            {
+               sb.Append(plugin.FileTypeFilter);
+               sb.Append("|");
+            }
+
+            sb.Length = sb.Length - 1;
+            return sb.ToString();
+         }
+      }
+
       /// <summary>
       /// Client Configuration Filename
       /// </summary>
@@ -156,6 +183,23 @@ namespace HFM.Instances
       public bool HasConfigFilename
       {
          get { return ConfigFilename.Length != 0; }
+      }
+      
+      /// <summary>
+      /// Current Config File Extension or the Default File Extension
+      /// </summary>
+      public string ConfigFileExtension
+      {
+         get
+         {
+            if (HasConfigFilename)
+            {
+               return Path.GetExtension(ConfigFilename);
+            }
+            
+            Debug.Assert(_settingsPlugins.Count != 0);
+            return _settingsPlugins[0].FileExtension;
+         }
       }
 
       /// <summary>
@@ -194,7 +238,8 @@ namespace HFM.Instances
       private readonly IClientInstanceFactory _instanceFactory;
       #endregion
 
-      #region CTOR
+      #region CTOR / Initialize
+      
       /// <summary>
       /// Default Constructor
       /// </summary>
@@ -238,7 +283,77 @@ namespace HFM.Instances
          // Hook-up PreferenceSet Event Handlers
          _Prefs.OfflineLastChanged += delegate { OfflineClientsLast = _Prefs.GetPreference<bool>(Preference.OfflineLast); };
          _Prefs.TimerSettingsChanged += delegate { SetTimerState(); };
+
+         _settingsPlugins = GetClientInstanceSerializers();
       }
+      
+      #endregion
+      
+      #region Client Instance Serializer Plugins
+      
+      private ReadOnlyCollection<IClientInstanceSettingsSerializer> GetClientInstanceSerializers()
+      {
+         var serializers = new List<IClientInstanceSettingsSerializer>();
+         serializers.Add(new ClientInstanceXmlSerializer());
+         
+         var di = new DirectoryInfo(Path.Combine(_Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), "ClientSettings"));
+         if (di.Exists)
+         {
+            var files = di.GetFiles("*.dll");
+            foreach (var file in files)
+            {
+               try
+               {
+                  Assembly asm = Assembly.LoadFrom(file.FullName);
+                  var serializer = GetSerializer(asm);
+                  if (serializer != null && ValidateSerializer(serializer))
+                  {
+                     serializers.Add(serializer);
+                  }
+               }
+               catch (Exception ex)
+               {
+                  HfmTrace.WriteToHfmConsole(ex);
+               }
+            }
+         }
+
+         return serializers.AsReadOnly();
+      }
+      
+      private static IClientInstanceSettingsSerializer GetSerializer(Assembly asm)
+      {
+         // Loop through each type in the DLL
+         foreach (Type t in asm.GetTypes())
+         {
+            // Only look at public types
+            if (t.IsPublic &&
+                !((t.Attributes & TypeAttributes.Abstract) == TypeAttributes.Abstract))
+            {
+               // See if this type implements our interface
+               var interfaceType = t.GetInterface("IClientInstanceSettingsSerializer", false);
+               if (interfaceType != null)
+               {
+                  return (IClientInstanceSettingsSerializer)Activator.CreateInstance(t);
+               }
+            }
+         }
+
+         return null;
+      }
+      
+      private static bool ValidateSerializer(IClientInstanceSettingsSerializer serializer)
+      {
+         var numOfBarChars = serializer.FileTypeFilter.Count(x => x == '|');
+         if (String.IsNullOrEmpty(serializer.FileExtension) || numOfBarChars != 1)
+         {
+            // extention filter string, too many bar characters
+            return false;
+         }
+
+         return true;
+      }
+      
       #endregion
 
       #region Events
@@ -353,27 +468,30 @@ namespace HFM.Instances
       
       #endregion
 
-      #region Read and Write Xml
+      #region Read and Write Config File
+      
       /// <summary>
-      /// Loads a collection of Client Instances from file
+      /// Reads a collection of Client Instance Settings from file
       /// </summary>
       /// <param name="filePath">Path to Config File</param>
-      public void FromXml(string filePath)
+      /// <param name="filterIndex">Dialog file type filter index (1 based)</param>
+      public void ReadConfigFile(string filePath, int filterIndex)
       {
          if (String.IsNullOrEmpty(filePath))
          {
             throw new ArgumentException("Argument 'filePath' cannot be a null or empty string.", "filePath");
          }
 
-         ChangedAfterSave = false;
-      
-         // Why do I need this? 7/1/10
-         //if (Path.IsPathRooted(filePath) == false)
-         //{
-         //   filePath = Path.Combine(_Prefs.ApplicationPath, filePath);
-         //}
+         if (filterIndex > _settingsPlugins.Count)
+         {
+            throw new IndexOutOfRangeException(String.Format(CultureInfo.CurrentCulture, 
+               "Argument 'filterIndex' must be between 1 and {0}.", _settingsPlugins.Count));
+         }
 
-         var serializer = new ClientInstanceXmlSerializer();
+         // clear all instance data before deserialize
+         Clear();
+         
+         var serializer = _settingsPlugins[filterIndex - 1];
          var collectionDataInterface = new InstanceCollectionDataInterface(GetCurrentInstanceArray());
          serializer.DataInterface = collectionDataInterface;
          serializer.Deserialize(filePath);
@@ -392,6 +510,8 @@ namespace HFM.Instances
 
          if (HasInstances)
          {
+            // update the settings plugin index only if something was loaded
+            _settingsPluginIndex = filterIndex;
             ConfigFilename = filePath;
 
             // Get client logs         
@@ -406,23 +526,30 @@ namespace HFM.Instances
       /// <summary>
       /// Saves the current collection of Client Instances to file
       /// </summary>
-      public void ToXml()
+      public void WriteConfigFile()
       {
-         ToXml(ConfigFilename);
+         WriteConfigFile(ConfigFilename, _settingsPluginIndex);
       }
 
       /// <summary>
       /// Saves the current collection of Client Instances to file
       /// </summary>
       /// <param name="filePath">Path to Config File</param>
-      public void ToXml(string filePath)
+      /// <param name="filterIndex">Dialog file type filter index (1 based)</param>
+      public void WriteConfigFile(string filePath, int filterIndex)
       {
          if (String.IsNullOrEmpty(filePath))
          {
             throw new ArgumentException("Argument 'filePath' cannot be a null or empty string.", "filePath");
          }
-         
-         var serializer = new ClientInstanceXmlSerializer();
+
+         if (filterIndex > _settingsPlugins.Count)
+         {
+            throw new IndexOutOfRangeException(String.Format(CultureInfo.CurrentCulture,
+               "Argument 'filterIndex' must be between 1 and {0}.", _settingsPlugins.Count));
+         }
+
+         var serializer = _settingsPlugins[filterIndex - 1];
          lock (_instanceCollection)
          {
             serializer.DataInterface = new InstanceCollectionDataInterface(GetCurrentInstanceArray());
@@ -434,39 +561,8 @@ namespace HFM.Instances
          ChangedAfterSave = false;
          OnCollectionSaved(EventArgs.Empty);
       }
+      
       #endregion
-
-      /// <summary>
-      /// Read FahMon ClientsTab.txt file and import new instance collection
-      /// </summary>
-      /// <param name="filename">Path of ClientsTab.txt to import</param>
-      public void FromFahMonClientsTab(string filename)
-      {
-         ChangedAfterSave = false;
-
-         var serializer = new ClientInstanceFahMonSerializer();
-         var collectionDataInterface = new InstanceCollectionDataInterface(GetCurrentInstanceArray());
-         serializer.DataInterface = collectionDataInterface;
-         serializer.Deserialize(filename);
-         
-         var instances = _instanceFactory.HandleImportResults(collectionDataInterface.Settings);
-         foreach (var instance in instances)
-         {
-            Add(instance, false);
-         }
-
-         if (HasInstances)
-         {
-            ChangedAfterSave = true;
-
-            // Get client logs         
-            QueueNewRetrieval();
-            // Start Retrieval and Web Generation Timers
-            SetTimerState();
-
-            OnCollectionLoaded(EventArgs.Empty);
-         }
-      }
 
       #region List Like Implementation (eventually implement IList or ICollection)
       /// <summary>

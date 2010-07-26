@@ -31,6 +31,40 @@ using HFM.Helpers;
 
 namespace HFM.Instances
 {
+   public interface IMarkupGenerator
+   {
+      /// <summary>
+      /// In Progress Flag for Callers
+      /// </summary>
+      bool GenerationInProgress { get; }
+
+      /// <summary>
+      /// Contains XML File Paths from most recent XML Generation
+      /// </summary>
+      ReadOnlyCollection<string> XmlFilePaths { get; }
+
+      /// <summary>
+      /// Contains HTML File Paths from most recent HTML Generation
+      /// </summary>
+      ReadOnlyCollection<string> HtmlFilePaths { get; }
+
+      /// <summary>
+      /// Generate HTML Files from the given Client Instance Collection.
+      /// </summary>
+      /// <param name="instances">Client Instance Collection.</param>
+      /// <exception cref="ArgumentNullException">Throws if instances is null.</exception>
+      /// <exception cref="InvalidOperationException">Throws if a Generate method is called in succession.</exception>
+      void GenerateHtml(ICollection<IClientInstance> instances);
+
+      /// <summary>
+      /// Generate XML Files from the given Client Instance Collection.
+      /// </summary>
+      /// <param name="instances">Client Instance Collection.</param>
+      /// <exception cref="ArgumentNullException">Throws if instances is null.</exception>
+      /// <exception cref="InvalidOperationException">Throws if a Generate method is called in succession.</exception>
+      void GenerateXml(ICollection<IClientInstance> instances);
+   }
+
    public sealed class MarkupGenerator : IMarkupGenerator
    {
       private volatile bool _generationInProgress;
@@ -435,21 +469,16 @@ namespace HFM.Instances
             XMLOps.setXmlNode(xmlData, "UPD", String.Format("{0:0.00}", instance.UPD));
             XMLOps.setXmlNode(xmlData, "MHz", instance.Settings.ClientProcessorMegahertz.ToString());
             XMLOps.setXmlNode(xmlData, "PPDMHz", String.Format("{0:0.000}", instance.PPD / instance.Settings.ClientProcessorMegahertz));
-            if (etaDate)
+            XMLOps.setXmlNode(xmlData, "ETA", instance.ETA.ToString());
+            if (instance.EtaDate.Equals(DateTime.MinValue))
             {
-               if (instance.EtaDate.Equals(DateTime.MinValue))
-               {
-                  XMLOps.setXmlNode(xmlData, "ETA", "Unknown");
-               }
-               else
-               {
-                  XMLOps.setXmlNode(xmlData, "ETA", String.Format("{0} {1}", instance.EtaDate.ToShortDateString(), instance.EtaDate.ToShortTimeString()));
-               }             
+               XMLOps.setXmlNode(xmlData, "ETADate", "Unknown");
             }
             else
             {
-               XMLOps.setXmlNode(xmlData, "ETA", instance.ETA.ToString());
-            }
+               XMLOps.setXmlNode(xmlData, "ETADate", String.Format("{0} {1}", instance.EtaDate.ToShortDateString(), instance.EtaDate.ToShortTimeString()));
+            }             
+            XMLOps.setXmlNode(xmlData, "ShowETADate", etaDate.ToString());
             XMLOps.setXmlNode(xmlData, "Core", instance.CurrentUnitInfo.Core);
             XMLOps.setXmlNode(xmlData, "CoreVersion", instance.CurrentUnitInfo.CoreVersion);
             XMLOps.setXmlNode(xmlData, "CoreID", instance.CurrentUnitInfo.CoreId); // Issue 193

@@ -60,7 +60,6 @@
     <Compile Include="ClientInstance.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ClientInstanceFahMonSerializer.cs" />
     <Compile Include="ClientInstanceFactory.cs" />
     <Compile Include="ClientInstanceSettings.cs" />
     <Compile Include="ClientInstanceSettingsDataInterface.cs" />

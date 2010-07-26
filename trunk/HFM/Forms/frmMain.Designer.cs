@@ -58,8 +58,6 @@ namespace HFM.Forms
          this.mnuFileSave = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuFileSaveas = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuFileSep1 = new System.Windows.Forms.ToolStripSeparator();
-         this.mnuFileImportFahMon = new System.Windows.Forms.ToolStripMenuItem();
-         this.mnuFileSep2 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuFileQuit = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuEdit = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuEditPreferences = new System.Windows.Forms.ToolStripMenuItem();
@@ -82,6 +80,7 @@ namespace HFM.Forms
          this.mnuViewSep2 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuViewToggleDateTime = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuViewToggleCompletedCountStyle = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuViewToggleVersionInformation = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuToolsBenchmarks = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuToolsDownloadProjects = new System.Windows.Forms.ToolStripMenuItem();
@@ -122,7 +121,6 @@ namespace HFM.Forms
          this.queueControl = new HFM.Classes.QueueControl();
          this.btnQueue = new HFM.Classes.ButtonWrapper();
          this.txtLogFile = new HFM.Classes.RichTextBoxWrapper();
-         this.mnuViewToggleVersionInformation = new System.Windows.Forms.ToolStripMenuItem();
          this.statusStrip.SuspendLayout();
          this.notifyMenu.SuspendLayout();
          this.AppMenu.SuspendLayout();
@@ -338,8 +336,6 @@ namespace HFM.Forms
             this.mnuFileSave,
             this.mnuFileSaveas,
             this.mnuFileSep1,
-            this.mnuFileImportFahMon,
-            this.mnuFileSep2,
             this.mnuFileQuit});
          this.mnuFile.Name = "mnuFile";
          this.mnuFile.Size = new System.Drawing.Size(35, 20);
@@ -388,18 +384,6 @@ namespace HFM.Forms
          this.mnuFileSep1.Name = "mnuFileSep1";
          this.mnuFileSep1.Size = new System.Drawing.Size(257, 6);
          // 
-         // mnuFileImportFahMon
-         // 
-         this.mnuFileImportFahMon.Name = "mnuFileImportFahMon";
-         this.mnuFileImportFahMon.Size = new System.Drawing.Size(260, 22);
-         this.mnuFileImportFahMon.Text = "&Import FahMon Configuration File";
-         this.mnuFileImportFahMon.Click += new System.EventHandler(this.mnuFileImportFahMon_Click);
-         // 
-         // mnuFileSep2
-         // 
-         this.mnuFileSep2.Name = "mnuFileSep2";
-         this.mnuFileSep2.Size = new System.Drawing.Size(257, 6);
-         // 
          // mnuFileQuit
          // 
          this.mnuFileQuit.Image = global::HFM.Properties.Resources.Quit;
@@ -419,7 +403,7 @@ namespace HFM.Forms
          // mnuEditPreferences
          // 
          this.mnuEditPreferences.Name = "mnuEditPreferences";
-         this.mnuEditPreferences.Size = new System.Drawing.Size(152, 22);
+         this.mnuEditPreferences.Size = new System.Drawing.Size(143, 22);
          this.mnuEditPreferences.Text = "&Preferences";
          this.mnuEditPreferences.Click += new System.EventHandler(this.mnuEditPreferences_Click);
          // 
@@ -569,6 +553,14 @@ namespace HFM.Forms
          this.mnuViewToggleCompletedCountStyle.Size = new System.Drawing.Size(255, 22);
          this.mnuViewToggleCompletedCountStyle.Text = "Toggle &Completed Count Style";
          this.mnuViewToggleCompletedCountStyle.Click += new System.EventHandler(this.mnuViewToggleCompletedCountStyle_Click);
+         // 
+         // mnuViewToggleVersionInformation
+         // 
+         this.mnuViewToggleVersionInformation.Name = "mnuViewToggleVersionInformation";
+         this.mnuViewToggleVersionInformation.ShortcutKeys = System.Windows.Forms.Keys.F11;
+         this.mnuViewToggleVersionInformation.Size = new System.Drawing.Size(255, 22);
+         this.mnuViewToggleVersionInformation.Text = "Toggle &Version Information";
+         this.mnuViewToggleVersionInformation.Click += new System.EventHandler(this.mnuViewToggleVersionInformation_Click);
          // 
          // mnuTools
          // 
@@ -946,14 +938,6 @@ namespace HFM.Forms
          this.txtLogFile.Text = "";
          this.txtLogFile.WordWrap = false;
          // 
-         // mnuViewToggleVersionInformation
-         // 
-         this.mnuViewToggleVersionInformation.Name = "mnuViewToggleVersionInformation";
-         this.mnuViewToggleVersionInformation.ShortcutKeys = System.Windows.Forms.Keys.F11;
-         this.mnuViewToggleVersionInformation.Size = new System.Drawing.Size(255, 22);
-         this.mnuViewToggleVersionInformation.Text = "Toggle &Version Information";
-         this.mnuViewToggleVersionInformation.Click += new System.EventHandler(this.mnuViewToggleVersionInformation_Click);
-         // 
          // frmMain
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1052,8 +1036,6 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripMenuItem mnuWebEOCTeam;
       private System.Windows.Forms.ToolStripSeparator mnuWebSep1;
       private System.Windows.Forms.ToolStripMenuItem mnuWebHFMGoogleCode;
-      private System.Windows.Forms.ToolStripMenuItem mnuFileImportFahMon;
-      private System.Windows.Forms.ToolStripSeparator mnuFileSep2;
       private System.Windows.Forms.ToolStripMenuItem mnuToolsBenchmarks;
       private System.Windows.Forms.ToolTip toolTipGrid;
       private System.Windows.Forms.ToolStripStatusLabel statusLabel24hr;

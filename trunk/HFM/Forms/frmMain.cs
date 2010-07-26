@@ -676,7 +676,7 @@ namespace HFM.Forms
 
          if (CanContinueDestructiveOp(sender, e))
          {
-            ClearUI();
+            _clientInstances.Clear();
          }
       }
 
@@ -694,13 +694,13 @@ namespace HFM.Forms
 
          if (CanContinueDestructiveOp(sender, e))
          {
-            openConfigDialog.DefaultExt = "hfm";
-            openConfigDialog.Filter = "HFM Configuration Files|*.hfm";
+            openConfigDialog.DefaultExt = _clientInstances.ConfigFileExtension;
+            openConfigDialog.Filter = _clientInstances.FileTypeFilters;
             openConfigDialog.FileName = _clientInstances.ConfigFilename;
             openConfigDialog.RestoreDirectory = true;
             if (openConfigDialog.ShowDialog() == DialogResult.OK)
             {
-               LoadFile(openConfigDialog.FileName);
+               LoadFile(openConfigDialog.FileName, openConfigDialog.FilterIndex);
             }
          }
       }
@@ -718,7 +718,7 @@ namespace HFM.Forms
          {
             try
             {
-               _clientInstances.ToXml();
+               _clientInstances.WriteConfigFile();
             }
             catch (Exception ex)
             {
@@ -738,11 +738,13 @@ namespace HFM.Forms
          // No Config File and no Instances, stub out
          if (_clientInstances.HasConfigFilename == false && _clientInstances.HasInstances == false) return;
       
+         saveConfigDialog.DefaultExt = _clientInstances.ConfigFileExtension;
+         saveConfigDialog.Filter = _clientInstances.FileTypeFilters;
          if (saveConfigDialog.ShowDialog() == DialogResult.OK)
          {
             try
             {
-               _clientInstances.ToXml(saveConfigDialog.FileName); // Issue 75
+               _clientInstances.WriteConfigFile(saveConfigDialog.FileName, saveConfigDialog.FilterIndex); // Issue 75
             }
             catch (Exception ex)
             {
@@ -750,33 +752,6 @@ namespace HFM.Forms
                MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture,
                   "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message),
                   Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-         }
-      }
-
-      /// <summary>
-      /// Import FahMon clientstab.txt configuration
-      /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
-      private void mnuFileImportFahMon_Click(object sender, EventArgs e)
-      {
-         if (_clientInstances.RetrievalInProgress)
-         {
-            MessageBox.Show(this, "Retrieval in progress... please wait to open another config file.",
-               Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return;
-         }
-
-         if (CanContinueDestructiveOp(sender, e))
-         {
-            openConfigDialog.DefaultExt = "txt";
-            openConfigDialog.Filter = "Text Files|*.txt";
-            openConfigDialog.FileName = "clientstab.txt";
-            openConfigDialog.RestoreDirectory = true;
-            if (openConfigDialog.ShowDialog() == DialogResult.OK)
-            {
-               ImportFahMonFile(openConfigDialog.FileName);
             }
          }
       }
@@ -1643,14 +1618,7 @@ namespace HFM.Forms
             {
                case DialogResult.Yes:
                   mnuFileSave_Click(sender, e);
-                  if (_clientInstances.ChangedAfterSave)
-                  {
-                     return false;
-                  }
-                  else
-                  {
-                     return true;
-                  }
+                  return !_clientInstances.ChangedAfterSave;
                case DialogResult.No:
                   return true;
                case DialogResult.Cancel:
@@ -1658,21 +1626,10 @@ namespace HFM.Forms
             }
             return false;
          }
-         else
-         {
-            return true;
-         }
+         
+         return true;
       }
 
-      /// <summary>
-      /// Set the UI to an empty (No Clients) state
-      /// </summary>
-      private void ClearUI()
-      {
-         // Clear the instances controller
-         _clientInstances.Clear();
-      }
-      
       /// <summary>
       /// Clear the Log File and Queue Viewers
       /// </summary>
@@ -1687,16 +1644,23 @@ namespace HFM.Forms
       /// <summary>
       /// Loads a configuration file into memory
       /// </summary>
-      /// <param name="Filename">File to load</param>
-      private void LoadFile(string Filename)
+      /// <param name="filePath">File to load</param>
+      private void LoadFile(string filePath)
       {
-         // Clear the UI
-         ClearUI();
-      
+         LoadFile(filePath, 1);
+      }
+
+      /// <summary>
+      /// Loads a configuration file into memory
+      /// </summary>
+      /// <param name="filePath">File to load</param>
+      /// <param name="filterIndex">Dialog file type filter index (1 based)</param>
+      private void LoadFile(string filePath, int filterIndex)
+      {
          try
          {
             // Read the config file
-            _clientInstances.FromXml(Filename);
+            _clientInstances.ReadConfigFile(filePath, filterIndex);
 
             if (_clientInstances.HasInstances == false)
             {
@@ -1709,36 +1673,6 @@ namespace HFM.Forms
             HfmTrace.WriteToHfmConsole(ex);
             MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture,
                "No client configurations were loaded from the given config file.{0}{0}{1}", Environment.NewLine, ex.Message),
-               Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-         }
-      }
-
-      /// <summary>
-      /// Imports a FahMon configuration file into memory
-      /// </summary>
-      /// <param name="filename"></param>
-      private void ImportFahMonFile(string filename)
-      {
-         // Clear the UI
-         ClearUI();
-         
-         try
-         {
-            // Read the config file
-            _clientInstances.FromFahMonClientsTab(filename);
-
-            if (_clientInstances.HasInstances == false)
-            {
-               MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture, 
-                  "No client configurations were imported from the given config file.{0}{0}Possibly because the file is in an older FahMon format (not tab delimited).{0}{0}Later versions of FahMon write a clientstab.txt file in tab delimited format.", Environment.NewLine),
-                  Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-         }
-         catch (Exception ex)
-         {
-            HfmTrace.WriteToHfmConsole(ex);
-            MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture,
-               "No client configurations were imported from the given config file.{0}{0}{1}", Environment.NewLine, ex.Message),
                Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
          }
       }
