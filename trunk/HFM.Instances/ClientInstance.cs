@@ -46,7 +46,7 @@ namespace HFM.Instances
       bool Owns(IOwnedByClientInstance value);
    }
 
-   public class ClientInstance : IClientInstance
+   public sealed class ClientInstance : IClientInstance
    {
       #region Fields
 

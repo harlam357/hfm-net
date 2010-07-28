@@ -45,7 +45,7 @@ namespace HFM.Preferences
       private readonly Data _iv = new Data("3k1vKL=Cz6!wZS`I");
       private readonly Data _symmetricKey = new Data("%`Bb9ega;$.GUDaf");
 
-      private readonly Dictionary<Preference, IMetadata> _Preferences = new Dictionary<Preference, IMetadata>();
+      private readonly Dictionary<Preference, IMetadata> _prefs = new Dictionary<Preference, IMetadata>();
       #endregion
 
       #region Properties
@@ -128,7 +128,7 @@ namespace HFM.Preferences
             if (String.IsNullOrEmpty(filename)) throw;
             
             File.Delete(filename);
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine("HFM.NET has detected that your user settings file has become");
             sb.AppendLine("corrupted.  This may be due to a crash or improper exiting of");
             sb.AppendLine("the program.  HFM.NET must reset your user settings in order");
@@ -143,7 +143,7 @@ namespace HFM.Preferences
       
       private static string HandleConfigurationErrorsException(Exception ex)
       {
-         ConfigurationErrorsException configurationErrorsException = ex as ConfigurationErrorsException;
+         var configurationErrorsException = ex as ConfigurationErrorsException;
          if (configurationErrorsException == null) return null;
 
          string filename = configurationErrorsException.Filename;
@@ -162,9 +162,9 @@ namespace HFM.Preferences
       /// <param name="key">Preference Key</param>
       public T GetPreference<T>(Preference key)
       {
-         if (_Preferences[key].DataType == typeof(T))
+         if (_prefs[key].DataType == typeof(T))
          {
-            return (T) _Preferences[key].Data;
+            return (T) _prefs[key].Data;
          }
          
          throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, 
@@ -179,16 +179,16 @@ namespace HFM.Preferences
       /// <param name="value">Preference Value</param>
       public void SetPreference<T>(Preference key, T value)
       {
-         if (_Preferences[key].DataType == typeof(T))
+         if (_prefs[key].DataType == typeof(T))
          {
-            ((Metadata<T>)_Preferences[key]).Data = value;
+            ((Metadata<T>)_prefs[key]).Data = value;
             return;
          }
-         if (_Preferences[key].DataType == typeof(int))
+         if (_prefs[key].DataType == typeof(int))
          {
-            string stringValue = value as string;
+            var stringValue = value as string;
             // Issue 189 - Use Default Value if String is Null or Empty
-            ((Metadata<int>) _Preferences[key]).Data = String.IsNullOrEmpty(stringValue) ? default(int) : Int32.Parse(stringValue);
+            ((Metadata<int>) _prefs[key]).Data = String.IsNullOrEmpty(stringValue) ? default(int) : Int32.Parse(stringValue);
             return;
          }
 
@@ -200,92 +200,93 @@ namespace HFM.Preferences
       {
          DateTime start = HfmTrace.ExecStart;
       
-         _Preferences.Add(Preference.FormLocation, new Metadata<Point>());
-         _Preferences.Add(Preference.FormSize, new Metadata<Size>());
-         _Preferences.Add(Preference.FormColumns, new Metadata<StringCollection>());
-         _Preferences.Add(Preference.FormSortColumn, new Metadata<string>());
-         _Preferences.Add(Preference.FormSortOrder, new Metadata<SortOrder>());
-         _Preferences.Add(Preference.FormSplitLocation, new Metadata<int>());
-         _Preferences.Add(Preference.FormLogWindowHeight, new Metadata<int>());
-         _Preferences.Add(Preference.FormLogVisible, new Metadata<bool>());
-         _Preferences.Add(Preference.QueueViewerVisible, new Metadata<bool>());
-         _Preferences.Add(Preference.TimeStyle, new Metadata<TimeStyleType>());
-         _Preferences.Add(Preference.CompletedCountDisplay, new Metadata<CompletedCountDisplayType>());
-         _Preferences.Add(Preference.ShowVersions, new Metadata<bool>());
-         _Preferences.Add(Preference.FormShowStyle, new Metadata<FormShowStyleType>());
+         _prefs.Add(Preference.FormLocation, new Metadata<Point>());
+         _prefs.Add(Preference.FormSize, new Metadata<Size>());
+         _prefs.Add(Preference.FormColumns, new Metadata<StringCollection>());
+         _prefs.Add(Preference.FormSortColumn, new Metadata<string>());
+         _prefs.Add(Preference.FormSortOrder, new Metadata<SortOrder>());
+         _prefs.Add(Preference.FormSplitLocation, new Metadata<int>());
+         _prefs.Add(Preference.FormLogWindowHeight, new Metadata<int>());
+         _prefs.Add(Preference.FormLogVisible, new Metadata<bool>());
+         _prefs.Add(Preference.QueueViewerVisible, new Metadata<bool>());
+         _prefs.Add(Preference.TimeStyle, new Metadata<TimeStyleType>());
+         _prefs.Add(Preference.CompletedCountDisplay, new Metadata<CompletedCountDisplayType>());
+         _prefs.Add(Preference.ShowVersions, new Metadata<bool>());
+         _prefs.Add(Preference.FormShowStyle, new Metadata<FormShowStyleType>());
 
-         _Preferences.Add(Preference.BenchmarksFormLocation, new Metadata<Point>());
-         _Preferences.Add(Preference.BenchmarksFormSize, new Metadata<Size>());
-         _Preferences.Add(Preference.GraphColors, new Metadata<List<Color>>());
+         _prefs.Add(Preference.BenchmarksFormLocation, new Metadata<Point>());
+         _prefs.Add(Preference.BenchmarksFormSize, new Metadata<Size>());
+         _prefs.Add(Preference.GraphColors, new Metadata<List<Color>>());
 
-         _Preferences.Add(Preference.MessagesFormLocation, new Metadata<Point>());
-         _Preferences.Add(Preference.MessagesFormSize, new Metadata<Size>());
+         _prefs.Add(Preference.MessagesFormLocation, new Metadata<Point>());
+         _prefs.Add(Preference.MessagesFormSize, new Metadata<Size>());
 
-         _Preferences.Add(Preference.SyncOnLoad, new Metadata<bool>());
-         _Preferences.Add(Preference.SyncOnSchedule, new Metadata<bool>());
-         _Preferences.Add(Preference.SyncTimeMinutes, new Metadata<int>());
-         _Preferences.Add(Preference.DuplicateUserIdCheck, new Metadata<bool>());
-         _Preferences.Add(Preference.DuplicateProjectCheck, new Metadata<bool>());
-         _Preferences.Add(Preference.AllowRunningAsync, new Metadata<bool>());
-         _Preferences.Add(Preference.ShowUserStats, new Metadata<bool>());
+         _prefs.Add(Preference.SyncOnLoad, new Metadata<bool>());
+         _prefs.Add(Preference.SyncOnSchedule, new Metadata<bool>());
+         _prefs.Add(Preference.SyncTimeMinutes, new Metadata<int>());
+         _prefs.Add(Preference.DuplicateUserIdCheck, new Metadata<bool>());
+         _prefs.Add(Preference.DuplicateProjectCheck, new Metadata<bool>());
+         _prefs.Add(Preference.AllowRunningAsync, new Metadata<bool>());
+         _prefs.Add(Preference.ShowXmlStats, new Metadata<bool>());
+         _prefs.Add(Preference.ShowTeamStats, new Metadata<bool>());
 
-         _Preferences.Add(Preference.GenerateWeb, new Metadata<bool>());
-         _Preferences.Add(Preference.GenerateInterval, new Metadata<int>());
-         _Preferences.Add(Preference.WebGenAfterRefresh, new Metadata<bool>());
-         _Preferences.Add(Preference.WebRoot, new Metadata<string>());
-         _Preferences.Add(Preference.WebGenCopyFAHlog, new Metadata<bool>());
-         _Preferences.Add(Preference.WebGenFtpMode, new Metadata<FtpType>());
-         _Preferences.Add(Preference.WebGenCopyHtml, new Metadata<bool>());
-         _Preferences.Add(Preference.WebGenCopyXml, new Metadata<bool>());
-         _Preferences.Add(Preference.WebGenLimitLogSize, new Metadata<bool>());
-         _Preferences.Add(Preference.WebGenLimitLogSizeLength, new Metadata<int>());
-         _Preferences.Add(Preference.CssFile, new Metadata<string>());
-         _Preferences.Add(Preference.WebOverview, new Metadata<string>());
-         _Preferences.Add(Preference.WebMobileOverview, new Metadata<string>());
-         _Preferences.Add(Preference.WebSummary, new Metadata<string>());
-         _Preferences.Add(Preference.WebMobileSummary, new Metadata<string>());
-         _Preferences.Add(Preference.WebInstance, new Metadata<string>());
+         _prefs.Add(Preference.GenerateWeb, new Metadata<bool>());
+         _prefs.Add(Preference.GenerateInterval, new Metadata<int>());
+         _prefs.Add(Preference.WebGenAfterRefresh, new Metadata<bool>());
+         _prefs.Add(Preference.WebRoot, new Metadata<string>());
+         _prefs.Add(Preference.WebGenCopyFAHlog, new Metadata<bool>());
+         _prefs.Add(Preference.WebGenFtpMode, new Metadata<FtpType>());
+         _prefs.Add(Preference.WebGenCopyHtml, new Metadata<bool>());
+         _prefs.Add(Preference.WebGenCopyXml, new Metadata<bool>());
+         _prefs.Add(Preference.WebGenLimitLogSize, new Metadata<bool>());
+         _prefs.Add(Preference.WebGenLimitLogSizeLength, new Metadata<int>());
+         _prefs.Add(Preference.CssFile, new Metadata<string>());
+         _prefs.Add(Preference.WebOverview, new Metadata<string>());
+         _prefs.Add(Preference.WebMobileOverview, new Metadata<string>());
+         _prefs.Add(Preference.WebSummary, new Metadata<string>());
+         _prefs.Add(Preference.WebMobileSummary, new Metadata<string>());
+         _prefs.Add(Preference.WebInstance, new Metadata<string>());
 
-         _Preferences.Add(Preference.RunMinimized, new Metadata<bool>());
-         _Preferences.Add(Preference.StartupCheckForUpdate, new Metadata<bool>());
-         _Preferences.Add(Preference.UseDefaultConfigFile, new Metadata<bool>());
-         _Preferences.Add(Preference.DefaultConfigFile, new Metadata<string>());
+         _prefs.Add(Preference.RunMinimized, new Metadata<bool>());
+         _prefs.Add(Preference.StartupCheckForUpdate, new Metadata<bool>());
+         _prefs.Add(Preference.UseDefaultConfigFile, new Metadata<bool>());
+         _prefs.Add(Preference.DefaultConfigFile, new Metadata<string>());
 
-         _Preferences.Add(Preference.OfflineLast, new Metadata<bool>());
-         _Preferences.Add(Preference.ColorLogFile, new Metadata<bool>());
-         _Preferences.Add(Preference.AutoSaveConfig, new Metadata<bool>());
-         _Preferences.Add(Preference.MaintainSelectedClient, new Metadata<bool>());
-         _Preferences.Add(Preference.PpdCalculation, new Metadata<PpdCalculationType>());
-         _Preferences.Add(Preference.DecimalPlaces, new Metadata<int>());
-         _Preferences.Add(Preference.CalculateBonus, new Metadata<bool>());
-         _Preferences.Add(Preference.EtaDate, new Metadata<bool>());
-         _Preferences.Add(Preference.LogFileViewer, new Metadata<string>());
-         _Preferences.Add(Preference.FileExplorer, new Metadata<string>());
-         _Preferences.Add(Preference.MessageLevel, new Metadata<int>());
+         _prefs.Add(Preference.OfflineLast, new Metadata<bool>());
+         _prefs.Add(Preference.ColorLogFile, new Metadata<bool>());
+         _prefs.Add(Preference.AutoSaveConfig, new Metadata<bool>());
+         _prefs.Add(Preference.MaintainSelectedClient, new Metadata<bool>());
+         _prefs.Add(Preference.PpdCalculation, new Metadata<PpdCalculationType>());
+         _prefs.Add(Preference.DecimalPlaces, new Metadata<int>());
+         _prefs.Add(Preference.CalculateBonus, new Metadata<bool>());
+         _prefs.Add(Preference.EtaDate, new Metadata<bool>());
+         _prefs.Add(Preference.LogFileViewer, new Metadata<string>());
+         _prefs.Add(Preference.FileExplorer, new Metadata<string>());
+         _prefs.Add(Preference.MessageLevel, new Metadata<int>());
 
-         _Preferences.Add(Preference.EmailReportingEnabled, new Metadata<bool>());
-         _Preferences.Add(Preference.EmailReportingServerSecure, new Metadata<bool>());
-         _Preferences.Add(Preference.EmailReportingToAddress, new Metadata<string>());
-         _Preferences.Add(Preference.EmailReportingFromAddress, new Metadata<string>());
-         _Preferences.Add(Preference.EmailReportingServerAddress, new Metadata<string>());
-         _Preferences.Add(Preference.EmailReportingServerPort, new Metadata<int>());
-         _Preferences.Add(Preference.EmailReportingServerUsername, new Metadata<string>());
-         _Preferences.Add(Preference.EmailReportingServerPassword, new Metadata<string>());
-         _Preferences.Add(Preference.ReportEuePause, new Metadata<bool>());
+         _prefs.Add(Preference.EmailReportingEnabled, new Metadata<bool>());
+         _prefs.Add(Preference.EmailReportingServerSecure, new Metadata<bool>());
+         _prefs.Add(Preference.EmailReportingToAddress, new Metadata<string>());
+         _prefs.Add(Preference.EmailReportingFromAddress, new Metadata<string>());
+         _prefs.Add(Preference.EmailReportingServerAddress, new Metadata<string>());
+         _prefs.Add(Preference.EmailReportingServerPort, new Metadata<int>());
+         _prefs.Add(Preference.EmailReportingServerUsername, new Metadata<string>());
+         _prefs.Add(Preference.EmailReportingServerPassword, new Metadata<string>());
+         _prefs.Add(Preference.ReportEuePause, new Metadata<bool>());
 
-         _Preferences.Add(Preference.EocUserId, new Metadata<int>());
-         _Preferences.Add(Preference.StanfordId, new Metadata<string>());
-         _Preferences.Add(Preference.TeamId, new Metadata<int>());
-         _Preferences.Add(Preference.ProjectDownloadUrl, new Metadata<string>());
-         _Preferences.Add(Preference.UseProxy, new Metadata<bool>());
-         _Preferences.Add(Preference.ProxyServer, new Metadata<string>());
-         _Preferences.Add(Preference.ProxyPort, new Metadata<int>());
-         _Preferences.Add(Preference.UseProxyAuth, new Metadata<bool>());
-         _Preferences.Add(Preference.ProxyUser, new Metadata<string>());
-         _Preferences.Add(Preference.ProxyPass, new Metadata<string>());
+         _prefs.Add(Preference.EocUserId, new Metadata<int>());
+         _prefs.Add(Preference.StanfordId, new Metadata<string>());
+         _prefs.Add(Preference.TeamId, new Metadata<int>());
+         _prefs.Add(Preference.ProjectDownloadUrl, new Metadata<string>());
+         _prefs.Add(Preference.UseProxy, new Metadata<bool>());
+         _prefs.Add(Preference.ProxyServer, new Metadata<string>());
+         _prefs.Add(Preference.ProxyPort, new Metadata<int>());
+         _prefs.Add(Preference.UseProxyAuth, new Metadata<bool>());
+         _prefs.Add(Preference.ProxyUser, new Metadata<string>());
+         _prefs.Add(Preference.ProxyPass, new Metadata<string>());
 
-         _Preferences.Add(Preference.CacheFolder, new Metadata<string>());
-         _Preferences.Add(Preference.ApplicationDataFolderPath, new Metadata<string>());
+         _prefs.Add(Preference.CacheFolder, new Metadata<string>());
+         _prefs.Add(Preference.ApplicationDataFolderPath, new Metadata<string>());
 
          Debug.WriteLine(String.Format("{0} Execution Time: {1}", HfmTrace.FunctionName, HfmTrace.GetExecTime(start)));
       }
@@ -296,12 +297,12 @@ namespace HFM.Preferences
       public void Load()
       {
          DateTime start = HfmTrace.ExecStart;
-         Symmetric symmetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
+         var symmetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
 
          UpgradeUserSettings();
 
-         Point location = new Point();
-         Size size = new Size();
+         var location = new Point();
+         var size = new Size();
          StringCollection columns = null;
          GetFormStateValues(ref location, ref size, ref columns);
          SetPreference(Preference.FormLocation, location);
@@ -337,7 +338,8 @@ namespace HFM.Preferences
          SetPreference(Preference.DuplicateUserIdCheck, Settings.Default.DuplicateUserIDCheck);
          SetPreference(Preference.DuplicateProjectCheck, Settings.Default.DuplicateProjectCheck);
          SetPreference(Preference.AllowRunningAsync, Settings.Default.AllowRunningAsync);
-         SetPreference(Preference.ShowUserStats, Settings.Default.ShowUserStats);
+         SetPreference(Preference.ShowXmlStats, Settings.Default.ShowUserStats);
+         SetPreference(Preference.ShowTeamStats, Settings.Default.ShowTeamStats);
         
          SetPreference(Preference.GenerateWeb, Settings.Default.GenerateWeb);
          SetPreference(Preference.GenerateInterval, GetValidNumeric(Settings.Default.GenerateInterval, Constants.MinutesDefault));
@@ -492,7 +494,7 @@ namespace HFM.Preferences
 
       private static List<Color> GetGraphColorsList()
       {
-         List<Color> graphColors = new List<Color>();
+         var graphColors = new List<Color>();
          foreach (string color in Settings.Default.GraphColors)
          {
             Color realColor = Color.FromName(color);
@@ -638,7 +640,7 @@ namespace HFM.Preferences
       {
          DateTime start = HfmTrace.ExecStart;
 
-         Symmetric symmetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
+         var symmetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
 
          bool raiseFormShowStyleChanged = false;
          bool raiseTimerSettingsChanged = false;
@@ -688,11 +690,12 @@ namespace HFM.Preferences
             Settings.Default.DuplicateUserIDCheck = GetPreference<bool>(Preference.DuplicateUserIdCheck);
             Settings.Default.DuplicateProjectCheck = GetPreference<bool>(Preference.DuplicateProjectCheck);
             Settings.Default.AllowRunningAsync = GetPreference<bool>(Preference.AllowRunningAsync);
-            if (Settings.Default.ShowUserStats != GetPreference<bool>(Preference.ShowUserStats))
+            if (Settings.Default.ShowUserStats != GetPreference<bool>(Preference.ShowXmlStats))
             {
                raiseShowUserStatsChanged = true;
             }
-            Settings.Default.ShowUserStats = GetPreference<bool>(Preference.ShowUserStats);
+            Settings.Default.ShowUserStats = GetPreference<bool>(Preference.ShowXmlStats);
+            Settings.Default.ShowTeamStats = GetPreference<bool>(Preference.ShowTeamStats);
 
             if (Settings.Default.GenerateWeb != GetPreference<bool>(Preference.GenerateWeb) ||
                 Settings.Default.GenerateInterval != GetPreference<int>(Preference.GenerateInterval).ToString() ||
@@ -808,7 +811,7 @@ namespace HFM.Preferences
       #region Save Support Methods
       private static StringCollection GetGraphColorsStringCollection(IEnumerable<Color> collection)
       {
-         StringCollection col = new StringCollection();
+         var col = new StringCollection();
          foreach (Color color in collection)
          {
             col.Add(color.Name);
@@ -1024,9 +1027,9 @@ namespace HFM.Preferences
       {
          get
          {
-            int decimalPlaces = GetPreference<int>(Preference.DecimalPlaces);
+            var decimalPlaces = GetPreference<int>(Preference.DecimalPlaces);
 
-            StringBuilder sbldr = new StringBuilder("###,###,##0");
+            var sbldr = new StringBuilder("###,###,##0");
             if (decimalPlaces > 0)
             {
                sbldr.Append(".");

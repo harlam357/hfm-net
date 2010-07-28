@@ -923,7 +923,7 @@ namespace HFM.Instances
                new MethodInvoker(DoWebGeneration).BeginInvoke(null, null);
             }
 
-            if (_Prefs.GetPreference<bool>(Preference.ShowUserStats))
+            if (_Prefs.GetPreference<bool>(Preference.ShowXmlStats))
             {
                OnRefreshUserStatsData(EventArgs.Empty);
             }

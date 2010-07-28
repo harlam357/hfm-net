@@ -143,7 +143,7 @@ namespace HFM.Forms
          // Read the User/Team stats data from disk
          _statsData.Read();
          // Set Stats Visibility and Refresh if necessary
-         XmlStatsVisible(_Prefs.GetPreference<bool>(Preference.ShowUserStats));
+         XmlStatsVisible(_Prefs.GetPreference<bool>(Preference.ShowXmlStats));
          // Initialize the Instance Collection
          _clientInstances.Initialize();
       
@@ -163,6 +163,7 @@ namespace HFM.Forms
 
          SubscribeToInstanceCollectionEvents();
          SubscribeToPreferenceSetEvents();
+         SubscribeToStatsLabelEvents();
 
          // If Mono, use the RowEnter Event (which was what 0.3.0 and prior used)
          // to set the CurrentInstance selection.  Obviously Mono doesn't fire the
@@ -211,6 +212,26 @@ namespace HFM.Forms
          _Prefs.PpdCalculationChanged += delegate { RefreshDisplay(); };
          _Prefs.DecimalPlacesChanged += delegate { RefreshDisplay(); };
          _Prefs.CalculateBonusChanged += delegate { RefreshDisplay(); };
+      }
+      
+      private void SubscribeToStatsLabelEvents()
+      {
+         statusUserTeamRank.MouseDown += StatsLabelMouseDown;
+         statusUserProjectRank.MouseDown += StatsLabelMouseDown;
+         statusUser24hr.MouseDown += StatsLabelMouseDown;
+         statusUserToday.MouseDown += StatsLabelMouseDown;
+         statusUserWeek.MouseDown += StatsLabelMouseDown;
+         statusUserTotal.MouseDown += StatsLabelMouseDown;
+         statusUserWUs.MouseDown += StatsLabelMouseDown;
+      }
+
+      private void StatsLabelMouseDown(object sender, MouseEventArgs e)
+      {
+         if (e.Button.Equals(MouseButtons.Right))
+         {
+            var statusLabel = (ToolStripStatusLabel)sender;
+            statsContextMenuStrip.Show(statusStrip, statusLabel.Bounds.X + e.X, statusLabel.Bounds.Y + e.Y);
+         }
       }
 
       public void SecondInstanceStarted(string[] args)
@@ -1715,11 +1736,26 @@ namespace HFM.Forms
          try
          {
             _statsData.GetEocXmlData(forceRefresh);
-            statusLabel24hr.Text = String.Format("24hr: {0:###,###,##0}", _statsData.Data.TwentyFourHourAvgerage);
-            statusLabelToday.Text = String.Format("Today: {0:###,###,##0}", _statsData.Data.PointsToday);
-            statusLabelWeek.Text = String.Format("Week: {0:###,###,##0}", _statsData.Data.PointsWeek);
-            statusLabelTotal.Text = String.Format("Total: {0:###,###,##0}", _statsData.Data.PointsTotal);
-            statusLabelWUs.Text = String.Format("WUs: {0:###,###,##0}", _statsData.Data.WorkUnitsTotal);
+            if (_Prefs.GetPreference<bool>(Preference.ShowTeamStats))
+            {
+               statusUserTeamRank.Text = String.Format(CultureInfo.CurrentCulture, String.Concat("Team: ", Constants.EocStatsFormat), _statsData.Data.TeamRank);
+               //statusUserProjectRank.Text = String.Format(CultureInfo.CurrentCulture, String.Concat("Project: ", Constants.EocStatsFormat), _statsData.Data.UserOverallRank);
+               statusUser24hr.Text = String.Format(CultureInfo.CurrentCulture, String.Concat("24hr: ", Constants.EocStatsFormat), _statsData.Data.TeamTwentyFourHourAvgerage);
+               statusUserToday.Text = String.Format(CultureInfo.CurrentCulture, String.Concat("Today: ", Constants.EocStatsFormat), _statsData.Data.TeamPointsToday);
+               statusUserWeek.Text = String.Format(CultureInfo.CurrentCulture, String.Concat("Week: ", Constants.EocStatsFormat), _statsData.Data.TeamPointsWeek);
+               statusUserTotal.Text = String.Format(CultureInfo.CurrentCulture, String.Concat("Total: ", Constants.EocStatsFormat), _statsData.Data.TeamPointsTotal);
+               statusUserWUs.Text = String.Format(CultureInfo.CurrentCulture, String.Concat("WUs: ", Constants.EocStatsFormat), _statsData.Data.TeamWorkUnitsTotal);
+            }
+            else
+            {
+               statusUserTeamRank.Text = String.Format(CultureInfo.CurrentCulture, String.Concat("Team: ", Constants.EocStatsFormat), _statsData.Data.UserTeamRank);
+               statusUserProjectRank.Text = String.Format(CultureInfo.CurrentCulture, String.Concat("Project: ", Constants.EocStatsFormat), _statsData.Data.UserOverallRank);
+               statusUser24hr.Text = String.Format(CultureInfo.CurrentCulture, String.Concat("24hr: ", Constants.EocStatsFormat), _statsData.Data.UserTwentyFourHourAvgerage);
+               statusUserToday.Text = String.Format(CultureInfo.CurrentCulture, String.Concat("Today: ", Constants.EocStatsFormat), _statsData.Data.UserPointsToday);
+               statusUserWeek.Text = String.Format(CultureInfo.CurrentCulture, String.Concat("Week: ", Constants.EocStatsFormat), _statsData.Data.UserPointsWeek);
+               statusUserTotal.Text = String.Format(CultureInfo.CurrentCulture, String.Concat("Total: ", Constants.EocStatsFormat), _statsData.Data.UserPointsTotal);
+               statusUserWUs.Text = String.Format(CultureInfo.CurrentCulture, String.Concat("WUs: ", Constants.EocStatsFormat), _statsData.Data.UserWorkUnitsTotal);
+            }
          }
          catch (Exception ex)
          {
@@ -1768,7 +1804,19 @@ namespace HFM.Forms
       /// </summary>
       private void PreferenceSet_ShowUserStatsChanged(object sender, EventArgs e)
       {
-         XmlStatsVisible(_Prefs.GetPreference<bool>(Preference.ShowUserStats));
+         XmlStatsVisible(_Prefs.GetPreference<bool>(Preference.ShowXmlStats));
+      }
+
+      private void mnuContextShowUserStats_Click(object sender, EventArgs e)
+      {
+         _Prefs.SetPreference(Preference.ShowTeamStats, false);
+         XmlStatsVisible(true);
+      }
+
+      private void mnuContextShowTeamStats_Click(object sender, EventArgs e)
+      {
+         _Prefs.SetPreference(Preference.ShowTeamStats, true);
+         XmlStatsVisible(true);
       }
 
       private void XmlStatsVisible(bool visible)
@@ -1785,11 +1833,13 @@ namespace HFM.Forms
             mnuWebSep2.Visible = false;
          }
 
-         statusLabel24hr.Visible = visible;
-         statusLabelToday.Visible = visible;
-         statusLabelWeek.Visible = visible;
-         statusLabelTotal.Visible = visible;
-         statusLabelWUs.Visible = visible;
+         statusUserTeamRank.Visible = visible;
+         statusUserProjectRank.Visible = !_Prefs.GetPreference<bool>(Preference.ShowTeamStats) && visible;
+         statusUser24hr.Visible = visible;
+         statusUserToday.Visible = visible;
+         statusUserWeek.Visible = visible;
+         statusUserTotal.Visible = visible;
+         statusUserWUs.Visible = visible;
          statusLabelMiddle.Visible = visible;
       }
 

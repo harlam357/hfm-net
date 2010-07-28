@@ -54,22 +54,22 @@ namespace HFM.Helpers.Tests
       private static XmlStatsData LoadTestData()
       {
          XmlStatsData testData = new XmlStatsData();
-         testData.TwentyFourHourAvgerage = 36123;
-         testData.PointsToday = 5675;
-         testData.PointsWeek = 256176;
-         testData.PointsTotal = 11222333;
-         testData.WorkUnitsTotal = 50987;
+         testData.UserTwentyFourHourAvgerage = 36123;
+         testData.UserPointsToday = 5675;
+         testData.UserPointsWeek = 256176;
+         testData.UserPointsTotal = 11222333;
+         testData.UserWorkUnitsTotal = 50987;
          
          return testData;
       }
 
       private static void ValidateTestData(IXmlStatsData data)
       {
-         Assert.AreEqual(36123, data.TwentyFourHourAvgerage);
-         Assert.AreEqual(5675, data.PointsToday);
-         Assert.AreEqual(256176, data.PointsWeek);
-         Assert.AreEqual(11222333, data.PointsTotal);
-         Assert.AreEqual(50987, data.WorkUnitsTotal);
+         Assert.AreEqual(36123, data.UserTwentyFourHourAvgerage);
+         Assert.AreEqual(5675, data.UserPointsToday);
+         Assert.AreEqual(256176, data.UserPointsWeek);
+         Assert.AreEqual(11222333, data.UserPointsTotal);
+         Assert.AreEqual(50987, data.UserWorkUnitsTotal);
       }
    }
 }

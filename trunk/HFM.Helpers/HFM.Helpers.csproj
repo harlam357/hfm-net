@@ -52,8 +52,8 @@
     <Compile Include="NetworkOps.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XMLOps.cs" />
+    <Compile Include="XmlStatsData.cs" />
     <Compile Include="XmlStatsDataContainer.cs" />
-    <Compile Include="XmlUserStatsData.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HFM.Framework\HFM.Framework.csproj">

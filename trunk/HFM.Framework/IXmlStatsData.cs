@@ -21,36 +21,106 @@ using System;
 
 namespace HFM.Framework
 {
-   public interface IXmlStatsData
+   public interface IXmlStatsData : IEquatable<IXmlStatsData>
    {
       /// <summary>
       /// Stats Last Updated
       /// </summary>
-      DateTime LastUpdated { get; set; }
+      DateTime LastUpdated { get; }
 
       /// <summary>
       /// User 24 Hour Points Average
       /// </summary>
-      long TwentyFourHourAvgerage { get; set; }
+      long UserTwentyFourHourAvgerage { get; }
 
       /// <summary>
       /// User Points Today
       /// </summary>
-      long PointsToday { get; set; }
+      long UserPointsToday { get; }
 
       /// <summary>
       /// User Points Week
       /// </summary>
-      long PointsWeek { get; set; }
+      long UserPointsWeek { get; }
 
       /// <summary>
       /// User Points Total
       /// </summary>
-      long PointsTotal { get; set; }
+      long UserPointsTotal { get; }
 
       /// <summary>
       /// User Work Units Total
       /// </summary>
-      long WorkUnitsTotal { get; set; }
+      long UserWorkUnitsTotal { get; }
+
+      /// <summary>
+      /// User Points Update
+      /// </summary>
+      long UserPointsUpdate { get; }
+
+      /// <summary>
+      /// User Team Rank
+      /// </summary>
+      int UserTeamRank { get; }
+
+      /// <summary>
+      /// User Overall Rank
+      /// </summary>
+      int UserOverallRank { get; }
+
+      /// <summary>
+      /// User Change Rank Twenty Four Hours
+      /// </summary>
+      int UserChangeRankTwentyFourHours { get; }
+
+      /// <summary>
+      /// User Change Rank Twenty Four Hours
+      /// </summary>
+      int UserChangeRankSevenDays { get; }
+
+      /// <summary>
+      /// Team 24 Hour Points Average
+      /// </summary>
+      long TeamTwentyFourHourAvgerage { get; }
+
+      /// <summary>
+      /// Team Points Today
+      /// </summary>
+      long TeamPointsToday { get; }
+
+      /// <summary>
+      /// Team Points Week
+      /// </summary>
+      long TeamPointsWeek { get; }
+
+      /// <summary>
+      /// Team Points Total
+      /// </summary>
+      long TeamPointsTotal { get; }
+
+      /// <summary>
+      /// Team Work Units Total
+      /// </summary>
+      long TeamWorkUnitsTotal { get; }
+
+      /// <summary>
+      /// Team Points Update
+      /// </summary>
+      long TeamPointsUpdate { get; }
+
+      /// <summary>
+      /// Team Rank
+      /// </summary>
+      int TeamRank { get; }
+
+      /// <summary>
+      /// Team Change Rank Twenty Four Hours
+      /// </summary>
+      int TeamChangeRankTwentyFourHours { get; }
+
+      /// <summary>
+      /// Team Change Rank Twenty Four Hours
+      /// </summary>
+      int TeamChangeRankSevenDays { get; }
    }
 }

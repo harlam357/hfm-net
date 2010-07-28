@@ -133,15 +133,15 @@ namespace HFM.Models
          }
       }
 
-      public bool ShowUserStats
+      public bool ShowXmlStats
       {
-         get { return _prefs.GetPreference<bool>(Preference.ShowUserStats); }
+         get { return _prefs.GetPreference<bool>(Preference.ShowXmlStats); }
          set
          {
-            if (ShowUserStats != value)
+            if (ShowXmlStats != value)
             {
-               _prefs.SetPreference(Preference.ShowUserStats, value);
-               OnPropertyChanged("ShowUserStats");
+               _prefs.SetPreference(Preference.ShowXmlStats, value);
+               OnPropertyChanged("ShowXmlStats");
             }
          }
       }

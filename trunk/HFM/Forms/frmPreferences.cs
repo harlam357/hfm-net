@@ -331,7 +331,7 @@ namespace HFM.Forms
          chkScheduled.DataBindings.Add("Checked", _scheduledTasksModel, "SyncOnSchedule", false, DataSourceUpdateMode.OnPropertyChanged);
 
          chkAllowRunningAsync.DataBindings.Add("Checked", _scheduledTasksModel, "AllowRunningAsync", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkShowUserStats.DataBindings.Add("Checked", _scheduledTasksModel, "ShowUserStats", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkShowUserStats.DataBindings.Add("Checked", _scheduledTasksModel, "ShowXmlStats", false, DataSourceUpdateMode.OnPropertyChanged);
          #endregion
 
          #region Web Generation

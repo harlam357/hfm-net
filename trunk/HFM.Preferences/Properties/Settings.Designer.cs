@@ -950,5 +950,17 @@ namespace HFM.Preferences.Properties {
                 this["EtaDate"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowTeamStats {
+            get {
+                return ((bool)(this["ShowTeamStats"]));
+            }
+            set {
+                this["ShowTeamStats"] = value;
+            }
+        }
     }
 }

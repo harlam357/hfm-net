@@ -42,6 +42,8 @@ namespace HFM.Framework
       public const string StanfordBaseUrl = "http://fah-web.stanford.edu/cgi-bin/main.py?qtype=userpage&username=";
       public const string GoogleGroupUrl = "http://groups.google.com/group/hfm-net";
 
+      public const string EocStatsFormat = "{0:###,###,##0}";
+
       /// <summary>
       /// Conversion factor - minutes to milli-seconds
       /// </summary>

@@ -132,28 +132,24 @@ namespace HFM.Helpers
             DateTime start = HfmTrace.ExecStart;
 
             #region Get the XML Document
-            XmlDocument xmlData = new XmlDocument();
+            var xmlData = new XmlDocument();
             xmlData.Load(_prefs.EocUserXml);
             xmlData.RemoveChild(xmlData.ChildNodes[0]);
 
             XmlNode eocNode = xmlData.SelectSingleNode("EOC_Folding_Stats");
-            XmlNode userNode = eocNode.SelectSingleNode("user");
             XmlNode statusNode = eocNode.SelectSingleNode("status");
-
             string updateStatus = statusNode.SelectSingleNode("Update_Status").InnerText;
             #endregion
 
-            // Get the Last Updated Time
-            DateTime lastUpdated = Data.LastUpdated;
-            // Update the data container
-            UpdateUserStatsDataContainer(this, userNode);
+            // Update get the new data
+            var newStatsData = GetUserStatsData(eocNode);
 
             // if Forced, set Last Updated and Serialize or
-            // if container's LastUpdated is now greater, we updated... otherwise, if the update 
+            // if the new data is not equal to the previous data, we updated... otherwise, if the update 
             // status is current we should assume the data is current but did not change - Issue 67
-            if (forceRefresh || (Data.LastUpdated > lastUpdated || updateStatus == "Current"))
+            if (forceRefresh || !(Data.Equals(newStatsData)) || updateStatus == "Current")
             {
-               Data.LastUpdated = DateTime.UtcNow;
+               _data = newStatsData;
                Write();
             }
 
@@ -167,15 +163,34 @@ namespace HFM.Helpers
       /// <summary>
       /// Updates the data container
       /// </summary>
-      /// <param name="userStatsData">User Stats Data Container</param>
-      /// <param name="userNode">User Stats XmlNode</param>
-      private static void UpdateUserStatsDataContainer(IXmlStatsDataContainer userStatsData, XmlNode userNode)
+      /// <param name="eocNode">EOC Stats XmlNode</param>
+      private static XmlStatsData GetUserStatsData(XmlNode eocNode)
       {
-         userStatsData.Data.TwentyFourHourAvgerage = Convert.ToInt64(userNode.SelectSingleNode("Points_24hr_Avg").InnerText);
-         userStatsData.Data.PointsToday = Convert.ToInt64(userNode.SelectSingleNode("Points_Today").InnerText);
-         userStatsData.Data.PointsWeek = Convert.ToInt64(userNode.SelectSingleNode("Points_Week").InnerText);
-         userStatsData.Data.PointsTotal = Convert.ToInt64(userNode.SelectSingleNode("Points").InnerText);
-         userStatsData.Data.WorkUnitsTotal = Convert.ToInt64(userNode.SelectSingleNode("WUs").InnerText);
+         XmlNode teamNode = eocNode.SelectSingleNode("team");
+         XmlNode userNode = eocNode.SelectSingleNode("user");
+         
+         var statsData = new XmlStatsData(DateTime.UtcNow);
+         statsData.UserTwentyFourHourAvgerage = Convert.ToInt64(userNode.SelectSingleNode("Points_24hr_Avg").InnerText);
+         statsData.UserPointsToday = Convert.ToInt64(userNode.SelectSingleNode("Points_Today").InnerText);
+         statsData.UserPointsWeek = Convert.ToInt64(userNode.SelectSingleNode("Points_Week").InnerText);
+         statsData.UserPointsTotal = Convert.ToInt64(userNode.SelectSingleNode("Points").InnerText);
+         statsData.UserWorkUnitsTotal = Convert.ToInt64(userNode.SelectSingleNode("WUs").InnerText);
+         statsData.UserPointsUpdate = Convert.ToInt64(userNode.SelectSingleNode("Points_Update").InnerText);
+         statsData.UserTeamRank = Convert.ToInt32(userNode.SelectSingleNode("Team_Rank").InnerText);
+         statsData.UserOverallRank = Convert.ToInt32(userNode.SelectSingleNode("Overall_Rank").InnerText);
+         statsData.UserChangeRankTwentyFourHours = Convert.ToInt32(userNode.SelectSingleNode("Change_Rank_24hr").InnerText);
+         statsData.UserChangeRankSevenDays = Convert.ToInt32(userNode.SelectSingleNode("Change_Rank_7days").InnerText);
+         statsData.TeamTwentyFourHourAvgerage = Convert.ToInt64(teamNode.SelectSingleNode("Points_24hr_Avg").InnerText);
+         statsData.TeamPointsToday = Convert.ToInt64(teamNode.SelectSingleNode("Points_Today").InnerText);
+         statsData.TeamPointsWeek = Convert.ToInt64(teamNode.SelectSingleNode("Points_Week").InnerText);
+         statsData.TeamPointsTotal = Convert.ToInt64(teamNode.SelectSingleNode("Points").InnerText);
+         statsData.TeamWorkUnitsTotal = Convert.ToInt64(teamNode.SelectSingleNode("WUs").InnerText);
+         statsData.TeamPointsUpdate = Convert.ToInt64(teamNode.SelectSingleNode("Points_Update").InnerText);
+         statsData.TeamRank = Convert.ToInt32(teamNode.SelectSingleNode("Rank").InnerText);
+         statsData.TeamChangeRankTwentyFourHours = Convert.ToInt32(teamNode.SelectSingleNode("Change_Rank_24hr").InnerText);
+         statsData.TeamChangeRankSevenDays = Convert.ToInt32(teamNode.SelectSingleNode("Change_Rank_7days").InnerText);
+
+         return statsData;
       }
       #endregion
       
