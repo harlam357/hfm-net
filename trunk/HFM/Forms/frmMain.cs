@@ -475,20 +475,17 @@ namespace HFM.Forms
          {
             statusLabelLeft.Text = _clientInstances.SelectedInstance.ClientPathAndArguments;
             
-            queueControl.SetQueue(_clientInstances.SelectedInstance.DataAggregator.Queue, 
-               _clientInstances.SelectedInstance.CurrentUnitInfo.TypeOfClient, 
-               _clientInstances.SelectedInstance.Settings.ClientIsOnVirtualMachine);
+            queueControl.SetQueue(_clientInstances.SelectedInstance.Queue, 
+               _clientInstances.SelectedInstance.TypeOfClient, 
+               _clientInstances.SelectedInstance.ClientIsOnVirtualMachine);
 
             // if we've got a good queue read, let queueControl_QueueIndexChanged()
             // handle populating the log lines.
-            IQueueBase qBase = _clientInstances.SelectedInstance.DataAggregator.Queue;
+            IQueueBase qBase = _clientInstances.SelectedInstance.Queue;
             if (qBase != null && qBase.DataPopulated) return;
 
-            // I'm not sure why I ever wrote this check here - it makes no sense - 4/6/10
-            //if (_clientInstances.SelectedInstance.DataAggregator.UnitLogLines != null)
-            //{
-               SetLogLines(_clientInstances.SelectedInstance.Settings, _clientInstances.SelectedInstance.DataAggregator.CurrentLogLines);
-            //}
+            // otherwise, load up the CurrentLogLines
+            SetLogLines(_clientInstances.SelectedInstance, _clientInstances.SelectedInstance.CurrentLogLines);
          }
          else
          {
@@ -514,7 +511,7 @@ namespace HFM.Forms
             // Check the UnitLogLines array against the requested Queue Index - Issue 171
             try
             {
-               SetLogLines(_clientInstances.SelectedInstance.Settings,
+               SetLogLines(_clientInstances.SelectedInstance,
                            _clientInstances.SelectedInstance.GetLogLinesForQueueIndex(e.Index));
             }
             catch (ArgumentOutOfRangeException ex)
@@ -534,15 +531,15 @@ namespace HFM.Forms
       /// </summary>
       /// <param name="instance">Client Instance</param>
       /// <param name="logLines">List of LogLines</param>
-      private void SetLogLines(IClientInstanceSettings instance, IList<ILogLine> logLines)
+      private void SetLogLines(IDisplayInstance instance, IList<ILogLine> logLines)
       {
          /*** Checked LogLine Count ***/
          if (logLines != null && logLines.Count > 0) 
          {
             // Different Client... Load LogLines
-            if (txtLogFile.LogOwnedByInstanceName.Equals(instance.InstanceName) == false)
+            if (txtLogFile.LogOwnedByInstanceName.Equals(instance.Name) == false)
             {
-               txtLogFile.SetLogLines(logLines, instance.InstanceName);
+               txtLogFile.SetLogLines(logLines, instance.Name);
                PreferenceSet_ColorLogFileChanged(null, EventArgs.Empty);
                
                //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("Set Log Lines (Changed Client - {0})", instance.InstanceName));
@@ -560,14 +557,14 @@ namespace HFM.Forms
                {
                   // even though i've checked the count above, it could have changed in between then
                   // and now... and if the count is 0 it will yield this exception.  Log It!!!
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, instance.InstanceName, ex);
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, instance.Name, ex);
                }
 
                // If the last text line in the textbox DOES NOT equal the last LogLine Text... Load LogLines.
                // Otherwise, the log has not changed, don't update and perform the log "flicker".
                if (txtLogFile.Lines[txtLogFile.Lines.Length - 1].Equals(lastLogLine) == false)
                {
-                  txtLogFile.SetLogLines(logLines, instance.InstanceName);
+                  txtLogFile.SetLogLines(logLines, instance.Name);
                   PreferenceSet_ColorLogFileChanged(null, EventArgs.Empty);
                   
                   //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Set Log Lines (log lines different)");
@@ -576,7 +573,7 @@ namespace HFM.Forms
             // Nothing in the Textbox... Load LogLines
             else
             {
-               txtLogFile.SetLogLines(logLines, instance.InstanceName);
+               txtLogFile.SetLogLines(logLines, instance.Name);
                PreferenceSet_ColorLogFileChanged(null, EventArgs.Empty);
             }
          }
@@ -623,7 +620,7 @@ namespace HFM.Forms
                // Check for SelectedInstance, and get out if not found
                if (_clientInstances.SelectedInstance == null) return;
 
-               if (_clientInstances.SelectedInstance.Settings.InstanceHostType.Equals(InstanceType.PathInstance))
+               if (_clientInstances.SelectedInstance.InstanceHostType.Equals(InstanceType.PathInstance))
                {
                   mnuContextClientsViewClientFiles.Visible = true;
                }
@@ -641,11 +638,11 @@ namespace HFM.Forms
                // Check for SelectedInstance, and get out if not found
                if (_clientInstances.SelectedInstance == null) return;
 
-               if (_clientInstances.SelectedInstance.Settings.InstanceHostType.Equals(InstanceType.PathInstance))
+               if (_clientInstances.SelectedInstance.InstanceHostType.Equals(InstanceType.PathInstance))
                {
                   try
                   {
-                     StartFileBrowser(_clientInstances.SelectedInstance.Settings.Path);
+                     StartFileBrowser(_clientInstances.SelectedInstance.Path);
                   }
                   catch (Exception ex)
                   {
@@ -653,7 +650,7 @@ namespace HFM.Forms
                      
                      MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError,
                         String.Format(CultureInfo.CurrentCulture, "client '{0}' files.{1}{1}Please check the current File Explorer defined in the Preferences",
-                        _clientInstances.SelectedInstance.Settings.InstanceName, Environment.NewLine)));
+                        _clientInstances.SelectedInstance.Name, Environment.NewLine)));
                   }
                }
             }
@@ -894,7 +891,7 @@ namespace HFM.Forms
          // Check for SelectedInstance, and get out if not found
          if (_clientInstances.SelectedInstance == null) return;
 
-         var settings = _clientInstances.SelectedInstance.Settings.Clone();
+         var settings = _clientInstances.SelectedInstanceSettings.Clone();
          string previousName = settings.InstanceName;
          string previousPath = settings.Path;
          var editHost = new frmHost(settings);
@@ -921,7 +918,7 @@ namespace HFM.Forms
          // Check for SelectedInstance, and get out if not found
          if (_clientInstances.SelectedInstance == null) return;
 
-         _clientInstances.Remove(_clientInstances.SelectedInstance.Settings.InstanceName);
+         _clientInstances.Remove(_clientInstances.SelectedInstance.Name);
       }
 
       /// <summary>
@@ -932,7 +929,7 @@ namespace HFM.Forms
          // Check for SelectedInstance, and get out if not found
          if (_clientInstances.SelectedInstance == null) return;
 
-         _clientInstances.RetrieveSingleClient(_clientInstances.SelectedInstance.Settings.InstanceName);
+         _clientInstances.RetrieveSingleClient(_clientInstances.SelectedInstance.Name);
       }
 
       /// <summary>
@@ -951,7 +948,7 @@ namespace HFM.Forms
          // Check for SelectedInstance, and get out if not found
          if (_clientInstances.SelectedInstance == null) return;
 
-         string logPath = Path.Combine(_Prefs.CacheDirectory, _clientInstances.SelectedInstance.Settings.CachedFahLogName);
+         string logPath = Path.Combine(_Prefs.CacheDirectory, _clientInstances.SelectedInstance.CachedFahLogName);
          if (File.Exists(logPath))
          {
             try
@@ -964,12 +961,12 @@ namespace HFM.Forms
                
                MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError,
                   String.Format(CultureInfo.CurrentCulture, "client '{0}' FAHlog file.{1}{1}Please check the current Log File Viewer defined in the Preferences",
-                  _clientInstances.SelectedInstance.Settings.InstanceName, Environment.NewLine)));
+                  _clientInstances.SelectedInstance.Name, Environment.NewLine)));
             }
          }
          else
          {
-            MessageBox.Show(String.Format("Cannot find client '{0}' FAHlog.txt file.", _clientInstances.SelectedInstance.Settings.InstanceName));
+            MessageBox.Show(String.Format("Cannot find client '{0}' FAHlog.txt file.", _clientInstances.SelectedInstance.Name));
          }
       }
 
@@ -981,11 +978,11 @@ namespace HFM.Forms
          // Check for SelectedInstance, and get out if not found
          if (_clientInstances.SelectedInstance == null) return;
 
-         if (_clientInstances.SelectedInstance.Settings.InstanceHostType.Equals(InstanceType.PathInstance))
+         if (_clientInstances.SelectedInstance.InstanceHostType.Equals(InstanceType.PathInstance))
          {
             try
             {
-               StartFileBrowser(_clientInstances.SelectedInstance.Settings.Path);
+               StartFileBrowser(_clientInstances.SelectedInstance.Path);
             }
             catch (Exception ex)
             {
@@ -993,7 +990,7 @@ namespace HFM.Forms
                
                MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError,
                   String.Format(CultureInfo.CurrentCulture, "client '{0}' files.{1}{1}Please check the current File Explorer defined in the Preferences",
-                  _clientInstances.SelectedInstance.Settings.InstanceName, Environment.NewLine)));
+                  _clientInstances.SelectedInstance.Name, Environment.NewLine)));
             }
          }
       }
@@ -1137,7 +1134,7 @@ namespace HFM.Forms
          // Check for SelectedInstance, and if found... load its ProjectID.
          if (_clientInstances.SelectedInstance != null)
          {
-            projectId = _clientInstances.SelectedInstance.CurrentUnitInfo.ProjectID;
+            projectId = _clientInstances.SelectedInstance.ProjectID;
          }
 
          var frm = new frmBenchmarks(_Prefs, _proteinCollection, _benchmarkContainer, _clientInstances, projectId);

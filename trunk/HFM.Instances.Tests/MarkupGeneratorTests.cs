@@ -57,12 +57,11 @@ namespace HFM.Instances.Tests
       public void GenerateXmlTest()
       {
          IPreferenceSet prefs = SetupMockPreferenceSet();
-         IProteinCollection proteinCollection = SetupMockProteinCollection();
-         ICollection<IClientInstance> instances = SetupMockClientInstanceCollection();
+         ICollection<IDisplayInstance> instances = SetupMockClientInstanceCollection();
          
          _mocks.ReplayAll();
 
-         MarkupGenerator markupGenerator = new MarkupGenerator(prefs, proteinCollection);
+         var markupGenerator = new MarkupGenerator(prefs);
          markupGenerator.DoXmlGeneration(_testFolderPath, instances);
          
          Assert.IsTrue(File.Exists(Path.Combine(_testFolderPath, "Overview.xml")));
@@ -75,12 +74,11 @@ namespace HFM.Instances.Tests
       public void GenerateHtmlTest()
       {
          IPreferenceSet prefs = SetupMockPreferenceSet();
-         IProteinCollection proteinCollection = SetupMockProteinCollection();
-         ICollection<IClientInstance> instances = SetupMockClientInstanceCollection();
+         ICollection<IDisplayInstance> instances = SetupMockClientInstanceCollection();
 
          _mocks.ReplayAll();
 
-         MarkupGenerator markupGenerator = new MarkupGenerator(prefs, proteinCollection);
+         var markupGenerator = new MarkupGenerator(prefs);
          markupGenerator.DoHtmlGeneration(_testFolderPath, instances);
 
          Assert.IsTrue(File.Exists(Path.Combine(_testFolderPath, "index.html")));
@@ -95,7 +93,7 @@ namespace HFM.Instances.Tests
 
       private IPreferenceSet SetupMockPreferenceSet()
       {
-         IPreferenceSet prefs = _mocks.DynamicMock<IPreferenceSet>();
+         var prefs = _mocks.DynamicMock<IPreferenceSet>();
          SetupResult.For(prefs.ApplicationPath).Return(@"..\..\..\HFM");
          Expect.Call(prefs.GetPreference<string>(Preference.WebOverview)).Return("WebOverview.xslt").Repeat.Any();
          Expect.Call(prefs.GetPreference<string>(Preference.WebMobileOverview)).Return("WebMobileOverview.xslt").Repeat.Any();
@@ -105,45 +103,23 @@ namespace HFM.Instances.Tests
          return prefs;
       }
 
-      private IProteinCollection SetupMockProteinCollection()
+      private ICollection<IDisplayInstance> SetupMockClientInstanceCollection()
       {
-         IProtein newProtein = _mocks.DynamicMock<IProtein>();
-         IProteinCollection proteinCollection = _mocks.DynamicMock<IProteinCollection>();
-         Expect.Call(proteinCollection.CreateProtein()).Return(newProtein).Repeat.Any();
-
-         return proteinCollection;
-      }
+         var newProtein = _mocks.DynamicMock<IProtein>();
       
-      private ICollection<IClientInstance> SetupMockClientInstanceCollection()
-      {
-         var instances = new List<IClientInstance>();
-
-         var unitInfoLogic = _mocks.Stub<IUnitInfoLogic>();
-         var dataAggregator1 = _mocks.Stub<IDataAggregator>();
-         SetupResult.For(dataAggregator1.CurrentLogLines).Return(new List<ILogLine>());
-         var dataAggregator2 = _mocks.Stub<IDataAggregator>();
-         // Test For - Issue 201 - Web Generation Fails when a Client with no CurrentLogLines is encountered.
-         // Make sure we return null for CurrentLogLines in the second DataAggregator mock.
-         SetupResult.For(dataAggregator2.CurrentLogLines).Return(null);
-
-         var settings = _mocks.Stub<IClientInstanceSettings>();
-         settings.InstanceName = "Test2";
-
-         var instance = _mocks.Stub<IClientInstance>();
-         SetupResult.For(instance.CurrentUnitInfo).Return(unitInfoLogic);
-         SetupResult.For(instance.DataAggregator).Return(dataAggregator1);
-         SetupResult.For(instance.Settings).Return(settings);       
-         
+         var instances = new List<IDisplayInstance>();
+         var instance = _mocks.DynamicMock<IDisplayInstance>();
+         SetupResult.For(instance.CurrentProtein).Return(newProtein);
+         SetupResult.For(instance.CurrentLogLines).Return(new List<ILogLine>());
+         SetupResult.For(instance.Name).Return("Test2");
          instances.Add(instance);
 
-         settings = _mocks.Stub<IClientInstanceSettings>();
-         settings.InstanceName = "Test1";
-
-         instance = _mocks.Stub<IClientInstance>();
-         SetupResult.For(instance.CurrentUnitInfo).Return(unitInfoLogic);
-         SetupResult.For(instance.DataAggregator).Return(dataAggregator2);
-         SetupResult.For(instance.Settings).Return(settings);       
-
+         instance = _mocks.DynamicMock<IDisplayInstance>();
+         // Test For - Issue 201 - Web Generation Fails when a Client with no CurrentLogLines is encountered.
+         // Make sure we return null for CurrentLogLines in the second DataAggregator mock.
+         SetupResult.For(instance.CurrentProtein).Return(newProtein);
+         SetupResult.For(instance.CurrentLogLines).Return(null);
+         SetupResult.For(instance.Name).Return("Test1");
          instances.Add(instance);
 
          return instances;

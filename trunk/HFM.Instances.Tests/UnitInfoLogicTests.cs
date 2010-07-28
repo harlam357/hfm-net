@@ -308,7 +308,7 @@ namespace HFM.Instances.Tests
          Expect.Call(newProtein.IsUnknown).Return(true).Repeat.Any();
 
          IProteinCollection proteinCollection = _mocks.DynamicMock<IProteinCollection>();
-         Expect.Call(proteinCollection.GetProtein(0)).Return(newProtein).Repeat.Any();
+         Expect.Call(proteinCollection.GetProtein(0, true)).Return(newProtein).Repeat.Any();
          Expect.Call(proteinCollection.GetProtein(2669)).Return(currentProtein).Repeat.Any();
          Expect.Call(proteinCollection.CreateProtein()).Return(newProtein).Repeat.Any();
 

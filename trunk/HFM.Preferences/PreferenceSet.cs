@@ -53,7 +53,7 @@ namespace HFM.Preferences
       {
          get
          {
-            return Path.GetDirectoryName(Application.ExecutablePath);
+            return Application.StartupPath;
          }
       }
 

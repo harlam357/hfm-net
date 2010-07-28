@@ -54,7 +54,7 @@ namespace HFM.Instances
       /// <param name="instances">Client Instance Collection.</param>
       /// <exception cref="ArgumentNullException">Throws if instances is null.</exception>
       /// <exception cref="InvalidOperationException">Throws if a Generate method is called in succession.</exception>
-      void GenerateHtml(ICollection<IClientInstance> instances);
+      void GenerateHtml(ICollection<IDisplayInstance> instances);
 
       /// <summary>
       /// Generate XML Files from the given Client Instance Collection.
@@ -62,7 +62,7 @@ namespace HFM.Instances
       /// <param name="instances">Client Instance Collection.</param>
       /// <exception cref="ArgumentNullException">Throws if instances is null.</exception>
       /// <exception cref="InvalidOperationException">Throws if a Generate method is called in succession.</exception>
-      void GenerateXml(ICollection<IClientInstance> instances);
+      void GenerateXml(ICollection<IDisplayInstance> instances);
    }
 
    public sealed class MarkupGenerator : IMarkupGenerator
@@ -88,7 +88,6 @@ namespace HFM.Instances
       public ReadOnlyCollection<string> HtmlFilePaths { get; private set; }
       
       private readonly IPreferenceSet _prefs;
-      private readonly IProteinCollection _proteinCollection;
       
       private enum XmlFileName
       {
@@ -96,10 +95,9 @@ namespace HFM.Instances
          Instances
       }
       
-      public MarkupGenerator(IPreferenceSet prefs, IProteinCollection proteinCollection)
+      public MarkupGenerator(IPreferenceSet prefs)
       {
          _prefs = prefs;
-         _proteinCollection = proteinCollection;
       }
       
       #region HTML Generation
@@ -110,7 +108,7 @@ namespace HFM.Instances
       /// <param name="instances">Client Instance Collection.</param>
       /// <exception cref="ArgumentNullException">Throws if instances is null.</exception>
       /// <exception cref="InvalidOperationException">Throws if a Generate method is called in succession.</exception>
-      public void GenerateHtml(ICollection<IClientInstance> instances)
+      public void GenerateHtml(ICollection<IDisplayInstance> instances)
       {
          if (instances == null) throw new ArgumentNullException("instances", "Argument 'instances' cannot be null.");
          if (_generationInProgress) throw new InvalidOperationException("Markup Generation already in progress.");
@@ -127,7 +125,7 @@ namespace HFM.Instances
          }
       }
       
-      public ReadOnlyCollection<string> DoHtmlGeneration(string folderPath, ICollection<IClientInstance> instances)
+      public ReadOnlyCollection<string> DoHtmlGeneration(string folderPath, ICollection<IDisplayInstance> instances)
       {
          Debug.Assert(String.IsNullOrEmpty(folderPath) == false);
          Debug.Assert(instances != null);
@@ -183,11 +181,11 @@ namespace HFM.Instances
             var instancesXml = new XmlDocument();
             instancesXml.Load(XmlFilePaths[(int)XmlFileName.Instances]);
             // Generate a page per instance
-            foreach (IClientInstance instance in instances)
+            foreach (IDisplayInstance instance in instances)
             {
-               filePath = Path.Combine(folderPath, String.Concat(instance.Settings.InstanceName, ".html"));
+               filePath = Path.Combine(folderPath, String.Concat(instance.Name, ".html"));
                sw = new StreamWriter(filePath, false);
-               sw.Write(XMLOps.Transform(FindInstanceNode(instancesXml, instance.Settings.InstanceName), instanceXslt, cssFileName));
+               sw.Write(XMLOps.Transform(FindInstanceNode(instancesXml, instance.Name), instanceXslt, cssFileName));
                sw.Close();
                // Success, add it to the list
                fileList.Add(filePath);
@@ -252,7 +250,7 @@ namespace HFM.Instances
       /// <param name="instances">Client Instance Collection.</param>
       /// <exception cref="ArgumentNullException">Throws if instances is null.</exception>
       /// <exception cref="InvalidOperationException">Throws if a Generate method is called in succession.</exception>
-      public void GenerateXml(ICollection<IClientInstance> instances)
+      public void GenerateXml(ICollection<IDisplayInstance> instances)
       {
          if (instances == null) throw new ArgumentNullException("instances", "Argument 'instances' cannot be null.");
          if (_generationInProgress) throw new InvalidOperationException("Markup Generation already in progress.");
@@ -269,7 +267,7 @@ namespace HFM.Instances
          }
       }
 
-      public ReadOnlyCollection<string> DoXmlGeneration(string folderPath, ICollection<IClientInstance> instances)
+      public ReadOnlyCollection<string> DoXmlGeneration(string folderPath, ICollection<IDisplayInstance> instances)
       {
          Debug.Assert(String.IsNullOrEmpty(folderPath) == false);
          Debug.Assert(instances != null);
@@ -295,7 +293,7 @@ namespace HFM.Instances
          instancesXml.AppendChild(xmlRoot);
          
          // Generate an XML Node per Client Instance
-         foreach (IClientInstance instance in instances)
+         foreach (IDisplayInstance instance in instances)
          {
             XmlDocument instanceXml = CreateInstanceXml(instance);
             XmlNode instanceNode = instancesXml.ImportNode(instanceXml.ChildNodes[1], true);
@@ -309,7 +307,7 @@ namespace HFM.Instances
          return Array.AsReadOnly(fileList);
       }
 
-      private XmlDocument CreateInstanceXml(IClientInstance instance)
+      private XmlDocument CreateInstanceXml(IDisplayInstance instance)
       {
          var xmlDoc = new XmlDocument();
          xmlDoc.Load(Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.XmlFolderName), "Instance.xml"));
@@ -330,11 +328,11 @@ namespace HFM.Instances
          //        <ExpectedCompletionDate>16 August 2006 1:46 am</ExpectedCompletionDate>
          //    </UnitInfo>
 
-         xmlData.SetAttribute("Name", instance.Settings.InstanceName);
+         xmlData.SetAttribute("Name", instance.Name);
          XMLOps.setXmlNode(xmlData, "HFMVersion", PlatformOps.ShortFormattedApplicationVersionWithRevision);
          XMLOps.setXmlNode(xmlData, "UnitInfo/FramesComplete", String.Format("{0}", instance.FramesComplete));
          XMLOps.setXmlNode(xmlData, "UnitInfo/PercentComplete", String.Format("{0}", instance.PercentComplete));
-         XMLOps.setXmlNode(xmlData, "UnitInfo/TimePerFrame", String.Format("{0}h, {1}m, {2}s", instance.TimePerFrame.Hours, instance.TimePerFrame.Minutes, instance.TimePerFrame.Seconds));
+         XMLOps.setXmlNode(xmlData, "UnitInfo/TimePerFrame", String.Format("{0}h, {1}m, {2}s", instance.TPF.Hours, instance.TPF.Minutes, instance.TPF.Seconds));
 
          string ppdFormatString = _prefs.PpdFormatString;
          XMLOps.setXmlNode(xmlData, "UnitInfo/EstPPD", String.Format("{0:" + ppdFormatString + "}", instance.PPD));
@@ -345,13 +343,13 @@ namespace HFM.Instances
          XMLOps.setXmlNode(xmlData, "UnitInfo/Failed", instance.TotalRunFailedUnits.ToString());
          XMLOps.setXmlNode(xmlData, "UnitInfo/TotalCompleted", instance.TotalClientCompletedUnits.ToString());
 
-         if (instance.CurrentUnitInfo.DownloadTimeUnknown)
+         if (instance.DownloadTimeUnknown)
          {
             XMLOps.setXmlNode(xmlData, "UnitInfo/DownloadTime", "Unknown");
          }
          else
          {
-            DateTime downloadTime = instance.CurrentUnitInfo.DownloadTime;
+            DateTime downloadTime = instance.DownloadTime;
             // TODO: When localizing use ToString("format", CultureInfo.CurrentCulture) instead.
             XMLOps.setXmlNode(xmlData, "UnitInfo/DownloadTime", String.Format(CultureInfo.InvariantCulture, "{0} at {1}", 
                downloadTime.ToString("D", CultureInfo.InvariantCulture), downloadTime.ToString("h:mm:ss tt", CultureInfo.InvariantCulture)));
@@ -384,11 +382,7 @@ namespace HFM.Instances
          //        <Contact>spark7</Contact>
          //    </Protein>
 
-         IProtein p = _proteinCollection.CreateProtein();
-         if (_proteinCollection.ContainsKey(instance.CurrentUnitInfo.ProjectID))
-         {
-            p = _proteinCollection[instance.CurrentUnitInfo.ProjectID];
-         }
+         IProtein p = instance.CurrentProtein;
          XMLOps.setXmlNode(xmlData, "Protein/ProjectNumber", p.ProjectNumber.ToString());
          XMLOps.setXmlNode(xmlData, "Protein/ServerIP", p.ServerIP);
          XMLOps.setXmlNode(xmlData, "Protein/WorkUnit", p.WorkUnitName);
@@ -404,9 +398,9 @@ namespace HFM.Instances
 
          var sb = new StringBuilder();
          // Issue 201 - Web Generation Fails when a Client with no CurrentLogLines is encountered.
-         if (instance.DataAggregator.CurrentLogLines != null)
+         if (instance.CurrentLogLines != null)
          {
-            foreach (ILogLine line in instance.DataAggregator.CurrentLogLines)
+            foreach (ILogLine line in instance.CurrentLogLines)
             {
                sb.Append(line.LineRaw);
                sb.Append("<BR>");
@@ -417,7 +411,7 @@ namespace HFM.Instances
          XMLOps.setXmlNode(xmlData, "UnitLog/Text", sb.ToString());
          if (_prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog))
          {
-            XMLOps.setXmlNode(xmlData, "UnitLog/FullLogFile", instance.Settings.CachedFahLogName);
+            XMLOps.setXmlNode(xmlData, "UnitLog/FullLogFile", instance.CachedFahLogName);
          }
          else
          {
@@ -441,16 +435,14 @@ namespace HFM.Instances
          return xmlDoc;
       }
 
-      private XmlDocument CreateSummaryXml(XmlDocument xmlDoc, IEnumerable<IClientInstance> instanceCollection)
+      private XmlDocument CreateSummaryXml(XmlDocument xmlDoc, IEnumerable<IDisplayInstance> instanceCollection)
       {
-         var duplicateUserIdCheck = _prefs.GetPreference<bool>(Preference.DuplicateUserIdCheck);
-         var duplicateProjectCheck = _prefs.GetPreference<bool>(Preference.DuplicateProjectCheck);
          var etaDate = _prefs.GetPreference<bool>(Preference.EtaDate);
          var completedCountDisplayType = _prefs.GetPreference<CompletedCountDisplayType>(Preference.CompletedCountDisplay);
          var showVersions = _prefs.GetPreference<bool>(Preference.ShowVersions);
          
          XmlElement xmlRootData = xmlDoc.DocumentElement;
-         foreach (IClientInstance instance in instanceCollection)
+         foreach (IDisplayInstance instance in instanceCollection)
          {
             var xmlFrag = new XmlDocument();
             xmlFrag.Load(Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.XmlFolderName), "SummaryFrag.xml"));
@@ -460,15 +452,15 @@ namespace HFM.Instances
             XMLOps.setXmlNode(xmlData, "StatusColor", PlatformOps.GetStatusHtmlColor(instance.Status));
             XMLOps.setXmlNode(xmlData, "StatusFontColor", PlatformOps.GetStatusHtmlFontColor(instance.Status));
             XMLOps.setXmlNode(xmlData, "PercentComplete", instance.PercentComplete.ToString());
-            XMLOps.setXmlNode(xmlData, "Name", instance.Settings.InstanceName);
-            XMLOps.setXmlNode(xmlData, "UserIDDuplicate", (duplicateUserIdCheck && instance.UserIdIsDuplicate).ToString());
-            XMLOps.setXmlNode(xmlData, "ClientType", instance.CurrentUnitInfo.TypeOfClient.ToString());
+            XMLOps.setXmlNode(xmlData, "Name", instance.Name);
+            XMLOps.setXmlNode(xmlData, "UserIDDuplicate", instance.UserIdIsDuplicate.ToString());
+            XMLOps.setXmlNode(xmlData, "ClientType", instance.TypeOfClient.ToString());
             XMLOps.setXmlNode(xmlData, "ClientVersion", instance.ClientVersion); // Issue 193
-            XMLOps.setXmlNode(xmlData, "TPF", instance.TimePerFrame.ToString());
+            XMLOps.setXmlNode(xmlData, "TPF", instance.TPF.ToString());
             XMLOps.setXmlNode(xmlData, "PPD", String.Format("{0:" + _prefs.PpdFormatString + "}", instance.PPD));
             XMLOps.setXmlNode(xmlData, "UPD", String.Format("{0:0.00}", instance.UPD));
-            XMLOps.setXmlNode(xmlData, "MHz", instance.Settings.ClientProcessorMegahertz.ToString());
-            XMLOps.setXmlNode(xmlData, "PPDMHz", String.Format("{0:0.000}", instance.PPD / instance.Settings.ClientProcessorMegahertz));
+            XMLOps.setXmlNode(xmlData, "MHz", instance.MHz.ToString());
+            XMLOps.setXmlNode(xmlData, "PPDMHz", instance.PPD_MHz.ToString());
             XMLOps.setXmlNode(xmlData, "ETA", instance.ETA.ToString());
             if (instance.EtaDate.Equals(DateTime.MinValue))
             {
@@ -479,34 +471,34 @@ namespace HFM.Instances
                XMLOps.setXmlNode(xmlData, "ETADate", String.Format("{0} {1}", instance.EtaDate.ToShortDateString(), instance.EtaDate.ToShortTimeString()));
             }             
             XMLOps.setXmlNode(xmlData, "ShowETADate", etaDate.ToString());
-            XMLOps.setXmlNode(xmlData, "Core", instance.CurrentUnitInfo.Core);
-            XMLOps.setXmlNode(xmlData, "CoreVersion", instance.CurrentUnitInfo.CoreVersion);
-            XMLOps.setXmlNode(xmlData, "CoreID", instance.CurrentUnitInfo.CoreId); // Issue 193
-            XMLOps.setXmlNode(xmlData, "ProjectRunCloneGen", instance.CurrentUnitInfo.ProjectRunCloneGen);
-            XMLOps.setXmlNode(xmlData, "ProjectDuplicate", (duplicateProjectCheck && instance.ProjectIsDuplicate).ToString());
+            XMLOps.setXmlNode(xmlData, "Core", instance.CoreName);
+            XMLOps.setXmlNode(xmlData, "CoreVersion", instance.CoreVersion);
+            XMLOps.setXmlNode(xmlData, "CoreID", instance.CoreId); // Issue 193
+            XMLOps.setXmlNode(xmlData, "ProjectRunCloneGen", instance.ProjectRunCloneGen);
+            XMLOps.setXmlNode(xmlData, "ProjectDuplicate", instance.ProjectIsDuplicate.ToString());
             XMLOps.setXmlNode(xmlData, "Credit", String.Format("{0:0}", instance.Credit));
             XMLOps.setXmlNode(xmlData, "Completed", instance.TotalRunCompletedUnits.ToString());
             XMLOps.setXmlNode(xmlData, "Failed", instance.TotalRunFailedUnits.ToString());
             XMLOps.setXmlNode(xmlData, "TotalCompleted", instance.TotalClientCompletedUnits.ToString());
             XMLOps.setXmlNode(xmlData, "CompletedCountDisplay", completedCountDisplayType.ToString());
-            XMLOps.setXmlNode(xmlData, "Username", String.Format("{0} ({1})", instance.FoldingID, instance.Team));
-            XMLOps.setXmlNode(xmlData, "UsernameMatch", instance.IsUsernameOk().ToString()); // Issue 51
+            XMLOps.setXmlNode(xmlData, "Username", instance.Username);
+            XMLOps.setXmlNode(xmlData, "UsernameMatch", instance.UsernameOk.ToString()); // Issue 51
             XMLOps.setXmlNode(xmlData, "ShowVersions", showVersions.ToString()); // Issue 193
-            if (instance.CurrentUnitInfo.DownloadTimeUnknown)
+            if (instance.DownloadTimeUnknown)
             {
                XMLOps.setXmlNode(xmlData, "DownloadTime", "Unknown");
             }
             else
             {
-               XMLOps.setXmlNode(xmlData, "DownloadTime", String.Format("{0} {1}", instance.CurrentUnitInfo.DownloadTime.ToShortDateString(), instance.CurrentUnitInfo.DownloadTime.ToShortTimeString()));
+               XMLOps.setXmlNode(xmlData, "DownloadTime", String.Format("{0} {1}", instance.DownloadTime.ToShortDateString(), instance.DownloadTime.ToShortTimeString()));
             }
-            if (instance.CurrentUnitInfo.PreferredDeadlineUnknown)
+            if (instance.PreferredDeadlineUnknown)
             {
                XMLOps.setXmlNode(xmlData, "Deadline", "Unknown");
             }
             else
             {
-               XMLOps.setXmlNode(xmlData, "Deadline", String.Format("{0} {1}", instance.CurrentUnitInfo.PreferredDeadline.ToShortDateString(), instance.CurrentUnitInfo.PreferredDeadline.ToShortTimeString()));
+               XMLOps.setXmlNode(xmlData, "Deadline", String.Format("{0} {1}", instance.PreferredDeadline.ToShortDateString(), instance.PreferredDeadline.ToShortTimeString()));
             }
 
             XmlNode xImpNode = xmlDoc.ImportNode(xmlFrag.ChildNodes[0], true);

@@ -69,17 +69,19 @@ namespace HFM.Framework
       IProtein GetProtein(int projectId);
 
       /// <summary>
+      /// Get Protein from Collection (should be called from worker thread)
+      /// </summary>
+      /// <param name="projectId">Project ID</param>
+      /// <param name="allowProteinDownload">Allow Download from psummary</param>
+      IProtein GetProtein(int projectId, bool allowProteinDownload);
+
+      /// <summary>
       /// Create a New Protein
       /// </summary>
       IProtein CreateProtein();
 
       #region Want to get rid of these direct collection accessors
-      void Add(int key, IProtein value);
-      bool Remove(int key);
-      void Clear();
-      
       bool ContainsKey(int key);
-      bool ContainsValue(IProtein value);
       
       bool TryGetValue(int key, out IProtein value);
       

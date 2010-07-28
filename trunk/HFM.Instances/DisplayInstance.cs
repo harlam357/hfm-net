@@ -30,185 +30,185 @@ namespace HFM.Instances
    {
       public const int NumberOfDisplayFields = 19;
    
-      private readonly IPreferenceSet _prefs;
+      //private readonly IPreferenceSet _prefs;
    
-      public DisplayInstance(IPreferenceSet prefs)
-      {
-         _prefs = prefs;
-      }
+      //public DisplayInstance(IPreferenceSet prefs)
+      //{
+      //   _prefs = prefs;
+      //}
    
-      #region Members & Read Only Properties
+      //#region Members & Read Only Properties
 
-      /// <summary>
-      /// 
-      /// </summary>
-      public ClientStatus Status { get; private set; }
+      ///// <summary>
+      ///// 
+      ///// </summary>
+      //public ClientStatus Status { get; private set; }
 
-      /// <summary>
-      /// Current progress (percentage) of the unit
-      /// </summary>
-      public float Progress { get; private set; }
+      ///// <summary>
+      ///// Current progress (percentage) of the unit
+      ///// </summary>
+      //public float Progress { get; private set; }
 
-      /// <summary>
-      /// 
-      /// </summary>
-      public String Name { get; private set; }
+      ///// <summary>
+      ///// 
+      ///// </summary>
+      //public String Name { get; private set; }
 
-      private string _clientType;
+      //private string _clientType;
 
-      private string _clientVersion;
+      //private string _clientVersion;
 
-      /// <summary>
-      /// 
-      /// </summary>
-      public string ClientType
-      {
-         get
-         {
-            if (_prefs.GetPreference<bool>(Preference.ShowVersions) && String.IsNullOrEmpty(_clientVersion) == false)
-            {
-               return String.Format(CultureInfo.CurrentCulture, "{0} ({1})", _clientType, _clientVersion);
-            }
-            return _clientType;
-         }
-      }
+      ///// <summary>
+      ///// 
+      ///// </summary>
+      //public string ClientType
+      //{
+      //   get
+      //   {
+      //      if (_prefs.GetPreference<bool>(Preference.ShowVersions) && String.IsNullOrEmpty(_clientVersion) == false)
+      //      {
+      //         return String.Format(CultureInfo.CurrentCulture, "{0} ({1})", _clientType, _clientVersion);
+      //      }
+      //      return _clientType;
+      //   }
+      //}
 
-      /// <summary>
-      /// 
-      /// </summary>
-      public TimeSpan TPF { get; private set; }
+      ///// <summary>
+      ///// 
+      ///// </summary>
+      //public TimeSpan TPF { get; private set; }
 
-      /// <summary>
-      /// PPD rating for this instance
-      /// </summary>
-      public double PPD { get; private set; }
+      ///// <summary>
+      ///// PPD rating for this instance
+      ///// </summary>
+      //public double PPD { get; private set; }
 
-      /// <summary>
-      /// The number of processor megahertz for this client instance
-      /// </summary>
-      public Int32 MHz { get; private set; }
+      ///// <summary>
+      ///// The number of processor megahertz for this client instance
+      ///// </summary>
+      //public Int32 MHz { get; private set; }
 
-      /// <summary>
-      /// PPD rating for this instance
-      /// </summary>
-      public double PPD_MHz { get; private set; }
+      ///// <summary>
+      ///// PPD rating for this instance
+      ///// </summary>
+      //public double PPD_MHz { get; private set; }
 
-      /// <summary>
-      /// ETA for this instance
-      /// </summary>
-      public TimeSpan ETA { get; private set; }
+      ///// <summary>
+      ///// ETA for this instance
+      ///// </summary>
+      //public TimeSpan ETA { get; private set; }
       
-      private string _core;
+      //private string _core;
 
-      private string _coreVersion;
+      //private string _coreVersion;
 
-      /// <summary>
-      /// 
-      /// </summary>
-      public string Core
-      {
-         get
-         {
-            if (_prefs.GetPreference<bool>(Preference.ShowVersions) && String.IsNullOrEmpty(_coreVersion) == false)
-            {
-               return String.Format(CultureInfo.CurrentCulture, "{0} ({1})", _core, _coreVersion);
-            }
-            return _core;
-         }
-      }
+      ///// <summary>
+      ///// 
+      ///// </summary>
+      //public string Core
+      //{
+      //   get
+      //   {
+      //      if (_prefs.GetPreference<bool>(Preference.ShowVersions) && String.IsNullOrEmpty(_coreVersion) == false)
+      //      {
+      //         return String.Format(CultureInfo.CurrentCulture, "{0} ({1})", _core, _coreVersion);
+      //      }
+      //      return _core;
+      //   }
+      //}
 
-      /// <summary>
-      /// 
-      /// </summary>
-      public string CoreId { get; private set; }
+      ///// <summary>
+      ///// 
+      ///// </summary>
+      //public string CoreId { get; private set; }
 
-      /// <summary>
-      /// 
-      /// </summary>
-      public string ProjectRunCloneGen { get; private set; }
+      ///// <summary>
+      ///// 
+      ///// </summary>
+      //public string ProjectRunCloneGen { get; private set; }
 
-      /// <summary>
-      /// 
-      /// </summary>
-      public double Credit { get; private set; }
+      ///// <summary>
+      ///// 
+      ///// </summary>
+      //public double Credit { get; private set; }
 
-      private int _runCompleted;
+      //private int _runCompleted;
 
-      private int _clientCompleted;
+      //private int _clientCompleted;
 
-      /// <summary>
-      /// 
-      /// </summary>
-      public int Complete
-      {
-         get
-         {
-            if (_prefs.GetPreference<CompletedCountDisplayType>(Preference.CompletedCountDisplay).Equals(CompletedCountDisplayType.ClientTotal))
-            {
-               return _clientCompleted;
-            }
-            return _runCompleted;
-         }
-      }
+      ///// <summary>
+      ///// 
+      ///// </summary>
+      //public int Complete
+      //{
+      //   get
+      //   {
+      //      if (_prefs.GetPreference<CompletedCountDisplayType>(Preference.CompletedCountDisplay).Equals(CompletedCountDisplayType.ClientTotal))
+      //      {
+      //         return _clientCompleted;
+      //      }
+      //      return _runCompleted;
+      //   }
+      //}
 
-      /// <summary>
-      /// 
-      /// </summary>
-      public int Failed { get; private set; }
+      ///// <summary>
+      ///// 
+      ///// </summary>
+      //public int Failed { get; private set; }
 
-      /// <summary>
-      /// 
-      /// </summary>
-      public string Username { get; private set; }
+      ///// <summary>
+      ///// 
+      ///// </summary>
+      //public string Username { get; private set; }
 
-      /// <summary>
-      /// Date/time the unit was downloaded
-      /// </summary>
-      public DateTime DownloadTime { get; private set; }
+      ///// <summary>
+      ///// Date/time the unit was downloaded
+      ///// </summary>
+      //public DateTime DownloadTime { get; private set; }
 
-      /// <summary>
-      /// 
-      /// </summary>
-      public DateTime Deadline { get; private set; }
+      ///// <summary>
+      ///// 
+      ///// </summary>
+      //public DateTime Deadline { get; private set; }
 
-      [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-      public string Dummy
-      {
-         get { return String.Empty; }
-      }
-      #endregion
+      //[SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+      //public string Dummy
+      //{
+      //   get { return String.Empty; }
+      //}
+      //#endregion
 
-      #region Implementation
-      public void Load(ClientInstance instance, int decimalPlaces)
-      {
-         Status = instance.Status;
-         Progress = ((float)instance.PercentComplete) / 100;
-         Name = instance.Settings.InstanceName;
-         _clientType = instance.CurrentUnitInfo.TypeOfClient.ToString();
-         _clientVersion = instance.ClientVersion;
-         TPF = instance.TimePerFrame;
-         PPD = Math.Round(instance.PPD, decimalPlaces);
-         MHz = instance.Settings.ClientProcessorMegahertz;
-         PPD_MHz = Math.Round(instance.PPD / instance.Settings.ClientProcessorMegahertz, 3);
-         ETA = instance.ETA;
-         _core = instance.CurrentUnitInfo.Core;
-         _coreVersion = instance.CurrentUnitInfo.CoreVersion;
-         CoreId = instance.CurrentUnitInfo.CoreId;
-         ProjectRunCloneGen = instance.CurrentUnitInfo.ProjectRunCloneGen;
-         Credit = instance.Credit;
-         _runCompleted = instance.TotalRunCompletedUnits;
-         _clientCompleted = instance.TotalClientCompletedUnits;
-         Failed = instance.TotalRunFailedUnits;
-         Username = instance.FoldingIDAndTeam;
-         DownloadTime = instance.CurrentUnitInfo.DownloadTime;
-         Deadline = instance.CurrentUnitInfo.PreferredDeadline;
-      }
+      //#region Implementation
+      //public void Load(ClientInstance instance, int decimalPlaces)
+      //{
+      //   Status = instance.Status;
+      //   Progress = ((float)instance.PercentComplete) / 100;
+      //   Name = instance.Settings.InstanceName;
+      //   _clientType = instance.CurrentUnitInfo.TypeOfClient.ToString();
+      //   _clientVersion = instance.ClientVersion;
+      //   TPF = instance.TPF;
+      //   PPD = Math.Round(instance.PPD, decimalPlaces);
+      //   MHz = instance.Settings.ClientProcessorMegahertz;
+      //   PPD_MHz = Math.Round(instance.PPD / instance.Settings.ClientProcessorMegahertz, 3);
+      //   ETA = instance.ETA;
+      //   _core = instance.CurrentUnitInfo.Core;
+      //   _coreVersion = instance.CurrentUnitInfo.CoreVersion;
+      //   CoreId = instance.CurrentUnitInfo.CoreId;
+      //   ProjectRunCloneGen = instance.CurrentUnitInfo.ProjectRunCloneGen;
+      //   Credit = instance.Credit;
+      //   _runCompleted = instance.TotalRunCompletedUnits;
+      //   _clientCompleted = instance.TotalClientCompletedUnits;
+      //   Failed = instance.TotalRunFailedUnits;
+      //   Username = instance.FoldingIDAndTeam;
+      //   DownloadTime = instance.CurrentUnitInfo.DownloadTime;
+      //   Deadline = instance.CurrentUnitInfo.PreferredDeadline;
+      //}
 
-      public void UpdateName(string key)
-      {
-         Name = key;
-      } 
-      #endregion
+      //public void UpdateName(string key)
+      //{
+      //   Name = key;
+      //} 
+      //#endregion
 
       public static void SetupDataGridViewColumns(DataGridView dataGridView1)
       {
@@ -244,13 +244,13 @@ namespace HFM.Instances
          dataGridView1.Columns.Add("Complete", "Complete");
          dataGridView1.Columns["Complete"].DataPropertyName = "Complete";
          dataGridView1.Columns.Add("Failed", "Failed");
-         dataGridView1.Columns["Failed"].DataPropertyName = "Failed";
+         dataGridView1.Columns["Failed"].DataPropertyName = "TotalRunFailedUnits";
          dataGridView1.Columns.Add("Username", "User Name");
          dataGridView1.Columns["Username"].DataPropertyName = "Username";
          dataGridView1.Columns.Add("DownloadTime", "Download Time");
          dataGridView1.Columns["DownloadTime"].DataPropertyName = "DownloadTime";
          dataGridView1.Columns.Add("Deadline", "Deadline");
-         dataGridView1.Columns["Deadline"].DataPropertyName = "Deadline";
+         dataGridView1.Columns["Deadline"].DataPropertyName = "PreferredDeadline";
          dataGridView1.Columns.Add("Dummy", String.Empty);
          //dataGridView1.Columns["Dummy"].DataPropertyName = "Dummy";
          // ReSharper restore PossibleNullReferenceException

@@ -29,7 +29,7 @@ namespace HFM.Instances
       /// Get Totals for all Client Instances in given Collection
       /// </summary>
       /// <returns>Totals for all Instances (InstanceTotals Structure)</returns>
-      public static InstanceTotals GetInstanceTotals(ICollection<IClientInstance> instances)
+      public static InstanceTotals GetInstanceTotals(ICollection<IDisplayInstance> instances)
       {
          var totals = new InstanceTotals();
          
@@ -46,7 +46,7 @@ namespace HFM.Instances
 
          totals.TotalClients = instances.Count;
 
-         foreach (IClientInstance instance in instances)
+         foreach (IDisplayInstance instance in instances)
          {
             totals.PPD += instance.PPD;
             totals.UPD += instance.UPD;

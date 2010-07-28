@@ -162,6 +162,11 @@ namespace HFM.Framework
       DateTime EtaDate { get; }
 
       /// <summary>
+      /// Flag specifying if EtaDate is Unknown
+      /// </summary>
+      bool EtaDateUnknown { get; }
+
+      /// <summary>
       /// Esimated Finishing Time for this unit
       /// </summary>
       TimeSpan EftByDownloadTime { get; }

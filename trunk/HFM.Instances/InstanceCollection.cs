@@ -110,7 +110,7 @@ namespace HFM.Instances
       /// <summary>
       /// Display instance collection (this is bound to the DataGridView)
       /// </summary>
-      private readonly SortableBindingList<DisplayInstance> _displayCollection;
+      private readonly SortableBindingList<IDisplayInstance> _displayCollection;
 
       /// <summary>
       /// Tells the SortableBindingList whether to sort Offline Clients Last
@@ -128,25 +128,34 @@ namespace HFM.Instances
       }
       
       /// <summary>
-      /// Currently Selected Client Instance
+      /// Currently Selected Display Instance
       /// </summary>
-      private ClientInstance _selectedInstance;
+      private ClientInstance _currentInstance;
 
-      /// <summary>
-      /// Currently Selected Client Instance
-      /// </summary>
-      [CLSCompliant(false)]
-      public IClientInstance SelectedInstance
+      private ClientInstance CurrentInstance
       {
-         get { return _selectedInstance; }
-         private set
+         set
          {
-            if (_selectedInstance != value)
+            if (_currentInstance != value)
             {
-               _selectedInstance = (ClientInstance)value;
+               _currentInstance = value;
                OnSelectedInstanceChanged(EventArgs.Empty);
             }
          }
+      }
+
+      /// <summary>
+      /// Currently Selected Display Instance
+      /// </summary>
+      [CLSCompliant(false)]
+      public IDisplayInstance SelectedInstance
+      {
+         get { return _currentInstance; }
+      }
+      
+      public IClientInstanceSettings SelectedInstanceSettings
+      {
+         get { return _currentInstance == null ? null : _currentInstance.Settings; }
       }
 
       private int _settingsPluginIndex;
@@ -257,7 +266,7 @@ namespace HFM.Instances
          _instanceFactory = instanceFactory;
 
          _instanceCollection = new Dictionary<string, ClientInstance>();
-         _displayCollection = new SortableBindingList<DisplayInstance>();
+         _displayCollection = new SortableBindingList<IDisplayInstance>();
 
          ConfigFilename = String.Empty;
       }
@@ -581,7 +590,7 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="instance">Client Instance</param>
       /// <param name="fireAddedEvent">Specifies whether this call fires the InstanceAdded Event</param>
-      private void Add(IClientInstance instance, bool fireAddedEvent)
+      private void Add(ClientInstance instance, bool fireAddedEvent)
       {
          if (ContainsName(instance.Settings.InstanceName))
          {
@@ -633,7 +642,6 @@ namespace HFM.Instances
          if (previousName != instance.Settings.InstanceName)
          {
             // update InstanceCollection
-            UpdateDisplayInstanceName(previousName, instance.Settings.InstanceName);
             Remove(previousName, false);
             Add(instance, false);
 
@@ -670,7 +678,7 @@ namespace HFM.Instances
       private void Remove(string key, bool fireRemovedEvent)
       {
          _instanceCollection.Remove(key);
-         DisplayInstance findInstance = FindDisplayInstance(_displayCollection, key);
+         IDisplayInstance findInstance = FindDisplayInstance(_displayCollection, key);
          _displayCollection.Remove(findInstance);
          OnCollectionChanged(EventArgs.Empty);
          
@@ -764,8 +772,7 @@ namespace HFM.Instances
                var uploadHtml = _Prefs.GetPreference<bool>(Preference.WebGenCopyHtml);
                var uploadXml = _Prefs.GetPreference<bool>(Preference.WebGenCopyXml);
                DateTime start = HfmTrace.ExecStart;
-               ICollection<IClientInstance> instances = GetCurrentInstanceArray();
-               instances = GetDisplaySortedInstanceCollection(instances);
+               ICollection<IDisplayInstance> instances = GetCurrentDisplayInstanceArray();
                if (uploadHtml)
                {
                   markupGenerator.GenerateHtml(instances);
@@ -787,26 +794,8 @@ namespace HFM.Instances
          }
       }
       
-      private ICollection<IClientInstance> GetDisplaySortedInstanceCollection(ICollection<IClientInstance> instances)
-      {
-         // Issue 166 - Make the Web Summary Page respect the current Sort Column and Direction.
-         var sortedCollection = new List<IClientInstance>(instances.Count);
-         var displayCollection = GetCurrentDisplayInstanceArray();
-         foreach (var d in displayCollection)
-         {
-            DisplayInstance displayInstance = d;
-            var instance = instances.Where(c => c.Settings.InstanceName == displayInstance.Name);
-            if (instance.Count() == 1)
-            {
-               sortedCollection.Add(instance.First());
-            }
-         }
-
-         return sortedCollection.AsReadOnly();
-      }
-      
       private void DeployWebsite(ICollection<string> htmlFilePaths, ICollection<string> xmlFilePaths,
-                                 ICollection<IClientInstance> instances)
+                                 ICollection<IDisplayInstance> instances)
       {
          Debug.Assert(_Prefs.GetPreference<bool>(Preference.GenerateWeb));
       
@@ -1172,7 +1161,7 @@ namespace HFM.Instances
                // Don't save the UnitInfo object if the contained Project is Unknown
                if (instance.CurrentUnitInfo.ProjectIsUnknown == false)
                {
-                  _unitInfoContainer.Add(instance.CurrentUnitInfoConcrete.UnitInfoData);
+                  _unitInfoContainer.Add(instance.CurrentUnitInfo.UnitInfoData);
                }
             }
          }
@@ -1184,12 +1173,14 @@ namespace HFM.Instances
       #endregion
 
       #region Binding Support
+
       /// <summary>
       /// Get Display Collection For Binding
       /// </summary>
       /// <returns>List of Display Instances</returns>
+      [CLSCompliant(false)]
       [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-      public BindingList<DisplayInstance> GetDisplayCollection()
+      public BindingList<IDisplayInstance> GetDisplayCollection()
       {
          RefreshDisplayCollection();
          return _displayCollection;
@@ -1204,32 +1195,15 @@ namespace HFM.Instances
          {
             foreach (ClientInstance instance in _instanceCollection.Values)
             {
-               DisplayInstance findInstance = FindDisplayInstance(_displayCollection, instance.Settings.InstanceName);
-               var decimalPlaces = _Prefs.GetPreference<int>(Preference.DecimalPlaces);
-               if (findInstance != null)
+               IDisplayInstance findInstance = FindDisplayInstance(_displayCollection, instance.Settings.InstanceName);
+               if (findInstance == null)
                {
-                  findInstance.Load(instance, decimalPlaces);
-               }
-               else
-               {
-                  var newInstance = new DisplayInstance(_Prefs);
-                  newInstance.Load(instance, decimalPlaces);
-                  _displayCollection.Add(newInstance);
+                  _displayCollection.Add(instance);
                }
             }
          }
       }
 
-      /// <summary>
-      /// Update an Instance Name in the Display Collection
-      /// </summary>
-      /// <param name="oldName">Old Instance Name</param>
-      /// <param name="newName">New Instance Name</param>
-      private void UpdateDisplayInstanceName(string oldName, string newName)
-      {
-         DisplayInstance findInstance = FindDisplayInstance(_displayCollection, oldName);
-         findInstance.UpdateName(newName);
-      }
       #endregion
 
       #region Duplicate UserID and Project Support
@@ -1289,44 +1263,34 @@ namespace HFM.Instances
                {
                   string instanceName = nameColumnValue.ToString();
                   ClientInstance instance;
-                  SelectedInstance = _instanceCollection.TryGetValue(instanceName, out instance) ? instance : null;
+                  CurrentInstance = _instanceCollection.TryGetValue(instanceName, out instance) ? instance : null;
                }
                else
                {
-                  SelectedInstance = null;
+                  CurrentInstance = null;
                }
             }
          }
          else
          {
-            SelectedInstance = null;
+            CurrentInstance = null;
          }
       }
-      
+
       /// <summary>
       /// Get Array Representation of Current Client Instance objects in Collection
       /// </summary>
       private ClientInstance[] GetCurrentInstanceArray()
       {
-         // Changing this to return an empty array instead of null
-         // Less hassle not having to possibly deal with a null reference - 4/17/10
-         //if (Count > 0)
-         //{
-            return _instanceCollection.Values.ToArray();
-         //}
-
-         //return null;
+         return _instanceCollection.Values.ToArray();
       }
 
       /// <summary>
       /// Get Array Representation of Current Display Instance objects in Collection
       /// </summary>
-      private DisplayInstance[] GetCurrentDisplayInstanceArray()
+      private IDisplayInstance[] GetCurrentDisplayInstanceArray()
       {
-         var displayInstances = new DisplayInstance[_displayCollection.Count];
-         _displayCollection.CopyTo(displayInstances, 0);
-
-         return displayInstances;
+         return _displayCollection.ToArray();
       }
       
       /// <summary>
@@ -1336,7 +1300,7 @@ namespace HFM.Instances
       [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
       public InstanceTotals GetInstanceTotals()
       {
-         return InstanceCollectionHelpers.GetInstanceTotals(GetCurrentInstanceArray());
+         return InstanceCollectionHelpers.GetInstanceTotals(GetCurrentDisplayInstanceArray());
       }
 
       /// <summary>
@@ -1345,9 +1309,9 @@ namespace HFM.Instances
       /// <param name="collection">DisplayIntance Collection</param>
       /// <param name="key">Instance Name</param>
       /// <returns></returns>
-      private static DisplayInstance FindDisplayInstance(IEnumerable<DisplayInstance> collection, string key)
+      private static IDisplayInstance FindDisplayInstance(IEnumerable<IDisplayInstance> collection, string key)
       {
-         return new List<DisplayInstance>(collection).Find(displayInstance => displayInstance.Name == key);
+         return new List<IDisplayInstance>(collection).Find(displayInstance => displayInstance.Name == key);
       }
 
       /// <summary>

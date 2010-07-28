@@ -85,18 +85,18 @@ namespace HFM.Instances.Tests
                          instance.UserAndMachineId);
 
          // True if the defaults are in place
-         Assert.AreEqual(true, instance.IsUsernameOk());
+         Assert.AreEqual(true, instance.UsernameOk);
          
          instance.FoldingID = "user";
          instance.Team = 3232;
-         Assert.AreEqual(true, instance.IsUsernameOk());
+         Assert.AreEqual(true, instance.UsernameOk);
          // Status must not be Unknown or Offline for function to evaluate false
          instance.Status = ClientStatus.RunningNoFrameTimes;
-         Assert.AreEqual(false, instance.IsUsernameOk());
+         Assert.AreEqual(false, instance.UsernameOk);
          
          instance.FoldingID = "harlam357";
          instance.Team = 32;
-         Assert.AreEqual(true, instance.IsUsernameOk());
+         Assert.AreEqual(true, instance.UsernameOk);
          Assert.AreEqual(String.Format(CultureInfo.InvariantCulture, "{0} ({1})", instance.FoldingID, instance.Team),
                          instance.FoldingIDAndTeam);
       }
@@ -111,7 +111,7 @@ namespace HFM.Instances.Tests
          Expect.Call(newProtein.Frames).Return(frames).Repeat.Any();
 
          IProteinCollection proteinCollection = _mocks.DynamicMock<IProteinCollection>();
-         Expect.Call(proteinCollection.GetProtein(0)).Return(currentProtein).IgnoreArguments().Repeat.Any();
+         Expect.Call(proteinCollection.GetProtein(0, true)).Return(currentProtein).IgnoreArguments().Repeat.Any();
          Expect.Call(proteinCollection.CreateProtein()).Return(newProtein).Repeat.Any();
 
          return proteinCollection;

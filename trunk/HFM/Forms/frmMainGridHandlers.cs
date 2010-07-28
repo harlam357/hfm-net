@@ -77,7 +77,7 @@ namespace HFM.Forms
             
             if (dataGridView1.Columns["Username"].Index == info.ColumnIndex)
             {
-               if (instance.IsUsernameOk() == false)
+               if (instance.UsernameOk == false)
                {
                   toolTipGrid.Show("Client's User Name does not match the configured User Name", dataGridView1, e.X + 15, e.Y);
                   return;
@@ -142,7 +142,7 @@ namespace HFM.Forms
             {
                #region Username Incorrect Custom Paint
                var instance = _clientInstances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
-               if (instance.IsUsernameOk() == false)
+               if (instance.UsernameOk == false)
                {
                   PaintGridCell(PaintCell.Warning, e);
                }

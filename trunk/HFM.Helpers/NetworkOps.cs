@@ -519,7 +519,7 @@ namespace HFM.Helpers
       /// <param name="instances">Client Instance Collection</param>
       /// <param name="prefs">Preferences Interface</param>
       public void FtpWebUpload(string server, string ftpPath, string username, string password, ICollection<string> htmlFilePaths, 
-                               ICollection<IClientInstance> instances, IPreferenceSet prefs)
+                               ICollection<IDisplayInstance> instances, IPreferenceSet prefs)
       {
          // Time FTP Upload Conversation - Issue 52
          DateTime start = HfmTrace.ExecStart;
@@ -545,9 +545,9 @@ namespace HFM.Helpers
                                     ? prefs.GetPreference<int>(Preference.WebGenLimitLogSizeLength) * 1024
                                     : -1;
                // Upload the FAHlog.txt File for each Client Instance
-               foreach (IClientInstance instance in instances)
+               foreach (IDisplayInstance instance in instances)
                {
-                  string cachedFahlogPath = Path.Combine(prefs.CacheDirectory, instance.Settings.CachedFahLogName);
+                  string cachedFahlogPath = Path.Combine(prefs.CacheDirectory, instance.CachedFahLogName);
                   if (File.Exists(cachedFahlogPath))
                   {
                      FtpUploadHelper(server, ftpPath, cachedFahlogPath, maximumLength, username, password, ftpMode);

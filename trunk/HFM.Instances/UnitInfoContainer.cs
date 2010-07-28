@@ -28,6 +28,36 @@ using HFM.Instrumentation;
 
 namespace HFM.Instances
 {
+   public interface IUnitInfoContainer
+   {
+      /// <summary>
+      /// Add to the Container
+      /// </summary>
+      /// <param name="unit"></param>
+      void Add(IUnitInfo unit);
+
+      /// <summary>
+      /// Clear the Container
+      /// </summary>
+      void Clear();
+
+      /// <summary>
+      /// Retrieve from the Container
+      /// </summary>
+      /// <param name="instance">Client Instance Interface</param>
+      IUnitInfo RetrieveUnitInfo(ClientInstance instance);
+
+      /// <summary>
+      /// Read Binary File
+      /// </summary>
+      void Read();
+
+      /// <summary>
+      /// Write Binary File
+      /// </summary>
+      void Write();
+   }
+
    public class UnitInfoContainer : IUnitInfoContainer
    {
       #region Constants
@@ -74,8 +104,7 @@ namespace HFM.Instances
       /// Retrieve from the Container
       /// </summary>
       /// <param name="instance">Client Instance</param>
-      [CLSCompliant(false)]
-      public IUnitInfo RetrieveUnitInfo(IClientInstance instance)
+      public IUnitInfo RetrieveUnitInfo(ClientInstance instance)
       {
          UnitInfo findUnit = _collection.UnitInfoList.Find(instance.Owns);
          return findUnit;

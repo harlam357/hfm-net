@@ -62,10 +62,10 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Enumerations.cs" />
     <Compile Include="IBenchmarkClient.cs" />
-    <Compile Include="IClientInstance.cs" />
     <Compile Include="IClientInstanceSettings.cs" />
     <Compile Include="IClientRun.cs" />
     <Compile Include="IDataAggregator.cs" />
+    <Compile Include="IDisplayInstance.cs" />
     <Compile Include="IFahLogUnitData.cs" />
     <Compile Include="IFrameData.cs" />
     <Compile Include="IInstanceProteinBenchmark.cs" />
@@ -87,8 +87,6 @@
     <Compile Include="IQueueReader.cs" />
     <Compile Include="IUnitFrame.cs" />
     <Compile Include="IUnitInfo.cs" />
-    <Compile Include="IUnitInfoContainer.cs" />
-    <Compile Include="IUnitInfoFactory.cs" />
     <Compile Include="IUnitInfoLogData.cs" />
     <Compile Include="IUnitInfoLogic.cs" />
     <Compile Include="IXmlStatsData.cs" />

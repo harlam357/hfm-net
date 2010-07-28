@@ -204,6 +204,16 @@ namespace HFM.Proteins
       /// <param name="projectId">Project ID</param>
       public IProtein GetProtein(int projectId)
       {
+         return GetProtein(projectId, true);
+      }
+
+      /// <summary>
+      /// Get Protein from Collection (should be called from worker thread)
+      /// </summary>
+      /// <param name="projectId">Project ID</param>
+      /// <param name="allowProteinDownload">Allow Download from psummary</param>
+      public IProtein GetProtein(int projectId, bool allowProteinDownload)
+      {
          // If Project Requested is 0, just return a "blank" Protein.
          if (projectId == 0) return new Protein();
       
@@ -224,30 +234,33 @@ namespace HFM.Proteins
             }
          }
          
-         // Execute a Download
-         _downloader.DownloadFromStanford();
+         if (allowProteinDownload)
+         {
+            // Execute a Download
+            _downloader.DownloadFromStanford();
 
-         // If the Project is now Found
-         if (ContainsKey(projectId))
-         {
-            // Remove it from the Not Found List and return it
-            _projectsNotFound.Remove(projectId);
-            return this[projectId];
+            // If the Project is now Found
+            if (ContainsKey(projectId))
+            {
+               // Remove it from the Not Found List and return it
+               _projectsNotFound.Remove(projectId);
+               return this[projectId];
+            }
+
+            // If already on the Not Found List
+            if (_projectsNotFound.ContainsKey(projectId))
+            {
+               // Update the Last Download Attempt Date
+               _projectsNotFound[projectId] = DateTime.Now;
+            }
+            else // Add it
+            {
+               _projectsNotFound.Add(projectId, DateTime.Now);
+            }
+
+            HfmTrace.WriteToHfmConsole(TraceLevel.Error,
+                                       String.Format("Project ID '{0}' not found on Stanford Web Project Summary.", projectId), true);
          }
-         
-         // If already on the Not Found List
-         if (_projectsNotFound.ContainsKey(projectId))
-         {
-            // Update the Last Download Attempt Date
-            _projectsNotFound[projectId] = DateTime.Now;
-         }
-         else // Add it
-         {
-            _projectsNotFound.Add(projectId, DateTime.Now);
-         }
-            
-         HfmTrace.WriteToHfmConsole(TraceLevel.Error,
-                                    String.Format("Project ID '{0}' not found on Stanford Web Project Summary.", projectId), true);
 
          // Return a "blank" Protein
          return new Protein();

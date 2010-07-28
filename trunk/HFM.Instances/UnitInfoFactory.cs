@@ -21,6 +21,11 @@ using HFM.Framework;
 
 namespace HFM.Instances
 {
+   public interface IUnitInfoFactory
+   {
+      IUnitInfo Create();
+   }
+
    public class UnitInfoFactory : IUnitInfoFactory
    {
       public IUnitInfo Create()

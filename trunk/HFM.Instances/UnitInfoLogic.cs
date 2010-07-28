@@ -129,9 +129,18 @@ namespace HFM.Instances
       #endregion
 
       #region Constructors
+
+      [CLSCompliant(false)]
+      public UnitInfoLogic(IPreferenceSet prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer,
+                           IUnitInfo unitInfo, IClientInstance clientInstance)
+         : this(prefs, proteinCollection, benchmarkContainer, unitInfo, clientInstance, true)
+      {
+      
+      }
+      
       [CLSCompliant(false)]
       public UnitInfoLogic(IPreferenceSet prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer, 
-                           IUnitInfo unitInfo, IClientInstance clientInstance)
+                           IUnitInfo unitInfo, IClientInstance clientInstance, bool allowProteinDownload)
       {
          _prefs = prefs;
          _proteinCollection = proteinCollection;
@@ -143,9 +152,10 @@ namespace HFM.Instances
          OwningInstancePath = _clientInstance.Settings.Path;
          UnitRetrievalTime = _clientInstance.LastRetrievalTime;
 
-         SetCurrentProtein();
+         CurrentProtein = _proteinCollection.GetProtein(ProjectID, allowProteinDownload);
          TypeOfClient = GetClientTypeFromProtein(CurrentProtein);
       }
+
       #endregion
 
       #region Unit Level Members
@@ -312,6 +322,8 @@ namespace HFM.Instances
          get { return _unitInfo.CoreId; }
       }
 
+      #region IProjectInfo Properties
+
       /// <summary>
       /// Project ID Number
       /// </summary>
@@ -358,6 +370,8 @@ namespace HFM.Instances
          get { return _unitInfo.ProjectGen; }
          set { _unitInfo.ProjectGen = value; }
       }
+      
+      #endregion
 
       /// <summary>
       /// Returns true if Project (R/C/G) has not been identified
@@ -553,6 +567,14 @@ namespace HFM.Instances
       public DateTime EtaDate
       {
          get { return DateTime.Now.Add(ETA); }
+      }
+
+      /// <summary>
+      /// Flag specifying if EtaDate is Unknown
+      /// </summary>
+      public bool EtaDateUnknown
+      {
+         get { return EtaDate.Equals(DateTime.MinValue); }
       }
 
       /// <summary>
@@ -1033,10 +1055,6 @@ namespace HFM.Instances
       #endregion
 
       #region Helpers
-      public void SetCurrentProtein()
-      {
-         CurrentProtein = _proteinCollection.GetProtein(ProjectID);
-      }
   
       /// <summary>
       /// Determine the client type based on the current protein core
@@ -1077,6 +1095,7 @@ namespace HFM.Instances
                return ClientType.Unknown;
          }
       }
+
       #endregion
    }
 }

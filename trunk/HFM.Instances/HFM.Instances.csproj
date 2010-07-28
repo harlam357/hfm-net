@@ -109,10 +109,6 @@
       <Project>{E1415297-BD33-4508-A491-F3C13E5A5F7F}</Project>
       <Name>HFM.Plugins</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HFM.Preferences\HFM.Preferences.csproj">
-      <Project>{0CAF91A3-D5F1-44C9-BAEB-FB81DFBF9C47}</Project>
-      <Name>HFM.Preferences</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
