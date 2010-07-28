@@ -248,7 +248,7 @@ namespace HFM.Instances
       public bool RetrievalInProgress
       {
          get { return _retrievalInProgress; }
-         protected set 
+         private set 
          { 
             _retrievalInProgress = value;
          }
@@ -883,7 +883,7 @@ namespace HFM.Instances
       public DateTime LastRetrievalTime
       {
          get { return _lastRetrievalTime; }
-         protected set
+         private set
          {
             _lastRetrievalTime = value;
          }
