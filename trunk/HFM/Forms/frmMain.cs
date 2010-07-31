@@ -1142,7 +1142,8 @@ namespace HFM.Forms
          _proteinCollection.ClearProjectsNotFoundCache();
          _proteinCollection.Downloader.ResetLastDownloadTime();
          // Execute Asynchronous Download
-         _proteinCollection.BeginDownloadFromStanford();
+         var projectDownloadView = InstanceProvider.GetInstance<IProjectDownloadView>();
+         projectDownloadView.Download();
       }
 
       /// <summary>

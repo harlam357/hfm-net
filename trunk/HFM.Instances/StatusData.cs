@@ -18,116 +18,43 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 using HFM.Framework;
 
 namespace HFM.Instances
 {
+   [SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
    public struct StatusData
    {
-      private string _InstanceName;
-      public string InstanceName
-      {
-         get { return _InstanceName; }
-         set { _InstanceName = value; }
-      }
+      public string InstanceName { get; set; }
 
-      private ClientType _TypeOfClient;
-      public ClientType TypeOfClient
-      {
-         get { return _TypeOfClient; }
-         set { _TypeOfClient = value; }
-      }
+      public ClientType TypeOfClient { get; set; }
 
-      private DateTime _LastRetrievalTime;
-      public DateTime LastRetrievalTime
-      {
-         get { return _LastRetrievalTime; }
-         set { _LastRetrievalTime = value; }
-      }
+      public DateTime LastRetrievalTime { get; set; }
 
-      private bool _IgnoreUtcOffset;
-      public bool IgnoreUtcOffset
-      {
-         get { return _IgnoreUtcOffset; }
-         set { _IgnoreUtcOffset = value; }
-      }
-      
-      private TimeSpan _UtcOffset;
-      public TimeSpan UtcOffset
-      {
-         get { return _UtcOffset; }
-         set { _UtcOffset = value; }
-      }
+      public bool IgnoreUtcOffset { get; set; }
 
-      private int _ClientTimeOffset;
-      public int ClientTimeOffset
-      {
-         get { return _ClientTimeOffset; }
-         set { _ClientTimeOffset = value; }
-      }
+      public TimeSpan UtcOffset { get; set; }
 
-      private DateTime _TimeOfLastUnitStart;
-      public DateTime TimeOfLastUnitStart
-      {
-         get { return _TimeOfLastUnitStart; }
-         set { _TimeOfLastUnitStart = value; }
-      }
+      public int ClientTimeOffset { get; set; }
 
-      private DateTime _TimeOfLastFrameProgress;
-      public DateTime TimeOfLastFrameProgress
-      {
-         get { return _TimeOfLastFrameProgress; }
-         set { _TimeOfLastFrameProgress = value; }
-      }
+      public DateTime TimeOfLastUnitStart { get; set; }
 
-      private ClientStatus _CurrentStatus;
-      public ClientStatus CurrentStatus
-      {
-         get { return _CurrentStatus; }
-         set { _CurrentStatus = value; }
-      }
+      public DateTime TimeOfLastFrameProgress { get; set; }
 
-      private ClientStatus _ReturnedStatus;
-      public ClientStatus ReturnedStatus
-      {
-         get { return _ReturnedStatus; }
-         set { _ReturnedStatus = value; }
-      }
+      public ClientStatus CurrentStatus { get; set; }
 
-      private int _FrameTime;
-      public int FrameTime
-      {
-         get { return _FrameTime; }
-         set { _FrameTime = value; }
-      }
+      public ClientStatus ReturnedStatus { get; set; }
 
-      private TimeSpan _AverageFrameTime;
-      public TimeSpan AverageFrameTime
-      {
-         get { return _AverageFrameTime; }
-         set { _AverageFrameTime = value; }
-      }
+      public int FrameTime { get; set; }
 
-      private TimeSpan _TimeOfLastFrame;
-      public TimeSpan TimeOfLastFrame
-      {
-         get { return _TimeOfLastFrame; }
-         set { _TimeOfLastFrame = value; }
-      }
+      public TimeSpan AverageFrameTime { get; set; }
 
-      private TimeSpan _UnitStartTimeStamp;
-      public TimeSpan UnitStartTimeStamp
-      {
-         get { return _UnitStartTimeStamp; }
-         set { _UnitStartTimeStamp = value; }
-      }
+      public TimeSpan TimeOfLastFrame { get; set; }
 
-      private bool _AllowRunningAsync;
-      public bool AllowRunningAsync
-      {
-         get { return _AllowRunningAsync; }
-         set { _AllowRunningAsync = value; }
-      }
+      public TimeSpan UnitStartTimeStamp { get; set; }
+
+      public bool AllowRunningAsync { get; set; }
    }
 }

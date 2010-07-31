@@ -493,7 +493,7 @@ namespace HFM.Instances
 
          if (filterIndex > _settingsPlugins.Count)
          {
-            throw new IndexOutOfRangeException(String.Format(CultureInfo.CurrentCulture, 
+            throw new ArgumentOutOfRangeException("filterIndex", String.Format(CultureInfo.CurrentCulture, 
                "Argument 'filterIndex' must be between 1 and {0}.", _settingsPlugins.Count));
          }
 
@@ -554,7 +554,7 @@ namespace HFM.Instances
 
          if (filterIndex > _settingsPlugins.Count)
          {
-            throw new IndexOutOfRangeException(String.Format(CultureInfo.CurrentCulture,
+            throw new ArgumentOutOfRangeException("filterIndex", String.Format(CultureInfo.CurrentCulture,
                "Argument 'filterIndex' must be between 1 and {0}.", _settingsPlugins.Count));
          }
 
@@ -1219,7 +1219,7 @@ namespace HFM.Instances
          OnFindDuplicatesComplete(EventArgs.Empty);
       }
 
-      public void FindDuplicateUserId(IEnumerable<ClientInstance> instances)
+      private static void FindDuplicateUserId(IEnumerable<ClientInstance> instances)
       {
          var duplicates = (from x in instances
                            group x by x.UserAndMachineId into g
@@ -1233,7 +1233,7 @@ namespace HFM.Instances
          }
       }
 
-      public void FindDuplicateProjects(IEnumerable<ClientInstance> instances)
+      private static void FindDuplicateProjects(IEnumerable<ClientInstance> instances)
       {
          var duplicates = (from x in instances
                            group x by x.CurrentUnitInfo.ProjectRunCloneGen into g

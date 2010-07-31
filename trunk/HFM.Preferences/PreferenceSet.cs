@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -160,6 +161,7 @@ namespace HFM.Preferences
       /// </summary>
       /// <typeparam name="T">Preference Data Type</typeparam>
       /// <param name="key">Preference Key</param>
+      [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
       public T GetPreference<T>(Preference key)
       {
          if (_prefs[key].DataType == typeof(T))

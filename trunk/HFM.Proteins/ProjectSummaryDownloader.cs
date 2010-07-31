@@ -34,63 +34,68 @@ namespace HFM.Proteins
 {
    public sealed class ProjectSummaryDownloader : IProjectSummaryDownloader
    {
-      #region Members
+      #region Fields
+      
       /// <summary>
       /// Collection Load Class Lock
       /// </summary>
-      private readonly static object _downloadLock = new object();
+      private readonly static object DownloadLock = new object();
 
-      private DateTime _LastDownloadTime = DateTime.MinValue;
       /// <summary>
       /// Time of Last Successful Download
       /// </summary>
-      public DateTime LastDownloadTime
-      {
-         get { return _LastDownloadTime; }
-      }
+      public DateTime LastDownloadTime { get; private set; }
 
-      private Uri _ProjectSummaryLocation;
       /// <summary>
       /// Project Summary HTML File Location
       /// </summary>
-      public Uri ProjectSummaryLocation
-      {
-         get { return _ProjectSummaryLocation; }
-         set { _ProjectSummaryLocation = value; }
-      }
+      public Uri ProjectSummaryLocation { get; set; }
 
-      private string _ProjectInfoLocation;
       /// <summary>
       /// Local Project Info Tab File Location
       /// </summary>
-      public string ProjectInfoLocation
-      {
-         get { return _ProjectInfoLocation; }
-         set { _ProjectInfoLocation = value; }
-      }
-      
-      private SortedDictionary<Int32, IProtein> _Dictionary;
+      public string ProjectInfoLocation { get; set; }
+
       /// <summary>
       /// Protein Storage Dictionary
       /// </summary>
-      public SortedDictionary<Int32, IProtein> Dictionary
-      {
-         get { return _Dictionary; }
-         set { _Dictionary = value; }
-      }
-      
-      private IPreferenceSet _Prefs;
+      public SortedDictionary<int, IProtein> Dictionary { get; set; }
+
       /// <summary>
       /// Preferences Interface
       /// </summary>
-      public IPreferenceSet Prefs
-      {
-         get { return _Prefs; }
-         set { _Prefs = value; }
-      }
+      public IPreferenceSet Prefs { get; set; }
+
+      private readonly HTMLparser _htmlParser;
+      
       #endregion
 
+      public ProjectSummaryDownloader()
+      {
+         LastDownloadTime = DateTime.MinValue;
+         _htmlParser = new HTMLparser();
+      }
+
       #region Events and Event Wrappers
+
+      public event EventHandler<DownloadProgressEventArgs> DownloadProgress;
+      private void OnDownloadProgress(DownloadProgressEventArgs e)
+      {
+         if (DownloadProgress != null)
+         {
+            DownloadProgress(this, e);
+         }
+      }
+
+      public event EventHandler ProjectDownloadFinished;
+      private void OnProjectDownloadFinished(EventArgs e)
+      {
+         if (ProjectDownloadFinished != null)
+         {
+            ProjectDownloadFinished(this, e);
+         }
+      }
+      
       /// <summary>
       /// Project (Protein) Data has been Updated
       /// </summary>
@@ -102,6 +107,7 @@ namespace HFM.Proteins
             ProjectInfoUpdated(this, e);
          }
       }
+      
       #endregion
 
       /// <summary>
@@ -110,7 +116,7 @@ namespace HFM.Proteins
       public void ResetLastDownloadTime()
       {
          // Reset the Last Download Time - see DownloadFromStanford(bool)
-         _LastDownloadTime = DateTime.MinValue;
+         LastDownloadTime = DateTime.MinValue;
       }
 
       /// <summary>
@@ -118,45 +124,53 @@ namespace HFM.Proteins
       /// </summary>
       public void DownloadFromStanford()
       {
-         string ProjectDownloadUrl = _Prefs.GetPreference<string>(Preference.ProjectDownloadUrl);
-         DownloadFromStanford(new Uri(ProjectDownloadUrl), true);
+         var projectDownloadUrl = Prefs.GetPreference<string>(Preference.ProjectDownloadUrl);
+         DownloadFromStanford(new Uri(projectDownloadUrl), true);
       }
 
       /// <summary>
       /// Download project information from Stanford University (THREAD SAFE)
       /// </summary>
-      public void DownloadFromStanford(Uri ProjectDownloadUrl, bool SaveToFile)
+      public void DownloadFromStanford(Uri projectDownloadUrl, bool saveToFile)
       {
-         lock (_downloadLock)
+         lock (DownloadLock)
          {
             // if a download was attempted in the last hour, don't execute again
-            TimeSpan LastDownloadDifference = DateTime.Now.Subtract(_LastDownloadTime);
-            if (LastDownloadDifference.TotalHours > 1)
+            TimeSpan lastDownloadDifference = DateTime.Now.Subtract(LastDownloadTime);
+            if (lastDownloadDifference.TotalHours > 1)
             {
                HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Attempting to Download new Project data...", true);
                try
                {
-                  ReadFromProjectSummaryHtml(ProjectDownloadUrl);
-                  _LastDownloadTime = DateTime.Now;
+                  ReadFromProjectSummaryHtml(projectDownloadUrl);
+                  LastDownloadTime = DateTime.Now;
 
-                  if (_Dictionary.Count > 0)
+                  string loadedProteins = String.Format(CultureInfo.CurrentCulture, "Loaded {0} Proteins from Stanford.", Dictionary.Count);
+                  OnDownloadProgress(new DownloadProgressEventArgs(100, loadedProteins));
+
+                  if (Dictionary.Count > 0)
                   {
-                     if (SaveToFile) SaveToTabDelimitedFile();
+                     if (saveToFile) SaveToTabDelimitedFile();
 
-                     HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Loaded {0} Proteins from Stanford.", _Dictionary.Count), true);
+                     HfmTrace.WriteToHfmConsole(TraceLevel.Info, loadedProteins, true);
                      OnProjectInfoUpdated(EventArgs.Empty);
                   }
                }
                catch (Exception ex)
                {
+                  OnDownloadProgress(new DownloadProgressEventArgs(0, ex.Message));
                   HfmTrace.WriteToHfmConsole(ex);
+               }
+               finally
+               {
+                  OnProjectDownloadFinished(EventArgs.Empty);
                }
             }
             else
             {
                HfmTrace.WriteToHfmConsole(TraceLevel.Info,
                                           String.Format(CultureInfo.CurrentCulture, "Download executed {0:0} minutes ago.",
-                                          LastDownloadDifference.TotalMinutes), true);
+                                          lastDownloadDifference.TotalMinutes), true);
             }
          }
       }
@@ -166,111 +180,108 @@ namespace HFM.Proteins
       /// </summary>
       public void ReadFromProjectSummaryHtml(Uri location)
       {
-         DateTime Start = HfmTrace.ExecStart;
+         DateTime start = HfmTrace.ExecStart;
 
          ProjectSummaryLocation = location;
 
          try
          {
-            HTMLparser pSummary = InitHTMLparser(ProjectSummaryLocation);
-            HTMLchunk oChunk;
-
-            // Parse until returned oChunk is null indicating we reached end of parsing
-            while ((oChunk = pSummary.ParseNext()) != null)
+            string[] psummaryLines = PerformDownload(ProjectSummaryLocation);
+            for (int i = 0; i < psummaryLines.Length; i++)
             {
-               // Look for an Open "tr" Tag
-               if (oChunk.oType.Equals(HTMLchunkType.OpenTag) &&
-                   oChunk.sTag.ToLower() == "tr")
+               Protein p = ParseProteinRow(psummaryLines[i]);
+               if (p != null)
                {
-                  Protein p = ParseProteinRow(pSummary);
-                  if (p != null)
+                  if (Dictionary.ContainsKey(p.ProjectNumber))
                   {
-                     if (_Dictionary.ContainsKey(p.ProjectNumber))
-                     {
-                        _Dictionary[p.ProjectNumber] = p;
-                     }
-                     else
-                     {
-                        _Dictionary.Add(p.ProjectNumber, p);
-                     }
+                     Dictionary[p.ProjectNumber] = p;
+                  }
+                  else
+                  {
+                     Dictionary.Add(p.ProjectNumber, p);
                   }
                }
+
+               var progress = (int)((i / (double)psummaryLines.Length) * 100);
+               OnDownloadProgress(new DownloadProgressEventArgs(progress, p == null ? String.Empty : p.WorkUnitName));
             }
          }
          finally
          {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, Start);
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, start);
          }
+      }
+
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="projectDownloadUri">Uri Pointing to psummary</param>
+      private static string[] PerformDownload(Uri projectDownloadUri)
+      {
+         var net = new NetworkOps();
+
+         string tempPath = Path.Combine(Path.GetTempPath(), "psummary.html");
+         net.HttpDownloadHelper(projectDownloadUri, tempPath, String.Empty, String.Empty);
+
+         return File.ReadAllLines(tempPath);
       }
 
       #region HTML Parsing Methods
-      /// <summary>
-      /// Initialize and Return HTMLparser Instance.
-      /// </summary>
-      /// <param name="ProjectDownloadUri">Uri Pointing to psummary</param>
-      [CLSCompliant(false)]
-      public HTMLparser InitHTMLparser(Uri ProjectDownloadUri)
-      {
-         NetworkOps net = new NetworkOps();
-
-         string tempPath = Path.Combine(Path.GetTempPath(), "psummary.html");
-         net.HttpDownloadHelper(ProjectDownloadUri, tempPath, String.Empty, String.Empty);
-      
-         string sSummaryPage;
-         using (StreamReader stream = File.OpenText(tempPath))
-         {
-            sSummaryPage = stream.ReadToEnd();
-         }
-
-         HTMLparser pSummary = new HTMLparser();
-         pSummary.Init(sSummaryPage);
-         return pSummary;
-      }
 
       /// <summary>
       /// Parse the HTML Table Row (tr) into a Protein Instance.
       /// </summary>
-      /// <param name="pSummary">HTMLparser Instance</param>
-      private static Protein ParseProteinRow(HTMLparser pSummary)
+      private Protein ParseProteinRow(string html)
       {
-         Protein p = new Protein();
+         _htmlParser.Init(html);
+         var p = new Protein();
 
-         try
+         HTMLchunk oChunk;
+         while ((oChunk = _htmlParser.ParseNext()) != null)
          {
-            int ProjectNumber;
-            if (Int32.TryParse(GetNextTdValue(pSummary), NumberStyles.Integer, CultureInfo.InvariantCulture, out ProjectNumber))
+            // Look for an Open "tr" Tag
+            if (oChunk.oType.Equals(HTMLchunkType.OpenTag) &&
+                oChunk.sTag.ToLower() == "tr")
             {
-               p.ProjectNumber = ProjectNumber;
-            }
-            else
-            {
-               return null;
-            }
-            p.ServerIP = GetNextTdValue(pSummary);
-            p.WorkUnitName = GetNextTdValue(pSummary);
-            try
-            {
-               p.NumAtoms = Int32.Parse(GetNextTdValue(pSummary), CultureInfo.InvariantCulture);
-            }
-            catch (FormatException)
-            {
-               p.NumAtoms = 0;
-            }
-            p.PreferredDays = Double.Parse(GetNextTdValue(pSummary), CultureInfo.InvariantCulture);
-            p.MaxDays = Double.Parse(GetNextTdValue(pSummary), CultureInfo.InvariantCulture);
-            p.Credit = Double.Parse(GetNextTdValue(pSummary), CultureInfo.InvariantCulture);
-            p.Frames = Int32.Parse(GetNextTdValue(pSummary), CultureInfo.InvariantCulture);
-            p.Core = GetNextTdValue(pSummary);
-            p.Description = GetNextTdValue(pSummary, "href");
-            p.Contact = GetNextTdValue(pSummary);
-            p.KFactor = Double.Parse(GetNextTdValue(pSummary), CultureInfo.InvariantCulture);
+               try
+               {
+                  int projectNumber;
+                  if (Int32.TryParse(GetNextTdValue(_htmlParser), NumberStyles.Integer, CultureInfo.InvariantCulture,
+                                     out projectNumber))
+                  {
+                     p.ProjectNumber = projectNumber;
+                  }
+                  else
+                  {
+                     return null;
+                  }
+                  p.ServerIP = GetNextTdValue(_htmlParser);
+                  p.WorkUnitName = GetNextTdValue(_htmlParser);
+                  try
+                  {
+                     p.NumAtoms = Int32.Parse(GetNextTdValue(_htmlParser), CultureInfo.InvariantCulture);
+                  }
+                  catch (FormatException)
+                  {
+                     p.NumAtoms = 0;
+                  }
+                  p.PreferredDays = Double.Parse(GetNextTdValue(_htmlParser), CultureInfo.InvariantCulture);
+                  p.MaxDays = Double.Parse(GetNextTdValue(_htmlParser), CultureInfo.InvariantCulture);
+                  p.Credit = Double.Parse(GetNextTdValue(_htmlParser), CultureInfo.InvariantCulture);
+                  p.Frames = Int32.Parse(GetNextTdValue(_htmlParser), CultureInfo.InvariantCulture);
+                  p.Core = GetNextTdValue(_htmlParser);
+                  p.Description = GetNextTdValue(_htmlParser, "href");
+                  p.Contact = GetNextTdValue(_htmlParser);
+                  p.KFactor = Double.Parse(GetNextTdValue(_htmlParser), CultureInfo.InvariantCulture);
 
-            return p;
-         }
-         catch (Exception ex)
-         {
-            // Ignore this row of the table - unparseable
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
+                  return p;
+               }
+               catch (Exception ex)
+               {
+                  // Ignore this row of the table - unparseable
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, ex);
+               }
+            }
          }
 
          return null;
@@ -289,45 +300,45 @@ namespace HFM.Proteins
       /// <summary>
       /// Return the value enclosed in the HTML Table Column (td).
       /// </summary>
-      /// <param name="pSummary">HTMLparser Instance</param>
-      /// <param name="ParamName">Name of Tag Parameter to Return</param>
+      /// <param name="htmlParser">HTMLparser Instance</param>
+      /// <param name="paramName">Name of Tag Parameter to Return</param>
       [CLSCompliant(false)]
-      public static string GetNextTdValue(HTMLparser pSummary, string ParamName)
+      public static string GetNextTdValue(HTMLparser htmlParser, string paramName)
       {
-         return GetNextValue(pSummary, "td", ParamName);
+         return GetNextValue(htmlParser, "td", paramName);
       }
 
       /// <summary>
       /// Return the value enclosed in the HTML Table Heading Column (th).
       /// </summary>
-      /// <param name="pSummary">HTMLparser Instance</param>
+      /// <param name="htmlParser">HTMLparser Instance</param>
       [CLSCompliant(false)]
-      public static string GetNextThValue(HTMLparser pSummary)
+      public static string GetNextThValue(HTMLparser htmlParser)
       {
-         return GetNextValue(pSummary, "th", String.Empty);
+         return GetNextValue(htmlParser, "th", String.Empty);
       }
 
       /// <summary>
       /// Return the value enclosed in the HTML Table Column (td).
       /// </summary>
-      /// <param name="pSummary">HTMLparser Instance</param>
-      /// <param name="TagName">Name of Tag to Search for</param>
-      /// <param name="ParamName">Name of Tag Parameter to Return</param>
+      /// <param name="htmlParser">HTMLparser Instance</param>
+      /// <param name="tagName">Name of Tag to Search for</param>
+      /// <param name="paramName">Name of Tag Parameter to Return</param>
       [CLSCompliant(false)]
-      public static string GetNextValue(HTMLparser pSummary, string TagName, string ParamName)
+      public static string GetNextValue(HTMLparser htmlParser, string tagName, string paramName)
       {
          HTMLchunk oChunk;
-         while ((oChunk = pSummary.ParseNext()) != null)
+         while ((oChunk = htmlParser.ParseNext()) != null)
          {
             // Look for an Open Tag matching the given Tag Name
             if (oChunk.oType.Equals(HTMLchunkType.OpenTag) &&
-                oChunk.sTag.ToLower() == TagName)
+                oChunk.sTag.ToLower() == tagName)
             {
                // If not looking for a Tag Parameter
-               if (ParamName.Length == 0)
+               if (paramName.Length == 0)
                {
                   // Look inside the "td" Tag
-                  oChunk = pSummary.ParseNext();
+                  oChunk = htmlParser.ParseNext();
                   if (oChunk != null)
                   {
                      // If it's an Open "font" Tag
@@ -335,7 +346,7 @@ namespace HFM.Proteins
                          oChunk.sTag.ToLower() == "font")
                      {
                         // Look inside the "font" Tag
-                        oChunk = pSummary.ParseNext();
+                        oChunk = htmlParser.ParseNext();
 
                         // If it's Text, return it
                         if (oChunk != null &&
@@ -355,15 +366,15 @@ namespace HFM.Proteins
                else
                {
                   // Look inside the "td" Tag
-                  oChunk = pSummary.ParseNext();
+                  oChunk = htmlParser.ParseNext();
 
                   // If it's an Open Tag
                   if (oChunk != null &&
                       oChunk.oType.Equals(HTMLchunkType.OpenTag) &&
-                      oChunk.oParams.Contains(ParamName))
+                      oChunk.oParams.Contains(paramName))
                   {
                      // Return the specified Parameter Name
-                     return oChunk.oParams[ParamName].ToString();
+                     return oChunk.oParams[paramName].ToString();
                   }
                }
 
@@ -382,17 +393,17 @@ namespace HFM.Proteins
       /// </summary>
       private void SaveToTabDelimitedFile()
       {
-         DateTime Start = HfmTrace.ExecStart;
+         DateTime start = HfmTrace.ExecStart;
 
-         String[] CSVData = new String[_Dictionary.Count];
-         Int32 i = 0;
+         var csvData = new String[Dictionary.Count];
+         int i = 0;
 
-         foreach (KeyValuePair<Int32, IProtein> kvp in _Dictionary)
+         foreach (KeyValuePair<Int32, IProtein> kvp in Dictionary)
          {
             // Project Number, Server IP, Work Unit Name, Number of Atoms, Preferred (days),
             // Final Deadline (days), Credit, Frames, Code, Description, Contact, KFactor
 
-            CSVData[i++] = String.Format(CultureInfo.InvariantCulture,
+            csvData[i++] = String.Format(CultureInfo.InvariantCulture,
                                          "{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}",
                /*  0 */ kvp.Value.ProjectNumber,    /*  1 */ kvp.Value.ServerIP,
                /*  2 */ kvp.Value.WorkUnitName,     /*  3 */ kvp.Value.NumAtoms,
@@ -402,9 +413,39 @@ namespace HFM.Proteins
                /* 10 */ kvp.Value.Contact,          /* 11 */ kvp.Value.KFactor);
          }
 
-         File.WriteAllLines(_ProjectInfoLocation, CSVData, Encoding.ASCII);
+         File.WriteAllLines(ProjectInfoLocation, csvData, Encoding.ASCII);
 
-         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Start);
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, start);
       }
+
+      #region IDisposable Members
+
+      private bool _disposed;
+
+      public void Dispose()
+      {
+         Dispose(true);
+         GC.SuppressFinalize(this);
+      }
+
+      private void Dispose(bool disposing)
+      {
+         if (!_disposed)
+         {
+            if (disposing)
+            {
+               _htmlParser.Dispose();
+            }
+         }
+
+         _disposed = true;
+      }
+
+      ~ProjectSummaryDownloader()
+      {
+         Dispose(false);
+      }
+
+      #endregion
    }
 }

@@ -25,10 +25,7 @@ using Castle.Windsor;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-using Majestic12;
-
 using HFM.Framework;
-using HFM.Proteins;
 using HFM.Instrumentation;
 
 namespace HFM.Proteins.Tests
@@ -36,98 +33,78 @@ namespace HFM.Proteins.Tests
    [TestFixture]
    public class ProjectSummaryDownloaderTests
    {
-      private IWindsorContainer container;
-      private MockRepository mocks;
+      private IWindsorContainer _container;
+      private MockRepository _mocks;
 
-      private IPreferenceSet Prefs;
+      private IPreferenceSet _prefs;
    
       [SetUp]
       public void Init()
       {
          TraceLevelSwitch.Instance.Level = TraceLevel.Verbose;
       
-         container = new WindsorContainer();
-         mocks = new MockRepository();
+         _container = new WindsorContainer();
+         _mocks = new MockRepository();
 
-         Prefs = mocks.DynamicMock<IPreferenceSet>();
-         Expect.Call(Prefs.GetPreference<bool>(Preference.UseProxy)).Return(false).Repeat.Any();
-         Expect.Call(Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath)).Return(String.Empty).Repeat.Any();
-         container.Kernel.AddComponentInstance<IPreferenceSet>(typeof(IPreferenceSet), Prefs);
-         InstanceProvider.SetContainer(container);
+         _prefs = _mocks.DynamicMock<IPreferenceSet>();
+         Expect.Call(_prefs.GetPreference<bool>(Preference.UseProxy)).Return(false).Repeat.Any();
+         Expect.Call(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath)).Return(String.Empty).Repeat.Any();
+         _container.Kernel.AddComponentInstance<IPreferenceSet>(typeof(IPreferenceSet), _prefs);
+         InstanceProvider.SetContainer(_container);
       }
 
       [Test]
-      public void DownloadFromStanfordTest()
+      public void DownloadFromStanfordPsummary_Test()
       {
-         mocks.ReplayAll();
+         _mocks.ReplayAll();
 
-         Uri baseUri = new Uri(Environment.CurrentDirectory);
-         Uri fileUri = new Uri(baseUri, "..\\TestFiles\\psummaryC.html");
+         var baseUri = new Uri(Environment.CurrentDirectory);
+         var fileUri = new Uri(baseUri, "..\\TestFiles\\psummary.html");
 
-         ProjectSummaryDownloader Downloader = new ProjectSummaryDownloader();
-         Downloader.Dictionary = new SortedDictionary<int, IProtein>();
-         Downloader.Prefs = Prefs;
-         Downloader.ReadFromProjectSummaryHtml(fileUri);
+         var downloader = new ProjectSummaryDownloader();
+         downloader.Dictionary = new SortedDictionary<int, IProtein>();
+         downloader.Prefs = _prefs;
+         downloader.ReadFromProjectSummaryHtml(fileUri);
 
-         Assert.AreEqual(228, Downloader.Dictionary.Count);
+         Assert.AreEqual(267, downloader.Dictionary.Count);
 
-         mocks.VerifyAll();
+         _mocks.VerifyAll();
       }
 
       [Test]
-      public void ValidatePsummaryTableLayout()
+      public void DownloadFromStanfordPsummaryB_Test()
       {
-         ValidatePsummaryTableLayout("..\\TestFiles\\psummary.html");
+         _mocks.ReplayAll();
+
+         var baseUri = new Uri(Environment.CurrentDirectory);
+         var fileUri = new Uri(baseUri, "..\\TestFiles\\psummaryB.html");
+
+         var downloader = new ProjectSummaryDownloader();
+         downloader.Dictionary = new SortedDictionary<int, IProtein>();
+         downloader.Prefs = _prefs;
+         downloader.ReadFromProjectSummaryHtml(fileUri);
+
+         Assert.AreEqual(263, downloader.Dictionary.Count);
+
+         _mocks.VerifyAll();
       }
 
       [Test]
-      public void ValidatePsummaryBTableLayout()
+      public void DownloadFromStanfordPsummaryC_Test()
       {
-         ValidatePsummaryTableLayout("..\\TestFiles\\psummaryB.html");
-      }
+         _mocks.ReplayAll();
 
-      [Test]
-      public void ValidatePsummaryCTableLayout()
-      {
-         ValidatePsummaryTableLayout("..\\TestFiles\\psummaryC.html");
-      }
+         var baseUri = new Uri(Environment.CurrentDirectory);
+         var fileUri = new Uri(baseUri, "..\\TestFiles\\psummaryC.html");
 
-      public void ValidatePsummaryTableLayout(string FilePath)
-      {
-         ProjectSummaryDownloader Downloader = new ProjectSummaryDownloader();
-         Downloader.Prefs = Prefs;
+         var downloader = new ProjectSummaryDownloader();
+         downloader.Dictionary = new SortedDictionary<int, IProtein>();
+         downloader.Prefs = _prefs;
+         downloader.ReadFromProjectSummaryHtml(fileUri);
 
-         Uri baseUri = new Uri(Environment.CurrentDirectory);
-         Uri fileUri = new Uri(baseUri, FilePath);
+         Assert.AreEqual(345, downloader.Dictionary.Count);
 
-         HTMLparser pSummary = Downloader.InitHTMLparser(fileUri);
-         HTMLchunk oChunk;
-
-         // Parse until returned oChunk is null indicating we reached end of parsing
-         while ((oChunk = pSummary.ParseNext()) != null)
-         {
-            // Look for an Open "tr" Tag
-            if (oChunk.oType.Equals(HTMLchunkType.OpenTag) &&
-                oChunk.sTag.ToLower() == "tr")
-            {
-               Assert.AreEqual("Project Number", ProjectSummaryDownloader.GetNextThValue(pSummary));
-               Assert.AreEqual("Server IP", ProjectSummaryDownloader.GetNextThValue(pSummary));
-               Assert.AreEqual("Work Unit Name", ProjectSummaryDownloader.GetNextThValue(pSummary));
-               Assert.AreEqual("Number of Atoms", ProjectSummaryDownloader.GetNextThValue(pSummary));
-               Assert.AreEqual("Preferred (days)", ProjectSummaryDownloader.GetNextThValue(pSummary));
-               Assert.AreEqual("Final deadline (days)", ProjectSummaryDownloader.GetNextThValue(pSummary));
-               Assert.AreEqual("Credit", ProjectSummaryDownloader.GetNextThValue(pSummary));
-               Assert.AreEqual("Frames", ProjectSummaryDownloader.GetNextThValue(pSummary));
-               Assert.AreEqual("Code", ProjectSummaryDownloader.GetNextThValue(pSummary));
-               Assert.AreEqual("Description", ProjectSummaryDownloader.GetNextThValue(pSummary));
-               Assert.AreEqual("Contact", ProjectSummaryDownloader.GetNextThValue(pSummary));
-               Assert.AreEqual("Kfactor", ProjectSummaryDownloader.GetNextThValue(pSummary));
-
-               return;
-            }
-         }
-
-         Assert.Fail("Never found a table row to validate.");
+         _mocks.VerifyAll();
       }
    }
 }

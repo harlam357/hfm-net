@@ -20,7 +20,6 @@
 using System;
 
 using NUnit.Framework;
-using Rhino.Mocks;
 
 using HFM.Framework;
 
@@ -29,14 +28,12 @@ namespace HFM.Instances.Tests
    [TestFixture]
    public class StatusTests
    {
-      private IPreferenceSet _prefs;
       private IStatusLogic _statusLogic;
    
       [SetUp]
       public void Init()
       {
-         _prefs = MockRepository.GenerateMock<IPreferenceSet>();
-         _statusLogic = new StatusLogic(_prefs);
+         _statusLogic = new StatusLogic();
       }
 
       [Test]

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <FxCopProject Version="1.36" Name="HFM FxCop Project">
  <ProjectOptions>
   <SharedProject>True</SharedProject>
@@ -139,5 +139,1524 @@
   <Groups />
   <Settings />
  </Rules>
- <FxCopReport Version="1.36" />
+ <FxCopReport Version="1.36">
+  <Targets>
+   <Target Name="$(ProjectDir)/HFM.NET/HFM.exe">
+    <Modules>
+     <Module Name="hfm.exe">
+      <Namespaces>
+       <Namespace Name="HFM.Models">
+        <Types>
+         <Type Name="ListItem">
+          <Members>
+           <Member Name="#DisplayMember">
+            <Accessors>
+             <Accessor Name="#get_DisplayMember()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ListItem.DisplayMember.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ValueMember">
+            <Accessors>
+             <Accessor Name="#get_ValueMember()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ListItem.ValueMember.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="OptionsModel">
+          <Members>
+           <Member Name="#AutoSaveConfig">
+            <Accessors>
+             <Accessor Name="#get_AutoSaveConfig()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'OptionsModel.AutoSaveConfig.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+             <Accessor Name="#set_AutoSaveConfig(System.Boolean)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'OptionsModel.AutoSaveConfig.set(bool)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#CalculateBonus">
+            <Accessors>
+             <Accessor Name="#get_CalculateBonus()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'OptionsModel.CalculateBonus.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+             <Accessor Name="#set_CalculateBonus(System.Boolean)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'OptionsModel.CalculateBonus.set(bool)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ColorLogFile">
+            <Accessors>
+             <Accessor Name="#get_ColorLogFile()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'OptionsModel.ColorLogFile.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+             <Accessor Name="#set_ColorLogFile(System.Boolean)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'OptionsModel.ColorLogFile.set(bool)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#DecimalPlaces">
+            <Accessors>
+             <Accessor Name="#get_DecimalPlaces()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'OptionsModel.DecimalPlaces.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+             <Accessor Name="#set_DecimalPlaces(System.Int32)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'OptionsModel.DecimalPlaces.set(int)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#EtaDate">
+            <Accessors>
+             <Accessor Name="#get_EtaDate()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'OptionsModel.EtaDate.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+             <Accessor Name="#set_EtaDate(System.Boolean)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'OptionsModel.EtaDate.set(bool)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#FormShowStyle">
+            <Accessors>
+             <Accessor Name="#get_FormShowStyle()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'OptionsModel.FormShowStyle.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+             <Accessor Name="#set_FormShowStyle(HFM.Framework.FormShowStyleType)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'OptionsModel.FormShowStyle.set(FormShowStyleType)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#MaintainSelectedClient">
+            <Accessors>
+             <Accessor Name="#get_MaintainSelectedClient()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'OptionsModel.MaintainSelectedClient.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+             <Accessor Name="#set_MaintainSelectedClient(System.Boolean)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'OptionsModel.MaintainSelectedClient.set(bool)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#MessageLevel">
+            <Accessors>
+             <Accessor Name="#get_MessageLevel()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'OptionsModel.MessageLevel.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+             <Accessor Name="#set_MessageLevel(System.Diagnostics.TraceLevel)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'OptionsModel.MessageLevel.set(TraceLevel)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#OfflineLast">
+            <Accessors>
+             <Accessor Name="#get_OfflineLast()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'OptionsModel.OfflineLast.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+             <Accessor Name="#set_OfflineLast(System.Boolean)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'OptionsModel.OfflineLast.set(bool)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#OnPropertyChanged(System.String)">
+            <Messages>
+             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+              <Issue>
+               <Item>'OptionsModel.OnPropertyChanged(string)'</Item>
+              </Issue>
+              <Notes>
+               <User Name="harlarw">
+                <Note Id="0" />
+               </User>
+              </Notes>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#PpdCalculation">
+            <Accessors>
+             <Accessor Name="#get_PpdCalculation()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'OptionsModel.PpdCalculation.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+             <Accessor Name="#set_PpdCalculation(HFM.Framework.PpdCalculationType)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'OptionsModel.PpdCalculation.set(PpdCalculationType)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="ReportingModel">
+          <Members>
+           <Member Name="#FromAddress">
+            <Accessors>
+             <Accessor Name="#set_FromAddress(System.String)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ReportingModel.FromAddress.set(string)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#OnPropertyChanged(System.String)">
+            <Messages>
+             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+              <Issue>
+               <Item>'ReportingModel.OnPropertyChanged(string)'</Item>
+              </Issue>
+              <Notes>
+               <User Name="harlarw">
+                <Note Id="0" />
+               </User>
+              </Notes>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#ReportEuePause">
+            <Accessors>
+             <Accessor Name="#get_ReportEuePause()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ReportingModel.ReportEuePause.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+             <Accessor Name="#set_ReportEuePause(System.Boolean)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ReportingModel.ReportEuePause.set(bool)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ReportingEnabled">
+            <Accessors>
+             <Accessor Name="#set_ReportingEnabled(System.Boolean)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ReportingModel.ReportingEnabled.set(bool)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ServerAddress">
+            <Accessors>
+             <Accessor Name="#set_ServerAddress(System.String)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ReportingModel.ServerAddress.set(string)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ServerAddressError">
+            <Accessors>
+             <Accessor Name="#get_ServerAddressError()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ReportingModel.ServerAddressError.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ServerPassword">
+            <Accessors>
+             <Accessor Name="#set_ServerPassword(System.String)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ReportingModel.ServerPassword.set(string)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ServerPasswordError">
+            <Accessors>
+             <Accessor Name="#get_ServerPasswordError()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ReportingModel.ServerPasswordError.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ServerPort">
+            <Accessors>
+             <Accessor Name="#set_ServerPort(System.Int32)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ReportingModel.ServerPort.set(int)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ServerPortError">
+            <Accessors>
+             <Accessor Name="#get_ServerPortError()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ReportingModel.ServerPortError.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ServerPortPairErrorMessage">
+            <Accessors>
+             <Accessor Name="#get_ServerPortPairErrorMessage()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ReportingModel.ServerPortPairErrorMessage.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ServerSecure">
+            <Accessors>
+             <Accessor Name="#get_ServerSecure()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ReportingModel.ServerSecure.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+             <Accessor Name="#set_ServerSecure(System.Boolean)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ReportingModel.ServerSecure.set(bool)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ServerUsername">
+            <Accessors>
+             <Accessor Name="#set_ServerUsername(System.String)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ReportingModel.ServerUsername.set(string)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ServerUsernameError">
+            <Accessors>
+             <Accessor Name="#get_ServerUsernameError()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ReportingModel.ServerUsernameError.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ToAddress">
+            <Accessors>
+             <Accessor Name="#set_ToAddress(System.String)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ReportingModel.ToAddress.set(string)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#UsernamePasswordPairErrorMessage">
+            <Accessors>
+             <Accessor Name="#get_UsernamePasswordPairErrorMessage()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ReportingModel.UsernamePasswordPairErrorMessage.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="ScheduledTasksModel">
+          <Members>
+           <Member Name="#AllowRunningAsync">
+            <Accessors>
+             <Accessor Name="#get_AllowRunningAsync()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ScheduledTasksModel.AllowRunningAsync.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+             <Accessor Name="#set_AllowRunningAsync(System.Boolean)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ScheduledTasksModel.AllowRunningAsync.set(bool)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#CopyFAHlog">
+            <Accessors>
+             <Accessor Name="#set_CopyFAHlog(System.Boolean)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ScheduledTasksModel.CopyFAHlog.set(bool)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#CopyHtml">
+            <Accessors>
+             <Accessor Name="#get_CopyHtml()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ScheduledTasksModel.CopyHtml.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+             <Accessor Name="#set_CopyHtml(System.Boolean)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ScheduledTasksModel.CopyHtml.set(bool)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#CopyXml">
+            <Accessors>
+             <Accessor Name="#get_CopyXml()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ScheduledTasksModel.CopyXml.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+             <Accessor Name="#set_CopyXml(System.Boolean)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ScheduledTasksModel.CopyXml.set(bool)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#DuplicateProjectCheck">
+            <Accessors>
+             <Accessor Name="#get_DuplicateProjectCheck()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ScheduledTasksModel.DuplicateProjectCheck.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+             <Accessor Name="#set_DuplicateProjectCheck(System.Boolean)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ScheduledTasksModel.DuplicateProjectCheck.set(bool)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#DuplicateUserIdCheck">
+            <Accessors>
+             <Accessor Name="#get_DuplicateUserIdCheck()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ScheduledTasksModel.DuplicateUserIdCheck.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+             <Accessor Name="#set_DuplicateUserIdCheck(System.Boolean)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ScheduledTasksModel.DuplicateUserIdCheck.set(bool)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#FtpMode">
+            <Accessors>
+             <Accessor Name="#set_FtpMode(HFM.Framework.FtpType)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ScheduledTasksModel.FtpMode.set(FtpType)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#GenerateInterval">
+            <Accessors>
+             <Accessor Name="#set_GenerateInterval(System.Int32)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ScheduledTasksModel.GenerateInterval.set(int)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#GenerateWeb">
+            <Accessors>
+             <Accessor Name="#set_GenerateWeb(System.Boolean)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ScheduledTasksModel.GenerateWeb.set(bool)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#LimitLogSize">
+            <Accessors>
+             <Accessor Name="#set_LimitLogSize(System.Boolean)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ScheduledTasksModel.LimitLogSize.set(bool)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#LimitLogSizeLength">
+            <Accessors>
+             <Accessor Name="#get_LimitLogSizeLength()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ScheduledTasksModel.LimitLogSizeLength.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+             <Accessor Name="#set_LimitLogSizeLength(System.Int32)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ScheduledTasksModel.LimitLogSizeLength.set(int)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ShowXmlStats">
+            <Accessors>
+             <Accessor Name="#get_ShowXmlStats()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ScheduledTasksModel.ShowXmlStats.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+             <Accessor Name="#set_ShowXmlStats(System.Boolean)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ScheduledTasksModel.ShowXmlStats.set(bool)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#SyncOnLoad">
+            <Accessors>
+             <Accessor Name="#get_SyncOnLoad()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ScheduledTasksModel.SyncOnLoad.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+             <Accessor Name="#set_SyncOnLoad(System.Boolean)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ScheduledTasksModel.SyncOnLoad.set(bool)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#SyncOnSchedule">
+            <Accessors>
+             <Accessor Name="#set_SyncOnSchedule(System.Boolean)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ScheduledTasksModel.SyncOnSchedule.set(bool)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#SyncTimeMinutes">
+            <Accessors>
+             <Accessor Name="#set_SyncTimeMinutes(System.Int32)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ScheduledTasksModel.SyncTimeMinutes.set(int)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#WebGenAfterRefresh">
+            <Accessors>
+             <Accessor Name="#set_WebGenAfterRefresh(System.Boolean)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'ScheduledTasksModel.WebGenAfterRefresh.set(bool)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="StartupAndExternalModel">
+          <Members>
+           <Member Name="#RunMinimized">
+            <Accessors>
+             <Accessor Name="#get_RunMinimized()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'StartupAndExternalModel.RunMinimized.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+             <Accessor Name="#set_RunMinimized(System.Boolean)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'StartupAndExternalModel.RunMinimized.set(bool)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#StartupCheckForUpdate">
+            <Accessors>
+             <Accessor Name="#get_StartupCheckForUpdate()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'StartupAndExternalModel.StartupCheckForUpdate.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+             <Accessor Name="#set_StartupCheckForUpdate(System.Boolean)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'StartupAndExternalModel.StartupCheckForUpdate.set(bool)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="WebSettingsModel">
+          <Members>
+           <Member Name="#EocUserId">
+            <Accessors>
+             <Accessor Name="#set_EocUserId(System.Int32)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'WebSettingsModel.EocUserId.set(int)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#OnPropertyChanged(System.String)">
+            <Messages>
+             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+              <Issue>
+               <Item>'WebSettingsModel.OnPropertyChanged(string)'</Item>
+              </Issue>
+              <Notes>
+               <User Name="harlarw">
+                <Note Id="0" />
+               </User>
+              </Notes>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#ProjectDownloadUrl">
+            <Accessors>
+             <Accessor Name="#set_ProjectDownloadUrl(System.String)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'WebSettingsModel.ProjectDownloadUrl.set(string)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ProxyPass">
+            <Accessors>
+             <Accessor Name="#set_ProxyPass(System.String)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'WebSettingsModel.ProxyPass.set(string)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ProxyPassError">
+            <Accessors>
+             <Accessor Name="#get_ProxyPassError()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'WebSettingsModel.ProxyPassError.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ProxyPort">
+            <Accessors>
+             <Accessor Name="#set_ProxyPort(System.Int32)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'WebSettingsModel.ProxyPort.set(int)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ProxyServer">
+            <Accessors>
+             <Accessor Name="#set_ProxyServer(System.String)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'WebSettingsModel.ProxyServer.set(string)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ProxyServerError">
+            <Accessors>
+             <Accessor Name="#get_ProxyServerError()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'WebSettingsModel.ProxyServerError.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ProxyUser">
+            <Accessors>
+             <Accessor Name="#set_ProxyUser(System.String)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'WebSettingsModel.ProxyUser.set(string)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ProxyUserError">
+            <Accessors>
+             <Accessor Name="#get_ProxyUserError()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'WebSettingsModel.ProxyUserError.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ServerPortError">
+            <Accessors>
+             <Accessor Name="#get_ServerPortError()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'WebSettingsModel.ServerPortError.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ServerPortPairErrorMessage">
+            <Accessors>
+             <Accessor Name="#get_ServerPortPairErrorMessage()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'WebSettingsModel.ServerPortPairErrorMessage.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#StanfordId">
+            <Accessors>
+             <Accessor Name="#set_StanfordId(System.String)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'WebSettingsModel.StanfordId.set(string)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#TeamId">
+            <Accessors>
+             <Accessor Name="#set_TeamId(System.Int32)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'WebSettingsModel.TeamId.set(int)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#UseProxy">
+            <Accessors>
+             <Accessor Name="#set_UseProxy(System.Boolean)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'WebSettingsModel.UseProxy.set(bool)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#UseProxyAuth">
+            <Accessors>
+             <Accessor Name="#set_UseProxyAuth(System.Boolean)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'WebSettingsModel.UseProxyAuth.set(bool)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#UsernamePasswordPairErrorMessage">
+            <Accessors>
+             <Accessor Name="#get_UsernamePasswordPairErrorMessage()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'WebSettingsModel.UsernamePasswordPairErrorMessage.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="WebVisualStylesModel">
+          <Members>
+           <Member Name="#CssFile">
+            <Accessors>
+             <Accessor Name="#set_CssFile(System.String)">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2010-07-31 17:00:11Z">
+                <Issue>
+                 <Item>'WebVisualStylesModel.CssFile.set(string)'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="harlarw">
+                  <Note Id="0" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+      </Namespaces>
+     </Module>
+    </Modules>
+   </Target>
+  </Targets>
+  <Notes>
+   <User Name="harlarw">
+    <Note Id="0" Modified="2010-07-31 17:17:14Z">Databound Model - Accessed through UI Control Databinding</Note>
+   </User>
+  </Notes>
+  <Rules>
+   <Rule TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811">
+    <Resolution Name="Default">{0} appears to have no upstream public or protected callers.</Resolution>
+   </Rule>
+  </Rules>
+ </FxCopReport>
 </FxCopProject>

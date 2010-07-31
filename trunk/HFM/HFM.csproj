@@ -21,7 +21,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -31,7 +31,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -41,7 +41,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -211,6 +211,12 @@
       <DependentUpon>frmHost.cs</DependentUpon>
     </EmbeddedResource>
     <Compile Include="Classes\NativeMethods.cs" />
+    <Compile Include="Forms\frmProjects.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmProjects.Designer.cs">
+      <DependentUpon>frmProjects.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\OptionsModel.cs" />
     <Compile Include="Models\ReportingModel.cs" />
     <Compile Include="Models\ScheduledTasksModel.cs" />
@@ -251,6 +257,9 @@
     <EmbeddedResource Include="Forms\frmMessages.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmMessages.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmProjects.resx">
+      <DependentUpon>frmProjects.cs</DependentUpon>
     </EmbeddedResource>
     <Content Include="..\Castle Windsor 2.0\Windsor License.txt">
       <Link>Windsor License.txt</Link>

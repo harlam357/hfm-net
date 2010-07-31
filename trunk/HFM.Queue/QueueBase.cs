@@ -39,7 +39,7 @@ namespace HFM.Queue
       /// <summary>
       /// Queue Structure
       /// </summary>
-      private Queue _q;
+      private QueueData _q;
       
       /// <summary>
       /// Flag Denoting if Class holds a Populated or Empty Queue Structure
@@ -58,14 +58,14 @@ namespace HFM.Queue
       /// </summary>
       internal QueueBase()
       {
-         _q = new Queue();
+         _q = new QueueData();
       }
 
       /// <summary>
       /// Constructor (Set Queue)
       /// </summary>
       /// <param name="q">Queue Structure</param>
-      internal QueueBase(Queue q)
+      internal QueueBase(QueueData q)
       {
          _q = q;
          _DataPopulated = true;

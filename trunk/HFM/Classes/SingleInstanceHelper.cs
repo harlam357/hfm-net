@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
@@ -77,6 +78,7 @@ namespace HFM.Classes
 
    public class IpcObject : MarshalByRefObject
    {
+      [SuppressMessage("Microsoft.Design", "CA1009:DeclareEventHandlersCorrectly")]
       public event NewInstanceHandler NewInstance;
 
       public IpcObject(NewInstanceHandler handler)

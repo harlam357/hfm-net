@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace HFM.Framework
 {
@@ -60,6 +61,7 @@ namespace HFM.Framework
       /// </summary>
       /// <typeparam name="T">Preference Data Type</typeparam>
       /// <param name="key">Preference Key</param>
+      [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
       T GetPreference<T>(Preference key);
 
       /// <summary>

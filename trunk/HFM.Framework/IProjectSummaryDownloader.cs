@@ -22,7 +22,7 @@ using System.Collections.Generic;
 
 namespace HFM.Framework
 {
-   public interface IProjectSummaryDownloader
+   public interface IProjectSummaryDownloader : IDisposable
    {
       /// <summary>
       /// Time of Last Successful Download
@@ -50,6 +50,16 @@ namespace HFM.Framework
       IPreferenceSet Prefs { get; set; }
 
       /// <summary>
+      /// Project (Protein) Download Progress
+      /// </summary>
+      event EventHandler<DownloadProgressEventArgs> DownloadProgress;
+
+      /// <summary>
+      /// Project (Protein) Download has Finished
+      /// </summary>
+      event EventHandler ProjectDownloadFinished;
+
+      /// <summary>
       /// Project (Protein) Data has been Updated
       /// </summary>
       event EventHandler ProjectInfoUpdated;
@@ -67,11 +77,24 @@ namespace HFM.Framework
       /// <summary>
       /// Download project information from Stanford University (THREAD SAFE)
       /// </summary>
-      void DownloadFromStanford(Uri ProjectDownloadUrl, bool SaveToFile);
+      void DownloadFromStanford(Uri projectDownloadUrl, bool saveToFile);
 
       /// <summary>
       /// Read Project Information from HTML (psummary.html)
       /// </summary>
       void ReadFromProjectSummaryHtml(Uri location);
+   }
+   
+   public class DownloadProgressEventArgs : EventArgs
+   {
+      public int Progress { get; private set; }
+
+      public string ProtienName { get; private set; }
+      
+      public DownloadProgressEventArgs(int progress, string proteinName)
+      {
+         Progress = progress;
+         ProtienName = proteinName;
+      }
    }
 }

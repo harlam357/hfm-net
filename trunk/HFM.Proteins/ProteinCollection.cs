@@ -105,21 +105,13 @@ namespace HFM.Proteins
          DateTime start = HfmTrace.ExecStart;
          try
          {
-            // If this is set to true, then it signals that the Project load
-            // was successful but all expected data was not present.  We now
-            // need to Download the psummary and update currently running
-            // Projects with current data. Old Projects not found on the 
-            // psummary will be left in the collection for historical purposes
-            // and the missing values defaulted.
-            bool backwardCompatibleDownload = false;
-
             String[] csvData = File.ReadAllLines(projectInfoFilePath);
             foreach (String sLine in csvData)
             {
                try
                {
                   // Parse the current line from the CSV file
-                  Protein p = new Protein();
+                  var p = new Protein();
                   String[] lineData = sLine.Split(new[] {'\t'}, StringSplitOptions.None);
                   p.ProjectNumber = Int32.Parse(lineData[0], CultureInfo.InvariantCulture);
                   p.ServerIP = lineData[1].Trim();
@@ -132,18 +124,7 @@ namespace HFM.Proteins
                   p.Core = lineData[8];
                   p.Description = lineData[9];
                   p.Contact = lineData[10];
-
-                  // Backward Compatibility with v0.4.0 or prior
-                  // Newer versions download and parse the KFactor
-                  if (lineData.Length > 11)
-                  {
-                     p.KFactor = Double.Parse(lineData[11], CultureInfo.InvariantCulture);
-                  }
-                  else
-                  {
-                     backwardCompatibleDownload = true;
-                     p.KFactor = 0;
-                  }
+                  p.KFactor = Double.Parse(lineData[11], CultureInfo.InvariantCulture);
 
                   if (ContainsKey(p.ProjectNumber))
                   {
@@ -158,12 +139,6 @@ namespace HFM.Proteins
                {
                   HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
                }
-            }
-
-            if (backwardCompatibleDownload)
-            {
-               // Signal the caller to Download and update from the psummary
-               return false;
             }
          }
          catch (Exception ex)

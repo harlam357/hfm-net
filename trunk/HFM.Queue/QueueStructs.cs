@@ -25,126 +25,127 @@ namespace HFM.Queue
 {
    [CLSCompliant(false)]
    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-   public struct Queue
+   [SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
+   public struct QueueData
    {
       /* 0000 Queue (client) version (v2.17 and above) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _Version;
+      private byte[] _version;
       /// <summary>
       /// Queue (client) version
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] Version
       {
-         get { return _Version; }
+         get { return _version; }
       }
 
       /* 0004 Current index number */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _CurrentIndex;
+      private byte[] _currentIndex;
       /// <summary>
       /// Current index number
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] CurrentIndex
       {
-         get { return _CurrentIndex; }
+         get { return _currentIndex; }
       }
 
       /* 0008 Array of ten queue entries */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 10)]
-      private Entry[] _Entries;
+      private Entry[] _entries;
       /// <summary>
       /// Array of ten queue entries
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public Entry[] Entries
       {
-         get { return _Entries; }
+         get { return _entries; }
       }
 
       /* 7128 Performance fraction (as of v3.24) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _PerformanceFraction;
+      private byte[] _performanceFraction;
       /// <summary>
       /// Performance fraction
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] PerformanceFraction
       {
-         get { return _PerformanceFraction; }
+         get { return _performanceFraction; }
       }
 
       /* 7132 Performance fraction unit weight (as of v3.24) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _PerformanceFractionUnitWeight;
+      private byte[] _performanceFractionUnitWeight;
       /// <summary>
       /// Performance fraction unit weight
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] PerformanceFractionUnitWeight
       {
-         get { return _PerformanceFractionUnitWeight; }
+         get { return _performanceFractionUnitWeight; }
       }
 
       /* 7136 Download rate sliding average (as of v4.00) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _DownloadRateAverage;
+      private byte[] _downloadRateAverage;
       /// <summary>
       /// Download rate sliding average
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] DownloadRateAverage
       {
-         get { return _DownloadRateAverage; }
+         get { return _downloadRateAverage; }
       }
 
       /* 7140 Download rate unit weight (as of v4.00) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _DownloadRateUnitWeight;
+      private byte[] _downloadRateUnitWeight;
       /// <summary>
       /// Download rate unit weight
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] DownloadRateUnitWeight
       {
-         get { return _DownloadRateUnitWeight; }
+         get { return _downloadRateUnitWeight; }
       }
 
       /* 7144 Upload rate sliding average (as of v4.00) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _UploadRateAverage;
+      private byte[] _uploadRateAverage;
       /// <summary>
       /// Upload rate sliding average
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] UploadRateAverage
       {
-         get { return _UploadRateAverage; }
+         get { return _uploadRateAverage; }
       }
 
       /* 7148 Upload rate unit weight (as of v4.00) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _UploadRateUnitWeight;
+      private byte[] _uploadRateUnitWeight;
       /// <summary>
       /// Upload rate unit weight
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] UploadRateUnitWeight
       {
-         get { return _UploadRateUnitWeight; }
+         get { return _uploadRateUnitWeight; }
       }
 
       /* 7152 Results successfully sent (after upload failures) (as of v5.00) (LE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _ResultsSent;
+      private byte[] _resultsSent;
       /// <summary>
       /// Results successfully sent (after upload failures)
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] ResultsSent
       {
-         get { return _ResultsSent; }
+         get { return _resultsSent; }
       }
 
       /* 7156 (as of v5.00) ...all zeros after queue conversion... */
@@ -171,24 +172,24 @@ namespace HFM.Queue
        ***/
       /* 000 Status */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _Status;
+      private byte[] _status;
       /// <summary>
       /// Status (0) Empty / (1) Active or (1) Ready / (2) Ready for Upload / (3) = Abandonded (Ignore if found) / (4) Fetching from Server
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] Status
       {
-         get { return _Status; }
+         get { return _status; }
       }
 
       /* 004 Pad for Windows, others as of v4.01, as of v6.01 number of SMP Cores to use (LE) */
-      private UInt32 _UseCores;
+      private UInt32 _useCores;
       /// <summary>
       /// Pad for Windows, others as of v4.01, as of v6.01 number of SMP Cores to use
       /// </summary>
       public UInt32 UseCores
       {
-         get { return _UseCores; }
+         get { return _useCores; }
       }
 
       /*** 0 = Begin Time
@@ -197,26 +198,26 @@ namespace HFM.Queue
        ***/
       /* 008 Time data (epoch 0000 1jan00 UTC) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
-      private UInt32[] _TimeData;
+      private UInt32[] _timeData;
       /// <summary>
       /// Time data (epoch 0000 1jan00 UTC)
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public UInt32[] TimeData
       {
-         get { return _TimeData; }
+         get { return _timeData; }
       }
 
       /* 040 Server IP address (until v3.0) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _OldServerIP; /*** Ignore this value ***/
+      private byte[] _oldServerIP; /*** Ignore this value ***/
       /// <summary>
       /// Server IP address (until v3.0 - Ignore this value)
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] OldServerIP
       {
-         get { return _OldServerIP; }
+         get { return _oldServerIP; }
       }
 
       /***
@@ -225,74 +226,74 @@ namespace HFM.Queue
        ***/
       /* 044 Upload status */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _UploadStatus;
+      private byte[] _uploadStatus;
       /// <summary>
       /// Upload status (0 = Not Uploaded / 1 = Uploaded)
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] UploadStatus
       {
-         get { return _UploadStatus; }
+         get { return _uploadStatus; }
       }
 
       /* 048 Web address for core downloads */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
-      private string _CoreDownloadUrl;
+      private string _coreDownloadUrl;
       /// <summary>
       /// Web address for core downloads
       /// </summary>
       [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings")]
       public string CoreDownloadUrl
       {
-         get { return _CoreDownloadUrl; }
+         get { return _coreDownloadUrl; }
       }
 
       /* 176 Misc1a */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _Misc1a;
+      private byte[] _misc1a;
       /// <summary>
       /// Misc1a
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] Misc1a
       {
-         get { return _Misc1a; }
+         get { return _misc1a; }
       }
 
       /* 180 Core_xx number (hex) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _CoreNumber; /*** Convert to Hex ***/
+      private byte[] _coreNumber; /*** Convert to Hex ***/
       /// <summary>
       /// Core_xx number
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] CoreNumber
       {
-         get { return _CoreNumber; }
+         get { return _coreNumber; }
       }
 
       /* 184 Misc1b */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _Misc1b;
+      private byte[] _misc1b;
       /// <summary>
       /// Misc1b
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] Misc1b
       {
-         get { return _Misc1b; }
+         get { return _misc1b; }
       }
 
       /* 188 wudata_xx.dat file size */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _WuDataFileSize;
+      private byte[] _wuDataFileSize;
       /// <summary>
       /// wudata_xx.dat file size
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] WuDataFileSize
       {
-         get { return _WuDataFileSize; }
+         get { return _wuDataFileSize; }
       }
 
       /* 192 */
@@ -328,14 +329,14 @@ namespace HFM.Queue
 
       /* 208-223 Project R/C/G (see above) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
-      private byte[] _Project;
+      private byte[] _project;
       /// <summary>
       /// Project R/C/G and Issued Time
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] Project
       {
-         get { return _Project; }
+         get { return _project; }
       }
 
       /* 224 */
@@ -351,165 +352,165 @@ namespace HFM.Queue
 
       /* 260 Machine ID (LE or BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _MachineID;
+      private byte[] _machineID;
       /// <summary>
       /// Machine ID
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] MachineID
       {
-         get { return _MachineID; }
+         get { return _machineID; }
       }
 
       /* 264 Server IP address */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _ServerIP;
+      private byte[] _serverIP;
       /// <summary>
       /// Server IP address
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] ServerIP
       {
-         get { return _ServerIP; }
+         get { return _serverIP; }
       }
 
       /* 268 Server port number */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _ServerPort;
+      private byte[] _serverPort;
       /// <summary>
       /// Server port number
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] ServerPort
       {
-         get { return _ServerPort; }
+         get { return _serverPort; }
       }
 
       /* 272 Work unit type */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
-      private string _WorkUnitType;
+      private string _workUnitType;
       /// <summary>
       /// Work unit type
       /// </summary>
       public string WorkUnitType
       {
-         get { return _WorkUnitType; }
+         get { return _workUnitType; }
       }
 
       /* 336 User Name */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
-      private string _FoldingID;
+      private string _foldingID;
       /// <summary>
       /// The Folding ID (Username) attached to this queue entry
       /// </summary>
       public string FoldingID
       {
-         get { return _FoldingID; }
+         get { return _foldingID; }
       }
 
       /* 400 Team Number */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
-      private string _Team;
+      private string _team;
       /// <summary>
       /// The Team number attached to this queue entry
       /// </summary>
       public string Team
       {
-         get { return _Team; }
+         get { return _team; }
       }
 
       /* 464 Stored ID for unit (UserID + MachineID) (LE or BE, usually BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
-      private byte[] _UserAndMachineID;
+      private byte[] _userAndMachineID;
       /// <summary>
       /// Stored ID for unit (UserID + MachineID)
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] UserAndMachineID
       {
-         get { return _UserAndMachineID; }
+         get { return _userAndMachineID; }
       }
 
       /* 472 Benchmark (until v3.24) (LE) */
-      private UInt32 _OldBenchmark; /*** Ignore this value ***/
+      private UInt32 _oldBenchmark; /*** Ignore this value ***/
       /// <summary>
       /// Benchmark (until v3.24 - Ignore this value)
       /// </summary>
       public UInt32 OldBenchmark
       {
-         get { return _OldBenchmark; }
+         get { return _oldBenchmark; }
       }
 
       /* 476 Misc3b (unused as of v3.24) (LE); Benchmark (as of v5.00) (BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _Benchmark;
+      private byte[] _benchmark;
       /// <summary>
       /// Benchmark (as of v5.00)
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] Benchmark
       {
-         get { return _Benchmark; }
+         get { return _benchmark; }
       }
 
       /* 480 CPU type (LE or BE, sometimes 0) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _CpuType;
+      private byte[] _cpuType;
       /// <summary>
       /// CPU type
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] CpuType
       {
-         get { return _CpuType; }
+         get { return _cpuType; }
       }
 
       /* 484 OS type (LE or BE, sometimes 0) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _OsType;
+      private byte[] _osType;
       /// <summary>
       /// OS type
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] OsType
       {
-         get { return _OsType; }
+         get { return _osType; }
       }
 
       /* 488 CPU species (LE or BE, sometimes 0) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _CpuSpecies;
+      private byte[] _cpuSpecies;
       /// <summary>
       /// CPU species
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] CpuSpecies
       {
-         get { return _CpuSpecies; }
+         get { return _cpuSpecies; }
       }
 
       /* 492 OS species (LE or BE, sometimes 0) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _OsSpecies;
+      private byte[] _osSpecies;
       /// <summary>
       /// OS species
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] OsSpecies
       {
-         get { return _OsSpecies; }
+         get { return _osSpecies; }
       }
 
       /* 496 Allowed time to return (seconds) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _ExpirationInSeconds; /*** Final Deadline ***/
+      private byte[] _expirationInSeconds; /*** Final Deadline ***/
       /// <summary>
       /// Allowed time to return (seconds) - Final Deadline
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] ExpirationInSeconds
       {
-         get { return _ExpirationInSeconds; }
+         get { return _expirationInSeconds; }
       }
 
       /* 500 */
@@ -525,62 +526,62 @@ namespace HFM.Queue
 
       /* 508 Assignment info present flag (LE or BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _AssignmentInfoPresent;
+      private byte[] _assignmentInfoPresent;
       /// <summary>
       /// Assignment info present flag
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] AssignmentInfoPresent
       {
-         get { return _AssignmentInfoPresent; }
+         get { return _assignmentInfoPresent; }
       }
 
       /* 512 Assignment timestamp (LE or BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _AssignmentTimeStamp;
+      private byte[] _assignmentTimeStamp;
       /// <summary>
       /// Assignment timestamp
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] AssignmentTimeStamp
       {
-         get { return _AssignmentTimeStamp; }
+         get { return _assignmentTimeStamp; }
       }
 
       /* 516 Assignment info checksum (LE or BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _AssignmentInfoChecksum;
+      private byte[] _assignmentInfoChecksum;
       /// <summary>
       /// Assignment info checksum
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] AssignmentInfoChecksum
       {
-         get { return _AssignmentInfoChecksum; }
+         get { return _assignmentInfoChecksum; }
       }
 
       /* 520 Collection server IP address (as of v5.00) (LE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _CollectionServerIP;
+      private byte[] _collectionServerIP;
       /// <summary>
       /// Collection server IP address
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] CollectionServerIP
       {
-         get { return _CollectionServerIP; }
+         get { return _collectionServerIP; }
       }
 
       /* 524 Download started time (as of v5.00) (BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _DownloadStartedTime;
+      private byte[] _downloadStartedTime;
       /// <summary>
       /// Download started time
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] DownloadStartedTime
       {
-         get { return _DownloadStartedTime; }
+         get { return _downloadStartedTime; }
       }
 
       /* 528 */
@@ -596,26 +597,26 @@ namespace HFM.Queue
 
       /* 544 Number of SMP cores (as of v5.91) (BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _NumberOfSmpCores;
+      private byte[] _numberOfSmpCores;
       /// <summary>
       /// Number of SMP cores
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] NumberOfSmpCores
       {
-         get { return _NumberOfSmpCores; }
+         get { return _numberOfSmpCores; }
       }
 
       /* 548 Tag of Work Unit (as of v5.00) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
-      private byte[] _WorkUnitTag;
+      private byte[] _workUnitTag;
       /// <summary>
       /// Tag of Work Unit
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] WorkUnitTag
       {
-         get { return _WorkUnitTag; }
+         get { return _workUnitTag; }
       }
 
       /* 564 */
@@ -631,47 +632,47 @@ namespace HFM.Queue
 
       /* 580 Passkey (as of v6.00) */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
-      private string _Passkey;
+      private string _passkey;
       /// <summary>
       /// Passkey
       /// </summary>
       public string Passkey
       {
-         get { return _Passkey; }
+         get { return _passkey; }
       }
 
       /* 612 Flops per CPU (core) (as of v6.00) (BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _Flops;
+      private byte[] _flops;
       /// <summary>
       /// Flops per CPU (core)
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] Flops
       {
-         get { return _Flops; }
+         get { return _flops; }
       }
 
       /* 616 Available memory (as of v6.00) (BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _Memory;
+      private byte[] _memory;
       /// <summary>
       /// Available memory (as of v6.00)
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] Memory
       {
-         get { return _Memory; }
+         get { return _memory; }
       }
 
       /* 620 Available GPU memory (as of v6.20) (LE) */
-      private UInt32 _GpuMemory;
+      private UInt32 _gpuMemory;
       /// <summary>
       /// Available GPU memory (as of v6.20)
       /// </summary>
       public UInt32 GpuMemory
       {
-         get { return _GpuMemory; }
+         get { return _gpuMemory; }
       }
 
       /* 624 */
@@ -692,36 +693,36 @@ namespace HFM.Queue
        ***/
       /* 688 WU expiration time */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private UInt32[] _ExpirationTime;
+      private UInt32[] _expirationTime;
       /// <summary>
       /// WU expiration time (0 = Due Date / 1-3 = Unknown)
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public UInt32[] ExpirationTime
       {
-         get { return _ExpirationTime; }
+         get { return _expirationTime; }
       }
 
       /* 704 Packet size limit (as of v5.00) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _PacketSizeLimit;
+      private byte[] _packetSizeLimit;
       /// <summary>
       /// Packet size limit
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] PacketSizeLimit
       {
-         get { return _PacketSizeLimit; }
+         get { return _packetSizeLimit; }
       }
 
       /* 708 Number of upload failures (as of v5.00) */
-      private UInt32 _NumberOfUploadFailures;
+      private UInt32 _numberOfUploadFailures;
       /// <summary>
       /// Number of upload failures
       /// </summary>
       public UInt32 NumberOfUploadFailures
       {
-         get { return _NumberOfUploadFailures; }
+         get { return _numberOfUploadFailures; }
       }
    }
 

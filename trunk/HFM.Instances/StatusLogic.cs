@@ -28,28 +28,20 @@ namespace HFM.Instances
 {
    public class StatusLogic : IStatusLogic
    {
-      private readonly IPreferenceSet _prefs;
-      
-      public StatusLogic(IPreferenceSet prefs)
-      {
-         _prefs = prefs;
-      }
-
       /// <summary>
       /// Handles the Client Status Returned by Log Parsing and then determine the Status.
       /// </summary>
       /// <param name="statusData">Client Status Data</param>
       public ClientStatus HandleStatusData(StatusData statusData)
       {
-         return HandleReturnedStatus(statusData, _prefs);
+         return HandleReturnedStatus(statusData);
       }
 
       /// <summary>
       /// Handles the Client Status Returned by Log Parsing and then determines what values to feed the DetermineStatus routine.
       /// </summary>
       /// <param name="statusData">Client Status Data</param>
-      /// <param name="prefs">PreferenceSet Interface</param>
-      public static ClientStatus HandleReturnedStatus(StatusData statusData, IPreferenceSet prefs)
+      public static ClientStatus HandleReturnedStatus(StatusData statusData)
       {
          switch (statusData.ReturnedStatus)
          {
@@ -235,7 +227,7 @@ namespace HFM.Instances
          #region Write Verbose Trace
          if (TraceLevelSwitch.Switch.TraceVerbose)
          {
-            List<string> messages = new List<string>(10);
+            var messages = new List<string>(10);
 
             messages.Add(String.Format("{0} ({1})", HfmTrace.FunctionName, statusData.InstanceName));
             messages.Add(String.Format(" - Retrieval Time (Date) ------- : {0}", statusData.LastRetrievalTime));
@@ -294,7 +286,7 @@ namespace HFM.Instances
          #region Write Verbose Trace
          if (TraceLevelSwitch.Switch.TraceVerbose)
          {
-            List<string> messages = new List<string>(4);
+            var messages = new List<string>(4);
 
             messages.Add(String.Format("{0} ({1})", HfmTrace.FunctionName, statusData.InstanceName));
             messages.Add(String.Format(" - Retrieval Time (Date) ------- : {0}", statusData.LastRetrievalTime));

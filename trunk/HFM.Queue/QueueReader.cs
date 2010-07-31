@@ -83,7 +83,7 @@ namespace HFM.Queue
          {
             using (BinaryReader reader = new BinaryReader(new FileStream(FilePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
             {
-               Queue q = FromBinaryReaderBlock(reader);
+               QueueData q = FromBinaryReaderBlock(reader);
 
                // at this point we know we've read a file of expected length
                // and no exceptions were thrown in the process
@@ -110,12 +110,12 @@ namespace HFM.Queue
          }
       }
 
-      private Queue FromBinaryReaderBlock(BinaryReader br)
+      private QueueData FromBinaryReaderBlock(BinaryReader br)
       {
          Debug.Assert(br != null);
       
          // Read byte array
-         byte[] buff = br.ReadBytes(Marshal.SizeOf(typeof(Queue)));
+         byte[] buff = br.ReadBytes(Marshal.SizeOf(typeof(QueueData)));
 
          if (buff.Length == QueueLength)
          {
@@ -125,14 +125,14 @@ namespace HFM.Queue
             GCHandle handle = GCHandle.Alloc(buff, GCHandleType.Pinned);
 
             // Marshal the bytes
-            Queue q = (Queue)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(Queue));
+            QueueData q = (QueueData)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(QueueData));
             handle.Free(); //Give control of the buffer back to the GC 
 
             return q;
          }
 
          _QueueReadOk = false;
-         return new Queue();
+         return new QueueData();
       }
       
       /// <summary>

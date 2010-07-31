@@ -77,6 +77,7 @@
     <Compile Include="InstanceTotals.cs" />
     <Compile Include="IOwnedByClientInstance.cs" />
     <Compile Include="IPreferenceSet.cs" />
+    <Compile Include="IProjectDownloadView.cs" />
     <Compile Include="IProjectInfo.cs" />
     <Compile Include="IProjectSummaryDownloader.cs" />
     <Compile Include="IProtein.cs" />
