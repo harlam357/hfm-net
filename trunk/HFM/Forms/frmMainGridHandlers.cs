@@ -85,7 +85,7 @@ namespace HFM.Forms
             }
             else if (dataGridView1.Columns["ProjectRunCloneGen"].Index == info.ColumnIndex)
             {
-               if (_Prefs.GetPreference<bool>(Preference.DuplicateProjectCheck) && instance.ProjectIsDuplicate)
+               if (_prefs.GetPreference<bool>(Preference.DuplicateProjectCheck) && instance.ProjectIsDuplicate)
                {
                   toolTipGrid.Show("Client is working on the same work unit as another client", dataGridView1, e.X + 15, e.Y);
                   return;
@@ -93,7 +93,7 @@ namespace HFM.Forms
             }
             else if (dataGridView1.Columns["Name"].Index == info.ColumnIndex)
             {
-               if (_Prefs.GetPreference<bool>(Preference.DuplicateUserIdCheck) && instance.UserIdIsDuplicate)
+               if (_prefs.GetPreference<bool>(Preference.DuplicateUserIdCheck) && instance.UserIdIsDuplicate)
                {
                   toolTipGrid.Show("Client is working with the same User and Machine ID as another client", dataGridView1, e.X + 15, e.Y);
                   return;
@@ -122,7 +122,7 @@ namespace HFM.Forms
             {
                #region Duplicate User and Machine ID Custom Paint
                var instance = _clientInstances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
-               if (_Prefs.GetPreference<bool>(Preference.DuplicateUserIdCheck) && instance.UserIdIsDuplicate)
+               if (_prefs.GetPreference<bool>(Preference.DuplicateUserIdCheck) && instance.UserIdIsDuplicate)
                {
                   PaintGridCell(PaintCell.Warning, e);
                }
@@ -132,7 +132,7 @@ namespace HFM.Forms
             {
                #region Duplicate Project Custom Paint
                var instance = _clientInstances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
-               if (_Prefs.GetPreference<bool>(Preference.DuplicateProjectCheck) && instance.ProjectIsDuplicate)
+               if (_prefs.GetPreference<bool>(Preference.DuplicateProjectCheck) && instance.ProjectIsDuplicate)
                {
                   PaintGridCell(PaintCell.Warning, e);
                }
@@ -152,7 +152,7 @@ namespace HFM.Forms
                       dataGridView1.Columns["ETA"].Index == e.ColumnIndex ||
                       dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex ||
                       dataGridView1.Columns["Deadline"].Index == e.ColumnIndex) &&
-                      _Prefs.GetPreference<TimeStyleType>(Preference.TimeStyle).Equals(TimeStyleType.Formatted))
+                      _prefs.GetPreference<TimeStyleType>(Preference.TimeStyle).Equals(TimeStyleType.Formatted))
             {
                PaintGridCell(PaintCell.Time, e);
             }
@@ -160,7 +160,7 @@ namespace HFM.Forms
             {
                #region ETA as Date Custom Paint
                var instance = _clientInstances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
-               if (_Prefs.GetPreference<bool>(Preference.EtaDate))
+               if (_prefs.GetPreference<bool>(Preference.EtaDate))
                {
                   PaintGridCell(PaintCell.EtaDate, instance.EtaDate, e);
                }
@@ -371,7 +371,7 @@ namespace HFM.Forms
                     dataGridView1.Columns["ETA"].Index == columnIndex ||
                     dataGridView1.Columns["DownloadTime"].Index == columnIndex ||
                     dataGridView1.Columns["Deadline"].Index == columnIndex) &&
-                    _Prefs.GetPreference<TimeStyleType>(Preference.TimeStyle).Equals(TimeStyleType.Formatted))
+                    _prefs.GetPreference<TimeStyleType>(Preference.TimeStyle).Equals(TimeStyleType.Formatted))
                {
                   if (dataGridView1.Columns["TPF"].Index == columnIndex)
                   {
@@ -395,7 +395,7 @@ namespace HFM.Forms
                   }
                }
                else if (dataGridView1.Columns["ETA"].Index == columnIndex &&
-                        _Prefs.GetPreference<bool>(Preference.EtaDate))
+                        _prefs.GetPreference<bool>(Preference.EtaDate))
                {
                   var instance = _clientInstances[dataGridView1.Rows[i].Cells["Name"].Value.ToString()];
                   formattedString = GetEtaDateString(instance.EtaDate);

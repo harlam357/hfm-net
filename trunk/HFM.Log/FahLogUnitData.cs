@@ -26,64 +26,46 @@ namespace HFM.Log
 {
    public class FahLogUnitData : IFahLogUnitData
    {
-      private TimeSpan _UnitStartTimeStamp = TimeSpan.MinValue;
+      public FahLogUnitData()
+      {
+         UnitStartTimeStamp = TimeSpan.MinValue;
+         FrameDataList = new List<ILogLine>(101);
+         CoreVersion = String.Empty;
+         ProjectInfoIndex = -1;
+         ProjectInfoList = new List<IProjectInfo>();
+         UnitResult = WorkUnitResult.Unknown;
+         Status = ClientStatus.Unknown;
+      }
+
       /// <summary>
       /// Unit Starting Time Stamp
       /// </summary>
-      public TimeSpan UnitStartTimeStamp
-      {
-         get { return _UnitStartTimeStamp; }
-         set { _UnitStartTimeStamp = value; }
-      }
+      public TimeSpan UnitStartTimeStamp { get; set; }
 
-      private IList<ILogLine> _FrameDataList = new List<ILogLine>(101);
       /// <summary>
       /// List of Log Lines containing Frame Data
       /// </summary>
-      public IList<ILogLine> FrameDataList
-      {
-         get { return _FrameDataList; }
-         set { _FrameDataList = value; }
-      }
+      public IList<ILogLine> FrameDataList { get; set; }
 
-      private Int32 _FramesObserved;
       /// <summary>
       /// Number of Frames Observed since Last Unit Start
       /// </summary>
-      public Int32 FramesObserved
-      {
-         get { return _FramesObserved; }
-         set { _FramesObserved = value; }
-      }
-   
-      private string _CoreVersion = String.Empty;
+      public Int32 FramesObserved { get; set; }
+
       /// <summary>
       /// Core Version
       /// </summary>
-      public string CoreVersion
-      {
-         get { return _CoreVersion; }
-         set { _CoreVersion = value; }
-      }
-      
-      private Int32 _ProjectInfoIndex = -1;
+      public string CoreVersion { get; set; }
+
       /// <summary>
       /// Project Info List Current Index
       /// </summary>
-      public Int32 ProjectInfoIndex
-      {
-         get { return _ProjectInfoIndex; }
-         set { _ProjectInfoIndex = value; }
-      }
-      
-      private readonly IList<IProjectInfo> _ProjectInfoList = new List<IProjectInfo>();
+      public int ProjectInfoIndex { get; set; }
+
       /// <summary>
       /// Project Info List
       /// </summary>
-      public IList<IProjectInfo> ProjectInfoList
-      {
-         get { return _ProjectInfoList; }
-      }
+      public IList<IProjectInfo> ProjectInfoList { get; private set; }
 
       /// <summary>
       /// Project ID Number
@@ -92,16 +74,16 @@ namespace HFM.Log
       {
          get 
          { 
-            if (_ProjectInfoIndex == -1)
+            if (ProjectInfoIndex == -1)
             {
-               if (_ProjectInfoList.Count > 0)
+               if (ProjectInfoList.Count > 0)
                {
-                  return _ProjectInfoList[_ProjectInfoList.Count - 1].ProjectID;
+                  return ProjectInfoList[ProjectInfoList.Count - 1].ProjectID;
                }
                return 0;
             }
 
-            return _ProjectInfoList[_ProjectInfoIndex].ProjectID;
+            return ProjectInfoList[ProjectInfoIndex].ProjectID;
          }
       }
 
@@ -112,16 +94,16 @@ namespace HFM.Log
       {
          get
          {
-            if (_ProjectInfoIndex == -1)
+            if (ProjectInfoIndex == -1)
             {
-               if (_ProjectInfoList.Count > 0)
+               if (ProjectInfoList.Count > 0)
                {
-                  return _ProjectInfoList[_ProjectInfoList.Count - 1].ProjectRun;
+                  return ProjectInfoList[ProjectInfoList.Count - 1].ProjectRun;
                }
                return 0;
             }
 
-            return _ProjectInfoList[_ProjectInfoIndex].ProjectRun;
+            return ProjectInfoList[ProjectInfoIndex].ProjectRun;
          }
       }
 
@@ -132,16 +114,16 @@ namespace HFM.Log
       {
          get
          {
-            if (_ProjectInfoIndex == -1)
+            if (ProjectInfoIndex == -1)
             {
-               if (_ProjectInfoList.Count > 0)
+               if (ProjectInfoList.Count > 0)
                {
-                  return _ProjectInfoList[_ProjectInfoList.Count - 1].ProjectClone;
+                  return ProjectInfoList[ProjectInfoList.Count - 1].ProjectClone;
                }
                return 0;
             }
 
-            return _ProjectInfoList[_ProjectInfoIndex].ProjectClone;
+            return ProjectInfoList[ProjectInfoIndex].ProjectClone;
          }
       }
 
@@ -152,37 +134,27 @@ namespace HFM.Log
       {
          get
          {
-            if (_ProjectInfoIndex == -1)
+            if (ProjectInfoIndex == -1)
             {
-               if (_ProjectInfoList.Count > 0)
+               if (ProjectInfoList.Count > 0)
                {
-                  return _ProjectInfoList[_ProjectInfoList.Count - 1].ProjectGen;
+                  return ProjectInfoList[ProjectInfoList.Count - 1].ProjectGen;
                }
                return 0;
             }
 
-            return _ProjectInfoList[_ProjectInfoIndex].ProjectGen;
+            return ProjectInfoList[ProjectInfoIndex].ProjectGen;
          }
       }
-   
-      private WorkUnitResult _UnitResult = WorkUnitResult.Unknown;
+
       /// <summary>
       /// Work Unit Result
       /// </summary>
-      public WorkUnitResult UnitResult
-      {
-         get { return _UnitResult; }
-         set { _UnitResult = value; }
-      }
+      public WorkUnitResult UnitResult { get; set; }
 
-      private ClientStatus _Status = ClientStatus.Unknown;
       /// <summary>
       /// Client Status
       /// </summary>
-      public ClientStatus Status
-      {
-         get { return _Status; }
-         set { _Status = value; }
-      }
+      public ClientStatus Status { get; set; }
    }
 }

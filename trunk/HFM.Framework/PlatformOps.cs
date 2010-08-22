@@ -286,5 +286,37 @@ namespace HFM.Framework
          }
       }
       #endregion
+
+      /// <summary>
+      /// Does the currentUnitInfo match the parsedUnitInfo?
+      /// </summary>
+      public static bool IsUnitInfoCurrentUnitInfo(IUnitInfoLogic currentUnitInfo, IUnitInfoLogic parsedUnitInfo)
+      {
+         // if the Projects are known
+         if (currentUnitInfo != null && currentUnitInfo.ProjectIsUnknown == false &&
+             parsedUnitInfo != null && parsedUnitInfo.ProjectIsUnknown == false)
+         {
+            // Matches the Current Project and Raw Download Time
+            // DownloadTime check should be made on the Raw DownloadTime
+            // value from the internal UnitInfoData data source object
+            if (ProjectsMatch(currentUnitInfo, parsedUnitInfo) &&
+                currentUnitInfo.UnitInfoData.DownloadTime.Equals(parsedUnitInfo.UnitInfoData.DownloadTime))
+            {
+               return true;
+            }
+         }
+
+         return false;
+      }
+
+      private static bool ProjectsMatch(IProjectInfo project1, IProjectInfo project2)
+      {
+         if (project1 == null || project2 == null) return false;
+
+         return (project1.ProjectID == project2.ProjectID &&
+                 project1.ProjectRun == project2.ProjectRun &&
+                 project1.ProjectClone == project2.ProjectClone &&
+                 project1.ProjectGen == project2.ProjectGen);
+      }
    }
 }

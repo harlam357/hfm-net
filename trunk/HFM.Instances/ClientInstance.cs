@@ -116,13 +116,14 @@ namespace HFM.Instances
          _statusLogic = statusLogic;
          _dataRetriever = dataRetriever;
          _dataAggregator = dataAggregator;
+         
          // Init User Specified Client Level Members
          _settings = instanceSettings ?? new ClientInstanceSettings(InstanceType.PathInstance);
          
          // Init Client Level Members
          Init();
          // Create a fresh UnitInfo
-         _currentUnitInfo = new UnitInfoLogic(_prefs, _proteinCollection, _benchmarkContainer, new UnitInfo(), this);
+         _currentUnitInfo = new UnitInfoLogic(_prefs, _proteinCollection.CreateProtein(), _benchmarkContainer, new UnitInfo(), this);
       }
       #endregion
 
@@ -319,14 +320,15 @@ namespace HFM.Instances
       /// </summary>
       public ClientStatus ProcessExisting()
       {
-         // Exec Start
          DateTime start = HfmTrace.ExecStart;
 
          #region Setup UnitInfo Aggregator
+         
          _dataAggregator.InstanceName = Settings.InstanceName;
          _dataAggregator.QueueFilePath = Path.Combine(_prefs.CacheDirectory, Settings.CachedQueueName);
          _dataAggregator.FahLogFilePath = Path.Combine(_prefs.CacheDirectory, Settings.CachedFahLogName);
          _dataAggregator.UnitInfoLogFilePath = Path.Combine(_prefs.CacheDirectory, Settings.CachedUnitInfoName); 
+         
          #endregion
          
          #region Run the Aggregator and Set ClientInstance Level Results
@@ -338,6 +340,7 @@ namespace HFM.Instances
          {
             PopulateRunLevelData(_dataAggregator.Queue.CurrentQueueEntry);
          }
+         
          #endregion
          
          var parsedUnits = new UnitInfoLogic[units.Count];
@@ -345,13 +348,14 @@ namespace HFM.Instances
          {
             if (units[i] != null)
             {
-               parsedUnits[i] = new UnitInfoLogic(_prefs, _proteinCollection, _benchmarkContainer, units[i], this);
+               IProtein protein = _proteinCollection.GetProtein(units[i].ProjectID);
+               parsedUnits[i] = new UnitInfoLogic(_prefs, protein, _benchmarkContainer, units[i], this);
             }
          }
 
          // *** THIS HAS TO BE DONE BEFORE UPDATING THE CurrentUnitInfo ***
          // Update Benchmarks from parsedUnits array 
-         UpdateBenchmarkData(parsedUnits, _dataAggregator.CurrentUnitIndex);
+         _benchmarkContainer.UpdateBenchmarkData(CurrentUnitInfo, parsedUnits, _dataAggregator.CurrentUnitIndex);
 
          // Update the CurrentUnitInfo if we have a Status
          ClientStatus currentWorkUnitStatus = _dataAggregator.CurrentWorkUnitStatus;
@@ -404,93 +408,12 @@ namespace HFM.Instances
       }
 
       /// <summary>
-      /// Update Project Benchmarks
-      /// </summary>
-      /// <param name="parsedUnits">Parsed UnitInfo Array</param>
-      /// <param name="benchmarkUpdateIndex">Index of Current UnitInfo</param>
-      private void UpdateBenchmarkData(UnitInfoLogic[] parsedUnits, int benchmarkUpdateIndex)
-      {
-         bool foundCurrent = false;
-         bool processUpdates = false;
-         int index = benchmarkUpdateIndex;
-         
-         #region Set index for the oldest unit in the array
-         if (index == parsedUnits.Length - 1)
-         {
-            index = 0;
-         }
-         else
-         {
-            index++;
-         }
-         #endregion
-
-         while (index != -1)
-         {
-            // If Current has not been found, check the benchmarkUpdateIndex
-            // or try to match the Current Project and Raw Download Time
-            if (processUpdates == false && (index == benchmarkUpdateIndex || IsUnitInfoCurrentUnitInfo(parsedUnits[index])))
-            {
-               foundCurrent = true;
-               processUpdates = true;
-            }
-
-            if (processUpdates)
-            {
-               int previousFrameID = 0;
-               if (foundCurrent)
-               {
-                  // current frame has already been recorded, increment to the next frame
-                  previousFrameID = CurrentUnitInfo.LastUnitFrameID + 1;
-                  foundCurrent = false;
-               }
-
-               // Even though the CurrentUnitInfo has been found in the parsed UnitInfoLogic array doesn't
-               // mean that all entries in the array will be present.  See TestFiles\SMP_12\FAHlog.txt.
-               if (parsedUnits[index] != null)
-               {
-                  // Update benchmarks
-                  _benchmarkContainer.UpdateBenchmarkData(parsedUnits[index], previousFrameID, parsedUnits[index].LastUnitFrameID);
-
-                  // Write Completed Unit Info only for units that are NOT current (i.e. have moved into history)
-                  // For some WUs (typically bigadv) all frames could be complete but the FinishedTime read from
-                  // the queue.dat is not yet populated.  To write this units production using an accurate bonus
-                  // multiplier that FinishedTime needs to be populated.
-                  if (index != benchmarkUpdateIndex)
-                  {
-                     // Make sure all Frames have been completed (not necessarily observed, but completed)
-                     if (parsedUnits[index].AllFramesAreCompleted)
-                     {
-                        UnitInfoContainer.WriteCompletedUnitInfo(parsedUnits[index]);
-                     }
-                  }
-               }
-            }
-
-            #region Increment to the next unit or set terminal value
-            if (index == benchmarkUpdateIndex)
-            {
-               index = -1;
-            }
-            else if (index == parsedUnits.Length - 1)
-            {
-               index = 0;
-            }
-            else
-            {
-               index++;
-            }
-            #endregion
-         }
-      }
-
-      /// <summary>
       /// Update Time of Last Frame Progress based on Current and Parsed UnitInfo
       /// </summary>
       private void UpdateTimeOfLastProgress(IUnitInfoLogic parsedUnitInfo)
       {
          // Matches the Current Project and Raw Download Time
-         if (IsUnitInfoCurrentUnitInfo(parsedUnitInfo))
+         if (PlatformOps.IsUnitInfoCurrentUnitInfo(CurrentUnitInfo, parsedUnitInfo))
          {
             // If the Unit Start Time Stamp is no longer the same as the CurrentUnitInfo
             if (parsedUnitInfo.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
@@ -514,40 +437,6 @@ namespace HFM.Instances
             TimeOfLastFrameProgress = DateTime.MinValue;
          }
       }
-
-      /// <summary>
-      /// Does the given UnitInfo.ProjectRunCloneGen match the CurrentUnitInfo.ProjectRunCloneGen?
-      /// </summary>
-      private bool IsUnitInfoCurrentUnitInfo(IUnitInfoLogic parsedUnitInfo)
-      {
-         Debug.Assert(CurrentUnitInfo != null);
-      
-         // if the parsed Project is known
-         if (parsedUnitInfo != null && parsedUnitInfo.ProjectIsUnknown == false)
-         {
-            // Matches the Current Project and Raw Download Time
-            // DownloadTime check should be made on the Raw DownloadTime
-            // value from the internal UnitInfoData data source object
-            if (ProjectsMatch(parsedUnitInfo, CurrentUnitInfo) &&
-                parsedUnitInfo.UnitInfoData.DownloadTime.Equals(CurrentUnitInfo.UnitInfoData.DownloadTime))
-            {
-               return true;
-            }
-         }
-
-         return false;
-      }
-
-      private static bool ProjectsMatch(IProjectInfo project1, IProjectInfo project2)
-      {
-         if (project1 == null || project2 == null) return false;
-
-         return (project1.ProjectID == project2.ProjectID &&
-                 project1.ProjectRun == project2.ProjectRun &&
-                 project1.ProjectClone == project2.ProjectClone &&
-                 project1.ProjectGen == project2.ProjectGen);
-      }
-      
       #endregion
 
       #region Status Handling and Determination
@@ -621,7 +510,8 @@ namespace HFM.Instances
       /// <param name="unitInfo">UnitInfo Object to Restore</param>
       public void RestoreUnitInfo(IUnitInfo unitInfo)
       {
-         CurrentUnitInfoConcrete = new UnitInfoLogic(_prefs, _proteinCollection, _benchmarkContainer, unitInfo, this, false);
+         IProtein protein = _proteinCollection.GetProtein(unitInfo.ProjectID, false);
+         CurrentUnitInfoConcrete = new UnitInfoLogic(_prefs, protein, _benchmarkContainer, unitInfo, this);
       }
       
       public bool Owns(IOwnedByClientInstance value)
@@ -766,9 +656,9 @@ namespace HFM.Instances
          }
       }
 
-      string IDisplayInstance.CoreId
+      string IDisplayInstance.CoreID
       {
-         get { return CurrentUnitInfo.CoreId; }
+         get { return CurrentUnitInfo.CoreID; }
       }
 
       string IDisplayInstance.ProjectRunCloneGen

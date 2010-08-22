@@ -235,8 +235,8 @@ namespace HFM.Instances
          dataGridView1.Columns["ETA"].DataPropertyName = "ETA";
          dataGridView1.Columns.Add("Core", "Core");
          dataGridView1.Columns["Core"].DataPropertyName = "Core";
-         dataGridView1.Columns.Add("CoreId", "Core ID");
-         dataGridView1.Columns["CoreId"].DataPropertyName = "CoreId";
+         dataGridView1.Columns.Add("CoreID", "Core ID");
+         dataGridView1.Columns["CoreID"].DataPropertyName = "CoreID";
          dataGridView1.Columns.Add("ProjectRunCloneGen", "Project (Run, Clone, Gen)");
          dataGridView1.Columns["ProjectRunCloneGen"].DataPropertyName = "ProjectRunCloneGen";
          dataGridView1.Columns.Add("Credit", "Credit");

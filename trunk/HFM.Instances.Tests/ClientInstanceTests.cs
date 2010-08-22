@@ -103,14 +103,15 @@ namespace HFM.Instances.Tests
 
       private IProteinCollection SetupMockProteinCollection(string core, int frames)
       {
-         IProtein currentProtein = _mocks.DynamicMock<IProtein>();
+         var currentProtein = _mocks.DynamicMock<IProtein>();
          Expect.Call(currentProtein.Core).Return(core).Repeat.Any();
          Expect.Call(currentProtein.Frames).Return(frames).Repeat.Any();
 
-         IProtein newProtein = _mocks.DynamicMock<IProtein>();
+         var newProtein = _mocks.DynamicMock<IProtein>();
+         Expect.Call(newProtein.Core).Return(String.Empty).Repeat.Any();
          Expect.Call(newProtein.Frames).Return(frames).Repeat.Any();
 
-         IProteinCollection proteinCollection = _mocks.DynamicMock<IProteinCollection>();
+         var proteinCollection = _mocks.DynamicMock<IProteinCollection>();
          Expect.Call(proteinCollection.GetProtein(0, true)).Return(currentProtein).IgnoreArguments().Repeat.Any();
          Expect.Call(proteinCollection.CreateProtein()).Return(newProtein).Repeat.Any();
 

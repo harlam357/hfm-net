@@ -598,7 +598,7 @@ namespace HFM.Instances
                "Client Name '{0}' already exists.", instance.Settings.InstanceName));
          }
 
-         var concreteInstance = (ClientInstance)instance;
+         var concreteInstance = instance;
          _instanceCollection.Add(instance.Settings.InstanceName, concreteInstance);
          OnCollectionChanged(EventArgs.Empty);
          

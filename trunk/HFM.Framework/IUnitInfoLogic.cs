@@ -32,7 +32,7 @@ namespace HFM.Framework
       /// <summary>
       /// Local time the logs used to generate this UnitInfo were retrieved
       /// </summary>
-      DateTime UnitRetrievalTime { get; set; }
+      DateTime UnitRetrievalTime { get; }
 
       /// <summary>
       /// The Folding ID (Username) attached to this work unit
@@ -47,7 +47,7 @@ namespace HFM.Framework
       /// <summary>
       /// Client Type for this work unit
       /// </summary>
-      ClientType TypeOfClient { get; set; }
+      ClientType TypeOfClient { get; }
 
       /// <summary>
       /// Date/time the unit was downloaded
@@ -94,7 +94,7 @@ namespace HFM.Framework
       /// </summary>
       string CoreVersion { get; }
 
-      string CoreId { get; }
+      string CoreID { get; }
 
       /// <summary>
       /// Returns true if Project (R/C/G) has not been identified
@@ -165,6 +165,11 @@ namespace HFM.Framework
       /// Flag specifying if EtaDate is Unknown
       /// </summary>
       bool EtaDateUnknown { get; }
+
+      /// <summary>
+      /// Specifies if All Frames have been Completed
+      /// </summary>
+      bool AllFramesAreCompleted { get; }
 
       /// <summary>
       /// Esimated Finishing Time for this unit

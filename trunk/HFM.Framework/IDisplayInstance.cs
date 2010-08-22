@@ -85,7 +85,7 @@ namespace HFM.Framework
       /// <summary>
       /// 
       /// </summary>
-      string CoreId { get; }
+      string CoreID { get; }
 
       /// <summary>
       /// 

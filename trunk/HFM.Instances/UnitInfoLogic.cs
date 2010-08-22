@@ -39,11 +39,6 @@ namespace HFM.Instances
       /// <summary>
       /// Protein Collection Interface
       /// </summary>
-      private readonly IProteinCollection _proteinCollection;
-
-      /// <summary>
-      /// Protein Collection Interface
-      /// </summary>
       private readonly IProteinBenchmarkContainer _benchmarkContainer;
 
       private readonly UnitInfo _unitInfo;
@@ -84,7 +79,6 @@ namespace HFM.Instances
       public string OwningInstanceName
       {
          get { return _unitInfo.OwningInstanceName; }
-         set { _unitInfo.OwningInstanceName = value; }
       }
 
       /// <summary>
@@ -93,7 +87,6 @@ namespace HFM.Instances
       public string OwningInstancePath
       {
          get { return _unitInfo.OwningInstancePath; }
-         set { _unitInfo.OwningInstancePath = value; }
       }
       #endregion
 
@@ -104,7 +97,6 @@ namespace HFM.Instances
       public DateTime UnitRetrievalTime
       {
          get { return _unitInfo.UnitRetrievalTime; }
-         set { _unitInfo.UnitRetrievalTime = value; }
       }
       #endregion
 
@@ -115,45 +107,34 @@ namespace HFM.Instances
       public string FoldingID
       {
          get { return _unitInfo.FoldingID; }
-         set { _unitInfo.FoldingID = value; }
       }
 
       /// <summary>
       /// The Team number attached to this work unit
       /// </summary>
-      public Int32 Team
+      public int Team
       {
          get { return _unitInfo.Team; }
-         set { _unitInfo.Team = value; }
       }
       #endregion
 
       #region Constructors
 
       [CLSCompliant(false)]
-      public UnitInfoLogic(IPreferenceSet prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer,
+      public UnitInfoLogic(IPreferenceSet prefs, IProtein protein, IProteinBenchmarkContainer benchmarkContainer, 
                            IUnitInfo unitInfo, IClientInstance clientInstance)
-         : this(prefs, proteinCollection, benchmarkContainer, unitInfo, clientInstance, true)
-      {
-      
-      }
-      
-      [CLSCompliant(false)]
-      public UnitInfoLogic(IPreferenceSet prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer, 
-                           IUnitInfo unitInfo, IClientInstance clientInstance, bool allowProteinDownload)
       {
          _prefs = prefs;
-         _proteinCollection = proteinCollection;
          _benchmarkContainer = benchmarkContainer;
          _unitInfo = (UnitInfo)unitInfo;
          _clientInstance = clientInstance;
 
-         OwningInstanceName = _clientInstance.Settings.InstanceName;
-         OwningInstancePath = _clientInstance.Settings.Path;
-         UnitRetrievalTime = _clientInstance.LastRetrievalTime;
+         _unitInfo.OwningInstanceName = _clientInstance.Settings.InstanceName;
+         _unitInfo.OwningInstancePath = _clientInstance.Settings.Path;
+         _unitInfo.UnitRetrievalTime = _clientInstance.LastRetrievalTime;
 
-         CurrentProtein = _proteinCollection.GetProtein(ProjectID, allowProteinDownload);
-         TypeOfClient = GetClientTypeFromProtein(CurrentProtein);
+         CurrentProtein = protein;
+         _unitInfo.TypeOfClient = GetClientTypeFromProtein(CurrentProtein);
       }
 
       #endregion
@@ -165,7 +146,6 @@ namespace HFM.Instances
       public ClientType TypeOfClient
       {
          get { return _unitInfo.TypeOfClient; }
-         set { _unitInfo.TypeOfClient = value; }
       }
 
       /// <summary>
@@ -316,10 +296,13 @@ namespace HFM.Instances
       {
          get { return _unitInfo.CoreVersion; }
       }
-      
-      public string CoreId
+
+      /// <summary>
+      /// Core ID (Hex Code) Number
+      /// </summary>
+      public string CoreID
       {
-         get { return _unitInfo.CoreId; }
+         get { return _unitInfo.CoreID; }
       }
 
       #region IProjectInfo Properties
@@ -327,48 +310,33 @@ namespace HFM.Instances
       /// <summary>
       /// Project ID Number
       /// </summary>
-      public Int32 ProjectID
+      public int ProjectID
       {
          get { return _unitInfo.ProjectID; }
-         set
-         {
-            _unitInfo.ProjectID = value;
-            if (_unitInfo.ProjectID == 0)
-            {
-               CurrentProtein = _proteinCollection.CreateProtein();
-            }
-            else
-            {
-               CurrentProtein = _proteinCollection.GetProtein(ProjectID);
-            }
-         }
       }
 
       /// <summary>
       /// Project ID (Run)
       /// </summary>
-      public Int32 ProjectRun
+      public int ProjectRun
       {
          get { return _unitInfo.ProjectRun; }
-         set { _unitInfo.ProjectRun = value; }
       }
 
       /// <summary>
       /// Project ID (Clone)
       /// </summary>
-      public Int32 ProjectClone
+      public int ProjectClone
       {
          get { return _unitInfo.ProjectClone; }
-         set { _unitInfo.ProjectClone = value; }
       }
 
       /// <summary>
       /// Project ID (Gen)
       /// </summary>
-      public Int32 ProjectGen
+      public int ProjectGen
       {
          get { return _unitInfo.ProjectGen; }
-         set { _unitInfo.ProjectGen = value; }
       }
       
       #endregion
@@ -399,7 +367,6 @@ namespace HFM.Instances
       public String ProteinName
       {
          get { return _unitInfo.ProteinName; }
-         set { _unitInfo.ProteinName = value; }
       }
 
       /// <summary>
@@ -408,7 +375,6 @@ namespace HFM.Instances
       public string ProteinTag
       {
          get { return _unitInfo.ProteinTag; }
-         set { _unitInfo.ProteinTag = value; }
       }
 
       /// <summary>
@@ -417,16 +383,15 @@ namespace HFM.Instances
       public WorkUnitResult UnitResult
       {
          get { return _unitInfo.UnitResult; }
-         set { _unitInfo.UnitResult = value; }
       }
 
-      private IProtein _CurrentProtein;
+      private IProtein _currentProtein;
       /// <summary>
       /// Class member containing info on the currently running protein
       /// </summary>
       public IProtein CurrentProtein
       {
-         get { return _CurrentProtein; }
+         get { return _currentProtein; }
          protected set
          {
             if (value == null)
@@ -435,7 +400,7 @@ namespace HFM.Instances
             }
 
             // Set the New Protein
-            _CurrentProtein = value;
+            _currentProtein = value;
          }
       }
       #endregion
@@ -444,12 +409,12 @@ namespace HFM.Instances
       /// <summary>
       /// Frame progress of the unit
       /// </summary>
-      public Int32 FramesComplete
+      public int FramesComplete
       {
          get
          {
             // Report Frame Progress even if CurrentProtein.IsUnknown - 11/22/09
-            Int32 rawScaleFactor = _unitInfo.RawFramesTotal / CurrentProtein.Frames;
+            int rawScaleFactor = _unitInfo.RawFramesTotal / CurrentProtein.Frames;
             if (rawScaleFactor > 0)
             {
                int computedFramesComplete = _unitInfo.RawFramesComplete / rawScaleFactor;
@@ -470,7 +435,7 @@ namespace HFM.Instances
       /// <summary>
       /// Current progress (percentage) of the unit
       /// </summary>
-      public Int32 PercentComplete
+      public int PercentComplete
       {
          get
          {
@@ -484,7 +449,7 @@ namespace HFM.Instances
       /// <summary>
       /// Frame Time per section based on current PPD calculation setting (readonly)
       /// </summary>
-      public Int32 RawTimePerSection
+      public int RawTimePerSection
       {
          get
          {
@@ -542,12 +507,9 @@ namespace HFM.Instances
       /// <summary>
       /// Points per day (PPD) rating for this unit
       /// </summary>
-      public Double PPD
+      public double PPD
       {
-         get
-         {
-            return GetPPD(TimePerFrame);
-         }
+         get { return GetPPD(TimePerFrame); }
       }
 
       /// <summary>
@@ -555,10 +517,7 @@ namespace HFM.Instances
       /// </summary>
       public TimeSpan ETA
       {
-         get
-         {
-            return new TimeSpan((CurrentProtein.Frames - FramesComplete) * TimePerFrame.Ticks);
-         }
+         get { return new TimeSpan((CurrentProtein.Frames - FramesComplete) * TimePerFrame.Ticks); }
       }
 
       /// <summary>
@@ -654,28 +613,20 @@ namespace HFM.Instances
       #endregion
 
       #region CurrentProtein Pass-Through Properties/Methods
+      
       public string WorkUnitName
       {
-         get
-         {
-            return CurrentProtein.WorkUnitName;
-         }
+         get { return CurrentProtein.WorkUnitName; }
       }
 
       public double NumAtoms
       {
-         get
-         {
-            return CurrentProtein.NumAtoms;
-         }
+         get { return CurrentProtein.NumAtoms; }
       }
 
       public double Credit
       {
-         get
-         {
-            return CurrentProtein.Credit;
-         }
+         get { return CurrentProtein.Credit; }
       }
 
       /// <summary>
@@ -696,29 +647,24 @@ namespace HFM.Instances
 
       public double Frames
       {
-         get
-         {
-            return CurrentProtein.Frames;
-         }
+         get { return CurrentProtein.Frames; }
       }
 
       public string Core
       {
-         get
-         {
-            return CurrentProtein.Core;
-         }
+         get { return CurrentProtein.Core; }
       }
+      
       #endregion
 
       #region Frame (UnitFrame) Data Variables
+      
       /// <summary>
       /// Number of Frames Observed on this Unit
       /// </summary>
-      public Int32 FramesObserved
+      public int FramesObserved
       {
          get { return _unitInfo.FramesObserved; }
-         set { _unitInfo.FramesObserved = value; }
       }
 
       /// <summary>
@@ -748,7 +694,7 @@ namespace HFM.Instances
       /// <summary>
       /// Last Frame ID based on UnitFrame Data
       /// </summary>
-      public Int32 LastUnitFrameID
+      public int LastUnitFrameID
       {
          get
          {
@@ -766,13 +712,14 @@ namespace HFM.Instances
             return 0;
          }
       }
+      
       #endregion
 
       #region Unit Production Variations
       /// <summary>
       /// Average frame time since unit download
       /// </summary>
-      public Int32 RawTimePerUnitDownload
+      public int RawTimePerUnitDownload
       {
          get
          {
@@ -800,10 +747,7 @@ namespace HFM.Instances
       /// </summary>
       public TimeSpan TimePerUnitDownload
       {
-         get
-         {
-            return TimeSpan.FromSeconds(RawTimePerUnitDownload);
-         }
+         get { return TimeSpan.FromSeconds(RawTimePerUnitDownload); }
       }
 
       /// <summary>
@@ -811,16 +755,13 @@ namespace HFM.Instances
       /// </summary>
       public double PPDPerUnitDownload
       {
-         get
-         {
-            return GetPPD(TimePerUnitDownload);
-         }
+         get { return GetPPD(TimePerUnitDownload); }
       }
 
       /// <summary>
       /// Average frame time over all sections
       /// </summary>
-      public Int32 RawTimePerAllSections
+      public int RawTimePerAllSections
       {
          get
          {
@@ -838,10 +779,7 @@ namespace HFM.Instances
       /// </summary>
       public TimeSpan TimePerAllSections
       {
-         get
-         {
-            return TimeSpan.FromSeconds(RawTimePerAllSections);
-         }
+         get { return TimeSpan.FromSeconds(RawTimePerAllSections); }
       }
 
       /// <summary>
@@ -849,16 +787,13 @@ namespace HFM.Instances
       /// </summary>
       public double PPDPerAllSections
       {
-         get
-         {
-            return GetPPD(TimePerAllSections);
-         }
+         get { return GetPPD(TimePerAllSections); }
       }
 
       /// <summary>
       /// Average frame time over the last three sections
       /// </summary>
-      public Int32 RawTimePerThreeSections
+      public int RawTimePerThreeSections
       {
          get
          {
@@ -877,10 +812,7 @@ namespace HFM.Instances
       /// </summary>
       public TimeSpan TimePerThreeSections
       {
-         get
-         {
-            return TimeSpan.FromSeconds(RawTimePerThreeSections);
-         }
+         get { return TimeSpan.FromSeconds(RawTimePerThreeSections); }
       }
 
       /// <summary>
@@ -888,16 +820,13 @@ namespace HFM.Instances
       /// </summary>
       public double PPDPerThreeSections
       {
-         get
-         {
-            return GetPPD(TimePerThreeSections);
-         }
+         get { return GetPPD(TimePerThreeSections); }
       }
 
       /// <summary>
       /// Frame time of the last section
       /// </summary>
-      public Int32 RawTimePerLastSection
+      public int RawTimePerLastSection
       {
          get
          {
@@ -933,10 +862,7 @@ namespace HFM.Instances
       /// </summary>
       public double PPDPerLastSection
       {
-         get
-         {
-            return GetPPD(TimePerLastSection);
-         }
+         get { return GetPPD(TimePerLastSection); }
       }
       
       private double GetPPD(TimeSpan frameTime)

@@ -438,6 +438,16 @@
             Global switches that change the behavior of protobuf-net
             </summary>
         </member>
+        <member name="P:ProtoBuf.Serializer.GlobalOptions.InferTagFromName">
+            <summary>
+            Global default for that
+            enables/disables automatic tag generation based on the existing name / order
+            of the defined members. See <seealso cref="P:ProtoBuf.ProtoContractAttribute.InferTagFromName"/>
+            for usage and <b>important warning</b> / explanation.
+            You must set the global default before attempting to serialize/deserialize any
+            impacted type.
+            </summary>
+        </member>
         <member name="T:ProtoBuf.Serializer.NonGeneric">
             <summary>
             Provides non-generic, reflection-based access to Serializer functionality
@@ -451,6 +461,11 @@
             <param name="style">How to encode the length prefix.</param>
             <param name="destination">The destination stream to write to.</param>
             <param name="tag">The tag used as a prefix to each record (only used with base-128 style prefixes).</param>
+        </member>
+        <member name="M:ProtoBuf.Serializer.NonGeneric.CanSerialize(System.Type)">
+            <summary>
+            Can the given type be meaningfully with protobuf-net?
+            </summary>
         </member>
         <member name="M:ProtoBuf.Serializer.NonGeneric.Serialize(System.IO.Stream,System.Object)">
             <summary>
@@ -594,6 +609,12 @@
             Flushes the IO buffer, writing any cached data to the underlying stream and resetting the cache.
             </summary>
         </member>
+        <member name="T:ProtoBuf.ServiceModel.ProtoBehaviorAttribute">
+            <summary>
+            Uses protocol buffer serialization on the specified operation; note that this
+            must be enabled on both the client and server.
+            </summary>
+        </member>
         <member name="F:ProtoBuf.WireType.Variant">
             <summary>
             Base-128 variant-length encoding
@@ -726,6 +747,26 @@
             Gets or sets the mechanism used to automatically infer field tags
             for members. This option should be used in advanced scenarios only.
             Please review the important notes against the ImplicitFields enumeration.
+            </summary>
+        </member>
+        <member name="P:ProtoBuf.ProtoContractAttribute.InferTagFromName">
+            <summary>
+            Enables/disables automatic tag generation based on the existing name / order
+            of the defined members. This option is not used for members marked
+            with ProtoMemberAttribute, as intended to provide compatibility with
+            WCF serialization. WARNING: when adding new fields you must take
+            care to increase the Order for new elements, otherwise data corruption
+            may occur.
+            </summary>
+            <remarks>If not specified, the default is assumed from <see cref="P:ProtoBuf.Serializer.GlobalOptions.InferTagFromName"/>.</remarks>
+        </member>
+        <member name="P:ProtoBuf.ProtoContractAttribute.DataMemberOffset">
+            <summary>
+            Specifies an offset to apply to [DataMember(Order=...)] markers;
+            this is useful when working with mex-generated classes that have
+            a different origin (usually 1 vs 0) than the original data-contract.
+            
+            This value is added to the Order of each member.
             </summary>
         </member>
         <member name="T:ProtoBuf.ProtoEnumAttribute">
@@ -1053,7 +1094,7 @@
         </member>
         <member name="F:ProtoBuf.PrefixStyle.Fixed32">
             <summary>
-            A fixed-length (big-endian) length prefix is applied to the data (useful for compatibility).
+            A fixed-length (little-endian) length prefix is applied to the data (useful for compatibility).
             </summary>
         </member>
         <member name="T:ProtoBuf.Property.PropertyEnum`2">
@@ -1204,6 +1245,60 @@
         <member name="M:ProtoBuf.ServiceModel.Client.HttpBasicTransport.CheckDisposed">
             <summary>
             Raises an exception if the instance has been disposed.
+            </summary>
+        </member>
+        <member name="T:ProtoBuf.ServiceModel.ProtoBehaviorExtension">
+            <summary>
+            Configuration element to swap out DatatContractSerilaizer with the XmlProtoSerializer for a given endpoint.
+            </summary>
+            <seealso cref="T:ProtoBuf.ServiceModel.ProtoEndpointBehavior"/>
+        </member>
+        <member name="M:ProtoBuf.ServiceModel.ProtoBehaviorExtension.#ctor">
+            <summary>
+            Creates a new ProtoBehaviorExtension instance.
+            </summary>
+        </member>
+        <member name="M:ProtoBuf.ServiceModel.ProtoBehaviorExtension.CreateBehavior">
+            <summary>
+            Creates a behavior extension based on the current configuration settings.
+            </summary>
+            <returns>The behavior extension.</returns>
+        </member>
+        <member name="P:ProtoBuf.ServiceModel.ProtoBehaviorExtension.BehaviorType">
+            <summary>
+            Gets the type of behavior.
+            </summary>     
+        </member>
+        <member name="T:ProtoBuf.ServiceModel.ProtoEndpointBehavior">
+            <summary>
+            Behavior to swap out DatatContractSerilaizer with the XmlProtoSerializer for a given endpoint.
+             <example>
+            Add the following to the server and client app.config in the system.serviceModel section:
+             <behaviors>
+               <endpointBehaviors>
+                 <behavior name="ProtoBufBehaviorConfig">
+                   <ProtoBufSerialization/>
+                 </behavior>
+               </endpointBehaviors>
+             </behaviors>
+             <extensions>
+               <behaviorExtensions>
+                 <add name="ProtoBufSerialization" type="ProtoBuf.ServiceModel.ProtoBehaviorExtension, protobuf-net, Version=1.0.0.255, Culture=neutral, PublicKeyToken=257b51d87d2e4d67"/>
+               </behaviorExtensions>
+             </extensions>
+            
+            Configure your endpoints to have a behaviorConfiguration as follows:
+            
+             <service name="TK.Framework.Samples.ServiceModel.Contract.SampleService">
+               <endpoint address="http://myhost:9003/SampleService" binding="basicHttpBinding" behaviorConfiguration="ProtoBufBehaviorConfig"
+                bindingConfiguration="basicHttpBindingConfig" name="basicHttpProtoBuf" contract="ISampleServiceContract" />
+             </service>
+             <client>
+                 <endpoint address="http://myhost:9003/SampleService" binding="basicHttpBinding"
+                     bindingConfiguration="basicHttpBindingConfig" contract="ISampleServiceContract"
+                     name="BasicHttpProtoBufEndpoint" behaviorConfiguration="ProtoBufBehaviorConfig"/>
+              </client>
+            </example>
             </summary>
         </member>
         <member name="T:ProtoBuf.ServiceModel.RpcUtils">

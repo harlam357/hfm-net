@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Globalization;
 
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -43,41 +42,74 @@ namespace HFM.Instances.Tests
       [Test]
       public void UnitInfoLogicTimePropertyTest()
       {
-         IProteinCollection proteinCollection = SetupMockProteinCollection("GROCVS", 100, 3, 6);
          IPreferenceSet prefs = SetupMockPreferenceSet();
+         IProtein protein = SetupMockProtein("GROCVS", 100, 3, 6);
          IClientInstance clientInstance = SetupMockClientInstance(ClientStatus.Running, false, 0);
          _mocks.ReplayAll();
-      
-         UnitInfo unitInfo = new UnitInfo();
-         UnitInfoLogic unitInfoLogic = new UnitInfoLogic(prefs, proteinCollection, _benchmarkContainer, unitInfo, clientInstance);
+
+         var unitInfo = new UnitInfo();
+         SetProject(unitInfo);
+         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance);
 
          SetDateTimeProperties(unitInfo);
          AssertDateTimeProperties(unitInfoLogic, unitInfo.DownloadTime.ToLocalTime(),
-            unitInfo.DueTime.ToLocalTime(), unitInfo.FinishedTime.ToLocalTime());
-         SetAndAssertProject(unitInfoLogic);
-         AssertDeadlines(unitInfoLogic, new DateTime(2010, 1, 3, 18, 0, 0), new DateTime(2010, 1, 6, 18, 0, 0));
-
+                                                 unitInfo.DownloadTime.ToLocalTime().AddDays(protein.PreferredDays),
+                                                 false,
+                                                 unitInfo.DownloadTime.ToLocalTime().AddDays(protein.MaxDays),
+                                                 unitInfo.DueTime.ToLocalTime(),
+                                                 unitInfo.FinishedTime.ToLocalTime());
          _mocks.VerifyAll();            
       }
 
       [Test]
       public void UnitInfoLogicTimePropertyUtcZeroTest()
       {
-         IProteinCollection proteinCollection = SetupMockProteinCollection("GROCVS", 100, 4, 8);
          IPreferenceSet prefs = SetupMockPreferenceSet();
+         IProtein protein = SetupMockProtein("GROCVS", 100, 4, 8);
          IClientInstance clientInstance = SetupMockClientInstance(ClientStatus.Running, true, 0);
          _mocks.ReplayAll();
 
-         UnitInfo unitInfo = new UnitInfo();
-         UnitInfoLogic unitInfoLogic = new UnitInfoLogic(prefs, proteinCollection, _benchmarkContainer, unitInfo, clientInstance);
+         var unitInfo = new UnitInfo();
+         SetProject(unitInfo);
+         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance);
 
          SetDateTimeProperties(unitInfo);
          AssertDateTimeProperties(unitInfoLogic, unitInfo.DownloadTime,
-            unitInfo.DueTime, unitInfo.FinishedTime);
-         SetAndAssertProject(unitInfoLogic);
-         AssertDeadlines(unitInfoLogic, new DateTime(2010, 1, 5, 0, 0, 0), new DateTime(2010, 1, 9, 0, 0, 0));
-
+                                                 unitInfo.DownloadTime.AddDays(protein.PreferredDays),
+                                                 false,
+                                                 unitInfo.DownloadTime.AddDays(protein.MaxDays),
+                                                 unitInfo.DueTime,
+                                                 unitInfo.FinishedTime);
          _mocks.VerifyAll();
+      }
+
+      [Test]
+      public void UnitInfoLogicTimePropertyWithUnknownProteinTest()
+      {
+         IPreferenceSet prefs = SetupMockPreferenceSet();
+         IProtein protein = SetupMockNewProtein();
+         IClientInstance clientInstance = SetupMockClientInstance(ClientStatus.Running, false, 0);
+         _mocks.ReplayAll();
+
+         var unitInfo = new UnitInfo();
+         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance);
+
+         SetDateTimeProperties(unitInfo);
+         AssertDateTimeProperties(unitInfoLogic, unitInfo.DownloadTime.ToLocalTime(),
+                                                 unitInfo.DueTime.ToLocalTime(), 
+                                                 true,
+                                                 DateTime.MinValue,
+                                                 unitInfo.DueTime.ToLocalTime(),
+                                                 unitInfo.FinishedTime.ToLocalTime());
+         _mocks.VerifyAll();
+      }
+
+      private static void SetProject(IUnitInfo unitInfo)
+      {
+         unitInfo.ProjectID = 2669;
+         unitInfo.ProjectRun = 1;
+         unitInfo.ProjectClone = 2;
+         unitInfo.ProjectGen = 3;
       }
       
       private static void SetDateTimeProperties(IUnitInfo unitInfo)
@@ -88,60 +120,46 @@ namespace HFM.Instances.Tests
       }
       
       private static void AssertDateTimeProperties(UnitInfoLogic unitInfoLogic, DateTime downloadTime, 
-                                                   DateTime dueTime, DateTime finishedTime)
+                                                   DateTime preferredDeadline, bool finalDeadlineUnknown, 
+                                                   DateTime finalDeadline, DateTime dueTime, DateTime finishedTime)
       {
          // Unit Info Logic Values
+         Assert.AreEqual(false, unitInfoLogic.DownloadTimeUnknown);
          Assert.AreEqual(downloadTime, unitInfoLogic.DownloadTime);
-         // use dueTime for PreferredDeadline when CurrentProtein.IsUnknown
-         Assert.AreEqual(unitInfoLogic.DueTime, unitInfoLogic.PreferredDeadline);
          Assert.AreEqual(false, unitInfoLogic.PreferredDeadlineUnknown);
-         Assert.AreEqual(DateTime.MinValue, unitInfoLogic.FinalDeadline);
-         Assert.AreEqual(true, unitInfoLogic.FinalDeadlineUnknown);
+         Assert.AreEqual(preferredDeadline, unitInfoLogic.PreferredDeadline);
+         Assert.AreEqual(finalDeadlineUnknown, unitInfoLogic.FinalDeadlineUnknown);
+         Assert.AreEqual(finalDeadline, unitInfoLogic.FinalDeadline);
+         Assert.AreEqual(false, unitInfoLogic.DueTimeUnknown);
          Assert.AreEqual(dueTime, unitInfoLogic.DueTime);
          Assert.AreEqual(finishedTime, unitInfoLogic.FinishedTime);
-      }
-      
-      private static void SetAndAssertProject(UnitInfoLogic unitInfoLogic)
-      {
-         Assert.IsTrue(unitInfoLogic.CurrentProtein.IsUnknown);
-         unitInfoLogic.ProjectID = 0;
-         Assert.IsTrue(unitInfoLogic.CurrentProtein.IsUnknown);
-         unitInfoLogic.ProjectID = 2669;
-         unitInfoLogic.ProjectRun = 1;
-         unitInfoLogic.ProjectClone = 2;
-         unitInfoLogic.ProjectGen = 3;
-         Assert.IsFalse(unitInfoLogic.CurrentProtein.IsUnknown);
-         Assert.AreEqual(String.Format(CultureInfo.InvariantCulture, "P{0} (R{1}, C{2}, G{3})",
-            unitInfoLogic.ProjectID, unitInfoLogic.ProjectRun,
-            unitInfoLogic.ProjectClone, unitInfoLogic.ProjectGen),
-            unitInfoLogic.ProjectRunCloneGen);
-      }
-      
-      private static void AssertDeadlines(IUnitInfoLogic unitInfoLogic, DateTime preferredDeadline, DateTime finalDeadline)
-      {
-         Assert.AreEqual(preferredDeadline, unitInfoLogic.PreferredDeadline);
-         Assert.AreEqual(false, unitInfoLogic.PreferredDeadlineUnknown);
-         Assert.AreEqual(finalDeadline, unitInfoLogic.FinalDeadline);
-         Assert.AreEqual(false, unitInfoLogic.FinalDeadlineUnknown);
+
+         if (unitInfoLogic.CurrentProtein.IsUnknown)
+         {
+            // use DueTime for PreferredDeadline when CurrentProtein.IsUnknown
+            Assert.AreEqual(unitInfoLogic.DueTime, unitInfoLogic.PreferredDeadline);
+         }
       }
 
       [Test]
       public void UnitInfoLogicFramePropertyTest()
       {
-         IProteinCollection proteinCollection = SetupMockProteinCollection("GROCVS", 100, 3, 6);
          IPreferenceSet prefs = SetupMockPreferenceSet();
-         DateTime baseDate = new DateTime(2010, 1, 1);
-         IClientInstance clientInstance = SetupMockClientInstance(ClientStatus.Running, false, 0, 
-            "Owner", "Path", baseDate.Add(TimeSpan.FromMinutes(30)));
+         IProtein protein = SetupMockProtein("GROCVS", 100, 3, 6);
+         var baseDate = new DateTime(2010, 1, 1);
+         IClientInstance clientInstance = SetupMockClientInstance(ClientStatus.Running, false, 0, "Owner", "Path", 
+                                                                  baseDate.Add(TimeSpan.FromMinutes(30)));
 
-         UnitInfo unitInfo = new UnitInfo();
+         var unitInfo = new UnitInfo();
          ILogLine line1 = MakeLogLine("00:00:00", 0, 0, 250000);
          ILogLine line2 = MakeLogLine("00:04:00", 1, 2500, 250000);
          ILogLine line3 = MakeLogLine("00:09:00", 2, 5000, 250000);
          ILogLine line4 = MakeLogLine("00:15:00", 3, 7500, 250000);
+
+         Expect.Call(protein.GetPPD(TimeSpan.Zero)).IgnoreArguments().Return(100);
          _mocks.ReplayAll();
 
-         UnitInfoLogic unitInfoLogic = new UnitInfoLogic(prefs, proteinCollection, _benchmarkContainer, unitInfo, clientInstance);
+         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance);
 
          Assert.AreEqual(TimeSpan.Zero, unitInfoLogic.TimeOfLastFrame);
          unitInfo.FramesObserved = 4;
@@ -154,38 +172,40 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(3, unitInfoLogic.PercentComplete);
          Assert.AreEqual(new TimeSpan(0, 5, 0), unitInfoLogic.TimePerFrame);
          // UPD
-         // PPD
+         Assert.AreEqual(100, unitInfoLogic.PPD);
          Assert.AreEqual(new TimeSpan(8, 5, 0), unitInfoLogic.ETA);
          Assert.AreEqual(TimeSpan.Zero, unitInfoLogic.EftByDownloadTime);
-         Assert.AreEqual(TimeSpan.Zero, unitInfoLogic.EftByFrameTime);
+         Assert.AreEqual(new TimeSpan(8, 20, 00), unitInfoLogic.EftByFrameTime);
          unitInfo.DownloadTime = baseDate;
          Assert.AreEqual(new TimeSpan(14, 35, 00), unitInfoLogic.EftByDownloadTime);
-         unitInfoLogic.ProjectID = 2669;
-         Assert.AreEqual(new TimeSpan(8, 20, 00), unitInfoLogic.EftByFrameTime);
          Assert.AreEqual(TimeSpan.FromMinutes(15), unitInfoLogic.TimeOfLastFrame);
          Assert.AreEqual(3, unitInfoLogic.LastUnitFrameID);
 
-         AssertPpdVariations(unitInfoLogic, 7800, 300, 300, 360, 100);
+         AssertTimeVariations(unitInfoLogic, 7800, 300, 300, 360);
+         
+         _mocks.VerifyAll();
       }
 
       [Test]
       public void UnitInfoLogicFramePropertyUtcZeroTest()
       {
-         IProteinCollection proteinCollection = SetupMockProteinCollection("GROCVS", 100, 3, 6);
          IPreferenceSet prefs = SetupMockPreferenceSet();
-         DateTime baseDate = new DateTime(2010, 1, 1);
-         IClientInstance clientInstance = SetupMockClientInstance(ClientStatus.Running, true, 0, 
-            "Owner", "Path", baseDate.Add(TimeSpan.FromMinutes(90)));
+         IProtein protein = SetupMockProtein("GROCVS", 100, 3, 6);
+         var baseDate = new DateTime(2010, 1, 1);
+         IClientInstance clientInstance = SetupMockClientInstance(ClientStatus.Running, true, 0, "Owner", "Path", 
+                                                                  baseDate.Add(TimeSpan.FromMinutes(90)));
 
-         UnitInfo unitInfo = new UnitInfo();
+         var unitInfo = new UnitInfo();
          ILogLine line1 = MakeLogLine("00:00:00", 0, 0, 100);
          ILogLine line2 = MakeLogLine("00:05:10", 1, 1, 100);
          ILogLine line3 = MakeLogLine("00:11:30", 2, 2, 100);
          ILogLine line4 = MakeLogLine("00:17:40", 3, 3, 100);
          ILogLine line5 = MakeLogLine("00:24:00", 4, 4, 100);
+
+         Expect.Call(protein.GetPPD(TimeSpan.Zero)).IgnoreArguments().Return(100);
          _mocks.ReplayAll();
 
-         UnitInfoLogic unitInfoLogic = new UnitInfoLogic(prefs, proteinCollection, _benchmarkContainer, unitInfo, clientInstance);
+         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance);
 
          Assert.AreEqual(TimeSpan.Zero, unitInfoLogic.TimeOfLastFrame);
          unitInfo.FramesObserved = 5;
@@ -199,38 +219,40 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(4, unitInfoLogic.PercentComplete);
          Assert.AreEqual(new TimeSpan(0, 6, 0), unitInfoLogic.TimePerFrame);
          // UPD
-         // PPD
+         Assert.AreEqual(100, unitInfoLogic.PPD);
          Assert.AreEqual(new TimeSpan(9, 36, 0), unitInfoLogic.ETA);
          Assert.AreEqual(TimeSpan.Zero, unitInfoLogic.EftByDownloadTime);
-         Assert.AreEqual(TimeSpan.Zero, unitInfoLogic.EftByFrameTime);
+         Assert.AreEqual(new TimeSpan(10, 00, 00), unitInfoLogic.EftByFrameTime);
          unitInfo.DownloadTime = baseDate;
          Assert.AreEqual(new TimeSpan(11, 6, 00), unitInfoLogic.EftByDownloadTime);
-         unitInfoLogic.ProjectID = 2669;
-         Assert.AreEqual(new TimeSpan(10, 00, 00), unitInfoLogic.EftByFrameTime);
          Assert.AreEqual(TimeSpan.FromMinutes(24), unitInfoLogic.TimeOfLastFrame);
          Assert.AreEqual(4, unitInfoLogic.LastUnitFrameID);
 
-         AssertPpdVariations(unitInfoLogic, 1350, 360, 376, 380, 100);
+         AssertTimeVariations(unitInfoLogic, 1350, 360, 376, 380);
+
+         _mocks.VerifyAll();
       }
       
       [Test]
       public void UnitInfoLogicFramesAndPpdTest()
       {
-         IProteinCollection proteinCollection = SetupMockProteinCollection("GROCVS", 100, 3, 6);
          IPreferenceSet prefs = SetupMockPreferenceSet();
-         DateTime baseDate = new DateTime(2010, 1, 1);
-         IClientInstance clientInstance = SetupMockClientInstance(ClientStatus.Running, true, 0, 
-            "Owner", "Path", baseDate.Add(TimeSpan.FromMinutes(90)));
+         IProtein protein = SetupMockProtein("GROCVS", 100, 3, 6);
+         var baseDate = new DateTime(2010, 1, 1);
+         IClientInstance clientInstance = SetupMockClientInstance(ClientStatus.Running, true, 0, "Owner", "Path", 
+                                                                  baseDate.Add(TimeSpan.FromMinutes(90)));
 
-         UnitInfo unitInfo = new UnitInfo();
+         var unitInfo = new UnitInfo();
          ILogLine line1 = MakeLogLine("00:00:00", 0, 0, 100);
          ILogLine line2 = MakeLogLine("00:05:10", 1, 1, 100);
          ILogLine line3 = MakeLogLine("00:11:30", 2, 2, 100);
          ILogLine line4 = MakeLogLine("00:17:40", 3, 3, 100);
          ILogLine line5 = MakeLogLine("00:24:00", 4, 4, 100);
+
+         Expect.Call(protein.GetPPD(TimeSpan.Zero)).IgnoreArguments().Return(100);
          _mocks.ReplayAll();
 
-         UnitInfoLogic unitInfoLogic = new UnitInfoLogic(prefs, proteinCollection, _benchmarkContainer, unitInfo, clientInstance);
+         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance);
 
          AssertRawTimesZero(unitInfoLogic);
 
@@ -242,35 +264,34 @@ namespace HFM.Instances.Tests
          unitInfo.SetCurrentFrame(line4);
          unitInfo.SetCurrentFrame(line5);
 
-         unitInfoLogic.ProjectID = 2669;
-         unitInfoLogic.ProjectRun = 1;
-         unitInfoLogic.ProjectClone = 2;
-         unitInfoLogic.ProjectGen = 3;
-         Assert.IsFalse(unitInfoLogic.CurrentProtein.IsUnknown);
-
+         Assert.AreEqual(100, unitInfoLogic.PPD);
          unitInfo.DownloadTime = baseDate;
-         AssertPpdVariations(unitInfoLogic, 1350, 360, 376, 380, 100);
+         AssertTimeVariations(unitInfoLogic, 1350, 360, 376, 380);
+         
+         _mocks.VerifyAll();
       }
 
       [Test]
       public void UnitInfoLogicFramesAndBonusPpdTest()
       {
-         IProteinCollection proteinCollection = SetupMockProteinCollection("GROCVS", 100, 3, 6);
          IPreferenceSet prefs = SetupMockPreferenceSet();
-         DateTime baseDate = new DateTime(2010, 1, 1);
-         IClientInstance clientInstance = SetupMockClientInstance(ClientStatus.Running, true, 0,
-            "Owner", "Path", baseDate.Add(TimeSpan.FromMinutes(90)));
-         Expect.Call(prefs.GetPreference<bool>(Preference.CalculateBonus)).Return(true).Repeat.Any();
+         IProtein protein = SetupMockProtein("GROCVS", 100, 3, 6);
+         var baseDate = new DateTime(2010, 1, 1);
+         IClientInstance clientInstance = SetupMockClientInstance(ClientStatus.Running, true, 0, "Owner", "Path", 
+                                                                  baseDate.Add(TimeSpan.FromMinutes(90)));
 
-         UnitInfo unitInfo = new UnitInfo();
+         var unitInfo = new UnitInfo();
          ILogLine line1 = MakeLogLine("00:00:00", 0, 0, 100);
          ILogLine line2 = MakeLogLine("00:05:10", 1, 1, 100);
          ILogLine line3 = MakeLogLine("00:11:30", 2, 2, 100);
          ILogLine line4 = MakeLogLine("00:17:40", 3, 3, 100);
          ILogLine line5 = MakeLogLine("00:24:00", 4, 4, 100);
+
+         Expect.Call(prefs.GetPreference<bool>(Preference.CalculateBonus)).Return(true);
+         Expect.Call(protein.GetPPD(TimeSpan.Zero, TimeSpan.Zero)).IgnoreArguments().Return(200);
          _mocks.ReplayAll();
 
-         UnitInfoLogic unitInfoLogic = new UnitInfoLogic(prefs, proteinCollection, _benchmarkContainer, unitInfo, clientInstance);
+         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance);
 
          AssertRawTimesZero(unitInfoLogic);
 
@@ -282,37 +303,33 @@ namespace HFM.Instances.Tests
          unitInfo.SetCurrentFrame(line4);
          unitInfo.SetCurrentFrame(line5);
 
-         unitInfoLogic.ProjectID = 2669;
-         unitInfoLogic.ProjectRun = 1;
-         unitInfoLogic.ProjectClone = 2;
-         unitInfoLogic.ProjectGen = 3;
-         Assert.IsFalse(unitInfoLogic.CurrentProtein.IsUnknown);
-
+         Assert.AreEqual(200, unitInfoLogic.PPD);
          unitInfo.DownloadTime = baseDate;
-         AssertPpdVariations(unitInfoLogic, 1350, 360, 376, 380, 200);
+         AssertTimeVariations(unitInfoLogic, 1350, 360, 376, 380);
+
+         _mocks.VerifyAll();
       }
 
-      private IProteinCollection SetupMockProteinCollection(string core, int frames, int preferredDays, int maxDays)
+      private IProtein SetupMockProtein(string core, int frames, int preferredDays, int maxDays)
       {
-         IProtein currentProtein = _mocks.DynamicMock<IProtein>();
+         var currentProtein = _mocks.DynamicMock<IProtein>();
          Expect.Call(currentProtein.Core).Return(core).Repeat.Any();
          Expect.Call(currentProtein.Frames).Return(frames).Repeat.Any();
          Expect.Call(currentProtein.PreferredDays).Return(preferredDays).Repeat.Any();
          Expect.Call(currentProtein.MaxDays).Return(maxDays).Repeat.Any();
-         Expect.Call(currentProtein.GetPPD(TimeSpan.Zero)).IgnoreArguments().Return(100).Repeat.Any();
-         Expect.Call(currentProtein.GetPPD(TimeSpan.Zero, TimeSpan.Zero)).IgnoreArguments().Return(200).Repeat.Any();
+         
 
-         IProtein newProtein = _mocks.DynamicMock<IProtein>();
+         return currentProtein;
+      }
+      
+      private IProtein SetupMockNewProtein()
+      {
+         var newProtein = _mocks.DynamicMock<IProtein>();
          Expect.Call(newProtein.Core).Return(String.Empty).Repeat.Any();
-         Expect.Call(newProtein.Frames).Return(frames).Repeat.Any();
+         Expect.Call(newProtein.Frames).Return(100).Repeat.Any();
          Expect.Call(newProtein.IsUnknown).Return(true).Repeat.Any();
 
-         IProteinCollection proteinCollection = _mocks.DynamicMock<IProteinCollection>();
-         Expect.Call(proteinCollection.GetProtein(0, true)).Return(newProtein).Repeat.Any();
-         Expect.Call(proteinCollection.GetProtein(2669)).Return(currentProtein).Repeat.Any();
-         Expect.Call(proteinCollection.CreateProtein()).Return(newProtein).Repeat.Any();
-
-         return proteinCollection;
+         return newProtein;
       }
       
       private static void AssertRawTimesZero(IUnitInfoLogic unitInfoLogic)
@@ -325,7 +342,7 @@ namespace HFM.Instances.Tests
 
       private IPreferenceSet SetupMockPreferenceSet()
       {
-         IPreferenceSet prefs = _mocks.DynamicMock<IPreferenceSet>();
+         var prefs = _mocks.DynamicMock<IPreferenceSet>();
          Expect.Call(prefs.GetPreference<PpdCalculationType>(Preference.PpdCalculation)).Return(PpdCalculationType.AllFrames).Repeat.Any();
          return prefs;
       }
@@ -344,7 +361,7 @@ namespace HFM.Instances.Tests
          settings.InstanceName = instanceName;
          settings.Path = path;
 
-         var clientInstance = _mocks.Stub<IClientInstance>();
+         var clientInstance = _mocks.DynamicMock<IClientInstance>();
          SetupResult.For(clientInstance.Status).Return(status);
          SetupResult.For(clientInstance.LastRetrievalTime).Return(lastRetrievalTime);
          SetupResult.For(clientInstance.Settings).Return(settings);
@@ -354,8 +371,8 @@ namespace HFM.Instances.Tests
 
       public ILogLine MakeLogLine(string timeStampString, int frameId, int complete, int total)
       {
-         ILogLine line = _mocks.DynamicMock<ILogLine>();
-         IFrameData frame = _mocks.DynamicMock<IFrameData>();
+         var line = _mocks.DynamicMock<ILogLine>();
+         var frame = _mocks.DynamicMock<IFrameData>();
 
          Expect.Call(line.LineType).Return(LogLineType.WorkUnitFrame);
          Expect.Call(line.LineData).Return(frame);
@@ -367,24 +384,20 @@ namespace HFM.Instances.Tests
          return line;
       }
 
-      private static void AssertPpdVariations(IUnitInfoLogic unitInfoLogic, int unitDownload, int allSections,
-                                              int threeSections, int lastSection, double ppd)
+      private static void AssertTimeVariations(IUnitInfoLogic unitInfoLogic, int unitDownload, int allSections,
+                                                                             int threeSections, int lastSection)
       {
          Assert.AreEqual(unitDownload, unitInfoLogic.RawTimePerUnitDownload);
          Assert.AreEqual(TimeSpan.FromSeconds(unitInfoLogic.RawTimePerUnitDownload), unitInfoLogic.TimePerUnitDownload);
-         Assert.AreEqual(ppd, unitInfoLogic.PPDPerUnitDownload);
 
          Assert.AreEqual(allSections, unitInfoLogic.RawTimePerAllSections);
          Assert.AreEqual(TimeSpan.FromSeconds(unitInfoLogic.RawTimePerAllSections), unitInfoLogic.TimePerAllSections);
-         Assert.AreEqual(ppd, unitInfoLogic.PPDPerAllSections);
 
          Assert.AreEqual(threeSections, unitInfoLogic.RawTimePerThreeSections);
          Assert.AreEqual(TimeSpan.FromSeconds(unitInfoLogic.RawTimePerThreeSections), unitInfoLogic.TimePerThreeSections);
-         Assert.AreEqual(ppd, unitInfoLogic.PPDPerThreeSections);
 
          Assert.AreEqual(lastSection, unitInfoLogic.RawTimePerLastSection);
          Assert.AreEqual(TimeSpan.FromSeconds(unitInfoLogic.RawTimePerLastSection), unitInfoLogic.TimePerLastSection);
-         Assert.AreEqual(ppd, unitInfoLogic.PPDPerLastSection);
       }
    }
 }

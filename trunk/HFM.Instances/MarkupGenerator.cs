@@ -473,7 +473,7 @@ namespace HFM.Instances
             XMLOps.setXmlNode(xmlData, "ShowETADate", etaDate.ToString());
             XMLOps.setXmlNode(xmlData, "Core", instance.CoreName);
             XMLOps.setXmlNode(xmlData, "CoreVersion", instance.CoreVersion);
-            XMLOps.setXmlNode(xmlData, "CoreID", instance.CoreId); // Issue 193
+            XMLOps.setXmlNode(xmlData, "CoreID", instance.CoreID); // Issue 193
             XMLOps.setXmlNode(xmlData, "ProjectRunCloneGen", instance.ProjectRunCloneGen);
             XMLOps.setXmlNode(xmlData, "ProjectDuplicate", instance.ProjectIsDuplicate.ToString());
             XMLOps.setXmlNode(xmlData, "Credit", String.Format("{0:0}", instance.Credit));

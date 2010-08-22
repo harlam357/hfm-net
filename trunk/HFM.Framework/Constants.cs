@@ -75,6 +75,7 @@ namespace HFM.Framework
       // Folding ID and Team Defaults
       public const string FoldingIDDefault = "Unknown";
       public const int TeamDefault = 0;
+      public const string CoreIDDefault = "Unknown";
 
       // Log Filename Constants
       public const string LocalFahLog = "FAHlog.txt";

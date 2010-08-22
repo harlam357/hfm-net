@@ -36,7 +36,7 @@ namespace HFM.Framework
       /// <summary>
       /// The Team number attached to this work unit
       /// </summary>
-      Int32 Team { get; set; }
+      int Team { get; set; }
 
       /// <summary>
       /// Client Type for this work unit
@@ -82,22 +82,22 @@ namespace HFM.Framework
       /// <summary>
       /// Project ID Number
       /// </summary>
-      Int32 ProjectID { get; set; }
+      int ProjectID { get; set; }
 
       /// <summary>
       /// Project ID (Run)
       /// </summary>
-      Int32 ProjectRun { get; set; }
+      int ProjectRun { get; set; }
 
       /// <summary>
       /// Project ID (Clone)
       /// </summary>
-      Int32 ProjectClone { get; set; }
+      int ProjectClone { get; set; }
 
       /// <summary>
       /// Project ID (Gen)
       /// </summary>
-      Int32 ProjectGen { get; set; }
+      int ProjectGen { get; set; }
 
       /// <summary>
       /// Returns true if Project (R/C/G) has not been identified
@@ -122,17 +122,17 @@ namespace HFM.Framework
       /// <summary>
       /// Raw number of steps complete
       /// </summary>
-      Int32 RawFramesComplete { get; set; }
+      int RawFramesComplete { get; set; }
 
       /// <summary>
       /// Raw total number of steps
       /// </summary>
-      Int32 RawFramesTotal { get; set; }
+      int RawFramesTotal { get; set; }
       
       /// <summary>
       /// Number of Frames Observed on this Unit
       /// </summary>
-      Int32 FramesObserved { get; set; }
+      int FramesObserved { get; set; }
 
       /// <summary>
       /// Last Observed Frame on this Unit
@@ -142,7 +142,7 @@ namespace HFM.Framework
       /// <summary>
       /// Core ID (Hex) Value
       /// </summary>
-      string CoreId { get; set; }
+      string CoreID { get; set; }
 
       /// <summary>
       /// Set the Current Work Unit Frame
