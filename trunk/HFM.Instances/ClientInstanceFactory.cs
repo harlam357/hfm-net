@@ -28,6 +28,13 @@ using HFM.Instrumentation;
 
 namespace HFM.Instances
 {
+   public interface IClientInstanceFactory
+   {
+      ReadOnlyCollection<ClientInstance> HandleImportResults(ICollection<ClientInstanceSettings> results);
+
+      ClientInstance Create(ClientInstanceSettings settings);
+   }
+
    public class ClientInstanceFactory : IClientInstanceFactory
    {
       /// <summary>
@@ -87,7 +94,7 @@ namespace HFM.Instances
          {
             return Create(settings);
          }
-         catch (InvalidOperationException ex)
+         catch (ArgumentException ex)
          {
             HfmTrace.WriteToHfmConsole(ex);
             return null;
@@ -99,19 +106,19 @@ namespace HFM.Instances
          if (settings == null) throw new ArgumentNullException("settings");
          if (settings.InstanceNameEmpty)
          {
-            throw new InvalidOperationException("No Instance Name is given.  Will not create Client Instance.");
+            throw new ArgumentException("No Instance Name is given.  Will not create Client Instance.");
          }
          
          if (settings.PathEmpty)
          {
-            throw new InvalidOperationException("No Instance Path is given.  Will not create Client Instance.");
+            throw new ArgumentException("No Instance Path is given.  Will not create Client Instance.");
          }
       
          string preCleanInstanceName = settings.InstanceName;
          ICollection<string> cleanupWarnings = settings.CleanupSettings();
          if (settings.InstanceNameError)
          {
-            throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, 
+            throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, 
                "Instance Name '{0}' is not valid after cleaning.  Will not create Client Instance.", preCleanInstanceName));
          }
          

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Hosts>
+  <Instance Name="Test1">
+    <HostType>PathInstance</HostType> 
+    <Path>C:\Test\Path\One\</Path> 
+  </Instance>
+</Hosts>

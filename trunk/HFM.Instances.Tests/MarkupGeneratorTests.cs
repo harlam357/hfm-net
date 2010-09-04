@@ -31,26 +31,20 @@ namespace HFM.Instances.Tests
    public class MarkupGeneratorTests
    {
       private MockRepository _mocks;
-      private readonly string _testFolderPath;
 
       private const string TestFolder = "MarkupGeneratorTestOutput";
-      
-      public MarkupGeneratorTests()
-      {
-         _testFolderPath = Path.Combine(@"..\..\", TestFolder);
-      }
       
       [SetUp]
       public void Init()
       {
          _mocks = new MockRepository();
          
-         if (Directory.Exists(_testFolderPath))
+         if (Directory.Exists(TestFolder))
          {
-            Directory.Delete(_testFolderPath, true);
+            Directory.Delete(TestFolder, true);
          }
 
-         Directory.CreateDirectory(_testFolderPath);
+         Directory.CreateDirectory(TestFolder);
       }
 
       [Test]
@@ -62,10 +56,10 @@ namespace HFM.Instances.Tests
          _mocks.ReplayAll();
 
          var markupGenerator = new MarkupGenerator(prefs);
-         markupGenerator.DoXmlGeneration(_testFolderPath, instances);
+         markupGenerator.DoXmlGeneration(TestFolder, instances);
          
-         Assert.IsTrue(File.Exists(Path.Combine(_testFolderPath, "Overview.xml")));
-         Assert.IsTrue(File.Exists(Path.Combine(_testFolderPath, "Instances.xml")));
+         Assert.IsTrue(File.Exists(Path.Combine(TestFolder, "Overview.xml")));
+         Assert.IsTrue(File.Exists(Path.Combine(TestFolder, "Instances.xml")));
          
          _mocks.VerifyAll();
       }
@@ -79,14 +73,14 @@ namespace HFM.Instances.Tests
          _mocks.ReplayAll();
 
          var markupGenerator = new MarkupGenerator(prefs);
-         markupGenerator.DoHtmlGeneration(_testFolderPath, instances);
+         markupGenerator.DoHtmlGeneration(TestFolder, instances);
 
-         Assert.IsTrue(File.Exists(Path.Combine(_testFolderPath, "index.html")));
-         Assert.IsTrue(File.Exists(Path.Combine(_testFolderPath, "mobile.html")));
-         Assert.IsTrue(File.Exists(Path.Combine(_testFolderPath, "summary.html")));
-         Assert.IsTrue(File.Exists(Path.Combine(_testFolderPath, "mobilesummary.html")));
-         Assert.IsTrue(File.Exists(Path.Combine(_testFolderPath, "Test1.html")));
-         Assert.IsTrue(File.Exists(Path.Combine(_testFolderPath, "Test2.html")));
+         Assert.IsTrue(File.Exists(Path.Combine(TestFolder, "index.html")));
+         Assert.IsTrue(File.Exists(Path.Combine(TestFolder, "mobile.html")));
+         Assert.IsTrue(File.Exists(Path.Combine(TestFolder, "summary.html")));
+         Assert.IsTrue(File.Exists(Path.Combine(TestFolder, "mobilesummary.html")));
+         Assert.IsTrue(File.Exists(Path.Combine(TestFolder, "Test1.html")));
+         Assert.IsTrue(File.Exists(Path.Combine(TestFolder, "Test2.html")));
          
          _mocks.VerifyAll();
       }

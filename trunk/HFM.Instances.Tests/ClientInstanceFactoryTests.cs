@@ -59,17 +59,11 @@ namespace HFM.Instances.Tests
       }
       
       [Test]
+      [ExpectedException(typeof(ArgumentNullException))]
       public void HandleImportResultsArgumentNullTest()
       {
          var builder = new ClientInstanceFactory(_prefs, _proteinCollection, _benchmarkContainer, _statusLogic);
-
-         try
-         {
-            builder.HandleImportResults(null);
-            Assert.Fail();
-         }
-         catch (ArgumentNullException)
-         { }
+         builder.HandleImportResults(null);
       }
 
       [Test]
@@ -98,49 +92,43 @@ namespace HFM.Instances.Tests
       }
 
       [Test]
+      [ExpectedException(typeof(ArgumentNullException))]
       public void CreateArgumentNullTest()
       {
          var builder = new ClientInstanceFactory(_prefs, _proteinCollection, _benchmarkContainer, _statusLogic);
-
-         try
-         {
-            builder.Create(null);
-            Assert.Fail();
-         }
-         catch (ArgumentNullException)
-         { }
+         builder.Create(null);
       }
       
       [Test]
+      [ExpectedException(typeof(ArgumentException))]
       public void CreateNameEmptyTest()
       {
          var builder = new ClientInstanceFactory(_prefs, _proteinCollection, _benchmarkContainer, _statusLogic);
+         builder.Create(new ClientInstanceSettings(InstanceType.PathInstance));
+      }
 
-         try
-         {
-            builder.Create(new ClientInstanceSettings(InstanceType.PathInstance));
-            Assert.Fail();
-         }
-         catch (InvalidOperationException)
-         { }
+      [Test]
+      [ExpectedException(typeof(ArgumentException))]
+      public void CreatePathEmptyTest()
+      {
+         var builder = new ClientInstanceFactory(_prefs, _proteinCollection, _benchmarkContainer, _statusLogic);
+         builder.Create(new ClientInstanceSettings(InstanceType.PathInstance)
+                        {
+                           InstanceName = "Client 1"
+                        });
       }
       
       [Test]
+      [ExpectedException(typeof(ArgumentException))]
       public void CreateNameFailedCleanupTest()
       {
          var builder = new ClientInstanceFactory(_prefs, _proteinCollection, _benchmarkContainer, _statusLogic);
-
          var invalidChars = System.IO.Path.GetInvalidFileNameChars();
-         try
-         {
-            builder.Create(new ClientInstanceSettings(InstanceType.PathInstance)
-                           {
-                              InstanceName = " " + invalidChars[0] + invalidChars[1] + " "
-                           });
-            Assert.Fail();
-         }
-         catch (InvalidOperationException)
-         { }
+         builder.Create(new ClientInstanceSettings(InstanceType.PathInstance)
+                        {
+                           InstanceName = " " + invalidChars[0] + invalidChars[1] + " ",
+                           Path = @"\\test\path\"
+                        });
       }
       
       [Test]

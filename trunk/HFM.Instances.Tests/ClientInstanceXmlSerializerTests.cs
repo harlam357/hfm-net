@@ -102,5 +102,95 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(true, instance4.ClientIsOnVirtualMachine);
          Assert.AreEqual(-180, instance4.ClientTimeOffset);
       }
+      
+      [Test]
+      [ExpectedException(typeof(ArgumentException))]
+      public void SerializeFilePathNullTest()
+      {
+         var serializer = new ClientInstanceXmlSerializer();
+         serializer.Serialize(null);
+      }
+
+      [Test]
+      [ExpectedException(typeof(ArgumentException))]
+      public void SerializeFilePathEmptyTest()
+      {
+         var serializer = new ClientInstanceXmlSerializer();
+         serializer.Serialize(String.Empty);
+      }
+
+      [Test]
+      [ExpectedException(typeof(ArgumentException))]
+      public void SerializeFilePathNotRootedTest()
+      {
+         var serializer = new ClientInstanceXmlSerializer();
+         serializer.Serialize(@"..\some\folder\");
+      }
+
+      [Test]
+      public void DeserializeXmlElementsNotFoundTest()
+      {
+         var serializer = new ClientInstanceXmlSerializer();
+         var dataInterface = new InstanceCollectionDataInterface(new List<IClientInstanceSettings>());
+         serializer.DataInterface = dataInterface;
+         serializer.Deserialize("..\\..\\TestFiles\\XmlDeserializeTest1.xml");
+         var collection = dataInterface.Settings;
+
+         IClientInstanceSettings instance = collection[0];
+         Assert.AreEqual("Test1", instance.InstanceName);
+         Assert.AreEqual(1, instance.ClientProcessorMegahertz);
+         Assert.AreEqual("FAHlog.txt", instance.RemoteFAHLogFilename);
+         Assert.AreEqual("unitinfo.txt", instance.RemoteUnitInfoFilename);
+         Assert.AreEqual("queue.dat", instance.RemoteQueueFilename);
+         Assert.AreEqual(InstanceType.PathInstance, instance.InstanceHostType);
+         Assert.AreEqual(@"C:\Test\Path\One\", instance.Path);
+         Assert.AreEqual(String.Empty, instance.Server);
+         Assert.AreEqual(String.Empty, instance.Username);
+         Assert.AreEqual(String.Empty, instance.Password);
+         Assert.AreEqual(FtpType.Passive, instance.FtpMode);
+         Assert.AreEqual(false, instance.ClientIsOnVirtualMachine);
+         Assert.AreEqual(0, instance.ClientTimeOffset);
+      }
+
+      [Test]
+      public void DeserializeXmlElementsNotCorrectTypeTest()
+      {
+         var serializer = new ClientInstanceXmlSerializer();
+         var dataInterface = new InstanceCollectionDataInterface(new List<IClientInstanceSettings>());
+         serializer.DataInterface = dataInterface;
+         serializer.Deserialize("..\\..\\TestFiles\\XmlDeserializeTest2.xml");
+         var collection = dataInterface.Settings;
+
+         IClientInstanceSettings instance = collection[0];
+         Assert.AreEqual("Test1", instance.InstanceName);
+         Assert.AreEqual(1, instance.ClientProcessorMegahertz);
+         Assert.AreEqual("FAHlog.txt", instance.RemoteFAHLogFilename);
+         Assert.AreEqual("unitinfo.txt", instance.RemoteUnitInfoFilename);
+         Assert.AreEqual("queue.dat", instance.RemoteQueueFilename);
+         Assert.AreEqual(InstanceType.PathInstance, instance.InstanceHostType);
+         Assert.AreEqual(@"C:\Test\Path\One\", instance.Path);
+         Assert.AreEqual(String.Empty, instance.Server);
+         Assert.AreEqual(String.Empty, instance.Username);
+         Assert.AreEqual(String.Empty, instance.Password);
+         Assert.AreEqual(FtpType.Passive, instance.FtpMode);
+         Assert.AreEqual(false, instance.ClientIsOnVirtualMachine);
+         Assert.AreEqual(0, instance.ClientTimeOffset);
+      }
+
+      [Test]
+      [ExpectedException(typeof(ArgumentException))]
+      public void DeserializeFilePathNullTest()
+      {
+         var serializer = new ClientInstanceXmlSerializer();
+         serializer.Deserialize(null);
+      }
+
+      [Test]
+      [ExpectedException(typeof(ArgumentException))]
+      public void DeserializeFilePathEmptyTest()
+      {
+         var serializer = new ClientInstanceXmlSerializer();
+         serializer.Deserialize(String.Empty);
+      }
    }
 }

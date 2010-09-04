@@ -22,6 +22,7 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Cache;
+
 using Castle.Windsor;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -35,38 +36,38 @@ namespace HFM.Helpers.Tests
    [TestFixture]
    public class NetworkOpsTests
    {
-      private readonly string TestFilesFolder = String.Format(CultureInfo.InvariantCulture, "..{0}..{0}TestFiles", Path.DirectorySeparatorChar);
-      private readonly string TestFilesWorkFolder = String.Format(CultureInfo.InvariantCulture, "..{0}..{0}TestFiles{0}Work", Path.DirectorySeparatorChar);
+      private readonly string _testFilesFolder = String.Format(CultureInfo.InvariantCulture, "..{0}..{0}TestFiles", Path.DirectorySeparatorChar);
+      private readonly string _testFilesWorkFolder = String.Format(CultureInfo.InvariantCulture, "..{0}..{0}TestFiles{0}Work", Path.DirectorySeparatorChar);
 
-      private readonly NetworkOps net = new NetworkOps();
+      private readonly NetworkOps _net = new NetworkOps();
 
-      private IWindsorContainer container;
-      private MockRepository mocks;
-   
+      private IWindsorContainer _container;
+      private MockRepository _mocks;
+
       [SetUp]
       public void Init()
       {
-         DirectoryInfo di = new DirectoryInfo(TestFilesWorkFolder);
+         var di = new DirectoryInfo(_testFilesWorkFolder);
          if (di.Exists)
          {
             di.Delete(true);
          }
-         
+
          di.Create();
 
-         container = new WindsorContainer();
-         mocks = new MockRepository();
-         
-         IPreferenceSet Prefs = mocks.DynamicMock<IPreferenceSet>();
-         Expect.Call(Prefs.GetPreference<bool>(Preference.UseProxy)).Return(false).Repeat.Any();
-         container.Kernel.AddComponentInstance<IPreferenceSet>(typeof(IPreferenceSet), Prefs);
-         InstanceProvider.SetContainer(container);
+         _container = new WindsorContainer();
+         _mocks = new MockRepository();
+
+         var prefs = _mocks.DynamicMock<IPreferenceSet>();
+         Expect.Call(prefs.GetPreference<bool>(Preference.UseProxy)).Return(false).Repeat.Any();
+         _container.Kernel.AddComponentInstance<IPreferenceSet>(typeof(IPreferenceSet), prefs);
+         InstanceProvider.SetContainer(_container);
       }
-      
+
       [TearDown]
       public void CleanUp()
       {
-         DirectoryInfo di = new DirectoryInfo(TestFilesWorkFolder);
+         var di = new DirectoryInfo(_testFilesWorkFolder);
          if (di.Exists)
          {
             di.Delete(true);
@@ -76,204 +77,205 @@ namespace HFM.Helpers.Tests
       [Test]
       public void FtpUploadHelper()
       {
-         IFtpWebOperation Operation = mocks.DynamicMock<IFtpWebOperation>();
-         Expect.Call(delegate { Operation.Upload("testpath", -1); });
-         
-         IFtpWebOperationRequest OperationRequest = mocks.Stub<IFtpWebOperationRequest>();
-         SetupResult.For(Operation.FtpOperationRequest).Return(OperationRequest);
-         SetupResult.For(Operation.OperationRequest).Return(OperationRequest);
-         
-         FtpWebRequest FtpRequest = mocks.DynamicMock<FtpWebRequest>();
-         SetupResult.For(OperationRequest.FtpRequest).Return(FtpRequest);
-         SetupResult.For(OperationRequest.Request).Return(FtpRequest);
-         
-         mocks.ReplayAll();
-         
-         net.FtpUploadHelper(Operation, "testpath", String.Empty, String.Empty, FtpType.Passive);
+         var operation = _mocks.DynamicMock<IFtpWebOperation>();
+         Expect.Call(delegate { operation.Upload("testpath", -1); });
 
-         Assert.AreSame(Operation, net.FtpOperation);
-         Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, OperationRequest.CachePolicy.Level);
-         Assert.AreEqual(true, OperationRequest.UsePassive);
-         
-         mocks.VerifyAll();
+         var operationRequest = _mocks.Stub<IFtpWebOperationRequest>();
+         SetupResult.For(operation.FtpOperationRequest).Return(operationRequest);
+         SetupResult.For(operation.OperationRequest).Return(operationRequest);
+
+         var ftpRequest = _mocks.DynamicMock<FtpWebRequest>();
+         SetupResult.For(operationRequest.FtpRequest).Return(ftpRequest);
+         SetupResult.For(operationRequest.Request).Return(ftpRequest);
+
+         _mocks.ReplayAll();
+
+         _net.FtpUploadHelper(operation, "testpath", String.Empty, String.Empty, FtpType.Passive);
+
+         Assert.AreSame(operation, _net.FtpOperation);
+         Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, operationRequest.CachePolicy.Level);
+         Assert.AreEqual(true, operationRequest.UsePassive);
+
+         _mocks.VerifyAll();
       }
 
       [Test]
       public void FtpDownloadHelper()
       {
-         IFtpWebOperation Operation = mocks.DynamicMock<IFtpWebOperation>();
-         Expect.Call(delegate { Operation.Download("testpath"); });
+         var operation = _mocks.DynamicMock<IFtpWebOperation>();
+         Expect.Call(delegate { operation.Download("testpath"); });
 
-         IFtpWebOperationRequest OperationRequest = mocks.Stub<IFtpWebOperationRequest>();
-         SetupResult.For(Operation.FtpOperationRequest).Return(OperationRequest);
-         SetupResult.For(Operation.OperationRequest).Return(OperationRequest);
+         var operationRequest = _mocks.Stub<IFtpWebOperationRequest>();
+         SetupResult.For(operation.FtpOperationRequest).Return(operationRequest);
+         SetupResult.For(operation.OperationRequest).Return(operationRequest);
 
-         FtpWebRequest FtpRequest = mocks.DynamicMock<FtpWebRequest>();
-         SetupResult.For(OperationRequest.FtpRequest).Return(FtpRequest);
-         SetupResult.For(OperationRequest.Request).Return(FtpRequest);
+         var ftpRequest = _mocks.DynamicMock<FtpWebRequest>();
+         SetupResult.For(operationRequest.FtpRequest).Return(ftpRequest);
+         SetupResult.For(operationRequest.Request).Return(ftpRequest);
 
-         mocks.ReplayAll();
+         _mocks.ReplayAll();
 
-         net.FtpDownloadHelper(Operation, "testpath", String.Empty, String.Empty, FtpType.Active);
+         _net.FtpDownloadHelper(operation, "testpath", String.Empty, String.Empty, FtpType.Active);
 
-         Assert.AreSame(Operation, net.FtpOperation);
-         Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, OperationRequest.CachePolicy.Level);
-         Assert.AreEqual(false, OperationRequest.UsePassive);
+         Assert.AreSame(operation, _net.FtpOperation);
+         Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, operationRequest.CachePolicy.Level);
+         Assert.AreEqual(false, operationRequest.UsePassive);
 
-         mocks.VerifyAll();
+         _mocks.VerifyAll();
       }
 
       [Test]
       public void GetFtpDownloadLength()
       {
-         IFtpWebOperation Operation = mocks.DynamicMock<IFtpWebOperation>();
-         Expect.Call(Operation.GetDownloadLength()).Return(100);
+         var operation = _mocks.DynamicMock<IFtpWebOperation>();
+         Expect.Call(operation.GetDownloadLength()).Return(100);
 
-         IFtpWebOperationRequest OperationRequest = mocks.Stub<IFtpWebOperationRequest>();
-         SetupResult.For(Operation.FtpOperationRequest).Return(OperationRequest);
-         SetupResult.For(Operation.OperationRequest).Return(OperationRequest);
+         var operationRequest = _mocks.Stub<IFtpWebOperationRequest>();
+         SetupResult.For(operation.FtpOperationRequest).Return(operationRequest);
+         SetupResult.For(operation.OperationRequest).Return(operationRequest);
 
-         FtpWebRequest FtpRequest = mocks.DynamicMock<FtpWebRequest>();
-         SetupResult.For(OperationRequest.FtpRequest).Return(FtpRequest);
-         SetupResult.For(OperationRequest.Request).Return(FtpRequest);
+         var ftpRequest = _mocks.DynamicMock<FtpWebRequest>();
+         SetupResult.For(operationRequest.FtpRequest).Return(ftpRequest);
+         SetupResult.For(operationRequest.Request).Return(ftpRequest);
 
-         mocks.ReplayAll();
+         _mocks.ReplayAll();
 
-         long length = net.GetFtpDownloadLength(Operation, String.Empty, String.Empty, FtpType.Active);
+         long length = _net.GetFtpDownloadLength(operation, String.Empty, String.Empty, FtpType.Active);
          Assert.AreEqual(100, length);
 
-         Assert.AreSame(Operation, net.FtpOperation);
-         Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, OperationRequest.CachePolicy.Level);
-         Assert.AreEqual(false, OperationRequest.UsePassive);
+         Assert.AreSame(operation, _net.FtpOperation);
+         Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, operationRequest.CachePolicy.Level);
+         Assert.AreEqual(false, operationRequest.UsePassive);
 
-         mocks.VerifyAll();
+         _mocks.VerifyAll();
       }
 
       [Test]
       public void HttpDownloadHelper()
       {
-         IWebOperation Operation = mocks.DynamicMock<IWebOperation>();
-         Expect.Call(delegate { Operation.Download("testpath"); });
+         var operation = _mocks.DynamicMock<IWebOperation>();
+         Expect.Call(delegate { operation.Download("testpath"); });
 
-         IWebOperationRequest OperationRequest = mocks.Stub<IWebOperationRequest>();
-         SetupResult.For(Operation.OperationRequest).Return(OperationRequest);
+         var operationRequest = _mocks.Stub<IWebOperationRequest>();
+         SetupResult.For(operation.OperationRequest).Return(operationRequest);
 
-         WebRequest Request = mocks.DynamicMock<WebRequest>();
-         SetupResult.For(OperationRequest.Request).Return(Request);
+         var request = _mocks.DynamicMock<WebRequest>();
+         SetupResult.For(operationRequest.Request).Return(request);
 
-         mocks.ReplayAll();
+         _mocks.ReplayAll();
 
-         net.HttpDownloadHelper(Operation, "testpath", String.Empty, String.Empty);
+         _net.HttpDownloadHelper(operation, "testpath", String.Empty, String.Empty);
 
-         Assert.AreSame(Operation, net.HttpOperation);
-         Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, OperationRequest.CachePolicy.Level);
+         Assert.AreSame(operation, _net.HttpOperation);
+         Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, operationRequest.CachePolicy.Level);
 
-         mocks.VerifyAll();
+         _mocks.VerifyAll();
       }
 
       [Test]
       public void GetHttpDownloadLength()
       {
-         IWebOperation Operation = mocks.DynamicMock<IWebOperation>();
-         Expect.Call(Operation.GetDownloadLength()).Return(100);
+         var operation = _mocks.DynamicMock<IWebOperation>();
+         Expect.Call(operation.GetDownloadLength()).Return(100);
 
-         IWebOperationRequest OperationRequest = mocks.Stub<IWebOperationRequest>();
-         SetupResult.For(Operation.OperationRequest).Return(OperationRequest);
+         var operationRequest = _mocks.Stub<IWebOperationRequest>();
+         SetupResult.For(operation.OperationRequest).Return(operationRequest);
 
-         WebRequest Request = mocks.DynamicMock<WebRequest>();
-         SetupResult.For(OperationRequest.Request).Return(Request);
+         var request = _mocks.DynamicMock<WebRequest>();
+         SetupResult.For(operationRequest.Request).Return(request);
 
-         mocks.ReplayAll();
+         _mocks.ReplayAll();
 
-         long length = net.GetHttpDownloadLength(Operation, String.Empty, String.Empty);
+         long length = _net.GetHttpDownloadLength(operation, String.Empty, String.Empty);
          Assert.AreEqual(100, length);
 
-         Assert.AreSame(Operation, net.HttpOperation);
-         Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, OperationRequest.CachePolicy.Level);
+         Assert.AreSame(operation, _net.HttpOperation);
+         Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, operationRequest.CachePolicy.Level);
 
-         mocks.VerifyAll();
+         _mocks.VerifyAll();
       }
 
       [Test]
       public void FtpCheckConnection()
       {
-         IFtpWebOperation Operation = mocks.DynamicMock<IFtpWebOperation>();
-         Expect.Call(delegate { Operation.CheckConnection(); });
+         var operation = _mocks.DynamicMock<IFtpWebOperation>();
+         Expect.Call(delegate { operation.CheckConnection(); });
 
-         IFtpWebOperationRequest OperationRequest = mocks.Stub<IFtpWebOperationRequest>();
-         SetupResult.For(Operation.FtpOperationRequest).Return(OperationRequest);
-         SetupResult.For(Operation.OperationRequest).Return(OperationRequest);
+         var operationRequest = _mocks.Stub<IFtpWebOperationRequest>();
+         SetupResult.For(operation.FtpOperationRequest).Return(operationRequest);
+         SetupResult.For(operation.OperationRequest).Return(operationRequest);
 
-         FtpWebRequest FtpRequest = mocks.DynamicMock<FtpWebRequest>();
-         SetupResult.For(OperationRequest.FtpRequest).Return(FtpRequest);
-         SetupResult.For(OperationRequest.Request).Return(FtpRequest);
+         var ftpRequest = _mocks.DynamicMock<FtpWebRequest>();
+         SetupResult.For(operationRequest.FtpRequest).Return(ftpRequest);
+         SetupResult.For(operationRequest.Request).Return(ftpRequest);
 
-         mocks.ReplayAll();
+         _mocks.ReplayAll();
 
-         net.FtpCheckConnection(Operation, String.Empty, String.Empty, FtpType.Passive);
+         _net.FtpCheckConnection(operation, String.Empty, String.Empty, FtpType.Passive);
 
-         Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, OperationRequest.CachePolicy.Level);
-         Assert.AreEqual(false, OperationRequest.KeepAlive);
-         Assert.AreEqual(5000, OperationRequest.Timeout);
-         Assert.AreEqual(true, OperationRequest.UsePassive);
+         Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, operationRequest.CachePolicy.Level);
+         Assert.AreEqual(false, operationRequest.KeepAlive);
+         Assert.AreEqual(5000, operationRequest.Timeout);
+         Assert.AreEqual(true, operationRequest.UsePassive);
 
-         mocks.VerifyAll();
+         _mocks.VerifyAll();
       }
 
       [Test]
       public void HttpCheckConnection()
       {
-         IWebOperation Operation = mocks.DynamicMock<IWebOperation>();
-         Expect.Call(delegate { Operation.CheckConnection(); });
+         var operation = _mocks.DynamicMock<IWebOperation>();
+         Expect.Call(delegate { operation.CheckConnection(); });
 
-         IWebOperationRequest OperationRequest = mocks.Stub<IWebOperationRequest>();
-         SetupResult.For(Operation.OperationRequest).Return(OperationRequest);
+         var operationRequest = _mocks.Stub<IWebOperationRequest>();
+         SetupResult.For(operation.OperationRequest).Return(operationRequest);
 
-         WebRequest Request = mocks.DynamicMock<WebRequest>();
-         SetupResult.For(OperationRequest.Request).Return(Request);
+         var request = _mocks.DynamicMock<WebRequest>();
+         SetupResult.For(operationRequest.Request).Return(request);
 
-         mocks.ReplayAll();
+         _mocks.ReplayAll();
 
-         net.HttpCheckConnection(Operation, String.Empty, String.Empty);
+         _net.HttpCheckConnection(operation, String.Empty, String.Empty);
 
-         Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, OperationRequest.CachePolicy.Level);
-         Assert.AreEqual(5000, OperationRequest.Timeout);
+         Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, operationRequest.CachePolicy.Level);
+         Assert.AreEqual(5000, operationRequest.Timeout);
 
-         mocks.VerifyAll();
+         _mocks.VerifyAll();
       }
 
       [Test]
       public void GetProteinDescription()
       {
-         IWebOperation Operation = mocks.DynamicMock<IWebOperation>();
-         Expect.Call(delegate { Operation.Download("testpath"); })
+         var operation = _mocks.DynamicMock<IWebOperation>();
+         Expect.Call(delegate { operation.Download("testpath"); })
             .IgnoreArguments()
             .Do(new DoTestCopyDelegate(DoTestCopy));
 
-         IWebOperationRequest OperationRequest = mocks.Stub<IWebOperationRequest>();
-         SetupResult.For(Operation.OperationRequest).Return(OperationRequest);
+         var operationRequest = _mocks.Stub<IWebOperationRequest>();
+         SetupResult.For(operation.OperationRequest).Return(operationRequest);
 
-         WebRequest Request = mocks.DynamicMock<WebRequest>();
-         SetupResult.For(OperationRequest.Request).Return(Request);
+         var request = _mocks.DynamicMock<WebRequest>();
+         SetupResult.For(operationRequest.Request).Return(request);
 
-         mocks.ReplayAll();
+         _mocks.ReplayAll();
 
-         string Description = net.GetProteinDescription(Operation);
+         string description = _net.GetProteinDescription(operation);
 
-         Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, OperationRequest.CachePolicy.Level);
-         Assert.AreEqual(5000, OperationRequest.Timeout);
+         Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, operationRequest.CachePolicy.Level);
+         Assert.AreEqual(5000, operationRequest.Timeout);
 
-         mocks.VerifyAll();
+         _mocks.VerifyAll();
 
-         Assert.AreEqual("<TABLE align=center width=650 border=0 cellpadding=2 >\n<TR><TD><font size=\"3\"><b><A name = 2669>Project 2669</A></b></font></TD></TR><TR><TD><center>\n<br>\nThese projects study how influenza virus recognizes and infects cells.  We are developing new simulation methods to better understand these processes.\n<br><br>\n</center>\n<BR><BR><BR></TD></TR><TR><TD></TD></TR></TABLE>",
-                         Description);
+         Assert.AreEqual(
+            "<TABLE align=center width=650 border=0 cellpadding=2 >\n<TR><TD><font size=\"3\"><b><A name = 2669>Project 2669</A></b></font></TD></TR><TR><TD><center>\n<br>\nThese projects study how influenza virus recognizes and infects cells.  We are developing new simulation methods to better understand these processes.\n<br><br>\n</center>\n<BR><BR><BR></TD></TR><TR><TD></TD></TR></TABLE>",
+            description);
       }
-      
-      private delegate void DoTestCopyDelegate(string FilePath);
-      
-      private void DoTestCopy(string FilePath)
+
+      private delegate void DoTestCopyDelegate(string filePath);
+
+      private void DoTestCopy(string filePath)
       {
-         File.Copy(Path.Combine(TestFilesFolder, "fahproject2669.html"), FilePath, true);
+         File.Copy(Path.Combine(_testFilesFolder, "fahproject2669.html"), filePath, true);
       }
 
       [Test]

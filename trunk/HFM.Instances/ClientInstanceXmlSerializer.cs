@@ -319,7 +319,7 @@ namespace HFM.Instances
             OnWarningMessage("Cannot load ftp mode flag, defaulting to passive.");
             dataInterface.SetSetting(ClientInstanceSettingsKeys.FtpMode, FtpType.Passive.ToString());
          }
-         catch (InvalidCastException)
+         catch (FormatException)
          {
             OnWarningMessage("Could not parse ftp mode flag, defaulting to passive.");
             dataInterface.SetSetting(ClientInstanceSettingsKeys.FtpMode, FtpType.Passive.ToString());
@@ -334,7 +334,7 @@ namespace HFM.Instances
             OnWarningMessage("Cannot load client VM flag, defaulting to false.");
             dataInterface.SetSetting(ClientInstanceSettingsKeys.UtcOffsetIsZero, false);
          }
-         catch (InvalidCastException)
+         catch (FormatException)
          {
             OnWarningMessage("Could not parse client VM flag, defaulting to false.");
             dataInterface.SetSetting(ClientInstanceSettingsKeys.UtcOffsetIsZero, false);

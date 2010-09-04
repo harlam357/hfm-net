@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Hosts>
+  <Instance Name="Test1">
+    <FAHLogFile>FAHlog.txt</FAHLogFile>
+    <UnitInfoFile>unitinfo.txt</UnitInfoFile>
+    <QueueFile>queue.dat</QueueFile>
+    <ClientMHz>NotANumber</ClientMHz>
+    <ClientVM>NotABoolean</ClientVM>
+    <ClientOffset>NotANumber</ClientOffset>
+    <HostType>PathInstance</HostType>
+    <Path>C:\Test\Path\One\</Path>
+    <Server></Server>
+    <Username></Username>
+    <Password></Password>
+    <PassiveFtpMode>NotEnumType</PassiveFtpMode>
+  </Instance>
+</Hosts>

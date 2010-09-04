@@ -38,12 +38,14 @@ namespace HFM.Instances.Tests
 
          var bc1 = new BenchmarkClient("C1", @"\\server\share");
          var bc1Clone = new BenchmarkClient("C1", @"\\server\share\");
+         var bc1NewPath = new BenchmarkClient("C1", @"C:\some\path\");
 
          var bc2 = new BenchmarkClient("C2", @"\\server\share");
          var bc2Clone = new BenchmarkClient("C2", @"\\server\share");
          Assert.AreEqual(String.Format(CultureInfo.InvariantCulture, "{0} ({1})", bc2.Name, bc2.Path), bc2.NameAndPath);
 
          Assert.IsFalse(bcAll.Equals(null));
+         Assert.IsFalse(bcAll.Equals(new object()));
          Assert.IsTrue(bcAll.Equals(bcAllClone));
          Assert.IsFalse(bcAll.Equals(bc1));
          Assert.IsFalse(bcAll.Equals(bc1Clone));
@@ -54,6 +56,11 @@ namespace HFM.Instances.Tests
 
          Assert.IsFalse(bc1 < bc1Clone);
          Assert.IsFalse(bc1 > bc1Clone);
+
+         Assert.IsTrue(bc1 < bc1NewPath);
+         Assert.IsFalse(bc1 > bc1NewPath);
+         
+         Assert.AreEqual(1, bc1.CompareTo(null));
 
          Assert.IsFalse(bc1 > bc2);
          Assert.IsTrue(bc1 < bc2);
