@@ -141,6 +141,48 @@ namespace HFM.Framework
       EffectiveRate
    }
 
+   public enum HistoryProductionView
+   {
+      BonusDownloadTime,
+      BonusFrameTime,
+      Standard
+   }
+
+   public enum QueryFieldName
+   {
+      ProjectID = 0,
+      ProjectRun,
+      ProjectClone,
+      ProjectGen,
+      InstanceName,
+      InstancePath,
+      Username,
+      Team,
+      CoreVersion,
+      FramesCompleted,
+      FrameTime,
+      Result,
+      DownloadDateTime,
+      CompletionDateTime,
+      WorkUnitName,
+      KFactor,
+      Core,
+      Frames,
+      Atoms,
+      ClientType,
+      PPD,
+      Credit
+   }
+
+   public enum QueryFieldType
+   {
+      Equal,
+      GreaterThan,
+      GreaterThanOrEqual,
+      LessThan,
+      LessThanOrEqual,
+   }
+
    public enum TimeStyleType
    {
       Standard,
@@ -238,6 +280,11 @@ namespace HFM.Framework
       UseProxyAuth,
       ProxyUser,
       ProxyPass,
+      HistoryProductionType,
+      ShowTopChecked,
+      ShowTopValue,
+      HistorySortColumnName,
+      HistorySortOrder,
       CacheFolder,
       ApplicationDataFolderPath 
    }

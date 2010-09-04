@@ -35,6 +35,8 @@ namespace HFM.Instances
    public sealed class InstanceProteinBenchmark : IInstanceProteinBenchmark
    {
       private const Int32 DefaultMaxFrames = 300;
+
+      private static readonly object FrameTimesListLock = new object();
    
       #region Members
 
@@ -110,15 +112,15 @@ namespace HFM.Instances
       }
       
       [NonSerialized]
-      private List<FrameTime> _FrameTimesList = new List<FrameTime>();
+      private List<FrameTime> _frameTimesList = new List<FrameTime>();
       /// <summary>
       /// Frame Times List
       /// </summary>
       [ProtoMember(5)]
       public List<FrameTime> FrameTimes
       {
-         get { return _FrameTimesList; }
-         set { _FrameTimesList = value; }
+         get { return _frameTimesList; }
+         set { _frameTimesList = value; }
       }
 
       /// <summary>
@@ -126,10 +128,10 @@ namespace HFM.Instances
       /// </summary>
       public void ConvertQueueToList()
       {
-         _FrameTimesList = new List<FrameTime>(_FrameTimes.Count);
+         _frameTimesList = new List<FrameTime>(_FrameTimes.Count);
          foreach (TimeSpan span in _FrameTimes)
          {
-            _FrameTimesList.Add(new FrameTime(span));
+            _frameTimesList.Add(new FrameTime(span));
          }
       }
       #endregion
@@ -168,9 +170,13 @@ namespace HFM.Instances
             if (FrameTimes.Count > 0)
             {
                TimeSpan totalTime = TimeSpan.Zero;
-               foreach (FrameTime time in FrameTimes)
+               lock (FrameTimesListLock)
                {
-                  totalTime = totalTime.Add(time.Duration);
+                  Debug.WriteLine("In AverageFrameTime property");
+                  foreach (FrameTime time in FrameTimes)
+                  {
+                     totalTime = totalTime.Add(time.Duration);
+                  }
                }
 
                return TimeSpan.FromSeconds((Convert.ToInt32(totalTime.TotalSeconds) / FrameTimes.Count));
@@ -216,7 +222,7 @@ namespace HFM.Instances
          _OwningInstancePath = ownerPath;
          _ProjectID = proteinID;
          _MinimumFrameTime = TimeSpan.Zero;
-         _FrameTimesList = new List<FrameTime>(DefaultMaxFrames);
+         _frameTimesList = new List<FrameTime>(DefaultMaxFrames);
       } 
       #endregion
 
@@ -259,15 +265,17 @@ namespace HFM.Instances
                _MinimumFrameTime = frameTime;
             }
 
-            // Dequeue once we have the Maximum number of frame times
-            if (FrameTimes.Count == DefaultMaxFrames)
+            lock (FrameTimesListLock)
             {
-               _FrameTimesList.RemoveAt(DefaultMaxFrames - 1);
-               //_FrameTimes.Dequeue();
+               Debug.WriteLine("In SetFrameTime() method");
+               // Dequeue once we have the Maximum number of frame times
+               if (FrameTimes.Count == DefaultMaxFrames)
+               {
+                  _frameTimesList.RemoveAt(DefaultMaxFrames - 1);
+               }
+               _frameTimesList.Insert(0, new FrameTime(frameTime));
             }
-            _FrameTimesList.Insert(0, new FrameTime(frameTime));
-            //_FrameTimes.Enqueue(frameTime);
-            
+
             return true;
          }
          
@@ -280,11 +288,14 @@ namespace HFM.Instances
       public void RefreshBenchmarkMinimumFrameTime()
       {
          TimeSpan minimumFrameTime = TimeSpan.Zero;
-         foreach (FrameTime frameTime in FrameTimes)
+         lock (FrameTimesListLock)
          {
-            if (frameTime.Duration < minimumFrameTime || minimumFrameTime.Equals(TimeSpan.Zero) )
+            foreach (FrameTime frameTime in FrameTimes)
             {
-               minimumFrameTime = frameTime.Duration;
+               if (frameTime.Duration < minimumFrameTime || minimumFrameTime.Equals(TimeSpan.Zero))
+               {
+                  minimumFrameTime = frameTime.Duration;
+               }
             }
          }
 

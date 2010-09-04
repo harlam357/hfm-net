@@ -3,12 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+
 using harlam357.Windows.Forms;
+
 using HFM.Framework;
 using HFM.Instances;
 using HFM.Instrumentation;
+using HFM.Models;
 
 namespace HFM.Forms
 {
@@ -20,9 +24,13 @@ namespace HFM.Forms
       private readonly IUnitInfoDatabase _database;
       private readonly IQueryParameterContainer _queryContainer;
       private readonly IHistoryView _view;
+      private readonly IQueryView _queryView;
       private readonly IOpenFileDialogView _openFileView;
       private readonly ISaveFileDialogView _saveFileView;
       private readonly IMessageBoxView _messageBoxView;
+      private readonly IHistoryPresenterModel _model;
+      
+      private IList<HistoryEntry> _currentHistoryEntries;
       
       public int NumberOfQueries
       {
@@ -30,21 +38,27 @@ namespace HFM.Forms
       }
    
       public HistoryPresenter(IPreferenceSet prefs, IUnitInfoDatabase database, IQueryParameterContainer queryContainer, IHistoryView view,
-                              IOpenFileDialogView openFileView, ISaveFileDialogView saveFileView, IMessageBoxView messageBoxView)
+                              IQueryView queryView, IOpenFileDialogView openFileView, ISaveFileDialogView saveFileView, IMessageBoxView messageBoxView,
+                              IHistoryPresenterModel model)
       {
          _prefs = prefs;
          _database = database;
          _queryContainer = queryContainer;
          _view = view;
+         _queryView = queryView;
          _openFileView = openFileView;
          _saveFileView = saveFileView;
          _messageBoxView = messageBoxView;
+         _model = model;
+         
+         _currentHistoryEntries = new List<HistoryEntry>();
       }
 
       public void Initialize()
       {
          _database.DatabaseFilePath = Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), UnitInfoDatabase.SqLiteFilename);
          _view.AttachPresenter(this);
+         _view.DataBindModel(_model);
          _view.QueryComboRefreshList(_queryContainer.QueryList);
       }
 
@@ -58,46 +72,180 @@ namespace HFM.Forms
          _view.Close();
       }
       
+      public void OnClosing()
+      {
+         _model.SavePreferences();
+      }
+      
+      public void RefreshClicked()
+      {
+         SelectQuery(_view.QueryComboSelectedIndex);
+      }
+      
       public void AddQuery(QueryParameters parameters)
       {
-         if (parameters.Name == QueryParameters.SelectAll)
-         {
-            throw new ArgumentException("Parameters cannot be Select All.");
-         }
+         CheckQueryParametersForAddOrReplace(parameters);
 
+         if (_queryContainer.QueryList.Find(x => x.Name == parameters.Name) != null)
+         {
+            throw new ArgumentException(String.Format(CultureInfo.CurrentCulture,
+               "A query with name '{0}' already exists.", parameters.Name));
+         }
+         
          _queryContainer.QueryList.Add(parameters);
          _queryContainer.Write();
          _view.QueryComboRefreshList(_queryContainer.QueryList);
       }
       
-      public void RemoveQuery(string name)
+      public void ReplaceQuery(int index, QueryParameters parameters)
       {
-         if (name == QueryParameters.SelectAll)
+         if (index == 0)
          {
-            throw new ArgumentException("Cannot remove Select All query.");
+            throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, "Cannot replace the '{0}' query.", QueryParameters.SelectAll));
          }
 
-         int index = _queryContainer.QueryList.FindIndex(x => x.Name == name);
-         if (index >= 0)
+         CheckQueryParametersForAddOrReplace(parameters);
+
+         var existing = _queryContainer.QueryList.Find(x => x.Name == parameters.Name);
+         if (existing != null && existing.Name != _queryContainer.QueryList[index].Name)
          {
-            _queryContainer.QueryList.RemoveAt(index);
-            _queryContainer.Write();
-            _view.QueryComboRefreshList(_queryContainer.QueryList);
+            throw new ArgumentException(String.Format(CultureInfo.CurrentCulture,
+               "A query with name '{0}' already exists.", parameters.Name));
+         }
+         
+         _queryContainer.QueryList.RemoveAt(index);
+         _queryContainer.QueryList.Insert(index, parameters);
+         _queryContainer.Write();
+         _view.QueryComboRefreshList(_queryContainer.QueryList);
+      }
+      
+      private static void CheckQueryParametersForAddOrReplace(QueryParameters parameters)
+      {
+         if (parameters.Name == QueryParameters.SelectAll)
+         {
+            throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, "Query name cannot be '{0}'.", QueryParameters.SelectAll));
+         }
+
+         if (parameters.Fields.Count == 0)
+         {
+            throw new ArgumentException("No query fields defined.");
+         }
+
+         for (int i = 0; i < parameters.Fields.Count; i++)
+         {
+            if (parameters.Fields[i].Value == null)
+            {
+               throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, "Field index {0} must have a query value.", (i + 1)));
+            }
          }
       }
 
-      public void QueryComboIndexChanged(int index)
+      public void RemoveQuery(QueryParameters parameters)
+      {
+         if (parameters.Name == QueryParameters.SelectAll)
+         {
+            throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, "Cannot remove '{0}' query.", QueryParameters.SelectAll));
+         }
+
+         _queryContainer.QueryList.Remove(parameters);
+         _queryContainer.Write();
+         _view.QueryComboRefreshList(_queryContainer.QueryList);
+      }
+
+      public void SelectQuery(int index)
       {
          if (index < 0 || index >= _queryContainer.QueryList.Count)
          {
             throw new ArgumentOutOfRangeException("index");
          }
 
-         var entries = _database.QueryUnitData(_queryContainer.QueryList[index]);
-         _view.DataGridSetDataSource(entries);
+         _view.EditButtonEnabled = index != 0;
+         _view.DeleteButtonEnabled = index != 0;
+
+         _currentHistoryEntries = _database.QueryUnitData(_queryContainer.QueryList[index], _model.ProductionView);
+         var showEntries = _currentHistoryEntries;
+         if (_model.ShowTopChecked)
+         {
+            showEntries = _currentHistoryEntries.Take(_model.ShowTopValue).ToList();
+         }
+         _view.DataGridSetDataSource(_currentHistoryEntries.Count, showEntries);
+         _view.ApplySort(_model.SortColumnName, _model.SortOrder);
+      }
+      
+      public void NewQueryClick()
+      {
+         var query = new QueryParameters { Name = "* New Query *" };
+         query.Fields.Add(new QueryField());
+         _queryView.Query = query;
+         
+         bool showDialog = true;
+         while (showDialog)
+         {
+            if (_queryView.ShowDialog(_view).Equals(DialogResult.OK))
+            {
+               try
+               {
+                  AddQuery(_queryView.Query);
+                  _view.QueryComboSelectedIndex = _queryContainer.QueryList.Count - 1;
+                  showDialog = false;
+               }
+               catch (ArgumentException ex)
+               {
+                  _messageBoxView.ShowError(_view, ex.Message, PlatformOps.ApplicationNameAndVersion);
+               }
+            }
+            else
+            {
+               showDialog = false;
+            }
+         }
+      }
+      
+      public void EditQueryClick()
+      {
+         _queryView.Query = _view.QueryComboSelectedValue.DeepCopy();
+
+         bool showDialog = true;
+         while (showDialog)
+         {
+            if (_queryView.ShowDialog(_view).Equals(DialogResult.OK))
+            {
+               try
+               {
+                  ReplaceQuery(_view.QueryComboSelectedIndex, _queryView.Query);
+                  showDialog = false;
+               }
+               catch (ArgumentException ex)
+               {
+                  _messageBoxView.ShowError(_view, ex.Message, PlatformOps.ApplicationNameAndVersion);
+               }
+            }
+            else
+            {
+               showDialog = false;
+            }
+         }
       }
 
-      public CompletedUnitsReadResult ImportCompletedUnitsClick()
+      public void DeleteQueryClick()
+      {
+         try
+         {
+            RemoveQuery(_view.QueryComboSelectedValue);
+         }
+         catch (ArgumentException ex)
+         {
+            _messageBoxView.ShowError(_view, ex.Message, PlatformOps.ApplicationNameAndVersion);
+         }
+      }
+      
+      public void SaveSortSettings(string sortColumnName, SortOrder sortOrder)
+      {
+         _model.SortColumnName = sortColumnName;
+         _model.SortOrder = sortOrder;
+      }
+
+      public void ImportCompletedUnitsClick()
       {
          _openFileView.Filter = CsvFilter;
          _openFileView.FileName = Constants.CompletedUnitsCsvFileName;
@@ -107,8 +255,9 @@ namespace HFM.Forms
             try
             {
                var result = _database.ReadCompletedUnits(_openFileView.FileName);
+               ShowImportResultDialog(result);
                _database.ImportCompletedUnits(result.Entries);
-               return result;
+               _view.QueryComboSelectedIndex = 0;
             }
             catch (Exception ex)
             {
@@ -118,8 +267,6 @@ namespace HFM.Forms
                   PlatformOps.ApplicationNameAndVersion);
             }
          }
-
-         return null;
       }
       
       public void ShowImportResultDialog(CompletedUnitsReadResult result)
@@ -162,6 +309,12 @@ namespace HFM.Forms
       {
          var sb = new StringBuilder();
          sb.AppendFormat("{0} imported {1} unit result(s) successfully.", Constants.ApplicationName, result.Entries.Count);
+         if (result.Duplicates != 0)
+         {
+            sb.AppendLine();
+            sb.AppendLine();
+            sb.AppendFormat("{0} result(s) are duplicates and were not imported.", result.Duplicates);
+         }
          if (result.ErrorLines.Count != 0)
          {
             sb.AppendLine();

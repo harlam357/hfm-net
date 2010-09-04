@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -56,7 +57,7 @@ namespace HFM.Instances.Tests
          database.WriteUnitInfo(unitInfoLogic);
 
          var rows = database.QueryUnitData(new QueryParameters());
-         Assert.AreEqual(1, rows.Length);
+         Assert.AreEqual(1, rows.Count);
          HistoryEntry entry = rows[0];
          Assert.AreEqual(2669, entry.ProjectID);
          Assert.AreEqual(1, entry.ProjectRun);
@@ -80,6 +81,86 @@ namespace HFM.Instances.Tests
       }
       
       [Test]
+      public void DeleteAllUnitInfoDataTest()
+      {
+         if (File.Exists(TestFile))
+         {
+            File.Delete(TestFile);
+         }
+
+         var database = new UnitInfoDatabase(_proteinCollection) { DatabaseFilePath = TestFile };
+         database.CreateTable(UnitInfoDatabase.WuHistoryTableName);
+         Assert.AreEqual(true, database.TableExists(UnitInfoDatabase.WuHistoryTableName));
+         database.DeleteAllUnitInfoData();
+         Assert.AreEqual(false, database.TableExists(UnitInfoDatabase.WuHistoryTableName));
+      }
+      
+      [Test]
+      public void DeleteUnitInfoTest()
+      {
+         var t = new Thread(CopyTestFile);
+         t.Start();
+         t.Join(3000);
+      
+         _mocks.ReplayAll();
+
+         var database = new UnitInfoDatabase(_proteinCollection) { DatabaseFilePath = Path.ChangeExtension(TestDataFile, ".dbcopy") };
+         Assert.AreEqual(44, database.QueryUnitData(new QueryParameters()).Count);
+         var entry = new HistoryEntry
+                     {
+                        ProjectID = 10632,
+                        ProjectRun = 94,
+                        ProjectClone = 19,
+                        ProjectGen = 0,
+                        DownloadDateTime = new DateTime(2010, 8, 8, 16, 41, 0)
+                     };
+         Assert.AreEqual(1, database.DeleteUnitInfo(entry));
+         Assert.AreEqual(43, database.QueryUnitData(new QueryParameters()).Count);
+
+         _mocks.VerifyAll();
+      }
+      
+      private static void CopyTestFile()
+      {
+         string testDataFileCopy = Path.ChangeExtension(TestDataFile, ".dbcopy");
+
+         if (File.Exists(testDataFileCopy))
+         {
+            File.Delete(testDataFileCopy);
+            File.Copy(TestDataFile, testDataFileCopy);
+         }
+      }
+
+      [Test]
+      public void DeleteUnitInfoTableNotExistTest()
+      {
+         const string newFile = "NewFile.db3";
+         
+         var database = new UnitInfoDatabase(_proteinCollection) { DatabaseFilePath = newFile };
+         Assert.AreEqual(0, database.DeleteUnitInfo(new HistoryEntry()));
+         
+         if (File.Exists(newFile))
+         {
+            File.Delete(newFile);
+         }
+      }
+
+      [Test]
+      public void DeleteUnitInfoUnitNotExistTest()
+      {
+         var database = new UnitInfoDatabase(_proteinCollection) { DatabaseFilePath = TestDataFile };
+         var entry = new HistoryEntry
+         {
+            ProjectID = 10633,
+            ProjectRun = 94,
+            ProjectClone = 19,
+            ProjectGen = 0,
+            DownloadDateTime = new DateTime(2010, 8, 8)
+         };
+         Assert.AreEqual(0, database.DeleteUnitInfo(entry));
+      }
+
+      [Test]
       public void ImportCompletedUnitsTest()
       {
          if (File.Exists(TestFile))
@@ -93,7 +174,7 @@ namespace HFM.Instances.Tests
          database.ImportCompletedUnits(database.ReadCompletedUnits("..\\..\\TestFiles\\CompletedUnits.csv").Entries);
 
          var rows = database.QueryUnitData(new QueryParameters());
-         Assert.AreEqual(44, rows.Length);
+         Assert.AreEqual(44, rows.Count);
          
          _mocks.VerifyAll();
       }
@@ -105,40 +186,43 @@ namespace HFM.Instances.Tests
       
          var database = new UnitInfoDatabase(_proteinCollection) { DatabaseFilePath = TestDataFile };
          var rows = database.QueryUnitData(new QueryParameters());
-         Assert.AreEqual(44, rows.Length);
+         Assert.AreEqual(44, rows.Count);
 
-         var parameters = new QueryParameters { ProjectID = { Enabled1 = true, Type1 = QueryFieldType.Equal, Value1 = 6600 } };
+         var parameters = new QueryParameters();
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectID, Type = QueryFieldType.Equal, Value = 6600 });
          rows = database.QueryUnitData(parameters);
-         Assert.AreEqual(13, rows.Length);
+         Assert.AreEqual(13, rows.Count);
 
-         parameters.DownloadDateTime.Enabled1 = true;
-         parameters.DownloadDateTime.Type1 = QueryFieldType.GreaterThanOrEqual;
-         parameters.DownloadDateTime.Value1 = new DateTime(2010, 8, 20);
-
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.DownloadDateTime, Type = QueryFieldType.GreaterThanOrEqual, Value = new DateTime(2010, 8, 20) });
          rows = database.QueryUnitData(parameters);
-         Assert.AreEqual(3, rows.Length);
+         Assert.AreEqual(3, rows.Count);
 
-         parameters = new QueryParameters { DownloadDateTime = { Enabled1 = true, Type1 = QueryFieldType.GreaterThan, Value1 = new DateTime(2010, 8, 8),
-                                                                 Enabled2 = true, Type2 = QueryFieldType.LessThan, Value2 = new DateTime(2010, 8, 22) } };
+         parameters = new QueryParameters();
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.DownloadDateTime, Type = QueryFieldType.GreaterThan, Value = new DateTime(2010, 8, 8) });
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.DownloadDateTime, Type = QueryFieldType.LessThan, Value = new DateTime(2010, 8, 22) });
          rows = database.QueryUnitData(parameters);
-         Assert.AreEqual(33, rows.Length);
+         Assert.AreEqual(33, rows.Count);
 
-         parameters = new QueryParameters { WorkUnitName = { Enabled1 = true, Type1 = QueryFieldType.Equal, Value1 = "WorkUnitName" } };
+         parameters = new QueryParameters();
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.WorkUnitName, Type = QueryFieldType.Equal, Value = "WorkUnitName" });
          rows = database.QueryUnitData(parameters);
-         Assert.AreEqual(13, rows.Length);
+         Assert.AreEqual(13, rows.Count);
 
-         parameters = new QueryParameters { WorkUnitName = { Enabled1 = true, Type1 = QueryFieldType.Equal, Value1 = "WorkUnitName2" } };
+         parameters = new QueryParameters();
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.WorkUnitName, Type = QueryFieldType.Equal, Value = "WorkUnitName2" });
          rows = database.QueryUnitData(parameters);
-         Assert.AreEqual(3, rows.Length);
+         Assert.AreEqual(3, rows.Count);
 
-         parameters = new QueryParameters { Atoms = { Enabled1 = true, Type1 = QueryFieldType.GreaterThan, Value1 = 5000,
-                                                      Enabled2 = true, Type2 = QueryFieldType.LessThanOrEqual, Value2 = 7000 } };
+         parameters = new QueryParameters();
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.Atoms, Type = QueryFieldType.GreaterThan, Value = 5000});
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.Atoms, Type = QueryFieldType.LessThanOrEqual, Value = 7000 });
          rows = database.QueryUnitData(parameters);
-         Assert.AreEqual(3, rows.Length);
+         Assert.AreEqual(3, rows.Count);
 
-         parameters = new QueryParameters { Core = { Enabled1 = true, Type1 = QueryFieldType.Equal, Value1 = "GROGPU2" } };
+         parameters = new QueryParameters();
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.Core, Type = QueryFieldType.Equal, Value = "GROGPU2" });
          rows = database.QueryUnitData(parameters);
-         Assert.AreEqual(16, rows.Length);
+         Assert.AreEqual(16, rows.Count);
          
          _mocks.VerifyAll();
       }
@@ -158,8 +242,8 @@ namespace HFM.Instances.Tests
       {
          var database = new UnitInfoDatabase(_proteinCollection);
          var result = database.ReadCompletedUnits("..\\..\\TestFiles\\CompletedUnitsLarge.csv");
-         Assert.AreEqual(330, result.Duplicates);
-         Assert.AreEqual(30413, result.Entries.Count);
+         Assert.AreEqual(8, result.Duplicates);
+         Assert.AreEqual(6994, result.Entries.Count);
          Assert.AreEqual(153, result.ErrorLines.Count);
       }
       

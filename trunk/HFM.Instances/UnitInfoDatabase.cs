@@ -21,6 +21,10 @@ namespace HFM.Instances
    {
       string DatabaseFilePath { get; set; }
 
+      bool TableExists(string tableName);
+
+      void CreateTable(string tableName);
+
       void DeleteAllUnitInfoData();
       
       void WriteUnitInfo(IUnitInfoLogic unitInfoLogic);
@@ -29,7 +33,9 @@ namespace HFM.Instances
       
       void ImportCompletedUnits(ICollection<HistoryEntry> entries);
       
-      HistoryEntry[] QueryUnitData(QueryParameters parameters);
+      IList<HistoryEntry> QueryUnitData(QueryParameters parameters);
+
+      IList<HistoryEntry> QueryUnitData(QueryParameters parameters, HistoryProductionView productionView);
 
       void WriteCompletedUnitInfo(IUnitInfoLogic unit);
 
@@ -88,6 +94,24 @@ namespace HFM.Instances
       public UnitInfoDatabase(IProteinCollection proteinCollection)
       {
          _proteinCollection = proteinCollection;
+      }
+      
+      public bool TableExists(string tableName)
+      {
+         using (var con = new SQLiteConnection(@"Data Source=" + DatabaseFilePath))
+         {
+            con.Open();
+            return TableExists(con, WuHistoryTableName);
+         }
+      }
+      
+      public void CreateTable(string tableName)
+      {
+         using (var con = new SQLiteConnection(@"Data Source=" + DatabaseFilePath))
+         {
+            con.Open();
+            CreateTable(con, WuHistoryTableName);
+         }
       }
       
       public void DeleteAllUnitInfoData()
@@ -194,7 +218,7 @@ namespace HFM.Instances
       private static bool UnitInfoExists(SQLiteConnection con, IUnitInfoLogic unitInfoLogic)
       {
          var rows = ExecuteQueryUnitData(con, BuildUnitKeyQueryParameters(unitInfoLogic));
-         return rows.Length != 0;
+         return rows.Count != 0;
       }
 
       //private static bool UnitInfoExists(SQLiteConnection con, HistoryEntry entry)
@@ -205,40 +229,12 @@ namespace HFM.Instances
       
       private static QueryParameters BuildUnitKeyQueryParameters(IUnitInfoLogic unitInfoLogic)
       {
-         var parameters = new QueryParameters
-         {
-            ProjectID =
-            {
-               Enabled1 = true,
-               Type1 = QueryFieldType.Equal,
-               Value1 = unitInfoLogic.ProjectID
-            },
-            ProjectRun =
-            {
-               Enabled1 = true,
-               Type1 = QueryFieldType.Equal,
-               Value1 = unitInfoLogic.ProjectRun
-            },
-            ProjectClone =
-            {
-               Enabled1 = true,
-               Type1 = QueryFieldType.Equal,
-               Value1 = unitInfoLogic.ProjectClone
-            },
-            ProjectGen =
-            {
-               Enabled1 = true,
-               Type1 = QueryFieldType.Equal,
-               Value1 = unitInfoLogic.ProjectGen
-            },
-            DownloadDateTime =
-            {
-               Enabled1 = true,
-               Type1 = QueryFieldType.Equal,
-               Value1 = unitInfoLogic.RawDownloadTime
-            }
-         };
-
+         var parameters = new QueryParameters();
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectID, Type = QueryFieldType.Equal, Value = unitInfoLogic.ProjectID });
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectRun, Type = QueryFieldType.Equal, Value = unitInfoLogic.ProjectRun });
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectClone, Type = QueryFieldType.Equal, Value = unitInfoLogic.ProjectClone });
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectGen, Type = QueryFieldType.Equal, Value = unitInfoLogic.ProjectGen });
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.DownloadDateTime, Type = QueryFieldType.Equal, Value = unitInfoLogic.RawDownloadTime });
          return parameters;
       }
 
@@ -276,40 +272,12 @@ namespace HFM.Instances
 
       private static QueryParameters BuildUnitKeyQueryParameters(HistoryEntry entry)
       {
-         var parameters = new QueryParameters
-         {
-            ProjectID =
-            {
-               Enabled1 = true,
-               Type1 = QueryFieldType.Equal,
-               Value1 = entry.ProjectID
-            },
-            ProjectRun =
-            {
-               Enabled1 = true,
-               Type1 = QueryFieldType.Equal,
-               Value1 = entry.ProjectRun
-            },
-            ProjectClone =
-            {
-               Enabled1 = true,
-               Type1 = QueryFieldType.Equal,
-               Value1 = entry.ProjectClone
-            },
-            ProjectGen =
-            {
-               Enabled1 = true,
-               Type1 = QueryFieldType.Equal,
-               Value1 = entry.ProjectGen
-            },
-            DownloadDateTime =
-            {
-               Enabled1 = true,
-               Type1 = QueryFieldType.Equal,
-               Value1 = entry.DownloadDateTime
-            }
-         };
-
+         var parameters = new QueryParameters();
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectID, Type = QueryFieldType.Equal, Value = entry.ProjectID });
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectRun, Type = QueryFieldType.Equal, Value = entry.ProjectRun });
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectClone, Type = QueryFieldType.Equal, Value = entry.ProjectClone });
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectGen, Type = QueryFieldType.Equal, Value = entry.ProjectGen });
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.DownloadDateTime, Type = QueryFieldType.Equal, Value = entry.DownloadDateTime });
          return parameters;
       }
 
@@ -345,21 +313,27 @@ namespace HFM.Instances
                               (int)entry.Result);
       }
 
-      public HistoryEntry[] QueryUnitData(QueryParameters parameters)
+      public IList<HistoryEntry> QueryUnitData(QueryParameters parameters)
+      {
+         return QueryUnitData(parameters, HistoryProductionView.BonusDownloadTime);
+      }
+      
+      public IList<HistoryEntry> QueryUnitData(QueryParameters parameters, HistoryProductionView productionView)
       {
          using (var con = new SQLiteConnection(@"Data Source=" + DatabaseFilePath))
          {
             con.Open();
-            return ExecuteQueryUnitData(con, parameters, _proteinCollection);
+            return ExecuteQueryUnitData(con, parameters, productionView, _proteinCollection);
          }
       }
       
-      private static HistoryEntry[] ExecuteQueryUnitData(SQLiteConnection con, QueryParameters parameters)
+      private static IList<HistoryEntry> ExecuteQueryUnitData(SQLiteConnection con, QueryParameters parameters)
       {
-         return ExecuteQueryUnitData(con, parameters, null);
+         return ExecuteQueryUnitData(con, parameters, HistoryProductionView.BonusDownloadTime, null);
       }
 
-      private static HistoryEntry[] ExecuteQueryUnitData(SQLiteConnection con, QueryParameters parameters, IProteinCollection proteinCollection)
+      private static IList<HistoryEntry> ExecuteQueryUnitData(SQLiteConnection con, QueryParameters parameters, 
+                                                              HistoryProductionView productionView, IProteinCollection proteinCollection)
       {
          if (TableExists(con, WuHistoryTableName))
          {
@@ -382,10 +356,11 @@ namespace HFM.Instances
                   FrameTime = TimeSpan.FromSeconds(wu.Field<int>("FrameTime")),
                   Result = (WorkUnitResult)wu.Field<int>("Result"),
                   DownloadDateTime = DateTime.SpecifyKind(wu.Field<DateTime>("DownloadDateTime"), DateTimeKind.Utc),
-                  CompletionDateTime = DateTime.SpecifyKind(wu.Field<DateTime>("CompletionDateTime"), DateTimeKind.Utc)
+                  CompletionDateTime = DateTime.SpecifyKind(wu.Field<DateTime>("CompletionDateTime"), DateTimeKind.Utc),
+                  ProductionView = productionView
                };
 
-            if (proteinCollection == null) return query.ToArray();
+            if (proteinCollection == null) return query.ToList();
             
             var proteins = proteinCollection.Proteins;
             var joinQuery = from entry in query
@@ -395,8 +370,8 @@ namespace HFM.Instances
 
             return FilterProteinParameters(parameters, joinQuery);
          }
-         
-         return new HistoryEntry[0];
+
+         return new List<HistoryEntry>();
       }
       
       private static DataTable GetDataTable(SQLiteConnection con, QueryParameters parameters)
@@ -415,7 +390,6 @@ namespace HFM.Instances
          var selectBuilder = new SelectStatementBuilder();
          var command = new SQLiteCommand(selectBuilder.BuildSelectStatement(parameters), con);
          var adapter = new SQLiteDataAdapter(command);
-
          var table = new DataTable();
          adapter.Fill(table);
 
@@ -425,69 +399,50 @@ namespace HFM.Instances
             {
                row.Delete();
             }
+            var builder = new SQLiteCommandBuilder(adapter);
+            adapter.UpdateCommand = builder.GetUpdateCommand();
+            return adapter.Update(table);
          }
 
-         return adapter.Update(table);
+         return 0;
       }
       
-      private static HistoryEntry[] FilterProteinParameters(QueryParameters parameters, IEnumerable<HistoryEntry> entries)
+      private static IList<HistoryEntry> FilterProteinParameters(QueryParameters parameters, IEnumerable<HistoryEntry> entries)
       {
          var query = entries.AsQueryable();
-         
-         if (parameters.WorkUnitName.Enabled)
+
+         foreach (var field in parameters.Fields)
          {
-            query = query.Where(BuildWhereCondition("WorkUnitName", parameters.WorkUnitName));
-         }
-         if (parameters.KFactor.Enabled)
-         {
-            query = query.Where(BuildWhereCondition("KFactor", parameters.KFactor));
-         }
-         if (parameters.Core.Enabled)
-         {
-            query = query.Where(BuildWhereCondition("Core", parameters.Core));
-         }
-         if (parameters.Frames.Enabled)
-         {
-            query = query.Where(BuildWhereCondition("Frames", parameters.Frames));
-         }
-         if (parameters.Atoms.Enabled)
-         {
-            query = query.Where(BuildWhereCondition("Atoms", parameters.Atoms));
-         }
-         if (parameters.ClientType.Enabled)
-         {
-            query = query.Where(BuildWhereCondition("ClientType", parameters.ClientType));
-         }
-         if (parameters.PPD.Enabled)
-         {
-            query = query.Where(BuildWhereCondition("PPD", parameters.PPD));
-         }
-         if (parameters.Credit.Enabled)
-         {
-            query = query.Where(BuildWhereCondition("Credit", parameters.Credit));
+            if (field.Name.Equals(QueryFieldName.WorkUnitName) ||
+                field.Name.Equals(QueryFieldName.KFactor) ||
+                field.Name.Equals(QueryFieldName.Core) ||
+                field.Name.Equals(QueryFieldName.Frames) ||
+                field.Name.Equals(QueryFieldName.Atoms) ||
+                field.Name.Equals(QueryFieldName.ClientType) ||
+                field.Name.Equals(QueryFieldName.PPD) ||
+                field.Name.Equals(QueryFieldName.Credit))
+            {
+               query = query.Where(BuildWhereCondition(field));
+            }
          }
 
-         return query.ToArray();
+         return query.ToList();
       }
 
-      private static string BuildWhereCondition<T>(string columnName, QueryField<T> queryField)
+      private static string BuildWhereCondition(QueryField queryField)
       {
          string valueFormat = "{2}";
-         if (typeof(T).Equals(typeof(String)))
+         if (queryField.Name.Equals(QueryFieldName.WorkUnitName) ||
+             queryField.Name.Equals(QueryFieldName.Core))
          {
             valueFormat = "\"{2}\"";
          }
       
          var sbWhere = new StringBuilder();
-         if (queryField.Enabled1 && queryField.Type1.Equals(QueryFieldType.All) == false)
-         {
-            sbWhere.AppendFormat(CultureInfo.InvariantCulture, "{0} {1} " + valueFormat, columnName, queryField.Type1Operator, queryField.Value1);
-            if (queryField.Enabled2 && queryField.Type2.Equals(QueryFieldType.All) == false)
-            {
-               sbWhere.Append(" And ");
-               sbWhere.AppendFormat(CultureInfo.InvariantCulture, "{0} {1} " + valueFormat, columnName, queryField.Type2Operator, queryField.Value2);
-            }
-         }
+         //if (queryField.Type.Equals(QueryFieldType.All) == false)
+         //{
+            sbWhere.AppendFormat(CultureInfo.InvariantCulture, "{0} {1} " + valueFormat, queryField.Name, queryField.Operator, queryField.Value);
+         //}
 
          return sbWhere.ToString();
       }
@@ -821,20 +776,6 @@ namespace HFM.Instances
       public List<string> ErrorLines { get; private set; }
    }
 
-   //public struct CompletedUnitsLineError
-   //{
-   //   public CompletedUnitsLineError(int lineNumber, string rawLine)
-   //   {
-   //      _lineNumber = lineNumber;
-   //      _rawLine = rawLine;
-   //   }
-
-   //   private readonly int _lineNumber;
-   //   public int LineNumber { get { return _lineNumber; } }
-   //   private readonly string _rawLine;
-   //   public string RawLine { get { return _rawLine; } }
-   //}
-   
    class SelectStatementBuilder
    {
       private const string WuHistoryTableSelectAllSql = "SELECT * FROM [{0}] ";
@@ -844,84 +785,36 @@ namespace HFM.Instances
 
       public string BuildSelectStatement(QueryParameters parameters)
       {
-         //if (parameters.SelectAll)
-         //{
-         //   return String.Format(CultureInfo.InvariantCulture, WuHistoryTableSelectAllSql, UnitInfoDatabase.WuHistoryTableName);
-         //}
+         if (parameters.Fields.Count == 0)
+         {
+            return String.Format(CultureInfo.InvariantCulture, WuHistoryTableSelectAllSql, UnitInfoDatabase.WuHistoryTableName);
+         }
          
          // reset
          _appendAnd = false;
 
          var sbWhere = new StringBuilder("WHERE ");
-         if (parameters.ProjectID.Enabled)
+
+         foreach (var field in parameters.Fields)
          {
-            sbWhere.Append(BuildWhereCondition("ProjectID", parameters.ProjectID));
-            sbWhere.Append(_appendAnd ? AndSpace : String.Empty);
-         }
-         if (parameters.ProjectRun.Enabled)
-         {
-            sbWhere.Append(BuildWhereCondition("ProjectRun", parameters.ProjectRun));
-            sbWhere.Append(_appendAnd ? AndSpace : String.Empty);
-         }
-         if (parameters.ProjectClone.Enabled)
-         {
-            sbWhere.Append(BuildWhereCondition("ProjectClone", parameters.ProjectClone));
-            sbWhere.Append(_appendAnd ? AndSpace : String.Empty);
-         }
-         if (parameters.ProjectGen.Enabled)
-         {
-            sbWhere.Append(BuildWhereCondition("ProjectGen", parameters.ProjectGen));
-            sbWhere.Append(_appendAnd ? AndSpace : String.Empty);
-         }
-         if (parameters.InstanceName.Enabled)
-         {
-            sbWhere.Append(BuildWhereCondition("InstanceName", parameters.InstanceName));
-            sbWhere.Append(_appendAnd ? AndSpace : String.Empty);
-         }
-         if (parameters.InstancePath.Enabled)
-         {
-            sbWhere.Append(BuildWhereCondition("InstancePath", parameters.InstancePath));
-            sbWhere.Append(_appendAnd ? AndSpace : String.Empty);
-         }
-         if (parameters.Username.Enabled)
-         {
-            sbWhere.Append(BuildWhereCondition("Username", parameters.Username));
-            sbWhere.Append(_appendAnd ? AndSpace : String.Empty);
-         }
-         if (parameters.Team.Enabled)
-         {
-            sbWhere.Append(BuildWhereCondition("Team", parameters.Team));
-            sbWhere.Append(_appendAnd ? AndSpace : String.Empty);
-         }
-         if (parameters.CoreVersion.Enabled)
-         {
-            sbWhere.Append(BuildWhereCondition("CoreVersion", parameters.CoreVersion));
-            sbWhere.Append(_appendAnd ? AndSpace : String.Empty);
-         }
-         if (parameters.FramesCompleted.Enabled)
-         {
-            sbWhere.Append(BuildWhereCondition("FramesCompleted", parameters.FramesCompleted));
-            sbWhere.Append(_appendAnd ? AndSpace : String.Empty);
-         }
-         if (parameters.FrameTime.Enabled)
-         {
-            sbWhere.Append(BuildWhereCondition("FrameTime", parameters.FrameTime));
-            sbWhere.Append(_appendAnd ? AndSpace : String.Empty);
-         }
-         if (parameters.Result.Enabled)
-         {
-            sbWhere.Append(BuildWhereCondition("Result", parameters.Result));
-            sbWhere.Append(_appendAnd ? AndSpace : String.Empty);
-         }
-         if (parameters.DownloadDateTime.Enabled)
-         {
-            sbWhere.Append(BuildWhereCondition("DownloadDateTime", parameters.DownloadDateTime));
-            sbWhere.Append(_appendAnd ? AndSpace : String.Empty);
-         }
-         if (parameters.CompletionDateTime.Enabled)
-         {
-            sbWhere.Append(BuildWhereCondition("CompletionDateTime", parameters.CompletionDateTime));
-            sbWhere.Append(_appendAnd ? AndSpace : String.Empty);
+            if (field.Name.Equals(QueryFieldName.ProjectID) ||
+                field.Name.Equals(QueryFieldName.ProjectRun) ||
+                field.Name.Equals(QueryFieldName.ProjectClone) ||
+                field.Name.Equals(QueryFieldName.ProjectGen) ||
+                field.Name.Equals(QueryFieldName.InstanceName) ||
+                field.Name.Equals(QueryFieldName.InstancePath) ||
+                field.Name.Equals(QueryFieldName.Username) ||
+                field.Name.Equals(QueryFieldName.Team) ||
+                field.Name.Equals(QueryFieldName.CoreVersion) ||
+                field.Name.Equals(QueryFieldName.FramesCompleted) ||
+                field.Name.Equals(QueryFieldName.FrameTime) ||
+                field.Name.Equals(QueryFieldName.Result) ||
+                field.Name.Equals(QueryFieldName.DownloadDateTime) ||
+                field.Name.Equals(QueryFieldName.CompletionDateTime))
+            {
+               sbWhere.Append(BuildWhereCondition(field));
+               sbWhere.Append(_appendAnd ? AndSpace : String.Empty);
+            }
          }
 
          string selectCommand = String.Format(CultureInfo.InvariantCulture,
@@ -935,24 +828,13 @@ namespace HFM.Instances
          return selectCommand;
       }
 
-      private string BuildWhereCondition<T>(string columnName, QueryField<T> queryField)
+      private string BuildWhereCondition(QueryField queryField)
       {
-         //if (queryField.SelectAll) return String.Empty;
+         _appendAnd = true;
 
          var sbWhere = new StringBuilder();
-         if (queryField.Enabled1 && queryField.Type1.Equals(QueryFieldType.All) == false)
-         {
-            _appendAnd = true;
-            
-            sbWhere.AppendFormat(CultureInfo.InvariantCulture, "[{0}] ", columnName);
-            sbWhere.Append(BuildValueCondition(queryField.Type1Operator, queryField.Value1));
-            if (queryField.Enabled2 && queryField.Type2.Equals(QueryFieldType.All) == false)
-            {
-               sbWhere.Append(AndSpace);
-               sbWhere.AppendFormat(CultureInfo.InvariantCulture, "[{0}] ", columnName);
-               sbWhere.Append(BuildValueCondition(queryField.Type2Operator, queryField.Value2));
-            }
-         }
+         sbWhere.AppendFormat(CultureInfo.InvariantCulture, "[{0}] ", queryField.Name);
+         sbWhere.Append(BuildValueCondition(queryField.Operator, queryField.Value));
 
          return sbWhere.ToString();
       }
@@ -964,8 +846,7 @@ namespace HFM.Instances
 
       private static string GetFormattedValue(object value)
       {
-         Type type = value.GetType();
-         if (type.Equals(typeof(DateTime)))
+         if (value is DateTime)
          {
             var dateTime = (DateTime)value;
             return String.Format(CultureInfo.InvariantCulture, "'{0}'", dateTime.ToString("yyyy-MM-dd HH:mm:ss"));
@@ -979,13 +860,13 @@ namespace HFM.Instances
    {
       public HistoryEntry()
       {
-         ProductionView = EntryProductionView.BonusDownloadTime;
+         ProductionView = HistoryProductionView.BonusDownloadTime;
       }
 
-      public HistoryEntry(EntryProductionView productionView)
-      {
-         ProductionView = productionView;
-      }
+      //public HistoryEntry(HistoryProductionView productionView)
+      //{
+      //   ProductionView = productionView;
+      //}
    
       public int ProjectID { get; set; }
       public int ProjectRun { get; set; }
@@ -1012,7 +893,7 @@ namespace HFM.Instances
 
       public ClientType ClientType { get; private set; }
       
-      public EntryProductionView ProductionView { get; set; }
+      public HistoryProductionView ProductionView { get; set; }
       
       public double PPD
       {
@@ -1022,11 +903,11 @@ namespace HFM.Instances
          
             switch (ProductionView)
             {
-               case EntryProductionView.Standard:
+               case HistoryProductionView.Standard:
                   return _protein.GetPPD(FrameTime);
-               case EntryProductionView.BonusFrameTime:
+               case HistoryProductionView.BonusFrameTime:
                   return _protein.GetPPD(FrameTime, TimeSpan.FromSeconds(FrameTime.TotalSeconds * Frames));
-               case EntryProductionView.BonusDownloadTime:
+               case HistoryProductionView.BonusDownloadTime:
                   return _protein.GetPPD(FrameTime, CompletionDateTime.Subtract(DownloadDateTime));
                default:
                   throw new NotImplementedException(String.Format(CultureInfo.CurrentCulture,
@@ -1043,11 +924,11 @@ namespace HFM.Instances
 
             switch (ProductionView)
             {
-               case EntryProductionView.Standard:
+               case HistoryProductionView.Standard:
                   return _protein.Credit;
-               case EntryProductionView.BonusFrameTime:
+               case HistoryProductionView.BonusFrameTime:
                   return _protein.GetBonusCredit(TimeSpan.FromSeconds(FrameTime.TotalSeconds * Frames));
-               case EntryProductionView.BonusDownloadTime:
+               case HistoryProductionView.BonusDownloadTime:
                   return _protein.GetBonusCredit(CompletionDateTime.Subtract(DownloadDateTime));
                default:
                   throw new NotImplementedException(String.Format(CultureInfo.CurrentCulture,
@@ -1217,144 +1098,90 @@ namespace HFM.Instances
       public QueryParameters()
       {
          Name = SelectAll;
+         Fields = new List<QueryField>();
+      }
       
-         ProjectID = new QueryField<int>();
-         ProjectRun = new QueryField<int>();
-         ProjectClone = new QueryField<int>();
-         ProjectGen = new QueryField<int>();
-         InstanceName = new QueryField<string>();
-         InstancePath = new QueryField<string>();
-         Username = new QueryField<string>();
-         Team = new QueryField<int>();
-         CoreVersion = new QueryField<float>();
-         FramesCompleted = new QueryField<int>();
-         FrameTime = new QueryField<int>();
-         Result = new QueryField<int>();
-         DownloadDateTime = new QueryField<DateTime>();
-         CompletionDateTime = new QueryField<DateTime>();
-         
-         WorkUnitName = new QueryField<string>();
-         KFactor = new QueryField<double>();
-         Core = new QueryField<string>();
-         Frames = new QueryField<int>();
-         Atoms = new QueryField<int>();
-
-         ClientType = new QueryField<int>();
-         PPD = new QueryField<double>();
-         Credit = new QueryField<double>();
+      public QueryParameters DeepCopy()
+      {
+         var parameters = new QueryParameters { Name = Name };
+         foreach (var field in Fields)
+         {
+            parameters.Fields.Add(field.DeepCopy());
+         }
+         return parameters;
       }
 
       [ProtoMember(1)]
       public string Name { get; set; }
-
-      #region WU History Fields
-
       [ProtoMember(2)]
-      public QueryField<int> ProjectID { get; private set; }
-      [ProtoMember(3)]
-      public QueryField<int> ProjectRun { get; private set; }
-      [ProtoMember(4)]
-      public QueryField<int> ProjectClone { get; private set; }
-      [ProtoMember(5)]
-      public QueryField<int> ProjectGen { get; private set; }
-      [ProtoMember(6)]
-      public QueryField<string> InstanceName { get; private set; }
-      [ProtoMember(7)]
-      public QueryField<string> InstancePath { get; private set; }
-      [ProtoMember(8)]
-      public QueryField<string> Username { get; private set; }
-      [ProtoMember(9)]
-      public QueryField<int> Team { get; private set; }
-      [ProtoMember(10)]
-      public QueryField<float> CoreVersion { get; private set; }
-      [ProtoMember(11)]
-      public QueryField<int> FramesCompleted { get; private set; }
-      [ProtoMember(12)]
-      public QueryField<int> FrameTime { get; private set; }
-      [ProtoMember(13)]
-      public QueryField<int> Result { get; private set; }
-      [ProtoMember(14)]
-      public QueryField<DateTime> DownloadDateTime { get; private set; }
-      [ProtoMember(15)]
-      public QueryField<DateTime> CompletionDateTime { get; private set; }
-      
-      #endregion
-      
-      #region Protein Fields
-
-      [ProtoMember(16)]
-      public QueryField<string> WorkUnitName { get; private set; }
-      [ProtoMember(17)]
-      public QueryField<double> KFactor { get; private set; }
-      [ProtoMember(18)]
-      public QueryField<string> Core { get; private set; }
-      [ProtoMember(19)]
-      public QueryField<int> Frames { get; private set; }
-      [ProtoMember(20)]
-      public QueryField<int> Atoms { get; private set; }
-
-      [ProtoMember(21)]
-      public QueryField<int> ClientType { get; private set; }
-      [ProtoMember(22)]
-      public QueryField<double> PPD { get; private set; }
-      [ProtoMember(23)]
-      public QueryField<double> Credit { get; private set; }
-      
-      #endregion
+      public List<QueryField> Fields { get; set; }
    }
    
    [ProtoContract]
-   public class QueryField<T>
+   public class QueryField
    {
       public QueryField()
       {
-         Enabled1 = false;
-         Type1 = QueryFieldType.All;
-         Value1 = default(T);
-         Enabled2 = false;
-         Type2 = QueryFieldType.All;
-         Value2 = default(T);
+         Name = QueryFieldName.ProjectID;
+         Type = QueryFieldType.Equal;
+      }
+      
+      public QueryField DeepCopy()
+      {
+         // Value is set and returned as an object but the underlying
+         // types are either value or immutable (string), so we're ok
+         // here with just an assignment.
+         return new QueryField { Name = Name, Type = Type, Value = Value };
       }
 
       [ProtoMember(1)]
-      public bool Enabled1 { get; set; }
+      public QueryFieldName Name { get; set; }
       [ProtoMember(2)]
-      public QueryFieldType Type1 { get; set; }
-      [ProtoMember(3)]
-      public T Value1 { get; set; }
-      private bool _enabled2;
-      [ProtoMember(4)]
-      public bool Enabled2
-      {
-         get { return Enabled1 ? _enabled2 : false; }
-         set { _enabled2 = value; }
-      }
-      [ProtoMember(5)]
-      public QueryFieldType Type2 { get; set; }
-      [ProtoMember(6)]
-      public T Value2 { get; set; }
+      public QueryFieldType Type { get; set; }
       
-      public bool Enabled
+      public object Value
       {
-         get { return Enabled1; }
-      }
-      
-      public string Type1Operator
-      {
-         get { return GetOperator(Type1); }
+         get
+         {
+            if (_dateTimeValue.HasValue)
+            {
+               return _dateTimeValue.Value;
+            }
+            return _stringValue;
+         }
+         set
+         {
+            if (value == null) return;
+            
+            if (value is DateTime)
+            {
+               _dateTimeValue = (DateTime)value;
+               _stringValue = null;
+            }
+            else
+            {
+               _dateTimeValue = null;
+               _stringValue = value.ToString();
+            }
+         }
       }
 
-      public string Type2Operator
+      [ProtoMember(3)]
+      private DateTime? _dateTimeValue;
+      [ProtoMember(4)]
+      private string _stringValue;
+
+      public string Operator
       {
-         get { return GetOperator(Type2); }
+         get { return GetOperator(Type); }
       }
-      
+
       private static string GetOperator(QueryFieldType type)
       {
          switch (type)
          {
-            case QueryFieldType.All:
-               return "*";
+            //case QueryFieldType.All:
+            //   return "*";
             case QueryFieldType.Equal:
                return "==";
             case QueryFieldType.GreaterThan:

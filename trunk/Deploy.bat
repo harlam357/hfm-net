@@ -27,6 +27,7 @@ copy /Y Castle.DynamicProxy2.dll %1
 copy /Y Castle.MicroKernel.dll %1
 copy /Y Castle.Windsor.dll %1
 copy /Y protobuf-net.dll %1
+copy /Y System.Linq.Dynamic.dll %1
 
 echo Copying Support Files and Folders...
 copy /Y GPLv2.TXT %1

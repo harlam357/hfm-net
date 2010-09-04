@@ -26,19 +26,19 @@ namespace HFM.Instances.Tests
    [TestFixture]
    public class ProteinBenchmarkContainerTests
    {
-      ProteinBenchmarkCollection collection;
+      ProteinBenchmarkCollection _collection;
    
       [SetUp]
       public void Init()
       {
-         collection = LoadTestCollection();
-         ValidateTestCollection(collection);
+         _collection = LoadTestCollection();
+         ValidateTestCollection(_collection);
       }
 
       [Test]
       public void ProtoBufSerializationTest()
       {
-         ProteinBenchmarkContainer.Serialize(collection, "ProtoBufTest.dat");
+         ProteinBenchmarkContainer.Serialize(_collection, "ProtoBufTest.dat");
          
          ProteinBenchmarkCollection collection2 = ProteinBenchmarkContainer.Deserialize("ProtoBufTest.dat");
          ValidateTestCollection(collection2);
@@ -54,7 +54,7 @@ namespace HFM.Instances.Tests
       [Test]
       public void XmlSerializationTest()
       {
-         ProteinBenchmarkContainer.SerializeToXml(collection, "XmlTest.xml");
+         ProteinBenchmarkContainer.SerializeToXml(_collection, "XmlTest.xml");
 
          ProteinBenchmarkCollection collection2 = ProteinBenchmarkContainer.DeserializeFromXml("XmlTest.xml");
          ValidateTestCollection(collection2);
@@ -62,11 +62,11 @@ namespace HFM.Instances.Tests
       
       private static ProteinBenchmarkCollection LoadTestCollection()
       {
-         ProteinBenchmarkCollection collection = new ProteinBenchmarkCollection();
+         var collection = new ProteinBenchmarkCollection();
          
          for (int i = 0; i < 10; i++)
          {
-            InstanceProteinBenchmark benchmark = new InstanceProteinBenchmark("TestOwner", "TestPath", 100 + i);
+            var benchmark = new InstanceProteinBenchmark("TestOwner", "TestPath", 100 + i);
             for (int j = 1; j < 6; j++)
             {
                benchmark.SetFrameTime(TimeSpan.FromMinutes(j));
@@ -98,17 +98,17 @@ namespace HFM.Instances.Tests
       [Test]
       public void MergeCollectionsTest()
       {
-         int Count = collection.BenchmarkList.Count;
+         int count = _collection.BenchmarkList.Count;
          ProteinBenchmarkCollection collection2 = LoadTestCollection();
 
-         ProteinBenchmarkCollection mergedCollection = ProteinBenchmarkContainer.MergeCollections(collection, collection2);
-         Assert.AreEqual(Count * 2, mergedCollection.BenchmarkList.Count);
+         ProteinBenchmarkCollection mergedCollection = ProteinBenchmarkContainer.MergeCollections(_collection, collection2);
+         Assert.AreEqual(count * 2, mergedCollection.BenchmarkList.Count);
 
-         mergedCollection = ProteinBenchmarkContainer.MergeCollections(collection, null);
-         Assert.AreEqual(Count, mergedCollection.BenchmarkList.Count);
+         mergedCollection = ProteinBenchmarkContainer.MergeCollections(_collection, null);
+         Assert.AreEqual(count, mergedCollection.BenchmarkList.Count);
 
-         mergedCollection = ProteinBenchmarkContainer.MergeCollections(null, collection);
-         Assert.AreEqual(Count, mergedCollection.BenchmarkList.Count);
+         mergedCollection = ProteinBenchmarkContainer.MergeCollections(null, _collection);
+         Assert.AreEqual(count, mergedCollection.BenchmarkList.Count);
 
          mergedCollection = ProteinBenchmarkContainer.MergeCollections(null, null);
          Assert.IsNull(mergedCollection);

@@ -23,7 +23,6 @@ using NUnit.Framework;
 using Rhino.Mocks;
 
 using HFM.Framework;
-using HFM.Proteins;
 
 namespace HFM.Proteins.Tests
 {
@@ -33,22 +32,22 @@ namespace HFM.Proteins.Tests
       [Test]
       public void GetProteinTest()
       {
-         MockRepository mocks = new MockRepository();
-         IProjectSummaryDownloader Downloader = mocks.Stub<IProjectSummaryDownloader>();
-         IPreferenceSet Prefs = mocks.DynamicMock<IPreferenceSet>();
-         Expect.Call(Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath)).Return(String.Empty).Repeat.Any();
+         var mocks = new MockRepository();
+         var downloader = mocks.Stub<IProjectSummaryDownloader>();
+         var prefs = mocks.DynamicMock<IPreferenceSet>();
+         Expect.Call(prefs.GetPreference<string>(Preference.ApplicationDataFolderPath)).Return(String.Empty).Repeat.Any();
          
          mocks.ReplayAll();
          
-         ProteinCollection Proteins = new ProteinCollection(Downloader, Prefs);
-         Proteins.Add(2483, new Protein(2483));
+         var proteins = new ProteinCollection(prefs, downloader);
+         proteins.Add(2483, new Protein { ProjectNumber = 2483 });
       
-         IProtein p = Proteins.GetProtein(2483);
+         IProtein p = proteins.GetProtein(2483);
          Assert.AreEqual(false, p.IsUnknown);
-         p = Proteins.GetProtein(2482);
+         p = proteins.GetProtein(2482);
          Assert.AreEqual(true, p.IsUnknown);
          // Do it twice to exercise the Projects Not Found List
-         p = Proteins.GetProtein(2482);
+         p = proteins.GetProtein(2482);
          Assert.AreEqual(true, p.IsUnknown);
          
          mocks.VerifyAll();
