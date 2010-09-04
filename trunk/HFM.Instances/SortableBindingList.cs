@@ -1,12 +1,7 @@
 /*
  * HFM.NET - Sortable Binding List Class
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  * 
- * Implementation by Joe Stegman - Microsoft Corporation
- * http://social.msdn.microsoft.com/forums/en-US/winformsdatacontrols/thread/12eb59d3-e687-4e36-93ab-bf6741954d39/
- * 
- * With modifications by harlam357 to support sorting DisplayInstance data objects.
- *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
@@ -22,46 +17,37 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+/* 
+ * Implementation by Joe Stegman - Microsoft Corporation
+ * http://social.msdn.microsoft.com/forums/en-US/winformsdatacontrols/thread/12eb59d3-e687-4e36-93ab-bf6741954d39/
+ */ 
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
-
-using HFM.Framework;
-using HFM.Instrumentation;
 
 namespace HFM.Instances
 {
    [Serializable]
    public class SortableBindingList<T> : BindingList<T>, ITypedList
    {
-      #region Members
-      private const string statusColumnName = "Status";
-      private const string nameColumnName = "Name";
+      #region Fields
 
-      private bool _isSorted;
+      protected bool IsSorted { get; set; }
       private ListSortDirection _dir = ListSortDirection.Ascending;
-      private bool _sortColumns = false;
+      private bool _sortColumns;
 
       [NonSerialized]
-      private PropertyDescriptorCollection _shape = null;
+      private PropertyDescriptorCollection _shape;
 
       [NonSerialized]
-      private PropertyDescriptor _sort = null;
+      private PropertyDescriptor _sort;
 
-      [NonSerialized]
-      private bool _offlineClientsLast = true; 
-      #endregion
-
-      #region Properties
-      public bool OfflineClientsLast
-      {
-         get { return _offlineClientsLast; }
-         set { _offlineClientsLast = value; }
-      } 
       #endregion
       
       #region Constructor
+
       public SortableBindingList()
       {
          /* Default to non-sorted columns */
@@ -70,9 +56,21 @@ namespace HFM.Instances
          /* Get shape (only get public properties marked browsable true) */
          _shape = GetShape();
       }
+
+      public SortableBindingList(IList<T> list)
+         : base(list)
+      {
+         /* Default to non-sorted columns */
+         _sortColumns = false;
+
+         /* Get shape (only get public properties marked browsable true) */
+         _shape = GetShape();
+      }
+
       #endregion
 
       #region SortedBindingList<T> Column Sorting API
+
       public bool SortColumns
       {
          get { return _sortColumns; }
@@ -91,9 +89,11 @@ namespace HFM.Instances
             }
          }
       }
+
       #endregion
 
       #region BindingList<T> Public Sorting API
+
       public void Sort()
       {
          ApplySortCore(_sort, _dir);
@@ -120,6 +120,7 @@ namespace HFM.Instances
       #endregion
 
       #region BindingList<T> Sorting Overrides
+
       protected override bool SupportsSortingCore
       {
          get { return true; }
@@ -127,37 +128,38 @@ namespace HFM.Instances
 
       protected override void ApplySortCore(PropertyDescriptor property, ListSortDirection direction)
       {
-         List<T> items = Items as List<T>;
+         var items = Items as List<T>;
 
          if ((null != items) && (null != property))
          {
-            PropertyComparer<T> pc = new PropertyComparer<T>(property, FindPropertyDescriptor(statusColumnName), 
-                                                             FindPropertyDescriptor(nameColumnName), direction, _offlineClientsLast);
+            var pc = new PropertyComparer<T>(property, direction);
             items.Sort(pc);
 
             /* Set sorted */
-            _isSorted = true;
+            IsSorted = true;
          }
          else
          {
             /* Set sorted */
-            _isSorted = false;
+            IsSorted = false;
          }
       }
 
       protected override bool IsSortedCore
       {
-         get { return _isSorted; }
+         get { return IsSorted; }
       }
 
       protected override void RemoveSortCore()
       {
-         _isSorted = false;
+         IsSorted = false;
       }
+
       #endregion
 
       #region SortedBindingList<T> Private Sorting API
-      private PropertyDescriptor FindPropertyDescriptor(string property)
+
+      protected PropertyDescriptor FindPropertyDescriptor(string property)
       {
          PropertyDescriptor prop = null;
 
@@ -182,43 +184,11 @@ namespace HFM.Instances
 
          return pdc;
       }
+
       #endregion
 
-      #region BindingList<T> Find Overrides
-      protected override bool SupportsSearchingCore
-      {
-         get { return true; }
-      }
+      #region PropertyComparer<T>
 
-      protected override int FindCore(PropertyDescriptor prop, object key)
-      {
-         // This key seems to always be null under Mono
-         if (key == null) return -1;
-      
-         if (key is String)
-         {
-            List<T> list = Items as List<T>;
-         
-            if ((null != list))
-            {
-               return list.FindIndex(delegate(T item)
-                                     {
-                                        if (prop.GetValue(item).Equals(key))
-                                        {
-                                           return true;
-                                        }
-                                        return false;
-                                     }); 
-            }
-            
-            return -1;
-         }
-
-         throw new NotSupportedException("Key must be of Type System.String.");
-      }
-      #endregion
-
-      #region PropertyComparer<TKey>
       internal class PropertyComparer<TKey> : IComparer<TKey>
       {
          /*
@@ -227,91 +197,38 @@ namespace HFM.Instances
          */
 
          private readonly PropertyDescriptor _property;
-         private readonly PropertyDescriptor _statusProperty;
-         private readonly PropertyDescriptor _nameProperty;
          private readonly ListSortDirection _direction;
-         private readonly bool _offlineClientsLast;
 
-         public PropertyComparer(PropertyDescriptor property, PropertyDescriptor statusProperty, PropertyDescriptor nameProperty, 
-                                 ListSortDirection direction, bool offlineClientsLast)
+         public PropertyComparer(PropertyDescriptor property, ListSortDirection direction)
          {
             _property = property;
-            _statusProperty = statusProperty;
-            _nameProperty = nameProperty;
             _direction = direction;
-            _offlineClientsLast = offlineClientsLast;
          }
 
          public int Compare(TKey xVal, TKey yVal)
          {
-            try
+            /* Get property values */
+            object xValue = GetPropertyValue(xVal, _property);
+            object yValue = GetPropertyValue(yVal, _property);
+
+            /* Determine sort order */
+            if (_direction == ListSortDirection.Ascending)
             {
-               /* Get property values */
-               object xValue = GetPropertyValue(xVal, _property);
-               object yValue = GetPropertyValue(yVal, _property);
-               object xStatusValue = GetPropertyValue(xVal, _statusProperty);
-               object yStatusValue = GetPropertyValue(yVal, _statusProperty);
-               object xNameValue = GetPropertyValue(xVal, _nameProperty);
-               object yNameValue = GetPropertyValue(yVal, _nameProperty);
-
-               if (_offlineClientsLast)
-               {
-                  if (((ClientStatus)xStatusValue).Equals(ClientStatus.Offline) && 
-                      ((ClientStatus)yStatusValue).Equals(ClientStatus.Offline) == false)
-                  {
-                     return 1;
-                  }
-                  if (((ClientStatus)yStatusValue).Equals(ClientStatus.Offline) &&
-                      ((ClientStatus)xStatusValue).Equals(ClientStatus.Offline) == false)
-                  {
-                     return -1;
-                  }
-               }
-
-               if (xValue.Equals(yValue))
-               {
-                  int returnValue1 = CompareAscending(xNameValue, yNameValue);
-                  if (returnValue1 != 0)
-                  {
-                     return returnValue1;
-                  }
-
-                  return 0;
-               }
-
-               /* Determine sort order */
-               if (_direction == ListSortDirection.Ascending)
-               {
-                  int returnValue = CompareAscending(xValue, yValue);
-                  return returnValue;
-               }
-               else
-               {
-                  int returnValue = CompareDescending(xValue, yValue);
-                  return returnValue;
-               }
+               return CompareAscending(xValue, yValue);
             }
-            /*** This Try Catch block is to see if I can ever log or reproduce the error sent in by Atlas Folder.
-             *   See GMail message from July 30th, 2009.  I cannot reproduce this with live data, but I believe
-             *   it is a threading issue with the current DisplayInstance from which comparison values are being
-             *   pulled.  Maybe I make a true copy of the two items (DisplayInstance) that are being compared
-             *   before calling items.Sort(pc) in ApplySortCore() above. ***/
-            catch (NullReferenceException ex)
-            {
-               HfmTrace.WriteToHfmConsole(ex);
-               return 0; // return as if the values are equal
-            }
+            
+            return CompareDescending(xValue, yValue);
          }
 
-         public bool Equals(TKey xVal, TKey yVal)
-         {
-            return xVal.Equals(yVal);
-         }
+         //public bool Equals(TKey xVal, TKey yVal)
+         //{
+         //   return xVal.Equals(yVal);
+         //}
 
-         public int GetHashCode(TKey obj)
-         {
-            return obj.GetHashCode();
-         }
+         //public int GetHashCode(TKey obj)
+         //{
+         //   return obj.GetHashCode();
+         //}
 
          /* Compare two property values of any type */
          private static int CompareAscending(object xValue, object yValue)
@@ -351,9 +268,11 @@ namespace HFM.Instances
             return property.GetValue(value);
          }
       }
+
       #endregion
 
       #region ITypedList Implementation
+
       public PropertyDescriptorCollection GetItemProperties(PropertyDescriptor[] listAccessors)
       {
          PropertyDescriptorCollection pdc;
@@ -377,6 +296,7 @@ namespace HFM.Instances
          /* Not really used anywhere other than DT and the old DataGrid */
          return typeof(T).Name;
       }
+
       #endregion
    }
 }

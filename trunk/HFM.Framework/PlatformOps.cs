@@ -18,6 +18,8 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Reflection;
@@ -297,10 +299,10 @@ namespace HFM.Framework
              parsedUnitInfo != null && parsedUnitInfo.ProjectIsUnknown == false)
          {
             // Matches the Current Project and Raw Download Time
-            // DownloadTime check should be made on the Raw DownloadTime
-            // value from the internal UnitInfoData data source object
+            // DownloadTime check should be made on the RawDownloadTime
+            // value from IUnitInfoLogic
             if (ProjectsMatch(currentUnitInfo, parsedUnitInfo) &&
-                currentUnitInfo.UnitInfoData.DownloadTime.Equals(parsedUnitInfo.UnitInfoData.DownloadTime))
+                currentUnitInfo.RawDownloadTime.Equals(parsedUnitInfo.RawDownloadTime))
             {
                return true;
             }
@@ -317,6 +319,75 @@ namespace HFM.Framework
                  project1.ProjectRun == project2.ProjectRun &&
                  project1.ProjectClone == project2.ProjectClone &&
                  project1.ProjectGen == project2.ProjectGen);
+      }
+
+      /// <summary>
+      /// Determine the Client Type based on the FAH Core Name
+      /// </summary>
+      /// <param name="coreName">FAH Core Name (from psummary)</param>
+      public static ClientType GetClientTypeFromCore(string coreName)
+      {
+         switch (coreName.ToUpperInvariant())
+         {
+            case "GROMACS":
+            case "DGROMACS":
+            case "GBGROMACS":
+            case "AMBER":
+            //case "QMD":
+            case "GROMACS33":
+            case "GROST":
+            case "GROSIMT":
+            case "DGROMACSB":
+            case "DGROMACSC":
+            case "GRO-A4":
+            //case "TINKER":
+            /*** ProtoMol Only */
+            case "PROTOMOL":
+               /*******************/
+               return ClientType.Standard;
+            case "GRO-SMP":
+            case "GROCVS":
+            case "GRO-A3":
+               return ClientType.SMP;
+            case "GROGPU2":
+            case "GROGPU2-MT":
+            case "OPENMMGPU":
+            case "ATI-DEV":
+            case "NVIDIA-DEV":
+               return ClientType.GPU;
+            default:
+               return ClientType.Unknown;
+         }
+      }
+      
+      public static string[] GetQueryFieldColumnNames()
+      {
+         // Indexes Must Match QueryFieldName enum defined in Enumerations.cs
+         var list = new List<string>();
+         list.Add("ProjectID");
+         list.Add("Run");
+         list.Add("Clone");
+         list.Add("Gen");
+         list.Add("Instance Name");
+         list.Add("Instance Path");
+         list.Add("Username");
+         list.Add("Team");
+         list.Add("Core Version");
+         list.Add("Frames Completed");
+         list.Add("Frame Time");
+         list.Add("Unit Result");
+         list.Add("Download Date");
+         list.Add("Completion Date");
+         list.Add("Work Unit Name");
+         list.Add("KFactor");
+         list.Add("Core Name");
+         list.Add("Total Frames");
+         list.Add("Atoms");
+         list.Add("Client Type");
+         list.Add("PPD");
+         list.Add("Credit");
+
+         return list.ToArray();
       }
    }
 }

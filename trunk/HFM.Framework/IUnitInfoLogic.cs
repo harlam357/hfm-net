@@ -42,7 +42,7 @@ namespace HFM.Framework
       /// <summary>
       /// The Team number attached to this work unit
       /// </summary>
-      Int32 Team { get; }
+      int Team { get; }
 
       /// <summary>
       /// Client Type for this work unit
@@ -53,6 +53,11 @@ namespace HFM.Framework
       /// Date/time the unit was downloaded
       /// </summary>
       DateTime DownloadTime { get; }
+
+      /// <summary>
+      /// Raw date/time the unit downloaded (UTC and no ClientTimeOffset)
+      /// </summary>
+      DateTime RawDownloadTime { get; }
 
       /// <summary>
       /// Flag specifying if Download Time is Unknown
@@ -90,6 +95,11 @@ namespace HFM.Framework
       DateTime FinishedTime { get; }
 
       /// <summary>
+      /// Raw date/time the unit finished (UTC and no ClientTimeOffset)
+      /// </summary>
+      DateTime RawFinishedTime { get; }
+
+      /// <summary>
       /// Core Version Number
       /// </summary>
       string CoreVersion { get; }
@@ -109,7 +119,7 @@ namespace HFM.Framework
       /// <summary>
       /// Name of the unit
       /// </summary>
-      String ProteinName { get; }
+      string ProteinName { get; }
 
       /// <summary>
       /// Tag string as read from the UnitInfo.txt file
@@ -129,12 +139,12 @@ namespace HFM.Framework
       /// <summary>
       /// Frame progress of the unit
       /// </summary>
-      Int32 FramesComplete { get; }
+      int FramesComplete { get; }
 
       /// <summary>
       /// Current progress (percentage) of the unit
       /// </summary>
-      Int32 PercentComplete { get; }
+      int PercentComplete { get; }
 
       /// <summary>
       /// Time per frame (TPF) of the unit
@@ -144,12 +154,12 @@ namespace HFM.Framework
       /// <summary>
       /// Units per day (UPD) rating for this unit
       /// </summary>
-      Double UPD { get; }
+      double UPD { get; }
 
       /// <summary>
       /// Points per day (PPD) rating for this unit
       /// </summary>
-      Double PPD { get; }
+      double PPD { get; }
 
       /// <summary>
       /// Esimated time of arrival (ETA) for this unit
@@ -200,7 +210,7 @@ namespace HFM.Framework
       /// <summary>
       /// Number of Frames Observed on this Unit
       /// </summary>
-      Int32 FramesObserved { get; }
+      int FramesObserved { get; }
 
       /// <summary>
       /// Last Observed Frame on this Unit
@@ -215,12 +225,12 @@ namespace HFM.Framework
       /// <summary>
       /// Last Frame ID based on UnitFrame Data
       /// </summary>
-      Int32 LastUnitFrameID { get; }
+      int LastUnitFrameID { get; }
 
       /// <summary>
       /// Average frame time since unit download
       /// </summary>
-      Int32 RawTimePerUnitDownload { get; }
+      int RawTimePerUnitDownload { get; }
 
       /// <summary>
       /// Average frame time since unit download
@@ -235,7 +245,7 @@ namespace HFM.Framework
       /// <summary>
       /// Average frame time over all sections
       /// </summary>
-      Int32 RawTimePerAllSections { get; }
+      int RawTimePerAllSections { get; }
 
       /// <summary>
       /// Average frame time over all sections
@@ -250,7 +260,7 @@ namespace HFM.Framework
       /// <summary>
       /// Average frame time over the last three sections
       /// </summary>
-      Int32 RawTimePerThreeSections { get; }
+      int RawTimePerThreeSections { get; }
 
       /// <summary>
       /// Average frame time over the last three sections
@@ -265,7 +275,7 @@ namespace HFM.Framework
       /// <summary>
       /// Frame time of the last section
       /// </summary>
-      Int32 RawTimePerLastSection { get; }
+      int RawTimePerLastSection { get; }
 
       /// <summary>
       /// Frame time of the last section
@@ -280,6 +290,6 @@ namespace HFM.Framework
       /// <summary>
       /// Frame Time per section based on current PPD calculation setting (readonly)
       /// </summary>
-      Int32 RawTimePerSection { get; }
+      int RawTimePerSection { get; }
    }
 }

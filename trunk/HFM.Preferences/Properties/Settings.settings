@@ -247,5 +247,20 @@
     <Setting Name="ShowTeamStats" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="HistoryProductionView" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="ShowTopChecked" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ShowTopValue" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="HistorySortColumnName" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="HistorySortOrder" Type="System.Windows.Forms.SortOrder" Scope="User">
+      <Value Profile="(Default)">None</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -77,6 +77,10 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Linq.Dynamic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\System.Linq.Dynamic\System.Linq.Dynamic.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -175,6 +179,12 @@
     <Compile Include="Forms\frmBenchmarks.Designer.cs">
       <DependentUpon>frmBenchmarks.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frmHistory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmHistory.Designer.cs">
+      <DependentUpon>frmHistory.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -217,6 +227,14 @@
     <Compile Include="Forms\frmProjects.Designer.cs">
       <DependentUpon>frmProjects.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frmQuery.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmQuery.Designer.cs">
+      <DependentUpon>frmQuery.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\HistoryPresenter.cs" />
+    <Compile Include="Models\HistoryPresenterModel.cs" />
     <Compile Include="Models\OptionsModel.cs" />
     <Compile Include="Models\ReportingModel.cs" />
     <Compile Include="Models\ScheduledTasksModel.cs" />
@@ -250,6 +268,9 @@
       <SubType>Designer</SubType>
       <DependentUpon>frmBenchmarks.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmHistory.resx">
+      <DependentUpon>frmHistory.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmMain.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmMain.cs</DependentUpon>
@@ -260,6 +281,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmProjects.resx">
       <DependentUpon>frmProjects.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmQuery.resx">
+      <DependentUpon>frmQuery.cs</DependentUpon>
     </EmbeddedResource>
     <Content Include="..\Castle Windsor 2.0\Windsor License.txt">
       <Link>Windsor License.txt</Link>

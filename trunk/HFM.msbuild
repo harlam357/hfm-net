@@ -4,8 +4,8 @@
 
    <PropertyGroup>
       <Major>0</Major>
-      <Minor>5</Minor>
-      <Build>2</Build>
+      <Minor>6</Minor>
+      <Build>0</Build>
       <Revision>0</Revision>
    </PropertyGroup>
 
@@ -48,6 +48,7 @@
    </Target>
 
    <Target Name="NUnit">
+      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Forms.Tests\bin\Release\HFM.Forms.Tests.dll /xml=HFM.Forms.Tests.Results.xml //a HFM //ea $(NCoverExcludeList) //x HFM.Forms.Tests.Coverage.xml" />
       <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Framework.Tests\bin\Release\HFM.Framework.Tests.dll /xml=HFM.Framework.Tests.Results.xml //a HFM.Framework //ea $(NCoverExcludeList) //x HFM.Framework.Tests.Coverage.xml" />
       <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Helpers.Tests\bin\Release\HFM.Helpers.Tests.dll /xml=HFM.Helpers.Tests.Results.xml //a HFM.Helpers //ea $(NCoverExcludeList) //x HFM.Helpers.Tests.Coverage.xml" />
       <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Instances.Tests\bin\Release\HFM.Instances.Tests.dll /xml=HFM.Instances.Tests.Results.xml //a HFM.Instances //ea $(NCoverExcludeList) //x HFM.Instances.Tests.Coverage.xml" />

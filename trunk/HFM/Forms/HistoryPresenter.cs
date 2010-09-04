@@ -58,6 +58,7 @@ namespace HFM.Forms
       {
          _database.DatabaseFilePath = Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), UnitInfoDatabase.SqLiteFilename);
          _view.AttachPresenter(this);
+         _model.LoadPreferences();
          _view.DataBindModel(_model);
          _view.QueryComboRefreshList(_queryContainer.QueryList);
       }

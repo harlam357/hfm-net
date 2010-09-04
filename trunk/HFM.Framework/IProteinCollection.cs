@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 
 namespace HFM.Framework
 {
@@ -31,10 +32,12 @@ namespace HFM.Framework
       /// <summary>
       /// Project Summary Downloader Interface
       /// </summary>
-      IProjectSummaryDownloader Downloader
-      {
-         get;
-      }
+      IProjectSummaryDownloader Downloader { get; }
+
+      /// <summary>
+      /// Collection of Proteins
+      /// </summary>
+      ICollection<IProtein> Proteins { get; }
 
       /// <summary>
       /// Execute Primary Collection Read Sequence

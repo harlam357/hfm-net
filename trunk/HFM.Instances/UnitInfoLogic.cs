@@ -134,7 +134,7 @@ namespace HFM.Instances
          _unitInfo.UnitRetrievalTime = _clientInstance.LastRetrievalTime;
 
          CurrentProtein = protein;
-         _unitInfo.TypeOfClient = GetClientTypeFromProtein(CurrentProtein);
+         _unitInfo.TypeOfClient = PlatformOps.GetClientTypeFromCore(CurrentProtein.Core);
       }
 
       #endregion
@@ -167,6 +167,14 @@ namespace HFM.Instances
             
             return _unitInfo.DownloadTime; 
          }
+      }
+
+      /// <summary>
+      /// Raw date/time the unit downloaded (UTC and no ClientTimeOffset)
+      /// </summary>
+      public DateTime RawDownloadTime
+      {
+         get { return _unitInfo.DownloadTime; }
       }
 
       /// <summary>
@@ -287,6 +295,14 @@ namespace HFM.Instances
 
             return _unitInfo.FinishedTime; 
          }
+      }
+
+      /// <summary>
+      /// Raw date/time the unit finished (UTC and no ClientTimeOffset)
+      /// </summary>
+      public DateTime RawFinishedTime
+      {
+         get { return _unitInfo.FinishedTime; }
       }
 
       /// <summary>
@@ -923,6 +939,7 @@ namespace HFM.Instances
       #endregion
 
       #region Calculate Production Variations
+      
       /// <summary>
       /// Get the average duration over the specified number of most recent frames
       /// </summary>
@@ -978,50 +995,7 @@ namespace HFM.Instances
 
          return averageSeconds;
       }
-      #endregion
-
-      #region Helpers
-  
-      /// <summary>
-      /// Determine the client type based on the current protein core
-      /// </summary>
-      /// <param name="currentProtein">Current Instance Protein</param>
-      /// <returns>Client Type</returns>
-      private static ClientType GetClientTypeFromProtein(IProtein currentProtein)
-      {
-         switch (currentProtein.Core.ToUpperInvariant())
-         {
-            case "GROMACS":
-            case "DGROMACS":
-            case "GBGROMACS":
-            case "AMBER":
-            //case "QMD":
-            case "GROMACS33":
-            case "GROST":
-            case "GROSIMT":
-            case "DGROMACSB":
-            case "DGROMACSC":
-            case "GRO-A4":
-            //case "TINKER":
-            /*** ProtoMol Only */
-            case "PROTOMOL":
-            /*******************/
-               return ClientType.Standard;
-            case "GRO-SMP":
-            case "GROCVS":
-            case "GRO-A3":
-               return ClientType.SMP;
-            case "GROGPU2":
-            case "GROGPU2-MT":
-            case "OPENMMGPU":
-            case "ATI-DEV":
-            case "NVIDIA-DEV":
-               return ClientType.GPU;
-            default:
-               return ClientType.Unknown;
-         }
-      }
-
+      
       #endregion
    }
 }

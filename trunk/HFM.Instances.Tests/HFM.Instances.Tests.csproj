@@ -71,6 +71,7 @@
     <Compile Include="StatusTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitInfoContainerTests.cs" />
+    <Compile Include="UnitInfoDatabaseTests.cs" />
     <Compile Include="UnitInfoLogicTests.cs" />
     <Compile Include="UnitInfoTests.cs" />
   </ItemGroup>

@@ -40,6 +40,7 @@ using HFM.Framework;
 using HFM.Helpers;
 using HFM.Instances;
 using HFM.Instrumentation;
+using HFM.Models;
 
 namespace HFM.Forms
 {
@@ -1181,6 +1182,15 @@ namespace HFM.Forms
          }
          
          frm.Show();
+      }
+
+      private void mnuToolsHistory_Click(object sender, EventArgs e)
+      {
+         var presenter = new HistoryPresenter(_prefs, new UnitInfoDatabase(_proteinCollection), new QueryParameterContainer(_prefs), 
+                                              new frmHistory(_prefs), new frmQuery(), new OpenFileDialogView(), new SaveFileDialogView(), 
+                                              new MessageBoxView(), new HistoryPresenterModel(_prefs));
+         presenter.Initialize();
+         presenter.Show();
       }
       #endregion
 

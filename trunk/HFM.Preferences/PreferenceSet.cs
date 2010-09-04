@@ -287,6 +287,12 @@ namespace HFM.Preferences
          _prefs.Add(Preference.ProxyUser, new Metadata<string>());
          _prefs.Add(Preference.ProxyPass, new Metadata<string>());
 
+         _prefs.Add(Preference.HistoryProductionType, new Metadata<HistoryProductionView>());
+         _prefs.Add(Preference.ShowTopChecked, new Metadata<bool>());
+         _prefs.Add(Preference.ShowTopValue, new Metadata<int>());
+         _prefs.Add(Preference.HistorySortColumnName, new Metadata<string>());
+         _prefs.Add(Preference.HistorySortOrder, new Metadata<SortOrder>());
+
          _prefs.Add(Preference.CacheFolder, new Metadata<string>());
          _prefs.Add(Preference.ApplicationDataFolderPath, new Metadata<string>());
 
@@ -397,6 +403,12 @@ namespace HFM.Preferences
          SetPreference(Preference.UseProxyAuth, Settings.Default.UseProxyAuth);
          SetPreference(Preference.ProxyUser, Settings.Default.ProxyUser);
          SetPreference(Preference.ProxyPass, DecryptProxyPass(Settings.Default.ProxyPass, symmetricProvider, _iv, _symmetricKey));
+
+         SetPreference(Preference.HistoryProductionType, (HistoryProductionView)Settings.Default.HistoryProductionView);
+         SetPreference(Preference.ShowTopChecked, Settings.Default.ShowTopChecked);
+         SetPreference(Preference.ShowTopValue, Settings.Default.ShowTopValue);
+         SetPreference(Preference.HistorySortColumnName, Settings.Default.HistorySortColumnName);
+         SetPreference(Preference.HistorySortOrder, Settings.Default.HistorySortOrder);
 
          SetPreference(Preference.CacheFolder, Settings.Default.CacheFolder);
          SetPreference(Preference.ApplicationDataFolderPath, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Constants.ExeName));
@@ -789,6 +801,12 @@ namespace HFM.Preferences
             Settings.Default.UseProxyAuth = GetPreference<bool>(Preference.UseProxyAuth);
             Settings.Default.ProxyUser = GetPreference<string>(Preference.ProxyUser);
             Settings.Default.ProxyPass = EncryptProxyPass(GetPreference<string>(Preference.ProxyPass), symmetricProvider, _iv, _symmetricKey);
+
+            Settings.Default.HistoryProductionView = (int)GetPreference<HistoryProductionView>(Preference.HistoryProductionType);
+            Settings.Default.ShowTopChecked = GetPreference<bool>(Preference.ShowTopChecked);
+            Settings.Default.ShowTopValue = GetPreference<int>(Preference.ShowTopValue);
+            Settings.Default.HistorySortColumnName = GetPreference<string>(Preference.HistorySortColumnName);
+            Settings.Default.HistorySortOrder = GetPreference<SortOrder>(Preference.HistorySortOrder);
             
             if (raiseFormShowStyleChanged) OnFormShowStyleSettingsChanged(EventArgs.Empty);
             if (raiseTimerSettingsChanged) OnTimerSettingsChanged(EventArgs.Empty);

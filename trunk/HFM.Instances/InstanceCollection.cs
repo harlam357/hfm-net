@@ -110,7 +110,7 @@ namespace HFM.Instances
       /// <summary>
       /// Display instance collection (this is bound to the DataGridView)
       /// </summary>
-      private readonly SortableBindingList<IDisplayInstance> _displayCollection;
+      private readonly DisplayInstanceSortableBindingList _displayCollection;
 
       /// <summary>
       /// Tells the SortableBindingList whether to sort Offline Clients Last
@@ -266,7 +266,7 @@ namespace HFM.Instances
          _instanceFactory = instanceFactory;
 
          _instanceCollection = new Dictionary<string, ClientInstance>();
-         _displayCollection = new SortableBindingList<IDisplayInstance>();
+         _displayCollection = new DisplayInstanceSortableBindingList();
 
          ConfigFilename = String.Empty;
       }

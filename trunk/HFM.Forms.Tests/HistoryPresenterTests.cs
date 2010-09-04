@@ -44,7 +44,8 @@ namespace HFM.Forms.Tests
          _openFileView = _mocks.Stub<IOpenFileDialogView>();
          _saveFileView = _mocks.Stub<ISaveFileDialogView>();
          _messageBoxView = _mocks.DynamicMock<IMessageBoxView>();
-         _model = _mocks.Stub<IHistoryPresenterModel>();
+         // let's use the real thing
+         _model = new HistoryPresenterModel(_prefs);
       }
       
       private HistoryPresenter NewPresenter()
@@ -55,8 +56,13 @@ namespace HFM.Forms.Tests
       [Test]
       public void InitializeTest()
       {
+         // use a mock for this test
+         _model = _mocks.DynamicMock<IHistoryPresenterModel>();
+      
          Expect.Call(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath)).Return(String.Empty).Repeat.Any();
          Expect.Call(() => _view.AttachPresenter(null)).IgnoreArguments();
+         Expect.Call(() => _model.LoadPreferences());
+         Expect.Call(() => _view.DataBindModel(_model));
          Expect.Call(() => _view.QueryComboRefreshList(null)).IgnoreArguments();
          _mocks.ReplayAll();
          _presenter = NewPresenter();
@@ -81,6 +87,29 @@ namespace HFM.Forms.Tests
          _mocks.ReplayAll();
          _presenter = NewPresenter();
          _presenter.Close();
+         _mocks.VerifyAll();
+      }
+
+      [Test]
+      public void OnClosingTest()
+      {
+         Expect.Call(() => _model.SavePreferences());
+         _mocks.ReplayAll();
+         _presenter = NewPresenter();
+         _presenter.OnClosing();
+         _mocks.VerifyAll();
+      }
+      
+      [Test]
+      public void RefreshClickedTest()
+      {
+         SetupResult.For(_view.QueryComboSelectedIndex).Return(0);
+         var entries = new List<HistoryEntry>();
+         Expect.Call(_database.QueryUnitData(null, HistoryProductionView.BonusDownloadTime)).IgnoreArguments().Return(entries);
+         Expect.Call(() => _view.DataGridSetDataSource(0, null)).IgnoreArguments();
+         _mocks.ReplayAll();
+         _presenter = NewPresenter();
+         _presenter.RefreshClicked();
          _mocks.VerifyAll();
       }
 
@@ -162,6 +191,29 @@ namespace HFM.Forms.Tests
          _presenter.ReplaceQuery(1, parameters2);
          Assert.AreEqual(2, _presenter.NumberOfQueries);
          _mocks.VerifyAll();
+      }
+
+      [Test]
+      [ExpectedException(typeof(ArgumentException))]
+      public void ReplaceQueryNameExistsTest()
+      {
+         var parameters = new QueryParameters { Name = "Test" };
+         parameters.Fields.Add(new QueryField { Value = 6606 });
+         var parameters2 = new QueryParameters { Name = "Test2" };
+         parameters2.Fields.Add(new QueryField { Value = 6606 });
+         var parameters3 = new QueryParameters { Name = "Test2" };
+         parameters3.Fields.Add(new QueryField { Value = 6606 });
+
+         Expect.Call(() => _queryContainer.Write()).Repeat.Twice();
+         Expect.Call(() => _view.QueryComboRefreshList(null)).IgnoreArguments().Repeat.Twice();
+         _mocks.ReplayAll();
+         _presenter = NewPresenter();
+         Assert.AreEqual(1, _presenter.NumberOfQueries);
+         _presenter.AddQuery(parameters);
+         Assert.AreEqual(2, _presenter.NumberOfQueries);
+         _presenter.AddQuery(parameters2);
+         Assert.AreEqual(3, _presenter.NumberOfQueries);
+         _presenter.ReplaceQuery(1, parameters3);
       }
 
       [Test]
@@ -322,12 +374,38 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
+      public void SelectQueryShowTopCheckedTest()
+      {
+         var entries = new List<HistoryEntry> { new HistoryEntry(), new HistoryEntry() };
+         Expect.Call(_database.QueryUnitData(null, HistoryProductionView.BonusDownloadTime)).IgnoreArguments().Return(entries);
+         Expect.Call(() => _view.DataGridSetDataSource(0, null)).IgnoreArguments();
+         _model.ShowTopChecked = true;
+         _model.ShowTopValue = 1;
+         _mocks.ReplayAll();
+         _presenter = NewPresenter();
+         _presenter.SelectQuery(0);
+         _mocks.VerifyAll();
+      }
+
+      [Test]
       [ExpectedException(typeof(ArgumentOutOfRangeException))]
       public void QueryComboIndexChangedOutOfRangeTest()
       {
          _mocks.ReplayAll();
          _presenter = NewPresenter();
          _presenter.SelectQuery(1);
+      }
+      
+      [Test]
+      public void SaveSortSettingsTest()
+      {
+         _mocks.ReplayAll();
+         _presenter = NewPresenter();
+         Assert.AreEqual(null, _model.SortColumnName);
+         Assert.AreEqual(SortOrder.None, _model.SortOrder);
+         _presenter.SaveSortSettings("Test", SortOrder.Ascending);
+         Assert.AreEqual("Test", _model.SortColumnName);
+         Assert.AreEqual(SortOrder.Ascending, _model.SortOrder);
       }
       
       [Test]

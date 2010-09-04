@@ -135,7 +135,5 @@ namespace HFM.Framework
       /// Write Xml File
       /// </summary>
       void WriteXml(string filePath);
-
-      void WriteCompletedUnitInfo(IUnitInfoLogic unit);
    }
 }

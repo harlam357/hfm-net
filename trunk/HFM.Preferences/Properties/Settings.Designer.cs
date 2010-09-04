@@ -962,5 +962,65 @@ namespace HFM.Preferences.Properties {
                 this["ShowTeamStats"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int HistoryProductionView {
+            get {
+                return ((int)(this["HistoryProductionView"]));
+            }
+            set {
+                this["HistoryProductionView"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowTopChecked {
+            get {
+                return ((bool)(this["ShowTopChecked"]));
+            }
+            set {
+                this["ShowTopChecked"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int ShowTopValue {
+            get {
+                return ((int)(this["ShowTopValue"]));
+            }
+            set {
+                this["ShowTopValue"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string HistorySortColumnName {
+            get {
+                return ((string)(this["HistorySortColumnName"]));
+            }
+            set {
+                this["HistorySortColumnName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("None")]
+        public global::System.Windows.Forms.SortOrder HistorySortOrder {
+            get {
+                return ((global::System.Windows.Forms.SortOrder)(this["HistorySortOrder"]));
+            }
+            set {
+                this["HistorySortOrder"] = value;
+            }
+        }
     }
 }
