@@ -34,7 +34,8 @@ namespace HFM.Proteins
    /// </summary>
    public sealed class ProteinCollection : SortedDictionary<Int32, IProtein>, IProteinCollection
    {
-      #region Members
+      #region Fields
+      
       private readonly string _projectInfoLocation;
       /// <summary>
       /// ProjectInfo.tab File Location
@@ -63,9 +64,22 @@ namespace HFM.Proteins
       /// </summary>
       /// <remarks>See GetProtein() and BeginDownloadFromStanford().</remarks>
       private readonly Dictionary<Int32, DateTime> _projectsNotFound = new Dictionary<Int32, DateTime>(); 
+      
       #endregion
       
-      public ProteinCollection(IProjectSummaryDownloader downloader, IPreferenceSet prefs)
+      #region Properties
+
+      /// <summary>
+      /// Collection of Proteins
+      /// </summary>
+      public ICollection<IProtein> Proteins
+      {
+         get { return new List<IProtein>(Values).AsReadOnly(); }
+      }
+      
+      #endregion
+      
+      public ProteinCollection(IPreferenceSet prefs, IProjectSummaryDownloader downloader)
       {
          _prefs = prefs;
          _projectInfoLocation = Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), Constants.ProjectInfoFileName);
@@ -125,14 +139,10 @@ namespace HFM.Proteins
                   p.Description = lineData[9];
                   p.Contact = lineData[10];
                   p.KFactor = Double.Parse(lineData[11], CultureInfo.InvariantCulture);
-
-                  if (ContainsKey(p.ProjectNumber))
+                  
+                  if (p.Valid)
                   {
                      this[p.ProjectNumber] = p;
-                  }
-                  else
-                  {
-                     Add(p.ProjectNumber, p);
                   }
                }
                catch (Exception ex)
@@ -195,7 +205,7 @@ namespace HFM.Proteins
          // If Project is Found, return it
          if (ContainsKey(projectId)) return this[projectId];
          
-         HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
                                     String.Format("Project ID '{0}' not found in Protein Collection.", projectId), true);
          
          // If Project has already been looked for previously
@@ -233,7 +243,7 @@ namespace HFM.Proteins
                _projectsNotFound.Add(projectId, DateTime.Now);
             }
 
-            HfmTrace.WriteToHfmConsole(TraceLevel.Error,
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
                                        String.Format("Project ID '{0}' not found on Stanford Web Project Summary.", projectId), true);
          }
 

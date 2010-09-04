@@ -190,16 +190,9 @@ namespace HFM.Proteins
             for (int i = 0; i < psummaryLines.Length; i++)
             {
                Protein p = ParseProteinRow(psummaryLines[i]);
-               if (p != null)
+               if (p != null && p.Valid) 
                {
-                  if (Dictionary.ContainsKey(p.ProjectNumber))
-                  {
-                     Dictionary[p.ProjectNumber] = p;
-                  }
-                  else
-                  {
-                     Dictionary.Add(p.ProjectNumber, p);
-                  }
+                  Dictionary[p.ProjectNumber] = p;
                }
 
                var progress = (int)((i / (double)psummaryLines.Length) * 100);
