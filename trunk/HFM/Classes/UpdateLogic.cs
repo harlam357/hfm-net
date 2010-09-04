@@ -56,7 +56,7 @@ namespace HFM.Classes
    
       private static ApplicationUpdate CheckForUpdate()
       {
-         UpdateChecker updateChecker = new UpdateChecker();
+         var updateChecker = new UpdateChecker();
          return updateChecker.CheckForUpdate(Constants.ApplicationName, NetworkOps.GetProxy());
       }
 
@@ -64,7 +64,7 @@ namespace HFM.Classes
       {
          try
          {
-            Func<ApplicationUpdate> func = (Func<ApplicationUpdate>)result.AsyncState;
+            var func = (Func<ApplicationUpdate>)result.AsyncState;
             ApplicationUpdate update = func.EndInvoke(result);
             if (update != null) 
             {
@@ -74,8 +74,8 @@ namespace HFM.Classes
                }
                else if (_userInvoked)
                {
-                  _messageBoxView.ShowInformation(_owner, String.Format(CultureInfo.CurrentCulture, 
-                     "{0} is already up-to-date.", Constants.ApplicationName), _owner.Text);
+                  _owner.Invoke(new MethodInvoker(() => _messageBoxView.ShowInformation(_owner, String.Format(CultureInfo.CurrentCulture,
+                                                           "{0} is already up-to-date.", Constants.ApplicationName), _owner.Text)));
                }
             }
          }
@@ -86,7 +86,7 @@ namespace HFM.Classes
             {
                string message = String.Format(CultureInfo.CurrentCulture, "{0} encountered the following error while checking for an update:{1}{1}{2}.",
                                               Constants.ApplicationName, Environment.NewLine, ex.Message);
-               _messageBoxView.ShowError(_owner, message, _owner.Text);
+               _owner.Invoke(new MethodInvoker(() => _messageBoxView.ShowError(_owner, message, _owner.Text)));
             }
          }
          finally
