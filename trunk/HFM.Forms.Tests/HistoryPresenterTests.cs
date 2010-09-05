@@ -38,7 +38,8 @@ namespace HFM.Forms.Tests
          _prefs = _mocks.DynamicMock<IPreferenceSet>();
          _database = _mocks.DynamicMock<IUnitInfoDatabase>();
          _queryContainer = _mocks.DynamicMock<IQueryParameterContainer>();
-         SetupResult.For(_queryContainer.QueryList).Return(QueryParameterContainer.NewQueryList());
+         var list = new List<QueryParameters> { new QueryParameters() };
+         SetupResult.For(_queryContainer.QueryList).Return(list);
          _view = _mocks.DynamicMock<IHistoryView>();
          _queryView = _mocks.DynamicMock<IQueryView>();
          _openFileView = _mocks.Stub<IOpenFileDialogView>();

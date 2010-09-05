@@ -966,7 +966,12 @@ namespace HFM.Instances
    public class QueryParameterList
    {
       [ProtoMember(1)]
-      public List<QueryParameters> QueryList { get; set; }
+      private readonly List<QueryParameters> _queryList = new List<QueryParameters>();
+
+      public List<QueryParameters> QueryList 
+      {
+         get { return _queryList; }
+      } 
    }
 
    public interface IQueryParameterContainer
@@ -1006,14 +1011,7 @@ namespace HFM.Instances
       private static QueryParameterList New()
       {
          var list = new QueryParameterList();
-         list.QueryList = NewQueryList();
-         return list;
-      }
-      
-      public static List<QueryParameters> NewQueryList()
-      {
-         var list = new List<QueryParameters>();
-         list.Add(new QueryParameters());
+         list.QueryList.Add(new QueryParameters());
          return list;
       }
    
@@ -1098,7 +1096,6 @@ namespace HFM.Instances
       public QueryParameters()
       {
          Name = SelectAll;
-         Fields = new List<QueryField>();
       }
       
       public QueryParameters DeepCopy()
@@ -1114,7 +1111,12 @@ namespace HFM.Instances
       [ProtoMember(1)]
       public string Name { get; set; }
       [ProtoMember(2)]
-      public List<QueryField> Fields { get; set; }
+      private readonly List<QueryField> _fields = new List<QueryField>();
+      
+      public List<QueryField> Fields
+      {
+         get { return _fields; }
+      }
    }
    
    [ProtoContract]
