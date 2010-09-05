@@ -19,6 +19,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
@@ -45,6 +46,8 @@ namespace HFM
       [STAThread]
       static void Main(string[] args)
       {
+         AppDomain.CurrentDomain.AssemblyResolve += CustomResolve;
+
          Args = args;
          Application.EnableVisualStyles();
          Application.SetCompatibleTextRenderingDefault(false);
@@ -131,6 +134,25 @@ namespace HFM
          
          Application.Run(frm);
          SingleInstanceHelper.Stop();
+      }
+
+      private static System.Reflection.Assembly CustomResolve(object sender, ResolveEventArgs args)
+      {
+         const string sqliteDll = "System.Data.SQLite";
+         if (args.Name.StartsWith(sqliteDll))
+         {
+            string platform = PlatformOps.IsRunningOnMono() ? "Mono" : Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE");
+            if (platform != null)
+            {
+               string filePath = Path.GetFullPath(Path.Combine(Path.Combine("SQLite", platform), String.Concat(sqliteDll, ".dll")));
+               HfmTrace.WriteToHfmConsole(String.Format(CultureInfo.CurrentCulture, "SQLite DLL Path: {0}", filePath));
+               if (File.Exists(filePath))
+               {
+                  return System.Reflection.Assembly.LoadFile(filePath);
+               }
+            }
+         }
+         return null;
       }
 
       /// <summary>

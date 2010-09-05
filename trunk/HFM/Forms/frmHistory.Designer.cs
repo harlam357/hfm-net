@@ -33,7 +33,7 @@
          System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmHistory));
          this.tableLayoutGridView = new System.Windows.Forms.TableLayoutPanel();
-         this.dataGridView1 = new System.Windows.Forms.DataGridView();
+         this.dataGridView1 = new HFM.Classes.HistoryGridViewWrapper();
          this.panel1 = new System.Windows.Forms.Panel();
          this.grpResults = new HFM.Classes.GroupBoxWrapper();
          this.rdoPanelProduction = new harlam357.Windows.Forms.RadioPanel();
@@ -424,7 +424,7 @@
       #endregion
 
       private System.Windows.Forms.TableLayoutPanel tableLayoutGridView;
-      private System.Windows.Forms.DataGridView dataGridView1;
+      private HFM.Classes.HistoryGridViewWrapper dataGridView1;
       private System.Windows.Forms.Panel panel1;
       private HFM.Classes.ComboBoxWrapper cboSortView;
       private HFM.Classes.ButtonWrapper btnDelete;

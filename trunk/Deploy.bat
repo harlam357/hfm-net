@@ -29,6 +29,14 @@ copy /Y Castle.Windsor.dll %1
 copy /Y protobuf-net.dll %1
 copy /Y System.Linq.Dynamic.dll %1
 
+if not exist %1\SQLite md %1\SQLite
+if not exist %1\SQLite\x86 md %1\SQLite\x86
+copy /Y ..\..\..\SQLite.NET\bin\System.Data.SQLite.dll %1\SQLite\x86
+if not exist %1\SQLite\AMD64 md %1\SQLite\AMD64
+copy /Y ..\..\..\SQLite.NET\bin\x64\System.Data.SQLite.dll %1\SQLite\AMD64
+if not exist %1\SQLite\Mono md %1\SQLite\Mono
+copy /Y ..\..\..\SQLite.NET\bin\ManagedOnly\System.Data.SQLite.dll %1\SQLite\Mono
+
 echo Copying Support Files and Folders...
 copy /Y GPLv2.TXT %1
 copy /Y "HTMLparser License.txt" %1

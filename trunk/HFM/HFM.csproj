@@ -130,6 +130,12 @@
     <Compile Include="Classes\GroupBoxWrapper.Designer.cs">
       <DependentUpon>GroupBoxWrapper.cs</DependentUpon>
     </Compile>
+    <Compile Include="Classes\HistoryGridViewWrapper.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Classes\HistoryGridViewWrapper.Designer.cs">
+      <DependentUpon>HistoryGridViewWrapper.cs</DependentUpon>
+    </Compile>
     <Compile Include="Classes\UpdateLogic.cs" />
     <Compile Include="Classes\LabelWrapper.cs">
       <SubType>Component</SubType>

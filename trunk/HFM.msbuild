@@ -59,7 +59,7 @@
    </Target>
 
    <Target Name="FxCop">
-      <Exec Command="$(FxCopPath) /project:HFM.FxCop /out:FxCopReport.xml" />
+      <Exec Command="$(FxCopPath) /project:HFM.FxCop /directory:.\SQLite.NET\bin /out:FxCopReport.xml" />
    </Target>
 
    <Target Name="ZipRelease">
