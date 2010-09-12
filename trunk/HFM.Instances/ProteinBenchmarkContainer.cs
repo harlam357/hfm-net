@@ -24,7 +24,6 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
 using HFM.Framework;
@@ -122,7 +121,7 @@ namespace HFM.Instances
                if (parsedUnits[index] != null)
                {
                   // Update benchmarks
-                  UpdateBenchmarkData(parsedUnits[index], previousFrameID, parsedUnits[index].LastUnitFrameID);
+                  UpdateBenchmarkData(parsedUnits[index].UnitInfoData, previousFrameID, parsedUnits[index].LastUnitFrameID);
 
                   // Write Completed Unit Info only for units that are NOT current (i.e. have moved into history)
                   // For some WUs (typically bigadv) all frames could be complete but the FinishedTime read from
@@ -162,12 +161,12 @@ namespace HFM.Instances
       /// <param name="unit">The UnitInfo containing the UnitFrame data</param>
       /// <param name="startingFrame">Starting Frame Index</param>
       /// <param name="endingFrame">Ending Frame Index</param>
-      private void UpdateBenchmarkData(IUnitInfoLogic unit, int startingFrame, int endingFrame)
+      private void UpdateBenchmarkData(IUnitInfo unit, int startingFrame, int endingFrame)
       {
          if (unit == null) throw new ArgumentNullException("unit", "Argument 'unit' cannot be null.");
 
          // project is not known, don't add to benchmark data
-         if (unit.UnitInfoData.ProjectIsUnknown) return;
+         if (unit.ProjectIsUnknown) return;
 
          // no progress has been made so stub out
          if (startingFrame > endingFrame) return;
@@ -175,8 +174,7 @@ namespace HFM.Instances
          IInstanceProteinBenchmark findBenchmark = FindBenchmark(unit);
          if (findBenchmark == null)
          {
-            InstanceProteinBenchmark newBenchmark =
-               new InstanceProteinBenchmark(unit.UnitInfoData.OwningInstanceName, unit.UnitInfoData.OwningInstancePath, unit.UnitInfoData.ProjectID);
+            var newBenchmark = new InstanceProteinBenchmark(unit.OwningInstanceName, unit.OwningInstancePath, unit.ProjectID);
 
             if (UpdateBenchmarkFrames(unit, startingFrame, endingFrame, newBenchmark))
             {
@@ -196,13 +194,13 @@ namespace HFM.Instances
       /// <param name="startingFrame">Starting Frame Index</param>
       /// <param name="endingFrame">Ending Frame Index</param>
       /// <param name="benchmark">The InstanceProteinBenchmark to Update</param>
-      private static bool UpdateBenchmarkFrames(IUnitInfoLogic unit, int startingFrame, int endingFrame, IInstanceProteinBenchmark benchmark)
+      private static bool UpdateBenchmarkFrames(IUnitInfo unit, int startingFrame, int endingFrame, IInstanceProteinBenchmark benchmark)
       {
          bool result = false;
 
          for (int i = startingFrame; i <= endingFrame; i++)
          {
-            IUnitFrame frame = unit.UnitInfoData.GetUnitFrame(i);
+            IUnitFrame frame = unit.GetUnitFrame(i);
             if (frame != null)
             {
                if (benchmark.SetFrameTime(frame.FrameDuration))
@@ -212,9 +210,8 @@ namespace HFM.Instances
             }
             else
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
-                                          String.Format(CultureInfo.CurrentCulture, "{0} ({1}) FrameID '{2}' Not Found ({3})",
-                                                        HfmTrace.FunctionName, unit.UnitInfoData.OwningInstanceName, i, unit.ProjectRunCloneGen));
+               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format(CultureInfo.CurrentCulture, 
+                  "({0}) FrameID '{1}' not found for Project ({2})", unit.OwningInstanceName, i, unit.ProjectID));
             }
          }
 
@@ -227,7 +224,7 @@ namespace HFM.Instances
       /// <param name="unit">The UnitInfo containing the Owner and Project data</param>
       public TimeSpan GetBenchmarkAverageFrameTime(IUnitInfoLogic unit)
       {
-         IInstanceProteinBenchmark findBenchmark = FindBenchmark(unit);
+         IInstanceProteinBenchmark findBenchmark = FindBenchmark(unit.UnitInfoData);
          if (findBenchmark != null)
          {
             return findBenchmark.AverageFrameTime;
@@ -240,14 +237,11 @@ namespace HFM.Instances
       /// Find the Benchmark based on the Owner and Project info from the given UnitInfo
       /// </summary>
       /// <param name="unit">The UnitInfo containing the Owner and Project data</param>
-      private IInstanceProteinBenchmark FindBenchmark(IUnitInfoLogic unit)
+      private IInstanceProteinBenchmark FindBenchmark(IUnitInfo unit)
       {
-         return _collection.BenchmarkList.Find(delegate(InstanceProteinBenchmark proteinBenchmark)
-         {
-            return proteinBenchmark.OwningInstanceName == unit.UnitInfoData.OwningInstanceName &&
-                   StringOps.PathsEqual(proteinBenchmark.OwningInstancePath, unit.UnitInfoData.OwningInstancePath) &&
-                   proteinBenchmark.ProjectID == unit.UnitInfoData.ProjectID;
-         });
+         return _collection.BenchmarkList.Find(benchmark => benchmark.OwningInstanceName == unit.OwningInstanceName &&
+                                                            StringOps.PathsEqual(benchmark.OwningInstancePath, unit.OwningInstancePath) &&
+                                                            benchmark.ProjectID == unit.ProjectID);
       }
 
       /// <summary>

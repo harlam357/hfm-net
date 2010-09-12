@@ -46,7 +46,6 @@
     <Compile Include="LogLineList.cs" />
     <Compile Include="ClientRun.cs" />
     <Compile Include="ClientRunList.cs" />
-    <Compile Include="FrameData.cs" />
     <Compile Include="LogLine.cs" />
     <Compile Include="LogReader.cs" />
     <Compile Include="LogReaderFactory.cs" />

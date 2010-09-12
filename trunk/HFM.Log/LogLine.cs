@@ -207,7 +207,7 @@ namespace HFM.Log
                }
                throw new FormatException(String.Format("Failed to parse Project (R/C/G) values from '{0}'", logLine.LineRaw));
             case LogLineType.WorkUnitFrame:
-               FrameData frame = new FrameData();
+               var frame = new UnitFrame();
                if (CheckForCompletedFrame(logLine, frame))
                {
                   return frame;
@@ -281,7 +281,7 @@ namespace HFM.Log
       /// </summary>
       /// <param name="logLine">Log Line</param>
       /// <param name="frame">Frame Data</param>
-      private static bool CheckForCompletedFrame(ILogLine logLine, IFrameData frame)
+      private static bool CheckForCompletedFrame(ILogLine logLine, UnitFrame frame)
       {
          Debug.Assert(logLine != null);
          Debug.Assert(frame != null);
@@ -354,7 +354,7 @@ namespace HFM.Log
       /// </summary>
       /// <param name="logLine">Log Line</param>
       /// <param name="frame">Frame Data</param>
-      private static bool CheckForCompletedGpuFrame(ILogLine logLine, IFrameData frame)
+      private static bool CheckForCompletedGpuFrame(ILogLine logLine, UnitFrame frame)
       {
          Debug.Assert(logLine != null);
          Debug.Assert(frame != null);

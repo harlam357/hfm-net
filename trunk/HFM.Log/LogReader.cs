@@ -271,7 +271,7 @@ namespace HFM.Log
             {
                clientWasPaused = false;
 
-               // Clear the Current Frame (Also Resets Frames Observed Count)
+               // Reset the Frames Observed Count
                // This will cause the Instance to only use frames beyond this point to 
                // set frame times and determine status - Issue 13 (Revised)
                data.FramesObserved = 0;
@@ -283,7 +283,7 @@ namespace HFM.Log
             #region Frame Data
             if (line.LineType.Equals(LogLineType.WorkUnitFrame))
             {
-               var frame = line.LineData as IFrameData;
+               var frame = line.LineData as UnitFrame;
                if (frame == null)
                {
                   // If not found, clear the LineType and get out
@@ -363,14 +363,6 @@ namespace HFM.Log
             }
             #endregion
          }
-         
-         // Fix This! Convert back to Zero TimeSpan, calling code still expects this for now.
-         // 4/6/10 - Made Changes in ClientInstance.UpdateTimeOfLastProgress() look for 
-         // TimeSpan.MinValue in order to fix this in conjunction with commenting this code.
-         //if (data.UnitStartTimeStamp.Equals(TimeSpan.MinValue))
-         //{
-         //   data.UnitStartTimeStamp = TimeSpan.Zero;
-         //}
          
          return data;
       }

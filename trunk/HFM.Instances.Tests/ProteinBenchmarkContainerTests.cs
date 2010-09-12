@@ -20,25 +20,49 @@
 using System;
 
 using NUnit.Framework;
+using Rhino.Mocks;
+
+using HFM.Framework;
 
 namespace HFM.Instances.Tests
 {
    [TestFixture]
    public class ProteinBenchmarkContainerTests
    {
-      ProteinBenchmarkCollection _collection;
+      private MockRepository _mocks;
+      private IPreferenceSet _prefs;
+      private IUnitInfoDatabase _database;
+      private ProteinBenchmarkContainer _container;
    
       [SetUp]
       public void Init()
       {
-         _collection = LoadTestCollection();
-         ValidateTestCollection(_collection);
+         _mocks = new MockRepository();
+         _prefs = _mocks.DynamicMock<IPreferenceSet>();
+         _database = _mocks.DynamicMock<IUnitInfoDatabase>();
+         _container = new ProteinBenchmarkContainer(_prefs, _database);
+      }
+
+      [Test]
+      public void UpdateBenchmarkDataTest()
+      {
+         var unitInfo1 = new UnitInfo();
+         unitInfo1.OwningInstanceName = "Owner";
+         unitInfo1.OwningInstancePath = "Path";
+         unitInfo1.ProjectID = 2669;
+         var unitInfoLogic1 = _mocks.DynamicMock<IUnitInfoLogic>();
+         SetupResult.For(unitInfoLogic1.UnitInfoData).Return(unitInfo1);
+         
+         
+         //_container.UpdateBenchmarkData();
       }
 
       [Test]
       public void ProtoBufSerializationTest()
       {
-         ProteinBenchmarkContainer.Serialize(_collection, "ProtoBufTest.dat");
+         var collection = LoadTestCollection();
+         ValidateTestCollection(collection);
+         ProteinBenchmarkContainer.Serialize(collection, "ProtoBufTest.dat");
          
          ProteinBenchmarkCollection collection2 = ProteinBenchmarkContainer.Deserialize("ProtoBufTest.dat");
          ValidateTestCollection(collection2);
@@ -54,7 +78,9 @@ namespace HFM.Instances.Tests
       [Test]
       public void XmlSerializationTest()
       {
-         ProteinBenchmarkContainer.SerializeToXml(_collection, "XmlTest.xml");
+         var collection = LoadTestCollection();
+         ValidateTestCollection(collection);
+         ProteinBenchmarkContainer.SerializeToXml(collection, "XmlTest.xml");
 
          ProteinBenchmarkCollection collection2 = ProteinBenchmarkContainer.DeserializeFromXml("XmlTest.xml");
          ValidateTestCollection(collection2);
@@ -98,16 +124,16 @@ namespace HFM.Instances.Tests
       [Test]
       public void MergeCollectionsTest()
       {
-         int count = _collection.BenchmarkList.Count;
-         ProteinBenchmarkCollection collection2 = LoadTestCollection();
+         var collection = LoadTestCollection();
+         int count = collection.BenchmarkList.Count;
 
-         ProteinBenchmarkCollection mergedCollection = ProteinBenchmarkContainer.MergeCollections(_collection, collection2);
+         ProteinBenchmarkCollection mergedCollection = ProteinBenchmarkContainer.MergeCollections(collection, collection);
          Assert.AreEqual(count * 2, mergedCollection.BenchmarkList.Count);
 
-         mergedCollection = ProteinBenchmarkContainer.MergeCollections(_collection, null);
+         mergedCollection = ProteinBenchmarkContainer.MergeCollections(collection, null);
          Assert.AreEqual(count, mergedCollection.BenchmarkList.Count);
 
-         mergedCollection = ProteinBenchmarkContainer.MergeCollections(null, _collection);
+         mergedCollection = ProteinBenchmarkContainer.MergeCollections(null, collection);
          Assert.AreEqual(count, mergedCollection.BenchmarkList.Count);
 
          mergedCollection = ProteinBenchmarkContainer.MergeCollections(null, null);

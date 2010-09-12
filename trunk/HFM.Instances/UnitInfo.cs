@@ -268,38 +268,24 @@ namespace HFM.Instances
       /// <summary>
       /// Set the Current Work Unit Frame
       /// </summary>
-      /// <exception cref="ArgumentException">Throws if 'logLine' does not have LogLineType 'WorkUnitFrame'.</exception>
-      public void SetCurrentFrame(ILogLine logLine)
+      /// <exception cref="ArgumentNullException">Throws if 'frame' is null.</exception>
+      public void SetCurrentFrame(UnitFrame frame)
       {
-         if (logLine.LineType.Equals(LogLineType.WorkUnitFrame) == false)
-         {
-            throw new ArgumentException("Argument 'logLine' must have LogLineType 'WorkUnitFrame'.");
-         }
-
-         // Check for FrameData
-         var frame = logLine.LineData as IFrameData;
-         if (frame == null)
-         {
-            // If not found, clear the LineType and get out
-            logLine.LineType = LogLineType.Unknown;
-            return;
-         }
+         if (frame == null) throw new ArgumentNullException("frame");
 
          // Parse TimeStamp
-         DateTime timeStamp = DateTime.ParseExact(frame.TimeStampString, "HH:mm:ss",
-                                                  DateTimeFormatInfo.InvariantInfo,
-                                                  PlatformOps.GetDateTimeStyle());
+         frame.TimeOfFrame = DateTime.ParseExact(frame.TimeStampString, "HH:mm:ss",
+                                                 DateTimeFormatInfo.InvariantInfo,
+                                                 PlatformOps.GetDateTimeStyle()).TimeOfDay;
 
          // Set Raw Frame Values                                       
          RawFramesComplete = frame.RawFramesComplete;
          RawFramesTotal = frame.RawFramesTotal;
-         // Create new UnitFrame
-         var unitFrame = new UnitFrame(frame.FrameID, timeStamp.TimeOfDay);
 
          if (UnitFrames.ContainsKey(frame.FrameID) == false)
          {
-            CurrentFrameConcrete = unitFrame;
-            UnitFrames.Add(unitFrame.FrameID, unitFrame);
+            CurrentFrameConcrete = frame;
+            UnitFrames.Add(frame.FrameID, frame);
 
             CurrentFrameConcrete.FrameDuration = TimeSpan.Zero;
             if (CurrentFrameConcrete.FrameID > 0 &&
@@ -310,11 +296,11 @@ namespace HFM.Instances
                                                              UnitFrames[CurrentFrameConcrete.FrameID - 1].TimeOfFrame);
             }
          }
-         else
-         {
-            // FrameID already exists, clear the LineType
-            logLine.LineType = LogLineType.Unknown;
-         }
+         //else
+         //{
+         //   // FrameID already exists, clear the LineType
+         //   logLine.LineType = LogLineType.Unknown;
+         //}
       }
 
       /// <summary>

@@ -453,8 +453,17 @@ namespace HFM.Instances
 
       private static void ParseFrameData(IEnumerable<LogLine> frameData, IUnitInfo unit)
       {
-         foreach (var frame in frameData)
+         foreach (var logLine in frameData)
          {
+            // Check for FrameData
+            var frame = logLine.LineData as UnitFrame;
+            if (frame == null)
+            {
+               // If not found, clear the LineType and get out
+               logLine.LineType = LogLineType.Unknown;
+               continue;
+            }
+            
             unit.SetCurrentFrame(frame);
          }
       }

@@ -157,7 +157,7 @@ namespace HFM.Framework
       /// <summary>
       /// Set the Current Work Unit Frame
       /// </summary>
-      void SetCurrentFrame(ILogLine logLine);
+      void SetCurrentFrame(UnitFrame frame);
 
       /// <summary>
       /// Get the UnitFrame Interface for this frameID

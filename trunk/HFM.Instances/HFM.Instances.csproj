@@ -94,7 +94,6 @@
     <Compile Include="SortableBindingList.cs" />
     <Compile Include="StatusData.cs" />
     <Compile Include="StatusLogic.cs" />
-    <Compile Include="UnitFrame.cs" />
     <Compile Include="UnitInfo.cs" />
     <Compile Include="DataAggregator.cs" />
     <Compile Include="UnitInfoCollection.cs" />

@@ -148,10 +148,10 @@ namespace HFM.Instances.Tests
          _displayInstance.LastRetrievalTime = baseDate.Add(TimeSpan.FromMinutes(30));
 
          var unitInfo = new UnitInfo();
-         ILogLine line1 = MakeLogLine("00:00:00", 0, 0, 250000);
-         ILogLine line2 = MakeLogLine("00:04:00", 1, 2500, 250000);
-         ILogLine line3 = MakeLogLine("00:09:00", 2, 5000, 250000);
-         ILogLine line4 = MakeLogLine("00:15:00", 3, 7500, 250000);
+         UnitFrame line1 = MakeUnitFrame("00:00:00", 0, 0, 250000);
+         UnitFrame line2 = MakeUnitFrame("00:04:00", 1, 2500, 250000);
+         UnitFrame line3 = MakeUnitFrame("00:09:00", 2, 5000, 250000);
+         UnitFrame line4 = MakeUnitFrame("00:15:00", 3, 7500, 250000);
 
          Expect.Call(protein.GetPPD(TimeSpan.Zero)).IgnoreArguments().Return(100);
          _mocks.ReplayAll();
@@ -193,11 +193,11 @@ namespace HFM.Instances.Tests
          _displayInstance.LastRetrievalTime = baseDate.Add(TimeSpan.FromMinutes(90));
 
          var unitInfo = new UnitInfo();
-         ILogLine line1 = MakeLogLine("00:00:00", 0, 0, 100);
-         ILogLine line2 = MakeLogLine("00:05:10", 1, 1, 100);
-         ILogLine line3 = MakeLogLine("00:11:30", 2, 2, 100);
-         ILogLine line4 = MakeLogLine("00:17:40", 3, 3, 100);
-         ILogLine line5 = MakeLogLine("00:24:00", 4, 4, 100);
+         UnitFrame line1 = MakeUnitFrame("00:00:00", 0, 0, 100);
+         UnitFrame line2 = MakeUnitFrame("00:05:10", 1, 1, 100);
+         UnitFrame line3 = MakeUnitFrame("00:11:30", 2, 2, 100);
+         UnitFrame line4 = MakeUnitFrame("00:17:40", 3, 3, 100);
+         UnitFrame line5 = MakeUnitFrame("00:24:00", 4, 4, 100);
 
          Expect.Call(protein.GetPPD(TimeSpan.Zero)).IgnoreArguments().Return(100);
          _mocks.ReplayAll();
@@ -240,11 +240,11 @@ namespace HFM.Instances.Tests
          _displayInstance.LastRetrievalTime = baseDate.Add(TimeSpan.FromMinutes(90));
 
          var unitInfo = new UnitInfo();
-         ILogLine line1 = MakeLogLine("00:00:00", 0, 0, 100);
-         ILogLine line2 = MakeLogLine("00:05:10", 1, 1, 100);
-         ILogLine line3 = MakeLogLine("00:11:30", 2, 2, 100);
-         ILogLine line4 = MakeLogLine("00:17:40", 3, 3, 100);
-         ILogLine line5 = MakeLogLine("00:24:00", 4, 4, 100);
+         UnitFrame line1 = MakeUnitFrame("00:00:00", 0, 0, 100);
+         UnitFrame line2 = MakeUnitFrame("00:05:10", 1, 1, 100);
+         UnitFrame line3 = MakeUnitFrame("00:11:30", 2, 2, 100);
+         UnitFrame line4 = MakeUnitFrame("00:17:40", 3, 3, 100);
+         UnitFrame line5 = MakeUnitFrame("00:24:00", 4, 4, 100);
 
          Expect.Call(protein.GetPPD(TimeSpan.Zero)).IgnoreArguments().Return(100);
          _mocks.ReplayAll();
@@ -278,11 +278,11 @@ namespace HFM.Instances.Tests
          _displayInstance.LastRetrievalTime = baseDate.Add(TimeSpan.FromMinutes(90));
 
          var unitInfo = new UnitInfo();
-         ILogLine line1 = MakeLogLine("00:00:00", 0, 0, 100);
-         ILogLine line2 = MakeLogLine("00:05:10", 1, 1, 100);
-         ILogLine line3 = MakeLogLine("00:11:30", 2, 2, 100);
-         ILogLine line4 = MakeLogLine("00:17:40", 3, 3, 100);
-         ILogLine line5 = MakeLogLine("00:24:00", 4, 4, 100);
+         UnitFrame line1 = MakeUnitFrame("00:00:00", 0, 0, 100);
+         UnitFrame line2 = MakeUnitFrame("00:05:10", 1, 1, 100);
+         UnitFrame line3 = MakeUnitFrame("00:11:30", 2, 2, 100);
+         UnitFrame line4 = MakeUnitFrame("00:17:40", 3, 3, 100);
+         UnitFrame line5 = MakeUnitFrame("00:24:00", 4, 4, 100);
 
          Expect.Call(prefs.GetPreference<bool>(Preference.CalculateBonus)).Return(true);
          Expect.Call(protein.GetPPD(TimeSpan.Zero, TimeSpan.Zero)).IgnoreArguments().Return(200);
@@ -359,19 +359,15 @@ namespace HFM.Instances.Tests
          return settings;
       }
 
-      public ILogLine MakeLogLine(string timeStampString, int frameId, int complete, int total)
+      public UnitFrame MakeUnitFrame(string timeStampString, int frameId, int complete, int total)
       {
-         var line = _mocks.DynamicMock<ILogLine>();
-         var frame = _mocks.DynamicMock<IFrameData>();
-
-         Expect.Call(line.LineType).Return(LogLineType.WorkUnitFrame);
-         Expect.Call(line.LineData).Return(frame);
-         Expect.Call(frame.FrameID).Return(frameId).Repeat.Any();
-         Expect.Call(frame.TimeStampString).Return(timeStampString);
-         Expect.Call(frame.RawFramesComplete).Return(complete);
-         Expect.Call(frame.RawFramesTotal).Return(total);
-         
-         return line;
+         return new UnitFrame
+                {
+                   FrameID = frameId,
+                   TimeStampString = timeStampString,
+                   RawFramesComplete = complete,
+                   RawFramesTotal = total
+                };
       }
 
       private static void AssertTimeVariations(IUnitInfoLogic unitInfoLogic, int unitDownload, int allSections,

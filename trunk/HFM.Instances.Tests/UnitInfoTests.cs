@@ -32,7 +32,7 @@ namespace HFM.Instances.Tests
       [Test]
       public void UnitInfoPropertyTest()
       {
-         UnitInfo unitInfo = new UnitInfo();
+         var unitInfo = new UnitInfo();
          
          Assert.AreEqual(DateTime.MinValue, unitInfo.DownloadTime);
          Assert.IsTrue(unitInfo.DownloadTimeUnknown);
@@ -69,31 +69,25 @@ namespace HFM.Instances.Tests
          DoUnitInfoSetCurrentFrameTest("23:45:12", "00:03:54", new TimeSpan(0, 18, 42));
       }
 
-      public void DoUnitInfoSetCurrentFrameTest(string TimeStampString1, string TimeStampString2, TimeSpan expectedDuration)
+      public void DoUnitInfoSetCurrentFrameTest(string timeStampString1, string timeStampString2, TimeSpan expectedDuration)
       {
-         UnitInfo unitInfo = new UnitInfo();
+         var unitInfo = new UnitInfo();
          
-         MockRepository mocks = new MockRepository();
-         
-         ILogLine line1 = mocks.DynamicMock<ILogLine>();
-         ILogLine line2 = mocks.DynamicMock<ILogLine>();
-         IFrameData frame1 = mocks.DynamicMock<IFrameData>();
-         IFrameData frame2 = mocks.DynamicMock<IFrameData>();
-         
-         Expect.Call(line1.LineType).Return(LogLineType.WorkUnitFrame);
-         Expect.Call(line2.LineType).Return(LogLineType.WorkUnitFrame);
-         Expect.Call(line1.LineData).Return(frame1);
-         Expect.Call(line2.LineData).Return(frame2);
-         Expect.Call(frame1.FrameID).Return(0).Repeat.Any();
-         Expect.Call(frame2.FrameID).Return(1).Repeat.Any();
-         Expect.Call(frame1.TimeStampString).Return(TimeStampString1);
-         Expect.Call(frame2.TimeStampString).Return(TimeStampString2);
-         Expect.Call(frame1.RawFramesComplete).Return(0);
-         Expect.Call(frame2.RawFramesComplete).Return(2500);
-         Expect.Call(frame1.RawFramesTotal).Return(250000);
-         Expect.Call(frame2.RawFramesTotal).Return(250000);
-         
-         mocks.ReplayAll();
+         var frame1 = new UnitFrame
+                      {
+                         FrameID = 0,
+                         TimeStampString = timeStampString1,
+                         RawFramesComplete = 0,
+                         RawFramesTotal = 250000
+                      };
+
+         var frame2 = new UnitFrame
+                      {
+                         FrameID = 1,
+                         TimeStampString = timeStampString2,
+                         RawFramesComplete = 2500,
+                         RawFramesTotal = 250000
+                      };
 
          // This property is set before setting unit frames
          // it will already contain the total number of
@@ -104,22 +98,20 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(null, unitInfo.GetUnitFrame(0));
          Assert.AreEqual(0, unitInfo.RawFramesComplete);
          Assert.AreEqual(0, unitInfo.RawFramesTotal);
-         
-         unitInfo.SetCurrentFrame(line1);
+
+         unitInfo.SetCurrentFrame(frame1);
          Assert.IsNotNull(unitInfo.CurrentFrame);
          Assert.AreEqual(TimeSpan.Zero, unitInfo.GetUnitFrame(0).FrameDuration);
          Assert.AreEqual(null, unitInfo.GetUnitFrame(1));
          Assert.AreEqual(0, unitInfo.RawFramesComplete);
          Assert.AreEqual(250000, unitInfo.RawFramesTotal);
-         
-         unitInfo.SetCurrentFrame(line2);
+
+         unitInfo.SetCurrentFrame(frame2);
          Assert.AreEqual(TimeSpan.Zero, unitInfo.GetUnitFrame(0).FrameDuration);
          Assert.AreEqual(expectedDuration, unitInfo.GetUnitFrame(1).FrameDuration);
          Assert.AreEqual(null, unitInfo.GetUnitFrame(2));
          Assert.AreEqual(2500, unitInfo.RawFramesComplete);
          Assert.AreEqual(250000, unitInfo.RawFramesTotal);
-         
-         mocks.VerifyAll();
       }
    }
 }

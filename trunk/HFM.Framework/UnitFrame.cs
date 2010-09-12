@@ -21,50 +21,45 @@ using System;
 
 using ProtoBuf;
 
-using HFM.Framework;
-
-namespace HFM.Instances
+namespace HFM.Framework
 {
-   [Serializable]
+   public interface IUnitFrame : IComparable<IUnitFrame>, IEquatable<IUnitFrame>
+   {
+      int FrameID { get; }
+   
+      TimeSpan TimeOfFrame { get; }
+
+      TimeSpan FrameDuration { get; }
+   }
+
+   //[Serializable]
    [ProtoContract]
    public class UnitFrame : IUnitFrame
    {
-      // Would have liked to change the member to _FrameID, bitten by the BinaryFormatter
-      // Look into migrating these pieces of data into something using data-contracts.
-      private Int32 _FramePercent;
-      // Changed the Property Name to FrameID - 11/22/09
-      [ProtoMember(1)]
-      public Int32 FrameID
-      {
-         get { return _FramePercent; }
-         set { _FramePercent = value; }
-      }
+      public string TimeStampString { get; set; }
+
+      public int RawFramesComplete { get; set; }
+
+      public int RawFramesTotal { get; set; }
    
-      private TimeSpan _TimeOfFrame;
+      [ProtoMember(1)]
+      public int FrameID { get; set; }
+
       [ProtoMember(2)]
-      public TimeSpan TimeOfFrame
-      {
-         get { return _TimeOfFrame; }
-         set { _TimeOfFrame = value; }
-      }
-      
-      private TimeSpan _FrameDuration;
+      public TimeSpan TimeOfFrame { get; set; }
+
       [ProtoMember(3)]
-      public TimeSpan FrameDuration
-      {
-         get { return _FrameDuration; }
-         set { _FrameDuration = value; }
-      }
+      public TimeSpan FrameDuration { get; set; }
 
       public UnitFrame()
       {
       
       }
    
-      public UnitFrame(Int32 framePercent, TimeSpan frameTime)
+      public UnitFrame(int framePercent, TimeSpan frameTime)
       {
-         _FramePercent = framePercent;
-         _TimeOfFrame = frameTime;
+         FrameID = framePercent;
+         TimeOfFrame = frameTime;
       }
 
       ///<summary>
@@ -91,7 +86,7 @@ namespace HFM.Instances
       ///<filterpriority>2</filterpriority>
       public override bool Equals(object obj)
       {
-         IUnitFrame frame = obj as IUnitFrame;
+         var frame = obj as IUnitFrame;
          if (frame != null)
          {
             return Equals(frame);
