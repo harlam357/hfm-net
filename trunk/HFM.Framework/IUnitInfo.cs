@@ -21,8 +21,18 @@ using System;
 
 namespace HFM.Framework
 {
-   public interface IUnitInfo : IOwnedByClientInstance
+   public interface IUnitInfo : IProjectInfo, IOwnedByClientInstance
    {
+      /// <summary>
+      /// Name of the Client Instance that owns this Object
+      /// </summary>
+      new string OwningInstanceName { get; set; }
+
+      /// <summary>
+      /// Path of the Client Instance that owns this Object
+      /// </summary>
+      new string OwningInstancePath { get; set; }
+   
       /// <summary>
       /// Local time the logs used to generate this UnitInfo were retrieved
       /// </summary>
@@ -82,22 +92,22 @@ namespace HFM.Framework
       /// <summary>
       /// Project ID Number
       /// </summary>
-      int ProjectID { get; set; }
+      new int ProjectID { get; set; }
 
       /// <summary>
       /// Project ID (Run)
       /// </summary>
-      int ProjectRun { get; set; }
+      new int ProjectRun { get; set; }
 
       /// <summary>
       /// Project ID (Clone)
       /// </summary>
-      int ProjectClone { get; set; }
+      new int ProjectClone { get; set; }
 
       /// <summary>
       /// Project ID (Gen)
       /// </summary>
-      int ProjectGen { get; set; }
+      new int ProjectGen { get; set; }
 
       /// <summary>
       /// Returns true if Project (R/C/G) has not been identified

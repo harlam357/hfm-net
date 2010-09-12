@@ -78,7 +78,7 @@ namespace HFM.Log
       /// <summary>
       /// Returns log text of the current client run.
       /// </summary>
-      public IList<ILogLine> CurrentClientRunLogLines
+      public IList<Framework.LogLine> CurrentClientRunLogLines
       {
          get
          {
@@ -90,7 +90,7 @@ namespace HFM.Log
 
                int length = end - start;
 
-               ILogLine[] logLines = new LogLine[length];
+               var logLines = new Framework.LogLine[length];
 
                _clientLogLines.CopyTo(start, logLines, 0, length);
 
@@ -104,7 +104,7 @@ namespace HFM.Log
       /// <summary>
       /// Returns log text of the previous work unit.
       /// </summary>
-      public IList<ILogLine> PreviousWorkUnitLogLines
+      public IList<Framework.LogLine> PreviousWorkUnitLogLines
       {
          get
          {
@@ -116,7 +116,7 @@ namespace HFM.Log
 
                int length = end - start;
 
-               ILogLine[] logLines = new LogLine[length];
+               var logLines = new Framework.LogLine[length];
 
                _clientLogLines.CopyTo(start, logLines, 0, length);
 
@@ -130,7 +130,7 @@ namespace HFM.Log
       /// <summary>
       /// Returns log text of the current work unit.
       /// </summary>
-      public IList<ILogLine> CurrentWorkUnitLogLines
+      public IList<Framework.LogLine> CurrentWorkUnitLogLines
       {
          get
          {
@@ -142,7 +142,7 @@ namespace HFM.Log
 
                int length = end - start;
 
-               ILogLine[] logLines = new LogLine[length];
+               var logLines = new Framework.LogLine[length];
 
                _clientLogLines.CopyTo(start, logLines, 0, length);
 
@@ -159,7 +159,7 @@ namespace HFM.Log
       /// Get a list of Log Lines that correspond to the given Queue Index.
       /// </summary>
       /// <param name="queueIndex">The Queue Index (0-9)</param>
-      public IList<ILogLine> GetLogLinesFromQueueIndex(int queueIndex)
+      public IList<Framework.LogLine> GetLogLinesFromQueueIndex(int queueIndex)
       {
          // walk backwards through the ClientRunList and then backward
          // through the UnitQueueIndex list.  Find the first (really last
@@ -178,7 +178,7 @@ namespace HFM.Log
 
                   int length = end - start;
 
-                  ILogLine[] logLines = new LogLine[length];
+                  var logLines = new Framework.LogLine[length];
 
                   _clientLogLines.CopyTo(start, logLines, 0, length);
 
@@ -238,16 +238,16 @@ namespace HFM.Log
       /// Get FAHlog Unit Data from the given Log Lines
       /// </summary>
       /// <param name="logLines">Log Lines to search</param>
-      public IFahLogUnitData GetFahLogDataFromLogLines(ICollection<ILogLine> logLines)
+      public IFahLogUnitData GetFahLogDataFromLogLines(ICollection<Framework.LogLine> logLines)
       {
-         FahLogUnitData data = new FahLogUnitData();
+         var data = new FahLogUnitData();
 
          if (logLines == null) return data;
          
          bool clientWasPaused = false;
          bool lookForProject = true;
       
-         foreach (ILogLine line in logLines)
+         foreach (var line in logLines)
          {
             #region Unit Start
             if ((line.LineType.Equals(LogLineType.WorkUnitProcessing) ||
@@ -283,7 +283,7 @@ namespace HFM.Log
             #region Frame Data
             if (line.LineType.Equals(LogLineType.WorkUnitFrame))
             {
-               IFrameData frame = line.LineData as IFrameData;
+               var frame = line.LineData as IFrameData;
                if (frame == null)
                {
                   // If not found, clear the LineType and get out

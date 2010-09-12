@@ -27,9 +27,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 
+using HFM.Framework;
+
 namespace HFM.Instances
 {
    [Serializable]
+   [CoverageExclude]
    public class SortableBindingList<T> : BindingList<T>, ITypedList
    {
       #region Fields
@@ -189,6 +192,7 @@ namespace HFM.Instances
 
       #region PropertyComparer<T>
 
+      [CoverageExclude]
       internal class PropertyComparer<TKey> : IComparer<TKey>
       {
          /*

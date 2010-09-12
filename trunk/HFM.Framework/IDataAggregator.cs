@@ -68,12 +68,12 @@ namespace HFM.Framework
       /// <summary>
       /// Current Log Lines based on UnitLogLines Array and CurrentUnitIndex
       /// </summary>
-      IList<ILogLine> CurrentLogLines { get; }
+      IList<LogLine> CurrentLogLines { get; }
 
       /// <summary>
       /// Array of LogLine Lists
       /// </summary>
-      IList<ILogLine>[] UnitLogLines { get; }
+      IList<LogLine>[] UnitLogLines { get; }
 
       /// <summary>
       /// Aggregate Data and return UnitInfo List

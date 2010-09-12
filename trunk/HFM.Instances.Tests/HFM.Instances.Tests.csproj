@@ -46,6 +46,10 @@
       <HintPath>..\Castle Windsor 2.0\bin\Castle.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
+    <Reference Include="protobuf-net, Version=1.0.0.282, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\protobuf-net\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="Rhino.Mocks, Version=3.5.0.1337, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files\Rhino Mocks\Rhino.Mocks.dll</HintPath>
@@ -63,9 +67,9 @@
     </Compile>
     <Compile Include="BenchmarkClientTests.cs" />
     <Compile Include="ClientInstanceFactoryTests.cs" />
-    <Compile Include="ClientInstanceTests.cs" />
     <Compile Include="ClientInstanceXmlSerializerTests.cs" />
     <Compile Include="DataAggregatorTests.cs" />
+    <Compile Include="DisplayInstanceTests.cs" />
     <Compile Include="MarkupGeneratorTests.cs" />
     <Compile Include="ProteinBenchmarkContainerTests.cs" />
     <Compile Include="StatusTests.cs" />

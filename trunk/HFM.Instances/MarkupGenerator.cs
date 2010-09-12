@@ -343,7 +343,7 @@ namespace HFM.Instances
          XMLOps.setXmlNode(xmlData, "UnitInfo/Failed", instance.TotalRunFailedUnits.ToString());
          XMLOps.setXmlNode(xmlData, "UnitInfo/TotalCompleted", instance.TotalClientCompletedUnits.ToString());
 
-         if (instance.DownloadTimeUnknown)
+         if (instance.DownloadTime.Equals(DateTime.MinValue))
          {
             XMLOps.setXmlNode(xmlData, "UnitInfo/DownloadTime", "Unknown");
          }
@@ -484,7 +484,7 @@ namespace HFM.Instances
             XMLOps.setXmlNode(xmlData, "Username", instance.Username);
             XMLOps.setXmlNode(xmlData, "UsernameMatch", instance.UsernameOk.ToString()); // Issue 51
             XMLOps.setXmlNode(xmlData, "ShowVersions", showVersions.ToString()); // Issue 193
-            if (instance.DownloadTimeUnknown)
+            if (instance.DownloadTime.Equals(DateTime.MinValue))
             {
                XMLOps.setXmlNode(xmlData, "DownloadTime", "Unknown");
             }
@@ -492,7 +492,7 @@ namespace HFM.Instances
             {
                XMLOps.setXmlNode(xmlData, "DownloadTime", String.Format("{0} {1}", instance.DownloadTime.ToShortDateString(), instance.DownloadTime.ToShortTimeString()));
             }
-            if (instance.PreferredDeadlineUnknown)
+            if (instance.PreferredDeadline.Equals(DateTime.MinValue))
             {
                XMLOps.setXmlNode(xmlData, "Deadline", "Unknown");
             }

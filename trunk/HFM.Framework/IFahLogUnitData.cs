@@ -32,7 +32,7 @@ namespace HFM.Framework
       /// <summary>
       /// List of Log Lines containing Frame Data
       /// </summary>
-      IList<ILogLine> FrameDataList { get; }
+      IList<LogLine> FrameDataList { get; }
       
       /// <summary>
       /// Number of Frames Observed since Last Unit Start

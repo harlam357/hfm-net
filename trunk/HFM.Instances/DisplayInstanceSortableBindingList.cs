@@ -26,6 +26,7 @@ using HFM.Framework;
 namespace HFM.Instances
 {
    [Serializable]
+   [CoverageExclude]
    [CLSCompliant(false)]
    public class DisplayInstanceSortableBindingList : SortableBindingList<IDisplayInstance>
    {
@@ -114,6 +115,7 @@ namespace HFM.Instances
 
       #region DisplayInstancePropertyComparer<T>
 
+      [CoverageExclude]
       internal class DisplayInstancePropertyComparer<T> : IComparer<T>
       {
          /*

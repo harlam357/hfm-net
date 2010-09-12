@@ -28,7 +28,7 @@ namespace HFM.Classes
 {
    public partial class RichTextBoxWrapper : RichTextBox
    {
-      private IList<ILogLine> _logLines;
+      private IList<LogLine> _logLines;
       
       private string _logOwnedByInstanceName = String.Empty;
       
@@ -42,7 +42,7 @@ namespace HFM.Classes
          InitializeComponent();
       }
 
-      public void SetLogLines(IList<ILogLine> lines, string logOwnedByInstance)
+      public void SetLogLines(IList<LogLine> lines, string logOwnedByInstance)
       {
          _logLines = lines;
          _logOwnedByInstanceName = logOwnedByInstance;

@@ -63,7 +63,7 @@ namespace HFM.Log
       #endregion
 
       #region Methods
-      public void HandleLogLines(IList<ILogLine> logLines)
+      public void HandleLogLines(IList<Framework.LogLine> logLines)
       {
          _unitStart.Initialize();
       

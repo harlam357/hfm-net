@@ -44,7 +44,7 @@ namespace HFM.Instances
       /// <summary>
       /// Retrieve from the Container
       /// </summary>
-      IUnitInfo RetrieveUnitInfo(ClientInstance instance);
+      UnitInfo RetrieveUnitInfo(ClientInstance instance);
 
       /// <summary>
       /// Read Binary File
@@ -87,7 +87,6 @@ namespace HFM.Instances
       /// <summary>
       /// Add to the Container
       /// </summary>
-      /// <param name="unit"></param>
       public void Add(IUnitInfo unit)
       {
          _collection.UnitInfoList.Add((UnitInfo)unit);
@@ -105,7 +104,7 @@ namespace HFM.Instances
       /// Retrieve from the Container
       /// </summary>
       /// <param name="instance">Client Instance</param>
-      public IUnitInfo RetrieveUnitInfo(ClientInstance instance)
+      public UnitInfo RetrieveUnitInfo(ClientInstance instance)
       {
          UnitInfo findUnit = _collection.UnitInfoList.Find(instance.Owns);
          return findUnit;

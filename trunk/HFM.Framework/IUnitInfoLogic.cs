@@ -22,7 +22,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace HFM.Framework
 {
-   public interface IUnitInfoLogic : IProjectInfo, IOwnedByClientInstance
+   public interface IUnitInfoLogic
    {
       /// <summary>
       /// Unit Info Data Class
@@ -30,39 +30,9 @@ namespace HFM.Framework
       IUnitInfo UnitInfoData { get; }
    
       /// <summary>
-      /// Local time the logs used to generate this UnitInfo were retrieved
-      /// </summary>
-      DateTime UnitRetrievalTime { get; }
-
-      /// <summary>
-      /// The Folding ID (Username) attached to this work unit
-      /// </summary>
-      string FoldingID { get; }
-
-      /// <summary>
-      /// The Team number attached to this work unit
-      /// </summary>
-      int Team { get; }
-
-      /// <summary>
-      /// Client Type for this work unit
-      /// </summary>
-      ClientType TypeOfClient { get; }
-
-      /// <summary>
       /// Date/time the unit was downloaded
       /// </summary>
       DateTime DownloadTime { get; }
-
-      /// <summary>
-      /// Raw date/time the unit downloaded (UTC and no ClientTimeOffset)
-      /// </summary>
-      DateTime RawDownloadTime { get; }
-
-      /// <summary>
-      /// Flag specifying if Download Time is Unknown
-      /// </summary>
-      bool DownloadTimeUnknown { get; }
 
       /// <summary>
       /// Work Unit Preferred Deadline
@@ -70,24 +40,9 @@ namespace HFM.Framework
       DateTime PreferredDeadline { get; }
 
       /// <summary>
-      /// Flag specifying if Preferred Deadline is Unknown
-      /// </summary>
-      bool PreferredDeadlineUnknown { get; }
-
-      /// <summary>
       /// Work Unit Preferred Deadline
       /// </summary>
       DateTime FinalDeadline { get; }
-
-      /// <summary>
-      /// Flag specifying if Final Deadline is Unknown
-      /// </summary>
-      bool FinalDeadlineUnknown { get; }
-
-      /// <summary>
-      /// Unit Start Time Stamp (Time Stamp from First Parsable Line in LogLines)
-      /// </summary>
-      TimeSpan UnitStartTimeStamp { get; }
 
       /// <summary>
       /// Date/time the unit finished
@@ -95,41 +50,9 @@ namespace HFM.Framework
       DateTime FinishedTime { get; }
 
       /// <summary>
-      /// Raw date/time the unit finished (UTC and no ClientTimeOffset)
-      /// </summary>
-      DateTime RawFinishedTime { get; }
-
-      /// <summary>
-      /// Core Version Number
-      /// </summary>
-      string CoreVersion { get; }
-
-      string CoreID { get; }
-
-      /// <summary>
-      /// Returns true if Project (R/C/G) has not been identified
-      /// </summary>
-      bool ProjectIsUnknown { get; }
-
-      /// <summary>
       /// Formatted Project (Run, Clone, Gen) Information
       /// </summary>
       string ProjectRunCloneGen { get; }
-
-      /// <summary>
-      /// Name of the unit
-      /// </summary>
-      string ProteinName { get; }
-
-      /// <summary>
-      /// Tag string as read from the UnitInfo.txt file
-      /// </summary>
-      string ProteinTag { get; }
-
-      /// <summary>
-      /// The Result of this Work Unit
-      /// </summary>
-      WorkUnitResult UnitResult { get; }
 
       /// <summary>
       /// Class member containing info on the currently running protein
@@ -190,22 +113,6 @@ namespace HFM.Framework
       /// Esimated Finishing Time for this unit
       /// </summary>
       TimeSpan EftByFrameTime { get; }
-
-      string WorkUnitName { get; }
-
-      double NumAtoms { get; }
-
-      double Credit { get; }
-
-      /// <summary>
-      /// Get the Credit of the Unit (including bonus)
-      /// </summary>
-      [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-      double GetBonusCredit();
-
-      double Frames { get; }
-
-      string Core { get; }
 
       /// <summary>
       /// Number of Frames Observed on this Unit
@@ -291,5 +198,7 @@ namespace HFM.Framework
       /// Frame Time per section based on current PPD calculation setting (readonly)
       /// </summary>
       int RawTimePerSection { get; }
+
+      void ShowPPDTrace();
    }
 }

@@ -31,12 +31,14 @@ namespace HFM.Instances.Tests
    {
       private MockRepository _mocks;
       private IProteinBenchmarkContainer _benchmarkContainer;
+      private IDisplayInstance _displayInstance;
 
       [SetUp]
       public void Init()
       {
          _mocks = new MockRepository();
          _benchmarkContainer = _mocks.DynamicMock<IProteinBenchmarkContainer>();
+         _displayInstance = _mocks.Stub<IDisplayInstance>();
       }
    
       [Test]
@@ -44,17 +46,16 @@ namespace HFM.Instances.Tests
       {
          IPreferenceSet prefs = SetupMockPreferenceSet();
          IProtein protein = SetupMockProtein("GROCVS", 100, 3, 6);
-         IClientInstance clientInstance = SetupMockClientInstance(ClientStatus.Running, false, 0);
+         IClientInstanceSettings clientInstance = SetupMockClientInstanceSettings(false, 0);
          _mocks.ReplayAll();
 
          var unitInfo = new UnitInfo();
          SetProject(unitInfo);
-         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance);
+         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance, _displayInstance);
 
          SetDateTimeProperties(unitInfo);
          AssertDateTimeProperties(unitInfoLogic, unitInfo.DownloadTime.ToLocalTime(),
                                                  unitInfo.DownloadTime.ToLocalTime().AddDays(protein.PreferredDays),
-                                                 false,
                                                  unitInfo.DownloadTime.ToLocalTime().AddDays(protein.MaxDays),
                                                  unitInfo.DueTime.ToLocalTime(),
                                                  unitInfo.FinishedTime.ToLocalTime());
@@ -66,17 +67,16 @@ namespace HFM.Instances.Tests
       {
          IPreferenceSet prefs = SetupMockPreferenceSet();
          IProtein protein = SetupMockProtein("GROCVS", 100, 4, 8);
-         IClientInstance clientInstance = SetupMockClientInstance(ClientStatus.Running, true, 0);
+         IClientInstanceSettings clientInstance = SetupMockClientInstanceSettings(true, 0);
          _mocks.ReplayAll();
 
          var unitInfo = new UnitInfo();
          SetProject(unitInfo);
-         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance);
+         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance, _displayInstance);
 
          SetDateTimeProperties(unitInfo);
          AssertDateTimeProperties(unitInfoLogic, unitInfo.DownloadTime,
                                                  unitInfo.DownloadTime.AddDays(protein.PreferredDays),
-                                                 false,
                                                  unitInfo.DownloadTime.AddDays(protein.MaxDays),
                                                  unitInfo.DueTime,
                                                  unitInfo.FinishedTime);
@@ -88,16 +88,15 @@ namespace HFM.Instances.Tests
       {
          IPreferenceSet prefs = SetupMockPreferenceSet();
          IProtein protein = SetupMockNewProtein();
-         IClientInstance clientInstance = SetupMockClientInstance(ClientStatus.Running, false, 0);
+         IClientInstanceSettings clientInstance = SetupMockClientInstanceSettings(false, 0);
          _mocks.ReplayAll();
 
          var unitInfo = new UnitInfo();
-         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance);
+         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance, _displayInstance);
 
          SetDateTimeProperties(unitInfo);
          AssertDateTimeProperties(unitInfoLogic, unitInfo.DownloadTime.ToLocalTime(),
                                                  unitInfo.DueTime.ToLocalTime(), 
-                                                 true,
                                                  DateTime.MinValue,
                                                  unitInfo.DueTime.ToLocalTime(),
                                                  unitInfo.FinishedTime.ToLocalTime());
@@ -120,17 +119,15 @@ namespace HFM.Instances.Tests
       }
       
       private static void AssertDateTimeProperties(UnitInfoLogic unitInfoLogic, DateTime downloadTime, 
-                                                   DateTime preferredDeadline, bool finalDeadlineUnknown, 
-                                                   DateTime finalDeadline, DateTime dueTime, DateTime finishedTime)
+                                                   DateTime preferredDeadline, DateTime finalDeadline, 
+                                                   DateTime dueTime, DateTime finishedTime)
       {
          // Unit Info Logic Values
-         Assert.AreEqual(false, unitInfoLogic.DownloadTimeUnknown);
+         Assert.AreEqual(false, unitInfoLogic.UnitInfoData.DownloadTimeUnknown);
          Assert.AreEqual(downloadTime, unitInfoLogic.DownloadTime);
-         Assert.AreEqual(false, unitInfoLogic.PreferredDeadlineUnknown);
          Assert.AreEqual(preferredDeadline, unitInfoLogic.PreferredDeadline);
-         Assert.AreEqual(finalDeadlineUnknown, unitInfoLogic.FinalDeadlineUnknown);
          Assert.AreEqual(finalDeadline, unitInfoLogic.FinalDeadline);
-         Assert.AreEqual(false, unitInfoLogic.DueTimeUnknown);
+         Assert.AreEqual(false, unitInfoLogic.UnitInfoData.DueTimeUnknown);
          Assert.AreEqual(dueTime, unitInfoLogic.DueTime);
          Assert.AreEqual(finishedTime, unitInfoLogic.FinishedTime);
 
@@ -147,8 +144,8 @@ namespace HFM.Instances.Tests
          IPreferenceSet prefs = SetupMockPreferenceSet();
          IProtein protein = SetupMockProtein("GROCVS", 100, 3, 6);
          var baseDate = new DateTime(2010, 1, 1);
-         IClientInstance clientInstance = SetupMockClientInstance(ClientStatus.Running, false, 0, "Owner", "Path", 
-                                                                  baseDate.Add(TimeSpan.FromMinutes(30)));
+         IClientInstanceSettings clientInstance = SetupMockClientInstanceSettings(false, 0, "Owner", "Path");
+         _displayInstance.LastRetrievalTime = baseDate.Add(TimeSpan.FromMinutes(30));
 
          var unitInfo = new UnitInfo();
          ILogLine line1 = MakeLogLine("00:00:00", 0, 0, 250000);
@@ -159,7 +156,7 @@ namespace HFM.Instances.Tests
          Expect.Call(protein.GetPPD(TimeSpan.Zero)).IgnoreArguments().Return(100);
          _mocks.ReplayAll();
 
-         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance);
+         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance, _displayInstance);
 
          Assert.AreEqual(TimeSpan.Zero, unitInfoLogic.TimeOfLastFrame);
          unitInfo.FramesObserved = 4;
@@ -192,8 +189,8 @@ namespace HFM.Instances.Tests
          IPreferenceSet prefs = SetupMockPreferenceSet();
          IProtein protein = SetupMockProtein("GROCVS", 100, 3, 6);
          var baseDate = new DateTime(2010, 1, 1);
-         IClientInstance clientInstance = SetupMockClientInstance(ClientStatus.Running, true, 0, "Owner", "Path", 
-                                                                  baseDate.Add(TimeSpan.FromMinutes(90)));
+         IClientInstanceSettings clientInstance = SetupMockClientInstanceSettings(true, 0, "Owner", "Path");
+         _displayInstance.LastRetrievalTime = baseDate.Add(TimeSpan.FromMinutes(90));
 
          var unitInfo = new UnitInfo();
          ILogLine line1 = MakeLogLine("00:00:00", 0, 0, 100);
@@ -205,7 +202,7 @@ namespace HFM.Instances.Tests
          Expect.Call(protein.GetPPD(TimeSpan.Zero)).IgnoreArguments().Return(100);
          _mocks.ReplayAll();
 
-         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance);
+         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance, _displayInstance);
 
          Assert.AreEqual(TimeSpan.Zero, unitInfoLogic.TimeOfLastFrame);
          unitInfo.FramesObserved = 5;
@@ -239,8 +236,8 @@ namespace HFM.Instances.Tests
          IPreferenceSet prefs = SetupMockPreferenceSet();
          IProtein protein = SetupMockProtein("GROCVS", 100, 3, 6);
          var baseDate = new DateTime(2010, 1, 1);
-         IClientInstance clientInstance = SetupMockClientInstance(ClientStatus.Running, true, 0, "Owner", "Path", 
-                                                                  baseDate.Add(TimeSpan.FromMinutes(90)));
+         IClientInstanceSettings clientInstance = SetupMockClientInstanceSettings(true, 0, "Owner", "Path");
+         _displayInstance.LastRetrievalTime = baseDate.Add(TimeSpan.FromMinutes(90));
 
          var unitInfo = new UnitInfo();
          ILogLine line1 = MakeLogLine("00:00:00", 0, 0, 100);
@@ -252,7 +249,7 @@ namespace HFM.Instances.Tests
          Expect.Call(protein.GetPPD(TimeSpan.Zero)).IgnoreArguments().Return(100);
          _mocks.ReplayAll();
 
-         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance);
+         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance, _displayInstance);
 
          AssertRawTimesZero(unitInfoLogic);
 
@@ -277,8 +274,8 @@ namespace HFM.Instances.Tests
          IPreferenceSet prefs = SetupMockPreferenceSet();
          IProtein protein = SetupMockProtein("GROCVS", 100, 3, 6);
          var baseDate = new DateTime(2010, 1, 1);
-         IClientInstance clientInstance = SetupMockClientInstance(ClientStatus.Running, true, 0, "Owner", "Path", 
-                                                                  baseDate.Add(TimeSpan.FromMinutes(90)));
+         IClientInstanceSettings clientInstance = SetupMockClientInstanceSettings(true, 0, "Owner", "Path");
+         _displayInstance.LastRetrievalTime = baseDate.Add(TimeSpan.FromMinutes(90));
 
          var unitInfo = new UnitInfo();
          ILogLine line1 = MakeLogLine("00:00:00", 0, 0, 100);
@@ -291,7 +288,7 @@ namespace HFM.Instances.Tests
          Expect.Call(protein.GetPPD(TimeSpan.Zero, TimeSpan.Zero)).IgnoreArguments().Return(200);
          _mocks.ReplayAll();
 
-         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance);
+         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance, _displayInstance);
 
          AssertRawTimesZero(unitInfoLogic);
 
@@ -317,7 +314,6 @@ namespace HFM.Instances.Tests
          Expect.Call(currentProtein.Frames).Return(frames).Repeat.Any();
          Expect.Call(currentProtein.PreferredDays).Return(preferredDays).Repeat.Any();
          Expect.Call(currentProtein.MaxDays).Return(maxDays).Repeat.Any();
-         
 
          return currentProtein;
       }
@@ -347,13 +343,12 @@ namespace HFM.Instances.Tests
          return prefs;
       }
       
-      private IClientInstance SetupMockClientInstance(ClientStatus status, bool utcOffsetIsZero, int clientTimeOffset)
+      private IClientInstanceSettings SetupMockClientInstanceSettings(bool utcOffsetIsZero, int clientTimeOffset)
       {
-         return SetupMockClientInstance(status, utcOffsetIsZero, clientTimeOffset, "Owner", "Path", DateTime.Now);
+         return SetupMockClientInstanceSettings(utcOffsetIsZero, clientTimeOffset, "Owner", "Path");
       }
 
-      private IClientInstance SetupMockClientInstance(ClientStatus status, bool utcOffsetIsZero, int clientTimeOffset,
-                                                      string instanceName, string path, DateTime lastRetrievalTime)
+      private IClientInstanceSettings SetupMockClientInstanceSettings(bool utcOffsetIsZero, int clientTimeOffset, string instanceName, string path)
       {
          var settings = _mocks.Stub<IClientInstanceSettings>();
          settings.ClientIsOnVirtualMachine = utcOffsetIsZero;
@@ -361,12 +356,7 @@ namespace HFM.Instances.Tests
          settings.InstanceName = instanceName;
          settings.Path = path;
 
-         var clientInstance = _mocks.DynamicMock<IClientInstance>();
-         SetupResult.For(clientInstance.Status).Return(status);
-         SetupResult.For(clientInstance.LastRetrievalTime).Return(lastRetrievalTime);
-         SetupResult.For(clientInstance.Settings).Return(settings);
-
-         return clientInstance;
+         return settings;
       }
 
       public ILogLine MakeLogLine(string timeStampString, int frameId, int complete, int total)

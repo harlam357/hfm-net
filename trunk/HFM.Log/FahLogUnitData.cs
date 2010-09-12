@@ -29,7 +29,7 @@ namespace HFM.Log
       public FahLogUnitData()
       {
          UnitStartTimeStamp = TimeSpan.MinValue;
-         FrameDataList = new List<ILogLine>(101);
+         FrameDataList = new List<Framework.LogLine>(101);
          CoreVersion = String.Empty;
          ProjectInfoIndex = -1;
          ProjectInfoList = new List<IProjectInfo>();
@@ -45,7 +45,7 @@ namespace HFM.Log
       /// <summary>
       /// List of Log Lines containing Frame Data
       /// </summary>
-      public IList<ILogLine> FrameDataList { get; set; }
+      public IList<Framework.LogLine> FrameDataList { get; set; }
 
       /// <summary>
       /// Number of Frames Observed since Last Unit Start

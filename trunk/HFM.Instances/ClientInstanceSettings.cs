@@ -23,10 +23,13 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 
+using ProtoBuf;
+
 using HFM.Framework;
 
 namespace HFM.Instances
 {
+   [ProtoContract]
    public class ClientInstanceSettings : IClientInstanceSettings
    {
       public string ImportError { get; set; }
@@ -51,6 +54,7 @@ namespace HFM.Instances
       /// <summary>
       /// Client host type (Path, FTP, or HTTP)
       /// </summary>
+      [ProtoMember(1)]
       public InstanceType InstanceHostType
       {
          get { return _instanceHostType; }
@@ -69,6 +73,7 @@ namespace HFM.Instances
       /// <summary>
       /// The name assigned to this client instance
       /// </summary>
+      [ProtoMember(2)]
       public string InstanceName
       {
          get { return _instanceName; }
@@ -96,6 +101,7 @@ namespace HFM.Instances
       /// <summary>
       /// The number of processor megahertz for this client instance
       /// </summary>
+      [ProtoMember(3)]
       public Int32 ClientProcessorMegahertz
       {
          get { return _clientProcessorMegahertz; }
@@ -118,6 +124,7 @@ namespace HFM.Instances
       /// <summary>
       /// Remote client log file name
       /// </summary>
+      [ProtoMember(4)]
       public string RemoteFAHLogFilename
       {
          get { return _remoteFAHLogFilename; }
@@ -140,6 +147,7 @@ namespace HFM.Instances
       /// <summary>
       /// Remote client unit info log file name
       /// </summary>
+      [ProtoMember(5)]
       public string RemoteUnitInfoFilename
       {
          get { return _remoteUnitInfoFilename; }
@@ -162,6 +170,7 @@ namespace HFM.Instances
       /// <summary>
       /// Remote client queue.dat file name
       /// </summary>
+      [ProtoMember(6)]
       public string RemoteQueueFilename
       {
          get { return _remoteQueueFilename; }
@@ -184,6 +193,7 @@ namespace HFM.Instances
       /// <summary>
       /// Location of log files for this instance
       /// </summary>
+      [ProtoMember(7)]
       public string Path
       {
          get { return _path; }
@@ -268,6 +278,7 @@ namespace HFM.Instances
       /// <summary>
       /// FTP Server name or IP Address
       /// </summary>
+      [ProtoMember(8)]
       public string Server
       {
          get { return _server; }
@@ -302,6 +313,7 @@ namespace HFM.Instances
       /// <summary>
       /// Username on remote server
       /// </summary>
+      [ProtoMember(9)]
       public string Username
       {
          get { return _username; } 
@@ -325,6 +337,7 @@ namespace HFM.Instances
       /// <summary>
       /// Password on remote server
       /// </summary>
+      [ProtoMember(10)]
       public string Password
       {
          get { return _password; }
@@ -384,6 +397,7 @@ namespace HFM.Instances
       /// <summary>
       /// Specifies the FTP Communication Mode for this client
       /// </summary>
+      [ProtoMember(11)]
       public FtpType FtpMode
       {
          get { return _ftpMode; }
@@ -400,11 +414,13 @@ namespace HFM.Instances
       /// <summary>
       /// Specifies that this client is on a VM that reports local time as UTC
       /// </summary>
+      [ProtoMember(12)]
       public bool ClientIsOnVirtualMachine { get; set; }
 
       /// <summary>
       /// Specifies the number of minutes (+/-) this client's clock differentiates
       /// </summary>
+      [ProtoMember(13)]
       public Int32 ClientTimeOffset { get; set; }
       
       public bool ClientTimeOffsetError

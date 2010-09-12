@@ -31,12 +31,14 @@ using HFM.Instrumentation;
 namespace HFM.Instances
 {
    [CLSCompliant(false)]
-   public interface IClientInstance : IDisplayInstance
+   public interface IClientInstance
    {
       /// <summary>
       /// Client Instance Settings
       /// </summary>
       IClientInstanceSettings Settings { get; }
+      
+      IDisplayInstance DisplayInstance { get; }
 
       /// <summary>
       /// Class member containing info specific to the current work unit
@@ -49,6 +51,8 @@ namespace HFM.Instances
    public sealed class ClientInstance : IClientInstance
    {
       #region Fields
+
+      #region ReadOnly
 
       /// <summary>
       /// PreferenceSet Interface
@@ -80,13 +84,19 @@ namespace HFM.Instances
       /// </summary>
       private readonly IDataAggregator _dataAggregator;
       
-      private readonly ClientInstanceSettings _settings;
-      /// <summary>
-      /// Client Instance Settings
-      /// </summary>
+      #endregion
+      
+      private readonly DisplayInstance _displayInstance;
+      
       public IClientInstanceSettings Settings
       {
-         get { return _settings; }
+         get { return _displayInstance.Settings; }
+      }
+      
+      [CLSCompliant(false)]
+      public IDisplayInstance DisplayInstance
+      {
+         get { return _displayInstance; }
       }
 
       #endregion
@@ -118,86 +128,34 @@ namespace HFM.Instances
          _dataAggregator = dataAggregator;
          
          // Init User Specified Client Level Members
-         _settings = instanceSettings ?? new ClientInstanceSettings(InstanceType.PathInstance);
+         _displayInstance = new DisplayInstance
+                            {
+                               Prefs = _prefs,
+                               ProteinCollection = _proteinCollection,
+                               BenchmarkContainer = _benchmarkContainer,
+                               SettingsConcrete = instanceSettings ?? new ClientInstanceSettings(InstanceType.PathInstance),
+                               UnitInfo = new UnitInfo()
+                            };
+         _displayInstance.BuildUnitInfoLogic();
          
          // Init Client Level Members
          Init();
-         // Create a fresh UnitInfo
-         _currentUnitInfo = new UnitInfoLogic(_prefs, _proteinCollection.CreateProtein(), _benchmarkContainer, new UnitInfo(), this);
       }
       #endregion
 
       #region Client Level Members
 
       /// <summary>
-      /// Client Startup Arguments
-      /// </summary>
-      public string Arguments { get; set; }
-
-      /// <summary>
-      /// User ID associated with this client
-      /// </summary>
-      public string UserId { get; set; }
-      
-      /// <summary>
-      /// True if User ID is Unknown
-      /// </summary>
-      public bool UserIdUnknown
-      {
-         get { return UserId.Length == 0; }
-      }
-
-      /// <summary>
-      /// Machine ID associated with this client
-      /// </summary>
-      public int MachineId { get; set; }
-
-      /// <summary>
-      /// Combined User ID and Machine ID String
-      /// </summary>
-      public string UserAndMachineId
-      {
-         get { return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", UserId, MachineId); }
-      }
-
-      /// <summary>
-      /// The Folding ID (Username) attached to this client
-      /// </summary>
-      public string FoldingID { get; set; }
-
-      /// <summary>
-      /// The Team number attached to this client
-      /// </summary>
-      public int Team { get; set; }
-
-      /// <summary>
-      /// Combined Folding ID and Team String
-      /// </summary>
-      public string FoldingIDAndTeam
-      {
-         get { return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", FoldingID, Team); }
-      }
-
-      private UnitInfoLogic _currentUnitInfo;
-      /// <summary>
-      /// Class member containing info specific to the current work unit
-      /// </summary>
-      private UnitInfoLogic CurrentUnitInfoConcrete
-      {
-         get { return _currentUnitInfo; }
-         set
-         {
-            UpdateTimeOfLastProgress(value);
-            _currentUnitInfo = value;
-         }
-      }
-      
-      /// <summary>
       /// Class member containing info specific to the current work unit
       /// </summary>
       public IUnitInfoLogic CurrentUnitInfo
       {
-         get { return _currentUnitInfo; }
+         get { return _displayInstance.CurrentUnitInfo; }
+         private set
+         {
+            UpdateTimeOfLastProgress(value);
+            _displayInstance.CurrentUnitInfo = value;
+         }
       }
 
       /// <summary>
@@ -205,15 +163,16 @@ namespace HFM.Instances
       /// </summary>
       private void Init()
       {
-         Arguments = String.Empty;
-         UserId = Constants.DefaultUserID;
-         MachineId = Constants.DefaultMachineID;
-         FoldingID = Constants.FoldingIDDefault;
-         Team = Constants.TeamDefault;
-         TotalRunCompletedUnits = 0;
-         TotalRunFailedUnits = 0;
-         TotalClientCompletedUnits = 0;
+         _displayInstance.Arguments = String.Empty;
+         _displayInstance.UserId = Constants.DefaultUserID;
+         _displayInstance.MachineId = Constants.DefaultMachineID;
+         //_displayInstance.FoldingID = Constants.FoldingIDDefault;
+         //_displayInstance.Team = Constants.TeamDefault;
+         _displayInstance.TotalRunCompletedUnits = 0;
+         _displayInstance.TotalRunFailedUnits = 0;
+         _displayInstance.TotalClientCompletedUnits = 0;
       }
+      
       #endregion
 
       #region Unit Progress Client Level Members
@@ -271,8 +230,8 @@ namespace HFM.Instances
          {
             RetrievalInProgress = true;
 
-            _dataRetriever.Settings = Settings;
-            switch (Settings.InstanceHostType)
+            _dataRetriever.Settings = _displayInstance.Settings;
+            switch (_displayInstance.Settings.InstanceHostType)
             {
                case InstanceType.PathInstance:
                   _dataRetriever.RetrievePathInstance();
@@ -285,11 +244,11 @@ namespace HFM.Instances
                   break;
                default:
                   throw new NotImplementedException(String.Format(CultureInfo.CurrentCulture,
-                     "Instance Type '{0}' is not implemented", Settings.InstanceHostType));
+                     "Instance Type '{0}' is not implemented", _displayInstance.Settings.InstanceHostType));
             }
 
             // Set successful Last Retrieval Time
-            LastRetrievalTime = DateTime.Now;
+            _displayInstance.LastRetrievalTime = DateTime.Now;
             // Re-Init Client Level Members Before Processing
             Init();
             // Process the retrieved logs
@@ -300,15 +259,15 @@ namespace HFM.Instances
          }
          catch (Exception ex)
          {
-            Status = ClientStatus.Offline;
-            HfmTrace.WriteToHfmConsole(Settings.InstanceName, ex);
+            _displayInstance.Status = ClientStatus.Offline;
+            HfmTrace.WriteToHfmConsole(_displayInstance.Settings.InstanceName, ex);
          }
          finally
          {
             RetrievalInProgress = false;
          }
 
-         HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Client Status: {2}", HfmTrace.FunctionName, Settings.InstanceName, Status));
+         HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Client Status: {2}", HfmTrace.FunctionName, _displayInstance.Settings.InstanceName, _displayInstance.Status));
       }
       
       #endregion
@@ -323,15 +282,16 @@ namespace HFM.Instances
          DateTime start = HfmTrace.ExecStart;
 
          #region Setup UnitInfo Aggregator
-         
-         _dataAggregator.InstanceName = Settings.InstanceName;
-         _dataAggregator.QueueFilePath = Path.Combine(_prefs.CacheDirectory, Settings.CachedQueueName);
-         _dataAggregator.FahLogFilePath = Path.Combine(_prefs.CacheDirectory, Settings.CachedFahLogName);
-         _dataAggregator.UnitInfoLogFilePath = Path.Combine(_prefs.CacheDirectory, Settings.CachedUnitInfoName); 
+
+         _dataAggregator.InstanceName = _displayInstance.Settings.InstanceName;
+         _dataAggregator.QueueFilePath = Path.Combine(_prefs.CacheDirectory, _displayInstance.Settings.CachedQueueName);
+         _dataAggregator.FahLogFilePath = Path.Combine(_prefs.CacheDirectory, _displayInstance.Settings.CachedFahLogName);
+         _dataAggregator.UnitInfoLogFilePath = Path.Combine(_prefs.CacheDirectory, _displayInstance.Settings.CachedUnitInfoName); 
          
          #endregion
          
          #region Run the Aggregator and Set ClientInstance Level Results
+         
          IList<IUnitInfo> units = _dataAggregator.AggregateData();
          // Issue 126 - Use the Folding ID, Team, User ID, and Machine ID from the FAHlog data.
          // Use the Current Queue Entry as a backup data source.
@@ -340,6 +300,10 @@ namespace HFM.Instances
          {
             PopulateRunLevelData(_dataAggregator.Queue.CurrentQueueEntry);
          }
+
+         _displayInstance.Queue = _dataAggregator.Queue;
+         _displayInstance.CurrentLogLines = _dataAggregator.CurrentLogLines;
+         _displayInstance.UnitLogLines = _dataAggregator.UnitLogLines;
          
          #endregion
          
@@ -349,7 +313,7 @@ namespace HFM.Instances
             if (units[i] != null)
             {
                IProtein protein = _proteinCollection.GetProtein(units[i].ProjectID);
-               parsedUnits[i] = new UnitInfoLogic(_prefs, protein, _benchmarkContainer, units[i], this);
+               parsedUnits[i] = new UnitInfoLogic(_prefs, protein, _benchmarkContainer, units[i], DisplayInstance.Settings, DisplayInstance);
             }
          }
 
@@ -361,11 +325,11 @@ namespace HFM.Instances
          ClientStatus currentWorkUnitStatus = _dataAggregator.CurrentWorkUnitStatus;
          if (currentWorkUnitStatus.Equals(ClientStatus.Unknown) == false)
          {
-            CurrentUnitInfoConcrete = parsedUnits[_dataAggregator.CurrentUnitIndex];
+            CurrentUnitInfo = parsedUnits[_dataAggregator.CurrentUnitIndex];
          }
          
-         CurrentUnitInfoConcrete.ShowPPDTrace();
-         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Settings.InstanceName, start);
+         CurrentUnitInfo.ShowPPDTrace();
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, DisplayInstance.Settings.InstanceName, start);
 
          // Return the Status
          return currentWorkUnitStatus;
@@ -373,37 +337,37 @@ namespace HFM.Instances
 
       private void PopulateRunLevelData(IClientRun run)
       {
-         ClientVersion = run.ClientVersion;
-         Arguments = run.Arguments;
-      
-         FoldingID = run.FoldingID;
-         Team = run.Team;
-         
-         UserId = run.UserID;
-         MachineId = run.MachineID;
+         _displayInstance.ClientVersion = run.ClientVersion;
+         _displayInstance.Arguments = run.Arguments;
 
-         TotalRunCompletedUnits = run.NumberOfCompletedUnits;
-         TotalRunFailedUnits = run.NumberOfFailedUnits;
-         TotalClientCompletedUnits = run.NumberOfTotalUnitsCompleted;
+         //_displayInstance.FoldingID = run.FoldingID;
+         //_displayInstance.Team = run.Team;
+
+         _displayInstance.UserId = run.UserID;
+         _displayInstance.MachineId = run.MachineID;
+
+         _displayInstance.TotalRunCompletedUnits = run.NumberOfCompletedUnits;
+         _displayInstance.TotalRunFailedUnits = run.NumberOfFailedUnits;
+         _displayInstance.TotalClientCompletedUnits = run.NumberOfTotalUnitsCompleted;
       }
 
       private void PopulateRunLevelData(IQueueEntry queueEntry)
       {
-         if (FoldingID == Constants.FoldingIDDefault)
+         //if (_displayInstance.FoldingID == Constants.FoldingIDDefault)
+         //{
+         //   _displayInstance.FoldingID = queueEntry.FoldingID;
+         //}
+         //if (_displayInstance.Team == Constants.TeamDefault)
+         //{
+         //   _displayInstance.Team = (int)queueEntry.TeamNumber;
+         //}
+         if (_displayInstance.UserId == Constants.DefaultUserID)
          {
-            FoldingID = queueEntry.FoldingID;
+            _displayInstance.UserId = queueEntry.UserID;
          }
-         if (Team == Constants.TeamDefault)
+         if (_displayInstance.MachineId == Constants.DefaultMachineID)
          {
-            Team = (int)queueEntry.TeamNumber;
-         }
-         if (UserId == Constants.DefaultUserID)
-         {
-            UserId = queueEntry.UserID;
-         }
-         if (MachineId == Constants.DefaultMachineID)
-         {
-            MachineId = (int)queueEntry.MachineID;
+            _displayInstance.MachineId = (int)queueEntry.MachineID;
          }
       }
 
@@ -416,9 +380,9 @@ namespace HFM.Instances
          if (PlatformOps.IsUnitInfoCurrentUnitInfo(CurrentUnitInfo, parsedUnitInfo))
          {
             // If the Unit Start Time Stamp is no longer the same as the CurrentUnitInfo
-            if (parsedUnitInfo.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
-                CurrentUnitInfo.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
-                parsedUnitInfo.UnitStartTimeStamp.Equals(CurrentUnitInfo.UnitStartTimeStamp) == false)
+            if (parsedUnitInfo.UnitInfoData.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
+                CurrentUnitInfo.UnitInfoData.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
+                parsedUnitInfo.UnitInfoData.UnitStartTimeStamp.Equals(CurrentUnitInfo.UnitInfoData.UnitStartTimeStamp) == false)
             {
                TimeOfLastUnitStart = DateTime.Now;
             }
@@ -437,6 +401,7 @@ namespace HFM.Instances
             TimeOfLastFrameProgress = DateTime.MinValue;
          }
       }
+      
       #endregion
 
       #region Status Handling and Determination
@@ -447,22 +412,24 @@ namespace HFM.Instances
       /// <param name="returnedStatus">Client Status</param>
       private void HandleReturnedStatus(ClientStatus returnedStatus)
       {
-         var statusData = new StatusData();
-         statusData.InstanceName = Settings.InstanceName;
-         statusData.TypeOfClient = CurrentUnitInfo.TypeOfClient;
-         statusData.LastRetrievalTime = LastRetrievalTime;
-         statusData.IgnoreUtcOffset = Settings.ClientIsOnVirtualMachine;
-         statusData.UtcOffset = TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
-         statusData.ClientTimeOffset = Settings.ClientTimeOffset;
-         statusData.TimeOfLastUnitStart = TimeOfLastUnitStart;
-         statusData.TimeOfLastFrameProgress = TimeOfLastFrameProgress;
-         statusData.CurrentStatus = Status;
-         statusData.ReturnedStatus = returnedStatus;
-         statusData.FrameTime = CurrentUnitInfo.RawTimePerSection;
-         statusData.AverageFrameTime = _benchmarkContainer.GetBenchmarkAverageFrameTime(CurrentUnitInfo);
-         statusData.TimeOfLastFrame = CurrentUnitInfo.TimeOfLastFrame;
-         statusData.UnitStartTimeStamp = CurrentUnitInfo.UnitStartTimeStamp;
-         statusData.AllowRunningAsync = _prefs.GetPreference<bool>(Preference.AllowRunningAsync);
+         var statusData = new StatusData
+                          {
+                             InstanceName = _displayInstance.Settings.InstanceName,
+                             TypeOfClient = CurrentUnitInfo.UnitInfoData.TypeOfClient,
+                             LastRetrievalTime = _displayInstance.LastRetrievalTime,
+                             IgnoreUtcOffset = _displayInstance.Settings.ClientIsOnVirtualMachine,
+                             UtcOffset = TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now),
+                             ClientTimeOffset = _displayInstance.Settings.ClientTimeOffset,
+                             TimeOfLastUnitStart = TimeOfLastUnitStart,
+                             TimeOfLastFrameProgress = TimeOfLastFrameProgress,
+                             CurrentStatus = _displayInstance.Status,
+                             ReturnedStatus = returnedStatus,
+                             FrameTime = CurrentUnitInfo.RawTimePerSection,
+                             AverageFrameTime = _benchmarkContainer.GetBenchmarkAverageFrameTime(CurrentUnitInfo),
+                             TimeOfLastFrame = CurrentUnitInfo.TimeOfLastFrame,
+                             UnitStartTimeStamp = CurrentUnitInfo.UnitInfoData.UnitStartTimeStamp,
+                             AllowRunningAsync = _prefs.GetPreference<bool>(Preference.AllowRunningAsync)
+                          };
 
          // If the returned status is EuePause and current status is not
          if (statusData.ReturnedStatus.Equals(ClientStatus.EuePause) && statusData.CurrentStatus.Equals(ClientStatus.EuePause) == false)
@@ -473,8 +440,8 @@ namespace HFM.Instances
                SendEuePauseEmail(statusData.InstanceName, _prefs);
             }
          }
-      
-         Status = _statusLogic.HandleStatusData(statusData);
+
+         _displayInstance.Status = _statusLogic.HandleStatusData(statusData);
       }
 
       /// <summary>
@@ -508,16 +475,16 @@ namespace HFM.Instances
       /// Restore the given UnitInfo into this Client Instance
       /// </summary>
       /// <param name="unitInfo">UnitInfo Object to Restore</param>
-      public void RestoreUnitInfo(IUnitInfo unitInfo)
+      public void RestoreUnitInfo(UnitInfo unitInfo)
       {
-         IProtein protein = _proteinCollection.GetProtein(unitInfo.ProjectID, false);
-         CurrentUnitInfoConcrete = new UnitInfoLogic(_prefs, protein, _benchmarkContainer, unitInfo, this);
+         _displayInstance.UnitInfo = unitInfo;
+         _displayInstance.BuildUnitInfoLogic();
       }
       
       public bool Owns(IOwnedByClientInstance value)
       {
-         if (value.OwningInstanceName.Equals(Settings.InstanceName) &&
-             StringOps.PathsEqual(value.OwningInstancePath, Settings.Path))
+         if (value.OwningInstanceName.Equals(_displayInstance.Settings.InstanceName) &&
+             StringOps.PathsEqual(value.OwningInstancePath, _displayInstance.Settings.Path))
          {
             return true;
          }
@@ -525,471 +492,6 @@ namespace HFM.Instances
          return false;
       }
       
-      #endregion
-
-      #region IDisplayInstance Members
-
-      #region Grid Properties
-
-      private ClientStatus _status;
-      /// <summary>
-      /// Status of this client
-      /// </summary>
-      public ClientStatus Status
-      {
-         get { return _status; }
-         set
-         {
-            if (_status != value)
-            {
-               _status = value;
-               //OnStatusChanged(EventArgs.Empty);
-            }
-         }
-      }
-
-      float IDisplayInstance.Progress
-      {
-         get { return ((float)PercentComplete) / 100; }
-      }
-
-      string IDisplayInstance.Name
-      {
-         get { return Settings.InstanceName; }
-      }
-
-      string IDisplayInstance.ClientType
-      {
-         get
-         {
-            if (_prefs.GetPreference<bool>(Preference.ShowVersions) && String.IsNullOrEmpty(ClientVersion) == false)
-            {
-               return String.Format(CultureInfo.CurrentCulture, "{0} ({1})", CurrentUnitInfo.TypeOfClient, ClientVersion);
-            }
-            return CurrentUnitInfo.TypeOfClient.ToString();
-         }
-      }
-
-      /// <summary>
-      /// Time per frame (TPF) of the unit
-      /// </summary>
-      public TimeSpan TPF
-      {
-         get
-         {
-            if (ProductionValuesOk)
-            {
-               return CurrentUnitInfo.TimePerFrame;
-            }
-
-            return TimeSpan.Zero;
-         }
-      }
-
-      /// <summary>
-      /// Points per day (PPD) rating for this instance
-      /// </summary>
-      public double PPD
-      {
-         get
-         {
-            if (ProductionValuesOk)
-            {
-               return Math.Round(CurrentUnitInfo.PPD, _prefs.GetPreference<int>(Preference.DecimalPlaces));
-            }
-
-            return 0;
-         }
-      }
-
-      /// <summary>
-      /// Units per day (UPD) rating for this instance
-      /// </summary>
-      public double UPD
-      {
-         get
-         {
-            if (ProductionValuesOk)
-            {
-               return CurrentUnitInfo.UPD;
-            }
-
-            return 0;
-         }
-      }
-
-      int IDisplayInstance.MHz
-      {
-         get { return Settings.ClientProcessorMegahertz; }
-      }
-
-      double IDisplayInstance.PPD_MHz
-      {
-         get { return Math.Round(PPD / Settings.ClientProcessorMegahertz, 3); }
-      }
-
-      /// <summary>
-      /// Esimated time of arrival (ETA) for this protein
-      /// </summary>
-      public TimeSpan ETA
-      {
-         get
-         {
-            if (ProductionValuesOk)
-            {
-               return CurrentUnitInfo.ETA;
-            }
-
-            return TimeSpan.Zero;
-         }
-      }
-
-      string IDisplayInstance.Core
-      {
-         get
-         {
-            if (_prefs.GetPreference<bool>(Preference.ShowVersions) && String.IsNullOrEmpty(CurrentUnitInfo.CoreVersion) == false)
-            {
-               return String.Format(CultureInfo.CurrentCulture, "{0} ({1})", CurrentUnitInfo.Core, CurrentUnitInfo.CoreVersion);
-            }
-            return CurrentUnitInfo.Core;
-         }
-      }
-
-      string IDisplayInstance.CoreID
-      {
-         get { return CurrentUnitInfo.CoreID; }
-      }
-
-      string IDisplayInstance.ProjectRunCloneGen
-      {
-         get { return CurrentUnitInfo.ProjectRunCloneGen; }
-      }
-
-      public double Credit
-      {
-         get
-         {
-            // Issue 125
-            if (ProductionValuesOk && _prefs.GetPreference<bool>(Preference.CalculateBonus))
-            {
-               return CurrentUnitInfo.GetBonusCredit();
-            }
-
-            return CurrentUnitInfo.Credit;
-         }
-      }
-
-      int IDisplayInstance.Complete
-      {
-         get
-         {
-            if (_prefs.GetPreference<CompletedCountDisplayType>(Preference.CompletedCountDisplay).Equals(CompletedCountDisplayType.ClientTotal))
-            {
-               return TotalClientCompletedUnits;
-            }
-            return TotalRunCompletedUnits;
-         }
-      }
-
-      /// <summary>
-      /// Number of failed units since the last client start
-      /// </summary>
-      public int TotalRunFailedUnits { get; set; }
-      
-      string IDisplayInstance.Username
-      {
-         get { return FoldingIDAndTeam; }
-      }
-
-      DateTime IDisplayInstance.DownloadTime
-      {
-         get { return CurrentUnitInfo.DownloadTime; }
-      }
-
-      DateTime IDisplayInstance.PreferredDeadline
-      {
-         get { return CurrentUnitInfo.PreferredDeadline; }
-      }
-      
-      #endregion
-
-      #region Complex Interfaces
-
-      /// <summary>
-      /// Class member containing info on the currently running protein
-      /// </summary>
-      IProtein IDisplayInstance.CurrentProtein
-      {
-         get { return CurrentUnitInfo.CurrentProtein; }
-      }
-
-      /// <summary>
-      /// Current Log Lines based on UnitLogLines Array and CurrentUnitIndex
-      /// </summary>
-      IList<ILogLine> IDisplayInstance.CurrentLogLines
-      {
-         get { return _dataAggregator.CurrentLogLines; }
-      }
-
-      /// <summary>
-      /// Return LogLine List for Specified Queue Index
-      /// </summary>
-      /// <param name="queueIndex">Index in Queue</param>
-      /// <exception cref="ArgumentOutOfRangeException">If queueIndex is outside the bounds of the Log Lines Array</exception>
-      public IList<ILogLine> GetLogLinesForQueueIndex(int queueIndex)
-      {
-         if (_dataAggregator.UnitLogLines == null) return null;
-
-         // Check the UnitLogLines array against the requested Queue Index - Issue 171
-         if (queueIndex < 0 || queueIndex > _dataAggregator.UnitLogLines.Length - 1)
-         {
-            throw new ArgumentOutOfRangeException("QueueIndex", String.Format(CultureInfo.CurrentCulture,
-               "Index is out of range.  Requested Index: {0}.  Array Length: {1}", queueIndex, _dataAggregator.UnitLogLines.Length));
-         }
-
-         if (_dataAggregator.UnitLogLines[queueIndex] != null)
-         {
-            return _dataAggregator.UnitLogLines[queueIndex];
-         }
-
-         return null;
-      }
-
-      /// <summary>
-      /// Queue Base Interface
-      /// </summary>
-      IQueueBase IDisplayInstance.Queue
-      {
-         get { return _dataAggregator.Queue; }
-      }
-      
-      #endregion
-
-      private DateTime _lastRetrievalTime = DateTime.MinValue;
-      /// <summary>
-      /// When the log files were last successfully retrieved
-      /// </summary>
-      public DateTime LastRetrievalTime
-      {
-         get { return _lastRetrievalTime; }
-         private set
-         {
-            _lastRetrievalTime = value;
-         }
-      }
-
-      /// <summary>
-      /// Flag denoting if Progress, Production, and Time based values are OK to Display
-      /// </summary>
-      public bool ProductionValuesOk
-      {
-         get
-         {
-            if (Status.Equals(ClientStatus.Running) ||
-                Status.Equals(ClientStatus.RunningAsync) ||
-                Status.Equals(ClientStatus.RunningNoFrameTimes))
-            {
-               return true;
-            }
-
-            return false;
-         }
-      }
-
-      /// <summary>
-      /// Client host type (Path, FTP, or HTTP)
-      /// </summary>
-      InstanceType IDisplayInstance.InstanceHostType
-      {
-         get { return Settings.InstanceHostType; }
-      }
-
-      /// <summary>
-      /// Location of log files for this instance
-      /// </summary>
-      string IDisplayInstance.Path
-      {
-         get { return Settings.Path; }
-      }
-
-      /// <summary>
-      /// Client Path and Arguments (If Arguments Exist)
-      /// </summary>
-      public string ClientPathAndArguments
-      {
-         get
-         {
-            if (Arguments.Length == 0)
-            {
-               return Settings.Path;
-            }
-
-            return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Settings.Path, Arguments);
-         }
-      }
-
-      /// <summary>
-      /// Specifies that this client is on a VM that reports local time as UTC
-      /// </summary>
-      bool IDisplayInstance.ClientIsOnVirtualMachine
-      {
-         get { return Settings.ClientIsOnVirtualMachine; }
-      }
-
-      /// <summary>
-      /// Frame progress of the unit
-      /// </summary>
-      public int FramesComplete
-      {
-         get
-         {
-            if (ProductionValuesOk)
-            {
-               return CurrentUnitInfo.FramesComplete;
-            }
-
-            return 0;
-         }
-      }
-
-      /// <summary>
-      /// Current progress (percentage) of the unit
-      /// </summary>
-      public int PercentComplete
-      {
-         get
-         {
-            if (ProductionValuesOk ||
-                Status.Equals(ClientStatus.Paused))
-            {
-               return CurrentUnitInfo.PercentComplete;
-            }
-
-            return 0;
-         }
-      }
-
-      /// <summary>
-      /// Client Type for this work unit
-      /// </summary>
-      ClientType IDisplayInstance.TypeOfClient
-      {
-         get { return CurrentUnitInfo.TypeOfClient; }
-      }
-
-      /// <summary>
-      /// Client Version
-      /// </summary>
-      public string ClientVersion { get; set; }
-
-      string IDisplayInstance.CoreName
-      {
-         get { return CurrentUnitInfo.Core; }
-      }
-
-      string IDisplayInstance.CoreVersion
-      {
-         get { return CurrentUnitInfo.CoreVersion; }
-      }
-
-      /// <summary>
-      /// Project ID Number
-      /// </summary>
-      int IDisplayInstance.ProjectID
-      {
-         get { return CurrentUnitInfo.ProjectID; }
-      }
-
-      /// <summary>
-      /// User ID is a Duplicate of another Client's User ID
-      /// </summary>
-      public bool UserIdIsDuplicate { get; set; }
-
-      /// <summary>
-      /// Project (R/C/G) is a Duplicate of another Client's Project (R/C/G)
-      /// </summary>
-      public bool ProjectIsDuplicate { get; set; }
-
-      public bool UsernameOk
-      {
-         get
-         {
-            // if these are the default assigned values, don't check otherwise and just return true
-            if (FoldingID == Constants.FoldingIDDefault && Team == Constants.TeamDefault)
-            {
-               return true;
-            }
-
-            if ((FoldingID != _prefs.GetPreference<string>(Preference.StanfordId) ||
-                      Team != _prefs.GetPreference<int>(Preference.TeamId)) &&
-                (Status.Equals(ClientStatus.Unknown) == false && Status.Equals(ClientStatus.Offline) == false))
-            {
-               return false;
-            }
-
-            return true;
-         }
-      }
-
-      /// <summary>
-      /// Number of completed units since the last client start
-      /// </summary>
-      public int TotalRunCompletedUnits { get; set; }
-
-      /// <summary>
-      /// Total Units Completed for lifetime of the client (read from log file)
-      /// </summary>
-      public int TotalClientCompletedUnits { get; set; }
-
-      /// <summary>
-      /// Cached FAHlog Filename for this instance
-      /// </summary>
-      string IDisplayInstance.CachedFahLogName
-      {
-         get { return Settings.CachedFahLogName; }
-      }
-
-      /// <summary>
-      /// Esimated time of arrival (ETA) for this protein
-      /// </summary>
-      public DateTime EtaDate
-      {
-         get
-         {
-            if (ProductionValuesOk)
-            {
-               return CurrentUnitInfo.EtaDate;
-            }
-
-            return DateTime.MinValue;
-         }
-      }
-
-      /// <summary>
-      /// Flag specifying if EtaDate is Unknown
-      /// </summary>
-      bool IDisplayInstance.EtaDateUnknown
-      {
-         get { return CurrentUnitInfo.EtaDateUnknown; }
-      }
-
-      /// <summary>
-      /// Flag specifying if Download Time is Unknown
-      /// </summary>
-      bool IDisplayInstance.DownloadTimeUnknown
-      {
-         get { return CurrentUnitInfo.DownloadTimeUnknown; }
-      }
-
-      /// <summary>
-      /// Flag specifying if Preferred Deadline is Unknown
-      /// </summary>
-      bool IDisplayInstance.PreferredDeadlineUnknown
-      {
-         get { return CurrentUnitInfo.PreferredDeadlineUnknown; }
-      }
-
       #endregion
    }
 }

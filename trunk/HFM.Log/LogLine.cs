@@ -27,7 +27,7 @@ using HFM.Instrumentation;
 
 namespace HFM.Log
 {
-   public class LogLine : ILogLine
+   internal static class LogLine
    {
       #region Regex (Static)
       // ReSharper disable InconsistentNaming
@@ -125,39 +125,9 @@ namespace HFM.Log
       // ReSharper restore InconsistentNaming
       #endregion
 
-      #region Properties
-
-      public LogLineType LineType { get; set; }
-
-      public int LineIndex { get; private set; }
-
-      public string LineRaw { get; private set; }
-
-      public object LineData { get; private set; }
-
-      #endregion
-
-      #region CTOR
-      public LogLine(LogLineType type, int index, string logLine)
-      {
-         try
-         {
-            LineType = type;
-            LineIndex = index;
-            LineRaw = logLine;
-            LineData = GetLineData(this);
-         }
-         catch (Exception ex)
-         {
-            LineType = LogLineType.Unknown;
-
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
-         }
-      }
-      #endregion
-
       #region Methods
-      private static object GetLineData(ILogLine logLine)
+      
+      public static object GetLineData(ILogLine logLine)
       {
          switch (logLine.LineType)
          {
@@ -407,11 +377,7 @@ namespace HFM.Log
 
          return false;
       }
-
-      public override string ToString()
-      {
-         return LineRaw;
-      }
+      
       #endregion
    }
 }

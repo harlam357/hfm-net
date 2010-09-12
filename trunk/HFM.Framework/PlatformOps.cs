@@ -295,14 +295,14 @@ namespace HFM.Framework
       public static bool IsUnitInfoCurrentUnitInfo(IUnitInfoLogic currentUnitInfo, IUnitInfoLogic parsedUnitInfo)
       {
          // if the Projects are known
-         if (currentUnitInfo != null && currentUnitInfo.ProjectIsUnknown == false &&
-             parsedUnitInfo != null && parsedUnitInfo.ProjectIsUnknown == false)
+         if (currentUnitInfo != null && currentUnitInfo.UnitInfoData.ProjectIsUnknown == false &&
+             parsedUnitInfo != null && parsedUnitInfo.UnitInfoData.ProjectIsUnknown == false)
          {
-            // Matches the Current Project and Raw Download Time
-            // DownloadTime check should be made on the RawDownloadTime
-            // value from IUnitInfoLogic
-            if (ProjectsMatch(currentUnitInfo, parsedUnitInfo) &&
-                currentUnitInfo.RawDownloadTime.Equals(parsedUnitInfo.RawDownloadTime))
+            // Matches the Current Project and Raw Download Time.
+            // Download Time check should be made on the DownloadTime
+            // property value available in the UnitInfoData property.
+            if (ProjectsMatch(currentUnitInfo.UnitInfoData, parsedUnitInfo.UnitInfoData) &&
+                currentUnitInfo.UnitInfoData.DownloadTime.Equals(parsedUnitInfo.UnitInfoData.DownloadTime))
             {
                return true;
             }
@@ -327,6 +327,12 @@ namespace HFM.Framework
       /// <param name="coreName">FAH Core Name (from psummary)</param>
       public static ClientType GetClientTypeFromCore(string coreName)
       {
+         // make this method more forgiving - rwh 9/6/10
+         if (String.IsNullOrEmpty(coreName))
+         {
+            return ClientType.Unknown;   
+         }
+         
          switch (coreName.ToUpperInvariant())
          {
             case "GROMACS":

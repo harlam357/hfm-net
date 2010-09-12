@@ -167,7 +167,7 @@ namespace HFM.Instances
          if (unit == null) throw new ArgumentNullException("unit", "Argument 'unit' cannot be null.");
 
          // project is not known, don't add to benchmark data
-         if (unit.ProjectIsUnknown) return;
+         if (unit.UnitInfoData.ProjectIsUnknown) return;
 
          // no progress has been made so stub out
          if (startingFrame > endingFrame) return;
@@ -176,7 +176,7 @@ namespace HFM.Instances
          if (findBenchmark == null)
          {
             InstanceProteinBenchmark newBenchmark =
-               new InstanceProteinBenchmark(unit.OwningInstanceName, unit.OwningInstancePath, unit.ProjectID);
+               new InstanceProteinBenchmark(unit.UnitInfoData.OwningInstanceName, unit.UnitInfoData.OwningInstancePath, unit.UnitInfoData.ProjectID);
 
             if (UpdateBenchmarkFrames(unit, startingFrame, endingFrame, newBenchmark))
             {
@@ -214,7 +214,7 @@ namespace HFM.Instances
             {
                HfmTrace.WriteToHfmConsole(TraceLevel.Verbose,
                                           String.Format(CultureInfo.CurrentCulture, "{0} ({1}) FrameID '{2}' Not Found ({3})",
-                                                        HfmTrace.FunctionName, unit.OwningInstanceName, i, unit.ProjectRunCloneGen));
+                                                        HfmTrace.FunctionName, unit.UnitInfoData.OwningInstanceName, i, unit.ProjectRunCloneGen));
             }
          }
 
@@ -244,9 +244,9 @@ namespace HFM.Instances
       {
          return _collection.BenchmarkList.Find(delegate(InstanceProteinBenchmark proteinBenchmark)
          {
-            return proteinBenchmark.OwningInstanceName == unit.OwningInstanceName &&
-                   StringOps.PathsEqual(proteinBenchmark.OwningInstancePath, unit.OwningInstancePath) &&
-                   proteinBenchmark.ProjectID == unit.ProjectID;
+            return proteinBenchmark.OwningInstanceName == unit.UnitInfoData.OwningInstanceName &&
+                   StringOps.PathsEqual(proteinBenchmark.OwningInstancePath, unit.UnitInfoData.OwningInstancePath) &&
+                   proteinBenchmark.ProjectID == unit.UnitInfoData.ProjectID;
          });
       }
 

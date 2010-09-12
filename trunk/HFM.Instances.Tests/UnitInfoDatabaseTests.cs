@@ -35,21 +35,24 @@ namespace HFM.Instances.Tests
             File.Delete(TestFile);
          }
       
+         var unitInfo = _mocks.Stub<IUnitInfo>();
+         unitInfo.ProjectID = 2669;
+         unitInfo.ProjectRun = 1;
+         unitInfo.ProjectClone = 2;
+         unitInfo.ProjectGen = 3;
+         unitInfo.OwningInstanceName = "Owner";
+         unitInfo.OwningInstancePath = "Path";
+         unitInfo.FoldingID = "harlam357";
+         unitInfo.Team = 32;
+         unitInfo.CoreVersion = "2.09";
+         unitInfo.UnitResult = WorkUnitResult.FinishedUnit;
+         unitInfo.DownloadTime = new DateTime(2010, 1, 1);
+         unitInfo.FinishedTime = new DateTime(2010, 1, 2);
+         
          var unitInfoLogic = _mocks.DynamicMock<IUnitInfoLogic>();
-         SetupResult.For(unitInfoLogic.ProjectID).Return(2669);
-         SetupResult.For(unitInfoLogic.ProjectRun).Return(1);
-         SetupResult.For(unitInfoLogic.ProjectClone).Return(2);
-         SetupResult.For(unitInfoLogic.ProjectGen).Return(3);
-         SetupResult.For(unitInfoLogic.OwningInstanceName).Return("Owner");
-         SetupResult.For(unitInfoLogic.OwningInstancePath).Return("Path");
-         SetupResult.For(unitInfoLogic.FoldingID).Return("harlam357");
-         SetupResult.For(unitInfoLogic.Team).Return(32);
-         SetupResult.For(unitInfoLogic.CoreVersion).Return("2.09");
+         SetupResult.For(unitInfoLogic.UnitInfoData).Return(unitInfo);
          SetupResult.For(unitInfoLogic.FramesComplete).Return(100);
          SetupResult.For(unitInfoLogic.RawTimePerAllSections).Return(600);
-         SetupResult.For(unitInfoLogic.UnitResult).Return(WorkUnitResult.FinishedUnit);
-         SetupResult.For(unitInfoLogic.RawDownloadTime).Return(new DateTime(2010, 1, 1));
-         SetupResult.For(unitInfoLogic.RawFinishedTime).Return(new DateTime(2010, 1, 2));
 
          _mocks.ReplayAll();
 

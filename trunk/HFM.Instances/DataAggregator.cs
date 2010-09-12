@@ -107,20 +107,20 @@ namespace HFM.Instances
       /// <summary>
       /// Current Log Lines based on UnitLogLines Array and CurrentUnitIndex
       /// </summary>
-      public IList<ILogLine> CurrentLogLines
+      public IList<LogLine> CurrentLogLines
       {
          get
          {
-            return _unitLogLines == null ? new List<ILogLine>() : _unitLogLines[CurrentUnitIndex];
+            return _unitLogLines == null ? new List<LogLine>() : _unitLogLines[CurrentUnitIndex];
          }
       }
 
-      private IList<ILogLine>[] _unitLogLines;
+      private IList<LogLine>[] _unitLogLines;
       /// <summary>
       /// Array of LogLine Lists
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-      public IList<ILogLine>[] UnitLogLines
+      public IList<LogLine>[] UnitLogLines
       {
          get { return _unitLogLines; }
       }
@@ -208,7 +208,7 @@ namespace HFM.Instances
       private IUnitInfo[] GenerateUnitInfoDataFromLogs()
       {
          var parsedUnits = new IUnitInfo[2];
-         _unitLogLines = new IList<ILogLine>[2];
+         _unitLogLines = new IList<LogLine>[2];
 
          if (_logReader.PreviousWorkUnitLogLines != null)
          {
@@ -233,7 +233,7 @@ namespace HFM.Instances
       private IUnitInfo[] GenerateUnitInfoDataFromQueue()
       {
          var parsedUnits = new IUnitInfo[10];
-         _unitLogLines = new IList<ILogLine>[10];
+         _unitLogLines = new IList<LogLine>[10];
 
          for (int queueIndex = 0; queueIndex < parsedUnits.Length; queueIndex++)
          {
@@ -451,9 +451,9 @@ namespace HFM.Instances
          }
       }
 
-      private static void ParseFrameData(IEnumerable<ILogLine> frameData, IUnitInfo unit)
+      private static void ParseFrameData(IEnumerable<LogLine> frameData, IUnitInfo unit)
       {
-         foreach (ILogLine frame in frameData)
+         foreach (var frame in frameData)
          {
             unit.SetCurrentFrame(frame);
          }

@@ -121,7 +121,7 @@ namespace HFM.Forms
             if (instance != null && instance.Owns(benchmark))
             {
                unit = instance.CurrentUnitInfo;
-               valuesOk = instance.ProductionValuesOk;
+               valuesOk = instance.DisplayInstance.ProductionValuesOk;
             }
             UpdateBenchmarkText(benchmark.ToMultiLineString(unit, _prefs.PpdFormatString, valuesOk));
          }

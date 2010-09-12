@@ -17,21 +17,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 using HFM.Framework;
+using HFM.Instrumentation;
 
 namespace HFM.Log
 {
    /// <summary>
    /// List of Client Log Lines.
    /// </summary>
-   public class LogLineList : List<ILogLine>
+   public class LogLineList : List<Framework.LogLine>
    {
       public void HandleLogLine(int index, string logLine)
       {
          LogLineType lineType = DetermineLineType(logLine);
-         Add(new LogLine(lineType, index, logLine));
+         var logLineObject = new Framework.LogLine { LineType = lineType, LineIndex = index, LineRaw = logLine };
+         try
+         {
+            logLineObject.LineData = LogLine.GetLineData(logLineObject);
+         }
+         catch (Exception ex)
+         {
+            logLineObject.LineType = LogLineType.Unknown;
+            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, ex);
+         }
+         Add(logLineObject);
       }
 
       /// <summary>

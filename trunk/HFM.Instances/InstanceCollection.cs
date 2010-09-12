@@ -150,7 +150,14 @@ namespace HFM.Instances
       [CLSCompliant(false)]
       public IDisplayInstance SelectedInstance
       {
-         get { return _currentInstance; }
+         get
+         {
+            if (_currentInstance != null)
+            {
+               return _currentInstance.DisplayInstance;
+            }
+            return null;
+         }
       }
       
       public IClientInstanceSettings SelectedInstanceSettings
@@ -848,7 +855,7 @@ namespace HFM.Instances
 
                if (_Prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog))
                {
-                  foreach (ClientInstance instance in instances)
+                  foreach (var instance in instances)
                   {
                      string cachedFahlogPath = Path.Combine(_Prefs.CacheDirectory, instance.Settings.CachedFahLogName);
                      if (File.Exists(cachedFahlogPath))
@@ -1159,7 +1166,7 @@ namespace HFM.Instances
             foreach (ClientInstance instance in _instanceCollection.Values)
             {
                // Don't save the UnitInfo object if the contained Project is Unknown
-               if (instance.CurrentUnitInfo.ProjectIsUnknown == false)
+               if (instance.CurrentUnitInfo.UnitInfoData.ProjectIsUnknown == false)
                {
                   _unitInfoContainer.Add(instance.CurrentUnitInfo.UnitInfoData);
                }
@@ -1198,7 +1205,7 @@ namespace HFM.Instances
                IDisplayInstance findInstance = FindDisplayInstance(_displayCollection, instance.Settings.InstanceName);
                if (findInstance == null)
                {
-                  _displayCollection.Add(instance);
+                  _displayCollection.Add(instance.DisplayInstance);
                }
             }
          }
@@ -1213,13 +1220,13 @@ namespace HFM.Instances
       public void FindDuplicates() // Issue 19
       {
          var instances = GetCurrentInstanceArray();
-         FindDuplicateUserId(instances);
-         FindDuplicateProjects(instances);
+         FindDuplicateUserId(_displayCollection);
+         FindDuplicateProjects(_displayCollection);
 
          OnFindDuplicatesComplete(EventArgs.Empty);
       }
 
-      private static void FindDuplicateUserId(IEnumerable<ClientInstance> instances)
+      private static void FindDuplicateUserId(IEnumerable<IDisplayInstance> instances)
       {
          var duplicates = (from x in instances
                            group x by x.UserAndMachineId into g
@@ -1227,21 +1234,21 @@ namespace HFM.Instances
                            where count > 1 && g.First().UserIdUnknown == false
                            select g.Key);
 
-         foreach (ClientInstance instance in instances)
+         foreach (IDisplayInstance instance in instances)
          {
             instance.UserIdIsDuplicate = duplicates.Contains(instance.UserAndMachineId);
          }
       }
 
-      private static void FindDuplicateProjects(IEnumerable<ClientInstance> instances)
+      private static void FindDuplicateProjects(IEnumerable<IDisplayInstance> instances)
       {
          var duplicates = (from x in instances
                            group x by x.CurrentUnitInfo.ProjectRunCloneGen into g
                            let count = g.Count()
-                           where count > 1 && g.First().CurrentUnitInfo.ProjectIsUnknown == false
+                           where count > 1 && g.First().CurrentUnitInfo.UnitInfoData.ProjectIsUnknown == false
                            select g.Key);
 
-         foreach (ClientInstance instance in instances)
+         foreach (IDisplayInstance instance in instances)
          {
             instance.ProjectIsDuplicate = duplicates.Contains(instance.CurrentUnitInfo.ProjectRunCloneGen);
          }

@@ -25,12 +25,20 @@ namespace HFM.Framework
    [CLSCompliant(false)]
    public interface IDisplayInstance
    {
+      IUnitInfoLogic CurrentUnitInfo { get; set; }
+   
+      IClientInstanceSettings Settings { get; }
+      
+      bool UserIdUnknown { get; }
+      
+      string UserAndMachineId { get; }
+   
       #region Grid Properties
    
       /// <summary>
       /// 
       /// </summary>
-      ClientStatus Status { get; }
+      ClientStatus Status { get; set; }
 
       /// <summary>
       /// Current progress (percentage) of the unit
@@ -134,14 +142,14 @@ namespace HFM.Framework
       /// <summary>
       /// Current Log Lines based on UnitLogLines Array and CurrentUnitIndex
       /// </summary>
-      IList<ILogLine> CurrentLogLines { get; }
+      IList<LogLine> CurrentLogLines { get; }
 
       /// <summary>
       /// Return LogLine List for Specified Queue Index
       /// </summary>
       /// <param name="queueIndex">Index in Queue</param>
       /// <exception cref="ArgumentOutOfRangeException">If queueIndex is outside the bounds of the Log Lines Array</exception>
-      IList<ILogLine> GetLogLinesForQueueIndex(int queueIndex);
+      IList<LogLine> GetLogLinesForQueueIndex(int queueIndex);
 
       /// <summary>
       /// Queue Base Interface
@@ -153,7 +161,7 @@ namespace HFM.Framework
       /// <summary>
       /// When the log files were last successfully retrieved
       /// </summary>
-      DateTime LastRetrievalTime { get; }
+      DateTime LastRetrievalTime { get; set; }
 
       /// <summary>
       /// Flag denoting if Progress, Production, and Time based values are OK to Display
@@ -215,12 +223,12 @@ namespace HFM.Framework
       /// <summary>
       /// User ID is a Duplicate of another Client's User ID
       /// </summary>
-      bool UserIdIsDuplicate { get; }
+      bool UserIdIsDuplicate { get; set; }
 
       /// <summary>
       /// Project (R/C/G) is a Duplicate of another Client's Project (R/C/G)
       /// </summary>
-      bool ProjectIsDuplicate { get; }
+      bool ProjectIsDuplicate { get; set; }
 
       bool UsernameOk { get; }
 
@@ -243,20 +251,5 @@ namespace HFM.Framework
       /// Esimated time of arrival (ETA) for this unit
       /// </summary>
       DateTime EtaDate { get; }
-
-      /// <summary>
-      /// Flag specifying if EtaDate is Unknown
-      /// </summary>
-      bool EtaDateUnknown { get; }
-
-      /// <summary>
-      /// Flag specifying if Download Time is Unknown
-      /// </summary>
-      bool DownloadTimeUnknown { get; }
-
-      /// <summary>
-      /// Flag specifying if Preferred Deadline is Unknown
-      /// </summary>
-      bool PreferredDeadlineUnknown { get; }
    }
 }

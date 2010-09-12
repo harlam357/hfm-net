@@ -20,7 +20,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 using HFM.Framework;
@@ -51,87 +50,28 @@ namespace HFM.Instances
       }
 
       /// <summary>
-      /// Owning Client Instance Interface
+      /// Owning Client Instance Settings Interface
       /// </summary>
-      private readonly IClientInstance _clientInstance;
+      private readonly IClientInstanceSettings _clientInstanceSettings;
 
-      /// <summary>
-      /// Use UTC Time Data as Local Time
-      /// </summary>
-      private bool UtcOffsetIsZero
-      {
-         get { return _clientInstance.Settings.ClientIsOnVirtualMachine; }
-      }
-      
-      /// <summary>
-      /// Client Time Adjustment (apply to DateTime values)
-      /// </summary>
-      private int ClientTimeOffset
-      {
-         get { return _clientInstance.Settings.ClientTimeOffset; }
-      }
-      #endregion
-
-      #region Owner Data Properties
-      /// <summary>
-      /// Name of the Client Instance that owns this UnitInfo
-      /// </summary>
-      public string OwningInstanceName
-      {
-         get { return _unitInfo.OwningInstanceName; }
-      }
-
-      /// <summary>
-      /// Path of the Client Instance that owns this UnitInfo
-      /// </summary>
-      public string OwningInstancePath
-      {
-         get { return _unitInfo.OwningInstancePath; }
-      }
-      #endregion
-
-      #region Retrieval Time Property
-      /// <summary>
-      /// Local time the logs used to generate this UnitInfo were retrieved
-      /// </summary>
-      public DateTime UnitRetrievalTime
-      {
-         get { return _unitInfo.UnitRetrievalTime; }
-      }
-      #endregion
-
-      #region Folding ID and Team Properties
-      /// <summary>
-      /// The Folding ID (Username) attached to this work unit
-      /// </summary>
-      public string FoldingID
-      {
-         get { return _unitInfo.FoldingID; }
-      }
-
-      /// <summary>
-      /// The Team number attached to this work unit
-      /// </summary>
-      public int Team
-      {
-         get { return _unitInfo.Team; }
-      }
+      private readonly IDisplayInstance _displayInstance;
       #endregion
 
       #region Constructors
 
       [CLSCompliant(false)]
       public UnitInfoLogic(IPreferenceSet prefs, IProtein protein, IProteinBenchmarkContainer benchmarkContainer, 
-                           IUnitInfo unitInfo, IClientInstance clientInstance)
+                           IUnitInfo unitInfo, IClientInstanceSettings clientInstanceSettings, IDisplayInstance displayInstance)
       {
          _prefs = prefs;
          _benchmarkContainer = benchmarkContainer;
          _unitInfo = (UnitInfo)unitInfo;
-         _clientInstance = clientInstance;
+         _clientInstanceSettings = clientInstanceSettings;
+         _displayInstance = displayInstance;
 
-         _unitInfo.OwningInstanceName = _clientInstance.Settings.InstanceName;
-         _unitInfo.OwningInstancePath = _clientInstance.Settings.Path;
-         _unitInfo.UnitRetrievalTime = _clientInstance.LastRetrievalTime;
+         _unitInfo.OwningInstanceName = _clientInstanceSettings.InstanceName;
+         _unitInfo.OwningInstancePath = _clientInstanceSettings.Path;
+         _unitInfo.UnitRetrievalTime = _displayInstance.LastRetrievalTime;
 
          CurrentProtein = protein;
          _unitInfo.TypeOfClient = PlatformOps.GetClientTypeFromCore(CurrentProtein.Core);
@@ -141,14 +81,6 @@ namespace HFM.Instances
 
       #region Unit Level Members
       /// <summary>
-      /// Client Type for this work unit
-      /// </summary>
-      public ClientType TypeOfClient
-      {
-         get { return _unitInfo.TypeOfClient; }
-      }
-
-      /// <summary>
       /// Date/time the unit was downloaded
       /// </summary>
       public DateTime DownloadTime
@@ -157,32 +89,16 @@ namespace HFM.Instances
          {
             if (_unitInfo.DownloadTime.Equals(DateTime.MinValue) == false)
             {
-               if (UtcOffsetIsZero == false)
+               if (_clientInstanceSettings.ClientIsOnVirtualMachine == false)
                {
-                  return _unitInfo.DownloadTime.ToLocalTime().Subtract(TimeSpan.FromMinutes(ClientTimeOffset));
+                  return _unitInfo.DownloadTime.ToLocalTime().Subtract(TimeSpan.FromMinutes(_clientInstanceSettings.ClientTimeOffset));
                }
 
-               return _unitInfo.DownloadTime.Subtract(TimeSpan.FromMinutes(ClientTimeOffset)); 
+               return _unitInfo.DownloadTime.Subtract(TimeSpan.FromMinutes(_clientInstanceSettings.ClientTimeOffset)); 
             }
             
             return _unitInfo.DownloadTime; 
          }
-      }
-
-      /// <summary>
-      /// Raw date/time the unit downloaded (UTC and no ClientTimeOffset)
-      /// </summary>
-      public DateTime RawDownloadTime
-      {
-         get { return _unitInfo.DownloadTime; }
-      }
-
-      /// <summary>
-      /// Flag specifying if Download Time is Unknown
-      /// </summary>
-      public bool DownloadTimeUnknown
-      {
-         get { return _unitInfo.DownloadTimeUnknown; }
       }
 
       /// <summary>
@@ -192,7 +108,7 @@ namespace HFM.Instances
       {
          get
          {
-            if (DownloadTimeUnknown == false)
+            if (_unitInfo.DownloadTimeUnknown == false)
             {
                if (CurrentProtein.IsUnknown == false)
                {
@@ -207,35 +123,19 @@ namespace HFM.Instances
       }
 
       /// <summary>
-      /// Flag specifying if Preferred Deadline is Unknown
-      /// </summary>
-      public bool PreferredDeadlineUnknown
-      {
-         get { return PreferredDeadline.Equals(DateTime.MinValue); }
-      }
-
-      /// <summary>
       /// Work Unit Preferred Deadline
       /// </summary>
       public DateTime FinalDeadline
       {
          get
          {
-            if (DownloadTimeUnknown == false && CurrentProtein.IsUnknown == false)
+            if (_unitInfo.DownloadTimeUnknown == false && CurrentProtein.IsUnknown == false)
             {
                return DownloadTime.AddDays(CurrentProtein.MaxDays);
             }
 
             return DateTime.MinValue;
          }
-      }
-
-      /// <summary>
-      /// Flag specifying if Final Deadline is Unknown
-      /// </summary>
-      public bool FinalDeadlineUnknown
-      {
-         get { return FinalDeadline.Equals(DateTime.MinValue); }
       }
 
       /// <summary>
@@ -247,33 +147,16 @@ namespace HFM.Instances
          {
             if (_unitInfo.DueTime.Equals(DateTime.MinValue) == false)
             {
-               if (UtcOffsetIsZero == false)
+               if (_clientInstanceSettings.ClientIsOnVirtualMachine == false)
                {
-                  return _unitInfo.DueTime.ToLocalTime().Subtract(TimeSpan.FromMinutes(ClientTimeOffset));
+                  return _unitInfo.DueTime.ToLocalTime().Subtract(TimeSpan.FromMinutes(_clientInstanceSettings.ClientTimeOffset));
                }
 
-               return _unitInfo.DueTime.Subtract(TimeSpan.FromMinutes(ClientTimeOffset));
+               return _unitInfo.DueTime.Subtract(TimeSpan.FromMinutes(_clientInstanceSettings.ClientTimeOffset));
             }
 
             return _unitInfo.DueTime; 
          }
-      }
-
-      /// <summary>
-      /// Flag specifying if Due Time is Unknown
-      /// </summary>
-      public bool DueTimeUnknown
-      {
-         get { return _unitInfo.DueTimeUnknown; }
-      }
-
-      /// <summary>
-      /// Unit Start Time Stamp (Time Stamp from First Parsable Line in LogLines)
-      /// </summary>
-      /// <remarks>Used to Determine Status when a LogLine Time Stamp is not available - See ClientInstance.HandleReturnedStatus</remarks>
-      public TimeSpan UnitStartTimeStamp
-      {
-         get { return _unitInfo.UnitStartTimeStamp; }
       }
 
       /// <summary>
@@ -285,84 +168,16 @@ namespace HFM.Instances
          {
             if (_unitInfo.FinishedTime.Equals(DateTime.MinValue) == false)
             {
-               if (UtcOffsetIsZero == false)
+               if (_clientInstanceSettings.ClientIsOnVirtualMachine == false)
                {
-                  return _unitInfo.FinishedTime.ToLocalTime().Subtract(TimeSpan.FromMinutes(ClientTimeOffset));
+                  return _unitInfo.FinishedTime.ToLocalTime().Subtract(TimeSpan.FromMinutes(_clientInstanceSettings.ClientTimeOffset));
                }
 
-               return _unitInfo.FinishedTime.Subtract(TimeSpan.FromMinutes(ClientTimeOffset));
+               return _unitInfo.FinishedTime.Subtract(TimeSpan.FromMinutes(_clientInstanceSettings.ClientTimeOffset));
             }
 
             return _unitInfo.FinishedTime; 
          }
-      }
-
-      /// <summary>
-      /// Raw date/time the unit finished (UTC and no ClientTimeOffset)
-      /// </summary>
-      public DateTime RawFinishedTime
-      {
-         get { return _unitInfo.FinishedTime; }
-      }
-
-      /// <summary>
-      /// Core Version Number
-      /// </summary>
-      public string CoreVersion
-      {
-         get { return _unitInfo.CoreVersion; }
-      }
-
-      /// <summary>
-      /// Core ID (Hex Code) Number
-      /// </summary>
-      public string CoreID
-      {
-         get { return _unitInfo.CoreID; }
-      }
-
-      #region IProjectInfo Properties
-
-      /// <summary>
-      /// Project ID Number
-      /// </summary>
-      public int ProjectID
-      {
-         get { return _unitInfo.ProjectID; }
-      }
-
-      /// <summary>
-      /// Project ID (Run)
-      /// </summary>
-      public int ProjectRun
-      {
-         get { return _unitInfo.ProjectRun; }
-      }
-
-      /// <summary>
-      /// Project ID (Clone)
-      /// </summary>
-      public int ProjectClone
-      {
-         get { return _unitInfo.ProjectClone; }
-      }
-
-      /// <summary>
-      /// Project ID (Gen)
-      /// </summary>
-      public int ProjectGen
-      {
-         get { return _unitInfo.ProjectGen; }
-      }
-      
-      #endregion
-
-      /// <summary>
-      /// Returns true if Project (R/C/G) has not been identified
-      /// </summary>
-      public bool ProjectIsUnknown
-      {
-         get { return _unitInfo.ProjectIsUnknown; } 
       }
 
       /// <summary>
@@ -372,33 +187,9 @@ namespace HFM.Instances
       {
          get
          {
-            return String.Format(CultureInfo.InvariantCulture, "P{0} (R{1}, C{2}, G{3})", 
-               ProjectID, ProjectRun, ProjectClone, ProjectGen);
+            return String.Format(CultureInfo.InvariantCulture, "P{0} (R{1}, C{2}, G{3})",
+               _unitInfo.ProjectID, _unitInfo.ProjectRun, _unitInfo.ProjectClone, _unitInfo.ProjectGen);
          }
-      }
-
-      /// <summary>
-      /// Name of the unit
-      /// </summary>
-      public String ProteinName
-      {
-         get { return _unitInfo.ProteinName; }
-      }
-
-      /// <summary>
-      /// Tag string as read from the UnitInfo.txt file
-      /// </summary>
-      public string ProteinTag
-      {
-         get { return _unitInfo.ProteinTag; }
-      }
-
-      /// <summary>
-      /// The Result of this Work Unit
-      /// </summary>
-      public WorkUnitResult UnitResult
-      {
-         get { return _unitInfo.UnitResult; }
       }
 
       private IProtein _currentProtein;
@@ -541,7 +332,7 @@ namespace HFM.Instances
       /// </summary>
       public DateTime EtaDate
       {
-         get { return DateTime.Now.Add(ETA); }
+         get { return _unitInfo.UnitRetrievalTime.Add(ETA); }
       }
 
       /// <summary>
@@ -596,7 +387,7 @@ namespace HFM.Instances
                   return TimeSpan.Zero;
                }
 
-               return UnitRetrievalTime.Add(ETA).Subtract(DownloadTime);
+               return _unitInfo.UnitRetrievalTime.Add(ETA).Subtract(DownloadTime);
             }
 
             return TimeSpan.Zero;
@@ -626,51 +417,6 @@ namespace HFM.Instances
             return TimeSpan.Zero;
          }
       }
-      #endregion
-
-      #region CurrentProtein Pass-Through Properties/Methods
-      
-      public string WorkUnitName
-      {
-         get { return CurrentProtein.WorkUnitName; }
-      }
-
-      public double NumAtoms
-      {
-         get { return CurrentProtein.NumAtoms; }
-      }
-
-      public double Credit
-      {
-         get { return CurrentProtein.Credit; }
-      }
-
-      /// <summary>
-      /// Get the Credit of the Unit (including bonus)
-      /// </summary>
-      [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-      public double GetBonusCredit()
-      {
-         // Issue 183
-         if (_clientInstance.Status.Equals(ClientStatus.RunningAsync) ||
-             _clientInstance.Status.Equals(ClientStatus.RunningNoFrameTimes))
-         {
-            return CurrentProtein.GetBonusCredit(EftByFrameTime);
-         }
-         
-         return CurrentProtein.GetBonusCredit(EftByDownloadTime);
-      }
-
-      public double Frames
-      {
-         get { return CurrentProtein.Frames; }
-      }
-
-      public string Core
-      {
-         get { return CurrentProtein.Core; }
-      }
-      
       #endregion
 
       #region Frame (UnitFrame) Data Variables
@@ -747,7 +493,7 @@ namespace HFM.Instances
                   // Use UnitRetrievalTime (sourced from ClientInstance.LastRetrievalTime) as basis for
                   // TimeSinceUnitDownload.  This removes the use of the "floating" value DateTime.Now
                   // as a basis for the calculation. - Issue 92
-                  TimeSpan timeSinceUnitDownload = UnitRetrievalTime.Subtract(DownloadTime);
+                  TimeSpan timeSinceUnitDownload = _unitInfo.UnitRetrievalTime.Subtract(DownloadTime);
                   return (Convert.ToInt32(timeSinceUnitDownload.TotalSeconds) / CurrentFrame.FrameID);
                }
 
@@ -892,8 +638,8 @@ namespace HFM.Instances
          if (_prefs.GetPreference<bool>(Preference.CalculateBonus))
          {
             // Issue 183
-            if (_clientInstance.Status.Equals(ClientStatus.RunningAsync) ||
-                _clientInstance.Status.Equals(ClientStatus.RunningNoFrameTimes))
+            if (_displayInstance.Status.Equals(ClientStatus.RunningAsync) ||
+                _displayInstance.Status.Equals(ClientStatus.RunningNoFrameTimes))
             {
                return CurrentProtein.GetPPD(frameTime, EftByFrameTime);
             }
@@ -908,7 +654,7 @@ namespace HFM.Instances
       {
          if (CurrentProtein.IsUnknown)
          {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, OwningInstanceName, "Current Protein is Unknown... 0 PPD.");
+            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, _unitInfo.OwningInstanceName, "Current Protein is Unknown... 0 PPD.");
          }
          else
          {
@@ -916,22 +662,22 @@ namespace HFM.Instances
             if (_prefs.GetPreference<bool>(Preference.CalculateBonus))
             {
                // Issue 183
-               if (_clientInstance.Status.Equals(ClientStatus.RunningAsync) ||
-                   _clientInstance.Status.Equals(ClientStatus.RunningNoFrameTimes))
+               if (_displayInstance.Status.Equals(ClientStatus.RunningAsync) ||
+                   _displayInstance.Status.Equals(ClientStatus.RunningNoFrameTimes))
                {
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, OwningInstanceName, "Calculate Bonus PPD - EFT by Frame Time.");
-                  CurrentProtein.GetPPD(TimePerFrame, EftByFrameTime, OwningInstanceName);
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, _unitInfo.OwningInstanceName, "Calculate Bonus PPD - EFT by Frame Time.");
+                  CurrentProtein.GetPPD(TimePerFrame, EftByFrameTime, _unitInfo.OwningInstanceName);
                }
                else
                {
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, OwningInstanceName, "Calculate Bonus PPD - EFT by Download Time.");
-                  CurrentProtein.GetPPD(TimePerFrame, EftByDownloadTime, OwningInstanceName);
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, _unitInfo.OwningInstanceName, "Calculate Bonus PPD - EFT by Download Time.");
+                  CurrentProtein.GetPPD(TimePerFrame, EftByDownloadTime, _unitInfo.OwningInstanceName);
                }
             }
             else
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, OwningInstanceName, "Calculate Standard PPD.");
-               CurrentProtein.GetPPD(TimePerFrame, OwningInstanceName);
+               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, _unitInfo.OwningInstanceName, "Calculate Standard PPD.");
+               CurrentProtein.GetPPD(TimePerFrame, _unitInfo.OwningInstanceName);
             }
          }
       }

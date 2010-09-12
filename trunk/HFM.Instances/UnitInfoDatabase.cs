@@ -11,9 +11,11 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+
+using ProtoBuf;
+
 using HFM.Framework;
 using HFM.Instrumentation;
-using ProtoBuf;
 
 namespace HFM.Instances
 {
@@ -230,11 +232,11 @@ namespace HFM.Instances
       private static QueryParameters BuildUnitKeyQueryParameters(IUnitInfoLogic unitInfoLogic)
       {
          var parameters = new QueryParameters();
-         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectID, Type = QueryFieldType.Equal, Value = unitInfoLogic.ProjectID });
-         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectRun, Type = QueryFieldType.Equal, Value = unitInfoLogic.ProjectRun });
-         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectClone, Type = QueryFieldType.Equal, Value = unitInfoLogic.ProjectClone });
-         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectGen, Type = QueryFieldType.Equal, Value = unitInfoLogic.ProjectGen });
-         parameters.Fields.Add(new QueryField { Name = QueryFieldName.DownloadDateTime, Type = QueryFieldType.Equal, Value = unitInfoLogic.RawDownloadTime });
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectID, Type = QueryFieldType.Equal, Value = unitInfoLogic.UnitInfoData.ProjectID });
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectRun, Type = QueryFieldType.Equal, Value = unitInfoLogic.UnitInfoData.ProjectRun });
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectClone, Type = QueryFieldType.Equal, Value = unitInfoLogic.UnitInfoData.ProjectClone });
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectGen, Type = QueryFieldType.Equal, Value = unitInfoLogic.UnitInfoData.ProjectGen });
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.DownloadDateTime, Type = QueryFieldType.Equal, Value = unitInfoLogic.UnitInfoData.DownloadTime });
          return parameters;
       }
 
@@ -242,9 +244,9 @@ namespace HFM.Instances
       {
          using (var command = new SQLiteCommand(con))
          {
-            var downloadDateTime = new SQLiteParameter("DownloadDateTime", DbType.DateTime) { Value = unitInfoLogic.RawDownloadTime };
+            var downloadDateTime = new SQLiteParameter("DownloadDateTime", DbType.DateTime) { Value = unitInfoLogic.UnitInfoData.DownloadTime };
             command.Parameters.Add(downloadDateTime);
-            var completionDateTime = new SQLiteParameter("CompletionDateTime", DbType.DateTime) { Value = unitInfoLogic.RawFinishedTime };
+            var completionDateTime = new SQLiteParameter("CompletionDateTime", DbType.DateTime) { Value = unitInfoLogic.UnitInfoData.FinishedTime };
             command.Parameters.Add(completionDateTime);
             
             command.CommandText = String.Format(CultureInfo.InvariantCulture, WuHistoryTableInsertSql, WuHistoryTableName, GetValuesString(unitInfoLogic));
@@ -256,18 +258,18 @@ namespace HFM.Instances
       {
          return String.Format(CultureInfo.InvariantCulture,
                               WuHistoryTableInsertValuesFormat, 
-                              unitInfoLogic.ProjectID,
-                              unitInfoLogic.ProjectRun,
-                              unitInfoLogic.ProjectClone,
-                              unitInfoLogic.ProjectGen,
-                              unitInfoLogic.OwningInstanceName,
-                              unitInfoLogic.OwningInstancePath,
-                              unitInfoLogic.FoldingID,
-                              unitInfoLogic.Team,
-                              unitInfoLogic.CoreVersion,
+                              unitInfoLogic.UnitInfoData.ProjectID,
+                              unitInfoLogic.UnitInfoData.ProjectRun,
+                              unitInfoLogic.UnitInfoData.ProjectClone,
+                              unitInfoLogic.UnitInfoData.ProjectGen,
+                              unitInfoLogic.UnitInfoData.OwningInstanceName,
+                              unitInfoLogic.UnitInfoData.OwningInstancePath,
+                              unitInfoLogic.UnitInfoData.FoldingID,
+                              unitInfoLogic.UnitInfoData.Team,
+                              unitInfoLogic.UnitInfoData.CoreVersion,
                               unitInfoLogic.FramesComplete,
                               unitInfoLogic.RawTimePerAllSections,
-                              (int)unitInfoLogic.UnitResult);
+                              (int)unitInfoLogic.UnitInfoData.UnitResult);
       }
 
       private static QueryParameters BuildUnitKeyQueryParameters(HistoryEntry entry)
@@ -451,119 +453,119 @@ namespace HFM.Instances
       
       public void WriteCompletedUnitInfo(IUnitInfoLogic unit)
       {
-         if (unit == null) throw new ArgumentNullException("unit", "Argument 'unit' cannot be null.");
+         //if (unit == null) throw new ArgumentNullException("unit", "Argument 'unit' cannot be null.");
 
-         UpgradeUnitInfoCsvFile();
+         //UpgradeUnitInfoCsvFile();
 
-         // Open CSV file and append completed unit info to file
-         StreamWriter csvFile = null;
-         try
-         {
-            bool bWriteHeader = false;
+         //// Open CSV file and append completed unit info to file
+         //StreamWriter csvFile = null;
+         //try
+         //{
+         //   bool bWriteHeader = false;
 
-            string fileName = Path.Combine(InstanceProvider.GetInstance<IPreferenceSet>().GetPreference<string>(
-                                              Preference.ApplicationDataFolderPath), Constants.CompletedUnitsCsvFileName);
+         //   string fileName = Path.Combine(InstanceProvider.GetInstance<IPreferenceSet>().GetPreference<string>(
+         //                                     Preference.ApplicationDataFolderPath), Constants.CompletedUnitsCsvFileName);
 
-            if (File.Exists(fileName) == false)
-            {
-               bWriteHeader = true;
-            }
+         //   if (File.Exists(fileName) == false)
+         //   {
+         //      bWriteHeader = true;
+         //   }
 
-            csvFile = new StreamWriter(fileName, true);
+         //   csvFile = new StreamWriter(fileName, true);
 
-            if (bWriteHeader)
-            {
-               csvFile.WriteLine(GetUnitCsvHeader());
-            }
+         //   if (bWriteHeader)
+         //   {
+         //      csvFile.WriteLine(GetUnitCsvHeader());
+         //   }
 
-            csvFile.WriteLine(GetUnitCsvLine(unit));
-         }
-         catch (Exception ex)
-         {
-            HfmTrace.WriteToHfmConsole(ex);
-         }
-         finally
-         {
-            if (csvFile != null)
-            {
-               csvFile.Close();
-            }
-         }
+         //   csvFile.WriteLine(GetUnitCsvLine(unit));
+         //}
+         //catch (Exception ex)
+         //{
+         //   HfmTrace.WriteToHfmConsole(ex);
+         //}
+         //finally
+         //{
+         //   if (csvFile != null)
+         //   {
+         //      csvFile.Close();
+         //   }
+         //}
       }
 
-      private static void UpgradeUnitInfoCsvFile()
-      {
-         IPreferenceSet prefs = InstanceProvider.GetInstance<IPreferenceSet>();
-         string applicationDataFolderPath = prefs.GetPreference<string>(Preference.ApplicationDataFolderPath);
+      //private static void UpgradeUnitInfoCsvFile()
+      //{
+      //   IPreferenceSet prefs = InstanceProvider.GetInstance<IPreferenceSet>();
+      //   string applicationDataFolderPath = prefs.GetPreference<string>(Preference.ApplicationDataFolderPath);
 
-         string oldFilePath = Path.Combine(prefs.ApplicationPath, Constants.CompletedUnitsCsvFileName);
-         string oldFilePath022 = Path.Combine(prefs.ApplicationPath, Constants.CompletedUnitsCsvFileName.Replace(".csv", ".0_2_2.csv"));
-         string newFilePath = Path.Combine(applicationDataFolderPath, Constants.CompletedUnitsCsvFileName);
-         string newFilePath022 = Path.Combine(applicationDataFolderPath, Constants.CompletedUnitsCsvFileName.Replace(".csv", ".0_2_2.csv"));
+      //   string oldFilePath = Path.Combine(prefs.ApplicationPath, Constants.CompletedUnitsCsvFileName);
+      //   string oldFilePath022 = Path.Combine(prefs.ApplicationPath, Constants.CompletedUnitsCsvFileName.Replace(".csv", ".0_2_2.csv"));
+      //   string newFilePath = Path.Combine(applicationDataFolderPath, Constants.CompletedUnitsCsvFileName);
+      //   string newFilePath022 = Path.Combine(applicationDataFolderPath, Constants.CompletedUnitsCsvFileName.Replace(".csv", ".0_2_2.csv"));
 
-         // If file does not exist in new location but does exist in old location
-         if (File.Exists(newFilePath) == false && File.Exists(oldFilePath))
-         {
-            try
-            {
-               // Try to copy it from the old to the new
-               File.Copy(oldFilePath, newFilePath);
-               File.Delete(oldFilePath);
-            }
-            catch (Exception ex)
-            {
-               HfmTrace.WriteToHfmConsole(ex);
-            }
-         }
+      //   // If file does not exist in new location but does exist in old location
+      //   if (File.Exists(newFilePath) == false && File.Exists(oldFilePath))
+      //   {
+      //      try
+      //      {
+      //         // Try to copy it from the old to the new
+      //         File.Copy(oldFilePath, newFilePath);
+      //         File.Delete(oldFilePath);
+      //      }
+      //      catch (Exception ex)
+      //      {
+      //         HfmTrace.WriteToHfmConsole(ex);
+      //      }
+      //   }
 
-         // If file does not exist in new location but does exist in old location
-         if (File.Exists(newFilePath022) == false && File.Exists(oldFilePath022))
-         {
-            try
-            {
-               // Try to copy it from the old to the new
-               File.Copy(oldFilePath022, newFilePath022);
-               File.Delete(oldFilePath022);
-            }
-            catch (Exception ex)
-            {
-               HfmTrace.WriteToHfmConsole(ex);
-            }
-         }
+      //   // If file does not exist in new location but does exist in old location
+      //   if (File.Exists(newFilePath022) == false && File.Exists(oldFilePath022))
+      //   {
+      //      try
+      //      {
+      //         // Try to copy it from the old to the new
+      //         File.Copy(oldFilePath022, newFilePath022);
+      //         File.Delete(oldFilePath022);
+      //      }
+      //      catch (Exception ex)
+      //      {
+      //         HfmTrace.WriteToHfmConsole(ex);
+      //      }
+      //   }
 
-         StreamReader csvFile = null;
-         try
-         {
-            if (File.Exists(newFilePath))
-            {
-               // Open the current file and read the first line (header)
-               csvFile = new StreamReader(newFilePath);
-               string headerLine = csvFile.ReadLine();
-               csvFile.Close();
-               csvFile = null;
+      //   StreamReader csvFile = null;
+      //   try
+      //   {
+      //      if (File.Exists(newFilePath))
+      //      {
+      //         // Open the current file and read the first line (header)
+      //         csvFile = new StreamReader(newFilePath);
+      //         string headerLine = csvFile.ReadLine();
+      //         csvFile.Close();
+      //         csvFile = null;
 
-               // Split the line on Comma and check the resulting array length
-               string[] headerSplit = headerLine.Split(new[] { Comma }, StringSplitOptions.None);
-               // If less than 19 items this file was created before v0.3.0, last release version
-               // before v0.3.0 is v0.2.2.  Rename the current file with last release version.
-               if (headerSplit.Length < 19)
-               {
-                  File.Move(newFilePath, newFilePath.Replace(".csv", ".0_2_2.csv"));
-               }
-            }
-         }
-         catch (Exception ex)
-         {
-            HfmTrace.WriteToHfmConsole(ex);
-         }
-         finally
-         {
-            if (csvFile != null)
-            {
-               csvFile.Close();
-            }
-         }
-      }
+      //         // Split the line on Comma and check the resulting array length
+      //         string[] headerSplit = headerLine.Split(new[] { Comma }, StringSplitOptions.None);
+      //         // If less than 19 items this file was created before v0.3.0, last release version
+      //         // before v0.3.0 is v0.2.2.  Rename the current file with last release version.
+      //         if (headerSplit.Length < 19)
+      //         {
+      //            File.Move(newFilePath, newFilePath.Replace(".csv", ".0_2_2.csv"));
+      //         }
+      //      }
+      //   }
+      //   catch (Exception ex)
+      //   {
+      //      HfmTrace.WriteToHfmConsole(ex);
+      //   }
+      //   finally
+      //   {
+      //      if (csvFile != null)
+      //      {
+      //         csvFile.Close();
+      //      }
+      //   }
+      //}
 
       private static string GetUnitCsvHeader()
       {
@@ -609,73 +611,73 @@ namespace HFM.Instances
          return sbldr.ToString();
       }
 
-      private static string GetUnitCsvLine(IUnitInfoLogic unit)
-      {
-         IPreferenceSet prefs = InstanceProvider.GetInstance<IPreferenceSet>();
+      //private static string GetUnitCsvLine(IUnitInfoLogic unit)
+      //{
+      //   IPreferenceSet prefs = InstanceProvider.GetInstance<IPreferenceSet>();
 
-         StringBuilder sbldr = new StringBuilder();
-         sbldr.Append(unit.ProjectID);
-         sbldr.Append(Comma);
-         sbldr.Append(unit.WorkUnitName);
-         sbldr.Append(Comma);
-         sbldr.Append(unit.OwningInstanceName);
-         sbldr.Append(Comma);
-         sbldr.Append(unit.OwningInstancePath);
-         sbldr.Append(Comma);
-         sbldr.Append(unit.FoldingID);
-         sbldr.Append(Comma);
-         sbldr.Append(unit.Team);
-         sbldr.Append(Comma);
-         sbldr.Append(unit.TypeOfClient.ToString());
-         sbldr.Append(Comma);
-         sbldr.Append(unit.Core);
-         sbldr.Append(Comma);
-         sbldr.Append(unit.CoreVersion);
-         sbldr.Append(Comma);
-         // Issue 43 - Use Time Per All Sections and not unit.PPD
-         sbldr.Append(unit.TimePerAllSections.ToString());
-         sbldr.Append(Comma);
-         // Issue 43 - Use Time Per All Sections and not unit.PPD
-         sbldr.Append(Math.Round(unit.PPDPerAllSections, prefs.GetPreference<int>(Preference.DecimalPlaces)));
-         sbldr.Append(Comma);
-         sbldr.Append(unit.DownloadTime.ToShortDateString());
-         sbldr.Append(Comma);
-         sbldr.Append(unit.DownloadTime.ToShortTimeString());
-         sbldr.Append(Comma);
-         if (unit.FinishedTime.Equals(DateTime.MinValue))
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Writing CompletedUnitInfo using DateTime.Now.", true);
-            sbldr.Append(DateTime.Now.ToShortDateString());
-            sbldr.Append(Comma);
-            sbldr.Append(DateTime.Now.ToShortTimeString());
-            sbldr.Append(Comma);
-         }
-         else
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Writing CompletedUnitInfo using UnitInfo.FinishedTime.", true);
-            sbldr.Append(unit.FinishedTime.ToShortDateString());
-            sbldr.Append(Comma);
-            sbldr.Append(unit.FinishedTime.ToShortTimeString());
-            sbldr.Append(Comma);
-         }
-         // Write Bonus Credit if enabled - Issue 125
-         if (prefs.GetPreference<bool>(Preference.CalculateBonus))
-         {
-            sbldr.Append(unit.GetBonusCredit());
-         }
-         else
-         {
-            sbldr.Append(unit.Credit);
-         }
-         sbldr.Append(Comma);
-         sbldr.Append(unit.Frames);
-         sbldr.Append(Comma);
-         sbldr.Append(unit.NumAtoms);
-         sbldr.Append(Comma);
-         sbldr.Append(String.Format("({0}/{1}/{2})", unit.ProjectRun, unit.ProjectClone, unit.ProjectGen));
+      //   StringBuilder sbldr = new StringBuilder();
+      //   sbldr.Append(unit.ProjectID);
+      //   sbldr.Append(Comma);
+      //   sbldr.Append(unit.WorkUnitName);
+      //   sbldr.Append(Comma);
+      //   sbldr.Append(unit.OwningInstanceName);
+      //   sbldr.Append(Comma);
+      //   sbldr.Append(unit.OwningInstancePath);
+      //   sbldr.Append(Comma);
+      //   sbldr.Append(unit.FoldingID);
+      //   sbldr.Append(Comma);
+      //   sbldr.Append(unit.Team);
+      //   sbldr.Append(Comma);
+      //   sbldr.Append(unit.TypeOfClient.ToString());
+      //   sbldr.Append(Comma);
+      //   sbldr.Append(unit.Core);
+      //   sbldr.Append(Comma);
+      //   sbldr.Append(unit.CoreVersion);
+      //   sbldr.Append(Comma);
+      //   // Issue 43 - Use Time Per All Sections and not unit.PPD
+      //   sbldr.Append(unit.TimePerAllSections.ToString());
+      //   sbldr.Append(Comma);
+      //   // Issue 43 - Use Time Per All Sections and not unit.PPD
+      //   sbldr.Append(Math.Round(unit.PPDPerAllSections, prefs.GetPreference<int>(Preference.DecimalPlaces)));
+      //   sbldr.Append(Comma);
+      //   sbldr.Append(unit.DownloadTime.ToShortDateString());
+      //   sbldr.Append(Comma);
+      //   sbldr.Append(unit.DownloadTime.ToShortTimeString());
+      //   sbldr.Append(Comma);
+      //   if (unit.FinishedTime.Equals(DateTime.MinValue))
+      //   {
+      //      HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Writing CompletedUnitInfo using DateTime.Now.", true);
+      //      sbldr.Append(DateTime.Now.ToShortDateString());
+      //      sbldr.Append(Comma);
+      //      sbldr.Append(DateTime.Now.ToShortTimeString());
+      //      sbldr.Append(Comma);
+      //   }
+      //   else
+      //   {
+      //      HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Writing CompletedUnitInfo using UnitInfo.FinishedTime.", true);
+      //      sbldr.Append(unit.FinishedTime.ToShortDateString());
+      //      sbldr.Append(Comma);
+      //      sbldr.Append(unit.FinishedTime.ToShortTimeString());
+      //      sbldr.Append(Comma);
+      //   }
+      //   // Write Bonus Credit if enabled - Issue 125
+      //   if (prefs.GetPreference<bool>(Preference.CalculateBonus))
+      //   {
+      //      sbldr.Append(unit.GetBonusCredit());
+      //   }
+      //   else
+      //   {
+      //      sbldr.Append(unit.Credit);
+      //   }
+      //   sbldr.Append(Comma);
+      //   sbldr.Append(unit.Frames);
+      //   sbldr.Append(Comma);
+      //   sbldr.Append(unit.NumAtoms);
+      //   sbldr.Append(Comma);
+      //   sbldr.Append(String.Format("({0}/{1}/{2})", unit.ProjectRun, unit.ProjectClone, unit.ProjectGen));
 
-         return sbldr.ToString();
-      }
+      //   return sbldr.ToString();
+      //}
 
       public CompletedUnitsReadResult ReadCompletedUnits(string filePath)
       {

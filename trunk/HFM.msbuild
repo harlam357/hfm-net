@@ -12,7 +12,7 @@
    <PropertyGroup>
       <FxCopPath>&quot;$(ProgramFiles)\Microsoft FxCop 1.36\FxCopCmd.exe&quot;</FxCopPath>
       <NCoverPath>&quot;$(ProgramFiles)\NCover\NCover.Console.exe&quot;</NCoverPath>
-      <NCoverExcludeList>System.Runtime.CompilerServices.CompilerGeneratedAttribute</NCoverExcludeList>
+      <NCoverExcludeList>System.Runtime.CompilerServices.CompilerGeneratedAttribute;HFM.Framework.CoverageExcludeAttribute</NCoverExcludeList>
       <NCoverExpPath>&quot;$(ProgramFiles)\NCoverExplorer\NCoverExplorer.Console.exe&quot;</NCoverExpPath>
       <NUnitPath>&quot;$(ProgramFiles)\NUnit 2.4.8\bin\nunit-console-x86.exe&quot;</NUnitPath>
    </PropertyGroup>

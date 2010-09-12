@@ -32,23 +32,23 @@ namespace HFM.Framework
       /// <summary>
       /// Returns log text of the current client run.
       /// </summary>
-      IList<ILogLine> CurrentClientRunLogLines { get; }
+      IList<LogLine> CurrentClientRunLogLines { get; }
       
       /// <summary>
       /// Returns log text of the previous work unit.
       /// </summary>
-      IList<ILogLine> PreviousWorkUnitLogLines { get; }
+      IList<LogLine> PreviousWorkUnitLogLines { get; }
       
       /// <summary>
       /// Returns log text of the current work unit.
       /// </summary>
-      IList<ILogLine> CurrentWorkUnitLogLines { get; }
+      IList<LogLine> CurrentWorkUnitLogLines { get; }
 
       /// <summary>
       /// Get a list of Log Lines that correspond to the given Queue Index.
       /// </summary>
       /// <param name="queueIndex">The Queue Index (0-9)</param>
-      IList<ILogLine> GetLogLinesFromQueueIndex(int queueIndex);
+      IList<LogLine> GetLogLinesFromQueueIndex(int queueIndex);
 
       /// <summary>
       /// Get an Empty FAHlog Unit Data
@@ -59,7 +59,7 @@ namespace HFM.Framework
       /// Get FAHlog Unit Data from the given Log Lines
       /// </summary>
       /// <param name="logLines">Log Lines to search</param>
-      IFahLogUnitData GetFahLogDataFromLogLines(ICollection<ILogLine> logLines);
+      IFahLogUnitData GetFahLogDataFromLogLines(ICollection<LogLine> logLines);
 
       /// <summary>
       /// Get an Empty unitinfo Log Data

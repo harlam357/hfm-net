@@ -553,7 +553,7 @@ namespace HFM.Forms
       /// </summary>
       /// <param name="instance">Client Instance</param>
       /// <param name="logLines">List of LogLines</param>
-      private void SetLogLines(IDisplayInstance instance, IList<ILogLine> logLines)
+      private void SetLogLines(IDisplayInstance instance, IList<LogLine> logLines)
       {
          /*** Checked LogLine Count ***/
          if (logLines != null && logLines.Count > 0) 

@@ -104,7 +104,7 @@ namespace HFM.Instances.Tests
          var instances = new List<IDisplayInstance>();
          var instance = _mocks.DynamicMock<IDisplayInstance>();
          SetupResult.For(instance.CurrentProtein).Return(newProtein);
-         SetupResult.For(instance.CurrentLogLines).Return(new List<ILogLine>());
+         SetupResult.For(instance.CurrentLogLines).Return(new List<LogLine>());
          SetupResult.For(instance.Name).Return("Test2");
          instances.Add(instance);
 
