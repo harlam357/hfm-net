@@ -60,6 +60,10 @@ namespace HFM.Forms
 
       void Close();
 
+      void BringToFront();
+      
+      FormWindowState WindowState { get; set; }
+
       bool Visible { get; set; }
    }
 
@@ -227,7 +231,12 @@ namespace HFM.Forms
 
       private void frmHistory_FormClosing(object sender, FormClosingEventArgs e)
       {
-         _presenter.OnClosing();
+         _presenter.OnViewClosing();
+      }
+
+      private void frmHistory_FormClosed(object sender, FormClosedEventArgs e)
+      {
+         _presenter.Close();
       }
 
       //private void AutoSizeColumn(int columnIndex)

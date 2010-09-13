@@ -28,19 +28,19 @@ namespace HFM.Instances.Tests
    [TestFixture]
    public class UnitInfoContainerTests
    {
-      UnitInfoCollection collection;
+      UnitInfoCollection _collection;
    
       [SetUp]
       public void Init()
       {
-         collection = LoadTestCollection();
-         ValidateTestCollection(collection);
+         _collection = LoadTestCollection();
+         ValidateTestCollection(_collection);
       }
 
       [Test]
       public void ProtoBufSerializationTest()
       {
-         UnitInfoContainer.Serialize(collection, "UnitInfoProtoBufTest.dat");
+         UnitInfoContainer.Serialize(_collection, "UnitInfoProtoBufTest.dat");
 
          UnitInfoCollection collection2 = UnitInfoContainer.Deserialize("UnitInfoProtoBufTest.dat");
          ValidateTestCollection(collection2);
@@ -55,11 +55,11 @@ namespace HFM.Instances.Tests
 
       private static UnitInfoCollection LoadTestCollection()
       {
-         UnitInfoCollection testCollection = new UnitInfoCollection();
+         var testCollection = new UnitInfoCollection();
          
          for (int i = 0; i < 10; i++)
          {
-            UnitInfo unitInfo = new UnitInfo();
+            var unitInfo = new UnitInfo();
             unitInfo.OwningInstanceName = "TestOwner";
             unitInfo.OwningInstancePath = "TestPath";
             unitInfo.UnitRetrievalTime = new DateTime((2000 + i), 1, 1, 0, 0, 0);
@@ -84,7 +84,7 @@ namespace HFM.Instances.Tests
             UnitFrame unitFrame = null;
             for (int j = 0; j < 4; j++)
             {
-               unitFrame = new UnitFrame(j, TimeSpan.FromMinutes(j + 1));
+               unitFrame = new UnitFrame { FrameID = j, TimeOfFrame = TimeSpan.FromMinutes(j + 1) };
                unitInfo.UnitFrames.Add(j, unitFrame);
             }
             unitInfo.FramesObserved = 4;

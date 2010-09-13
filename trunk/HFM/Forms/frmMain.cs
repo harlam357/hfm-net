@@ -40,11 +40,12 @@ using HFM.Framework;
 using HFM.Helpers;
 using HFM.Instances;
 using HFM.Instrumentation;
-using HFM.Models;
 
 namespace HFM.Forms
 {
+   // ReSharper disable InconsistentNaming
    public partial class frmMain : FormWrapper
+   // ReSharper restore InconsistentNaming
    {
       #region Private Fields
       
@@ -79,6 +80,11 @@ namespace HFM.Forms
       /// Path to the update file (MSI) to run on exit
       /// </summary>
       private string _updateFilePath;
+      
+      /// <summary>
+      /// Work Unit History Presentation
+      /// </summary>
+      private HistoryPresenter _historyPresenter;
       
       /// <summary>
       /// Preferences Interface
@@ -1186,11 +1192,14 @@ namespace HFM.Forms
 
       private void mnuToolsHistory_Click(object sender, EventArgs e)
       {
-         var presenter = new HistoryPresenter(_prefs, new UnitInfoDatabase(_proteinCollection), new QueryParameterContainer(_prefs), 
-                                              new frmHistory(_prefs), new frmQuery(), new OpenFileDialogView(), new SaveFileDialogView(), 
-                                              new MessageBoxView(), new HistoryPresenterModel(_prefs));
-         presenter.Initialize();
-         presenter.Show();
+         if (_historyPresenter == null)
+         {
+            _historyPresenter = InstanceProvider.GetInstance<HistoryPresenter>();
+            _historyPresenter.Initialize();
+            _historyPresenter.PresenterClosed += delegate { _historyPresenter = null; };
+         }
+
+         _historyPresenter.Show();
       }
       #endregion
 

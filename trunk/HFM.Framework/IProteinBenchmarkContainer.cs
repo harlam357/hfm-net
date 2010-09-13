@@ -111,10 +111,10 @@ namespace HFM.Framework
       /// </summary>
       void Read();
       
-      /// <summary>
-      /// Read Binary File
-      /// </summary>
-      void Read(bool merge);
+      ///// <summary>
+      ///// Read Binary File
+      ///// </summary>
+      //void Read(bool merge);
       
       /// <summary>
       /// Write Binary File
@@ -126,10 +126,10 @@ namespace HFM.Framework
       /// </summary>
       void ReadXml(string filePath);
       
-      /// <summary>
-      /// Read Xml File
-      /// </summary>
-      void ReadXml(string filePath, bool merge);
+      ///// <summary>
+      ///// Read Xml File
+      ///// </summary>
+      //void ReadXml(string filePath, bool merge);
       
       /// <summary>
       /// Write Xml File

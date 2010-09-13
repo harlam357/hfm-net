@@ -51,17 +51,6 @@ namespace HFM.Framework
       [ProtoMember(3)]
       public TimeSpan FrameDuration { get; set; }
 
-      public UnitFrame()
-      {
-      
-      }
-   
-      public UnitFrame(int framePercent, TimeSpan frameTime)
-      {
-         FrameID = framePercent;
-         TimeOfFrame = frameTime;
-      }
-
       ///<summary>
       ///Serves as a hash function for a particular type. <see cref="M:System.Object.GetHashCode"></see> is suitable for use in hashing algorithms and data structures like a hash table.
       ///</summary>

@@ -28,8 +28,10 @@ namespace HFM.Framework
       public const string HfmLogFileName = "HFM.log";
       public const string HfmPrevLogFileName = "HFM-prev.log";
 
+      public const string SqLiteFilename = "WuHistory.db3";
       public const string ProjectInfoFileName = "ProjectInfo.tab";
       public const string UnitInfoCacheFileName = "UnitInfoCache.dat";
+      public const string BenchmarkCacheFileName = "BenchmarkCache.dat";
       public const string CompletedUnitsCsvFileName = "CompletedUnits.csv";
 
       public const string CssFolderName = "CSS";

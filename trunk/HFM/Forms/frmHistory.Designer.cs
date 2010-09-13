@@ -403,6 +403,7 @@
          this.Name = "frmHistory";
          this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
          this.Text = "Work Unit History";
+         this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmHistory_FormClosed);
          this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmHistory_FormClosing);
          this.tableLayoutGridView.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();

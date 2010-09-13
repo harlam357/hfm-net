@@ -75,6 +75,19 @@ namespace HFM.Forms.Tests
       public void ShowTest()
       {
          Expect.Call(() => _view.Show());
+         Expect.Call(() => _view.BringToFront());
+         _mocks.ReplayAll();
+         _presenter = NewPresenter();
+         _presenter.Show();
+         _mocks.VerifyAll();
+      }
+
+      [Test]
+      public void ShowFromMinimizedTest()
+      {
+         Expect.Call(() => _view.Show());
+         Expect.Call(_view.WindowState).Return(FormWindowState.Minimized);
+         Expect.Call(_view.WindowState = FormWindowState.Normal);
          _mocks.ReplayAll();
          _presenter = NewPresenter();
          _presenter.Show();
@@ -84,11 +97,15 @@ namespace HFM.Forms.Tests
       [Test]
       public void CloseTest()
       {
-         Expect.Call(() => _view.Close());
+         bool presenterClosedFired = false;
+         
          _mocks.ReplayAll();
          _presenter = NewPresenter();
+         _presenter.PresenterClosed += delegate { presenterClosedFired = true; };
          _presenter.Close();
          _mocks.VerifyAll();
+         
+         Assert.AreEqual(true, presenterClosedFired);
       }
 
       [Test]
@@ -97,7 +114,7 @@ namespace HFM.Forms.Tests
          Expect.Call(() => _model.SavePreferences());
          _mocks.ReplayAll();
          _presenter = NewPresenter();
-         _presenter.OnClosing();
+         _presenter.OnViewClosing();
          _mocks.VerifyAll();
       }
       

@@ -25,94 +25,49 @@ namespace HFM.Log
 {
    public class UnitInfoLogData : IUnitInfoLogData
    {
-      private string _ProteinName;
       /// <summary>
       /// Protein Name
       /// </summary>
-      public string ProteinName
-      {
-         get { return _ProteinName; }
-         set { _ProteinName = value; }
-      }
-      
-      private string _ProteinTag;
+      public string ProteinName { get; set; }
+
       /// <summary>
       /// Protein Tag
       /// </summary>
-      public string ProteinTag
-      {
-         get { return _ProteinTag; }
-         set { _ProteinTag = value; }
-      }
+      public string ProteinTag { get; set; }
 
-      private Int32 _ProjectID;
       /// <summary>
       /// Project ID Number
       /// </summary>
-      public Int32 ProjectID
-      {
-         get { return _ProjectID; }
-         set { _ProjectID = value; }
-      }
+      public Int32 ProjectID { get; set; }
 
-      private Int32 _ProjectRun;
       /// <summary>
       /// Project ID (Run)
       /// </summary>
-      public Int32 ProjectRun
-      {
-         get { return _ProjectRun; }
-         set { _ProjectRun = value; }
-      }
+      public Int32 ProjectRun { get; set; }
 
-      private Int32 _ProjectClone;
       /// <summary>
       /// Project ID (Clone)
       /// </summary>
-      public Int32 ProjectClone
-      {
-         get { return _ProjectClone; }
-         set { _ProjectClone = value; }
-      }
+      public Int32 ProjectClone { get; set; }
 
-      private Int32 _ProjectGen;
       /// <summary>
       /// Project ID (Gen)
       /// </summary>
-      public Int32 ProjectGen
-      {
-         get { return _ProjectGen; }
-         set { _ProjectGen = value; }
-      }
+      public Int32 ProjectGen { get; set; }
 
-      private DateTime _DownloadTime;
       /// <summary>
       /// Download Time
       /// </summary>
-      public DateTime DownloadTime
-      {
-         get { return _DownloadTime; }
-         set { _DownloadTime = value; }
-      }
+      public DateTime DownloadTime { get; set; }
 
-      private DateTime _DueTime;
       /// <summary>
       /// Due Time
       /// </summary>
-      public DateTime DueTime
-      {
-         get { return _DueTime; }
-         set { _DueTime = value; }
-      }
+      public DateTime DueTime { get; set; }
 
-      private int _Progress;
       /// <summary>
       /// Progress Percentage
       /// </summary>
-      public int Progress
-      {
-         get { return _Progress; }
-         set { _Progress = value; }
-      }
+      public int Progress { get; set; }
    }
 }

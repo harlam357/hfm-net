@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -50,11 +51,62 @@ namespace HFM.Instances.Tests
          unitInfo1.OwningInstanceName = "Owner";
          unitInfo1.OwningInstancePath = "Path";
          unitInfo1.ProjectID = 2669;
+         unitInfo1.ProjectRun = 1;
+         unitInfo1.ProjectClone = 2;
+         unitInfo1.ProjectGen = 3;
+         unitInfo1.UnitFrames.Add(0, new UnitFrame { FrameDuration = TimeSpan.FromMinutes(0), FrameID = 0 });
+         unitInfo1.UnitFrames.Add(1, new UnitFrame { FrameDuration = TimeSpan.FromMinutes(5), FrameID = 1 });
+         unitInfo1.UnitFrames.Add(2, new UnitFrame { FrameDuration = TimeSpan.FromMinutes(5), FrameID = 2 });
+         unitInfo1.UnitFrames.Add(3, new UnitFrame { FrameDuration = TimeSpan.FromMinutes(5), FrameID = 3 });
+         unitInfo1.FinishedTime = new DateTime(2010, 1, 1);
+
+         var currentUnitInfo = _mocks.DynamicMock<IUnitInfoLogic>();
+         SetupResult.For(currentUnitInfo.UnitInfoData).Return(unitInfo1);
+         SetupResult.For(currentUnitInfo.LastUnitFrameID).Return(0);
+         
          var unitInfoLogic1 = _mocks.DynamicMock<IUnitInfoLogic>();
          SetupResult.For(unitInfoLogic1.UnitInfoData).Return(unitInfo1);
+         SetupResult.For(unitInfoLogic1.LastUnitFrameID).Return(3);
+
+         var unitInfo2 = new UnitInfo();
+         unitInfo2.OwningInstanceName = "Owner";
+         unitInfo2.OwningInstancePath = "Path";
+         unitInfo2.ProjectID = 2669;
+         unitInfo2.ProjectRun = 2;
+         unitInfo2.ProjectClone = 3;
+         unitInfo2.ProjectGen = 4;
+         unitInfo2.FinishedTime = new DateTime(2010, 1, 1);
+         var unitInfoLogic2 = _mocks.DynamicMock<IUnitInfoLogic>();
+         SetupResult.For(unitInfoLogic2.UnitInfoData).Return(unitInfo2);
+
+         var unitInfo3 = new UnitInfo();
+         unitInfo3.OwningInstanceName = "Owner";
+         unitInfo3.OwningInstancePath = "Path";
+         unitInfo3.ProjectID = 2669;
+         unitInfo3.ProjectRun = 3;
+         unitInfo3.ProjectClone = 4;
+         unitInfo3.ProjectGen = 5;
+         unitInfo3.FinishedTime = new DateTime(2010, 1, 1);
+         var unitInfoLogic3 = _mocks.DynamicMock<IUnitInfoLogic>();
+         SetupResult.For(unitInfoLogic3.UnitInfoData).Return(unitInfo3);
+
+         var parsedUnits = new List<IUnitInfoLogic> { unitInfoLogic1, unitInfoLogic2, unitInfoLogic3 };
+
+         Expect.Call(() => _database.WriteUnitInfo(null)).IgnoreArguments().Repeat.Times(3);
          
+         _mocks.ReplayAll();
+
+         Assert.AreEqual(false, _container.ContainsClient(new BenchmarkClient("Owner", "Path")));
+         Assert.AreEqual(false, new List<int>(_container.GetBenchmarkProjects()).Contains(2669));
+         Assert.AreEqual(TimeSpan.Zero, _container.GetBenchmarkAverageFrameTime(currentUnitInfo));
          
-         //_container.UpdateBenchmarkData();
+         _container.UpdateBenchmarkData(currentUnitInfo, parsedUnits.ToArray(), 2);
+         
+         Assert.AreEqual(true, _container.ContainsClient(new BenchmarkClient("Owner", "Path")));
+         Assert.AreEqual(true, new List<int>(_container.GetBenchmarkProjects()).Contains(2669));
+         Assert.AreEqual(TimeSpan.FromMinutes(5), _container.GetBenchmarkAverageFrameTime(currentUnitInfo));
+         
+         _mocks.VerifyAll();
       }
 
       [Test]
@@ -121,23 +173,23 @@ namespace HFM.Instances.Tests
          }
       }
 
-      [Test]
-      public void MergeCollectionsTest()
-      {
-         var collection = LoadTestCollection();
-         int count = collection.BenchmarkList.Count;
+      //[Test]
+      //public void MergeCollectionsTest()
+      //{
+      //   var collection = LoadTestCollection();
+      //   int count = collection.BenchmarkList.Count;
 
-         ProteinBenchmarkCollection mergedCollection = ProteinBenchmarkContainer.MergeCollections(collection, collection);
-         Assert.AreEqual(count * 2, mergedCollection.BenchmarkList.Count);
+      //   ProteinBenchmarkCollection mergedCollection = ProteinBenchmarkContainer.MergeCollections(collection, collection);
+      //   Assert.AreEqual(count * 2, mergedCollection.BenchmarkList.Count);
 
-         mergedCollection = ProteinBenchmarkContainer.MergeCollections(collection, null);
-         Assert.AreEqual(count, mergedCollection.BenchmarkList.Count);
+      //   mergedCollection = ProteinBenchmarkContainer.MergeCollections(collection, null);
+      //   Assert.AreEqual(count, mergedCollection.BenchmarkList.Count);
 
-         mergedCollection = ProteinBenchmarkContainer.MergeCollections(null, collection);
-         Assert.AreEqual(count, mergedCollection.BenchmarkList.Count);
+      //   mergedCollection = ProteinBenchmarkContainer.MergeCollections(null, collection);
+      //   Assert.AreEqual(count, mergedCollection.BenchmarkList.Count);
 
-         mergedCollection = ProteinBenchmarkContainer.MergeCollections(null, null);
-         Assert.IsNull(mergedCollection);
-      }
+      //   mergedCollection = ProteinBenchmarkContainer.MergeCollections(null, null);
+      //   Assert.IsNull(mergedCollection);
+      //}
    }
 }

@@ -105,6 +105,18 @@ namespace HFM
             return;
          }
 
+         try
+         {
+            var database = InstanceProvider.GetInstance<Instances.IUnitInfoDatabase>();
+            database.DatabaseFilePath = Path.Combine(prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), Constants.SqLiteFilename);
+         }
+         catch (Exception ex)
+         {
+            ExceptionDialog.ShowErrorDialog(ex, "UnitInfo Database Failed to Initialize.",
+               Constants.GoogleGroupUrl, PlatformOps.ApplicationNameAndVersionWithRevision, true);
+            return;
+         }
+
          frmMain frm;
          try
          {

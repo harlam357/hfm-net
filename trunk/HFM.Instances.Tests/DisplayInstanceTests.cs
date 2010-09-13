@@ -70,13 +70,13 @@ namespace HFM.Instances.Tests
                            RawFramesComplete = 10000,
                            RawFramesTotal = 250000,
                            FramesObserved = 4,
-                           CurrentFrameConcrete = new UnitFrame(4, TimeSpan.FromMinutes(20)),
+                           CurrentFrameConcrete = new UnitFrame { FrameID = 4, TimeOfFrame = TimeSpan.FromMinutes(20) },
                            CoreID = "A2"
                         };
-         unitInfo.UnitFrames.Add(0, new UnitFrame(0, TimeSpan.FromMinutes(0)));
-         unitInfo.UnitFrames.Add(1, new UnitFrame(1, TimeSpan.FromMinutes(5)));
-         unitInfo.UnitFrames.Add(2, new UnitFrame(2, TimeSpan.FromMinutes(10)));
-         unitInfo.UnitFrames.Add(3, new UnitFrame(3, TimeSpan.FromMinutes(15)));
+         unitInfo.UnitFrames.Add(0, new UnitFrame { FrameID = 0, TimeOfFrame = TimeSpan.FromMinutes(0) });
+         unitInfo.UnitFrames.Add(1, new UnitFrame { FrameID = 1, TimeOfFrame = TimeSpan.FromMinutes(5) });
+         unitInfo.UnitFrames.Add(2, new UnitFrame { FrameID = 2, TimeOfFrame = TimeSpan.FromMinutes(10) });
+         unitInfo.UnitFrames.Add(3, new UnitFrame { FrameID = 3, TimeOfFrame = TimeSpan.FromMinutes(15) });
          unitInfo.UnitFrames.Add(4, unitInfo.CurrentFrameConcrete);
          foreach (var frame in unitInfo.UnitFrames.Values)
          {
