@@ -1022,5 +1022,38 @@ namespace HFM.Preferences.Properties {
                 this["HistorySortOrder"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Drawing.Point HistoryFormLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["HistoryFormLocation"]));
+            }
+            set {
+                this["HistoryFormLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Drawing.Size HistoryFormSize {
+            get {
+                return ((global::System.Drawing.Size)(this["HistoryFormSize"]));
+            }
+            set {
+                this["HistoryFormSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection HistoryFormColumns {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["HistoryFormColumns"]));
+            }
+            set {
+                this["HistoryFormColumns"] = value;
+            }
+        }
     }
 }

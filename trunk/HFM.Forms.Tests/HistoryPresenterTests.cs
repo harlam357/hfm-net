@@ -1,6 +1,26 @@
-﻿
+﻿/*
+ * HFM.NET - Work Unit History Presenter Tests
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License. See the included file GPLv2.TXT.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
@@ -42,8 +62,8 @@ namespace HFM.Forms.Tests
          SetupResult.For(_queryContainer.QueryList).Return(list);
          _view = _mocks.DynamicMock<IHistoryView>();
          _queryView = _mocks.DynamicMock<IQueryView>();
-         _openFileView = _mocks.Stub<IOpenFileDialogView>();
-         _saveFileView = _mocks.Stub<ISaveFileDialogView>();
+         _openFileView = _mocks.DynamicMock<IOpenFileDialogView>();
+         _saveFileView = _mocks.DynamicMock<ISaveFileDialogView>();
          _messageBoxView = _mocks.DynamicMock<IMessageBoxView>();
          // let's use the real thing
          _model = new HistoryPresenterModel(_prefs);
@@ -111,6 +131,38 @@ namespace HFM.Forms.Tests
       [Test]
       public void OnClosingTest()
       {
+         var p = new Point();
+         var s = new Size();
+         var columns = new StringCollection();
+      
+         Expect.Call(_view.Location).Return(p);
+         Expect.Call(_view.Size).Return(s);
+         Expect.Call(_view.GetColumnSettings()).Return(columns);
+      
+         Expect.Call(_view.WindowState).Return(FormWindowState.Normal);
+         Expect.Call(_model.FormLocation = p);
+         Expect.Call(_model.FormSize = s);
+         Expect.Call(_model.FormColumns = columns);
+         Expect.Call(() => _model.SavePreferences());
+         _mocks.ReplayAll();
+         _presenter = NewPresenter();
+         _presenter.OnViewClosing();
+         _mocks.VerifyAll();
+      }
+
+      [Test]
+      public void OnClosingWhileNotNormalWindowTest()
+      {
+         var r = new Rectangle();
+         var columns = new StringCollection();
+
+         Expect.Call(_view.RestoreBounds).Return(r);
+         Expect.Call(_view.GetColumnSettings()).Return(columns);
+
+         Expect.Call(_view.WindowState).Return(FormWindowState.Minimized);
+         Expect.Call(_model.FormLocation = r.Location);
+         Expect.Call(_model.FormSize = r.Size);
+         Expect.Call(_model.FormColumns = columns);
          Expect.Call(() => _model.SavePreferences());
          _mocks.ReplayAll();
          _presenter = NewPresenter();

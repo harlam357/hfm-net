@@ -285,6 +285,9 @@ namespace HFM.Framework
       ShowTopValue,
       HistorySortColumnName,
       HistorySortOrder,
+      HistoryFormLocation,
+      HistoryFormSize,
+      HistoryFormColumns,
       CacheFolder,
       ApplicationDataFolderPath 
    }

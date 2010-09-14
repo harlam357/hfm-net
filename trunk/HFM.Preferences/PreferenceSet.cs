@@ -292,6 +292,9 @@ namespace HFM.Preferences
          _prefs.Add(Preference.ShowTopValue, new Metadata<int>());
          _prefs.Add(Preference.HistorySortColumnName, new Metadata<string>());
          _prefs.Add(Preference.HistorySortOrder, new Metadata<SortOrder>());
+         _prefs.Add(Preference.HistoryFormLocation, new Metadata<Point>());
+         _prefs.Add(Preference.HistoryFormSize, new Metadata<Size>());
+         _prefs.Add(Preference.HistoryFormColumns, new Metadata<StringCollection>());
 
          _prefs.Add(Preference.CacheFolder, new Metadata<string>());
          _prefs.Add(Preference.ApplicationDataFolderPath, new Metadata<string>());
@@ -409,6 +412,13 @@ namespace HFM.Preferences
          SetPreference(Preference.ShowTopValue, Settings.Default.ShowTopValue);
          SetPreference(Preference.HistorySortColumnName, Settings.Default.HistorySortColumnName);
          SetPreference(Preference.HistorySortOrder, Settings.Default.HistorySortOrder);
+         location = new Point();
+         size = new Size();
+         columns = null;
+         GetHistoryFormStateValues(ref location, ref size, ref columns);
+         SetPreference(Preference.HistoryFormLocation, location);
+         SetPreference(Preference.HistoryFormSize, size);
+         SetPreference(Preference.HistoryFormColumns, columns);
 
          SetPreference(Preference.CacheFolder, Settings.Default.CacheFolder);
          SetPreference(Preference.ApplicationDataFolderPath, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Constants.ExeName));
@@ -637,6 +647,18 @@ namespace HFM.Preferences
 
          return proxyPass;
       }
+
+      private static void GetHistoryFormStateValues(ref Point location, ref Size size, ref StringCollection columns)
+      {
+         try
+         {
+            location = Settings.Default.HistoryFormLocation;
+            size = Settings.Default.HistoryFormSize;
+            columns = Settings.Default.HistoryFormColumns;
+         }
+         catch (NullReferenceException)
+         { }
+      }
       #endregion
 
       /// <summary>
@@ -807,6 +829,9 @@ namespace HFM.Preferences
             Settings.Default.ShowTopValue = GetPreference<int>(Preference.ShowTopValue);
             Settings.Default.HistorySortColumnName = GetPreference<string>(Preference.HistorySortColumnName);
             Settings.Default.HistorySortOrder = GetPreference<SortOrder>(Preference.HistorySortOrder);
+            Settings.Default.HistoryFormLocation = GetPreference<Point>(Preference.HistoryFormLocation);
+            Settings.Default.HistoryFormSize = GetPreference<Size>(Preference.HistoryFormSize);
+            Settings.Default.HistoryFormColumns = GetPreference<StringCollection>(Preference.HistoryFormColumns);
             
             if (raiseFormShowStyleChanged) OnFormShowStyleSettingsChanged(EventArgs.Empty);
             if (raiseTimerSettingsChanged) OnTimerSettingsChanged(EventArgs.Empty);

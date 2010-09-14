@@ -19,8 +19,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
 
 using HFM.Classes;
@@ -36,10 +38,6 @@ namespace HFM.Forms
 
       void DataBindModel(IHistoryPresenterModel model);
 
-      void SetLocation(int x, int y);
-
-      void SetSize(int width, int height);
-      
       void QueryComboRefreshList(IList<QueryParameters> queryList);
       
       int QueryComboSelectedIndex { get; set; }
@@ -54,7 +52,11 @@ namespace HFM.Forms
 
       void DataGridSetDataSource(int totalResults, IList<HistoryEntry> list);
 
+      StringCollection GetColumnSettings();
+
       void ApplySort(string sortColumnName, SortOrder sortOrder);
+
+      #region System.Windows.Forms.Form Exposure
 
       void Show();
 
@@ -63,8 +65,16 @@ namespace HFM.Forms
       void BringToFront();
       
       FormWindowState WindowState { get; set; }
+      
+      Point Location { get; set; }
+      
+      Size Size { get; set; }
+      
+      Rectangle RestoreBounds { get; }
 
       bool Visible { get; set; }
+      
+      #endregion
    }
 
    // ReSharper disable InconsistentNaming
@@ -92,16 +102,10 @@ namespace HFM.Forms
          rdoPanelProduction.ValueMember = "ProductionView";
          chkTop.DataBindings.Add("Checked", model, "ShowTopChecked", false, DataSourceUpdateMode.OnPropertyChanged);
          numericUpDown1.DataBindings.Add("Value", model, "ShowTopValue", false, DataSourceUpdateMode.OnPropertyChanged);
-      }
 
-      public void SetLocation(int x, int y)
-      {
-         Location = new Point(x, y);
-      }
-
-      public void SetSize(int width, int height)
-      {
-         Size = new Size(width, height);
+         Location = model.FormLocation;
+         Size = model.FormSize;
+         RestoreColumnSettings(model.FormColumns);
       }
       
       public void QueryComboRefreshList(IList<QueryParameters> queryList)
@@ -188,6 +192,49 @@ namespace HFM.Forms
          }
       }
 
+      /// <summary>
+      /// Save Column Index, Width, and Visibility
+      /// </summary>
+      public StringCollection GetColumnSettings()
+      {
+         // Save column state data
+         // including order, column width and whether or not the column is visible
+         var formColumns = new StringCollection();
+         int i = 0;
+
+         foreach (DataGridViewColumn column in dataGridView1.Columns)
+         {
+            formColumns.Add(String.Format(CultureInfo.InvariantCulture,
+                                    "{0},{1},{2},{3}",
+                                    column.DisplayIndex.ToString("D2"),
+                                    column.Width,
+                                    column.Visible,
+                                    i++));
+         }
+
+         return formColumns;
+      }
+
+      private void RestoreColumnSettings(StringCollection formColumns)
+      {
+         if (formColumns == null) return;
+
+         // Restore the columns' state
+         var colsArray = new string[formColumns.Count];
+
+         formColumns.CopyTo(colsArray, 0);
+         Array.Sort(colsArray);
+
+         for (int i = 0; i < colsArray.Length; i++)
+         {
+            string[] a = colsArray[i].Split(',');
+            int index = Int32.Parse(a[3]);
+            dataGridView1.Columns[index].DisplayIndex = Int32.Parse(a[0]);
+            dataGridView1.Columns[index].Width = Int32.Parse(a[1]);
+            dataGridView1.Columns[index].Visible = Boolean.Parse(a[2]);
+         }
+      }
+
       #endregion
       
       private void cboSortView_SelectedIndexChanged(object sender, EventArgs e)
@@ -217,10 +264,6 @@ namespace HFM.Forms
 
       private void mnuViewAutoSizeGrid_Click(object sender, EventArgs e)
       {
-         //for (var i = 0; i < dataGridView1.Columns.Count; i++)
-         //{
-         //   dataGridView1.AutoResizeColumns();
-         //}
          dataGridView1.AutoResizeColumns();
       }
 
@@ -238,33 +281,6 @@ namespace HFM.Forms
       {
          _presenter.Close();
       }
-
-      //private void AutoSizeColumn(int columnIndex)
-      //{
-      //   var font = new Font(dataGridView1.DefaultCellStyle.Font, FontStyle.Regular);
-
-      //   SizeF s;
-      //   int width = 0;
-
-      //   for (int i = 0; i < dataGridView1.Rows.Count; i++)
-      //   {
-      //      if (dataGridView1.Rows[i].Cells[columnIndex].Value != null)
-      //      {
-      //         string formattedString = dataGridView1.Rows[i].Cells[columnIndex].FormattedValue.ToString();
-      //         s = TextRenderer.MeasureText(formattedString, font);
-
-      //         if (width < s.Width)
-      //         {
-      //            width = (int)(s.Width + 3);
-      //         }
-      //      }
-      //   }
-
-      //   if (width >= dataGridView1.Columns[columnIndex].MinimumWidth)
-      //   {
-      //      dataGridView1.Columns[columnIndex].Width = width;
-      //   }
-      //}
 
       private void SetupDataGridView(IPreferenceSet prefs)
       {

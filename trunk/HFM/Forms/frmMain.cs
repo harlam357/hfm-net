@@ -1624,7 +1624,7 @@ namespace HFM.Forms
 
          foreach (DataGridViewColumn column in dataGridView1.Columns)
          {
-            stringCollection.Add(String.Format(
+            stringCollection.Add(String.Format(CultureInfo.InvariantCulture, 
                                     "{0},{1},{2},{3}",
                                     column.DisplayIndex.ToString("D2"),
                                     column.Width,

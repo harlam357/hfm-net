@@ -17,7 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 
 using HFM.Framework;
@@ -36,9 +38,15 @@ namespace HFM.Models
       
       int ShowTopValue { get; set; }
       
+      Point FormLocation { get; set; }
+      
+      Size FormSize { get; set; }
+
       string SortColumnName { get; set; }
       
       SortOrder SortOrder { get; set; }
+
+      StringCollection FormColumns { get; set; }
    }
 
    public sealed class HistoryPresenterModel : IHistoryPresenterModel
@@ -55,8 +63,11 @@ namespace HFM.Models
          _productionView = _prefs.GetPreference<HistoryProductionView>(Preference.HistoryProductionType);
          _showTopChecked = _prefs.GetPreference<bool>(Preference.ShowTopChecked);
          _showTopValue = _prefs.GetPreference<int>(Preference.ShowTopValue);
+         FormLocation = _prefs.GetPreference<Point>(Preference.HistoryFormLocation);
+         FormSize = _prefs.GetPreference<Size>(Preference.HistoryFormSize);
          SortColumnName = _prefs.GetPreference<string>(Preference.HistorySortColumnName);
          SortOrder = _prefs.GetPreference<SortOrder>(Preference.HistorySortOrder);
+         FormColumns = _prefs.GetPreference<StringCollection>(Preference.HistoryFormColumns);
       }
 
       public void SavePreferences()
@@ -64,8 +75,11 @@ namespace HFM.Models
          _prefs.SetPreference(Preference.HistoryProductionType, _productionView);
          _prefs.SetPreference(Preference.ShowTopChecked, _showTopChecked);
          _prefs.SetPreference(Preference.ShowTopValue, _showTopValue);
+         _prefs.SetPreference(Preference.HistoryFormLocation, FormLocation);
+         _prefs.SetPreference(Preference.HistoryFormSize, FormSize);
          _prefs.SetPreference(Preference.HistorySortColumnName, SortColumnName);
          _prefs.SetPreference(Preference.HistorySortOrder, SortOrder);
+         _prefs.SetPreference(Preference.HistoryFormColumns, FormColumns);
          _prefs.Save();
       }
 
@@ -114,10 +128,16 @@ namespace HFM.Models
          }
       }
 
+      public Point FormLocation { get; set; }
+
+      public Size FormSize { get; set; }
+
       public string SortColumnName { get; set; }
 
       public SortOrder SortOrder { get; set; }
-
+      
+      public StringCollection FormColumns { get; set; }
+      
       #region INotifyPropertyChanged Members
 
       public event PropertyChangedEventHandler PropertyChanged;

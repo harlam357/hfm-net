@@ -104,6 +104,20 @@ namespace HFM.Forms
       
       public void OnViewClosing()
       {
+         // Save location and size data
+         // RestoreBounds remembers normal position if minimized or maximized
+         if (_view.WindowState == FormWindowState.Normal)
+         {
+            _model.FormLocation = _view.Location;
+            _model.FormSize = _view.Size;
+         }
+         else
+         {
+            _model.FormLocation = _view.RestoreBounds.Location;
+            _model.FormSize = _view.RestoreBounds.Size;
+         }
+
+         _model.FormColumns = _view.GetColumnSettings();
          _model.SavePreferences();
       }
       
