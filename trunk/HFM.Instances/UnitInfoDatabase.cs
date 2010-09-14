@@ -31,7 +31,7 @@ namespace HFM.Instances
       
       void WriteUnitInfo(IUnitInfoLogic unitInfoLogic);
 
-      int DeleteUnitInfo(HistoryEntry entry);
+      int DeleteUnitInfo(long id);
       
       void ImportCompletedUnits(ICollection<HistoryEntry> entries);
       
@@ -151,14 +151,16 @@ namespace HFM.Instances
          }
       }
       
-      public int DeleteUnitInfo(HistoryEntry entry)
+      public int DeleteUnitInfo(long id)
       {
          using (var con = new SQLiteConnection(@"Data Source=" + DatabaseFilePath))
          {
             con.Open();
             if (TableExists(con, WuHistoryTableName))
             {
-               return DeleteRows(con, BuildUnitKeyQueryParameters(entry));
+               var parameters = new QueryParameters();
+               parameters.Fields.Add(new QueryField { Name = QueryFieldName.ID, Type = QueryFieldType.Equal, Value = id });
+               return DeleteRows(con, parameters);
             }
 
             return 0;
@@ -280,17 +282,6 @@ namespace HFM.Instances
                               (int)unitInfoLogic.UnitInfoData.UnitResult);
       }
 
-      private static QueryParameters BuildUnitKeyQueryParameters(HistoryEntry entry)
-      {
-         var parameters = new QueryParameters();
-         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectID, Type = QueryFieldType.Equal, Value = entry.ProjectID });
-         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectRun, Type = QueryFieldType.Equal, Value = entry.ProjectRun });
-         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectClone, Type = QueryFieldType.Equal, Value = entry.ProjectClone });
-         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectGen, Type = QueryFieldType.Equal, Value = entry.ProjectGen });
-         parameters.Fields.Add(new QueryField { Name = QueryFieldName.DownloadDateTime, Type = QueryFieldType.Equal, Value = entry.DownloadDateTime });
-         return parameters;
-      }
-
       private static void WriteUnitInfoToDatabase(SQLiteConnection con, HistoryEntry entry)
       {
          using (var command = new SQLiteCommand(con))
@@ -353,6 +344,7 @@ namespace HFM.Instances
                from wu in table.AsEnumerable()
                select new HistoryEntry
                {
+                  ID = wu.Field<long>("ID"),
                   ProjectID = wu.Field<int>("ProjectID"),
                   ProjectRun = wu.Field<int>("ProjectRun"),
                   ProjectClone = wu.Field<int>("ProjectClone"),
@@ -623,7 +615,8 @@ namespace HFM.Instances
 
          foreach (var field in parameters.Fields)
          {
-            if (field.Name.Equals(QueryFieldName.ProjectID) ||
+            if (field.Name.Equals(QueryFieldName.ID) ||
+                field.Name.Equals(QueryFieldName.ProjectID) ||
                 field.Name.Equals(QueryFieldName.ProjectRun) ||
                 field.Name.Equals(QueryFieldName.ProjectClone) ||
                 field.Name.Equals(QueryFieldName.ProjectGen) ||
@@ -689,11 +682,7 @@ namespace HFM.Instances
          ProductionView = HistoryProductionView.BonusDownloadTime;
       }
 
-      //public HistoryEntry(HistoryProductionView productionView)
-      //{
-      //   ProductionView = productionView;
-      //}
-   
+      public long ID { get; set; }
       public int ProjectID { get; set; }
       public int ProjectRun { get; set; }
       public int ProjectClone { get; set; }

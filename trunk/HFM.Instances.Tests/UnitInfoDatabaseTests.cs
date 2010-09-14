@@ -109,15 +109,7 @@ namespace HFM.Instances.Tests
 
          var database = new UnitInfoDatabase(_proteinCollection) { DatabaseFilePath = Path.ChangeExtension(TestDataFile, ".dbcopy") };
          Assert.AreEqual(44, database.QueryUnitData(new QueryParameters()).Count);
-         var entry = new HistoryEntry
-                     {
-                        ProjectID = 10632,
-                        ProjectRun = 94,
-                        ProjectClone = 19,
-                        ProjectGen = 0,
-                        DownloadDateTime = new DateTime(2010, 8, 8, 16, 41, 0)
-                     };
-         Assert.AreEqual(1, database.DeleteUnitInfo(entry));
+         Assert.AreEqual(1, database.DeleteUnitInfo(15));
          Assert.AreEqual(43, database.QueryUnitData(new QueryParameters()).Count);
 
          _mocks.VerifyAll();
@@ -140,7 +132,7 @@ namespace HFM.Instances.Tests
          const string newFile = "NewFile.db3";
          
          var database = new UnitInfoDatabase(_proteinCollection) { DatabaseFilePath = newFile };
-         Assert.AreEqual(0, database.DeleteUnitInfo(new HistoryEntry()));
+         Assert.AreEqual(0, database.DeleteUnitInfo(100));
          
          if (File.Exists(newFile))
          {
@@ -152,15 +144,7 @@ namespace HFM.Instances.Tests
       public void DeleteUnitInfoUnitNotExistTest()
       {
          var database = new UnitInfoDatabase(_proteinCollection) { DatabaseFilePath = TestDataFile };
-         var entry = new HistoryEntry
-         {
-            ProjectID = 10633,
-            ProjectRun = 94,
-            ProjectClone = 19,
-            ProjectGen = 0,
-            DownloadDateTime = new DateTime(2010, 8, 8)
-         };
-         Assert.AreEqual(0, database.DeleteUnitInfo(entry));
+         Assert.AreEqual(0, database.DeleteUnitInfo(100));
       }
 
       [Test]

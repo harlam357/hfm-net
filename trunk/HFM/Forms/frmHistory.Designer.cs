@@ -28,6 +28,7 @@
       /// </summary>
       private void InitializeComponent()
       {
+         this.components = new System.ComponentModel.Container();
          System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
          System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
          System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -59,6 +60,8 @@
          this.mnuFileImportCompletedUnits = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuView = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuViewAutoSizeGrid = new System.Windows.Forms.ToolStripMenuItem();
+         this.dataGridMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+         this.dataGridDeleteWorkUnitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.tableLayoutGridView.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
          this.panel1.SuspendLayout();
@@ -68,6 +71,7 @@
          this.panel2.SuspendLayout();
          this.grpDataView.SuspendLayout();
          this.menuStrip1.SuspendLayout();
+         this.dataGridMenuStrip.SuspendLayout();
          this.SuspendLayout();
          // 
          // tableLayoutGridView
@@ -124,6 +128,7 @@
          this.dataGridView1.ShowCellToolTips = false;
          this.dataGridView1.Size = new System.Drawing.Size(824, 461);
          this.dataGridView1.TabIndex = 0;
+         this.dataGridView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseDown);
          this.dataGridView1.Sorted += new System.EventHandler(this.dataGridView1_Sorted);
          this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
          // 
@@ -391,6 +396,20 @@
          this.mnuViewAutoSizeGrid.Text = "Auto Size &Grid Columns";
          this.mnuViewAutoSizeGrid.Click += new System.EventHandler(this.mnuViewAutoSizeGrid_Click);
          // 
+         // dataGridMenuStrip
+         // 
+         this.dataGridMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.dataGridDeleteWorkUnitMenuItem});
+         this.dataGridMenuStrip.Name = "dataGridMenuStrip";
+         this.dataGridMenuStrip.Size = new System.Drawing.Size(167, 26);
+         // 
+         // dataGridDeleteWorkUnitMenuItem
+         // 
+         this.dataGridDeleteWorkUnitMenuItem.Name = "dataGridDeleteWorkUnitMenuItem";
+         this.dataGridDeleteWorkUnitMenuItem.Size = new System.Drawing.Size(166, 22);
+         this.dataGridDeleteWorkUnitMenuItem.Text = "Delete Work Unit";
+         this.dataGridDeleteWorkUnitMenuItem.Click += new System.EventHandler(this.dataGridDeleteWorkUnitMenuItem_Click);
+         // 
          // frmHistory
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -417,6 +436,7 @@
          this.grpDataView.ResumeLayout(false);
          this.menuStrip1.ResumeLayout(false);
          this.menuStrip1.PerformLayout();
+         this.dataGridMenuStrip.ResumeLayout(false);
          this.ResumeLayout(false);
          this.PerformLayout();
 
@@ -451,5 +471,7 @@
       private HFM.Classes.TextBoxWrapper txtResults;
       private HFM.Classes.LabelWrapper lblPpdCalc;
       private harlam357.Windows.Forms.RadioPanel rdoPanelProduction;
+      private System.Windows.Forms.ContextMenuStrip dataGridMenuStrip;
+      private System.Windows.Forms.ToolStripMenuItem dataGridDeleteWorkUnitMenuItem;
    }
 }

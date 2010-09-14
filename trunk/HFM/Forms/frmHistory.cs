@@ -48,6 +48,8 @@ namespace HFM.Forms
       
       bool DeleteButtonEnabled { get; set; }
       
+      HistoryEntry DataGridSelectedHistoryEntry { get; }
+      
       void DataGridSetDataSource(IList<HistoryEntry> list);
 
       void DataGridSetDataSource(int totalResults, IList<HistoryEntry> list);
@@ -157,6 +159,20 @@ namespace HFM.Forms
       {
          get { return btnDelete.Enabled; }
          set { btnDelete.Enabled = value; }
+      }
+      
+      public HistoryEntry DataGridSelectedHistoryEntry
+      {
+         get
+         {
+            if (dataGridView1.DataSource != null)
+            {
+               var cm = (CurrencyManager)dataGridView1.BindingContext[dataGridView1.DataSource];
+               return cm.Current as HistoryEntry;
+            }
+            
+            return null;
+         }
       }
       
       public void DataGridSetDataSource(IList<HistoryEntry> list)
@@ -356,6 +372,32 @@ namespace HFM.Forms
       private void dataGridView1_Sorted(object sender, EventArgs e)
       {
          _presenter.SaveSortSettings(dataGridView1.SortedColumn.Name, dataGridView1.SortOrder);
+      }
+
+      private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
+      {
+         DataGridView.HitTestInfo hti = dataGridView1.HitTest(e.X, e.Y);
+         if (e.Button == MouseButtons.Right)
+         {
+            if (hti.Type == DataGridViewHitTestType.RowHeader ||
+                hti.Type == DataGridViewHitTestType.Cell)
+            {
+               if (dataGridView1.Rows[hti.RowIndex].Selected == false)
+               {
+                  dataGridView1.Rows[hti.RowIndex].Selected = true;
+               }
+            }
+         
+            if (hti.Type == DataGridViewHitTestType.RowHeader)
+            {
+               dataGridMenuStrip.Show(dataGridView1.PointToScreen(new Point(e.X, e.Y)));
+            }
+         }
+      }
+
+      private void dataGridDeleteWorkUnitMenuItem_Click(object sender, EventArgs e)
+      {
+         _presenter.DeleteWorkUnitClick();
       }
    }
 }

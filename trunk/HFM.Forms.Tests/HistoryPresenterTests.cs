@@ -432,6 +432,32 @@ namespace HFM.Forms.Tests
       }
       
       [Test]
+      public void DeleteWorkUnitClickTest()
+      {
+         SetupResult.For(_view.DataGridSelectedHistoryEntry).Return(new HistoryEntry { ID = 1 });
+         Expect.Call(_messageBoxView.AskYesNoQuestion(null, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
+         Expect.Call(_database.DeleteUnitInfo(1)).Return(1);
+         var entries = new List<HistoryEntry>();
+         Expect.Call(_database.QueryUnitData(null, HistoryProductionView.BonusDownloadTime)).IgnoreArguments().Return(entries);
+         Expect.Call(() => _view.DataGridSetDataSource(0, null)).IgnoreArguments();
+         _mocks.ReplayAll();
+         _presenter = NewPresenter();
+         _presenter.DeleteWorkUnitClick();
+         _mocks.VerifyAll();
+      }
+      
+      [Test]
+      public void DeleteWorkUnitClickNoSelectionTest()
+      {
+         SetupResult.For(_view.DataGridSelectedHistoryEntry).Return(null);
+         Expect.Call(() => _messageBoxView.ShowInformation(null, String.Empty, String.Empty)).IgnoreArguments();
+         _mocks.ReplayAll();
+         _presenter = NewPresenter();
+         _presenter.DeleteWorkUnitClick();
+         _mocks.VerifyAll();
+      }
+      
+      [Test]
       public void SelectQueryTest()
       {
          var entries = new List<HistoryEntry>();

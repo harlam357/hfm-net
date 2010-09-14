@@ -382,8 +382,8 @@ namespace HFM.Framework
          list.Add("Frames Completed");
          list.Add("Frame Time");
          list.Add("Unit Result");
-         list.Add("Download Date");
-         list.Add("Completion Date");
+         list.Add("Download Date (UTC)");
+         list.Add("Completion Date (UTC)");
          list.Add("Work Unit Name");
          list.Add("KFactor");
          list.Add("Core Name");

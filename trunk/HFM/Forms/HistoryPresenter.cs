@@ -283,6 +283,26 @@ namespace HFM.Forms
          }
       }
       
+      public void DeleteWorkUnitClick()
+      {
+         var entry = _view.DataGridSelectedHistoryEntry;
+         if (entry == null)
+         {
+            _messageBoxView.ShowInformation(_view, "No work unit selected.", PlatformOps.ApplicationNameAndVersion);
+         }
+         else
+         {
+            var result = _messageBoxView.AskYesNoQuestion(_view, "Are you sure?", PlatformOps.ApplicationNameAndVersion);
+            if (result.Equals(DialogResult.Yes))
+            {
+               if (_database.DeleteUnitInfo(entry.ID) != 0)
+               {
+                  RefreshClicked();
+               }
+            }
+         }
+      }
+      
       public void SaveSortSettings(string sortColumnName, SortOrder sortOrder)
       {
          _model.SortColumnName = sortColumnName;

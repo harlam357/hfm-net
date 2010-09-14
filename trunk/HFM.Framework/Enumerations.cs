@@ -150,6 +150,7 @@ namespace HFM.Framework
 
    public enum QueryFieldName
    {
+      ID = -1,
       ProjectID = 0,
       ProjectRun,
       ProjectClone,
