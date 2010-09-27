@@ -23,7 +23,6 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 
 using HFM.Framework;
-using HFM.Instrumentation;
 
 namespace HFM.Log
 {

@@ -24,7 +24,6 @@ using System.IO;
 using System.Xml;
 
 using HFM.Framework;
-using HFM.Instrumentation;
 
 namespace HFM.Helpers
 {

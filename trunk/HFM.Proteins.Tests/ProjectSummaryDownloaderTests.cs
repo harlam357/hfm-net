@@ -26,7 +26,6 @@ using NUnit.Framework;
 using Rhino.Mocks;
 
 using HFM.Framework;
-using HFM.Instrumentation;
 
 namespace HFM.Proteins.Tests
 {

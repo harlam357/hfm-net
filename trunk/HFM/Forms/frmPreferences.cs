@@ -34,7 +34,6 @@ using harlam357.Windows.Forms;
 
 using HFM.Framework;
 using HFM.Helpers;
-using HFM.Instrumentation;
 using HFM.Models;
 
 namespace HFM.Forms

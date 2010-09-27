@@ -25,7 +25,6 @@ using NUnit.Framework;
 using HFM.Framework;
 using HFM.Log;
 using HFM.Queue;
-using HFM.Instrumentation;
 
 namespace HFM.Instances.Tests
 {

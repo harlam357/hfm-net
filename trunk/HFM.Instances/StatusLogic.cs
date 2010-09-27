@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 
 using HFM.Framework;
-using HFM.Instrumentation;
 
 namespace HFM.Instances
 {

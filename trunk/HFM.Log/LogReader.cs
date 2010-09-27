@@ -25,7 +25,6 @@ using System.IO;
 using System.Text.RegularExpressions;
 
 using HFM.Framework;
-using HFM.Instrumentation;
 
 namespace HFM.Log
 {

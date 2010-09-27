@@ -24,7 +24,6 @@ using System.Diagnostics;
 using System.Globalization;
 
 using HFM.Framework;
-using HFM.Instrumentation;
 
 namespace HFM.Instances
 {

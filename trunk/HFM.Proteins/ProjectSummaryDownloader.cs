@@ -27,8 +27,6 @@ using System.Text;
 using Majestic12;
 
 using HFM.Framework;
-using HFM.Helpers;
-using HFM.Instrumentation;
 
 namespace HFM.Proteins
 {

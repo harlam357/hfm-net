@@ -15,7 +15,6 @@ using System.Text.RegularExpressions;
 using ProtoBuf;
 
 using HFM.Framework;
-using HFM.Instrumentation;
 
 namespace HFM.Instances
 {

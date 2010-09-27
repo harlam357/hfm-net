@@ -58,10 +58,6 @@
       <Project>{FFFF3DE4-8620-4C13-A968-ADF58133146B}</Project>
       <Name>HFM.Framework</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HFM.Instrumentation\HFM.Instrumentation.csproj">
-      <Project>{7D6B604A-5C4A-4E97-A6D4-9C927ABBD74A}</Project>
-      <Name>HFM.Instrumentation</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
