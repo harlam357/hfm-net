@@ -26,8 +26,8 @@
   <Target Name="$(ProjectDir)/HFM.NET/HFM.Framework.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/HFM.NET/HFM.Helpers.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/HFM.NET/HFM.Instances.dll" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/HFM.NET/HFM.Instrumentation.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/HFM.NET/HFM.Log.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/HFM.NET/HFM.Plugins.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/HFM.NET/HFM.Preferences.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/HFM.NET/HFM.Proteins.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/HFM.NET/HFM.Queue.dll" Analyze="True" AnalyzeAllChildren="True" />
