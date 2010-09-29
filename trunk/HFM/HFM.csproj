@@ -240,6 +240,7 @@
       <DependentUpon>frmQuery.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\HistoryPresenter.cs" />
+    <Compile Include="Forms\InstanceSettingsPresenter.cs" />
     <Compile Include="Models\HistoryPresenterModel.cs" />
     <Compile Include="Models\OptionsModel.cs" />
     <Compile Include="Models\ReportingModel.cs" />
@@ -383,10 +384,6 @@
     <ProjectReference Include="..\HFM.Instances\HFM.Instances.csproj">
       <Project>{B8614309-B90A-4B86-97FF-3A9E64B9658F}</Project>
       <Name>HFM.Instances</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HFM.Instrumentation\HFM.Instrumentation.csproj">
-      <Project>{7D6B604A-5C4A-4E97-A6D4-9C927ABBD74A}</Project>
-      <Name>HFM.Instrumentation</Name>
     </ProjectReference>
     <ProjectReference Include="..\HFM.Log\HFM.Log.csproj">
       <Project>{2C3EA8A1-D17F-419D-A76A-970550FB5A09}</Project>

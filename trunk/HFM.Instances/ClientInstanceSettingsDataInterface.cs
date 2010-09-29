@@ -32,6 +32,10 @@ namespace HFM.Instances
                return GetInstanceType(_settings.InstanceHostType);
             case ClientInstanceSettingsKeys.InstanceName:
                return _settings.InstanceName;
+            case ClientInstanceSettingsKeys.ExternalInstance:
+               return _settings.ExternalInstance;
+            case ClientInstanceSettingsKeys.ExternalFileName:
+               return _settings.RemoteExternalFilename;
             case ClientInstanceSettingsKeys.ClientMhz:
                return _settings.ClientProcessorMegahertz;
             case ClientInstanceSettingsKeys.FahLogFileName:
@@ -55,8 +59,8 @@ namespace HFM.Instances
             case ClientInstanceSettingsKeys.ClientTimeOffset:
                return _settings.ClientTimeOffset;
             default:
-               throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
-                                                                 "Client Instance Setting {0} is not valid.", key));
+               throw new NotImplementedException(String.Format(CultureInfo.CurrentCulture,
+                                                               "Client Instance Setting {0} is not implemented.", key));
          }
       }
 
@@ -69,6 +73,12 @@ namespace HFM.Instances
                break;
             case ClientInstanceSettingsKeys.InstanceName:
                _settings.InstanceName = VerifyString(value);
+               break;
+            case ClientInstanceSettingsKeys.ExternalInstance:
+               _settings.ExternalInstance = VerifyBool(value);
+               break;
+            case ClientInstanceSettingsKeys.ExternalFileName:
+               _settings.RemoteExternalFilename = VerifyString(value);
                break;
             case ClientInstanceSettingsKeys.ClientMhz:
                _settings.ClientProcessorMegahertz = VerifyInt32(value);
@@ -104,8 +114,8 @@ namespace HFM.Instances
                _settings.ClientTimeOffset = VerifyInt32(value);
                break;
             default:
-               throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
-                                                                 "Client Instance Setting {0} is not valid.", key));
+               throw new NotImplementedException(String.Format(CultureInfo.CurrentCulture,
+                                                               "Client Instance Setting {0} is not implemented.", key));
          }
       }
 
@@ -152,8 +162,8 @@ namespace HFM.Instances
             case InstanceType.FtpInstance:
                return "FtpInstance";
             default:
-               throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
-                                                                 "Instance Type {0} is not valid.", type)); 
+               throw new NotImplementedException(String.Format(CultureInfo.CurrentCulture,
+                                                               "Instance Type {0} is not implemented.", type)); 
          }
       }
 
@@ -183,8 +193,8 @@ namespace HFM.Instances
             case FtpType.Active:
                return "Active";
             default:
-               throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
-                                                                 "Ftp Type {0} is not valid.", type));
+               throw new NotImplementedException(String.Format(CultureInfo.CurrentCulture,
+                                                               "Ftp Type {0} is not implemented.", type));
          }
       }
       

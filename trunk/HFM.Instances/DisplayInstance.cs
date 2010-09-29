@@ -33,6 +33,11 @@ namespace HFM.Instances
    public class DisplayInstance : IDisplayInstance
    {
       public const int NumberOfDisplayFields = 19;
+
+      /// <summary>
+      /// Name (key) of ExternalInstance that owns this DisplayInstance (otherwise null)
+      /// </summary>
+      public string ExternalInstanceName { get; set; }
       
       public IPreferenceSet Prefs { get; set; }
       public IProteinCollection ProteinCollection { get; set; }
@@ -574,6 +579,19 @@ namespace HFM.Instances
       }
 
       #endregion
+
+      public bool Owns(IOwnedByClientInstance value)
+      {
+         // External Instances don't own anything local
+         if (ExternalInstanceName == null &&
+             value.OwningInstanceName.Equals(Settings.InstanceName) &&
+             StringOps.PathsEqual(value.OwningInstancePath, Settings.Path))
+         {
+            return true;
+         }
+
+         return false;
+      }
 
       [CoverageExclude]
       public static void SetupDataGridViewColumns(DataGridView dataGridView1)

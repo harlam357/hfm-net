@@ -287,7 +287,8 @@ namespace HFM.Instances
                return TimeSpan.FromSeconds(RawTimePerSection);
             }
 
-            return _benchmarkContainer.GetBenchmarkAverageFrameTime(this);
+            // Issue 79 - no benchmark container is available to merged display instances
+            return _benchmarkContainer != null ? _benchmarkContainer.GetBenchmarkAverageFrameTime(this) : TimeSpan.Zero;
          }
       }
 

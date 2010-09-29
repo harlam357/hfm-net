@@ -40,6 +40,8 @@ namespace HFM.Instances
       // ReSharper disable InconsistentNaming
       private const string xmlNodeInstance = "Instance";
       private const string xmlAttrName = "Name";
+      private const string xmlNodeExternal = "External";
+      private const string xmlNodeExternalFile = "ExternalFile";
       private const string xmlNodeFAHLog = "FAHLogFile";
       private const string xmlNodeUnitInfo = "UnitInfoFile";
       private const string xmlNodeQueue = "QueueFile";
@@ -126,6 +128,10 @@ namespace HFM.Instances
          xmlRoot.SetAttribute(xmlAttrName, instanceName);
          xmlData.AppendChild(xmlRoot);
 
+         xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlNodeExternal, 
+            dataInterface.GetSetting(ClientInstanceSettingsKeys.ExternalInstance).ToString()));
+         xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlNodeExternalFile,
+            dataInterface.GetSetting(ClientInstanceSettingsKeys.ExternalFileName).ToString()));
          xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlNodeFAHLog,
             dataInterface.GetSetting(ClientInstanceSettingsKeys.FahLogFileName).ToString()));
          xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlNodeUnitInfo, 
@@ -214,6 +220,31 @@ namespace HFM.Instances
          dataInterface.SetSetting(ClientInstanceSettingsKeys.InstanceType, xmlData.SelectSingleNode(xmlPropType).InnerText);
          dataInterface.SetSetting(ClientInstanceSettingsKeys.InstanceName, xmlData.Attributes[xmlAttrName].ChildNodes[0].Value);
          dataInterface.SetSetting(ClientInstanceSettingsKeys.Path, xmlData.SelectSingleNode(xmlPropPath).InnerText);
+         
+         try
+         {
+            dataInterface.SetSetting(ClientInstanceSettingsKeys.ExternalInstance, Convert.ToBoolean(xmlData.SelectSingleNode(xmlNodeExternal).InnerText));
+         }
+         catch (NullReferenceException)
+         {
+            OnWarningMessage("Cannot load external instance flag, defaulting to false.");
+            dataInterface.SetSetting(ClientInstanceSettingsKeys.ExternalInstance, false);
+         }
+         catch (FormatException)
+         {
+            OnWarningMessage("Cannot load external instance flag, defaulting to false.");
+            dataInterface.SetSetting(ClientInstanceSettingsKeys.ExternalInstance, false);
+         }
+
+         try
+         {
+            dataInterface.SetSetting(ClientInstanceSettingsKeys.ExternalFileName, xmlData.SelectSingleNode(xmlNodeExternalFile).InnerText);
+         }
+         catch (NullReferenceException)
+         {
+            OnWarningMessage("Cannot load remote External.dat filename.");
+            dataInterface.SetSetting(ClientInstanceSettingsKeys.ExternalFileName, Constants.LocalExternal);
+         }
          
          try
          {

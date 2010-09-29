@@ -20,84 +20,120 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Windows.Forms;
 
 using harlam357.Windows.Forms;
 
 using HFM.Framework;
-using HFM.Helpers;
-using HFM.Instrumentation;
 
 namespace HFM.Forms
 {
-   public partial class frmHost : Classes.FormWrapper
+   public interface IInstanceSettingsView : IWin32Window
    {
-      #region Members
       /// <summary>
       /// Maximum Dialog Height
       /// </summary>
-      private readonly int _maxHeight;
+      int MaxHeight { get; }
 
       /// <summary>
       /// Maximum Dialog Width
       /// </summary>
-      private readonly int _maxWidth;
+      int MaxWidth { get; }
 
-      /// <summary>
-      /// Client Instance being Edited
-      /// </summary>
-      private readonly IClientInstanceSettings _settings;
-      /// <summary>
-      /// Client Instance being Edited
-      /// </summary>
-      public IClientInstanceSettings Settings
-      {
-         get { return _settings; }
-      }
+      void AttachPresenter(InstanceSettingsPresenter presenter);
+   
+      void DataBind(IClientInstanceSettings settings);
+
+      List<IValidatingControl> FindValidatingControls();
+
+      string ClientMegahertzLabelText { get; set; }
+      
+      bool MergeFileNameVisible { get; set; }
+
+      bool LogFileNamesVisible { set; }
+      
+      bool PathGroupVisible { set; }
+
+      bool HttpGroupVisible { set; }
+
+      bool FtpGroupVisible { set; }
+      
+      bool ClientIsOnVirtualMachineVisible { set; }
+      
+      bool ClientTimeOffsetVisible { set; }
+
+      void ShowConnectionSucceededMessage();
+
+      void ShowConnectionFailedMessage(string message);
+
+      void SetDefaultCursor();
+
+      void SetWaitCursor();
+
+      #region System.Windows.Forms.Form Exposure
+
+      DialogResult ShowDialog(IWin32Window owner);
+
+      void Close();
+
+      Size Size { get; set; }
+
+      DialogResult DialogResult { get; set; }
+
+      #endregion
+   }
+
+   // ReSharper disable InconsistentNaming
+   public partial class frmHost : Classes.FormWrapper, IInstanceSettingsView
+   // ReSharper restore InconsistentNaming
+   {
+      #region Members
       
       /// <summary>
-      /// Network Operations Interface
+      /// Maximum Dialog Height
       /// </summary>
-      private NetworkOps _net;
+      public int MaxHeight { get; private set; }
 
-      private List<IValidatingControl> _validatingControls;
+      /// <summary>
+      /// Maximum Dialog Width
+      /// </summary>
+      public int MaxWidth { get; private set; }
 
-      private PropertyDescriptorCollection _propertyCollection;
+      private InstanceSettingsPresenter _presenter;
+
       #endregion
    
       #region Constructor
-      public frmHost(IClientInstanceSettings settings)
-      {
-         _settings = settings;
       
+      public frmHost()
+      {
          InitializeComponent();
          
          numOffset.Minimum = Constants.MinOffsetMinutes;
          numOffset.Maximum = Constants.MaxOffsetMinutes;
          
-         _maxHeight = Height;
-         _maxWidth = Width;
-         
-         DataBind(settings);
-         FindValidatingControls();
-         GetModelProperties();
-         _settings.PropertyChanged += SettingsPropertyChanged;
+         MaxHeight = Height;
+         MaxWidth = Width;
       }
+      
       #endregion
+      
+      public void AttachPresenter(InstanceSettingsPresenter presenter)
+      {
+         _presenter = presenter;
+      }
 
       private void frmHost_Shown(object sender, EventArgs e)
       {
          txtDummy.Visible = false;
       }
       
-      private void DataBind(IClientInstanceSettings settings)
+      public void DataBind(IClientInstanceSettings settings)
       {
          txtName.DataBindings.Add("Text", settings, "InstanceName", false, DataSourceUpdateMode.OnValidation);
+         txtMergeFileName.DataBindings.Add("Text", settings, "RemoteExternalFilename", false, DataSourceUpdateMode.OnValidation);
          txtClientMegahertz.DataBindings.Add("Text", settings, "ClientProcessorMegahertz", false, DataSourceUpdateMode.OnValidation);
          txtLogFileName.DataBindings.Add("Text", settings, "RemoteFAHLogFilename", false, DataSourceUpdateMode.OnValidation);
          txtUnitFileName.DataBindings.Add("Text", settings, "RemoteUnitInfoFilename", false, DataSourceUpdateMode.OnValidation);
@@ -123,9 +159,9 @@ namespace HFM.Forms
          txtDummy.DataBindings.Add("Text", settings, "Dummy", false, DataSourceUpdateMode.Never);
       }
 
-      private void FindValidatingControls()
+      public List<IValidatingControl> FindValidatingControls()
       {
-         _validatingControls = FindValidatingControls(Controls);
+         return FindValidatingControls(Controls);
       }
 
       private static List<IValidatingControl> FindValidatingControls(Control.ControlCollection controls)
@@ -146,242 +182,108 @@ namespace HFM.Forms
          return validatingControls;
       }
 
-      private void GetModelProperties()
+      public string ClientMegahertzLabelText
       {
-         _propertyCollection = TypeDescriptor.GetProperties(Settings);
+         get { return lblClientMegahertz.Text; }
+         set { lblClientMegahertz.Text = value; }
       }
 
-      private void SettingsPropertyChanged(object sender, PropertyChangedEventArgs e)
+      public bool MergeFileNameVisible
       {
-         SetPropertyErrorState(e.PropertyName, true);
+         get { return txtMergeFileName.Visible; }
+         set { txtMergeFileName.Visible = value; }
       }
       
-      private void SetPropertyErrorState()
+      public bool LogFileNamesVisible
       {
-         foreach (PropertyDescriptor property in _propertyCollection)
+         set 
+         { 
+            //lblClientMegahertz.Visible = value;
+            //txtClientMegahertz.Visible = value;
+            lblLogFileName.Visible = value;
+            txtLogFileName.Visible = value;
+            lblUnitFileName.Visible = value;
+            txtUnitFileName.Visible = value;
+            lblQueueFileName.Visible = value;
+            txtQueueFileName.Visible = value;
+
+            pnlHostType.Top = pnlHostType.Top - InstanceSettingsPresenter.LogFileNamesVisibleOffset;
+            btnTestConnection.Top = btnTestConnection.Top - InstanceSettingsPresenter.LogFileNamesVisibleOffset;
+            grpLocal.Top = grpLocal.Top - InstanceSettingsPresenter.LogFileNamesVisibleOffset;
+            grpHTTP.Top = grpHTTP.Top - InstanceSettingsPresenter.LogFileNamesVisibleOffset;
+            grpFTP.Top = grpFTP.Top - InstanceSettingsPresenter.LogFileNamesVisibleOffset;
+         }
+      }
+
+      public bool PathGroupVisible
+      {
+         //get { return grpLocal.Visible; }
+         set
          {
-            SetPropertyErrorState(property.DisplayName, false);
+            grpLocal.Visible = value;
+            txtLocalPath.Enabled = value;
+         }
+      }
+
+      public bool HttpGroupVisible
+      {
+         //get { return grpHTTP.Visible; }
+         set
+         {
+            grpHTTP.Visible = value;
+            txtWebURL.Enabled = value;
+            txtWebUser.Enabled = value;
+            txtWebPass.Enabled = value;
+         }
+      }
+
+      public bool FtpGroupVisible
+      {
+         //get { return grpFTP.Visible; }
+         set
+         {
+            grpFTP.Visible = value;
+            txtFTPServer.Enabled = value;
+            txtFTPPath.Enabled = value;
+            txtFTPUser.Enabled = value;
+            txtFTPPass.Enabled = value;
          }
       }
       
-      private void SetPropertyErrorState(string boundProperty, bool showToolTip)
+      public bool ClientIsOnVirtualMachineVisible
       {
-         var errorProperty = _propertyCollection.Find(boundProperty + "Error", false);
-         if (errorProperty != null)
+         set { chkClientVM.Visible = value; }
+      }
+      
+      public bool ClientTimeOffsetVisible
+      {
+         set
          {
-            SetPropertyErrorState(boundProperty, errorProperty, showToolTip);
+            numOffset.Visible = value;
+            lblOffset.Visible = value;
          }
       }
-
-      private void SetPropertyErrorState(string boundProperty, PropertyDescriptor errorProperty, bool showToolTip)
-      {
-         ICollection<IValidatingControl> validatingControls = FindBoundControls(boundProperty);
-         var errorState = (bool)errorProperty.GetValue(Settings);
-         foreach (var control in validatingControls)
-         {
-            control.ErrorState = errorState;
-            if (showToolTip) control.ShowToolTip();
-         }
-      }
-
-      private ReadOnlyCollection<IValidatingControl> FindBoundControls(string propertyName)
-      {
-         return _validatingControls.FindAll(x => x.DataBindings["Text"].BindingMemberInfo.BindingField == propertyName).AsReadOnly();
-      }
-
-      #region Radio Button Management
-      /// <summary>
-      /// Enable the HTTP controls
-      /// </summary>
-      private void HttpFieldsActive(bool state)
-      {
-         if (state)
-         {
-            Size = new Size(_maxWidth, _maxHeight - 50);
-         }
-         grpHTTP.Visible = state;
-         txtWebURL.Enabled = state;
-         txtWebUser.Enabled = state;
-         txtWebPass.Enabled = state;
-      }
-
-      /// <summary>
-      /// Enable/disable the FTP controls
-      /// </summary>
-      private void FtpFieldsActive(bool state)
-      {
-         if (state)
-         {
-            Size = new Size(_maxWidth, _maxHeight);
-         }
-         grpFTP.Visible = state;
-         txtFTPServer.Enabled = state;
-         txtFTPPath.Enabled = state;
-         txtFTPUser.Enabled = state;
-         txtFTPPass.Enabled = state;
-      }
-
-      /// <summary>
-      /// Enable/disable the local path controls
-      /// </summary>
-      private void PathFieldsActive(bool state)
-      {
-         if (state)
-         {
-            Size = new Size(_maxWidth, _maxHeight - 78);
-         }
-         grpLocal.Visible = state;
-         txtLocalPath.Enabled = state;
-      }
-
-      /// <summary>
-      /// Configure the form fields according to the selected radio button
-      /// </summary>
-      private void radioButtonSet_CheckedChanged(object sender, EventArgs e)
-      {
-         if (radioLocal.Checked)
-         {
-            PathFieldsActive(true);
-            FtpFieldsActive(false);
-            HttpFieldsActive(false);
-         }
-         else if (radioFTP.Checked)
-         {
-            PathFieldsActive(false);
-            FtpFieldsActive(true);
-            HttpFieldsActive(false);
-         }
-         else if (radioHTTP.Checked)
-         {
-            PathFieldsActive(false);
-            FtpFieldsActive(false);
-            HttpFieldsActive(true);
-         }
-      }
-      #endregion
-
-      #region Local Path Browse functions
-      /// <summary>
-      /// Display the folder selection dialog. We want a path.
-      /// </summary>
-      private void btnBrowseLocal_Click(object sender, EventArgs e)
-      {
-         if (Settings.Path.Length > 0)
-         {
-            openLogFolder.SelectedPath = Settings.Path;
-         }
-
-         openLogFolder.ShowDialog();
-         if (openLogFolder.SelectedPath.Length > 0)
-         {
-            Settings.Path = openLogFolder.SelectedPath;
-         }
-      }
-      #endregion
 
       #region Button Event Handlers
+
+      private void btnBrowseLocal_Click(object sender, EventArgs e)
+      {
+         _presenter.LocalBrowseClicked();
+      }
+      
       private void btnTestConnection_Click(object sender, EventArgs e)
       {
-         if (_net == null)
-         {
-            _net = new NetworkOps();
-         }
-
-         try
-         {
-            SetWaitCursor();
-            if (radioLocal.Checked)
-            {
-               CheckFileConnectionDelegate del = CheckFileConnection;
-               del.BeginInvoke(Settings.Path, CheckFileConnectionCallback, del);
-            }
-            else if (radioFTP.Checked)
-            {
-               FtpCheckConnectionDelegate del = _net.FtpCheckConnection;
-               del.BeginInvoke(Settings.Server, Settings.Path, Settings.Username, Settings.Password, Settings.FtpMode, FtpCheckConnectionCallback, del);
-            }
-            else if (radioHTTP.Checked)
-            {
-               HttpCheckConnectionDelegate del = _net.HttpCheckConnection;
-               del.BeginInvoke(Settings.Path, Settings.Username, Settings.Password, HttpCheckConnectionCallback, del);
-            }
-         }
-         catch (Exception ex)
-         {
-            HfmTrace.WriteToHfmConsole(ex);
-            ShowConnectionFailedMessage(ex.Message);
-         }
-      }
-
-      private delegate void CheckFileConnectionDelegate(string directory);
-
-      public void CheckFileConnection(string directory)
-      {
-         if (Directory.Exists(directory) == false)
-         {
-            throw new IOException(String.Format(CultureInfo.CurrentCulture,
-               "Folder Path '{0}' does not exist.", directory));
-         }
-      }
-
-      private void CheckFileConnectionCallback(IAsyncResult result)
-      {
-         try
-         {
-            var del = (CheckFileConnectionDelegate)result.AsyncState;
-            del.EndInvoke(result);
-            ShowConnectionSucceededMessage();
-         }
-         catch (Exception ex)
-         {
-            HfmTrace.WriteToHfmConsole(ex);
-            ShowConnectionFailedMessage(ex.Message);
-         }
-         finally
-         {
-            SetDefaultCursor();
-         }
+         _presenter.TestConnectionClicked();
       }
       
-      private void FtpCheckConnectionCallback(IAsyncResult result)
+      private void btnOK_Click(object sender, EventArgs e)
       {
-         try
-         {
-            var del = (FtpCheckConnectionDelegate)result.AsyncState;
-            del.EndInvoke(result);
-            ShowConnectionSucceededMessage();
-         }
-         catch (Exception ex)
-         {
-            HfmTrace.WriteToHfmConsole(ex);
-            ShowConnectionFailedMessage(ex.Message);
-         }
-         finally
-         {
-            SetDefaultCursor();
-         }
+         _presenter.OkClicked();
       }
 
-      private void HttpCheckConnectionCallback(IAsyncResult result)
-      {
-         try
-         {
-            var del = (HttpCheckConnectionDelegate)result.AsyncState;
-            del.EndInvoke(result);
-            ShowConnectionSucceededMessage();
-         }
-         catch (Exception ex)
-         {
-            HfmTrace.WriteToHfmConsole(ex);
-            ShowConnectionFailedMessage(ex.Message);
-         }
-         finally
-         {
-            SetDefaultCursor();
-         }
-      }
+      #endregion
       
-      private void ShowConnectionSucceededMessage()
+      public void ShowConnectionSucceededMessage()
       {
          if (InvokeRequired)
          {
@@ -392,14 +294,12 @@ namespace HFM.Forms
          MessageBox.Show(this, "Test Connection Succeeded", PlatformOps.ApplicationNameAndVersion,
             MessageBoxButtons.OK, MessageBoxIcon.Information);
       }
-      
-      private delegate void ShowConnectionFailedMessageDelegate(string message);
 
-      private void ShowConnectionFailedMessage(string message)
+      public void ShowConnectionFailedMessage(string message)
       {
          if (InvokeRequired)
          {
-            Invoke(new ShowConnectionFailedMessageDelegate(ShowConnectionFailedMessage), message);
+            Invoke(new MethodInvoker(() => ShowConnectionFailedMessage(message)));
             return;
          }
 
@@ -408,7 +308,7 @@ namespace HFM.Forms
                MessageBoxIcon.Error);
       }
 
-      private void SetDefaultCursor()
+      public void SetDefaultCursor()
       {
          if (InvokeRequired)
          {
@@ -419,7 +319,7 @@ namespace HFM.Forms
          Cursor = Cursors.Default;
       }
 
-      private void SetWaitCursor()
+      public void SetWaitCursor()
       {
          if (InvokeRequired)
          {
@@ -429,47 +329,5 @@ namespace HFM.Forms
 
          Cursor = Cursors.WaitCursor;
       }
-
-      private void btnOK_Click(object sender, EventArgs e)
-      {
-         if (ValidateAcceptance())
-         {
-            DialogResult = DialogResult.OK;
-            Close();
-         }
-      }
-      
-      private bool ValidateAcceptance()
-      {
-         SetPropertyErrorState();
-         // Check for error conditions
-         if (Settings.InstanceNameError ||
-             Settings.ClientProcessorMegahertzError ||
-             Settings.RemoteFAHLogFilenameError ||
-             Settings.RemoteUnitInfoFilenameError ||
-             Settings.RemoteQueueFilenameError ||
-             Settings.ServerError ||
-             Settings.CredentialsError ||
-             Settings.PathEmpty)
-         {
-            MessageBox.Show("There are validation errors.  Please correct the yellow highlighted fields.", Constants.ApplicationName,
-               MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            return false;
-         }
-         
-         if (Settings.PathError)
-         {
-            if (MessageBox.Show("There are validation errors.  Do you wish to accept the input anyway?", Constants.ApplicationName,
-                  MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-               return true;
-            }
-
-            return false;
-         }
-         
-         return true;
-      }
-      #endregion
    }
 }

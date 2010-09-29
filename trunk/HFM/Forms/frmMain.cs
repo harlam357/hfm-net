@@ -39,7 +39,6 @@ using HFM.Classes;
 using HFM.Framework;
 using HFM.Helpers;
 using HFM.Instances;
-using HFM.Instrumentation;
 
 namespace HFM.Forms
 {
@@ -180,7 +179,7 @@ namespace HFM.Forms
             HfmTrace.WriteToHfmConsole("Running on Mono...");
             dataGridView1.RowEnter += delegate
             {
-               _clientInstances.SetCurrentInstance(dataGridView1.SelectedRows);
+               _clientInstances.SetSelectedInstance(dataGridView1.SelectedRows);
             };
          }
       }
@@ -491,29 +490,34 @@ namespace HFM.Forms
       /// </summary>
       private void dataGridView1_SelectionChanged(object sender, EventArgs e)
       {
-         _clientInstances.SetCurrentInstance(dataGridView1.SelectedRows);
+         _clientInstances.SetSelectedInstance(dataGridView1.SelectedRows);
       }
       
       /// <summary>
-      /// When _clientInstances SelectedInstance Changes
+      /// When _clientInstances SelectedDisplayInstance Changes
       /// </summary>
       private void ClientInstances_SelectedInstanceChanged(object sender, EventArgs e)
       {
-         if (_clientInstances.SelectedInstance != null)
+         if (_clientInstances.SelectedDisplayInstance != null)
          {
-            statusLabelLeft.Text = _clientInstances.SelectedInstance.ClientPathAndArguments;
+            mnuClientsViewCachedLog.Visible = _clientInstances.ClientFilesMenuItemVisible;
+            mnuClientsViewCachedLog.Visible = _clientInstances.CachedLogMenuItemVisible;
+            mnuClientsSep3.Visible = _clientInstances.ClientFilesMenuItemVisible ||
+                                     _clientInstances.CachedLogMenuItemVisible;
+         
+            statusLabelLeft.Text = _clientInstances.SelectedDisplayInstance.ClientPathAndArguments;
             
-            queueControl.SetQueue(_clientInstances.SelectedInstance.Queue, 
-               _clientInstances.SelectedInstance.TypeOfClient, 
-               _clientInstances.SelectedInstance.ClientIsOnVirtualMachine);
+            queueControl.SetQueue(_clientInstances.SelectedDisplayInstance.Queue, 
+               _clientInstances.SelectedDisplayInstance.TypeOfClient, 
+               _clientInstances.SelectedDisplayInstance.ClientIsOnVirtualMachine);
 
             // if we've got a good queue read, let queueControl_QueueIndexChanged()
             // handle populating the log lines.
-            IQueueBase qBase = _clientInstances.SelectedInstance.Queue;
+            IQueueBase qBase = _clientInstances.SelectedDisplayInstance.Queue;
             if (qBase != null && qBase.DataPopulated) return;
 
             // otherwise, load up the CurrentLogLines
-            SetLogLines(_clientInstances.SelectedInstance, _clientInstances.SelectedInstance.CurrentLogLines);
+            SetLogLines(_clientInstances.SelectedDisplayInstance, _clientInstances.SelectedDisplayInstance.CurrentLogLines);
          }
          else
          {
@@ -532,15 +536,15 @@ namespace HFM.Forms
             return;
          }
 
-         if (_clientInstances.SelectedInstance != null)
+         if (_clientInstances.SelectedDisplayInstance != null)
          {
             //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("Changed Queue Index ({0} - {1})", InstanceName, e.Index));
 
             // Check the UnitLogLines array against the requested Queue Index - Issue 171
             try
             {
-               SetLogLines(_clientInstances.SelectedInstance,
-                           _clientInstances.SelectedInstance.GetLogLinesForQueueIndex(e.Index));
+               SetLogLines(_clientInstances.SelectedDisplayInstance,
+                           _clientInstances.SelectedDisplayInstance.GetLogLinesForQueueIndex(e.Index));
             }
             catch (ArgumentOutOfRangeException ex)
             {
@@ -630,8 +634,6 @@ namespace HFM.Forms
       /// <summary>
       /// Handle Right-Click (Contest Menu) and Left Double-Click (File Browser)
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
       {
          DataGridView.HitTestInfo hti = dataGridView1.HitTest(e.X, e.Y);
@@ -641,21 +643,17 @@ namespace HFM.Forms
             {
                if (dataGridView1.Rows[hti.RowIndex].Cells[hti.ColumnIndex].Selected == false)
                {
-                  //dataGridView1.ClearSelection();
                   dataGridView1.Rows[hti.RowIndex].Cells[hti.ColumnIndex].Selected = true;
                }
 
-               // Check for SelectedInstance, and get out if not found
-               if (_clientInstances.SelectedInstance == null) return;
+               // Check for SelectedClientInstance, and get out if not found
+               if (_clientInstances.SelectedClientInstance == null) return;
 
-               if (_clientInstances.SelectedInstance.InstanceHostType.Equals(InstanceType.PathInstance))
-               {
-                  mnuContextClientsViewClientFiles.Visible = true;
-               }
-               else
-               {
-                  mnuContextClientsViewClientFiles.Visible = false;
-               }
+               mnuContextClientsViewClientFiles.Visible = _clientInstances.ClientFilesMenuItemVisible;
+               mnuContextClientsViewCachedLog.Visible = _clientInstances.CachedLogMenuItemVisible;
+               mnuContextClientsSep2.Visible = _clientInstances.ClientFilesMenuItemVisible ||
+                                               _clientInstances.CachedLogMenuItemVisible;
+               
                gridContextMenuStrip.Show(dataGridView1.PointToScreen(new Point(e.X, e.Y)));
             }
          }
@@ -663,14 +661,14 @@ namespace HFM.Forms
          {
             if (hti.Type == DataGridViewHitTestType.Cell)
             {
-               // Check for SelectedInstance, and get out if not found
-               if (_clientInstances.SelectedInstance == null) return;
+               // Check for SelectedClientInstance, and get out if not found
+               if (_clientInstances.SelectedClientInstance == null) return;
 
-               if (_clientInstances.SelectedInstance.InstanceHostType.Equals(InstanceType.PathInstance))
+               if (_clientInstances.SelectedClientInstance.Settings.InstanceHostType.Equals(InstanceType.PathInstance))
                {
                   try
                   {
-                     StartFileBrowser(_clientInstances.SelectedInstance.Path);
+                     StartFileBrowser(_clientInstances.SelectedClientInstance.Settings.Path);
                   }
                   catch (Exception ex)
                   {
@@ -678,7 +676,7 @@ namespace HFM.Forms
                      
                      MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError,
                         String.Format(CultureInfo.CurrentCulture, "client '{0}' files.{1}{1}Please check the current File Explorer defined in the Preferences",
-                        _clientInstances.SelectedInstance.Name, Environment.NewLine)));
+                        _clientInstances.SelectedClientInstance.Settings.InstanceName, Environment.NewLine)));
                   }
                }
             }
@@ -895,8 +893,29 @@ namespace HFM.Forms
       private void mnuClientsAdd_Click(object sender, EventArgs e)
       {
          var settings = new ClientInstanceSettings();
-         var newHost = new frmHost(settings);
-         while (newHost.ShowDialog().Equals(DialogResult.OK))
+         var newHost = InstanceProvider.GetInstance<InstanceSettingsPresenter>();
+         newHost.Settings = settings;
+         while (newHost.ShowDialog(this).Equals(DialogResult.OK))
+         {
+            try
+            {
+               _clientInstances.Add(newHost.Settings);
+               break;
+            }
+            catch (InvalidOperationException ex)
+            {
+               HfmTrace.WriteToHfmConsole(ex);
+               MessageBox.Show(this, ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error); 
+            }
+         }
+      }
+
+      private void mnuFileMerge_Click(object sender, EventArgs e)
+      {
+         var settings = new ClientInstanceSettings { ExternalInstance = true };
+         var newHost = InstanceProvider.GetInstance<InstanceSettingsPresenter>();
+         newHost.Settings = settings;
+         while (newHost.ShowDialog(this).Equals(DialogResult.OK))
          {
             try
             {
@@ -916,14 +935,15 @@ namespace HFM.Forms
       /// </summary>
       private void mnuClientsEdit_Click(object sender, EventArgs e)
       {
-         // Check for SelectedInstance, and get out if not found
-         if (_clientInstances.SelectedInstance == null) return;
+         // Check for SelectedClientInstance, and get out if not found
+         if (_clientInstances.SelectedClientInstance == null) return;
 
-         var settings = _clientInstances.SelectedInstanceSettings.Clone();
+         var settings = _clientInstances.SelectedClientInstance.Settings.Clone();
          string previousName = settings.InstanceName;
          string previousPath = settings.Path;
-         var editHost = new frmHost(settings);
-         while (editHost.ShowDialog().Equals(DialogResult.OK))
+         var editHost = InstanceProvider.GetInstance<InstanceSettingsPresenter>();
+         editHost.Settings = settings;
+         while (editHost.ShowDialog(this).Equals(DialogResult.OK))
          {
             try
             {
@@ -943,10 +963,10 @@ namespace HFM.Forms
       /// </summary>
       private void mnuClientsDelete_Click(object sender, EventArgs e)
       {
-         // Check for SelectedInstance, and get out if not found
-         if (_clientInstances.SelectedInstance == null) return;
+         // Check for SelectedClientInstance, and get out if not found
+         if (_clientInstances.SelectedClientInstance == null) return;
 
-         _clientInstances.Remove(_clientInstances.SelectedInstance.Name);
+         _clientInstances.Remove(_clientInstances.SelectedClientInstance.Settings.InstanceName);
       }
 
       /// <summary>
@@ -954,10 +974,10 @@ namespace HFM.Forms
       /// </summary>
       private void mnuClientsRefreshSelected_Click(object sender, EventArgs e)
       {
-         // Check for SelectedInstance, and get out if not found
-         if (_clientInstances.SelectedInstance == null) return;
+         // Check for SelectedClientInstance, and get out if not found
+         if (_clientInstances.SelectedClientInstance == null) return;
 
-         _clientInstances.RetrieveSingleClient(_clientInstances.SelectedInstance.Name);
+         _clientInstances.RetrieveSingleClient(_clientInstances.SelectedClientInstance.Settings.InstanceName);
       }
 
       /// <summary>
@@ -973,10 +993,10 @@ namespace HFM.Forms
       /// </summary>
       private void mnuClientsViewCachedLog_Click(object sender, EventArgs e)
       {
-         // Check for SelectedInstance, and get out if not found
-         if (_clientInstances.SelectedInstance == null) return;
+         // Check for SelectedClientInstance, and get out if not found
+         if (_clientInstances.SelectedClientInstance == null) return;
 
-         string logPath = Path.Combine(_prefs.CacheDirectory, _clientInstances.SelectedInstance.CachedFahLogName);
+         string logPath = Path.Combine(_prefs.CacheDirectory, _clientInstances.SelectedClientInstance.Settings.CachedFahLogName);
          if (File.Exists(logPath))
          {
             try
@@ -989,12 +1009,12 @@ namespace HFM.Forms
                
                MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError,
                   String.Format(CultureInfo.CurrentCulture, "client '{0}' FAHlog file.{1}{1}Please check the current Log File Viewer defined in the Preferences",
-                  _clientInstances.SelectedInstance.Name, Environment.NewLine)));
+                  _clientInstances.SelectedClientInstance.Settings.InstanceName, Environment.NewLine)));
             }
          }
          else
          {
-            MessageBox.Show(String.Format("Cannot find client '{0}' FAHlog.txt file.", _clientInstances.SelectedInstance.Name));
+            MessageBox.Show(String.Format("Cannot find client '{0}' FAHlog.txt file.", _clientInstances.SelectedClientInstance.Settings.InstanceName));
          }
       }
 
@@ -1003,14 +1023,14 @@ namespace HFM.Forms
       /// </summary>
       private void mnuClientsViewClientFiles_Click(object sender, EventArgs e)
       {
-         // Check for SelectedInstance, and get out if not found
-         if (_clientInstances.SelectedInstance == null) return;
+         // Check for SelectedClientInstance, and get out if not found
+         if (_clientInstances.SelectedClientInstance == null) return;
 
-         if (_clientInstances.SelectedInstance.InstanceHostType.Equals(InstanceType.PathInstance))
+         if (_clientInstances.SelectedClientInstance.Settings.InstanceHostType.Equals(InstanceType.PathInstance))
          {
             try
             {
-               StartFileBrowser(_clientInstances.SelectedInstance.Path);
+               StartFileBrowser(_clientInstances.SelectedClientInstance.Settings.Path);
             }
             catch (Exception ex)
             {
@@ -1018,7 +1038,7 @@ namespace HFM.Forms
                
                MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError,
                   String.Format(CultureInfo.CurrentCulture, "client '{0}' files.{1}{1}Please check the current File Explorer defined in the Preferences",
-                  _clientInstances.SelectedInstance.Name, Environment.NewLine)));
+                  _clientInstances.SelectedClientInstance.Settings.InstanceName, Environment.NewLine)));
             }
          }
       }
@@ -1160,10 +1180,10 @@ namespace HFM.Forms
       {
          int projectId = 0;
       
-         // Check for SelectedInstance, and if found... load its ProjectID.
-         if (_clientInstances.SelectedInstance != null)
+         // Check for SelectedDisplayInstance, and if found... load its ProjectID.
+         if (_clientInstances.SelectedDisplayInstance != null)
          {
-            projectId = _clientInstances.SelectedInstance.ProjectID;
+            projectId = _clientInstances.SelectedDisplayInstance.ProjectID;
          }
 
          var frm = new frmBenchmarks(_prefs, _proteinCollection, _benchmarkContainer, _clientInstances, projectId);
@@ -1274,23 +1294,32 @@ namespace HFM.Forms
       {
          try 
          {
-            _clientInstances.RefreshDisplayCollection();
+            //_clientInstances.RefreshDisplayCollection();
             if (dataGridView1.DataSource != null)
             {
                // Freeze the SelectionChanged Event when doing currency refresh
                dataGridView1.FreezeSelectionChanged = true;
             
-               var cm = (CurrencyManager)dataGridView1.BindingContext[dataGridView1.DataSource];
-               if (cm != null)
+               //var cm = (CurrencyManager)dataGridView1.BindingContext[dataGridView1.DataSource];
+               //if (cm != null)
+               //{
+               //   if (InvokeRequired)
+               //   {
+               //      Invoke(new MethodInvoker(cm.Refresh));
+               //   }
+               //   else
+               //   {
+               //      cm.Refresh();
+               //   }
+               //}
+
+               if (InvokeRequired)
                {
-                  if (InvokeRequired)
-                  {
-                     Invoke(new MethodInvoker(cm.Refresh));
-                  }
-                  else
-                  {
-                     cm.Refresh();
-                  }
+                  Invoke(new MethodInvoker(_clientInstances.RefreshDisplayCollection));
+               }
+               else
+               {
+                  _clientInstances.RefreshDisplayCollection();
                }
 
                ApplySort();
@@ -1332,7 +1361,7 @@ namespace HFM.Forms
             // forced here instead.
             if (PlatformOps.IsRunningOnMono())
             {
-               _clientInstances.SetCurrentInstance(dataGridView1.SelectedRows);
+               _clientInstances.SetSelectedInstance(dataGridView1.SelectedRows);
             }
             _clientInstances.RaiseSelectedInstanceChanged();
          }

@@ -11,7 +11,6 @@ copy /y HFM.exe.config %1
 copy /y HFM.Framework.dll %1
 copy /Y HFM.Helpers.dll %1
 copy /Y HFM.Instances.dll %1
-copy /Y HFM.Instrumentation.dll %1
 copy /Y HFM.Log.dll %1
 copy /Y HFM.Plugins.dll %1
 copy /Y HFM.Preferences.dll %1

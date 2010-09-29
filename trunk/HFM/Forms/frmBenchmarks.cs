@@ -29,7 +29,6 @@ using ZedGraph;
 
 using HFM.Framework;
 using HFM.Instances;
-using HFM.Instrumentation;
 
 namespace HFM.Forms
 {
@@ -121,7 +120,7 @@ namespace HFM.Forms
             if (instance != null && instance.Owns(benchmark))
             {
                unit = instance.CurrentUnitInfo;
-               valuesOk = instance.DisplayInstance.ProductionValuesOk;
+               valuesOk = instance.ProductionValuesOk;
             }
             UpdateBenchmarkText(benchmark.ToMultiLineString(unit, _prefs.PpdFormatString, valuesOk));
          }

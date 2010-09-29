@@ -409,7 +409,9 @@ namespace HFM.Instances
          }
 
          XMLOps.setXmlNode(xmlData, "UnitLog/Text", sb.ToString());
-         if (_prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog))
+         // Issue 79 - External Instances don't have full FAHlog.txt files available
+         if (instance.ExternalInstanceName == null &&
+             _prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog))
          {
             XMLOps.setXmlNode(xmlData, "UnitLog/FullLogFile", instance.CachedFahLogName);
          }

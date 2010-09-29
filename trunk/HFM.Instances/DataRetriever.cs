@@ -24,8 +24,6 @@ using System.IO;
 using System.Net;
 
 using HFM.Framework;
-using HFM.Helpers;
-using HFM.Instrumentation;
 
 namespace HFM.Instances
 {
@@ -65,6 +63,12 @@ namespace HFM.Instances
       /// </summary>
       public void RetrievePathInstance()
       {
+         if (Settings.ExternalInstance)
+         {
+            RetrieveExternalPathInstance();
+            return;
+         }
+      
          DateTime start = HfmTrace.ExecStart;
 
          try
@@ -157,10 +161,47 @@ namespace HFM.Instances
       }
 
       /// <summary>
+      /// Retrieve the external data file from the configured Local path
+      /// </summary>
+      private void RetrieveExternalPathInstance()
+      {
+         DateTime start = HfmTrace.ExecStart;
+
+         try
+         {
+            var fileInfo = new FileInfo(Path.Combine(Settings.Path, Settings.RemoteExternalFilename));
+            string filePath = Path.Combine(_prefs.CacheDirectory, Settings.CachedExternalName);
+
+            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Settings.InstanceName, "External Data copy (start)");
+
+            if (fileInfo.Exists)
+            {
+               fileInfo.CopyTo(filePath, true);
+               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Settings.InstanceName, "External Data copy (success)");
+            }
+            else
+            {
+               throw new FileNotFoundException(String.Format(CultureInfo.CurrentCulture,
+                  "The path {0} is inaccessible.", fileInfo.FullName));
+            }
+         }
+         finally
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, Settings.InstanceName, start);
+         }
+      }
+
+      /// <summary>
       /// Retrieve the log and unit info files from the configured HTTP location
       /// </summary>
       public void RetrieveHttpInstance()
       {
+         if (Settings.ExternalInstance)
+         {
+            RetrieveExternalHttpInstance();
+            return;
+         }
+      
          DateTime start = HfmTrace.ExecStart;
 
          var net = new NetworkOps();
@@ -227,10 +268,37 @@ namespace HFM.Instances
       }
 
       /// <summary>
+      /// Retrieve the external data file from the configured HTTP location
+      /// </summary>
+      private void RetrieveExternalHttpInstance()
+      {
+         DateTime start = HfmTrace.ExecStart;
+         
+         var net = new NetworkOps();
+
+         try
+         {
+            string httpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Settings.Path, "/", Settings.RemoteExternalFilename);
+            string localFile = Path.Combine(_prefs.CacheDirectory, Settings.CachedExternalName);
+            net.HttpDownloadHelper(httpPath, localFile, Settings.Username, Settings.Password);
+         }
+         finally
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, Settings.InstanceName, start);
+         }
+      }
+
+      /// <summary>
       /// Retrieve the log and unit info files from the configured FTP location
       /// </summary>
       public void RetrieveFtpInstance()
       {
+         if (Settings.ExternalInstance)
+         {
+            RetrieveExternalFtpInstance();
+            return;
+         }
+      
          DateTime start = HfmTrace.ExecStart;
 
          var net = new NetworkOps();
@@ -296,5 +364,26 @@ namespace HFM.Instances
             HfmTrace.WriteToHfmConsole(TraceLevel.Info, Settings.InstanceName, start);
          }
       }   
+
+      /// <summary>
+      /// Retrieve the external data file from the configured FTP location
+      /// </summary>
+      public void RetrieveExternalFtpInstance()
+      {
+         DateTime start = HfmTrace.ExecStart;
+
+         var net = new NetworkOps();
+
+         try
+         {
+            string localFilePath = Path.Combine(_prefs.CacheDirectory, Settings.CachedExternalName);
+            net.FtpDownloadHelper(Settings.Server, Settings.Path, Settings.RemoteExternalFilename, localFilePath,
+                                  Settings.Username, Settings.Password, Settings.FtpMode);
+         }
+         finally
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, Settings.InstanceName, start);
+         }
+      }
    }
 }

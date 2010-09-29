@@ -39,6 +39,7 @@ namespace HFM.Instances
          get
          {
             return (InstanceNameError ||
+                    RemoteExternalFilenameError ||
                     ClientProcessorMegahertzError ||
                     RemoteFAHLogFilenameError ||
                     RemoteUnitInfoFilenameError ||
@@ -95,6 +96,32 @@ namespace HFM.Instances
       public bool InstanceNameError
       {
          get { return !StringOps.ValidateInstanceName(InstanceName); }
+      }
+
+      [ProtoMember(14)]
+      public bool ExternalInstance { get; set; }
+
+      private string _remoteExternalFilename;
+      /// <summary>
+      /// External data file name
+      /// </summary>
+      [ProtoMember(15)]
+      public string RemoteExternalFilename
+      {
+         get { return _remoteExternalFilename; }
+         set
+         {
+            if (_remoteExternalFilename != value)
+            {
+               _remoteExternalFilename = value == null ? String.Empty : value.Trim();
+               OnPropertyChanged("RemoteExternalFilename");
+            }
+         }
+      }
+
+      public bool RemoteExternalFilenameError
+      {
+         get { return !StringOps.ValidateFileName(RemoteExternalFilename); }
       }
 
       private Int32 _clientProcessorMegahertz;
@@ -448,6 +475,8 @@ namespace HFM.Instances
          ImportError = String.Empty;
          InstanceHostType = hostType;
          InstanceName = String.Empty;
+         ExternalInstance = false;
+         RemoteExternalFilename = Constants.LocalExternal;
          ClientProcessorMegahertz = 1;
          RemoteFAHLogFilename = Constants.LocalFahLog;
          RemoteUnitInfoFilename = Constants.LocalUnitInfo;
@@ -476,6 +505,8 @@ namespace HFM.Instances
       {
          InstanceHostType = settings.InstanceHostType;
          InstanceName = settings.InstanceName;
+         ExternalInstance = settings.ExternalInstance;
+         RemoteExternalFilename = settings.RemoteExternalFilename;
          ClientProcessorMegahertz = settings.ClientProcessorMegahertz;
          RemoteFAHLogFilename = settings.RemoteFAHLogFilename;
          RemoteUnitInfoFilename = settings.RemoteUnitInfoFilename;
@@ -577,6 +608,14 @@ namespace HFM.Instances
       public string CachedQueueName
       {
          get { return String.Format(CultureInfo.InvariantCulture, "{0}-{1}", InstanceName, Constants.LocalQueue); }
+      }
+
+      /// <summary>
+      /// Cached External Filename for this instance
+      /// </summary>
+      public string CachedExternalName
+      {
+         get { return String.Format(CultureInfo.InvariantCulture, "{0}-{1}", InstanceName, Constants.LocalExternal); }
       }
 
       #endregion

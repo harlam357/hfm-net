@@ -60,6 +60,8 @@ namespace HFM.Forms
          this.mnuFileSave = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuFileSaveas = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuFileSep1 = new System.Windows.Forms.ToolStripSeparator();
+         this.mnuFileMerge = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuFileSep2 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuFileQuit = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuEdit = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuEditPreferences = new System.Windows.Forms.ToolStripMenuItem();
@@ -85,6 +87,7 @@ namespace HFM.Forms
          this.mnuViewToggleVersionInformation = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuToolsBenchmarks = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuToolsHistory = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuToolsDownloadProjects = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuWeb = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuWebEOCUser = new System.Windows.Forms.ToolStripMenuItem();
@@ -128,7 +131,6 @@ namespace HFM.Forms
          this.mnuContextShowTeamStats = new System.Windows.Forms.ToolStripMenuItem();
          this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuContextForceRefreshEocStats = new System.Windows.Forms.ToolStripMenuItem();
-         this.mnuToolsHistory = new System.Windows.Forms.ToolStripMenuItem();
          this.statusStrip.SuspendLayout();
          this.notifyMenu.SuspendLayout();
          this.AppMenu.SuspendLayout();
@@ -369,6 +371,8 @@ namespace HFM.Forms
             this.mnuFileSave,
             this.mnuFileSaveas,
             this.mnuFileSep1,
+            this.mnuFileMerge,
+            this.mnuFileSep2,
             this.mnuFileQuit});
          this.mnuFile.Name = "mnuFile";
          this.mnuFile.Size = new System.Drawing.Size(35, 20);
@@ -417,6 +421,18 @@ namespace HFM.Forms
          this.mnuFileSep1.Name = "mnuFileSep1";
          this.mnuFileSep1.Size = new System.Drawing.Size(257, 6);
          // 
+         // mnuFileMerge
+         // 
+         this.mnuFileMerge.Name = "mnuFileMerge";
+         this.mnuFileMerge.Size = new System.Drawing.Size(260, 22);
+         this.mnuFileMerge.Text = "Merge External Client Data";
+         this.mnuFileMerge.Click += new System.EventHandler(this.mnuFileMerge_Click);
+         // 
+         // mnuFileSep2
+         // 
+         this.mnuFileSep2.Name = "mnuFileSep2";
+         this.mnuFileSep2.Size = new System.Drawing.Size(257, 6);
+         // 
          // mnuFileQuit
          // 
          this.mnuFileQuit.Image = global::HFM.Properties.Resources.Quit;
@@ -460,58 +476,58 @@ namespace HFM.Forms
          // mnuClientsAdd
          // 
          this.mnuClientsAdd.Name = "mnuClientsAdd";
-         this.mnuClientsAdd.Size = new System.Drawing.Size(221, 22);
+         this.mnuClientsAdd.Size = new System.Drawing.Size(186, 22);
          this.mnuClientsAdd.Text = "&Add Client";
          this.mnuClientsAdd.Click += new System.EventHandler(this.mnuClientsAdd_Click);
          // 
          // mnuClientsSep1
          // 
          this.mnuClientsSep1.Name = "mnuClientsSep1";
-         this.mnuClientsSep1.Size = new System.Drawing.Size(218, 6);
+         this.mnuClientsSep1.Size = new System.Drawing.Size(183, 6);
          // 
          // mnuClientsEdit
          // 
          this.mnuClientsEdit.Name = "mnuClientsEdit";
-         this.mnuClientsEdit.Size = new System.Drawing.Size(221, 22);
+         this.mnuClientsEdit.Size = new System.Drawing.Size(186, 22);
          this.mnuClientsEdit.Text = "&Edit Client";
          this.mnuClientsEdit.Click += new System.EventHandler(this.mnuClientsEdit_Click);
          // 
          // mnuClientsDelete
          // 
          this.mnuClientsDelete.Name = "mnuClientsDelete";
-         this.mnuClientsDelete.Size = new System.Drawing.Size(221, 22);
+         this.mnuClientsDelete.Size = new System.Drawing.Size(186, 22);
          this.mnuClientsDelete.Text = "&Delete Client";
          this.mnuClientsDelete.Click += new System.EventHandler(this.mnuClientsDelete_Click);
          // 
          // mnuClientsSep2
          // 
          this.mnuClientsSep2.Name = "mnuClientsSep2";
-         this.mnuClientsSep2.Size = new System.Drawing.Size(218, 6);
+         this.mnuClientsSep2.Size = new System.Drawing.Size(183, 6);
          // 
          // mnuClientsViewCachedLog
          // 
          this.mnuClientsViewCachedLog.Name = "mnuClientsViewCachedLog";
-         this.mnuClientsViewCachedLog.Size = new System.Drawing.Size(221, 22);
+         this.mnuClientsViewCachedLog.Size = new System.Drawing.Size(186, 22);
          this.mnuClientsViewCachedLog.Text = "View Cached &Log File";
          this.mnuClientsViewCachedLog.Click += new System.EventHandler(this.mnuClientsViewCachedLog_Click);
          // 
          // mnuClientsViewClientFiles
          // 
          this.mnuClientsViewClientFiles.Name = "mnuClientsViewClientFiles";
-         this.mnuClientsViewClientFiles.Size = new System.Drawing.Size(221, 22);
-         this.mnuClientsViewClientFiles.Text = "View Client &Files (Local Only)";
+         this.mnuClientsViewClientFiles.Size = new System.Drawing.Size(186, 22);
+         this.mnuClientsViewClientFiles.Text = "View Client &Files";
          this.mnuClientsViewClientFiles.Click += new System.EventHandler(this.mnuClientsViewClientFiles_Click);
          // 
          // mnuClientsSep3
          // 
          this.mnuClientsSep3.Name = "mnuClientsSep3";
-         this.mnuClientsSep3.Size = new System.Drawing.Size(218, 6);
+         this.mnuClientsSep3.Size = new System.Drawing.Size(183, 6);
          // 
          // mnuClientsRefreshSelected
          // 
          this.mnuClientsRefreshSelected.Name = "mnuClientsRefreshSelected";
          this.mnuClientsRefreshSelected.ShortcutKeys = System.Windows.Forms.Keys.F5;
-         this.mnuClientsRefreshSelected.Size = new System.Drawing.Size(221, 22);
+         this.mnuClientsRefreshSelected.Size = new System.Drawing.Size(186, 22);
          this.mnuClientsRefreshSelected.Text = "Refresh &Selected";
          this.mnuClientsRefreshSelected.Click += new System.EventHandler(this.mnuClientsRefreshSelected_Click);
          // 
@@ -519,7 +535,7 @@ namespace HFM.Forms
          // 
          this.mnuClientsRefreshAll.Name = "mnuClientsRefreshAll";
          this.mnuClientsRefreshAll.ShortcutKeys = System.Windows.Forms.Keys.F6;
-         this.mnuClientsRefreshAll.Size = new System.Drawing.Size(221, 22);
+         this.mnuClientsRefreshAll.Size = new System.Drawing.Size(186, 22);
          this.mnuClientsRefreshAll.Text = "&Refresh All";
          this.mnuClientsRefreshAll.Click += new System.EventHandler(this.mnuClientsRefreshAll_Click);
          // 
@@ -612,6 +628,14 @@ namespace HFM.Forms
          this.mnuToolsBenchmarks.Size = new System.Drawing.Size(246, 22);
          this.mnuToolsBenchmarks.Text = "&Benchmarks Viewer";
          this.mnuToolsBenchmarks.Click += new System.EventHandler(this.mnuToolsBenchmarks_Click);
+         // 
+         // mnuToolsHistory
+         // 
+         this.mnuToolsHistory.Name = "mnuToolsHistory";
+         this.mnuToolsHistory.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
+         this.mnuToolsHistory.Size = new System.Drawing.Size(246, 22);
+         this.mnuToolsHistory.Text = "Work Unit History Viewer";
+         this.mnuToolsHistory.Click += new System.EventHandler(this.mnuToolsHistory_Click);
          // 
          // mnuToolsDownloadProjects
          // 
@@ -1008,14 +1032,6 @@ namespace HFM.Forms
          this.mnuContextForceRefreshEocStats.Text = "Force Refresh EOC Stats";
          this.mnuContextForceRefreshEocStats.Click += new System.EventHandler(this.mnuWebRefreshUserStats_Click);
          // 
-         // mnuToolsHistory
-         // 
-         this.mnuToolsHistory.Name = "mnuToolsHistory";
-         this.mnuToolsHistory.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
-         this.mnuToolsHistory.Size = new System.Drawing.Size(246, 22);
-         this.mnuToolsHistory.Text = "Work Unit History Viewer";
-         this.mnuToolsHistory.Click += new System.EventHandler(this.mnuToolsHistory_Click);
-         // 
          // frmMain
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1147,5 +1163,7 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
       private System.Windows.Forms.ToolStripMenuItem mnuContextForceRefreshEocStats;
       private System.Windows.Forms.ToolStripMenuItem mnuToolsHistory;
+      private System.Windows.Forms.ToolStripMenuItem mnuFileMerge;
+      private System.Windows.Forms.ToolStripSeparator mnuFileSep2;
    }
 }

@@ -25,8 +25,6 @@ using System.Diagnostics;
 using System.IO;
 
 using HFM.Framework;
-using HFM.Helpers;
-using HFM.Instrumentation;
 
 namespace HFM.Instances
 {
@@ -40,12 +38,7 @@ namespace HFM.Instances
       
       IDisplayInstance DisplayInstance { get; }
 
-      /// <summary>
-      /// Class member containing info specific to the current work unit
-      /// </summary>
-      IUnitInfoLogic CurrentUnitInfo { get; }
-
-      bool Owns(IOwnedByClientInstance value);
+      IList<IDisplayInstance> ExternalDisplayInstances { get; }
    }
 
    public sealed class ClientInstance : IClientInstance
@@ -98,6 +91,9 @@ namespace HFM.Instances
       {
          get { return _displayInstance; }
       }
+
+      [CLSCompliant(false)]
+      public IList<IDisplayInstance> ExternalDisplayInstances { get; private set; }
 
       #endregion
       
@@ -252,10 +248,17 @@ namespace HFM.Instances
             // Re-Init Client Level Members Before Processing
             Init();
             // Process the retrieved logs
-            ClientStatus returnedStatus = ProcessExisting();
-
-            // Handle the status retured from the log parse
-            HandleReturnedStatus(returnedStatus);
+            if (Settings.ExternalInstance)
+            {
+               ReadExternalDataFile(Path.Combine(_prefs.CacheDirectory, _displayInstance.Settings.CachedExternalName));
+               //_displayInstance.Status = ClientStatus.Running;
+            }
+            else
+            {
+               ClientStatus returnedStatus = ProcessExisting();
+               // Handle the status retured from the log parse
+               HandleReturnedStatus(returnedStatus);
+            }
          }
          catch (Exception ex)
          {
@@ -268,6 +271,37 @@ namespace HFM.Instances
          }
 
          HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Client Status: {2}", HfmTrace.FunctionName, _displayInstance.Settings.InstanceName, _displayInstance.Status));
+      }
+
+      private void ReadExternalDataFile(string filePath)
+      {
+         DateTime start = HfmTrace.ExecStart;
+
+         ExternalDisplayInstances = null;
+         try
+         {
+            using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+               var list = ProtoBuf.Serializer.Deserialize<List<DisplayInstance>>(fileStream);
+               foreach (var instance in list)
+               {
+                  // set external instance key - also used to identify display instances
+                  // that are bound to an external client instance
+                  instance.ExternalInstanceName = Settings.InstanceName;
+                  // update the instance name to specify the merged source name
+                  instance.Settings.InstanceName = String.Format(CultureInfo.InvariantCulture,
+                     "{0} ({1})", instance.Name, instance.ExternalInstanceName);
+                  instance.Prefs = _prefs;
+                  instance.ProteinCollection = _proteinCollection;
+                  instance.BuildUnitInfoLogic();
+               }
+               ExternalDisplayInstances = list.ConvertAll(x => (IDisplayInstance)x);
+            }
+         }
+         finally
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, start);
+         }
       }
       
       #endregion
@@ -479,17 +513,6 @@ namespace HFM.Instances
       {
          _displayInstance.UnitInfo = unitInfo;
          _displayInstance.BuildUnitInfoLogic();
-      }
-      
-      public bool Owns(IOwnedByClientInstance value)
-      {
-         if (value.OwningInstanceName.Equals(_displayInstance.Settings.InstanceName) &&
-             StringOps.PathsEqual(value.OwningInstancePath, _displayInstance.Settings.Path))
-         {
-            return true;
-         }
-         
-         return false;
       }
       
       #endregion

@@ -36,8 +36,6 @@ using System.Collections.Generic;
 
 using HFM.Framework;
 using HFM.Plugins;
-using HFM.Helpers;
-using HFM.Instrumentation;
 
 namespace HFM.Instances
 {
@@ -90,13 +88,18 @@ namespace HFM.Instances
       private readonly Dictionary<string, ClientInstance> _instanceCollection;
 
       /// <summary>
-      /// Client Instance Accessor
+      /// Display instance collection (this is bound to the DataGridView)
       /// </summary>
-      /// <param name="key">Client Instance Name</param>
+      private readonly DisplayInstanceSortableBindingList _displayCollection;
+
+      /// <summary>
+      /// Display Instance Accessor
+      /// </summary>
+      /// <param name="key">Display Instance Name</param>
       [CLSCompliant(false)]
-      public IClientInstance this[string key]
+      public IDisplayInstance this[string key]
       {
-         get { return _instanceCollection.ContainsKey(key) ? _instanceCollection[key] : null; }
+         get { return _displayCollection.FirstOrDefault(x => x.Name == key); }
       }
 
       /// <summary>
@@ -106,11 +109,6 @@ namespace HFM.Instances
       {
          get { return _instanceCollection.Count > 0; }
       }
-
-      /// <summary>
-      /// Display instance collection (this is bound to the DataGridView)
-      /// </summary>
-      private readonly DisplayInstanceSortableBindingList _displayCollection;
 
       /// <summary>
       /// Tells the SortableBindingList whether to sort Offline Clients Last
@@ -126,44 +124,36 @@ namespace HFM.Instances
             }
          }
       }
-      
-      /// <summary>
-      /// Currently Selected Display Instance
-      /// </summary>
-      private ClientInstance _currentInstance;
 
-      private ClientInstance CurrentInstance
+      [CLSCompliant(false)]
+      public IClientInstance SelectedClientInstance { get; private set; }
+
+      /// <summary>
+      /// Specifies if the UI Menu Item for 'View Client Files' is Visbile
+      /// </summary>
+      public bool ClientFilesMenuItemVisible
       {
-         set
+         get 
          {
-            if (_currentInstance != value)
-            {
-               _currentInstance = value;
-               OnSelectedInstanceChanged(EventArgs.Empty);
-            }
+            return SelectedClientInstance == null || 
+                   SelectedClientInstance.Settings.InstanceHostType.Equals(InstanceType.PathInstance);
          }
       }
 
       /// <summary>
-      /// Currently Selected Display Instance
+      /// Specifies if the UI Menu Item for 'View Cached Log File' is Visbile
       /// </summary>
-      [CLSCompliant(false)]
-      public IDisplayInstance SelectedInstance
+      public bool CachedLogMenuItemVisible
       {
          get
          {
-            if (_currentInstance != null)
-            {
-               return _currentInstance.DisplayInstance;
-            }
-            return null;
+            return SelectedClientInstance == null ||
+                   !(SelectedClientInstance.Settings.ExternalInstance);
          }
       }
-      
-      public IClientInstanceSettings SelectedInstanceSettings
-      {
-         get { return _currentInstance == null ? null : _currentInstance.Settings; }
-      }
+
+      [CLSCompliant(false)]
+      public IDisplayInstance SelectedDisplayInstance { get; private set; }
 
       private int _settingsPluginIndex;
 
@@ -231,7 +221,7 @@ namespace HFM.Instances
       /// <summary>
       /// Preferences Interface
       /// </summary>
-      private readonly IPreferenceSet _Prefs;
+      private readonly IPreferenceSet _prefs;
 
       /// <summary>
       /// Protein Collection Interface
@@ -266,7 +256,7 @@ namespace HFM.Instances
                                 IUnitInfoContainer unitInfoContainer,
                                 IClientInstanceFactory instanceFactory)
       {
-         _Prefs = prefs;
+         _prefs = prefs;
          _proteinCollection = proteinCollection;
          _benchmarkContainer = benchmarkContainer;
          _unitInfoContainer = unitInfoContainer;
@@ -291,14 +281,14 @@ namespace HFM.Instances
          _proteinCollection.Downloader.ProjectInfoUpdated += ProteinCollection_ProjectInfoUpdated;
 
          // Set Offline Clients Sort Flag
-         OfflineClientsLast = _Prefs.GetPreference<bool>(Preference.OfflineLast);
+         OfflineClientsLast = _prefs.GetPreference<bool>(Preference.OfflineLast);
 
          // Clear the Log File Cache Folder
          ClearCacheFolder();
 
          // Hook-up PreferenceSet Event Handlers
-         _Prefs.OfflineLastChanged += delegate { OfflineClientsLast = _Prefs.GetPreference<bool>(Preference.OfflineLast); };
-         _Prefs.TimerSettingsChanged += delegate { SetTimerState(); };
+         _prefs.OfflineLastChanged += delegate { OfflineClientsLast = _prefs.GetPreference<bool>(Preference.OfflineLast); };
+         _prefs.TimerSettingsChanged += delegate { SetTimerState(); };
 
          _settingsPlugins = GetClientInstanceSerializers();
       }
@@ -312,7 +302,7 @@ namespace HFM.Instances
          var serializers = new List<IClientInstanceSettingsSerializer>();
          serializers.Add(new ClientInstanceXmlSerializer());
          
-         var di = new DirectoryInfo(Path.Combine(_Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), "ClientSettings"));
+         var di = new DirectoryInfo(Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), "ClientSettings"));
          if (di.Exists)
          {
             var files = di.GetFiles("*.dll");
@@ -605,13 +595,16 @@ namespace HFM.Instances
                "Client Name '{0}' already exists.", instance.Settings.InstanceName));
          }
 
-         var concreteInstance = instance;
-         _instanceCollection.Add(instance.Settings.InstanceName, concreteInstance);
+         // lock added here - 9/28/10
+         lock (_instanceCollection)
+         {
+            _instanceCollection.Add(instance.Settings.InstanceName, instance);
+         }
          OnCollectionChanged(EventArgs.Empty);
          
          if (fireAddedEvent)
          {
-            RetrieveSingleClient(concreteInstance);
+            RetrieveSingleClient(instance);
 
             ChangedAfterSave = true;
             OnInstanceAdded(EventArgs.Empty);
@@ -630,6 +623,8 @@ namespace HFM.Instances
          if (previousPath == null) throw new ArgumentNullException("previousPath");
          if (settings == null) throw new ArgumentNullException("settings");
 
+         Debug.Assert(_instanceCollection.ContainsKey(previousName));
+
          // if the host key changed
          if (previousName != settings.InstanceName)
          {
@@ -641,25 +636,37 @@ namespace HFM.Instances
             }
          }
 
-         Debug.Assert(_instanceCollection.ContainsKey(previousName));
          var instance = _instanceCollection[previousName];
          // load the new settings
          instance.Settings.LoadSettings(settings);
+
          // Instance Name changed but isn't an already existing key
          if (previousName != instance.Settings.InstanceName)
          {
-            // update InstanceCollection
-            Remove(previousName, false);
-            Add(instance, false);
+            // lock added here - 9/28/10
+            lock (_instanceCollection)
+            {
+               // update InstanceCollection
+               _instanceCollection.Remove(previousName);
+               _instanceCollection.Add(instance.Settings.InstanceName, instance);
+            }
 
-            // update the Names in the BenchmarkContainer
-            _benchmarkContainer.UpdateInstanceName(new BenchmarkClient(previousName, instance.Settings.Path), instance.Settings.InstanceName);
+            // Issue 79 - 9/28/10
+            if (instance.Settings.ExternalInstance == false)
+            {
+               // update the Names in the BenchmarkContainer
+               _benchmarkContainer.UpdateInstanceName(new BenchmarkClient(previousName, instance.Settings.Path), instance.Settings.InstanceName);
+            }
          }
          // the path changed
          if (StringOps.PathsEqual(previousPath, instance.Settings.Path) == false)
          {
-            // update the Paths in the BenchmarkContainer
-            _benchmarkContainer.UpdateInstancePath(new BenchmarkClient(instance.Settings.InstanceName, previousPath), instance.Settings.Path);
+            // Issue 79 - 9/28/10
+            if (instance.Settings.ExternalInstance == false)
+            {
+               // update the Paths in the BenchmarkContainer
+               _benchmarkContainer.UpdateInstancePath(new BenchmarkClient(instance.Settings.InstanceName, previousPath), instance.Settings.Path);
+            }
          }
          
          RetrieveSingleClient(instance);
@@ -669,33 +676,32 @@ namespace HFM.Instances
       }
       
       /// <summary>
-      /// Remove an Instance by Key
+      /// Remove an Instance by Name
       /// </summary>
-      /// <param name="key">Instance Key</param>
-      public void Remove(string key)
+      /// <param name="instanceName">Instance Name</param>
+      public void Remove(string instanceName)
       {
-         Remove(key, true);
-      }
+         if (String.IsNullOrEmpty(instanceName))
+         {
+            throw new ArgumentException("Argument 'instanceName' cannot be a null or empty string.");
+         }
 
-      /// <summary>
-      /// Remove an Instance by Key
-      /// </summary>
-      /// <param name="key">Instance Key</param>
-      /// <param name="fireRemovedEvent">Specifies whether this call fires the InstanceRemoved Event</param>
-      private void Remove(string key, bool fireRemovedEvent)
-      {
-         _instanceCollection.Remove(key);
-         IDisplayInstance findInstance = FindDisplayInstance(_displayCollection, key);
-         _displayCollection.Remove(findInstance);
+         // lock added here - 9/28/10
+         lock (_instanceCollection)
+         {
+            _instanceCollection.Remove(instanceName);
+            var findInstance = FindDisplayInstance(_displayCollection, instanceName);
+            if (findInstance != null)
+            {
+               _displayCollection.Remove(findInstance);
+            }
+         }
          OnCollectionChanged(EventArgs.Empty);
          
-         if (fireRemovedEvent)
-         {
-            ChangedAfterSave = true;
-            OnInstanceRemoved(EventArgs.Empty);
+         ChangedAfterSave = true;
+         OnInstanceRemoved(EventArgs.Empty);
 
-            FindDuplicates();
-         }
+         FindDuplicates();
       }
       
       /// <summary>
@@ -727,7 +733,7 @@ namespace HFM.Instances
       /// <param name="instanceName">Instance Name to search for</param>
       public bool ContainsName(string instanceName)
       {
-         var findInstance = new List<ClientInstance>(_instanceCollection.Values).Find(
+         var findInstance = _instanceCollection.Values.FirstOrDefault(
             instance => instance.Settings.InstanceName.ToUpperInvariant() == instanceName.ToUpperInvariant());
          return findInstance != null;
       }
@@ -748,8 +754,8 @@ namespace HFM.Instances
       /// </summary>
       private void webGenTimer_Tick(object sender, EventArgs e)
       {
-         Debug.Assert(_Prefs.GetPreference<bool>(Preference.GenerateWeb));
-         Debug.Assert(_Prefs.GetPreference<bool>(Preference.WebGenAfterRefresh) == false);
+         Debug.Assert(_prefs.GetPreference<bool>(Preference.GenerateWeb));
+         Debug.Assert(_prefs.GetPreference<bool>(Preference.WebGenAfterRefresh) == false);
       
          HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping Web Generation Timer");
          webTimer.Stop();
@@ -761,7 +767,7 @@ namespace HFM.Instances
       
       private void DoWebGeneration()
       {
-         Debug.Assert(_Prefs.GetPreference<bool>(Preference.GenerateWeb));
+         Debug.Assert(_prefs.GetPreference<bool>(Preference.GenerateWeb));
 
          // lazy initialize
          var markupGenerator = InstanceProvider.GetInstance<IMarkupGenerator>();
@@ -776,20 +782,30 @@ namespace HFM.Instances
             {
                HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Starting Web Generation...");
 
-               var uploadHtml = _Prefs.GetPreference<bool>(Preference.WebGenCopyHtml);
-               var uploadXml = _Prefs.GetPreference<bool>(Preference.WebGenCopyXml);
+               var uploadHtml = _prefs.GetPreference<bool>(Preference.WebGenCopyHtml);
+               var uploadXml = _prefs.GetPreference<bool>(Preference.WebGenCopyXml);
                DateTime start = HfmTrace.ExecStart;
-               ICollection<IDisplayInstance> instances = GetCurrentDisplayInstanceArray();
+               ICollection<IClientInstance> instances = GetCurrentInstanceArray();
+               ICollection<IDisplayInstance> displayInstances = GetCurrentDisplayInstanceArray();
                if (uploadHtml)
                {
-                  markupGenerator.GenerateHtml(instances);
+                  // GenerateHtml calls GenerateXml - these two
+                  // calls are mutually exclusive
+                  markupGenerator.GenerateHtml(displayInstances);
                }
                else if (uploadXml)
                {
-                  markupGenerator.GenerateXml(instances);  
+                  markupGenerator.GenerateXml(displayInstances);  
+               }
+               // For now if Xml Upload is choosen, generate
+               // the External Data File
+               string externalFilePath = null;
+               if (uploadXml)
+               {
+                  externalFilePath = BuildExternalDataFile(instances);
                }
 
-               DeployWebsite(markupGenerator.HtmlFilePaths, markupGenerator.XmlFilePaths, instances);
+               DeployWebsite(markupGenerator.HtmlFilePaths, markupGenerator.XmlFilePaths, externalFilePath, displayInstances);
 
                HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format(CultureInfo.CurrentCulture, 
                   "Total Web Generation Execution Time: {0}", HfmTrace.GetExecTime(start)));
@@ -801,15 +817,43 @@ namespace HFM.Instances
          }
       }
       
-      private void DeployWebsite(ICollection<string> htmlFilePaths, ICollection<string> xmlFilePaths,
-                                 ICollection<IDisplayInstance> instances)
+      private static string BuildExternalDataFile(IEnumerable<IClientInstance> instances)
       {
-         Debug.Assert(_Prefs.GetPreference<bool>(Preference.GenerateWeb));
+         var list = (from instance in instances
+                     where instance.Settings.ExternalInstance == false
+                     select (DisplayInstance)instance.DisplayInstance).ToList();
+
+         DateTime start = HfmTrace.ExecStart;
+
+         var filePath = Path.Combine(Path.GetTempPath(), Constants.LocalExternal);
+         try
+         {
+            using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+            {
+               ProtoBuf.Serializer.Serialize(fileStream, list);
+            }
+            return filePath;
+         }
+         catch (Exception ex)
+         {
+            HfmTrace.WriteToHfmConsole(ex);
+            return null;
+         }
+         finally
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, start);
+         }
+      }
       
-         var copyHtml = _Prefs.GetPreference<bool>(Preference.WebGenCopyHtml);
-         var copyXml = _Prefs.GetPreference<bool>(Preference.WebGenCopyXml);
+      private void DeployWebsite(ICollection<string> htmlFilePaths, ICollection<string> xmlFilePaths,
+                                 string externalFilePath, ICollection<IDisplayInstance> instances)
+      {
+         Debug.Assert(_prefs.GetPreference<bool>(Preference.GenerateWeb));
       
-         Match match = StringOps.MatchFtpWithUserPassUrl(_Prefs.GetPreference<string>(Preference.WebRoot));
+         var copyHtml = _prefs.GetPreference<bool>(Preference.WebGenCopyHtml);
+         var copyXml = _prefs.GetPreference<bool>(Preference.WebGenCopyXml);
+      
+         Match match = StringOps.MatchFtpWithUserPassUrl(_prefs.GetPreference<string>(Preference.WebRoot));
          if (match.Success)
          {
             string server = match.Result("${domain}");
@@ -821,17 +865,18 @@ namespace HFM.Instances
             
             if (copyHtml)
             {
-               _networkOps.FtpWebUpload(server, ftpPath, username, password, htmlFilePaths, instances, _Prefs);
+               _networkOps.FtpWebUpload(server, ftpPath, username, password, htmlFilePaths, instances, _prefs);
             }
             if (copyXml)
             {
-               _networkOps.FtpXmlUpload(server, ftpPath, username, password, xmlFilePaths, _Prefs);
+               _networkOps.FtpXmlUpload(server, ftpPath, username, password, xmlFilePaths, _prefs);
+               _networkOps.FtpUploadHelper(server, ftpPath, externalFilePath, username, password, _prefs.GetPreference<FtpType>(Preference.WebGenFtpMode));
             }
          }
          else
          {
-            var webRoot = _Prefs.GetPreference<string>(Preference.WebRoot);
-            var cssFile = _Prefs.GetPreference<string>(Preference.CssFile);
+            var webRoot = _prefs.GetPreference<string>(Preference.WebRoot);
+            var cssFile = _prefs.GetPreference<string>(Preference.CssFile);
 
             // Create the web folder (just in case)
             if (Directory.Exists(webRoot) == false)
@@ -842,7 +887,7 @@ namespace HFM.Instances
             if (copyHtml)
             {
                // Copy the CSS file to the output directory
-               string cssFilePath = Path.Combine(Path.Combine(_Prefs.ApplicationPath, Constants.CssFolderName), cssFile);
+               string cssFilePath = Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.CssFolderName), cssFile);
                if (File.Exists(cssFilePath))
                {
                   File.Copy(cssFilePath, Path.Combine(webRoot, cssFile), true);
@@ -853,12 +898,13 @@ namespace HFM.Instances
                   File.Copy(filePath, Path.Combine(webRoot, Path.GetFileName(filePath)), true);
                }
 
-               if (_Prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog))
+               if (_prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog))
                {
                   foreach (var instance in instances)
                   {
-                     string cachedFahlogPath = Path.Combine(_Prefs.CacheDirectory, instance.Settings.CachedFahLogName);
-                     if (File.Exists(cachedFahlogPath))
+                     string cachedFahlogPath = Path.Combine(_prefs.CacheDirectory, instance.Settings.CachedFahLogName);
+                     // Issue 79 - External Instances don't have full FAHlog.txt files available
+                     if (instance.ExternalInstanceName == null && File.Exists(cachedFahlogPath))
                      {
                         File.Copy(cachedFahlogPath, Path.Combine(webRoot, instance.Settings.CachedFahLogName), true);
                      }
@@ -923,20 +969,20 @@ namespace HFM.Instances
             async.AsyncWaitHandle.WaitOne();
 
             // run post retrieval processes
-            if (_Prefs.GetPreference<bool>(Preference.GenerateWeb) && 
-                _Prefs.GetPreference<bool>(Preference.WebGenAfterRefresh))
+            if (_prefs.GetPreference<bool>(Preference.GenerateWeb) && 
+                _prefs.GetPreference<bool>(Preference.WebGenAfterRefresh))
             {
                // do a web gen (on another thread)
                new MethodInvoker(DoWebGeneration).BeginInvoke(null, null);
             }
 
-            if (_Prefs.GetPreference<bool>(Preference.ShowXmlStats))
+            if (_prefs.GetPreference<bool>(Preference.ShowXmlStats))
             {
                OnRefreshUserStatsData(EventArgs.Empty);
             }
 
             // Enable the data retrieval timer
-            if (_Prefs.GetPreference<bool>(Preference.SyncOnSchedule))
+            if (_prefs.GetPreference<bool>(Preference.SyncOnSchedule))
             {
                StartBackgroundTimer();
             }
@@ -955,7 +1001,7 @@ namespace HFM.Instances
       {
          // get flag synchronous or asynchronous - we don't want this flag to change on us
          // in the middle of a retrieve, so grab it now and use the local copy
-         bool synchronous = _Prefs.GetPreference<bool>(Preference.SyncOnLoad);
+         bool synchronous = _prefs.GetPreference<bool>(Preference.SyncOnLoad);
 
          // copy the current instance keys into local array
          int numInstances = _instanceCollection.Count;
@@ -1087,7 +1133,7 @@ namespace HFM.Instances
          }
 
          // Enable the data retrieval timer
-         if (_Prefs.GetPreference<bool>(Preference.SyncOnSchedule))
+         if (_prefs.GetPreference<bool>(Preference.SyncOnSchedule))
          {
             if (RetrievalInProgress == false)
             {
@@ -1104,8 +1150,8 @@ namespace HFM.Instances
          }
 
          // Enable the web generation timer
-         if (_Prefs.GetPreference<bool>(Preference.GenerateWeb) &&
-             _Prefs.GetPreference<bool>(Preference.WebGenAfterRefresh) == false)
+         if (_prefs.GetPreference<bool>(Preference.GenerateWeb) &&
+             _prefs.GetPreference<bool>(Preference.WebGenAfterRefresh) == false)
          {
             StartWebGenTimer();
          }
@@ -1124,7 +1170,7 @@ namespace HFM.Instances
       /// </summary>
       private void StartBackgroundTimer()
       {
-         int syncTimeMinutes = _Prefs.GetPreference<int>(Preference.SyncTimeMinutes);
+         int syncTimeMinutes = _prefs.GetPreference<int>(Preference.SyncTimeMinutes);
          
          workTimer.Interval = syncTimeMinutes * Constants.MinToMillisec;
          HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Starting Retrieval Timer Loop: {0} Minutes", syncTimeMinutes));
@@ -1136,10 +1182,10 @@ namespace HFM.Instances
       /// </summary>
       private void StartWebGenTimer()
       {
-         Debug.Assert(_Prefs.GetPreference<bool>(Preference.GenerateWeb));
-         Debug.Assert(_Prefs.GetPreference<bool>(Preference.WebGenAfterRefresh) == false);
+         Debug.Assert(_prefs.GetPreference<bool>(Preference.GenerateWeb));
+         Debug.Assert(_prefs.GetPreference<bool>(Preference.WebGenAfterRefresh) == false);
          
-         int generateInterval = _Prefs.GetPreference<int>(Preference.GenerateInterval);
+         int generateInterval = _prefs.GetPreference<int>(Preference.GenerateInterval);
 
          webTimer.Interval = generateInterval * Constants.MinToMillisec;
          HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format(CultureInfo.CurrentCulture,
@@ -1200,13 +1246,74 @@ namespace HFM.Instances
       {
          lock (_instanceCollection)
          {
-            foreach (ClientInstance instance in _instanceCollection.Values)
+            _displayCollection.RaiseListChangedEvents = false;
+            ClearExternalDisplayInstances();
+            RefreshLocalInstances();
+            RefreshExternalInstances();
+            _displayCollection.RaiseListChangedEvents = true;
+         }
+         _displayCollection.ResetBindings();
+      }
+
+      /// <summary>
+      /// Call only from RefreshDisplayCollection()
+      /// </summary>
+      private void ClearExternalDisplayInstances()
+      {
+         var displayCollectionCopy = _displayCollection.ToList();
+         foreach (var instance in displayCollectionCopy)
+         {
+            if (instance.Settings.ExternalInstance ||
+                instance.ExternalInstanceName != null)
             {
-               IDisplayInstance findInstance = FindDisplayInstance(_displayCollection, instance.Settings.InstanceName);
-               if (findInstance == null)
+               _displayCollection.Remove(instance);
+            }     
+         }
+      }
+
+      /// <summary>
+      /// Call only from RefreshDisplayCollection()
+      /// </summary>
+      private void RefreshLocalInstances()
+      {
+         var localInstances = from instance in _instanceCollection.Values
+                              where instance.Settings.ExternalInstance == false
+                              select instance;
+
+         foreach (var instance in localInstances)
+         {
+            IDisplayInstance findInstance = FindDisplayInstance(_displayCollection, instance.Settings.InstanceName);
+            if (findInstance == null)
+            {
+               _displayCollection.Add(instance.DisplayInstance);
+            }
+         }
+      }
+
+      /// <summary>
+      /// Call only from RefreshDisplayCollection()
+      /// </summary>
+      private void RefreshExternalInstances()
+      {
+         var externalInstances = from instance in _instanceCollection.Values
+                                 where instance.Settings.ExternalInstance
+                                 select instance;
+
+         foreach (var instance in externalInstances)
+         {
+            if (instance.ExternalDisplayInstances != null)
+            {
+               foreach (var displayInstance in instance.ExternalDisplayInstances)
                {
-                  _displayCollection.Add(instance.DisplayInstance);
+                  _displayCollection.Add(displayInstance);
                }
+            }
+            else
+            {
+               // add the ExternalInstance directly to the display 
+               // collection, something must be shown to the user 
+               // so they can manipulate it.
+               _displayCollection.Add(instance.DisplayInstance);
             }
          }
       }
@@ -1219,7 +1326,6 @@ namespace HFM.Instances
       /// </summary>
       public void FindDuplicates() // Issue 19
       {
-         var instances = GetCurrentInstanceArray();
          FindDuplicateUserId(_displayCollection);
          FindDuplicateProjects(_displayCollection);
 
@@ -1257,30 +1363,43 @@ namespace HFM.Instances
 
       #region Helper Functions
       
-      public void SetCurrentInstance(IList selectedClients)
+      public void SetSelectedInstance(IList selectedClients)
       {
-         if (selectedClients.Count > 0)
+         lock (_instanceCollection)
          {
-            Debug.Assert(selectedClients.Count == 1);
-            
-            if (selectedClients[0] is DataGridViewRow)
+            var previousClient = SelectedDisplayInstance;
+            if (selectedClients.Count > 0)
             {
-               object nameColumnValue = ((DataGridViewRow) selectedClients[0]).Cells["Name"].Value;
-               if (nameColumnValue != null)
+               Debug.Assert(selectedClients.Count == 1);
+
+               var selectedClient = selectedClients[0] as DataGridViewRow;
+               if (selectedClient != null)
                {
-                  string instanceName = nameColumnValue.ToString();
-                  ClientInstance instance;
-                  CurrentInstance = _instanceCollection.TryGetValue(instanceName, out instance) ? instance : null;
-               }
-               else
-               {
-                  CurrentInstance = null;
+                  var nameColumnValue = selectedClient.Cells["Name"].Value;
+                  if (nameColumnValue != null)
+                  {
+                     var instanceName = nameColumnValue.ToString();
+                     SelectedDisplayInstance = _displayCollection.FirstOrDefault(x => x.Name == instanceName);
+                     SelectedClientInstance = SelectedDisplayInstance.ExternalInstanceName != null ? 
+                        _instanceCollection[SelectedDisplayInstance.ExternalInstanceName] : _instanceCollection[instanceName];
+                  }
+                  else
+                  {
+                     SelectedDisplayInstance = null;
+                     SelectedClientInstance = null;
+                  }
                }
             }
-         }
-         else
-         {
-            CurrentInstance = null;
+            else
+            {
+               SelectedDisplayInstance = null;
+               SelectedClientInstance = null;
+            }
+
+            if (previousClient != SelectedDisplayInstance)
+            {
+               RaiseSelectedInstanceChanged();
+            }
          }
       }
 
@@ -1289,7 +1408,11 @@ namespace HFM.Instances
       /// </summary>
       private ClientInstance[] GetCurrentInstanceArray()
       {
-         return _instanceCollection.Values.ToArray();
+         // lock added here - 9/28/10
+         lock (_instanceCollection)
+         {
+            return _instanceCollection.Values.ToArray();
+         }
       }
 
       /// <summary>
@@ -1297,7 +1420,11 @@ namespace HFM.Instances
       /// </summary>
       private IDisplayInstance[] GetCurrentDisplayInstanceArray()
       {
-         return _displayCollection.ToArray();
+         // lock added here - 9/28/10
+         lock (_instanceCollection)
+         {
+            return _displayCollection.ToArray();
+         }
       }
       
       /// <summary>
@@ -1318,7 +1445,7 @@ namespace HFM.Instances
       /// <returns></returns>
       private static IDisplayInstance FindDisplayInstance(IEnumerable<IDisplayInstance> collection, string key)
       {
-         return new List<IDisplayInstance>(collection).Find(displayInstance => displayInstance.Name == key);
+         return collection.FirstOrDefault(displayInstance => displayInstance.Name == key);
       }
 
       /// <summary>
@@ -1328,8 +1455,8 @@ namespace HFM.Instances
       {
          DateTime start = HfmTrace.ExecStart;
 
-         string cacheFolder = Path.Combine(_Prefs.GetPreference<string>(Preference.ApplicationDataFolderPath),
-                                           _Prefs.GetPreference<string>(Preference.CacheFolder));
+         string cacheFolder = Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath),
+                                           _prefs.GetPreference<string>(Preference.CacheFolder));
 
          var di = new DirectoryInfo(cacheFolder);
          if (di.Exists == false)

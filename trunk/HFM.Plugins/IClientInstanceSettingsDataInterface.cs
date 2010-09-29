@@ -5,6 +5,8 @@ namespace HFM.Plugins
    {
       InstanceType,
       InstanceName,
+      ExternalInstance,
+      ExternalFileName,
       ClientMhz,
       FahLogFileName,
       UnitInfoFileName,

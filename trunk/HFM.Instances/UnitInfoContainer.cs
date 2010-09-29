@@ -25,7 +25,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 using ProtoBuf;
 
 using HFM.Framework;
-using HFM.Instrumentation;
 
 namespace HFM.Instances
 {
@@ -106,8 +105,7 @@ namespace HFM.Instances
       /// <param name="instance">Client Instance</param>
       public UnitInfo RetrieveUnitInfo(ClientInstance instance)
       {
-         UnitInfo findUnit = _collection.UnitInfoList.Find(instance.Owns);
-         return findUnit;
+         return _collection.UnitInfoList.Find(instance.DisplayInstance.Owns);
       }
       
       #endregion

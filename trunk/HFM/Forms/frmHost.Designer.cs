@@ -93,12 +93,13 @@ namespace HFM.Forms
          this.lblUnitFileName = new HFM.Classes.LabelWrapper();
          this.lblClientMegahertz = new HFM.Classes.LabelWrapper();
          this.txtClientMegahertz = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.label1 = new HFM.Classes.LabelWrapper();
+         this.lblOffset = new HFM.Classes.LabelWrapper();
          this.lblQueueFileName = new HFM.Classes.LabelWrapper();
          this.txtQueueFileName = new harlam357.Windows.Forms.ValidatingTextBox();
          this.btnTestConnection = new HFM.Classes.ButtonWrapper();
          this.pnlHostType = new harlam357.Windows.Forms.RadioPanel();
          this.txtDummy = new HFM.Classes.TextBoxWrapper();
+         this.txtMergeFileName = new harlam357.Windows.Forms.ValidatingTextBox();
          ((System.ComponentModel.ISupportInitialize)(this.numOffset)).BeginInit();
          this.grpLocal.SuspendLayout();
          this.grpFTP.SuspendLayout();
@@ -190,7 +191,6 @@ namespace HFM.Forms
          this.radioLocal.Tag = "0";
          this.radioLocal.Text = "Local Path";
          this.radioLocal.UseVisualStyleBackColor = true;
-         this.radioLocal.CheckedChanged += new System.EventHandler(this.radioButtonSet_CheckedChanged);
          // 
          // txtName
          // 
@@ -231,7 +231,6 @@ namespace HFM.Forms
          this.radioFTP.Tag = "1";
          this.radioFTP.Text = "FTP Server";
          this.radioFTP.UseVisualStyleBackColor = true;
-         this.radioFTP.CheckedChanged += new System.EventHandler(this.radioButtonSet_CheckedChanged);
          // 
          // lblFTPServer
          // 
@@ -295,7 +294,6 @@ namespace HFM.Forms
          this.radioHTTP.Tag = "2";
          this.radioHTTP.Text = "Web Server";
          this.radioHTTP.UseVisualStyleBackColor = true;
-         this.radioHTTP.CheckedChanged += new System.EventHandler(this.radioButtonSet_CheckedChanged);
          // 
          // txtWebURL
          // 
@@ -610,15 +608,15 @@ namespace HFM.Forms
          this.txtClientMegahertz.Text = "1";
          this.txtClientMegahertz.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
-         // label1
+         // lblOffset
          // 
-         this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-         this.label1.AutoSize = true;
-         this.label1.Location = new System.Drawing.Point(64, 355);
-         this.label1.Name = "label1";
-         this.label1.Size = new System.Drawing.Size(136, 13);
-         this.label1.TabIndex = 18;
-         this.label1.Text = "Client Time Offset (Minutes)";
+         this.lblOffset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+         this.lblOffset.AutoSize = true;
+         this.lblOffset.Location = new System.Drawing.Point(64, 355);
+         this.lblOffset.Name = "lblOffset";
+         this.lblOffset.Size = new System.Drawing.Size(136, 13);
+         this.lblOffset.TabIndex = 18;
+         this.lblOffset.Text = "Client Time Offset (Minutes)";
          // 
          // lblQueueFileName
          // 
@@ -648,7 +646,6 @@ namespace HFM.Forms
          // 
          // btnTestConnection
          // 
-         this.btnTestConnection.CausesValidation = false;
          this.btnTestConnection.Location = new System.Drawing.Point(271, 142);
          this.btnTestConnection.Name = "btnTestConnection";
          this.btnTestConnection.Size = new System.Drawing.Size(114, 24);
@@ -675,18 +672,37 @@ namespace HFM.Forms
          this.txtDummy.Size = new System.Drawing.Size(49, 20);
          this.txtDummy.TabIndex = 23;
          // 
+         // txtMergeFileName
+         // 
+         this.txtMergeFileName.BackColor = System.Drawing.SystemColors.Window;
+         this.txtMergeFileName.DoubleBuffered = true;
+         this.txtMergeFileName.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.txtMergeFileName.ErrorState = false;
+         this.txtMergeFileName.ErrorToolTip = this.toolTipHost;
+         this.txtMergeFileName.ErrorToolTipDuration = 5000;
+         this.txtMergeFileName.ErrorToolTipPoint = new System.Drawing.Point(230, 0);
+         this.txtMergeFileName.ErrorToolTipText = "File name contains invalid characters.";
+         this.txtMergeFileName.Location = new System.Drawing.Point(146, 38);
+         this.txtMergeFileName.MaxLength = 100;
+         this.txtMergeFileName.Name = "txtMergeFileName";
+         this.txtMergeFileName.Size = new System.Drawing.Size(237, 20);
+         this.txtMergeFileName.TabIndex = 3;
+         this.txtMergeFileName.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         this.txtMergeFileName.Visible = false;
+         // 
          // frmHost
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.ClientSize = new System.Drawing.Size(392, 385);
+         this.Controls.Add(this.txtMergeFileName);
          this.Controls.Add(this.txtDummy);
          this.Controls.Add(this.grpLocal);
          this.Controls.Add(this.pnlHostType);
          this.Controls.Add(this.btnTestConnection);
          this.Controls.Add(this.txtQueueFileName);
          this.Controls.Add(this.lblQueueFileName);
-         this.Controls.Add(this.label1);
+         this.Controls.Add(this.lblOffset);
          this.Controls.Add(this.numOffset);
          this.Controls.Add(this.txtClientMegahertz);
          this.Controls.Add(this.lblClientMegahertz);
@@ -760,7 +776,7 @@ namespace HFM.Forms
       private Classes.CheckBoxWrapper chkClientVM;
       private Classes.LabelWrapper lblClientMegahertz;
       private ValidatingTextBox txtClientMegahertz;
-      private Classes.LabelWrapper label1;
+      private Classes.LabelWrapper lblOffset;
       private System.Windows.Forms.NumericUpDown numOffset;
       private Classes.RadioButtonWrapper radioLocal;
       private Classes.RadioButtonWrapper radioFTP;
@@ -775,6 +791,7 @@ namespace HFM.Forms
       private RadioPanel pnlHostType;
       private RadioPanel pnlFtpMode;
       private HFM.Classes.TextBoxWrapper txtDummy;
+      private ValidatingTextBox txtMergeFileName;
 
    }
 }
