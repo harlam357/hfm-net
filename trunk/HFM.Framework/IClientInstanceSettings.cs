@@ -41,6 +41,18 @@ namespace HFM.Framework
       bool InstanceNameError { get; }
 
       /// <summary>
+      /// Specifies if this instance is configured to merge client data from an external source
+      /// </summary>
+      bool ExternalInstance { get; set; }
+
+      /// <summary>
+      /// Remote external data file name
+      /// </summary>
+      string RemoteExternalFilename { get; set; }
+
+      bool RemoteExternalFilenameError { get; }
+
+      /// <summary>
       /// The number of processor megahertz for this client instance
       /// </summary>
       Int32 ClientProcessorMegahertz { get; set; }
@@ -135,5 +147,10 @@ namespace HFM.Framework
       /// Cached Queue Filename for this instance
       /// </summary>
       string CachedQueueName { get; }
+
+      /// <summary>
+      /// Cached External Filename for this instance
+      /// </summary>
+      string CachedExternalName { get; }
    }
 }

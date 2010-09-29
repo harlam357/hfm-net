@@ -22,6 +22,7 @@ namespace HFM.Framework
    public static class Constants
    {
       #region Public Const
+      
       public const string ExeName = "HFM";
       public const string ApplicationName = "HFM.NET";
 
@@ -83,6 +84,8 @@ namespace HFM.Framework
       public const string LocalFahLog = "FAHlog.txt";
       public const string LocalUnitInfo = "unitinfo.txt";
       public const string LocalQueue = "queue.dat";
+      public const string LocalExternal = "External.dat";
+
       #endregion
    }
 }

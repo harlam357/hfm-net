@@ -18,8 +18,6 @@
  */
 
 using System;
-using System.Globalization;
-using System.IO;
 using System.Net;
 using System.Net.Cache;
 
@@ -29,16 +27,11 @@ using Rhino.Mocks;
 
 using harlam357.Net;
 
-using HFM.Framework;
-
-namespace HFM.Helpers.Tests
+namespace HFM.Framework.Tests
 {
    [TestFixture]
    public class NetworkOpsTests
    {
-      private readonly string _testFilesFolder = String.Format(CultureInfo.InvariantCulture, "..{0}..{0}TestFiles", Path.DirectorySeparatorChar);
-      private readonly string _testFilesWorkFolder = String.Format(CultureInfo.InvariantCulture, "..{0}..{0}TestFiles{0}Work", Path.DirectorySeparatorChar);
-
       private readonly NetworkOps _net = new NetworkOps();
 
       private IWindsorContainer _container;
@@ -47,14 +40,6 @@ namespace HFM.Helpers.Tests
       [SetUp]
       public void Init()
       {
-         var di = new DirectoryInfo(_testFilesWorkFolder);
-         if (di.Exists)
-         {
-            di.Delete(true);
-         }
-
-         di.Create();
-
          _container = new WindsorContainer();
          _mocks = new MockRepository();
 
@@ -64,21 +49,11 @@ namespace HFM.Helpers.Tests
          InstanceProvider.SetContainer(_container);
       }
 
-      [TearDown]
-      public void CleanUp()
-      {
-         var di = new DirectoryInfo(_testFilesWorkFolder);
-         if (di.Exists)
-         {
-            di.Delete(true);
-         }
-      }
-
       [Test]
       public void FtpUploadHelper()
       {
          var operation = _mocks.DynamicMock<IFtpWebOperation>();
-         Expect.Call(delegate { operation.Upload("testpath", -1); });
+         Expect.Call(() => operation.Upload("testpath", -1));
 
          var operationRequest = _mocks.Stub<IFtpWebOperationRequest>();
          SetupResult.For(operation.FtpOperationRequest).Return(operationRequest);
@@ -103,7 +78,7 @@ namespace HFM.Helpers.Tests
       public void FtpDownloadHelper()
       {
          var operation = _mocks.DynamicMock<IFtpWebOperation>();
-         Expect.Call(delegate { operation.Download("testpath"); });
+         Expect.Call(() => operation.Download("testpath"));
 
          var operationRequest = _mocks.Stub<IFtpWebOperationRequest>();
          SetupResult.For(operation.FtpOperationRequest).Return(operationRequest);
@@ -154,7 +129,7 @@ namespace HFM.Helpers.Tests
       public void HttpDownloadHelper()
       {
          var operation = _mocks.DynamicMock<IWebOperation>();
-         Expect.Call(delegate { operation.Download("testpath"); });
+         Expect.Call(() => operation.Download("testpath"));
 
          var operationRequest = _mocks.Stub<IWebOperationRequest>();
          SetupResult.For(operation.OperationRequest).Return(operationRequest);
@@ -199,7 +174,7 @@ namespace HFM.Helpers.Tests
       public void FtpCheckConnection()
       {
          var operation = _mocks.DynamicMock<IFtpWebOperation>();
-         Expect.Call(delegate { operation.CheckConnection(); });
+         Expect.Call(operation.CheckConnection);
 
          var operationRequest = _mocks.Stub<IFtpWebOperationRequest>();
          SetupResult.For(operation.FtpOperationRequest).Return(operationRequest);
@@ -225,7 +200,7 @@ namespace HFM.Helpers.Tests
       public void HttpCheckConnection()
       {
          var operation = _mocks.DynamicMock<IWebOperation>();
-         Expect.Call(delegate { operation.CheckConnection(); });
+         Expect.Call(operation.CheckConnection);
 
          var operationRequest = _mocks.Stub<IWebOperationRequest>();
          SetupResult.For(operation.OperationRequest).Return(operationRequest);
@@ -241,41 +216,6 @@ namespace HFM.Helpers.Tests
          Assert.AreEqual(5000, operationRequest.Timeout);
 
          _mocks.VerifyAll();
-      }
-
-      [Test]
-      public void GetProteinDescription()
-      {
-         var operation = _mocks.DynamicMock<IWebOperation>();
-         Expect.Call(delegate { operation.Download("testpath"); })
-            .IgnoreArguments()
-            .Do(new DoTestCopyDelegate(DoTestCopy));
-
-         var operationRequest = _mocks.Stub<IWebOperationRequest>();
-         SetupResult.For(operation.OperationRequest).Return(operationRequest);
-
-         var request = _mocks.DynamicMock<WebRequest>();
-         SetupResult.For(operationRequest.Request).Return(request);
-
-         _mocks.ReplayAll();
-
-         string description = _net.GetProteinDescription(operation);
-
-         Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, operationRequest.CachePolicy.Level);
-         Assert.AreEqual(5000, operationRequest.Timeout);
-
-         _mocks.VerifyAll();
-
-         Assert.AreEqual(
-            "<TABLE align=center width=650 border=0 cellpadding=2 >\n<TR><TD><font size=\"3\"><b><A name = 2669>Project 2669</A></b></font></TD></TR><TR><TD><center>\n<br>\nThese projects study how influenza virus recognizes and infects cells.  We are developing new simulation methods to better understand these processes.\n<br><br>\n</center>\n<BR><BR><BR></TD></TR><TR><TD></TD></TR></TABLE>",
-            description);
-      }
-
-      private delegate void DoTestCopyDelegate(string filePath);
-
-      private void DoTestCopy(string filePath)
-      {
-         File.Copy(Path.Combine(_testFilesFolder, "fahproject2669.html"), filePath, true);
       }
 
       [Test]

@@ -25,6 +25,11 @@ namespace HFM.Framework
    [CLSCompliant(false)]
    public interface IDisplayInstance
    {
+      /// <summary>
+      /// Specifies the name of External Instance if this DisplayInstance belongs to an external data source
+      /// </summary>
+      string ExternalInstanceName { get; }
+   
       IUnitInfoLogic CurrentUnitInfo { get; set; }
    
       IClientInstanceSettings Settings { get; }
@@ -251,5 +256,7 @@ namespace HFM.Framework
       /// Esimated time of arrival (ETA) for this unit
       /// </summary>
       DateTime EtaDate { get; }
+
+      bool Owns(IOwnedByClientInstance value);
    }
 }
