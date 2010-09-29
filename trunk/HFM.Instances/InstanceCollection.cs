@@ -918,7 +918,7 @@ namespace HFM.Instances
                   File.Copy(filePath, Path.Combine(webRoot, Path.GetFileName(filePath)), true);
                }
                // Issue 79
-               File.Copy(externalFilePath, Path.Combine(webRoot, Path.GetFileName(externalFilePath)));
+               File.Copy(externalFilePath, Path.Combine(webRoot, Path.GetFileName(externalFilePath)), true);
             }
          }
       }
