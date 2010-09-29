@@ -870,6 +870,7 @@ namespace HFM.Instances
             if (copyXml)
             {
                _networkOps.FtpXmlUpload(server, ftpPath, username, password, xmlFilePaths, _prefs);
+               // Issue 79
                _networkOps.FtpUploadHelper(server, ftpPath, externalFilePath, username, password, _prefs.GetPreference<FtpType>(Preference.WebGenFtpMode));
             }
          }
@@ -903,8 +904,7 @@ namespace HFM.Instances
                   foreach (var instance in instances)
                   {
                      string cachedFahlogPath = Path.Combine(_prefs.CacheDirectory, instance.Settings.CachedFahLogName);
-                     // Issue 79 - External Instances don't have full FAHlog.txt files available
-                     if (instance.ExternalInstanceName == null && File.Exists(cachedFahlogPath))
+                     if (File.Exists(cachedFahlogPath))
                      {
                         File.Copy(cachedFahlogPath, Path.Combine(webRoot, instance.Settings.CachedFahLogName), true);
                      }
@@ -917,6 +917,8 @@ namespace HFM.Instances
                {
                   File.Copy(filePath, Path.Combine(webRoot, Path.GetFileName(filePath)), true);
                }
+               // Issue 79
+               File.Copy(externalFilePath, Path.Combine(webRoot, Path.GetFileName(externalFilePath)));
             }
          }
       }
