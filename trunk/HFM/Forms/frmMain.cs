@@ -500,7 +500,7 @@ namespace HFM.Forms
       {
          if (_clientInstances.SelectedDisplayInstance != null)
          {
-            mnuClientsViewCachedLog.Visible = _clientInstances.ClientFilesMenuItemVisible;
+            mnuClientsViewClientFiles.Visible = _clientInstances.ClientFilesMenuItemVisible;
             mnuClientsViewCachedLog.Visible = _clientInstances.CachedLogMenuItemVisible;
             mnuClientsSep3.Visible = _clientInstances.ClientFilesMenuItemVisible ||
                                      _clientInstances.CachedLogMenuItemVisible;

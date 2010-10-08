@@ -20,7 +20,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 
 using ProtoBuf;
 
@@ -118,16 +117,7 @@ namespace HFM.Instances
       public void Read()
       {
          string filePath = Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), Constants.UnitInfoCacheFileName);
-         
-         _collection = DeserializeLegacy(filePath);
-         if (_collection == null)
-         {
-            _collection = Deserialize(filePath);
-         }
-         if (_collection == null)
-         {
-            _collection = new UnitInfoCollection();
-         }
+         _collection = Deserialize(filePath) ?? new UnitInfoCollection();
       }
 
       /// <summary>
@@ -177,36 +167,6 @@ namespace HFM.Instances
          catch (Exception ex)
          {
             HfmTrace.WriteToHfmConsole(ex);
-         }
-
-         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, start);
-
-         return collection;
-      }
-
-      public static UnitInfoCollection DeserializeLegacy(string filePath)
-      {
-         DateTime start = HfmTrace.ExecStart;
-
-         UnitInfoCollection collection = null;
-
-         FileStream fileStream = null;
-         var formatter = new BinaryFormatter();
-         try
-         {
-            fileStream = new FileStream(filePath, FileMode.Open);
-            collection = (UnitInfoCollection)formatter.Deserialize(fileStream);
-         }
-         catch (Exception ex)
-         {
-            HfmTrace.WriteToHfmConsole(ex);
-         }
-         finally
-         {
-            if (fileStream != null)
-            {
-               fileStream.Close();
-            }
          }
 
          HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, start);

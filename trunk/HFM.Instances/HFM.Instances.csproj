@@ -78,6 +78,7 @@
     <Compile Include="DataRetriever.cs" />
     <Compile Include="DisplayInstance.cs" />
     <Compile Include="DisplayInstanceSortableBindingList.cs" />
+    <Compile Include="HistoryEntrySortableBindingList.cs" />
     <Compile Include="InstanceCollection.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -59,7 +59,7 @@
          this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
          this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
          this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-         this.tableLayoutPanel1.Size = new System.Drawing.Size(547, 303);
+         this.tableLayoutPanel1.Size = new System.Drawing.Size(594, 303);
          this.tableLayoutPanel1.TabIndex = 0;
          // 
          // panel1
@@ -71,14 +71,14 @@
          this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
          this.panel1.Location = new System.Drawing.Point(3, 3);
          this.panel1.Name = "panel1";
-         this.panel1.Size = new System.Drawing.Size(541, 34);
+         this.panel1.Size = new System.Drawing.Size(588, 34);
          this.panel1.TabIndex = 0;
          // 
          // txtName
          // 
          this.txtName.Location = new System.Drawing.Point(53, 8);
          this.txtName.Name = "txtName";
-         this.txtName.Size = new System.Drawing.Size(302, 20);
+         this.txtName.Size = new System.Drawing.Size(348, 20);
          this.txtName.TabIndex = 5;
          // 
          // lblName
@@ -93,7 +93,7 @@
          // btnRemove
          // 
          this.btnRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-         this.btnRemove.Location = new System.Drawing.Point(451, 6);
+         this.btnRemove.Location = new System.Drawing.Point(498, 6);
          this.btnRemove.Name = "btnRemove";
          this.btnRemove.Size = new System.Drawing.Size(81, 23);
          this.btnRemove.TabIndex = 1;
@@ -104,7 +104,7 @@
          // btnAdd
          // 
          this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-         this.btnAdd.Location = new System.Drawing.Point(364, 6);
+         this.btnAdd.Location = new System.Drawing.Point(411, 6);
          this.btnAdd.Name = "btnAdd";
          this.btnAdd.Size = new System.Drawing.Size(81, 23);
          this.btnAdd.TabIndex = 0;
@@ -124,8 +124,9 @@
          this.dataGridView1.Location = new System.Drawing.Point(3, 43);
          this.dataGridView1.MultiSelect = false;
          this.dataGridView1.Name = "dataGridView1";
+         this.dataGridView1.RowHeadersVisible = false;
          this.dataGridView1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-         this.dataGridView1.Size = new System.Drawing.Size(541, 217);
+         this.dataGridView1.Size = new System.Drawing.Size(588, 217);
          this.dataGridView1.TabIndex = 1;
          // 
          // panel2
@@ -135,13 +136,13 @@
          this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
          this.panel2.Location = new System.Drawing.Point(3, 266);
          this.panel2.Name = "panel2";
-         this.panel2.Size = new System.Drawing.Size(541, 34);
+         this.panel2.Size = new System.Drawing.Size(588, 34);
          this.panel2.TabIndex = 2;
          // 
          // btnOK
          // 
          this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-         this.btnOK.Location = new System.Drawing.Point(374, 6);
+         this.btnOK.Location = new System.Drawing.Point(421, 6);
          this.btnOK.Name = "btnOK";
          this.btnOK.Size = new System.Drawing.Size(75, 23);
          this.btnOK.TabIndex = 2;
@@ -152,7 +153,7 @@
          // btnCancel
          // 
          this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-         this.btnCancel.Location = new System.Drawing.Point(456, 6);
+         this.btnCancel.Location = new System.Drawing.Point(503, 6);
          this.btnCancel.Name = "btnCancel";
          this.btnCancel.Size = new System.Drawing.Size(75, 23);
          this.btnCancel.TabIndex = 3;
@@ -164,7 +165,7 @@
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(547, 303);
+         this.ClientSize = new System.Drawing.Size(594, 303);
          this.Controls.Add(this.tableLayoutPanel1);
          this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

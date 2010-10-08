@@ -423,7 +423,14 @@ namespace HFM.Instances
                 field.Name.Equals(QueryFieldName.PPD) ||
                 field.Name.Equals(QueryFieldName.Credit))
             {
-               query = query.Where(BuildWhereCondition(field));
+               try
+               {
+                  query = query.Where(BuildWhereCondition(field));
+               }
+               catch (ParseException ex)
+               {
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
+               }
             }
          }
 
@@ -642,6 +649,7 @@ namespace HFM.Instances
             selectCommand += sbWhere.ToString();
             selectCommand = selectCommand.Remove(selectCommand.LastIndexOf(AndSpace)).Trim();
          }
+         selectCommand += " ORDER BY [ID] ASC";
 
          return selectCommand;
       }
@@ -967,9 +975,12 @@ namespace HFM.Instances
          }
          set
          {
-            if (value == null) return;
-            
-            if (value is DateTime)
+            if (value == null)
+            {
+               _dateTimeValue = null;
+               _stringValue = null;
+            }
+            else if (value is DateTime)
             {
                _dateTimeValue = (DateTime)value;
                _stringValue = null;

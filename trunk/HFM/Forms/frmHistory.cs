@@ -184,7 +184,7 @@ namespace HFM.Forms
       {
          txtResults.Text = totalResults.ToString();
          txtShown.Text = list.Count.ToString();
-         dataGridView1.DataSource = new SortableBindingList<HistoryEntry>(list);
+         dataGridView1.DataSource = new HistoryEntrySortableBindingList(list);
       }
       
       public void ApplySort(string sortColumnName, SortOrder sortOrder)
@@ -382,9 +382,10 @@ namespace HFM.Forms
             if (hti.Type == DataGridViewHitTestType.RowHeader ||
                 hti.Type == DataGridViewHitTestType.Cell)
             {
-               if (dataGridView1.Rows[hti.RowIndex].Selected == false)
+               int columnIndex = hti.ColumnIndex < 0 ? 0 : hti.ColumnIndex;
+               if (dataGridView1.Rows[hti.RowIndex].Cells[columnIndex].Selected == false)
                {
-                  dataGridView1.Rows[hti.RowIndex].Selected = true;
+                  dataGridView1.Rows[hti.RowIndex].Cells[columnIndex].Selected = true;
                }
             }
          

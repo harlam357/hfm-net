@@ -63,8 +63,9 @@ namespace HFM
          }
          catch (Exception ex)
          {
-            ExceptionDialog.ShowErrorDialog(ex, "Single Instance Helper Failed to Start.",
-               Constants.GoogleGroupUrl, PlatformOps.ApplicationNameAndVersionWithRevision, true);
+            ExceptionDialog.ShowErrorDialog(ex, PlatformOps.ApplicationNameAndVersionWithRevision, Environment.OSVersion.VersionString,
+               "Single Instance Helper Failed to Start.", 
+               Constants.GoogleGroupUrl, true);
             return;
          }
 
@@ -75,8 +76,9 @@ namespace HFM
          }
          catch (Exception ex)
          {
-            ExceptionDialog.ShowErrorDialog(ex, "Windsor Container Failed to Initialize.  The HFM.exe.config file is likely corrupt.",
-               Constants.GoogleGroupUrl, PlatformOps.ApplicationNameAndVersionWithRevision, true);
+            ExceptionDialog.ShowErrorDialog(ex, PlatformOps.ApplicationNameAndVersionWithRevision, Environment.OSVersion.VersionString,
+               "Windsor Container Failed to Initialize.  Either components are missing or the HFM.exe.config file is corrupt.",
+               Constants.GoogleGroupUrl, true);
             return;
          }
 
@@ -88,8 +90,9 @@ namespace HFM
          }
          catch (Exception ex)
          {
-            ExceptionDialog.ShowErrorDialog(ex, "Preferences Failed to Initialize.  The user.config file is likely corrupt.",
-               Constants.GoogleGroupUrl, PlatformOps.ApplicationNameAndVersionWithRevision, true);
+            ExceptionDialog.ShowErrorDialog(ex, PlatformOps.ApplicationNameAndVersionWithRevision, Environment.OSVersion.VersionString,
+               "Preferences Failed to Initialize.  The user.config file is likely corrupt.",
+               Constants.GoogleGroupUrl, true);
             return;
          }
 
@@ -99,8 +102,9 @@ namespace HFM
          }
          catch (Exception ex)
          {
-            ExceptionDialog.ShowErrorDialog(ex, "Logging Failed to Initialize.",
-               Constants.GoogleGroupUrl, PlatformOps.ApplicationNameAndVersionWithRevision, true);
+            ExceptionDialog.ShowErrorDialog(ex, PlatformOps.ApplicationNameAndVersionWithRevision, Environment.OSVersion.VersionString,
+               "Logging Failed to Initialize.",
+               Constants.GoogleGroupUrl, true);
             return;
          }
 
@@ -111,8 +115,9 @@ namespace HFM
          }
          catch (Exception ex)
          {
-            ExceptionDialog.ShowErrorDialog(ex, "UnitInfo Database Failed to Initialize.",
-               Constants.GoogleGroupUrl, PlatformOps.ApplicationNameAndVersionWithRevision, true);
+            ExceptionDialog.ShowErrorDialog(ex, PlatformOps.ApplicationNameAndVersionWithRevision, Environment.OSVersion.VersionString,
+               "UnitInfo Database Failed to Initialize.",
+               Constants.GoogleGroupUrl, true);
             return;
          }
 
@@ -124,8 +129,9 @@ namespace HFM
          }
          catch (Exception ex)
          {
-            ExceptionDialog.ShowErrorDialog(ex, "Primary UI Failed to Initialize.",
-               Constants.GoogleGroupUrl, PlatformOps.ApplicationNameAndVersionWithRevision, true);
+            ExceptionDialog.ShowErrorDialog(ex, PlatformOps.ApplicationNameAndVersionWithRevision, Environment.OSVersion.VersionString,
+               "Primary UI Failed to Initialize.",
+               Constants.GoogleGroupUrl, true);
             return;
          }
          #endregion
@@ -136,15 +142,23 @@ namespace HFM
          }
          catch (Exception ex)
          {
-            ExceptionDialog.ShowErrorDialog(ex, "Single Instance IPC Channel Failed to Register.",
-               Constants.GoogleGroupUrl, PlatformOps.ApplicationNameAndVersionWithRevision, true);
+            ExceptionDialog.ShowErrorDialog(ex, PlatformOps.ApplicationNameAndVersionWithRevision, Environment.OSVersion.VersionString,
+               "Single Instance IPC Channel Failed to Register.",
+               Constants.GoogleGroupUrl, true);
             return;
          }
 
-         ExceptionDialog.RegisterForUnhandledExceptions(PlatformOps.ApplicationNameAndVersionWithRevision, HfmTrace.WriteToHfmConsole);
+         ExceptionDialog.RegisterForUnhandledExceptions(PlatformOps.ApplicationNameAndVersionWithRevision, 
+            Environment.OSVersion.VersionString, HfmTrace.WriteToHfmConsole);
          
-         Application.Run(frm);
-         SingleInstanceHelper.Stop();
+         try
+         {
+            Application.Run(frm);
+         }
+         finally
+         {
+            SingleInstanceHelper.Stop();
+         }
       }
 
       private static System.Reflection.Assembly CustomResolve(object sender, ResolveEventArgs args)

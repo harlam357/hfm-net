@@ -19,6 +19,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Globalization;
 using System.Windows.Forms;
 
 using HFM.Framework;
@@ -37,15 +40,17 @@ namespace HFM.Forms
       void Close();
    }
 
+   // ReSharper disable InconsistentNaming
    public partial class frmQuery : Form, IQueryView
+   // ReSharper restore InconsistentNaming
    {
       private QueryParameters _query;
+      private BindingList<QueryField> _queryFieldList;
 
       public frmQuery()
       {
          InitializeComponent();
          SetupDataGridViewColumns();
-         //dataGridView1.DataError += dataGridView1_DataError;
          dataGridView1.CellValueChanged += dataGridView1_CellValueChanged;
 
          Query = new QueryParameters();
@@ -59,9 +64,10 @@ namespace HFM.Forms
          set
          {
             _query = value;
+            _queryFieldList = new BindingList<QueryField>(_query.Fields);
             BindNameTextBox(_query);
             dataGridView1.DataSource = null;
-            dataGridView1.DataSource = _query.Fields;
+            dataGridView1.DataSource = _queryFieldList;
          }
       }
 
@@ -75,85 +81,131 @@ namespace HFM.Forms
 
       private void SetupDataGridViewColumns()
       {
-         var names = PlatformOps.GetQueryFieldColumnNames();
-      
          dataGridView1.AutoGenerateColumns = false;
 
-         var queryFieldColumn = new DataGridViewComboBoxColumn();
-         var columnChoices = new List<Choice>();
-         columnChoices.Add(new Choice(names[(int)QueryFieldName.ProjectID], QueryFieldName.ProjectID));
-         columnChoices.Add(new Choice(names[(int)QueryFieldName.WorkUnitName], QueryFieldName.WorkUnitName));
-         columnChoices.Add(new Choice(names[(int)QueryFieldName.InstanceName], QueryFieldName.InstanceName));
-         columnChoices.Add(new Choice(names[(int)QueryFieldName.InstancePath], QueryFieldName.InstancePath));
-         columnChoices.Add(new Choice(names[(int)QueryFieldName.Username], QueryFieldName.Username));
-         columnChoices.Add(new Choice(names[(int)QueryFieldName.Team], QueryFieldName.Team));
-         columnChoices.Add(new Choice(names[(int)QueryFieldName.ClientType], QueryFieldName.ClientType));
-         columnChoices.Add(new Choice(names[(int)QueryFieldName.Core], QueryFieldName.Core));
-         columnChoices.Add(new Choice(names[(int)QueryFieldName.CoreVersion], QueryFieldName.CoreVersion));
-         columnChoices.Add(new Choice(names[(int)QueryFieldName.FrameTime], QueryFieldName.FrameTime));
-         columnChoices.Add(new Choice(names[(int)QueryFieldName.KFactor], QueryFieldName.KFactor));
-         columnChoices.Add(new Choice(names[(int)QueryFieldName.PPD], QueryFieldName.PPD));
-         columnChoices.Add(new Choice(names[(int)QueryFieldName.DownloadDateTime], QueryFieldName.DownloadDateTime));
-         columnChoices.Add(new Choice(names[(int)QueryFieldName.CompletionDateTime], QueryFieldName.CompletionDateTime));
-         columnChoices.Add(new Choice(names[(int)QueryFieldName.Credit], QueryFieldName.Credit));
-         columnChoices.Add(new Choice(names[(int)QueryFieldName.Frames], QueryFieldName.Frames));
-         columnChoices.Add(new Choice(names[(int)QueryFieldName.FramesCompleted], QueryFieldName.FramesCompleted));
-         columnChoices.Add(new Choice(names[(int)QueryFieldName.Result], QueryFieldName.Result));
-         columnChoices.Add(new Choice(names[(int)QueryFieldName.Atoms], QueryFieldName.Atoms));
-         columnChoices.Add(new Choice(names[(int)QueryFieldName.ProjectRun], QueryFieldName.ProjectRun));
-         columnChoices.Add(new Choice(names[(int)QueryFieldName.ProjectClone], QueryFieldName.ProjectClone));
-         columnChoices.Add(new Choice(names[(int)QueryFieldName.ProjectGen], QueryFieldName.ProjectGen));
-         
-         queryFieldColumn.Name = "Name";
-         queryFieldColumn.HeaderText = "Name";
-         queryFieldColumn.DataSource = columnChoices;
-         queryFieldColumn.DisplayMember = "Display";
-         queryFieldColumn.ValueMember = "Value";
-         queryFieldColumn.DataPropertyName = "Name";
-         queryFieldColumn.Width = 125;
-         dataGridView1.Columns.Add(queryFieldColumn);
+         var queryColumn = new DataGridViewComboBoxColumn();
+         var columnChoices = GetQueryFieldChoices();
+         queryColumn.Name = "Name";
+         queryColumn.HeaderText = "Name";
+         queryColumn.DataSource = columnChoices;
+         queryColumn.DisplayMember = "Display";
+         queryColumn.ValueMember = "Value";
+         queryColumn.DataPropertyName = "Name";
+         queryColumn.Width = 150;
+         dataGridView1.Columns.Add(queryColumn);
 
-         var queryTypeColumn = new DataGridViewComboBoxColumn();
-         columnChoices = new List<Choice>();
-         columnChoices.Add(new Choice("Equal", QueryFieldType.Equal));
-         columnChoices.Add(new Choice("Greater Than", QueryFieldType.GreaterThan));
-         columnChoices.Add(new Choice("Greater Than Or Equal", QueryFieldType.GreaterThanOrEqual));
-         columnChoices.Add(new Choice("Less Than", QueryFieldType.LessThan));
-         columnChoices.Add(new Choice("Less Than Or Equal", QueryFieldType.LessThanOrEqual));
-         queryTypeColumn.Name = "Operator";
-         queryTypeColumn.HeaderText = "Operator";
-         queryTypeColumn.DataSource = columnChoices;
-         queryTypeColumn.DisplayMember = "Display";
-         queryTypeColumn.ValueMember = "Value";
-         queryTypeColumn.DataPropertyName = "Type";
-         queryTypeColumn.Width = 150;
-         dataGridView1.Columns.Add(queryTypeColumn);
+         queryColumn = new DataGridViewComboBoxColumn();
+         columnChoices = GetOperatorFieldChoices();
+         queryColumn.Name = "Operator";
+         queryColumn.HeaderText = "Operator";
+         queryColumn.DataSource = columnChoices;
+         queryColumn.DisplayMember = "Display";
+         queryColumn.ValueMember = "Value";
+         queryColumn.DataPropertyName = "Type";
+         queryColumn.Width = 175;
+         dataGridView1.Columns.Add(queryColumn);
 
          var valueColumn = new ValueColumn();
          valueColumn.Name = "Value";
          valueColumn.HeaderText = "Value";
          valueColumn.DataPropertyName = "Value";
+         valueColumn.DefaultCellStyle.DataSourceNullValue = null;
          //valueColumn.Width = 200;
          valueColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
          dataGridView1.Columns.Add(valueColumn);
       }
+      
+      private static List<Choice> GetQueryFieldChoices()
+      {
+         var columnChoices = new List<Choice>();
+         
+         // On Mono the ComboBox choices must exactly match the enumeration name - LAME!!!
+         if (PlatformOps.IsRunningOnMono())
+         {
+            columnChoices.Add(new Choice(QueryFieldName.ProjectID.ToString(), QueryFieldName.ProjectID));
+            columnChoices.Add(new Choice(QueryFieldName.WorkUnitName.ToString(), QueryFieldName.WorkUnitName));
+            columnChoices.Add(new Choice(QueryFieldName.InstanceName.ToString(), QueryFieldName.InstanceName));
+            columnChoices.Add(new Choice(QueryFieldName.InstancePath.ToString(), QueryFieldName.InstancePath));
+            columnChoices.Add(new Choice(QueryFieldName.Username.ToString(), QueryFieldName.Username));
+            columnChoices.Add(new Choice(QueryFieldName.Team.ToString(), QueryFieldName.Team));
+            columnChoices.Add(new Choice(QueryFieldName.ClientType.ToString(), QueryFieldName.ClientType));
+            columnChoices.Add(new Choice(QueryFieldName.Core.ToString(), QueryFieldName.Core));
+            columnChoices.Add(new Choice(QueryFieldName.CoreVersion.ToString(), QueryFieldName.CoreVersion));
+            columnChoices.Add(new Choice(QueryFieldName.FrameTime.ToString(), QueryFieldName.FrameTime));
+            columnChoices.Add(new Choice(QueryFieldName.KFactor.ToString(), QueryFieldName.KFactor));
+            columnChoices.Add(new Choice(QueryFieldName.PPD.ToString(), QueryFieldName.PPD));
+            columnChoices.Add(new Choice(QueryFieldName.DownloadDateTime.ToString(), QueryFieldName.DownloadDateTime));
+            columnChoices.Add(new Choice(QueryFieldName.CompletionDateTime.ToString(), QueryFieldName.CompletionDateTime));
+            columnChoices.Add(new Choice(QueryFieldName.Credit.ToString(), QueryFieldName.Credit));
+            columnChoices.Add(new Choice(QueryFieldName.Frames.ToString(), QueryFieldName.Frames));
+            columnChoices.Add(new Choice(QueryFieldName.FramesCompleted.ToString(), QueryFieldName.FramesCompleted));
+            columnChoices.Add(new Choice(QueryFieldName.Result.ToString(), QueryFieldName.Result));
+            columnChoices.Add(new Choice(QueryFieldName.Atoms.ToString(), QueryFieldName.Atoms));
+            columnChoices.Add(new Choice(QueryFieldName.ProjectRun.ToString(), QueryFieldName.ProjectRun));
+            columnChoices.Add(new Choice(QueryFieldName.ProjectClone.ToString(), QueryFieldName.ProjectClone));
+            columnChoices.Add(new Choice(QueryFieldName.ProjectGen.ToString(), QueryFieldName.ProjectGen));
+         }
+         else
+         {
+            var names = PlatformOps.GetQueryFieldColumnNames();
+            columnChoices.Add(new Choice(names[(int)QueryFieldName.ProjectID], QueryFieldName.ProjectID));
+            columnChoices.Add(new Choice(names[(int)QueryFieldName.WorkUnitName], QueryFieldName.WorkUnitName));
+            columnChoices.Add(new Choice(names[(int)QueryFieldName.InstanceName], QueryFieldName.InstanceName));
+            columnChoices.Add(new Choice(names[(int)QueryFieldName.InstancePath], QueryFieldName.InstancePath));
+            columnChoices.Add(new Choice(names[(int)QueryFieldName.Username], QueryFieldName.Username));
+            columnChoices.Add(new Choice(names[(int)QueryFieldName.Team], QueryFieldName.Team));
+            columnChoices.Add(new Choice(names[(int)QueryFieldName.ClientType], QueryFieldName.ClientType));
+            columnChoices.Add(new Choice(names[(int)QueryFieldName.Core], QueryFieldName.Core));
+            columnChoices.Add(new Choice(names[(int)QueryFieldName.CoreVersion], QueryFieldName.CoreVersion));
+            columnChoices.Add(new Choice(names[(int)QueryFieldName.FrameTime], QueryFieldName.FrameTime));
+            columnChoices.Add(new Choice(names[(int)QueryFieldName.KFactor], QueryFieldName.KFactor));
+            columnChoices.Add(new Choice(names[(int)QueryFieldName.PPD], QueryFieldName.PPD));
+            columnChoices.Add(new Choice(names[(int)QueryFieldName.DownloadDateTime], QueryFieldName.DownloadDateTime));
+            columnChoices.Add(new Choice(names[(int)QueryFieldName.CompletionDateTime], QueryFieldName.CompletionDateTime));
+            columnChoices.Add(new Choice(names[(int)QueryFieldName.Credit], QueryFieldName.Credit));
+            columnChoices.Add(new Choice(names[(int)QueryFieldName.Frames], QueryFieldName.Frames));
+            columnChoices.Add(new Choice(names[(int)QueryFieldName.FramesCompleted], QueryFieldName.FramesCompleted));
+            columnChoices.Add(new Choice(names[(int)QueryFieldName.Result], QueryFieldName.Result));
+            columnChoices.Add(new Choice(names[(int)QueryFieldName.Atoms], QueryFieldName.Atoms));
+            columnChoices.Add(new Choice(names[(int)QueryFieldName.ProjectRun], QueryFieldName.ProjectRun));
+            columnChoices.Add(new Choice(names[(int)QueryFieldName.ProjectClone], QueryFieldName.ProjectClone));
+            columnChoices.Add(new Choice(names[(int)QueryFieldName.ProjectGen], QueryFieldName.ProjectGen));
+         }
+
+         return columnChoices;
+      }
+      
+      private static List<Choice> GetOperatorFieldChoices()
+      {
+         var columnChoices = new List<Choice>();
+         if (PlatformOps.IsRunningOnMono())
+         {
+            columnChoices.Add(new Choice(QueryFieldType.Equal.ToString(), QueryFieldType.Equal));
+            columnChoices.Add(new Choice(QueryFieldType.GreaterThan.ToString(), QueryFieldType.GreaterThan));
+            columnChoices.Add(new Choice(QueryFieldType.GreaterThanOrEqual.ToString(), QueryFieldType.GreaterThanOrEqual));
+            columnChoices.Add(new Choice(QueryFieldType.LessThan.ToString(), QueryFieldType.LessThan));
+            columnChoices.Add(new Choice(QueryFieldType.LessThanOrEqual.ToString(), QueryFieldType.LessThanOrEqual));
+         }
+         else
+         {
+            columnChoices.Add(new Choice("Equal", QueryFieldType.Equal));
+            columnChoices.Add(new Choice("Greater Than", QueryFieldType.GreaterThan));
+            columnChoices.Add(new Choice("Greater Than Or Equal", QueryFieldType.GreaterThanOrEqual));
+            columnChoices.Add(new Choice("Less Than", QueryFieldType.LessThan));
+            columnChoices.Add(new Choice("Less Than Or Equal", QueryFieldType.LessThanOrEqual));
+         }
+
+         return columnChoices;
+      }
 
       void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
       {
-         //var cell = dataGridView1[e.ColumnIndex, e.RowIndex];
-         //if (cell.OwningColumn.Name == "Name")
-         //{
-         //   var valueCell = (ValueCell)cell.OwningRow.Cells["Value"];
-         //   if (cell.Value.Equals(QueryFieldName.DownloadDateTime) ||
-         //       cell.Value.Equals(QueryFieldName.CompletionDateTime))
-         //   {
-         //      valueCell.CalendarEdit = true;
-         //   }
-         //   else
-         //   {
-         //      valueCell.CalendarEdit = false;
-         //   }
-         //}
+         // column is query field
+         if (e.ColumnIndex == 0)
+         {
+            // clear the value cell (this works for .NET and Mono)
+            dataGridView1["Value", e.RowIndex].Value = null;
+         }
       }
 
       private void btnAdd_Click(object sender, EventArgs e)
@@ -164,20 +216,22 @@ namespace HFM.Forms
 
       private void btnRemove_Click(object sender, EventArgs e)
       {
-         foreach (DataGridViewRow row in dataGridView1.SelectedRows)
+         Debug.Assert(dataGridView1.SelectedCells.Count == 1);
+         foreach (DataGridViewCell cell in dataGridView1.SelectedCells)
          {
-            _query.Fields.RemoveAt(row.Index);
+            _query.Fields.RemoveAt(cell.OwningRow.Index);
          }
          RefreshDisplay();
       }
 
       private void RefreshDisplay()
       {
-         if (dataGridView1.DataSource != null)
-         {
-            var cm = (CurrencyManager)dataGridView1.BindingContext[dataGridView1.DataSource];
-            cm.Refresh();
-         }
+         //if (dataGridView1.DataSource != null)
+         //{
+         //   var cm = (CurrencyManager)dataGridView1.BindingContext[dataGridView1.DataSource];
+         //   cm.Refresh();
+         //}
+         _queryFieldList.ResetBindings();
       }
 
       private void btnOK_Click(object sender, EventArgs e)
@@ -191,11 +245,6 @@ namespace HFM.Forms
          DialogResult = DialogResult.Cancel;
          Close();
       }
-
-      //private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
-      //{
-      
-      //}
    }
 
    internal class Choice
@@ -235,26 +284,6 @@ namespace HFM.Forms
 
    public class ValueCell : DataGridViewTextBoxCell
    {
-      //private bool _calendarEdit;
-      
-      //public bool CalendarEdit
-      //{
-      //   get { return _calendarEdit; }
-      //   set
-      //   {
-      //      _calendarEdit = value;
-      //      if (_calendarEdit)
-      //      {
-      //         // Use the short date format.
-      //         Style.Format = "d";
-      //      }
-      //      else
-      //      {
-      //         Style.Format = String.Empty;
-      //      }
-      //   }
-      //}
-      
       private bool CalendarEdit
       {
          get
@@ -267,6 +296,30 @@ namespace HFM.Forms
             }
             
             return false;
+         }
+      }
+
+      public override void InitializeEditingControl(int rowIndex, object
+          initialFormattedValue, DataGridViewCellStyle dataGridViewCellStyle)
+      {
+         if (PlatformOps.IsRunningOnMono()) return;
+
+         // Set the value of the editing control to the current cell value.
+         base.InitializeEditingControl(rowIndex, initialFormattedValue, dataGridViewCellStyle);
+         
+         if (CalendarEdit)
+         {
+            var ctl = DataGridView.EditingControl as CalendarEditingControl;
+
+            // if a DateTime Value is present
+            if (Value != null && Value is DateTime)
+            {
+               ctl.Value = (DateTime)Value;
+            }
+            else
+            {
+               ctl.Value = (DateTime)DefaultNewRowValue;
+            }
          }
       }
 
@@ -308,28 +361,6 @@ namespace HFM.Forms
             return base.DefaultNewRowValue;
          }
       }
-
-      public override void InitializeEditingControl(int rowIndex, object initialFormattedValue,
-                                                    DataGridViewCellStyle dataGridViewCellStyle)
-      {
-         // Set the value of the editing control to the current cell value.
-         base.InitializeEditingControl(rowIndex, initialFormattedValue, dataGridViewCellStyle);
-         
-         if (CalendarEdit)
-         {
-            var ctl = DataGridView.EditingControl as CalendarEditingControl;
-
-            // Use the default row value when Value property is null.
-            if (Value == null)
-            {
-               ctl.Value = (DateTime)DefaultNewRowValue;
-            }
-            else
-            {
-               ctl.Value = (DateTime)Value;
-            }
-         }
-      }
    }
 
    internal class CalendarEditingControl : DateTimePicker, IDataGridViewEditingControl
@@ -338,7 +369,8 @@ namespace HFM.Forms
 
       public CalendarEditingControl()
       {
-         Format = DateTimePickerFormat.Short;
+         Format = DateTimePickerFormat.Custom;
+         CustomFormat = "MM/dd/yyyy hh:mm:ss tt";
       }
 
       #region IDataGridViewEditingControl Members
@@ -346,7 +378,13 @@ namespace HFM.Forms
       // Implements the IDataGridViewEditingControl.EditingControlFormattedValue property.
       public object EditingControlFormattedValue
       {
-         get { return Value.ToShortDateString(); }
+         // calling ToShortDateString() will reset the time portion of the
+         // value back to 12:00:00 AM and we need the time portion of the value
+         //get { return Value.ToShortDateString(); }
+         
+         // return the entire value using Invariant Culture rules
+         // not tested on cultures other than en-US as of 10/7/10
+         get { return Value.ToString(CultureInfo.InvariantCulture); }
          set
          {
             if (value is String)
