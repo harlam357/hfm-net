@@ -977,30 +977,6 @@ namespace HFM.Preferences.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ShowTopChecked {
-            get {
-                return ((bool)(this["ShowTopChecked"]));
-            }
-            set {
-                this["ShowTopChecked"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
-        public int ShowTopValue {
-            get {
-                return ((int)(this["ShowTopValue"]));
-            }
-            set {
-                this["ShowTopValue"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string HistorySortColumnName {
             get {
@@ -1053,6 +1029,42 @@ namespace HFM.Preferences.Properties {
             }
             set {
                 this["HistoryFormColumns"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowFirstChecked {
+            get {
+                return ((bool)(this["ShowFirstChecked"]));
+            }
+            set {
+                this["ShowFirstChecked"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int ShowEntriesValue {
+            get {
+                return ((int)(this["ShowEntriesValue"]));
+            }
+            set {
+                this["ShowEntriesValue"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowLastChecked {
+            get {
+                return ((bool)(this["ShowLastChecked"]));
+            }
+            set {
+                this["ShowLastChecked"] = value;
             }
         }
     }

@@ -287,8 +287,9 @@ namespace HFM.Preferences
          _prefs.Add(Preference.ProxyPass, new Metadata<string>());
 
          _prefs.Add(Preference.HistoryProductionType, new Metadata<HistoryProductionView>());
-         _prefs.Add(Preference.ShowTopChecked, new Metadata<bool>());
-         _prefs.Add(Preference.ShowTopValue, new Metadata<int>());
+         _prefs.Add(Preference.ShowFirstChecked, new Metadata<bool>());
+         _prefs.Add(Preference.ShowLastChecked, new Metadata<bool>());
+         _prefs.Add(Preference.ShowEntriesValue, new Metadata<int>());
          _prefs.Add(Preference.HistorySortColumnName, new Metadata<string>());
          _prefs.Add(Preference.HistorySortOrder, new Metadata<SortOrder>());
          _prefs.Add(Preference.HistoryFormLocation, new Metadata<Point>());
@@ -407,8 +408,9 @@ namespace HFM.Preferences
          SetPreference(Preference.ProxyPass, DecryptProxyPass(Settings.Default.ProxyPass, symmetricProvider, _iv, _symmetricKey));
 
          SetPreference(Preference.HistoryProductionType, (HistoryProductionView)Settings.Default.HistoryProductionView);
-         SetPreference(Preference.ShowTopChecked, Settings.Default.ShowTopChecked);
-         SetPreference(Preference.ShowTopValue, Settings.Default.ShowTopValue);
+         SetPreference(Preference.ShowFirstChecked, Settings.Default.ShowFirstChecked);
+         SetPreference(Preference.ShowLastChecked, Settings.Default.ShowLastChecked);
+         SetPreference(Preference.ShowEntriesValue, Settings.Default.ShowEntriesValue);
          SetPreference(Preference.HistorySortColumnName, Settings.Default.HistorySortColumnName);
          SetPreference(Preference.HistorySortOrder, Settings.Default.HistorySortOrder);
          location = new Point();
@@ -824,8 +826,9 @@ namespace HFM.Preferences
             Settings.Default.ProxyPass = EncryptProxyPass(GetPreference<string>(Preference.ProxyPass), symmetricProvider, _iv, _symmetricKey);
 
             Settings.Default.HistoryProductionView = (int)GetPreference<HistoryProductionView>(Preference.HistoryProductionType);
-            Settings.Default.ShowTopChecked = GetPreference<bool>(Preference.ShowTopChecked);
-            Settings.Default.ShowTopValue = GetPreference<int>(Preference.ShowTopValue);
+            Settings.Default.ShowFirstChecked = GetPreference<bool>(Preference.ShowFirstChecked);
+            Settings.Default.ShowLastChecked = GetPreference<bool>(Preference.ShowLastChecked);
+            Settings.Default.ShowEntriesValue = GetPreference<int>(Preference.ShowEntriesValue);
             Settings.Default.HistorySortColumnName = GetPreference<string>(Preference.HistorySortColumnName);
             Settings.Default.HistorySortOrder = GetPreference<SortOrder>(Preference.HistorySortOrder);
             Settings.Default.HistoryFormLocation = GetPreference<Point>(Preference.HistoryFormLocation);

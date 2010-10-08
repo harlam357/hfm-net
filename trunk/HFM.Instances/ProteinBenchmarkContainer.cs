@@ -93,10 +93,21 @@ namespace HFM.Instances
 
                // Even though the CurrentUnitInfo has been found in the parsed UnitInfoLogic array doesn't
                // mean that all entries in the array will be present.  See TestFiles\SMP_12\FAHlog.txt.
-               if (parsedUnits[index] != null)
+               var unit = parsedUnits[index];
+               if (unit != null)
                {
                   // Update benchmarks
-                  UpdateBenchmarkData(parsedUnits[index].UnitInfoData, previousFrameID, parsedUnits[index].LastUnitFrameID);
+                  UpdateBenchmarkData(unit.UnitInfoData, previousFrameID, unit.LastUnitFrameID);
+                  // If this unit has moved into history and no Finished Time could
+                  // be gleaned from the log parsing, use the current DateTime (UTC)
+                  // so this unit will be eligible for writing to the database.
+                  if (index != nextUnitIndex &&
+                      unit.UnitInfoData.FinishedTime.Equals(DateTime.MinValue))
+                  {
+                     HfmTrace.WriteToHfmConsole(TraceLevel.Info, unit.UnitInfoData.OwningInstanceName, 
+                        String.Format(CultureInfo.CurrentCulture, "{0} - Using current Date/Time (UTC) for Finished Time value.", unit.ProjectRunCloneGen));
+                     unit.UnitInfoData.FinishedTime = DateTime.UtcNow;
+                  }
                   // Update history database
                   _database.WriteUnitInfo(parsedUnits[index]);
                }

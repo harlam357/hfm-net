@@ -207,9 +207,13 @@ namespace HFM.Forms
 
          _currentHistoryEntries = _database.QueryUnitData(_queryContainer.QueryList[index], _model.ProductionView);
          var showEntries = _currentHistoryEntries;
-         if (_model.ShowTopChecked)
+         if (_model.ShowFirstChecked)
          {
-            showEntries = _currentHistoryEntries.Take(_model.ShowTopValue).ToList();
+            showEntries = _currentHistoryEntries.Take(_model.ShowEntriesValue).ToList();
+         }
+         else if (_model.ShowLastChecked)
+         {
+            showEntries = _currentHistoryEntries.Reverse().Take(_model.ShowEntriesValue).ToList();
          }
          _view.DataGridSetDataSource(_currentHistoryEntries.Count, showEntries);
          _view.ApplySort(_model.SortColumnName, _model.SortOrder);
@@ -272,13 +276,17 @@ namespace HFM.Forms
 
       public void DeleteQueryClick()
       {
-         try
+         var result = _messageBoxView.AskYesNoQuestion(_view, "Are you sure?", PlatformOps.ApplicationNameAndVersion);
+         if (result.Equals(DialogResult.Yes))
          {
-            RemoveQuery(_view.QueryComboSelectedValue);
-         }
-         catch (ArgumentException ex)
-         {
-            _messageBoxView.ShowError(_view, ex.Message, PlatformOps.ApplicationNameAndVersion);
+            try
+            {
+               RemoveQuery(_view.QueryComboSelectedValue);
+            }
+            catch (ArgumentException ex)
+            {
+               _messageBoxView.ShowError(_view, ex.Message, PlatformOps.ApplicationNameAndVersion);
+            }
          }
       }
       

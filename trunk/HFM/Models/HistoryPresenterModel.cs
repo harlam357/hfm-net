@@ -34,9 +34,11 @@ namespace HFM.Models
       
       HistoryProductionView ProductionView { get; set; }
       
-      bool ShowTopChecked { get; set; }
-      
-      int ShowTopValue { get; set; }
+      bool ShowFirstChecked { get; set; }
+
+      bool ShowLastChecked { get; set; }
+
+      int ShowEntriesValue { get; set; }
       
       Point FormLocation { get; set; }
       
@@ -61,8 +63,9 @@ namespace HFM.Models
       public void LoadPreferences()
       {
          _productionView = _prefs.GetPreference<HistoryProductionView>(Preference.HistoryProductionType);
-         _showTopChecked = _prefs.GetPreference<bool>(Preference.ShowTopChecked);
-         _showTopValue = _prefs.GetPreference<int>(Preference.ShowTopValue);
+         _showFirstChecked = _prefs.GetPreference<bool>(Preference.ShowFirstChecked);
+         _showLastChecked = _prefs.GetPreference<bool>(Preference.ShowLastChecked);
+         _showEntriesValue = _prefs.GetPreference<int>(Preference.ShowEntriesValue);
          FormLocation = _prefs.GetPreference<Point>(Preference.HistoryFormLocation);
          FormSize = _prefs.GetPreference<Size>(Preference.HistoryFormSize);
          SortColumnName = _prefs.GetPreference<string>(Preference.HistorySortColumnName);
@@ -73,8 +76,9 @@ namespace HFM.Models
       public void SavePreferences()
       {
          _prefs.SetPreference(Preference.HistoryProductionType, _productionView);
-         _prefs.SetPreference(Preference.ShowTopChecked, _showTopChecked);
-         _prefs.SetPreference(Preference.ShowTopValue, _showTopValue);
+         _prefs.SetPreference(Preference.ShowFirstChecked, _showFirstChecked);
+         _prefs.SetPreference(Preference.ShowLastChecked, _showLastChecked);
+         _prefs.SetPreference(Preference.ShowEntriesValue, _showEntriesValue);
          _prefs.SetPreference(Preference.HistoryFormLocation, FormLocation);
          _prefs.SetPreference(Preference.HistoryFormSize, FormSize);
          _prefs.SetPreference(Preference.HistorySortColumnName, SortColumnName);
@@ -98,32 +102,49 @@ namespace HFM.Models
          }
       }
 
-      private bool _showTopChecked;
+      private bool _showFirstChecked;
 
-      public bool ShowTopChecked
+      public bool ShowFirstChecked
       {
-         get { return _showTopChecked; }
+         get { return _showFirstChecked; }
          set
          {
-            if (_showTopChecked != value)
+            if (_showFirstChecked != value)
             {
-               _showTopChecked = value;
-               OnPropertyChanged("ShowTopChecked");
+               _showFirstChecked = value;
+               if (_showFirstChecked) _showLastChecked = false;
+               OnPropertyChanged("ShowFirstChecked");
             }
          }
       }
 
-      private int _showTopValue;
+      private bool _showLastChecked;
 
-      public int ShowTopValue
+      public bool ShowLastChecked
       {
-         get { return _showTopValue; }
+         get { return _showLastChecked; }
          set
          {
-            if (_showTopValue != value)
+            if (_showLastChecked != value)
             {
-               _showTopValue = value;
-               OnPropertyChanged("ShowTopValue");
+               _showLastChecked = value;
+               if (_showLastChecked) _showFirstChecked = false;
+               OnPropertyChanged("ShowLastChecked");
+            }
+         }
+      }
+
+      private int _showEntriesValue;
+
+      public int ShowEntriesValue
+      {
+         get { return _showEntriesValue; }
+         set
+         {
+            if (_showEntriesValue != value)
+            {
+               _showEntriesValue = value;
+               OnPropertyChanged("ShowEntriesValue");
             }
          }
       }

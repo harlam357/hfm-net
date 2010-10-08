@@ -411,6 +411,7 @@ namespace HFM.Forms.Tests
          var parameters = new QueryParameters { Name = "Test" };
          parameters.Fields.Add(new QueryField { Value = 6606 });
          SetupResult.For(_view.QueryComboSelectedValue).Return(parameters);
+         Expect.Call(_messageBoxView.AskYesNoQuestion(_view, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
          _mocks.ReplayAll();
          _presenter = NewPresenter();
          _presenter.AddQuery(parameters);
@@ -421,9 +422,26 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
+      public void DeleteQueryClickNoTest()
+      {
+         var parameters = new QueryParameters { Name = "Test" };
+         parameters.Fields.Add(new QueryField { Value = 6606 });
+         SetupResult.For(_view.QueryComboSelectedValue).Return(parameters);
+         Expect.Call(_messageBoxView.AskYesNoQuestion(_view, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.No);
+         _mocks.ReplayAll();
+         _presenter = NewPresenter();
+         _presenter.AddQuery(parameters);
+         Assert.AreEqual(2, _presenter.NumberOfQueries);
+         _presenter.DeleteQueryClick();
+         Assert.AreEqual(2, _presenter.NumberOfQueries);
+         _mocks.VerifyAll();
+      }
+
+      [Test]
       public void DeleteQueryClickFailedTest()
       {
          SetupResult.For(_view.QueryComboSelectedValue).Return(new QueryParameters());
+         Expect.Call(_messageBoxView.AskYesNoQuestion(_view, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
          Expect.Call(() => _messageBoxView.ShowError(_view, String.Empty, String.Empty)).IgnoreArguments();
          _mocks.ReplayAll();
          _presenter = NewPresenter();
@@ -470,16 +488,34 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void SelectQueryShowTopCheckedTest()
+      public void SelectQueryShowFirstCheckedTest()
       {
          var entries = new List<HistoryEntry> { new HistoryEntry(), new HistoryEntry() };
          Expect.Call(_database.QueryUnitData(null, HistoryProductionView.BonusDownloadTime)).IgnoreArguments().Return(entries);
          Expect.Call(() => _view.DataGridSetDataSource(0, null)).IgnoreArguments();
-         _model.ShowTopChecked = true;
-         _model.ShowTopValue = 1;
+         _model.ShowFirstChecked = true;
+         _model.ShowEntriesValue = 1;
          _mocks.ReplayAll();
          _presenter = NewPresenter();
          _presenter.SelectQuery(0);
+         // should be able to assert that only one entry appears 
+         // in the shown entries list, but it's currently not exposed
+         _mocks.VerifyAll();
+      }
+
+      [Test]
+      public void SelectQueryShowLastCheckedTest()
+      {
+         var entries = new List<HistoryEntry> { new HistoryEntry(), new HistoryEntry() };
+         Expect.Call(_database.QueryUnitData(null, HistoryProductionView.BonusDownloadTime)).IgnoreArguments().Return(entries);
+         Expect.Call(() => _view.DataGridSetDataSource(0, null)).IgnoreArguments();
+         _model.ShowLastChecked = true;
+         _model.ShowEntriesValue = 1;
+         _mocks.ReplayAll();
+         _presenter = NewPresenter();
+         _presenter.SelectQuery(0);
+         // should be able to assert that only one entry appears 
+         // in the shown entries list, but it's currently not exposed
          _mocks.VerifyAll();
       }
 

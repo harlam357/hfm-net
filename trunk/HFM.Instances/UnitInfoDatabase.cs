@@ -253,6 +253,9 @@ namespace HFM.Instances
       {
          using (var command = new SQLiteCommand(con))
          {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, unitInfoLogic.UnitInfoData.OwningInstanceName,
+               String.Format(CultureInfo.CurrentCulture, "Writing unit {0} to database.", unitInfoLogic.ProjectRunCloneGen));
+         
             var downloadDateTime = new SQLiteParameter("DownloadDateTime", DbType.DateTime) { Value = unitInfoLogic.UnitInfoData.DownloadTime };
             command.Parameters.Add(downloadDateTime);
             var completionDateTime = new SQLiteParameter("CompletionDateTime", DbType.DateTime) { Value = unitInfoLogic.UnitInfoData.FinishedTime };

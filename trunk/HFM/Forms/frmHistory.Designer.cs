@@ -42,7 +42,7 @@
          this.dataGridDeleteWorkUnitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.dataGridView1 = new HFM.Classes.HistoryGridViewWrapper();
          this.btnRefresh = new HFM.Classes.ButtonWrapper();
-         this.chkTop = new HFM.Classes.CheckBoxWrapper();
+         this.chkFirst = new HFM.Classes.CheckBoxWrapper();
          this.lblResults = new HFM.Classes.LabelWrapper();
          this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
          this.txtResults = new HFM.Classes.TextBoxWrapper();
@@ -50,16 +50,21 @@
          this.txtShown = new HFM.Classes.TextBoxWrapper();
          this.lblPpdCalc = new HFM.Classes.LabelWrapper();
          this.rdoPanelProduction = new harlam357.Windows.Forms.RadioPanel();
-         this.rdoBonusDownload = new HFM.Classes.RadioButtonWrapper();
-         this.rdoBonusFrame = new HFM.Classes.RadioButtonWrapper();
          this.rdoStandard = new HFM.Classes.RadioButtonWrapper();
+         this.rdoBonusFrame = new HFM.Classes.RadioButtonWrapper();
+         this.rdoBonusDownload = new HFM.Classes.RadioButtonWrapper();
          this.grpDataView = new HFM.Classes.GroupBoxWrapper();
-         this.btnEdit = new HFM.Classes.ButtonWrapper();
-         this.btnDelete = new HFM.Classes.ButtonWrapper();
-         this.cboSortView = new HFM.Classes.ComboBoxWrapper();
          this.btnNew = new HFM.Classes.ButtonWrapper();
+         this.cboSortView = new HFM.Classes.ComboBoxWrapper();
+         this.btnDelete = new HFM.Classes.ButtonWrapper();
+         this.btnEdit = new HFM.Classes.ButtonWrapper();
          this.grpResults = new HFM.Classes.GroupBoxWrapper();
          this.splitContainerWrapper1 = new HFM.Classes.SplitContainerWrapper();
+         this.mnuViewSep1 = new System.Windows.Forms.ToolStripSeparator();
+         this.mnuViewRefresh = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuFileSep1 = new System.Windows.Forms.ToolStripSeparator();
+         this.mnuFileExit = new System.Windows.Forms.ToolStripMenuItem();
+         this.chkLast = new HFM.Classes.CheckBoxWrapper();
          this.menuStrip1.SuspendLayout();
          this.dataGridMenuStrip.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -79,14 +84,16 @@
             this.mnuView});
          this.menuStrip1.Location = new System.Drawing.Point(0, 0);
          this.menuStrip1.Name = "menuStrip1";
-         this.menuStrip1.Size = new System.Drawing.Size(830, 24);
+         this.menuStrip1.Size = new System.Drawing.Size(903, 24);
          this.menuStrip1.TabIndex = 1;
          this.menuStrip1.Text = "menuStrip1";
          // 
          // mnuFile
          // 
          this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuFileImportCompletedUnits});
+            this.mnuFileImportCompletedUnits,
+            this.mnuFileSep1,
+            this.mnuFileExit});
          this.mnuFile.Name = "mnuFile";
          this.mnuFile.Size = new System.Drawing.Size(35, 20);
          this.mnuFile.Text = "&File";
@@ -101,7 +108,9 @@
          // mnuView
          // 
          this.mnuView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuViewAutoSizeGrid});
+            this.mnuViewAutoSizeGrid,
+            this.mnuViewSep1,
+            this.mnuViewRefresh});
          this.mnuView.Name = "mnuView";
          this.mnuView.Size = new System.Drawing.Size(41, 20);
          this.mnuView.Text = "&View";
@@ -161,7 +170,7 @@
          this.dataGridView1.RowTemplate.Height = 18;
          this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
          this.dataGridView1.ShowCellToolTips = false;
-         this.dataGridView1.Size = new System.Drawing.Size(830, 198);
+         this.dataGridView1.Size = new System.Drawing.Size(903, 198);
          this.dataGridView1.TabIndex = 0;
          this.dataGridView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseDown);
          this.dataGridView1.Sorted += new System.EventHandler(this.dataGridView1_Sorted);
@@ -169,7 +178,7 @@
          // 
          // btnRefresh
          // 
-         this.btnRefresh.Location = new System.Drawing.Point(411, 50);
+         this.btnRefresh.Location = new System.Drawing.Point(481, 50);
          this.btnRefresh.Name = "btnRefresh";
          this.btnRefresh.Size = new System.Drawing.Size(70, 23);
          this.btnRefresh.TabIndex = 5;
@@ -177,15 +186,15 @@
          this.btnRefresh.UseVisualStyleBackColor = true;
          this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
          // 
-         // chkTop
+         // chkFirst
          // 
-         this.chkTop.AutoSize = true;
-         this.chkTop.Location = new System.Drawing.Point(266, 54);
-         this.chkTop.Name = "chkTop";
-         this.chkTop.Size = new System.Drawing.Size(75, 17);
-         this.chkTop.TabIndex = 1;
-         this.chkTop.Text = "Show Top";
-         this.chkTop.UseVisualStyleBackColor = true;
+         this.chkFirst.AutoSize = true;
+         this.chkFirst.Location = new System.Drawing.Point(266, 54);
+         this.chkFirst.Name = "chkFirst";
+         this.chkFirst.Size = new System.Drawing.Size(75, 17);
+         this.chkFirst.TabIndex = 1;
+         this.chkFirst.Text = "Show First";
+         this.chkFirst.UseVisualStyleBackColor = true;
          // 
          // lblResults
          // 
@@ -198,7 +207,7 @@
          // 
          // numericUpDown1
          // 
-         this.numericUpDown1.Location = new System.Drawing.Point(347, 52);
+         this.numericUpDown1.Location = new System.Drawing.Point(424, 52);
          this.numericUpDown1.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -263,17 +272,17 @@
          this.rdoPanelProduction.TabIndex = 13;
          this.rdoPanelProduction.ValueMember = null;
          // 
-         // rdoBonusDownload
+         // rdoStandard
          // 
-         this.rdoBonusDownload.AutoSize = true;
-         this.rdoBonusDownload.Location = new System.Drawing.Point(3, 3);
-         this.rdoBonusDownload.Name = "rdoBonusDownload";
-         this.rdoBonusDownload.Size = new System.Drawing.Size(138, 17);
-         this.rdoBonusDownload.TabIndex = 11;
-         this.rdoBonusDownload.TabStop = true;
-         this.rdoBonusDownload.Tag = "0";
-         this.rdoBonusDownload.Text = "Bonus (Download Time)";
-         this.rdoBonusDownload.UseVisualStyleBackColor = true;
+         this.rdoStandard.AutoSize = true;
+         this.rdoStandard.Location = new System.Drawing.Point(272, 3);
+         this.rdoStandard.Name = "rdoStandard";
+         this.rdoStandard.Size = new System.Drawing.Size(68, 17);
+         this.rdoStandard.TabIndex = 9;
+         this.rdoStandard.TabStop = true;
+         this.rdoStandard.Tag = "2";
+         this.rdoStandard.Text = "Standard";
+         this.rdoStandard.UseVisualStyleBackColor = true;
          // 
          // rdoBonusFrame
          // 
@@ -287,17 +296,17 @@
          this.rdoBonusFrame.Text = "Bonus (Frame Time)";
          this.rdoBonusFrame.UseVisualStyleBackColor = true;
          // 
-         // rdoStandard
+         // rdoBonusDownload
          // 
-         this.rdoStandard.AutoSize = true;
-         this.rdoStandard.Location = new System.Drawing.Point(272, 3);
-         this.rdoStandard.Name = "rdoStandard";
-         this.rdoStandard.Size = new System.Drawing.Size(68, 17);
-         this.rdoStandard.TabIndex = 9;
-         this.rdoStandard.TabStop = true;
-         this.rdoStandard.Tag = "2";
-         this.rdoStandard.Text = "Standard";
-         this.rdoStandard.UseVisualStyleBackColor = true;
+         this.rdoBonusDownload.AutoSize = true;
+         this.rdoBonusDownload.Location = new System.Drawing.Point(3, 3);
+         this.rdoBonusDownload.Name = "rdoBonusDownload";
+         this.rdoBonusDownload.Size = new System.Drawing.Size(138, 17);
+         this.rdoBonusDownload.TabIndex = 11;
+         this.rdoBonusDownload.TabStop = true;
+         this.rdoBonusDownload.Tag = "0";
+         this.rdoBonusDownload.Text = "Bonus (Download Time)";
+         this.rdoBonusDownload.UseVisualStyleBackColor = true;
          // 
          // grpDataView
          // 
@@ -312,25 +321,15 @@
          this.grpDataView.TabStop = false;
          this.grpDataView.Text = "Data View";
          // 
-         // btnEdit
+         // btnNew
          // 
-         this.btnEdit.Location = new System.Drawing.Point(120, 23);
-         this.btnEdit.Name = "btnEdit";
-         this.btnEdit.Size = new System.Drawing.Size(95, 23);
-         this.btnEdit.TabIndex = 4;
-         this.btnEdit.Text = "Edit";
-         this.btnEdit.UseVisualStyleBackColor = true;
-         this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
-         // 
-         // btnDelete
-         // 
-         this.btnDelete.Location = new System.Drawing.Point(221, 23);
-         this.btnDelete.Name = "btnDelete";
-         this.btnDelete.Size = new System.Drawing.Size(95, 23);
-         this.btnDelete.TabIndex = 3;
-         this.btnDelete.Text = "Delete";
-         this.btnDelete.UseVisualStyleBackColor = true;
-         this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+         this.btnNew.Location = new System.Drawing.Point(19, 23);
+         this.btnNew.Name = "btnNew";
+         this.btnNew.Size = new System.Drawing.Size(95, 23);
+         this.btnNew.TabIndex = 2;
+         this.btnNew.Text = "New";
+         this.btnNew.UseVisualStyleBackColor = true;
+         this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
          // 
          // cboSortView
          // 
@@ -342,18 +341,29 @@
          this.cboSortView.TabIndex = 0;
          this.cboSortView.SelectedIndexChanged += new System.EventHandler(this.cboSortView_SelectedIndexChanged);
          // 
-         // btnNew
+         // btnDelete
          // 
-         this.btnNew.Location = new System.Drawing.Point(19, 23);
-         this.btnNew.Name = "btnNew";
-         this.btnNew.Size = new System.Drawing.Size(95, 23);
-         this.btnNew.TabIndex = 2;
-         this.btnNew.Text = "New";
-         this.btnNew.UseVisualStyleBackColor = true;
-         this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
+         this.btnDelete.Location = new System.Drawing.Point(221, 23);
+         this.btnDelete.Name = "btnDelete";
+         this.btnDelete.Size = new System.Drawing.Size(95, 23);
+         this.btnDelete.TabIndex = 3;
+         this.btnDelete.Text = "Delete";
+         this.btnDelete.UseVisualStyleBackColor = true;
+         this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+         // 
+         // btnEdit
+         // 
+         this.btnEdit.Location = new System.Drawing.Point(120, 23);
+         this.btnEdit.Name = "btnEdit";
+         this.btnEdit.Size = new System.Drawing.Size(95, 23);
+         this.btnEdit.TabIndex = 4;
+         this.btnEdit.Text = "Edit";
+         this.btnEdit.UseVisualStyleBackColor = true;
+         this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
          // 
          // grpResults
          // 
+         this.grpResults.Controls.Add(this.chkLast);
          this.grpResults.Controls.Add(this.rdoPanelProduction);
          this.grpResults.Controls.Add(this.lblPpdCalc);
          this.grpResults.Controls.Add(this.txtShown);
@@ -361,11 +371,11 @@
          this.grpResults.Controls.Add(this.txtResults);
          this.grpResults.Controls.Add(this.numericUpDown1);
          this.grpResults.Controls.Add(this.lblResults);
-         this.grpResults.Controls.Add(this.chkTop);
+         this.grpResults.Controls.Add(this.chkFirst);
          this.grpResults.Controls.Add(this.btnRefresh);
          this.grpResults.Location = new System.Drawing.Point(340, 3);
          this.grpResults.Name = "grpResults";
-         this.grpResults.Size = new System.Drawing.Size(487, 84);
+         this.grpResults.Size = new System.Drawing.Size(560, 84);
          this.grpResults.TabIndex = 7;
          this.grpResults.TabStop = false;
          this.grpResults.Text = "Results";
@@ -387,19 +397,54 @@
          // splitContainerWrapper1.Panel2
          // 
          this.splitContainerWrapper1.Panel2.Controls.Add(this.dataGridView1);
-         this.splitContainerWrapper1.Size = new System.Drawing.Size(830, 292);
+         this.splitContainerWrapper1.Size = new System.Drawing.Size(903, 292);
          this.splitContainerWrapper1.SplitterDistance = 90;
          this.splitContainerWrapper1.TabIndex = 8;
+         // 
+         // mnuViewSep1
+         // 
+         this.mnuViewSep1.Name = "mnuViewSep1";
+         this.mnuViewSep1.Size = new System.Drawing.Size(192, 6);
+         // 
+         // mnuViewRefresh
+         // 
+         this.mnuViewRefresh.Name = "mnuViewRefresh";
+         this.mnuViewRefresh.ShortcutKeys = System.Windows.Forms.Keys.F5;
+         this.mnuViewRefresh.Size = new System.Drawing.Size(195, 22);
+         this.mnuViewRefresh.Text = "&Refresh";
+         this.mnuViewRefresh.Click += new System.EventHandler(this.mnuViewRefresh_Click);
+         // 
+         // mnuFileSep1
+         // 
+         this.mnuFileSep1.Name = "mnuFileSep1";
+         this.mnuFileSep1.Size = new System.Drawing.Size(212, 6);
+         // 
+         // mnuFileExit
+         // 
+         this.mnuFileExit.Name = "mnuFileExit";
+         this.mnuFileExit.Size = new System.Drawing.Size(215, 22);
+         this.mnuFileExit.Text = "&Exit";
+         this.mnuFileExit.Click += new System.EventHandler(this.mnuFileExit_Click);
+         // 
+         // chkLast
+         // 
+         this.chkLast.AutoSize = true;
+         this.chkLast.Location = new System.Drawing.Point(345, 54);
+         this.chkLast.Name = "chkLast";
+         this.chkLast.Size = new System.Drawing.Size(76, 17);
+         this.chkLast.TabIndex = 14;
+         this.chkLast.Text = "Show Last";
+         this.chkLast.UseVisualStyleBackColor = true;
          // 
          // frmHistory
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(830, 316);
+         this.ClientSize = new System.Drawing.Size(903, 316);
          this.Controls.Add(this.splitContainerWrapper1);
          this.Controls.Add(this.menuStrip1);
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-         this.MinimumSize = new System.Drawing.Size(838, 350);
+         this.MinimumSize = new System.Drawing.Size(800, 350);
          this.Name = "frmHistory";
          this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
          this.Text = "Work Unit History";
@@ -434,7 +479,7 @@
       private System.Windows.Forms.ToolStripMenuItem dataGridDeleteWorkUnitMenuItem;
       private HFM.Classes.HistoryGridViewWrapper dataGridView1;
       private HFM.Classes.ButtonWrapper btnRefresh;
-      private HFM.Classes.CheckBoxWrapper chkTop;
+      private HFM.Classes.CheckBoxWrapper chkFirst;
       private HFM.Classes.LabelWrapper lblResults;
       private System.Windows.Forms.NumericUpDown numericUpDown1;
       private HFM.Classes.TextBoxWrapper txtResults;
@@ -452,5 +497,10 @@
       private HFM.Classes.ButtonWrapper btnEdit;
       private HFM.Classes.GroupBoxWrapper grpResults;
       private HFM.Classes.SplitContainerWrapper splitContainerWrapper1;
+      private System.Windows.Forms.ToolStripSeparator mnuFileSep1;
+      private System.Windows.Forms.ToolStripMenuItem mnuFileExit;
+      private System.Windows.Forms.ToolStripSeparator mnuViewSep1;
+      private System.Windows.Forms.ToolStripMenuItem mnuViewRefresh;
+      private HFM.Classes.CheckBoxWrapper chkLast;
    }
 }

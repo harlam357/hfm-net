@@ -102,8 +102,9 @@ namespace HFM.Forms
       {
          rdoPanelProduction.DataSource = model;
          rdoPanelProduction.ValueMember = "ProductionView";
-         chkTop.DataBindings.Add("Checked", model, "ShowTopChecked", false, DataSourceUpdateMode.OnPropertyChanged);
-         numericUpDown1.DataBindings.Add("Value", model, "ShowTopValue", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkFirst.DataBindings.Add("Checked", model, "ShowFirstChecked", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkLast.DataBindings.Add("Checked", model, "ShowLastChecked", false, DataSourceUpdateMode.OnPropertyChanged);
+         numericUpDown1.DataBindings.Add("Value", model, "ShowEntriesValue", false, DataSourceUpdateMode.OnPropertyChanged);
 
          Location = model.FormLocation;
          Size = model.FormSize;
@@ -278,9 +279,19 @@ namespace HFM.Forms
          _presenter.ImportCompletedUnitsClick();
       }
 
+      private void mnuFileExit_Click(object sender, EventArgs e)
+      {
+         Close();
+      }
+
       private void mnuViewAutoSizeGrid_Click(object sender, EventArgs e)
       {
          dataGridView1.AutoResizeColumns();
+      }
+
+      private void mnuViewRefresh_Click(object sender, EventArgs e)
+      {
+         _presenter.RefreshClicked();
       }
 
       private void btnRefresh_Click(object sender, EventArgs e)
