@@ -91,6 +91,7 @@ namespace HFM.Forms
       {
          if (_settings.ExternalInstance)
          {
+            _settingsView.Text = "Client Data Merge Setup"; 
             _settingsView.ClientMegahertzLabelText = "Merge File Name:";
             _settingsView.MergeFileNameVisible = true;
             _settingsView.LogFileNamesVisible = false;

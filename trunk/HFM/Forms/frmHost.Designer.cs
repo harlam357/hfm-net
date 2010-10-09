@@ -114,7 +114,7 @@ namespace HFM.Forms
          this.btnOK.Location = new System.Drawing.Point(212, 350);
          this.btnOK.Name = "btnOK";
          this.btnOK.Size = new System.Drawing.Size(81, 25);
-         this.btnOK.TabIndex = 19;
+         this.btnOK.TabIndex = 18;
          this.btnOK.Text = "OK";
          this.btnOK.UseVisualStyleBackColor = true;
          this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
@@ -127,7 +127,7 @@ namespace HFM.Forms
          this.btnCancel.Location = new System.Drawing.Point(304, 350);
          this.btnCancel.Name = "btnCancel";
          this.btnCancel.Size = new System.Drawing.Size(81, 25);
-         this.btnCancel.TabIndex = 20;
+         this.btnCancel.TabIndex = 19;
          this.btnCancel.Text = "Cancel";
          this.btnCancel.UseVisualStyleBackColor = true;
          // 
@@ -155,7 +155,7 @@ namespace HFM.Forms
          this.chkClientVM.Location = new System.Drawing.Point(12, 326);
          this.chkClientVM.Name = "chkClientVM";
          this.chkClientVM.Size = new System.Drawing.Size(301, 17);
-         this.chkClientVM.TabIndex = 16;
+         this.chkClientVM.TabIndex = 15;
          this.chkClientVM.Text = "Client is on Virtual Machine (and reports UTC as local time)";
          this.toolTipHost.SetToolTip(this.chkClientVM, resources.GetString("chkClientVM.ToolTip"));
          this.chkClientVM.UseVisualStyleBackColor = true;
@@ -166,7 +166,7 @@ namespace HFM.Forms
          this.numOffset.Location = new System.Drawing.Point(8, 352);
          this.numOffset.Name = "numOffset";
          this.numOffset.Size = new System.Drawing.Size(54, 20);
-         this.numOffset.TabIndex = 17;
+         this.numOffset.TabIndex = 16;
          this.toolTipHost.SetToolTip(this.numOffset, resources.GetString("numOffset.ToolTip"));
          // 
          // btnBrowseLocal
@@ -437,7 +437,7 @@ namespace HFM.Forms
          this.grpLocal.Location = new System.Drawing.Point(7, 166);
          this.grpLocal.Name = "grpLocal";
          this.grpLocal.Size = new System.Drawing.Size(378, 69);
-         this.grpLocal.TabIndex = 13;
+         this.grpLocal.TabIndex = 11;
          this.grpLocal.TabStop = false;
          // 
          // lblLogFolder
@@ -465,7 +465,7 @@ namespace HFM.Forms
          this.grpFTP.Location = new System.Drawing.Point(7, 166);
          this.grpFTP.Name = "grpFTP";
          this.grpFTP.Size = new System.Drawing.Size(378, 152);
-         this.grpFTP.TabIndex = 15;
+         this.grpFTP.TabIndex = 13;
          this.grpFTP.TabStop = false;
          // 
          // pnlFtpMode
@@ -522,7 +522,7 @@ namespace HFM.Forms
          this.grpHTTP.Location = new System.Drawing.Point(7, 166);
          this.grpHTTP.Name = "grpHTTP";
          this.grpHTTP.Size = new System.Drawing.Size(378, 99);
-         this.grpHTTP.TabIndex = 14;
+         this.grpHTTP.TabIndex = 12;
          this.grpHTTP.TabStop = false;
          // 
          // openLogFolder
@@ -615,7 +615,7 @@ namespace HFM.Forms
          this.lblOffset.Location = new System.Drawing.Point(64, 355);
          this.lblOffset.Name = "lblOffset";
          this.lblOffset.Size = new System.Drawing.Size(136, 13);
-         this.lblOffset.TabIndex = 18;
+         this.lblOffset.TabIndex = 17;
          this.lblOffset.Text = "Client Time Offset (Minutes)";
          // 
          // lblQueueFileName
@@ -649,7 +649,7 @@ namespace HFM.Forms
          this.btnTestConnection.Location = new System.Drawing.Point(271, 142);
          this.btnTestConnection.Name = "btnTestConnection";
          this.btnTestConnection.Size = new System.Drawing.Size(114, 24);
-         this.btnTestConnection.TabIndex = 21;
+         this.btnTestConnection.TabIndex = 14;
          this.btnTestConnection.Text = "Test Connection";
          this.btnTestConnection.UseVisualStyleBackColor = true;
          this.btnTestConnection.Click += new System.EventHandler(this.btnTestConnection_Click);
@@ -662,7 +662,7 @@ namespace HFM.Forms
          this.pnlHostType.Location = new System.Drawing.Point(8, 139);
          this.pnlHostType.Name = "pnlHostType";
          this.pnlHostType.Size = new System.Drawing.Size(257, 30);
-         this.pnlHostType.TabIndex = 22;
+         this.pnlHostType.TabIndex = 10;
          this.pnlHostType.ValueMember = null;
          // 
          // txtDummy
@@ -670,7 +670,7 @@ namespace HFM.Forms
          this.txtDummy.Location = new System.Drawing.Point(331, 324);
          this.txtDummy.Name = "txtDummy";
          this.txtDummy.Size = new System.Drawing.Size(49, 20);
-         this.txtDummy.TabIndex = 23;
+         this.txtDummy.TabIndex = 20;
          // 
          // txtMergeFileName
          // 
@@ -695,9 +695,10 @@ namespace HFM.Forms
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.ClientSize = new System.Drawing.Size(392, 385);
+         this.Controls.Add(this.grpLocal);
+         this.Controls.Add(this.grpHTTP);
          this.Controls.Add(this.txtMergeFileName);
          this.Controls.Add(this.txtDummy);
-         this.Controls.Add(this.grpLocal);
          this.Controls.Add(this.pnlHostType);
          this.Controls.Add(this.btnTestConnection);
          this.Controls.Add(this.txtQueueFileName);
@@ -716,7 +717,6 @@ namespace HFM.Forms
          this.Controls.Add(this.txtLogFileName);
          this.Controls.Add(this.txtUnitFileName);
          this.Controls.Add(this.grpFTP);
-         this.Controls.Add(this.grpHTTP);
          this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
          this.MaximizeBox = false;

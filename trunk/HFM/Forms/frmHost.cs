@@ -74,6 +74,8 @@ namespace HFM.Forms
 
       #region System.Windows.Forms.Form Exposure
 
+      string Text { get; set; }
+
       DialogResult ShowDialog(IWin32Window owner);
 
       void Close();
