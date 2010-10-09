@@ -534,6 +534,154 @@ namespace HFM.Instances.Tests
          #endregion
       }
 
+      [Test, Category("SMP")]
+      public void SMP_13() // ReadyForUpload queue status now populates the FinishedTime property
+      {
+         const string path = "..\\..\\..\\TestFiles\\SMP_13";
+         _dataAggregator.InstanceName = "SMP_13";
+         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
+         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
+         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+
+         var unitInfoList = _dataAggregator.AggregateData();
+         Assert.AreEqual(10, unitInfoList.Count);
+         Assert.IsNotNull(unitInfoList[0]);
+         Assert.IsNull(unitInfoList[1]);
+         Assert.IsNull(unitInfoList[2]);
+         Assert.IsNull(unitInfoList[3]);
+         Assert.IsNull(unitInfoList[4]);
+         Assert.IsNull(unitInfoList[5]);
+         Assert.IsNull(unitInfoList[6]);
+         Assert.IsNull(unitInfoList[7]);
+         Assert.IsNull(unitInfoList[8]);
+         Assert.IsNull(unitInfoList[9]);
+
+         #region Check Data Aggregator
+         Assert.IsNotNull(_dataAggregator.Queue);
+         Assert.AreEqual(0, _dataAggregator.CurrentUnitIndex);
+         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
+         Assert.AreEqual(ClientStatus.SendingWorkPacket, _dataAggregator.CurrentWorkUnitStatus);
+         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
+         Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
+         Assert.IsNull(_dataAggregator.UnitLogLines[1]);
+         Assert.IsNull(_dataAggregator.UnitLogLines[2]);
+         Assert.IsNull(_dataAggregator.UnitLogLines[3]);
+         Assert.IsNull(_dataAggregator.UnitLogLines[4]);
+         Assert.IsNull(_dataAggregator.UnitLogLines[5]);
+         Assert.IsNull(_dataAggregator.UnitLogLines[6]);
+         Assert.IsNull(_dataAggregator.UnitLogLines[7]);
+         Assert.IsNull(_dataAggregator.UnitLogLines[8]);
+         Assert.IsNull(_dataAggregator.UnitLogLines[9]);
+         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         #endregion
+
+         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+
+         #region Check Unit Info Data Values
+         Assert.AreEqual(null, unitInfoData.OwningInstanceName);
+         Assert.AreEqual(null, unitInfoData.OwningInstancePath);
+         Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
+         Assert.AreEqual("harlam357", unitInfoData.FoldingID);
+         Assert.AreEqual(32, unitInfoData.Team);
+         Assert.AreEqual(ClientType.Unknown, unitInfoData.TypeOfClient);
+         Assert.AreEqual(new DateTime(2010, 5, 27, 12, 4, 26), unitInfoData.DownloadTime);
+         Assert.AreEqual(new DateTime(2010, 6, 2, 12, 4, 26), unitInfoData.DueTime);
+         Assert.AreEqual(new TimeSpan(17, 19, 05), unitInfoData.UnitStartTimeStamp);
+         Assert.AreEqual(new DateTime(2010, 5, 28, 21, 34, 4), unitInfoData.FinishedTime); // is populated
+         Assert.AreEqual("2.19", unitInfoData.CoreVersion);
+         Assert.AreEqual(6073, unitInfoData.ProjectID);
+         Assert.AreEqual(0, unitInfoData.ProjectRun);
+         Assert.AreEqual(10, unitInfoData.ProjectClone);
+         Assert.AreEqual(53, unitInfoData.ProjectGen);
+         Assert.AreEqual("Gromacs", unitInfoData.ProteinName);
+         Assert.AreEqual("P6073R0C10G53", unitInfoData.ProteinTag);
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, unitInfoData.UnitResult);
+         Assert.AreEqual(500000, unitInfoData.RawFramesComplete);
+         Assert.AreEqual(500000, unitInfoData.RawFramesTotal);
+         Assert.AreEqual(55, unitInfoData.FramesObserved);
+         Assert.AreEqual(100, unitInfoData.CurrentFrame.FrameID);
+         Assert.AreEqual(new TimeSpan(21, 33, 46), unitInfoData.CurrentFrame.TimeOfFrame);
+         Assert.AreEqual(new TimeSpan(0, 4, 32), unitInfoData.CurrentFrame.FrameDuration);
+         Assert.AreEqual("A3", unitInfoData.CoreID);
+         #endregion
+      }
+
+      [Test, Category("SMP")]
+      public void SMP_14() // GettingWorkPacket - queue entry available before any log data
+      {
+         const string path = "..\\..\\..\\TestFiles\\SMP_14";
+         _dataAggregator.InstanceName = "SMP_14";
+         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
+         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
+         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+
+         var unitInfoList = _dataAggregator.AggregateData();
+         Assert.AreEqual(10, unitInfoList.Count);
+         Assert.IsNotNull(unitInfoList[0]);
+         Assert.IsNotNull(unitInfoList[1]);
+         Assert.IsNull(unitInfoList[2]);
+         Assert.IsNull(unitInfoList[3]);
+         Assert.IsNull(unitInfoList[4]);
+         Assert.IsNull(unitInfoList[5]);
+         Assert.IsNull(unitInfoList[6]);
+         Assert.IsNull(unitInfoList[7]);
+         Assert.IsNull(unitInfoList[8]);
+         Assert.IsNull(unitInfoList[9]);
+
+         #region Check Data Aggregator
+         Assert.IsNotNull(_dataAggregator.Queue);
+         Assert.AreEqual(1, _dataAggregator.CurrentUnitIndex);
+         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
+         Assert.AreEqual(ClientStatus.GettingWorkPacket, _dataAggregator.CurrentWorkUnitStatus);
+         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
+         Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[1]);
+         Assert.IsNull(_dataAggregator.UnitLogLines[2]);
+         Assert.IsNull(_dataAggregator.UnitLogLines[3]);
+         Assert.IsNull(_dataAggregator.UnitLogLines[4]);
+         Assert.IsNull(_dataAggregator.UnitLogLines[5]);
+         Assert.IsNull(_dataAggregator.UnitLogLines[6]);
+         Assert.IsNull(_dataAggregator.UnitLogLines[7]);
+         Assert.IsNull(_dataAggregator.UnitLogLines[8]);
+         Assert.IsNull(_dataAggregator.UnitLogLines[9]);
+         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         #endregion
+
+         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+
+         #region Check Unit Info Data Values
+         Assert.AreEqual(null, unitInfoData.OwningInstanceName);
+         Assert.AreEqual(null, unitInfoData.OwningInstancePath);
+         Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
+         Assert.AreEqual("harlam357", unitInfoData.FoldingID);
+         Assert.AreEqual(32, unitInfoData.Team);
+         Assert.AreEqual(ClientType.Unknown, unitInfoData.TypeOfClient);
+         Assert.AreEqual(new DateTime(2009, 11, 8, 13, 57, 45), unitInfoData.DownloadTime);
+         Assert.AreEqual(new DateTime(2009, 11, 12, 13, 57, 45), unitInfoData.DueTime);
+         Assert.AreEqual(TimeSpan.MinValue, unitInfoData.UnitStartTimeStamp);
+         Assert.AreEqual(DateTime.MinValue, unitInfoData.FinishedTime);
+         Assert.AreEqual(String.Empty, unitInfoData.CoreVersion);
+         Assert.AreEqual(2653, unitInfoData.ProjectID);
+         Assert.AreEqual(28, unitInfoData.ProjectRun);
+         Assert.AreEqual(194, unitInfoData.ProjectClone);
+         Assert.AreEqual(125, unitInfoData.ProjectGen);
+         Assert.AreEqual(null, unitInfoData.ProteinName);
+         Assert.AreEqual("P2653R28C194G125", unitInfoData.ProteinTag);
+         Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
+         Assert.AreEqual(0, unitInfoData.RawFramesComplete);
+         Assert.AreEqual(0, unitInfoData.RawFramesTotal);
+         Assert.AreEqual(0, unitInfoData.FramesObserved);
+         // no CurrentFrame has been set
+         //Assert.AreEqual(0, unitInfoData.CurrentFrame.FrameID);
+         //Assert.AreEqual(TimeSpan.MinValue, unitInfoData.CurrentFrame.TimeOfFrame);
+         //Assert.AreEqual(TimeSpan.Zero, unitInfoData.CurrentFrame.FrameDuration);
+         Assert.IsNull(unitInfoData.CurrentFrame);
+         Assert.AreEqual("A1", unitInfoData.CoreID);
+         #endregion
+      }
+
       [Test, Category("GPU")]
       public void GPU2_3()
       {

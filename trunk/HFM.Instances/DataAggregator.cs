@@ -270,7 +270,9 @@ namespace HFM.Instances
 
                   if (_currentFahLogUnitData.Status.Equals(ClientStatus.GettingWorkPacket))
                   {
-                     _unitLogLines[queueIndex] = null;
+                     // Use either the current Work Unit log lines or current Client Run log lines
+                     // as decided upon above... don't clear it here and show the user nothing - 10/9/10
+                     //_unitLogLines[queueIndex] = null;
                      fahLogUnitData = _logReader.CreateFahLogUnitData();
                      unitInfoLogData = _logReader.CreateUnitInfoLogData();
                   }
@@ -369,7 +371,8 @@ namespace HFM.Instances
             unit.DueTime = entry.DueTimeUtc;
 
             /* FinishedTime */
-            if (entry.EntryStatus.Equals(QueueEntryStatus.Finished))
+            if (entry.EntryStatus.Equals(QueueEntryStatus.Finished) ||
+                entry.EntryStatus.Equals(QueueEntryStatus.ReadyForUpload))
             {
                unit.FinishedTime = entry.EndTimeUtc;
             }

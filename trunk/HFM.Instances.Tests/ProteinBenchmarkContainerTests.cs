@@ -75,8 +75,7 @@ namespace HFM.Instances.Tests
          unitInfo2.ProjectRun = 2;
          unitInfo2.ProjectClone = 3;
          unitInfo2.ProjectGen = 4;
-         // allow UpdateBenchmarkData() to fill in the FinishedTime for us
-         //unitInfo2.FinishedTime = new DateTime(2010, 1, 1);
+         unitInfo2.FinishedTime = new DateTime(2010, 1, 1);
          var unitInfoLogic2 = _mocks.DynamicMock<IUnitInfoLogic>();
          SetupResult.For(unitInfoLogic2.UnitInfoData).Return(unitInfo2);
 
@@ -102,9 +101,6 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(TimeSpan.Zero, _container.GetBenchmarkAverageFrameTime(currentUnitInfo));
          
          _container.UpdateBenchmarkData(currentUnitInfo, parsedUnits.ToArray(), 2);
-         
-         // verify the FinishedTime was populated
-         Assert.IsTrue(unitInfo2.FinishedTime >= DateTime.UtcNow.Date);
          
          Assert.AreEqual(true, _container.ContainsClient(new BenchmarkClient("Owner", "Path")));
          Assert.AreEqual(true, new List<int>(_container.GetBenchmarkProjects()).Contains(2669));
