@@ -1,5 +1,5 @@
 /*
- * HFM.NET - XML Stats Data Container Interface
+ * HFM.NET - Registry Operations Helper Class Tests
  * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -17,34 +17,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace HFM.Framework
+using System;
+
+using NUnit.Framework;
+
+namespace HFM.Framework.Tests
 {
-   public interface IXmlStatsDataContainer
+   [TestFixture]
+   public class RegistryOpsTests
    {
-      /// <summary>
-      /// User Stats Data
-      /// </summary>
-      IXmlStatsData Data { get; }
-
-      /// <summary>
-      /// Is it Time for a Stats Update?
-      /// </summary>
-      bool TimeForUpdate();
-
-      /// <summary>
-      /// Get Overall User Data from EOC XML
-      /// </summary>
-      /// <param name="forceRefresh">Force Refresh or allow to check for next update time</param>
-      void GetEocXmlData(bool forceRefresh);
-
-      /// <summary>
-      /// Read Binary File
-      /// </summary>
-      void Read();
-
-      /// <summary>
-      /// Write Binary File
-      /// </summary>
-      void Write();
+      [Test]
+      public void TestHfmAutoRun()
+      {
+         RegistryOps.SetHfmAutoRun(System.Reflection.Assembly.GetExecutingAssembly().Location);
+         Assert.AreEqual(true, RegistryOps.IsHfmAutoRunSet());
+         RegistryOps.SetHfmAutoRun(String.Empty);
+         Assert.AreEqual(false, RegistryOps.IsHfmAutoRunSet());
+      }
    }
 }

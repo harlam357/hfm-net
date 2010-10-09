@@ -28,7 +28,6 @@ using harlam357.Security;
 using harlam357.Security.Encryption;
 
 using HFM.Framework;
-using HFM.Helpers;
 using HFM.Plugins;
 
 namespace HFM.Instances

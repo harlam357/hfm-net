@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Helpers.Tests", "HFM.Helpers.Tests\HFM.Helpers.Tests.csproj", "{02F017B7-ADDA-4EC0-8E71-59CC8AE8EA46}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Instances.Tests", "HFM.Instances.Tests\HFM.Instances.Tests.csproj", "{C3D60E2F-E00D-485B-8B78-F285132AA229}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Proteins.Tests", "HFM.Proteins.Tests\HFM.Proteins.Tests.csproj", "{04744056-F956-4E20-B229-28E2FC154509}"
@@ -14,8 +12,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM", "HFM\HFM.csproj", "{A032015C-AA3F-4610-A107-46FB89E41485}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Framework", "HFM.Framework\HFM.Framework.csproj", "{FFFF3DE4-8620-4C13-A968-ADF58133146B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Helpers", "HFM.Helpers\HFM.Helpers.csproj", "{4A9D010E-BAEA-4818-9216-8E0DBD7D5570}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Instances", "HFM.Instances\HFM.Instances.csproj", "{B8614309-B90A-4B86-97FF-3A9E64B9658F}"
 EndProject
@@ -46,12 +42,6 @@ Global
 		ScriptedRelease|Any CPU = ScriptedRelease|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{02F017B7-ADDA-4EC0-8E71-59CC8AE8EA46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{02F017B7-ADDA-4EC0-8E71-59CC8AE8EA46}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{02F017B7-ADDA-4EC0-8E71-59CC8AE8EA46}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{02F017B7-ADDA-4EC0-8E71-59CC8AE8EA46}.Release|Any CPU.Build.0 = Release|Any CPU
-		{02F017B7-ADDA-4EC0-8E71-59CC8AE8EA46}.ScriptedRelease|Any CPU.ActiveCfg = Release|Any CPU
-		{02F017B7-ADDA-4EC0-8E71-59CC8AE8EA46}.ScriptedRelease|Any CPU.Build.0 = Release|Any CPU
 		{C3D60E2F-E00D-485B-8B78-F285132AA229}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C3D60E2F-E00D-485B-8B78-F285132AA229}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3D60E2F-E00D-485B-8B78-F285132AA229}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -88,12 +78,6 @@ Global
 		{FFFF3DE4-8620-4C13-A968-ADF58133146B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FFFF3DE4-8620-4C13-A968-ADF58133146B}.ScriptedRelease|Any CPU.ActiveCfg = Release|Any CPU
 		{FFFF3DE4-8620-4C13-A968-ADF58133146B}.ScriptedRelease|Any CPU.Build.0 = Release|Any CPU
-		{4A9D010E-BAEA-4818-9216-8E0DBD7D5570}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4A9D010E-BAEA-4818-9216-8E0DBD7D5570}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4A9D010E-BAEA-4818-9216-8E0DBD7D5570}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4A9D010E-BAEA-4818-9216-8E0DBD7D5570}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4A9D010E-BAEA-4818-9216-8E0DBD7D5570}.ScriptedRelease|Any CPU.ActiveCfg = Release|Any CPU
-		{4A9D010E-BAEA-4818-9216-8E0DBD7D5570}.ScriptedRelease|Any CPU.Build.0 = Release|Any CPU
 		{B8614309-B90A-4B86-97FF-3A9E64B9658F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B8614309-B90A-4B86-97FF-3A9E64B9658F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8614309-B90A-4B86-97FF-3A9E64B9658F}.Release|Any CPU.ActiveCfg = Release|Any CPU

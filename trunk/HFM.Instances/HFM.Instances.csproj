@@ -109,10 +109,6 @@
       <Project>{FFFF3DE4-8620-4C13-A968-ADF58133146B}</Project>
       <Name>HFM.Framework</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HFM.Helpers\HFM.Helpers.csproj">
-      <Project>{4A9D010E-BAEA-4818-9216-8E0DBD7D5570}</Project>
-      <Name>HFM.Helpers</Name>
-    </ProjectReference>
     <ProjectReference Include="..\HFM.Plugins\HFM.Plugins.csproj">
       <Project>{E1415297-BD33-4508-A491-F3C13E5A5F7F}</Project>
       <Name>HFM.Plugins</Name>
