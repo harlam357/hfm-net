@@ -36,6 +36,31 @@ namespace HFM.Framework
    public interface INetworkOps
    {
       /// <summary>
+      /// Upload a File via Ftp.
+      /// </summary>
+      /// <param name="server">Server Name or IP.</param>
+      /// <param name="ftpPath">Path to upload to on remote Ftp server.</param>
+      /// <param name="localFilePath">Path to local file.</param>
+      /// <param name="username">Ftp Login Username.</param>
+      /// <param name="password">Ftp Login Password.</param>
+      /// <param name="ftpMode">Ftp Transfer Mode.</param>
+      /// <exception cref="ArgumentException">Throws if Server or FtpPath, or LocalFilePath is Null or Empty.</exception>
+      void FtpUploadHelper(string server, string ftpPath, string localFilePath, string username, string password, FtpType ftpMode);
+
+      /// <summary>
+      /// Upload a File via Ftp.
+      /// </summary>
+      /// <param name="server">Server Name or IP.</param>
+      /// <param name="ftpPath">Path to upload to on remote Ftp server.</param>
+      /// <param name="localFilePath">Path to local file.</param>
+      /// <param name="maximumLength"></param>
+      /// <param name="username">Ftp Login Username.</param>
+      /// <param name="password">Ftp Login Password.</param>
+      /// <param name="ftpMode">Ftp Transfer Mode.</param>
+      /// <exception cref="ArgumentException">Throws if Server or FtpPath, or LocalFilePath is Null or Empty.</exception>
+      void FtpUploadHelper(string server, string ftpPath, string localFilePath, int maximumLength, string username, string password, FtpType ftpMode);
+   
+      /// <summary>
       /// Check an FTP Connection.
       /// </summary>
       /// <param name="server">Server Name or IP.</param>
@@ -572,92 +597,6 @@ namespace HFM.Framework
          SetProxy(httpWebOperation.OperationRequest.Request);
 
          httpWebOperation.CheckConnection();
-      }
-
-      /// <summary>
-      /// Upload Web Site Files.
-      /// </summary>
-      /// <param name="server">Server Name</param>
-      /// <param name="ftpPath">Path from FTP Server Root</param>
-      /// <param name="username">FTP Server Username</param>
-      /// <param name="password">FTP Server Password</param>
-      /// <param name="htmlFilePaths">HTML File Paths</param>
-      /// <param name="instances">Client Instance Collection</param>
-      /// <param name="prefs">Preferences Interface</param>
-      public void FtpWebUpload(string server, string ftpPath, string username, string password, ICollection<string> htmlFilePaths, 
-                               ICollection<IDisplayInstance> instances, IPreferenceSet prefs)
-      {
-         // Time FTP Upload Conversation - Issue 52
-         DateTime start = HfmTrace.ExecStart;
-
-         try
-         {
-            // Get the FTP Type
-            var ftpMode = prefs.GetPreference<FtpType>(Preference.WebGenFtpMode);
-
-            // Upload CSS File
-            FtpUploadHelper(server, ftpPath, Path.Combine(Path.Combine(prefs.ApplicationPath, Constants.CssFolderName), 
-               prefs.GetPreference<string>(Preference.CssFile)), username, password, ftpMode);
-
-            // Upload each HTML File
-            foreach (string filePath in htmlFilePaths)
-            {
-               FtpUploadHelper(server, ftpPath, filePath, username, password, ftpMode);
-            }
-
-            if (prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog))
-            {
-               int maximumLength = prefs.GetPreference<bool>(Preference.WebGenLimitLogSize)
-                                    ? prefs.GetPreference<int>(Preference.WebGenLimitLogSizeLength) * 1024
-                                    : -1;
-               // Upload the FAHlog.txt File for each Client Instance
-               foreach (IDisplayInstance instance in instances)
-               {
-                  string cachedFahlogPath = Path.Combine(prefs.CacheDirectory, instance.CachedFahLogName);
-                  if (File.Exists(cachedFahlogPath))
-                  {
-                     FtpUploadHelper(server, ftpPath, cachedFahlogPath, maximumLength, username, password, ftpMode);
-                  }
-               }
-            }
-         }
-         finally
-         {
-            // Time FTP Upload Conversation - Issue 52
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, start);
-         }
-      }
-
-      /// <summary>
-      /// Upload XML Files.
-      /// </summary>
-      /// <param name="server">Server Name</param>
-      /// <param name="ftpPath">Path from FTP Server Root</param>
-      /// <param name="username">FTP Server Username</param>
-      /// <param name="password">FTP Server Password</param>
-      /// <param name="xmlFilePaths">XML File Paths</param>
-      /// <param name="prefs">Preferences Interface</param>
-      public void FtpXmlUpload(string server, string ftpPath, string username, string password, ICollection<string> xmlFilePaths, IPreferenceSet prefs)
-      {
-         // Time FTP Upload Conversation - Issue 52
-         DateTime start = HfmTrace.ExecStart;
-
-         try
-         {
-            // Get the FTP Type
-            var ftpMode = prefs.GetPreference<FtpType>(Preference.WebGenFtpMode);
-
-            // Upload each XML File
-            foreach (string filePath in xmlFilePaths)
-            {
-               FtpUploadHelper(server, ftpPath, filePath, username, password, ftpMode);
-            }
-         }
-         finally
-         {
-            // Time FTP Upload Conversation - Issue 52
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, start);
-         }
       }
 
       private static void SetFtpMode(IFtpWebOperationRequest request, FtpType ftpMode)

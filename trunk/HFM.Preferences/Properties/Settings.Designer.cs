@@ -1067,5 +1067,17 @@ namespace HFM.Preferences.Properties {
                 this["ShowLastChecked"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool WebGenCopyClientData {
+            get {
+                return ((bool)(this["WebGenCopyClientData"]));
+            }
+            set {
+                this["WebGenCopyClientData"] = value;
+            }
+        }
     }
 }

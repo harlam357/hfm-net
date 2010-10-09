@@ -23,6 +23,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
 
@@ -48,20 +49,18 @@ namespace HFM.Instances
       ReadOnlyCollection<string> HtmlFilePaths { get; }
 
       /// <summary>
-      /// Generate HTML Files from the given Client Instance Collection.
+      /// Contains File Path to the most recent Client Data File
       /// </summary>
-      /// <param name="instances">Client Instance Collection.</param>
-      /// <exception cref="ArgumentNullException">Throws if instances is null.</exception>
-      /// <exception cref="InvalidOperationException">Throws if a Generate method is called in succession.</exception>
-      void GenerateHtml(ICollection<IDisplayInstance> instances);
+      string ClientDataFilePath { get; }
 
       /// <summary>
-      /// Generate XML Files from the given Client Instance Collection.
+      /// Generate Web Files from the given Display and Client Instances.
       /// </summary>
-      /// <param name="instances">Client Instance Collection.</param>
-      /// <exception cref="ArgumentNullException">Throws if instances is null.</exception>
+      /// <param name="displayInstances">Display Instances</param>
+      /// <param name="clientInstances">Client Instances</param>
+      /// <exception cref="ArgumentNullException">Throws if displayInstances or clientInstances is null.</exception>
       /// <exception cref="InvalidOperationException">Throws if a Generate method is called in succession.</exception>
-      void GenerateXml(ICollection<IDisplayInstance> instances);
+      void Generate(IEnumerable<IDisplayInstance> displayInstances, IEnumerable<IClientInstance> clientInstances);
    }
 
    public sealed class MarkupGenerator : IMarkupGenerator
@@ -85,6 +84,11 @@ namespace HFM.Instances
       /// Contains HTML File Paths from most recent HTML Generation
       /// </summary>
       public ReadOnlyCollection<string> HtmlFilePaths { get; private set; }
+
+      /// <summary>
+      /// Contains File Path to the most recent Client Data File
+      /// </summary>
+      public string ClientDataFilePath { get; private set; }
       
       private readonly IPreferenceSet _prefs;
       
@@ -99,24 +103,46 @@ namespace HFM.Instances
          _prefs = prefs;
       }
       
-      #region HTML Generation
-
       /// <summary>
-      /// Generate HTML Files from the given Client Instance Collection.
+      /// Generate Web Files from the given Display and Client Instances.
       /// </summary>
-      /// <param name="instances">Client Instance Collection.</param>
-      /// <exception cref="ArgumentNullException">Throws if instances is null.</exception>
+      /// <param name="displayInstances">Display Instances</param>
+      /// <param name="clientInstances">Client Instances</param>
+      /// <exception cref="ArgumentNullException">Throws if displayInstances or clientInstances is null.</exception>
       /// <exception cref="InvalidOperationException">Throws if a Generate method is called in succession.</exception>
-      public void GenerateHtml(ICollection<IDisplayInstance> instances)
+      public void Generate(IEnumerable<IDisplayInstance> displayInstances, IEnumerable<IClientInstance> clientInstances)
       {
-         if (instances == null) throw new ArgumentNullException("instances", "Argument 'instances' cannot be null.");
+         if (displayInstances == null) throw new ArgumentNullException("displayInstances");
+         if (clientInstances == null) throw new ArgumentNullException("clientInstances");
          if (_generationInProgress) throw new InvalidOperationException("Markup Generation already in progress.");
 
          _generationInProgress = true;
 
+         XmlFilePaths = null;
+         HtmlFilePaths = null;
+         ClientDataFilePath = null;
+
          try
          {
-            HtmlFilePaths = DoHtmlGeneration(Path.GetTempPath(), instances);
+            var copyHtml = _prefs.GetPreference<bool>(Preference.WebGenCopyHtml);
+            var copyXml = _prefs.GetPreference<bool>(Preference.WebGenCopyXml);
+            var copyClientData = _prefs.GetPreference<bool>(Preference.WebGenCopyClientData);
+
+            if (copyHtml)
+            {
+               // GenerateHtml calls GenerateXml - these two
+               // calls are mutually exclusive
+               GenerateHtml(displayInstances);
+            }
+            else if (copyXml)
+            {
+               GenerateXml(displayInstances);
+            }
+            // Issue 79
+            if (copyClientData)
+            {
+               GenerateClientData(clientInstances);
+            }
          }
          finally
          {
@@ -124,7 +150,25 @@ namespace HFM.Instances
          }
       }
       
-      public ReadOnlyCollection<string> DoHtmlGeneration(string folderPath, ICollection<IDisplayInstance> instances)
+      #region HTML Generation
+
+      /// <summary>
+      /// Generate HTML Files from the given Display Instances
+      /// </summary>
+      /// <param name="instances">Display Instances</param>
+      public void GenerateHtml(IEnumerable<IDisplayInstance> instances)
+      {
+         try
+         {
+            HtmlFilePaths = DoHtmlGeneration(Path.GetTempPath(), instances);
+         }
+         catch (Exception ex)
+         {
+            HfmTrace.WriteToHfmConsole(ex);
+         }
+      }
+      
+      private ReadOnlyCollection<string> DoHtmlGeneration(string folderPath, IEnumerable<IDisplayInstance> instances)
       {
          Debug.Assert(String.IsNullOrEmpty(folderPath) == false);
          Debug.Assert(instances != null);
@@ -136,7 +180,7 @@ namespace HFM.Instances
             // Generate XML Files
             XmlFilePaths = DoXmlGeneration(folderPath, instances);
 
-            var fileList = new List<string>(instances.Count + 4);
+            var fileList = new List<string>(instances.Count() + 4);
             var cssFileName = _prefs.GetPreference<string>(Preference.CssFile);
          
             // Load the Overview XML
@@ -244,29 +288,22 @@ namespace HFM.Instances
       #region XML Generation
 
       /// <summary>
-      /// Generate XML Files from the given Client Instance Collection.
+      /// Generate XML Files from the given Display Instances
       /// </summary>
-      /// <param name="instances">Client Instance Collection.</param>
-      /// <exception cref="ArgumentNullException">Throws if instances is null.</exception>
-      /// <exception cref="InvalidOperationException">Throws if a Generate method is called in succession.</exception>
-      public void GenerateXml(ICollection<IDisplayInstance> instances)
+      /// <param name="instances">Display Instances</param>
+      public void GenerateXml(IEnumerable<IDisplayInstance> instances)
       {
-         if (instances == null) throw new ArgumentNullException("instances", "Argument 'instances' cannot be null.");
-         if (_generationInProgress) throw new InvalidOperationException("Markup Generation already in progress.");
-
-         _generationInProgress = true;
-
          try
          {
             XmlFilePaths = DoXmlGeneration(Path.GetTempPath(), instances);
          }
-         finally
+         catch (Exception ex)
          {
-            _generationInProgress = false;
+            HfmTrace.WriteToHfmConsole(ex);
          }
       }
 
-      public ReadOnlyCollection<string> DoXmlGeneration(string folderPath, ICollection<IDisplayInstance> instances)
+      private ReadOnlyCollection<string> DoXmlGeneration(string folderPath, IEnumerable<IDisplayInstance> instances)
       {
          Debug.Assert(String.IsNullOrEmpty(folderPath) == false);
          Debug.Assert(instances != null);
@@ -549,6 +586,40 @@ namespace HFM.Instances
          XMLOps.setXmlNode(xmlData, "LastUpdatedTime", DateTime.Now.ToString("h:mm:ss tt zzz", CultureInfo.InvariantCulture));
 
          return xmlDoc;
+      }
+      
+      #endregion
+      
+      #region Client Data Generation
+
+      /// <summary>
+      /// Generate Client Data File from the given Client Instances
+      /// </summary>
+      /// <param name="instances">Client Instances</param>
+      public void GenerateClientData(IEnumerable<IClientInstance> instances)
+      {
+         try
+         {
+            ClientDataFilePath = DoClientDataGeneration(Path.GetTempPath(), instances);
+         }
+         catch (Exception ex)
+         {
+            HfmTrace.WriteToHfmConsole(ex);
+         }
+      }
+      
+      private static string DoClientDataGeneration(string folderPath, IEnumerable<IClientInstance> instances)
+      {
+         var list = (from instance in instances
+                     where instance.Settings.ExternalInstance == false
+                     select (DisplayInstance)instance.DisplayInstance).ToList();
+
+         var filePath = Path.Combine(folderPath, Constants.LocalExternal);
+         using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+         {
+            ProtoBuf.Serializer.Serialize(fileStream, list);
+         }
+         return filePath;
       }
       
       #endregion

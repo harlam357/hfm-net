@@ -16,7 +16,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
- 
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -32,34 +33,115 @@ namespace HFM.Instances.Tests
    {
       private MockRepository _mocks;
 
-      private const string TestFolder = "MarkupGeneratorTestOutput";
-      
       [SetUp]
       public void Init()
       {
          _mocks = new MockRepository();
+      }
+      
+      [Test]
+      public void GenerateTest()
+      {
+         IPreferenceSet prefs = SetupMockPreferenceSet();
+         Expect.Call(prefs.GetPreference<bool>(Preference.WebGenCopyXml)).Return(true);
+         Expect.Call(prefs.GetPreference<bool>(Preference.WebGenCopyHtml)).Return(true);
+         Expect.Call(prefs.GetPreference<bool>(Preference.WebGenCopyClientData)).Return(true);
          
-         if (Directory.Exists(TestFolder))
-         {
-            Directory.Delete(TestFolder, true);
-         }
+         IEnumerable<IDisplayInstance> displayinstances = SetupMockDisplayInstanceCollection();
+         IEnumerable<IClientInstance> clientInstances = new List<IClientInstance>();
 
-         Directory.CreateDirectory(TestFolder);
+         _mocks.ReplayAll();
+
+         var markupGenerator = new MarkupGenerator(prefs);
+         markupGenerator.Generate(displayinstances, clientInstances);
+         
+         Assert.IsNotNull(markupGenerator.XmlFilePaths);
+         Assert.IsNotNull(markupGenerator.HtmlFilePaths);
+         Assert.IsNotNull(markupGenerator.ClientDataFilePath);
+         
+         _mocks.VerifyAll();
+      }
+
+      [Test]
+      public void GenerateXmlOnlyTest()
+      {
+         IPreferenceSet prefs = SetupMockPreferenceSet();
+         Expect.Call(prefs.GetPreference<bool>(Preference.WebGenCopyXml)).Return(true);
+         Expect.Call(prefs.GetPreference<bool>(Preference.WebGenCopyHtml)).Return(false);
+         Expect.Call(prefs.GetPreference<bool>(Preference.WebGenCopyClientData)).Return(false);
+
+         IEnumerable<IDisplayInstance> displayinstances = SetupMockDisplayInstanceCollection();
+         IEnumerable<IClientInstance> clientInstances = new List<IClientInstance>();
+
+         _mocks.ReplayAll();
+
+         var markupGenerator = new MarkupGenerator(prefs);
+         markupGenerator.Generate(displayinstances, clientInstances);
+
+         Assert.IsNotNull(markupGenerator.XmlFilePaths);
+         Assert.IsNull(markupGenerator.HtmlFilePaths);
+         Assert.IsNull(markupGenerator.ClientDataFilePath);
+
+         _mocks.VerifyAll();
+      }
+
+      [Test]
+      public void DontGenerateTest()
+      {
+         IPreferenceSet prefs = SetupMockPreferenceSet();
+         Expect.Call(prefs.GetPreference<bool>(Preference.WebGenCopyXml)).Return(false);
+         Expect.Call(prefs.GetPreference<bool>(Preference.WebGenCopyHtml)).Return(false);
+         Expect.Call(prefs.GetPreference<bool>(Preference.WebGenCopyClientData)).Return(false);
+
+         IEnumerable<IDisplayInstance> displayinstances = SetupMockDisplayInstanceCollection();
+         IEnumerable<IClientInstance> clientInstances = new List<IClientInstance>();
+
+         _mocks.ReplayAll();
+
+         var markupGenerator = new MarkupGenerator(prefs);
+         markupGenerator.Generate(displayinstances, clientInstances);
+
+         Assert.IsNull(markupGenerator.XmlFilePaths);
+         Assert.IsNull(markupGenerator.HtmlFilePaths);
+         Assert.IsNull(markupGenerator.ClientDataFilePath);
+
+         _mocks.VerifyAll();
+      }
+      
+      [Test]
+      [ExpectedException(typeof(ArgumentNullException))]
+      public void GenerateArgumentNullTest1()
+      {
+         var prefs = SetupMockPreferenceSet();
+         
+         var markupGenerator = new MarkupGenerator(prefs);
+         markupGenerator.Generate(null, new List<IClientInstance>());
+      }
+
+      [Test]
+      [ExpectedException(typeof(ArgumentNullException))]
+      public void GenerateArgumentNullTest2()
+      {
+         var prefs = SetupMockPreferenceSet();
+
+         var markupGenerator = new MarkupGenerator(prefs);
+         markupGenerator.Generate(SetupMockDisplayInstanceCollection(), null);
       }
 
       [Test]
       public void GenerateXmlTest()
       {
          IPreferenceSet prefs = SetupMockPreferenceSet();
-         ICollection<IDisplayInstance> instances = SetupMockClientInstanceCollection();
+         IEnumerable<IDisplayInstance> instances = SetupMockDisplayInstanceCollection();
          
          _mocks.ReplayAll();
 
          var markupGenerator = new MarkupGenerator(prefs);
-         markupGenerator.DoXmlGeneration(TestFolder, instances);
+         markupGenerator.GenerateXml(instances);
          
-         Assert.IsTrue(File.Exists(Path.Combine(TestFolder, "Overview.xml")));
-         Assert.IsTrue(File.Exists(Path.Combine(TestFolder, "Instances.xml")));
+         Assert.AreEqual(2, markupGenerator.XmlFilePaths.Count);
+         Assert.AreEqual(Path.Combine(Path.GetTempPath(), "Overview.xml"), markupGenerator.XmlFilePaths[0]);
+         Assert.AreEqual(Path.Combine(Path.GetTempPath(), "Instances.xml"), markupGenerator.XmlFilePaths[1]);
          
          _mocks.VerifyAll();
       }
@@ -68,20 +150,37 @@ namespace HFM.Instances.Tests
       public void GenerateHtmlTest()
       {
          IPreferenceSet prefs = SetupMockPreferenceSet();
-         ICollection<IDisplayInstance> instances = SetupMockClientInstanceCollection();
+         IEnumerable<IDisplayInstance> instances = SetupMockDisplayInstanceCollection();
 
          _mocks.ReplayAll();
 
          var markupGenerator = new MarkupGenerator(prefs);
-         markupGenerator.DoHtmlGeneration(TestFolder, instances);
+         markupGenerator.GenerateHtml(instances);
 
-         Assert.IsTrue(File.Exists(Path.Combine(TestFolder, "index.html")));
-         Assert.IsTrue(File.Exists(Path.Combine(TestFolder, "mobile.html")));
-         Assert.IsTrue(File.Exists(Path.Combine(TestFolder, "summary.html")));
-         Assert.IsTrue(File.Exists(Path.Combine(TestFolder, "mobilesummary.html")));
-         Assert.IsTrue(File.Exists(Path.Combine(TestFolder, "Test1.html")));
-         Assert.IsTrue(File.Exists(Path.Combine(TestFolder, "Test2.html")));
+         Assert.AreEqual(6, markupGenerator.HtmlFilePaths.Count);
+         Assert.AreEqual(Path.Combine(Path.GetTempPath(), "index.html"), markupGenerator.HtmlFilePaths[0]);
+         Assert.AreEqual(Path.Combine(Path.GetTempPath(), "mobile.html"), markupGenerator.HtmlFilePaths[1]);
+         Assert.AreEqual(Path.Combine(Path.GetTempPath(), "summary.html"), markupGenerator.HtmlFilePaths[2]);
+         Assert.AreEqual(Path.Combine(Path.GetTempPath(), "mobilesummary.html"), markupGenerator.HtmlFilePaths[3]);
+         Assert.AreEqual(Path.Combine(Path.GetTempPath(), "Test2.html"), markupGenerator.HtmlFilePaths[4]);
+         Assert.AreEqual(Path.Combine(Path.GetTempPath(), "Test1.html"), markupGenerator.HtmlFilePaths[5]);
          
+         _mocks.VerifyAll();
+      }
+
+      [Test]
+      public void GenerateClientDataTest()
+      {
+         IPreferenceSet prefs = SetupMockPreferenceSet();
+         IEnumerable<IClientInstance> instances = new List<IClientInstance>();
+
+         _mocks.ReplayAll();
+
+         var markupGenerator = new MarkupGenerator(prefs);
+         markupGenerator.GenerateClientData(instances);
+
+         Assert.IsNotNull(markupGenerator.ClientDataFilePath);
+
          _mocks.VerifyAll();
       }
 
@@ -97,7 +196,7 @@ namespace HFM.Instances.Tests
          return prefs;
       }
 
-      private ICollection<IDisplayInstance> SetupMockClientInstanceCollection()
+      private IEnumerable<IDisplayInstance> SetupMockDisplayInstanceCollection()
       {
          var newProtein = _mocks.DynamicMock<IProtein>();
       

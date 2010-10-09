@@ -84,7 +84,7 @@ namespace HFM.Framework
       public const string LocalFahLog = "FAHlog.txt";
       public const string LocalUnitInfo = "unitinfo.txt";
       public const string LocalQueue = "queue.dat";
-      public const string LocalExternal = "External.dat";
+      public const string LocalExternal = "ClientData.dat";
 
       #endregion
    }

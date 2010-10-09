@@ -191,6 +191,7 @@ namespace HFM.Forms
                txtWebSiteBase.Enabled = _scheduledTasksModel.GenerateWeb;
                chkHtml.Enabled = _scheduledTasksModel.GenerateWeb;
                chkXml.Enabled = _scheduledTasksModel.GenerateWeb;
+               chkClientData.Enabled = _scheduledTasksModel.GenerateWeb;
                chkFAHlog.Enabled = _scheduledTasksModel.GenerateWeb;
                btnTestConnection.Enabled = _scheduledTasksModel.GenerateWeb;
                btnBrowseWebFolder.Enabled = _scheduledTasksModel.GenerateWeb;
@@ -351,6 +352,8 @@ namespace HFM.Forms
          chkHtml.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
          chkXml.DataBindings.Add("Checked", _scheduledTasksModel, "CopyXml", false, DataSourceUpdateMode.OnPropertyChanged);
          chkXml.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkClientData.DataBindings.Add("Checked", _scheduledTasksModel, "CopyClientData", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkClientData.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
          chkFAHlog.DataBindings.Add("Checked", _scheduledTasksModel, "CopyFAHlog", false, DataSourceUpdateMode.OnPropertyChanged);
          chkFAHlog.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
          pnlFtpMode.DataSource = _scheduledTasksModel;

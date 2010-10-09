@@ -239,6 +239,7 @@ namespace HFM.Preferences
          _prefs.Add(Preference.WebGenFtpMode, new Metadata<FtpType>());
          _prefs.Add(Preference.WebGenCopyHtml, new Metadata<bool>());
          _prefs.Add(Preference.WebGenCopyXml, new Metadata<bool>());
+         _prefs.Add(Preference.WebGenCopyClientData, new Metadata<bool>());
          _prefs.Add(Preference.WebGenLimitLogSize, new Metadata<bool>());
          _prefs.Add(Preference.WebGenLimitLogSizeLength, new Metadata<int>());
          _prefs.Add(Preference.CssFile, new Metadata<string>());
@@ -360,6 +361,7 @@ namespace HFM.Preferences
          SetPreference(Preference.WebGenFtpMode, GetFtpType());
          SetPreference(Preference.WebGenCopyHtml, Settings.Default.WebGenCopyHtml);
          SetPreference(Preference.WebGenCopyXml, Settings.Default.WebGenCopyXml);
+         SetPreference(Preference.WebGenCopyClientData, Settings.Default.WebGenCopyClientData);
          SetPreference(Preference.WebGenLimitLogSize, Settings.Default.WebGenLimitLogSize);
          SetPreference(Preference.WebGenLimitLogSizeLength, Settings.Default.WebGenLimitLogSizeLength);
          SetPreference(Preference.CssFile, Settings.Default.CSSFile);
@@ -748,6 +750,7 @@ namespace HFM.Preferences
             Settings.Default.WebGenFtpMode = GetPreference<FtpType>(Preference.WebGenFtpMode).ToString();
             Settings.Default.WebGenCopyHtml = GetPreference<bool>(Preference.WebGenCopyHtml);
             Settings.Default.WebGenCopyXml = GetPreference<bool>(Preference.WebGenCopyXml);
+            Settings.Default.WebGenCopyClientData = GetPreference<bool>(Preference.WebGenCopyClientData);
             Settings.Default.WebGenLimitLogSize = GetPreference<bool>(Preference.WebGenLimitLogSize);
             Settings.Default.WebGenLimitLogSizeLength = GetPreference<int>(Preference.WebGenLimitLogSizeLength);
             Settings.Default.CSSFile = GetPreference<string>(Preference.CssFile);

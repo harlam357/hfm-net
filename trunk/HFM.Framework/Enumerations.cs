@@ -239,6 +239,7 @@ namespace HFM.Framework
       WebGenFtpMode,
       WebGenCopyHtml,
       WebGenCopyXml,
+      WebGenCopyClientData,
       WebGenLimitLogSize,
       WebGenLimitLogSizeLength,
       CssFile,

@@ -241,7 +241,7 @@ namespace HFM.Instances
          }
          catch (NullReferenceException)
          {
-            OnWarningMessage("Cannot load remote External.dat filename.");
+            OnWarningMessage("Cannot load remote external filename.");
             dataInterface.SetSetting(ClientInstanceSettingsKeys.ExternalFileName, Constants.LocalExternal);
          }
          

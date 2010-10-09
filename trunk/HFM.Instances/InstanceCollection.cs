@@ -29,7 +29,6 @@ using System.IO;
 using System.ComponentModel;
 using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Collections.Generic;
@@ -214,9 +213,14 @@ namespace HFM.Instances
       public bool ChangedAfterSave { get; private set; }
 
       /// <summary>
-      /// Network Operations Interface
+      /// Markup (HTML, XML, Client Data) Generator Interface
       /// </summary>
-      private NetworkOps _networkOps;
+      private IMarkupGenerator _markupGenerator;
+
+      /// <summary>
+      /// Website (HTML, XML, Client Data) Deployer
+      /// </summary>
+      private IWebsiteDeployer _websiteDeployer;
       
       /// <summary>
       /// Preferences Interface
@@ -570,7 +574,8 @@ namespace HFM.Instances
       
       #endregion
 
-      #region List Like Implementation (eventually implement IList or ICollection)
+      #region Add/Edit/Remove/Clear/Contains
+      
       /// <summary>
       /// Add an Instance
       /// </summary>
@@ -737,6 +742,7 @@ namespace HFM.Instances
             instance => instance.Settings.InstanceName.ToUpperInvariant() == instanceName.ToUpperInvariant());
          return findInstance != null;
       }
+      
       #endregion
 
       #region Retrieval Logic
@@ -770,42 +776,26 @@ namespace HFM.Instances
          Debug.Assert(_prefs.GetPreference<bool>(Preference.GenerateWeb));
 
          // lazy initialize
-         var markupGenerator = InstanceProvider.GetInstance<IMarkupGenerator>();
+         if (_markupGenerator == null) _markupGenerator = InstanceProvider.GetInstance<IMarkupGenerator>();
+         if (_websiteDeployer == null) _websiteDeployer = InstanceProvider.GetInstance<IWebsiteDeployer>();
 
          try
          {
-            if (markupGenerator.GenerationInProgress)
+            if (_markupGenerator.GenerationInProgress)
             {
                HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Web Generation already in progress...");
             }
             else
             {
+               DateTime start = HfmTrace.ExecStart;
+            
                HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Starting Web Generation...");
 
-               var uploadHtml = _prefs.GetPreference<bool>(Preference.WebGenCopyHtml);
-               var uploadXml = _prefs.GetPreference<bool>(Preference.WebGenCopyXml);
-               DateTime start = HfmTrace.ExecStart;
-               ICollection<IClientInstance> instances = GetCurrentInstanceArray();
                ICollection<IDisplayInstance> displayInstances = GetCurrentDisplayInstanceArray();
-               if (uploadHtml)
-               {
-                  // GenerateHtml calls GenerateXml - these two
-                  // calls are mutually exclusive
-                  markupGenerator.GenerateHtml(displayInstances);
-               }
-               else if (uploadXml)
-               {
-                  markupGenerator.GenerateXml(displayInstances);  
-               }
-               // For now if Xml Upload is choosen, generate
-               // the External Data File
-               string externalFilePath = null;
-               if (uploadXml)
-               {
-                  externalFilePath = BuildExternalDataFile(instances);
-               }
-
-               DeployWebsite(markupGenerator.HtmlFilePaths, markupGenerator.XmlFilePaths, externalFilePath, displayInstances);
+               ICollection<IClientInstance> clientInstances = GetCurrentInstanceArray();
+               
+               _markupGenerator.Generate(displayInstances, clientInstances);
+               _websiteDeployer.DeployWebsite(_markupGenerator.HtmlFilePaths, _markupGenerator.XmlFilePaths, _markupGenerator.ClientDataFilePath, displayInstances);
 
                HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format(CultureInfo.CurrentCulture, 
                   "Total Web Generation Execution Time: {0}", HfmTrace.GetExecTime(start)));
@@ -814,112 +804,6 @@ namespace HFM.Instances
          catch (Exception ex)
          {
             HfmTrace.WriteToHfmConsole(ex);
-         }
-      }
-      
-      private static string BuildExternalDataFile(IEnumerable<IClientInstance> instances)
-      {
-         var list = (from instance in instances
-                     where instance.Settings.ExternalInstance == false
-                     select (DisplayInstance)instance.DisplayInstance).ToList();
-
-         DateTime start = HfmTrace.ExecStart;
-
-         var filePath = Path.Combine(Path.GetTempPath(), Constants.LocalExternal);
-         try
-         {
-            using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
-            {
-               ProtoBuf.Serializer.Serialize(fileStream, list);
-            }
-            return filePath;
-         }
-         catch (Exception ex)
-         {
-            HfmTrace.WriteToHfmConsole(ex);
-            return null;
-         }
-         finally
-         {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, start);
-         }
-      }
-      
-      private void DeployWebsite(ICollection<string> htmlFilePaths, ICollection<string> xmlFilePaths,
-                                 string externalFilePath, ICollection<IDisplayInstance> instances)
-      {
-         Debug.Assert(_prefs.GetPreference<bool>(Preference.GenerateWeb));
-      
-         var copyHtml = _prefs.GetPreference<bool>(Preference.WebGenCopyHtml);
-         var copyXml = _prefs.GetPreference<bool>(Preference.WebGenCopyXml);
-      
-         Match match = StringOps.MatchFtpWithUserPassUrl(_prefs.GetPreference<string>(Preference.WebRoot));
-         if (match.Success)
-         {
-            string server = match.Result("${domain}");
-            string ftpPath = match.Result("${file}");
-            string username = match.Result("${username}");
-            string password = match.Result("${password}");
-
-            if (_networkOps == null) _networkOps = new NetworkOps();
-            
-            if (copyHtml)
-            {
-               _networkOps.FtpWebUpload(server, ftpPath, username, password, htmlFilePaths, instances, _prefs);
-            }
-            if (copyXml)
-            {
-               _networkOps.FtpXmlUpload(server, ftpPath, username, password, xmlFilePaths, _prefs);
-               // Issue 79
-               _networkOps.FtpUploadHelper(server, ftpPath, externalFilePath, username, password, _prefs.GetPreference<FtpType>(Preference.WebGenFtpMode));
-            }
-         }
-         else
-         {
-            var webRoot = _prefs.GetPreference<string>(Preference.WebRoot);
-            var cssFile = _prefs.GetPreference<string>(Preference.CssFile);
-
-            // Create the web folder (just in case)
-            if (Directory.Exists(webRoot) == false)
-            {
-               Directory.CreateDirectory(webRoot);
-            }
-
-            if (copyHtml)
-            {
-               // Copy the CSS file to the output directory
-               string cssFilePath = Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.CssFolderName), cssFile);
-               if (File.Exists(cssFilePath))
-               {
-                  File.Copy(cssFilePath, Path.Combine(webRoot, cssFile), true);
-               }
-
-               foreach (string filePath in htmlFilePaths)
-               {
-                  File.Copy(filePath, Path.Combine(webRoot, Path.GetFileName(filePath)), true);
-               }
-
-               if (_prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog))
-               {
-                  foreach (var instance in instances)
-                  {
-                     string cachedFahlogPath = Path.Combine(_prefs.CacheDirectory, instance.Settings.CachedFahLogName);
-                     if (File.Exists(cachedFahlogPath))
-                     {
-                        File.Copy(cachedFahlogPath, Path.Combine(webRoot, instance.Settings.CachedFahLogName), true);
-                     }
-                  }
-               }
-            }
-            if (copyXml)
-            {
-               foreach (string filePath in xmlFilePaths)
-               {
-                  File.Copy(filePath, Path.Combine(webRoot, Path.GetFileName(filePath)), true);
-               }
-               // Issue 79
-               File.Copy(externalFilePath, Path.Combine(webRoot, Path.GetFileName(externalFilePath)), true);
-            }
          }
       }
 

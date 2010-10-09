@@ -253,7 +253,9 @@ namespace HFM.Models
          {
             if (CopyHtml != value)
             {
-               if (value == false && CopyXml == false)
+               if (value == false && 
+                   CopyXml == false &&
+                   CopyClientData == false)
                {
                   return;
                }
@@ -270,12 +272,33 @@ namespace HFM.Models
          {
             if (CopyXml != value)
             {
-               if (value == false && CopyHtml == false)
+               if (value == false && 
+                   CopyHtml == false &&
+                   CopyClientData == false)
                {
                   CopyHtml = true;
                }
                _prefs.SetPreference(Preference.WebGenCopyXml, value);
                OnPropertyChanged("CopyXml");
+            }
+         }
+      }
+      
+      public bool CopyClientData
+      {
+         get { return _prefs.GetPreference<bool>(Preference.WebGenCopyClientData); }
+         set
+         {
+            if (CopyClientData != value)
+            {
+               if (value == false && 
+                   CopyHtml == false &&
+                   CopyXml == false)
+               {
+                  CopyHtml = true;
+               }
+               _prefs.SetPreference(Preference.WebGenCopyClientData, value);
+               OnPropertyChanged("CopyClientData");
             }
          }
       }

@@ -103,6 +103,7 @@
     <Compile Include="UnitInfoFactory.cs" />
     <Compile Include="UnitInfoLogic.cs" />
     <Compile Include="MarkupGenerator.cs" />
+    <Compile Include="WebsiteDeployer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HFM.Framework\HFM.Framework.csproj">

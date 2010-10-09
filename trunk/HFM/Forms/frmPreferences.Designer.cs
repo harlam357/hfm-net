@@ -110,6 +110,7 @@ namespace HFM.Forms
          this.cboShowStyle = new HFM.Classes.ComboBoxWrapper();
          this.labelWrapper2 = new HFM.Classes.LabelWrapper();
          this.grpInteractiveOptions = new HFM.Classes.GroupBoxWrapper();
+         this.chkEtaAsDate = new HFM.Classes.CheckBoxWrapper();
          this.chkMaintainSelected = new HFM.Classes.CheckBoxWrapper();
          this.chkCalcBonus = new HFM.Classes.CheckBoxWrapper();
          this.label2 = new HFM.Classes.LabelWrapper();
@@ -187,7 +188,7 @@ namespace HFM.Forms
          this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
          this.btnOK = new HFM.Classes.ButtonWrapper();
          this.btnCancel = new HFM.Classes.ButtonWrapper();
-         this.chkEtaAsDate = new HFM.Classes.CheckBoxWrapper();
+         this.chkClientData = new HFM.Classes.CheckBoxWrapper();
          this.tabControl1.SuspendLayout();
          this.tabSchdTasks.SuspendLayout();
          this.grpUpdateData.SuspendLayout();
@@ -372,6 +373,7 @@ namespace HFM.Forms
          // 
          // grpHTMLOutput
          // 
+         this.grpHTMLOutput.Controls.Add(this.chkClientData);
          this.grpHTMLOutput.Controls.Add(this.pnlFtpMode);
          this.grpHTMLOutput.Controls.Add(this.udLimitSize);
          this.grpHTMLOutput.Controls.Add(this.chkLimitSize);
@@ -402,7 +404,7 @@ namespace HFM.Forms
          this.pnlFtpMode.Location = new System.Drawing.Point(276, 71);
          this.pnlFtpMode.Name = "pnlFtpMode";
          this.pnlFtpMode.Size = new System.Drawing.Size(199, 26);
-         this.pnlFtpMode.TabIndex = 18;
+         this.pnlFtpMode.TabIndex = 15;
          this.pnlFtpMode.ValueMember = null;
          // 
          // radioActive
@@ -441,7 +443,7 @@ namespace HFM.Forms
          // udLimitSize
          // 
          this.udLimitSize.Enabled = false;
-         this.udLimitSize.Location = new System.Drawing.Point(322, 103);
+         this.udLimitSize.Location = new System.Drawing.Point(322, 143);
          this.udLimitSize.Maximum = new decimal(new int[] {
             10240,
             0,
@@ -454,7 +456,7 @@ namespace HFM.Forms
             0});
          this.udLimitSize.Name = "udLimitSize";
          this.udLimitSize.Size = new System.Drawing.Size(62, 20);
-         this.udLimitSize.TabIndex = 17;
+         this.udLimitSize.TabIndex = 14;
          this.udLimitSize.Value = new decimal(new int[] {
             1,
             0,
@@ -465,10 +467,10 @@ namespace HFM.Forms
          // 
          this.chkLimitSize.AutoSize = true;
          this.chkLimitSize.Enabled = false;
-         this.chkLimitSize.Location = new System.Drawing.Point(164, 104);
+         this.chkLimitSize.Location = new System.Drawing.Point(164, 144);
          this.chkLimitSize.Name = "chkLimitSize";
          this.chkLimitSize.Size = new System.Drawing.Size(158, 17);
-         this.chkLimitSize.TabIndex = 16;
+         this.chkLimitSize.TabIndex = 13;
          this.chkLimitSize.Text = "Limit FAHlog.txt size to (KB):";
          this.chkLimitSize.UseVisualStyleBackColor = true;
          // 
@@ -476,10 +478,10 @@ namespace HFM.Forms
          // 
          this.chkXml.AutoSize = true;
          this.chkXml.Enabled = false;
-         this.chkXml.Location = new System.Drawing.Point(143, 75);
+         this.chkXml.Location = new System.Drawing.Point(10, 98);
          this.chkXml.Name = "chkXml";
          this.chkXml.Size = new System.Drawing.Size(121, 17);
-         this.chkXml.TabIndex = 15;
+         this.chkXml.TabIndex = 10;
          this.chkXml.Text = "Copy XML to Target";
          this.chkXml.UseVisualStyleBackColor = true;
          // 
@@ -490,7 +492,7 @@ namespace HFM.Forms
          this.chkHtml.Location = new System.Drawing.Point(10, 75);
          this.chkHtml.Name = "chkHtml";
          this.chkHtml.Size = new System.Drawing.Size(129, 17);
-         this.chkHtml.TabIndex = 14;
+         this.chkHtml.TabIndex = 9;
          this.chkHtml.Text = "Copy HTML to Target";
          this.chkHtml.UseVisualStyleBackColor = true;
          // 
@@ -500,7 +502,7 @@ namespace HFM.Forms
          this.btnTestConnection.Location = new System.Drawing.Point(383, 15);
          this.btnTestConnection.Name = "btnTestConnection";
          this.btnTestConnection.Size = new System.Drawing.Size(100, 24);
-         this.btnTestConnection.TabIndex = 8;
+         this.btnTestConnection.TabIndex = 5;
          this.btnTestConnection.Text = "Test Connection";
          this.btnTestConnection.UseVisualStyleBackColor = true;
          this.btnTestConnection.Click += new System.EventHandler(this.btnTestConnection_Click);
@@ -509,10 +511,10 @@ namespace HFM.Forms
          // 
          this.chkFAHlog.AutoSize = true;
          this.chkFAHlog.Enabled = false;
-         this.chkFAHlog.Location = new System.Drawing.Point(10, 104);
+         this.chkFAHlog.Location = new System.Drawing.Point(10, 144);
          this.chkFAHlog.Name = "chkFAHlog";
          this.chkFAHlog.Size = new System.Drawing.Size(148, 17);
-         this.chkFAHlog.TabIndex = 9;
+         this.chkFAHlog.TabIndex = 12;
          this.chkFAHlog.Text = "Copy FAHlog.txt to Target";
          this.chkFAHlog.UseVisualStyleBackColor = true;
          // 
@@ -579,7 +581,7 @@ namespace HFM.Forms
          this.btnBrowseWebFolder.Location = new System.Drawing.Point(457, 43);
          this.btnBrowseWebFolder.Name = "btnBrowseWebFolder";
          this.btnBrowseWebFolder.Size = new System.Drawing.Size(24, 23);
-         this.btnBrowseWebFolder.TabIndex = 7;
+         this.btnBrowseWebFolder.TabIndex = 8;
          this.btnBrowseWebFolder.Text = "...";
          this.btnBrowseWebFolder.UseVisualStyleBackColor = true;
          this.btnBrowseWebFolder.Click += new System.EventHandler(this.btnBrowseWebFolder_Click);
@@ -599,7 +601,7 @@ namespace HFM.Forms
          this.txtWebSiteBase.Name = "txtWebSiteBase";
          this.txtWebSiteBase.ReadOnly = true;
          this.txtWebSiteBase.Size = new System.Drawing.Size(332, 20);
-         this.txtWebSiteBase.TabIndex = 6;
+         this.txtWebSiteBase.TabIndex = 7;
          this.txtWebSiteBase.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // lbl2WebSiteDir
@@ -608,7 +610,7 @@ namespace HFM.Forms
          this.lbl2WebSiteDir.Location = new System.Drawing.Point(7, 48);
          this.lbl2WebSiteDir.Name = "lbl2WebSiteDir";
          this.lbl2WebSiteDir.Size = new System.Drawing.Size(110, 13);
-         this.lbl2WebSiteDir.TabIndex = 5;
+         this.lbl2WebSiteDir.TabIndex = 6;
          this.lbl2WebSiteDir.Text = "Target Folder or URL:";
          // 
          // chkWebSiteGenerator
@@ -891,6 +893,16 @@ namespace HFM.Forms
          this.grpInteractiveOptions.TabIndex = 0;
          this.grpInteractiveOptions.TabStop = false;
          this.grpInteractiveOptions.Text = "Interactive Options";
+         // 
+         // chkEtaAsDate
+         // 
+         this.chkEtaAsDate.AutoSize = true;
+         this.chkEtaAsDate.Location = new System.Drawing.Point(256, 98);
+         this.chkEtaAsDate.Name = "chkEtaAsDate";
+         this.chkEtaAsDate.Size = new System.Drawing.Size(202, 17);
+         this.chkEtaAsDate.TabIndex = 9;
+         this.chkEtaAsDate.Text = "Show ETA value as a Date and Time";
+         this.chkEtaAsDate.UseVisualStyleBackColor = true;
          // 
          // chkMaintainSelected
          // 
@@ -1856,15 +1868,16 @@ namespace HFM.Forms
          this.btnCancel.UseVisualStyleBackColor = true;
          this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
          // 
-         // chkEtaAsDate
+         // chkClientData
          // 
-         this.chkEtaAsDate.AutoSize = true;
-         this.chkEtaAsDate.Location = new System.Drawing.Point(256, 98);
-         this.chkEtaAsDate.Name = "chkEtaAsDate";
-         this.chkEtaAsDate.Size = new System.Drawing.Size(202, 17);
-         this.chkEtaAsDate.TabIndex = 9;
-         this.chkEtaAsDate.Text = "Show ETA value as a Date and Time";
-         this.chkEtaAsDate.UseVisualStyleBackColor = true;
+         this.chkClientData.AutoSize = true;
+         this.chkClientData.Enabled = false;
+         this.chkClientData.Location = new System.Drawing.Point(10, 121);
+         this.chkClientData.Name = "chkClientData";
+         this.chkClientData.Size = new System.Drawing.Size(151, 17);
+         this.chkClientData.TabIndex = 11;
+         this.chkClientData.Text = "Copy Client Data to Target";
+         this.chkClientData.UseVisualStyleBackColor = true;
          // 
          // frmPreferences
          // 
@@ -2065,5 +2078,6 @@ namespace HFM.Forms
       private HFM.Classes.CheckBoxWrapper chkLimitSize;
       private RadioPanel pnlFtpMode;
       private HFM.Classes.CheckBoxWrapper chkEtaAsDate;
+      private HFM.Classes.CheckBoxWrapper chkClientData;
    }
 }
