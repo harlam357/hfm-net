@@ -35,6 +35,8 @@ namespace HFM.Framework
       public const string BenchmarkCacheFileName = "BenchmarkCache.dat";
       public const string CompletedUnitsCsvFileName = "CompletedUnits.csv";
 
+      public const string PluginsFolderName = "Plugins";
+
       public const string CssFolderName = "CSS";
       public const string XmlFolderName = "XML";
       public const string XsltFolderName = "XSL";

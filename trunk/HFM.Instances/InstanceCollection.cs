@@ -306,7 +306,7 @@ namespace HFM.Instances
          var serializers = new List<IClientInstanceSettingsSerializer>();
          serializers.Add(new ClientInstanceXmlSerializer());
          
-         var di = new DirectoryInfo(Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), "ClientSettings"));
+         var di = new DirectoryInfo(Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), Constants.PluginsFolderName));
          if (di.Exists)
          {
             var files = di.GetFiles("*.dll");
@@ -337,8 +337,7 @@ namespace HFM.Instances
          foreach (Type t in asm.GetTypes())
          {
             // Only look at public types
-            if (t.IsPublic &&
-                !((t.Attributes & TypeAttributes.Abstract) == TypeAttributes.Abstract))
+            if (t.IsPublic && (t.Attributes & TypeAttributes.Abstract) != TypeAttributes.Abstract)
             {
                // See if this type implements our interface
                var interfaceType = t.GetInterface("IClientInstanceSettingsSerializer", false);
@@ -600,6 +599,9 @@ namespace HFM.Instances
                "Client Name '{0}' already exists.", instance.Settings.InstanceName));
          }
 
+         // Issue 230
+         bool hasInstances = HasInstances;
+         
          // lock added here - 9/28/10
          lock (_instanceCollection)
          {
@@ -613,6 +615,12 @@ namespace HFM.Instances
 
             ChangedAfterSave = true;
             OnInstanceAdded(EventArgs.Empty);
+            
+            // Issue 230
+            if (hasInstances == false)
+            {
+               SetTimerState();
+            }
          }
       }
       

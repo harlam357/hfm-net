@@ -336,9 +336,9 @@ namespace HFM.Forms
             return;
          }
 
-         var updatePresenter = new UpdatePresenter(this, HfmTrace.WriteToHfmConsole,
+         var updatePresenter = new UpdatePresenter(HfmTrace.WriteToHfmConsole,
             update, NetworkOps.GetProxy(), Constants.ApplicationName, PlatformOps.ApplicationVersionWithRevision);
-         updatePresenter.ShowView();
+         updatePresenter.Show(this);
          HandleUpdatePresenterResults(updatePresenter);
       }
       

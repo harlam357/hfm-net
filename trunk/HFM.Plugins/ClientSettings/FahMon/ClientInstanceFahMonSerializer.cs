@@ -133,8 +133,8 @@ namespace HFM.Plugins.ClientSettings.FahMon
          {
             dataInterface.SetSetting(ClientInstanceSettingsKeys.InstanceType, "FtpInstance");
             dataInterface.SetSetting(ClientInstanceSettingsKeys.InstanceName, instanceName);
-            dataInterface.SetSetting(ClientInstanceSettingsKeys.Server, matchUrl.Result("${domain}"));
-            dataInterface.SetSetting(ClientInstanceSettingsKeys.Path, matchUrl.Result("${file}"));
+            dataInterface.SetSetting(ClientInstanceSettingsKeys.Server, matchFtpUserPass.Result("${domain}"));
+            dataInterface.SetSetting(ClientInstanceSettingsKeys.Path, matchFtpUserPass.Result("${file}"));
             dataInterface.SetSetting(ClientInstanceSettingsKeys.Username, matchFtpUserPass.Result("${username}"));
             dataInterface.SetSetting(ClientInstanceSettingsKeys.Password, matchFtpUserPass.Result("${password}"));
          }
