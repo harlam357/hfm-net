@@ -158,7 +158,9 @@ namespace HFM.Instances.Tests
          _mocks.ReplayAll();
 
          var database = new UnitInfoDatabase(_proteinCollection) { DatabaseFilePath = TestFile };
-         database.ImportCompletedUnits(database.ReadCompletedUnits("..\\..\\TestFiles\\CompletedUnits.csv").Entries);
+         var completedUnitsReader = new CompletedUnitsFileReader { CompletedUnitsFilePath = "..\\..\\TestFiles\\CompletedUnits.csv" };
+         completedUnitsReader.Process();
+         database.ImportCompletedUnits(completedUnitsReader.Result.Entries);
 
          var rows = database.QueryUnitData(new QueryParameters());
          Assert.AreEqual(44, rows.Count);
@@ -217,21 +219,21 @@ namespace HFM.Instances.Tests
       [Test]
       public void ReadCompletedUnitsTest()
       {
-         var database = new UnitInfoDatabase(_proteinCollection);
-         var result = database.ReadCompletedUnits("..\\..\\TestFiles\\CompletedUnits.csv");
-         Assert.AreEqual(0, result.Duplicates);
-         Assert.AreEqual(44, result.Entries.Count);
-         Assert.AreEqual(0, result.ErrorLines.Count);
+         var completedUnitsReader = new CompletedUnitsFileReader { CompletedUnitsFilePath = "..\\..\\TestFiles\\CompletedUnits.csv" };
+         completedUnitsReader.Process();
+         Assert.AreEqual(0, completedUnitsReader.Result.Duplicates);
+         Assert.AreEqual(44, completedUnitsReader.Result.Entries.Count);
+         Assert.AreEqual(0, completedUnitsReader.Result.ErrorLines.Count);
       }
 
       [Test]
       public void ReadCompletedUnitsLargeTest()
       {
-         var database = new UnitInfoDatabase(_proteinCollection);
-         var result = database.ReadCompletedUnits("..\\..\\TestFiles\\CompletedUnitsLarge.csv");
-         Assert.AreEqual(8, result.Duplicates);
-         Assert.AreEqual(6994, result.Entries.Count);
-         Assert.AreEqual(153, result.ErrorLines.Count);
+         var completedUnitsReader = new CompletedUnitsFileReader { CompletedUnitsFilePath = "..\\..\\TestFiles\\CompletedUnitsLarge.csv" };
+         completedUnitsReader.Process();
+         Assert.AreEqual(8, completedUnitsReader.Result.Duplicates);
+         Assert.AreEqual(6994, completedUnitsReader.Result.Entries.Count);
+         Assert.AreEqual(153, completedUnitsReader.Result.ErrorLines.Count);
       }
       
       private static IProteinCollection SetupMockProteinCollection(MockRepository mocks)

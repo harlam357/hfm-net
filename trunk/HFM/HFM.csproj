@@ -241,6 +241,12 @@
     </Compile>
     <Compile Include="Forms\HistoryPresenter.cs" />
     <Compile Include="Forms\InstanceSettingsPresenter.cs" />
+    <Compile Include="Forms\frmUnitImport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmUnitImport.Designer.cs">
+      <DependentUpon>frmUnitImport.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\HistoryPresenterModel.cs" />
     <Compile Include="Models\OptionsModel.cs" />
     <Compile Include="Models\ReportingModel.cs" />
@@ -291,6 +297,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmQuery.resx">
       <DependentUpon>frmQuery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmUnitImport.resx">
+      <DependentUpon>frmUnitImport.cs</DependentUpon>
     </EmbeddedResource>
     <Content Include="..\Castle Windsor 2.0\Windsor License.txt">
       <Link>Windsor License.txt</Link>

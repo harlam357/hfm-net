@@ -61,11 +61,6 @@ namespace HFM.Framework
       void ClearProjectsNotFoundCache();
 
       /// <summary>
-      /// Download project information from Stanford University (psummary.html)
-      /// </summary>
-      IAsyncResult BeginDownloadFromStanford();
-
-      /// <summary>
       /// Get Protein (should be called from worker thread)
       /// </summary>
       /// <param name="projectId">Project ID</param>

@@ -36,8 +36,12 @@
          this.menuStrip1 = new System.Windows.Forms.MenuStrip();
          this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuFileImportCompletedUnits = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuFileSep1 = new System.Windows.Forms.ToolStripSeparator();
+         this.mnuFileExit = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuView = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuViewAutoSizeGrid = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuViewSep1 = new System.Windows.Forms.ToolStripSeparator();
+         this.mnuViewRefresh = new System.Windows.Forms.ToolStripMenuItem();
          this.dataGridMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
          this.dataGridDeleteWorkUnitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.dataGridView1 = new HFM.Classes.HistoryGridViewWrapper();
@@ -59,12 +63,8 @@
          this.btnDelete = new HFM.Classes.ButtonWrapper();
          this.btnEdit = new HFM.Classes.ButtonWrapper();
          this.grpResults = new HFM.Classes.GroupBoxWrapper();
-         this.splitContainerWrapper1 = new HFM.Classes.SplitContainerWrapper();
-         this.mnuViewSep1 = new System.Windows.Forms.ToolStripSeparator();
-         this.mnuViewRefresh = new System.Windows.Forms.ToolStripMenuItem();
-         this.mnuFileSep1 = new System.Windows.Forms.ToolStripSeparator();
-         this.mnuFileExit = new System.Windows.Forms.ToolStripMenuItem();
          this.chkLast = new HFM.Classes.CheckBoxWrapper();
+         this.splitContainerWrapper1 = new HFM.Classes.SplitContainerWrapper();
          this.menuStrip1.SuspendLayout();
          this.dataGridMenuStrip.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -105,6 +105,18 @@
          this.mnuFileImportCompletedUnits.Text = "Import &CompletedUnits.csv";
          this.mnuFileImportCompletedUnits.Click += new System.EventHandler(this.mnuFileImportCompletedUnits_Click);
          // 
+         // mnuFileSep1
+         // 
+         this.mnuFileSep1.Name = "mnuFileSep1";
+         this.mnuFileSep1.Size = new System.Drawing.Size(212, 6);
+         // 
+         // mnuFileExit
+         // 
+         this.mnuFileExit.Name = "mnuFileExit";
+         this.mnuFileExit.Size = new System.Drawing.Size(215, 22);
+         this.mnuFileExit.Text = "&Exit";
+         this.mnuFileExit.Click += new System.EventHandler(this.mnuFileExit_Click);
+         // 
          // mnuView
          // 
          this.mnuView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -121,6 +133,19 @@
          this.mnuViewAutoSizeGrid.Size = new System.Drawing.Size(195, 22);
          this.mnuViewAutoSizeGrid.Text = "Auto Size &Grid Columns";
          this.mnuViewAutoSizeGrid.Click += new System.EventHandler(this.mnuViewAutoSizeGrid_Click);
+         // 
+         // mnuViewSep1
+         // 
+         this.mnuViewSep1.Name = "mnuViewSep1";
+         this.mnuViewSep1.Size = new System.Drawing.Size(192, 6);
+         // 
+         // mnuViewRefresh
+         // 
+         this.mnuViewRefresh.Name = "mnuViewRefresh";
+         this.mnuViewRefresh.ShortcutKeys = System.Windows.Forms.Keys.F5;
+         this.mnuViewRefresh.Size = new System.Drawing.Size(195, 22);
+         this.mnuViewRefresh.Text = "&Refresh";
+         this.mnuViewRefresh.Click += new System.EventHandler(this.mnuViewRefresh_Click);
          // 
          // dataGridMenuStrip
          // 
@@ -151,7 +176,7 @@
          dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
          dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
          dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-         dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+         dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
          this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
          this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
          dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -380,6 +405,16 @@
          this.grpResults.TabStop = false;
          this.grpResults.Text = "Results";
          // 
+         // chkLast
+         // 
+         this.chkLast.AutoSize = true;
+         this.chkLast.Location = new System.Drawing.Point(345, 54);
+         this.chkLast.Name = "chkLast";
+         this.chkLast.Size = new System.Drawing.Size(76, 17);
+         this.chkLast.TabIndex = 14;
+         this.chkLast.Text = "Show Last";
+         this.chkLast.UseVisualStyleBackColor = true;
+         // 
          // splitContainerWrapper1
          // 
          this.splitContainerWrapper1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -400,41 +435,6 @@
          this.splitContainerWrapper1.Size = new System.Drawing.Size(903, 292);
          this.splitContainerWrapper1.SplitterDistance = 90;
          this.splitContainerWrapper1.TabIndex = 8;
-         // 
-         // mnuViewSep1
-         // 
-         this.mnuViewSep1.Name = "mnuViewSep1";
-         this.mnuViewSep1.Size = new System.Drawing.Size(192, 6);
-         // 
-         // mnuViewRefresh
-         // 
-         this.mnuViewRefresh.Name = "mnuViewRefresh";
-         this.mnuViewRefresh.ShortcutKeys = System.Windows.Forms.Keys.F5;
-         this.mnuViewRefresh.Size = new System.Drawing.Size(195, 22);
-         this.mnuViewRefresh.Text = "&Refresh";
-         this.mnuViewRefresh.Click += new System.EventHandler(this.mnuViewRefresh_Click);
-         // 
-         // mnuFileSep1
-         // 
-         this.mnuFileSep1.Name = "mnuFileSep1";
-         this.mnuFileSep1.Size = new System.Drawing.Size(212, 6);
-         // 
-         // mnuFileExit
-         // 
-         this.mnuFileExit.Name = "mnuFileExit";
-         this.mnuFileExit.Size = new System.Drawing.Size(215, 22);
-         this.mnuFileExit.Text = "&Exit";
-         this.mnuFileExit.Click += new System.EventHandler(this.mnuFileExit_Click);
-         // 
-         // chkLast
-         // 
-         this.chkLast.AutoSize = true;
-         this.chkLast.Location = new System.Drawing.Point(345, 54);
-         this.chkLast.Name = "chkLast";
-         this.chkLast.Size = new System.Drawing.Size(76, 17);
-         this.chkLast.TabIndex = 14;
-         this.chkLast.Text = "Show Last";
-         this.chkLast.UseVisualStyleBackColor = true;
          // 
          // frmHistory
          // 

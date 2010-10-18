@@ -45,6 +45,8 @@ namespace HFM.Forms.Tests
       private IQueryParameterContainer _queryContainer;
       private IHistoryView _view;
       private IQueryView _queryView;
+      private IProgressDialogView _unitImportView;
+      private ICompletedUnitsFileReader _completedUnitsReader;
       private IOpenFileDialogView _openFileView;
       private ISaveFileDialogView _saveFileView;
       private IMessageBoxView _messageBoxView;
@@ -62,6 +64,9 @@ namespace HFM.Forms.Tests
          SetupResult.For(_queryContainer.QueryList).Return(list);
          _view = _mocks.DynamicMock<IHistoryView>();
          _queryView = _mocks.DynamicMock<IQueryView>();
+         _unitImportView = _mocks.DynamicMock<IProgressDialogView>();
+         _completedUnitsReader = _mocks.DynamicMock<ICompletedUnitsFileReader>();
+         SetupResult.For(_unitImportView.ProcessRunner).Return(_completedUnitsReader);
          _openFileView = _mocks.DynamicMock<IOpenFileDialogView>();
          _saveFileView = _mocks.DynamicMock<ISaveFileDialogView>();
          _messageBoxView = _mocks.DynamicMock<IMessageBoxView>();
@@ -71,7 +76,8 @@ namespace HFM.Forms.Tests
       
       private HistoryPresenter NewPresenter()
       {
-         return new HistoryPresenter(_prefs, _database, _queryContainer, _view, _queryView, _openFileView, _saveFileView, _messageBoxView, _model);
+         return new HistoryPresenter(_prefs, _database, _queryContainer, _view, _queryView, _unitImportView,
+                                     _completedUnitsReader, _openFileView, _saveFileView, _messageBoxView, _model);
       }
    
       [Test]
@@ -545,7 +551,8 @@ namespace HFM.Forms.Tests
       {
          Expect.Call(_openFileView.ShowDialog(_view)).Return(DialogResult.OK);
          var result = new CompletedUnitsReadResult();
-         Expect.Call(_database.ReadCompletedUnits(String.Empty)).IgnoreArguments().Return(result);
+         Expect.Call(() => _unitImportView.Process());
+         SetupResult.For(_completedUnitsReader.Result).Return(result);
          Expect.Call(() => _database.ImportCompletedUnits(result.Entries));
          _mocks.ReplayAll();
          _presenter = NewPresenter();
@@ -557,7 +564,8 @@ namespace HFM.Forms.Tests
       public void ImportCompletedUnitsClickImportFailedTest()
       {
          Expect.Call(_openFileView.ShowDialog(_view)).Return(DialogResult.OK);
-         Expect.Call(_database.ReadCompletedUnits(String.Empty)).IgnoreArguments().Throw(new IOException());
+         Expect.Call(() => _unitImportView.Process());
+         SetupResult.For(_completedUnitsReader.Exception).Return(new IOException());
          Expect.Call(() => _messageBoxView.ShowError(_view, String.Empty, String.Empty)).IgnoreArguments();
          _mocks.ReplayAll();
          _presenter = NewPresenter();
@@ -580,7 +588,7 @@ namespace HFM.Forms.Tests
       {
          Expect.Call(_messageBoxView.AskYesNoQuestion(_view, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
          Expect.Call(_saveFileView.ShowDialog(_view)).Return(DialogResult.OK);
-         Expect.Call(() => _database.WriteCompletedUnitErrorLines(String.Empty, null)).IgnoreArguments();
+         Expect.Call(() => _completedUnitsReader.WriteCompletedUnitErrorLines(String.Empty, null)).IgnoreArguments();
          _mocks.ReplayAll();
          _presenter = NewPresenter();
          var result = new CompletedUnitsReadResult();
@@ -595,7 +603,7 @@ namespace HFM.Forms.Tests
       {
          Expect.Call(_messageBoxView.AskYesNoQuestion(_view, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
          Expect.Call(_saveFileView.ShowDialog(_view)).Return(DialogResult.OK);
-         Expect.Call(() => _database.WriteCompletedUnitErrorLines(String.Empty, null)).IgnoreArguments().Throw(new IOException());
+         Expect.Call(() => _completedUnitsReader.WriteCompletedUnitErrorLines(String.Empty, null)).IgnoreArguments().Throw(new IOException());
          Expect.Call(() => _messageBoxView.ShowError(_view, String.Empty, String.Empty)).IgnoreArguments();
          _mocks.ReplayAll();
          _presenter = NewPresenter();

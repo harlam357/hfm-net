@@ -26,6 +26,8 @@ using System.Text;
 
 using Majestic12;
 
+using harlam357.Windows.Forms;
+
 using HFM.Framework;
 
 namespace HFM.Proteins
@@ -64,6 +66,13 @@ namespace HFM.Proteins
       /// </summary>
       public IPreferenceSet Prefs { get; set; }
 
+      public bool Processing { get; private set; }
+
+      public Exception Exception
+      {
+         get { throw new NotImplementedException(); }
+      }
+
       private readonly HTMLparser _htmlParser;
       
       #endregion
@@ -76,21 +85,27 @@ namespace HFM.Proteins
 
       #region Events and Event Wrappers
 
-      public event EventHandler<DownloadProgressEventArgs> DownloadProgress;
-      private void OnDownloadProgress(DownloadProgressEventArgs e)
+      /// <summary>
+      /// Project (Protein) Download Progress
+      /// </summary>
+      public event EventHandler<ProgressEventArgs> ProgressChanged;
+      private void OnDownloadProgress(ProgressEventArgs e)
       {
-         if (DownloadProgress != null)
+         if (ProgressChanged != null)
          {
-            DownloadProgress(this, e);
+            ProgressChanged(this, e);
          }
       }
 
-      public event EventHandler ProjectDownloadFinished;
+      /// <summary>
+      /// Project (Protein) Download has Finished
+      /// </summary>
+      public event EventHandler ProcessFinished;
       private void OnProjectDownloadFinished(EventArgs e)
       {
-         if (ProjectDownloadFinished != null)
+         if (ProcessFinished != null)
          {
-            ProjectDownloadFinished(this, e);
+            ProcessFinished(this, e);
          }
       }
       
@@ -120,10 +135,20 @@ namespace HFM.Proteins
       /// <summary>
       /// Download project information from Stanford University (THREAD SAFE)
       /// </summary>
-      public void DownloadFromStanford()
+      public void Process()
       {
          var projectDownloadUrl = Prefs.GetPreference<string>(Preference.ProjectDownloadUrl);
          DownloadFromStanford(new Uri(projectDownloadUrl), true);
+      }
+
+      public bool SupportsCancellation
+      {
+         get { return false; }
+      }
+
+      public void Cancel()
+      {
+         throw new NotImplementedException();
       }
 
       /// <summary>
@@ -133,44 +158,54 @@ namespace HFM.Proteins
       {
          lock (DownloadLock)
          {
-            // if a download was attempted in the last hour, don't execute again
-            TimeSpan lastDownloadDifference = DateTime.Now.Subtract(LastDownloadTime);
-            if (lastDownloadDifference.TotalHours > 1)
+            if (CheckLastDownloadTime() == false)
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Attempting to Download new Project data...", true);
-               try
-               {
-                  ReadFromProjectSummaryHtml(projectDownloadUrl);
-                  LastDownloadTime = DateTime.Now;
+               return;
+            }
+         
+            Processing = true;
 
-                  string loadedProteins = String.Format(CultureInfo.CurrentCulture, "Loaded {0} Proteins from Stanford.", Dictionary.Count);
-                  OnDownloadProgress(new DownloadProgressEventArgs(100, loadedProteins));
+            HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Attempting to Download new Project data...", true);
+            try
+            {
+               ReadFromProjectSummaryHtml(projectDownloadUrl);
+               LastDownloadTime = DateTime.Now;
 
-                  if (Dictionary.Count > 0)
-                  {
-                     if (saveToFile) SaveToTabDelimitedFile();
+               string loadedProteins = String.Format(CultureInfo.CurrentCulture, "Loaded {0} Proteins from Stanford.", Dictionary.Count);
+               OnDownloadProgress(new ProgressEventArgs(100, loadedProteins));
 
-                     HfmTrace.WriteToHfmConsole(TraceLevel.Info, loadedProteins, true);
-                     OnProjectInfoUpdated(EventArgs.Empty);
-                  }
-               }
-               catch (Exception ex)
+               if (Dictionary.Count > 0)
                {
-                  OnDownloadProgress(new DownloadProgressEventArgs(0, ex.Message));
-                  HfmTrace.WriteToHfmConsole(ex);
-               }
-               finally
-               {
-                  OnProjectDownloadFinished(EventArgs.Empty);
+                  if (saveToFile) SaveToTabDelimitedFile();
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Info, loadedProteins, true);
+                  OnProjectInfoUpdated(EventArgs.Empty);
                }
             }
-            else
+            catch (Exception ex)
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Info,
-                                          String.Format(CultureInfo.CurrentCulture, "Download executed {0:0} minutes ago.",
-                                          lastDownloadDifference.TotalMinutes), true);
+               OnDownloadProgress(new ProgressEventArgs(0, ex.Message));
+               HfmTrace.WriteToHfmConsole(ex);
+            }
+            finally
+            {
+               Processing = false;  
+               OnProjectDownloadFinished(EventArgs.Empty);
             }
          }
+      }
+      
+      private bool CheckLastDownloadTime()
+      {
+         // if a download was attempted in the last hour, don't execute again
+         TimeSpan lastDownloadDifference = DateTime.Now.Subtract(LastDownloadTime);
+         if (lastDownloadDifference.TotalHours > 1)
+         {
+            return true;
+         }
+         
+         HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format(CultureInfo.CurrentCulture,
+            "Download executed {0:0} minutes ago.", lastDownloadDifference.TotalMinutes), true);
+         return false;
       }
 
       /// <summary>
@@ -194,7 +229,7 @@ namespace HFM.Proteins
                }
 
                var progress = (int)((i / (double)psummaryLines.Length) * 100);
-               OnDownloadProgress(new DownloadProgressEventArgs(progress, p == null ? String.Empty : p.WorkUnitName));
+               OnDownloadProgress(new ProgressEventArgs(progress, p == null ? String.Empty : p.WorkUnitName));
             }
          }
          finally

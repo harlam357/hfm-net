@@ -97,7 +97,7 @@ namespace HFM.Proteins
       {
          if (ReadFromTabDelimitedFile() == false)
          {
-            _downloader.DownloadFromStanford();
+            _downloader.Process();
          }
       }
 
@@ -172,16 +172,6 @@ namespace HFM.Proteins
          _projectsNotFound.Clear();
       }
 
-      private delegate void DownloadFromStanfordDelegate();
-
-      /// <summary>
-      /// Download project information from Stanford University (THREAD SAFE)
-      /// </summary>
-      public IAsyncResult BeginDownloadFromStanford()
-      {
-         return new DownloadFromStanfordDelegate(_downloader.DownloadFromStanford).BeginInvoke(null, null);
-      }
-      
       /// <summary>
       /// Get Protein from Collection (should be called from worker thread)
       /// </summary>
@@ -221,7 +211,7 @@ namespace HFM.Proteins
          if (allowProteinDownload)
          {
             // Execute a Download
-            _downloader.DownloadFromStanford();
+            _downloader.Process();
 
             // If the Project is now Found
             if (ContainsKey(projectId))

@@ -1168,8 +1168,11 @@ namespace HFM.Forms
          _proteinCollection.ClearProjectsNotFoundCache();
          _proteinCollection.Downloader.ResetLastDownloadTime();
          // Execute Asynchronous Download
-         var projectDownloadView = InstanceProvider.GetInstance<IProjectDownloadView>();
-         projectDownloadView.Download();
+         var projectDownloadView = InstanceProvider.GetInstance<IProgressDialogView>("projectDownloadView");
+         projectDownloadView.OwnerWindow = this;
+         projectDownloadView.ProcessRunner = _proteinCollection.Downloader;
+         projectDownloadView.UpdateMessage(_proteinCollection.Downloader.Prefs.GetPreference<string>(Preference.ProjectDownloadUrl));
+         projectDownloadView.Process();
       }
 
       /// <summary>

@@ -41,6 +41,8 @@ namespace HFM.Forms
       private readonly IQueryParameterContainer _queryContainer;
       private readonly IHistoryView _view;
       private readonly IQueryView _queryView;
+      private readonly IProgressDialogView _unitImportView;
+      private readonly ICompletedUnitsFileReader _completedUnitsReader;
       private readonly IOpenFileDialogView _openFileView;
       private readonly ISaveFileDialogView _saveFileView;
       private readonly IMessageBoxView _messageBoxView;
@@ -54,9 +56,10 @@ namespace HFM.Forms
       {
          get { return _queryContainer.QueryList.Count; }
       }
-   
+
       public HistoryPresenter(IPreferenceSet prefs, IUnitInfoDatabase database, IQueryParameterContainer queryContainer, IHistoryView view,
-                              IQueryView queryView, IOpenFileDialogView openFileView, ISaveFileDialogView saveFileView, IMessageBoxView messageBoxView,
+                              IQueryView queryView, IProgressDialogView unitImportView, ICompletedUnitsFileReader completedUnitsReader, 
+                              IOpenFileDialogView openFileView, ISaveFileDialogView saveFileView, IMessageBoxView messageBoxView, 
                               IHistoryPresenterModel model)
       {
          _prefs = prefs;
@@ -64,10 +67,15 @@ namespace HFM.Forms
          _queryContainer = queryContainer;
          _view = view;
          _queryView = queryView;
+         _unitImportView = unitImportView;
+         _completedUnitsReader = completedUnitsReader;
          _openFileView = openFileView;
          _saveFileView = saveFileView;
          _messageBoxView = messageBoxView;
          _model = model;
+
+         _unitImportView.OwnerWindow = _view;
+         _unitImportView.ProcessRunner = _completedUnitsReader;
          
          _currentHistoryEntries = new List<HistoryEntry>();
       }
@@ -323,20 +331,24 @@ namespace HFM.Forms
          _openFileView.InitialDirectory = _prefs.GetPreference<string>(Preference.ApplicationDataFolderPath);
          if (_openFileView.ShowDialog(_view).Equals(DialogResult.OK))
          {
-            try
+            _completedUnitsReader.CompletedUnitsFilePath = _openFileView.FileName;
+            
+            _unitImportView.UpdateMessage(String.Empty);
+            _unitImportView.UpdateProgress(0);
+            _unitImportView.Process();
+            if (_unitImportView.ProcessRunner.Exception != null)
             {
-               var result = _database.ReadCompletedUnits(_openFileView.FileName);
-               ShowImportResultDialog(result);
-               _database.ImportCompletedUnits(result.Entries);
-               _view.QueryComboSelectedIndex = 0;
-            }
-            catch (Exception ex)
-            {
+               Exception ex = _unitImportView.ProcessRunner.Exception;
                HfmTrace.WriteToHfmConsole(ex);
                _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture, 
                   "Import Failed with the following error:{0}{0}{1}", Environment.NewLine, ex.Message), 
                   PlatformOps.ApplicationNameAndVersion);
+                  
+               return;
             }
+            ShowImportResultDialog(_completedUnitsReader.Result);
+            _database.ImportCompletedUnits(_completedUnitsReader.Result.Entries);
+            _view.QueryComboSelectedIndex = 0;
          }
       }
       
@@ -365,7 +377,7 @@ namespace HFM.Forms
       {
          try
          {
-            _database.WriteCompletedUnitErrorLines(filePath, lines);
+            _completedUnitsReader.WriteCompletedUnitErrorLines(filePath, lines);
          }
          catch (Exception ex)
          {
