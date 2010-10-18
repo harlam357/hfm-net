@@ -51,6 +51,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\harlam357-net\net20\bin\Release\harlam357.Net.dll</HintPath>
     </Reference>
+    <Reference Include="harlam357.Windows.Forms, Version=1.2.0.31, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\harlam357-net\net20\bin\Release\harlam357.Windows.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="protobuf-net, Version=1.0.0.282, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\protobuf-net\protobuf-net.dll</HintPath>
@@ -85,7 +89,6 @@
     <Compile Include="InstanceTotals.cs" />
     <Compile Include="IOwnedByClientInstance.cs" />
     <Compile Include="IPreferenceSet.cs" />
-    <Compile Include="IProjectDownloadView.cs" />
     <Compile Include="IProjectInfo.cs" />
     <Compile Include="IProjectSummaryDownloader.cs" />
     <Compile Include="IProtein.cs" />

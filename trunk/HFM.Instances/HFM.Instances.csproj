@@ -40,6 +40,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\harlam357-net\net20\bin\Release\harlam357.Security.dll</HintPath>
     </Reference>
+    <Reference Include="harlam357.Windows.Forms, Version=1.2.0.31, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\harlam357-net\net20\bin\Release\harlam357.Windows.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="protobuf-net, Version=1.0.0.278, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\protobuf-net\protobuf-net.dll</HintPath>
