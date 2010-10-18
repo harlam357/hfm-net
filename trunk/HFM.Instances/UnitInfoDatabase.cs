@@ -216,10 +216,36 @@ namespace HFM.Instances
       
       private static bool ValidateUnitInfo(IUnitInfo unitInfo)
       {
+         bool result = ValidateFinishedUnitInfo(unitInfo);
+         if (!(result))
+         {
+            // Issue 233
+            result = ValidateIncompleteUnitInfo(unitInfo);
+         }
+         return result;
+      }
+      
+      private static bool ValidateFinishedUnitInfo(IUnitInfo unitInfo)
+      {
          return unitInfo.ProjectIsUnknown == false &&
-                unitInfo.UnitResult.Equals(WorkUnitResult.Unknown) == false &&
+                unitInfo.UnitResult.Equals(WorkUnitResult.FinishedUnit) &&
                 unitInfo.DownloadTime.Equals(DateTime.MinValue) == false &&
                 unitInfo.FinishedTime.Equals(DateTime.MinValue) == false;
+      }
+      
+      private static bool ValidateIncompleteUnitInfo(IUnitInfo unitInfo)
+      {
+         // Finished Time will not be populated if any of these error
+         // results are detected.  Only check for valid Project and 
+         // download time - Issue 233
+      
+         return unitInfo.ProjectIsUnknown == false &&
+               (unitInfo.UnitResult.Equals(WorkUnitResult.BadWorkUnit) ||
+                unitInfo.UnitResult.Equals(WorkUnitResult.CoreOutdated) ||
+                unitInfo.UnitResult.Equals(WorkUnitResult.EarlyUnitEnd) ||
+                unitInfo.UnitResult.Equals(WorkUnitResult.Interrupted) ||
+                unitInfo.UnitResult.Equals(WorkUnitResult.UnstableMachine)) &&
+                unitInfo.DownloadTime.Equals(DateTime.MinValue) == false;
       }
 
       private static bool UnitInfoExists(SQLiteConnection con, IUnitInfoLogic unitInfoLogic)

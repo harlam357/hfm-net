@@ -77,8 +77,57 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(new DateTime(2010, 1, 1), entry.DownloadDateTime);
          Assert.AreEqual(new DateTime(2010, 1, 2), entry.CompletionDateTime);
          
-         // test code the ensure this unit is NOT written again
+         // test code to ensure this unit is NOT written again
          database.WriteUnitInfo(unitInfoLogic);
+         // verify
+         rows = database.QueryUnitData(new QueryParameters());
+         Assert.AreEqual(1, rows.Count);
+
+         _mocks.VerifyAll();
+      }
+
+      [Test]
+      public void WriteUnitInfoEarlyUnitEndTest()
+      {
+         if (File.Exists(TestFile))
+         {
+            File.Delete(TestFile);
+         }
+
+         var unitInfo = _mocks.Stub<IUnitInfo>();
+         unitInfo.ProjectID = 2670;
+         unitInfo.ProjectRun = 2;
+         unitInfo.ProjectClone = 3;
+         unitInfo.ProjectGen = 4;
+         unitInfo.OwningInstanceName = "Owner";
+         unitInfo.OwningInstancePath = "Path";
+         unitInfo.FoldingID = "harlam357";
+         unitInfo.Team = 32;
+         unitInfo.CoreVersion = "2.09";
+         unitInfo.UnitResult = WorkUnitResult.EarlyUnitEnd;
+         unitInfo.DownloadTime = new DateTime(2010, 2, 2);
+         unitInfo.FinishedTime = DateTime.MinValue;
+
+         var unitInfoLogic = _mocks.DynamicMock<IUnitInfoLogic>();
+         SetupResult.For(unitInfoLogic.UnitInfoData).Return(unitInfo);
+         SetupResult.For(unitInfoLogic.FramesComplete).Return(100);
+         SetupResult.For(unitInfoLogic.RawTimePerAllSections).Return(600);
+
+         _mocks.ReplayAll();
+
+         var database = new UnitInfoDatabase(_proteinCollection) { DatabaseFilePath = TestFile };
+         database.WriteUnitInfo(unitInfoLogic);
+
+         var rows = database.QueryUnitData(new QueryParameters());
+         Assert.AreEqual(1, rows.Count);
+         HistoryEntry entry = rows[0];
+         Assert.AreEqual(2670, entry.ProjectID);
+         Assert.AreEqual(2, entry.ProjectRun);
+         Assert.AreEqual(3, entry.ProjectClone);
+         Assert.AreEqual(4, entry.ProjectGen);
+         Assert.AreEqual(WorkUnitResult.EarlyUnitEnd, entry.Result);
+         Assert.AreEqual(new DateTime(2010, 2, 2), entry.DownloadDateTime);
+         Assert.AreEqual(DateTime.MinValue, entry.CompletionDateTime);
 
          _mocks.VerifyAll();
       }
