@@ -69,6 +69,7 @@ namespace HFM.Forms
          this.chkScheduled = new HFM.Classes.CheckBoxWrapper();
          this.chkSynchronous = new HFM.Classes.CheckBoxWrapper();
          this.grpHTMLOutput = new HFM.Classes.GroupBoxWrapper();
+         this.chkClientData = new HFM.Classes.CheckBoxWrapper();
          this.pnlFtpMode = new harlam357.Windows.Forms.RadioPanel();
          this.radioActive = new HFM.Classes.RadioButtonWrapper();
          this.radioPassive = new HFM.Classes.RadioButtonWrapper();
@@ -188,7 +189,7 @@ namespace HFM.Forms
          this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
          this.btnOK = new HFM.Classes.ButtonWrapper();
          this.btnCancel = new HFM.Classes.ButtonWrapper();
-         this.chkClientData = new HFM.Classes.CheckBoxWrapper();
+         this.chkClientHung = new HFM.Classes.CheckBoxWrapper();
          this.tabControl1.SuspendLayout();
          this.tabSchdTasks.SuspendLayout();
          this.grpUpdateData.SuspendLayout();
@@ -395,6 +396,17 @@ namespace HFM.Forms
          this.grpHTMLOutput.TabIndex = 0;
          this.grpHTMLOutput.TabStop = false;
          this.grpHTMLOutput.Text = "Web Generation";
+         // 
+         // chkClientData
+         // 
+         this.chkClientData.AutoSize = true;
+         this.chkClientData.Enabled = false;
+         this.chkClientData.Location = new System.Drawing.Point(10, 121);
+         this.chkClientData.Name = "chkClientData";
+         this.chkClientData.Size = new System.Drawing.Size(151, 17);
+         this.chkClientData.TabIndex = 11;
+         this.chkClientData.Text = "Copy Client Data to Target";
+         this.chkClientData.UseVisualStyleBackColor = true;
          // 
          // pnlFtpMode
          // 
@@ -1030,6 +1042,7 @@ namespace HFM.Forms
          // 
          // grpReportSelections
          // 
+         this.grpReportSelections.Controls.Add(this.chkClientHung);
          this.grpReportSelections.Controls.Add(this.chkClientEuePause);
          this.grpReportSelections.Enabled = false;
          this.grpReportSelections.Location = new System.Drawing.Point(6, 179);
@@ -1868,16 +1881,16 @@ namespace HFM.Forms
          this.btnCancel.UseVisualStyleBackColor = true;
          this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
          // 
-         // chkClientData
+         // chkClientHung
          // 
-         this.chkClientData.AutoSize = true;
-         this.chkClientData.Enabled = false;
-         this.chkClientData.Location = new System.Drawing.Point(10, 121);
-         this.chkClientData.Name = "chkClientData";
-         this.chkClientData.Size = new System.Drawing.Size(151, 17);
-         this.chkClientData.TabIndex = 11;
-         this.chkClientData.Text = "Copy Client Data to Target";
-         this.chkClientData.UseVisualStyleBackColor = true;
+         this.chkClientHung.AutoSize = true;
+         this.chkClientHung.Enabled = false;
+         this.chkClientHung.Location = new System.Drawing.Point(10, 43);
+         this.chkClientHung.Name = "chkClientHung";
+         this.chkClientHung.Size = new System.Drawing.Size(137, 17);
+         this.chkClientHung.TabIndex = 1;
+         this.chkClientHung.Text = "Client Hung Notification";
+         this.chkClientHung.UseVisualStyleBackColor = true;
          // 
          // frmPreferences
          // 
@@ -2079,5 +2092,6 @@ namespace HFM.Forms
       private RadioPanel pnlFtpMode;
       private HFM.Classes.CheckBoxWrapper chkEtaAsDate;
       private HFM.Classes.CheckBoxWrapper chkClientData;
+      private HFM.Classes.CheckBoxWrapper chkClientHung;
    }
 }

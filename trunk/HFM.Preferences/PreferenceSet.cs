@@ -275,6 +275,7 @@ namespace HFM.Preferences
          _prefs.Add(Preference.EmailReportingServerUsername, new Metadata<string>());
          _prefs.Add(Preference.EmailReportingServerPassword, new Metadata<string>());
          _prefs.Add(Preference.ReportEuePause, new Metadata<bool>());
+         _prefs.Add(Preference.ReportHung, new Metadata<bool>());
 
          _prefs.Add(Preference.EocUserId, new Metadata<int>());
          _prefs.Add(Preference.StanfordId, new Metadata<string>());
@@ -397,6 +398,7 @@ namespace HFM.Preferences
          SetPreference(Preference.EmailReportingServerUsername, Settings.Default.EmailReportingServerUsername);
          SetPreference(Preference.EmailReportingServerPassword, DecryptEmailReportingServerPassword(Settings.Default.EmailReportingServerPassword, symmetricProvider, _iv, _symmetricKey));
          SetPreference(Preference.ReportEuePause, Settings.Default.ReportEuePause);
+         SetPreference(Preference.ReportHung, Settings.Default.ReportHung);
          
          SetPreference(Preference.EocUserId, Settings.Default.EOCUserID);
          SetPreference(Preference.StanfordId, Settings.Default.StanfordID);
@@ -816,6 +818,7 @@ namespace HFM.Preferences
             Settings.Default.EmailReportingServerUsername = GetPreference<string>(Preference.EmailReportingServerUsername);
             Settings.Default.EmailReportingServerPassword = EncryptEmailReportingServerPassword(GetPreference<string>(Preference.EmailReportingServerPassword), symmetricProvider, _iv, _symmetricKey);
             Settings.Default.ReportEuePause = GetPreference<bool>(Preference.ReportEuePause);
+            Settings.Default.ReportHung = GetPreference<bool>(Preference.ReportHung);
 
             Settings.Default.EOCUserID = GetPreference<int>(Preference.EocUserId);
             Settings.Default.StanfordID = GetPreference<string>(Preference.StanfordId);

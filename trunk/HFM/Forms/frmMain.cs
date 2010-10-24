@@ -31,6 +31,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 using harlam357.Windows.Forms;
@@ -1044,6 +1045,7 @@ namespace HFM.Forms
       #endregion
 
       #region View Menu Click Handlers
+      
       private void mnuViewAutoSizeGridColumns_Click(object sender, EventArgs e)
       {
          for (var i = 0; i < dataGridView1.Columns.Count; i++)
@@ -1145,17 +1147,38 @@ namespace HFM.Forms
 
       private void mnuViewToggleVersionInformation_Click(object sender, EventArgs e)
       {
-         if (_prefs.GetPreference<bool>(Preference.ShowVersions))
-         {
-            _prefs.SetPreference(Preference.ShowVersions, false);
-         }
-         else
-         {
-            _prefs.SetPreference(Preference.ShowVersions, true);
-         }
-
+         _prefs.SetPreference(Preference.ShowVersions, !_prefs.GetPreference<bool>(Preference.ShowVersions));
          dataGridView1.Invalidate();
       }
+
+      private void mnuViewToggleBonusCalculation_Click(object sender, EventArgs e)
+      {
+         bool value = !_prefs.GetPreference<bool>(Preference.CalculateBonus);
+         _prefs.SetPreference(Preference.CalculateBonus, value);
+         toolTipNotify.Show(value ? "Bonus On" : "Bonus Off", this, Size.Width - 150, 8, 2000);
+         dataGridView1.Invalidate();
+      }
+
+      private void mnuViewCycleCalculation_Click(object sender, EventArgs e)
+      {
+         var calculationType = _prefs.GetPreference<PpdCalculationType>(Preference.PpdCalculation);
+         int typeIndex = 0;
+         // EffectiveRate is always LAST entry
+         if (calculationType.Equals(PpdCalculationType.EffectiveRate) == false)
+         {
+            typeIndex = (int)calculationType;
+            typeIndex++;
+         }
+
+         calculationType = (PpdCalculationType)typeIndex;
+         _prefs.SetPreference(Preference.PpdCalculation, calculationType);
+         string calculationTypeString = (from item in Models.OptionsModel.PpdCalculationList
+                                         where ((PpdCalculationType)item.ValueMember) == calculationType
+                                         select item.DisplayMember).First();
+         toolTipNotify.Show(calculationTypeString, this, Size.Width - 150, 8, 2000);
+         dataGridView1.Invalidate();
+      }
+      
       #endregion
 
       #region Tools Menu Click Handlers

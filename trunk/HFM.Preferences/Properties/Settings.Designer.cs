@@ -1079,5 +1079,17 @@ namespace HFM.Preferences.Properties {
                 this["WebGenCopyClientData"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ReportHung {
+            get {
+                return ((bool)(this["ReportHung"]));
+            }
+            set {
+                this["ReportHung"] = value;
+            }
+        }
     }
 }

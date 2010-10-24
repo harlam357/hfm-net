@@ -475,6 +475,16 @@ namespace HFM.Instances
             }
          }
 
+         // If the returned status is Hung and current status is not
+         if (statusData.ReturnedStatus.Equals(ClientStatus.Hung) && statusData.CurrentStatus.Equals(ClientStatus.Hung) == false)
+         {
+            if (_prefs.GetPreference<bool>(Preference.EmailReportingEnabled) &&
+                _prefs.GetPreference<bool>(Preference.ReportHung))
+            {
+               SendHungEmail(statusData.InstanceName, _prefs);
+            }
+         }
+
          _displayInstance.Status = _statusLogic.HandleStatusData(statusData);
       }
 
@@ -493,6 +503,29 @@ namespace HFM.Instances
                                  prefs.GetPreference<string>(Preference.EmailReportingServerAddress),
                                  prefs.GetPreference<int>(Preference.EmailReportingServerPort),
                                  prefs.GetPreference<string>(Preference.EmailReportingServerUsername), 
+                                 prefs.GetPreference<string>(Preference.EmailReportingServerPassword));
+         }
+         catch (Exception ex)
+         {
+            HfmTrace.WriteToHfmConsole(ex);
+         }
+      }
+
+      /// <summary>
+      /// Send Hung Status Email
+      /// </summary>
+      private static void SendHungEmail(string instanceName, IPreferenceSet prefs)
+      {
+         string messageBody = String.Format("HFM.NET detected that Client '{0}' has entered a Hung state.", instanceName);
+         try
+         {
+            NetworkOps.SendEmail(prefs.GetPreference<bool>(Preference.EmailReportingServerSecure),
+                                 prefs.GetPreference<string>(Preference.EmailReportingFromAddress),
+                                 prefs.GetPreference<string>(Preference.EmailReportingToAddress),
+                                 "HFM.NET - Client Hung Error", messageBody,
+                                 prefs.GetPreference<string>(Preference.EmailReportingServerAddress),
+                                 prefs.GetPreference<int>(Preference.EmailReportingServerPort),
+                                 prefs.GetPreference<string>(Preference.EmailReportingServerUsername),
                                  prefs.GetPreference<string>(Preference.EmailReportingServerPassword));
          }
          catch (Exception ex)

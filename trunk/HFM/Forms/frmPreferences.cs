@@ -480,6 +480,7 @@ namespace HFM.Forms
          #region Report Selections
          grpReportSelections.DataBindings.Add("Enabled", _reportingModel, "ReportingEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
          chkClientEuePause.DataBindings.Add("Checked", _reportingModel, "ReportEuePause", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkClientHung.DataBindings.Add("Checked", _reportingModel, "ReportHung", false, DataSourceUpdateMode.OnPropertyChanged);
          #endregion
       }
 

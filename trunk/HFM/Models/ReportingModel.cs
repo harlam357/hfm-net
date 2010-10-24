@@ -263,6 +263,19 @@ namespace HFM.Models
             }
          }
       }
+
+      public bool ReportHung
+      {
+         get { return _prefs.GetPreference<bool>(Preference.ReportHung); }
+         set
+         {
+            if (ReportHung != value)
+            {
+               _prefs.SetPreference(Preference.ReportHung, value);
+               OnPropertyChanged("ReportHung");
+            }
+         }
+      }
       
       #endregion
    

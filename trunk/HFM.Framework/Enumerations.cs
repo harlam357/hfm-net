@@ -272,6 +272,7 @@ namespace HFM.Framework
       EmailReportingServerUsername,
       EmailReportingServerPassword,
       ReportEuePause,
+      ReportHung,
       EocUserId,
       StanfordId,
       TeamId,
