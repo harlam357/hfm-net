@@ -19,6 +19,7 @@
 
    <ItemGroup>
       <ZipFiles Include=".\HFM.NET\**\*.*" />
+      <ClientSettingsFahMonZipFiles Include=".\HFM.Plugins\ClientSettings\FahMon\Release\**\*.*" />
    </ItemGroup>
 
    <Target Name="Version">
@@ -41,6 +42,10 @@
                Properties="Configuration=ScriptedRelease" />
 
       <CallTarget Targets="NUnit" />
+      
+      <MSBuild Projects=".\HFM.Plugins\ClientSettings\FahMon\HFM.Plugins.ClientSettings.FahMon.sln"
+               Targets="Rebuild"
+               Properties="Configuration=ScriptedRelease" />
    </Target>
 
    <Target Name="Build" DependsOnTargets="Compile">
@@ -65,6 +70,9 @@
       <Zip Files="@(ZipFiles)"
            WorkingDirectory=".\HFM.NET"
            ZipFileName="HFM Release $(Major).$(Minor).$(Build).$(Revision).zip" />
+      <Zip Files="@(ClientSettingsFahMonZipFiles)"
+           WorkingDirectory=".\HFM.Plugins\ClientSettings\FahMon\Release"
+           ZipFileName="HFM FahMon Plugin $(Major).$(Minor).$(Build).$(Revision).zip" />
    </Target>
 
    <Target Name="MsiRelease">
@@ -76,6 +84,7 @@
 
    <Target Name ="CopyTargets" Condition="'$(TargetDestination)' != ''">
       <Copy SourceFiles="HFM Release $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(TargetDestination)" />
+      <Copy SourceFiles="HFM FahMon Plugin $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(TargetDestination)" />
       <Copy SourceFiles="HFM Release $(Major).$(Minor).$(Build).$(Revision).msi" DestinationFolder="$(TargetDestination)" />
    </Target>
 </Project>
