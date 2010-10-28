@@ -60,8 +60,6 @@ namespace HFM.Forms
          this.mnuFileSave = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuFileSaveas = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuFileSep1 = new System.Windows.Forms.ToolStripSeparator();
-         this.mnuFileMerge = new System.Windows.Forms.ToolStripMenuItem();
-         this.mnuFileSep2 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuFileQuit = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuEdit = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuEditPreferences = new System.Windows.Forms.ToolStripMenuItem();
@@ -71,9 +69,11 @@ namespace HFM.Forms
          this.mnuClientsEdit = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuClientsDelete = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuClientsSep2 = new System.Windows.Forms.ToolStripSeparator();
+         this.mnuClientsMergeClientData = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuClientsSep3 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuClientsViewCachedLog = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuClientsViewClientFiles = new System.Windows.Forms.ToolStripMenuItem();
-         this.mnuClientsSep3 = new System.Windows.Forms.ToolStripSeparator();
+         this.mnuClientsSep4 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuClientsRefreshSelected = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuClientsRefreshAll = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuView = new System.Windows.Forms.ToolStripMenuItem();
@@ -375,8 +375,6 @@ namespace HFM.Forms
             this.mnuFileSave,
             this.mnuFileSaveas,
             this.mnuFileSep1,
-            this.mnuFileMerge,
-            this.mnuFileSep2,
             this.mnuFileQuit});
          this.mnuFile.Name = "mnuFile";
          this.mnuFile.Size = new System.Drawing.Size(35, 20);
@@ -425,18 +423,6 @@ namespace HFM.Forms
          this.mnuFileSep1.Name = "mnuFileSep1";
          this.mnuFileSep1.Size = new System.Drawing.Size(257, 6);
          // 
-         // mnuFileMerge
-         // 
-         this.mnuFileMerge.Name = "mnuFileMerge";
-         this.mnuFileMerge.Size = new System.Drawing.Size(260, 22);
-         this.mnuFileMerge.Text = "Merge External Client Data";
-         this.mnuFileMerge.Click += new System.EventHandler(this.mnuFileMerge_Click);
-         // 
-         // mnuFileSep2
-         // 
-         this.mnuFileSep2.Name = "mnuFileSep2";
-         this.mnuFileSep2.Size = new System.Drawing.Size(257, 6);
-         // 
          // mnuFileQuit
          // 
          this.mnuFileQuit.Image = global::HFM.Properties.Resources.Quit;
@@ -456,7 +442,7 @@ namespace HFM.Forms
          // mnuEditPreferences
          // 
          this.mnuEditPreferences.Name = "mnuEditPreferences";
-         this.mnuEditPreferences.Size = new System.Drawing.Size(143, 22);
+         this.mnuEditPreferences.Size = new System.Drawing.Size(152, 22);
          this.mnuEditPreferences.Text = "&Preferences";
          this.mnuEditPreferences.Click += new System.EventHandler(this.mnuEditPreferences_Click);
          // 
@@ -468,9 +454,11 @@ namespace HFM.Forms
             this.mnuClientsEdit,
             this.mnuClientsDelete,
             this.mnuClientsSep2,
+            this.mnuClientsMergeClientData,
+            this.mnuClientsSep3,
             this.mnuClientsViewCachedLog,
             this.mnuClientsViewClientFiles,
-            this.mnuClientsSep3,
+            this.mnuClientsSep4,
             this.mnuClientsRefreshSelected,
             this.mnuClientsRefreshAll});
          this.mnuClients.Name = "mnuClients";
@@ -508,6 +496,18 @@ namespace HFM.Forms
          this.mnuClientsSep2.Name = "mnuClientsSep2";
          this.mnuClientsSep2.Size = new System.Drawing.Size(183, 6);
          // 
+         // mnuClientsMergeClientData
+         // 
+         this.mnuClientsMergeClientData.Name = "mnuClientsMergeClientData";
+         this.mnuClientsMergeClientData.Size = new System.Drawing.Size(186, 22);
+         this.mnuClientsMergeClientData.Text = "&Merge Client Data";
+         this.mnuClientsMergeClientData.Click += new System.EventHandler(this.mnuClientsMerge_Click);
+         // 
+         // mnuClientsSep3
+         // 
+         this.mnuClientsSep3.Name = "mnuClientsSep3";
+         this.mnuClientsSep3.Size = new System.Drawing.Size(183, 6);
+         // 
          // mnuClientsViewCachedLog
          // 
          this.mnuClientsViewCachedLog.Name = "mnuClientsViewCachedLog";
@@ -522,10 +522,10 @@ namespace HFM.Forms
          this.mnuClientsViewClientFiles.Text = "View Client &Files";
          this.mnuClientsViewClientFiles.Click += new System.EventHandler(this.mnuClientsViewClientFiles_Click);
          // 
-         // mnuClientsSep3
+         // mnuClientsSep4
          // 
-         this.mnuClientsSep3.Name = "mnuClientsSep3";
-         this.mnuClientsSep3.Size = new System.Drawing.Size(183, 6);
+         this.mnuClientsSep4.Name = "mnuClientsSep4";
+         this.mnuClientsSep4.Size = new System.Drawing.Size(183, 6);
          // 
          // mnuClientsRefreshSelected
          // 
@@ -1136,7 +1136,7 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripMenuItem mnuView;
       private System.Windows.Forms.ToolStripMenuItem mnuViewShowHideLog;
       private System.Windows.Forms.ToolStripMenuItem mnuTools;
-      private System.Windows.Forms.ToolStripSeparator mnuClientsSep3;
+      private System.Windows.Forms.ToolStripSeparator mnuClientsSep4;
       private System.Windows.Forms.ToolStripMenuItem mnuClientsViewCachedLog;
       private System.Windows.Forms.ToolStripMenuItem mnuToolsDownloadProjects;
       private System.Windows.Forms.ContextMenuStrip gridContextMenuStrip;
@@ -1191,11 +1191,11 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
       private System.Windows.Forms.ToolStripMenuItem mnuContextForceRefreshEocStats;
       private System.Windows.Forms.ToolStripMenuItem mnuToolsHistory;
-      private System.Windows.Forms.ToolStripMenuItem mnuFileMerge;
-      private System.Windows.Forms.ToolStripSeparator mnuFileSep2;
       private System.Windows.Forms.ToolStripMenuItem mnuViewCycleCalculationStyle;
       private System.Windows.Forms.ToolStripSeparator mnuViewSep3;
       private System.Windows.Forms.ToolStripMenuItem mnuViewToggleBonusCalculation;
       private System.Windows.Forms.ToolTip toolTipNotify;
+      private System.Windows.Forms.ToolStripMenuItem mnuClientsMergeClientData;
+      private System.Windows.Forms.ToolStripSeparator mnuClientsSep3;
    }
 }

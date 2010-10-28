@@ -502,7 +502,7 @@ namespace HFM.Forms
          {
             mnuClientsViewClientFiles.Visible = _clientInstances.ClientFilesMenuItemVisible;
             mnuClientsViewCachedLog.Visible = _clientInstances.CachedLogMenuItemVisible;
-            mnuClientsSep3.Visible = _clientInstances.ClientFilesMenuItemVisible ||
+            mnuClientsSep4.Visible = _clientInstances.ClientFilesMenuItemVisible ||
                                      _clientInstances.CachedLogMenuItemVisible;
          
             statusLabelLeft.Text = _clientInstances.SelectedDisplayInstance.ClientPathAndArguments;
@@ -910,26 +910,6 @@ namespace HFM.Forms
          }
       }
 
-      private void mnuFileMerge_Click(object sender, EventArgs e)
-      {
-         var settings = new ClientInstanceSettings { ExternalInstance = true };
-         var newHost = InstanceProvider.GetInstance<InstanceSettingsPresenter>();
-         newHost.Settings = settings;
-         while (newHost.ShowDialog(this).Equals(DialogResult.OK))
-         {
-            try
-            {
-               _clientInstances.Add(newHost.Settings);
-               break;
-            }
-            catch (InvalidOperationException ex)
-            {
-               HfmTrace.WriteToHfmConsole(ex);
-               MessageBox.Show(this, ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error); 
-            }
-         }
-      }
-
       /// <summary>
       /// Edits an existing host configuration
       /// </summary>
@@ -967,6 +947,26 @@ namespace HFM.Forms
          if (_clientInstances.SelectedClientInstance == null) return;
 
          _clientInstances.Remove(_clientInstances.SelectedClientInstance.Settings.InstanceName);
+      }
+
+      private void mnuClientsMerge_Click(object sender, EventArgs e)
+      {
+         var settings = new ClientInstanceSettings { ExternalInstance = true };
+         var newHost = InstanceProvider.GetInstance<InstanceSettingsPresenter>();
+         newHost.Settings = settings;
+         while (newHost.ShowDialog(this).Equals(DialogResult.OK))
+         {
+            try
+            {
+               _clientInstances.Add(newHost.Settings);
+               break;
+            }
+            catch (InvalidOperationException ex)
+            {
+               HfmTrace.WriteToHfmConsole(ex);
+               MessageBox.Show(this, ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+         }
       }
 
       /// <summary>
