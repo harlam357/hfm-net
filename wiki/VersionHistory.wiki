@@ -1,6 +1,70 @@
 #summary HFM.NET Version History
 #labels Featured
 
+=Change Log - Version: 0.5.1 - Revision 198 - Beta=
+
+  * Release Date: June 27, 2010
+
+  * Enhancement: Issue 76 - ETA as a Date or as a TimeSpan: Added Preferences option to display the unformatted value as a Date rather than the default TimeSpan.
+  * Enhancement: Issue 79 - Added options for HTML and/or XML web gen upload.  You can only deselect HTML if XML is specified.  If XML is deselected and HTML is not already selected, HTML will be default to selected.
+  * Enhancement: Issue 155 - Add capability to specify the maximum size of the FAHlog.txt files being uploaded via FTP.
+  * Enhancement: Issue 193 - Add Client Version to Client Type Column and Combine Core and Core Version Columns: Added Toggle option (View Menu / F11) to turn this data on/off.  Also replaced the Core Version column with Core ID (hex core code).
+  * Enhancement: Issue 206 - Display Timezone on Generated Web Pages (after time).
+  * Enhancement:  Issue 76 /193 - Update XML and XSLT files used for Web Generation to comply with primary grid updates (non-breaking changes - custom XSLT should continue to work fine).
+  * Enhancement: Recognize OPENMMGPU core WUs as GPU Client Type.
+  * Enhancement: Add Verbose Debug code showing PPD calculation values.
+  * Enhancement: Add 'Auto Size Grid Columns' item to the View Menu.  Column Auto Size now leaves the column slightly wider than before - to give each column's text a little more "buffer" room.
+  * Enhancement: HFM.Plugins.dll - This will be the project that will specify the third-party consumable interfaces allowing input/output plugins to be created.
+
+  * Change: Folding Instance Setup and Preferences dialog backends have been mostly rewritten.
+  * Change: Increased the relative width of the standard "Overview" web page to 32% - allow room for the new UTC offset value without word wrap.
+  * Change: If an Add or Edit Folding Instance operation fails due to a duplicate name, show the dialog again with the same settings that had already been input... gives the user a chance to correct the duplicate without having to enter ALL the data again.
+
+  * Fix: Issue 210 - Remove smb:// as a valid URI protocol for an Http Instance.
+  * Fix: Issue 211 - Built on date with wrong locale on About Dialog.  Forcing to Invariant (en-US) culture until application is localized.
+  * Fix: Turn off LogViewer Word Wrap.  If Word Wrap happens it screws up the line coloring.
+  * Fix: Update custom grid painting code to fix some drawing abnormalities under Mono - looks much better now.
+
+=Change Log - Version: 0.5.0 - Revision 180 - Beta=
+
+  * Release Date: May 10, 2010
+
+  * Change: HFM now REQUIRES the .NET Framework v3.5 on Windows.  Mono v2.4 (2.6 recommended) on Linux.
+
+  * Change: XML Output for 'Completed', 'Failed', and now 'TotalCompleted' work units per client and for all clients are now specified as such.  
+    * XML Templates and XLS Transforms delivered with HFM have been updated to reflect this change.  If you have created your own custom XSLT files to Transform this XML data into HTML output, I apologize for the change but this now makes similar data in the XML/XSLT files use the same tag names (and make much more sense).  You'll need to update your custom XSL Transforms.
+
+  * Enhancement: Issue 58 - Add New Version Notification.  Including option to check for updates on startup and a Help Menu option to forcibly check for updates.
+  * Enhancement: Issue 59 - Add Toggle Switch (F10) to change between 'ClientTotal' or 'CurrentClientRun' Completed Units Count.
+  * Enhancement: Issue 85 - Add an unhandled exception reporting dialog.  Now when HFM encounters an unexpected exception the user will have easy access to exception information and a means to easily open up and post the information to the HFM Google Group.
+  * Enhancement: Issue 165 - Move Web Generation to its own thread (when run "After Full Refresh").
+  * Enhancement: Issue 166 - Make the Web Summary Page respect the current Sort Column and Direction.
+  * Enhancement: Issue 167 - Rework the About Dialog.  I like much better. :-)  Include the build date in addition to the version number.
+  * Enhancement: Issue 180 - Restore the already running instance to the screen when starting another HFM process.
+  * Enhancement: Issue 189 - When a client is 'RunningAsync' or 'RunningNoFrameTimes' then use the reported frame time to calculate EFT (Estimated Finishing Time) for Bonus Credit and PPD Calculations.
+  * Enhancement: Issue 192 - Detect and Handle "+ Running on battery power" Pause Messages.
+  * Enhancement: Issue 196 - Capture BAD_WORK_UNIT Result as Failed Work Unit.
+  * Enhancement: Add option to maintain the selected client during a Full Refresh operation (see option in the Preferences -> Options menu).
+  * Enhancement: Add Help Menu Items for HFM.log File and HFM.NET Data Files.
+
+  * Change: Use TimePerFrame, which takes into account the benchmark frame time, when calculating EftByFrameTime.  Really a fix for an error made implementing Issue 189.
+  * Change: Allow clients to report Percent Complete during Pause status.
+  * Change: Move Show/Hide Messages Window Menu Item from Tools Menu to View Menu.
+  * Change: Move External Application options from "Options" Tab to "Startup & External" Tab in Preferences.
+
+  * Fix: Issue 176 - HFM Crashes on Startup when it encounters a corrupt user.config file.
+  * Fix: Issue 189 - Unhandled Exception when saving Preferences with no EOC ID or Team Number in Web Settings.  Made each User and Team ID Web Settings Field require a value.
+  * Fix: Issue 191 - New ProtoMol Projects don't report frame progress on the precent boundry - thus they go cyclically out of 'Running' (Green) status.
+  * Fix: Issue 199 - Unhandled Exception calculating frame duration.  The UnitInfo.UnitFrames property is now a generic dictionary
+  * Fix: Issue 201 - Web Generation Fails when a Client with no CurrentWorkUnitLogLines is encountered.  Alter MarkupGeneratorTests to validate.  Thanks AtlasFolder!
+  * Fix: Allow spaces in Unix style path names (Regex).
+  * Fix: Unhandled Exception when Right-Click on Column Header when no Row is selected in the Grid.
+  * Fix: Issue with Clients going gray (Offline) and remaining that way.  The only other fix was to delete the UnitInfoCache.dat file after shutdown of HFM.
+  * Fix: Clean Instance Names when reading from Xml according to the same rules used for importing from a FahMon config file - for those who edit their .hfm files manually.
+
+  * Add: Test Logs - ProtoMol - verify Issue 191.
+  * Add: Test Logs - Stanadard - verify Issue 192.
+
 =Change Log - Version: 0.4.10 - Revision 156 - Beta=
   
   * Release Date: March 18, 2010
