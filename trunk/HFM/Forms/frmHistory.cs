@@ -88,6 +88,17 @@ namespace HFM.Forms
       public frmHistory(IPreferenceSet prefs)
       {
          InitializeComponent();
+
+         // split container does not scale when
+         // there is a fixed panel
+         using (var myGraphics = CreateGraphics())
+         {
+            var dpi = myGraphics.DpiX;
+            var scaleFactor = dpi / 96;
+            var distance = splitContainerWrapper1.SplitterDistance * scaleFactor;
+            splitContainerWrapper1.SplitterDistance = (int)distance;
+         }
+         
          SetupDataGridView(prefs);
       }
 

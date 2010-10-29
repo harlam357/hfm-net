@@ -236,7 +236,15 @@ namespace HFM.Forms
          if (e.Button.Equals(MouseButtons.Right))
          {
             var statusLabel = (ToolStripStatusLabel)sender;
-            statsContextMenuStrip.Show(statusStrip, statusLabel.Bounds.X + e.X, statusLabel.Bounds.Y + e.Y);
+            // Issue 235
+            if (PlatformOps.IsRunningOnMono())
+            {
+               statsContextMenuStrip.Show(statusStrip, e.X, e.Y);
+            }
+            else
+            {
+               statsContextMenuStrip.Show(statusStrip, statusLabel.Bounds.X + e.X, statusLabel.Bounds.Y + e.Y);
+            }
          }
       }
 
