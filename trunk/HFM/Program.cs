@@ -169,7 +169,7 @@ namespace HFM
             string platform = PlatformOps.IsRunningOnMono() ? "Mono" : Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE");
             if (platform != null)
             {
-               string filePath = Path.GetFullPath(Path.Combine(Path.Combine("SQLite", platform), String.Concat(sqliteDll, ".dll")));
+               string filePath = Path.GetFullPath(Path.Combine(Application.StartupPath, Path.Combine(Path.Combine("SQLite", platform), String.Concat(sqliteDll, ".dll"))));
                HfmTrace.WriteToHfmConsole(String.Format(CultureInfo.CurrentCulture, "SQLite DLL Path: {0}", filePath));
                if (File.Exists(filePath))
                {
