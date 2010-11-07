@@ -23,7 +23,6 @@ using System.Diagnostics;
 using NUnit.Framework;
 
 using HFM.Framework;
-using HFM.Log;
 using HFM.Queue;
 
 namespace HFM.DataAggregator.Tests

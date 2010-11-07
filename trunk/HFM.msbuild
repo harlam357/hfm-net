@@ -53,8 +53,8 @@
    </Target>
 
    <Target Name="NUnit">
-      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.DataAggregator.Tests\bin\Release\HFM.DataAggregator.Tests.dll /xml=HFM.Forms.DataAggregator.Results.xml //a HFM //ea $(NCoverExcludeList) //x HFM.DataAggregator.Tests.Coverage.xml" />
       <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Forms.Tests\bin\Release\HFM.Forms.Tests.dll /xml=HFM.Forms.Tests.Results.xml //a HFM //ea $(NCoverExcludeList) //x HFM.Forms.Tests.Coverage.xml" />
+      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.DataAggregator.Tests\bin\Release\HFM.DataAggregator.Tests.dll /xml=HFM.DataAggregator.Results.xml //a HFM.DataAggregator //ea $(NCoverExcludeList) //x HFM.DataAggregator.Tests.Coverage.xml" />
       <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Framework.Tests\bin\Release\HFM.Framework.Tests.dll /xml=HFM.Framework.Tests.Results.xml //a HFM.Framework //ea $(NCoverExcludeList) //x HFM.Framework.Tests.Coverage.xml" />
       <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Instances.Tests\bin\Release\HFM.Instances.Tests.dll /xml=HFM.Instances.Tests.Results.xml //a HFM.Instances //ea $(NCoverExcludeList) //x HFM.Instances.Tests.Coverage.xml" />
       <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Log.Tests\bin\Release\HFM.Log.Tests.dll /xml=HFM.Log.Tests.Results.xml //a HFM.Log //ea $(NCoverExcludeList) //x HFM.Log.Tests.Coverage.xml" />
