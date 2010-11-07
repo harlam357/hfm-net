@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Log Reader Class Tests
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -46,36 +46,32 @@ namespace HFM.Log.Tests
          _reader.ScanFahLog("..\\..\\..\\TestFiles\\SMP_1\\FAHlog.txt");
          
          // Check Run 0 Positions
-         ClientRun expectedRun = new ClientRun(2);
-         expectedRun.UnitQueueIndex.Add(5);
-         expectedRun.UnitStartIndex.Add(30);
-         expectedRun.UnitQueueIndex.Add(6);
-         expectedRun.UnitStartIndex.Add(150);
+         var expectedRun = new ClientRun(2);
+         expectedRun.UnitIndexes.Add(new UnitIndex(5, 30));
+         expectedRun.UnitIndexes.Add(new UnitIndex(6, 150));
          expectedRun.Arguments = "-smp -verbosity 9";
          expectedRun.FoldingID = "harlam357";
          expectedRun.Team = 32;
          expectedRun.UserID = "5131EA752EB60547";
          expectedRun.MachineID = 1;
-         expectedRun.NumberOfCompletedUnits = 1;
-         expectedRun.NumberOfFailedUnits = 0;
-         expectedRun.NumberOfTotalUnitsCompleted = 261;
+         expectedRun.CompletedUnits = 1;
+         expectedRun.FailedUnits = 0;
+         expectedRun.TotalCompletedUnits = 261;
 
          DoClientRunCheck(expectedRun, _reader.ClientRunList[0]);
 
          // Check Run 1 Positions
          expectedRun = new ClientRun(274);
-         expectedRun.UnitQueueIndex.Add(6);
-         expectedRun.UnitStartIndex.Add(302);
-         expectedRun.UnitQueueIndex.Add(7);
-         expectedRun.UnitStartIndex.Add(402);
+         expectedRun.UnitIndexes.Add(new UnitIndex(6, 302));
+         expectedRun.UnitIndexes.Add(new UnitIndex(7, 402));
          expectedRun.Arguments = "-smp -verbosity 9";
          expectedRun.FoldingID = "harlam357";
          expectedRun.Team = 32;
          expectedRun.UserID = "5131EA752EB60547";
          expectedRun.MachineID = 1;
-         expectedRun.NumberOfCompletedUnits = 2;
-         expectedRun.NumberOfFailedUnits = 0;
-         expectedRun.NumberOfTotalUnitsCompleted = 263;
+         expectedRun.CompletedUnits = 2;
+         expectedRun.FailedUnits = 0;
+         expectedRun.TotalCompletedUnits = 263;
 
          DoClientRunCheck(expectedRun, _reader.ClientRunList[1]);
 
@@ -97,19 +93,17 @@ namespace HFM.Log.Tests
          _reader.ScanFahLog("..\\..\\..\\TestFiles\\SMP_2\\FAHlog.txt");
 
          // Check Run 0 Positions
-         ClientRun expectedRun = new ClientRun(2);
-         expectedRun.UnitQueueIndex.Add(1);
-         expectedRun.UnitStartIndex.Add(30);
-         expectedRun.UnitQueueIndex.Add(2);
-         expectedRun.UnitStartIndex.Add(221);
+         var expectedRun = new ClientRun(2);
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 30));
+         expectedRun.UnitIndexes.Add(new UnitIndex(2, 221));
          expectedRun.Arguments = "-smp -verbosity 9";
          expectedRun.FoldingID = "harlam357";
          expectedRun.Team = 32;
          expectedRun.UserID = "3A49EBB303C19834";
          expectedRun.MachineID = 1;
-         expectedRun.NumberOfCompletedUnits = 2;
-         expectedRun.NumberOfFailedUnits = 0;
-         expectedRun.NumberOfTotalUnitsCompleted = 292;
+         expectedRun.CompletedUnits = 2;
+         expectedRun.FailedUnits = 0;
+         expectedRun.TotalCompletedUnits = 292;
 
          DoClientRunCheck(expectedRun, _reader.ClientRunList[0]);
 
@@ -134,11 +128,9 @@ namespace HFM.Log.Tests
          _reader.ScanFahLog("..\\..\\..\\TestFiles\\SMP_3\\FAHlog.txt");
 
          // Check Run 0 Positions
-         ClientRun expectedRun = new ClientRun(2);
-         expectedRun.UnitQueueIndex.Add(1);
-         expectedRun.UnitStartIndex.Add(231);
-         expectedRun.UnitQueueIndex.Add(2);
-         expectedRun.UnitStartIndex.Add(385);
+         var expectedRun = new ClientRun(2);
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 231));
+         expectedRun.UnitIndexes.Add(new UnitIndex(2, 385));
          expectedRun.Arguments = "-local -forceasm -smp 4";
          expectedRun.FoldingID = "harlam357";
          expectedRun.Team = 32;
@@ -146,9 +138,9 @@ namespace HFM.Log.Tests
          // see ClientLogLines indexes 29 & 30
          expectedRun.UserID = String.Empty;
          expectedRun.MachineID = 1;
-         expectedRun.NumberOfCompletedUnits = 1;
-         expectedRun.NumberOfFailedUnits = 0;
-         expectedRun.NumberOfTotalUnitsCompleted = 0; //TODO: not capturing line "+ Starting local stats count at 1"
+         expectedRun.CompletedUnits = 1;
+         expectedRun.FailedUnits = 0;
+         expectedRun.TotalCompletedUnits = 0; //TODO: not capturing line "+ Starting local stats count at 1"
 
          DoClientRunCheck(expectedRun, _reader.ClientRunList[0]);
 
@@ -170,15 +162,15 @@ namespace HFM.Log.Tests
          _reader.ScanFahLog("..\\..\\..\\TestFiles\\SMP_10\\FAHlog.txt");
 
          // Check Run 0 Positions
-         ClientRun expectedRun = new ClientRun(401);
+         var expectedRun = new ClientRun(401);
          expectedRun.Arguments = "-configonly";
          expectedRun.FoldingID = "sneakysnowman";
          expectedRun.Team = 32;
          expectedRun.UserID = "5D2DCEF06CE524B3";
          expectedRun.MachineID = 1;
-         expectedRun.NumberOfCompletedUnits = 0;
-         expectedRun.NumberOfFailedUnits = 0;
-         expectedRun.NumberOfTotalUnitsCompleted = 0;
+         expectedRun.CompletedUnits = 0;
+         expectedRun.FailedUnits = 0;
+         expectedRun.TotalCompletedUnits = 0;
 
          DoClientRunCheck(expectedRun, _reader.ClientRunList[5]);
 
@@ -200,66 +192,47 @@ namespace HFM.Log.Tests
          _reader.ScanFahLog("..\\..\\..\\TestFiles\\GPU2_1\\FAHlog.txt");
 
          // Check Run 0 Positions
-         ClientRun expectedRun = new ClientRun(2);
-         expectedRun.UnitQueueIndex.Add(1);
-         expectedRun.UnitStartIndex.Add(130);
-         expectedRun.UnitQueueIndex.Add(2);
-         expectedRun.UnitStartIndex.Add(326);
-         expectedRun.UnitQueueIndex.Add(3);
-         expectedRun.UnitStartIndex.Add(387);
-         expectedRun.UnitQueueIndex.Add(4);
-         expectedRun.UnitStartIndex.Add(449);
-         expectedRun.UnitQueueIndex.Add(5);
-         expectedRun.UnitStartIndex.Add(510);
-         expectedRun.UnitQueueIndex.Add(6);
-         expectedRun.UnitStartIndex.Add(571);
+         var expectedRun = new ClientRun(2);
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 130));
+         expectedRun.UnitIndexes.Add(new UnitIndex(2, 326));
+         expectedRun.UnitIndexes.Add(new UnitIndex(3, 387));
+         expectedRun.UnitIndexes.Add(new UnitIndex(4, 449));
+         expectedRun.UnitIndexes.Add(new UnitIndex(5, 510));
+         expectedRun.UnitIndexes.Add(new UnitIndex(6, 571));
          expectedRun.Arguments = "-verbosity 9 -local";
          expectedRun.FoldingID = "harlam357";
          expectedRun.Team = 32;
          expectedRun.UserID = "CF185086C102A47";
          expectedRun.MachineID = 2;
-         expectedRun.NumberOfCompletedUnits = 1;
-         expectedRun.NumberOfFailedUnits = 5;
-         expectedRun.NumberOfTotalUnitsCompleted = 0; //TODO: not capturing line "+ Starting local stats count at 1"
+         expectedRun.CompletedUnits = 1;
+         expectedRun.FailedUnits = 5;
+         expectedRun.TotalCompletedUnits = 0; //TODO: not capturing line "+ Starting local stats count at 1"
 
          DoClientRunCheck(expectedRun, _reader.ClientRunList[0]);
 
          // Check Run 1 Positions
          expectedRun = new ClientRun(618);
-         expectedRun.UnitQueueIndex.Add(7);
-         expectedRun.UnitStartIndex.Add(663);
-         expectedRun.UnitQueueIndex.Add(8);
-         expectedRun.UnitStartIndex.Add(737);
-         expectedRun.UnitQueueIndex.Add(9);
-         expectedRun.UnitStartIndex.Add(935);
-         expectedRun.UnitQueueIndex.Add(0);
-         expectedRun.UnitStartIndex.Add(1132);
-         expectedRun.UnitQueueIndex.Add(1);
-         expectedRun.UnitStartIndex.Add(1329);
-         expectedRun.UnitQueueIndex.Add(2);
-         expectedRun.UnitStartIndex.Add(1526);
-         expectedRun.UnitQueueIndex.Add(3);
-         expectedRun.UnitStartIndex.Add(1724);
-         expectedRun.UnitQueueIndex.Add(4);
-         expectedRun.UnitStartIndex.Add(1926);
-         expectedRun.UnitQueueIndex.Add(5);
-         expectedRun.UnitStartIndex.Add(2123);
-         expectedRun.UnitQueueIndex.Add(6);
-         expectedRun.UnitStartIndex.Add(2321);
-         expectedRun.UnitQueueIndex.Add(7);
-         expectedRun.UnitStartIndex.Add(2518);
-         expectedRun.UnitQueueIndex.Add(8);
-         expectedRun.UnitStartIndex.Add(2715);
-         expectedRun.UnitQueueIndex.Add(9);
-         expectedRun.UnitStartIndex.Add(2917);
+         expectedRun.UnitIndexes.Add(new UnitIndex(7, 663));
+         expectedRun.UnitIndexes.Add(new UnitIndex(8, 737));
+         expectedRun.UnitIndexes.Add(new UnitIndex(9, 935));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 1132));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 1329));
+         expectedRun.UnitIndexes.Add(new UnitIndex(2, 1526));
+         expectedRun.UnitIndexes.Add(new UnitIndex(3, 1724));
+         expectedRun.UnitIndexes.Add(new UnitIndex(4, 1926));
+         expectedRun.UnitIndexes.Add(new UnitIndex(5, 2123));
+         expectedRun.UnitIndexes.Add(new UnitIndex(6, 2321));
+         expectedRun.UnitIndexes.Add(new UnitIndex(7, 2518));
+         expectedRun.UnitIndexes.Add(new UnitIndex(8, 2715));
+         expectedRun.UnitIndexes.Add(new UnitIndex(9, 2917));
          expectedRun.Arguments = "-verbosity 9 -local";
          expectedRun.FoldingID = "harlam357";
          expectedRun.Team = 32;
          expectedRun.UserID = "CF185086C102A47";
          expectedRun.MachineID = 2;
-         expectedRun.NumberOfCompletedUnits = 11;
-         expectedRun.NumberOfFailedUnits = 1;
-         expectedRun.NumberOfTotalUnitsCompleted = 12;
+         expectedRun.CompletedUnits = 11;
+         expectedRun.FailedUnits = 1;
+         expectedRun.TotalCompletedUnits = 12;
 
          DoClientRunCheck(expectedRun, _reader.ClientRunList[1]);
 
@@ -281,21 +254,18 @@ namespace HFM.Log.Tests
          _reader.ScanFahLog("..\\..\\..\\TestFiles\\GPU2_2\\FAHlog.txt");
 
          // Check Run 0 Positions
-         ClientRun expectedRun = new ClientRun(2);
-         expectedRun.UnitQueueIndex.Add(8);
-         expectedRun.UnitStartIndex.Add(34);
-         expectedRun.UnitQueueIndex.Add(9);
-         expectedRun.UnitStartIndex.Add(208);
-         expectedRun.UnitQueueIndex.Add(0);
-         expectedRun.UnitStartIndex.Add(382);
+         var expectedRun = new ClientRun(2);
+         expectedRun.UnitIndexes.Add(new UnitIndex(8, 34));
+         expectedRun.UnitIndexes.Add(new UnitIndex(9, 208));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 382));
          expectedRun.Arguments = String.Empty;
          expectedRun.FoldingID = "harlam357";
          expectedRun.Team = 32;
          expectedRun.UserID = "51108B97183EA3DF";
          expectedRun.MachineID = 2;
-         expectedRun.NumberOfCompletedUnits = 2;
-         expectedRun.NumberOfFailedUnits = 0;
-         expectedRun.NumberOfTotalUnitsCompleted = 4221;
+         expectedRun.CompletedUnits = 2;
+         expectedRun.FailedUnits = 0;
+         expectedRun.TotalCompletedUnits = 4221;
 
          DoClientRunCheck(expectedRun, _reader.ClientRunList[0]);
 
@@ -317,42 +287,35 @@ namespace HFM.Log.Tests
          _reader.ScanFahLog("..\\..\\..\\TestFiles\\GPU2_3\\FAHlog.txt");
 
          // Check Run 0 Positions
-         ClientRun expectedRun = new ClientRun(0);
-         expectedRun.UnitQueueIndex.Add(6);
-         expectedRun.UnitStartIndex.Add(24);
+         var expectedRun = new ClientRun(0);
+         expectedRun.UnitIndexes.Add(new UnitIndex(6, 24));
          expectedRun.Arguments = String.Empty;
          expectedRun.FoldingID = "JollySwagman";
          expectedRun.Team = 32;
          expectedRun.UserID = "1D1493BB0A79C9AE";
          expectedRun.MachineID = 2;
-         expectedRun.NumberOfCompletedUnits = 0;
-         expectedRun.NumberOfFailedUnits = 0;
-         expectedRun.NumberOfTotalUnitsCompleted = 0;
+         expectedRun.CompletedUnits = 0;
+         expectedRun.FailedUnits = 0;
+         expectedRun.TotalCompletedUnits = 0;
 
          DoClientRunCheck(expectedRun, _reader.ClientRunList[0]);
 
          // Check Run 1 Positions
          expectedRun = new ClientRun(56);
-         expectedRun.UnitQueueIndex.Add(6);
-         expectedRun.UnitStartIndex.Add(80);
-         expectedRun.UnitQueueIndex.Add(7);
-         expectedRun.UnitStartIndex.Add(221);
-         expectedRun.UnitQueueIndex.Add(8);
-         expectedRun.UnitStartIndex.Add(271);
-         expectedRun.UnitQueueIndex.Add(9);
-         expectedRun.UnitStartIndex.Add(320);
-         expectedRun.UnitQueueIndex.Add(0);
-         expectedRun.UnitStartIndex.Add(373);
-         expectedRun.UnitQueueIndex.Add(1);
-         expectedRun.UnitStartIndex.Add(421);
+         expectedRun.UnitIndexes.Add(new UnitIndex(6, 80));
+         expectedRun.UnitIndexes.Add(new UnitIndex(7, 221));
+         expectedRun.UnitIndexes.Add(new UnitIndex(8, 271));
+         expectedRun.UnitIndexes.Add(new UnitIndex(9, 320));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 373));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 421));
          expectedRun.Arguments = String.Empty;
          expectedRun.FoldingID = "JollySwagman";
          expectedRun.Team = 32;
          expectedRun.UserID = "1D1493BB0A79C9AE";
          expectedRun.MachineID = 2;
-         expectedRun.NumberOfCompletedUnits = 1;
-         expectedRun.NumberOfFailedUnits = 5;
-         expectedRun.NumberOfTotalUnitsCompleted = 224;
+         expectedRun.CompletedUnits = 1;
+         expectedRun.FailedUnits = 5;
+         expectedRun.TotalCompletedUnits = 224;
 
          DoClientRunCheck(expectedRun, _reader.ClientRunList[1]);
 
@@ -377,17 +340,16 @@ namespace HFM.Log.Tests
          _reader.ScanFahLog("..\\..\\..\\TestFiles\\GPU2_7\\FAHlog.txt");
 
          // Check Run 0 Positions
-         ClientRun expectedRun = new ClientRun(0);
-         expectedRun.UnitQueueIndex.Add(0);
-         expectedRun.UnitStartIndex.Add(24);
+         var expectedRun = new ClientRun(0);
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 24));
          expectedRun.Arguments = String.Empty;
          expectedRun.FoldingID = "Zagen30";
          expectedRun.Team = 46301;
          expectedRun.UserID = "xxxxxxxxxxxxxxxxxxx";
          expectedRun.MachineID = 2;
-         expectedRun.NumberOfCompletedUnits = 0;
-         expectedRun.NumberOfFailedUnits = 0;
-         expectedRun.NumberOfTotalUnitsCompleted = 1994;
+         expectedRun.CompletedUnits = 0;
+         expectedRun.FailedUnits = 0;
+         expectedRun.TotalCompletedUnits = 1994;
 
          DoClientRunCheck(expectedRun, _reader.ClientRunList[0]);
 
@@ -426,47 +388,44 @@ namespace HFM.Log.Tests
          _reader.ScanFahLog("..\\..\\..\\TestFiles\\Standard_1\\FAHlog.txt");
 
          // Check Run 0 Positions
-         ClientRun expectedRun = new ClientRun(2);
+         var expectedRun = new ClientRun(2);
          expectedRun.Arguments = "-configonly";
          expectedRun.FoldingID = "harlam357";
          expectedRun.Team = 32;
          expectedRun.UserID = "4E34332601E26450";
          expectedRun.MachineID = 5;
-         expectedRun.NumberOfCompletedUnits = 0;
-         expectedRun.NumberOfFailedUnits = 0;
-         expectedRun.NumberOfTotalUnitsCompleted = 0;
+         expectedRun.CompletedUnits = 0;
+         expectedRun.FailedUnits = 0;
+         expectedRun.TotalCompletedUnits = 0;
 
          DoClientRunCheck(expectedRun, _reader.ClientRunList[0]);
 
          // Check Run 1 Positions
          expectedRun = new ClientRun(30);
-         expectedRun.UnitQueueIndex.Add(1);
-         expectedRun.UnitStartIndex.Add(179);
-         expectedRun.UnitQueueIndex.Add(2);
-         expectedRun.UnitStartIndex.Add(593);
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 179));
+         expectedRun.UnitIndexes.Add(new UnitIndex(2, 593));
          expectedRun.Arguments = "-verbosity 9 -forceasm";
          expectedRun.FoldingID = "harlam357";
          expectedRun.Team = 32;
          expectedRun.UserID = "4E34332601E26450";
          expectedRun.MachineID = 5;
-         expectedRun.NumberOfCompletedUnits = 1;
-         expectedRun.NumberOfFailedUnits = 0;
-         expectedRun.NumberOfTotalUnitsCompleted = 0; //TODO: not capturing line "+ Starting local stats count at 1"
+         expectedRun.CompletedUnits = 1;
+         expectedRun.FailedUnits = 0;
+         expectedRun.TotalCompletedUnits = 0; //TODO: not capturing line "+ Starting local stats count at 1"
 
          DoClientRunCheck(expectedRun, _reader.ClientRunList[1]);
 
          // Check Run 2 Positions
          expectedRun = new ClientRun(839);
-         expectedRun.UnitQueueIndex.Add(2);
-         expectedRun.UnitStartIndex.Add(874);
+         expectedRun.UnitIndexes.Add(new UnitIndex(2, 874));
          expectedRun.Arguments = "-verbosity 9 -forceasm -oneunit";
          expectedRun.FoldingID = "harlam357";
          expectedRun.Team = 32;
          expectedRun.UserID = "4E34332601E26450";
          expectedRun.MachineID = 5;
-         expectedRun.NumberOfCompletedUnits = 1;
-         expectedRun.NumberOfFailedUnits = 0;
-         expectedRun.NumberOfTotalUnitsCompleted = 2;
+         expectedRun.CompletedUnits = 1;
+         expectedRun.FailedUnits = 0;
+         expectedRun.TotalCompletedUnits = 2;
 
          DoClientRunCheck(expectedRun, _reader.ClientRunList[2]);
 
@@ -488,32 +447,30 @@ namespace HFM.Log.Tests
          _reader.ScanFahLog("..\\..\\..\\TestFiles\\Standard_5\\FAHlog.txt");
 
          // Check Run 3 Positions
-         ClientRun expectedRun = new ClientRun(788);
-         expectedRun.UnitQueueIndex.Add(4);
-         expectedRun.UnitStartIndex.Add(820);
+         var expectedRun = new ClientRun(788);
+         expectedRun.UnitIndexes.Add(new UnitIndex(4, 820));
          expectedRun.Arguments = "-oneunit -forceasm -verbosity 9";
          expectedRun.FoldingID = "borden.b";
          expectedRun.Team = 131;
          expectedRun.UserID = "722723950C6887C2";
          expectedRun.MachineID = 3;
-         expectedRun.NumberOfCompletedUnits = 0;
-         expectedRun.NumberOfFailedUnits = 0;
-         expectedRun.NumberOfTotalUnitsCompleted = 0;
+         expectedRun.CompletedUnits = 0;
+         expectedRun.FailedUnits = 0;
+         expectedRun.TotalCompletedUnits = 0;
 
          DoClientRunCheck(expectedRun, _reader.ClientRunList[3]);
          
          // Check Run 4 Positions
          expectedRun = new ClientRun(927);
-         expectedRun.UnitQueueIndex.Add(4);
-         expectedRun.UnitStartIndex.Add(961);
+         expectedRun.UnitIndexes.Add(new UnitIndex(4, 961));
          expectedRun.Arguments = "-forceasm -verbosity 9 -oneunit";
          expectedRun.FoldingID = "borden.b";
          expectedRun.Team = 131;
          expectedRun.UserID = "722723950C6887C2";
          expectedRun.MachineID = 3;
-         expectedRun.NumberOfCompletedUnits = 0;
-         expectedRun.NumberOfFailedUnits = 0;
-         expectedRun.NumberOfTotalUnitsCompleted = 0;
+         expectedRun.CompletedUnits = 0;
+         expectedRun.FailedUnits = 0;
+         expectedRun.TotalCompletedUnits = 0;
 
          DoClientRunCheck(expectedRun, _reader.ClientRunList[4]);
 
@@ -554,33 +511,24 @@ namespace HFM.Log.Tests
          _reader.ScanFahLog("..\\..\\..\\TestFiles\\Standard_6\\FAHlog.txt");
 
          // Check Run 0 Positions
-         ClientRun expectedRun = new ClientRun(2);
-         expectedRun.UnitQueueIndex.Add(9);
-         expectedRun.UnitStartIndex.Add(27);
-         expectedRun.UnitQueueIndex.Add(0);
-         expectedRun.UnitStartIndex.Add(294);
-         expectedRun.UnitQueueIndex.Add(1);
-         expectedRun.UnitStartIndex.Add(554);
-         expectedRun.UnitQueueIndex.Add(2);
-         expectedRun.UnitStartIndex.Add(814);
-         expectedRun.UnitQueueIndex.Add(3);
-         expectedRun.UnitStartIndex.Add(1074);
-         expectedRun.UnitQueueIndex.Add(4);
-         expectedRun.UnitStartIndex.Add(1338);
-         expectedRun.UnitQueueIndex.Add(5);
-         expectedRun.UnitStartIndex.Add(1602);
-         expectedRun.UnitQueueIndex.Add(6);
-         expectedRun.UnitStartIndex.Add(1870);
-         expectedRun.UnitQueueIndex.Add(7);
-         expectedRun.UnitStartIndex.Add(2130);
+         var expectedRun = new ClientRun(2);
+         expectedRun.UnitIndexes.Add(new UnitIndex(9, 27));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 294));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 554));
+         expectedRun.UnitIndexes.Add(new UnitIndex(2, 814));
+         expectedRun.UnitIndexes.Add(new UnitIndex(3, 1074));
+         expectedRun.UnitIndexes.Add(new UnitIndex(4, 1338));
+         expectedRun.UnitIndexes.Add(new UnitIndex(5, 1602));
+         expectedRun.UnitIndexes.Add(new UnitIndex(6, 1870));
+         expectedRun.UnitIndexes.Add(new UnitIndex(7, 2130));
          expectedRun.Arguments = String.Empty;
          expectedRun.FoldingID = "DrSpalding";
          expectedRun.Team = 48083;
          expectedRun.UserID = "1E19BD450434A6ED";
          expectedRun.MachineID = 1;
-         expectedRun.NumberOfCompletedUnits = 8;
-         expectedRun.NumberOfFailedUnits = 0;
-         expectedRun.NumberOfTotalUnitsCompleted = 229;
+         expectedRun.CompletedUnits = 8;
+         expectedRun.FailedUnits = 0;
+         expectedRun.TotalCompletedUnits = 229;
 
          DoClientRunCheck(expectedRun, _reader.ClientRunList[0]);
 
@@ -600,16 +548,11 @@ namespace HFM.Log.Tests
       private static void DoClientRunCheck(ClientRun expectedRun, ClientRun run)
       {
          Assert.AreEqual(expectedRun.ClientStartIndex, run.ClientStartIndex);
-         // The Unit Start and Unit Queue Index Lists should have the same
-         // number of elements.  This should probably be one generic list.
-         Assert.AreEqual(run.UnitQueueIndex.Count, run.UnitStartIndex.Count);
-
-         Assert.AreEqual(expectedRun.UnitQueueIndex.Count, run.UnitQueueIndex.Count);
-         Assert.AreEqual(expectedRun.UnitStartIndex.Count, run.UnitStartIndex.Count);
-         for (int i = 0; i < expectedRun.UnitQueueIndex.Count; i++)
+         Assert.AreEqual(expectedRun.UnitIndexes.Count, run.UnitIndexes.Count);
+         for (int i = 0; i < expectedRun.UnitIndexes.Count; i++)
          {
-            Assert.AreEqual(expectedRun.UnitQueueIndex[i], run.UnitQueueIndex[i]);
-            Assert.AreEqual(expectedRun.UnitStartIndex[i], run.UnitStartIndex[i]);
+            Assert.AreEqual(expectedRun.UnitIndexes[i].StartIndex, run.UnitIndexes[i].StartIndex);
+            Assert.AreEqual(expectedRun.UnitIndexes[i].QueueIndex, run.UnitIndexes[i].QueueIndex);
          }
 
          Assert.AreEqual(expectedRun.Arguments, run.Arguments);
@@ -617,9 +560,9 @@ namespace HFM.Log.Tests
          Assert.AreEqual(expectedRun.Team, run.Team);
          Assert.AreEqual(expectedRun.UserID, run.UserID);
          Assert.AreEqual(expectedRun.MachineID, run.MachineID);
-         Assert.AreEqual(expectedRun.NumberOfCompletedUnits, run.NumberOfCompletedUnits);
-         Assert.AreEqual(expectedRun.NumberOfFailedUnits, run.NumberOfFailedUnits);
-         Assert.AreEqual(expectedRun.NumberOfTotalUnitsCompleted, run.NumberOfTotalUnitsCompleted);
+         Assert.AreEqual(expectedRun.CompletedUnits, run.CompletedUnits);
+         Assert.AreEqual(expectedRun.FailedUnits, run.FailedUnits);
+         Assert.AreEqual(expectedRun.TotalCompletedUnits, run.TotalCompletedUnits);
       }
    }
    // ReSharper restore InconsistentNaming

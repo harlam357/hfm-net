@@ -236,21 +236,18 @@ namespace HFM.Log
 
          if (_unitStart.WorkUnitProcessingIndex > -1)
          {
-            CurrentClientRun.UnitStartIndex.Add(_unitStart.WorkUnitProcessingIndex);
             // Set the Queue Slot - we don't care if we found a valid slot or not
-            CurrentClientRun.UnitQueueIndex.Add(_unitStart.WorkUnitQueueSlotIndex);
+            CurrentClientRun.UnitIndexes.Add(new UnitIndex(_unitStart.WorkUnitQueueSlotIndex, _unitStart.WorkUnitProcessingIndex));
          }
          else if (_unitStart.WorkUnitWorkingIndex > -1)
          {
-            CurrentClientRun.UnitStartIndex.Add(_unitStart.WorkUnitWorkingIndex);
             // Set the Queue Slot - we don't care if we found a valid slot or not
-            CurrentClientRun.UnitQueueIndex.Add(_unitStart.WorkUnitQueueSlotIndex);
+            CurrentClientRun.UnitIndexes.Add(new UnitIndex(_unitStart.WorkUnitQueueSlotIndex,_unitStart.WorkUnitWorkingIndex));
          }
          else if (_unitStart.WorkUnitStartIndex > -1)
          {
-            CurrentClientRun.UnitStartIndex.Add(_unitStart.WorkUnitStartIndex);
             // Set the Queue Slot - we don't care if we found a valid slot or not
-            CurrentClientRun.UnitQueueIndex.Add(_unitStart.WorkUnitQueueSlotIndex);
+            CurrentClientRun.UnitIndexes.Add(new UnitIndex(_unitStart.WorkUnitQueueSlotIndex, _unitStart.WorkUnitStartIndex));
          }
          else
          {
@@ -275,7 +272,7 @@ namespace HFM.Log
             {
                if (logLine.LineData.Equals(WorkUnitResult.FinishedUnit))
                {
-                  CurrentClientRun.NumberOfCompletedUnits++;
+                  CurrentClientRun.CompletedUnits++;
                }
                else if (logLine.LineData.Equals(WorkUnitResult.EarlyUnitEnd) ||
                         logLine.LineData.Equals(WorkUnitResult.UnstableMachine) ||
@@ -283,7 +280,7 @@ namespace HFM.Log
                         logLine.LineData.Equals(WorkUnitResult.BadWorkUnit) ||
                         logLine.LineData.Equals(WorkUnitResult.CoreOutdated)) 
                {
-                  CurrentClientRun.NumberOfFailedUnits++;
+                  CurrentClientRun.FailedUnits++;
                }
             }
          }
@@ -297,7 +294,7 @@ namespace HFM.Log
       {
          if (CurrentClientRun != null)
          {
-            CurrentClientRun.NumberOfTotalUnitsCompleted = (int)logLine.LineData;
+            CurrentClientRun.TotalCompletedUnits = (int)logLine.LineData;
          }
       } 
       #endregion

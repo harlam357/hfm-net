@@ -381,9 +381,9 @@ namespace HFM.Instances
          _displayInstance.UserId = run.UserID;
          _displayInstance.MachineId = run.MachineID;
 
-         _displayInstance.TotalRunCompletedUnits = run.NumberOfCompletedUnits;
-         _displayInstance.TotalRunFailedUnits = run.NumberOfFailedUnits;
-         _displayInstance.TotalClientCompletedUnits = run.NumberOfTotalUnitsCompleted;
+         _displayInstance.TotalRunCompletedUnits = run.CompletedUnits;
+         _displayInstance.TotalRunFailedUnits = run.FailedUnits;
+         _displayInstance.TotalClientCompletedUnits = run.TotalCompletedUnits;
       }
 
       private void PopulateRunLevelData(IQueueEntry queueEntry)

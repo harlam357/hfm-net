@@ -58,20 +58,10 @@ namespace HFM.Log
       IList<LogLine> GetLogLinesFromQueueIndex(int queueIndex);
 
       /// <summary>
-      /// Get an Empty FAHlog Unit Data
-      /// </summary>
-      FahLogUnitData CreateFahLogUnitData();
-
-      /// <summary>
       /// Get FAHlog Unit Data from the given Log Lines
       /// </summary>
       /// <param name="logLines">Log Lines to search</param>
       FahLogUnitData GetFahLogDataFromLogLines(ICollection<LogLine> logLines);
-
-      /// <summary>
-      /// Get an Empty unitinfo Log Data
-      /// </summary>
-      UnitInfoLogData CreateUnitInfoLogData();
 
       /// <summary>
       /// Parse the content from the unitinfo.txt file.
@@ -182,10 +172,10 @@ namespace HFM.Log
          get
          {
             ClientRun lastClientRun = _clientRunList.CurrentClientRun;
-            if (lastClientRun != null && lastClientRun.UnitStartIndex.Count > 1)
+            if (lastClientRun != null && lastClientRun.UnitIndexes.Count > 1)
             {
-               int start = lastClientRun.UnitStartIndex[lastClientRun.UnitStartIndex.Count - 2];
-               int end = lastClientRun.UnitStartIndex[lastClientRun.UnitStartIndex.Count - 1];
+               int start = lastClientRun.UnitIndexes[lastClientRun.UnitIndexes.Count - 2].StartIndex;
+               int end = lastClientRun.UnitIndexes[lastClientRun.UnitIndexes.Count - 1].StartIndex;
 
                int length = end - start;
 
@@ -208,9 +198,9 @@ namespace HFM.Log
          get
          {
             ClientRun lastClientRun = _clientRunList.CurrentClientRun;
-            if (lastClientRun != null && lastClientRun.UnitStartIndex.Count > 0)
+            if (lastClientRun != null && lastClientRun.UnitIndexes.Count > 0)
             {
-               int start = lastClientRun.UnitStartIndex[lastClientRun.UnitStartIndex.Count - 1];
+               int start = lastClientRun.UnitIndexes[lastClientRun.UnitIndexes.Count - 1].StartIndex;
                int end = _clientLogLines.Count;
 
                int length = end - start;
@@ -240,13 +230,13 @@ namespace HFM.Log
          // the given queueIndex.
          for (int i = ClientRunList.Count - 1; i >= 0; i--)
          {
-            for (int j = ClientRunList[i].UnitStartIndex.Count - 1; j >= 0; j--)
+            for (int j = ClientRunList[i].UnitIndexes.Count - 1; j >= 0; j--)
             {
                // if a match is found
-               if (ClientRunList[i].UnitQueueIndex[j] == queueIndex)
+               if (ClientRunList[i].UnitIndexes[j].QueueIndex == queueIndex)
                {
                   // set the unit start position
-                  int start = ClientRunList[i].UnitStartIndex[j];
+                  int start = ClientRunList[i].UnitIndexes[j].StartIndex;
                   int end = DetermineEndPosition(i, j);
 
                   int length = end - start;
@@ -272,7 +262,7 @@ namespace HFM.Log
          if (i == ClientRunList.Count - 1)
          {
             // we're workin on the last unit in the run
-            if (j == ClientRunList[i].UnitStartIndex.Count - 1)
+            if (j == ClientRunList[i].UnitIndexes.Count - 1)
             {
                // use the last line index as the end position
                return _clientLogLines.Count;
@@ -280,13 +270,13 @@ namespace HFM.Log
             else // we're working on a unit prior to the last
             {
                // use the unit start position for the next unit
-               return ClientRunList[i].UnitStartIndex[j + 1];
+               return ClientRunList[i].UnitIndexes[j + 1].StartIndex;
             }
          }
          else // we're working on a client run prior to the last
          {
             // we're workin on the last unit in the run
-            if (j == ClientRunList[i].UnitStartIndex.Count - 1)
+            if (j == ClientRunList[i].UnitIndexes.Count - 1)
             {
                // use the client start position for the next client run
                return ClientRunList[i + 1].ClientStartIndex;
@@ -294,17 +284,9 @@ namespace HFM.Log
             else
             {
                // use the unit start position for the next unit
-               return ClientRunList[i].UnitStartIndex[j + 1];
+               return ClientRunList[i].UnitIndexes[j + 1].StartIndex;
             }
          }
-      }
-
-      /// <summary>
-      /// Get an Empty FAHlog Unit Data
-      /// </summary>
-      public FahLogUnitData CreateFahLogUnitData()
-      {
-         return new FahLogUnitData();
       }
 
       /// <summary>
@@ -485,14 +467,6 @@ namespace HFM.Log
                             };
 
          data.ProjectInfoList.Add(info);
-      }
-
-      /// <summary>
-      /// Get an Empty unitinfo Log Data
-      /// </summary>
-      public UnitInfoLogData CreateUnitInfoLogData()
-      {
-         return new UnitInfoLogData();
       }
 
       /// <summary>

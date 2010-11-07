@@ -270,8 +270,8 @@ namespace HFM.DataAggregator
                      // Use either the current Work Unit log lines or current Client Run log lines
                      // as decided upon above... don't clear it here and show the user nothing - 10/9/10
                      //_unitLogLines[queueIndex] = null;
-                     fahLogUnitData = _logReader.CreateFahLogUnitData();
-                     unitInfoLogData = _logReader.CreateUnitInfoLogData();
+                     fahLogUnitData = new FahLogUnitData();
+                     unitInfoLogData = new UnitInfoLogData();
                   }
                   parsedUnits[queueIndex] = BuildUnitInfo(_queueReader.Queue.GetQueueEntry((uint) queueIndex), fahLogUnitData, unitInfoLogData, true);
                }

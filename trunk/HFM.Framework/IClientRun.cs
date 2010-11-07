@@ -33,10 +33,10 @@ namespace HFM.Framework
 
       int MachineID { get; set; }
 
-      int NumberOfCompletedUnits { get; set; }
+      int CompletedUnits { get; set; }
 
-      int NumberOfFailedUnits { get; set; }
+      int FailedUnits { get; set; }
 
-      int NumberOfTotalUnitsCompleted { get; set; }
+      int TotalCompletedUnits { get; set; }
    }
 }

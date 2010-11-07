@@ -25,120 +25,127 @@ using HFM.Framework;
 namespace HFM.Log
 {
    /// <summary>
-   /// Holds Run Level Data for a Single Client Run.
+   /// Data Class for a single Client Run (client start to client stop).
    /// </summary>
    public class ClientRun : IClientRun
    {
-      #region Members
-      private string _ClientVersion = String.Empty;
-      public string ClientVersion
-      {
-         get { return _ClientVersion; }
-         set { _ClientVersion = value; }
-      }
-      
-      private string _Arguments = String.Empty;
-      public string Arguments
-      {
-         get { return _Arguments; }
-         set { _Arguments = value; }
-      }
-
-      private string _FoldingID = Constants.FoldingIDDefault;
-      public string FoldingID
-      {
-         get { return _FoldingID; }
-         set { _FoldingID = value; }
-      }
-
-      private int _Team = Constants.TeamDefault;
-      public int Team
-      {
-         get { return _Team; }
-         set { _Team = value; }
-      }
-
-      private string _UserID = String.Empty;
-      public string UserID
-      {
-         get { return _UserID; }
-         set { _UserID = value; }
-      }
-
-      private int _MachineID;
-      public int MachineID
-      {
-         get { return _MachineID; }
-         set { _MachineID = value; }
-      }
-
-      private int _NumberOfCompletedUnits;
-      public int NumberOfCompletedUnits
-      {
-         get { return _NumberOfCompletedUnits; }
-         set { _NumberOfCompletedUnits = value; }
-      }
-
-      private int _NumberOfFailedUnits;
-      public int NumberOfFailedUnits
-      {
-         get { return _NumberOfFailedUnits; }
-         set { _NumberOfFailedUnits = value; }
-      }
-
-      private int _NumberOfTotalUnitsCompleted;
-      public int NumberOfTotalUnitsCompleted
-      {
-         get { return _NumberOfTotalUnitsCompleted; }
-         set { _NumberOfTotalUnitsCompleted = value; }
-      }
-
+      private readonly int _clientStartIndex;
       /// <summary>
-      /// Line index of client start position.
-      /// </summary>
-      private readonly int _ClientStartPosition;
-      /// <summary>
-      /// Line index of client start position.
+      /// Log line index of the starting line for this Client Run.
       /// </summary>
       public int ClientStartIndex
       {
-         get { return _ClientStartPosition; }
+         get { return _clientStartIndex; }
       }
 
+      private readonly List<UnitIndex> _unitIndexes;
       /// <summary>
-      /// List of work unit start positions for this client run.
+      /// List of Unit Indexes in this Client Run.
       /// </summary>
-      private readonly List<int> _UnitStartIndex = new List<int>();
-      /// <summary>
-      /// List of work unit start positions for this client run.
-      /// </summary>
-      public List<int> UnitStartIndex
+      public List<UnitIndex> UnitIndexes
       {
-         get { return _UnitStartIndex; }
+         get { return _unitIndexes; }
       }
-
-      /// <summary>
-      /// List of Queue Indexes that correspond to the Unit Start Indexes for this client run.
-      /// </summary>
-      private readonly List<int> _UnitQueueIndex = new List<int>();
-      /// <summary>
-      /// List of Queue Indexes that correspond to the Unit Start Indexes for this client run.
-      /// </summary>
-      public List<int> UnitQueueIndex
-      {
-         get { return _UnitQueueIndex; }
-      }
-      #endregion
-
+   
       #region CTOR
+      
       /// <summary>
-      /// Primary Constructor
+      /// ClientRun Constructor
       /// </summary>
-      /// <param name="ClientStartIndex">Line index of client start.</param>
-      public ClientRun(int ClientStartIndex)
+      /// <param name="clientStartIndex">Log line index of the starting line for this Client Run.</param>
+      public ClientRun(int clientStartIndex)
       {
-         _ClientStartPosition = ClientStartIndex;
+         _clientStartIndex = clientStartIndex;
+         _unitIndexes = new List<UnitIndex>();
+
+         ClientVersion = String.Empty;
+         Arguments = String.Empty;
+         FoldingID = Constants.FoldingIDDefault;
+         Team = Constants.TeamDefault;
+         UserID = String.Empty;
       }
+      
       #endregion
+   
+      #region Properties
+
+      /// <summary>
+      /// Client Version Number
+      /// </summary>
+      public string ClientVersion { get; set; }
+
+      /// <summary>
+      /// Client Command Line Arguments
+      /// </summary>
+      public string Arguments { get; set; }
+
+      /// <summary>
+      /// Folding ID (User name)
+      /// </summary>
+      public string FoldingID { get; set; }
+
+      /// <summary>
+      /// Team Number
+      /// </summary>
+      public int Team { get; set; }
+
+      /// <summary>
+      /// User ID (unique hexadecimal value)
+      /// </summary>
+      public string UserID { get; set; }
+
+      /// <summary>
+      /// Machine ID
+      /// </summary>
+      public int MachineID { get; set; }
+
+      /// <summary>
+      /// Number of Completed Units for this Client Run
+      /// </summary>
+      public int CompletedUnits { get; set; }
+
+      /// <summary>
+      /// Number of Failed Units for this Client Run
+      /// </summary>
+      public int FailedUnits { get; set; }
+
+      /// <summary>
+      /// Total Number of Completed Units (for the life of the client - as reported in the FAHlog.txt file)
+      /// </summary>
+      public int TotalCompletedUnits { get; set; }
+
+      #endregion
+   }
+   
+   public struct UnitIndex
+   {
+      private readonly int _queueIndex;
+      /// <summary>
+      /// Queue index of this work unit.
+      /// </summary>
+      public int QueueIndex
+      {
+         get { return _queueIndex; }
+      }
+   
+      private readonly int _startIndex;
+      /// <summary>
+      /// Log line index of the starting line of this work unit.
+      /// </summary>
+      public int StartIndex
+      {
+         get { return _startIndex; }
+      }
+      
+      /// <summary>
+      /// UnitIndex Constructor
+      /// </summary>
+      /// <param name="queueIndex">Queue index of this work unit.</param>
+      /// <param name="startIndex">Log line index of the starting line of this work unit.</param>
+      public UnitIndex(int queueIndex, int startIndex)
+      {
+         _queueIndex = queueIndex;
+         _startIndex = startIndex;
+      }     
    }
 }

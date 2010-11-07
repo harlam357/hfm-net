@@ -155,17 +155,17 @@ namespace HFM.Framework
       string WorkUnitType { get; }
 
       /// <summary>
-      /// The Folding ID (Username) attached to this queue entry
+      /// Folding ID (User name)
       /// </summary>
       string FoldingID { get; }
 
       /// <summary>
-      /// The Team number attached to this queue entry
+      /// Team Number
       /// </summary>
       string Team { get; }
 
       /// <summary>
-      /// The Team number attached to this queue entry
+      /// Team Number
       /// </summary>
       UInt32 TeamNumber { get; }
 
@@ -175,7 +175,7 @@ namespace HFM.Framework
       string ID { get; }
 
       /// <summary>
-      /// UserID associated with this queue entry
+      /// User ID (unique hexadecimal value)
       /// </summary>
       string UserID { get; }
 
