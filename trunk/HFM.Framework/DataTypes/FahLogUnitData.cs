@@ -20,16 +20,14 @@
 using System;
 using System.Collections.Generic;
 
-using HFM.Framework;
-
-namespace HFM.Log
+namespace HFM.Framework.DataTypes
 {
-   public class FahLogUnitData : IFahLogUnitData
+   public class FahLogUnitData : IProjectInfo
    {
       public FahLogUnitData()
       {
          UnitStartTimeStamp = TimeSpan.MinValue;
-         FrameDataList = new List<Framework.LogLine>(101);
+         FrameDataList = new List<LogLine>(101);
          CoreVersion = String.Empty;
          ProjectInfoIndex = -1;
          ProjectInfoList = new List<IProjectInfo>();
@@ -45,7 +43,7 @@ namespace HFM.Log
       /// <summary>
       /// List of Log Lines containing Frame Data
       /// </summary>
-      public IList<Framework.LogLine> FrameDataList { get; set; }
+      public IList<LogLine> FrameDataList { get; set; }
 
       /// <summary>
       /// Number of Frames Observed since Last Unit Start

@@ -21,7 +21,7 @@ using System;
 
 using ProtoBuf;
 
-namespace HFM.Framework
+namespace HFM.Framework.DataTypes
 {
    public interface IUnitFrame : IComparable<IUnitFrame>, IEquatable<IUnitFrame>
    {
@@ -85,12 +85,12 @@ namespace HFM.Framework
       }
 
       ///<summary>
-      ///Determines whether the specified <see cref="T:HFM.Framework.IUnitFrame"></see> is equal to the current <see cref="T:HFM.Framework.IUnitFrame"></see>.
+      ///Determines whether the specified <see cref="T:HFM.Framework.DataTypes.IUnitFrame"></see> is equal to the current <see cref="T:HFM.Framework.DataTypes.IUnitFrame"></see>.
       ///</summary>
       ///<returns>
-      ///true if the specified <see cref="T:HFM.Framework.IUnitFrame"></see> is equal to the current <see cref="T:HFM.Framework.IUnitFrame"></see>; otherwise, false.
+      ///true if the specified <see cref="T:HFM.Framework.DataTypes.IUnitFrame"></see> is equal to the current <see cref="T:HFM.Framework.DataTypes.IUnitFrame"></see>; otherwise, false.
       ///</returns>
-      ///<param name="frame">The <see cref="T:HFM.Framework.IUnitFrame"></see> to compare with the current <see cref="T:HFM.Framework.IUnitFrame"></see>.</param>
+      ///<param name="frame">The <see cref="T:HFM.Framework.DataTypes.IUnitFrame"></see> to compare with the current <see cref="T:HFM.Framework.DataTypes.IUnitFrame"></see>.</param>
       public bool Equals(IUnitFrame frame)
       {
          if (frame == null)

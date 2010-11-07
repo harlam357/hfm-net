@@ -72,7 +72,6 @@
     <Compile Include="BenchmarkClientTests.cs" />
     <Compile Include="ClientInstanceFactoryTests.cs" />
     <Compile Include="ClientInstanceXmlSerializerTests.cs" />
-    <Compile Include="DataAggregatorTests.cs" />
     <Compile Include="DisplayInstanceTests.cs" />
     <Compile Include="MarkupGeneratorTests.cs" />
     <Compile Include="ProteinBenchmarkContainerTests.cs" />

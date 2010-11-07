@@ -28,6 +28,7 @@ using System.Text;
 using System.Xml;
 
 using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Instances
 {

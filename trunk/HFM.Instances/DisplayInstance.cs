@@ -26,6 +26,7 @@ using System.Windows.Forms;
 using ProtoBuf;
 
 using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Instances
 {

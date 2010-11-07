@@ -26,6 +26,7 @@ using System.Text;
 using System.Xml.Serialization;
 
 using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Instances
 {

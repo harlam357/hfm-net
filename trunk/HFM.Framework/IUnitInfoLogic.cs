@@ -18,7 +18,8 @@
  */
 
 using System;
-using System.Diagnostics.CodeAnalysis;
+
+using HFM.Framework.DataTypes;
 
 namespace HFM.Framework
 {

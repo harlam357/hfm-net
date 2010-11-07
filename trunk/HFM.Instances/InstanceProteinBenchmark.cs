@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Xml.Serialization;
-
+using HFM.Framework.DataTypes;
 using ProtoBuf;
 
 using HFM.Framework;

@@ -19,6 +19,8 @@
 
 using System;
 
+using HFM.Framework.DataTypes;
+
 namespace HFM.Framework
 {
    public interface IInstanceProteinBenchmark : IOwnedByClientInstance

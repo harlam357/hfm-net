@@ -25,6 +25,7 @@ using System.Globalization;
 using System.IO;
 
 using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Proteins
 {

@@ -27,8 +27,9 @@ using System.Windows.Forms;
 
 using ZedGraph;
 
-using HFM.Framework;
 using HFM.Instances;
+using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Forms
 {

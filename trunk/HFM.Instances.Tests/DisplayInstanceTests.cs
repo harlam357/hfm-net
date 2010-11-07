@@ -8,6 +8,7 @@ using Rhino.Mocks;
 using ProtoBuf;
 
 using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Instances.Tests
 {

@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Log Line Class
+ * HFM.NET - Log Line Parser Class
  * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -23,10 +23,11 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 
 using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Log
 {
-   internal static class LogLine
+   internal static class LogLineParser
    {
       #region Regex (Static)
       // ReSharper disable InconsistentNaming

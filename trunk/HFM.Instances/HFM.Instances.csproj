@@ -89,7 +89,6 @@
     <Compile Include="InstanceCollectionDataInterface.cs" />
     <Compile Include="InstanceCollectionHelpers.cs" />
     <Compile Include="InstanceProteinBenchmark.cs" />
-    <Compile Include="IStatusLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BenchmarkClient.cs" />
     <Compile Include="ProteinBenchmarkCollection.cs" />
@@ -99,12 +98,9 @@
     <Compile Include="SortableBindingList.cs" />
     <Compile Include="StatusData.cs" />
     <Compile Include="StatusLogic.cs" />
-    <Compile Include="UnitInfo.cs" />
-    <Compile Include="DataAggregator.cs" />
     <Compile Include="UnitInfoCollection.cs" />
     <Compile Include="UnitInfoContainer.cs" />
     <Compile Include="UnitInfoDatabase.cs" />
-    <Compile Include="UnitInfoFactory.cs" />
     <Compile Include="UnitInfoLogic.cs" />
     <Compile Include="MarkupGenerator.cs" />
     <Compile Include="WebsiteDeployer.cs" />

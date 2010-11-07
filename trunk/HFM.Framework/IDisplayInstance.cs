@@ -20,6 +20,8 @@
 using System;
 using System.Collections.Generic;
 
+using HFM.Framework.DataTypes;
+
 namespace HFM.Framework
 {
    [CLSCompliant(false)]

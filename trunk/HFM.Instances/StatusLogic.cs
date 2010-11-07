@@ -25,6 +25,15 @@ using HFM.Framework;
 
 namespace HFM.Instances
 {
+   public interface IStatusLogic
+   {
+      /// <summary>
+      /// Handles the Client Status Returned by Log Parsing and then determine the Status.
+      /// </summary>
+      /// <param name="statusData">Client Status Data</param>
+      ClientStatus HandleStatusData(StatusData statusData);
+   }
+
    public class StatusLogic : IStatusLogic
    {
       /// <summary>

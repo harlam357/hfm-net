@@ -24,6 +24,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 
 using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Instances.Tests
 {

@@ -25,9 +25,83 @@ using System.IO;
 using System.Text.RegularExpressions;
 
 using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Log
 {
+   public interface ILogReader
+   {
+      /// <summary>
+      /// Returns the last client run data.
+      /// </summary>
+      IClientRun CurrentClientRun { get; }
+
+      /// <summary>
+      /// Returns log text of the current client run.
+      /// </summary>
+      IList<LogLine> CurrentClientRunLogLines { get; }
+
+      /// <summary>
+      /// Returns log text of the previous work unit.
+      /// </summary>
+      IList<LogLine> PreviousWorkUnitLogLines { get; }
+
+      /// <summary>
+      /// Returns log text of the current work unit.
+      /// </summary>
+      IList<LogLine> CurrentWorkUnitLogLines { get; }
+
+      /// <summary>
+      /// Get a list of Log Lines that correspond to the given Queue Index.
+      /// </summary>
+      /// <param name="queueIndex">The Queue Index (0-9)</param>
+      IList<LogLine> GetLogLinesFromQueueIndex(int queueIndex);
+
+      /// <summary>
+      /// Get an Empty FAHlog Unit Data
+      /// </summary>
+      FahLogUnitData CreateFahLogUnitData();
+
+      /// <summary>
+      /// Get FAHlog Unit Data from the given Log Lines
+      /// </summary>
+      /// <param name="logLines">Log Lines to search</param>
+      FahLogUnitData GetFahLogDataFromLogLines(ICollection<LogLine> logLines);
+
+      /// <summary>
+      /// Get an Empty unitinfo Log Data
+      /// </summary>
+      UnitInfoLogData CreateUnitInfoLogData();
+
+      /// <summary>
+      /// Parse the content from the unitinfo.txt file.
+      /// </summary>
+      /// <param name="logFilePath">Path to the log file.</param>
+      UnitInfoLogData GetUnitInfoLogData(string logFilePath);
+
+      /// <summary>
+      /// Parse the content from the unitinfo.txt file.
+      /// </summary>
+      /// <param name="instanceName">Name of the Client Instance that called this method.</param>
+      /// <param name="logFilePath">Path to the log file.</param>
+      UnitInfoLogData GetUnitInfoLogData(string instanceName, string logFilePath);
+
+      /// <summary>
+      /// Scan the FAHLog text lines to determine work unit boundries.
+      /// </summary>
+      /// <param name="logFilePath">Path to the log file.</param>
+      /// <exception cref="ArgumentException">Throws if logFilePath is Null or Empty.</exception>
+      void ScanFahLog(string logFilePath);
+
+      /// <summary>
+      /// Scan the FAHLog text lines to determine work unit boundries.
+      /// </summary>
+      /// <param name="instanceName">Name of the Client Instance that called this method.</param>
+      /// <param name="logFilePath">Path to the log file.</param>
+      /// <exception cref="ArgumentException">Throws if logFilePath is Null or Empty.</exception>
+      void ScanFahLog(string instanceName, string logFilePath);
+   }
+
    /// <summary>
    /// Reads FAHlog.txt files, determines log positions, and does run level detection.
    /// </summary>
@@ -77,7 +151,7 @@ namespace HFM.Log
       /// <summary>
       /// Returns log text of the current client run.
       /// </summary>
-      public IList<Framework.LogLine> CurrentClientRunLogLines
+      public IList<LogLine> CurrentClientRunLogLines
       {
          get
          {
@@ -89,7 +163,7 @@ namespace HFM.Log
 
                int length = end - start;
 
-               var logLines = new Framework.LogLine[length];
+               var logLines = new LogLine[length];
 
                _clientLogLines.CopyTo(start, logLines, 0, length);
 
@@ -103,7 +177,7 @@ namespace HFM.Log
       /// <summary>
       /// Returns log text of the previous work unit.
       /// </summary>
-      public IList<Framework.LogLine> PreviousWorkUnitLogLines
+      public IList<LogLine> PreviousWorkUnitLogLines
       {
          get
          {
@@ -115,7 +189,7 @@ namespace HFM.Log
 
                int length = end - start;
 
-               var logLines = new Framework.LogLine[length];
+               var logLines = new LogLine[length];
 
                _clientLogLines.CopyTo(start, logLines, 0, length);
 
@@ -129,7 +203,7 @@ namespace HFM.Log
       /// <summary>
       /// Returns log text of the current work unit.
       /// </summary>
-      public IList<Framework.LogLine> CurrentWorkUnitLogLines
+      public IList<LogLine> CurrentWorkUnitLogLines
       {
          get
          {
@@ -141,7 +215,7 @@ namespace HFM.Log
 
                int length = end - start;
 
-               var logLines = new Framework.LogLine[length];
+               var logLines = new LogLine[length];
 
                _clientLogLines.CopyTo(start, logLines, 0, length);
 
@@ -158,7 +232,7 @@ namespace HFM.Log
       /// Get a list of Log Lines that correspond to the given Queue Index.
       /// </summary>
       /// <param name="queueIndex">The Queue Index (0-9)</param>
-      public IList<Framework.LogLine> GetLogLinesFromQueueIndex(int queueIndex)
+      public IList<LogLine> GetLogLinesFromQueueIndex(int queueIndex)
       {
          // walk backwards through the ClientRunList and then backward
          // through the UnitQueueIndex list.  Find the first (really last
@@ -177,7 +251,7 @@ namespace HFM.Log
 
                   int length = end - start;
 
-                  var logLines = new Framework.LogLine[length];
+                  var logLines = new LogLine[length];
 
                   _clientLogLines.CopyTo(start, logLines, 0, length);
 
@@ -228,7 +302,7 @@ namespace HFM.Log
       /// <summary>
       /// Get an Empty FAHlog Unit Data
       /// </summary>
-      public IFahLogUnitData CreateFahLogUnitData()
+      public FahLogUnitData CreateFahLogUnitData()
       {
          return new FahLogUnitData();
       }
@@ -237,7 +311,7 @@ namespace HFM.Log
       /// Get FAHlog Unit Data from the given Log Lines
       /// </summary>
       /// <param name="logLines">Log Lines to search</param>
-      public IFahLogUnitData GetFahLogDataFromLogLines(ICollection<Framework.LogLine> logLines)
+      public FahLogUnitData GetFahLogDataFromLogLines(ICollection<LogLine> logLines)
       {
          var data = new FahLogUnitData();
 
@@ -390,7 +464,7 @@ namespace HFM.Log
          return TimeSpan.MinValue;
       }
 
-      private static void PopulateProjectData(ILogLine line, IFahLogUnitData data)
+      private static void PopulateProjectData(ILogLine line, FahLogUnitData data)
       {
          Debug.Assert(line != null);
          Debug.Assert(data != null);
@@ -416,7 +490,7 @@ namespace HFM.Log
       /// <summary>
       /// Get an Empty unitinfo Log Data
       /// </summary>
-      public IUnitInfoLogData CreateUnitInfoLogData()
+      public UnitInfoLogData CreateUnitInfoLogData()
       {
          return new UnitInfoLogData();
       }
@@ -425,7 +499,7 @@ namespace HFM.Log
       /// Parse the content from the unitinfo.txt file.
       /// </summary>
       /// <param name="logFilePath">Path to the log file.</param>
-      public IUnitInfoLogData GetUnitInfoLogData(string logFilePath)
+      public UnitInfoLogData GetUnitInfoLogData(string logFilePath)
       {
          return GetUnitInfoLogData(String.Empty, logFilePath);
       }
@@ -437,7 +511,7 @@ namespace HFM.Log
       /// <param name="logFilePath">Path to the log file.</param>
       /// <exception cref="ArgumentNullException">Throws if instanceName is Null.</exception>
       /// <exception cref="ArgumentException">Throws if logFilePath is Null or Empty.</exception>
-      public IUnitInfoLogData GetUnitInfoLogData(string instanceName, string logFilePath)
+      public UnitInfoLogData GetUnitInfoLogData(string instanceName, string logFilePath)
       {
          if (instanceName == null) throw new ArgumentNullException("instanceName", "Argument 'instanceName' cannot be null.");
 

@@ -23,16 +23,15 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
-
+using HFM.Framework.DataTypes;
+using HFM.Log;
 using HFM.Framework;
 
-namespace HFM.Instances
+namespace HFM.DataAggregator
 {
    public class DataAggregator : IDataAggregator
    {
       private readonly IQueueReader _queueReader;
-      private readonly ILogReaderFactory _logReaderFactory;
-      private readonly IUnitInfoFactory _unitInfoFactory;
 
       private ILogReader _logReader;
 
@@ -94,7 +93,7 @@ namespace HFM.Instances
          get { return _currentClientRun; }
       }
 
-      private IFahLogUnitData _currentFahLogUnitData;
+      private FahLogUnitData _currentFahLogUnitData;
       /// <summary>
       /// Current Work Unit Status based on LogReader CurrentWorkUnitLogLines
       /// </summary>
@@ -125,11 +124,9 @@ namespace HFM.Instances
       }
 
       [CLSCompliant(false)]
-      public DataAggregator(IQueueReader queueReader, ILogReaderFactory logReaderFactory, IUnitInfoFactory unitInfoFactory)
+      public DataAggregator(IQueueReader queueReader)
       {
          _queueReader = queueReader;
-         _logReaderFactory = logReaderFactory;
-         _unitInfoFactory = unitInfoFactory;
       }
 
       #region Aggregation Logic
@@ -139,7 +136,7 @@ namespace HFM.Instances
       /// </summary>
       public IList<IUnitInfo> AggregateData()
       {
-         _logReader = _logReaderFactory.Create();
+         _logReader = new LogReader();
       
          IList<IUnitInfo> parsedUnits;
 
@@ -239,8 +236,8 @@ namespace HFM.Instances
             // Get the Log Lines for this queue position from the reader
             _unitLogLines[queueIndex] = _logReader.GetLogLinesFromQueueIndex(queueIndex);
             // Get the FAH Log Data from the Log Lines
-            IFahLogUnitData fahLogUnitData = _logReader.GetFahLogDataFromLogLines(_unitLogLines[queueIndex]);
-            IUnitInfoLogData unitInfoLogData = null;
+            FahLogUnitData fahLogUnitData = _logReader.GetFahLogDataFromLogLines(_unitLogLines[queueIndex]);
+            UnitInfoLogData unitInfoLogData = null;
             // On the Current Queue Index
             if (queueIndex == _queueReader.Queue.CurrentIndex)
             {
@@ -290,14 +287,14 @@ namespace HFM.Instances
          return parsedUnits;
       }
       
-      private IUnitInfo BuildUnitInfo(IQueueEntry queueEntry, IFahLogUnitData fahLogUnitData, IUnitInfoLogData unitInfoLogData)
+      private IUnitInfo BuildUnitInfo(IQueueEntry queueEntry, FahLogUnitData fahLogUnitData, UnitInfoLogData unitInfoLogData)
       {
          return BuildUnitInfo(queueEntry, fahLogUnitData, unitInfoLogData, false);
       }
 
-      private IUnitInfo BuildUnitInfo(IQueueEntry queueEntry, IFahLogUnitData fahLogUnitData, IUnitInfoLogData unitInfoLogData, bool matchOverride)
+      private IUnitInfo BuildUnitInfo(IQueueEntry queueEntry, FahLogUnitData fahLogUnitData, UnitInfoLogData unitInfoLogData, bool matchOverride)
       {
-         IUnitInfo unit = _unitInfoFactory.Create();
+         IUnitInfo unit = new UnitInfo();
          unit.UnitStartTimeStamp = fahLogUnitData.UnitStartTimeStamp;
          unit.FramesObserved = fahLogUnitData.FramesObserved;
          unit.CoreVersion = fahLogUnitData.CoreVersion;
@@ -330,7 +327,7 @@ namespace HFM.Instances
          return unit;
       }
 
-      private static void SearchFahLogUnitDataProjects(IUnitInfo unit, IFahLogUnitData fahLogUnitData)
+      private static void SearchFahLogUnitDataProjects(IUnitInfo unit, FahLogUnitData fahLogUnitData)
       {
          Debug.Assert(unit != null);
          for (int i = 0; i < fahLogUnitData.ProjectInfoList.Count; i++)
@@ -392,8 +389,8 @@ namespace HFM.Instances
          }
       }
 
-      private static void PopulateUnitInfoFromLogs(IClientRun currentClientRun, IFahLogUnitData fahLogUnitData, 
-                                                   IUnitInfoLogData unitInfoLogData, IUnitInfo unit)
+      private static void PopulateUnitInfoFromLogs(IClientRun currentClientRun, FahLogUnitData fahLogUnitData, 
+                                                   UnitInfoLogData unitInfoLogData, IUnitInfo unit)
       {
          Debug.Assert(currentClientRun != null);
          Debug.Assert(fahLogUnitData != null);

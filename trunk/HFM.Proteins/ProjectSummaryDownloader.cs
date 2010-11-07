@@ -29,6 +29,7 @@ using Majestic12;
 using harlam357.Windows.Forms;
 
 using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Proteins
 {

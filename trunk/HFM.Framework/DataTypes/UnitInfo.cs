@@ -24,9 +24,7 @@ using System.Globalization;
 
 using ProtoBuf;
 
-using HFM.Framework;
-
-namespace HFM.Instances
+namespace HFM.Framework.DataTypes
 {
    [ProtoContract]
    public class UnitInfo : IUnitInfo

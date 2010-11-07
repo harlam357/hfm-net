@@ -19,7 +19,7 @@
  
  using ProtoBuf;
 
-namespace HFM.Framework
+namespace HFM.Framework.DataTypes
 {
    public interface ILogLine
    {

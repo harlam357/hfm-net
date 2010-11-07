@@ -22,21 +22,22 @@ using System.Collections.Generic;
 using System.Diagnostics;
 
 using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Log
 {
    /// <summary>
    /// List of Client Log Lines.
    /// </summary>
-   public class LogLineList : List<Framework.LogLine>
+   public class LogLineList : List<LogLine>
    {
       public void HandleLogLine(int index, string logLine)
       {
          LogLineType lineType = DetermineLineType(logLine);
-         var logLineObject = new Framework.LogLine { LineType = lineType, LineIndex = index, LineRaw = logLine };
+         var logLineObject = new LogLine { LineType = lineType, LineIndex = index, LineRaw = logLine };
          try
          {
-            logLineObject.LineData = LogLine.GetLineData(logLineObject);
+            logLineObject.LineData = LogLineParser.GetLineData(logLineObject);
          }
          catch (Exception ex)
          {

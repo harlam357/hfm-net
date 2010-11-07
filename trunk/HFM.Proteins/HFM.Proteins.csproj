@@ -56,7 +56,6 @@
     </Compile>
     <Compile Include="ProjectSummaryDownloader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Protein.cs" />
     <Compile Include="ProteinCollection.cs" />
   </ItemGroup>
   <ItemGroup>

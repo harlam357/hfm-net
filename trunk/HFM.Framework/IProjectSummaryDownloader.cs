@@ -22,6 +22,8 @@ using System.Collections.Generic;
 
 using harlam357.Windows.Forms;
 
+using HFM.Framework.DataTypes;
+
 namespace HFM.Framework
 {
    public interface IProjectSummaryDownloader : IProgressProcessRunner, IDisposable

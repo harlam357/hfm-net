@@ -73,6 +73,12 @@
     </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="CoverageExcludeAttribute.cs" />
+    <Compile Include="DataTypes\FahLogUnitData.cs" />
+    <Compile Include="DataTypes\LogLine.cs" />
+    <Compile Include="DataTypes\Protein.cs" />
+    <Compile Include="DataTypes\UnitFrame.cs" />
+    <Compile Include="DataTypes\UnitInfo.cs" />
+    <Compile Include="DataTypes\UnitInfoLogData.cs" />
     <Compile Include="Enumerations.cs" />
     <Compile Include="HfmTrace.cs" />
     <Compile Include="IBenchmarkClient.cs" />
@@ -80,10 +86,7 @@
     <Compile Include="IClientRun.cs" />
     <Compile Include="IDataAggregator.cs" />
     <Compile Include="IDisplayInstance.cs" />
-    <Compile Include="IFahLogUnitData.cs" />
     <Compile Include="IInstanceProteinBenchmark.cs" />
-    <Compile Include="ILogReader.cs" />
-    <Compile Include="ILogReaderFactory.cs" />
     <Compile Include="IMessagesView.cs" />
     <Compile Include="InstanceProvider.cs" />
     <Compile Include="InstanceTotals.cs" />
@@ -91,23 +94,19 @@
     <Compile Include="IPreferenceSet.cs" />
     <Compile Include="IProjectInfo.cs" />
     <Compile Include="IProjectSummaryDownloader.cs" />
-    <Compile Include="IProtein.cs" />
     <Compile Include="IProteinBenchmarkContainer.cs" />
     <Compile Include="IProteinCollection.cs" />
     <Compile Include="IQueueBase.cs" />
     <Compile Include="IQueueEntry.cs" />
     <Compile Include="IQueueReader.cs" />
     <Compile Include="IUnitInfo.cs" />
-    <Compile Include="IUnitInfoLogData.cs" />
     <Compile Include="IUnitInfoLogic.cs" />
-    <Compile Include="LogLine.cs" />
     <Compile Include="Metadata.cs" />
     <Compile Include="NetworkOps.cs" />
     <Compile Include="PlatformOps.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistryOps.cs" />
     <Compile Include="StringOps.cs" />
-    <Compile Include="UnitFrame.cs" />
     <Compile Include="XMLOps.cs" />
     <Compile Include="XmlStatsData.cs" />
     <Compile Include="XmlStatsDataContainer.cs" />

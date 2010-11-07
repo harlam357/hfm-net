@@ -22,6 +22,7 @@ using System;
 using NUnit.Framework;
 
 using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Log.Tests
 {
@@ -399,7 +400,7 @@ namespace HFM.Log.Tests
          Assert.AreEqual("1.31", _reader.ClientLogLines[37].LineData);
          Assert.That(_reader.ClientLogLines[50].ToString().Contains("Project: 5781 (Run 2, Clone 700, Gen 2)"));
 
-         IFahLogUnitData unitData = _reader.GetFahLogDataFromLogLines(_reader.CurrentWorkUnitLogLines);
+         FahLogUnitData unitData = _reader.GetFahLogDataFromLogLines(_reader.CurrentWorkUnitLogLines);
          Assert.AreEqual(new TimeSpan(1, 57, 21), unitData.UnitStartTimeStamp);
          Assert.AreEqual(5, unitData.FrameDataList.Count);
          Assert.AreEqual(5, unitData.FramesObserved);
@@ -527,7 +528,7 @@ namespace HFM.Log.Tests
          Assert.That(_reader.ClientLogLines[971].ToString().Contains("Project: 6501 (Run 15, Clone 0, Gen 0)"));
          Assert.That(_reader.ClientLogLines[1006].ToString().Contains("Project: 10002 (Run 19, Clone 0, Gen 51)"));
 
-         IFahLogUnitData unitData = _reader.GetFahLogDataFromLogLines(_reader.CurrentWorkUnitLogLines);
+         FahLogUnitData unitData = _reader.GetFahLogDataFromLogLines(_reader.CurrentWorkUnitLogLines);
          Assert.AreEqual(new TimeSpan(0, 41, 7), unitData.UnitStartTimeStamp);
          Assert.AreEqual(5, unitData.FrameDataList.Count);
          Assert.AreEqual(5, unitData.FramesObserved);

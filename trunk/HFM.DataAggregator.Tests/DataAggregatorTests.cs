@@ -26,7 +26,7 @@ using HFM.Framework;
 using HFM.Log;
 using HFM.Queue;
 
-namespace HFM.Instances.Tests
+namespace HFM.DataAggregator.Tests
 {
    [TestFixture]
    public class DataAggregatorTests
@@ -42,7 +42,7 @@ namespace HFM.Instances.Tests
       [SetUp]
       public void Init()
       {
-         _dataAggregator = new DataAggregator(new QueueReader(), new LogReaderFactory(), new UnitInfoFactory());
+         _dataAggregator = new DataAggregator(new QueueReader());
          TraceLevelSwitch.Instance.Level = TraceLevel.Verbose;
       }
 

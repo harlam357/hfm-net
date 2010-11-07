@@ -23,6 +23,7 @@ using System.Diagnostics;
 using System.Globalization;
 
 using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Log
 {
@@ -62,7 +63,7 @@ namespace HFM.Log
       #endregion
 
       #region Methods
-      public void HandleLogLines(IList<Framework.LogLine> logLines)
+      public void HandleLogLines(IList<LogLine> logLines)
       {
          _unitStart.Initialize();
       

@@ -21,6 +21,8 @@ using System.Collections.Generic;
 
 using ProtoBuf;
 
+using HFM.Framework.DataTypes;
+
 namespace HFM.Instances
 {
    [ProtoContract]

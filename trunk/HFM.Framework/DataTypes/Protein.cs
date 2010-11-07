@@ -23,10 +23,116 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 
-using HFM.Framework;
-
-namespace HFM.Proteins
+namespace HFM.Framework.DataTypes
 {
+   public interface IProtein
+   {
+      /// <summary>
+      /// Project Number
+      /// </summary>
+      int ProjectNumber { get; }
+
+      /// <summary>
+      /// Server IP Address
+      /// </summary>
+      String ServerIP { get; }
+
+      /// <summary>
+      /// Work Unit Name
+      /// </summary>
+      String WorkUnitName { get; }
+
+      /// <summary>
+      /// Number of Atoms
+      /// </summary>
+      int NumAtoms { get; }
+
+      /// <summary>
+      /// Deadline - Preferred Days
+      /// </summary>
+      double PreferredDays { get; }
+
+      /// <summary>
+      /// Deadline - Maximum Days
+      /// </summary>
+      double MaxDays { get; }
+
+      /// <summary>
+      /// Work Unit Credit
+      /// </summary>
+      double Credit { get; }
+
+      /// <summary>
+      /// Number of Frames
+      /// </summary>
+      int Frames { get; }
+
+      /// <summary>
+      /// Core Identification String
+      /// </summary>
+      String Core { get; }
+
+      /// <summary>
+      /// Project Description (usually a URL)
+      /// </summary>
+      String Description { get; }
+
+      /// <summary>
+      /// Project Research Contact
+      /// </summary>
+      String Contact { get; }
+
+      /// <summary>
+      /// Bonus (K) Factor
+      /// </summary>
+      double KFactor { get; }
+
+      /// <summary>
+      /// Flag Denoting if Project Number is Unknown
+      /// </summary>
+      bool IsUnknown { get; }
+
+      /// <summary>
+      /// Get Points Per Day based on given Frame Time
+      /// </summary>
+      /// <param name="frameTime">Frame Time</param>
+      double GetPPD(TimeSpan frameTime);
+
+      /// <summary>
+      /// Get Points Per Day based on given Frame Time
+      /// </summary>
+      /// <param name="frameTime">Frame Time</param>
+      /// <param name="instanceName">Calling Instance Name</param>
+      double GetPPD(TimeSpan frameTime, string instanceName);
+
+      /// <summary>
+      /// Get Points Per Day based on given Frame Time
+      /// </summary>
+      /// <param name="frameTime">Frame Time</param>
+      /// <param name="estTimeOfUnit">Estimated Time of the Unit</param>
+      double GetPPD(TimeSpan frameTime, TimeSpan estTimeOfUnit);
+
+      /// <summary>
+      /// Get Points Per Day based on given Frame Time
+      /// </summary>
+      /// <param name="frameTime">Frame Time</param>
+      /// <param name="estTimeOfUnit">Estimated Time of the Unit</param>
+      /// <param name="instanceName">Calling Instance Name</param>
+      double GetPPD(TimeSpan frameTime, TimeSpan estTimeOfUnit, string instanceName);
+
+      /// <summary>
+      /// Get Units Per Day based on given Frame Time
+      /// </summary>
+      /// <param name="frameTime">Frame Time</param>
+      double GetUPD(TimeSpan frameTime);
+
+      /// <summary>
+      /// Get the Credit of the Unit (including bonus)
+      /// </summary>
+      /// <param name="estTimeOfUnit">Estimated Time of the Unit</param>
+      double GetBonusCredit(TimeSpan estTimeOfUnit);
+   }
+
    public class Protein : IProtein
    {
       public Protein()

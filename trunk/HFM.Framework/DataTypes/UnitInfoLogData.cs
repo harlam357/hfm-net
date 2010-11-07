@@ -1,5 +1,5 @@
 /*
- * HFM.NET - unitinfo.txt Log Data Interface
+ * HFM.NET - unitinfo.txt Log Data Class
  * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -19,33 +19,53 @@
 
 using System;
 
-namespace HFM.Framework
+namespace HFM.Framework.DataTypes
 {
-   public interface IUnitInfoLogData : IProjectInfo
+   public class UnitInfoLogData : IProjectInfo
    {
       /// <summary>
       /// Protein Name
       /// </summary>
-      string ProteinName { get; }
+      public string ProteinName { get; set; }
 
       /// <summary>
       /// Protein Tag
       /// </summary>
-      string ProteinTag { get; }
+      public string ProteinTag { get; set; }
+
+      /// <summary>
+      /// Project ID Number
+      /// </summary>
+      public Int32 ProjectID { get; set; }
+
+      /// <summary>
+      /// Project ID (Run)
+      /// </summary>
+      public Int32 ProjectRun { get; set; }
+
+      /// <summary>
+      /// Project ID (Clone)
+      /// </summary>
+      public Int32 ProjectClone { get; set; }
+
+      /// <summary>
+      /// Project ID (Gen)
+      /// </summary>
+      public Int32 ProjectGen { get; set; }
 
       /// <summary>
       /// Download Time
       /// </summary>
-      DateTime DownloadTime { get; }
+      public DateTime DownloadTime { get; set; }
 
       /// <summary>
       /// Due Time
       /// </summary>
-      DateTime DueTime { get; }
+      public DateTime DueTime { get; set; }
 
       /// <summary>
       /// Progress Percentage
       /// </summary>
-      int Progress { get; }
+      public int Progress { get; set; }
    }
 }

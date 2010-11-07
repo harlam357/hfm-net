@@ -25,6 +25,7 @@ using System.Diagnostics;
 using System.IO;
 
 using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Instances
 {
