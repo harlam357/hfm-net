@@ -73,7 +73,9 @@
     </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="CoverageExcludeAttribute.cs" />
+    <Compile Include="DataTypes\ClientRun.cs" />
     <Compile Include="DataTypes\FahLogUnitData.cs" />
+    <Compile Include="DataTypes\InstanceTotals.cs" />
     <Compile Include="DataTypes\LogLine.cs" />
     <Compile Include="DataTypes\Protein.cs" />
     <Compile Include="DataTypes\UnitFrame.cs" />
@@ -83,13 +85,11 @@
     <Compile Include="HfmTrace.cs" />
     <Compile Include="IBenchmarkClient.cs" />
     <Compile Include="IClientInstanceSettings.cs" />
-    <Compile Include="IClientRun.cs" />
     <Compile Include="IDataAggregator.cs" />
     <Compile Include="IDisplayInstance.cs" />
     <Compile Include="IInstanceProteinBenchmark.cs" />
     <Compile Include="IMessagesView.cs" />
     <Compile Include="InstanceProvider.cs" />
-    <Compile Include="InstanceTotals.cs" />
     <Compile Include="IOwnedByClientInstance.cs" />
     <Compile Include="IPreferenceSet.cs" />
     <Compile Include="IProjectInfo.cs" />

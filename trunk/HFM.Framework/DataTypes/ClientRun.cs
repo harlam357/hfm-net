@@ -20,14 +20,12 @@
 using System;
 using System.Collections.Generic;
 
-using HFM.Framework;
-
-namespace HFM.Log
+namespace HFM.Framework.DataTypes
 {
    /// <summary>
    /// Data Class for a single Client Run (client start to client stop).
    /// </summary>
-   public class ClientRun : IClientRun
+   public class ClientRun
    {
       private readonly int _clientStartIndex;
       /// <summary>

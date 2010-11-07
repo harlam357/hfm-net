@@ -34,6 +34,7 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 
 using HFM.Framework;
+using HFM.Framework.DataTypes;
 using HFM.Plugins;
 
 namespace HFM.Instances

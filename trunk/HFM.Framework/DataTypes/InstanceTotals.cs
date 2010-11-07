@@ -19,7 +19,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace HFM.Framework
+namespace HFM.Framework.DataTypes
 {
    [SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
    public struct InstanceTotals

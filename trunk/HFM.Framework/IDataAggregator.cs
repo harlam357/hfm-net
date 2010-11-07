@@ -60,7 +60,7 @@ namespace HFM.Framework
       /// <summary>
       /// Client Run Data for the Current Run
       /// </summary>
-      IClientRun CurrentClientRun { get; }
+      ClientRun CurrentClientRun { get; }
 
       /// <summary>
       /// Current Work Unit Status based on LogReader CurrentWorkUnitLogLines

@@ -370,7 +370,7 @@ namespace HFM.Instances
          return currentWorkUnitStatus;
       }
 
-      private void PopulateRunLevelData(IClientRun run)
+      private void PopulateRunLevelData(ClientRun run)
       {
          _displayInstance.ClientVersion = run.ClientVersion;
          _displayInstance.Arguments = run.Arguments;

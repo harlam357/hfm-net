@@ -34,7 +34,7 @@ namespace HFM.Log
       /// <summary>
       /// Returns the last client run data.
       /// </summary>
-      IClientRun CurrentClientRun { get; }
+      ClientRun CurrentClientRun { get; }
 
       /// <summary>
       /// Returns log text of the current client run.
@@ -133,7 +133,7 @@ namespace HFM.Log
       /// <summary>
       /// Returns the last client run data.
       /// </summary>
-      public IClientRun CurrentClientRun
+      public ClientRun CurrentClientRun
       {
          get { return ClientRunList.CurrentClientRun; }
       }

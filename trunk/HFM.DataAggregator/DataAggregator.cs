@@ -84,11 +84,11 @@ namespace HFM.DataAggregator
          }
       }
 
-      private IClientRun _currentClientRun;
+      private ClientRun _currentClientRun;
       /// <summary>
       /// Client Run Data for the Current Run
       /// </summary>
-      public IClientRun CurrentClientRun
+      public ClientRun CurrentClientRun
       {
          get { return _currentClientRun; }
       }
@@ -389,7 +389,7 @@ namespace HFM.DataAggregator
          }
       }
 
-      private static void PopulateUnitInfoFromLogs(IClientRun currentClientRun, FahLogUnitData fahLogUnitData, 
+      private static void PopulateUnitInfoFromLogs(ClientRun currentClientRun, FahLogUnitData fahLogUnitData, 
                                                    UnitInfoLogData unitInfoLogData, IUnitInfo unit)
       {
          Debug.Assert(currentClientRun != null);

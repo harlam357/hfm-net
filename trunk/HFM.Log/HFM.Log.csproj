@@ -43,7 +43,6 @@
       <Link>AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="LogLineList.cs" />
-    <Compile Include="ClientRun.cs" />
     <Compile Include="ClientRunList.cs" />
     <Compile Include="LogLineParser.cs" />
     <Compile Include="LogReader.cs" />
