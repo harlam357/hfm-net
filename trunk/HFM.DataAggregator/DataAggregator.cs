@@ -140,7 +140,7 @@ namespace HFM.DataAggregator
       
          IList<IUnitInfo> parsedUnits;
 
-         _logReader.ScanFahLog(InstanceName, FahLogFilePath);
+         _logReader.ScanFahLog(FahLogFilePath);
          _currentClientRun = _logReader.CurrentClientRun;
 
          // Decision Time: If Queue Read fails parse from logs only
@@ -221,7 +221,7 @@ namespace HFM.DataAggregator
          }
          
          _currentFahLogUnitData = _logReader.GetFahLogDataFromLogLines(_unitLogLines[1]);
-         parsedUnits[1] = BuildUnitInfo(null, _currentFahLogUnitData, _logReader.GetUnitInfoLogData(InstanceName, UnitInfoLogFilePath), matchOverride);
+         parsedUnits[1] = BuildUnitInfo(null, _currentFahLogUnitData, GetUnitInfoLogData(), matchOverride);
 
          return parsedUnits;
       }
@@ -242,7 +242,7 @@ namespace HFM.DataAggregator
             if (queueIndex == _queueReader.Queue.CurrentIndex)
             {
                // Get the UnitInfo Log Data
-               unitInfoLogData = _logReader.GetUnitInfoLogData(InstanceName, UnitInfoLogFilePath);
+               unitInfoLogData = GetUnitInfoLogData();
                _currentFahLogUnitData = fahLogUnitData;
             }
 
@@ -285,6 +285,19 @@ namespace HFM.DataAggregator
          }
 
          return parsedUnits;
+      }
+      
+      private UnitInfoLogData GetUnitInfoLogData()
+      {
+         try
+         {
+            return _logReader.GetUnitInfoLogData(UnitInfoLogFilePath);
+         }
+         catch (Exception ex)
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, ex);
+            return null;
+         }
       }
       
       private IUnitInfo BuildUnitInfo(IQueueEntry queueEntry, FahLogUnitData fahLogUnitData, UnitInfoLogData unitInfoLogData)

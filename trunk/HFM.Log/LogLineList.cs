@@ -27,11 +27,30 @@ using HFM.Framework.DataTypes;
 namespace HFM.Log
 {
    /// <summary>
-   /// List of Client Log Lines.
+   /// List of FAHlog.txt Log Lines.
    /// </summary>
-   public class LogLineList : List<LogLine>
+   internal class LogLineList : List<LogLine>
    {
-      public void HandleLogLine(int index, string logLine)
+      /// <summary>
+      /// Adds the elements of the specified list to the end of the List.
+      /// </summary>
+      /// <param name="logLines">List of raw log lines.</param>
+      internal void AddRange(IList<string> logLines)
+      {
+         // Scan all raw lines and create a LogLine object for each denoting its
+         // LogLineType and any LineData parsed from the raw line.
+         for (int i = 0; i < logLines.Count; i++)
+         {
+            Add(i, logLines[i]);
+         }
+      }
+   
+      /// <summary>
+      /// Adds a LogLine to the end of the List.
+      /// </summary>
+      /// <param name="index">The log line index.</param>
+      /// <param name="logLine">The raw log line being added.</param>
+      private void Add(int index, string logLine)
       {
          LogLineType lineType = DetermineLineType(logLine);
          var logLineObject = new LogLine { LineType = lineType, LineIndex = index, LineRaw = logLine };
@@ -48,210 +67,210 @@ namespace HFM.Log
       }
 
       /// <summary>
-      /// Inspect the given log line and determine the line type.
+      /// Inspect the given raw log line and determine the line type.
       /// </summary>
-      /// <param name="logLine">The log line being inspected.</param>
+      /// <param name="logLine">The raw log line being inspected.</param>
       private static LogLineType DetermineLineType(string logLine)
       {
          if (logLine.Contains("--- Opening Log file"))
          {
             return LogLineType.LogOpen;
          }
-         else if (logLine.Contains("###############################################################################"))
+         if (logLine.Contains("###############################################################################"))
          {
             return LogLineType.LogHeader;
          }
-         else if (logLine.Contains("Folding@Home Client Version"))
+         if (logLine.Contains("Folding@Home Client Version"))
          {
             return LogLineType.ClientVersion;
          }
-         else if (logLine.Contains("] Sending work to server"))
+         if (logLine.Contains("] Sending work to server"))
          {
             return LogLineType.ClientSendWorkToServer;
          }
-         else if (logLine.Contains("] - Autosending finished units..."))
+         if (logLine.Contains("] - Autosending finished units..."))
          {
             return LogLineType.ClientAutosendStart;
          }
-         else if (logLine.Contains("] - Autosend completed"))
+         if (logLine.Contains("] - Autosend completed"))
          {
             return LogLineType.ClientAutosendComplete;
          }
-         else if (logLine.Contains("] + Attempting to send results"))
+         if (logLine.Contains("] + Attempting to send results"))
          {
             return LogLineType.ClientSendStart;
          }
-         else if (logLine.Contains("] + Could not connect to Work Server"))
+         if (logLine.Contains("] + Could not connect to Work Server"))
          {
             return LogLineType.ClientSendConnectFailed;
          }
-         else if (logLine.Contains("] - Error: Could not transmit unit"))
+         if (logLine.Contains("] - Error: Could not transmit unit"))
          {
             return LogLineType.ClientSendFailed;
          }
-         else if (logLine.Contains("] + Results successfully sent"))
+         if (logLine.Contains("] + Results successfully sent"))
          {
             return LogLineType.ClientSendComplete;
          }
-         else if (logLine.Contains("Arguments:"))
+         if (logLine.Contains("Arguments:"))
          {
             return LogLineType.ClientArguments;
          }
-         else if (logLine.Contains("] - User name:"))
+         if (logLine.Contains("] - User name:"))
          {
             return LogLineType.ClientUserNameTeam;
          }
-         else if (logLine.Contains("] + Requesting User ID from server"))
+         if (logLine.Contains("] + Requesting User ID from server"))
          {
             return LogLineType.ClientRequestingUserID;
          }
-         else if (logLine.Contains("- Received User ID ="))
+         if (logLine.Contains("- Received User ID ="))
          {
             return LogLineType.ClientReceivedUserID;
          }
-         else if (logLine.Contains("] - User ID:"))
+         if (logLine.Contains("] - User ID:"))
          {
             return LogLineType.ClientUserID;
          }
-         else if (logLine.Contains("] - Machine ID:"))
+         if (logLine.Contains("] - Machine ID:"))
          {
             return LogLineType.ClientMachineID;
          }
-         else if (logLine.Contains("] + Attempting to get work packet"))
+         if (logLine.Contains("] + Attempting to get work packet"))
          {
             return LogLineType.ClientAttemptGetWorkPacket;
          }
-         else if (logLine.Contains("] - Will indicate memory of"))
+         if (logLine.Contains("] - Will indicate memory of"))
          {
             return LogLineType.ClientIndicateMemory;
          }
-         else if (logLine.Contains("] - Detect CPU. Vendor:"))
+         if (logLine.Contains("] - Detect CPU. Vendor:"))
          {
             return LogLineType.ClientDetectCpu;
          }
-         else if (logLine.Contains("] + Processing work unit"))
+         if (logLine.Contains("] + Processing work unit"))
          {
             return LogLineType.WorkUnitProcessing;
          }
-         else if (logLine.Contains("] + Downloading new core"))
+         if (logLine.Contains("] + Downloading new core"))
          {
             return LogLineType.WorkUnitCoreDownload;
          }
-         else if (logLine.Contains("] Working on Unit 0"))
+         if (logLine.Contains("] Working on Unit 0"))
          {
             return LogLineType.WorkUnitIndex;
          }
-         else if (logLine.Contains("] Working on queue slot 0"))
+         if (logLine.Contains("] Working on queue slot 0"))
          {
             return LogLineType.WorkUnitQueueIndex;
          }
-         else if (logLine.Contains("] + Working ..."))
+         if (logLine.Contains("] + Working ..."))
          {
             return LogLineType.WorkUnitWorking;
          }
-         else if (logLine.Contains("] *------------------------------*"))
+         if (logLine.Contains("] *------------------------------*"))
          {
             return LogLineType.WorkUnitStart;
          }
          /*** ProtoMol Only */
-         else if (logLine.Contains("] ************************** ProtoMol Folding@Home Core **************************"))
+         if (logLine.Contains("] ************************** ProtoMol Folding@Home Core **************************"))
          {
             return LogLineType.WorkUnitStart;
          }
          /*******************/
-         else if (logLine.Contains("] Version"))
+         if (logLine.Contains("] Version"))
          {
             return LogLineType.WorkUnitCoreVersion;
          }
          /*** ProtoMol Only */
-         else if (logLine.Contains("]   Version:"))
+         if (logLine.Contains("]   Version:"))
          {
             return LogLineType.WorkUnitCoreVersion;
          }
          /*******************/
-         else if (IsLineTypeWorkUnitStarted(logLine))
+         if (IsLineTypeWorkUnitStarted(logLine))
          {
             return LogLineType.WorkUnitRunning;
          }
-         else if (logLine.Contains("] Project:"))
+         if (logLine.Contains("] Project:"))
          {
             return LogLineType.WorkUnitProject;
          }
-         else if (logLine.Contains("] Completed "))
+         if (logLine.Contains("] Completed "))
          {
             return LogLineType.WorkUnitFrame;
          }
-         else if (logLine.Contains("] + Paused"))
+         if (logLine.Contains("] + Paused"))
          {
             return LogLineType.WorkUnitPaused;
          }
-         else if (logLine.Contains("] + Running on battery power"))
+         if (logLine.Contains("] + Running on battery power"))
          {
             return LogLineType.WorkUnitPausedForBattery;
          }
-         else if (logLine.Contains("] + Off battery, restarting core"))
+         if (logLine.Contains("] + Off battery, restarting core"))
          {
             return LogLineType.WorkUnitResumeFromBattery;
          }
-         else if (logLine.Contains("] - Shutting down core"))
+         if (logLine.Contains("] - Shutting down core"))
          {
             return LogLineType.WorkUnitShuttingDownCore;
          }
-         else if (logLine.Contains("] Folding@home Core Shutdown:"))
+         if (logLine.Contains("] Folding@home Core Shutdown:"))
          {
             return LogLineType.WorkUnitCoreShutdown;
          }
-         else if (logLine.Contains("] + Number of Units Completed:"))
+         if (logLine.Contains("] + Number of Units Completed:"))
          {
             return LogLineType.ClientNumberOfUnitsCompleted;
          }
-         else if (logLine.Contains("] This is a sign of more serious problems, shutting down."))
+         if (logLine.Contains("] This is a sign of more serious problems, shutting down."))
          {
+            //TODO: No unit test coverage - need test log that contains this string
             return LogLineType.ClientCoreCommunicationsErrorShutdown;
          }
-         else if (logLine.Contains("] EUE limit exceeded. Pausing 24 hours."))
+         if (logLine.Contains("] EUE limit exceeded. Pausing 24 hours."))
          {
             return LogLineType.ClientEuePauseState;
          }
-         else if (logLine.Contains("] Folding@Home will go to sleep for 1 day"))
+         if (logLine.Contains("] Folding@Home will go to sleep for 1 day"))
          {
+            //TODO: No unit test coverage - need test log that contains this string
             return LogLineType.ClientEuePauseState;
          }
-         else if (logLine.Contains("Folding@Home Client Shutdown"))
+         if (logLine.Contains("Folding@Home Client Shutdown"))
          {
             return LogLineType.ClientShutdown;
          }
-         else
-         {
-            return LogLineType.Unknown;
-         }
+         
+         return LogLineType.Unknown;
       }
 
       /// <summary>
-      /// Inspect the given log line and determine if the line type is LogLineType.WorkUnitRunning.
+      /// Determine if the line type is LogLineType.WorkUnitRunning.
       /// </summary>
-      /// <param name="logLine">The log line being inspected.</param>
+      /// <param name="logLine">The raw log line being inspected.</param>
       private static bool IsLineTypeWorkUnitStarted(string logLine)
       {
          if (logLine.Contains("] Preparing to commence simulation"))
          {
             return true;
          }
-         else if (logLine.Contains("] Called DecompressByteArray"))
+         if (logLine.Contains("] Called DecompressByteArray"))
          {
             return true;
          }
-         else if (logLine.Contains("] - Digital signature verified"))
+         if (logLine.Contains("] - Digital signature verified"))
          {
             return true;
          }
          /*** ProtoMol Only */
-         else if (logLine.Contains("] Digital signatures verified"))
+         if (logLine.Contains("] Digital signatures verified"))
          {
             return true;
          }
          /*******************/
-         else if (logLine.Contains("] Entering M.D."))
+         if (logLine.Contains("] Entering M.D."))
          {
             return true;
          }

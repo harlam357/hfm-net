@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.IO;
 
 using NUnit.Framework;
 
@@ -39,7 +40,6 @@ namespace HFM.Log.Tests
       }
       
       [Test, Category("SMP")]
-
       public void SMP_1_FAHlog() // verbosity 9
       {
          // Scan
@@ -80,10 +80,10 @@ namespace HFM.Log.Tests
          Assert.IsNotNull(_reader.CurrentWorkUnitLogLines);
          
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
-         Assert.AreEqual(5, _reader.ClientLogLines[33].LineData);
-         Assert.AreEqual("2.08", _reader.ClientLogLines[40].LineData);
-         Assert.That(_reader.ClientLogLines[51].ToString().Contains("Project: 2677 (Run 10, Clone 29, Gen 28)"));
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, _reader.ClientLogLines[109].LineData);
+         Assert.AreEqual(5, _reader.LogLineList[33].LineData);
+         Assert.AreEqual("2.08", _reader.LogLineList[40].LineData);
+         Assert.That(_reader.LogLineList[51].ToString().Contains("Project: 2677 (Run 10, Clone 29, Gen 28)"));
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, _reader.LogLineList[109].LineData);
       }
 
       [Test, Category("SMP")]
@@ -112,13 +112,13 @@ namespace HFM.Log.Tests
          Assert.IsNotNull(_reader.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
-         Assert.AreEqual(1, _reader.ClientLogLines[33].LineData);
-         Assert.AreEqual("2.08", _reader.ClientLogLines[40].LineData);
-         Assert.That(_reader.ClientLogLines[47].ToString().Contains("Project: 2677 (Run 10, Clone 49, Gen 38)"));
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, _reader.ClientLogLines[180].LineData);
+         Assert.AreEqual(1, _reader.LogLineList[33].LineData);
+         Assert.AreEqual("2.08", _reader.LogLineList[40].LineData);
+         Assert.That(_reader.LogLineList[47].ToString().Contains("Project: 2677 (Run 10, Clone 49, Gen 38)"));
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, _reader.LogLineList[180].LineData);
 
          // Special Check to be sure the reader is catching the Attempting To Send line
-         Assert.AreEqual(LogLineType.ClientSendStart, _reader.ClientLogLines[379].LineType);
+         Assert.AreEqual(LogLineType.ClientSendStart, _reader.LogLineList[379].LineType);
       }
 
       [Test, Category("SMP")]
@@ -149,10 +149,10 @@ namespace HFM.Log.Tests
          Assert.IsNotNull(_reader.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
-         Assert.AreEqual(1, _reader.ClientLogLines[234].LineData);
-         Assert.AreEqual("2.08", _reader.ClientLogLines[239].LineData);
-         Assert.That(_reader.ClientLogLines[246].ToString().Contains("Project: 2677 (Run 4, Clone 60, Gen 40)"));
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, _reader.ClientLogLines[368].LineData);
+         Assert.AreEqual(1, _reader.LogLineList[234].LineData);
+         Assert.AreEqual("2.08", _reader.LogLineList[239].LineData);
+         Assert.That(_reader.LogLineList[246].ToString().Contains("Project: 2677 (Run 4, Clone 60, Gen 40)"));
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, _reader.LogLineList[368].LineData);
       }
 
       [Test, Category("SMP")]
@@ -179,10 +179,10 @@ namespace HFM.Log.Tests
          Assert.IsNotNull(_reader.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 8 - Unit Index 0)
-         Assert.AreEqual(6, _reader.ClientLogLines[610].LineData);
-         Assert.AreEqual("2.10", _reader.ClientLogLines[617].LineData);
-         Assert.That(_reader.ClientLogLines[628].ToString().Contains("Project: 2683 (Run 4, Clone 11, Gen 18)"));
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, _reader.ClientLogLines[660].LineData);
+         Assert.AreEqual(6, _reader.LogLineList[610].LineData);
+         Assert.AreEqual("2.10", _reader.LogLineList[617].LineData);
+         Assert.That(_reader.LogLineList[628].ToString().Contains("Project: 2683 (Run 4, Clone 11, Gen 18)"));
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, _reader.LogLineList[660].LineData);
       }
 
       [Test, Category("GPU")]
@@ -241,10 +241,10 @@ namespace HFM.Log.Tests
          Assert.IsNotNull(_reader.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
-         Assert.AreEqual(1, _reader.ClientLogLines[133].LineData);
-         Assert.AreEqual("1.19", _reader.ClientLogLines[140].LineData);
-         Assert.That(_reader.ClientLogLines[154].ToString().Contains("Project: 5771 (Run 12, Clone 109, Gen 805)"));
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, _reader.ClientLogLines[286].LineData);
+         Assert.AreEqual(1, _reader.LogLineList[133].LineData);
+         Assert.AreEqual("1.19", _reader.LogLineList[140].LineData);
+         Assert.That(_reader.LogLineList[154].ToString().Contains("Project: 5771 (Run 12, Clone 109, Gen 805)"));
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, _reader.LogLineList[286].LineData);
       }
 
       [Test, Category("GPU")]
@@ -274,10 +274,10 @@ namespace HFM.Log.Tests
          Assert.IsNotNull(_reader.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
-         Assert.AreEqual(8, _reader.ClientLogLines[37].LineData);
-         Assert.AreEqual("1.19", _reader.ClientLogLines[42].LineData);
-         Assert.That(_reader.ClientLogLines[56].ToString().Contains("Project: 5751 (Run 8, Clone 205, Gen 527)"));
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, _reader.ClientLogLines[188].LineData);
+         Assert.AreEqual(8, _reader.LogLineList[37].LineData);
+         Assert.AreEqual("1.19", _reader.LogLineList[42].LineData);
+         Assert.That(_reader.LogLineList[56].ToString().Contains("Project: 5751 (Run 8, Clone 205, Gen 527)"));
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, _reader.LogLineList[188].LineData);
       }
 
       [Test, Category("GPU")]
@@ -324,13 +324,13 @@ namespace HFM.Log.Tests
          Assert.IsNotNull(_reader.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 1 - Unit Index 3)
-         Assert.AreEqual(9, _reader.ClientLogLines[323].LineData);
-         Assert.AreEqual("1.19", _reader.ClientLogLines[328].LineData);
-         Assert.That(_reader.ClientLogLines[342].ToString().Contains("Project: 5756 (Run 6, Clone 32, Gen 480)"));
-         Assert.AreEqual(WorkUnitResult.UnstableMachine, _reader.ClientLogLines[359].LineData);
+         Assert.AreEqual(9, _reader.LogLineList[323].LineData);
+         Assert.AreEqual("1.19", _reader.LogLineList[328].LineData);
+         Assert.That(_reader.LogLineList[342].ToString().Contains("Project: 5756 (Run 6, Clone 32, Gen 480)"));
+         Assert.AreEqual(WorkUnitResult.UnstableMachine, _reader.LogLineList[359].LineData);
 
          // Special Check to be sure the reader is catching the EUE Pause line
-         Assert.AreEqual(LogLineType.ClientEuePauseState, _reader.ClientLogLines[463].LineType);
+         Assert.AreEqual(LogLineType.ClientEuePauseState, _reader.LogLineList[463].LineType);
       }
 
       [Test, Category("GPU")]
@@ -358,9 +358,9 @@ namespace HFM.Log.Tests
          Assert.IsNotNull(_reader.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
-         Assert.AreEqual(0, _reader.ClientLogLines[28].LineData);
-         Assert.AreEqual("1.31", _reader.ClientLogLines[37].LineData);
-         Assert.That(_reader.ClientLogLines[50].ToString().Contains("Project: 5781 (Run 2, Clone 700, Gen 2)"));
+         Assert.AreEqual(0, _reader.LogLineList[28].LineData);
+         Assert.AreEqual("1.31", _reader.LogLineList[37].LineData);
+         Assert.That(_reader.LogLineList[50].ToString().Contains("Project: 5781 (Run 2, Clone 700, Gen 2)"));
 
          FahLogUnitData unitData = _reader.GetFahLogDataFromLogLines(_reader.CurrentWorkUnitLogLines);
          Assert.AreEqual(new TimeSpan(1, 57, 21), unitData.UnitStartTimeStamp);
@@ -434,10 +434,10 @@ namespace HFM.Log.Tests
          Assert.IsNotNull(_reader.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 1 - Unit Index 0)
-         Assert.AreEqual(1, _reader.ClientLogLines[182].LineData);
-         Assert.AreEqual("1.90", _reader.ClientLogLines[189].LineData);
-         Assert.That(_reader.ClientLogLines[197].ToString().Contains("Project: 4456 (Run 173, Clone 0, Gen 31)"));
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, _reader.ClientLogLines[433].LineData);
+         Assert.AreEqual(1, _reader.LogLineList[182].LineData);
+         Assert.AreEqual("1.90", _reader.LogLineList[189].LineData);
+         Assert.That(_reader.LogLineList[197].ToString().Contains("Project: 4456 (Run 173, Clone 0, Gen 31)"));
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, _reader.LogLineList[433].LineData);
       }
 
       [Test, Category("Standard")]
@@ -479,11 +479,11 @@ namespace HFM.Log.Tests
          Assert.IsNotNull(_reader.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 4 - Unit Index 0)
-         Assert.AreEqual(4, _reader.ClientLogLines[967].LineData);
-         Assert.AreEqual("23", _reader.ClientLogLines[978].LineData);
-         Assert.That(_reader.ClientLogLines[963].ToString().Contains("Project: 6501 (Run 13, Clone 0, Gen 0)"));
-         Assert.That(_reader.ClientLogLines[971].ToString().Contains("Project: 6501 (Run 15, Clone 0, Gen 0)"));
-         Assert.That(_reader.ClientLogLines[1006].ToString().Contains("Project: 10002 (Run 19, Clone 0, Gen 51)"));
+         Assert.AreEqual(4, _reader.LogLineList[967].LineData);
+         Assert.AreEqual("23", _reader.LogLineList[978].LineData);
+         Assert.That(_reader.LogLineList[963].ToString().Contains("Project: 6501 (Run 13, Clone 0, Gen 0)"));
+         Assert.That(_reader.LogLineList[971].ToString().Contains("Project: 6501 (Run 15, Clone 0, Gen 0)"));
+         Assert.That(_reader.LogLineList[1006].ToString().Contains("Project: 10002 (Run 19, Clone 0, Gen 51)"));
 
          FahLogUnitData unitData = _reader.GetFahLogDataFromLogLines(_reader.CurrentWorkUnitLogLines);
          Assert.AreEqual(new TimeSpan(0, 41, 7), unitData.UnitStartTimeStamp);
@@ -537,12 +537,12 @@ namespace HFM.Log.Tests
          Assert.IsNotNull(_reader.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 6)
-         Assert.AreEqual(7, _reader.ClientLogLines[2133].LineData);
-         Assert.AreEqual("1.90", _reader.ClientLogLines[2138].LineData);
-         Assert.That(_reader.ClientLogLines[2147].ToString().Contains("Project: 4461 (Run 886, Clone 3, Gen 56)"));
+         Assert.AreEqual(7, _reader.LogLineList[2133].LineData);
+         Assert.AreEqual("1.90", _reader.LogLineList[2138].LineData);
+         Assert.That(_reader.LogLineList[2147].ToString().Contains("Project: 4461 (Run 886, Clone 3, Gen 56)"));
          
          // Special Check to be sure the reader is catching the Pause For Battery line
-         Assert.AreEqual(LogLineType.WorkUnitPausedForBattery, _reader.ClientLogLines[2323].LineType);
+         Assert.AreEqual(LogLineType.WorkUnitPausedForBattery, _reader.LogLineList[2323].LineType);
       }
       
       private static void DoClientRunCheck(ClientRun expectedRun, ClientRun run)
@@ -563,6 +563,92 @@ namespace HFM.Log.Tests
          Assert.AreEqual(expectedRun.CompletedUnits, run.CompletedUnits);
          Assert.AreEqual(expectedRun.FailedUnits, run.FailedUnits);
          Assert.AreEqual(expectedRun.TotalCompletedUnits, run.TotalCompletedUnits);
+      }
+      
+      [Test, Category("GPU")]
+      public void GPU2_5_UnitInfo()
+      {
+         var data = _reader.GetUnitInfoLogData("..\\..\\..\\TestFiles\\GPU2_5\\unitinfo.txt");
+         Assert.AreEqual("p4744_lam5w_300K", data.ProteinName);
+         Assert.AreEqual("-", data.ProteinTag);
+         Assert.AreEqual(0, data.ProjectID);
+         Assert.AreEqual(0, data.ProjectRun);
+         Assert.AreEqual(0, data.ProjectClone);
+         Assert.AreEqual(0, data.ProjectGen);
+         Assert.AreEqual(new DateTime(DateTime.Now.Year, 1, 2, 20, 35, 41), data.DownloadTime);
+         Assert.AreEqual(new DateTime(DateTime.Now.Year, 1, 5, 20, 35, 41), data.DueTime);
+         Assert.AreEqual(73, data.Progress);
+      }
+
+      [Test, Category("SMP")]
+      public void SMP_10_UnitInfo()
+      {
+         var data = _reader.GetUnitInfoLogData("..\\..\\..\\TestFiles\\SMP_10\\unitinfo.txt");
+         Assert.AreEqual("Gromacs", data.ProteinName);
+         Assert.AreEqual("P2683R6C12G21", data.ProteinTag);
+         Assert.AreEqual(2683, data.ProjectID);
+         Assert.AreEqual(6, data.ProjectRun);
+         Assert.AreEqual(12, data.ProjectClone);
+         Assert.AreEqual(21, data.ProjectGen);
+         Assert.AreEqual(new DateTime(DateTime.Now.Year, 12, 12, 0, 9, 22), data.DownloadTime);
+         Assert.AreEqual(new DateTime(DateTime.Now.Year, 12, 18, 0, 9, 22), data.DueTime);
+         Assert.AreEqual(1724900, data.Progress);
+      }
+
+      [Test]
+      [ExpectedException(typeof(ArgumentException))]
+      public void GetUnitInfoLogData_ArgumentNull()
+      {
+         _reader.GetUnitInfoLogData(null);
+      }
+
+      [Test]
+      [ExpectedException(typeof(ArgumentException))]
+      public void GetUnitInfoLogData_ArgumentEmpty()
+      {
+         _reader.GetUnitInfoLogData(String.Empty);
+      }
+      
+      [Test]
+      [ExpectedException(typeof(IOException))]
+      public void GetUnitInfoLogData_FileDoesNotExist()
+      {
+         _reader.GetUnitInfoLogData("..\\..\\..\\TestFiles\\DoesNotExist\\unitinfo.txt");
+      }
+
+      [Test]
+      [ExpectedException(typeof(FormatException))]
+      public void Malformed_1_UnitInfo1()
+      {
+         _reader.GetUnitInfoLogData("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo1.txt");
+      }
+
+      [Test]
+      [ExpectedException(typeof(FormatException))]
+      public void Malformed_1_UnitInfo2()
+      {
+         _reader.GetUnitInfoLogData("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo2.txt");
+      }
+
+      [Test]
+      [ExpectedException(typeof(FormatException))]
+      public void Malformed_1_UnitInfo3()
+      {
+         _reader.GetUnitInfoLogData("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo3.txt");
+      }
+
+      [Test]
+      [ExpectedException(typeof(FormatException))]
+      public void Malformed_1_UnitInfo4()
+      {
+         _reader.GetUnitInfoLogData("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo4.txt");
+      }
+
+      [Test]
+      [ExpectedException(typeof(FormatException))]
+      public void Malformed_1_UnitInfo5()
+      {
+         _reader.GetUnitInfoLogData("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo5.txt");
       }
    }
    // ReSharper restore InconsistentNaming

@@ -36,22 +36,22 @@ namespace HFM.Framework.DataTypes
       /// <summary>
       /// Project ID Number
       /// </summary>
-      public Int32 ProjectID { get; set; }
+      public int ProjectID { get; set; }
 
       /// <summary>
       /// Project ID (Run)
       /// </summary>
-      public Int32 ProjectRun { get; set; }
+      public int ProjectRun { get; set; }
 
       /// <summary>
       /// Project ID (Clone)
       /// </summary>
-      public Int32 ProjectClone { get; set; }
+      public int ProjectClone { get; set; }
 
       /// <summary>
       /// Project ID (Gen)
       /// </summary>
-      public Int32 ProjectGen { get; set; }
+      public int ProjectGen { get; set; }
 
       /// <summary>
       /// Download Time
