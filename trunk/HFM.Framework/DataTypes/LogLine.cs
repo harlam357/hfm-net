@@ -17,13 +17,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
  
- using ProtoBuf;
+using ProtoBuf;
 
 namespace HFM.Framework.DataTypes
 {
    public interface ILogLine
    {
-      LogLineType LineType { get; set; }
+      LogLineType LineType { get; }
 
       int LineIndex { get; }
 

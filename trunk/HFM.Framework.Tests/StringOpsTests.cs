@@ -286,18 +286,6 @@ namespace HFM.Framework.Tests
       }
       
       [Test]
-      public void WorkUnitResultFromString()
-      {
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, StringOps.WorkUnitResultFromString("FINISHED_UNIT"));
-         Assert.AreEqual(WorkUnitResult.EarlyUnitEnd, StringOps.WorkUnitResultFromString("EARLY_UNIT_END"));
-         Assert.AreEqual(WorkUnitResult.UnstableMachine, StringOps.WorkUnitResultFromString("UNSTABLE_MACHINE"));
-         Assert.AreEqual(WorkUnitResult.Interrupted, StringOps.WorkUnitResultFromString("INTERRUPTED"));
-         Assert.AreEqual(WorkUnitResult.BadWorkUnit, StringOps.WorkUnitResultFromString("BAD_WORK_UNIT"));
-         Assert.AreEqual(WorkUnitResult.CoreOutdated, StringOps.WorkUnitResultFromString("CORE_OUTDATED"));
-         Assert.AreEqual(WorkUnitResult.Unknown, StringOps.WorkUnitResultFromString("afasfdsafasdfas"));
-      }
-      
-      [Test]
       public void PathsEqualTest()
       {
          Assert.IsTrue(StringOps.PathsEqual(@"c:\folder\path", @"C:\FOLDER\PATH\"));

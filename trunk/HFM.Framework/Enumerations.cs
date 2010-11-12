@@ -42,7 +42,6 @@ namespace HFM.Framework
       Active
    }
    
-   #region Client and Work Unit Status Types
    public enum ClientStatus
    {
       Unknown,
@@ -57,18 +56,6 @@ namespace HFM.Framework
       RunningAsync,
       Running
    }
-
-   public enum WorkUnitResult
-   {
-      Unknown,
-      FinishedUnit,
-      EarlyUnitEnd,
-      UnstableMachine,
-      Interrupted,
-      BadWorkUnit,
-      CoreOutdated
-   }
-   #endregion
 
    /// <summary>
    /// The Queue Entry Status
@@ -85,52 +72,6 @@ namespace HFM.Framework
       ReadyForUpload,
       Abandonded,
       FetchingFromServer
-   }
-
-   /// <summary>
-   /// Log Line Types
-   /// </summary>
-   public enum LogLineType
-   {
-      Unknown = -1,
-      LogOpen = 0,
-      LogHeader,
-      ClientVersion,
-      ClientSendWorkToServer,
-      ClientAutosendStart,
-      ClientAutosendComplete,
-      ClientSendStart,
-      ClientSendConnectFailed,
-      ClientSendFailed,
-      ClientSendComplete,
-      ClientArguments,
-      ClientUserNameTeam,
-      ClientRequestingUserID,
-      ClientReceivedUserID,
-      ClientUserID,
-      ClientMachineID,
-      ClientAttemptGetWorkPacket,
-      ClientIndicateMemory,
-      ClientDetectCpu,
-      WorkUnitProcessing,
-      WorkUnitCoreDownload,
-      WorkUnitIndex,
-      WorkUnitQueueIndex,
-      WorkUnitWorking,
-      WorkUnitStart,
-      WorkUnitCoreVersion,
-      WorkUnitRunning,
-      WorkUnitProject,
-      WorkUnitFrame,
-      WorkUnitPaused,
-      WorkUnitPausedForBattery,
-      WorkUnitResumeFromBattery,
-      WorkUnitShuttingDownCore,
-      WorkUnitCoreShutdown,
-      ClientNumberOfUnitsCompleted,
-      ClientCoreCommunicationsErrorShutdown,
-      ClientEuePauseState,
-      ClientShutdown
    }
 
    public enum PpdCalculationType

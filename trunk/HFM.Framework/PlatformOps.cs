@@ -19,10 +19,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Reflection;
+
+using HFM.Framework.DataTypes;
 
 namespace HFM.Framework
 {

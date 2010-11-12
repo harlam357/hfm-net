@@ -17,52 +17,51 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-using System;
-
-using HFM.Framework;
-
-namespace HFM.Log
+namespace HFM.Framework.DataTypes
 {
-   public class ProjectInfo : IProjectInfo
+   public interface IProjectInfo
    {
-      private Int32 _ProjectID;
       /// <summary>
       /// Project ID Number
       /// </summary>
-      public Int32 ProjectID
-      {
-         get { return _ProjectID; }
-         set { _ProjectID = value; }
-      }
+      int ProjectID { get; }
 
-      private Int32 _ProjectRun;
       /// <summary>
       /// Project ID (Run)
       /// </summary>
-      public Int32 ProjectRun
-      {
-         get { return _ProjectRun; }
-         set { _ProjectRun = value; }
-      }
+      int ProjectRun { get; }
 
-      private Int32 _ProjectClone;
       /// <summary>
       /// Project ID (Clone)
       /// </summary>
-      public Int32 ProjectClone
-      {
-         get { return _ProjectClone; }
-         set { _ProjectClone = value; }
-      }
+      int ProjectClone { get; }
 
-      private Int32 _ProjectGen;
       /// <summary>
       /// Project ID (Gen)
       /// </summary>
-      public Int32 ProjectGen
-      {
-         get { return _ProjectGen; }
-         set { _ProjectGen = value; }
-      }
+      int ProjectGen { get; }
+   }
+
+   public class ProjectInfo : IProjectInfo
+   {
+      /// <summary>
+      /// Project ID Number
+      /// </summary>
+      public int ProjectID { get; set; }
+
+      /// <summary>
+      /// Project ID (Run)
+      /// </summary>
+      public int ProjectRun { get; set; }
+
+      /// <summary>
+      /// Project ID (Clone)
+      /// </summary>
+      public int ProjectClone { get; set; }
+
+      /// <summary>
+      /// Project ID (Gen)
+      /// </summary>
+      public int ProjectGen { get; set; }
    }
 }

@@ -650,6 +650,18 @@ namespace HFM.Log.Tests
       {
          _reader.GetUnitInfoLogData("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo5.txt");
       }
+
+      [Test]
+      public void WorkUnitResultFromString()
+      {
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, LogLineParser.WorkUnitResultFromString("FINISHED_UNIT"));
+         Assert.AreEqual(WorkUnitResult.EarlyUnitEnd, LogLineParser.WorkUnitResultFromString("EARLY_UNIT_END"));
+         Assert.AreEqual(WorkUnitResult.UnstableMachine, LogLineParser.WorkUnitResultFromString("UNSTABLE_MACHINE"));
+         Assert.AreEqual(WorkUnitResult.Interrupted, LogLineParser.WorkUnitResultFromString("INTERRUPTED"));
+         Assert.AreEqual(WorkUnitResult.BadWorkUnit, LogLineParser.WorkUnitResultFromString("BAD_WORK_UNIT"));
+         Assert.AreEqual(WorkUnitResult.CoreOutdated, LogLineParser.WorkUnitResultFromString("CORE_OUTDATED"));
+         Assert.AreEqual(WorkUnitResult.Unknown, LogLineParser.WorkUnitResultFromString("afasfdsafasdfas"));
+      }
    }
    // ReSharper restore InconsistentNaming
 }

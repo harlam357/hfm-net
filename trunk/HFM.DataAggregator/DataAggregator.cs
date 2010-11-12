@@ -23,9 +23,10 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+
+using HFM.Framework;
 using HFM.Framework.DataTypes;
 using HFM.Log;
-using HFM.Framework;
 
 namespace HFM.DataAggregator
 {

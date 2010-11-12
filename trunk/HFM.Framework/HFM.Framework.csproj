@@ -74,9 +74,11 @@
     <Compile Include="Constants.cs" />
     <Compile Include="CoverageExcludeAttribute.cs" />
     <Compile Include="DataTypes\ClientRun.cs" />
+    <Compile Include="DataTypes\Enumerations.cs" />
     <Compile Include="DataTypes\FahLogUnitData.cs" />
     <Compile Include="DataTypes\InstanceTotals.cs" />
     <Compile Include="DataTypes\LogLine.cs" />
+    <Compile Include="DataTypes\ProjectInfo.cs" />
     <Compile Include="DataTypes\Protein.cs" />
     <Compile Include="DataTypes\UnitFrame.cs" />
     <Compile Include="DataTypes\UnitInfo.cs" />
@@ -92,7 +94,6 @@
     <Compile Include="InstanceProvider.cs" />
     <Compile Include="IOwnedByClientInstance.cs" />
     <Compile Include="IPreferenceSet.cs" />
-    <Compile Include="IProjectInfo.cs" />
     <Compile Include="IProjectSummaryDownloader.cs" />
     <Compile Include="IProteinBenchmarkContainer.cs" />
     <Compile Include="IProteinCollection.cs" />

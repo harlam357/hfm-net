@@ -89,10 +89,10 @@ namespace HFM.Log
       #region Fields
       
       private readonly Regex _rTimeStamp =
-            new Regex("\\[(?<Timestamp>.{8})\\]", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+         new Regex("\\[(?<Timestamp>.{8})\\]", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       private readonly Regex _rProjectNumberFromTag =
-            new Regex("P(?<ProjectNumber>.*)R(?<Run>.*)C(?<Clone>.*)G(?<Gen>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+         new Regex("P(?<ProjectNumber>.*)R(?<Run>.*)C(?<Clone>.*)G(?<Gen>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
       
       /// <summary>
       /// List of client run positions.
@@ -331,17 +331,9 @@ namespace HFM.Log
             #region Frame Data
             if (line.LineType.Equals(LogLineType.WorkUnitFrame))
             {
-               var frame = line.LineData as UnitFrame;
-               if (frame == null)
-               {
-                  // If not found, clear the LineType and get out
-                  line.LineType = LogLineType.Unknown;
-               }
-               else
-               {
-                  data.FramesObserved++;
-                  data.FrameDataList.Add(line);
-               }
+               Debug.Assert(line.LineData is UnitFrame);
+               data.FramesObserved++;
+               data.FrameDataList.Add(line);
             }
             #endregion
 
@@ -557,10 +549,8 @@ namespace HFM.Log
 
          string[] fahLogText = File.ReadAllLines(logFilePath);
 
-         // Need to clear any previous data before scanning.  
-         // This Scan could be called multiple times on the same instance.
+         // Need to clear any previous data before adding new range.  
          _logLineList.Clear();
-         _clientRunList.Clear();
          
          _logLineList.AddRange(fahLogText);
 
@@ -568,7 +558,7 @@ namespace HFM.Log
          // of LogLine to the ClientRun List so it can determine the Client 
          // and Unit Start Indexes.
 
-         _clientRunList.HandleLogLines(_logLineList);
+         _clientRunList.Build(_logLineList);
 
          DoRunLevelDetection();
       }
@@ -602,7 +592,7 @@ namespace HFM.Log
                }
                else if (LogLineList[j].LineType.Equals(LogLineType.ClientUserNameTeam))
                {
-                  ArrayList userAndTeam = (ArrayList)LogLineList[j].LineData;
+                  var userAndTeam = (ArrayList)LogLineList[j].LineData;
                   ClientRunList[i].FoldingID = userAndTeam[0].ToString();
                   ClientRunList[i].Team = (int)userAndTeam[1];
                }

@@ -29,6 +29,7 @@ namespace HFM.Framework
    public static class StringOps
    {
       #region Constants
+      
       private const string ValidNameFirst =  "[a-zA-Z0-9\\+=\\-_\\$&^\\[\\]]";
       private const string ValidNameMiddle = "[a-zA-Z0-9\\+=\\-_\\$&^\\[\\] \\.]";
       private const string ValidNameLast =   "[a-zA-Z0-9\\+=\\-_\\$&^\\[\\]]";
@@ -46,14 +47,7 @@ namespace HFM.Framework
       private const string ValidMatchFtpWithUserPassUrl = @"\b(?<protocol>ftp)://(?<username>[A-Z0-9+&@#/%=~_|!:,.;]+):(?<password>[A-Z0-9+&@#/%=~_|!:,.;]+)@(?<domain>[-A-Z0-9.]+)(?<file>/[-A-Z0-9+&@#/%=~_|!:,.;]*/)";
       
       private const string ValidEmailAddress = @"^[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}$";
-
-      // Work Unit Result Strings
-      private const string FinishedUnit = "FINISHED_UNIT";
-      private const string EarlyUnitEnd = "EARLY_UNIT_END";
-      private const string UnstableMachine = "UNSTABLE_MACHINE";
-      private const string Interrupted = "INTERRUPTED";
-      private const string BadWorkUnit = "BAD_WORK_UNIT";
-      private const string CoreOutdated = "CORE_OUTDATED";
+      
       #endregion
    
       #region Methods
@@ -285,31 +279,6 @@ namespace HFM.Framework
          return true; 
       }
 
-      /// <summary>
-      /// Get the WorkUnitResult Enum representation of the given result string.
-      /// </summary>
-      /// <param name="result">Work Unit Result as String.</param>
-      public static WorkUnitResult WorkUnitResultFromString(string result)
-      {
-         switch (result)
-         {
-            case FinishedUnit:
-               return WorkUnitResult.FinishedUnit;
-            case EarlyUnitEnd:
-               return WorkUnitResult.EarlyUnitEnd;
-            case UnstableMachine:
-               return WorkUnitResult.UnstableMachine;
-            case Interrupted:
-               return WorkUnitResult.Interrupted;
-            case BadWorkUnit:
-               return WorkUnitResult.BadWorkUnit;
-            case CoreOutdated:
-               return WorkUnitResult.CoreOutdated;
-            default:
-               return WorkUnitResult.Unknown;
-         }
-      }
-      
       /// <summary>
       /// Are two Client Instance Paths Equal?
       /// </summary>

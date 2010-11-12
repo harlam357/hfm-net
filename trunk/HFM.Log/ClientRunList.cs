@@ -30,9 +30,10 @@ namespace HFM.Log
    /// <summary>
    /// List of Client Runs.
    /// </summary>
-   public class ClientRunList : List<ClientRun>
+   internal class ClientRunList : List<ClientRun>
    {
-      #region Members
+      #region Fields
+      
       /// <summary>
       /// Local variable containing the current LogLineType.
       /// </summary>
@@ -41,14 +42,16 @@ namespace HFM.Log
       /// <summary>
       /// Holds starting information for the current work unit.
       /// </summary>
-      private UnitStartContainer _unitStart; 
+      private UnitStartContainer _unitStart;
+       
       #endregion
 
       #region Properties
+
       /// <summary>
       /// Returns the most recent client run if available, otherwise null.
       /// </summary>
-      public ClientRun CurrentClientRun
+      internal ClientRun CurrentClientRun
       {
          get
          {
@@ -60,16 +63,20 @@ namespace HFM.Log
             return null;
          }
       } 
+      
       #endregion
 
       #region Methods
-      public void HandleLogLines(IList<LogLine> logLines)
+      internal void Build(IList<LogLine> logLines)
       {
+         // clear before building
+         Clear();
+         // init unit start container
          _unitStart.Initialize();
       
-         // Now that we know the LineType for each log line, scan the List of LogLine
+         // LogLine contains the LineType, so we'll scan the List of LogLine
          // and set Client and Unit Start Indexes.
-         foreach (ILogLine line in logLines)
+         foreach (var line in logLines)
          {
             HandleLogLine(line);
          }
@@ -166,8 +173,8 @@ namespace HFM.Log
          // then update the ProcessingIndex to bypass the CoreDownload section
          // of the log file.
          if (_unitStart.WorkUnitProcessingIndex == -1 ||
-             (_unitStart.WorkUnitProcessingIndex != -1 &&
-              _unitStart.WorkUnitCoreDownloadIndex > _unitStart.WorkUnitProcessingIndex))
+            (_unitStart.WorkUnitProcessingIndex != -1 &&
+             _unitStart.WorkUnitCoreDownloadIndex > _unitStart.WorkUnitProcessingIndex))
          {
             _unitStart.WorkUnitProcessingIndex = lineIndex;
          }

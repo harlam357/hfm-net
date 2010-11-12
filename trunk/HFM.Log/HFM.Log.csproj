@@ -46,7 +46,6 @@
     <Compile Include="ClientRunList.cs" />
     <Compile Include="LogLineParser.cs" />
     <Compile Include="LogReader.cs" />
-    <Compile Include="ProjectInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
