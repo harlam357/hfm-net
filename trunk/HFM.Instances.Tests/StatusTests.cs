@@ -21,7 +21,7 @@ using System;
 
 using NUnit.Framework;
 
-using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Instances.Tests
 {

@@ -19,9 +19,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
-using HFM.Framework;
 using HFM.Framework.DataTypes;
 
 namespace HFM.Log
@@ -60,8 +58,8 @@ namespace HFM.Log
          }
          catch (Exception ex)
          {
-            logLineObject.LineType = LogLineType.Unknown;
-            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, ex);
+            logLineObject.LineType = LogLineType.Error;
+            logLineObject.LineData = ex;
          }
          Add(logLineObject);
       }

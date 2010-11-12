@@ -18,275 +18,53 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 
-using HFM.Framework;
 using HFM.Framework.DataTypes;
 
 namespace HFM.Log
 {
-   public interface ILogReader
-   {
-      /// <summary>
-      /// Returns the last client run data.
-      /// </summary>
-      ClientRun CurrentClientRun { get; }
-
-      /// <summary>
-      /// Returns log text of the current client run.
-      /// </summary>
-      IList<LogLine> CurrentClientRunLogLines { get; }
-
-      /// <summary>
-      /// Returns log text of the previous work unit.
-      /// </summary>
-      IList<LogLine> PreviousWorkUnitLogLines { get; }
-
-      /// <summary>
-      /// Returns log text of the current work unit.
-      /// </summary>
-      IList<LogLine> CurrentWorkUnitLogLines { get; }
-
-      /// <summary>
-      /// Get a list of Log Lines that correspond to the given Queue Index.
-      /// </summary>
-      /// <param name="queueIndex">The Queue Index (0-9)</param>
-      IList<LogLine> GetLogLinesFromQueueIndex(int queueIndex);
-
-      /// <summary>
-      /// Get FAHlog Unit Data from the given Log Lines
-      /// </summary>
-      /// <param name="logLines">Log Lines to search</param>
-      FahLogUnitData GetFahLogDataFromLogLines(ICollection<LogLine> logLines);
-
-      /// <summary>
-      /// Parse the content from the unitinfo.txt file.
-      /// </summary>
-      /// <param name="logFilePath">Path to the log file.</param>
-      /// <exception cref="System.ArgumentException">Throws if logFilePath is Null or Empty.</exception>
-      /// <exception cref="System.IO.IOException">Throws if file specified by logFilePath cannot be read.</exception>
-      /// <exception cref="System.FormatException">Throws if log data fails parsing.</exception>
-      UnitInfoLogData GetUnitInfoLogData(string logFilePath);
-
-      /// <summary>
-      /// Scan the FAHLog text lines to determine work unit boundries.
-      /// </summary>
-      /// <param name="logFilePath">Path to the log file.</param>
-      /// <exception cref="ArgumentException">Throws if logFilePath is Null or Empty.</exception>
-      void ScanFahLog(string logFilePath);
-   }
-
    /// <summary>
-   /// Reads FAHlog.txt files, determines log positions, and does run level detection.
+   /// Reads FAHlog.txt files.  Determines client run data and work unit log positions.
    /// </summary>
-   public class LogReader : ILogReader
+   public class LogReader
    {
       #region Fields
       
-      private readonly Regex _rTimeStamp =
+      private static readonly Regex RegexTimeStamp =
          new Regex("\\[(?<Timestamp>.{8})\\]", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
-      private readonly Regex _rProjectNumberFromTag =
+      private static readonly Regex RegexProjectNumberFromTag =
          new Regex("P(?<ProjectNumber>.*)R(?<Run>.*)C(?<Clone>.*)G(?<Gen>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
-      
-      /// <summary>
-      /// List of client run positions.
-      /// </summary>
-      private readonly ClientRunList _clientRunList = new ClientRunList(); 
-      /// <summary>
-      /// List of client run positions.
-      /// </summary>
-      public List<ClientRun> ClientRunList
-      {
-         get { return _clientRunList; }
-      }
 
-      /// <summary>
-      /// List of client log lines.
-      /// </summary>
-      private readonly LogLineList _logLineList = new LogLineList();
-      /// <summary>
-      /// List of client log lines.
-      /// </summary>
-      public List<LogLine> LogLineList
-      {
-         get { return _logLineList; }
-      }
+      private readonly DateTimeStyles _dateTimeStyles;
       
       #endregion
 
-      #region Properties
+      #region Constructor
       
       /// <summary>
-      /// Returns the last client run data.
+      /// LogReader Constructor
       /// </summary>
-      public ClientRun CurrentClientRun
+      /// <param name="dateTimeStyles">Style used to parse DateTime structures from log data.</param>
+      public LogReader(DateTimeStyles dateTimeStyles)
       {
-         get { return _clientRunList.CurrentClientRun; }
+         _dateTimeStyles = dateTimeStyles;
       }
 
-      /// <summary>
-      /// Returns log text of the current client run.
-      /// </summary>
-      public IList<LogLine> CurrentClientRunLogLines
-      {
-         get
-         {
-            ClientRun lastClientRun = _clientRunList.CurrentClientRun;
-            if (lastClientRun != null)
-            {
-               int start = lastClientRun.ClientStartIndex;
-               int end = _logLineList.Count;
-
-               int length = end - start;
-
-               var logLines = new LogLine[length];
-
-               _logLineList.CopyTo(start, logLines, 0, length);
-
-               return logLines;
-            }
-
-            return null;
-         }
-      }
-      
-      /// <summary>
-      /// Returns log text of the previous work unit.
-      /// </summary>
-      public IList<LogLine> PreviousWorkUnitLogLines
-      {
-         get
-         {
-            ClientRun lastClientRun = _clientRunList.CurrentClientRun;
-            if (lastClientRun != null && lastClientRun.UnitIndexes.Count > 1)
-            {
-               int start = lastClientRun.UnitIndexes[lastClientRun.UnitIndexes.Count - 2].StartIndex;
-               int end = lastClientRun.UnitIndexes[lastClientRun.UnitIndexes.Count - 1].StartIndex;
-
-               int length = end - start;
-
-               var logLines = new LogLine[length];
-
-               _logLineList.CopyTo(start, logLines, 0, length);
-
-               return logLines;
-            }
-
-            return null;
-         }
-      }
-
-      /// <summary>
-      /// Returns log text of the current work unit.
-      /// </summary>
-      public IList<LogLine> CurrentWorkUnitLogLines
-      {
-         get
-         {
-            ClientRun lastClientRun = _clientRunList.CurrentClientRun;
-            if (lastClientRun != null && lastClientRun.UnitIndexes.Count > 0)
-            {
-               int start = lastClientRun.UnitIndexes[lastClientRun.UnitIndexes.Count - 1].StartIndex;
-               int end = _logLineList.Count;
-
-               int length = end - start;
-
-               var logLines = new LogLine[length];
-
-               _logLineList.CopyTo(start, logLines, 0, length);
-
-               return logLines;
-            }
-
-            return null;
-         }
-      } 
-      
       #endregion
 
       #region Methods
-      /// <summary>
-      /// Get a list of Log Lines that correspond to the given Queue Index.
-      /// </summary>
-      /// <param name="queueIndex">The Queue Index (0-9)</param>
-      public IList<LogLine> GetLogLinesFromQueueIndex(int queueIndex)
-      {
-         // walk backwards through the ClientRunList and then backward
-         // through the UnitQueueIndex list.  Find the first (really last
-         // because we're itterating in reverse) UnitQueueIndex that matches
-         // the given queueIndex.
-         for (int i = ClientRunList.Count - 1; i >= 0; i--)
-         {
-            for (int j = ClientRunList[i].UnitIndexes.Count - 1; j >= 0; j--)
-            {
-               // if a match is found
-               if (ClientRunList[i].UnitIndexes[j].QueueIndex == queueIndex)
-               {
-                  // set the unit start position
-                  int start = ClientRunList[i].UnitIndexes[j].StartIndex;
-                  int end = DetermineEndPosition(i, j);
-
-                  int length = end - start;
-
-                  var logLines = new LogLine[length];
-
-                  _logLineList.CopyTo(start, logLines, 0, length);
-
-                  return logLines;
-               }
-            }
-         }
-
-         return null;
-      }
-
-      /// <summary>
-      /// Determine the ending index of the Work Unit Log Lines.
-      /// </summary>
-      private int DetermineEndPosition(int i, int j)
-      {
-         // we're working on the last client run
-         if (i == ClientRunList.Count - 1)
-         {
-            // we're workin on the last unit in the run
-            if (j == ClientRunList[i].UnitIndexes.Count - 1)
-            {
-               // use the last line index as the end position
-               return _logLineList.Count;
-            }
-            else // we're working on a unit prior to the last
-            {
-               // use the unit start position for the next unit
-               return ClientRunList[i].UnitIndexes[j + 1].StartIndex;
-            }
-         }
-         else // we're working on a client run prior to the last
-         {
-            // we're workin on the last unit in the run
-            if (j == ClientRunList[i].UnitIndexes.Count - 1)
-            {
-               // use the client start position for the next client run
-               return ClientRunList[i + 1].ClientStartIndex;
-            }
-            else
-            {
-               // use the unit start position for the next unit
-               return ClientRunList[i].UnitIndexes[j + 1].StartIndex;
-            }
-         }
-      }
-
+      
       /// <summary>
       /// Get FAHlog Unit Data from the given Log Lines
       /// </summary>
       /// <param name="logLines">Log Lines to search</param>
-      public FahLogUnitData GetFahLogDataFromLogLines(ICollection<LogLine> logLines)
+      public FahLogUnitData GetFahLogDataFromLogLines(IEnumerable<LogLine> logLines)
       {
          var data = new FahLogUnitData();
 
@@ -414,13 +192,13 @@ namespace HFM.Log
       private TimeSpan GetLogLineTimeStamp(ILogLine logLine)
       {
          Match mTimeStamp;
-         if ((mTimeStamp = _rTimeStamp.Match(logLine.LineRaw)).Success)
+         if ((mTimeStamp = RegexTimeStamp.Match(logLine.LineRaw)).Success)
          {
             try
             {
                DateTime timeStamp = DateTime.ParseExact(mTimeStamp.Result("${Timestamp}"), "HH:mm:ss",
                                                         DateTimeFormatInfo.InvariantInfo,
-                                                        PlatformOps.GetDateTimeStyle());
+                                                        _dateTimeStyles);
 
                return timeStamp.TimeOfDay;
             }
@@ -435,21 +213,16 @@ namespace HFM.Log
       {
          Debug.Assert(line != null);
          Debug.Assert(data != null);
-      
-         if (line.LineType.Equals(LogLineType.WorkUnitProject) == false)
-         {
-            throw new ArgumentException(String.Format("Log line is not of type '{0}'", LogLineType.WorkUnitProject), "line");
-         }
+         Debug.Assert(line.LineType.Equals(LogLineType.WorkUnitProject));
          
-         Match match = (Match)line.LineData;
-
-         ProjectInfo info = new ProjectInfo
-                            {
-                               ProjectID = Int32.Parse(match.Result("${ProjectNumber}")),
-                               ProjectRun = Int32.Parse(match.Result("${Run}")),
-                               ProjectClone = Int32.Parse(match.Result("${Clone}")),
-                               ProjectGen = Int32.Parse(match.Result("${Gen}"))
-                            };
+         var match = (Match)line.LineData;
+         var info = new ProjectInfo
+                        {
+                           ProjectID = Int32.Parse(match.Result("${ProjectNumber}")),
+                           ProjectRun = Int32.Parse(match.Result("${Run}")),
+                           ProjectClone = Int32.Parse(match.Result("${Clone}")),
+                           ProjectGen = Int32.Parse(match.Result("${Gen}"))
+                        };
 
          data.ProjectInfoList.Add(info);
       }
@@ -498,7 +271,7 @@ namespace HFM.Log
                   data.ProteinTag = line.Substring(5);
 
                   Match mProjectNumberFromTag;
-                  if ((mProjectNumberFromTag = _rProjectNumberFromTag.Match(data.ProteinTag)).Success)
+                  if ((mProjectNumberFromTag = RegexProjectNumberFromTag.Match(data.ProteinTag)).Success)
                   {
                      data.ProjectID = Int32.Parse(mProjectNumberFromTag.Result("${ProjectNumber}"));
                      data.ProjectRun = Int32.Parse(mProjectNumberFromTag.Result("${Run}"));
@@ -511,14 +284,14 @@ namespace HFM.Log
                {
                   data.DownloadTime = DateTime.ParseExact(line.Substring(15), "MMMM d H:mm:ss",
                                                           DateTimeFormatInfo.InvariantInfo,
-                                                          PlatformOps.GetDateTimeStyle());
+                                                          _dateTimeStyles);
                }
                /* DueTime (Could be read here or through the queue.dat) */
                else if (line.StartsWith("Due time: "))
                {
                   data.DueTime = DateTime.ParseExact(line.Substring(10), "MMMM d H:mm:ss",
                                                      DateTimeFormatInfo.InvariantInfo,
-                                                     PlatformOps.GetDateTimeStyle());
+                                                     _dateTimeStyles);
                }
                /* Progress (Supplemental Read - if progress percentage cannot be determined through FAHlog.txt) */
                else if (line.StartsWith("Progress: "))
@@ -540,7 +313,7 @@ namespace HFM.Log
       /// </summary>
       /// <param name="logFilePath">Path to the log file.</param>
       /// <exception cref="ArgumentException">Throws if logFilePath is Null or Empty.</exception>
-      public void ScanFahLog(string logFilePath)
+      public List<LogLine> GetLogLines(string logFilePath)
       {
          if (String.IsNullOrEmpty(logFilePath))
          {
@@ -548,66 +321,25 @@ namespace HFM.Log
          }
 
          string[] fahLogText = File.ReadAllLines(logFilePath);
-
-         // Need to clear any previous data before adding new range.  
-         _logLineList.Clear();
          
-         _logLineList.AddRange(fahLogText);
+         // Need to clear any previous data before adding new range.
+         var logLineList = new LogLineList();
+         logLineList.AddRange(fahLogText);
 
+         return logLineList;
+      }
+      
+      public List<ClientRun> GetClientRuns(IList<LogLine> logLines)
+      {
          // Now that we know the LineType for each LogLine, hand off the List
          // of LogLine to the ClientRun List so it can determine the Client 
          // and Unit Start Indexes.
+         var clientRunList = new ClientRunList();
+         clientRunList.Build(logLines);
 
-         _clientRunList.Build(_logLineList);
-
-         DoRunLevelDetection();
+         return clientRunList;
       }
       
-      private void DoRunLevelDetection()
-      {
-         for (int i = 0; i < ClientRunList.Count; i++)
-         {
-            int end;
-            // we're working on the last client run
-            if (i == ClientRunList.Count - 1)
-            {
-               // use the last line index as the end position
-               end = LogLineList.Count;
-            }
-            else // we're working on a client run prior to the last
-            {
-               // use the client start position for the next client run
-               end = ClientRunList[i + 1].ClientStartIndex;
-            }
-         
-            for (int j = ClientRunList[i].ClientStartIndex; j < end; j++)
-            {
-               if (LogLineList[j].LineType.Equals(LogLineType.ClientVersion))
-               {
-                  ClientRunList[i].ClientVersion = LogLineList[j].LineData.ToString();
-               }
-               else if (LogLineList[j].LineType.Equals(LogLineType.ClientArguments))
-               {
-                  ClientRunList[i].Arguments = LogLineList[j].LineData.ToString();
-               }
-               else if (LogLineList[j].LineType.Equals(LogLineType.ClientUserNameTeam))
-               {
-                  var userAndTeam = (ArrayList)LogLineList[j].LineData;
-                  ClientRunList[i].FoldingID = userAndTeam[0].ToString();
-                  ClientRunList[i].Team = (int)userAndTeam[1];
-               }
-               else if (LogLineList[j].LineType.Equals(LogLineType.ClientUserID) ||
-                        LogLineList[j].LineType.Equals(LogLineType.ClientReceivedUserID))
-               {
-                  ClientRunList[i].UserID = LogLineList[j].LineData.ToString();
-               }
-               else if (LogLineList[j].LineType.Equals(LogLineType.ClientMachineID))
-               {
-                  ClientRunList[i].MachineID = (int)LogLineList[j].LineData;
-               }
-            }
-         }
-      }
       #endregion
    }
 }

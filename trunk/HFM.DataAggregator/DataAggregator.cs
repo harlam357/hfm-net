@@ -34,7 +34,8 @@ namespace HFM.DataAggregator
    {
       private readonly IQueueReader _queueReader;
 
-      private ILogReader _logReader;
+      private LogReader _logReader;
+      private LogInterpreter _logInterpreter;
 
       /// <summary>
       /// Instance Name
@@ -137,13 +138,20 @@ namespace HFM.DataAggregator
       /// </summary>
       public IList<IUnitInfo> AggregateData()
       {
-         _logReader = new LogReader();
-      
+         _logReader = new LogReader(PlatformOps.GetDateTimeStyle());
+         var logLines = _logReader.GetLogLines(FahLogFilePath);
+         var clientRuns = _logReader.GetClientRuns(logLines);
+
+         _logInterpreter = new LogInterpreter(logLines, clientRuns);
+         _currentClientRun = _logInterpreter.LastClientRun;
+         
+         // report errors that came back from log parsing
+         foreach (var s in _logInterpreter.LogLineParsingErrors)
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, s);
+         }
+
          IList<IUnitInfo> parsedUnits;
-
-         _logReader.ScanFahLog(FahLogFilePath);
-         _currentClientRun = _logReader.CurrentClientRun;
-
          // Decision Time: If Queue Read fails parse from logs only
          if (ReadQueueFile())
          {
@@ -158,6 +166,7 @@ namespace HFM.DataAggregator
          }
          
          _logReader = null;
+         _logInterpreter = null;
 
          return parsedUnits;
       }
@@ -207,18 +216,18 @@ namespace HFM.DataAggregator
          var parsedUnits = new IUnitInfo[2];
          _unitLogLines = new IList<LogLine>[2];
 
-         if (_logReader.PreviousWorkUnitLogLines != null)
+         if (_logInterpreter.PreviousWorkUnitLogLines != null)
          {
-            _unitLogLines[0] = _logReader.PreviousWorkUnitLogLines;
-            parsedUnits[0] = BuildUnitInfo(null, _logReader.GetFahLogDataFromLogLines(_logReader.PreviousWorkUnitLogLines), null);
+            _unitLogLines[0] = _logInterpreter.PreviousWorkUnitLogLines;
+            parsedUnits[0] = BuildUnitInfo(null, _logReader.GetFahLogDataFromLogLines(_logInterpreter.PreviousWorkUnitLogLines), null);
          }
 
          bool matchOverride = false;
-         _unitLogLines[1] = _logReader.CurrentWorkUnitLogLines;
+         _unitLogLines[1] = _logInterpreter.CurrentWorkUnitLogLines;
          if (_unitLogLines[1] == null)
          {
             matchOverride = true;
-            _unitLogLines[1] = _logReader.CurrentClientRunLogLines;
+            _unitLogLines[1] = _logInterpreter.CurrentClientRunLogLines;
          }
          
          _currentFahLogUnitData = _logReader.GetFahLogDataFromLogLines(_unitLogLines[1]);
@@ -235,7 +244,7 @@ namespace HFM.DataAggregator
          for (int queueIndex = 0; queueIndex < parsedUnits.Length; queueIndex++)
          {
             // Get the Log Lines for this queue position from the reader
-            _unitLogLines[queueIndex] = _logReader.GetLogLinesFromQueueIndex(queueIndex);
+            _unitLogLines[queueIndex] = _logInterpreter.GetLogLinesFromQueueIndex(queueIndex);
             // Get the FAH Log Data from the Log Lines
             FahLogUnitData fahLogUnitData = _logReader.GetFahLogDataFromLogLines(_unitLogLines[queueIndex]);
             UnitInfoLogData unitInfoLogData = null;
@@ -255,13 +264,13 @@ namespace HFM.DataAggregator
                   HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture,
                      "Could not verify log section for current queue entry ({0}). Trying to parse with most recent log section.", queueIndex));
 
-                  _unitLogLines[queueIndex] = _logReader.CurrentWorkUnitLogLines;
+                  _unitLogLines[queueIndex] = _logInterpreter.CurrentWorkUnitLogLines;
                   // If got no Work Unit Log Lines based on Current Work Unit Log Lines
                   // then take the entire Current Client Run Log Lines - likely the run
                   // was short and never contained any Work Unit Data.
                   if (_unitLogLines[queueIndex] == null)
                   {
-                     _unitLogLines[queueIndex] = _logReader.CurrentClientRunLogLines;
+                     _unitLogLines[queueIndex] = _logInterpreter.CurrentClientRunLogLines;
                   }
                   fahLogUnitData = _logReader.GetFahLogDataFromLogLines(_unitLogLines[queueIndex]);
                   _currentFahLogUnitData = fahLogUnitData;

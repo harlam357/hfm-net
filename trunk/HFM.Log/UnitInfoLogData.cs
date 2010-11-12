@@ -19,7 +19,9 @@
 
 using System;
 
-namespace HFM.Framework.DataTypes
+using HFM.Framework.DataTypes;
+
+namespace HFM.Log
 {
    public class UnitInfoLogData : IProjectInfo
    {

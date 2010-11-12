@@ -20,7 +20,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace HFM.Framework.DataTypes
+using HFM.Framework.DataTypes;
+
+namespace HFM.Log
 {
    public class FahLogUnitData : IProjectInfo
    {
@@ -36,7 +38,7 @@ namespace HFM.Framework.DataTypes
       }
 
       /// <summary>
-      /// Unit Starting Time Stamp
+      /// Unit Start Time Stamp
       /// </summary>
       public TimeSpan UnitStartTimeStamp { get; set; }
 
@@ -48,7 +50,7 @@ namespace HFM.Framework.DataTypes
       /// <summary>
       /// Number of Frames Observed since Last Unit Start
       /// </summary>
-      public Int32 FramesObserved { get; set; }
+      public int FramesObserved { get; set; }
 
       /// <summary>
       /// Core Version
@@ -68,7 +70,7 @@ namespace HFM.Framework.DataTypes
       /// <summary>
       /// Project ID Number
       /// </summary>
-      public Int32 ProjectID
+      public int ProjectID
       {
          get 
          { 
@@ -88,7 +90,7 @@ namespace HFM.Framework.DataTypes
       /// <summary>
       /// Project ID (Run)
       /// </summary>
-      public Int32 ProjectRun
+      public int ProjectRun
       {
          get
          {
@@ -108,7 +110,7 @@ namespace HFM.Framework.DataTypes
       /// <summary>
       /// Project ID (Clone)
       /// </summary>
-      public Int32 ProjectClone
+      public int ProjectClone
       {
          get
          {
@@ -128,7 +130,7 @@ namespace HFM.Framework.DataTypes
       /// <summary>
       /// Project ID (Gen)
       /// </summary>
-      public Int32 ProjectGen
+      public int ProjectGen
       {
          get
          {

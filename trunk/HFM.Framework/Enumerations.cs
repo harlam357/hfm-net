@@ -19,7 +19,6 @@
 
 namespace HFM.Framework
 {
-   #region Instance and Client Types
    public enum InstanceType
    {
       PathInstance,
@@ -27,36 +26,12 @@ namespace HFM.Framework
       HttpInstance
    }
 
-   public enum ClientType
-   {
-      Unknown,
-      Standard,
-      SMP,
-      GPU
-   }
-   #endregion
-   
    public enum FtpType
    {
       Passive,
       Active
    }
    
-   public enum ClientStatus
-   {
-      Unknown,
-      Offline,
-      Stopped,
-      EuePause,
-      Hung,
-      Paused,
-      SendingWorkPacket,
-      GettingWorkPacket,
-      RunningNoFrameTimes,
-      RunningAsync,
-      Running
-   }
-
    /// <summary>
    /// The Queue Entry Status
    /// </summary>

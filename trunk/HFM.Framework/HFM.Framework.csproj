@@ -75,14 +75,12 @@
     <Compile Include="CoverageExcludeAttribute.cs" />
     <Compile Include="DataTypes\ClientRun.cs" />
     <Compile Include="DataTypes\Enumerations.cs" />
-    <Compile Include="DataTypes\FahLogUnitData.cs" />
     <Compile Include="DataTypes\InstanceTotals.cs" />
     <Compile Include="DataTypes\LogLine.cs" />
     <Compile Include="DataTypes\ProjectInfo.cs" />
     <Compile Include="DataTypes\Protein.cs" />
     <Compile Include="DataTypes\UnitFrame.cs" />
     <Compile Include="DataTypes\UnitInfo.cs" />
-    <Compile Include="DataTypes\UnitInfoLogData.cs" />
     <Compile Include="Enumerations.cs" />
     <Compile Include="HfmTrace.cs" />
     <Compile Include="IBenchmarkClient.cs" />

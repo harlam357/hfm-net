@@ -17,12 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 
-using HFM.Framework;
 using HFM.Framework.DataTypes;
 
 namespace HFM.Log
@@ -49,24 +47,17 @@ namespace HFM.Log
       #region Properties
 
       /// <summary>
-      /// Returns the most recent client run if available, otherwise null.
+      /// Returns the most recent Client Run if available, otherwise null.
       /// </summary>
-      internal ClientRun CurrentClientRun
+      private ClientRun LastClientRun
       {
-         get
-         {
-            if (Count > 0)
-            {
-               return this[Count - 1];
-            }
-
-            return null;
-         }
+         get { return Count > 0 ? this[Count - 1] : null; }
       } 
       
       #endregion
 
       #region Methods
+      
       internal void Build(IList<LogLine> logLines)
       {
          // clear before building
@@ -80,6 +71,8 @@ namespace HFM.Log
          {
             HandleLogLine(line);
          }
+
+         DoRunLevelDetection(logLines);
       }
       
       /// <summary>
@@ -232,35 +225,32 @@ namespace HFM.Log
       /// <remarks></remarks>
       private void HandleWorkUnitRunning(ILogLine line)
       {
-         if (CurrentClientRun == null)
+         if (LastClientRun == null)
          {
-            // no client run to attach this unit start
-            throw new InvalidOperationException("Found Work Unit Data before any Log Headers.");
+            Add(new ClientRun(line.LineIndex));
          }
+
+         Debug.Assert(LastClientRun != null);
          
-         // If we've already seen a WorkUnitRunning line, ignore this one.
+         // If we've already seen a WorkUnitRunning line, ignore this one.);
          if (_currentLineType.Equals(LogLineType.WorkUnitRunning)) return;
 
+         // Not Checking the Queue Slot - we don't care if we found a valid slot or not
          if (_unitStart.WorkUnitProcessingIndex > -1)
          {
-            // Set the Queue Slot - we don't care if we found a valid slot or not
-            CurrentClientRun.UnitIndexes.Add(new UnitIndex(_unitStart.WorkUnitQueueSlotIndex, _unitStart.WorkUnitProcessingIndex));
+            LastClientRun.UnitIndexes.Add(new UnitIndex(_unitStart.WorkUnitQueueSlotIndex, _unitStart.WorkUnitProcessingIndex));
          }
          else if (_unitStart.WorkUnitWorkingIndex > -1)
          {
-            // Set the Queue Slot - we don't care if we found a valid slot or not
-            CurrentClientRun.UnitIndexes.Add(new UnitIndex(_unitStart.WorkUnitQueueSlotIndex,_unitStart.WorkUnitWorkingIndex));
+            LastClientRun.UnitIndexes.Add(new UnitIndex(_unitStart.WorkUnitQueueSlotIndex, _unitStart.WorkUnitWorkingIndex));
          }
          else if (_unitStart.WorkUnitStartIndex > -1)
          {
-            // Set the Queue Slot - we don't care if we found a valid slot or not
-            CurrentClientRun.UnitIndexes.Add(new UnitIndex(_unitStart.WorkUnitQueueSlotIndex, _unitStart.WorkUnitStartIndex));
+            LastClientRun.UnitIndexes.Add(new UnitIndex(_unitStart.WorkUnitQueueSlotIndex, _unitStart.WorkUnitStartIndex));
          }
          else
          {
-            // No Unit Start Index.  This log section looks to be corrupted.
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format(CultureInfo.CurrentCulture,
-               "Could not find a Unit Start Index.  The log section around line {0} appears to be corrupted.", line.LineIndex + 1));
+            LastClientRun.UnitIndexes.Add(new UnitIndex(_unitStart.WorkUnitQueueSlotIndex, line.LineIndex));
          }
 
          // Re-initialize Values
@@ -275,11 +265,11 @@ namespace HFM.Log
       {
          if (_currentLineType.Equals(LogLineType.WorkUnitRunning))
          {
-            if (CurrentClientRun != null)
+            if (LastClientRun != null)
             {
                if (logLine.LineData.Equals(WorkUnitResult.FinishedUnit))
                {
-                  CurrentClientRun.CompletedUnits++;
+                  LastClientRun.CompletedUnits++;
                }
                else if (logLine.LineData.Equals(WorkUnitResult.EarlyUnitEnd) ||
                         logLine.LineData.Equals(WorkUnitResult.UnstableMachine) ||
@@ -287,7 +277,7 @@ namespace HFM.Log
                         logLine.LineData.Equals(WorkUnitResult.BadWorkUnit) ||
                         logLine.LineData.Equals(WorkUnitResult.CoreOutdated)) 
                {
-                  CurrentClientRun.FailedUnits++;
+                  LastClientRun.FailedUnits++;
                }
             }
          }
@@ -299,11 +289,58 @@ namespace HFM.Log
       /// <param name="logLine">The given LogLine object.</param>
       private void HandleClientNumberOfUnitsCompleted(ILogLine logLine)
       {
-         if (CurrentClientRun != null)
+         if (LastClientRun != null)
          {
-            CurrentClientRun.TotalCompletedUnits = (int)logLine.LineData;
+            LastClientRun.TotalCompletedUnits = (int)logLine.LineData;
          }
-      } 
+      }
+
+      private void DoRunLevelDetection(IList<LogLine> logLines)
+      {
+         for (int i = 0; i < Count; i++)
+         {
+            int end;
+            // we're working on the last client run
+            if (i == Count - 1)
+            {
+               // use the last line index as the end position
+               end = logLines.Count;
+            }
+            else // we're working on a client run prior to the last
+            {
+               // use the client start position for the next client run
+               end = this[i + 1].ClientStartIndex;
+            }
+
+            for (int j = this[i].ClientStartIndex; j < end; j++)
+            {
+               if (logLines[j].LineType.Equals(LogLineType.ClientVersion))
+               {
+                  this[i].ClientVersion = logLines[j].LineData.ToString();
+               }
+               else if (logLines[j].LineType.Equals(LogLineType.ClientArguments))
+               {
+                  this[i].Arguments = logLines[j].LineData.ToString();
+               }
+               else if (logLines[j].LineType.Equals(LogLineType.ClientUserNameTeam))
+               {
+                  var userAndTeam = (ArrayList)logLines[j].LineData;
+                  this[i].FoldingID = userAndTeam[0].ToString();
+                  this[i].Team = (int)userAndTeam[1];
+               }
+               else if (logLines[j].LineType.Equals(LogLineType.ClientUserID) ||
+                        logLines[j].LineType.Equals(LogLineType.ClientReceivedUserID))
+               {
+                  this[i].UserID = logLines[j].LineData.ToString();
+               }
+               else if (logLines[j].LineType.Equals(LogLineType.ClientMachineID))
+               {
+                  this[i].MachineID = (int)logLines[j].LineData;
+               }
+            }
+         }
+      }
+      
       #endregion
    }
 

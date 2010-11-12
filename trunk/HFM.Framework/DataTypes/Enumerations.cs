@@ -24,6 +24,7 @@ namespace HFM.Framework.DataTypes
    /// </summary>
    public enum LogLineType
    {
+      Error = -2,
       Unknown = -1,
       LogOpen = 0,
       LogHeader,
@@ -65,6 +66,9 @@ namespace HFM.Framework.DataTypes
       ClientShutdown
    }
 
+   /// <summary>
+   /// Work Unit Result Types
+   /// </summary>
    public enum WorkUnitResult
    {
       Unknown,
@@ -74,5 +78,34 @@ namespace HFM.Framework.DataTypes
       Interrupted,
       BadWorkUnit,
       CoreOutdated
+   }
+
+   /// <summary>
+   /// Client Types
+   /// </summary>
+   public enum ClientType
+   {
+      Unknown,
+      Standard,
+      SMP,
+      GPU
+   }
+
+   /// <summary>
+   /// Client Status Types
+   /// </summary>
+   public enum ClientStatus
+   {
+      Unknown,
+      Offline,
+      Stopped,
+      EuePause,
+      Hung,
+      Paused,
+      SendingWorkPacket,
+      GettingWorkPacket,
+      RunningNoFrameTimes,
+      RunningAsync,
+      Running
    }
 }

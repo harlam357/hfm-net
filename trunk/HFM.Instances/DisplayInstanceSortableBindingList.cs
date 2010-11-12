@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 
 using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Instances
 {

@@ -20,7 +20,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Instances
 {

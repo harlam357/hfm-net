@@ -32,18 +32,21 @@ namespace HFM.Log.Tests
    public class LogReaderTests
    {
       private LogReader _reader;
+      private LogInterpreter _logInterpreter;
    
       [SetUp]
       public void Init()
       {
-         _reader = new LogReader();
+         _reader = new LogReader(PlatformOps.GetDateTimeStyle());
       }
       
       [Test, Category("SMP")]
       public void SMP_1_FAHlog() // verbosity 9
       {
          // Scan
-         _reader.ScanFahLog("..\\..\\..\\TestFiles\\SMP_1\\FAHlog.txt");
+         var logLines = _reader.GetLogLines("..\\..\\..\\TestFiles\\SMP_1\\FAHlog.txt");
+         var clientRuns = _reader.GetClientRuns(logLines);
+         _logInterpreter = new LogInterpreter(logLines, clientRuns);
          
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
@@ -58,7 +61,7 @@ namespace HFM.Log.Tests
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 261;
 
-         DoClientRunCheck(expectedRun, _reader.ClientRunList[0]);
+         DoClientRunCheck(expectedRun, clientRuns[0]);
 
          // Check Run 1 Positions
          expectedRun = new ClientRun(274);
@@ -73,24 +76,26 @@ namespace HFM.Log.Tests
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 263;
 
-         DoClientRunCheck(expectedRun, _reader.ClientRunList[1]);
+         DoClientRunCheck(expectedRun, clientRuns[1]);
 
          // Verify LogLine Properties
-         Assert.IsNotNull(_reader.PreviousWorkUnitLogLines);
-         Assert.IsNotNull(_reader.CurrentWorkUnitLogLines);
+         Assert.IsNotNull(_logInterpreter.PreviousWorkUnitLogLines);
+         Assert.IsNotNull(_logInterpreter.CurrentWorkUnitLogLines);
          
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
-         Assert.AreEqual(5, _reader.LogLineList[33].LineData);
-         Assert.AreEqual("2.08", _reader.LogLineList[40].LineData);
-         Assert.That(_reader.LogLineList[51].ToString().Contains("Project: 2677 (Run 10, Clone 29, Gen 28)"));
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, _reader.LogLineList[109].LineData);
+         Assert.AreEqual(5, logLines[33].LineData);
+         Assert.AreEqual("2.08", logLines[40].LineData);
+         Assert.That(logLines[51].ToString().Contains("Project: 2677 (Run 10, Clone 29, Gen 28)"));
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, logLines[109].LineData);
       }
 
       [Test, Category("SMP")]
       public void SMP_2_FAHlog() // verbosity 9
       {
          // Scan
-         _reader.ScanFahLog("..\\..\\..\\TestFiles\\SMP_2\\FAHlog.txt");
+         var logLines = _reader.GetLogLines("..\\..\\..\\TestFiles\\SMP_2\\FAHlog.txt");
+         var clientRuns = _reader.GetClientRuns(logLines);
+         _logInterpreter = new LogInterpreter(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
@@ -105,27 +110,29 @@ namespace HFM.Log.Tests
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 292;
 
-         DoClientRunCheck(expectedRun, _reader.ClientRunList[0]);
+         DoClientRunCheck(expectedRun, clientRuns[0]);
 
          // Verify LogLine Properties
-         Assert.IsNotNull(_reader.PreviousWorkUnitLogLines);
-         Assert.IsNotNull(_reader.CurrentWorkUnitLogLines);
+         Assert.IsNotNull(_logInterpreter.PreviousWorkUnitLogLines);
+         Assert.IsNotNull(_logInterpreter.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
-         Assert.AreEqual(1, _reader.LogLineList[33].LineData);
-         Assert.AreEqual("2.08", _reader.LogLineList[40].LineData);
-         Assert.That(_reader.LogLineList[47].ToString().Contains("Project: 2677 (Run 10, Clone 49, Gen 38)"));
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, _reader.LogLineList[180].LineData);
+         Assert.AreEqual(1, logLines[33].LineData);
+         Assert.AreEqual("2.08", logLines[40].LineData);
+         Assert.That(logLines[47].ToString().Contains("Project: 2677 (Run 10, Clone 49, Gen 38)"));
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, logLines[180].LineData);
 
          // Special Check to be sure the reader is catching the Attempting To Send line
-         Assert.AreEqual(LogLineType.ClientSendStart, _reader.LogLineList[379].LineType);
+         Assert.AreEqual(LogLineType.ClientSendStart, logLines[379].LineType);
       }
 
       [Test, Category("SMP")]
       public void SMP_3_FAHlog() // verbosity (normal) / Handles Core Download on Startup / notfred's instance
       {
          // Scan
-         _reader.ScanFahLog("..\\..\\..\\TestFiles\\SMP_3\\FAHlog.txt");
+         var logLines = _reader.GetLogLines("..\\..\\..\\TestFiles\\SMP_3\\FAHlog.txt");
+         var clientRuns = _reader.GetClientRuns(logLines);
+         _logInterpreter = new LogInterpreter(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
@@ -142,27 +149,30 @@ namespace HFM.Log.Tests
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 0; //TODO: not capturing line "+ Starting local stats count at 1"
 
-         DoClientRunCheck(expectedRun, _reader.ClientRunList[0]);
+         DoClientRunCheck(expectedRun, clientRuns[0]);
 
          // Verify LogLine Properties
-         Assert.IsNotNull(_reader.PreviousWorkUnitLogLines);
-         Assert.IsNotNull(_reader.CurrentWorkUnitLogLines);
+         Assert.IsNotNull(_logInterpreter.PreviousWorkUnitLogLines);
+         Assert.IsNotNull(_logInterpreter.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
-         Assert.AreEqual(1, _reader.LogLineList[234].LineData);
-         Assert.AreEqual("2.08", _reader.LogLineList[239].LineData);
-         Assert.That(_reader.LogLineList[246].ToString().Contains("Project: 2677 (Run 4, Clone 60, Gen 40)"));
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, _reader.LogLineList[368].LineData);
+         Assert.AreEqual(1, logLines[234].LineData);
+         Assert.AreEqual("2.08", logLines[239].LineData);
+         Assert.That(logLines[246].ToString().Contains("Project: 2677 (Run 4, Clone 60, Gen 40)"));
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, logLines[368].LineData);
       }
 
       [Test, Category("SMP")]
       public void SMP_10_FAHlog() // -smp 8 -bigadv verbosity 9 / Corrupted Log Section in Client Run Index 5
       {
          // Scan
-         _reader.ScanFahLog("..\\..\\..\\TestFiles\\SMP_10\\FAHlog.txt");
+         var logLines = _reader.GetLogLines("..\\..\\..\\TestFiles\\SMP_10\\FAHlog.txt");
+         var clientRuns = _reader.GetClientRuns(logLines);
+         _logInterpreter = new LogInterpreter(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(401);
+         expectedRun.UnitIndexes.Add(new UnitIndex(-1, 426));
          expectedRun.Arguments = "-configonly";
          expectedRun.FoldingID = "sneakysnowman";
          expectedRun.Team = 32;
@@ -172,24 +182,26 @@ namespace HFM.Log.Tests
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 0;
 
-         DoClientRunCheck(expectedRun, _reader.ClientRunList[5]);
+         DoClientRunCheck(expectedRun, clientRuns[5]);
 
          // Verify LogLine Properties
-         Assert.IsNull(_reader.PreviousWorkUnitLogLines);
-         Assert.IsNotNull(_reader.CurrentWorkUnitLogLines);
+         Assert.IsNull(_logInterpreter.PreviousWorkUnitLogLines);
+         Assert.IsNotNull(_logInterpreter.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 8 - Unit Index 0)
-         Assert.AreEqual(6, _reader.LogLineList[610].LineData);
-         Assert.AreEqual("2.10", _reader.LogLineList[617].LineData);
-         Assert.That(_reader.LogLineList[628].ToString().Contains("Project: 2683 (Run 4, Clone 11, Gen 18)"));
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, _reader.LogLineList[660].LineData);
+         Assert.AreEqual(6, logLines[610].LineData);
+         Assert.AreEqual("2.10", logLines[617].LineData);
+         Assert.That(logLines[628].ToString().Contains("Project: 2683 (Run 4, Clone 11, Gen 18)"));
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, logLines[660].LineData);
       }
 
       [Test, Category("GPU")]
       public void GPU2_1_FAHlog() // verbosity 9
       {
          // Scan
-         _reader.ScanFahLog("..\\..\\..\\TestFiles\\GPU2_1\\FAHlog.txt");
+         var logLines = _reader.GetLogLines("..\\..\\..\\TestFiles\\GPU2_1\\FAHlog.txt");
+         var clientRuns = _reader.GetClientRuns(logLines);
+         _logInterpreter = new LogInterpreter(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
@@ -208,7 +220,7 @@ namespace HFM.Log.Tests
          expectedRun.FailedUnits = 5;
          expectedRun.TotalCompletedUnits = 0; //TODO: not capturing line "+ Starting local stats count at 1"
 
-         DoClientRunCheck(expectedRun, _reader.ClientRunList[0]);
+         DoClientRunCheck(expectedRun, clientRuns[0]);
 
          // Check Run 1 Positions
          expectedRun = new ClientRun(618);
@@ -234,24 +246,26 @@ namespace HFM.Log.Tests
          expectedRun.FailedUnits = 1;
          expectedRun.TotalCompletedUnits = 12;
 
-         DoClientRunCheck(expectedRun, _reader.ClientRunList[1]);
+         DoClientRunCheck(expectedRun, clientRuns[1]);
 
          // Verify LogLine Properties
-         Assert.IsNotNull(_reader.PreviousWorkUnitLogLines);
-         Assert.IsNotNull(_reader.CurrentWorkUnitLogLines);
+         Assert.IsNotNull(_logInterpreter.PreviousWorkUnitLogLines);
+         Assert.IsNotNull(_logInterpreter.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
-         Assert.AreEqual(1, _reader.LogLineList[133].LineData);
-         Assert.AreEqual("1.19", _reader.LogLineList[140].LineData);
-         Assert.That(_reader.LogLineList[154].ToString().Contains("Project: 5771 (Run 12, Clone 109, Gen 805)"));
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, _reader.LogLineList[286].LineData);
+         Assert.AreEqual(1, logLines[133].LineData);
+         Assert.AreEqual("1.19", logLines[140].LineData);
+         Assert.That(logLines[154].ToString().Contains("Project: 5771 (Run 12, Clone 109, Gen 805)"));
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, logLines[286].LineData);
       }
 
       [Test, Category("GPU")]
       public void GPU2_2_FAHlog() // verbosity (normal)
       {
          // Scan
-         _reader.ScanFahLog("..\\..\\..\\TestFiles\\GPU2_2\\FAHlog.txt");
+         var logLines = _reader.GetLogLines("..\\..\\..\\TestFiles\\GPU2_2\\FAHlog.txt");
+         var clientRuns = _reader.GetClientRuns(logLines);
+         _logInterpreter = new LogInterpreter(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
@@ -267,24 +281,26 @@ namespace HFM.Log.Tests
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 4221;
 
-         DoClientRunCheck(expectedRun, _reader.ClientRunList[0]);
+         DoClientRunCheck(expectedRun, clientRuns[0]);
 
          // Verify LogLine Properties
-         Assert.IsNotNull(_reader.PreviousWorkUnitLogLines);
-         Assert.IsNotNull(_reader.CurrentWorkUnitLogLines);
+         Assert.IsNotNull(_logInterpreter.PreviousWorkUnitLogLines);
+         Assert.IsNotNull(_logInterpreter.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
-         Assert.AreEqual(8, _reader.LogLineList[37].LineData);
-         Assert.AreEqual("1.19", _reader.LogLineList[42].LineData);
-         Assert.That(_reader.LogLineList[56].ToString().Contains("Project: 5751 (Run 8, Clone 205, Gen 527)"));
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, _reader.LogLineList[188].LineData);
+         Assert.AreEqual(8, logLines[37].LineData);
+         Assert.AreEqual("1.19", logLines[42].LineData);
+         Assert.That(logLines[56].ToString().Contains("Project: 5751 (Run 8, Clone 205, Gen 527)"));
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, logLines[188].LineData);
       }
 
       [Test, Category("GPU")]
       public void GPU2_3_FAHlog() // verbosity (normal) / EUE Pause Test
       {
          // Scan
-         _reader.ScanFahLog("..\\..\\..\\TestFiles\\GPU2_3\\FAHlog.txt");
+         var logLines = _reader.GetLogLines("..\\..\\..\\TestFiles\\GPU2_3\\FAHlog.txt");
+         var clientRuns = _reader.GetClientRuns(logLines);
+         _logInterpreter = new LogInterpreter(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(0);
@@ -298,7 +314,7 @@ namespace HFM.Log.Tests
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 0;
 
-         DoClientRunCheck(expectedRun, _reader.ClientRunList[0]);
+         DoClientRunCheck(expectedRun, clientRuns[0]);
 
          // Check Run 1 Positions
          expectedRun = new ClientRun(56);
@@ -317,27 +333,29 @@ namespace HFM.Log.Tests
          expectedRun.FailedUnits = 5;
          expectedRun.TotalCompletedUnits = 224;
 
-         DoClientRunCheck(expectedRun, _reader.ClientRunList[1]);
+         DoClientRunCheck(expectedRun, clientRuns[1]);
 
          // Verify LogLine Properties
-         Assert.IsNotNull(_reader.PreviousWorkUnitLogLines);
-         Assert.IsNotNull(_reader.CurrentWorkUnitLogLines);
+         Assert.IsNotNull(_logInterpreter.PreviousWorkUnitLogLines);
+         Assert.IsNotNull(_logInterpreter.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 1 - Unit Index 3)
-         Assert.AreEqual(9, _reader.LogLineList[323].LineData);
-         Assert.AreEqual("1.19", _reader.LogLineList[328].LineData);
-         Assert.That(_reader.LogLineList[342].ToString().Contains("Project: 5756 (Run 6, Clone 32, Gen 480)"));
-         Assert.AreEqual(WorkUnitResult.UnstableMachine, _reader.LogLineList[359].LineData);
+         Assert.AreEqual(9, logLines[323].LineData);
+         Assert.AreEqual("1.19", logLines[328].LineData);
+         Assert.That(logLines[342].ToString().Contains("Project: 5756 (Run 6, Clone 32, Gen 480)"));
+         Assert.AreEqual(WorkUnitResult.UnstableMachine, logLines[359].LineData);
 
          // Special Check to be sure the reader is catching the EUE Pause line
-         Assert.AreEqual(LogLineType.ClientEuePauseState, _reader.LogLineList[463].LineType);
+         Assert.AreEqual(LogLineType.ClientEuePauseState, logLines[463].LineType);
       }
 
       [Test, Category("GPU")]
       public void GPU2_7_FAHlog() // verbosity (normal) / Project String After "+ Processing work unit"
       {
          // Scan
-         _reader.ScanFahLog("..\\..\\..\\TestFiles\\GPU2_7\\FAHlog.txt");
+         var logLines = _reader.GetLogLines("..\\..\\..\\TestFiles\\GPU2_7\\FAHlog.txt");
+         var clientRuns = _reader.GetClientRuns(logLines);
+         _logInterpreter = new LogInterpreter(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(0);
@@ -351,18 +369,18 @@ namespace HFM.Log.Tests
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 1994;
 
-         DoClientRunCheck(expectedRun, _reader.ClientRunList[0]);
+         DoClientRunCheck(expectedRun, clientRuns[0]);
 
          // Verify LogLine Properties
-         Assert.IsNull(_reader.PreviousWorkUnitLogLines);
-         Assert.IsNotNull(_reader.CurrentWorkUnitLogLines);
+         Assert.IsNull(_logInterpreter.PreviousWorkUnitLogLines);
+         Assert.IsNotNull(_logInterpreter.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
-         Assert.AreEqual(0, _reader.LogLineList[28].LineData);
-         Assert.AreEqual("1.31", _reader.LogLineList[37].LineData);
-         Assert.That(_reader.LogLineList[50].ToString().Contains("Project: 5781 (Run 2, Clone 700, Gen 2)"));
+         Assert.AreEqual(0, logLines[28].LineData);
+         Assert.AreEqual("1.31", logLines[37].LineData);
+         Assert.That(logLines[50].ToString().Contains("Project: 5781 (Run 2, Clone 700, Gen 2)"));
 
-         FahLogUnitData unitData = _reader.GetFahLogDataFromLogLines(_reader.CurrentWorkUnitLogLines);
+         var unitData = _reader.GetFahLogDataFromLogLines(_logInterpreter.CurrentWorkUnitLogLines);
          Assert.AreEqual(new TimeSpan(1, 57, 21), unitData.UnitStartTimeStamp);
          Assert.AreEqual(5, unitData.FrameDataList.Count);
          Assert.AreEqual(5, unitData.FramesObserved);
@@ -385,7 +403,9 @@ namespace HFM.Log.Tests
       public void Standard_1_FAHlog() // verbosity 9
       {
          // Scan
-         _reader.ScanFahLog("..\\..\\..\\TestFiles\\Standard_1\\FAHlog.txt");
+         var logLines = _reader.GetLogLines("..\\..\\..\\TestFiles\\Standard_1\\FAHlog.txt");
+         var clientRuns = _reader.GetClientRuns(logLines);
+         _logInterpreter = new LogInterpreter(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
@@ -398,7 +418,7 @@ namespace HFM.Log.Tests
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 0;
 
-         DoClientRunCheck(expectedRun, _reader.ClientRunList[0]);
+         DoClientRunCheck(expectedRun, clientRuns[0]);
 
          // Check Run 1 Positions
          expectedRun = new ClientRun(30);
@@ -413,7 +433,7 @@ namespace HFM.Log.Tests
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 0; //TODO: not capturing line "+ Starting local stats count at 1"
 
-         DoClientRunCheck(expectedRun, _reader.ClientRunList[1]);
+         DoClientRunCheck(expectedRun, clientRuns[1]);
 
          // Check Run 2 Positions
          expectedRun = new ClientRun(839);
@@ -427,24 +447,26 @@ namespace HFM.Log.Tests
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 2;
 
-         DoClientRunCheck(expectedRun, _reader.ClientRunList[2]);
+         DoClientRunCheck(expectedRun, clientRuns[2]);
 
          // Verify LogLine Properties
-         Assert.IsNull(_reader.PreviousWorkUnitLogLines); // No Previous Log Lines for this Run
-         Assert.IsNotNull(_reader.CurrentWorkUnitLogLines);
+         Assert.IsNull(_logInterpreter.PreviousWorkUnitLogLines); // No Previous Log Lines for this Run
+         Assert.IsNotNull(_logInterpreter.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 1 - Unit Index 0)
-         Assert.AreEqual(1, _reader.LogLineList[182].LineData);
-         Assert.AreEqual("1.90", _reader.LogLineList[189].LineData);
-         Assert.That(_reader.LogLineList[197].ToString().Contains("Project: 4456 (Run 173, Clone 0, Gen 31)"));
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, _reader.LogLineList[433].LineData);
+         Assert.AreEqual(1, logLines[182].LineData);
+         Assert.AreEqual("1.90", logLines[189].LineData);
+         Assert.That(logLines[197].ToString().Contains("Project: 4456 (Run 173, Clone 0, Gen 31)"));
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, logLines[433].LineData);
       }
 
       [Test, Category("Standard")]
       public void Standard_5_FAHlog() // verbosity 9
       {
          // Scan
-         _reader.ScanFahLog("..\\..\\..\\TestFiles\\Standard_5\\FAHlog.txt");
+         var logLines = _reader.GetLogLines("..\\..\\..\\TestFiles\\Standard_5\\FAHlog.txt");
+         var clientRuns = _reader.GetClientRuns(logLines);
+         _logInterpreter = new LogInterpreter(logLines, clientRuns);
 
          // Check Run 3 Positions
          var expectedRun = new ClientRun(788);
@@ -458,7 +480,7 @@ namespace HFM.Log.Tests
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 0;
 
-         DoClientRunCheck(expectedRun, _reader.ClientRunList[3]);
+         DoClientRunCheck(expectedRun, clientRuns[3]);
          
          // Check Run 4 Positions
          expectedRun = new ClientRun(927);
@@ -472,20 +494,20 @@ namespace HFM.Log.Tests
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 0;
 
-         DoClientRunCheck(expectedRun, _reader.ClientRunList[4]);
+         DoClientRunCheck(expectedRun, clientRuns[4]);
 
          // Verify LogLine Properties
-         Assert.IsNull(_reader.PreviousWorkUnitLogLines); // No Previous Log Lines for this Run
-         Assert.IsNotNull(_reader.CurrentWorkUnitLogLines);
+         Assert.IsNull(_logInterpreter.PreviousWorkUnitLogLines); // No Previous Log Lines for this Run
+         Assert.IsNotNull(_logInterpreter.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 4 - Unit Index 0)
-         Assert.AreEqual(4, _reader.LogLineList[967].LineData);
-         Assert.AreEqual("23", _reader.LogLineList[978].LineData);
-         Assert.That(_reader.LogLineList[963].ToString().Contains("Project: 6501 (Run 13, Clone 0, Gen 0)"));
-         Assert.That(_reader.LogLineList[971].ToString().Contains("Project: 6501 (Run 15, Clone 0, Gen 0)"));
-         Assert.That(_reader.LogLineList[1006].ToString().Contains("Project: 10002 (Run 19, Clone 0, Gen 51)"));
+         Assert.AreEqual(4, logLines[967].LineData);
+         Assert.AreEqual("23", logLines[978].LineData);
+         Assert.That(logLines[963].ToString().Contains("Project: 6501 (Run 13, Clone 0, Gen 0)"));
+         Assert.That(logLines[971].ToString().Contains("Project: 6501 (Run 15, Clone 0, Gen 0)"));
+         Assert.That(logLines[1006].ToString().Contains("Project: 10002 (Run 19, Clone 0, Gen 51)"));
 
-         FahLogUnitData unitData = _reader.GetFahLogDataFromLogLines(_reader.CurrentWorkUnitLogLines);
+         var unitData = _reader.GetFahLogDataFromLogLines(_logInterpreter.CurrentWorkUnitLogLines);
          Assert.AreEqual(new TimeSpan(0, 41, 7), unitData.UnitStartTimeStamp);
          Assert.AreEqual(5, unitData.FrameDataList.Count);
          Assert.AreEqual(5, unitData.FramesObserved);
@@ -508,7 +530,9 @@ namespace HFM.Log.Tests
       public void Standard_6_FAHlog() // verbosity normal / Gromacs 3.3
       {
          // Scan
-         _reader.ScanFahLog("..\\..\\..\\TestFiles\\Standard_6\\FAHlog.txt");
+         var logLines = _reader.GetLogLines("..\\..\\..\\TestFiles\\Standard_6\\FAHlog.txt");
+         var clientRuns = _reader.GetClientRuns(logLines);
+         _logInterpreter = new LogInterpreter(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
@@ -530,19 +554,19 @@ namespace HFM.Log.Tests
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 229;
 
-         DoClientRunCheck(expectedRun, _reader.ClientRunList[0]);
+         DoClientRunCheck(expectedRun, clientRuns[0]);
 
          // Verify LogLine Properties
-         Assert.IsNotNull(_reader.PreviousWorkUnitLogLines);
-         Assert.IsNotNull(_reader.CurrentWorkUnitLogLines);
+         Assert.IsNotNull(_logInterpreter.PreviousWorkUnitLogLines);
+         Assert.IsNotNull(_logInterpreter.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 6)
-         Assert.AreEqual(7, _reader.LogLineList[2133].LineData);
-         Assert.AreEqual("1.90", _reader.LogLineList[2138].LineData);
-         Assert.That(_reader.LogLineList[2147].ToString().Contains("Project: 4461 (Run 886, Clone 3, Gen 56)"));
+         Assert.AreEqual(7, logLines[2133].LineData);
+         Assert.AreEqual("1.90", logLines[2138].LineData);
+         Assert.That(logLines[2147].ToString().Contains("Project: 4461 (Run 886, Clone 3, Gen 56)"));
          
          // Special Check to be sure the reader is catching the Pause For Battery line
-         Assert.AreEqual(LogLineType.WorkUnitPausedForBattery, _reader.LogLineList[2323].LineType);
+         Assert.AreEqual(LogLineType.WorkUnitPausedForBattery, logLines[2323].LineType);
       }
       
       private static void DoClientRunCheck(ClientRun expectedRun, ClientRun run)
