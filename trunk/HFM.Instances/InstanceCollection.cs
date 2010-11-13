@@ -1109,7 +1109,7 @@ namespace HFM.Instances
                // Don't save the UnitInfo object if the contained Project is Unknown
                if (instance.CurrentUnitInfo.UnitInfoData.ProjectIsUnknown == false)
                {
-                  _unitInfoContainer.Add(instance.CurrentUnitInfo.UnitInfoData);
+                  _unitInfoContainer.Add((UnitInfo)instance.CurrentUnitInfo.UnitInfoData);
                }
             }
          }

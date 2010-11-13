@@ -363,7 +363,7 @@ namespace HFM.DataAggregator
 
       private IUnitInfo BuildUnitInfo(QueueEntry queueEntry, FahLogUnitData fahLogUnitData, UnitInfoLogData unitInfoLogData, bool matchOverride)
       {
-         IUnitInfo unit = new UnitInfo();
+         var unit = new UnitInfo();
          unit.UnitStartTimeStamp = fahLogUnitData.UnitStartTimeStamp;
          unit.FramesObserved = fahLogUnitData.FramesObserved;
          unit.CoreVersion = fahLogUnitData.CoreVersion;
@@ -420,7 +420,7 @@ namespace HFM.DataAggregator
       }
 
       #region Unit Population Methods
-      private static void PopulateUnitInfoFromQueueEntry(QueueEntry entry, IUnitInfo unit)
+      private static void PopulateUnitInfoFromQueueEntry(QueueEntry entry, UnitInfo unit)
       {
          if ((entry.EntryStatus.Equals(QueueEntryStatus.Unknown) ||
               entry.EntryStatus.Equals(QueueEntryStatus.Empty) ||
@@ -459,7 +459,7 @@ namespace HFM.DataAggregator
       }
 
       private static void PopulateUnitInfoFromLogs(ClientRun currentClientRun, FahLogUnitData fahLogUnitData, 
-                                                   UnitInfoLogData unitInfoLogData, IUnitInfo unit)
+                                                   UnitInfoLogData unitInfoLogData, UnitInfo unit)
       {
          Debug.Assert(currentClientRun != null);
          Debug.Assert(fahLogUnitData != null);
@@ -519,7 +519,7 @@ namespace HFM.DataAggregator
          }
       }
 
-      private static void ParseFrameData(IEnumerable<LogLine> frameData, IUnitInfo unit)
+      private static void ParseFrameData(IEnumerable<LogLine> frameData, UnitInfo unit)
       {
          foreach (var logLine in frameData)
          {

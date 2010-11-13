@@ -97,7 +97,6 @@
     <Compile Include="IProjectSummaryDownloader.cs" />
     <Compile Include="IProteinBenchmarkContainer.cs" />
     <Compile Include="IProteinCollection.cs" />
-    <Compile Include="IUnitInfo.cs" />
     <Compile Include="IUnitInfoLogic.cs" />
     <Compile Include="Metadata.cs" />
     <Compile Include="NetworkOps.cs" />

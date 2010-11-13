@@ -104,7 +104,7 @@ namespace HFM.Instances.Tests
          _mocks.VerifyAll();
       }
 
-      private static void SetProject(IUnitInfo unitInfo)
+      private static void SetProject(UnitInfo unitInfo)
       {
          unitInfo.ProjectID = 2669;
          unitInfo.ProjectRun = 1;
@@ -112,7 +112,7 @@ namespace HFM.Instances.Tests
          unitInfo.ProjectGen = 3;
       }
       
-      private static void SetDateTimeProperties(IUnitInfo unitInfo)
+      private static void SetDateTimeProperties(UnitInfo unitInfo)
       {
          unitInfo.DownloadTime = new DateTime(2010, 1, 1, 0, 0, 0, DateTimeKind.Utc);
          unitInfo.DueTime = new DateTime(2010, 1, 6, 0, 0, 0, DateTimeKind.Utc);

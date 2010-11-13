@@ -33,7 +33,7 @@ namespace HFM.Instances
       /// <summary>
       /// Add to the Container
       /// </summary>
-      void Add(IUnitInfo unit);
+      void Add(UnitInfo unit);
 
       /// <summary>
       /// Clear the Container
@@ -86,9 +86,9 @@ namespace HFM.Instances
       /// <summary>
       /// Add to the Container
       /// </summary>
-      public void Add(IUnitInfo unit)
+      public void Add(UnitInfo unit)
       {
-         _collection.UnitInfoList.Add((UnitInfo)unit);
+         _collection.UnitInfoList.Add(unit);
       }
 
       /// <summary>

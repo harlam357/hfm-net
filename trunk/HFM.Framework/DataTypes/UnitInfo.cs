@@ -26,6 +26,115 @@ using ProtoBuf;
 
 namespace HFM.Framework.DataTypes
 {
+   public interface IUnitInfo : IProjectInfo, IOwnedByClientInstance
+   {
+      /// <summary>
+      /// Local time the logs used to generate this UnitInfo were retrieved
+      /// </summary>
+      DateTime UnitRetrievalTime { get; }
+
+      /// <summary>
+      /// The Folding ID (Username) attached to this work unit
+      /// </summary>
+      string FoldingID { get; }
+
+      /// <summary>
+      /// The Team number attached to this work unit
+      /// </summary>
+      int Team { get; }
+
+      /// <summary>
+      /// Client Type for this work unit
+      /// </summary>
+      ClientType TypeOfClient { get; }
+
+      /// <summary>
+      /// Date/time the unit was downloaded
+      /// </summary>
+      DateTime DownloadTime { get; }
+
+      /// <summary>
+      /// Flag specifying if Download Time is Unknown
+      /// </summary>
+      bool DownloadTimeUnknown { get; }
+
+      /// <summary>
+      /// Date/time the unit is due (preferred deadline)
+      /// </summary>
+      DateTime DueTime { get; }
+
+      /// <summary>
+      /// Flag specifying if Due Time is Unknown
+      /// </summary>
+      bool DueTimeUnknown { get; }
+
+      /// <summary>
+      /// Unit Start Time Stamp (Time Stamp from First Parsable Line in LogLines)
+      /// </summary>
+      /// <remarks>Used to Determine Status when a LogLine Time Stamp is not available - See ClientInstance.HandleReturnedStatus</remarks>
+      TimeSpan UnitStartTimeStamp { get; }
+
+      /// <summary>
+      /// Date/time the unit finished
+      /// </summary>
+      DateTime FinishedTime { get; }
+
+      /// <summary>
+      /// Core Version Number
+      /// </summary>
+      string CoreVersion { get; }
+
+      /// <summary>
+      /// Returns true if Project (R/C/G) has not been identified
+      /// </summary>
+      bool ProjectIsUnknown { get; }
+
+      /// <summary>
+      /// Name of the unit
+      /// </summary>
+      String ProteinName { get; }
+
+      /// <summary>
+      /// Tag string as read from the UnitInfo.txt file
+      /// </summary>
+      string ProteinTag { get; }
+
+      /// <summary>
+      /// The Result of this Work Unit
+      /// </summary>
+      WorkUnitResult UnitResult { get; }
+
+      /// <summary>
+      /// Raw number of steps complete
+      /// </summary>
+      int RawFramesComplete { get; }
+
+      /// <summary>
+      /// Raw total number of steps
+      /// </summary>
+      int RawFramesTotal { get; }
+
+      /// <summary>
+      /// Number of Frames Observed on this Unit
+      /// </summary>
+      int FramesObserved { get; }
+
+      /// <summary>
+      /// Last Observed Frame on this Unit
+      /// </summary>
+      IUnitFrame CurrentFrame { get; }
+
+      /// <summary>
+      /// Core ID (Hex) Value
+      /// </summary>
+      string CoreID { get; }
+
+      /// <summary>
+      /// Get the UnitFrame Interface for this frameID
+      /// </summary>
+      IUnitFrame GetUnitFrame(int frameID);
+   }
+
    [ProtoContract]
    public class UnitInfo : IUnitInfo
    {

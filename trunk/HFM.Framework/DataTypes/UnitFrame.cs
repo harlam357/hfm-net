@@ -32,7 +32,6 @@ namespace HFM.Framework.DataTypes
       TimeSpan FrameDuration { get; }
    }
 
-   //[Serializable]
    [ProtoContract]
    public class UnitFrame : IUnitFrame
    {

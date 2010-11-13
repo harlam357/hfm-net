@@ -36,7 +36,7 @@ namespace HFM.Instances.Tests
             File.Delete(TestFile);
          }
       
-         var unitInfo = _mocks.Stub<IUnitInfo>();
+         var unitInfo = new UnitInfo();
          unitInfo.ProjectID = 2669;
          unitInfo.ProjectRun = 1;
          unitInfo.ProjectClone = 2;
@@ -95,7 +95,7 @@ namespace HFM.Instances.Tests
             File.Delete(TestFile);
          }
 
-         var unitInfo = _mocks.Stub<IUnitInfo>();
+         var unitInfo = new UnitInfo();
          unitInfo.ProjectID = 2670;
          unitInfo.ProjectRun = 2;
          unitInfo.ProjectClone = 3;
