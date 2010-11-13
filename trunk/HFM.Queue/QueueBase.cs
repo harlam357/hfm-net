@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Queue Base Class
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,9 +18,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-
-using HFM.Framework;
 
 namespace HFM.Queue
 {
@@ -34,24 +31,36 @@ namespace HFM.Queue
    }
 
    [CLSCompliant(false)]
-   public class QueueBase : IQueueBase
+   public class QueueBase
    {
+      #region Fields
+   
       /// <summary>
       /// Queue Structure
       /// </summary>
       private QueueData _q;
       
-      /// <summary>
-      /// Flag Denoting if Class holds a Populated or Empty Queue Structure
-      /// </summary>
-      private readonly bool _DataPopulated;
+      private readonly bool _dataPopulated;
       /// <summary>
       /// Flag Denoting if Class holds a Populated or Empty Queue Structure
       /// </summary>
       public bool DataPopulated
       {
-         get { return _DataPopulated; }
+         get { return _dataPopulated; }
       }
+
+      private readonly SystemType _system = SystemType.x86;
+      /// <summary>
+      /// The System (CPU) Type
+      /// </summary>
+      internal SystemType System
+      {
+         get { return _system; }
+      }
+      
+      #endregion
+
+      #region Constructor
 
       /// <summary>
       /// Constructor (Clear Queue)
@@ -68,42 +77,18 @@ namespace HFM.Queue
       internal QueueBase(QueueData q)
       {
          _q = q;
-         _DataPopulated = true;
+         _dataPopulated = true;
 
          // determine system type based on the version field
          if (IsBigEndian(_q.Version))
          {
-            _System = SystemType.PPC;
+            _system = SystemType.PPC;
          }
       }
       
-      /// <summary>
-      /// Create a new Instance
-      /// </summary>
-      public IQueueBase Create()
-      {
-         return CreateInstance();
-      }
+      #endregion
 
-      /// <summary>
-      /// Create a new Instance
-      /// </summary>
-      public static IQueueBase CreateInstance()
-      {
-         return new QueueBase();
-      }
-
-      /// <summary>
-      /// The System (CPU) Type
-      /// </summary>
-      private readonly SystemType _System = SystemType.x86;
-      /// <summary>
-      /// The System (CPU) Type
-      /// </summary>
-      internal SystemType System
-      {
-         get { return _System; }
-      }
+      #region queue.dat Properties
 
       /// <summary>
       /// Queue (client) version
@@ -213,41 +198,21 @@ namespace HFM.Queue
             return BitConverter.ToUInt32(_q.ResultsSent, 0);
          }
       }
-
-      /// <summary>
-      /// Get the Current QueueEntry.
-      /// </summary>
-      public IQueueEntry CurrentQueueEntry
-      {
-         get { return new QueueEntry(_q.Entries[CurrentIndex], CurrentIndex, CurrentIndex, this); }
-      }
+      
+      #endregion
+      
+      #region Entry Accessors
 
       /// <summary>
       /// Get the QueueEntry at the specified Index.
       /// </summary>
-      /// <param name="Index">Queue Entry Index</param>
-      public IQueueEntry GetQueueEntry(uint Index)
+      /// <param name="index">Queue Entry Index</param>
+      public QueueEntry GetQueueEntry(uint index)
       {
-         return new QueueEntry(_q.Entries[Index], Index, CurrentIndex, this);
+         return new QueueEntry(_q.Entries[index], index, this);
       }
-
-      /// <summary>
-      /// Collection used to populate UI Controls
-      /// </summary>
-      public ICollection<string> EntryNameCollection
-      {
-         get
-         {
-            List<string> list = new List<string>(10);
-
-            for (uint i = 0; i < 10; i++)
-            {
-               list.Add(String.Format("{0} - {1}", i, GetQueueEntry(i).ProjectRunCloneGen));
-            }
-
-            return list;
-         }
-      }
+      
+      #endregion
 
       internal byte[] GetSystemBytes(byte[] b)
       {

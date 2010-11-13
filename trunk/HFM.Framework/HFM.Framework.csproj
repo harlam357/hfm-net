@@ -73,6 +73,8 @@
     </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="CoverageExcludeAttribute.cs" />
+    <Compile Include="DataTypes\ClientQueue.cs" />
+    <Compile Include="DataTypes\ClientQueueEntry.cs" />
     <Compile Include="DataTypes\ClientRun.cs" />
     <Compile Include="DataTypes\Enumerations.cs" />
     <Compile Include="DataTypes\InstanceTotals.cs" />
@@ -95,9 +97,6 @@
     <Compile Include="IProjectSummaryDownloader.cs" />
     <Compile Include="IProteinBenchmarkContainer.cs" />
     <Compile Include="IProteinCollection.cs" />
-    <Compile Include="IQueueBase.cs" />
-    <Compile Include="IQueueEntry.cs" />
-    <Compile Include="IQueueReader.cs" />
     <Compile Include="IUnitInfo.cs" />
     <Compile Include="IUnitInfoLogic.cs" />
     <Compile Include="Metadata.cs" />

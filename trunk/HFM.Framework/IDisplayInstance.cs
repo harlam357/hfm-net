@@ -159,9 +159,9 @@ namespace HFM.Framework
       IList<LogLine> GetLogLinesForQueueIndex(int queueIndex);
 
       /// <summary>
-      /// Queue Base Interface
+      /// Client Queue
       /// </summary>
-      IQueueBase Queue { get; }
+      ClientQueue Queue { get; }
       
       #endregion
 

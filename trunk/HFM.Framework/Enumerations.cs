@@ -32,23 +32,6 @@ namespace HFM.Framework
       Active
    }
    
-   /// <summary>
-   /// The Queue Entry Status
-   /// </summary>
-   public enum QueueEntryStatus
-   {
-      Unknown = -1,
-      Empty,
-      Deleted,
-      Finished,
-      Garbage,
-      FoldingNow,
-      Queued,
-      ReadyForUpload,
-      Abandonded,
-      FetchingFromServer
-   }
-
    public enum PpdCalculationType
    {
       LastFrame,

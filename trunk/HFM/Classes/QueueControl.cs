@@ -55,11 +55,11 @@ namespace HFM.Classes
    
       public event EventHandler<QueueIndexChangedEventArgs> QueueIndexChanged;
    
-      private IQueueBase _qBase;
+      private ClientQueue _qBase;
       private IProteinCollection _proteinCollection;
       
-      private ClientType _ClientType = ClientType.Unknown;
-      private bool _ClientIsOnVirtualMachine;
+      private ClientType _clientType = ClientType.Unknown;
+      private bool _clientIsOnVirtualMachine;
       
       private const int DefaultRowHeight = 23;
    
@@ -82,48 +82,48 @@ namespace HFM.Classes
       }
       
       [CLSCompliant(false)]
-      public void SetQueue(IQueueBase qBase)
+      public void SetQueue(ClientQueue qBase)
       {
          SetQueue(qBase, ClientType.Unknown, false);
       }
 
       [CLSCompliant(false)]
-      public void SetQueue(IQueueBase qBase, ClientType type, bool vm)
+      public void SetQueue(ClientQueue qBase, ClientType type, bool vm)
       {
-         if (qBase != null && qBase.DataPopulated)
+         if (qBase != null)
          {
             _qBase = qBase;
-            _ClientType = type;
-            _ClientIsOnVirtualMachine = vm;
+            _clientType = type;
+            _clientIsOnVirtualMachine = vm;
             
             cboQueueIndex.SelectedIndexChanged -= cboQueueIndex_SelectedIndexChanged;
             cboQueueIndex.DataSource = _qBase.EntryNameCollection;
             cboQueueIndex.SelectedIndex = -1;
             cboQueueIndex.SelectedIndexChanged += cboQueueIndex_SelectedIndexChanged;
 
-            cboQueueIndex.SelectedIndex = (int)_qBase.CurrentIndex;
+            cboQueueIndex.SelectedIndex = _qBase.CurrentIndex;
          }
          else
          {
             _qBase = null;
-            _ClientType = ClientType.Unknown;
-            _ClientIsOnVirtualMachine = false;
+            _clientType = ClientType.Unknown;
+            _clientIsOnVirtualMachine = false;
             SetControlsVisible(false);
          }
       }
 
       private void cboQueueIndex_SelectedIndexChanged(object sender, EventArgs e)
       {
-         if ((_qBase != null && _qBase.DataPopulated) == false) return;
+         if (_qBase == null) return;
       
          if (cboQueueIndex.SelectedIndex > -1)
          {
             SetControlsVisible(true);
 
-            IQueueEntry entry = _qBase.GetQueueEntry((uint)cboQueueIndex.SelectedIndex);
+            ClientQueueEntry entry = _qBase.GetQueueEntry(cboQueueIndex.SelectedIndex);
             txtStatus.Text = entry.EntryStatus.ToString();
             txtCredit.Text = _proteinCollection.ContainsKey(entry.ProjectID) ? _proteinCollection[entry.ProjectID].Credit.ToString(CultureInfo.CurrentCulture) : "0";
-            if (_ClientIsOnVirtualMachine)
+            if (_clientIsOnVirtualMachine)
             {
                txtBeginDate.Text = String.Format("{0} {1}", entry.BeginTimeUtc.ToShortDateString(), entry.BeginTimeUtc.ToShortTimeString());
             }
@@ -137,7 +137,7 @@ namespace HFM.Classes
             }
             else
             {
-               if (_ClientIsOnVirtualMachine)
+               if (_clientIsOnVirtualMachine)
                {
                   txtEndDate.Text = String.Format("{0} {1}", entry.EndTimeUtc.ToShortDateString(), entry.EndTimeUtc.ToShortTimeString());
                }
@@ -235,7 +235,7 @@ namespace HFM.Classes
          }
          else
          {
-            switch (_ClientType)
+            switch (_clientType)
             {
                case ClientType.Unknown:
                case ClientType.Standard:

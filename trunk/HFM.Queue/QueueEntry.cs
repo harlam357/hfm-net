@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Queue Entry Class
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,13 +21,15 @@ using System;
 using System.Diagnostics;
 using System.Text;
 
-using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Queue
 {
    [CLSCompliant(false)]
-   public class QueueEntry : IQueueEntry
+   public class QueueEntry
    {
+      #region Fields
+   
       /// <summary>
       /// Wrapped Entry Structure
       /// </summary>
@@ -37,28 +39,30 @@ namespace HFM.Queue
       /// </summary>
       private readonly UInt32 _thisIndex;
       /// <summary>
-      /// Current Entry Index
-      /// </summary>
-      private readonly UInt32 _currentIndex;
-      /// <summary>
       /// The QueueReader that Created this QueueEntry
       /// </summary>
       private readonly QueueBase _qBase;
+      
+      #endregion
+
+      #region Constructor
 
       /// <summary>
       /// Primary Constructor
       /// </summary>
       /// <param name="qEntry">Entry Structure</param>
       /// <param name="thisIndex">This Entry Index</param>
-      /// <param name="currentIndex">Current Entry Index</param>
       /// <param name="qBase">The QueueReader that Created this QueueEntry</param>
-      public QueueEntry(Entry qEntry, UInt32 thisIndex, UInt32 currentIndex, QueueBase qBase)
+      public QueueEntry(Entry qEntry, UInt32 thisIndex, QueueBase qBase)
       {
          _qEntry = qEntry;
          _thisIndex = thisIndex;
-         _currentIndex = currentIndex;
          _qBase = qBase;
       }
+      
+      #endregion
+      
+      #region queue.dat Properties
 
       /// <summary>
       /// Status (0) Empty / (1) Active or (1) Ready / (2) Ready for Upload / (3) = Abandonded (Ignore if found) / (4) Fetching from Server
@@ -103,7 +107,7 @@ namespace HFM.Queue
                      return QueueEntryStatus.Garbage;
                   }
                case 1:
-                  if (_thisIndex == _currentIndex)
+                  if (_thisIndex == _qBase.CurrentIndex)
                   {
                      /* The unit is in progress.  Presumably the core is running. */
                      return QueueEntryStatus.FoldingNow;
@@ -337,20 +341,6 @@ namespace HFM.Queue
       }
 
       /// <summary>
-      /// Formatted Project (Run, Clone, Gen) Information
-      /// </summary>
-      public string ProjectRunCloneGen
-      {
-         get
-         {
-            return String.Format("P{0} (R{1}, C{2}, G{3})", ProjectID,
-                                                            ProjectRun,
-                                                            ProjectClone,
-                                                            ProjectGen);
-         }
-      }
-
-      /// <summary>
       /// Project Issued Time (UTC)
       /// </summary>
       public DateTime ProjectIssuedUtc
@@ -445,7 +435,7 @@ namespace HFM.Queue
       }
 
       /// <summary>
-      /// The Folding ID (Username) attached to this queue entry
+      /// Folding ID (User name)
       /// </summary>
       public string FoldingID
       {
@@ -453,7 +443,7 @@ namespace HFM.Queue
       }
 
       /// <summary>
-      /// The Team number attached to this queue entry
+      /// Team Number
       /// </summary>
       public string Team
       {
@@ -461,7 +451,7 @@ namespace HFM.Queue
       }
 
       /// <summary>
-      /// The Team number attached to this queue entry
+      /// Team Number
       /// </summary>
       public UInt32 TeamNumber
       {
@@ -501,7 +491,7 @@ namespace HFM.Queue
       }
 
       /// <summary>
-      /// UserID associated with this queue entry
+      /// User ID (unique hexadecimal value)
       /// </summary>
       public string UserID
       {
@@ -752,12 +742,10 @@ namespace HFM.Queue
             int i = Array.IndexOf(_qEntry.WorkUnitTag, (byte)0);
             if (i >= 0)
             {
-               return ASCIIEncoding.ASCII.GetString(_qEntry.WorkUnitTag, 0, i);
+               return Encoding.ASCII.GetString(_qEntry.WorkUnitTag, 0, i);
             }
-            else
-            {
-               return ASCIIEncoding.ASCII.GetString(_qEntry.WorkUnitTag, 0, _qEntry.WorkUnitTag.Length);
-            }
+            
+            return Encoding.ASCII.GetString(_qEntry.WorkUnitTag, 0, _qEntry.WorkUnitTag.Length);
          }
       }
 
@@ -862,6 +850,8 @@ namespace HFM.Queue
       {
          get { return _qEntry.NumberOfUploadFailures; }
       }
+      
+      #endregion
 
       public static byte[] HexToData(string hexString)
       {
@@ -882,15 +872,15 @@ namespace HFM.Queue
          return data;
       }
 
-      public static string GetUserIDFromUserAndMachineID(byte[] UserAndMachineID, UInt32 MachineID, bool IsMachineIDBigEndian)
+      public static string GetUserIDFromUserAndMachineID(byte[] userAndMachineID, UInt32 machineID, bool isMachineIDBigEndian)
       {
-         Debug.Assert(UserAndMachineID.Length == 8);
+         Debug.Assert(userAndMachineID.Length == 8);
 
          /*** Remove the MachineID from UserAndMachineID ***/
 
-         byte[] bytes = new byte[UserAndMachineID.Length];
-         Array.Copy(UserAndMachineID, bytes, UserAndMachineID.Length);
-         if (IsMachineIDBigEndian)
+         byte[] bytes = new byte[userAndMachineID.Length];
+         Array.Copy(userAndMachineID, bytes, userAndMachineID.Length);
+         if (isMachineIDBigEndian)
          {
             // Reverse the bytes so we get the least significant byte first
             Array.Reverse(bytes);
@@ -898,13 +888,13 @@ namespace HFM.Queue
 
          // Convert to 64bit integer
          UInt64 value = BitConverter.ToUInt64(bytes, 0);
-         value = value - MachineID;
+         value = value - machineID;
          // Convert back to bytes after MachineID has been subtracted
          bytes = BitConverter.GetBytes(value);
          // Reverse the bytes so we show the most significant byte first
          Array.Reverse(bytes);
 
-         StringBuilder sb = new StringBuilder(UserAndMachineID.Length * 2);
+         StringBuilder sb = new StringBuilder(userAndMachineID.Length * 2);
          foreach (byte b in bytes)
          {
             sb.AppendFormat("{0:X2}", b);
@@ -912,17 +902,17 @@ namespace HFM.Queue
          return sb.ToString().TrimStart('0');
       }
 
-      private static string GetCpuString(byte[] CpuType, byte[] CpuSpecies)
+      private static string GetCpuString(byte[] cpuType, byte[] cpuSpecies)
       {
-         UInt32 CpuTypeAsUInt32 = GetCpuOrOsNumber(CpuType);
-         UInt32 CpuSpeciesAsUInt32 = GetCpuOrOsNumber(CpuSpecies);
+         UInt32 cpuTypeAsUInt32 = GetCpuOrOsNumber(cpuType);
+         UInt32 cpuSpeciesAsUInt32 = GetCpuOrOsNumber(cpuSpecies);
 
-         return GetCpuString((CpuTypeAsUInt32 * 100000) + CpuSpeciesAsUInt32);
+         return GetCpuString((cpuTypeAsUInt32 * 100000) + cpuSpeciesAsUInt32);
       }
 
-      private static string GetCpuString(UInt32 CpuId)
+      private static string GetCpuString(UInt32 cpuId)
       {
-         switch (CpuId)
+         switch (cpuId)
          {
             case 100000:
                return "x86";
@@ -963,17 +953,17 @@ namespace HFM.Queue
          return "Unknown";
       }
 
-      private static string GetOsString(byte[] OsType, byte[] OsSpecies)
+      private static string GetOsString(byte[] osType, byte[] osSpecies)
       {
-         UInt32 OsTypeAsUInt32 = GetCpuOrOsNumber(OsType);
-         UInt32 OsSpeciesAsUInt32 = GetCpuOrOsNumber(OsSpecies);
+         UInt32 osTypeAsUInt32 = GetCpuOrOsNumber(osType);
+         UInt32 osSpeciesAsUInt32 = GetCpuOrOsNumber(osSpecies);
 
-         return GetOsString((OsTypeAsUInt32 * 100000) + OsSpeciesAsUInt32);
+         return GetOsString((osTypeAsUInt32 * 100000) + osSpeciesAsUInt32);
       }
 
-      private static string GetOsString(UInt32 OsId)
+      private static string GetOsString(UInt32 osId)
       {
-         switch (OsId)
+         switch (osId)
          {
             case 100000:
                return "Windows";

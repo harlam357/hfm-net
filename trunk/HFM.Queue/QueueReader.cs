@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Queue Reader Class
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,12 +22,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 
-using HFM.Framework;
-
 namespace HFM.Queue
 {
    [CLSCompliant(false)]
-   public class QueueReader : IQueueReader
+   public class QueueReader
    {
       public const int QueueLength = 7168;
       public const int QueueEntryLength = 712;
@@ -35,11 +33,11 @@ namespace HFM.Queue
       /// <summary>
       /// Queue Base Class
       /// </summary>
-      private IQueueBase _qBase;
+      private QueueBase _qBase;
       /// <summary>
       /// Queue Base Class
       /// </summary>
-      public IQueueBase Queue
+      public QueueBase Queue
       {
          get { return _qBase; }
       }
@@ -47,41 +45,41 @@ namespace HFM.Queue
       /// <summary>
       /// queue.dat File Path
       /// </summary>
-      private string _QueueFilePath;
+      private string _queueFilePath;
       /// <summary>
       /// queue.dat File Path
       /// </summary>
       public string QueueFilePath
       {
-         get { return _QueueFilePath; }
+         get { return _queueFilePath; }
       }
       
       /// <summary>
       /// Queue Read Ok Flag
       /// </summary>
-      private bool _QueueReadOk;
+      private bool _queueReadOk;
       /// <summary>
       /// Queue Read Ok Flag
       /// </summary>
       public bool QueueReadOk
       {
-         get { return _QueueReadOk; }
+         get { return _queueReadOk; }
       }
       
       /// <summary>
       /// Read queue.dat file
       /// </summary>
-      /// <param name="FilePath">Path to queue.dat file</param>
+      /// <param name="filePath">Path to queue.dat file</param>
       /// <exception cref="ArgumentException">Throws if FileName is Null or Empty.</exception>
-      public void ReadQueue(string FilePath)
+      public void ReadQueue(string filePath)
       {
-         if (String.IsNullOrEmpty(FilePath)) throw new ArgumentException("Argument 'FilePath' cannot be a null or empty string.");
+         if (String.IsNullOrEmpty(filePath)) throw new ArgumentException("Argument 'FilePath' cannot be a null or empty string.");
       
-         _QueueFilePath = FilePath;
+         _queueFilePath = filePath;
       
          try
          {
-            using (BinaryReader reader = new BinaryReader(new FileStream(FilePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
+            using (var reader = new BinaryReader(new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
             {
                QueueData q = FromBinaryReaderBlock(reader);
 
@@ -119,19 +117,19 @@ namespace HFM.Queue
 
          if (buff.Length == QueueLength)
          {
-            _QueueReadOk = true;
+            _queueReadOk = true;
 
             // Make sure that the Garbage Collector doesn't move our buffer 
             GCHandle handle = GCHandle.Alloc(buff, GCHandleType.Pinned);
 
             // Marshal the bytes
-            QueueData q = (QueueData)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(QueueData));
+            var q = (QueueData)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(QueueData));
             handle.Free(); //Give control of the buffer back to the GC 
 
             return q;
          }
 
-         _QueueReadOk = false;
+         _queueReadOk = false;
          return new QueueData();
       }
       
@@ -140,7 +138,7 @@ namespace HFM.Queue
       /// </summary>
       public void ClearQueue()
       {
-         _QueueReadOk = false;
+         _queueReadOk = false;
          _qBase = new QueueBase();
       }
    }

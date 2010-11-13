@@ -386,7 +386,7 @@ namespace HFM.Instances
          _displayInstance.TotalClientCompletedUnits = run.TotalCompletedUnits;
       }
 
-      private void PopulateRunLevelData(IQueueEntry queueEntry)
+      private void PopulateRunLevelData(ClientQueueEntry queueEntry)
       {
          //if (_displayInstance.FoldingID == Constants.FoldingIDDefault)
          //{

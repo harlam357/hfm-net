@@ -522,8 +522,8 @@ namespace HFM.Forms
 
             // if we've got a good queue read, let queueControl_QueueIndexChanged()
             // handle populating the log lines.
-            IQueueBase qBase = _clientInstances.SelectedDisplayInstance.Queue;
-            if (qBase != null && qBase.DataPopulated) return;
+            ClientQueue qBase = _clientInstances.SelectedDisplayInstance.Queue;
+            if (qBase != null) return;
 
             // otherwise, load up the CurrentLogLines
             SetLogLines(_clientInstances.SelectedDisplayInstance, _clientInstances.SelectedDisplayInstance.CurrentLogLines);

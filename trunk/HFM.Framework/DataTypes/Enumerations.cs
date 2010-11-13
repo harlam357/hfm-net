@@ -108,4 +108,21 @@ namespace HFM.Framework.DataTypes
       RunningAsync,
       Running
    }
+
+   /// <summary>
+   /// Queue Entry Status Types
+   /// </summary>
+   public enum QueueEntryStatus
+   {
+      Unknown = -1,
+      Empty,
+      Deleted,
+      Finished,
+      Garbage,
+      FoldingNow,
+      Queued,
+      ReadyForUpload,
+      Abandonded,
+      FetchingFromServer
+   }
 }

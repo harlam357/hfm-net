@@ -48,9 +48,9 @@ namespace HFM.Framework
       string UnitInfoLogFilePath { get; set; }
 
       /// <summary>
-      /// Queue Base Interface
+      /// Client Queue
       /// </summary>
-      IQueueBase Queue { get; }
+      ClientQueue Queue { get; }
 
       /// <summary>
       /// Current Index in List of returned UnitInfo and UnitLogLines

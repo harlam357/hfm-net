@@ -371,10 +371,9 @@ namespace HFM.Instances
       public IList<LogLine>[] UnitLogLines { get; set; }
 
       /// <summary>
-      /// Queue Base Interface
+      /// Client Queue
       /// </summary>
-      [CLSCompliant(false)]
-      public IQueueBase Queue { get; set; }
+      public ClientQueue Queue { get; set; }
       
       #endregion
 

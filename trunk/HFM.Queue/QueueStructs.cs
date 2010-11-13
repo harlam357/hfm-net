@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Queue Structures
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,6 +23,7 @@ using System.Runtime.InteropServices;
 
 namespace HFM.Queue
 {
+   // ReSharper disable FieldCanBeMadeReadOnly.Local
    [CLSCompliant(false)]
    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
    [SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
@@ -159,7 +160,9 @@ namespace HFM.Queue
          get { return _z7156; }
       }
    }
+   // ReSharper restore FieldCanBeMadeReadOnly.Local
 
+   // ReSharper disable FieldCanBeMadeReadOnly.Local
    [CLSCompliant(false)]
    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
    public struct Entry
@@ -725,6 +728,7 @@ namespace HFM.Queue
          get { return _numberOfUploadFailures; }
       }
    }
+   // ReSharper restore FieldCanBeMadeReadOnly.Local
 
    #region struct layout from qd.c (9/10/2009) (http://linuxminded.nl/?target=software-qd-tools.plc)
    //u32		version;	 /* 0000 Queue (client) version (v2.17 and above) */

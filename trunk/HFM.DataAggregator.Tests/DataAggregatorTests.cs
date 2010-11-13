@@ -42,7 +42,7 @@ namespace HFM.DataAggregator.Tests
       [SetUp]
       public void Init()
       {
-         _dataAggregator = new DataAggregator(new QueueReader());
+         _dataAggregator = new DataAggregator();
          TraceLevelSwitch.Instance.Level = TraceLevel.Verbose;
       }
 
@@ -822,7 +822,7 @@ namespace HFM.DataAggregator.Tests
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
 
          _dataAggregator.AggregateData();
-         Assert.IsTrue(_dataAggregator.Queue.DataPopulated);
+         Assert.IsNotNull(_dataAggregator.Queue);
          _dataAggregator.QueueFilePath = "wrong_file_name.dat";
 
          _dataAggregator.AggregateData();

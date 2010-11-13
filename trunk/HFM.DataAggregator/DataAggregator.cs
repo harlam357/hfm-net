@@ -27,13 +27,13 @@ using System.IO;
 using HFM.Framework;
 using HFM.Framework.DataTypes;
 using HFM.Log;
+using HFM.Queue;
 
 namespace HFM.DataAggregator
 {
    public class DataAggregator : IDataAggregator
    {
-      private readonly IQueueReader _queueReader;
-
+      private readonly QueueReader _queueReader;
       private LogReader _logReader;
       private LogInterpreter _logInterpreter;
 
@@ -57,15 +57,15 @@ namespace HFM.DataAggregator
       /// </summary>
       public string UnitInfoLogFilePath { get; set; }
 
+      private ClientQueue _clientQueue;
       /// <summary>
-      /// Queue Base Interface
+      /// Client Queue
       /// </summary>
-      [CLSCompliant(false)]
-      public IQueueBase Queue
+      public ClientQueue Queue
       {
          get
          {
-            return _queueReader.QueueReadOk ? _queueReader.Queue : null;
+            return _clientQueue;
          }
       }
 
@@ -125,10 +125,9 @@ namespace HFM.DataAggregator
          get { return _unitLogLines; }
       }
 
-      [CLSCompliant(false)]
-      public DataAggregator(IQueueReader queueReader)
+      public DataAggregator()
       {
-         _queueReader = queueReader;
+         _queueReader = new QueueReader();
       }
 
       #region Aggregation Logic
@@ -156,6 +155,7 @@ namespace HFM.DataAggregator
          if (ReadQueueFile())
          {
             parsedUnits = GenerateUnitInfoDataFromQueue();
+            _clientQueue = BuildClientQueue();
          }
          else
          {
@@ -163,12 +163,58 @@ namespace HFM.DataAggregator
                "Queue unavailable or failed read.  Parsing logs without queue.");
 
             parsedUnits = GenerateUnitInfoDataFromLogs();
+            _clientQueue = null;
          }
          
          _logReader = null;
          _logInterpreter = null;
 
          return parsedUnits;
+      }
+
+      private ClientQueue BuildClientQueue()
+      {
+         var cq = new ClientQueue();
+         var q = _queueReader.Queue;
+         cq.CurrentIndex = (int)q.CurrentIndex;
+         cq.PerformanceFraction = q.PerformanceFraction;
+         cq.PerformanceFractionUnitWeight = (int)q.PerformanceFractionUnitWeight;
+         cq.DownloadRateAverage = q.DownloadRateAverage;
+         cq.DownloadRateUnitWeight = (int)q.DownloadRateUnitWeight;
+         cq.UploadRateAverage = q.UploadRateAverage;
+         cq.UploadRateUnitWeight = (int)q.UploadRateUnitWeight;
+         
+         for (int i = 0; i < 10; i++)
+         {
+            PopulateClientQueueEntry(cq.GetQueueEntry(i), q.GetQueueEntry((uint)i));
+         }
+
+         return cq;
+      }
+      
+      private static void PopulateClientQueueEntry(ClientQueueEntry cqe, QueueEntry qe)
+      {
+         cqe.EntryStatus = qe.EntryStatus;
+         cqe.SpeedFactor = qe.SpeedFactor;
+         cqe.UseCores = (int)qe.UseCores;
+         cqe.BeginTimeUtc = qe.BeginTimeUtc;
+         cqe.BeginTimeLocal = qe.BeginTimeLocal;
+         cqe.EndTimeUtc = qe.EndTimeUtc;
+         cqe.EndTimeLocal = qe.EndTimeLocal;
+         cqe.ProjectID = qe.ProjectID;
+         cqe.ProjectRun = qe.ProjectRun;
+         cqe.ProjectClone = qe.ProjectClone;
+         cqe.ProjectGen = qe.ProjectGen;
+         cqe.MachineID = (int)qe.MachineID;
+         cqe.ServerIP = qe.ServerIP;
+         cqe.UserID = qe.UserID;
+         cqe.Benchmark = (int)qe.Benchmark;
+         cqe.CpuString = qe.CpuString;
+         cqe.OsString = qe.OsString;
+         cqe.NumberOfSmpCores = (int)qe.NumberOfSmpCores;
+         cqe.MegaFlops = qe.MegaFlops;
+         cqe.Memory = (int)qe.Memory;
+         cqe.GpuMemory = (int)qe.GpuMemory;
       }
 
       /// <summary>
@@ -283,7 +329,7 @@ namespace HFM.DataAggregator
                      fahLogUnitData = new FahLogUnitData();
                      unitInfoLogData = new UnitInfoLogData();
                   }
-                  parsedUnits[queueIndex] = BuildUnitInfo(_queueReader.Queue.GetQueueEntry((uint) queueIndex), fahLogUnitData, unitInfoLogData, true);
+                  parsedUnits[queueIndex] = BuildUnitInfo(_queueReader.Queue.GetQueueEntry((uint)queueIndex), fahLogUnitData, unitInfoLogData, true);
                }
                else
                {
@@ -310,12 +356,12 @@ namespace HFM.DataAggregator
          }
       }
       
-      private IUnitInfo BuildUnitInfo(IQueueEntry queueEntry, FahLogUnitData fahLogUnitData, UnitInfoLogData unitInfoLogData)
+      private IUnitInfo BuildUnitInfo(QueueEntry queueEntry, FahLogUnitData fahLogUnitData, UnitInfoLogData unitInfoLogData)
       {
          return BuildUnitInfo(queueEntry, fahLogUnitData, unitInfoLogData, false);
       }
 
-      private IUnitInfo BuildUnitInfo(IQueueEntry queueEntry, FahLogUnitData fahLogUnitData, UnitInfoLogData unitInfoLogData, bool matchOverride)
+      private IUnitInfo BuildUnitInfo(QueueEntry queueEntry, FahLogUnitData fahLogUnitData, UnitInfoLogData unitInfoLogData, bool matchOverride)
       {
          IUnitInfo unit = new UnitInfo();
          unit.UnitStartTimeStamp = fahLogUnitData.UnitStartTimeStamp;
@@ -374,7 +420,7 @@ namespace HFM.DataAggregator
       }
 
       #region Unit Population Methods
-      private static void PopulateUnitInfoFromQueueEntry(IQueueEntry entry, IUnitInfo unit)
+      private static void PopulateUnitInfoFromQueueEntry(QueueEntry entry, IUnitInfo unit)
       {
          if ((entry.EntryStatus.Equals(QueueEntryStatus.Unknown) ||
               entry.EntryStatus.Equals(QueueEntryStatus.Empty) ||

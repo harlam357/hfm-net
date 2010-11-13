@@ -22,19 +22,20 @@ using System.Globalization;
 
 using NUnit.Framework;
 
-using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Queue.Tests
 {
    [TestFixture]
    public class QueueReaderTests
    {
+      // ReSharper disable InconsistentNaming
       [Test, Category("SMP")]
       public void SMP_4_queue() // WinSMP v6.24R3
       {
-         QueueReader reader = new QueueReader();
+         var reader = new QueueReader();
          reader.ReadQueue("..\\..\\..\\TestFiles\\SMP_4\\queue.dat");
-         IQueueBase queue = reader.Queue;
+         QueueBase queue = reader.Queue;
          Assert.AreEqual(600, queue.Version);
          Assert.AreEqual(9, queue.CurrentIndex);
          Assert.AreEqual(0.7884074f, queue.PerformanceFraction);
@@ -45,7 +46,7 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(4, queue.UploadRateUnitWeight);
          Assert.AreEqual(0, queue.ResultsSent);
          
-         IQueueEntry entry8 = queue.GetQueueEntry(8);
+         QueueEntry entry8 = queue.GetQueueEntry(8);
          Assert.AreEqual(QueueEntryStatus.Finished, entry8.EntryStatus);
          Assert.AreEqual(4.46, entry8.SpeedFactor);
          Assert.AreEqual("171.64.65.64", entry8.ServerIP);
@@ -54,7 +55,6 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(3, entry8.ProjectRun);
          Assert.AreEqual(71, entry8.ProjectClone);
          Assert.AreEqual(119, entry8.ProjectGen);
-         Assert.AreEqual("P2653 (R3, C71, G119)", entry8.ProjectRunCloneGen);
          Assert.AreEqual(0, entry8.Benchmark);
          Assert.AreEqual(500, entry8.Misc1a);
          Assert.AreEqual(200, entry8.Misc1b);
@@ -98,9 +98,9 @@ namespace HFM.Queue.Tests
       [Test, Category("SMP")]
       public void SMP_5_queue() // Linux SMP v6.24
       {
-         QueueReader reader = new QueueReader();
+         var reader = new QueueReader();
          reader.ReadQueue("..\\..\\..\\TestFiles\\SMP_5\\queue.dat");
-         IQueueBase queue = reader.Queue;
+         QueueBase queue = reader.Queue;
          Assert.AreEqual(600, queue.Version);
          Assert.AreEqual(4, queue.CurrentIndex);
          Assert.AreEqual(0.724012256f, queue.PerformanceFraction);
@@ -111,7 +111,7 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(4, queue.UploadRateUnitWeight);
          Assert.AreEqual(0, queue.ResultsSent);
 
-         IQueueEntry entry4 = queue.GetQueueEntry(4);
+         QueueEntry entry4 = queue.GetQueueEntry(4);
          Assert.AreEqual(QueueEntryStatus.FoldingNow, entry4.EntryStatus);
          Assert.AreEqual(0, entry4.SpeedFactor);
          Assert.AreEqual("171.64.65.56", entry4.ServerIP);
@@ -120,7 +120,6 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(33, entry4.ProjectRun);
          Assert.AreEqual(19, entry4.ProjectClone);
          Assert.AreEqual(44, entry4.ProjectGen);
-         Assert.AreEqual("P2677 (R33, C19, G44)", entry4.ProjectRunCloneGen);
          Assert.AreEqual(0, entry4.Benchmark);
          Assert.AreEqual(500, entry4.Misc1a);
          Assert.AreEqual(200, entry4.Misc1b);
@@ -165,9 +164,9 @@ namespace HFM.Queue.Tests
       [Test, Category("SMP")]
       public void SMP_6_queue() // Linux SMP v6.24 - Waiting Upload
       {
-         QueueReader reader = new QueueReader();
+         var reader = new QueueReader();
          reader.ReadQueue("..\\..\\..\\TestFiles\\SMP_6\\queue.dat");
-         IQueueBase queue = reader.Queue;
+         QueueBase queue = reader.Queue;
          Assert.AreEqual(600, queue.Version);
          Assert.AreEqual(7, queue.CurrentIndex);
          Assert.AreEqual(0.7182704f, queue.PerformanceFraction);
@@ -178,7 +177,7 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(4, queue.UploadRateUnitWeight);
          Assert.AreEqual(0, queue.ResultsSent);
 
-         IQueueEntry entry6 = queue.GetQueueEntry(6);
+         QueueEntry entry6 = queue.GetQueueEntry(6);
          Assert.AreEqual(QueueEntryStatus.ReadyForUpload, entry6.EntryStatus);
          Assert.AreEqual(3.97, entry6.SpeedFactor);
          Assert.AreEqual("171.64.65.56", entry6.ServerIP);
@@ -187,7 +186,6 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(2, entry6.ProjectRun);
          Assert.AreEqual(112, entry6.ProjectClone);
          Assert.AreEqual(164, entry6.ProjectGen);
-         Assert.AreEqual("P2669 (R2, C112, G164)", entry6.ProjectRunCloneGen);
          Assert.AreEqual(0, entry6.Benchmark);
          Assert.AreEqual(500, entry6.Misc1a);
          Assert.AreEqual(200, entry6.Misc1b);
@@ -231,9 +229,9 @@ namespace HFM.Queue.Tests
       [Test, Category("GPU")]
       public void GPU2_4_queue() // GPU2 v6.23
       {
-         QueueReader reader = new QueueReader();
+         var reader = new QueueReader();
          reader.ReadQueue("..\\..\\..\\TestFiles\\GPU2_4\\queue.dat");
-         IQueueBase queue = reader.Queue;
+         QueueBase queue = reader.Queue;
          Assert.AreEqual(600, queue.Version);
          Assert.AreEqual(8, queue.CurrentIndex);
          Assert.AreEqual(0.990233958f, queue.PerformanceFraction);
@@ -244,7 +242,7 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(4, queue.UploadRateUnitWeight);
          Assert.AreEqual(305567834, queue.ResultsSent); // This number makes no sense
 
-         IQueueEntry entry7 = queue.GetQueueEntry(7);
+         QueueEntry entry7 = queue.GetQueueEntry(7);
          Assert.AreEqual(QueueEntryStatus.Finished, entry7.EntryStatus);
          Assert.AreEqual(178.51, entry7.SpeedFactor);
          Assert.AreEqual("171.64.65.106", entry7.ServerIP);
@@ -253,7 +251,6 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(5, entry7.ProjectRun);
          Assert.AreEqual(360, entry7.ProjectClone);
          Assert.AreEqual(1, entry7.ProjectGen);
-         Assert.AreEqual("P5790 (R5, C360, G1)", entry7.ProjectRunCloneGen);
          Assert.AreEqual(0, entry7.Benchmark);
          Assert.AreEqual(500, entry7.Misc1a);
          Assert.AreEqual(200, entry7.Misc1b);
@@ -297,9 +294,9 @@ namespace HFM.Queue.Tests
       [Test, Category("GPU")]
       public void GPU2_5_queue() // GPU2 v6.23 - ID value for p10xxx Projects is written Big Endian
       {
-         QueueReader reader = new QueueReader();
+         var reader = new QueueReader();
          reader.ReadQueue("..\\..\\..\\TestFiles\\GPU2_5\\queue.dat");
-         IQueueBase queue = reader.Queue;
+         QueueBase queue = reader.Queue;
          Assert.AreEqual(600, queue.Version);
          Assert.AreEqual(9, queue.CurrentIndex);
          Assert.AreEqual(0.974022746f, queue.PerformanceFraction);
@@ -310,7 +307,7 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(4, queue.UploadRateUnitWeight);
          Assert.AreEqual(315582117, queue.ResultsSent); // This number makes no sense
 
-         IQueueEntry entry9 = queue.GetQueueEntry(9);
+         QueueEntry entry9 = queue.GetQueueEntry(9);
          Assert.AreEqual(QueueEntryStatus.FoldingNow, entry9.EntryStatus);
          Assert.AreEqual(0.0, entry9.SpeedFactor);
          Assert.AreEqual("171.64.65.71", entry9.ServerIP);
@@ -319,7 +316,6 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(266, entry9.ProjectRun);
          Assert.AreEqual(9, entry9.ProjectClone);
          Assert.AreEqual(11, entry9.ProjectGen);
-         Assert.AreEqual("P10101 (R266, C9, G11)", entry9.ProjectRunCloneGen);
          Assert.AreEqual(0, entry9.Benchmark);
          Assert.AreEqual(500, entry9.Misc1a);
          Assert.AreEqual(119, entry9.Misc1b); //***
@@ -363,9 +359,9 @@ namespace HFM.Queue.Tests
       [Test, Category("Standard")]
       public void Standard_2_queue() // Standard PPC v6.xx
       {
-         QueueReader reader = new QueueReader();
+         var reader = new QueueReader();
          reader.ReadQueue("..\\..\\..\\TestFiles\\Standard_2\\queue.dat");
-         IQueueBase queue = reader.Queue;
+         QueueBase queue = reader.Queue;
          Assert.AreEqual(600, queue.Version);
          Assert.AreEqual(2, queue.CurrentIndex);
          Assert.AreEqual(0.907946765f, queue.PerformanceFraction);
@@ -376,10 +372,10 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(1, queue.UploadRateUnitWeight);
          Assert.AreEqual(0, queue.ResultsSent);
          
-         IQueueEntry entry0 = queue.GetQueueEntry(0);
+         QueueEntry entry0 = queue.GetQueueEntry(0);
          Assert.AreEqual(QueueEntryStatus.Empty, entry0.EntryStatus);
 
-         IQueueEntry entry1 = queue.GetQueueEntry(1);
+         QueueEntry entry1 = queue.GetQueueEntry(1);
          Assert.AreEqual(QueueEntryStatus.Finished, entry1.EntryStatus);
          Assert.AreEqual(10.86, entry1.SpeedFactor);
          Assert.AreEqual("171.64.65.65", entry1.ServerIP);
@@ -388,7 +384,6 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(1, entry1.ProjectRun);
          Assert.AreEqual(518, entry1.ProjectClone);
          Assert.AreEqual(185, entry1.ProjectGen);
-         Assert.AreEqual("P2611 (R1, C518, G185)", entry1.ProjectRunCloneGen);
          Assert.AreEqual(0, entry1.Benchmark);
          Assert.AreEqual(500, entry1.Misc1a);
          Assert.AreEqual(400, entry1.Misc1b);
@@ -428,7 +423,7 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(3872181, entry1.WuDataFileSize);
          Assert.AreEqual("Folding@Home", entry1.WorkUnitType);
 
-         IQueueEntry entry2 = queue.GetQueueEntry(2);
+         QueueEntry entry2 = queue.GetQueueEntry(2);
          Assert.AreEqual(QueueEntryStatus.FoldingNow, entry2.EntryStatus);
          Assert.AreEqual(0, entry2.SpeedFactor);
          Assert.AreEqual("171.64.65.65", entry2.ServerIP);
@@ -437,7 +432,6 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(32, entry2.ProjectRun);
          Assert.AreEqual(0, entry2.ProjectClone);
          Assert.AreEqual(169, entry2.ProjectGen);
-         Assert.AreEqual("P2613 (R32, C0, G169)", entry2.ProjectRunCloneGen);
          Assert.AreEqual(0, entry2.Benchmark);
          Assert.AreEqual(500, entry2.Misc1a);
          Assert.AreEqual(400, entry2.Misc1b);
@@ -482,9 +476,9 @@ namespace HFM.Queue.Tests
       [Test, Category("Standard")]
       public void Standard_3_queue() // Standard PPC v5.01
       {
-         QueueReader reader = new QueueReader();
+         var reader = new QueueReader();
          reader.ReadQueue("..\\..\\..\\TestFiles\\Standard_3\\queue.dat");
-         IQueueBase queue = reader.Queue;
+         QueueBase queue = reader.Queue;
          Assert.AreEqual(501, queue.Version);
          Assert.AreEqual(2, queue.CurrentIndex);
          Assert.AreEqual(0.823216438f, queue.PerformanceFraction);
@@ -495,7 +489,7 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(4, queue.UploadRateUnitWeight);
          Assert.AreEqual(0, queue.ResultsSent);
 
-         IQueueEntry entry1 = queue.GetQueueEntry(1);
+         QueueEntry entry1 = queue.GetQueueEntry(1);
          Assert.AreEqual(QueueEntryStatus.Finished, entry1.EntryStatus);
          Assert.AreEqual(8.44, entry1.SpeedFactor);
          Assert.AreEqual("171.64.65.58", entry1.ServerIP);
@@ -504,7 +498,6 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(0, entry1.ProjectRun);
          Assert.AreEqual(505, entry1.ProjectClone);
          Assert.AreEqual(74, entry1.ProjectGen);
-         Assert.AreEqual("P3046 (R0, C505, G74)", entry1.ProjectRunCloneGen);
          Assert.AreEqual(357, entry1.Benchmark);
          Assert.AreEqual(500, entry1.Misc1a);
          Assert.AreEqual(200, entry1.Misc1b);
@@ -548,9 +541,9 @@ namespace HFM.Queue.Tests
       [Test, Category("Standard")]
       public void Standard_4_queue() // Standard x86 v6.xx
       {
-         QueueReader reader = new QueueReader();
+         var reader = new QueueReader();
          reader.ReadQueue("..\\..\\..\\TestFiles\\Standard_4\\queue.dat");
-         IQueueBase queue = reader.Queue;
+         QueueBase queue = reader.Queue;
          Assert.AreEqual(600, queue.Version);
          Assert.AreEqual(1, queue.CurrentIndex);
          Assert.AreEqual(0.0f, queue.PerformanceFraction);
@@ -561,10 +554,10 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(0, queue.UploadRateUnitWeight);
          Assert.AreEqual(0, queue.ResultsSent);
 
-         IQueueEntry entry0 = queue.GetQueueEntry(0);
+         QueueEntry entry0 = queue.GetQueueEntry(0);
          Assert.AreEqual(QueueEntryStatus.Empty, entry0.EntryStatus);
 
-         IQueueEntry entry1 = queue.GetQueueEntry(1);
+         QueueEntry entry1 = queue.GetQueueEntry(1);
          Assert.AreEqual(QueueEntryStatus.FoldingNow, entry1.EntryStatus);
          Assert.AreEqual(0.0, entry1.SpeedFactor);
          Assert.AreEqual("171.65.103.162", entry1.ServerIP);
@@ -573,7 +566,6 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(204, entry1.ProjectRun);
          Assert.AreEqual(8, entry1.ProjectClone);
          Assert.AreEqual(16, entry1.ProjectGen);
-         Assert.AreEqual("P2498 (R204, C8, G16)", entry1.ProjectRunCloneGen);
          Assert.AreEqual(0, entry1.Benchmark);
          Assert.AreEqual(500, entry1.Misc1a);
          Assert.AreEqual(400, entry1.Misc1b);
@@ -615,22 +607,23 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(2972889, entry1.WuDataFileSize);
          Assert.AreEqual("Folding@Home", entry1.WorkUnitType);
       }
+      // ReSharper restore InconsistentNaming
       
       [Test]
       public void UserIDCalculationTest()
       {
          byte[] b = QueueEntry.HexToData("99D3CF222E1FA00");
          Array.Reverse(b);
-         string UserID = QueueEntry.GetUserIDFromUserAndMachineID(b, 16, false);
-         Assert.AreEqual("99D3CF222E1F9F0", UserID);
+         string userID = QueueEntry.GetUserIDFromUserAndMachineID(b, 16, false);
+         Assert.AreEqual("99D3CF222E1F9F0", userID);
          
          b = QueueEntry.HexToData("00FAE122F23C9D09");
-         UserID = QueueEntry.GetUserIDFromUserAndMachineID(b, 16, false);
-         Assert.AreEqual("99D3CF222E1F9F0", UserID);
+         userID = QueueEntry.GetUserIDFromUserAndMachineID(b, 16, false);
+         Assert.AreEqual("99D3CF222E1F9F0", userID);
 
          b = QueueEntry.HexToData("99D3CF222E1FA00");
-         UserID = QueueEntry.GetUserIDFromUserAndMachineID(b, 16, true);
-         Assert.AreEqual("99D3CF222E1F9F0", UserID);
+         userID = QueueEntry.GetUserIDFromUserAndMachineID(b, 16, true);
+         Assert.AreEqual("99D3CF222E1F9F0", userID);
       }
    }
 }
