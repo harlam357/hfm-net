@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 
 using HFM.Framework.DataTypes;
 
@@ -28,12 +29,17 @@ namespace HFM.Framework
       /// <summary>
       /// Project ID
       /// </summary>
-      Int32 ProjectID { get; }
+      int ProjectID { get; }
 
       /// <summary>
       /// Minimum Frame Time
       /// </summary>
       TimeSpan MinimumFrameTime { get; }
+
+      /// <summary>
+      /// Frame Times List
+      /// </summary>
+      List<ProteinFrameTime> FrameTimes { get; }
 
       /// <summary>
       /// PPD based on Minimum Frame Time
@@ -70,13 +76,5 @@ namespace HFM.Framework
       /// Refresh the Minimum Frame Time for this Benchmark based on current List of Frame Times
       /// </summary>
       void RefreshBenchmarkMinimumFrameTime();
-
-      /// <summary>
-      /// Return Multi-Line String (Array)
-      /// </summary>
-      /// <param name="UnitInfo">Client Instance UnitInfo (null for unavailable)</param>
-      /// <param name="PpdFormatString">PPD Format String</param>
-      /// <param name="ProductionValuesOk">Client Instance Production Values Flag</param>
-      string[] ToMultiLineString(IUnitInfoLogic UnitInfo, string PpdFormatString, bool ProductionValuesOk);
    }
 }

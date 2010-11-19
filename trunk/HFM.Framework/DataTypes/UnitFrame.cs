@@ -33,7 +33,7 @@ namespace HFM.Framework.DataTypes
    }
 
    [ProtoContract]
-   public class UnitFrame : IUnitFrame
+   public sealed class UnitFrame : IUnitFrame
    {
       public string TimeStampString { get; set; }
 

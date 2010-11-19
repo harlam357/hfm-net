@@ -78,6 +78,7 @@
     <Compile Include="DataTypes\ClientQueueEntry.cs" />
     <Compile Include="DataTypes\ClientRun.cs" />
     <Compile Include="DataTypes\Enumerations.cs" />
+    <Compile Include="DataTypes\ProteinFrameTime.cs" />
     <Compile Include="DataTypes\InstanceTotals.cs" />
     <Compile Include="DataTypes\LogLine.cs" />
     <Compile Include="DataTypes\ProjectInfo.cs" />

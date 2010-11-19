@@ -123,12 +123,61 @@ namespace HFM.Forms
                unit = instance.CurrentUnitInfo;
                valuesOk = instance.ProductionValuesOk;
             }
-            UpdateBenchmarkText(benchmark.ToMultiLineString(unit, _prefs.PpdFormatString, valuesOk));
+            UpdateBenchmarkText(ToMultiLineString(benchmark, unit, _prefs.PpdFormatString, valuesOk));
          }
 
          CreateFrameTimeGraph(zgFrameTime, lines, list, _graphColors);
          CreatePpdGraph(zgPpd, lines, list, _graphColors, _prefs.GetPreference<int>(Preference.DecimalPlaces));
       }
+
+      /// <summary>
+      /// Return Multi-Line String (Array)
+      /// </summary>
+      /// <param name="benchmark"></param>
+      /// <param name="unitInfo">Client Instance UnitInfo (null for unavailable)</param>
+      /// <param name="ppdFormatString">PPD Format String</param>
+      /// <param name="productionValuesOk">Client Instance Production Values Flag</param>
+      private IEnumerable<string> ToMultiLineString(IInstanceProteinBenchmark benchmark, IUnitInfoLogic unitInfo, string ppdFormatString, bool productionValuesOk)
+      {
+         var output = new List<string>(12);
+
+         IProtein protein;
+         _proteinCollection.TryGetValue(benchmark.ProjectID, out protein);
+         if (protein != null)
+         {
+            output.Add(String.Empty);
+            output.Add(String.Format(" Name: {0}", benchmark.OwningInstanceName));
+            output.Add(String.Format(" Path: {0}", benchmark.OwningInstancePath));
+            output.Add(String.Format(" Number of Frames Observed: {0}", benchmark.FrameTimes.Count));
+            output.Add(String.Empty);
+            output.Add(String.Format(" Min. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
+               benchmark.MinimumFrameTime, benchmark.MinimumFrameTimePPD));
+            output.Add(String.Format(" Avg. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
+               benchmark.AverageFrameTime, benchmark.AverageFrameTimePPD));
+
+            if (unitInfo != null && unitInfo.UnitInfoData.ProjectID.Equals(protein.ProjectNumber) &&
+                                    productionValuesOk)
+            {
+               output.Add(String.Format(" Cur. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
+                  unitInfo.TimePerLastSection, unitInfo.PPDPerLastSection));
+               output.Add(String.Format(" R3F. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
+                  unitInfo.TimePerThreeSections, unitInfo.PPDPerThreeSections));
+               output.Add(String.Format(" All  Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
+                  unitInfo.TimePerAllSections, unitInfo.PPDPerAllSections));
+               output.Add(String.Format(" Eff. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
+                  unitInfo.TimePerUnitDownload, unitInfo.PPDPerUnitDownload));
+            }
+
+            output.Add(String.Empty);
+         }
+         else
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
+                                       String.Format("{0} could not find Project ID '{1}'.", HfmTrace.FunctionName, benchmark.ProjectID));
+         }
+
+         return output.ToArray();
+      } 
 
       private void listBox1_MouseDown(object sender, MouseEventArgs e)
       {

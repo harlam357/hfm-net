@@ -25,7 +25,7 @@ namespace HFM.Framework.DataTypes
    /// <summary>
    /// Container Class used to Bind Benchmark Client Data to the Benchmarks Form
    /// </summary>
-   public class BenchmarkClient
+   public class BenchmarkClient : IComparable<BenchmarkClient>, IEquatable<BenchmarkClient>
    {
       /// <summary>
       /// Self Referencing Property

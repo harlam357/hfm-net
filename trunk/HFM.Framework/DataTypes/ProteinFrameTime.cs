@@ -1,5 +1,5 @@
-/*
- * HFM.NET - Benchmark Collection Class
+﻿/*
+ * HFM.NET - Protein Frame Time Class
  * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -16,29 +16,28 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-
+ 
 using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Xml.Serialization;
 
 using ProtoBuf;
 
-namespace HFM.Instances
+namespace HFM.Framework.DataTypes
 {
    [ProtoContract]
-   public class ProteinBenchmarkCollection
+   public sealed class ProteinFrameTime
    {
-      #region Members
-      private readonly List<InstanceProteinBenchmark> _benchmarkList = new List<InstanceProteinBenchmark>();
-      /// <summary>
-      /// Serialized Benchmark List
-      /// </summary>
+      [XmlIgnore]
+      public TimeSpan Duration { get; set; }
+
       [ProtoMember(1)]
-      [XmlElement("Benchmarks")]
-      public List<InstanceProteinBenchmark> BenchmarkList
+      [XmlAttribute("Duration")]
+      [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
+      public long DurationTicks
       {
-         get { return _benchmarkList; }
+         get { return Duration.Ticks; }
+         set { Duration = new TimeSpan(value); }
       }
-      #endregion
    }
 }
