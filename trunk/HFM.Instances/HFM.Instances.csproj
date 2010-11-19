@@ -90,7 +90,6 @@
     <Compile Include="InstanceCollectionHelpers.cs" />
     <Compile Include="InstanceProteinBenchmark.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BenchmarkClient.cs" />
     <Compile Include="ProteinBenchmarkCollection.cs" />
     <Compile Include="ProteinBenchmarkContainer.cs">
       <SubType>Code</SubType>

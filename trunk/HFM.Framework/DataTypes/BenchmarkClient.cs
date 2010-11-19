@@ -20,19 +20,17 @@
 using System;
 using System.Globalization;
 
-using HFM.Framework;
-
-namespace HFM.Instances
+namespace HFM.Framework.DataTypes
 {
    /// <summary>
    /// Container Class used to Bind Benchmark Client Data to the Benchmarks Form
    /// </summary>
-   public class BenchmarkClient : IBenchmarkClient
+   public class BenchmarkClient
    {
       /// <summary>
       /// Self Referencing Property
       /// </summary>
-      public IBenchmarkClient Client
+      public BenchmarkClient Client
       {
          get { return this; }
       }
@@ -123,7 +121,7 @@ namespace HFM.Instances
       ///<filterpriority>2</filterpriority>
       public override bool Equals(object obj)
       {
-         IBenchmarkClient client = obj as BenchmarkClient;
+         var client = obj as BenchmarkClient;
          if (client != null)
          {
             return Equals(client);
@@ -139,7 +137,7 @@ namespace HFM.Instances
       ///true if the specified <see cref="T:HFM.Instances.BenchmarkClient"></see> is equal to the current <see cref="T:HFM.Instances.BenchmarkClient"></see>; otherwise, false.
       ///</returns>
       ///<param name="client">The <see cref="T:HFM.Instances.BenchmarkClient"></see> to compare with the current <see cref="T:HFM.Instances.BenchmarkClient"></see>.</param>
-      public bool Equals(IBenchmarkClient client)
+      public bool Equals(BenchmarkClient client)
       {
          if (client == null)
          {
@@ -163,7 +161,7 @@ namespace HFM.Instances
       ///A 32-bit signed integer that indicates the relative order of the objects being compared. The return value has the following meanings: Value Meaning Less than zero This object is less than the other parameter.Zero This object is equal to other. Greater than zero This object is greater than other. 
       ///</returns>
       ///<param name="other">An object to compare with this object.</param>
-      public int CompareTo(IBenchmarkClient other)
+      public int CompareTo(BenchmarkClient other)
       {
          if (other == null)
          {

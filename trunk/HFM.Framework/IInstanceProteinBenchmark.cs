@@ -53,7 +53,7 @@ namespace HFM.Framework
       /// <summary>
       /// Benchmark Client Descriptor
       /// </summary>
-      IBenchmarkClient Client { get; }
+      BenchmarkClient Client { get; }
 
       /// <summary>
       /// Benchmark Protein

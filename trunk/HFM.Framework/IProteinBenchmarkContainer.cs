@@ -20,6 +20,8 @@
 using System;
 using System.Collections.Generic;
 
+using HFM.Framework.DataTypes;
+
 namespace HFM.Framework
 {
    public interface IProteinBenchmarkContainer
@@ -42,32 +44,32 @@ namespace HFM.Framework
       /// Delete all Benchmarks for the given BenchmarkClient
       /// </summary>
       /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
-      void Delete(IBenchmarkClient client);
+      void Delete(BenchmarkClient client);
 
       /// <summary>
       /// Delete all Benchmarks for the given BenchmarkClient and ProjectID
       /// </summary>
       /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
       /// <param name="projectID">Project Number</param>
-      void Delete(IBenchmarkClient client, int projectID);
+      void Delete(BenchmarkClient client, int projectID);
 
       /// <summary>
       /// Determine if the given BenchmarkClient exists in the Benchmarks data
       /// </summary>
       /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
-      bool ContainsClient(IBenchmarkClient client);
+      bool ContainsClient(BenchmarkClient client);
 
       /// <summary>
       /// Refresh the Minimum Frame Time for the given BenchmarkClient and ProjectID
       /// </summary>
       /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
       /// <param name="projectID">Project Number</param>
-      void RefreshMinimumFrameTime(IBenchmarkClient client, int projectID);
+      void RefreshMinimumFrameTime(BenchmarkClient client, int projectID);
 
       /// <summary>
       /// Get List of BenchmarkClients
       /// </summary>
-      IBenchmarkClient[] GetBenchmarkClients();
+      BenchmarkClient[] GetBenchmarkClients();
 
       /// <summary>
       /// Get List of Benchmark Project Numbers
@@ -77,34 +79,34 @@ namespace HFM.Framework
       /// <summary>
       /// Get List of Benchmark Project Numbers
       /// </summary>
-      int[] GetBenchmarkProjects(IBenchmarkClient client);
+      int[] GetBenchmarkProjects(BenchmarkClient client);
       
       /// <summary>
       /// Get List of Benchmarks for the given BenchmarkClient
       /// </summary>
       /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
-      List<IInstanceProteinBenchmark> GetBenchmarks(IBenchmarkClient client);
+      List<IInstanceProteinBenchmark> GetBenchmarks(BenchmarkClient client);
       
       /// <summary>
       /// Get List of Benchmarks for the given BenchmarkClient
       /// </summary>
       /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
       /// <param name="projectID">Project Number</param>
-      List<IInstanceProteinBenchmark> GetBenchmarks(IBenchmarkClient client, int projectID);
+      List<IInstanceProteinBenchmark> GetBenchmarks(BenchmarkClient client, int projectID);
 
       /// <summary>
       /// Update the given BenchmarkClient benchmarks with the new Owning Instance Name
       /// </summary>
       /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
       /// <param name="newName">New Benchmark Owner Name</param>
-      void UpdateInstanceName(IBenchmarkClient client, string newName);
+      void UpdateInstanceName(BenchmarkClient client, string newName);
 
       /// <summary>
       /// Update the given BenchmarkClient benchmarks with the new Owning Instance Path
       /// </summary>
       /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
       /// <param name="newPath">New Benchmark Owner Path</param>
-      void UpdateInstancePath(IBenchmarkClient client, string newPath);
+      void UpdateInstancePath(BenchmarkClient client, string newPath);
       
       /// <summary>
       /// Read Binary File

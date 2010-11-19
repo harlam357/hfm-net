@@ -228,7 +228,7 @@ namespace HFM.Instances
       /// <summary>
       /// Benchmark Client Descriptor
       /// </summary>
-      public IBenchmarkClient Client
+      public BenchmarkClient Client
       {
          get 
          { 

@@ -45,7 +45,7 @@ namespace HFM.Forms
       private readonly InstanceCollection _instanceCollection;
       private readonly int _initialProjectID; 
       
-      private IBenchmarkClient _currentBenchmarkClient;
+      private BenchmarkClient _currentBenchmarkClient;
       #endregion
 
       #region Form Constructor / functionality
@@ -84,7 +84,7 @@ namespace HFM.Forms
       #region Event Handlers
       private void cboClients_SelectedIndexChanged(object sender, EventArgs e)
       {
-         _currentBenchmarkClient = (IBenchmarkClient)cboClients.SelectedValue;
+         _currentBenchmarkClient = (BenchmarkClient)cboClients.SelectedValue;
          if (_currentBenchmarkClient.AllClients)
          {
             picDeleteClient.Visible = false;

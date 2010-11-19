@@ -22,6 +22,8 @@ using System.Globalization;
 
 using NUnit.Framework;
 
+using HFM.Framework.DataTypes;
+
 namespace HFM.Instances.Tests
 {
    [TestFixture]

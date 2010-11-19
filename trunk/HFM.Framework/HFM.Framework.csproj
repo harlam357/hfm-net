@@ -73,6 +73,7 @@
     </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="CoverageExcludeAttribute.cs" />
+    <Compile Include="DataTypes\BenchmarkClient.cs" />
     <Compile Include="DataTypes\ClientQueue.cs" />
     <Compile Include="DataTypes\ClientQueueEntry.cs" />
     <Compile Include="DataTypes\ClientRun.cs" />
@@ -85,7 +86,6 @@
     <Compile Include="DataTypes\UnitInfo.cs" />
     <Compile Include="Enumerations.cs" />
     <Compile Include="HfmTrace.cs" />
-    <Compile Include="IBenchmarkClient.cs" />
     <Compile Include="IClientInstanceSettings.cs" />
     <Compile Include="IDataAggregator.cs" />
     <Compile Include="IDisplayInstance.cs" />

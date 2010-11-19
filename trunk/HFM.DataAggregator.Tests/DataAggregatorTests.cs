@@ -24,7 +24,6 @@ using NUnit.Framework;
 
 using HFM.Framework;
 using HFM.Framework.DataTypes;
-using HFM.Queue;
 
 namespace HFM.DataAggregator.Tests
 {

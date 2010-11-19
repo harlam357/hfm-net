@@ -218,7 +218,7 @@ namespace HFM.Instances
       /// Delete all Benchmarks for the given BenchmarkClient
       /// </summary>
       /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
-      public void Delete(IBenchmarkClient client)
+      public void Delete(BenchmarkClient client)
       {
          if (client.AllClients) throw new InvalidOperationException("Cannot delete All Clients.");
 
@@ -231,7 +231,7 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
       /// <param name="projectId">Project Number</param>
-      public void Delete(IBenchmarkClient client, int projectId)
+      public void Delete(BenchmarkClient client, int projectId)
       {
          _collection.BenchmarkList.RemoveAll(benchmark =>
                                              {
@@ -252,7 +252,7 @@ namespace HFM.Instances
       /// Determine if the given BenchmarkClient exists in the Benchmarks data
       /// </summary>
       /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
-      public bool ContainsClient(IBenchmarkClient client)
+      public bool ContainsClient(BenchmarkClient client)
       {
          return _collection.BenchmarkList.Find(benchmark =>
                                                {
@@ -273,7 +273,7 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
       /// <param name="projectId">Project Number</param>
-      public void RefreshMinimumFrameTime(IBenchmarkClient client, int projectId)
+      public void RefreshMinimumFrameTime(BenchmarkClient client, int projectId)
       {
          IList<IInstanceProteinBenchmark> benchmarks = GetBenchmarks(client, projectId);
          foreach (InstanceProteinBenchmark benchmark in benchmarks)
@@ -286,9 +286,9 @@ namespace HFM.Instances
       /// <summary>
       /// Get List of BenchmarkClients
       /// </summary>
-      public IBenchmarkClient[] GetBenchmarkClients()
+      public BenchmarkClient[] GetBenchmarkClients()
       {
-         var benchmarkClients = new List<IBenchmarkClient> { new BenchmarkClient() };
+         var benchmarkClients = new List<BenchmarkClient> { new BenchmarkClient() };
 
          foreach (var benchmark in _collection.BenchmarkList)
          {
@@ -315,7 +315,7 @@ namespace HFM.Instances
       /// <summary>
       /// Get List of Benchmark Project Numbers
       /// </summary>
-      public int[] GetBenchmarkProjects(IBenchmarkClient client)
+      public int[] GetBenchmarkProjects(BenchmarkClient client)
       {
          var projects = new List<int>();
 
@@ -347,7 +347,7 @@ namespace HFM.Instances
       /// Get List of Benchmarks for the given BenchmarkClient
       /// </summary>
       /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
-      public List<IInstanceProteinBenchmark> GetBenchmarks(IBenchmarkClient client)
+      public List<IInstanceProteinBenchmark> GetBenchmarks(BenchmarkClient client)
       {
          var list = _collection.BenchmarkList.FindAll(benchmark =>
                                                       {
@@ -366,7 +366,7 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
       /// <param name="projectId">Project Number</param>
-      public List<IInstanceProteinBenchmark> GetBenchmarks(IBenchmarkClient client, int projectId)
+      public List<IInstanceProteinBenchmark> GetBenchmarks(BenchmarkClient client, int projectId)
       {
          var list = _collection.BenchmarkList.FindAll(benchmark =>
                                                       {
@@ -389,7 +389,7 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
       /// <param name="newName">New Benchmark Owner Name</param>
-      public void UpdateInstanceName(IBenchmarkClient client, string newName)
+      public void UpdateInstanceName(BenchmarkClient client, string newName)
       {
          IList<IInstanceProteinBenchmark> benchmarks = GetBenchmarks(client);
          foreach (InstanceProteinBenchmark benchmark in benchmarks)
@@ -404,7 +404,7 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
       /// <param name="newPath">New Benchmark Owner Path</param>
-      public void UpdateInstancePath(IBenchmarkClient client, string newPath)
+      public void UpdateInstancePath(BenchmarkClient client, string newPath)
       {
          IList<IInstanceProteinBenchmark> benchmarks = GetBenchmarks(client);
          foreach (InstanceProteinBenchmark benchmark in benchmarks)
