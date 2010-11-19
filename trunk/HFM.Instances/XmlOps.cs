@@ -24,12 +24,12 @@ using System.Text;
 using System.Xml;
 using System.Xml.Xsl;
 
-namespace HFM.Framework
+namespace HFM.Instances
 {
    /// <summary>
    /// Helper class for generating XML and HTML
    /// </summary>
-   public static class XMLOps
+   internal static class XmlOps
    {
       /// <summary>
       /// Writes the appropriate text (nodeText) into the identified XML node (xPath) within the document (xmlData)
@@ -37,7 +37,7 @@ namespace HFM.Framework
       /// <param name="xmlData">XML Document to use as source for node</param>
       /// <param name="xPath">Path into XML document</param>
       /// <param name="nodeText">String to write into the InnerText property</param>
-      public static void setXmlNode(XmlElement xmlData, string xPath, string nodeText)
+      internal static void SetXmlNode(XmlElement xmlData, string xPath, string nodeText)
       {
          XmlNode xNode = xmlData.SelectSingleNode(xPath);
          if (xNode != null)
@@ -53,7 +53,7 @@ namespace HFM.Framework
       /// <param name="xPath"></param>
       /// <param name="nodeText"></param>
       /// <returns></returns>
-      public static XmlElement createXmlNode(XmlDocument xmlDoc, string xPath, string nodeText)
+      internal static XmlElement CreateXmlNode(XmlDocument xmlDoc, string xPath, string nodeText)
       {
          XmlElement xmlEl = xmlDoc.CreateElement(xPath);
          XmlNode xmlN = xmlDoc.CreateNode(XmlNodeType.Text, xPath, String.Empty);
@@ -69,7 +69,7 @@ namespace HFM.Framework
       /// <param name="xmlDoc">XML Source Document/Node</param>
       /// <param name="xsltFilePath">Path to the XSL Transform to apply</param>
       /// <param name="cssFileName">CSS file name to embed in the transformed XML</param>
-      public static string Transform(XmlNode xmlDoc, string xsltFilePath, string cssFileName)
+      internal static string Transform(XmlNode xmlDoc, string xsltFilePath, string cssFileName)
       {
          // Create XmlReaderSettings and XmlReader
          var xsltSettings = new XmlReaderSettings();

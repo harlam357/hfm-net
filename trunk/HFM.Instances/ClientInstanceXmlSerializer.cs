@@ -127,29 +127,29 @@ namespace HFM.Instances
          xmlRoot.SetAttribute(xmlAttrName, instanceName);
          xmlData.AppendChild(xmlRoot);
 
-         xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlNodeExternal, 
+         xmlData.ChildNodes[0].AppendChild(XmlOps.CreateXmlNode(xmlData, xmlNodeExternal, 
             dataInterface.GetSetting(ClientInstanceSettingsKeys.ExternalInstance).ToString()));
-         xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlNodeExternalFile,
+         xmlData.ChildNodes[0].AppendChild(XmlOps.CreateXmlNode(xmlData, xmlNodeExternalFile,
             dataInterface.GetSetting(ClientInstanceSettingsKeys.ExternalFileName).ToString()));
-         xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlNodeFAHLog,
+         xmlData.ChildNodes[0].AppendChild(XmlOps.CreateXmlNode(xmlData, xmlNodeFAHLog,
             dataInterface.GetSetting(ClientInstanceSettingsKeys.FahLogFileName).ToString()));
-         xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlNodeUnitInfo, 
+         xmlData.ChildNodes[0].AppendChild(XmlOps.CreateXmlNode(xmlData, xmlNodeUnitInfo, 
             dataInterface.GetSetting(ClientInstanceSettingsKeys.UnitInfoFileName).ToString()));
-         xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlNodeQueue,
+         xmlData.ChildNodes[0].AppendChild(XmlOps.CreateXmlNode(xmlData, xmlNodeQueue,
             dataInterface.GetSetting(ClientInstanceSettingsKeys.QueueFileName).ToString()));
-         xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlNodeClientMHz,
+         xmlData.ChildNodes[0].AppendChild(XmlOps.CreateXmlNode(xmlData, xmlNodeClientMHz,
             dataInterface.GetSetting(ClientInstanceSettingsKeys.ClientMhz).ToString()));
-         xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlNodeClientVM,
+         xmlData.ChildNodes[0].AppendChild(XmlOps.CreateXmlNode(xmlData, xmlNodeClientVM,
             dataInterface.GetSetting(ClientInstanceSettingsKeys.UtcOffsetIsZero).ToString()));
-         xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlNodeClientOffset,
+         xmlData.ChildNodes[0].AppendChild(XmlOps.CreateXmlNode(xmlData, xmlNodeClientOffset,
             dataInterface.GetSetting(ClientInstanceSettingsKeys.ClientTimeOffset).ToString()));
-         xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropType, 
+         xmlData.ChildNodes[0].AppendChild(XmlOps.CreateXmlNode(xmlData, xmlPropType, 
             dataInterface.GetSetting(ClientInstanceSettingsKeys.InstanceType).ToString()));
-         xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropPath,
+         xmlData.ChildNodes[0].AppendChild(XmlOps.CreateXmlNode(xmlData, xmlPropPath,
             dataInterface.GetSetting(ClientInstanceSettingsKeys.Path).ToString()));
-         xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropServ,
+         xmlData.ChildNodes[0].AppendChild(XmlOps.CreateXmlNode(xmlData, xmlPropServ,
             dataInterface.GetSetting(ClientInstanceSettingsKeys.Server).ToString()));
-         xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropUser, 
+         xmlData.ChildNodes[0].AppendChild(XmlOps.CreateXmlNode(xmlData, xmlPropUser, 
             dataInterface.GetSetting(ClientInstanceSettingsKeys.Username).ToString()));
 
          var symetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
@@ -169,8 +169,8 @@ namespace HFM.Instances
                encryptedPassword = clearPassword;
             }
          }
-         xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropPass, encryptedPassword));
-         xmlData.ChildNodes[0].AppendChild(XMLOps.createXmlNode(xmlData, xmlPropPassiveFtpMode, 
+         xmlData.ChildNodes[0].AppendChild(XmlOps.CreateXmlNode(xmlData, xmlPropPass, encryptedPassword));
+         xmlData.ChildNodes[0].AppendChild(XmlOps.CreateXmlNode(xmlData, xmlPropPassiveFtpMode, 
             dataInterface.GetSetting(ClientInstanceSettingsKeys.FtpMode).ToString()));
 
          return xmlData;

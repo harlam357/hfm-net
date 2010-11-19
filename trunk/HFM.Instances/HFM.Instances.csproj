@@ -102,6 +102,7 @@
     <Compile Include="UnitInfoLogic.cs" />
     <Compile Include="MarkupGenerator.cs" />
     <Compile Include="WebsiteDeployer.cs" />
+    <Compile Include="XmlOps.cs" />
     <Compile Include="XmlStatsDataContainer.cs" />
   </ItemGroup>
   <ItemGroup>

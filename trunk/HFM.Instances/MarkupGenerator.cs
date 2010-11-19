@@ -191,7 +191,7 @@ namespace HFM.Instances
             // Generate the index page
             string filePath = Path.Combine(folderPath, "index.html");
             sw = new StreamWriter(filePath, false);
-            sw.Write(XMLOps.Transform(overviewXml, GetXsltFileName(Preference.WebOverview), cssFileName));
+            sw.Write(XmlOps.Transform(overviewXml, GetXsltFileName(Preference.WebOverview), cssFileName));
             sw.Close();
             // Success, add it to the list
             fileList.Add(filePath);
@@ -199,7 +199,7 @@ namespace HFM.Instances
             // Generate the mobile index page
             filePath = Path.Combine(folderPath, "mobile.html");
             sw = new StreamWriter(filePath, false);
-            sw.Write(XMLOps.Transform(overviewXml, GetXsltFileName(Preference.WebMobileOverview), cssFileName));
+            sw.Write(XmlOps.Transform(overviewXml, GetXsltFileName(Preference.WebMobileOverview), cssFileName));
             sw.Close();
             // Success, add it to the list
             fileList.Add(filePath);
@@ -207,7 +207,7 @@ namespace HFM.Instances
             // Generate the summary page
             filePath = Path.Combine(folderPath, "summary.html");
             sw = new StreamWriter(filePath, false);
-            sw.Write(XMLOps.Transform(overviewXml, GetXsltFileName(Preference.WebSummary), cssFileName));
+            sw.Write(XmlOps.Transform(overviewXml, GetXsltFileName(Preference.WebSummary), cssFileName));
             sw.Close();
             // Success, add it to the list
             fileList.Add(filePath);
@@ -215,7 +215,7 @@ namespace HFM.Instances
             // Generate the mobile summary page
             filePath = Path.Combine(folderPath, "mobilesummary.html");
             sw = new StreamWriter(filePath, false);
-            sw.Write(XMLOps.Transform(overviewXml, GetXsltFileName(Preference.WebMobileSummary), cssFileName));
+            sw.Write(XmlOps.Transform(overviewXml, GetXsltFileName(Preference.WebMobileSummary), cssFileName));
             sw.Close();
             // Success, add it to the list
             fileList.Add(filePath);
@@ -229,7 +229,7 @@ namespace HFM.Instances
             {
                filePath = Path.Combine(folderPath, String.Concat(instance.Name, ".html"));
                sw = new StreamWriter(filePath, false);
-               sw.Write(XMLOps.Transform(FindInstanceNode(instancesXml, instance.Name), instanceXslt, cssFileName));
+               sw.Write(XmlOps.Transform(FindInstanceNode(instancesXml, instance.Name), instanceXslt, cssFileName));
                sw.Close();
                // Success, add it to the list
                fileList.Add(filePath);
@@ -366,41 +366,41 @@ namespace HFM.Instances
          //    </UnitInfo>
 
          xmlData.SetAttribute("Name", instance.Name);
-         XMLOps.setXmlNode(xmlData, "HFMVersion", PlatformOps.ShortFormattedApplicationVersionWithRevision);
-         XMLOps.setXmlNode(xmlData, "UnitInfo/FramesComplete", String.Format("{0}", instance.FramesComplete));
-         XMLOps.setXmlNode(xmlData, "UnitInfo/PercentComplete", String.Format("{0}", instance.PercentComplete));
-         XMLOps.setXmlNode(xmlData, "UnitInfo/TimePerFrame", String.Format("{0}h, {1}m, {2}s", instance.TPF.Hours, instance.TPF.Minutes, instance.TPF.Seconds));
+         XmlOps.SetXmlNode(xmlData, "HFMVersion", PlatformOps.ShortFormattedApplicationVersionWithRevision);
+         XmlOps.SetXmlNode(xmlData, "UnitInfo/FramesComplete", String.Format("{0}", instance.FramesComplete));
+         XmlOps.SetXmlNode(xmlData, "UnitInfo/PercentComplete", String.Format("{0}", instance.PercentComplete));
+         XmlOps.SetXmlNode(xmlData, "UnitInfo/TimePerFrame", String.Format("{0}h, {1}m, {2}s", instance.TPF.Hours, instance.TPF.Minutes, instance.TPF.Seconds));
 
          string ppdFormatString = _prefs.PpdFormatString;
-         XMLOps.setXmlNode(xmlData, "UnitInfo/EstPPD", String.Format("{0:" + ppdFormatString + "}", instance.PPD));
-         XMLOps.setXmlNode(xmlData, "UnitInfo/EstPPW", String.Format("{0:" + ppdFormatString + "}", instance.PPD * 7));
-         XMLOps.setXmlNode(xmlData, "UnitInfo/EstUPD", String.Format("{0:0.00}", instance.UPD));
-         XMLOps.setXmlNode(xmlData, "UnitInfo/EstUPW", String.Format("{0:0.00}", instance.UPD * 7));
-         XMLOps.setXmlNode(xmlData, "UnitInfo/Completed", instance.TotalRunCompletedUnits.ToString());
-         XMLOps.setXmlNode(xmlData, "UnitInfo/Failed", instance.TotalRunFailedUnits.ToString());
-         XMLOps.setXmlNode(xmlData, "UnitInfo/TotalCompleted", instance.TotalClientCompletedUnits.ToString());
+         XmlOps.SetXmlNode(xmlData, "UnitInfo/EstPPD", String.Format("{0:" + ppdFormatString + "}", instance.PPD));
+         XmlOps.SetXmlNode(xmlData, "UnitInfo/EstPPW", String.Format("{0:" + ppdFormatString + "}", instance.PPD * 7));
+         XmlOps.SetXmlNode(xmlData, "UnitInfo/EstUPD", String.Format("{0:0.00}", instance.UPD));
+         XmlOps.SetXmlNode(xmlData, "UnitInfo/EstUPW", String.Format("{0:0.00}", instance.UPD * 7));
+         XmlOps.SetXmlNode(xmlData, "UnitInfo/Completed", instance.TotalRunCompletedUnits.ToString());
+         XmlOps.SetXmlNode(xmlData, "UnitInfo/Failed", instance.TotalRunFailedUnits.ToString());
+         XmlOps.SetXmlNode(xmlData, "UnitInfo/TotalCompleted", instance.TotalClientCompletedUnits.ToString());
 
          if (instance.DownloadTime.Equals(DateTime.MinValue))
          {
-            XMLOps.setXmlNode(xmlData, "UnitInfo/DownloadTime", "Unknown");
+            XmlOps.SetXmlNode(xmlData, "UnitInfo/DownloadTime", "Unknown");
          }
          else
          {
             DateTime downloadTime = instance.DownloadTime;
             // TODO: When localizing use ToString("format", CultureInfo.CurrentCulture) instead.
-            XMLOps.setXmlNode(xmlData, "UnitInfo/DownloadTime", String.Format(CultureInfo.InvariantCulture, "{0} at {1}", 
+            XmlOps.SetXmlNode(xmlData, "UnitInfo/DownloadTime", String.Format(CultureInfo.InvariantCulture, "{0} at {1}", 
                downloadTime.ToString("D", CultureInfo.InvariantCulture), downloadTime.ToString("h:mm:ss tt", CultureInfo.InvariantCulture)));
          }
 
          if (instance.ETA.Equals(TimeSpan.Zero))
          {
-            XMLOps.setXmlNode(xmlData, "UnitInfo/ExpectedCompletionDate", "Unknown");
+            XmlOps.SetXmlNode(xmlData, "UnitInfo/ExpectedCompletionDate", "Unknown");
          }
          else
          {
             DateTime completeTime = DateTime.Now.Add(instance.ETA);
             // TODO: When localizing use ToString("format", CultureInfo.CurrentCulture) instead.
-            XMLOps.setXmlNode(xmlData, "UnitInfo/ExpectedCompletionDate", String.Format(CultureInfo.InvariantCulture, "{0} at {1}",
+            XmlOps.SetXmlNode(xmlData, "UnitInfo/ExpectedCompletionDate", String.Format(CultureInfo.InvariantCulture, "{0} at {1}",
                completeTime.ToString("D", CultureInfo.InvariantCulture), completeTime.ToString("h:mm:ss tt", CultureInfo.InvariantCulture)));
          }
 
@@ -420,18 +420,18 @@ namespace HFM.Instances
          //    </Protein>
 
          IProtein p = instance.CurrentProtein;
-         XMLOps.setXmlNode(xmlData, "Protein/ProjectNumber", p.ProjectNumber.ToString());
-         XMLOps.setXmlNode(xmlData, "Protein/ServerIP", p.ServerIP);
-         XMLOps.setXmlNode(xmlData, "Protein/WorkUnit", p.WorkUnitName);
-         XMLOps.setXmlNode(xmlData, "Protein/NumAtoms", p.NumAtoms.ToString());
-         XMLOps.setXmlNode(xmlData, "Protein/PreferredDays", p.PreferredDays.ToString());
-         XMLOps.setXmlNode(xmlData, "Protein/MaxDays", p.MaxDays.ToString());
-         XMLOps.setXmlNode(xmlData, "Protein/Credit", p.Credit.ToString());
-         XMLOps.setXmlNode(xmlData, "Protein/KFactor", p.KFactor.ToString());
-         XMLOps.setXmlNode(xmlData, "Protein/Frames", p.Frames.ToString());
-         XMLOps.setXmlNode(xmlData, "Protein/Core", p.Core);
-         XMLOps.setXmlNode(xmlData, "Protein/Description", p.Description);
-         XMLOps.setXmlNode(xmlData, "Protein/Contact", p.Contact);
+         XmlOps.SetXmlNode(xmlData, "Protein/ProjectNumber", p.ProjectNumber.ToString());
+         XmlOps.SetXmlNode(xmlData, "Protein/ServerIP", p.ServerIP);
+         XmlOps.SetXmlNode(xmlData, "Protein/WorkUnit", p.WorkUnitName);
+         XmlOps.SetXmlNode(xmlData, "Protein/NumAtoms", p.NumAtoms.ToString());
+         XmlOps.SetXmlNode(xmlData, "Protein/PreferredDays", p.PreferredDays.ToString());
+         XmlOps.SetXmlNode(xmlData, "Protein/MaxDays", p.MaxDays.ToString());
+         XmlOps.SetXmlNode(xmlData, "Protein/Credit", p.Credit.ToString());
+         XmlOps.SetXmlNode(xmlData, "Protein/KFactor", p.KFactor.ToString());
+         XmlOps.SetXmlNode(xmlData, "Protein/Frames", p.Frames.ToString());
+         XmlOps.SetXmlNode(xmlData, "Protein/Core", p.Core);
+         XmlOps.SetXmlNode(xmlData, "Protein/Description", p.Description);
+         XmlOps.SetXmlNode(xmlData, "Protein/Contact", p.Contact);
 
          var sb = new StringBuilder();
          // Issue 201 - Web Generation Fails when a Client with no CurrentLogLines is encountered.
@@ -445,31 +445,31 @@ namespace HFM.Instances
             }
          }
 
-         XMLOps.setXmlNode(xmlData, "UnitLog/Text", sb.ToString());
+         XmlOps.SetXmlNode(xmlData, "UnitLog/Text", sb.ToString());
          // Issue 79 - External Instances don't have full FAHlog.txt files available
          if (instance.ExternalInstanceName == null &&
              _prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog))
          {
-            XMLOps.setXmlNode(xmlData, "UnitLog/FullLogFile", instance.CachedFahLogName);
+            XmlOps.SetXmlNode(xmlData, "UnitLog/FullLogFile", instance.CachedFahLogName);
          }
          else
          {
-            XMLOps.setXmlNode(xmlData, "UnitLog/FullLogFile", String.Empty);
+            XmlOps.SetXmlNode(xmlData, "UnitLog/FullLogFile", String.Empty);
          }
 
          //    <LastUpdatedDate>10 August 2006</LastUpdatedDate>
          //    <LastUpdatedTime>9:25:23 pm</LastUpdatedTime>
 
-         XMLOps.setXmlNode(xmlData, "LastUpdatedDate", DateTime.Now.ToLongDateString());
+         XmlOps.SetXmlNode(xmlData, "LastUpdatedDate", DateTime.Now.ToLongDateString());
          // TODO: When localizing use ToString("h:mm:ss tt zzz", CultureInfo.CurrentCulture) instead.
-         XMLOps.setXmlNode(xmlData, "LastUpdatedTime", DateTime.Now.ToString("h:mm:ss tt zzz", CultureInfo.InvariantCulture));
+         XmlOps.SetXmlNode(xmlData, "LastUpdatedTime", DateTime.Now.ToString("h:mm:ss tt zzz", CultureInfo.InvariantCulture));
 
          //    <LastRetrievedDate>10 August 2006</LastRetrievedDate>
          //    <LastRetrievedTime>9:25:23 pm</LastRetrievedTime>
 
-         XMLOps.setXmlNode(xmlData, "LastRetrievedDate", instance.LastRetrievalTime.ToLongDateString());
+         XmlOps.SetXmlNode(xmlData, "LastRetrievedDate", instance.LastRetrievalTime.ToLongDateString());
          // TODO: When localizing use ToString("h:mm:ss tt zzz", CultureInfo.CurrentCulture) instead.
-         XMLOps.setXmlNode(xmlData, "LastRetrievedTime", instance.LastRetrievalTime.ToString("h:mm:ss tt zzz", CultureInfo.InvariantCulture));
+         XmlOps.SetXmlNode(xmlData, "LastRetrievedTime", instance.LastRetrievalTime.ToString("h:mm:ss tt zzz", CultureInfo.InvariantCulture));
 
          return xmlDoc;
       }
@@ -487,57 +487,57 @@ namespace HFM.Instances
             xmlFrag.Load(Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.XmlFolderName), "SummaryFrag.xml"));
             XmlElement xmlData = xmlFrag.DocumentElement;
 
-            XMLOps.setXmlNode(xmlData, "Status", instance.Status.ToString());
-            XMLOps.setXmlNode(xmlData, "StatusColor", PlatformOps.GetStatusHtmlColor(instance.Status));
-            XMLOps.setXmlNode(xmlData, "StatusFontColor", PlatformOps.GetStatusHtmlFontColor(instance.Status));
-            XMLOps.setXmlNode(xmlData, "PercentComplete", instance.PercentComplete.ToString());
-            XMLOps.setXmlNode(xmlData, "Name", instance.Name);
-            XMLOps.setXmlNode(xmlData, "UserIDDuplicate", instance.UserIdIsDuplicate.ToString());
-            XMLOps.setXmlNode(xmlData, "ClientType", instance.TypeOfClient.ToString());
-            XMLOps.setXmlNode(xmlData, "ClientVersion", instance.ClientVersion); // Issue 193
-            XMLOps.setXmlNode(xmlData, "TPF", instance.TPF.ToString());
-            XMLOps.setXmlNode(xmlData, "PPD", String.Format("{0:" + _prefs.PpdFormatString + "}", instance.PPD));
-            XMLOps.setXmlNode(xmlData, "UPD", String.Format("{0:0.00}", instance.UPD));
-            XMLOps.setXmlNode(xmlData, "MHz", instance.MHz.ToString());
-            XMLOps.setXmlNode(xmlData, "PPDMHz", instance.PPD_MHz.ToString());
-            XMLOps.setXmlNode(xmlData, "ETA", instance.ETA.ToString());
+            XmlOps.SetXmlNode(xmlData, "Status", instance.Status.ToString());
+            XmlOps.SetXmlNode(xmlData, "StatusColor", PlatformOps.GetStatusHtmlColor(instance.Status));
+            XmlOps.SetXmlNode(xmlData, "StatusFontColor", PlatformOps.GetStatusHtmlFontColor(instance.Status));
+            XmlOps.SetXmlNode(xmlData, "PercentComplete", instance.PercentComplete.ToString());
+            XmlOps.SetXmlNode(xmlData, "Name", instance.Name);
+            XmlOps.SetXmlNode(xmlData, "UserIDDuplicate", instance.UserIdIsDuplicate.ToString());
+            XmlOps.SetXmlNode(xmlData, "ClientType", instance.TypeOfClient.ToString());
+            XmlOps.SetXmlNode(xmlData, "ClientVersion", instance.ClientVersion); // Issue 193
+            XmlOps.SetXmlNode(xmlData, "TPF", instance.TPF.ToString());
+            XmlOps.SetXmlNode(xmlData, "PPD", String.Format("{0:" + _prefs.PpdFormatString + "}", instance.PPD));
+            XmlOps.SetXmlNode(xmlData, "UPD", String.Format("{0:0.00}", instance.UPD));
+            XmlOps.SetXmlNode(xmlData, "MHz", instance.MHz.ToString());
+            XmlOps.SetXmlNode(xmlData, "PPDMHz", instance.PPD_MHz.ToString());
+            XmlOps.SetXmlNode(xmlData, "ETA", instance.ETA.ToString());
             if (instance.EtaDate.Equals(DateTime.MinValue))
             {
-               XMLOps.setXmlNode(xmlData, "ETADate", "Unknown");
+               XmlOps.SetXmlNode(xmlData, "ETADate", "Unknown");
             }
             else
             {
-               XMLOps.setXmlNode(xmlData, "ETADate", String.Format("{0} {1}", instance.EtaDate.ToShortDateString(), instance.EtaDate.ToShortTimeString()));
+               XmlOps.SetXmlNode(xmlData, "ETADate", String.Format("{0} {1}", instance.EtaDate.ToShortDateString(), instance.EtaDate.ToShortTimeString()));
             }             
-            XMLOps.setXmlNode(xmlData, "ShowETADate", etaDate.ToString());
-            XMLOps.setXmlNode(xmlData, "Core", instance.CoreName);
-            XMLOps.setXmlNode(xmlData, "CoreVersion", instance.CoreVersion);
-            XMLOps.setXmlNode(xmlData, "CoreID", instance.CoreID); // Issue 193
-            XMLOps.setXmlNode(xmlData, "ProjectRunCloneGen", instance.ProjectRunCloneGen);
-            XMLOps.setXmlNode(xmlData, "ProjectDuplicate", instance.ProjectIsDuplicate.ToString());
-            XMLOps.setXmlNode(xmlData, "Credit", String.Format("{0:0}", instance.Credit));
-            XMLOps.setXmlNode(xmlData, "Completed", instance.TotalRunCompletedUnits.ToString());
-            XMLOps.setXmlNode(xmlData, "Failed", instance.TotalRunFailedUnits.ToString());
-            XMLOps.setXmlNode(xmlData, "TotalCompleted", instance.TotalClientCompletedUnits.ToString());
-            XMLOps.setXmlNode(xmlData, "CompletedCountDisplay", completedCountDisplayType.ToString());
-            XMLOps.setXmlNode(xmlData, "Username", instance.Username);
-            XMLOps.setXmlNode(xmlData, "UsernameMatch", instance.UsernameOk.ToString()); // Issue 51
-            XMLOps.setXmlNode(xmlData, "ShowVersions", showVersions.ToString()); // Issue 193
+            XmlOps.SetXmlNode(xmlData, "ShowETADate", etaDate.ToString());
+            XmlOps.SetXmlNode(xmlData, "Core", instance.CoreName);
+            XmlOps.SetXmlNode(xmlData, "CoreVersion", instance.CoreVersion);
+            XmlOps.SetXmlNode(xmlData, "CoreID", instance.CoreID); // Issue 193
+            XmlOps.SetXmlNode(xmlData, "ProjectRunCloneGen", instance.ProjectRunCloneGen);
+            XmlOps.SetXmlNode(xmlData, "ProjectDuplicate", instance.ProjectIsDuplicate.ToString());
+            XmlOps.SetXmlNode(xmlData, "Credit", String.Format("{0:0}", instance.Credit));
+            XmlOps.SetXmlNode(xmlData, "Completed", instance.TotalRunCompletedUnits.ToString());
+            XmlOps.SetXmlNode(xmlData, "Failed", instance.TotalRunFailedUnits.ToString());
+            XmlOps.SetXmlNode(xmlData, "TotalCompleted", instance.TotalClientCompletedUnits.ToString());
+            XmlOps.SetXmlNode(xmlData, "CompletedCountDisplay", completedCountDisplayType.ToString());
+            XmlOps.SetXmlNode(xmlData, "Username", instance.Username);
+            XmlOps.SetXmlNode(xmlData, "UsernameMatch", instance.UsernameOk.ToString()); // Issue 51
+            XmlOps.SetXmlNode(xmlData, "ShowVersions", showVersions.ToString()); // Issue 193
             if (instance.DownloadTime.Equals(DateTime.MinValue))
             {
-               XMLOps.setXmlNode(xmlData, "DownloadTime", "Unknown");
+               XmlOps.SetXmlNode(xmlData, "DownloadTime", "Unknown");
             }
             else
             {
-               XMLOps.setXmlNode(xmlData, "DownloadTime", String.Format("{0} {1}", instance.DownloadTime.ToShortDateString(), instance.DownloadTime.ToShortTimeString()));
+               XmlOps.SetXmlNode(xmlData, "DownloadTime", String.Format("{0} {1}", instance.DownloadTime.ToShortDateString(), instance.DownloadTime.ToShortTimeString()));
             }
             if (instance.PreferredDeadline.Equals(DateTime.MinValue))
             {
-               XMLOps.setXmlNode(xmlData, "Deadline", "Unknown");
+               XmlOps.SetXmlNode(xmlData, "Deadline", "Unknown");
             }
             else
             {
-               XMLOps.setXmlNode(xmlData, "Deadline", String.Format("{0} {1}", instance.PreferredDeadline.ToShortDateString(), instance.PreferredDeadline.ToShortTimeString()));
+               XmlOps.SetXmlNode(xmlData, "Deadline", String.Format("{0} {1}", instance.PreferredDeadline.ToShortDateString(), instance.PreferredDeadline.ToShortTimeString()));
             }
 
             XmlNode xImpNode = xmlDoc.ImportNode(xmlFrag.ChildNodes[0], true);
@@ -553,38 +553,38 @@ namespace HFM.Instances
          xmlDoc.Load(Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.XmlFolderName), "Overview.xml"));
          XmlElement xmlData = xmlDoc.DocumentElement;
 
-         XMLOps.setXmlNode(xmlData, "HFMVersion", PlatformOps.ShortFormattedApplicationVersionWithRevision);
-         XMLOps.setXmlNode(xmlData, "TotalHosts", totals.TotalClients.ToString());
-         XMLOps.setXmlNode(xmlData, "GoodHosts", totals.WorkingClients.ToString());
-         XMLOps.setXmlNode(xmlData, "BadHosts", totals.NonWorkingClients.ToString());
+         XmlOps.SetXmlNode(xmlData, "HFMVersion", PlatformOps.ShortFormattedApplicationVersionWithRevision);
+         XmlOps.SetXmlNode(xmlData, "TotalHosts", totals.TotalClients.ToString());
+         XmlOps.SetXmlNode(xmlData, "GoodHosts", totals.WorkingClients.ToString());
+         XmlOps.SetXmlNode(xmlData, "BadHosts", totals.NonWorkingClients.ToString());
 
          string ppdFormatString = _prefs.PpdFormatString;
-         XMLOps.setXmlNode(xmlData, "EstPPD", String.Format("{0:" + ppdFormatString + "}", totals.PPD));
-         XMLOps.setXmlNode(xmlData, "EstPPW", String.Format("{0:" + ppdFormatString + "}", totals.PPD * 7));
-         XMLOps.setXmlNode(xmlData, "EstUPD", String.Format("{0:" + ppdFormatString + "}", totals.UPD));
-         XMLOps.setXmlNode(xmlData, "EstUPW", String.Format("{0:" + ppdFormatString + "}", totals.UPD * 7));
+         XmlOps.SetXmlNode(xmlData, "EstPPD", String.Format("{0:" + ppdFormatString + "}", totals.PPD));
+         XmlOps.SetXmlNode(xmlData, "EstPPW", String.Format("{0:" + ppdFormatString + "}", totals.PPD * 7));
+         XmlOps.SetXmlNode(xmlData, "EstUPD", String.Format("{0:" + ppdFormatString + "}", totals.UPD));
+         XmlOps.SetXmlNode(xmlData, "EstUPW", String.Format("{0:" + ppdFormatString + "}", totals.UPD * 7));
 
          if (totals.WorkingClients > 0)
          {
-            XMLOps.setXmlNode(xmlData, "AvEstPPD", String.Format("{0:" + ppdFormatString + "}", totals.PPD / totals.WorkingClients));
-            XMLOps.setXmlNode(xmlData, "AvEstPPW", String.Format("{0:" + ppdFormatString + "}", totals.PPD * 7 / totals.WorkingClients));
-            XMLOps.setXmlNode(xmlData, "AvEstUPD", String.Format("{0:" + ppdFormatString + "}", totals.UPD / totals.WorkingClients));
-            XMLOps.setXmlNode(xmlData, "AvEstUPW", String.Format("{0:" + ppdFormatString + "}", totals.UPD * 7 / totals.WorkingClients));
+            XmlOps.SetXmlNode(xmlData, "AvEstPPD", String.Format("{0:" + ppdFormatString + "}", totals.PPD / totals.WorkingClients));
+            XmlOps.SetXmlNode(xmlData, "AvEstPPW", String.Format("{0:" + ppdFormatString + "}", totals.PPD * 7 / totals.WorkingClients));
+            XmlOps.SetXmlNode(xmlData, "AvEstUPD", String.Format("{0:" + ppdFormatString + "}", totals.UPD / totals.WorkingClients));
+            XmlOps.SetXmlNode(xmlData, "AvEstUPW", String.Format("{0:" + ppdFormatString + "}", totals.UPD * 7 / totals.WorkingClients));
          }
          else
          {
-            XMLOps.setXmlNode(xmlData, "AvEstPPD", "0");
-            XMLOps.setXmlNode(xmlData, "AvEstPPW", "0");
-            XMLOps.setXmlNode(xmlData, "AvEstUPD", "0");
-            XMLOps.setXmlNode(xmlData, "AvEstUPW", "0");
+            XmlOps.SetXmlNode(xmlData, "AvEstPPD", "0");
+            XmlOps.SetXmlNode(xmlData, "AvEstPPW", "0");
+            XmlOps.SetXmlNode(xmlData, "AvEstUPD", "0");
+            XmlOps.SetXmlNode(xmlData, "AvEstUPW", "0");
          }
 
-         XMLOps.setXmlNode(xmlData, "Completed", totals.TotalRunCompletedUnits.ToString());
-         XMLOps.setXmlNode(xmlData, "Failed", totals.TotalRunFailedUnits.ToString());
-         XMLOps.setXmlNode(xmlData, "TotalCompleted", totals.TotalClientCompletedUnits.ToString());
-         XMLOps.setXmlNode(xmlData, "LastUpdatedDate", DateTime.Now.ToLongDateString());
+         XmlOps.SetXmlNode(xmlData, "Completed", totals.TotalRunCompletedUnits.ToString());
+         XmlOps.SetXmlNode(xmlData, "Failed", totals.TotalRunFailedUnits.ToString());
+         XmlOps.SetXmlNode(xmlData, "TotalCompleted", totals.TotalClientCompletedUnits.ToString());
+         XmlOps.SetXmlNode(xmlData, "LastUpdatedDate", DateTime.Now.ToLongDateString());
          // TODO: When localizing use ToString("h:mm:ss tt zzz", CultureInfo.CurrentCulture) instead.
-         XMLOps.setXmlNode(xmlData, "LastUpdatedTime", DateTime.Now.ToString("h:mm:ss tt zzz", CultureInfo.InvariantCulture));
+         XmlOps.SetXmlNode(xmlData, "LastUpdatedTime", DateTime.Now.ToString("h:mm:ss tt zzz", CultureInfo.InvariantCulture));
 
          return xmlDoc;
       }
