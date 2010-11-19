@@ -85,14 +85,8 @@ namespace HFM.Framework
       /// Get List of Benchmarks for the given BenchmarkClient
       /// </summary>
       /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
-      List<IInstanceProteinBenchmark> GetBenchmarks(BenchmarkClient client);
-      
-      /// <summary>
-      /// Get List of Benchmarks for the given BenchmarkClient
-      /// </summary>
-      /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
       /// <param name="projectID">Project Number</param>
-      List<IInstanceProteinBenchmark> GetBenchmarks(BenchmarkClient client, int projectID);
+      List<ProteinBenchmark> GetBenchmarks(BenchmarkClient client, int projectID);
 
       /// <summary>
       /// Update the given BenchmarkClient benchmarks with the new Owning Instance Name

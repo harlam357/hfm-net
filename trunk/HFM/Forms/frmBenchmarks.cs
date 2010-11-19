@@ -106,13 +106,13 @@ namespace HFM.Forms
 
          UpdateBenchmarkText(lines);
 
-         List<IInstanceProteinBenchmark> list = _benchmarkContainer.GetBenchmarks(_currentBenchmarkClient, projectID);
-         list.Sort(delegate(IInstanceProteinBenchmark benchmark1, IInstanceProteinBenchmark benchmark2)
+         List<ProteinBenchmark> list = _benchmarkContainer.GetBenchmarks(_currentBenchmarkClient, projectID);
+         list.Sort(delegate(ProteinBenchmark benchmark1, ProteinBenchmark benchmark2)
          {
             return benchmark1.OwningInstanceName.CompareTo(benchmark2.OwningInstanceName);
          });
 
-         foreach (InstanceProteinBenchmark benchmark in list)
+         foreach (ProteinBenchmark benchmark in list)
          {
             IUnitInfoLogic unit = null;
             bool valuesOk = false;
@@ -137,7 +137,7 @@ namespace HFM.Forms
       /// <param name="unitInfo">Client Instance UnitInfo (null for unavailable)</param>
       /// <param name="ppdFormatString">PPD Format String</param>
       /// <param name="productionValuesOk">Client Instance Production Values Flag</param>
-      private IEnumerable<string> ToMultiLineString(IInstanceProteinBenchmark benchmark, IUnitInfoLogic unitInfo, string ppdFormatString, bool productionValuesOk)
+      private IEnumerable<string> ToMultiLineString(ProteinBenchmark benchmark, IUnitInfoLogic unitInfo, string ppdFormatString, bool productionValuesOk)
       {
          var output = new List<string>(12);
 
@@ -151,9 +151,9 @@ namespace HFM.Forms
             output.Add(String.Format(" Number of Frames Observed: {0}", benchmark.FrameTimes.Count));
             output.Add(String.Empty);
             output.Add(String.Format(" Min. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-               benchmark.MinimumFrameTime, benchmark.MinimumFrameTimePPD));
+               benchmark.MinimumFrameTime, GetPPD(benchmark.MinimumFrameTime, protein)));
             output.Add(String.Format(" Avg. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-               benchmark.AverageFrameTime, benchmark.AverageFrameTimePPD));
+               benchmark.AverageFrameTime, GetPPD(benchmark.AverageFrameTime, protein)));
 
             if (unitInfo != null && unitInfo.UnitInfoData.ProjectID.Equals(protein.ProjectNumber) &&
                                     productionValuesOk)
@@ -178,6 +178,23 @@ namespace HFM.Forms
 
          return output.ToArray();
       } 
+
+      private double GetPPD(TimeSpan frameTime, IProtein protein)
+      {
+         if (protein != null)
+         {
+            // Issue 125 & 129
+            if (_prefs.GetPreference<bool>(Preference.CalculateBonus))
+            {
+               TimeSpan finishTime = TimeSpan.FromMilliseconds(frameTime.TotalMilliseconds*protein.Frames);
+               return protein.GetPPD(frameTime, finishTime);
+            }
+
+            return protein.GetPPD(frameTime);
+         }
+
+         return 0;
+      }
 
       private void listBox1_MouseDown(object sender, MouseEventArgs e)
       {
@@ -459,8 +476,8 @@ namespace HFM.Forms
       /// <param name="benchmarks">Benchmarks Collection to Plot</param>
       /// <param name="graphColors">Graph Colors List</param>
       /// <param name="decimalPlaces">PPD Decimal Places</param>
-      private static void CreatePpdGraph(ZedGraphControl zg, string[] projectInfo, IEnumerable<IInstanceProteinBenchmark> benchmarks, 
-                                         IList<Color> graphColors, int decimalPlaces)
+      private void CreatePpdGraph(ZedGraphControl zg, string[] projectInfo, IEnumerable<ProteinBenchmark> benchmarks, 
+                                  IList<Color> graphColors, int decimalPlaces)
       {
          Debug.Assert(zg != null);
          
@@ -487,16 +504,21 @@ namespace HFM.Forms
 
             // Create the bars for each benchmark
             int i = 0;
-            foreach (InstanceProteinBenchmark benchmark in benchmarks)
+            foreach (ProteinBenchmark benchmark in benchmarks)
             {
-               if (benchmark.MinimumFrameTimePPD >= 1000 || benchmark.AverageFrameTimePPD >= 1000)
+               IProtein protein;
+               _proteinCollection.TryGetValue(benchmark.ProjectID, out protein);
+
+               double minimumFrameTimePPD = GetPPD(benchmark.MinimumFrameTime, protein);
+               double averageFrameTimePPD = GetPPD(benchmark.AverageFrameTime, protein);
+               if (minimumFrameTimePPD >= 1000 || averageFrameTimePPD >= 1000)
                {
                   inThousands = true;
                }
 
                double[] yPoints = new double[2];
-               yPoints[0] = Math.Round(benchmark.MinimumFrameTimePPD, decimalPlaces);
-               yPoints[1] = Math.Round(benchmark.AverageFrameTimePPD, decimalPlaces);
+               yPoints[0] = Math.Round(minimumFrameTimePPD, decimalPlaces);
+               yPoints[1] = Math.Round(averageFrameTimePPD, decimalPlaces);
 
                CreateBar(i, myPane, benchmark.OwningInstanceName, yPoints, graphColors);
                i++;
@@ -560,7 +582,7 @@ namespace HFM.Forms
       /// <param name="projectInfo">Project Info Array</param>
       /// <param name="benchmarks">Benchmarks Collection to Plot</param>
       /// <param name="graphColors">Graph Colors List</param>
-      private static void CreateFrameTimeGraph(ZedGraphControl zg, string[] projectInfo, IEnumerable<IInstanceProteinBenchmark> benchmarks,
+      private static void CreateFrameTimeGraph(ZedGraphControl zg, string[] projectInfo, IEnumerable<ProteinBenchmark> benchmarks,
                                                IList<Color> graphColors)
       {
          Debug.Assert(zg != null);
@@ -585,7 +607,7 @@ namespace HFM.Forms
 
             // Create the bars for each benchmark
             int i = 0;
-            foreach (InstanceProteinBenchmark benchmark in benchmarks)
+            foreach (ProteinBenchmark benchmark in benchmarks)
             {
                double[] yPoints = new double[2];
                yPoints[0] = benchmark.MinimumFrameTime.TotalSeconds;

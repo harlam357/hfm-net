@@ -146,10 +146,15 @@ namespace HFM.Instances
          // no progress has been made so stub out
          if (startingFrame > endingFrame) return;
 
-         IInstanceProteinBenchmark findBenchmark = FindBenchmark(unit);
+         ProteinBenchmark findBenchmark = FindBenchmark(unit);
          if (findBenchmark == null)
          {
-            var newBenchmark = new InstanceProteinBenchmark(unit.OwningInstanceName, unit.OwningInstancePath, unit.ProjectID);
+            var newBenchmark = new ProteinBenchmark
+                               {
+                                  OwningInstanceName = unit.OwningInstanceName,
+                                  OwningInstancePath = unit.OwningInstancePath,
+                                  ProjectID = unit.ProjectID
+                               };
 
             if (UpdateBenchmarkFrames(unit, startingFrame, endingFrame, newBenchmark))
             {
@@ -169,7 +174,7 @@ namespace HFM.Instances
       /// <param name="startingFrame">Starting Frame Index</param>
       /// <param name="endingFrame">Ending Frame Index</param>
       /// <param name="benchmark">The InstanceProteinBenchmark to Update</param>
-      private static bool UpdateBenchmarkFrames(IUnitInfo unit, int startingFrame, int endingFrame, IInstanceProteinBenchmark benchmark)
+      private static bool UpdateBenchmarkFrames(IUnitInfo unit, int startingFrame, int endingFrame, ProteinBenchmark benchmark)
       {
          bool result = false;
 
@@ -207,7 +212,7 @@ namespace HFM.Instances
       /// Find the Benchmark based on the Owner and Project info from the given UnitInfo
       /// </summary>
       /// <param name="unit">The UnitInfo containing the Owner and Project data</param>
-      private IInstanceProteinBenchmark FindBenchmark(IUnitInfo unit)
+      private ProteinBenchmark FindBenchmark(IUnitInfo unit)
       {
          return _collection.BenchmarkList.Find(benchmark => benchmark.OwningInstanceName == unit.OwningInstanceName &&
                                                             StringOps.PathsEqual(benchmark.OwningInstancePath, unit.OwningInstancePath) &&
@@ -275,8 +280,8 @@ namespace HFM.Instances
       /// <param name="projectId">Project Number</param>
       public void RefreshMinimumFrameTime(BenchmarkClient client, int projectId)
       {
-         IList<IInstanceProteinBenchmark> benchmarks = GetBenchmarks(client, projectId);
-         foreach (InstanceProteinBenchmark benchmark in benchmarks)
+         IList<ProteinBenchmark> benchmarks = GetBenchmarks(client, projectId);
+         foreach (ProteinBenchmark benchmark in benchmarks)
          {
             benchmark.RefreshBenchmarkMinimumFrameTime();
          }
@@ -347,7 +352,7 @@ namespace HFM.Instances
       /// Get List of Benchmarks for the given BenchmarkClient
       /// </summary>
       /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
-      public List<IInstanceProteinBenchmark> GetBenchmarks(BenchmarkClient client)
+      private IEnumerable<ProteinBenchmark> GetBenchmarks(BenchmarkClient client)
       {
          var list = _collection.BenchmarkList.FindAll(benchmark =>
                                                       {
@@ -357,8 +362,8 @@ namespace HFM.Instances
                                                          }
                                                          return benchmark.Client.Equals(client);
                                                       });
-         
-         return list.ConvertAll(benchmark => (IInstanceProteinBenchmark)benchmark);
+
+         return list;
       }
 
       /// <summary>
@@ -366,7 +371,7 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
       /// <param name="projectId">Project Number</param>
-      public List<IInstanceProteinBenchmark> GetBenchmarks(BenchmarkClient client, int projectId)
+      public List<ProteinBenchmark> GetBenchmarks(BenchmarkClient client, int projectId)
       {
          var list = _collection.BenchmarkList.FindAll(benchmark =>
                                                       {
@@ -381,7 +386,7 @@ namespace HFM.Instances
                                                          return false;
                                                       });
 
-         return list.ConvertAll(benchmark => (IInstanceProteinBenchmark)benchmark);
+         return list;
       }
 
       /// <summary>
@@ -391,8 +396,8 @@ namespace HFM.Instances
       /// <param name="newName">New Benchmark Owner Name</param>
       public void UpdateInstanceName(BenchmarkClient client, string newName)
       {
-         IList<IInstanceProteinBenchmark> benchmarks = GetBenchmarks(client);
-         foreach (InstanceProteinBenchmark benchmark in benchmarks)
+         IEnumerable<ProteinBenchmark> benchmarks = GetBenchmarks(client);
+         foreach (ProteinBenchmark benchmark in benchmarks)
          {
             benchmark.OwningInstanceName = newName;
          }
@@ -406,8 +411,8 @@ namespace HFM.Instances
       /// <param name="newPath">New Benchmark Owner Path</param>
       public void UpdateInstancePath(BenchmarkClient client, string newPath)
       {
-         IList<IInstanceProteinBenchmark> benchmarks = GetBenchmarks(client);
-         foreach (InstanceProteinBenchmark benchmark in benchmarks)
+         IEnumerable<ProteinBenchmark> benchmarks = GetBenchmarks(client);
+         foreach (ProteinBenchmark benchmark in benchmarks)
          {
             benchmark.OwningInstancePath = newPath;
          }

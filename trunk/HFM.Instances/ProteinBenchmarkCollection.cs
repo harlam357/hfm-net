@@ -17,11 +17,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
 using ProtoBuf;
+
+using HFM.Framework.DataTypes;
 
 namespace HFM.Instances
 {
@@ -29,13 +30,13 @@ namespace HFM.Instances
    public class ProteinBenchmarkCollection
    {
       #region Members
-      private readonly List<InstanceProteinBenchmark> _benchmarkList = new List<InstanceProteinBenchmark>();
+      private readonly List<ProteinBenchmark> _benchmarkList = new List<ProteinBenchmark>();
       /// <summary>
       /// Serialized Benchmark List
       /// </summary>
       [ProtoMember(1)]
       [XmlElement("Benchmarks")]
-      public List<InstanceProteinBenchmark> BenchmarkList
+      public List<ProteinBenchmark> BenchmarkList
       {
          get { return _benchmarkList; }
       }

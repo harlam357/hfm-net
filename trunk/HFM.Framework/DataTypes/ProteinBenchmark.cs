@@ -1,5 +1,5 @@
 /*
- * HFM.NET - Benchmark Data Class
+ * HFM.NET - Protein Benchmark Data Class
  * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -25,19 +25,16 @@ using System.Xml.Serialization;
 
 using ProtoBuf;
 
-using HFM.Framework;
-using HFM.Framework.DataTypes;
-
-namespace HFM.Instances
+namespace HFM.Framework.DataTypes
 {
    [ProtoContract]
-   public sealed class InstanceProteinBenchmark : IInstanceProteinBenchmark
+   public sealed class ProteinBenchmark : IOwnedByClientInstance
    {
       private const int DefaultMaxFrames = 300;
 
       private static readonly object FrameTimesListLock = new object();
    
-      #region Fields
+      #region Properties
       
       #region Owner Data Properties
 
@@ -80,39 +77,6 @@ namespace HFM.Instances
       }
 
       /// <summary>
-      /// Frame Times List
-      /// </summary>
-      [ProtoMember(5)]
-      public List<ProteinFrameTime> FrameTimes { get; set; }
-
-      #endregion
-
-      #region Properties
-      
-      /// <summary>
-      /// PPD based on Minimum Frame Time
-      /// </summary>
-      public double MinimumFrameTimePPD
-      {
-         get 
-         { 
-            if (Protein != null)
-            {
-               // Issue 125 & 129
-               if (InstanceProvider.GetInstance<IPreferenceSet>().GetPreference<bool>(Preference.CalculateBonus))
-               {
-                  TimeSpan finishTime = TimeSpan.FromMilliseconds(MinimumFrameTime.TotalMilliseconds * Protein.Frames);
-                  return Protein.GetPPD(MinimumFrameTime, finishTime);
-               }
-
-               return Protein.GetPPD(MinimumFrameTime);
-            }
-            
-            return 0;
-         }
-      }
-
-      /// <summary>
       /// Average Frame Time
       /// </summary>
       public TimeSpan AverageFrameTime
@@ -139,50 +103,10 @@ namespace HFM.Instances
       }
 
       /// <summary>
-      /// PPD based on Average Frame Time
+      /// Frame Times List
       /// </summary>
-      public double AverageFrameTimePPD
-      {
-         get
-         {
-            if (Protein != null)
-            {
-               // Issue 125 & 129
-               if (InstanceProvider.GetInstance<IPreferenceSet>().GetPreference<bool>(Preference.CalculateBonus))
-               {
-                  TimeSpan finishTime = TimeSpan.FromMilliseconds(AverageFrameTime.TotalMilliseconds * Protein.Frames);
-                  return Protein.GetPPD(AverageFrameTime, finishTime);
-               }
-
-               return Protein.GetPPD(AverageFrameTime);
-            }
-
-            return 0;
-         }
-      }
-      #endregion
-
-      #region Constructor
-      // ReSharper disable UnusedMember.Local
-      /// <summary>
-      /// Used by protobuf-net serializer
-      /// </summary>
-      private InstanceProteinBenchmark()
-      {
-         MinimumFrameTime = TimeSpan.Zero;
-         FrameTimes = new List<ProteinFrameTime>(DefaultMaxFrames);
-      }
-      // ReSharper restore UnusedMember.Local
-
-      public InstanceProteinBenchmark(string ownerName, string ownerPath, int projectID)
-      {
-         OwningInstanceName = ownerName;
-         OwningInstancePath = ownerPath;
-         ProjectID = projectID;
-         MinimumFrameTime = TimeSpan.Zero;
-         FrameTimes = new List<ProteinFrameTime>(DefaultMaxFrames);
-      } 
-      #endregion
+      [ProtoMember(5)]
+      public List<ProteinFrameTime> FrameTimes { get; set; }
 
       /// <summary>
       /// Benchmark Client Descriptor
@@ -191,22 +115,24 @@ namespace HFM.Instances
       {
          get { return new BenchmarkClient(OwningInstanceName, OwningInstancePath); }
       }
+      
+      #endregion
 
+      #region Constructor
+      
       /// <summary>
-      /// Benchmark Protein
+      /// Default Constructor
       /// </summary>
-      public IProtein Protein
+      public ProteinBenchmark()
       {
-         get
-         {
-            IProtein protein;
-            InstanceProvider.GetInstance<IProteinCollection>().TryGetValue(ProjectID, out protein);
-
-            return protein;
-         }
+         MinimumFrameTime = TimeSpan.Zero;
+         FrameTimes = new List<ProteinFrameTime>(DefaultMaxFrames);
       }
-
+      
+      #endregion
+      
       #region Implementation
+      
       /// <summary>
       /// Set Next Frame Time
       /// </summary>

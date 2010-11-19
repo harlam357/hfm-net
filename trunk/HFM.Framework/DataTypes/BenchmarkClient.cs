@@ -131,12 +131,12 @@ namespace HFM.Framework.DataTypes
       }
 
       ///<summary>
-      ///Determines whether the specified <see cref="T:HFM.Instances.BenchmarkClient"></see> is equal to the current <see cref="T:HFM.Instances.BenchmarkClient"></see>.
+      ///Determines whether the specified <see cref="T:HFM.Framework.DataTypes.BenchmarkClient"></see> is equal to the current <see cref="T:HFM.Framework.DataTypes.BenchmarkClient"></see>.
       ///</summary>
       ///<returns>
-      ///true if the specified <see cref="T:HFM.Instances.BenchmarkClient"></see> is equal to the current <see cref="T:HFM.Instances.BenchmarkClient"></see>; otherwise, false.
+      ///true if the specified <see cref="T:HFM.Framework.DataTypes.BenchmarkClient"></see> is equal to the current <see cref="T:HFM.Framework.DataTypes.BenchmarkClient"></see>; otherwise, false.
       ///</returns>
-      ///<param name="client">The <see cref="T:HFM.Instances.BenchmarkClient"></see> to compare with the current <see cref="T:HFM.Instances.BenchmarkClient"></see>.</param>
+      ///<param name="client">The <see cref="T:HFM.Framework.DataTypes.BenchmarkClient"></see> to compare with the current <see cref="T:HFM.Framework.DataTypes.BenchmarkClient"></see>.</param>
       public bool Equals(BenchmarkClient client)
       {
          if (client == null)

@@ -145,7 +145,13 @@ namespace HFM.Instances.Tests
          
          for (int i = 0; i < 10; i++)
          {
-            var benchmark = new InstanceProteinBenchmark("TestOwner", "TestPath", 100 + i);
+            var benchmark = new ProteinBenchmark
+                            {
+                               OwningInstanceName = "TestOwner",
+                               OwningInstancePath = "TestPath",
+                               ProjectID = 100 + i
+                            };
+            
             for (int j = 1; j < 6; j++)
             {
                benchmark.SetFrameTime(TimeSpan.FromMinutes(j));
@@ -160,7 +166,7 @@ namespace HFM.Instances.Tests
       {
          for (int i = 0; i < 10; i++)
          {
-            InstanceProteinBenchmark benchmark = collection.BenchmarkList[i];
+            ProteinBenchmark benchmark = collection.BenchmarkList[i];
             Assert.AreEqual("TestOwner", benchmark.OwningInstanceName);
             Assert.AreEqual("TestPath", benchmark.OwningInstancePath);
             Assert.AreEqual(100 + i, benchmark.ProjectID);

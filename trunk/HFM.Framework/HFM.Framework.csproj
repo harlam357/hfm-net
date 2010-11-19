@@ -78,6 +78,7 @@
     <Compile Include="DataTypes\ClientQueueEntry.cs" />
     <Compile Include="DataTypes\ClientRun.cs" />
     <Compile Include="DataTypes\Enumerations.cs" />
+    <Compile Include="DataTypes\ProteinBenchmark.cs" />
     <Compile Include="DataTypes\ProteinFrameTime.cs" />
     <Compile Include="DataTypes\InstanceTotals.cs" />
     <Compile Include="DataTypes\LogLine.cs" />
@@ -90,7 +91,6 @@
     <Compile Include="IClientInstanceSettings.cs" />
     <Compile Include="IDataAggregator.cs" />
     <Compile Include="IDisplayInstance.cs" />
-    <Compile Include="IInstanceProteinBenchmark.cs" />
     <Compile Include="IMessagesView.cs" />
     <Compile Include="InstanceProvider.cs" />
     <Compile Include="IOwnedByClientInstance.cs" />
