@@ -21,10 +21,10 @@ using System;
 
 using ProtoBuf;
 
-namespace HFM.Framework
+namespace HFM.Framework.DataTypes
 {
    [ProtoContract]
-   public class XmlStatsData
+   public class XmlStatsData : IEquatable<XmlStatsData>
    {
       public XmlStatsData()
       {

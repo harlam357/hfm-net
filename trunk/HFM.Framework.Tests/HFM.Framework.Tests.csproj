@@ -81,8 +81,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistryOpsTests.cs" />
     <Compile Include="StringOpsTests.cs" />
-    <Compile Include="XmlStatsDataContainerTests.cs" />
-    <Compile Include="XmlStatsDataContainerUpdateTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HFM.Framework\HFM.Framework.csproj">

@@ -86,6 +86,7 @@
     <Compile Include="DataTypes\Protein.cs" />
     <Compile Include="DataTypes\UnitFrame.cs" />
     <Compile Include="DataTypes\UnitInfo.cs" />
+    <Compile Include="DataTypes\XmlStatsData.cs" />
     <Compile Include="Enumerations.cs" />
     <Compile Include="HfmTrace.cs" />
     <Compile Include="IClientInstanceSettings.cs" />
@@ -98,14 +99,13 @@
     <Compile Include="IProteinBenchmarkContainer.cs" />
     <Compile Include="IProteinCollection.cs" />
     <Compile Include="IUnitInfoLogic.cs" />
+    <Compile Include="IXmlStatsDataContainer.cs" />
     <Compile Include="NetworkOps.cs" />
     <Compile Include="PlatformOps.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistryOps.cs" />
     <Compile Include="StringOps.cs" />
     <Compile Include="XMLOps.cs" />
-    <Compile Include="XmlStatsData.cs" />
-    <Compile Include="XmlStatsDataContainer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

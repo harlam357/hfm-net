@@ -81,6 +81,7 @@
     <Compile Include="UnitInfoDatabaseTests.cs" />
     <Compile Include="UnitInfoLogicTests.cs" />
     <Compile Include="UnitInfoTests.cs" />
+    <Compile Include="XmlStatsDataContainerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HFM.Framework\HFM.Framework.csproj">

@@ -1,5 +1,5 @@
 /*
- * HFM.NET - XML Stats Data Container Update Tests
+ * HFM.NET - XML Stats Data Container Tests
  * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -21,11 +21,59 @@ using System;
 
 using NUnit.Framework;
 
-namespace HFM.Framework.Tests
+using HFM.Framework.DataTypes;
+
+namespace HFM.Instances.Tests
 {
    [TestFixture]
-   public class UserStatsDataContainerTests
+   public class XmlStatsDataContainerTests
    {
+      XmlStatsData _data;
+
+      [SetUp]
+      public void Init()
+      {
+         _data = LoadTestData();
+         ValidateTestData(_data);
+      }
+
+      [Test]
+      public void ProtoBufSerializationTest()
+      {
+         XmlStatsDataContainer.Serialize(_data, "XmlStatsProtoBufTest.dat");
+
+         XmlStatsData data2 = XmlStatsDataContainer.Deserialize("XmlStatsProtoBufTest.dat");
+         ValidateTestData(data2);
+      }
+
+      [Test]
+      public void ProtoBufDeserializeFileNotFoundTest()
+      {
+         XmlStatsData testData = XmlStatsDataContainer.Deserialize("FileNotFound.dat");
+         Assert.IsNull(testData);
+      }
+
+      private static XmlStatsData LoadTestData()
+      {
+         var testData = new XmlStatsData();
+         testData.UserTwentyFourHourAvgerage = 36123;
+         testData.UserPointsToday = 5675;
+         testData.UserPointsWeek = 256176;
+         testData.UserPointsTotal = 11222333;
+         testData.UserWorkUnitsTotal = 50987;
+         
+         return testData;
+      }
+
+      private static void ValidateTestData(XmlStatsData data)
+      {
+         Assert.AreEqual(36123, data.UserTwentyFourHourAvgerage);
+         Assert.AreEqual(5675, data.UserPointsToday);
+         Assert.AreEqual(256176, data.UserPointsWeek);
+         Assert.AreEqual(11222333, data.UserPointsTotal);
+         Assert.AreEqual(50987, data.UserWorkUnitsTotal);
+      }
+
       [Test]
       public void TimeForNextUpdate()
       {
@@ -38,7 +86,7 @@ namespace HFM.Framework.Tests
       public void GetNextUpdateTime()
       {
          DateTime nowUtc = DateTime.UtcNow.Date;
-      
+
          #region Standard Time
          Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(3)),
                          XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(0)), false));
@@ -51,7 +99,7 @@ namespace HFM.Framework.Tests
 
          Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(6)),
                          XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(3)), false));
-                         
+
          Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(6)),
                          XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(4)), false));
 

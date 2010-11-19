@@ -23,37 +23,11 @@ using System.Globalization;
 using System.IO;
 using System.Xml;
 
-namespace HFM.Framework
+using HFM.Framework;
+using HFM.Framework.DataTypes;
+
+namespace HFM.Instances
 {
-   public interface IXmlStatsDataContainer
-   {
-      /// <summary>
-      /// User Stats Data
-      /// </summary>
-      XmlStatsData Data { get; }
-
-      /// <summary>
-      /// Is it Time for a Stats Update?
-      /// </summary>
-      bool TimeForUpdate();
-
-      /// <summary>
-      /// Get Overall User Data from EOC XML
-      /// </summary>
-      /// <param name="forceRefresh">Force Refresh or allow to check for next update time</param>
-      void GetEocXmlData(bool forceRefresh);
-
-      /// <summary>
-      /// Read Binary File
-      /// </summary>
-      void Read();
-
-      /// <summary>
-      /// Write Binary File
-      /// </summary>
-      void Write();
-   }
-
    public class XmlStatsDataContainer : IXmlStatsDataContainer
    {
       #region Constants
@@ -105,7 +79,7 @@ namespace HFM.Framework
       /// <summary>
       /// Is it Time for a Stats Update?
       /// </summary>
-      public static bool TimeForNextUpdate(DateTime lastUpdated, DateTime utcNow, bool isDaylightSavingTime)
+      internal static bool TimeForNextUpdate(DateTime lastUpdated, DateTime utcNow, bool isDaylightSavingTime)
       {
          // No Last Updated Value
          if (lastUpdated.Equals(DateTime.MinValue))
@@ -128,7 +102,7 @@ namespace HFM.Framework
          return false;
       }
 
-      public static DateTime GetNextUpdateTime(DateTime lastUpdated, bool isDaylightSavingTime)
+      internal static DateTime GetNextUpdateTime(DateTime lastUpdated, bool isDaylightSavingTime)
       {
          // What I really need to know is if it is Daylight Savings Time
          // in the Central Time Zone, not the local machines Time Zone.
