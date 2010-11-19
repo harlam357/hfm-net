@@ -91,7 +91,6 @@
     <Compile Include="IClientInstanceSettings.cs" />
     <Compile Include="IDataAggregator.cs" />
     <Compile Include="IDisplayInstance.cs" />
-    <Compile Include="IMessagesView.cs" />
     <Compile Include="InstanceProvider.cs" />
     <Compile Include="IOwnedByClientInstance.cs" />
     <Compile Include="IPreferenceSet.cs" />
@@ -99,7 +98,6 @@
     <Compile Include="IProteinBenchmarkContainer.cs" />
     <Compile Include="IProteinCollection.cs" />
     <Compile Include="IUnitInfoLogic.cs" />
-    <Compile Include="Metadata.cs" />
     <Compile Include="NetworkOps.cs" />
     <Compile Include="PlatformOps.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -25,6 +25,25 @@ using HFM.Framework;
 
 namespace HFM.Forms
 {
+   public interface IMessagesView
+   {
+      void AddMessage(string message);
+
+      void ScrollToEnd();
+
+      void SetManualStartPosition();
+
+      void SetLocation(int x, int y);
+
+      void SetSize(int width, int height);
+
+      void Show();
+
+      void Close();
+
+      bool Visible { get; set; }
+   }
+
    public partial class frmMessages : Classes.FormWrapper, IMessagesView
    {
       private readonly IPreferenceSet _prefs;

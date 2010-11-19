@@ -1,9 +1,6 @@
 ﻿/*
  * HFM.NET - Generic Metadata Class and Interface
  * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
- * 
- * Based on code by Bryan Watts
- * http://stackoverflow.com/questions/353126/c-multiple-generic-types-in-one-list/1351071
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,10 +16,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+ 
+/* 
+ * Based on code by Bryan Watts
+ * http://stackoverflow.com/questions/353126/c-multiple-generic-types-in-one-list/1351071
+ */
 
 using System;
 
-namespace HFM.Framework
+namespace HFM.Preferences
 {
    public interface IMetadata
    {
@@ -58,11 +60,6 @@ namespace HFM.Framework
          get { return Data; }
       }
 
-      private T _Data;
-      public T Data 
-      {
-         get { return _Data; }
-         set { _Data = value; }
-      }
+      public T Data { get; set; }
    }
 }
