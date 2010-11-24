@@ -24,10 +24,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 
-using HFM.Framework;
-using HFM.Framework.DataTypes;
 using HFM.Log;
 using HFM.Queue;
+using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.DataAggregator
 {
@@ -137,7 +137,7 @@ namespace HFM.DataAggregator
       /// </summary>
       public IList<IUnitInfo> AggregateData()
       {
-         _logReader = new LogReader(PlatformOps.GetDateTimeStyle());
+         _logReader = new LogReader(Default.DateTimeStyle);
          var logLines = _logReader.GetLogLines(FahLogFilePath);
          var clientRuns = _logReader.GetClientRuns(logLines);
 
@@ -509,11 +509,11 @@ namespace HFM.DataAggregator
          }
 
          /* FoldingID and Team from Last Client Run (Could have already been read through Queue) */
-         if (unit.FoldingID.Equals(Constants.FoldingIDDefault))
+         if (unit.FoldingID.Equals(Default.FoldingIDDefault))
          {
             unit.FoldingID = currentClientRun.FoldingID;
          }
-         if (unit.Team == Constants.TeamDefault)
+         if (unit.Team == Default.TeamDefault)
          {
             unit.Team = currentClientRun.Team;
          }

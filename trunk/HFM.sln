@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Plugins", "HFM.Plugins\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.DataAggregator", "HFM.DataAggregator\HFM.DataAggregator.csproj", "{83BF1B7A-72B4-486B-A248-9E97814F62ED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Framework.DataTypes", "HFM.Framework.DataTypes\HFM.Framework.DataTypes.csproj", "{B294C8E0-63AD-47CF-8DE5-CE44C046DF89}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -86,6 +88,12 @@ Global
 		{83BF1B7A-72B4-486B-A248-9E97814F62ED}.Release|Any CPU.Build.0 = Release|Any CPU
 		{83BF1B7A-72B4-486B-A248-9E97814F62ED}.ScriptedRelease|Any CPU.ActiveCfg = Release|Any CPU
 		{83BF1B7A-72B4-486B-A248-9E97814F62ED}.ScriptedRelease|Any CPU.Build.0 = Release|Any CPU
+		{B294C8E0-63AD-47CF-8DE5-CE44C046DF89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B294C8E0-63AD-47CF-8DE5-CE44C046DF89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B294C8E0-63AD-47CF-8DE5-CE44C046DF89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B294C8E0-63AD-47CF-8DE5-CE44C046DF89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B294C8E0-63AD-47CF-8DE5-CE44C046DF89}.ScriptedRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{B294C8E0-63AD-47CF-8DE5-CE44C046DF89}.ScriptedRelease|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

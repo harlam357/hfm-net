@@ -279,43 +279,6 @@ namespace HFM.Framework
          return true; 
       }
 
-      /// <summary>
-      /// Are two Client Instance Paths Equal?
-      /// </summary>
-      public static bool PathsEqual(string path1, string path2)
-      {
-         ICollection<string> path1Variations = GetPathVariations(path1);
-         ICollection<string> path2Variations = GetPathVariations(path2);
-
-         foreach (var variation1 in path1Variations)
-         {
-            foreach (var variation2 in path2Variations)
-            {
-               if (variation1.Equals(variation2))
-               {
-                  return true;
-               }
-            }
-         }
-
-         return false;
-      }
-      
-      private static ICollection<string> GetPathVariations(string path)
-      {
-         var pathVariations = new List<string>(2);
-         if (path.EndsWith("\\") || path.EndsWith("/"))
-         {
-            pathVariations.Add(path.ToUpperInvariant());
-         }
-         else
-         {
-            pathVariations.Add(String.Concat(path.ToUpperInvariant(), "\\"));
-            pathVariations.Add(String.Concat(path.ToUpperInvariant(), "/"));
-         }
-         return pathVariations;
-      }
-
       public static bool ValidateMinutes(int minutes)
       {
          if ((minutes > Constants.MaxMinutes) || (minutes < Constants.MinMinutes))

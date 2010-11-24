@@ -673,7 +673,7 @@ namespace HFM.Instances
             }
          }
          // the path changed
-         if (StringOps.PathsEqual(previousPath, instance.Settings.Path) == false)
+         if (Paths.Equal(previousPath, instance.Settings.Path) == false)
          {
             // Issue 79 - 9/28/10
             if (instance.Settings.ExternalInstance == false)

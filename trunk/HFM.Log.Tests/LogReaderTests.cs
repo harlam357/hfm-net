@@ -22,7 +22,6 @@ using System.IO;
 
 using NUnit.Framework;
 
-using HFM.Framework;
 using HFM.Framework.DataTypes;
 
 namespace HFM.Log.Tests
@@ -37,7 +36,7 @@ namespace HFM.Log.Tests
       [SetUp]
       public void Init()
       {
-         _reader = new LogReader(PlatformOps.GetDateTimeStyle());
+         _reader = new LogReader(Default.DateTimeStyle);
       }
       
       [Test, Category("SMP")]

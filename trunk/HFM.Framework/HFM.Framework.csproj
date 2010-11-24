@@ -73,27 +73,12 @@
     </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="CoverageExcludeAttribute.cs" />
-    <Compile Include="DataTypes\BenchmarkClient.cs" />
-    <Compile Include="DataTypes\ClientQueue.cs" />
-    <Compile Include="DataTypes\ClientQueueEntry.cs" />
-    <Compile Include="DataTypes\ClientRun.cs" />
-    <Compile Include="DataTypes\Enumerations.cs" />
-    <Compile Include="DataTypes\ProteinBenchmark.cs" />
-    <Compile Include="DataTypes\ProteinFrameTime.cs" />
-    <Compile Include="DataTypes\InstanceTotals.cs" />
-    <Compile Include="DataTypes\LogLine.cs" />
-    <Compile Include="DataTypes\ProjectInfo.cs" />
-    <Compile Include="DataTypes\Protein.cs" />
-    <Compile Include="DataTypes\UnitFrame.cs" />
-    <Compile Include="DataTypes\UnitInfo.cs" />
-    <Compile Include="DataTypes\XmlStatsData.cs" />
     <Compile Include="Enumerations.cs" />
     <Compile Include="HfmTrace.cs" />
     <Compile Include="IClientInstanceSettings.cs" />
     <Compile Include="IDataAggregator.cs" />
     <Compile Include="IDisplayInstance.cs" />
     <Compile Include="InstanceProvider.cs" />
-    <Compile Include="IOwnedByClientInstance.cs" />
     <Compile Include="IPreferenceSet.cs" />
     <Compile Include="IProjectSummaryDownloader.cs" />
     <Compile Include="IProteinBenchmarkContainer.cs" />
@@ -105,6 +90,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistryOps.cs" />
     <Compile Include="StringOps.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HFM.Framework.DataTypes\HFM.Framework.DataTypes.csproj">
+      <Project>{B294C8E0-63AD-47CF-8DE5-CE44C046DF89}</Project>
+      <Name>HFM.Framework.DataTypes</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

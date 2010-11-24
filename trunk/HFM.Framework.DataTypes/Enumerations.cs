@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Framework Enumerations
+ * HFM.NET - Framework.DataTypes Enumerations
  * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or

@@ -659,6 +659,8 @@ namespace HFM.Instances
          }
          else
          {
+            TimeSpan estTimeOfUnit;
+            
             // Issue 125
             if (_prefs.GetPreference<bool>(Preference.CalculateBonus))
             {
@@ -667,19 +669,33 @@ namespace HFM.Instances
                    _displayInstance.Status.Equals(ClientStatus.RunningNoFrameTimes))
                {
                   HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, _unitInfo.OwningInstanceName, "Calculate Bonus PPD - EFT by Frame Time.");
-                  CurrentProtein.GetPPD(TimePerFrame, EftByFrameTime, _unitInfo.OwningInstanceName);
+                  estTimeOfUnit = EftByFrameTime;
                }
                else
                {
                   HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, _unitInfo.OwningInstanceName, "Calculate Bonus PPD - EFT by Download Time.");
-                  CurrentProtein.GetPPD(TimePerFrame, EftByDownloadTime, _unitInfo.OwningInstanceName);
+                  estTimeOfUnit = EftByDownloadTime;
                }
             }
             else
             {
                HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, _unitInfo.OwningInstanceName, "Calculate Standard PPD.");
-               CurrentProtein.GetPPD(TimePerFrame, _unitInfo.OwningInstanceName);
+               estTimeOfUnit = TimeSpan.Zero;
             }
+
+            var messages = new List<string>(9);
+
+            messages.Add(string.Format(CultureInfo.CurrentCulture, "{0} ({1})", HfmTrace.FunctionName, _unitInfo.OwningInstanceName));
+            messages.Add(string.Format(CultureInfo.CurrentCulture, " - Frame Time ----- : {0}", TimePerFrame));
+            messages.Add(string.Format(CultureInfo.CurrentCulture, " - Credit --------- : {0}", CurrentProtein.Credit));
+            messages.Add(string.Format(CultureInfo.CurrentCulture, " - Base PPD ------- : {0}", CurrentProtein.GetPPD(TimePerFrame)));
+            messages.Add(string.Format(CultureInfo.CurrentCulture, " - KFactor -------- : {0}", CurrentProtein.KFactor));
+            messages.Add(string.Format(CultureInfo.CurrentCulture, " - Estimated Time - : {0}", estTimeOfUnit));
+            messages.Add(string.Format(CultureInfo.CurrentCulture, " - Preferred Time - : {0}", TimeSpan.FromDays(CurrentProtein.PreferredDays)));
+            messages.Add(string.Format(CultureInfo.CurrentCulture, " - Bonus Multiplier : {0}", CurrentProtein.GetBonusMultiplier(estTimeOfUnit)));
+            messages.Add(string.Format(CultureInfo.CurrentCulture, " - Bonus PPD ------ : {0}", CurrentProtein.GetPPD(TimePerFrame, estTimeOfUnit)));
+
+            HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, messages);
          }
       }
       

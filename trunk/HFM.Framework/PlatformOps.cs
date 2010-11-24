@@ -35,29 +35,6 @@ namespace HFM.Framework
       }
 
       /// <summary>
-      /// Get the DateTimeStyle for the given Client Instance.
-      /// </summary>
-      public static System.Globalization.DateTimeStyles GetDateTimeStyle()
-      {
-         System.Globalization.DateTimeStyles style;
-
-         if (IsRunningOnMono())
-         {
-            style = System.Globalization.DateTimeStyles.AssumeUniversal |
-                    System.Globalization.DateTimeStyles.AdjustToUniversal;
-         }
-         else
-         {
-            // set parse style to parse local
-            style = System.Globalization.DateTimeStyles.NoCurrentDateDefault |
-                    System.Globalization.DateTimeStyles.AssumeUniversal |
-                    System.Globalization.DateTimeStyles.AdjustToUniversal;
-         }
-
-         return style;
-      }
-      
-      /// <summary>
       /// Major.Minor.Build
       /// </summary>
       public static string ApplicationVersion

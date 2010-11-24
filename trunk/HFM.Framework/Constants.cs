@@ -59,9 +59,6 @@ namespace HFM.Framework
       /// </summary>
       public const int UnitInfoMax = 1048576; // 1 Megabyte
 
-      public const int MinDecimalPlaces = 0;
-      public const int MaxDecimalPlaces = 5;
-
       public const int MinMinutes = 1;
       public const int MaxMinutes = 180;
 
@@ -71,16 +68,11 @@ namespace HFM.Framework
       public const int MinutesDefault = 15;
       public const int ProxyPortDefault = 8080;
 
-      public const string UnassignedDescription = "Unassigned Description";
-
       // Default ID Constants
       public const string DefaultUserID = "";
       public const int DefaultMachineID = 0;
 
-      // Folding ID and Team Defaults
-      public const string FoldingIDDefault = "Unknown";
-      public const int TeamDefault = 0;
-      public const string CoreIDDefault = "Unknown";
+      
 
       // Log Filename Constants
       public const string LocalFahLog = "FAHlog.txt";

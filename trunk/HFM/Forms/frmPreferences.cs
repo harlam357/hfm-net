@@ -32,8 +32,9 @@ using System.Windows.Forms;
 
 using harlam357.Windows.Forms;
 
-using HFM.Framework;
 using HFM.Models;
+using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Forms
 {
@@ -92,8 +93,8 @@ namespace HFM.Forms
       
          InitializeComponent();
 
-         udDecimalPlaces.Minimum = Constants.MinDecimalPlaces;
-         udDecimalPlaces.Maximum = Constants.MaxDecimalPlaces;
+         udDecimalPlaces.Minimum = 0;
+         udDecimalPlaces.Maximum = Default.MaxDecimalPlaces;
 
          _validatingControls = new List<IValidatingControl>[tabControl1.TabCount];
          _propertyCollection = new PropertyDescriptorCollection[tabControl1.TabCount];

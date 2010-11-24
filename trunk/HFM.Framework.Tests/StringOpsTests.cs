@@ -284,17 +284,5 @@ namespace HFM.Framework.Tests
          catch (ArgumentException)
          { }
       }
-      
-      [Test]
-      public void PathsEqualTest()
-      {
-         Assert.IsTrue(StringOps.PathsEqual(@"c:\folder\path", @"C:\FOLDER\PATH\"));
-         Assert.IsFalse(StringOps.PathsEqual(@"c:\folder\path", @"D:\FOLDER\PATH\"));
-         Assert.IsFalse(StringOps.PathsEqual(@"c:\folder\path/", @"C:\FOLDER\PATH\"));
-         Assert.IsTrue(StringOps.PathsEqual(@"folder\path", @"FOLDER\PATH\"));
-         Assert.IsTrue(StringOps.PathsEqual(@"folder/path", @"FOLDER/PATH/"));
-         Assert.IsFalse(StringOps.PathsEqual(@"/folder/path", @"FOLDER/PATH/"));
-         Assert.IsTrue(StringOps.PathsEqual(@"/folder/path", @"/FOLDER/PATH/"));
-      }
    }
 }

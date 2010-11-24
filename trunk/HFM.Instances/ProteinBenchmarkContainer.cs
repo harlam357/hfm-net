@@ -215,7 +215,7 @@ namespace HFM.Instances
       private ProteinBenchmark FindBenchmark(IUnitInfo unit)
       {
          return _collection.BenchmarkList.Find(benchmark => benchmark.OwningInstanceName == unit.OwningInstanceName &&
-                                                            StringOps.PathsEqual(benchmark.OwningInstancePath, unit.OwningInstancePath) &&
+                                                            Paths.Equal(benchmark.OwningInstancePath, unit.OwningInstancePath) &&
                                                             benchmark.ProjectID == unit.ProjectID);
       }
 

@@ -526,7 +526,7 @@ namespace HFM.Instances
          get
          {
             // if these are the default assigned values, don't check otherwise and just return true
-            if (FoldingID == Constants.FoldingIDDefault && Team == Constants.TeamDefault)
+            if (FoldingID == Default.FoldingIDDefault && Team == Default.TeamDefault)
             {
                return true;
             }
@@ -585,7 +585,7 @@ namespace HFM.Instances
          // External Instances don't own anything local
          if (ExternalInstanceName == null &&
              value.OwningInstanceName.Equals(Settings.InstanceName) &&
-             StringOps.PathsEqual(value.OwningInstancePath, Settings.Path))
+             Paths.Equal(value.OwningInstancePath, Settings.Path))
          {
             return true;
          }
