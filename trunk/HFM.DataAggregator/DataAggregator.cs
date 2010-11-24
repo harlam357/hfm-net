@@ -33,7 +33,6 @@ namespace HFM.DataAggregator
 {
    public class DataAggregator : IDataAggregator
    {
-      private readonly QueueReader _queueReader;
       private LogReader _logReader;
       private LogInterpreter _logInterpreter;
 
@@ -76,9 +75,9 @@ namespace HFM.DataAggregator
       {
          get
          {
-            if (_queueReader.QueueReadOk)
+            if (_clientQueue != null)
             {
-               return (int) _queueReader.Queue.CurrentIndex;
+               return _clientQueue.CurrentIndex;
             }
 
             // default Unit Index if only parsing logs
@@ -125,11 +124,6 @@ namespace HFM.DataAggregator
          get { return _unitLogLines; }
       }
 
-      public DataAggregator()
-      {
-         _queueReader = new QueueReader();
-      }
-
       #region Aggregation Logic
       
       /// <summary>
@@ -152,10 +146,11 @@ namespace HFM.DataAggregator
 
          IList<IUnitInfo> parsedUnits;
          // Decision Time: If Queue Read fails parse from logs only
-         if (ReadQueueFile())
+         QueueData qData = ReadQueueFile();
+         if (qData != null)
          {
-            parsedUnits = GenerateUnitInfoDataFromQueue();
-            _clientQueue = BuildClientQueue();
+            parsedUnits = GenerateUnitInfoDataFromQueue(qData);
+            _clientQueue = BuildClientQueue(qData);
          }
          else
          {
@@ -172,10 +167,9 @@ namespace HFM.DataAggregator
          return parsedUnits;
       }
 
-      private ClientQueue BuildClientQueue()
+      private static ClientQueue BuildClientQueue(QueueData q)
       {
          var cq = new ClientQueue();
-         var q = _queueReader.Queue;
          cq.CurrentIndex = (int)q.CurrentIndex;
          cq.PerformanceFraction = q.PerformanceFraction;
          cq.PerformanceFractionUnitWeight = (int)q.PerformanceFractionUnitWeight;
@@ -194,7 +188,7 @@ namespace HFM.DataAggregator
       
       private static void PopulateClientQueueEntry(ClientQueueEntry cqe, QueueEntry qe)
       {
-         cqe.EntryStatus = qe.EntryStatus;
+         cqe.EntryStatus = (QueueEntryStatus)qe.EntryStatus;
          cqe.SpeedFactor = qe.SpeedFactor;
          cqe.UseCores = (int)qe.UseCores;
          cqe.BeginTimeUtc = qe.BeginTimeUtc;
@@ -220,10 +214,8 @@ namespace HFM.DataAggregator
       /// <summary>
       /// Read the queue.dat file
       /// </summary>
-      private bool ReadQueueFile()
+      private QueueData ReadQueueFile()
       {
-         bool success = false;
-
          // Make sure the queue file exists first.  Would like to avoid the exception overhead.
          if (File.Exists(QueueFilePath))
          {
@@ -231,16 +223,7 @@ namespace HFM.DataAggregator
             // if something goes wrong just catch and log
             try
             {
-               _queueReader.ReadQueue(QueueFilePath);
-               if (_queueReader.QueueReadOk)
-               {
-                  success = true;
-               }
-               else
-               {
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, 
-                     String.Format("{0} read failed.", _queueReader.QueueFilePath));
-               }
+               return QueueReader.ReadQueue(QueueFilePath);
             }
             catch (Exception ex)
             {
@@ -248,13 +231,7 @@ namespace HFM.DataAggregator
             }
          }
 
-         // If read is unsuccessful, clear the queue - Issue 171
-         if (success == false)
-         {
-            _queueReader.ClearQueue();
-         }
-
-         return success;
+         return null;
       }
 
       private IUnitInfo[] GenerateUnitInfoDataFromLogs()
@@ -282,7 +259,7 @@ namespace HFM.DataAggregator
          return parsedUnits;
       }
 
-      private IUnitInfo[] GenerateUnitInfoDataFromQueue()
+      private IUnitInfo[] GenerateUnitInfoDataFromQueue(QueueData q)
       {
          var parsedUnits = new IUnitInfo[10];
          _unitLogLines = new IList<LogLine>[10];
@@ -295,17 +272,17 @@ namespace HFM.DataAggregator
             FahLogUnitData fahLogUnitData = _logReader.GetFahLogDataFromLogLines(_unitLogLines[queueIndex]);
             UnitInfoLogData unitInfoLogData = null;
             // On the Current Queue Index
-            if (queueIndex == _queueReader.Queue.CurrentIndex)
+            if (queueIndex == q.CurrentIndex)
             {
                // Get the UnitInfo Log Data
                unitInfoLogData = GetUnitInfoLogData();
                _currentFahLogUnitData = fahLogUnitData;
             }
 
-            parsedUnits[queueIndex] = BuildUnitInfo(_queueReader.Queue.GetQueueEntry((uint)queueIndex), fahLogUnitData, unitInfoLogData);
+            parsedUnits[queueIndex] = BuildUnitInfo(q.GetQueueEntry((uint)queueIndex), fahLogUnitData, unitInfoLogData);
             if (parsedUnits[queueIndex] == null)
             {
-               if (queueIndex == _queueReader.Queue.CurrentIndex)
+               if (queueIndex == q.CurrentIndex)
                {
                   HfmTrace.WriteToHfmConsole(TraceLevel.Warning, InstanceName, String.Format(CultureInfo.CurrentCulture,
                      "Could not verify log section for current queue entry ({0}). Trying to parse with most recent log section.", queueIndex));
@@ -329,7 +306,7 @@ namespace HFM.DataAggregator
                      fahLogUnitData = new FahLogUnitData();
                      unitInfoLogData = new UnitInfoLogData();
                   }
-                  parsedUnits[queueIndex] = BuildUnitInfo(_queueReader.Queue.GetQueueEntry((uint)queueIndex), fahLogUnitData, unitInfoLogData, true);
+                  parsedUnits[queueIndex] = BuildUnitInfo(q.GetQueueEntry((uint)queueIndex), fahLogUnitData, unitInfoLogData, true);
                }
                else
                {
@@ -422,10 +399,13 @@ namespace HFM.DataAggregator
       #region Unit Population Methods
       private static void PopulateUnitInfoFromQueueEntry(QueueEntry entry, UnitInfo unit)
       {
-         if ((entry.EntryStatus.Equals(QueueEntryStatus.Unknown) ||
-              entry.EntryStatus.Equals(QueueEntryStatus.Empty) ||
-              entry.EntryStatus.Equals(QueueEntryStatus.Garbage) ||
-              entry.EntryStatus.Equals(QueueEntryStatus.Abandonded)) == false)
+         // convert to enum
+         var queueEntryStatus = (QueueEntryStatus)entry.EntryStatus;
+      
+         if ((queueEntryStatus.Equals(QueueEntryStatus.Unknown) ||
+              queueEntryStatus.Equals(QueueEntryStatus.Empty) ||
+              queueEntryStatus.Equals(QueueEntryStatus.Garbage) ||
+              queueEntryStatus.Equals(QueueEntryStatus.Abandonded)) == false)
          {
             /* Tag (Could be read here or through the unitinfo.txt file) */
             unit.ProteinTag = entry.WorkUnitTag;
@@ -437,8 +417,8 @@ namespace HFM.DataAggregator
             unit.DueTime = entry.DueTimeUtc;
 
             /* FinishedTime */
-            if (entry.EntryStatus.Equals(QueueEntryStatus.Finished) ||
-                entry.EntryStatus.Equals(QueueEntryStatus.ReadyForUpload))
+            if (queueEntryStatus.Equals(QueueEntryStatus.Finished) ||
+                queueEntryStatus.Equals(QueueEntryStatus.ReadyForUpload))
             {
                unit.FinishedTime = entry.EndTimeUtc;
             }

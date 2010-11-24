@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <FxCopProject Version="1.36" Name="HFM FxCop Project">
  <ProjectOptions>
   <SharedProject>True</SharedProject>
@@ -22,7 +22,9 @@
   <TargetFrameworkVersion>3.5</TargetFrameworkVersion>
  </ProjectOptions>
  <Targets>
+  <Target Name="$(ProjectDir)/HFM.NET/HFM.DataAggregator.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/HFM.NET/HFM.exe" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/HFM.NET/HFM.Framework.DataTypes.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/HFM.NET/HFM.Framework.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/HFM.NET/HFM.Instances.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/HFM.NET/HFM.Log.dll" Analyze="True" AnalyzeAllChildren="True" />

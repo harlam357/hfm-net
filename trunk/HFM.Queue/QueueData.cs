@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Queue Base Class
+ * HFM.NET - Queue Data Class
  * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -31,14 +31,14 @@ namespace HFM.Queue
    }
 
    [CLSCompliant(false)]
-   public class QueueBase
+   public class QueueData
    {
       #region Fields
    
       /// <summary>
       /// Queue Structure
       /// </summary>
-      private QueueData _q;
+      private Data _q;
       
       private readonly bool _dataPopulated;
       /// <summary>
@@ -65,16 +65,16 @@ namespace HFM.Queue
       /// <summary>
       /// Constructor (Clear Queue)
       /// </summary>
-      internal QueueBase()
+      internal QueueData()
       {
-         _q = new QueueData();
+         _q = new Data();
       }
 
       /// <summary>
       /// Constructor (Set Queue)
       /// </summary>
       /// <param name="q">Queue Structure</param>
-      internal QueueBase(QueueData q)
+      internal QueueData(Data q)
       {
          _q = q;
          _dataPopulated = true;

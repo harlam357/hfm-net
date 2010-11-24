@@ -24,10 +24,9 @@ using System.Runtime.InteropServices;
 namespace HFM.Queue
 {
    // ReSharper disable FieldCanBeMadeReadOnly.Local
-   [CLSCompliant(false)]
    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
    [SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
-   public struct QueueData
+   internal struct Data
    {
       /* 0000 Queue (client) version (v2.17 and above) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
@@ -163,9 +162,8 @@ namespace HFM.Queue
    // ReSharper restore FieldCanBeMadeReadOnly.Local
 
    // ReSharper disable FieldCanBeMadeReadOnly.Local
-   [CLSCompliant(false)]
    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-   public struct Entry
+   internal struct Entry
    {
       /*** 0 = Empty, Deleted, Finished, or Garbage 
        *   1 = Folding Now or Queued 
@@ -730,7 +728,7 @@ namespace HFM.Queue
    }
    // ReSharper restore FieldCanBeMadeReadOnly.Local
 
-   #region struct layout from qd.c (9/10/2009) (http://linuxminded.nl/?target=software-qd-tools.plc)
+   #region struct layout from qd.c (11/11/2010) (http://linuxminded.nl/?target=software-qd-tools.plc)
    //u32		version;	 /* 0000 Queue (client) version (v2.17 and above) */
    //u32		current;	 /* 0004 Current index number */
    //struct qs
@@ -762,13 +760,13 @@ namespace HFM.Queue
    //      }	g;			/* Genome@home data */
    //   }	wuid;		 /* 208 Work unit ID information */
    //   char	z224[36];
-   //   char	mid[4];		 /* 260 Machine ID (LE) */
+   //   char	mid[4];		 /* 260 Machine ID (LE or BE, was only LE before v5 work servers) */
    //   u32	svr2;		 /* 264 Server IP address */
    //   u32	port;		 /* 268 Server port number */
    //   char	type[64];	 /* 272 Work unit type */
    //   char	uname[64];	 /* 336 User Name */
    //   char	teamn[64];	 /* 400 Team Number */
-   //   char	uid[8];		 /* 464 Stored ID for unit (UserID + MachineID) (LE or BE, usually BE) */
+   //   char	uid[8];		 /* 464 Stored ID for unit (UserID + MachineID) (LE or BE, usually BE, always BE for v5 work servers) */
    //   char	bench[4];	 /* 472 Benchmark (as of v3.24) (LE) */
    //   char	m476[4];	 /* 476 Misc3b (unused as of v3.24) (LE); Benchmark (as of v5.00) (BE) */
    //   u32	cpu_type;	 /* 480 CPU type (LE or BE, sometimes 0) */
@@ -776,13 +774,16 @@ namespace HFM.Queue
    //   u32	cpu_spec;	 /* 488 CPU species (LE or BE, sometimes 0) */
    //   u32	os_spec;	 /* 492 OS species (LE or BE, sometimes 0) */
    //   u32	expire;		 /* 496 Allowed time to return (seconds) */
-   //   char	z500[8];
+   //   char	z500[4];
+   //   char    cltype[4];	 /* 504 Client type required (usually 0) (LE or BE) */
    //   char	aiflag[4];	 /* 508 Assignment info present flag (LE or BE) */
    //   char	aitime[4];	 /* 512 Assignment timestamp (LE or BE) */
    //   char	aidata[4];	 /* 516 Assignment info (LE or BE) */
    //   char	csip[4];	 /* 520 Collection server IP address (as of v5.00) (LE) */
    //   char	dstart[4];	 /* 524 Download started time (as of v5.00) (BE) */
-   //   char	z528[16];
+   //   char	z528[4];
+   //   char	m532[4];	 /* 532 Misc4a (LE or BE) */
+   //   char	z536[8];
    //   char    cores[4];	 /* 544 Number of SMP cores (as of v5.91) (BE) */
    //   char    tag[16];         /* 548 Tag of Work Unit (as of v5.00) */
    //   char    z564[16];

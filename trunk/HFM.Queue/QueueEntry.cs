@@ -21,8 +21,6 @@ using System;
 using System.Diagnostics;
 using System.Text;
 
-using HFM.Framework.DataTypes;
-
 namespace HFM.Queue
 {
    [CLSCompliant(false)]
@@ -33,7 +31,7 @@ namespace HFM.Queue
       /// <summary>
       /// Wrapped Entry Structure
       /// </summary>
-      private Entry _qEntry;
+      private Entry _entry;
       /// <summary>
       /// This Entry Index
       /// </summary>
@@ -41,7 +39,24 @@ namespace HFM.Queue
       /// <summary>
       /// The QueueReader that Created this QueueEntry
       /// </summary>
-      private readonly QueueBase _qBase;
+      private readonly QueueData _qData;
+      
+      /// <summary>
+      /// Entry Status String Array (indexes correspond to the EntryStatus property)
+      /// </summary>
+      public static string[] EntryStatusStrings = new[]
+                                                  {
+                                                     "Unknown",
+                                                     "Empty",
+                                                     "Deleted",
+                                                     "Finished",
+                                                     "Garbage",
+                                                     "Folding Now",
+                                                     "Queued",
+                                                     "Ready For Upload",
+                                                     "Abandonded",
+                                                     "Fetching From Server"
+                                                  };
       
       #endregion
 
@@ -50,14 +65,14 @@ namespace HFM.Queue
       /// <summary>
       /// Primary Constructor
       /// </summary>
-      /// <param name="qEntry">Entry Structure</param>
+      /// <param name="entry">Entry Structure</param>
       /// <param name="thisIndex">This Entry Index</param>
-      /// <param name="qBase">The QueueReader that Created this QueueEntry</param>
-      public QueueEntry(Entry qEntry, UInt32 thisIndex, QueueBase qBase)
+      /// <param name="qData">The QueueData object that is creating this QueueEntry</param>
+      internal QueueEntry(Entry entry, UInt32 thisIndex, QueueData qData)
       {
-         _qEntry = qEntry;
+         _entry = entry;
          _thisIndex = thisIndex;
-         _qBase = qBase;
+         _qData = qData;
       }
       
       #endregion
@@ -71,15 +86,17 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] b = _qBase.GetSystemBytes(_qEntry.Status);
+            byte[] b = _qData.GetSystemBytes(_entry.Status);
             return BitConverter.ToUInt32(b, 0);
          }
       }
 
       /// <summary>
-      /// Status Enumeration
+      /// Entry Status (status value based on Status property and other properties of this queue entry)
+      /// (0) Unknown / (1) Empty / (2) Deleted / (3) Finished / (4) Garbage / (5) Folding Now
+      /// (6) Queued / (7) Ready For Upload / (8) Abandonded / (9) Fetching From Server
       /// </summary>
-      public QueueEntryStatus EntryStatus
+      public UInt32 EntryStatus
       {
          get
          {
@@ -89,48 +106,48 @@ namespace HFM.Queue
                   if (ProjectID == 0)
                   {
                      /* The queue entry has never been used, or has been completely cleared. */
-                     return QueueEntryStatus.Empty;
+                     return 1; // Empty
                   }
                   else if (UploadStatus == 0)
                   {
                      /* The unit was explicitly deleted. */
-                     return QueueEntryStatus.Deleted;
+                     return 2; // Deleted
                   }
                   else if (UploadStatus == 1)
                   {
                      /* The unit has been uploaded.  The queue entry is just history. */
-                     return QueueEntryStatus.Finished;
+                     return 3; // Finished
                   }
                   else
                   {
                      /* The queue entry is available, but its history is unintelligible. */
-                     return QueueEntryStatus.Garbage;
+                     return 4; // Garbage
                   }
                case 1:
-                  if (_thisIndex == _qBase.CurrentIndex)
+                  if (_thisIndex == _qData.CurrentIndex)
                   {
                      /* The unit is in progress.  Presumably the core is running. */
-                     return QueueEntryStatus.FoldingNow;
+                     return 5; // Folding Now
                   }
                   else
                   {
                      /* The unit has been downloaded but processing hasn't begun yet. */
-                     return QueueEntryStatus.Queued;
+                     return 6; // Queued
                   }
                case 2:
                   /* The core has finished the unit, but it is still in the queue. */
-                  return QueueEntryStatus.ReadyForUpload;
+                  return 7; // Ready For Upload
                case 3: /* Bug before V3b5, neglected to post status (1). */
-                  return QueueEntryStatus.Abandonded;
+                  return 8; // Abandonded
                case 4:
                   /* Client presently contacting the server, or something failed in download.
 			          * If this state persists past the current unit, the queue entry will be
 			          * unusable, but otherwise things will go on as usual.
 			          */
-                  return QueueEntryStatus.FetchingFromServer;
+                  return 9; // Fetching From Server
                default:
                   /* Something other than 0 to 4. */
-                  return QueueEntryStatus.Unknown;
+                  return 0; // Unknown
             }
          }
       }
@@ -142,8 +159,8 @@ namespace HFM.Queue
       {
          get
          {
-            if (EntryStatus.Equals(QueueEntryStatus.Finished) ||
-                EntryStatus.Equals(QueueEntryStatus.ReadyForUpload))
+            if (EntryStatus.Equals(3) || // Finished
+                EntryStatus.Equals(7))   // Ready For Upload
             {
                return Math.Round(ExpirationInSeconds / EndTimeUtc.Subtract(BeginTimeUtc).TotalSeconds, 2, MidpointRounding.AwayFromZero);
             }
@@ -157,7 +174,7 @@ namespace HFM.Queue
       /// </summary>
       public UInt32 UseCores
       {
-         get { return _qEntry.UseCores; }
+         get { return _entry.UseCores; }
       }
 
       /// <summary>
@@ -168,14 +185,14 @@ namespace HFM.Queue
          get
          {
             DateTime d = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            if (_qBase.System.Equals(SystemType.PPC))
+            if (_qData.System.Equals(SystemType.PPC))
             {
-               byte[] b = BitConverter.GetBytes(_qEntry.TimeData[1]);
-               byte[] bytes = _qBase.GetSystemBytes(b);
+               byte[] b = BitConverter.GetBytes(_entry.TimeData[1]);
+               byte[] bytes = _qData.GetSystemBytes(b);
                UInt32 seconds = BitConverter.ToUInt32(bytes, 0);
                return d.AddSeconds(seconds);
             }
-            return d.AddSeconds(_qEntry.TimeData[0]);
+            return d.AddSeconds(_entry.TimeData[0]);
          }
       }
 
@@ -198,14 +215,14 @@ namespace HFM.Queue
          get
          {
             DateTime d = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            if (_qBase.System.Equals(SystemType.PPC))
+            if (_qData.System.Equals(SystemType.PPC))
             {
-               byte[] b = BitConverter.GetBytes(_qEntry.TimeData[5]);
-               byte[] bytes = _qBase.GetSystemBytes(b);
+               byte[] b = BitConverter.GetBytes(_entry.TimeData[5]);
+               byte[] bytes = _qData.GetSystemBytes(b);
                UInt32 seconds = BitConverter.ToUInt32(bytes, 0);
                return d.AddSeconds(seconds);
             }
-            return d.AddSeconds(_qEntry.TimeData[4]);
+            return d.AddSeconds(_entry.TimeData[4]);
          }
       }
 
@@ -227,7 +244,7 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] b = _qBase.GetSystemBytes(_qEntry.UploadStatus);
+            byte[] b = _qData.GetSystemBytes(_entry.UploadStatus);
             return BitConverter.ToUInt32(b, 0);
          }
       }
@@ -237,7 +254,7 @@ namespace HFM.Queue
       /// </summary>
       public Uri CoreDownloadUrl
       {
-         get { return new Uri(String.Format("http://{0}/Core_{1}.fah", _qEntry.CoreDownloadUrl, CoreNumber)); }
+         get { return new Uri(String.Format("http://{0}/Core_{1}.fah", _entry.CoreDownloadUrl, CoreNumber)); }
       }
 
       /// <summary>
@@ -247,7 +264,7 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] b = _qBase.GetSystemBytes(_qEntry.Misc1a);
+            byte[] b = _qData.GetSystemBytes(_entry.Misc1a);
             return BitConverter.ToUInt32(b, 0);
          }
       }
@@ -259,7 +276,7 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] b = _qBase.GetSystemBytes(_qEntry.CoreNumber);
+            byte[] b = _qData.GetSystemBytes(_entry.CoreNumber);
             return BitConverter.ToUInt32(b, 0).ToString("x");
          }
       }
@@ -271,7 +288,7 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] b = _qBase.GetSystemBytes(_qEntry.Misc1b);
+            byte[] b = _qData.GetSystemBytes(_entry.Misc1b);
             return BitConverter.ToUInt32(b, 0);
          }
       }
@@ -283,7 +300,7 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] b = _qBase.GetSystemBytes(_qEntry.WuDataFileSize);
+            byte[] b = _qData.GetSystemBytes(_entry.WuDataFileSize);
             return BitConverter.ToUInt32(b, 0);
          }
       }
@@ -296,7 +313,7 @@ namespace HFM.Queue
          get
          {
             byte[] b = new byte[2];
-            Array.Copy(_qEntry.Project, 0, b, 0, 2);
+            Array.Copy(_entry.Project, 0, b, 0, 2);
             return BitConverter.ToUInt16(b, 0);
          }
       }
@@ -309,7 +326,7 @@ namespace HFM.Queue
          get
          {
             byte[] b = new byte[2];
-            Array.Copy(_qEntry.Project, 2, b, 0, 2);
+            Array.Copy(_entry.Project, 2, b, 0, 2);
             return BitConverter.ToUInt16(b, 0);
          }
       }
@@ -322,7 +339,7 @@ namespace HFM.Queue
          get
          {
             byte[] b = new byte[2];
-            Array.Copy(_qEntry.Project, 4, b, 0, 2);
+            Array.Copy(_entry.Project, 4, b, 0, 2);
             return BitConverter.ToUInt16(b, 0);
          }
       }
@@ -335,7 +352,7 @@ namespace HFM.Queue
          get
          {
             byte[] b = new byte[2];
-            Array.Copy(_qEntry.Project, 6, b, 0, 2);
+            Array.Copy(_entry.Project, 6, b, 0, 2);
             return BitConverter.ToUInt16(b, 0);
          }
       }
@@ -348,7 +365,7 @@ namespace HFM.Queue
          get
          {
             byte[] b = new byte[4];
-            Array.Copy(_qEntry.Project, 8, b, 0, 4);
+            Array.Copy(_entry.Project, 8, b, 0, 4);
             UInt32 seconds = BitConverter.ToUInt32(b, 0);
             DateTime d = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             return d.AddSeconds(seconds);
@@ -376,12 +393,12 @@ namespace HFM.Queue
             if (IsMachineIDBigEndian)
             {
                byte[] b = new byte[4];
-               Array.Copy(_qEntry.MachineID, b, _qEntry.MachineID.Length);
+               Array.Copy(_entry.MachineID, b, _entry.MachineID.Length);
                Array.Reverse(b);
                return BitConverter.ToUInt32(b, 0);
             }
 
-            return BitConverter.ToUInt32(_qEntry.MachineID, 0);
+            return BitConverter.ToUInt32(_entry.MachineID, 0);
          }
       }
 
@@ -392,7 +409,7 @@ namespace HFM.Queue
       {
          get
          {
-            return QueueBase.IsBigEndian(_qEntry.MachineID);
+            return QueueData.IsBigEndian(_entry.MachineID);
          }
       }
 
@@ -403,14 +420,14 @@ namespace HFM.Queue
       {
          get
          {
-            if (_qBase.System.Equals(SystemType.PPC))
+            if (_qData.System.Equals(SystemType.PPC))
             {
-               return String.Format("{0}.{1}.{2}.{3}", _qEntry.ServerIP[0], _qEntry.ServerIP[1],
-                                                       _qEntry.ServerIP[2], _qEntry.ServerIP[3]);
+               return String.Format("{0}.{1}.{2}.{3}", _entry.ServerIP[0], _entry.ServerIP[1],
+                                                       _entry.ServerIP[2], _entry.ServerIP[3]);
             }
 
-            return String.Format("{0}.{1}.{2}.{3}", _qEntry.ServerIP[3], _qEntry.ServerIP[2],
-                                                    _qEntry.ServerIP[1], _qEntry.ServerIP[0]);
+            return String.Format("{0}.{1}.{2}.{3}", _entry.ServerIP[3], _entry.ServerIP[2],
+                                                    _entry.ServerIP[1], _entry.ServerIP[0]);
          }
       }
 
@@ -421,7 +438,7 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] b = _qBase.GetSystemBytes(_qEntry.ServerPort);
+            byte[] b = _qData.GetSystemBytes(_entry.ServerPort);
             return BitConverter.ToUInt32(b, 0);
          }
       }
@@ -431,7 +448,7 @@ namespace HFM.Queue
       /// </summary>
       public string WorkUnitType
       {
-         get { return _qEntry.WorkUnitType; }
+         get { return _entry.WorkUnitType; }
       }
 
       /// <summary>
@@ -439,7 +456,7 @@ namespace HFM.Queue
       /// </summary>
       public string FoldingID
       {
-         get { return _qEntry.FoldingID; }
+         get { return _entry.FoldingID; }
       }
 
       /// <summary>
@@ -447,7 +464,7 @@ namespace HFM.Queue
       /// </summary>
       public string Team
       {
-         get { return _qEntry.Team; }
+         get { return _entry.Team; }
       }
 
       /// <summary>
@@ -458,7 +475,7 @@ namespace HFM.Queue
          get
          {
             UInt32 team;
-            if (UInt32.TryParse(_qEntry.Team, out team))
+            if (UInt32.TryParse(_entry.Team, out team))
             {
                return team;
             }
@@ -474,14 +491,14 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] bytes = new byte[_qEntry.UserAndMachineID.Length];
-            Array.Copy(_qEntry.UserAndMachineID, bytes, _qEntry.UserAndMachineID.Length);
+            byte[] bytes = new byte[_entry.UserAndMachineID.Length];
+            Array.Copy(_entry.UserAndMachineID, bytes, _entry.UserAndMachineID.Length);
             if (IsMachineIDBigEndian == false)
             {
                Array.Reverse(bytes);
             }
 
-            StringBuilder sb = new StringBuilder(_qEntry.UserAndMachineID.Length * 2);
+            StringBuilder sb = new StringBuilder(_entry.UserAndMachineID.Length * 2);
             foreach (byte b in bytes)
             {
                sb.AppendFormat("{0:X2}", b);
@@ -497,7 +514,7 @@ namespace HFM.Queue
       {
          get
          {
-            return GetUserIDFromUserAndMachineID(_qEntry.UserAndMachineID, MachineID, IsMachineIDBigEndian);
+            return GetUserIDFromUserAndMachineID(_entry.UserAndMachineID, MachineID, IsMachineIDBigEndian);
          }
       }
 
@@ -508,8 +525,8 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] b = new byte[_qEntry.Benchmark.Length];
-            Array.Copy(_qEntry.Benchmark, b, _qEntry.Benchmark.Length);
+            byte[] b = new byte[_entry.Benchmark.Length];
+            Array.Copy(_entry.Benchmark, b, _entry.Benchmark.Length);
             Array.Reverse(b);
             return BitConverter.ToUInt32(b, 0);
          }
@@ -522,7 +539,7 @@ namespace HFM.Queue
       {
          get
          {
-            return GetCpuOrOsNumber(_qEntry.CpuType);
+            return GetCpuOrOsNumber(_entry.CpuType);
          }
       }
 
@@ -533,7 +550,7 @@ namespace HFM.Queue
       {
          get
          {
-            return GetCpuOrOsNumber(_qEntry.OsType);
+            return GetCpuOrOsNumber(_entry.OsType);
          }
       }
 
@@ -544,7 +561,7 @@ namespace HFM.Queue
       {
          get
          {
-            return GetCpuOrOsNumber(_qEntry.CpuSpecies);
+            return GetCpuOrOsNumber(_entry.CpuSpecies);
          }
       }
 
@@ -555,7 +572,7 @@ namespace HFM.Queue
       {
          get
          {
-            return GetCpuOrOsNumber(_qEntry.OsSpecies);
+            return GetCpuOrOsNumber(_entry.OsSpecies);
          }
       }
 
@@ -564,7 +581,7 @@ namespace HFM.Queue
       /// </summary>
       public string CpuString
       {
-         get { return GetCpuString(_qEntry.CpuType, _qEntry.CpuSpecies); }
+         get { return GetCpuString(_entry.CpuType, _entry.CpuSpecies); }
       }
 
       /// <summary>
@@ -572,7 +589,7 @@ namespace HFM.Queue
       /// </summary>
       public string OsString
       {
-         get { return GetOsString(_qEntry.OsType, _qEntry.OsSpecies); }
+         get { return GetOsString(_entry.OsType, _entry.OsSpecies); }
       }
 
       /// <summary>
@@ -582,7 +599,7 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] b = _qBase.GetSystemBytes(_qEntry.ExpirationInSeconds);
+            byte[] b = _qData.GetSystemBytes(_entry.ExpirationInSeconds);
             return BitConverter.ToUInt32(b, 0);
          }
       }
@@ -618,10 +635,10 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] b = new byte[_qEntry.AssignmentInfoPresent.Length];
-            Array.Copy(_qEntry.AssignmentInfoPresent, b, 4);
+            byte[] b = new byte[_entry.AssignmentInfoPresent.Length];
+            Array.Copy(_entry.AssignmentInfoPresent, b, 4);
 
-            if (QueueBase.IsBigEndian(_qEntry.AssignmentInfoPresent))
+            if (QueueData.IsBigEndian(_entry.AssignmentInfoPresent))
             {
                Array.Reverse(b);
             }
@@ -641,10 +658,10 @@ namespace HFM.Queue
 
             if (AssignmentInfoPresent)
             {
-               byte[] b = new byte[_qEntry.AssignmentTimeStamp.Length];
-               Array.Copy(_qEntry.AssignmentTimeStamp, b, 4);
+               byte[] b = new byte[_entry.AssignmentTimeStamp.Length];
+               Array.Copy(_entry.AssignmentTimeStamp, b, 4);
 
-               if (QueueBase.IsBigEndian(_qEntry.AssignmentInfoPresent))
+               if (QueueData.IsBigEndian(_entry.AssignmentInfoPresent))
                {
                   Array.Reverse(b);
                }
@@ -677,19 +694,19 @@ namespace HFM.Queue
          {
             if (AssignmentInfoPresent)
             {
-               byte[] bytes = new byte[_qEntry.AssignmentInfoChecksum.Length];
-               Array.Copy(_qEntry.AssignmentInfoChecksum, bytes, 4);
+               byte[] bytes = new byte[_entry.AssignmentInfoChecksum.Length];
+               Array.Copy(_entry.AssignmentInfoChecksum, bytes, 4);
 
                // Reverse this value if 'AssignmentInfoPresent' IS NOT Big Endian
                // qd.c prints the bytes in reverse order so it stands to reason 
                // that if 'AssignmentInfoPresent' IS Big Endian then the bytes
                // would not need reversed.  This theory is UNTESTED.
-               if (QueueBase.IsBigEndian(_qEntry.AssignmentInfoPresent) == false)
+               if (QueueData.IsBigEndian(_entry.AssignmentInfoPresent) == false)
                {
                   Array.Reverse(bytes);
                }
 
-               StringBuilder sb = new StringBuilder(_qEntry.AssignmentInfoChecksum.Length * 2);
+               StringBuilder sb = new StringBuilder(_entry.AssignmentInfoChecksum.Length * 2);
                foreach (byte b in bytes)
                {
                   sb.AppendFormat("{0:X2}", b);
@@ -708,13 +725,13 @@ namespace HFM.Queue
       {
          get
          {
-            if (_qBase.System.Equals(SystemType.PPC))
+            if (_qData.System.Equals(SystemType.PPC))
             {
-               return String.Format("{0}.{1}.{2}.{3}", _qEntry.CollectionServerIP[0], _qEntry.CollectionServerIP[1],
-                                                       _qEntry.CollectionServerIP[2], _qEntry.CollectionServerIP[3]);
+               return String.Format("{0}.{1}.{2}.{3}", _entry.CollectionServerIP[0], _entry.CollectionServerIP[1],
+                                                       _entry.CollectionServerIP[2], _entry.CollectionServerIP[3]);
             }
-            return String.Format("{0}.{1}.{2}.{3}", _qEntry.CollectionServerIP[3], _qEntry.CollectionServerIP[2],
-                                                    _qEntry.CollectionServerIP[1], _qEntry.CollectionServerIP[0]);
+            return String.Format("{0}.{1}.{2}.{3}", _entry.CollectionServerIP[3], _entry.CollectionServerIP[2],
+                                                    _entry.CollectionServerIP[1], _entry.CollectionServerIP[0]);
          }
       }
 
@@ -725,8 +742,8 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] b = new byte[_qEntry.NumberOfSmpCores.Length];
-            Array.Copy(_qEntry.NumberOfSmpCores, b, _qEntry.NumberOfSmpCores.Length);
+            byte[] b = new byte[_entry.NumberOfSmpCores.Length];
+            Array.Copy(_entry.NumberOfSmpCores, b, _entry.NumberOfSmpCores.Length);
             Array.Reverse(b);
             return BitConverter.ToUInt32(b, 0);
          }
@@ -739,13 +756,13 @@ namespace HFM.Queue
       {
          get
          {
-            int i = Array.IndexOf(_qEntry.WorkUnitTag, (byte)0);
+            int i = Array.IndexOf(_entry.WorkUnitTag, (byte)0);
             if (i >= 0)
             {
-               return Encoding.ASCII.GetString(_qEntry.WorkUnitTag, 0, i);
+               return Encoding.ASCII.GetString(_entry.WorkUnitTag, 0, i);
             }
             
-            return Encoding.ASCII.GetString(_qEntry.WorkUnitTag, 0, _qEntry.WorkUnitTag.Length);
+            return Encoding.ASCII.GetString(_entry.WorkUnitTag, 0, _entry.WorkUnitTag.Length);
          }
       }
 
@@ -754,7 +771,7 @@ namespace HFM.Queue
       /// </summary>
       public string Passkey
       {
-         get { return _qEntry.Passkey; }
+         get { return _entry.Passkey; }
       }
 
       /// <summary>
@@ -764,8 +781,8 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] b = new byte[_qEntry.Flops.Length];
-            Array.Copy(_qEntry.Flops, b, _qEntry.Flops.Length);
+            byte[] b = new byte[_entry.Flops.Length];
+            Array.Copy(_entry.Flops, b, _entry.Flops.Length);
             Array.Reverse(b);
             return BitConverter.ToUInt32(b, 0);
          }
@@ -789,8 +806,8 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] b = new byte[_qEntry.Memory.Length];
-            Array.Copy(_qEntry.Memory, b, _qEntry.Memory.Length);
+            byte[] b = new byte[_entry.Memory.Length];
+            Array.Copy(_entry.Memory, b, _entry.Memory.Length);
             Array.Reverse(b);
             return BitConverter.ToUInt32(b, 0);
          }
@@ -801,7 +818,7 @@ namespace HFM.Queue
       /// </summary>
       public UInt32 GpuMemory
       {
-         get { return _qEntry.GpuMemory; }
+         get { return _entry.GpuMemory; }
       }
 
       /// <summary>
@@ -812,14 +829,14 @@ namespace HFM.Queue
          get
          {
             DateTime d = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            if (_qBase.System.Equals(SystemType.PPC))
+            if (_qData.System.Equals(SystemType.PPC))
             {
-               byte[] b = BitConverter.GetBytes(_qEntry.ExpirationTime[1]);
-               byte[] bytes = _qBase.GetSystemBytes(b);
+               byte[] b = BitConverter.GetBytes(_entry.ExpirationTime[1]);
+               byte[] bytes = _qData.GetSystemBytes(b);
                UInt32 seconds = BitConverter.ToUInt32(bytes, 0);
                return d.AddSeconds(seconds);
             }
-            return d.AddSeconds(_qEntry.ExpirationTime[0]);
+            return d.AddSeconds(_entry.ExpirationTime[0]);
          }
       }
 
@@ -838,7 +855,7 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] b = _qBase.GetSystemBytes(_qEntry.PacketSizeLimit);
+            byte[] b = _qData.GetSystemBytes(_entry.PacketSizeLimit);
             return BitConverter.ToUInt32(b, 0);
          }
       }
@@ -848,12 +865,12 @@ namespace HFM.Queue
       /// </summary>
       public UInt32 NumberOfUploadFailures
       {
-         get { return _qEntry.NumberOfUploadFailures; }
+         get { return _entry.NumberOfUploadFailures; }
       }
       
       #endregion
 
-      public static byte[] HexToData(string hexString)
+      internal static byte[] HexToData(string hexString)
       {
          if (hexString == null) throw new ArgumentNullException("hexString", "Argument 'hexString' cannot be null.");
 
@@ -872,7 +889,7 @@ namespace HFM.Queue
          return data;
       }
 
-      public static string GetUserIDFromUserAndMachineID(byte[] userAndMachineID, UInt32 machineID, bool isMachineIDBigEndian)
+      internal static string GetUserIDFromUserAndMachineID(byte[] userAndMachineID, UInt32 machineID, bool isMachineIDBigEndian)
       {
          Debug.Assert(userAndMachineID.Length == 8);
 

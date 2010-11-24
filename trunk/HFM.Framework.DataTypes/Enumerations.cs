@@ -114,7 +114,7 @@ namespace HFM.Framework.DataTypes
    /// </summary>
    public enum QueueEntryStatus
    {
-      Unknown = -1,
+      Unknown,
       Empty,
       Deleted,
       Finished,
