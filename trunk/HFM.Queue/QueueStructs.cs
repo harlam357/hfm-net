@@ -151,13 +151,13 @@ namespace HFM.Queue
       /* 7156 (as of v5.00) ...all zeros after queue conversion... */
       [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 12)]
       private string _z7156;
-      /// <summary>
-      /// (as of v5.00) ...all zeros after queue conversion...
-      /// </summary>
-      public string z7156
-      {
-         get { return _z7156; }
-      }
+      ///// <summary>
+      ///// (as of v5.00) ...all zeros after queue conversion...
+      ///// </summary>
+      //public string z7156
+      //{
+      //   get { return _z7156; }
+      //}
    }
    // ReSharper restore FieldCanBeMadeReadOnly.Local
 
@@ -212,14 +212,14 @@ namespace HFM.Queue
       /* 040 Server IP address (until v3.0) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
       private byte[] _oldServerIP; /*** Ignore this value ***/
-      /// <summary>
-      /// Server IP address (until v3.0 - Ignore this value)
-      /// </summary>
-      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-      public byte[] OldServerIP
-      {
-         get { return _oldServerIP; }
-      }
+      ///// <summary>
+      ///// Server IP address (until v3.0 - Ignore this value)
+      ///// </summary>
+      //[SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      //public byte[] OldServerIP
+      //{
+      //   get { return _oldServerIP; }
+      //}
 
       /***
        * 0 = Not Uploaded
@@ -298,15 +298,15 @@ namespace HFM.Queue
       }
 
       /* 192 */
-      [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
-      private string _z192;
-      /// <summary>
-      /// z192
-      /// </summary>
-      public string z192
-      {
-         get { return _z192; }
-      }
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
+      private byte[] _z192;
+      ///// <summary>
+      ///// z192
+      ///// </summary>
+      //public byte[] z192
+      //{
+      //   get { return _z192; }
+      //}
 
       /* 208 Project number (LE) */
       //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 2)]
@@ -341,17 +341,17 @@ namespace HFM.Queue
       }
 
       /* 224 */
-      [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 36)]
-      private string _z224;
-      /// <summary>
-      /// z224
-      /// </summary>
-      public string z224
-      {
-         get { return _z224; }
-      }
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 36)]
+      private byte[] _z224;
+      ///// <summary>
+      ///// z224
+      ///// </summary>
+      //public byte[] z224
+      //{
+      //   get { return _z224; }
+      //}
 
-      /* 260 Machine ID (LE or BE) */
+      /* 260 Machine ID (LE or BE, was only LE before v5 work servers) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
       private byte[] _machineID;
       /// <summary>
@@ -420,7 +420,7 @@ namespace HFM.Queue
          get { return _team; }
       }
 
-      /* 464 Stored ID for unit (UserID + MachineID) (LE or BE, usually BE) */
+      /* Stored ID for unit (UserID + MachineID) (LE or BE, usually BE, always BE for v5 work servers) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
       private byte[] _userAndMachineID;
       /// <summary>
@@ -434,13 +434,13 @@ namespace HFM.Queue
 
       /* 472 Benchmark (until v3.24) (LE) */
       private UInt32 _oldBenchmark; /*** Ignore this value ***/
-      /// <summary>
-      /// Benchmark (until v3.24 - Ignore this value)
-      /// </summary>
-      public UInt32 OldBenchmark
-      {
-         get { return _oldBenchmark; }
-      }
+      ///// <summary>
+      ///// Benchmark (until v3.24 - Ignore this value)
+      ///// </summary>
+      //public UInt32 OldBenchmark
+      //{
+      //   get { return _oldBenchmark; }
+      //}
 
       /* 476 Misc3b (unused as of v3.24) (LE); Benchmark (as of v5.00) (BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
@@ -515,14 +515,25 @@ namespace HFM.Queue
       }
 
       /* 500 */
-      [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 8)]
-      private string _z500;
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+      private byte[] _z500;
+      ///// <summary>
+      ///// z500
+      ///// </summary>
+      //public byte[] z500
+      //{
+      //   get { return _z500; }
+      //}
+
+      /* 504 Client type required (usually 0) (LE or BE) */
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+      private byte[] _requiredClientType;
       /// <summary>
-      /// z500
+      /// Required client type
       /// </summary>
-      public string z500
+      public byte[] RequiredClientType
       {
-         get { return _z500; }
+         get { return _requiredClientType; }
       }
 
       /* 508 Assignment info present flag (LE or BE) */
@@ -576,25 +587,47 @@ namespace HFM.Queue
       /* 524 Download started time (as of v5.00) (BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
       private byte[] _downloadStartedTime;
-      /// <summary>
-      /// Download started time
-      /// </summary>
-      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-      public byte[] DownloadStartedTime
-      {
-         get { return _downloadStartedTime; }
-      }
+      ///// <summary>
+      ///// Download started time
+      ///// </summary>
+      //[SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      //public byte[] DownloadStartedTime
+      //{
+      //   get { return _downloadStartedTime; }
+      //}
 
       /* 528 */
-      [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
-      private string _z528;
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+      private byte[] _z528;
+      ///// <summary>
+      ///// z528
+      ///// </summary>
+      //public byte[] z528
+      //{
+      //   get { return _z528; }
+      //}
+
+      /* 532 Misc4a (LE or BE) */
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+      private byte[] _Misc4a;
       /// <summary>
-      /// z528
+      /// Misc4a
       /// </summary>
-      public string z528
+      public byte[] Misc4a
       {
-         get { return _z528; }
+         get { return _Misc4a; }
       }
+
+      /* 536 */
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
+      private byte[] _z536;
+      ///// <summary>
+      ///// z536
+      ///// </summary>
+      //public byte[] z536
+      //{
+      //   get { return _z536; }
+      //}
 
       /* 544 Number of SMP cores (as of v5.91) (BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
@@ -621,23 +654,24 @@ namespace HFM.Queue
       }
 
       /* 564 */
-      [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
-      private string _z564;
-      /// <summary>
-      /// z564
-      /// </summary>
-      public string z564
-      {
-         get { return _z564; }
-      }
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
+      private byte[] _z564;
+      ///// <summary>
+      ///// z564
+      ///// </summary>
+      //public byte[] z564
+      //{
+      //   get { return _z564; }
+      //}
 
       /* 580 Passkey (as of v6.00) */
-      [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
-      private string _passkey;
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
+      private byte[] _passkey;
       /// <summary>
       /// Passkey
       /// </summary>
-      public string Passkey
+      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+      public byte[] Passkey
       {
          get { return _passkey; }
       }
@@ -677,15 +711,15 @@ namespace HFM.Queue
       }
 
       /* 624 */
-      [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
-      private string _z624;
-      /// <summary>
-      /// z624
-      /// </summary>
-      public string z624
-      {
-         get { return _z624; }
-      }
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 64)]
+      private byte[] _z624;
+      ///// <summary>
+      ///// z624
+      ///// </summary>
+      //public byte[] z624
+      //{
+      //   get { return _z624; }
+      //}
 
       /***
        * 0 = Due Date - This time is calculated by the client when it downloads a unit.

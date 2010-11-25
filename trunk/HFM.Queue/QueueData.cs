@@ -26,10 +26,15 @@ namespace HFM.Queue
    /// </summary>
    internal enum SystemType
    {
+      // ReSharper disable InconsistentNaming
       x86 = 0,
       PPC
+      // ReSharper restore InconsistentNaming
    }
 
+   /// <summary>
+   /// Queue Data Class
+   /// </summary>
    [CLSCompliant(false)]
    public class QueueData
    {
@@ -38,17 +43,8 @@ namespace HFM.Queue
       /// <summary>
       /// Queue Structure
       /// </summary>
-      private Data _q;
+      private readonly Data _q;
       
-      private readonly bool _dataPopulated;
-      /// <summary>
-      /// Flag Denoting if Class holds a Populated or Empty Queue Structure
-      /// </summary>
-      public bool DataPopulated
-      {
-         get { return _dataPopulated; }
-      }
-
       private readonly SystemType _system = SystemType.x86;
       /// <summary>
       /// The System (CPU) Type
@@ -57,27 +53,23 @@ namespace HFM.Queue
       {
          get { return _system; }
       }
+
+      /// <summary>
+      /// Epoch 2000 Date Time structure (UTC)
+      /// </summary>
+      public static readonly DateTime Epoch2000 = new DateTime(2000, 1, 1, 0, 0 ,0, DateTimeKind.Utc);
       
       #endregion
 
       #region Constructor
 
       /// <summary>
-      /// Constructor (Clear Queue)
-      /// </summary>
-      internal QueueData()
-      {
-         _q = new Data();
-      }
-
-      /// <summary>
-      /// Constructor (Set Queue)
+      /// Primary Constructor (Set Queue)
       /// </summary>
       /// <param name="q">Queue Structure</param>
       internal QueueData(Data q)
       {
          _q = q;
-         _dataPopulated = true;
 
          // determine system type based on the version field
          if (IsBigEndian(_q.Version))
@@ -187,16 +179,19 @@ namespace HFM.Queue
       }
 
       /// <summary>
-      /// Results successfully sent (after upload failures)
+      /// Results successfully sent (after upload failures) (UTC)
       /// </summary>
-      public UInt32 ResultsSent
+      public DateTime ResultsSentUtc
       {
-         get
-         {
-            //byte[] b = new byte[_q.ResultsSent.Length];
-            //Array.Copy(_q.ResultsSent, b, _q.ResultsSent.Length);
-            return BitConverter.ToUInt32(_q.ResultsSent, 0);
-         }
+         get { return Epoch2000.AddSeconds(BitConverter.ToUInt32(_q.ResultsSent, 0)); }
+      }
+
+      /// <summary>
+      /// Results successfully sent (after upload failures) (Local)
+      /// </summary>
+      public DateTime ResultsSentLocal
+      {
+         get { return ResultsSentUtc.ToLocalTime(); }
       }
       
       #endregion

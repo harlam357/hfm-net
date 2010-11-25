@@ -18,14 +18,25 @@
  */
 
 using System;
+using System.IO;
 using System.Globalization;
 
 using NUnit.Framework;
 
-using HFM.Framework.DataTypes;
-
 namespace HFM.Queue.Tests
 {
+   // EntryStatus values
+   // 0 - Unknown
+   // 1 - Empty
+   // 2 - Deleted
+   // 3 - Finished
+   // 4 - Garbage
+   // 5 - Folding Now
+   // 6 - Queued
+   // 7 - Ready For Upload
+   // 8 - Abandonded
+   // 9 - Fetching From Server
+
    [TestFixture]
    public class QueueReaderTests
    {
@@ -42,10 +53,11 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(4, queue.DownloadRateUnitWeight);
          Assert.AreEqual(179.357f, queue.UploadRateAverage);
          Assert.AreEqual(4, queue.UploadRateUnitWeight);
-         Assert.AreEqual(0, queue.ResultsSent);
+         Assert.AreEqual(QueueData.Epoch2000, queue.ResultsSentUtc);
          
          QueueEntry entry8 = queue.GetQueueEntry(8);
-         Assert.AreEqual((int)QueueEntryStatus.Finished, entry8.EntryStatus);
+         Assert.AreEqual(8, entry8.Index);
+         Assert.AreEqual(3, entry8.EntryStatus);
          Assert.AreEqual(4.46, entry8.SpeedFactor);
          Assert.AreEqual("171.64.65.64", entry8.ServerIP);
          Assert.AreEqual(8080, entry8.ServerPort);
@@ -56,15 +68,14 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(0, entry8.Benchmark);
          Assert.AreEqual(500, entry8.Misc1a);
          Assert.AreEqual(200, entry8.Misc1b);
+         Assert.AreEqual(12, entry8.Misc4a);
          Assert.AreEqual(new DateTime(2009, 9, 11, 13, 34, 24, DateTimeKind.Local), entry8.ProjectIssuedLocal);
          Assert.AreEqual(new DateTime(2009, 9, 11, 13, 34, 56, DateTimeKind.Local), entry8.BeginTimeLocal);
          Assert.AreEqual(new DateTime(2009, 9, 12, 11, 7, 37, DateTimeKind.Local), entry8.EndTimeLocal);
          Assert.AreEqual(new DateTime(2009, 9, 15, 13, 34, 56, DateTimeKind.Local), entry8.DueTimeLocal);
          Assert.AreEqual(4, entry8.ExpirationInDays);
-         //preferred
          Assert.AreEqual("http://www.stanford.edu/~pande/Win32/x86/Core_a1.fah", entry8.CoreDownloadUrl.AbsoluteUri);
          Assert.AreEqual("a1", entry8.CoreNumber);
-         //core name
          Assert.AreEqual(1, entry8.CpuType);
          Assert.AreEqual(687, entry8.CpuSpecies);
          Assert.AreEqual("Pentium II/III", entry8.CpuString);
@@ -79,13 +90,16 @@ namespace HFM.Queue.Tests
          Assert.AreEqual("1061.857101", entry8.MegaFlops.ToString(CultureInfo.InvariantCulture));
          Assert.AreEqual(1534, entry8.Memory);
          Assert.AreEqual(0, entry8.GpuMemory);
+         Assert.AreEqual(0, entry8.RequiredClientType);
          Assert.AreEqual(true, entry8.AssignmentInfoPresent);
          Assert.AreEqual(new DateTime(2009, 9, 11, 13, 34, 20, DateTimeKind.Local), entry8.AssignmentTimeStampLocal);
          Assert.AreEqual("B9645213", entry8.AssignmentInfoChecksum);
          Assert.AreEqual("171.67.108.25", entry8.CollectionServerIP);
+         Assert.AreEqual(0, entry8.NumberOfUploadFailures);
          Assert.AreEqual(524286976, entry8.PacketSizeLimit);
          Assert.AreEqual("harlam357", entry8.FoldingID);
          Assert.AreEqual("32", entry8.Team);
+         Assert.AreEqual(32, entry8.TeamNumber);
          Assert.AreEqual("7AFAD2B923A9732A", entry8.ID);
          Assert.AreEqual("7AFAD2B923A97329", entry8.UserID);
          Assert.AreEqual(1, entry8.MachineID);
@@ -105,10 +119,11 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(4, queue.DownloadRateUnitWeight);
          Assert.AreEqual(184.095f, queue.UploadRateAverage);
          Assert.AreEqual(4, queue.UploadRateUnitWeight);
-         Assert.AreEqual(0, queue.ResultsSent);
+         Assert.AreEqual(QueueData.Epoch2000, queue.ResultsSentUtc);
 
          QueueEntry entry4 = queue.GetQueueEntry(4);
-         Assert.AreEqual((int)QueueEntryStatus.FoldingNow, entry4.EntryStatus);
+         Assert.AreEqual(4, entry4.Index);
+         Assert.AreEqual(5, entry4.EntryStatus);
          Assert.AreEqual(0, entry4.SpeedFactor);
          Assert.AreEqual("171.64.65.56", entry4.ServerIP);
          Assert.AreEqual(8080, entry4.ServerPort);
@@ -119,16 +134,14 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(0, entry4.Benchmark);
          Assert.AreEqual(500, entry4.Misc1a);
          Assert.AreEqual(200, entry4.Misc1b);
+         Assert.AreEqual(12, entry4.Misc4a);
          Assert.AreEqual(new DateTime(2009, 9, 13, 21, 36, 34, DateTimeKind.Local), entry4.ProjectIssuedLocal);
          Assert.AreEqual(new DateTime(2009, 9, 13, 21, 38, 21, DateTimeKind.Local), entry4.BeginTimeLocal);
-         /*** Entry Not Completed ***/
-         Assert.AreEqual(new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc), entry4.EndTimeUtc); //Utc
+         Assert.AreEqual(QueueData.Epoch2000, entry4.EndTimeUtc);
          Assert.AreEqual(new DateTime(2009, 9, 16, 21, 38, 21, DateTimeKind.Local), entry4.DueTimeLocal);
          Assert.AreEqual(3, entry4.ExpirationInDays);
-         //preferred
          Assert.AreEqual("http://www.stanford.edu/~pande/Linux/AMD64/Core_a2.fah", entry4.CoreDownloadUrl.AbsoluteUri);
          Assert.AreEqual("a2", entry4.CoreNumber);
-         //core name
          Assert.AreEqual(16, entry4.CpuType);
          Assert.AreEqual(0, entry4.CpuSpecies);
          Assert.AreEqual("AMD64", entry4.CpuString);
@@ -143,13 +156,16 @@ namespace HFM.Queue.Tests
          Assert.AreEqual("1060.72291", entry4.MegaFlops.ToString(CultureInfo.InvariantCulture));
          Assert.AreEqual(685, entry4.Memory);
          Assert.AreEqual(0, entry4.GpuMemory);
+         Assert.AreEqual(0, entry4.RequiredClientType);
          Assert.AreEqual(true, entry4.AssignmentInfoPresent);
          Assert.AreEqual(new DateTime(2009, 9, 13, 21, 36, 31, DateTimeKind.Local), entry4.AssignmentTimeStampLocal);
          Assert.AreEqual("B9196E68", entry4.AssignmentInfoChecksum);
          Assert.AreEqual("171.67.108.25", entry4.CollectionServerIP);
+         Assert.AreEqual(0, entry4.NumberOfUploadFailures);
          Assert.AreEqual(524286976, entry4.PacketSizeLimit);
          Assert.AreEqual("harlam357", entry4.FoldingID);
          Assert.AreEqual("32", entry4.Team);
+         Assert.AreEqual(32, entry4.TeamNumber);
          Assert.AreEqual("3D9D4D633BD91E9B", entry4.ID);
          Assert.AreEqual("3D9D4D633BD91E9A", entry4.UserID);
          Assert.AreEqual(1, entry4.MachineID);
@@ -169,10 +185,11 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(4, queue.DownloadRateUnitWeight);
          Assert.AreEqual(183.91f, queue.UploadRateAverage);
          Assert.AreEqual(4, queue.UploadRateUnitWeight);
-         Assert.AreEqual(0, queue.ResultsSent);
+         Assert.AreEqual(QueueData.Epoch2000, queue.ResultsSentUtc);
 
          QueueEntry entry6 = queue.GetQueueEntry(6);
-         Assert.AreEqual((int)QueueEntryStatus.ReadyForUpload, entry6.EntryStatus);
+         Assert.AreEqual(6, entry6.Index);
+         Assert.AreEqual(7, entry6.EntryStatus);
          Assert.AreEqual(3.97, entry6.SpeedFactor);
          Assert.AreEqual("171.64.65.56", entry6.ServerIP);
          Assert.AreEqual(8080, entry6.ServerPort);
@@ -183,15 +200,14 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(0, entry6.Benchmark);
          Assert.AreEqual(500, entry6.Misc1a);
          Assert.AreEqual(200, entry6.Misc1b);
+         Assert.AreEqual(12, entry6.Misc4a);
          Assert.AreEqual(new DateTime(2009, 9, 25, 10, 29, 46, DateTimeKind.Local), entry6.ProjectIssuedLocal);
          Assert.AreEqual(new DateTime(2009, 9, 25, 10, 30, 32, DateTimeKind.Local), entry6.BeginTimeLocal);
          Assert.AreEqual(new DateTime(2009, 9, 26, 9, 38, 6, DateTimeKind.Local), entry6.EndTimeUtc);
          Assert.AreEqual(new DateTime(2009, 9, 28, 10, 30, 32, DateTimeKind.Local), entry6.DueTimeLocal);
          Assert.AreEqual(3, entry6.ExpirationInDays);
-         //preferred
          Assert.AreEqual("http://www.stanford.edu/~pande/Linux/AMD64/Core_a2.fah", entry6.CoreDownloadUrl.AbsoluteUri);
          Assert.AreEqual("a2", entry6.CoreNumber);
-         //core name
          Assert.AreEqual(16, entry6.CpuType);
          Assert.AreEqual(0, entry6.CpuSpecies);
          Assert.AreEqual("AMD64", entry6.CpuString);
@@ -206,13 +222,16 @@ namespace HFM.Queue.Tests
          Assert.AreEqual("1060.500841", entry6.MegaFlops.ToString(CultureInfo.InvariantCulture));
          Assert.AreEqual(685, entry6.Memory);
          Assert.AreEqual(0, entry6.GpuMemory);
+         Assert.AreEqual(0, entry6.RequiredClientType);
          Assert.AreEqual(true, entry6.AssignmentInfoPresent);
          Assert.AreEqual(new DateTime(2009, 9, 25, 10, 29, 42, DateTimeKind.Local), entry6.AssignmentTimeStampLocal);
          Assert.AreEqual("B91698A1", entry6.AssignmentInfoChecksum);
          Assert.AreEqual("171.67.108.25", entry6.CollectionServerIP);
+         Assert.AreEqual(4, entry6.NumberOfUploadFailures);
          Assert.AreEqual(524286976, entry6.PacketSizeLimit);
          Assert.AreEqual("harlam357", entry6.FoldingID);
          Assert.AreEqual("32", entry6.Team);
+         Assert.AreEqual(32, entry6.TeamNumber);
          Assert.AreEqual("030686B3436DEE21", entry6.ID);
          Assert.AreEqual( "30686B3436DEE20", entry6.UserID);
          Assert.AreEqual(1, entry6.MachineID);
@@ -232,10 +251,11 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(4, queue.DownloadRateUnitWeight);
          Assert.AreEqual(99.712f, queue.UploadRateAverage);
          Assert.AreEqual(4, queue.UploadRateUnitWeight);
-         Assert.AreEqual(305567834, queue.ResultsSent); // This number makes no sense
+         Assert.AreEqual(new DateTime(2009, 9, 6, 10, 57, 14, DateTimeKind.Local), queue.ResultsSentLocal);
 
          QueueEntry entry7 = queue.GetQueueEntry(7);
-         Assert.AreEqual((int)QueueEntryStatus.Finished, entry7.EntryStatus);
+         Assert.AreEqual(7, entry7.Index);
+         Assert.AreEqual(3, entry7.EntryStatus);
          Assert.AreEqual(178.51, entry7.SpeedFactor);
          Assert.AreEqual("171.64.65.106", entry7.ServerIP);
          Assert.AreEqual(8080, entry7.ServerPort);
@@ -246,15 +266,14 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(0, entry7.Benchmark);
          Assert.AreEqual(500, entry7.Misc1a);
          Assert.AreEqual(200, entry7.Misc1b);
+         Assert.AreEqual(11, entry7.Misc4a);
          Assert.AreEqual(new DateTime(2009, 9, 13, 19, 45, 30, DateTimeKind.Local), entry7.ProjectIssuedLocal);
          Assert.AreEqual(new DateTime(2009, 9, 13, 19, 45, 30, DateTimeKind.Local), entry7.BeginTimeLocal);
          Assert.AreEqual(new DateTime(2009, 9, 13, 21, 46, 30, DateTimeKind.Local), entry7.EndTimeLocal);
          Assert.AreEqual(new DateTime(2009, 9, 28, 19, 45, 30, DateTimeKind.Local), entry7.DueTimeLocal);
          Assert.AreEqual(15, entry7.ExpirationInDays);
-         //preferred
          Assert.AreEqual("http://www.stanford.edu/~pande/Win32/x86/NVIDIA/G80/Core_11.fah", entry7.CoreDownloadUrl.AbsoluteUri);
          Assert.AreEqual("11", entry7.CoreNumber);
-         //core name
          Assert.AreEqual(1, entry7.CpuType);
          Assert.AreEqual(687, entry7.CpuSpecies);
          Assert.AreEqual("Pentium II/III", entry7.CpuString);
@@ -269,13 +288,16 @@ namespace HFM.Queue.Tests
          Assert.AreEqual("1065.171903", entry7.MegaFlops.ToString(CultureInfo.InvariantCulture));
          Assert.AreEqual(4094, entry7.Memory);
          Assert.AreEqual(258, entry7.GpuMemory);
+         Assert.AreEqual(0, entry7.RequiredClientType);
          Assert.AreEqual(true, entry7.AssignmentInfoPresent);
          Assert.AreEqual(new DateTime(2009, 9, 13, 19, 45, 26, DateTimeKind.Local), entry7.AssignmentTimeStampLocal);
          Assert.AreEqual("B9194833", entry7.AssignmentInfoChecksum);
          Assert.AreEqual("171.67.108.25", entry7.CollectionServerIP);
+         Assert.AreEqual(0, entry7.NumberOfUploadFailures);
          Assert.AreEqual(524286976, entry7.PacketSizeLimit);
          Assert.AreEqual("harlam357", entry7.FoldingID);
          Assert.AreEqual("32", entry7.Team);
+         Assert.AreEqual(32, entry7.TeamNumber);
          Assert.AreEqual("0CF185086C102A49", entry7.ID);
          Assert.AreEqual( "CF185086C102A47", entry7.UserID);
          Assert.AreEqual(2, entry7.MachineID);
@@ -295,10 +317,11 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(4, queue.DownloadRateUnitWeight);
          Assert.AreEqual(109.226f, queue.UploadRateAverage);
          Assert.AreEqual(4, queue.UploadRateUnitWeight);
-         Assert.AreEqual(315582117, queue.ResultsSent); // This number makes no sense
+         Assert.AreEqual(new DateTime(2009, 12, 31, 7, 41, 57, DateTimeKind.Local), queue.ResultsSentLocal);
 
          QueueEntry entry9 = queue.GetQueueEntry(9);
-         Assert.AreEqual((int)QueueEntryStatus.FoldingNow, entry9.EntryStatus);
+         Assert.AreEqual(9, entry9.Index);
+         Assert.AreEqual(5, entry9.EntryStatus);
          Assert.AreEqual(0.0, entry9.SpeedFactor);
          Assert.AreEqual("171.64.65.71", entry9.ServerIP);
          Assert.AreEqual(8080, entry9.ServerPort);
@@ -308,16 +331,15 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(11, entry9.ProjectGen);
          Assert.AreEqual(0, entry9.Benchmark);
          Assert.AreEqual(500, entry9.Misc1a);
-         Assert.AreEqual(119, entry9.Misc1b); //***
+         Assert.AreEqual(119, entry9.Misc1b);
+         Assert.AreEqual(11, entry9.Misc4a);
          Assert.AreEqual(new DateTime(1969, 12, 31, 18, 00, 00, DateTimeKind.Local), entry9.ProjectIssuedLocal);
          Assert.AreEqual(new DateTime(2010, 1, 2, 14, 35, 41, DateTimeKind.Local), entry9.BeginTimeLocal);
-         Assert.AreEqual(new DateTime(1999, 12, 31, 18, 00, 00, DateTimeKind.Local), entry9.EndTimeLocal);
+         Assert.AreEqual(QueueData.Epoch2000, entry9.EndTimeUtc);
          Assert.AreEqual(new DateTime(2010, 1, 5, 14, 35, 41, DateTimeKind.Local), entry9.DueTimeLocal);
          Assert.AreEqual(3, entry9.ExpirationInDays);
-         //preferred
          Assert.AreEqual("http://www.stanford.edu/~pande/Win32/x86/NVIDIA/G80/Core_11.fah", entry9.CoreDownloadUrl.AbsoluteUri);
          Assert.AreEqual("11", entry9.CoreNumber);
-         //core name
          Assert.AreEqual(1, entry9.CpuType);
          Assert.AreEqual(687, entry9.CpuSpecies);
          Assert.AreEqual("Pentium II/III", entry9.CpuString);
@@ -326,19 +348,22 @@ namespace HFM.Queue.Tests
          Assert.AreEqual("Windows", entry9.OsString);
          Assert.AreEqual(0, entry9.NumberOfSmpCores);
          Assert.AreEqual(0, entry9.UseCores);
-         Assert.AreEqual("", entry9.WorkUnitTag); //***
+         Assert.AreEqual("", entry9.WorkUnitTag);
          Assert.AreEqual(1064917390, entry9.Flops);
          Assert.AreEqual(1064.91739, entry9.MegaFlops);
          Assert.AreEqual("1064.91739", entry9.MegaFlops.ToString(CultureInfo.InvariantCulture));
          Assert.AreEqual(6141, entry9.Memory);
          Assert.AreEqual(258, entry9.GpuMemory);
+         Assert.AreEqual(0, entry9.RequiredClientType);
          Assert.AreEqual(true, entry9.AssignmentInfoPresent);
          Assert.AreEqual(new DateTime(2010, 1, 2, 14, 35, 35, DateTimeKind.Local), entry9.AssignmentTimeStampLocal);
          Assert.AreEqual("B98B6C2F", entry9.AssignmentInfoChecksum);
          Assert.AreEqual("171.67.108.26", entry9.CollectionServerIP);
+         Assert.AreEqual(0, entry9.NumberOfUploadFailures);
          Assert.AreEqual(524286976, entry9.PacketSizeLimit);
          Assert.AreEqual("harlam357", entry9.FoldingID);
          Assert.AreEqual("32", entry9.Team);
+         Assert.AreEqual(32, entry9.TeamNumber);
          Assert.AreEqual("524BA6317A0D763D", entry9.ID);
          Assert.AreEqual("524BA6317A0D763A", entry9.UserID);
          Assert.AreEqual(3, entry9.MachineID);
@@ -358,13 +383,15 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(2, queue.DownloadRateUnitWeight);
          Assert.AreEqual(3375.984f, queue.UploadRateAverage);
          Assert.AreEqual(1, queue.UploadRateUnitWeight);
-         Assert.AreEqual(0, queue.ResultsSent);
+         Assert.AreEqual(QueueData.Epoch2000, queue.ResultsSentUtc);
          
          QueueEntry entry0 = queue.GetQueueEntry(0);
-         Assert.AreEqual((int)QueueEntryStatus.Empty, entry0.EntryStatus);
+         Assert.AreEqual(0, entry0.Index);
+         Assert.AreEqual(1, entry0.EntryStatus);
 
          QueueEntry entry1 = queue.GetQueueEntry(1);
-         Assert.AreEqual((int)QueueEntryStatus.Finished, entry1.EntryStatus);
+         Assert.AreEqual(1, entry1.Index);
+         Assert.AreEqual(3, entry1.EntryStatus);
          Assert.AreEqual(10.86, entry1.SpeedFactor);
          Assert.AreEqual("171.64.65.65", entry1.ServerIP);
          Assert.AreEqual(8080, entry1.ServerPort);
@@ -375,15 +402,14 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(0, entry1.Benchmark);
          Assert.AreEqual(500, entry1.Misc1a);
          Assert.AreEqual(400, entry1.Misc1b);
+         Assert.AreEqual(7, entry1.Misc4a);
          Assert.AreEqual(new DateTime(2009, 9, 25, 15, 20, 04, DateTimeKind.Local), entry1.ProjectIssuedLocal);
          Assert.AreEqual(new DateTime(2009, 9, 25, 15, 20, 12, DateTimeKind.Local), entry1.BeginTimeLocal);
          Assert.AreEqual(new DateTime(2009, 9, 29, 7, 42, 28, DateTimeKind.Local), entry1.EndTimeLocal);
          Assert.AreEqual(new DateTime(2009, 11, 4, 14, 20, 12, DateTimeKind.Local), entry1.DueTimeLocal);
          Assert.AreEqual(40, entry1.ExpirationInDays);
-         //preferred
          Assert.AreEqual("http://www.stanford.edu/~pande/OSX/PowerPC/Core_78.fah", entry1.CoreDownloadUrl.AbsoluteUri);
          Assert.AreEqual("78", entry1.CoreNumber);
-         //core name
          Assert.AreEqual(2, entry1.CpuType);
          Assert.AreEqual(0, entry1.CpuSpecies);
          Assert.AreEqual("PowerPC", entry1.CpuString);
@@ -398,13 +424,16 @@ namespace HFM.Queue.Tests
          Assert.AreEqual("0", entry1.MegaFlops.ToString(CultureInfo.InvariantCulture));
          Assert.AreEqual(2048, entry1.Memory);
          Assert.AreEqual(0, entry1.GpuMemory);
+         Assert.AreEqual(0, entry1.RequiredClientType);
          Assert.AreEqual(true, entry1.AssignmentInfoPresent);
          Assert.AreEqual(new DateTime(2009, 9, 25, 15, 20, 00, DateTimeKind.Local), entry1.AssignmentTimeStampLocal);
          Assert.AreEqual("B916E4CE", entry1.AssignmentInfoChecksum);
          Assert.AreEqual("171.67.108.25", entry1.CollectionServerIP);
+         Assert.AreEqual(0, entry1.NumberOfUploadFailures);
          Assert.AreEqual(524286976, entry1.PacketSizeLimit);
          Assert.AreEqual("surferseth", entry1.FoldingID);
          Assert.AreEqual("32", entry1.Team);
+         Assert.AreEqual(32, entry1.TeamNumber);
          Assert.AreEqual("5C35923707490D99", entry1.ID);
          Assert.AreEqual("5C35923707490D98", entry1.UserID);
          Assert.AreEqual(1, entry1.MachineID);
@@ -412,7 +441,8 @@ namespace HFM.Queue.Tests
          Assert.AreEqual("Folding@Home", entry1.WorkUnitType);
 
          QueueEntry entry2 = queue.GetQueueEntry(2);
-         Assert.AreEqual((int)QueueEntryStatus.FoldingNow, entry2.EntryStatus);
+         Assert.AreEqual(2, entry2.Index);
+         Assert.AreEqual(5, entry2.EntryStatus);
          Assert.AreEqual(0, entry2.SpeedFactor);
          Assert.AreEqual("171.64.65.65", entry2.ServerIP);
          Assert.AreEqual(8080, entry2.ServerPort);
@@ -423,16 +453,14 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(0, entry2.Benchmark);
          Assert.AreEqual(500, entry2.Misc1a);
          Assert.AreEqual(400, entry2.Misc1b);
+         Assert.AreEqual(7, entry2.Misc4a);
          Assert.AreEqual(new DateTime(2009, 9, 29, 7, 45, 57, DateTimeKind.Local), entry2.ProjectIssuedLocal);
          Assert.AreEqual(new DateTime(2009, 9, 29, 7, 46, 15, DateTimeKind.Local), entry2.BeginTimeLocal);
-         /*** Entry Not Completed ***/
-         Assert.AreEqual(new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc), entry2.EndTimeUtc); //Utc
+         Assert.AreEqual(QueueData.Epoch2000, entry2.EndTimeUtc);
          Assert.AreEqual(new DateTime(2009, 11, 8, 6, 46, 15, DateTimeKind.Local), entry2.DueTimeLocal);
          Assert.AreEqual(40, entry2.ExpirationInDays);
-         //preferred
          Assert.AreEqual("http://www.stanford.edu/~pande/OSX/PowerPC/Core_78.fah", entry2.CoreDownloadUrl.AbsoluteUri);
          Assert.AreEqual("78", entry2.CoreNumber);
-         //core name
          Assert.AreEqual(2, entry2.CpuType);
          Assert.AreEqual(0, entry2.CpuSpecies);
          Assert.AreEqual("PowerPC", entry2.CpuString);
@@ -447,13 +475,16 @@ namespace HFM.Queue.Tests
          Assert.AreEqual("1063.808819", entry2.MegaFlops.ToString(CultureInfo.InvariantCulture));
          Assert.AreEqual(2048, entry2.Memory);
          Assert.AreEqual(0, entry2.GpuMemory);
+         Assert.AreEqual(0, entry2.RequiredClientType);
          Assert.AreEqual(true, entry2.AssignmentInfoPresent);
          Assert.AreEqual(new DateTime(2009, 9, 29, 7, 45, 53, DateTimeKind.Local), entry2.AssignmentTimeStampLocal);
          Assert.AreEqual("B90DB8BF", entry2.AssignmentInfoChecksum);
          Assert.AreEqual("171.67.108.25", entry2.CollectionServerIP);
+         Assert.AreEqual(0, entry2.NumberOfUploadFailures);
          Assert.AreEqual(524286976, entry2.PacketSizeLimit);
          Assert.AreEqual("surferseth", entry2.FoldingID);
          Assert.AreEqual("32", entry2.Team);
+         Assert.AreEqual(32, entry2.TeamNumber);
          Assert.AreEqual("5C35923707490D99", entry2.ID);
          Assert.AreEqual("5C35923707490D98", entry2.UserID);
          Assert.AreEqual(1, entry2.MachineID);
@@ -473,10 +504,11 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(4, queue.DownloadRateUnitWeight);
          Assert.AreEqual(97.206f, queue.UploadRateAverage);
          Assert.AreEqual(4, queue.UploadRateUnitWeight);
-         Assert.AreEqual(0, queue.ResultsSent);
+         Assert.AreEqual(QueueData.Epoch2000, queue.ResultsSentUtc);
 
          QueueEntry entry1 = queue.GetQueueEntry(1);
-         Assert.AreEqual((int)QueueEntryStatus.Finished, entry1.EntryStatus);
+         Assert.AreEqual(1, entry1.Index);
+         Assert.AreEqual(3, entry1.EntryStatus);
          Assert.AreEqual(8.44, entry1.SpeedFactor);
          Assert.AreEqual("171.64.65.58", entry1.ServerIP);
          Assert.AreEqual(8080, entry1.ServerPort);
@@ -487,15 +519,14 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(357, entry1.Benchmark);
          Assert.AreEqual(500, entry1.Misc1a);
          Assert.AreEqual(200, entry1.Misc1b);
+         Assert.AreEqual(0, entry1.Misc4a);
          Assert.AreEqual(new DateTime(2009, 08, 31, 10, 07, 52, DateTimeKind.Local), entry1.ProjectIssuedLocal);
          Assert.AreEqual(new DateTime(2009, 08, 31, 10, 06, 31, DateTimeKind.Local), entry1.BeginTimeLocal);
          Assert.AreEqual(new DateTime(2009, 09, 08, 05, 52, 45, DateTimeKind.Local), entry1.EndTimeLocal);
          Assert.AreEqual(new DateTime(2009, 11, 05, 09, 06, 31, DateTimeKind.Local), entry1.DueTimeLocal);
          Assert.AreEqual(66, entry1.ExpirationInDays);
-         //preferred
          Assert.AreEqual("http://www.stanford.edu/~pande/OSX/PowerPC/Core_78.fah", entry1.CoreDownloadUrl.AbsoluteUri);
          Assert.AreEqual("78", entry1.CoreNumber);
-         //core name
          Assert.AreEqual(2, entry1.CpuType);
          Assert.AreEqual(0, entry1.CpuSpecies);
          Assert.AreEqual("PowerPC", entry1.CpuString);
@@ -510,13 +541,16 @@ namespace HFM.Queue.Tests
          Assert.AreEqual("0", entry1.MegaFlops.ToString(CultureInfo.InvariantCulture));
          Assert.AreEqual(0, entry1.Memory);
          Assert.AreEqual(0, entry1.GpuMemory);
+         Assert.AreEqual(3, entry1.RequiredClientType);
          Assert.AreEqual(true, entry1.AssignmentInfoPresent);
          Assert.AreEqual(new DateTime(2009, 08, 31, 10, 07, 49, DateTimeKind.Local), entry1.AssignmentTimeStampLocal);
          Assert.AreEqual("B977A500", entry1.AssignmentInfoChecksum);
          Assert.AreEqual("171.67.108.17", entry1.CollectionServerIP);
+         Assert.AreEqual(0, entry1.NumberOfUploadFailures);
          Assert.AreEqual(5241856, entry1.PacketSizeLimit);
          Assert.AreEqual("susato", entry1.FoldingID);
          Assert.AreEqual("1971", entry1.Team);
+         Assert.AreEqual(1971, entry1.TeamNumber);
          Assert.AreEqual("33B4219B415837A4", entry1.ID);
          Assert.AreEqual("33B4219B415837A3", entry1.UserID);
          Assert.AreEqual(1, entry1.MachineID);
@@ -536,13 +570,15 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(1, queue.DownloadRateUnitWeight);
          Assert.AreEqual(0.0f, queue.UploadRateAverage);
          Assert.AreEqual(0, queue.UploadRateUnitWeight);
-         Assert.AreEqual(0, queue.ResultsSent);
+         Assert.AreEqual(QueueData.Epoch2000, queue.ResultsSentUtc);
 
          QueueEntry entry0 = queue.GetQueueEntry(0);
-         Assert.AreEqual((int)QueueEntryStatus.Empty, entry0.EntryStatus);
+         Assert.AreEqual(0, entry0.Index);
+         Assert.AreEqual(1, entry0.EntryStatus);
 
          QueueEntry entry1 = queue.GetQueueEntry(1);
-         Assert.AreEqual((int)QueueEntryStatus.FoldingNow, entry1.EntryStatus);
+         Assert.AreEqual(1, entry1.Index);
+         Assert.AreEqual(5, entry1.EntryStatus);
          Assert.AreEqual(0.0, entry1.SpeedFactor);
          Assert.AreEqual("171.65.103.162", entry1.ServerIP);
          Assert.AreEqual(8080, entry1.ServerPort);
@@ -553,17 +589,14 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(0, entry1.Benchmark);
          Assert.AreEqual(500, entry1.Misc1a);
          Assert.AreEqual(400, entry1.Misc1b);
-         // This ProjectIssuedLocal Value makes no sense
+         Assert.AreEqual(2, entry1.Misc4a);
          Assert.AreEqual(new DateTime(2009, 10, 25, 17, 20, 57, DateTimeKind.Local), entry1.ProjectIssuedLocal);
          Assert.AreEqual(new DateTime(2009, 10, 25, 11, 47, 16, DateTimeKind.Local), entry1.BeginTimeLocal);
-         /*** Entry Not Completed ***/
-         Assert.AreEqual(new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc), entry1.EndTimeUtc); //Utc
+         Assert.AreEqual(QueueData.Epoch2000, entry1.EndTimeUtc);
          Assert.AreEqual(new DateTime(2010, 1, 26, 10, 47, 16, DateTimeKind.Local), entry1.DueTimeLocal);
          Assert.AreEqual(93, entry1.ExpirationInDays);
-         //preferred
          Assert.AreEqual("http://www.stanford.edu/~pande/Win32/x86/Core_78.fah", entry1.CoreDownloadUrl.AbsoluteUri);
          Assert.AreEqual("78", entry1.CoreNumber);
-         //core name
          Assert.AreEqual(1, entry1.CpuType);
          Assert.AreEqual(2000, entry1.CpuSpecies);
          Assert.AreEqual("AMD x86", entry1.CpuString);
@@ -578,13 +611,16 @@ namespace HFM.Queue.Tests
          Assert.AreEqual("0", entry1.MegaFlops.ToString(CultureInfo.InvariantCulture));
          Assert.AreEqual(1022, entry1.Memory);
          Assert.AreEqual(0, entry1.GpuMemory);
+         Assert.AreEqual(3, entry1.RequiredClientType);
          Assert.AreEqual(true, entry1.AssignmentInfoPresent);
          Assert.AreEqual(new DateTime(2009, 10, 25, 11, 46, 56, DateTimeKind.Local), entry1.AssignmentTimeStampLocal);
          Assert.AreEqual("B92F1DDD", entry1.AssignmentInfoChecksum);
          Assert.AreEqual("171.65.103.100", entry1.CollectionServerIP);
+         Assert.AreEqual(0, entry1.NumberOfUploadFailures);
          Assert.AreEqual(524286976, entry1.PacketSizeLimit);
          Assert.AreEqual("harlam357", entry1.FoldingID);
          Assert.AreEqual("32", entry1.Team);
+         Assert.AreEqual(32, entry1.TeamNumber);
          Assert.AreEqual("3F6B3F0625B7E6CA", entry1.ID);
          Assert.AreEqual("3F6B3F0625B7E6BA", entry1.UserID);
          Assert.AreEqual(16, entry1.MachineID);
@@ -592,6 +628,55 @@ namespace HFM.Queue.Tests
          Assert.AreEqual("Folding@Home", entry1.WorkUnitType);
       }
       // ReSharper restore InconsistentNaming
+      
+      [Test]
+      [ExpectedException(typeof(ArgumentException))]
+      public void QueueReaderArgumentNullTest()
+      {
+         QueueReader.ReadQueue(null);
+      }
+
+      [Test]
+      [ExpectedException(typeof(ArgumentException))]
+      public void QueueReaderArgumentEmptyTest()
+      {
+         QueueReader.ReadQueue(String.Empty);
+      }
+
+      [Test]
+      [ExpectedException(typeof(IOException))]
+      public void QueueReaderFileNotExistTest()
+      {
+         QueueReader.ReadQueue("does_not_exist.dat");
+      }
+
+      [Test]
+      [ExpectedException(typeof(IOException))]
+      public void QueueReaderFileWrongLengthTest()
+      {
+         const string filePath = "wrong_length.dat";
+
+         using (var fileStream = File.Create(filePath, 7000))
+         {
+            fileStream.Write(new byte[7000], 0, 7000);
+         }
+         QueueReader.ReadQueue(filePath);
+         File.Delete(filePath);
+      }
+
+      [Test]
+      [ExpectedException(typeof(NotSupportedException))]
+      public void QueueReaderFileWrongVersionTest()
+      {
+         const string filePath = "wrong_version.dat";
+
+         using (var fileStream = File.Create(filePath, 7168))
+         {
+            fileStream.Write(new byte[7168], 0, 7168);
+         }
+         QueueReader.ReadQueue(filePath);
+         File.Delete(filePath);
+      }
       
       [Test]
       public void UserIDCalculationTest()

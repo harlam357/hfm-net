@@ -18,11 +18,15 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
 namespace HFM.Queue
 {
+   /// <summary>
+   /// Queue Entry Class
+   /// </summary>
    [CLSCompliant(false)]
    public class QueueEntry
    {
@@ -33,9 +37,16 @@ namespace HFM.Queue
       /// </summary>
       private Entry _entry;
       /// <summary>
-      /// This Entry Index
+      /// Entry Index
       /// </summary>
-      private readonly UInt32 _thisIndex;
+      private readonly UInt32 _index;
+      /// <summary>
+      /// Entry Index
+      /// </summary>
+      public UInt32 Index
+      {
+         get { return _index; }
+      }
       /// <summary>
       /// The QueueReader that Created this QueueEntry
       /// </summary>
@@ -58,6 +69,54 @@ namespace HFM.Queue
                                                      "Fetching From Server"
                                                   };
       
+      /// <summary>
+      /// Required Client Type String Array (indexes correspond to the RequiredClientType property)
+      /// </summary>
+      public static string[] RequiredClientTypeStrings = new[]
+                                                         {
+                                                            String.Empty,
+                                                            "Regular",
+                                                            "No Deadline",
+                                                            "Advmethods",
+                                                            "Beta",
+                                                            "Internal",
+                                                            "Big Beta",
+                                                            "BigAdv",
+                                                            "Alpha",
+                                                            "Big Alpha"
+                                                         };
+      
+      /// <summary>
+      /// Core Number Name String Array (keys correspond to the CoreNumber property)
+      /// </summary>
+      public static Dictionary<string, string> CoreNumberStrings = new Dictionary<string, string>()
+                                                                   {
+                                                                      { String.Empty, String.Empty },
+                                                                      { "10", "GROGPU" },       /* GPU */
+                                                                      { "11", "GROGPU2" },		/* GPU2 (ATI CAL / NVIDIA CUDA) */
+                                                                      { "12", "ATI-DEV" },		/* GPU2 (ATI Development) */
+                                                                      { "13", "NVIDIA-DEV" },	/* GPU2 (NVIDIA Development) */
+                                                                      { "14", "GROGPU2-MT" },	/* GPU2 (NVIDIA Development) */
+                                                                      { "15", "OPENMMGPU" },		/* GPU3 (OpenMM) */
+                                                                      { "20", "SHARPEN" },		/* SHARPEN */
+                                                                      { "65", "TINKER" },		   /* Tinker */
+                                                                      { "78", "GROMACS" },		/* Gromacs */
+                                                                      { "79", "DGROMACS" },		/* Double-precision Gromacs */
+                                                                      { "7a", "GBGROMACS" },		/* GB Gromacs (Generalized Born implicit solvent) */
+                                                                      { "7b", "DGROMACSB" },		/* Double-precision Gromacs B */
+                                                                      { "7c", "DGROMACSC" },		/* Double-precision Gromacs C */
+                                                                      { "80", "GROST" },		   /* Gromacs SREM */
+                                                                      { "81", "GROSIMT" },		/* Gromacs Simulated Tempering */
+                                                                      { "82", "AMBER" },		   /* Amber */
+                                                                      { "96", "QMD" },		      /* QMD */
+                                                                      { "a0", "GROMACS33" },		/* Gromacs 3.3 */
+                                                                      { "a1", "GRO-SMP" },		/* Gromacs SMP (V1.71) */
+                                                                      { "a2", "GROCVS" },		   /* Gromacs CVS / Gromacs SMP (V1.90) */
+                                                                      { "a3", "GRO-A3" },		   /* Gromacs SMP2 / Gromacs SMP (V2.13) */
+                                                                      { "a4", "GRO-A4" },		   /* Gromacs GB (V2.06) */
+                                                                      { "b4", "ProtoMol" },		/* ProtoMol */
+                                                                   };
+      
       #endregion
 
       #region Constructor
@@ -66,12 +125,12 @@ namespace HFM.Queue
       /// Primary Constructor
       /// </summary>
       /// <param name="entry">Entry Structure</param>
-      /// <param name="thisIndex">This Entry Index</param>
+      /// <param name="index">Entry Index</param>
       /// <param name="qData">The QueueData object that is creating this QueueEntry</param>
-      internal QueueEntry(Entry entry, UInt32 thisIndex, QueueData qData)
+      internal QueueEntry(Entry entry, UInt32 index, QueueData qData)
       {
          _entry = entry;
-         _thisIndex = thisIndex;
+         _index = index;
          _qData = qData;
       }
       
@@ -124,7 +183,7 @@ namespace HFM.Queue
                      return 4; // Garbage
                   }
                case 1:
-                  if (_thisIndex == _qData.CurrentIndex)
+                  if (_index == _qData.CurrentIndex)
                   {
                      /* The unit is in progress.  Presumably the core is running. */
                      return 5; // Folding Now
@@ -184,15 +243,14 @@ namespace HFM.Queue
       {
          get
          {
-            DateTime d = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             if (_qData.System.Equals(SystemType.PPC))
             {
                byte[] b = BitConverter.GetBytes(_entry.TimeData[1]);
                byte[] bytes = _qData.GetSystemBytes(b);
                UInt32 seconds = BitConverter.ToUInt32(bytes, 0);
-               return d.AddSeconds(seconds);
+               return QueueData.Epoch2000.AddSeconds(seconds);
             }
-            return d.AddSeconds(_entry.TimeData[0]);
+            return QueueData.Epoch2000.AddSeconds(_entry.TimeData[0]);
          }
       }
 
@@ -214,15 +272,14 @@ namespace HFM.Queue
       {
          get
          {
-            DateTime d = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             if (_qData.System.Equals(SystemType.PPC))
             {
                byte[] b = BitConverter.GetBytes(_entry.TimeData[5]);
                byte[] bytes = _qData.GetSystemBytes(b);
                UInt32 seconds = BitConverter.ToUInt32(bytes, 0);
-               return d.AddSeconds(seconds);
+               return QueueData.Epoch2000.AddSeconds(seconds);
             }
-            return d.AddSeconds(_entry.TimeData[4]);
+            return QueueData.Epoch2000.AddSeconds(_entry.TimeData[4]);
          }
       }
 
@@ -629,6 +686,41 @@ namespace HFM.Queue
       }
 
       /// <summary>
+      /// Required client type endian flag
+      /// </summary>
+      private bool RequiredClientTypeBigEndian
+      {
+         get { return QueueData.IsBigEndian(_entry.RequiredClientType); }
+      }
+
+      /// <summary>
+      /// Required client type
+      /// </summary>
+      public UInt32 RequiredClientType
+      {
+         get
+         {
+            byte[] b = new byte[_entry.RequiredClientType.Length];
+            Array.Copy(_entry.RequiredClientType, b, b.Length);
+
+            if (RequiredClientTypeBigEndian)
+            {
+               Array.Reverse(b);
+            }
+
+            return BitConverter.ToUInt32(b, 0);
+         }
+      }
+      
+      /// <summary>
+      /// Assignment info endian flag
+      /// </summary>
+      public bool AssignmentInfoBigEndian
+      {
+         get { return QueueData.IsBigEndian(_entry.AssignmentInfoPresent); }
+      }
+
+      /// <summary>
       /// Assignment info present flag
       /// </summary>
       public bool AssignmentInfoPresent
@@ -638,7 +730,7 @@ namespace HFM.Queue
             byte[] b = new byte[_entry.AssignmentInfoPresent.Length];
             Array.Copy(_entry.AssignmentInfoPresent, b, 4);
 
-            if (QueueData.IsBigEndian(_entry.AssignmentInfoPresent))
+            if (AssignmentInfoBigEndian)
             {
                Array.Reverse(b);
             }
@@ -669,8 +761,7 @@ namespace HFM.Queue
                seconds = BitConverter.ToUInt32(b, 0);
             }
 
-            DateTime d = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            return d.AddSeconds(seconds);
+            return QueueData.Epoch2000.AddSeconds(seconds);
          }
       }
 
@@ -736,6 +827,33 @@ namespace HFM.Queue
       }
 
       /// <summary>
+      /// Misc4a endian flag
+      /// </summary>
+      public bool Misc4aBigEndian
+      {
+         get { return QueueData.IsBigEndian(_entry.Misc4a); }
+      }
+      
+      /// <summary>
+      /// Misc4a
+      /// </summary>
+      public UInt32 Misc4a
+      {
+         get
+         {
+            byte[] b = new byte[_entry.Misc4a.Length];
+            Array.Copy(_entry.Misc4a, b, _entry.Misc4a.Length);
+            
+            if (Misc4aBigEndian)
+            {
+               Array.Reverse(b);
+            }
+
+            return BitConverter.ToUInt32(b, 0);
+         }
+      }
+
+      /// <summary>
       /// Number of SMP cores
       /// </summary>
       public UInt32 NumberOfSmpCores
@@ -771,7 +889,20 @@ namespace HFM.Queue
       /// </summary>
       public string Passkey
       {
-         get { return _entry.Passkey; }
+         get
+         {
+            if (_entry.Passkey[0] == 0)
+            {
+               return String.Empty;
+            }
+            
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in _entry.Passkey)
+            {
+               sb.Append(Convert.ToChar(b));
+            }
+            return sb.ToString();
+         }
       }
 
       /// <summary>
@@ -828,15 +959,14 @@ namespace HFM.Queue
       {
          get
          {
-            DateTime d = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             if (_qData.System.Equals(SystemType.PPC))
             {
                byte[] b = BitConverter.GetBytes(_entry.ExpirationTime[1]);
                byte[] bytes = _qData.GetSystemBytes(b);
                UInt32 seconds = BitConverter.ToUInt32(bytes, 0);
-               return d.AddSeconds(seconds);
+               return QueueData.Epoch2000.AddSeconds(seconds);
             }
-            return d.AddSeconds(_entry.ExpirationTime[0]);
+            return QueueData.Epoch2000.AddSeconds(_entry.ExpirationTime[0]);
          }
       }
 
@@ -872,7 +1002,7 @@ namespace HFM.Queue
 
       internal static byte[] HexToData(string hexString)
       {
-         if (hexString == null) throw new ArgumentNullException("hexString", "Argument 'hexString' cannot be null.");
+         Debug.Assert(hexString != null);
 
          if (hexString.Length % 2 == 1)
          {

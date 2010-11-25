@@ -25,6 +25,9 @@ using System.Runtime.InteropServices;
 
 namespace HFM.Queue
 {
+   /// <summary>
+   /// Queue Reader Class
+   /// </summary>
    [CLSCompliant(false)]
    public static class QueueReader
    {
