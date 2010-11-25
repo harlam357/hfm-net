@@ -37,6 +37,9 @@ copy /Y ..\..\..\SQLite.NET\bin\x64\System.Data.SQLite.dll %1\SQLite\AMD64
 if not exist %1\SQLite\Mono md %1\SQLite\Mono
 copy /Y ..\..\..\SQLite.NET\bin\ManagedOnly\System.Data.SQLite.dll %1\SQLite\Mono
 
+if not exist %1\Tools md %1\Tools
+copy /Y ..\..\..\HFM.Queue.Tool\bin\ReleaseMerge\HFM.Queue.exe %1\Tools
+
 echo Copying Support Files and Folders...
 copy /Y GPLv2.TXT %1
 copy /Y "HTMLparser License.txt" %1

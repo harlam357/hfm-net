@@ -37,7 +37,7 @@
    </Target>
 
    <Target Name="Compile" DependsOnTargets="Version">
-      <MSBuild Projects="HFM.Tests.sln"
+      <MSBuild Projects="HFM.All.sln"
                Targets="Rebuild"
                Properties="Configuration=ScriptedRelease" />
 
