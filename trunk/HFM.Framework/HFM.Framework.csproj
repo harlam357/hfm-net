@@ -79,11 +79,13 @@
     <Compile Include="ICompletedUnitsFileReader.cs" />
     <Compile Include="IDataAggregator.cs" />
     <Compile Include="IDisplayInstance.cs" />
+    <Compile Include="IInstanceCollection.cs" />
     <Compile Include="InstanceProvider.cs" />
     <Compile Include="IPreferenceSet.cs" />
     <Compile Include="IProjectSummaryDownloader.cs" />
     <Compile Include="IProteinBenchmarkContainer.cs" />
     <Compile Include="IProteinCollection.cs" />
+    <Compile Include="IQueryParameterContainer.cs" />
     <Compile Include="IUnitInfoDatabase.cs" />
     <Compile Include="IUnitInfoLogic.cs" />
     <Compile Include="IXmlStatsDataContainer.cs" />

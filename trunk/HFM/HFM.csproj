@@ -63,11 +63,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Castle Windsor 2.0\bin\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="harlam357.Net, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\harlam357-net\net20\bin\Release\harlam357.Net.dll</HintPath>
-    </Reference>
-    <Reference Include="harlam357.Windows.Forms, Version=1.1.0.7, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="harlam357.Windows.Forms, Version=1.2.0.36, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\harlam357-net\net20\bin\Release\harlam357.Windows.Forms.dll</HintPath>
     </Reference>
@@ -75,191 +71,17 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Linq.Dynamic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\System.Linq.Dynamic\System.Linq.Dynamic.dll</HintPath>
-    </Reference>
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="ZedGraph, Version=5.1.5.28844, Culture=neutral, PublicKeyToken=02a83cbd123fcd60, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ZedGraph\zedgraph_dll_v5.1.5\ZedGraph.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyVersion.cs">
       <Link>AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="Classes\ButtonWrapper.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Classes\ButtonWrapper.Designer.cs">
-      <DependentUpon>ButtonWrapper.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Classes\CheckBoxWrapper.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Classes\CheckBoxWrapper.Designer.cs">
-      <DependentUpon>CheckBoxWrapper.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Classes\ComboBoxWrapper.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Classes\ComboBoxWrapper.Designer.cs">
-      <DependentUpon>ComboBoxWrapper.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Classes\DataGridViewColumnSelector.cs" />
-    <Compile Include="Classes\DataGridViewWrapper.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Classes\DataGridViewWrapper.Designer.cs">
-      <DependentUpon>DataGridViewWrapper.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Classes\FormWrapper.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Classes\FormWrapper.Designer.cs">
-      <DependentUpon>FormWrapper.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Classes\GroupBoxWrapper.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Classes\GroupBoxWrapper.Designer.cs">
-      <DependentUpon>GroupBoxWrapper.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Classes\HistoryGridViewWrapper.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Classes\HistoryGridViewWrapper.Designer.cs">
-      <DependentUpon>HistoryGridViewWrapper.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Classes\UpdateLogic.cs" />
-    <Compile Include="Classes\LabelWrapper.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Classes\LabelWrapper.Designer.cs">
-      <DependentUpon>LabelWrapper.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Classes\QueueControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Classes\QueueControl.Designer.cs">
-      <DependentUpon>QueueControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Classes\RadioButtonWrapper.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Classes\RadioButtonWrapper.Designer.cs">
-      <DependentUpon>RadioButtonWrapper.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Classes\RichTextBoxWrapper.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Classes\RichTextBoxWrapper.Designer.cs">
-      <DependentUpon>RichTextBoxWrapper.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Classes\SplitContainerWrapper.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Classes\SplitContainerWrapper.Designer.cs">
-      <DependentUpon>SplitContainerWrapper.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Classes\TextBoxWrapper.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Classes\TextBoxWrapper.Designer.cs">
-      <DependentUpon>TextBoxWrapper.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\frmAbout.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmAbout.Designer.cs">
-      <DependentUpon>frmAbout.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\frmBenchmarks.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmBenchmarks.Designer.cs">
-      <DependentUpon>frmBenchmarks.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\frmHistory.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmHistory.Designer.cs">
-      <DependentUpon>frmHistory.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\frmMain.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmMain.Designer.cs">
-      <DependentUpon>frmMain.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\frmMainGridHandlers.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmMessages.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmMessages.Designer.cs">
-      <DependentUpon>frmMessages.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\frmPreferences.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmPreferences.Designer.cs">
-      <DependentUpon>frmPreferences.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\frmHost.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmHost.Designer.cs">
-      <DependentUpon>frmHost.cs</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="Forms\frmAbout.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmAbout.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmHost.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmHost.cs</DependentUpon>
-    </EmbeddedResource>
-    <Compile Include="Classes\NativeMethods.cs" />
-    <Compile Include="Forms\frmProjects.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmProjects.Designer.cs">
-      <DependentUpon>frmProjects.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\frmQuery.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmQuery.Designer.cs">
-      <DependentUpon>frmQuery.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\HistoryPresenter.cs" />
-    <Compile Include="Forms\InstanceSettingsPresenter.cs" />
-    <Compile Include="Forms\frmUnitImport.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmUnitImport.Designer.cs">
-      <DependentUpon>frmUnitImport.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Models\HistoryPresenterModel.cs" />
-    <Compile Include="Models\OptionsModel.cs" />
-    <Compile Include="Models\ReportingModel.cs" />
-    <Compile Include="Models\ScheduledTasksModel.cs" />
-    <Compile Include="Models\StartupAndExternalModel.cs" />
-    <Compile Include="Models\WebSettingsModel.cs" />
-    <Compile Include="Models\WebVisualStylesModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Forms\frmPreferences.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmPreferences.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -274,33 +96,6 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Classes\QueueControl.resx">
-      <DependentUpon>QueueControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmBenchmarks.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmBenchmarks.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmHistory.resx">
-      <DependentUpon>frmHistory.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmMain.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmMain.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmMessages.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmMessages.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmProjects.resx">
-      <DependentUpon>frmProjects.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmQuery.resx">
-      <DependentUpon>frmQuery.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmUnitImport.resx">
-      <DependentUpon>frmUnitImport.cs</DependentUpon>
-    </EmbeddedResource>
     <Content Include="..\Castle Windsor 2.0\Windsor License.txt">
       <Link>Windsor License.txt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -350,12 +145,6 @@
     <Content Include="CSS\Orange.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Resources\hfm_logo.png" />
-    <None Include="Resources\UpArrow.png" />
-    <None Include="Resources\Color.png" />
-    <None Include="Resources\Delete.png" />
-    <None Include="Resources\DownArrow.png" />
-    <None Include="Resources\hfm_logo_large.png" />
     <Content Include="XML\Overview.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -386,6 +175,10 @@
       <Project>{83BF1B7A-72B4-486B-A248-9E97814F62ED}</Project>
       <Name>HFM.DataAggregator</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HFM.Forms\HFM.Forms.csproj">
+      <Project>{C0B126D1-C495-4062-A8C8-4AAA69F35C9D}</Project>
+      <Name>HFM.Forms</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HFM.Framework.DataTypes\HFM.Framework.DataTypes.csproj">
       <Project>{B294C8E0-63AD-47CF-8DE5-CE44C046DF89}</Project>
       <Name>HFM.Framework.DataTypes</Name>
@@ -409,6 +202,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Help\" />
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

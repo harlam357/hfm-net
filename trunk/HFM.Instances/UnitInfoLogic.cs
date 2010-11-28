@@ -59,7 +59,6 @@ namespace HFM.Instances
 
       #region Constructors
 
-      [CLSCompliant(false)]
       public UnitInfoLogic(IPreferenceSet prefs, IProtein protein, IProteinBenchmarkContainer benchmarkContainer, 
                            IUnitInfo unitInfo, IClientInstanceSettings clientInstanceSettings, IDisplayInstance displayInstance)
       {

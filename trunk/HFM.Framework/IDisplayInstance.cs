@@ -24,7 +24,6 @@ using HFM.Framework.DataTypes;
 
 namespace HFM.Framework
 {
-   [CLSCompliant(false)]
    public interface IDisplayInstance
    {
       /// <summary>

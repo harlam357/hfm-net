@@ -39,7 +39,7 @@ using HFM.Plugins;
 
 namespace HFM.Instances
 {
-   public sealed class InstanceCollection : IDisposable
+   public sealed class InstanceCollection : IInstanceCollection, IDisposable
    {
       #region Fields
       
@@ -96,7 +96,6 @@ namespace HFM.Instances
       /// Display Instance Accessor
       /// </summary>
       /// <param name="key">Display Instance Name</param>
-      [CLSCompliant(false)]
       public IDisplayInstance this[string key]
       {
          get { return _displayCollection.FirstOrDefault(x => x.Name == key); }
@@ -125,7 +124,6 @@ namespace HFM.Instances
          }
       }
 
-      [CLSCompliant(false)]
       public IClientInstance SelectedClientInstance { get; private set; }
 
       /// <summary>
@@ -152,7 +150,6 @@ namespace HFM.Instances
          }
       }
 
-      [CLSCompliant(false)]
       public IDisplayInstance SelectedDisplayInstance { get; private set; }
 
       private int _settingsPluginIndex;
@@ -254,7 +251,6 @@ namespace HFM.Instances
       /// <summary>
       /// Default Constructor
       /// </summary>
-      [CLSCompliant(false)]
       public InstanceCollection(IPreferenceSet prefs, 
                                 IProteinCollection proteinCollection, 
                                 IProteinBenchmarkContainer benchmarkContainer, 
@@ -1126,7 +1122,6 @@ namespace HFM.Instances
       /// Get Display Collection For Binding
       /// </summary>
       /// <returns>List of Display Instances</returns>
-      [CLSCompliant(false)]
       [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
       public BindingList<IDisplayInstance> GetDisplayCollection()
       {

@@ -29,7 +29,6 @@ using HFM.Framework.DataTypes;
 
 namespace HFM.Instances
 {
-   [CLSCompliant(false)]
    public interface IClientInstance
    {
       /// <summary>
@@ -87,13 +86,11 @@ namespace HFM.Instances
          get { return _displayInstance.Settings; }
       }
       
-      [CLSCompliant(false)]
       public IDisplayInstance DisplayInstance
       {
          get { return _displayInstance; }
       }
 
-      [CLSCompliant(false)]
       public IList<IDisplayInstance> ExternalDisplayInstances { get; private set; }
 
       #endregion
@@ -102,7 +99,6 @@ namespace HFM.Instances
       /// <summary>
       /// Primary Constructor
       /// </summary>
-      [CLSCompliant(false)]
       public ClientInstance(IPreferenceSet prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer,
                             IStatusLogic statusLogic, IDataRetriever dataRetriever, IDataAggregator dataAggregator)
          : this(prefs, proteinCollection, benchmarkContainer, statusLogic, dataRetriever, dataAggregator, null)
@@ -113,7 +109,6 @@ namespace HFM.Instances
       /// <summary>
       /// Primary Constructor
       /// </summary>
-      [CLSCompliant(false)]
       public ClientInstance(IPreferenceSet prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer,
                             IStatusLogic statusLogic, IDataRetriever dataRetriever, IDataAggregator dataAggregator, ClientInstanceSettings instanceSettings)
       {

@@ -28,7 +28,6 @@ namespace HFM.Instances
 {
    [Serializable]
    [CoverageExclude]
-   [CLSCompliant(false)]
    public class DisplayInstanceSortableBindingList : SortableBindingList<IDisplayInstance>
    {
       #region Fields

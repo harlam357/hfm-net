@@ -53,7 +53,7 @@
    </Target>
 
    <Target Name="NUnit">
-      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Forms.Tests\bin\Release\HFM.Forms.Tests.dll /xml=HFM.Forms.Tests.Results.xml //a HFM //ea $(NCoverExcludeList) //x HFM.Forms.Tests.Coverage.xml" />
+      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Forms.Tests\bin\Release\HFM.Forms.Tests.dll /xml=HFM.Forms.Tests.Results.xml //a HFM.Forms //ea $(NCoverExcludeList) //x HFM.Forms.Tests.Coverage.xml" />
       <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.DataAggregator.Tests\bin\Release\HFM.DataAggregator.Tests.dll /xml=HFM.DataAggregator.Tests.Results.xml //a HFM.DataAggregator //ea $(NCoverExcludeList) //x HFM.DataAggregator.Tests.Coverage.xml" />
       <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Framework.Tests\bin\Release\HFM.Framework.Tests.dll /xml=HFM.Framework.Tests.Results.xml //a HFM.Framework //ea $(NCoverExcludeList) //x HFM.Framework.Tests.Coverage.xml" />
       <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Framework.DataTypes.Tests\bin\Release\HFM.Framework.DataTypes.Tests.dll /xml=HFM.Framework.DataTypes.Tests.Results.xml //a HFM.Framework.DataTypes //ea $(NCoverExcludeList) //x HFM.Framework.DataTypes.Tests.Coverage.xml" />

@@ -43,6 +43,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Framework.DataTypes", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Framework.DataTypes.Tests", "HFM.Framework.DataTypes.Tests\HFM.Framework.DataTypes.Tests.csproj", "{52912315-F758-4EDF-A6D5-FB875FEB7F93}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Forms", "HFM.Forms\HFM.Forms.csproj", "{C0B126D1-C495-4062-A8C8-4AAA69F35C9D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -158,6 +160,12 @@ Global
 		{52912315-F758-4EDF-A6D5-FB875FEB7F93}.Release|Any CPU.Build.0 = Release|Any CPU
 		{52912315-F758-4EDF-A6D5-FB875FEB7F93}.ScriptedRelease|Any CPU.ActiveCfg = Release|Any CPU
 		{52912315-F758-4EDF-A6D5-FB875FEB7F93}.ScriptedRelease|Any CPU.Build.0 = Release|Any CPU
+		{C0B126D1-C495-4062-A8C8-4AAA69F35C9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0B126D1-C495-4062-A8C8-4AAA69F35C9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0B126D1-C495-4062-A8C8-4AAA69F35C9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0B126D1-C495-4062-A8C8-4AAA69F35C9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0B126D1-C495-4062-A8C8-4AAA69F35C9D}.ScriptedRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{C0B126D1-C495-4062-A8C8-4AAA69F35C9D}.ScriptedRelease|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
