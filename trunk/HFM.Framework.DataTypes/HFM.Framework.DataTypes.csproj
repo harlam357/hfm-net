@@ -56,6 +56,7 @@
     <Compile Include="ClientQueue.cs" />
     <Compile Include="ClientQueueEntry.cs" />
     <Compile Include="ClientRun.cs" />
+    <Compile Include="CompletedUnitsReadResult.cs" />
     <Compile Include="Default.cs" />
     <Compile Include="Enumerations.cs" />
     <Compile Include="HistoryEntry.cs" />

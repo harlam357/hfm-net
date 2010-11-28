@@ -1,4 +1,22 @@
-﻿   
+﻿/*
+ * HFM.NET - Work Unit History Database
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License. See the included file GPLv2.TXT.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+   
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,8 +30,6 @@ using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
-using ProtoBuf;
-
 using harlam357.Windows.Forms;
 
 using HFM.Framework;
@@ -21,27 +37,6 @@ using HFM.Framework.DataTypes;
 
 namespace HFM.Instances
 {
-   public interface IUnitInfoDatabase
-   {
-      string DatabaseFilePath { get; set; }
-
-      bool TableExists(string tableName);
-
-      void CreateTable(string tableName);
-
-      void DeleteAllUnitInfoData();
-      
-      void WriteUnitInfo(IUnitInfoLogic unitInfoLogic);
-
-      int DeleteUnitInfo(long id);
-      
-      void ImportCompletedUnits(ICollection<HistoryEntry> entries);
-      
-      IList<HistoryEntry> QueryUnitData(QueryParameters parameters);
-
-      IList<HistoryEntry> QueryUnitData(QueryParameters parameters, HistoryProductionView productionView);
-   }
-
    public class UnitInfoDatabase : IUnitInfoDatabase
    {
       public const string WuHistoryTableName = "WuHistory";
@@ -562,27 +557,6 @@ namespace HFM.Instances
 
          return String.Format(CultureInfo.InvariantCulture, "'{0}'", value);
       }
-   }
-
-   public class CompletedUnitsReadResult
-   {
-      public CompletedUnitsReadResult()
-      {
-         Entries = new List<HistoryEntry>();
-         ErrorLines = new List<string>();
-      }
-
-      public int Duplicates { get; set; }
-      public List<HistoryEntry> Entries { get; private set; }
-      public List<string> ErrorLines { get; private set; }
-   }
-   
-   public interface ICompletedUnitsFileReader : IProgressProcessRunner
-   {
-      string CompletedUnitsFilePath { get; set; }
-      CompletedUnitsReadResult Result { get; }
-   
-      void WriteCompletedUnitErrorLines(string filePath, IEnumerable<string> lines);
    }
 
    public class CompletedUnitsFileReader : ICompletedUnitsFileReader

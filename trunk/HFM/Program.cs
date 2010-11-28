@@ -110,7 +110,7 @@ namespace HFM
 
          try
          {
-            var database = InstanceProvider.GetInstance<Instances.IUnitInfoDatabase>();
+            var database = InstanceProvider.GetInstance<IUnitInfoDatabase>();
             database.DatabaseFilePath = Path.Combine(prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), Constants.SqLiteFilename);
          }
          catch (Exception ex)

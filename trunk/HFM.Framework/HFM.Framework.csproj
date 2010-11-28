@@ -76,6 +76,7 @@
     <Compile Include="Enumerations.cs" />
     <Compile Include="HfmTrace.cs" />
     <Compile Include="IClientInstanceSettings.cs" />
+    <Compile Include="ICompletedUnitsFileReader.cs" />
     <Compile Include="IDataAggregator.cs" />
     <Compile Include="IDisplayInstance.cs" />
     <Compile Include="InstanceProvider.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="IProjectSummaryDownloader.cs" />
     <Compile Include="IProteinBenchmarkContainer.cs" />
     <Compile Include="IProteinCollection.cs" />
+    <Compile Include="IUnitInfoDatabase.cs" />
     <Compile Include="IUnitInfoLogic.cs" />
     <Compile Include="IXmlStatsDataContainer.cs" />
     <Compile Include="NetworkOps.cs" />
