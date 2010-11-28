@@ -89,14 +89,13 @@
     <Compile Include="InstanceCollectionDataInterface.cs" />
     <Compile Include="InstanceCollectionHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProteinBenchmarkCollection.cs" />
     <Compile Include="ProteinBenchmarkContainer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="QueryParameterContainer.cs" />
     <Compile Include="SortableBindingList.cs" />
     <Compile Include="StatusData.cs" />
     <Compile Include="StatusLogic.cs" />
-    <Compile Include="UnitInfoCollection.cs" />
     <Compile Include="UnitInfoContainer.cs" />
     <Compile Include="UnitInfoDatabase.cs" />
     <Compile Include="UnitInfoLogic.cs" />

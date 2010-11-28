@@ -299,51 +299,6 @@ namespace HFM.Framework
                  project1.ProjectGen == project2.ProjectGen);
       }
 
-      /// <summary>
-      /// Determine the Client Type based on the FAH Core Name
-      /// </summary>
-      /// <param name="coreName">FAH Core Name (from psummary)</param>
-      public static ClientType GetClientTypeFromCore(string coreName)
-      {
-         // make this method more forgiving - rwh 9/6/10
-         if (String.IsNullOrEmpty(coreName))
-         {
-            return ClientType.Unknown;   
-         }
-         
-         switch (coreName.ToUpperInvariant())
-         {
-            case "GROMACS":
-            case "DGROMACS":
-            case "GBGROMACS":
-            case "AMBER":
-            //case "QMD":
-            case "GROMACS33":
-            case "GROST":
-            case "GROSIMT":
-            case "DGROMACSB":
-            case "DGROMACSC":
-            case "GRO-A4":
-            //case "TINKER":
-            /*** ProtoMol Only */
-            case "PROTOMOL":
-               /*******************/
-               return ClientType.Standard;
-            case "GRO-SMP":
-            case "GROCVS":
-            case "GRO-A3":
-               return ClientType.SMP;
-            case "GROGPU2":
-            case "GROGPU2-MT":
-            case "OPENMMGPU":
-            case "ATI-DEV":
-            case "NVIDIA-DEV":
-               return ClientType.GPU;
-            default:
-               return ClientType.Unknown;
-         }
-      }
-      
       public static string[] GetQueryFieldColumnNames()
       {
          // Indexes Must Match QueryFieldName enum defined in Enumerations.cs

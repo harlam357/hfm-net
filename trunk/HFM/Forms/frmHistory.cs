@@ -25,10 +25,11 @@ using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 
-using HFM.Classes;
-using HFM.Framework;
-using HFM.Instances;
 using HFM.Models;
+using HFM.Classes;
+using HFM.Instances;
+using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Forms
 {

@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
@@ -28,6 +29,20 @@ using HFM.Framework.DataTypes;
 
 namespace HFM.Instances
 {
+   [ProtoContract]
+   public class UnitInfoCollection
+   {
+      private readonly List<UnitInfo> _unitInfoList = new List<UnitInfo>();
+      /// <summary>
+      /// Serialized UnitInfo List
+      /// </summary>
+      [ProtoMember(1)]
+      public List<UnitInfo> UnitInfoList
+      {
+         get { return _unitInfoList; }
+      }
+   }
+
    public interface IUnitInfoContainer
    {
       /// <summary>

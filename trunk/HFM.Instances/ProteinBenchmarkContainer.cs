@@ -25,11 +25,32 @@ using System.IO;
 using System.Text;
 using System.Xml.Serialization;
 
+using ProtoBuf;
+
 using HFM.Framework;
 using HFM.Framework.DataTypes;
 
 namespace HFM.Instances
 {
+   [ProtoContract]
+   public class ProteinBenchmarkCollection
+   {
+      #region Fields
+      
+      private readonly List<ProteinBenchmark> _benchmarkList = new List<ProteinBenchmark>();
+      /// <summary>
+      /// Serialized Benchmark List
+      /// </summary>
+      [ProtoMember(1)]
+      [XmlElement("Benchmarks")]
+      public List<ProteinBenchmark> BenchmarkList
+      {
+         get { return _benchmarkList; }
+      }
+      
+      #endregion
+   }
+
    public class ProteinBenchmarkContainer : IProteinBenchmarkContainer
    {
       #region Fields

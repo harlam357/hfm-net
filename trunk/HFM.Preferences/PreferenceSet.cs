@@ -35,6 +35,7 @@ using harlam357.Security;
 using harlam357.Security.Encryption;
 
 using HFM.Framework;
+using HFM.Framework.DataTypes;
 using HFM.Preferences.Properties;
 
 namespace HFM.Preferences

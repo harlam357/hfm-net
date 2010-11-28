@@ -26,9 +26,10 @@ using System.Windows.Forms;
 
 using harlam357.Windows.Forms;
 
-using HFM.Framework;
-using HFM.Instances;
 using HFM.Models;
+using HFM.Instances;
+using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Forms
 {

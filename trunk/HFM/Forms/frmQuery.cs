@@ -25,7 +25,7 @@ using System.Globalization;
 using System.Windows.Forms;
 
 using HFM.Framework;
-using HFM.Instances;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Forms
 {

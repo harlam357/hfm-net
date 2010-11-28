@@ -125,4 +125,56 @@ namespace HFM.Framework.DataTypes
       Abandonded,
       FetchingFromServer
    }
+
+   /// <summary>
+   /// Work Unit History Production View Type
+   /// </summary>
+   public enum HistoryProductionView
+   {
+      BonusDownloadTime,
+      BonusFrameTime,
+      Standard
+   }
+
+   /// <summary>
+   /// Work Unit History Query Field Names
+   /// </summary>
+   public enum QueryFieldName
+   {
+      ID = -1,
+      ProjectID = 0,
+      ProjectRun,
+      ProjectClone,
+      ProjectGen,
+      InstanceName,
+      InstancePath,
+      Username,
+      Team,
+      CoreVersion,
+      FramesCompleted,
+      FrameTime,
+      Result,
+      DownloadDateTime,
+      CompletionDateTime,
+      WorkUnitName,
+      KFactor,
+      Core,
+      Frames,
+      Atoms,
+      ClientType,
+      PPD,
+      Credit
+   }
+
+   /// <summary>
+   /// Work Unit History Query Field Types
+   /// </summary>
+   public enum QueryFieldType
+   {
+      Equal,
+      GreaterThan,
+      GreaterThanOrEqual,
+      LessThan,
+      LessThanOrEqual,
+   }
 }
