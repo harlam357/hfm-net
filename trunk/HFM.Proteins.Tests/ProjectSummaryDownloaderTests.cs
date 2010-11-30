@@ -21,7 +21,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-using Castle.Windsor;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -33,7 +32,6 @@ namespace HFM.Proteins.Tests
    [TestFixture]
    public class ProjectSummaryDownloaderTests
    {
-      private IWindsorContainer _container;
       private MockRepository _mocks;
 
       private IPreferenceSet _prefs;
@@ -43,14 +41,11 @@ namespace HFM.Proteins.Tests
       {
          TraceLevelSwitch.Instance.Level = TraceLevel.Verbose;
       
-         _container = new WindsorContainer();
          _mocks = new MockRepository();
 
          _prefs = _mocks.DynamicMock<IPreferenceSet>();
          Expect.Call(_prefs.GetPreference<bool>(Preference.UseProxy)).Return(false).Repeat.Any();
          Expect.Call(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath)).Return(String.Empty).Repeat.Any();
-         _container.Kernel.AddComponentInstance<IPreferenceSet>(typeof(IPreferenceSet), _prefs);
-         InstanceProvider.SetContainer(_container);
       }
 
       [Test]

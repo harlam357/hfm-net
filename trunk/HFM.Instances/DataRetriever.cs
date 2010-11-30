@@ -205,7 +205,7 @@ namespace HFM.Instances
       
          DateTime start = HfmTrace.ExecStart;
 
-         var net = new NetworkOps();
+         var net = new NetworkOps(_prefs);
 
          try
          {
@@ -275,7 +275,7 @@ namespace HFM.Instances
       {
          DateTime start = HfmTrace.ExecStart;
          
-         var net = new NetworkOps();
+         var net = new NetworkOps(_prefs);
 
          try
          {
@@ -302,7 +302,7 @@ namespace HFM.Instances
       
          DateTime start = HfmTrace.ExecStart;
 
-         var net = new NetworkOps();
+         var net = new NetworkOps(_prefs);
 
          try
          {
@@ -373,7 +373,7 @@ namespace HFM.Instances
       {
          DateTime start = HfmTrace.ExecStart;
 
-         var net = new NetworkOps();
+         var net = new NetworkOps(_prefs);
 
          try
          {

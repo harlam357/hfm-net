@@ -193,7 +193,7 @@ namespace HFM.Framework
       /// </summary>
       void RefreshDisplayCollection();
 
-      void SetSelectedInstance(IList selectedClients);
+      void SetSelectedInstance(string instanceName);
       
       /// <summary>
       /// Get Totals for all loaded Client Instances

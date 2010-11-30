@@ -21,7 +21,6 @@ using System;
 using System.Net;
 using System.Net.Cache;
 
-using Castle.Windsor;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -34,21 +33,17 @@ namespace HFM.Framework.Tests
    [TestFixture]
    public class NetworkOpsTests
    {
-      private readonly NetworkOps _net = new NetworkOps();
-
-      private IWindsorContainer _container;
       private MockRepository _mocks;
+      private NetworkOps _net;
 
       [SetUp]
       public void Init()
       {
-         _container = new WindsorContainer();
          _mocks = new MockRepository();
 
          var prefs = _mocks.DynamicMock<IPreferenceSet>();
          Expect.Call(prefs.GetPreference<bool>(Preference.UseProxy)).Return(false).Repeat.Any();
-         _container.Kernel.AddComponentInstance<IPreferenceSet>(typeof(IPreferenceSet), prefs);
-         InstanceProvider.SetContainer(_container);
+         _net = new NetworkOps(prefs);
       }
 
       [Test]

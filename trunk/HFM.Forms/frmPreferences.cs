@@ -39,7 +39,9 @@ using HFM.Framework.DataTypes;
 
 namespace HFM.Forms
 {
+   // ReSharper disable InconsistentNaming
    public partial class frmPreferences : FormWrapper
+   // ReSharper restore InconsistentNaming
    {
       /// <summary>
       /// Tab Name Enumeration (maintain in same order as tab pages)
@@ -713,7 +715,7 @@ namespace HFM.Forms
       {
          if (_net == null)
          {
-            _net = new NetworkOps();
+            _net = new NetworkOps(_prefs);
          }
 
          try

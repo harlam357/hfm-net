@@ -60,13 +60,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SQLite.NET\bin\System.Data.SQLite.DLL</HintPath>
     </Reference>
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Linq.Dynamic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\System.Linq.Dynamic\System.Linq.Dynamic.dll</HintPath>
     </Reference>
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.XML" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyVersion.cs">

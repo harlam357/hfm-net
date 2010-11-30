@@ -180,7 +180,7 @@ namespace HFM.Forms
             HfmTrace.WriteToHfmConsole("Running on Mono...");
             dataGridView1.RowEnter += delegate
             {
-               _clientInstances.SetSelectedInstance(dataGridView1.SelectedRows);
+               _clientInstances.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
             };
          }
       }
@@ -332,7 +332,7 @@ namespace HFM.Forms
       
       private void CheckForUpdate(bool userInvoked)
       {
-         if (_updateLogic == null) _updateLogic = new UpdateLogic(this, new MessageBoxView());
+         if (_updateLogic == null) _updateLogic = new UpdateLogic(this, new MessageBoxView(), new NetworkOps(_prefs));
          if (_updateLogic.CheckInProgress == false)
          {
             HfmTrace.WriteToHfmConsole("Checking for update...");
@@ -349,7 +349,7 @@ namespace HFM.Forms
          }
 
          var updatePresenter = new UpdatePresenter(HfmTrace.WriteToHfmConsole,
-            update, NetworkOps.GetProxy(), Constants.ApplicationName, PlatformOps.ApplicationVersionWithRevision);
+            update, new NetworkOps(_prefs).GetProxy(), Constants.ApplicationName, PlatformOps.ApplicationVersionWithRevision);
          updatePresenter.Show(this);
          HandleUpdatePresenterResults(updatePresenter);
       }
@@ -501,7 +501,7 @@ namespace HFM.Forms
       /// </summary>
       private void dataGridView1_SelectionChanged(object sender, EventArgs e)
       {
-         _clientInstances.SetSelectedInstance(dataGridView1.SelectedRows);
+         _clientInstances.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
       }
       
       /// <summary>
@@ -1397,10 +1397,30 @@ namespace HFM.Forms
             // forced here instead.
             if (PlatformOps.IsRunningOnMono())
             {
-               _clientInstances.SetSelectedInstance(dataGridView1.SelectedRows);
+               _clientInstances.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
             }
             _clientInstances.RaiseSelectedInstanceChanged();
          }
+      }
+      
+      private string GetSelectedRowInstanceName(System.Collections.IList selectedRows)
+      {
+         if (selectedRows.Count > 0)
+         {
+            Debug.Assert(selectedRows.Count == 1);
+
+            var selectedClient = selectedRows[0] as DataGridViewRow;
+            if (selectedClient != null)
+            {
+               var nameColumnValue = selectedClient.Cells["Name"].Value;
+               if (nameColumnValue != null)
+               {
+                  return nameColumnValue.ToString();
+               }
+            }
+         }
+
+         return null;
       }
       
       private void SelectCurrentRowKey()

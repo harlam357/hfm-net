@@ -26,11 +26,9 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
-using System.ComponentModel;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-using System.Windows.Forms;
 using System.Collections.Generic;
 
 using HFM.Framework;
@@ -841,7 +839,7 @@ namespace HFM.Instances
             workTimer.Stop();
 
             // fire the retrieval wrapper thread (basically a wait thread off the UI thread)
-            new MethodInvoker(DoRetrievalWrapper).BeginInvoke(null, null);
+            new Action(DoRetrievalWrapper).BeginInvoke(null, null);
          }
       }
       
@@ -856,7 +854,7 @@ namespace HFM.Instances
             RetrievalInProgress = true;
 
             // fire the actual retrieval thread
-            IAsyncResult async = new MethodInvoker(DoRetrieval).BeginInvoke(null, null);
+            IAsyncResult async = new Action(DoRetrieval).BeginInvoke(null, null);
             // wait for completion
             async.AsyncWaitHandle.WaitOne();
 
@@ -865,7 +863,7 @@ namespace HFM.Instances
                 _prefs.GetPreference<bool>(Preference.WebGenAfterRefresh))
             {
                // do a web gen (on another thread)
-               new MethodInvoker(DoWebGeneration).BeginInvoke(null, null);
+               new Action(DoWebGeneration).BeginInvoke(null, null);
             }
 
             if (_prefs.GetPreference<bool>(Preference.ShowXmlStats))
@@ -1243,32 +1241,16 @@ namespace HFM.Instances
 
       #region Helper Functions
       
-      public void SetSelectedInstance(IList selectedClients)
+      public void SetSelectedInstance(string instanceName)
       {
          lock (_instanceCollection)
          {
             var previousClient = SelectedDisplayInstance;
-            if (selectedClients.Count > 0)
+            if (instanceName != null)
             {
-               Debug.Assert(selectedClients.Count == 1);
-
-               var selectedClient = selectedClients[0] as DataGridViewRow;
-               if (selectedClient != null)
-               {
-                  var nameColumnValue = selectedClient.Cells["Name"].Value;
-                  if (nameColumnValue != null)
-                  {
-                     var instanceName = nameColumnValue.ToString();
-                     SelectedDisplayInstance = _displayCollection.FirstOrDefault(x => x.Name == instanceName);
-                     SelectedClientInstance = SelectedDisplayInstance.ExternalInstanceName != null ? 
-                        _instanceCollection[SelectedDisplayInstance.ExternalInstanceName] : _instanceCollection[instanceName];
-                  }
-                  else
-                  {
-                     SelectedDisplayInstance = null;
-                     SelectedClientInstance = null;
-                  }
-               }
+               SelectedDisplayInstance = _displayCollection.FirstOrDefault(x => x.Name == instanceName);
+               SelectedClientInstance = SelectedDisplayInstance.ExternalInstanceName != null ? 
+                  _instanceCollection[SelectedDisplayInstance.ExternalInstanceName] : _instanceCollection[instanceName];
             }
             else
             {

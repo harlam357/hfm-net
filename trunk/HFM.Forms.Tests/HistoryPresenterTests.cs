@@ -30,7 +30,6 @@ using Rhino.Mocks;
 using harlam357.Windows.Forms;
 
 using HFM.Forms.Models;
-using HFM.Instances;
 using HFM.Framework;
 using HFM.Framework.DataTypes;
 

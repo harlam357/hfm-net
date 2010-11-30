@@ -36,11 +36,13 @@ namespace HFM.Forms
 
       private readonly Form _owner;
       private readonly IMessageBoxView _messageBoxView;
+      private readonly INetworkOps _net;
 
-      public UpdateLogic(Form owner, IMessageBoxView messageBoxView)
+      public UpdateLogic(Form owner, IMessageBoxView messageBoxView, INetworkOps net)
       {
          _owner = owner;
          _messageBoxView = messageBoxView;
+         _net = net;
       }
    
       public void BeginCheckForUpdate(Action<ApplicationUpdate> showUpdateCallback, bool userInvoked)
@@ -52,10 +54,10 @@ namespace HFM.Forms
          func.BeginInvoke(CheckForUpdateCallback, func);
       }
    
-      private static ApplicationUpdate CheckForUpdate()
+      private ApplicationUpdate CheckForUpdate()
       {
          var updateChecker = new UpdateChecker();
-         return updateChecker.CheckForUpdate(Constants.ApplicationName, NetworkOps.GetProxy());
+         return updateChecker.CheckForUpdate(Constants.ApplicationName, _net.GetProxy());
       }
 
       private void CheckForUpdateCallback(IAsyncResult result)

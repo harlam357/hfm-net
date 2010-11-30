@@ -138,6 +138,8 @@ namespace HFM.Proteins
       /// </summary>
       public void Process()
       {
+         //if (Prefs == null) throw new InvalidOperationException();
+      
          var projectDownloadUrl = Prefs.GetPreference<string>(Preference.ProjectDownloadUrl);
          DownloadFromStanford(new Uri(projectDownloadUrl), true);
       }
@@ -243,9 +245,11 @@ namespace HFM.Proteins
       /// 
       /// </summary>
       /// <param name="projectDownloadUri">Uri Pointing to psummary</param>
-      private static string[] PerformDownload(Uri projectDownloadUri)
+      private string[] PerformDownload(Uri projectDownloadUri)
       {
-         var net = new NetworkOps();
+         Debug.Assert(Prefs != null);
+      
+         var net = new NetworkOps(Prefs);
 
          string tempPath = Path.Combine(Path.GetTempPath(), "psummary.html");
          net.HttpDownloadHelper(projectDownloadUri, tempPath, String.Empty, String.Empty);

@@ -102,6 +102,11 @@ namespace HFM.Framework
       /// <param name="password">Http Login Password.</param>
       /// <exception cref="ArgumentException">Throws if Url is Null or Empty.</exception>
       void HttpCheckConnection(string url, string username, string password);
+
+      /// <summary>
+      /// Get Web Proxy Interface based on Preferences.
+      /// </summary>
+      IWebProxy GetProxy();
    }
 
    /// <summary>
@@ -109,6 +114,13 @@ namespace HFM.Framework
    /// </summary>
    public class NetworkOps : INetworkOps
    {
+      private readonly IPreferenceSet _prefs;
+      
+      public NetworkOps(IPreferenceSet prefs)
+      {
+         _prefs = prefs;
+      }
+   
       private IFtpWebOperation _ftpWebOperation;
       public IFtpWebOperation FtpOperation
       {
@@ -656,7 +668,7 @@ namespace HFM.Framework
       /// Set Proxy Information on WebRequest.
       /// </summary>
       /// <param name="request">Makes a request to a Uniform Resource Identifier (URI).</param>
-      private static void SetProxy(WebRequest request)
+      private void SetProxy(WebRequest request)
       {
          Debug.Assert(request != null);
 
@@ -671,18 +683,16 @@ namespace HFM.Framework
       /// <summary>
       /// Get Web Proxy Interface based on Preferences.
       /// </summary>
-      public static IWebProxy GetProxy()
+      public IWebProxy GetProxy()
       {
-         var prefs = InstanceProvider.GetInstance<IPreferenceSet>();
-
-         if (prefs.GetPreference<bool>(Preference.UseProxy))
+         if (_prefs.GetPreference<bool>(Preference.UseProxy))
          {
-            IWebProxy proxy = new WebProxy(prefs.GetPreference<string>(Preference.ProxyServer),
-                                           prefs.GetPreference<int>(Preference.ProxyPort));
-            if (prefs.GetPreference<bool>(Preference.UseProxyAuth))
+            IWebProxy proxy = new WebProxy(_prefs.GetPreference<string>(Preference.ProxyServer),
+                                           _prefs.GetPreference<int>(Preference.ProxyPort));
+            if (_prefs.GetPreference<bool>(Preference.UseProxyAuth))
             {
-               proxy.Credentials = GetNetworkCredential(prefs.GetPreference<string>(Preference.ProxyUser),
-                                                        prefs.GetPreference<string>(Preference.ProxyPass));
+               proxy.Credentials = GetNetworkCredential(_prefs.GetPreference<string>(Preference.ProxyUser),
+                                                        _prefs.GetPreference<string>(Preference.ProxyPass));
             }
 
             return proxy;
