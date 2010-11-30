@@ -21,7 +21,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Windows.Forms;
 
 using ProtoBuf;
 
@@ -33,8 +32,6 @@ namespace HFM.Instances
    [ProtoContract]
    public class DisplayInstance : IDisplayInstance
    {
-      public const int NumberOfDisplayFields = 19;
-
       /// <summary>
       /// Name (key) of ExternalInstance that owns this DisplayInstance (otherwise null)
       /// </summary>
@@ -61,12 +58,8 @@ namespace HFM.Instances
          set { _unitInfo = value; }
       }
       
-      public IClientInstanceSettings Settings
-      {
-         get { return SettingsConcrete; }
-      }
       [ProtoMember(2)]
-      public ClientInstanceSettings SettingsConcrete { get; set; }
+      public ClientInstanceSettings Settings { get; set; }
       
       public void BuildUnitInfoLogic()
       {
@@ -591,53 +584,6 @@ namespace HFM.Instances
          }
 
          return false;
-      }
-
-      [CoverageExclude]
-      public static void SetupDataGridViewColumns(DataGridView dataGridView1)
-      {
-         // ReSharper disable PossibleNullReferenceException
-         dataGridView1.Columns.Add("Status", "Status");
-         dataGridView1.Columns["Status"].DataPropertyName = "Status";
-         dataGridView1.Columns.Add("Progress", "Progress");
-         dataGridView1.Columns["Progress"].DataPropertyName = "Progress";
-         var progressStyle = new DataGridViewCellStyle { Format = "00%" };
-         dataGridView1.Columns["Progress"].DefaultCellStyle = progressStyle;
-         dataGridView1.Columns.Add("Name", "Name");
-         dataGridView1.Columns["Name"].DataPropertyName = "Name";
-         dataGridView1.Columns.Add("ClientType", "Client Type");
-         dataGridView1.Columns["ClientType"].DataPropertyName = "ClientType";
-         dataGridView1.Columns.Add("TPF", "TPF");
-         dataGridView1.Columns["TPF"].DataPropertyName = "TPF";
-         dataGridView1.Columns.Add("PPD", "PPD");
-         dataGridView1.Columns["PPD"].DataPropertyName = "PPD";
-         dataGridView1.Columns.Add("MHz", "MHz");
-         dataGridView1.Columns["MHz"].DataPropertyName = "MHz";
-         dataGridView1.Columns.Add("PPD_MHz", "PPD/MHz");
-         dataGridView1.Columns["PPD_MHz"].DataPropertyName = "PPD_MHz";
-         dataGridView1.Columns.Add("ETA", "ETA");
-         dataGridView1.Columns["ETA"].DataPropertyName = "ETA";
-         dataGridView1.Columns.Add("Core", "Core");
-         dataGridView1.Columns["Core"].DataPropertyName = "Core";
-         dataGridView1.Columns.Add("CoreID", "Core ID");
-         dataGridView1.Columns["CoreID"].DataPropertyName = "CoreID";
-         dataGridView1.Columns.Add("ProjectRunCloneGen", "Project (Run, Clone, Gen)");
-         dataGridView1.Columns["ProjectRunCloneGen"].DataPropertyName = "ProjectRunCloneGen";
-         dataGridView1.Columns.Add("Credit", "Credit");
-         dataGridView1.Columns["Credit"].DataPropertyName = "Credit";
-         dataGridView1.Columns.Add("Complete", "Complete");
-         dataGridView1.Columns["Complete"].DataPropertyName = "Complete";
-         dataGridView1.Columns.Add("Failed", "Failed");
-         dataGridView1.Columns["Failed"].DataPropertyName = "TotalRunFailedUnits";
-         dataGridView1.Columns.Add("Username", "User Name");
-         dataGridView1.Columns["Username"].DataPropertyName = "Username";
-         dataGridView1.Columns.Add("DownloadTime", "Download Time");
-         dataGridView1.Columns["DownloadTime"].DataPropertyName = "DownloadTime";
-         dataGridView1.Columns.Add("Deadline", "Deadline");
-         dataGridView1.Columns["Deadline"].DataPropertyName = "PreferredDeadline";
-         dataGridView1.Columns.Add("Dummy", String.Empty);
-         //dataGridView1.Columns["Dummy"].DataPropertyName = "Dummy";
-         // ReSharper restore PossibleNullReferenceException
       }
    }
 }

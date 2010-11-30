@@ -28,6 +28,12 @@ namespace HFM.Framework.DataTypes
       public const int TeamDefault = 0;
       public const string CoreIDDefault = "Unknown";
 
+      // Log Filename Constants
+      public const string FahLogFileName = "FAHlog.txt";
+      public const string UnitInfoFileName = "unitinfo.txt";
+      public const string QueueFileName = "queue.dat";
+      public const string ExternalDataFileName = "ClientData.dat";
+
       public const int MaxDecimalPlaces = 5;
 
       private static bool IsRunningOnMono()

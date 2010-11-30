@@ -47,7 +47,7 @@ namespace HFM.Instances.Tests
       {
          IPreferenceSet prefs = SetupMockPreferenceSet();
          IProtein protein = SetupMockProtein("GROCVS", 100, 3, 6);
-         IClientInstanceSettings clientInstance = SetupMockClientInstanceSettings(false, 0);
+         IClientInstanceSettings clientInstance = SetupClientInstanceSettings(false, 0);
          _mocks.ReplayAll();
 
          var unitInfo = new UnitInfo();
@@ -68,7 +68,7 @@ namespace HFM.Instances.Tests
       {
          IPreferenceSet prefs = SetupMockPreferenceSet();
          IProtein protein = SetupMockProtein("GROCVS", 100, 4, 8);
-         IClientInstanceSettings clientInstance = SetupMockClientInstanceSettings(true, 0);
+         IClientInstanceSettings clientInstance = SetupClientInstanceSettings(true, 0);
          _mocks.ReplayAll();
 
          var unitInfo = new UnitInfo();
@@ -89,7 +89,7 @@ namespace HFM.Instances.Tests
       {
          IPreferenceSet prefs = SetupMockPreferenceSet();
          IProtein protein = SetupMockNewProtein();
-         IClientInstanceSettings clientInstance = SetupMockClientInstanceSettings(false, 0);
+         IClientInstanceSettings clientInstance = SetupClientInstanceSettings(false, 0);
          _mocks.ReplayAll();
 
          var unitInfo = new UnitInfo();
@@ -145,7 +145,7 @@ namespace HFM.Instances.Tests
          IPreferenceSet prefs = SetupMockPreferenceSet();
          IProtein protein = SetupMockProtein("GROCVS", 100, 3, 6);
          var baseDate = new DateTime(2010, 1, 1);
-         IClientInstanceSettings clientInstance = SetupMockClientInstanceSettings(false, 0, "Owner", "Path");
+         IClientInstanceSettings clientInstance = SetupClientInstanceSettings(false, 0, "Owner", "Path");
          _displayInstance.LastRetrievalTime = baseDate.Add(TimeSpan.FromMinutes(30));
 
          var unitInfo = new UnitInfo();
@@ -190,7 +190,7 @@ namespace HFM.Instances.Tests
          IPreferenceSet prefs = SetupMockPreferenceSet();
          IProtein protein = SetupMockProtein("GROCVS", 100, 3, 6);
          var baseDate = new DateTime(2010, 1, 1);
-         IClientInstanceSettings clientInstance = SetupMockClientInstanceSettings(true, 0, "Owner", "Path");
+         IClientInstanceSettings clientInstance = SetupClientInstanceSettings(true, 0, "Owner", "Path");
          _displayInstance.LastRetrievalTime = baseDate.Add(TimeSpan.FromMinutes(90));
 
          var unitInfo = new UnitInfo();
@@ -237,7 +237,7 @@ namespace HFM.Instances.Tests
          IPreferenceSet prefs = SetupMockPreferenceSet();
          IProtein protein = SetupMockProtein("GROCVS", 100, 3, 6);
          var baseDate = new DateTime(2010, 1, 1);
-         IClientInstanceSettings clientInstance = SetupMockClientInstanceSettings(true, 0, "Owner", "Path");
+         IClientInstanceSettings clientInstance = SetupClientInstanceSettings(true, 0, "Owner", "Path");
          _displayInstance.LastRetrievalTime = baseDate.Add(TimeSpan.FromMinutes(90));
 
          var unitInfo = new UnitInfo();
@@ -275,7 +275,7 @@ namespace HFM.Instances.Tests
          IPreferenceSet prefs = SetupMockPreferenceSet();
          IProtein protein = SetupMockProtein("GROCVS", 100, 3, 6);
          var baseDate = new DateTime(2010, 1, 1);
-         IClientInstanceSettings clientInstance = SetupMockClientInstanceSettings(true, 0, "Owner", "Path");
+         IClientInstanceSettings clientInstance = SetupClientInstanceSettings(true, 0, "Owner", "Path");
          _displayInstance.LastRetrievalTime = baseDate.Add(TimeSpan.FromMinutes(90));
 
          var unitInfo = new UnitInfo();
@@ -344,14 +344,14 @@ namespace HFM.Instances.Tests
          return prefs;
       }
       
-      private IClientInstanceSettings SetupMockClientInstanceSettings(bool utcOffsetIsZero, int clientTimeOffset)
+      private static IClientInstanceSettings SetupClientInstanceSettings(bool utcOffsetIsZero, int clientTimeOffset)
       {
-         return SetupMockClientInstanceSettings(utcOffsetIsZero, clientTimeOffset, "Owner", "Path");
+         return SetupClientInstanceSettings(utcOffsetIsZero, clientTimeOffset, "Owner", "Path");
       }
 
-      private IClientInstanceSettings SetupMockClientInstanceSettings(bool utcOffsetIsZero, int clientTimeOffset, string instanceName, string path)
+      private static IClientInstanceSettings SetupClientInstanceSettings(bool utcOffsetIsZero, int clientTimeOffset, string instanceName, string path)
       {
-         var settings = _mocks.Stub<IClientInstanceSettings>();
+         var settings = new ClientInstanceSettings();
          settings.ClientIsOnVirtualMachine = utcOffsetIsZero;
          settings.ClientTimeOffset = clientTimeOffset;
          settings.InstanceName = instanceName;

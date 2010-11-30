@@ -97,5 +97,53 @@ namespace HFM.Forms.Controls
       
       //   base.OnCellMouseDown(e);
       //}
+
+      public const int NumberOfDisplayFields = 19;
+
+      public static void SetupDataGridViewColumns(DataGridView dgv)
+      {
+         // ReSharper disable PossibleNullReferenceException
+         dgv.Columns.Add("Status", "Status");
+         dgv.Columns["Status"].DataPropertyName = "Status";
+         dgv.Columns.Add("Progress", "Progress");
+         dgv.Columns["Progress"].DataPropertyName = "Progress";
+         var progressStyle = new DataGridViewCellStyle { Format = "00%" };
+         dgv.Columns["Progress"].DefaultCellStyle = progressStyle;
+         dgv.Columns.Add("Name", "Name");
+         dgv.Columns["Name"].DataPropertyName = "Name";
+         dgv.Columns.Add("ClientType", "Client Type");
+         dgv.Columns["ClientType"].DataPropertyName = "ClientType";
+         dgv.Columns.Add("TPF", "TPF");
+         dgv.Columns["TPF"].DataPropertyName = "TPF";
+         dgv.Columns.Add("PPD", "PPD");
+         dgv.Columns["PPD"].DataPropertyName = "PPD";
+         dgv.Columns.Add("MHz", "MHz");
+         dgv.Columns["MHz"].DataPropertyName = "MHz";
+         dgv.Columns.Add("PPD_MHz", "PPD/MHz");
+         dgv.Columns["PPD_MHz"].DataPropertyName = "PPD_MHz";
+         dgv.Columns.Add("ETA", "ETA");
+         dgv.Columns["ETA"].DataPropertyName = "ETA";
+         dgv.Columns.Add("Core", "Core");
+         dgv.Columns["Core"].DataPropertyName = "Core";
+         dgv.Columns.Add("CoreID", "Core ID");
+         dgv.Columns["CoreID"].DataPropertyName = "CoreID";
+         dgv.Columns.Add("ProjectRunCloneGen", "Project (Run, Clone, Gen)");
+         dgv.Columns["ProjectRunCloneGen"].DataPropertyName = "ProjectRunCloneGen";
+         dgv.Columns.Add("Credit", "Credit");
+         dgv.Columns["Credit"].DataPropertyName = "Credit";
+         dgv.Columns.Add("Complete", "Complete");
+         dgv.Columns["Complete"].DataPropertyName = "Complete";
+         dgv.Columns.Add("Failed", "Failed");
+         dgv.Columns["Failed"].DataPropertyName = "TotalRunFailedUnits";
+         dgv.Columns.Add("Username", "User Name");
+         dgv.Columns["Username"].DataPropertyName = "Username";
+         dgv.Columns.Add("DownloadTime", "Download Time");
+         dgv.Columns["DownloadTime"].DataPropertyName = "DownloadTime";
+         dgv.Columns.Add("Deadline", "Deadline");
+         dgv.Columns["Deadline"].DataPropertyName = "PreferredDeadline";
+         dgv.Columns.Add("Dummy", String.Empty);
+         //dataGridView1.Columns["Dummy"].DataPropertyName = "Dummy";
+         // ReSharper restore PossibleNullReferenceException
+      }
    }
 }

@@ -10,7 +10,9 @@ using System.Windows.Forms;
 
 using harlam357.Windows.Forms;
 
+using HFM.Forms.Models;
 using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Forms
 {
@@ -20,22 +22,22 @@ namespace HFM.Forms
    
       #region Fields
       
-      private IClientInstanceSettings _settings;
+      private IClientInstanceSettingsModel _settingsModel;
       /// <summary>
       /// Client Instance being Edited
       /// </summary>
-      public IClientInstanceSettings Settings
+      public IClientInstanceSettingsModel SettingsModel
       {
-         get { return _settings; }
+         get { return _settingsModel; }
          set
          {
             // remove any event handlers currently attached
-            if (_settings != null) _settings.PropertyChanged -= SettingsPropertyChanged;
+            if (_settingsModel != null) _settingsModel.PropertyChanged -= SettingsModelPropertyChanged;
             
-            _settings = value;
-            _settingsView.DataBind(_settings);
-            _propertyCollection = TypeDescriptor.GetProperties(_settings);
-            _settings.PropertyChanged += SettingsPropertyChanged;
+            _settingsModel = value;
+            _settingsView.DataBind(_settingsModel);
+            _propertyCollection = TypeDescriptor.GetProperties(_settingsModel);
+            _settingsModel.PropertyChanged += SettingsModelPropertyChanged;
             SetViewInstanceType();
             SetViewHostType();
          }
@@ -77,7 +79,7 @@ namespace HFM.Forms
          return _settingsView.ShowDialog(owner);
       }
 
-      private void SettingsPropertyChanged(object sender, PropertyChangedEventArgs e)
+      private void SettingsModelPropertyChanged(object sender, PropertyChangedEventArgs e)
       {
          // Dummy because this is a radio button group
          if (e.PropertyName == "Dummy")
@@ -89,7 +91,7 @@ namespace HFM.Forms
       
       private void SetViewInstanceType()
       {
-         if (_settings.ExternalInstance)
+         if (_settingsModel.ExternalInstance)
          {
             _settingsView.Text = "Client Data Merge Setup"; 
             _settingsView.ClientMegahertzLabelText = "Merge File Name:";
@@ -102,10 +104,10 @@ namespace HFM.Forms
       
       private void SetViewHostType()
       {
-         switch (_settings.InstanceHostType)
+         switch (_settingsModel.InstanceHostType)
          {
             case InstanceType.PathInstance:
-               if (_settings.ExternalInstance)
+               if (_settingsModel.ExternalInstance)
                {
                   
                   _settingsView.Size = new Size(_settingsView.MaxWidth, _settingsView.MaxHeight - 78 - LogFileNamesVisibleOffset);
@@ -119,7 +121,7 @@ namespace HFM.Forms
                _settingsView.FtpGroupVisible = false;
                break;
             case InstanceType.HttpInstance:
-               if (_settings.ExternalInstance)
+               if (_settingsModel.ExternalInstance)
                {
                   _settingsView.Size = new Size(_settingsView.MaxWidth, _settingsView.MaxHeight - 50 - LogFileNamesVisibleOffset);
                }
@@ -132,7 +134,7 @@ namespace HFM.Forms
                _settingsView.FtpGroupVisible = false;
                break;
             case InstanceType.FtpInstance:
-               if (_settings.ExternalInstance)
+               if (_settingsModel.ExternalInstance)
                {
                   _settingsView.Size = new Size(_settingsView.MaxWidth, _settingsView.MaxHeight - LogFileNamesVisibleOffset);
                }
@@ -171,7 +173,7 @@ namespace HFM.Forms
       
          var validatingControls = FindBoundControls(boundProperty);
          // ReSharper disable PossibleNullReferenceException
-         var errorState = (bool)errorProperty.GetValue(Settings);
+         var errorState = (bool)errorProperty.GetValue(SettingsModel);
          // ReSharper restore PossibleNullReferenceException
          foreach (var control in validatingControls)
          {
@@ -196,15 +198,15 @@ namespace HFM.Forms
       
       public void LocalBrowseClicked()
       {
-         if (Settings.Path.Length > 0)
+         if (SettingsModel.Path.Length > 0)
          {
-            _folderBrowserView.SelectedPath = Settings.Path;
+            _folderBrowserView.SelectedPath = SettingsModel.Path;
          }
 
          _folderBrowserView.ShowDialog(_settingsView);
          if (_folderBrowserView.SelectedPath.Length > 0)
          {
-            Settings.Path = _folderBrowserView.SelectedPath;
+            SettingsModel.Path = _folderBrowserView.SelectedPath;
          }
       }
 
@@ -213,18 +215,18 @@ namespace HFM.Forms
          //try
          //{
             _settingsView.SetWaitCursor();
-            if (_settings.InstanceHostType.Equals(InstanceType.PathInstance))
+            if (_settingsModel.InstanceHostType.Equals(InstanceType.PathInstance))
             {
-               var action = new Action(() => CheckFileConnection(Settings.Path));
+               var action = new Action(() => CheckFileConnection(SettingsModel.Path));
                action.BeginInvoke(CheckConnectionCallback, action);
             }
-            else if (_settings.InstanceHostType.Equals(InstanceType.FtpInstance))
+            else if (_settingsModel.InstanceHostType.Equals(InstanceType.FtpInstance))
             {
-               _networkOps.BeginFtpCheckConnection(Settings.Server, Settings.Path, Settings.Username, Settings.Password, Settings.FtpMode, CheckConnectionCallback);
+               _networkOps.BeginFtpCheckConnection(SettingsModel.Server, SettingsModel.Path, SettingsModel.Username, SettingsModel.Password, SettingsModel.FtpMode, CheckConnectionCallback);
             }
-            else if (_settings.InstanceHostType.Equals(InstanceType.HttpInstance))
+            else if (_settingsModel.InstanceHostType.Equals(InstanceType.HttpInstance))
             {
-               _networkOps.BeginHttpCheckConnection(Settings.Path, Settings.Username, Settings.Password, CheckConnectionCallback);
+               _networkOps.BeginHttpCheckConnection(SettingsModel.Path, SettingsModel.Username, SettingsModel.Password, CheckConnectionCallback);
             }
          //}
          //catch (Exception ex)
@@ -275,14 +277,14 @@ namespace HFM.Forms
       {
          SetPropertyErrorState();
          // Check for error conditions
-         if (Settings.InstanceNameError ||
-             Settings.ClientProcessorMegahertzError ||
-             Settings.RemoteFAHLogFilenameError ||
-             Settings.RemoteUnitInfoFilenameError ||
-             Settings.RemoteQueueFilenameError ||
-             Settings.ServerError ||
-             Settings.CredentialsError ||
-             Settings.PathEmpty)
+         if (SettingsModel.InstanceNameError ||
+             SettingsModel.ClientProcessorMegahertzError ||
+             SettingsModel.RemoteFAHLogFilenameError ||
+             SettingsModel.RemoteUnitInfoFilenameError ||
+             SettingsModel.RemoteQueueFilenameError ||
+             SettingsModel.ServerError ||
+             SettingsModel.CredentialsError ||
+             SettingsModel.PathEmpty)
          {
             _messageBoxView.ShowError(_settingsView, 
                "There are validation errors.  Please correct the yellow highlighted fields.", 
@@ -290,7 +292,7 @@ namespace HFM.Forms
             return false;
          }
 
-         if (Settings.PathError)
+         if (SettingsModel.PathError)
          {
             if (_messageBoxView.AskYesNoQuestion(_settingsView, 
                "There are validation errors.  Do you wish to accept the input anyway?", 

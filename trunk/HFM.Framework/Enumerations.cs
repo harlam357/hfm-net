@@ -19,19 +19,6 @@
 
 namespace HFM.Framework
 {
-   public enum InstanceType
-   {
-      PathInstance,
-      FtpInstance,
-      HttpInstance
-   }
-
-   public enum FtpType
-   {
-      Passive,
-      Active
-   }
-   
    public enum PpdCalculationType
    {
       LastFrame,

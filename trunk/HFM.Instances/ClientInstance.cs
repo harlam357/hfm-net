@@ -29,18 +29,6 @@ using HFM.Framework.DataTypes;
 
 namespace HFM.Instances
 {
-   public interface IClientInstance
-   {
-      /// <summary>
-      /// Client Instance Settings
-      /// </summary>
-      IClientInstanceSettings Settings { get; }
-      
-      IDisplayInstance DisplayInstance { get; }
-
-      IList<IDisplayInstance> ExternalDisplayInstances { get; }
-   }
-
    public sealed class ClientInstance : IClientInstance
    {
       #region Fields
@@ -81,7 +69,7 @@ namespace HFM.Instances
       
       private readonly DisplayInstance _displayInstance;
       
-      public IClientInstanceSettings Settings
+      public ClientInstanceSettings Settings
       {
          get { return _displayInstance.Settings; }
       }
@@ -125,7 +113,7 @@ namespace HFM.Instances
                                Prefs = _prefs,
                                ProteinCollection = _proteinCollection,
                                BenchmarkContainer = _benchmarkContainer,
-                               SettingsConcrete = instanceSettings ?? new ClientInstanceSettings(InstanceType.PathInstance),
+                               Settings = instanceSettings ?? new ClientInstanceSettings(InstanceType.PathInstance),
                                UnitInfo = new UnitInfo()
                             };
          _displayInstance.BuildUnitInfoLogic();

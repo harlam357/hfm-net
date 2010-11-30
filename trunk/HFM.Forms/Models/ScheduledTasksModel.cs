@@ -22,6 +22,7 @@ using System.IO;
 using System.ComponentModel;
 
 using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Forms.Models
 {

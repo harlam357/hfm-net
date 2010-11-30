@@ -24,6 +24,7 @@ using System.IO;
 using System.Net;
 
 using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Instances
 {

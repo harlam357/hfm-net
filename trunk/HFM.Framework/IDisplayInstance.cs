@@ -33,7 +33,7 @@ namespace HFM.Framework
    
       IUnitInfoLogic CurrentUnitInfo { get; set; }
    
-      IClientInstanceSettings Settings { get; }
+      ClientInstanceSettings Settings { get; }
       
       bool UserIdUnknown { get; }
       

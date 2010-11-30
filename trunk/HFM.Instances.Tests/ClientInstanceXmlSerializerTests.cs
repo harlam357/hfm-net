@@ -23,7 +23,7 @@ using System.IO;
 
 using NUnit.Framework;
 
-using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Instances.Tests
 {
@@ -61,7 +61,7 @@ namespace HFM.Instances.Tests
          instance2.ClientIsOnVirtualMachine = true;
          instance2.ClientTimeOffset = -180;
          
-         ICollection<IClientInstanceSettings> collection1 = new List<IClientInstanceSettings>();
+         ICollection<ClientInstanceSettings> collection1 = new List<ClientInstanceSettings>();
          collection1.Add(instance1);
          collection1.Add(instance2);
          var serializer = new ClientInstanceXmlSerializer();
@@ -72,7 +72,7 @@ namespace HFM.Instances.Tests
          serializer.Deserialize("Test.xml");
          var collection2 = dataInterface.Settings;
 
-         IClientInstanceSettings instance3 = collection2[0];
+         ClientInstanceSettings instance3 = collection2[0];
          Assert.AreEqual("Test1", instance3.InstanceName);
          Assert.AreEqual(1000, instance3.ClientProcessorMegahertz);
          Assert.AreEqual("FAHlog.txt", instance3.RemoteFAHLogFilename);
@@ -87,7 +87,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(false, instance3.ClientIsOnVirtualMachine);
          Assert.AreEqual(60, instance3.ClientTimeOffset);
 
-         IClientInstanceSettings instance4 = collection2[1];
+         ClientInstanceSettings instance4 = collection2[1];
          Assert.AreEqual("Test2", instance4.InstanceName);
          Assert.AreEqual(3800, instance4.ClientProcessorMegahertz);
          Assert.AreEqual("FAHlog-Test2.txt", instance4.RemoteFAHLogFilename);
@@ -131,12 +131,12 @@ namespace HFM.Instances.Tests
       public void DeserializeXmlElementsNotFoundTest()
       {
          var serializer = new ClientInstanceXmlSerializer();
-         var dataInterface = new InstanceCollectionDataInterface(new List<IClientInstanceSettings>());
+         var dataInterface = new InstanceCollectionDataInterface(new List<ClientInstanceSettings>());
          serializer.DataInterface = dataInterface;
          serializer.Deserialize("..\\..\\TestFiles\\XmlDeserializeTest1.xml");
          var collection = dataInterface.Settings;
 
-         IClientInstanceSettings instance = collection[0];
+         ClientInstanceSettings instance = collection[0];
          Assert.AreEqual("Test1", instance.InstanceName);
          Assert.AreEqual(1, instance.ClientProcessorMegahertz);
          Assert.AreEqual("FAHlog.txt", instance.RemoteFAHLogFilename);
@@ -156,12 +156,12 @@ namespace HFM.Instances.Tests
       public void DeserializeXmlElementsNotCorrectTypeTest()
       {
          var serializer = new ClientInstanceXmlSerializer();
-         var dataInterface = new InstanceCollectionDataInterface(new List<IClientInstanceSettings>());
+         var dataInterface = new InstanceCollectionDataInterface(new List<ClientInstanceSettings>());
          serializer.DataInterface = dataInterface;
          serializer.Deserialize("..\\..\\TestFiles\\XmlDeserializeTest2.xml");
          var collection = dataInterface.Settings;
 
-         IClientInstanceSettings instance = collection[0];
+         ClientInstanceSettings instance = collection[0];
          Assert.AreEqual("Test1", instance.InstanceName);
          Assert.AreEqual(1, instance.ClientProcessorMegahertz);
          Assert.AreEqual("FAHlog.txt", instance.RemoteFAHLogFilename);

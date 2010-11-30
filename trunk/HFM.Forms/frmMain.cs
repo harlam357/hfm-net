@@ -36,8 +36,8 @@ using System.Windows.Forms;
 
 using harlam357.Windows.Forms;
 
+using HFM.Forms.Models;
 using HFM.Forms.Controls;
-using HFM.Instances;
 using HFM.Framework;
 using HFM.Framework.DataTypes;
 
@@ -104,7 +104,7 @@ namespace HFM.Forms
       /// <summary>
       /// Collection of Client Instances
       /// </summary>
-      private readonly InstanceCollection _clientInstances;
+      private readonly IInstanceCollection _clientInstances;
 
       /// <summary>
       /// Protein Collection Interface
@@ -127,7 +127,7 @@ namespace HFM.Forms
       /// Main form constructor
       /// </summary>
       public frmMain(IPreferenceSet prefs, IMessagesView messagesView, IXmlStatsDataContainer statsData,
-                     InstanceCollection instanceCollection, IProteinCollection proteinCollection, 
+                     IInstanceCollection instanceCollection, IProteinCollection proteinCollection, 
                      IProteinBenchmarkContainer benchmarkContainer)
       {
          _prefs = prefs;
@@ -155,7 +155,7 @@ namespace HFM.Forms
          _clientInstances.Initialize();
       
          // Manually Create the Columns - Issue 41
-         DisplayInstance.SetupDataGridViewColumns(dataGridView1);
+         DataGridViewWrapper.SetupDataGridViewColumns(dataGridView1);
          // Restore Form Preferences (MUST BE DONE AFTER DataGridView Columns are Setup)
          RestoreFormPreferences();
          SetupDataGridView();
@@ -477,7 +477,7 @@ namespace HFM.Forms
       /// </summary>
       private void DataGridViewColumnDisplayIndexChanged(object sender, DataGridViewColumnEventArgs e)
       {
-         if (dataGridView1.Columns.Count == DisplayInstance.NumberOfDisplayFields)
+         if (dataGridView1.Columns.Count == DataGridViewWrapper.NumberOfDisplayFields)
          {
             foreach (DataGridViewColumn column in dataGridView1.Columns)
             {
@@ -905,12 +905,12 @@ namespace HFM.Forms
       {
          var settings = new ClientInstanceSettings();
          var newHost = InstanceProvider.GetInstance<InstanceSettingsPresenter>();
-         newHost.Settings = settings;
+         newHost.SettingsModel = new ClientInstanceSettingsModel(settings);
          while (newHost.ShowDialog(this).Equals(DialogResult.OK))
          {
             try
             {
-               _clientInstances.Add(newHost.Settings);
+               _clientInstances.Add(newHost.SettingsModel.Settings);
                break;
             }
             catch (InvalidOperationException ex)
@@ -929,16 +929,16 @@ namespace HFM.Forms
          // Check for SelectedClientInstance, and get out if not found
          if (_clientInstances.SelectedClientInstance == null) return;
 
-         var settings = _clientInstances.SelectedClientInstance.Settings.Clone();
+         var settings = _clientInstances.SelectedClientInstance.Settings.DeepCopy();
          string previousName = settings.InstanceName;
          string previousPath = settings.Path;
          var editHost = InstanceProvider.GetInstance<InstanceSettingsPresenter>();
-         editHost.Settings = settings;
+         editHost.SettingsModel = new ClientInstanceSettingsModel(settings);
          while (editHost.ShowDialog(this).Equals(DialogResult.OK))
          {
             try
             {
-               _clientInstances.Edit(previousName, previousPath, editHost.Settings);
+               _clientInstances.Edit(previousName, previousPath, editHost.SettingsModel.Settings);
                break;
             }
             catch (InvalidOperationException ex)
@@ -964,12 +964,12 @@ namespace HFM.Forms
       {
          var settings = new ClientInstanceSettings { ExternalInstance = true };
          var newHost = InstanceProvider.GetInstance<InstanceSettingsPresenter>();
-         newHost.Settings = settings;
+         newHost.SettingsModel = new ClientInstanceSettingsModel(settings);
          while (newHost.ShowDialog(this).Equals(DialogResult.OK))
          {
             try
             {
-               _clientInstances.Add(newHost.Settings);
+               _clientInstances.Add(newHost.SettingsModel.Settings);
                break;
             }
             catch (InvalidOperationException ex)

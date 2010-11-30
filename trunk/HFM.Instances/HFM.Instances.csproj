@@ -76,7 +76,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ClientInstanceFactory.cs" />
-    <Compile Include="ClientInstanceSettings.cs" />
     <Compile Include="ClientInstanceSettingsDataInterface.cs" />
     <Compile Include="ClientInstanceXmlSerializer.cs" />
     <Compile Include="DataRetriever.cs" />

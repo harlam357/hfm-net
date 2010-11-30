@@ -53,6 +53,7 @@
       <Link>AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="BenchmarkClient.cs" />
+    <Compile Include="ClientInstanceSettings.cs" />
     <Compile Include="ClientQueue.cs" />
     <Compile Include="ClientQueueEntry.cs" />
     <Compile Include="ClientRun.cs" />

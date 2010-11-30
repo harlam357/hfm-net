@@ -5,8 +5,9 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-using HFM.Framework;
 using HFM.Plugins;
+using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Instances
 {
@@ -19,19 +20,19 @@ namespace HFM.Instances
          get { return _settingsList.AsReadOnly(); }
       }
       
-      private readonly ICollection<IClientInstanceSettings> _collection;
+      private readonly ICollection<ClientInstanceSettings> _collection;
    
       public InstanceCollectionDataInterface(ICollection<IClientInstance> instances)
       {
          _settingsList = new List<ClientInstanceSettings>();
-         _collection = new List<IClientInstanceSettings>(instances.Count);
+         _collection = new List<ClientInstanceSettings>(instances.Count);
          foreach (var instance in instances)
          {
             _collection.Add(instance.Settings);
          }
       }
    
-      public InstanceCollectionDataInterface(ICollection<IClientInstanceSettings> collection)
+      public InstanceCollectionDataInterface(ICollection<ClientInstanceSettings> collection)
       {
          _settingsList = new List<ClientInstanceSettings>();
          _collection = collection;

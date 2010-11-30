@@ -103,7 +103,7 @@ namespace HFM.Instances.Tests
          var displayInstance = new DisplayInstance
                                {
                                   ProteinCollection = _proteinCollection,
-                                  SettingsConcrete = settings,
+                                  Settings = settings,
                                   Arguments = "-verbosity 9",
                                   UserId = "A3B4",
                                   MachineId = 2,

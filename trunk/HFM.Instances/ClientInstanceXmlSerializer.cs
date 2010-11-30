@@ -27,8 +27,8 @@ using System.Xml;
 using harlam357.Security;
 using harlam357.Security.Encryption;
 
-using HFM.Framework;
 using HFM.Plugins;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Instances
 {
@@ -242,7 +242,7 @@ namespace HFM.Instances
          catch (NullReferenceException)
          {
             OnWarningMessage("Cannot load remote external filename.");
-            dataInterface.SetSetting(ClientInstanceSettingsKeys.ExternalFileName, Constants.LocalExternal);
+            dataInterface.SetSetting(ClientInstanceSettingsKeys.ExternalFileName, Default.ExternalDataFileName);
          }
          
          try
@@ -267,7 +267,7 @@ namespace HFM.Instances
          catch (NullReferenceException)
          {
             OnWarningMessage("Cannot load remote FAHlog.txt filename.");
-            dataInterface.SetSetting(ClientInstanceSettingsKeys.FahLogFileName, Constants.LocalFahLog);
+            dataInterface.SetSetting(ClientInstanceSettingsKeys.FahLogFileName, Default.FahLogFileName);
          }
 
          try
@@ -277,7 +277,7 @@ namespace HFM.Instances
          catch (NullReferenceException)
          {
             OnWarningMessage("Cannot load remote unitinfo.txt filename.");
-            dataInterface.SetSetting(ClientInstanceSettingsKeys.UnitInfoFileName, Constants.LocalUnitInfo);
+            dataInterface.SetSetting(ClientInstanceSettingsKeys.UnitInfoFileName, Default.UnitInfoFileName);
          }
 
          try
@@ -287,7 +287,7 @@ namespace HFM.Instances
          catch (NullReferenceException)
          {
             OnWarningMessage("Cannot load remote queue.dat filename.");
-            dataInterface.SetSetting(ClientInstanceSettingsKeys.QueueFileName, Constants.LocalQueue);
+            dataInterface.SetSetting(ClientInstanceSettingsKeys.QueueFileName, Default.QueueFileName);
          }
 
          try

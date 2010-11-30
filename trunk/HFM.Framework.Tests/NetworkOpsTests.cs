@@ -27,6 +27,8 @@ using Rhino.Mocks;
 
 using harlam357.Net;
 
+using HFM.Framework.DataTypes;
+
 namespace HFM.Framework.Tests
 {
    [TestFixture]

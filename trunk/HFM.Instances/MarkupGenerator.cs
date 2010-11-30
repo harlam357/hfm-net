@@ -615,7 +615,7 @@ namespace HFM.Instances
                      where instance.Settings.ExternalInstance == false
                      select (DisplayInstance)instance.DisplayInstance).ToList();
 
-         var filePath = Path.Combine(folderPath, Constants.LocalExternal);
+         var filePath = Path.Combine(folderPath, Default.ExternalDataFileName);
          using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
          {
             ProtoBuf.Serializer.Serialize(fileStream, list);

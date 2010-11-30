@@ -26,6 +26,7 @@ using System.Windows.Forms;
 
 using harlam357.Windows.Forms;
 
+using HFM.Forms.Models;
 using HFM.Forms.Controls;
 using HFM.Framework;
 
@@ -45,7 +46,7 @@ namespace HFM.Forms
 
       void AttachPresenter(InstanceSettingsPresenter presenter);
    
-      void DataBind(IClientInstanceSettings settings);
+      void DataBind(IClientInstanceSettingsModel settings);
 
       List<IValidatingControl> FindValidatingControls();
 
@@ -133,7 +134,7 @@ namespace HFM.Forms
          txtDummy.Visible = false;
       }
       
-      public void DataBind(IClientInstanceSettings settings)
+      public void DataBind(IClientInstanceSettingsModel settings)
       {
          txtName.DataBindings.Add("Text", settings, "InstanceName", false, DataSourceUpdateMode.OnValidation);
          txtMergeFileName.DataBindings.Add("Text", settings, "RemoteExternalFilename", false, DataSourceUpdateMode.OnValidation);

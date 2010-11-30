@@ -24,6 +24,7 @@ using System.Diagnostics;
 using System.Globalization;
 
 using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Instances
 {
@@ -103,19 +104,19 @@ namespace HFM.Instances
       public ClientInstance Create(ClientInstanceSettings settings)
       {
          if (settings == null) throw new ArgumentNullException("settings");
-         if (settings.InstanceNameEmpty)
+         if (settings.InstanceName.Length == 0)
          {
             throw new ArgumentException("No Instance Name is given.  Will not create Client Instance.");
          }
          
-         if (settings.PathEmpty)
+         if (settings.Path.Length == 0)
          {
             throw new ArgumentException("No Instance Path is given.  Will not create Client Instance.");
          }
       
          string preCleanInstanceName = settings.InstanceName;
-         ICollection<string> cleanupWarnings = settings.CleanupSettings();
-         if (settings.InstanceNameError)
+         ICollection<string> cleanupWarnings = CleanupSettings(settings);
+         if (!(StringOps.ValidateInstanceName(settings.InstanceName)))
          {
             throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, 
                "Instance Name '{0}' is not valid after cleaning.  Will not create Client Instance.", preCleanInstanceName));
@@ -138,6 +139,52 @@ namespace HFM.Instances
          return new ClientInstance(_prefs, _proteinCollection, _benchmarkContainer, _statusLogic, 
                                    InstanceProvider.GetInstance<IDataRetriever>(),
                                    InstanceProvider.GetInstance<IDataAggregator>(), settings);
+      }
+
+      public ICollection<string> CleanupSettings(ClientInstanceSettings settings)
+      {
+         var warnings = new List<string>();
+
+         if (!(StringOps.ValidateInstanceName(settings.InstanceName)))
+         {
+            // Remove illegal characters
+            warnings.Add(String.Format(CultureInfo.CurrentCulture,
+                                       "Instance Name '{0}' contained invalid characters and was cleaned.", settings.InstanceName));
+            settings.InstanceName = StringOps.CleanInstanceName(settings.InstanceName);
+         }
+
+         if (settings.ClientProcessorMegahertz < 1)
+         {
+            warnings.Add("Client MHz is less than 1, defaulting to 1 MHz.");
+            settings.ClientProcessorMegahertz = 1;
+         }
+         
+         if (String.IsNullOrEmpty(settings.RemoteFAHLogFilename))
+         {
+            warnings.Add("No remote FAHlog.txt filename, loading default.");
+            settings.RemoteFAHLogFilename = Default.FahLogFileName;
+         }
+
+         if (String.IsNullOrEmpty(settings.RemoteUnitInfoFilename))
+         {
+            warnings.Add("No remote unitinfo.txt filename, loading default.");
+            settings.RemoteUnitInfoFilename = Default.UnitInfoFileName;
+         }
+
+         if (String.IsNullOrEmpty(settings.RemoteQueueFilename))
+         {
+            warnings.Add("No remote queue.dat filename, loading default.");
+            settings.RemoteQueueFilename = Default.QueueFileName;
+         }
+
+         if (settings.ClientTimeOffset < Constants.MinOffsetMinutes ||
+             settings.ClientTimeOffset > Constants.MaxOffsetMinutes)
+         {
+            warnings.Add("Client time offset is out of range, defaulting to 0.");
+            settings.ClientTimeOffset = 0;
+         }
+
+         return warnings.AsReadOnly();
       }
    }
 }

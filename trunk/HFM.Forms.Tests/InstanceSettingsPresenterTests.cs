@@ -27,7 +27,9 @@ using Rhino.Mocks.Constraints;
 
 using harlam357.Windows.Forms;
 
+using HFM.Forms.Models;
 using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Forms.Tests
 {
@@ -60,7 +62,7 @@ namespace HFM.Forms.Tests
       [Test]
       public void ClientInstanceSettingsPathTest()
       {
-         var settings = _mocks.Stub<IClientInstanceSettings>();
+         var settings = _mocks.Stub<IClientInstanceSettingsModel>();
          Expect.Call(() => _settingsView.DataBind(settings));
          Expect.Call(() => settings.PropertyChanged += null).Constraints(Is.NotNull());
          Expect.Call(() => _settingsView.PathGroupVisible = true);
@@ -68,17 +70,17 @@ namespace HFM.Forms.Tests
          Expect.Call(() => _settingsView.FtpGroupVisible = false);
          _mocks.ReplayAll();
          _presenter = NewPresenter();
-         _presenter.Settings = settings;
+         _presenter.SettingsModel = settings;
          _mocks.VerifyAll();
          
          // check on default Path instance - no need to replicate this assertion
-         Assert.AreSame(settings, _presenter.Settings);
+         Assert.AreSame(settings, _presenter.SettingsModel);
       }
 
       [Test]
       public void ClientInstanceSettingsHttpTest()
       {
-         var settings = _mocks.Stub<IClientInstanceSettings>();
+         var settings = _mocks.Stub<IClientInstanceSettingsModel>();
          settings.InstanceHostType = InstanceType.HttpInstance;
          Expect.Call(() => _settingsView.DataBind(settings));
          Expect.Call(() => settings.PropertyChanged += null).Constraints(Is.NotNull());
@@ -87,14 +89,14 @@ namespace HFM.Forms.Tests
          Expect.Call(() => _settingsView.FtpGroupVisible = false);
          _mocks.ReplayAll();
          _presenter = NewPresenter();
-         _presenter.Settings = settings;
+         _presenter.SettingsModel = settings;
          _mocks.VerifyAll();
       }
 
       [Test]
       public void ClientInstanceSettingsFtpTest()
       {
-         var settings = _mocks.Stub<IClientInstanceSettings>();
+         var settings = _mocks.Stub<IClientInstanceSettingsModel>();
          settings.InstanceHostType = InstanceType.FtpInstance;
          Expect.Call(() => _settingsView.DataBind(settings));
          Expect.Call(() => settings.PropertyChanged += null).Constraints(Is.NotNull());
@@ -103,7 +105,7 @@ namespace HFM.Forms.Tests
          Expect.Call(() => _settingsView.FtpGroupVisible = true);
          _mocks.ReplayAll();
          _presenter = NewPresenter();
-         _presenter.Settings = settings;
+         _presenter.SettingsModel = settings;
          _mocks.VerifyAll();
       }
       
@@ -120,14 +122,14 @@ namespace HFM.Forms.Tests
       [Test]
       public void LocalBrowseClickedTest()
       {
-         var settings = _mocks.Stub<IClientInstanceSettings>();
+         var settings = _mocks.Stub<IClientInstanceSettingsModel>();
          settings.Path = "C:\\";
          Expect.Call(_folderBrowserView.SelectedPath = settings.Path);
          Expect.Call(_folderBrowserView.ShowDialog(_settingsView)).Return(DialogResult.OK);
          Expect.Call(_folderBrowserView.SelectedPath).Return("D:\\").Repeat.Twice();
          _mocks.ReplayAll();
          _presenter = NewPresenter();
-         _presenter.Settings = settings;
+         _presenter.SettingsModel = settings;
          _presenter.LocalBrowseClicked();
          _mocks.VerifyAll();
          
@@ -137,12 +139,12 @@ namespace HFM.Forms.Tests
       [Test]
       public void TestConnectionClickedHttpTest()
       {
-         var settings = _mocks.Stub<IClientInstanceSettings>();
+         var settings = _mocks.Stub<IClientInstanceSettingsModel>();
          settings.InstanceHostType = InstanceType.HttpInstance;
          Expect.Call(_networkOps.BeginHttpCheckConnection(null, null, null, null)).IgnoreArguments().Return(null);
          _mocks.ReplayAll();
          _presenter = NewPresenter();
-         _presenter.Settings = settings;
+         _presenter.SettingsModel = settings;
          _presenter.TestConnectionClicked();
          _mocks.VerifyAll();
       }
@@ -150,12 +152,12 @@ namespace HFM.Forms.Tests
       [Test]
       public void TestConnectionClickedFtpTest()
       {
-         var settings = _mocks.Stub<IClientInstanceSettings>();
+         var settings = _mocks.Stub<IClientInstanceSettingsModel>();
          settings.InstanceHostType = InstanceType.FtpInstance;
          Expect.Call(_networkOps.BeginFtpCheckConnection(null, null, null, null, FtpType.Passive, null)).IgnoreArguments().Return(null);
          _mocks.ReplayAll();
          _presenter = NewPresenter();
-         _presenter.Settings = settings;
+         _presenter.SettingsModel = settings;
          _presenter.TestConnectionClicked();
          _mocks.VerifyAll();
       }
@@ -163,12 +165,12 @@ namespace HFM.Forms.Tests
       [Test]
       public void OkClickedErrorTest()
       {
-         var settings = _mocks.Stub<IClientInstanceSettings>();
+         var settings = _mocks.Stub<IClientInstanceSettingsModel>();
          SetupResult.For(settings.InstanceNameError).Return(true);
          Expect.Call(() => _messageBoxView.ShowError(_settingsView, String.Empty, String.Empty)).IgnoreArguments();
          _mocks.ReplayAll();
          _presenter = NewPresenter();
-         _presenter.Settings = settings;
+         _presenter.SettingsModel = settings;
          _presenter.OkClicked();
          _mocks.VerifyAll();
       }
@@ -176,12 +178,12 @@ namespace HFM.Forms.Tests
       [Test]
       public void OkClickedPathErrorNotOkTest()
       {
-         var settings = _mocks.Stub<IClientInstanceSettings>();
+         var settings = _mocks.Stub<IClientInstanceSettingsModel>();
          SetupResult.For(settings.PathError).Return(true);
          Expect.Call(_messageBoxView.AskYesNoQuestion(_settingsView, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.No);
          _mocks.ReplayAll();
          _presenter = NewPresenter();
-         _presenter.Settings = settings;
+         _presenter.SettingsModel = settings;
          _presenter.OkClicked();
          _mocks.VerifyAll();
       }
@@ -189,14 +191,14 @@ namespace HFM.Forms.Tests
       [Test]
       public void OkClickedPathErrorOkTest()
       {
-         var settings = _mocks.Stub<IClientInstanceSettings>();
+         var settings = _mocks.Stub<IClientInstanceSettingsModel>();
          SetupResult.For(settings.PathError).Return(true);
          Expect.Call(_messageBoxView.AskYesNoQuestion(_settingsView, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
          Expect.Call(_settingsView.DialogResult = DialogResult.OK);
          Expect.Call(() => _settingsView.Close());
          _mocks.ReplayAll();
          _presenter = NewPresenter();
-         _presenter.Settings = settings;
+         _presenter.SettingsModel = settings;
          _presenter.OkClicked();
          _mocks.VerifyAll();
       }
@@ -204,12 +206,12 @@ namespace HFM.Forms.Tests
       [Test]
       public void OkClickedTest()
       {
-         var settings = _mocks.Stub<IClientInstanceSettings>();
+         var settings = _mocks.Stub<IClientInstanceSettingsModel>();
          Expect.Call(_settingsView.DialogResult = DialogResult.OK);
          Expect.Call(() => _settingsView.Close());
          _mocks.ReplayAll();
          _presenter = NewPresenter();
-         _presenter.Settings = settings;
+         _presenter.SettingsModel = settings;
          _presenter.OkClicked();
          _mocks.VerifyAll();
       }

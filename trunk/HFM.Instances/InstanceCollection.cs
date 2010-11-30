@@ -39,7 +39,7 @@ using HFM.Plugins;
 
 namespace HFM.Instances
 {
-   public sealed class InstanceCollection : IInstanceCollection, IDisposable
+   public sealed class InstanceCollection : IInstanceCollection
    {
       #region Fields
       
@@ -576,7 +576,7 @@ namespace HFM.Instances
       /// Add an Instance
       /// </summary>
       /// <param name="settings">Client Instance Settings</param>
-      public void Add(IClientInstanceSettings settings)
+      public void Add(ClientInstanceSettings settings)
       {
          if (settings == null) throw new ArgumentNullException("settings");
 
@@ -627,7 +627,7 @@ namespace HFM.Instances
       /// <param name="previousName"></param>
       /// <param name="previousPath"></param>
       /// <param name="settings">Client Instance Settings</param>
-      public void Edit(string previousName, string previousPath, IClientInstanceSettings settings)
+      public void Edit(string previousName, string previousPath, ClientInstanceSettings settings)
       {
          if (previousName == null) throw new ArgumentNullException("previousName");
          if (previousPath == null) throw new ArgumentNullException("previousPath");

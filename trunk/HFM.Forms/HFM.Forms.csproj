@@ -101,6 +101,7 @@
     <Compile Include="Controls\LabelWrapper.Designer.cs">
       <DependentUpon>LabelWrapper.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\ClientInstanceSettingsModel.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Controls\QueueControl.cs">
       <SubType>UserControl</SubType>

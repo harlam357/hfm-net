@@ -42,7 +42,7 @@ namespace HFM.Forms
       private readonly IProteinCollection _proteinCollection;
       private readonly IProteinBenchmarkContainer _benchmarkContainer;
       private readonly List<Color> _graphColors;
-      private readonly IInstanceCollection _instanceCollection;
+      private readonly IInstanceAccessor _instanceCollection;
       private readonly int _initialProjectID; 
       
       private BenchmarkClient _currentBenchmarkClient;

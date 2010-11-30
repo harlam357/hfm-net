@@ -20,6 +20,25 @@
 namespace HFM.Framework.DataTypes
 {
    /// <summary>
+   /// Client Instance Types
+   /// </summary>
+   public enum InstanceType
+   {
+      PathInstance,
+      FtpInstance,
+      HttpInstance
+   }
+
+   /// <summary>
+   /// Ftp Transfer Types
+   /// </summary>
+   public enum FtpType
+   {
+      Passive,
+      Active
+   }
+
+   /// <summary>
    /// Log Line Types
    /// </summary>
    public enum LogLineType
