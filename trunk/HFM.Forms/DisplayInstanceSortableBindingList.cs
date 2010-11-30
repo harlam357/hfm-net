@@ -24,11 +24,11 @@ using System.ComponentModel;
 using HFM.Framework;
 using HFM.Framework.DataTypes;
 
-namespace HFM.Instances
+namespace HFM.Forms
 {
    [Serializable]
    [CoverageExclude]
-   public class DisplayInstanceSortableBindingList : SortableBindingList<IDisplayInstance>
+   public class DisplayInstanceSortableBindingList : SortableBindingList<IDisplayInstance>, IDisplayInstanceCollection
    {
       #region Fields
 

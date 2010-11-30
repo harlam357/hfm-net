@@ -88,6 +88,7 @@
     <Compile Include="Controls\GroupBoxWrapper.Designer.cs">
       <DependentUpon>GroupBoxWrapper.cs</DependentUpon>
     </Compile>
+    <Compile Include="DisplayInstanceSortableBindingList.cs" />
     <Compile Include="HistoryEntrySortableBindingList.cs" />
     <Compile Include="Controls\HistoryGridViewWrapper.cs">
       <SubType>Component</SubType>
@@ -133,6 +134,7 @@
     <Compile Include="Controls\TextBoxWrapper.Designer.cs">
       <DependentUpon>TextBoxWrapper.cs</DependentUpon>
     </Compile>
+    <Compile Include="SortableBindingList.cs" />
     <Compile Include="UpdateLogic.cs" />
     <Compile Include="frmAbout.cs">
       <SubType>Form</SubType>
@@ -317,10 +319,6 @@
     <ProjectReference Include="..\HFM.Framework\HFM.Framework.csproj">
       <Project>{FFFF3DE4-8620-4C13-A968-ADF58133146B}</Project>
       <Name>HFM.Framework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HFM.Instances\HFM.Instances.csproj">
-      <Project>{B8614309-B90A-4B86-97FF-3A9E64B9658F}</Project>
-      <Name>HFM.Instances</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -80,7 +80,6 @@
     <Compile Include="ClientInstanceXmlSerializer.cs" />
     <Compile Include="DataRetriever.cs" />
     <Compile Include="DisplayInstance.cs" />
-    <Compile Include="DisplayInstanceSortableBindingList.cs" />
     <Compile Include="InstanceCollection.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -91,7 +90,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="QueryParameterContainer.cs" />
-    <Compile Include="SortableBindingList.cs" />
     <Compile Include="StatusData.cs" />
     <Compile Include="StatusLogic.cs" />
     <Compile Include="UnitInfoContainer.cs" />

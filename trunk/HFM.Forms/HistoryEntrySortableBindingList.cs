@@ -21,7 +21,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-using HFM.Instances;
 using HFM.Framework;
 using HFM.Framework.DataTypes;
 

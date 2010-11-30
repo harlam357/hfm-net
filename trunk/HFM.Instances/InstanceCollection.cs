@@ -90,7 +90,7 @@ namespace HFM.Instances
       /// <summary>
       /// Display instance collection (this is bound to the DataGridView)
       /// </summary>
-      private readonly DisplayInstanceSortableBindingList _displayCollection;
+      private readonly IDisplayInstanceCollection _displayCollection;
 
       /// <summary>
       /// Display Instance Accessor
@@ -255,16 +255,17 @@ namespace HFM.Instances
                                 IProteinCollection proteinCollection, 
                                 IProteinBenchmarkContainer benchmarkContainer, 
                                 IUnitInfoContainer unitInfoContainer,
-                                IClientInstanceFactory instanceFactory)
+                                IClientInstanceFactory instanceFactory,
+                                IDisplayInstanceCollection displayCollection)
       {
          _prefs = prefs;
          _proteinCollection = proteinCollection;
          _benchmarkContainer = benchmarkContainer;
          _unitInfoContainer = unitInfoContainer;
          _instanceFactory = instanceFactory;
+         _displayCollection = displayCollection;
 
          _instanceCollection = new Dictionary<string, ClientInstance>();
-         _displayCollection = new DisplayInstanceSortableBindingList();
 
          ConfigFilename = String.Empty;
       }
@@ -1117,17 +1118,6 @@ namespace HFM.Instances
       #endregion
 
       #region Binding Support
-
-      /// <summary>
-      /// Get Display Collection For Binding
-      /// </summary>
-      /// <returns>List of Display Instances</returns>
-      [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-      public BindingList<IDisplayInstance> GetDisplayCollection()
-      {
-         RefreshDisplayCollection();
-         return _displayCollection;
-      }
 
       /// <summary>
       /// Refresh the Display Collection from the Instance Collection

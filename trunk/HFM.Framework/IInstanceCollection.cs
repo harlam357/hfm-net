@@ -189,13 +189,6 @@ namespace HFM.Framework
       void SaveCurrentUnitInfo();
 
       /// <summary>
-      /// Get Display Collection For Binding
-      /// </summary>
-      /// <returns>List of Display Instances</returns>
-      [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-      BindingList<IDisplayInstance> GetDisplayCollection();
-
-      /// <summary>
       /// Refresh the Display Collection from the Instance Collection
       /// </summary>
       void RefreshDisplayCollection();

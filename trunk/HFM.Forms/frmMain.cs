@@ -191,7 +191,7 @@ namespace HFM.Forms
          new DataGridViewColumnSelector(dataGridView1);
 
          dataGridView1.AutoGenerateColumns = false;
-         _displayBindingSource.DataSource = _clientInstances.GetDisplayCollection();
+         _displayBindingSource.DataSource = InstanceProvider.GetInstance<IDisplayInstanceCollection>();
          dataGridView1.DataSource = _displayBindingSource;
       }
 

@@ -20,7 +20,7 @@
 /* 
  * Implementation by Joe Stegman - Microsoft Corporation
  * http://social.msdn.microsoft.com/forums/en-US/winformsdatacontrols/thread/12eb59d3-e687-4e36-93ab-bf6741954d39/
- */ 
+ */
 
 using System;
 using System.Collections.Generic;
@@ -29,7 +29,7 @@ using System.Windows.Forms;
 
 using HFM.Framework;
 
-namespace HFM.Instances
+namespace HFM.Forms
 {
    [Serializable]
    [CoverageExclude]
