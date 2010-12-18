@@ -222,6 +222,10 @@ namespace HFM.Log
          {
             return LogLineType.ClientNumberOfUnitsCompleted;
          }
+         if (logLine.Contains("] Client-core communications error:"))
+         {
+            return LogLineType.ClientCoreCommunicationsError;
+         }
          if (logLine.Contains("] This is a sign of more serious problems, shutting down."))
          {
             //TODO: No unit test coverage - need test log that contains this string
@@ -231,7 +235,7 @@ namespace HFM.Log
          {
             return LogLineType.ClientEuePauseState;
          }
-         if (logLine.Contains("] Folding@Home will go to sleep for 1 day"))
+         if (logLine.Contains("Folding@Home will go to sleep for 1 day"))
          {
             //TODO: No unit test coverage - need test log that contains this string
             return LogLineType.ClientEuePauseState;

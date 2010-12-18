@@ -340,7 +340,7 @@ namespace HFM.Instances
          _benchmarkContainer.UpdateBenchmarkData(CurrentUnitInfo, parsedUnits, _dataAggregator.CurrentUnitIndex);
 
          // Update the CurrentUnitInfo if we have a Status
-         ClientStatus currentWorkUnitStatus = _dataAggregator.CurrentWorkUnitStatus;
+         ClientStatus currentWorkUnitStatus = _dataAggregator.CurrentClientRun.Status;
          if (currentWorkUnitStatus.Equals(ClientStatus.Unknown) == false)
          {
             CurrentUnitInfo = parsedUnits[_dataAggregator.CurrentUnitIndex];

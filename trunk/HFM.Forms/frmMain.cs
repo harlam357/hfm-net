@@ -554,8 +554,13 @@ namespace HFM.Forms
             // Check the UnitLogLines array against the requested Queue Index - Issue 171
             try
             {
-               SetLogLines(_clientInstances.SelectedDisplayInstance,
-                           _clientInstances.SelectedDisplayInstance.GetLogLinesForQueueIndex(e.Index));
+               var logLines = _clientInstances.SelectedDisplayInstance.GetLogLinesForQueueIndex(e.Index);
+               if (logLines == null && e.Index == _clientInstances.SelectedDisplayInstance.Queue.CurrentIndex)
+               {
+                  logLines = _clientInstances.SelectedDisplayInstance.CurrentLogLines;
+               }
+
+               SetLogLines(_clientInstances.SelectedDisplayInstance, logLines);
             }
             catch (ArgumentOutOfRangeException ex)
             {

@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -43,18 +44,19 @@ namespace HFM.Forms.Controls
          InitializeComponent();
       }
 
-      public void SetLogLines(IList<LogLine> lines, string logOwnedByInstance)
+      public void SetLogLines(IEnumerable<LogLine> lines, string logOwnedByInstance)
       {
-         _logLines = lines;
          _logOwnedByInstanceName = logOwnedByInstance;
-      
-         List<string> logLines = new List<string>(lines.Count);
-         foreach (ILogLine line in lines)
+
+         // limit the maximum number of log lines
+         int lineOffset = lines.Count() - Constants.MaxDisplayableLogLines;
+         if (lineOffset > 0)
          {
-            logLines.Add(line.LineRaw);
+            lines = lines.Where((x, i) => i > lineOffset);
          }
-         
-         Lines = logLines.ToArray();
+
+         _logLines = lines.ToList();
+         Lines = (from ILogLine line in lines select line.LineRaw).ToArray();
       }
       
       public void SetNoLogLines()
@@ -83,6 +85,7 @@ namespace HFM.Forms.Controls
                DoLineHighlight(i, Color.Green);
             }
             else if (line.LineType.Equals(LogLineType.ClientShutdown) ||
+                     line.LineType.Equals(LogLineType.ClientCoreCommunicationsError) ||
                      line.LineType.Equals(LogLineType.ClientCoreCommunicationsErrorShutdown) ||
                      line.LineType.Equals(LogLineType.ClientEuePauseState) ||
                      line.LineType.Equals(LogLineType.WorkUnitCoreShutdown))

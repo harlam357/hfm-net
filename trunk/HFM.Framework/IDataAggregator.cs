@@ -62,11 +62,6 @@ namespace HFM.Framework
       ClientRun CurrentClientRun { get; }
 
       /// <summary>
-      /// Current Work Unit Status based on LogReader CurrentWorkUnitLogLines
-      /// </summary>
-      ClientStatus CurrentWorkUnitStatus { get; }
-
-      /// <summary>
       /// Current Log Lines based on UnitLogLines Array and CurrentUnitIndex
       /// </summary>
       IList<LogLine> CurrentLogLines { get; }

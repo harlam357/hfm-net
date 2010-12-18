@@ -34,7 +34,6 @@ namespace HFM.Log
          ProjectInfoIndex = -1;
          ProjectInfoList = new List<IProjectInfo>();
          UnitResult = WorkUnitResult.Unknown;
-         Status = ClientStatus.Unknown;
       }
 
       /// <summary>
@@ -151,10 +150,5 @@ namespace HFM.Log
       /// Work Unit Result
       /// </summary>
       public WorkUnitResult UnitResult { get; set; }
-
-      /// <summary>
-      /// Client Status
-      /// </summary>
-      public ClientStatus Status { get; set; }
    }
 }

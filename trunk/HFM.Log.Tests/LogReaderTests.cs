@@ -59,6 +59,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 1;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 261;
+         expectedRun.Status = ClientStatus.RunningNoFrameTimes;
 
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
@@ -74,6 +75,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 2;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 263;
+         expectedRun.Status = ClientStatus.GettingWorkPacket;
 
          DoClientRunCheck(expectedRun, clientRuns[1]);
 
@@ -108,6 +110,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 2;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 292;
+         expectedRun.Status = ClientStatus.SendingWorkPacket;
 
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
@@ -147,6 +150,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 1;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 0; //TODO: not capturing line "+ Starting local stats count at 1"
+         expectedRun.Status = ClientStatus.RunningNoFrameTimes;
 
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
@@ -169,7 +173,7 @@ namespace HFM.Log.Tests
          var clientRuns = _reader.GetClientRuns(logLines);
          _logInterpreter = new LogInterpreter(logLines, clientRuns);
 
-         // Check Run 0 Positions
+         // Check Run 5 Positions
          var expectedRun = new ClientRun(401);
          expectedRun.UnitIndexes.Add(new UnitIndex(-1, 426));
          expectedRun.Arguments = "-configonly";
@@ -180,6 +184,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 0;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 0;
+         expectedRun.Status = ClientStatus.RunningNoFrameTimes;
 
          DoClientRunCheck(expectedRun, clientRuns[5]);
 
@@ -192,6 +197,73 @@ namespace HFM.Log.Tests
          Assert.AreEqual("2.10", logLines[617].LineData);
          Assert.That(logLines[628].ToString().Contains("Project: 2683 (Run 4, Clone 11, Gen 18)"));
          Assert.AreEqual(WorkUnitResult.FinishedUnit, logLines[660].LineData);
+      }
+
+      [Test, Category("SMP")]
+      public void SMP_15_FAHlog() // lots of Client-core communications error
+      {
+         // Scan
+         var logLines = _reader.GetLogLines("..\\..\\..\\TestFiles\\SMP_15\\FAHlog.txt");
+         var clientRuns = _reader.GetClientRuns(logLines);
+         _logInterpreter = new LogInterpreter(logLines, clientRuns);
+
+         // Check Run 0 Positions
+         var expectedRun = new ClientRun(2);
+         expectedRun.UnitIndexes.Add(new UnitIndex(7, 36));
+         expectedRun.UnitIndexes.Add(new UnitIndex(8, 234));
+         expectedRun.UnitIndexes.Add(new UnitIndex(9, 284));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 334));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 658));
+         expectedRun.UnitIndexes.Add(new UnitIndex(2, 708));
+         expectedRun.UnitIndexes.Add(new UnitIndex(3, 758));
+         expectedRun.UnitIndexes.Add(new UnitIndex(4, 1082));
+         expectedRun.UnitIndexes.Add(new UnitIndex(5, 1147));
+         expectedRun.UnitIndexes.Add(new UnitIndex(6, 1219));
+         expectedRun.UnitIndexes.Add(new UnitIndex(7, 1269));
+         expectedRun.UnitIndexes.Add(new UnitIndex(8, 1341));
+         expectedRun.UnitIndexes.Add(new UnitIndex(9, 1436));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 1538));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 1588));
+         expectedRun.UnitIndexes.Add(new UnitIndex(2, 1638));
+         expectedRun.UnitIndexes.Add(new UnitIndex(3, 1710));
+         expectedRun.UnitIndexes.Add(new UnitIndex(4, 1760));
+         expectedRun.UnitIndexes.Add(new UnitIndex(5, 1825));
+         expectedRun.UnitIndexes.Add(new UnitIndex(6, 2149));
+         expectedRun.UnitIndexes.Add(new UnitIndex(7, 2199));
+         expectedRun.UnitIndexes.Add(new UnitIndex(8, 2418));
+         expectedRun.UnitIndexes.Add(new UnitIndex(9, 2490));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 2540));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 2590));
+         expectedRun.UnitIndexes.Add(new UnitIndex(2, 2914));
+         expectedRun.UnitIndexes.Add(new UnitIndex(3, 2964));
+         expectedRun.UnitIndexes.Add(new UnitIndex(4, 3014));
+         expectedRun.UnitIndexes.Add(new UnitIndex(5, 3353));
+         expectedRun.UnitIndexes.Add(new UnitIndex(6, 3448));
+         expectedRun.UnitIndexes.Add(new UnitIndex(7, 3498));
+         expectedRun.UnitIndexes.Add(new UnitIndex(8, 3645));
+         expectedRun.UnitIndexes.Add(new UnitIndex(9, 3710));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 3760));
+         expectedRun.Arguments = "-smp -verbosity 9";
+         expectedRun.FoldingID = "harlam357";
+         expectedRun.Team = 32;
+         expectedRun.UserID = "DC1DAF57D91DF79";
+         expectedRun.MachineID = 1;
+         expectedRun.CompletedUnits = 1;
+         expectedRun.FailedUnits = 33;
+         expectedRun.TotalCompletedUnits = 617;
+         expectedRun.Status = ClientStatus.EuePause;
+
+         DoClientRunCheck(expectedRun, clientRuns[0]);
+
+         // Verify LogLine Properties
+         Assert.IsNotNull(_logInterpreter.PreviousWorkUnitLogLines);
+         Assert.IsNotNull(_logInterpreter.CurrentWorkUnitLogLines);
+
+         // Spot Check Work Unit Data (Run Index 0 - Unit Index 33)
+         Assert.AreEqual(0, logLines[3763].LineData);
+         Assert.AreEqual("2.22", logLines[3770].LineData);
+         Assert.That(logLines[3780].ToString().Contains("Project: 6071 (Run 0, Clone 39, Gen 70)"));
+         Assert.AreEqual(WorkUnitResult.ClientCoreError, logLines[3786].LineData);
       }
 
       [Test, Category("GPU")]
@@ -218,6 +290,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 1;
          expectedRun.FailedUnits = 5;
          expectedRun.TotalCompletedUnits = 0; //TODO: not capturing line "+ Starting local stats count at 1"
+         expectedRun.Status = ClientStatus.Stopped;
 
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
@@ -244,6 +317,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 11;
          expectedRun.FailedUnits = 1;
          expectedRun.TotalCompletedUnits = 12;
+         expectedRun.Status = ClientStatus.RunningNoFrameTimes;
 
          DoClientRunCheck(expectedRun, clientRuns[1]);
 
@@ -279,6 +353,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 2;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 4221;
+         expectedRun.Status = ClientStatus.Stopped;
 
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
@@ -312,6 +387,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 0;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 0;
+         expectedRun.Status = ClientStatus.Stopped;
 
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
@@ -331,6 +407,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 1;
          expectedRun.FailedUnits = 5;
          expectedRun.TotalCompletedUnits = 224;
+         expectedRun.Status = ClientStatus.EuePause;
 
          DoClientRunCheck(expectedRun, clientRuns[1]);
 
@@ -367,6 +444,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 0;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 1994;
+         expectedRun.Status = ClientStatus.RunningNoFrameTimes;
 
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
@@ -395,7 +473,6 @@ namespace HFM.Log.Tests
          Assert.AreEqual(unitData.ProjectClone, unitData.ProjectInfoList[unitData.ProjectInfoList.Count - 1].ProjectClone);
          Assert.AreEqual(unitData.ProjectGen, unitData.ProjectInfoList[unitData.ProjectInfoList.Count - 1].ProjectGen);
          Assert.AreEqual(WorkUnitResult.Unknown, unitData.UnitResult);
-         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, unitData.Status);
       }
 
       [Test, Category("Standard")]
@@ -431,6 +508,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 1;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 0; //TODO: not capturing line "+ Starting local stats count at 1"
+         expectedRun.Status = ClientStatus.Stopped;
 
          DoClientRunCheck(expectedRun, clientRuns[1]);
 
@@ -445,6 +523,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 1;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 2;
+         expectedRun.Status = ClientStatus.Stopped;
 
          DoClientRunCheck(expectedRun, clientRuns[2]);
 
@@ -478,6 +557,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 0;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 0;
+         expectedRun.Status = ClientStatus.RunningNoFrameTimes;
 
          DoClientRunCheck(expectedRun, clientRuns[3]);
          
@@ -492,6 +572,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 0;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 0;
+         expectedRun.Status = ClientStatus.RunningNoFrameTimes;
 
          DoClientRunCheck(expectedRun, clientRuns[4]);
 
@@ -522,7 +603,6 @@ namespace HFM.Log.Tests
          Assert.AreEqual(unitData.ProjectClone, unitData.ProjectInfoList[unitData.ProjectInfoList.Count - 1].ProjectClone);
          Assert.AreEqual(unitData.ProjectGen, unitData.ProjectInfoList[unitData.ProjectInfoList.Count - 1].ProjectGen);
          Assert.AreEqual(WorkUnitResult.Unknown, unitData.UnitResult);
-         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, unitData.Status);
       }
 
       [Test, Category("Standard")]
@@ -552,6 +632,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 8;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 229;
+         expectedRun.Status = ClientStatus.Paused;
 
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
@@ -586,6 +667,7 @@ namespace HFM.Log.Tests
          Assert.AreEqual(expectedRun.CompletedUnits, run.CompletedUnits);
          Assert.AreEqual(expectedRun.FailedUnits, run.FailedUnits);
          Assert.AreEqual(expectedRun.TotalCompletedUnits, run.TotalCompletedUnits);
+         Assert.AreEqual(expectedRun.Status, run.Status);
       }
       
       [Test, Category("GPU")]

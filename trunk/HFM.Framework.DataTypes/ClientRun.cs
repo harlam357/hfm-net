@@ -61,6 +61,7 @@ namespace HFM.Framework.DataTypes
          FoldingID = Default.FoldingIDDefault;
          Team = Default.TeamDefault;
          UserID = String.Empty;
+         Status = ClientStatus.Unknown;
       }
       
       #endregion
@@ -111,6 +112,11 @@ namespace HFM.Framework.DataTypes
       /// Total Number of Completed Units (for the life of the client - as reported in the FAHlog.txt file)
       /// </summary>
       public int TotalCompletedUnits { get; set; }
+
+      /// <summary>
+      /// Client Status
+      /// </summary>
+      public ClientStatus Status { get; set; }
 
       #endregion
    }

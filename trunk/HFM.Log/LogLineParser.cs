@@ -144,9 +144,18 @@ namespace HFM.Log
          {
             case LogLineType.ClientVersion:
                int versionIndex = logLine.LineRaw.IndexOf("Version", StringComparison.Ordinal) + 8;
-               return versionIndex < logLine.LineRaw.Length ? logLine.LineRaw.Substring(versionIndex) : String.Empty;
+               if (versionIndex < logLine.LineRaw.Length)
+               {
+                  return logLine.LineRaw.Substring(versionIndex).Trim();
+               }
+               throw new FormatException(String.Format("Failed to parse Client Version value from '{0}'", logLine.LineRaw));
             case LogLineType.ClientArguments:
-               return logLine.LineRaw.Substring(10).Trim();
+               int argumentIndex = logLine.LineRaw.IndexOf("Arguments:", StringComparison.Ordinal) + 11;
+               if (argumentIndex < logLine.LineRaw.Length)
+               {
+                  return logLine.LineRaw.Substring(argumentIndex).Trim();
+               }
+               throw new FormatException(String.Format("Failed to parse Arguments value from '{0}'", logLine.LineRaw));
             case LogLineType.ClientUserNameTeam:
                Match mUserTeam;
                if ((mUserTeam = rUserTeam.Match(logLine.LineRaw)).Success)
@@ -242,6 +251,8 @@ namespace HFM.Log
                   return Int32.Parse(mCompletedWUs.Result("${Completed}"));
                }
                throw new FormatException(String.Format("Failed to parse Units Completed value from '{0}'", logLine.LineRaw));
+            case LogLineType.ClientCoreCommunicationsError:
+               return WorkUnitResult.ClientCoreError;
          }
 
          return null;

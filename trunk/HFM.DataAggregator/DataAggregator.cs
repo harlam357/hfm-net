@@ -94,15 +94,7 @@ namespace HFM.DataAggregator
          get { return _currentClientRun; }
       }
 
-      private FahLogUnitData _currentFahLogUnitData;
-      /// <summary>
-      /// Current Work Unit Status based on LogReader CurrentWorkUnitLogLines
-      /// </summary>
-      public ClientStatus CurrentWorkUnitStatus
-      {
-         get { return _currentFahLogUnitData.Status; }
-      }
-
+      private IList<LogLine> _currentClientRunLogLines;
       /// <summary>
       /// Current Log Lines based on UnitLogLines Array and CurrentUnitIndex
       /// </summary>
@@ -110,7 +102,17 @@ namespace HFM.DataAggregator
       {
          get
          {
-            return _unitLogLines == null ? new List<LogLine>() : _unitLogLines[CurrentUnitIndex];
+            if (_unitLogLines == null || _unitLogLines[CurrentUnitIndex] == null)
+            {
+               if (_currentClientRunLogLines == null)
+               {
+                  return new List<LogLine>();
+               }
+
+               return _currentClientRunLogLines;
+            }
+
+            return _unitLogLines[CurrentUnitIndex];
          }
       }
 
@@ -137,6 +139,7 @@ namespace HFM.DataAggregator
 
          _logInterpreter = new LogInterpreter(logLines, clientRuns);
          _currentClientRun = _logInterpreter.LastClientRun;
+         _currentClientRunLogLines = _logInterpreter.CurrentClientRunLogLines;
          
          // report errors that came back from log parsing
          foreach (var s in _logInterpreter.LogLineParsingErrors)
@@ -253,8 +256,7 @@ namespace HFM.DataAggregator
             _unitLogLines[1] = _logInterpreter.CurrentClientRunLogLines;
          }
          
-         _currentFahLogUnitData = _logReader.GetFahLogDataFromLogLines(_unitLogLines[1]);
-         parsedUnits[1] = BuildUnitInfo(null, _currentFahLogUnitData, GetUnitInfoLogData(), matchOverride);
+         parsedUnits[1] = BuildUnitInfo(null, _logReader.GetFahLogDataFromLogLines(_unitLogLines[1]), GetUnitInfoLogData(), matchOverride);
 
          return parsedUnits;
       }
@@ -276,7 +278,6 @@ namespace HFM.DataAggregator
             {
                // Get the UnitInfo Log Data
                unitInfoLogData = GetUnitInfoLogData();
-               _currentFahLogUnitData = fahLogUnitData;
             }
 
             parsedUnits[queueIndex] = BuildUnitInfo(q.GetQueueEntry((uint)queueIndex), fahLogUnitData, unitInfoLogData);
@@ -296,9 +297,8 @@ namespace HFM.DataAggregator
                      _unitLogLines[queueIndex] = _logInterpreter.CurrentClientRunLogLines;
                   }
                   fahLogUnitData = _logReader.GetFahLogDataFromLogLines(_unitLogLines[queueIndex]);
-                  _currentFahLogUnitData = fahLogUnitData;
 
-                  if (_currentFahLogUnitData.Status.Equals(ClientStatus.GettingWorkPacket))
+                  if (_currentClientRun.Status.Equals(ClientStatus.GettingWorkPacket))
                   {
                      // Use either the current Work Unit log lines or current Client Run log lines
                      // as decided upon above... don't clear it here and show the user nothing - 10/9/10

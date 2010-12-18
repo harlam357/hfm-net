@@ -80,6 +80,7 @@ namespace HFM.Framework.DataTypes
       WorkUnitShuttingDownCore,
       WorkUnitCoreShutdown,
       ClientNumberOfUnitsCompleted,
+      ClientCoreCommunicationsError,
       ClientCoreCommunicationsErrorShutdown,
       ClientEuePauseState,
       ClientShutdown
@@ -96,7 +97,8 @@ namespace HFM.Framework.DataTypes
       UnstableMachine,
       Interrupted,
       BadWorkUnit,
-      CoreOutdated
+      CoreOutdated,
+      ClientCoreError
    }
 
    /// <summary>

@@ -64,7 +64,7 @@ namespace HFM.DataAggregator.Tests
          Assert.IsNull(_dataAggregator.Queue);
          Assert.AreEqual(1, _dataAggregator.CurrentUnitIndex);
          Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _dataAggregator.CurrentWorkUnitStatus);
+         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.Status);
          Assert.IsNotNull(_dataAggregator.CurrentLogLines);
          Assert.AreEqual(2, _dataAggregator.UnitLogLines.Length);
          Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
@@ -129,7 +129,7 @@ namespace HFM.DataAggregator.Tests
          Assert.IsNotNull(_dataAggregator.Queue);
          Assert.AreEqual(1, _dataAggregator.CurrentUnitIndex);
          Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _dataAggregator.CurrentWorkUnitStatus);
+         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.Status);
          Assert.IsNotNull(_dataAggregator.CurrentLogLines);
          Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
          Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
@@ -209,7 +209,7 @@ namespace HFM.DataAggregator.Tests
          Assert.IsNotNull(_dataAggregator.Queue);
          Assert.AreEqual(3, _dataAggregator.CurrentUnitIndex);
          Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _dataAggregator.CurrentWorkUnitStatus);
+         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.Status);
          Assert.IsNotNull(_dataAggregator.CurrentLogLines);
          Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
          Assert.IsNull(_dataAggregator.UnitLogLines[0]);
@@ -277,7 +277,7 @@ namespace HFM.DataAggregator.Tests
          Assert.IsNull(_dataAggregator.Queue);
          Assert.AreEqual(1, _dataAggregator.CurrentUnitIndex);
          Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _dataAggregator.CurrentWorkUnitStatus);
+         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.Status);
          Assert.IsNotNull(_dataAggregator.CurrentLogLines);
          Assert.AreEqual(2, _dataAggregator.UnitLogLines.Length);
          Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
@@ -340,7 +340,7 @@ namespace HFM.DataAggregator.Tests
          Assert.IsNotNull(_dataAggregator.Queue);
          Assert.AreEqual(5, _dataAggregator.CurrentUnitIndex);
          Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _dataAggregator.CurrentWorkUnitStatus);
+         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.Status);
          Assert.IsNotNull(_dataAggregator.CurrentLogLines);
          Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
          Assert.IsNull(_dataAggregator.UnitLogLines[0]);
@@ -413,7 +413,7 @@ namespace HFM.DataAggregator.Tests
          Assert.IsNotNull(_dataAggregator.Queue);
          Assert.AreEqual(5, _dataAggregator.CurrentUnitIndex);
          Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _dataAggregator.CurrentWorkUnitStatus);
+         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.Status);
          Assert.IsNotNull(_dataAggregator.CurrentLogLines);
          Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
          Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
@@ -486,7 +486,7 @@ namespace HFM.DataAggregator.Tests
          Assert.IsNotNull(_dataAggregator.Queue);
          Assert.AreEqual(7, _dataAggregator.CurrentUnitIndex);
          Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _dataAggregator.CurrentWorkUnitStatus);
+         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.Status);
          Assert.IsNotNull(_dataAggregator.CurrentLogLines);
          Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
          Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
@@ -559,7 +559,7 @@ namespace HFM.DataAggregator.Tests
          Assert.IsNotNull(_dataAggregator.Queue);
          Assert.AreEqual(0, _dataAggregator.CurrentUnitIndex);
          Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(ClientStatus.SendingWorkPacket, _dataAggregator.CurrentWorkUnitStatus);
+         Assert.AreEqual(ClientStatus.SendingWorkPacket, _dataAggregator.CurrentClientRun.Status);
          Assert.IsNotNull(_dataAggregator.CurrentLogLines);
          Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
          Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
@@ -632,7 +632,7 @@ namespace HFM.DataAggregator.Tests
          Assert.IsNotNull(_dataAggregator.Queue);
          Assert.AreEqual(1, _dataAggregator.CurrentUnitIndex);
          Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(ClientStatus.GettingWorkPacket, _dataAggregator.CurrentWorkUnitStatus);
+         Assert.AreEqual(ClientStatus.GettingWorkPacket, _dataAggregator.CurrentClientRun.Status);
          Assert.IsNotNull(_dataAggregator.CurrentLogLines);
          Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
          Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
@@ -681,6 +681,80 @@ namespace HFM.DataAggregator.Tests
          #endregion
       }
 
+      [Test, Category("SMP")]
+      public void SMP_15() // lots of Client-core communications error
+      {
+         const string path = "..\\..\\..\\TestFiles\\SMP_15";
+         _dataAggregator.InstanceName = "SMP_15";
+         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
+         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
+         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+
+         var unitInfoList = _dataAggregator.AggregateData();
+         Assert.AreEqual(10, unitInfoList.Count);
+         Assert.IsNotNull(unitInfoList[0]);
+         Assert.IsNotNull(unitInfoList[1]);
+         Assert.IsNotNull(unitInfoList[2]);
+         Assert.IsNotNull(unitInfoList[3]);
+         Assert.IsNotNull(unitInfoList[4]);
+         Assert.IsNotNull(unitInfoList[5]);
+         Assert.IsNotNull(unitInfoList[6]);
+         Assert.IsNotNull(unitInfoList[7]);
+         Assert.IsNotNull(unitInfoList[8]);
+         Assert.IsNotNull(unitInfoList[9]);
+
+         #region Check Data Aggregator
+         Assert.IsNotNull(_dataAggregator.Queue);
+         Assert.AreEqual(0, _dataAggregator.CurrentUnitIndex);
+         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
+         Assert.AreEqual(ClientStatus.EuePause, _dataAggregator.CurrentClientRun.Status);
+         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
+         Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[1]);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[2]);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[3]);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[4]);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[5]);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[6]);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[7]);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[8]);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[9]);
+         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         #endregion
+
+         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+
+         #region Check Unit Info Data Values
+         Assert.AreEqual(null, unitInfoData.OwningInstanceName);
+         Assert.AreEqual(null, unitInfoData.OwningInstancePath);
+         Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
+         Assert.AreEqual("harlam357", unitInfoData.FoldingID);
+         Assert.AreEqual(32, unitInfoData.Team);
+         Assert.AreEqual(ClientType.Unknown, unitInfoData.TypeOfClient);
+         Assert.AreEqual(new DateTime(2010, 10, 14, 9, 18, 26), unitInfoData.DownloadTime);
+         Assert.AreEqual(new DateTime(2010, 10, 20, 9, 18, 26), unitInfoData.DueTime);
+         Assert.AreEqual(new TimeSpan(9, 18, 31), unitInfoData.UnitStartTimeStamp);
+         Assert.AreEqual(DateTime.MinValue, unitInfoData.FinishedTime);
+         Assert.AreEqual("2.22", unitInfoData.CoreVersion);
+         Assert.AreEqual(6071, unitInfoData.ProjectID);
+         Assert.AreEqual(0, unitInfoData.ProjectRun);
+         Assert.AreEqual(39, unitInfoData.ProjectClone);
+         Assert.AreEqual(70, unitInfoData.ProjectGen);
+         Assert.AreEqual("Gromacs", unitInfoData.ProteinName);
+         Assert.AreEqual("P6071R0C39G70", unitInfoData.ProteinTag);
+         Assert.AreEqual(WorkUnitResult.ClientCoreError, unitInfoData.UnitResult);
+         Assert.AreEqual(0, unitInfoData.RawFramesComplete);
+         Assert.AreEqual(500000, unitInfoData.RawFramesTotal);
+         Assert.AreEqual(1, unitInfoData.FramesObserved);
+         Assert.AreEqual(0, unitInfoData.CurrentFrame.FrameID);
+         Assert.AreEqual(new TimeSpan(9, 18, 38), unitInfoData.CurrentFrame.TimeOfFrame);
+         Assert.AreEqual(TimeSpan.Zero, unitInfoData.CurrentFrame.FrameDuration);
+         Assert.IsNotNull(unitInfoData.CurrentFrame);
+         Assert.AreEqual("A3", unitInfoData.CoreID);
+         #endregion
+      }
+
       [Test, Category("GPU")]
       public void GPU2_3()
       {
@@ -699,7 +773,7 @@ namespace HFM.DataAggregator.Tests
          Assert.IsNull(_dataAggregator.Queue);
          Assert.AreEqual(1, _dataAggregator.CurrentUnitIndex);
          Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(ClientStatus.EuePause, _dataAggregator.CurrentWorkUnitStatus);
+         Assert.AreEqual(ClientStatus.EuePause, _dataAggregator.CurrentClientRun.Status);
          Assert.IsNotNull(_dataAggregator.CurrentLogLines);
          Assert.AreEqual(2, _dataAggregator.UnitLogLines.Length);
          Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
@@ -764,7 +838,7 @@ namespace HFM.DataAggregator.Tests
          Assert.IsNotNull(_dataAggregator.Queue);
          Assert.AreEqual(8, _dataAggregator.CurrentUnitIndex);
          Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(ClientStatus.GettingWorkPacket, _dataAggregator.CurrentWorkUnitStatus);
+         Assert.AreEqual(ClientStatus.GettingWorkPacket, _dataAggregator.CurrentClientRun.Status);
          Assert.IsNotNull(_dataAggregator.CurrentLogLines);
          Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
          Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
@@ -846,7 +920,7 @@ namespace HFM.DataAggregator.Tests
          Assert.IsNull(_dataAggregator.Queue);
          Assert.AreEqual(1, _dataAggregator.CurrentUnitIndex);
          Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _dataAggregator.CurrentWorkUnitStatus);
+         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.Status);
          Assert.IsNotNull(_dataAggregator.CurrentLogLines);
          Assert.AreEqual(2, _dataAggregator.UnitLogLines.Length);
          Assert.IsNull(_dataAggregator.UnitLogLines[0]);
@@ -911,7 +985,7 @@ namespace HFM.DataAggregator.Tests
          Assert.IsNotNull(_dataAggregator.Queue);
          Assert.AreEqual(8, _dataAggregator.CurrentUnitIndex);
          Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(ClientStatus.Stopped, _dataAggregator.CurrentWorkUnitStatus);
+         Assert.AreEqual(ClientStatus.Stopped, _dataAggregator.CurrentClientRun.Status);
          Assert.IsNotNull(_dataAggregator.CurrentLogLines);
          Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
          Assert.IsNull(_dataAggregator.UnitLogLines[0]);
@@ -974,7 +1048,7 @@ namespace HFM.DataAggregator.Tests
          Assert.IsNull(_dataAggregator.Queue);
          Assert.AreEqual(1, _dataAggregator.CurrentUnitIndex);
          Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(ClientStatus.Stopped, _dataAggregator.CurrentWorkUnitStatus);
+         Assert.AreEqual(ClientStatus.Stopped, _dataAggregator.CurrentClientRun.Status);
          Assert.IsNotNull(_dataAggregator.CurrentLogLines);
          Assert.AreEqual(2, _dataAggregator.UnitLogLines.Length);
          Assert.IsNull(_dataAggregator.UnitLogLines[0]);
@@ -1037,7 +1111,7 @@ namespace HFM.DataAggregator.Tests
          Assert.IsNotNull(_dataAggregator.Queue);
          Assert.AreEqual(4, _dataAggregator.CurrentUnitIndex);
          Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _dataAggregator.CurrentWorkUnitStatus);
+         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.Status);
          Assert.IsNotNull(_dataAggregator.CurrentLogLines);
          Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
          Assert.IsNull(_dataAggregator.UnitLogLines[0]);
@@ -1102,7 +1176,7 @@ namespace HFM.DataAggregator.Tests
          Assert.IsNull(_dataAggregator.Queue);
          Assert.AreEqual(1, _dataAggregator.CurrentUnitIndex);
          Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _dataAggregator.CurrentWorkUnitStatus);
+         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.Status);
          Assert.IsNotNull(_dataAggregator.CurrentLogLines);
          Assert.AreEqual(2, _dataAggregator.UnitLogLines.Length);
          Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
@@ -1159,7 +1233,7 @@ namespace HFM.DataAggregator.Tests
          Assert.IsNull(_dataAggregator.Queue);
          Assert.AreEqual(1, _dataAggregator.CurrentUnitIndex);
          Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _dataAggregator.CurrentWorkUnitStatus);
+         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.Status);
          Assert.IsNotNull(_dataAggregator.CurrentLogLines);
          Assert.AreEqual(2, _dataAggregator.UnitLogLines.Length);
          Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);

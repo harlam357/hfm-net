@@ -142,42 +142,10 @@ namespace HFM.Log
             #endregion
             
             #region Unit Result
-            if (line.LineType.Equals(LogLineType.WorkUnitCoreShutdown) && line.LineData != null)
+            if ((line.LineType.Equals(LogLineType.WorkUnitCoreShutdown) && line.LineData != null) ||
+                (line.LineType.Equals(LogLineType.ClientCoreCommunicationsError) && line.LineData != null))
             {
                data.UnitResult = (WorkUnitResult)line.LineData;
-            }
-            #endregion
-
-            #region Client Status
-            if (line.LineType.Equals(LogLineType.WorkUnitProcessing) ||
-                line.LineType.Equals(LogLineType.WorkUnitWorking) ||
-                line.LineType.Equals(LogLineType.WorkUnitStart) ||
-                line.LineType.Equals(LogLineType.WorkUnitFrame) ||
-                line.LineType.Equals(LogLineType.WorkUnitResumeFromBattery))
-            {
-               data.Status = ClientStatus.RunningNoFrameTimes;
-            }
-            else if (line.LineType.Equals(LogLineType.WorkUnitPaused) || 
-                     line.LineType.Equals(LogLineType.WorkUnitPausedForBattery))
-            {
-               data.Status = ClientStatus.Paused;
-            }
-            else if (line.LineType.Equals(LogLineType.ClientSendWorkToServer))
-            {
-               data.Status = ClientStatus.SendingWorkPacket;
-            }
-            else if (line.LineType.Equals(LogLineType.ClientAttemptGetWorkPacket))
-            {
-               data.Status = ClientStatus.GettingWorkPacket;
-            }
-            else if (line.LineType.Equals(LogLineType.ClientEuePauseState))
-            {
-               data.Status = ClientStatus.EuePause;
-            }
-            else if (line.LineType.Equals(LogLineType.ClientShutdown) ||
-                     line.LineType.Equals(LogLineType.ClientCoreCommunicationsErrorShutdown))
-            {
-               data.Status = ClientStatus.Stopped;
             }
             #endregion
          }
