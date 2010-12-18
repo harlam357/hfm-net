@@ -56,7 +56,7 @@ namespace HFM.Log
       /// <summary>
       /// Returns the most recent Client Run if available, otherwise null.
       /// </summary>
-      public ClientRun LastClientRun
+      public ClientRun CurrentClientRun
       {
          get { return _clientRunList.Count > 0 ? _clientRunList[_clientRunList.Count - 1] : null; }
       }
@@ -68,7 +68,7 @@ namespace HFM.Log
       {
          get
          {
-            ClientRun lastClientRun = LastClientRun;
+            ClientRun lastClientRun = CurrentClientRun;
             if (lastClientRun != null)
             {
                int start = lastClientRun.ClientStartIndex;
@@ -94,7 +94,7 @@ namespace HFM.Log
       {
          get
          {
-            ClientRun lastClientRun = LastClientRun;
+            ClientRun lastClientRun = CurrentClientRun;
             if (lastClientRun != null && lastClientRun.UnitIndexes.Count > 1)
             {
                int start = lastClientRun.UnitIndexes[lastClientRun.UnitIndexes.Count - 2].StartIndex;
@@ -120,7 +120,7 @@ namespace HFM.Log
       {
          get
          {
-            ClientRun lastClientRun = LastClientRun;
+            ClientRun lastClientRun = CurrentClientRun;
             if (lastClientRun != null && lastClientRun.UnitIndexes.Count > 0)
             {
                int start = lastClientRun.UnitIndexes[lastClientRun.UnitIndexes.Count - 1].StartIndex;
@@ -145,7 +145,7 @@ namespace HFM.Log
       /// Get a list of Log Lines that correspond to the given Queue Index.
       /// </summary>
       /// <param name="queueIndex">The Queue Index (0-9)</param>
-      public IList<LogLine> GetLogLinesFromQueueIndex(int queueIndex)
+      public IList<LogLine> GetLogLinesForQueueIndex(int queueIndex)
       {
          // walk backwards through the ClientRunList and then backward
          // through the UnitQueueIndex list.  Find the first (really last

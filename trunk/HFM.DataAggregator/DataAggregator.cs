@@ -33,7 +33,6 @@ namespace HFM.DataAggregator
 {
    public class DataAggregator : IDataAggregator
    {
-      private LogReader _logReader;
       private LogInterpreter _logInterpreter;
 
       /// <summary>
@@ -133,12 +132,11 @@ namespace HFM.DataAggregator
       /// </summary>
       public IList<IUnitInfo> AggregateData()
       {
-         _logReader = new LogReader(Default.DateTimeStyle);
-         var logLines = _logReader.GetLogLines(FahLogFilePath);
-         var clientRuns = _logReader.GetClientRuns(logLines);
+         var logLines = LogReader.GetLogLines(FahLogFilePath);
+         var clientRuns = LogReader.GetClientRuns(logLines);
 
          _logInterpreter = new LogInterpreter(logLines, clientRuns);
-         _currentClientRun = _logInterpreter.LastClientRun;
+         _currentClientRun = _logInterpreter.CurrentClientRun;
          _currentClientRunLogLines = _logInterpreter.CurrentClientRunLogLines;
          
          // report errors that came back from log parsing
@@ -164,7 +162,6 @@ namespace HFM.DataAggregator
             _clientQueue = null;
          }
          
-         _logReader = null;
          _logInterpreter = null;
 
          return parsedUnits;
@@ -245,7 +242,7 @@ namespace HFM.DataAggregator
          if (_logInterpreter.PreviousWorkUnitLogLines != null)
          {
             _unitLogLines[0] = _logInterpreter.PreviousWorkUnitLogLines;
-            parsedUnits[0] = BuildUnitInfo(null, _logReader.GetFahLogDataFromLogLines(_logInterpreter.PreviousWorkUnitLogLines), null);
+            parsedUnits[0] = BuildUnitInfo(null, LogReader.GetFahLogDataFromLogLines(_logInterpreter.PreviousWorkUnitLogLines), null);
          }
 
          bool matchOverride = false;
@@ -256,7 +253,7 @@ namespace HFM.DataAggregator
             _unitLogLines[1] = _logInterpreter.CurrentClientRunLogLines;
          }
          
-         parsedUnits[1] = BuildUnitInfo(null, _logReader.GetFahLogDataFromLogLines(_unitLogLines[1]), GetUnitInfoLogData(), matchOverride);
+         parsedUnits[1] = BuildUnitInfo(null, LogReader.GetFahLogDataFromLogLines(_unitLogLines[1]), GetUnitInfoLogData(), matchOverride);
 
          return parsedUnits;
       }
@@ -269,9 +266,9 @@ namespace HFM.DataAggregator
          for (int queueIndex = 0; queueIndex < parsedUnits.Length; queueIndex++)
          {
             // Get the Log Lines for this queue position from the reader
-            _unitLogLines[queueIndex] = _logInterpreter.GetLogLinesFromQueueIndex(queueIndex);
+            _unitLogLines[queueIndex] = _logInterpreter.GetLogLinesForQueueIndex(queueIndex);
             // Get the FAH Log Data from the Log Lines
-            FahLogUnitData fahLogUnitData = _logReader.GetFahLogDataFromLogLines(_unitLogLines[queueIndex]);
+            FahLogUnitData fahLogUnitData = LogReader.GetFahLogDataFromLogLines(_unitLogLines[queueIndex]);
             UnitInfoLogData unitInfoLogData = null;
             // On the Current Queue Index
             if (queueIndex == q.CurrentIndex)
@@ -296,7 +293,7 @@ namespace HFM.DataAggregator
                   {
                      _unitLogLines[queueIndex] = _logInterpreter.CurrentClientRunLogLines;
                   }
-                  fahLogUnitData = _logReader.GetFahLogDataFromLogLines(_unitLogLines[queueIndex]);
+                  fahLogUnitData = LogReader.GetFahLogDataFromLogLines(_unitLogLines[queueIndex]);
 
                   if (_currentClientRun.Status.Equals(ClientStatus.GettingWorkPacket))
                   {
@@ -324,7 +321,7 @@ namespace HFM.DataAggregator
       {
          try
          {
-            return _logReader.GetUnitInfoLogData(UnitInfoLogFilePath);
+            return LogReader.GetUnitInfoLogData(UnitInfoLogFilePath);
          }
          catch (Exception ex)
          {

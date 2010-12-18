@@ -30,22 +30,13 @@ namespace HFM.Log.Tests
    [TestFixture]
    public class LogReaderTests
    {
-      private LogReader _reader;
-      private LogInterpreter _logInterpreter;
-   
-      [SetUp]
-      public void Init()
-      {
-         _reader = new LogReader(Default.DateTimeStyle);
-      }
-      
       [Test, Category("SMP")]
       public void SMP_1_FAHlog() // verbosity 9
       {
          // Scan
-         var logLines = _reader.GetLogLines("..\\..\\..\\TestFiles\\SMP_1\\FAHlog.txt");
-         var clientRuns = _reader.GetClientRuns(logLines);
-         _logInterpreter = new LogInterpreter(logLines, clientRuns);
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\SMP_1\\FAHlog.txt");
+         var clientRuns = LogReader.GetClientRuns(logLines);
+         var logInterpreter = new LogInterpreter(logLines, clientRuns);
          
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
@@ -80,8 +71,8 @@ namespace HFM.Log.Tests
          DoClientRunCheck(expectedRun, clientRuns[1]);
 
          // Verify LogLine Properties
-         Assert.IsNotNull(_logInterpreter.PreviousWorkUnitLogLines);
-         Assert.IsNotNull(_logInterpreter.CurrentWorkUnitLogLines);
+         Assert.IsNotNull(logInterpreter.PreviousWorkUnitLogLines);
+         Assert.IsNotNull(logInterpreter.CurrentWorkUnitLogLines);
          
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
          Assert.AreEqual(5, logLines[33].LineData);
@@ -94,9 +85,9 @@ namespace HFM.Log.Tests
       public void SMP_2_FAHlog() // verbosity 9
       {
          // Scan
-         var logLines = _reader.GetLogLines("..\\..\\..\\TestFiles\\SMP_2\\FAHlog.txt");
-         var clientRuns = _reader.GetClientRuns(logLines);
-         _logInterpreter = new LogInterpreter(logLines, clientRuns);
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\SMP_2\\FAHlog.txt");
+         var clientRuns = LogReader.GetClientRuns(logLines);
+         var logInterpreter = new LogInterpreter(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
@@ -115,8 +106,8 @@ namespace HFM.Log.Tests
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
          // Verify LogLine Properties
-         Assert.IsNotNull(_logInterpreter.PreviousWorkUnitLogLines);
-         Assert.IsNotNull(_logInterpreter.CurrentWorkUnitLogLines);
+         Assert.IsNotNull(logInterpreter.PreviousWorkUnitLogLines);
+         Assert.IsNotNull(logInterpreter.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
          Assert.AreEqual(1, logLines[33].LineData);
@@ -132,9 +123,9 @@ namespace HFM.Log.Tests
       public void SMP_3_FAHlog() // verbosity (normal) / Handles Core Download on Startup / notfred's instance
       {
          // Scan
-         var logLines = _reader.GetLogLines("..\\..\\..\\TestFiles\\SMP_3\\FAHlog.txt");
-         var clientRuns = _reader.GetClientRuns(logLines);
-         _logInterpreter = new LogInterpreter(logLines, clientRuns);
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\SMP_3\\FAHlog.txt");
+         var clientRuns = LogReader.GetClientRuns(logLines);
+         var logInterpreter = new LogInterpreter(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
@@ -155,8 +146,8 @@ namespace HFM.Log.Tests
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
          // Verify LogLine Properties
-         Assert.IsNotNull(_logInterpreter.PreviousWorkUnitLogLines);
-         Assert.IsNotNull(_logInterpreter.CurrentWorkUnitLogLines);
+         Assert.IsNotNull(logInterpreter.PreviousWorkUnitLogLines);
+         Assert.IsNotNull(logInterpreter.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
          Assert.AreEqual(1, logLines[234].LineData);
@@ -169,9 +160,9 @@ namespace HFM.Log.Tests
       public void SMP_10_FAHlog() // -smp 8 -bigadv verbosity 9 / Corrupted Log Section in Client Run Index 5
       {
          // Scan
-         var logLines = _reader.GetLogLines("..\\..\\..\\TestFiles\\SMP_10\\FAHlog.txt");
-         var clientRuns = _reader.GetClientRuns(logLines);
-         _logInterpreter = new LogInterpreter(logLines, clientRuns);
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\SMP_10\\FAHlog.txt");
+         var clientRuns = LogReader.GetClientRuns(logLines);
+         var logInterpreter = new LogInterpreter(logLines, clientRuns);
 
          // Check Run 5 Positions
          var expectedRun = new ClientRun(401);
@@ -189,8 +180,8 @@ namespace HFM.Log.Tests
          DoClientRunCheck(expectedRun, clientRuns[5]);
 
          // Verify LogLine Properties
-         Assert.IsNull(_logInterpreter.PreviousWorkUnitLogLines);
-         Assert.IsNotNull(_logInterpreter.CurrentWorkUnitLogLines);
+         Assert.IsNull(logInterpreter.PreviousWorkUnitLogLines);
+         Assert.IsNotNull(logInterpreter.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 8 - Unit Index 0)
          Assert.AreEqual(6, logLines[610].LineData);
@@ -203,9 +194,9 @@ namespace HFM.Log.Tests
       public void SMP_15_FAHlog() // lots of Client-core communications error
       {
          // Scan
-         var logLines = _reader.GetLogLines("..\\..\\..\\TestFiles\\SMP_15\\FAHlog.txt");
-         var clientRuns = _reader.GetClientRuns(logLines);
-         _logInterpreter = new LogInterpreter(logLines, clientRuns);
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\SMP_15\\FAHlog.txt");
+         var clientRuns = LogReader.GetClientRuns(logLines);
+         var logInterpreter = new LogInterpreter(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
@@ -256,8 +247,8 @@ namespace HFM.Log.Tests
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
          // Verify LogLine Properties
-         Assert.IsNotNull(_logInterpreter.PreviousWorkUnitLogLines);
-         Assert.IsNotNull(_logInterpreter.CurrentWorkUnitLogLines);
+         Assert.IsNotNull(logInterpreter.PreviousWorkUnitLogLines);
+         Assert.IsNotNull(logInterpreter.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 33)
          Assert.AreEqual(0, logLines[3763].LineData);
@@ -270,9 +261,9 @@ namespace HFM.Log.Tests
       public void GPU2_1_FAHlog() // verbosity 9
       {
          // Scan
-         var logLines = _reader.GetLogLines("..\\..\\..\\TestFiles\\GPU2_1\\FAHlog.txt");
-         var clientRuns = _reader.GetClientRuns(logLines);
-         _logInterpreter = new LogInterpreter(logLines, clientRuns);
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\GPU2_1\\FAHlog.txt");
+         var clientRuns = LogReader.GetClientRuns(logLines);
+         var logInterpreter = new LogInterpreter(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
@@ -322,8 +313,8 @@ namespace HFM.Log.Tests
          DoClientRunCheck(expectedRun, clientRuns[1]);
 
          // Verify LogLine Properties
-         Assert.IsNotNull(_logInterpreter.PreviousWorkUnitLogLines);
-         Assert.IsNotNull(_logInterpreter.CurrentWorkUnitLogLines);
+         Assert.IsNotNull(logInterpreter.PreviousWorkUnitLogLines);
+         Assert.IsNotNull(logInterpreter.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
          Assert.AreEqual(1, logLines[133].LineData);
@@ -336,9 +327,9 @@ namespace HFM.Log.Tests
       public void GPU2_2_FAHlog() // verbosity (normal)
       {
          // Scan
-         var logLines = _reader.GetLogLines("..\\..\\..\\TestFiles\\GPU2_2\\FAHlog.txt");
-         var clientRuns = _reader.GetClientRuns(logLines);
-         _logInterpreter = new LogInterpreter(logLines, clientRuns);
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\GPU2_2\\FAHlog.txt");
+         var clientRuns = LogReader.GetClientRuns(logLines);
+         var logInterpreter = new LogInterpreter(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
@@ -358,8 +349,8 @@ namespace HFM.Log.Tests
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
          // Verify LogLine Properties
-         Assert.IsNotNull(_logInterpreter.PreviousWorkUnitLogLines);
-         Assert.IsNotNull(_logInterpreter.CurrentWorkUnitLogLines);
+         Assert.IsNotNull(logInterpreter.PreviousWorkUnitLogLines);
+         Assert.IsNotNull(logInterpreter.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
          Assert.AreEqual(8, logLines[37].LineData);
@@ -372,9 +363,9 @@ namespace HFM.Log.Tests
       public void GPU2_3_FAHlog() // verbosity (normal) / EUE Pause Test
       {
          // Scan
-         var logLines = _reader.GetLogLines("..\\..\\..\\TestFiles\\GPU2_3\\FAHlog.txt");
-         var clientRuns = _reader.GetClientRuns(logLines);
-         _logInterpreter = new LogInterpreter(logLines, clientRuns);
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\GPU2_3\\FAHlog.txt");
+         var clientRuns = LogReader.GetClientRuns(logLines);
+         var logInterpreter = new LogInterpreter(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(0);
@@ -412,8 +403,8 @@ namespace HFM.Log.Tests
          DoClientRunCheck(expectedRun, clientRuns[1]);
 
          // Verify LogLine Properties
-         Assert.IsNotNull(_logInterpreter.PreviousWorkUnitLogLines);
-         Assert.IsNotNull(_logInterpreter.CurrentWorkUnitLogLines);
+         Assert.IsNotNull(logInterpreter.PreviousWorkUnitLogLines);
+         Assert.IsNotNull(logInterpreter.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 1 - Unit Index 3)
          Assert.AreEqual(9, logLines[323].LineData);
@@ -429,9 +420,9 @@ namespace HFM.Log.Tests
       public void GPU2_7_FAHlog() // verbosity (normal) / Project String After "+ Processing work unit"
       {
          // Scan
-         var logLines = _reader.GetLogLines("..\\..\\..\\TestFiles\\GPU2_7\\FAHlog.txt");
-         var clientRuns = _reader.GetClientRuns(logLines);
-         _logInterpreter = new LogInterpreter(logLines, clientRuns);
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\GPU2_7\\FAHlog.txt");
+         var clientRuns = LogReader.GetClientRuns(logLines);
+         var logInterpreter = new LogInterpreter(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(0);
@@ -449,15 +440,15 @@ namespace HFM.Log.Tests
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
          // Verify LogLine Properties
-         Assert.IsNull(_logInterpreter.PreviousWorkUnitLogLines);
-         Assert.IsNotNull(_logInterpreter.CurrentWorkUnitLogLines);
+         Assert.IsNull(logInterpreter.PreviousWorkUnitLogLines);
+         Assert.IsNotNull(logInterpreter.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
          Assert.AreEqual(0, logLines[28].LineData);
          Assert.AreEqual("1.31", logLines[37].LineData);
          Assert.That(logLines[50].ToString().Contains("Project: 5781 (Run 2, Clone 700, Gen 2)"));
 
-         var unitData = _reader.GetFahLogDataFromLogLines(_logInterpreter.CurrentWorkUnitLogLines);
+         var unitData = LogReader.GetFahLogDataFromLogLines(logInterpreter.CurrentWorkUnitLogLines);
          Assert.AreEqual(new TimeSpan(1, 57, 21), unitData.UnitStartTimeStamp);
          Assert.AreEqual(5, unitData.FrameDataList.Count);
          Assert.AreEqual(5, unitData.FramesObserved);
@@ -479,9 +470,9 @@ namespace HFM.Log.Tests
       public void Standard_1_FAHlog() // verbosity 9
       {
          // Scan
-         var logLines = _reader.GetLogLines("..\\..\\..\\TestFiles\\Standard_1\\FAHlog.txt");
-         var clientRuns = _reader.GetClientRuns(logLines);
-         _logInterpreter = new LogInterpreter(logLines, clientRuns);
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\Standard_1\\FAHlog.txt");
+         var clientRuns = LogReader.GetClientRuns(logLines);
+         var logInterpreter = new LogInterpreter(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
@@ -528,8 +519,8 @@ namespace HFM.Log.Tests
          DoClientRunCheck(expectedRun, clientRuns[2]);
 
          // Verify LogLine Properties
-         Assert.IsNull(_logInterpreter.PreviousWorkUnitLogLines); // No Previous Log Lines for this Run
-         Assert.IsNotNull(_logInterpreter.CurrentWorkUnitLogLines);
+         Assert.IsNull(logInterpreter.PreviousWorkUnitLogLines); // No Previous Log Lines for this Run
+         Assert.IsNotNull(logInterpreter.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 1 - Unit Index 0)
          Assert.AreEqual(1, logLines[182].LineData);
@@ -542,9 +533,9 @@ namespace HFM.Log.Tests
       public void Standard_5_FAHlog() // verbosity 9
       {
          // Scan
-         var logLines = _reader.GetLogLines("..\\..\\..\\TestFiles\\Standard_5\\FAHlog.txt");
-         var clientRuns = _reader.GetClientRuns(logLines);
-         _logInterpreter = new LogInterpreter(logLines, clientRuns);
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\Standard_5\\FAHlog.txt");
+         var clientRuns = LogReader.GetClientRuns(logLines);
+         var logInterpreter = new LogInterpreter(logLines, clientRuns);
 
          // Check Run 3 Positions
          var expectedRun = new ClientRun(788);
@@ -577,8 +568,8 @@ namespace HFM.Log.Tests
          DoClientRunCheck(expectedRun, clientRuns[4]);
 
          // Verify LogLine Properties
-         Assert.IsNull(_logInterpreter.PreviousWorkUnitLogLines); // No Previous Log Lines for this Run
-         Assert.IsNotNull(_logInterpreter.CurrentWorkUnitLogLines);
+         Assert.IsNull(logInterpreter.PreviousWorkUnitLogLines); // No Previous Log Lines for this Run
+         Assert.IsNotNull(logInterpreter.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 4 - Unit Index 0)
          Assert.AreEqual(4, logLines[967].LineData);
@@ -587,7 +578,7 @@ namespace HFM.Log.Tests
          Assert.That(logLines[971].ToString().Contains("Project: 6501 (Run 15, Clone 0, Gen 0)"));
          Assert.That(logLines[1006].ToString().Contains("Project: 10002 (Run 19, Clone 0, Gen 51)"));
 
-         var unitData = _reader.GetFahLogDataFromLogLines(_logInterpreter.CurrentWorkUnitLogLines);
+         var unitData = LogReader.GetFahLogDataFromLogLines(logInterpreter.CurrentWorkUnitLogLines);
          Assert.AreEqual(new TimeSpan(0, 41, 7), unitData.UnitStartTimeStamp);
          Assert.AreEqual(5, unitData.FrameDataList.Count);
          Assert.AreEqual(5, unitData.FramesObserved);
@@ -609,9 +600,9 @@ namespace HFM.Log.Tests
       public void Standard_6_FAHlog() // verbosity normal / Gromacs 3.3
       {
          // Scan
-         var logLines = _reader.GetLogLines("..\\..\\..\\TestFiles\\Standard_6\\FAHlog.txt");
-         var clientRuns = _reader.GetClientRuns(logLines);
-         _logInterpreter = new LogInterpreter(logLines, clientRuns);
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\Standard_6\\FAHlog.txt");
+         var clientRuns = LogReader.GetClientRuns(logLines);
+         var logInterpreter = new LogInterpreter(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
@@ -637,8 +628,8 @@ namespace HFM.Log.Tests
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
          // Verify LogLine Properties
-         Assert.IsNotNull(_logInterpreter.PreviousWorkUnitLogLines);
-         Assert.IsNotNull(_logInterpreter.CurrentWorkUnitLogLines);
+         Assert.IsNotNull(logInterpreter.PreviousWorkUnitLogLines);
+         Assert.IsNotNull(logInterpreter.CurrentWorkUnitLogLines);
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 6)
          Assert.AreEqual(7, logLines[2133].LineData);
@@ -673,7 +664,7 @@ namespace HFM.Log.Tests
       [Test, Category("GPU")]
       public void GPU2_5_UnitInfo()
       {
-         var data = _reader.GetUnitInfoLogData("..\\..\\..\\TestFiles\\GPU2_5\\unitinfo.txt");
+         var data = LogReader.GetUnitInfoLogData("..\\..\\..\\TestFiles\\GPU2_5\\unitinfo.txt");
          Assert.AreEqual("p4744_lam5w_300K", data.ProteinName);
          Assert.AreEqual("-", data.ProteinTag);
          Assert.AreEqual(0, data.ProjectID);
@@ -688,7 +679,7 @@ namespace HFM.Log.Tests
       [Test, Category("SMP")]
       public void SMP_10_UnitInfo()
       {
-         var data = _reader.GetUnitInfoLogData("..\\..\\..\\TestFiles\\SMP_10\\unitinfo.txt");
+         var data = LogReader.GetUnitInfoLogData("..\\..\\..\\TestFiles\\SMP_10\\unitinfo.txt");
          Assert.AreEqual("Gromacs", data.ProteinName);
          Assert.AreEqual("P2683R6C12G21", data.ProteinTag);
          Assert.AreEqual(2683, data.ProjectID);
@@ -704,56 +695,56 @@ namespace HFM.Log.Tests
       [ExpectedException(typeof(ArgumentException))]
       public void GetUnitInfoLogData_ArgumentNull()
       {
-         _reader.GetUnitInfoLogData(null);
+         LogReader.GetUnitInfoLogData(null);
       }
 
       [Test]
       [ExpectedException(typeof(ArgumentException))]
       public void GetUnitInfoLogData_ArgumentEmpty()
       {
-         _reader.GetUnitInfoLogData(String.Empty);
+         LogReader.GetUnitInfoLogData(String.Empty);
       }
       
       [Test]
       [ExpectedException(typeof(IOException))]
       public void GetUnitInfoLogData_FileDoesNotExist()
       {
-         _reader.GetUnitInfoLogData("..\\..\\..\\TestFiles\\DoesNotExist\\unitinfo.txt");
+         LogReader.GetUnitInfoLogData("..\\..\\..\\TestFiles\\DoesNotExist\\unitinfo.txt");
       }
 
       [Test]
       [ExpectedException(typeof(FormatException))]
       public void Malformed_1_UnitInfo1()
       {
-         _reader.GetUnitInfoLogData("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo1.txt");
+         LogReader.GetUnitInfoLogData("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo1.txt");
       }
 
       [Test]
       [ExpectedException(typeof(FormatException))]
       public void Malformed_1_UnitInfo2()
       {
-         _reader.GetUnitInfoLogData("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo2.txt");
+         LogReader.GetUnitInfoLogData("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo2.txt");
       }
 
       [Test]
       [ExpectedException(typeof(FormatException))]
       public void Malformed_1_UnitInfo3()
       {
-         _reader.GetUnitInfoLogData("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo3.txt");
+         LogReader.GetUnitInfoLogData("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo3.txt");
       }
 
       [Test]
       [ExpectedException(typeof(FormatException))]
       public void Malformed_1_UnitInfo4()
       {
-         _reader.GetUnitInfoLogData("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo4.txt");
+         LogReader.GetUnitInfoLogData("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo4.txt");
       }
 
       [Test]
       [ExpectedException(typeof(FormatException))]
       public void Malformed_1_UnitInfo5()
       {
-         _reader.GetUnitInfoLogData("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo5.txt");
+         LogReader.GetUnitInfoLogData("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo5.txt");
       }
 
       [Test]

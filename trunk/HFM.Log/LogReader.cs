@@ -29,9 +29,9 @@ using HFM.Framework.DataTypes;
 namespace HFM.Log
 {
    /// <summary>
-   /// Reads FAHlog.txt files.  Determines client run data and work unit log positions.
+   /// FAH Client Log File Reader.  Gets data from FAHlog.txt and unitinfo.txt files.
    /// </summary>
-   public class LogReader
+   public static class LogReader
    {
       #region Fields
       
@@ -41,21 +41,6 @@ namespace HFM.Log
       private static readonly Regex RegexProjectNumberFromTag =
          new Regex("P(?<ProjectNumber>.*)R(?<Run>.*)C(?<Clone>.*)G(?<Gen>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
-      private readonly DateTimeStyles _dateTimeStyles;
-      
-      #endregion
-
-      #region Constructor
-      
-      /// <summary>
-      /// LogReader Constructor
-      /// </summary>
-      /// <param name="dateTimeStyles">Style used to parse DateTime structures from log data.</param>
-      public LogReader(DateTimeStyles dateTimeStyles)
-      {
-         _dateTimeStyles = dateTimeStyles;
-      }
-
       #endregion
 
       #region Methods
@@ -64,7 +49,7 @@ namespace HFM.Log
       /// Get FAHlog Unit Data from the given Log Lines
       /// </summary>
       /// <param name="logLines">Log Lines to search</param>
-      public FahLogUnitData GetFahLogDataFromLogLines(IEnumerable<LogLine> logLines)
+      public static FahLogUnitData GetFahLogDataFromLogLines(IEnumerable<LogLine> logLines)
       {
          var data = new FahLogUnitData();
 
@@ -153,11 +138,7 @@ namespace HFM.Log
          return data;
       }
 
-      /// <summary>
-      /// Get the time stamp from this log line and set as the unit's start time
-      /// </summary>
-      /// <param name="logLine">Log Line</param>
-      private TimeSpan GetLogLineTimeStamp(ILogLine logLine)
+      private static TimeSpan GetLogLineTimeStamp(ILogLine logLine)
       {
          Match mTimeStamp;
          if ((mTimeStamp = RegexTimeStamp.Match(logLine.LineRaw)).Success)
@@ -166,7 +147,7 @@ namespace HFM.Log
             {
                DateTime timeStamp = DateTime.ParseExact(mTimeStamp.Result("${Timestamp}"), "HH:mm:ss",
                                                         DateTimeFormatInfo.InvariantInfo,
-                                                        _dateTimeStyles);
+                                                        Default.DateTimeStyle);
 
                return timeStamp.TimeOfDay;
             }
@@ -199,10 +180,10 @@ namespace HFM.Log
       /// Parse the content from the unitinfo.txt file.
       /// </summary>
       /// <param name="logFilePath">Path to the log file.</param>
-      /// <exception cref="System.ArgumentException">Throws if logFilePath is Null or Empty.</exception>
+      /// <exception cref="System.ArgumentException">Throws if logFilePath is null or empty.</exception>
       /// <exception cref="System.IO.IOException">Throws if file specified by logFilePath cannot be read.</exception>
       /// <exception cref="System.FormatException">Throws if log data fails parsing.</exception>
-      public UnitInfoLogData GetUnitInfoLogData(string logFilePath)
+      public static UnitInfoLogData GetUnitInfoLogData(string logFilePath)
       {
          if (String.IsNullOrEmpty(logFilePath))
          {
@@ -252,14 +233,14 @@ namespace HFM.Log
                {
                   data.DownloadTime = DateTime.ParseExact(line.Substring(15), "MMMM d H:mm:ss",
                                                           DateTimeFormatInfo.InvariantInfo,
-                                                          _dateTimeStyles);
+                                                          Default.DateTimeStyle);
                }
                /* DueTime (Could be read here or through the queue.dat) */
                else if (line.StartsWith("Due time: "))
                {
                   data.DueTime = DateTime.ParseExact(line.Substring(10), "MMMM d H:mm:ss",
                                                      DateTimeFormatInfo.InvariantInfo,
-                                                     _dateTimeStyles);
+                                                     Default.DateTimeStyle);
                }
                /* Progress (Supplemental Read - if progress percentage cannot be determined through FAHlog.txt) */
                else if (line.StartsWith("Progress: "))
@@ -277,11 +258,11 @@ namespace HFM.Log
       }
 
       /// <summary>
-      /// Scan the FAHLog text lines to determine work unit boundries.
+      /// Read the FAHlog.txt lines and determine log line types and data.
       /// </summary>
       /// <param name="logFilePath">Path to the log file.</param>
-      /// <exception cref="ArgumentException">Throws if logFilePath is Null or Empty.</exception>
-      public List<LogLine> GetLogLines(string logFilePath)
+      /// <exception cref="ArgumentException">Throws if logFilePath is null or empty.</exception>
+      public static List<LogLine> GetLogLines(string logFilePath)
       {
          if (String.IsNullOrEmpty(logFilePath))
          {
@@ -296,9 +277,16 @@ namespace HFM.Log
 
          return logLineList;
       }
-      
-      public List<ClientRun> GetClientRuns(IList<LogLine> logLines)
+
+      /// <summary>
+      /// Scan the log lines to find client run data and work unit start positions.
+      /// </summary>
+      /// <param name="logLines">Log lines to scan.</param>
+      /// <exception cref="ArgumentNullException">Throws if logLines is null.</exception>
+      public static List<ClientRun> GetClientRuns(IList<LogLine> logLines)
       {
+         if (logLines == null) throw new ArgumentNullException("logLines");
+
          // Now that we know the LineType for each LogLine, hand off the List
          // of LogLine to the ClientRun List so it can determine the Client 
          // and Unit Start Indexes.
