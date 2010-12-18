@@ -69,5 +69,7 @@ namespace HFM.Framework
       // Default ID Constants
       public const string DefaultUserID = "";
       public const int DefaultMachineID = 0;
+
+      public const int MaxDisplayableLogLines = 500;
    }
 }
