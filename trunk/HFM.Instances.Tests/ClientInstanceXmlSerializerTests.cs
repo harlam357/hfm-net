@@ -120,11 +120,19 @@ namespace HFM.Instances.Tests
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentException))]
-      public void SerializeFilePathNotRootedTest()
+      [ExpectedException(typeof(InvalidOperationException))]
+      public void SerializeNoDataInterfaceTest()
       {
          var serializer = new ClientInstanceXmlSerializer();
          serializer.Serialize(@"..\some\folder\");
+      }
+
+      [Test]
+      [ExpectedException(typeof(InvalidOperationException))]
+      public void DeserializeNoDataInterfaceTest()
+      {
+         var serializer = new ClientInstanceXmlSerializer();
+         serializer.Deserialize(@"..\some\folder\");
       }
 
       [Test]

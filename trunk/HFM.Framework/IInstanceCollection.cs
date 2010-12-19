@@ -62,26 +62,6 @@ namespace HFM.Framework
       IDisplayInstance SelectedDisplayInstance { get; }
       
       /// <summary>
-      /// String Representation of the File Type Filters used in an Open File Dialog
-      /// </summary>
-      string FileTypeFilters { get; }
-
-      /// <summary>
-      /// Client Configuration Filename
-      /// </summary>
-      string ConfigFilename { get; }
-
-      /// <summary>
-      /// Client Configuration has Filename defined
-      /// </summary>
-      bool HasConfigFilename { get; }
-      
-      /// <summary>
-      /// Current Config File Extension or the Default File Extension
-      /// </summary>
-      string ConfigFileExtension { get; }
-
-      /// <summary>
       /// Denotes the Saved State of the Current Client Configuration (false == saved, true == unsaved)
       /// </summary>
       bool ChangedAfterSave { get; }
@@ -104,7 +84,7 @@ namespace HFM.Framework
 
       event EventHandler InstanceRetrieved;
 
-      event EventHandler FindDuplicatesComplete;
+      event EventHandler InvalidateGrid;
 
       event EventHandler OfflineLastChanged;
 

@@ -266,26 +266,6 @@ namespace HFM.Instances.Tests
          _mocks.VerifyAll();
       }
 
-      [Test]
-      public void ReadCompletedUnitsTest()
-      {
-         var completedUnitsReader = new CompletedUnitsFileReader { CompletedUnitsFilePath = "..\\..\\TestFiles\\CompletedUnits.csv" };
-         completedUnitsReader.Process();
-         Assert.AreEqual(0, completedUnitsReader.Result.Duplicates);
-         Assert.AreEqual(44, completedUnitsReader.Result.Entries.Count);
-         Assert.AreEqual(0, completedUnitsReader.Result.ErrorLines.Count);
-      }
-
-      [Test]
-      public void ReadCompletedUnitsLargeTest()
-      {
-         var completedUnitsReader = new CompletedUnitsFileReader { CompletedUnitsFilePath = "..\\..\\TestFiles\\CompletedUnitsLarge.csv" };
-         completedUnitsReader.Process();
-         Assert.AreEqual(8, completedUnitsReader.Result.Duplicates);
-         Assert.AreEqual(6994, completedUnitsReader.Result.Entries.Count);
-         Assert.AreEqual(153, completedUnitsReader.Result.ErrorLines.Count);
-      }
-      
       private static IProteinCollection SetupMockProteinCollection(MockRepository mocks)
       {
          var proteinCollection = mocks.DynamicMock<IProteinCollection>();

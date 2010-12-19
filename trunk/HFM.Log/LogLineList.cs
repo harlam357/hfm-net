@@ -237,7 +237,6 @@ namespace HFM.Log
          }
          if (logLine.Contains("Folding@Home will go to sleep for 1 day"))
          {
-            //TODO: No unit test coverage - need test log that contains this string
             return LogLineType.ClientEuePauseState;
          }
          if (logLine.Contains("Folding@Home Client Shutdown"))

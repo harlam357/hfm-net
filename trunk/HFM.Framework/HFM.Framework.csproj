@@ -75,6 +75,7 @@
     <Compile Include="IDisplayInstance.cs" />
     <Compile Include="IDisplayInstanceCollection.cs" />
     <Compile Include="IInstanceCollection.cs" />
+    <Compile Include="IInstanceConfigurationManager.cs" />
     <Compile Include="InstanceProvider.cs" />
     <Compile Include="IPreferenceSet.cs" />
     <Compile Include="IProjectSummaryDownloader.cs" />

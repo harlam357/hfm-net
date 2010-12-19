@@ -21,13 +21,11 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Collections;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Collections.Generic;
 
@@ -149,60 +147,7 @@ namespace HFM.Instances
       }
 
       public IDisplayInstance SelectedDisplayInstance { get; private set; }
-
-      private int _settingsPluginIndex;
-
-      private IList<IClientInstanceSettingsSerializer> _settingsPlugins;
       
-      /// <summary>
-      /// String Representation of the File Type Filters used in an Open File Dialog
-      /// </summary>
-      public string FileTypeFilters
-      {
-         get
-         {
-            var sb = new StringBuilder();
-            foreach (var plugin in _settingsPlugins)
-            {
-               sb.Append(plugin.FileTypeFilter);
-               sb.Append("|");
-            }
-
-            sb.Length = sb.Length - 1;
-            return sb.ToString();
-         }
-      }
-
-      /// <summary>
-      /// Client Configuration Filename
-      /// </summary>
-      public string ConfigFilename { get; private set; }
-
-      /// <summary>
-      /// Client Configuration has Filename defined
-      /// </summary>
-      public bool HasConfigFilename
-      {
-         get { return ConfigFilename.Length != 0; }
-      }
-      
-      /// <summary>
-      /// Current Config File Extension or the Default File Extension
-      /// </summary>
-      public string ConfigFileExtension
-      {
-         get
-         {
-            if (HasConfigFilename)
-            {
-               return Path.GetExtension(ConfigFilename);
-            }
-            
-            Debug.Assert(_settingsPlugins.Count != 0);
-            return _settingsPlugins[0].FileExtension;
-         }
-      }
-
       /// <summary>
       /// Denotes the Saved State of the Current Client Configuration (false == saved, true == unsaved)
       /// </summary>
@@ -242,6 +187,11 @@ namespace HFM.Instances
       /// Client Instance Factory
       /// </summary>
       private readonly IClientInstanceFactory _instanceFactory;
+
+      /// <summary>
+      /// Instance Configuration Manager
+      /// </summary>
+      private readonly InstanceConfigurationManager _configurationManager;
       #endregion
 
       #region CTOR / Initialize
@@ -254,7 +204,8 @@ namespace HFM.Instances
                                 IProteinBenchmarkContainer benchmarkContainer, 
                                 IUnitInfoContainer unitInfoContainer,
                                 IClientInstanceFactory instanceFactory,
-                                IDisplayInstanceCollection displayCollection)
+                                IDisplayInstanceCollection displayCollection,
+                                IInstanceConfigurationManager configurationManager)
       {
          _prefs = prefs;
          _proteinCollection = proteinCollection;
@@ -262,10 +213,9 @@ namespace HFM.Instances
          _unitInfoContainer = unitInfoContainer;
          _instanceFactory = instanceFactory;
          _displayCollection = displayCollection;
+         _configurationManager = (InstanceConfigurationManager)configurationManager;
 
          _instanceCollection = new Dictionary<string, ClientInstance>();
-
-         ConfigFilename = String.Empty;
       }
 
       public void Initialize()
@@ -289,8 +239,6 @@ namespace HFM.Instances
          // Hook-up PreferenceSet Event Handlers
          _prefs.OfflineLastChanged += delegate { OfflineClientsLast = _prefs.GetPreference<bool>(Preference.OfflineLast); };
          _prefs.TimerSettingsChanged += delegate { SetTimerState(); };
-
-         _settingsPlugins = GetClientInstanceSerializers();
       }
       
       #endregion
@@ -426,12 +374,12 @@ namespace HFM.Instances
          }
       }
 
-      public event EventHandler FindDuplicatesComplete;
-      private void OnFindDuplicatesComplete(EventArgs e)
+      public event EventHandler InvalidateGrid;
+      private void OnInvalidateGrid(EventArgs e)
       {
-         if (FindDuplicatesComplete != null)
+         if (InvalidateGrid != null)
          {
-            FindDuplicatesComplete(this, e);
+            InvalidateGrid(this, e);
          }
       }
 
@@ -487,38 +435,25 @@ namespace HFM.Instances
             throw new ArgumentException("Argument 'filePath' cannot be a null or empty string.", "filePath");
          }
 
-         if (filterIndex > _settingsPlugins.Count)
+         if (filterIndex > _configurationManager.SettingsPluginsCount)
          {
             throw new ArgumentOutOfRangeException("filterIndex", String.Format(CultureInfo.CurrentCulture, 
-               "Argument 'filterIndex' must be between 1 and {0}.", _settingsPlugins.Count));
+               "Argument 'filterIndex' must be between 1 and {0}.", _configurationManager.SettingsPluginsCount));
          }
 
          // clear all instance data before deserialize
          Clear();
-         
-         var serializer = _settingsPlugins[filterIndex - 1];
-         var collectionDataInterface = new InstanceCollectionDataInterface(GetCurrentInstanceArray());
-         serializer.DataInterface = collectionDataInterface;
-         serializer.Deserialize(filePath);
-         
-         var instances = _instanceFactory.HandleImportResults(collectionDataInterface.Settings);
-         foreach (var instance in instances)
+      
+         var instances = _configurationManager.ReadConfigFile(filePath, filterIndex);
+
+         if (instances.Count != 0)
          {
-            var restoreUnitInfo = _unitInfoContainer.RetrieveUnitInfo(instance);
-            if (restoreUnitInfo != null)
+            // add each instance to the collection
+            foreach (var instance in instances)
             {
-               instance.RestoreUnitInfo(restoreUnitInfo);
-               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, instance.Settings.InstanceName, "Restored UnitInfo.");
+               Add(instance, false);
             }
-            Add(instance, false);
-         }
-
-         if (HasInstances)
-         {
-            // update the settings plugin index only if something was loaded
-            _settingsPluginIndex = filterIndex;
-            ConfigFilename = filePath;
-
+         
             // Get client logs         
             QueueNewRetrieval();
             // Start Retrieval and Web Generation Timers
@@ -533,7 +468,7 @@ namespace HFM.Instances
       /// </summary>
       public void WriteConfigFile()
       {
-         WriteConfigFile(ConfigFilename, _settingsPluginIndex);
+         WriteConfigFile(_configurationManager.ConfigFilename, _configurationManager.SettingsPluginIndex);
       }
 
       /// <summary>
@@ -548,21 +483,14 @@ namespace HFM.Instances
             throw new ArgumentException("Argument 'filePath' cannot be a null or empty string.", "filePath");
          }
 
-         if (filterIndex > _settingsPlugins.Count)
+         if (filterIndex > _configurationManager.SettingsPluginsCount)
          {
             throw new ArgumentOutOfRangeException("filterIndex", String.Format(CultureInfo.CurrentCulture,
-               "Argument 'filterIndex' must be between 1 and {0}.", _settingsPlugins.Count));
+               "Argument 'filterIndex' must be between 1 and {0}.", _configurationManager.SettingsPluginsCount));
          }
 
-         var serializer = _settingsPlugins[filterIndex - 1];
-         lock (_instanceCollection)
-         {
-            serializer.DataInterface = new InstanceCollectionDataInterface(GetCurrentInstanceArray());
-         }
-         
-         serializer.Serialize(filePath);
-         
-         ConfigFilename = filePath;
+         _configurationManager.WriteConfigFile(GetCurrentInstanceArray(), filePath, filterIndex);
+
          ChangedAfterSave = false;
          OnCollectionSaved(EventArgs.Empty);
       }
@@ -579,7 +507,7 @@ namespace HFM.Instances
       {
          if (settings == null) throw new ArgumentNullException("settings");
 
-         Add(_instanceFactory.Create((ClientInstanceSettings)settings), true);
+         Add(_instanceFactory.Create(settings), true);
       }
       
       /// <summary>
@@ -710,7 +638,8 @@ namespace HFM.Instances
          ChangedAfterSave = true;
          OnInstanceRemoved(EventArgs.Empty);
 
-         FindDuplicates();
+         DuplicateFinder.FindDuplicates(_displayCollection);
+         OnInvalidateGrid(EventArgs.Empty);
       }
       
       /// <summary>
@@ -727,7 +656,7 @@ namespace HFM.Instances
          _displayCollection.Clear();
 
          // new config filename
-         ConfigFilename = String.Empty;
+         _configurationManager.ClearConfigFilename();
          // collection has not changed
          ChangedAfterSave = false;
          // This will disable the timers, we have no hosts
@@ -936,7 +865,8 @@ namespace HFM.Instances
          }
 
          // check for clients with duplicate Project (Run, Clone, Gen) or UserID
-         FindDuplicates();
+         DuplicateFinder.FindDuplicates(_displayCollection);
+         OnInvalidateGrid(EventArgs.Empty);
 
          // Save the benchmark collection
          _benchmarkContainer.Write();
@@ -1001,7 +931,8 @@ namespace HFM.Instances
             async.AsyncWaitHandle.WaitOne();
 
             // check for clients with duplicate Project (Run, Clone, Gen) or UserID
-            FindDuplicates();
+            DuplicateFinder.FindDuplicates(_displayCollection);
+            OnInvalidateGrid(EventArgs.Empty);
 
             // Save the benchmark collection
             _benchmarkContainer.Write();
@@ -1196,47 +1127,6 @@ namespace HFM.Instances
          }
       }
 
-      #endregion
-
-      #region Duplicate UserID and Project Support
-      /// <summary>
-      /// Find Clients with Duplicate UserIDs or Project (R/C/G)
-      /// </summary>
-      public void FindDuplicates() // Issue 19
-      {
-         FindDuplicateUserId(_displayCollection);
-         FindDuplicateProjects(_displayCollection);
-
-         OnFindDuplicatesComplete(EventArgs.Empty);
-      }
-
-      private static void FindDuplicateUserId(IEnumerable<IDisplayInstance> instances)
-      {
-         var duplicates = (from x in instances
-                           group x by x.UserAndMachineId into g
-                           let count = g.Count()
-                           where count > 1 && g.First().UserIdUnknown == false
-                           select g.Key);
-
-         foreach (IDisplayInstance instance in instances)
-         {
-            instance.UserIdIsDuplicate = duplicates.Contains(instance.UserAndMachineId);
-         }
-      }
-
-      private static void FindDuplicateProjects(IEnumerable<IDisplayInstance> instances)
-      {
-         var duplicates = (from x in instances
-                           group x by x.CurrentUnitInfo.ProjectRunCloneGen into g
-                           let count = g.Count()
-                           where count > 1 && g.First().CurrentUnitInfo.UnitInfoData.ProjectIsUnknown == false
-                           select g.Key);
-
-         foreach (IDisplayInstance instance in instances)
-         {
-            instance.ProjectIsDuplicate = duplicates.Contains(instance.CurrentUnitInfo.ProjectRunCloneGen);
-         }
-      }
       #endregion
 
       #region Helper Functions

@@ -33,41 +33,61 @@ namespace HFM.Instances
    {
       #region Fields
 
-      #region ReadOnly
-
+      private IPreferenceSet _prefs;
       /// <summary>
       /// PreferenceSet Interface
       /// </summary>
-      private readonly IPreferenceSet _prefs;
+      public IPreferenceSet Prefs
+      {
+         set { _prefs = value; }
+      }
       
+      private IProteinCollection _proteinCollection;
       /// <summary>
       /// Protein Collection Interface
       /// </summary>
-      private readonly IProteinCollection _proteinCollection;
+      public IProteinCollection ProteinCollection
+      {
+         set { _proteinCollection = value; }
+      }
       
+      private IProteinBenchmarkContainer _benchmarkContainer;
       /// <summary>
       /// Protein Collection Interface
       /// </summary>
-      private readonly IProteinBenchmarkContainer _benchmarkContainer;
+      public IProteinBenchmarkContainer BenchmarkContainer
+      {
+         set { _benchmarkContainer = value; }
+      }
       
+      private IStatusLogic _statusLogic;
       /// <summary>
       /// Status Logic Interface
       /// </summary>
-      private readonly IStatusLogic _statusLogic;
+      public IStatusLogic StatusLogic
+      {
+         set { _statusLogic = value; }
+      }
 
+      private IDataRetriever _dataRetriever;
       /// <summary>
       /// Data Retriever Interface
       /// </summary>
-      private readonly IDataRetriever _dataRetriever;
+      public IDataRetriever DataRetriever
+      {
+         set { _dataRetriever = value; }
+      }
 
+      private IDataAggregator _dataAggregator;
       /// <summary>
       /// Data Aggregator Interface
       /// </summary>
-      private readonly IDataAggregator _dataAggregator;
+      public IDataAggregator DataAggregator
+      {
+         set { _dataAggregator = value; }
+      }
       
-      #endregion
-      
-      private readonly DisplayInstance _displayInstance;
+      private DisplayInstance _displayInstance;
       
       public ClientInstanceSettings Settings
       {
@@ -83,44 +103,29 @@ namespace HFM.Instances
 
       #endregion
       
-      #region Constructor
-      /// <summary>
-      /// Primary Constructor
-      /// </summary>
-      public ClientInstance(IPreferenceSet prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer,
-                            IStatusLogic statusLogic, IDataRetriever dataRetriever, IDataAggregator dataAggregator)
-         : this(prefs, proteinCollection, benchmarkContainer, statusLogic, dataRetriever, dataAggregator, null)
+      #region Initialize
+      
+      public void Initialize()
       {
-         
+         Initialize(null);
       }
       
-      /// <summary>
-      /// Primary Constructor
-      /// </summary>
-      public ClientInstance(IPreferenceSet prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer,
-                            IStatusLogic statusLogic, IDataRetriever dataRetriever, IDataAggregator dataAggregator, ClientInstanceSettings instanceSettings)
+      public void Initialize(ClientInstanceSettings settings)
       {
-         _prefs = prefs;
-         _proteinCollection = proteinCollection;
-         _benchmarkContainer = benchmarkContainer;
-         _statusLogic = statusLogic;
-         _dataRetriever = dataRetriever;
-         _dataAggregator = dataAggregator;
-         
          // Init User Specified Client Level Members
          _displayInstance = new DisplayInstance
                             {
                                Prefs = _prefs,
                                ProteinCollection = _proteinCollection,
                                BenchmarkContainer = _benchmarkContainer,
-                               Settings = instanceSettings ?? new ClientInstanceSettings(InstanceType.PathInstance),
+                               Settings = settings ?? new ClientInstanceSettings(InstanceType.PathInstance),
                                UnitInfo = new UnitInfo()
                             };
          _displayInstance.BuildUnitInfoLogic();
-         
-         // Init Client Level Members
-         Init();
+
+         InitClientLevelMembers();
       }
+
       #endregion
 
       #region Client Level Members
@@ -138,10 +143,7 @@ namespace HFM.Instances
          }
       }
 
-      /// <summary>
-      /// Init Client Level Members
-      /// </summary>
-      private void Init()
+      private void InitClientLevelMembers()
       {
          _displayInstance.Arguments = String.Empty;
          _displayInstance.UserId = Constants.DefaultUserID;
@@ -230,7 +232,7 @@ namespace HFM.Instances
             // Set successful Last Retrieval Time
             _displayInstance.LastRetrievalTime = DateTime.Now;
             // Re-Init Client Level Members Before Processing
-            Init();
+            InitClientLevelMembers();
             // Process the retrieved logs
             if (Settings.ExternalInstance)
             {
@@ -528,6 +530,8 @@ namespace HFM.Instances
       /// <param name="unitInfo">UnitInfo Object to Restore</param>
       public void RestoreUnitInfo(UnitInfo unitInfo)
       {
+         if (_displayInstance == null) throw new InvalidOperationException("Client Instance is not initialized.");
+      
          _displayInstance.UnitInfo = unitInfo;
          _displayInstance.BuildUnitInfoLogic();
       }

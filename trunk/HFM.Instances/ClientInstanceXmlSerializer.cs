@@ -19,8 +19,6 @@
  
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Security.Cryptography;
 using System.Xml;
 
@@ -68,7 +66,8 @@ namespace HFM.Instances
       /// <summary>
       /// Serialize this Client Instance to Xml
       /// </summary>
-      /// <exception cref="ArgumentException">Throws if fileName is null, empty, or not a rooted path.</exception>
+      /// <exception cref="ArgumentException">Throws if fileName is null or empty.</exception>
+      /// <exception cref="InvalidOperationException">Throws if no data interface is available.</exception>
       /// <exception cref="XmlException">Throws if serialization fails.  Inspect InnerException for original Exception.</exception>
       public void Serialize(string fileName)
       {
@@ -77,11 +76,16 @@ namespace HFM.Instances
             throw new ArgumentException("Argument 'fileName' cannot be a null or empty string.", "fileName");
          }
 
-         // Save the XML stream to the file
-         if (Path.IsPathRooted(fileName) == false)
+         //// Save the XML stream to the file
+         //if (Path.IsPathRooted(fileName) == false)
+         //{
+         //   throw new ArgumentException(String.Format(CultureInfo.CurrentCulture,
+         //      "Argument 'fileName' must be a rooted path.  Given path '{0}'.", fileName), "fileName");
+         //}
+         
+         if (_dataInterface == null)
          {
-            throw new ArgumentException(String.Format(CultureInfo.CurrentCulture,
-               "Argument 'fileName' must be a rooted path.  Given path '{0}'.", fileName), "fileName");
+            throw new InvalidOperationException("No data interface available.");
          }
 
          try
@@ -181,12 +185,18 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="fileName">XML File Name</param>
       /// <exception cref="ArgumentException">Throws if fileName is null or empty.</exception>
+      /// <exception cref="InvalidOperationException">Throws if no data interface is available.</exception>
       /// <exception cref="XmlException">Throws if deserialization fails.  Inspect InnerException for original Exception.</exception>
       public void Deserialize(string fileName)
       {
          if (String.IsNullOrEmpty(fileName))
          {
             throw new ArgumentException("Argument 'fileName' cannot be a null or empty string.", "fileName");
+         }
+
+         if (_dataInterface == null)
+         {
+            throw new InvalidOperationException("No data interface available.");
          }
 
          try

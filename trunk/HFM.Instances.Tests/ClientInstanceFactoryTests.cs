@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
+using Castle.Core;
 using Castle.Windsor;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -35,10 +36,6 @@ namespace HFM.Instances.Tests
    {
       private WindsorContainer _container;
       private MockRepository _mocks;
-      private IPreferenceSet _prefs;
-      private IProteinCollection _proteinCollection;
-      private IProteinBenchmarkContainer _benchmarkContainer;
-      private IStatusLogic _statusLogic;
    
       [SetUp]
       public void Init()
@@ -48,21 +45,21 @@ namespace HFM.Instances.Tests
          _container = new WindsorContainer();
          _mocks = new MockRepository();
 
+         _container.Kernel.AddComponent("clientInstance", typeof(ClientInstance), LifestyleType.Transient);
+         _container.Kernel.AddComponentInstance("preferenceSet", typeof(IPreferenceSet), MockRepository.GenerateMock<IPreferenceSet>());
+         _container.Kernel.AddComponentInstance("proteinCollection", typeof(IProteinCollection), SetupMockProteinCollection("GRO-A3", 100));
+         _container.Kernel.AddComponentInstance("benchmarkContainer", typeof(IProteinBenchmarkContainer), MockRepository.GenerateMock<IProteinBenchmarkContainer>());
+         _container.Kernel.AddComponentInstance("statusLogic", typeof(IStatusLogic), MockRepository.GenerateMock<IStatusLogic>());
          _container.Kernel.AddComponentInstance("dataAggregator", typeof(IDataAggregator), MockRepository.GenerateMock<IDataAggregator>());
          _container.Kernel.AddComponentInstance("dataRetriever", typeof(IDataRetriever), MockRepository.GenerateMock<IDataRetriever>());
          InstanceProvider.SetContainer(_container);
-
-         _prefs = _mocks.DynamicMock<IPreferenceSet>();
-         _proteinCollection = SetupMockProteinCollection("GRO-A3", 100);
-         _benchmarkContainer = _mocks.DynamicMock<IProteinBenchmarkContainer>();
-         _statusLogic = _mocks.DynamicMock<IStatusLogic>();
       }
       
       [Test]
       [ExpectedException(typeof(ArgumentNullException))]
       public void HandleImportResultsArgumentNullTest()
       {
-         var builder = new ClientInstanceFactory(_prefs, _proteinCollection, _benchmarkContainer, _statusLogic);
+         var builder = new ClientInstanceFactory();
          builder.HandleImportResults(null);
       }
 
@@ -71,7 +68,7 @@ namespace HFM.Instances.Tests
       {
          _mocks.ReplayAll();
 
-         var builder = new ClientInstanceFactory(_prefs, _proteinCollection, _benchmarkContainer, _statusLogic);
+         var builder = new ClientInstanceFactory();
          var result1 = new ClientInstanceSettings(InstanceType.PathInstance)
                        {
                           InstanceName = "Client 1",
@@ -95,7 +92,7 @@ namespace HFM.Instances.Tests
       [ExpectedException(typeof(ArgumentNullException))]
       public void CreateArgumentNullTest()
       {
-         var builder = new ClientInstanceFactory(_prefs, _proteinCollection, _benchmarkContainer, _statusLogic);
+         var builder = new ClientInstanceFactory();
          builder.Create(null);
       }
       
@@ -103,7 +100,7 @@ namespace HFM.Instances.Tests
       [ExpectedException(typeof(ArgumentException))]
       public void CreateNameEmptyTest()
       {
-         var builder = new ClientInstanceFactory(_prefs, _proteinCollection, _benchmarkContainer, _statusLogic);
+         var builder = new ClientInstanceFactory();
          builder.Create(new ClientInstanceSettings(InstanceType.PathInstance));
       }
 
@@ -111,7 +108,7 @@ namespace HFM.Instances.Tests
       [ExpectedException(typeof(ArgumentException))]
       public void CreatePathEmptyTest()
       {
-         var builder = new ClientInstanceFactory(_prefs, _proteinCollection, _benchmarkContainer, _statusLogic);
+         var builder = new ClientInstanceFactory();
          builder.Create(new ClientInstanceSettings(InstanceType.PathInstance)
                         {
                            InstanceName = "Client 1"
@@ -122,7 +119,7 @@ namespace HFM.Instances.Tests
       [ExpectedException(typeof(ArgumentException))]
       public void CreateNameFailedCleanupTest()
       {
-         var builder = new ClientInstanceFactory(_prefs, _proteinCollection, _benchmarkContainer, _statusLogic);
+         var builder = new ClientInstanceFactory();
          var invalidChars = System.IO.Path.GetInvalidFileNameChars();
          builder.Create(new ClientInstanceSettings(InstanceType.PathInstance)
                         {
@@ -136,7 +133,7 @@ namespace HFM.Instances.Tests
       {
          _mocks.ReplayAll();
 
-         var builder = new ClientInstanceFactory(_prefs, _proteinCollection, _benchmarkContainer, _statusLogic);
+         var builder = new ClientInstanceFactory();
          var settings = new ClientInstanceSettings(InstanceType.PathInstance)
                         {
                            InstanceName = "Client{ 1",

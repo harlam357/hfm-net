@@ -62,16 +62,19 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyVersion.cs">
       <Link>AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="BenchmarkClientTests.cs" />
     <Compile Include="ClientInstanceFactoryTests.cs" />
     <Compile Include="ClientInstanceXmlSerializerTests.cs" />
+    <Compile Include="CompletedUnitsFileReaderTests.cs" />
     <Compile Include="DisplayInstanceTests.cs" />
+    <Compile Include="DuplicateFinderTests.cs" />
+    <Compile Include="InstanceConfigurationManagerTests.cs" />
     <Compile Include="MarkupGeneratorTests.cs" />
     <Compile Include="ProteinBenchmarkContainerTests.cs" />
     <Compile Include="StatusTests.cs" />

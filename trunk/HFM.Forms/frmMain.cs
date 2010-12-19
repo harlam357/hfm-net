@@ -47,7 +47,7 @@ namespace HFM.Forms
    public partial class frmMain : FormWrapper
    // ReSharper restore InconsistentNaming
    {
-      #region Private Fields
+      #region Fields
       
       private static readonly string FormTitle = String.Format("HFM.NET v{0} - Beta", PlatformOps.ApplicationVersion);
       
@@ -117,18 +117,25 @@ namespace HFM.Forms
       private readonly IProteinBenchmarkContainer _benchmarkContainer;
 
       /// <summary>
+      /// Instance Configuration Manager
+      /// </summary>
+      private readonly IInstanceConfigurationManager _configurationManager;
+
+      /// <summary>
       /// Display Collection Binding Source
       /// </summary>
       private readonly BindingSource _displayBindingSource;
+
       #endregion
 
-      #region Form Constructor / Functionality
+      #region Constructor / Initialize
+
       /// <summary>
       /// Main form constructor
       /// </summary>
       public frmMain(IPreferenceSet prefs, IMessagesView messagesView, IXmlStatsDataContainer statsData,
                      IInstanceCollection instanceCollection, IProteinCollection proteinCollection, 
-                     IProteinBenchmarkContainer benchmarkContainer)
+                     IProteinBenchmarkContainer benchmarkContainer, IInstanceConfigurationManager configurationManager)
       {
          _prefs = prefs;
          _frmMessages = messagesView;
@@ -136,6 +143,7 @@ namespace HFM.Forms
          _clientInstances = instanceCollection;
          _proteinCollection = proteinCollection;
          _benchmarkContainer = benchmarkContainer;
+         _configurationManager = configurationManager;
          _displayBindingSource = new BindingSource();
 
          // This call is Required by the Windows Form Designer
@@ -205,9 +213,11 @@ namespace HFM.Forms
          _clientInstances.InstanceRemoved += ClientInstances_InstanceDataChanged;
          _clientInstances.InstanceRetrieved += delegate { RefreshDisplay(); };
          _clientInstances.SelectedInstanceChanged += ClientInstances_SelectedInstanceChanged;
-         _clientInstances.FindDuplicatesComplete += delegate { RefreshDisplay(); };
          _clientInstances.OfflineLastChanged += delegate { ApplySort(); };
          _clientInstances.RefreshUserStatsData += delegate { RefreshUserStatsData(false); };
+
+         // refactored events
+         _clientInstances.InvalidateGrid += delegate { dataGridView1.Invalidate(); };
       }
 
       private void SubscribeToPreferenceSetEvents()
@@ -231,6 +241,10 @@ namespace HFM.Forms
          statusUserTotal.MouseDown += StatsLabelMouseDown;
          statusUserWUs.MouseDown += StatsLabelMouseDown;
       }
+
+      #endregion
+      
+      #region Other Handlers
 
       private void StatsLabelMouseDown(object sender, MouseEventArgs e)
       {
@@ -469,6 +483,7 @@ namespace HFM.Forms
          _prefs.SetPreference(Preference.FormSplitLocation, splitContainer1.SplitterDistance);
          _prefs.Save();
       }
+      
       #endregion
       
       #region Data Grid View Handlers
@@ -733,9 +748,9 @@ namespace HFM.Forms
 
          if (CanContinueDestructiveOp(sender, e))
          {
-            openConfigDialog.DefaultExt = _clientInstances.ConfigFileExtension;
-            openConfigDialog.Filter = _clientInstances.FileTypeFilters;
-            openConfigDialog.FileName = _clientInstances.ConfigFilename;
+            openConfigDialog.DefaultExt = _configurationManager.ConfigFileExtension;
+            openConfigDialog.Filter = _configurationManager.FileTypeFilters;
+            openConfigDialog.FileName = _configurationManager.ConfigFilename;
             openConfigDialog.RestoreDirectory = true;
             if (openConfigDialog.ShowDialog() == DialogResult.OK)
             {
@@ -749,7 +764,7 @@ namespace HFM.Forms
       /// </summary>
       private void mnuFileSave_Click(object sender, EventArgs e)
       {
-         if (_clientInstances.HasConfigFilename == false)
+         if (_configurationManager.HasConfigFilename == false)
          {
             mnuFileSaveas_Click(sender, e);
          }
@@ -775,10 +790,10 @@ namespace HFM.Forms
       private void mnuFileSaveas_Click(object sender, EventArgs e)
       {
          // No Config File and no Instances, stub out
-         if (_clientInstances.HasConfigFilename == false && _clientInstances.HasInstances == false) return;
+         if (_configurationManager.HasConfigFilename == false && _clientInstances.HasInstances == false) return;
       
-         saveConfigDialog.DefaultExt = _clientInstances.ConfigFileExtension;
-         saveConfigDialog.Filter = _clientInstances.FileTypeFilters;
+         saveConfigDialog.DefaultExt = _configurationManager.ConfigFileExtension;
+         saveConfigDialog.Filter = _configurationManager.FileTypeFilters;
          if (saveConfigDialog.ShowDialog() == DialogResult.OK)
          {
             try

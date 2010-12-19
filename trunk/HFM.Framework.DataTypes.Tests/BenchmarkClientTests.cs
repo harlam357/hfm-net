@@ -22,9 +22,7 @@ using System.Globalization;
 
 using NUnit.Framework;
 
-using HFM.Framework.DataTypes;
-
-namespace HFM.Instances.Tests
+namespace HFM.Framework.DataTypes.Tests
 {
    [TestFixture]
    public class BenchmarkClientTests

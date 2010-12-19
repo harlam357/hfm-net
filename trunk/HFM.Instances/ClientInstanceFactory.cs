@@ -37,35 +37,6 @@ namespace HFM.Instances
 
    public class ClientInstanceFactory : IClientInstanceFactory
    {
-      /// <summary>
-      /// PreferenceSet Interface
-      /// </summary>
-      private readonly IPreferenceSet _prefs;
-
-      /// <summary>
-      /// Protein Collection Interface
-      /// </summary>
-      private readonly IProteinCollection _proteinCollection;
-
-      /// <summary>
-      /// Protein Collection Interface
-      /// </summary>
-      private readonly IProteinBenchmarkContainer _benchmarkContainer;
-
-      /// <summary>
-      /// Status Logic Interface
-      /// </summary>
-      private readonly IStatusLogic _statusLogic;
-
-      public ClientInstanceFactory(IPreferenceSet prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer,
-                                   IStatusLogic statusLogic)
-      {
-         _prefs = prefs;
-         _proteinCollection = proteinCollection;
-         _benchmarkContainer = benchmarkContainer;
-         _statusLogic = statusLogic;
-      }
-   
       public ReadOnlyCollection<ClientInstance> HandleImportResults(ICollection<ClientInstanceSettings> results)
       {
          if (results == null) throw new ArgumentNullException("results");
@@ -136,9 +107,9 @@ namespace HFM.Instances
             }
          }
 
-         return new ClientInstance(_prefs, _proteinCollection, _benchmarkContainer, _statusLogic, 
-                                   InstanceProvider.GetInstance<IDataRetriever>(),
-                                   InstanceProvider.GetInstance<IDataAggregator>(), settings);
+         var instance = InstanceProvider.GetInstance<ClientInstance>();
+         instance.Initialize(settings);
+         return instance;
       }
 
       public ICollection<string> CleanupSettings(ClientInstanceSettings settings)
