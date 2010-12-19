@@ -86,44 +86,26 @@ namespace HFM.Forms
       /// </summary>
       private HistoryPresenter _historyPresenter;
       
-      /// <summary>
-      /// Preferences Interface
-      /// </summary>
+      #region Service Interfaces
+      
       private readonly IPreferenceSet _prefs;
 
-      /// <summary>
-      /// Messages View
-      /// </summary>
       private readonly IMessagesView _frmMessages;
 
-      /// <summary>
-      /// XML Stats Data Interface
-      /// </summary>
       private readonly IXmlStatsDataContainer _statsData;
 
-      /// <summary>
-      /// Collection of Client Instances
-      /// </summary>
       private readonly IInstanceCollection _clientInstances;
 
-      /// <summary>
-      /// Protein Collection Interface
-      /// </summary>
       private readonly IProteinCollection _proteinCollection;
 
-      /// <summary>
-      /// Protein Benchmark Interface
-      /// </summary>
       private readonly IProteinBenchmarkContainer _benchmarkContainer;
 
-      /// <summary>
-      /// Instance Configuration Manager
-      /// </summary>
       private readonly IInstanceConfigurationManager _configurationManager;
 
-      /// <summary>
-      /// Display Collection Binding Source
-      /// </summary>
+      private readonly IExternalProcessStarter _processStarter;
+      
+      #endregion
+
       private readonly BindingSource _displayBindingSource;
 
       #endregion
@@ -135,7 +117,8 @@ namespace HFM.Forms
       /// </summary>
       public frmMain(IPreferenceSet prefs, IMessagesView messagesView, IXmlStatsDataContainer statsData,
                      IInstanceCollection instanceCollection, IProteinCollection proteinCollection, 
-                     IProteinBenchmarkContainer benchmarkContainer, IInstanceConfigurationManager configurationManager)
+                     IProteinBenchmarkContainer benchmarkContainer, IInstanceConfigurationManager configurationManager,
+                     IExternalProcessStarter processStarter)
       {
          _prefs = prefs;
          _frmMessages = messagesView;
@@ -144,6 +127,7 @@ namespace HFM.Forms
          _proteinCollection = proteinCollection;
          _benchmarkContainer = benchmarkContainer;
          _configurationManager = configurationManager;
+         _processStarter = processStarter;
          _displayBindingSource = new BindingSource();
 
          // This call is Required by the Windows Form Designer
@@ -205,19 +189,22 @@ namespace HFM.Forms
 
       private void SubscribeToInstanceCollectionEvents()
       {
-         _clientInstances.CollectionChanged += delegate { RefreshDisplay(); };
-         //_clientInstances.CollectionLoaded += ClientInstances_CollectionLoaded;
-         //_clientInstances.CollectionSaved += ClientInstances_CollectionSaved;
-         _clientInstances.InstanceAdded += ClientInstances_InstanceDataChanged;
-         _clientInstances.InstanceEdited += ClientInstances_InstanceDataChanged;
-         _clientInstances.InstanceRemoved += ClientInstances_InstanceDataChanged;
-         _clientInstances.InstanceRetrieved += delegate { RefreshDisplay(); };
-         _clientInstances.SelectedInstanceChanged += ClientInstances_SelectedInstanceChanged;
-         _clientInstances.OfflineLastChanged += delegate { ApplySort(); };
          _clientInstances.RefreshUserStatsData += delegate { RefreshUserStatsData(false); };
 
          // refactored events
+         _clientInstances.RefreshGrid += delegate { RefreshDisplay(); };
          _clientInstances.InvalidateGrid += delegate { dataGridView1.Invalidate(); };
+         _clientInstances.OfflineLastChanged += delegate { ApplySort(); };
+         _clientInstances.InstanceDataChanged += InstanceDataChanged;
+         _clientInstances.SelectedInstanceChanged += SelectedInstanceChanged;
+      }
+
+      private void InstanceDataChanged(object sender, EventArgs e)
+      {
+         if (_prefs.GetPreference<bool>(Preference.AutoSaveConfig))
+         {
+            mnuFileSave_Click(sender, e);
+         }
       }
 
       private void SubscribeToPreferenceSetEvents()
@@ -288,9 +275,6 @@ namespace HFM.Forms
          }
       }
 
-      /// <summary>
-      /// Loads the appropriate file on initialisation - ie when showing the form
-      /// </summary>
       private void frmMain_Shown(object sender, EventArgs e)
       {
          if (_prefs.GetPreference<bool>(Preference.RunMinimized))
@@ -382,9 +366,6 @@ namespace HFM.Forms
          }
       }
 
-      /// <summary>
-      /// Hides the taskbar icon if the app is minimized
-      /// </summary>
       private void frmMain_Resize(object sender, EventArgs e)
       {
          if (WindowState != FormWindowState.Minimized)
@@ -407,9 +388,6 @@ namespace HFM.Forms
          }
       }
 
-      /// <summary>
-      /// Save Form State on before closing
-      /// </summary>
       private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
       {
          if (CanContinueDestructiveOp(sender, e) == false)
@@ -473,9 +451,6 @@ namespace HFM.Forms
          }
       }
 
-      /// <summary>
-      /// Update Split Location in Preferences
-      /// </summary>
       private void SplitContainerSplitterMoved(object sender, SplitterEventArgs e)
       {
          // When the log file window (Panel2) is visible, this event will fire.
@@ -487,9 +462,7 @@ namespace HFM.Forms
       #endregion
       
       #region Data Grid View Handlers
-      /// <summary>
-      /// When Column Index changes, set the last column to AutoSize Fill, the others to AutoSize None
-      /// </summary>
+      
       private void DataGridViewColumnDisplayIndexChanged(object sender, DataGridViewColumnEventArgs e)
       {
          if (dataGridView1.Columns.Count == DataGridViewWrapper.NumberOfDisplayFields)
@@ -511,18 +484,12 @@ namespace HFM.Forms
          }
       }
 
-      /// <summary>
-      /// When Grid Selection Changes
-      /// </summary>
       private void dataGridView1_SelectionChanged(object sender, EventArgs e)
       {
          _clientInstances.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
       }
       
-      /// <summary>
-      /// When _clientInstances SelectedDisplayInstance Changes
-      /// </summary>
-      private void ClientInstances_SelectedInstanceChanged(object sender, EventArgs e)
+      private void SelectedInstanceChanged(object sender, EventArgs e)
       {
          if (_clientInstances.SelectedDisplayInstance != null)
          {
@@ -551,9 +518,6 @@ namespace HFM.Forms
          }
       }
 
-      /// <summary>
-      /// When Queue Control QueueIndex Changes
-      /// </summary>
       private void queueControl_QueueIndexChanged(object sender, QueueIndexChangedEventArgs e)
       {
          if (e.Index == -1)
@@ -589,11 +553,6 @@ namespace HFM.Forms
          }
       }
 
-      /// <summary>
-      /// Populates the Log Viewer with the given LogLine List.
-      /// </summary>
-      /// <param name="instance">Client Instance</param>
-      /// <param name="logLines">List of LogLines</param>
       private void SetLogLines(IDisplayInstance instance, IList<LogLine> logLines)
       {
          /*** Checked LogLine Count ***/
@@ -648,9 +607,6 @@ namespace HFM.Forms
          txtLogFile.ScrollToBottom();
       }
 
-      /// <summary>
-      /// Update Form Level Sorting Fields
-      /// </summary>
       private void dataGridView1_Sorted(object sender, EventArgs e)
       {
          _sortColumnName = dataGridView1.SortedColumn.Name;
@@ -662,9 +618,6 @@ namespace HFM.Forms
          SelectCurrentRowKey();
       }
 
-      /// <summary>
-      /// Handle Right-Click (Contest Menu) and Left Double-Click (File Browser)
-      /// </summary>
       private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
       {
          DataGridView.HitTestInfo hti = dataGridView1.HitTest(e.X, e.Y);
@@ -697,28 +650,16 @@ namespace HFM.Forms
 
                if (_clientInstances.SelectedClientInstance.Settings.InstanceHostType.Equals(InstanceType.PathInstance))
                {
-                  try
-                  {
-                     StartFileBrowser(_clientInstances.SelectedClientInstance.Settings.Path);
-                  }
-                  catch (Exception ex)
-                  {
-                     HfmTrace.WriteToHfmConsole(ex);
-                     
-                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError,
-                        String.Format(CultureInfo.CurrentCulture, "client '{0}' files.{1}{1}Please check the current File Explorer defined in the Preferences",
-                        _clientInstances.SelectedClientInstance.Settings.InstanceName, Environment.NewLine)));
-                  }
+                  HandleProcessStartResult(_processStarter.ShowFileExplorer(_clientInstances.SelectedClientInstance.Settings.Path));
                }
             }
          }
       }
+      
       #endregion
 
       #region File Menu Click Handlers
-      /// <summary>
-      /// Create a new host configuration
-      /// </summary>
+      
       private void mnuFileNew_Click(object sender, EventArgs e)
       {
          if (_clientInstances.RetrievalInProgress)
@@ -734,9 +675,6 @@ namespace HFM.Forms
          }
       }
 
-      /// <summary>
-      /// Open an existing (saved) host configuration
-      /// </summary>
       private void mnuFileOpen_Click(object sender, EventArgs e)
       {
          if (_clientInstances.RetrievalInProgress)
@@ -759,9 +697,6 @@ namespace HFM.Forms
          }
       }
 
-      /// <summary>
-      /// Save the current host configuration
-      /// </summary>
       private void mnuFileSave_Click(object sender, EventArgs e)
       {
          if (_configurationManager.HasConfigFilename == false)
@@ -784,9 +719,6 @@ namespace HFM.Forms
          }
       }
 
-      /// <summary>
-      /// Save the current host configuration as a new file
-      /// </summary>
       private void mnuFileSaveas_Click(object sender, EventArgs e)
       {
          // No Config File and no Instances, stub out
@@ -810,16 +742,12 @@ namespace HFM.Forms
          }
       }
 
-      /// <summary>
-      /// Exit the application
-      /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
       private void mnuFileQuit_Click(object sender, EventArgs e)
       {
          // CanContinueDestructiveOp code moved into frmMainNew_FormClosing() - Issue 1
          Close();
       }
+
       #endregion
 
       #region Edit Menu Click Handlers
@@ -838,52 +766,20 @@ namespace HFM.Forms
       #endregion
 
       #region Help Menu Click Handlers
+
       private void mnuHelpHfmLogFile_Click(object sender, EventArgs e)
       {
-         string logPath = Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath),
-                                       Constants.HfmLogFileName);
-         try
-         {
-            Process.Start(_prefs.GetPreference<string>(Preference.LogFileViewer), logPath);
-         }
-         catch (Exception ex)
-         {
-            HfmTrace.WriteToHfmConsole(ex);
-
-            MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, 
-               String.Format(CultureInfo.CurrentCulture, "the HFM.log file.{0}{0}Please check the current Log File Viewer defined in the Preferences",
-               Environment.NewLine)));
-         }
+         HandleProcessStartResult(_processStarter.ShowHfmLogFile());
       }
 
       private void mnuHelpHfmDataFiles_Click(object sender, EventArgs e)
       {
-         try
-         {
-            StartFileBrowser(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath));
-         }
-         catch (Exception ex)
-         {
-            HfmTrace.WriteToHfmConsole(ex);
-
-            MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError,
-               String.Format(CultureInfo.CurrentCulture, "the HFM.NET data files.{0}{0}Please check the current File Explorer defined in the Preferences",
-               Environment.NewLine)));
-         }
+         HandleProcessStartResult(_processStarter.ShowFileExplorer(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath)));
       }
 
       private void mnuHelpHfmGroup_Click(object sender, EventArgs e)
       {
-         try
-         {
-            Process.Start("http://groups.google.com/group/hfm-net/");
-         }
-         catch (Exception ex)
-         {
-            HfmTrace.WriteToHfmConsole(ex);
-
-            MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "HFM.NET Google Group"));
-         }
+         HandleProcessStartResult(_processStarter.ShowHfmGoogleGroup());
       }
       
       private void mnuHelpCheckForUpdate_Click(object sender, EventArgs e)
@@ -891,36 +787,26 @@ namespace HFM.Forms
          CheckForUpdate(true);
       }
       
-      /// <summary>
-      /// Show the About dialog
-      /// </summary>
       private void mnuHelpAbout_Click(object sender, EventArgs e)
       {
          var newAbout = new frmAbout();
          newAbout.ShowDialog(this);
       }
 
-      /// <summary>
-      /// Show the help file at the contents tab
-      /// </summary>
       private void mnuHelpContents_Click(object sender, EventArgs e)
       {
          //Help.ShowHelp(this, helpProvider.HelpNamespace);
       }
 
-      /// <summary>
-      /// Show the help file at the index tab
-      /// </summary>
       private void mnuHelpIndex_Click(object sender, EventArgs e)
       {
          //Help.ShowHelpIndex(this, helpProvider.HelpNamespace);
       }
+
       #endregion
 
       #region Clients Menu Click Handlers
-      /// <summary>
-      /// Add a new host to the configuration
-      /// </summary>
+      
       private void mnuClientsAdd_Click(object sender, EventArgs e)
       {
          var settings = new ClientInstanceSettings();
@@ -941,9 +827,6 @@ namespace HFM.Forms
          }
       }
 
-      /// <summary>
-      /// Edits an existing host configuration
-      /// </summary>
       private void mnuClientsEdit_Click(object sender, EventArgs e)
       {
          // Check for SelectedClientInstance, and get out if not found
@@ -969,9 +852,6 @@ namespace HFM.Forms
          }
       }
 
-      /// <summary>
-      /// Removes a host from the configuration
-      /// </summary>
       private void mnuClientsDelete_Click(object sender, EventArgs e)
       {
          // Check for SelectedClientInstance, and get out if not found
@@ -1000,9 +880,6 @@ namespace HFM.Forms
          }
       }
 
-      /// <summary>
-      /// Refreshes the currently selected client
-      /// </summary>
       private void mnuClientsRefreshSelected_Click(object sender, EventArgs e)
       {
          // Check for SelectedClientInstance, and get out if not found
@@ -1011,47 +888,29 @@ namespace HFM.Forms
          _clientInstances.RetrieveSingleClient(_clientInstances.SelectedClientInstance.Settings.InstanceName);
       }
 
-      /// <summary>
-      /// Refreshes all clients
-      /// </summary>
       private void mnuClientsRefreshAll_Click(object sender, EventArgs e)
       {
          _clientInstances.QueueNewRetrieval();
       }
 
-      /// <summary>
-      /// Fire process to show the cached FAHLog file
-      /// </summary>
       private void mnuClientsViewCachedLog_Click(object sender, EventArgs e)
       {
          // Check for SelectedClientInstance, and get out if not found
          if (_clientInstances.SelectedClientInstance == null) return;
 
-         string logPath = Path.Combine(_prefs.CacheDirectory, _clientInstances.SelectedClientInstance.Settings.CachedFahLogName);
-         if (File.Exists(logPath))
+         string logFilePath = Path.Combine(_prefs.CacheDirectory, _clientInstances.SelectedClientInstance.Settings.CachedFahLogName);
+         if (File.Exists(logFilePath))
          {
-            try
-            {
-               Process.Start(_prefs.GetPreference<string>(Preference.LogFileViewer), logPath);
-            }
-            catch (Exception ex)
-            {
-               HfmTrace.WriteToHfmConsole(ex);
-               
-               MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError,
-                  String.Format(CultureInfo.CurrentCulture, "client '{0}' FAHlog file.{1}{1}Please check the current Log File Viewer defined in the Preferences",
-                  _clientInstances.SelectedClientInstance.Settings.InstanceName, Environment.NewLine)));
-            }
+            HandleProcessStartResult(_processStarter.ShowCachedLogFile(logFilePath));
          }
          else
          {
-            MessageBox.Show(String.Format("Cannot find client '{0}' FAHlog.txt file.", _clientInstances.SelectedClientInstance.Settings.InstanceName));
+            string message = String.Format(CultureInfo.CurrentCulture, "The FAHlog.txt file for '{0}' does not exist.",
+                                           _clientInstances.SelectedClientInstance.Settings.InstanceName);
+            MessageBox.Show(this, message, PlatformOps.ApplicationNameAndVersion, MessageBoxButtons.OK, MessageBoxIcon.Warning);
          }
       }
 
-      /// <summary>
-      /// Fire process to show the current client file directory (Local Clients Only)
-      /// </summary>
       private void mnuClientsViewClientFiles_Click(object sender, EventArgs e)
       {
          // Check for SelectedClientInstance, and get out if not found
@@ -1059,20 +918,10 @@ namespace HFM.Forms
 
          if (_clientInstances.SelectedClientInstance.Settings.InstanceHostType.Equals(InstanceType.PathInstance))
          {
-            try
-            {
-               StartFileBrowser(_clientInstances.SelectedClientInstance.Settings.Path);
-            }
-            catch (Exception ex)
-            {
-               HfmTrace.WriteToHfmConsole(ex);
-               
-               MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError,
-                  String.Format(CultureInfo.CurrentCulture, "client '{0}' files.{1}{1}Please check the current File Explorer defined in the Preferences",
-                  _clientInstances.SelectedClientInstance.Settings.InstanceName, Environment.NewLine)));
-            }
+            HandleProcessStartResult(_processStarter.ShowFileExplorer(_clientInstances.SelectedClientInstance.Settings.Path));
          }
       }
+      
       #endregion
 
       #region View Menu Click Handlers
@@ -1280,46 +1129,20 @@ namespace HFM.Forms
       #endregion
 
       #region Web Menu Click Handlers
+
       private void mnuWebEOCUser_Click(object sender, EventArgs e)
       {
-         try
-         {
-            Process.Start(_prefs.EocUserUrl.AbsoluteUri);
-         }
-         catch (Exception ex)
-         {
-            HfmTrace.WriteToHfmConsole(ex);
-
-            MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "EOC User Stats page"));
-         }
+         HandleProcessStartResult(_processStarter.ShowEocUserPage());
       }
 
       private void mnuWebStanfordUser_Click(object sender, EventArgs e)
       {
-         try
-         {
-            Process.Start(_prefs.StanfordUserUrl.AbsoluteUri);
-         }
-         catch (Exception ex)
-         {
-            HfmTrace.WriteToHfmConsole(ex);
-
-            MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "Stanford User Stats page"));
-         }
+         HandleProcessStartResult(_processStarter.ShowStanfordUserPage());
       }
 
       private void mnuWebEOCTeam_Click(object sender, EventArgs e)
       {
-         try
-         {
-            Process.Start(_prefs.EocTeamUrl.AbsoluteUri);
-         }
-         catch (Exception ex)
-         {
-            HfmTrace.WriteToHfmConsole(ex);
-
-            MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "EOC Team Stats page"));
-         }
+         HandleProcessStartResult(_processStarter.ShowEocTeamPage());
       }
 
       private void mnuWebRefreshUserStats_Click(object sender, EventArgs e)
@@ -1329,17 +1152,9 @@ namespace HFM.Forms
 
       private void mnuWebHFMGoogleCode_Click(object sender, EventArgs e)
       {
-         try
-         {
-            Process.Start("http://code.google.com/p/hfm-net/");
-         }
-         catch (Exception ex)
-         {
-            HfmTrace.WriteToHfmConsole(ex);
-
-            MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "HFM.NET Google Code page"));
-         }
+         HandleProcessStartResult(_processStarter.ShowHfmGoogleCode());
       }
+
       #endregion
 
       #region Background Work Routines
@@ -1423,7 +1238,7 @@ namespace HFM.Forms
          }
       }
       
-      private string GetSelectedRowInstanceName(System.Collections.IList selectedRows)
+      private static string GetSelectedRowInstanceName(System.Collections.IList selectedRows)
       {
          if (selectedRows.Count > 0)
          {
@@ -1466,18 +1281,19 @@ namespace HFM.Forms
          {
             dataGridView1.FreezeSorted = true;
             
-            if (String.IsNullOrEmpty(_sortColumnName) == false && 
-                dataGridView1.Columns.Contains(_sortColumnName) &&
-                _sortColumnOrder.Equals(SortOrder.None) == false)
+            // if we have a column name and a valid sort order
+            if (!(String.IsNullOrEmpty(_sortColumnName)) && 
+                !(_sortColumnOrder.Equals(SortOrder.None)))
             {
-               if (_sortColumnOrder.Equals(SortOrder.Ascending))
+               // check for the column
+               DataGridViewColumn column = dataGridView1.Columns[_sortColumnName];
+               if (column != null)
                {
-                  dataGridView1.Sort(dataGridView1.Columns[_sortColumnName], ListSortDirection.Ascending);
-                  dataGridView1.SortedColumn.HeaderCell.SortGlyphDirection = _sortColumnOrder;
-               }
-               else if (_sortColumnOrder.Equals(SortOrder.Descending))
-               {
-                  dataGridView1.Sort(dataGridView1.Columns[_sortColumnName], ListSortDirection.Descending);
+                  ListSortDirection sortDirection = _sortColumnOrder.Equals(SortOrder.Ascending)
+                                                       ? ListSortDirection.Ascending
+                                                       : ListSortDirection.Descending;
+
+                  dataGridView1.Sort(column, sortDirection);
                   dataGridView1.SortedColumn.HeaderCell.SortGlyphDirection = _sortColumnOrder;
                }
             }
@@ -1843,13 +1659,12 @@ namespace HFM.Forms
          }
       }
 
-      /// <summary>
-      /// Fire File Browser Process (wrap calls to this function in try catch)
-      /// </summary>
-      /// <param name="path">The Folder Path to browse</param>
-      private void StartFileBrowser(string path)
+      private void HandleProcessStartResult(string message)
       {
-         Process.Start(_prefs.GetPreference<string>(Preference.FileExplorer), path);
+         if (message != null)
+         {
+            MessageBox.Show(this, message, PlatformOps.ApplicationNameAndVersion, MessageBoxButtons.OK, MessageBoxIcon.Error);
+         }
       }
 
       #region User Stats Data Methods
@@ -1894,16 +1709,6 @@ namespace HFM.Forms
          }
       }
       
-      #endregion
-
-      #region Instance Collection Event Handlers
-      private void ClientInstances_InstanceDataChanged(object sender, EventArgs e)
-      {
-         if (_prefs.GetPreference<bool>(Preference.AutoSaveConfig))
-         {
-            mnuFileSave_Click(sender, e);
-         }
-      }
       #endregion
 
       #region PreferenceSet Event Handlers

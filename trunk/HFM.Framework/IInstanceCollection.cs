@@ -18,9 +18,7 @@
  */
 
 using System;
-using System.Collections;
 using System.Diagnostics.CodeAnalysis;
-using System.ComponentModel;
 
 using HFM.Framework.DataTypes;
 
@@ -70,23 +68,13 @@ namespace HFM.Framework
 
       #region Events
 
-      event EventHandler CollectionChanged;
-
-      event EventHandler CollectionLoaded;
-
-      event EventHandler CollectionSaved;
-
-      event EventHandler InstanceAdded;
-
-      event EventHandler InstanceEdited;
-
-      event EventHandler InstanceRemoved;
-
-      event EventHandler InstanceRetrieved;
+      event EventHandler RefreshGrid;
 
       event EventHandler InvalidateGrid;
 
       event EventHandler OfflineLastChanged;
+      
+      event EventHandler InstanceDataChanged;
 
       /// <summary>
       /// Force Raises the SelectedInstanceChanged event.

@@ -19,35 +19,22 @@
  */
 
 using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
-using System.Reflection;
 using System.Threading;
 using System.Collections.Generic;
 
 using HFM.Framework;
 using HFM.Framework.DataTypes;
-using HFM.Plugins;
 
 namespace HFM.Instances
 {
    public sealed class InstanceCollection : IInstanceCollection
    {
       #region Fields
-      
-      /// <summary>
-      /// Retrieval Timer Object (init 10 minutes)
-      /// </summary>
-      private readonly System.Timers.Timer workTimer = new System.Timers.Timer(600000);
-
-      /// <summary>
-      /// Web Generation Timer Object (init 15 minutes)
-      /// </summary>
-      private readonly System.Timers.Timer webTimer = new System.Timers.Timer(900000);
 
       /// <summary>
       /// Local time that denotes when a full retrieve started (only accessed by the RetrieveInProgress property)
@@ -77,16 +64,6 @@ namespace HFM.Instances
             }
          }
       }
-      
-      /// <summary>
-      /// Client Instance Collection
-      /// </summary>
-      private readonly Dictionary<string, ClientInstance> _instanceCollection;
-
-      /// <summary>
-      /// Display instance collection (this is bound to the DataGridView)
-      /// </summary>
-      private readonly IDisplayInstanceCollection _displayCollection;
 
       /// <summary>
       /// Display Instance Accessor
@@ -122,6 +99,13 @@ namespace HFM.Instances
 
       public IClientInstance SelectedClientInstance { get; private set; }
 
+      public IDisplayInstance SelectedDisplayInstance { get; private set; }
+
+      /// <summary>
+      /// Denotes the Saved State of the Current Client Configuration (false == saved, true == unsaved)
+      /// </summary>
+      public bool ChangedAfterSave { get; private set; }
+
       /// <summary>
       /// Specifies if the UI Menu Item for 'View Client Files' is Visbile
       /// </summary>
@@ -146,12 +130,7 @@ namespace HFM.Instances
          }
       }
 
-      public IDisplayInstance SelectedDisplayInstance { get; private set; }
-      
-      /// <summary>
-      /// Denotes the Saved State of the Current Client Configuration (false == saved, true == unsaved)
-      /// </summary>
-      public bool ChangedAfterSave { get; private set; }
+      #region Service Interfaces
 
       /// <summary>
       /// Markup (HTML, XML, Client Data) Generator Interface
@@ -189,15 +168,38 @@ namespace HFM.Instances
       private readonly IClientInstanceFactory _instanceFactory;
 
       /// <summary>
+      /// Display instance collection (this is bound to the DataGridView)
+      /// </summary>
+      private readonly IDisplayInstanceCollection _displayCollection;
+
+      /// <summary>
       /// Instance Configuration Manager
       /// </summary>
       private readonly InstanceConfigurationManager _configurationManager;
+
       #endregion
 
-      #region CTOR / Initialize
+      /// <summary>
+      /// Client Instance Collection
+      /// </summary>
+      private readonly Dictionary<string, ClientInstance> _instanceCollection;
+
+      /// <summary>
+      /// Retrieval Timer Object (init 10 minutes)
+      /// </summary>
+      private readonly System.Timers.Timer _workTimer = new System.Timers.Timer(600000);
+
+      /// <summary>
+      /// Web Generation Timer Object (init 15 minutes)
+      /// </summary>
+      private readonly System.Timers.Timer _webTimer = new System.Timers.Timer(900000);
+      
+      #endregion
+
+      #region Constructor / Initialize
       
       /// <summary>
-      /// Default Constructor
+      /// Primary Constructor
       /// </summary>
       public InstanceCollection(IPreferenceSet prefs, 
                                 IProteinCollection proteinCollection, 
@@ -223,9 +225,9 @@ namespace HFM.Instances
          _unitInfoContainer.Read();
       
          // Hook up Retrieval Timer Event Handler
-         workTimer.Elapsed += bgWorkTimer_Tick;
+         _workTimer.Elapsed += bgWorkTimer_Tick;
          // Hook up Web Generation Timer Event Handler
-         webTimer.Elapsed += webGenTimer_Tick;
+         _webTimer.Elapsed += webGenTimer_Tick;
 
          // Hook up Protein Collection Updated Event Handler
          _proteinCollection.Downloader.ProjectInfoUpdated += ProteinCollection_ProjectInfoUpdated;
@@ -243,134 +245,14 @@ namespace HFM.Instances
       
       #endregion
       
-      #region Client Instance Serializer Plugins
-      
-      private ReadOnlyCollection<IClientInstanceSettingsSerializer> GetClientInstanceSerializers()
-      {
-         var serializers = new List<IClientInstanceSettingsSerializer>();
-         serializers.Add(new ClientInstanceXmlSerializer());
-         
-         var di = new DirectoryInfo(Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), Constants.PluginsFolderName));
-         if (di.Exists)
-         {
-            var files = di.GetFiles("*.dll");
-            foreach (var file in files)
-            {
-               try
-               {
-                  Assembly asm = Assembly.LoadFrom(file.FullName);
-                  var serializer = GetSerializer(asm);
-                  if (serializer != null && ValidateSerializer(serializer))
-                  {
-                     serializers.Add(serializer);
-                  }
-               }
-               catch (Exception ex)
-               {
-                  HfmTrace.WriteToHfmConsole(ex);
-               }
-            }
-         }
-
-         return serializers.AsReadOnly();
-      }
-      
-      private static IClientInstanceSettingsSerializer GetSerializer(Assembly asm)
-      {
-         // Loop through each type in the DLL
-         foreach (Type t in asm.GetTypes())
-         {
-            // Only look at public types
-            if (t.IsPublic && (t.Attributes & TypeAttributes.Abstract) != TypeAttributes.Abstract)
-            {
-               // See if this type implements our interface
-               var interfaceType = t.GetInterface("IClientInstanceSettingsSerializer", false);
-               if (interfaceType != null)
-               {
-                  return (IClientInstanceSettingsSerializer)Activator.CreateInstance(t);
-               }
-            }
-         }
-
-         return null;
-      }
-      
-      private static bool ValidateSerializer(IClientInstanceSettingsSerializer serializer)
-      {
-         var numOfBarChars = serializer.FileTypeFilter.Count(x => x == '|');
-         if (String.IsNullOrEmpty(serializer.FileExtension) || numOfBarChars != 1)
-         {
-            // extention filter string, too many bar characters
-            return false;
-         }
-
-         return true;
-      }
-      
-      #endregion
-
       #region Events
 
-      public event EventHandler CollectionChanged;
-      private void OnCollectionChanged(EventArgs e)
+      public event EventHandler RefreshGrid;
+      private void OnRefreshGrid(EventArgs e)
       {
-         if (CollectionChanged != null)
+         if (RefreshGrid != null)
          {
-            CollectionChanged(this, e);
-         }
-      }
-
-      public event EventHandler CollectionLoaded;
-      private void OnCollectionLoaded(EventArgs e)
-      {
-         if (CollectionLoaded != null)
-         {
-            CollectionLoaded(this, e);
-         }
-      }
-
-      public event EventHandler CollectionSaved;
-      private void OnCollectionSaved(EventArgs e)
-      {
-         if (CollectionSaved != null)
-         {
-            CollectionSaved(this, e);
-         }
-      }
-
-      public event EventHandler InstanceAdded;
-      private void OnInstanceAdded(EventArgs e)
-      {
-         if (InstanceAdded != null)
-         {
-            InstanceAdded(this, e);
-         }
-      }
-
-      public event EventHandler InstanceEdited;
-      private void OnInstanceEdited(EventArgs e)
-      {
-         if (InstanceEdited != null)
-         {
-            InstanceEdited(this, e);
-         }
-      }
-
-      public event EventHandler InstanceRemoved;
-      private void OnInstanceRemoved(EventArgs e)
-      {
-         if (InstanceRemoved != null)
-         {
-            InstanceRemoved(this, e);
-         }
-      }
-
-      public event EventHandler InstanceRetrieved;
-      private void OnInstanceRetrieved(EventArgs e)
-      {
-         if (InstanceRetrieved != null)
-         {
-            InstanceRetrieved(this, e);
+            RefreshGrid(this, e);
          }
       }
 
@@ -389,6 +271,15 @@ namespace HFM.Instances
          if (OfflineLastChanged != null)
          {
             OfflineLastChanged(this, e);
+         }
+      }
+
+      public event EventHandler InstanceDataChanged;
+      private void OnInstanceDataChanged(EventArgs e)
+      {
+         if (InstanceDataChanged != null)
+         {
+            InstanceDataChanged(this, e);
          }
       }
 
@@ -458,8 +349,6 @@ namespace HFM.Instances
             QueueNewRetrieval();
             // Start Retrieval and Web Generation Timers
             SetTimerState();
-
-            OnCollectionLoaded(EventArgs.Empty);
          }
       }
 
@@ -492,7 +381,6 @@ namespace HFM.Instances
          _configurationManager.WriteConfigFile(GetCurrentInstanceArray(), filePath, filterIndex);
 
          ChangedAfterSave = false;
-         OnCollectionSaved(EventArgs.Empty);
       }
       
       #endregion
@@ -517,6 +405,8 @@ namespace HFM.Instances
       /// <param name="fireAddedEvent">Specifies whether this call fires the InstanceAdded Event</param>
       private void Add(ClientInstance instance, bool fireAddedEvent)
       {
+         Debug.Assert(instance != null);
+      
          if (ContainsName(instance.Settings.InstanceName))
          {
             throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
@@ -531,14 +421,14 @@ namespace HFM.Instances
          {
             _instanceCollection.Add(instance.Settings.InstanceName, instance);
          }
-         OnCollectionChanged(EventArgs.Empty);
+         OnRefreshGrid(EventArgs.Empty);
          
          if (fireAddedEvent)
          {
             RetrieveSingleClient(instance);
 
             ChangedAfterSave = true;
-            OnInstanceAdded(EventArgs.Empty);
+            OnInstanceDataChanged(EventArgs.Empty);
             
             // Issue 230
             if (hasInstances == false)
@@ -609,7 +499,7 @@ namespace HFM.Instances
          RetrieveSingleClient(instance);
 
          ChangedAfterSave = true;
-         OnInstanceEdited(EventArgs.Empty);
+         OnInstanceDataChanged(EventArgs.Empty);
       }
       
       /// <summary>
@@ -633,10 +523,10 @@ namespace HFM.Instances
                _displayCollection.Remove(findInstance);
             }
          }
-         OnCollectionChanged(EventArgs.Empty);
+         OnRefreshGrid(EventArgs.Empty);
          
          ChangedAfterSave = true;
-         OnInstanceRemoved(EventArgs.Empty);
+         OnInstanceDataChanged(EventArgs.Empty);
 
          DuplicateFinder.FindDuplicates(_displayCollection);
          OnInvalidateGrid(EventArgs.Empty);
@@ -662,7 +552,7 @@ namespace HFM.Instances
          // This will disable the timers, we have no hosts
          SetTimerState();
          
-         OnCollectionChanged(EventArgs.Empty);
+         OnRefreshGrid(EventArgs.Empty);
       }
 
       /// <summary>
@@ -697,7 +587,7 @@ namespace HFM.Instances
          Debug.Assert(_prefs.GetPreference<bool>(Preference.WebGenAfterRefresh) == false);
       
          HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping Web Generation Timer");
-         webTimer.Stop();
+         _webTimer.Stop();
          
          DoWebGeneration();
 
@@ -765,7 +655,7 @@ namespace HFM.Instances
          if (HasInstances)
          {
             HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping Retrieval Timer Loop");
-            workTimer.Stop();
+            _workTimer.Stop();
 
             // fire the retrieval wrapper thread (basically a wait thread off the UI thread)
             new Action(DoRetrievalWrapper).BeginInvoke(null, null);
@@ -896,7 +786,7 @@ namespace HFM.Instances
          {
             instance.Retrieve();
             // This event should signal the UI to update
-            OnInstanceRetrieved(EventArgs.Empty);
+            OnRefreshGrid(EventArgs.Empty);
          }
       }
 
@@ -948,8 +838,8 @@ namespace HFM.Instances
          if (HasInstances == false)
          {
             HfmTrace.WriteToHfmConsole(TraceLevel.Info, "No Hosts - Stopping All Background Timer Loops");
-            workTimer.Stop();
-            webTimer.Stop();
+            _workTimer.Stop();
+            _webTimer.Stop();
             return;
          }
 
@@ -963,10 +853,10 @@ namespace HFM.Instances
          }
          else
          {
-            if (workTimer.Enabled)
+            if (_workTimer.Enabled)
             {
                HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping Retrieval Timer Loop");
-               workTimer.Stop();
+               _workTimer.Stop();
             }
          }
 
@@ -978,10 +868,10 @@ namespace HFM.Instances
          }
          else
          {
-            if (webTimer.Enabled)
+            if (_webTimer.Enabled)
             {
                HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping Web Generation Timer Loop");
-               webTimer.Stop();
+               _webTimer.Stop();
             }
          }
       }
@@ -993,9 +883,9 @@ namespace HFM.Instances
       {
          int syncTimeMinutes = _prefs.GetPreference<int>(Preference.SyncTimeMinutes);
          
-         workTimer.Interval = syncTimeMinutes * Constants.MinToMillisec;
+         _workTimer.Interval = syncTimeMinutes * Constants.MinToMillisec;
          HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Starting Retrieval Timer Loop: {0} Minutes", syncTimeMinutes));
-         workTimer.Start();
+         _workTimer.Start();
       }
 
       /// <summary>
@@ -1008,10 +898,10 @@ namespace HFM.Instances
          
          int generateInterval = _prefs.GetPreference<int>(Preference.GenerateInterval);
 
-         webTimer.Interval = generateInterval * Constants.MinToMillisec;
+         _webTimer.Interval = generateInterval * Constants.MinToMillisec;
          HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format(CultureInfo.CurrentCulture,
             "Starting Web Generation Timer Loop: {0} Minutes", generateInterval));
-         webTimer.Start();
+         _webTimer.Start();
       }
       #endregion
 
@@ -1258,8 +1148,8 @@ namespace HFM.Instances
             if (disposing)
             {
                // clean managed resources
-               workTimer.Dispose();
-               webTimer.Dispose();
+               _workTimer.Dispose();
+               _webTimer.Dispose();
             }
 
             _disposed = true;

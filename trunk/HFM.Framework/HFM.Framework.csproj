@@ -59,7 +59,9 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyVersion.cs">
@@ -68,6 +70,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="CoverageExcludeAttribute.cs" />
     <Compile Include="Enumerations.cs" />
+    <Compile Include="ExternalProcessStarter.cs" />
     <Compile Include="HfmTrace.cs" />
     <Compile Include="IClientInstance.cs" />
     <Compile Include="ICompletedUnitsFileReader.cs" />
