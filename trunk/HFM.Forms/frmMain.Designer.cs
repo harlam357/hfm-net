@@ -322,7 +322,7 @@ namespace HFM.Forms
          this.mnuNotifyRst.Name = "mnuNotifyRst";
          this.mnuNotifyRst.Size = new System.Drawing.Size(128, 22);
          this.mnuNotifyRst.Text = "&Restore";
-         this.mnuNotifyRst.Click += new System.EventHandler(this.mnuNotifyRst_Click);
+         this.mnuNotifyRst.Click += new System.EventHandler(this.mnuNotifyRestore_Click);
          // 
          // mnuNotifyMin
          // 
@@ -330,7 +330,7 @@ namespace HFM.Forms
          this.mnuNotifyMin.Name = "mnuNotifyMin";
          this.mnuNotifyMin.Size = new System.Drawing.Size(128, 22);
          this.mnuNotifyMin.Text = "Mi&nimize";
-         this.mnuNotifyMin.Click += new System.EventHandler(this.mnuNotifyMin_Click);
+         this.mnuNotifyMin.Click += new System.EventHandler(this.mnuNotifyMinimize_Click);
          // 
          // mnuNotifyMax
          // 
@@ -338,7 +338,7 @@ namespace HFM.Forms
          this.mnuNotifyMax.Name = "mnuNotifyMax";
          this.mnuNotifyMax.Size = new System.Drawing.Size(128, 22);
          this.mnuNotifyMax.Text = "&Maximize";
-         this.mnuNotifyMax.Click += new System.EventHandler(this.mnuNotifyMax_Click);
+         this.mnuNotifyMax.Click += new System.EventHandler(this.mnuNotifyMaximize_Click);
          // 
          // mnuNotifySep1
          // 

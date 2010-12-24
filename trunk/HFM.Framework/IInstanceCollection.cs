@@ -84,7 +84,7 @@ namespace HFM.Framework
 
       event EventHandler SelectedInstanceChanged;
 
-      event EventHandler RefreshUserStatsData;
+      event EventHandler RefreshUserStatsControls;
       
       #endregion
 
@@ -152,9 +152,10 @@ namespace HFM.Framework
       void RetrieveSingleClient(string instanceName);
 
       /// <summary>
-      /// Serialize the Current UnitInfo Objects to disk
+      /// Refresh Stats Data from EOC
       /// </summary>
-      void SaveCurrentUnitInfo();
+      /// <param name="forceRefresh">If true, ignore last refresh time stamps and update.</param>
+      void RefreshUserStatsData(bool forceRefresh);
 
       /// <summary>
       /// Refresh the Display Collection from the Instance Collection

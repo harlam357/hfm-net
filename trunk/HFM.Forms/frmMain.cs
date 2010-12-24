@@ -45,7 +45,6 @@ namespace HFM.Forms
 {
    // ReSharper disable InconsistentNaming
    public partial class frmMain : FormWrapper
-   // ReSharper restore InconsistentNaming
    {
       #region Fields
       
@@ -139,37 +138,27 @@ namespace HFM.Forms
 
       public void Initialize()
       {
-         // Read the User/Team stats data from disk
-         _statsData.Read();
-         // Apply User Stats Enabled Selection
-         UserStatsEnabledChanged();
-         // Initialize the Instance Collection
-         _clientInstances.Initialize();
-      
          // Manually Create the Columns - Issue 41
          DataGridViewWrapper.SetupDataGridViewColumns(dataGridView1);
          // Restore Form Preferences (MUST BE DONE AFTER DataGridView Columns are Setup)
          RestoreFormPreferences();
          SetupDataGridView();
 
-         // Read the Protein Collection from disk
-         _proteinCollection.Read();
          // Give the Queue Control access to the Protein Collection
          queueControl.SetProteinCollection(_proteinCollection);
-
-         // Read the Benchmarks from disk
-         _benchmarkContainer.Read();
 
          SubscribeToInstanceCollectionEvents();
          SubscribeToPreferenceSetEvents();
          SubscribeToStatsLabelEvents();
+
+         // Apply User Stats Enabled Selection
+         UserStatsEnabledChanged();
 
          // If Mono, use the RowEnter Event (which was what 0.3.0 and prior used)
          // to set the CurrentInstance selection.  Obviously Mono doesn't fire the
          // DataGridView.SelectionChanged Event.
          if (PlatformOps.IsRunningOnMono())
          {
-            HfmTrace.WriteToHfmConsole("Running on Mono...");
             dataGridView1.RowEnter += delegate
             {
                _clientInstances.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
@@ -189,14 +178,13 @@ namespace HFM.Forms
 
       private void SubscribeToInstanceCollectionEvents()
       {
-         _clientInstances.RefreshUserStatsData += delegate { RefreshUserStatsData(false); };
-
          // refactored events
          _clientInstances.RefreshGrid += delegate { RefreshDisplay(); };
          _clientInstances.InvalidateGrid += delegate { dataGridView1.Invalidate(); };
          _clientInstances.OfflineLastChanged += delegate { ApplySort(); };
          _clientInstances.InstanceDataChanged += InstanceDataChanged;
          _clientInstances.SelectedInstanceChanged += SelectedInstanceChanged;
+         _clientInstances.RefreshUserStatsControls += delegate { RefreshUserStatsControls(); };
       }
 
       private void InstanceDataChanged(object sender, EventArgs e)
@@ -209,10 +197,10 @@ namespace HFM.Forms
 
       private void SubscribeToPreferenceSetEvents()
       {
-         _prefs.FormShowStyleSettingsChanged += PreferenceSet_FormShowStyleSettingsChanged;
-         _prefs.ShowUserStatsChanged += PreferenceSetShowUserStatsChanged;
-         _prefs.MessageLevelChanged += PreferenceSet_MessageLevelChanged;
-         _prefs.ColorLogFileChanged += PreferenceSet_ColorLogFileChanged;
+         _prefs.FormShowStyleSettingsChanged += delegate { SetFormShowStyle(); };
+         _prefs.ShowUserStatsChanged += delegate { UserStatsEnabledChanged(); };
+         _prefs.MessageLevelChanged += MessageLevelChanged;
+         _prefs.ColorLogFileChanged += ColorLogFileChanged;
          _prefs.PpdCalculationChanged += delegate { RefreshDisplay(); };
          _prefs.DecimalPlacesChanged += delegate { RefreshDisplay(); };
          _prefs.CalculateBonusChanged += delegate { RefreshDisplay(); };
@@ -298,7 +286,7 @@ namespace HFM.Forms
 
          if (String.IsNullOrEmpty(fileName) == false)
          {
-            LoadFile(fileName);
+            LoadConfigFile(fileName);
          }
          
          // Add the Index Changed Handler here after everything is shown
@@ -415,19 +403,7 @@ namespace HFM.Forms
          _prefs.SetPreference(Preference.FormLogVisible, txtLogFile.Visible);
          _prefs.SetPreference(Preference.QueueViewerVisible, queueControl.Visible);
 
-         // Save the data
-         _prefs.Save();
-         
-         // Save the data on current WUs in progress
-         _clientInstances.SaveCurrentUnitInfo();
-         // Save the benchmark collection
-         _benchmarkContainer.Write();
-
          CheckForAndFireUpdateProcess();
-
-         HfmTrace.WriteToHfmConsole("----------");
-         HfmTrace.WriteToHfmConsole("Exiting...");
-         HfmTrace.WriteToHfmConsole(String.Empty);
       }
       
       private void CheckForAndFireUpdateProcess()
@@ -562,7 +538,7 @@ namespace HFM.Forms
             if (txtLogFile.LogOwnedByInstanceName.Equals(instance.Name) == false)
             {
                txtLogFile.SetLogLines(logLines, instance.Name);
-               PreferenceSet_ColorLogFileChanged(null, EventArgs.Empty);
+               ColorLogFileChanged(null, EventArgs.Empty);
                
                //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("Set Log Lines (Changed Client - {0})", instance.InstanceName));
             }
@@ -587,7 +563,7 @@ namespace HFM.Forms
                if (txtLogFile.Lines[txtLogFile.Lines.Length - 1].Equals(lastLogLine) == false)
                {
                   txtLogFile.SetLogLines(logLines, instance.Name);
-                  PreferenceSet_ColorLogFileChanged(null, EventArgs.Empty);
+                  ColorLogFileChanged(null, EventArgs.Empty);
                   
                   //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Set Log Lines (log lines different)");
                }
@@ -596,7 +572,7 @@ namespace HFM.Forms
             else
             {
                txtLogFile.SetLogLines(logLines, instance.Name);
-               PreferenceSet_ColorLogFileChanged(null, EventArgs.Empty);
+               ColorLogFileChanged(null, EventArgs.Empty);
             }
          }
          else
@@ -692,7 +668,7 @@ namespace HFM.Forms
             openConfigDialog.RestoreDirectory = true;
             if (openConfigDialog.ShowDialog() == DialogResult.OK)
             {
-               LoadFile(openConfigDialog.FileName, openConfigDialog.FilterIndex);
+               LoadConfigFile(openConfigDialog.FileName, openConfigDialog.FilterIndex);
             }
          }
       }
@@ -751,11 +727,7 @@ namespace HFM.Forms
       #endregion
 
       #region Edit Menu Click Handlers
-      /// <summary>
-      /// Displays and handles the User Preferences dialog
-      /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
+
       private void mnuEditPreferences_Click(object sender, EventArgs e)
       {
          var prefDialog = new frmPreferences(_prefs);
@@ -763,6 +735,7 @@ namespace HFM.Forms
          
          dataGridView1.Invalidate();
       }
+
       #endregion
 
       #region Help Menu Click Handlers
@@ -967,7 +940,7 @@ namespace HFM.Forms
       /// </summary>
       private void mnuViewShowHideLog_Click(object sender, EventArgs e)
       {
-         ShowHideLog(!txtLogFile.Visible);
+         ShowHideLogWindow(!txtLogFile.Visible);
       }
 
       /// <summary>
@@ -1052,7 +1025,7 @@ namespace HFM.Forms
 
          calculationType = (PpdCalculationType)typeIndex;
          _prefs.SetPreference(Preference.PpdCalculation, calculationType);
-         string calculationTypeString = (from item in Models.OptionsModel.PpdCalculationList
+         string calculationTypeString = (from item in OptionsModel.PpdCalculationList
                                          where ((PpdCalculationType)item.ValueMember) == calculationType
                                          select item.DisplayMember).First();
          toolTipNotify.Show(calculationTypeString, this, Size.Width - 150, 8, 2000);
@@ -1062,9 +1035,7 @@ namespace HFM.Forms
       #endregion
 
       #region Tools Menu Click Handlers
-      /// <summary>
-      /// Download Project Info From Stanford
-      /// </summary>
+
       private void mnuToolsDownloadProjects_Click(object sender, EventArgs e)
       {
          // Clear the Project Not Found Cache and Last Download Time
@@ -1078,9 +1049,6 @@ namespace HFM.Forms
          projectDownloadView.Process();
       }
 
-      /// <summary>
-      /// Show the Benchmarks Dialog
-      /// </summary>
       private void mnuToolsBenchmarks_Click(object sender, EventArgs e)
       {
          int projectId = 0;
@@ -1091,8 +1059,10 @@ namespace HFM.Forms
             projectId = _clientInstances.SelectedDisplayInstance.ProjectID;
          }
 
-         var frm = new frmBenchmarks(_prefs, _proteinCollection, _benchmarkContainer, _clientInstances, projectId);
-         frm.StartPosition = FormStartPosition.Manual;
+         var frm = new frmBenchmarks(_prefs, _proteinCollection, _benchmarkContainer, _clientInstances, projectId)
+                   {
+                      StartPosition = FormStartPosition.Manual
+                   };
 
          // Restore state data
          var location = _prefs.GetPreference<Point>(Preference.BenchmarksFormLocation);
@@ -1126,6 +1096,7 @@ namespace HFM.Forms
 
          _historyPresenter.Show();
       }
+
       #endregion
 
       #region Web Menu Click Handlers
@@ -1147,7 +1118,7 @@ namespace HFM.Forms
 
       private void mnuWebRefreshUserStats_Click(object sender, EventArgs e)
       {
-         RefreshUserStatsData(true);
+         _clientInstances.RefreshUserStatsData(true);
       }
 
       private void mnuWebHFMGoogleCode_Click(object sender, EventArgs e)
@@ -1158,9 +1129,7 @@ namespace HFM.Forms
       #endregion
 
       #region Background Work Routines
-      /// <summary>
-      /// Refresh the Form
-      /// </summary>
+
       private void RefreshDisplay()
       {
          try 
@@ -1202,7 +1171,7 @@ namespace HFM.Forms
                Invoke(new MethodInvoker(DoSetSelectedInstance));
             }
 
-            RefreshControls();
+            RefreshControlsWithTotalsData();
          }
          // This can happen when exiting the app in the middle of a retrieval process.
          // TODO: When implementing retrieval thread cancelling, cancel the the retrieval
@@ -1302,10 +1271,7 @@ namespace HFM.Forms
          }
       }
 
-      /// <summary>
-      /// Refresh remaining UI controls with current data
-      /// </summary>
-      private void RefreshControls()
+      private void RefreshControlsWithTotalsData()
       {
          InstanceTotals totals = _clientInstances.GetInstanceTotals();
 
@@ -1314,24 +1280,28 @@ namespace HFM.Forms
 
          SetNotifyIconText(String.Format("{0} Working Clients{3}{1} Non-Working Clients{3}{2:" + _prefs.PpdFormatString + "} PPD",
                                          goodHosts, totals.NonWorkingClients, totalPPD, Environment.NewLine));
-         RefreshStatusLabels(goodHosts, totalPPD);
+         RefreshClientStatusBarLabels(goodHosts, totalPPD);
       }
 
-      /// <summary>
-      /// Delegate used for Post-Message Invoke to UI Thread
-      /// </summary>
-      /// <param name="val">String Value</param>
-      private delegate void SimpleVoidStringDelegate(string val);
-      
-      /// <summary>
-      /// Sets the Notify Icon Text (Thread Safe)
-      /// </summary>
-      /// <param name="val">Text to set</param>
+      private void RefreshClientStatusBarLabels(int goodHosts, double totalPPD)
+      {
+         if (goodHosts == 1)
+         {
+            SetStatusLabelHostsText(String.Format("{0} Client", goodHosts));
+         }
+         else
+         {
+            SetStatusLabelHostsText(String.Format("{0} Clients", goodHosts));
+         }
+
+         SetStatusLabelPPDText(String.Format("{0:" + _prefs.PpdFormatString + "} PPD", totalPPD));
+      }
+
       private void SetNotifyIconText(string val)
       {
          if (InvokeRequired)
          {
-            BeginInvoke(new SimpleVoidStringDelegate(SetNotifyIconText), new object[] { val });
+            BeginInvoke(new Action<string>(SetNotifyIconText), val);
             return;
          }
          
@@ -1348,23 +1318,6 @@ namespace HFM.Forms
       }
 
       /// <summary>
-      /// Update the Status Labels with Client and PPD info
-      /// </summary>
-      private void RefreshStatusLabels(int goodHosts, double totalPPD)
-      {
-         if (goodHosts == 1)
-         {
-            SetStatusLabelHostsText(String.Format("{0} Client", goodHosts));
-         }
-         else
-         {
-            SetStatusLabelHostsText(String.Format("{0} Clients", goodHosts));
-         }
-
-         SetStatusLabelPPDText(String.Format("{0:" + _prefs.PpdFormatString + "} PPD", totalPPD));
-      }
-
-      /// <summary>
       /// Sets the Hosts Status Label Text (Thread Safe)
       /// </summary>
       /// <param name="val">Text to set</param>
@@ -1372,7 +1325,7 @@ namespace HFM.Forms
       {
          if (InvokeRequired)
          {
-            BeginInvoke(new SimpleVoidStringDelegate(SetStatusLabelHostsText), new object[] { val });
+            BeginInvoke(new Action<string>(SetStatusLabelHostsText), val);
             return;
          }
          
@@ -1387,18 +1340,17 @@ namespace HFM.Forms
       {
          if (InvokeRequired)
          {
-            BeginInvoke(new SimpleVoidStringDelegate(SetStatusLabelPPDText), new object[] { val });
+            BeginInvoke(new Action<string>(SetStatusLabelPPDText), val);
             return;
          }
          
          statusLabelPPW.Text = val;
       }
+
       #endregion
 
       #region System Tray Icon Routines
-      /// <summary>
-      /// Action of the double-clicked notification icon (min/restore)
-      /// </summary>
+
       private void NotifyIconDoubleClick(object sender, EventArgs e)
       {
          if (WindowState == FormWindowState.Minimized)
@@ -1412,10 +1364,7 @@ namespace HFM.Forms
          }
       }
 
-      /// <summary>
-      /// Action of the clicked notification icon restore option
-      /// </summary>
-      private void mnuNotifyRst_Click(object sender, EventArgs e)
+      private void mnuNotifyRestore_Click(object sender, EventArgs e)
       {
          if (WindowState == FormWindowState.Minimized)
          {
@@ -1427,10 +1376,7 @@ namespace HFM.Forms
          }
       }
 
-      /// <summary>
-      /// Action of the clicked notification icon minimize option
-      /// </summary>
-      private void mnuNotifyMin_Click(object sender, EventArgs e)
+      private void mnuNotifyMinimize_Click(object sender, EventArgs e)
       {
          if (WindowState != FormWindowState.Minimized)
          {
@@ -1439,10 +1385,7 @@ namespace HFM.Forms
          }
       }
 
-      /// <summary>
-      /// Action of the clicked notification icon maximize option
-      /// </summary>
-      private void mnuNotifyMax_Click(object sender, EventArgs e)
+      private void mnuNotifyMaximize_Click(object sender, EventArgs e)
       {
          if (WindowState != FormWindowState.Maximized)
          {
@@ -1450,13 +1393,11 @@ namespace HFM.Forms
             _originalState = WindowState;
          }
       }
+
       #endregion
 
       #region Helper Routines
-      
-      /// <summary>
-      /// Restore Form State
-      /// </summary>
+
       private void RestoreFormPreferences()
       {
          //TODO: Would like to do this here in lieu of in frmMain_Shown() event.
@@ -1491,7 +1432,7 @@ namespace HFM.Forms
 
          if (_prefs.GetPreference<bool>(Preference.FormLogVisible) == false)
          {
-            ShowHideLog(false);
+            ShowHideLogWindow(false);
          }
 
          if (_prefs.GetPreference<bool>(Preference.QueueViewerVisible) == false)
@@ -1533,9 +1474,6 @@ namespace HFM.Forms
          }
       }
 
-      /// <summary>
-      /// Save Column Index, Width, and Visibility
-      /// </summary>
       private void SaveColumnSettings()
       {
          // Save column state data
@@ -1556,9 +1494,6 @@ namespace HFM.Forms
          _prefs.SetPreference(Preference.FormColumns, stringCollection);
       }
 
-      /// <summary>
-      /// Save Sorted Column Name and Order
-      /// </summary>
       private void SaveSortColumn()
       {
          _prefs.SetPreference(Preference.FormSortColumn, _sortColumnName);
@@ -1589,9 +1524,6 @@ namespace HFM.Forms
          return true;
       }
 
-      /// <summary>
-      /// Clear the Log File and Queue Viewers
-      /// </summary>
       private void ClearLogAndQueueViewer()
       {
          // clear the log text
@@ -1604,9 +1536,9 @@ namespace HFM.Forms
       /// Loads a configuration file into memory
       /// </summary>
       /// <param name="filePath">File to load</param>
-      private void LoadFile(string filePath)
+      private void LoadConfigFile(string filePath)
       {
-         LoadFile(filePath, 1);
+         LoadConfigFile(filePath, 1);
       }
 
       /// <summary>
@@ -1614,7 +1546,7 @@ namespace HFM.Forms
       /// </summary>
       /// <param name="filePath">File to load</param>
       /// <param name="filterIndex">Dialog file type filter index (1 based)</param>
-      private void LoadFile(string filePath, int filterIndex)
+      private void LoadConfigFile(string filePath, int filterIndex)
       {
          try
          {
@@ -1636,11 +1568,7 @@ namespace HFM.Forms
          }
       }
 
-      /// <summary>
-      /// Show or Hide the Log File Control
-      /// </summary>
-      /// <param name="show"></param>
-      private void ShowHideLog(bool show)
+      private void ShowHideLogWindow(bool show)
       {
          if (show == false)
          {
@@ -1669,19 +1597,13 @@ namespace HFM.Forms
 
       #region User Stats Data Methods
       
-      private void RefreshUserStatsData(bool forceRefresh)
-      {
-         _statsData.GetEocXmlData(forceRefresh);
-         RefreshUserStatsControls();
-      }
-      
       /// <summary>
       /// Refresh User Stats from Xml Data Source
       /// </summary>
       private void RefreshUserStatsControls()
       {
-         try
-         {
+         //try
+         //{
             if (_prefs.GetPreference<bool>(Preference.ShowTeamStats))
             {
                statusUserTeamRank.Text = String.Format(CultureInfo.CurrentCulture, String.Concat("Team: ", Constants.EocStatsFormat), _statsData.Data.TeamRank);
@@ -1702,20 +1624,16 @@ namespace HFM.Forms
                statusUserTotal.Text = String.Format(CultureInfo.CurrentCulture, String.Concat("Total: ", Constants.EocStatsFormat), _statsData.Data.UserPointsTotal);
                statusUserWUs.Text = String.Format(CultureInfo.CurrentCulture, String.Concat("WUs: ", Constants.EocStatsFormat), _statsData.Data.UserWorkUnitsTotal);
             }
-         }
-         catch (Exception ex)
-         {
-            HfmTrace.WriteToHfmConsole(ex);
-         }
+         //}
+         //catch (Exception ex)
+         //{
+         //   HfmTrace.WriteToHfmConsole(ex);
+         //}
       }
       
       #endregion
 
       #region PreferenceSet Event Handlers
-      private void PreferenceSet_FormShowStyleSettingsChanged(object sender, EventArgs e)
-      {
-         SetFormShowStyle();
-      }
 
       private void SetFormShowStyle()
       {
@@ -1736,41 +1654,16 @@ namespace HFM.Forms
          }
       }
 
-      /// <summary>
-      /// User Stats Preference Changed
-      /// </summary>
-      private void PreferenceSetShowUserStatsChanged(object sender, EventArgs e)
-      {
-         UserStatsEnabledChanged();
-      }
-
-      /// <summary>
-      /// Show or Hide User Stats Controls based on user setting
-      /// </summary>
       private void UserStatsEnabledChanged()
       {
          var showXmlStats = _prefs.GetPreference<bool>(Preference.ShowXmlStats);
          SetStatsControlsVisible(showXmlStats);
          if (showXmlStats)
          {
-            RefreshUserStatsData(false);
+            _clientInstances.RefreshUserStatsData(false);
          }
       }
 
-      private void mnuContextShowUserStats_Click(object sender, EventArgs e)
-      {
-         _prefs.SetPreference(Preference.ShowTeamStats, false);
-         SetStatsControlsVisible(true);
-         RefreshUserStatsControls();
-      }
-      
-      private void mnuContextShowTeamStats_Click(object sender, EventArgs e)
-      {
-         _prefs.SetPreference(Preference.ShowTeamStats, true);
-         SetStatsControlsVisible(true);
-         RefreshUserStatsControls();
-      }
-      
       private void SetStatsControlsVisible(bool visible)
       {
          mnuWebRefreshUserStats.Visible = visible;
@@ -1785,10 +1678,7 @@ namespace HFM.Forms
          statusLabelMiddle.Visible = visible;
       }
 
-      /// <summary>
-      /// Sets Debug Message Level on Trace Level Switch
-      /// </summary>
-      private void PreferenceSet_MessageLevelChanged(object sender, EventArgs e)
+      private void MessageLevelChanged(object sender, EventArgs e)
       {
          var newLevel = (TraceLevel)_prefs.GetPreference<int>(Preference.MessageLevel);
          if (newLevel != TraceLevelSwitch.Instance.Level)
@@ -1798,10 +1688,7 @@ namespace HFM.Forms
          }
       }
 
-      /// <summary>
-      /// Sets the Log Color option after change
-      /// </summary>
-      private void PreferenceSet_ColorLogFileChanged(object sender, EventArgs e)
+      private void ColorLogFileChanged(object sender, EventArgs e)
       {
          if (_prefs.GetPreference<bool>(Preference.ColorLogFile))
          {
@@ -1812,8 +1699,28 @@ namespace HFM.Forms
             txtLogFile.RemoveHighlight();
          }
       }
+
+      #endregion
+
+      #region Status Bar Context Menu Event Handlers
+
+      private void mnuContextShowUserStats_Click(object sender, EventArgs e)
+      {
+         _prefs.SetPreference(Preference.ShowTeamStats, false);
+         SetStatsControlsVisible(true);
+         RefreshUserStatsControls();
+      }
+
+      private void mnuContextShowTeamStats_Click(object sender, EventArgs e)
+      {
+         _prefs.SetPreference(Preference.ShowTeamStats, true);
+         SetStatsControlsVisible(true);
+         RefreshUserStatsControls();
+      }
+
       #endregion
       
       #endregion
    }
+   // ReSharper restore InconsistentNaming
 }

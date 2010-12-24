@@ -29,9 +29,10 @@ using Castle.Core.Resource;
 
 using harlam357.Windows.Forms;
 
-using HFM.Framework;
-using HFM.Classes;
 using HFM.Forms;
+using HFM.Classes;
+using HFM.Instances;
+using HFM.Framework;
 
 namespace HFM
 {
@@ -45,13 +46,16 @@ namespace HFM
       [STAThread]
       static void Main(string[] args)
       {
+         Args = args;
+
+         Application.ApplicationExit += ApplicationExit;
          AppDomain.CurrentDomain.AssemblyResolve += CustomResolve;
 
-         Args = args;
          Application.EnableVisualStyles();
          Application.SetCompatibleTextRenderingDefault(false);
 
          #region Primary Initialization
+
          // Issue 180 - Restore the already running instance to the screen.
          try
          {
@@ -108,6 +112,11 @@ namespace HFM
             return;
          }
 
+         if (PlatformOps.IsRunningOnMono())
+         {
+            HfmTrace.WriteToHfmConsole("Running on Mono...");
+         }
+
          try
          {
             var database = InstanceProvider.GetInstance<IUnitInfoDatabase>();
@@ -120,6 +129,32 @@ namespace HFM
                Constants.GoogleGroupUrl, true);
             return;
          }
+         
+         try
+         {
+            ClearCacheFolder(prefs);
+         }
+         catch (Exception ex)
+         {
+            ExceptionDialog.ShowErrorDialog(ex, PlatformOps.ApplicationNameAndVersionWithRevision, Environment.OSVersion.VersionString,
+               "Failed to create or clear the data cache folder.",
+               Constants.GoogleGroupUrl, true);
+            return;
+         }
+
+         // Read Containers
+         var statsData = InstanceProvider.GetInstance<IXmlStatsDataContainer>();
+         statsData.Read();
+         var proteinCollection = InstanceProvider.GetInstance<IProteinCollection>();
+         proteinCollection.Read();
+         var benchmarkContainer = InstanceProvider.GetInstance<IProteinBenchmarkContainer>();
+         benchmarkContainer.Read();
+         var unitInfoContainer = InstanceProvider.GetInstance<IUnitInfoContainer>();
+         unitInfoContainer.Read();
+
+         // Initialize the Instance Collection
+         var instanceCollection = InstanceProvider.GetInstance<IInstanceCollection>();
+         instanceCollection.Initialize();
 
          frmMain frm;
          try
@@ -134,11 +169,10 @@ namespace HFM
                Constants.GoogleGroupUrl, true);
             return;
          }
-         #endregion
 
          try
          {
-            SingleInstanceHelper.RegisterIpcChannel(frm);
+            SingleInstanceHelper.RegisterIpcChannel(frm.SecondInstanceStarted);
          }
          catch (Exception ex)
          {
@@ -148,6 +182,9 @@ namespace HFM
             return;
          }
 
+         #endregion
+
+         // Register the Unhandled Exception Dialog
          ExceptionDialog.RegisterForUnhandledExceptions(PlatformOps.ApplicationNameAndVersionWithRevision, 
             Environment.OSVersion.VersionString, HfmTrace.WriteToHfmConsole);
          
@@ -159,6 +196,20 @@ namespace HFM
          {
             SingleInstanceHelper.Stop();
          }
+      }
+
+      private static void ApplicationExit(object sender, EventArgs e)
+      {
+         // Save preferences
+         var prefs = InstanceProvider.GetInstance<IPreferenceSet>();
+         prefs.Save();
+         // Save the benchmark collection
+         var benchmarkContainer = InstanceProvider.GetInstance<IProteinBenchmarkContainer>();
+         benchmarkContainer.Write();
+
+         HfmTrace.WriteToHfmConsole("----------");
+         HfmTrace.WriteToHfmConsole("Exiting...");
+         HfmTrace.WriteToHfmConsole(String.Empty);
       }
 
       private static System.Reflection.Assembly CustomResolve(object sender, ResolveEventArgs args)
@@ -178,6 +229,39 @@ namespace HFM
             }
          }
          return null;
+      }
+
+      /// <summary>
+      /// Clears the log cache folder specified by the CacheFolder setting
+      /// </summary>
+      private static void ClearCacheFolder(IPreferenceSet prefs)
+      {
+         DateTime start = HfmTrace.ExecStart;
+
+         string cacheFolder = Path.Combine(prefs.GetPreference<string>(Preference.ApplicationDataFolderPath),
+                                           prefs.GetPreference<string>(Preference.CacheFolder));
+
+         var di = new DirectoryInfo(cacheFolder);
+         if (di.Exists == false)
+         {
+            di.Create();
+         }
+         else
+         {
+            foreach (var fi in di.GetFiles())
+            {
+               try
+               {
+                  fi.Delete();
+               }
+               catch (Exception ex)
+               {
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("Failed to clear cache file '{0}'.", fi.Name), ex);
+               }
+            }
+         }
+
+         HfmTrace.WriteToHfmConsole(TraceLevel.Info, start);
       }
 
       /// <summary>

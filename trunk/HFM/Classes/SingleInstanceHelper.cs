@@ -29,7 +29,6 @@ using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Ipc;
 using System.Threading;
 
-using HFM.Forms;
 using HFM.Framework;
 
 namespace HFM.Classes
@@ -48,12 +47,12 @@ namespace HFM.Classes
          return onlyInstance;
       }
       
-      public static void RegisterIpcChannel(frmMain frm)
+      public static void RegisterIpcChannel(NewInstanceHandler handler)
       {
          IChannel ipcChannel = new IpcServerChannel(PlatformOps.AssemblyGuid);
          ChannelServices.RegisterChannel(ipcChannel, false);
 
-         IpcObject obj = new IpcObject(frm.SecondInstanceStarted);
+         IpcObject obj = new IpcObject(handler);
          RemotingServices.Marshal(obj, ObjectName);
       }
       

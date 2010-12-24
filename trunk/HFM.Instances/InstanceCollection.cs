@@ -23,7 +23,6 @@ using System.Linq;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.IO;
 using System.Threading;
 using System.Collections.Generic;
 
@@ -132,39 +131,20 @@ namespace HFM.Instances
 
       #region Service Interfaces
 
-      /// <summary>
-      /// Markup (HTML, XML, Client Data) Generator Interface
-      /// </summary>
       private IMarkupGenerator _markupGenerator;
 
-      /// <summary>
-      /// Website (HTML, XML, Client Data) Deployer
-      /// </summary>
       private IWebsiteDeployer _websiteDeployer;
       
-      /// <summary>
-      /// Preferences Interface
-      /// </summary>
       private readonly IPreferenceSet _prefs;
 
-      /// <summary>
-      /// Protein Collection Interface
-      /// </summary>
       private readonly IProteinCollection _proteinCollection;
 
-      /// <summary>
-      /// Protein Collection Interface
-      /// </summary>
       private readonly IProteinBenchmarkContainer _benchmarkContainer;
       
-      /// <summary>
-      /// UnitInfo Container Interface
-      /// </summary>
       private readonly IUnitInfoContainer _unitInfoContainer;
 
-      /// <summary>
-      /// Client Instance Factory
-      /// </summary>
+      private readonly IXmlStatsDataContainer _statsData;
+
       private readonly IClientInstanceFactory _instanceFactory;
 
       /// <summary>
@@ -172,9 +152,6 @@ namespace HFM.Instances
       /// </summary>
       private readonly IDisplayInstanceCollection _displayCollection;
 
-      /// <summary>
-      /// Instance Configuration Manager
-      /// </summary>
       private readonly InstanceConfigurationManager _configurationManager;
 
       #endregion
@@ -205,6 +182,7 @@ namespace HFM.Instances
                                 IProteinCollection proteinCollection, 
                                 IProteinBenchmarkContainer benchmarkContainer, 
                                 IUnitInfoContainer unitInfoContainer,
+                                IXmlStatsDataContainer statsData,
                                 IClientInstanceFactory instanceFactory,
                                 IDisplayInstanceCollection displayCollection,
                                 IInstanceConfigurationManager configurationManager)
@@ -213,6 +191,7 @@ namespace HFM.Instances
          _proteinCollection = proteinCollection;
          _benchmarkContainer = benchmarkContainer;
          _unitInfoContainer = unitInfoContainer;
+         _statsData = statsData;
          _instanceFactory = instanceFactory;
          _displayCollection = displayCollection;
          _configurationManager = (InstanceConfigurationManager)configurationManager;
@@ -222,21 +201,16 @@ namespace HFM.Instances
 
       public void Initialize()
       {
-         _unitInfoContainer.Read();
-      
          // Hook up Retrieval Timer Event Handler
-         _workTimer.Elapsed += bgWorkTimer_Tick;
+         _workTimer.Elapsed += WorkTimerTick;
          // Hook up Web Generation Timer Event Handler
-         _webTimer.Elapsed += webGenTimer_Tick;
+         _webTimer.Elapsed += WebGenTimerTick;
 
          // Hook up Protein Collection Updated Event Handler
-         _proteinCollection.Downloader.ProjectInfoUpdated += ProteinCollection_ProjectInfoUpdated;
+         _proteinCollection.Downloader.ProjectInfoUpdated += ProjectInfoUpdated;
 
          // Set Offline Clients Sort Flag
          OfflineClientsLast = _prefs.GetPreference<bool>(Preference.OfflineLast);
-
-         // Clear the Log File Cache Folder
-         ClearCacheFolder();
 
          // Hook-up PreferenceSet Event Handlers
          _prefs.OfflineLastChanged += delegate { OfflineClientsLast = _prefs.GetPreference<bool>(Preference.OfflineLast); };
@@ -301,12 +275,12 @@ namespace HFM.Instances
          }
       }
 
-      public event EventHandler RefreshUserStatsData;
-      private void OnRefreshUserStatsData(EventArgs e)
+      public event EventHandler RefreshUserStatsControls;
+      private void OnRefreshUserStatsControls(EventArgs e)
       {
-         if (RefreshUserStatsData != null)
+         if (RefreshUserStatsControls != null)
          {
-            RefreshUserStatsData(this, e);
+            RefreshUserStatsControls(this, e);
          }
       }
       
@@ -569,10 +543,11 @@ namespace HFM.Instances
       #endregion
 
       #region Retrieval Logic
+
       /// <summary>
       /// When the host refresh timer expires, refresh all the hosts
       /// </summary>
-      private void bgWorkTimer_Tick(object sender, EventArgs e)
+      private void WorkTimerTick(object sender, EventArgs e)
       {
          HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Running Retrieval Process...");
          QueueNewRetrieval();
@@ -581,7 +556,7 @@ namespace HFM.Instances
       /// <summary>
       /// When the web gen timer expires, refresh the website files
       /// </summary>
-      private void webGenTimer_Tick(object sender, EventArgs e)
+      private void WebGenTimerTick(object sender, EventArgs e)
       {
          Debug.Assert(_prefs.GetPreference<bool>(Preference.GenerateWeb));
          Debug.Assert(_prefs.GetPreference<bool>(Preference.WebGenAfterRefresh) == false);
@@ -633,7 +608,7 @@ namespace HFM.Instances
       /// <summary>
       /// Forces a log and screen refresh when the Stanford info is updated
       /// </summary>
-      private void ProteinCollection_ProjectInfoUpdated(object sender, EventArgs e)
+      private void ProjectInfoUpdated(object sender, EventArgs e)
       {
          // Do Retrieve on all clients after Project Info is updated (this is confirmed needed)
          QueueNewRetrieval();
@@ -687,7 +662,7 @@ namespace HFM.Instances
 
             if (_prefs.GetPreference<bool>(Preference.ShowXmlStats))
             {
-               OnRefreshUserStatsData(EventArgs.Empty);
+               RefreshUserStatsData(false);
             }
 
             // Enable the data retrieval timer
@@ -881,7 +856,7 @@ namespace HFM.Instances
       /// </summary>
       private void StartBackgroundTimer()
       {
-         int syncTimeMinutes = _prefs.GetPreference<int>(Preference.SyncTimeMinutes);
+         var syncTimeMinutes = _prefs.GetPreference<int>(Preference.SyncTimeMinutes);
          
          _workTimer.Interval = syncTimeMinutes * Constants.MinToMillisec;
          HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Starting Retrieval Timer Loop: {0} Minutes", syncTimeMinutes));
@@ -896,44 +871,24 @@ namespace HFM.Instances
          Debug.Assert(_prefs.GetPreference<bool>(Preference.GenerateWeb));
          Debug.Assert(_prefs.GetPreference<bool>(Preference.WebGenAfterRefresh) == false);
          
-         int generateInterval = _prefs.GetPreference<int>(Preference.GenerateInterval);
+         var generateInterval = _prefs.GetPreference<int>(Preference.GenerateInterval);
 
          _webTimer.Interval = generateInterval * Constants.MinToMillisec;
          HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format(CultureInfo.CurrentCulture,
             "Starting Web Generation Timer Loop: {0} Minutes", generateInterval));
          _webTimer.Start();
       }
-      #endregion
 
-      #region Save UnitInfo Collection
       /// <summary>
-      /// Serialize the Current UnitInfo Objects to disk
+      /// Refresh Stats Data from EOC
       /// </summary>
-      public void SaveCurrentUnitInfo()
+      /// <param name="forceRefresh">If true, ignore last refresh time stamps and update.</param>
+      public void RefreshUserStatsData(bool forceRefresh)
       {
-         // If no clients loaded, stub out
-         if (HasInstances == false) return;
-         
-         DateTime start = HfmTrace.ExecStart;
-
-         _unitInfoContainer.Clear();
-         
-         lock (_instanceCollection)
-         {
-            foreach (ClientInstance instance in _instanceCollection.Values)
-            {
-               // Don't save the UnitInfo object if the contained Project is Unknown
-               if (instance.CurrentUnitInfo.UnitInfoData.ProjectIsUnknown == false)
-               {
-                  _unitInfoContainer.Add((UnitInfo)instance.CurrentUnitInfo.UnitInfoData);
-               }
-            }
-         }
-
-         _unitInfoContainer.Write();
-
-         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, start);
+         _statsData.GetEocXmlData(forceRefresh);
+         OnRefreshUserStatsControls(EventArgs.Empty);
       }
+
       #endregion
 
       #region Binding Support
@@ -1090,37 +1045,26 @@ namespace HFM.Instances
          return collection.FirstOrDefault(displayInstance => displayInstance.Name == key);
       }
 
-      /// <summary>
-      /// Clears the log cache folder specified by the CacheFolder setting
-      /// </summary>
-      private void ClearCacheFolder()
+      private void SaveCurrentUnitInfo()
       {
-         DateTime start = HfmTrace.ExecStart;
+         // If no clients loaded, stub out
+         if (HasInstances == false) return;
 
-         string cacheFolder = Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath),
-                                           _prefs.GetPreference<string>(Preference.CacheFolder));
+         _unitInfoContainer.Clear();
 
-         var di = new DirectoryInfo(cacheFolder);
-         if (di.Exists == false)
+         lock (_instanceCollection)
          {
-            di.Create();
-         }
-         else
-         {
-            foreach (FileInfo fi in di.GetFiles())
+            foreach (ClientInstance instance in _instanceCollection.Values)
             {
-               try
+               // Don't save the UnitInfo object if the contained Project is Unknown
+               if (instance.CurrentUnitInfo.UnitInfoData.ProjectIsUnknown == false)
                {
-                  fi.Delete();
-               }
-               catch (Exception ex)
-               {
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Warning, String.Format("Failed to Clear Cache File '{0}'.", fi.Name), ex);
+                  _unitInfoContainer.Add((UnitInfo)instance.CurrentUnitInfo.UnitInfoData);
                }
             }
          }
 
-         HfmTrace.WriteToHfmConsole(TraceLevel.Info, start);
+         _unitInfoContainer.Write();
       }
 
       #endregion
@@ -1143,10 +1087,17 @@ namespace HFM.Instances
       {
          if (false == _disposed)
          {
-            // clean native resources        
+            // clean native resources
             
             if (disposing)
             {
+               // not really the "correct" place
+               // to do this... but it keeps the
+               // logic out of the UI.
+
+               // Save current work units
+               SaveCurrentUnitInfo();
+               
                // clean managed resources
                _workTimer.Dispose();
                _webTimer.Dispose();
