@@ -235,7 +235,7 @@ namespace HFM.Instances
       /// </summary>
       public void Read()
       {
-         string filePath = Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), DataStoreFilename);
+         string filePath = Path.Combine(_prefs.ApplicationDataFolderPath, DataStoreFilename);
          _data = Deserialize(filePath) ?? new XmlStatsData();
       }
 
@@ -244,7 +244,7 @@ namespace HFM.Instances
       /// </summary>
       public void Write()
       {
-         Serialize(_data, Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), DataStoreFilename));
+         Serialize(_data, Path.Combine(_prefs.ApplicationDataFolderPath, DataStoreFilename));
       }
       
       private static readonly object SerializeLock = typeof(XmlStatsDataContainer);

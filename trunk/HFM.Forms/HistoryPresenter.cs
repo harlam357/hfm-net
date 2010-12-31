@@ -328,7 +328,7 @@ namespace HFM.Forms
       {
          _openFileView.Filter = CsvFilter;
          _openFileView.FileName = Constants.CompletedUnitsCsvFileName;
-         _openFileView.InitialDirectory = _prefs.GetPreference<string>(Preference.ApplicationDataFolderPath);
+         _openFileView.InitialDirectory = _prefs.ApplicationDataFolderPath;
          if (_openFileView.ShowDialog(_view).Equals(DialogResult.OK))
          {
             _completedUnitsReader.CompletedUnitsFilePath = _openFileView.FileName;

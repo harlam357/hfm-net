@@ -36,7 +36,7 @@ namespace HFM.Proteins.Tests
          var mocks = new MockRepository();
          var downloader = mocks.Stub<IProjectSummaryDownloader>();
          var prefs = mocks.DynamicMock<IPreferenceSet>();
-         Expect.Call(prefs.GetPreference<string>(Preference.ApplicationDataFolderPath)).Return(String.Empty).Repeat.Any();
+         Expect.Call(prefs.ApplicationDataFolderPath).Return(String.Empty).Repeat.Any();
          
          mocks.ReplayAll();
          

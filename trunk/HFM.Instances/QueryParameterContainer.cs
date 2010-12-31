@@ -62,7 +62,7 @@ namespace HFM.Instances
       /// </summary>
       public void Read()
       {
-         string filePath = Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), QueryFilename);
+         string filePath = Path.Combine(_prefs.ApplicationDataFolderPath, QueryFilename);
 
          _queryList = Deserialize(filePath);
          if (_queryList == null)
@@ -76,7 +76,7 @@ namespace HFM.Instances
       /// </summary>
       public void Write()
       {
-         Serialize(_queryList, Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), QueryFilename));
+         Serialize(_queryList, Path.Combine(_prefs.ApplicationDataFolderPath, QueryFilename));
       }
 
       private static readonly object SerializeLock = typeof(QueryParameterList);

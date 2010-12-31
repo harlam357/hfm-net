@@ -35,7 +35,6 @@ namespace HFM.Framework
       [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
       public static T GetInstance<T>()
       {
-         //return (T)_container[typeof(T)];
          return _container.Resolve<T>();
       }
 

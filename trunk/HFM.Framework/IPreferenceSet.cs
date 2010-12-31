@@ -26,6 +26,8 @@ namespace HFM.Framework
    {
       string ApplicationPath { get; }
 
+      string ApplicationDataFolderPath { get; }
+
       /// <summary>
       /// Log File Cache Directory
       /// </summary>
@@ -51,10 +53,14 @@ namespace HFM.Framework
       /// </summary>
       Uri StanfordUserUrl { get; }
 
+      void Reset();
+
+      void Upgrade();
+
       /// <summary>
       /// Initialize the Preferences
       /// </summary>
-      bool Initialize();
+      void Initialize();
 
       /// <summary>
       /// Get a Preference of Type T

@@ -277,13 +277,6 @@ namespace HFM.Forms
             fileName = _prefs.GetPreference<string>(Preference.DefaultConfigFile);
          }
 
-         //TODO: Handle command line arguments
-         //if (Program.Args.Length > 0)
-         //{
-         //   // Filename on command line - probably from Explorer
-         //   fileName = Program.Args[0];
-         //}
-
          if (String.IsNullOrEmpty(fileName) == false)
          {
             LoadConfigFile(fileName);
@@ -747,7 +740,7 @@ namespace HFM.Forms
 
       private void mnuHelpHfmDataFiles_Click(object sender, EventArgs e)
       {
-         HandleProcessStartResult(_processStarter.ShowFileExplorer(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath)));
+         HandleProcessStartResult(_processStarter.ShowFileExplorer(_prefs.ApplicationDataFolderPath));
       }
 
       private void mnuHelpHfmGroup_Click(object sender, EventArgs e)

@@ -82,7 +82,7 @@ namespace HFM.Proteins
       public ProteinCollection(IPreferenceSet prefs, IProjectSummaryDownloader downloader)
       {
          _prefs = prefs;
-         _projectInfoLocation = Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), Constants.ProjectInfoFileName);
+         _projectInfoLocation = Path.Combine(_prefs.ApplicationDataFolderPath, Constants.ProjectInfoFileName);
          
          _downloader = downloader;
          _downloader.Dictionary = this;

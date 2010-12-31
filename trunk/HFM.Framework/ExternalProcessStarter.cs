@@ -84,7 +84,7 @@ namespace HFM.Framework
       /// </summary>
       public string ShowHfmLogFile()
       {
-         string logFilePath = Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), Constants.HfmLogFileName);
+         string logFilePath = Path.Combine(_prefs.ApplicationDataFolderPath, Constants.HfmLogFileName);
          string errorMessage = String.Format(CultureInfo.CurrentCulture, 
                "An error occured while attempting to show the HFM.log file.{0}{0}Please check the current Log File Viewer defined in the Preferences",
                Environment.NewLine);

@@ -21,7 +21,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Configuration;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
@@ -50,12 +49,15 @@ namespace HFM.Preferences
       #endregion
 
       #region Properties
+
       public string ApplicationPath
       {
-         get
-         {
-            return Application.StartupPath;
-         }
+         get { return Application.StartupPath; }
+      }
+      
+      public string ApplicationDataFolderPath
+      {
+         get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Constants.ExeName); }
       }
 
       /// <summary>
@@ -63,8 +65,7 @@ namespace HFM.Preferences
       /// </summary>
       public string CacheDirectory
       {
-         get { return Path.Combine(GetPreference<string>(Preference.ApplicationDataFolderPath), 
-                                   GetPreference<string>(Preference.CacheFolder)); }
+         get { return Path.Combine(ApplicationDataFolderPath, GetPreference<string>(Preference.CacheFolder)); }
       }
       
       /// <summary>
@@ -114,46 +115,29 @@ namespace HFM.Preferences
       #endregion
 
       #region Implementation
-      public bool Initialize()
+      
+      public void Reset()
       {
-         SetupDictionary();
+         Settings.Default.Reset();
+      }
 
-         try
-         {
-            // Issue 176
-            Load();
-         }
-         catch (Exception ex)
-         {
-            string filename = HandleConfigurationErrorsException(ex);
-            if (String.IsNullOrEmpty(filename)) throw;
-            
-            File.Delete(filename);
-            var sb = new StringBuilder();
-            sb.AppendLine("HFM.NET has detected that your user settings file has become");
-            sb.AppendLine("corrupted.  This may be due to a crash or improper exiting of");
-            sb.AppendLine("the program.  HFM.NET must reset your user settings in order");
-            sb.AppendLine("to continue.  The program will now exit.  Please restart.");
-            MessageBox.Show(sb.ToString(), PlatformOps.ApplicationNameAndVersion, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            
-            return false;
-         }
+      public void Upgrade()
+      {
+         string appVersionString = PlatformOps.ApplicationVersionWithRevision;
 
-         return true;
+         if (Settings.Default.ApplicationVersion != appVersionString)
+         {
+            Settings.Default.Upgrade();
+            Settings.Default.ApplicationVersion = appVersionString;
+            Settings.Default.Save();
+         }
       }
       
-      private static string HandleConfigurationErrorsException(Exception ex)
+      public void Initialize()
       {
-         var configurationErrorsException = ex as ConfigurationErrorsException;
-         if (configurationErrorsException == null) return null;
-
-         string filename = configurationErrorsException.Filename;
-         if (String.IsNullOrEmpty(filename))
-         {
-            filename = HandleConfigurationErrorsException(ex.InnerException);
-         }
-
-         return filename;
+         SetupDictionary();
+         // Issue 176
+         Load();
       }
       
       /// <summary>
@@ -189,8 +173,8 @@ namespace HFM.Preferences
          if (_prefs[key].DataType == typeof(int))
          {
             var stringValue = value as string;
-            // Issue 189 - Use Default Value if String is Null or Empty
-            ((Metadata<int>) _prefs[key]).Data = String.IsNullOrEmpty(stringValue) ? default(int) : Int32.Parse(stringValue);
+            // Issue 189 - Use default value if string is null or empty
+            ((Metadata<int>)_prefs[key]).Data = String.IsNullOrEmpty(stringValue) ? default(int) : Int32.Parse(stringValue);
             return;
          }
 
@@ -300,7 +284,6 @@ namespace HFM.Preferences
          _prefs.Add(Preference.HistoryFormColumns, new Metadata<StringCollection>());
 
          _prefs.Add(Preference.CacheFolder, new Metadata<string>());
-         _prefs.Add(Preference.ApplicationDataFolderPath, new Metadata<string>());
 
          Debug.WriteLine(String.Format("{0} Execution Time: {1}", HfmTrace.FunctionName, HfmTrace.GetExecTime(start)));
       }
@@ -312,8 +295,6 @@ namespace HFM.Preferences
       {
          DateTime start = HfmTrace.ExecStart;
          var symmetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
-
-         UpgradeUserSettings();
 
          var location = new Point();
          var size = new Size();
@@ -427,23 +408,12 @@ namespace HFM.Preferences
          SetPreference(Preference.HistoryFormColumns, columns);
 
          SetPreference(Preference.CacheFolder, Settings.Default.CacheFolder);
-         SetPreference(Preference.ApplicationDataFolderPath, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Constants.ExeName));
 
          Debug.WriteLine(String.Format("{0} Execution Time: {1}", HfmTrace.FunctionName, HfmTrace.GetExecTime(start)));
       }
 
       #region Load Support Methods
-      private static void UpgradeUserSettings()
-      {
-         string appVersionString = PlatformOps.ApplicationVersionWithRevision;
-
-         if (Settings.Default.ApplicationVersion != appVersionString)
-         {
-            Settings.Default.Upgrade();
-            Settings.Default.ApplicationVersion = appVersionString;
-            Settings.Default.Save();
-         }
-      }
+      
 
       private static void GetFormStateValues(ref Point location, ref Size size, ref StringCollection columns)
       {
@@ -932,6 +902,7 @@ namespace HFM.Preferences
 
          return proxyPass;
       }
+      
       #endregion
       
       #endregion

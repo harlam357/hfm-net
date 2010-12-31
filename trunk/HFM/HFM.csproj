@@ -68,9 +68,11 @@
       <HintPath>..\harlam357-net\net20\bin\Release\harlam357.Windows.Forms.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Windows.Forms" />
@@ -80,6 +82,7 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Classes\Arguments.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">

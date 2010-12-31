@@ -18,6 +18,9 @@
  */
 
 using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -38,7 +41,7 @@ namespace HFM
 {
    static class Program
    {
-      public static string[] Args;
+      private static bool _serviceMode;
 
       /// <summary>
       /// The main entry point for the application.
@@ -46,13 +49,23 @@ namespace HFM
       [STAThread]
       static void Main(string[] args)
       {
-         Args = args;
-
          Application.ApplicationExit += ApplicationExit;
          AppDomain.CurrentDomain.AssemblyResolve += CustomResolve;
 
          Application.EnableVisualStyles();
          Application.SetCompatibleTextRenderingDefault(false);
+         
+         ICollection<Argument> arguments;
+         try
+         {
+            arguments = Arguments.Parse(args);
+         }
+         catch (Exception ex)
+         {
+            //TODO: show usage
+            ShowStartupError(ex, null);
+            return;
+         }
 
          #region Primary Initialization
 
@@ -67,9 +80,7 @@ namespace HFM
          }
          catch (Exception ex)
          {
-            ExceptionDialog.ShowErrorDialog(ex, PlatformOps.ApplicationNameAndVersionWithRevision, Environment.OSVersion.VersionString,
-               "Single Instance Helper Failed to Start.", 
-               Constants.GoogleGroupUrl, true);
+            ShowStartupError(ex, "Single Instance Helper failed to start.");
             return;
          }
 
@@ -80,9 +91,7 @@ namespace HFM
          }
          catch (Exception ex)
          {
-            ExceptionDialog.ShowErrorDialog(ex, PlatformOps.ApplicationNameAndVersionWithRevision, Environment.OSVersion.VersionString,
-               "Windsor Container Failed to Initialize.  Either components are missing or the HFM.exe.config file is corrupt.",
-               Constants.GoogleGroupUrl, true);
+            ShowStartupError(ex, "Windsor Container failed to initialize.  Either components are missing or the HFM.exe.config file is corrupt.");
             return;
          }
 
@@ -90,25 +99,23 @@ namespace HFM
          try
          {
             prefs = InstanceProvider.GetInstance<IPreferenceSet>();
-            if (prefs.Initialize() == false) return;
+            SetupTraceListeners(prefs, InstanceProvider.GetInstance<IMessagesView>());
          }
          catch (Exception ex)
          {
-            ExceptionDialog.ShowErrorDialog(ex, PlatformOps.ApplicationNameAndVersionWithRevision, Environment.OSVersion.VersionString,
-               "Preferences Failed to Initialize.  The user.config file is likely corrupt.",
-               Constants.GoogleGroupUrl, true);
+            ShowStartupError(ex, "Logging failed to initialize.");
             return;
          }
 
          try
          {
-            SetupTraceListeners(prefs, InstanceProvider.GetInstance<IMessagesView>());
+            SetupUserPreferences(arguments, prefs);
+            // Get the actual TraceLevel from the preferences
+            TraceLevelSwitch.Instance.Level = (TraceLevel)prefs.GetPreference<int>(Preference.MessageLevel);
          }
          catch (Exception ex)
          {
-            ExceptionDialog.ShowErrorDialog(ex, PlatformOps.ApplicationNameAndVersionWithRevision, Environment.OSVersion.VersionString,
-               "Logging Failed to Initialize.",
-               Constants.GoogleGroupUrl, true);
+            ShowStartupError(ex, "User preferences failed to initialize.  The user.config file is likely corrupt.  Start with the '/r' switch to reset the user preferences.");
             return;
          }
 
@@ -120,13 +127,11 @@ namespace HFM
          try
          {
             var database = InstanceProvider.GetInstance<IUnitInfoDatabase>();
-            database.DatabaseFilePath = Path.Combine(prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), Constants.SqLiteFilename);
+            database.DatabaseFilePath = Path.Combine(prefs.ApplicationDataFolderPath, Constants.SqLiteFilename);
          }
          catch (Exception ex)
          {
-            ExceptionDialog.ShowErrorDialog(ex, PlatformOps.ApplicationNameAndVersionWithRevision, Environment.OSVersion.VersionString,
-               "UnitInfo Database Failed to Initialize.",
-               Constants.GoogleGroupUrl, true);
+            ShowStartupError(ex, "UnitInfo Database failed to initialize.");
             return;
          }
          
@@ -136,9 +141,7 @@ namespace HFM
          }
          catch (Exception ex)
          {
-            ExceptionDialog.ShowErrorDialog(ex, PlatformOps.ApplicationNameAndVersionWithRevision, Environment.OSVersion.VersionString,
-               "Failed to create or clear the data cache folder.",
-               Constants.GoogleGroupUrl, true);
+            ShowStartupError(ex, "Failed to create or clear the data cache folder.");
             return;
          }
 
@@ -164,9 +167,7 @@ namespace HFM
          }
          catch (Exception ex)
          {
-            ExceptionDialog.ShowErrorDialog(ex, PlatformOps.ApplicationNameAndVersionWithRevision, Environment.OSVersion.VersionString,
-               "Primary UI Failed to Initialize.",
-               Constants.GoogleGroupUrl, true);
+            ShowStartupError(ex, "Primary UI failed to initialize.");
             return;
          }
 
@@ -176,9 +177,7 @@ namespace HFM
          }
          catch (Exception ex)
          {
-            ExceptionDialog.ShowErrorDialog(ex, PlatformOps.ApplicationNameAndVersionWithRevision, Environment.OSVersion.VersionString,
-               "Single Instance IPC Channel Failed to Register.",
-               Constants.GoogleGroupUrl, true);
+            ShowStartupError(ex, "Single Instance IPC channel failed to register.");
             return;
          }
 
@@ -195,6 +194,52 @@ namespace HFM
          finally
          {
             SingleInstanceHelper.Stop();
+         }
+      }
+      
+      private static void SetupUserPreferences(IEnumerable<Argument> arguments, IPreferenceSet prefs)
+      {
+         var argument = arguments.FirstOrDefault(x => x.Type.Equals(ArgumentType.ResetPrefs));
+         if (argument != null)
+         {
+            var userConfig = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
+            if (userConfig.HasFile)
+            {
+               File.Delete(userConfig.FilePath);
+            }
+            // Reset
+            prefs.Reset();
+         }
+         else
+         {
+            // Upgrade
+            prefs.Upgrade();
+         }
+         // Init
+         prefs.Initialize();
+      }
+
+      private static void ShowStartupError(Exception ex, string message)
+      {
+         if (_serviceMode)
+         {
+            Trace.WriteLine(PlatformOps.ApplicationNameAndVersionWithRevision);
+            Trace.WriteLine(String.Empty);
+            Trace.WriteLine(Environment.OSVersion.VersionString);
+            Trace.WriteLine(String.Empty);
+            if (String.IsNullOrEmpty(message) == false)
+            {
+               Trace.WriteLine(message);
+               Trace.WriteLine(String.Empty);
+            }
+            Trace.WriteLine(ex);
+            Trace.WriteLine(String.Empty);
+            Trace.WriteLine(Constants.GoogleGroupUrl);
+         }
+         else
+         {
+            ExceptionDialog.ShowErrorDialog(ex, PlatformOps.ApplicationNameAndVersionWithRevision, Environment.OSVersion.VersionString,
+               message, Constants.GoogleGroupUrl, true);
          }
       }
 
@@ -238,7 +283,7 @@ namespace HFM
       {
          DateTime start = HfmTrace.ExecStart;
 
-         string cacheFolder = Path.Combine(prefs.GetPreference<string>(Preference.ApplicationDataFolderPath),
+         string cacheFolder = Path.Combine(prefs.ApplicationDataFolderPath,
                                            prefs.GetPreference<string>(Preference.CacheFolder));
 
          var di = new DirectoryInfo(cacheFolder);
@@ -270,7 +315,7 @@ namespace HFM
       private static void SetupTraceListeners(IPreferenceSet prefs, IMessagesView messagesView)
       {
          // Ensure the HFM User Application Data Folder Exists
-         var applicationDataFolderPath = prefs.GetPreference<string>(Preference.ApplicationDataFolderPath);
+         var applicationDataFolderPath = prefs.ApplicationDataFolderPath;
          if (Directory.Exists(applicationDataFolderPath) == false)
          {
             Directory.CreateDirectory(applicationDataFolderPath);
@@ -294,16 +339,10 @@ namespace HFM
          Trace.Listeners.Add(listener);
          Trace.AutoFlush = true;
 
-         // Set Level to Warning to catch any errors that come from loading the preferences
-         TraceLevelSwitch.Instance.Level = TraceLevel.Warning;
-
          HfmTrace.Instance.TextMessage += ((sender, e) => messagesView.AddMessage(e.Message));
          HfmTrace.WriteToHfmConsole(String.Empty);
          HfmTrace.WriteToHfmConsole(String.Format("Starting - HFM.NET v{0}", PlatformOps.ApplicationVersionWithRevision));
          HfmTrace.WriteToHfmConsole(String.Empty);
-
-         // Get the actual TraceLevel from the preferences
-         TraceLevelSwitch.Instance.Level = (TraceLevel)prefs.GetPreference<int>(Preference.MessageLevel);
       }
    }
 }

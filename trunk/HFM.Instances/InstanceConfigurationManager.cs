@@ -181,7 +181,7 @@ namespace HFM.Instances
          var serializers = new List<IClientInstanceSettingsSerializer>();
          serializers.Add(new ClientInstanceXmlSerializer());
 
-         var di = new DirectoryInfo(Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), Constants.PluginsFolderName));
+         var di = new DirectoryInfo(Path.Combine(_prefs.ApplicationDataFolderPath, Constants.PluginsFolderName));
          if (di.Exists)
          {
             var files = di.GetFiles("*.dll");

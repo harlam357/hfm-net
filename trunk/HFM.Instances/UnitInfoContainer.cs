@@ -132,7 +132,7 @@ namespace HFM.Instances
       /// </summary>
       public void Read()
       {
-         string filePath = Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), Constants.UnitInfoCacheFileName);
+         string filePath = Path.Combine(_prefs.ApplicationDataFolderPath, Constants.UnitInfoCacheFileName);
          _collection = Deserialize(filePath) ?? new UnitInfoCollection();
       }
 
@@ -141,7 +141,7 @@ namespace HFM.Instances
       /// </summary>
       public void Write()
       {
-         Serialize(_collection, Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), Constants.UnitInfoCacheFileName));
+         Serialize(_collection, Path.Combine(_prefs.ApplicationDataFolderPath, Constants.UnitInfoCacheFileName));
       }
 
       private static readonly object SerializeLock = typeof(UnitInfoCollection);

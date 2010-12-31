@@ -45,7 +45,7 @@ namespace HFM.Proteins.Tests
 
          _prefs = _mocks.DynamicMock<IPreferenceSet>();
          Expect.Call(_prefs.GetPreference<bool>(Preference.UseProxy)).Return(false).Repeat.Any();
-         Expect.Call(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath)).Return(String.Empty).Repeat.Any();
+         Expect.Call(_prefs.ApplicationDataFolderPath).Return(String.Empty).Repeat.Any();
       }
 
       [Test]

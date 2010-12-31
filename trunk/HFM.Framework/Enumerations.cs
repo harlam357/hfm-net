@@ -135,7 +135,6 @@ namespace HFM.Framework
       HistoryFormLocation,
       HistoryFormSize,
       HistoryFormColumns,
-      CacheFolder,
-      ApplicationDataFolderPath 
+      CacheFolder
    }
 }

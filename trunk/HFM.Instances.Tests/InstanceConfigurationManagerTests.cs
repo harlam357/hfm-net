@@ -43,7 +43,7 @@ namespace HFM.Instances.Tests
          _mocks = new MockRepository();
       
          _prefs = _mocks.DynamicMock<IPreferenceSet>();
-         Expect.Call(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath)).Return(String.Empty);
+         Expect.Call(_prefs.ApplicationDataFolderPath).Return(String.Empty);
          _instanceFactory = _mocks.DynamicMock<IClientInstanceFactory>();
          _unitInfoContainer = _mocks.DynamicMock<IUnitInfoContainer>();
       }

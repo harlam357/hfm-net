@@ -86,7 +86,7 @@ namespace HFM.Forms.Tests
          // use a mock for this test
          _model = _mocks.DynamicMock<IHistoryPresenterModel>();
       
-         Expect.Call(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath)).Return(String.Empty).Repeat.Any();
+         Expect.Call(_prefs.ApplicationDataFolderPath).Return(String.Empty).Repeat.Any();
          Expect.Call(() => _view.AttachPresenter(null)).IgnoreArguments();
          Expect.Call(() => _model.LoadPreferences());
          Expect.Call(() => _view.DataBindModel(_model));

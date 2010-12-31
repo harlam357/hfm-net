@@ -455,7 +455,7 @@ namespace HFM.Instances
       /// </summary>
       public void Read(bool merge)
       {
-         string filePath = Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), Constants.BenchmarkCacheFileName);
+         string filePath = Path.Combine(_prefs.ApplicationDataFolderPath, Constants.BenchmarkCacheFileName);
 
          ProteinBenchmarkCollection collection = Deserialize(filePath);
 
@@ -473,7 +473,7 @@ namespace HFM.Instances
       /// </summary>
       public void Write()
       {
-         Serialize(_collection, Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), Constants.BenchmarkCacheFileName));
+         Serialize(_collection, Path.Combine(_prefs.ApplicationDataFolderPath, Constants.BenchmarkCacheFileName));
       }
 
       /// <summary>
@@ -489,7 +489,7 @@ namespace HFM.Instances
       /// </summary>
       public void ReadXml(string filePath, bool merge)
       {
-         ProteinBenchmarkCollection collection = DeserializeFromXml(Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), filePath));
+         ProteinBenchmarkCollection collection = DeserializeFromXml(Path.Combine(_prefs.ApplicationDataFolderPath, filePath));
          
          //_collection = merge ? MergeCollections(_collection, collection) : collection;
          _collection = collection;
@@ -505,7 +505,7 @@ namespace HFM.Instances
       /// </summary>
       public void WriteXml(string filePath)
       {
-         SerializeToXml(_collection, Path.Combine(_prefs.GetPreference<string>(Preference.ApplicationDataFolderPath), filePath));
+         SerializeToXml(_collection, Path.Combine(_prefs.ApplicationDataFolderPath, filePath));
       }
       
       ///// <summary>
