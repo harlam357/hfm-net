@@ -118,6 +118,7 @@ namespace HFM.Preferences
       
       public void Reset()
       {
+         HfmTrace.WriteToHfmConsole("Resetting user preferences...");
          Settings.Default.Reset();
       }
 

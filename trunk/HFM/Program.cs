@@ -41,8 +41,6 @@ namespace HFM
 {
    static class Program
    {
-      private static bool _serviceMode;
-
       /// <summary>
       /// The main entry point for the application.
       /// </summary>
@@ -60,7 +58,7 @@ namespace HFM
          {
             arguments = Arguments.Parse(args);
          }
-         catch (Exception ex)
+         catch (FormatException ex)
          {
             //TODO: show usage
             ShowStartupError(ex, null);
@@ -109,7 +107,10 @@ namespace HFM
 
          try
          {
-            SetupUserPreferences(arguments, prefs);
+            if (!SetupUserPreferences(arguments, prefs))
+            {
+               return;
+            }
             // Get the actual TraceLevel from the preferences
             TraceLevelSwitch.Instance.Level = (TraceLevel)prefs.GetPreference<int>(Preference.MessageLevel);
          }
@@ -197,7 +198,7 @@ namespace HFM
          }
       }
       
-      private static void SetupUserPreferences(IEnumerable<Argument> arguments, IPreferenceSet prefs)
+      private static bool SetupUserPreferences(IEnumerable<Argument> arguments, IPreferenceSet prefs)
       {
          var argument = arguments.FirstOrDefault(x => x.Type.Equals(ArgumentType.ResetPrefs));
          if (argument != null)
@@ -209,38 +210,22 @@ namespace HFM
             }
             // Reset
             prefs.Reset();
+
+            return false;
          }
-         else
-         {
-            // Upgrade
-            prefs.Upgrade();
-         }
+         
+         // Upgrade
+         prefs.Upgrade();
          // Init
          prefs.Initialize();
+
+         return true;
       }
 
       private static void ShowStartupError(Exception ex, string message)
       {
-         if (_serviceMode)
-         {
-            Trace.WriteLine(PlatformOps.ApplicationNameAndVersionWithRevision);
-            Trace.WriteLine(String.Empty);
-            Trace.WriteLine(Environment.OSVersion.VersionString);
-            Trace.WriteLine(String.Empty);
-            if (String.IsNullOrEmpty(message) == false)
-            {
-               Trace.WriteLine(message);
-               Trace.WriteLine(String.Empty);
-            }
-            Trace.WriteLine(ex);
-            Trace.WriteLine(String.Empty);
-            Trace.WriteLine(Constants.GoogleGroupUrl);
-         }
-         else
-         {
-            ExceptionDialog.ShowErrorDialog(ex, PlatformOps.ApplicationNameAndVersionWithRevision, Environment.OSVersion.VersionString,
-               message, Constants.GoogleGroupUrl, true);
-         }
+         ExceptionDialog.ShowErrorDialog(ex, PlatformOps.ApplicationNameAndVersionWithRevision, Environment.OSVersion.VersionString,
+            message, Constants.GoogleGroupUrl, true);
       }
 
       private static void ApplicationExit(object sender, EventArgs e)

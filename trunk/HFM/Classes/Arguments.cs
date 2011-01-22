@@ -31,21 +31,22 @@ namespace HFM.Classes
 
    internal static class Arguments
    {
-      private const string ServiceArg = "/s";
       private const string ResetPrefsArg = "/r";
       private const string OpenFileArg = "/f";
    
-      public static ICollection<Argument> Parse(IList<string> args)
+      /// <summary>
+      /// Parse Raw Arguments.
+      /// </summary>
+      /// <param name="args">Raw Argument Array</param>
+      /// <returns>Argument Collection</returns>
+      /// <exception cref="FormatException">Throws if a supplied raw argument is malformed.</exception>
+      internal static ICollection<Argument> Parse(IList<string> args)
       {
          var arguments = new List<Argument>();
       
          for (int i = 0; i < args.Count; i++)
          {
-            if (args[i] == ServiceArg)
-            {
-               arguments.Add(new Argument { Type = ArgumentType.Service });
-            }
-            else if (args[i] == ResetPrefsArg)
+            if (args[i] == ResetPrefsArg)
             {
                arguments.Add(new Argument { Type = ArgumentType.ResetPrefs });
             }
@@ -56,9 +57,9 @@ namespace HFM.Classes
                {
                   data = args[++i];
                }
-               if (data.Length == 0 || data.StartsWith("-"))
+               if (data.Length == 0 || data.StartsWith("/"))
                {
-                  throw new ArgumentException("Missing file name argument.");
+                  throw new FormatException("Missing file name argument.");
                }
                arguments.Add(new Argument { Type = ArgumentType.OpenFile, Data = data });
             }
