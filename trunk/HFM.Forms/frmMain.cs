@@ -25,7 +25,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -43,32 +42,76 @@ using HFM.Framework.DataTypes;
 
 namespace HFM.Forms
 {
+   public interface IMainView : IWin32Window
+   {
+      FormWindowState WindowState { get; set; }
+
+      bool ShowInTaskbar { get; set; }
+
+      Icon Icon { get; }
+
+      string Text { get; set; }
+
+      bool Visible { get; set; }
+
+      Point Location { get; set; }
+
+      FormStartPosition StartPosition { get; set; }
+
+      Size Size { get; set; }
+
+      Rectangle RestoreBounds { get; }
+
+      bool LogFileVisible { get; }
+
+      bool QueueVisible { get; }
+
+      DataGridView DataGridView { get; }
+
+      SplitContainer SplitContainer { get; }
+
+      NotifyIcon NotifyIcon { get; }
+
+      ContextMenuStrip NotifyMenu { get; }
+
+      void Initialize(MainPresenter presenter);
+      
+      //TODO: Move these methods to presenter
+      void ApplySort();
+
+      void SelectCurrentRowKey();
+
+      void ShowHideLogWindow(bool show);
+
+      void ShowHideQueue(bool show);
+   }
+
    // ReSharper disable InconsistentNaming
-   public partial class frmMain : FormWrapper
+   public partial class frmMain : FormWrapper, IMainView
    {
       #region Fields
       
       private static readonly string FormTitle = String.Format("HFM.NET v{0} - Beta", PlatformOps.ApplicationVersion);
+
+      private MainPresenter _presenter;
       
-      /// <summary>
-      /// Holds the state of the window before it is hidden (minimise to tray behaviour)
-      /// </summary>
-      private FormWindowState _originalState;
+      public bool LogFileVisible
+      {
+         get { return txtLogFile.Visible; }
+      }
+      
+      public bool QueueVisible
+      {
+         get { return queueControl.Visible; }
+      }
 
-      /// <summary>
-      /// Holds current Sort Column Name
-      /// </summary>
-      private string _sortColumnName = String.Empty;
+      public DataGridView DataGridView { get { return dataGridView1; } }
+      
+      public SplitContainer SplitContainer { get { return splitContainer1; } }
+      
+      public NotifyIcon NotifyIcon { get; private set; }
 
-      /// <summary>
-      /// Holds current Sort Column Order
-      /// </summary>
-      private SortOrder _sortColumnOrder = SortOrder.None;
-
-      /// <summary>
-      /// Notify Icon for frmMain
-      /// </summary>
-      private NotifyIcon _notifyIcon;
+      public ContextMenuStrip NotifyMenu { get { return notifyMenu; } }
       
       /// <summary>
       /// Work Unit History Presentation
@@ -89,8 +132,6 @@ namespace HFM.Forms
 
       private readonly IProteinBenchmarkContainer _benchmarkContainer;
 
-      private readonly IInstanceConfigurationManager _configurationManager;
-
       private readonly IExternalProcessStarter _processStarter;
 
       private readonly IUpdateLogic _updateLogic;
@@ -108,7 +149,7 @@ namespace HFM.Forms
       /// </summary>
       public frmMain(IPreferenceSet prefs, IMessagesView messagesView, IXmlStatsDataContainer statsData,
                      IInstanceCollection instanceCollection, IProteinCollection proteinCollection, 
-                     IProteinBenchmarkContainer benchmarkContainer, IInstanceConfigurationManager configurationManager,
+                     IProteinBenchmarkContainer benchmarkContainer, 
                      IExternalProcessStarter processStarter, IUpdateLogic updateLogic)
       {
          _prefs = prefs;
@@ -117,7 +158,6 @@ namespace HFM.Forms
          _clientInstances = instanceCollection;
          _proteinCollection = proteinCollection;
          _benchmarkContainer = benchmarkContainer;
-         _configurationManager = configurationManager;
          _processStarter = processStarter;
          _updateLogic = updateLogic;
          _updateLogic.Owner = this;
@@ -130,12 +170,14 @@ namespace HFM.Forms
          base.Text = FormTitle;
       }
 
-      public void Initialize()
+      public void Initialize(MainPresenter presenter)
       {
+         _presenter = presenter;
+      
          // Manually Create the Columns - Issue 41
          DataGridViewWrapper.SetupDataGridViewColumns(dataGridView1);
          // Restore Form Preferences (MUST BE DONE AFTER DataGridView Columns are Setup)
-         RestoreFormPreferences();
+         _presenter.RestoreFormPreferences();
          SetupDataGridView();
 
          // Give the Queue Control access to the Protein Collection
@@ -191,7 +233,7 @@ namespace HFM.Forms
 
       private void SubscribeToPreferenceSetEvents()
       {
-         _prefs.FormShowStyleSettingsChanged += delegate { SetFormShowStyle(); };
+         _prefs.FormShowStyleSettingsChanged += delegate { _presenter.SetViewShowStyle(); };
          _prefs.ShowUserStatsChanged += delegate { UserStatsEnabledChanged(); };
          _prefs.MessageLevelChanged += MessageLevelChanged;
          _prefs.ColorLogFileChanged += ColorLogFileChanged;
@@ -232,6 +274,7 @@ namespace HFM.Forms
          }
       }
 
+      //TODO: Move to Presenter
       public void SecondInstanceStarted(string[] args)
       {
          if (InvokeRequired)
@@ -242,7 +285,7 @@ namespace HFM.Forms
       
          if (WindowState == FormWindowState.Minimized)
          {
-            WindowState = _originalState;
+            WindowState = _presenter.OriginalState;
          }
          else
          {
@@ -259,151 +302,25 @@ namespace HFM.Forms
 
       private void frmMain_Shown(object sender, EventArgs e)
       {
-         if (_prefs.GetPreference<bool>(Preference.RunMinimized))
-         {
-            WindowState = FormWindowState.Minimized;
-         }
-      
-         string fileName = String.Empty;
-
-         if (_prefs.GetPreference<bool>(Preference.UseDefaultConfigFile))
-         {
-            fileName = _prefs.GetPreference<string>(Preference.DefaultConfigFile);
-         }
-
-         if (String.IsNullOrEmpty(fileName) == false)
-         {
-            LoadConfigFile(fileName);
-         }
+         NotifyIcon = new NotifyIcon(components);
          
-         // Add the Index Changed Handler here after everything is shown
-         dataGridView1.ColumnDisplayIndexChanged += DataGridViewColumnDisplayIndexChanged;
-         // Then run it once to ensure the last column is set to Fill
-         DataGridViewColumnDisplayIndexChanged(null, null);
-         // Add the Splitter Moved Handler here after everything is shown - Issue 8
-         splitContainer1.SplitterMoved += SplitContainerSplitterMoved;
-
-         _notifyIcon = new NotifyIcon(components);
-         
-         _notifyIcon.BalloonTipIcon = ToolTipIcon.Info;
-         _notifyIcon.ContextMenuStrip = notifyMenu;
-         _notifyIcon.Icon = Icon;
-         _notifyIcon.Text = base.Text;
-         _notifyIcon.DoubleClick += NotifyIconDoubleClick;
-         SetFormShowStyle();
-
-         if (_prefs.GetPreference<bool>(Preference.StartupCheckForUpdate))
-         {
-            _updateLogic.CheckForUpdate();
-         }
+         _presenter.ViewShown();
       }
 
       private void frmMain_Resize(object sender, EventArgs e)
       {
-         if (WindowState != FormWindowState.Minimized)
-         {
-            _originalState = WindowState;
-            // ReApply Sort when restoring from the sys tray - Issue 32
-            if (ShowInTaskbar == false)
-            {
-               ApplySort();
-            }
-         }
-         
-         SetFormShowStyle();
-         
-         // When the log file window (panel) is collapsed, get the split location
-         // changes based on the height of Panel1 - Issue 8
-         if (Visible && splitContainer1.Panel2Collapsed)
-         {
-            _prefs.SetPreference(Preference.FormSplitLocation, splitContainer1.Panel1.Height);
-         }
+         _presenter.ViewResize();
       }
 
       private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
       {
-         if (CanContinueDestructiveOp(sender, e) == false)
-         {
-            e.Cancel = true;
-            return;
-         }
-
-         SaveColumnSettings();
-         SaveSortColumn();
-
-         // Save location and size data
-         // RestoreBounds remembers normal position if minimized or maximized
-         if (WindowState == FormWindowState.Normal)
-         {
-            _prefs.SetPreference(Preference.FormLocation, Location);
-            _prefs.SetPreference(Preference.FormSize, Size);
-         }
-         else
-         {
-            _prefs.SetPreference(Preference.FormLocation, RestoreBounds.Location);
-            _prefs.SetPreference(Preference.FormSize, RestoreBounds.Size);
-         }
-
-         _prefs.SetPreference(Preference.FormLogVisible, txtLogFile.Visible);
-         _prefs.SetPreference(Preference.QueueViewerVisible, queueControl.Visible);
-
-         CheckForAndFireUpdateProcess();
-      }
-      
-      private void CheckForAndFireUpdateProcess()
-      {
-         if (String.IsNullOrEmpty(_updateLogic.UpdateFilePath) == false)
-         {
-            HfmTrace.WriteToHfmConsole(String.Format(CultureInfo.CurrentCulture,
-               "Firing update file '{0}'...", _updateLogic.UpdateFilePath));
-            try
-            {
-               Process.Start(_updateLogic.UpdateFilePath);
-            }
-            catch (Exception ex)
-            {
-               HfmTrace.WriteToHfmConsole(ex);
-               string message = String.Format(CultureInfo.CurrentCulture,
-                                              "Update process failed to start with the following error:{0}{0}{1}",
-                                              Environment.NewLine, ex.Message);
-               MessageBox.Show(this, message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-         }
-      }
-
-      private void SplitContainerSplitterMoved(object sender, SplitterEventArgs e)
-      {
-         // When the log file window (Panel2) is visible, this event will fire.
-         // Update the split location directly from the split panel control. - Issue 8
-         _prefs.SetPreference(Preference.FormSplitLocation, splitContainer1.SplitterDistance);
-         _prefs.Save();
+         e.Cancel = _presenter.ViewClosing();
       }
       
       #endregion
       
       #region Data Grid View Handlers
       
-      private void DataGridViewColumnDisplayIndexChanged(object sender, DataGridViewColumnEventArgs e)
-      {
-         if (dataGridView1.Columns.Count == DataGridViewWrapper.NumberOfDisplayFields)
-         {
-            foreach (DataGridViewColumn column in dataGridView1.Columns)
-            {
-               if (column.DisplayIndex < dataGridView1.Columns.Count - 1)
-               {
-                  column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-               }
-               else
-               {
-                  column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-               }
-            }
-
-            SaveColumnSettings(); // Save Column Settings - Issue 73
-            _prefs.Save();
-         }
-      }
-
       private void dataGridView1_SelectionChanged(object sender, EventArgs e)
       {
          _clientInstances.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
@@ -529,13 +446,7 @@ namespace HFM.Forms
 
       private void dataGridView1_Sorted(object sender, EventArgs e)
       {
-         _sortColumnName = dataGridView1.SortedColumn.Name;
-         _sortColumnOrder = dataGridView1.SortOrder;
-
-         SaveSortColumn(); // Save Column Sort Order - Issue 73
-         _prefs.Save();
-
-         SelectCurrentRowKey();
+         _presenter.DataGridViewSorted();
       }
 
       private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
@@ -582,84 +493,22 @@ namespace HFM.Forms
       
       private void mnuFileNew_Click(object sender, EventArgs e)
       {
-         if (_clientInstances.RetrievalInProgress)
-         {
-            MessageBox.Show(this, "Retrieval in progress... please wait to create a new config file.", 
-               Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return;
-         }
-
-         if (CanContinueDestructiveOp(sender, e))
-         {
-            _clientInstances.Clear();
-         }
+         _presenter.FileNewClick();
       }
 
       private void mnuFileOpen_Click(object sender, EventArgs e)
       {
-         if (_clientInstances.RetrievalInProgress)
-         {
-            MessageBox.Show(this, "Retrieval in progress... please wait to open another config file.",
-               Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return;
-         }
-
-         if (CanContinueDestructiveOp(sender, e))
-         {
-            openConfigDialog.DefaultExt = _configurationManager.ConfigFileExtension;
-            openConfigDialog.Filter = _configurationManager.FileTypeFilters;
-            openConfigDialog.FileName = _configurationManager.ConfigFilename;
-            openConfigDialog.RestoreDirectory = true;
-            if (openConfigDialog.ShowDialog() == DialogResult.OK)
-            {
-               LoadConfigFile(openConfigDialog.FileName, openConfigDialog.FilterIndex);
-            }
-         }
+         _presenter.FileOpenClick();
       }
 
       private void mnuFileSave_Click(object sender, EventArgs e)
       {
-         if (_configurationManager.HasConfigFilename == false)
-         {
-            mnuFileSaveas_Click(sender, e);
-         }
-         else
-         {
-            try
-            {
-               _clientInstances.WriteConfigFile();
-            }
-            catch (Exception ex)
-            {
-               HfmTrace.WriteToHfmConsole(ex);
-               MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture,
-                  "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message),
-                  Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-         }
+         _presenter.FileSaveClick();
       }
 
       private void mnuFileSaveas_Click(object sender, EventArgs e)
       {
-         // No Config File and no Instances, stub out
-         if (_configurationManager.HasConfigFilename == false && _clientInstances.HasInstances == false) return;
-      
-         saveConfigDialog.DefaultExt = _configurationManager.ConfigFileExtension;
-         saveConfigDialog.Filter = _configurationManager.FileTypeFilters;
-         if (saveConfigDialog.ShowDialog() == DialogResult.OK)
-         {
-            try
-            {
-               _clientInstances.WriteConfigFile(saveConfigDialog.FileName, saveConfigDialog.FilterIndex); // Issue 75
-            }
-            catch (Exception ex)
-            {
-               HfmTrace.WriteToHfmConsole(ex);
-               MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture,
-                  "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message),
-                  Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-         }
+         _presenter.FileSaveAsClick();
       }
 
       private void mnuFileQuit_Click(object sender, EventArgs e)
@@ -898,7 +747,7 @@ namespace HFM.Forms
          ShowHideQueue(!queueControl.Visible);
       }
       
-      private void ShowHideQueue(bool show)
+      public void ShowHideQueue(bool show)
       {
          if (show == false)
          {
@@ -1174,7 +1023,7 @@ namespace HFM.Forms
          return null;
       }
       
-      private void SelectCurrentRowKey()
+      public void SelectCurrentRowKey()
       {
          int row = _displayBindingSource.Find("Name", dataGridView1.CurrentRowKey);
          if (row > -1 && row < dataGridView1.Rows.Count)
@@ -1187,7 +1036,7 @@ namespace HFM.Forms
       /// <summary>
       /// Apply Sort to Data Grid View
       /// </summary>
-      private void ApplySort()
+      public void ApplySort()
       {
          if (InvokeRequired)
          {
@@ -1198,19 +1047,19 @@ namespace HFM.Forms
             dataGridView1.FreezeSorted = true;
             
             // if we have a column name and a valid sort order
-            if (!(String.IsNullOrEmpty(_sortColumnName)) && 
-                !(_sortColumnOrder.Equals(SortOrder.None)))
+            if (!(String.IsNullOrEmpty(_presenter.SortColumnName)) &&
+                !(_presenter.SortColumnOrder.Equals(SortOrder.None)))
             {
                // check for the column
-               DataGridViewColumn column = dataGridView1.Columns[_sortColumnName];
+               DataGridViewColumn column = dataGridView1.Columns[_presenter.SortColumnName];
                if (column != null)
                {
-                  ListSortDirection sortDirection = _sortColumnOrder.Equals(SortOrder.Ascending)
+                  ListSortDirection sortDirection = _presenter.SortColumnOrder.Equals(SortOrder.Ascending)
                                                        ? ListSortDirection.Ascending
                                                        : ListSortDirection.Descending;
 
                   dataGridView1.Sort(column, sortDirection);
-                  dataGridView1.SortedColumn.HeaderCell.SortGlyphDirection = _sortColumnOrder;
+                  dataGridView1.SortedColumn.HeaderCell.SortGlyphDirection = _presenter.SortColumnOrder;
                }
             }
 
@@ -1253,14 +1102,14 @@ namespace HFM.Forms
          }
          
          // make sure the object has been created
-         if (_notifyIcon != null)
+         if (NotifyIcon != null)
          {
             if (val.Length > 64)
             {
                //if string is too long, remove the word Clients
                val = val.Replace("Clients", String.Empty);
             }
-            _notifyIcon.Text = val;
+            NotifyIcon.Text = val;
          }
       }
 
@@ -1298,178 +1147,24 @@ namespace HFM.Forms
 
       #region System Tray Icon Routines
 
-      private void NotifyIconDoubleClick(object sender, EventArgs e)
-      {
-         if (WindowState == FormWindowState.Minimized)
-         {
-            WindowState = _originalState;
-         }
-         else
-         {
-            _originalState = WindowState;
-            WindowState = FormWindowState.Minimized;
-         }
-      }
-
       private void mnuNotifyRestore_Click(object sender, EventArgs e)
       {
-         if (WindowState == FormWindowState.Minimized)
-         {
-            WindowState = _originalState;
-         }
-         else if (WindowState == FormWindowState.Maximized)
-         {
-            WindowState = FormWindowState.Normal;
-         }
+         _presenter.NotifyIconRestoreClick();
       }
 
       private void mnuNotifyMinimize_Click(object sender, EventArgs e)
       {
-         if (WindowState != FormWindowState.Minimized)
-         {
-            _originalState = WindowState;
-            WindowState = FormWindowState.Minimized;
-         }
+         _presenter.NotifyIconMinimizeClick();
       }
 
       private void mnuNotifyMaximize_Click(object sender, EventArgs e)
       {
-         if (WindowState != FormWindowState.Maximized)
-         {
-            WindowState = FormWindowState.Maximized;
-            _originalState = WindowState;
-         }
+         _presenter.NotifyIconMaximizeClick();
       }
 
       #endregion
 
       #region Helper Routines
-
-      private void RestoreFormPreferences()
-      {
-         //TODO: Would like to do this here in lieu of in frmMain_Shown() event.
-         // There is some drawing error that if Minimized here, the first time the
-         // Form is restored from the system tray, the DataGridView is drawn with
-         // a big black box on the right hand side.  Like it didn't get initialized
-         // properly when the Form was created.
-         //if (Prefs.RunMinimized)
-         //{
-         //   WindowState = FormWindowState.Minimized;
-         //}
-
-         // Restore state data
-         var location = _prefs.GetPreference<Point>(Preference.FormLocation);
-         var size = _prefs.GetPreference<Size>(Preference.FormSize);
-
-         if (location.X != 0 && location.Y != 0)
-         {
-            // Set StartPosition to manual
-            StartPosition = FormStartPosition.Manual;
-            Location = location;
-         }
-         if (size.Width != 0 && size.Height != 0)
-         {
-            if (_prefs.GetPreference<bool>(Preference.FormLogVisible) == false)
-            {
-               size = new Size(size.Width, size.Height + _prefs.GetPreference<int>(Preference.FormLogWindowHeight));
-            }
-            Size = size;
-            splitContainer1.SplitterDistance = _prefs.GetPreference<int>(Preference.FormSplitLocation);
-         }
-
-         if (_prefs.GetPreference<bool>(Preference.FormLogVisible) == false)
-         {
-            ShowHideLogWindow(false);
-         }
-
-         if (_prefs.GetPreference<bool>(Preference.QueueViewerVisible) == false)
-         {
-            ShowHideQueue(false);
-         }
-
-         //if (Prefs.FormSortColumn != String.Empty &&
-         //    Prefs.FormSortOrder != SortOrder.None)
-         //{
-            _sortColumnName = _prefs.GetPreference<string>(Preference.FormSortColumn);
-            _sortColumnOrder = _prefs.GetPreference<SortOrder>(Preference.FormSortOrder);
-         //}
-         
-         try
-         {
-            // Restore the columns' state
-            var cols = _prefs.GetPreference<StringCollection>(Preference.FormColumns);
-            var colsArray = new string[cols.Count];
-            
-            cols.CopyTo(colsArray, 0);
-            Array.Sort(colsArray);
-            
-            for (int i = 0; i < colsArray.Length; i++)
-            {
-               string[] a = colsArray[i].Split(',');
-               int index = int.Parse(a[3]);
-               dataGridView1.Columns[index].DisplayIndex = Int16.Parse(a[0]);
-               if (dataGridView1.Columns[index].AutoSizeMode.Equals(DataGridViewAutoSizeColumnMode.Fill) == false)
-               {
-                  dataGridView1.Columns[index].Width = Int16.Parse(a[1]);
-               }
-               dataGridView1.Columns[index].Visible = bool.Parse(a[2]);
-            }
-         }
-         catch (NullReferenceException)
-         {
-            // This happens when the FormColumns setting is empty
-         }
-      }
-
-      private void SaveColumnSettings()
-      {
-         // Save column state data
-         // including order, column width and whether or not the column is visible
-         var stringCollection = new StringCollection();
-         int i = 0;
-
-         foreach (DataGridViewColumn column in dataGridView1.Columns)
-         {
-            stringCollection.Add(String.Format(CultureInfo.InvariantCulture, 
-                                    "{0},{1},{2},{3}",
-                                    column.DisplayIndex.ToString("D2"),
-                                    column.Width,
-                                    column.Visible,
-                                    i++));
-         }
-
-         _prefs.SetPreference(Preference.FormColumns, stringCollection);
-      }
-
-      private void SaveSortColumn()
-      {
-         _prefs.SetPreference(Preference.FormSortColumn, _sortColumnName);
-         _prefs.SetPreference(Preference.FormSortOrder, _sortColumnOrder);
-      }
-
-      /// <summary>
-      /// Test current application status for changes; ask for confirmation if necessary.
-      /// </summary>
-      private bool CanContinueDestructiveOp(object sender, EventArgs e)
-      {
-         if (_clientInstances.ChangedAfterSave)
-         {
-            DialogResult qResult = MessageBox.Show(this, String.Format("There are changes to the configuration that have not been saved.  Would you like to save these changes?{0}{0}Yes - Continue and save the changes / No - Continue and do not save the changes / Cancel - Do not continue", Environment.NewLine), base.Text, MessageBoxButtons.YesNoCancel);
-            switch (qResult)
-            {
-               case DialogResult.Yes:
-                  mnuFileSave_Click(sender, e);
-                  return !_clientInstances.ChangedAfterSave;
-               case DialogResult.No:
-                  return true;
-               case DialogResult.Cancel:
-                  return false;
-            }
-            return false;
-         }
-         
-         return true;
-      }
 
       private void ClearLogAndQueueViewer()
       {
@@ -1479,43 +1174,7 @@ namespace HFM.Forms
          queueControl.SetQueue(null);
       }
 
-      /// <summary>
-      /// Loads a configuration file into memory
-      /// </summary>
-      /// <param name="filePath">File to load</param>
-      private void LoadConfigFile(string filePath)
-      {
-         LoadConfigFile(filePath, 1);
-      }
-
-      /// <summary>
-      /// Loads a configuration file into memory
-      /// </summary>
-      /// <param name="filePath">File to load</param>
-      /// <param name="filterIndex">Dialog file type filter index (1 based)</param>
-      private void LoadConfigFile(string filePath, int filterIndex)
-      {
-         try
-         {
-            // Read the config file
-            _clientInstances.ReadConfigFile(filePath, filterIndex);
-
-            if (_clientInstances.HasInstances == false)
-            {
-               MessageBox.Show(this, "No client configurations were loaded from the given config file.",
-                  Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-         }
-         catch (Exception ex)
-         {
-            HfmTrace.WriteToHfmConsole(ex);
-            MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture,
-               "No client configurations were loaded from the given config file.{0}{0}{1}", Environment.NewLine, ex.Message),
-               Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-         }
-      }
-
-      private void ShowHideLogWindow(bool show)
+      public void ShowHideLogWindow(bool show)
       {
          if (show == false)
          {
@@ -1581,25 +1240,6 @@ namespace HFM.Forms
       #endregion
 
       #region PreferenceSet Event Handlers
-
-      private void SetFormShowStyle()
-      {
-         switch (_prefs.GetPreference<FormShowStyleType>(Preference.FormShowStyle))
-         {
-            case FormShowStyleType.SystemTray:
-               if (_notifyIcon != null) _notifyIcon.Visible = true;
-               ShowInTaskbar = (WindowState != FormWindowState.Minimized);
-               break;
-            case FormShowStyleType.TaskBar:
-               if (_notifyIcon != null) _notifyIcon.Visible = false;
-               ShowInTaskbar = true;
-               break;
-            case FormShowStyleType.Both:
-               if (_notifyIcon != null) _notifyIcon.Visible = true;
-               ShowInTaskbar = true;
-               break;
-         }
-      }
 
       private void UserStatsEnabledChanged()
       {

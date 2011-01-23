@@ -39,6 +39,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -102,6 +103,7 @@
     <Compile Include="Controls\LabelWrapper.Designer.cs">
       <DependentUpon>LabelWrapper.cs</DependentUpon>
     </Compile>
+    <Compile Include="MainPresenter.cs" />
     <Compile Include="Models\ClientInstanceSettingsModel.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Controls\QueueControl.cs">

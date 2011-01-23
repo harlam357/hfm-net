@@ -163,8 +163,8 @@ namespace HFM
          frmMain frm;
          try
          {
-            frm = InstanceProvider.GetInstance<frmMain>();
-            frm.Initialize();
+            frm = (frmMain)InstanceProvider.GetInstance<IMainView>();
+            frm.Initialize(InstanceProvider.GetInstance<MainPresenter>());
          }
          catch (Exception ex)
          {

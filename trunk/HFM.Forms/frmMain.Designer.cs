@@ -113,8 +113,6 @@ namespace HFM.Forms
          this.mnuHelpCheckForUpdate = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuHelpSep3 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
-         this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
-         this.saveConfigDialog = new System.Windows.Forms.SaveFileDialog();
          this.gridContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
          this.mnuContextClientsRefreshSelected = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuContextClientsSep1 = new System.Windows.Forms.ToolStripSeparator();
@@ -125,12 +123,12 @@ namespace HFM.Forms
          this.mnuContextClientsViewCachedLog = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuContextClientsViewClientFiles = new System.Windows.Forms.ToolStripMenuItem();
          this.toolTipGrid = new System.Windows.Forms.ToolTip(this.components);
-         this.splitContainer1 = new SplitContainerWrapper();
-         this.dataGridView1 = new DataGridViewWrapper();
-         this.splitContainer2 = new SplitContainerWrapper();
-         this.queueControl = new QueueControl();
-         this.btnQueue = new ButtonWrapper();
-         this.txtLogFile = new RichTextBoxWrapper();
+         this.splitContainer1 = new HFM.Forms.Controls.SplitContainerWrapper();
+         this.dataGridView1 = new HFM.Forms.Controls.DataGridViewWrapper();
+         this.splitContainer2 = new HFM.Forms.Controls.SplitContainerWrapper();
+         this.queueControl = new HFM.Forms.Controls.QueueControl();
+         this.btnQueue = new HFM.Forms.Controls.ButtonWrapper();
+         this.txtLogFile = new HFM.Forms.Controls.RichTextBoxWrapper();
          this.statsContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
          this.mnuContextShowUserStats = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuContextShowTeamStats = new System.Windows.Forms.ToolStripMenuItem();
@@ -822,17 +820,6 @@ namespace HFM.Forms
          this.mnuHelpAbout.Text = "&About";
          this.mnuHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
          // 
-         // openConfigDialog
-         // 
-         this.openConfigDialog.DefaultExt = "hfm";
-         this.openConfigDialog.Filter = "HFM Configuration Files|*.hfm";
-         this.openConfigDialog.RestoreDirectory = true;
-         // 
-         // saveConfigDialog
-         // 
-         this.saveConfigDialog.DefaultExt = "hfm";
-         this.saveConfigDialog.Filter = "HFM Configuration Files|*.hfm";
-         // 
          // gridContextMenuStrip
          // 
          this.gridContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -998,7 +985,7 @@ namespace HFM.Forms
          this.queueControl.Name = "queueControl";
          this.queueControl.Size = new System.Drawing.Size(258, 356);
          this.queueControl.TabIndex = 1;
-         this.queueControl.QueueIndexChanged += new System.EventHandler<QueueIndexChangedEventArgs>(this.queueControl_QueueIndexChanged);
+         this.queueControl.QueueIndexChanged += new System.EventHandler<HFM.Forms.Controls.QueueIndexChangedEventArgs>(this.queueControl_QueueIndexChanged);
          // 
          // btnQueue
          // 
@@ -1124,8 +1111,6 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripMenuItem mnuHelpIndex;
       private System.Windows.Forms.ToolStripSeparator mnuHelpSep1;
       private System.Windows.Forms.ToolStripMenuItem mnuHelpAbout;
-      private System.Windows.Forms.OpenFileDialog openConfigDialog;
-      private System.Windows.Forms.SaveFileDialog saveConfigDialog;
       private System.Windows.Forms.ToolStripMenuItem mnuClients;
       private System.Windows.Forms.ToolStripMenuItem mnuClientsAdd;
       private System.Windows.Forms.ToolStripSeparator mnuClientsSep1;
