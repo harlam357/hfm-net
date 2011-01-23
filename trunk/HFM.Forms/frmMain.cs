@@ -1,7 +1,7 @@
 /*
  * HFM.NET - Main UI Form
  * Copyright (C) 2006-2007 David Rawling
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -71,16 +71,6 @@ namespace HFM.Forms
       private NotifyIcon _notifyIcon;
       
       /// <summary>
-      /// Update Logic Class
-      /// </summary>
-      private UpdateLogic _updateLogic;
-
-      /// <summary>
-      /// Path to the update file (MSI) to run on exit
-      /// </summary>
-      private string _updateFilePath;
-      
-      /// <summary>
       /// Work Unit History Presentation
       /// </summary>
       private HistoryPresenter _historyPresenter;
@@ -102,6 +92,8 @@ namespace HFM.Forms
       private readonly IInstanceConfigurationManager _configurationManager;
 
       private readonly IExternalProcessStarter _processStarter;
+
+      private readonly IUpdateLogic _updateLogic;
       
       #endregion
 
@@ -117,7 +109,7 @@ namespace HFM.Forms
       public frmMain(IPreferenceSet prefs, IMessagesView messagesView, IXmlStatsDataContainer statsData,
                      IInstanceCollection instanceCollection, IProteinCollection proteinCollection, 
                      IProteinBenchmarkContainer benchmarkContainer, IInstanceConfigurationManager configurationManager,
-                     IExternalProcessStarter processStarter)
+                     IExternalProcessStarter processStarter, IUpdateLogic updateLogic)
       {
          _prefs = prefs;
          _frmMessages = messagesView;
@@ -127,6 +119,8 @@ namespace HFM.Forms
          _benchmarkContainer = benchmarkContainer;
          _configurationManager = configurationManager;
          _processStarter = processStarter;
+         _updateLogic = updateLogic;
+         _updateLogic.Owner = this;
          _displayBindingSource = new BindingSource();
 
          // This call is Required by the Windows Form Designer
@@ -300,50 +294,7 @@ namespace HFM.Forms
 
          if (_prefs.GetPreference<bool>(Preference.StartupCheckForUpdate))
          {
-            CheckForUpdate();
-         }
-      }
-      
-      private void CheckForUpdate()
-      {
-         CheckForUpdate(false);
-      }
-      
-      private void CheckForUpdate(bool userInvoked)
-      {
-         if (_updateLogic == null) _updateLogic = new UpdateLogic(this, new MessageBoxView(), new NetworkOps(_prefs));
-         if (_updateLogic.CheckInProgress == false)
-         {
-            HfmTrace.WriteToHfmConsole("Checking for update...");
-            _updateLogic.BeginCheckForUpdate(ShowUpdate, userInvoked);
-         }
-      }
-      
-      private void ShowUpdate(ApplicationUpdate update)
-      {
-         if (InvokeRequired)
-         {
-            Invoke(new MethodInvoker(() => ShowUpdate(update)));
-            return;
-         }
-
-         var updatePresenter = new UpdatePresenter(HfmTrace.WriteToHfmConsole,
-            update, new NetworkOps(_prefs).GetProxy(), Constants.ApplicationName, PlatformOps.ApplicationVersionWithRevision);
-         updatePresenter.Show(this);
-         HandleUpdatePresenterResults(updatePresenter);
-      }
-      
-      private void HandleUpdatePresenterResults(UpdatePresenter presenter)
-      {
-         if (presenter.UpdateReady && 
-             presenter.SelectedUpdate.UpdateType == 0 &&
-             PlatformOps.IsRunningOnMono() == false)
-         {
-            string message = String.Format(CultureInfo.CurrentCulture,
-                                           "{0} will install the new version when you exit the application.",
-                                           Constants.ApplicationName);
-            MessageBox.Show(this, message, Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-            _updateFilePath = presenter.LocalFilePath;
+            _updateLogic.CheckForUpdate();
          }
       }
 
@@ -401,13 +352,13 @@ namespace HFM.Forms
       
       private void CheckForAndFireUpdateProcess()
       {
-         if (String.IsNullOrEmpty(_updateFilePath) == false)
+         if (String.IsNullOrEmpty(_updateLogic.UpdateFilePath) == false)
          {
             HfmTrace.WriteToHfmConsole(String.Format(CultureInfo.CurrentCulture,
-               "Firing update file '{0}'...", _updateFilePath));
+               "Firing update file '{0}'...", _updateLogic.UpdateFilePath));
             try
             {
-               Process.Start(_updateFilePath);
+               Process.Start(_updateLogic.UpdateFilePath);
             }
             catch (Exception ex)
             {
@@ -750,7 +701,10 @@ namespace HFM.Forms
       
       private void mnuHelpCheckForUpdate_Click(object sender, EventArgs e)
       {
-         CheckForUpdate(true);
+         // if already in progress, stub out...
+         if (_updateLogic.CheckInProgress) return;
+         
+         _updateLogic.CheckForUpdate(true);
       }
       
       private void mnuHelpAbout_Click(object sender, EventArgs e)

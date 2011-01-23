@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Update Logic Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,7 +19,7 @@
 
 using System;
 using System.Globalization;
-using System.Windows.Forms;
+using System.Net;
 
 using harlam357.Windows.Forms;
 
@@ -27,37 +27,86 @@ using HFM.Framework;
 
 namespace HFM.Forms
 {
-   internal class UpdateLogic
+   public interface IUpdateLogic
    {
-      private Action<ApplicationUpdate> _showUpdateCallback;
-      private bool _userInvoked;
-      
-      public bool CheckInProgress { get; private set; }
-
-      private readonly Form _owner;
-      private readonly IMessageBoxView _messageBoxView;
-      private readonly INetworkOps _net;
-
-      public UpdateLogic(Form owner, IMessageBoxView messageBoxView, INetworkOps net)
-      {
-         _owner = owner;
-         _messageBoxView = messageBoxView;
-         _net = net;
-      }
+      System.Windows.Forms.Form Owner { get; set; }
    
-      public void BeginCheckForUpdate(Action<ApplicationUpdate> showUpdateCallback, bool userInvoked)
+      bool CheckInProgress { get; }
+      
+      string UpdateFilePath { get; }
+
+      void CheckForUpdate();
+      
+      void CheckForUpdate(bool userInvoked);
+   }
+
+   /* Cannot write an effective unit test for this class
+    * until I remove the concrete dependencies on NetworkOps
+    * and UpdateChecker.  I'd also like to enable a synchronous
+    * or asynchronous option since it's more difficult to unit
+    * test an asynchronous operation *OR* do like the following:
+    * http://stackoverflow.com/questions/1174702/is-there-a-way-to-unit-test-an-async-method
+    */
+
+   public sealed class UpdateLogic : IUpdateLogic
+   {
+      #region Properties
+   
+      public System.Windows.Forms.Form Owner { get; set; }
+
+      public bool CheckInProgress { get; private set; }
+      
+      public string UpdateFilePath { get; private set; }
+      
+      #endregion
+      
+      #region Fields
+
+      private bool _userInvoked;
+      private IWebProxy _proxy;
+      
+      private readonly IPreferenceSet _prefs;
+      private readonly IMessageBoxView _messageBoxView;
+      
+      #endregion
+
+      public UpdateLogic(IPreferenceSet prefs, IMessageBoxView messageBoxView)
       {
+         _prefs = prefs;
+         _messageBoxView = messageBoxView;
+      }
+
+      public void CheckForUpdate()
+      {
+         CheckForUpdate(false);
+      }
+
+      public void CheckForUpdate(bool userInvoked)
+      {
+         if (Owner == null)
+         {
+            throw new InvalidOperationException("Owner property cannot be null.");
+         }
+      
+         if (CheckInProgress)
+         {
+            throw new InvalidOperationException("Update check already in progress.");
+         }
+      
          CheckInProgress = true;
-         _showUpdateCallback = showUpdateCallback;
+         
+         // set globals
          _userInvoked = userInvoked;
-         Func<ApplicationUpdate> func = CheckForUpdate;
+         _proxy = new NetworkOps(_prefs).GetProxy();
+         
+         Func<ApplicationUpdate> func = DoCheckForUpdate;
          func.BeginInvoke(CheckForUpdateCallback, func);
       }
    
-      private ApplicationUpdate CheckForUpdate()
+      private ApplicationUpdate DoCheckForUpdate()
       {
          var updateChecker = new UpdateChecker();
-         return updateChecker.CheckForUpdate(Constants.ApplicationName, _net.GetProxy());
+         return updateChecker.CheckForUpdate(Constants.ApplicationName, _proxy);
       }
 
       private void CheckForUpdateCallback(IAsyncResult result)
@@ -70,12 +119,12 @@ namespace HFM.Forms
             {
                if (NewVersionAvailable(update.Version))
                {
-                  _showUpdateCallback(update);
+                  ShowUpdate(update);
                }
                else if (_userInvoked)
                {
-                  _owner.Invoke(new MethodInvoker(() => _messageBoxView.ShowInformation(_owner, String.Format(CultureInfo.CurrentCulture,
-                                                           "{0} is already up-to-date.", Constants.ApplicationName), _owner.Text)));
+                  Owner.Invoke(new Action(() => _messageBoxView.ShowInformation(Owner, String.Format(CultureInfo.CurrentCulture,
+                                                   "{0} is already up-to-date.", Constants.ApplicationName), Owner.Text)));
                }
             }
          }
@@ -86,7 +135,7 @@ namespace HFM.Forms
             {
                string message = String.Format(CultureInfo.CurrentCulture, "{0} encountered the following error while checking for an update:{1}{1}{2}.",
                                               Constants.ApplicationName, Environment.NewLine, ex.Message);
-               _owner.Invoke(new MethodInvoker(() => _messageBoxView.ShowError(_owner, message, _owner.Text)));
+               Owner.Invoke(new Action(() => _messageBoxView.ShowError(Owner, message, Owner.Text)));
             }
          }
          finally
@@ -98,6 +147,34 @@ namespace HFM.Forms
       private static bool NewVersionAvailable(string updateVersion)
       {
          return PlatformOps.GetVersionLongFromString(updateVersion) > PlatformOps.VersionNumber;
+      }
+
+      private void ShowUpdate(ApplicationUpdate update)
+      {
+         if (Owner.InvokeRequired)
+         {
+            Owner.Invoke(new Action(() => ShowUpdate(update)));
+            return;
+         }
+
+         var updatePresenter = new UpdatePresenter(HfmTrace.WriteToHfmConsole,
+            update, _proxy, Constants.ApplicationName, PlatformOps.ApplicationVersionWithRevision);
+         updatePresenter.Show(Owner);
+         HandleUpdatePresenterResults(updatePresenter);
+      }
+
+      private void HandleUpdatePresenterResults(UpdatePresenter presenter)
+      {
+         if (presenter.UpdateReady &&
+             presenter.SelectedUpdate.UpdateType == 0 &&
+             PlatformOps.IsRunningOnMono() == false)
+         {
+            string message = String.Format(CultureInfo.CurrentCulture,
+                                           "{0} will install the new version when you exit the application.",
+                                           Constants.ApplicationName);
+            _messageBoxView.ShowInformation(Owner, message, Owner.Text);
+            UpdateFilePath = presenter.LocalFilePath;
+         }
       }
    }
 }
