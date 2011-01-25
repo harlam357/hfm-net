@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Main UI DataGrid Handlers
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -67,7 +67,7 @@ namespace HFM.Forms
          #region Draw or Hide the Tooltip
          if (info.RowIndex > -1)
          {
-            var instance = _clientInstances[dataGridView1.Rows[info.RowIndex].Cells["Name"].Value.ToString()];
+            var instance = _instanceCollection[dataGridView1.Rows[info.RowIndex].Cells["Name"].Value.ToString()];
 
             // ReSharper disable PossibleNullReferenceException
             if (dataGridView1.Columns["Status"].Index == info.ColumnIndex)
@@ -122,7 +122,7 @@ namespace HFM.Forms
             else if (dataGridView1.Columns["Name"].Index == e.ColumnIndex)
             {
                #region Duplicate User and Machine ID Custom Paint
-               var instance = _clientInstances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
+               var instance = _instanceCollection[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
                if (_prefs.GetPreference<bool>(Preference.DuplicateUserIdCheck) && instance.UserIdIsDuplicate)
                {
                   PaintGridCell(PaintCell.Warning, e);
@@ -132,7 +132,7 @@ namespace HFM.Forms
             else if (dataGridView1.Columns["ProjectRunCloneGen"].Index == e.ColumnIndex)
             {
                #region Duplicate Project Custom Paint
-               var instance = _clientInstances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
+               var instance = _instanceCollection[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
                if (_prefs.GetPreference<bool>(Preference.DuplicateProjectCheck) && instance.ProjectIsDuplicate)
                {
                   PaintGridCell(PaintCell.Warning, e);
@@ -142,7 +142,7 @@ namespace HFM.Forms
             else if (dataGridView1.Columns["Username"].Index == e.ColumnIndex)
             {
                #region Username Incorrect Custom Paint
-               var instance = _clientInstances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
+               var instance = _instanceCollection[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
                if (instance.UsernameOk == false)
                {
                   PaintGridCell(PaintCell.Warning, e);
@@ -160,7 +160,7 @@ namespace HFM.Forms
             else if (dataGridView1.Columns["ETA"].Index == e.ColumnIndex)
             {
                #region ETA as Date Custom Paint
-               var instance = _clientInstances[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
+               var instance = _instanceCollection[dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString()];
                if (_prefs.GetPreference<bool>(Preference.EtaDate))
                {
                   PaintGridCell(PaintCell.EtaDate, instance.EtaDate, e);
@@ -398,7 +398,7 @@ namespace HFM.Forms
                else if (dataGridView1.Columns["ETA"].Index == columnIndex &&
                         _prefs.GetPreference<bool>(Preference.EtaDate))
                {
-                  var instance = _clientInstances[dataGridView1.Rows[i].Cells["Name"].Value.ToString()];
+                  var instance = _instanceCollection[dataGridView1.Rows[i].Cells["Name"].Value.ToString()];
                   formattedString = GetEtaDateString(instance.EtaDate);
                }
                else if (dataGridView1.Columns["DownloadTime"].Index == columnIndex ||

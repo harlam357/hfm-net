@@ -42,6 +42,13 @@ namespace HFM.Classes
 
       public static bool Start()
       {
+         // Issue 236
+         // perhaps add some secondary check here that check the 
+         // running processes and looks for HFM.exe.  Under Mono
+         // there seems to be an issue with the original Mutex
+         // being released even after the process has died...
+         // usually when a user manually kills the process.
+      
          bool onlyInstance;
          _mutex = new Mutex(true, MutexName, out onlyInstance);
          return onlyInstance;
@@ -58,6 +65,11 @@ namespace HFM.Classes
       
       public static void SignalFirstInstance(string[] args)
       {
+         // Issue 236
+         // The actual exception comes from this method, but
+         // if we accurately detected if another instance was
+         // running or not, then this would not be a problem.
+      
          string objectUri = String.Format(CultureInfo.InvariantCulture, "ipc://{0}/{1}", PlatformOps.AssemblyGuid, ObjectName);
 
          IChannel ipcChannel = new IpcClientChannel();

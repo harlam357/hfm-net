@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Benchmarks Form Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,39 +33,71 @@ using HFM.Framework.DataTypes;
 
 namespace HFM.Forms
 {
+   public interface IBenchmarksView
+   {
+      /// <summary>
+      /// ProjectID to Load when View is Shown
+      /// </summary>
+      int LoadProjectID { get; set; }
+
+      void SetManualStartPosition();
+   
+      #region System.Windows.Forms.Form Exposure
+
+      void Show();
+
+      Point Location { get; set; }
+
+      Size Size { get; set; }
+
+      #endregion
+   }
+
    // ReSharper disable InconsistentNaming
-   public partial class frmBenchmarks : FormWrapper
+   public partial class frmBenchmarks : FormWrapper, IBenchmarksView
    // ReSharper restore InconsistentNaming
    {
-      #region Members
+      #region Properties
+      
+      /// <summary>
+      /// ProjectID to Load when View is Shown
+      /// </summary>
+      public int LoadProjectID { get; set; }
+      
+      #endregion
+   
+      #region Fields
       private readonly IPreferenceSet _prefs;
       private readonly IProteinCollection _proteinCollection;
       private readonly IProteinBenchmarkContainer _benchmarkContainer;
       private readonly List<Color> _graphColors;
       private readonly IInstanceAccessor _instanceCollection;
-      private readonly int _initialProjectID; 
       
       private BenchmarkClient _currentBenchmarkClient;
       #endregion
 
       #region Form Constructor / functionality
       public frmBenchmarks(IPreferenceSet prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer, 
-                           IInstanceCollection instanceCollection, int projectID)
+                           IInstanceCollection instanceCollection)
       {
          _prefs = prefs;
          _proteinCollection = proteinCollection;
          _benchmarkContainer = benchmarkContainer;
          _graphColors = _prefs.GetPreference<List<Color>>(Preference.GraphColors);
          _instanceCollection = instanceCollection;
-         _initialProjectID = projectID;
       
          InitializeComponent();
+      }
+      
+      public void SetManualStartPosition()
+      {
+         StartPosition = FormStartPosition.Manual;
       }
 
       private void frmBenchmarks_Shown(object sender, EventArgs e)
       {
          UpdateClientsComboBinding();
-         UpdateProjectListBoxBinding(_initialProjectID);
+         UpdateProjectListBoxBinding(LoadProjectID);
          lstColors.DataSource = _graphColors;
          
          // Issue 154 - make sure focus is on the projects list box

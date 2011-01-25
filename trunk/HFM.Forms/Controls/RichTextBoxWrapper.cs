@@ -1,6 +1,6 @@
 /*
  * HFM.NET - RichTextBox Wrapper Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,7 +28,26 @@ using HFM.Framework.DataTypes;
 
 namespace HFM.Forms.Controls
 {
-   public partial class RichTextBoxWrapper : RichTextBox
+   public interface ILogFileViewer
+   {
+      bool Visible { get; set; }
+   
+      string LogOwnedByInstanceName { get; }
+      
+      void SetLogLines(IEnumerable<LogLine> lines, string logOwnedByInstance);
+
+      string[] Lines { get; }
+      
+      void SetNoLogLines();
+      
+      void ScrollToBottom();
+      
+      void HighlightLines();
+      
+      void RemoveHighlight();
+   }
+
+   public partial class RichTextBoxWrapper : RichTextBox, ILogFileViewer
    {
       private IList<LogLine> _logLines;
       

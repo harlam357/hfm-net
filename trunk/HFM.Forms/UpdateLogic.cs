@@ -29,7 +29,7 @@ namespace HFM.Forms
 {
    public interface IUpdateLogic
    {
-      System.Windows.Forms.Form Owner { get; set; }
+      IMainView Owner { get; set; }
    
       bool CheckInProgress { get; }
       
@@ -52,7 +52,7 @@ namespace HFM.Forms
    {
       #region Properties
    
-      public System.Windows.Forms.Form Owner { get; set; }
+      public IMainView Owner { get; set; }
 
       public bool CheckInProgress { get; private set; }
       
