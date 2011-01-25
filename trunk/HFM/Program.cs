@@ -164,7 +164,7 @@ namespace HFM
          try
          {
             frm = (frmMain)InstanceProvider.GetInstance<IMainView>();
-            frm.Initialize(InstanceProvider.GetInstance<MainPresenter>());
+            frm.Initialize(InstanceProvider.GetInstance<MainPresenter>(), proteinCollection);
          }
          catch (Exception ex)
          {
