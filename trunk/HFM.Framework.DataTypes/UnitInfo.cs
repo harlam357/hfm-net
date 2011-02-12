@@ -1,7 +1,7 @@
 /*
  * HFM.NET - Unit Info Class
  * Copyright (C) 2006 David Rawling
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,7 +20,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
+using System.Diagnostics;
+using System.Linq;
 
 using ProtoBuf;
 
@@ -54,19 +55,9 @@ namespace HFM.Framework.DataTypes
       DateTime DownloadTime { get; }
 
       /// <summary>
-      /// Flag specifying if Download Time is Unknown
-      /// </summary>
-      bool DownloadTimeUnknown { get; }
-
-      /// <summary>
       /// Date/time the unit is due (preferred deadline)
       /// </summary>
       DateTime DueTime { get; }
-
-      /// <summary>
-      /// Flag specifying if Due Time is Unknown
-      /// </summary>
-      bool DueTimeUnknown { get; }
 
       /// <summary>
       /// Unit Start Time Stamp (Time Stamp from First Parsable Line in LogLines)
@@ -83,11 +74,6 @@ namespace HFM.Framework.DataTypes
       /// Core Version Number
       /// </summary>
       string CoreVersion { get; }
-
-      /// <summary>
-      /// Returns true if Project (R/C/G) has not been identified
-      /// </summary>
-      bool ProjectIsUnknown { get; }
 
       /// <summary>
       /// Name of the unit
@@ -140,8 +126,8 @@ namespace HFM.Framework.DataTypes
    {
       public UnitInfo()
       {
-         FoldingID = Default.FoldingIDDefault;
-         Team = Default.TeamDefault;
+         FoldingID = Default.FoldingID;
+         Team = Default.Team;
 
          TypeOfClient = ClientType.Unknown;
          DownloadTime = DateTime.MinValue;
@@ -153,44 +139,33 @@ namespace HFM.Framework.DataTypes
          ProteinTag = String.Empty;
          UnitResult = WorkUnitResult.Unknown;
          UnitFrames = new Dictionary<int, UnitFrame>();
-         CoreID = Default.CoreIDDefault;
+         CoreID = Default.CoreID;
       }
       
       #region Owner Data Properties
-      private string _owningInstanceName;
+
       /// <summary>
       /// Name of the Client Instance that owns this UnitInfo
       /// </summary>
       [ProtoMember(1)]
-      public string OwningInstanceName
-      {
-         get { return _owningInstanceName; }
-         set { _owningInstanceName = value; }
-      }
+      public string OwningInstanceName { get; set; }
 
-      private string _owningInstancePath;
       /// <summary>
       /// Path of the Client Instance that owns this UnitInfo
       /// </summary>
       [ProtoMember(2)]
-      public string OwningInstancePath
-      {
-         get { return _owningInstancePath; }
-         set { _owningInstancePath = value; }
-      }
+      public string OwningInstancePath { get; set; }
+
       #endregion
 
       #region Retrieval Time Property
-      private DateTime _unitRetrievalTime;
+
       /// <summary>
       /// Local time the logs used to generate this UnitInfo were retrieved
       /// </summary>
       [ProtoMember(3)]
-      public DateTime UnitRetrievalTime
-      {
-         get { return _unitRetrievalTime; }
-         set { _unitRetrievalTime = value; }
-      } 
+      public DateTime UnitRetrievalTime { get; set; }
+
       #endregion
 
       #region Folding ID and Team Properties
@@ -224,26 +199,10 @@ namespace HFM.Framework.DataTypes
       public DateTime DownloadTime { get; set; }
 
       /// <summary>
-      /// Flag specifying if Download Time is Unknown
-      /// </summary>
-      public bool DownloadTimeUnknown
-      {
-         get { return DownloadTime.Equals(DateTime.MinValue); }
-      }
-
-      /// <summary>
       /// Date/time the unit is due (preferred deadline)
       /// </summary>
       [ProtoMember(8)]
       public DateTime DueTime { get; set; }
-
-      /// <summary>
-      /// Flag specifying if Due Time is Unknown
-      /// </summary>
-      public bool DueTimeUnknown
-      {
-         get { return DueTime.Equals(DateTime.MinValue); }
-      }
 
       /// <summary>
       /// Unit Start Time Stamp (Time Stamp from First Parsable Line in LogLines)
@@ -289,20 +248,6 @@ namespace HFM.Framework.DataTypes
       public int ProjectGen { get; set; }
 
       /// <summary>
-      /// Returns true if Project (R/C/G) has not been identified
-      /// </summary>
-      public bool ProjectIsUnknown
-      {
-         get
-         {
-            return ProjectID == 0 &&
-                   ProjectRun == 0 &&
-                   ProjectClone == 0 &&
-                   ProjectGen == 0;
-         }
-      }
-
-      /// <summary>
       /// Name of the unit
       /// </summary>
       [ProtoMember(16)]
@@ -341,23 +286,32 @@ namespace HFM.Framework.DataTypes
       #region Frame (UnitFrame) Data Variables
 
       /// <summary>
-      /// Number of Frames Observed on this Unit
+      /// Number of Frames Observed since Last Unit Start or Resume from Pause
       /// </summary>
       [ProtoMember(21)]
       public int FramesObserved { get; set; }
 
-      /// <summary>
-      /// Last Observed Frame on this Unit
-      /// </summary>
-      [ProtoMember(22)]
-      public UnitFrame CurrentFrameConcrete { get; set; }
+      // Open ProtoMember - was of type UnitFrame
+      //[ProtoMember(22)]
 
       /// <summary>
       /// Last Observed Frame on this Unit
       /// </summary>
       public IUnitFrame CurrentFrame
       {
-         get { return CurrentFrameConcrete; }
+         get
+         {
+            if (UnitFrames.Count == 0) return null;
+
+            int max = UnitFrames.Keys.Max();
+            if (max >= 0)
+            {
+               Debug.Assert(UnitFrames[max].FrameID == max);
+               return UnitFrames[max];
+            }
+
+            return null;
+         }
       }
 
       /// <summary>
@@ -380,34 +334,21 @@ namespace HFM.Framework.DataTypes
       {
          if (frame == null) throw new ArgumentNullException("frame");
 
-         // Parse TimeStamp
-         frame.TimeOfFrame = DateTime.ParseExact(frame.TimeStampString, "HH:mm:ss",
-                                                 DateTimeFormatInfo.InvariantInfo,
-                                                 Default.DateTimeStyle).TimeOfDay;
-
+         if (UnitFrames.ContainsKey(frame.FrameID)) return;
+         
          // Set Raw Frame Values                                       
          RawFramesComplete = frame.RawFramesComplete;
          RawFramesTotal = frame.RawFramesTotal;
+         
+         UnitFrames.Add(frame.FrameID, frame);
 
-         if (UnitFrames.ContainsKey(frame.FrameID) == false)
+         frame.FrameDuration = TimeSpan.Zero;
+         if (frame.FrameID > 0 &&
+             UnitFrames.ContainsKey(frame.FrameID - 1) &&
+             FramesObserved > 1)
          {
-            CurrentFrameConcrete = frame;
-            UnitFrames.Add(frame.FrameID, frame);
-
-            CurrentFrameConcrete.FrameDuration = TimeSpan.Zero;
-            if (CurrentFrameConcrete.FrameID > 0 &&
-                UnitFrames.ContainsKey(CurrentFrameConcrete.FrameID - 1) &&
-                FramesObserved > 1)
-            {
-               CurrentFrameConcrete.FrameDuration = GetDelta(CurrentFrameConcrete.TimeOfFrame,
-                                                             UnitFrames[CurrentFrameConcrete.FrameID - 1].TimeOfFrame);
-            }
+            frame.FrameDuration = GetDelta(frame.TimeOfFrame, UnitFrames[frame.FrameID - 1].TimeOfFrame);
          }
-         //else
-         //{
-         //   // FrameID already exists, clear the LineType
-         //   logLine.LineType = LogLineType.Unknown;
-         //}
       }
 
       /// <summary>

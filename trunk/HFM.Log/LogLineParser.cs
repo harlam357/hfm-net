@@ -20,6 +20,7 @@
 using System;
 using System.Collections;
 using System.Diagnostics;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 using HFM.Framework.DataTypes;
@@ -333,7 +334,7 @@ namespace HFM.Log
             // 10% frame step tolerance. In the example the completed must be within 250 steps.
             if (Math.Abs(calculatedPercent - framePercent) <= 0.1)
             {
-               frame.TimeStampString = mFramesCompleted.Result("${Timestamp}");
+               frame.TimeOfFrame = ParseTimeStamp(mFramesCompleted.Result("${Timestamp}"));
                frame.FrameID = framePercent;
 
                return true;
@@ -342,7 +343,7 @@ namespace HFM.Log
             // Issue 191 - New ProtoMol Projects don't report frame progress on the precent boundry.
             if (Math.Abs(calculatedPercent - (framePercent + 1)) <= 0.1)
             {
-               frame.TimeStampString = mFramesCompleted.Result("${Timestamp}");
+               frame.TimeOfFrame = ParseTimeStamp(mFramesCompleted.Result("${Timestamp}"));
                frame.FrameID = framePercent + 1;
 
                return true;
@@ -373,13 +374,22 @@ namespace HFM.Log
             //TODO: Hard code here, 100 GPU Frames. 
             // Could I get this from the Project Data?  I could but what's the point, 100% is 100%.
 
-            frame.TimeStampString = mFramesCompletedGpu.Result("${Timestamp}");
+            frame.TimeOfFrame = ParseTimeStamp(mFramesCompletedGpu.Result("${Timestamp}"));
             frame.FrameID = frame.RawFramesComplete;
 
             return true;
          }
 
          return false;
+      }
+      
+      private static TimeSpan ParseTimeStamp(string timeStamp)
+      {
+         Debug.Assert(timeStamp != null);
+      
+         return DateTime.ParseExact(timeStamp, "HH:mm:ss",
+                                    DateTimeFormatInfo.InvariantInfo,
+                                    Default.DateTimeStyle).TimeOfDay;
       }
       
       #endregion

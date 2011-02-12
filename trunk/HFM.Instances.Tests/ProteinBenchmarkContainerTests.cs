@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Benchmark Container Class Tests
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -63,11 +63,11 @@ namespace HFM.Instances.Tests
 
          var currentUnitInfo = _mocks.DynamicMock<IUnitInfoLogic>();
          SetupResult.For(currentUnitInfo.UnitInfoData).Return(unitInfo1);
-         SetupResult.For(currentUnitInfo.LastUnitFrameID).Return(0);
+         SetupResult.For(currentUnitInfo.FramesComplete).Return(0);
          
          var unitInfoLogic1 = _mocks.DynamicMock<IUnitInfoLogic>();
          SetupResult.For(unitInfoLogic1.UnitInfoData).Return(unitInfo1);
-         SetupResult.For(unitInfoLogic1.LastUnitFrameID).Return(3);
+         SetupResult.For(unitInfoLogic1.FramesComplete).Return(3);
 
          var unitInfo2 = new UnitInfo();
          unitInfo2.OwningInstanceName = "Owner";

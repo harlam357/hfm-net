@@ -1,7 +1,7 @@
 /*
  * HFM.NET - Instance Collection Class
  * Copyright (C) 2006-2007 David Rawling
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -1057,7 +1057,7 @@ namespace HFM.Instances
             foreach (ClientInstance instance in _instanceCollection.Values)
             {
                // Don't save the UnitInfo object if the contained Project is Unknown
-               if (instance.CurrentUnitInfo.UnitInfoData.ProjectIsUnknown == false)
+               if (instance.CurrentUnitInfo.UnitInfoData.ProjectIsUnknown() == false)
                {
                   _unitInfoContainer.Add((UnitInfo)instance.CurrentUnitInfo.UnitInfoData);
                }

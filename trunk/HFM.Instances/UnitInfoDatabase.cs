@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Work Unit History Database
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -69,10 +69,7 @@ namespace HFM.Instances
                                                                         "[FrameTime]," +
                                                                         "[Result]," +
                                                                         "[DownloadDateTime]," +
-                                                                        "[CompletionDateTime]) VALUES({1});";
-
-      private const string WuHistoryTableInsertValuesFormat =
-         "{0}, {1}, {2}, {3}, '{4}', '{5}', '{6}', {7}, {8}, {9}, {10}, {11}, @DownloadDateTime, @CompletionDateTime";
+                                                                        "[CompletionDateTime]) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
       public string DatabaseFilePath { get; set; }
       private readonly IProteinCollection _proteinCollection;
@@ -219,7 +216,7 @@ namespace HFM.Instances
       
       private static bool ValidateFinishedUnitInfo(IUnitInfo unitInfo)
       {
-         return unitInfo.ProjectIsUnknown == false &&
+         return unitInfo.ProjectIsUnknown() == false &&
                 unitInfo.UnitResult.Equals(WorkUnitResult.FinishedUnit) &&
                 unitInfo.DownloadTime.Equals(DateTime.MinValue) == false &&
                 unitInfo.FinishedTime.Equals(DateTime.MinValue) == false;
@@ -231,7 +228,7 @@ namespace HFM.Instances
          // results are detected.  Only check for valid Project and 
          // download time - Issue 233
       
-         return unitInfo.ProjectIsUnknown == false &&
+         return unitInfo.ProjectIsUnknown() == false &&
                (unitInfo.UnitResult.Equals(WorkUnitResult.BadWorkUnit) ||
                 unitInfo.UnitResult.Equals(WorkUnitResult.CoreOutdated) ||
                 unitInfo.UnitResult.Equals(WorkUnitResult.EarlyUnitEnd) ||
@@ -269,65 +266,77 @@ namespace HFM.Instances
          {
             HfmTrace.WriteToHfmConsole(TraceLevel.Info, unitInfoLogic.UnitInfoData.OwningInstanceName,
                String.Format(CultureInfo.CurrentCulture, "Writing unit {0} to database.", unitInfoLogic.ProjectRunCloneGen));
-         
+
+            var projectID = new SQLiteParameter("ProjectID", DbType.Int32) { Value = unitInfoLogic.UnitInfoData.ProjectID };
+            command.Parameters.Add(projectID);
+            var projectRun = new SQLiteParameter("ProjectRun", DbType.Int32) { Value = unitInfoLogic.UnitInfoData.ProjectRun };
+            command.Parameters.Add(projectRun);
+            var projectClone = new SQLiteParameter("ProjectClone", DbType.Int32) { Value = unitInfoLogic.UnitInfoData.ProjectClone };
+            command.Parameters.Add(projectClone);
+            var projectGen = new SQLiteParameter("ProjectGen", DbType.Int32) { Value = unitInfoLogic.UnitInfoData.ProjectGen };
+            command.Parameters.Add(projectGen);
+            var instanceName = new SQLiteParameter("InstanceName", DbType.String) { Value = unitInfoLogic.UnitInfoData.OwningInstanceName };
+            command.Parameters.Add(instanceName);
+            var instancePath = new SQLiteParameter("InstancePath", DbType.String) { Value = unitInfoLogic.UnitInfoData.OwningInstancePath };
+            command.Parameters.Add(instancePath);
+            var username = new SQLiteParameter("Username", DbType.String) { Value = unitInfoLogic.UnitInfoData.FoldingID };
+            command.Parameters.Add(username);
+            var team = new SQLiteParameter("Team", DbType.Int32) { Value = unitInfoLogic.UnitInfoData.Team };
+            command.Parameters.Add(team);
+            var coreVersion = new SQLiteParameter("CoreVersion", DbType.Single) { Value = unitInfoLogic.UnitInfoData.CoreVersion };
+            command.Parameters.Add(coreVersion);
+            var framesCompleted = new SQLiteParameter("FramesCompleted", DbType.Int32) { Value = unitInfoLogic.FramesComplete };
+            command.Parameters.Add(framesCompleted);
+            var frameTime = new SQLiteParameter("FrameTime", DbType.Int32) { Value = unitInfoLogic.RawTimePerAllSections };
+            command.Parameters.Add(frameTime);
+            var result = new SQLiteParameter("Result", DbType.Int32) { Value = (int)unitInfoLogic.UnitInfoData.UnitResult };
+            command.Parameters.Add(result);
             var downloadDateTime = new SQLiteParameter("DownloadDateTime", DbType.DateTime) { Value = unitInfoLogic.UnitInfoData.DownloadTime };
             command.Parameters.Add(downloadDateTime);
             var completionDateTime = new SQLiteParameter("CompletionDateTime", DbType.DateTime) { Value = unitInfoLogic.UnitInfoData.FinishedTime };
             command.Parameters.Add(completionDateTime);
             
-            command.CommandText = String.Format(CultureInfo.InvariantCulture, WuHistoryTableInsertSql, WuHistoryTableName, GetValuesString(unitInfoLogic));
+            command.CommandText = String.Format(CultureInfo.InvariantCulture, WuHistoryTableInsertSql, WuHistoryTableName);
             command.ExecuteNonQuery();
          }
       }
       
-      private static string GetValuesString(IUnitInfoLogic unitInfoLogic)
-      {
-         return String.Format(CultureInfo.InvariantCulture,
-                              WuHistoryTableInsertValuesFormat, 
-                              unitInfoLogic.UnitInfoData.ProjectID,
-                              unitInfoLogic.UnitInfoData.ProjectRun,
-                              unitInfoLogic.UnitInfoData.ProjectClone,
-                              unitInfoLogic.UnitInfoData.ProjectGen,
-                              unitInfoLogic.UnitInfoData.OwningInstanceName,
-                              unitInfoLogic.UnitInfoData.OwningInstancePath,
-                              unitInfoLogic.UnitInfoData.FoldingID,
-                              unitInfoLogic.UnitInfoData.Team,
-                              unitInfoLogic.UnitInfoData.CoreVersion,
-                              unitInfoLogic.FramesComplete,
-                              unitInfoLogic.RawTimePerAllSections,
-                              (int)unitInfoLogic.UnitInfoData.UnitResult);
-      }
-
       private static void WriteUnitInfoToDatabase(SQLiteConnection con, HistoryEntry entry)
       {
          using (var command = new SQLiteCommand(con))
          {
+            var projectID = new SQLiteParameter("ProjectID", DbType.Int32) { Value = entry.ProjectID };
+            command.Parameters.Add(projectID);
+            var projectRun = new SQLiteParameter("ProjectRun", DbType.Int32) { Value = entry.ProjectRun };
+            command.Parameters.Add(projectRun);
+            var projectClone = new SQLiteParameter("ProjectClone", DbType.Int32) { Value = entry.ProjectClone };
+            command.Parameters.Add(projectClone);
+            var projectGen = new SQLiteParameter("ProjectGen", DbType.Int32) { Value = entry.ProjectGen };
+            command.Parameters.Add(projectGen);
+            var instanceName = new SQLiteParameter("InstanceName", DbType.String) { Value = entry.InstanceName };
+            command.Parameters.Add(instanceName);
+            var instancePath = new SQLiteParameter("InstancePath", DbType.String) { Value = entry.InstancePath };
+            command.Parameters.Add(instancePath);
+            var username = new SQLiteParameter("Username", DbType.String) { Value = entry.Username };
+            command.Parameters.Add(username);
+            var team = new SQLiteParameter("Team", DbType.Int32) { Value = entry.Team };
+            command.Parameters.Add(team);
+            var coreVersion = new SQLiteParameter("CoreVersion", DbType.Single) { Value = entry.CoreVersion };
+            command.Parameters.Add(coreVersion);
+            var framesCompleted = new SQLiteParameter("FramesCompleted", DbType.Int32) { Value = entry.FramesCompleted };
+            command.Parameters.Add(framesCompleted);
+            var frameTime = new SQLiteParameter("FrameTime", DbType.Int32) { Value = entry.FrameTime.TotalSeconds };
+            command.Parameters.Add(frameTime);
+            var result = new SQLiteParameter("Result", DbType.Int32) { Value = (int)entry.Result };
+            command.Parameters.Add(result);
             var downloadDateTime = new SQLiteParameter("DownloadDateTime", DbType.DateTime) { Value = entry.DownloadDateTime };
             command.Parameters.Add(downloadDateTime);
             var completionDateTime = new SQLiteParameter("CompletionDateTime", DbType.DateTime) { Value = entry.CompletionDateTime };
             command.Parameters.Add(completionDateTime);
 
-            command.CommandText = String.Format(CultureInfo.InvariantCulture, WuHistoryTableInsertSql, WuHistoryTableName, GetValuesString(entry));
+            command.CommandText = String.Format(CultureInfo.InvariantCulture, WuHistoryTableInsertSql, WuHistoryTableName);
             command.ExecuteNonQuery();
          }
-      }
-
-      private static string GetValuesString(HistoryEntry entry)
-      {
-         return String.Format(CultureInfo.InvariantCulture,
-                              WuHistoryTableInsertValuesFormat,
-                              entry.ProjectID,
-                              entry.ProjectRun,
-                              entry.ProjectClone,
-                              entry.ProjectGen,
-                              entry.InstanceName,
-                              entry.InstancePath,
-                              entry.Username,
-                              entry.Team,
-                              entry.CoreVersion,
-                              entry.FramesCompleted,
-                              entry.FrameTime.TotalSeconds,
-                              (int)entry.Result);
       }
 
       public IList<HistoryEntry> QueryUnitData(QueryParameters parameters)

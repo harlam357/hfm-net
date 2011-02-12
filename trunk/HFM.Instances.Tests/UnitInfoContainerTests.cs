@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - UnitInfo Container Class Tests
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,7 +21,6 @@ using System;
 
 using NUnit.Framework;
 
-using HFM.Framework;
 using HFM.Framework.DataTypes;
 
 namespace HFM.Instances.Tests
@@ -81,15 +80,13 @@ namespace HFM.Instances.Tests
             unitInfo.UnitResult = WorkUnitResult.CoreOutdated;
             unitInfo.RawFramesComplete = 2500;
             unitInfo.RawFramesTotal = 250000;
-            
-            UnitFrame unitFrame = null;
+
             for (int j = 0; j < 4; j++)
             {
-               unitFrame = new UnitFrame { FrameID = j, TimeOfFrame = TimeSpan.FromMinutes(j + 1) };
+               var unitFrame = new UnitFrame { FrameID = j, TimeOfFrame = TimeSpan.FromMinutes(j + 1) };
                unitInfo.UnitFrames.Add(j, unitFrame);
             }
             unitInfo.FramesObserved = 4;
-            unitInfo.CurrentFrameConcrete = unitFrame;
 
             testCollection.UnitInfoList.Add(unitInfo);
          }

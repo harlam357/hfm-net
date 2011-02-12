@@ -1,7 +1,7 @@
 /*
  * HFM.NET - Client Instance Class
  * Copyright (C) 2006 David Rawling
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -387,7 +387,7 @@ namespace HFM.Instances
          }
          if (_displayInstance.MachineId == Constants.DefaultMachineID)
          {
-            _displayInstance.MachineId = (int)queueEntry.MachineID;
+            _displayInstance.MachineId = queueEntry.MachineID;
          }
       }
 
@@ -406,9 +406,9 @@ namespace HFM.Instances
             {
                TimeOfLastUnitStart = DateTime.Now;
             }
-         
-            // If the Last Unit Frame ID is greater than the CurrentUnitInfo Last Unit Frame ID
-            if (parsedUnitInfo.LastUnitFrameID > CurrentUnitInfo.LastUnitFrameID)
+
+            // If the Frames Complete is greater than the CurrentUnitInfo Frames Complete
+            if (parsedUnitInfo.FramesComplete > CurrentUnitInfo.FramesComplete)
             {
                // Update the Time Of Last Frame Progress
                TimeOfLastFrameProgress = DateTime.Now;
@@ -446,7 +446,9 @@ namespace HFM.Instances
                              ReturnedStatus = returnedStatus,
                              FrameTime = CurrentUnitInfo.RawTimePerSection,
                              AverageFrameTime = _benchmarkContainer.GetBenchmarkAverageFrameTime(CurrentUnitInfo),
-                             TimeOfLastFrame = CurrentUnitInfo.TimeOfLastFrame,
+                             TimeOfLastFrame = CurrentUnitInfo.UnitInfoData.CurrentFrame == null
+                                                  ? TimeSpan.Zero
+                                                  : CurrentUnitInfo.UnitInfoData.CurrentFrame.TimeOfFrame,
                              UnitStartTimeStamp = CurrentUnitInfo.UnitInfoData.UnitStartTimeStamp,
                              AllowRunningAsync = _prefs.GetPreference<bool>(Preference.AllowRunningAsync)
                           };

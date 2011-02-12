@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Default Value Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,9 +24,9 @@ namespace HFM.Framework.DataTypes
    public static class Default
    {
       // Folding ID and Team Defaults
-      public const string FoldingIDDefault = "Unknown";
-      public const int TeamDefault = 0;
-      public const string CoreIDDefault = "Unknown";
+      public const string FoldingID = "Unknown";
+      public const int Team = 0;
+      public const string CoreID = "Unknown";
 
       // Log Filename Constants
       public const string FahLogFileName = "FAHlog.txt";

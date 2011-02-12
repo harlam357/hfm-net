@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Display Instance Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 using ProtoBuf;
@@ -260,32 +259,15 @@ namespace HFM.Instances
       {
          get
          {
-            // Issue 125
-            if (ProductionValuesOk && Prefs.GetPreference<bool>(Preference.CalculateBonus))
+            if (ProductionValuesOk)
             {
-               return GetBonusCredit();
+               return CurrentUnitInfo.Credit;
             }
 
             return CurrentUnitInfo.CurrentProtein.Credit;
          }
       }
 
-      /// <summary>
-      /// Get the Credit of the Unit (including bonus)
-      /// </summary>
-      [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-      private double GetBonusCredit()
-      {
-         // Issue 183
-         if (Status.Equals(ClientStatus.RunningAsync) ||
-             Status.Equals(ClientStatus.RunningNoFrameTimes))
-         {
-            return CurrentUnitInfo.CurrentProtein.GetBonusCredit(CurrentUnitInfo.EftByFrameTime);
-         }
-
-         return CurrentUnitInfo.CurrentProtein.GetBonusCredit(CurrentUnitInfo.EftByDownloadTime);
-      }
-      
       public int Complete
       {
          get
@@ -519,7 +501,7 @@ namespace HFM.Instances
          get
          {
             // if these are the default assigned values, don't check otherwise and just return true
-            if (FoldingID == Default.FoldingIDDefault && Team == Default.TeamDefault)
+            if (FoldingID == Default.FoldingID && Team == Default.Team)
             {
                return true;
             }

@@ -47,7 +47,7 @@ namespace HFM.Log
       public IList<LogLine> FrameDataList { get; set; }
 
       /// <summary>
-      /// Number of Frames Observed since Last Unit Start
+      /// Number of Frames Observed since Last Unit Start or Resume from Pause
       /// </summary>
       public int FramesObserved { get; set; }
 

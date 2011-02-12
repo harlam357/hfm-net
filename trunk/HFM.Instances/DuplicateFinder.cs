@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Duplicate Finder Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,6 +21,7 @@ using System.Linq;
 using System.Collections.Generic;
 
 using HFM.Framework;
+using HFM.Framework.DataTypes;
 
 namespace HFM.Instances
 {
@@ -54,7 +55,7 @@ namespace HFM.Instances
          var duplicates = (from x in instances
                            group x by x.CurrentUnitInfo.ProjectRunCloneGen into g
                            let count = g.Count()
-                           where count > 1 && g.First().CurrentUnitInfo.UnitInfoData.ProjectIsUnknown == false
+                           where count > 1 && g.First().CurrentUnitInfo.UnitInfoData.ProjectIsUnknown() == false
                            select g.Key);
 
          foreach (IDisplayInstance instance in instances)

@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Protein Benchmark Data Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,7 +20,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Xml.Serialization;
 
 using ProtoBuf;
@@ -88,7 +87,6 @@ namespace HFM.Framework.DataTypes
                TimeSpan totalTime = TimeSpan.Zero;
                lock (FrameTimesListLock)
                {
-                  Debug.WriteLine("In AverageFrameTime property");
                   foreach (ProteinFrameTime time in FrameTimes)
                   {
                      totalTime = totalTime.Add(time.Duration);
@@ -148,7 +146,6 @@ namespace HFM.Framework.DataTypes
 
             lock (FrameTimesListLock)
             {
-               Debug.WriteLine("In SetFrameTime() method");
                // Dequeue once we have the Maximum number of frame times
                if (FrameTimes.Count == DefaultMaxFrames)
                {

@@ -1,4 +1,22 @@
-﻿
+﻿/*
+ * HFM.NET - Work Unit History Database Tests
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License. See the included file GPLv2.TXT.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,7 +47,7 @@ namespace HFM.Instances.Tests
       }
    
       [Test]
-      public void WriteUnitInfoTest()
+      public void WriteUnitInfoTest1()
       {
          if (File.Exists(TestFile))
          {
@@ -78,6 +96,65 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(new DateTime(2010, 1, 1), entry.DownloadDateTime);
          Assert.AreEqual(new DateTime(2010, 1, 2), entry.CompletionDateTime);
          
+         // test code to ensure this unit is NOT written again
+         database.WriteUnitInfo(unitInfoLogic);
+         // verify
+         rows = database.QueryUnitData(new QueryParameters());
+         Assert.AreEqual(1, rows.Count);
+
+         _mocks.VerifyAll();
+      }
+
+      [Test]
+      public void WriteUnitInfoTest2()
+      {
+         if (File.Exists(TestFile))
+         {
+            File.Delete(TestFile);
+         }
+
+         var unitInfo = new UnitInfo();
+         unitInfo.ProjectID = 6900;
+         unitInfo.ProjectRun = 4;
+         unitInfo.ProjectClone = 5;
+         unitInfo.ProjectGen = 6;
+         unitInfo.OwningInstanceName = "Owner's";
+         unitInfo.OwningInstancePath = "The Path's";
+         unitInfo.FoldingID = "harlam357's";
+         unitInfo.Team = 100;
+         unitInfo.CoreVersion = "2.27";
+         unitInfo.UnitResult = WorkUnitResult.EarlyUnitEnd;
+         unitInfo.DownloadTime = new DateTime(2009, 5, 5);
+         unitInfo.FinishedTime = DateTime.MinValue;
+
+         var unitInfoLogic = _mocks.DynamicMock<IUnitInfoLogic>();
+         SetupResult.For(unitInfoLogic.UnitInfoData).Return(unitInfo);
+         SetupResult.For(unitInfoLogic.FramesComplete).Return(56);
+         SetupResult.For(unitInfoLogic.RawTimePerAllSections).Return(1000);
+
+         _mocks.ReplayAll();
+
+         var database = new UnitInfoDatabase(_proteinCollection) { DatabaseFilePath = TestFile };
+         database.WriteUnitInfo(unitInfoLogic);
+
+         var rows = database.QueryUnitData(new QueryParameters());
+         Assert.AreEqual(1, rows.Count);
+         HistoryEntry entry = rows[0];
+         Assert.AreEqual(6900, entry.ProjectID);
+         Assert.AreEqual(4, entry.ProjectRun);
+         Assert.AreEqual(5, entry.ProjectClone);
+         Assert.AreEqual(6, entry.ProjectGen);
+         Assert.AreEqual("Owner's", entry.InstanceName);
+         Assert.AreEqual("The Path's", entry.InstancePath);
+         Assert.AreEqual("harlam357's", entry.Username);
+         Assert.AreEqual(100, entry.Team);
+         Assert.AreEqual(2.27f, entry.CoreVersion);
+         Assert.AreEqual(56, entry.FramesCompleted);
+         Assert.AreEqual(TimeSpan.FromSeconds(1000), entry.FrameTime);
+         Assert.AreEqual(WorkUnitResult.EarlyUnitEnd, entry.Result);
+         Assert.AreEqual(new DateTime(2009, 5, 5), entry.DownloadDateTime);
+         Assert.AreEqual(DateTime.MinValue, entry.CompletionDateTime);
+
          // test code to ensure this unit is NOT written again
          database.WriteUnitInfo(unitInfoLogic);
          // verify

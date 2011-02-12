@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Benchmark Container Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -105,11 +105,11 @@ namespace HFM.Instances
 
             if (processUpdates)
             {
-               int previousFrameID = 0;
+               int previousFramesComplete = 0;
                if (foundCurrent)
                {
                   // current frame has already been recorded, increment to the next frame
-                  previousFrameID = currentUnitInfo.LastUnitFrameID + 1;
+                  previousFramesComplete = currentUnitInfo.FramesComplete + 1;
                   foundCurrent = false;
                }
 
@@ -118,7 +118,7 @@ namespace HFM.Instances
                if (parsedUnits[index] != null)
                {
                   // Update benchmarks
-                  UpdateBenchmarkData(parsedUnits[index].UnitInfoData, previousFrameID, parsedUnits[index].LastUnitFrameID);
+                  UpdateBenchmarkData(parsedUnits[index].UnitInfoData, previousFramesComplete, parsedUnits[index].FramesComplete);
                   // Update history database
                   _database.WriteUnitInfo(parsedUnits[index]);
                }
@@ -162,7 +162,7 @@ namespace HFM.Instances
          Debug.Assert(unit != null);
 
          // project is not known, don't add to benchmark data
-         if (unit.ProjectIsUnknown) return;
+         if (unit.ProjectIsUnknown()) return;
 
          // no progress has been made so stub out
          if (startingFrame > endingFrame) return;

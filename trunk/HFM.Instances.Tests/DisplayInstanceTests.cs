@@ -1,4 +1,22 @@
-﻿
+﻿/*
+ * HFM.NET - Display Instance Class Tests
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License. See the included file GPLv2.TXT.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ */
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,7 +36,6 @@ namespace HFM.Instances.Tests
       private MockRepository _mocks;
       private IPreferenceSet _prefs;
       private IProteinCollection _proteinCollection;
-      private IProteinBenchmarkContainer _benchmarkContainer;
    
       [SetUp]
       public void Init()
@@ -26,7 +43,6 @@ namespace HFM.Instances.Tests
          _mocks = new MockRepository();
          _prefs = _mocks.DynamicMock<IPreferenceSet>();
          _proteinCollection = _mocks.DynamicMock<IProteinCollection>();
-         _benchmarkContainer = _mocks.DynamicMock<IProteinBenchmarkContainer>();
       }
    
       [Test]
@@ -71,14 +87,13 @@ namespace HFM.Instances.Tests
                            RawFramesComplete = 10000,
                            RawFramesTotal = 250000,
                            FramesObserved = 4,
-                           CurrentFrameConcrete = new UnitFrame { FrameID = 4, TimeOfFrame = TimeSpan.FromMinutes(20) },
                            CoreID = "A2"
                         };
          unitInfo.UnitFrames.Add(0, new UnitFrame { FrameID = 0, TimeOfFrame = TimeSpan.FromMinutes(0) });
          unitInfo.UnitFrames.Add(1, new UnitFrame { FrameID = 1, TimeOfFrame = TimeSpan.FromMinutes(5) });
          unitInfo.UnitFrames.Add(2, new UnitFrame { FrameID = 2, TimeOfFrame = TimeSpan.FromMinutes(10) });
          unitInfo.UnitFrames.Add(3, new UnitFrame { FrameID = 3, TimeOfFrame = TimeSpan.FromMinutes(15) });
-         unitInfo.UnitFrames.Add(4, unitInfo.CurrentFrameConcrete);
+         unitInfo.UnitFrames.Add(4, new UnitFrame { FrameID = 4, TimeOfFrame = TimeSpan.FromMinutes(20) });
          foreach (var frame in unitInfo.UnitFrames.Values)
          {
             frame.FrameDuration = TimeSpan.FromMinutes(5);

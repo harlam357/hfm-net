@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Unit Info Logic Interface
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -76,6 +76,11 @@ namespace HFM.Framework
       TimeSpan TimePerFrame { get; }
 
       /// <summary>
+      /// Work unit credit
+      /// </summary>
+      double Credit { get; }
+
+      /// <summary>
       /// Units per day (UPD) rating for this unit
       /// </summary>
       double UPD { get; }
@@ -96,44 +101,9 @@ namespace HFM.Framework
       DateTime EtaDate { get; }
 
       /// <summary>
-      /// Flag specifying if EtaDate is Unknown
-      /// </summary>
-      bool EtaDateUnknown { get; }
-
-      /// <summary>
       /// Specifies if All Frames have been Completed
       /// </summary>
-      bool AllFramesAreCompleted { get; }
-
-      /// <summary>
-      /// Esimated Finishing Time for this unit
-      /// </summary>
-      TimeSpan EftByDownloadTime { get; }
-
-      /// <summary>
-      /// Esimated Finishing Time for this unit
-      /// </summary>
-      TimeSpan EftByFrameTime { get; }
-
-      /// <summary>
-      /// Number of Frames Observed on this Unit
-      /// </summary>
-      int FramesObserved { get; }
-
-      /// <summary>
-      /// Last Observed Frame on this Unit
-      /// </summary>
-      IUnitFrame CurrentFrame { get; }
-
-      /// <summary>
-      /// Timestamp from the last completed frame
-      /// </summary>
-      TimeSpan TimeOfLastFrame { get; }
-
-      /// <summary>
-      /// Last Frame ID based on UnitFrame Data
-      /// </summary>
-      int LastUnitFrameID { get; }
+      bool AllFramesCompleted { get; }
 
       /// <summary>
       /// Average frame time since unit download

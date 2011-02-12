@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Unit Info Logic Class Tests
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Globalization;
 
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -41,350 +42,840 @@ namespace HFM.Instances.Tests
          _benchmarkContainer = _mocks.DynamicMock<IProteinBenchmarkContainer>();
          _displayInstance = _mocks.Stub<IDisplayInstance>();
       }
-   
+      
+      #region DownloadTime
+      
       [Test]
-      public void UnitInfoLogicTimePropertyTest()
+      public void DownloadTimeTest1()
       {
-         IPreferenceSet prefs = SetupMockPreferenceSet();
-         IProtein protein = SetupMockProtein("GROCVS", 100, 3, 6);
-         IClientInstanceSettings clientInstance = SetupClientInstanceSettings(false, 0);
-         _mocks.ReplayAll();
-
-         var unitInfo = new UnitInfo();
-         SetProject(unitInfo);
-         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance, _displayInstance);
-
-         SetDateTimeProperties(unitInfo);
-         AssertDateTimeProperties(unitInfoLogic, unitInfo.DownloadTime.ToLocalTime(),
-                                                 unitInfo.DownloadTime.ToLocalTime().AddDays(protein.PreferredDays),
-                                                 unitInfo.DownloadTime.ToLocalTime().AddDays(protein.MaxDays),
-                                                 unitInfo.DueTime.ToLocalTime(),
-                                                 unitInfo.FinishedTime.ToLocalTime());
-         _mocks.VerifyAll();            
+         var unitInfo = new UnitInfo { DownloadTime = DateTime.UtcNow };
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo, settings);
+         
+         Assert.AreEqual(unitInfo.DownloadTime.ToLocalTime(), 
+                         unitInfoLogic.DownloadTime);
       }
 
       [Test]
-      public void UnitInfoLogicTimePropertyUtcZeroTest()
+      public void DownloadTimeTest2()
       {
-         IPreferenceSet prefs = SetupMockPreferenceSet();
-         IProtein protein = SetupMockProtein("GROCVS", 100, 4, 8);
-         IClientInstanceSettings clientInstance = SetupClientInstanceSettings(true, 0);
-         _mocks.ReplayAll();
-
-         var unitInfo = new UnitInfo();
-         SetProject(unitInfo);
-         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance, _displayInstance);
-
-         SetDateTimeProperties(unitInfo);
-         AssertDateTimeProperties(unitInfoLogic, unitInfo.DownloadTime,
-                                                 unitInfo.DownloadTime.AddDays(protein.PreferredDays),
-                                                 unitInfo.DownloadTime.AddDays(protein.MaxDays),
-                                                 unitInfo.DueTime,
-                                                 unitInfo.FinishedTime);
-         _mocks.VerifyAll();
+         var unitInfo = new UnitInfo { DownloadTime = DateTime.UtcNow };
+         var settings = CreateClientInstanceSettings(false, 60);
+         var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo, settings);
+         
+         Assert.AreEqual(unitInfo.DownloadTime.ToLocalTime()
+                         .Subtract(TimeSpan.FromMinutes(60)), 
+                         unitInfoLogic.DownloadTime);
       }
 
       [Test]
-      public void UnitInfoLogicTimePropertyWithUnknownProteinTest()
+      public void DownloadTimeTest3()
       {
-         IPreferenceSet prefs = SetupMockPreferenceSet();
-         IProtein protein = SetupMockNewProtein();
-         IClientInstanceSettings clientInstance = SetupClientInstanceSettings(false, 0);
-         _mocks.ReplayAll();
-
-         var unitInfo = new UnitInfo();
-         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance, _displayInstance);
-
-         SetDateTimeProperties(unitInfo);
-         AssertDateTimeProperties(unitInfoLogic, unitInfo.DownloadTime.ToLocalTime(),
-                                                 unitInfo.DueTime.ToLocalTime(), 
-                                                 DateTime.MinValue,
-                                                 unitInfo.DueTime.ToLocalTime(),
-                                                 unitInfo.FinishedTime.ToLocalTime());
-         _mocks.VerifyAll();
+         var unitInfo = new UnitInfo { DownloadTime = DateTime.UtcNow };
+         var settings = CreateClientInstanceSettings(true, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo, settings);
+         
+         Assert.AreEqual(unitInfo.DownloadTime,
+                         unitInfoLogic.DownloadTime);
       }
 
-      private static void SetProject(UnitInfo unitInfo)
+      [Test]
+      public void DownloadTimeTest4()
       {
-         unitInfo.ProjectID = 2669;
-         unitInfo.ProjectRun = 1;
-         unitInfo.ProjectClone = 2;
-         unitInfo.ProjectGen = 3;
+         var unitInfo = new UnitInfo { DownloadTime = DateTime.UtcNow };
+         var settings = CreateClientInstanceSettings(true, -60);
+         var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo, settings);
+
+         Assert.AreEqual(unitInfo.DownloadTime
+                         .Add(TimeSpan.FromMinutes(60)), 
+                         unitInfoLogic.DownloadTime);
+      }
+
+      [Test]
+      public void DownloadTimeTest5()
+      {
+         var unitInfo = new UnitInfo { DownloadTime = DateTime.MinValue };
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo, settings);
+
+         Assert.AreEqual(unitInfo.DownloadTime, 
+                         unitInfoLogic.DownloadTime);
       }
       
-      private static void SetDateTimeProperties(UnitInfo unitInfo)
-      {
-         unitInfo.DownloadTime = new DateTime(2010, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-         unitInfo.DueTime = new DateTime(2010, 1, 6, 0, 0, 0, DateTimeKind.Utc);
-         unitInfo.FinishedTime = new DateTime(2010, 1, 1, 4, 30, 0, DateTimeKind.Utc);
-      }
+      #endregion
       
-      private static void AssertDateTimeProperties(UnitInfoLogic unitInfoLogic, DateTime downloadTime, 
-                                                   DateTime preferredDeadline, DateTime finalDeadline, 
-                                                   DateTime dueTime, DateTime finishedTime)
-      {
-         // Unit Info Logic Values
-         Assert.AreEqual(false, unitInfoLogic.UnitInfoData.DownloadTimeUnknown);
-         Assert.AreEqual(downloadTime, unitInfoLogic.DownloadTime);
-         Assert.AreEqual(preferredDeadline, unitInfoLogic.PreferredDeadline);
-         Assert.AreEqual(finalDeadline, unitInfoLogic.FinalDeadline);
-         Assert.AreEqual(false, unitInfoLogic.UnitInfoData.DueTimeUnknown);
-         Assert.AreEqual(dueTime, unitInfoLogic.DueTime);
-         Assert.AreEqual(finishedTime, unitInfoLogic.FinishedTime);
+      #region DueTime
 
-         if (unitInfoLogic.CurrentProtein.IsUnknown)
-         {
-            // use DueTime for PreferredDeadline when CurrentProtein.IsUnknown
-            Assert.AreEqual(unitInfoLogic.DueTime, unitInfoLogic.PreferredDeadline);
-         }
+      [Test]
+      public void DueTimeTest1()
+      {
+         var unitInfo = new UnitInfo { DueTime = DateTime.UtcNow };
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo, settings);
+
+         Assert.AreEqual(unitInfo.DueTime.ToLocalTime(),
+                         unitInfoLogic.DueTime);
       }
 
       [Test]
-      public void UnitInfoLogicFramePropertyTest()
+      public void DueTimeTest2()
       {
-         IPreferenceSet prefs = SetupMockPreferenceSet();
-         IProtein protein = SetupMockProtein("GROCVS", 100, 3, 6);
-         var baseDate = new DateTime(2010, 1, 1);
-         IClientInstanceSettings clientInstance = SetupClientInstanceSettings(false, 0, "Owner", "Path");
-         _displayInstance.LastRetrievalTime = baseDate.Add(TimeSpan.FromMinutes(30));
+         var unitInfo = new UnitInfo { DueTime = DateTime.UtcNow };
+         var settings = CreateClientInstanceSettings(false, 60);
+         var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo, settings);
 
+         Assert.AreEqual(unitInfo.DueTime.ToLocalTime()
+                         .Subtract(TimeSpan.FromMinutes(60)),
+                         unitInfoLogic.DueTime);
+      }
+
+      [Test]
+      public void DueTimeTest3()
+      {
+         var unitInfo = new UnitInfo { DueTime = DateTime.UtcNow };
+         var settings = CreateClientInstanceSettings(true, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo, settings);
+
+         Assert.AreEqual(unitInfo.DueTime,
+                         unitInfoLogic.DueTime);
+      }
+
+      [Test]
+      public void DueTimeTest4()
+      {
+         var unitInfo = new UnitInfo { DueTime = DateTime.UtcNow };
+         var settings = CreateClientInstanceSettings(true, -60);
+         var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo, settings);
+
+         Assert.AreEqual(unitInfo.DueTime
+                         .Add(TimeSpan.FromMinutes(60)),
+                         unitInfoLogic.DueTime);
+      }
+
+      [Test]
+      public void DueTimeTest5()
+      {
+         var unitInfo = new UnitInfo { DueTime = DateTime.MinValue };
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo, settings);
+
+         Assert.AreEqual(unitInfo.DueTime,
+                         unitInfoLogic.DueTime);
+      }
+      
+      #endregion
+
+      #region FinishedTime
+
+      [Test]
+      public void FinishedTimeTest1()
+      {
+         var unitInfo = new UnitInfo { FinishedTime = DateTime.UtcNow };
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo, settings);
+
+         Assert.AreEqual(unitInfo.FinishedTime.ToLocalTime(),
+                         unitInfoLogic.FinishedTime);
+      }
+
+      [Test]
+      public void FinishedTimeTest2()
+      {
+         var unitInfo = new UnitInfo { FinishedTime = DateTime.UtcNow };
+         var settings = CreateClientInstanceSettings(false, 60);
+         var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo, settings);
+
+         Assert.AreEqual(unitInfo.FinishedTime.ToLocalTime()
+                         .Subtract(TimeSpan.FromMinutes(60)),
+                         unitInfoLogic.FinishedTime);
+      }
+
+      [Test]
+      public void FinishedTimeTest3()
+      {
+         var unitInfo = new UnitInfo { FinishedTime = DateTime.UtcNow };
+         var settings = CreateClientInstanceSettings(true, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo, settings);
+
+         Assert.AreEqual(unitInfo.FinishedTime,
+                         unitInfoLogic.FinishedTime);
+      }
+
+      [Test]
+      public void FinishedTimeTest4()
+      {
+         var unitInfo = new UnitInfo { FinishedTime = DateTime.UtcNow };
+         var settings = CreateClientInstanceSettings(true, -60);
+         var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo, settings);
+
+         Assert.AreEqual(unitInfo.FinishedTime
+                         .Add(TimeSpan.FromMinutes(60)),
+                         unitInfoLogic.FinishedTime);
+      }
+
+      [Test]
+      public void FinishedTimeTest5()
+      {
+         var unitInfo = new UnitInfo { FinishedTime = DateTime.MinValue };
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo, settings);
+
+         Assert.AreEqual(unitInfo.FinishedTime,
+                         unitInfoLogic.FinishedTime);
+      }
+
+      #endregion
+
+      #region PreferredDeadline
+
+      [Test]
+      public void PreferredDeadlineTest1()
+      {
+         var protein = new Protein { ProjectNumber = 1, PreferredDays = 3 };
+         var unitInfo = new UnitInfo { DownloadTime = DateTime.UtcNow };         
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(protein, unitInfo, settings);
+         
+         Assert.AreEqual(unitInfo.DownloadTime.ToLocalTime().AddDays(3), 
+                         unitInfoLogic.PreferredDeadline);
+      }
+
+      [Test]
+      public void PreferredDeadlineTest2()
+      {
+         var unitInfo = new UnitInfo { DownloadTime = DateTime.UtcNow, DueTime = DateTime.UtcNow.Add(TimeSpan.FromDays(5)) };
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo, settings);
+
+         // PreferredDeadline comes from DueTime when Protein.IsUnknown
+         Assert.AreEqual(unitInfo.DownloadTime.ToLocalTime().AddDays(5),
+                         unitInfoLogic.PreferredDeadline);
+      }
+
+      [Test]
+      public void PreferredDeadlineTest3()
+      {
+         var unitInfo = new UnitInfo { DownloadTime = DateTime.MinValue };
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo, settings);
+
+         Assert.AreEqual(unitInfo.DownloadTime,
+                         unitInfoLogic.PreferredDeadline);
+      }
+      
+      #endregion
+
+      #region FinalDeadline
+
+      [Test]
+      public void FinalDeadlineTest1()
+      {
+         var protein = new Protein { ProjectNumber = 1, MaxDays = 6 };
+         var unitInfo = new UnitInfo { DownloadTime = DateTime.UtcNow };
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(protein, unitInfo, settings);
+
+         Assert.AreEqual(unitInfo.DownloadTime.ToLocalTime().AddDays(6),
+                         unitInfoLogic.FinalDeadline);
+      }
+
+      [Test]
+      public void FinalDeadlineTest2()
+      {
+         var unitInfo = new UnitInfo { DownloadTime = DateTime.UtcNow };
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo, settings);
+
+         Assert.AreEqual(DateTime.MinValue,
+                         unitInfoLogic.FinalDeadline);
+      }
+
+      [Test]
+      public void FinalDeadlineTest3()
+      {
+         var unitInfo = new UnitInfo { DownloadTime = DateTime.MinValue };
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo, settings);
+
+         Assert.AreEqual(unitInfo.DownloadTime,
+                         unitInfoLogic.FinalDeadline);
+      }
+      
+      #endregion
+      
+      #region CurrentProtein
+      
+      [Test]
+      public void ProjectRunCloneGenTest()
+      {
+         var unitInfo = new UnitInfo { ProjectID = 2669, ProjectRun = 1, ProjectClone = 2, ProjectGen = 3 };
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo, settings);
+         
+         Assert.AreEqual("P2669 (R1, C2, G3)", unitInfoLogic.ProjectRunCloneGen);
+      }
+
+      [Test]
+      public void CurrentProteinTest1()
+      {
+         var protein = new Protein { ProjectNumber = 2669 };
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(protein, new UnitInfo(), settings);
+
+         Assert.AreSame(protein, unitInfoLogic.CurrentProtein);
+      }
+
+      [Test]
+      public void CurrentProteinTest2()
+      {
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(null, new UnitInfo(), settings);
+
+         Assert.IsTrue(unitInfoLogic.CurrentProtein.IsUnknown);
+      }
+      
+      #endregion
+
+      #region Frame and Percent Complete
+
+      [Test]
+      public void FramesCompleteTest1()
+      {
          var unitInfo = new UnitInfo();
-         UnitFrame line1 = MakeUnitFrame("00:00:00", 0, 0, 250000);
-         UnitFrame line2 = MakeUnitFrame("00:04:00", 1, 2500, 250000);
-         UnitFrame line3 = MakeUnitFrame("00:09:00", 2, 5000, 250000);
-         UnitFrame line4 = MakeUnitFrame("00:15:00", 3, 7500, 250000);
+         unitInfo.UnitFrames.Add(1, new UnitFrame { FrameID = 1 });
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(null, unitInfo, settings);
 
-         Expect.Call(protein.GetPPD(TimeSpan.Zero)).IgnoreArguments().Return(100);
+         Assert.AreEqual(1, unitInfoLogic.FramesComplete);
+      }
+
+      [Test]
+      public void FramesCompleteTest2()
+      {
+         var unitInfo = new UnitInfo();
+         unitInfo.UnitFrames.Add(-1, new UnitFrame { FrameID = -1 });
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(null, unitInfo, settings);
+
+         Assert.AreEqual(0, unitInfoLogic.FramesComplete);
+      }
+
+      [Test]
+      public void FramesCompleteTest3()
+      {
+         var unitInfo = new UnitInfo();
+         unitInfo.UnitFrames.Add(101, new UnitFrame { FrameID = 101 });
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(null, unitInfo, settings);
+
+         Assert.AreEqual(100, unitInfoLogic.FramesComplete);
+      }
+
+      [Test]
+      public void FramesCompleteTest4()
+      {
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(null, new UnitInfo(), settings);
+
+         Assert.AreEqual(0, unitInfoLogic.FramesComplete);
+      }
+
+      [Test]
+      public void PercentCompleteTest1()
+      {
+         var unitInfo = new UnitInfo();
+         unitInfo.UnitFrames.Add(5, new UnitFrame { FrameID = 5 });
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(null, unitInfo, settings);
+
+         Assert.AreEqual(5, unitInfoLogic.PercentComplete);
+      }
+
+      [Test]
+      public void PercentCompleteTest2()
+      {
+         var protein = new Protein { Frames = 200 };
+         var unitInfo = new UnitInfo();
+         unitInfo.UnitFrames.Add(5, new UnitFrame { FrameID = 5 });
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(protein, unitInfo, settings);
+
+         Assert.AreEqual(2, unitInfoLogic.PercentComplete);
+      }
+      
+      #endregion
+
+      #region PerSectionTests
+
+      [Test]
+      public void PerUnitDownloadTest1()
+      {
+         var protein = new Protein { ProjectNumber = 1, Credit = 100 };
+         var unitInfo = new UnitInfo { DownloadTime = DateTime.UtcNow, FramesObserved = 4 };
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:00:00", 0));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:04:00", 1));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:09:00", 2));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:15:00", 3));
+         var settings = CreateClientInstanceSettings(false, 0);
+         
+         _displayInstance.LastRetrievalTime = unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(30));
          _mocks.ReplayAll();
-
-         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance, _displayInstance);
-
-         Assert.AreEqual(TimeSpan.Zero, unitInfoLogic.TimeOfLastFrame);
-         unitInfo.FramesObserved = 4;
-         unitInfo.SetCurrentFrame(line1);
-         unitInfo.SetCurrentFrame(line2);
-         unitInfo.SetCurrentFrame(line3);
-         unitInfo.SetCurrentFrame(line4);
-
-         Assert.AreEqual(3, unitInfoLogic.FramesComplete);
-         Assert.AreEqual(3, unitInfoLogic.PercentComplete);
-         Assert.AreEqual(new TimeSpan(0, 5, 0), unitInfoLogic.TimePerFrame);
-         // UPD
-         Assert.AreEqual(100, unitInfoLogic.PPD);
-         Assert.AreEqual(new TimeSpan(8, 5, 0), unitInfoLogic.ETA);
-         Assert.AreEqual(TimeSpan.Zero, unitInfoLogic.EftByDownloadTime);
-         Assert.AreEqual(new TimeSpan(8, 20, 00), unitInfoLogic.EftByFrameTime);
-         unitInfo.DownloadTime = baseDate;
-         Assert.AreEqual(new TimeSpan(14, 35, 00), unitInfoLogic.EftByDownloadTime);
-         Assert.AreEqual(TimeSpan.FromMinutes(15), unitInfoLogic.TimeOfLastFrame);
-         Assert.AreEqual(3, unitInfoLogic.LastUnitFrameID);
-
-         AssertTimeVariations(unitInfoLogic, 7800, 300, 300, 360);
+         
+         var unitInfoLogic = CreateUnitInfoLogic(protein, unitInfo, settings);
+         
+         Assert.AreEqual(7800, unitInfoLogic.RawTimePerUnitDownload);
+         Assert.AreEqual(TimeSpan.FromSeconds(7800), unitInfoLogic.TimePerUnitDownload);
+         Assert.AreEqual(11.07692, unitInfoLogic.PPDPerUnitDownload);
          
          _mocks.VerifyAll();
       }
 
       [Test]
-      public void UnitInfoLogicFramePropertyUtcZeroTest()
+      public void PerUnitDownloadTest2()
       {
-         IPreferenceSet prefs = SetupMockPreferenceSet();
-         IProtein protein = SetupMockProtein("GROCVS", 100, 3, 6);
-         var baseDate = new DateTime(2010, 1, 1);
-         IClientInstanceSettings clientInstance = SetupClientInstanceSettings(true, 0, "Owner", "Path");
-         _displayInstance.LastRetrievalTime = baseDate.Add(TimeSpan.FromMinutes(90));
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(null, new UnitInfo(), settings);
 
-         var unitInfo = new UnitInfo();
-         UnitFrame line1 = MakeUnitFrame("00:00:00", 0, 0, 100);
-         UnitFrame line2 = MakeUnitFrame("00:05:10", 1, 1, 100);
-         UnitFrame line3 = MakeUnitFrame("00:11:30", 2, 2, 100);
-         UnitFrame line4 = MakeUnitFrame("00:17:40", 3, 3, 100);
-         UnitFrame line5 = MakeUnitFrame("00:24:00", 4, 4, 100);
-
-         Expect.Call(protein.GetPPD(TimeSpan.Zero)).IgnoreArguments().Return(100);
-         _mocks.ReplayAll();
-
-         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance, _displayInstance);
-
-         Assert.AreEqual(TimeSpan.Zero, unitInfoLogic.TimeOfLastFrame);
-         unitInfo.FramesObserved = 5;
-         unitInfo.SetCurrentFrame(line1);
-         unitInfo.SetCurrentFrame(line2);
-         unitInfo.SetCurrentFrame(line3);
-         unitInfo.SetCurrentFrame(line4);
-         unitInfo.SetCurrentFrame(line5);
-
-         Assert.AreEqual(4, unitInfoLogic.FramesComplete);
-         Assert.AreEqual(4, unitInfoLogic.PercentComplete);
-         Assert.AreEqual(new TimeSpan(0, 6, 0), unitInfoLogic.TimePerFrame);
-         // UPD
-         Assert.AreEqual(100, unitInfoLogic.PPD);
-         Assert.AreEqual(new TimeSpan(9, 36, 0), unitInfoLogic.ETA);
-         Assert.AreEqual(TimeSpan.Zero, unitInfoLogic.EftByDownloadTime);
-         Assert.AreEqual(new TimeSpan(10, 00, 00), unitInfoLogic.EftByFrameTime);
-         unitInfo.DownloadTime = baseDate;
-         Assert.AreEqual(new TimeSpan(11, 6, 00), unitInfoLogic.EftByDownloadTime);
-         Assert.AreEqual(TimeSpan.FromMinutes(24), unitInfoLogic.TimeOfLastFrame);
-         Assert.AreEqual(4, unitInfoLogic.LastUnitFrameID);
-
-         AssertTimeVariations(unitInfoLogic, 1350, 360, 376, 380);
-
-         _mocks.VerifyAll();
-      }
-      
-      [Test]
-      public void UnitInfoLogicFramesAndPpdTest()
-      {
-         IPreferenceSet prefs = SetupMockPreferenceSet();
-         IProtein protein = SetupMockProtein("GROCVS", 100, 3, 6);
-         var baseDate = new DateTime(2010, 1, 1);
-         IClientInstanceSettings clientInstance = SetupClientInstanceSettings(true, 0, "Owner", "Path");
-         _displayInstance.LastRetrievalTime = baseDate.Add(TimeSpan.FromMinutes(90));
-
-         var unitInfo = new UnitInfo();
-         UnitFrame line1 = MakeUnitFrame("00:00:00", 0, 0, 100);
-         UnitFrame line2 = MakeUnitFrame("00:05:10", 1, 1, 100);
-         UnitFrame line3 = MakeUnitFrame("00:11:30", 2, 2, 100);
-         UnitFrame line4 = MakeUnitFrame("00:17:40", 3, 3, 100);
-         UnitFrame line5 = MakeUnitFrame("00:24:00", 4, 4, 100);
-
-         Expect.Call(protein.GetPPD(TimeSpan.Zero)).IgnoreArguments().Return(100);
-         _mocks.ReplayAll();
-
-         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance, _displayInstance);
-
-         AssertRawTimesZero(unitInfoLogic);
-
-         Assert.AreEqual(TimeSpan.Zero, unitInfoLogic.TimeOfLastFrame);
-         unitInfo.FramesObserved = 5;
-         unitInfo.SetCurrentFrame(line1);
-         unitInfo.SetCurrentFrame(line2);
-         unitInfo.SetCurrentFrame(line3);
-         unitInfo.SetCurrentFrame(line4);
-         unitInfo.SetCurrentFrame(line5);
-
-         Assert.AreEqual(100, unitInfoLogic.PPD);
-         unitInfo.DownloadTime = baseDate;
-         AssertTimeVariations(unitInfoLogic, 1350, 360, 376, 380);
-         
-         _mocks.VerifyAll();
-      }
-
-      [Test]
-      public void UnitInfoLogicFramesAndBonusPpdTest()
-      {
-         IPreferenceSet prefs = SetupMockPreferenceSet();
-         IProtein protein = SetupMockProtein("GROCVS", 100, 3, 6);
-         var baseDate = new DateTime(2010, 1, 1);
-         IClientInstanceSettings clientInstance = SetupClientInstanceSettings(true, 0, "Owner", "Path");
-         _displayInstance.LastRetrievalTime = baseDate.Add(TimeSpan.FromMinutes(90));
-
-         var unitInfo = new UnitInfo();
-         UnitFrame line1 = MakeUnitFrame("00:00:00", 0, 0, 100);
-         UnitFrame line2 = MakeUnitFrame("00:05:10", 1, 1, 100);
-         UnitFrame line3 = MakeUnitFrame("00:11:30", 2, 2, 100);
-         UnitFrame line4 = MakeUnitFrame("00:17:40", 3, 3, 100);
-         UnitFrame line5 = MakeUnitFrame("00:24:00", 4, 4, 100);
-
-         Expect.Call(prefs.GetPreference<bool>(Preference.CalculateBonus)).Return(true);
-         Expect.Call(protein.GetPPD(TimeSpan.Zero, TimeSpan.Zero)).IgnoreArguments().Return(200);
-         _mocks.ReplayAll();
-
-         var unitInfoLogic = new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, clientInstance, _displayInstance);
-
-         AssertRawTimesZero(unitInfoLogic);
-
-         Assert.AreEqual(TimeSpan.Zero, unitInfoLogic.TimeOfLastFrame);
-         unitInfo.FramesObserved = 5;
-         unitInfo.SetCurrentFrame(line1);
-         unitInfo.SetCurrentFrame(line2);
-         unitInfo.SetCurrentFrame(line3);
-         unitInfo.SetCurrentFrame(line4);
-         unitInfo.SetCurrentFrame(line5);
-
-         Assert.AreEqual(200, unitInfoLogic.PPD);
-         unitInfo.DownloadTime = baseDate;
-         AssertTimeVariations(unitInfoLogic, 1350, 360, 376, 380);
-
-         _mocks.VerifyAll();
-      }
-
-      private IProtein SetupMockProtein(string core, int frames, int preferredDays, int maxDays)
-      {
-         var currentProtein = _mocks.DynamicMock<IProtein>();
-         Expect.Call(currentProtein.Core).Return(core).Repeat.Any();
-         Expect.Call(currentProtein.Frames).Return(frames).Repeat.Any();
-         Expect.Call(currentProtein.PreferredDays).Return(preferredDays).Repeat.Any();
-         Expect.Call(currentProtein.MaxDays).Return(maxDays).Repeat.Any();
-
-         return currentProtein;
-      }
-      
-      private IProtein SetupMockNewProtein()
-      {
-         var newProtein = _mocks.DynamicMock<IProtein>();
-         Expect.Call(newProtein.Core).Return(String.Empty).Repeat.Any();
-         Expect.Call(newProtein.Frames).Return(100).Repeat.Any();
-         Expect.Call(newProtein.IsUnknown).Return(true).Repeat.Any();
-
-         return newProtein;
-      }
-      
-      private static void AssertRawTimesZero(IUnitInfoLogic unitInfoLogic)
-      {
          Assert.AreEqual(0, unitInfoLogic.RawTimePerUnitDownload);
-         Assert.AreEqual(0, unitInfoLogic.RawTimePerAllSections);
-         Assert.AreEqual(0, unitInfoLogic.RawTimePerThreeSections);
-         Assert.AreEqual(0, unitInfoLogic.RawTimePerLastSection);
+         Assert.AreEqual(TimeSpan.FromSeconds(0), unitInfoLogic.TimePerUnitDownload);
+         Assert.AreEqual(0, unitInfoLogic.PPDPerUnitDownload);
       }
 
-      private IPreferenceSet SetupMockPreferenceSet()
+      [Test]
+      public void PerUnitDownloadTest3()
       {
-         var prefs = _mocks.DynamicMock<IPreferenceSet>();
-         Expect.Call(prefs.GetPreference<PpdCalculationType>(Preference.PpdCalculation)).Return(PpdCalculationType.AllFrames).Repeat.Any();
-         return prefs;
+         var unitInfo = new UnitInfo { FramesObserved = 4 };
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:00:00", 0));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:04:00", 1));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:09:00", 2));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:15:00", 3));
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(null, unitInfo, settings);
+
+         Assert.AreEqual(0, unitInfoLogic.RawTimePerUnitDownload);
+         Assert.AreEqual(TimeSpan.FromSeconds(0), unitInfoLogic.TimePerUnitDownload);
+         Assert.AreEqual(0, unitInfoLogic.PPDPerUnitDownload);
+      }
+
+      [Test]
+      public void PerUnitDownloadTest4()
+      {
+         var unitInfo = new UnitInfo { DownloadTime = DateTime.UtcNow, FramesObserved = 4 };
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:00:00", -1));
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(null, unitInfo, settings);
+
+         Assert.AreEqual(0, unitInfoLogic.RawTimePerUnitDownload);
+         Assert.AreEqual(TimeSpan.FromSeconds(0), unitInfoLogic.TimePerUnitDownload);
+         Assert.AreEqual(0, unitInfoLogic.PPDPerUnitDownload);
       }
       
-      private static IClientInstanceSettings SetupClientInstanceSettings(bool utcOffsetIsZero, int clientTimeOffset)
+      [Test]
+      public void PerAllSectionsTest1()
       {
-         return SetupClientInstanceSettings(utcOffsetIsZero, clientTimeOffset, "Owner", "Path");
+         var protein = new Protein { ProjectNumber = 1, Credit = 100 };
+         var unitInfo = new UnitInfo { FramesObserved = 5 };
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:00:00", 0));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:05:10", 1));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:11:30", 2));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:17:40", 3));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:24:00", 4));
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(protein, unitInfo, settings);
+
+         Assert.AreEqual(360, unitInfoLogic.RawTimePerAllSections);
+         Assert.AreEqual(TimeSpan.FromSeconds(360), unitInfoLogic.TimePerAllSections);
+         Assert.AreEqual(240, unitInfoLogic.PPDPerAllSections);
       }
 
-      private static IClientInstanceSettings SetupClientInstanceSettings(bool utcOffsetIsZero, int clientTimeOffset, string instanceName, string path)
+      [Test]
+      public void PerAllSectionsTest2()
+      {
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(null, new UnitInfo(), settings);
+
+         Assert.AreEqual(0, unitInfoLogic.RawTimePerAllSections);
+         Assert.AreEqual(TimeSpan.FromSeconds(0), unitInfoLogic.TimePerAllSections);
+         Assert.AreEqual(0, unitInfoLogic.PPDPerAllSections);
+      }
+
+      [Test]
+      public void PerThreeSectionsTest1()
+      {
+         var protein = new Protein { ProjectNumber = 1, Credit = 100 };
+         var unitInfo = new UnitInfo { FramesObserved = 5 };
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:00:00", 0));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:05:10", 1));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:11:30", 2));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:17:40", 3));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:24:00", 4));
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(protein, unitInfo, settings);
+
+         Assert.AreEqual(376, unitInfoLogic.RawTimePerThreeSections);
+         Assert.AreEqual(TimeSpan.FromSeconds(376), unitInfoLogic.TimePerThreeSections);
+         Assert.AreEqual(229.78723, unitInfoLogic.PPDPerThreeSections);
+      }
+
+      [Test]
+      public void PerThreeSectionsTest2()
+      {
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(null, new UnitInfo(), settings);
+
+         Assert.AreEqual(0, unitInfoLogic.RawTimePerThreeSections);
+         Assert.AreEqual(TimeSpan.FromSeconds(0), unitInfoLogic.TimePerThreeSections);
+         Assert.AreEqual(0, unitInfoLogic.PPDPerThreeSections);
+      }
+
+      [Test]
+      public void PerLastSectionTest1()
+      {
+         var protein = new Protein { ProjectNumber = 1, Credit = 100 };
+         var unitInfo = new UnitInfo { FramesObserved = 5 };
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:00:00", 0));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:05:10", 1));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:11:30", 2));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:17:40", 3));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:24:00", 4));
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(protein, unitInfo, settings);
+
+         Assert.AreEqual(380, unitInfoLogic.RawTimePerLastSection);
+         Assert.AreEqual(TimeSpan.FromSeconds(380), unitInfoLogic.TimePerLastSection);
+         Assert.AreEqual(227.36842, unitInfoLogic.PPDPerLastSection);
+      }
+
+      [Test]
+      public void PerLastSectionTest2()
+      {
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(null, new UnitInfo(), settings);
+
+         Assert.AreEqual(0, unitInfoLogic.RawTimePerLastSection);
+         Assert.AreEqual(TimeSpan.FromSeconds(0), unitInfoLogic.TimePerLastSection);
+         Assert.AreEqual(0, unitInfoLogic.PPDPerLastSection);
+      }
+      
+      [Test]
+      public void TimePerSectionTest1()
+      {
+         var unitInfo = new UnitInfo { FramesObserved = 5 };
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:00:00", 0));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:05:10", 1));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:11:30", 2));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:17:40", 3));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:24:00", 4));
+         var settings = CreateClientInstanceSettings(false, 0);
+
+         var prefs = _mocks.DynamicMock<IPreferenceSet>();
+         /*****/
+         Expect.Call(prefs.GetPreference<PpdCalculationType>(Preference.PpdCalculation))
+            .Return(PpdCalculationType.LastFrame).Repeat.AtLeastOnce();
+         /*****/
+         _mocks.ReplayAll();
+         
+         var unitInfoLogic = CreateUnitInfoLogic(prefs, null, unitInfo, settings);
+
+         Assert.AreEqual(380, unitInfoLogic.RawTimePerSection);
+         Assert.AreEqual(TimeSpan.FromSeconds(380), unitInfoLogic.TimePerFrame);
+         
+         _mocks.VerifyAll();
+      }
+
+      [Test]
+      public void TimePerSectionTest2()
+      {
+         var unitInfo = new UnitInfo { FramesObserved = 5 };
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:00:00", 0));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:05:10", 1));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:11:30", 2));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:17:40", 3));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:24:00", 4));
+         var settings = CreateClientInstanceSettings(false, 0);
+
+         var prefs = _mocks.DynamicMock<IPreferenceSet>();
+         /*****/
+         Expect.Call(prefs.GetPreference<PpdCalculationType>(Preference.PpdCalculation))
+            .Return(PpdCalculationType.LastThreeFrames).Repeat.AtLeastOnce();
+         /*****/
+         _mocks.ReplayAll();
+
+         var unitInfoLogic = CreateUnitInfoLogic(prefs, null, unitInfo, settings);
+
+         Assert.AreEqual(376, unitInfoLogic.RawTimePerSection);
+         Assert.AreEqual(TimeSpan.FromSeconds(376), unitInfoLogic.TimePerFrame);
+
+         _mocks.VerifyAll();
+      }
+
+      [Test]
+      public void TimePerSectionTest3()
+      {
+         var unitInfo = new UnitInfo { FramesObserved = 5 };
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:00:00", 0));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:05:10", 1));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:11:30", 2));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:17:40", 3));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:24:00", 4));
+         var settings = CreateClientInstanceSettings(false, 0);
+
+         var prefs = _mocks.DynamicMock<IPreferenceSet>();
+         /*****/
+         Expect.Call(prefs.GetPreference<PpdCalculationType>(Preference.PpdCalculation))
+            .Return(PpdCalculationType.AllFrames).Repeat.AtLeastOnce();
+         /*****/
+         _mocks.ReplayAll();
+
+         var unitInfoLogic = CreateUnitInfoLogic(prefs, null, unitInfo, settings);
+
+         Assert.AreEqual(360, unitInfoLogic.RawTimePerSection);
+         Assert.AreEqual(TimeSpan.FromSeconds(360), unitInfoLogic.TimePerFrame);
+
+         _mocks.VerifyAll();
+      }
+
+      [Test]
+      public void TimePerSectionTest4()
+      {
+         var protein = new Protein { ProjectNumber = 1, Credit = 100 };
+         var unitInfo = new UnitInfo { DownloadTime = DateTime.UtcNow, FramesObserved = 4 };
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:00:00", 0));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:04:00", 1));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:09:00", 2));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:15:00", 3));
+         var settings = CreateClientInstanceSettings(false, 0);
+
+         _displayInstance.LastRetrievalTime = unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(30));
+         var prefs = _mocks.DynamicMock<IPreferenceSet>();
+         /*****/
+         Expect.Call(prefs.GetPreference<PpdCalculationType>(Preference.PpdCalculation))
+            .Return(PpdCalculationType.EffectiveRate).Repeat.AtLeastOnce();
+         /*****/
+         _mocks.ReplayAll();
+
+         var unitInfoLogic = CreateUnitInfoLogic(prefs, protein, unitInfo, settings);
+
+         Assert.AreEqual(7800, unitInfoLogic.RawTimePerSection);
+         Assert.AreEqual(TimeSpan.FromSeconds(7800), unitInfoLogic.TimePerFrame);
+
+         _mocks.VerifyAll();
+      }
+      
+      [Test]
+      public void TimePerSectionTest5()
+      {
+         var settings = CreateClientInstanceSettings(false, 0);
+         Expect.Call(_benchmarkContainer.GetBenchmarkAverageFrameTime(null)).IgnoreArguments()
+            .Return(TimeSpan.FromMinutes(10));
+         _mocks.ReplayAll();
+
+         var unitInfoLogic = CreateUnitInfoLogic(null, new UnitInfo(), settings);
+         Assert.AreEqual(TimeSpan.FromMinutes(10), unitInfoLogic.TimePerFrame);
+
+         _mocks.VerifyAll();
+      }
+
+      [Test]
+      public void TimePerSectionTest6()
+      {
+         var settings = CreateClientInstanceSettings(false, 0);
+         _benchmarkContainer = null;
+         var unitInfoLogic = CreateUnitInfoLogic(null, new UnitInfo(), settings);
+         Assert.AreEqual(TimeSpan.Zero, unitInfoLogic.TimePerFrame);
+      }
+
+      #endregion
+
+      #region Credit, UPD, PPD
+
+      [Test]
+      public void CreditUPDAndPPDTest1()
+      {
+         var protein = new Protein { ProjectNumber = 1, Credit = 100, KFactor = 5, PreferredDays = 3, MaxDays = 6 };
+         var utcNow = DateTime.UtcNow;
+         var unitInfo = new UnitInfo { FinishedTime = utcNow, DownloadTime = utcNow.Subtract(TimeSpan.FromHours(2)), FramesObserved = 4 };
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:00:00", 0));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:04:00", 1));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:09:00", 2));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:15:00", 3));
+         var settings = CreateClientInstanceSettings(false, 0);
+
+         var prefs = _mocks.DynamicMock<IPreferenceSet>();
+         Expect.Call(prefs.GetPreference<bool>(Preference.CalculateBonus))
+            .Return(true).Repeat.AtLeastOnce();
+         /*****/
+         _displayInstance.Status = ClientStatus.RunningNoFrameTimes;
+         /*****/
+         _mocks.ReplayAll();
+
+         var unitInfoLogic = CreateUnitInfoLogic(prefs, protein, unitInfo, settings);
+         Assert.AreEqual(849, unitInfoLogic.Credit);
+         Assert.AreEqual(2.4, unitInfoLogic.UPD);
+         Assert.AreEqual(2036.46753, unitInfoLogic.PPD);
+
+         _mocks.VerifyAll();
+      }
+
+      [Test]
+      public void CreditUPDAndPPDTest2()
+      {
+         var protein = new Protein { ProjectNumber = 1, Credit = 100, KFactor = 5, PreferredDays = 3, MaxDays = 6};
+         var utcNow = DateTime.UtcNow;
+         var unitInfo = new UnitInfo { FinishedTime = utcNow, DownloadTime = utcNow.Subtract(TimeSpan.FromHours(2)), FramesObserved = 4 };
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:00:00", 0));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:04:00", 1));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:09:00", 2));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:15:00", 3));
+         var settings = CreateClientInstanceSettings(false, 0);
+
+         var prefs = _mocks.DynamicMock<IPreferenceSet>();
+         Expect.Call(prefs.GetPreference<bool>(Preference.CalculateBonus))
+            .Return(true).Repeat.AtLeastOnce();
+         /*****/
+         _displayInstance.Status = ClientStatus.Running;
+         /*****/
+         _mocks.ReplayAll();
+
+         var unitInfoLogic = CreateUnitInfoLogic(prefs, protein, unitInfo, settings);
+         Assert.AreEqual(1897, unitInfoLogic.Credit);
+         Assert.AreEqual(2.4, unitInfoLogic.UPD);
+         Assert.AreEqual(4553.67983, unitInfoLogic.PPD);
+
+         _mocks.VerifyAll();
+      }
+
+      [Test]
+      public void CreditUPDAndPPDTest3()
+      {
+         var protein = new Protein { ProjectNumber = 1, Credit = 100 };
+         var unitInfo = new UnitInfo { FramesObserved = 4 };
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:00:00", 0));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:04:00", 1));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:09:00", 2));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:15:00", 3));
+         var settings = CreateClientInstanceSettings(false, 0);
+
+         var unitInfoLogic = CreateUnitInfoLogic(protein, unitInfo, settings);
+         Assert.AreEqual(100, unitInfoLogic.Credit);
+         Assert.AreEqual(2.4, unitInfoLogic.UPD);
+         Assert.AreEqual(240, unitInfoLogic.PPD);
+      }
+
+      [Test]
+      public void CreditUPDAndPPDTest4()
+      {
+         var unitInfo = new UnitInfo { FramesObserved = 4 };
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:00:00", 0));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:04:00", 1));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:09:00", 2));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:15:00", 3));
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(null, unitInfo, settings);
+         Assert.AreEqual(0, unitInfoLogic.Credit);
+         Assert.AreEqual(2.4, unitInfoLogic.UPD);
+         Assert.AreEqual(0, unitInfoLogic.PPD);
+      }
+      
+      #endregion
+      
+      #region ETA
+      
+      [Test]
+      public void EtaTest1()
+      {
+         var unitInfo = new UnitInfo { FramesObserved = 4 };
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:00:00", 0));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:04:00", 1));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:09:00", 2));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:15:00", 3));
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(null, unitInfo, settings);
+         Assert.AreEqual(TimeSpan.FromMinutes(582), unitInfoLogic.ETA);
+      }
+
+      [Test]
+      public void EtaTest2()
+      {
+         var unitInfo = new UnitInfo { DownloadTime = DateTime.UtcNow, FramesObserved = 4 };
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:00:00", 0));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:04:00", 1));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:09:00", 2));
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:15:00", 3));
+         var settings = CreateClientInstanceSettings(false, 0);
+         
+         _displayInstance.LastRetrievalTime = unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(30));
+         _mocks.ReplayAll();
+         
+         var unitInfoLogic = CreateUnitInfoLogic(null, unitInfo, settings);
+         Assert.AreEqual(unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(612)), unitInfoLogic.EtaDate);
+         
+         _mocks.VerifyAll();
+      }
+      
+      #endregion
+
+      #region AllFramesCompleted
+
+      [Test]
+      public void AllFramesCompleted1()
+      {
+         var unitInfo = new UnitInfo();
+         unitInfo.SetCurrentFrame(MakeUnitFrame("00:00:00", 100));
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(null, unitInfo, settings);
+         Assert.IsTrue(unitInfoLogic.AllFramesCompleted);
+      }
+
+      [Test]
+      public void AllFramesCompleted2()
+      {
+         var settings = CreateClientInstanceSettings(false, 0);
+         var unitInfoLogic = CreateUnitInfoLogic(null, new UnitInfo(), settings);
+         Assert.IsFalse(unitInfoLogic.AllFramesCompleted);
+      }
+      
+      #endregion
+
+      #region Helpers
+
+      private UnitInfoLogic CreateUnitInfoLogic(IProtein protein, IUnitInfo unitInfo, IClientInstanceSettings settings)
+      {
+         return CreateUnitInfoLogic(MockRepository.GenerateMock<IPreferenceSet>(), protein, unitInfo, settings);
+      }
+      
+      private UnitInfoLogic CreateUnitInfoLogic(IPreferenceSet prefs, IProtein protein, IUnitInfo unitInfo, IClientInstanceSettings settings)
+      {
+         return new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, settings, _displayInstance);
+      }
+      
+      private static IClientInstanceSettings CreateClientInstanceSettings(bool utcOffsetIsZero, int clientTimeOffset)
       {
          var settings = new ClientInstanceSettings();
          settings.ClientIsOnVirtualMachine = utcOffsetIsZero;
          settings.ClientTimeOffset = clientTimeOffset;
-         settings.InstanceName = instanceName;
-         settings.Path = path;
+         settings.InstanceName = "Owner";
+         settings.Path = "Path";
 
          return settings;
       }
 
-      public UnitFrame MakeUnitFrame(string timeStampString, int frameId, int complete, int total)
+      private static UnitFrame MakeUnitFrame(string timeStamp, int frameId)
       {
          return new UnitFrame
                 {
                    FrameID = frameId,
-                   TimeStampString = timeStampString,
-                   RawFramesComplete = complete,
-                   RawFramesTotal = total
+                   TimeOfFrame = ParseTimeStamp(timeStamp),
                 };
       }
 
-      private static void AssertTimeVariations(IUnitInfoLogic unitInfoLogic, int unitDownload, int allSections,
-                                                                             int threeSections, int lastSection)
+      private static TimeSpan ParseTimeStamp(string timeStamp)
       {
-         Assert.AreEqual(unitDownload, unitInfoLogic.RawTimePerUnitDownload);
-         Assert.AreEqual(TimeSpan.FromSeconds(unitInfoLogic.RawTimePerUnitDownload), unitInfoLogic.TimePerUnitDownload);
-
-         Assert.AreEqual(allSections, unitInfoLogic.RawTimePerAllSections);
-         Assert.AreEqual(TimeSpan.FromSeconds(unitInfoLogic.RawTimePerAllSections), unitInfoLogic.TimePerAllSections);
-
-         Assert.AreEqual(threeSections, unitInfoLogic.RawTimePerThreeSections);
-         Assert.AreEqual(TimeSpan.FromSeconds(unitInfoLogic.RawTimePerThreeSections), unitInfoLogic.TimePerThreeSections);
-
-         Assert.AreEqual(lastSection, unitInfoLogic.RawTimePerLastSection);
-         Assert.AreEqual(TimeSpan.FromSeconds(unitInfoLogic.RawTimePerLastSection), unitInfoLogic.TimePerLastSection);
+         return DateTime.ParseExact(timeStamp, "HH:mm:ss",
+                                    DateTimeFormatInfo.InvariantInfo,
+                                    Default.DateTimeStyle).TimeOfDay;
       }
+      
+      #endregion
    }
 }
