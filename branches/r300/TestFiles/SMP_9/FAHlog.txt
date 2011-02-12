@@ -1,0 +1,237 @@
+
+
+--- Opening Log file [January 19 08:43:24 UTC] 
+
+
+# Linux SMP Console Edition ###################################################
+###############################################################################
+
+                       Folding@Home Client Version 6.24R3
+
+                          http://folding.stanford.edu
+
+###############################################################################
+###############################################################################
+
+Launch directory: /usr/local/fah
+Executable: ./fah6
+Arguments: -bigadv -smp 7 
+
+[08:43:24] - Ask before connecting: No
+[08:43:24] - User name: coccola (Team 86565)
+[08:43:24] - User ID: 483863F0D7DA6E3
+[08:43:24] - Machine ID: 1
+[08:43:24] 
+[08:43:24] Loaded queue successfully.
+[08:43:24] 
+[08:43:24] + Processing work unit
+[08:43:24] Core required: FahCore_a2.exe
+[08:43:24] Core found.
+[08:43:24] Working on queue slot 04 [January 19 08:43:24 UTC]
+[08:43:24] + Working ...
+[08:43:24] 
+[08:43:24] *------------------------------*
+[08:43:24] Folding@Home Gromacs SMP Core
+[08:43:24] Version 2.10 (Sun Aug 30 03:43:28 CEST 2009)
+[08:43:25] 
+[08:43:25] Preparing to commence simulation
+[08:43:25] - Ensuring status. Please wait.
+[08:43:25] Files status OK
+[08:43:31] - Expanded 30233964 -> 159270593 (decompressed 100.6 percent)
+[08:43:33] Called DecompressByteArray: compressed_data_size=30233964 data_size=159270593, decompressed_data_size=159270593 diff=0
+[08:43:34] - Digital signature verified
+[08:43:34] 
+[08:43:34] Project: 2683 (Run 5, Clone 8, Gen 35)
+[08:43:34] 
+[08:43:34] Assembly optimizations on if available.
+[08:43:34] Entering M.D.
+[08:43:46] Using Gromacs checkpoints
+[08:43:53] 
+[08:44:04] Entering M.D.
+[08:44:10] Using Gromacs checkpoints
+[08:44:48] data_04.log
+[08:44:48] Verified work/wudata_04.trr
+[08:44:48] Verified work/wudata_04.xtc
+[08:44:48] Verified work/wudata_04.edr
+[08:44:53] Completed 72094 out of 250000 steps  (28%)
+[08:54:06] Completed 72500 out of 250000 steps  (29%)
+[09:49:50] Completed 75000 out of 250000 steps  (30%)
+[10:44:10] Completed 77500 out of 250000 steps  (31%)
+[11:38:51] Completed 80000 out of 250000 steps  (32%)
+[12:32:25] Completed 82500 out of 250000 steps  (33%)
+[13:26:29] Completed 85000 out of 250000 steps  (34%)
+[14:20:47] Completed 87500 out of 250000 steps  (35%)
+[15:15:11] Completed 90000 out of 250000 steps  (36%)
+[16:09:19] Completed 92500 out of 250000 steps  (37%)
+[17:04:13] Completed 95000 out of 250000 steps  (38%)
+[17:59:46] Completed 97500 out of 250000 steps  (39%)
+[18:54:03] Completed 100000 out of 250000 steps  (40%)
+[19:41:26] Completed 102500 out of 250000 steps  (41%)
+[20:28:50] Completed 105000 out of 250000 steps  (42%)
+[21:16:13] Completed 107500 out of 250000 steps  (43%)
+[22:04:04] Completed 110000 out of 250000 steps  (44%)
+[22:51:39] Completed 112500 out of 250000 steps  (45%)
+[23:39:07] Completed 115000 out of 250000 steps  (46%)
+[00:26:46] Completed 117500 out of 250000 steps  (47%)
+[01:21:50] Completed 120000 out of 250000 steps  (48%)
+[02:22:03] Completed 122500 out of 250000 steps  (49%)
+[03:23:22] Completed 125000 out of 250000 steps  (50%)
+[04:22:38] Completed 127500 out of 250000 steps  (51%)
+[05:19:03] Completed 130000 out of 250000 steps  (52%)
+[06:18:11] Completed 132500 out of 250000 steps  (53%)
+[07:18:04] Completed 135000 out of 250000 steps  (54%)
+[08:18:34] Completed 137500 out of 250000 steps  (55%)
+[09:17:54] Completed 140000 out of 250000 steps  (56%)
+[10:17:50] Completed 142500 out of 250000 steps  (57%)
+[11:17:32] Completed 145000 out of 250000 steps  (58%)
+[12:17:13] Completed 147500 out of 250000 steps  (59%)
+[13:15:44] Completed 150000 out of 250000 steps  (60%)
+[14:11:10] Completed 152500 out of 250000 steps  (61%)
+[15:07:14] Completed 155000 out of 250000 steps  (62%)
+[16:03:55] Completed 157500 out of 250000 steps  (63%)
+[16:59:53] Completed 160000 out of 250000 steps  (64%)
+[17:56:39] Completed 162500 out of 250000 steps  (65%)
+[18:51:42] Completed 165000 out of 250000 steps  (66%)
+[19:47:26] Completed 167500 out of 250000 steps  (67%)
+[20:50:44] Completed 170000 out of 250000 steps  (68%)
+[21:54:48] Completed 172500 out of 250000 steps  (69%)
+[22:55:39] Completed 175000 out of 250000 steps  (70%)
+[23:55:16] Completed 177500 out of 250000 steps  (71%)
+[00:55:45] Completed 180000 out of 250000 steps  (72%)
+[01:55:09] Completed 182500 out of 250000 steps  (73%)
+[02:53:35] Completed 185000 out of 250000 steps  (74%)
+[03:52:07] Completed 187500 out of 250000 steps  (75%)
+[04:44:41] Completed 190000 out of 250000 steps  (76%)
+[05:40:49] Completed 192500 out of 250000 steps  (77%)
+[06:37:12] Completed 195000 out of 250000 steps  (78%)
+[07:33:07] Completed 197500 out of 250000 steps  (79%)
+[08:29:48] Completed 200000 out of 250000 steps  (80%)
+[09:27:04] Completed 202500 out of 250000 steps  (81%)
+[10:22:43] Completed 205000 out of 250000 steps  (82%)
+[11:18:40] Completed 207500 out of 250000 steps  (83%)
+[12:15:03] Completed 210000 out of 250000 steps  (84%)
+[13:10:29] Completed 212500 out of 250000 steps  (85%)
+[14:05:51] Completed 215000 out of 250000 steps  (86%)
+[15:01:19] Completed 217500 out of 250000 steps  (87%)
+[15:56:44] Completed 220000 out of 250000 steps  (88%)
+[16:52:07] Completed 222500 out of 250000 steps  (89%)
+[17:47:28] Completed 225000 out of 250000 steps  (90%)
+[18:42:52] Completed 227500 out of 250000 steps  (91%)
+[19:38:41] Completed 230000 out of 250000 steps  (92%)
+[20:35:24] Completed 232500 out of 250000 steps  (93%)
+[21:30:54] Completed 235000 out of 250000 steps  (94%)
+[22:27:10] Completed 237500 out of 250000 steps  (95%)
+[23:23:35] Completed 240000 out of 250000 steps  (96%)
+[00:19:43] Completed 242500 out of 250000 steps  (97%)
+[01:19:04] Completed 245000 out of 250000 steps  (98%)
+[02:17:31] Completed 247500 out of 250000 steps  (99%)
+[03:16:06] Completed 250000 out of 250000 steps  (100%)
+[03:16:43] DynamicWrapper: Finished Work Unit: sleep=10000
+[03:16:52] 
+[03:16:52] Finished Work Unit:
+[03:16:52] - Reading up to 52544928 from "work/wudata_04.trr": Read 52544928
+[03:16:54] trr file hash check passed.
+[03:16:54] - Reading up to 41978176 from "work/wudata_04.xtc": Read 41978176
+[03:16:57] xtc file hash check passed.
+[03:16:57] edr file hash check passed.
+[03:16:57] logfile size: 217387
+[03:16:57] Leaving Run
+[03:16:59] - Writing 94905407 bytes of core data to disk...
+[03:17:15]   ... Done.
+[03:19:24] - Shutting down core
+[03:19:24] 
+[03:19:24] Folding@home Core Shutdown: FINISHED_UNIT
+[03:20:16] CoreStatus = 64 (100)
+[03:20:16] Sending work to server
+[03:20:16] Project: 2683 (Run 5, Clone 8, Gen 35)
+
+
+[03:20:17] + Attempting to send results [January 22 03:20:17 UTC]
+[04:33:00] + Results successfully sent
+[04:33:00] Thank you for your contribution to Folding@Home.
+[04:33:00] + Number of Units Completed: 4
+
+[04:33:48] - Preparing to get new work unit...
+[04:33:48] Cleaning up work directory
+[04:33:48] + Attempting to get work packet
+[04:33:48] - Connecting to assignment server
+[04:33:50] - Successful: assigned to (171.67.108.22).
+[04:33:50] + News From Folding@Home: Welcome to Folding@Home
+[04:33:50] Loaded queue successfully.
+[04:37:17] + Closed connections
+[04:37:17] 
+[04:37:17] + Processing work unit
+[04:37:17] Core required: FahCore_a2.exe
+[04:37:17] Core found.
+[04:37:17] Project: 2683 (Run 1, Clone 42, Gen 135)
+[04:37:17] Working on queue slot 05 [January 22 04:37:17 UTC]
+[04:37:17] + Working ...
+[04:37:17] 
+[04:37:17] *------------------------------*
+[04:37:17] Folding@Home Gromacs SMP Core
+[04:37:17] Version 2.10 (Sun Aug 30 03:43:28 CEST 2009)
+[04:37:17] 
+[04:37:17] Preparing to commence simulation
+[04:37:17] - Ensuring status. Please wait.
+[04:37:26] - Looking at optimizations...
+[04:37:26] - Working with standard loops on this execution.
+[04:37:26] - Files status OK
+[04:38:50]  (decompressed 101.8 percent)
+[04:39:26] 49 (decompressed 101.8 percent)
+[04:39:36] Called DecompressByteArray: compressed_data_size=30325301 data_size=159726549, decompressed_data_size=159726549 diff=0
+[04:39:38] oject: 2681 (Run 9, Clone 8, Gen 55)
+[04:39:38] 
+[04:39:39]  2681 (Run 9, Clone 8, Gen 55)
+[04:39:39] 
+[04:40:09] Entering M.D.
+[05:38:30] pleted 2500 out of 250000 steps  (1%)
+[06:34:17] Completed 5000 out of 250000 steps  (2%)
+[07:29:42] Completed 7500 out of 250000 steps  (3%)
+[08:26:26] Completed 10000 out of 250000 steps  (4%)
+[09:25:12] Completed 12500 out of 250000 steps  (5%)
+[10:24:56] Completed 15000 out of 250000 steps  (6%)
+[11:27:59] Completed 17500 out of 250000 steps  (7%)
+[12:28:38] Completed 20000 out of 250000 steps  (8%)
+[13:29:26] Completed 22500 out of 250000 steps  (9%)
+[14:28:44] Completed 25000 out of 250000 steps  (10%)
+[15:30:20] Completed 27500 out of 250000 steps  (11%)
+[16:32:13] Completed 30000 out of 250000 steps  (12%)
+[17:31:50] Completed 32500 out of 250000 steps  (13%)
+[18:31:40] Completed 35000 out of 250000 steps  (14%)
+[19:28:00] Completed 37500 out of 250000 steps  (15%)
+[20:24:25] Completed 40000 out of 250000 steps  (16%)
+[21:20:28] Completed 42500 out of 250000 steps  (17%)
+[22:16:42] Completed 45000 out of 250000 steps  (18%)
+[23:14:12] Completed 47500 out of 250000 steps  (19%)
+[00:14:07] Completed 50000 out of 250000 steps  (20%)
+[01:14:34] Completed 52500 out of 250000 steps  (21%)
+[02:18:24] Completed 55000 out of 250000 steps  (22%)
+[03:22:19] Completed 57500 out of 250000 steps  (23%)
+[04:26:14] Completed 60000 out of 250000 steps  (24%)
+[05:28:29] Completed 62500 out of 250000 steps  (25%)
+[06:27:40] Completed 65000 out of 250000 steps  (26%)
+[07:26:14] Completed 67500 out of 250000 steps  (27%)
+[08:24:34] Completed 70000 out of 250000 steps  (28%)
+[09:23:34] Completed 72500 out of 250000 steps  (29%)
+[10:20:59] Completed 75000 out of 250000 steps  (30%)
+[11:19:34] Completed 77500 out of 250000 steps  (31%)
+[12:22:11] Completed 80000 out of 250000 steps  (32%)
+[13:26:40] Completed 82500 out of 250000 steps  (33%)
+[14:31:00] Completed 85000 out of 250000 steps  (34%)
+[15:35:17] Completed 87500 out of 250000 steps  (35%)
+[16:37:14] Completed 90000 out of 250000 steps  (36%)
+[17:39:37] Completed 92500 out of 250000 steps  (37%)
+[18:43:52] Completed 95000 out of 250000 steps  (38%)
+[19:47:54] Completed 97500 out of 250000 steps  (39%)
+[20:47:32] Completed 100000 out of 250000 steps  (40%)
+[21:45:50] Completed 102500 out of 250000 steps  (41%)
+[22:42:42] Completed 105000 out of 250000 steps  (42%)
+[23:39:26] Completed 107500 out of 250000 steps  (43%)
+[00:36:18] Completed 110000 out of 250000 steps  (44%)
+[01:33:08] Completed 112500 out of 250000 steps  (45%)
+[02:29:44] Completed 115000 out of 250000 steps  (46%)
+[03:26:43] Completed 117500 out of 250000 steps  (47%)
+[04:23:38] Completed 120000 out of 250000 steps  (48%)
+[05:22:31] Completed 122500 out of 250000 steps  (49%)
+[06:21:32] Completed 125000 out of 250000 steps  (50%)
+[07:20:44] Completed 127500 out of 250000 steps  (51%)
