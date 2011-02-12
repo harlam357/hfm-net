@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Data Aggregator Class Tests
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -1082,6 +1082,105 @@ namespace HFM.DataAggregator.Tests
          Assert.AreEqual(0, unitInfoData.FramesObserved);
          Assert.IsNull(unitInfoData.CurrentFrame);
          Assert.AreEqual("Unknown", unitInfoData.CoreID);
+         #endregion
+      }
+
+      [Test, Category("GPU")]
+      public void GPU3_1()
+      {
+         const string path = "..\\..\\..\\TestFiles\\GPU3_1";
+         _dataAggregator.InstanceName = "GPU3_1";
+         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
+         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
+         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+
+         var unitInfoList = _dataAggregator.AggregateData();
+         Assert.AreEqual(10, unitInfoList.Count);
+         Assert.IsNotNull(unitInfoList[0]);
+         Assert.IsNotNull(unitInfoList[1]);
+         Assert.IsNotNull(unitInfoList[2]);
+         Assert.IsNotNull(unitInfoList[3]);
+         Assert.IsNotNull(unitInfoList[4]);
+         Assert.IsNotNull(unitInfoList[5]);
+         Assert.IsNotNull(unitInfoList[6]);
+         Assert.IsNotNull(unitInfoList[7]);
+         Assert.IsNotNull(unitInfoList[8]);
+         Assert.IsNotNull(unitInfoList[9]);
+
+         #region Check Data Aggregator
+         Assert.IsNotNull(_dataAggregator.Queue);
+         Assert.AreEqual(8, _dataAggregator.CurrentUnitIndex);
+         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
+         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.Status);
+         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
+         Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[1]);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[2]);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[3]);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[4]);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[5]);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[6]);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[7]);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[8]);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[9]);
+         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         #endregion
+
+         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex - 1];
+
+         #region Check Unit Info Data Values
+         Assert.AreEqual(null, unitInfoData.OwningInstanceName);
+         Assert.AreEqual(null, unitInfoData.OwningInstancePath);
+         Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
+         Assert.AreEqual("harlam357", unitInfoData.FoldingID);
+         Assert.AreEqual(32, unitInfoData.Team);
+         Assert.AreEqual(ClientType.Unknown, unitInfoData.TypeOfClient);
+         Assert.AreEqual(new DateTime(2010, 11, 19, 3, 45, 56), unitInfoData.DownloadTime);
+         Assert.AreEqual(new DateTime(2010, 11, 29, 3, 45, 56), unitInfoData.DueTime);
+         Assert.AreEqual(new TimeSpan(3, 45, 56), unitInfoData.UnitStartTimeStamp);
+         Assert.AreEqual(new DateTime(2010, 11, 19, 5, 56, 35), unitInfoData.FinishedTime);
+         Assert.AreEqual("2.14", unitInfoData.CoreVersion);
+         Assert.AreEqual(6800, unitInfoData.ProjectID);
+         Assert.AreEqual(595, unitInfoData.ProjectRun);
+         Assert.AreEqual(0, unitInfoData.ProjectClone);
+         Assert.AreEqual(32, unitInfoData.ProjectGen);
+         Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
+         Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, unitInfoData.UnitResult);
+         Assert.AreEqual(49999999, unitInfoData.RawFramesComplete);
+         Assert.AreEqual(50000000, unitInfoData.RawFramesTotal);
+         Assert.AreEqual(100, unitInfoData.FramesObserved);
+         Assert.IsNotNull(unitInfoData.CurrentFrame);
+         Assert.AreEqual("15", unitInfoData.CoreID);
+         #endregion
+
+         unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+
+         #region Check Unit Info Data Values
+         Assert.AreEqual(null, unitInfoData.OwningInstanceName);
+         Assert.AreEqual(null, unitInfoData.OwningInstancePath);
+         Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
+         Assert.AreEqual("harlam357", unitInfoData.FoldingID);
+         Assert.AreEqual(32, unitInfoData.Team);
+         Assert.AreEqual(ClientType.Unknown, unitInfoData.TypeOfClient);
+         Assert.AreEqual(new DateTime(2010, 11, 19, 5, 56, 56), unitInfoData.DownloadTime);
+         Assert.AreEqual(new DateTime(2010, 11, 29, 5, 56, 56), unitInfoData.DueTime);
+         Assert.AreEqual(new TimeSpan(5, 56, 56), unitInfoData.UnitStartTimeStamp);
+         Assert.AreEqual(DateTime.MinValue, unitInfoData.FinishedTime);
+         Assert.AreEqual("2.14", unitInfoData.CoreVersion);
+         Assert.AreEqual(6800, unitInfoData.ProjectID);
+         Assert.AreEqual(595, unitInfoData.ProjectRun);
+         Assert.AreEqual(0, unitInfoData.ProjectClone);
+         Assert.AreEqual(33, unitInfoData.ProjectGen);
+         Assert.AreEqual("PEPTIDE (1-42)", unitInfoData.ProteinName);
+         Assert.AreEqual("-", unitInfoData.ProteinTag);
+         Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
+         Assert.AreEqual(11500000, unitInfoData.RawFramesComplete);
+         Assert.AreEqual(50000000, unitInfoData.RawFramesTotal);
+         Assert.AreEqual(23, unitInfoData.FramesObserved);
+         Assert.IsNotNull(unitInfoData.CurrentFrame);
+         Assert.AreEqual("15", unitInfoData.CoreID);
          #endregion
       }
 

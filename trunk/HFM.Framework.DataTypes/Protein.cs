@@ -1,7 +1,7 @@
 /*
  * HFM.NET - Protein Class
  * Copyright (C) 2006 David Rawling
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,6 +19,8 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace HFM.Framework.DataTypes
 {
@@ -119,6 +121,14 @@ namespace HFM.Framework.DataTypes
       /// </summary>
       /// <param name="estTimeOfUnit">Estimated Time of the Unit</param>
       double GetBonusMultiplier(TimeSpan estTimeOfUnit);
+
+      /// <summary>
+      /// Get all Production Values
+      /// </summary>
+      /// <param name="frameTime">Frame Time</param>
+      /// <param name="eftByDownloadTime">Estimated Time of the Unit (by Download Time)</param>
+      /// <param name="eftByFrameTime">Estimated Time of the Unit (by Frame Time)</param>
+      ProductionValues GetProductionValues(TimeSpan frameTime, TimeSpan eftByDownloadTime, TimeSpan eftByFrameTime);
    }
 
    public class Protein : IProtein
@@ -230,10 +240,7 @@ namespace HFM.Framework.DataTypes
       /// <param name="estTimeOfUnit">Estimated Time of the Unit</param>
       public double GetPPD(TimeSpan frameTime, TimeSpan estTimeOfUnit)
       {
-         if (frameTime.Equals(TimeSpan.Zero))
-         {
-            return 0;
-         }
+         if (frameTime.IsZero()) return 0;
 
          double basePPD = GetUPD(frameTime) * Credit;
          double bonusMulti = GetBonusMultiplier(estTimeOfUnit);
@@ -248,11 +255,7 @@ namespace HFM.Framework.DataTypes
       /// <param name="frameTime">Frame Time</param>
       public double GetUPD(TimeSpan frameTime)
       {
-         if (frameTime.Equals(TimeSpan.Zero))
-         {
-            return 0.0;
-         }
-         return 86400 / (frameTime.TotalSeconds * Frames);
+         return frameTime.IsZero() ? 0.0 : 86400 / (frameTime.TotalSeconds * Frames);
       }
       
       /// <summary>
@@ -283,6 +286,34 @@ namespace HFM.Framework.DataTypes
          return 1;
       }
 
+      /// <summary>
+      /// Get all Production Values
+      /// </summary>
+      /// <param name="frameTime">Frame Time</param>
+      /// <param name="eftByDownloadTime">Estimated Time of the Unit (by Download Time)</param>
+      /// <param name="eftByFrameTime">Estimated Time of the Unit (by Frame Time)</param>
+      public ProductionValues GetProductionValues(TimeSpan frameTime, TimeSpan eftByDownloadTime, TimeSpan eftByFrameTime)
+      {
+         var value = new ProductionValues
+                     {
+                        TimePerFrame = frameTime,
+                        BaseCredit = Credit,
+                        BasePPD = GetPPD(frameTime),
+                        PreferredTime = TimeSpan.FromDays(PreferredDays),
+                        MaximumTime = TimeSpan.FromDays(MaxDays),
+                        KFactor = KFactor,
+                        EftByDownloadTime = eftByDownloadTime,
+                        DownloadTimeBonusMulti = GetBonusMultiplier(eftByDownloadTime),
+                        DownloadTimeBonusCredit = GetBonusCredit(eftByDownloadTime),
+                        DownloadTimeBonusPPD = GetPPD(frameTime, eftByDownloadTime),
+                        EftByFrameTime = eftByFrameTime,
+                        FrameTimeBonusMulti = GetBonusMultiplier(eftByFrameTime),
+                        FrameTimeBonusCredit = GetBonusCredit(eftByFrameTime),
+                        FrameTimeBonusPPD = GetPPD(frameTime, eftByFrameTime)
+                     };
+         return value;
+      }
+      
       /// <summary>
       /// Determine the Client Type based on the FAH Core Name
       /// </summary>
@@ -326,6 +357,59 @@ namespace HFM.Framework.DataTypes
             default:
                return ClientType.Unknown;
          }
+      }
+   }
+   
+   public struct ProductionValues
+   {
+      public TimeSpan TimePerFrame { get; set; }
+
+      public double BaseCredit { get; set; }
+
+      public double BasePPD { get; set; }
+
+      public TimeSpan PreferredTime { get; set; }
+
+      public TimeSpan MaximumTime { get; set; }
+
+      public double KFactor { get; set; }
+
+      public TimeSpan EftByDownloadTime { get; set; }
+
+      public double DownloadTimeBonusMulti { get; set; }
+
+      public double DownloadTimeBonusCredit { get; set; }
+
+      public double DownloadTimeBonusPPD { get; set; }
+      
+      public TimeSpan EftByFrameTime { get; set; }
+
+      public double FrameTimeBonusMulti { get; set; }
+
+      public double FrameTimeBonusCredit { get; set; }
+
+      public double FrameTimeBonusPPD { get; set; }
+      
+      public IEnumerable<string> ToMultiLineString()
+      {
+         return new[]
+         {
+            String.Format(CultureInfo.CurrentCulture, " - Base Credit--------- : {0}", BaseCredit),
+            String.Format(CultureInfo.CurrentCulture, " - Base PPD ----------- : {0}", BasePPD),
+            String.Format(CultureInfo.CurrentCulture, " - Preferred Time ----- : {0}", PreferredTime),
+            String.Format(CultureInfo.CurrentCulture, " - Maximum Time ------- : {0}", MaximumTime),
+            String.Format(CultureInfo.CurrentCulture, " - KFactor ------------ : {0}", KFactor),
+            String.Format(CultureInfo.CurrentCulture, " + - by Download Time - + {0}", String.Empty),
+            String.Format(CultureInfo.CurrentCulture, " - --- WU Time -------- : {0}", EftByDownloadTime),
+            String.Format(CultureInfo.CurrentCulture, " - --- Bonus Multiplier : {0}", DownloadTimeBonusMulti),
+            String.Format(CultureInfo.CurrentCulture, " - --- Bonus Credit --- : {0}", DownloadTimeBonusCredit),
+            String.Format(CultureInfo.CurrentCulture, " - --- Bonus PPD ------ : {0}", DownloadTimeBonusPPD),
+            String.Format(CultureInfo.CurrentCulture, " + - by Frame Time ---- + {0}", String.Empty),
+            String.Format(CultureInfo.CurrentCulture, " - --- WU Time -------- : {0}", EftByFrameTime),
+            String.Format(CultureInfo.CurrentCulture, " - --- Bonus Multiplier : {0}", FrameTimeBonusMulti),
+            String.Format(CultureInfo.CurrentCulture, " - --- Bonus Credit --- : {0}", FrameTimeBonusCredit),
+            String.Format(CultureInfo.CurrentCulture, " - --- Bonus PPD ------ : {0}", FrameTimeBonusPPD)
+         };
       }
    }
 }

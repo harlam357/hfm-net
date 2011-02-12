@@ -1,7 +1,7 @@
 /*
  * HFM.NET - HfmTrace (Instrumentation) Class
  * Copyright (C) 2006-2007 David Rawling
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -134,7 +134,7 @@ namespace HFM.Framework
          }
       }
 
-      public static void WriteToHfmConsole(TraceLevel level, ICollection messages)
+      public static void WriteToHfmConsole(TraceLevel level, IEnumerable messages)
       {
          if (level.CompareTo(TraceLevelSwitch.Switch.Level) < 1)
          {

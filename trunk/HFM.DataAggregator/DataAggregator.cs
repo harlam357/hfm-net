@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Data Aggregator Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -385,7 +385,7 @@ namespace HFM.DataAggregator
       private static bool ProjectsMatch(IUnitInfo unit, IProjectInfo projectInfo)
       {
          Debug.Assert(unit != null);
-         if (unit.ProjectIsUnknown || projectInfo == null) return false;
+         if (unit.ProjectIsUnknown() || projectInfo == null) return false;
       
          return (unit.ProjectID == projectInfo.ProjectID &&
                  unit.ProjectRun == projectInfo.ProjectRun &&
@@ -443,7 +443,7 @@ namespace HFM.DataAggregator
          Debug.Assert(unit != null);
 
          /* Project (R/C/G) (Could have already been read through Queue) */
-         if (unit.ProjectIsUnknown)
+         if (unit.ProjectIsUnknown())
          {
             unit.ProjectID = fahLogUnitData.ProjectID;
             unit.ProjectRun = fahLogUnitData.ProjectRun;
@@ -462,13 +462,13 @@ namespace HFM.DataAggregator
             }
 
             /* DownloadTime (Could have already been read through Queue) */
-            if (unit.DownloadTimeUnknown)
+            if (unit.DownloadTime.IsUnknown())
             {
                unit.DownloadTime = unitInfoLogData.DownloadTime;
             }
 
             /* DueTime (Could have already been read through Queue) */
-            if (unit.DueTimeUnknown)
+            if (unit.DueTime.IsUnknown())
             {
                unit.DueTime = unitInfoLogData.DueTime;
             }
@@ -476,7 +476,7 @@ namespace HFM.DataAggregator
             /* FinishedTime (Not available in unitinfo log) */
 
             /* Project (R/C/G) (Could have already been read through Queue) */
-            if (unit.ProjectIsUnknown)
+            if (unit.ProjectIsUnknown())
             {
                unit.ProjectID = unitInfoLogData.ProjectID;
                unit.ProjectRun = unitInfoLogData.ProjectRun;

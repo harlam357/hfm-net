@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Platform Operations Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -273,8 +273,8 @@ namespace HFM.Framework
       public static bool IsUnitInfoCurrentUnitInfo(IUnitInfoLogic currentUnitInfo, IUnitInfoLogic parsedUnitInfo)
       {
          // if the Projects are known
-         if (currentUnitInfo != null && currentUnitInfo.UnitInfoData.ProjectIsUnknown == false &&
-             parsedUnitInfo != null && parsedUnitInfo.UnitInfoData.ProjectIsUnknown == false)
+         if (currentUnitInfo != null && currentUnitInfo.UnitInfoData.ProjectIsUnknown() == false &&
+             parsedUnitInfo != null && parsedUnitInfo.UnitInfoData.ProjectIsUnknown() == false)
          {
             // Matches the Current Project and Raw Download Time.
             // Download Time check should be made on the DownloadTime

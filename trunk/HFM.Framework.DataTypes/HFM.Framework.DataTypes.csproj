@@ -39,6 +39,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -53,6 +54,7 @@
     <Compile Include="CompletedUnitsReadResult.cs" />
     <Compile Include="Default.cs" />
     <Compile Include="Enumerations.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="HistoryEntry.cs" />
     <Compile Include="InstanceTotals.cs" />
     <Compile Include="IOwnedByClientInstance.cs" />
