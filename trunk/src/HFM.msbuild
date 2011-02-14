@@ -9,23 +9,12 @@
       <Revision>0</Revision>
    </PropertyGroup>
 
-   <PropertyGroup>
-      <ArtifactsPath>.\Artifacts</ArtifactsPath>
-      <ArtifactsHFM>.\Artifacts\HFM.NET</ArtifactsHFM>
-      <ArtifactsPlugins>.\Artifacts\Plugins</ArtifactsPlugins>
-      <ArtifactsPackages>.\Artifacts\Packages</ArtifactsPackages>
-   </PropertyGroup>
-
-   <Target Name="Build" DependsOnTargets="Compile">
-      <Message Text="HFM.NET Build Complete"/>
-   </Target>
-
-   <Target Name="Compile" DependsOnTargets="Version">
-      <MSBuild Projects="HFM.All.sln"
-               Targets="Rebuild"
-               Properties="Configuration=ScriptedRelease" />
-
-      <CallTarget Targets="NUnit" />
+   <Target Name="AssemblyVersion" DependsOnTargets="Version">
+      <AssemblyInfo CodeLanguage="CS"
+        OutputFile="AssemblyVersion.cs"
+        AssemblyVersion="$(Major).$(Minor).$(Build).$(Revision)"
+        AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
+        Condition="$(Revision) != '0' "/>
    </Target>
 
    <Target Name="Version">
@@ -34,12 +23,18 @@
       </SvnVersion>
 
       <Message Text="Version: $(Major).$(Minor).$(Build).$(Revision)"/>
+   </Target>
 
-      <AssemblyInfo CodeLanguage="CS"
-        OutputFile="AssemblyVersion.cs"
-        AssemblyVersion="$(Major).$(Minor).$(Build).$(Revision)"
-        AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
-        Condition="$(Revision) != '0' "/>
+   <Target Name="Build" DependsOnTargets="Compile">
+      <Message Text="HFM.NET Build Complete"/>
+   </Target>
+
+   <Target Name="Compile" DependsOnTargets="AssemblyVersion">
+      <MSBuild Projects="HFM.All.sln"
+               Targets="Rebuild"
+               Properties="Configuration=ScriptedRelease" />
+
+      <CallTarget Targets="NUnit" />
    </Target>
 
    <PropertyGroup>
@@ -48,6 +43,13 @@
       <NCoverExpPath>&quot;..\tools\NCoverExplorer\NCoverExplorer.Console.exe&quot;</NCoverExpPath>
       <NUnitPath>&quot;..\lib\NUnit\bin\net-2.0\nunit-console-x86.exe&quot;</NUnitPath>
       <FxCopPath>&quot;$(ProgramFiles)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\FxCopCmd.exe&quot;</FxCopPath>
+   </PropertyGroup>
+
+   <PropertyGroup>
+      <ArtifactsPath>.\Artifacts</ArtifactsPath>
+      <ArtifactsHFM>.\Artifacts\HFM.NET</ArtifactsHFM>
+      <ArtifactsPlugins>.\Artifacts\Plugins</ArtifactsPlugins>
+      <ArtifactsPackages>.\Artifacts\Packages</ArtifactsPackages>
    </PropertyGroup>
 
    <Target Name="NUnit">
@@ -70,31 +72,26 @@
       <ZipFiles Include="$(ArtifactsHFM)\**\*.*" />
    </ItemGroup>
 
-   <PropertyGroup>
-      <ZipName>HFM $(Major).$(Minor).$(Build).$(Revision).zip</ZipName>
-      <MsiName>HFM $(Major).$(Minor).$(Build).$(Revision).msi</MsiName>
-   </PropertyGroup>
-
-   <Target Name="BuildZip">
+   <Target Name="BuildZip" DependsOnTargets="Version">
       <MakeDir Directories="$(ArtifactsPackages)" />
       <Zip Files="@(ZipFiles)"
            WorkingDirectory="$(ArtifactsHFM)"
-           ZipFileName="$(ArtifactsPackages)\$(ZipName)" />
+           ZipFileName="$(ArtifactsPackages)\HFM $(Major).$(Minor).$(Build).$(Revision).zip" />
    </Target>
 
-   <Target Name="BuildMsi">
+   <Target Name="BuildMsi" DependsOnTargets="Version">
       <MakeDir Directories="$(ArtifactsPackages)" />
       <MSBuild Projects="HFM.Setup.sln"
                Targets="Rebuild"
                Properties="Configuration=Release" />
-      <Copy SourceFiles=".\HFM.Setup\bin\Release\HFM.Setup.msi" DestinationFiles="$(ArtifactsPackages)\$(MsiName)" />
+      <Copy SourceFiles=".\HFM.Setup\bin\Release\HFM.Setup.msi" DestinationFiles="$(ArtifactsPackages)\HFM $(Major).$(Minor).$(Build).$(Revision).msi" />
    </Target>
 
    <Target Name="BuildPlugins" DependsOnTargets="CompilePlugins">
       <Message Text="HFM.NET Plugins Build Complete"/>
    </Target>
 
-   <Target Name="CompilePlugins" DependsOnTargets="Version">
+   <Target Name="CompilePlugins" DependsOnTargets="AssemblyVersion">
       <MSBuild Projects=".\HFM.Plugins.ClientSettings\FahMon\HFM.Plugins.ClientSettings.FahMon.sln"
                Targets="Rebuild"
                Properties="Configuration=ScriptedRelease" />
@@ -104,20 +101,16 @@
       <PluginsFahMonZipFiles Include="$(ArtifactsPlugins)\FahMon\**\*.*" />
    </ItemGroup>
 
-   <PropertyGroup>
-      <PluginsFahMonZipName>HFM FahMon Plugin $(Major).$(Minor).$(Build).$(Revision).zip</PluginsFahMonZipName>
-   </PropertyGroup>
-
-   <Target Name="BuildPluginsZip">
+   <Target Name="BuildPluginsZip" DependsOnTargets="Version">
       <MakeDir Directories="$(ArtifactsPackages)" />
       <Zip Files="@(PluginsFahMonZipFiles)"
            WorkingDirectory="$(ArtifactsPlugins)\FahMon"
-           ZipFileName="$(ArtifactsPackages)\$(PluginsFahMonZipName)" />
+           ZipFileName="$(ArtifactsPackages)\HFM FahMon Plugin $(Major).$(Minor).$(Build).$(Revision).zip" />
    </Target>
 
-   <Target Name ="CopyPackages" Condition="'$(PackageDestination)' != ''">
-      <Copy SourceFiles="$(ArtifactsPackages)\$(ZipName)" DestinationFolder="$(PackageDestination)" />
-      <Copy SourceFiles="$(ArtifactsPackages)\$(MsiName)" DestinationFolder="$(PackageDestination)" />
-      <Copy SourceFiles="$(ArtifactsPackages)\$(PluginsFahMonZipName)" DestinationFolder="$(PackageDestination)" />
+   <Target Name ="CopyPackages" Condition="'$(PackageDestination)' != ''" DependsOnTargets="Version">
+      <Copy SourceFiles="$(ArtifactsPackages)\HFM $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
+      <Copy SourceFiles="$(ArtifactsPackages)\HFM $(Major).$(Minor).$(Build).$(Revision).msi" DestinationFolder="$(PackageDestination)" />
+      <Copy SourceFiles="$(ArtifactsPackages)\HFM FahMon Plugin $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
    </Target>
 </Project>
