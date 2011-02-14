@@ -245,12 +245,7 @@ namespace HFM.Instances.Tests
       private static void CopyTestFile()
       {
          string testDataFileCopy = Path.ChangeExtension(TestDataFile, ".dbcopy");
-
-         if (File.Exists(testDataFileCopy))
-         {
-            File.Delete(testDataFileCopy);
-            File.Copy(TestDataFile, testDataFileCopy);
-         }
+         File.Copy(TestDataFile, testDataFileCopy, true);
       }
 
       [Test]
