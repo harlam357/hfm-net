@@ -1,7 +1,0 @@
-Current Work Unit
------------------
-Name: Gromacs
-Tag: P6073R0C10G53
-Download time: May 27 12:04:26
-Due time: June 2 12:04:26
-Progress: 100%  [||||||||||]

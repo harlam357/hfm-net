@@ -1,7 +1,0 @@
-Current Work Unit
------------------
-Name: Gromacs
-Tag: P2681R9C8G55
-Download time: January 22 04:37:17
-Due time: January 28 04:37:17
-Progress: 0%  [__________]
