@@ -1,0 +1,29 @@
+<Dictionary>
+   <Words>
+      <Recognized>
+         <Word>Harlamert</Word>
+         <Word>harlam</Word>
+         <Word>notfred's</Word>
+         <Word>Chudnovsky</Word>
+         <Word>Rawling</Word>
+         <Word>unitinfo</Word>
+         <Word>Hlog</Word>
+         <Word>Gravell</Word>
+         <Word>Lparser</Word>
+         <Word>castleproject</Word>
+         <Word>fahlogstats-net</Word>
+         <Word>htmlparser</Word>
+         <Word>php</Word>
+         <Word>protobuf</Word>
+         <Word>sourceforge</Word>
+         <Word>zedgraph</Word>
+         <Word>Ipc</Word>
+      </Recognized>
+   </Words>
+   <Acronyms>
+      <CasingExceptions>
+         <Acronym>Ppd</Acronym>
+         <Acronym>HFM</Acronym>
+      </CasingExceptions>
+   </Acronyms>
+</Dictionary>

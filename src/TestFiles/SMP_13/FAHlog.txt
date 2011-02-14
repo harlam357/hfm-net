@@ -1,0 +1,141 @@
+
+
+--- Opening Log file [May 28 17:19:04 UTC] 
+
+
+# Windows SMP Console Edition #################################################
+###############################################################################
+
+                       Folding@Home Client Version 6.29
+
+                          http://folding.stanford.edu
+
+###############################################################################
+###############################################################################
+
+Launch directory: C:\Program Files (x86)\FAHSMP
+Executable: Folding@home-Win32-x86.exe
+Arguments: -smp -verbosity 9 -forceasm 
+
+[17:19:04] - Ask before connecting: No
+[17:19:04] - User name: harlam357 (Team 32)
+[17:19:04] - User ID: 51108B97183EA3DF
+[17:19:04] - Machine ID: 1
+[17:19:04] 
+[17:19:05] Loaded queue successfully.
+[17:19:05] 
+[17:19:05] + Processing work unit
+[17:19:05] - Autosending finished units... [17:19:05]
+[17:19:05] Core required: FahCore_a3.exe
+[17:19:05] Trying to send all finished work units
+[17:19:05] + No unsent completed units remaining.
+[17:19:05] Core found.
+[17:19:05] - Autosend completed
+[17:19:05] Working on queue slot 00 [May 28 17:19:05 UTC]
+[17:19:05] + Working ...
+[17:19:05] - Calling '.\FahCore_a3.exe -dir work/ -nice 19 -suffix 00 -np 4 -checkpoint 30 -forceasm -verbose -lifeline 2208 -version 629'
+
+[17:19:05] 
+[17:19:05] *------------------------------*
+[17:19:05] Folding@Home Gromacs SMP Core
+[17:19:05] Version 2.19 (Mar 12, 2010)
+[17:19:05] 
+[17:19:05] Preparing to commence simulation
+[17:19:05] - Ensuring status. Please wait.
+[17:19:14] - Assembly optimizations manually forced on.
+[17:19:14] - Not checking prior termination.
+[17:19:15] - Expanded 1766300 -> 2253449 (decompressed 127.5 percent)
+[17:19:15] Called DecompressByteArray: compressed_data_size=1766300 data_size=2253449, decompressed_data_size=2253449 diff=0
+[17:19:15] - Digital signature verified
+[17:19:15] 
+[17:19:15] Project: 6073 (Run 0, Clone 10, Gen 53)
+[17:19:15] 
+[17:19:15] Assembly optimizations on if available.
+[17:19:15] Entering M.D.
+[17:19:21] Using Gromacs checkpoints
+[17:19:22] Resuming from checkpoint
+[17:19:22] Verified work/wudata_00.log
+[17:19:22] Verified work/wudata_00.trr
+[17:19:22] Verified work/wudata_00.edr
+[17:19:22] Completed 227558 out of 500000 steps  (45%)
+[17:21:55] Completed 230000 out of 500000 steps  (46%)
+[17:26:39] Completed 235000 out of 500000 steps  (47%)
+[17:31:23] Completed 240000 out of 500000 steps  (48%)
+[17:36:06] Completed 245000 out of 500000 steps  (49%)
+[17:40:46] Completed 250000 out of 500000 steps  (50%)
+[17:45:28] Completed 255000 out of 500000 steps  (51%)
+[17:50:09] Completed 260000 out of 500000 steps  (52%)
+[17:54:51] Completed 265000 out of 500000 steps  (53%)
+[17:59:33] Completed 270000 out of 500000 steps  (54%)
+[18:04:15] Completed 275000 out of 500000 steps  (55%)
+[18:08:57] Completed 280000 out of 500000 steps  (56%)
+[18:13:39] Completed 285000 out of 500000 steps  (57%)
+[18:18:21] Completed 290000 out of 500000 steps  (58%)
+[18:23:04] Completed 295000 out of 500000 steps  (59%)
+[18:27:46] Completed 300000 out of 500000 steps  (60%)
+[18:32:28] Completed 305000 out of 500000 steps  (61%)
+[18:37:10] Completed 310000 out of 500000 steps  (62%)
+[18:41:51] Completed 315000 out of 500000 steps  (63%)
+[18:46:33] Completed 320000 out of 500000 steps  (64%)
+[18:51:14] Completed 325000 out of 500000 steps  (65%)
+[18:55:56] Completed 330000 out of 500000 steps  (66%)
+[19:00:38] Completed 335000 out of 500000 steps  (67%)
+[19:05:20] Completed 340000 out of 500000 steps  (68%)
+[19:10:00] Completed 345000 out of 500000 steps  (69%)
+[19:14:43] Completed 350000 out of 500000 steps  (70%)
+[19:19:26] Completed 355000 out of 500000 steps  (71%)
+[19:24:10] Completed 360000 out of 500000 steps  (72%)
+[19:28:53] Completed 365000 out of 500000 steps  (73%)
+[19:33:36] Completed 370000 out of 500000 steps  (74%)
+[19:38:19] Completed 375000 out of 500000 steps  (75%)
+[19:43:02] Completed 380000 out of 500000 steps  (76%)
+[19:47:46] Completed 385000 out of 500000 steps  (77%)
+[19:52:29] Completed 390000 out of 500000 steps  (78%)
+[19:57:12] Completed 395000 out of 500000 steps  (79%)
+[20:01:54] Completed 400000 out of 500000 steps  (80%)
+[20:06:37] Completed 405000 out of 500000 steps  (81%)
+[20:11:20] Completed 410000 out of 500000 steps  (82%)
+[20:16:02] Completed 415000 out of 500000 steps  (83%)
+[20:20:45] Completed 420000 out of 500000 steps  (84%)
+[20:25:29] Completed 425000 out of 500000 steps  (85%)
+[20:30:11] Completed 430000 out of 500000 steps  (86%)
+[20:34:54] Completed 435000 out of 500000 steps  (87%)
+[20:39:33] Completed 440000 out of 500000 steps  (88%)
+[20:44:04] Completed 445000 out of 500000 steps  (89%)
+[20:48:35] Completed 450000 out of 500000 steps  (90%)
+[20:53:06] Completed 455000 out of 500000 steps  (91%)
+[20:57:37] Completed 460000 out of 500000 steps  (92%)
+[21:02:07] Completed 465000 out of 500000 steps  (93%)
+[21:06:38] Completed 470000 out of 500000 steps  (94%)
+[21:11:08] Completed 475000 out of 500000 steps  (95%)
+[21:15:39] Completed 480000 out of 500000 steps  (96%)
+[21:20:11] Completed 485000 out of 500000 steps  (97%)
+[21:24:44] Completed 490000 out of 500000 steps  (98%)
+[21:29:14] Completed 495000 out of 500000 steps  (99%)
+[21:33:46] Completed 500000 out of 500000 steps  (100%)
+[21:33:47] DynamicWrapper: Finished Work Unit: sleep=10000
+[21:33:57] 
+[21:33:57] Finished Work Unit:
+[21:33:57] - Reading up to 3701280 from "work/wudata_00.trr": Read 3701280
+[21:33:57] trr file hash check passed.
+[21:33:57] edr file hash check passed.
+[21:33:57] logfile size: 55676
+[21:33:57] Leaving Run
+[21:33:58] - Writing 3792508 bytes of core data to disk...
+[21:33:59]   ... Done.
+[21:33:59] - Shutting down core
+[21:33:59] 
+[21:33:59] Folding@home Core Shutdown: FINISHED_UNIT
+[21:34:04] CoreStatus = 64 (100)
+[21:34:04] Unit 0 finished with 77 percent of time to deadline remaining.
+[21:34:04] Updated performance fraction: 0.911173
+[21:34:04] Sending work to server
+[21:34:04] Project: 6073 (Run 0, Clone 10, Gen 53)
+
+
+[21:34:04] + Attempting to send results [May 28 21:34:04 UTC]
+[21:34:04] - Reading file work/wuresults_00.dat from core
+[21:34:04]   (Read 3792508 bytes from disk)
+[21:34:04] Connecting to http://171.64.65.54:8080/
+[21:34:43] Posted data.
+[21:34:43] Initial: 0000; 
