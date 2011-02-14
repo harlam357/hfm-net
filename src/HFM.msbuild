@@ -87,6 +87,11 @@
       <Copy SourceFiles=".\HFM.Setup\bin\Release\HFM.Setup.msi" DestinationFiles="$(ArtifactsPackages)\HFM $(Major).$(Minor).$(Build).$(Revision).msi" />
    </Target>
 
+   <Target Name ="CopyPackages" Condition="'$(PackageDestination)' != ''" DependsOnTargets="Version">
+      <Copy SourceFiles="$(ArtifactsPackages)\HFM $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
+      <Copy SourceFiles="$(ArtifactsPackages)\HFM $(Major).$(Minor).$(Build).$(Revision).msi" DestinationFolder="$(PackageDestination)" />
+   </Target>
+
    <Target Name="BuildPlugins" DependsOnTargets="CompilePlugins">
       <Message Text="HFM.NET Plugins Build Complete"/>
    </Target>
@@ -108,9 +113,7 @@
            ZipFileName="$(ArtifactsPackages)\HFM FahMon Plugin $(Major).$(Minor).$(Build).$(Revision).zip" />
    </Target>
 
-   <Target Name ="CopyPackages" Condition="'$(PackageDestination)' != ''" DependsOnTargets="Version">
-      <Copy SourceFiles="$(ArtifactsPackages)\HFM $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
-      <Copy SourceFiles="$(ArtifactsPackages)\HFM $(Major).$(Minor).$(Build).$(Revision).msi" DestinationFolder="$(PackageDestination)" />
+   <Target Name ="CopyPluginsPackages" Condition="'$(PackageDestination)' != ''" DependsOnTargets="Version">
       <Copy SourceFiles="$(ArtifactsPackages)\HFM FahMon Plugin $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
    </Target>
 </Project>
