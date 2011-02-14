@@ -1,0 +1,383 @@
+
+
+--- Opening Log file [August 18 02:40:05 UTC] 
+
+
+# Linux SMP Console Edition ###################################################
+###############################################################################
+
+                       Folding@Home Client Version 6.24beta
+
+                          http://folding.stanford.edu
+
+###############################################################################
+###############################################################################
+
+Launch directory: /home/harlarw/FAH
+Executable: ./fah6
+Arguments: -smp -verbosity 9 
+
+[02:40:05] - Ask before connecting: No
+[02:40:05] - User name: harlam357 (Team 32)
+[02:40:05] - User ID: 3A49EBB303C19834
+[02:40:05] - Machine ID: 1
+[02:40:05] 
+[02:40:05] Loaded queue successfully.
+[02:40:05] - Autosending finished units... [August 18 02:40:05 UTC]
+[02:40:05] Trying to send all finished work units
+[02:40:05] + No unsent completed units remaining.
+[02:40:05] - Autosend completed
+[02:40:05] 
+[03:26:24] + Processing work unit
+[03:26:24] At least 4 processors must be requested.Core required: FahCore_a2.exe
+[03:26:24] Core found.
+[03:26:24] Working on queue slot 01 [August 22 03:26:24 UTC]
+[03:26:24] + Working ...
+[03:26:24] - Calling './mpiexec -np 4 -host 127.0.0.1 ./FahCore_a2.exe -dir work/ -suffix 01 -checkpoint 30 -verbose -lifeline 5511 -version 624'
+
+[03:26:24] 
+[03:26:24] *------------------------------*
+[03:26:24] Folding@Home Gromacs SMP Core
+[03:26:24] Version 2.08 (Mon May 18 14:47:42 PDT 2009)
+[03:26:24] 
+[03:26:24] Preparing to commence simulation
+[03:26:24] - Ensuring status. Please wait.
+[03:26:25] Called DecompressByteArray: compressed_data_size=4840664 data_size=24028029, decompressed_data_size=24028029 diff=0
+[03:26:25] - Digital signature verified
+[03:26:25] 
+[03:26:25] Project: 2677 (Run 10, Clone 49, Gen 38)
+[03:26:25] 
+[03:26:25] Assembly optimizations on if available.
+[03:26:25] Entering M.D.
+[03:26:35] Run 10, Clone 49, Gen 38)
+[03:26:35] 
+[03:26:35] Entering M.D.
+[03:37:16] pleted 2500 out of 250000 steps  (1%)
+[03:47:44] Completed 5000 out of 250000 steps  (2%)
+[03:58:06] Completed 7500 out of 250000 steps  (3%)
+[04:08:29] Completed 10000 out of 250000 steps  (4%)
+[04:18:55] Completed 12500 out of 250000 steps  (5%)
+[04:29:18] Completed 15000 out of 250000 steps  (6%)
+[04:39:42] Completed 17500 out of 250000 steps  (7%)
+[04:50:14] Completed 20000 out of 250000 steps  (8%)
+[05:00:45] Completed 22500 out of 250000 steps  (9%)
+[05:11:03] Completed 25000 out of 250000 steps  (10%)
+[05:21:18] Completed 27500 out of 250000 steps  (11%)
+[05:31:47] Completed 30000 out of 250000 steps  (12%)
+[05:42:19] Completed 32500 out of 250000 steps  (13%)
+[05:52:42] Completed 35000 out of 250000 steps  (14%)
+[06:03:14] Completed 37500 out of 250000 steps  (15%)
+[06:13:35] Completed 40000 out of 250000 steps  (16%)
+[06:24:03] Completed 42500 out of 250000 steps  (17%)
+[06:34:42] Completed 45000 out of 250000 steps  (18%)
+[06:45:20] Completed 47500 out of 250000 steps  (19%)
+[06:55:48] Completed 50000 out of 250000 steps  (20%)
+[07:06:17] Completed 52500 out of 250000 steps  (21%)
+[07:16:49] Completed 55000 out of 250000 steps  (22%)
+[07:27:14] Completed 57500 out of 250000 steps  (23%)
+[07:38:08] Completed 60000 out of 250000 steps  (24%)
+[07:48:43] Completed 62500 out of 250000 steps  (25%)
+[07:59:12] Completed 65000 out of 250000 steps  (26%)
+[08:09:49] Completed 67500 out of 250000 steps  (27%)
+[08:20:21] Completed 70000 out of 250000 steps  (28%)
+[08:30:50] Completed 72500 out of 250000 steps  (29%)
+[08:40:05] - Autosending finished units... [August 22 08:40:05 UTC]
+[08:40:05] Trying to send all finished work units
+[08:40:05] + No unsent completed units remaining.
+[08:40:05] - Autosend completed
+[08:41:22] Completed 75000 out of 250000 steps  (30%)
+[08:52:10] Completed 77500 out of 250000 steps  (31%)
+[09:02:32] Completed 80000 out of 250000 steps  (32%)
+[09:13:05] Completed 82500 out of 250000 steps  (33%)
+[09:23:38] Completed 85000 out of 250000 steps  (34%)
+[09:34:22] Completed 87500 out of 250000 steps  (35%)
+[09:44:47] Completed 90000 out of 250000 steps  (36%)
+[09:55:31] Completed 92500 out of 250000 steps  (37%)
+[10:05:55] Completed 95000 out of 250000 steps  (38%)
+[10:16:29] Completed 97500 out of 250000 steps  (39%)
+[10:26:58] Completed 100000 out of 250000 steps  (40%)
+[10:37:19] Completed 102500 out of 250000 steps  (41%)
+[10:47:35] Completed 105000 out of 250000 steps  (42%)
+[10:58:15] Completed 107500 out of 250000 steps  (43%)
+[11:08:44] Completed 110000 out of 250000 steps  (44%)
+[11:19:01] Completed 112500 out of 250000 steps  (45%)
+[11:29:16] Completed 115000 out of 250000 steps  (46%)
+[11:39:30] Completed 117500 out of 250000 steps  (47%)
+[11:49:59] Completed 120000 out of 250000 steps  (48%)
+[12:00:20] Completed 122500 out of 250000 steps  (49%)
+[12:10:37] Completed 125000 out of 250000 steps  (50%)
+[12:20:56] Completed 127500 out of 250000 steps  (51%)
+[12:31:38] Completed 130000 out of 250000 steps  (52%)
+[12:41:56] Completed 132500 out of 250000 steps  (53%)
+[12:52:12] Completed 135000 out of 250000 steps  (54%)
+[13:02:36] Completed 137500 out of 250000 steps  (55%)
+[13:13:19] Completed 140000 out of 250000 steps  (56%)
+[13:23:44] Completed 142500 out of 250000 steps  (57%)
+[13:34:13] Completed 145000 out of 250000 steps  (58%)
+[13:44:33] Completed 147500 out of 250000 steps  (59%)
+[13:54:52] Completed 150000 out of 250000 steps  (60%)
+[14:05:18] Completed 152500 out of 250000 steps  (61%)
+[14:15:55] Completed 155000 out of 250000 steps  (62%)
+[14:26:16] Completed 157500 out of 250000 steps  (63%)
+[14:36:38] Completed 160000 out of 250000 steps  (64%)
+[14:40:05] - Autosending finished units... [August 22 14:40:05 UTC]
+[14:40:05] Trying to send all finished work units
+[14:40:05] + No unsent completed units remaining.
+[14:40:05] - Autosend completed
+[14:47:02] Completed 162500 out of 250000 steps  (65%)
+[14:57:26] Completed 165000 out of 250000 steps  (66%)
+[15:07:54] Completed 167500 out of 250000 steps  (67%)
+[15:18:19] Completed 170000 out of 250000 steps  (68%)
+[15:28:52] Completed 172500 out of 250000 steps  (69%)
+[15:39:36] Completed 175000 out of 250000 steps  (70%)
+[15:49:58] Completed 177500 out of 250000 steps  (71%)
+[16:00:46] Completed 180000 out of 250000 steps  (72%)
+[16:11:18] Completed 182500 out of 250000 steps  (73%)
+[16:21:33] Completed 185000 out of 250000 steps  (74%)
+[16:32:16] Completed 187500 out of 250000 steps  (75%)
+[16:42:33] Completed 190000 out of 250000 steps  (76%)
+[16:52:49] Completed 192500 out of 250000 steps  (77%)
+[17:03:22] Completed 195000 out of 250000 steps  (78%)
+[17:13:41] Completed 197500 out of 250000 steps  (79%)
+[17:24:07] Completed 200000 out of 250000 steps  (80%)
+[17:34:30] Completed 202500 out of 250000 steps  (81%)
+[17:44:50] Completed 205000 out of 250000 steps  (82%)
+[17:55:08] Completed 207500 out of 250000 steps  (83%)
+[18:05:45] Completed 210000 out of 250000 steps  (84%)
+[18:15:58] Completed 212500 out of 250000 steps  (85%)
+[18:26:36] Completed 215000 out of 250000 steps  (86%)
+[18:37:16] Completed 217500 out of 250000 steps  (87%)
+[18:47:45] Completed 220000 out of 250000 steps  (88%)
+[18:58:04] Completed 222500 out of 250000 steps  (89%)
+[19:08:22] Completed 225000 out of 250000 steps  (90%)
+[19:18:36] Completed 227500 out of 250000 steps  (91%)
+[19:28:55] Completed 230000 out of 250000 steps  (92%)
+[19:39:17] Completed 232500 out of 250000 steps  (93%)
+[19:49:35] Completed 235000 out of 250000 steps  (94%)
+[19:59:56] Completed 237500 out of 250000 steps  (95%)
+[20:10:19] Completed 240000 out of 250000 steps  (96%)
+[20:20:44] Completed 242500 out of 250000 steps  (97%)
+[20:30:58] Completed 245000 out of 250000 steps  (98%)
+[20:40:05] - Autosending finished units... [August 22 20:40:05 UTC]
+[20:40:05] Trying to send all finished work units
+[20:40:05] + No unsent completed units remaining.
+[20:40:05] - Autosend completed
+[20:41:17] Completed 247500 out of 250000 steps  (99%)
+[20:51:47] Completed 250000 out of 250000 steps  (100%)
+[20:51:48] DynamicWrapper: Finished Work Unit: sleep=10000
+[20:51:58] 
+[20:51:58] Finished Work Unit:
+[20:51:58] - Reading up to 21176928 from "work/wudata_01.trr": Read 21176928
+[20:51:58] trr file hash check passed.
+[20:51:58] - Reading up to 27122104 from "work/wudata_01.xtc": Read 27122104
+[20:51:59] xtc file hash check passed.
+[20:51:59] edr file hash check passed.
+[20:51:59] logfile size: 181734
+[20:51:59] Leaving Run
+[20:52:02] - Writing 48625518 bytes of core data to disk...
+[20:52:03]   ... Done.
+[20:52:10] - Shutting down core
+[20:52:10] 
+[20:52:10] Folding@home Core Shutdown: FINISHED_UNIT
+[20:55:24] CoreStatus = 64 (100)
+[20:55:24] Unit 1 finished with 76 percent of time to deadline remaining.
+[20:55:24] Updated performance fraction: 0.751999
+[20:55:24] Sending work to server
+[20:55:24] Project: 2677 (Run 10, Clone 49, Gen 38)
+
+
+[20:55:24] + Attempting to send results [August 22 20:55:24 UTC]
+[20:55:24] - Reading file work/wuresults_01.dat from core
+[20:55:24]   (Read 48625518 bytes from disk)
+[20:55:24] Connecting to http://171.64.65.56:8080/
+[20:58:45] Posted data.
+[20:58:45] Initial: 0000; - Uploaded at ~228 kB/s
+[20:58:52] - Averaged speed for that direction ~215 kB/s
+[20:58:52] + Results successfully sent
+[20:58:52] Thank you for your contribution to Folding@Home.
+[20:58:52] + Number of Units Completed: 292
+
+[20:58:55] - Warning: Could not delete all work unit files (1): Core file absent
+[20:58:55] Trying to send all finished work units
+[20:58:55] + No unsent completed units remaining.
+[20:58:55] - Preparing to get new work unit...
+[20:58:55] + Attempting to get work packet
+[20:58:55] - Will indicate memory of 685 MB
+[20:58:55] - Connecting to assignment server
+[20:58:55] Connecting to http://assign.stanford.edu:8080/
+[20:58:56] Posted data.
+[20:58:56] Initial: 40AB; - Successful: assigned to (171.64.65.56).
+[20:58:56] + News From Folding@Home: Welcome to Folding@Home
+[20:58:56] Loaded queue successfully.
+[20:58:56] Connecting to http://171.64.65.56:8080/
+[20:59:01] Posted data.
+[20:59:01] Initial: 0000; - Receiving payload (expected size: 4842063)
+[20:59:11] - Downloaded at ~472 kB/s
+[20:59:11] - Averaged speed for that direction ~438 kB/s
+[20:59:11] + Received work.
+[20:59:11] Trying to send all finished work units
+[20:59:11] + No unsent completed units remaining.
+[20:59:11] + Closed connections
+[20:59:11] 
+[20:59:11] + Processing work unit
+[20:59:11] At least 4 processors must be requested.Core required: FahCore_a2.exe
+[20:59:11] Core found.
+[20:59:11] Working on queue slot 02 [August 22 20:59:11 UTC]
+[20:59:11] + Working ...
+[20:59:11] - Calling './mpiexec -np 4 -host 127.0.0.1 ./FahCore_a2.exe -dir work/ -suffix 02 -checkpoint 30 -verbose -lifeline 5511 -version 624'
+
+[20:59:12] 
+[20:59:12] *------------------------------*
+[20:59:12] Folding@Home Gromacs SMP Core
+[20:59:12] Version 2.08 (Mon May 18 14:47:42 PDT 2009)
+[20:59:12] 
+[20:59:12] Preparing to commence simulation
+[20:59:12] - Ensuring status. Please wait.
+[20:59:13] Called DecompressByteArray: compressed_data_size=4841551 data_size=24031133, decompressed_data_size=24031133 diff=0
+[20:59:13] - Digital signature verified
+[20:59:13] 
+[20:59:13] Project: 2677 (Run 35, Clone 31, Gen 38)
+[20:59:13] 
+[20:59:13] Assembly optimizations on if available.
+[20:59:13] Entering M.D.
+[20:59:23] Run 35, Clone 31, Gen 38)
+[20:59:23] 
+[20:59:23] Entering M.D.
+[21:10:13] pleted 2500 out of 250000 steps  (1%)
+[21:20:41] Completed 5000 out of 250000 steps  (2%)
+[21:31:23] Completed 7500 out of 250000 steps  (3%)
+[21:41:50] Completed 10000 out of 250000 steps  (4%)
+[21:52:21] Completed 12500 out of 250000 steps  (5%)
+[22:03:13] Completed 15000 out of 250000 steps  (6%)
+[22:13:56] Completed 17500 out of 250000 steps  (7%)
+[22:24:20] Completed 20000 out of 250000 steps  (8%)
+[22:34:35] Completed 22500 out of 250000 steps  (9%)
+[22:45:12] Completed 25000 out of 250000 steps  (10%)
+[22:56:00] Completed 27500 out of 250000 steps  (11%)
+[23:06:38] Completed 30000 out of 250000 steps  (12%)
+[23:17:29] Completed 32500 out of 250000 steps  (13%)
+[23:28:41] Completed 35000 out of 250000 steps  (14%)
+[23:39:56] Completed 37500 out of 250000 steps  (15%)
+[23:50:29] Completed 40000 out of 250000 steps  (16%)
+[00:01:12] Completed 42500 out of 250000 steps  (17%)
+[00:11:56] Completed 45000 out of 250000 steps  (18%)
+[00:22:28] Completed 47500 out of 250000 steps  (19%)
+[00:33:19] Completed 50000 out of 250000 steps  (20%)
+[00:43:48] Completed 52500 out of 250000 steps  (21%)
+[00:54:30] Completed 55000 out of 250000 steps  (22%)
+[01:05:05] Completed 57500 out of 250000 steps  (23%)
+[01:16:10] Completed 60000 out of 250000 steps  (24%)
+[01:26:34] Completed 62500 out of 250000 steps  (25%)
+[01:37:20] Completed 65000 out of 250000 steps  (26%)
+[01:48:01] Completed 67500 out of 250000 steps  (27%)
+[01:58:36] Completed 70000 out of 250000 steps  (28%)
+[02:09:12] Completed 72500 out of 250000 steps  (29%)
+[02:19:34] Completed 75000 out of 250000 steps  (30%)
+[02:30:09] Completed 77500 out of 250000 steps  (31%)
+[02:40:05] - Autosending finished units... [August 23 02:40:05 UTC]
+[02:40:05] Trying to send all finished work units
+[02:40:05] + No unsent completed units remaining.
+[02:40:05] - Autosend completed
+[02:40:51] Completed 80000 out of 250000 steps  (32%)
+[02:51:21] Completed 82500 out of 250000 steps  (33%)
+[03:01:51] Completed 85000 out of 250000 steps  (34%)
+[03:12:16] Completed 87500 out of 250000 steps  (35%)
+[03:23:02] Completed 90000 out of 250000 steps  (36%)
+[03:33:52] Completed 92500 out of 250000 steps  (37%)
+[03:44:14] Completed 95000 out of 250000 steps  (38%)
+[03:54:53] Completed 97500 out of 250000 steps  (39%)
+[04:05:46] Completed 100000 out of 250000 steps  (40%)
+[04:16:38] Completed 102500 out of 250000 steps  (41%)
+[04:27:09] Completed 105000 out of 250000 steps  (42%)
+[04:37:58] Completed 107500 out of 250000 steps  (43%)
+[04:48:28] Completed 110000 out of 250000 steps  (44%)
+[04:59:04] Completed 112500 out of 250000 steps  (45%)
+[05:09:34] Completed 115000 out of 250000 steps  (46%)
+[05:20:09] Completed 117500 out of 250000 steps  (47%)
+[05:30:57] Completed 120000 out of 250000 steps  (48%)
+[05:41:38] Completed 122500 out of 250000 steps  (49%)
+[05:52:03] Completed 125000 out of 250000 steps  (50%)
+[06:02:29] Completed 127500 out of 250000 steps  (51%)
+[06:13:05] Completed 130000 out of 250000 steps  (52%)
+[06:23:32] Completed 132500 out of 250000 steps  (53%)
+[06:34:14] Completed 135000 out of 250000 steps  (54%)
+[06:44:51] Completed 137500 out of 250000 steps  (55%)
+[06:55:13] Completed 140000 out of 250000 steps  (56%)
+[07:05:40] Completed 142500 out of 250000 steps  (57%)
+[07:16:09] Completed 145000 out of 250000 steps  (58%)
+[07:26:32] Completed 147500 out of 250000 steps  (59%)
+[07:37:04] Completed 150000 out of 250000 steps  (60%)
+[07:47:49] Completed 152500 out of 250000 steps  (61%)
+[07:58:44] Completed 155000 out of 250000 steps  (62%)
+[08:09:47] Completed 157500 out of 250000 steps  (63%)
+[08:20:29] Completed 160000 out of 250000 steps  (64%)
+[08:30:59] Completed 162500 out of 250000 steps  (65%)
+[08:40:05] - Autosending finished units... [August 23 08:40:05 UTC]
+[08:40:05] Trying to send all finished work units
+[08:40:05] + No unsent completed units remaining.
+[08:40:05] - Autosend completed
+[08:41:21] Completed 165000 out of 250000 steps  (66%)
+[08:51:59] Completed 167500 out of 250000 steps  (67%)
+[09:02:28] Completed 170000 out of 250000 steps  (68%)
+[09:12:45] Completed 172500 out of 250000 steps  (69%)
+[09:23:24] Completed 175000 out of 250000 steps  (70%)
+[09:34:00] Completed 177500 out of 250000 steps  (71%)
+[09:45:04] Completed 180000 out of 250000 steps  (72%)
+[09:55:39] Completed 182500 out of 250000 steps  (73%)
+[10:06:11] Completed 185000 out of 250000 steps  (74%)
+[10:16:35] Completed 187500 out of 250000 steps  (75%)
+[10:27:17] Completed 190000 out of 250000 steps  (76%)
+[10:37:43] Completed 192500 out of 250000 steps  (77%)
+[10:48:18] Completed 195000 out of 250000 steps  (78%)
+[10:58:34] Completed 197500 out of 250000 steps  (79%)
+[11:09:20] Completed 200000 out of 250000 steps  (80%)
+[11:20:04] Completed 202500 out of 250000 steps  (81%)
+[11:30:51] Completed 205000 out of 250000 steps  (82%)
+[11:41:16] Completed 207500 out of 250000 steps  (83%)
+[11:51:47] Completed 210000 out of 250000 steps  (84%)
+[12:02:27] Completed 212500 out of 250000 steps  (85%)
+[12:13:32] Completed 215000 out of 250000 steps  (86%)
+[12:24:02] Completed 217500 out of 250000 steps  (87%)
+[12:34:43] Completed 220000 out of 250000 steps  (88%)
+[12:45:25] Completed 222500 out of 250000 steps  (89%)
+[12:55:53] Completed 225000 out of 250000 steps  (90%)
+[13:06:30] Completed 227500 out of 250000 steps  (91%)
+[13:17:33] Completed 230000 out of 250000 steps  (92%)
+[13:28:28] Completed 232500 out of 250000 steps  (93%)
+[13:39:15] Completed 235000 out of 250000 steps  (94%)
+[13:49:53] Completed 237500 out of 250000 steps  (95%)
+[14:00:22] Completed 240000 out of 250000 steps  (96%)
+[14:11:19] Completed 242500 out of 250000 steps  (97%)
+[14:22:13] Completed 245000 out of 250000 steps  (98%)
+[14:33:00] Completed 247500 out of 250000 steps  (99%)
+[14:40:05] - Autosending finished units... [August 23 14:40:05 UTC]
+[14:40:05] Trying to send all finished work units
+[14:40:05] + No unsent completed units remaining.
+[14:40:05] - Autosend completed
+[14:43:48] Completed 250000 out of 250000 steps  (100%)
+[14:43:50] DynamicWrapper: Finished Work Unit: sleep=10000
+[14:44:00] 
+[14:44:00] Finished Work Unit:
+[14:44:00] - Reading up to 21181680 from "work/wudata_02.trr": Read 21181680
+[14:44:01] trr file hash check passed.
+[14:44:01] - Reading up to 27141928 from "work/wudata_02.xtc": Read 27141928
+[14:44:02] xtc file hash check passed.
+[14:44:02] edr file hash check passed.
+[14:44:02] logfile size: 181925
+[14:44:02] Leaving Run
+[14:44:05] - Writing 48650285 bytes of core data to disk...
+[14:44:06]   ... Done.
+[14:44:13] - Shutting down core
+[14:44:13] 
+[14:44:13] Folding@home Core Shutdown: FINISHED_UNIT
+[14:47:22] CoreStatus = 64 (100)
+[14:47:22] Unit 2 finished with 75 percent of time to deadline remaining.
+[14:47:22] Updated performance fraction: 0.752147
+[14:47:22] Sending work to server
+[14:47:22] Project: 2677 (Run 35, Clone 31, Gen 38)
+
+
+[14:47:22] + Attempting to send results [August 23 14:47:22 UTC]
+[14:47:22] - Reading file work/wuresults_02.dat from core
+[14:47:22]   (Read 48650285 bytes from disk)
+[14:47:22] Connecting to http://171.64.65.56:8080/
