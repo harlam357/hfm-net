@@ -18,12 +18,15 @@
          <Word>sourceforge</Word>
          <Word>zedgraph</Word>
          <Word>Ipc</Word>
+         <Word>GPU</Word>
+         <Word>SMP</Word>
       </Recognized>
    </Words>
    <Acronyms>
       <CasingExceptions>
          <Acronym>Ppd</Acronym>
          <Acronym>HFM</Acronym>
+         <Acronym>ID</Acronym>
       </CasingExceptions>
    </Acronyms>
 </Dictionary>

@@ -1,6 +1,24 @@
-﻿
+﻿/*
+ * HFM.NET - History Entry Class
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License. See the included file GPLv2.TXT.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
 using System;
-using System.Globalization;
+using System.Diagnostics;
 
 namespace HFM.Framework.DataTypes
 {
@@ -54,8 +72,10 @@ namespace HFM.Framework.DataTypes
                case HistoryProductionView.BonusDownloadTime:
                   return _protein.GetPPD(FrameTime, CompletionDateTime.Subtract(DownloadDateTime));
                default:
-                  throw new NotImplementedException(String.Format(CultureInfo.CurrentCulture,
-                                                                  "Production View Type '{0}' is not implemented.", ProductionView));
+                  // ReSharper disable HeuristicUnreachableCode
+                  Debug.Assert(false);
+                  return 0;
+                  // ReSharper restore HeuristicUnreachableCode
             }
          }
       }
@@ -75,8 +95,10 @@ namespace HFM.Framework.DataTypes
                case HistoryProductionView.BonusDownloadTime:
                   return _protein.GetBonusCredit(CompletionDateTime.Subtract(DownloadDateTime));
                default:
-                  throw new NotImplementedException(String.Format(CultureInfo.CurrentCulture,
-                                                                  "Production View Type '{0}' is not implemented.", ProductionView));
+                  // ReSharper disable HeuristicUnreachableCode
+                  Debug.Assert(false);
+                  return 0;
+                  // ReSharper restore HeuristicUnreachableCode
             }
          }
       }
