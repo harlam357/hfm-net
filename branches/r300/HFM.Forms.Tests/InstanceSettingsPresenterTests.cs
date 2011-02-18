@@ -23,7 +23,6 @@ using System.Windows.Forms;
 
 using NUnit.Framework;
 using Rhino.Mocks;
-using Rhino.Mocks.Constraints;
 
 using harlam357.Windows.Forms;
 
@@ -64,7 +63,7 @@ namespace HFM.Forms.Tests
       {
          var settings = _mocks.Stub<IClientInstanceSettingsModel>();
          Expect.Call(() => _settingsView.DataBind(settings));
-         Expect.Call(() => settings.PropertyChanged += null).Constraints(Is.NotNull());
+         Expect.Call(() => settings.PropertyChanged += null).Constraints(Rhino.Mocks.Constraints.Is.NotNull());
          Expect.Call(() => _settingsView.PathGroupVisible = true);
          Expect.Call(() => _settingsView.HttpGroupVisible = false);
          Expect.Call(() => _settingsView.FtpGroupVisible = false);
@@ -83,7 +82,7 @@ namespace HFM.Forms.Tests
          var settings = _mocks.Stub<IClientInstanceSettingsModel>();
          settings.InstanceHostType = InstanceType.HttpInstance;
          Expect.Call(() => _settingsView.DataBind(settings));
-         Expect.Call(() => settings.PropertyChanged += null).Constraints(Is.NotNull());
+         Expect.Call(() => settings.PropertyChanged += null).Constraints(Rhino.Mocks.Constraints.Is.NotNull());
          Expect.Call(() => _settingsView.PathGroupVisible = false);
          Expect.Call(() => _settingsView.HttpGroupVisible = true);
          Expect.Call(() => _settingsView.FtpGroupVisible = false);
@@ -99,7 +98,7 @@ namespace HFM.Forms.Tests
          var settings = _mocks.Stub<IClientInstanceSettingsModel>();
          settings.InstanceHostType = InstanceType.FtpInstance;
          Expect.Call(() => _settingsView.DataBind(settings));
-         Expect.Call(() => settings.PropertyChanged += null).Constraints(Is.NotNull());
+         Expect.Call(() => settings.PropertyChanged += null).Constraints(Rhino.Mocks.Constraints.Is.NotNull());
          Expect.Call(() => _settingsView.PathGroupVisible = false);
          Expect.Call(() => _settingsView.HttpGroupVisible = false);
          Expect.Call(() => _settingsView.FtpGroupVisible = true);

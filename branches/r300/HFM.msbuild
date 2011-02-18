@@ -10,11 +10,11 @@
    </PropertyGroup>
 
    <PropertyGroup>
-      <FxCopPath>&quot;$(ProgramFiles)\Microsoft FxCop 1.36\FxCopCmd.exe&quot;</FxCopPath>
-      <NCoverPath>&quot;$(ProgramFiles)\NCover\NCover.Console.exe&quot;</NCoverPath>
+      <NCoverPath>&quot;.\tools\NCover\NCover.Console.exe&quot;</NCoverPath>
       <NCoverExcludeList>System.Runtime.CompilerServices.CompilerGeneratedAttribute;HFM.Framework.CoverageExcludeAttribute</NCoverExcludeList>
-      <NCoverExpPath>&quot;$(ProgramFiles)\NCoverExplorer\NCoverExplorer.Console.exe&quot;</NCoverExpPath>
-      <NUnitPath>&quot;$(ProgramFiles)\NUnit 2.4.8\bin\nunit-console-x86.exe&quot;</NUnitPath>
+      <NCoverExpPath>&quot;.\tools\NCoverExplorer\NCoverExplorer.Console.exe&quot;</NCoverExpPath>
+      <NUnitPath>&quot;.\lib\NUnit\bin\net-2.0\nunit-console-x86.exe&quot;</NUnitPath>
+      <!--<FxCopPath>&quot;$(ProgramFiles)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\FxCopCmd.exe&quot;</FxCopPath>-->
    </PropertyGroup>
 
    <ItemGroup>
@@ -23,7 +23,7 @@
    </ItemGroup>
 
    <Target Name="Version">
-      <SvnVersion LocalPath="." ToolPath="$(ProgramFiles)\CollabNet Subversion Client">
+      <SvnVersion LocalPath="." ToolPath="$(ProgramFiles)\CollabNet\Subversion Client">
          <Output TaskParameter="Revision" PropertyName="Revision" />
       </SvnVersion>
 
@@ -53,20 +53,20 @@
    </Target>
 
    <Target Name="NUnit">
-      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Forms.Tests\bin\Release\HFM.Forms.Tests.dll /xml=HFM.Forms.Tests.Results.xml //a HFM.Forms //ea $(NCoverExcludeList) //x HFM.Forms.Tests.Coverage.xml" />
-      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.DataAggregator.Tests\bin\Release\HFM.DataAggregator.Tests.dll /xml=HFM.DataAggregator.Tests.Results.xml //a HFM.DataAggregator //ea $(NCoverExcludeList) //x HFM.DataAggregator.Tests.Coverage.xml" />
-      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Framework.Tests\bin\Release\HFM.Framework.Tests.dll /xml=HFM.Framework.Tests.Results.xml //a HFM.Framework //ea $(NCoverExcludeList) //x HFM.Framework.Tests.Coverage.xml" />
-      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Framework.DataTypes.Tests\bin\Release\HFM.Framework.DataTypes.Tests.dll /xml=HFM.Framework.DataTypes.Tests.Results.xml //a HFM.Framework.DataTypes //ea $(NCoverExcludeList) //x HFM.Framework.DataTypes.Tests.Coverage.xml" />
-      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Instances.Tests\bin\Release\HFM.Instances.Tests.dll /xml=HFM.Instances.Tests.Results.xml //a HFM.Instances //ea $(NCoverExcludeList) //x HFM.Instances.Tests.Coverage.xml" />
-      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Log.Tests\bin\Release\HFM.Log.Tests.dll /xml=HFM.Log.Tests.Results.xml //a HFM.Log //ea $(NCoverExcludeList) //x HFM.Log.Tests.Coverage.xml" />
-      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Proteins.Tests\bin\Release\HFM.Proteins.Tests.dll /xml=HFM.Proteins.Tests.Results.xml //a HFM.Proteins //ea $(NCoverExcludeList) //x HFM.Proteins.Tests.Coverage.xml" />
-      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Queue.Tests\bin\Release\HFM.Queue.Tests.dll /xml=HFM.Queue.Tests.Results.xml //a HFM.Queue //ea $(NCoverExcludeList) //x HFM.Queue.Tests.Coverage.xml" />
+      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Forms.Tests\bin\Release\HFM.Forms.Tests.dll /xml=HFM.Forms.Tests.Results.xml //reg //a HFM.Forms //ea $(NCoverExcludeList) //x HFM.Forms.Tests.Coverage.xml" />
+      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.DataAggregator.Tests\bin\Release\HFM.DataAggregator.Tests.dll /xml=HFM.DataAggregator.Tests.Results.xml //reg //a HFM.DataAggregator //ea $(NCoverExcludeList) //x HFM.DataAggregator.Tests.Coverage.xml" />
+      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Framework.Tests\bin\Release\HFM.Framework.Tests.dll /xml=HFM.Framework.Tests.Results.xml //reg //a HFM.Framework //ea $(NCoverExcludeList) //x HFM.Framework.Tests.Coverage.xml" />
+      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Framework.DataTypes.Tests\bin\Release\HFM.Framework.DataTypes.Tests.dll /xml=HFM.Framework.DataTypes.Tests.Results.xml //reg //a HFM.Framework.DataTypes //ea $(NCoverExcludeList) //x HFM.Framework.DataTypes.Tests.Coverage.xml" />
+      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Instances.Tests\bin\Release\HFM.Instances.Tests.dll /xml=HFM.Instances.Tests.Results.xml //reg //a HFM.Instances //ea $(NCoverExcludeList) //x HFM.Instances.Tests.Coverage.xml" />
+      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Log.Tests\bin\Release\HFM.Log.Tests.dll /xml=HFM.Log.Tests.Results.xml //reg //a HFM.Log //ea $(NCoverExcludeList) //x HFM.Log.Tests.Coverage.xml" />
+      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Proteins.Tests\bin\Release\HFM.Proteins.Tests.dll /xml=HFM.Proteins.Tests.Results.xml //reg //a HFM.Proteins //ea $(NCoverExcludeList) //x HFM.Proteins.Tests.Coverage.xml" />
+      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Queue.Tests\bin\Release\HFM.Queue.Tests.dll /xml=HFM.Queue.Tests.Results.xml //reg //a HFM.Queue //ea $(NCoverExcludeList) //x HFM.Queue.Tests.Coverage.xml" />
       <Exec Command="$(NCoverExpPath) *.Tests.Coverage.xml /s:Coverage.xml" />
    </Target>
 
-   <Target Name="FxCop">
+   <!--<Target Name="FxCop">
       <Exec Command="$(FxCopPath) /project:HFM.FxCop /directory:.\SQLite.NET\bin /out:FxCopReport.xml" />
-   </Target>
+   </Target>-->
 
    <Target Name="ZipRelease">
       <Zip Files="@(ZipFiles)"
