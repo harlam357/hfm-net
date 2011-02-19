@@ -50,6 +50,15 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\harlam357public.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core">
       <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.Core.dll</HintPath>
@@ -64,7 +73,7 @@
       <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="harlam357.Windows.Forms">
-      <HintPath>..\..\lib\harlam357-net\net20\bin\Release\harlam357.Windows.Forms.dll</HintPath>
+      <HintPath>..\..\lib\harlam357-net\harlam357.Windows.Forms.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\lib\NUnit\bin\net-2.0\nunit.framework.dll</HintPath>
@@ -87,7 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyVersion.cs">
-      <Link>AssemblyVersion.cs</Link>
+      <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="ClientInstanceFactoryTests.cs" />
     <Compile Include="ClientInstanceXmlSerializerTests.cs" />
@@ -138,6 +147,11 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\harlam357public.snk">
+      <Link>Properties\harlam357public.snk</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

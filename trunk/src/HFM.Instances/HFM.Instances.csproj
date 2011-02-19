@@ -53,15 +53,24 @@
     <DebugSymbols>true</DebugSymbols>
     <CodeAnalysisRuleSet>..\..\..\hfm-net\src\HFM.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\harlam357public.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="harlam357.Net">
-      <HintPath>..\..\lib\harlam357-net\net20\bin\Release\harlam357.Net.dll</HintPath>
+      <HintPath>..\..\lib\harlam357-net\harlam357.Net.dll</HintPath>
     </Reference>
     <Reference Include="harlam357.Security">
-      <HintPath>..\..\lib\harlam357-net\net20\bin\Release\harlam357.Security.dll</HintPath>
+      <HintPath>..\..\lib\harlam357-net\harlam357.Security.dll</HintPath>
     </Reference>
     <Reference Include="harlam357.Windows.Forms">
-      <HintPath>..\..\lib\harlam357-net\net20\bin\Release\harlam357.Windows.Forms.dll</HintPath>
+      <HintPath>..\..\lib\harlam357-net\harlam357.Windows.Forms.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net">
       <HintPath>..\..\lib\protobuf-net\protobuf-net.dll</HintPath>
@@ -87,11 +96,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyVersion.cs">
-      <Link>AssemblyVersion.cs</Link>
+      <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="ClientInstance.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="ClientInstance.cs" />
     <Compile Include="ClientInstanceFactory.cs" />
     <Compile Include="ClientInstanceSettingsDataInterface.cs" />
     <Compile Include="ClientInstanceXmlSerializer.cs" />
@@ -99,16 +106,12 @@
     <Compile Include="DataRetriever.cs" />
     <Compile Include="DisplayInstance.cs" />
     <Compile Include="DuplicateFinder.cs" />
-    <Compile Include="InstanceCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="InstanceCollection.cs" />
     <Compile Include="InstanceCollectionDataInterface.cs" />
     <Compile Include="InstanceCollectionHelpers.cs" />
     <Compile Include="InstanceConfigurationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProteinBenchmarkContainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="ProteinBenchmarkContainer.cs" />
     <Compile Include="QueryParameterContainer.cs" />
     <Compile Include="StatusData.cs" />
     <Compile Include="StatusLogic.cs" />
@@ -153,8 +156,13 @@
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
-      <Link>CustomDictionary.xml</Link>
+      <Link>Properties\CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\harlam357public.snk">
+      <Link>Properties\harlam357public.snk</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
