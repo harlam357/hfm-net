@@ -1063,7 +1063,6 @@ namespace HFM.Forms
          this.Text = "HFM.NET";
          this.Shown += new System.EventHandler(this.frmMain_Shown);
          this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
-         this.Resize += new System.EventHandler(this.frmMain_Resize);
          this.statusStrip.ResumeLayout(false);
          this.statusStrip.PerformLayout();
          this.notifyMenu.ResumeLayout(false);

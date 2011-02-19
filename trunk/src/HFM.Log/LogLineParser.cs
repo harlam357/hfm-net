@@ -83,7 +83,7 @@ namespace HFM.Log
       /// Regular Expression to match Core Version string.
       /// </summary>
       private static readonly Regex rCoreVersion =
-         new Regex("\\[(?<Timestamp>.{8})\\] Version (?<CoreVer>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+         new Regex("\\[(?<Timestamp>.{8})\\] Version (?<CoreVer>.*) \\(.*\\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       /*** ProtoMol Only */
       /// <summary>
@@ -206,12 +206,13 @@ namespace HFM.Log
                Match mCoreVer;
                if ((mCoreVer = rCoreVersion.Match(logLine.LineRaw)).Success)
                {
-                  string sCoreVer = mCoreVer.Result("${CoreVer}");
-                  if (sCoreVer.IndexOf(" ") > 1)
+                  string sCoreVer = mCoreVer.Result("${CoreVer}").Trim();
+                  float coreVersion;
+                  if (Single.TryParse(sCoreVer, out coreVersion))
                   {
-                     return sCoreVer.Substring(0, sCoreVer.IndexOf(" "));
+                     return sCoreVer;
                   }
-                  return sCoreVer;
+                  throw new FormatException(String.Format("Failed to parse Core Version from '{0}'", logLine.LineRaw));
                }
                /*** ProtoMol Only */
                if ((mCoreVer = rProtoMolCoreVersion.Match(logLine.LineRaw)).Success)

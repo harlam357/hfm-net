@@ -347,6 +347,7 @@ namespace HFM.Framework.DataTypes
             case "GRO-SMP":
             case "GROCVS":
             case "GRO-A3":
+            case "GRO-A5":
                return ClientType.SMP;
             case "GROGPU2":
             case "GROGPU2-MT":
