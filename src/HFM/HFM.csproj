@@ -69,6 +69,15 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisRuleSet>..\..\..\hfm-net\src\HFM.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\harlam357public.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -87,7 +96,7 @@
       <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="harlam357.Windows.Forms">
-      <HintPath>..\..\lib\harlam357-net\net20\bin\Release\harlam357.Windows.Forms.dll</HintPath>
+      <HintPath>..\..\lib\harlam357-net\harlam357.Windows.Forms.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -102,7 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyVersion.cs">
-      <Link>AssemblyVersion.cs</Link>
+      <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Classes\Arguments.cs" />
     <Compile Include="Program.cs" />
@@ -118,15 +127,14 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Classes\SingleInstanceHelper.cs" />
+    <None Include="..\harlam357public.snk">
+      <Link>Properties\harlam357public.snk</Link>
+    </None>
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\lib\protobuf-net\protoc-license.txt">
-      <Link>protoc-license.txt</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
-      <Link>CustomDictionary.xml</Link>
+      <Link>Properties\CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
     <Content Include="CSS\BlueTwo.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -1,24 +1,4 @@
-﻿/*
- * HFM.NET - Application Assembly Configuration
- * Copyright (C) 2006-2007 David Rawling
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
-using System;
+﻿using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -38,7 +18,7 @@ using System.Resources;
 
 [assembly: NeutralResourcesLanguageAttribute("en-US")]
 [assembly: CLSCompliant(true)]
-[assembly: InternalsVisibleTo("HFM.Instances.Tests")]
+[assembly: InternalsVisibleTo("HFM.Instances.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100e14183a4b02c8425c363ab94d0615ec82b061c1edd9e1258db3a9f13b1a4f099d8a4a7b50e1010f6efeb3c822f256c587000e474752d6dbda1ec27858c99ba4998183b857fc98d9dc5c8fd2bcf4a43ffeab5d2a37e52d71950dfbe106d472cc88382f491ee54827f024a535395d01a183394a4b6157b283d129402630b1ce3d5")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
