@@ -111,6 +111,10 @@ namespace HFM.Forms.Controls
             {
                DoLineHighlight(i, Color.DarkRed);
             }
+            else if (line.LineType.Equals(LogLineType.Error))
+            {
+               DoLineHighlight(i, Color.DarkOrange);
+            }
             else if (line.LineType.Equals(LogLineType.Unknown) == false)
             {
                DoLineHighlight(i, Color.Blue);

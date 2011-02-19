@@ -181,6 +181,11 @@ namespace HFM.Forms
       public void Initialize(MainPresenter presenter, IProteinCollection proteinCollection)
       {
          _presenter = presenter;
+         // Resize can be invoked when InitializeComponent() is call
+         // if the DPI is not set to Normal (96 DPI).  The frmMain_Resize
+         // method depends on _presenter being NOT NULL... wait to hook
+         // up this event until after _presenter has been set (above).
+         Resize += frmMain_Resize;
       
          // Manually Create the Columns - Issue 41
          DataGridViewWrapper.SetupDataGridViewColumns(dataGridView1);
