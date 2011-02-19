@@ -130,7 +130,14 @@ namespace HFM.Instances
             // ensure this unit is not written twice
             if (UnitInfoExists(con, unitInfoLogic) == false)
             {
-               WriteUnitInfoToDatabase(con, unitInfoLogic);
+               try
+               {
+                  WriteUnitInfoToDatabase(con, unitInfoLogic);
+               }
+               catch (SQLiteException ex)
+               {
+                  HfmTrace.WriteToHfmConsole(ex);
+               }
             }
          }
       }

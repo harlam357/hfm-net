@@ -466,6 +466,57 @@ namespace HFM.Log.Tests
          Assert.AreEqual(WorkUnitResult.Unknown, unitData.UnitResult);
       }
 
+      [Test, Category("GPU")]
+      public void GPU3_2_FAHlog() // verbosity 9 / OPENMMGPU v2.19
+      {
+         // Scan
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\GPU3_2\\FAHlog.txt");
+         var clientRuns = LogReader.GetClientRuns(logLines);
+         var logInterpreter = new LogInterpreter(logLines, clientRuns);
+
+         // Check Run 0 Positions
+         var expectedRun = new ClientRun(2);
+         expectedRun.UnitIndexes.Add(new UnitIndex(3, 27));
+         expectedRun.UnitIndexes.Add(new UnitIndex(4, 170));
+         expectedRun.Arguments = "-gpu 0 -verbosity 9 -local -verbosity 9";
+         expectedRun.FoldingID = "HayesK";
+         expectedRun.Team = 32;
+         expectedRun.UserID = "37114EB5198643C1";
+         expectedRun.MachineID = 2;
+         expectedRun.CompletedUnits = 1;
+         expectedRun.FailedUnits = 0;
+         expectedRun.TotalCompletedUnits = 847;
+         expectedRun.Status = ClientStatus.RunningNoFrameTimes;
+
+         DoClientRunCheck(expectedRun, clientRuns[0]);
+
+         // Verify LogLine Properties
+         Assert.IsNotNull(logInterpreter.PreviousWorkUnitLogLines);
+         Assert.IsNotNull(logInterpreter.CurrentWorkUnitLogLines);
+
+         // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
+         Assert.AreEqual(3, logLines[34].LineData);
+         Assert.AreEqual("2.19", logLines[41].LineData);
+         Assert.That(logLines[56].ToString().Contains("Project: 10634 (Run 11, Clone 24, Gen 14)"));
+
+         var unitData = LogReader.GetFahLogDataFromLogLines(logInterpreter.CurrentWorkUnitLogLines);
+         Assert.AreEqual(new TimeSpan(17, 31, 22), unitData.UnitStartTimeStamp);
+         Assert.AreEqual(12, unitData.FrameDataList.Count);
+         Assert.AreEqual(12, unitData.FramesObserved);
+         Assert.AreEqual("2.19", unitData.CoreVersion);
+         Assert.AreEqual(-1, unitData.ProjectInfoIndex);
+         Assert.AreEqual(1, unitData.ProjectInfoList.Count);
+         Assert.AreEqual(10634, unitData.ProjectID);
+         Assert.AreEqual(8, unitData.ProjectRun);
+         Assert.AreEqual(24, unitData.ProjectClone);
+         Assert.AreEqual(24, unitData.ProjectGen);
+         Assert.AreEqual(unitData.ProjectID, unitData.ProjectInfoList[unitData.ProjectInfoList.Count - 1].ProjectID);
+         Assert.AreEqual(unitData.ProjectRun, unitData.ProjectInfoList[unitData.ProjectInfoList.Count - 1].ProjectRun);
+         Assert.AreEqual(unitData.ProjectClone, unitData.ProjectInfoList[unitData.ProjectInfoList.Count - 1].ProjectClone);
+         Assert.AreEqual(unitData.ProjectGen, unitData.ProjectInfoList[unitData.ProjectInfoList.Count - 1].ProjectGen);
+         Assert.AreEqual(WorkUnitResult.Unknown, unitData.UnitResult);
+      }
+
       [Test, Category("Standard")]
       public void Standard_1_FAHlog() // verbosity 9
       {
