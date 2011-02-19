@@ -7,8 +7,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName>HFM.Setup</OutputName>
     <OutputType>Package</OutputType>
-    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.0\Wix.targets</WixTargetsPath>
-    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.0\Wix.targets</WixTargetsPath>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
@@ -30,9 +30,11 @@
   <ItemGroup>
     <WixExtension Include="WixFileVersionExtension">
       <HintPath>WixFileVersionExtension.dll</HintPath>
+      <Name>WixFileVersionExtension</Name>
     </WixExtension>
     <WixExtension Include="WixUIExtension">
       <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
     </WixExtension>
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +52,6 @@
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
-    <PreBuildEvent>paraffin -update ..\..\HFM1.PARAFFIN</PreBuildEvent>
+    <PreBuildEvent>REM ..\..\..\tools\Paraffin\Paraffin -update ..\..\HFM1.PARAFFIN</PreBuildEvent>
   </PropertyGroup>
 </Project>

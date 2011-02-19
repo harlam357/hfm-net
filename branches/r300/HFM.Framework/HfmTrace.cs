@@ -24,6 +24,13 @@ using System.Diagnostics;
 
 namespace HFM.Framework
 {
+   //TODO: Need a way to notify the main UI when 
+   //      Error or Warning exceptions are logged.
+   
+   //TODO: Would like to show full function names
+   //      only in the HFM.log file and not in 
+   //      the Messages Window.
+
    public class HfmTrace
    {
       #region Instrumentation
@@ -108,7 +115,7 @@ namespace HFM.Framework
       #endregion
 
       #region HFM Console Write Support
-      private static readonly object _lockTraceWrite = typeof(Trace);
+      private static readonly object LockTraceWrite = typeof(Trace);
 
       #region Static
       public static void WriteToHfmConsole(string message)
@@ -229,7 +236,7 @@ namespace HFM.Framework
       #region Private Instance
       private void DoWrite(TraceLevel level, IEnumerable messages)
       {
-         lock (_lockTraceWrite)
+         lock (LockTraceWrite)
          {
             foreach (string message in messages)
             {
@@ -242,7 +249,7 @@ namespace HFM.Framework
 
       private void DoWrite(TraceLevel level, string message, bool showFunctionName)
       {
-         lock (_lockTraceWrite)
+         lock (LockTraceWrite)
          {
             string traceString;
             if (showFunctionName)
@@ -260,7 +267,7 @@ namespace HFM.Framework
 
       private void DoWrite(TraceLevel level, Exception ex)
       {
-         lock (_lockTraceWrite)
+         lock (LockTraceWrite)
          {
             string traceString = FormatTraceString(level, String.Format("{0} Threw Exception: {1}", GParentFunctionName, ex));
             Trace.WriteLine(traceString);
@@ -272,7 +279,7 @@ namespace HFM.Framework
 
       private void DoWrite(TraceLevel level, DateTime Start)
       {
-         lock (_lockTraceWrite)
+         lock (LockTraceWrite)
          {
             string traceString = FormatTraceString(level, String.Format("{0} Execution Time: {1}", GParentFunctionName, GetExecTime(Start)));
             Trace.WriteLine(traceString);
@@ -282,7 +289,7 @@ namespace HFM.Framework
 
       private void DoWrite(TraceLevel level, string subMessage, string message)
       {
-         lock (_lockTraceWrite)
+         lock (LockTraceWrite)
          {
             string traceString = FormatTraceString(level, String.Format("{0} ({1}) {2}", GParentFunctionName, subMessage, message));
             Trace.WriteLine(traceString);
@@ -292,7 +299,7 @@ namespace HFM.Framework
 
       private void DoWrite(TraceLevel level, string subMessage, Exception ex)
       {
-         lock (_lockTraceWrite)
+         lock (LockTraceWrite)
          {
             string traceString = FormatTraceString(level, String.Format("{0} ({1}) Threw Exception: {2}", GParentFunctionName, subMessage, ex));
             Trace.WriteLine(traceString);
@@ -304,7 +311,7 @@ namespace HFM.Framework
 
       private void DoWrite(TraceLevel level, string subMessage, DateTime Start)
       {
-         lock (_lockTraceWrite)
+         lock (LockTraceWrite)
          {
             string traceString = FormatTraceString(level, String.Format("{0} ({1}) Execution Time: {2}", GParentFunctionName, subMessage, GetExecTime(Start)));
             Trace.WriteLine(traceString);
