@@ -10,9 +10,6 @@ using System.Resources;
 [assembly: AssemblyTitle("HFM.Log")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("harlam357")]
-[assembly: AssemblyProduct("HFM.NET")]
-[assembly: AssemblyCopyright("Copyright © Ryan Harlamert 2009-2010.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

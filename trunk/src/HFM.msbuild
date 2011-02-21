@@ -12,6 +12,9 @@
    <Target Name="AssemblyVersion" DependsOnTargets="Version">
       <AssemblyInfo CodeLanguage="CS"
         OutputFile="AssemblyVersion.cs"
+        AssemblyCompany="harlam357"
+        AssemblyProduct="HFM.NET"
+        AssemblyCopyright="Copyright © Ryan Harlamert 2009-2011."
         AssemblyVersion="$(Major).$(Minor).$(Build).$(Revision)"
         AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
         Condition="$(Revision) != '0' "/>
