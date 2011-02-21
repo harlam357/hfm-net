@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Client Queue Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -137,7 +137,7 @@ namespace HFM.Framework.DataTypes
 
             for (int i = 0; i < 10; i++)
             {
-               list.Add(String.Format("{0} - {1}", i, GetQueueEntry(i).ProjectRunCloneGen));
+               list.Add(String.Format("{0} - {1}", i, GetQueueEntry(i).ProjectRunCloneGen()));
             }
 
             return list;

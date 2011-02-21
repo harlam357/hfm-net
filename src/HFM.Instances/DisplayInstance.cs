@@ -252,7 +252,7 @@ namespace HFM.Instances
 
       public string ProjectRunCloneGen
       {
-         get { return CurrentUnitInfo.ProjectRunCloneGen; }
+         get { return CurrentUnitInfo.UnitInfoData.ProjectRunCloneGen(); }
       }
 
       public double Credit

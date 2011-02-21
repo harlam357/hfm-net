@@ -272,7 +272,7 @@ namespace HFM.Instances
          using (var command = new SQLiteCommand(con))
          {
             HfmTrace.WriteToHfmConsole(TraceLevel.Info, unitInfoLogic.UnitInfoData.OwningInstanceName,
-               String.Format(CultureInfo.CurrentCulture, "Writing unit {0} to database.", unitInfoLogic.ProjectRunCloneGen));
+               String.Format(CultureInfo.CurrentCulture, "Writing unit {0} to database.", unitInfoLogic.UnitInfoData.ProjectRunCloneGen()));
 
             var projectID = new SQLiteParameter("ProjectID", DbType.Int32) { Value = unitInfoLogic.UnitInfoData.ProjectID };
             command.Parameters.Add(projectID);

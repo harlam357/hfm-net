@@ -53,14 +53,14 @@ namespace HFM.Instances
       private static void FindDuplicateProjects(IEnumerable<IDisplayInstance> instances)
       {
          var duplicates = (from x in instances
-                           group x by x.CurrentUnitInfo.ProjectRunCloneGen into g
+                           group x by x.CurrentUnitInfo.UnitInfoData.ProjectRunCloneGen() into g
                            let count = g.Count()
                            where count > 1 && g.First().CurrentUnitInfo.UnitInfoData.ProjectIsUnknown() == false
                            select g.Key);
 
          foreach (IDisplayInstance instance in instances)
          {
-            instance.ProjectIsDuplicate = duplicates.Contains(instance.CurrentUnitInfo.ProjectRunCloneGen);
+            instance.ProjectIsDuplicate = duplicates.Contains(instance.CurrentUnitInfo.UnitInfoData.ProjectRunCloneGen());
          }
       }
    }

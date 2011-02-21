@@ -18,7 +18,7 @@ namespace HFM.Queue.Tool
          Console.WriteLine("{0} version {1} (qd clone)", app, fi.FileVersion);
          Console.WriteLine("Copyright (C) 2002-2005 Richard P. Howell IV.");
          Console.WriteLine("Copyright (C) 2005-2008 Sebastiaan Couwenberg");
-         Console.WriteLine("Copyright (C) 2009-2010 Ryan Harlamert");
+         Console.WriteLine("Copyright (C) 2009-2011 Ryan Harlamert");
          
          IEnumerable<Argument> arguments;
          try

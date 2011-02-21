@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Globalization;
 
 namespace HFM.Framework.DataTypes
 {
@@ -47,6 +48,15 @@ namespace HFM.Framework.DataTypes
                 projectInfo.ProjectRun == 0 &&
                 projectInfo.ProjectClone == 0 &&
                 projectInfo.ProjectGen == 0;
+      }
+
+      /// <summary>
+      /// Formatted Project (Run, Clone, Gen) Information
+      /// </summary>
+      public static string ProjectRunCloneGen(this IProjectInfo projectInfo)
+      {
+         return String.Format(CultureInfo.InvariantCulture, "P{0} (R{1}, C{2}, G{3})", 
+            projectInfo.ProjectID, projectInfo.ProjectRun, projectInfo.ProjectClone, projectInfo.ProjectGen);
       }
    }
 }

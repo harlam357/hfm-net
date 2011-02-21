@@ -145,18 +145,6 @@ namespace HFM.Instances
          }
       }
 
-      /// <summary>
-      /// Formatted Project (Run, Clone, Gen) Information
-      /// </summary>
-      public string ProjectRunCloneGen
-      {
-         get
-         {
-            return String.Format(CultureInfo.InvariantCulture, "P{0} (R{1}, C{2}, G{3})",
-               _unitInfo.ProjectID, _unitInfo.ProjectRun, _unitInfo.ProjectClone, _unitInfo.ProjectGen);
-         }
-      }
-
       private IProtein _currentProtein;
       /// <summary>
       /// Class member containing info on the currently running protein

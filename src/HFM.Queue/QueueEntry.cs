@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Queue Entry Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,6 +20,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Text;
 
 namespace HFM.Queue
@@ -30,16 +32,24 @@ namespace HFM.Queue
    [CLSCompliant(false)]
    public class QueueEntry
    {
+      #region Constants
+
+      private const string UnknownValue = "Unknown";
+
+      #endregion
+
       #region Fields
-   
+
       /// <summary>
       /// Wrapped Entry Structure
       /// </summary>
       private Entry _entry;
+
       /// <summary>
       /// Entry Index
       /// </summary>
       private readonly UInt32 _index;
+
       /// <summary>
       /// Entry Index
       /// </summary>
@@ -47,75 +57,144 @@ namespace HFM.Queue
       {
          get { return _index; }
       }
+
       /// <summary>
       /// The QueueReader that Created this QueueEntry
       /// </summary>
       private readonly QueueData _qData;
+
+      /// <summary>
+      /// CPU Type Dictionary
+      /// </summary>
+      [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+      public static Dictionary<UInt32, string> GetCpuTypes()
+      {
+         return new Dictionary<UInt32, string>
+                {
+                   { 100000, "x86" },
+                   { 100085, "x86" },
+                   { 100086, "i86" },
+                   { 100087, "Pentium IV" },
+                   { 100186, "i186" },
+                   { 100286, "i286" },
+                   { 100386, "i386" },
+                   { 100486, "i486" },
+                   { 100586, "Pentium" },
+                   { 100587, "Pentium MMX" },
+                   { 100686, "Pentium Pro" },
+                   { 100687, "Pentium II/III" },
+                   { 101000, "Cyrix x86" },
+                   { 102000, "AMD x86" },
+                   { 200000, "PowerPC" },
+                   { 1100000, "IA64" },
+                   { 1600000, "AMD64" }
+                };
+      }
+
+      /// <summary>
+      /// OS Type Dictionary
+      /// </summary>
+      [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+      [SuppressMessage("Microsoft.Globalization", "CA1302:DoNotHardcodeLocaleSpecificStrings", MessageId = "WinNT")]
+      public static Dictionary<UInt32, string> GetOsTypes()
+      {
+         return new Dictionary<UInt32, string>
+                {
+                   { 100000, "Windows" },
+                   { 100001, "Win95" },
+                   { 100002, "Win95_OSR2" },
+                   { 100003, "Win98" },
+                   { 100004, "Win98SE" },
+                   { 100005, "WinME" },
+                   { 100006, "WinNT" },
+                   { 100007, "Win2K" },
+                   { 100008, "WinXP" },
+                   { 100009, "Win2K3" },
+                   { 200000, "MacOS" },
+                   { 300000, "OSX" },
+                   { 400000, "Linux" },
+                   { 700000, "FreeBSD" },
+                   { 800000, "OpenBSD" },
+                   { 1800000, "Win64" },
+                   { 1900000, "OS2" }
+                };
+      }
       
       /// <summary>
-      /// Entry Status String Array (indexes correspond to the EntryStatus property)
+      /// Entry Status Literals (index corresponds to the EntryStatus property)
       /// </summary>
-      public static string[] EntryStatusStrings = new[]
-                                                  {
-                                                     "Unknown",
-                                                     "Empty",
-                                                     "Deleted",
-                                                     "Finished",
-                                                     "Garbage",
-                                                     "Folding Now",
-                                                     "Queued",
-                                                     "Ready For Upload",
-                                                     "Abandonded",
-                                                     "Fetching From Server"
-                                                  };
+      public static string[] GetEntryStatusLiterals()
+      {
+         return new[]
+                {
+                   "Unknown",
+                   "Empty",
+                   "Deleted",
+                   "Finished",
+                   "Garbage",
+                   "Folding Now",
+                   "Queued",
+                   "Ready For Upload",
+                   "Abandonded",
+                   "Fetching From Server"
+                };
+      }                                              
+
+      /// <summary>
+      /// Required Client Type Literals (index corresponds to the RequiredClientType property)
+      /// </summary>
+      public static string[] GetRequiredClientTypeLiterals()
+      {
+         return new[]
+                {
+                   String.Empty,
+                   "Regular",
+                   "No Deadline",
+                   "Advmethods",
+                   "Beta",
+                   "Internal",
+                   "Big Beta",
+                   "BigAdv",
+                   "Alpha",
+                   "Big Alpha"
+                };
+      } 
       
       /// <summary>
-      /// Required Client Type String Array (indexes correspond to the RequiredClientType property)
+      /// Core Name Dictionary (keys correspond to the CoreNumber property)
       /// </summary>
-      public static string[] RequiredClientTypeStrings = new[]
-                                                         {
-                                                            String.Empty,
-                                                            "Regular",
-                                                            "No Deadline",
-                                                            "Advmethods",
-                                                            "Beta",
-                                                            "Internal",
-                                                            "Big Beta",
-                                                            "BigAdv",
-                                                            "Alpha",
-                                                            "Big Alpha"
-                                                         };
-      
-      /// <summary>
-      /// Core Number Name String Array (keys correspond to the CoreNumber property)
-      /// </summary>
-      public static Dictionary<string, string> CoreNumberStrings = new Dictionary<string, string>()
-                                                                   {
-                                                                      { String.Empty, String.Empty },
-                                                                      { "10", "GROGPU" },       /* GPU */
-                                                                      { "11", "GROGPU2" },		/* GPU2 (ATI CAL / NVIDIA CUDA) */
-                                                                      { "12", "ATI-DEV" },		/* GPU2 (ATI Development) */
-                                                                      { "13", "NVIDIA-DEV" },	/* GPU2 (NVIDIA Development) */
-                                                                      { "14", "GROGPU2-MT" },	/* GPU2 (NVIDIA Development) */
-                                                                      { "15", "OPENMMGPU" },		/* GPU3 (OpenMM) */
-                                                                      { "20", "SHARPEN" },		/* SHARPEN */
-                                                                      { "65", "TINKER" },		   /* Tinker */
-                                                                      { "78", "GROMACS" },		/* Gromacs */
-                                                                      { "79", "DGROMACS" },		/* Double-precision Gromacs */
-                                                                      { "7a", "GBGROMACS" },		/* GB Gromacs (Generalized Born implicit solvent) */
-                                                                      { "7b", "DGROMACSB" },		/* Double-precision Gromacs B */
-                                                                      { "7c", "DGROMACSC" },		/* Double-precision Gromacs C */
-                                                                      { "80", "GROST" },		   /* Gromacs SREM */
-                                                                      { "81", "GROSIMT" },		/* Gromacs Simulated Tempering */
-                                                                      { "82", "AMBER" },		   /* Amber */
-                                                                      { "96", "QMD" },		      /* QMD */
-                                                                      { "a0", "GROMACS33" },		/* Gromacs 3.3 */
-                                                                      { "a1", "GRO-SMP" },		/* Gromacs SMP (V1.71) */
-                                                                      { "a2", "GROCVS" },		   /* Gromacs CVS / Gromacs SMP (V1.90) */
-                                                                      { "a3", "GRO-A3" },		   /* Gromacs SMP2 / Gromacs SMP (V2.13) */
-                                                                      { "a4", "GRO-A4" },		   /* Gromacs GB (V2.06) */
-                                                                      { "b4", "ProtoMol" },		/* ProtoMol */
-                                                                   };
+      [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+      public static Dictionary<UInt32, string> GetCoreNames()
+      {
+         return new Dictionary<UInt32, string>
+                {
+                   { 0, String.Empty },
+                   { 0x10, "GROGPU" },       /* GPU */
+                   { 0x11, "GROGPU2" },		/* GPU2 (ATI CAL / NVIDIA CUDA) */
+                   { 0x12, "ATI-DEV" },		/* GPU2 (ATI Development) */
+                   { 0x13, "NVIDIA-DEV" },	/* GPU2 (NVIDIA Development) */
+                   { 0x14, "GROGPU2-MT" },	/* GPU2 (NVIDIA Development) */
+                   { 0x15, "OPENMMGPU" },		/* GPU3 (OpenMM) */
+                   { 0x20, "SHARPEN" },		/* SHARPEN */
+                   { 0x65, "TINKER" },		   /* Tinker */
+                   { 0x78, "GROMACS" },		/* Gromacs */
+                   { 0x79, "DGROMACS" },		/* Double-precision Gromacs */
+                   { 0x7a, "GBGROMACS" },		/* GB Gromacs (Generalized Born implicit solvent) */
+                   { 0x7b, "DGROMACSB" },		/* Double-precision Gromacs B */
+                   { 0x7c, "DGROMACSC" },		/* Double-precision Gromacs C */
+                   { 0x80, "GROST" },		   /* Gromacs SREM */
+                   { 0x81, "GROSIMT" },		/* Gromacs Simulated Tempering */
+                   { 0x82, "AMBER" },		   /* Amber */
+                   { 0x96, "QMD" },		      /* QMD */
+                   { 0xa0, "GROMACS33" },		/* Gromacs 3.3 */
+                   { 0xa1, "GRO-SMP" },		/* Gromacs SMP (V1.71) */
+                   { 0xa2, "GROCVS" },		   /* Gromacs CVS / Gromacs SMP (V1.90) */
+                   { 0xa3, "GRO-A3" },		   /* Gromacs SMP2 / Gromacs SMP (V2.13) */
+                   { 0xa4, "GRO-A4" },		   /* Gromacs GB (V2.06) */
+                   { 0xa5, "GRO-A5" },       /* Gromacs SMP2 (v2.27) - added to HFM API on 2-20-11 */
+                   { 0xb4, "ProtoMol" },		/* ProtoMol */
+                };
+      } 
       
       #endregion
 
@@ -137,6 +216,8 @@ namespace HFM.Queue
       #endregion
       
       #region queue.dat Properties
+
+      // ReSharper disable InconsistentNaming
 
       /// <summary>
       /// Status (0) Empty / (1) Active or (1) Ready / (2) Ready for Upload / (3) = Abandonded (Ignore if found) / (4) Fetching from Server
@@ -167,36 +248,32 @@ namespace HFM.Queue
                      /* The queue entry has never been used, or has been completely cleared. */
                      return 1; // Empty
                   }
-                  else if (UploadStatus == 0)
+                  if (UploadStatus == 0)
                   {
                      /* The unit was explicitly deleted. */
                      return 2; // Deleted
                   }
-                  else if (UploadStatus == 1)
+                  if (UploadStatus == 1)
                   {
                      /* The unit has been uploaded.  The queue entry is just history. */
                      return 3; // Finished
                   }
-                  else
-                  {
-                     /* The queue entry is available, but its history is unintelligible. */
-                     return 4; // Garbage
-                  }
+
+                  /* The queue entry is available, but its history is unintelligible. */
+                  return 4; // Garbage
                case 1:
                   if (_index == _qData.CurrentIndex)
                   {
                      /* The unit is in progress.  Presumably the core is running. */
                      return 5; // Folding Now
                   }
-                  else
-                  {
-                     /* The unit has been downloaded but processing hasn't begun yet. */
-                     return 6; // Queued
-                  }
+
+                  /* The unit has been downloaded but processing hasn't begun yet. */
+                  return 6; // Queued
                case 2:
                   /* The core has finished the unit, but it is still in the queue. */
                   return 7; // Ready For Upload
-               case 3: /* Bug before V3b5, neglected to post status (1). */
+               case 3: /* Issue before V3b5, neglected to post status (1). */
                   return 8; // Abandonded
                case 4:
                   /* Client presently contacting the server, or something failed in download.
@@ -208,6 +285,20 @@ namespace HFM.Queue
                   /* Something other than 0 to 4. */
                   return 0; // Unknown
             }
+         }
+      }
+
+      /// <summary>
+      /// Entry Status (status value based on Status property and other properties of this queue entry)
+      /// (0) Unknown / (1) Empty / (2) Deleted / (3) Finished / (4) Garbage / (5) Folding Now
+      /// (6) Queued / (7) Ready For Upload / (8) Abandonded / (9) Fetching From Server
+      /// </summary>
+      public string EntryStatusLiteral
+      {
+         get
+         {
+            var literals = GetEntryStatusLiterals();
+            return EntryStatus >= 0 && EntryStatus <= literals.Length ? literals[EntryStatus] : UnknownValue;
          }
       }
 
@@ -229,11 +320,11 @@ namespace HFM.Queue
       }
 
       /// <summary>
-      /// Pad for Windows, others as of v4.01, as of v6.01 number of SMP Cores to use
+      /// Number of SMP cores
       /// </summary>
-      public UInt32 UseCores
+      public UInt32 NumberOfSmpCores
       {
-         get { return _entry.UseCores; }
+         get { return _entry.NumberOfSmpCores; }
       }
 
       /// <summary>
@@ -311,7 +402,7 @@ namespace HFM.Queue
       /// </summary>
       public Uri CoreDownloadUrl
       {
-         get { return new Uri(String.Format("http://{0}/Core_{1}.fah", _entry.CoreDownloadUrl, CoreNumber)); }
+         get { return new Uri(String.Format(CultureInfo.InvariantCulture, "http://{0}/Core_{1}.fah", _entry.CoreDownloadUrl, CoreNumberHex)); }
       }
 
       /// <summary>
@@ -329,12 +420,32 @@ namespace HFM.Queue
       /// <summary>
       /// Core_xx number
       /// </summary>
-      public string CoreNumber
+      public UInt32 CoreNumber
       {
          get
          {
             byte[] b = _qData.GetSystemBytes(_entry.CoreNumber);
-            return BitConverter.ToUInt32(b, 0).ToString("x");
+            return BitConverter.ToUInt32(b, 0);
+         }
+      }
+
+      /// <summary>
+      /// Core_xx number
+      /// </summary>
+      public string CoreNumberHex
+      {
+         get { return CoreNumber.ToString("x", CultureInfo.InvariantCulture); }
+      }
+
+      /// <summary>
+      /// Core_xx name
+      /// </summary>
+      public string CoreName
+      {
+         get
+         {
+            var names = GetCoreNames();
+            return names.ContainsKey(CoreNumber) ? names[CoreNumber] : UnknownValue;
          }
       }
 
@@ -369,7 +480,7 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] b = new byte[2];
+            var b = new byte[2];
             Array.Copy(_entry.Project, 0, b, 0, 2);
             return BitConverter.ToUInt16(b, 0);
          }
@@ -382,7 +493,7 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] b = new byte[2];
+            var b = new byte[2];
             Array.Copy(_entry.Project, 2, b, 0, 2);
             return BitConverter.ToUInt16(b, 0);
          }
@@ -395,7 +506,7 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] b = new byte[2];
+            var b = new byte[2];
             Array.Copy(_entry.Project, 4, b, 0, 2);
             return BitConverter.ToUInt16(b, 0);
          }
@@ -408,7 +519,7 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] b = new byte[2];
+            var b = new byte[2];
             Array.Copy(_entry.Project, 6, b, 0, 2);
             return BitConverter.ToUInt16(b, 0);
          }
@@ -421,10 +532,10 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] b = new byte[4];
+            var b = new byte[4];
             Array.Copy(_entry.Project, 8, b, 0, 4);
             UInt32 seconds = BitConverter.ToUInt32(b, 0);
-            DateTime d = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var d = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             return d.AddSeconds(seconds);
          }
       }
@@ -449,7 +560,7 @@ namespace HFM.Queue
          {
             if (IsMachineIDBigEndian)
             {
-               byte[] b = new byte[4];
+               var b = new byte[4];
                Array.Copy(_entry.MachineID, b, _entry.MachineID.Length);
                Array.Reverse(b);
                return BitConverter.ToUInt32(b, 0);
@@ -479,12 +590,12 @@ namespace HFM.Queue
          {
             if (_qData.System.Equals(SystemType.PPC))
             {
-               return String.Format("{0}.{1}.{2}.{3}", _entry.ServerIP[0], _entry.ServerIP[1],
-                                                       _entry.ServerIP[2], _entry.ServerIP[3]);
+               return String.Format(CultureInfo.InvariantCulture, "{0}.{1}.{2}.{3}", 
+                  _entry.ServerIP[0], _entry.ServerIP[1], _entry.ServerIP[2], _entry.ServerIP[3]);
             }
 
-            return String.Format("{0}.{1}.{2}.{3}", _entry.ServerIP[3], _entry.ServerIP[2],
-                                                    _entry.ServerIP[1], _entry.ServerIP[0]);
+            return String.Format(CultureInfo.InvariantCulture, "{0}.{1}.{2}.{3}", 
+               _entry.ServerIP[3], _entry.ServerIP[2], _entry.ServerIP[1], _entry.ServerIP[0]);
          }
       }
 
@@ -548,14 +659,14 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] bytes = new byte[_entry.UserAndMachineID.Length];
+            var bytes = new byte[_entry.UserAndMachineID.Length];
             Array.Copy(_entry.UserAndMachineID, bytes, _entry.UserAndMachineID.Length);
             if (IsMachineIDBigEndian == false)
             {
                Array.Reverse(bytes);
             }
 
-            StringBuilder sb = new StringBuilder(_entry.UserAndMachineID.Length * 2);
+            var sb = new StringBuilder(_entry.UserAndMachineID.Length * 2);
             foreach (byte b in bytes)
             {
                sb.AppendFormat("{0:X2}", b);
@@ -571,7 +682,7 @@ namespace HFM.Queue
       {
          get
          {
-            return GetUserIDFromUserAndMachineID(_entry.UserAndMachineID, MachineID, IsMachineIDBigEndian);
+            return GetUserID(_entry.UserAndMachineID, MachineID, IsMachineIDBigEndian);
          }
       }
 
@@ -582,7 +693,7 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] b = new byte[_entry.Benchmark.Length];
+            var b = new byte[_entry.Benchmark.Length];
             Array.Copy(_entry.Benchmark, b, _entry.Benchmark.Length);
             Array.Reverse(b);
             return BitConverter.ToUInt32(b, 0);
@@ -594,10 +705,7 @@ namespace HFM.Queue
       /// </summary>
       public UInt32 CpuType
       {
-         get
-         {
-            return GetCpuOrOsNumber(_entry.CpuType);
-         }
+         get { return GetCpuOrOsNumber(_entry.CpuType); }
       }
 
       /// <summary>
@@ -605,10 +713,7 @@ namespace HFM.Queue
       /// </summary>
       public UInt32 OsType
       {
-         get
-         {
-            return GetCpuOrOsNumber(_entry.OsType);
-         }
+         get { return GetCpuOrOsNumber(_entry.OsType); }
       }
 
       /// <summary>
@@ -616,10 +721,7 @@ namespace HFM.Queue
       /// </summary>
       public UInt32 CpuSpecies
       {
-         get
-         {
-            return GetCpuOrOsNumber(_entry.CpuSpecies);
-         }
+         get { return GetCpuOrOsNumber(_entry.CpuSpecies); }
       }
 
       /// <summary>
@@ -627,26 +729,23 @@ namespace HFM.Queue
       /// </summary>
       public UInt32 OsSpecies
       {
-         get
-         {
-            return GetCpuOrOsNumber(_entry.OsSpecies);
-         }
+         get { return GetCpuOrOsNumber(_entry.OsSpecies); }
       }
 
       /// <summary>
-      /// CPU type (string)
+      /// CPU type
       /// </summary>
       public string CpuString
       {
-         get { return GetCpuString(_entry.CpuType, _entry.CpuSpecies); }
+         get { return GetCpuString((CpuType * 100000) + CpuSpecies); }
       }
 
       /// <summary>
-      /// OS type (string)
+      /// OS type
       /// </summary>
       public string OsString
       {
-         get { return GetOsString(_entry.OsType, _entry.OsSpecies); }
+         get { return GetOsString((OsType * 100000) + OsSpecies); }
       }
 
       /// <summary>
@@ -700,7 +799,7 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] b = new byte[_entry.RequiredClientType.Length];
+            var b = new byte[_entry.RequiredClientType.Length];
             Array.Copy(_entry.RequiredClientType, b, b.Length);
 
             if (RequiredClientTypeBigEndian)
@@ -709,6 +808,20 @@ namespace HFM.Queue
             }
 
             return BitConverter.ToUInt32(b, 0);
+         }
+      }
+
+      /// <summary>
+      /// Required client type
+      /// </summary>
+      public string RequiredClientTypeLiteral
+      {
+         get
+         {
+            var literals = GetRequiredClientTypeLiterals();
+            return RequiredClientType >= 0 && RequiredClientType <= literals.Length
+                      ? literals[RequiredClientType]
+                      : UnknownValue;
          }
       }
       
@@ -727,7 +840,7 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] b = new byte[_entry.AssignmentInfoPresent.Length];
+            var b = new byte[_entry.AssignmentInfoPresent.Length];
             Array.Copy(_entry.AssignmentInfoPresent, b, 4);
 
             if (AssignmentInfoBigEndian)
@@ -750,7 +863,7 @@ namespace HFM.Queue
 
             if (AssignmentInfoPresent)
             {
-               byte[] b = new byte[_entry.AssignmentTimeStamp.Length];
+               var b = new byte[_entry.AssignmentTimeStamp.Length];
                Array.Copy(_entry.AssignmentTimeStamp, b, 4);
 
                if (QueueData.IsBigEndian(_entry.AssignmentInfoPresent))
@@ -785,7 +898,7 @@ namespace HFM.Queue
          {
             if (AssignmentInfoPresent)
             {
-               byte[] bytes = new byte[_entry.AssignmentInfoChecksum.Length];
+               var bytes = new byte[_entry.AssignmentInfoChecksum.Length];
                Array.Copy(_entry.AssignmentInfoChecksum, bytes, 4);
 
                // Reverse this value if 'AssignmentInfoPresent' IS NOT Big Endian
@@ -797,7 +910,7 @@ namespace HFM.Queue
                   Array.Reverse(bytes);
                }
 
-               StringBuilder sb = new StringBuilder(_entry.AssignmentInfoChecksum.Length * 2);
+               var sb = new StringBuilder(_entry.AssignmentInfoChecksum.Length * 2);
                foreach (byte b in bytes)
                {
                   sb.AppendFormat("{0:X2}", b);
@@ -818,11 +931,13 @@ namespace HFM.Queue
          {
             if (_qData.System.Equals(SystemType.PPC))
             {
-               return String.Format("{0}.{1}.{2}.{3}", _entry.CollectionServerIP[0], _entry.CollectionServerIP[1],
-                                                       _entry.CollectionServerIP[2], _entry.CollectionServerIP[3]);
+               return String.Format(CultureInfo.InvariantCulture, "{0}.{1}.{2}.{3}", 
+                  _entry.CollectionServerIP[0], _entry.CollectionServerIP[1],
+                  _entry.CollectionServerIP[2], _entry.CollectionServerIP[3]);
             }
-            return String.Format("{0}.{1}.{2}.{3}", _entry.CollectionServerIP[3], _entry.CollectionServerIP[2],
-                                                    _entry.CollectionServerIP[1], _entry.CollectionServerIP[0]);
+            return String.Format(CultureInfo.InvariantCulture, "{0}.{1}.{2}.{3}", 
+               _entry.CollectionServerIP[3], _entry.CollectionServerIP[2],
+               _entry.CollectionServerIP[1], _entry.CollectionServerIP[0]);
          }
       }
 
@@ -841,7 +956,7 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] b = new byte[_entry.Misc4a.Length];
+            var b = new byte[_entry.Misc4a.Length];
             Array.Copy(_entry.Misc4a, b, _entry.Misc4a.Length);
             
             if (Misc4aBigEndian)
@@ -854,14 +969,14 @@ namespace HFM.Queue
       }
 
       /// <summary>
-      /// Number of SMP cores
+      /// Number of SMP Cores to use
       /// </summary>
-      public UInt32 NumberOfSmpCores
+      public UInt32 UseCores
       {
          get
          {
-            byte[] b = new byte[_entry.NumberOfSmpCores.Length];
-            Array.Copy(_entry.NumberOfSmpCores, b, _entry.NumberOfSmpCores.Length);
+            var b = new byte[_entry.UseCores.Length];
+            Array.Copy(_entry.UseCores, b, _entry.UseCores.Length);
             Array.Reverse(b);
             return BitConverter.ToUInt32(b, 0);
          }
@@ -896,7 +1011,7 @@ namespace HFM.Queue
                return String.Empty;
             }
             
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (byte b in _entry.Passkey)
             {
                sb.Append(Convert.ToChar(b));
@@ -912,7 +1027,7 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] b = new byte[_entry.Flops.Length];
+            var b = new byte[_entry.Flops.Length];
             Array.Copy(_entry.Flops, b, _entry.Flops.Length);
             Array.Reverse(b);
             return BitConverter.ToUInt32(b, 0);
@@ -937,7 +1052,7 @@ namespace HFM.Queue
       {
          get
          {
-            byte[] b = new byte[_entry.Memory.Length];
+            var b = new byte[_entry.Memory.Length];
             Array.Copy(_entry.Memory, b, _entry.Memory.Length);
             Array.Reverse(b);
             return BitConverter.ToUInt32(b, 0);
@@ -997,6 +1112,8 @@ namespace HFM.Queue
       {
          get { return _entry.NumberOfUploadFailures; }
       }
+
+      // ReSharper restore InconsistentNaming
       
       #endregion
 
@@ -1009,8 +1126,7 @@ namespace HFM.Queue
             hexString = '0' + hexString; // Pad the first byte
          }
 
-         byte[] data = new byte[hexString.Length / 2];
-
+         var data = new byte[hexString.Length / 2];
          for (int i = 0; i < data.Length; i++)
          {
             data[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
@@ -1019,13 +1135,15 @@ namespace HFM.Queue
          return data;
       }
 
-      internal static string GetUserIDFromUserAndMachineID(byte[] userAndMachineID, UInt32 machineID, bool isMachineIDBigEndian)
+      // ReSharper disable InconsistentNaming
+      internal static string GetUserID(byte[] userAndMachineID, UInt32 machineID, bool isMachineIDBigEndian)
+      // ReSharper restore InconsistentNaming
       {
          Debug.Assert(userAndMachineID.Length == 8);
 
          /*** Remove the MachineID from UserAndMachineID ***/
 
-         byte[] bytes = new byte[userAndMachineID.Length];
+         var bytes = new byte[userAndMachineID.Length];
          Array.Copy(userAndMachineID, bytes, userAndMachineID.Length);
          if (isMachineIDBigEndian)
          {
@@ -1041,7 +1159,7 @@ namespace HFM.Queue
          // Reverse the bytes so we show the most significant byte first
          Array.Reverse(bytes);
 
-         StringBuilder sb = new StringBuilder(userAndMachineID.Length * 2);
+         var sb = new StringBuilder(userAndMachineID.Length * 2);
          foreach (byte b in bytes)
          {
             sb.AppendFormat("{0:X2}", b);
@@ -1049,106 +1167,16 @@ namespace HFM.Queue
          return sb.ToString().TrimStart('0');
       }
 
-      private static string GetCpuString(byte[] cpuType, byte[] cpuSpecies)
-      {
-         UInt32 cpuTypeAsUInt32 = GetCpuOrOsNumber(cpuType);
-         UInt32 cpuSpeciesAsUInt32 = GetCpuOrOsNumber(cpuSpecies);
-
-         return GetCpuString((cpuTypeAsUInt32 * 100000) + cpuSpeciesAsUInt32);
-      }
-
       private static string GetCpuString(UInt32 cpuId)
       {
-         switch (cpuId)
-         {
-            case 100000:
-               return "x86";
-            case 100085:
-               return "x86";
-            case 100086:
-               return "i86";
-            case 100087:
-               return "Pentium IV";
-            case 100186:
-               return "i186";
-            case 100286:
-               return "i286";
-            case 100386:
-               return "i386";
-            case 100486:
-               return "i486";
-            case 100586:
-               return "Pentium";
-            case 100587:
-               return "Pentium MMX";
-            case 100686:
-               return "Pentium Pro";
-            case 100687:
-               return "Pentium II/III";
-            case 101000:
-               return "Cyrix x86";
-            case 102000:
-               return "AMD x86";
-            case 200000:
-               return "PowerPC";
-            case 1100000:
-               return "IA64";
-            case 1600000:
-               return "AMD64";
-         }
-
-         return "Unknown";
-      }
-
-      private static string GetOsString(byte[] osType, byte[] osSpecies)
-      {
-         UInt32 osTypeAsUInt32 = GetCpuOrOsNumber(osType);
-         UInt32 osSpeciesAsUInt32 = GetCpuOrOsNumber(osSpecies);
-
-         return GetOsString((osTypeAsUInt32 * 100000) + osSpeciesAsUInt32);
+         var literals = GetCpuTypes();
+         return literals.ContainsKey(cpuId) ? literals[cpuId] : UnknownValue;
       }
 
       private static string GetOsString(UInt32 osId)
       {
-         switch (osId)
-         {
-            case 100000:
-               return "Windows";
-            case 100001:
-               return "Win95";
-            case 100002:
-               return "Win95_OSR2";
-            case 100003:
-               return "Win98";
-            case 100004:
-               return "Win98SE";
-            case 100005:
-               return "WinME";
-            case 100006:
-               return "WinNT";
-            case 100007:
-               return "Win2K";
-            case 100008:
-               return "WinXP";
-            case 100009:
-               return "Win2K3";
-            case 200000:
-               return "MacOS";
-            case 300000:
-               return "OSX";
-            case 400000:
-               return "Linux";
-            case 700000:
-               return "FreeBSD";
-            case 800000:
-               return "OpenBSD";
-            case 1800000:
-               return "Win64";
-            case 1900000:
-               return "OS2";
-         }
-
-         return "Unknown";
+         var literals = GetOsTypes();
+         return literals.ContainsKey(osId) ? literals[osId] : UnknownValue;
       }
 
       private static UInt32 GetCpuOrOsNumber(byte[] b)

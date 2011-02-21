@@ -44,7 +44,6 @@ namespace HFM.Instances.Tests
          var unitInfo1 = new UnitInfo { ProjectID = 1 };
          var logic1 = _mocks.DynamicMock<IUnitInfoLogic>();
          SetupResult.For(logic1.UnitInfoData).Return(unitInfo1);
-         SetupResult.For(logic1.ProjectRunCloneGen).Return("1");
          instance1.CurrentUnitInfo = logic1;
 
          var instance2 = new DisplayInstance();
@@ -52,7 +51,6 @@ namespace HFM.Instances.Tests
          var unitInfo2 = new UnitInfo { ProjectID = 1 };
          var logic2 = _mocks.DynamicMock<IUnitInfoLogic>();
          SetupResult.For(logic2.UnitInfoData).Return(unitInfo2);
-         SetupResult.For(logic2.ProjectRunCloneGen).Return("1");
          instance2.CurrentUnitInfo = logic2;
          
          _mocks.ReplayAll();
@@ -75,7 +73,6 @@ namespace HFM.Instances.Tests
          var unitInfo1 = new UnitInfo { ProjectID = 1 };
          var logic1 = _mocks.DynamicMock<IUnitInfoLogic>();
          SetupResult.For(logic1.UnitInfoData).Return(unitInfo1);
-         SetupResult.For(logic1.ProjectRunCloneGen).Return("1");
          instance1.CurrentUnitInfo = logic1;
 
          var instance2 = new DisplayInstance();
@@ -83,7 +80,6 @@ namespace HFM.Instances.Tests
          var unitInfo2 = new UnitInfo { ProjectID = 2 };
          var logic2 = _mocks.DynamicMock<IUnitInfoLogic>();
          SetupResult.For(logic2.UnitInfoData).Return(unitInfo2);
-         SetupResult.For(logic2.ProjectRunCloneGen).Return("2");
          instance2.CurrentUnitInfo = logic2;
 
          _mocks.ReplayAll();
@@ -106,7 +102,6 @@ namespace HFM.Instances.Tests
          var unitInfo1 = new UnitInfo { ProjectID = 1 };
          var logic1 = _mocks.DynamicMock<IUnitInfoLogic>();
          SetupResult.For(logic1.UnitInfoData).Return(unitInfo1);
-         SetupResult.For(logic1.ProjectRunCloneGen).Return("1");
          instance1.CurrentUnitInfo = logic1;
 
          var instance2 = new DisplayInstance();
@@ -114,7 +109,6 @@ namespace HFM.Instances.Tests
          var unitInfo2 = new UnitInfo { ProjectID = 2 };
          var logic2 = _mocks.DynamicMock<IUnitInfoLogic>();
          SetupResult.For(logic2.UnitInfoData).Return(unitInfo2);
-         SetupResult.For(logic2.ProjectRunCloneGen).Return("2");
          instance2.CurrentUnitInfo = logic2;
 
          var instance3 = new DisplayInstance();
@@ -122,7 +116,6 @@ namespace HFM.Instances.Tests
          var unitInfo3 = new UnitInfo { ProjectID = 1 };
          var logic3 = _mocks.DynamicMock<IUnitInfoLogic>();
          SetupResult.For(logic3.UnitInfoData).Return(unitInfo3);
-         SetupResult.For(logic3.ProjectRunCloneGen).Return("1");
          instance3.CurrentUnitInfo = logic3;
 
          _mocks.ReplayAll();

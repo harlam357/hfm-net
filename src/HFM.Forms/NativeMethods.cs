@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Native P/Invoke Methods Class
- * Copyright (C) 2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,6 +33,7 @@ namespace HFM.Forms
       internal const int SB_LINEDOWN = 1;
       internal const int SB_TOP = 6;
       internal const int SB_BOTTOM = 7;
+      internal const int EM_LINESCROLL = 0x00B6;
       // ReSharper restore InconsistentNaming
 
       [DllImport("user32.dll", CharSet = CharSet.Auto)]

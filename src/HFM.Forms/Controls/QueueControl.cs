@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Queue Control
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,6 +28,7 @@ namespace HFM.Forms.Controls
 {
    public sealed partial class QueueControl : UserControl
    {
+      // ReSharper disable UnusedMember.Local
       private enum QueueControlRows
       {
          IndexCombo = 0,
@@ -45,13 +46,13 @@ namespace HFM.Forms.Controls
          CpuType,
          OS,
          Memory,
-         GpuMemory,
          Benchmark,
          SmpCores,
          CoresToUse,
          UserId,
          MachineId
       }
+      // ReSharper restore UnusedMember.Local
    
       public event EventHandler<QueueIndexChangedEventArgs> QueueIndexChanged;
    
@@ -154,7 +155,6 @@ namespace HFM.Forms.Controls
             txtCpuType.Text = entry.CpuString;
             txtOsType.Text = entry.OsString;
             txtMemory.Text = entry.Memory.ToString(CultureInfo.CurrentCulture);
-            txtGpuMemory.Text = entry.GpuMemory.ToString(CultureInfo.CurrentCulture);
             txtBenchmark.Text = entry.Benchmark.ToString(CultureInfo.CurrentCulture);
             txtSmpCores.Text = entry.NumberOfSmpCores.ToString(CultureInfo.CurrentCulture);
             txtCoresToUse.Text = entry.UseCores.ToString(CultureInfo.CurrentCulture);
@@ -217,7 +217,6 @@ namespace HFM.Forms.Controls
          txtCpuType.Visible = visible;
          txtOsType.Visible = visible;
          txtMemory.Visible = visible;
-         txtGpuMemory.Visible = visible;
          txtBenchmark.Visible = visible;
          txtSmpCores.Visible = visible;
          txtCoresToUse.Visible = visible;
@@ -226,7 +225,6 @@ namespace HFM.Forms.Controls
          
          if (visible == false)
          {
-            tableLayoutPanel1.RowStyles[(int)QueueControlRows.GpuMemory].Height = 0;
             tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = DefaultRowHeight;
             tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = 0;
             tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = 0;
@@ -238,8 +236,6 @@ namespace HFM.Forms.Controls
                case ClientType.Unknown:
                case ClientType.Standard:
                   // Set Rows to Zero Height and Hide Labels First
-                  txtGpuMemory.Visible = false;
-                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.GpuMemory].Height = 0;
                   txtSmpCores.Visible = false;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = 0;
                   txtCoresToUse.Visible = false;
@@ -257,13 +253,9 @@ namespace HFM.Forms.Controls
                   txtCoresToUse.Visible = false;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = 0;
                   // Then Show the Client Specific Queue Row(s)
-                  txtGpuMemory.Visible = true;
-                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.GpuMemory].Height = DefaultRowHeight;
                   break;
                case ClientType.SMP:
                   // Set Rows to Zero Height and Hide Labels First
-                  txtGpuMemory.Visible = false;
-                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.GpuMemory].Height = 0;
                   txtBenchmark.Visible = false;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = 0;
                   // Then Show the Client Specific Queue Row(s)

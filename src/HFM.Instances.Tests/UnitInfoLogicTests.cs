@@ -306,16 +306,6 @@ namespace HFM.Instances.Tests
       #region CurrentProtein
       
       [Test]
-      public void ProjectRunCloneGenTest()
-      {
-         var unitInfo = new UnitInfo { ProjectID = 2669, ProjectRun = 1, ProjectClone = 2, ProjectGen = 3 };
-         var settings = CreateClientInstanceSettings(false, 0);
-         var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo, settings);
-         
-         Assert.AreEqual("P2669 (R1, C2, G3)", unitInfoLogic.ProjectRunCloneGen);
-      }
-
-      [Test]
       public void CurrentProteinTest1()
       {
          var protein = new Protein { ProjectNumber = 2669 };

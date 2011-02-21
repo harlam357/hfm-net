@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Work Unit History Query UI Form
- * Copyright (C) 2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -247,7 +247,7 @@ namespace HFM.Forms
       }
    }
 
-   internal class Choice
+   internal class Choice : IComparable<Choice>
    {
       public Choice(string display, object value)
       {
@@ -257,6 +257,15 @@ namespace HFM.Forms
 
       public string Display { get; private set; }
       public object Value { get; private set; }
+
+      #region IComparable<Choice> Members
+
+      public int CompareTo(Choice other)
+      {
+         return Display.CompareTo(other.Display);
+      }
+
+      #endregion
    }
 
    public class ValueColumn : DataGridViewColumn
