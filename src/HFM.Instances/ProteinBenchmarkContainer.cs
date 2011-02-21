@@ -35,47 +35,35 @@ namespace HFM.Instances
    [ProtoContract]
    public class ProteinBenchmarkCollection
    {
-      #region Fields
-      
       private readonly List<ProteinBenchmark> _benchmarkList = new List<ProteinBenchmark>();
-      /// <summary>
-      /// Serialized Benchmark List
-      /// </summary>
+
       [ProtoMember(1)]
       [XmlElement("Benchmarks")]
       public List<ProteinBenchmark> BenchmarkList
       {
          get { return _benchmarkList; }
       }
-      
-      #endregion
    }
 
    public class ProteinBenchmarkContainer : IProteinBenchmarkContainer
    {
       #region Fields
       
-      /// <summary>
-      /// Preferences Interface
-      /// </summary>
       private readonly IPreferenceSet _prefs;
-
       private readonly IUnitInfoDatabase _database;
-      
-      /// <summary>
-      /// Benchmark Collection
-      /// </summary>
       private ProteinBenchmarkCollection _collection;
       
       #endregion
 
       #region Constructor
+
       public ProteinBenchmarkContainer(IPreferenceSet prefs, IUnitInfoDatabase database)
       {
          _prefs = prefs;
          _database = database;
          _collection = new ProteinBenchmarkCollection();
       } 
+
       #endregion
 
       #region Implementation
@@ -301,7 +289,7 @@ namespace HFM.Instances
       /// <param name="projectId">Project Number</param>
       public void RefreshMinimumFrameTime(BenchmarkClient client, int projectId)
       {
-         IList<ProteinBenchmark> benchmarks = GetBenchmarks(client, projectId);
+         IEnumerable<ProteinBenchmark> benchmarks = GetBenchmarks(client, projectId);
          foreach (ProteinBenchmark benchmark in benchmarks)
          {
             benchmark.RefreshBenchmarkMinimumFrameTime();
@@ -392,7 +380,7 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="client">BenchmarkClient containing Client Name and Path data</param>
       /// <param name="projectId">Project Number</param>
-      public List<ProteinBenchmark> GetBenchmarks(BenchmarkClient client, int projectId)
+      public IEnumerable<ProteinBenchmark> GetBenchmarks(BenchmarkClient client, int projectId)
       {
          var list = _collection.BenchmarkList.FindAll(benchmark =>
                                                       {
@@ -460,12 +448,7 @@ namespace HFM.Instances
          ProteinBenchmarkCollection collection = Deserialize(filePath);
 
          //_collection = merge ? MergeCollections(_collection, collection) : collection;
-         _collection = collection;
-         
-         if (_collection == null)
-         {
-            _collection = new ProteinBenchmarkCollection();
-         }
+         _collection = collection ?? new ProteinBenchmarkCollection();
       }
 
       /// <summary>
@@ -492,12 +475,7 @@ namespace HFM.Instances
          ProteinBenchmarkCollection collection = DeserializeFromXml(Path.Combine(_prefs.ApplicationDataFolderPath, filePath));
          
          //_collection = merge ? MergeCollections(_collection, collection) : collection;
-         _collection = collection;
-         
-         if (_collection == null)
-         {
-            _collection = new ProteinBenchmarkCollection();
-         }
+         _collection = collection ?? new ProteinBenchmarkCollection();
       }
 
       /// <summary>
@@ -554,7 +532,7 @@ namespace HFM.Instances
             {
                try
                {
-                  ProtoBuf.Serializer.Serialize(fileStream, collection);
+                  Serializer.Serialize(fileStream, collection);
                }
                catch (Exception ex)
                {
@@ -598,7 +576,7 @@ namespace HFM.Instances
          {
             using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
-               collection = ProtoBuf.Serializer.Deserialize<ProteinBenchmarkCollection>(fileStream);
+               collection = Serializer.Deserialize<ProteinBenchmarkCollection>(fileStream);
             }
          }
          catch (Exception ex)

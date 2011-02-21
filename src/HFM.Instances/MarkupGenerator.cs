@@ -499,7 +499,7 @@ namespace HFM.Instances
             XmlOps.SetXmlNode(xmlData, "PPD", String.Format("{0:" + _prefs.PpdFormatString + "}", instance.PPD));
             XmlOps.SetXmlNode(xmlData, "UPD", String.Format("{0:0.00}", instance.UPD));
             XmlOps.SetXmlNode(xmlData, "MHz", instance.MHz.ToString());
-            XmlOps.SetXmlNode(xmlData, "PPDMHz", instance.PPD_MHz.ToString());
+            XmlOps.SetXmlNode(xmlData, "PPDMHz", instance.PpdMHz.ToString());
             XmlOps.SetXmlNode(xmlData, "ETA", instance.ETA.ToString());
             if (instance.EtaDate.Equals(DateTime.MinValue))
             {

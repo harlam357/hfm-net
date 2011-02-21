@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Net;
 
@@ -146,7 +147,17 @@ namespace HFM.Forms
 
       private static bool NewVersionAvailable(string updateVersion)
       {
-         return PlatformOps.GetVersionLongFromString(updateVersion) > PlatformOps.VersionNumber;
+         if (updateVersion == null) return false;
+
+         try
+         {
+            return PlatformOps.ParseVersion(updateVersion) > PlatformOps.VersionNumber;
+         }
+         catch (FormatException ex)
+         {
+            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
+            return false;
+         }
       }
 
       private void ShowUpdate(ApplicationUpdate update)

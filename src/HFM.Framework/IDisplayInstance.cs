@@ -84,7 +84,7 @@ namespace HFM.Framework
       /// <summary>
       /// PPD rating for this instance
       /// </summary>
-      double PPD_MHz { get; }
+      double PpdMHz { get; }
 
       /// <summary>
       /// ETA for this instance

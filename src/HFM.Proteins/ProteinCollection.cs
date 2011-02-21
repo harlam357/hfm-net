@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 
@@ -32,6 +33,7 @@ namespace HFM.Proteins
    /// <summary>
    /// Protein Collection
    /// </summary>
+   [SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix")]
    public sealed class ProteinCollection : SortedDictionary<Int32, IProtein>, IProteinCollection
    {
       #region Fields

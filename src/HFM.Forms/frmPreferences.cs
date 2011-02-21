@@ -1,7 +1,7 @@
 /*
  * HFM.NET - User Preferences Form
  * Copyright (C) 2006-2007 David Rawling
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -46,7 +46,7 @@ namespace HFM.Forms
       /// <summary>
       /// Tab Name Enumeration (maintain in same order as tab pages)
       /// </summary>
-      enum TabName
+      private enum TabName
       {
          ScheduledTasks,
          StartupAndExternal,
@@ -724,7 +724,7 @@ namespace HFM.Forms
             Match mMatchFtpWithUserPassUrl = StringOps.MatchFtpWithUserPassUrl(txtWebSiteBase.Text);
             if (mMatchFtpWithUserPassUrl.Success == false)
             {
-               CheckFileConnectionDelegate del = CheckFileConnection;
+               Action<string> del = CheckFileConnection;
                del.BeginInvoke(txtWebSiteBase.Text, CheckFileConnectionCallback, del);
             }
             else
@@ -734,7 +734,7 @@ namespace HFM.Forms
                string username = mMatchFtpWithUserPassUrl.Result("${username}");
                string password = mMatchFtpWithUserPassUrl.Result("${password}");
                
-               FtpCheckConnectionDelegate del = _net.FtpCheckConnection;
+               FtpCheckConnectionAction del = _net.FtpCheckConnection;
                del.BeginInvoke(server, path, username, password, _scheduledTasksModel.FtpMode, FtpCheckConnectionCallback, del);
             }
          }
@@ -744,8 +744,6 @@ namespace HFM.Forms
             ShowConnectionFailedMessage(ex.Message);
          }
       }
-      
-      private delegate void CheckFileConnectionDelegate(string directory);
       
       public void CheckFileConnection(string directory)
       {
@@ -760,7 +758,7 @@ namespace HFM.Forms
       {
          try
          {
-            var del = (CheckFileConnectionDelegate)result.AsyncState;
+            var del = (Action<string>)result.AsyncState;
             del.EndInvoke(result);
             ShowConnectionSucceededMessage();
          }
@@ -779,7 +777,7 @@ namespace HFM.Forms
       {
          try
          {
-            var del = (FtpCheckConnectionDelegate)result.AsyncState;
+            var del = (FtpCheckConnectionAction)result.AsyncState;
             del.EndInvoke(result);
             ShowConnectionSucceededMessage();
          }
@@ -806,13 +804,11 @@ namespace HFM.Forms
             MessageBoxButtons.OK, MessageBoxIcon.Information);
       }
 
-      private delegate void ShowConnectionFailedMessageDelegate(string message);
-
       private void ShowConnectionFailedMessage(string message)
       {
          if (InvokeRequired)
          {
-            Invoke(new ShowConnectionFailedMessageDelegate(ShowConnectionFailedMessage), message);
+            Invoke(new Action<string>(ShowConnectionFailedMessage), message);
             return;
          }
 

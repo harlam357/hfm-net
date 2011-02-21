@@ -51,50 +51,52 @@ namespace HFM.Framework
       #endregion
    
       #region Methods
+
       /// <summary>
       /// Validate Instance Name
       /// </summary>
-      /// <param name="val">String to validate</param>
-      public static bool ValidateInstanceName(string val)
+      public static bool ValidateInstanceName(string name)
       {
-         Regex rValidName = new Regex(String.Format(CultureInfo.InvariantCulture, 
+         if (name == null) return false;
+
+         var rValidName = new Regex(String.Format(CultureInfo.InvariantCulture, 
             "^{0}{1}+{2}$", ValidNameFirst, ValidNameMiddle, ValidNameLast), RegexOptions.Singleline);
-         return rValidName.IsMatch(val);
+         return rValidName.IsMatch(name);
       }
 
       /// <summary>
       /// Clean Instance Name
       /// </summary>
-      /// <param name="val">String to clean</param>
-      /// <returns>Cleaned Instance Name</returns>
-      public static string CleanInstanceName(string val)
+      public static string CleanInstanceName(string name)
       {
-         Regex rValidFirst = new Regex(ValidNameFirst, RegexOptions.Singleline);
-         Regex rValidMiddle = new Regex(ValidNameMiddle, RegexOptions.Singleline);
-         Regex rValidLast = new Regex(ValidNameLast, RegexOptions.Singleline);
+         if (name == null) return null;
+
+         var rValidFirst = new Regex(ValidNameFirst, RegexOptions.Singleline);
+         var rValidMiddle = new Regex(ValidNameMiddle, RegexOptions.Singleline);
+         var rValidLast = new Regex(ValidNameLast, RegexOptions.Singleline);
          
-         StringBuilder sbldr = new StringBuilder(val.Length);
-         for (int i = 0; i < val.Length; i++)
+         var sbldr = new StringBuilder(name.Length);
+         for (int i = 0; i < name.Length; i++)
          {
             if (i == 0)
             {
-               if (rValidFirst.IsMatch(val[i].ToString()))
+               if (rValidFirst.IsMatch(name[i].ToString()))
                {
-                  sbldr.Append(val[i]);
+                  sbldr.Append(name[i]);
                }
             }
-            else if (i == val.Length - 1)
+            else if (i == name.Length - 1)
             {
-               if (rValidLast.IsMatch(val[i].ToString()))
+               if (rValidLast.IsMatch(name[i].ToString()))
                {
-                  sbldr.Append(val[i]);
+                  sbldr.Append(name[i]);
                }
             }
             else
             {
-               if (rValidMiddle.IsMatch(val[i].ToString()))
+               if (rValidMiddle.IsMatch(name[i].ToString()))
                {
-                  sbldr.Append(val[i]);
+                  sbldr.Append(name[i]);
                }
             }
          }
@@ -288,6 +290,7 @@ namespace HFM.Framework
 
          return true;
       } 
+
       #endregion
    }
 }

@@ -31,6 +31,7 @@ using HFM.Framework.DataTypes;
 
 namespace HFM.DataAggregator
 {
+   [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces")]
    public class DataAggregator : IDataAggregator
    {
       private LogInterpreter _logInterpreter;

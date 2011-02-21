@@ -1,6 +1,6 @@
 /*
  * HFM.NET - String Operations Helper Class Tests
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,7 +27,7 @@ namespace HFM.Framework.Tests
    public class StringOpsTests
    {
       [Test]
-      public void ValidateInstanceName()
+      public void ValidateInstanceNameTest()
       {
          Assert.IsTrue(StringOps.ValidateInstanceName("+a+"));
          Assert.IsTrue(StringOps.ValidateInstanceName("=a="));
@@ -60,13 +60,15 @@ namespace HFM.Framework.Tests
          Assert.IsFalse(StringOps.ValidateInstanceName("*a*"));
          Assert.IsFalse(StringOps.ValidateInstanceName("(a("));
          Assert.IsFalse(StringOps.ValidateInstanceName(")a)"));
+
+         Assert.IsFalse(StringOps.ValidateInstanceName(String.Empty));
+         Assert.IsFalse(StringOps.ValidateInstanceName(null));
       }
       
       [Test]
-      public void CleanInstanceName()
+      public void CleanInstanceNameTest()
       {
-         string str;
-         str = StringOps.CleanInstanceName("+a}");
+         string str = StringOps.CleanInstanceName("+a}");
          Assert.AreEqual("+a", str);
          str = StringOps.CleanInstanceName("}a+");
          Assert.AreEqual("a+", str);
@@ -74,6 +76,10 @@ namespace HFM.Framework.Tests
          Assert.AreEqual("=a", str);
          str = StringOps.CleanInstanceName("\\a=");
          Assert.AreEqual("a=", str);
+         str = StringOps.CleanInstanceName(String.Empty);
+         Assert.AreEqual(String.Empty, str);
+         str = StringOps.CleanInstanceName(null);
+         Assert.AreEqual(null, str);
       }
 
       [Test]

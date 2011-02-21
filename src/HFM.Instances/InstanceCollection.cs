@@ -31,6 +31,7 @@ using HFM.Framework.DataTypes;
 
 namespace HFM.Instances
 {
+   [SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix")]
    public sealed class InstanceCollection : IInstanceCollection
    {
       #region Fields

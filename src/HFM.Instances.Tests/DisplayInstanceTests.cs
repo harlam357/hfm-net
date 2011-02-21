@@ -175,7 +175,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(5000, displayInstance2.PPD);
          Assert.AreEqual(3.5, displayInstance2.UPD);
          Assert.AreEqual(1000, displayInstance2.MHz);
-         Assert.AreEqual(5, displayInstance2.PPD_MHz);
+         Assert.AreEqual(5, displayInstance2.PpdMHz);
          Assert.AreEqual(TimeSpan.FromHours(8), displayInstance2.ETA);
          Assert.AreEqual("GROCVS", displayInstance2.Core);
          Assert.AreEqual("A2", displayInstance2.CoreID);

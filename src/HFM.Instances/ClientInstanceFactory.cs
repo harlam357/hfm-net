@@ -116,11 +116,11 @@ namespace HFM.Instances
       {
          var warnings = new List<string>();
 
-         if (!(StringOps.ValidateInstanceName(settings.InstanceName)))
+         if (!StringOps.ValidateInstanceName(settings.InstanceName))
          {
-            // Remove illegal characters
-            warnings.Add(String.Format(CultureInfo.CurrentCulture,
-                                       "Instance Name '{0}' contained invalid characters and was cleaned.", settings.InstanceName));
+            // remove illegal characters
+            warnings.Add(String.Format(CultureInfo.InvariantCulture,
+               "Instance Name '{0}' contained invalid characters and was cleaned.", settings.InstanceName));
             settings.InstanceName = StringOps.CleanInstanceName(settings.InstanceName);
          }
 

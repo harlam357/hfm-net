@@ -18,11 +18,13 @@
  */
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 using HFM.Framework.DataTypes;
 
 namespace HFM.Framework
 {
+   [SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix")]
    public interface IProteinCollection
    {
       /// <summary>
