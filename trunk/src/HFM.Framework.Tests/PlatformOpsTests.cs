@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Coverage Exclude Attribute
+ * HFM.NET - Platform Operations Class Tests
  * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -19,11 +19,38 @@
 
 using System;
 
-namespace HFM.Framework
+using NUnit.Framework;
+
+namespace HFM.Framework.Tests
 {
-   [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property | AttributeTargets.Method)]
-   public sealed class CoverageExcludeAttribute : Attribute
+   [TestFixture]
+   public class PlatformOpsTests
    {
-   
+      [Test]
+      public void ParseVersionTest1()
+      {
+         Assert.AreEqual(1020030004, PlatformOps.ParseVersion("1.2.3.4"));
+      }
+
+      [Test]
+      [ExpectedException(typeof(ArgumentNullException))]
+      public void ParseVersionTest2()
+      {
+         PlatformOps.ParseVersion(null);
+      }
+
+      [Test]
+      [ExpectedException(typeof(FormatException))]
+      public void ParseVersionTest3()
+      {
+         PlatformOps.ParseVersion("1.2.3");
+      }
+
+      [Test]
+      [ExpectedException(typeof(FormatException))]
+      public void ParseVersionTest4()
+      {
+         PlatformOps.ParseVersion("1.2.3.b");
+      }
    }
 }

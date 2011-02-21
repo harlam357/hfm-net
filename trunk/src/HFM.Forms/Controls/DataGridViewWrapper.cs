@@ -119,8 +119,8 @@ namespace HFM.Forms.Controls
          dgv.Columns["PPD"].DataPropertyName = "PPD";
          dgv.Columns.Add("MHz", "MHz");
          dgv.Columns["MHz"].DataPropertyName = "MHz";
-         dgv.Columns.Add("PPD_MHz", "PPD/MHz");
-         dgv.Columns["PPD_MHz"].DataPropertyName = "PPD_MHz";
+         dgv.Columns.Add("PpdMHz", "PPD/MHz");
+         dgv.Columns["PpdMHz"].DataPropertyName = "PpdMHz";
          dgv.Columns.Add("ETA", "ETA");
          dgv.Columns["ETA"].DataPropertyName = "ETA";
          dgv.Columns.Add("Core", "Core");

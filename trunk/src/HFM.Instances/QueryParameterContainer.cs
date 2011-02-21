@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 using ProtoBuf;
@@ -35,7 +36,8 @@ namespace HFM.Instances
    
       private readonly IPreferenceSet _prefs;
       private QueryParameterList _queryList;
-      
+
+      [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
       public List<QueryParameters> QueryList
       {
          get { return _queryList.QueryList; }

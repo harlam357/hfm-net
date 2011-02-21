@@ -21,7 +21,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 using HFM.Framework.DataTypes;
 
@@ -39,10 +41,7 @@ namespace HFM.Framework
       /// </summary>
       public static string ApplicationVersion
       {
-         get
-         {
-            return GetVersionString("{0}.{1}.{2}");
-         }
+         get { return CreateVersionString("{0}.{1}.{2}"); }
       }
 
       /// <summary>
@@ -50,10 +49,7 @@ namespace HFM.Framework
       /// </summary>
       public static string ApplicationNameAndVersion
       {
-         get
-         {
-            return String.Concat("HFM.NET v", GetVersionString("{0}.{1}.{2}"));
-         }
+         get { return String.Concat("HFM.NET v", CreateVersionString("{0}.{1}.{2}")); }
       }
 
       /// <summary>
@@ -61,10 +57,7 @@ namespace HFM.Framework
       /// </summary>
       public static string ApplicationNameAndVersionWithRevision
       {
-         get
-         {
-            return String.Concat("HFM.NET v", GetVersionString("{0}.{1}.{2}.{3}"));
-         }
+         get { return String.Concat("HFM.NET v", CreateVersionString("{0}.{1}.{2}.{3}")); }
       }
 
       /// <summary>
@@ -72,10 +65,7 @@ namespace HFM.Framework
       /// </summary>
       public static string ApplicationVersionWithRevision
       {
-         get
-         {
-            return GetVersionString("{0}.{1}.{2}.{3}");
-         }
+         get { return CreateVersionString("{0}.{1}.{2}.{3}"); }
       }
 
       /// <summary>
@@ -83,10 +73,7 @@ namespace HFM.Framework
       /// </summary>
       public static string ShortFormattedApplicationVersionWithRevision
       {
-         get
-         {
-            return GetVersionString("v{0}.{1}.{2}.{3}");
-         }
+         get { return CreateVersionString("v{0}.{1}.{2}.{3}"); }
       }
 
       /// <summary>
@@ -94,10 +81,7 @@ namespace HFM.Framework
       /// </summary>
       public static string LongFormattedApplicationVersionWithRevision
       {
-         get
-         {
-            return GetVersionString("Version {0}.{1}.{2} - Revision {3}");
-         }
+         get { return CreateVersionString("Version {0}.{1}.{2} - Revision {3}"); }
       }
       
       public static long VersionNumber
@@ -113,21 +97,36 @@ namespace HFM.Framework
       }
       
       /// <summary>
-      /// 
+      /// Parse version number from 'x.x.x.x' formatted string.
       /// </summary>
-      /// <param name="version"></param>
-      /// <exception cref="FormatException">Throws when numbers cannot be parsed.</exception>
-      public static long GetVersionLongFromString(string version)
+      /// <exception cref="ArgumentNullException">Throws when argument is null.</exception>
+      /// <exception cref="FormatException">Throws when given version cannot be parsed.</exception>
+      public static long ParseVersion(string version)
       {
-         int[] versionNumbers = new int[4];
-      
-         string[] split = version.Split(new[] { '.' }, 4, StringSplitOptions.None);
-         for (int i = 0; i < split.Length; i++)
-         {
-            versionNumbers[i] = Int32.Parse(split[i]);
-         }
-         
+         if (version == null) throw new ArgumentNullException("version");
+
+         var versionNumbers = GetVersionNumbers(version);
          return GetVersionLongFromArray(versionNumbers);
+      }
+
+      private static int[] GetVersionNumbers(string version)
+      {
+         Debug.Assert(version != null);
+
+         var regex = new Regex("^(?<Major>(\\d+))\\.(?<Minor>(\\d+))\\.(?<Build>(\\d+))\\.(?<Revision>(\\d+))$", RegexOptions.ExplicitCapture);
+         var match = regex.Match(version);
+         if (match.Success)
+         {
+            var versionNumbers = new int[4];
+            versionNumbers[0] = Int32.Parse(match.Result("${Major}"), CultureInfo.InvariantCulture);
+            versionNumbers[1] = Int32.Parse(match.Result("${Minor}"), CultureInfo.InvariantCulture);
+            versionNumbers[2] = Int32.Parse(match.Result("${Build}"), CultureInfo.InvariantCulture);
+            versionNumbers[3] = Int32.Parse(match.Result("${Revision}"), CultureInfo.InvariantCulture);
+            return versionNumbers;
+         }
+
+         throw new FormatException(String.Format(CultureInfo.CurrentCulture, 
+            "Given version '{0}' is not in the correct format.", version));
       }
       
       private static long GetVersionLongFromArray(params int[] versionNumbers)
@@ -136,11 +135,13 @@ namespace HFM.Framework
                 (versionNumbers[2] * 10000) + versionNumbers[3];
       }
 
-      private static string GetVersionString(string format)
+      private static string CreateVersionString(string format)
       {
+         Debug.Assert(format != null);
+
          FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
-         return String.Format(format, fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
-                              fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
+         return String.Format(CultureInfo.InvariantCulture, format, fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
+                                                                    fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
       }
 
       public static string AssemblyGuid

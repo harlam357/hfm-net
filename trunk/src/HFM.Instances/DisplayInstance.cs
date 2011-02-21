@@ -212,7 +212,7 @@ namespace HFM.Instances
          get { return Settings.ClientProcessorMegahertz; }
       }
 
-      public double PPD_MHz
+      public double PpdMHz
       {
          get { return Math.Round(PPD / MHz, 3); }
       }

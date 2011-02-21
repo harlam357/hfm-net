@@ -18,6 +18,7 @@
  */
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 using HFM.Framework.DataTypes;
 
@@ -25,6 +26,7 @@ namespace HFM.Framework
 {
    public interface IQueryParameterContainer
    {
+      [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
       List<QueryParameters> QueryList { get; }
 
       /// <summary>

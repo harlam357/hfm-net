@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Instance Provider Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 
 using Castle.Windsor;
@@ -35,9 +34,9 @@ namespace HFM.Framework
          _container = container;
       }
 
-      public static void CreateContainer(ConfigResource configResource)
+      public static void CreateContainer(IResource resource)
       {
-         _container = new WindsorContainer(new XmlInterpreter(configResource));
+         _container = new WindsorContainer(new XmlInterpreter(resource));
       }
 
       public static void DisposeContainer()

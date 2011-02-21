@@ -33,6 +33,7 @@ namespace HFM.Framework
       IDisplayInstance this[string key] { get; }
    }
 
+   [SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix")]
    public interface IInstanceCollection : IInstanceAccessor, IDisposable
    {
       /// <summary>

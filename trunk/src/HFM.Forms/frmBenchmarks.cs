@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -138,11 +139,8 @@ namespace HFM.Forms
 
          UpdateBenchmarkText(lines);
 
-         List<ProteinBenchmark> list = _benchmarkContainer.GetBenchmarks(_currentBenchmarkClient, projectID);
-         list.Sort(delegate(ProteinBenchmark benchmark1, ProteinBenchmark benchmark2)
-         {
-            return benchmark1.OwningInstanceName.CompareTo(benchmark2.OwningInstanceName);
-         });
+         List<ProteinBenchmark> list = _benchmarkContainer.GetBenchmarks(_currentBenchmarkClient, projectID).ToList();
+         list.Sort((benchmark1, benchmark2) => benchmark1.OwningInstanceName.CompareTo(benchmark2.OwningInstanceName));
 
          foreach (ProteinBenchmark benchmark in list)
          {

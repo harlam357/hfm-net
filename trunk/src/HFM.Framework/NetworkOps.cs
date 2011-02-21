@@ -19,6 +19,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -31,8 +32,8 @@ using HFM.Framework.DataTypes;
 
 namespace HFM.Framework
 {
-   public delegate void FtpCheckConnectionDelegate(string server, string ftpPath, string username, string password, FtpType ftpMode);
-   public delegate void HttpCheckConnectionDelegate(string url, string username, string password);
+   public delegate void FtpCheckConnectionAction(string server, string ftpPath, string username, string password, FtpType ftpMode);
+   public delegate void HttpCheckConnectionAction(string url, string username, string password);
 
    public interface INetworkOps
    {
@@ -106,6 +107,7 @@ namespace HFM.Framework
       /// <summary>
       /// Get Web Proxy Interface based on Preferences.
       /// </summary>
+      [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
       IWebProxy GetProxy();
    }
 
@@ -637,13 +639,15 @@ namespace HFM.Framework
                                    string messageBody, string smtpHost, int smtpPort, string smtpHostUsername,
                                    string smtpHostPassword)
       {
-         var message = new MailMessage(messageFrom, messageTo, messageSubject, messageBody);
-         var client = new SmtpClient(smtpHost, smtpPort)
-                      {
-                         Credentials = GetNetworkCredential(smtpHostUsername, smtpHostPassword),
-                         EnableSsl = enableSsl
-                      };
-         client.Send(message);
+         using (var message = new MailMessage(messageFrom, messageTo, messageSubject, messageBody))
+         {
+            var client = new SmtpClient(smtpHost, smtpPort)
+                         {
+                            Credentials = GetNetworkCredential(smtpHostUsername, smtpHostPassword),
+                            EnableSsl = enableSsl
+                         };
+            client.Send(message);
+         }
       }
 
       /// <summary>
@@ -683,6 +687,7 @@ namespace HFM.Framework
       /// <summary>
       /// Get Web Proxy Interface based on Preferences.
       /// </summary>
+      [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
       public IWebProxy GetProxy()
       {
          if (_prefs.GetPreference<bool>(Preference.UseProxy))
