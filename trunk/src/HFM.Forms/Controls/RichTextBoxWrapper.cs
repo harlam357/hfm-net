@@ -67,12 +67,14 @@ namespace HFM.Forms.Controls
       {
          _logOwnedByInstanceName = logOwnedByInstance;
 
+#if !LOGTOOL
          // limit the maximum number of log lines
          int lineOffset = lines.Count() - Constants.MaxDisplayableLogLines;
          if (lineOffset > 0)
          {
             lines = lines.Where((x, i) => i > lineOffset);
          }
+#endif
 
          _logLines = lines.ToList();
          Lines = (from ILogLine line in lines select line.LineRaw).ToArray();
@@ -167,10 +169,8 @@ namespace HFM.Forms.Controls
          {
             throw new NotImplementedException("This function is not implemented when running under the Mono Runtime.");
          }
-         else
-         {
-            NativeMethods.SendMessage(Handle, NativeMethods.WM_VSCROLL, new IntPtr(NativeMethods.SB_TOP), new IntPtr(0));
-         }
+
+         NativeMethods.SendMessage(Handle, NativeMethods.WM_VSCROLL, new IntPtr(NativeMethods.SB_TOP), new IntPtr(0));
       }
 
       public void ScrollLineDown()
@@ -179,10 +179,8 @@ namespace HFM.Forms.Controls
          {
             throw new NotImplementedException("This function is not implemented when running under the Mono Runtime.");
          }
-         else
-         {
-            NativeMethods.SendMessage(Handle, NativeMethods.WM_VSCROLL, new IntPtr(NativeMethods.SB_LINEDOWN), new IntPtr(0));
-         }
+
+         NativeMethods.SendMessage(Handle, NativeMethods.WM_VSCROLL, new IntPtr(NativeMethods.SB_LINEDOWN), new IntPtr(0));
       }
 
       public void ScrollLineUp()
@@ -191,10 +189,18 @@ namespace HFM.Forms.Controls
          {
             throw new NotImplementedException("This function is not implemented when running under the Mono Runtime.");
          }
-         else
+
+         NativeMethods.SendMessage(Handle, NativeMethods.WM_VSCROLL, new IntPtr(NativeMethods.SB_LINEUP), new IntPtr(0));
+      }
+
+      public void ScrollToLine(int lineNumber)
+      {
+         if (PlatformOps.IsRunningOnMono())
          {
-            NativeMethods.SendMessage(Handle, NativeMethods.WM_VSCROLL, new IntPtr(NativeMethods.SB_LINEUP), new IntPtr(0));
+            throw new NotImplementedException("This function is not implemented when running under the Mono Runtime.");
          }
+
+         NativeMethods.SendMessage(Handle, NativeMethods.EM_LINESCROLL, new IntPtr(0), new IntPtr(lineNumber));
       }
       
       #endregion

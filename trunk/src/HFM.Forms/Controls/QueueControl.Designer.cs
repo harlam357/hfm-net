@@ -56,11 +56,9 @@ namespace HFM.Forms.Controls
          this.txtUserID = new TextBoxWrapper();
          this.txtCoresToUse = new TextBoxWrapper();
          this.lblUserID = new LabelWrapper();
-         this.txtGpuMemory = new TextBoxWrapper();
          this.txtSmpCores = new TextBoxWrapper();
          this.lblCoresToUse = new LabelWrapper();
          this.txtAverageUploadRate = new TextBoxWrapper();
-         this.lblGpuMemory = new LabelWrapper();
          this.lblCredit = new LabelWrapper();
          this.lblBenchmark = new LabelWrapper();
          this.lblSmpCores = new LabelWrapper();
@@ -97,21 +95,19 @@ namespace HFM.Forms.Controls
          this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 90F));
          this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
          this.tableLayoutPanel1.Controls.Add(this.cboQueueIndex, 0, 0);
-         this.tableLayoutPanel1.Controls.Add(this.txtMachineID, 1, 20);
+         this.tableLayoutPanel1.Controls.Add(this.txtMachineID, 1, 19);
          this.tableLayoutPanel1.Controls.Add(this.labelWrapper1, 0, 2);
-         this.tableLayoutPanel1.Controls.Add(this.lblMachineID, 0, 20);
+         this.tableLayoutPanel1.Controls.Add(this.lblMachineID, 0, 19);
          this.tableLayoutPanel1.Controls.Add(this.txtStatus, 1, 2);
-         this.tableLayoutPanel1.Controls.Add(this.txtUserID, 1, 19);
-         this.tableLayoutPanel1.Controls.Add(this.txtCoresToUse, 1, 18);
-         this.tableLayoutPanel1.Controls.Add(this.lblUserID, 0, 19);
-         this.tableLayoutPanel1.Controls.Add(this.txtGpuMemory, 1, 15);
-         this.tableLayoutPanel1.Controls.Add(this.txtSmpCores, 1, 17);
-         this.tableLayoutPanel1.Controls.Add(this.lblCoresToUse, 0, 18);
+         this.tableLayoutPanel1.Controls.Add(this.txtUserID, 1, 18);
+         this.tableLayoutPanel1.Controls.Add(this.txtCoresToUse, 1, 17);
+         this.tableLayoutPanel1.Controls.Add(this.lblUserID, 0, 18);
+         this.tableLayoutPanel1.Controls.Add(this.txtSmpCores, 1, 16);
+         this.tableLayoutPanel1.Controls.Add(this.lblCoresToUse, 0, 17);
          this.tableLayoutPanel1.Controls.Add(this.txtAverageUploadRate, 1, 11);
-         this.tableLayoutPanel1.Controls.Add(this.lblGpuMemory, 0, 15);
          this.tableLayoutPanel1.Controls.Add(this.lblCredit, 0, 3);
-         this.tableLayoutPanel1.Controls.Add(this.lblBenchmark, 0, 16);
-         this.tableLayoutPanel1.Controls.Add(this.lblSmpCores, 0, 17);
+         this.tableLayoutPanel1.Controls.Add(this.lblBenchmark, 0, 15);
+         this.tableLayoutPanel1.Controls.Add(this.lblSmpCores, 0, 16);
          this.tableLayoutPanel1.Controls.Add(this.txtMemory, 1, 14);
          this.tableLayoutPanel1.Controls.Add(this.lblAverageUploadRate, 0, 11);
          this.tableLayoutPanel1.Controls.Add(this.txtAverageDownloadRate, 1, 10);
@@ -134,12 +130,12 @@ namespace HFM.Forms.Controls
          this.tableLayoutPanel1.Controls.Add(this.lblMegaFlops, 0, 8);
          this.tableLayoutPanel1.Controls.Add(this.lblServer, 0, 9);
          this.tableLayoutPanel1.Controls.Add(this.txtServer, 1, 9);
-         this.tableLayoutPanel1.Controls.Add(this.txtBenchmark, 1, 16);
+         this.tableLayoutPanel1.Controls.Add(this.txtBenchmark, 1, 15);
          this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
          this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
          this.tableLayoutPanel1.Name = "tableLayoutPanel1";
          this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(7, 5, 9, 5);
-         this.tableLayoutPanel1.RowCount = 22;
+         this.tableLayoutPanel1.RowCount = 21;
          this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
          this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
          this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
@@ -160,9 +156,8 @@ namespace HFM.Forms.Controls
          this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
          this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
          this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
-         this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
          this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
-         this.tableLayoutPanel1.Size = new System.Drawing.Size(236, 486);
+         this.tableLayoutPanel1.Size = new System.Drawing.Size(236, 463);
          this.tableLayoutPanel1.TabIndex = 35;
          // 
          // cboQueueIndex
@@ -180,7 +175,7 @@ namespace HFM.Forms.Controls
          // txtMachineID
          // 
          this.txtMachineID.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtMachineID.Location = new System.Drawing.Point(100, 457);
+         this.txtMachineID.Location = new System.Drawing.Point(100, 434);
          this.txtMachineID.Name = "txtMachineID";
          this.txtMachineID.ReadOnly = true;
          this.txtMachineID.Size = new System.Drawing.Size(124, 20);
@@ -201,7 +196,7 @@ namespace HFM.Forms.Controls
          // 
          this.lblMachineID.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblMachineID.AutoSize = true;
-         this.lblMachineID.Location = new System.Drawing.Point(10, 459);
+         this.lblMachineID.Location = new System.Drawing.Point(10, 436);
          this.lblMachineID.Name = "lblMachineID";
          this.lblMachineID.Size = new System.Drawing.Size(65, 13);
          this.lblMachineID.TabIndex = 17;
@@ -220,7 +215,7 @@ namespace HFM.Forms.Controls
          // txtUserID
          // 
          this.txtUserID.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtUserID.Location = new System.Drawing.Point(100, 434);
+         this.txtUserID.Location = new System.Drawing.Point(100, 411);
          this.txtUserID.Name = "txtUserID";
          this.txtUserID.ReadOnly = true;
          this.txtUserID.Size = new System.Drawing.Size(124, 20);
@@ -230,7 +225,7 @@ namespace HFM.Forms.Controls
          // txtCoresToUse
          // 
          this.txtCoresToUse.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtCoresToUse.Location = new System.Drawing.Point(100, 411);
+         this.txtCoresToUse.Location = new System.Drawing.Point(100, 388);
          this.txtCoresToUse.Name = "txtCoresToUse";
          this.txtCoresToUse.ReadOnly = true;
          this.txtCoresToUse.Size = new System.Drawing.Size(124, 20);
@@ -241,26 +236,16 @@ namespace HFM.Forms.Controls
          // 
          this.lblUserID.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblUserID.AutoSize = true;
-         this.lblUserID.Location = new System.Drawing.Point(10, 436);
+         this.lblUserID.Location = new System.Drawing.Point(10, 413);
          this.lblUserID.Name = "lblUserID";
          this.lblUserID.Size = new System.Drawing.Size(46, 13);
          this.lblUserID.TabIndex = 16;
          this.lblUserID.Text = "User ID:";
          // 
-         // txtGpuMemory
-         // 
-         this.txtGpuMemory.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtGpuMemory.Location = new System.Drawing.Point(100, 342);
-         this.txtGpuMemory.Name = "txtGpuMemory";
-         this.txtGpuMemory.ReadOnly = true;
-         this.txtGpuMemory.Size = new System.Drawing.Size(124, 20);
-         this.txtGpuMemory.TabIndex = 31;
-         this.txtGpuMemory.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-         // 
          // txtSmpCores
          // 
          this.txtSmpCores.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtSmpCores.Location = new System.Drawing.Point(100, 388);
+         this.txtSmpCores.Location = new System.Drawing.Point(100, 365);
          this.txtSmpCores.Name = "txtSmpCores";
          this.txtSmpCores.ReadOnly = true;
          this.txtSmpCores.Size = new System.Drawing.Size(124, 20);
@@ -271,7 +256,7 @@ namespace HFM.Forms.Controls
          // 
          this.lblCoresToUse.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblCoresToUse.AutoSize = true;
-         this.lblCoresToUse.Location = new System.Drawing.Point(10, 413);
+         this.lblCoresToUse.Location = new System.Drawing.Point(10, 390);
          this.lblCoresToUse.Name = "lblCoresToUse";
          this.lblCoresToUse.Size = new System.Drawing.Size(75, 13);
          this.lblCoresToUse.TabIndex = 15;
@@ -287,16 +272,6 @@ namespace HFM.Forms.Controls
          this.txtAverageUploadRate.TabIndex = 27;
          this.txtAverageUploadRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          // 
-         // lblGpuMemory
-         // 
-         this.lblGpuMemory.Anchor = System.Windows.Forms.AnchorStyles.Left;
-         this.lblGpuMemory.AutoSize = true;
-         this.lblGpuMemory.Location = new System.Drawing.Point(10, 344);
-         this.lblGpuMemory.Name = "lblGpuMemory";
-         this.lblGpuMemory.Size = new System.Drawing.Size(73, 13);
-         this.lblGpuMemory.TabIndex = 14;
-         this.lblGpuMemory.Text = "GPU Memory:";
-         // 
          // lblCredit
          // 
          this.lblCredit.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -311,7 +286,7 @@ namespace HFM.Forms.Controls
          // 
          this.lblBenchmark.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblBenchmark.AutoSize = true;
-         this.lblBenchmark.Location = new System.Drawing.Point(10, 367);
+         this.lblBenchmark.Location = new System.Drawing.Point(10, 344);
          this.lblBenchmark.Name = "lblBenchmark";
          this.lblBenchmark.Size = new System.Drawing.Size(64, 13);
          this.lblBenchmark.TabIndex = 11;
@@ -321,7 +296,7 @@ namespace HFM.Forms.Controls
          // 
          this.lblSmpCores.Anchor = System.Windows.Forms.AnchorStyles.Left;
          this.lblSmpCores.AutoSize = true;
-         this.lblSmpCores.Location = new System.Drawing.Point(10, 390);
+         this.lblSmpCores.Location = new System.Drawing.Point(10, 367);
          this.lblSmpCores.Name = "lblSmpCores";
          this.lblSmpCores.Size = new System.Drawing.Size(63, 13);
          this.lblSmpCores.TabIndex = 12;
@@ -550,7 +525,7 @@ namespace HFM.Forms.Controls
          // txtBenchmark
          // 
          this.txtBenchmark.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtBenchmark.Location = new System.Drawing.Point(100, 365);
+         this.txtBenchmark.Location = new System.Drawing.Point(100, 342);
          this.txtBenchmark.Name = "txtBenchmark";
          this.txtBenchmark.ReadOnly = true;
          this.txtBenchmark.Size = new System.Drawing.Size(124, 20);
@@ -564,7 +539,7 @@ namespace HFM.Forms.Controls
          this.BackColor = System.Drawing.SystemColors.Window;
          this.Controls.Add(this.tableLayoutPanel1);
          this.Name = "QueueControl";
-         this.Size = new System.Drawing.Size(236, 486);
+         this.Size = new System.Drawing.Size(236, 463);
          this.tableLayoutPanel1.ResumeLayout(false);
          this.tableLayoutPanel1.PerformLayout();
          this.ResumeLayout(false);
@@ -600,8 +575,6 @@ namespace HFM.Forms.Controls
       private LabelWrapper lblCredit;
       private TextBoxWrapper txtSpeedFactor;
       private LabelWrapper lblSpeedFactor;
-      private TextBoxWrapper txtGpuMemory;
-      private LabelWrapper lblGpuMemory;
       private TextBoxWrapper txtStatus;
       private LabelWrapper labelWrapper1;
       private TextBoxWrapper txtPerformanceFraction;

@@ -57,9 +57,8 @@ namespace HFM.Queue.Tool
       {
          bool printProjectString = arguments.FirstOrDefault(a => a.Type == ArgumentType.PrintProjectString) != null ? true : false;
          bool showAll = arguments.FirstOrDefault(a => a.Type == ArgumentType.ShowAll) != null ? true : false;
-      
-         string statusString = QueueEntry.EntryStatusStrings[e.EntryStatus];
-         Console.Write(" Index {0}: {1}", e.Index, statusString);
+
+         Console.Write(" Index {0}: {1}", e.Index, e.EntryStatusLiteral);
          if (e.SpeedFactor == 0)
          {
             Console.WriteLine();
@@ -87,14 +86,7 @@ namespace HFM.Queue.Tool
          Console.WriteLine("due: {0:ddd MMM dd HH:mm:ss yyyy} ({1} days)", e.DueTimeLocal, Math.Ceiling(preferred.TotalDays));
          Console.WriteLine("  core URL: {0}", e.CoreDownloadUrl);
          Console.Write("  core number: 0x{0}", e.CoreNumber);
-         if (QueueEntry.CoreNumberStrings.ContainsKey(e.CoreNumber))
-         {
-            Console.WriteLine("; core name: {0}", QueueEntry.CoreNumberStrings[e.CoreNumber]);
-         }
-         else
-         {
-            Console.WriteLine();
-         }
+         Console.WriteLine("; core name: {0}", e.CoreName);
          Console.WriteLine("  CPU: {0},{1} {2}; OS: {3},{4} {5}", e.CpuType, e.CpuSpecies, e.CpuString, e.OsType, e.OsSpecies, e.OsString);
          Console.WriteLine("  smp cores: {0}; cores to use: {1}", e.NumberOfSmpCores, e.UseCores);
          Console.WriteLine("  tag: {0}", e.WorkUnitTag);
@@ -104,7 +96,7 @@ namespace HFM.Queue.Tool
          }
          Console.WriteLine("  flops: {0} ({1:0.000000} megaflops)", e.Flops, e.MegaFlops);
          Console.WriteLine("  memory: {0} MB", e.Memory);
-         Console.WriteLine("  client type: {0} {1}", e.RequiredClientType, QueueEntry.RequiredClientTypeStrings[e.RequiredClientType]);
+         Console.WriteLine("  client type: {0} {1}", e.RequiredClientType, e.RequiredClientTypeLiteral);
          string assignmentInfoEndian = e.AssignmentInfoBigEndian ? "be" : "le";
          if (e.AssignmentInfoPresent)
          {

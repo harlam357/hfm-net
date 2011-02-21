@@ -431,7 +431,7 @@ namespace HFM.DataAggregator
             unit.Team = (int) entry.TeamNumber;
             
             /* Core ID */
-            unit.CoreID = entry.CoreNumber.ToUpperInvariant();
+            unit.CoreID = entry.CoreNumberHex.ToUpperInvariant();
          }
       }
 

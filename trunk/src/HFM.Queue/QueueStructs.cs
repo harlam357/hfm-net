@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Queue Structures
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -183,14 +183,14 @@ namespace HFM.Queue
          get { return _status; }
       }
 
-      /* 004 Pad for Windows, others as of v4.01, as of v6.01 number of SMP Cores to use (LE) */
-      private UInt32 _useCores;
+      /* 004 Pad for Windows, others as of v4.01, as of v6.01 Number of SMP cores (LE) */
+      private UInt32 _numberOfSmpCores;
       /// <summary>
-      /// Pad for Windows, others as of v4.01, as of v6.01 number of SMP Cores to use
+      /// Pad for Windows, others as of v4.01, as of v6.01 Number of SMP cores
       /// </summary>
-      public UInt32 UseCores
+      public UInt32 NumberOfSmpCores
       {
-         get { return _useCores; }
+         get { return _numberOfSmpCores; }
       }
 
       /*** 0 = Begin Time
@@ -629,16 +629,16 @@ namespace HFM.Queue
       //   get { return _z536; }
       //}
 
-      /* 544 Number of SMP cores (as of v5.91) (BE) */
+      /* 544 Number of SMP cores to use (as of v5.91) (BE) */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-      private byte[] _numberOfSmpCores;
+      private byte[] _useCores;
       /// <summary>
-      /// Number of SMP cores
+      /// Number of SMP cores to use
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-      public byte[] NumberOfSmpCores
+      public byte[] UseCores
       {
-         get { return _numberOfSmpCores; }
+         get { return _useCores; }
       }
 
       /* 548 Tag of Work Unit (as of v5.00) */

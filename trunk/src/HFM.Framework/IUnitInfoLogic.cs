@@ -51,11 +51,6 @@ namespace HFM.Framework
       DateTime FinishedTime { get; }
 
       /// <summary>
-      /// Formatted Project (Run, Clone, Gen) Information
-      /// </summary>
-      string ProjectRunCloneGen { get; }
-
-      /// <summary>
       /// Class member containing info on the currently running protein
       /// </summary>
       IProtein CurrentProtein { get; }

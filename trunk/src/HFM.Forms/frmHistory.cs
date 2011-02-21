@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Work Unit History UI Form
- * Copyright (C) 2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,6 +23,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 
 using HFM.Forms.Models;
@@ -131,11 +132,8 @@ namespace HFM.Forms
       
          var selectedIndex = cboSortView.SelectedIndex;
 
-         var names = new List<Choice>();
-         foreach (var query in queryList)
-         {
-            names.Add(new Choice(query.Name, query));
-         }
+         var names = queryList.Select(query => new Choice(query.Name, query)).ToList();
+         names.Sort();
          cboSortView.DataSource = names;
          cboSortView.DisplayMember = "Display";
          cboSortView.ValueMember = "Value";
@@ -297,6 +295,10 @@ namespace HFM.Forms
 
       private void mnuViewAutoSizeGrid_Click(object sender, EventArgs e)
       {
+         // do this manually... with a ton of items in the grid
+         // this can take quite a while... should limit it to 
+         // the visible entries if posssible... if not then some
+         // set number like 100 entires.
          dataGridView1.AutoResizeColumns();
       }
 

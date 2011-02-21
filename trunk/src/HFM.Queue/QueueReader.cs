@@ -19,6 +19,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -84,14 +85,17 @@ namespace HFM.Queue
          throw new IOException(String.Format(CultureInfo.CurrentCulture, 
             "Length of data read was {0} bytes and not the expected {1} bytes.", buff.Length, QueueLength));
       }
-      
+
+      [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
       private static byte[] GetRawData(string filePath)
       {
          Debug.Assert(String.IsNullOrEmpty(filePath) == false);
 
          try
          {
-            using (var reader = new BinaryReader(new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
+            // .NET types - presents little to no danger if Dispose() is called multiple times
+            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var reader = new BinaryReader(stream))
             {
                // Read byte array
                return reader.ReadBytes(Marshal.SizeOf(typeof(Data)));
