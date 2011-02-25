@@ -24,10 +24,12 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 
-using HFM.Log;
-using HFM.Queue;
+using AutoMapper;
+
 using HFM.Framework;
 using HFM.Framework.DataTypes;
+using HFM.Log;
+using HFM.Queue;
 
 namespace HFM.DataAggregator
 {
@@ -126,6 +128,16 @@ namespace HFM.DataAggregator
          get { return _unitLogLines; }
       }
 
+      #region AutoMapper
+
+      public static void ConfigureMaps()
+      {
+         Mapper.CreateMap<QueueData, ClientQueue>();
+         Mapper.CreateMap<QueueEntry, ClientQueueEntry>();
+      }
+
+      #endregion
+
       #region Aggregation Logic
       
       /// <summary>
@@ -170,46 +182,13 @@ namespace HFM.DataAggregator
 
       private static ClientQueue BuildClientQueue(QueueData q)
       {
-         var cq = new ClientQueue();
-         cq.CurrentIndex = (int)q.CurrentIndex;
-         cq.PerformanceFraction = q.PerformanceFraction;
-         cq.PerformanceFractionUnitWeight = (int)q.PerformanceFractionUnitWeight;
-         cq.DownloadRateAverage = q.DownloadRateAverage;
-         cq.DownloadRateUnitWeight = (int)q.DownloadRateUnitWeight;
-         cq.UploadRateAverage = q.UploadRateAverage;
-         cq.UploadRateUnitWeight = (int)q.UploadRateUnitWeight;
-         
+         var cq = Mapper.Map<QueueData, ClientQueue>(q);
          for (int i = 0; i < 10; i++)
          {
-            PopulateClientQueueEntry(cq.GetQueueEntry(i), q.GetQueueEntry((uint)i));
+            Mapper.Map(q.GetQueueEntry((uint)i), cq.GetQueueEntry(i));
          }
 
          return cq;
-      }
-      
-      private static void PopulateClientQueueEntry(ClientQueueEntry cqe, QueueEntry qe)
-      {
-         cqe.EntryStatus = (QueueEntryStatus)qe.EntryStatus;
-         cqe.SpeedFactor = qe.SpeedFactor;
-         cqe.UseCores = (int)qe.UseCores;
-         cqe.BeginTimeUtc = qe.BeginTimeUtc;
-         cqe.BeginTimeLocal = qe.BeginTimeLocal;
-         cqe.EndTimeUtc = qe.EndTimeUtc;
-         cqe.EndTimeLocal = qe.EndTimeLocal;
-         cqe.ProjectID = qe.ProjectID;
-         cqe.ProjectRun = qe.ProjectRun;
-         cqe.ProjectClone = qe.ProjectClone;
-         cqe.ProjectGen = qe.ProjectGen;
-         cqe.MachineID = (int)qe.MachineID;
-         cqe.ServerIP = qe.ServerIP;
-         cqe.UserID = qe.UserID;
-         cqe.Benchmark = (int)qe.Benchmark;
-         cqe.CpuString = qe.CpuString;
-         cqe.OsString = qe.OsString;
-         cqe.NumberOfSmpCores = (int)qe.NumberOfSmpCores;
-         cqe.MegaFlops = qe.MegaFlops;
-         cqe.Memory = (int)qe.Memory;
-         cqe.GpuMemory = (int)qe.GpuMemory;
       }
 
       /// <summary>

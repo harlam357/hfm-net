@@ -36,10 +36,7 @@ namespace HFM.Framework.DataTypes
 
       public const int MaxDecimalPlaces = 5;
 
-      private static bool IsRunningOnMono()
-      {
-         return Type.GetType("Mono.Runtime") != null;
-      }
+      private static readonly bool IsRunningOnMono = Type.GetType("Mono.Runtime") != null;
 
       /// <summary>
       /// Get the DateTimeStyle for the given Client Instance.
@@ -50,7 +47,7 @@ namespace HFM.Framework.DataTypes
          {
             System.Globalization.DateTimeStyles style;
 
-            if (IsRunningOnMono())
+            if (IsRunningOnMono)
             {
                style = System.Globalization.DateTimeStyles.AssumeUniversal |
                        System.Globalization.DateTimeStyles.AdjustToUniversal;
@@ -65,6 +62,14 @@ namespace HFM.Framework.DataTypes
 
             return style;
          }
+      }
+
+      /// <summary>
+      /// String Comparison for Paths (case sensetive on Mono / case insensetive on .NET)
+      /// </summary>
+      public static StringComparison PathComparison
+      {
+         get { return IsRunningOnMono ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase; }
       }
    }
 }

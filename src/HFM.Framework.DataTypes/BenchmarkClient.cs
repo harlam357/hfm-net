@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Benchmark Client Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,6 +27,8 @@ namespace HFM.Framework.DataTypes
    /// </summary>
    public class BenchmarkClient : IComparable<BenchmarkClient>, IEquatable<BenchmarkClient>
    {
+      #region Fields and Properties
+
       /// <summary>
       /// Self Referencing Property
       /// </summary>
@@ -67,18 +69,13 @@ namespace HFM.Framework.DataTypes
       /// </summary>
       public string NameAndPath
       {
-         get
-         {
-            if (_allClients)
-            {
-               return "All Clients";
-            }
-
-            return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Name, Path);
-         }
+         get { return _allClients ? "All Clients" : String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Name, Path); }
       }
 
+      #endregion
+
       #region Constructors
+
       /// <summary>
       /// Create BenchmarkClient Instance (All Clients)
       /// </summary>
@@ -90,11 +87,15 @@ namespace HFM.Framework.DataTypes
       /// <summary>
       /// Create BenchmarkClient Instance (Individual Clients)
       /// </summary>
-      public BenchmarkClient(string clientName, string clientPath)
+      public BenchmarkClient(string name, string path)
       {
-         _name = clientName;
-         _path = clientPath;
+         if (String.IsNullOrEmpty(name)) throw new ArgumentException("Argument 'name' cannot be a null or empty string.");
+         if (String.IsNullOrEmpty(path)) throw new ArgumentException("Argument 'path' cannot be a null or empty string.");
+
+         _name = name;
+         _path = path;
       }
+
       #endregion
 
       ///<summary>
@@ -122,12 +123,7 @@ namespace HFM.Framework.DataTypes
       public override bool Equals(object obj)
       {
          var client = obj as BenchmarkClient;
-         if (client != null)
-         {
-            return Equals(client);
-         }
-
-         return base.Equals(obj);
+         return client != null ? Equals(client) : base.Equals(obj);
       }
 
       ///<summary>
@@ -136,22 +132,24 @@ namespace HFM.Framework.DataTypes
       ///<returns>
       ///true if the specified <see cref="T:HFM.Framework.DataTypes.BenchmarkClient"></see> is equal to the current <see cref="T:HFM.Framework.DataTypes.BenchmarkClient"></see>; otherwise, false.
       ///</returns>
-      ///<param name="client">The <see cref="T:HFM.Framework.DataTypes.BenchmarkClient"></see> to compare with the current <see cref="T:HFM.Framework.DataTypes.BenchmarkClient"></see>.</param>
-      public bool Equals(BenchmarkClient client)
+      ///<param name="other">The <see cref="T:HFM.Framework.DataTypes.BenchmarkClient"></see> to compare with the current <see cref="T:HFM.Framework.DataTypes.BenchmarkClient"></see>.</param>
+      public bool Equals(BenchmarkClient other)
       {
-         if (client == null)
-         {
-            return false;
-         }
+         if (other == null) return false;
 
-         if (Name.Equals(client.Name) &&
-             Paths.Equal(Path, client.Path) &&
-             AllClients.Equals(client.AllClients))
-         {
-            return true;
-         }
+         return Name.Equals(other.Name) &&
+                Paths.Equal(Path, other.Path) &&
+                AllClients.Equals(other.AllClients);
+      }
 
-         return false;
+      public static bool operator == (BenchmarkClient bc1, BenchmarkClient bc2)
+      {
+         return ReferenceEquals(bc1, null) ? ReferenceEquals(bc2, null) : bc1.Equals(bc2);
+      }
+
+      public static bool operator != (BenchmarkClient bc1, BenchmarkClient bc2)
+      {
+         return !(bc1 == bc2);
       }
 
       ///<summary>
@@ -168,6 +166,10 @@ namespace HFM.Framework.DataTypes
             return 1;
          }
 
+         // both All Clients true (equal)
+         if (AllClients && other.AllClients) return 0;
+
+         // both All Client false (check properties)
          if (AllClients.Equals(other.AllClients))
          {
             if (Name.Equals(other.Name))
@@ -177,25 +179,27 @@ namespace HFM.Framework.DataTypes
                   return 0;
                }
 
-               return Path.CompareTo(other.Path);
+               return String.Compare(Path, other.Path, Default.PathComparison);
             }
 
-            return Name.CompareTo(other.Name);
+            return String.Compare(Name, other.Name, StringComparison.OrdinalIgnoreCase);
          }
 
+         // this All Clients true (this is less than)
          if (AllClients) return -1;
 
+         // other All Clients true (this is greater than)
          return 1;
       }
 
       public static bool operator < (BenchmarkClient bc1, BenchmarkClient bc2)
       {
-         return (bc1.CompareTo(bc2) < 0);
+         return bc1 == null ? bc2 != null : bc1.CompareTo(bc2) < 0;
       }
 
       public static bool operator > (BenchmarkClient bc1, BenchmarkClient bc2)
       {
-         return (bc1.CompareTo(bc2) > 0);
+         return bc2 == null ? bc1 != null : bc2.CompareTo(bc1) < 0;
       }
    }
 }

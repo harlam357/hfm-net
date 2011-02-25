@@ -120,7 +120,7 @@ namespace HFM.Forms.Controls
             SetControlsVisible(true);
 
             ClientQueueEntry entry = _qBase.GetQueueEntry(cboQueueIndex.SelectedIndex);
-            txtStatus.Text = entry.EntryStatus.ToString();
+            txtStatus.Text = entry.EntryStatusLiteral;
             txtCredit.Text = _proteinCollection.ContainsKey(entry.ProjectID) ? _proteinCollection[entry.ProjectID].Credit.ToString(CultureInfo.CurrentCulture) : "0";
             if (_clientIsOnVirtualMachine)
             {

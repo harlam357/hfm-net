@@ -27,15 +27,14 @@ using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
-using Castle.Windsor;
 using Castle.Core.Resource;
 
 using harlam357.Windows.Forms;
 
-using HFM.Forms;
 using HFM.Classes;
-using HFM.Instances;
+using HFM.Forms;
 using HFM.Framework;
+using HFM.Instances;
 
 namespace HFM
 {
@@ -81,6 +80,8 @@ namespace HFM
             ShowStartupError(ex, "Single Instance Helper failed to start.");
             return;
          }
+
+         DataAggregator.DataAggregator.ConfigureMaps();
 
          try
          {

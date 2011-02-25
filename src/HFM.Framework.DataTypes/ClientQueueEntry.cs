@@ -45,7 +45,7 @@ namespace HFM.Framework.DataTypes
       /// <summary>
       /// Status Enumeration
       /// </summary>
-      public QueueEntryStatus EntryStatus { get; set; }
+      public string EntryStatusLiteral { get; set; }
 
       /// <summary>
       /// Specifies a Factor Value denoting the Speed of Completion in relationship to the Maximum Expiration Time.
@@ -141,11 +141,6 @@ namespace HFM.Framework.DataTypes
       /// Available memory (as of v6.00)
       /// </summary>
       public int Memory { get; set; }
-
-      /// <summary>
-      /// Available GPU memory (as of v6.20)
-      /// </summary>
-      public int GpuMemory { get; set; }
 
       #endregion
    }
