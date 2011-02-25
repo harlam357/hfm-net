@@ -118,6 +118,8 @@ namespace HFM.Framework.DataTypes
 
       public bool Equals(HistoryEntry other)
       {
+         if (other == null) return false;
+
          return (ProjectID == other.ProjectID &&
                  ProjectRun == other.ProjectRun &&
                  ProjectClone == other.ProjectClone &&

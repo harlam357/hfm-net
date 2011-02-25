@@ -190,15 +190,15 @@ namespace HFM.Framework.DataTypes
                      // filesystem), then append the current platform
                      // separator character
                      if (_path.Length > 2 &&
-                        (_path.EndsWith("\\") ||
-                         _path.EndsWith("/")) == false)
+                        (_path.EndsWith("\\", StringComparison.OrdinalIgnoreCase) ||
+                         _path.EndsWith("/", StringComparison.OrdinalIgnoreCase)) == false)
                      {
                         _path = String.Concat(_path, System.IO.Path.DirectorySeparatorChar);
                      }
                      break;
                   case InstanceType.HttpInstance:
                   case InstanceType.FtpInstance:
-                     if (_path.EndsWith("/") == false)
+                     if (_path.EndsWith("/", StringComparison.OrdinalIgnoreCase) == false)
                      {
                         _path = String.Concat(_path, "/");
                      }
@@ -275,8 +275,15 @@ namespace HFM.Framework.DataTypes
          LoadSettings(settings);
       }
 
+      /// <summary>
+      /// Load the Client Settings
+      /// </summary>
+      /// <param name="settings">Client Settings to Load</param>
+      /// <exception cref="ArgumentNullException">Throws when arugment is null.</exception>
       public void LoadSettings(ClientInstanceSettings settings)
       {
+         if (settings == null) throw new ArgumentNullException("settings");
+
          InstanceHostType = settings.InstanceHostType;
          InstanceName = settings.InstanceName;
          ExternalInstance = settings.ExternalInstance;

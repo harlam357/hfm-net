@@ -32,9 +32,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 namespace HFM.Framework.DataTypes
 {
+   [SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix")]
    public class ClientQueue
    {
       #region Fields
@@ -57,11 +60,6 @@ namespace HFM.Framework.DataTypes
       #endregion
 
       #region queue.dat Properties
-
-      ///// <summary>
-      ///// Queue (client) version
-      ///// </summary>
-      //public int Version { get; set; }
 
       /// <summary>
       /// Current index number
@@ -98,11 +96,6 @@ namespace HFM.Framework.DataTypes
       /// </summary>
       public int UploadRateUnitWeight { get; set; }
 
-      ///// <summary>
-      ///// Results successfully sent (after upload failures)
-      ///// </summary>
-      //public int ResultsSent { get; set; }
-      
       #endregion
       
       #region Entry Accessors
@@ -137,7 +130,8 @@ namespace HFM.Framework.DataTypes
 
             for (int i = 0; i < 10; i++)
             {
-               list.Add(String.Format("{0} - {1}", i, GetQueueEntry(i).ProjectRunCloneGen()));
+               list.Add(String.Format(CultureInfo.InvariantCulture,
+                  "{0} - {1}", i, GetQueueEntry(i).ProjectRunCloneGen()));
             }
 
             return list;

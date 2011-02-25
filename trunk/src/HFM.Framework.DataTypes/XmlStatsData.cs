@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - XML Stats Data
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -164,6 +164,8 @@ namespace HFM.Framework.DataTypes
 
       public bool Equals(XmlStatsData other)
       {
+         if (other == null) return false;
+
          return (UserTwentyFourHourAvgerage == other.TeamTwentyFourHourAvgerage &&
                  UserPointsToday == other.UserPointsToday &&
                  UserPointsWeek == other.UserPointsWeek &&

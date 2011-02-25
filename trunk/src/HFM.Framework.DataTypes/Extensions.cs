@@ -44,6 +44,8 @@ namespace HFM.Framework.DataTypes
       /// </summary>
       public static bool ProjectIsUnknown(this IProjectInfo projectInfo)
       {
+         if (projectInfo == null) return true;
+
          return projectInfo.ProjectID == 0 &&
                 projectInfo.ProjectRun == 0 &&
                 projectInfo.ProjectClone == 0 &&
@@ -55,6 +57,8 @@ namespace HFM.Framework.DataTypes
       /// </summary>
       public static string ProjectRunCloneGen(this IProjectInfo projectInfo)
       {
+         if (projectInfo == null) return String.Empty;
+
          return String.Format(CultureInfo.InvariantCulture, "P{0} (R{1}, C{2}, G{3})", 
             projectInfo.ProjectID, projectInfo.ProjectRun, projectInfo.ProjectClone, projectInfo.ProjectGen);
       }

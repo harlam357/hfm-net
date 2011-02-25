@@ -20,6 +20,7 @@
 using System;
 using System.Diagnostics;
 
+using AutoMapper;
 using NUnit.Framework;
 
 using HFM.Framework;
@@ -43,9 +44,17 @@ namespace HFM.DataAggregator.Tests
       {
          _dataAggregator = new DataAggregator();
          TraceLevelSwitch.Instance.Level = TraceLevel.Verbose;
+         DataAggregator.ConfigureMaps();
+      }
+
+      [Test]
+      public void TestMaps()
+      {
+         Mapper.AssertConfigurationIsValid();
       }
 
       // ReSharper disable InconsistentNaming
+
       [Test, Category("SMP")]
       public void SMP_3()
       {
@@ -1370,6 +1379,7 @@ namespace HFM.DataAggregator.Tests
          Assert.AreEqual("Unknown", unitInfoData.CoreID);
          #endregion
       }
+
       // ReSharper restore InconsistentNaming
    }
 }

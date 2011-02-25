@@ -29,6 +29,7 @@ copy /Y Castle.MicroKernel.dll %1
 copy /Y Castle.Windsor.dll %1
 copy /Y protobuf-net.dll %1
 copy /Y System.Linq.Dynamic.dll %1
+copy /Y AutoMapper.dll %1
 
 if not exist %1\SQLite md %1\SQLite
 if not exist %1\SQLite\x86 md %1\SQLite\x86
@@ -50,6 +51,7 @@ copy /Y "..\..\..\..\lib\ZedGraph\ZedGraph License.txt" %1\Documentation\License
 copy /Y "..\..\..\..\lib\Castle Windsor 2.0\Windsor License.txt" %1\Documentation\License
 copy /Y "..\..\..\..\lib\protobuf-net\protobuf-net Licence.txt" %1\Documentation\License
 copy /Y "..\..\..\..\lib\protobuf-net\protoc-license.txt" %1\Documentation\License
+copy /Y "..\..\..\..\lib\AutoMapper\AutoMapper License.txt" %1\Documentation\License
 
 echo Copying Support Files and Folders...
 if not exist %1\CSS md %1\CSS
