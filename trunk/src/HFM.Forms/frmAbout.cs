@@ -37,7 +37,10 @@ namespace HFM.Forms
       public frmAbout()
       {
          InitializeComponent();
-         lblVersion.Text = PlatformOps.LongFormattedApplicationVersionWithRevision;
+         int[] versions = PlatformOps.GetVersionNumbers();
+         Debug.Assert(versions.Length == 4);
+         lblVersion.Text = String.Format(CultureInfo.InvariantCulture, "Version {0}.{1}.{2} - Revision {3}",
+                                         versions[0], versions[1], versions[2], versions[3]);
          string assemblyLocation = Assembly.GetExecutingAssembly().Location;
          if (String.IsNullOrEmpty(assemblyLocation) == false)
          {

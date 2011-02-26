@@ -407,5 +407,35 @@ namespace HFM.Forms
 
          return sb.ToString();
       }
+
+      public static string[] GetQueryFieldColumnNames()
+      {
+         // Indexes Must Match QueryFieldName enum defined in Enumerations.cs
+         var list = new List<string>();
+         list.Add("ProjectID");
+         list.Add("Run");
+         list.Add("Clone");
+         list.Add("Gen");
+         list.Add("Instance Name");
+         list.Add("Instance Path");
+         list.Add("Username");
+         list.Add("Team");
+         list.Add("Core Version");
+         list.Add("Frames Completed");
+         list.Add("Frame Time");
+         list.Add("Unit Result");
+         list.Add("Download Date (UTC)");
+         list.Add("Completion Date (UTC)");
+         list.Add("Work Unit Name");
+         list.Add("KFactor");
+         list.Add("Core Name");
+         list.Add("Total Frames");
+         list.Add("Atoms");
+         list.Add("Client Type");
+         list.Add("PPD");
+         list.Add("Credit");
+
+         return list.ToArray();
+      }
    }
 }

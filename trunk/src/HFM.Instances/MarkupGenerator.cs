@@ -366,7 +366,7 @@ namespace HFM.Instances
          //    </UnitInfo>
 
          xmlData.SetAttribute("Name", instance.Name);
-         XmlOps.SetXmlNode(xmlData, "HFMVersion", PlatformOps.ShortFormattedApplicationVersionWithRevision);
+         XmlOps.SetXmlNode(xmlData, "HFMVersion", String.Concat("v", PlatformOps.ApplicationVersionWithRevision));
          XmlOps.SetXmlNode(xmlData, "UnitInfo/FramesComplete", String.Format("{0}", instance.FramesComplete));
          XmlOps.SetXmlNode(xmlData, "UnitInfo/PercentComplete", String.Format("{0}", instance.PercentComplete));
          XmlOps.SetXmlNode(xmlData, "UnitInfo/TimePerFrame", String.Format("{0}h, {1}m, {2}s", instance.TPF.Hours, instance.TPF.Minutes, instance.TPF.Seconds));
@@ -488,8 +488,8 @@ namespace HFM.Instances
             XmlElement xmlData = xmlFrag.DocumentElement;
 
             XmlOps.SetXmlNode(xmlData, "Status", instance.Status.ToString());
-            XmlOps.SetXmlNode(xmlData, "StatusColor", PlatformOps.GetStatusHtmlColor(instance.Status));
-            XmlOps.SetXmlNode(xmlData, "StatusFontColor", PlatformOps.GetStatusHtmlFontColor(instance.Status));
+            XmlOps.SetXmlNode(xmlData, "StatusColor", instance.Status.GetHtmlColor());
+            XmlOps.SetXmlNode(xmlData, "StatusFontColor", instance.Status.GetHtmlFontColor());
             XmlOps.SetXmlNode(xmlData, "PercentComplete", instance.PercentComplete.ToString());
             XmlOps.SetXmlNode(xmlData, "Name", instance.Name);
             XmlOps.SetXmlNode(xmlData, "UserIDDuplicate", instance.UserIdIsDuplicate.ToString());
@@ -553,7 +553,7 @@ namespace HFM.Instances
          xmlDoc.Load(Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.XmlFolderName), "Overview.xml"));
          XmlElement xmlData = xmlDoc.DocumentElement;
 
-         XmlOps.SetXmlNode(xmlData, "HFMVersion", PlatformOps.ShortFormattedApplicationVersionWithRevision);
+         XmlOps.SetXmlNode(xmlData, "HFMVersion", String.Concat("v", PlatformOps.ApplicationVersionWithRevision));
          XmlOps.SetXmlNode(xmlData, "TotalHosts", totals.TotalClients.ToString());
          XmlOps.SetXmlNode(xmlData, "GoodHosts", totals.WorkingClients.ToString());
          XmlOps.SetXmlNode(xmlData, "BadHosts", totals.NonWorkingClients.ToString());

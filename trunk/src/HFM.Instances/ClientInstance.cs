@@ -397,7 +397,7 @@ namespace HFM.Instances
       private void UpdateTimeOfLastProgress(IUnitInfoLogic parsedUnitInfo)
       {
          // Matches the Current Project and Raw Download Time
-         if (PlatformOps.IsUnitInfoCurrentUnitInfo(CurrentUnitInfo, parsedUnitInfo))
+         if (CurrentUnitInfo.EqualsUnitInfoLogic(parsedUnitInfo))
          {
             // If the Unit Start Time Stamp is no longer the same as the CurrentUnitInfo
             if (parsedUnitInfo.UnitInfoData.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&

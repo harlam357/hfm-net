@@ -84,8 +84,7 @@ namespace HFM.Instances
          {
             // If Current has not been found, check the nextUnitIndex
             // or try to match the Current Project and Raw Download Time
-            if (processUpdates == false && (index == nextUnitIndex ||
-                                            PlatformOps.IsUnitInfoCurrentUnitInfo(currentUnitInfo, parsedUnits[index])))
+            if (processUpdates == false && (index == nextUnitIndex || currentUnitInfo.EqualsUnitInfoLogic(parsedUnits[index])))
             {
                foundCurrent = true;
                processUpdates = true;

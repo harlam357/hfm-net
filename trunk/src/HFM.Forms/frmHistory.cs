@@ -327,7 +327,7 @@ namespace HFM.Forms
          // Add Column Selector
          new DataGridViewColumnSelector(dataGridView1);
       
-         var names = PlatformOps.GetQueryFieldColumnNames();
+         var names = HistoryPresenter.GetQueryFieldColumnNames();
       
          dataGridView1.AutoGenerateColumns = false;
          // ReSharper disable PossibleNullReferenceException

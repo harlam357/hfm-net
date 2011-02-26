@@ -147,7 +147,7 @@ namespace HFM.Forms
          }
          else
          {
-            var names = PlatformOps.GetQueryFieldColumnNames();
+            var names = HistoryPresenter.GetQueryFieldColumnNames();
             columnChoices.Add(new Choice(names[(int)QueryFieldName.ProjectID], QueryFieldName.ProjectID));
             columnChoices.Add(new Choice(names[(int)QueryFieldName.WorkUnitName], QueryFieldName.WorkUnitName));
             columnChoices.Add(new Choice(names[(int)QueryFieldName.InstanceName], QueryFieldName.InstanceName));

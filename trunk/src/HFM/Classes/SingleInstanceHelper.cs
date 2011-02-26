@@ -25,6 +25,7 @@ using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Reflection;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Ipc;
@@ -40,7 +41,8 @@ namespace HFM.Classes
       private Mutex _mutex;
       
       private const string ObjectName = "SingleInstanceProxy";
-      private static readonly string MutexName = String.Format(CultureInfo.InvariantCulture, "Global\\{0}", PlatformOps.AssemblyGuid);
+      private static readonly string AssemblyGuid = GetAssemblyGuid();
+      private static readonly string MutexName = String.Format(CultureInfo.InvariantCulture, "Global\\{0}", AssemblyGuid);
 
       public bool Start()
       {
@@ -58,7 +60,7 @@ namespace HFM.Classes
       
       public static void RegisterIpcChannel(NewInstanceHandler handler)
       {
-         IChannel ipcChannel = new IpcServerChannel(PlatformOps.AssemblyGuid);
+         IChannel ipcChannel = new IpcServerChannel(AssemblyGuid);
          ChannelServices.RegisterChannel(ipcChannel, false);
 
          var obj = new IpcObject(handler);
@@ -72,13 +74,23 @@ namespace HFM.Classes
          // if we accurately detected if another instance was
          // running or not, then this would not be a problem.
       
-         string objectUri = String.Format(CultureInfo.InvariantCulture, "ipc://{0}/{1}", PlatformOps.AssemblyGuid, ObjectName);
+         string objectUri = String.Format(CultureInfo.InvariantCulture, "ipc://{0}/{1}", AssemblyGuid, ObjectName);
 
          IChannel ipcChannel = new IpcClientChannel();
          ChannelServices.RegisterChannel(ipcChannel, false);
 
          var obj = (IpcObject)Activator.GetObject(typeof(IpcObject), objectUri);
          obj.SignalNewInstance(args);
+      }
+
+      private static string GetAssemblyGuid()
+      {
+         object[] attributes = Assembly.GetEntryAssembly().GetCustomAttributes(typeof(System.Runtime.InteropServices.GuidAttribute), false);
+         if (attributes.Length == 0)
+         {
+            return String.Empty;
+         }
+         return ((System.Runtime.InteropServices.GuidAttribute)attributes[0]).Value;
       }
 
       #region IDisposable Members
