@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Single Instance Helper Class
- * Copyright (C) 2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.Remoting;
@@ -33,21 +34,21 @@ using HFM.Framework;
 
 namespace HFM.Classes
 {
-   public static class SingleInstanceHelper
+   internal class SingleInstanceHelper : IDisposable
    {
-      private static Mutex _mutex;
+      private Mutex _mutex;
       
       private const string ObjectName = "SingleInstanceProxy";
       private static readonly string MutexName = String.Format(CultureInfo.InvariantCulture, "Global\\{0}", PlatformOps.AssemblyGuid);
 
-      public static bool Start()
+      public bool Start()
       {
          // Issue 236
-         // perhaps add some secondary check here that check the 
-         // running processes and looks for HFM.exe.  Under Mono
-         // there seems to be an issue with the original Mutex
-         // being released even after the process has died...
-         // usually when a user manually kills the process.
+         // Under Mono there seems to be an issue with the original Mutex
+         // being released even after the process has died... usually when
+         // a user manually kills the process.
+         // In fact, Mono 2.8 has turned off shared file handles all together.
+         // http://www.mono-project.com/Release_Notes_Mono_2.8
       
          bool onlyInstance;
          _mutex = new Mutex(true, MutexName, out onlyInstance);
@@ -59,7 +60,7 @@ namespace HFM.Classes
          IChannel ipcChannel = new IpcServerChannel(PlatformOps.AssemblyGuid);
          ChannelServices.RegisterChannel(ipcChannel, false);
 
-         IpcObject obj = new IpcObject(handler);
+         var obj = new IpcObject(handler);
          RemotingServices.Marshal(obj, ObjectName);
       }
       
@@ -75,14 +76,43 @@ namespace HFM.Classes
          IChannel ipcChannel = new IpcClientChannel();
          ChannelServices.RegisterChannel(ipcChannel, false);
 
-         IpcObject obj = (IpcObject)Activator.GetObject(typeof(IpcObject), objectUri);
+         var obj = (IpcObject)Activator.GetObject(typeof(IpcObject), objectUri);
          obj.SignalNewInstance(args);
       }
 
-      public static void Stop()
+      #region IDisposable Members
+
+      private bool _disposed;
+
+      public void Dispose()
       {
-         _mutex.ReleaseMutex();
+         Dispose(true);
+         GC.SuppressFinalize(this);
       }
+
+      private void Dispose(bool disposing)
+      {
+         if (!_disposed)
+         {
+            if (disposing)
+            {
+               if (_mutex != null)
+               {
+                  _mutex.Close();
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Mutex Closed...", false);   
+               }
+            }
+         }
+
+         _disposed = true;
+      }
+
+      ~SingleInstanceHelper()
+      {
+         Dispose(false);
+      }
+
+      #endregion
    }
 
    public delegate void NewInstanceHandler(string[] args);

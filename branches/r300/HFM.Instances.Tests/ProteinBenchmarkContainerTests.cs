@@ -31,7 +31,6 @@ namespace HFM.Instances.Tests
    [TestFixture]
    public class ProteinBenchmarkContainerTests
    {
-      private MockRepository _mocks;
       private IPreferenceSet _prefs;
       private IUnitInfoDatabase _database;
       private ProteinBenchmarkContainer _container;
@@ -39,9 +38,8 @@ namespace HFM.Instances.Tests
       [SetUp]
       public void Init()
       {
-         _mocks = new MockRepository();
-         _prefs = _mocks.DynamicMock<IPreferenceSet>();
-         _database = _mocks.DynamicMock<IUnitInfoDatabase>();
+         _prefs = MockRepository.GenerateStub<IPreferenceSet>();
+         _database = MockRepository.GenerateMock<IUnitInfoDatabase>();
          _container = new ProteinBenchmarkContainer(_prefs, _database);
       }
 
@@ -61,13 +59,13 @@ namespace HFM.Instances.Tests
          unitInfo1.UnitFrames.Add(3, new UnitFrame { FrameDuration = TimeSpan.FromMinutes(5), FrameID = 3 });
          unitInfo1.FinishedTime = new DateTime(2010, 1, 1);
 
-         var currentUnitInfo = _mocks.DynamicMock<IUnitInfoLogic>();
-         SetupResult.For(currentUnitInfo.UnitInfoData).Return(unitInfo1);
-         SetupResult.For(currentUnitInfo.FramesComplete).Return(0);
-         
-         var unitInfoLogic1 = _mocks.DynamicMock<IUnitInfoLogic>();
-         SetupResult.For(unitInfoLogic1.UnitInfoData).Return(unitInfo1);
-         SetupResult.For(unitInfoLogic1.FramesComplete).Return(3);
+         var currentUnitInfo = MockRepository.GenerateStub<IUnitInfoLogic>();
+         currentUnitInfo.Stub(x => x.UnitInfoData).Return(unitInfo1);
+         currentUnitInfo.Stub(x => x.FramesComplete).Return(0);
+
+         var unitInfoLogic1 = MockRepository.GenerateStub<IUnitInfoLogic>();
+         unitInfoLogic1.Stub(x => x.UnitInfoData).Return(unitInfo1);
+         unitInfoLogic1.Stub(x => x.FramesComplete).Return(3);
 
          var unitInfo2 = new UnitInfo();
          unitInfo2.OwningInstanceName = "Owner";
@@ -77,8 +75,8 @@ namespace HFM.Instances.Tests
          unitInfo2.ProjectClone = 3;
          unitInfo2.ProjectGen = 4;
          unitInfo2.FinishedTime = new DateTime(2010, 1, 1);
-         var unitInfoLogic2 = _mocks.DynamicMock<IUnitInfoLogic>();
-         SetupResult.For(unitInfoLogic2.UnitInfoData).Return(unitInfo2);
+         var unitInfoLogic2 = MockRepository.GenerateStub<IUnitInfoLogic>();
+         unitInfoLogic2.Stub(x => x.UnitInfoData).Return(unitInfo2);
 
          var unitInfo3 = new UnitInfo();
          unitInfo3.OwningInstanceName = "Owner";
@@ -88,14 +86,13 @@ namespace HFM.Instances.Tests
          unitInfo3.ProjectClone = 4;
          unitInfo3.ProjectGen = 5;
          unitInfo3.FinishedTime = new DateTime(2010, 1, 1);
-         var unitInfoLogic3 = _mocks.DynamicMock<IUnitInfoLogic>();
-         SetupResult.For(unitInfoLogic3.UnitInfoData).Return(unitInfo3);
+         var unitInfoLogic3 = MockRepository.GenerateStub<IUnitInfoLogic>();
+         unitInfoLogic3.Stub(x => x.UnitInfoData).Return(unitInfo3);
 
          var parsedUnits = new List<IUnitInfoLogic> { unitInfoLogic1, unitInfoLogic2, unitInfoLogic3 };
 
-         Expect.Call(() => _database.WriteUnitInfo(null)).IgnoreArguments().Repeat.Times(3);
-         
-         _mocks.ReplayAll();
+         _database.Stub(x => x.ConnectionOk).Return(true);
+         _database.Expect(x => x.WriteUnitInfo(null)).IgnoreArguments().Repeat.Times(3);
 
          Assert.AreEqual(false, _container.ContainsClient(new BenchmarkClient("Owner", "Path")));
          Assert.AreEqual(false, new List<int>(_container.GetBenchmarkProjects()).Contains(2669));
@@ -107,7 +104,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(true, new List<int>(_container.GetBenchmarkProjects()).Contains(2669));
          Assert.AreEqual(TimeSpan.FromMinutes(5), _container.GetBenchmarkAverageFrameTime(currentUnitInfo));
          
-         _mocks.VerifyAll();
+         _database.VerifyAllExpectations();
       }
 
       [Test]

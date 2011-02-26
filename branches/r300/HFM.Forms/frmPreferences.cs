@@ -1,7 +1,7 @@
 /*
  * HFM.NET - User Preferences Form
  * Copyright (C) 2006-2007 David Rawling
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -102,7 +102,7 @@ namespace HFM.Forms
          _validatingControls = new List<IValidatingControl>[tabControl1.TabCount];
          _propertyCollection = new PropertyDescriptorCollection[tabControl1.TabCount];
          _models = new object[tabControl1.TabCount];
-         if (PlatformOps.IsRunningOnMono() == false)
+         if (_isRunningOnMono == false)
          {
             _cssSampleBrowser = new WebBrowser();
 
@@ -154,7 +154,7 @@ namespace HFM.Forms
          //_optionsModel.PropertyChanged += OptionsPropertyChanged;
          _reportingModel.PropertyChanged += ReportingPropertyChanged;
          _webSettingsModel.PropertyChanged += WebSettingsChanged;
-         //_webVisualStylesModel.PropertyChanged += WebVisualStylesPropertyChanged;
+         _webVisualStylesModel.PropertyChanged += WebVisualStylesPropertyChanged;
       }
       
       private static List<IValidatingControl> FindValidatingControls(Control.ControlCollection controls)
@@ -178,7 +178,11 @@ namespace HFM.Forms
       private void ScheduledTasksPropertyChanged(object sender, PropertyChangedEventArgs e)
       {
          SetPropertyErrorState((int)TabName.ScheduledTasks, e.PropertyName, true);
-         if (_isRunningOnMono) HandleScheduledTasksPropertyEnabledForMono(e.PropertyName);
+         if (_isRunningOnMono)
+         {
+            HandleScheduledTasksPropertyEnabledForMono(e.PropertyName);
+            HandleScheduledTasksPropertyChangedForMono(e.PropertyName);
+         }
       }
 
       private void HandleScheduledTasksPropertyEnabledForMono(string propertyName)
@@ -214,10 +218,24 @@ namespace HFM.Forms
                break;
          }
       }
+
+      private void HandleScheduledTasksPropertyChangedForMono(string propertyName)
+      {
+         switch (propertyName)
+         {
+            case "WebRoot":
+               txtWebSiteBase.Text = _scheduledTasksModel.WebRoot;
+               break;
+         }
+      }
       
       private void StartupAndExternalPropertyChanged(object sender, PropertyChangedEventArgs e)
       {
-         if (_isRunningOnMono) HandleStartupAndExternalPropertyEnabledForMono(e.PropertyName);
+         if (_isRunningOnMono)
+         {
+            HandleStartupAndExternalPropertyEnabledForMono(e.PropertyName);
+            HandleStartupAndExternalPropertyChangedForMono(e.PropertyName);
+         }
       }
 
       private void HandleStartupAndExternalPropertyEnabledForMono(string propertyName)
@@ -227,6 +245,22 @@ namespace HFM.Forms
             case "UseDefaultConfigFile":
                txtDefaultConfigFile.Enabled = _startupAndExternalModel.UseDefaultConfigFile;
                btnBrowseConfigFile.Enabled = _startupAndExternalModel.UseDefaultConfigFile;
+               break;
+         }
+      }
+
+      private void HandleStartupAndExternalPropertyChangedForMono(string propertyName)
+      {
+         switch (propertyName)
+         {
+            case "DefaultConfigFile":
+               txtDefaultConfigFile.Text = _startupAndExternalModel.DefaultConfigFile;
+               break;
+            case "LogFileViewer":
+               txtLogFileViewer.Text = _startupAndExternalModel.LogFileViewer;
+               break;
+            case "FileExplorer":
+               txtFileExplorer.Text = _startupAndExternalModel.FileExplorer;
                break;
          }
       }
@@ -273,6 +307,33 @@ namespace HFM.Forms
             case "ProxyAuthEnabled":
                txtProxyUser.Enabled = _webSettingsModel.ProxyAuthEnabled;
                txtProxyPass.Enabled = _webSettingsModel.ProxyAuthEnabled;
+               break;
+         }
+      }
+
+      private void WebVisualStylesPropertyChanged(object sender, PropertyChangedEventArgs e)
+      {
+         if (_isRunningOnMono) HandleWebVisualStylesPropertyChangedForMono(e.PropertyName);
+      }
+
+      private void HandleWebVisualStylesPropertyChangedForMono(string propertyName)
+      {
+         switch (propertyName)
+         {
+            case "WebOverview":
+               txtOverview.Text = _webVisualStylesModel.WebOverview;
+               break;
+            case "WebMobileOverview":
+               txtMobileOverview.Text = _webVisualStylesModel.WebMobileOverview;
+               break;
+            case "WebSummary":
+               txtSummary.Text = _webVisualStylesModel.WebSummary;
+               break;
+            case "WebMobileSummary":
+               txtMobileSummary.Text = _webVisualStylesModel.WebMobileSummary;
+               break;
+            case "WebInstance":
+               txtInstance.Text = _webVisualStylesModel.WebInstance;
                break;
          }
       }
@@ -382,7 +443,7 @@ namespace HFM.Forms
       
          #region Startup
          /*** Auto-Run Is Not DataBound ***/
-         if (PlatformOps.IsRunningOnMono() == false)
+         if (_isRunningOnMono == false)
          {
             chkAutoRun.Checked = RegistryOps.IsHfmAutoRunSet();
          }
@@ -669,7 +730,7 @@ namespace HFM.Forms
 
       private void ShowCssPreview()
       {
-         if (PlatformOps.IsRunningOnMono()) return;
+         if (_isRunningOnMono) return;
          
          string sStylesheet = Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.CssFolderName), _webVisualStylesModel.CssFile);
          var sb = new StringBuilder();
@@ -724,7 +785,7 @@ namespace HFM.Forms
             Match mMatchFtpWithUserPassUrl = StringOps.MatchFtpWithUserPassUrl(txtWebSiteBase.Text);
             if (mMatchFtpWithUserPassUrl.Success == false)
             {
-               CheckFileConnectionDelegate del = CheckFileConnection;
+               Action<string> del = CheckFileConnection;
                del.BeginInvoke(txtWebSiteBase.Text, CheckFileConnectionCallback, del);
             }
             else
@@ -745,8 +806,6 @@ namespace HFM.Forms
          }
       }
       
-      private delegate void CheckFileConnectionDelegate(string directory);
-      
       public void CheckFileConnection(string directory)
       {
          if (Directory.Exists(directory) == false)
@@ -760,7 +819,7 @@ namespace HFM.Forms
       {
          try
          {
-            var del = (CheckFileConnectionDelegate)result.AsyncState;
+            var del = (Action<string>)result.AsyncState;
             del.EndInvoke(result);
             ShowConnectionSucceededMessage();
          }
@@ -879,25 +938,24 @@ namespace HFM.Forms
 
       private void GetAutoRun()
       {
-         if (PlatformOps.IsRunningOnMono() == false)
+         if (_isRunningOnMono) return;
+         
+         try
          {
-            try
+            if (chkAutoRun.Checked)
             {
-               if (chkAutoRun.Checked)
-               {
-                  RegistryOps.SetHfmAutoRun(Application.ExecutablePath);
-               }
-               else
-               {
-                  RegistryOps.SetHfmAutoRun(String.Empty);
-               }
+               RegistryOps.SetHfmAutoRun(Application.ExecutablePath);
             }
-            catch (InvalidOperationException ex)
+            else
             {
-               HfmTrace.WriteToHfmConsole(ex);
-               MessageBox.Show(this, "Failed to save HFM.NET Auto Run Registry Value.  Please see the Messages Windows for detailed error information.",
-                  Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+               RegistryOps.SetHfmAutoRun(String.Empty);
             }
+         }
+         catch (InvalidOperationException ex)
+         {
+            HfmTrace.WriteToHfmConsole(ex);
+            MessageBox.Show(this, "Failed to save HFM.NET Auto Run Registry Value.  Please see the Messages Windows for detailed error information.",
+               Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
          }
       }
 

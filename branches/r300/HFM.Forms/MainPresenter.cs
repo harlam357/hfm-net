@@ -817,7 +817,7 @@ namespace HFM.Forms
          {
             string message = String.Format(CultureInfo.CurrentCulture, "The FAHlog.txt file for '{0}' does not exist.",
                                            _instanceCollection.SelectedClientInstance.Settings.InstanceName);
-            _messageBoxView.ShowInformation(_view, message, PlatformOps.ApplicationNameAndVersion);
+            _messageBoxView.ShowInformation(_view, message, _view.Text);
          }
       }
 
@@ -1019,6 +1019,8 @@ namespace HFM.Forms
 
       public void ToolsHistoryClick()
       {
+         Debug.Assert(_view.WorkUnitHistoryMenuEnabled);
+      
          if (_historyPresenter == null)
          {
             _historyPresenter = InstanceProvider.GetInstance<HistoryPresenter>();
@@ -1135,7 +1137,7 @@ namespace HFM.Forms
       {
          if (message != null)
          {
-            _messageBoxView.ShowError(_view, message, PlatformOps.ApplicationNameAndVersion);
+            _messageBoxView.ShowError(_view, message, _view.Text);
          }
       }
       

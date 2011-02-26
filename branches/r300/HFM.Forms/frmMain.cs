@@ -65,6 +65,8 @@ namespace HFM.Forms
 
       string StatusLabelLeftText { get; set; }
 
+      bool WorkUnitHistoryMenuEnabled { get; set; }
+
       ILogFileViewer LogFileViewer { get; }
 
       DataGridView DataGridView { get; }
@@ -119,6 +121,12 @@ namespace HFM.Forms
       {
          get { return statusLabelLeft.Text; }
          set { statusLabelLeft.Text = value; }
+      }
+      
+      public bool WorkUnitHistoryMenuEnabled
+      {
+         get { return mnuToolsHistory.Enabled; }
+         set { mnuToolsHistory.Enabled = value; }
       }
 
       public ILogFileViewer LogFileViewer { get { return txtLogFile; } }
@@ -209,6 +217,11 @@ namespace HFM.Forms
          if (PlatformOps.IsRunningOnMono())
          {
             dataGridView1.RowEnter += delegate
+            {
+               _instanceCollection.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
+            };
+            // Use RowLeave to clear data grid when selection New file under Mono
+            dataGridView1.RowLeave += delegate
             {
                _instanceCollection.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
             };

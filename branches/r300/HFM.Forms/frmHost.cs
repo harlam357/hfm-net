@@ -61,6 +61,8 @@ namespace HFM.Forms
       bool HttpGroupVisible { set; }
 
       bool FtpGroupVisible { set; }
+
+      string LocalPathText { set; }
       
       bool ClientIsOnVirtualMachineVisible { set; }
       
@@ -252,6 +254,11 @@ namespace HFM.Forms
             txtFTPUser.Enabled = value;
             txtFTPPass.Enabled = value;
          }
+      }
+      
+      public string LocalPathText
+      {
+         set { txtLocalPath.Text = value; }
       }
       
       public bool ClientIsOnVirtualMachineVisible
