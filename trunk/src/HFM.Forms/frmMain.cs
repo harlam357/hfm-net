@@ -143,23 +143,15 @@ namespace HFM.Forms
       
       #region Fields
 
-      private static readonly string FormTitle = String.Format("HFM.NET v{0} - Beta", PlatformOps.ApplicationVersion);
-
       private MainPresenter _presenter;
 
       private NotifyIcon _notifyIcon;
 
       private readonly BindingSource _displayBindingSource;
       
-      #region Service Interfaces
-      
       private readonly IPreferenceSet _prefs;
-
       private readonly IXmlStatsDataContainer _statsData;
-
       private readonly IInstanceCollection _instanceCollection;
-
-      #endregion
 
       #endregion
 
@@ -179,7 +171,11 @@ namespace HFM.Forms
          InitializeComponent();
 
          // Set Main Form Text
-         base.Text = FormTitle;
+#if BETA
+         base.Text = String.Format("HFM.NET v{0} - Beta", PlatformOps.ApplicationVersion);
+#else
+         base.Text = String.Format("HFM.NET v{0}", PlatformOps.ApplicationVersion);
+#endif
       }
       
       #endregion

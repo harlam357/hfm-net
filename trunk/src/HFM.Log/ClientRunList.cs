@@ -342,35 +342,33 @@ namespace HFM.Log
                
                #region Client Status
 
-               ILogLine line = logLines[j];
-
-               if (line.LineType.Equals(LogLineType.WorkUnitProcessing) ||
-                   line.LineType.Equals(LogLineType.WorkUnitWorking) ||
-                   line.LineType.Equals(LogLineType.WorkUnitStart) ||
-                   line.LineType.Equals(LogLineType.WorkUnitFrame) ||
-                   line.LineType.Equals(LogLineType.WorkUnitResumeFromBattery))
+               if (logLines[j].LineType.Equals(LogLineType.WorkUnitProcessing) ||
+                   logLines[j].LineType.Equals(LogLineType.WorkUnitWorking) ||
+                   logLines[j].LineType.Equals(LogLineType.WorkUnitStart) ||
+                   logLines[j].LineType.Equals(LogLineType.WorkUnitFrame) ||
+                   logLines[j].LineType.Equals(LogLineType.WorkUnitResumeFromBattery))
                {
                   this[i].Status = ClientStatus.RunningNoFrameTimes;
                }
-               else if (line.LineType.Equals(LogLineType.WorkUnitPaused) ||
-                        line.LineType.Equals(LogLineType.WorkUnitPausedForBattery))
+               else if (logLines[j].LineType.Equals(LogLineType.WorkUnitPaused) ||
+                        logLines[j].LineType.Equals(LogLineType.WorkUnitPausedForBattery))
                {
                   this[i].Status = ClientStatus.Paused;
                }
-               else if (line.LineType.Equals(LogLineType.ClientSendWorkToServer))
+               else if (logLines[j].LineType.Equals(LogLineType.ClientSendWorkToServer))
                {
                   this[i].Status = ClientStatus.SendingWorkPacket;
                }
-               else if (line.LineType.Equals(LogLineType.ClientAttemptGetWorkPacket))
+               else if (logLines[j].LineType.Equals(LogLineType.ClientAttemptGetWorkPacket))
                {
                   this[i].Status = ClientStatus.GettingWorkPacket;
                }
-               else if (line.LineType.Equals(LogLineType.ClientEuePauseState))
+               else if (logLines[j].LineType.Equals(LogLineType.ClientEuePauseState))
                {
                   this[i].Status = ClientStatus.EuePause;
                }
-               else if (line.LineType.Equals(LogLineType.ClientShutdown) ||
-                        line.LineType.Equals(LogLineType.ClientCoreCommunicationsErrorShutdown))
+               else if (logLines[j].LineType.Equals(LogLineType.ClientShutdown) ||
+                        logLines[j].LineType.Equals(LogLineType.ClientCoreCommunicationsErrorShutdown))
                {
                   this[i].Status = ClientStatus.Stopped;
                }
