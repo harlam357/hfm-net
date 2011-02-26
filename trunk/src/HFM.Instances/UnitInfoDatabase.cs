@@ -71,15 +71,48 @@ namespace HFM.Instances
                                                                         "[DownloadDateTime]," +
                                                                         "[CompletionDateTime]) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
+      /// <summary>
+      /// Get or Set the Database File Path
+      /// </summary>
       public string DatabaseFilePath { get; set; }
+
+      /// <summary>
+      /// Flag that notes if the Database is safe to call
+      /// </summary>
+      public bool ConnectionOk { get; private set; }
+      
       private readonly IProteinCollection _proteinCollection;
    
       public UnitInfoDatabase(IProteinCollection proteinCollection)
       {
          _proteinCollection = proteinCollection;
       }
+
+      /// <summary>
+      /// Check the Database Connection
+      /// </summary>
+      public bool CheckConnection()
+      {
+         using (var con = new SQLiteConnection(@"Data Source=" + DatabaseFilePath))
+         {
+            con.Open();
+            if (!TableExists(con, WuHistoryTableName))
+            {
+               CreateTable(con, WuHistoryTableName);
+            }
+            var parameters = new QueryParameters();
+            parameters.Fields.Add(new QueryField
+                                     {
+                                        Name = QueryFieldName.ID,
+                                        Type = QueryFieldType.Equal,
+                                        Value = 0
+                                     });
+            ExecuteQueryUnitData(con, parameters);
+            return (ConnectionOk = true);
+         }
+      }
       
-      public bool TableExists(string tableName)
+      internal bool TableExists()
       {
          using (var con = new SQLiteConnection(@"Data Source=" + DatabaseFilePath))
          {
@@ -88,7 +121,7 @@ namespace HFM.Instances
          }
       }
       
-      public void CreateTable(string tableName)
+      internal void CreateTable()
       {
          using (var con = new SQLiteConnection(@"Data Source=" + DatabaseFilePath))
          {
@@ -130,14 +163,7 @@ namespace HFM.Instances
             // ensure this unit is not written twice
             if (UnitInfoExists(con, unitInfoLogic) == false)
             {
-               try
-               {
-                  WriteUnitInfoToDatabase(con, unitInfoLogic);
-               }
-               catch (SQLiteException ex)
-               {
-                  HfmTrace.WriteToHfmConsole(ex);
-               }
+               WriteUnitInfoToDatabase(con, unitInfoLogic);
             }
          }
       }

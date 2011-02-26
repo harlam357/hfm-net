@@ -219,10 +219,10 @@ namespace HFM.Instances.Tests
          }
 
          var database = new UnitInfoDatabase(_proteinCollection) { DatabaseFilePath = TestFile };
-         database.CreateTable(UnitInfoDatabase.WuHistoryTableName);
-         Assert.AreEqual(true, database.TableExists(UnitInfoDatabase.WuHistoryTableName));
+         database.CreateTable();
+         Assert.AreEqual(true, database.TableExists());
          database.DeleteAllUnitInfoData();
-         Assert.AreEqual(false, database.TableExists(UnitInfoDatabase.WuHistoryTableName));
+         Assert.AreEqual(false, database.TableExists());
       }
       
       [Test]

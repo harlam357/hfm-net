@@ -269,10 +269,10 @@ namespace HFM.Framework
       {
          lock (LockTraceWrite)
          {
-            string traceString = FormatTraceString(level, String.Format("{0} Threw Exception: {1}", GParentFunctionName, ex));
+            string traceString = FormatTraceString(level, String.Format("{0} Caught Exception: {1}", GParentFunctionName, ex));
             Trace.WriteLine(traceString);
 
-            string consoleString = FormatTraceString(level, String.Format("{0} Threw Exception: {1}", GParentFunctionName, ex.Message));
+            string consoleString = FormatTraceString(level, String.Format("{0} Caught Exception: {1}", GParentFunctionName, ex.Message));
             OnTextMessage(new TextMessageEventArgs(consoleString));
          }
       }
@@ -301,10 +301,10 @@ namespace HFM.Framework
       {
          lock (LockTraceWrite)
          {
-            string traceString = FormatTraceString(level, String.Format("{0} ({1}) Threw Exception: {2}", GParentFunctionName, subMessage, ex));
+            string traceString = FormatTraceString(level, String.Format("{0} ({1}) Caught Exception: {2}", GParentFunctionName, subMessage, ex));
             Trace.WriteLine(traceString);
 
-            string consoleString = FormatTraceString(level, String.Format("{0} ({1}) Threw Exception: {2}", GParentFunctionName, subMessage, ex.Message));
+            string consoleString = FormatTraceString(level, String.Format("{0} ({1}) Caught Exception: {2}", GParentFunctionName, subMessage, ex.Message));
             OnTextMessage(new TextMessageEventArgs(consoleString));
          }
       }

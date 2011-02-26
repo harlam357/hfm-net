@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Application Entry Point
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -64,22 +64,30 @@ namespace HFM
             return;
          }
 
-         #region Primary Initialization
-
          // Issue 180 - Restore the already running instance to the screen.
-         try
+         using (var singleInstance = new SingleInstanceHelper())
          {
-            if (!SingleInstanceHelper.Start())
+            try
             {
-               SingleInstanceHelper.SignalFirstInstance(args);
+               if (!singleInstance.Start())
+               {
+                  SingleInstanceHelper.SignalFirstInstance(args);
+                  return;
+               }
+            }
+            catch (Exception ex)
+            {
+               ShowStartupError(ex, "Failed to signal first instance of HFM.NET.  Please try starting HFM.NET again before reporting this issue.");
                return;
             }
+
+            Initialize(arguments);
          }
-         catch (Exception ex)
-         {
-            ShowStartupError(ex, "Single Instance Helper failed to start.");
-            return;
-         }
+      }
+      
+      private static void Initialize(IEnumerable<Argument> arguments)
+      {
+         #region Primary Initialization
 
          DataAggregator.DataAggregator.ConfigureMaps();
 
@@ -128,15 +136,16 @@ namespace HFM
             HfmTrace.WriteToHfmConsole("Running on Mono...");
          }
 
+         bool connectionOk = false;
          try
          {
             var database = InstanceProvider.GetInstance<IUnitInfoDatabase>();
             database.DatabaseFilePath = Path.Combine(prefs.ApplicationDataFolderPath, Constants.SqLiteFilename);
+            connectionOk = database.CheckConnection();
          }
          catch (Exception ex)
          {
-            ShowStartupError(ex, "UnitInfo Database failed to initialize.");
-            return;
+            HfmTrace.WriteToHfmConsole(ex);
          }
          
          try
@@ -168,6 +177,7 @@ namespace HFM
          {
             frm = (frmMain)InstanceProvider.GetInstance<IMainView>();
             frm.Initialize(InstanceProvider.GetInstance<MainPresenter>(), proteinCollection);
+            frm.WorkUnitHistoryMenuEnabled = connectionOk;
          }
          catch (Exception ex)
          {
@@ -185,20 +195,13 @@ namespace HFM
             return;
          }
 
-         #endregion
-
          // Register the Unhandled Exception Dialog
          ExceptionDialog.RegisterForUnhandledExceptions(PlatformOps.ApplicationNameAndVersionWithRevision, 
             Environment.OSVersion.VersionString, HfmTrace.WriteToHfmConsole);
-         
-         try
-         {
-            Application.Run(frm);
-         }
-         finally
-         {
-            SingleInstanceHelper.Stop();
-         }
+
+         Application.Run(frm);
+
+         #endregion
       }
       
       private static bool SetupUserPreferences(IEnumerable<Argument> arguments, IPreferenceSet prefs)
