@@ -49,6 +49,8 @@ namespace HFM.Forms
       public const int LogFileNamesVisibleOffset = 70;
    
       #region Fields
+
+      private bool _isRunningOnMono;
       
       private IClientInstanceSettingsModel _settingsModel;
       /// <summary>
@@ -98,6 +100,8 @@ namespace HFM.Forms
          _messageBoxView = messageBoxView;
          _folderBrowserView = folderBrowserView;
          _validatingControls = _settingsView.FindValidatingControls();
+         
+         _isRunningOnMono = PlatformOps.IsRunningOnMono();
       }
       
       #endregion
@@ -115,6 +119,7 @@ namespace HFM.Forms
             SetViewHostType();
          }
          SetPropertyErrorState(e.PropertyName, true);
+         if (_isRunningOnMono) HandleSettingsModelPropertyChangedForMono(e.PropertyName);
       }
       
       private void SetViewInstanceType()
@@ -222,6 +227,16 @@ namespace HFM.Forms
                                                }
                                                return false;
                                             }).AsReadOnly();
+      }
+      
+      private void HandleSettingsModelPropertyChangedForMono(string propertyName)
+      {
+         switch (propertyName)
+         {
+            case "Path":
+               _settingsView.LocalPathText = _settingsModel.Path;
+               break;
+         }
       }
       
       public void LocalBrowseClicked()

@@ -108,7 +108,17 @@ namespace HFM.Instances
                   // Update benchmarks
                   UpdateBenchmarkData(parsedUnits[index].UnitInfoData, previousFramesComplete, parsedUnits[index].FramesComplete);
                   // Update history database
-                  _database.WriteUnitInfo(parsedUnits[index]);
+                  if (_database.ConnectionOk)
+                  {
+                     try
+                     {
+                        _database.WriteUnitInfo(parsedUnits[index]);
+                     }
+                     catch (Exception ex)
+                     {
+                        HfmTrace.WriteToHfmConsole(ex);
+                     }
+                  }
                }
             }
 

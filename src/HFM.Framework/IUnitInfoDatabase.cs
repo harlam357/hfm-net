@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Work Unit History Database Interface
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,11 +25,17 @@ namespace HFM.Framework
 {
    public interface IUnitInfoDatabase
    {
+      /// <summary>
+      /// Get or Set the Database File Path
+      /// </summary>
       string DatabaseFilePath { get; set; }
 
-      bool TableExists(string tableName);
+      /// <summary>
+      /// Flag that notes if the Database is safe to call
+      /// </summary>
+      bool ConnectionOk { get; }
 
-      void CreateTable(string tableName);
+      bool CheckConnection();
 
       void DeleteAllUnitInfoData();
       
