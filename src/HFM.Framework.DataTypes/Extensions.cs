@@ -18,12 +18,15 @@
  */
 
 using System;
+using System.Drawing;
 using System.Globalization;
 
 namespace HFM.Framework.DataTypes
 {
    public static class Extensions
    {
+      #region DateTime/TimeSpan
+
       public static bool IsKnown(this DateTime dateTime)
       {
          return !IsUnknown(dateTime);
@@ -39,9 +42,14 @@ namespace HFM.Framework.DataTypes
          return timeSpan.Equals(TimeSpan.Zero);
       }
 
+      #endregion
+
+      #region IProjectInfo
+
       /// <summary>
-      /// Returns true if Project (R/C/G) has not been identified
+      /// Is Project Unknown?
       /// </summary>
+      /// <returns>true if Project (R/C/G) has not been identified.</returns>
       public static bool ProjectIsUnknown(this IProjectInfo projectInfo)
       {
          if (projectInfo == null) return true;
@@ -53,7 +61,7 @@ namespace HFM.Framework.DataTypes
       }
 
       /// <summary>
-      /// Formatted Project (Run, Clone, Gen) Information
+      /// Formatted Project (R/C/G) information.
       /// </summary>
       public static string ProjectRunCloneGen(this IProjectInfo projectInfo)
       {
@@ -62,5 +70,107 @@ namespace HFM.Framework.DataTypes
          return String.Format(CultureInfo.InvariantCulture, "P{0} (R{1}, C{2}, G{3})", 
             projectInfo.ProjectID, projectInfo.ProjectRun, projectInfo.ProjectClone, projectInfo.ProjectGen);
       }
+
+      /// <summary>
+      /// Equals Project (R/C/G)
+      /// </summary>
+      /// <returns>true if Project (R/C/G) are equal.</returns>
+      public static bool EqualsProject(this IProjectInfo projectInfo1, IProjectInfo projectInfo2)
+      {
+         if (projectInfo1 == null || projectInfo2 == null) return false;
+
+         return (projectInfo1.ProjectID == projectInfo2.ProjectID &&
+                 projectInfo1.ProjectRun == projectInfo2.ProjectRun &&
+                 projectInfo1.ProjectClone == projectInfo2.ProjectClone &&
+                 projectInfo1.ProjectGen == projectInfo2.ProjectGen);
+      }
+
+      #endregion
+
+      #region ClientStatus
+
+      /// <summary>
+      /// Gets Status Color Pen Object
+      /// </summary>
+      public static Pen GetDrawingPen(this ClientStatus status)
+      {
+         return new Pen(GetStatusColor(status));
+      }
+
+      /// <summary>
+      /// Gets Status Color Brush Object
+      /// </summary>
+      public static SolidBrush GetDrawingBrush(this ClientStatus status)
+      {
+         return new SolidBrush(GetStatusColor(status));
+      }
+
+      /// <summary>
+      /// Gets Status Html Color String
+      /// </summary>
+      public static string GetHtmlColor(this ClientStatus status)
+      {
+         return ColorTranslator.ToHtml(GetStatusColor(status));
+      }
+
+      /// <summary>
+      /// Gets Status Html Font Color String
+      /// </summary>
+      public static string GetHtmlFontColor(this ClientStatus status)
+      {
+         switch (status)
+         {
+            case ClientStatus.Running:
+               return ColorTranslator.ToHtml(Color.White);
+            case ClientStatus.RunningAsync:
+               return ColorTranslator.ToHtml(Color.White);
+            case ClientStatus.RunningNoFrameTimes:
+               return ColorTranslator.ToHtml(Color.Black);
+            case ClientStatus.Stopped:
+            case ClientStatus.EuePause:
+            case ClientStatus.Hung:
+               return ColorTranslator.ToHtml(Color.White);
+            case ClientStatus.Paused:
+               return ColorTranslator.ToHtml(Color.Black);
+            case ClientStatus.SendingWorkPacket:
+            case ClientStatus.GettingWorkPacket:
+               return ColorTranslator.ToHtml(Color.White);
+            case ClientStatus.Offline:
+               return ColorTranslator.ToHtml(Color.Black);
+            default:
+               return ColorTranslator.ToHtml(Color.Black);
+         }
+      }
+
+      /// <summary>
+      /// Gets Status Color Object
+      /// </summary>
+      private static Color GetStatusColor(ClientStatus status)
+      {
+         switch (status)
+         {
+            case ClientStatus.Running:
+               return Color.Green;
+            case ClientStatus.RunningAsync:
+               return Color.Blue;
+            case ClientStatus.RunningNoFrameTimes:
+               return Color.Yellow;
+            case ClientStatus.Stopped:
+            case ClientStatus.EuePause:
+            case ClientStatus.Hung:
+               return Color.DarkRed;
+            case ClientStatus.Paused:
+               return Color.Orange;
+            case ClientStatus.SendingWorkPacket:
+            case ClientStatus.GettingWorkPacket:
+               return Color.Purple;
+            case ClientStatus.Offline:
+               return Color.Gray;
+            default:
+               return Color.Gray;
+         }
+      }
+
+      #endregion
    }
 }

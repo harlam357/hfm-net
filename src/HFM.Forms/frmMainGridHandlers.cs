@@ -265,8 +265,8 @@ namespace HFM.Forms
 
                   // Draw the inset highlight box.
                   var status = (ClientStatus)e.Value;
-                  e.Graphics.DrawRectangle(PlatformOps.GetStatusPen(status), newRect);
-                  e.Graphics.FillRectangle(PlatformOps.GetStatusBrush(status), newRect);
+                  e.Graphics.DrawRectangle(status.GetDrawingPen(), newRect);
+                  e.Graphics.FillRectangle(status.GetDrawingBrush(), newRect);
                }
                else if (paint.Equals(PaintCell.Time))
                {
