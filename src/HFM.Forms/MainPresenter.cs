@@ -395,8 +395,7 @@ namespace HFM.Forms
             // Different Client... Load LogLines
             if (_view.LogFileViewer.LogOwnedByInstanceName.Equals(instance.Name) == false)
             {
-               _view.LogFileViewer.SetLogLines(logLines, instance.Name);
-               ApplyColorLogFileSetting();
+               _view.LogFileViewer.SetLogLines(logLines, instance.Name, _prefs.GetPreference<bool>(Preference.ColorLogFile));
 
                //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("Set Log Lines (Changed Client - {0})", instance.InstanceName));
             }
@@ -420,8 +419,7 @@ namespace HFM.Forms
                // Otherwise, the log has not changed, don't update and perform the log "flicker".
                if (_view.LogFileViewer.Lines[_view.LogFileViewer.Lines.Length - 1].Equals(lastLogLine) == false)
                {
-                  _view.LogFileViewer.SetLogLines(logLines, instance.Name);
-                  ApplyColorLogFileSetting();
+                  _view.LogFileViewer.SetLogLines(logLines, instance.Name, _prefs.GetPreference<bool>(Preference.ColorLogFile));
 
                   //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Set Log Lines (log lines different)");
                }
@@ -429,8 +427,7 @@ namespace HFM.Forms
             // Nothing in the Textbox... Load LogLines
             else
             {
-               _view.LogFileViewer.SetLogLines(logLines, instance.Name);
-               ApplyColorLogFileSetting();
+               _view.LogFileViewer.SetLogLines(logLines, instance.Name, _prefs.GetPreference<bool>(Preference.ColorLogFile));
             }
          }
          else
@@ -1123,14 +1120,7 @@ namespace HFM.Forms
 
       public void ApplyColorLogFileSetting()
       {
-         if (_prefs.GetPreference<bool>(Preference.ColorLogFile))
-         {
-            _view.LogFileViewer.HighlightLines();
-         }
-         else
-         {
-            _view.LogFileViewer.RemoveHighlight();
-         }
+         _view.LogFileViewer.HighlightLines(_prefs.GetPreference<bool>(Preference.ColorLogFile));
       }
 
       private void HandleProcessStartResult(string message)

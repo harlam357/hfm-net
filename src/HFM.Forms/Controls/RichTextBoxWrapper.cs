@@ -18,9 +18,10 @@
  */
 
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
 
 using HFM.Framework;
@@ -34,17 +35,15 @@ namespace HFM.Forms.Controls
    
       string LogOwnedByInstanceName { get; }
       
-      void SetLogLines(IEnumerable<LogLine> lines, string logOwnedByInstance);
+      void SetLogLines(IEnumerable<LogLine> lines, string logOwnedByInstance, bool highlightLines);
+
+      void HighlightLines(bool value);
 
       string[] Lines { get; }
       
       void SetNoLogLines();
       
       void ScrollToBottom();
-      
-      void HighlightLines();
-      
-      void RemoveHighlight();
    }
 
    public partial class RichTextBoxWrapper : RichTextBox, ILogFileViewer
@@ -63,7 +62,7 @@ namespace HFM.Forms.Controls
          InitializeComponent();
       }
 
-      public void SetLogLines(IEnumerable<LogLine> lines, string logOwnedByInstance)
+      public void SetLogLines(IEnumerable<LogLine> lines, string logOwnedByInstance, bool highlightLines)
       {
          _logOwnedByInstanceName = logOwnedByInstance;
 
@@ -77,74 +76,66 @@ namespace HFM.Forms.Controls
 #endif
 
          _logLines = lines.ToList();
-         Lines = (from ILogLine line in lines select line.LineRaw).ToArray();
+         HighlightLines(highlightLines);
+      }
+
+      public void HighlightLines(bool value)
+      {
+         if (value)
+         {
+            Rtf = BuildRtfString();
+         }
+         else
+         {
+            Rtf = null;
+            Lines = (from ILogLine line in _logLines select line.LineRaw).ToArray();
+         }
+      }
+
+      private string BuildRtfString()
+      {
+         // cf1 - Dark Green
+         // cf2 - Dark Red
+         // cf3 - Dark Orange
+         // cf4 - Blue
+         // cf5 - Slate Gray
+
+         var sb = new StringBuilder();
+         sb.Append(@"{\rtf1\ansi\deff0{\colortbl;\red0\green150\blue0;\red139\green0\blue0;\red255\green140\blue0;\red0\green0\blue255;\red120\green120\blue120;}");
+         foreach(var line in _logLines)
+         {
+            sb.AppendFormat(CultureInfo.InvariantCulture, @"{0}{1}\line", GetLineColor(line), line);
+         }
+         return sb.ToString();
+      }
+
+      private static string GetLineColor(ILogLine line)
+      {
+         switch (line.LineType)
+         {
+            case LogLineType.WorkUnitFrame:
+               return @"\cf1";
+            case LogLineType.ClientShutdown:
+            case LogLineType.ClientCoreCommunicationsError:
+            case LogLineType.ClientCoreCommunicationsErrorShutdown:
+            case LogLineType.ClientEuePauseState:
+            case LogLineType.WorkUnitCoreShutdown:
+               return @"\cf2";
+            case LogLineType.Error:
+               return @"\cf3";
+            case LogLineType.Unknown:
+               return @"\cf5";
+            default:
+               return @"\cf4";
+         }
       }
       
       public void SetNoLogLines()
       {
          _logLines = null;
-      
+
+         Rtf = null;
          Text = "No Log Available";
-         RemoveHighlight();
-      }
-
-      public void HighlightLines()
-      {
-         if (_logLines == null) return;
-         
-         SuspendLayout();
-         
-         RemoveHighlight();
-         
-         ForeColor = Color.SlateGray;
-
-         for (int i = 0; i < _logLines.Count; i++)
-         {
-            ILogLine line = _logLines[i];
-            if (line.LineType.Equals(LogLineType.WorkUnitFrame))
-            {
-               DoLineHighlight(i, Color.Green);
-            }
-            else if (line.LineType.Equals(LogLineType.ClientShutdown) ||
-                     line.LineType.Equals(LogLineType.ClientCoreCommunicationsError) ||
-                     line.LineType.Equals(LogLineType.ClientCoreCommunicationsErrorShutdown) ||
-                     line.LineType.Equals(LogLineType.ClientEuePauseState) ||
-                     line.LineType.Equals(LogLineType.WorkUnitCoreShutdown))
-            {
-               DoLineHighlight(i, Color.DarkRed);
-            }
-            else if (line.LineType.Equals(LogLineType.Error))
-            {
-               DoLineHighlight(i, Color.DarkOrange);
-            }
-            else if (line.LineType.Equals(LogLineType.Unknown) == false)
-            {
-               DoLineHighlight(i, Color.Blue);
-            }
-         }
-         
-         ResumeLayout(false);
-      }
-      
-      public void RemoveHighlight()
-      {
-         if (ForeColor.Equals(Color.Black) == false)
-         {
-            ForeColor = Color.Black;
-
-            SelectAll();
-            SelectionColor = ForeColor;
-         }
-      }
-
-      private void DoLineHighlight(int lineIndex, Color color)
-      {
-         int firstChar = GetFirstCharIndexFromLine(lineIndex);
-         int length = Lines[lineIndex].Length;
-         Select(firstChar, length);
-
-         SelectionColor = color;
-         //SelectionBackColor = color;
       }
 
       #region Native Scroll Messages (don't call under Mono)
