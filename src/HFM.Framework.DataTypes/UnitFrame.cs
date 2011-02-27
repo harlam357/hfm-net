@@ -73,12 +73,7 @@ namespace HFM.Framework.DataTypes
       public override bool Equals(object obj)
       {
          var frame = obj as IUnitFrame;
-         if (frame != null)
-         {
-            return Equals(frame);
-         }
-
-         return base.Equals(obj);
+         return frame != null ? Equals(frame) : base.Equals(obj);
       }
 
       ///<summary>
@@ -87,22 +82,24 @@ namespace HFM.Framework.DataTypes
       ///<returns>
       ///true if the specified <see cref="T:HFM.Framework.DataTypes.IUnitFrame"></see> is equal to the current <see cref="T:HFM.Framework.DataTypes.IUnitFrame"></see>; otherwise, false.
       ///</returns>
-      ///<param name="frame">The <see cref="T:HFM.Framework.DataTypes.IUnitFrame"></see> to compare with the current <see cref="T:HFM.Framework.DataTypes.IUnitFrame"></see>.</param>
-      public bool Equals(IUnitFrame frame)
+      ///<param name="other">The <see cref="T:HFM.Framework.DataTypes.IUnitFrame"></see> to compare with the current <see cref="T:HFM.Framework.DataTypes.IUnitFrame"></see>.</param>
+      public bool Equals(IUnitFrame other)
       {
-         if (frame == null)
-         {
-            return false;
-         }
+         if (other == null) return false;
 
-         if (FrameID.Equals(frame.FrameID) &&
-             TimeOfFrame.Equals(frame.TimeOfFrame) &&
-             FrameDuration.Equals(frame.FrameDuration))
-         {
-            return true;
-         }
+         return FrameID.Equals(other.FrameID) &&
+                TimeOfFrame.Equals(other.TimeOfFrame) &&
+                FrameDuration.Equals(other.FrameDuration);
+      }
 
-         return false;
+      public static bool operator == (UnitFrame uf1, UnitFrame uf2)
+      {
+         return ReferenceEquals(uf1, null) ? ReferenceEquals(uf2, null) : uf1.Equals(uf2);
+      }
+
+      public static bool operator != (UnitFrame uf1, UnitFrame uf2)
+      {
+         return !(uf1 == uf2);
       }
 
       ///<summary>
@@ -139,12 +136,12 @@ namespace HFM.Framework.DataTypes
 
       public static bool operator < (UnitFrame uf1, UnitFrame uf2)
       {
-         return (uf1.CompareTo(uf2) < 0);
+         return uf1 == null ? uf2 != null : uf1.CompareTo(uf2) < 0;
       }
 
       public static bool operator > (UnitFrame uf1, UnitFrame uf2)
       {
-         return (uf1.CompareTo(uf2) > 0);
+         return uf2 == null ? uf1 != null : uf2.CompareTo(uf1) < 0;
       }
    }
 }
