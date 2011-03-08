@@ -74,7 +74,7 @@ namespace HFM.Instances
          _unitInfo.UnitRetrievalTime = _displayInstance.LastRetrievalTime;
 
          CurrentProtein = protein;
-         _unitInfo.TypeOfClient = Protein.GetClientTypeFromCore(CurrentProtein.Core);
+         _unitInfo.TypeOfClient = UnitInfo.DetermineClientType(CurrentProtein.Core, _unitInfo.CoreID);
       }
 
       #endregion
