@@ -390,5 +390,99 @@ namespace HFM.Framework.DataTypes
       }
       
       #endregion
+
+      public static ClientType DetermineClientType(string coreName, string coreId)
+      {
+         ClientType type = GetClientTypeFromCore(coreName);
+         if (type.Equals(ClientType.Unknown))
+         {
+            type = GetClientTypeFromCoreId(coreId);
+         }
+         return type;
+      }
+
+      /// <summary>
+      /// Determine the Client Type based on the FAH Core Name
+      /// </summary>
+      /// <param name="coreName">FAH Core Name (from psummary)</param>
+      public static ClientType GetClientTypeFromCore(string coreName)
+      {
+         // make this method more forgiving - rwh 9/6/10
+         if (String.IsNullOrEmpty(coreName))
+         {
+            return ClientType.Unknown;
+         }
+
+         switch (coreName.ToUpperInvariant())
+         {
+            case "GROMACS":
+            case "DGROMACS":
+            case "GBGROMACS":
+            case "AMBER":
+            case "GROMACS33":
+            case "GROST":
+            case "GROSIMT":
+            case "DGROMACSB":
+            case "DGROMACSC":
+            case "GRO-A4":
+            case "PROTOMOL":
+               return ClientType.Standard;
+            case "GRO-SMP":
+            case "GROCVS":
+            case "GRO-A3":
+            case "GRO-A5":
+               return ClientType.SMP;
+            case "GROGPU2":
+            case "GROGPU2-MT":
+            case "OPENMMGPU":
+            case "ATI-DEV":
+            case "NVIDIA-DEV":
+               return ClientType.GPU;
+            default:
+               return ClientType.Unknown;
+         }
+      }
+
+      /// <summary>
+      /// Determine the Client Type based on the FAH Core ID
+      /// </summary>
+      /// <param name="coreId">FAH Core ID</param>
+      private static ClientType GetClientTypeFromCoreId(string coreId)
+      {
+         // make this method more forgiving - rwh 9/6/10
+         if (String.IsNullOrEmpty(coreId))
+         {
+            return ClientType.Unknown;
+         }
+
+         switch (coreId.ToUpperInvariant())
+         {
+            case "78": // Gromacs
+            case "79": // Double Gromacs
+            case "7A": // GB Gromacs
+            case "7B": // Double Gromacs B
+            case "7C": // Double Gromacs C
+            case "80": // Gromacs SREM
+            case "81": // Gromacs SIMT
+            case "82": // Amber
+            case "A0": // Gromacs 33
+            case "B4": // ProtoMol
+               return ClientType.Standard;
+            case "A1": // Gromacs SMP
+            case "A2": // Gromacs SMP
+            case "A3": // Gromacs SMP2
+            case "A5": // Gromacs SMP2
+               return ClientType.SMP;
+            case "11": // GPU2 - GROGPU2
+            case "12": // GPU2 - ATI-DEV
+            case "13": // GPU2 - NVIDIA-DEV
+            case "14": // GPU2 - GROGPU2-MT
+            case "15": // GPU3 - OPENMMGPU - NVIDIA
+            case "16": // GPU3 - OPENMMGPU - ATI
+               return ClientType.GPU;
+            default:
+               return ClientType.Unknown;
+         }
+      }
    }
 }
