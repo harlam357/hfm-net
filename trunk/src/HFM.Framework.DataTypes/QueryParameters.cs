@@ -27,7 +27,7 @@ using ProtoBuf;
 namespace HFM.Framework.DataTypes
 {
    [ProtoContract]
-   public class QueryParameters
+   public class QueryParameters : IComparable<QueryParameters>
    {
       public const string SelectAll = "*** SELECT ALL ***";
 
@@ -38,12 +38,7 @@ namespace HFM.Framework.DataTypes
 
       public QueryParameters DeepCopy()
       {
-         var parameters = new QueryParameters { Name = Name };
-         foreach (var field in Fields)
-         {
-            parameters.Fields.Add(field.DeepCopy());
-         }
-         return parameters;
+         return Serializer.DeepClone(this);
       }
 
       [ProtoMember(1)]
@@ -55,6 +50,54 @@ namespace HFM.Framework.DataTypes
       {
          get { return _fields; }
       }
+
+      #region IComparable<QueryParameters> Members
+
+      public int CompareTo(QueryParameters other)
+      {
+         // other null, this is greater
+         if (other == null)
+         {
+            return 1;
+         }
+
+         // other not null, check this Name
+         if (Name == null)
+         {
+            // if null, check other.Name
+            if (other.Name == null)
+            {
+               // if other.Name is null, equal
+               return 0;
+            }
+
+            // other.Name NOT null, this is less
+            return -1;
+         }
+
+         if (Name == SelectAll)
+         {
+            if (other.Name == SelectAll)
+            {
+               // both SelectAll, equal
+               return 0;
+            }
+
+            // Name is SelectAll, this is less
+            return -1;
+         }
+
+         if (other.Name == SelectAll)
+         {
+            // other.Name is SelectAll, this is greater
+            return 1;
+         }
+
+         // finally, just compare
+         return Name.CompareTo(other.Name);
+      }
+
+      #endregion
    }
 
    [ProtoContract]
@@ -64,14 +107,6 @@ namespace HFM.Framework.DataTypes
       {
          Name = QueryFieldName.ProjectID;
          Type = QueryFieldType.Equal;
-      }
-
-      public QueryField DeepCopy()
-      {
-         // Value is set and returned as an object but the underlying
-         // types are either value or immutable (string), so we're ok
-         // here with just an assignment.
-         return new QueryField { Name = Name, Type = Type, Value = Value };
       }
 
       [ProtoMember(1)]
