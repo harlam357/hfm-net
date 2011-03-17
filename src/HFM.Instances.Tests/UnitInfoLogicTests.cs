@@ -31,16 +31,14 @@ namespace HFM.Instances.Tests
    [TestFixture]
    public class UnitInfoLogicTests
    {
-      private MockRepository _mocks;
       private IProteinBenchmarkContainer _benchmarkContainer;
       private IDisplayInstance _displayInstance;
 
       [SetUp]
       public void Init()
       {
-         _mocks = new MockRepository();
-         _benchmarkContainer = _mocks.DynamicMock<IProteinBenchmarkContainer>();
-         _displayInstance = _mocks.Stub<IDisplayInstance>();
+         _benchmarkContainer = MockRepository.GenerateStub<IProteinBenchmarkContainer>();
+         _displayInstance = MockRepository.GenerateStub<IDisplayInstance>();
       }
       
       #region DownloadTime
@@ -406,18 +404,14 @@ namespace HFM.Instances.Tests
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:04:00", 1));
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:09:00", 2));
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:15:00", 3));
-         var settings = CreateClientInstanceSettings(false, 0);
+         var settings = CreateClientInstanceSettings(true, 0);
          
          _displayInstance.LastRetrievalTime = unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(30));
-         _mocks.ReplayAll();
-         
          var unitInfoLogic = CreateUnitInfoLogic(protein, unitInfo, settings);
          
-         Assert.AreEqual(7800, unitInfoLogic.RawTimePerUnitDownload);
-         Assert.AreEqual(TimeSpan.FromSeconds(7800), unitInfoLogic.TimePerUnitDownload);
-         Assert.AreEqual(11.07692, unitInfoLogic.PPDPerUnitDownload);
-         
-         _mocks.VerifyAll();
+         Assert.AreEqual(600, unitInfoLogic.RawTimePerUnitDownload);
+         Assert.AreEqual(TimeSpan.FromSeconds(600), unitInfoLogic.TimePerUnitDownload);
+         Assert.AreEqual(144, unitInfoLogic.PPDPerUnitDownload);
       }
 
       [Test]
@@ -558,19 +552,12 @@ namespace HFM.Instances.Tests
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:24:00", 4));
          var settings = CreateClientInstanceSettings(false, 0);
 
-         var prefs = _mocks.DynamicMock<IPreferenceSet>();
-         /*****/
-         Expect.Call(prefs.GetPreference<PpdCalculationType>(Preference.PpdCalculation))
-            .Return(PpdCalculationType.LastFrame).Repeat.AtLeastOnce();
-         /*****/
-         _mocks.ReplayAll();
+         var prefs = MockRepository.GenerateStub<IPreferenceSet>();
+         prefs.Stub(x => x.GetPreference<PpdCalculationType>(Preference.PpdCalculation)).Return(PpdCalculationType.LastFrame);
          
          var unitInfoLogic = CreateUnitInfoLogic(prefs, null, unitInfo, settings);
-
          Assert.AreEqual(380, unitInfoLogic.RawTimePerSection);
          Assert.AreEqual(TimeSpan.FromSeconds(380), unitInfoLogic.TimePerFrame);
-         
-         _mocks.VerifyAll();
       }
 
       [Test]
@@ -584,19 +571,13 @@ namespace HFM.Instances.Tests
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:24:00", 4));
          var settings = CreateClientInstanceSettings(false, 0);
 
-         var prefs = _mocks.DynamicMock<IPreferenceSet>();
-         /*****/
-         Expect.Call(prefs.GetPreference<PpdCalculationType>(Preference.PpdCalculation))
-            .Return(PpdCalculationType.LastThreeFrames).Repeat.AtLeastOnce();
-         /*****/
-         _mocks.ReplayAll();
+         var prefs = MockRepository.GenerateStub<IPreferenceSet>();
+         prefs.Stub(x => x.GetPreference<PpdCalculationType>(Preference.PpdCalculation)).Return(PpdCalculationType.LastThreeFrames);
 
          var unitInfoLogic = CreateUnitInfoLogic(prefs, null, unitInfo, settings);
 
          Assert.AreEqual(376, unitInfoLogic.RawTimePerSection);
          Assert.AreEqual(TimeSpan.FromSeconds(376), unitInfoLogic.TimePerFrame);
-
-         _mocks.VerifyAll();
       }
 
       [Test]
@@ -610,19 +591,13 @@ namespace HFM.Instances.Tests
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:24:00", 4));
          var settings = CreateClientInstanceSettings(false, 0);
 
-         var prefs = _mocks.DynamicMock<IPreferenceSet>();
-         /*****/
-         Expect.Call(prefs.GetPreference<PpdCalculationType>(Preference.PpdCalculation))
-            .Return(PpdCalculationType.AllFrames).Repeat.AtLeastOnce();
-         /*****/
-         _mocks.ReplayAll();
+         var prefs = MockRepository.GenerateStub<IPreferenceSet>();
+         prefs.Stub(x => x.GetPreference<PpdCalculationType>(Preference.PpdCalculation)).Return(PpdCalculationType.AllFrames);
 
          var unitInfoLogic = CreateUnitInfoLogic(prefs, null, unitInfo, settings);
 
          Assert.AreEqual(360, unitInfoLogic.RawTimePerSection);
          Assert.AreEqual(TimeSpan.FromSeconds(360), unitInfoLogic.TimePerFrame);
-
-         _mocks.VerifyAll();
       }
 
       [Test]
@@ -634,36 +609,26 @@ namespace HFM.Instances.Tests
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:04:00", 1));
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:09:00", 2));
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:15:00", 3));
-         var settings = CreateClientInstanceSettings(false, 0);
+         var settings = CreateClientInstanceSettings(true, 0);
 
          _displayInstance.LastRetrievalTime = unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(30));
-         var prefs = _mocks.DynamicMock<IPreferenceSet>();
-         /*****/
-         Expect.Call(prefs.GetPreference<PpdCalculationType>(Preference.PpdCalculation))
-            .Return(PpdCalculationType.EffectiveRate).Repeat.AtLeastOnce();
-         /*****/
-         _mocks.ReplayAll();
+         var prefs = MockRepository.GenerateStub<IPreferenceSet>();
+         prefs.Stub(x => x.GetPreference<PpdCalculationType>(Preference.PpdCalculation)).Return(PpdCalculationType.EffectiveRate);
 
          var unitInfoLogic = CreateUnitInfoLogic(prefs, protein, unitInfo, settings);
 
-         Assert.AreEqual(7800, unitInfoLogic.RawTimePerSection);
-         Assert.AreEqual(TimeSpan.FromSeconds(7800), unitInfoLogic.TimePerFrame);
-
-         _mocks.VerifyAll();
+         Assert.AreEqual(600, unitInfoLogic.RawTimePerSection);
+         Assert.AreEqual(TimeSpan.FromSeconds(600), unitInfoLogic.TimePerFrame);
       }
       
       [Test]
       public void TimePerSectionTest5()
       {
          var settings = CreateClientInstanceSettings(false, 0);
-         Expect.Call(_benchmarkContainer.GetBenchmarkAverageFrameTime(null)).IgnoreArguments()
-            .Return(TimeSpan.FromMinutes(10));
-         _mocks.ReplayAll();
+         _benchmarkContainer.Stub(x => x.GetBenchmarkAverageFrameTime(null)).IgnoreArguments().Return(TimeSpan.FromMinutes(10));
 
          var unitInfoLogic = CreateUnitInfoLogic(null, new UnitInfo(), settings);
          Assert.AreEqual(TimeSpan.FromMinutes(10), unitInfoLogic.TimePerFrame);
-
-         _mocks.VerifyAll();
       }
 
       [Test]
@@ -691,20 +656,14 @@ namespace HFM.Instances.Tests
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:15:00", 3));
          var settings = CreateClientInstanceSettings(false, 0);
 
-         var prefs = _mocks.DynamicMock<IPreferenceSet>();
-         Expect.Call(prefs.GetPreference<bool>(Preference.CalculateBonus))
-            .Return(true).Repeat.AtLeastOnce();
-         /*****/
+         var prefs = MockRepository.GenerateStub<IPreferenceSet>();
+         prefs.Stub(x => x.GetPreference<bool>(Preference.CalculateBonus)).Return(true);
          _displayInstance.Status = ClientStatus.RunningNoFrameTimes;
-         /*****/
-         _mocks.ReplayAll();
 
          var unitInfoLogic = CreateUnitInfoLogic(prefs, protein, unitInfo, settings);
          Assert.AreEqual(849, unitInfoLogic.Credit);
          Assert.AreEqual(2.4, unitInfoLogic.UPD);
          Assert.AreEqual(2036.46753, unitInfoLogic.PPD);
-
-         _mocks.VerifyAll();
       }
 
       [Test]
@@ -719,20 +678,14 @@ namespace HFM.Instances.Tests
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:15:00", 3));
          var settings = CreateClientInstanceSettings(false, 0);
 
-         var prefs = _mocks.DynamicMock<IPreferenceSet>();
-         Expect.Call(prefs.GetPreference<bool>(Preference.CalculateBonus))
-            .Return(true).Repeat.AtLeastOnce();
-         /*****/
+         var prefs = MockRepository.GenerateStub<IPreferenceSet>();
+         prefs.Stub(x => x.GetPreference<bool>(Preference.CalculateBonus)).Return(true);
          _displayInstance.Status = ClientStatus.Running;
-         /*****/
-         _mocks.ReplayAll();
 
          var unitInfoLogic = CreateUnitInfoLogic(prefs, protein, unitInfo, settings);
          Assert.AreEqual(1897, unitInfoLogic.Credit);
          Assert.AreEqual(2.4, unitInfoLogic.UPD);
          Assert.AreEqual(4553.67983, unitInfoLogic.PPD);
-
-         _mocks.VerifyAll();
       }
 
       [Test]
@@ -795,12 +748,9 @@ namespace HFM.Instances.Tests
          var settings = CreateClientInstanceSettings(false, 0);
          
          _displayInstance.LastRetrievalTime = unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(30));
-         _mocks.ReplayAll();
          
          var unitInfoLogic = CreateUnitInfoLogic(null, unitInfo, settings);
          Assert.AreEqual(unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(612)), unitInfoLogic.EtaDate);
-         
-         _mocks.VerifyAll();
       }
       
       #endregion

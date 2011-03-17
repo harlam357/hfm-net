@@ -85,6 +85,7 @@ namespace HFM.Forms
          _view.AttachPresenter(this);
          _model.LoadPreferences();
          _view.DataBindModel(_model);
+         _queryContainer.QueryList.Sort();
          _view.QueryComboRefreshList(_queryContainer.QueryList);
       }
 
@@ -144,6 +145,7 @@ namespace HFM.Forms
          }
          
          _queryContainer.QueryList.Add(parameters);
+         _queryContainer.QueryList.Sort();
          _queryContainer.Write();
          _view.QueryComboRefreshList(_queryContainer.QueryList);
       }
@@ -165,7 +167,8 @@ namespace HFM.Forms
          }
          
          _queryContainer.QueryList.RemoveAt(index);
-         _queryContainer.QueryList.Insert(index, parameters);
+         _queryContainer.QueryList.Add(parameters);
+         _queryContainer.QueryList.Sort();
          _queryContainer.Write();
          _view.QueryComboRefreshList(_queryContainer.QueryList);
       }

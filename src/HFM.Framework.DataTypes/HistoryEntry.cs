@@ -108,7 +108,7 @@ namespace HFM.Framework.DataTypes
          _protein = protein;
          if (protein != null)
          {
-            ClientType = Protein.GetClientTypeFromCore(protein.Core);
+            ClientType = UnitInfo.GetClientTypeFromCore(protein.Core);
          }
 
          return this;
