@@ -244,6 +244,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ZedGraphManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Controls\QueueControl.resx">

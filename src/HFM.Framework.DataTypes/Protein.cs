@@ -101,8 +101,16 @@ namespace HFM.Framework.DataTypes
       /// Get Points Per Day based on given Frame Time
       /// </summary>
       /// <param name="frameTime">Frame Time</param>
+      /// <param name="calculateBonus">Calculate Bonus Value</param>
+      double GetPPD(TimeSpan frameTime, bool calculateBonus);
+
+      /// <summary>
+      /// Get Points Per Day based on given Frame Time
+      /// </summary>
+      /// <param name="frameTime">Frame Time</param>
       /// <param name="estTimeOfUnit">Estimated Time of the Unit</param>
-      double GetPPD(TimeSpan frameTime, TimeSpan estTimeOfUnit);
+      /// <param name="calculateBonus">Calculate Bonus Value</param>
+      double GetPPD(TimeSpan frameTime, TimeSpan estTimeOfUnit, bool calculateBonus);
 
       /// <summary>
       /// Get Units Per Day based on given Frame Time
@@ -111,16 +119,18 @@ namespace HFM.Framework.DataTypes
       double GetUPD(TimeSpan frameTime);
 
       /// <summary>
-      /// Get the Credit of the Unit (including bonus)
+      /// Get the Credit of the Unit (possibly including bonus)
       /// </summary>
       /// <param name="estTimeOfUnit">Estimated Time of the Unit</param>
-      double GetBonusCredit(TimeSpan estTimeOfUnit);
+      /// <param name="calculateBonus">Calculate Bonus Value</param>
+      double GetCredit(TimeSpan estTimeOfUnit, bool calculateBonus);
 
       /// <summary>
-      /// Get the Bonus Multiplier
+      /// Get the PPD and Credit Multiplier
       /// </summary>
       /// <param name="estTimeOfUnit">Estimated Time of the Unit</param>
-      double GetBonusMultiplier(TimeSpan estTimeOfUnit);
+      /// <param name="calculateBonus">Calculate Bonus Value</param>
+      double GetMultiplier(TimeSpan estTimeOfUnit, bool calculateBonus);
 
       /// <summary>
       /// Get all Production Values
@@ -128,7 +138,8 @@ namespace HFM.Framework.DataTypes
       /// <param name="frameTime">Frame Time</param>
       /// <param name="eftByDownloadTime">Estimated Time of the Unit (by Download Time)</param>
       /// <param name="eftByFrameTime">Estimated Time of the Unit (by Frame Time)</param>
-      ProductionValues GetProductionValues(TimeSpan frameTime, TimeSpan eftByDownloadTime, TimeSpan eftByFrameTime);
+      /// <param name="calculateBonus">Calculate Bonus Value</param>
+      ProductionValues GetProductionValues(TimeSpan frameTime, TimeSpan eftByDownloadTime, TimeSpan eftByFrameTime, bool calculateBonus);
    }
 
    public class Protein : IProtein
@@ -230,7 +241,17 @@ namespace HFM.Framework.DataTypes
       /// <param name="frameTime">Frame Time</param>
       public double GetPPD(TimeSpan frameTime)
       {
-         return GetPPD(frameTime, TimeSpan.Zero);
+         return GetPPD(frameTime, TimeSpan.Zero, false);
+      }
+
+      /// <summary>
+      /// Get Points Per Day based on given Frame Time
+      /// </summary>
+      /// <param name="frameTime">Frame Time</param>
+      /// <param name="calculateBonus">Calculate Bonus Value</param>
+      public double GetPPD(TimeSpan frameTime, bool calculateBonus)
+      {
+         return GetPPD(frameTime, TimeSpan.FromSeconds(frameTime.TotalSeconds * Frames), calculateBonus);
       }
 
       /// <summary>
@@ -238,12 +259,13 @@ namespace HFM.Framework.DataTypes
       /// </summary>
       /// <param name="frameTime">Frame Time</param>
       /// <param name="estTimeOfUnit">Estimated Time of the Unit</param>
-      public double GetPPD(TimeSpan frameTime, TimeSpan estTimeOfUnit)
+      /// <param name="calculateBonus">Calculate Bonus Value</param>
+      public double GetPPD(TimeSpan frameTime, TimeSpan estTimeOfUnit, bool calculateBonus)
       {
          if (frameTime.IsZero()) return 0;
 
          double basePPD = GetUPD(frameTime) * Credit;
-         double bonusMulti = GetBonusMultiplier(estTimeOfUnit);
+         double bonusMulti = GetMultiplier(estTimeOfUnit, calculateBonus);
          double bonusPPD = Math.Round((basePPD * bonusMulti), Default.MaxDecimalPlaces);
          
          return bonusPPD;
@@ -257,25 +279,27 @@ namespace HFM.Framework.DataTypes
       {
          return frameTime.IsZero() ? 0.0 : 86400 / (frameTime.TotalSeconds * Frames);
       }
-      
+
       /// <summary>
-      /// Get the Credit of the Unit (including bonus)
+      /// Get the Credit of the Unit (possibly including bonus)
       /// </summary>
       /// <param name="estTimeOfUnit">Estimated Time of the Unit</param>
-      public double GetBonusCredit(TimeSpan estTimeOfUnit)
+      /// <param name="calculateBonus">Calculate Bonus Value</param>
+      public double GetCredit(TimeSpan estTimeOfUnit, bool calculateBonus)
       {
-         double bonusMulti = GetBonusMultiplier(estTimeOfUnit);
+         double bonusMulti = GetMultiplier(estTimeOfUnit, calculateBonus);
          return Math.Round((Credit * bonusMulti), 0);
       }
 
       /// <summary>
-      /// Get the Bonus Multiplier
+      /// Get the PPD and Credit Multiplier
       /// </summary>
       /// <param name="estTimeOfUnit">Estimated Time of the Unit</param>
-      public double GetBonusMultiplier(TimeSpan estTimeOfUnit)
+      /// <param name="calculateBonus">Calculate Bonus Value</param>
+      public double GetMultiplier(TimeSpan estTimeOfUnit, bool calculateBonus)
       {
          // Make sure the given TimeSpan is not negative
-         if (KFactor > 0 && estTimeOfUnit.CompareTo(TimeSpan.Zero) > 0)
+         if (calculateBonus && KFactor > 0 && estTimeOfUnit.CompareTo(TimeSpan.Zero) > 0)
          {
             if (estTimeOfUnit <= TimeSpan.FromDays(PreferredDays))
             {
@@ -292,7 +316,8 @@ namespace HFM.Framework.DataTypes
       /// <param name="frameTime">Frame Time</param>
       /// <param name="eftByDownloadTime">Estimated Time of the Unit (by Download Time)</param>
       /// <param name="eftByFrameTime">Estimated Time of the Unit (by Frame Time)</param>
-      public ProductionValues GetProductionValues(TimeSpan frameTime, TimeSpan eftByDownloadTime, TimeSpan eftByFrameTime)
+      /// <param name="calculateBonus">Calculate Bonus Value</param>
+      public ProductionValues GetProductionValues(TimeSpan frameTime, TimeSpan eftByDownloadTime, TimeSpan eftByFrameTime, bool calculateBonus)
       {
          var value = new ProductionValues
                      {
@@ -303,13 +328,13 @@ namespace HFM.Framework.DataTypes
                         MaximumTime = TimeSpan.FromDays(MaxDays),
                         KFactor = KFactor,
                         EftByDownloadTime = eftByDownloadTime,
-                        DownloadTimeBonusMulti = GetBonusMultiplier(eftByDownloadTime),
-                        DownloadTimeBonusCredit = GetBonusCredit(eftByDownloadTime),
-                        DownloadTimeBonusPPD = GetPPD(frameTime, eftByDownloadTime),
+                        DownloadTimeBonusMulti = GetMultiplier(eftByDownloadTime, calculateBonus),
+                        DownloadTimeBonusCredit = GetCredit(eftByDownloadTime, calculateBonus),
+                        DownloadTimeBonusPPD = GetPPD(frameTime, eftByDownloadTime, calculateBonus),
                         EftByFrameTime = eftByFrameTime,
-                        FrameTimeBonusMulti = GetBonusMultiplier(eftByFrameTime),
-                        FrameTimeBonusCredit = GetBonusCredit(eftByFrameTime),
-                        FrameTimeBonusPPD = GetPPD(frameTime, eftByFrameTime)
+                        FrameTimeBonusMulti = GetMultiplier(eftByFrameTime, calculateBonus),
+                        FrameTimeBonusCredit = GetCredit(eftByFrameTime, calculateBonus),
+                        FrameTimeBonusPPD = GetPPD(frameTime, eftByFrameTime, calculateBonus)
                      };
          return value;
       }

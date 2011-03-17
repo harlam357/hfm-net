@@ -68,9 +68,9 @@ namespace HFM.Framework.DataTypes
                case HistoryProductionView.Standard:
                   return _protein.GetPPD(FrameTime);
                case HistoryProductionView.BonusFrameTime:
-                  return _protein.GetPPD(FrameTime, TimeSpan.FromSeconds(FrameTime.TotalSeconds * Frames));
+                  return _protein.GetPPD(FrameTime, TimeSpan.FromSeconds(FrameTime.TotalSeconds * Frames), true);
                case HistoryProductionView.BonusDownloadTime:
-                  return _protein.GetPPD(FrameTime, CompletionDateTime.Subtract(DownloadDateTime));
+                  return _protein.GetPPD(FrameTime, CompletionDateTime.Subtract(DownloadDateTime), true);
                default:
                   // ReSharper disable HeuristicUnreachableCode
                   Debug.Assert(false);
@@ -91,9 +91,9 @@ namespace HFM.Framework.DataTypes
                case HistoryProductionView.Standard:
                   return _protein.Credit;
                case HistoryProductionView.BonusFrameTime:
-                  return _protein.GetBonusCredit(TimeSpan.FromSeconds(FrameTime.TotalSeconds * Frames));
+                  return _protein.GetCredit(TimeSpan.FromSeconds(FrameTime.TotalSeconds * Frames), true);
                case HistoryProductionView.BonusDownloadTime:
-                  return _protein.GetBonusCredit(CompletionDateTime.Subtract(DownloadDateTime));
+                  return _protein.GetCredit(CompletionDateTime.Subtract(DownloadDateTime), true);
                default:
                   // ReSharper disable HeuristicUnreachableCode
                   Debug.Assert(false);

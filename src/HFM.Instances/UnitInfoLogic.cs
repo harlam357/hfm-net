@@ -527,10 +527,10 @@ namespace HFM.Instances
             if (_displayInstance.Status.Equals(ClientStatus.RunningAsync) ||
                 _displayInstance.Status.Equals(ClientStatus.RunningNoFrameTimes))
             {
-               return CurrentProtein.GetBonusCredit(eftByFrameTime);
+               return CurrentProtein.GetCredit(eftByFrameTime, true);
             }
 
-            return CurrentProtein.GetBonusCredit(eftByDownloadTime);
+            return CurrentProtein.GetCredit(eftByDownloadTime, true);
          }
 
          return CurrentProtein.Credit;
@@ -550,10 +550,10 @@ namespace HFM.Instances
             if (_displayInstance.Status.Equals(ClientStatus.RunningAsync) ||
                 _displayInstance.Status.Equals(ClientStatus.RunningNoFrameTimes))
             {
-               return CurrentProtein.GetPPD(frameTime, eftByFrameTime);
+               return CurrentProtein.GetPPD(frameTime, eftByFrameTime, true);
             }
 
-            return CurrentProtein.GetPPD(frameTime, eftByDownloadTime);
+            return CurrentProtein.GetPPD(frameTime, eftByDownloadTime, true);
          }
 
          return CurrentProtein.GetPPD(frameTime);
@@ -573,7 +573,8 @@ namespace HFM.Instances
          }
 
          // Issue 125
-         if (_prefs.GetPreference<bool>(Preference.CalculateBonus))
+         var calculateBonus = _prefs.GetPreference<bool>(Preference.CalculateBonus);
+         if (calculateBonus)
          {
             // Issue 183
             if (_displayInstance.Status.Equals(ClientStatus.RunningAsync) ||
@@ -591,7 +592,7 @@ namespace HFM.Instances
             HfmTrace.WriteToHfmConsole(level, _unitInfo.OwningInstanceName, "Calculate Standard PPD.");
          }
 
-         var values = CurrentProtein.GetProductionValues(TimePerFrame, EftByDownloadTime, EftByFrameTime);
+         var values = CurrentProtein.GetProductionValues(TimePerFrame, EftByDownloadTime, EftByFrameTime, calculateBonus);
          HfmTrace.WriteToHfmConsole(level, values.ToMultiLineString());
       }
       

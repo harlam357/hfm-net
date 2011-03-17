@@ -76,19 +76,16 @@ namespace HFM.Framework
       /// <param name="allowProteinDownload">Allow Download from psummary</param>
       IProtein GetProtein(int projectId, bool allowProteinDownload);
 
-      /// <summary>
-      /// Create a New Protein
-      /// </summary>
-      IProtein CreateProtein();
+      #region Inherited
 
-      #region Want to get rid of these direct collection accessors
       bool ContainsKey(int key);
       
       bool TryGetValue(int key, out IProtein value);
       
       IProtein this[int key] { get; set; }
-      #endregion
 
       int Count { get; }
+
+      #endregion
    }
 }

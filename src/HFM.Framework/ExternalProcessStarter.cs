@@ -44,6 +44,12 @@ namespace HFM.Framework
       string ShowFileExplorer(string path);
 
       /// <summary>
+      /// Show the given URL in the default web browser
+      /// </summary>
+      /// <param name="url">Website URL</param>
+      string ShowWebBrowser(string url);
+
+      /// <summary>
       /// Show the HFM Google Code page
       /// </summary>
       string ShowHfmGoogleCode();
@@ -86,7 +92,7 @@ namespace HFM.Framework
       {
          string logFilePath = Path.Combine(_prefs.ApplicationDataFolderPath, Constants.HfmLogFileName);
          string errorMessage = String.Format(CultureInfo.CurrentCulture, 
-               "An error occured while attempting to show the HFM.log file.{0}{0}Please check the current Log File Viewer defined in the Preferences",
+               "An error occured while attempting to show the HFM.log file.{0}{0}Please check the current Log File Viewer defined in the Preferences.",
                Environment.NewLine);
          return RunProcess(_prefs.GetPreference<string>(Preference.LogFileViewer), logFilePath, errorMessage);
       }
@@ -98,7 +104,7 @@ namespace HFM.Framework
       public string ShowCachedLogFile(string logFilePath)
       {
          string errorMessage = String.Format(CultureInfo.CurrentCulture,
-               "An error occured while attempting to show the FAHlog.txt file.{0}{0}Please check the current Log File Viewer defined in the Preferences",
+               "An error occured while attempting to show the FAHlog.txt file.{0}{0}Please check the current Log File Viewer defined in the Preferences.",
                Environment.NewLine);
          return RunProcess(_prefs.GetPreference<string>(Preference.LogFileViewer), logFilePath, errorMessage);
       }
@@ -110,9 +116,20 @@ namespace HFM.Framework
       public string ShowFileExplorer(string path)
       {
          string errorMessage = String.Format(CultureInfo.CurrentCulture,
-               "An error occured while attempting to show '{0}'.{1}{1}Please check the current File Explorer defined in the Preferences",
+               "An error occured while attempting to show '{0}'.{1}{1}Please check the current File Explorer defined in the Preferences.",
                path, Environment.NewLine);
          return RunProcess(_prefs.GetPreference<string>(Preference.FileExplorer), path, errorMessage);
+      }
+
+      /// <summary>
+      /// Show the given URL in the default web browser
+      /// </summary>
+      /// <param name="url">Website URL</param>
+      public string ShowWebBrowser(string url)
+      {
+         string errorMessage = String.Format(CultureInfo.CurrentCulture,
+               "An error occured while attempting to show '{0}'.", url);
+         return RunProcess(url, String.Empty, errorMessage);
       }
 
       /// <summary>

@@ -43,7 +43,7 @@ namespace HFM.Instances.Tests
       public void Init()
       {
          _mocks = new MockRepository();
-         _proteinCollection = SetupMockProteinCollection(_mocks);
+         _proteinCollection = SetupMockProteinCollection();
       }
    
       [Test]
@@ -338,40 +338,40 @@ namespace HFM.Instances.Tests
          _mocks.VerifyAll();
       }
 
-      private static IProteinCollection SetupMockProteinCollection(MockRepository mocks)
+      private static IProteinCollection SetupMockProteinCollection()
       {
-         var proteinCollection = mocks.DynamicMock<IProteinCollection>();
+         var proteinCollection = MockRepository.GenerateStub<IProteinCollection>();
          var proteins = new List<IProtein>();
-         
-         var protein = mocks.DynamicMock<IProtein>();
-         SetupResult.For(protein.ProjectNumber).Return(6600);
-         SetupResult.For(protein.WorkUnitName).Return("WorkUnitName");
-         SetupResult.For(protein.Core).Return("GROGPU2");
-         SetupResult.For(protein.Credit).Return(450);
-         SetupResult.For(protein.KFactor).Return(0);
-         SetupResult.For(protein.Frames).Return(100);
-         SetupResult.For(protein.NumAtoms).Return(5000);
 
-         Expect.Call(protein.GetPPD(TimeSpan.Zero)).IgnoreArguments().Return(100).Repeat.Any();
-         Expect.Call(protein.GetPPD(TimeSpan.Zero, TimeSpan.Zero)).IgnoreArguments().Return(200).Repeat.Any();
-         Expect.Call(protein.GetBonusCredit(TimeSpan.Zero)).IgnoreArguments().Return(900).Repeat.Any();
+         var protein = MockRepository.GenerateStub<IProtein>();
+         protein.Stub(x => x.ProjectNumber).Return(6600);
+         protein.Stub(x => x.WorkUnitName).Return("WorkUnitName");
+         protein.Stub(x => x.Core).Return("GROGPU2");
+         protein.Stub(x => x.Credit).Return(450);
+         protein.Stub(x => x.KFactor).Return(0);
+         protein.Stub(x => x.Frames).Return(100);
+         protein.Stub(x => x.NumAtoms).Return(5000);
+
+         protein.Stub(x => x.GetPPD(TimeSpan.Zero)).IgnoreArguments().Return(100);
+         protein.Stub(x => x.GetPPD(TimeSpan.Zero, TimeSpan.Zero, false)).IgnoreArguments().Return(200);
+         protein.Stub(x => x.GetCredit(TimeSpan.Zero, false)).IgnoreArguments().Return(900);
          proteins.Add(protein);
 
-         protein = mocks.DynamicMock<IProtein>();
-         SetupResult.For(protein.ProjectNumber).Return(5797);
-         SetupResult.For(protein.WorkUnitName).Return("WorkUnitName2");
-         SetupResult.For(protein.Core).Return("GROGPU2");
-         SetupResult.For(protein.Credit).Return(675);
-         SetupResult.For(protein.KFactor).Return(0);
-         SetupResult.For(protein.Frames).Return(100);
-         SetupResult.For(protein.NumAtoms).Return(7000);
+         protein = MockRepository.GenerateStub<IProtein>();
+         protein.Stub(x => x.ProjectNumber).Return(5797);
+         protein.Stub(x => x.WorkUnitName).Return("WorkUnitName2");
+         protein.Stub(x => x.Core).Return("GROGPU2");
+         protein.Stub(x => x.Credit).Return(675);
+         protein.Stub(x => x.KFactor).Return(0);
+         protein.Stub(x => x.Frames).Return(100);
+         protein.Stub(x => x.NumAtoms).Return(7000);
 
-         Expect.Call(protein.GetPPD(TimeSpan.Zero)).IgnoreArguments().Return(300).Repeat.Any();
-         Expect.Call(protein.GetPPD(TimeSpan.Zero, TimeSpan.Zero)).IgnoreArguments().Return(400).Repeat.Any();
-         Expect.Call(protein.GetBonusCredit(TimeSpan.Zero)).IgnoreArguments().Return(1350).Repeat.Any();
+         protein.Stub(x => x.GetPPD(TimeSpan.Zero)).IgnoreArguments().Return(300);
+         protein.Stub(x => x.GetPPD(TimeSpan.Zero, TimeSpan.Zero, false)).IgnoreArguments().Return(400);
+         protein.Stub(x => x.GetCredit(TimeSpan.Zero, false)).IgnoreArguments().Return(1350);
          proteins.Add(protein);
 
-         SetupResult.For(proteinCollection.Proteins).Return(proteins);
+         proteinCollection.Stub(x => x.Proteins).Return(proteins);
          return proteinCollection;
       }
    }
