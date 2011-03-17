@@ -28,6 +28,8 @@ using System.Windows.Forms;
 
 using ZedGraph;
 
+using harlam357.Windows.Forms;
+
 using HFM.Forms.Controls;
 using HFM.Framework;
 using HFM.Framework.DataTypes;
@@ -68,24 +70,30 @@ namespace HFM.Forms
       #endregion
    
       #region Fields
+
       private readonly IPreferenceSet _prefs;
       private readonly IProteinCollection _proteinCollection;
       private readonly IProteinBenchmarkContainer _benchmarkContainer;
       private readonly List<Color> _graphColors;
       private readonly IInstanceAccessor _instanceCollection;
+      private readonly IMessageBoxView _messageBoxView;
+      private readonly IExternalProcessStarter _processStarter;
       
       private BenchmarkClient _currentBenchmarkClient;
+
       #endregion
 
       #region Form Constructor / functionality
       public frmBenchmarks(IPreferenceSet prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer, 
-                           IInstanceCollection instanceCollection)
+                           IInstanceCollection instanceCollection, IMessageBoxView messageBoxView, IExternalProcessStarter processStarter)
       {
          _prefs = prefs;
          _proteinCollection = proteinCollection;
          _benchmarkContainer = benchmarkContainer;
          _graphColors = _prefs.GetPreference<List<Color>>(Preference.GraphColors);
          _instanceCollection = instanceCollection;
+         _messageBoxView = messageBoxView;
+         _processStarter = processStarter;
       
          InitializeComponent();
       }
@@ -112,20 +120,15 @@ namespace HFM.Forms
          _prefs.SetPreference(Preference.BenchmarksFormSize, Size);
          _prefs.Save();
       }
+
       #endregion
 
       #region Event Handlers
+
       private void cboClients_SelectedIndexChanged(object sender, EventArgs e)
       {
          _currentBenchmarkClient = (BenchmarkClient)cboClients.SelectedValue;
-         if (_currentBenchmarkClient.AllClients)
-         {
-            picDeleteClient.Visible = false;
-         }
-         else
-         {
-            picDeleteClient.Visible = true;
-         }
+         picDeleteClient.Visible = !_currentBenchmarkClient.AllClients;
          
          UpdateProjectListBoxBinding();
       }
@@ -156,8 +159,10 @@ namespace HFM.Forms
             UpdateBenchmarkText(ToMultiLineString(benchmark, unit, _prefs.PpdFormatString, valuesOk));
          }
 
-         CreateFrameTimeGraph(zgFrameTime, lines, list, _graphColors);
-         CreatePpdGraph(zgPpd, lines, list, _graphColors, _prefs.GetPreference<int>(Preference.DecimalPlaces));
+         var zedGraphManager = new ZedGraphManager(_proteinCollection);
+         zedGraphManager.CreateFrameTimeGraph(zgFrameTime, lines, list, _graphColors);
+         zedGraphManager.CreatePpdGraph(zgPpd, lines, list, _graphColors, 
+            _prefs.GetPreference<int>(Preference.DecimalPlaces), _prefs.GetPreference<bool>(Preference.CalculateBonus));
       }
 
       /// <summary>
@@ -175,18 +180,19 @@ namespace HFM.Forms
          _proteinCollection.TryGetValue(benchmark.ProjectID, out protein);
          if (protein != null)
          {
+            var calculateBonus = _prefs.GetPreference<bool>(Preference.CalculateBonus);
+
             output.Add(String.Empty);
             output.Add(String.Format(" Name: {0}", benchmark.OwningInstanceName));
             output.Add(String.Format(" Path: {0}", benchmark.OwningInstancePath));
             output.Add(String.Format(" Number of Frames Observed: {0}", benchmark.FrameTimes.Count));
             output.Add(String.Empty);
             output.Add(String.Format(" Min. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-               benchmark.MinimumFrameTime, GetPPD(benchmark.MinimumFrameTime, protein)));
+               benchmark.MinimumFrameTime, protein.GetPPD(benchmark.MinimumFrameTime, calculateBonus)));
             output.Add(String.Format(" Avg. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-               benchmark.AverageFrameTime, GetPPD(benchmark.AverageFrameTime, protein)));
+               benchmark.AverageFrameTime, protein.GetPPD(benchmark.AverageFrameTime, calculateBonus)));
 
-            if (unitInfo != null && unitInfo.UnitInfoData.ProjectID.Equals(protein.ProjectNumber) &&
-                                    productionValuesOk)
+            if (unitInfo != null && unitInfo.UnitInfoData.ProjectID.Equals(protein.ProjectNumber) && productionValuesOk)
             {
                output.Add(String.Format(" Cur. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
                   unitInfo.TimePerLastSection, unitInfo.PPDPerLastSection));
@@ -207,23 +213,6 @@ namespace HFM.Forms
          }
 
          return output.ToArray();
-      } 
-
-      private double GetPPD(TimeSpan frameTime, IProtein protein)
-      {
-         if (protein != null)
-         {
-            // Issue 125 & 129
-            if (_prefs.GetPreference<bool>(Preference.CalculateBonus))
-            {
-               TimeSpan finishTime = TimeSpan.FromMilliseconds(frameTime.TotalMilliseconds*protein.Frames);
-               return protein.GetPPD(frameTime, finishTime);
-            }
-
-            return protein.GetPPD(frameTime);
-         }
-
-         return 0;
       }
 
       private void listBox1_MouseDown(object sender, MouseEventArgs e)
@@ -274,15 +263,7 @@ namespace HFM.Forms
 
       private void linkDescription_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
       {
-         try
-         {
-            Process.Start(linkDescription.Text);
-         }
-         catch (Exception ex)
-         {
-            HfmTrace.WriteToHfmConsole(ex);
-            MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "Project Description"));
-         }
+         HandleProcessStartResult(_processStarter.ShowWebBrowser(linkDescription.Text));
       }
 
       private void picDeleteClient_Click(object sender, EventArgs e)
@@ -307,7 +288,7 @@ namespace HFM.Forms
       {
          if (lstColors.SelectedIndex == -1)
          {
-            MessageBox.Show(this, "No Color Selected.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            _messageBoxView.ShowInformation(this, "No Color Selected.", Text);
             return;
          }
 
@@ -325,7 +306,7 @@ namespace HFM.Forms
       {
          if (lstColors.SelectedIndex == -1)
          {
-            MessageBox.Show(this, "No Color Selected.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            _messageBoxView.ShowInformation(this, "No Color Selected.", Text);
             return;
          }
 
@@ -341,14 +322,14 @@ namespace HFM.Forms
 
       private void btnAddColor_Click(object sender, EventArgs e)
       {
-         ColorDialog dlg = new ColorDialog();
+         var dlg = new ColorDialog();
          if (dlg.ShowDialog(this).Equals(DialogResult.OK))
          {
-            Color addColor = FindNearestKnown(dlg.Color);
+            Color addColor = dlg.Color.FindNearestKnown();
             if (_graphColors.Contains(addColor))
             {
-               MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture, "{0} is already a graph color.", addColor.Name), 
-                  Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+               _messageBoxView.ShowInformation(this, String.Format(CultureInfo.CurrentCulture, 
+                  "{0} is already a graph color.", addColor.Name), Text);
                return;
             }
 
@@ -362,13 +343,13 @@ namespace HFM.Forms
       {
          if (lstColors.SelectedIndex == -1)
          {
-            MessageBox.Show(this, "No Color Selected.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            _messageBoxView.ShowInformation(this, "No Color Selected.", Text);
             return;
          }
 
          if (_graphColors.Count <= 3)
          {
-            MessageBox.Show(this, "Must have at least three colors.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            _messageBoxView.ShowInformation(this, "Must have at least three colors.", Text);
             return;
          }
 
@@ -385,9 +366,11 @@ namespace HFM.Forms
       {
          Close();
       } 
+
       #endregion
 
-      #region Helper Routines
+      #region Update Routines
+
       private void UpdateBenchmarkText(IEnumerable<string> benchmarkLines)
       {
          var lines = new List<string>(txtBenchmarks.Lines);
@@ -442,6 +425,8 @@ namespace HFM.Forms
 
          return lines.ToArray();
       }
+
+      #region Binding
 
       private void UpdateClientsComboBinding()
       {
@@ -498,231 +483,16 @@ namespace HFM.Forms
          cm.Refresh();
       }
 
-      /// <summary>
-      /// Build The PPD GraphPane
-      /// </summary>
-      /// <param name="zg">ZedGraph Control</param>
-      /// <param name="projectInfo">Project Info Array</param>
-      /// <param name="benchmarks">Benchmarks Collection to Plot</param>
-      /// <param name="graphColors">Graph Colors List</param>
-      /// <param name="decimalPlaces">PPD Decimal Places</param>
-      private void CreatePpdGraph(ZedGraphControl zg, string[] projectInfo, IEnumerable<ProteinBenchmark> benchmarks, 
-                                  IList<Color> graphColors, int decimalPlaces)
-      {
-         Debug.Assert(zg != null);
-         
-         try
-         {
-            // get a reference to the GraphPane
-            GraphPane myPane = zg.GraphPane;
-
-            // Clear the bars
-            myPane.CurveList.Clear();
-            // Clear the bar labels
-            myPane.GraphObjList.Clear();
-            // Clear the XAxis Project Information
-            myPane.XAxis.Title.Text = String.Empty;
-
-            // If no Project Information, get out
-            if (projectInfo.Length == 0)
-            {
-               return;
-            }
-
-            // Scale YAxis In Thousands?
-            bool inThousands = false;
-
-            // Create the bars for each benchmark
-            int i = 0;
-            foreach (ProteinBenchmark benchmark in benchmarks)
-            {
-               IProtein protein;
-               _proteinCollection.TryGetValue(benchmark.ProjectID, out protein);
-
-               double minimumFrameTimePPD = GetPPD(benchmark.MinimumFrameTime, protein);
-               double averageFrameTimePPD = GetPPD(benchmark.AverageFrameTime, protein);
-               if (minimumFrameTimePPD >= 1000 || averageFrameTimePPD >= 1000)
-               {
-                  inThousands = true;
-               }
-
-               double[] yPoints = new double[2];
-               yPoints[0] = Math.Round(minimumFrameTimePPD, decimalPlaces);
-               yPoints[1] = Math.Round(averageFrameTimePPD, decimalPlaces);
-
-               CreateBar(i, myPane, benchmark.OwningInstanceName, yPoints, graphColors);
-               i++;
-            }
-
-            // Create the bar labels
-            BarItem.CreateBarLabels(myPane, true, String.Empty, zg.Font.Name, zg.Font.Size, Color.Black, true, false, false);
-
-            // Set the Titles
-            myPane.Title.Text = "HFM.NET - Client Benchmarks";
-            var sb = new StringBuilder();
-            for (i = 0; i < projectInfo.Length - 2; i++)
-            {
-               sb.Append(projectInfo[i]);
-               sb.Append(" / ");
-            }
-            sb.Append(projectInfo[i]);
-            myPane.XAxis.Title.Text = sb.ToString();
-            myPane.YAxis.Title.Text = "PPD";
-
-            // Draw the X tics between the labels instead of at the labels
-            myPane.XAxis.MajorTic.IsBetweenLabels = true;
-            // Set the XAxis labels
-            var labels = new[] { "Min. Frame Time", "Avg. Frame Time" };
-            myPane.XAxis.Scale.TextLabels = labels;
-            // Set the XAxis to Text type
-            myPane.XAxis.Type = AxisType.Text;
-
-            // Don't show YAxis.Scale as 10^3         
-            myPane.YAxis.Scale.MagAuto = false;
-            // Set the YAxis Steps
-            if (inThousands)
-            {
-               myPane.YAxis.Scale.MajorStep = 1000;
-               myPane.YAxis.Scale.MinorStep = 500;
-            }
-            else
-            {
-               myPane.YAxis.Scale.MajorStep = 100;
-               myPane.YAxis.Scale.MinorStep = 10;
-            }
-
-            // Fill the Axis and Pane backgrounds
-            myPane.Chart.Fill = new Fill(Color.White, Color.FromArgb(255, 255, 166), 90F);
-            myPane.Fill = new Fill(Color.FromArgb(250, 250, 255));
-         }
-         finally
-         {
-            // Tell ZedGraph to refigure the
-            // axes since the data have changed
-            zg.AxisChange();
-            // Refresh the control
-            zg.Refresh();
-         }
-      }
-      
-      /// <summary>
-      /// Build The Frame Time GraphPane
-      /// </summary>
-      /// <param name="zg">ZedGraph Control</param>
-      /// <param name="projectInfo">Project Info Array</param>
-      /// <param name="benchmarks">Benchmarks Collection to Plot</param>
-      /// <param name="graphColors">Graph Colors List</param>
-      private static void CreateFrameTimeGraph(ZedGraphControl zg, string[] projectInfo, IEnumerable<ProteinBenchmark> benchmarks,
-                                               IList<Color> graphColors)
-      {
-         Debug.Assert(zg != null);
-
-         try
-         {
-            // get a reference to the GraphPane
-            GraphPane myPane = zg.GraphPane;
-
-            // Clear the bars
-            myPane.CurveList.Clear();
-            // Clear the bar labels
-            myPane.GraphObjList.Clear();
-            // Clear the XAxis Project Information
-            myPane.XAxis.Title.Text = String.Empty;
-
-            // If no Project Information, get out
-            if (projectInfo.Length == 0)
-            {
-               return;
-            }
-
-            // Create the bars for each benchmark
-            int i = 0;
-            foreach (ProteinBenchmark benchmark in benchmarks)
-            {
-               double[] yPoints = new double[2];
-               yPoints[0] = benchmark.MinimumFrameTime.TotalSeconds;
-               yPoints[1] = benchmark.AverageFrameTime.TotalSeconds;
-
-               CreateBar(i, myPane, benchmark.OwningInstanceName, yPoints, graphColors);
-               i++;
-            }
-
-            // Create the bar labels
-            BarItem.CreateBarLabels(myPane, true, String.Empty, zg.Font.Name, zg.Font.Size, Color.Black, true, false, false);
-
-            // Set the Titles
-            myPane.Title.Text = "HFM.NET - Client Benchmarks";
-            var sb = new StringBuilder();
-            for (i = 0; i < projectInfo.Length - 2; i++)
-            {
-               sb.Append(projectInfo[i]);
-               sb.Append(" / ");
-            }
-            sb.Append(projectInfo[i]);
-            myPane.XAxis.Title.Text = sb.ToString();
-            myPane.YAxis.Title.Text = "Frame Time (Seconds)";
-
-            // Draw the X tics between the labels instead of at the labels
-            myPane.XAxis.MajorTic.IsBetweenLabels = true;
-            // Set the XAxis labels
-            var labels = new[] { "Min. Frame Time", "Avg. Frame Time" };
-            myPane.XAxis.Scale.TextLabels = labels;
-            // Set the XAxis to Text type
-            myPane.XAxis.Type = AxisType.Text;
-
-            // Fill the Axis and Pane backgrounds
-            myPane.Chart.Fill = new Fill(Color.White, Color.FromArgb(255, 255, 166), 90F);
-            myPane.Fill = new Fill(Color.FromArgb(250, 250, 255));
-         }
-         finally
-         {
-            // Tell ZedGraph to refigure the
-            // axes since the data have changed
-            zg.AxisChange();
-            // Refresh the control
-            zg.Refresh();
-         }
-      }
-
-      private static void CreateBar(int index, GraphPane myPane, string instanceName, double[] y, IList<Color> graphColors)
-      {
-         int colorIndex = index % graphColors.Count;
-         Color barColor = graphColors[colorIndex];
-
-         // Generate a bar with the Instance Name in the legend
-         BarItem myBar = myPane.AddBar(instanceName, null, y, barColor);
-         myBar.Bar.Fill = new Fill(barColor, Color.White, barColor);
-      }
-
-      private static Color FindNearestKnown(Color c)
-      {
-         var best = new ColorName { Name = null };
-
-         foreach (string colorName in Enum.GetNames(typeof(KnownColor)))
-         {
-            Color known = Color.FromName(colorName);
-            int dist = Math.Abs(c.R - known.R) + Math.Abs(c.G - known.G) + Math.Abs(c.B - known.B);
-
-            if (best.Name == null || dist < best.Distance)
-            {
-               best.Color = known;
-               best.Name = colorName;
-               best.Distance = dist;
-            }
-         }
-
-         return best.Color;
-      }
       #endregion
-   }
 
-   /// <summary>
-   /// Container for Color, Name, 
-   /// </summary>
-   internal struct ColorName
-   {
-      internal Color Color;
-      internal string Name;
-      internal int Distance;
+      #endregion
+
+      private void HandleProcessStartResult(string message)
+      {
+         if (message != null)
+         {
+            _messageBoxView.ShowError(this, message, Text);
+         }
+      }
    }
 }

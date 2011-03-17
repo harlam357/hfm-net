@@ -44,6 +44,37 @@ namespace HFM.Framework.DataTypes
 
       #endregion
 
+      #region Color
+
+      public static Color FindNearestKnown(this Color c)
+      {
+         var best = new ColorName { Name = null };
+
+         foreach (string colorName in Enum.GetNames(typeof(KnownColor)))
+         {
+            Color known = Color.FromName(colorName);
+            int dist = Math.Abs(c.R - known.R) + Math.Abs(c.G - known.G) + Math.Abs(c.B - known.B);
+
+            if (best.Name == null || dist < best.Distance)
+            {
+               best.Color = known;
+               best.Name = colorName;
+               best.Distance = dist;
+            }
+         }
+
+         return best.Color;
+      }
+
+      struct ColorName
+      {
+         public Color Color;
+         public string Name;
+         public int Distance;
+      }
+
+      #endregion
+
       #region IProjectInfo
 
       /// <summary>

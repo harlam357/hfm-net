@@ -144,19 +144,11 @@ namespace HFM.Instances.Tests
          Assert.AreEqual("Client 1", instance.Settings.InstanceName);                       
       }
 
-      private IProteinCollection SetupMockProteinCollection(string core, int frames)
+      private static IProteinCollection SetupMockProteinCollection(string core, int frames)
       {
-         var currentProtein = _mocks.DynamicMock<IProtein>();
-         Expect.Call(currentProtein.Core).Return(core).Repeat.Any();
-         Expect.Call(currentProtein.Frames).Return(frames).Repeat.Any();
-
-         var newProtein = _mocks.DynamicMock<IProtein>();
-         Expect.Call(newProtein.Core).Return(String.Empty).Repeat.Any();
-         Expect.Call(newProtein.Frames).Return(frames).Repeat.Any();
-
-         var proteinCollection = _mocks.DynamicMock<IProteinCollection>();
-         Expect.Call(proteinCollection.GetProtein(0, true)).Return(currentProtein).IgnoreArguments().Repeat.Any();
-         Expect.Call(proteinCollection.CreateProtein()).Return(newProtein).Repeat.Any();
+         var currentProtein = new Protein { Core = core, Frames = frames };
+         var proteinCollection = MockRepository.GenerateStub<IProteinCollection>();
+         proteinCollection.Stub(x => x.GetProtein(0, true)).Return(currentProtein).IgnoreArguments();
 
          return proteinCollection;
       }
