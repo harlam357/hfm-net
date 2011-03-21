@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Preferences - Startup and External Tab - Binding Model
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,36 +26,58 @@ namespace HFM.Forms.Models
 {
    class StartupAndExternalModel : INotifyPropertyChanged
    {
-      private readonly IPreferenceSet _prefs;
-      
       public StartupAndExternalModel(IPreferenceSet prefs)
       {
-         _prefs = prefs;
+         Load(prefs);
+      }
+
+      public void Load(IPreferenceSet prefs)
+      {
+         RunMinimized = prefs.Get<bool>(Preference.RunMinimized);
+         StartupCheckForUpdate = prefs.Get<bool>(Preference.StartupCheckForUpdate);
+         DefaultConfigFile = prefs.Get<string>(Preference.DefaultConfigFile);
+         UseDefaultConfigFile = prefs.Get<bool>(Preference.UseDefaultConfigFile);
+         LogFileViewer = prefs.Get<string>(Preference.LogFileViewer);
+         FileExplorer = prefs.Get<string>(Preference.FileExplorer);
+      }
+
+      public void Update(IPreferenceSet prefs)
+      {
+         prefs.Set(Preference.RunMinimized, RunMinimized);
+         prefs.Set(Preference.StartupCheckForUpdate, StartupCheckForUpdate);
+         prefs.Set(Preference.DefaultConfigFile, DefaultConfigFile);
+         prefs.Set(Preference.UseDefaultConfigFile, UseDefaultConfigFile);
+         prefs.Set(Preference.LogFileViewer, LogFileViewer);
+         prefs.Set(Preference.FileExplorer, FileExplorer);
       }
 
       #region Startup
 
+      private bool _runMinimized;
+
       public bool RunMinimized
       {
-         get { return _prefs.GetPreference<bool>(Preference.RunMinimized); }
+         get { return _runMinimized; }
          set
          {
             if (RunMinimized != value)
             {
-               _prefs.SetPreference(Preference.RunMinimized, value);
+               _runMinimized = value;
                OnPropertyChanged("RunMinimized");
             }
          }
       }
 
+      private bool _startupCheckForUpdate;
+
       public bool StartupCheckForUpdate
       {
-         get { return _prefs.GetPreference<bool>(Preference.StartupCheckForUpdate); }
+         get { return _startupCheckForUpdate; }
          set
          {
             if (StartupCheckForUpdate != value)
             {
-               _prefs.SetPreference(Preference.StartupCheckForUpdate, value);
+               _startupCheckForUpdate = value;
                OnPropertyChanged("StartupCheckForUpdate");
             }
          }
@@ -65,15 +87,17 @@ namespace HFM.Forms.Models
 
       #region Configuration File
 
+      private string _defaultConfigFile;
+
       public string DefaultConfigFile
       {
-         get { return _prefs.GetPreference<string>(Preference.DefaultConfigFile); }
+         get { return _defaultConfigFile; }
          set
          {
             if (DefaultConfigFile != value)
             {
                string newValue = value == null ? String.Empty : value.Trim();
-               _prefs.SetPreference(Preference.DefaultConfigFile, newValue);
+               _defaultConfigFile = newValue;
                OnPropertyChanged("DefaultConfigFile");
                
                if (newValue.Length == 0)
@@ -84,14 +108,16 @@ namespace HFM.Forms.Models
          }
       }
 
+      private bool _useDefaultConfigFile;
+
       public bool UseDefaultConfigFile
       {
-         get { return _prefs.GetPreference<bool>(Preference.UseDefaultConfigFile); }
+         get { return _useDefaultConfigFile; }
          set
          {
             if (UseDefaultConfigFile != value)
             {
-               _prefs.SetPreference(Preference.UseDefaultConfigFile, value);
+               _useDefaultConfigFile = value;
                OnPropertyChanged("UseDefaultConfigFile");
             }
          }
@@ -101,29 +127,33 @@ namespace HFM.Forms.Models
 
       #region External Programs
 
+      private string _logFileViewer;
+
       public string LogFileViewer
       {
-         get { return _prefs.GetPreference<string>(Preference.LogFileViewer); }
+         get { return _logFileViewer; }
          set
          {
             if (LogFileViewer != value)
             {
                string newValue = value == null ? String.Empty : value.Trim();
-               _prefs.SetPreference(Preference.LogFileViewer, newValue);
+               _logFileViewer = newValue;
                OnPropertyChanged("LogFileViewer");
             }
          }
       }
 
+      private string _fileExplorer;
+
       public string FileExplorer
       {
-         get { return _prefs.GetPreference<string>(Preference.FileExplorer); }
+         get { return _fileExplorer; }
          set
          {
             if (FileExplorer != value)
             {
                string newValue = value == null ? String.Empty : value.Trim();
-               _prefs.SetPreference(Preference.FileExplorer, newValue);
+               _fileExplorer = newValue;
                OnPropertyChanged("FileExplorer");
             }
          }

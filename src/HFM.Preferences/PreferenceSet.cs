@@ -65,7 +65,7 @@ namespace HFM.Preferences
       /// </summary>
       public string CacheDirectory
       {
-         get { return Path.Combine(ApplicationDataFolderPath, GetPreference<string>(Preference.CacheFolder)); }
+         get { return Path.Combine(ApplicationDataFolderPath, Get<string>(Preference.CacheFolder)); }
       }
       
       /// <summary>
@@ -75,7 +75,7 @@ namespace HFM.Preferences
       {
          get 
          { 
-            return String.Concat(Constants.EOCUserXmlUrl, GetPreference<int>(Preference.EocUserId));
+            return String.Concat(Constants.EOCUserXmlUrl, Get<int>(Preference.EocUserId));
          }
       }
 
@@ -86,7 +86,7 @@ namespace HFM.Preferences
       {
          get
          {
-            return new Uri(String.Concat(Constants.EOCUserBaseUrl, GetPreference<int>(Preference.EocUserId)));
+            return new Uri(String.Concat(Constants.EOCUserBaseUrl, Get<int>(Preference.EocUserId)));
          }
       }
 
@@ -97,7 +97,7 @@ namespace HFM.Preferences
       {
          get
          {
-            return new Uri(String.Concat(Constants.EOCTeamBaseUrl, GetPreference<int>(Preference.TeamId)));
+            return new Uri(String.Concat(Constants.EOCTeamBaseUrl, Get<int>(Preference.TeamId)));
          }
       }
 
@@ -108,7 +108,7 @@ namespace HFM.Preferences
       {
          get
          {
-            return new Uri(String.Concat(Constants.StanfordBaseUrl, GetPreference<string>(Preference.StanfordId)));
+            return new Uri(String.Concat(Constants.StanfordBaseUrl, Get<string>(Preference.StanfordId)));
          }
       }
 
@@ -147,7 +147,7 @@ namespace HFM.Preferences
       /// <typeparam name="T">Preference Data Type</typeparam>
       /// <param name="key">Preference Key</param>
       [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
-      public T GetPreference<T>(Preference key)
+      public T Get<T>(Preference key)
       {
          if (_prefs[key].DataType == typeof(T))
          {
@@ -159,12 +159,24 @@ namespace HFM.Preferences
       }
 
       /// <summary>
+      /// Get a Preference of Type T
+      /// </summary>
+      /// <typeparam name="T">Preference Data Type</typeparam>
+      /// <param name="key">Preference Key</param>
+      //[Obsolete("Use Get<T>()")]
+      [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
+      public T GetPreference<T>(Preference key)
+      {
+         return Get<T>(key);
+      }
+
+      /// <summary>
       /// Set a Preference of Type T
       /// </summary>
       /// <typeparam name="T">Preference Data Type</typeparam>
       /// <param name="key">Preference Key</param>
       /// <param name="value">Preference Value</param>
-      public void SetPreference<T>(Preference key, T value)
+      public void Set<T>(Preference key, T value)
       {
          if (_prefs[key].DataType == typeof(T))
          {
@@ -181,6 +193,18 @@ namespace HFM.Preferences
 
          throw new ArgumentException(String.Format(CultureInfo.CurrentCulture,
             "Preference '{0}' of Type '{1}' does not exist.", key, typeof(T)));
+      }
+
+      /// <summary>
+      /// Set a Preference of Type T
+      /// </summary>
+      /// <typeparam name="T">Preference Data Type</typeparam>
+      /// <param name="key">Preference Key</param>
+      /// <param name="value">Preference Value</param>
+      //[Obsolete("Use Set<T>()")]
+      public void SetPreference<T>(Preference key, T value)
+      {
+         Set(key, value);
       }
 
       private void SetupDictionary()
@@ -303,116 +327,116 @@ namespace HFM.Preferences
          var size = new Size();
          StringCollection columns = null;
          GetFormStateValues(ref location, ref size, ref columns);
-         SetPreference(Preference.FormLocation, location);
-         SetPreference(Preference.FormSize, size);
-         SetPreference(Preference.FormColumns, columns);
-         SetPreference(Preference.FormSortColumn, Settings.Default.FormSortColumn);
-         SetPreference(Preference.FormSortOrder, GetFormSortOrder());
-         SetPreference(Preference.FormSplitLocation, Settings.Default.FormSplitLocation);
-         SetPreference(Preference.FormLogWindowHeight, Settings.Default.FormLogWindowHeight);
-         SetPreference(Preference.FormLogVisible, Settings.Default.FormLogVisible);
-         SetPreference(Preference.QueueViewerVisible, Settings.Default.QueueViewerVisible);
-         SetPreference(Preference.TimeStyle, GetTimeStyle());
-         SetPreference(Preference.CompletedCountDisplay, GetCompletedCountDisplay());
-         SetPreference(Preference.ShowVersions, Settings.Default.ShowVersions);
-         SetPreference(Preference.FormShowStyle, GetFormShowStyle());
+         Set(Preference.FormLocation, location);
+         Set(Preference.FormSize, size);
+         Set(Preference.FormColumns, columns);
+         Set(Preference.FormSortColumn, Settings.Default.FormSortColumn);
+         Set(Preference.FormSortOrder, GetFormSortOrder());
+         Set(Preference.FormSplitLocation, Settings.Default.FormSplitLocation);
+         Set(Preference.FormLogWindowHeight, Settings.Default.FormLogWindowHeight);
+         Set(Preference.FormLogVisible, Settings.Default.FormLogVisible);
+         Set(Preference.QueueViewerVisible, Settings.Default.QueueViewerVisible);
+         Set(Preference.TimeStyle, GetTimeStyle());
+         Set(Preference.CompletedCountDisplay, GetCompletedCountDisplay());
+         Set(Preference.ShowVersions, Settings.Default.ShowVersions);
+         Set(Preference.FormShowStyle, GetFormShowStyle());
 
          location = new Point();
          size = new Size();
          GetBenchmarksFormStateValues(ref location, ref size);
-         SetPreference(Preference.BenchmarksFormLocation, location);
-         SetPreference(Preference.BenchmarksFormSize, size);
-         SetPreference(Preference.GraphColors, GetGraphColorsList());
-         SetPreference(Preference.BenchmarksGraphLayoutType, GetBenchmarksGraphLayoutType());
-         SetPreference(Preference.BenchmarksClientsPerGraph, Settings.Default.BenchmarksClientsPerGraph);
+         Set(Preference.BenchmarksFormLocation, location);
+         Set(Preference.BenchmarksFormSize, size);
+         Set(Preference.GraphColors, GetGraphColorsList());
+         Set(Preference.BenchmarksGraphLayoutType, GetBenchmarksGraphLayoutType());
+         Set(Preference.BenchmarksClientsPerGraph, Settings.Default.BenchmarksClientsPerGraph);
 
          location = new Point();
          size = new Size();
          GetMessagesFormStateValues(ref location, ref size);
-         SetPreference(Preference.MessagesFormLocation, location);
-         SetPreference(Preference.MessagesFormSize, size);
+         Set(Preference.MessagesFormLocation, location);
+         Set(Preference.MessagesFormSize, size);
 
-         SetPreference(Preference.SyncOnLoad, Settings.Default.SyncOnLoad);
-         SetPreference(Preference.SyncOnSchedule, Settings.Default.SyncOnSchedule);
-         SetPreference(Preference.SyncTimeMinutes, GetValidNumeric(Settings.Default.SyncTimeMinutes, Constants.MinutesDefault));
-         SetPreference(Preference.DuplicateUserIdCheck, Settings.Default.DuplicateUserIDCheck);
-         SetPreference(Preference.DuplicateProjectCheck, Settings.Default.DuplicateProjectCheck);
-         SetPreference(Preference.AllowRunningAsync, Settings.Default.AllowRunningAsync);
-         SetPreference(Preference.ShowXmlStats, Settings.Default.ShowUserStats);
-         SetPreference(Preference.ShowTeamStats, Settings.Default.ShowTeamStats);
+         Set(Preference.SyncOnLoad, Settings.Default.SyncOnLoad);
+         Set(Preference.SyncOnSchedule, Settings.Default.SyncOnSchedule);
+         Set(Preference.SyncTimeMinutes, GetValidNumeric(Settings.Default.SyncTimeMinutes, Constants.MinutesDefault));
+         Set(Preference.DuplicateUserIdCheck, Settings.Default.DuplicateUserIDCheck);
+         Set(Preference.DuplicateProjectCheck, Settings.Default.DuplicateProjectCheck);
+         Set(Preference.AllowRunningAsync, Settings.Default.AllowRunningAsync);
+         Set(Preference.ShowXmlStats, Settings.Default.ShowUserStats);
+         Set(Preference.ShowTeamStats, Settings.Default.ShowTeamStats);
         
-         SetPreference(Preference.GenerateWeb, Settings.Default.GenerateWeb);
-         SetPreference(Preference.GenerateInterval, GetValidNumeric(Settings.Default.GenerateInterval, Constants.MinutesDefault));
-         SetPreference(Preference.WebGenAfterRefresh, Settings.Default.WebGenAfterRefresh);
-         SetPreference(Preference.WebRoot, DecryptWebRoot(Settings.Default.WebRoot, symmetricProvider, _iv, _symmetricKey));
-         SetPreference(Preference.WebGenCopyFAHlog, Settings.Default.WebGenCopyFAHlog);
-         SetPreference(Preference.WebGenFtpMode, GetFtpType());
-         SetPreference(Preference.WebGenCopyHtml, Settings.Default.WebGenCopyHtml);
-         SetPreference(Preference.WebGenCopyXml, Settings.Default.WebGenCopyXml);
-         SetPreference(Preference.WebGenCopyClientData, Settings.Default.WebGenCopyClientData);
-         SetPreference(Preference.WebGenLimitLogSize, Settings.Default.WebGenLimitLogSize);
-         SetPreference(Preference.WebGenLimitLogSizeLength, Settings.Default.WebGenLimitLogSizeLength);
-         SetPreference(Preference.CssFile, Settings.Default.CSSFile);
-         SetPreference(Preference.WebOverview, Settings.Default.WebOverview);
-         SetPreference(Preference.WebMobileOverview, Settings.Default.WebMobileOverview);
-         SetPreference(Preference.WebSummary, Settings.Default.WebSummary);
-         SetPreference(Preference.WebMobileSummary, Settings.Default.WebMobileSummary);
-         SetPreference(Preference.WebInstance, Settings.Default.WebInstance);
+         Set(Preference.GenerateWeb, Settings.Default.GenerateWeb);
+         Set(Preference.GenerateInterval, GetValidNumeric(Settings.Default.GenerateInterval, Constants.MinutesDefault));
+         Set(Preference.WebGenAfterRefresh, Settings.Default.WebGenAfterRefresh);
+         Set(Preference.WebRoot, DecryptWebRoot(Settings.Default.WebRoot, symmetricProvider, _iv, _symmetricKey));
+         Set(Preference.WebGenCopyFAHlog, Settings.Default.WebGenCopyFAHlog);
+         Set(Preference.WebGenFtpMode, GetFtpType());
+         Set(Preference.WebGenCopyHtml, Settings.Default.WebGenCopyHtml);
+         Set(Preference.WebGenCopyXml, Settings.Default.WebGenCopyXml);
+         Set(Preference.WebGenCopyClientData, Settings.Default.WebGenCopyClientData);
+         Set(Preference.WebGenLimitLogSize, Settings.Default.WebGenLimitLogSize);
+         Set(Preference.WebGenLimitLogSizeLength, Settings.Default.WebGenLimitLogSizeLength);
+         Set(Preference.CssFile, Settings.Default.CSSFile);
+         Set(Preference.WebOverview, Settings.Default.WebOverview);
+         Set(Preference.WebMobileOverview, Settings.Default.WebMobileOverview);
+         Set(Preference.WebSummary, Settings.Default.WebSummary);
+         Set(Preference.WebMobileSummary, Settings.Default.WebMobileSummary);
+         Set(Preference.WebInstance, Settings.Default.WebInstance);
 
-         SetPreference(Preference.RunMinimized, Settings.Default.RunMinimized);
-         SetPreference(Preference.StartupCheckForUpdate, Settings.Default.StartupCheckForUpdate);
-         SetPreference(Preference.UseDefaultConfigFile, Settings.Default.UseDefaultConfigFile);
-         SetPreference(Preference.DefaultConfigFile, Settings.Default.DefaultConfigFile);
+         Set(Preference.RunMinimized, Settings.Default.RunMinimized);
+         Set(Preference.StartupCheckForUpdate, Settings.Default.StartupCheckForUpdate);
+         Set(Preference.UseDefaultConfigFile, Settings.Default.UseDefaultConfigFile);
+         Set(Preference.DefaultConfigFile, Settings.Default.DefaultConfigFile);
 
-         SetPreference(Preference.OfflineLast, Settings.Default.OfflineLast);
-         SetPreference(Preference.ColorLogFile, Settings.Default.ColorLogFile);
-         SetPreference(Preference.AutoSaveConfig, Settings.Default.AutoSaveConfig);
-         SetPreference(Preference.MaintainSelectedClient, Settings.Default.MaintainSelectedClient);
-         SetPreference(Preference.PpdCalculation, GetPpdCalculation());
-         SetPreference(Preference.DecimalPlaces, Settings.Default.DecimalPlaces);
-         SetPreference(Preference.CalculateBonus, Settings.Default.CalculateBonus);
-         SetPreference(Preference.EtaDate, Settings.Default.EtaDate);
-         SetPreference(Preference.LogFileViewer, Settings.Default.LogFileViewer);
-         SetPreference(Preference.FileExplorer, Settings.Default.FileExplorer);
-         SetPreference(Preference.MessageLevel, Settings.Default.MessageLevel);
+         Set(Preference.OfflineLast, Settings.Default.OfflineLast);
+         Set(Preference.ColorLogFile, Settings.Default.ColorLogFile);
+         Set(Preference.AutoSaveConfig, Settings.Default.AutoSaveConfig);
+         Set(Preference.MaintainSelectedClient, Settings.Default.MaintainSelectedClient);
+         Set(Preference.PpdCalculation, GetPpdCalculation());
+         Set(Preference.DecimalPlaces, Settings.Default.DecimalPlaces);
+         Set(Preference.CalculateBonus, Settings.Default.CalculateBonus);
+         Set(Preference.EtaDate, Settings.Default.EtaDate);
+         Set(Preference.LogFileViewer, Settings.Default.LogFileViewer);
+         Set(Preference.FileExplorer, Settings.Default.FileExplorer);
+         Set(Preference.MessageLevel, Settings.Default.MessageLevel);
 
-         SetPreference(Preference.EmailReportingEnabled, Settings.Default.EmailReportingEnabled);
-         SetPreference(Preference.EmailReportingServerSecure, Settings.Default.EmailReportingServerSecure);
-         SetPreference(Preference.EmailReportingToAddress, Settings.Default.EmailReportingToAddress);
-         SetPreference(Preference.EmailReportingFromAddress, Settings.Default.EmailReportingFromAddress);
-         SetPreference(Preference.EmailReportingServerAddress, Settings.Default.EmailReportingServerAddress);
-         SetPreference(Preference.EmailReportingServerPort, Settings.Default.EmailReportingServerPort);
-         SetPreference(Preference.EmailReportingServerUsername, Settings.Default.EmailReportingServerUsername);
-         SetPreference(Preference.EmailReportingServerPassword, DecryptEmailReportingServerPassword(Settings.Default.EmailReportingServerPassword, symmetricProvider, _iv, _symmetricKey));
-         SetPreference(Preference.ReportEuePause, Settings.Default.ReportEuePause);
-         SetPreference(Preference.ReportHung, Settings.Default.ReportHung);
+         Set(Preference.EmailReportingEnabled, Settings.Default.EmailReportingEnabled);
+         Set(Preference.EmailReportingServerSecure, Settings.Default.EmailReportingServerSecure);
+         Set(Preference.EmailReportingToAddress, Settings.Default.EmailReportingToAddress);
+         Set(Preference.EmailReportingFromAddress, Settings.Default.EmailReportingFromAddress);
+         Set(Preference.EmailReportingServerAddress, Settings.Default.EmailReportingServerAddress);
+         Set(Preference.EmailReportingServerPort, Settings.Default.EmailReportingServerPort);
+         Set(Preference.EmailReportingServerUsername, Settings.Default.EmailReportingServerUsername);
+         Set(Preference.EmailReportingServerPassword, DecryptEmailReportingServerPassword(Settings.Default.EmailReportingServerPassword, symmetricProvider, _iv, _symmetricKey));
+         Set(Preference.ReportEuePause, Settings.Default.ReportEuePause);
+         Set(Preference.ReportHung, Settings.Default.ReportHung);
          
-         SetPreference(Preference.EocUserId, Settings.Default.EOCUserID);
-         SetPreference(Preference.StanfordId, Settings.Default.StanfordID);
-         SetPreference(Preference.TeamId, Settings.Default.TeamID);
-         SetPreference(Preference.ProjectDownloadUrl, Settings.Default.ProjectDownloadUrl);
-         SetPreference(Preference.UseProxy, Settings.Default.UseProxy);
-         SetPreference(Preference.ProxyServer, Settings.Default.ProxyServer);
-         SetPreference(Preference.ProxyPort, Settings.Default.ProxyPort);
-         SetPreference(Preference.UseProxyAuth, Settings.Default.UseProxyAuth);
-         SetPreference(Preference.ProxyUser, Settings.Default.ProxyUser);
-         SetPreference(Preference.ProxyPass, DecryptProxyPass(Settings.Default.ProxyPass, symmetricProvider, _iv, _symmetricKey));
+         Set(Preference.EocUserId, Settings.Default.EOCUserID);
+         Set(Preference.StanfordId, Settings.Default.StanfordID);
+         Set(Preference.TeamId, Settings.Default.TeamID);
+         Set(Preference.ProjectDownloadUrl, Settings.Default.ProjectDownloadUrl);
+         Set(Preference.UseProxy, Settings.Default.UseProxy);
+         Set(Preference.ProxyServer, Settings.Default.ProxyServer);
+         Set(Preference.ProxyPort, Settings.Default.ProxyPort);
+         Set(Preference.UseProxyAuth, Settings.Default.UseProxyAuth);
+         Set(Preference.ProxyUser, Settings.Default.ProxyUser);
+         Set(Preference.ProxyPass, DecryptProxyPass(Settings.Default.ProxyPass, symmetricProvider, _iv, _symmetricKey));
 
-         SetPreference(Preference.HistoryProductionType, (HistoryProductionView)Settings.Default.HistoryProductionView);
-         SetPreference(Preference.ShowFirstChecked, Settings.Default.ShowFirstChecked);
-         SetPreference(Preference.ShowLastChecked, Settings.Default.ShowLastChecked);
-         SetPreference(Preference.ShowEntriesValue, Settings.Default.ShowEntriesValue);
-         SetPreference(Preference.HistorySortColumnName, Settings.Default.HistorySortColumnName);
-         SetPreference(Preference.HistorySortOrder, Settings.Default.HistorySortOrder);
+         Set(Preference.HistoryProductionType, (HistoryProductionView)Settings.Default.HistoryProductionView);
+         Set(Preference.ShowFirstChecked, Settings.Default.ShowFirstChecked);
+         Set(Preference.ShowLastChecked, Settings.Default.ShowLastChecked);
+         Set(Preference.ShowEntriesValue, Settings.Default.ShowEntriesValue);
+         Set(Preference.HistorySortColumnName, Settings.Default.HistorySortColumnName);
+         Set(Preference.HistorySortOrder, Settings.Default.HistorySortOrder);
          location = new Point();
          size = new Size();
          columns = null;
          GetHistoryFormStateValues(ref location, ref size, ref columns);
-         SetPreference(Preference.HistoryFormLocation, location);
-         SetPreference(Preference.HistoryFormSize, size);
-         SetPreference(Preference.HistoryFormColumns, columns);
+         Set(Preference.HistoryFormLocation, location);
+         Set(Preference.HistoryFormSize, size);
+         Set(Preference.HistoryFormColumns, columns);
 
-         SetPreference(Preference.CacheFolder, Settings.Default.CacheFolder);
+         Set(Preference.CacheFolder, Settings.Default.CacheFolder);
 
          Debug.WriteLine(String.Format("{0} Execution Time: {1}", HfmTrace.FunctionName, HfmTrace.GetExecTime(start)));
       }
@@ -684,79 +708,79 @@ namespace HFM.Preferences
          
          try
          {
-            Settings.Default.FormLocation = GetPreference<Point>(Preference.FormLocation);
-            Settings.Default.FormSize = GetPreference<Size>(Preference.FormSize);
-            Settings.Default.FormColumns = GetPreference<StringCollection>(Preference.FormColumns);
-            Settings.Default.FormSortColumn = GetPreference<string>(Preference.FormSortColumn);
-            Settings.Default.FormSortOrder = GetPreference<SortOrder>(Preference.FormSortOrder);
-            Settings.Default.FormSplitLocation = GetPreference<int>(Preference.FormSplitLocation);
-            Settings.Default.FormLogWindowHeight = GetPreference<int>(Preference.FormLogWindowHeight);
-            Settings.Default.FormLogVisible = GetPreference<bool>(Preference.FormLogVisible);
-            Settings.Default.QueueViewerVisible = GetPreference<bool>(Preference.QueueViewerVisible);
-            Settings.Default.TimeStyle = GetPreference<TimeStyleType>(Preference.TimeStyle).ToString();
-            Settings.Default.CompletedCountDisplay = GetPreference<CompletedCountDisplayType>(Preference.CompletedCountDisplay).ToString();
-            Settings.Default.ShowVersions = GetPreference<bool>(Preference.ShowVersions);
-            if (Settings.Default.FormShowStyle != GetPreference<FormShowStyleType>(Preference.FormShowStyle).ToString())
+            Settings.Default.FormLocation = Get<Point>(Preference.FormLocation);
+            Settings.Default.FormSize = Get<Size>(Preference.FormSize);
+            Settings.Default.FormColumns = Get<StringCollection>(Preference.FormColumns);
+            Settings.Default.FormSortColumn = Get<string>(Preference.FormSortColumn);
+            Settings.Default.FormSortOrder = Get<SortOrder>(Preference.FormSortOrder);
+            Settings.Default.FormSplitLocation = Get<int>(Preference.FormSplitLocation);
+            Settings.Default.FormLogWindowHeight = Get<int>(Preference.FormLogWindowHeight);
+            Settings.Default.FormLogVisible = Get<bool>(Preference.FormLogVisible);
+            Settings.Default.QueueViewerVisible = Get<bool>(Preference.QueueViewerVisible);
+            Settings.Default.TimeStyle = Get<TimeStyleType>(Preference.TimeStyle).ToString();
+            Settings.Default.CompletedCountDisplay = Get<CompletedCountDisplayType>(Preference.CompletedCountDisplay).ToString();
+            Settings.Default.ShowVersions = Get<bool>(Preference.ShowVersions);
+            if (Settings.Default.FormShowStyle != Get<FormShowStyleType>(Preference.FormShowStyle).ToString())
             {
                raiseFormShowStyleChanged = true;
             }
-            Settings.Default.FormShowStyle = GetPreference<FormShowStyleType>(Preference.FormShowStyle).ToString();
+            Settings.Default.FormShowStyle = Get<FormShowStyleType>(Preference.FormShowStyle).ToString();
 
-            Settings.Default.BenchmarksFormLocation = GetPreference<Point>(Preference.BenchmarksFormLocation);
-            Settings.Default.BenchmarksFormSize = GetPreference<Size>(Preference.BenchmarksFormSize);
-            Settings.Default.GraphColors = GetGraphColorsStringCollection(GetPreference<List<Color>>(Preference.GraphColors));
-            Settings.Default.BenchmarksGraphLayoutType = GetPreference<GraphLayoutType>(Preference.BenchmarksGraphLayoutType).ToString();
-            Settings.Default.BenchmarksClientsPerGraph = GetPreference<int>(Preference.BenchmarksClientsPerGraph);
+            Settings.Default.BenchmarksFormLocation = Get<Point>(Preference.BenchmarksFormLocation);
+            Settings.Default.BenchmarksFormSize = Get<Size>(Preference.BenchmarksFormSize);
+            Settings.Default.GraphColors = GetGraphColorsStringCollection(Get<List<Color>>(Preference.GraphColors));
+            Settings.Default.BenchmarksGraphLayoutType = Get<GraphLayoutType>(Preference.BenchmarksGraphLayoutType).ToString();
+            Settings.Default.BenchmarksClientsPerGraph = Get<int>(Preference.BenchmarksClientsPerGraph);
 
-            Settings.Default.MessagesFormLocation = GetPreference<Point>(Preference.MessagesFormLocation);
-            Settings.Default.MessagesFormSize = GetPreference<Size>(Preference.MessagesFormSize);
+            Settings.Default.MessagesFormLocation = Get<Point>(Preference.MessagesFormLocation);
+            Settings.Default.MessagesFormSize = Get<Size>(Preference.MessagesFormSize);
 
-            Settings.Default.SyncOnLoad = GetPreference<bool>(Preference.SyncOnLoad);
-            if (Settings.Default.SyncOnSchedule != GetPreference<bool>(Preference.SyncOnSchedule) ||
-                Settings.Default.SyncTimeMinutes != GetPreference<int>(Preference.SyncTimeMinutes).ToString())
+            Settings.Default.SyncOnLoad = Get<bool>(Preference.SyncOnLoad);
+            if (Settings.Default.SyncOnSchedule != Get<bool>(Preference.SyncOnSchedule) ||
+                Settings.Default.SyncTimeMinutes != Get<int>(Preference.SyncTimeMinutes).ToString())
             {
                raiseTimerSettingsChanged = true;
             }
-            Settings.Default.SyncOnSchedule = GetPreference<bool>(Preference.SyncOnSchedule);
-            Settings.Default.SyncTimeMinutes = GetPreference<int>(Preference.SyncTimeMinutes).ToString();
-            Settings.Default.DuplicateUserIDCheck = GetPreference<bool>(Preference.DuplicateUserIdCheck);
-            Settings.Default.DuplicateProjectCheck = GetPreference<bool>(Preference.DuplicateProjectCheck);
-            Settings.Default.AllowRunningAsync = GetPreference<bool>(Preference.AllowRunningAsync);
-            if (Settings.Default.ShowUserStats != GetPreference<bool>(Preference.ShowXmlStats))
+            Settings.Default.SyncOnSchedule = Get<bool>(Preference.SyncOnSchedule);
+            Settings.Default.SyncTimeMinutes = Get<int>(Preference.SyncTimeMinutes).ToString();
+            Settings.Default.DuplicateUserIDCheck = Get<bool>(Preference.DuplicateUserIdCheck);
+            Settings.Default.DuplicateProjectCheck = Get<bool>(Preference.DuplicateProjectCheck);
+            Settings.Default.AllowRunningAsync = Get<bool>(Preference.AllowRunningAsync);
+            if (Settings.Default.ShowUserStats != Get<bool>(Preference.ShowXmlStats))
             {
                raiseShowUserStatsChanged = true;
             }
-            Settings.Default.ShowUserStats = GetPreference<bool>(Preference.ShowXmlStats);
-            Settings.Default.ShowTeamStats = GetPreference<bool>(Preference.ShowTeamStats);
+            Settings.Default.ShowUserStats = Get<bool>(Preference.ShowXmlStats);
+            Settings.Default.ShowTeamStats = Get<bool>(Preference.ShowTeamStats);
 
-            if (Settings.Default.GenerateWeb != GetPreference<bool>(Preference.GenerateWeb) ||
-                Settings.Default.GenerateInterval != GetPreference<int>(Preference.GenerateInterval).ToString() ||
-                Settings.Default.WebGenAfterRefresh != GetPreference<bool>(Preference.WebGenAfterRefresh))
+            if (Settings.Default.GenerateWeb != Get<bool>(Preference.GenerateWeb) ||
+                Settings.Default.GenerateInterval != Get<int>(Preference.GenerateInterval).ToString() ||
+                Settings.Default.WebGenAfterRefresh != Get<bool>(Preference.WebGenAfterRefresh))
             {
                raiseTimerSettingsChanged = true;
             }
-            Settings.Default.GenerateWeb = GetPreference<bool>(Preference.GenerateWeb);
-            Settings.Default.GenerateInterval = GetPreference<int>(Preference.GenerateInterval).ToString();
-            Settings.Default.WebGenAfterRefresh = GetPreference<bool>(Preference.WebGenAfterRefresh);
-            Settings.Default.WebRoot = EncryptWebRoot(GetPreference<string>(Preference.WebRoot), symmetricProvider, _iv, _symmetricKey);
-            Settings.Default.WebGenCopyFAHlog = GetPreference<bool>(Preference.WebGenCopyFAHlog);
-            Settings.Default.WebGenFtpMode = GetPreference<FtpType>(Preference.WebGenFtpMode).ToString();
-            Settings.Default.WebGenCopyHtml = GetPreference<bool>(Preference.WebGenCopyHtml);
-            Settings.Default.WebGenCopyXml = GetPreference<bool>(Preference.WebGenCopyXml);
-            Settings.Default.WebGenCopyClientData = GetPreference<bool>(Preference.WebGenCopyClientData);
-            Settings.Default.WebGenLimitLogSize = GetPreference<bool>(Preference.WebGenLimitLogSize);
-            Settings.Default.WebGenLimitLogSizeLength = GetPreference<int>(Preference.WebGenLimitLogSizeLength);
-            Settings.Default.CSSFile = GetPreference<string>(Preference.CssFile);
-            Settings.Default.WebOverview = GetPreference<string>(Preference.WebOverview);
-            Settings.Default.WebMobileOverview = GetPreference<string>(Preference.WebMobileOverview);
-            Settings.Default.WebSummary = GetPreference<string>(Preference.WebSummary);
-            Settings.Default.WebMobileSummary = GetPreference<string>(Preference.WebMobileSummary);
-            Settings.Default.WebInstance = GetPreference<string>(Preference.WebInstance);
+            Settings.Default.GenerateWeb = Get<bool>(Preference.GenerateWeb);
+            Settings.Default.GenerateInterval = Get<int>(Preference.GenerateInterval).ToString();
+            Settings.Default.WebGenAfterRefresh = Get<bool>(Preference.WebGenAfterRefresh);
+            Settings.Default.WebRoot = EncryptWebRoot(Get<string>(Preference.WebRoot), symmetricProvider, _iv, _symmetricKey);
+            Settings.Default.WebGenCopyFAHlog = Get<bool>(Preference.WebGenCopyFAHlog);
+            Settings.Default.WebGenFtpMode = Get<FtpType>(Preference.WebGenFtpMode).ToString();
+            Settings.Default.WebGenCopyHtml = Get<bool>(Preference.WebGenCopyHtml);
+            Settings.Default.WebGenCopyXml = Get<bool>(Preference.WebGenCopyXml);
+            Settings.Default.WebGenCopyClientData = Get<bool>(Preference.WebGenCopyClientData);
+            Settings.Default.WebGenLimitLogSize = Get<bool>(Preference.WebGenLimitLogSize);
+            Settings.Default.WebGenLimitLogSizeLength = Get<int>(Preference.WebGenLimitLogSizeLength);
+            Settings.Default.CSSFile = Get<string>(Preference.CssFile);
+            Settings.Default.WebOverview = Get<string>(Preference.WebOverview);
+            Settings.Default.WebMobileOverview = Get<string>(Preference.WebMobileOverview);
+            Settings.Default.WebSummary = Get<string>(Preference.WebSummary);
+            Settings.Default.WebMobileSummary = Get<string>(Preference.WebMobileSummary);
+            Settings.Default.WebInstance = Get<string>(Preference.WebInstance);
 
-            Settings.Default.RunMinimized = GetPreference<bool>(Preference.RunMinimized);
-            Settings.Default.StartupCheckForUpdate = GetPreference<bool>(Preference.StartupCheckForUpdate);
-            Settings.Default.UseDefaultConfigFile = GetPreference<bool>(Preference.UseDefaultConfigFile);
-            Settings.Default.DefaultConfigFile = GetPreference<string>(Preference.DefaultConfigFile);
+            Settings.Default.RunMinimized = Get<bool>(Preference.RunMinimized);
+            Settings.Default.StartupCheckForUpdate = Get<bool>(Preference.StartupCheckForUpdate);
+            Settings.Default.UseDefaultConfigFile = Get<bool>(Preference.UseDefaultConfigFile);
+            Settings.Default.DefaultConfigFile = Get<string>(Preference.DefaultConfigFile);
             // if config file name is nothing, automatically set default config to false
             if (Settings.Default.DefaultConfigFile.Length == 0)
             {
@@ -764,73 +788,73 @@ namespace HFM.Preferences
                Settings.Default.UseDefaultConfigFile = false;
             }
 
-            if (Settings.Default.OfflineLast != GetPreference<bool>(Preference.OfflineLast))
+            if (Settings.Default.OfflineLast != Get<bool>(Preference.OfflineLast))
             {
                raiseOfflineLastChanged = true;
             }
-            Settings.Default.OfflineLast = GetPreference<bool>(Preference.OfflineLast);
-            if (Settings.Default.ColorLogFile != GetPreference<bool>(Preference.ColorLogFile))
+            Settings.Default.OfflineLast = Get<bool>(Preference.OfflineLast);
+            if (Settings.Default.ColorLogFile != Get<bool>(Preference.ColorLogFile))
             {
                raiseColorLogFileChanged = true;
             }
-            Settings.Default.ColorLogFile = GetPreference<bool>(Preference.ColorLogFile);
-            Settings.Default.AutoSaveConfig = GetPreference<bool>(Preference.AutoSaveConfig);
-            Settings.Default.MaintainSelectedClient = GetPreference<bool>(Preference.MaintainSelectedClient);
-            if (Settings.Default.PpdCalculation != GetPreference<PpdCalculationType>(Preference.PpdCalculation).ToString())
+            Settings.Default.ColorLogFile = Get<bool>(Preference.ColorLogFile);
+            Settings.Default.AutoSaveConfig = Get<bool>(Preference.AutoSaveConfig);
+            Settings.Default.MaintainSelectedClient = Get<bool>(Preference.MaintainSelectedClient);
+            if (Settings.Default.PpdCalculation != Get<PpdCalculationType>(Preference.PpdCalculation).ToString())
             {
                raisePpdCalculationChanged = true;
             }
-            Settings.Default.PpdCalculation = GetPreference<PpdCalculationType>(Preference.PpdCalculation).ToString();
-            if (Settings.Default.DecimalPlaces != GetPreference<int>(Preference.DecimalPlaces))
+            Settings.Default.PpdCalculation = Get<PpdCalculationType>(Preference.PpdCalculation).ToString();
+            if (Settings.Default.DecimalPlaces != Get<int>(Preference.DecimalPlaces))
             {
                raiseDecimalPlacesChanged = true;
             }
-            Settings.Default.DecimalPlaces = GetPreference<int>(Preference.DecimalPlaces);
-            if (Settings.Default.CalculateBonus != GetPreference<bool>(Preference.CalculateBonus))
+            Settings.Default.DecimalPlaces = Get<int>(Preference.DecimalPlaces);
+            if (Settings.Default.CalculateBonus != Get<bool>(Preference.CalculateBonus))
             {
                raiseCalculateBonusChanged = true;
             }
-            Settings.Default.CalculateBonus = GetPreference<bool>(Preference.CalculateBonus);
-            Settings.Default.EtaDate = GetPreference<bool>(Preference.EtaDate);
-            Settings.Default.LogFileViewer = GetPreference<string>(Preference.LogFileViewer);
-            Settings.Default.FileExplorer = GetPreference<string>(Preference.FileExplorer);
-            if (Settings.Default.MessageLevel != GetPreference<int>(Preference.MessageLevel))
+            Settings.Default.CalculateBonus = Get<bool>(Preference.CalculateBonus);
+            Settings.Default.EtaDate = Get<bool>(Preference.EtaDate);
+            Settings.Default.LogFileViewer = Get<string>(Preference.LogFileViewer);
+            Settings.Default.FileExplorer = Get<string>(Preference.FileExplorer);
+            if (Settings.Default.MessageLevel != Get<int>(Preference.MessageLevel))
             {
                raiseMessageLevelChanged = true;
             }
-            Settings.Default.MessageLevel = GetPreference<int>(Preference.MessageLevel);
+            Settings.Default.MessageLevel = Get<int>(Preference.MessageLevel);
 
-            Settings.Default.EmailReportingEnabled = GetPreference<bool>(Preference.EmailReportingEnabled);
-            Settings.Default.EmailReportingServerSecure = GetPreference<bool>(Preference.EmailReportingServerSecure);
-            Settings.Default.EmailReportingToAddress = GetPreference<string>(Preference.EmailReportingToAddress);
-            Settings.Default.EmailReportingFromAddress = GetPreference<string>(Preference.EmailReportingFromAddress);
-            Settings.Default.EmailReportingServerAddress = GetPreference<string>(Preference.EmailReportingServerAddress);
-            Settings.Default.EmailReportingServerPort = GetPreference<int>(Preference.EmailReportingServerPort);
-            Settings.Default.EmailReportingServerUsername = GetPreference<string>(Preference.EmailReportingServerUsername);
-            Settings.Default.EmailReportingServerPassword = EncryptEmailReportingServerPassword(GetPreference<string>(Preference.EmailReportingServerPassword), symmetricProvider, _iv, _symmetricKey);
-            Settings.Default.ReportEuePause = GetPreference<bool>(Preference.ReportEuePause);
-            Settings.Default.ReportHung = GetPreference<bool>(Preference.ReportHung);
+            Settings.Default.EmailReportingEnabled = Get<bool>(Preference.EmailReportingEnabled);
+            Settings.Default.EmailReportingServerSecure = Get<bool>(Preference.EmailReportingServerSecure);
+            Settings.Default.EmailReportingToAddress = Get<string>(Preference.EmailReportingToAddress);
+            Settings.Default.EmailReportingFromAddress = Get<string>(Preference.EmailReportingFromAddress);
+            Settings.Default.EmailReportingServerAddress = Get<string>(Preference.EmailReportingServerAddress);
+            Settings.Default.EmailReportingServerPort = Get<int>(Preference.EmailReportingServerPort);
+            Settings.Default.EmailReportingServerUsername = Get<string>(Preference.EmailReportingServerUsername);
+            Settings.Default.EmailReportingServerPassword = EncryptEmailReportingServerPassword(Get<string>(Preference.EmailReportingServerPassword), symmetricProvider, _iv, _symmetricKey);
+            Settings.Default.ReportEuePause = Get<bool>(Preference.ReportEuePause);
+            Settings.Default.ReportHung = Get<bool>(Preference.ReportHung);
 
-            Settings.Default.EOCUserID = GetPreference<int>(Preference.EocUserId);
-            Settings.Default.StanfordID = GetPreference<string>(Preference.StanfordId);
-            Settings.Default.TeamID = GetPreference<int>(Preference.TeamId);
-            Settings.Default.ProjectDownloadUrl = GetPreference<string>(Preference.ProjectDownloadUrl);
-            Settings.Default.UseProxy = GetPreference<bool>(Preference.UseProxy);
-            Settings.Default.ProxyServer = GetPreference<string>(Preference.ProxyServer);
-            Settings.Default.ProxyPort = GetPreference<int>(Preference.ProxyPort);
-            Settings.Default.UseProxyAuth = GetPreference<bool>(Preference.UseProxyAuth);
-            Settings.Default.ProxyUser = GetPreference<string>(Preference.ProxyUser);
-            Settings.Default.ProxyPass = EncryptProxyPass(GetPreference<string>(Preference.ProxyPass), symmetricProvider, _iv, _symmetricKey);
+            Settings.Default.EOCUserID = Get<int>(Preference.EocUserId);
+            Settings.Default.StanfordID = Get<string>(Preference.StanfordId);
+            Settings.Default.TeamID = Get<int>(Preference.TeamId);
+            Settings.Default.ProjectDownloadUrl = Get<string>(Preference.ProjectDownloadUrl);
+            Settings.Default.UseProxy = Get<bool>(Preference.UseProxy);
+            Settings.Default.ProxyServer = Get<string>(Preference.ProxyServer);
+            Settings.Default.ProxyPort = Get<int>(Preference.ProxyPort);
+            Settings.Default.UseProxyAuth = Get<bool>(Preference.UseProxyAuth);
+            Settings.Default.ProxyUser = Get<string>(Preference.ProxyUser);
+            Settings.Default.ProxyPass = EncryptProxyPass(Get<string>(Preference.ProxyPass), symmetricProvider, _iv, _symmetricKey);
 
-            Settings.Default.HistoryProductionView = (int)GetPreference<HistoryProductionView>(Preference.HistoryProductionType);
-            Settings.Default.ShowFirstChecked = GetPreference<bool>(Preference.ShowFirstChecked);
-            Settings.Default.ShowLastChecked = GetPreference<bool>(Preference.ShowLastChecked);
-            Settings.Default.ShowEntriesValue = GetPreference<int>(Preference.ShowEntriesValue);
-            Settings.Default.HistorySortColumnName = GetPreference<string>(Preference.HistorySortColumnName);
-            Settings.Default.HistorySortOrder = GetPreference<SortOrder>(Preference.HistorySortOrder);
-            Settings.Default.HistoryFormLocation = GetPreference<Point>(Preference.HistoryFormLocation);
-            Settings.Default.HistoryFormSize = GetPreference<Size>(Preference.HistoryFormSize);
-            Settings.Default.HistoryFormColumns = GetPreference<StringCollection>(Preference.HistoryFormColumns);
+            Settings.Default.HistoryProductionView = (int)Get<HistoryProductionView>(Preference.HistoryProductionType);
+            Settings.Default.ShowFirstChecked = Get<bool>(Preference.ShowFirstChecked);
+            Settings.Default.ShowLastChecked = Get<bool>(Preference.ShowLastChecked);
+            Settings.Default.ShowEntriesValue = Get<int>(Preference.ShowEntriesValue);
+            Settings.Default.HistorySortColumnName = Get<string>(Preference.HistorySortColumnName);
+            Settings.Default.HistorySortOrder = Get<SortOrder>(Preference.HistorySortOrder);
+            Settings.Default.HistoryFormLocation = Get<Point>(Preference.HistoryFormLocation);
+            Settings.Default.HistoryFormSize = Get<Size>(Preference.HistoryFormSize);
+            Settings.Default.HistoryFormColumns = Get<StringCollection>(Preference.HistoryFormColumns);
             
             if (raiseFormShowStyleChanged) OnFormShowStyleSettingsChanged(EventArgs.Empty);
             if (raiseTimerSettingsChanged) OnTimerSettingsChanged(EventArgs.Empty);

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Preferences - Options Tab - Binding Model
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,114 +28,156 @@ namespace HFM.Forms.Models
 {
    class OptionsModel : INotifyPropertyChanged
    {
-      private readonly IPreferenceSet _prefs;
-
       public OptionsModel(IPreferenceSet prefs)
       {
-         _prefs = prefs;
+         Load(prefs);
+      }
+
+      public void Load(IPreferenceSet prefs)
+      {
+         OfflineLast = prefs.Get<bool>(Preference.OfflineLast);
+         ColorLogFile = prefs.Get<bool>(Preference.ColorLogFile);
+         AutoSaveConfig = prefs.Get<bool>(Preference.AutoSaveConfig);
+         MaintainSelectedClient = prefs.Get<bool>(Preference.MaintainSelectedClient);
+         PpdCalculation = prefs.Get<PpdCalculationType>(Preference.PpdCalculation);
+         DecimalPlaces = prefs.Get<int>(Preference.DecimalPlaces);
+         CalculateBonus = prefs.Get<bool>(Preference.CalculateBonus);
+         EtaDate = prefs.Get<bool>(Preference.EtaDate);
+         MessageLevel = (TraceLevel)prefs.Get<int>(Preference.MessageLevel);
+         FormShowStyle = prefs.Get<FormShowStyleType>(Preference.FormShowStyle);
+      }
+
+      public void Update(IPreferenceSet prefs)
+      {
+         prefs.Set(Preference.OfflineLast, OfflineLast);
+         prefs.Set(Preference.ColorLogFile, ColorLogFile);
+         prefs.Set(Preference.AutoSaveConfig, AutoSaveConfig);
+         prefs.Set(Preference.MaintainSelectedClient, MaintainSelectedClient);
+         prefs.Set(Preference.PpdCalculation, PpdCalculation);
+         prefs.Set(Preference.DecimalPlaces, DecimalPlaces);
+         prefs.Set(Preference.CalculateBonus, CalculateBonus);
+         prefs.Set(Preference.EtaDate, EtaDate);
+         prefs.Set(Preference.MessageLevel, (int)MessageLevel);
+         prefs.Set(Preference.FormShowStyle, FormShowStyle);
       }
 
       #region Interactive Options
 
+      private bool _offlineLast;
+
       public bool OfflineLast
       {
-         get { return _prefs.GetPreference<bool>(Preference.OfflineLast); }
+         get { return _offlineLast; }
          set
          {
             if (OfflineLast != value)
             {
-               _prefs.SetPreference(Preference.OfflineLast, value);
+               _offlineLast = value;
                OnPropertyChanged("OfflineLast");
             }
          }
       }
 
+      private bool _colorLogFile;
+
       public bool ColorLogFile
       {
-         get { return _prefs.GetPreference<bool>(Preference.ColorLogFile); }
+         get { return _colorLogFile; }
          set
          {
             if (ColorLogFile != value)
             {
-               _prefs.SetPreference(Preference.ColorLogFile, value);
+               _colorLogFile = value;
                OnPropertyChanged("ColorLogFile");
             }
          }
       }
 
+      private bool _autoSaveConfig;
+
       public bool AutoSaveConfig
       {
-         get { return _prefs.GetPreference<bool>(Preference.AutoSaveConfig); }
+         get { return _autoSaveConfig; }
          set
          {
             if (AutoSaveConfig != value)
             {
-               _prefs.SetPreference(Preference.AutoSaveConfig, value);
+               _autoSaveConfig = value;
                OnPropertyChanged("AutoSaveConfig");
             }
          }
       }
 
+      private bool _maintainSelectedClient;
+
       public bool MaintainSelectedClient
       {
-         get { return _prefs.GetPreference<bool>(Preference.MaintainSelectedClient); }
+         get { return _maintainSelectedClient; }
          set
          {
             if (MaintainSelectedClient != value)
             {
-               _prefs.SetPreference(Preference.MaintainSelectedClient, value);
+               _maintainSelectedClient = value;
                OnPropertyChanged("MaintainSelectedClient");
             }
          }
       }
+
+      private PpdCalculationType _ppdCalculation;
       
       public PpdCalculationType PpdCalculation
       {
-         get { return _prefs.GetPreference<PpdCalculationType>(Preference.PpdCalculation); }
+         get { return _ppdCalculation; }
          set
          {
             if (PpdCalculation != value)
             {
-               _prefs.SetPreference(Preference.PpdCalculation, value);
+               _ppdCalculation = value;
                OnPropertyChanged("PpdCalculation");
             }
          }
       }
 
+      private int _decimalPlaces;
+
       public int DecimalPlaces
       {
-         get { return _prefs.GetPreference<int>(Preference.DecimalPlaces); }
+         get { return _decimalPlaces; }
          set
          {
             if (DecimalPlaces != value)
             {
-               _prefs.SetPreference(Preference.DecimalPlaces, value);
+               _decimalPlaces = value;
                OnPropertyChanged("DecimalPlaces");
             }
          }
       }
 
+      private bool _calculateBonus;
+
       public bool CalculateBonus
       {
-         get { return _prefs.GetPreference<bool>(Preference.CalculateBonus); }
+         get { return _calculateBonus; }
          set
          {
             if (CalculateBonus != value)
             {
-               _prefs.SetPreference(Preference.CalculateBonus, value);
+               _calculateBonus = value;
                OnPropertyChanged("CalculateBonus");
             }
          }
       }
+
+      private bool _etaDate;
       
       public bool EtaDate
       {
-         get { return _prefs.GetPreference<bool>(Preference.EtaDate); }
+         get { return _etaDate; }
          set
          {
             if (EtaDate != value)
             {
-               _prefs.SetPreference(Preference.EtaDate, value);
+               _etaDate = value;
                OnPropertyChanged("EtaDate");
             }
          }
@@ -145,14 +187,16 @@ namespace HFM.Forms.Models
 
       #region Debug Message Level
 
+      private TraceLevel _messageLevel;
+
       public TraceLevel MessageLevel
       {
-         get { return (TraceLevel)_prefs.GetPreference<int>(Preference.MessageLevel); }
+         get { return _messageLevel; }
          set
          {
             if (MessageLevel != value)
             {
-               _prefs.SetPreference(Preference.MessageLevel, (int)value);
+               _messageLevel = value;
                OnPropertyChanged("MessageLevel");
             }
          }
@@ -162,14 +206,16 @@ namespace HFM.Forms.Models
 
       #region Form Docking Style
 
+      private FormShowStyleType _formShowStyle;
+
       public FormShowStyleType FormShowStyle
       {
-         get { return _prefs.GetPreference<FormShowStyleType>(Preference.FormShowStyle); }
+         get { return _formShowStyle; }
          set
          {
             if (FormShowStyle != value)
             {
-               _prefs.SetPreference(Preference.FormShowStyle, value);
+               _formShowStyle = value;
                OnPropertyChanged("FormShowStyle");
             }
          }

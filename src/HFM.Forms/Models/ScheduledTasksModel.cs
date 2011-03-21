@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Preferences - Scheduled Tasks Tab - Binding Model
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -37,63 +37,113 @@ namespace HFM.Forms.Models
                    WebRootError;
          }
       }
-   
-      private readonly IPreferenceSet _prefs;
-   
+
       public ScheduledTasksModel(IPreferenceSet prefs)
       {
-         _prefs = prefs;
+         Load(prefs);
+      }
+   
+      public void Load(IPreferenceSet prefs)
+      {
+         SyncOnLoad = prefs.Get<bool>(Preference.SyncOnLoad);
+         DuplicateProjectCheck = prefs.Get<bool>(Preference.DuplicateProjectCheck);
+         DuplicateUserIdCheck = prefs.Get<bool>(Preference.DuplicateUserIdCheck);
+         SyncTimeMinutes = prefs.Get<int>(Preference.SyncTimeMinutes);
+         SyncOnSchedule = prefs.Get<bool>(Preference.SyncOnSchedule);
+         AllowRunningAsync = prefs.Get<bool>(Preference.AllowRunningAsync);
+         ShowXmlStats = prefs.Get<bool>(Preference.ShowXmlStats);
+         GenerateInterval = prefs.Get<int>(Preference.GenerateInterval);
+         WebGenAfterRefresh = prefs.Get<bool>(Preference.WebGenAfterRefresh);
+         WebRoot = prefs.Get<string>(Preference.WebRoot);
+         CopyHtml = prefs.Get<bool>(Preference.WebGenCopyHtml);
+         CopyXml = prefs.Get<bool>(Preference.WebGenCopyXml);
+         CopyClientData = prefs.Get<bool>(Preference.WebGenCopyClientData);
+         CopyFAHlog = prefs.Get<bool>(Preference.WebGenCopyFAHlog);
+         FtpMode = prefs.Get<FtpType>(Preference.WebGenFtpMode);
+         LimitLogSize = prefs.Get<bool>(Preference.WebGenLimitLogSize);
+         LimitLogSizeLength = prefs.Get<int>(Preference.WebGenLimitLogSizeLength);
+         GenerateWeb = prefs.Get<bool>(Preference.GenerateWeb);
+      }
+
+      public void Update(IPreferenceSet prefs)
+      {
+         prefs.Set(Preference.SyncOnLoad, SyncOnLoad);
+         prefs.Set(Preference.DuplicateProjectCheck, DuplicateProjectCheck);
+         prefs.Set(Preference.DuplicateUserIdCheck, DuplicateUserIdCheck);
+         prefs.Set(Preference.SyncTimeMinutes, SyncTimeMinutes);
+         prefs.Set(Preference.SyncOnSchedule, SyncOnSchedule);
+         prefs.Set(Preference.AllowRunningAsync, AllowRunningAsync);
+         prefs.Set(Preference.ShowXmlStats, ShowXmlStats);
+         prefs.Set(Preference.GenerateInterval, GenerateInterval);
+         prefs.Set(Preference.WebGenAfterRefresh, WebGenAfterRefresh);
+         prefs.Set(Preference.WebRoot, WebRoot);
+         prefs.Set(Preference.WebGenCopyHtml, CopyHtml);
+         prefs.Set(Preference.WebGenCopyXml, CopyXml);
+         prefs.Set(Preference.WebGenCopyClientData, CopyClientData);
+         prefs.Set(Preference.WebGenCopyFAHlog, CopyFAHlog);
+         prefs.Set(Preference.WebGenFtpMode, FtpMode);
+         prefs.Set(Preference.WebGenLimitLogSize, LimitLogSize);
+         prefs.Set(Preference.WebGenLimitLogSizeLength, LimitLogSizeLength);
+         prefs.Set(Preference.GenerateWeb, GenerateWeb);
       }
 
       #region Refresh Data
 
+      private bool _syncLoad;
+
       public bool SyncOnLoad
       {
-         get { return _prefs.GetPreference<bool>(Preference.SyncOnLoad); }
+         get { return _syncLoad; }
          set
          {
             if (SyncOnLoad != value)
             {
-               _prefs.SetPreference(Preference.SyncOnLoad, value);
+               _syncLoad = value;
                OnPropertyChanged("SyncOnLoad");
             }
          }
       }
 
+      private bool _duplicateProjectCheck;
+
       public bool DuplicateProjectCheck
       {
-         get { return _prefs.GetPreference<bool>(Preference.DuplicateProjectCheck); }
+         get { return _duplicateProjectCheck; }
          set
          {
             if (DuplicateProjectCheck != value)
             {
-               _prefs.SetPreference(Preference.DuplicateProjectCheck, value);
+               _duplicateProjectCheck = value;
                OnPropertyChanged("DuplicateProjectCheck");
             }
          }
       }
 
+      private bool _duplicateUserIdCheck;
+
       public bool DuplicateUserIdCheck
       {
-         get { return _prefs.GetPreference<bool>(Preference.DuplicateUserIdCheck); }
+         get { return _duplicateUserIdCheck; }
          set
          {
             if (DuplicateUserIdCheck != value)
             {
-               _prefs.SetPreference(Preference.DuplicateUserIdCheck, value);
+               _duplicateUserIdCheck = value;
                OnPropertyChanged("DuplicateUserIdCheck");
             }
          }
       }
 
+      private int _syncTimeMinutes;
+
       public int SyncTimeMinutes
       {
-         get { return _prefs.GetPreference<int>(Preference.SyncTimeMinutes); }
+         get { return _syncTimeMinutes; }
          set
          {
             if (SyncTimeMinutes != value)
             {
-               _prefs.SetPreference(Preference.SyncTimeMinutes, value);
+               _syncTimeMinutes = value;
                OnPropertyChanged("SyncTimeMinutes");
             }
          }
@@ -108,40 +158,46 @@ namespace HFM.Forms.Models
          }
       }
 
+      private bool _syncOnSchedule;
+
       public bool SyncOnSchedule
       {
-         get { return _prefs.GetPreference<bool>(Preference.SyncOnSchedule); }
+         get { return _syncOnSchedule; }
          set
          {
             if (SyncOnSchedule != value)
             {
-               _prefs.SetPreference(Preference.SyncOnSchedule, value);
+               _syncOnSchedule = value;
                OnPropertyChanged("SyncOnSchedule");
             }
          }
       }
 
+      private bool _allowRunningAsync;
+
       public bool AllowRunningAsync
       {
-         get { return _prefs.GetPreference<bool>(Preference.AllowRunningAsync); }
+         get { return _allowRunningAsync; }
          set
          {
             if (AllowRunningAsync != value)
             {
-               _prefs.SetPreference(Preference.AllowRunningAsync, value);
+               _allowRunningAsync = value;
                OnPropertyChanged("AllowRunningAsync");
             }
          }
       }
 
+      private bool _showXmlStats;
+
       public bool ShowXmlStats
       {
-         get { return _prefs.GetPreference<bool>(Preference.ShowXmlStats); }
+         get { return _showXmlStats; }
          set
          {
             if (ShowXmlStats != value)
             {
-               _prefs.SetPreference(Preference.ShowXmlStats, value);
+               _showXmlStats = value;
                OnPropertyChanged("ShowXmlStats");
             }
          }
@@ -151,14 +207,16 @@ namespace HFM.Forms.Models
 
       #region Web Generation
 
+      private int _generateInterval;
+
       public int GenerateInterval
       {
-         get { return _prefs.GetPreference<int>(Preference.GenerateInterval); }
+         get { return _generateInterval; }
          set
          {
             if (GenerateInterval != value)
             {
-               _prefs.SetPreference(Preference.GenerateInterval, value);
+               _generateInterval = value;
                OnPropertyChanged("GenerateInterval");
             }
          }
@@ -178,23 +236,27 @@ namespace HFM.Forms.Models
          }
       }
 
+      private bool _webGenAfterRefresh;
+
       public bool WebGenAfterRefresh
       {
-         get { return _prefs.GetPreference<bool>(Preference.WebGenAfterRefresh); }
+         get { return _webGenAfterRefresh; }
          set
          {
             if (WebGenAfterRefresh != value)
             {
-               _prefs.SetPreference(Preference.WebGenAfterRefresh, value);
+               _webGenAfterRefresh = value;
                OnPropertyChanged("WebGenAfterRefresh");
                OnPropertyChanged("GenerateIntervalEnabled");
             }
          }
       }
 
+      private string _webRoot;
+
       public string WebRoot
       {
-         get { return _prefs.GetPreference<string>(Preference.WebRoot); }
+         get { return _webRoot; }
          set
          {
             if (WebRoot != value)
@@ -213,7 +275,7 @@ namespace HFM.Forms.Models
                      newValue += "/";
                   }
                }
-               _prefs.SetPreference(Preference.WebRoot, newValue);
+               _webRoot = newValue;
                OnPropertyChanged("WebRoot");
                OnPropertyChanged("FtpModeEnabled");
                OnPropertyChanged("LimitLogSizeEnabled");
@@ -247,9 +309,11 @@ namespace HFM.Forms.Models
          get { return StringOps.ValidateFtpWithUserPassUrl(WebRoot); }
       }
 
+      private bool _copyHtml;
+
       public bool CopyHtml
       {
-         get { return _prefs.GetPreference<bool>(Preference.WebGenCopyHtml); }
+         get { return _copyHtml; }
          set
          {
             if (CopyHtml != value)
@@ -260,15 +324,17 @@ namespace HFM.Forms.Models
                {
                   return;
                }
-               _prefs.SetPreference(Preference.WebGenCopyHtml, value);
+               _copyHtml = value;
                OnPropertyChanged("CopyHtml");
             }
          }
       }
 
+      private bool _copyXml;
+
       public bool CopyXml
       {
-         get { return _prefs.GetPreference<bool>(Preference.WebGenCopyXml); }
+         get { return _copyXml; }
          set
          {
             if (CopyXml != value)
@@ -279,15 +345,17 @@ namespace HFM.Forms.Models
                {
                   CopyHtml = true;
                }
-               _prefs.SetPreference(Preference.WebGenCopyXml, value);
+               _copyXml = value;
                OnPropertyChanged("CopyXml");
             }
          }
       }
+
+      private bool _copyClientData;
       
       public bool CopyClientData
       {
-         get { return _prefs.GetPreference<bool>(Preference.WebGenCopyClientData); }
+         get { return _copyClientData; }
          set
          {
             if (CopyClientData != value)
@@ -298,22 +366,24 @@ namespace HFM.Forms.Models
                {
                   CopyHtml = true;
                }
-               _prefs.SetPreference(Preference.WebGenCopyClientData, value);
+               _copyClientData = value;
                OnPropertyChanged("CopyClientData");
             }
          }
       }
 
       // ReSharper disable InconsistentNaming
+      private bool _copyFAHlog;
+
       public bool CopyFAHlog
       // ReSharper restore InconsistentNaming
       {
-         get { return _prefs.GetPreference<bool>(Preference.WebGenCopyFAHlog); }
+         get { return _copyFAHlog; }
          set
          {
             if (CopyFAHlog != value)
             {
-               _prefs.SetPreference(Preference.WebGenCopyFAHlog, value);
+               _copyFAHlog = value;
                OnPropertyChanged("CopyFAHlog");
                OnPropertyChanged("LimitLogSizeEnabled");
                OnPropertyChanged("LimitLogSizeLengthEnabled");
@@ -321,14 +391,16 @@ namespace HFM.Forms.Models
          }
       }
 
+      private FtpType _ftpMode;
+
       public FtpType FtpMode
       {
-         get { return _prefs.GetPreference<FtpType>(Preference.WebGenFtpMode); }
+         get { return _ftpMode; }
          set
          {
             if (FtpMode != value)
             {
-               _prefs.SetPreference(Preference.WebGenFtpMode, value);
+               _ftpMode = value;
                OnPropertyChanged("FtpMode");
             }
          }
@@ -339,14 +411,16 @@ namespace HFM.Forms.Models
          get { return GenerateWeb && IsWebRootFtp; }
       }
 
+      private bool _limitLogSize;
+
       public bool LimitLogSize
       {
-         get { return _prefs.GetPreference<bool>(Preference.WebGenLimitLogSize); }
+         get { return _limitLogSize; }
          set
          {
             if (LimitLogSize != value)
             {
-               _prefs.SetPreference(Preference.WebGenLimitLogSize, value);
+               _limitLogSize = value;
                OnPropertyChanged("LimitLogSize");
                OnPropertyChanged("LimitLogSizeEnabled");
                OnPropertyChanged("LimitLogSizeLengthEnabled");
@@ -359,14 +433,16 @@ namespace HFM.Forms.Models
          get { return GenerateWeb && IsWebRootFtp && CopyFAHlog; }
       }
 
+      private int _limitLogSizeLength;
+
       public int LimitLogSizeLength
       {
-         get { return _prefs.GetPreference<int>(Preference.WebGenLimitLogSizeLength); }
+         get { return _limitLogSizeLength; }
          set
          {
             if (LimitLogSizeLength != value)
             {
-               _prefs.SetPreference(Preference.WebGenLimitLogSizeLength, value);
+               _limitLogSizeLength = value;
                OnPropertyChanged("LimitLogSizeLength");
             }
          }
@@ -377,14 +453,16 @@ namespace HFM.Forms.Models
          get { return LimitLogSizeEnabled && LimitLogSize; }
       }
 
+      private bool _generateWeb;
+
       public bool GenerateWeb
       {
-         get { return _prefs.GetPreference<bool>(Preference.GenerateWeb); }
+         get { return _generateWeb; }
          set
          {
             if (GenerateWeb != value)
             {
-               _prefs.SetPreference(Preference.GenerateWeb, value);
+               _generateWeb = value;
                OnPropertyChanged("GenerateWeb");
                OnPropertyChanged("GenerateIntervalEnabled");
                OnPropertyChanged("FtpModeEnabled");

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Preferences - Reporting Tab - Binding Model
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -37,37 +37,67 @@ namespace HFM.Forms.Models
          }
       }
    
-      private readonly IPreferenceSet _prefs;
-      
       public ReportingModel(IPreferenceSet prefs)
       {
-         _prefs = prefs;
+         Load(prefs);
+      }
+
+      public void Load(IPreferenceSet prefs)
+      {
+         ServerSecure = prefs.Get<bool>(Preference.EmailReportingServerSecure);
+         ToAddress = prefs.Get<string>(Preference.EmailReportingToAddress);
+         FromAddress = prefs.Get<string>(Preference.EmailReportingFromAddress);
+         ServerAddress = prefs.Get<string>(Preference.EmailReportingServerAddress);
+         ServerPort = prefs.Get<int>(Preference.EmailReportingServerPort);
+         ServerUsername = prefs.Get<string>(Preference.EmailReportingServerUsername);
+         ServerPassword = prefs.Get<string>(Preference.EmailReportingServerPassword);
+         ReportingEnabled = prefs.Get<bool>(Preference.EmailReportingEnabled);
+         ReportEuePause = prefs.Get<bool>(Preference.ReportEuePause);
+         ReportHung = prefs.Get<bool>(Preference.ReportHung);
+      }
+
+      public void Update(IPreferenceSet prefs)
+      {
+         prefs.Set(Preference.EmailReportingServerSecure, ServerSecure);
+         prefs.Set(Preference.EmailReportingToAddress, ToAddress);
+         prefs.Set(Preference.EmailReportingFromAddress, FromAddress);
+         prefs.Set(Preference.EmailReportingServerAddress, ServerAddress);
+         prefs.Set(Preference.EmailReportingServerPort, ServerPort);
+         prefs.Set(Preference.EmailReportingServerUsername, ServerUsername);
+         prefs.Set(Preference.EmailReportingServerPassword, ServerPassword);
+         prefs.Set(Preference.EmailReportingEnabled, ReportingEnabled);
+         prefs.Set(Preference.ReportEuePause, ReportEuePause);
+         prefs.Set(Preference.ReportHung, ReportHung);
       }
 
       #region Email Settings
 
+      private bool _serverSecure;
+
       public bool ServerSecure
       {
-         get { return _prefs.GetPreference<bool>(Preference.EmailReportingServerSecure); }
+         get { return _serverSecure; }
          set
          {
             if (ServerSecure != value)
             {
-               _prefs.SetPreference(Preference.EmailReportingServerSecure, value);
+               _serverSecure = value;
                OnPropertyChanged("ServerSecure");
             }
          }
       }
 
+      private string _toAddress;
+
       public string ToAddress
       {
-         get { return _prefs.GetPreference<string>(Preference.EmailReportingToAddress); }
+         get { return _toAddress; }
          set
          {
             if (ToAddress != value)
             {
                string newValue = value == null ? String.Empty : value.Trim();
-               _prefs.SetPreference(Preference.EmailReportingToAddress, newValue);
+               _toAddress = newValue;
                OnPropertyChanged("ToAddress");
             }
          }
@@ -84,15 +114,17 @@ namespace HFM.Forms.Models
          }
       }
 
+      private string _fromAddress;
+
       public string FromAddress
       {
-         get { return _prefs.GetPreference<string>(Preference.EmailReportingFromAddress); }
+         get { return _fromAddress; }
          set
          {
             if (FromAddress != value)
             {
                string newValue = value == null ? String.Empty : value.Trim();
-               _prefs.SetPreference(Preference.EmailReportingFromAddress, newValue);
+               _fromAddress = newValue;
                OnPropertyChanged("FromAddress");
             }
          }
@@ -109,15 +141,17 @@ namespace HFM.Forms.Models
          }
       }
 
+      private string _serverAddress;
+
       public string ServerAddress
       {
-         get { return _prefs.GetPreference<string>(Preference.EmailReportingServerAddress); }
+         get { return _serverAddress; }
          set
          {
             if (ServerAddress != value)
             {
                string newValue = value == null ? String.Empty : value.Trim();
-               _prefs.SetPreference(Preference.EmailReportingServerAddress, newValue);
+               _serverAddress = newValue;
                OnPropertyChanged("ServerPort");
                OnPropertyChanged("ServerAddress");
             }
@@ -129,14 +163,16 @@ namespace HFM.Forms.Models
          get { return ServerPortPairError; }
       }
 
+      private int _serverPort;
+
       public int ServerPort
       {
-         get { return _prefs.GetPreference<int>(Preference.EmailReportingServerPort); }
+         get { return _serverPort; }
          set
          {
             if (ServerPort != value)
             {
-               _prefs.SetPreference(Preference.EmailReportingServerPort, value);
+               _serverPort = value;
                OnPropertyChanged("ServerAddress");
                OnPropertyChanged("ServerPort");
             }
@@ -171,15 +207,17 @@ namespace HFM.Forms.Models
       
       public string ServerPortPairErrorMessage { get; private set; }
 
+      private string _serverUsername;
+
       public string ServerUsername
       {
-         get { return _prefs.GetPreference<string>(Preference.EmailReportingServerUsername); }
+         get { return _serverUsername; }
          set
          {
             if (ServerUsername != value)
             {
                string newValue = value == null ? String.Empty : value.Trim();
-               _prefs.SetPreference(Preference.EmailReportingServerUsername, newValue);
+               _serverUsername = newValue;
                OnPropertyChanged("ServerPassword");
                OnPropertyChanged("ServerUsername");
             }
@@ -191,15 +229,17 @@ namespace HFM.Forms.Models
          get { return UsernamePasswordPairError; }
       }
 
+      private string _serverPassword;
+
       public string ServerPassword
       {
-         get { return _prefs.GetPreference<string>(Preference.EmailReportingServerPassword); }
+         get { return _serverPassword; }
          set
          {
             if (ServerPassword != value)
             {
                string newValue = value == null ? String.Empty : value.Trim();
-               _prefs.SetPreference(Preference.EmailReportingServerPassword, newValue);
+               _serverPassword = newValue;
                OnPropertyChanged("ServerUsername");
                OnPropertyChanged("ServerPassword");
             }
@@ -234,14 +274,16 @@ namespace HFM.Forms.Models
 
       public string UsernamePasswordPairErrorMessage { get; private set; }
 
+      private bool _reportingEnabled;
+
       public bool ReportingEnabled
       {
-         get { return _prefs.GetPreference<bool>(Preference.EmailReportingEnabled); }
+         get { return _reportingEnabled; }
          set
          {
             if (ReportingEnabled != value)
             {
-               _prefs.SetPreference(Preference.EmailReportingEnabled, value);
+               _reportingEnabled = value;
                OnPropertyChanged("ReportingEnabled");
             }
          }
@@ -251,27 +293,31 @@ namespace HFM.Forms.Models
 
       #region Report Selections
 
+      private bool _reportEuePause;
+
       public bool ReportEuePause
       {
-         get { return _prefs.GetPreference<bool>(Preference.ReportEuePause); }
+         get { return _reportEuePause; }
          set
          {
             if (ReportEuePause != value)
             {
-               _prefs.SetPreference(Preference.ReportEuePause, value);
+               _reportEuePause = value;
                OnPropertyChanged("ReportEuePause");
             }
          }
       }
 
+      private bool _reportHung;
+
       public bool ReportHung
       {
-         get { return _prefs.GetPreference<bool>(Preference.ReportHung); }
+         get { return _reportHung; }
          set
          {
             if (ReportHung != value)
             {
-               _prefs.SetPreference(Preference.ReportHung, value);
+               _reportHung = value;
                OnPropertyChanged("ReportHung");
             }
          }
