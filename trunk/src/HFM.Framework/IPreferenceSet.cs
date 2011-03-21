@@ -68,6 +68,15 @@ namespace HFM.Framework
       /// <typeparam name="T">Preference Data Type</typeparam>
       /// <param name="key">Preference Key</param>
       [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
+      T Get<T>(Preference key);
+
+      /// <summary>
+      /// Get a Preference of Type T
+      /// </summary>
+      /// <typeparam name="T">Preference Data Type</typeparam>
+      /// <param name="key">Preference Key</param>
+      //[Obsolete("Use Get<T>()")]
+      [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
       T GetPreference<T>(Preference key);
 
       /// <summary>
@@ -76,6 +85,15 @@ namespace HFM.Framework
       /// <typeparam name="T">Preference Data Type</typeparam>
       /// <param name="key">Preference Key</param>
       /// <param name="value">Preference Value</param>
+      void Set<T>(Preference key, T value);
+
+      /// <summary>
+      /// Set a Preference of Type T
+      /// </summary>
+      /// <typeparam name="T">Preference Data Type</typeparam>
+      /// <param name="key">Preference Key</param>
+      /// <param name="value">Preference Value</param>
+      //[Obsolete("Use Set<T>()")]
       void SetPreference<T>(Preference key, T value);
 
       /// <summary>

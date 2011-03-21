@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Preferences - Web Visual Styles Tab - Binding Model
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,19 +31,40 @@ namespace HFM.Forms.Models
    {
       private const string CssExtension = ".css";
    
-      private readonly IPreferenceSet _prefs;
-
       public WebVisualStylesModel(IPreferenceSet prefs)
       {
-         _prefs = prefs;
+         Load(prefs);
       }
+
+      public void Load(IPreferenceSet prefs)
+      {
+         ApplicationPath = prefs.ApplicationPath;
+         CssFile = prefs.Get<string>(Preference.CssFile);
+         WebOverview = prefs.Get<string>(Preference.WebOverview);
+         WebMobileOverview = prefs.Get<string>(Preference.WebMobileOverview);
+         WebSummary = prefs.Get<string>(Preference.WebSummary);
+         WebMobileSummary = prefs.Get<string>(Preference.WebMobileSummary);
+         WebInstance = prefs.Get<string>(Preference.WebInstance);
+      }
+
+      public void Update(IPreferenceSet prefs)
+      {
+         prefs.Set(Preference.CssFile, CssFile);
+         prefs.Set(Preference.WebOverview, WebOverview);
+         prefs.Set(Preference.WebMobileOverview, WebMobileOverview);
+         prefs.Set(Preference.WebSummary, WebSummary);
+         prefs.Set(Preference.WebMobileSummary, WebMobileSummary);
+         prefs.Set(Preference.WebInstance, WebInstance);
+      }
+
+      private string ApplicationPath { get; set; }
 
       public ReadOnlyCollection<ListItem> CssFileList
       {
          get
          {
             var list = new List<ListItem>();
-            var di = new DirectoryInfo(Path.Combine(_prefs.ApplicationPath, Constants.CssFolderName));
+            var di = new DirectoryInfo(Path.Combine(ApplicationPath, Constants.CssFolderName));
             if (di.Exists)
             {
                foreach (FileInfo fi in di.GetFiles())
@@ -59,85 +80,97 @@ namespace HFM.Forms.Models
          }
       }
 
+      private string _cssFile;
+
       public string CssFile
       {
-         get { return _prefs.GetPreference<string>(Preference.CssFile); }
+         get { return _cssFile; }
          set
          {
             if (CssFile != value)
             {
                string newValue = value == null ? String.Empty : value.Trim();
-               _prefs.SetPreference(Preference.CssFile, newValue);
+               _cssFile = newValue;
                OnPropertyChanged("CssFile");
             }
          }
       }
 
+      private string _webOverview;
+
       public string WebOverview
       {
-         get { return _prefs.GetPreference<string>(Preference.WebOverview); }
+         get { return _webOverview; }
          set
          {
             if (WebOverview != value)
             {
                string newValue = value == null ? String.Empty : value.Trim();
-               _prefs.SetPreference(Preference.WebOverview, newValue);
+               _webOverview = newValue;
                OnPropertyChanged("WebOverview");
             }
          }
       }
 
+      private string _webMobileOverview;
+
       public string WebMobileOverview
       {
-         get { return _prefs.GetPreference<string>(Preference.WebMobileOverview); }
+         get { return _webMobileOverview; }
          set
          {
             if (WebMobileOverview != value)
             {
                string newValue = value == null ? String.Empty : value.Trim();
-               _prefs.SetPreference(Preference.WebMobileOverview, newValue);
+               _webMobileOverview = newValue;
                OnPropertyChanged("WebMobileOverview");
             }
          }
       }
 
+      private string _webSummary;
+
       public string WebSummary
       {
-         get { return _prefs.GetPreference<string>(Preference.WebSummary); }
+         get { return _webSummary; }
          set
          {
             if (WebSummary != value)
             {
                string newValue = value == null ? String.Empty : value.Trim();
-               _prefs.SetPreference(Preference.WebSummary, newValue);
+               _webSummary = newValue;
                OnPropertyChanged("WebSummary");
             }
          }
       }
 
+      private string _webMobileSummary;
+
       public string WebMobileSummary
       {
-         get { return _prefs.GetPreference<string>(Preference.WebMobileSummary); }
+         get { return _webMobileSummary; }
          set
          {
             if (WebMobileSummary != value)
             {
                string newValue = value == null ? String.Empty : value.Trim();
-               _prefs.SetPreference(Preference.WebMobileSummary, newValue);
+               _webMobileSummary = newValue;
                OnPropertyChanged("WebMobileSummary");
             }
          }
       }
 
+      private string _webInstance;
+
       public string WebInstance
       {
-         get { return _prefs.GetPreference<string>(Preference.WebInstance); }
+         get { return _webInstance; }
          set
          {
             if (WebInstance != value)
             {
                string newValue = value == null ? String.Empty : value.Trim();
-               _prefs.SetPreference(Preference.WebInstance, newValue);
+               _webInstance = newValue;
                OnPropertyChanged("WebInstance");
             }
          }

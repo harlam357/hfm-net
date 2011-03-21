@@ -905,6 +905,12 @@ namespace HFM.Forms
          if (CheckForErrorConditions() == false)
          {
             GetAutoRun();
+            _scheduledTasksModel.Update(_prefs);
+            _startupAndExternalModel.Update(_prefs);
+            _optionsModel.Update(_prefs);
+            _reportingModel.Update(_prefs);
+            _webSettingsModel.Update(_prefs);
+            _webVisualStylesModel.Update(_prefs);
             _prefs.Save();
 
             DialogResult = DialogResult.OK;

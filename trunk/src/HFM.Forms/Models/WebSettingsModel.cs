@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Preferences - Web Settings Tab - Binding Model
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -39,23 +39,51 @@ namespace HFM.Forms.Models
          }
       }
    
-      private readonly IPreferenceSet _prefs;
-
       public WebSettingsModel(IPreferenceSet prefs)
       {
-         _prefs = prefs;
+         Load(prefs);
+      }
+
+      public void Load(IPreferenceSet prefs)
+      {
+         EocUserId = prefs.Get<int>(Preference.EocUserId);
+         StanfordId = prefs.Get<string>(Preference.StanfordId);
+         TeamId = prefs.Get<int>(Preference.TeamId);
+         ProjectDownloadUrl = prefs.Get<string>(Preference.ProjectDownloadUrl);
+         ProxyServer = prefs.Get<string>(Preference.ProxyServer);
+         ProxyPort = prefs.Get<int>(Preference.ProxyPort);
+         UseProxy = prefs.Get<bool>(Preference.UseProxy);
+         ProxyUser = prefs.Get<string>(Preference.ProxyUser);
+         ProxyPass = prefs.Get<string>(Preference.ProxyPass);
+         UseProxyAuth = prefs.Get<bool>(Preference.UseProxyAuth);
+      }
+
+      public void Update(IPreferenceSet prefs)
+      {
+         prefs.Set(Preference.EocUserId, EocUserId);
+         prefs.Set(Preference.StanfordId, StanfordId);
+         prefs.Set(Preference.TeamId, TeamId);
+         prefs.Set(Preference.ProjectDownloadUrl, ProjectDownloadUrl);
+         prefs.Set(Preference.ProxyServer, ProxyServer);
+         prefs.Set(Preference.ProxyPort, ProxyPort);
+         prefs.Set(Preference.UseProxy, UseProxy);
+         prefs.Set(Preference.ProxyUser, ProxyUser);
+         prefs.Set(Preference.ProxyPass, ProxyPass);
+         prefs.Set(Preference.UseProxyAuth, UseProxyAuth);
       }
 
       #region Web Statistics
 
+      private int _eocUserId;
+
       public int EocUserId
       {
-         get { return _prefs.GetPreference<int>(Preference.EocUserId); }
+         get { return _eocUserId; }
          set
          {
             if (EocUserId != value)
             {
-               _prefs.SetPreference(Preference.EocUserId, value);
+               _eocUserId = value;
                OnPropertyChanged("EocUserId");
             }
          }
@@ -66,15 +94,17 @@ namespace HFM.Forms.Models
          get { return EocUserId < 0; }
       }
 
+      private string _stanfordId;
+
       public string StanfordId
       {
-         get { return _prefs.GetPreference<string>(Preference.StanfordId); }
+         get { return _stanfordId; }
          set
          {
             if (StanfordId != value)
             {
                string newValue = value == null ? String.Empty : value.Trim();
-               _prefs.SetPreference(Preference.StanfordId, newValue);
+               _stanfordId = newValue;
                OnPropertyChanged("StanfordId");
             }
          }
@@ -85,14 +115,16 @@ namespace HFM.Forms.Models
          get { return StanfordId.Length == 0; }
       }
 
+      private int _teamId;
+
       public int TeamId
       {
-         get { return _prefs.GetPreference<int>(Preference.TeamId); }
+         get { return _teamId; }
          set
          {
             if (TeamId != value)
             {
-               _prefs.SetPreference(Preference.TeamId, value);
+               _teamId = value;
                OnPropertyChanged("TeamId");
             }
          }
@@ -107,15 +139,17 @@ namespace HFM.Forms.Models
 
       #region Project Download URL
 
+      private string _projectDownloadUrl;
+
       public string ProjectDownloadUrl
       {
-         get { return _prefs.GetPreference<string>(Preference.ProjectDownloadUrl); }
+         get { return _projectDownloadUrl; }
          set
          {
             if (ProjectDownloadUrl != value)
             {
                string newValue = value == null ? String.Empty : value.Trim();
-               _prefs.SetPreference(Preference.ProjectDownloadUrl, newValue);
+               _projectDownloadUrl = newValue;
                OnPropertyChanged("ProjectDownloadUrl");
             }
          }
@@ -130,15 +164,17 @@ namespace HFM.Forms.Models
 
       #region Web Proxy Settings
 
+      private string _proxyServer;
+
       public string ProxyServer
       {
-         get { return _prefs.GetPreference<string>(Preference.ProxyServer); }
+         get { return _proxyServer; }
          set
          {
             if (ProxyServer != value)
             {
                string newValue = value == null ? String.Empty : value.Trim();
-               _prefs.SetPreference(Preference.ProxyServer, newValue);
+               _proxyServer = newValue;
                OnPropertyChanged("ProxyPort");
                OnPropertyChanged("ProxyServer");
             }
@@ -150,21 +186,23 @@ namespace HFM.Forms.Models
          get { return ServerPortPairError; }
       }
 
+      private int _proxyPort;
+
       public int ProxyPort
       {
-         get { return _prefs.GetPreference<int>(Preference.ProxyPort); }
+         get { return _proxyPort; }
          set
          {
             if (ProxyPort != value)
             {
-               _prefs.SetPreference(Preference.ProxyPort, value);
+               _proxyPort = value;
                OnPropertyChanged("ProxyServer");
                OnPropertyChanged("ProxyPort");
             }
          }
       }
 
-      public bool ServerPortError
+      public bool ProxyPortError
       {
          get { return ServerPortPairError; }
       }
@@ -192,29 +230,33 @@ namespace HFM.Forms.Models
 
       public string ServerPortPairErrorMessage { get; private set; }
 
+      private bool _useProxy;
+
       public bool UseProxy
       {
-         get { return _prefs.GetPreference<bool>(Preference.UseProxy); }
+         get { return _useProxy; }
          set
          {
             if (UseProxy != value)
             {
-               _prefs.SetPreference(Preference.UseProxy, value);
+               _useProxy = value;
                OnPropertyChanged("UseProxy");
                OnPropertyChanged("ProxyAuthEnabled");
             }
          }
       }
 
+      private string _proxyUser;
+
       public string ProxyUser
       {
-         get { return _prefs.GetPreference<string>(Preference.ProxyUser); }
+         get { return _proxyUser; }
          set
          {
             if (ProxyUser != value)
             {
                string newValue = value == null ? String.Empty : value.Trim();
-               _prefs.SetPreference(Preference.ProxyUser, newValue);
+               _proxyUser = newValue;
                OnPropertyChanged("ProxyPass");
                OnPropertyChanged("ProxyUser");
             }
@@ -226,15 +268,17 @@ namespace HFM.Forms.Models
          get { return UsernamePasswordPairError; }
       }
 
+      private string _proxyPass;
+
       public string ProxyPass
       {
-         get { return _prefs.GetPreference<string>(Preference.ProxyPass); }
+         get { return _proxyPass; }
          set
          {
             if (ProxyPass != value)
             {
                string newValue = value == null ? String.Empty : value.Trim();
-               _prefs.SetPreference(Preference.ProxyPass, newValue);
+               _proxyPass = newValue;
                OnPropertyChanged("ProxyUser");
                OnPropertyChanged("ProxyPass");
             }
@@ -269,14 +313,16 @@ namespace HFM.Forms.Models
 
       public string UsernamePasswordPairErrorMessage { get; private set; }
 
+      private bool _useProxyAuth;
+
       public bool UseProxyAuth
       {
-         get { return _prefs.GetPreference<bool>(Preference.UseProxyAuth); }
+         get { return _useProxyAuth; }
          set
          {
             if (UseProxyAuth != value)
             {
-               _prefs.SetPreference(Preference.UseProxyAuth, value);
+               _useProxyAuth = value;
                OnPropertyChanged("UseProxyAuth");
                OnPropertyChanged("ProxyAuthEnabled");
             }
