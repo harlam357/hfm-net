@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Framework Enumerations
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -45,6 +45,12 @@ namespace HFM.Framework
       TaskBar,
       Both
    }
+
+   public enum GraphLayoutType
+   {
+      Single,
+      ClientsPerGraph
+   }
    
    public enum Preference
    {
@@ -64,6 +70,8 @@ namespace HFM.Framework
       BenchmarksFormLocation,
       BenchmarksFormSize,
       GraphColors,
+      BenchmarksGraphLayoutType,
+      BenchmarksClientsPerGraph,
       MessagesFormLocation,
       MessagesFormSize,
       SyncOnLoad,

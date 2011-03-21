@@ -1,7 +1,7 @@
 /*
  * HFM.NET - User Preferences Class
  * Copyright (C) 2006-2007 David Rawling
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -204,6 +204,8 @@ namespace HFM.Preferences
          _prefs.Add(Preference.BenchmarksFormLocation, new Metadata<Point>());
          _prefs.Add(Preference.BenchmarksFormSize, new Metadata<Size>());
          _prefs.Add(Preference.GraphColors, new Metadata<List<Color>>());
+         _prefs.Add(Preference.BenchmarksGraphLayoutType, new Metadata<GraphLayoutType>());
+         _prefs.Add(Preference.BenchmarksClientsPerGraph, new Metadata<int>());
 
          _prefs.Add(Preference.MessagesFormLocation, new Metadata<Point>());
          _prefs.Add(Preference.MessagesFormSize, new Metadata<Size>());
@@ -321,6 +323,8 @@ namespace HFM.Preferences
          SetPreference(Preference.BenchmarksFormLocation, location);
          SetPreference(Preference.BenchmarksFormSize, size);
          SetPreference(Preference.GraphColors, GetGraphColorsList());
+         SetPreference(Preference.BenchmarksGraphLayoutType, GetBenchmarksGraphLayoutType());
+         SetPreference(Preference.BenchmarksClientsPerGraph, Settings.Default.BenchmarksClientsPerGraph);
 
          location = new Point();
          size = new Size();
@@ -508,6 +512,19 @@ namespace HFM.Preferences
          return graphColors;
       }
 
+      private static GraphLayoutType GetBenchmarksGraphLayoutType()
+      {
+         switch (Settings.Default.BenchmarksGraphLayoutType)
+         {
+            case "Single":
+               return GraphLayoutType.Single;
+            case "ClientsPerGraph":
+               return GraphLayoutType.ClientsPerGraph;
+            default:
+               return GraphLayoutType.Single;
+         }
+      }
+
       private static void GetMessagesFormStateValues(ref Point location, ref Size size)
       {
          try
@@ -688,6 +705,8 @@ namespace HFM.Preferences
             Settings.Default.BenchmarksFormLocation = GetPreference<Point>(Preference.BenchmarksFormLocation);
             Settings.Default.BenchmarksFormSize = GetPreference<Size>(Preference.BenchmarksFormSize);
             Settings.Default.GraphColors = GetGraphColorsStringCollection(GetPreference<List<Color>>(Preference.GraphColors));
+            Settings.Default.BenchmarksGraphLayoutType = GetPreference<GraphLayoutType>(Preference.BenchmarksGraphLayoutType).ToString();
+            Settings.Default.BenchmarksClientsPerGraph = GetPreference<int>(Preference.BenchmarksClientsPerGraph);
 
             Settings.Default.MessagesFormLocation = GetPreference<Point>(Preference.MessagesFormLocation);
             Settings.Default.MessagesFormSize = GetPreference<Size>(Preference.MessagesFormSize);

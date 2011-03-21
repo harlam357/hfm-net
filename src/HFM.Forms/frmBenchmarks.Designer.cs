@@ -32,54 +32,60 @@ namespace HFM.Forms
       {
          this.components = new System.ComponentModel.Container();
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBenchmarks));
-         this.grpProjectInfo = new GroupBoxWrapper();
-         this.txtKFactor = new TextBoxWrapper();
-         this.lblKFactor = new LabelWrapper();
-         this.txtServerIP = new TextBoxWrapper();
-         this.txtContact = new TextBoxWrapper();
-         this.txtMaximumDays = new TextBoxWrapper();
-         this.txtPreferredDays = new TextBoxWrapper();
-         this.txtCore = new TextBoxWrapper();
-         this.txtAtoms = new TextBoxWrapper();
-         this.txtFrames = new TextBoxWrapper();
-         this.txtCredit = new TextBoxWrapper();
-         this.txtProjectID = new TextBoxWrapper();
+         this.grpProjectInfo = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.txtKFactor = new HFM.Forms.Controls.TextBoxWrapper();
+         this.lblKFactor = new HFM.Forms.Controls.LabelWrapper();
+         this.txtServerIP = new HFM.Forms.Controls.TextBoxWrapper();
+         this.txtContact = new HFM.Forms.Controls.TextBoxWrapper();
+         this.txtMaximumDays = new HFM.Forms.Controls.TextBoxWrapper();
+         this.txtPreferredDays = new HFM.Forms.Controls.TextBoxWrapper();
+         this.txtCore = new HFM.Forms.Controls.TextBoxWrapper();
+         this.txtAtoms = new HFM.Forms.Controls.TextBoxWrapper();
+         this.txtFrames = new HFM.Forms.Controls.TextBoxWrapper();
+         this.txtCredit = new HFM.Forms.Controls.TextBoxWrapper();
+         this.txtProjectID = new HFM.Forms.Controls.TextBoxWrapper();
          this.linkDescription = new System.Windows.Forms.LinkLabel();
-         this.lblServerIP = new LabelWrapper();
-         this.lblContact = new LabelWrapper();
-         this.lblCore = new LabelWrapper();
-         this.lblMaxDays = new LabelWrapper();
-         this.lblPreferred = new LabelWrapper();
-         this.lblAtoms = new LabelWrapper();
-         this.lblFrames = new LabelWrapper();
-         this.lblCredit = new LabelWrapper();
-         this.lblDescription = new LabelWrapper();
-         this.lblProjectID = new LabelWrapper();
+         this.lblServerIP = new HFM.Forms.Controls.LabelWrapper();
+         this.lblContact = new HFM.Forms.Controls.LabelWrapper();
+         this.lblCore = new HFM.Forms.Controls.LabelWrapper();
+         this.lblMaxDays = new HFM.Forms.Controls.LabelWrapper();
+         this.lblPreferred = new HFM.Forms.Controls.LabelWrapper();
+         this.lblAtoms = new HFM.Forms.Controls.LabelWrapper();
+         this.lblFrames = new HFM.Forms.Controls.LabelWrapper();
+         this.lblCredit = new HFM.Forms.Controls.LabelWrapper();
+         this.lblDescription = new HFM.Forms.Controls.LabelWrapper();
+         this.lblProjectID = new HFM.Forms.Controls.LabelWrapper();
          this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-         this.splitContainerBench = new SplitContainerWrapper();
+         this.splitContainerBench = new HFM.Forms.Controls.SplitContainerWrapper();
          this.listBox1 = new System.Windows.Forms.ListBox();
          this.tabControl1 = new System.Windows.Forms.TabControl();
          this.tabTextBenchmark = new System.Windows.Forms.TabPage();
-         this.txtBenchmarks = new TextBoxWrapper();
-         this.tabGraphFrameTime = new System.Windows.Forms.TabPage();
-         this.zgFrameTime = new ZedGraph.ZedGraphControl();
-         this.tabGraphPPD = new System.Windows.Forms.TabPage();
-         this.zgPpd = new ZedGraph.ZedGraphControl();
-         this.tabGraphColors = new System.Windows.Forms.TabPage();
-         this.picColorPreview = new System.Windows.Forms.PictureBox();
-         this.btnMoveColorDown = new ButtonWrapper();
-         this.btnMoveColorUp = new ButtonWrapper();
-         this.btnDeleteColor = new ButtonWrapper();
-         this.btnAddColor = new ButtonWrapper();
+         this.txtBenchmarks = new HFM.Forms.Controls.TextBoxWrapper();
+         this.tabGraphConfig = new System.Windows.Forms.TabPage();
+         this.grpColors = new HFM.Forms.Controls.GroupBoxWrapper();
          this.lstColors = new System.Windows.Forms.ListBox();
-         this.btnExit = new ButtonWrapper();
-         this.grpClients = new GroupBoxWrapper();
+         this.picColorPreview = new System.Windows.Forms.PictureBox();
+         this.btnMoveColorDown = new HFM.Forms.Controls.ButtonWrapper();
+         this.btnAddColor = new HFM.Forms.Controls.ButtonWrapper();
+         this.btnMoveColorUp = new HFM.Forms.Controls.ButtonWrapper();
+         this.btnDeleteColor = new HFM.Forms.Controls.ButtonWrapper();
+         this.tabGraphFrameTime1 = new System.Windows.Forms.TabPage();
+         this.zgFrameTime1 = new ZedGraph.ZedGraphControl();
+         this.tabGraphPPD1 = new System.Windows.Forms.TabPage();
+         this.zgPpd1 = new ZedGraph.ZedGraphControl();
+         this.btnExit = new HFM.Forms.Controls.ButtonWrapper();
+         this.grpClients = new HFM.Forms.Controls.GroupBoxWrapper();
          this.picDeleteClient = new System.Windows.Forms.PictureBox();
-         this.cboClients = new ComboBoxWrapper();
+         this.cboClients = new HFM.Forms.Controls.ComboBoxWrapper();
          this.listBox1ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
          this.mnuContextRefreshMinimum = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuContextDeleteProject = new System.Windows.Forms.ToolStripMenuItem();
          this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+         this.grpClientLayout = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.pnlClientLayout = new harlam357.Windows.Forms.RadioPanel();
+         this.rdoSingleGraph = new HFM.Forms.Controls.RadioButtonWrapper();
+         this.rdoClientsPerGraph = new HFM.Forms.Controls.RadioButtonWrapper();
+         this.udClientsPerGraph = new System.Windows.Forms.NumericUpDown();
          this.grpProjectInfo.SuspendLayout();
          this.tableLayoutPanel1.SuspendLayout();
          this.splitContainerBench.Panel1.SuspendLayout();
@@ -87,13 +93,17 @@ namespace HFM.Forms
          this.splitContainerBench.SuspendLayout();
          this.tabControl1.SuspendLayout();
          this.tabTextBenchmark.SuspendLayout();
-         this.tabGraphFrameTime.SuspendLayout();
-         this.tabGraphPPD.SuspendLayout();
-         this.tabGraphColors.SuspendLayout();
+         this.tabGraphConfig.SuspendLayout();
+         this.grpColors.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.picColorPreview)).BeginInit();
+         this.tabGraphFrameTime1.SuspendLayout();
+         this.tabGraphPPD1.SuspendLayout();
          this.grpClients.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.picDeleteClient)).BeginInit();
          this.listBox1ContextMenuStrip.SuspendLayout();
+         this.grpClientLayout.SuspendLayout();
+         this.pnlClientLayout.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.udClientsPerGraph)).BeginInit();
          this.SuspendLayout();
          // 
          // grpProjectInfo
@@ -384,18 +394,18 @@ namespace HFM.Forms
          this.listBox1.FormattingEnabled = true;
          this.listBox1.Location = new System.Drawing.Point(0, 0);
          this.listBox1.Name = "listBox1";
-         this.listBox1.Size = new System.Drawing.Size(65, 394);
+         this.listBox1.Size = new System.Drawing.Size(65, 395);
          this.listBox1.TabIndex = 0;
-         this.listBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseUp);
          this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
          this.listBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDown);
+         this.listBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseUp);
          // 
          // tabControl1
          // 
          this.tabControl1.Controls.Add(this.tabTextBenchmark);
-         this.tabControl1.Controls.Add(this.tabGraphFrameTime);
-         this.tabControl1.Controls.Add(this.tabGraphPPD);
-         this.tabControl1.Controls.Add(this.tabGraphColors);
+         this.tabControl1.Controls.Add(this.tabGraphConfig);
+         this.tabControl1.Controls.Add(this.tabGraphFrameTime1);
+         this.tabControl1.Controls.Add(this.tabGraphPPD1);
          this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
          this.tabControl1.Location = new System.Drawing.Point(0, 0);
          this.tabControl1.Name = "tabControl1";
@@ -427,77 +437,47 @@ namespace HFM.Forms
          this.txtBenchmarks.Size = new System.Drawing.Size(473, 363);
          this.txtBenchmarks.TabIndex = 0;
          // 
-         // tabGraphFrameTime
+         // tabGraphConfig
          // 
-         this.tabGraphFrameTime.Controls.Add(this.zgFrameTime);
-         this.tabGraphFrameTime.Location = new System.Drawing.Point(4, 22);
-         this.tabGraphFrameTime.Name = "tabGraphFrameTime";
-         this.tabGraphFrameTime.Padding = new System.Windows.Forms.Padding(3);
-         this.tabGraphFrameTime.Size = new System.Drawing.Size(479, 369);
-         this.tabGraphFrameTime.TabIndex = 2;
-         this.tabGraphFrameTime.Text = "Graph - Frame Time";
-         this.tabGraphFrameTime.UseVisualStyleBackColor = true;
+         this.tabGraphConfig.Controls.Add(this.grpClientLayout);
+         this.tabGraphConfig.Controls.Add(this.grpColors);
+         this.tabGraphConfig.Location = new System.Drawing.Point(4, 22);
+         this.tabGraphConfig.Name = "tabGraphConfig";
+         this.tabGraphConfig.Size = new System.Drawing.Size(479, 369);
+         this.tabGraphConfig.TabIndex = 3;
+         this.tabGraphConfig.Text = "Graph Config";
+         this.tabGraphConfig.UseVisualStyleBackColor = true;
          // 
-         // zgFrameTime
+         // grpColors
          // 
-         this.zgFrameTime.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.zgFrameTime.Location = new System.Drawing.Point(3, 3);
-         this.zgFrameTime.Name = "zgFrameTime";
-         this.zgFrameTime.ScrollGrace = 0;
-         this.zgFrameTime.ScrollMaxX = 0;
-         this.zgFrameTime.ScrollMaxY = 0;
-         this.zgFrameTime.ScrollMaxY2 = 0;
-         this.zgFrameTime.ScrollMinX = 0;
-         this.zgFrameTime.ScrollMinY = 0;
-         this.zgFrameTime.ScrollMinY2 = 0;
-         this.zgFrameTime.Size = new System.Drawing.Size(473, 363);
-         this.zgFrameTime.TabIndex = 0;
+         this.grpColors.Controls.Add(this.lstColors);
+         this.grpColors.Controls.Add(this.picColorPreview);
+         this.grpColors.Controls.Add(this.btnMoveColorDown);
+         this.grpColors.Controls.Add(this.btnAddColor);
+         this.grpColors.Controls.Add(this.btnMoveColorUp);
+         this.grpColors.Controls.Add(this.btnDeleteColor);
+         this.grpColors.Location = new System.Drawing.Point(4, 6);
+         this.grpColors.Name = "grpColors";
+         this.grpColors.Size = new System.Drawing.Size(249, 355);
+         this.grpColors.TabIndex = 6;
+         this.grpColors.TabStop = false;
+         this.grpColors.Text = "Color Configuration";
          // 
-         // tabGraphPPD
+         // lstColors
          // 
-         this.tabGraphPPD.Controls.Add(this.zgPpd);
-         this.tabGraphPPD.Location = new System.Drawing.Point(4, 22);
-         this.tabGraphPPD.Name = "tabGraphPPD";
-         this.tabGraphPPD.Padding = new System.Windows.Forms.Padding(3);
-         this.tabGraphPPD.Size = new System.Drawing.Size(479, 369);
-         this.tabGraphPPD.TabIndex = 1;
-         this.tabGraphPPD.Text = "Graph - PPD";
-         this.tabGraphPPD.UseVisualStyleBackColor = true;
-         // 
-         // zgPpd
-         // 
-         this.zgPpd.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.zgPpd.Location = new System.Drawing.Point(3, 3);
-         this.zgPpd.Name = "zgPpd";
-         this.zgPpd.ScrollGrace = 0;
-         this.zgPpd.ScrollMaxX = 0;
-         this.zgPpd.ScrollMaxY = 0;
-         this.zgPpd.ScrollMaxY2 = 0;
-         this.zgPpd.ScrollMinX = 0;
-         this.zgPpd.ScrollMinY = 0;
-         this.zgPpd.ScrollMinY2 = 0;
-         this.zgPpd.Size = new System.Drawing.Size(473, 363);
-         this.zgPpd.TabIndex = 0;
-         // 
-         // tabGraphColors
-         // 
-         this.tabGraphColors.Controls.Add(this.picColorPreview);
-         this.tabGraphColors.Controls.Add(this.btnMoveColorDown);
-         this.tabGraphColors.Controls.Add(this.btnMoveColorUp);
-         this.tabGraphColors.Controls.Add(this.btnDeleteColor);
-         this.tabGraphColors.Controls.Add(this.btnAddColor);
-         this.tabGraphColors.Controls.Add(this.lstColors);
-         this.tabGraphColors.Location = new System.Drawing.Point(4, 22);
-         this.tabGraphColors.Name = "tabGraphColors";
-         this.tabGraphColors.Size = new System.Drawing.Size(479, 369);
-         this.tabGraphColors.TabIndex = 3;
-         this.tabGraphColors.Text = "Graph Colors";
-         this.tabGraphColors.UseVisualStyleBackColor = true;
+         this.lstColors.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                     | System.Windows.Forms.AnchorStyles.Left)));
+         this.lstColors.FormattingEnabled = true;
+         this.lstColors.Location = new System.Drawing.Point(6, 19);
+         this.lstColors.Name = "lstColors";
+         this.lstColors.Size = new System.Drawing.Size(111, 329);
+         this.lstColors.TabIndex = 0;
+         this.lstColors.SelectedIndexChanged += new System.EventHandler(this.lstColors_SelectedIndexChanged);
          // 
          // picColorPreview
          // 
          this.picColorPreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-         this.picColorPreview.Location = new System.Drawing.Point(170, 12);
+         this.picColorPreview.Location = new System.Drawing.Point(171, 19);
          this.picColorPreview.Name = "picColorPreview";
          this.picColorPreview.Size = new System.Drawing.Size(66, 66);
          this.picColorPreview.TabIndex = 5;
@@ -506,7 +486,7 @@ namespace HFM.Forms
          // btnMoveColorDown
          // 
          this.btnMoveColorDown.Image = global::HFM.Forms.Properties.Resources.DownArrow;
-         this.btnMoveColorDown.Location = new System.Drawing.Point(123, 48);
+         this.btnMoveColorDown.Location = new System.Drawing.Point(124, 55);
          this.btnMoveColorDown.Name = "btnMoveColorDown";
          this.btnMoveColorDown.Size = new System.Drawing.Size(30, 30);
          this.btnMoveColorDown.TabIndex = 2;
@@ -514,10 +494,21 @@ namespace HFM.Forms
          this.btnMoveColorDown.UseVisualStyleBackColor = true;
          this.btnMoveColorDown.Click += new System.EventHandler(this.btnMoveColorDown_Click);
          // 
+         // btnAddColor
+         // 
+         this.btnAddColor.Image = global::HFM.Forms.Properties.Resources.Color;
+         this.btnAddColor.Location = new System.Drawing.Point(124, 91);
+         this.btnAddColor.Name = "btnAddColor";
+         this.btnAddColor.Size = new System.Drawing.Size(30, 30);
+         this.btnAddColor.TabIndex = 3;
+         this.toolTip1.SetToolTip(this.btnAddColor, "Add Color");
+         this.btnAddColor.UseVisualStyleBackColor = true;
+         this.btnAddColor.Click += new System.EventHandler(this.btnAddColor_Click);
+         // 
          // btnMoveColorUp
          // 
          this.btnMoveColorUp.Image = global::HFM.Forms.Properties.Resources.UpArrow;
-         this.btnMoveColorUp.Location = new System.Drawing.Point(123, 12);
+         this.btnMoveColorUp.Location = new System.Drawing.Point(124, 19);
          this.btnMoveColorUp.Name = "btnMoveColorUp";
          this.btnMoveColorUp.Size = new System.Drawing.Size(30, 30);
          this.btnMoveColorUp.TabIndex = 1;
@@ -528,7 +519,7 @@ namespace HFM.Forms
          // btnDeleteColor
          // 
          this.btnDeleteColor.Image = global::HFM.Forms.Properties.Resources.Delete;
-         this.btnDeleteColor.Location = new System.Drawing.Point(123, 120);
+         this.btnDeleteColor.Location = new System.Drawing.Point(124, 127);
          this.btnDeleteColor.Name = "btnDeleteColor";
          this.btnDeleteColor.Size = new System.Drawing.Size(30, 30);
          this.btnDeleteColor.TabIndex = 4;
@@ -536,27 +527,57 @@ namespace HFM.Forms
          this.btnDeleteColor.UseVisualStyleBackColor = true;
          this.btnDeleteColor.Click += new System.EventHandler(this.btnDeleteColor_Click);
          // 
-         // btnAddColor
+         // tabGraphFrameTime1
          // 
-         this.btnAddColor.Image = global::HFM.Forms.Properties.Resources.Color;
-         this.btnAddColor.Location = new System.Drawing.Point(123, 84);
-         this.btnAddColor.Name = "btnAddColor";
-         this.btnAddColor.Size = new System.Drawing.Size(30, 30);
-         this.btnAddColor.TabIndex = 3;
-         this.toolTip1.SetToolTip(this.btnAddColor, "Add Color");
-         this.btnAddColor.UseVisualStyleBackColor = true;
-         this.btnAddColor.Click += new System.EventHandler(this.btnAddColor_Click);
+         this.tabGraphFrameTime1.Controls.Add(this.zgFrameTime1);
+         this.tabGraphFrameTime1.Location = new System.Drawing.Point(4, 22);
+         this.tabGraphFrameTime1.Name = "tabGraphFrameTime1";
+         this.tabGraphFrameTime1.Padding = new System.Windows.Forms.Padding(3);
+         this.tabGraphFrameTime1.Size = new System.Drawing.Size(479, 369);
+         this.tabGraphFrameTime1.TabIndex = 2;
+         this.tabGraphFrameTime1.Text = "Graph - Frame Time (1)";
+         this.tabGraphFrameTime1.UseVisualStyleBackColor = true;
          // 
-         // lstColors
+         // zgFrameTime1
          // 
-         this.lstColors.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                     | System.Windows.Forms.AnchorStyles.Left)));
-         this.lstColors.FormattingEnabled = true;
-         this.lstColors.Location = new System.Drawing.Point(3, 6);
-         this.lstColors.Name = "lstColors";
-         this.lstColors.Size = new System.Drawing.Size(111, 355);
-         this.lstColors.TabIndex = 0;
-         this.lstColors.SelectedIndexChanged += new System.EventHandler(this.lstColors_SelectedIndexChanged);
+         this.zgFrameTime1.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.zgFrameTime1.Location = new System.Drawing.Point(3, 3);
+         this.zgFrameTime1.Name = "zgFrameTime1";
+         this.zgFrameTime1.ScrollGrace = 0D;
+         this.zgFrameTime1.ScrollMaxX = 0D;
+         this.zgFrameTime1.ScrollMaxY = 0D;
+         this.zgFrameTime1.ScrollMaxY2 = 0D;
+         this.zgFrameTime1.ScrollMinX = 0D;
+         this.zgFrameTime1.ScrollMinY = 0D;
+         this.zgFrameTime1.ScrollMinY2 = 0D;
+         this.zgFrameTime1.Size = new System.Drawing.Size(473, 363);
+         this.zgFrameTime1.TabIndex = 0;
+         // 
+         // tabGraphPPD1
+         // 
+         this.tabGraphPPD1.Controls.Add(this.zgPpd1);
+         this.tabGraphPPD1.Location = new System.Drawing.Point(4, 22);
+         this.tabGraphPPD1.Name = "tabGraphPPD1";
+         this.tabGraphPPD1.Padding = new System.Windows.Forms.Padding(3);
+         this.tabGraphPPD1.Size = new System.Drawing.Size(479, 369);
+         this.tabGraphPPD1.TabIndex = 1;
+         this.tabGraphPPD1.Text = "Graph - PPD (1)";
+         this.tabGraphPPD1.UseVisualStyleBackColor = true;
+         // 
+         // zgPpd1
+         // 
+         this.zgPpd1.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.zgPpd1.Location = new System.Drawing.Point(3, 3);
+         this.zgPpd1.Name = "zgPpd1";
+         this.zgPpd1.ScrollGrace = 0D;
+         this.zgPpd1.ScrollMaxX = 0D;
+         this.zgPpd1.ScrollMaxY = 0D;
+         this.zgPpd1.ScrollMaxY2 = 0D;
+         this.zgPpd1.ScrollMinX = 0D;
+         this.zgPpd1.ScrollMinY = 0D;
+         this.zgPpd1.ScrollMinY2 = 0D;
+         this.zgPpd1.Size = new System.Drawing.Size(473, 363);
+         this.zgPpd1.TabIndex = 0;
          // 
          // btnExit
          // 
@@ -629,6 +650,76 @@ namespace HFM.Forms
          this.mnuContextDeleteProject.Text = "Delete This Project";
          this.mnuContextDeleteProject.Click += new System.EventHandler(this.mnuContextDeleteProject_Click);
          // 
+         // grpClientLayout
+         // 
+         this.grpClientLayout.Controls.Add(this.pnlClientLayout);
+         this.grpClientLayout.Location = new System.Drawing.Point(259, 6);
+         this.grpClientLayout.Name = "grpClientLayout";
+         this.grpClientLayout.Size = new System.Drawing.Size(215, 355);
+         this.grpClientLayout.TabIndex = 7;
+         this.grpClientLayout.TabStop = false;
+         this.grpClientLayout.Text = "Client Layout";
+         // 
+         // pnlClientLayout
+         // 
+         this.pnlClientLayout.Controls.Add(this.udClientsPerGraph);
+         this.pnlClientLayout.Controls.Add(this.rdoClientsPerGraph);
+         this.pnlClientLayout.Controls.Add(this.rdoSingleGraph);
+         this.pnlClientLayout.Location = new System.Drawing.Point(6, 19);
+         this.pnlClientLayout.Name = "pnlClientLayout";
+         this.pnlClientLayout.Size = new System.Drawing.Size(203, 91);
+         this.pnlClientLayout.TabIndex = 0;
+         this.pnlClientLayout.ValueMember = null;
+         // 
+         // rdoSingleGraph
+         // 
+         this.rdoSingleGraph.AutoSize = true;
+         this.rdoSingleGraph.Location = new System.Drawing.Point(11, 8);
+         this.rdoSingleGraph.Name = "rdoSingleGraph";
+         this.rdoSingleGraph.Size = new System.Drawing.Size(86, 17);
+         this.rdoSingleGraph.TabIndex = 0;
+         this.rdoSingleGraph.TabStop = true;
+         this.rdoSingleGraph.Tag = "0";
+         this.rdoSingleGraph.Text = "Single Graph";
+         this.rdoSingleGraph.UseVisualStyleBackColor = true;
+         this.rdoSingleGraph.CheckedChanged += new System.EventHandler(this.rdoSingleGraph_CheckedChanged);
+         // 
+         // rdoClientsPerGraph
+         // 
+         this.rdoClientsPerGraph.AutoSize = true;
+         this.rdoClientsPerGraph.Location = new System.Drawing.Point(11, 36);
+         this.rdoClientsPerGraph.Name = "rdoClientsPerGraph";
+         this.rdoClientsPerGraph.Size = new System.Drawing.Size(158, 17);
+         this.rdoClientsPerGraph.TabIndex = 1;
+         this.rdoClientsPerGraph.TabStop = true;
+         this.rdoClientsPerGraph.Tag = "1";
+         this.rdoClientsPerGraph.Text = "Number of Clients per Graph";
+         this.rdoClientsPerGraph.UseVisualStyleBackColor = true;
+         this.rdoClientsPerGraph.CheckedChanged += new System.EventHandler(this.rdoClientsPerGraph_CheckedChanged);
+         // 
+         // udClientsPerGraph
+         // 
+         this.udClientsPerGraph.Location = new System.Drawing.Point(11, 62);
+         this.udClientsPerGraph.Maximum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+         this.udClientsPerGraph.Minimum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+         this.udClientsPerGraph.Name = "udClientsPerGraph";
+         this.udClientsPerGraph.Size = new System.Drawing.Size(50, 20);
+         this.udClientsPerGraph.TabIndex = 2;
+         this.udClientsPerGraph.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+         this.udClientsPerGraph.ValueChanged += new System.EventHandler(this.udClientsPerGraph_ValueChanged);
+         // 
          // frmBenchmarks
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -641,8 +732,8 @@ namespace HFM.Forms
          this.Name = "frmBenchmarks";
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
          this.Text = "Benchmarks Viewer";
-         this.Shown += new System.EventHandler(this.frmBenchmarks_Shown);
          this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmBenchmarks_FormClosing);
+         this.Shown += new System.EventHandler(this.frmBenchmarks_Shown);
          this.grpProjectInfo.ResumeLayout(false);
          this.grpProjectInfo.PerformLayout();
          this.tableLayoutPanel1.ResumeLayout(false);
@@ -652,13 +743,18 @@ namespace HFM.Forms
          this.tabControl1.ResumeLayout(false);
          this.tabTextBenchmark.ResumeLayout(false);
          this.tabTextBenchmark.PerformLayout();
-         this.tabGraphFrameTime.ResumeLayout(false);
-         this.tabGraphPPD.ResumeLayout(false);
-         this.tabGraphColors.ResumeLayout(false);
+         this.tabGraphConfig.ResumeLayout(false);
+         this.grpColors.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.picColorPreview)).EndInit();
+         this.tabGraphFrameTime1.ResumeLayout(false);
+         this.tabGraphPPD1.ResumeLayout(false);
          this.grpClients.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.picDeleteClient)).EndInit();
          this.listBox1ContextMenuStrip.ResumeLayout(false);
+         this.grpClientLayout.ResumeLayout(false);
+         this.pnlClientLayout.ResumeLayout(false);
+         this.pnlClientLayout.PerformLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.udClientsPerGraph)).EndInit();
          this.ResumeLayout(false);
 
       }
@@ -700,11 +796,11 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolTip toolTip1;
       private System.Windows.Forms.TabControl tabControl1;
       private System.Windows.Forms.TabPage tabTextBenchmark;
-      private System.Windows.Forms.TabPage tabGraphPPD;
-      private ZedGraph.ZedGraphControl zgPpd;
-      private System.Windows.Forms.TabPage tabGraphFrameTime;
-      private ZedGraph.ZedGraphControl zgFrameTime;
-      private System.Windows.Forms.TabPage tabGraphColors;
+      private System.Windows.Forms.TabPage tabGraphPPD1;
+      private ZedGraph.ZedGraphControl zgPpd1;
+      private System.Windows.Forms.TabPage tabGraphFrameTime1;
+      private ZedGraph.ZedGraphControl zgFrameTime1;
+      private System.Windows.Forms.TabPage tabGraphConfig;
       private ButtonWrapper btnMoveColorDown;
       private ButtonWrapper btnMoveColorUp;
       private ButtonWrapper btnDeleteColor;
@@ -713,6 +809,12 @@ namespace HFM.Forms
       private System.Windows.Forms.PictureBox picColorPreview;
       private TextBoxWrapper txtKFactor;
       private LabelWrapper lblKFactor;
+      private GroupBoxWrapper grpColors;
+      private GroupBoxWrapper grpClientLayout;
+      private harlam357.Windows.Forms.RadioPanel pnlClientLayout;
+      private RadioButtonWrapper rdoClientsPerGraph;
+      private RadioButtonWrapper rdoSingleGraph;
+      private System.Windows.Forms.NumericUpDown udClientsPerGraph;
 
 
    }
