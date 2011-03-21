@@ -1091,5 +1091,29 @@ namespace HFM.Preferences.Properties {
                 this["ReportHung"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Single")]
+        public string BenchmarksGraphLayoutType {
+            get {
+                return ((string)(this["BenchmarksGraphLayoutType"]));
+            }
+            set {
+                this["BenchmarksGraphLayoutType"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int BenchmarksClientsPerGraph {
+            get {
+                return ((int)(this["BenchmarksClientsPerGraph"]));
+            }
+            set {
+                this["BenchmarksClientsPerGraph"] = value;
+            }
+        }
     }
 }

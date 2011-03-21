@@ -23,7 +23,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 using ZedGraph;
@@ -66,10 +65,14 @@ namespace HFM.Forms
       /// ProjectID to Load when View is Shown
       /// </summary>
       public int LoadProjectID { get; set; }
+
+      public GraphLayoutType GraphLayoutType { get; set; }
       
       #endregion
    
       #region Fields
+
+      private int _currentNumberOfGraphs = 1;
 
       private readonly IPreferenceSet _prefs;
       private readonly IProteinCollection _proteinCollection;
@@ -78,6 +81,7 @@ namespace HFM.Forms
       private readonly IInstanceAccessor _instanceCollection;
       private readonly IMessageBoxView _messageBoxView;
       private readonly IExternalProcessStarter _processStarter;
+      private readonly ZedGraphManager _zedGraphManager;
       
       private BenchmarkClient _currentBenchmarkClient;
 
@@ -94,7 +98,8 @@ namespace HFM.Forms
          _instanceCollection = instanceCollection;
          _messageBoxView = messageBoxView;
          _processStarter = processStarter;
-      
+         _zedGraphManager = new ZedGraphManager();
+
          InitializeComponent();
       }
       
@@ -108,6 +113,9 @@ namespace HFM.Forms
          UpdateClientsComboBinding();
          UpdateProjectListBoxBinding(LoadProjectID);
          lstColors.DataSource = _graphColors;
+         GraphLayoutType = _prefs.GetPreference<GraphLayoutType>(Preference.BenchmarksGraphLayoutType);
+         pnlClientLayout.DataSource = this;
+         pnlClientLayout.ValueMember = "GraphLayoutType";
          
          // Issue 154 - make sure focus is on the projects list box
          listBox1.Select();
@@ -118,6 +126,7 @@ namespace HFM.Forms
          // Save state data
          _prefs.SetPreference(Preference.BenchmarksFormLocation, Location);
          _prefs.SetPreference(Preference.BenchmarksFormSize, Size);
+         _prefs.SetPreference(Preference.BenchmarksGraphLayoutType, GraphLayoutType);
          _prefs.Save();
       }
 
@@ -144,6 +153,8 @@ namespace HFM.Forms
 
          List<ProteinBenchmark> list = _benchmarkContainer.GetBenchmarks(_currentBenchmarkClient, projectID).ToList();
          list.Sort((benchmark1, benchmark2) => benchmark1.OwningInstanceName.CompareTo(benchmark2.OwningInstanceName));
+         IProtein protein;
+         _proteinCollection.TryGetValue(projectID, out protein);
 
          foreach (ProteinBenchmark benchmark in list)
          {
@@ -159,10 +170,98 @@ namespace HFM.Forms
             UpdateBenchmarkText(ToMultiLineString(benchmark, unit, _prefs.PpdFormatString, valuesOk));
          }
 
-         var zedGraphManager = new ZedGraphManager(_proteinCollection);
-         zedGraphManager.CreateFrameTimeGraph(zgFrameTime, lines, list, _graphColors);
-         zedGraphManager.CreatePpdGraph(zgPpd, lines, list, _graphColors, 
-            _prefs.GetPreference<int>(Preference.DecimalPlaces), _prefs.GetPreference<bool>(Preference.CalculateBonus));
+         tabControl1.SuspendLayout();
+
+         int clientsPerGraph = _prefs.GetPreference<int>(Preference.BenchmarksClientsPerGraph);
+         SetupGraphTabs(list.Count, clientsPerGraph);
+
+         int tabIndex = 1;
+         if (GraphLayoutType.Equals(GraphLayoutType.ClientsPerGraph))
+         {
+            int lastDisplayed = 0;
+            for (int i = 1; i < list.Count; i++)
+            {
+               if (i % clientsPerGraph == 0)
+               {
+                  var benchmarks = new ProteinBenchmark[clientsPerGraph];
+                  list.CopyTo(lastDisplayed, benchmarks, 0, clientsPerGraph);
+                  DrawGraphs(tabIndex, lines, benchmarks, protein);
+                  tabIndex++;
+                  lastDisplayed = i;
+               }
+            }
+
+            if (lastDisplayed < list.Count)
+            {
+               var benchmarks = new ProteinBenchmark[list.Count - lastDisplayed];
+               list.CopyTo(lastDisplayed, benchmarks, 0, list.Count - lastDisplayed);
+               DrawGraphs(tabIndex, lines, benchmarks, protein);
+            }
+         }
+         else
+         {
+            DrawGraphs(tabIndex, lines, list, protein);
+         }
+
+         tabControl1.ResumeLayout(true);
+      }
+
+      private void SetupGraphTabs(int numberOfBenchmarks, int clientsPerGraph)
+      {
+         int graphs = 1;
+         if (GraphLayoutType.Equals(GraphLayoutType.ClientsPerGraph))
+         {
+            graphs = (int)Math.Ceiling(numberOfBenchmarks / (double)clientsPerGraph);
+            if (graphs == 0)
+            {
+               graphs = 1;
+            }
+         }
+
+         if (graphs > _currentNumberOfGraphs)
+         {
+            for (int i = _currentNumberOfGraphs + 1; i <= graphs; i++)
+            {
+               tabControl1.TabPages.Add("tabGraphFrameTime" + i, "Graph - Frame Time (" + i + ")");
+               var zgFrameTime = new ZedGraphControl();
+               zgFrameTime.Name = "zgFrameTime" + i;
+               zgFrameTime.Dock = DockStyle.Fill;
+               tabControl1.TabPages[tabControl1.TabPages.Count - 1].Controls.Add(zgFrameTime);
+
+               tabControl1.TabPages.Add("tabGraphPPD" + i, "Graph - PPD (" + i + ")");
+               var zgPpd = new ZedGraphControl();
+               zgPpd.Name = "zgPpd" + i;
+               zgPpd.Dock = DockStyle.Fill;
+               tabControl1.TabPages[tabControl1.TabPages.Count - 1].Controls.Add(zgPpd);
+            }
+         }
+         else if (graphs < _currentNumberOfGraphs)
+         {
+            for (int i = _currentNumberOfGraphs; i > graphs; i--)
+            {
+               tabControl1.TabPages.RemoveByKey("tabGraphFrameTime" + i);
+               tabControl1.TabPages.RemoveByKey("tabGraphPPD" + i);
+            }
+         }
+
+         _currentNumberOfGraphs = graphs;
+      }
+
+      private void DrawGraphs(int tabIndex, IList<string> lines, IEnumerable<ProteinBenchmark> benchmarks, IProtein protein)
+      {
+         _zedGraphManager.CreateFrameTimeGraph(GetFrameTimeGraph(tabIndex), lines, benchmarks, _graphColors);
+         _zedGraphManager.CreatePpdGraph(GetPpdGraph(tabIndex), lines, benchmarks, _graphColors,
+            _prefs.GetPreference<int>(Preference.DecimalPlaces), protein, _prefs.GetPreference<bool>(Preference.CalculateBonus));
+      }
+
+      private ZedGraphControl GetFrameTimeGraph(int index)
+      {
+         return (ZedGraphControl)tabControl1.TabPages["tabGraphFrameTime" + index].Controls["zgFrameTime" + index];
+      }
+
+      private ZedGraphControl GetPpdGraph(int index)
+      {
+         return (ZedGraphControl)tabControl1.TabPages["tabGraphPPD" + index].Controls["zgPpd" + index];
       }
 
       /// <summary>
@@ -360,6 +459,26 @@ namespace HFM.Forms
          {
             lstColors.SelectedIndex = _graphColors.Count - 1;
          }
+      }
+
+      private void rdoSingleGraph_CheckedChanged(object sender, EventArgs e)
+      {
+         SetClientsPerGraphUpDownEnabled();
+      }
+
+      private void rdoClientsPerGraph_CheckedChanged(object sender, EventArgs e)
+      {
+         SetClientsPerGraphUpDownEnabled();
+      }
+
+      private void udClientsPerGraph_ValueChanged(object sender, EventArgs e)
+      {
+         _prefs.SetPreference(Preference.BenchmarksClientsPerGraph, (int)udClientsPerGraph.Value);
+      }
+
+      private void SetClientsPerGraphUpDownEnabled()
+      {
+         udClientsPerGraph.Enabled = rdoClientsPerGraph.Checked;
       }
 
       private void btnExit_Click(object sender, EventArgs e)

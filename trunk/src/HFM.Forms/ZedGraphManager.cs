@@ -1,27 +1,36 @@
-﻿
+﻿/*
+ * HFM.NET - ZedGraph Drawing Manager Class
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License. See the included file GPLv2.TXT.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
 using System.Text;
 
 using ZedGraph;
 
-using HFM.Framework;
 using HFM.Framework.DataTypes;
 
 namespace HFM.Forms
 {
    public class ZedGraphManager
    {
-      private readonly IProteinCollection _proteinCollection;
-
-      public ZedGraphManager(IProteinCollection proteinCollection)
-      {
-         _proteinCollection = proteinCollection;
-      }
-
       /// <summary>
       /// Build The PPD GraphPane
       /// </summary>
@@ -30,11 +39,13 @@ namespace HFM.Forms
       /// <param name="benchmarks">Benchmarks Collection to Plot</param>
       /// <param name="graphColors">Graph Colors List</param>
       /// <param name="decimalPlaces">PPD Decimal Places</param>
+      /// <param name="protein"></param>
+      /// <param name="calculateBonus"></param>
       [CLSCompliant(false)]
       public void CreatePpdGraph(ZedGraphControl zg, IList<string> projectInfo, 
                                  IEnumerable<ProteinBenchmark> benchmarks,
                                  IList<Color> graphColors, int decimalPlaces,
-                                 bool calculateBonus)
+                                 IProtein protein, bool calculateBonus)
       {
          Debug.Assert(zg != null);
 
@@ -63,9 +74,6 @@ namespace HFM.Forms
             int i = 0;
             foreach (ProteinBenchmark benchmark in benchmarks)
             {
-               IProtein protein;
-               _proteinCollection.TryGetValue(benchmark.ProjectID, out protein);
-
                double minimumFrameTimePPD = 0;
                double averageFrameTimePPD = 0;
                if (protein != null)
