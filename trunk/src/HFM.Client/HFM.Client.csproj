@@ -43,7 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClientAccess.cs" />
+    <Compile Include="Connection.cs" />
+    <Compile Include="MessageKey.cs" />
+    <Compile Include="Messages.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queue.cs" />
