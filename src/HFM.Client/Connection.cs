@@ -3,24 +3,34 @@ using System;
 using System.Diagnostics;
 using System.Net.Sockets;
 using System.Text;
+using System.Timers;
 
 namespace HFM.Client
 {
-   public class ClientAccess : IDisposable
+   public class Connection : IDisposable
    {
       private const int InternalBufferSize = 1024;
       private const int SocketBufferSize = 8196;
       private const int DefaultTimeoutLength = 2000;
+      private const int DefaultSocketTimerLength = 100;
 
       private TcpClient _tcpClient;
       private NetworkStream _stream;
       private readonly StringBuilder _readBuffer;
+      private readonly Timer _timer;
+
+      private static readonly object BufferLock = new object();
 
       #region TcpClient Properties
 
       public bool Connected
       {
          get { return _tcpClient.Client == null ? false : _tcpClient.Connected; }
+      }
+
+      public bool DataAvailable
+      {
+         get { return _readBuffer.Length != 0; }
       }
 
       public int ConnectTimeout { get; set; }
@@ -35,19 +45,7 @@ namespace HFM.Client
 
       #endregion
 
-      #region Data Properties
-
-      public Slots Slots { get; private set; }
-
-      public Options Options { get; private set; }
-
-      public Queue Queue { get; private set; }
-
-      public string LogFile { get; set; }
-
-      #endregion
-
-      public ClientAccess()
+      public Connection()
       {
          ConnectTimeout = DefaultTimeoutLength;
          SendTimeout = DefaultTimeoutLength;
@@ -56,6 +54,20 @@ namespace HFM.Client
          ReceiveBufferSize = SocketBufferSize;
          _tcpClient = CreateClient();
          _readBuffer = new StringBuilder();
+         _timer = new Timer(DefaultSocketTimerLength);
+         _timer.Elapsed += SocketTimerElapsed;
+      }
+
+      private void SocketTimerElapsed(object sender, ElapsedEventArgs e)
+      {
+ 	      if (Connected)
+ 	      {
+ 	         Update();
+ 	      }
+         else
+ 	      {
+ 	         _timer.Stop();
+ 	      }
       }
 
       private TcpClient CreateClient()
@@ -87,11 +99,19 @@ namespace HFM.Client
             }
 
             _tcpClient.EndConnect(ar);
+            // start listening for messages
+            // from the network stream
+            _timer.Start();
          }
          finally
          {
             wh.Close();
          } 
+      }
+
+      public void Close()
+      {
+         _tcpClient.Close();
       }
 
       public void SendCommand(string command)
@@ -107,12 +127,14 @@ namespace HFM.Client
             _stream = _tcpClient.GetStream();
          }
          var buffer = Encoding.ASCII.GetBytes(command);
-         _stream.Write(buffer, 0, buffer.Length);
+         //_stream.Write(buffer, 0, buffer.Length);
+         _stream.BeginWrite(buffer, 0, buffer.Length, null, null);
       }
 
-      public void Update()
+      protected virtual void Update()
       {
-         if (!Connected) throw new InvalidOperationException("Client is not connected.");
+         //if (!Connected) throw new InvalidOperationException("Client is not connected.");
+         Debug.Assert(Connected);
 
          if (_stream == null)
          {
@@ -127,79 +149,32 @@ namespace HFM.Client
          //   bytesRead = _stream.Read(buffer, 0, buffer.Length);
          //}
 
-         while (_stream.DataAvailable)
+         lock (BufferLock)
          {
-            _stream.Read(buffer, 0, buffer.Length);
-            _readBuffer.Append(Encoding.ASCII.GetString(buffer));
-         }
-         ProcessBuffer();
-      }
-
-      private void ProcessBuffer()
-      {
-         string value = _readBuffer.ToString();
-         JsonMessage json;
-         while ((json = GetNextJsonValue(value)) != null)
-         {
-            ProcessJsonMessage(json);
-            value = json.NextStartIndex < value.Length ? value.Substring(json.NextStartIndex) : String.Empty;
-         }
-         _readBuffer.Clear();
-         _readBuffer.Append(value);
-      }
-
-      private void ProcessJsonMessage(JsonMessage json)
-      {
-         switch (json.Name)
-         {
-            case "slots":
-               Slots = Slots.Parse(json.Value);
-               break;
-            case "options":
-               Options = Options.Parse(json.Value);
-               break;
-            case "units":
-               Queue = Queue.Parse(json.Value);
-               break;
-            case "log-restart":
-               // set the platform specific new line character(s)
-               string logFile = json.Value.Replace("\\" + "n", Environment.NewLine);
-               LogFile = logFile;
-               break;
+            while (_stream.DataAvailable)
+            {
+               _stream.Read(buffer, 0, buffer.Length);
+               _readBuffer.Append(Encoding.ASCII.GetString(buffer));
+            }
          }
       }
 
-      private static JsonMessage GetNextJsonValue(string value)
+      public string GetBuffer(bool clear)
       {
-         Debug.Assert(value != null);
-
-         // find the header
-         int messageIndex = value.IndexOf("PyON ");
-         if (messageIndex < 0)
+         lock (BufferLock)
          {
-            return null;
+            string value = _readBuffer.ToString();
+            if (clear) _readBuffer.Clear();
+            return value;
          }
-         // "PyON " plus version number and another space - i.e. "PyON 1 "
-         messageIndex += 7;
+      }
 
-         int startIndex = value.IndexOf('\n', messageIndex);
-         if (startIndex < 0) return null;
-         
-         // find the footer
-         int endIndex = value.IndexOf("---\n", startIndex);
-         if (endIndex < 0) return null;
-
-         var jsonMessage = new JsonMessage();
-         // get the PyON message name
-         jsonMessage.Name = value.Substring(messageIndex, startIndex - messageIndex);
-
-         // get the PyON message
-         string pyon = value.Substring(startIndex, endIndex - startIndex);
-         // replace PyON values with JSON values
-         jsonMessage.Value = pyon.Replace("[\n", String.Empty).Replace("]\n", String.Empty).Replace(": None", ": null");
-         // set the index so we know where to trim the string
-         jsonMessage.NextStartIndex = endIndex + 4;
-         return jsonMessage;
+      public void ClearBuffer()
+      {
+         lock (BufferLock)
+         {
+            _readBuffer.Clear();
+         }
       }
 
       #region IDisposable Members
@@ -218,27 +193,18 @@ namespace HFM.Client
          {
             if (disposing)
             {
-               _tcpClient.Close();
+               Close();
             }
          }
 
          _disposed = true;
       }
 
-      ~ClientAccess()
+      ~Connection()
       {
          Dispose(false);
       }
 
       #endregion
-   }
-
-   public class JsonMessage
-   {
-      public string Name { get; set; }
-
-      public string Value { get; set; }
-
-      public int NextStartIndex { get; set; }
    }
 }
