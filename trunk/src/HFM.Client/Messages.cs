@@ -20,7 +20,7 @@ namespace HFM.Client
       #region Fields
 
       private readonly StringBuilder _readBuffer;
-      private readonly Dictionary<string, IMessage> _messages;
+      private readonly Dictionary<string, Message> _messages;
 
       #endregion
 
@@ -32,7 +32,7 @@ namespace HFM.Client
       public Messages()
       {
          _readBuffer = new StringBuilder();
-         _messages = new Dictionary<string, IMessage>();
+         _messages = new Dictionary<string, Message>();
       }
 
       #endregion
@@ -44,7 +44,7 @@ namespace HFM.Client
       /// </summary>
       /// <param name="key">Server Message Key</param>
       /// <returns>The server message or null if the message is not in the cache.</returns>
-      public IMessage GetMessage(string key)
+      public Message GetMessage(string key)
       {
          return _messages.ContainsKey(key) ? _messages[key] : null;
       }
@@ -87,13 +87,14 @@ namespace HFM.Client
       /// </summary>
       /// <param name="buffer">Data Buffer Value</param>
       /// <returns>Message or null if no message is available in the buffer.</returns>
-      private static Message GetNextMessage(ref string buffer)
+      public static Message GetNextMessage(ref string buffer)
       {
          Debug.Assert(buffer != null);
 
          const string pyonHeader = "PyON 1 ";
          const char lineFeed = '\n';
-         const string pyonFooter = "---\n";
+         const string pyonFooter1 = "---\n";
+         const string pyonFooter2 = "---";
 
          // find the header
          int messageIndex = buffer.IndexOf(pyonHeader);
@@ -109,8 +110,15 @@ namespace HFM.Client
          if (startIndex < 0) return null;
 
          // find the footer
-         int endIndex = buffer.IndexOf(pyonFooter, startIndex);
-         if (endIndex < 0) return null;
+         int endIndex = buffer.IndexOf(pyonFooter1, startIndex);
+         if (endIndex < 0)
+         {
+            endIndex = buffer.IndexOf(pyonFooter2, startIndex);
+            if (endIndex < 0)
+            {
+               return null;
+            }
+         }
 
          // create the message and set received time stamp
          var message = new Message { Received = DateTime.UtcNow };
@@ -124,14 +132,14 @@ namespace HFM.Client
          message.Value = pyon.Replace(": None", ": null");
 
          // set the index so we know where to trim the string (end plus footer length)
-         int nextStartIndex = endIndex + pyonFooter.Length;
+         int nextStartIndex = endIndex + pyonFooter1.Length;
          // if more buffer is available set it and return, otherwise set the buffer empty
          buffer = nextStartIndex < buffer.Length ? buffer.Substring(nextStartIndex) : String.Empty;
 
          return message;
       }
 
-      private void UpdateMessageCache(IMessage message)
+      private void UpdateMessageCache(Message message)
       {
          switch (message.Key)
          {
@@ -163,26 +171,13 @@ namespace HFM.Client
       #endregion
    }
 
-   public interface IMessage
+   public class Message
    {
-      /// <summary>
-      /// Message Key
-      /// </summary>
-      string Key { get; }
+      internal Message()
+      {
+         
+      }
 
-      /// <summary>
-      /// Message Value
-      /// </summary>
-      string Value { get; }
-
-      /// <summary>
-      /// Received Time Stamp
-      /// </summary>
-      DateTime Received { get; }
-   }
-
-   public class Message : IMessage
-   {
       /// <summary>
       /// Message Key
       /// </summary>
@@ -197,5 +192,12 @@ namespace HFM.Client
       /// Received Time Stamp
       /// </summary>
       public DateTime Received { get; set; }
+
+      internal void SetMessageValues(Message message)
+      {
+         Key = message.Key;
+         Value = message.Value;
+         Received = message.Received;
+      }
    }
 }

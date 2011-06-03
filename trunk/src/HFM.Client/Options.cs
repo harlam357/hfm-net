@@ -1,120 +1,334 @@
 ﻿
-using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 
 using Newtonsoft.Json.Linq;
 
 namespace HFM.Client
 {
-   public class Options : Dictionary<string, string>
+   public class Options : Message
    {
-      public const string AssignmentServers = "assignment-servers";
-      public const string CaptureDirectory = "capture-directory";
-      public const string CaptureSockets = "capture-sockets";
-      public const string Checkpoint = "checkpoint";
-      public const string Child = "child";
-      public const string ClientSubtype = "client-subtype";
-      public const string ClientType = "client-type";
-      public const string CommandAddress = "command-address";
-      public const string CommandAllow = "command-allow";
-      public const string CommandAllowNoPass = "command-allow-no-pass";
-      public const string CommandDeny = "command-deny";
-      public const string CommandDenyNoPass = "command-deny-no-pass";
-      public const string CommandPort = "command-port";
-      public const string ConfigRotate = "config-rotate";
-      public const string ConfigRotateDir = "config-rotate-dir";
-      public const string ConfigRotateMax = "config-rotate-max";
-      public const string CoreDir = "core-dir";
-      public const string CoreKey = "core-key";
-      public const string CorePrep = "core-prep";
-      public const string CorePriority = "core-priority";
-      public const string CoreServer = "core-server";
-      public const string CpuAffinity = "cpu-affinity";
-      public const string CpuSpecies = "cpu-species";
-      public const string CpuType = "cpu-type";
-      public const string CpuUsage = "cpu-usage";
-      public const string Cpus = "cpus";
-      public const string CycleRate = "cycle-rate";
-      public const string Cycles = "cycles";
-      public const string Daemon = "daemon";
-      public const string DataDirectory = "data-directory";
-      public const string DebugSockets = "debug-sockets";
-      public const string DumpAfterDeadline = "dump-after-deadline";
-      public const string Eval = "eval";
-      public const string ExceptionLocations = "exception-locations";
-      public const string ExecDirectory = "exec-directory";
-      public const string ExitWhenDone = "exit-when-done";
-      public const string ExtraCoreArgs = "extra-core-args";
-      public const string ForceWs = "force-ws";
-      public const string Gpu = "gpu";
-      public const string GpuAssignmentServers = "gpu-assignment-servers";
-      public const string GpuDeviceId = "gpu-device-id";
-      public const string GpuId = "gpu-id";
-      public const string GpuIndex = "gpu-index";
-      public const string GpuVendorId = "gpu-vendor-id";
-      public const string Log = "log";
-      public const string LogColor = "log-color";
-      public const string LogCrlf = "log-crlf";
-      public const string LogDate = "log-date";
-      public const string LogDebug = "log-debug";
-      public const string LogDomain = "log-domain";
-      public const string LogDomainLevels = "log-domain-levels";
-      public const string LogHeader = "log-header";
-      public const string LogLevel = "log-level";
-      public const string LogNoInfoHeader = "log-no-info-header";
-      public const string LogRedirect = "log-redirect";
-      public const string LogRotate = "log-rotate";
-      public const string LogRotateDir = "log-rotate-dir";
-      public const string LogRotateMax = "log-rotate-max";
-      public const string LogShortLevel = "log-short-level";
-      public const string LogSimpleDomains = "log-simple-domains";
-      public const string LogThreadId = "log-thread-id";
-      public const string LogTime = "log-time";
-      public const string LogToScreen = "log-to-screen";
-      public const string LogTruncate = "log-truncate";
-      public const string MachineId = "machine-id";
-      public const string MaxDelay = "max-delay";
-      public const string MaxPacketSize = "max-packet-size";
-      public const string MaxQueue = "max-queue";
-      public const string MaxShutdownWait = "max-shutdown-wait";
-      public const string MaxSlotErrors = "max-slot-errors";
-      public const string MaxUnitErrors = "max-unit-errors";
-      public const string MaxUnits = "max-units";
-      public const string Memory = "memory";
-      public const string MinDelay = "min-delay";
-      public const string NextUnitPercentage = "next-unit-percentage";
-      public const string Priority = "priority";
-      public const string NoAssembly = "no-assembly";
-      public const string OsSpecies = "os-species";
-      public const string OsType = "os-type";
-      public const string Passkey = "passkey";
-      public const string Password = "password";
-      public const string PauseOnBattery = "pause-on-battery";
-      public const string PauseOnStart = "pause-on-start";
-      public const string Pid = "pid";
-      public const string PidFile = "pid-file";
-      public const string ProjectKey = "project-key";
-      public const string Respawn = "respawn";
-      public const string Script = "script";
-      public const string Service = "service";
-      public const string ServiceDescription = "service-description";
-      public const string ServiceRestart = "service-restart";
-      public const string ServiceRestartDelay = "service-restart-delay";
-      public const string Smp = "smp";
-      public const string StackTraces = "stack-traces";
-      public const string Team = "team";
-      public const string Threads = "threads";
-      public const string User = "user";
-      public const string Verbosity = "verbosity";
-
-      public static Options Parse(string value)
+      private Options()
       {
-         var o = JObject.Parse(value);
+         
+      }
+
+      [MessageProperty("assignment-servers")]
+      public string AssignmentServers { get; set; }
+
+      [MessageProperty("capture-directory")]
+      public string CaptureDirectory { get; set; }
+
+      [MessageProperty("capture-sockets")]
+      public bool CaptureSockets { get; set; }
+
+      [MessageProperty("checkpoint")]
+      public int Checkpoint { get; set; }
+
+      [MessageProperty("child")]
+      public bool Child { get; set; }
+
+      [MessageProperty("client-subtype")]
+      public string ClientSubtype { get; set; }
+
+      [MessageProperty("client-type")]
+      public string ClientType { get; set; }
+
+      // could be IP Address type
+      [MessageProperty("command-address")]
+      public string CommandAddress { get; set; }
+
+      // could be IP Address type
+      [MessageProperty("command-allow")]
+      public string CommandAllow { get; set; }
+
+      // could be IP Address type
+      [MessageProperty("command-allow-no-pass")]
+      public string CommandAllowNoPass { get; set; }
+
+      // could be IP Address type
+      [MessageProperty("command-deny")]
+      public string CommandDeny { get; set; }
+
+      // could be IP Address type
+      [MessageProperty("command-deny-no-pass")]
+      public string CommandDenyNoPass { get; set; }
+
+      [MessageProperty("command-port")]
+      public int CommandPort { get; set; }
+
+      [MessageProperty("config-rotate")]
+      public bool ConfigRotate { get; set; }
+
+      [MessageProperty("config-rotate-dir")]
+      public string ConfigRotateDir { get; set; }
+
+      [MessageProperty("config-rotate-max")]
+      public int ConfigRotateMax { get; set; }
+
+      [MessageProperty("core-dir")]
+      public string CoreDir { get; set; }
+
+      [MessageProperty("core-key")]
+      public string CoreKey { get; set; }
+
+      [MessageProperty("core-prep")]
+      public string CorePrep { get; set; }
+
+      [MessageProperty("core-priority")]
+      public string CorePriority { get; set; }
+
+      [MessageProperty("core-server")]
+      public string CoreServer { get; set; }
+
+      [MessageProperty("cpu-affinity")]
+      public bool CpuAffinity { get; set; }
+
+      // could be enum type
+      [MessageProperty("cpu-species")]
+      public string CpuSpecies { get; set; }
+
+      // SHOULD be enum type
+      [MessageProperty("cpu-type")]
+      public string CpuType { get; set; }
+
+      [MessageProperty("cpu-usage")]
+      public int CpuUsage { get; set; }
+
+      [MessageProperty("cpus")]
+      public int Cpus { get; set; }
+
+      [MessageProperty("cycle-rate")]
+      public int CycleRate { get; set; }
+
+      [MessageProperty("cycles")]
+      public int Cycles { get; set; }
+
+      [MessageProperty("daemon")]
+      public bool Daemon { get; set; }
+
+      [MessageProperty("data-directory")]
+      public string DataDirectory { get; set; }
+
+      [MessageProperty("debug-sockets")]
+      public bool DebugSockets { get; set; }
+
+      [MessageProperty("dump-after-deadline")]
+      public bool DumpAfterDeadline { get; set; }
+
+      [MessageProperty("eval")]
+      public string Eval { get; set; }
+
+      [MessageProperty("exception-locations")]
+      public bool ExceptionLocations { get; set; }
+
+      [MessageProperty("exec-directory")]
+      public string ExecDirectory { get; set; }
+
+      [MessageProperty("exit-when-done")]
+      public bool ExitWhenDone { get; set; }
+
+      [MessageProperty("extra-core-args")]
+      public string ExtraCoreArgs { get; set; }
+
+      [MessageProperty("force-ws")]
+      public string ForceWs { get; set; }
+
+      [MessageProperty("gpu")]
+      public bool Gpu { get; set; }
+
+      [MessageProperty("gpu-assignment-servers")]
+      public string GpuAssignmentServers { get; set; }
+
+      [MessageProperty("gpu-device-id")]
+      public string GpuDeviceId { get; set; }
+
+      [MessageProperty("gpu-id")]
+      public int GpuId { get; set; }
+
+      [MessageProperty("gpu-index")]
+      public string GpuIndex { get; set; }
+
+      [MessageProperty("gpu-vendor-id")]
+      public string GpuVendorId { get; set; }
+
+      [MessageProperty("log")]
+      public string Log { get; set; }
+
+      [MessageProperty("log-color")]
+      public bool LogColor { get; set; }
+
+      [MessageProperty("log-crlf")]
+      public bool LogCrlf { get; set; }
+
+      [MessageProperty("log-date")]
+      public bool LogDate { get; set; }
+
+      [MessageProperty("log-debug")]
+      public bool LogDebug { get; set; }
+
+      [MessageProperty("log-domain")]
+      public bool LogDomain { get; set; }
+
+      [MessageProperty("log-domain-levels")]
+      public string LogDomainLevels { get; set; }
+
+      [MessageProperty("log-header")]
+      public bool LogHeader { get; set; }
+
+      [MessageProperty("log-level")]
+      public bool LogLevel { get; set; }
+
+      [MessageProperty("log-no-info-header")]
+      public bool LogNoInfoHeader { get; set; }
+
+      [MessageProperty("log-redirect")]
+      public bool LogRedirect { get; set; }
+
+      [MessageProperty("log-rotate")]
+      public bool LogRotate { get; set; }
+
+      [MessageProperty("log-rotate-dir")]
+      public string LogRotateDir { get; set; }
+
+      [MessageProperty("log-rotate-max")]
+      public int LogRotateMax { get; set; }
+
+      [MessageProperty("log-short-level")]
+      public bool LogShortLevel { get; set; }
+
+      [MessageProperty("log-simple-domains")]
+      public bool LogSimpleDomains { get; set; }
+
+      [MessageProperty("log-thread-id")]
+      public bool LogThreadId { get; set; }
+
+      [MessageProperty("log-time")]
+      public bool LogTime { get; set; }
+
+      [MessageProperty("log-to-screen")]
+      public bool LogToScreen { get; set; }
+
+      [MessageProperty("log-truncate")]
+      public bool LogTruncate { get; set; }
+
+      [MessageProperty("machine-id")]
+      public int MachineId { get; set; }
+
+      [MessageProperty("max-delay")]
+      public int MaxDelay { get; set; }
+
+      // could be enum type
+      [MessageProperty("max-packet-size")]
+      public string MaxPacketSize { get; set; }
+
+      [MessageProperty("max-queue")]
+      public int MaxQueue { get; set; }
+
+      [MessageProperty("max-shutdown-wait")]
+      public int MaxShutdownWait { get; set; }
+
+      [MessageProperty("max-slot-errors")]
+      public int MaxSlotErrors { get; set; }
+
+      [MessageProperty("max-unit-errors")]
+      public int MaxUnitErrors { get; set; }
+
+      [MessageProperty("max-units")]
+      public int MaxUnits { get; set; }
+
+      [MessageProperty("memory")]
+      public string Memory { get; set; }
+
+      [MessageProperty("min-delay")]
+      public int MinDelay { get; set; }
+
+      [MessageProperty("next-unit-percentage")]
+      public int NextUnitPercentage { get; set; }
+
+      [MessageProperty("priority")]
+      public string Priority { get; set; }
+
+      [MessageProperty("no-assembly")]
+      public bool NoAssembly { get; set; }
+      
+      // could be enum type
+      [MessageProperty("os-species")]
+      public string OsSpecies { get; set; }
+
+      // SHOULD be enum type
+      [MessageProperty("os-type")]
+      public string OsType { get; set; }
+
+      [MessageProperty("passkey")]
+      public string Passkey { get; set; }
+
+      [MessageProperty("password")]
+      public string Password { get; set; }
+
+      [MessageProperty("pause-on-battery")]
+      public bool PauseOnBattery { get; set; }
+
+      [MessageProperty("pause-on-start")]
+      public bool PauseOnStart { get; set; }
+
+      [MessageProperty("pid")]
+      public bool Pid { get; set; }
+
+      [MessageProperty("pid-file")]
+      public string PidFile { get; set; }
+
+      [MessageProperty("project-key")]
+      public int ProjectKey { get; set; }
+
+      [MessageProperty("respawn")]
+      public bool Respawn { get; set; }
+
+      [MessageProperty("script")]
+      public string Script { get; set; }
+
+      [MessageProperty("service")]
+      public bool Service { get; set; }
+
+      [MessageProperty("service-description")]
+      public string ServiceDescription { get; set; }
+
+      [MessageProperty("service-restart")]
+      public bool ServiceRestart { get; set; }
+
+      [MessageProperty("service-restart-delay")]
+      public int ServiceRestartDelay { get; set; }
+
+      [MessageProperty("smp")]
+      public bool Smp { get; set; }
+
+      [MessageProperty("stack-traces")]
+      public bool StackTraces { get; set; }
+
+      [MessageProperty("team")]
+      public int Team { get; set; }
+
+      [MessageProperty("threads")]
+      public int Threads { get; set; }
+
+      [MessageProperty("user")]
+      public string User { get; set; }
+      
+      [MessageProperty("verbosity")]
+      public int Verbosity { get; set; }
+
+      public static Options Parse(Message message)
+      {
+         return Parse(message.Value, message);
+      }
+
+      public static Options Parse(string json, Message message) 
+      {
          var options = new Options();
-         foreach (var prop in o.Properties())
+         foreach (var prop in JObject.Parse(json).Properties())
          {
-            options.Add(prop.Name, (string)prop);
+            FahClient.SetObjectProperty(options, TypeDescriptor.GetProperties(options), prop);
          }
+         options.SetMessageValues(message);
          return options;
       }
    }
