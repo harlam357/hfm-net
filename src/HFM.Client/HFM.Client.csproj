@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Connection.cs" />
     <Compile Include="FahClient.cs" />
+    <Compile Include="Heartbeat.cs" />
     <Compile Include="MessagePropertyAttribute.cs" />
     <Compile Include="Messages.cs" />
     <Compile Include="Options.cs" />
