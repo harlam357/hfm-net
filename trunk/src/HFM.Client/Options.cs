@@ -1,4 +1,23 @@
-﻿
+﻿/*
+ * HFM.NET - Options Data Class
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License. See the included file GPLv2.TXT.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+using System;
 using System.ComponentModel;
 
 using Newtonsoft.Json.Linq;
@@ -7,10 +26,7 @@ namespace HFM.Client
 {
    public class Options : Message
    {
-      private Options()
-      {
-         
-      }
+      #region Properties
 
       [MessageProperty("assignment-servers")]
       public string AssignmentServers { get; set; }
@@ -250,7 +266,7 @@ namespace HFM.Client
 
       [MessageProperty("no-assembly")]
       public bool NoAssembly { get; set; }
-      
+
       // could be enum type
       [MessageProperty("os-species")]
       public string OsSpecies { get; set; }
@@ -279,6 +295,18 @@ namespace HFM.Client
 
       [MessageProperty("project-key")]
       public int ProjectKey { get; set; }
+
+      [MessageProperty("proxy")]
+      public string Proxy { get; set; }
+
+      [MessageProperty("proxy-enable")]
+      public bool ProxyEnable { get; set; }
+
+      [MessageProperty("proxy-pass")]
+      public string ProxyPass { get; set; }
+
+      [MessageProperty("proxy-user")]
+      public string ProxyUser { get; set; }
 
       [MessageProperty("respawn")]
       public bool Respawn { get; set; }
@@ -312,17 +340,40 @@ namespace HFM.Client
 
       [MessageProperty("user")]
       public string User { get; set; }
-      
+
       [MessageProperty("verbosity")]
       public int Verbosity { get; set; }
 
+      #endregion
+
+      private Options()
+      {
+         
+      }
+
+      /// <summary>
+      /// Create an Options object from the given Message.
+      /// </summary>
+      /// <param name="message">Message object containing JSON value and meta-data.</param>
+      /// <exception cref="ArgumentNullException">Throws if message parameter is null.</exception>
       public static Options Parse(Message message)
       {
+         if (message == null) throw new ArgumentNullException("message");
+
          return Parse(message.Value, message);
       }
 
-      public static Options Parse(string json, Message message) 
+      /// <summary>
+      /// Create an Options object from the given Message.
+      /// </summary>
+      /// <param name="json">JSON string to parse.</param>
+      /// <param name="message">Message object containing meta-data.</param>
+      /// <exception cref="ArgumentNullException">Throws if json or message parameter is null.</exception>
+      internal static Options Parse(string json, Message message) 
       {
+         if (json == null) throw new ArgumentNullException("json");
+         if (message == null) throw new ArgumentNullException("message");
+
          var options = new Options();
          foreach (var prop in JObject.Parse(json).Properties())
          {

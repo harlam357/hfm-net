@@ -1,4 +1,22 @@
-﻿
+﻿/*
+ * HFM.NET - Messages Class
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License. See the included file GPLv2.TXT.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -89,6 +107,8 @@ namespace HFM.Client
       /// <returns>Message or null if no message is available in the buffer.</returns>
       public static Message GetNextMessage(ref string buffer)
       {
+         //TODO: Should be internal exposure
+
          Debug.Assert(buffer != null);
 
          const string pyonHeader = "PyON 1 ";
@@ -199,5 +219,53 @@ namespace HFM.Client
          Value = message.Value;
          Received = message.Received;
       }
+   }
+
+   public static class MessageKey
+   {
+      /// <summary>
+      /// Heartbeat Message Key
+      /// </summary>
+      public const string Heartbeat = "heartbeat";
+      /// <summary>
+      /// Log Restart Message Key
+      /// </summary>
+      internal const string LogRestart = "log-restart";
+      /// <summary>
+      /// Log Update Message Key
+      /// </summary>
+      internal const string LogUpdate = "log-update";
+      /// <summary>
+      /// Log Message Key (aggregated log text - this key is specific to the HFM.Client API)
+      /// </summary>
+      public const string Log = "log";
+      /// <summary>
+      /// Info Message Key
+      /// </summary>
+      public const string Info = "info";
+      /// <summary>
+      /// Options Message Key
+      /// </summary>
+      public const string Options = "options";
+      /// <summary>
+      /// Queue Info Message Key
+      /// </summary>
+      public const string QueueInfo = "units";
+      /// <summary>
+      /// Simulation Info Message Key
+      /// </summary>
+      /// <remarks>This message is in response to a command that takes a slot id argument.
+      /// Will probably need to save messages for each slot requested in a dictionary.</remarks>
+      public const string SimulationInfo = "simulation-info";
+      /// <summary>
+      /// Slot Info Message Key
+      /// </summary>
+      public const string SlotInfo = "slots";
+      /// <summary>
+      /// Slot Options Message Key
+      /// </summary>
+      /// <remarks>This message is in response to a command that takes a slot id argument.
+      /// Will probably need to save messages for each slot requested in a dictionary.</remarks>
+      public const string SlotOptions = "slot-options";
    }
 }
