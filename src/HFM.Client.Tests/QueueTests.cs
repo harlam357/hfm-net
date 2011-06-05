@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Slots Data Class Tests
+ * HFM.NET - Queue Data Class Tests
  * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -24,19 +24,13 @@ using NUnit.Framework;
 namespace HFM.Client.Tests
 {
    [TestFixture]
-   public class SlotsTests
+   public class QueueTests
    {
       [Test]
       public void ParseTest1()
       {
-         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\slots.txt");
-         var slots = Slots.Parse(Messages.GetNextMessage(ref message));
-         Assert.AreEqual(1, slots.Count);
-         Assert.AreEqual(0, slots[0].ID);
-         Assert.AreEqual("RUNNING", slots[0].Status);
-         Assert.AreEqual("smp:4", slots[0].Description);
-         Assert.IsNotNull(slots[0].Options);
-         Assert.IsTrue(slots[0].Options.PauseOnStart);
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\units.txt");
+         var queue = Queue.Parse(Messages.GetNextMessage(ref message));
       }
    }
 }

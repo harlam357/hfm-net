@@ -1,0 +1,31 @@
+PyON 1 units
+[
+  {
+    "id": "00",
+    "state": "RUNNING",
+    "project": 11020,
+    "run": 0,
+    "clone": 1921,
+    "gen": 24,
+    "core": "0xa3",
+    "unit": "0x000000210a3b1e5b4d824701aee79f1e",
+    "percentdone": "59.00%",
+    "totalframes": 1000,
+    "framesdone": 590,
+    "assigned": "27/May/2011-19:34:24",
+    "timeout": "04/Jun/2011-19:34:24",
+    "deadline": "08/Jun/2011-19:34:24",
+    "ws": "171.64.65.55",
+    "cs": "171.67.108.26",
+    "waitingon": "",
+    "attempts": 0,
+    "nextattempt": "0.00 secs",
+    "slot": 0,
+    "eta": "2 hours 28 mins",
+    "ppd": "1749.96",
+    "tpf": "3 mins 38 secs",
+    "basecredit": "443.00",
+    "creditestimate": "443.00"
+  }
+]
+---
