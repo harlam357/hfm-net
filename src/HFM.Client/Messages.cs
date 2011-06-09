@@ -22,6 +22,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
+using HFM.Client.DataTypes;
+
 namespace HFM.Client
 {
    public class Messages : Connection
@@ -38,7 +40,7 @@ namespace HFM.Client
       #region Fields
 
       private readonly StringBuilder _readBuffer;
-      private readonly Dictionary<string, Message> _messages;
+      private readonly Dictionary<string, JsonMessage> _messages;
 
       #endregion
 
@@ -50,7 +52,7 @@ namespace HFM.Client
       public Messages()
       {
          _readBuffer = new StringBuilder();
-         _messages = new Dictionary<string, Message>();
+         _messages = new Dictionary<string, JsonMessage>();
       }
 
       #endregion
@@ -62,7 +64,7 @@ namespace HFM.Client
       /// </summary>
       /// <param name="key">Server Message Key</param>
       /// <returns>The server message or null if the message is not in the cache.</returns>
-      public Message GetMessage(string key)
+      public JsonMessage GetJsonMessage(string key)
       {
          return _messages.ContainsKey(key) ? _messages[key] : null;
       }
@@ -80,8 +82,8 @@ namespace HFM.Client
          string bufferValue = _readBuffer.ToString();
 
          bool messagesUpdated = false;
-         Message json;
-         while ((json = GetNextMessage(ref bufferValue)) != null)
+         JsonMessage json;
+         while ((json = GetNextJsonMessage(ref bufferValue)) != null)
          {
             UpdateMessageCache(json);
             messagesUpdated = true;
@@ -105,7 +107,7 @@ namespace HFM.Client
       /// </summary>
       /// <param name="buffer">Data Buffer Value</param>
       /// <returns>Message or null if no message is available in the buffer.</returns>
-      public static Message GetNextMessage(ref string buffer)
+      public static JsonMessage GetNextJsonMessage(ref string buffer)
       {
          //TODO: Should be internal exposure
 
@@ -141,7 +143,7 @@ namespace HFM.Client
          }
 
          // create the message and set received time stamp
-         var message = new Message { Received = DateTime.UtcNow };
+         var message = new JsonMessage { Received = DateTime.UtcNow };
          // get the message name
          message.Key = buffer.Substring(messageIndex, startIndex - messageIndex);
 
@@ -159,27 +161,27 @@ namespace HFM.Client
          return message;
       }
 
-      private void UpdateMessageCache(Message message)
+      private void UpdateMessageCache(JsonMessage message)
       {
          switch (message.Key)
          {
             // log text will need the platform specific new line character(s) set
             // i.e. message.Value.Replace("\\" + "n", Environment.NewLine);
 
-            case MessageKey.LogRestart:
-               _messages[MessageKey.Log] = new Message { Key = MessageKey.Log, Value = message.Value, Received = DateTime.UtcNow };
-               Debug.WriteLine("received " + MessageKey.LogRestart);
+            case JsonMessageKey.LogRestart:
+               _messages[JsonMessageKey.Log] = new JsonMessage { Key = JsonMessageKey.Log, Value = message.Value, Received = DateTime.UtcNow };
+               Debug.WriteLine("received " + JsonMessageKey.LogRestart);
                break;
-            case MessageKey.LogUpdate:
-               if (_messages.ContainsKey(MessageKey.Log))
+            case JsonMessageKey.LogUpdate:
+               if (_messages.ContainsKey(JsonMessageKey.Log))
                {
-                  _messages[MessageKey.Log] = new Message { Key = MessageKey.Log, Value = _messages[MessageKey.Log] + message.Value, Received = DateTime.UtcNow };
+                  _messages[JsonMessageKey.Log] = new JsonMessage { Key = JsonMessageKey.Log, Value = _messages[JsonMessageKey.Log] + message.Value, Received = DateTime.UtcNow };
                }
                else
                {
-                  _messages[MessageKey.Log] = new Message { Key = MessageKey.Log, Value = message.Value, Received = DateTime.UtcNow };
+                  _messages[JsonMessageKey.Log] = new JsonMessage { Key = JsonMessageKey.Log, Value = message.Value, Received = DateTime.UtcNow };
                }
-               Debug.WriteLine("received " + MessageKey.LogUpdate);
+               Debug.WriteLine("received " + JsonMessageKey.LogUpdate);
                break;
             default:
                _messages[message.Key] = message;
@@ -191,37 +193,7 @@ namespace HFM.Client
       #endregion
    }
 
-   public class Message
-   {
-      internal Message()
-      {
-         
-      }
-
-      /// <summary>
-      /// Message Key
-      /// </summary>
-      public string Key { get; set; }
-
-      /// <summary>
-      /// Message Value
-      /// </summary>
-      public string Value { get; set; }
-
-      /// <summary>
-      /// Received Time Stamp
-      /// </summary>
-      public DateTime Received { get; set; }
-
-      internal void SetMessageValues(Message message)
-      {
-         Key = message.Key;
-         Value = message.Value;
-         Received = message.Received;
-      }
-   }
-
-   public static class MessageKey
+   public static class JsonMessageKey
    {
       /// <summary>
       /// Heartbeat Message Key

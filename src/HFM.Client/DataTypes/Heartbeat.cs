@@ -19,9 +19,9 @@
 
 using System;
 
-namespace HFM.Client
+namespace HFM.Client.DataTypes
 {
-   public class Heartbeat : Message
+   public class Heartbeat : TypedMessage
    {
       private Heartbeat()
       {
@@ -30,7 +30,7 @@ namespace HFM.Client
 
       public int Value { get; set; }
 
-      public static Heartbeat Parse(Message message)
+      public static Heartbeat Parse(JsonMessage message)
       {
          var heartbeat = new Heartbeat();
          heartbeat.Value = Int32.Parse(message.Value);

@@ -22,9 +22,9 @@ using System.ComponentModel;
 
 using Newtonsoft.Json.Linq;
 
-namespace HFM.Client
+namespace HFM.Client.DataTypes
 {
-   public class Slots : Message, IList<Slot>
+   public class Slots : TypedMessage, IList<Slot>
    {
       private readonly List<Slot> _slots;
 
@@ -37,7 +37,7 @@ namespace HFM.Client
       /// Create a Slots object from the given Message.
       /// </summary>
       /// <param name="message">Message object containing JSON value and meta-data.</param>
-      public static Slots Parse(Message message)
+      public static Slots Parse(JsonMessage message)
       {
          var jsonArray = JArray.Parse(message.Value);
          var slots = new Slots();
@@ -59,7 +59,7 @@ namespace HFM.Client
                }
                else
                {
-                  FahClient.SetObjectProperty(slot, TypeDescriptor.GetProperties(slot), prop);
+                  MessagePropertySetter.SetJProperty(slot, TypeDescriptor.GetProperties(slot), prop);
                }
             }
             slots.Add(slot);

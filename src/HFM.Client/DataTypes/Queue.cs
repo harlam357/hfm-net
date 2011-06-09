@@ -22,9 +22,9 @@ using System.ComponentModel;
 
 using Newtonsoft.Json.Linq;
 
-namespace HFM.Client
+namespace HFM.Client.DataTypes
 {
-   public class Queue : Message, IList<QueueUnit>
+   public class Queue : TypedMessage, IList<QueueUnit>
    {
       private readonly List<QueueUnit> _units;
 
@@ -37,7 +37,7 @@ namespace HFM.Client
       /// Create a Queue object from the given Message.
       /// </summary>
       /// <param name="message">Message object containing JSON value and meta-data.</param>
-      public static Queue Parse(Message message)
+      public static Queue Parse(JsonMessage message)
       {
          var jsonArray = JArray.Parse(message.Value);
          var queue = new Queue();
@@ -51,7 +51,7 @@ namespace HFM.Client
             var queueUnit = new QueueUnit();
             foreach (var prop in JObject.Parse(token.ToString()).Properties())
             {
-               FahClient.SetObjectProperty(queueUnit, TypeDescriptor.GetProperties(queueUnit), prop);
+               MessagePropertySetter.SetJProperty(queueUnit, TypeDescriptor.GetProperties(queueUnit), prop);
             }
             queue.Add(queueUnit);
          }

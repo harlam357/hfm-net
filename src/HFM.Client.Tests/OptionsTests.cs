@@ -22,6 +22,8 @@ using System.IO;
 
 using NUnit.Framework;
 
+using HFM.Client.DataTypes;
+
 namespace HFM.Client.Tests
 {
    [TestFixture]
@@ -31,7 +33,7 @@ namespace HFM.Client.Tests
       public void ParseTest1()
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\options.txt");
-         var options = Options.Parse(Messages.GetNextMessage(ref message));
+         var options = Options.Parse(Messages.GetNextJsonMessage(ref message));
          Assert.AreEqual("assign3.stanford.edu:8080 assign4.stanford.edu:80", options.AssignmentServers);
          Assert.AreEqual("capture", options.CaptureDirectory);
          Assert.AreEqual(false, options.CaptureSockets);
