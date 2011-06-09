@@ -22,6 +22,8 @@ using System.IO;
 
 using NUnit.Framework;
 
+using HFM.Client.DataTypes;
+
 namespace HFM.Client.Tests
 {
    [TestFixture]
@@ -31,7 +33,7 @@ namespace HFM.Client.Tests
       public void ParseTest1()
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\units.txt");
-         var queue = Queue.Parse(Messages.GetNextMessage(ref message));
+         var queue = Queue.Parse(Messages.GetNextJsonMessage(ref message));
          Assert.AreEqual(0, queue[0].ID);
          Assert.AreEqual("RUNNING", queue[0].State);
          Assert.AreEqual(11020, queue[0].Project);

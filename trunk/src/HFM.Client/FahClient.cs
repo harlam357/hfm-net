@@ -17,36 +17,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
-using System.ComponentModel;
-
-using Newtonsoft.Json.Linq;
+using HFM.Client.DataTypes;
 
 namespace HFM.Client
 {
    public class FahClient : Messages
    {
-      public static void SetObjectProperty(object component, PropertyDescriptorCollection componentProperties, JProperty jsonProperty)
+      public T GetMessage<T>() where T : TypedMessage
       {
-         foreach (PropertyDescriptor optionsProperty in componentProperties)
-         {
-            var messageProperty = (MessagePropertyAttribute)optionsProperty.Attributes[typeof(MessagePropertyAttribute)];
-            if (messageProperty != null)
-            {
-               if (messageProperty.Name == jsonProperty.Name)
-               {
-                  if (jsonProperty.Value.Type.Equals(JTokenType.String))
-                  {
-                     optionsProperty.SetValue(component, Convert.ChangeType((string)jsonProperty, optionsProperty.PropertyType));
-                  }
-                  else if (jsonProperty.Value.Type.Equals(JTokenType.Integer))
-                  {
-                     optionsProperty.SetValue(component, (int)jsonProperty);
-                  }
-                  break;
-               }
-            }
-         }
+         return null;
       }
    }
 }

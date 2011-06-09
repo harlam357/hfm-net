@@ -22,9 +22,9 @@ using System.ComponentModel;
 
 using Newtonsoft.Json.Linq;
 
-namespace HFM.Client
+namespace HFM.Client.DataTypes
 {
-   public class Options : Message
+   public class Options : TypedMessage
    {
       #region Properties
 
@@ -356,7 +356,7 @@ namespace HFM.Client
       /// </summary>
       /// <param name="message">Message object containing JSON value and meta-data.</param>
       /// <exception cref="ArgumentNullException">Throws if message parameter is null.</exception>
-      public static Options Parse(Message message)
+      public static Options Parse(JsonMessage message)
       {
          if (message == null) throw new ArgumentNullException("message");
 
@@ -377,7 +377,7 @@ namespace HFM.Client
          var options = new Options();
          foreach (var prop in JObject.Parse(json).Properties())
          {
-            FahClient.SetObjectProperty(options, TypeDescriptor.GetProperties(options), prop);
+            MessagePropertySetter.SetJProperty(options, TypeDescriptor.GetProperties(options), prop);
          }
          options.SetMessageValues(message);
          return options;
