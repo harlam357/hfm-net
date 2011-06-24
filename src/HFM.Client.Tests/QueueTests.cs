@@ -33,8 +33,8 @@ namespace HFM.Client.Tests
       public void ParseTest1()
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\units.txt");
-         var queue = Queue.Parse(Messages.GetNextJsonMessage(ref message));
-         Assert.AreEqual(0, queue[0].ID);
+         var queue = Queue.Parse(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(0, queue[0].Id);
          Assert.AreEqual("RUNNING", queue[0].State);
          Assert.AreEqual(11020, queue[0].Project);
          Assert.AreEqual(0, queue[0].Run);
@@ -54,9 +54,9 @@ namespace HFM.Client.Tests
          Assert.AreEqual(0, queue[0].Attempts);
          Assert.AreEqual("0.00 secs", queue[0].NextAttempt);
          Assert.AreEqual(0, queue[0].Slot);
-         Assert.AreEqual("2 hours 28 mins", queue[0].ETA);
-         Assert.AreEqual(1749.96, queue[0].PPD);
-         Assert.AreEqual("3 mins 38 secs", queue[0].TPF);
+         Assert.AreEqual("2 hours 28 mins", queue[0].Eta);
+         Assert.AreEqual(1749.96, queue[0].Ppd);
+         Assert.AreEqual("3 mins 38 secs", queue[0].Tpf);
          Assert.AreEqual(443, queue[0].BaseCredit);
          Assert.AreEqual(443, queue[0].CreditEstimate);
       }

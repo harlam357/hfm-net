@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Messages Class
+ * HFM.NET - MessageCache Class
  * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ using HFM.Client.DataTypes;
 
 namespace HFM.Client
 {
-   public class Messages : Connection
+   public class MessageCache : Connection
    {
       #region Events
 
@@ -49,7 +49,7 @@ namespace HFM.Client
       /// <summary>
       /// Create a Server Message Handler.
       /// </summary>
-      public Messages()
+      public MessageCache()
       {
          _readBuffer = new StringBuilder();
          _messages = new Dictionary<string, JsonMessage>();

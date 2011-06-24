@@ -1,5 +1,24 @@
-﻿
+﻿/*
+ * HFM.NET - Client Info Data Class
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License. See the included file GPLv2.TXT.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
 using System;
+using System.Linq;
 
 using Newtonsoft.Json.Linq;
 
@@ -7,45 +26,236 @@ namespace HFM.Client.DataTypes
 {
    public class ClientInfo : TypedMessage
    {
+      private ClientInfo()
+      {
+         Client = new Client();
+         Build = new Build();
+         System = new SystemInfo();
+      }
+
+      #region Properties
+
+      [MessageProperty("Folding@home Client")]
+      public Client Client { get; private set; }
+
+      [MessageProperty("Build")]
+      public Build Build { get; private set; }
+
+      [MessageProperty("System")]
+      public SystemInfo System { get; private set; }
+
+      #endregion
+
+      /// <summary>
+      /// Create a ClientInfo object from the given JsonMessage.
+      /// </summary>
+      /// <param name="message">Message object containing JSON value and meta-data.</param>
+      /// <exception cref="ArgumentNullException">Throws if message parameter is null.</exception>
       public static ClientInfo Parse(JsonMessage message)
       {
-         var jsonArray = JArray.Parse(message.Value);
+         if (message == null) throw new ArgumentNullException("message");
+
          var clientInfo = new ClientInfo();
-         foreach (var token in jsonArray)
+         var propertySetter = new MessagePropertySetter(clientInfo);
+         foreach (var token in JArray.Parse(message.Value))
          {
             if (!token.HasValues)
             {
                continue;
             }
 
-            foreach (var token2 in token)
+            object clientInfoProperty = propertySetter.GetPropertyValue((string)token[0]);
+            if (clientInfoProperty != null)
             {
-               if (!token2.HasValues)
+               var innerPropertySetter = new MessagePropertySetter(clientInfoProperty);
+               foreach (var innerToken in token)
                {
-                  continue;
+                  if (!innerToken.HasValues)
+                  {
+                     continue;
+                  }
+
+                  if (innerToken.Values().Count() >= 2)
+                  {
+                     innerPropertySetter.SetProperty((string)innerToken[0], (string)innerToken[1]);
+                  }
                }
-
-               string value = (string)token2[1];
             }
-
-            //var slot = new Slot();
-            //foreach (var prop in JObject.Parse(token.ToString()).Properties())
-            //{
-            //   if (prop.Name.Equals("options"))
-            //   {
-            //      var optionsValue = prop.ToString();
-            //      // have to strip off "options" portion of the JSON
-            //      slot.Options = Options.Parse(optionsValue.Substring(optionsValue.IndexOf('{')), message);
-            //   }
-            //   else
-            //   {
-            //      FahClient.SetObjectProperty(slot, TypeDescriptor.GetProperties(slot), prop);
-            //   }
-            //}
-            //clientInfo.Add(slot);
          }
          clientInfo.SetMessageValues(message);
          return clientInfo;
       }      
+   }
+
+   public class Client
+   {
+      internal Client()
+      {
+         
+      }
+
+      #region Properties
+
+      // could be Url type
+      [MessageProperty("Website")]
+      public string Website { get; set; }
+
+      [MessageProperty("Copyright")]
+      public string Copyright { get; set; }
+
+      [MessageProperty("Author")]
+      public string Author { get; set; }
+
+      [MessageProperty("Args")]
+      public string Args { get; set; }
+
+      [MessageProperty("Config")]
+      public string Config { get; set; }
+
+      #endregion
+   }
+
+   public class Build
+   {
+      internal Build()
+      {
+         
+      }
+
+      #region Properties
+
+      [MessageProperty("Version")]
+      public string Version { get; set; }
+
+      [MessageProperty("Date")]
+      public string Date { get; set; }
+
+      [MessageProperty("Time")]
+      public string Time { get; set; }
+
+      //TODO: parse DateTime value from Date and Time properties
+      //public DateTime DateTime
+      //{ 
+      //   get { return DateTime.MinValue; }
+      //}
+
+      [MessageProperty("SVN Rev")]
+      public int SvnRev { get; set; }
+
+      [MessageProperty("Branch")]
+      public string Branch { get; set; }
+
+      [MessageProperty("Compiler")]
+      public string Compiler { get; set; }
+
+      [MessageProperty("Options")]
+      public string Options { get; set; }
+
+      [MessageProperty("Platform")]
+      public string Platform { get; set; }
+
+      [MessageProperty("Bits")]
+      public int Bits { get; set; }
+
+      [MessageProperty("Mode")]
+      public string Mode { get; set; }
+
+      #endregion
+   }
+
+   public class SystemInfo
+   {
+      internal SystemInfo()
+      {
+         
+      }
+
+      #region Properties
+
+      [MessageProperty("OS")]
+      public string OperatingSystem { get; set; }
+
+      //TODO: parse OperatingSystemEnum value from OperatingSystem property
+      //public enum OperatingSystemEnum
+      //{
+      //   get { return ???; }
+      //}
+
+      [MessageProperty("CPU")]
+      public string Cpu { get; set; }
+
+      [MessageProperty("CPU ID")]
+      public string CpuId { get; set; }
+
+      //TODO: parse CpuEnum value from Cpu property
+      //public enum CpuEnum
+      //{
+      //   get { return ???; }
+      //}
+
+      [MessageProperty("CPUs")]
+      public int CpuCount { get; set; }
+
+      [MessageProperty("Memory")]
+      public string Memory { get; set; }
+
+      [MessageProperty("Free Memory")]
+      public string FreeMemory { get; set; }
+
+      [MessageProperty("Threads")]
+      public string ThreadType { get; set; }
+
+      [MessageProperty("GPUs")]
+      public int GpuCount { get; set; }
+
+      [MessageProperty("GPU 0")]
+      public string GpuId0 { get; set; }
+
+      [MessageProperty("GPU 1")]
+      public string GpuId1 { get; set; }
+
+      [MessageProperty("GPU 2")]
+      public string GpuId2 { get; set; }
+
+      [MessageProperty("GPU 3")]
+      public string GpuId3 { get; set; }
+
+      [MessageProperty("GPU 4")]
+      public string GpuId4 { get; set; }
+
+      [MessageProperty("GPU 5")]
+      public string GpuId5 { get; set; }
+
+      [MessageProperty("GPU 6")]
+      public string GpuId6 { get; set; }
+
+      [MessageProperty("GPU 7")]
+      public string GpuId7 { get; set; }
+
+      [MessageProperty("CUDA")]
+      public string Cuda { get; set; }
+
+      //TODO: parse CudaDetected value from Cuda property (suspect the values are "Detected" and "Not detected")
+      //public bool CudaDetected
+      //{
+      //   get { return ???; }
+      //}
+
+      [MessageProperty("On Battery")]
+      public bool OnBattery { get; set; }
+
+      [MessageProperty("UTC offset")]
+      public int UtcOffset { get; set; }
+
+      [MessageProperty("PID")]
+      public int ProcessId { get; set; }
+
+      [MessageProperty("CWD")]
+      public string WorkingDirectory { get; set; }
+
+      [MessageProperty("Win32 Service")]
+      public bool Win32Service { get; set; }
+
+      #endregion
    }
 }

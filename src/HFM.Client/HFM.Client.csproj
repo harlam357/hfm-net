@@ -51,7 +51,7 @@
     <Compile Include="DataTypes\Queue.cs" />
     <Compile Include="DataTypes\Slots.cs" />
     <Compile Include="FahClient.cs" />
-    <Compile Include="Messages.cs" />
+    <Compile Include="MessageCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

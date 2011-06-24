@@ -18,7 +18,6 @@
  */
 
 using System.Collections.Generic;
-using System.ComponentModel;
 
 using Newtonsoft.Json.Linq;
 
@@ -34,7 +33,7 @@ namespace HFM.Client.DataTypes
       }
 
       /// <summary>
-      /// Create a Slots object from the given Message.
+      /// Create a Slots object from the given JsonMessage.
       /// </summary>
       /// <param name="message">Message object containing JSON value and meta-data.</param>
       public static Slots Parse(JsonMessage message)
@@ -49,18 +48,10 @@ namespace HFM.Client.DataTypes
             }
 
             var slot = new Slot();
+            var propertySetter = new MessagePropertySetter(slot);
             foreach (var prop in JObject.Parse(token.ToString()).Properties())
             {
-               if (prop.Name.Equals("options"))
-               {
-                  var optionsValue = prop.ToString();
-                  // have to strip off "options" portion of the JSON
-                  slot.Options = Options.Parse(optionsValue.Substring(optionsValue.IndexOf('{')), message);
-               }
-               else
-               {
-                  MessagePropertySetter.SetJProperty(slot, TypeDescriptor.GetProperties(slot), prop);
-               }
+               propertySetter.SetProperty(prop);
             }
             slots.Add(slot);
          }
@@ -147,6 +138,8 @@ namespace HFM.Client.DataTypes
          return _slots.Contains(item);
       }
 
+#pragma warning disable 1584,1711,1572,1581,1580
+
       /// <summary>
       /// Copies the elements of the <see cref="T:System.Collections.Generic.ICollection`1"/> to an <see cref="T:System.Array"/>, starting at a particular <see cref="T:System.Array"/> index.
       /// </summary>
@@ -155,6 +148,8 @@ namespace HFM.Client.DataTypes
       {
          _slots.CopyTo(array, arrayIndex);
       }
+
+#pragma warning restore 1584,1711,1572,1581,1580
 
       /// <summary>
       /// Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"/>.
@@ -229,11 +224,11 @@ namespace HFM.Client.DataTypes
    {
       internal Slot()
       {
-         
+         Options = new Options();
       }
 
       [MessageProperty("id")]
-      public int ID { get; set; }
+      public int Id { get; set; }
 
       // SHOULD be enum type (looks like same value in Queue.State)
       [MessageProperty("status")]
@@ -242,6 +237,7 @@ namespace HFM.Client.DataTypes
       [MessageProperty("description")]
       public string Description { get; set; }
 
+      [MessageProperty("options")]
       public Options Options { get; set; }
    }
 }

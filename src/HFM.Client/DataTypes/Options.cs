@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.ComponentModel;
 
 using Newtonsoft.Json.Linq;
 
@@ -26,6 +25,12 @@ namespace HFM.Client.DataTypes
 {
    public class Options : TypedMessage
    {
+      //private Options()
+      internal Options()
+      {
+         
+      }
+
       #region Properties
 
       [MessageProperty("assignment-servers")]
@@ -346,13 +351,8 @@ namespace HFM.Client.DataTypes
 
       #endregion
 
-      private Options()
-      {
-         
-      }
-
       /// <summary>
-      /// Create an Options object from the given Message.
+      /// Create an Options object from the given JsonMessage.
       /// </summary>
       /// <param name="message">Message object containing JSON value and meta-data.</param>
       /// <exception cref="ArgumentNullException">Throws if message parameter is null.</exception>
@@ -364,7 +364,7 @@ namespace HFM.Client.DataTypes
       }
 
       /// <summary>
-      /// Create an Options object from the given Message.
+      /// Create an Options object from the given JsonMessage.
       /// </summary>
       /// <param name="json">JSON string to parse.</param>
       /// <param name="message">Message object containing meta-data.</param>
@@ -375,9 +375,10 @@ namespace HFM.Client.DataTypes
          if (message == null) throw new ArgumentNullException("message");
 
          var options = new Options();
+         var propertySetter = new MessagePropertySetter(options);
          foreach (var prop in JObject.Parse(json).Properties())
          {
-            MessagePropertySetter.SetJProperty(options, TypeDescriptor.GetProperties(options), prop);
+            propertySetter.SetProperty(prop);
          }
          options.SetMessageValues(message);
          return options;
