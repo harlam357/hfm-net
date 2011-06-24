@@ -30,8 +30,15 @@ namespace HFM.Client.DataTypes
 
       public int Value { get; set; }
 
+      /// <summary>
+      /// Create a Heartbeat object from the given JsonMessage.
+      /// </summary>
+      /// <param name="message">Message object containing JSON value and meta-data.</param>
+      /// <exception cref="ArgumentNullException">Throws if message parameter is null.</exception>
       public static Heartbeat Parse(JsonMessage message)
       {
+         if (message == null) throw new ArgumentNullException("message");
+
          var heartbeat = new Heartbeat();
          heartbeat.Value = Int32.Parse(message.Value);
          return heartbeat;
