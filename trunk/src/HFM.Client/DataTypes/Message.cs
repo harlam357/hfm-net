@@ -1,6 +1,25 @@
-﻿
+﻿/*
+ * HFM.NET - Message Data Class
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License. See the included file GPLv2.TXT.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
 using System;
 using System.ComponentModel;
+using System.Linq;
 
 using Newtonsoft.Json.Linq;
 
@@ -58,29 +77,72 @@ namespace HFM.Client.DataTypes
       }
    }
 
-   internal static class MessagePropertySetter
+   internal class MessagePropertySetter
    {
-      internal static void SetJProperty(object component, PropertyDescriptorCollection componentProperties, JProperty jsonProperty)
+      private readonly object _message;
+      private readonly PropertyDescriptorCollection _properties;
+
+      internal MessagePropertySetter(object message)
       {
-         foreach (PropertyDescriptor optionsProperty in componentProperties)
+         _message = message;
+         _properties = TypeDescriptor.GetProperties(message);
+      }
+
+      internal void SetProperty(JProperty jProperty)
+      {
+         var classProperty = GetProperty(jProperty.Name);
+         if (classProperty == null)
          {
-            var messageProperty = (MessagePropertyAttribute)optionsProperty.Attributes[typeof(MessagePropertyAttribute)];
-            if (messageProperty != null)
+            return;
+         }
+
+         if (jProperty.Value.Type.Equals(JTokenType.String))
+         {
+            classProperty.SetValue(_message, Convert.ChangeType((string)jProperty, classProperty.PropertyType));
+         }
+         else if (jProperty.Value.Type.Equals(JTokenType.Integer))
+         {
+            classProperty.SetValue(_message, (int)jProperty);
+         }
+         else if (jProperty.Value.Type.Equals(JTokenType.Object))
+         {
+            var jObject = JObject.Parse(jProperty.Value.ToString());
+            var propertyValue = GetPropertyValue(jProperty.Name);
+            if (propertyValue != null)
             {
-               if (messageProperty.Name == jsonProperty.Name)
+               var propertySetter = new MessagePropertySetter(propertyValue);
+               foreach (var prop in jObject.Properties())
                {
-                  if (jsonProperty.Value.Type.Equals(JTokenType.String))
-                  {
-                     optionsProperty.SetValue(component, Convert.ChangeType((string)jsonProperty, optionsProperty.PropertyType));
-                  }
-                  else if (jsonProperty.Value.Type.Equals(JTokenType.Integer))
-                  {
-                     optionsProperty.SetValue(component, (int)jsonProperty);
-                  }
-                  break;
+                  propertySetter.SetProperty(prop);
                }
             }
          }
+      }
+
+      internal void SetProperty(string key, string value)
+      {
+         var classProperty = GetProperty(key);
+         if (classProperty == null)
+         {
+            return;
+         }
+
+         classProperty.SetValue(_message, Convert.ChangeType(value, classProperty.PropertyType));
+      }
+
+      internal object GetPropertyValue(string key)
+      {
+         var classProperty = GetProperty(key);
+         return classProperty == null ? null : classProperty.GetValue(_message);
+      }
+
+      private PropertyDescriptor GetProperty(string key)
+      {
+         return (from PropertyDescriptor classProperty in _properties
+                 let messageProperty = (MessagePropertyAttribute)classProperty.Attributes[typeof(MessagePropertyAttribute)]
+                 where messageProperty != null
+                 where messageProperty.Name == key
+                 select classProperty).FirstOrDefault();
       }
    }
 }

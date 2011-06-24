@@ -32,12 +32,11 @@ namespace HFM.Client.Tests
       public void ParseTest1()
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\slots.txt");
-         var slots = Slots.Parse(Messages.GetNextJsonMessage(ref message));
+         var slots = Slots.Parse(MessageCache.GetNextJsonMessage(ref message));
          Assert.AreEqual(1, slots.Count);
-         Assert.AreEqual(0, slots[0].ID);
+         Assert.AreEqual(0, slots[0].Id);
          Assert.AreEqual("RUNNING", slots[0].Status);
          Assert.AreEqual("smp:4", slots[0].Description);
-         Assert.IsNotNull(slots[0].Options);
          Assert.IsTrue(slots[0].Options.PauseOnStart);
       }
    }

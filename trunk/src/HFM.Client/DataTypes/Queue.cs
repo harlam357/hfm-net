@@ -18,7 +18,6 @@
  */
 
 using System.Collections.Generic;
-using System.ComponentModel;
 
 using Newtonsoft.Json.Linq;
 
@@ -34,7 +33,7 @@ namespace HFM.Client.DataTypes
       }
 
       /// <summary>
-      /// Create a Queue object from the given Message.
+      /// Create a Queue object from the given JsonMessage.
       /// </summary>
       /// <param name="message">Message object containing JSON value and meta-data.</param>
       public static Queue Parse(JsonMessage message)
@@ -49,9 +48,10 @@ namespace HFM.Client.DataTypes
             }
 
             var queueUnit = new QueueUnit();
+            var propertySetter = new MessagePropertySetter(queueUnit);
             foreach (var prop in JObject.Parse(token.ToString()).Properties())
             {
-               MessagePropertySetter.SetJProperty(queueUnit, TypeDescriptor.GetProperties(queueUnit), prop);
+               propertySetter.SetProperty(prop);
             }
             queue.Add(queueUnit);
          }
@@ -138,6 +138,8 @@ namespace HFM.Client.DataTypes
          return _units.Contains(item);
       }
 
+#pragma warning disable 1584,1711,1572,1581,1580
+
       /// <summary>
       /// Copies the elements of the <see cref="T:System.Collections.Generic.ICollection`1"/> to an <see cref="T:System.Array"/>, starting at a particular <see cref="T:System.Array"/> index.
       /// </summary>
@@ -146,6 +148,8 @@ namespace HFM.Client.DataTypes
       {
          _units.CopyTo(array, arrayIndex);
       }
+
+#pragma warning restore 1584,1711,1572,1581,1580
 
       /// <summary>
       /// Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"/>.
@@ -226,7 +230,7 @@ namespace HFM.Client.DataTypes
       #region Properties
 
       [MessageProperty("id")]
-      public int ID { get; set; }
+      public int Id { get; set; }
 
       // SHOULD be enum type (looks like same value in Slot.Status)
       [MessageProperty("state")]
@@ -293,14 +297,14 @@ namespace HFM.Client.DataTypes
 
       // SHOULD be TimeSpan type
       [MessageProperty("eta")]
-      public string ETA { get; set; }
+      public string Eta { get; set; }
 
       [MessageProperty("ppd")]
-      public double PPD { get; set; }
+      public double Ppd { get; set; }
 
       // SHOULD be TimeSpan type
       [MessageProperty("tpf")]
-      public string TPF { get; set; }
+      public string Tpf { get; set; }
 
       [MessageProperty("basecredit")]
       public double BaseCredit { get; set; }

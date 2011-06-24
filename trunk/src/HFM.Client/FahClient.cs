@@ -21,7 +21,7 @@ using HFM.Client.DataTypes;
 
 namespace HFM.Client
 {
-   public class FahClient : Messages
+   public class FahClient : MessageCache
    {
       public T GetMessage<T>() where T : TypedMessage
       {

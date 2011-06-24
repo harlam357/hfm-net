@@ -32,7 +32,7 @@ namespace HFM.Client.Tests
       public void ParseTest1()
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\heartbeat.txt");
-         var heartbeat = Heartbeat.Parse(Messages.GetNextJsonMessage(ref message));
+         var heartbeat = Heartbeat.Parse(MessageCache.GetNextJsonMessage(ref message));
          Assert.AreEqual(12, heartbeat.Value);
       }
    }
