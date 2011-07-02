@@ -19,7 +19,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Net.Sockets;
 using System.Text;
 using System.Timers;
 
@@ -36,7 +35,7 @@ namespace HFM.Client
       /// <summary>
       /// Default TcpClient Send and Receive Buffer Size
       /// </summary>
-      private const int SocketBufferSize = 8196;
+      private const int DefaultSocketBufferSize = 8196;
       /// <summary>
       /// Default Connection, Send, and Receive Timeout Length
       /// </summary>
@@ -50,8 +49,10 @@ namespace HFM.Client
 
       #region Fields
 
-      private TcpClient _tcpClient;
-      private NetworkStream _stream;
+      private ITcpClient _tcpClient;
+      private INetworkStream _stream;
+      private readonly ITcpClientFactory _tcpClientFactory;
+      private readonly byte[] _internalBuffer;
       private readonly StringBuilder _readBuffer;
       private readonly Timer _timer;
 
@@ -61,8 +62,13 @@ namespace HFM.Client
 
       #region Properties
 
+      internal byte[] InternalBuffer
+      {
+         get { return _internalBuffer; }
+      }
+
       /// <summary>
-      /// Is there a Connection to the Server?
+      /// Gets a value indicating whether the Connection is connected to a remote host.
       /// </summary>
       public bool Connected
       {
@@ -70,11 +76,20 @@ namespace HFM.Client
       }
 
       /// <summary>
-      /// Is there data available in the read buffer?
+      /// Gets a value that indicates whether data is available to be read.
       /// </summary>
       public bool DataAvailable
       {
          get { return _readBuffer.Length != 0; }
+      }
+
+      /// <summary>
+      /// Gets or sets a value indicating whether the Connection should process updates.
+      /// </summary>
+      public bool UpdateEnabled
+      {
+         get { return _timer.Enabled; }
+         set { _timer.Enabled = value; }
       }
 
       /// <summary>
@@ -83,29 +98,69 @@ namespace HFM.Client
       public int ConnectTimeout { get; set; }
 
       /// <summary>
+      /// Length of time between each network stream read (default - 100ms).
+      /// </summary>
+      public int ReceiveLoopTime { get; set; }
+
+      private int _sendTimeout = DefaultTimeoutLength;
+
+      /// <summary>
       /// Length of time to wait for a command to be sent (default - 2 seconds).
       /// </summary>
-      public int SendTimeout { get; set; }
+      public int SendTimeout
+      {
+         get { return _sendTimeout; }
+         set
+         {
+            _tcpClient.SendTimeout = value;
+            _sendTimeout = value;
+         }
+      }
+
+      private int _sendBufferSize = DefaultSocketBufferSize;
 
       /// <summary>
       /// Size of outgoing data buffer (default - 8k).
       /// </summary>
-      public int SendBufferSize { get; set; }
+      public int SendBufferSize
+      {
+         get { return _sendBufferSize; }
+         set
+         {
+            _tcpClient.SendBufferSize = value;
+            _sendBufferSize = value;
+         }
+      }
+
+      private int _receiveTimeout = DefaultTimeoutLength;
 
       /// <summary>
       /// Length of time to wait for a response to be received (default - 2 seconds).
       /// </summary>
-      public int ReceiveTimeout { get; set; }
+      public int ReceiveTimeout
+      {
+         get { return _receiveTimeout; }
+         set
+         {
+            _tcpClient.ReceiveTimeout = value;
+            _receiveTimeout = value;
+         }
+      }
+
+      private int _receiveBufferSize = DefaultSocketBufferSize;
 
       /// <summary>
       /// Size of incoming data buffer (default - 8k).
       /// </summary>
-      public int ReceiveBufferSize { get; set; }
-
-      /// <summary>
-      /// Length of time between each network stream read (default - 100ms).
-      /// </summary>
-      public int ReceiveLoopTime { get; set; }
+      public int ReceiveBufferSize
+      {
+         get { return _receiveBufferSize; }
+         set
+         {
+            _tcpClient.ReceiveBufferSize = value;
+            _receiveBufferSize = value;
+         }
+      }
 
       #endregion
 
@@ -115,15 +170,22 @@ namespace HFM.Client
       /// Create a Server Connection.
       /// </summary>
       public Connection()
+         : this(new TcpClientFactory())
+      {
+         
+      }
+
+      /// <summary>
+      /// Create a Server Connection.
+      /// </summary>
+      internal Connection(ITcpClientFactory tcpClientFactory)
       {
          ConnectTimeout = DefaultTimeoutLength;
-         SendTimeout = DefaultTimeoutLength;
-         SendBufferSize = SocketBufferSize;
-         ReceiveTimeout = DefaultTimeoutLength;
-         ReceiveBufferSize = SocketBufferSize;
          ReceiveLoopTime = DefaultSocketTimerLength;
 
+         _tcpClientFactory = tcpClientFactory;
          _tcpClient = CreateClient();
+         _internalBuffer = new byte[InternalBufferSize];
          _readBuffer = new StringBuilder();
          _timer = new Timer(ReceiveLoopTime);
          _timer.Elapsed += SocketTimerElapsed;
@@ -146,7 +208,6 @@ namespace HFM.Client
          }
 
          IAsyncResult ar = _tcpClient.BeginConnect(hostname, port, null, null);
-         System.Threading.WaitHandle wh = ar.AsyncWaitHandle;
          try
          {
             if (!ar.AsyncWaitHandle.WaitOne(TimeSpan.FromMilliseconds(ConnectTimeout), false))
@@ -162,19 +223,18 @@ namespace HFM.Client
          }
          finally
          {
-            wh.Close();
+            ar.AsyncWaitHandle.Close();
          } 
       }
 
-      private TcpClient CreateClient()
+      private ITcpClient CreateClient()
       {
-         return new TcpClient
-         {
-            SendTimeout = SendTimeout,
-            SendBufferSize = SendBufferSize,
-            ReceiveTimeout = ReceiveTimeout,
-            ReceiveBufferSize = ReceiveBufferSize
-         };
+         var tcpClient = _tcpClientFactory.Create();
+         tcpClient.SendTimeout = SendTimeout;
+         tcpClient.SendBufferSize = SendBufferSize;
+         tcpClient.ReceiveTimeout = ReceiveTimeout;
+         tcpClient.ReceiveBufferSize = ReceiveBufferSize;
+         return tcpClient;
       }
 
       /// <summary>
@@ -213,7 +273,7 @@ namespace HFM.Client
          _stream.BeginWrite(buffer, 0, buffer.Length, null, null);
       }
 
-      private void SocketTimerElapsed(object sender, ElapsedEventArgs e)
+      internal void SocketTimerElapsed(object sender, ElapsedEventArgs e)
       {
          if (Connected)
          {
@@ -247,7 +307,6 @@ namespace HFM.Client
          {
             _stream = _tcpClient.GetStream();
          }
-         var buffer = new byte[InternalBufferSize];
 
          // lock so we're not append to and reading 
          // from the buffer at the same time
@@ -263,8 +322,8 @@ namespace HFM.Client
             // this seems to work better than the method above
             while (_stream.DataAvailable)
             {
-               _stream.Read(buffer, 0, buffer.Length);
-               _readBuffer.Append(Encoding.ASCII.GetString(buffer));
+               _stream.Read(_internalBuffer, 0, _internalBuffer.Length);
+               _readBuffer.Append(Encoding.ASCII.GetString(_internalBuffer));
             }
          }
       }

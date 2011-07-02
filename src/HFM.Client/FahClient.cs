@@ -25,6 +25,47 @@ namespace HFM.Client
    {
       public T GetMessage<T>() where T : TypedMessage
       {
+         if (typeof(T).Equals(typeof(ClientInfo)))
+         {
+            var jsonMessage = GetJsonMessage(JsonMessageKey.Info);
+            if (jsonMessage != null)
+            {
+               return ClientInfo.Parse(jsonMessage) as T;
+            }
+         }
+         else if (typeof(T).Equals(typeof(Heartbeat)))
+         {
+            var jsonMessage = GetJsonMessage(JsonMessageKey.Heartbeat);
+            if (jsonMessage != null)
+            {
+               return Heartbeat.Parse(jsonMessage) as T;
+            }
+         }
+         else if (typeof(T).Equals(typeof(Options)))
+         {
+            var jsonMessage = GetJsonMessage(JsonMessageKey.Options);
+            if (jsonMessage != null)
+            {
+               return Options.Parse(jsonMessage) as T;
+            }
+         }
+         else if (typeof(T).Equals(typeof(Queue)))
+         {
+            var jsonMessage = GetJsonMessage(JsonMessageKey.QueueInfo);
+            if (jsonMessage != null)
+            {
+               return Queue.Parse(jsonMessage) as T;
+            }
+         }
+         else if (typeof(T).Equals(typeof(Slots)))
+         {
+            var jsonMessage = GetJsonMessage(JsonMessageKey.SlotInfo);
+            if (jsonMessage != null)
+            {
+               return Slots.Parse(jsonMessage) as T;
+            }
+         }
+
          return null;
       }
    }
