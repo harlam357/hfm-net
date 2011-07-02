@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HFM.Client</RootNamespace>
     <AssemblyName>HFM.Client</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,6 +31,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\harlam357public.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json.Net35">
       <HintPath>..\..\lib\Json.NET\Newtonsoft.Json.Net35.dll</HintPath>
@@ -38,11 +48,16 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\AssemblyVersion.cs">
+      <Link>Properties\AssemblyVersion.cs</Link>
+    </Compile>
+    <Compile Include="..\HFM.Framework\CoverageExcludeAttribute.cs">
+      <Link>CoverageExcludeAttribute.cs</Link>
+    </Compile>
     <Compile Include="Connection.cs" />
     <Compile Include="DataTypes\ClientInfo.cs" />
     <Compile Include="DataTypes\Heartbeat.cs" />
@@ -50,11 +65,14 @@
     <Compile Include="DataTypes\Options.cs" />
     <Compile Include="DataTypes\Queue.cs" />
     <Compile Include="DataTypes\Slots.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="FahClient.cs" />
     <Compile Include="MessageCache.cs" />
+    <Compile Include="NetworkStreamAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TcpClientAdapter.cs" />
+    <Compile Include="TcpClientFactory.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

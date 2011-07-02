@@ -106,12 +106,11 @@ namespace HFM.Client.DataTypes
          }
          else if (jProperty.Value.Type.Equals(JTokenType.Object))
          {
-            var jObject = JObject.Parse(jProperty.Value.ToString());
             var propertyValue = GetPropertyValue(jProperty.Name);
             if (propertyValue != null)
             {
                var propertySetter = new MessagePropertySetter(propertyValue);
-               foreach (var prop in jObject.Properties())
+               foreach (var prop in JObject.Parse(jProperty.Value.ToString()).Properties())
                {
                   propertySetter.SetProperty(prop);
                }

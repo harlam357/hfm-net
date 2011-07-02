@@ -47,7 +47,7 @@ namespace HFM.Client
       #region Constructor
 
       /// <summary>
-      /// Create a Server Message Handler.
+      /// Create a Server Message Cache.
       /// </summary>
       public MessageCache()
       {
@@ -107,10 +107,8 @@ namespace HFM.Client
       /// </summary>
       /// <param name="buffer">Data Buffer Value</param>
       /// <returns>Message or null if no message is available in the buffer.</returns>
-      public static JsonMessage GetNextJsonMessage(ref string buffer)
+      internal static JsonMessage GetNextJsonMessage(ref string buffer)
       {
-         //TODO: Should be internal exposure
-
          Debug.Assert(buffer != null);
 
          const string pyonHeader = "PyON 1 ";
