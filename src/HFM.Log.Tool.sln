@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Log", "HFM.Log\HFM.Log.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Framework.DataTypes", "HFM.Framework.DataTypes\HFM.Framework.DataTypes.csproj", "{B294C8E0-63AD-47CF-8DE5-CE44C046DF89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Framework", "HFM.Framework\HFM.Framework.csproj", "{FFFF3DE4-8620-4C13-A968-ADF58133146B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,14 +39,6 @@ Global
 		{B294C8E0-63AD-47CF-8DE5-CE44C046DF89}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B294C8E0-63AD-47CF-8DE5-CE44C046DF89}.ReleaseDev|Any CPU.ActiveCfg = Release|Any CPU
 		{B294C8E0-63AD-47CF-8DE5-CE44C046DF89}.ReleaseDev|Any CPU.Build.0 = Release|Any CPU
-		{FFFF3DE4-8620-4C13-A968-ADF58133146B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FFFF3DE4-8620-4C13-A968-ADF58133146B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FFFF3DE4-8620-4C13-A968-ADF58133146B}.DebugDev|Any CPU.ActiveCfg = Debug|Any CPU
-		{FFFF3DE4-8620-4C13-A968-ADF58133146B}.DebugDev|Any CPU.Build.0 = Debug|Any CPU
-		{FFFF3DE4-8620-4C13-A968-ADF58133146B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FFFF3DE4-8620-4C13-A968-ADF58133146B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FFFF3DE4-8620-4C13-A968-ADF58133146B}.ReleaseDev|Any CPU.ActiveCfg = Release|Any CPU
-		{FFFF3DE4-8620-4C13-A968-ADF58133146B}.ReleaseDev|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
