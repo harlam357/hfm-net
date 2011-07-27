@@ -19,6 +19,8 @@
 
 using System;
 using System.Diagnostics;
+using System.Globalization;
+using System.Net.Sockets;
 using System.Text;
 using System.Timers;
 
@@ -33,9 +35,13 @@ namespace HFM.Client
       /// </summary>
       private const int InternalBufferSize = 1024;
       /// <summary>
-      /// Default TcpClient Send and Receive Buffer Size
+      /// Default TcpClient Send Buffer Size
       /// </summary>
-      private const int DefaultSocketBufferSize = 8196;
+      private const int DefaultSendBufferSize = 8196;
+      /// <summary>
+      /// Default TcpClient Receive Buffer Size
+      /// </summary>
+      private const int DefaultReceiveBufferSize = 32768;
       /// <summary>
       /// Default Connection, Send, and Receive Timeout Length
       /// </summary>
@@ -47,6 +53,15 @@ namespace HFM.Client
 
       #endregion
 
+      #region Events
+
+      /// <summary>
+      /// Fired when a status event occurs.
+      /// </summary>
+      public event EventHandler<StatusMessageEventArgs> StatusMessage;
+
+      #endregion
+
       #region Fields
 
       private ITcpClient _tcpClient;
@@ -55,6 +70,11 @@ namespace HFM.Client
       private readonly byte[] _internalBuffer;
       private readonly StringBuilder _readBuffer;
       private readonly Timer _timer;
+
+      /// <summary>
+      /// Don't allow Update() to be called more than once.
+      /// </summary>
+      private bool _updating;
 
       private static readonly object BufferLock = new object();
 
@@ -98,26 +118,30 @@ namespace HFM.Client
       public int ConnectTimeout { get; set; }
 
       /// <summary>
-      /// Length of time between each network stream read (default - 100ms).
+      /// Length of time between each network stream read attempt (default - 100ms).
       /// </summary>
-      public int ReceiveLoopTime { get; set; }
-
-      private int _sendTimeout = DefaultTimeoutLength;
-
-      /// <summary>
-      /// Length of time to wait for a command to be sent (default - 2 seconds).
-      /// </summary>
-      public int SendTimeout
+      public double ReceiveLoopTime
       {
-         get { return _sendTimeout; }
-         set
-         {
-            _tcpClient.SendTimeout = value;
-            _sendTimeout = value;
-         }
+         get { return _timer.Interval; }
+         set { _timer.Interval = value; }
       }
 
-      private int _sendBufferSize = DefaultSocketBufferSize;
+      //private int _sendTimeout = DefaultTimeoutLength;
+
+      ///// <summary>
+      ///// Length of time to wait for a command to be sent (default - 2 seconds).
+      ///// </summary>
+      //public int SendTimeout
+      //{
+      //   get { return _sendTimeout; }
+      //   set
+      //   {
+      //      _tcpClient.SendTimeout = value;
+      //      _sendTimeout = value;
+      //   }
+      //}
+
+      private int _sendBufferSize = DefaultSendBufferSize;
 
       /// <summary>
       /// Size of outgoing data buffer (default - 8k).
@@ -132,25 +156,25 @@ namespace HFM.Client
          }
       }
 
-      private int _receiveTimeout = DefaultTimeoutLength;
+      //private int _receiveTimeout = DefaultTimeoutLength;
+
+      ///// <summary>
+      ///// Length of time to wait for a response to be received (default - 2 seconds).
+      ///// </summary>
+      //public int ReceiveTimeout
+      //{
+      //   get { return _receiveTimeout; }
+      //   set
+      //   {
+      //      _tcpClient.ReceiveTimeout = value;
+      //      _receiveTimeout = value;
+      //   }
+      //}
+
+      private int _receiveBufferSize = DefaultReceiveBufferSize;
 
       /// <summary>
-      /// Length of time to wait for a response to be received (default - 2 seconds).
-      /// </summary>
-      public int ReceiveTimeout
-      {
-         get { return _receiveTimeout; }
-         set
-         {
-            _tcpClient.ReceiveTimeout = value;
-            _receiveTimeout = value;
-         }
-      }
-
-      private int _receiveBufferSize = DefaultSocketBufferSize;
-
-      /// <summary>
-      /// Size of incoming data buffer (default - 8k).
+      /// Size of incoming data buffer (default - 32k).
       /// </summary>
       public int ReceiveBufferSize
       {
@@ -181,13 +205,12 @@ namespace HFM.Client
       internal Connection(ITcpClientFactory tcpClientFactory)
       {
          ConnectTimeout = DefaultTimeoutLength;
-         ReceiveLoopTime = DefaultSocketTimerLength;
 
          _tcpClientFactory = tcpClientFactory;
          _tcpClient = CreateClient();
          _internalBuffer = new byte[InternalBufferSize];
          _readBuffer = new StringBuilder();
-         _timer = new Timer(ReceiveLoopTime);
+         _timer = new Timer(DefaultSocketTimerLength);
          _timer.Elapsed += SocketTimerElapsed;
       }
 
@@ -198,16 +221,23 @@ namespace HFM.Client
       /// <summary>
       /// Connect to a Server.
       /// </summary>
-      /// <param name="hostname">Hostname or IP Address</param>
+      /// <param name="host">Hostname or IP Address</param>
       /// <param name="port">TCP Port</param>
-      public void Connect(string hostname, int port)
+      /// <param name="password">Client Access Password</param>
+      /// <exception cref="InvalidOperationException">Throws if the client is already connected.</exception>
+      /// <exception cref="ArgumentNullException">Throws if either 'host' or 'password' argument is null.</exception>
+      /// <exception cref="TimeoutException">Throws if connection attempt times out.</exception>
+      public void Connect(string host, int port, string password)
       {
-         if (_tcpClient.Client == null)
-         {
-            _tcpClient = CreateClient();
-         }
+         // check connection status, callers should make sure no connection exists first
+         if (Connected) throw new InvalidOperationException("Client is already connected.");
 
-         IAsyncResult ar = _tcpClient.BeginConnect(hostname, port, null, null);
+         if (host == null) throw new ArgumentNullException("host");
+         if (password == null) throw new ArgumentNullException("password");
+
+         _tcpClient = CreateClient();
+
+         IAsyncResult ar = _tcpClient.BeginConnect(host, port, null, null);
          try
          {
             if (!ar.AsyncWaitHandle.WaitOne(TimeSpan.FromMilliseconds(ConnectTimeout), false))
@@ -217,6 +247,13 @@ namespace HFM.Client
             }
 
             _tcpClient.EndConnect(ar);
+            _stream = _tcpClient.GetStream();
+
+            // send authentication
+            SendCommand("auth " + password);
+            // send status message
+            OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
+               "Connected to {0} ({1})", host, port), TraceLevel.Info));
             // start listening for messages
             // from the network stream
             _timer.Start();
@@ -230,9 +267,9 @@ namespace HFM.Client
       private ITcpClient CreateClient()
       {
          var tcpClient = _tcpClientFactory.Create();
-         tcpClient.SendTimeout = SendTimeout;
+         //tcpClient.SendTimeout = SendTimeout;
          tcpClient.SendBufferSize = SendBufferSize;
-         tcpClient.ReceiveTimeout = ReceiveTimeout;
+         //tcpClient.ReceiveTimeout = ReceiveTimeout;
          tcpClient.ReceiveBufferSize = ReceiveBufferSize;
          return tcpClient;
       }
@@ -244,38 +281,55 @@ namespace HFM.Client
       {
          // stop the timer
          _timer.Stop();
-         // close the actual connection
-         _tcpClient.Close();
+         // close the network stream
+         if (_stream != null)
+         {
+            _stream.Close();
+         }
          // remove reference to the network stream
          _stream = null;
+         // close the actual connection
+         _tcpClient.Close();
+         // send status message
+         OnStatusMessage(new StatusMessageEventArgs("Connection closed.", TraceLevel.Info));
       }
 
       /// <summary>
       /// Send a Command to the Server.
       /// </summary>
+      /// <param name="command">Command Text.  Null, empty, or whitespace strings will be ignored.</param>
+      /// <exception cref="InvalidOperationException">Throws if client is not connected.</exception>
       /// <remarks>Callers should make sure they're connected by checking the Connected property.</remarks>
       public void SendCommand(string command)
       {
          // check connection status, callers should make sure they're connected first
          if (!Connected) throw new InvalidOperationException("Client is not connected.");
 
+         if (command.IsNullOrWhiteSpace())
+         {
+            OnStatusMessage(new StatusMessageEventArgs("No command text given.", TraceLevel.Warning));
+            return;
+         }
+
          if (!command.EndsWith("\n", StringComparison.Ordinal))
          {
             command += "\n";
          }
-         // get the network stream
-         if (_stream == null)
-         {
-            _stream = _tcpClient.GetStream();
-         }
          var buffer = Encoding.ASCII.GetBytes(command);
-         //_stream.Write(buffer, 0, buffer.Length);
          _stream.BeginWrite(buffer, 0, buffer.Length, null, null);
+         // send status message
+         OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
+            "Sent command: {0}", command), TraceLevel.Info));
       }
 
       internal void SocketTimerElapsed(object sender, ElapsedEventArgs e)
       {
-         if (Connected)
+         if (!Connected)
+         {
+            return;
+         }
+
+         if (!_updating)
          {
             try
             {
@@ -283,14 +337,28 @@ namespace HFM.Client
             }
             catch (Exception ex)
             {
-               //TODO: log it!!!
-               Close();
+               if (!IsCancelBlockingCallSocketError(ex))
+               {
+                  OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
+                     "Update failed: {0}", ex.Message), TraceLevel.Error));
+                  Close();
+               }
             }
          }
-         else
+      }
+
+      private static bool IsCancelBlockingCallSocketError(Exception ex)
+      {
+         var ioEx = ex as System.IO.IOException;
+         if (ioEx != null)
          {
-            Close();
+            var socketEx = ioEx.InnerException as SocketException;
+            if (socketEx != null && socketEx.ErrorCode == 10004)
+            {
+               return true;
+            }
          }
+         return false;
       }
 
       /// <summary>
@@ -298,32 +366,27 @@ namespace HFM.Client
       /// </summary>
       protected virtual void Update()
       {
-         // this method should only be called from
-         // SocketTimerElapsed() and that method
-         // makes sure the connection is open first
-         Debug.Assert(Connected);
-         // get the network stream
-         if (_stream == null)
-         {
-            _stream = _tcpClient.GetStream();
-         }
-
-         // lock so we're not append to and reading 
+         // lock so we're not appending to and reading 
          // from the buffer at the same time
          lock (BufferLock)
          {
-            //int bytesRead = _stream.Read(buffer, 0, buffer.Length);
-            //while (bytesRead != 0)
-            //{
-            //   _readBuffer.Append(Encoding.ASCII.GetString(buffer));
-            //   bytesRead = _stream.Read(buffer, 0, buffer.Length);
-            //}
-
-            // this seems to work better than the method above
-            while (_stream.DataAvailable)
+            try
             {
-               _stream.Read(_internalBuffer, 0, _internalBuffer.Length);
-               _readBuffer.Append(Encoding.ASCII.GetString(_internalBuffer));
+               _updating = true;
+
+               do
+               {
+                  if (_stream.Read(_internalBuffer, 0, _internalBuffer.Length) == 0)
+                  {
+                     throw new System.IO.IOException("The underlying socket has been closed.");
+                  }
+                  _readBuffer.Append(Encoding.ASCII.GetString(_internalBuffer));
+               } 
+               while (_stream.DataAvailable);
+            }
+            finally
+            {
+               _updating = false;
             }
          }
       }
@@ -366,6 +429,21 @@ namespace HFM.Client
          }
       }
 
+      /// <summary>
+      /// Raise the StatusMessage Event.
+      /// </summary>
+      /// <param name="e">Event Arguments (if null the event is cancelled)</param>
+      protected virtual void OnStatusMessage(StatusMessageEventArgs e)
+      {
+         if (e == null) return;
+
+         Debug.WriteLine(e.Status);
+         if (StatusMessage != null)
+         {
+            StatusMessage(this, e);
+         }
+      }
+
       #endregion
 
       #region IDisposable Members
@@ -378,13 +456,16 @@ namespace HFM.Client
          GC.SuppressFinalize(this);
       }
 
-      private void Dispose(bool disposing)
+      protected virtual void Dispose(bool disposing)
       {
          if (!_disposed)
          {
             if (disposing)
             {
+               // close connection
                Close();
+               // dispose of timer
+               _timer.Dispose();
             }
          }
 
@@ -397,5 +478,37 @@ namespace HFM.Client
       }
 
       #endregion
+   }
+
+   public class StatusMessageEventArgs : EventArgs
+   {
+      public string Status { get; private set; }
+
+      public TraceLevel Level { get; private set; }
+
+      internal StatusMessageEventArgs(string status, TraceLevel level)
+      {
+         if (status == null) throw new ArgumentNullException("status");
+
+         Status = CleanUpStatusMessage(status);
+         Level = level;
+      }
+
+      private static string CleanUpStatusMessage(string status)
+      {
+         Debug.Assert(status != null);
+
+         int newLine = status.IndexOf(Environment.NewLine, StringComparison.OrdinalIgnoreCase);
+         if (newLine > -1)
+         {
+            return status.Substring(0, newLine);
+         }
+         int lineFeed = status.IndexOf("\n", StringComparison.OrdinalIgnoreCase);
+         if (lineFeed > -1)
+         {
+            return status.Substring(0, lineFeed);
+         }
+         return status;
+      }
    }
 }
