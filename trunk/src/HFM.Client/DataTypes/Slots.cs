@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System;
 using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
@@ -36,8 +37,11 @@ namespace HFM.Client.DataTypes
       /// Create a Slots object from the given JsonMessage.
       /// </summary>
       /// <param name="message">Message object containing JSON value and meta-data.</param>
+      /// <exception cref="ArgumentNullException">Throws if 'message' argument is null.</exception>
       public static Slots Parse(JsonMessage message)
       {
+         if (message == null) throw new ArgumentNullException("message");
+
          var jsonArray = JArray.Parse(message.Value);
          var slots = new Slots();
          foreach (var token in jsonArray)

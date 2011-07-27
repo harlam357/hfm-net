@@ -19,7 +19,9 @@
 
 using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 
 using Newtonsoft.Json.Linq;
 
@@ -41,6 +43,21 @@ namespace HFM.Client.DataTypes
       /// Message Value
       /// </summary>
       public string Value { get; set; }
+
+      /// <summary>
+      /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+      /// </summary>
+      /// <returns>
+      /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+      /// </returns>
+      /// <filterpriority>2</filterpriority>
+      public override string ToString()
+      {
+         var sb = new StringBuilder();
+         sb.AppendLine(base.ToString());
+         sb.AppendLine(Value);
+         return sb.ToString();
+      }
    }
 
    public abstract class Message
@@ -60,8 +77,21 @@ namespace HFM.Client.DataTypes
          Key = message.Key;
          Received = message.Received;
       }
+
+      /// <summary>
+      /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+      /// </summary>
+      /// <returns>
+      /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+      /// </returns>
+      /// <filterpriority>2</filterpriority>
+      public override string ToString()
+      {
+         return String.Format(CultureInfo.InvariantCulture, "Message Key: {0} - Received at: {1}", Key, Received);
+      }
    }
 
+   [AttributeUsage(AttributeTargets.Property)]
    public sealed class MessagePropertyAttribute : Attribute
    {
       private readonly string _name;
@@ -98,7 +128,7 @@ namespace HFM.Client.DataTypes
 
          if (jProperty.Value.Type.Equals(JTokenType.String))
          {
-            classProperty.SetValue(_message, Convert.ChangeType((string)jProperty, classProperty.PropertyType));
+            classProperty.SetValue(_message, Convert.ChangeType((string)jProperty, classProperty.PropertyType, CultureInfo.InvariantCulture));
          }
          else if (jProperty.Value.Type.Equals(JTokenType.Integer))
          {
@@ -126,7 +156,7 @@ namespace HFM.Client.DataTypes
             return;
          }
 
-         classProperty.SetValue(_message, Convert.ChangeType(value, classProperty.PropertyType));
+         classProperty.SetValue(_message, Convert.ChangeType(value, classProperty.PropertyType, CultureInfo.InvariantCulture));
       }
 
       internal object GetPropertyValue(string key)
