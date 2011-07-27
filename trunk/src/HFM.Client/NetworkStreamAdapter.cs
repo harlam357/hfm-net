@@ -70,7 +70,7 @@ namespace HFM.Client
    }
 
    [CoverageExclude]
-   public class NetworkStreamAdapter : INetworkStream
+   public sealed class NetworkStreamAdapter : INetworkStream
    {
       private readonly NetworkStream _networkStream;
 

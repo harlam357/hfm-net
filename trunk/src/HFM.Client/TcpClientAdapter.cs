@@ -7,7 +7,7 @@ using HFM.Framework;
 
 namespace HFM.Client
 {
-   public interface ITcpClient
+   public interface ITcpClient : IDisposable
    {
       #region Properties
 
@@ -56,7 +56,7 @@ namespace HFM.Client
    }
 
    [CoverageExclude]
-   public class TcpClientAdapter : ITcpClient
+   public sealed class TcpClientAdapter : ITcpClient
    {
       private readonly TcpClient _tcpClient;
 
@@ -165,6 +165,11 @@ namespace HFM.Client
       public INetworkStream GetStream()
       {
          return new NetworkStreamAdapter(_tcpClient.GetStream());
+      }
+
+      void IDisposable.Dispose()
+      {
+         ((IDisposable)_tcpClient).Dispose();
       }
 
       #endregion
