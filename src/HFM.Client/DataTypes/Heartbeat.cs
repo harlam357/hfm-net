@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Globalization;
 
 namespace HFM.Client.DataTypes
 {
@@ -40,7 +41,7 @@ namespace HFM.Client.DataTypes
          if (message == null) throw new ArgumentNullException("message");
 
          var heartbeat = new Heartbeat();
-         heartbeat.Value = Int32.Parse(message.Value);
+         heartbeat.Value = Int32.Parse(message.Value, CultureInfo.InvariantCulture);
          return heartbeat;
       }
    }
