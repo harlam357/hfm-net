@@ -348,7 +348,7 @@ namespace HFM.Client.Tests
       }
 
       [Test]
-      public void SocketTimerElapsedTest()
+      public void SocketTimerElapsedTest1()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
@@ -360,6 +360,7 @@ namespace HFM.Client.Tests
 
             connection.SocketTimerElapsed(null, null);
 
+            // check GetBuffer() and DataAvailable
             Assert.IsTrue(connection.DataAvailable);
             string connectionBuffer = connection.GetBuffer(false);
             Assert.IsFalse(String.IsNullOrEmpty(connectionBuffer));
@@ -367,6 +368,76 @@ namespace HFM.Client.Tests
             connectionBuffer = connection.GetBuffer();
             Assert.IsFalse(String.IsNullOrEmpty(connectionBuffer));
             Assert.IsFalse(connection.DataAvailable);
+         }
+
+         _tcpClient.VerifyAllExpectations();
+         _stream.VerifyAllExpectations();
+      }
+
+      [Test]
+      public void SocketTimerElapsedTest2()
+      {
+         using (var connection = new Connection(CreateClientFactory()))
+         {
+            Connect(connection);
+
+            var buffer = connection.InternalBuffer;
+            _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
+               new Func<byte[], int, int, int>(FillBufferForSocketTimerElapsedTest));
+
+            connection.SocketTimerElapsed(null, null);
+
+            // check ClearBuffer() and DataAvailable
+            Assert.IsTrue(connection.DataAvailable);
+            connection.ClearBuffer();
+            Assert.IsFalse(connection.DataAvailable);
+         }
+
+         _tcpClient.VerifyAllExpectations();
+         _stream.VerifyAllExpectations();
+      }
+
+      [Test]
+      public void SocketTimerElapsedTest3()
+      {
+         using (var connection = new Connection(CreateClientFactory()))
+         {
+            Connect(connection);
+
+            var buffer = connection.InternalBuffer;
+            // when Read returns 0 the connection has been lost and the
+            // implementation throws an IOException
+            _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Return(0);
+            // as a result the connection is closed, set expectations
+            _stream.Expect(x => x.Close());
+            _tcpClient.Expect(x => x.Close());
+
+            bool statusMessageFired = false;
+            connection.StatusMessage += (sender, args) => statusMessageFired = true;
+            connection.SocketTimerElapsed(null, null);
+
+            Assert.IsTrue(statusMessageFired);
+         }
+
+         _tcpClient.VerifyAllExpectations();
+         _stream.VerifyAllExpectations();
+      }
+
+      [Test]
+      public void SocketTimerElapsedTest4()
+      {
+         using (var connection = new Connection(CreateClientFactory()))
+         {
+            Connect(connection);
+
+            var buffer = connection.InternalBuffer;
+            // when we call Close() ourselves then the Read() method called by
+            // Update() will throw a WSACancelBlockingCall error code as the 
+            // inner exception of an IOException.  in this case Close() does 
+            // not need called again since it was called through the API.
+            _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Throw(new IOException(String.Empty, new SocketException(10004)));
+
+            connection.SocketTimerElapsed(null, null);
          }
 
          _tcpClient.VerifyAllExpectations();

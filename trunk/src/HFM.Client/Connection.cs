@@ -324,10 +324,7 @@ namespace HFM.Client
 
       internal void SocketTimerElapsed(object sender, ElapsedEventArgs e)
       {
-         if (!Connected)
-         {
-            return;
-         }
+         Debug.Assert(Connected);
 
          if (!_updating)
          {
@@ -353,6 +350,7 @@ namespace HFM.Client
          if (ioEx != null)
          {
             var socketEx = ioEx.InnerException as SocketException;
+            // code 10004 is WSACancelBlockingCall
             if (socketEx != null && socketEx.ErrorCode == 10004)
             {
                return true;
