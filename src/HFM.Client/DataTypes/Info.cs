@@ -28,18 +28,18 @@ namespace HFM.Client.DataTypes
    {
       private Info()
       {
-         Client = new Client();
-         Build = new Build();
+         Client = new ClientInfo();
+         Build = new BuildInfo();
          System = new SystemInfo();
       }
 
       #region Properties
 
       [MessageProperty("Folding@home Client")]
-      public Client Client { get; private set; }
+      public ClientInfo Client { get; private set; }
 
       [MessageProperty("Build")]
-      public Build Build { get; private set; }
+      public BuildInfo Build { get; private set; }
 
       [MessageProperty("System")]
       public SystemInfo System { get; private set; }
@@ -87,9 +87,9 @@ namespace HFM.Client.DataTypes
       }      
    }
 
-   public class Client
+   public class ClientInfo
    {
-      internal Client()
+      internal ClientInfo()
       {
          
       }
@@ -115,9 +115,9 @@ namespace HFM.Client.DataTypes
       #endregion
    }
 
-   public class Build
+   public class BuildInfo
    {
-      internal Build()
+      internal BuildInfo()
       {
          
       }

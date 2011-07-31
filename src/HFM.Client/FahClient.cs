@@ -69,29 +69,35 @@ namespace HFM.Client
                return Options.Parse(jsonMessage) as T;
             }
          }
-         else if (typeof(T).Equals(typeof(Queue)))
-         {
-            var jsonMessage = GetJsonMessage(JsonMessageKey.QueueInfo);
-            if (jsonMessage != null)
-            {
-               return Queue.Parse(jsonMessage) as T;
-            }
-         }
-         else if (typeof(T).Equals(typeof(Slots)))
+         else if (typeof(T).Equals(typeof(SlotCollection)))
          {
             var jsonMessage = GetJsonMessage(JsonMessageKey.SlotInfo);
             if (jsonMessage != null)
             {
-               return Slots.Parse(jsonMessage) as T;
+               return SlotCollection.Parse(jsonMessage) as T;
+            }
+         }
+         else if (typeof(T).Equals(typeof(UnitCollection)))
+         {
+            var jsonMessage = GetJsonMessage(JsonMessageKey.QueueInfo);
+            if (jsonMessage != null)
+            {
+               return UnitCollection.Parse(jsonMessage) as T;
             }
          }
 
          return null;
       }
 
+      /// <summary>
+      /// Raise the MessageUpdated Event.
+      /// </summary>
+      /// <param name="e">Event Arguments (if null the event is cancelled)</param>
       protected override void OnMessageUpdated(MessageUpdatedEventArgs e)
       {
-         e.Type = MapKeyToType(e.Key);
+         if (e == null) return;
+
+         e.DataType = MapKeyToType(e.Key);
          base.OnMessageUpdated(e);
       }
 
@@ -105,10 +111,10 @@ namespace HFM.Client
                return typeof(Info);
             case JsonMessageKey.Options:
                return typeof(Options);
-            case JsonMessageKey.QueueInfo:
-               return typeof(Queue);
             case JsonMessageKey.SlotInfo:
-               return typeof(Slots);
+               return typeof(SlotCollection);
+            case JsonMessageKey.QueueInfo:
+               return typeof(UnitCollection);
          }
 
          return null;

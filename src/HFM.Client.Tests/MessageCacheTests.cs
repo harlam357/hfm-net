@@ -61,7 +61,7 @@ namespace HFM.Client.Tests
             messageCache.SocketTimerElapsed(null, null);
 
             Assert.AreEqual("units", e.Key);
-            Assert.IsNull(e.Type);
+            Assert.IsNull(e.DataType);
             Assert.IsNotNull(messageCache.GetJsonMessage(JsonMessageKey.QueueInfo));
          }
 

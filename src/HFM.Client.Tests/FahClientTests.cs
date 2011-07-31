@@ -64,7 +64,7 @@ namespace HFM.Client.Tests
             fahClient.SocketTimerElapsed(null, null);
 
             Assert.AreEqual("heartbeat", e.Key);
-            Assert.AreEqual(typeof(Heartbeat), e.Type);
+            Assert.AreEqual(typeof(Heartbeat), e.DataType);
             var heartbeat = fahClient.GetMessage<Heartbeat>();
             Assert.IsNotNull(heartbeat);
          }
@@ -100,7 +100,7 @@ namespace HFM.Client.Tests
             fahClient.SocketTimerElapsed(null, null);
 
             Assert.AreEqual("info", e.Key);
-            Assert.AreEqual(typeof(Info), e.Type);
+            Assert.AreEqual(typeof(Info), e.DataType);
             var info = fahClient.GetMessage<Info>();
             Assert.IsNotNull(info);
          }
@@ -146,7 +146,7 @@ namespace HFM.Client.Tests
             fahClient.SocketTimerElapsed(null, null);
 
             Assert.AreEqual("options", e.Key);
-            Assert.AreEqual(typeof(Options), e.Type);
+            Assert.AreEqual(typeof(Options), e.DataType);
             var options = fahClient.GetMessage<Options>();
             Assert.IsNotNull(options);
          }
