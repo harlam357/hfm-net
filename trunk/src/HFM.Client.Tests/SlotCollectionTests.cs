@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Slots Data Class Tests
+ * HFM.NET - Slot Collection Data Class Tests
  * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -26,18 +26,18 @@ using HFM.Client.DataTypes;
 namespace HFM.Client.Tests
 {
    [TestFixture]
-   public class SlotsTests
+   public class SlotCollectionTests
    {
       [Test]
       public void ParseTest1()
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\slots.txt");
-         var slots = Slots.Parse(MessageCache.GetNextJsonMessage(ref message));
-         Assert.AreEqual(1, slots.Count);
-         Assert.AreEqual(0, slots[0].Id);
-         Assert.AreEqual("RUNNING", slots[0].Status);
-         Assert.AreEqual("smp:4", slots[0].Description);
-         Assert.IsTrue(slots[0].Options.PauseOnStart);
+         var slotCollection = SlotCollection.Parse(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(1, slotCollection.Count);
+         Assert.AreEqual(0, slotCollection[0].Id);
+         Assert.AreEqual("RUNNING", slotCollection[0].Status);
+         Assert.AreEqual("smp:4", slotCollection[0].Description);
+         Assert.IsTrue(slotCollection[0].Options.PauseOnStart);
       }
    }
 }

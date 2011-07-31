@@ -50,6 +50,7 @@ namespace HFM.Client
 
       void Close();
 
+      [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
       INetworkStream GetStream();
 
       #endregion

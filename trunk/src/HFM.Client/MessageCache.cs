@@ -160,8 +160,8 @@ namespace HFM.Client
 
       private static int FindStartIndex(string buffer, int messageIndex)
       {
-         int index = buffer.IndexOf(CarriageReturnLineFeed, messageIndex);
-         return index >= 0 ? index : buffer.IndexOf(LineFeed, messageIndex);
+         int index = buffer.IndexOf(CarriageReturnLineFeed, messageIndex, StringComparison.Ordinal);
+         return index >= 0 ? index : buffer.IndexOf(LineFeed, messageIndex, StringComparison.Ordinal);
       }
 
       private static int FindEndIndex(string buffer, int startIndex)
@@ -194,8 +194,14 @@ namespace HFM.Client
             "Received Message: {0}", message.Key), TraceLevel.Info));
       }
 
+      /// <summary>
+      /// Raise the MessageUpdated Event.
+      /// </summary>
+      /// <param name="e">Event Arguments (if null the event is cancelled)</param>
       protected virtual void OnMessageUpdated(MessageUpdatedEventArgs e)
       {
+         if (e == null) return;
+
          if (MessageUpdated != null)
          {
             MessageUpdated(this, e);
@@ -212,9 +218,9 @@ namespace HFM.Client
       /// </summary>
       public string Key { get; private set; }
       /// <summary>
-      /// Messgae type that was updated.
+      /// Messgae data type that was updated.
       /// </summary>
-      public Type Type { get; internal set; }
+      public Type DataType { get; internal set; }
 
       public MessageUpdatedEventArgs(string key)
       {
@@ -237,13 +243,13 @@ namespace HFM.Client
       /// </summary>
       public const string Options = "options";
       /// <summary>
-      /// Queue Info Message Key
-      /// </summary>
-      public const string QueueInfo = "units";
-      /// <summary>
       /// Slot Info Message Key
       /// </summary>
       public const string SlotInfo = "slots";
+      /// <summary>
+      /// Queue Info Message Key
+      /// </summary>
+      public const string QueueInfo = "units";
 
       /// <summary>
       /// Log Restart Message Key
@@ -253,7 +259,6 @@ namespace HFM.Client
       /// Log Update Message Key
       /// </summary>
       public const string LogUpdate = "log-update";
-      
       
       /// <summary>
       /// Simulation Info Message Key

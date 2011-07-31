@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Slots Data Class
+ * HFM.NET - Unit Collection Data Class
  * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -24,26 +24,26 @@ using Newtonsoft.Json.Linq;
 
 namespace HFM.Client.DataTypes
 {
-   public class Slots : TypedMessage, IList<Slot>
+   public class UnitCollection : TypedMessage, IList<Unit>
    {
-      private readonly List<Slot> _slots;
+      private readonly List<Unit> _units;
 
-      private Slots()
+      private UnitCollection()
       {
-         _slots = new List<Slot>();
+         _units = new List<Unit>();
       }
 
       /// <summary>
-      /// Create a Slots object from the given JsonMessage.
+      /// Create a UnitCollection object from the given JsonMessage.
       /// </summary>
       /// <param name="message">Message object containing JSON value and meta-data.</param>
       /// <exception cref="ArgumentNullException">Throws if 'message' argument is null.</exception>
-      public static Slots Parse(JsonMessage message)
+      public static UnitCollection Parse(JsonMessage message)
       {
          if (message == null) throw new ArgumentNullException("message");
 
          var jsonArray = JArray.Parse(message.Value);
-         var slots = new Slots();
+         var unitCollection = new UnitCollection();
          foreach (var token in jsonArray)
          {
             if (!token.HasValues)
@@ -51,19 +51,19 @@ namespace HFM.Client.DataTypes
                continue;
             }
 
-            var slot = new Slot();
-            var propertySetter = new MessagePropertySetter(slot);
+            var queueUnit = new Unit();
+            var propertySetter = new MessagePropertySetter(queueUnit);
             foreach (var prop in JObject.Parse(token.ToString()).Properties())
             {
                propertySetter.SetProperty(prop);
             }
-            slots.Add(slot);
+            unitCollection.Add(queueUnit);
          }
-         slots.SetMessageValues(message);
-         return slots;
+         unitCollection.SetMessageValues(message);
+         return unitCollection;
       }
 
-      #region IList<Slot> Members
+      #region IList<Unit> Members
 
       /// <summary>
       /// Determines the index of a specific item in the <see cref="T:System.Collections.Generic.IList`1"/>.
@@ -72,18 +72,18 @@ namespace HFM.Client.DataTypes
       /// The index of <paramref name="item"/> if found in the list; otherwise, -1.
       /// </returns>
       /// <param name="item">The object to locate in the <see cref="T:System.Collections.Generic.IList`1"/>.</param>
-      public int IndexOf(Slot item)
+      public int IndexOf(Unit item)
       {
-         return _slots.IndexOf(item);
+         return _units.IndexOf(item);
       }
 
       /// <summary>
       /// Inserts an item to the <see cref="T:System.Collections.Generic.IList`1"/> at the specified index.
       /// </summary>
       /// <param name="index">The zero-based index at which <paramref name="item"/> should be inserted.</param><param name="item">The object to insert into the <see cref="T:System.Collections.Generic.IList`1"/>.</param><exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in the <see cref="T:System.Collections.Generic.IList`1"/>.</exception><exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.IList`1"/> is read-only.</exception>
-      public void Insert(int index, Slot item)
+      public void Insert(int index, Unit item)
       {
-         _slots.Insert(index, item);
+         _units.Insert(index, item);
       }
 
       /// <summary>
@@ -92,7 +92,7 @@ namespace HFM.Client.DataTypes
       /// <param name="index">The zero-based index of the item to remove.</param><exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in the <see cref="T:System.Collections.Generic.IList`1"/>.</exception><exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.IList`1"/> is read-only.</exception>
       public void RemoveAt(int index)
       {
-         _slots.RemoveAt(index);
+         _units.RemoveAt(index);
       }
 
       /// <summary>
@@ -102,23 +102,23 @@ namespace HFM.Client.DataTypes
       /// The element at the specified index.
       /// </returns>
       /// <param name="index">The zero-based index of the element to get or set.</param><exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in the <see cref="T:System.Collections.Generic.IList`1"/>.</exception><exception cref="T:System.NotSupportedException">The property is set and the <see cref="T:System.Collections.Generic.IList`1"/> is read-only.</exception>
-      public Slot this[int index]
+      public Unit this[int index]
       {
-         get { return _slots[index]; }
-         set { _slots[index] = value; }
+         get { return _units[index]; }
+         set { _units[index] = value; }
       }
 
       #endregion
 
-      #region ICollection<Slot> Members
+      #region ICollection<Unit> Members
 
       /// <summary>
       /// Adds an item to the <see cref="T:System.Collections.Generic.ICollection`1"/>.
       /// </summary>
       /// <param name="item">The object to add to the <see cref="T:System.Collections.Generic.ICollection`1"/>.</param><exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.</exception>
-      public void Add(Slot item)
+      public void Add(Unit item)
       {
-         _slots.Add(item);
+         _units.Add(item);
       }
 
       /// <summary>
@@ -127,7 +127,7 @@ namespace HFM.Client.DataTypes
       /// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only. </exception>
       public void Clear()
       {
-         _slots.Clear();
+         _units.Clear();
       }
 
       /// <summary>
@@ -137,9 +137,9 @@ namespace HFM.Client.DataTypes
       /// true if <paramref name="item"/> is found in the <see cref="T:System.Collections.Generic.ICollection`1"/>; otherwise, false.
       /// </returns>
       /// <param name="item">The object to locate in the <see cref="T:System.Collections.Generic.ICollection`1"/>.</param>
-      public bool Contains(Slot item)
+      public bool Contains(Unit item)
       {
-         return _slots.Contains(item);
+         return _units.Contains(item);
       }
 
 #pragma warning disable 1584,1711,1572,1581,1580
@@ -148,9 +148,9 @@ namespace HFM.Client.DataTypes
       /// Copies the elements of the <see cref="T:System.Collections.Generic.ICollection`1"/> to an <see cref="T:System.Array"/>, starting at a particular <see cref="T:System.Array"/> index.
       /// </summary>
       /// <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the elements copied from <see cref="T:System.Collections.Generic.ICollection`1"/>. The <see cref="T:System.Array"/> must have zero-based indexing.</param><param name="arrayIndex">The zero-based index in <paramref name="array"/> at which copying begins.</param><exception cref="T:System.ArgumentNullException"><paramref name="array"/> is null.</exception><exception cref="T:System.ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than 0.</exception><exception cref="T:System.ArgumentException"><paramref name="array"/> is multidimensional.-or-The number of elements in the source <see cref="T:System.Collections.Generic.ICollection`1"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination <paramref name="array"/>.-or-Type <paramref name="T"/> cannot be cast automatically to the type of the destination <paramref name="array"/>.</exception>
-      public void CopyTo(Slot[] array, int arrayIndex)
+      public void CopyTo(Unit[] array, int arrayIndex)
       {
-         _slots.CopyTo(array, arrayIndex);
+         _units.CopyTo(array, arrayIndex);
       }
 
 #pragma warning restore 1584,1711,1572,1581,1580
@@ -163,7 +163,7 @@ namespace HFM.Client.DataTypes
       /// </returns>
       public int Count
       {
-         get { return _slots.Count; }
+         get { return _units.Count; }
       }
 
       /// <summary>
@@ -172,9 +172,9 @@ namespace HFM.Client.DataTypes
       /// <returns>
       /// true if the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only; otherwise, false.
       /// </returns>
-      bool ICollection<Slot>.IsReadOnly
+      bool ICollection<Unit>.IsReadOnly
       {
-         get { return ((ICollection<Slot>)_slots).IsReadOnly; }
+         get { return ((ICollection<Unit>)_units).IsReadOnly; }
       }
 
       /// <summary>
@@ -184,14 +184,14 @@ namespace HFM.Client.DataTypes
       /// true if <paramref name="item"/> was successfully removed from the <see cref="T:System.Collections.Generic.ICollection`1"/>; otherwise, false. This method also returns false if <paramref name="item"/> is not found in the original <see cref="T:System.Collections.Generic.ICollection`1"/>.
       /// </returns>
       /// <param name="item">The object to remove from the <see cref="T:System.Collections.Generic.ICollection`1"/>.</param><exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.</exception>
-      public bool Remove(Slot item)
+      public bool Remove(Unit item)
       {
-         return _slots.Remove(item);
+         return _units.Remove(item);
       }
 
       #endregion
 
-      #region IEnumerable<Slot> Members
+      #region IEnumerable<Unit> Members
 
       /// <summary>
       /// Returns an enumerator that iterates through the collection.
@@ -200,9 +200,9 @@ namespace HFM.Client.DataTypes
       /// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
       /// </returns>
       /// <filterpriority>1</filterpriority>
-      public IEnumerator<Slot> GetEnumerator()
+      public IEnumerator<Unit> GetEnumerator()
       {
-         return _slots.GetEnumerator();
+         return _units.GetEnumerator();
       }
 
       #endregion
@@ -224,24 +224,98 @@ namespace HFM.Client.DataTypes
       #endregion
    }
 
-   public class Slot
+   public class Unit
    {
-      internal Slot()
+      internal Unit()
       {
-         Options = new Options();
+         
       }
+
+      #region Properties
 
       [MessageProperty("id")]
       public int Id { get; set; }
 
-      // SHOULD be enum type (looks like same value in Queue.State)
-      [MessageProperty("status")]
-      public string Status { get; set; }
+      // SHOULD be enum type (looks like same value in Slot.Status)
+      [MessageProperty("state")]
+      public string State { get; set; }
 
-      [MessageProperty("description")]
-      public string Description { get; set; }
+      [MessageProperty("project")]
+      public int Project { get; set; }
 
-      [MessageProperty("options")]
-      public Options Options { get; set; }
+      [MessageProperty("run")]
+      public int Run { get; set; }
+
+      [MessageProperty("clone")]
+      public int Clone { get; set; }
+
+      [MessageProperty("gen")]
+      public int Gen { get; set; }
+
+      [MessageProperty("core")]
+      public string Core { get; set; }
+
+      [MessageProperty("unit")]
+      public string UnitId { get; set; }
+
+      [MessageProperty("percentdone")]
+      public string PercentDone { get; set; }
+
+      [MessageProperty("totalframes")]
+      public int TotalFrames { get; set; }
+
+      [MessageProperty("framesdone")]
+      public int FramesDone { get; set; }
+
+      // SHOULD be DateTime type (wait for v7.1.25 - has ISO formatted values)
+      [MessageProperty("assigned")]
+      public string Assigned { get; set; }
+
+      // SHOULD be DateTime type (wait for v7.1.25 - has ISO formatted values)
+      [MessageProperty("timeout")]
+      public string Timeout { get; set; }
+
+      // SHOULD be DateTime type (wait for v7.1.25 - has ISO formatted values)
+      [MessageProperty("deadline")]
+      public string Deadline { get; set; }
+
+      // could be IP Address type
+      [MessageProperty("ws")]
+      public string WorkServer { get; set; }
+
+      // could be IP Address type
+      [MessageProperty("cs")]
+      public string CollectionServer { get; set; }
+
+      [MessageProperty("waitingon")]
+      public string WaitingOn { get; set; }
+
+      [MessageProperty("attempts")]
+      public int Attempts { get; set; }
+
+      [MessageProperty("nextattempt")]
+      public string NextAttempt { get; set; }
+
+      [MessageProperty("slot")]
+      public int Slot { get; set; }
+
+      // SHOULD be TimeSpan type
+      [MessageProperty("eta")]
+      public string Eta { get; set; }
+
+      [MessageProperty("ppd")]
+      public double Ppd { get; set; }
+
+      // SHOULD be TimeSpan type
+      [MessageProperty("tpf")]
+      public string Tpf { get; set; }
+
+      [MessageProperty("basecredit")]
+      public double BaseCredit { get; set; }
+
+      [MessageProperty("creditestimate")]
+      public double CreditEstimate { get; set; }
+
+      #endregion
    }
 }

@@ -8,6 +8,7 @@ using HFM.Framework;
 
 namespace HFM.Client
 {
+   [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix")]
    public interface INetworkStream : IDisposable
    {
       #region Properties
@@ -58,6 +59,7 @@ namespace HFM.Client
 
       void Flush();
 
+      [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
       object GetLifetimeService();
 
       object InitializeLifetimeService();
