@@ -17,28 +17,48 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System;
+
 using HFM.Client.DataTypes;
 
 namespace HFM.Client
 {
    public class FahClient : MessageCache
    {
+      /// <summary>
+      /// Create a FahClient.
+      /// </summary>
+      public FahClient()
+         : this(new TcpClientFactory())
+      {
+
+      }
+
+      /// <summary>
+      /// Create a FahClient.
+      /// </summary>
+      public FahClient(ITcpClientFactory tcpClientFactory)
+         : base(tcpClientFactory)
+      {
+
+      }
+
       public T GetMessage<T>() where T : TypedMessage
       {
-         if (typeof(T).Equals(typeof(ClientInfo)))
-         {
-            var jsonMessage = GetJsonMessage(JsonMessageKey.Info);
-            if (jsonMessage != null)
-            {
-               return ClientInfo.Parse(jsonMessage) as T;
-            }
-         }
-         else if (typeof(T).Equals(typeof(Heartbeat)))
+         if (typeof(T).Equals(typeof(Heartbeat)))
          {
             var jsonMessage = GetJsonMessage(JsonMessageKey.Heartbeat);
             if (jsonMessage != null)
             {
                return Heartbeat.Parse(jsonMessage) as T;
+            }
+         }
+         else if (typeof(T).Equals(typeof(Info)))
+         {
+            var jsonMessage = GetJsonMessage(JsonMessageKey.Info);
+            if (jsonMessage != null)
+            {
+               return Info.Parse(jsonMessage) as T;
             }
          }
          else if (typeof(T).Equals(typeof(Options)))
@@ -64,6 +84,31 @@ namespace HFM.Client
             {
                return Slots.Parse(jsonMessage) as T;
             }
+         }
+
+         return null;
+      }
+
+      protected override void OnMessageUpdated(MessageUpdatedEventArgs e)
+      {
+         e.Type = MapKeyToType(e.Key);
+         base.OnMessageUpdated(e);
+      }
+
+      private static Type MapKeyToType(string key)
+      {
+         switch (key)
+         {
+            case JsonMessageKey.Heartbeat:
+               return typeof(Heartbeat);
+            case JsonMessageKey.Info:
+               return typeof(Info);
+            case JsonMessageKey.Options:
+               return typeof(Options);
+            case JsonMessageKey.QueueInfo:
+               return typeof(Queue);
+            case JsonMessageKey.SlotInfo:
+               return typeof(Slots);
          }
 
          return null;

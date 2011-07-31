@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Client Info Data Class Tests
+ * HFM.NET - Info Data Class Tests
  * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ namespace HFM.Client.Tests
       public void ParseTest1()
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\info.txt");
-         var info = ClientInfo.Parse(MessageCache.GetNextJsonMessage(ref message));
+         var info = Info.Parse(MessageCache.GetNextJsonMessage(ref message));
          Assert.AreEqual("http://folding.stanford.edu/", info.Client.Website);
          Assert.AreEqual("(c) 2009,2010 Stanford University", info.Client.Copyright);
          Assert.AreEqual("Joseph Coffland <joseph@cauldrondevelopment.com>", info.Client.Author);

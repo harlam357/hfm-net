@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Client Info Data Class
+ * HFM.NET - Info Data Class
  * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -24,9 +24,9 @@ using Newtonsoft.Json.Linq;
 
 namespace HFM.Client.DataTypes
 {
-   public class ClientInfo : TypedMessage
+   public class Info : TypedMessage
    {
-      private ClientInfo()
+      private Info()
       {
          Client = new Client();
          Build = new Build();
@@ -47,16 +47,16 @@ namespace HFM.Client.DataTypes
       #endregion
 
       /// <summary>
-      /// Create a ClientInfo object from the given JsonMessage.
+      /// Create a Info object from the given JsonMessage.
       /// </summary>
       /// <param name="message">Message object containing JSON value and meta-data.</param>
       /// <exception cref="ArgumentNullException">Throws if message parameter is null.</exception>
-      public static ClientInfo Parse(JsonMessage message)
+      public static Info Parse(JsonMessage message)
       {
          if (message == null) throw new ArgumentNullException("message");
 
-         var clientInfo = new ClientInfo();
-         var propertySetter = new MessagePropertySetter(clientInfo);
+         var info = new Info();
+         var propertySetter = new MessagePropertySetter(info);
          foreach (var token in JArray.Parse(message.Value))
          {
             if (!token.HasValues)
@@ -82,8 +82,8 @@ namespace HFM.Client.DataTypes
                }
             }
          }
-         clientInfo.SetMessageValues(message);
-         return clientInfo;
+         info.SetMessageValues(message);
+         return info;
       }      
    }
 
