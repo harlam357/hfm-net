@@ -24,7 +24,7 @@ using NUnit.Framework;
 
 using HFM.Client.DataTypes;
 
-namespace HFM.Client.Tests
+namespace HFM.Client.Tests.DataTypes
 {
    [TestFixture]
    public class OptionsTests
