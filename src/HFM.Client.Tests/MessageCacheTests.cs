@@ -54,10 +54,14 @@ namespace HFM.Client.Tests
 
             var buffer = messageCache.InternalBuffer;
             _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
-               new Func<byte[], int, int, int>(ConnectionTests.FillBufferForSocketTimerElapsedTest));
+               new Func<byte[], int, int, int>(ConnectionTests.FillBufferWithTestData));
 
+            MessageUpdatedEventArgs e = null;
+            messageCache.MessageUpdated += (sender, args) => e = args;
             messageCache.SocketTimerElapsed(null, null);
 
+            Assert.AreEqual("units", e.Key);
+            Assert.IsNull(e.Type);
             Assert.IsNotNull(messageCache.GetJsonMessage(JsonMessageKey.QueueInfo));
          }
 

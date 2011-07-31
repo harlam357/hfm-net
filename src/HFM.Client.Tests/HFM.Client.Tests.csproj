@@ -58,9 +58,10 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="ClientInfoTests.cs" />
     <Compile Include="ConnectionTests.cs" />
+    <Compile Include="FahClientTests.cs" />
     <Compile Include="HeartbeatTests.cs" />
+    <Compile Include="InfoTests.cs" />
     <Compile Include="MessageCacheTests.cs" />
     <Compile Include="OptionsTests.cs" />
     <Compile Include="QueueTests.cs" />

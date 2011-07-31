@@ -229,14 +229,6 @@ namespace HFM.Client
       /// </summary>
       public const string Heartbeat = "heartbeat";
       /// <summary>
-      /// Log Restart Message Key
-      /// </summary>
-      public const string LogRestart = "log-restart";
-      /// <summary>
-      /// Log Update Message Key
-      /// </summary>
-      public const string LogUpdate = "log-update";
-      /// <summary>
       /// Info Message Key
       /// </summary>
       public const string Info = "info";
@@ -249,15 +241,26 @@ namespace HFM.Client
       /// </summary>
       public const string QueueInfo = "units";
       /// <summary>
+      /// Slot Info Message Key
+      /// </summary>
+      public const string SlotInfo = "slots";
+
+      /// <summary>
+      /// Log Restart Message Key
+      /// </summary>
+      public const string LogRestart = "log-restart";
+      /// <summary>
+      /// Log Update Message Key
+      /// </summary>
+      public const string LogUpdate = "log-update";
+      
+      
+      /// <summary>
       /// Simulation Info Message Key
       /// </summary>
       /// <remarks>This message is in response to a command that takes a slot id argument.
       /// Will probably need to save messages for each slot requested in a dictionary.</remarks>
       public const string SimulationInfo = "simulation-info";
-      /// <summary>
-      /// Slot Info Message Key
-      /// </summary>
-      public const string SlotInfo = "slots";
       /// <summary>
       /// Slot Options Message Key
       /// </summary>

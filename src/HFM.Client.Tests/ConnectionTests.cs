@@ -183,8 +183,8 @@ namespace HFM.Client.Tests
       internal static void Connect(Connection connection, ITcpClient tcpClient, INetworkStream stream)
       {
          SetupSuccessfulConnectionExpectations(tcpClient, stream);
-         // set to 10 seconds so the update loop never gets a chance to fire
-         connection.ReceiveLoopTime = 10000;
+         // set to 5 minutes so the update loop never gets a chance to fire
+         connection.ReceiveLoopTime = 300000;
          connection.Connect("server", 10000, "password");
       }
 
@@ -361,7 +361,7 @@ namespace HFM.Client.Tests
 
             var buffer = connection.InternalBuffer;
             _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
-               new Func<byte[], int, int, int>(FillBufferForSocketTimerElapsedTest));
+               new Func<byte[], int, int, int>(FillBufferWithTestData));
 
             connection.SocketTimerElapsed(null, null);
 
@@ -388,7 +388,7 @@ namespace HFM.Client.Tests
 
             var buffer = connection.InternalBuffer;
             _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
-               new Func<byte[], int, int, int>(FillBufferForSocketTimerElapsedTest));
+               new Func<byte[], int, int, int>(FillBufferWithTestData));
 
             connection.SocketTimerElapsed(null, null);
 
@@ -449,7 +449,7 @@ namespace HFM.Client.Tests
          _stream.VerifyAllExpectations();
       }
 
-      internal static int FillBufferForSocketTimerElapsedTest(byte[] buffer, int offset, int size)
+      internal static int FillBufferWithTestData(byte[] buffer, int offset, int size)
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\units.txt");
          var messageBytes = Encoding.ASCII.GetBytes(message);
