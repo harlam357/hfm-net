@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 
 using HFM.Client.DataTypes;
@@ -33,7 +34,16 @@ namespace HFM.Client
       /// <summary>
       /// Fired when a new or updated message is received.
       /// </summary>
-      public event EventHandler MessagesUpdated;
+      public event EventHandler<MessageUpdatedEventArgs> MessageUpdated;
+
+      #endregion
+
+      #region Constants
+
+      private const string LineFeed = "\n";
+      private const string CarriageReturnLineFeed = "\r\n";
+      private const string PyonHeader = "PyON 1 ";
+      private const string PyonFooter = "---";
 
       #endregion
 
@@ -50,6 +60,16 @@ namespace HFM.Client
       /// Create a Server Message Cache.
       /// </summary>
       public MessageCache()
+         : this(new TcpClientFactory())
+      {
+
+      }
+
+      /// <summary>
+      /// Create a Server Message Cache.
+      /// </summary>
+      public MessageCache(ITcpClientFactory tcpClientFactory)
+         : base(tcpClientFactory)
       {
          _readBuffer = new StringBuilder();
          _messages = new Dictionary<string, JsonMessage>();
@@ -81,25 +101,14 @@ namespace HFM.Client
          _readBuffer.Append(GetBuffer());
          string bufferValue = _readBuffer.ToString();
 
-         bool messagesUpdated = false;
          JsonMessage json;
          while ((json = GetNextJsonMessage(ref bufferValue)) != null)
          {
             UpdateMessageCache(json);
-            messagesUpdated = true;
+            OnMessageUpdated(new MessageUpdatedEventArgs(json.Key));
          }
          _readBuffer.Clear();
          _readBuffer.Append(bufferValue);
-
-         if (messagesUpdated) OnMessagesUpdated(EventArgs.Empty);
-      }
-
-      protected virtual void OnMessagesUpdated(EventArgs e)
-      {
-         if (MessagesUpdated != null)
-         {
-            MessagesUpdated(this, e);
-         }
       }
 
       /// <summary>
@@ -109,35 +118,26 @@ namespace HFM.Client
       /// <returns>Message or null if no message is available in the buffer.</returns>
       internal static JsonMessage GetNextJsonMessage(ref string buffer)
       {
-         Debug.Assert(buffer != null);
-
-         const string pyonHeader = "PyON 1 ";
-         const char lineFeed = '\n';
-         const string pyonFooter1 = "---\n";
-         const string pyonFooter2 = "---";
+         if (buffer == null) return null;
 
          // find the header
-         int messageIndex = buffer.IndexOf(pyonHeader);
+         int messageIndex = buffer.IndexOf(PyonHeader, StringComparison.Ordinal);
          if (messageIndex < 0)
          {
             return null;
          }
          // set starting message index
-         messageIndex += pyonHeader.Length;
+         messageIndex += PyonHeader.Length;
 
-         // find the first line feed character after the header
-         int startIndex = buffer.IndexOf(lineFeed, messageIndex);
+         // find the first CrLf or Lf character after the header
+         int startIndex = FindStartIndex(buffer, messageIndex);
          if (startIndex < 0) return null;
 
          // find the footer
-         int endIndex = buffer.IndexOf(pyonFooter1, startIndex);
+         int endIndex = FindEndIndex(buffer, startIndex);
          if (endIndex < 0)
          {
-            endIndex = buffer.IndexOf(pyonFooter2, startIndex);
-            if (endIndex < 0)
-            {
-               return null;
-            }
+            return null;
          }
 
          // create the message and set received time stamp
@@ -148,47 +148,78 @@ namespace HFM.Client
          // get the PyON message
          string pyon = buffer.Substring(startIndex, endIndex - startIndex);
          // replace PyON values with JSON values
-         //message.Value = pyon.Replace("[\n", String.Empty).Replace("]\n", String.Empty).Replace(": None", ": null");
          message.Value = pyon.Replace(": None", ": null");
 
          // set the index so we know where to trim the string (end plus footer length)
-         int nextStartIndex = endIndex + pyonFooter1.Length;
+         int nextStartIndex = endIndex + PyonFooter.Length;
          // if more buffer is available set it and return, otherwise set the buffer empty
          buffer = nextStartIndex < buffer.Length ? buffer.Substring(nextStartIndex) : String.Empty;
 
          return message;
       }
 
+      private static int FindStartIndex(string buffer, int messageIndex)
+      {
+         int index = buffer.IndexOf(CarriageReturnLineFeed, messageIndex);
+         return index >= 0 ? index : buffer.IndexOf(LineFeed, messageIndex);
+      }
+
+      private static int FindEndIndex(string buffer, int startIndex)
+      {
+         int index = buffer.IndexOf(PyonFooter + CarriageReturnLineFeed, startIndex, StringComparison.Ordinal);
+         if (index >= 0)
+         {
+            return index;
+         }
+
+         index = buffer.IndexOf(PyonFooter + LineFeed, startIndex, StringComparison.Ordinal);
+         if (index >= 0)
+         {
+            return index;
+         }
+
+         index = buffer.IndexOf(PyonFooter, startIndex, StringComparison.Ordinal);
+         if (index >= 0)
+         {
+            return index;
+         }
+
+         return -1;
+      }
+
       private void UpdateMessageCache(JsonMessage message)
       {
-         switch (message.Key)
-         {
-            // log text will need the platform specific new line character(s) set
-            // i.e. message.Value.Replace("\\" + "n", Environment.NewLine);
+         _messages[message.Key] = message;
+         OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
+            "Received Message: {0}", message.Key), TraceLevel.Info));
+      }
 
-            case JsonMessageKey.LogRestart:
-               _messages[JsonMessageKey.Log] = new JsonMessage { Key = JsonMessageKey.Log, Value = message.Value, Received = DateTime.UtcNow };
-               Debug.WriteLine("received " + JsonMessageKey.LogRestart);
-               break;
-            case JsonMessageKey.LogUpdate:
-               if (_messages.ContainsKey(JsonMessageKey.Log))
-               {
-                  _messages[JsonMessageKey.Log] = new JsonMessage { Key = JsonMessageKey.Log, Value = _messages[JsonMessageKey.Log] + message.Value, Received = DateTime.UtcNow };
-               }
-               else
-               {
-                  _messages[JsonMessageKey.Log] = new JsonMessage { Key = JsonMessageKey.Log, Value = message.Value, Received = DateTime.UtcNow };
-               }
-               Debug.WriteLine("received " + JsonMessageKey.LogUpdate);
-               break;
-            default:
-               _messages[message.Key] = message;
-               Debug.WriteLine("received " + message.Key);
-               break;
+      protected virtual void OnMessageUpdated(MessageUpdatedEventArgs e)
+      {
+         if (MessageUpdated != null)
+         {
+            MessageUpdated(this, e);
          }
       }
 
       #endregion
+   }
+
+   public class MessageUpdatedEventArgs : EventArgs
+   {
+      /// <summary>
+      /// Messgae key that was updated.
+      /// </summary>
+      public string Key { get; private set; }
+      /// <summary>
+      /// Messgae type that was updated.
+      /// </summary>
+      public Type Type { get; internal set; }
+
+      public MessageUpdatedEventArgs(string key)
+      {
+         Key = key;
+      }
    }
 
    public static class JsonMessageKey
@@ -200,15 +231,11 @@ namespace HFM.Client
       /// <summary>
       /// Log Restart Message Key
       /// </summary>
-      internal const string LogRestart = "log-restart";
+      public const string LogRestart = "log-restart";
       /// <summary>
       /// Log Update Message Key
       /// </summary>
-      internal const string LogUpdate = "log-update";
-      /// <summary>
-      /// Log Message Key (aggregated log text - this key is specific to the HFM.Client API)
-      /// </summary>
-      public const string Log = "log";
+      public const string LogUpdate = "log-update";
       /// <summary>
       /// Info Message Key
       /// </summary>
