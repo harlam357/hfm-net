@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
@@ -101,9 +102,22 @@ namespace HFM.Client.DataTypes
          get { return _name; }
       }
 
+      private readonly Type _converterType;
+
+      public Type ConverterType
+      {
+         get { return _converterType; }
+      }
+
       public MessagePropertyAttribute(string name)
       {
          _name = name;
+      }
+
+      public MessagePropertyAttribute(string name, Type converterType)
+      {
+         _name = name;
+         _converterType = converterType;
       }
    }
 
@@ -120,19 +134,27 @@ namespace HFM.Client.DataTypes
 
       internal void SetProperty(JProperty jProperty)
       {
-         var classProperty = GetProperty(jProperty.Name);
-         if (classProperty == null)
+         if (jProperty == null) return;
+
+         var properties = GetProperties(jProperty.Name);
+         if (properties.Count() == 0)
          {
             return;
          }
 
          if (jProperty.Value.Type.Equals(JTokenType.String))
          {
-            classProperty.SetValue(_message, Convert.ChangeType((string)jProperty, classProperty.PropertyType, CultureInfo.InvariantCulture));
+            foreach (var classProperty in properties)
+            {
+               SetPropertyValue(classProperty, (string)jProperty);
+            }
          }
          else if (jProperty.Value.Type.Equals(JTokenType.Integer))
          {
-            classProperty.SetValue(_message, (int)jProperty);
+            foreach (var classProperty in properties)
+            {
+               classProperty.SetValue(_message, (int)jProperty);
+            }
          }
          else if (jProperty.Value.Type.Equals(JTokenType.Object))
          {
@@ -150,28 +172,68 @@ namespace HFM.Client.DataTypes
 
       internal void SetProperty(string key, string value)
       {
-         var classProperty = GetProperty(key);
-         if (classProperty == null)
+         if (key == null) return;
+
+         var properties = GetProperties(key);
+         if (properties.Count() == 0)
          {
             return;
          }
 
-         classProperty.SetValue(_message, Convert.ChangeType(value, classProperty.PropertyType, CultureInfo.InvariantCulture));
+         foreach (var classProperty in properties)
+         {
+            SetPropertyValue(classProperty, value);
+         }
+      }
+
+      private void SetPropertyValue(PropertyDescriptor classProperty, string value)
+      {
+         try
+         {
+            IConversionProvider conversionProvider = GetConversionProvider(classProperty);
+            if (conversionProvider != null)
+            {
+               classProperty.SetValue(_message, conversionProvider.Convert(value));
+            }
+            else
+            {
+               classProperty.SetValue(_message, Convert.ChangeType(value, classProperty.PropertyType, CultureInfo.InvariantCulture));
+            }
+         }
+         catch (FormatException)
+         {
+            // TODO: Log or make a list of these conversion errors
+         }
       }
 
       internal object GetPropertyValue(string key)
       {
-         var classProperty = GetProperty(key);
+         var classProperty = GetProperties(key).FirstOrDefault();
          return classProperty == null ? null : classProperty.GetValue(_message);
       }
 
-      private PropertyDescriptor GetProperty(string key)
+      private IEnumerable<PropertyDescriptor> GetProperties(string key)
       {
          return (from PropertyDescriptor classProperty in _properties
                  let messageProperty = (MessagePropertyAttribute)classProperty.Attributes[typeof(MessagePropertyAttribute)]
                  where messageProperty != null
                  where messageProperty.Name == key
-                 select classProperty).FirstOrDefault();
+                 select classProperty);
       }
+
+      private static IConversionProvider GetConversionProvider(MemberDescriptor classProperty)
+      {
+         Type converterType = ((MessagePropertyAttribute)classProperty.Attributes[typeof(MessagePropertyAttribute)]).ConverterType;
+         if (converterType != null && converterType.GetInterface("IConversionProvider") != null)
+         {
+            return (IConversionProvider)Activator.CreateInstance(converterType);
+         }
+         return null;
+      }
+   }
+
+   public interface IConversionProvider
+   {
+      object Convert(string input);
    }
 }

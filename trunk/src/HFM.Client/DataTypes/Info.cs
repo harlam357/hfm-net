@@ -96,7 +96,6 @@ namespace HFM.Client.DataTypes
 
       #region Properties
 
-      // could be Url type
       [MessageProperty("Website")]
       public string Website { get; set; }
 
@@ -133,11 +132,40 @@ namespace HFM.Client.DataTypes
       [MessageProperty("Time")]
       public string Time { get; set; }
 
-      //TODO: parse DateTime value from Date and Time properties
-      //public DateTime DateTime
+      #region BuildDateTime Property
+
+      //public DateTime BuildDateTime
       //{ 
-      //   get { return DateTime.MinValue; }
+      //   get { return GetDateTime(); }
       //}
+
+      //private DateTime? _dateTime;
+
+      //private DateTime GetDateTime()
+      //{
+      //   if (_dateTime == null)
+      //   {
+      //      if (Date != null && Time != null)
+      //      {
+      //         try
+      //         {
+      //            _dateTime = DateTime.ParseExact(String.Concat(Date, " ", Time), "MMM  d yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+      //         }
+      //         catch (FormatException)
+      //         {
+      //            _dateTime = DateTime.MinValue;
+      //         }
+      //      }
+      //      else
+      //      {
+      //         _dateTime = DateTime.MinValue;
+      //      }
+      //   }
+
+      //   return _dateTime.Value;
+      //}
+
+      #endregion
 
       [MessageProperty("SVN Rev")]
       public int SvnRev { get; set; }
@@ -163,6 +191,26 @@ namespace HFM.Client.DataTypes
       #endregion
    }
 
+   // ReSharper disable InconsistentNaming
+
+   //public enum OperatingSystemType
+   //{
+   //   Unknown,
+   //   Windows,
+   //   WindowsXP,
+   //   WindowsXPx64,
+   //   Vista32,
+   //   Vista64,
+   //   Windows7x32,
+   //   Windows7x64,
+   //   Linux,
+   //   OSX
+
+   //   // TODO: Expand Linux and OSX members if necessary
+   //}
+
+   // ReSharper restore InconsistentNaming
+
    public class SystemInfo
    {
       internal SystemInfo()
@@ -175,11 +223,8 @@ namespace HFM.Client.DataTypes
       [MessageProperty("OS")]
       public string OperatingSystem { get; set; }
 
-      //TODO: parse OperatingSystemEnum value from OperatingSystem property
-      //public enum OperatingSystemEnum
-      //{
-      //   get { return ???; }
-      //}
+      //[MessageProperty("OS", typeof(OperatingSystemConverter))]
+      //public OperatingSystemType OperatingSystemEnum { get; set; }
 
       [MessageProperty("CPU")]
       public string Cpu { get; set; }
@@ -199,14 +244,22 @@ namespace HFM.Client.DataTypes
       [MessageProperty("Memory")]
       public string Memory { get; set; }
 
+      //[MessageProperty("Memory", typeof(MemoryValueConverter))]
+      //public double MemoryValue { get; set; }
+
       [MessageProperty("Free Memory")]
       public string FreeMemory { get; set; }
+
+      //[MessageProperty("Free Memory", typeof(MemoryValueConverter))]
+      //public double FreeMemoryValue { get; set; }
 
       [MessageProperty("Threads")]
       public string ThreadType { get; set; }
 
       [MessageProperty("GPUs")]
       public int GpuCount { get; set; }
+
+      //TODO: parse GpuEnum value from GpuId properties
 
       [MessageProperty("GPU 0")]
       public string GpuId0 { get; set; }
@@ -258,4 +311,57 @@ namespace HFM.Client.DataTypes
 
       #endregion
    }
+
+   #region IConversionProvider Classes
+
+   //public sealed class MemoryValueConverter : IConversionProvider
+   //{
+   //   public object Convert(string input)
+   //   {
+   //      int gigabyteIndex = input.IndexOf("GiB");
+   //      if (gigabyteIndex > 0)
+   //      {
+   //         double gigabytes = Double.Parse(input.Substring(0, gigabyteIndex));
+   //         return gigabytes;
+   //      }
+
+   //      return 0;
+   //   }
+   //}
+
+   //public sealed class OperatingSystemConverter : IConversionProvider
+   //{
+   //   public object Convert(string input)
+   //   {
+   //      OperatingSystemType os = OperatingSystemType.Unknown;
+
+   //      if (input.Contains("Windows"))
+   //      {
+   //         os = OperatingSystemType.Windows;
+
+   //         #region Detect Specific Windows Version
+
+   //         switch (input)
+   //         {
+   //            case "Microsoft(R) Windows(R) XP Professional x64 Edition":
+   //               os = OperatingSystemType.WindowsXPx64;
+   //               break;
+   //         }
+
+   //         #endregion
+   //      }
+   //      else if (input.Contains("Linux"))
+   //      {
+   //         os = OperatingSystemType.Linux;
+   //      }
+   //      else if (input.Contains("OSX"))
+   //      {
+   //         os = OperatingSystemType.OSX;
+   //      }
+
+   //      return os;
+   //   }
+   //}
+
+   #endregion
 }
