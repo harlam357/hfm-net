@@ -60,5 +60,12 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(443, unitCollection[0].BaseCredit);
          Assert.AreEqual(443, unitCollection[0].CreditEstimate);
       }
+
+      [Test]
+      [ExpectedException(typeof(ArgumentNullException))]
+      public void ParseNullArgumentTest()
+      {
+         UnitCollection.Parse(null);
+      }
    }
 }

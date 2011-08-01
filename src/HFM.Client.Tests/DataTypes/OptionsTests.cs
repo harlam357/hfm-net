@@ -137,5 +137,12 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("harlam357", options.User);
          Assert.AreEqual(5, options.Verbosity);
       }
+
+      [Test]
+      [ExpectedException(typeof(ArgumentNullException))]
+      public void ParseNullArgumentTest()
+      {
+         Options.Parse(null);
+      }
    }
 }

@@ -63,7 +63,7 @@ namespace HFM.Client.Tests
             fahClient.MessageUpdated += (sender, args) => e = args;
             fahClient.SocketTimerElapsed(null, null);
 
-            Assert.AreEqual("heartbeat", e.Key);
+            Assert.AreEqual(JsonMessageKey.Heartbeat, e.Key);
             Assert.AreEqual(typeof(Heartbeat), e.DataType);
             var heartbeat = fahClient.GetMessage<Heartbeat>();
             Assert.IsNotNull(heartbeat);
@@ -99,7 +99,7 @@ namespace HFM.Client.Tests
             fahClient.MessageUpdated += (sender, args) => e = args;
             fahClient.SocketTimerElapsed(null, null);
 
-            Assert.AreEqual("info", e.Key);
+            Assert.AreEqual(JsonMessageKey.Info, e.Key);
             Assert.AreEqual(typeof(Info), e.DataType);
             var info = fahClient.GetMessage<Info>();
             Assert.IsNotNull(info);
@@ -145,7 +145,7 @@ namespace HFM.Client.Tests
             fahClient.MessageUpdated += (sender, args) => e = args;
             fahClient.SocketTimerElapsed(null, null);
 
-            Assert.AreEqual("options", e.Key);
+            Assert.AreEqual(JsonMessageKey.Options, e.Key);
             Assert.AreEqual(typeof(Options), e.DataType);
             var options = fahClient.GetMessage<Options>();
             Assert.IsNotNull(options);
@@ -187,6 +187,68 @@ namespace HFM.Client.Tests
             bytesRead++;
          }
          return bytesRead;
+      }
+
+      [Test]
+      public void GetSlotCollectionTest()
+      {
+         using (var fahClient = new FahClient(CreateClientFactory()))
+         {
+            Connect(fahClient);
+
+            var buffer = fahClient.InternalBuffer;
+            _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
+               new Func<byte[], int, int, int>(FillBufferWithSlotsData1));
+
+            MessageUpdatedEventArgs e = null;
+            fahClient.MessageUpdated += (sender, args) => e = args;
+            fahClient.SocketTimerElapsed(null, null);
+
+            Assert.AreEqual(JsonMessageKey.SlotInfo, e.Key);
+            Assert.AreEqual(typeof(SlotCollection), e.DataType);
+            var slotCollection = fahClient.GetMessage<SlotCollection>();
+            Assert.IsNotNull(slotCollection);
+            Assert.AreEqual(1, slotCollection.Count);
+         }
+
+         _tcpClient.VerifyAllExpectations();
+         _stream.VerifyAllExpectations();
+      }
+
+      private static int FillBufferWithSlotsData1(byte[] buffer, int offset, int size)
+      {
+         return ReadBytes("..\\..\\..\\TestFiles\\Client_v7_1\\slots.txt", buffer, buffer.Length * 0);
+      }
+
+      [Test]
+      public void GetUnitCollectionTest()
+      {
+         using (var fahClient = new FahClient(CreateClientFactory()))
+         {
+            Connect(fahClient);
+
+            var buffer = fahClient.InternalBuffer;
+            _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
+               new Func<byte[], int, int, int>(FillBufferWithUnitsData1));
+
+            MessageUpdatedEventArgs e = null;
+            fahClient.MessageUpdated += (sender, args) => e = args;
+            fahClient.SocketTimerElapsed(null, null);
+
+            Assert.AreEqual(JsonMessageKey.QueueInfo, e.Key);
+            Assert.AreEqual(typeof(UnitCollection), e.DataType);
+            var unitCollection = fahClient.GetMessage<UnitCollection>();
+            Assert.IsNotNull(unitCollection);
+            Assert.AreEqual(1, unitCollection.Count);
+         }
+
+         _tcpClient.VerifyAllExpectations();
+         _stream.VerifyAllExpectations();
+      }
+
+      private static int FillBufferWithUnitsData1(byte[] buffer, int offset, int size)
+      {
+         return ReadBytes("..\\..\\..\\TestFiles\\Client_v7_1\\units.txt", buffer, buffer.Length * 0);
       }
    }
 }

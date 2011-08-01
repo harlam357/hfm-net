@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System;
 using System.IO;
 
 using NUnit.Framework;
@@ -38,6 +39,13 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("RUNNING", slotCollection[0].Status);
          Assert.AreEqual("smp:4", slotCollection[0].Description);
          Assert.IsTrue(slotCollection[0].Options.PauseOnStart);
+      }
+
+      [Test]
+      [ExpectedException(typeof(ArgumentNullException))]
+      public void ParseNullArgumentTest()
+      {
+         SlotCollection.Parse(null);
       }
    }
 }

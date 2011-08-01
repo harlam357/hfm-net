@@ -191,7 +191,7 @@ namespace HFM.Client
       {
          _messages[message.Key] = message;
          OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
-            "Received Message: {0}", message.Key), TraceLevel.Info));
+            "Received message: {0}", message.Key), TraceLevel.Info));
       }
 
       /// <summary>
