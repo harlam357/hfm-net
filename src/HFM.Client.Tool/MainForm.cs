@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
@@ -29,10 +30,16 @@ namespace HFM.Client.Tool
    {
       private readonly FahClient _fahClient;
 
+      private int _totalBytesSent;
+      private int _totalBytesReceived;
+
       public MainForm()
       {
          _fahClient = new FahClient();
          _fahClient.MessageUpdated += FahClientMessageUpdated;
+         _fahClient.ConnectedChanged += FahClientConnectedChanged;
+         _fahClient.DataLengthSent += FahClientDataLengthSent;
+         _fahClient.DataLengthReceived += FahClientDataLengthReceived;
          _fahClient.StatusMessage += FahClientStatusMessage;
 
          InitializeComponent();
@@ -76,6 +83,8 @@ namespace HFM.Client.Tool
          }
 
          StatusLabel.Text = text;
+         StatusMessageListBox.Items.Add(text);
+         StatusMessageListBox.SelectedIndex = StatusMessageListBox.Items.Count - 1;
       }
 
       private void ConnectButtonClick(object sender, EventArgs e)
@@ -121,6 +130,70 @@ namespace HFM.Client.Tool
          }
 
          _fahClient.SendCommand(CommandTextBox.Text);
+      }
+
+      private void FahClientConnectedChanged(object sender, ConnectedChangedEventArgs e)
+      {
+         SetConnectionButtons(e.Connected);
+      }
+
+      private void SetConnectionButtons(bool connected)
+      {
+         if (InvokeRequired)
+         {
+            Invoke(new Action<bool>(SetConnectionButtons), connected);
+            return;
+         }
+
+         ConnectButton.Enabled = !connected;
+         CloseButton.Enabled = connected;
+      }
+
+      private void ClearMessagesButtonClick(object sender, EventArgs e)
+      {
+         MessageDisplayTextBox.Clear();
+      }
+
+      private void FahClientDataLengthSent(object sender, DataLengthEventArgs e)
+      {
+         unchecked
+         {
+            _totalBytesSent += e.DataLength;
+         }
+         UpdateDataSentValueLabel(String.Format(CultureInfo.CurrentCulture, 
+            "{0:0.0} KBs", _totalBytesSent / 1024.0));
+      }
+
+      private void UpdateDataSentValueLabel(string text)
+      {
+         if (InvokeRequired)
+         {
+            Invoke(new Action<string>(UpdateDataSentValueLabel), text);
+            return;
+         }
+
+         DataSentValueLabel.Text = text;
+      }
+
+      private void FahClientDataLengthReceived(object sender, DataLengthEventArgs e)
+      {
+         unchecked
+         {
+            _totalBytesReceived += e.DataLength;
+         }
+         UpdateDataReceivedValueLabel(String.Format(CultureInfo.CurrentCulture,
+            "{0:0.0} KBs", _totalBytesReceived / 1024.0));
+      }
+
+      private void UpdateDataReceivedValueLabel(string text)
+      {
+         if (InvokeRequired)
+         {
+            Invoke(new Action<string>(UpdateDataReceivedValueLabel), text);
+            return;
+         }
+
+         DataReceivedValueLabel.Text = text;
       }
 
       #region TextBox KeyPress Event Handler (to enforce digits only)

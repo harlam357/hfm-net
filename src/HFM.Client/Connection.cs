@@ -60,6 +60,18 @@ namespace HFM.Client
       /// Fired when a status event occurs.
       /// </summary>
       public event EventHandler<StatusMessageEventArgs> StatusMessage;
+      /// <summary>
+      /// Fired when the Connected property changes.
+      /// </summary>
+      public event EventHandler<ConnectedChangedEventArgs> ConnectedChanged;
+      /// <summary>
+      /// Fired when data is sent to the client.
+      /// </summary>
+      public event EventHandler<DataLengthEventArgs> DataLengthSent;
+      /// <summary>
+      /// Fired when data is received from the client.
+      /// </summary>
+      public event EventHandler<DataLengthEventArgs> DataLengthReceived;
 
       #endregion
 
@@ -252,6 +264,8 @@ namespace HFM.Client
 
             // send authentication
             SendCommand("auth " + password);
+            // send connected event
+            OnConnectedChanged(new ConnectedChangedEventArgs(true)); // maybe use Connected property?
             // send status message
             OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
                "Connected to {0}:{1}", host, port), TraceLevel.Info));
@@ -291,6 +305,8 @@ namespace HFM.Client
          _stream = null;
          // close the actual connection
          _tcpClient.Close();
+         // send connected event
+         OnConnectedChanged(new ConnectedChangedEventArgs(false)); // maybe use Connected property?
          // send status message
          OnStatusMessage(new StatusMessageEventArgs("Connection closed.", TraceLevel.Info));
       }
@@ -316,11 +332,19 @@ namespace HFM.Client
          {
             command += "\n";
          }
-         var buffer = Encoding.ASCII.GetBytes(command);
+         byte[] buffer = Encoding.ASCII.GetBytes(command);
          _stream.BeginWrite(buffer, 0, buffer.Length, null, null);
+         // send data sent event
+         OnDataLengthSent(new DataLengthEventArgs(buffer.Length));
          // send status message
          OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
-            "Sent command: {0}", command), TraceLevel.Info));
+            "Sent command: {0} ({1} bytes)", CleanUpCommandText(command), buffer.Length), TraceLevel.Info));
+      }
+
+      private static string CleanUpCommandText(string command)
+      {
+         Debug.Assert(command != null);
+         return command.Replace("\n", String.Empty);
       }
 
       internal void SocketTimerElapsed(object sender, ElapsedEventArgs e)
@@ -373,6 +397,7 @@ namespace HFM.Client
             {
                _updating = true;
 
+               int totalBytesRead = 0;
                do
                {
                   int bytesRead = _stream.Read(_internalBuffer, 0, _internalBuffer.Length);
@@ -381,8 +406,11 @@ namespace HFM.Client
                      throw new System.IO.IOException("The underlying socket has been closed.");
                   }
                   _readBuffer.Append(Encoding.ASCII.GetString(_internalBuffer.Take(bytesRead).ToArray()));
+                  totalBytesRead += bytesRead;
                } 
                while (_stream.DataAvailable);
+               // send data received event
+               OnDataLengthReceived(new DataLengthEventArgs(totalBytesRead));
 #if DEBUG
                System.IO.File.AppendAllText("buffer.txt", _readBuffer.ToString().Replace("\n", Environment.NewLine).Replace("\\n", Environment.NewLine));
 #endif
@@ -447,6 +475,30 @@ namespace HFM.Client
          }
       }
 
+      private void OnConnectedChanged(ConnectedChangedEventArgs e)
+      {
+         if (ConnectedChanged != null)
+         {
+            ConnectedChanged(this, e);
+         }
+      }
+
+      private void OnDataLengthSent(DataLengthEventArgs e)
+      {
+         if (DataLengthSent != null)
+         {
+            DataLengthSent(this, e);
+         }
+      }
+
+      private void OnDataLengthReceived(DataLengthEventArgs e)
+      {
+         if (DataLengthReceived != null)
+         {
+            DataLengthReceived(this, e);
+         }
+      }
+
       #endregion
 
       #region IDisposable Members
@@ -483,35 +535,44 @@ namespace HFM.Client
       #endregion
    }
 
-   public class StatusMessageEventArgs : EventArgs
+   public sealed class StatusMessageEventArgs : EventArgs
    {
       public string Status { get; private set; }
 
       public TraceLevel Level { get; private set; }
 
-      internal StatusMessageEventArgs(string status, TraceLevel level)
+      /// <summary>
+      /// Constructor
+      /// </summary>
+      /// <param name="status">Status Message</param>
+      /// <param name="level">Trace Level</param>
+      /// <exception cref="ArgumentNullException">Throws if 'status' argument is null.</exception>
+      public StatusMessageEventArgs(string status, TraceLevel level)
       {
          if (status == null) throw new ArgumentNullException("status");
 
-         Status = CleanUpStatusMessage(status);
+         Status = status;
          Level = level;
       }
+   }
 
-      private static string CleanUpStatusMessage(string status)
+   public sealed class ConnectedChangedEventArgs : EventArgs
+   {
+      public bool Connected { get; private set; }
+
+      internal ConnectedChangedEventArgs(bool connected)
       {
-         Debug.Assert(status != null);
+         Connected = connected;
+      }
+   }
 
-         int newLine = status.IndexOf(Environment.NewLine, StringComparison.OrdinalIgnoreCase);
-         if (newLine > -1)
-         {
-            return status.Substring(0, newLine);
-         }
-         int lineFeed = status.IndexOf("\n", StringComparison.OrdinalIgnoreCase);
-         if (lineFeed > -1)
-         {
-            return status.Substring(0, lineFeed);
-         }
-         return status;
+   public sealed class DataLengthEventArgs : EventArgs
+   {
+      public int DataLength { get; private set; }
+
+      internal DataLengthEventArgs(int dataLength)
+      {
+         DataLength = dataLength;
       }
    }
 }
