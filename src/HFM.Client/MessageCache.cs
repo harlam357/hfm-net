@@ -105,6 +105,7 @@ namespace HFM.Client
          while ((json = GetNextJsonMessage(ref bufferValue)) != null)
          {
             UpdateMessageCache(json);
+            Debug.WriteLine(String.Format(CultureInfo.CurrentCulture, "{0} length: {1}", json.Key, json.Value.Length));
             OnMessageUpdated(new MessageUpdatedEventArgs(json.Key));
          }
          _readBuffer.Clear();
@@ -166,23 +167,23 @@ namespace HFM.Client
 
       private static int FindEndIndex(string buffer, int startIndex)
       {
-         int index = buffer.IndexOf(PyonFooter + CarriageReturnLineFeed, startIndex, StringComparison.Ordinal);
+         int index = buffer.IndexOf(String.Concat(CarriageReturnLineFeed, PyonFooter, CarriageReturnLineFeed), startIndex, StringComparison.Ordinal);
          if (index >= 0)
          {
             return index;
          }
 
-         index = buffer.IndexOf(PyonFooter + LineFeed, startIndex, StringComparison.Ordinal);
+         index = buffer.IndexOf(String.Concat(LineFeed, PyonFooter, LineFeed), startIndex, StringComparison.Ordinal);
          if (index >= 0)
          {
             return index;
          }
 
-         index = buffer.IndexOf(PyonFooter, startIndex, StringComparison.Ordinal);
-         if (index >= 0)
-         {
-            return index;
-         }
+         //index = buffer.IndexOf(PyonFooter, startIndex, StringComparison.Ordinal);
+         //if (index >= 0)
+         //{
+         //   return index;
+         //}
 
          return -1;
       }

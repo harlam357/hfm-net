@@ -1,23 +1,35 @@
-﻿
+﻿/*
+ * HFM.NET - HFM.Client Extensions Class
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License. See the included file GPLv2.TXT.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
 using System;
 using System.Text;
 
 namespace HFM.Client
 {
-   public static class Extensions
+   internal static class Extensions
    {
       // Note: implemented in .NET 4.0 - remove when upgrading
-      public static void Clear(this StringBuilder sb)
+      internal static void Clear(this StringBuilder sb)
       {
          if (sb == null) throw new ArgumentNullException("sb");
 
          sb.Length = 0;
-      }
-
-      // Note: implemented in .NET 4.0 - remove when upgrading
-      public static bool IsNullOrWhiteSpace(this string value)
-      {
-         return value == null || value.Trim().Length == 0;
       }
    }
 }
