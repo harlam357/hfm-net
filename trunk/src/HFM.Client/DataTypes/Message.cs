@@ -88,7 +88,7 @@ namespace HFM.Client.DataTypes
       /// <filterpriority>2</filterpriority>
       public override string ToString()
       {
-         return String.Format(CultureInfo.InvariantCulture, "Message Key: {0} - Received at: {1}", Key, Received);
+         return String.Format(CultureInfo.CurrentCulture, "Message Key: {0} - Received at: {1}", Key, Received);
       }
    }
 

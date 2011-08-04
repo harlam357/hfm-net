@@ -20,6 +20,7 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Timers;
@@ -37,11 +38,11 @@ namespace HFM.Client
       /// <summary>
       /// Default TcpClient Send Buffer Size
       /// </summary>
-      private const int DefaultSendBufferSize = 8196;
+      private const int DefaultSendBufferSize = 1024 * 8;
       /// <summary>
       /// Default TcpClient Receive Buffer Size
       /// </summary>
-      private const int DefaultReceiveBufferSize = 32768;
+      private const int DefaultReceiveBufferSize = 1024 * 8;
       /// <summary>
       /// Default Connection, Send, and Receive Timeout Length
       /// </summary>
@@ -174,7 +175,7 @@ namespace HFM.Client
       private int _receiveBufferSize = DefaultReceiveBufferSize;
 
       /// <summary>
-      /// Size of incoming data buffer (default - 32k).
+      /// Size of incoming data buffer (default - 8k).
       /// </summary>
       public int ReceiveBufferSize
       {
@@ -253,7 +254,7 @@ namespace HFM.Client
             SendCommand("auth " + password);
             // send status message
             OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
-               "Connected to {0} ({1})", host, port), TraceLevel.Info));
+               "Connected to {0}:{1}", host, port), TraceLevel.Info));
             // start listening for messages
             // from the network stream
             _timer.Start();
@@ -305,7 +306,7 @@ namespace HFM.Client
          // check connection status, callers should make sure they're connected first
          if (!Connected) throw new InvalidOperationException("Client is not connected.");
 
-         if (command.IsNullOrWhiteSpace())
+         if (command == null || command.Trim().Length == 0)
          {
             OnStatusMessage(new StatusMessageEventArgs("No command text given.", TraceLevel.Warning));
             return;
@@ -374,13 +375,17 @@ namespace HFM.Client
 
                do
                {
-                  if (_stream.Read(_internalBuffer, 0, _internalBuffer.Length) == 0)
+                  int bytesRead = _stream.Read(_internalBuffer, 0, _internalBuffer.Length);
+                  if (bytesRead == 0)
                   {
                      throw new System.IO.IOException("The underlying socket has been closed.");
                   }
-                  _readBuffer.Append(Encoding.ASCII.GetString(_internalBuffer));
+                  _readBuffer.Append(Encoding.ASCII.GetString(_internalBuffer.Take(bytesRead).ToArray()));
                } 
                while (_stream.DataAvailable);
+#if DEBUG
+               System.IO.File.AppendAllText("buffer.txt", _readBuffer.ToString().Replace("\n", Environment.NewLine).Replace("\\n", Environment.NewLine));
+#endif
             }
             finally
             {

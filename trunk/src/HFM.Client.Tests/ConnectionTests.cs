@@ -51,9 +51,9 @@ namespace HFM.Client.Tests
             Assert.AreEqual(2000, connection.ConnectTimeout);
             Assert.AreEqual(100, connection.ReceiveLoopTime);
             //Assert.AreEqual(2000, connection.SendTimeout);
-            Assert.AreEqual(8196, connection.SendBufferSize);
+            Assert.AreEqual(1024 * 8, connection.SendBufferSize);
             //Assert.AreEqual(2000, connection.ReceiveTimeout);
-            Assert.AreEqual(32768, connection.ReceiveBufferSize);
+            Assert.AreEqual(1024 * 8, connection.ReceiveBufferSize);
          }
       }
 
