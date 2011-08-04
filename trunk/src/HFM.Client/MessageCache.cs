@@ -105,7 +105,6 @@ namespace HFM.Client
          while ((json = GetNextJsonMessage(ref bufferValue)) != null)
          {
             UpdateMessageCache(json);
-            Debug.WriteLine(String.Format(CultureInfo.CurrentCulture, "{0} length: {1}", json.Key, json.Value.Length));
             OnMessageUpdated(new MessageUpdatedEventArgs(json.Key));
          }
          _readBuffer.Clear();
@@ -192,7 +191,7 @@ namespace HFM.Client
       {
          _messages[message.Key] = message;
          OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
-            "Received message: {0}", message.Key), TraceLevel.Info));
+            "Received message: {0} ({1} bytes)", message.Key, message.Value.Length), TraceLevel.Info));
       }
 
       /// <summary>

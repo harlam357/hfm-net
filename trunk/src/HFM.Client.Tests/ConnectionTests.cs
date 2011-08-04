@@ -140,12 +140,15 @@ namespace HFM.Client.Tests
          {
             SetupSuccessfulConnectionExpectations(_tcpClient, _stream);
 
+            bool connectedChangedFired = false;
             bool statusMessageFired = false;
+            connection.ConnectedChanged += (sender, args) => connectedChangedFired = true;
             connection.StatusMessage += (sender, args) => statusMessageFired = true;
-            // set to 10 seconds so the update loop never gets a chance to fire
-            connection.ReceiveLoopTime = 10000;
+            // set to 5 minutes so the update loop never gets a chance to fire
+            connection.ReceiveLoopTime = 300000;
             connection.Connect("server", 10000, "password");
 
+            Assert.IsTrue(connectedChangedFired);
             Assert.IsTrue(statusMessageFired);
             Assert.IsTrue(connection.UpdateEnabled);
          }
@@ -289,17 +292,26 @@ namespace HFM.Client.Tests
          {
             Connect(connection);
 
+            bool dataLengthSentFired = false;
+            bool statusMessageFired = false;
+            connection.DataLengthSent += (sender, args) => dataLengthSentFired = true;
+            connection.StatusMessage += (sender, args) => statusMessageFired = true;
             var buffer = Encoding.ASCII.GetBytes("command\n");
             _stream.Expect(x => x.BeginWrite(buffer, 0, buffer.Length, null, null)).Return(null);
             connection.SendCommand("command");
+
+            Assert.IsTrue(dataLengthSentFired);
+            Assert.IsTrue(statusMessageFired);
          }
 
          _tcpClient.VerifyAllExpectations();
          _stream.VerifyAllExpectations();
       }
 
+      #region SendCommand - Null, Empty, & Whitespace Tests
+
       [Test]
-      public void SendCommandTest3()
+      public void SendCommandNullTest()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
@@ -317,7 +329,7 @@ namespace HFM.Client.Tests
       }
 
       [Test]
-      public void SendCommandTest4()
+      public void SendCommandEmptyTest()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
@@ -335,7 +347,7 @@ namespace HFM.Client.Tests
       }
 
       [Test]
-      public void SendCommandTest5()
+      public void SendCommandWhitespaceTest()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
@@ -352,6 +364,8 @@ namespace HFM.Client.Tests
          _stream.VerifyAllExpectations();
       }
 
+      #endregion
+
       [Test]
       public void SocketTimerElapsedTest1()
       {
@@ -359,12 +373,15 @@ namespace HFM.Client.Tests
          {
             Connect(connection);
 
+            bool dataLengthReceivedFired = false;
+            connection.DataLengthReceived += (sender, args) => dataLengthReceivedFired = true;
             var buffer = connection.InternalBuffer;
             _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
                new Func<byte[], int, int, int>(FillBufferWithTestData));
 
             connection.SocketTimerElapsed(null, null);
 
+            Assert.IsTrue(dataLengthReceivedFired);
             // check GetBuffer() and DataAvailable
             Assert.IsTrue(connection.DataAvailable);
             string connectionBuffer = connection.GetBuffer(false);

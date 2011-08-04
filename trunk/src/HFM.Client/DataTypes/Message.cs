@@ -55,8 +55,10 @@ namespace HFM.Client.DataTypes
       public override string ToString()
       {
          var sb = new StringBuilder();
-         sb.AppendLine(base.ToString());
+         sb.Append(base.ToString());
+         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, " - Length: {0}", Value.Length));
          sb.AppendLine(Value);
+         sb.AppendLine();
          return sb.ToString();
       }
    }
