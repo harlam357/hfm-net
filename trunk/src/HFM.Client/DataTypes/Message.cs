@@ -144,21 +144,7 @@ namespace HFM.Client.DataTypes
             return;
          }
 
-         if (jProperty.Value.Type.Equals(JTokenType.String))
-         {
-            foreach (var classProperty in properties)
-            {
-               SetPropertyValue(classProperty, (string)jProperty);
-            }
-         }
-         else if (jProperty.Value.Type.Equals(JTokenType.Integer))
-         {
-            foreach (var classProperty in properties)
-            {
-               classProperty.SetValue(_message, (int)jProperty);
-            }
-         }
-         else if (jProperty.Value.Type.Equals(JTokenType.Object))
+         if (jProperty.Value.Type.Equals(JTokenType.Object))
          {
             var propertyValue = GetPropertyValue(jProperty.Name);
             if (propertyValue != null)
@@ -167,6 +153,20 @@ namespace HFM.Client.DataTypes
                foreach (var prop in JObject.Parse(jProperty.Value.ToString()).Properties())
                {
                   propertySetter.SetProperty(prop);
+               }
+            }
+         }
+         else
+         {
+            foreach (var classProperty in properties)
+            {
+               if (jProperty.Value.Type.Equals(JTokenType.String))
+               {
+                  SetPropertyValue(classProperty, (string)jProperty);
+               }
+               else if (jProperty.Value.Type.Equals(JTokenType.Integer))
+               {
+                  SetPropertyValue(classProperty, ((int)jProperty).ToString());
                }
             }
          }
@@ -204,7 +204,9 @@ namespace HFM.Client.DataTypes
                {
                   propertyType = propertyType.GetGenericArguments().First();
                }
+               // ReSharper disable AssignNullToNotNullAttribute
                classProperty.SetValue(_message, Convert.ChangeType(value, propertyType, CultureInfo.InvariantCulture));
+               // ReSharper restore AssignNullToNotNullAttribute
             }
          }
          catch (FormatException)

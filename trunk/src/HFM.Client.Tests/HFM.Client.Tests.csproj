@@ -62,6 +62,7 @@
     <Compile Include="DataTypes\HeartbeatTests.cs" />
     <Compile Include="DataTypes\InfoTests.cs" />
     <Compile Include="DataTypes\OptionsTests.cs" />
+    <Compile Include="DataTypes\SimulationInfoTests.cs" />
     <Compile Include="DataTypes\SlotCollectionTests.cs" />
     <Compile Include="DataTypes\SlotOptionsTests.cs" />
     <Compile Include="DataTypes\UnitCollectionTests.cs" />
