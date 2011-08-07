@@ -63,6 +63,7 @@
     <Compile Include="DataTypes\InfoTests.cs" />
     <Compile Include="DataTypes\OptionsTests.cs" />
     <Compile Include="DataTypes\SlotCollectionTests.cs" />
+    <Compile Include="DataTypes\SlotOptionsTests.cs" />
     <Compile Include="DataTypes\UnitCollectionTests.cs" />
     <Compile Include="FahClientTests.cs" />
     <Compile Include="MessageCacheTests.cs" />

@@ -199,7 +199,12 @@ namespace HFM.Client.DataTypes
             }
             else
             {
-               classProperty.SetValue(_message, Convert.ChangeType(value, classProperty.PropertyType, CultureInfo.InvariantCulture));
+               Type propertyType = classProperty.PropertyType;
+               if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+               {
+                  propertyType = propertyType.GetGenericArguments().First();
+               }
+               classProperty.SetValue(_message, Convert.ChangeType(value, propertyType, CultureInfo.InvariantCulture));
             }
          }
          catch (FormatException)
