@@ -61,11 +61,13 @@
       <Link>CoverageExcludeAttribute.cs</Link>
     </Compile>
     <Compile Include="Connection.cs" />
+    <Compile Include="DataTypes\ConverterTypes.cs" />
     <Compile Include="DataTypes\OptionsTypes.cs" />
     <Compile Include="DataTypes\Heartbeat.cs" />
     <Compile Include="DataTypes\Info.cs" />
     <Compile Include="DataTypes\Message.cs" />
     <Compile Include="DataTypes\Options.cs" />
+    <Compile Include="DataTypes\SimulationInfo.cs" />
     <Compile Include="DataTypes\SlotCollection.cs" />
     <Compile Include="DataTypes\SlotOptions.cs" />
     <Compile Include="DataTypes\UnitCollection.cs" />

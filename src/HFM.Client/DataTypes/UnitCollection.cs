@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text.RegularExpressions;
 
 using Newtonsoft.Json.Linq;
@@ -273,21 +272,21 @@ namespace HFM.Client.DataTypes
       [MessageProperty("assigned")]
       public string Assigned { get; set; }
 
-      [MessageProperty("assigned", typeof(UnitDateTimeConverter))]
+      [MessageProperty("assigned", typeof(DateTimeConverter))]
       public DateTime? AssignedDateTime { get; set; }
 
       // v7.1.25 - has ISO formatted values
       [MessageProperty("timeout")]
       public string Timeout { get; set; }
 
-      [MessageProperty("timeout", typeof(UnitDateTimeConverter))]
+      [MessageProperty("timeout", typeof(DateTimeConverter))]
       public DateTime? TimeoutDateTime { get; set; }
 
       // v7.1.25 - has ISO formatted values
       [MessageProperty("deadline")]
       public string Deadline { get; set; }
 
-      [MessageProperty("deadline", typeof(UnitDateTimeConverter))]
+      [MessageProperty("deadline", typeof(DateTimeConverter))]
       public DateTime? DeadlineDateTime { get; set; }
 
       [MessageProperty("ws")]
@@ -312,6 +311,7 @@ namespace HFM.Client.DataTypes
       [MessageProperty("eta")]
       public string Eta { get; set; }
 
+      // not exactly the same value seen in SimulationInfo.EtaTimeSpan
       [MessageProperty("eta", typeof(UnitTimeSpanConverter))]
       public TimeSpan? EtaTimeSpan { get; set; }
 
@@ -334,14 +334,6 @@ namespace HFM.Client.DataTypes
    }
 
    #region IConversionProvider Classes
-
-   internal sealed class UnitDateTimeConverter : IConversionProvider
-   {
-      public object Convert(string input)
-      {
-         return DateTime.ParseExact(input, "dd/MMM/yyyy-HH:mm:ss", CultureInfo.InvariantCulture);
-      }
-   }
 
    internal sealed class UnitTimeSpanConverter : IConversionProvider
    {
