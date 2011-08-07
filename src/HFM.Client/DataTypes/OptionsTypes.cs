@@ -22,6 +22,8 @@ using System.Globalization;
 
 namespace HFM.Client.DataTypes
 {
+   #region Enumerations
+
    public enum ClientTypeEnum
    {
       Unknown,
@@ -56,6 +58,10 @@ namespace HFM.Client.DataTypes
       Idle,
       Low
    }
+
+   #endregion
+
+   #region IConversionProvider Classes
 
    internal sealed class ClientTypeConverter : IConversionProvider
    {
@@ -130,4 +136,6 @@ namespace HFM.Client.DataTypes
             "Failed to parse core-priority value of '{0}'.", input));
       }
    }
+
+   #endregion
 }

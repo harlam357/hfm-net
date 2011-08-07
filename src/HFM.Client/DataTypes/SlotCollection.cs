@@ -235,6 +235,8 @@ namespace HFM.Client.DataTypes
          SlotOptions = new SlotOptions();
       }
 
+      #region Properties
+
       [MessageProperty("id")]
       public int Id { get; set; }
 
@@ -247,5 +249,7 @@ namespace HFM.Client.DataTypes
 
       [MessageProperty("options")]
       public SlotOptions SlotOptions { get; set; }
+
+      #endregion
    }
 }

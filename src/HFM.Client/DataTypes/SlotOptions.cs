@@ -30,6 +30,8 @@ namespace HFM.Client.DataTypes
          
       }
 
+      #region Properties
+
       [MessageProperty("client-type")]
       public string ClientType { get; set; }
 
@@ -74,6 +76,8 @@ namespace HFM.Client.DataTypes
 
       [MessageProperty("gpu-device-id")]
       public string GpuDeviceId { get; set; }
+
+      #endregion
 
       /// <summary>
       /// Create a SlotOptions object from the given JsonMessage.
