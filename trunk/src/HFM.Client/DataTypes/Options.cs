@@ -25,8 +25,7 @@ namespace HFM.Client.DataTypes
 {
    public class Options : TypedMessage
    {
-      //private Options()
-      internal Options()
+      private Options()
       {
          
       }

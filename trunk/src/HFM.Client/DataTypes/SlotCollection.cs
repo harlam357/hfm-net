@@ -60,6 +60,10 @@ namespace HFM.Client.DataTypes
             slotCollection.Add(slot);
          }
          slotCollection.SetMessageValues(message);
+         foreach (var slot in slotCollection)
+         {
+            slot.SlotOptions.SetMessageValues(message);
+         }
          return slotCollection;
       }
 
@@ -228,7 +232,7 @@ namespace HFM.Client.DataTypes
    {
       internal Slot()
       {
-         Options = new Options();
+         SlotOptions = new SlotOptions();
       }
 
       [MessageProperty("id")]
@@ -242,6 +246,6 @@ namespace HFM.Client.DataTypes
       public string Description { get; set; }
 
       [MessageProperty("options")]
-      public Options Options { get; set; }
+      public SlotOptions SlotOptions { get; set; }
    }
 }

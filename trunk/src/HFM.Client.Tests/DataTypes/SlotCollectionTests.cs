@@ -38,7 +38,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(0, slotCollection[0].Id);
          Assert.AreEqual("RUNNING", slotCollection[0].Status);
          Assert.AreEqual("smp:4", slotCollection[0].Description);
-         Assert.IsTrue(slotCollection[0].Options.PauseOnStart);
+         Assert.AreEqual(true, slotCollection[0].SlotOptions.PauseOnStart);
       }
 
       [Test]
