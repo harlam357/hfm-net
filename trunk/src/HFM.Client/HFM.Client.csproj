@@ -61,6 +61,7 @@
       <Link>CoverageExcludeAttribute.cs</Link>
     </Compile>
     <Compile Include="Connection.cs" />
+    <Compile Include="DataTypes\OptionsTypes.cs" />
     <Compile Include="DataTypes\Heartbeat.cs" />
     <Compile Include="DataTypes\Info.cs" />
     <Compile Include="DataTypes\Message.cs" />
