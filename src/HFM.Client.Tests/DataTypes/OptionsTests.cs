@@ -39,8 +39,9 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(false, options.CaptureSockets);
          Assert.AreEqual(15, options.Checkpoint);
          Assert.AreEqual(false, options.Child);
-         Assert.AreEqual("STDCLI", options.ClientSubtype);
+         Assert.AreEqual("STDCLI", options.ClientSubType);
          Assert.AreEqual("normal", options.ClientType);
+         Assert.AreEqual(ClientTypeEnum.Normal, options.ClientTypeEnum);
          Assert.AreEqual("0.0.0.0", options.CommandAddress);
          Assert.AreEqual("127.0.0.1", options.CommandAllow);
          Assert.AreEqual("127.0.0.1", options.CommandAllowNoPass);
@@ -54,6 +55,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(null, options.CoreKey);
          Assert.AreEqual(null, options.CorePrep);
          Assert.AreEqual("idle", options.CorePriority);
+         Assert.AreEqual(CorePriorityEnum.Idle, options.CorePriorityEnum);
          Assert.AreEqual(null, options.CoreServer);
          Assert.AreEqual(false, options.CpuAffinity);
          Assert.AreEqual("X86_PENTIUM_II", options.CpuSpecies);
@@ -101,6 +103,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(0, options.MachineId);
          Assert.AreEqual(21600, options.MaxDelay);
          Assert.AreEqual("normal", options.MaxPacketSize);
+         Assert.AreEqual(MaxPacketSizeEnum.Normal, options.MaxPacketSizeEnum);
          Assert.AreEqual(16, options.MaxQueue);
          Assert.AreEqual(60, options.MaxShutdownWait);
          Assert.AreEqual(5, options.MaxSlotErrors);
