@@ -243,9 +243,19 @@ namespace HFM.Client
       /// </summary>
       public const string Options = "options";
       /// <summary>
+      /// Simulation Info Message Key
+      /// </summary>
+      /// <remarks>This message is in response to a command that takes a slot id argument.</remarks>
+      public const string SimulationInfo = "simulation-info";
+      /// <summary>
       /// Slot Info Message Key
       /// </summary>
       public const string SlotInfo = "slots";
+      /// <summary>
+      /// Slot Options Message Key
+      /// </summary>
+      /// <remarks>This message is in response to a command that takes a slot id argument.</remarks>
+      public const string SlotOptions = "slot-options";
       /// <summary>
       /// Queue Info Message Key
       /// </summary>
@@ -259,18 +269,5 @@ namespace HFM.Client
       /// Log Update Message Key
       /// </summary>
       public const string LogUpdate = "log-update";
-      
-      /// <summary>
-      /// Simulation Info Message Key
-      /// </summary>
-      /// <remarks>This message is in response to a command that takes a slot id argument.
-      /// Will probably need to save messages for each slot requested in a dictionary.</remarks>
-      public const string SimulationInfo = "simulation-info";
-      /// <summary>
-      /// Slot Options Message Key
-      /// </summary>
-      /// <remarks>This message is in response to a command that takes a slot id argument.
-      /// Will probably need to save messages for each slot requested in a dictionary.</remarks>
-      public const string SlotOptions = "slot-options";
    }
 }

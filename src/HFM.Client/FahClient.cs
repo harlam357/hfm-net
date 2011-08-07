@@ -69,12 +69,28 @@ namespace HFM.Client
                return Options.Parse(jsonMessage) as T;
             }
          }
+         else if (typeof(T).Equals(typeof(SimulationInfo)))
+         {
+            var jsonMessage = GetJsonMessage(JsonMessageKey.SimulationInfo);
+            if (jsonMessage != null)
+            {
+               return SimulationInfo.Parse(jsonMessage) as T;
+            }
+         }
          else if (typeof(T).Equals(typeof(SlotCollection)))
          {
             var jsonMessage = GetJsonMessage(JsonMessageKey.SlotInfo);
             if (jsonMessage != null)
             {
                return SlotCollection.Parse(jsonMessage) as T;
+            }
+         }
+         else if (typeof(T).Equals(typeof(SlotOptions)))
+         {
+            var jsonMessage = GetJsonMessage(JsonMessageKey.SlotOptions);
+            if (jsonMessage != null)
+            {
+               return SlotOptions.Parse(jsonMessage) as T;
             }
          }
          else if (typeof(T).Equals(typeof(UnitCollection)))
@@ -111,8 +127,12 @@ namespace HFM.Client
                return typeof(Info);
             case JsonMessageKey.Options:
                return typeof(Options);
+            case JsonMessageKey.SimulationInfo:
+               return typeof(SimulationInfo);
             case JsonMessageKey.SlotInfo:
                return typeof(SlotCollection);
+            case JsonMessageKey.SlotOptions:
+               return typeof(SlotOptions);
             case JsonMessageKey.QueueInfo:
                return typeof(UnitCollection);
          }
