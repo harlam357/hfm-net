@@ -46,8 +46,11 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(1000, unitCollection[0].TotalFrames);
          Assert.AreEqual(590, unitCollection[0].FramesDone);
          Assert.AreEqual("27/May/2011-19:34:24", unitCollection[0].Assigned);
+         Assert.AreEqual(new DateTime(2011, 5, 27, 19, 34, 24), unitCollection[0].AssignedDateTime);
          Assert.AreEqual("04/Jun/2011-19:34:24", unitCollection[0].Timeout);
+         Assert.AreEqual(new DateTime(2011, 6, 4, 19, 34, 24), unitCollection[0].TimeoutDateTime);
          Assert.AreEqual("08/Jun/2011-19:34:24", unitCollection[0].Deadline);
+         Assert.AreEqual(new DateTime(2011, 6, 8, 19, 34, 24), unitCollection[0].DeadlineDateTime);
          Assert.AreEqual("171.64.65.55", unitCollection[0].WorkServer);
          Assert.AreEqual("171.67.108.26", unitCollection[0].CollectionServer);
          Assert.AreEqual(String.Empty, unitCollection[0].WaitingOn);
@@ -55,8 +58,10 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("0.00 secs", unitCollection[0].NextAttempt);
          Assert.AreEqual(0, unitCollection[0].Slot);
          Assert.AreEqual("2 hours 28 mins", unitCollection[0].Eta);
+         Assert.AreEqual(new TimeSpan(2, 28, 0), unitCollection[0].EtaTimeSpan);
          Assert.AreEqual(1749.96, unitCollection[0].Ppd);
          Assert.AreEqual("3 mins 38 secs", unitCollection[0].Tpf);
+         Assert.AreEqual(new TimeSpan(0, 3, 38), unitCollection[0].TpfTimeSpan);
          Assert.AreEqual(443, unitCollection[0].BaseCredit);
          Assert.AreEqual(443, unitCollection[0].CreditEstimate);
       }

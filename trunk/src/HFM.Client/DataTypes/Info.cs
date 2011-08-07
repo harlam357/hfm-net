@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Globalization;
 using System.Linq;
 
 using Newtonsoft.Json.Linq;
@@ -134,36 +135,27 @@ namespace HFM.Client.DataTypes
 
       #region BuildDateTime Property
 
-      //public DateTime BuildDateTime
-      //{ 
-      //   get { return GetDateTime(); }
-      //}
+      public DateTime? BuildDateTime
+      {
+         get { return GetDateTime(); }
+      }
 
-      //private DateTime? _dateTime;
+      private DateTime? GetDateTime()
+      {
+         if (Date != null && Time != null)
+         {
+            try
+            {
+               return DateTime.ParseExact(String.Concat(Date, " ", Time), "MMM  d yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+            }
+            catch (FormatException)
+            {
+               return null;
+            }
+         }
 
-      //private DateTime GetDateTime()
-      //{
-      //   if (_dateTime == null)
-      //   {
-      //      if (Date != null && Time != null)
-      //      {
-      //         try
-      //         {
-      //            _dateTime = DateTime.ParseExact(String.Concat(Date, " ", Time), "MMM  d yyyy HH:mm:ss", CultureInfo.InvariantCulture);
-      //         }
-      //         catch (FormatException)
-      //         {
-      //            _dateTime = DateTime.MinValue;
-      //         }
-      //      }
-      //      else
-      //      {
-      //         _dateTime = DateTime.MinValue;
-      //      }
-      //   }
-
-      //   return _dateTime.Value;
-      //}
+         return null;
+      }
 
       #endregion
 
@@ -193,21 +185,21 @@ namespace HFM.Client.DataTypes
 
    // ReSharper disable InconsistentNaming
 
-   //public enum OperatingSystemType
-   //{
-   //   Unknown,
-   //   Windows,
-   //   WindowsXP,
-   //   WindowsXPx64,
-   //   Vista32,
-   //   Vista64,
-   //   Windows7x32,
-   //   Windows7x64,
-   //   Linux,
-   //   OSX
+   public enum OperatingSystemEnum
+   {
+      Unknown,
+      Windows,
+      WindowsXP,
+      WindowsXPx64,
+      Vista32,
+      Vista64,
+      Windows7x32,
+      Windows7x64,
+      Linux,
+      OSX
 
-   //   // TODO: Expand Linux and OSX members if necessary
-   //}
+      // Expand Linux and OSX members if necessary
+   }
 
    // ReSharper restore InconsistentNaming
 
@@ -223,8 +215,8 @@ namespace HFM.Client.DataTypes
       [MessageProperty("OS")]
       public string OperatingSystem { get; set; }
 
-      //[MessageProperty("OS", typeof(OperatingSystemConverter))]
-      //public OperatingSystemType OperatingSystemEnum { get; set; }
+      [MessageProperty("OS", typeof(OperatingSystemConverter))]
+      public OperatingSystemEnum OperatingSystemEnum { get; set; }
 
       [MessageProperty("CPU")]
       public string Cpu { get; set; }
@@ -233,7 +225,7 @@ namespace HFM.Client.DataTypes
       public string CpuId { get; set; }
 
       //TODO: parse CpuEnum value from Cpu property
-      //public enum CpuEnum
+      //public CpuEnum CpuEnum
       //{
       //   get { return ???; }
       //}
@@ -329,39 +321,39 @@ namespace HFM.Client.DataTypes
    //   }
    //}
 
-   //public sealed class OperatingSystemConverter : IConversionProvider
-   //{
-   //   public object Convert(string input)
-   //   {
-   //      OperatingSystemType os = OperatingSystemType.Unknown;
+   internal sealed class OperatingSystemConverter : IConversionProvider
+   {
+      public object Convert(string input)
+      {
+         OperatingSystemEnum os = OperatingSystemEnum.Unknown;
 
-   //      if (input.Contains("Windows"))
-   //      {
-   //         os = OperatingSystemType.Windows;
+         if (input.Contains("Windows"))
+         {
+            os = OperatingSystemEnum.Windows;
 
-   //         #region Detect Specific Windows Version
+            #region Detect Specific Windows Version
 
-   //         switch (input)
-   //         {
-   //            case "Microsoft(R) Windows(R) XP Professional x64 Edition":
-   //               os = OperatingSystemType.WindowsXPx64;
-   //               break;
-   //         }
+            switch (input)
+            {
+               case "Microsoft(R) Windows(R) XP Professional x64 Edition":
+                  os = OperatingSystemEnum.WindowsXPx64;
+                  break;
+            }
 
-   //         #endregion
-   //      }
-   //      else if (input.Contains("Linux"))
-   //      {
-   //         os = OperatingSystemType.Linux;
-   //      }
-   //      else if (input.Contains("OSX"))
-   //      {
-   //         os = OperatingSystemType.OSX;
-   //      }
+            #endregion
+         }
+         else if (input.Contains("Linux"))
+         {
+            os = OperatingSystemEnum.Linux;
+         }
+         else if (input.Contains("OSX"))
+         {
+            os = OperatingSystemEnum.OSX;
+         }
 
-   //      return os;
-   //   }
-   //}
+         return os;
+      }
+   }
 
    #endregion
 }

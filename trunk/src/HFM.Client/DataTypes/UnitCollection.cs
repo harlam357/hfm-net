@@ -19,6 +19,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 using Newtonsoft.Json.Linq;
 
@@ -267,23 +269,30 @@ namespace HFM.Client.DataTypes
       [MessageProperty("framesdone")]
       public int FramesDone { get; set; }
 
-      // SHOULD be DateTime type (wait for v7.1.25 - has ISO formatted values)
+      // v7.1.25 - has ISO formatted values
       [MessageProperty("assigned")]
       public string Assigned { get; set; }
 
-      // SHOULD be DateTime type (wait for v7.1.25 - has ISO formatted values)
+      [MessageProperty("assigned", typeof(UnitDateTimeConverter))]
+      public DateTime? AssignedDateTime { get; set; }
+
+      // v7.1.25 - has ISO formatted values
       [MessageProperty("timeout")]
       public string Timeout { get; set; }
 
-      // SHOULD be DateTime type (wait for v7.1.25 - has ISO formatted values)
+      [MessageProperty("timeout", typeof(UnitDateTimeConverter))]
+      public DateTime? TimeoutDateTime { get; set; }
+
+      // v7.1.25 - has ISO formatted values
       [MessageProperty("deadline")]
       public string Deadline { get; set; }
 
-      // could be IP Address type
+      [MessageProperty("deadline", typeof(UnitDateTimeConverter))]
+      public DateTime? DeadlineDateTime { get; set; }
+
       [MessageProperty("ws")]
       public string WorkServer { get; set; }
 
-      // could be IP Address type
       [MessageProperty("cs")]
       public string CollectionServer { get; set; }
 
@@ -293,22 +302,27 @@ namespace HFM.Client.DataTypes
       [MessageProperty("attempts")]
       public int Attempts { get; set; }
 
+      // could be TimeSpan type
       [MessageProperty("nextattempt")]
       public string NextAttempt { get; set; }
 
       [MessageProperty("slot")]
       public int Slot { get; set; }
 
-      // SHOULD be TimeSpan type
       [MessageProperty("eta")]
       public string Eta { get; set; }
+
+      [MessageProperty("eta", typeof(UnitTimeSpanConverter))]
+      public TimeSpan? EtaTimeSpan { get; set; }
 
       [MessageProperty("ppd")]
       public double Ppd { get; set; }
 
-      // SHOULD be TimeSpan type
       [MessageProperty("tpf")]
       public string Tpf { get; set; }
+
+      [MessageProperty("tpf", typeof(UnitTimeSpanConverter))]
+      public TimeSpan? TpfTimeSpan { get; set; }
 
       [MessageProperty("basecredit")]
       public double BaseCredit { get; set; }
@@ -318,4 +332,52 @@ namespace HFM.Client.DataTypes
 
       #endregion
    }
+
+   #region IConversionProvider Classes
+
+   internal sealed class UnitDateTimeConverter : IConversionProvider
+   {
+      public object Convert(string input)
+      {
+         return DateTime.ParseExact(input, "dd/MMM/yyyy-HH:mm:ss", CultureInfo.InvariantCulture);
+      }
+   }
+
+   internal sealed class UnitTimeSpanConverter : IConversionProvider
+   {
+      public object Convert(string input)
+      {
+         var regex1 = new Regex("(?<Hours>.+) hours (?<Minutes>.+) mins (?<Seconds>.+) secs", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+         var regex2 = new Regex("(?<Hours>.+) hours (?<Minutes>.+) mins", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+         var regex3 = new Regex("(?<Minutes>.+) mins (?<Seconds>.+) secs", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+
+         Match matchRegex1;
+         if ((matchRegex1 = regex1.Match(input)).Success)
+         {
+            return new TimeSpan(System.Convert.ToInt32(matchRegex1.Result("${Hours}")), 
+                                System.Convert.ToInt32(matchRegex1.Result("${Minutes}")),
+                                System.Convert.ToInt32(matchRegex1.Result("${Seconds}")));
+         }
+
+         Match matchRegex2;
+         if ((matchRegex2 = regex2.Match(input)).Success)
+         {
+            return new TimeSpan(System.Convert.ToInt32(matchRegex2.Result("${Hours}")),
+                                System.Convert.ToInt32(matchRegex2.Result("${Minutes}")),
+                                0);
+         }
+
+         Match matchRegex3;
+         if ((matchRegex3 = regex3.Match(input)).Success)
+         {
+            return new TimeSpan(0,
+                                System.Convert.ToInt32(matchRegex3.Result("${Minutes}")),
+                                System.Convert.ToInt32(matchRegex3.Result("${Seconds}")));
+         }
+
+         return null;
+      }
+   }
+
+   #endregion
 }
