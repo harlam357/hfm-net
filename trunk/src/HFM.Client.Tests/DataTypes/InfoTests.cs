@@ -42,7 +42,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("7.1.24", info.Build.Version);
          Assert.AreEqual("Apr  6 2011", info.Build.Date);
          Assert.AreEqual("21:37:58", info.Build.Time);
-         //Assert.AreEqual(new DateTime(2011, 4, 6, 21, 37, 58), info.Build.BuildDateTime);
+         Assert.AreEqual(new DateTime(2011, 4, 6, 21, 37, 58), info.Build.BuildDateTime);
          Assert.AreEqual(2908, info.Build.SvnRev);
          Assert.AreEqual("fah/trunk/client", info.Build.Branch);
          Assert.AreEqual("Intel(R) C++ MSVC 1500 mode 1110", info.Build.Compiler);
@@ -51,7 +51,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(32, info.Build.Bits);
          Assert.AreEqual("Release", info.Build.Mode);
          Assert.AreEqual("Microsoft(R) Windows(R) XP Professional x64 Edition", info.System.OperatingSystem);
-         //Assert.AreEqual(OperatingSystemType.WindowsXPx64, info.System.OperatingSystemEnum);
+         Assert.AreEqual(OperatingSystemEnum.WindowsXPx64, info.System.OperatingSystemEnum);
          Assert.AreEqual("Intel(R) Core(TM)2 Quad CPU    Q6600  @ 2.40GHz", info.System.Cpu);
          Assert.AreEqual("GenuineIntel Family 6 Model 15 Stepping 11", info.System.CpuId);
          Assert.AreEqual(4, info.System.CpuCount);
