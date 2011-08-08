@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 using Newtonsoft.Json.Linq;
@@ -225,11 +226,11 @@ namespace HFM.Client.DataTypes
       #endregion
    }
 
-   public class Unit
+   public class Unit : ITypedMessageObject
    {
       internal Unit()
       {
-         
+         _errors = new List<MessagePropertyConversionError>();
       }
 
       #region Properties
@@ -331,43 +332,63 @@ namespace HFM.Client.DataTypes
       public double CreditEstimate { get; set; }
 
       #endregion
+
+      #region ITypedMessageObject Members
+
+      private readonly List<MessagePropertyConversionError> _errors;
+      /// <summary>
+      /// Read-only list of property type conversion errors.
+      /// </summary>
+      public IEnumerable<MessagePropertyConversionError> Errors
+      {
+         get { return _errors.AsReadOnly(); }
+      }
+
+      void ITypedMessageObject.AddError(MessagePropertyConversionError error)
+      {
+         _errors.Add(error);
+      }
+
+      #endregion
    }
 
    #region IConversionProvider Classes
 
    internal sealed class UnitTimeSpanConverter : IConversionProvider
    {
-      public object Convert(string input)
+      public object Convert(object input)
       {
-         var regex1 = new Regex("(?<Hours>.+) hours (?<Minutes>.+) mins (?<Seconds>.+) secs", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
-         var regex2 = new Regex("(?<Hours>.+) hours (?<Minutes>.+) mins", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
-         var regex3 = new Regex("(?<Minutes>.+) mins (?<Seconds>.+) secs", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+         var inputString = (string)input;
 
+         var regex1 = new Regex("(?<Hours>.+) hours (?<Minutes>.+) mins (?<Seconds>.+) secs", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
          Match matchRegex1;
-         if ((matchRegex1 = regex1.Match(input)).Success)
+         if ((matchRegex1 = regex1.Match(inputString)).Success)
          {
-            return new TimeSpan(System.Convert.ToInt32(matchRegex1.Result("${Hours}")), 
-                                System.Convert.ToInt32(matchRegex1.Result("${Minutes}")),
-                                System.Convert.ToInt32(matchRegex1.Result("${Seconds}")));
+            return new TimeSpan(System.Convert.ToInt32(matchRegex1.Result("${Hours}"), CultureInfo.InvariantCulture),
+                                System.Convert.ToInt32(matchRegex1.Result("${Minutes}"), CultureInfo.InvariantCulture),
+                                System.Convert.ToInt32(matchRegex1.Result("${Seconds}"), CultureInfo.InvariantCulture));
          }
 
+         var regex2 = new Regex("(?<Hours>.+) hours (?<Minutes>.+) mins", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
          Match matchRegex2;
-         if ((matchRegex2 = regex2.Match(input)).Success)
+         if ((matchRegex2 = regex2.Match(inputString)).Success)
          {
-            return new TimeSpan(System.Convert.ToInt32(matchRegex2.Result("${Hours}")),
-                                System.Convert.ToInt32(matchRegex2.Result("${Minutes}")),
+            return new TimeSpan(System.Convert.ToInt32(matchRegex2.Result("${Hours}"), CultureInfo.InvariantCulture),
+                                System.Convert.ToInt32(matchRegex2.Result("${Minutes}"), CultureInfo.InvariantCulture),
                                 0);
          }
 
+         var regex3 = new Regex("(?<Minutes>.+) mins (?<Seconds>.+) secs", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
          Match matchRegex3;
-         if ((matchRegex3 = regex3.Match(input)).Success)
+         if ((matchRegex3 = regex3.Match(inputString)).Success)
          {
             return new TimeSpan(0,
-                                System.Convert.ToInt32(matchRegex3.Result("${Minutes}")),
-                                System.Convert.ToInt32(matchRegex3.Result("${Seconds}")));
+                                System.Convert.ToInt32(matchRegex3.Result("${Minutes}"), CultureInfo.InvariantCulture),
+                                System.Convert.ToInt32(matchRegex3.Result("${Seconds}"), CultureInfo.InvariantCulture));
          }
 
-         return null;
+         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
+            "Failed to parse time span value of '{0}'.", inputString));
       }
    }
 

@@ -228,11 +228,12 @@ namespace HFM.Client.DataTypes
       #endregion
    }
 
-   public class Slot
+   public class Slot : ITypedMessageObject
    {
       internal Slot()
       {
          SlotOptions = new SlotOptions();
+         _errors = new List<MessagePropertyConversionError>();
       }
 
       #region Properties
@@ -249,6 +250,24 @@ namespace HFM.Client.DataTypes
 
       [MessageProperty("options")]
       public SlotOptions SlotOptions { get; set; }
+
+      #endregion
+
+      #region ITypedMessageObject Members
+
+      private readonly List<MessagePropertyConversionError> _errors;
+      /// <summary>
+      /// Read-only list of property type conversion errors.
+      /// </summary>
+      public IEnumerable<MessagePropertyConversionError> Errors
+      {
+         get { return _errors.AsReadOnly(); }
+      }
+
+      void ITypedMessageObject.AddError(MessagePropertyConversionError error)
+      {
+         _errors.Add(error);
+      }
 
       #endregion
    }

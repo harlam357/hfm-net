@@ -28,9 +28,30 @@ using Newtonsoft.Json.Linq;
 
 namespace HFM.Client.DataTypes
 {
-   public abstract class TypedMessage : Message
+   public abstract class TypedMessage : Message, ITypedMessageObject
    {
-      
+      #region ITypedMessageObject Members
+
+      private readonly List<MessagePropertyConversionError> _errors;
+      /// <summary>
+      /// Read-only list of property type conversion errors.
+      /// </summary>
+      public IEnumerable<MessagePropertyConversionError> Errors
+      {
+         get { return _errors.AsReadOnly(); }
+      }
+
+      internal TypedMessage()
+      {
+         _errors = new List<MessagePropertyConversionError>();
+      }
+
+      void ITypedMessageObject.AddError(MessagePropertyConversionError error)
+      {
+         _errors.Add(error);
+      }
+
+      #endregion
    }
 
    public class JsonMessage : Message
@@ -166,7 +187,7 @@ namespace HFM.Client.DataTypes
                }
                else if (jProperty.Value.Type.Equals(JTokenType.Integer))
                {
-                  SetPropertyValue(classProperty, ((int)jProperty).ToString());
+                  SetPropertyValue(classProperty, (int)jProperty);
                }
             }
          }
@@ -188,7 +209,7 @@ namespace HFM.Client.DataTypes
          }
       }
 
-      private void SetPropertyValue(PropertyDescriptor classProperty, string value)
+      private void SetPropertyValue(PropertyDescriptor classProperty, object value)
       {
          try
          {
@@ -209,9 +230,13 @@ namespace HFM.Client.DataTypes
                // ReSharper restore AssignNullToNotNullAttribute
             }
          }
-         catch (FormatException)
+         catch (Exception ex)
          {
-            // TODO: Log or make a list of these conversion errors
+            var typedMessageObject = _message as ITypedMessageObject;
+            if (typedMessageObject != null)
+            {
+               typedMessageObject.AddError(new MessagePropertyConversionError(classProperty.Name, ex.Message));
+            }
          }
       }
 
@@ -241,8 +266,45 @@ namespace HFM.Client.DataTypes
       }
    }
 
+   public sealed class MessagePropertyConversionError
+   {
+      private readonly string _propertyName;
+      /// <summary>
+      /// Data Class Property Name
+      /// </summary>
+      public string PropertyName
+      {
+         get { return _propertyName; }
+      }
+
+      private readonly string _message;
+      /// <summary>
+      /// Conversion Error Message
+      /// </summary>
+      public string Message
+      {
+         get { return _message; }
+      }
+
+      internal MessagePropertyConversionError(string propertyName, string message)
+      {
+         _propertyName = propertyName;
+         _message = message;
+      }
+   }
+
    public interface IConversionProvider
    {
-      object Convert(string input);
+      object Convert(object input);
+   }
+
+   public interface ITypedMessageObject
+   {
+      /// <summary>
+      /// Read-only list of property type conversion errors.
+      /// </summary>
+      IEnumerable<MessagePropertyConversionError> Errors { get; }
+
+      void AddError(MessagePropertyConversionError error);
    }
 }

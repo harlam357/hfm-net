@@ -126,17 +126,17 @@ namespace HFM.Client.DataTypes
 
    internal sealed class SimulationInfoDateTimeConverter : IConversionProvider
    {
-      public object Convert(string input)
+      public object Convert(object input)
       {
-         return new DateTime(1970, 1, 1).AddSeconds(System.Convert.ToInt32(input));
+         return new DateTime(1970, 1, 1).AddSeconds((int)input);
       }
    }
 
    internal sealed class SimulationInfoTimeSpanConverter : IConversionProvider
    {
-      public object Convert(string input)
+      public object Convert(object input)
       {
-         return new TimeSpan(0, 0, System.Convert.ToInt32(input));
+         return new TimeSpan(0, 0, (int)input);
       }
    }
 

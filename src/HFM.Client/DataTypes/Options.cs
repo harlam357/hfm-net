@@ -51,13 +51,13 @@ namespace HFM.Client.DataTypes
       public string ClientSubType { get; set; }
 
       //[MessageProperty("client-subtype", typeof(ClientSubTypeConverter))]
-      //public ClientSubTypeEnum ClientSubTypeEnum { get; set; }
+      //public ClientSubType ClientSubTypeEnum { get; set; }
 
       [MessageProperty("client-type")]
       public string ClientType { get; set; }
 
       [MessageProperty("client-type", typeof(ClientTypeConverter))]
-      public ClientTypeEnum ClientTypeEnum { get; set; }
+      public ClientType ClientTypeEnum { get; set; }
 
       // could be IP Address type
       [MessageProperty("command-address")]
@@ -104,7 +104,7 @@ namespace HFM.Client.DataTypes
       public string CorePriority { get; set; }
 
       [MessageProperty("core-priority", typeof(CorePriorityConverter))]
-      public CorePriorityEnum CorePriorityEnum { get; set; }
+      public CorePriority CorePriorityEnum { get; set; }
 
       [MessageProperty("core-server")]
       public string CoreServer { get; set; }
@@ -250,7 +250,7 @@ namespace HFM.Client.DataTypes
       public string MaxPacketSize { get; set; }
 
       [MessageProperty("max-packet-size", typeof(MaxPacketSizeConverter))]
-      public MaxPacketSizeEnum MaxPacketSizeEnum { get; set; }
+      public MaxPacketSize MaxPacketSizeEnum { get; set; }
 
       [MessageProperty("max-queue")]
       public int? MaxQueue { get; set; }
