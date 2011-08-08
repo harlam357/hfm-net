@@ -19,6 +19,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using NUnit.Framework;
@@ -67,6 +68,7 @@ namespace HFM.Client.Tests
             Assert.AreEqual(typeof(Heartbeat), e.DataType);
             var heartbeat = fahClient.GetMessage<Heartbeat>();
             Assert.IsNotNull(heartbeat);
+            Assert.AreEqual(0, heartbeat.Errors.Count());
          }
 
          _tcpClient.VerifyAllExpectations();
@@ -103,6 +105,7 @@ namespace HFM.Client.Tests
             Assert.AreEqual(typeof(Info), e.DataType);
             var info = fahClient.GetMessage<Info>();
             Assert.IsNotNull(info);
+            Assert.AreEqual(0, info.Errors.Count());
          }
 
          _tcpClient.VerifyAllExpectations();
@@ -149,6 +152,7 @@ namespace HFM.Client.Tests
             Assert.AreEqual(typeof(Options), e.DataType);
             var options = fahClient.GetMessage<Options>();
             Assert.IsNotNull(options);
+            Assert.AreEqual(0, options.Errors.Count());
          }
 
          _tcpClient.VerifyAllExpectations();
@@ -189,6 +193,7 @@ namespace HFM.Client.Tests
             Assert.AreEqual(typeof(SimulationInfo), e.DataType);
             var simulationInfo = fahClient.GetMessage<SimulationInfo>();
             Assert.IsNotNull(simulationInfo);
+            Assert.AreEqual(0, simulationInfo.Errors.Count());
          }
 
          _tcpClient.VerifyAllExpectations();
@@ -219,7 +224,9 @@ namespace HFM.Client.Tests
             Assert.AreEqual(typeof(SlotCollection), e.DataType);
             var slotCollection = fahClient.GetMessage<SlotCollection>();
             Assert.IsNotNull(slotCollection);
+            Assert.AreEqual(0, slotCollection.Errors.Count());
             Assert.AreEqual(1, slotCollection.Count);
+            Assert.AreEqual(0, slotCollection[0].Errors.Count());
          }
 
          _tcpClient.VerifyAllExpectations();
@@ -248,8 +255,9 @@ namespace HFM.Client.Tests
 
             Assert.AreEqual(JsonMessageKey.SlotOptions, e.Key);
             Assert.AreEqual(typeof(SlotOptions), e.DataType);
-            var slotCollection = fahClient.GetMessage<SlotOptions>();
-            Assert.IsNotNull(slotCollection);
+            var slotOptions = fahClient.GetMessage<SlotOptions>();
+            Assert.IsNotNull(slotOptions);
+            Assert.AreEqual(0, slotOptions.Errors.Count());
          }
 
          _tcpClient.VerifyAllExpectations();
@@ -280,7 +288,9 @@ namespace HFM.Client.Tests
             Assert.AreEqual(typeof(UnitCollection), e.DataType);
             var unitCollection = fahClient.GetMessage<UnitCollection>();
             Assert.IsNotNull(unitCollection);
+            Assert.AreEqual(0, unitCollection.Errors.Count());
             Assert.AreEqual(1, unitCollection.Count);
+            Assert.AreEqual(0, unitCollection[0].Errors.Count());
          }
 
          _tcpClient.VerifyAllExpectations();
