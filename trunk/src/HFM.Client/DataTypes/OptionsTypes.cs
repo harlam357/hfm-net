@@ -24,7 +24,7 @@ namespace HFM.Client.DataTypes
 {
    #region Enumerations
 
-   public enum ClientTypeEnum
+   public enum ClientType
    {
       Unknown,
       Normal,
@@ -34,7 +34,7 @@ namespace HFM.Client.DataTypes
 
    // ReSharper disable InconsistentNaming
 
-   public enum ClientSubTypeEnum
+   public enum ClientSubType
    {
       Unknown,
       Normal,  // ???
@@ -44,7 +44,7 @@ namespace HFM.Client.DataTypes
 
    // ReSharper restore InconsistentNaming
 
-   public enum MaxPacketSizeEnum
+   public enum MaxPacketSize
    {
       Unknown,
       Small,
@@ -52,7 +52,7 @@ namespace HFM.Client.DataTypes
       Big
    }
 
-   public enum CorePriorityEnum
+   public enum CorePriority
    {
       Unknown,
       Idle,
@@ -65,75 +65,79 @@ namespace HFM.Client.DataTypes
 
    internal sealed class ClientTypeConverter : IConversionProvider
    {
-      public object Convert(string input)
+      public object Convert(object input)
       {
-         switch (input)
+         var inputString = (string)input;
+         switch (inputString)
          {
             case "normal":
-               return ClientTypeEnum.Normal;
+               return ClientType.Normal;
             case "advanced":
-               return ClientTypeEnum.Advanced;
+               return ClientType.Advanced;
             case "bigadv":
-               return ClientTypeEnum.BigAdv;
+               return ClientType.BigAdv;
          }
 
          throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse client-type value of '{0}'.", input));
+            "Failed to parse client-type value of '{0}'.", inputString));
       }
    }
 
    internal sealed class ClientSubTypeConverter : IConversionProvider
    {
-      public object Convert(string input)
+      public object Convert(object input)
       {
-         switch (input)
+         var inputString = (string)input;
+         switch (inputString)
          {
             case "normal":
-               return ClientSubTypeEnum.Normal;
+               return ClientSubType.Normal;
             case "SMP":
-               return ClientSubTypeEnum.SMP;
+               return ClientSubType.SMP;
             case "GPU":
-               return ClientSubTypeEnum.GPU;
+               return ClientSubType.GPU;
          }
 
          throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse client-subtype value of '{0}'.", input));
+            "Failed to parse client-subtype value of '{0}'.", inputString));
       }
    }
 
    internal sealed class MaxPacketSizeConverter : IConversionProvider
    {
-      public object Convert(string input)
+      public object Convert(object input)
       {
-         switch (input)
+         var inputString = (string)input;
+         switch (inputString)
          {
             case "small":
-               return MaxPacketSizeEnum.Small;
+               return MaxPacketSize.Small;
             case "normal":
-               return MaxPacketSizeEnum.Normal;
+               return MaxPacketSize.Normal;
             case "big":
-               return MaxPacketSizeEnum.Big;
+               return MaxPacketSize.Big;
          }
 
          throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse max-packet-size value of '{0}'.", input));
+            "Failed to parse max-packet-size value of '{0}'.", inputString));
       }
    }
 
    internal sealed class CorePriorityConverter : IConversionProvider
    {
-      public object Convert(string input)
+      public object Convert(object input)
       {
-         switch (input)
+         var inputString = (string)input;
+         switch (inputString)
          {
             case "idle":
-               return CorePriorityEnum.Idle;
+               return CorePriority.Idle;
             case "low":
-               return CorePriorityEnum.Low;
+               return CorePriority.Low;
          }
 
          throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse core-priority value of '{0}'.", input));
+            "Failed to parse core-priority value of '{0}'.", inputString));
       }
    }
 

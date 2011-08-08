@@ -185,7 +185,7 @@ namespace HFM.Client.DataTypes
 
    // ReSharper disable InconsistentNaming
 
-   public enum OperatingSystemEnum
+   public enum OperatingSystem
    {
       Unknown,
       Windows,
@@ -216,7 +216,7 @@ namespace HFM.Client.DataTypes
       public string OperatingSystem { get; set; }
 
       [MessageProperty("OS", typeof(OperatingSystemConverter))]
-      public OperatingSystemEnum OperatingSystemEnum { get; set; }
+      public OperatingSystem OperatingSystemEnum { get; set; }
 
       [MessageProperty("CPU")]
       public string Cpu { get; set; }
@@ -306,7 +306,7 @@ namespace HFM.Client.DataTypes
 
    #region IConversionProvider Classes
 
-   //public sealed class MemoryValueConverter : IConversionProvider
+   //internal sealed class MemoryValueConverter : IConversionProvider
    //{
    //   public object Convert(string input)
    //   {
@@ -323,35 +323,37 @@ namespace HFM.Client.DataTypes
 
    internal sealed class OperatingSystemConverter : IConversionProvider
    {
-      public object Convert(string input)
+      public object Convert(object input)
       {
-         OperatingSystemEnum os = OperatingSystemEnum.Unknown;
-
-         if (input.Contains("Windows"))
+         var inputString = (string)input;
+         if (inputString.Contains("Windows"))
          {
-            os = OperatingSystemEnum.Windows;
+            OperatingSystem os = OperatingSystem.Windows;
 
             #region Detect Specific Windows Version
 
-            switch (input)
+            switch (inputString)
             {
                case "Microsoft(R) Windows(R) XP Professional x64 Edition":
-                  os = OperatingSystemEnum.WindowsXPx64;
+                  os = OperatingSystem.WindowsXPx64;
                   break;
             }
 
             #endregion
+
+            return os;
          }
-         else if (input.Contains("Linux"))
+         if (inputString.Contains("Linux"))
          {
-            os = OperatingSystemEnum.Linux;
+            return OperatingSystem.Linux;
          }
-         else if (input.Contains("OSX"))
+         if (inputString.Contains("OSX"))
          {
-            os = OperatingSystemEnum.OSX;
+            return OperatingSystem.OSX;
          }
 
-         return os;
+         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
+            "Failed to parse OS value of '{0}'.", inputString));
       }
    }
 

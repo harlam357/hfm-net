@@ -24,9 +24,9 @@ namespace HFM.Client.DataTypes
 {
    internal sealed class DateTimeConverter : IConversionProvider
    {
-      public object Convert(string input)
+      public object Convert(object input)
       {
-         return DateTime.ParseExact(input, "dd/MMM/yyyy-HH:mm:ss", CultureInfo.InvariantCulture);
+         return DateTime.ParseExact((string)input, "dd/MMM/yyyy-HH:mm:ss", CultureInfo.InvariantCulture);
       }
    }
 }
