@@ -199,6 +199,11 @@ namespace HFM.Client
          }
       }
 
+      /// <summary>
+      /// When true the receive buffer is written to a buffer.txt file.
+      /// </summary>
+      public bool DebugReceiveBuffer { get; set; }
+
       #endregion
 
       #region Constructor
@@ -355,6 +360,8 @@ namespace HFM.Client
          {
             try
             {
+               _updating = true;
+
                Update();
             }
             catch (Exception ex)
@@ -365,6 +372,10 @@ namespace HFM.Client
                      "Update failed: {0}", ex.Message), TraceLevel.Error));
                   Close();
                }
+            }
+            finally
+            {
+               _updating = false;
             }
          }
       }
@@ -389,36 +400,30 @@ namespace HFM.Client
       /// </summary>
       protected virtual void Update()
       {
-         // lock so we're not appending to and reading 
-         // from the buffer at the same time
-         lock (BufferLock)
+         int totalBytesRead = 0;
+         do
          {
-            try
+            int bytesRead = _stream.Read(_internalBuffer, 0, _internalBuffer.Length);
+            if (bytesRead == 0)
             {
-               _updating = true;
+               throw new System.IO.IOException("The underlying socket has been closed.");
+            }
 
-               int totalBytesRead = 0;
-               do
-               {
-                  int bytesRead = _stream.Read(_internalBuffer, 0, _internalBuffer.Length);
-                  if (bytesRead == 0)
-                  {
-                     throw new System.IO.IOException("The underlying socket has been closed.");
-                  }
-                  _readBuffer.Append(Encoding.ASCII.GetString(_internalBuffer.Take(bytesRead).ToArray()));
-                  totalBytesRead += bytesRead;
-               } 
-               while (_stream.DataAvailable);
-               // send data received event
-               OnDataLengthReceived(new DataLengthEventArgs(totalBytesRead));
-#if DEBUG
-               System.IO.File.AppendAllText("buffer.txt", _readBuffer.ToString().Replace("\n", Environment.NewLine).Replace("\\n", Environment.NewLine));
-#endif
-            }
-            finally
+            // lock so we're not appending to and reading 
+            // from the buffer at the same time
+            lock (BufferLock)
             {
-               _updating = false;
+               _readBuffer.Append(Encoding.ASCII.GetString(_internalBuffer.Take(bytesRead).ToArray()));
             }
+
+            totalBytesRead += bytesRead;
+         } 
+         while (_stream.DataAvailable);
+         // send data received event
+         OnDataLengthReceived(new DataLengthEventArgs(totalBytesRead));
+         if (DebugReceiveBuffer)
+         {
+            System.IO.File.AppendAllText("buffer.txt", _readBuffer.ToString().Replace("\n", Environment.NewLine).Replace("\\n", Environment.NewLine));
          }
       }
 
