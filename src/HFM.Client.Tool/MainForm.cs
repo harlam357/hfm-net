@@ -23,6 +23,7 @@ using System.IO;
 using System.Windows.Forms;
 
 using HFM.Client.DataTypes;
+using HFM.Framework;
 
 namespace HFM.Client.Tool
 {
@@ -41,8 +42,11 @@ namespace HFM.Client.Tool
          _fahClient.DataLengthSent += FahClientDataLengthSent;
          _fahClient.DataLengthReceived += FahClientDataLengthReceived;
          _fahClient.StatusMessage += FahClientStatusMessage;
+         _fahClient.DebugReceiveBuffer = true;
 
          InitializeComponent();
+
+         base.Text = String.Format("HFM Client Tool v{0}", PlatformOps.ApplicationVersionWithRevision);
       }
 
       private void FahClientMessageUpdated(object sender, MessageUpdatedEventArgs e)
@@ -50,6 +54,16 @@ namespace HFM.Client.Tool
          JsonMessage jsonMessage = _fahClient.GetJsonMessage(e.Key);
          AppendToMessageDisplayTextBox(String.Empty);
          AppendToMessageDisplayTextBox(jsonMessage.ToString());
+         
+         if (e.DataType == typeof(SlotCollection))
+         {
+            var slotCollection = _fahClient.GetMessage<SlotCollection>();
+            foreach (var slot in slotCollection)
+            {
+               _fahClient.SendCommand("slot-options " + slot.Id + " client-type client-subtype machine-id max-packet-size core-priority next-unit-percentage max-units checkpoint pause-on-start gpu-vendor-id gpu-device-id");
+               _fahClient.SendCommand("simulation-info " + slot.Id);
+            }
+         }
       }
 
       private void AppendToMessageDisplayTextBox(string text)
@@ -89,7 +103,6 @@ namespace HFM.Client.Tool
 
       private void ConnectButtonClick(object sender, EventArgs e)
       {
-#if DEBUG
          if (File.Exists("buffer.txt"))
          {
             try
@@ -101,7 +114,7 @@ namespace HFM.Client.Tool
             { }
             // ReSharper restore EmptyGeneralCatchClause
          }
-#endif
+
          try
          {
             _fahClient.Connect(HostAddressTextBox.Text, Int32.Parse(PortTextBox.Text), PasswordTextBox.Text);
@@ -129,7 +142,18 @@ namespace HFM.Client.Tool
             return;
          }
 
-         _fahClient.SendCommand(CommandTextBox.Text);
+         string command = CommandTextBox.Text;
+         if (command == "test-commands")
+         {
+            _fahClient.SendCommand("info");
+            _fahClient.SendCommand("options -a");   
+            _fahClient.SendCommand("queue-info");
+            _fahClient.SendCommand("slot-info");
+         }
+         else
+         {
+            _fahClient.SendCommand(CommandTextBox.Text);
+         }
       }
 
       private void FahClientConnectedChanged(object sender, ConnectedChangedEventArgs e)
@@ -151,6 +175,8 @@ namespace HFM.Client.Tool
 
       private void ClearMessagesButtonClick(object sender, EventArgs e)
       {
+         StatusLabel.Text = String.Empty;
+         StatusMessageListBox.Items.Clear();
          MessageDisplayTextBox.Clear();
       }
 

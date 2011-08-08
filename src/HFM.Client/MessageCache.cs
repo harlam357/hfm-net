@@ -100,6 +100,7 @@ namespace HFM.Client
          // get the connection buffer and clear the connection buffer
          _readBuffer.Append(GetBuffer());
          string bufferValue = _readBuffer.ToString();
+         _readBuffer.Clear();
 
          JsonMessage json;
          while ((json = GetNextJsonMessage(ref bufferValue)) != null)
@@ -107,7 +108,6 @@ namespace HFM.Client
             UpdateMessageCache(json);
             OnMessageUpdated(new MessageUpdatedEventArgs(json.Key));
          }
-         _readBuffer.Clear();
          _readBuffer.Append(bufferValue);
       }
 
