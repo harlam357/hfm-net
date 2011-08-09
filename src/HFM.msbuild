@@ -29,7 +29,12 @@
    </Target>
 
    <Target Name="Build" DependsOnTargets="Compile">
+      <CallTarget Targets="Deploy"/>
       <Message Text="HFM.NET Build Complete"/>
+   </Target>
+
+   <Target Name="Deploy">
+      <Exec Command="..\..\..\Deploy.bat ..\..\..\Artifacts\HFM.NET" WorkingDirectory="HFM\bin\Release"/>
    </Target>
 
    <Target Name="Compile" DependsOnTargets="AssemblyVersion">
@@ -56,6 +61,7 @@
    </PropertyGroup>
 
    <Target Name="NUnit">
+      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Client.Tests\bin\Release\HFM.Client.Tests.dll /xml=$(ArtifactsPath)\HFM.Client.Tests.Results.xml //reg //a HFM.Client //ea $(NCoverExcludeList) //x $(ArtifactsPath)\HFM.Client.Tests.Coverage.xml" />
       <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Forms.Tests\bin\Release\HFM.Forms.Tests.dll /xml=$(ArtifactsPath)\HFM.Forms.Tests.Results.xml //reg //a HFM.Forms //ea $(NCoverExcludeList) //x $(ArtifactsPath)\HFM.Forms.Tests.Coverage.xml" />
       <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.DataAggregator.Tests\bin\Release\HFM.DataAggregator.Tests.dll /xml=$(ArtifactsPath)\HFM.DataAggregator.Tests.Results.xml //reg //a HFM.DataAggregator //ea $(NCoverExcludeList) //x $(ArtifactsPath)\HFM.DataAggregator.Tests.Coverage.xml" />
       <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Framework.Tests\bin\Release\HFM.Framework.Tests.dll /xml=$(ArtifactsPath)\HFM.Framework.Tests.Results.xml //reg //a HFM.Framework //ea $(NCoverExcludeList) //x $(ArtifactsPath)\HFM.Framework.Tests.Coverage.xml" />
