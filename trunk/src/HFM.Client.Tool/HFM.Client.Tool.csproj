@@ -137,7 +137,7 @@
 goto End
 
 :Merge
-..\..\..\..\tools\ILMerge\ILMerge.exe  /t:winexe /ndebug /out:HFM.Client.exe HFM.Client.Tool.exe HFM.Client.dll
+..\..\..\..\tools\ILMerge\ILMerge.exe  /t:winexe /ndebug /out:HFM.Client.exe HFM.Client.Tool.exe HFM.Client.dll Newtonsoft.Json.Net35.dll
 :End</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

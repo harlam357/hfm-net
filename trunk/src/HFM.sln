@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Framework.DataTypes", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Forms", "HFM.Forms\HFM.Forms.csproj", "{C0B126D1-C495-4062-A8C8-4AAA69F35C9D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Client", "HFM.Client\HFM.Client.csproj", "{B1BB2AF4-5C2F-42A7-80B4-7291D3E4BC39}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -102,6 +104,12 @@ Global
 		{C0B126D1-C495-4062-A8C8-4AAA69F35C9D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C0B126D1-C495-4062-A8C8-4AAA69F35C9D}.ScriptedRelease|Any CPU.ActiveCfg = Release|Any CPU
 		{C0B126D1-C495-4062-A8C8-4AAA69F35C9D}.ScriptedRelease|Any CPU.Build.0 = Release|Any CPU
+		{B1BB2AF4-5C2F-42A7-80B4-7291D3E4BC39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1BB2AF4-5C2F-42A7-80B4-7291D3E4BC39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1BB2AF4-5C2F-42A7-80B4-7291D3E4BC39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1BB2AF4-5C2F-42A7-80B4-7291D3E4BC39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1BB2AF4-5C2F-42A7-80B4-7291D3E4BC39}.ScriptedRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{B1BB2AF4-5C2F-42A7-80B4-7291D3E4BC39}.ScriptedRelease|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

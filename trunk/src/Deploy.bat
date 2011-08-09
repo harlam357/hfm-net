@@ -8,6 +8,7 @@ del /S /Q %1\*.*
 echo Deploying Assemblies...
 copy /y HFM.exe %1
 copy /y HFM.exe.config %1
+copy /y HFM.Client.dll %1
 copy /y HFM.DataAggregator.dll %1
 copy /y HFM.Forms.dll %1
 copy /y HFM.Framework.dll %1
@@ -30,6 +31,7 @@ copy /Y Castle.Windsor.dll %1
 copy /Y protobuf-net.dll %1
 copy /Y System.Linq.Dynamic.dll %1
 copy /Y AutoMapper.dll %1
+copy /Y Newtonsoft.Json.Net35.dll %1
 
 if not exist %1\SQLite md %1\SQLite
 if not exist %1\SQLite\x86 md %1\SQLite\x86
@@ -40,6 +42,7 @@ if not exist %1\SQLite\Mono md %1\SQLite\Mono
 copy /Y ..\..\..\..\lib\SQLite.NET\bin\ManagedOnly\System.Data.SQLite.dll %1\SQLite\Mono
 
 if not exist %1\Tools md %1\Tools
+copy /Y ..\..\..\HFM.Client.Tool\bin\ReleaseMerge\HFM.Client.exe %1\Tools
 copy /Y ..\..\..\HFM.Queue.Tool\bin\ReleaseMerge\HFM.Queue.exe %1\Tools
 
 echo Copying License Files...
@@ -52,6 +55,7 @@ copy /Y "..\..\..\..\lib\Castle Windsor 2.0\Windsor License.txt" %1\Documentatio
 copy /Y "..\..\..\..\lib\protobuf-net\protobuf-net Licence.txt" %1\Documentation\License
 copy /Y "..\..\..\..\lib\protobuf-net\protoc-license.txt" %1\Documentation\License
 copy /Y "..\..\..\..\lib\AutoMapper\AutoMapper License.txt" %1\Documentation\License
+copy /Y "..\..\..\..\lib\Json.NET\Json.NET License.txt" %1\Documentation\License
 
 echo Copying Support Files and Folders...
 if not exist %1\CSS md %1\CSS
