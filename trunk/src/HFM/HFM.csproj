@@ -242,17 +242,9 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>if $(ConfigurationName)==ScriptedRelease goto Deploy
-goto End
-
-:Deploy
-call ..\..\..\Deploy.bat ..\..\..\Artifacts\HFM.NET
-:End</PostBuildEvent>
-    <PreBuildEvent>if $(ConfigurationName)==ScriptedRelease goto BuildAsmInfo
-goto End
-
-:BuildAsmInfo
-C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\MSBuild.exe ..\..\..\HFM.msbuild /t:Version
-:End</PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>

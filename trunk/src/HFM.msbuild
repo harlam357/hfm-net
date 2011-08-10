@@ -29,7 +29,7 @@
    </Target>
 
    <Target Name="Build" DependsOnTargets="Compile">
-      <CallTarget Targets="Deploy"/>
+      <CallTarget Targets="Deploy" ContinueOnError="true"/>
       <Message Text="HFM.NET Build Complete"/>
    </Target>
 
