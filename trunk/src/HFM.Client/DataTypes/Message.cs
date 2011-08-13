@@ -28,8 +28,24 @@ using Newtonsoft.Json.Linq;
 
 namespace HFM.Client.DataTypes
 {
+   public abstract class TypedMessageCollection : TypedMessage
+   {
+      internal abstract void Fill<T>(JsonMessage message) where T : ITypedMessageObject;
+   }
+
    public abstract class TypedMessage : Message, ITypedMessageObject
    {
+      #region Constructor
+
+      protected TypedMessage()
+      {
+         _errors = new List<MessagePropertyConversionError>();
+      }
+
+      #endregion
+
+      internal abstract void Fill(JsonMessage message);
+
       #region ITypedMessageObject Members
 
       private readonly List<MessagePropertyConversionError> _errors;
@@ -39,11 +55,6 @@ namespace HFM.Client.DataTypes
       public IEnumerable<MessagePropertyConversionError> Errors
       {
          get { return _errors.AsReadOnly(); }
-      }
-
-      internal TypedMessage()
-      {
-         _errors = new List<MessagePropertyConversionError>();
       }
 
       void ITypedMessageObject.AddError(MessagePropertyConversionError error)
@@ -64,7 +75,7 @@ namespace HFM.Client.DataTypes
       /// <summary>
       /// Message Value
       /// </summary>
-      public string Value { get; set; }
+      public string Value { get; internal set; }
 
       /// <summary>
       /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
@@ -89,12 +100,12 @@ namespace HFM.Client.DataTypes
       /// <summary>
       /// Message Key
       /// </summary>
-      public string Key { get; set; }
+      public string Key { get; internal set; }
 
       /// <summary>
       /// Received Time Stamp
       /// </summary>
-      public DateTime Received { get; set; }
+      public DateTime Received { get; internal set; }
 
       internal void SetMessageValues(Message message)
       {
@@ -266,6 +277,11 @@ namespace HFM.Client.DataTypes
       }
    }
 
+   public interface IConversionProvider
+   {
+      object Convert(object input);
+   }
+
    public sealed class MessagePropertyConversionError
    {
       private readonly string _propertyName;
@@ -291,11 +307,6 @@ namespace HFM.Client.DataTypes
          _propertyName = propertyName;
          _message = message;
       }
-   }
-
-   public interface IConversionProvider
-   {
-      object Convert(object input);
    }
 
    public interface ITypedMessageObject

@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 
@@ -27,7 +28,7 @@ namespace HFM.Client.DataTypes
 {
    public class Info : TypedMessage
    {
-      private Info()
+      public Info()
       {
          Client = new ClientInfo();
          Build = new BuildInfo();
@@ -48,16 +49,14 @@ namespace HFM.Client.DataTypes
       #endregion
 
       /// <summary>
-      /// Create a Info object from the given JsonMessage.
+      /// Fill the Info object with data from the given JsonMessage.
       /// </summary>
       /// <param name="message">Message object containing JSON value and meta-data.</param>
-      /// <exception cref="ArgumentNullException">Throws if message parameter is null.</exception>
-      public static Info Parse(JsonMessage message)
+      internal override void Fill(JsonMessage message)
       {
-         if (message == null) throw new ArgumentNullException("message");
+         Debug.Assert(message != null);
 
-         var info = new Info();
-         var propertySetter = new MessagePropertySetter(info);
+         var propertySetter = new MessagePropertySetter(this);
          foreach (var token in JArray.Parse(message.Value))
          {
             if (!token.HasValues)
@@ -83,18 +82,12 @@ namespace HFM.Client.DataTypes
                }
             }
          }
-         info.SetMessageValues(message);
-         return info;
+         SetMessageValues(message);
       }      
    }
 
    public class ClientInfo
    {
-      internal ClientInfo()
-      {
-         
-      }
-
       #region Properties
 
       [MessageProperty("Website")]
@@ -117,11 +110,6 @@ namespace HFM.Client.DataTypes
 
    public class BuildInfo
    {
-      internal BuildInfo()
-      {
-         
-      }
-
       #region Properties
 
       [MessageProperty("Version")]
@@ -133,29 +121,29 @@ namespace HFM.Client.DataTypes
       [MessageProperty("Time")]
       public string Time { get; set; }
 
-      #region BuildDateTime Property
+      #region BuildDateTime Property (commented)
 
-      public DateTime? BuildDateTime
-      {
-         get { return GetDateTime(); }
-      }
+      //public DateTime? BuildDateTime
+      //{
+      //   get { return GetDateTime(); }
+      //}
 
-      private DateTime? GetDateTime()
-      {
-         if (Date != null && Time != null)
-         {
-            try
-            {
-               return DateTime.ParseExact(String.Concat(Date, " ", Time), "MMM  d yyyy HH:mm:ss", CultureInfo.InvariantCulture);
-            }
-            catch (FormatException)
-            {
-               return null;
-            }
-         }
+      //private DateTime? GetDateTime()
+      //{
+      //   if (Date != null && Time != null)
+      //   {
+      //      try
+      //      {
+      //         return DateTime.ParseExact(String.Concat(Date, " ", Time), "MMM  d yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+      //      }
+      //      catch (FormatException)
+      //      {
+      //         return null;
+      //      }
+      //   }
 
-         return null;
-      }
+      //   return null;
+      //}
 
       #endregion
 
@@ -205,11 +193,6 @@ namespace HFM.Client.DataTypes
 
    public class SystemInfo
    {
-      internal SystemInfo()
-      {
-         
-      }
-
       #region Properties
 
       [MessageProperty("OS")]

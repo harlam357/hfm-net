@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
+using System.Diagnostics;
 
 using Newtonsoft.Json.Linq;
 
@@ -25,11 +25,6 @@ namespace HFM.Client.DataTypes
 {
    public class Options : TypedMessage
    {
-      private Options()
-      {
-         
-      }
-
       #region Properties
 
       [MessageProperty("assignment-servers")]
@@ -362,22 +357,19 @@ namespace HFM.Client.DataTypes
       #endregion
 
       /// <summary>
-      /// Create an Options object from the given JsonMessage.
+      /// Fill the Options object with data from the given JsonMessage.
       /// </summary>
       /// <param name="message">Message object containing JSON value and meta-data.</param>
-      /// <exception cref="ArgumentNullException">Throws if message parameter is null.</exception>
-      public static Options Parse(JsonMessage message)
+      internal override void Fill(JsonMessage message)
       {
-         if (message == null) throw new ArgumentNullException("message");
+         Debug.Assert(message != null);
 
-         var options = new Options();
-         var propertySetter = new MessagePropertySetter(options);
+         var propertySetter = new MessagePropertySetter(this);
          foreach (var prop in JObject.Parse(message.Value).Properties())
          {
             propertySetter.SetProperty(prop);
          }
-         options.SetMessageValues(message);
-         return options;
+         SetMessageValues(message);
       }
    }
 }

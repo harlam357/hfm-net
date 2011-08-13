@@ -18,6 +18,8 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using HFM.Client.DataTypes;
 
@@ -25,6 +27,17 @@ namespace HFM.Client
 {
    public class FahClient : MessageCache
    {
+      private static readonly Dictionary<string, Type> TypeMap = new Dictionary<string, Type>
+                                                                 {
+                                                                    { JsonMessageKey.Heartbeat, typeof(Heartbeat) },
+                                                                    { JsonMessageKey.Info, typeof(Info) },
+                                                                    { JsonMessageKey.Options, typeof(Options) },
+                                                                    { JsonMessageKey.SimulationInfo, typeof(SimulationInfo) },
+                                                                    { JsonMessageKey.SlotInfo, typeof(SlotCollection) },
+                                                                    { JsonMessageKey.SlotOptions, typeof(SlotOptions) },
+                                                                    { JsonMessageKey.QueueInfo, typeof(UnitCollection) }
+                                                                 };
+
       /// <summary>
       /// Create a FahClient.
       /// </summary>
@@ -37,72 +50,47 @@ namespace HFM.Client
       /// <summary>
       /// Create a FahClient.
       /// </summary>
-      public FahClient(ITcpClientFactory tcpClientFactory)
+      internal FahClient(ITcpClientFactory tcpClientFactory)
          : base(tcpClientFactory)
       {
 
       }
 
-      public T GetMessage<T>() where T : TypedMessage
+      /// <summary>
+      /// Get a Typed Server Message.  Returns null if the message is not in the cache.
+      /// </summary>
+      public T GetMessage<T>() where T : TypedMessage, new()
       {
-         if (typeof(T).Equals(typeof(Heartbeat)))
+         var jsonMessage = GetJsonMessage(GetKey(typeof(T)));
+         if (jsonMessage != null)
          {
-            var jsonMessage = GetJsonMessage(JsonMessageKey.Heartbeat);
-            if (jsonMessage != null)
-            {
-               return Heartbeat.Parse(jsonMessage) as T;
-            }
-         }
-         else if (typeof(T).Equals(typeof(Info)))
-         {
-            var jsonMessage = GetJsonMessage(JsonMessageKey.Info);
-            if (jsonMessage != null)
-            {
-               return Info.Parse(jsonMessage) as T;
-            }
-         }
-         else if (typeof(T).Equals(typeof(Options)))
-         {
-            var jsonMessage = GetJsonMessage(JsonMessageKey.Options);
-            if (jsonMessage != null)
-            {
-               return Options.Parse(jsonMessage) as T;
-            }
-         }
-         else if (typeof(T).Equals(typeof(SimulationInfo)))
-         {
-            var jsonMessage = GetJsonMessage(JsonMessageKey.SimulationInfo);
-            if (jsonMessage != null)
-            {
-               return SimulationInfo.Parse(jsonMessage) as T;
-            }
-         }
-         else if (typeof(T).Equals(typeof(SlotCollection)))
-         {
-            var jsonMessage = GetJsonMessage(JsonMessageKey.SlotInfo);
-            if (jsonMessage != null)
-            {
-               return SlotCollection.Parse(jsonMessage) as T;
-            }
-         }
-         else if (typeof(T).Equals(typeof(SlotOptions)))
-         {
-            var jsonMessage = GetJsonMessage(JsonMessageKey.SlotOptions);
-            if (jsonMessage != null)
-            {
-               return SlotOptions.Parse(jsonMessage) as T;
-            }
-         }
-         else if (typeof(T).Equals(typeof(UnitCollection)))
-         {
-            var jsonMessage = GetJsonMessage(JsonMessageKey.QueueInfo);
-            if (jsonMessage != null)
-            {
-               return UnitCollection.Parse(jsonMessage) as T;
-            }
+            var options = Activator.CreateInstance<T>();
+            options.Fill(jsonMessage);
+            return options;
          }
 
          return null;
+      }
+
+      /// <summary>
+      /// Get a Typed Server Message.  Returns null if the message is not in the cache.
+      /// </summary>
+      public T GetMessage<T, TCollectionType>() where T : TypedMessageCollection, new() where TCollectionType : ITypedMessageObject, new()
+      {
+         var jsonMessage = GetJsonMessage(GetKey(typeof(T)));
+         if (jsonMessage != null)
+         {
+            var options = Activator.CreateInstance<T>();
+            options.Fill<TCollectionType>(jsonMessage);
+            return options;
+         }
+
+         return null;
+      }
+
+      private static string GetKey(Type type)
+      {
+         return TypeMap.FirstOrDefault(x => type.Equals(x.Value) || type.IsSubclassOf(x.Value)).Key;
       }
 
       /// <summary>
@@ -113,31 +101,8 @@ namespace HFM.Client
       {
          if (e == null) return;
 
-         e.DataType = MapKeyToType(e.Key);
+         e.DataType = TypeMap.ContainsKey(e.Key) ? TypeMap[e.Key] : null;
          base.OnMessageUpdated(e);
-      }
-
-      private static Type MapKeyToType(string key)
-      {
-         switch (key)
-         {
-            case JsonMessageKey.Heartbeat:
-               return typeof(Heartbeat);
-            case JsonMessageKey.Info:
-               return typeof(Info);
-            case JsonMessageKey.Options:
-               return typeof(Options);
-            case JsonMessageKey.SimulationInfo:
-               return typeof(SimulationInfo);
-            case JsonMessageKey.SlotInfo:
-               return typeof(SlotCollection);
-            case JsonMessageKey.SlotOptions:
-               return typeof(SlotOptions);
-            case JsonMessageKey.QueueInfo:
-               return typeof(UnitCollection);
-         }
-
-         return null;
       }
    }
 }

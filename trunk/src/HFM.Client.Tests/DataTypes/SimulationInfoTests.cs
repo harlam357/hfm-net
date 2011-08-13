@@ -30,10 +30,11 @@ namespace HFM.Client.Tests.DataTypes
    public class SimulationInfoTests
    {
       [Test]
-      public void ParseTest1()
+      public void FillTest1()
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\simulation-info.txt");
-         var simulationInfo = SimulationInfo.Parse(MessageCache.GetNextJsonMessage(ref message));
+         var simulationInfo = new SimulationInfo();
+         simulationInfo.Fill(MessageCache.GetNextJsonMessage(ref message));
          Assert.AreEqual("harlam357", simulationInfo.User);
          Assert.AreEqual(32, simulationInfo.Team);
          Assert.AreEqual(11020, simulationInfo.Project);
@@ -59,13 +60,6 @@ namespace HFM.Client.Tests.DataTypes
          // not exactly the same value seen in Unit.EtaTimeSpan
          Assert.AreEqual(new TimeSpan(2, 27, 24), simulationInfo.EtaTimeSpan);
          Assert.AreEqual("", simulationInfo.News);
-      }
-
-      [Test]
-      [ExpectedException(typeof(ArgumentNullException))]
-      public void ParseNullArgumentTest()
-      {
-         SimulationInfo.Parse(null);
       }
    }
 }

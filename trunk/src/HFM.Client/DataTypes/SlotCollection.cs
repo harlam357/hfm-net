@@ -19,31 +19,40 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 
 using Newtonsoft.Json.Linq;
 
 namespace HFM.Client.DataTypes
 {
-   public class SlotCollection : TypedMessage, IList<Slot>
+   public sealed class SlotCollection : TypedMessageCollection, IList<Slot>
    {
       private readonly List<Slot> _slots;
 
-      private SlotCollection()
+      public SlotCollection()
       {
          _slots = new List<Slot>();
       }
 
       /// <summary>
-      /// Create a SlotCollection object from the given JsonMessage.
+      /// Fill the SlotCollection object with data from the given JsonMessage.
       /// </summary>
       /// <param name="message">Message object containing JSON value and meta-data.</param>
-      /// <exception cref="ArgumentNullException">Throws if 'message' argument is null.</exception>
-      public static SlotCollection Parse(JsonMessage message)
+      internal override void Fill(JsonMessage message)
       {
-         if (message == null) throw new ArgumentNullException("message");
+         Fill<Slot>(message);
+      }
+
+      /// <summary>
+      /// Fill the SlotCollection object with data from the given JsonMessage.
+      /// </summary>
+      /// <param name="message">Message object containing JSON value and meta-data.</param>
+      internal override void Fill<T>(JsonMessage message)
+      {
+         Debug.Assert(message != null);
 
          var jsonArray = JArray.Parse(message.Value);
-         var slotCollection = new SlotCollection();
          foreach (var token in jsonArray)
          {
             if (!token.HasValues)
@@ -51,20 +60,25 @@ namespace HFM.Client.DataTypes
                continue;
             }
 
-            var slot = new Slot();
+            var slot = Activator.CreateInstance<T>() as Slot;
+            if (slot == null)
+            {
+               throw new InvalidCastException(String.Format(CultureInfo.CurrentCulture, 
+                  "Type {0} cannot be converted to type Slot.", typeof(T)));
+            }
+
             var propertySetter = new MessagePropertySetter(slot);
             foreach (var prop in JObject.Parse(token.ToString()).Properties())
             {
                propertySetter.SetProperty(prop);
             }
-            slotCollection.Add(slot);
+            Add(slot);
          }
-         slotCollection.SetMessageValues(message);
-         foreach (var slot in slotCollection)
+         SetMessageValues(message);
+         foreach (var slot in this)
          {
             slot.SlotOptions.SetMessageValues(message);
          }
-         return slotCollection;
       }
 
       #region IList<Slot> Members
@@ -230,7 +244,7 @@ namespace HFM.Client.DataTypes
 
    public class Slot : ITypedMessageObject
    {
-      internal Slot()
+      public Slot()
       {
          SlotOptions = new SlotOptions();
          _errors = new List<MessagePropertyConversionError>();
