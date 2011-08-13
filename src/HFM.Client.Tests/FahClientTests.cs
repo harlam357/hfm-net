@@ -26,6 +26,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 
 using HFM.Client.DataTypes;
+using HFM.Client.Tests.DataTypes;
 
 namespace HFM.Client.Tests
 {
@@ -233,6 +234,34 @@ namespace HFM.Client.Tests
          _stream.VerifyAllExpectations();
       }
 
+      [Test]
+      public void GetSlotDerivedCollectionTest()
+      {
+         using (var fahClient = new FahClient(CreateClientFactory()))
+         {
+            Connect(fahClient);
+
+            var buffer = fahClient.InternalBuffer;
+            _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
+               new Func<byte[], int, int, int>(FillBufferWithSlotsData));
+
+            MessageUpdatedEventArgs e = null;
+            fahClient.MessageUpdated += (sender, args) => e = args;
+            fahClient.SocketTimerElapsed(null, null);
+
+            Assert.AreEqual(JsonMessageKey.SlotInfo, e.Key);
+            Assert.AreEqual(typeof(SlotCollection), e.DataType);
+            var slotCollection = fahClient.GetMessage<SlotCollection, SlotDerived>();
+            Assert.IsNotNull(slotCollection);
+            Assert.AreEqual(0, slotCollection.Errors.Count());
+            Assert.AreEqual(1, slotCollection.Count);
+            Assert.AreEqual(1, slotCollection[0].Errors.Count());
+         }
+
+         _tcpClient.VerifyAllExpectations();
+         _stream.VerifyAllExpectations();
+      }
+
       private static int FillBufferWithSlotsData(byte[] buffer, int offset, int size)
       {
          return ReadBytes("..\\..\\..\\TestFiles\\Client_v7_1\\slots.txt", buffer, buffer.Length * 0);
@@ -291,6 +320,34 @@ namespace HFM.Client.Tests
             Assert.AreEqual(0, unitCollection.Errors.Count());
             Assert.AreEqual(1, unitCollection.Count);
             Assert.AreEqual(0, unitCollection[0].Errors.Count());
+         }
+
+         _tcpClient.VerifyAllExpectations();
+         _stream.VerifyAllExpectations();
+      }
+
+      [Test]
+      public void GetUnitDerivedCollectionTest()
+      {
+         using (var fahClient = new FahClient(CreateClientFactory()))
+         {
+            Connect(fahClient);
+
+            var buffer = fahClient.InternalBuffer;
+            _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
+               new Func<byte[], int, int, int>(FillBufferWithUnitsData));
+
+            MessageUpdatedEventArgs e = null;
+            fahClient.MessageUpdated += (sender, args) => e = args;
+            fahClient.SocketTimerElapsed(null, null);
+
+            Assert.AreEqual(JsonMessageKey.QueueInfo, e.Key);
+            Assert.AreEqual(typeof(UnitCollection), e.DataType);
+            var unitCollection = fahClient.GetMessage<UnitCollection, UnitDerived>();
+            Assert.IsNotNull(unitCollection);
+            Assert.AreEqual(0, unitCollection.Errors.Count());
+            Assert.AreEqual(1, unitCollection.Count);
+            Assert.AreEqual(1, unitCollection[0].Errors.Count());
          }
 
          _tcpClient.VerifyAllExpectations();

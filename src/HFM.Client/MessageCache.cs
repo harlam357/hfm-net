@@ -68,7 +68,7 @@ namespace HFM.Client
       /// <summary>
       /// Create a Server Message Cache.
       /// </summary>
-      public MessageCache(ITcpClientFactory tcpClientFactory)
+      internal MessageCache(ITcpClientFactory tcpClientFactory)
          : base(tcpClientFactory)
       {
          _readBuffer = new StringBuilder();
@@ -83,7 +83,6 @@ namespace HFM.Client
       /// Get a Server Message.  Returns null if the message is not in the cache.
       /// </summary>
       /// <param name="key">Server Message Key</param>
-      /// <returns>The server message or null if the message is not in the cache.</returns>
       public JsonMessage GetJsonMessage(string key)
       {
          return _messages.ContainsKey(key) ? _messages[key] : null;

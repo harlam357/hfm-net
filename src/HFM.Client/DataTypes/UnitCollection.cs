@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -26,26 +27,33 @@ using Newtonsoft.Json.Linq;
 
 namespace HFM.Client.DataTypes
 {
-   public class UnitCollection : TypedMessage, IList<Unit>
+   public sealed class UnitCollection : TypedMessageCollection, IList<Unit>
    {
       private readonly List<Unit> _units;
 
-      private UnitCollection()
+      public UnitCollection()
       {
          _units = new List<Unit>();
       }
 
       /// <summary>
-      /// Create a UnitCollection object from the given JsonMessage.
+      /// Fill the UnitCollection object with data from the given JsonMessage.
       /// </summary>
       /// <param name="message">Message object containing JSON value and meta-data.</param>
-      /// <exception cref="ArgumentNullException">Throws if 'message' argument is null.</exception>
-      public static UnitCollection Parse(JsonMessage message)
+      internal override void Fill(JsonMessage message)
       {
-         if (message == null) throw new ArgumentNullException("message");
+         Fill<Unit>(message);
+      }
+
+      /// <summary>
+      /// Fill the UnitCollection object with data from the given JsonMessage.
+      /// </summary>
+      /// <param name="message">Message object containing JSON value and meta-data.</param>
+      internal override void Fill<T>(JsonMessage message)
+      {
+         Debug.Assert(message != null);
 
          var jsonArray = JArray.Parse(message.Value);
-         var unitCollection = new UnitCollection();
          foreach (var token in jsonArray)
          {
             if (!token.HasValues)
@@ -53,16 +61,21 @@ namespace HFM.Client.DataTypes
                continue;
             }
 
-            var queueUnit = new Unit();
-            var propertySetter = new MessagePropertySetter(queueUnit);
+            var unit = Activator.CreateInstance<T>() as Unit;
+            if (unit == null)
+            {
+               throw new InvalidCastException(String.Format(CultureInfo.CurrentCulture,
+                  "Type {0} cannot be converted to type Unit.", typeof(T)));
+            }
+
+            var propertySetter = new MessagePropertySetter(unit);
             foreach (var prop in JObject.Parse(token.ToString()).Properties())
             {
                propertySetter.SetProperty(prop);
             }
-            unitCollection.Add(queueUnit);
+            Add(unit);
          }
-         unitCollection.SetMessageValues(message);
-         return unitCollection;
+         SetMessageValues(message);
       }
 
       #region IList<Unit> Members
@@ -228,7 +241,7 @@ namespace HFM.Client.DataTypes
 
    public class Unit : ITypedMessageObject
    {
-      internal Unit()
+      public Unit()
       {
          _errors = new List<MessagePropertyConversionError>();
       }

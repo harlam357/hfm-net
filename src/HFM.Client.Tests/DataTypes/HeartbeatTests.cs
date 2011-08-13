@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
 using System.IO;
 
 using NUnit.Framework;
@@ -30,18 +29,12 @@ namespace HFM.Client.Tests.DataTypes
    public class HeartbeatTests
    {
       [Test]
-      public void ParseTest1()
+      public void FillTest1()
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\heartbeat.txt");
-         var heartbeat = Heartbeat.Parse(MessageCache.GetNextJsonMessage(ref message));
+         var heartbeat = new Heartbeat();
+         heartbeat.Fill(MessageCache.GetNextJsonMessage(ref message));
          Assert.AreEqual(12, heartbeat.Value);
-      }
-
-      [Test]
-      [ExpectedException(typeof(ArgumentNullException))]
-      public void ParseNullArgumentTest()
-      {
-         Heartbeat.Parse(null);
       }
    }
 }

@@ -30,10 +30,11 @@ namespace HFM.Client.Tests.DataTypes
    public class SlotOptionsTests
    {
       [Test]
-      public void ParseTest1()
+      public void FillTest1()
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\slot-options.txt");
-         var slotOptions = SlotOptions.Parse(MessageCache.GetNextJsonMessage(ref message));
+         var slotOptions = new SlotOptions();
+         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
          Assert.AreEqual("normal", slotOptions.ClientType);
          Assert.AreEqual(ClientType.Normal, slotOptions.ClientTypeEnum);
          Assert.AreEqual("SMP", slotOptions.ClientSubType);
@@ -49,13 +50,6 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(true, slotOptions.PauseOnStart);
          Assert.AreEqual(null, slotOptions.GpuVendorId);
          Assert.AreEqual(null, slotOptions.GpuDeviceId);
-      }
-
-      [Test]
-      [ExpectedException(typeof(ArgumentNullException))]
-      public void ParseNullArgumentTest()
-      {
-         SlotOptions.Parse(null);
       }
    }
 }

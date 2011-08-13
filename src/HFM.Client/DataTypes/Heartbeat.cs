@@ -18,31 +18,26 @@
  */
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 
 namespace HFM.Client.DataTypes
 {
-   public class Heartbeat : TypedMessage
+   public sealed class Heartbeat : TypedMessage
    {
-      private Heartbeat()
-      {
-         
-      }
-
+      /// <summary>
+      /// Heartbeat Number
+      /// </summary>
       public int Value { get; set; }
 
       /// <summary>
-      /// Create a Heartbeat object from the given JsonMessage.
+      /// Fill the Heartbeat object with data from the given JsonMessage.
       /// </summary>
       /// <param name="message">Message object containing JSON value and meta-data.</param>
-      /// <exception cref="ArgumentNullException">Throws if message parameter is null.</exception>
-      public static Heartbeat Parse(JsonMessage message)
+      internal override void Fill(JsonMessage message)
       {
-         if (message == null) throw new ArgumentNullException("message");
-
-         var heartbeat = new Heartbeat();
-         heartbeat.Value = Int32.Parse(message.Value, CultureInfo.InvariantCulture);
-         return heartbeat;
+         Debug.Assert(message != null);
+         Value = Int32.Parse(message.Value, CultureInfo.InvariantCulture);
       }
    }
 }

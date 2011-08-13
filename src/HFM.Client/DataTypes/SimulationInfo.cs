@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Diagnostics;
 
 using Newtonsoft.Json.Linq;
 
@@ -103,22 +104,19 @@ namespace HFM.Client.DataTypes
       #endregion
 
       /// <summary>
-      /// Create an SimulationInfo object from the given JsonMessage.
+      /// Fill the SimulationInfo object with data from the given JsonMessage.
       /// </summary>
       /// <param name="message">Message object containing JSON value and meta-data.</param>
-      /// <exception cref="ArgumentNullException">Throws if message parameter is null.</exception>
-      public static SimulationInfo Parse(JsonMessage message)
+      internal override void Fill(JsonMessage message)
       {
-         if (message == null) throw new ArgumentNullException("message");
+         Debug.Assert(message != null);
 
-         var simulationInfo = new SimulationInfo();
-         var propertySetter = new MessagePropertySetter(simulationInfo);
+         var propertySetter = new MessagePropertySetter(this);
          foreach (var prop in JObject.Parse(message.Value).Properties())
          {
             propertySetter.SetProperty(prop);
          }
-         simulationInfo.SetMessageValues(message);
-         return simulationInfo;
+         SetMessageValues(message);
       }
    }
 

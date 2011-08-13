@@ -30,10 +30,11 @@ namespace HFM.Client.Tests.DataTypes
    public class OptionsTests
    {
       [Test]
-      public void ParseTest1()
+      public void FillTest1()
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\options.txt");
-         var options = Options.Parse(MessageCache.GetNextJsonMessage(ref message));
+         var options = new Options();
+         options.Fill(MessageCache.GetNextJsonMessage(ref message));
          Assert.AreEqual("assign3.stanford.edu:8080 assign4.stanford.edu:80", options.AssignmentServers);
          Assert.AreEqual("capture", options.CaptureDirectory);
          Assert.AreEqual(false, options.CaptureSockets);
@@ -139,13 +140,6 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(4, options.Threads);
          Assert.AreEqual("harlam357", options.User);
          Assert.AreEqual(5, options.Verbosity);
-      }
-
-      [Test]
-      [ExpectedException(typeof(ArgumentNullException))]
-      public void ParseNullArgumentTest()
-      {
-         Options.Parse(null);
       }
    }
 }

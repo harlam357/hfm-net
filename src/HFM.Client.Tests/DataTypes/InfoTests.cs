@@ -30,10 +30,11 @@ namespace HFM.Client.Tests.DataTypes
    public class ClientInfoTests
    {
       [Test]
-      public void ParseTest1()
+      public void FillTest1()
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\info.txt");
-         var info = Info.Parse(MessageCache.GetNextJsonMessage(ref message));
+         var info = new Info();
+         info.Fill(MessageCache.GetNextJsonMessage(ref message));
          Assert.AreEqual("http://folding.stanford.edu/", info.Client.Website);
          Assert.AreEqual("(c) 2009,2010 Stanford University", info.Client.Copyright);
          Assert.AreEqual("Joseph Coffland <joseph@cauldrondevelopment.com>", info.Client.Author);
@@ -42,7 +43,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("7.1.24", info.Build.Version);
          Assert.AreEqual("Apr  6 2011", info.Build.Date);
          Assert.AreEqual("21:37:58", info.Build.Time);
-         Assert.AreEqual(new DateTime(2011, 4, 6, 21, 37, 58), info.Build.BuildDateTime);
+         //Assert.AreEqual(new DateTime(2011, 4, 6, 21, 37, 58), info.Build.BuildDateTime);
          Assert.AreEqual(2908, info.Build.SvnRev);
          Assert.AreEqual("fah/trunk/client", info.Build.Branch);
          Assert.AreEqual("Intel(R) C++ MSVC 1500 mode 1110", info.Build.Compiler);
@@ -75,13 +76,6 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(3080, info.System.ProcessId);
          Assert.AreEqual("C:/Documents and Settings/user/Application Data/FAHClient", info.System.WorkingDirectory);
          Assert.AreEqual(true, info.System.Win32Service);
-      }
-
-      [Test]
-      [ExpectedException(typeof(ArgumentNullException))]
-      public void ParseNullArgumentTest()
-      {
-         Info.Parse(null);
       }
    }
 }

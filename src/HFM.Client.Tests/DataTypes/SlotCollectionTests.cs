@@ -19,6 +19,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 
 using NUnit.Framework;
 
@@ -30,10 +31,11 @@ namespace HFM.Client.Tests.DataTypes
    public class SlotCollectionTests
    {
       [Test]
-      public void ParseTest1()
+      public void FillTest1()
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\slots.txt");
-         var slotCollection = SlotCollection.Parse(MessageCache.GetNextJsonMessage(ref message));
+         var slotCollection = new SlotCollection();
+         slotCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
          Assert.AreEqual(1, slotCollection.Count);
          Assert.AreEqual(0, slotCollection[0].Id);
          Assert.AreEqual("RUNNING", slotCollection[0].Status);
@@ -42,10 +44,65 @@ namespace HFM.Client.Tests.DataTypes
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentNullException))]
-      public void ParseNullArgumentTest()
+      public void FillDerivedTest1()
       {
-         SlotCollection.Parse(null);
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\slots.txt");
+         var slotCollection = new SlotCollection();
+         slotCollection.Fill<SlotDerived>(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(1, slotCollection.Count);
+         Assert.AreEqual(0, slotCollection[0].Id);
+         Assert.AreEqual("00", ((SlotDerived)slotCollection[0]).IdString);
+         Assert.AreEqual(null, ((SlotDerived)slotCollection[0]).IdBool);
+         Assert.AreEqual("RUNNING", slotCollection[0].Status);
+         Assert.AreEqual("smp:4", slotCollection[0].Description);
+         Assert.AreEqual(true, slotCollection[0].SlotOptions.PauseOnStart);
+         Assert.AreEqual("true", ((SlotOptionsDerived)slotCollection[0].SlotOptions).PauseOnStartString);
       }
+
+      [Test]
+      [ExpectedException(typeof(InvalidCastException))]
+      public void FillNotDerivedTest()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\slots.txt");
+         var slotCollection = new SlotCollection();
+         slotCollection.Fill<SlotNotDerived>(MessageCache.GetNextJsonMessage(ref message));
+      }
+   }
+
+   public class SlotDerived : Slot
+   {
+      public SlotDerived()
+      {
+         SlotOptions = new SlotOptionsDerived();
+      }
+
+      [MessageProperty("id")]
+      public string IdString { get; set; }
+
+      [MessageProperty("id")]
+      public bool? IdBool { get; set; }
+   }
+
+   public class SlotOptionsDerived : SlotOptions
+   {
+      [MessageProperty("pause-on-start")]
+      public string PauseOnStartString { get; set; }
+   }
+
+   public class SlotNotDerived : ITypedMessageObject
+   {
+      #region ITypedMessageObject Members
+
+      public System.Collections.Generic.IEnumerable<MessagePropertyConversionError> Errors
+      {
+         get { throw new NotImplementedException(); }
+      }
+
+      void ITypedMessageObject.AddError(MessagePropertyConversionError error)
+      {
+         throw new NotImplementedException();
+      }
+
+      #endregion
    }
 }
