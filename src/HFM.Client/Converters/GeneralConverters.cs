@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - General Data Class Converter Types
+ * HFM.NET - General Data Converters
  * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -20,8 +20,13 @@
 using System;
 using System.Globalization;
 
-namespace HFM.Client.DataTypes
+namespace HFM.Client.Converters
 {
+   public interface IConversionProvider
+   {
+      object Convert(object input);
+   }
+
    internal sealed class DateTimeConverter : IConversionProvider
    {
       public object Convert(object input)

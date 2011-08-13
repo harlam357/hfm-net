@@ -35,7 +35,9 @@ namespace HFM.Client
                                                                     { JsonMessageKey.SimulationInfo, typeof(SimulationInfo) },
                                                                     { JsonMessageKey.SlotInfo, typeof(SlotCollection) },
                                                                     { JsonMessageKey.SlotOptions, typeof(SlotOptions) },
-                                                                    { JsonMessageKey.QueueInfo, typeof(UnitCollection) }
+                                                                    { JsonMessageKey.QueueInfo, typeof(UnitCollection) },
+                                                                    { JsonMessageKey.LogRestart, typeof(LogRestart) },
+                                                                    { JsonMessageKey.LogUpdate, typeof(LogUpdate) }
                                                                  };
 
       /// <summary>
@@ -64,9 +66,9 @@ namespace HFM.Client
          var jsonMessage = GetJsonMessage(GetKey(typeof(T)));
          if (jsonMessage != null)
          {
-            var options = Activator.CreateInstance<T>();
-            options.Fill(jsonMessage);
-            return options;
+            var typedMessage = Activator.CreateInstance<T>();
+            typedMessage.Fill(jsonMessage);
+            return typedMessage;
          }
 
          return null;
@@ -80,9 +82,9 @@ namespace HFM.Client
          var jsonMessage = GetJsonMessage(GetKey(typeof(T)));
          if (jsonMessage != null)
          {
-            var options = Activator.CreateInstance<T>();
-            options.Fill<TCollectionType>(jsonMessage);
-            return options;
+            var typedMessageCollection = Activator.CreateInstance<T>();
+            typedMessageCollection.Fill<TCollectionType>(jsonMessage);
+            return typedMessageCollection;
          }
 
          return null;

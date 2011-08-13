@@ -359,6 +359,72 @@ namespace HFM.Client.Tests
          return ReadBytes("..\\..\\..\\TestFiles\\Client_v7_1\\units.txt", buffer, buffer.Length * 0);
       }
 
+      [Test]
+      public void GetLogRestartTest()
+      {
+         using (var fahClient = new FahClient(CreateClientFactory()))
+         {
+            Connect(fahClient);
+
+            var buffer = new byte[70 * 1024];
+            fahClient.InternalBuffer = buffer;
+            _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
+               new Func<byte[], int, int, int>(FillBufferWithLogRestartData));
+
+            MessageUpdatedEventArgs e = null;
+            fahClient.MessageUpdated += (sender, args) => e = args;
+            fahClient.SocketTimerElapsed(null, null);
+
+            Assert.AreEqual(JsonMessageKey.LogRestart, e.Key);
+            Assert.AreEqual(typeof(LogRestart), e.DataType);
+            var logRestart = fahClient.GetMessage<LogRestart>();
+            Assert.IsNotNull(logRestart);
+            Assert.AreEqual('*', logRestart.Value[0]);
+            Assert.IsFalse(logRestart.Value.EndsWith("\""));
+         }
+
+         _tcpClient.VerifyAllExpectations();
+         _stream.VerifyAllExpectations();
+      }
+
+      private static int FillBufferWithLogRestartData(byte[] buffer, int offset, int size)
+      {
+         return ReadBytes("..\\..\\..\\TestFiles\\Client_v7_1\\log-restart.txt", buffer, buffer.Length * 0);
+      }
+
+      [Test]
+      public void GetLogUpdateTest()
+      {
+         using (var fahClient = new FahClient(CreateClientFactory()))
+         {
+            Connect(fahClient);
+
+            var buffer = new byte[70 * 1024];
+            fahClient.InternalBuffer = buffer;
+            _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
+               new Func<byte[], int, int, int>(FillBufferWithLogUpdateData));
+
+            MessageUpdatedEventArgs e = null;
+            fahClient.MessageUpdated += (sender, args) => e = args;
+            fahClient.SocketTimerElapsed(null, null);
+
+            Assert.AreEqual(JsonMessageKey.LogUpdate, e.Key);
+            Assert.AreEqual(typeof(LogUpdate), e.DataType);
+            var logUpdate = fahClient.GetMessage<LogUpdate>();
+            Assert.IsNotNull(logUpdate);
+            Assert.AreEqual('s', logUpdate.Value[0]);
+            Assert.IsFalse(logUpdate.Value.EndsWith("\""));
+         }
+
+         _tcpClient.VerifyAllExpectations();
+         _stream.VerifyAllExpectations();
+      }
+
+      private static int FillBufferWithLogUpdateData(byte[] buffer, int offset, int size)
+      {
+         return ReadBytes("..\\..\\..\\TestFiles\\Client_v7_1\\log-update_1.txt", buffer, buffer.Length * 0);
+      }
+
       private static int ReadBytes(string filePath, byte[] buffer, int startingByte)
       {
          string message = File.ReadAllText(filePath);

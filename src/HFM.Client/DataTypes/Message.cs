@@ -26,6 +26,8 @@ using System.Text;
 
 using Newtonsoft.Json.Linq;
 
+using HFM.Client.Converters;
+
 namespace HFM.Client.DataTypes
 {
    public abstract class TypedMessageCollection : TypedMessage
@@ -275,11 +277,6 @@ namespace HFM.Client.DataTypes
          }
          return null;
       }
-   }
-
-   public interface IConversionProvider
-   {
-      object Convert(object input);
    }
 
    public sealed class MessagePropertyConversionError

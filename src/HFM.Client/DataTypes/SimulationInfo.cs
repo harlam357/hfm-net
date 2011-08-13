@@ -22,6 +22,8 @@ using System.Diagnostics;
 
 using Newtonsoft.Json.Linq;
 
+using HFM.Client.Converters;
+
 namespace HFM.Client.DataTypes
 {
    public class SimulationInfo : TypedMessage
@@ -119,24 +121,4 @@ namespace HFM.Client.DataTypes
          SetMessageValues(message);
       }
    }
-
-   #region IConversionProvider Classes
-
-   internal sealed class SimulationInfoDateTimeConverter : IConversionProvider
-   {
-      public object Convert(object input)
-      {
-         return new DateTime(1970, 1, 1).AddSeconds((int)input);
-      }
-   }
-
-   internal sealed class SimulationInfoTimeSpanConverter : IConversionProvider
-   {
-      public object Convert(object input)
-      {
-         return new TimeSpan(0, 0, (int)input);
-      }
-   }
-
-   #endregion
 }
