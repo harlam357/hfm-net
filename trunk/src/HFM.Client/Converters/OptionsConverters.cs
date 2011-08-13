@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Common Options Data Types and Converters
+ * HFM.NET - Options Data Converters
  * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -20,49 +20,10 @@
 using System;
 using System.Globalization;
 
-namespace HFM.Client.DataTypes
+using HFM.Client.DataTypes;
+
+namespace HFM.Client.Converters
 {
-   #region Enumerations
-
-   public enum ClientType
-   {
-      Unknown,
-      Normal,
-      Advanced,
-      BigAdv
-   }
-
-   // ReSharper disable InconsistentNaming
-
-   public enum ClientSubType
-   {
-      Unknown,
-      Normal,  // ???
-      SMP,
-      GPU      // ???
-   }
-
-   // ReSharper restore InconsistentNaming
-
-   public enum MaxPacketSize
-   {
-      Unknown,
-      Small,
-      Normal,
-      Big
-   }
-
-   public enum CorePriority
-   {
-      Unknown,
-      Idle,
-      Low
-   }
-
-   #endregion
-
-   #region IConversionProvider Classes
-
    internal sealed class ClientTypeConverter : IConversionProvider
    {
       public object Convert(object input)
@@ -140,6 +101,4 @@ namespace HFM.Client.DataTypes
             "Failed to parse core-priority value of '{0}'.", inputString));
       }
    }
-
-   #endregion
 }

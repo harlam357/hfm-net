@@ -79,8 +79,8 @@ namespace HFM.Client
 
       private ITcpClient _tcpClient;
       private INetworkStream _stream;
+      private byte[] _internalBuffer;
       private readonly ITcpClientFactory _tcpClientFactory;
-      private readonly byte[] _internalBuffer;
       private readonly StringBuilder _readBuffer;
       private readonly Timer _timer;
 
@@ -98,6 +98,7 @@ namespace HFM.Client
       internal byte[] InternalBuffer
       {
          get { return _internalBuffer; }
+         set { _internalBuffer = value; }
       }
 
       /// <summary>

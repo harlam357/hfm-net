@@ -1,0 +1,63 @@
+﻿/*
+ * HFM.NET - Unit Collection Data Converters
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License. See the included file GPLv2.TXT.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+using System;
+using System.Globalization;
+using System.Text.RegularExpressions;
+
+namespace HFM.Client.Converters
+{
+   internal sealed class UnitTimeSpanConverter : IConversionProvider
+   {
+      public object Convert(object input)
+      {
+         var inputString = (string)input;
+
+         var regex1 = new Regex("(?<Hours>.+) hours (?<Minutes>.+) mins (?<Seconds>.+) secs", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+         Match matchRegex1;
+         if ((matchRegex1 = regex1.Match(inputString)).Success)
+         {
+            return new TimeSpan(System.Convert.ToInt32(matchRegex1.Result("${Hours}"), CultureInfo.InvariantCulture),
+                                System.Convert.ToInt32(matchRegex1.Result("${Minutes}"), CultureInfo.InvariantCulture),
+                                System.Convert.ToInt32(matchRegex1.Result("${Seconds}"), CultureInfo.InvariantCulture));
+         }
+
+         var regex2 = new Regex("(?<Hours>.+) hours (?<Minutes>.+) mins", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+         Match matchRegex2;
+         if ((matchRegex2 = regex2.Match(inputString)).Success)
+         {
+            return new TimeSpan(System.Convert.ToInt32(matchRegex2.Result("${Hours}"), CultureInfo.InvariantCulture),
+                                System.Convert.ToInt32(matchRegex2.Result("${Minutes}"), CultureInfo.InvariantCulture),
+                                0);
+         }
+
+         var regex3 = new Regex("(?<Minutes>.+) mins (?<Seconds>.+) secs", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+         Match matchRegex3;
+         if ((matchRegex3 = regex3.Match(inputString)).Success)
+         {
+            return new TimeSpan(0,
+                                System.Convert.ToInt32(matchRegex3.Result("${Minutes}"), CultureInfo.InvariantCulture),
+                                System.Convert.ToInt32(matchRegex3.Result("${Seconds}"), CultureInfo.InvariantCulture));
+         }
+
+         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
+            "Failed to parse time span value of '{0}'.", inputString));
+      }
+   }
+}

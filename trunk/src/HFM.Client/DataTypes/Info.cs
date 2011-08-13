@@ -17,12 +17,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
 
 using Newtonsoft.Json.Linq;
+
+using HFM.Client.Converters;
 
 namespace HFM.Client.DataTypes
 {
@@ -171,26 +171,6 @@ namespace HFM.Client.DataTypes
       #endregion
    }
 
-   // ReSharper disable InconsistentNaming
-
-   public enum OperatingSystem
-   {
-      Unknown,
-      Windows,
-      WindowsXP,
-      WindowsXPx64,
-      Vista32,
-      Vista64,
-      Windows7x32,
-      Windows7x64,
-      Linux,
-      OSX
-
-      // Expand Linux and OSX members if necessary
-   }
-
-   // ReSharper restore InconsistentNaming
-
    public class SystemInfo
    {
       #region Properties
@@ -199,7 +179,7 @@ namespace HFM.Client.DataTypes
       public string OperatingSystem { get; set; }
 
       [MessageProperty("OS", typeof(OperatingSystemConverter))]
-      public OperatingSystem OperatingSystemEnum { get; set; }
+      public OperatingSystemType OperatingSystemEnum { get; set; }
 
       [MessageProperty("CPU")]
       public string Cpu { get; set; }
@@ -286,59 +266,4 @@ namespace HFM.Client.DataTypes
 
       #endregion
    }
-
-   #region IConversionProvider Classes
-
-   //internal sealed class MemoryValueConverter : IConversionProvider
-   //{
-   //   public object Convert(string input)
-   //   {
-   //      int gigabyteIndex = input.IndexOf("GiB");
-   //      if (gigabyteIndex > 0)
-   //      {
-   //         double gigabytes = Double.Parse(input.Substring(0, gigabyteIndex));
-   //         return gigabytes;
-   //      }
-
-   //      return 0;
-   //   }
-   //}
-
-   internal sealed class OperatingSystemConverter : IConversionProvider
-   {
-      public object Convert(object input)
-      {
-         var inputString = (string)input;
-         if (inputString.Contains("Windows"))
-         {
-            OperatingSystem os = OperatingSystem.Windows;
-
-            #region Detect Specific Windows Version
-
-            switch (inputString)
-            {
-               case "Microsoft(R) Windows(R) XP Professional x64 Edition":
-                  os = OperatingSystem.WindowsXPx64;
-                  break;
-            }
-
-            #endregion
-
-            return os;
-         }
-         if (inputString.Contains("Linux"))
-         {
-            return OperatingSystem.Linux;
-         }
-         if (inputString.Contains("OSX"))
-         {
-            return OperatingSystem.OSX;
-         }
-
-         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse OS value of '{0}'.", inputString));
-      }
-   }
-
-   #endregion
 }

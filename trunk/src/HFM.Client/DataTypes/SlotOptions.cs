@@ -21,6 +21,8 @@ using System.Diagnostics;
 
 using Newtonsoft.Json.Linq;
 
+using HFM.Client.Converters;
+
 namespace HFM.Client.DataTypes
 {
    public class SlotOptions : TypedMessage
