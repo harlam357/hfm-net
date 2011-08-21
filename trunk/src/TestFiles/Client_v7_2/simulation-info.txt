@@ -1,0 +1,25 @@
+PyON 1 simulation-info
+{
+  "user": "Shelnutt2",
+  "team": "32",
+  "project": 10083,
+  "run": 0,
+  "clone": 17,
+  "gen": 24,
+  "core_type": 164,
+  "core": "GROGBA4",
+  "description": "",
+  "total_iterations": 10000,
+  "iterations_done": 0,
+  "energy": 0,
+  "temperature": 0,
+  "start_time": "09/Aug/2011-02:54:54",
+  "timeout": 1313549694,
+  "deadline": 1313808894,
+  "run_time": 210,
+  "simulation_time": 0,
+  "eta": 0,
+  "news": ""
+}
+---
+

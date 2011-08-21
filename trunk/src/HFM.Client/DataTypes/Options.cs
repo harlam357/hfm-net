@@ -47,8 +47,8 @@ namespace HFM.Client.DataTypes
       [MessageProperty("client-subtype")]
       public string ClientSubType { get; set; }
 
-      //[MessageProperty("client-subtype", typeof(ClientSubTypeConverter))]
-      //public ClientSubType ClientSubTypeEnum { get; set; }
+      [MessageProperty("client-subtype", typeof(ClientSubTypeConverter))]
+      public ClientSubType ClientSubTypeEnum { get; set; }
 
       [MessageProperty("client-type")]
       public string ClientType { get; set; }
@@ -322,6 +322,9 @@ namespace HFM.Client.DataTypes
 
       [MessageProperty("respawn")]
       public bool? Respawn { get; set; }
+
+      [MessageProperty("run-as")]
+      public string RunAs { get; set; }
 
       [MessageProperty("script")]
       public string Script { get; set; }

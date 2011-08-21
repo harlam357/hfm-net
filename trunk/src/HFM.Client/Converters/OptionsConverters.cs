@@ -57,6 +57,10 @@ namespace HFM.Client.Converters
                return ClientSubType.SMP;
             case "GPU":
                return ClientSubType.GPU;
+            case "STDCLI":
+               return ClientSubType.StdCli;
+            case "LINUX":
+               return ClientSubType.Linux;
          }
 
          throw new FormatException(String.Format(CultureInfo.InvariantCulture,

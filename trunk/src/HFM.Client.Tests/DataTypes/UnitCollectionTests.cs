@@ -115,6 +115,44 @@ namespace HFM.Client.Tests.DataTypes
          var unitCollection = new UnitCollection();
          unitCollection.Fill<UnitNotDerived>(MessageCache.GetNextJsonMessage(ref message));
       }
+
+      [Test]
+      public void FillTest2()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_2\\units.txt");
+         var unitCollection = new UnitCollection();
+         unitCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(0, unitCollection[0].Id);
+         Assert.AreEqual("RUNNING", unitCollection[0].State);
+         Assert.AreEqual(10083, unitCollection[0].Project);
+         Assert.AreEqual(0, unitCollection[0].Run);
+         Assert.AreEqual(17, unitCollection[0].Clone);
+         Assert.AreEqual(24, unitCollection[0].Gen);
+         Assert.AreEqual("0xa4", unitCollection[0].Core);
+         Assert.AreEqual("0x000000480001329c4ddbf194abdd0077", unitCollection[0].UnitId);
+         Assert.AreEqual("0.00%", unitCollection[0].PercentDone);
+         Assert.AreEqual(10000, unitCollection[0].TotalFrames);
+         Assert.AreEqual(0, unitCollection[0].FramesDone);
+         Assert.AreEqual("09/Aug/2011-02:54:54", unitCollection[0].Assigned);
+         Assert.AreEqual(new DateTime(2011, 8, 9, 2, 54, 54), unitCollection[0].AssignedDateTime);
+         Assert.AreEqual("17/Aug/2011-02:54:54", unitCollection[0].Timeout);
+         Assert.AreEqual(new DateTime(2011, 8, 17, 2, 54, 54), unitCollection[0].TimeoutDateTime);
+         Assert.AreEqual("20/Aug/2011-02:54:54", unitCollection[0].Deadline);
+         Assert.AreEqual(new DateTime(2011, 8, 20, 2, 54, 54), unitCollection[0].DeadlineDateTime);
+         Assert.AreEqual("129.74.85.15", unitCollection[0].WorkServer);
+         Assert.AreEqual("129.74.85.16", unitCollection[0].CollectionServer);
+         Assert.AreEqual(String.Empty, unitCollection[0].WaitingOn);
+         Assert.AreEqual(0, unitCollection[0].Attempts);
+         Assert.AreEqual("0.00 secs", unitCollection[0].NextAttempt);
+         Assert.AreEqual(0, unitCollection[0].Slot);
+         Assert.AreEqual("0.00 secs", unitCollection[0].Eta);
+         Assert.AreEqual(TimeSpan.Zero, unitCollection[0].EtaTimeSpan);
+         Assert.AreEqual(0.0, unitCollection[0].Ppd);
+         Assert.AreEqual("0.00 secs", unitCollection[0].Tpf);
+         Assert.AreEqual(TimeSpan.Zero, unitCollection[0].TpfTimeSpan);
+         Assert.AreEqual(600, unitCollection[0].BaseCredit);
+         Assert.AreEqual(600, unitCollection[0].CreditEstimate);
+      }
    }
 
    public class UnitDerived : Unit
