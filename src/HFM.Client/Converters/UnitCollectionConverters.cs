@@ -29,6 +29,8 @@ namespace HFM.Client.Converters
       {
          var inputString = (string)input;
 
+         // should be able to do all this with a single regular expression
+
          var regex1 = new Regex("(?<Hours>.+) hours (?<Minutes>.+) mins (?<Seconds>.+) secs", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
          Match matchRegex1;
          if ((matchRegex1 = regex1.Match(inputString)).Success)
@@ -54,6 +56,13 @@ namespace HFM.Client.Converters
             return new TimeSpan(0,
                                 System.Convert.ToInt32(matchRegex3.Result("${Minutes}"), CultureInfo.InvariantCulture),
                                 System.Convert.ToInt32(matchRegex3.Result("${Seconds}"), CultureInfo.InvariantCulture));
+         }
+
+         var regex4 = new Regex("(?<Seconds>.+) secs", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+         Match matchRegex4;
+         if ((matchRegex4 = regex4.Match(inputString)).Success)
+         {
+            return TimeSpan.FromSeconds(System.Convert.ToDouble(matchRegex4.Result("${Seconds}"), CultureInfo.InvariantCulture));
          }
 
          throw new FormatException(String.Format(CultureInfo.InvariantCulture,

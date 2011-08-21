@@ -24,20 +24,43 @@ using HFM.Client.DataTypes;
 
 namespace HFM.Client.Converters
 {
-   //internal sealed class MemoryValueConverter : IConversionProvider
-   //{
-   //   public object Convert(string input)
-   //   {
-   //      int gigabyteIndex = input.IndexOf("GiB");
-   //      if (gigabyteIndex > 0)
-   //      {
-   //         double gigabytes = Double.Parse(input.Substring(0, gigabyteIndex));
-   //         return gigabytes;
-   //      }
+   internal sealed class MemoryValueConverter : IConversionProvider
+   {
+      public object Convert(object input)
+      {
+         var inputString = (string)input;
+         Exception innerException = null;
+         try
+         {
+            // always returns value in gigabytes
+            int gigabyteIndex = inputString.IndexOf("GiB");
+            if (gigabyteIndex > 0)
+            {
+               double gigabytes = Double.Parse(inputString.Substring(0, gigabyteIndex));
+               return gigabytes;
+            }
+            int megabyteIndex = inputString.IndexOf("MiB");
+            if (megabyteIndex > 0)
+            {
+               double megabytes = Double.Parse(inputString.Substring(0, megabyteIndex));
+               return megabytes / 1024;
+            }
+            int kilobyteIndex = inputString.IndexOf("KiB");
+            if (kilobyteIndex > 0)
+            {
+               double kilobytes = Double.Parse(inputString.Substring(0, kilobyteIndex));
+               return kilobytes / 1048576;
+            }
+         }
+         catch (FormatException ex)
+         {
+            innerException = ex;
+         }
 
-   //      return 0;
-   //   }
-   //}
+         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
+            "Failed to parse memory value of '{0}'.", inputString), innerException);
+      }
+   }
 
    internal sealed class OperatingSystemConverter : IConversionProvider
    {
@@ -72,6 +95,32 @@ namespace HFM.Client.Converters
 
          throw new FormatException(String.Format(CultureInfo.InvariantCulture,
             "Failed to parse OS value of '{0}'.", inputString));
+      }
+   }
+
+   internal sealed class CudaVersionConverter : IConversionProvider
+   {
+      public object Convert(object input)
+      {
+         var inputString = (string)input;
+         if (inputString == "Not Detected")
+         {
+            // not an error, but no value
+            return null;
+         }
+
+         Exception innerException;
+         try
+         {
+            return Double.Parse(inputString);
+         }
+         catch (FormatException ex)
+         {
+            innerException = ex;
+         }
+
+         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
+            "Failed to parse CUDA version value of '{0}'.", inputString), innerException);
       }
    }
 }

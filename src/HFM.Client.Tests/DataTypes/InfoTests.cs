@@ -43,7 +43,6 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("7.1.24", info.Build.Version);
          Assert.AreEqual("Apr  6 2011", info.Build.Date);
          Assert.AreEqual("21:37:58", info.Build.Time);
-         //Assert.AreEqual(new DateTime(2011, 4, 6, 21, 37, 58), info.Build.BuildDateTime);
          Assert.AreEqual(2908, info.Build.SvnRev);
          Assert.AreEqual("fah/trunk/client", info.Build.Branch);
          Assert.AreEqual("Intel(R) C++ MSVC 1500 mode 1110", info.Build.Compiler);
@@ -52,14 +51,14 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(32, info.Build.Bits);
          Assert.AreEqual("Release", info.Build.Mode);
          Assert.AreEqual("Microsoft(R) Windows(R) XP Professional x64 Edition", info.System.OperatingSystem);
-         Assert.AreEqual(Client.DataTypes.OperatingSystemType.WindowsXPx64, info.System.OperatingSystemEnum);
+         Assert.AreEqual(OperatingSystemType.WindowsXPx64, info.System.OperatingSystemEnum);
          Assert.AreEqual("Intel(R) Core(TM)2 Quad CPU    Q6600  @ 2.40GHz", info.System.Cpu);
          Assert.AreEqual("GenuineIntel Family 6 Model 15 Stepping 11", info.System.CpuId);
          Assert.AreEqual(4, info.System.CpuCount);
          Assert.AreEqual("4.00GiB", info.System.Memory);
-         //Assert.AreEqual(4.0, info.System.MemoryValue);
+         Assert.AreEqual(4.0, info.System.MemoryValue);
          Assert.AreEqual("3.10GiB", info.System.FreeMemory);
-         //Assert.AreEqual(3.1, info.System.FreeMemoryValue);
+         Assert.AreEqual(3.1, info.System.FreeMemoryValue);
          Assert.AreEqual("WINDOWS_THREADS", info.System.ThreadType);
          Assert.AreEqual(1, info.System.GpuCount);
          Assert.AreEqual("ATI:2 Mobility Radeon HD 3600 Series", info.System.GpuId0);
@@ -71,11 +70,63 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(null, info.System.GpuId6);
          Assert.AreEqual(null, info.System.GpuId7);
          Assert.AreEqual("Not detected", info.System.Cuda);
+         Assert.AreEqual(null, info.System.CudaVersion);
+         Assert.AreEqual(null, info.System.CudaDriver);
          Assert.AreEqual(false, info.System.OnBattery);
          Assert.AreEqual(-5, info.System.UtcOffset);
          Assert.AreEqual(3080, info.System.ProcessId);
          Assert.AreEqual("C:/Documents and Settings/user/Application Data/FAHClient", info.System.WorkingDirectory);
          Assert.AreEqual(true, info.System.Win32Service);
+      }
+
+      [Test]
+      public void FillTest2()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_2\\info.txt");
+         var info = new Info();
+         info.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual("http://folding.stanford.edu/", info.Client.Website);
+         Assert.AreEqual("(c) 2009,2010 Stanford University", info.Client.Copyright);
+         Assert.AreEqual("Joseph Coffland <joseph@cauldrondevelopment.com>", info.Client.Author);
+         Assert.AreEqual(" --password yyyyy", info.Client.Args);
+         Assert.AreEqual("/home/s.shelnutt/folding/FAHClient-7.1.24-Ubuntu-10.10-64bit-release/config.xml", info.Client.Config);
+         Assert.AreEqual("7.1.24", info.Build.Version);
+         Assert.AreEqual("Apr  6 2011", info.Build.Date);
+         Assert.AreEqual("21:24:39", info.Build.Time);
+         Assert.AreEqual(2908, info.Build.SvnRev);
+         Assert.AreEqual("fah/trunk/client", info.Build.Branch);
+         Assert.AreEqual("Intel(R) C++ g++ 4.3 mode 1110", info.Build.Compiler);
+         Assert.AreEqual("-std=gnu++98 -O3 -funroll-loops -msse2 -axSSE3,SSSE3,SSE4.1,SSE4.2 -restrict", info.Build.Options);
+         Assert.AreEqual("linux2 2.6.35-22-server", info.Build.Platform);
+         Assert.AreEqual(64, info.Build.Bits);
+         Assert.AreEqual("Release", info.Build.Mode);
+         Assert.AreEqual("Linux 2.6.36-gentoo-r1 x86_64", info.System.OperatingSystem);
+         Assert.AreEqual(OperatingSystemType.Linux, info.System.OperatingSystemEnum);
+         Assert.AreEqual("Intel(R) Core(TM)2 CPU          6300  @ 1.86GHz", info.System.Cpu);
+         Assert.AreEqual("GenuineIntel Family 6 Model 15 Stepping 2", info.System.CpuId);
+         Assert.AreEqual(2, info.System.CpuCount);
+         Assert.AreEqual("1.96GiB", info.System.Memory);
+         Assert.AreEqual(1.96, info.System.MemoryValue);
+         Assert.AreEqual("237.61MiB", info.System.FreeMemory);
+         Assert.AreEqual(0.232041015625, info.System.FreeMemoryValue);
+         Assert.AreEqual("POSIX_THREADS", info.System.ThreadType);
+         Assert.AreEqual(1, info.System.GpuCount);
+         Assert.AreEqual("FERMI:1 GF104 [GeForce GTX 460]", info.System.GpuId0);
+         Assert.AreEqual(null, info.System.GpuId1);
+         Assert.AreEqual(null, info.System.GpuId2);
+         Assert.AreEqual(null, info.System.GpuId3);
+         Assert.AreEqual(null, info.System.GpuId4);
+         Assert.AreEqual(null, info.System.GpuId5);
+         Assert.AreEqual(null, info.System.GpuId6);
+         Assert.AreEqual(null, info.System.GpuId7);
+         Assert.AreEqual("2.1", info.System.Cuda);
+         Assert.AreEqual(2.1, info.System.CudaVersion);
+         Assert.AreEqual("4000", info.System.CudaDriver);
+         Assert.AreEqual(false, info.System.OnBattery);
+         Assert.AreEqual(-4, info.System.UtcOffset);
+         Assert.AreEqual(1408, info.System.ProcessId);
+         Assert.AreEqual("/home/s.shelnutt/folding/FAHClient-7.1.24-Ubuntu-10.10-64bit-release", info.System.WorkingDirectory);
+         Assert.AreEqual(null, info.System.Win32Service);
       }
    }
 }

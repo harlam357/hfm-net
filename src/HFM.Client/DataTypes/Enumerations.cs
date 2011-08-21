@@ -54,7 +54,9 @@ namespace HFM.Client.DataTypes
       Unknown,
       Normal,  // ???
       SMP,
-      GPU      // ???
+      GPU,     // ???
+      StdCli,
+      Linux
    }
 
    // ReSharper restore InconsistentNaming

@@ -19,7 +19,6 @@
 
 using System;
 using System.IO;
-using System.Linq;
 
 using NUnit.Framework;
 
@@ -66,6 +65,18 @@ namespace HFM.Client.Tests.DataTypes
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\slots.txt");
          var slotCollection = new SlotCollection();
          slotCollection.Fill<SlotNotDerived>(MessageCache.GetNextJsonMessage(ref message));
+      }
+
+      [Test]
+      public void FillTest2()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_2\\slots.txt");
+         var slotCollection = new SlotCollection();
+         slotCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(1, slotCollection.Count);
+         Assert.AreEqual(0, slotCollection[0].Id);
+         Assert.AreEqual("RUNNING", slotCollection[0].Status);
+         Assert.AreEqual("uniprocessor", slotCollection[0].Description);
       }
    }
 

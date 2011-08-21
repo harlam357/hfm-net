@@ -199,14 +199,14 @@ namespace HFM.Client.DataTypes
       [MessageProperty("Memory")]
       public string Memory { get; set; }
 
-      //[MessageProperty("Memory", typeof(MemoryValueConverter))]
-      //public double MemoryValue { get; set; }
+      [MessageProperty("Memory", typeof(MemoryValueConverter))]
+      public double? MemoryValue { get; set; }
 
       [MessageProperty("Free Memory")]
       public string FreeMemory { get; set; }
 
-      //[MessageProperty("Free Memory", typeof(MemoryValueConverter))]
-      //public double FreeMemoryValue { get; set; }
+      [MessageProperty("Free Memory", typeof(MemoryValueConverter))]
+      public double? FreeMemoryValue { get; set; }
 
       [MessageProperty("Threads")]
       public string ThreadType { get; set; }
@@ -243,11 +243,11 @@ namespace HFM.Client.DataTypes
       [MessageProperty("CUDA")]
       public string Cuda { get; set; }
 
-      //TODO: parse CudaDetected value from Cuda property (suspect the values are "Detected" and "Not detected")
-      //public bool CudaDetected
-      //{
-      //   get { return ???; }
-      //}
+      [MessageProperty("CUDA", typeof(CudaVersionConverter))]
+      public double? CudaVersion { get; set; }
+
+      [MessageProperty("CUDA Driver")]
+      public string CudaDriver { get; set; }
 
       [MessageProperty("On Battery")]
       public bool OnBattery { get; set; }
@@ -262,7 +262,7 @@ namespace HFM.Client.DataTypes
       public string WorkingDirectory { get; set; }
 
       [MessageProperty("Win32 Service")]
-      public bool Win32Service { get; set; }
+      public bool? Win32Service { get; set; }
 
       #endregion
    }
