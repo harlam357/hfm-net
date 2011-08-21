@@ -93,5 +93,38 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(TimeSpan.Zero, simulationInfo.EtaTimeSpan);
          Assert.AreEqual(String.Empty, simulationInfo.News);
       }
+
+      [Test]
+      public void FillTest3()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_3\\simulation-info.txt");
+         var simulationInfo = new SimulationInfo();
+         simulationInfo.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual("Adak", simulationInfo.User);
+         Assert.AreEqual(32, simulationInfo.Team);
+         Assert.AreEqual(7018, simulationInfo.Project);
+         Assert.AreEqual(2, simulationInfo.Run);
+         Assert.AreEqual(76, simulationInfo.Clone);
+         Assert.AreEqual(18, simulationInfo.Gen);
+         Assert.AreEqual(164, simulationInfo.CoreType);
+         Assert.AreEqual("GROGBA4", simulationInfo.Core);
+         Assert.AreEqual(String.Empty, simulationInfo.Description);
+         Assert.AreEqual(10000, simulationInfo.TotalIterations);
+         Assert.AreEqual(300, simulationInfo.IterationsDone);
+         Assert.AreEqual(0, simulationInfo.Energy);
+         Assert.AreEqual(0, simulationInfo.Temperature);
+         Assert.AreEqual("09/Aug/2011-05:40:17", simulationInfo.StartTime);
+         Assert.AreEqual(new DateTime(2011, 8, 9, 5, 40, 17), simulationInfo.StartTimeDateTime);
+         Assert.AreEqual(1313559617, simulationInfo.Timeout);
+         Assert.AreEqual(new DateTime(2011, 8, 17, 5, 40, 17), simulationInfo.TimeoutDateTime);
+         Assert.AreEqual(1313818817, simulationInfo.Deadline);
+         Assert.AreEqual(new DateTime(2011, 8, 20, 5, 40, 17), simulationInfo.DeadlineDateTime);
+         Assert.AreEqual(436, simulationInfo.RunTime);
+         Assert.AreEqual(0, simulationInfo.SimulationTime);
+         Assert.AreEqual(12730, simulationInfo.Eta);
+         // not exactly the same value seen in Unit.EtaTimeSpan
+         Assert.AreEqual(new TimeSpan(3, 32, 10), simulationInfo.EtaTimeSpan);
+         Assert.AreEqual(String.Empty, simulationInfo.News);
+      }
    }
 }

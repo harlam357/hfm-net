@@ -29,8 +29,9 @@ namespace HFM.Client.DataTypes
       WindowsXPx64,
       Vista32,
       Vista64,
-      Windows7x32,
-      Windows7x64,
+      Windows7,
+      //Windows7x32,
+      //Windows7x64,
       Linux,
       OSX
 
