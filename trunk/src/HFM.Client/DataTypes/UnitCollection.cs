@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Net;
 
 using Newtonsoft.Json.Linq;
 
@@ -307,8 +308,14 @@ namespace HFM.Client.DataTypes
       [MessageProperty("ws")]
       public string WorkServer { get; set; }
 
+      [MessageProperty("ws", typeof(IPAddressConverter))]
+      public IPAddress WorkServerIPAddress { get; set; }
+
       [MessageProperty("cs")]
       public string CollectionServer { get; set; }
+
+      [MessageProperty("cs", typeof(IPAddressConverter))]
+      public IPAddress CollectionServerIPAddress { get; set; }
 
       [MessageProperty("waitingon")]
       public string WaitingOn { get; set; }
@@ -316,9 +323,11 @@ namespace HFM.Client.DataTypes
       [MessageProperty("attempts")]
       public int Attempts { get; set; }
 
-      // could be TimeSpan type
       [MessageProperty("nextattempt")]
       public string NextAttempt { get; set; }
+
+      [MessageProperty("nextattempt", typeof(UnitTimeSpanConverter))]
+      public TimeSpan? NextAttemptTimeSpan { get; set; }
 
       [MessageProperty("slot")]
       public int Slot { get; set; }

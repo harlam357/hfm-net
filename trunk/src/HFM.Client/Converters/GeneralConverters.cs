@@ -19,6 +19,7 @@
 
 using System;
 using System.Globalization;
+using System.Net;
 
 namespace HFM.Client.Converters
 {
@@ -31,7 +32,31 @@ namespace HFM.Client.Converters
    {
       public object Convert(object input)
       {
-         return DateTime.ParseExact((string)input, "dd/MMM/yyyy-HH:mm:ss", CultureInfo.InvariantCulture);
+         try
+         {
+            return DateTime.ParseExact((string)input, "dd/MMM/yyyy-HH:mm:ss", CultureInfo.InvariantCulture);
+         }
+         catch (FormatException ex)
+         {
+            throw new FormatException(String.Format(CultureInfo.InvariantCulture,
+               "Failed to parse date time value of '{0}'.", input), ex);
+         }
+      }
+   }
+
+   internal sealed class IPAddressConverter : IConversionProvider
+   {
+      public object Convert(object input)
+      {
+         try
+         {
+            return IPAddress.Parse((string)input);
+         }
+         catch (FormatException ex)
+         {
+            throw new FormatException(String.Format(CultureInfo.InvariantCulture,
+               "Failed to parse IP address value of '{0}'.", input), ex);
+         }
       }
    }
 }

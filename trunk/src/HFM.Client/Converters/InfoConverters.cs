@@ -73,11 +73,13 @@ namespace HFM.Client.Converters
 
             #region Detect Specific Windows Version
 
-            switch (inputString)
+            if (inputString.Contains("XP Professional x64"))
             {
-               case "Microsoft(R) Windows(R) XP Professional x64 Edition":
-                  os = OperatingSystemType.WindowsXPx64;
-                  break;
+               os = OperatingSystemType.WindowsXPx64;
+            }
+            else if (inputString.Contains("Windows 7"))
+            {
+               os = OperatingSystemType.Windows7;
             }
 
             #endregion

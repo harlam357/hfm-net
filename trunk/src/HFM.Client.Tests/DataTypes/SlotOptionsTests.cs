@@ -74,5 +74,28 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(null, slotOptions.GpuVendorId);
          Assert.AreEqual(null, slotOptions.GpuDeviceId);
       }
+
+      [Test]
+      public void FillTest3()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_3\\slot-options.txt");
+         var slotOptions = new SlotOptions();
+         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual("normal", slotOptions.ClientType);
+         Assert.AreEqual(ClientType.Normal, slotOptions.ClientTypeEnum);
+         Assert.AreEqual("SMP", slotOptions.ClientSubType);
+         Assert.AreEqual(ClientSubType.SMP, slotOptions.ClientSubTypeEnum);
+         Assert.AreEqual(0, slotOptions.MachineId);
+         Assert.AreEqual("normal", slotOptions.MaxPacketSize);
+         Assert.AreEqual(MaxPacketSize.Normal, slotOptions.MaxPacketSizeEnum);
+         Assert.AreEqual("idle", slotOptions.CorePriority);
+         Assert.AreEqual(CorePriority.Idle, slotOptions.CorePriorityEnum);
+         Assert.AreEqual(99, slotOptions.NextUnitPercentage);
+         Assert.AreEqual(0, slotOptions.MaxUnits);
+         Assert.AreEqual(30, slotOptions.Checkpoint);
+         Assert.AreEqual(false, slotOptions.PauseOnStart);
+         Assert.AreEqual(null, slotOptions.GpuVendorId);
+         Assert.AreEqual(null, slotOptions.GpuDeviceId);
+      }
    }
 }

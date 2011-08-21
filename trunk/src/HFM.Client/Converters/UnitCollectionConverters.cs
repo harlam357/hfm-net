@@ -31,42 +31,51 @@ namespace HFM.Client.Converters
 
          // should be able to do all this with a single regular expression
 
-         var regex1 = new Regex("(?<Hours>.+) hours (?<Minutes>.+) mins (?<Seconds>.+) secs", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
-         Match matchRegex1;
-         if ((matchRegex1 = regex1.Match(inputString)).Success)
-         {
-            return new TimeSpan(System.Convert.ToInt32(matchRegex1.Result("${Hours}"), CultureInfo.InvariantCulture),
-                                System.Convert.ToInt32(matchRegex1.Result("${Minutes}"), CultureInfo.InvariantCulture),
-                                System.Convert.ToInt32(matchRegex1.Result("${Seconds}"), CultureInfo.InvariantCulture));
-         }
+         Exception innerException = null;
 
-         var regex2 = new Regex("(?<Hours>.+) hours (?<Minutes>.+) mins", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
-         Match matchRegex2;
-         if ((matchRegex2 = regex2.Match(inputString)).Success)
+         try
          {
-            return new TimeSpan(System.Convert.ToInt32(matchRegex2.Result("${Hours}"), CultureInfo.InvariantCulture),
-                                System.Convert.ToInt32(matchRegex2.Result("${Minutes}"), CultureInfo.InvariantCulture),
-                                0);
-         }
+            var regex1 = new Regex("(?<Hours>.+) hours (?<Minutes>.+) mins (?<Seconds>.+) secs", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+            Match matchRegex1;
+            if ((matchRegex1 = regex1.Match(inputString)).Success)
+            {
+               return new TimeSpan(System.Convert.ToInt32(matchRegex1.Result("${Hours}"), CultureInfo.InvariantCulture),
+                                   System.Convert.ToInt32(matchRegex1.Result("${Minutes}"), CultureInfo.InvariantCulture),
+                                   System.Convert.ToInt32(matchRegex1.Result("${Seconds}"), CultureInfo.InvariantCulture));
+            }
 
-         var regex3 = new Regex("(?<Minutes>.+) mins (?<Seconds>.+) secs", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
-         Match matchRegex3;
-         if ((matchRegex3 = regex3.Match(inputString)).Success)
-         {
-            return new TimeSpan(0,
-                                System.Convert.ToInt32(matchRegex3.Result("${Minutes}"), CultureInfo.InvariantCulture),
-                                System.Convert.ToInt32(matchRegex3.Result("${Seconds}"), CultureInfo.InvariantCulture));
-         }
+            var regex2 = new Regex("(?<Hours>.+) hours (?<Minutes>.+) mins", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+            Match matchRegex2;
+            if ((matchRegex2 = regex2.Match(inputString)).Success)
+            {
+               return new TimeSpan(System.Convert.ToInt32(matchRegex2.Result("${Hours}"), CultureInfo.InvariantCulture),
+                                   System.Convert.ToInt32(matchRegex2.Result("${Minutes}"), CultureInfo.InvariantCulture),
+                                   0);
+            }
 
-         var regex4 = new Regex("(?<Seconds>.+) secs", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
-         Match matchRegex4;
-         if ((matchRegex4 = regex4.Match(inputString)).Success)
+            var regex3 = new Regex("(?<Minutes>.+) mins (?<Seconds>.+) secs", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+            Match matchRegex3;
+            if ((matchRegex3 = regex3.Match(inputString)).Success)
+            {
+               return new TimeSpan(0,
+                                   System.Convert.ToInt32(matchRegex3.Result("${Minutes}"), CultureInfo.InvariantCulture),
+                                   System.Convert.ToInt32(matchRegex3.Result("${Seconds}"), CultureInfo.InvariantCulture));
+            }
+
+            var regex4 = new Regex("(?<Seconds>.+) secs", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+            Match matchRegex4;
+            if ((matchRegex4 = regex4.Match(inputString)).Success)
+            {
+               return TimeSpan.FromSeconds(System.Convert.ToDouble(matchRegex4.Result("${Seconds}"), CultureInfo.InvariantCulture));
+            }
+         }
+         catch (FormatException ex)
          {
-            return TimeSpan.FromSeconds(System.Convert.ToDouble(matchRegex4.Result("${Seconds}"), CultureInfo.InvariantCulture));
+            innerException = ex;
          }
 
          throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse time span value of '{0}'.", inputString));
+            "Failed to parse time span value of '{0}'.", inputString), innerException);
       }
    }
 }
