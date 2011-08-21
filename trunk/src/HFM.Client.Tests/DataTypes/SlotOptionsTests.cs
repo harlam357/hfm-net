@@ -29,6 +29,8 @@ namespace HFM.Client.Tests.DataTypes
    [TestFixture]
    public class SlotOptionsTests
    {
+      // ReSharper disable InconsistentNaming
+
       [Test]
       public void FillTest1()
       {
@@ -97,5 +99,76 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(null, slotOptions.GpuVendorId);
          Assert.AreEqual(null, slotOptions.GpuDeviceId);
       }
+
+      [Test]
+      public void FillTest4_1()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_4\\slot-options1.txt");
+         var slotOptions = new SlotOptions();
+         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual("beta", slotOptions.ClientType);
+         Assert.AreEqual(ClientType.Beta, slotOptions.ClientTypeEnum);
+         Assert.AreEqual("SMP", slotOptions.ClientSubType);
+         Assert.AreEqual(ClientSubType.SMP, slotOptions.ClientSubTypeEnum);
+         Assert.AreEqual(0, slotOptions.MachineId);
+         Assert.AreEqual("big", slotOptions.MaxPacketSize);
+         Assert.AreEqual(MaxPacketSize.Big, slotOptions.MaxPacketSizeEnum);
+         Assert.AreEqual("idle", slotOptions.CorePriority);
+         Assert.AreEqual(CorePriority.Idle, slotOptions.CorePriorityEnum);
+         Assert.AreEqual(100, slotOptions.NextUnitPercentage);
+         Assert.AreEqual(0, slotOptions.MaxUnits);
+         Assert.AreEqual(15, slotOptions.Checkpoint);
+         Assert.AreEqual(false, slotOptions.PauseOnStart);
+         Assert.AreEqual(null, slotOptions.GpuVendorId);
+         Assert.AreEqual(null, slotOptions.GpuDeviceId);
+      }
+
+      [Test]
+      public void FillTest4_2()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_4\\slot-options2.txt");
+         var slotOptions = new SlotOptions();
+         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual("beta", slotOptions.ClientType);
+         Assert.AreEqual(ClientType.Beta, slotOptions.ClientTypeEnum);
+         Assert.AreEqual("GPU", slotOptions.ClientSubType);
+         Assert.AreEqual(ClientSubType.GPU, slotOptions.ClientSubTypeEnum);
+         Assert.AreEqual(1, slotOptions.MachineId);
+         Assert.AreEqual("normal", slotOptions.MaxPacketSize);
+         Assert.AreEqual(MaxPacketSize.Normal, slotOptions.MaxPacketSizeEnum);
+         Assert.AreEqual("low", slotOptions.CorePriority);
+         Assert.AreEqual(CorePriority.Low, slotOptions.CorePriorityEnum);
+         Assert.AreEqual(99, slotOptions.NextUnitPercentage);
+         Assert.AreEqual(0, slotOptions.MaxUnits);
+         Assert.AreEqual(15, slotOptions.Checkpoint);
+         Assert.AreEqual(false, slotOptions.PauseOnStart);
+         Assert.AreEqual(null, slotOptions.GpuVendorId);
+         Assert.AreEqual(null, slotOptions.GpuDeviceId);
+      }
+
+      [Test]
+      public void FillTest4_3()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_4\\slot-options3.txt");
+         var slotOptions = new SlotOptions();
+         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual("beta", slotOptions.ClientType);
+         Assert.AreEqual(ClientType.Beta, slotOptions.ClientTypeEnum);
+         Assert.AreEqual("GPU", slotOptions.ClientSubType);
+         Assert.AreEqual(ClientSubType.GPU, slotOptions.ClientSubTypeEnum);
+         Assert.AreEqual(2, slotOptions.MachineId);
+         Assert.AreEqual("normal", slotOptions.MaxPacketSize);
+         Assert.AreEqual(MaxPacketSize.Normal, slotOptions.MaxPacketSizeEnum);
+         Assert.AreEqual("low", slotOptions.CorePriority);
+         Assert.AreEqual(CorePriority.Low, slotOptions.CorePriorityEnum);
+         Assert.AreEqual(99, slotOptions.NextUnitPercentage);
+         Assert.AreEqual(0, slotOptions.MaxUnits);
+         Assert.AreEqual(15, slotOptions.Checkpoint);
+         Assert.AreEqual(false, slotOptions.PauseOnStart);
+         Assert.AreEqual(null, slotOptions.GpuVendorId);
+         Assert.AreEqual(null, slotOptions.GpuDeviceId);
+      }
+
+      // ReSharper restore InconsistentNaming
    }
 }

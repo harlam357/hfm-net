@@ -91,6 +91,9 @@ namespace HFM.Client.DataTypes
       [MessageProperty("run_time")]
       public int RunTime { get; set; }
 
+      [MessageProperty("run_time", typeof(SimulationInfoTimeSpanConverter))]
+      public TimeSpan? RunTimeTimeSpan { get; set; }
+
       [MessageProperty("simulation_time")]
       public int SimulationTime { get; set; }
 
