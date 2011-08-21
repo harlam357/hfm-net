@@ -25,6 +25,13 @@ namespace HFM.Client.Converters
    {
       public object Convert(object input)
       {
+         var inputValue = (int)input;
+         if (inputValue == 0)
+         {
+            // not an error, but no value
+            return null;
+         }
+
          return new DateTime(1970, 1, 1).AddSeconds((int)input);
       }
    }

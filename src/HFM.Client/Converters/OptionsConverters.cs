@@ -37,6 +37,8 @@ namespace HFM.Client.Converters
                return ClientType.Advanced;
             case "bigadv":
                return ClientType.BigAdv;
+            case "beta":
+               return ClientType.Beta;
          }
 
          throw new FormatException(String.Format(CultureInfo.InvariantCulture,

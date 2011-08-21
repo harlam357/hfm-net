@@ -32,14 +32,21 @@ namespace HFM.Client.Converters
    {
       public object Convert(object input)
       {
+         var inputString = (string)input;
+         if (inputString == "<invalid>")
+         {
+            // not an error, but no value
+            return null;
+         }
+
          try
          {
-            return DateTime.ParseExact((string)input, "dd/MMM/yyyy-HH:mm:ss", CultureInfo.InvariantCulture);
+            return DateTime.ParseExact(inputString, "dd/MMM/yyyy-HH:mm:ss", CultureInfo.InvariantCulture);
          }
          catch (FormatException ex)
          {
             throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-               "Failed to parse date time value of '{0}'.", input), ex);
+               "Failed to parse date time value of '{0}'.", inputString), ex);
          }
       }
    }

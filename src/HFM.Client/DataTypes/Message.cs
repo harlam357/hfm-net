@@ -194,13 +194,24 @@ namespace HFM.Client.DataTypes
          {
             foreach (var classProperty in properties)
             {
-               if (jProperty.Value.Type.Equals(JTokenType.String))
+               try
                {
-                  SetPropertyValue(classProperty, (string)jProperty);
+                  if (jProperty.Value.Type.Equals(JTokenType.String))
+                  {
+                     SetPropertyValue(classProperty, (string)jProperty);
+                  }
+                  else if (jProperty.Value.Type.Equals(JTokenType.Integer))
+                  {
+                     SetPropertyValue(classProperty, (int)jProperty);
+                  }
                }
-               else if (jProperty.Value.Type.Equals(JTokenType.Integer))
+               catch (Exception ex)
                {
-                  SetPropertyValue(classProperty, (int)jProperty);
+                  var typedMessageObject = _message as ITypedMessageObject;
+                  if (typedMessageObject != null)
+                  {
+                     typedMessageObject.AddError(new MessagePropertyConversionError(classProperty.Name, ex.Message));
+                  }
                }
             }
          }
@@ -218,38 +229,38 @@ namespace HFM.Client.DataTypes
 
          foreach (var classProperty in properties)
          {
-            SetPropertyValue(classProperty, value);
+            try
+            {
+               SetPropertyValue(classProperty, value);
+            }
+            catch (Exception ex)
+            {
+               var typedMessageObject = _message as ITypedMessageObject;
+               if (typedMessageObject != null)
+               {
+                  typedMessageObject.AddError(new MessagePropertyConversionError(classProperty.Name, ex.Message));
+               }
+            }
          }
       }
 
       private void SetPropertyValue(PropertyDescriptor classProperty, object value)
       {
-         try
+         IConversionProvider conversionProvider = GetConversionProvider(classProperty);
+         if (conversionProvider != null)
          {
-            IConversionProvider conversionProvider = GetConversionProvider(classProperty);
-            if (conversionProvider != null)
-            {
-               classProperty.SetValue(_message, conversionProvider.Convert(value));
-            }
-            else
-            {
-               Type propertyType = classProperty.PropertyType;
-               if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
-               {
-                  propertyType = propertyType.GetGenericArguments().First();
-               }
-               // ReSharper disable AssignNullToNotNullAttribute
-               classProperty.SetValue(_message, Convert.ChangeType(value, propertyType, CultureInfo.InvariantCulture));
-               // ReSharper restore AssignNullToNotNullAttribute
-            }
+            classProperty.SetValue(_message, conversionProvider.Convert(value));
          }
-         catch (Exception ex)
+         else
          {
-            var typedMessageObject = _message as ITypedMessageObject;
-            if (typedMessageObject != null)
+            Type propertyType = classProperty.PropertyType;
+            if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
-               typedMessageObject.AddError(new MessagePropertyConversionError(classProperty.Name, ex.Message));
+               propertyType = propertyType.GetGenericArguments().First();
             }
+            // ReSharper disable AssignNullToNotNullAttribute
+            classProperty.SetValue(_message, Convert.ChangeType(value, propertyType, CultureInfo.InvariantCulture));
+            // ReSharper restore AssignNullToNotNullAttribute
          }
       }
 

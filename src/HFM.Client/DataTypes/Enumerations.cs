@@ -45,7 +45,8 @@ namespace HFM.Client.DataTypes
       Unknown,
       Normal,
       Advanced,
-      BigAdv
+      BigAdv,
+      Beta
    }
 
    // ReSharper disable InconsistentNaming
@@ -55,7 +56,7 @@ namespace HFM.Client.DataTypes
       Unknown,
       Normal,  // ???
       SMP,
-      GPU,     // ???
+      GPU,
       StdCli,
       Linux
    }
