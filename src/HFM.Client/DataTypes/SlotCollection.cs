@@ -21,7 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-
+using HFM.Client.Converters;
 using Newtonsoft.Json.Linq;
 
 namespace HFM.Client.DataTypes
@@ -255,9 +255,12 @@ namespace HFM.Client.DataTypes
       [MessageProperty("id")]
       public int Id { get; set; }
 
-      // SHOULD be enum type (looks like same value in Unit.State)
+      // same value in Unit.State
       [MessageProperty("status")]
       public string Status { get; set; }
+
+      [MessageProperty("status", typeof(SlotStatusConverter))]
+      public SlotStatus StatusEnum { get; set; }
 
       [MessageProperty("description")]
       public string Description { get; set; }

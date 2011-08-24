@@ -77,4 +77,12 @@ namespace HFM.Client.DataTypes
       Idle,
       Low
    }
+
+   public enum SlotStatus
+   {
+      Unknown,
+      Paused,
+      Running,
+      Finishing
+   }
 }
