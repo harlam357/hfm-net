@@ -82,6 +82,8 @@ namespace HFM.Client.Converters
                return SlotStatus.Running;
             case "FINISHING":
                return SlotStatus.Finishing;
+            case "SEND":
+               return SlotStatus.Send;
          }
 
          throw new FormatException(String.Format(CultureInfo.InvariantCulture,

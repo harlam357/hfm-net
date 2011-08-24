@@ -150,6 +150,19 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(SlotStatus.Running, slotCollection[1].StatusEnum);
          Assert.AreEqual("gpu:0:\"Radeon HD 5870 (Cypress)\"", slotCollection[1].Description);
       }
+
+      [Test]
+      public void FillTest6()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_6\\slots.txt");
+         var slotCollection = new SlotCollection();
+         slotCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(1, slotCollection.Count);
+         Assert.AreEqual(0, slotCollection[0].Id);
+         Assert.AreEqual("RUNNING", slotCollection[0].Status);
+         Assert.AreEqual(SlotStatus.Running, slotCollection[0].StatusEnum);
+         Assert.AreEqual("uniprocessor", slotCollection[0].Description);
+      }
    }
 
    public class SlotDerived : Slot

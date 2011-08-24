@@ -53,12 +53,12 @@ namespace HFM.Client.DataTypes
 
    public enum ClientSubType
    {
-      Unknown,
-      Normal,  // ???
-      SMP,
-      GPU,
-      StdCli,
-      Linux
+      Unknown = 0,
+      Normal = 1,    // ???
+      StdCli = 1,    // appears to be uniprocessor (Normal) on Windows
+      Linux = 1,     // appears to be uniprocessor (Normal) on Linux
+      SMP = 2,
+      GPU = 3,
    }
 
    // ReSharper restore InconsistentNaming
@@ -83,6 +83,7 @@ namespace HFM.Client.DataTypes
       Unknown,
       Paused,
       Running,
-      Finishing
+      Finishing,
+      Send
    }
 }
