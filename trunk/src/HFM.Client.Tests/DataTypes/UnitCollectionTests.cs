@@ -37,6 +37,7 @@ namespace HFM.Client.Tests.DataTypes
          unitCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
          Assert.AreEqual(0, unitCollection[0].Id);
          Assert.AreEqual("RUNNING", unitCollection[0].State);
+         Assert.AreEqual(SlotStatus.Running, unitCollection[0].StateEnum);
          Assert.AreEqual(11020, unitCollection[0].Project);
          Assert.AreEqual(0, unitCollection[0].Run);
          Assert.AreEqual(1921, unitCollection[0].Clone);
@@ -81,6 +82,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("00", ((UnitDerived)unitCollection[0]).IdString);
          Assert.AreEqual(null, ((UnitDerived)unitCollection[0]).IdBool);
          Assert.AreEqual("RUNNING", unitCollection[0].State);
+         Assert.AreEqual(SlotStatus.Running, unitCollection[0].StateEnum);
          Assert.AreEqual(11020, unitCollection[0].Project);
          Assert.AreEqual(0, unitCollection[0].Run);
          Assert.AreEqual(1921, unitCollection[0].Clone);
@@ -128,6 +130,7 @@ namespace HFM.Client.Tests.DataTypes
          unitCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
          Assert.AreEqual(0, unitCollection[0].Id);
          Assert.AreEqual("RUNNING", unitCollection[0].State);
+         Assert.AreEqual(SlotStatus.Running, unitCollection[0].StateEnum);
          Assert.AreEqual(10083, unitCollection[0].Project);
          Assert.AreEqual(0, unitCollection[0].Run);
          Assert.AreEqual(17, unitCollection[0].Clone);
@@ -169,6 +172,7 @@ namespace HFM.Client.Tests.DataTypes
          unitCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
          Assert.AreEqual(0, unitCollection[0].Id);
          Assert.AreEqual("RUNNING", unitCollection[0].State);
+         Assert.AreEqual(SlotStatus.Running, unitCollection[0].StateEnum);
          Assert.AreEqual(7018, unitCollection[0].Project);
          Assert.AreEqual(2, unitCollection[0].Run);
          Assert.AreEqual(76, unitCollection[0].Clone);
@@ -211,6 +215,7 @@ namespace HFM.Client.Tests.DataTypes
          unitCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
          Assert.AreEqual(1, unitCollection[0].Id);
          Assert.AreEqual("RUNNING", unitCollection[0].State);
+         Assert.AreEqual(SlotStatus.Running, unitCollection[0].StateEnum);
          Assert.AreEqual(7507, unitCollection[0].Project);
          Assert.AreEqual(0, unitCollection[0].Run);
          Assert.AreEqual(34, unitCollection[0].Clone);
@@ -246,6 +251,7 @@ namespace HFM.Client.Tests.DataTypes
 
          Assert.AreEqual(0, unitCollection[1].Id);
          Assert.AreEqual("RUNNING", unitCollection[1].State);
+         Assert.AreEqual(SlotStatus.Running, unitCollection[1].StateEnum);
          Assert.AreEqual(5788, unitCollection[1].Project);
          Assert.AreEqual(9, unitCollection[1].Run);
          Assert.AreEqual(838, unitCollection[1].Clone);
@@ -281,6 +287,7 @@ namespace HFM.Client.Tests.DataTypes
 
          Assert.AreEqual(2, unitCollection[2].Id);
          Assert.AreEqual("RUNNING", unitCollection[2].State);
+         Assert.AreEqual(SlotStatus.Running, unitCollection[2].StateEnum);
          Assert.AreEqual(5796, unitCollection[2].Project);
          Assert.AreEqual(19, unitCollection[2].Run);
          Assert.AreEqual(79, unitCollection[2].Clone);
@@ -323,6 +330,7 @@ namespace HFM.Client.Tests.DataTypes
          unitCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
          Assert.AreEqual(2, unitCollection[0].Id);
          Assert.AreEqual("RUNNING", unitCollection[0].State);
+         Assert.AreEqual(SlotStatus.Running, unitCollection[0].StateEnum);
          Assert.AreEqual(11294, unitCollection[0].Project);
          Assert.AreEqual(7, unitCollection[0].Run);
          Assert.AreEqual(243, unitCollection[0].Clone);
@@ -358,6 +366,7 @@ namespace HFM.Client.Tests.DataTypes
 
          Assert.AreEqual(1, unitCollection[1].Id);
          Assert.AreEqual("RUNNING", unitCollection[1].State);
+         Assert.AreEqual(SlotStatus.Running, unitCollection[1].StateEnum);
          Assert.AreEqual(7611, unitCollection[1].Project);
          Assert.AreEqual(0, unitCollection[1].Run);
          Assert.AreEqual(34, unitCollection[1].Clone);

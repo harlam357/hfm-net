@@ -253,9 +253,12 @@ namespace HFM.Client.DataTypes
       [MessageProperty("id")]
       public int Id { get; set; }
 
-      // SHOULD be enum type (looks like same value in Slot.Status)
+      // same value in Slot.Status
       [MessageProperty("state")]
       public string State { get; set; }
+
+      [MessageProperty("state", typeof(SlotStatusConverter))]
+      public SlotStatus StateEnum { get; set; }
 
       [MessageProperty("project")]
       public int Project { get; set; }

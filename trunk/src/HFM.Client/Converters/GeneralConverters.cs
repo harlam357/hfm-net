@@ -21,6 +21,8 @@ using System;
 using System.Globalization;
 using System.Net;
 
+using HFM.Client.DataTypes;
+
 namespace HFM.Client.Converters
 {
    public interface IConversionProvider
@@ -64,6 +66,26 @@ namespace HFM.Client.Converters
             throw new FormatException(String.Format(CultureInfo.InvariantCulture,
                "Failed to parse IP address value of '{0}'.", input), ex);
          }
+      }
+   }
+
+   internal sealed class SlotStatusConverter : IConversionProvider
+   {
+      public object Convert(object input)
+      {
+         var inputString = (string)input;
+         switch (inputString)
+         {
+            case "PAUSED":
+               return SlotStatus.Paused;
+            case "RUNNING":
+               return SlotStatus.Running;
+            case "FINISHING":
+               return SlotStatus.Finishing;
+         }
+
+         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
+            "Failed to parse status value of '{0}'.", inputString));
       }
    }
 }
