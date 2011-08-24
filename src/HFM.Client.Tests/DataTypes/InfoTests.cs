@@ -228,5 +228,55 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("G:/FAH/Data", info.System.WorkingDirectory);
          Assert.AreEqual(false, info.System.Win32Service);
       }
+
+      [Test]
+      public void FillTest5()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_5\\info.txt");
+         var info = new Info();
+         info.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual("http://folding.stanford.edu/", info.Client.Website);
+         Assert.AreEqual("(c) 2009,2010 Stanford University", info.Client.Copyright);
+         Assert.AreEqual("Joseph Coffland <joseph@cauldrondevelopment.com>", info.Client.Author);
+         Assert.AreEqual(" --lifeline 3540 --command-port=36330", info.Client.Args);
+         Assert.AreEqual("C:/FAH/SMPBeta/FAHClient/config.xml", info.Client.Config);
+         Assert.AreEqual("7.1.24", info.Build.Version);
+         Assert.AreEqual("Apr  6 2011", info.Build.Date);
+         Assert.AreEqual("21:37:58", info.Build.Time);
+         Assert.AreEqual(2908, info.Build.SvnRev);
+         Assert.AreEqual("fah/trunk/client", info.Build.Branch);
+         Assert.AreEqual("Intel(R) C++ MSVC 1500 mode 1110", info.Build.Compiler);
+         Assert.AreEqual("/TP /nologo /EHa /wd4297 /wd4103 /wd1786 /Ox -arch:SSE2 /QaxSSE3,SSSE3,SSE4.1,SSE4.2 /Qrestrict /MT", info.Build.Options);
+         Assert.AreEqual("win32 Vista", info.Build.Platform);
+         Assert.AreEqual(32, info.Build.Bits);
+         Assert.AreEqual("Release", info.Build.Mode);
+         Assert.AreEqual("Microsoft Windows 7 Professional", info.System.OperatingSystem);
+         Assert.AreEqual(OperatingSystemType.Windows7, info.System.OperatingSystemEnum);
+         Assert.AreEqual("AMD Phenom(tm) II X4 945 Processor", info.System.Cpu);
+         Assert.AreEqual("AuthenticAMD Family 16 Model 4 Stepping 3", info.System.CpuId);
+         Assert.AreEqual(4, info.System.CpuCount);
+         Assert.AreEqual("4.00GiB", info.System.Memory);
+         Assert.AreEqual(4.0, info.System.MemoryValue);
+         Assert.AreEqual("2.64GiB", info.System.FreeMemory);
+         Assert.AreEqual(2.64, info.System.FreeMemoryValue);
+         Assert.AreEqual("WINDOWS_THREADS", info.System.ThreadType);
+         Assert.AreEqual(1, info.System.GpuCount);
+         Assert.AreEqual("ATI:4 Radeon HD 5870 (Cypress)", info.System.GpuId0);
+         Assert.AreEqual(null, info.System.GpuId1);
+         Assert.AreEqual(null, info.System.GpuId2);
+         Assert.AreEqual(null, info.System.GpuId3);
+         Assert.AreEqual(null, info.System.GpuId4);
+         Assert.AreEqual(null, info.System.GpuId5);
+         Assert.AreEqual(null, info.System.GpuId6);
+         Assert.AreEqual(null, info.System.GpuId7);
+         Assert.AreEqual("Not detected", info.System.Cuda);
+         Assert.AreEqual(null, info.System.CudaVersion);
+         Assert.AreEqual(null, info.System.CudaDriver);
+         Assert.AreEqual(false, info.System.OnBattery);
+         Assert.AreEqual(-4, info.System.UtcOffset);
+         Assert.AreEqual(760, info.System.ProcessId);
+         Assert.AreEqual("C:/FAH/SMPBeta/FAHClient", info.System.WorkingDirectory);
+         Assert.AreEqual(false, info.System.Win32Service);
+      }
    }
 }

@@ -68,6 +68,13 @@ namespace HFM.Client.Converters
             {
                return TimeSpan.FromSeconds(System.Convert.ToDouble(matchRegex4.Result("${Seconds}"), CultureInfo.InvariantCulture));
             }
+
+            var regex5 = new Regex("(?<Days>.+) days", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+            Match matchRegex5;
+            if ((matchRegex5 = regex5.Match(inputString)).Success)
+            {
+               return TimeSpan.FromDays(System.Convert.ToDouble(matchRegex5.Result("${Days}"), CultureInfo.InvariantCulture));
+            }
          }
          catch (FormatException ex)
          {

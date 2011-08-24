@@ -1,0 +1,17 @@
+PyON 1 slots
+[
+  {
+    "id": "00",
+    "status": "RUNNING",
+    "description": "smp:4",
+    "options": {}
+  },
+  {
+    "id": "01",
+    "status": "RUNNING",
+    "description": "gpu:0:\"Radeon HD 5870 (Cypress)\"",
+    "options": {}
+  }
+]
+---
+

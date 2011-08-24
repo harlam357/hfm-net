@@ -243,6 +243,74 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("DeadlineDateTime", simulationInfo.Errors.ElementAt(1).PropertyName);
       }
 
+      [Test]
+      public void FillTest5_1()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_5\\simulation-info1.txt");
+         var simulationInfo = new SimulationInfo();
+         simulationInfo.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual("The_Penguin", simulationInfo.User);
+         Assert.AreEqual(32, simulationInfo.Team);
+         Assert.AreEqual(7611, simulationInfo.Project);
+         Assert.AreEqual(0, simulationInfo.Run);
+         Assert.AreEqual(34, simulationInfo.Clone);
+         Assert.AreEqual(21, simulationInfo.Gen);
+         Assert.AreEqual(164, simulationInfo.CoreType);
+         Assert.AreEqual("GROGBA4", simulationInfo.Core);
+         Assert.AreEqual(String.Empty, simulationInfo.Description);
+         Assert.AreEqual(2000, simulationInfo.TotalIterations);
+         Assert.AreEqual(535, simulationInfo.IterationsDone);
+         Assert.AreEqual(0, simulationInfo.Energy);
+         Assert.AreEqual(0, simulationInfo.Temperature);
+         Assert.AreEqual("08/Aug/2011-12:32:11", simulationInfo.StartTime);
+         Assert.AreEqual(new DateTime(2011, 8, 8, 12, 32, 11), simulationInfo.StartTimeDateTime);
+         Assert.AreEqual(1313818475, simulationInfo.Timeout);
+         Assert.AreEqual(new DateTime(2011, 8, 20, 5, 34, 35), simulationInfo.TimeoutDateTime);
+         Assert.AreEqual(1314493259, simulationInfo.Deadline);
+         Assert.AreEqual(new DateTime(2011, 8, 28, 1, 0, 59), simulationInfo.DeadlineDateTime);
+         Assert.AreEqual(34641, simulationInfo.RunTime);
+         Assert.AreEqual(new TimeSpan(9, 37, 21), simulationInfo.RunTimeTimeSpan);
+         Assert.AreEqual(0, simulationInfo.SimulationTime);
+         Assert.AreEqual(94379, simulationInfo.Eta);
+         // not exactly the same value seen in Unit.EtaTimeSpan
+         Assert.AreEqual(new TimeSpan(1, 2, 12, 59), simulationInfo.EtaTimeSpan);
+         Assert.AreEqual(String.Empty, simulationInfo.News);
+      }
+
+      [Test]
+      public void FillTest5_2()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_5\\simulation-info2.txt");
+         var simulationInfo = new SimulationInfo();
+         simulationInfo.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual("The_Penguin", simulationInfo.User);
+         Assert.AreEqual(32, simulationInfo.Team);
+         Assert.AreEqual(11294, simulationInfo.Project);
+         Assert.AreEqual(7, simulationInfo.Run);
+         Assert.AreEqual(243, simulationInfo.Clone);
+         Assert.AreEqual(66, simulationInfo.Gen);
+         Assert.AreEqual(22, simulationInfo.CoreType);
+         Assert.AreEqual("OPENMM_OPENCL", simulationInfo.Core);
+         Assert.AreEqual(String.Empty, simulationInfo.Description);
+         Assert.AreEqual(50000, simulationInfo.TotalIterations);
+         Assert.AreEqual(49000, simulationInfo.IterationsDone);
+         Assert.AreEqual(0, simulationInfo.Energy);
+         Assert.AreEqual(0, simulationInfo.Temperature);
+         Assert.AreEqual("08/Aug/2011-16:21:25", simulationInfo.StartTime);
+         Assert.AreEqual(new DateTime(2011, 8, 8, 16, 21, 25), simulationInfo.StartTimeDateTime);
+         Assert.AreEqual(1313338885, simulationInfo.Timeout);
+         Assert.AreEqual(new DateTime(2011, 8, 14, 16, 21, 25), simulationInfo.TimeoutDateTime);
+         Assert.AreEqual(1313684485, simulationInfo.Deadline);
+         Assert.AreEqual(new DateTime(2011, 8, 18, 16, 21, 25), simulationInfo.DeadlineDateTime);
+         Assert.AreEqual(22732, simulationInfo.RunTime);
+         Assert.AreEqual(new TimeSpan(6, 18, 52), simulationInfo.RunTimeTimeSpan);
+         Assert.AreEqual(0, simulationInfo.SimulationTime);
+         Assert.AreEqual(329, simulationInfo.Eta);
+         // not exactly the same value seen in Unit.EtaTimeSpan
+         Assert.AreEqual(new TimeSpan(0, 5, 29), simulationInfo.EtaTimeSpan);
+         Assert.AreEqual(String.Empty, simulationInfo.News);
+      }
+
       // ReSharper restore InconsistentNaming
    }
 }

@@ -124,6 +124,23 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("low", slotCollection[2].SlotOptions.CorePriority);
          Assert.AreEqual(CorePriority.Low, slotCollection[2].SlotOptions.CorePriorityEnum);
       }
+
+      [Test]
+      public void FillTest5()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_5\\slots.txt");
+         var slotCollection = new SlotCollection();
+         slotCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(2, slotCollection.Count);
+
+         Assert.AreEqual(0, slotCollection[0].Id);
+         Assert.AreEqual("RUNNING", slotCollection[0].Status);
+         Assert.AreEqual("smp:4", slotCollection[0].Description);
+
+         Assert.AreEqual(1, slotCollection[1].Id);
+         Assert.AreEqual("RUNNING", slotCollection[1].Status);
+         Assert.AreEqual("gpu:0:\"Radeon HD 5870 (Cypress)\"", slotCollection[1].Description);
+      }
    }
 
    public class SlotDerived : Slot
