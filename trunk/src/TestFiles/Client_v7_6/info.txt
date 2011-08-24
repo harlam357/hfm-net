@@ -1,0 +1,134 @@
+PyON 1 info
+[
+  [
+    "Folding@home Client",
+    [
+      "Website",
+      "http://folding.stanford.edu/"
+    ],
+    [
+      "Copyright",
+      "(c) 2009,2010 Stanford University"
+    ],
+    [
+      "Author",
+      "Joseph Coffland <joseph@cauldrondevelopment.com>"
+    ],
+    [
+      "Args",
+      " --lifeline 43012"
+    ],
+    [
+      "Config",
+      "C:/Documents and Settings/All Users/Application Data/FAHClient/config.xml"
+    ]
+  ],
+  [
+    "Build",
+    [
+      "Version",
+      "7.1.21"
+    ],
+    [
+      "Date",
+      "Mar 23 2011"
+    ],
+    [
+      "Time",
+      "15:13:48"
+    ],
+    [
+      "SVN Rev",
+      "2883"
+    ],
+    [
+      "Branch",
+      "fah/trunk/client"
+    ],
+    [
+      "Compiler",
+      "Intel(R) C++ MSVC 1500 mode 1110"
+    ],
+    [
+      "Options",
+      "/TP /nologo /EHa /wd4297 /wd4103 /wd1786 /Ox -arch:SSE /QaxSSE2,SSE3,SSSE3,SSE4.1,SSE4.2 /Qrestrict /MT"
+    ],
+    [
+      "Platform",
+      "win32 XP"
+    ],
+    [
+      "Bits",
+      "32"
+    ],
+    [
+      "Mode",
+      "Release"
+    ]
+  ],
+  [
+    "System",
+    [
+      "OS",
+      "Microsoft Windows XP Professional"
+    ],
+    [
+      "CPU",
+      "AMD Athlon(tm) Processor 1640B"
+    ],
+    [
+      "CPU ID",
+      "AuthenticAMD Family 15 Model 127 Stepping 2"
+    ],
+    [
+      "CPUs",
+      "1"
+    ],
+    [
+      "Memory",
+      "1.75GiB"
+    ],
+    [
+      "Free Memory",
+      "764.64MiB"
+    ],
+    [
+      "Threads",
+      "WINDOWS_THREADS"
+    ],
+    [
+      "GPUs",
+      "1"
+    ],
+    [
+      "GPU 0",
+      "ATI:2 Radeon 3100 Graphics"
+    ],
+    [
+      "CUDA",
+      "Not detected"
+    ],
+    [
+      "On Battery",
+      "false"
+    ],
+    [
+      "UTC offset",
+      "-4"
+    ],
+    [
+      "PID",
+      "45024"
+    ],
+    [
+      "CWD",
+      "C:/Documents and Settings/All Users/Application Data/FAHClient"
+    ],
+    [
+      "Win32 Service",
+      "false"
+    ]
+  ]
+]
+---
+
