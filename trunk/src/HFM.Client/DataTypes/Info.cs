@@ -214,10 +214,11 @@ namespace HFM.Client.DataTypes
       [MessageProperty("GPUs")]
       public int GpuCount { get; set; }
 
-      //TODO: parse GpuEnum value from GpuId properties
-
       [MessageProperty("GPU 0")]
       public string GpuId0 { get; set; }
+
+      [MessageProperty("GPU 0", typeof(GpuTypeConverter))]
+      public string GpuId0Type { get; set; }
 
       [MessageProperty("GPU 0", typeof(GpuManufacturerConverter))]
       public GpuManufacturer GpuId0Manufacturer { get; set; }
@@ -225,11 +226,17 @@ namespace HFM.Client.DataTypes
       [MessageProperty("GPU 1")]
       public string GpuId1 { get; set; }
 
+      [MessageProperty("GPU 1", typeof(GpuTypeConverter))]
+      public string GpuId1Type { get; set; }
+
       [MessageProperty("GPU 1", typeof(GpuManufacturerConverter))]
       public GpuManufacturer GpuId1Manufacturer { get; set; }
 
       [MessageProperty("GPU 2")]
       public string GpuId2 { get; set; }
+
+      [MessageProperty("GPU 2", typeof(GpuTypeConverter))]
+      public string GpuId2Type { get; set; }
 
       [MessageProperty("GPU 2", typeof(GpuManufacturerConverter))]
       public GpuManufacturer GpuId2Manufacturer { get; set; }
@@ -237,11 +244,17 @@ namespace HFM.Client.DataTypes
       [MessageProperty("GPU 3")]
       public string GpuId3 { get; set; }
 
+      [MessageProperty("GPU 3", typeof(GpuTypeConverter))]
+      public string GpuId3Type { get; set; }
+
       [MessageProperty("GPU 3", typeof(GpuManufacturerConverter))]
       public GpuManufacturer GpuId3Manufacturer { get; set; }
 
       [MessageProperty("GPU 4")]
       public string GpuId4 { get; set; }
+
+      [MessageProperty("GPU 4", typeof(GpuTypeConverter))]
+      public string GpuId4Type { get; set; }
 
       [MessageProperty("GPU 4", typeof(GpuManufacturerConverter))]
       public GpuManufacturer GpuId4Manufacturer { get; set; }
@@ -249,17 +262,26 @@ namespace HFM.Client.DataTypes
       [MessageProperty("GPU 5")]
       public string GpuId5 { get; set; }
 
+      [MessageProperty("GPU 5", typeof(GpuTypeConverter))]
+      public string GpuId5Type { get; set; }
+
       [MessageProperty("GPU 5", typeof(GpuManufacturerConverter))]
       public GpuManufacturer GpuId5Manufacturer { get; set; }
 
       [MessageProperty("GPU 6")]
       public string GpuId6 { get; set; }
 
+      [MessageProperty("GPU 6", typeof(GpuTypeConverter))]
+      public string GpuId6Type { get; set; }
+
       [MessageProperty("GPU 6", typeof(GpuManufacturerConverter))]
       public GpuManufacturer GpuId6Manufacturer { get; set; }
 
       [MessageProperty("GPU 7")]
       public string GpuId7 { get; set; }
+
+      [MessageProperty("GPU 7", typeof(GpuTypeConverter))]
+      public string GpuId7Type { get; set; }
 
       [MessageProperty("GPU 7", typeof(GpuManufacturerConverter))]
       public GpuManufacturer GpuId7Manufacturer { get; set; }

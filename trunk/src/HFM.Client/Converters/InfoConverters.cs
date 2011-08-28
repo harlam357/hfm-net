@@ -19,6 +19,7 @@
 
 using System;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 using HFM.Client.DataTypes;
 
@@ -211,6 +212,36 @@ namespace HFM.Client.Converters
 
          throw new FormatException(String.Format(CultureInfo.InvariantCulture,
             "Failed to parse GPU manufacturer value from '{0}'.", inputString));
+      }
+   }
+
+   internal sealed class GpuTypeConverter : IConversionProvider
+   {
+      public object Convert(object input)
+      {
+         if (input == null)
+         {
+            // not an error, but no value
+            return null;
+         }
+
+         var inputString = (string)input;
+
+         var regex1 = new Regex("\\[(?<GpuType>.+)\\]", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+         Match matchRegex1;
+         if ((matchRegex1 = regex1.Match(inputString)).Success)
+         {
+            return matchRegex1.Result("${GpuType}");
+         }
+
+         int radeonIndex = inputString.IndexOf("Radeon");
+         if (radeonIndex >= 0)
+         {
+            return inputString.Substring(radeonIndex, inputString.Length - radeonIndex);
+         }
+
+         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
+            "Failed to parse GPU type value from '{0}'.", inputString));
       }
    }
 }
