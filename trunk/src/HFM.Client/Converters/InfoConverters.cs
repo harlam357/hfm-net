@@ -100,7 +100,7 @@ namespace HFM.Client.Converters
          }
 
          throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse OS value of '{0}'.", inputString));
+            "Failed to parse OS value from '{0}'.", inputString));
       }
    }
 
@@ -127,6 +127,90 @@ namespace HFM.Client.Converters
 
          throw new FormatException(String.Format(CultureInfo.InvariantCulture,
             "Failed to parse CUDA version value of '{0}'.", inputString), innerException);
+      }
+   }
+
+   internal sealed class CpuManufacturerConverter : IConversionProvider
+   {
+      public object Convert(object input)
+      {
+         var inputString = (string)input;
+         if (inputString.Contains("GenuineIntel"))
+         {
+            return CpuManufacturer.Intel;
+         }
+         if (inputString.Contains("AuthenticAMD"))
+         {
+            return CpuManufacturer.AMD;
+         }
+
+         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
+            "Failed to parse CPU manufacturer value from '{0}'.", inputString));
+      }
+   }
+
+   internal sealed class CpuTypeConverter : IConversionProvider
+   {
+      public object Convert(object input)
+      {
+         var inputString = (string)input;
+         if (inputString.Contains("Core(TM)2"))
+         {
+            return CpuType.Core2;
+         }
+         if (inputString.Contains("Core(TM) i7"))
+         {
+            return CpuType.Corei7;
+         }
+         // assumed, no unit tests
+         if (inputString.Contains("Core(TM) i5"))
+         {
+            return CpuType.Corei5;
+         }
+         // assumed, no unit tests
+         if (inputString.Contains("Core(TM) i3"))
+         {
+            return CpuType.Corei3;
+         }
+         if (inputString.Contains("Core(TM) i3"))
+         {
+            return CpuType.Corei3;
+         }
+         if (inputString.Contains("Phenom(tm) II"))
+         {
+            return CpuType.PhenomII;
+         }
+         // assumed, no unit tests
+         if (inputString.Contains("Phenom(tm)"))
+         {
+            return CpuType.PhenomII;
+         }
+         if (inputString.Contains("Athlon(tm)"))
+         {
+            return CpuType.Athlon;
+         }
+
+         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
+            "Failed to parse CPU type value from '{0}'.", inputString));
+      }
+   }
+
+   internal sealed class GpuManufacturerConverter : IConversionProvider
+   {
+      public object Convert(object input)
+      {
+         var inputString = (string)input;
+         if (inputString.Contains("ATI"))
+         {
+            return GpuManufacturer.ATI;
+         }
+         if (inputString.Contains("NVIDIA") || inputString.Contains("FERMI"))
+         {
+            return GpuManufacturer.Nvidia;
+         }
+
+         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
+            "Failed to parse GPU manufacturer value from '{0}'.", inputString));
       }
    }
 }
