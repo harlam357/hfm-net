@@ -18,8 +18,9 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
-
+using System.Linq;
 using NUnit.Framework;
 
 using HFM.Framework.DataTypes;
@@ -27,6 +28,7 @@ using HFM.Framework.DataTypes;
 namespace HFM.Log.Tests
 {
    // ReSharper disable InconsistentNaming
+
    [TestFixture]
    public class LogReaderTests
    {
@@ -36,7 +38,7 @@ namespace HFM.Log.Tests
          // Scan
          var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\SMP_1\\FAHlog.txt");
          var clientRuns = LogReader.GetClientRuns(logLines);
-         var logInterpreter = new LogInterpreter(logLines, clientRuns);
+         var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
          
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
@@ -87,7 +89,7 @@ namespace HFM.Log.Tests
          // Scan
          var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\SMP_2\\FAHlog.txt");
          var clientRuns = LogReader.GetClientRuns(logLines);
-         var logInterpreter = new LogInterpreter(logLines, clientRuns);
+         var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
@@ -125,7 +127,7 @@ namespace HFM.Log.Tests
          // Scan
          var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\SMP_3\\FAHlog.txt");
          var clientRuns = LogReader.GetClientRuns(logLines);
-         var logInterpreter = new LogInterpreter(logLines, clientRuns);
+         var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
@@ -162,7 +164,7 @@ namespace HFM.Log.Tests
          // Scan
          var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\SMP_10\\FAHlog.txt");
          var clientRuns = LogReader.GetClientRuns(logLines);
-         var logInterpreter = new LogInterpreter(logLines, clientRuns);
+         var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
          // Check Run 5 Positions
          var expectedRun = new ClientRun(401);
@@ -196,7 +198,7 @@ namespace HFM.Log.Tests
          // Scan
          var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\SMP_15\\FAHlog.txt");
          var clientRuns = LogReader.GetClientRuns(logLines);
-         var logInterpreter = new LogInterpreter(logLines, clientRuns);
+         var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
@@ -263,7 +265,7 @@ namespace HFM.Log.Tests
          // Scan
          var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\GPU2_1\\FAHlog.txt");
          var clientRuns = LogReader.GetClientRuns(logLines);
-         var logInterpreter = new LogInterpreter(logLines, clientRuns);
+         var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
@@ -329,7 +331,7 @@ namespace HFM.Log.Tests
          // Scan
          var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\GPU2_2\\FAHlog.txt");
          var clientRuns = LogReader.GetClientRuns(logLines);
-         var logInterpreter = new LogInterpreter(logLines, clientRuns);
+         var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
@@ -365,7 +367,7 @@ namespace HFM.Log.Tests
          // Scan
          var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\GPU2_3\\FAHlog.txt");
          var clientRuns = LogReader.GetClientRuns(logLines);
-         var logInterpreter = new LogInterpreter(logLines, clientRuns);
+         var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(0);
@@ -422,7 +424,7 @@ namespace HFM.Log.Tests
          // Scan
          var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\GPU2_7\\FAHlog.txt");
          var clientRuns = LogReader.GetClientRuns(logLines);
-         var logInterpreter = new LogInterpreter(logLines, clientRuns);
+         var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(0);
@@ -472,7 +474,7 @@ namespace HFM.Log.Tests
          // Scan
          var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\GPU3_2\\FAHlog.txt");
          var clientRuns = LogReader.GetClientRuns(logLines);
-         var logInterpreter = new LogInterpreter(logLines, clientRuns);
+         var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
@@ -523,7 +525,7 @@ namespace HFM.Log.Tests
          // Scan
          var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\Standard_1\\FAHlog.txt");
          var clientRuns = LogReader.GetClientRuns(logLines);
-         var logInterpreter = new LogInterpreter(logLines, clientRuns);
+         var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
@@ -586,7 +588,7 @@ namespace HFM.Log.Tests
          // Scan
          var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\Standard_5\\FAHlog.txt");
          var clientRuns = LogReader.GetClientRuns(logLines);
-         var logInterpreter = new LogInterpreter(logLines, clientRuns);
+         var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
          // Check Run 3 Positions
          var expectedRun = new ClientRun(788);
@@ -653,7 +655,7 @@ namespace HFM.Log.Tests
          // Scan
          var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\Standard_6\\FAHlog.txt");
          var clientRuns = LogReader.GetClientRuns(logLines);
-         var logInterpreter = new LogInterpreter(logLines, clientRuns);
+         var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
@@ -690,6 +692,83 @@ namespace HFM.Log.Tests
          // Special Check to be sure the reader is catching the Pause For Battery line
          Assert.AreEqual(LogLineType.WorkUnitPausedForBattery, logLines[2323].LineType);
       }
+
+      #region Version 7 Logs
+
+      [Test]
+      public void Client_v7_1()
+      {
+         // Scan
+         IList<LogLine> logLines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_1\\log.txt"), LogFileType.Version7);
+         IList<ClientRun> clientRuns = LogReader.GetClientRuns(logLines, LogFileType.Version7);
+         
+         // Check Run 0 Positions
+         var expectedRun = new ClientRun(1);
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 174, 272));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 236, 433));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 399, 609));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 561, 771));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 740, 1085));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 899, 1240));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 1208, 1400));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 1369, 1564));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 1526, 1726));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 1692, 1886));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 1853, 2063));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 2015, 2225));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 2194, 2385));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 2352, 2546));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 2511, 2707));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 2673, 2868));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 2833, 3028));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 2997, 3198));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 3154, 3360));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 3325, 3523));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 3487, 3699));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 3664, 3876));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 3827, 4053));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 4005, -1));
+         expectedRun.Arguments = String.Empty;
+         expectedRun.FoldingID = "Unknown";
+         expectedRun.Team = 0;
+         expectedRun.UserID = String.Empty;
+         expectedRun.MachineID = 0;
+         expectedRun.CompletedUnits = 21;
+         expectedRun.FailedUnits = 0;
+         expectedRun.TotalCompletedUnits = 0;
+         expectedRun.Status = ClientStatus.Unknown;
+
+         DoClientRunCheck(expectedRun, clientRuns[0]);
+
+         var logInterpreter = new LogInterpreter(logLines, clientRuns);
+         Assert.AreEqual(1, logInterpreter.LogLineParsingErrors.Count());
+
+         logLines = logInterpreter.GetLogLinesForQueueIndex(1, new ProjectInfo { ProjectID = 7136, ProjectRun = 0, ProjectClone = 39, ProjectGen = 103 });
+         Assert.AreEqual(99, logLines.Count);
+         FahLogUnitData fahLogData = LogReader.GetFahLogDataFromLogLines(logLines.Filter(LogFilterType.IndexAndNonIndexed));
+         Assert.AreEqual(new TimeSpan(18, 6, 54), fahLogData.UnitStartTimeStamp);
+         Assert.AreEqual(6, fahLogData.FrameDataList.Count);
+         Assert.AreEqual(6, fahLogData.FramesObserved);
+         Assert.AreEqual(7136, fahLogData.ProjectID);
+         Assert.AreEqual(0, fahLogData.ProjectRun);
+         Assert.AreEqual(39, fahLogData.ProjectClone);
+         Assert.AreEqual(103, fahLogData.ProjectGen);
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, fahLogData.UnitResult);
+
+         logLines = logInterpreter.GetLogLinesForQueueIndex(0, new ProjectInfo { ProjectID = 6984, ProjectRun = 0, ProjectClone = 1, ProjectGen = 18 });
+         Assert.AreEqual(198, logLines.Count);
+         fahLogData = LogReader.GetFahLogDataFromLogLines(logLines.Filter(LogFilterType.IndexAndNonIndexed));
+         Assert.AreEqual(new TimeSpan(18, 39, 17), fahLogData.UnitStartTimeStamp);
+         Assert.AreEqual(101, fahLogData.FrameDataList.Count);
+         Assert.AreEqual(101, fahLogData.FramesObserved);
+         Assert.AreEqual(6984, fahLogData.ProjectID);
+         Assert.AreEqual(0, fahLogData.ProjectRun);
+         Assert.AreEqual(1, fahLogData.ProjectClone);
+         Assert.AreEqual(18, fahLogData.ProjectGen);
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, fahLogData.UnitResult);
+      }
+
+      #endregion
       
       private static void DoClientRunCheck(ClientRun expectedRun, ClientRun run)
       {
@@ -697,8 +776,9 @@ namespace HFM.Log.Tests
          Assert.AreEqual(expectedRun.UnitIndexes.Count, run.UnitIndexes.Count);
          for (int i = 0; i < expectedRun.UnitIndexes.Count; i++)
          {
-            Assert.AreEqual(expectedRun.UnitIndexes[i].StartIndex, run.UnitIndexes[i].StartIndex);
             Assert.AreEqual(expectedRun.UnitIndexes[i].QueueIndex, run.UnitIndexes[i].QueueIndex);
+            Assert.AreEqual(expectedRun.UnitIndexes[i].StartIndex, run.UnitIndexes[i].StartIndex);
+            Assert.AreEqual(expectedRun.UnitIndexes[i].EndIndex, run.UnitIndexes[i].EndIndex);
          }
 
          Assert.AreEqual(expectedRun.Arguments, run.Arguments);
@@ -710,6 +790,38 @@ namespace HFM.Log.Tests
          Assert.AreEqual(expectedRun.FailedUnits, run.FailedUnits);
          Assert.AreEqual(expectedRun.TotalCompletedUnits, run.TotalCompletedUnits);
          Assert.AreEqual(expectedRun.Status, run.Status);
+      }
+
+      [Test]
+      [ExpectedException(typeof(ArgumentNullException))]
+      public void GetLogLines_ArgumentNull1()
+      {
+         string logFilePath = null;
+         LogReader.GetLogLines(logFilePath);
+      }
+
+      [Test]
+      [ExpectedException(typeof(ArgumentException))]
+      public void GetLogLines_ArgumentEmpty()
+      {
+         string logFilePath = String.Empty;
+         LogReader.GetLogLines(logFilePath);
+      }
+
+      [Test]
+      [ExpectedException(typeof(ArgumentNullException))]
+      public void GetLogLines_ArgumentNull2()
+      {
+         IList<string> logLines = null;
+         LogReader.GetLogLines(logLines);
+      }
+
+      [Test]
+      [ExpectedException(typeof(ArgumentNullException))]
+      public void GetClientRuns_ArgumentNull()
+      {
+         IList<LogLine> logLines = null;
+         LogReader.GetClientRuns(logLines);
       }
       
       [Test, Category("GPU")]
@@ -740,6 +852,12 @@ namespace HFM.Log.Tests
          Assert.AreEqual(new DateTime(DateTime.Now.Year, 12, 12, 0, 9, 22), data.DownloadTime);
          Assert.AreEqual(new DateTime(DateTime.Now.Year, 12, 18, 0, 9, 22), data.DueTime);
          Assert.AreEqual(1724900, data.Progress);
+      }
+
+      [Test]
+      public void GetFahLogDataFromLogLines_ArgumentNull()
+      {
+         Assert.IsNotNull(LogReader.GetFahLogDataFromLogLines(null));
       }
 
       [Test]
@@ -801,14 +919,15 @@ namespace HFM.Log.Tests
       [Test]
       public void WorkUnitResultFromString()
       {
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, LogLineParser.WorkUnitResultFromString("FINISHED_UNIT"));
-         Assert.AreEqual(WorkUnitResult.EarlyUnitEnd, LogLineParser.WorkUnitResultFromString("EARLY_UNIT_END"));
-         Assert.AreEqual(WorkUnitResult.UnstableMachine, LogLineParser.WorkUnitResultFromString("UNSTABLE_MACHINE"));
-         Assert.AreEqual(WorkUnitResult.Interrupted, LogLineParser.WorkUnitResultFromString("INTERRUPTED"));
-         Assert.AreEqual(WorkUnitResult.BadWorkUnit, LogLineParser.WorkUnitResultFromString("BAD_WORK_UNIT"));
-         Assert.AreEqual(WorkUnitResult.CoreOutdated, LogLineParser.WorkUnitResultFromString("CORE_OUTDATED"));
-         Assert.AreEqual(WorkUnitResult.Unknown, LogLineParser.WorkUnitResultFromString("afasfdsafasdfas"));
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, "FINISHED_UNIT".ToWorkUnitResult());
+         Assert.AreEqual(WorkUnitResult.EarlyUnitEnd, "EARLY_UNIT_END".ToWorkUnitResult());
+         Assert.AreEqual(WorkUnitResult.UnstableMachine, "UNSTABLE_MACHINE".ToWorkUnitResult());
+         Assert.AreEqual(WorkUnitResult.Interrupted, "INTERRUPTED".ToWorkUnitResult());
+         Assert.AreEqual(WorkUnitResult.BadWorkUnit, "BAD_WORK_UNIT".ToWorkUnitResult());
+         Assert.AreEqual(WorkUnitResult.CoreOutdated, "CORE_OUTDATED".ToWorkUnitResult());
+         Assert.AreEqual(WorkUnitResult.Unknown, "afasfdsafasdfas".ToWorkUnitResult());
       }
    }
+
    // ReSharper restore InconsistentNaming
 }

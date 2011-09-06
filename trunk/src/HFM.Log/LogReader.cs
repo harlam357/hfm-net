@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Log Reader Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,12 +22,19 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 using HFM.Framework.DataTypes;
 
 namespace HFM.Log
 {
+   public enum LogFileType
+   {
+      Legacy,
+      Version7
+   }
+
    /// <summary>
    /// FAH Client Log File Reader.  Gets data from FAHlog.txt and unitinfo.txt files.
    /// </summary>
@@ -35,9 +42,6 @@ namespace HFM.Log
    {
       #region Fields
       
-      private static readonly Regex RegexTimeStamp =
-         new Regex("\\[(?<Timestamp>.{8})\\]", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
-
       private static readonly Regex RegexProjectNumberFromTag =
          new Regex("P(?<ProjectNumber>.*)R(?<Run>.*)C(?<Clone>.*)G(?<Gen>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
@@ -67,7 +71,7 @@ namespace HFM.Log
                  line.LineType.Equals(LogLineType.WorkUnitFrame)) &&
                  data.UnitStartTimeStamp.Equals(TimeSpan.MinValue))
             {
-               data.UnitStartTimeStamp = GetLogLineTimeStamp(line);
+               data.UnitStartTimeStamp = line.GetTimeStamp() ?? TimeSpan.MinValue;
             }
 
             if (line.LineType.Equals(LogLineType.WorkUnitPaused) || 
@@ -87,7 +91,7 @@ namespace HFM.Log
                // set frame times and determine status - Issue 13 (Revised)
                data.FramesObserved = 0;
                // Reset the Unit Start Time
-               data.UnitStartTimeStamp = GetLogLineTimeStamp(line);
+               data.UnitStartTimeStamp = line.GetTimeStamp() ?? TimeSpan.MinValue;
             }
             #endregion
             
@@ -136,26 +140,6 @@ namespace HFM.Log
          }
          
          return data;
-      }
-
-      private static TimeSpan GetLogLineTimeStamp(ILogLine logLine)
-      {
-         Match mTimeStamp;
-         if ((mTimeStamp = RegexTimeStamp.Match(logLine.LineRaw)).Success)
-         {
-            try
-            {
-               DateTime timeStamp = DateTime.ParseExact(mTimeStamp.Result("${Timestamp}"), "HH:mm:ss",
-                                                        DateTimeFormatInfo.InvariantInfo,
-                                                        Default.DateTimeStyle);
-
-               return timeStamp.TimeOfDay;
-            }
-            catch (FormatException)
-            { }
-         }
-         
-         return TimeSpan.MinValue;
       }
 
       private static void PopulateProjectData(ILogLine line, FahLogUnitData data)
@@ -258,22 +242,58 @@ namespace HFM.Log
       }
 
       /// <summary>
-      /// Read the FAHlog.txt lines and determine log line types and data.
+      /// Determine log line types and data.
       /// </summary>
       /// <param name="logFilePath">Path to the log file.</param>
-      /// <exception cref="ArgumentException">Throws if logFilePath is null or empty.</exception>
+      /// <exception cref="ArgumentNullException">Throws if logFilePath is null.</exception>
+      /// <exception cref="ArgumentException">Throws if logFilePath is empty.</exception>
       public static List<LogLine> GetLogLines(string logFilePath)
       {
-         if (String.IsNullOrEmpty(logFilePath))
+         return GetLogLines(logFilePath, LogFileType.Legacy);
+      }
+
+      /// <summary>
+      /// Determine log line types and data.
+      /// </summary>
+      /// <param name="logFilePath">Path to the log file.</param>
+      /// <param name="logFileType">File Type - Legacy or Version 7</param>
+      /// <exception cref="ArgumentNullException">Throws if logFilePath is null.</exception>
+      /// <exception cref="ArgumentException">Throws if logFilePath is empty.</exception>
+      public static List<LogLine> GetLogLines(string logFilePath, LogFileType logFileType)
+      {
+         if (logFilePath == null) throw new ArgumentNullException("logFilePath");
+
+         if (logFilePath.Length == 0)
          {
-            throw new ArgumentException("Argument 'logFilePath' cannot be a null or empty string.");
+            throw new ArgumentException("Argument 'logFilePath' cannot be an empty string.");
          }
 
-         string[] fahLogText = File.ReadAllLines(logFilePath);
-         
+         return GetLogLines(File.ReadAllLines(logFilePath), logFileType);
+      }
+
+      /// <summary>
+      /// Determine log line types and data.
+      /// </summary>
+      /// <param name="logLines">List of log lines.</param>
+      /// <exception cref="ArgumentNullException">Throws if logLines is null.</exception>
+      public static List<LogLine> GetLogLines(IList<string> logLines)
+      {
+         return GetLogLines(logLines, LogFileType.Legacy);
+      }
+
+      /// <summary>
+      /// Determine log line types and data.
+      /// </summary>
+      /// <param name="logLines">List of log lines.</param>
+      /// <param name="logFileType">File Type - Legacy or Version 7</param>
+      /// <exception cref="ArgumentNullException">Throws if logLines is null.</exception>
+      public static List<LogLine> GetLogLines(IList<string> logLines, LogFileType logFileType)
+      {
+         if (logLines == null) throw new ArgumentNullException("logLines");
+
          // Need to clear any previous data before adding new range.
-         var logLineList = new LogLineList();
-         logLineList.AddRange(fahLogText);
+         var logLineList = logFileType.GetLogLineList();
+         logLineList.AddRange(logLines);
 
          return logLineList;
       }
@@ -285,17 +305,114 @@ namespace HFM.Log
       /// <exception cref="ArgumentNullException">Throws if logLines is null.</exception>
       public static List<ClientRun> GetClientRuns(IList<LogLine> logLines)
       {
+         return GetClientRuns(logLines, LogFileType.Legacy);
+      }
+
+      /// <summary>
+      /// Scan the log lines to find client run data and work unit start positions.
+      /// </summary>
+      /// <param name="logLines">Log lines to scan.</param>
+      /// <param name="logFileType">File Type - Legacy or Version 7</param>
+      /// <exception cref="ArgumentNullException">Throws if logLines is null.</exception>
+      public static List<ClientRun> GetClientRuns(IList<LogLine> logLines, LogFileType logFileType)
+      {
          if (logLines == null) throw new ArgumentNullException("logLines");
 
          // Now that we know the LineType for each LogLine, hand off the List
          // of LogLine to the ClientRun List so it can determine the Client 
          // and Unit Start Indexes.
-         var clientRunList = new ClientRunList();
+         var clientRunList = logFileType.GetClientRunList();
          clientRunList.Build(logLines);
 
          return clientRunList;
       }
       
+      #endregion
+   }
+
+   public static class LogReaderExtensions
+   {
+      private static readonly Regex TimeStampRegex =
+         new Regex("\\[?(?<Timestamp>.{8})[\\]|:]", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+
+      #region ILogLine
+
+      /// <summary>
+      /// Get the time stamp from the log line or return null.
+      /// </summary>
+      public static TimeSpan? GetTimeStamp(this ILogLine logLine)
+      {
+         Match timeStampMatch;
+         if ((timeStampMatch = TimeStampRegex.Match(logLine.LineRaw)).Success)
+         {
+            try
+            {
+               return ParseTimeStamp(timeStampMatch.Result("${Timestamp}"));
+            }
+            catch (FormatException)
+            {
+               
+            }
+         }
+
+         return null;
+      }
+
+      /// <summary>
+      /// Get the time stamp from the log line or throw.
+      /// </summary>
+      /// <exception cref="FormatException">Throws if time stamp string cannot be parsed.</exception>
+      public static TimeSpan ParseTimeStamp(this ILogLine logLine)
+      {
+         Match timeStampMatch;
+         if ((timeStampMatch = TimeStampRegex.Match(logLine.LineRaw)).Success)
+         {
+            return ParseTimeStamp(timeStampMatch.Result("${Timestamp}"));
+         }
+
+         throw new FormatException(String.Format("Failed to parse Time Stamp Data from '{0}'", logLine.LineRaw));
+      }
+
+      private static TimeSpan ParseTimeStamp(string value)
+      {
+         return DateTime.ParseExact(value, "HH:mm:ss",
+                                    DateTimeFormatInfo.InvariantInfo,
+                                    Default.DateTimeStyle).TimeOfDay;
+      }
+
+      #endregion
+
+      
+
+      #region LogFileType
+
+      internal static LogLineListBase GetLogLineList(this LogFileType logFileType)
+      {
+         if (logFileType.Equals(LogFileType.Legacy))
+         {
+            return (LogLineListBase)Activator.CreateInstance(typeof(LogLineListLegacy), logFileType);
+         }
+         return (LogLineListBase)Activator.CreateInstance(typeof(LogLineList), logFileType);
+      }
+
+      internal static ClientRunListBase GetClientRunList(this LogFileType logFileType)
+      {
+         if (logFileType.Equals(LogFileType.Legacy))
+         {
+            return Activator.CreateInstance<ClientRunListLegacy>();
+         }
+         return Activator.CreateInstance<ClientRunList>();
+      }
+
+      internal static LogLineParserBase GetLogLineParser(this LogFileType logFileType)
+      {
+         if (logFileType.Equals(LogFileType.Legacy))
+         {
+            return Activator.CreateInstance<LogLineParserLegacy>();
+         }
+         return Activator.CreateInstance<LogLineParser>();
+      }
+
       #endregion
    }
 }

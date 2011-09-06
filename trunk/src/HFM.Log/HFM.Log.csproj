@@ -71,10 +71,18 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="FahLogUnitData.cs" />
+    <Compile Include="LogInterpreterBase.cs" />
     <Compile Include="LogInterpreter.cs" />
+    <Compile Include="LogInterpreterLegacy.cs" />
+    <Compile Include="LogLineListBase.cs" />
     <Compile Include="LogLineList.cs" />
+    <Compile Include="LogLineListLegacy.cs" />
+    <Compile Include="ClientRunListBase.cs" />
     <Compile Include="ClientRunList.cs" />
+    <Compile Include="ClientRunListLegacy.cs" />
     <Compile Include="LogLineParser.cs" />
+    <Compile Include="LogLineParserLegacy.cs" />
+    <Compile Include="LogLineParserBase.cs" />
     <Compile Include="LogReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitInfoLogData.cs" />
