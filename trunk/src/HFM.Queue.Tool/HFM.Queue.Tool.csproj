@@ -137,7 +137,8 @@
 goto End
 
 :Merge
-..\..\..\..\tools\ILMerge\ILMerge.exe  /t:exe /ndebug /out:HFM.Queue.exe HFM.Queue.Tool.exe HFM.Queue.dll
+set PATH=C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319;%25PATH%25
+..\..\..\..\tools\ILMerge\ILMerge.exe /keyfile:"$(AssemblyOriginatorKeyFile)" /t:exe /ndebug /out:HFM.Queue.exe HFM.Queue.Tool.exe HFM.Queue.dll
 :End</PostBuildEvent>
   </PropertyGroup>
 </Project>
