@@ -80,17 +80,17 @@ namespace HFM.Log
          switch (logLine.LineType)
          {
             case LogLineType.WorkUnitProject:
-               Match projectId;
-               if ((projectId = ProjectIDRegex.Match(logLine.LineRaw)).Success)
+               Match projectIdMatch;
+               if ((projectIdMatch = ProjectIDRegex.Match(logLine.LineRaw)).Success)
                {
-                  return projectId;
+                  return projectIdMatch;
                }
                return new LogLineError(String.Format("Failed to parse Project (R/C/G) values from '{0}'", logLine.LineRaw));
             case LogLineType.WorkUnitCoreVersion:
-               Match mCoreVer;
-               if ((mCoreVer = CoreVersionRegex.Match(logLine.LineRaw)).Success)
+               Match coreVersionMatch;
+               if ((coreVersionMatch = CoreVersionRegex.Match(logLine.LineRaw)).Success)
                {
-                  string sCoreVer = mCoreVer.Result("${CoreVer}").Trim();
+                  string sCoreVer = coreVersionMatch.Result("${CoreVer}").Trim();
                   float coreVersion;
                   if (Single.TryParse(sCoreVer, out coreVersion))
                   {
@@ -112,10 +112,10 @@ namespace HFM.Log
                }
                return new LogLineError(String.Format("Failed to parse Frame Data from '{0}'", logLine.LineRaw));
             case LogLineType.WorkUnitCoreShutdown:
-               Match mCoreShutdown;
-               if ((mCoreShutdown = CoreShutdownRegex.Match(logLine.LineRaw)).Success)
+               Match coreShutdownMatch;
+               if ((coreShutdownMatch = CoreShutdownRegex.Match(logLine.LineRaw)).Success)
                {
-                  return mCoreShutdown.Result("${UnitResult}").ToWorkUnitResult();
+                  return coreShutdownMatch.Result("${UnitResult}").ToWorkUnitResult();
                }
                return new LogLineError(String.Format("Failed to parse Work Unit Result value from '{0}'", logLine.LineRaw));
          }

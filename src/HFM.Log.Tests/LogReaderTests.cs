@@ -768,6 +768,63 @@ namespace HFM.Log.Tests
          Assert.AreEqual(WorkUnitResult.FinishedUnit, fahLogData.UnitResult);
       }
 
+      [Test]
+      public void Client_v7_7()
+      {
+         // Scan
+         IList<LogLine> logLines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_7\\log.txt"), LogFileType.Version7);
+         IList<ClientRun> clientRuns = LogReader.GetClientRuns(logLines, LogFileType.Version7);
+
+         // Check Run 0 Positions
+         var expectedRun = new ClientRun(1);
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 64, 293));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 60, 439));
+         expectedRun.UnitIndexes.Add(new UnitIndex(2, 261, 690));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 412, 788));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 654, 959));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 928, 1163));
+         expectedRun.UnitIndexes.Add(new UnitIndex(2, 755, 1324));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 1172, 1398));
+         expectedRun.Arguments = "";
+         expectedRun.FoldingID = "Unknown";
+         expectedRun.Team = 0;
+         expectedRun.UserID = "";
+         expectedRun.MachineID = 0;
+         expectedRun.CompletedUnits = 5;
+         expectedRun.FailedUnits = 0;
+         expectedRun.TotalCompletedUnits = 0;
+         expectedRun.Status = ClientStatus.Unknown;
+
+         DoClientRunCheck(expectedRun, clientRuns[0]);
+
+         var logInterpreter = new LogInterpreter(logLines, clientRuns);
+         Assert.AreEqual(1, logInterpreter.LogLineParsingErrors.Count());
+
+         logLines = logInterpreter.GetLogLinesForQueueIndex(0, new ProjectInfo { ProjectID = 6801, ProjectRun = 6348, ProjectClone = 0, ProjectGen = 305 });
+         Assert.AreEqual(227, logLines.Count);
+         FahLogUnitData fahLogData = LogReader.GetFahLogDataFromLogLines(logLines.Filter(LogFilterType.IndexAndNonIndexed));
+         Assert.AreEqual(new TimeSpan(0, 37, 37), fahLogData.UnitStartTimeStamp);
+         Assert.AreEqual(101, fahLogData.FrameDataList.Count);
+         Assert.AreEqual(101, fahLogData.FramesObserved);
+         Assert.AreEqual(6801, fahLogData.ProjectID);
+         Assert.AreEqual(6348, fahLogData.ProjectRun);
+         Assert.AreEqual(0, fahLogData.ProjectClone);
+         Assert.AreEqual(305, fahLogData.ProjectGen);
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, fahLogData.UnitResult);
+
+         logLines = logInterpreter.GetLogLinesForQueueIndex(2, new ProjectInfo { ProjectID = 11051, ProjectRun = 0, ProjectClone = 2, ProjectGen = 39 });
+         Assert.AreEqual(570, logLines.Count);
+         fahLogData = LogReader.GetFahLogDataFromLogLines(logLines.Filter(LogFilterType.IndexAndNonIndexed));
+         Assert.AreEqual(new TimeSpan(18, 29, 46), fahLogData.UnitStartTimeStamp);
+         Assert.AreEqual(101, fahLogData.FrameDataList.Count);
+         Assert.AreEqual(101, fahLogData.FramesObserved);
+         Assert.AreEqual(11051, fahLogData.ProjectID);
+         Assert.AreEqual(0, fahLogData.ProjectRun);
+         Assert.AreEqual(2, fahLogData.ProjectClone);
+         Assert.AreEqual(39, fahLogData.ProjectGen);
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, fahLogData.UnitResult);
+      }
+
       #endregion
       
       private static void DoClientRunCheck(ClientRun expectedRun, ClientRun run)

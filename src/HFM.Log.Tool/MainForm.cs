@@ -20,7 +20,7 @@ namespace HFM.Log.Tool
       {
          InitializeComponent();
 
-         base.Text = String.Format("HFM.NET Log Tool v{0}", PlatformOps.ApplicationVersion);
+         base.Text = String.Format("HFM Log Tool v{0}", PlatformOps.ApplicationVersionWithRevision);
 #if !DEV
          btnGenCode.Visible = false;
 #endif
@@ -112,8 +112,9 @@ namespace HFM.Log.Tool
 
          if (File.Exists(txtLogPath.Text))
          {
-            _logLines = LogReader.GetLogLines(txtLogPath.Text);
-            _clientRuns = LogReader.GetClientRuns(_logLines);
+            LogFileType logFileType = GetLogFileType();
+            _logLines = LogReader.GetLogLines(txtLogPath.Text, logFileType);
+            _clientRuns = LogReader.GetClientRuns(_logLines, logFileType);
 
             PopulateClientRunsInTree(_clientRuns);
             richTextBox1.SetLogLines(_logLines, String.Empty, true);
@@ -123,6 +124,11 @@ namespace HFM.Log.Tool
             MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture,
                "File '{0}' does not exist.", txtLogPath.Text), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
          }
+      }
+
+      private LogFileType GetLogFileType()
+      {
+         return LegacyRadioButton.Checked ? LogFileType.Legacy : LogFileType.Version7;
       }
 
       private void PopulateClientRunsInTree(IList<ClientRun> clientRunList)
@@ -148,7 +154,7 @@ namespace HFM.Log.Tool
             for (int j = 0; j < _clientRuns[i].UnitIndexes.Count; j++)
             {
                var index = _clientRuns[i].UnitIndexes[j];
-               sb.AppendLine("expectedRun.UnitIndexes.Add(new UnitIndex(" + index.QueueIndex + "," + index.StartIndex + "));");
+               sb.AppendLine("expectedRun.UnitIndexes.Add(new UnitIndex(" + index.QueueIndex + "," + index.StartIndex + "," + index.EndIndex + "));");
             }
             sb.AppendLine("expectedRun.Arguments = \"" + _clientRuns[i].Arguments + "\";");
             sb.AppendLine("expectedRun.FoldingID = \"" + _clientRuns[i].FoldingID + "\";");

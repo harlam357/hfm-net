@@ -41,10 +41,14 @@
          this.txtLogLineIndex = new System.Windows.Forms.TextBox();
          this.txtLogLineType = new System.Windows.Forms.TextBox();
          this.txtLogLineData = new System.Windows.Forms.TextBox();
+         this.panel1 = new System.Windows.Forms.Panel();
+         this.LegacyRadioButton = new System.Windows.Forms.RadioButton();
+         this.Version7RadioButton = new System.Windows.Forms.RadioButton();
          this.richTextBox1 = new HFM.Forms.Controls.RichTextBoxWrapper();
          this.splitContainer1.Panel1.SuspendLayout();
          this.splitContainer1.Panel2.SuspendLayout();
          this.splitContainer1.SuspendLayout();
+         this.panel1.SuspendLayout();
          this.SuspendLayout();
          // 
          // txtLogPath
@@ -99,9 +103,9 @@
          // 
          // splitContainer1
          // 
-         this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                     | System.Windows.Forms.AnchorStyles.Left)
-                     | System.Windows.Forms.AnchorStyles.Right)));
+         this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
          this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
          this.splitContainer1.Location = new System.Drawing.Point(12, 12);
          this.splitContainer1.Name = "splitContainer1";
@@ -167,13 +171,44 @@
          // 
          // txtLogLineData
          // 
-         this.txtLogLineData.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                     | System.Windows.Forms.AnchorStyles.Right)));
+         this.txtLogLineData.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
          this.txtLogLineData.Location = new System.Drawing.Point(468, 445);
          this.txtLogLineData.Name = "txtLogLineData";
          this.txtLogLineData.ReadOnly = true;
          this.txtLogLineData.Size = new System.Drawing.Size(406, 20);
          this.txtLogLineData.TabIndex = 13;
+         // 
+         // panel1
+         // 
+         this.panel1.Controls.Add(this.Version7RadioButton);
+         this.panel1.Controls.Add(this.LegacyRadioButton);
+         this.panel1.Location = new System.Drawing.Point(670, 474);
+         this.panel1.Name = "panel1";
+         this.panel1.Size = new System.Drawing.Size(174, 23);
+         this.panel1.TabIndex = 14;
+         // 
+         // LegacyRadioButton
+         // 
+         this.LegacyRadioButton.AutoSize = true;
+         this.LegacyRadioButton.Checked = true;
+         this.LegacyRadioButton.Location = new System.Drawing.Point(3, 3);
+         this.LegacyRadioButton.Name = "LegacyRadioButton";
+         this.LegacyRadioButton.Size = new System.Drawing.Size(60, 17);
+         this.LegacyRadioButton.TabIndex = 0;
+         this.LegacyRadioButton.TabStop = true;
+         this.LegacyRadioButton.Text = "Legacy";
+         this.LegacyRadioButton.UseVisualStyleBackColor = true;
+         // 
+         // Version7RadioButton
+         // 
+         this.Version7RadioButton.AutoSize = true;
+         this.Version7RadioButton.Location = new System.Drawing.Point(69, 3);
+         this.Version7RadioButton.Name = "Version7RadioButton";
+         this.Version7RadioButton.Size = new System.Drawing.Size(69, 17);
+         this.Version7RadioButton.TabIndex = 1;
+         this.Version7RadioButton.Text = "Version 7";
+         this.Version7RadioButton.UseVisualStyleBackColor = true;
          // 
          // richTextBox1
          // 
@@ -193,6 +228,7 @@
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.ClientSize = new System.Drawing.Size(886, 509);
+         this.Controls.Add(this.panel1);
          this.Controls.Add(this.txtLogLineData);
          this.Controls.Add(this.txtLogLineType);
          this.Controls.Add(this.txtLogLineIndex);
@@ -212,6 +248,8 @@
          this.splitContainer1.Panel1.ResumeLayout(false);
          this.splitContainer1.Panel2.ResumeLayout(false);
          this.splitContainer1.ResumeLayout(false);
+         this.panel1.ResumeLayout(false);
+         this.panel1.PerformLayout();
          this.ResumeLayout(false);
          this.PerformLayout();
 
@@ -232,6 +270,9 @@
       private System.Windows.Forms.TextBox txtLogLineIndex;
       private System.Windows.Forms.TextBox txtLogLineType;
       private System.Windows.Forms.TextBox txtLogLineData;
+      private System.Windows.Forms.Panel panel1;
+      private System.Windows.Forms.RadioButton Version7RadioButton;
+      private System.Windows.Forms.RadioButton LegacyRadioButton;
    }
 }
 

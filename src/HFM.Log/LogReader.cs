@@ -61,10 +61,12 @@ namespace HFM.Log
          
          bool clientWasPaused = false;
          bool lookForProject = true;
+         int queueIndex = -1;
       
          foreach (var line in logLines)
          {
             #region Unit Start
+
             if ((line.LineType.Equals(LogLineType.WorkUnitProcessing) ||
                  line.LineType.Equals(LogLineType.WorkUnitWorking) ||
                  line.LineType.Equals(LogLineType.WorkUnitStart) ||
@@ -93,18 +95,22 @@ namespace HFM.Log
                // Reset the Unit Start Time
                data.UnitStartTimeStamp = line.GetTimeStamp() ?? TimeSpan.MinValue;
             }
+
             #endregion
             
             #region Frame Data
+
             if (line.LineType.Equals(LogLineType.WorkUnitFrame))
             {
                Debug.Assert(line.LineData is UnitFrame);
                data.FramesObserved++;
                data.FrameDataList.Add(line);
             }
+
             #endregion
 
             #region Core Version
+
             if (data.CoreVersion.Length == 0)
             {
                if (line.LineType.Equals(LogLineType.WorkUnitCoreVersion) && line.LineData != null)
@@ -112,9 +118,11 @@ namespace HFM.Log
                   data.CoreVersion = line.LineData.ToString();
                }
             }
+
             #endregion
 
             #region Project
+
             if (lookForProject)
             {
                // If we encounter a work unit frame, we should have
@@ -128,14 +136,32 @@ namespace HFM.Log
                   PopulateProjectData(line, data);
                }
             }
+
             #endregion
             
             #region Unit Result
+
             if ((line.LineType.Equals(LogLineType.WorkUnitCoreShutdown) && line.LineData != null) ||
                 (line.LineType.Equals(LogLineType.ClientCoreCommunicationsError) && line.LineData != null))
             {
                data.UnitResult = (WorkUnitResult)line.LineData;
             }
+
+            if (line.LineType.Equals(LogLineType.WorkUnitWorking) && line.LineData != null)
+            {
+               queueIndex = (int)line.LineData;
+            }
+            if (line.LineType.Equals(LogLineType.WorkUnitCoreReturn) && line.LineData != null)
+            {
+               // make sure the result being captured 
+               // is for the correct queue index.
+               var unitResult = (UnitResult)line.LineData;
+               if (unitResult.Index == queueIndex)
+               {
+                  data.UnitResult = unitResult.Value;
+               }
+            }
+
             #endregion
          }
          

@@ -149,6 +149,7 @@ namespace HFM.Client.Tool
             _fahClient.SendCommand("options -a");   
             _fahClient.SendCommand("queue-info");
             _fahClient.SendCommand("slot-info");
+            _fahClient.SendCommand("log-updates restart");
          }
          else
          {
