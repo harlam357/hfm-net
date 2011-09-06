@@ -140,6 +140,15 @@ namespace HFM.Framework.DataTypes
       {
          get { return _startIndex; }
       }
+
+      private readonly int _endIndex;
+      /// <summary>
+      /// Log line index of the ending line of this work unit.
+      /// </summary>
+      public int EndIndex
+      {
+         get { return _endIndex; }
+      }
       
       /// <summary>
       /// UnitIndex Constructor
@@ -147,9 +156,22 @@ namespace HFM.Framework.DataTypes
       /// <param name="queueIndex">Queue index of this work unit.</param>
       /// <param name="startIndex">Log line index of the starting line of this work unit.</param>
       public UnitIndex(int queueIndex, int startIndex)
+         : this(queueIndex, startIndex, -1)
+      {
+
+      }
+
+      /// <summary>
+      /// UnitIndex Constructor
+      /// </summary>
+      /// <param name="queueIndex">Queue index of this work unit.</param>
+      /// <param name="startIndex">Log line index of the starting line of this work unit.</param>
+      /// <param name="endIndex">Log line index of the ending line of this work unit.</param>
+      public UnitIndex(int queueIndex, int startIndex, int endIndex)
       {
          _queueIndex = queueIndex;
          _startIndex = startIndex;
+         _endIndex = endIndex;
       }     
    }
 }
