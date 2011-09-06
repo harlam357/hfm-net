@@ -1,0 +1,21 @@
+PyON 1 slots
+[
+  {
+    "id": "00",
+    "status": "FINISHING",
+    "description": "smp:4",
+    "options": {
+      "client-type": "beta",
+      "max-packet-size": "big",
+      "next-unit-percentage": "100"
+    }
+  },
+  {
+    "id": "01",
+    "status": "RUNNING",
+    "description": "gpu:0:\"GF106 [GeForce 450 GTS]\"",
+    "options": {}
+  }
+]
+---
+
