@@ -1,0 +1,25 @@
+PyON 1 simulation-info
+{
+  "user": "HayesK",
+  "team": "32",
+  "project": 11051,
+  "run": 0,
+  "clone": 2,
+  "gen": 39,
+  "core_type": 163,
+  "core": "GROGBSMP",
+  "description": "",
+  "total_iterations": 1000,
+  "iterations_done": 910,
+  "energy": 0,
+  "temperature": 0,
+  "start_time": "22/Aug/2011-18:29:03",
+  "timeout": 1315074543,
+  "deadline": 1316111343,
+  "run_time": 27396,
+  "simulation_time": 0,
+  "eta": 2567,
+  "news": ""
+}
+---
+

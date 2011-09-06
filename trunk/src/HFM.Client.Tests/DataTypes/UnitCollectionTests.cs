@@ -583,6 +583,85 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(937, unitCollection[4].BaseCredit);
          Assert.AreEqual(937, unitCollection[4].CreditEstimate);
       }
+
+      [Test]
+      public void FillTest7()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_7\\units.txt");
+         var unitCollection = new UnitCollection();
+         unitCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(2, unitCollection[0].Id);
+         Assert.AreEqual("RUNNING", unitCollection[0].State);
+         Assert.AreEqual(SlotStatus.Running, unitCollection[0].StateEnum);
+         Assert.AreEqual(11051, unitCollection[0].Project);
+         Assert.AreEqual(0, unitCollection[0].Run);
+         Assert.AreEqual(2, unitCollection[0].Clone);
+         Assert.AreEqual(39, unitCollection[0].Gen);
+         Assert.AreEqual("0xa3", unitCollection[0].Core);
+         Assert.AreEqual("0x000000280a3b1e5b4db73f5943ba9ef4", unitCollection[0].UnitId);
+         Assert.AreEqual("91.00%", unitCollection[0].PercentDone);
+         Assert.AreEqual(1000, unitCollection[0].TotalFrames);
+         Assert.AreEqual(910, unitCollection[0].FramesDone);
+         Assert.AreEqual("22/Aug/2011-18:29:03", unitCollection[0].Assigned);
+         Assert.AreEqual(new DateTime(2011, 8, 22, 18, 29, 3), unitCollection[0].AssignedDateTime);
+         Assert.AreEqual("03/Sep/2011-18:29:03", unitCollection[0].Timeout);
+         Assert.AreEqual(new DateTime(2011, 9, 3, 18, 29, 3), unitCollection[0].TimeoutDateTime);
+         Assert.AreEqual("15/Sep/2011-18:29:03", unitCollection[0].Deadline);
+         Assert.AreEqual(new DateTime(2011, 9, 15, 18, 29, 3), unitCollection[0].DeadlineDateTime);
+         Assert.AreEqual("171.64.65.55", unitCollection[0].WorkServer);
+         Assert.AreEqual(new IPAddress(new byte[] { 171, 64, 65, 55 }), unitCollection[0].WorkServerIPAddress);
+         Assert.AreEqual("171.67.108.26", unitCollection[0].CollectionServer);
+         Assert.AreEqual(new IPAddress(new byte[] { 171, 67, 108, 26 }), unitCollection[0].CollectionServerIPAddress);
+         Assert.AreEqual(String.Empty, unitCollection[0].WaitingOn);
+         Assert.AreEqual(0, unitCollection[0].Attempts);
+         Assert.AreEqual("0.00 secs", unitCollection[0].NextAttempt);
+         Assert.AreEqual(TimeSpan.Zero, unitCollection[0].NextAttemptTimeSpan);
+         Assert.AreEqual(0, unitCollection[0].Slot);
+         Assert.AreEqual("42 mins 47 secs", unitCollection[0].Eta);
+         // not exactly the same value seen in SimulationInfo.EtaTimeSpan
+         Assert.AreEqual(new TimeSpan(0, 42, 47), unitCollection[0].EtaTimeSpan);
+         Assert.AreEqual(1859.89, unitCollection[0].Ppd);
+         Assert.AreEqual("4 mins 59 secs", unitCollection[0].Tpf);
+         Assert.AreEqual(new TimeSpan(0, 4, 59), unitCollection[0].TpfTimeSpan);
+         Assert.AreEqual(645, unitCollection[0].BaseCredit);
+         Assert.AreEqual(645, unitCollection[0].CreditEstimate);
+
+         Assert.AreEqual(0, unitCollection[1].Id);
+         Assert.AreEqual("RUNNING", unitCollection[1].State);
+         Assert.AreEqual(SlotStatus.Running, unitCollection[1].StateEnum);
+         Assert.AreEqual(6801, unitCollection[1].Project);
+         Assert.AreEqual(6348, unitCollection[1].Run);
+         Assert.AreEqual(0, unitCollection[1].Clone);
+         Assert.AreEqual(305, unitCollection[1].Gen);
+         Assert.AreEqual("0x15", unitCollection[1].Core);
+         Assert.AreEqual("0x0000014d0a3b1e644d94b9700899a51b", unitCollection[1].UnitId);
+         Assert.AreEqual("40.00%", unitCollection[1].PercentDone);
+         Assert.AreEqual(50000, unitCollection[1].TotalFrames);
+         Assert.AreEqual(20000, unitCollection[1].FramesDone);
+         Assert.AreEqual("23/Aug/2011-00:37:16", unitCollection[1].Assigned);
+         Assert.AreEqual(new DateTime(2011, 8, 23, 0, 37, 16), unitCollection[1].AssignedDateTime);
+         Assert.AreEqual("28/Aug/2011-00:37:16", unitCollection[1].Timeout);
+         Assert.AreEqual(new DateTime(2011, 8, 28, 0, 37, 16), unitCollection[1].TimeoutDateTime);
+         Assert.AreEqual("02/Sep/2011-00:37:16", unitCollection[1].Deadline);
+         Assert.AreEqual(new DateTime(2011, 9, 2, 0, 37, 16), unitCollection[1].DeadlineDateTime);
+         Assert.AreEqual("171.64.65.64", unitCollection[1].WorkServer);
+         Assert.AreEqual(new IPAddress(new byte[] { 171, 64, 65, 64 }), unitCollection[1].WorkServerIPAddress);
+         Assert.AreEqual("171.67.108.26", unitCollection[1].CollectionServer);
+         Assert.AreEqual(new IPAddress(new byte[] { 171, 67, 108, 26 }), unitCollection[1].CollectionServerIPAddress);
+         Assert.AreEqual(String.Empty, unitCollection[1].WaitingOn);
+         Assert.AreEqual(0, unitCollection[1].Attempts);
+         Assert.AreEqual("0.00 secs", unitCollection[1].NextAttempt);
+         Assert.AreEqual(TimeSpan.Zero, unitCollection[1].NextAttemptTimeSpan);
+         Assert.AreEqual(1, unitCollection[1].Slot);
+         Assert.AreEqual("2 hours 10 mins", unitCollection[1].Eta);
+         // not exactly the same value seen in SimulationInfo.EtaTimeSpan
+         Assert.AreEqual(new TimeSpan(2, 10, 0), unitCollection[1].EtaTimeSpan);
+         Assert.AreEqual(8868.96, unitCollection[1].Ppd);
+         Assert.AreEqual("2 mins 11 secs", unitCollection[1].Tpf);
+         Assert.AreEqual(new TimeSpan(0, 2, 11), unitCollection[1].TpfTimeSpan);
+         Assert.AreEqual(1348, unitCollection[1].BaseCredit);
+         Assert.AreEqual(1348, unitCollection[1].CreditEstimate);
+      }
    }
 
    public class UnitDerived : Unit
