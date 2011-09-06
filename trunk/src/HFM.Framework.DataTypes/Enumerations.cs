@@ -79,6 +79,7 @@ namespace HFM.Framework.DataTypes
       WorkUnitResumeFromBattery,
       WorkUnitShuttingDownCore,
       WorkUnitCoreShutdown,
+      WorkUnitCoreReturn,           // v7 specific
       WorkUnitCleaningUp,           // v7 specific
       ClientNumberOfUnitsCompleted,
       ClientCoreCommunicationsError,

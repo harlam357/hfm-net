@@ -92,6 +92,10 @@ namespace HFM.Log
          {
             return LogLineType.WorkUnitCoreShutdown;
          }
+         if (logLine.Contains(":FahCore, running Unit "))
+         {
+            return LogLineType.WorkUnitCoreReturn;
+         }
          if (logLine.Contains(":Cleaning up Unit"))
          {
             return LogLineType.WorkUnitCleaningUp;

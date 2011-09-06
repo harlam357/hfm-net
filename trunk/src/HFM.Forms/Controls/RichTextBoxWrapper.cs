@@ -114,19 +114,19 @@ namespace HFM.Forms.Controls
          switch (line.LineType)
          {
             case LogLineType.WorkUnitFrame:
-               return @"\cf1";
+               return @"\cf1 ";
             case LogLineType.ClientShutdown:
             case LogLineType.ClientCoreCommunicationsError:
             case LogLineType.ClientCoreCommunicationsErrorShutdown:
             case LogLineType.ClientEuePauseState:
             case LogLineType.WorkUnitCoreShutdown:
-               return @"\cf2";
+               return @"\cf2 ";
             case LogLineType.Error:
-               return @"\cf3";
+               return @"\cf3 ";
             case LogLineType.Unknown:
-               return @"\cf5";
+               return @"\cf5 ";
             default:
-               return @"\cf4";
+               return @"\cf4 ";
          }
       }
       

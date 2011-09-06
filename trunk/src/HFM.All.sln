@@ -53,6 +53,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Client.Tests", "HFM.Cli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Client.Tool", "HFM.Client.Tool\HFM.Client.Tool.csproj", "{6166E2AF-F49B-4FEA-8528-9E806766052B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Log.Tool", "HFM.Log.Tool\HFM.Log.Tool.csproj", "{A8552DC2-2B4E-4193-A12B-2560586B7B42}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -198,6 +200,12 @@ Global
 		{6166E2AF-F49B-4FEA-8528-9E806766052B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6166E2AF-F49B-4FEA-8528-9E806766052B}.ScriptedRelease|Any CPU.ActiveCfg = ReleaseMerge|Any CPU
 		{6166E2AF-F49B-4FEA-8528-9E806766052B}.ScriptedRelease|Any CPU.Build.0 = ReleaseMerge|Any CPU
+		{A8552DC2-2B4E-4193-A12B-2560586B7B42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8552DC2-2B4E-4193-A12B-2560586B7B42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8552DC2-2B4E-4193-A12B-2560586B7B42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8552DC2-2B4E-4193-A12B-2560586B7B42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8552DC2-2B4E-4193-A12B-2560586B7B42}.ScriptedRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{A8552DC2-2B4E-4193-A12B-2560586B7B42}.ScriptedRelease|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
