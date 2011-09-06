@@ -204,8 +204,8 @@ Global
 		{A8552DC2-2B4E-4193-A12B-2560586B7B42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8552DC2-2B4E-4193-A12B-2560586B7B42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8552DC2-2B4E-4193-A12B-2560586B7B42}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A8552DC2-2B4E-4193-A12B-2560586B7B42}.ScriptedRelease|Any CPU.ActiveCfg = Release|Any CPU
-		{A8552DC2-2B4E-4193-A12B-2560586B7B42}.ScriptedRelease|Any CPU.Build.0 = Release|Any CPU
+		{A8552DC2-2B4E-4193-A12B-2560586B7B42}.ScriptedRelease|Any CPU.ActiveCfg = ReleaseMerge|Any CPU
+		{A8552DC2-2B4E-4193-A12B-2560586B7B42}.ScriptedRelease|Any CPU.Build.0 = ReleaseMerge|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

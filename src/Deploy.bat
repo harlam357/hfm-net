@@ -43,6 +43,7 @@ copy /Y ..\..\..\..\lib\SQLite.NET\bin\ManagedOnly\System.Data.SQLite.dll %1\SQL
 
 if not exist %1\Tools md %1\Tools
 copy /Y ..\..\..\HFM.Client.Tool\bin\ReleaseMerge\HFM.Client.exe %1\Tools
+copy /Y ..\..\..\HFM.Log.Tool\bin\ReleaseMerge\HFM.Log.exe %1\Tools
 copy /Y ..\..\..\HFM.Queue.Tool\bin\ReleaseMerge\HFM.Queue.exe %1\Tools
 
 echo Copying License Files...
