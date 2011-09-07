@@ -31,7 +31,7 @@ namespace HFM.Log
    {
       #region Fields
 
-      private readonly Dictionary<int, UnitIndexes> _unitIndexes;
+      private readonly Dictionary<int, UnitIndexData> _unitIndexData;
 
       #endregion
 
@@ -39,7 +39,7 @@ namespace HFM.Log
 
       public ClientRunList()
       {
-         _unitIndexes = new Dictionary<int, UnitIndexes>();
+         _unitIndexData = new Dictionary<int, UnitIndexData>();
       }
 
       #endregion
@@ -51,7 +51,7 @@ namespace HFM.Log
          base.Build(logLines);
 
          // anything left is an active work unit
-         foreach (var unitIndex in _unitIndexes.Values)
+         foreach (var unitIndex in _unitIndexData.Values)
          {
             if (CurrentClientRun == null)
             {
@@ -64,33 +64,13 @@ namespace HFM.Log
          }
 
          // remove all
-         _unitIndexes.Clear();
+         _unitIndexData.Clear();
       }
 
       protected override void HandleWorkUnitWorking(ILogLine logLine)
       {
          var queueIndex = (int)logLine.LineData;
-         _unitIndexes[queueIndex] = new UnitIndexes { QueueIndex = queueIndex, WorkingIndex = logLine.LineIndex };
-      }
-
-      protected override void HandleWorkUnitCoreShutdown(ILogLine logLine)
-      {
-         if (CurrentClientRun != null)
-         {
-            if (logLine.LineData.Equals(WorkUnitResult.FinishedUnit))
-            {
-               CurrentClientRun.CompletedUnits++;
-            }
-            else if (logLine.LineData.Equals(WorkUnitResult.EarlyUnitEnd) ||
-                     logLine.LineData.Equals(WorkUnitResult.UnstableMachine) ||
-                     logLine.LineData.Equals(WorkUnitResult.Interrupted) ||
-                     logLine.LineData.Equals(WorkUnitResult.BadWorkUnit) ||
-                     logLine.LineData.Equals(WorkUnitResult.CoreOutdated) ||
-                     logLine.LineData.Equals(WorkUnitResult.ClientCoreError))
-            {
-               CurrentClientRun.FailedUnits++;
-            }
-         }
+         _unitIndexData[queueIndex] = new UnitIndexData { QueueIndex = queueIndex, WorkingIndex = logLine.LineIndex };
       }
 
       protected override void HandleWorkUnitCleaningUp(ILogLine logLine)
@@ -98,7 +78,7 @@ namespace HFM.Log
          base.HandleWorkUnitCleaningUp(logLine);
 
          var queueIndex = (int)logLine.LineData;
-         if (_unitIndexes.ContainsKey(queueIndex))
+         if (_unitIndexData.ContainsKey(queueIndex))
          {
             if (CurrentClientRun == null)
             {
@@ -107,16 +87,16 @@ namespace HFM.Log
 
             Debug.Assert(CurrentClientRun != null);
 
-            CurrentClientRun.UnitIndexes.Add(new UnitIndex(queueIndex, _unitIndexes[queueIndex].WorkingIndex, logLine.LineIndex));
+            CurrentClientRun.UnitIndexes.Add(new UnitIndex(queueIndex, _unitIndexData[queueIndex].WorkingIndex, logLine.LineIndex));
 
             // remove from dictionary
-            _unitIndexes.Remove(queueIndex);
+            _unitIndexData.Remove(queueIndex);
          }
       }
 
       #endregion
 
-      private class UnitIndexes
+      private class UnitIndexData
       {
          public int QueueIndex { get; set; }
          public int WorkingIndex { get; set; }

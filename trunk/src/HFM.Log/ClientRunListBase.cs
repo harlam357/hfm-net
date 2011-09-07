@@ -144,7 +144,25 @@ namespace HFM.Log
          
       }
 
-      protected abstract void HandleWorkUnitCoreShutdown(ILogLine logLine);
+      protected virtual void HandleWorkUnitCoreShutdown(ILogLine logLine)
+      {
+         if (CurrentClientRun != null)
+         {
+            if (logLine.LineData.Equals(WorkUnitResult.FinishedUnit))
+            {
+               CurrentClientRun.CompletedUnits++;
+            }
+            else if (logLine.LineData.Equals(WorkUnitResult.EarlyUnitEnd) ||
+                     logLine.LineData.Equals(WorkUnitResult.UnstableMachine) ||
+                     logLine.LineData.Equals(WorkUnitResult.Interrupted) ||
+                     logLine.LineData.Equals(WorkUnitResult.BadWorkUnit) ||
+                     logLine.LineData.Equals(WorkUnitResult.CoreOutdated) ||
+                     logLine.LineData.Equals(WorkUnitResult.ClientCoreError))
+            {
+               CurrentClientRun.FailedUnits++;
+            }
+         }
+      }
 
       private void HandleClientNumberOfUnitsCompleted(ILogLine logLine)
       {

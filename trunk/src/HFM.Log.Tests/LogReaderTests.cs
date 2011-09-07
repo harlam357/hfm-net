@@ -747,6 +747,7 @@ namespace HFM.Log.Tests
          Assert.AreEqual(99, logLines.Count);
          FahLogUnitData fahLogData = LogReader.GetFahLogDataFromLogLines(logLines.Filter(LogFilterType.IndexAndNonIndexed));
          Assert.AreEqual(new TimeSpan(18, 6, 54), fahLogData.UnitStartTimeStamp);
+         Assert.AreEqual("2.27", fahLogData.CoreVersion);
          Assert.AreEqual(6, fahLogData.FrameDataList.Count);
          Assert.AreEqual(6, fahLogData.FramesObserved);
          Assert.AreEqual(7136, fahLogData.ProjectID);
@@ -759,6 +760,7 @@ namespace HFM.Log.Tests
          Assert.AreEqual(198, logLines.Count);
          fahLogData = LogReader.GetFahLogDataFromLogLines(logLines.Filter(LogFilterType.IndexAndNonIndexed));
          Assert.AreEqual(new TimeSpan(18, 39, 17), fahLogData.UnitStartTimeStamp);
+         Assert.AreEqual("2.27", fahLogData.CoreVersion);
          Assert.AreEqual(101, fahLogData.FrameDataList.Count);
          Assert.AreEqual(101, fahLogData.FramesObserved);
          Assert.AreEqual(6984, fahLogData.ProjectID);
@@ -804,6 +806,7 @@ namespace HFM.Log.Tests
          Assert.AreEqual(227, logLines.Count);
          FahLogUnitData fahLogData = LogReader.GetFahLogDataFromLogLines(logLines.Filter(LogFilterType.IndexAndNonIndexed));
          Assert.AreEqual(new TimeSpan(0, 37, 37), fahLogData.UnitStartTimeStamp);
+         Assert.AreEqual("2.20", fahLogData.CoreVersion);
          Assert.AreEqual(101, fahLogData.FrameDataList.Count);
          Assert.AreEqual(101, fahLogData.FramesObserved);
          Assert.AreEqual(6801, fahLogData.ProjectID);
@@ -816,6 +819,7 @@ namespace HFM.Log.Tests
          Assert.AreEqual(570, logLines.Count);
          fahLogData = LogReader.GetFahLogDataFromLogLines(logLines.Filter(LogFilterType.IndexAndNonIndexed));
          Assert.AreEqual(new TimeSpan(18, 29, 46), fahLogData.UnitStartTimeStamp);
+         Assert.AreEqual("2.27", fahLogData.CoreVersion);
          Assert.AreEqual(101, fahLogData.FrameDataList.Count);
          Assert.AreEqual(101, fahLogData.FramesObserved);
          Assert.AreEqual(11051, fahLogData.ProjectID);
@@ -823,6 +827,45 @@ namespace HFM.Log.Tests
          Assert.AreEqual(2, fahLogData.ProjectClone);
          Assert.AreEqual(39, fahLogData.ProjectGen);
          Assert.AreEqual(WorkUnitResult.FinishedUnit, fahLogData.UnitResult);
+      }
+
+      [Test]
+      public void Client_v7_8()
+      {
+         // Scan
+         IList<LogLine> logLines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_8\\log.txt"), LogFileType.Version7);
+         IList<ClientRun> clientRuns = LogReader.GetClientRuns(logLines, LogFileType.Version7);
+
+         // Check Run 0 Positions
+         var expectedRun = new ClientRun(1);
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 114, -1));
+         expectedRun.Arguments = "";
+         expectedRun.FoldingID = "Unknown";
+         expectedRun.Team = 0;
+         expectedRun.UserID = "";
+         expectedRun.MachineID = 0;
+         expectedRun.CompletedUnits = 0;
+         expectedRun.FailedUnits = 0;
+         expectedRun.TotalCompletedUnits = 0;
+         expectedRun.Status = ClientStatus.Unknown;
+
+         DoClientRunCheck(expectedRun, clientRuns[0]);
+
+         var logInterpreter = new LogInterpreter(logLines, clientRuns);
+         Assert.AreEqual(2, logInterpreter.LogLineParsingErrors.Count());
+
+         logLines = logInterpreter.GetLogLinesForQueueIndex(1, new ProjectInfo { ProjectID = 7704, ProjectRun = 4, ProjectClone = 7, ProjectGen = 1 });
+         Assert.AreEqual(31, logLines.Count);
+         FahLogUnitData fahLogData = LogReader.GetFahLogDataFromLogLines(logLines.Filter(LogFilterType.IndexAndNonIndexed));
+         Assert.AreEqual(new TimeSpan(22, 1, 5), fahLogData.UnitStartTimeStamp);
+         Assert.AreEqual("2.27", fahLogData.CoreVersion);
+         Assert.AreEqual(0, fahLogData.FrameDataList.Count);
+         Assert.AreEqual(0, fahLogData.FramesObserved);
+         Assert.AreEqual(7704, fahLogData.ProjectID);
+         Assert.AreEqual(4, fahLogData.ProjectRun);
+         Assert.AreEqual(7, fahLogData.ProjectClone);
+         Assert.AreEqual(1, fahLogData.ProjectGen);
+         Assert.AreEqual(WorkUnitResult.Unknown, fahLogData.UnitResult);
       }
 
       #endregion

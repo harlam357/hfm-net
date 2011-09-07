@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System.Text.RegularExpressions;
+
 using HFM.Framework.DataTypes;
 
 namespace HFM.Log
@@ -92,7 +94,7 @@ namespace HFM.Log
          {
             return LogLineType.WorkUnitCoreShutdown;
          }
-         if (logLine.Contains(":FahCore, running Unit "))
+         if (Regex.IsMatch(logLine, "FahCore, running Unit \\d{2}, returned: "))
          {
             return LogLineType.WorkUnitCoreReturn;
          }
