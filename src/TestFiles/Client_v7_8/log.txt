@@ -1,0 +1,145 @@
+*********************** Log Started 06/Sep/2011-19:55:42 ***********************
+19:55:42:************************* Folding@home Client *************************
+19:55:42:      Website: http://folding.stanford.edu/
+19:55:42:    Copyright: (c) 2009,2010 Stanford University
+19:55:42:       Author: Joseph Coffland <joseph@cauldrondevelopment.com>
+19:55:42:         Args: --lifeline 1252 --command-port=36330
+19:55:42:       Config: C:/Documents and Settings/harlarw/Application
+19:55:42:               Data/FAHClient/config.xml
+19:55:42:******************************** Build ********************************
+19:55:42:      Version: 7.1.24
+19:55:42:         Date: Apr 6 2011
+19:55:42:         Time: 21:37:58
+19:55:42:      SVN Rev: 2908
+19:55:42:       Branch: fah/trunk/client
+19:55:42:     Compiler: Intel(R) C++ MSVC 1500 mode 1110
+19:55:42:      Options: /TP /nologo /EHa /wd4297 /wd4103 /wd1786 /Ox -arch:SSE2
+19:55:42:               /QaxSSE3,SSSE3,SSE4.1,SSE4.2 /Qrestrict /MT
+19:55:42:     Platform: win32 Vista
+19:55:42:         Bits: 32
+19:55:42:         Mode: Release
+19:55:42:******************************* System ********************************
+19:55:42:           OS: Microsoft(R) Windows(R) XP Professional x64 Edition
+19:55:42:          CPU: Intel(R) Core(TM)2 Quad CPU Q6600 @ 2.40GHz
+19:55:42:       CPU ID: GenuineIntel Family 6 Model 15 Stepping 11
+19:55:42:         CPUs: 4
+19:55:42:       Memory: 4.00GiB
+19:55:42:  Free Memory: 2.99GiB
+19:55:42:      Threads: WINDOWS_THREADS
+19:55:42:         GPUs: 1
+19:55:42:        GPU 0: ATI:2 Mobility Radeon HD 3600 Series
+19:55:42:         CUDA: Not detected
+19:55:42:   On Battery: false
+19:55:42:   UTC offset: -5
+19:55:42:          PID: 3012
+19:55:42:          CWD: C:/Documents and Settings/harlarw/Application Data/FAHClient
+19:55:42:Win32 Service: false
+19:55:42:***********************************************************************
+19:55:43:<config>
+19:55:43:  <!-- Network -->
+19:55:43:  <proxy v=':8080'/>
+19:55:43:
+19:55:43:  <!-- Remote Command Server -->
+19:55:43:  <password v='******'/>
+19:55:43:
+19:55:43:  <!-- User Information -->
+19:55:43:  <passkey v='********************************'/>
+19:55:43:  <team v='32'/>
+19:55:43:  <user v='harlam357'/>
+19:55:43:
+19:55:43:  <!-- Folding Slots -->
+19:55:43:  <slot id='0' type='SMP'>
+19:55:43:    <pause-on-start v='true'/>
+19:55:43:  </slot>
+19:55:43:</config>
+19:55:43:Trying to access database...
+19:55:43:Database locked
+19:55:43:Enabled folding slot 00: PAUSED smp:4
+19:55:43:Server connection id=1 on 0.0.0.0:36330 from 127.0.0.1
+20:07:32:Slot 00 unpaused
+20:07:32:Starting Unit 01
+20:07:32:Running core: "C:/Documents and Settings/harlarw/Application Data/FAHClient/cores/www.stanford.edu/~pande/Win32/x86/Core_a4.fah/FahCore_a4.exe" -dir 01 -suffix 01 -lifeline 3012 -version 701 -checkpoint 15 -np 4
+20:07:32:Started core on PID 744
+20:07:32:FahCore 0xa4 started
+20:07:33:Unit 01:
+20:07:33:Unit 01:*------------------------------*
+20:07:33:Unit 01:Folding@Home Gromacs GB Core
+20:07:33:Unit 01:Version 2.27 (Dec. 15, 2010)
+20:07:33:Unit 01:
+20:07:33:Unit 01:Preparing to commence simulation
+20:07:33:Unit 01:- Ensuring status. Please wait.
+20:07:42:Unit 01:- Looking at optimizations...
+20:07:42:Unit 01:- Working with standard loops on this execution.
+20:07:42:Unit 01:- Previous termination of core was improper.
+20:07:42:Unit 01:- Going to use standard loops.
+20:07:42:Unit 01:- Files status OK
+20:07:42:Unit 01:- Expanded 1006273 -> 2275264 (decompressed 226.1 percent)
+20:07:42:Unit 01:Called DecompressByteArray: compressed_data_size=1006273 data_size=2275264, decompressed_data_size=2275264 diff=0
+20:07:42:Unit 01:- Digital signature verified
+20:07:42:Unit 01:
+20:07:42:Unit 01:Project: 7704 (Run 4, Clone 7, Gen 1)
+20:07:42:Unit 01:
+20:07:42:Unit 01:Entering M.D.
+20:07:48:Unit 01:Using Gromacs checkpoints
+20:07:48:Unit 01:Mapping NT from 4 to 4 
+20:07:48:Unit 01:Resuming from checkpoint
+20:07:48:Unit 01:Verified 01/wudata_01.log
+20:07:48:Unit 01:Verified 01/wudata_01.trr
+20:07:48:Unit 01:Verified 01/wudata_01.xtc
+20:07:48:Unit 01:Verified 01/wudata_01.edr
+20:07:48:Unit 01:Completed 754250 out of 1000000 steps  (75%)
+20:12:07:Unit 01:Completed 760000 out of 1000000 steps  (76%)
+20:19:36:Unit 01:Completed 770000 out of 1000000 steps  (77%)
+20:27:06:Unit 01:Completed 780000 out of 1000000 steps  (78%)
+20:34:36:Unit 01:Completed 790000 out of 1000000 steps  (79%)
+20:42:05:Unit 01:Completed 800000 out of 1000000 steps  (80%)
+20:49:35:Unit 01:Completed 810000 out of 1000000 steps  (81%)
+20:57:05:Unit 01:Completed 820000 out of 1000000 steps  (82%)
+21:04:34:Unit 01:Completed 830000 out of 1000000 steps  (83%)
+21:12:04:Unit 01:Completed 840000 out of 1000000 steps  (84%)
+21:19:33:Unit 01:Completed 850000 out of 1000000 steps  (85%)
+21:27:03:Unit 01:Completed 860000 out of 1000000 steps  (86%)
+21:33:13:Server connection id=2 on 0.0.0.0:36330 from 192.168.0.137
+21:34:07:Server connection id=2 ended
+21:34:33:Unit 01:Completed 870000 out of 1000000 steps  (87%)
+21:42:02:Unit 01:Completed 880000 out of 1000000 steps  (88%)
+21:49:31:Unit 01:Completed 890000 out of 1000000 steps  (89%)
+21:57:01:Unit 01:Completed 900000 out of 1000000 steps  (90%)
+21:58:50:Slot 00 paused
+21:58:50:Slot 00: shutting core down
+21:58:50:WARNING: FahCore not accepting gentle shutdown, killing
+21:58:50:WARNING: Killing Unit 01
+21:58:50:FahCore, running Unit 01, terminated.
+21:59:58:Server connection id=3 on 0.0.0.0:36330 from 192.168.0.152
+22:01:04:Slot 00 unpaused
+22:01:05:Starting Unit 01
+22:01:05:Running core: "C:/Documents and Settings/harlarw/Application Data/FAHClient/cores/www.stanford.edu/~pande/Win32/x86/Core_a4.fah/FahCore_a4.exe" -dir 01 -suffix 01 -lifeline 3012 -version 701 -checkpoint 15 -np 4
+22:01:05:Started core on PID 3060
+22:01:05:FahCore 0xa4 started
+22:01:05:Unit 01:
+22:01:05:Unit 01:*------------------------------*
+22:01:05:Unit 01:Folding@Home Gromacs GB Core
+22:01:05:Unit 01:Version 2.27 (Dec. 15, 2010)
+22:01:05:Unit 01:
+22:01:05:Unit 01:Preparing to commence simulation
+22:01:05:Unit 01:- Ensuring status. Please wait.
+22:01:14:Unit 01:- Looking at optimizations...
+22:01:14:Unit 01:- Working with standard loops on this execution.
+22:01:14:Unit 01:- Previous termination of core was improper.
+22:01:14:Unit 01:- Going to use standard loops.
+22:01:14:Unit 01:- Files status OK
+22:01:14:Unit 01:- Expanded 1006273 -> 2275264 (decompressed 226.1 percent)
+22:01:14:Unit 01:Called DecompressByteArray: compressed_data_size=1006273 data_size=2275264, decompressed_data_size=2275264 diff=0
+22:01:14:Unit 01:- Digital signature verified
+22:01:14:Unit 01:
+22:01:14:Unit 01:Project: 7704 (Run 4, Clone 7, Gen 1)
+22:01:14:Unit 01:
+22:01:14:Unit 01:Entering M.D.
+22:01:20:Unit 01:Using Gromacs checkpoints
+22:01:20:Unit 01:Mapping NT from 4 to 4 
+22:01:21:Unit 01:Resuming from checkpoint
+22:01:21:Unit 01:Verified 01/wudata_01.log
+22:01:21:Unit 01:Verified 01/wudata_01.trr
+22:01:21:Unit 01:Verified 01/wudata_01.xtc
+22:01:21:Unit 01:Verified 01/wudata_01.edr
+22:01:21:Unit 01:Completed 894380 out of 1000000 steps  (89%)

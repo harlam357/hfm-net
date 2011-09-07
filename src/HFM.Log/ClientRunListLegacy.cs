@@ -40,7 +40,7 @@ namespace HFM.Log
       /// <summary>
       /// Holds index information for the current work unit.
       /// </summary>
-      private UnitIndexes _unitStart;
+      private UnitIndexData _unitIndexData;
 
       #endregion
 
@@ -58,7 +58,7 @@ namespace HFM.Log
       internal override void Build(IList<LogLine> logLines)
       {
          // init unit index container
-         _unitStart.Initialize();
+         _unitIndexData.Initialize();
 
          base.Build(logLines);
 
@@ -99,11 +99,11 @@ namespace HFM.Log
          // has been observerd and is greater than the current ProcessingIndex,
          // then update the ProcessingIndex to bypass the CoreDownload section
          // of the log file.
-         if (_unitStart.ProcessingIndex == -1 ||
-            (_unitStart.ProcessingIndex != -1 &&
-             _unitStart.CoreDownloadIndex > _unitStart.ProcessingIndex))
+         if (_unitIndexData.ProcessingIndex == -1 ||
+            (_unitIndexData.ProcessingIndex != -1 &&
+             _unitIndexData.CoreDownloadIndex > _unitIndexData.ProcessingIndex))
          {
-            _unitStart.ProcessingIndex = logLine.LineIndex;
+            _unitIndexData.ProcessingIndex = logLine.LineIndex;
          }
 
          _currentLineType = logLine.LineType;
@@ -113,7 +113,7 @@ namespace HFM.Log
       {
          base.HandleWorkUnitCoreDownload(logLine);
 
-         _unitStart.CoreDownloadIndex = logLine.LineIndex;
+         _unitIndexData.CoreDownloadIndex = logLine.LineIndex;
          _currentLineType = logLine.LineType;
       }
 
@@ -121,7 +121,7 @@ namespace HFM.Log
       {
          base.HandleWorkUnitQueueIndex(logLine);
 
-         _unitStart.QueueSlotIndex = (int)logLine.LineData;
+         _unitIndexData.QueueSlotIndex = (int)logLine.LineData;
       }
 
       protected override void HandleWorkUnitWorking(ILogLine logLine)
@@ -136,14 +136,14 @@ namespace HFM.Log
          }
          else
          {
-            _unitStart.WorkingIndex = logLine.LineIndex;
+            _unitIndexData.WorkingIndex = logLine.LineIndex;
             _currentLineType = logLine.LineType;
          }
       }
 
       protected override void HandleWorkUnitStart(ILogLine logLine)
       {
-         _unitStart.StartIndex = logLine.LineIndex;
+         _unitIndexData.StartIndex = logLine.LineIndex;
          _currentLineType = logLine.LineType;
       }
 
@@ -160,27 +160,27 @@ namespace HFM.Log
          if (_currentLineType.Equals(LogLineType.WorkUnitRunning)) return;
 
          // Not Checking the Queue Slot - we don't care if we found a valid slot or not
-         if (_unitStart.ProcessingIndex > -1)
+         if (_unitIndexData.ProcessingIndex > -1)
          {
-            CurrentClientRun.UnitIndexes.Add(new UnitIndex(_unitStart.QueueSlotIndex, _unitStart.ProcessingIndex));
+            CurrentClientRun.UnitIndexes.Add(new UnitIndex(_unitIndexData.QueueSlotIndex, _unitIndexData.ProcessingIndex));
          }
-         else if (_unitStart.WorkingIndex > -1)
+         else if (_unitIndexData.WorkingIndex > -1)
          {
-            CurrentClientRun.UnitIndexes.Add(new UnitIndex(_unitStart.QueueSlotIndex, _unitStart.WorkingIndex));
+            CurrentClientRun.UnitIndexes.Add(new UnitIndex(_unitIndexData.QueueSlotIndex, _unitIndexData.WorkingIndex));
          }
-         else if (_unitStart.StartIndex > -1)
+         else if (_unitIndexData.StartIndex > -1)
          {
-            CurrentClientRun.UnitIndexes.Add(new UnitIndex(_unitStart.QueueSlotIndex, _unitStart.StartIndex));
+            CurrentClientRun.UnitIndexes.Add(new UnitIndex(_unitIndexData.QueueSlotIndex, _unitIndexData.StartIndex));
          }
          else
          {
-            CurrentClientRun.UnitIndexes.Add(new UnitIndex(_unitStart.QueueSlotIndex, logLine.LineIndex));
+            CurrentClientRun.UnitIndexes.Add(new UnitIndex(_unitIndexData.QueueSlotIndex, logLine.LineIndex));
          }
 
          _currentLineType = logLine.LineType;
 
          // Re-initialize Values
-         _unitStart.Initialize();
+         _unitIndexData.Initialize();
       }
 
       protected override void HandleWorkUnitPaused(ILogLine logLine)
@@ -194,22 +194,7 @@ namespace HFM.Log
       {
          if (_currentLineType.Equals(LogLineType.WorkUnitRunning))
          {
-            if (CurrentClientRun != null)
-            {
-               if (logLine.LineData.Equals(WorkUnitResult.FinishedUnit))
-               {
-                  CurrentClientRun.CompletedUnits++;
-               }
-               else if (logLine.LineData.Equals(WorkUnitResult.EarlyUnitEnd) ||
-                        logLine.LineData.Equals(WorkUnitResult.UnstableMachine) ||
-                        logLine.LineData.Equals(WorkUnitResult.Interrupted) ||
-                        logLine.LineData.Equals(WorkUnitResult.BadWorkUnit) ||
-                        logLine.LineData.Equals(WorkUnitResult.CoreOutdated) ||
-                        logLine.LineData.Equals(WorkUnitResult.ClientCoreError))
-               {
-                  CurrentClientRun.FailedUnits++;
-               }
-            }
+            base.HandleWorkUnitCoreShutdown(logLine);
          }
 
          _currentLineType = logLine.LineType;
@@ -301,7 +286,7 @@ namespace HFM.Log
       /// <summary>
       /// Data container for captured unit indexes
       /// </summary>
-      private struct UnitIndexes
+      private struct UnitIndexData
       {
          public int ProcessingIndex;
          public int CoreDownloadIndex;
