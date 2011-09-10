@@ -60,6 +60,35 @@ namespace HFM.Forms
       /// Holds current Sort Column Order
       /// </summary>
       public SortOrder SortColumnOrder { get; private set; }
+
+      /// <summary>
+      /// Denotes the Saved State of the Current Client Configuration (false == saved, true == unsaved)
+      /// </summary>
+      private bool ChangedAfterSave { get; set; }
+
+      /// <summary>
+      /// Specifies if the UI Menu Item for 'View Client Files' is Visbile
+      /// </summary>
+      private bool ClientFilesMenuItemVisible
+      {
+         get
+         {
+            return _instanceCollection.SelectedClientInstance == null ||
+                   _instanceCollection.SelectedClientInstance.Settings.InstanceHostType.Equals(InstanceType.PathInstance);
+         }
+      }
+
+      /// <summary>
+      /// Specifies if the UI Menu Item for 'View Cached Log File' is Visbile
+      /// </summary>
+      private bool CachedLogMenuItemVisible
+      {
+         get
+         {
+            return _instanceCollection.SelectedClientInstance == null ||
+                 !(_instanceCollection.SelectedClientInstance.Settings.ExternalInstance);
+         }
+      }
       
       #endregion
       
@@ -80,6 +109,9 @@ namespace HFM.Forms
       private readonly IOpenFileDialogView _openFileDialogView;
       private readonly ISaveFileDialogView _saveFileDialogView;
       private readonly IExternalProcessStarter _processStarter;
+      private readonly IClientInstanceFactory _instanceFactory;
+      private readonly IProteinBenchmarkContainer _benchmarkContainer;
+      private readonly RetrievalLogic _retrievalLogic;
       
       #endregion
       
@@ -91,7 +123,8 @@ namespace HFM.Forms
                            InstanceConfigurationManager configurationManager, IProteinCollection proteinCollection,
                            IUpdateLogic updateLogic, IMessagesView messagesView, IMessageBoxView messageBoxView, 
                            IOpenFileDialogView openFileDialogView, ISaveFileDialogView saveFileDialogView, 
-                           IExternalProcessStarter processStarter)
+                           IExternalProcessStarter processStarter, IClientInstanceFactory instanceFactory,
+                           IProteinBenchmarkContainer benchmarkContainer, RetrievalLogic retrievalLogic)
       {
          _view = view;
          _prefs = prefs;
@@ -104,12 +137,19 @@ namespace HFM.Forms
          _openFileDialogView = openFileDialogView;
          _saveFileDialogView = saveFileDialogView;
          _processStarter = processStarter;
+         _instanceFactory = instanceFactory;
+         _benchmarkContainer = benchmarkContainer;
+         _retrievalLogic = retrievalLogic;
 
          // set owner
          _updateLogic.Owner = _view;
 
          SortColumnName = String.Empty;
          SortColumnOrder = SortOrder.None;
+
+         _prefs.ShowUserStatsChanged += delegate { UserStatsEnabledChanged(); };
+         // Hook up Protein Collection Updated Event Handler
+         _proteinCollection.Downloader.ProjectInfoUpdated += delegate { _retrievalLogic.QueueNewRetrieval(); };
       }
       
       #endregion
@@ -320,10 +360,10 @@ namespace HFM.Forms
       {
          if (_instanceCollection.SelectedDisplayInstance != null)
          {
-            _view.SetClientMenuItemsVisible(_instanceCollection.ClientFilesMenuItemVisible,
-                                            _instanceCollection.CachedLogMenuItemVisible,
-                                            _instanceCollection.ClientFilesMenuItemVisible ||
-                                            _instanceCollection.CachedLogMenuItemVisible);
+            _view.SetClientMenuItemsVisible(ClientFilesMenuItemVisible,
+                                            CachedLogMenuItemVisible,
+                                            ClientFilesMenuItemVisible ||
+                                            CachedLogMenuItemVisible);
          
             _view.StatusLabelLeftText = _instanceCollection.SelectedDisplayInstance.ClientPathAndArguments;
 
@@ -518,10 +558,10 @@ namespace HFM.Forms
                // Check for SelectedClientInstance, and get out if not found
                if (_instanceCollection.SelectedClientInstance == null) return;
 
-               _view.SetGridContextMenuItemsVisible(_instanceCollection.ClientFilesMenuItemVisible,
-                                                    _instanceCollection.CachedLogMenuItemVisible,
-                                                    _instanceCollection.ClientFilesMenuItemVisible ||
-                                                    _instanceCollection.CachedLogMenuItemVisible);
+               _view.SetGridContextMenuItemsVisible(ClientFilesMenuItemVisible,
+                                                    CachedLogMenuItemVisible,
+                                                    ClientFilesMenuItemVisible ||
+                                                    CachedLogMenuItemVisible);
 
                _view.ShowGridContextMenuStrip(_view.DataGridView.PointToScreen(new Point(coordX, coordY)));
             }
@@ -555,7 +595,7 @@ namespace HFM.Forms
 
       public void FileNewClick()
       {
-         if (_instanceCollection.RetrievalInProgress)
+         if (_retrievalLogic.RetrievalInProgress)
          {
             _messageBoxView.ShowInformation(_view, "Retrieval in progress... please wait to create a new config file.", _view.Text);
             return;
@@ -563,13 +603,18 @@ namespace HFM.Forms
 
          if (CheckForConfigurationChanges())
          {
+            // new config filename
+            _configurationManager.ClearConfigFilename();
+            // collection has not changed
+            ChangedAfterSave = false;
+            // clear the collection
             _instanceCollection.Clear();
          }
       }
 
       public void FileOpenClick()
       {
-         if (_instanceCollection.RetrievalInProgress)
+         if (_retrievalLogic.RetrievalInProgress)
          {
             _messageBoxView.ShowInformation(_view, "Retrieval in progress... please wait to open another config file.", _view.Text);
             return;
@@ -590,7 +635,7 @@ namespace HFM.Forms
 
       private bool CheckForConfigurationChanges()
       {
-         if (_instanceCollection.ChangedAfterSave)
+         if (ChangedAfterSave)
          {
             DialogResult result = _messageBoxView.AskYesNoCancelQuestion(_view, 
                String.Format("There are changes to the configuration that have not been saved.  Would you like to save these changes?{0}{0}Yes - Continue and save the changes / No - Continue and do not save the changes / Cancel - Do not continue", Environment.NewLine),
@@ -600,7 +645,7 @@ namespace HFM.Forms
             {
                case DialogResult.Yes:
                   FileSaveClick();
-                  return !(_instanceCollection.ChangedAfterSave);
+                  return !(ChangedAfterSave);
                case DialogResult.No:
                   return true;
                case DialogResult.Cancel:
@@ -707,6 +752,14 @@ namespace HFM.Forms
 
          ICollection<ClientInstance> instances = _configurationManager.ReadConfigFile(filePath, filterIndex);
          _instanceCollection.LoadInstances(instances);
+
+         if (_instanceCollection.HasInstances)
+         {
+            // Get client logs         
+            _retrievalLogic.QueueNewRetrieval();
+            // Start Retrieval and Web Generation Timers
+            _retrievalLogic.SetTimerState();
+         }
       }
 
       /// <summary>
@@ -737,7 +790,7 @@ namespace HFM.Forms
 
          _configurationManager.WriteConfigFile(_instanceCollection.GetCurrentInstanceArray(), filePath, filterIndex);
 
-         _instanceCollection.ChangedAfterSave = false;
+         ChangedAfterSave = false;
       }
 
       #endregion
@@ -780,7 +833,7 @@ namespace HFM.Forms
          {
             try
             {
-               _instanceCollection.Add(newHost.SettingsModel.Settings);
+               Add(newHost.SettingsModel.Settings);
                break;
             }
             catch (InvalidOperationException ex)
@@ -805,7 +858,7 @@ namespace HFM.Forms
          {
             try
             {
-               _instanceCollection.Edit(previousName, previousPath, editHost.SettingsModel.Settings);
+               Edit(previousName, previousPath, editHost.SettingsModel.Settings);
                break;
             }
             catch (InvalidOperationException ex)
@@ -834,7 +887,7 @@ namespace HFM.Forms
          {
             try
             {
-               _instanceCollection.Add(newHost.SettingsModel.Settings);
+               Add(newHost.SettingsModel.Settings);
                break;
             }
             catch (InvalidOperationException ex)
@@ -850,12 +903,12 @@ namespace HFM.Forms
          // Check for SelectedClientInstance, and get out if not found
          if (_instanceCollection.SelectedClientInstance == null) return;
 
-         _instanceCollection.RetrieveSingleClient(_instanceCollection.SelectedClientInstance.Settings.InstanceName);
+         _retrievalLogic.RetrieveSingleClient(_instanceCollection.SelectedClientInstance.Settings.InstanceName);
       }
       
       public void ClientsRefreshAllClick()
       {
-         _instanceCollection.QueueNewRetrieval();
+         _retrievalLogic.QueueNewRetrieval();
       }
 
       public void ClientsViewCachedLogClick()
@@ -888,6 +941,170 @@ namespace HFM.Forms
       }
       
       #endregion
+
+      /// <summary>
+      /// Add an Instance
+      /// </summary>
+      /// <param name="settings">Client Instance Settings</param>
+      private void Add(ClientInstanceSettings settings)
+      {
+         if (settings == null) throw new ArgumentNullException("settings");
+
+         Add(_instanceFactory.Create(settings), true);
+      }
+
+      /// <summary>
+      /// Add an Instance
+      /// </summary>
+      /// <param name="instance">Client Instance</param>
+      /// <param name="fireAddedEvent">Specifies whether this call fires the InstanceAdded Event</param>
+      private void Add(ClientInstance instance, bool fireAddedEvent)
+      {
+         Debug.Assert(instance != null);
+
+         if (_instanceCollection.ContainsKey(instance.Settings.InstanceName))
+         {
+            throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
+               "Client Name '{0}' already exists.", instance.Settings.InstanceName));
+         }
+
+         // Issue 230
+         bool hasInstances = _instanceCollection.HasInstances;
+
+         // lock added here - 9/28/10
+         lock (_instanceCollection)
+         {
+            _instanceCollection.Add(instance.Settings.InstanceName, instance);
+         }
+         _view.RefreshDisplay();
+
+         if (fireAddedEvent)
+         {
+            _retrievalLogic.RetrieveSingleClient(instance);
+
+            ChangedAfterSave = true;
+            AutoSaveConfig();
+
+            // Issue 230
+            if (hasInstances == false)
+            {
+               _retrievalLogic.SetTimerState();
+            }
+         }
+      }
+
+      /// <summary>
+      /// Edit the ClientInstance Name and Path
+      /// </summary>
+      /// <param name="previousName"></param>
+      /// <param name="previousPath"></param>
+      /// <param name="settings">Client Instance Settings</param>
+      private void Edit(string previousName, string previousPath, ClientInstanceSettings settings)
+      {
+         if (previousName == null) throw new ArgumentNullException("previousName");
+         if (previousPath == null) throw new ArgumentNullException("previousPath");
+         if (settings == null) throw new ArgumentNullException("settings");
+
+         Debug.Assert(_instanceCollection.ContainsKey(previousName));
+
+         // if the host key changed
+         if (previousName != settings.InstanceName)
+         {
+            // check for a duplicate name
+            if (_instanceCollection.ContainsKey(settings.InstanceName))
+            {
+               throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
+                  "Client Name '{0}' already exists.", settings.InstanceName));
+            }
+         }
+
+         var instance = _instanceCollection.GetClientInstance(previousName);
+         // load the new settings
+         instance.Settings.LoadSettings(settings);
+
+         // Instance Name changed but isn't an already existing key
+         if (previousName != instance.Settings.InstanceName)
+         {
+            // lock added here - 9/28/10
+            lock (_instanceCollection)
+            {
+               // update InstanceCollection
+               _instanceCollection.Remove(previousName);
+               _instanceCollection.Add(instance.Settings.InstanceName, instance);
+            }
+
+            // Issue 79 - 9/28/10
+            if (instance.Settings.ExternalInstance == false)
+            {
+               // update the Names in the BenchmarkContainer
+               _benchmarkContainer.UpdateInstanceName(new BenchmarkClient(previousName, instance.Settings.Path), instance.Settings.InstanceName);
+            }
+         }
+         // the path changed
+         if (Paths.Equal(previousPath, instance.Settings.Path) == false)
+         {
+            // Issue 79 - 9/28/10
+            if (instance.Settings.ExternalInstance == false)
+            {
+               // update the Paths in the BenchmarkContainer
+               _benchmarkContainer.UpdateInstancePath(new BenchmarkClient(instance.Settings.InstanceName, previousPath), instance.Settings.Path);
+            }
+         }
+
+         _retrievalLogic.RetrieveSingleClient(instance);
+
+         ChangedAfterSave = true;
+         AutoSaveConfig();
+      }
+
+      /// <summary>
+      /// Remove an Instance by Name
+      /// </summary>
+      /// <param name="instanceName">Instance Name</param>
+      public void Remove(string instanceName)
+      {
+         if (String.IsNullOrEmpty(instanceName))
+         {
+            throw new ArgumentException("Argument 'instanceName' cannot be a null or empty string.");
+         }
+
+         // lock added here - 9/28/10
+         lock (_instanceCollection)
+         {
+            _instanceCollection.Remove(instanceName);
+            var findInstance = _instanceCollection.FindDisplayInstance(instanceName);
+            if (findInstance != null)
+            {
+               _instanceCollection.DisplayCollection.Remove(findInstance);
+            }
+         }
+         _view.RefreshDisplay();
+
+         ChangedAfterSave = true;
+         AutoSaveConfig();
+
+         DuplicateFinder.FindDuplicates(_instanceCollection.DisplayCollection);
+         _view.DataGridView.Invalidate();
+      }
+
+      /// <summary>
+      /// Clear All Instance Data
+      /// </summary>
+      public void Clear()
+      {
+         if (_instanceCollection.HasInstances)
+         {
+            _instanceCollection.SaveCurrentUnitInfo();
+         }
+
+         _instanceCollection.Clear();
+         _instanceCollection.DisplayCollection.Clear();
+
+         // This will disable the timers, we have no hosts
+         _retrievalLogic.SetTimerState();
+
+         _view.RefreshDisplay();
+      }
 
       #region View Menu Handling Methods
 
@@ -1107,7 +1324,7 @@ namespace HFM.Forms
 
       public void RefreshUserStatsClick()
       {
-         _instanceCollection.RefreshUserStatsData(true);
+         _retrievalLogic.RefreshUserStatsData(true);
       }
 
       public void ShowHfmGoogleCode()
@@ -1166,6 +1383,16 @@ namespace HFM.Forms
       
       #region Other Handling Methods
 
+      public void UserStatsEnabledChanged()
+      {
+         var showXmlStats = _prefs.GetPreference<bool>(Preference.ShowXmlStats);
+         _view.SetStatsControlsVisible(showXmlStats);
+         if (showXmlStats)
+         {
+            _retrievalLogic.RefreshUserStatsData(false);
+         }
+      }
+      
       public void ApplyMessageLevelIfChanged()
       {
          var newLevel = (TraceLevel)_prefs.GetPreference<int>(Preference.MessageLevel);

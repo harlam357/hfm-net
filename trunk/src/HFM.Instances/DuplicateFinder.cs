@@ -25,7 +25,7 @@ using HFM.Framework.DataTypes;
 
 namespace HFM.Instances
 {
-   internal static class DuplicateFinder
+   public static class DuplicateFinder
    {
       /// <summary>
       /// Find Clients with Duplicate UserIDs or Project (R/C/G)
