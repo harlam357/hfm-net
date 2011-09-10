@@ -28,6 +28,7 @@ using System.Windows.Forms;
 using HFM.Forms.Controls;
 using HFM.Framework;
 using HFM.Framework.DataTypes;
+using HFM.Instances;
 
 namespace HFM.Forms
 {
@@ -151,7 +152,7 @@ namespace HFM.Forms
       
       private readonly IPreferenceSet _prefs;
       private readonly IXmlStatsDataContainer _statsData;
-      private readonly IInstanceCollection _instanceCollection;
+      private readonly InstanceCollection _instanceCollection;
 
       #endregion
 
@@ -160,7 +161,7 @@ namespace HFM.Forms
       /// <summary>
       /// Main Form constructor
       /// </summary>
-      public frmMain(IPreferenceSet prefs, IXmlStatsDataContainer statsData, IInstanceCollection instanceCollection)
+      public frmMain(IPreferenceSet prefs, IXmlStatsDataContainer statsData, InstanceCollection instanceCollection)
       {
          _prefs = prefs;
          _statsData = statsData;

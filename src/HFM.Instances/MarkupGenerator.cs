@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Markup Generator Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -61,7 +61,7 @@ namespace HFM.Instances
       /// <param name="clientInstances">Client Instances</param>
       /// <exception cref="ArgumentNullException">Throws if displayInstances or clientInstances is null.</exception>
       /// <exception cref="InvalidOperationException">Throws if a Generate method is called in succession.</exception>
-      void Generate(IEnumerable<IDisplayInstance> displayInstances, IEnumerable<IClientInstance> clientInstances);
+      void Generate(IEnumerable<IDisplayInstance> displayInstances, IEnumerable<ClientInstance> clientInstances);
    }
 
    public sealed class MarkupGenerator : IMarkupGenerator
@@ -111,7 +111,7 @@ namespace HFM.Instances
       /// <param name="clientInstances">Client Instances</param>
       /// <exception cref="ArgumentNullException">Throws if displayInstances or clientInstances is null.</exception>
       /// <exception cref="InvalidOperationException">Throws if a Generate method is called in succession.</exception>
-      public void Generate(IEnumerable<IDisplayInstance> displayInstances, IEnumerable<IClientInstance> clientInstances)
+      public void Generate(IEnumerable<IDisplayInstance> displayInstances, IEnumerable<ClientInstance> clientInstances)
       {
          if (displayInstances == null) throw new ArgumentNullException("displayInstances");
          if (clientInstances == null) throw new ArgumentNullException("clientInstances");
@@ -597,7 +597,7 @@ namespace HFM.Instances
       /// Generate Client Data File from the given Client Instances
       /// </summary>
       /// <param name="instances">Client Instances</param>
-      public void GenerateClientData(IEnumerable<IClientInstance> instances)
+      public void GenerateClientData(IEnumerable<ClientInstance> instances)
       {
          try
          {
@@ -609,7 +609,7 @@ namespace HFM.Instances
          }
       }
       
-      private static string DoClientDataGeneration(string folderPath, IEnumerable<IClientInstance> instances)
+      private static string DoClientDataGeneration(string folderPath, IEnumerable<ClientInstance> instances)
       {
          var list = (from instance in instances
                      where instance.Settings.ExternalInstance == false

@@ -32,7 +32,7 @@ using HFM.Framework.DataTypes;
 namespace HFM.Instances
 {
    [SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix")]
-   public sealed class InstanceCollection : IInstanceCollection
+   public sealed class InstanceCollection
    {
       #region Fields
 
@@ -97,14 +97,14 @@ namespace HFM.Instances
          }
       }
 
-      public IClientInstance SelectedClientInstance { get; private set; }
+      public ClientInstance SelectedClientInstance { get; private set; }
 
       public IDisplayInstance SelectedDisplayInstance { get; private set; }
 
       /// <summary>
       /// Denotes the Saved State of the Current Client Configuration (false == saved, true == unsaved)
       /// </summary>
-      public bool ChangedAfterSave { get; private set; }
+      public bool ChangedAfterSave { get; set; }
 
       /// <summary>
       /// Specifies if the UI Menu Item for 'View Client Files' is Visbile
@@ -186,7 +186,7 @@ namespace HFM.Instances
                                 IXmlStatsDataContainer statsData,
                                 IClientInstanceFactory instanceFactory,
                                 IDisplayInstanceCollection displayCollection,
-                                IInstanceConfigurationManager configurationManager)
+                                InstanceConfigurationManager configurationManager)
       {
          _prefs = prefs;
          _proteinCollection = proteinCollection;
@@ -195,7 +195,7 @@ namespace HFM.Instances
          _statsData = statsData;
          _instanceFactory = instanceFactory;
          _displayCollection = displayCollection;
-         _configurationManager = (InstanceConfigurationManager)configurationManager;
+         _configurationManager = configurationManager;
 
          _instanceCollection = new Dictionary<string, ClientInstance>();
       }
@@ -287,78 +287,25 @@ namespace HFM.Instances
       
       #endregion
 
-      #region Read and Write Config File
-      
-      /// <summary>
-      /// Reads a collection of Client Instance Settings from file
-      /// </summary>
-      /// <param name="filePath">Path to Config File</param>
-      /// <param name="filterIndex">Dialog file type filter index (1 based)</param>
-      public void ReadConfigFile(string filePath, int filterIndex)
+      public void LoadInstances(IEnumerable<ClientInstance> instances)
       {
-         if (String.IsNullOrEmpty(filePath))
-         {
-            throw new ArgumentException("Argument 'filePath' cannot be a null or empty string.", "filePath");
-         }
-
-         if (filterIndex > _configurationManager.SettingsPluginsCount)
-         {
-            throw new ArgumentOutOfRangeException("filterIndex", String.Format(CultureInfo.CurrentCulture, 
-               "Argument 'filterIndex' must be between 1 and {0}.", _configurationManager.SettingsPluginsCount));
-         }
-
          // clear all instance data before deserialize
          Clear();
-      
-         var instances = _configurationManager.ReadConfigFile(filePath, filterIndex);
 
-         if (instances.Count != 0)
+         if (instances.Count() != 0)
          {
             // add each instance to the collection
             foreach (var instance in instances)
             {
                Add(instance, false);
             }
-         
+
             // Get client logs         
             QueueNewRetrieval();
             // Start Retrieval and Web Generation Timers
             SetTimerState();
          }
       }
-
-      /// <summary>
-      /// Saves the current collection of Client Instances to file
-      /// </summary>
-      public void WriteConfigFile()
-      {
-         WriteConfigFile(_configurationManager.ConfigFilename, _configurationManager.SettingsPluginIndex);
-      }
-
-      /// <summary>
-      /// Saves the current collection of Client Instances to file
-      /// </summary>
-      /// <param name="filePath">Path to Config File</param>
-      /// <param name="filterIndex">Dialog file type filter index (1 based)</param>
-      public void WriteConfigFile(string filePath, int filterIndex)
-      {
-         if (String.IsNullOrEmpty(filePath))
-         {
-            throw new ArgumentException("Argument 'filePath' cannot be a null or empty string.", "filePath");
-         }
-
-         if (filterIndex > _configurationManager.SettingsPluginsCount)
-         {
-            throw new ArgumentOutOfRangeException("filterIndex", String.Format(CultureInfo.CurrentCulture,
-               "Argument 'filterIndex' must be between 1 and {0}.", _configurationManager.SettingsPluginsCount));
-         }
-
-         _configurationManager.WriteConfigFile(GetCurrentInstanceArray(), filePath, filterIndex);
-
-         ChangedAfterSave = false;
-      }
-      
-      #endregion
 
       #region Add/Edit/Remove/Clear/Contains
       
@@ -591,7 +538,7 @@ namespace HFM.Instances
                HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Starting Web Generation...");
 
                ICollection<IDisplayInstance> displayInstances = GetCurrentDisplayInstanceArray();
-               ICollection<IClientInstance> clientInstances = GetCurrentInstanceArray();
+               ICollection<ClientInstance> clientInstances = GetCurrentInstanceArray();
                
                _markupGenerator.Generate(displayInstances, clientInstances);
                _websiteDeployer.DeployWebsite(_markupGenerator.HtmlFilePaths, _markupGenerator.XmlFilePaths, _markupGenerator.ClientDataFilePath, displayInstances);
@@ -1004,7 +951,7 @@ namespace HFM.Instances
       /// <summary>
       /// Get Array Representation of Current Client Instance objects in Collection
       /// </summary>
-      private ClientInstance[] GetCurrentInstanceArray()
+      public ClientInstance[] GetCurrentInstanceArray()
       {
          // lock added here - 9/28/10
          lock (_instanceCollection)

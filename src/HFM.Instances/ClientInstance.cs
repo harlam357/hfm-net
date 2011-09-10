@@ -29,7 +29,7 @@ using HFM.Framework.DataTypes;
 
 namespace HFM.Instances
 {
-   public sealed class ClientInstance : IClientInstance
+   public sealed class ClientInstance
    {
       #region Fields
 
