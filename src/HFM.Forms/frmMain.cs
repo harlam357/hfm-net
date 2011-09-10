@@ -102,6 +102,12 @@ namespace HFM.Forms
 
       void ShowNotifyToolTip(string text);
       
+      void RefreshDisplay();
+
+      void RefreshUserStatsControls();
+
+      void SetStatsControlsVisible(bool visible);
+
       #region Background Processing Methods
       
       void ApplySort();
@@ -206,7 +212,7 @@ namespace HFM.Forms
          SubscribeToStatsLabelEvents();
 
          // Apply User Stats Enabled Selection
-         UserStatsEnabledChanged();
+         _presenter.UserStatsEnabledChanged();
 
          // If Mono, use the RowEnter Event (which was what 0.3.0 and prior used)
          // to set the CurrentInstance selection.  Obviously Mono doesn't fire the
@@ -238,18 +244,13 @@ namespace HFM.Forms
       private void SubscribeToInstanceCollectionEvents()
       {
          // refactored events
-         _instanceCollection.RefreshGrid += delegate { RefreshDisplay(); };
-         _instanceCollection.InvalidateGrid += delegate { dataGridView1.Invalidate(); };
          _instanceCollection.OfflineLastChanged += delegate { ApplySort(); };
-         _instanceCollection.InstanceDataChanged += delegate { _presenter.AutoSaveConfig(); };
          _instanceCollection.SelectedInstanceChanged += delegate { _presenter.DisplaySelectedInstance(); };
-         _instanceCollection.RefreshUserStatsControls += delegate { RefreshUserStatsControls(); };
       }
 
       private void SubscribeToPreferenceSetEvents()
       {
          _prefs.FormShowStyleSettingsChanged += delegate { _presenter.SetViewShowStyle(); };
-         _prefs.ShowUserStatsChanged += delegate { UserStatsEnabledChanged(); };
          _prefs.MessageLevelChanged += delegate { _presenter.ApplyMessageLevelIfChanged(); };
          _prefs.ColorLogFileChanged += delegate { _presenter.ApplyColorLogFileSetting(); };
          _prefs.PpdCalculationChanged += delegate { RefreshDisplay(); };
@@ -634,7 +635,7 @@ namespace HFM.Forms
 
       #region Background Work Routines
 
-      private void RefreshDisplay()
+      public void RefreshDisplay()
       {
          try 
          {
@@ -876,7 +877,7 @@ namespace HFM.Forms
          }
       }
       
-      private void RefreshUserStatsControls()
+      public void RefreshUserStatsControls()
       {
          var data = _statsData.Data;
          if (_prefs.GetPreference<bool>(Preference.ShowTeamStats))
@@ -902,17 +903,7 @@ namespace HFM.Forms
          statusUserWUs.Text = String.Format(CultureInfo.CurrentCulture, String.Concat("WUs: ", Constants.EocStatsFormat), totalWUs);
       }
       
-      private void UserStatsEnabledChanged()
-      {
-         var showXmlStats = _prefs.GetPreference<bool>(Preference.ShowXmlStats);
-         SetStatsControlsVisible(showXmlStats);
-         if (showXmlStats)
-         {
-            _instanceCollection.RefreshUserStatsData(false);
-         }
-      }
-
-      private void SetStatsControlsVisible(bool visible)
+      public void SetStatsControlsVisible(bool visible)
       {
          mnuWebRefreshUserStats.Visible = visible;
          mnuWebSep2.Visible = visible;

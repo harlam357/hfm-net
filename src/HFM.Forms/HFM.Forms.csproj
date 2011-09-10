@@ -164,6 +164,7 @@
     <Compile Include="Controls\TextBoxWrapper.Designer.cs">
       <DependentUpon>TextBoxWrapper.cs</DependentUpon>
     </Compile>
+    <Compile Include="RetrievalLogic.cs" />
     <Compile Include="SortableBindingList.cs" />
     <Compile Include="UpdateLogic.cs" />
     <Compile Include="frmAbout.cs">
