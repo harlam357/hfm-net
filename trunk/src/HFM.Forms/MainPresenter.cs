@@ -38,6 +38,7 @@ using HFM.Forms.Controls;
 using HFM.Forms.Models;
 using HFM.Framework;
 using HFM.Framework.DataTypes;
+using HFM.Instances;
 
 namespace HFM.Forms
 {
@@ -70,8 +71,8 @@ namespace HFM.Forms
    
       private readonly IMainView _view;
       private readonly IPreferenceSet _prefs;
-      private readonly IInstanceCollection _instanceCollection;
-      private readonly IInstanceConfigurationManager _configurationManager;
+      private readonly InstanceCollection _instanceCollection;
+      private readonly InstanceConfigurationManager _configurationManager;
       private readonly IProteinCollection _proteinCollection;
       private readonly IUpdateLogic _updateLogic;
       private readonly IMessagesView _messagesView;
@@ -86,8 +87,8 @@ namespace HFM.Forms
 
       #region Constructor
 
-      public MainPresenter(IMainView view, IPreferenceSet prefs, IInstanceCollection instanceCollection,
-                           IInstanceConfigurationManager configurationManager, IProteinCollection proteinCollection,
+      public MainPresenter(IMainView view, IPreferenceSet prefs, InstanceCollection instanceCollection,
+                           InstanceConfigurationManager configurationManager, IProteinCollection proteinCollection,
                            IUpdateLogic updateLogic, IMessagesView messagesView, IMessageBoxView messageBoxView, 
                            IOpenFileDialogView openFileDialogView, ISaveFileDialogView saveFileDialogView, 
                            IExternalProcessStarter processStarter)
@@ -621,7 +622,7 @@ namespace HFM.Forms
          {
             try
             {
-               _instanceCollection.WriteConfigFile();
+               WriteConfigFile();
             }
             catch (Exception ex)
             {
@@ -644,7 +645,7 @@ namespace HFM.Forms
          {
             try
             {
-               _instanceCollection.WriteConfigFile(_saveFileDialogView.FileName, _saveFileDialogView.FilterIndex); // Issue 75
+               WriteConfigFile(_saveFileDialogView.FileName, _saveFileDialogView.FilterIndex); // Issue 75
             }
             catch (Exception ex)
             {
@@ -666,7 +667,7 @@ namespace HFM.Forms
          try
          {
             // Read the config file
-            _instanceCollection.ReadConfigFile(filePath, filterIndex);
+            ReadConfigFile(filePath, filterIndex);
 
             if (_instanceCollection.HasInstances == false)
             {
@@ -682,6 +683,63 @@ namespace HFM.Forms
          }
       }
       
+      #endregion
+
+      #region Read and Write Config File
+
+      /// <summary>
+      /// Reads a collection of Client Instance Settings from file
+      /// </summary>
+      /// <param name="filePath">Path to Config File</param>
+      /// <param name="filterIndex">Dialog file type filter index (1 based)</param>
+      public void ReadConfigFile(string filePath, int filterIndex)
+      {
+         if (String.IsNullOrEmpty(filePath))
+         {
+            throw new ArgumentException("Argument 'filePath' cannot be a null or empty string.", "filePath");
+         }
+
+         if (filterIndex > _configurationManager.SettingsPluginsCount)
+         {
+            throw new ArgumentOutOfRangeException("filterIndex", String.Format(CultureInfo.CurrentCulture,
+               "Argument 'filterIndex' must be between 1 and {0}.", _configurationManager.SettingsPluginsCount));
+         }
+
+         ICollection<ClientInstance> instances = _configurationManager.ReadConfigFile(filePath, filterIndex);
+         _instanceCollection.LoadInstances(instances);
+      }
+
+      /// <summary>
+      /// Saves the current collection of Client Instances to file
+      /// </summary>
+      public void WriteConfigFile()
+      {
+         WriteConfigFile(_configurationManager.ConfigFilename, _configurationManager.SettingsPluginIndex);
+      }
+
+      /// <summary>
+      /// Saves the current collection of Client Instances to file
+      /// </summary>
+      /// <param name="filePath">Path to Config File</param>
+      /// <param name="filterIndex">Dialog file type filter index (1 based)</param>
+      public void WriteConfigFile(string filePath, int filterIndex)
+      {
+         if (String.IsNullOrEmpty(filePath))
+         {
+            throw new ArgumentException("Argument 'filePath' cannot be a null or empty string.", "filePath");
+         }
+
+         if (filterIndex > _configurationManager.SettingsPluginsCount)
+         {
+            throw new ArgumentOutOfRangeException("filterIndex", String.Format(CultureInfo.CurrentCulture,
+               "Argument 'filterIndex' must be between 1 and {0}.", _configurationManager.SettingsPluginsCount));
+         }
+
+         _configurationManager.WriteConfigFile(_instanceCollection.GetCurrentInstanceArray(), filePath, filterIndex);
+
+         _instanceCollection.ChangedAfterSave = false;
+      }
+
       #endregion
 
       #region Help Menu Handling Methods

@@ -97,13 +97,10 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="ExternalProcessStarter.cs" />
     <Compile Include="HfmTrace.cs" />
-    <Compile Include="IClientInstance.cs" />
     <Compile Include="ICompletedUnitsFileReader.cs" />
     <Compile Include="IDataAggregator.cs" />
     <Compile Include="IDisplayInstance.cs" />
     <Compile Include="IDisplayInstanceCollection.cs" />
-    <Compile Include="IInstanceCollection.cs" />
-    <Compile Include="IInstanceConfigurationManager.cs" />
     <Compile Include="InstanceProvider.cs" />
     <Compile Include="IPreferenceSet.cs" />
     <Compile Include="IProjectSummaryDownloader.cs" />

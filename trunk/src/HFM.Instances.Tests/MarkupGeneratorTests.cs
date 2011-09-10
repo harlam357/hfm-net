@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Markup Generator Class Tests
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -49,7 +49,7 @@ namespace HFM.Instances.Tests
          Expect.Call(prefs.GetPreference<bool>(Preference.WebGenCopyClientData)).Return(true);
          
          IEnumerable<IDisplayInstance> displayinstances = SetupMockDisplayInstanceCollection();
-         IEnumerable<IClientInstance> clientInstances = new List<IClientInstance>();
+         IEnumerable<ClientInstance> clientInstances = new List<ClientInstance>();
 
          _mocks.ReplayAll();
 
@@ -72,7 +72,7 @@ namespace HFM.Instances.Tests
          Expect.Call(prefs.GetPreference<bool>(Preference.WebGenCopyClientData)).Return(false);
 
          IEnumerable<IDisplayInstance> displayinstances = SetupMockDisplayInstanceCollection();
-         IEnumerable<IClientInstance> clientInstances = new List<IClientInstance>();
+         IEnumerable<ClientInstance> clientInstances = new List<ClientInstance>();
 
          _mocks.ReplayAll();
 
@@ -95,7 +95,7 @@ namespace HFM.Instances.Tests
          Expect.Call(prefs.GetPreference<bool>(Preference.WebGenCopyClientData)).Return(false);
 
          IEnumerable<IDisplayInstance> displayinstances = SetupMockDisplayInstanceCollection();
-         IEnumerable<IClientInstance> clientInstances = new List<IClientInstance>();
+         IEnumerable<ClientInstance> clientInstances = new List<ClientInstance>();
 
          _mocks.ReplayAll();
 
@@ -116,7 +116,7 @@ namespace HFM.Instances.Tests
          var prefs = SetupMockPreferenceSet();
          
          var markupGenerator = new MarkupGenerator(prefs);
-         markupGenerator.Generate(null, new List<IClientInstance>());
+         markupGenerator.Generate(null, new List<ClientInstance>());
       }
 
       [Test]
@@ -173,7 +173,7 @@ namespace HFM.Instances.Tests
       public void GenerateClientDataTest()
       {
          IPreferenceSet prefs = SetupMockPreferenceSet();
-         IEnumerable<IClientInstance> instances = new List<IClientInstance>();
+         IEnumerable<ClientInstance> instances = new List<ClientInstance>();
 
          _mocks.ReplayAll();
 

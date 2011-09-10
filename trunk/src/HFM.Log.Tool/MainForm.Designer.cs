@@ -42,8 +42,8 @@
          this.txtLogLineType = new System.Windows.Forms.TextBox();
          this.txtLogLineData = new System.Windows.Forms.TextBox();
          this.panel1 = new System.Windows.Forms.Panel();
-         this.LegacyRadioButton = new System.Windows.Forms.RadioButton();
          this.Version7RadioButton = new System.Windows.Forms.RadioButton();
+         this.LegacyRadioButton = new System.Windows.Forms.RadioButton();
          this.richTextBox1 = new HFM.Forms.Controls.RichTextBoxWrapper();
          this.splitContainer1.Panel1.SuspendLayout();
          this.splitContainer1.Panel2.SuspendLayout();
@@ -181,12 +181,23 @@
          // 
          // panel1
          // 
+         this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
          this.panel1.Controls.Add(this.Version7RadioButton);
          this.panel1.Controls.Add(this.LegacyRadioButton);
          this.panel1.Location = new System.Drawing.Point(670, 474);
          this.panel1.Name = "panel1";
          this.panel1.Size = new System.Drawing.Size(174, 23);
          this.panel1.TabIndex = 14;
+         // 
+         // Version7RadioButton
+         // 
+         this.Version7RadioButton.AutoSize = true;
+         this.Version7RadioButton.Location = new System.Drawing.Point(69, 3);
+         this.Version7RadioButton.Name = "Version7RadioButton";
+         this.Version7RadioButton.Size = new System.Drawing.Size(69, 17);
+         this.Version7RadioButton.TabIndex = 1;
+         this.Version7RadioButton.Text = "Version 7";
+         this.Version7RadioButton.UseVisualStyleBackColor = true;
          // 
          // LegacyRadioButton
          // 
@@ -199,16 +210,6 @@
          this.LegacyRadioButton.TabStop = true;
          this.LegacyRadioButton.Text = "Legacy";
          this.LegacyRadioButton.UseVisualStyleBackColor = true;
-         // 
-         // Version7RadioButton
-         // 
-         this.Version7RadioButton.AutoSize = true;
-         this.Version7RadioButton.Location = new System.Drawing.Point(69, 3);
-         this.Version7RadioButton.Name = "Version7RadioButton";
-         this.Version7RadioButton.Size = new System.Drawing.Size(69, 17);
-         this.Version7RadioButton.TabIndex = 1;
-         this.Version7RadioButton.Text = "Version 7";
-         this.Version7RadioButton.UseVisualStyleBackColor = true;
          // 
          // richTextBox1
          // 

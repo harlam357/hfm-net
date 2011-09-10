@@ -32,6 +32,7 @@ using harlam357.Windows.Forms;
 using HFM.Forms.Controls;
 using HFM.Framework;
 using HFM.Framework.DataTypes;
+using HFM.Instances;
 
 namespace HFM.Forms
 {
@@ -78,7 +79,7 @@ namespace HFM.Forms
       private readonly IProteinCollection _proteinCollection;
       private readonly IProteinBenchmarkContainer _benchmarkContainer;
       private readonly List<Color> _graphColors;
-      private readonly IInstanceAccessor _instanceCollection;
+      private readonly InstanceCollection _instanceCollection;
       private readonly IMessageBoxView _messageBoxView;
       private readonly IExternalProcessStarter _processStarter;
       private readonly ZedGraphManager _zedGraphManager;
@@ -89,7 +90,7 @@ namespace HFM.Forms
 
       #region Form Constructor / functionality
       public frmBenchmarks(IPreferenceSet prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer, 
-                           IInstanceCollection instanceCollection, IMessageBoxView messageBoxView, IExternalProcessStarter processStarter)
+                           InstanceCollection instanceCollection, IMessageBoxView messageBoxView, IExternalProcessStarter processStarter)
       {
          _prefs = prefs;
          _proteinCollection = proteinCollection;

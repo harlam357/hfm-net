@@ -169,7 +169,7 @@ namespace HFM
          unitInfoContainer.Read();
 
          // Initialize the Instance Collection
-         var instanceCollection = InstanceProvider.GetInstance<IInstanceCollection>();
+         var instanceCollection = InstanceProvider.GetInstance<InstanceCollection>();
          instanceCollection.Initialize();
 
          frmMain frm;

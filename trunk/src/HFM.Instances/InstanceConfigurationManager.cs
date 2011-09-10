@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Instance Configuration Manager Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,7 +31,7 @@ using HFM.Plugins;
 
 namespace HFM.Instances
 {
-   public class InstanceConfigurationManager : IInstanceConfigurationManager
+   public class InstanceConfigurationManager
    {
       private readonly IPreferenceSet _prefs;
       private readonly IClientInstanceFactory _instanceFactory;
@@ -123,7 +123,7 @@ namespace HFM.Instances
       /// </summary>
       /// <param name="filePath">Path to Config File</param>
       /// <param name="filterIndex">Dialog file type filter index (1 based)</param>
-      internal ICollection<ClientInstance> ReadConfigFile(string filePath, int filterIndex)
+      public ICollection<ClientInstance> ReadConfigFile(string filePath, int filterIndex)
       {
          Debug.Assert(String.IsNullOrEmpty(filePath) == false);
          Debug.Assert(filterIndex <= _settingsPlugins.Count);
@@ -160,7 +160,7 @@ namespace HFM.Instances
       /// <param name="instances">Client Instance Collection</param>
       /// <param name="filePath">Path to Config File</param>
       /// <param name="filterIndex">Dialog file type filter index (1 based)</param>
-      internal void WriteConfigFile(ICollection<IClientInstance> instances, string filePath, int filterIndex)
+      public void WriteConfigFile(ICollection<ClientInstance> instances, string filePath, int filterIndex)
       {
          Debug.Assert(instances != null);
          Debug.Assert(String.IsNullOrEmpty(filePath) == false);

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Instance Collection Data Interface Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,7 +24,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using HFM.Plugins;
-using HFM.Framework;
 using HFM.Framework.DataTypes;
 
 namespace HFM.Instances
@@ -46,7 +45,7 @@ namespace HFM.Instances
          _collection = new List<ClientInstanceSettings>();
       }
 
-      public InstanceCollectionDataInterface(ICollection<IClientInstance> instances)
+      public InstanceCollectionDataInterface(ICollection<ClientInstance> instances)
       {
          _settingsList = new List<ClientInstanceSettings>();
          _collection = new List<ClientInstanceSettings>(instances.Count);
