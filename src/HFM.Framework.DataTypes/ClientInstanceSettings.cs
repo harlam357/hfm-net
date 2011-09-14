@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Client Instance Settings Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 
 using ProtoBuf;
@@ -280,9 +281,9 @@ namespace HFM.Framework.DataTypes
       /// </summary>
       /// <param name="settings">Client Settings to Load</param>
       /// <exception cref="ArgumentNullException">Throws when arugment is null.</exception>
-      public void LoadSettings(ClientInstanceSettings settings)
+      private void LoadSettings(IClientInstanceSettings settings)
       {
-         if (settings == null) throw new ArgumentNullException("settings");
+         Debug.Assert(settings != null);
 
          InstanceHostType = settings.InstanceHostType;
          InstanceName = settings.InstanceName;

@@ -58,10 +58,9 @@ namespace HFM.Instances
       /// Generate Web Files from the given Display and Client Instances.
       /// </summary>
       /// <param name="displayInstances">Display Instances</param>
-      /// <param name="clientInstances">Client Instances</param>
-      /// <exception cref="ArgumentNullException">Throws if displayInstances or clientInstances is null.</exception>
+      /// <exception cref="ArgumentNullException">Throws if displayInstances is null.</exception>
       /// <exception cref="InvalidOperationException">Throws if a Generate method is called in succession.</exception>
-      void Generate(IEnumerable<IDisplayInstance> displayInstances, IEnumerable<ClientInstance> clientInstances);
+      void Generate(IEnumerable<IDisplayInstance> displayInstances);
    }
 
    public sealed class MarkupGenerator : IMarkupGenerator
@@ -103,18 +102,16 @@ namespace HFM.Instances
       {
          _prefs = prefs;
       }
-      
+
       /// <summary>
       /// Generate Web Files from the given Display and Client Instances.
       /// </summary>
       /// <param name="displayInstances">Display Instances</param>
-      /// <param name="clientInstances">Client Instances</param>
-      /// <exception cref="ArgumentNullException">Throws if displayInstances or clientInstances is null.</exception>
+      /// <exception cref="ArgumentNullException">Throws if displayInstances is null.</exception>
       /// <exception cref="InvalidOperationException">Throws if a Generate method is called in succession.</exception>
-      public void Generate(IEnumerable<IDisplayInstance> displayInstances, IEnumerable<ClientInstance> clientInstances)
+      public void Generate(IEnumerable<IDisplayInstance> displayInstances)
       {
          if (displayInstances == null) throw new ArgumentNullException("displayInstances");
-         if (clientInstances == null) throw new ArgumentNullException("clientInstances");
          if (_generationInProgress) throw new InvalidOperationException("Markup Generation already in progress.");
 
          _generationInProgress = true;
@@ -142,7 +139,7 @@ namespace HFM.Instances
             // Issue 79
             if (copyClientData)
             {
-               GenerateClientData(clientInstances);
+               GenerateClientData(displayInstances);
             }
          }
          finally
@@ -329,7 +326,7 @@ namespace HFM.Instances
          XmlElement xmlRoot = instancesXml.CreateElement("Instances");
          instancesXml.AppendChild(xmlRoot);
          
-         // Generate an XML Node per Client Instance
+         // Generate an XML Node per Display Instance
          foreach (IDisplayInstance instance in instances)
          {
             XmlDocument instanceXml = CreateInstanceXml(instance);
@@ -597,7 +594,7 @@ namespace HFM.Instances
       /// Generate Client Data File from the given Client Instances
       /// </summary>
       /// <param name="instances">Client Instances</param>
-      public void GenerateClientData(IEnumerable<ClientInstance> instances)
+      public void GenerateClientData(IEnumerable<IDisplayInstance> instances)
       {
          try
          {
@@ -609,11 +606,9 @@ namespace HFM.Instances
          }
       }
       
-      private static string DoClientDataGeneration(string folderPath, IEnumerable<ClientInstance> instances)
+      private static string DoClientDataGeneration(string folderPath, IEnumerable<IDisplayInstance> instances)
       {
-         var list = (from instance in instances
-                     where instance.Settings.ExternalInstance == false
-                     select (DisplayInstance)instance.DisplayInstance).ToList();
+         var list = instances.Cast<DisplayInstance>().ToList();
 
          var filePath = Path.Combine(folderPath, Default.ExternalDataFileName);
          using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))

@@ -39,8 +39,21 @@ namespace HFM.Instances
       public IPreferenceSet Prefs { get; set; }
       public IProteinCollection ProteinCollection { get; set; }
       public IProteinBenchmarkContainer BenchmarkContainer { get; set; }
-      
-      public IUnitInfoLogic CurrentUnitInfo { get; set; }
+
+      private IUnitInfoLogic _currentUnitInfo;
+
+      /// <summary>
+      /// Class member containing info specific to the current work unit
+      /// </summary>
+      public IUnitInfoLogic CurrentUnitInfo
+      {
+         get { return _currentUnitInfo; }
+         set
+         {
+            UpdateTimeOfLastProgress(value);
+            _currentUnitInfo = value;
+         }
+      }
       
       private UnitInfo _unitInfo;
       [ProtoMember(1)]
@@ -566,6 +579,87 @@ namespace HFM.Instances
          }
 
          return false;
+      }
+
+      #region Client Level Members
+
+      public void InitClientLevelMembers()
+      {
+         Arguments = String.Empty;
+         UserId = Constants.DefaultUserID;
+         MachineId = Constants.DefaultMachineID;
+         //FoldingID = Constants.FoldingIDDefault;
+         //Team = Constants.TeamDefault;
+         TotalRunCompletedUnits = 0;
+         TotalRunFailedUnits = 0;
+         TotalClientCompletedUnits = 0;
+      }
+
+      #endregion
+
+      #region Unit Progress Client Level Members
+
+      private DateTime _timeOfLastUnitStart = DateTime.MinValue;
+      /// <summary>
+      /// Local Time when this Client last detected Frame Progress
+      /// </summary>
+      internal DateTime TimeOfLastUnitStart
+      {
+         get { return _timeOfLastUnitStart; }
+         set { _timeOfLastUnitStart = value; }
+      }
+
+      private DateTime _timeOfLastFrameProgress = DateTime.MinValue;
+      /// <summary>
+      /// Local Time when this Client last detected Frame Progress
+      /// </summary>
+      internal DateTime TimeOfLastFrameProgress
+      {
+         get { return _timeOfLastFrameProgress; }
+         set { _timeOfLastFrameProgress = value; }
+      }
+
+      #endregion
+
+      /// <summary>
+      /// Update Time of Last Frame Progress based on Current and Parsed UnitInfo
+      /// </summary>
+      private void UpdateTimeOfLastProgress(IUnitInfoLogic parsedUnitInfo)
+      {
+         // Matches the Current Project and Raw Download Time
+         if (CurrentUnitInfo.EqualsUnitInfoLogic(parsedUnitInfo))
+         {
+            // If the Unit Start Time Stamp is no longer the same as the CurrentUnitInfo
+            if (parsedUnitInfo.UnitInfoData.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
+                CurrentUnitInfo.UnitInfoData.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
+                parsedUnitInfo.UnitInfoData.UnitStartTimeStamp.Equals(CurrentUnitInfo.UnitInfoData.UnitStartTimeStamp) == false)
+            {
+               TimeOfLastUnitStart = DateTime.Now;
+            }
+
+            // If the Frames Complete is greater than the CurrentUnitInfo Frames Complete
+            if (parsedUnitInfo.FramesComplete > CurrentUnitInfo.FramesComplete)
+            {
+               // Update the Time Of Last Frame Progress
+               TimeOfLastFrameProgress = DateTime.Now;
+            }
+         }
+         else // Different UnitInfo - Update the Time Of Last 
+         // Unit Start and Clear Frame Progress Value
+         {
+            TimeOfLastUnitStart = DateTime.Now;
+            TimeOfLastFrameProgress = DateTime.MinValue;
+         }
+      }
+
+      /// <summary>
+      /// Restore the given UnitInfo into this Client Instance
+      /// </summary>
+      /// <param name="unitInfo">UnitInfo Object to Restore</param>
+      public void RestoreUnitInfo(UnitInfo unitInfo)
+      {
+         UnitInfo = unitInfo;
+         BuildUnitInfoLogic();
       }
    }
 }

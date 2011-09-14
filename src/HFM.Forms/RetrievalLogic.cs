@@ -164,9 +164,7 @@ namespace HFM.Forms
                HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Starting Web Generation...");
 
                ICollection<IDisplayInstance> displayInstances = _instanceCollection.GetCurrentDisplayInstanceArray();
-               ICollection<ClientInstance> clientInstances = _instanceCollection.GetCurrentInstanceArray();
-
-               _markupGenerator.Generate(displayInstances, clientInstances);
+               _markupGenerator.Generate(displayInstances);
                _websiteDeployer.DeployWebsite(_markupGenerator.HtmlFilePaths, _markupGenerator.XmlFilePaths, _markupGenerator.ClientDataFilePath, displayInstances);
 
                HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format(CultureInfo.CurrentCulture,

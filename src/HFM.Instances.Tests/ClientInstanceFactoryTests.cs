@@ -18,11 +18,11 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 using Castle.Core;
 using Castle.Windsor;
+
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -35,7 +35,6 @@ namespace HFM.Instances.Tests
    public class ClientInstanceFactoryTests
    {
       private WindsorContainer _container;
-      private MockRepository _mocks;
    
       [SetUp]
       public void Init()
@@ -43,15 +42,13 @@ namespace HFM.Instances.Tests
          TraceLevelSwitch.Instance.Level = TraceLevel.Verbose;
       
          _container = new WindsorContainer();
-         _mocks = new MockRepository();
-
          _container.Kernel.AddComponent("clientInstance", typeof(ClientInstance), LifestyleType.Transient);
-         _container.Kernel.AddComponentInstance("preferenceSet", typeof(IPreferenceSet), MockRepository.GenerateMock<IPreferenceSet>());
-         _container.Kernel.AddComponentInstance("proteinCollection", typeof(IProteinCollection), SetupMockProteinCollection("GRO-A3", 100));
-         _container.Kernel.AddComponentInstance("benchmarkContainer", typeof(IProteinBenchmarkContainer), MockRepository.GenerateMock<IProteinBenchmarkContainer>());
-         _container.Kernel.AddComponentInstance("statusLogic", typeof(IStatusLogic), MockRepository.GenerateMock<IStatusLogic>());
-         _container.Kernel.AddComponentInstance("dataAggregator", typeof(IDataAggregator), MockRepository.GenerateMock<IDataAggregator>());
-         _container.Kernel.AddComponentInstance("dataRetriever", typeof(IDataRetriever), MockRepository.GenerateMock<IDataRetriever>());
+         _container.Kernel.AddComponentInstance("preferenceSet", typeof(IPreferenceSet), MockRepository.GenerateStub<IPreferenceSet>());
+         _container.Kernel.AddComponentInstance("proteinCollection", typeof(IProteinCollection), SetupStubProteinCollection("GRO-A3", 100));
+         _container.Kernel.AddComponentInstance("benchmarkContainer", typeof(IProteinBenchmarkContainer), MockRepository.GenerateStub<IProteinBenchmarkContainer>());
+         _container.Kernel.AddComponentInstance("statusLogic", typeof(IStatusLogic), MockRepository.GenerateStub<IStatusLogic>());
+         _container.Kernel.AddComponentInstance("dataRetriever", typeof(IDataRetriever), MockRepository.GenerateStub<IDataRetriever>());
+         _container.Kernel.AddComponentInstance("dataAggregator", typeof(IDataAggregator), MockRepository.GenerateStub<IDataAggregator>());
          InstanceProvider.SetContainer(_container);
       }
       
@@ -66,8 +63,6 @@ namespace HFM.Instances.Tests
       [Test]
       public void HandleImportResultsTest()
       {
-         _mocks.ReplayAll();
-
          var builder = new ClientInstanceFactory();
          var result1 = new ClientInstanceSettings(InstanceType.PathInstance)
                        {
@@ -81,11 +76,8 @@ namespace HFM.Instances.Tests
                        };
          var result3 = new ClientInstanceSettings { ImportError = "Import Error Message" };
          var result4 = new ClientInstanceSettings(InstanceType.FtpInstance);
-         var resultList = new List<ClientInstanceSettings> { result1, result2, result3, result4 };
-         var instances = builder.HandleImportResults(resultList);
+         var instances = builder.HandleImportResults(new[] { result1, result2, result3, result4 });
          Assert.AreEqual(2, instances.Count);
-         
-         _mocks.VerifyAll();
       }
 
       [Test]
@@ -131,8 +123,6 @@ namespace HFM.Instances.Tests
       [Test]
       public void CreateTest()
       {
-         _mocks.ReplayAll();
-
          var builder = new ClientInstanceFactory();
          var settings = new ClientInstanceSettings(InstanceType.PathInstance)
                         {
@@ -144,7 +134,7 @@ namespace HFM.Instances.Tests
          Assert.AreEqual("Client 1", instance.Settings.InstanceName);                       
       }
 
-      private static IProteinCollection SetupMockProteinCollection(string core, int frames)
+      private static IProteinCollection SetupStubProteinCollection(string core, int frames)
       {
          var currentProtein = new Protein { Core = core, Frames = frames };
          var proteinCollection = MockRepository.GenerateStub<IProteinCollection>();

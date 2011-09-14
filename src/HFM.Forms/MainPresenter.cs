@@ -603,12 +603,8 @@ namespace HFM.Forms
 
          if (CheckForConfigurationChanges())
          {
-            // new config filename
-            _configurationManager.ClearConfigFilename();
-            // collection has not changed
-            ChangedAfterSave = false;
-            // clear the collection
-            _instanceCollection.Clear();
+            // clear the clients and UI
+            Clear();
          }
       }
 
@@ -874,8 +870,7 @@ namespace HFM.Forms
          // Check for SelectedClientInstance, and get out if not found
          if (_instanceCollection.SelectedClientInstance == null) return;
 
-         //TODO: Add _instanceCollection.RemoveSelected()
-         _instanceCollection.Remove(_instanceCollection.SelectedClientInstance.Settings.InstanceName);
+         Remove(_instanceCollection.SelectedClientInstance.Settings.InstanceName);
       }
 
       public void ClientsMergeClick()
@@ -948,7 +943,7 @@ namespace HFM.Forms
       /// <param name="settings">Client Instance Settings</param>
       private void Add(ClientInstanceSettings settings)
       {
-         if (settings == null) throw new ArgumentNullException("settings");
+         Debug.Assert(settings != null);
 
          Add(_instanceFactory.Create(settings), true);
       }
@@ -1001,9 +996,9 @@ namespace HFM.Forms
       /// <param name="settings">Client Instance Settings</param>
       private void Edit(string previousName, string previousPath, ClientInstanceSettings settings)
       {
-         if (previousName == null) throw new ArgumentNullException("previousName");
-         if (previousPath == null) throw new ArgumentNullException("previousPath");
-         if (settings == null) throw new ArgumentNullException("settings");
+         Debug.Assert(previousName != null);
+         Debug.Assert(previousPath != null);
+         Debug.Assert(settings != null);
 
          Debug.Assert(_instanceCollection.ContainsKey(previousName));
 
@@ -1020,7 +1015,7 @@ namespace HFM.Forms
 
          var instance = _instanceCollection.GetClientInstance(previousName);
          // load the new settings
-         instance.Settings.LoadSettings(settings);
+         instance.Settings = settings;
 
          // Instance Name changed but isn't an already existing key
          if (previousName != instance.Settings.InstanceName)
@@ -1061,7 +1056,7 @@ namespace HFM.Forms
       /// Remove an Instance by Name
       /// </summary>
       /// <param name="instanceName">Instance Name</param>
-      public void Remove(string instanceName)
+      private void Remove(string instanceName)
       {
          if (String.IsNullOrEmpty(instanceName))
          {
@@ -1090,8 +1085,13 @@ namespace HFM.Forms
       /// <summary>
       /// Clear All Instance Data
       /// </summary>
-      public void Clear()
+      private void Clear()
       {
+         // new config filename
+         _configurationManager.ClearConfigFilename();
+         // collection has not changed
+         ChangedAfterSave = false;
+
          if (_instanceCollection.HasInstances)
          {
             _instanceCollection.SaveCurrentUnitInfo();

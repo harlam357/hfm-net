@@ -244,6 +244,23 @@ namespace HFM.Framework.DataTypes
 
       #endregion
 
+      #region InstanceType
+
+      public static bool IsLegacyType(this InstanceType type)
+      {
+         switch (type)
+         {
+            case InstanceType.PathInstance:
+            case InstanceType.HttpInstance:
+            case InstanceType.FtpInstance:
+               return true;
+         }
+
+         return false;
+      }
+
+      #endregion
+
       #region IEnumerable<LogLine>
 
       public static readonly Regex WorkUnitRunningRegex =

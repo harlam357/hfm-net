@@ -33,6 +33,8 @@ namespace HFM.Instances
    {
       #region Fields
 
+      #region Injection Properties
+
       private IPreferenceSet _prefs;
       /// <summary>
       /// PreferenceSet Interface
@@ -86,101 +88,40 @@ namespace HFM.Instances
       {
          set { _dataAggregator = value; }
       }
-      
-      private DisplayInstance _displayInstance;
+
+      #endregion
+
+      private ClientInstanceSettings _settings;
       
       public ClientInstanceSettings Settings
       {
-         get { return _displayInstance.Settings; }
-      }
-      
-      public IDisplayInstance DisplayInstance
-      {
-         get { return _displayInstance; }
-      }
-
-      public IList<IDisplayInstance> ExternalDisplayInstances { get; private set; }
-
-      #endregion
-      
-      #region Initialize
-      
-      public void Initialize()
-      {
-         Initialize(null);
-      }
-      
-      public void Initialize(ClientInstanceSettings settings)
-      {
-         // Init User Specified Client Level Members
-         _displayInstance = new DisplayInstance
-                            {
-                               Prefs = _prefs,
-                               ProteinCollection = _proteinCollection,
-                               BenchmarkContainer = _benchmarkContainer,
-                               Settings = settings ?? new ClientInstanceSettings(InstanceType.PathInstance),
-                               UnitInfo = new UnitInfo()
-                            };
-         _displayInstance.BuildUnitInfoLogic();
-
-         InitClientLevelMembers();
-      }
-
-      #endregion
-
-      #region Client Level Members
-
-      /// <summary>
-      /// Class member containing info specific to the current work unit
-      /// </summary>
-      public IUnitInfoLogic CurrentUnitInfo
-      {
-         get { return _displayInstance.CurrentUnitInfo; }
-         private set
+         get { return _settings; }
+         set
          {
-            UpdateTimeOfLastProgress(value);
-            _displayInstance.CurrentUnitInfo = value;
+            Debug.Assert(value != null);
+
+            _settings = value;
+
+            DisplayInstances.Clear();
+            if (_settings.InstanceHostType.IsLegacyType() && !_settings.ExternalInstance)
+            {
+               // add default legacy display instance, external instances
+               // or version 7 client display instances will be added 
+               // during the retrieval process
+               DisplayInstances.Add(0, CreateDisplayInstance());
+            }
          }
       }
-
-      private void InitClientLevelMembers()
-      {
-         _displayInstance.Arguments = String.Empty;
-         _displayInstance.UserId = Constants.DefaultUserID;
-         _displayInstance.MachineId = Constants.DefaultMachineID;
-         //_displayInstance.FoldingID = Constants.FoldingIDDefault;
-         //_displayInstance.Team = Constants.TeamDefault;
-         _displayInstance.TotalRunCompletedUnits = 0;
-         _displayInstance.TotalRunFailedUnits = 0;
-         _displayInstance.TotalClientCompletedUnits = 0;
-      }
       
+      public IDictionary<int, DisplayInstance> DisplayInstances { get; private set; }
+
       #endregion
 
-      #region Unit Progress Client Level Members
-      
-      private DateTime _timeOfLastUnitStart = DateTime.MinValue;
-      /// <summary>
-      /// Local Time when this Client last detected Frame Progress
-      /// </summary>
-      internal DateTime TimeOfLastUnitStart
+      public ClientInstance()
       {
-         get { return _timeOfLastUnitStart; }
-         set { _timeOfLastUnitStart = value; }
+         DisplayInstances = new Dictionary<int, DisplayInstance>();
       }
-
-      private DateTime _timeOfLastFrameProgress = DateTime.MinValue;
-      /// <summary>
-      /// Local Time when this Client last detected Frame Progress
-      /// </summary>
-      internal DateTime TimeOfLastFrameProgress
-      {
-         get { return _timeOfLastFrameProgress; }
-         set { _timeOfLastFrameProgress = value; }
-      } 
       
-      #endregion
-
       #region Retrieval Properties
       
       private volatile bool _retrievalInProgress;
@@ -199,6 +140,23 @@ namespace HFM.Instances
       #endregion
 
       #region Retrieval Methods
+
+      public DisplayInstance CreateDisplayInstance()
+      {
+         // Init User Specified Client Level Members
+         var displayInstance = new DisplayInstance
+                               {
+                                  Prefs = _prefs,
+                                  ProteinCollection = _proteinCollection,
+                                  BenchmarkContainer = _benchmarkContainer,
+                                  Settings = Settings,
+                                  UnitInfo = new UnitInfo()
+                               };
+         displayInstance.BuildUnitInfoLogic();
+         displayInstance.InitClientLevelMembers();
+
+         return displayInstance;
+      }
       
       /// <summary>
       /// Retrieve Instance Log Files based on Instance Type
@@ -212,58 +170,57 @@ namespace HFM.Instances
          {
             RetrievalInProgress = true;
 
-            _dataRetriever.Settings = _displayInstance.Settings;
-            switch (_displayInstance.Settings.InstanceHostType)
+            _dataRetriever.Execute(Settings);
+            if (Settings.InstanceHostType.IsLegacyType())
             {
-               case InstanceType.PathInstance:
-                  _dataRetriever.RetrievePathInstance();
-                  break;
-               case InstanceType.HttpInstance:
-                  _dataRetriever.RetrieveHttpInstance();
-                  break;
-               case InstanceType.FtpInstance:
-                  _dataRetriever.RetrieveFtpInstance();
-                  break;
-               default:
-                  throw new NotImplementedException(String.Format(CultureInfo.CurrentCulture,
-                     "Instance Type '{0}' is not implemented", _displayInstance.Settings.InstanceHostType));
-            }
+               if (Settings.ExternalInstance)
+               {
+                  ReadExternalDataFile(Path.Combine(_prefs.CacheDirectory, Settings.CachedExternalName));
+                  //_displayInstance.Status = ClientStatus.Running;
+               }
+               else
+               {
+                  Debug.Assert(DisplayInstances.Count == 1);
 
-            // Set successful Last Retrieval Time
-            _displayInstance.LastRetrievalTime = DateTime.Now;
-            // Re-Init Client Level Members Before Processing
-            InitClientLevelMembers();
-            // Process the retrieved logs
-            if (Settings.ExternalInstance)
-            {
-               ReadExternalDataFile(Path.Combine(_prefs.CacheDirectory, _displayInstance.Settings.CachedExternalName));
-               //_displayInstance.Status = ClientStatus.Running;
+                  DisplayInstance displayInstance = DisplayInstances[0];
+
+                  try
+                  {
+                     // Set successful Last Retrieval Time
+                     displayInstance.LastRetrievalTime = DateTime.Now;
+                     // Re-Init Client Level Members Before Processing
+                     displayInstance.InitClientLevelMembers();
+                     // Process the retrieved logs
+
+                     ClientStatus returnedStatus = ProcessLegacy(displayInstance);
+                     // Handle the status retured from the log parse
+                     HandleReturnedStatus(returnedStatus, displayInstance);
+                  }
+                  catch (Exception ex)
+                  {
+                     displayInstance.Status = ClientStatus.Offline;
+                     HfmTrace.WriteToHfmConsole(displayInstance.Settings.InstanceName, ex);
+                  }
+
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Client Status: {2}", HfmTrace.FunctionName, displayInstance.Settings.InstanceName, displayInstance.Status));
+               }
             }
             else
             {
-               ClientStatus returnedStatus = ProcessExisting();
-               // Handle the status retured from the log parse
-               HandleReturnedStatus(returnedStatus);
+               // v7 client
             }
-         }
-         catch (Exception ex)
-         {
-            _displayInstance.Status = ClientStatus.Offline;
-            HfmTrace.WriteToHfmConsole(_displayInstance.Settings.InstanceName, ex);
          }
          finally
          {
             RetrievalInProgress = false;
          }
-
-         HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Client Status: {2}", HfmTrace.FunctionName, _displayInstance.Settings.InstanceName, _displayInstance.Status));
       }
 
       private void ReadExternalDataFile(string filePath)
       {
          DateTime start = HfmTrace.ExecStart;
 
-         ExternalDisplayInstances = null;
+         DisplayInstances.Clear();
          try
          {
             using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
@@ -281,7 +238,12 @@ namespace HFM.Instances
                   instance.ProteinCollection = _proteinCollection;
                   instance.BuildUnitInfoLogic();
                }
-               ExternalDisplayInstances = list.ConvertAll(x => (IDisplayInstance)x);
+               
+               //DisplayInstances = list.ConvertAll(x => (IDisplayInstance)x);
+               for (int i = 0; i < list.Count; i++)
+               {
+                  DisplayInstances.Add(i, list[i]);
+               }
             }
          }
          finally
@@ -297,16 +259,16 @@ namespace HFM.Instances
       /// <summary>
       /// Process the cached log files that exist on this machine
       /// </summary>
-      public ClientStatus ProcessExisting()
+      private ClientStatus ProcessLegacy(DisplayInstance displayInstance)
       {
          DateTime start = HfmTrace.ExecStart;
 
          #region Setup UnitInfo Aggregator
 
-         _dataAggregator.InstanceName = _displayInstance.Settings.InstanceName;
-         _dataAggregator.QueueFilePath = Path.Combine(_prefs.CacheDirectory, _displayInstance.Settings.CachedQueueName);
-         _dataAggregator.FahLogFilePath = Path.Combine(_prefs.CacheDirectory, _displayInstance.Settings.CachedFahLogName);
-         _dataAggregator.UnitInfoLogFilePath = Path.Combine(_prefs.CacheDirectory, _displayInstance.Settings.CachedUnitInfoName); 
+         _dataAggregator.InstanceName = Settings.InstanceName;
+         _dataAggregator.QueueFilePath = Path.Combine(_prefs.CacheDirectory, Settings.CachedQueueName);
+         _dataAggregator.FahLogFilePath = Path.Combine(_prefs.CacheDirectory, Settings.CachedFahLogName);
+         _dataAggregator.UnitInfoLogFilePath = Path.Combine(_prefs.CacheDirectory, Settings.CachedUnitInfoName); 
          
          #endregion
          
@@ -315,15 +277,15 @@ namespace HFM.Instances
          IList<IUnitInfo> units = _dataAggregator.AggregateData();
          // Issue 126 - Use the Folding ID, Team, User ID, and Machine ID from the FAHlog data.
          // Use the Current Queue Entry as a backup data source.
-         PopulateRunLevelData(_dataAggregator.CurrentClientRun);
+         PopulateRunLevelData(_dataAggregator.CurrentClientRun, displayInstance);
          if (_dataAggregator.Queue != null)
          {
-            PopulateRunLevelData(_dataAggregator.Queue.CurrentQueueEntry);
+            PopulateRunLevelData(_dataAggregator.Queue.CurrentQueueEntry, displayInstance);
          }
 
-         _displayInstance.Queue = _dataAggregator.Queue;
-         _displayInstance.CurrentLogLines = _dataAggregator.CurrentLogLines;
-         _displayInstance.UnitLogLines = _dataAggregator.UnitLogLines;
+         displayInstance.Queue = _dataAggregator.Queue;
+         displayInstance.CurrentLogLines = _dataAggregator.CurrentLogLines;
+         displayInstance.UnitLogLines = _dataAggregator.UnitLogLines;
          
          #endregion
          
@@ -333,45 +295,45 @@ namespace HFM.Instances
             if (units[i] != null)
             {
                IProtein protein = _proteinCollection.GetProtein(units[i].ProjectID);
-               parsedUnits[i] = new UnitInfoLogic(_prefs, protein, _benchmarkContainer, units[i], DisplayInstance.Settings, DisplayInstance);
+               parsedUnits[i] = new UnitInfoLogic(_prefs, protein, _benchmarkContainer, units[i], Settings, displayInstance);
             }
          }
 
          // *** THIS HAS TO BE DONE BEFORE UPDATING THE CurrentUnitInfo ***
          // Update Benchmarks from parsedUnits array 
-         _benchmarkContainer.UpdateBenchmarkData(CurrentUnitInfo, parsedUnits, _dataAggregator.CurrentUnitIndex);
+         _benchmarkContainer.UpdateBenchmarkData(displayInstance.CurrentUnitInfo, parsedUnits, _dataAggregator.CurrentUnitIndex);
 
          // Update the CurrentUnitInfo if we have a Status
          ClientStatus currentWorkUnitStatus = _dataAggregator.CurrentClientRun.Status;
          if (currentWorkUnitStatus.Equals(ClientStatus.Unknown) == false)
          {
-            CurrentUnitInfo = parsedUnits[_dataAggregator.CurrentUnitIndex];
+            displayInstance.CurrentUnitInfo = parsedUnits[_dataAggregator.CurrentUnitIndex];
          }
          
-         CurrentUnitInfo.ShowPPDTrace();
-         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, DisplayInstance.Settings.InstanceName, start);
+         displayInstance.CurrentUnitInfo.ShowPPDTrace();
+         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Settings.InstanceName, start);
 
          // Return the Status
          return currentWorkUnitStatus;
       }
 
-      private void PopulateRunLevelData(ClientRun run)
+      private static void PopulateRunLevelData(ClientRun run, DisplayInstance displayInstance)
       {
-         _displayInstance.ClientVersion = run.ClientVersion;
-         _displayInstance.Arguments = run.Arguments;
+         displayInstance.ClientVersion = run.ClientVersion;
+         displayInstance.Arguments = run.Arguments;
 
-         //_displayInstance.FoldingID = run.FoldingID;
-         //_displayInstance.Team = run.Team;
+         //displayInstance.FoldingID = run.FoldingID;
+         //displayInstance.Team = run.Team;
 
-         _displayInstance.UserId = run.UserID;
-         _displayInstance.MachineId = run.MachineID;
+         displayInstance.UserId = run.UserID;
+         displayInstance.MachineId = run.MachineID;
 
-         _displayInstance.TotalRunCompletedUnits = run.CompletedUnits;
-         _displayInstance.TotalRunFailedUnits = run.FailedUnits;
-         _displayInstance.TotalClientCompletedUnits = run.TotalCompletedUnits;
+         displayInstance.TotalRunCompletedUnits = run.CompletedUnits;
+         displayInstance.TotalRunFailedUnits = run.FailedUnits;
+         displayInstance.TotalClientCompletedUnits = run.TotalCompletedUnits;
       }
 
-      private void PopulateRunLevelData(ClientQueueEntry queueEntry)
+      private static void PopulateRunLevelData(ClientQueueEntry queueEntry, DisplayInstance displayInstance)
       {
          //if (_displayInstance.FoldingID == Constants.FoldingIDDefault)
          //{
@@ -381,44 +343,13 @@ namespace HFM.Instances
          //{
          //   _displayInstance.Team = (int)queueEntry.TeamNumber;
          //}
-         if (_displayInstance.UserId == Constants.DefaultUserID)
+         if (displayInstance.UserId == Constants.DefaultUserID)
          {
-            _displayInstance.UserId = queueEntry.UserID;
+            displayInstance.UserId = queueEntry.UserID;
          }
-         if (_displayInstance.MachineId == Constants.DefaultMachineID)
+         if (displayInstance.MachineId == Constants.DefaultMachineID)
          {
-            _displayInstance.MachineId = queueEntry.MachineID;
-         }
-      }
-
-      /// <summary>
-      /// Update Time of Last Frame Progress based on Current and Parsed UnitInfo
-      /// </summary>
-      private void UpdateTimeOfLastProgress(IUnitInfoLogic parsedUnitInfo)
-      {
-         // Matches the Current Project and Raw Download Time
-         if (CurrentUnitInfo.EqualsUnitInfoLogic(parsedUnitInfo))
-         {
-            // If the Unit Start Time Stamp is no longer the same as the CurrentUnitInfo
-            if (parsedUnitInfo.UnitInfoData.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
-                CurrentUnitInfo.UnitInfoData.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
-                parsedUnitInfo.UnitInfoData.UnitStartTimeStamp.Equals(CurrentUnitInfo.UnitInfoData.UnitStartTimeStamp) == false)
-            {
-               TimeOfLastUnitStart = DateTime.Now;
-            }
-
-            // If the Frames Complete is greater than the CurrentUnitInfo Frames Complete
-            if (parsedUnitInfo.FramesComplete > CurrentUnitInfo.FramesComplete)
-            {
-               // Update the Time Of Last Frame Progress
-               TimeOfLastFrameProgress = DateTime.Now;
-            }
-         }
-         else // Different UnitInfo - Update the Time Of Last 
-              // Unit Start and Clear Frame Progress Value
-         {
-            TimeOfLastUnitStart = DateTime.Now;
-            TimeOfLastFrameProgress = DateTime.MinValue;
+            displayInstance.MachineId = queueEntry.MachineID;
          }
       }
       
@@ -429,27 +360,26 @@ namespace HFM.Instances
       /// <summary>
       /// Handles the Client Status Returned by Log Parsing and then determines what values to feed the DetermineStatus routine.
       /// </summary>
-      /// <param name="returnedStatus">Client Status</param>
-      private void HandleReturnedStatus(ClientStatus returnedStatus)
+      private void HandleReturnedStatus(ClientStatus returnedStatus, DisplayInstance displayInstance)
       {
          var statusData = new StatusData
                           {
-                             InstanceName = _displayInstance.Settings.InstanceName,
-                             TypeOfClient = CurrentUnitInfo.UnitInfoData.TypeOfClient,
-                             LastRetrievalTime = _displayInstance.LastRetrievalTime,
-                             IgnoreUtcOffset = _displayInstance.Settings.ClientIsOnVirtualMachine,
+                             InstanceName = Settings.InstanceName,
+                             TypeOfClient = displayInstance.CurrentUnitInfo.UnitInfoData.TypeOfClient,
+                             LastRetrievalTime = displayInstance.LastRetrievalTime,
+                             IgnoreUtcOffset = Settings.ClientIsOnVirtualMachine,
                              UtcOffset = TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now),
-                             ClientTimeOffset = _displayInstance.Settings.ClientTimeOffset,
-                             TimeOfLastUnitStart = TimeOfLastUnitStart,
-                             TimeOfLastFrameProgress = TimeOfLastFrameProgress,
-                             CurrentStatus = _displayInstance.Status,
+                             ClientTimeOffset = Settings.ClientTimeOffset,
+                             TimeOfLastUnitStart = displayInstance.TimeOfLastUnitStart,
+                             TimeOfLastFrameProgress = displayInstance.TimeOfLastFrameProgress,
+                             CurrentStatus = displayInstance.Status,
                              ReturnedStatus = returnedStatus,
-                             FrameTime = CurrentUnitInfo.RawTimePerSection,
-                             AverageFrameTime = _benchmarkContainer.GetBenchmarkAverageFrameTime(CurrentUnitInfo),
-                             TimeOfLastFrame = CurrentUnitInfo.UnitInfoData.CurrentFrame == null
+                             FrameTime = displayInstance.CurrentUnitInfo.RawTimePerSection,
+                             AverageFrameTime = _benchmarkContainer.GetBenchmarkAverageFrameTime(displayInstance.CurrentUnitInfo),
+                             TimeOfLastFrame = displayInstance.CurrentUnitInfo.UnitInfoData.CurrentFrame == null
                                                   ? TimeSpan.Zero
-                                                  : CurrentUnitInfo.UnitInfoData.CurrentFrame.TimeOfFrame,
-                             UnitStartTimeStamp = CurrentUnitInfo.UnitInfoData.UnitStartTimeStamp,
+                                                  : displayInstance.CurrentUnitInfo.UnitInfoData.CurrentFrame.TimeOfFrame,
+                             UnitStartTimeStamp = displayInstance.CurrentUnitInfo.UnitInfoData.UnitStartTimeStamp,
                              AllowRunningAsync = _prefs.GetPreference<bool>(Preference.AllowRunningAsync)
                           };
 
@@ -473,7 +403,7 @@ namespace HFM.Instances
             }
          }
 
-         _displayInstance.Status = _statusLogic.HandleStatusData(statusData);
+         displayInstance.Status = _statusLogic.HandleStatusData(statusData);
       }
 
       /// <summary>
@@ -522,22 +452,6 @@ namespace HFM.Instances
          }
       }
 
-      #endregion
-
-      #region Other Helper Functions
-      
-      /// <summary>
-      /// Restore the given UnitInfo into this Client Instance
-      /// </summary>
-      /// <param name="unitInfo">UnitInfo Object to Restore</param>
-      public void RestoreUnitInfo(UnitInfo unitInfo)
-      {
-         if (_displayInstance == null) throw new InvalidOperationException("Client Instance is not initialized.");
-      
-         _displayInstance.UnitInfo = unitInfo;
-         _displayInstance.BuildUnitInfoLogic();
-      }
-      
       #endregion
    }
 }

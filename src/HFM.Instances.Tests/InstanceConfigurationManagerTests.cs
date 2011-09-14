@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Instance Configuration Manager Tests
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,7 +18,9 @@
  */
 
 using System;
-using System.Collections.Generic;
+
+using Castle.Core;
+using Castle.Windsor;
 
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -31,28 +33,38 @@ namespace HFM.Instances.Tests
    [TestFixture]
    public class InstanceConfigurationManagerTests
    {
-      private MockRepository _mocks;
-   
       private IPreferenceSet _prefs;
-      private IClientInstanceFactory _instanceFactory;
+      private IProteinCollection _proteinCollection;
       private IUnitInfoContainer _unitInfoContainer;
+
+      private IClientInstanceFactory _instanceFactory;
+      private IWindsorContainer _container;
+
 
       [SetUp]
       public void Init()
       {
-         _mocks = new MockRepository();
-      
-         _prefs = _mocks.DynamicMock<IPreferenceSet>();
-         Expect.Call(_prefs.ApplicationDataFolderPath).Return(String.Empty);
-         _instanceFactory = _mocks.DynamicMock<IClientInstanceFactory>();
-         _unitInfoContainer = _mocks.DynamicMock<IUnitInfoContainer>();
+         _prefs = MockRepository.GenerateStub<IPreferenceSet>();
+         _prefs.Stub(x => x.ApplicationDataFolderPath).Return(String.Empty);
+         _proteinCollection = SetupStubProteinCollection("GRO-A3", 100);
+         _unitInfoContainer = MockRepository.GenerateStub<IUnitInfoContainer>();
+
+         _instanceFactory = new ClientInstanceFactory();
+         // setup container for real ClientInstanceFactory
+         _container = new WindsorContainer();
+         _container.Kernel.AddComponent("clientInstance", typeof(ClientInstance), LifestyleType.Transient);
+         _container.Kernel.AddComponentInstance("preferenceSet", _prefs);
+         _container.Kernel.AddComponentInstance("proteinCollection", typeof(IProteinCollection), _proteinCollection);
+         _container.Kernel.AddComponentInstance("benchmarkContainer", typeof(IProteinBenchmarkContainer), MockRepository.GenerateStub<IProteinBenchmarkContainer>());
+         _container.Kernel.AddComponentInstance("statusLogic", typeof(IStatusLogic), MockRepository.GenerateStub<IStatusLogic>());
+         _container.Kernel.AddComponentInstance("dataRetriever", typeof(IDataRetriever), MockRepository.GenerateStub<IDataRetriever>());
+         _container.Kernel.AddComponentInstance("dataAggregator", typeof(IDataAggregator), MockRepository.GenerateStub<IDataAggregator>());
+         InstanceProvider.SetContainer(_container);
       }
    
       [Test]
       public void DefaultsTest()
       {
-         _mocks.ReplayAll();
-      
          var configurationManager = new InstanceConfigurationManager(_prefs, _instanceFactory, _unitInfoContainer);
          Assert.AreEqual(String.Empty, configurationManager.ConfigFilename);
          Assert.AreEqual(0, configurationManager.SettingsPluginIndex);
@@ -60,27 +72,13 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(false, configurationManager.HasConfigFilename);
          Assert.AreEqual("hfm", configurationManager.ConfigFileExtension); //TODO: default is different than after Read
          Assert.AreEqual("HFM Configuration Files|*.hfm", configurationManager.FileTypeFilters);
-         
-         _mocks.VerifyAll();
       }
       
       [Test]
       public void ReadConfigFileTest()
       {
-         var instance1 = new ClientInstance();
-         var proteinCollection = _mocks.DynamicMock<IProteinCollection>();
-         Expect.Call(proteinCollection.GetProtein(0, false)).Return(new Protein()).Repeat.Twice();
-         instance1.ProteinCollection = proteinCollection;
+         _unitInfoContainer.Stub(x => x.RetrieveUnitInfo(null)).IgnoreArguments().Return(new UnitInfo());
          
-         Expect.Call(_instanceFactory.HandleImportResults(null)).Return(
-            (new List<ClientInstance> { instance1 }).AsReadOnly()).IgnoreArguments();
-         Expect.Call(_unitInfoContainer.RetrieveUnitInfo(instance1)).Return(new UnitInfo());
-         
-         _mocks.ReplayAll();
-         
-         // initialize AFTER mocks are in replay mode
-         instance1.Initialize();
-
          var configurationManager = new InstanceConfigurationManager(_prefs, _instanceFactory, _unitInfoContainer);
          configurationManager.ReadConfigFile("..\\..\\TestFiles\\test.hfm", 1);
          Assert.AreEqual("..\\..\\TestFiles\\test.hfm", configurationManager.ConfigFilename);
@@ -89,22 +87,15 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(true, configurationManager.HasConfigFilename);
          Assert.AreEqual(".hfm", configurationManager.ConfigFileExtension);
          Assert.AreEqual("HFM Configuration Files|*.hfm", configurationManager.FileTypeFilters);
-         
-         _mocks.VerifyAll();
       }
       
       [Test]
       public void WriteConfigFileTest()
       {
          var instance1 = new ClientInstance();
-         var proteinCollection = _mocks.DynamicMock<IProteinCollection>();
-         Expect.Call(proteinCollection.GetProtein(0, false)).Return(new Protein());
-         instance1.ProteinCollection = proteinCollection;
+         instance1.ProteinCollection = _proteinCollection;
+         instance1.Settings = new ClientInstanceSettings { InstanceName = "test" };
       
-         _mocks.ReplayAll();
-         
-         instance1.Initialize();
-
          var configurationManager = new InstanceConfigurationManager(_prefs, _instanceFactory, _unitInfoContainer);
          configurationManager.WriteConfigFile(new[] { instance1 }, "..\\..\\TestFiles\\new.ext", 1);
          Assert.AreEqual("..\\..\\TestFiles\\new.ext", configurationManager.ConfigFilename);
@@ -113,8 +104,15 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(true, configurationManager.HasConfigFilename);
          Assert.AreEqual(".ext", configurationManager.ConfigFileExtension);
          Assert.AreEqual("HFM Configuration Files|*.hfm", configurationManager.FileTypeFilters);
-         
-         _mocks.VerifyAll();
+      }
+
+      private static IProteinCollection SetupStubProteinCollection(string core, int frames)
+      {
+         var currentProtein = new Protein { Core = core, Frames = frames };
+         var proteinCollection = MockRepository.GenerateStub<IProteinCollection>();
+         proteinCollection.Stub(x => x.GetProtein(0, true)).Return(currentProtein).IgnoreArguments();
+
+         return proteinCollection;
       }
    }
 }

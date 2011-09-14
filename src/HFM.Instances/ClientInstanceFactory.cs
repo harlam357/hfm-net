@@ -108,7 +108,7 @@ namespace HFM.Instances
          }
 
          var instance = InstanceProvider.GetInstance<ClientInstance>();
-         instance.Initialize(settings);
+         instance.Settings = settings;
          return instance;
       }
 
