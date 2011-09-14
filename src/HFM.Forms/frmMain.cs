@@ -19,7 +19,6 @@
  */
  
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -28,13 +27,12 @@ using System.Windows.Forms;
 using HFM.Forms.Controls;
 using HFM.Framework;
 using HFM.Framework.DataTypes;
-using HFM.Instances;
 
 namespace HFM.Forms
 {
    public interface IMainView : IWin32Window
    {
-      #region System.Windows.Forms Properties
+      #region System.Windows.Forms.Form Properties
 
       FormWindowState WindowState { get; set; }
 
@@ -54,7 +52,7 @@ namespace HFM.Forms
       
       #endregion
 
-      #region System.Windows.Forms Methods
+      #region System.Windows.Forms.Form Methods
 
       object Invoke(Delegate method);
 
@@ -70,7 +68,7 @@ namespace HFM.Forms
 
       ILogFileViewer LogFileViewer { get; }
 
-      DataGridView DataGridView { get; }
+      IDataGridView DataGridView { get; }
 
       SplitContainer SplitContainer { get; }
 
@@ -102,17 +100,15 @@ namespace HFM.Forms
 
       void ShowNotifyToolTip(string text);
       
-      void RefreshDisplay();
-
-      void RefreshUserStatsControls();
+      void RefreshUserStatsControls(XmlStatsData data);
 
       void SetStatsControlsVisible(bool visible);
 
       #region Background Processing Methods
       
-      void ApplySort();
+      string GetSelectedRowInstanceName(System.Collections.IList selectedRows);
 
-      void SelectCurrentRowKey();
+      void RefreshControlsWithTotalsData(InstanceTotals totals);
       
       #endregion
       
@@ -138,7 +134,7 @@ namespace HFM.Forms
 
       public ILogFileViewer LogFileViewer { get { return txtLogFile; } }
 
-      public DataGridView DataGridView { get { return dataGridView1; } }
+      public IDataGridView DataGridView { get { return dataGridView1; } }
       
       public SplitContainer SplitContainer { get { return splitContainer1; } }
 
@@ -151,26 +147,20 @@ namespace HFM.Forms
       #region Fields
 
       private MainPresenter _presenter;
-
       private NotifyIcon _notifyIcon;
 
-      private readonly BindingSource _displayBindingSource;
-      
       private readonly IPreferenceSet _prefs;
-      private readonly IXmlStatsDataContainer _statsData;
 
       #endregion
 
       #region Constructor
 
       /// <summary>
-      /// Main Form constructor
+      /// Main Form Constructor
       /// </summary>
-      public frmMain(IPreferenceSet prefs, IXmlStatsDataContainer statsData)
+      public frmMain(IPreferenceSet prefs)
       {
          _prefs = prefs;
-         _statsData = statsData;
-         _displayBindingSource = new BindingSource();
 
          // This call is Required by the Windows Form Designer
          InitializeComponent();
@@ -196,20 +186,24 @@ namespace HFM.Forms
          // up this event until after _presenter has been set (above).
          Resize += frmMain_Resize;
       
-         // Manually Create the Columns - Issue 41
-         DataGridViewWrapper.SetupDataGridViewColumns(dataGridView1);
-         // Restore Form Preferences (MUST BE DONE AFTER DataGridView Columns are Setup)
-         _presenter.RestoreFormPreferences();
-         SetupDataGridView();
+         #region Initialize Controls
 
+         // Manually Create the Columns - Issue 41
+         SetupDataGridViewColumns(dataGridView1);
+         // Add Column Selector
+         new DataGridViewColumnSelector(dataGridView1);
          // Give the Queue Control access to the Protein Collection
          queueControl.SetProteinCollection(proteinCollection);
 
-         SubscribeToPreferenceSetEvents();
-         SubscribeToStatsLabelEvents();
+         #endregion
 
-         // Apply User Stats Enabled Selection
-         _presenter.UserStatsEnabledChanged();
+         // Initialize the Presenter
+         _presenter.Initialize();
+
+         // Hook-up Status Label Event Handlers
+         SubscribeToStatsLabelEvents();
+         
+         #region Hook-up DataGridView Event Handlers for Mono
 
          // If Mono, use the RowEnter Event (which was what 0.3.0 and prior used)
          // to set the CurrentInstance selection.  Obviously Mono doesn't fire the
@@ -220,32 +214,14 @@ namespace HFM.Forms
             {
                _presenter.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
             };
-            // Use RowLeave to clear data grid when selection New file under Mono
+            // Use RowLeave to clear data grid when selecting New file under Mono
             dataGridView1.RowLeave += delegate
             {
                _presenter.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
             };
          }
-      }
 
-      private void SetupDataGridView()
-      {
-         // Add Column Selector
-         new DataGridViewColumnSelector(dataGridView1);
-
-         dataGridView1.AutoGenerateColumns = false;
-         _displayBindingSource.DataSource = InstanceProvider.GetInstance<IDisplayInstanceCollection>();
-         dataGridView1.DataSource = _displayBindingSource;
-      }
-
-      private void SubscribeToPreferenceSetEvents()
-      {
-         _prefs.FormShowStyleSettingsChanged += delegate { _presenter.SetViewShowStyle(); };
-         _prefs.MessageLevelChanged += delegate { _presenter.ApplyMessageLevelIfChanged(); };
-         _prefs.ColorLogFileChanged += delegate { _presenter.ApplyColorLogFileSetting(); };
-         _prefs.PpdCalculationChanged += delegate { RefreshDisplay(); };
-         _prefs.DecimalPlacesChanged += delegate { RefreshDisplay(); };
-         _prefs.CalculateBonusChanged += delegate { RefreshDisplay(); };
+         #endregion
       }
       
       private void SubscribeToStatsLabelEvents()
@@ -290,15 +266,6 @@ namespace HFM.Forms
 
       private void frmMain_Shown(object sender, EventArgs e)
       {
-         // Add the Index Changed Handler here after everything is shown
-         dataGridView1.ColumnDisplayIndexChanged += delegate { _presenter.DataGridViewColumnDisplayIndexChanged(); };
-         // Then run it once to ensure the last column is set to Fill
-         _presenter.DataGridViewColumnDisplayIndexChanged();
-         // Add the Splitter Moved Handler here after everything is shown - Issue 8
-         // When the log file window (Panel2) is visible, this event will fire.
-         // Update the split location directly from the split panel control. - Issue 8
-         splitContainer1.SplitterMoved += delegate { _presenter.UpdateMainSplitContainerDistance(splitContainer1.SplitterDistance); };
-      
          _notifyIcon = new NotifyIcon(components);
          _notifyIcon.BalloonTipIcon = ToolTipIcon.Info;
          _notifyIcon.ContextMenuStrip = notifyMenu;
@@ -625,77 +592,7 @@ namespace HFM.Forms
 
       #region Background Work Routines
 
-      public void RefreshDisplay()
-      {
-         try 
-         {
-            if (dataGridView1.DataSource != null)
-            {
-               // Freeze the SelectionChanged Event when doing currency refresh
-               dataGridView1.FreezeSelectionChanged = true;
-            
-               if (InvokeRequired)
-               {
-                  Invoke(new MethodInvoker(_presenter.RefreshDisplayCollection));
-                  // sort BEFORE resetting data bindings
-                  ApplySort();
-                  Invoke(new Action<bool>(_displayBindingSource.ResetBindings), false);
-               }
-               else
-               {
-                  _presenter.RefreshDisplayCollection();
-                  // sort BEFORE resetting data bindings
-                  ApplySort();
-                  _displayBindingSource.ResetBindings(false);
-               }
-
-               // not AFTER
-               //ApplySort();
-
-               // Unfreeze the SelectionChanged Event after refresh
-               // This removes the "stuttering log" effect seen as each client is refreshed
-               dataGridView1.FreezeSelectionChanged = false;
-               
-               Invoke(new MethodInvoker(DoSetSelectedInstance));
-            }
-
-            RefreshControlsWithTotalsData();
-         }
-         // This can happen when exiting the app in the middle of a retrieval process.
-         // TODO: When implementing retrieval thread cancelling, cancel the the retrieval
-         // thread on shutdown before allowing the app to exit.  Should be able to remove
-         // this catch at that point.
-         catch (ObjectDisposedException ex)
-         {
-            HfmTrace.WriteToHfmConsole(ex);
-         }
-      }
-
-      private void DoSetSelectedInstance()
-      {
-         if (dataGridView1.CurrentCell != null)
-         {
-            if (_prefs.GetPreference<bool>(Preference.MaintainSelectedClient))
-            {
-               SelectCurrentRowKey();
-            }
-            else
-            {
-               dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Selected = true;
-            }
-            // If Mono, go ahead and set the CurrentInstance here.  Under .NET the selection
-            // setter above causes this same operation, but since Mono won't fire the 
-            // DataGridView.SelectionChanged Event, the result of that event needs to be
-            // forced here instead.
-            if (PlatformOps.IsRunningOnMono())
-            {
-               _presenter.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
-            }
-            _presenter.DisplaySelectedInstance();
-         }
-      }
-      
-      private static string GetSelectedRowInstanceName(System.Collections.IList selectedRows)
+      public string GetSelectedRowInstanceName(System.Collections.IList selectedRows)
       {
          if (selectedRows.Count > 0)
          {
@@ -715,67 +612,14 @@ namespace HFM.Forms
          return null;
       }
       
-      public void SelectCurrentRowKey()
+      public void RefreshControlsWithTotalsData(InstanceTotals totals)
       {
-         int row = _displayBindingSource.Find("Name", dataGridView1.CurrentRowKey);
-         if (row > -1 && row < dataGridView1.Rows.Count)
-         {
-            _displayBindingSource.Position = row;
-            dataGridView1.Rows[row].Selected = true;
-         }
-      }
-
-      /// <summary>
-      /// Apply Sort to Data Grid View
-      /// </summary>
-      public void ApplySort()
-      {
-         if (InvokeRequired)
-         {
-            Invoke(new MethodInvoker(ApplySort), null);
-         }
-         else
-         {
-            dataGridView1.FreezeSorted = true;
-            
-            // if we have a column name and a valid sort order
-            if (!(String.IsNullOrEmpty(_presenter.SortColumnName)) &&
-                !(_presenter.SortColumnOrder.Equals(SortOrder.None)))
-            {
-               // check for the column
-               DataGridViewColumn column = dataGridView1.Columns[_presenter.SortColumnName];
-               if (column != null)
-               {
-                  ListSortDirection sortDirection = _presenter.SortColumnOrder.Equals(SortOrder.Ascending)
-                                                       ? ListSortDirection.Ascending
-                                                       : ListSortDirection.Descending;
-
-                  dataGridView1.Sort(column, sortDirection);
-                  dataGridView1.SortedColumn.HeaderCell.SortGlyphDirection = _presenter.SortColumnOrder;
-               }
-            }
-
-            dataGridView1.FreezeSorted = false;
-         }
-      }
-
-      private void RefreshControlsWithTotalsData()
-      {
-         InstanceTotals totals = _presenter.GetCurrentDisplayInstanceArray().GetInstanceTotals();
-
-         double totalPPD = totals.PPD;
-         int goodHosts = totals.WorkingClients;
-
          SetNotifyIconText(String.Format("{0} Working Clients{3}{1} Non-Working Clients{3}{2:" + _prefs.PpdFormatString + "} PPD",
-                                         goodHosts, totals.NonWorkingClients, totalPPD, Environment.NewLine));
-         RefreshClientStatusBarLabels(goodHosts, totalPPD);
-      }
+                                         totals.WorkingClients, totals.NonWorkingClients, totals.PPD, Environment.NewLine));
 
-      private void RefreshClientStatusBarLabels(int goodHosts, double totalPPD)
-      {
-         string clientLabel = goodHosts == 1 ? "Client" : "Clients";
-         SetStatusLabelHostsText(String.Format(CultureInfo.CurrentCulture, "{0} {1}", goodHosts, clientLabel));
-         SetStatusLabelPPDText(String.Format(CultureInfo.CurrentCulture, "{0:" + _prefs.PpdFormatString + "} PPD", totalPPD));
+         string clientLabel = totals.WorkingClients == 1 ? "Client" : "Clients";
+         SetStatusLabelHostsText(String.Format(CultureInfo.CurrentCulture, "{0} {1}", totals.WorkingClients, clientLabel));
+         SetStatusLabelPPDText(String.Format(CultureInfo.CurrentCulture, "{0:" + _prefs.PpdFormatString + "} PPD", totals.PPD));
       }
 
       private void SetNotifyIconText(string val)
@@ -860,9 +704,8 @@ namespace HFM.Forms
          }
       }
       
-      public void RefreshUserStatsControls()
+      public void RefreshUserStatsControls(XmlStatsData data)
       {
-         var data = _statsData.Data;
          if (_prefs.GetPreference<bool>(Preference.ShowTeamStats))
          {
             ApplyUserStats(data.TeamRank, 0, data.TeamTwentyFourHourAvgerage, data.TeamPointsToday, 
@@ -902,16 +745,12 @@ namespace HFM.Forms
 
       private void mnuContextShowUserStats_Click(object sender, EventArgs e)
       {
-         _prefs.SetPreference(Preference.ShowTeamStats, false);
-         SetStatsControlsVisible(true);
-         RefreshUserStatsControls();
+         _presenter.ShowUserStatsClick();
       }
 
       private void mnuContextShowTeamStats_Click(object sender, EventArgs e)
       {
-         _prefs.SetPreference(Preference.ShowTeamStats, true);
-         SetStatsControlsVisible(true);
-         RefreshUserStatsControls();
+         _presenter.ShowTeamStatsClick();
       }
 
       #endregion

@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -34,7 +35,6 @@ using System.Windows.Forms;
 
 using harlam357.Windows.Forms;
 
-using HFM.Forms.Controls;
 using HFM.Forms.Models;
 using HFM.Framework;
 using HFM.Framework.DataTypes;
@@ -47,7 +47,7 @@ namespace HFM.Forms
       #region Properties
    
       /// <summary>
-      /// Holds the state of the window before it is hidden (minimise to tray behaviour)
+      /// Holds the state of the window before it is hidden (minimize to tray behaviour)
       /// </summary>
       public FormWindowState OriginalWindowState { get; private set; }
 
@@ -104,7 +104,7 @@ namespace HFM.Forms
             if (_displayCollection.OfflineClientsLast != value)
             {
                _displayCollection.OfflineClientsLast = value;
-               _view.ApplySort();
+               ApplySort();
             }
          }
       }
@@ -114,6 +114,8 @@ namespace HFM.Forms
       #region Fields
 
       private HistoryPresenter _historyPresenter;
+
+      private readonly BindingSource _displayBindingSource;
    
       #region Views
    
@@ -182,6 +184,7 @@ namespace HFM.Forms
          _benchmarkContainer = benchmarkContainer;
          // Logic Services
          _updateLogic = updateLogic;
+         _updateLogic.Owner = _view;
          _retrievalLogic = retrievalLogic;
          _retrievalLogic.Initialize(this);
          _processStarter = processStarter;
@@ -191,43 +194,75 @@ namespace HFM.Forms
          _statsData = statsData;
          _configurationManager = configurationManager;
 
-         // set owner
-         _updateLogic.Owner = _view;
+         _displayBindingSource = new BindingSource();
 
          SortColumnName = String.Empty;
          SortColumnOrder = SortOrder.None;
 
          // Set Offline Clients Sort Flag
          OfflineClientsLast = _prefs.GetPreference<bool>(Preference.OfflineLast);
-         // Hook-up PreferenceSet Event Handlers
+         // Hook-up Event Handlers
          _prefs.OfflineLastChanged += delegate { OfflineClientsLast = _prefs.GetPreference<bool>(Preference.OfflineLast); };
-
          _prefs.ShowUserStatsChanged += delegate { UserStatsEnabledChanged(); };
-         // Hook up Protein Collection Updated Event Handler
          _proteinCollection.Downloader.ProjectInfoUpdated += delegate { _retrievalLogic.QueueNewRetrieval(); };
       }
       
       #endregion
+
+      public void Initialize()
+      {
+         // Restore Form Preferences (MUST BE DONE AFTER DataGridView Columns are Setup)
+         RestoreFormPreferences();
+         // 
+         BindToDataGridView();
+         // 
+         SubscribeToPreferenceSetEvents();
+         // Apply User Stats Enabled Selection
+         UserStatsEnabledChanged();
+      }
+
+      private void BindToDataGridView()
+      {
+         _view.DataGridView.AutoGenerateColumns = false;
+         _displayBindingSource.DataSource = _displayCollection;
+         _view.DataGridView.DataSource = _displayBindingSource;
+      }
+
+      private void SubscribeToPreferenceSetEvents()
+      {
+         _prefs.FormShowStyleSettingsChanged += delegate { SetViewShowStyle(); };
+         _prefs.MessageLevelChanged += delegate { ApplyMessageLevelIfChanged(); };
+         _prefs.ColorLogFileChanged += delegate { ApplyColorLogFileSetting(); };
+         _prefs.PpdCalculationChanged += delegate { RefreshDisplay(); };
+         _prefs.DecimalPlacesChanged += delegate { RefreshDisplay(); };
+         _prefs.CalculateBonusChanged += delegate { RefreshDisplay(); };
+      }
       
       #region View Handling Methods
    
       public void ViewShown()
       {
+         // Add the Index Changed Handler here after everything is shown
+         _view.DataGridView.ColumnDisplayIndexChanged += delegate { DataGridViewColumnDisplayIndexChanged(); };
+         // Then run it once to ensure the last column is set to Fill
+         DataGridViewColumnDisplayIndexChanged();
+         // Add the Splitter Moved Handler here after everything is shown - Issue 8
+         // When the log file window (Panel2) is visible, this event will fire.
+         // Update the split location directly from the split panel control. - Issue 8
+         _view.SplitContainer.SplitterMoved += delegate { UpdateMainSplitContainerDistance(_view.SplitContainer.SplitterDistance); };
+
          if (_prefs.GetPreference<bool>(Preference.RunMinimized))
          {
             _view.WindowState = FormWindowState.Minimized;
          }
 
-         string fileName = String.Empty;
-
          if (_prefs.GetPreference<bool>(Preference.UseDefaultConfigFile))
          {
-            fileName = _prefs.GetPreference<string>(Preference.DefaultConfigFile);
-         }
-
-         if (String.IsNullOrEmpty(fileName) == false)
-         {
-            LoadConfigFile(fileName);
+            var fileName = _prefs.GetPreference<string>(Preference.DefaultConfigFile);
+            if (!String.IsNullOrEmpty(fileName))
+            {
+               LoadConfigFile(fileName);
+            }
          }
 
          SetViewShowStyle();
@@ -246,7 +281,7 @@ namespace HFM.Forms
             // ReApply Sort when restoring from the sys tray - Issue 32
             if (_view.ShowInTaskbar == false)
             {
-               _view.ApplySort();
+               ApplySort();
             }
          }
 
@@ -262,7 +297,7 @@ namespace HFM.Forms
 
       public bool ViewClosing()
       {
-         if (CheckForConfigurationChanges() == false)
+         if (!CheckForConfigurationChanges())
          {
             return true;
          }
@@ -310,31 +345,30 @@ namespace HFM.Forms
          }
       }
 
-      public void RestoreFormPreferences()
+      private void RestoreFormPreferences()
       {
-         //TODO: Would like to do this here in lieu of in frmMain_Shown() event.
+         // Would like to do this here in lieu of in frmMain_Shown() event.
          // There is some drawing error that if Minimized here, the first time the
          // Form is restored from the system tray, the DataGridView is drawn with
-         // a big black box on the right hand side.  Like it didn't get initialized
+         // a big black box on the right hand side. Like it didn't get initialized
          // properly when the Form was created.
          //if (Prefs.RunMinimized)
          //{
          //   WindowState = FormWindowState.Minimized;
          //}
 
-         // Restore state data
+         // Look for start position
          var location = _prefs.GetPreference<Point>(Preference.FormLocation);
-         var size = _prefs.GetPreference<Size>(Preference.FormSize);
-
          if (location.X != 0 && location.Y != 0)
          {
-            // Set StartPosition to manual
             _view.SetManualStartPosition();
             _view.Location = location;
          }
+         // Look for view size
+         var size = _prefs.GetPreference<Size>(Preference.FormSize);
          if (size.Width != 0 && size.Height != 0)
          {
-            if (_prefs.GetPreference<bool>(Preference.FormLogVisible) == false)
+            if (!_prefs.GetPreference<bool>(Preference.FormLogVisible))
             {
                size = new Size(size.Width, size.Height + _prefs.GetPreference<int>(Preference.FormLogWindowHeight));
             }
@@ -342,12 +376,11 @@ namespace HFM.Forms
             _view.SplitContainer.SplitterDistance = _prefs.GetPreference<int>(Preference.FormSplitLocation);
          }
 
-         if (_prefs.GetPreference<bool>(Preference.FormLogVisible) == false)
+         if (!_prefs.GetPreference<bool>(Preference.FormLogVisible))
          {
             ShowHideLogWindow(false);
          }
-
-         if (_prefs.GetPreference<bool>(Preference.QueueViewerVisible) == false)
+         if (!_prefs.GetPreference<bool>(Preference.QueueViewerVisible))
          {
             ShowHideQueue(false);
          }
@@ -372,10 +405,10 @@ namespace HFM.Forms
             {
                string[] a = colsArray[i].Split(',');
                int index = int.Parse(a[3]);
-               _view.DataGridView.Columns[index].DisplayIndex = Int16.Parse(a[0]);
+               _view.DataGridView.Columns[index].DisplayIndex = Int32.Parse(a[0]);
                if (_view.DataGridView.Columns[index].AutoSizeMode.Equals(DataGridViewAutoSizeColumnMode.Fill) == false)
                {
-                  _view.DataGridView.Columns[index].Width = Int16.Parse(a[1]);
+                  _view.DataGridView.Columns[index].Width = Int32.Parse(a[1]);
                }
                _view.DataGridView.Columns[index].Visible = bool.Parse(a[2]);
             }
@@ -388,7 +421,7 @@ namespace HFM.Forms
 
       private void CheckForAndFireUpdateProcess()
       {
-         if (String.IsNullOrEmpty(_updateLogic.UpdateFilePath) == false)
+         if (!String.IsNullOrEmpty(_updateLogic.UpdateFilePath))
          {
             HfmTrace.WriteToHfmConsole(String.Format(CultureInfo.CurrentCulture,
                "Firing update file '{0}'...", _updateLogic.UpdateFilePath));
@@ -534,9 +567,9 @@ namespace HFM.Forms
          _view.LogFileViewer.ScrollToBottom();
       }
 
-      public void DataGridViewColumnDisplayIndexChanged()
+      private void DataGridViewColumnDisplayIndexChanged()
       {
-         if (_view.DataGridView.Columns.Count == DataGridViewWrapper.NumberOfDisplayFields)
+         if (_view.DataGridView.Columns.Count == frmMain.NumberOfDisplayFields)
          {
             foreach (DataGridViewColumn column in _view.DataGridView.Columns)
             {
@@ -581,7 +614,7 @@ namespace HFM.Forms
          _prefs.SetPreference(Preference.FormSortOrder, SortColumnOrder);
       }
 
-      public void UpdateMainSplitContainerDistance(int splitterDistance)
+      private void UpdateMainSplitContainerDistance(int splitterDistance)
       {
          _prefs.SetPreference(Preference.FormSplitLocation, splitterDistance);
          _prefs.Save();
@@ -595,7 +628,7 @@ namespace HFM.Forms
          SaveSortColumn(); // Save Column Sort Order - Issue 73
          _prefs.Save();
 
-         _view.SelectCurrentRowKey();
+         SelectCurrentRowKey();
       }
 
       public void DataGridViewMouseDown(int coordX, int coordY, MouseButtons button, int clicks)
@@ -1435,8 +1468,22 @@ namespace HFM.Forms
       }
 
       #endregion
-      
-      #region Other Handling Methods
+
+      #region User Stats Handling Methods
+
+      public void ShowUserStatsClick()
+      {
+         _prefs.SetPreference(Preference.ShowTeamStats, false);
+         _view.SetStatsControlsVisible(true);
+         _view.RefreshUserStatsControls(_statsData.Data);
+      }
+
+      public void ShowTeamStatsClick()
+      {
+         _prefs.SetPreference(Preference.ShowTeamStats, true);
+         _view.SetStatsControlsVisible(true);
+         _view.RefreshUserStatsControls(_statsData.Data);
+      }
 
       public void UserStatsEnabledChanged()
       {
@@ -1447,7 +1494,21 @@ namespace HFM.Forms
             RefreshUserStatsData(false);
          }
       }
-      
+
+      /// <summary>
+      /// Refresh Stats Data from EOC
+      /// </summary>
+      /// <param name="forceRefresh">If true, ignore last refresh time stamps and update.</param>
+      public void RefreshUserStatsData(bool forceRefresh)
+      {
+         _statsData.GetEocXmlData(forceRefresh);
+         _view.RefreshUserStatsControls(_statsData.Data);
+      }
+
+      #endregion
+
+      #region Other Handling Methods
+
       public void ApplyMessageLevelIfChanged()
       {
          var newLevel = (TraceLevel)_prefs.GetPreference<int>(Preference.MessageLevel);
@@ -1499,13 +1560,122 @@ namespace HFM.Forms
 
       public void RefreshDisplay()
       {
-         _view.RefreshDisplay();
+         try
+         {
+            if (_view.DataGridView.DataSource != null)
+            {
+               // Freeze the SelectionChanged Event when doing currency refresh
+               _view.DataGridView.FreezeSelectionChanged = true;
+
+               if (_view.InvokeRequired)
+               {
+                  _view.Invoke(new MethodInvoker(RefreshDisplayCollection));
+                  // sort BEFORE resetting data bindings
+                  ApplySort();
+                  _view.Invoke(new Action<bool>(_displayBindingSource.ResetBindings), false);
+               }
+               else
+               {
+                  RefreshDisplayCollection();
+                  // sort BEFORE resetting data bindings
+                  ApplySort();
+                  _displayBindingSource.ResetBindings(false);
+               }
+
+               // not AFTER
+               //ApplySort();
+
+               // Unfreeze the SelectionChanged Event after refresh
+               // This removes the "stuttering log" effect seen as each client is refreshed
+               _view.DataGridView.FreezeSelectionChanged = false;
+
+               _view.Invoke(new MethodInvoker(DoSetSelectedInstance));
+            }
+
+            _view.RefreshControlsWithTotalsData(GetCurrentDisplayInstanceArray().GetInstanceTotals());
+         }
+         // This can happen when exiting the app in the middle of a retrieval process.
+         // TODO: When implementing retrieval thread cancelling, cancel the the retrieval
+         // thread on shutdown before allowing the app to exit.  Should be able to remove
+         // this catch at that point.
+         catch (ObjectDisposedException ex)
+         {
+            HfmTrace.WriteToHfmConsole(ex);
+         }
+      }
+
+      private void DoSetSelectedInstance()
+      {
+         if (_view.DataGridView.CurrentCell != null)
+         {
+            if (_prefs.GetPreference<bool>(Preference.MaintainSelectedClient))
+            {
+               SelectCurrentRowKey();
+            }
+            else
+            {
+               _view.DataGridView.Rows[_view.DataGridView.CurrentCell.RowIndex].Selected = true;
+            }
+            // If Mono, go ahead and set the CurrentInstance here.  Under .NET the selection
+            // setter above causes this same operation, but since Mono won't fire the 
+            // DataGridView.SelectionChanged Event, the result of that event needs to be
+            // forced here instead.
+            if (PlatformOps.IsRunningOnMono())
+            {
+               SetSelectedInstance(_view.GetSelectedRowInstanceName(_view.DataGridView.SelectedRows));
+            }
+            DisplaySelectedInstance();
+         }
+      }
+
+      public void SelectCurrentRowKey()
+      {
+         int row = _displayBindingSource.Find("Name", _view.DataGridView.CurrentRowKey);
+         if (row > -1 && row < _view.DataGridView.Rows.Count)
+         {
+            _displayBindingSource.Position = row;
+            _view.DataGridView.Rows[row].Selected = true;
+         }
+      }
+
+      /// <summary>
+      /// Apply Sort to Data Grid View
+      /// </summary>
+      public void ApplySort()
+      {
+         if (_view.InvokeRequired)
+         {
+            _view.Invoke(new MethodInvoker(ApplySort), null);
+         }
+         else
+         {
+            _view.DataGridView.FreezeSorted = true;
+
+            // if we have a column name and a valid sort order
+            if (!(String.IsNullOrEmpty(SortColumnName)) &&
+                !(SortColumnOrder.Equals(SortOrder.None)))
+            {
+               // check for the column
+               DataGridViewColumn column = _view.DataGridView.Columns[SortColumnName];
+               if (column != null)
+               {
+                  ListSortDirection sortDirection = SortColumnOrder.Equals(SortOrder.Ascending)
+                                                       ? ListSortDirection.Ascending
+                                                       : ListSortDirection.Descending;
+
+                  _view.DataGridView.Sort(column, sortDirection);
+                  _view.DataGridView.SortedColumn.HeaderCell.SortGlyphDirection = SortColumnOrder;
+               }
+            }
+
+            _view.DataGridView.FreezeSorted = false;
+         }
       }
 
       /// <summary>
       /// Refresh the Display Collection from the Instance Collection
       /// </summary>
-      public void RefreshDisplayCollection()
+      private void RefreshDisplayCollection()
       {
          lock (_instanceCollection)
          {
@@ -1602,16 +1772,6 @@ namespace HFM.Forms
          // check for clients with duplicate Project (Run, Clone, Gen) or UserID
          DuplicateFinder.FindDuplicates(_displayCollection);
          _view.DataGridView.Invalidate();
-      }
-
-      /// <summary>
-      /// Refresh Stats Data from EOC
-      /// </summary>
-      /// <param name="forceRefresh">If true, ignore last refresh time stamps and update.</param>
-      public void RefreshUserStatsData(bool forceRefresh)
-      {
-         _statsData.GetEocXmlData(forceRefresh);
-         _view.RefreshUserStatsControls();
       }
    }
 }
