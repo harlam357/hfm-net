@@ -123,7 +123,7 @@ namespace HFM.Forms
          this.mnuContextClientsViewClientFiles = new System.Windows.Forms.ToolStripMenuItem();
          this.toolTipGrid = new System.Windows.Forms.ToolTip(this.components);
          this.splitContainer1 = new HFM.Forms.Controls.SplitContainerWrapper();
-         this.dataGridView1 = new HFM.Forms.Controls.DataGridViewWrapper();
+         this.dataGridView1 = new HFM.Forms.Controls.DataGridViewExt();
          this.splitContainer2 = new HFM.Forms.Controls.SplitContainerWrapper();
          this.queueControl = new HFM.Forms.Controls.QueueControl();
          this.btnQueue = new HFM.Forms.Controls.ButtonWrapper();
@@ -1137,7 +1137,7 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripMenuItem mnuClientsViewClientFiles;
       private System.Windows.Forms.ToolStripMenuItem mnuContextClientsViewClientFiles;
       private SplitContainerWrapper splitContainer1;
-      private DataGridViewWrapper dataGridView1;
+      private DataGridViewExt dataGridView1;
       private System.Windows.Forms.ToolStripMenuItem mnuWeb;
       private System.Windows.Forms.ToolStripMenuItem mnuWebEOCUser;
       private System.Windows.Forms.ToolStripMenuItem mnuWebStanfordUser;

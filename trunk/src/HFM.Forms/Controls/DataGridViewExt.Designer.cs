@@ -1,6 +1,6 @@
 namespace HFM.Forms.Controls
 {
-   partial class DataGridViewWrapper
+   partial class DataGridViewExt
    {
       /// <summary> 
       /// Required designer variable.

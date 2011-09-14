@@ -99,12 +99,13 @@
       <DependentUpon>ComboBoxWrapper.cs</DependentUpon>
     </Compile>
     <Compile Include="DataGridViewColumnSelector.cs" />
-    <Compile Include="Controls\DataGridViewWrapper.cs">
+    <Compile Include="Controls\DataGridViewExt.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\DataGridViewWrapper.Designer.cs">
-      <DependentUpon>DataGridViewWrapper.cs</DependentUpon>
+    <Compile Include="Controls\DataGridViewExt.Designer.cs">
+      <DependentUpon>DataGridViewExt.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\DataGridViewProgressColumn.cs" />
     <Compile Include="Controls\FormWrapper.cs">
       <SubType>Form</SubType>
     </Compile>
