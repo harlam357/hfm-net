@@ -73,17 +73,15 @@ namespace HFM.Forms
 
       #region Service Interfaces
 
+      private MainPresenter _presenter;
+      
       private IMarkupGenerator _markupGenerator;
 
       private IWebsiteDeployer _websiteDeployer;
 
       private readonly IPreferenceSet _prefs;
 
-      private readonly IMainView _mainView;
-
       private readonly InstanceCollection _instanceCollection;
-
-      private readonly IXmlStatsDataContainer _statsData;
 
       private readonly IProteinBenchmarkContainer _benchmarkContainer;
 
@@ -91,28 +89,24 @@ namespace HFM.Forms
 
       #endregion
 
-      public RetrievalLogic(IPreferenceSet prefs, IMainView mainView, InstanceCollection instanceCollection, IXmlStatsDataContainer statsData,
-                            IProteinBenchmarkContainer benchmarkContainer)
+      public RetrievalLogic(IPreferenceSet prefs, InstanceCollection instanceCollection, IProteinBenchmarkContainer benchmarkContainer)
       {
          _prefs = prefs;
-         _mainView = mainView;
          _instanceCollection = instanceCollection;
-         _statsData = statsData;
          _benchmarkContainer = benchmarkContainer;
       }
 
-      public void Initialize()
+      public void Initialize(MainPresenter presenter)
       {
+         if (presenter == null) throw new ArgumentNullException("presenter");
+
+         _presenter = presenter;
+
          // Hook up Retrieval Timer Event Handler
          _workTimer.Elapsed += WorkTimerTick;
          // Hook up Web Generation Timer Event Handler
          _webTimer.Elapsed += WebGenTimerTick;
 
-         //// Set Offline Clients Sort Flag
-         //OfflineClientsLast = _prefs.GetPreference<bool>(Preference.OfflineLast);
-
-         // Hook-up PreferenceSet Event Handlers
-         //_prefs.OfflineLastChanged += delegate { OfflineClientsLast = _prefs.GetPreference<bool>(Preference.OfflineLast); };
          _prefs.TimerSettingsChanged += delegate { SetTimerState(); };
       }
 
@@ -163,7 +157,7 @@ namespace HFM.Forms
 
                HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Starting Web Generation...");
 
-               ICollection<IDisplayInstance> displayInstances = _instanceCollection.GetCurrentDisplayInstanceArray();
+               ICollection<IDisplayInstance> displayInstances = _presenter.GetCurrentDisplayInstanceArray();
                _markupGenerator.Generate(displayInstances);
                _websiteDeployer.DeployWebsite(_markupGenerator.HtmlFilePaths, _markupGenerator.XmlFilePaths, _markupGenerator.ClientDataFilePath, displayInstances);
 
@@ -190,7 +184,7 @@ namespace HFM.Forms
          }
 
          // only fire if there are Hosts
-         if (_instanceCollection.HasInstances)
+         if (_instanceCollection.HasInstances())
          {
             HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping Retrieval Timer Loop");
             _workTimer.Stop();
@@ -225,7 +219,7 @@ namespace HFM.Forms
 
             if (_prefs.GetPreference<bool>(Preference.ShowXmlStats))
             {
-               RefreshUserStatsData(false);
+               _presenter.RefreshUserStatsData(false);
             }
 
             // Enable the data retrieval timer
@@ -293,8 +287,7 @@ namespace HFM.Forms
          }
 
          // check for clients with duplicate Project (Run, Clone, Gen) or UserID
-         DuplicateFinder.FindDuplicates(_instanceCollection.DisplayCollection);
-         _mainView.DataGridView.Invalidate();
+         _presenter.FindDuplicates();
 
          // Save the benchmark collection
          _benchmarkContainer.Write();
@@ -311,30 +304,27 @@ namespace HFM.Forms
       /// <summary>
       /// Stub to execute retrieve and refresh display
       /// </summary>
-      /// <param name="instance"></param>
       private void RetrieveInstance(ClientInstance instance)
       {
          if (instance.RetrievalInProgress == false)
          {
             instance.Retrieve();
             // signal the UI to update
-            _mainView.RefreshDisplay();
+            _presenter.RefreshDisplay();
          }
       }
 
       /// <summary>
       /// Retrieve the given Client Instance
       /// </summary>
-      /// <param name="instanceName">Client Instance Name</param>
       public void RetrieveSingleClient(string instanceName)
       {
-         RetrieveSingleClient(_instanceCollection.GetClientInstance(instanceName));
+         RetrieveSingleClient(_instanceCollection[instanceName]);
       }
 
       /// <summary>
       /// Retrieve the given Client Instance
       /// </summary>
-      /// <param name="instance">Client Instance</param>
       public void RetrieveSingleClient(ClientInstance instance)
       {
          // fire the actual retrieval thread
@@ -344,7 +334,6 @@ namespace HFM.Forms
       /// <summary>
       /// Do a single retrieval operation on the given Client Instance
       /// </summary>
-      /// <param name="instance">Client Instance</param>
       private void DoSingleClientRetieval(ClientInstance instance)
       {
          if (instance.RetrievalInProgress == false)
@@ -353,8 +342,7 @@ namespace HFM.Forms
             async.AsyncWaitHandle.WaitOne();
 
             // check for clients with duplicate Project (Run, Clone, Gen) or UserID
-            DuplicateFinder.FindDuplicates(_instanceCollection.DisplayCollection);
-            _mainView.DataGridView.Invalidate();
+            _presenter.FindDuplicates();
 
             // Save the benchmark collection
             _benchmarkContainer.Write();
@@ -367,7 +355,7 @@ namespace HFM.Forms
       public void SetTimerState()
       {
          // Disable timers if no hosts
-         if (_instanceCollection.HasInstances == false)
+         if (!_instanceCollection.HasInstances())
          {
             HfmTrace.WriteToHfmConsole(TraceLevel.Info, "No Hosts - Stopping All Background Timer Loops");
             _workTimer.Stop();
@@ -434,16 +422,6 @@ namespace HFM.Forms
          HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format(CultureInfo.CurrentCulture,
             "Starting Web Generation Timer Loop: {0} Minutes", generateInterval));
          _webTimer.Start();
-      }
-
-      /// <summary>
-      /// Refresh Stats Data from EOC
-      /// </summary>
-      /// <param name="forceRefresh">If true, ignore last refresh time stamps and update.</param>
-      public void RefreshUserStatsData(bool forceRefresh)
-      {
-         _statsData.GetEocXmlData(forceRefresh);
-         _mainView.RefreshUserStatsControls();
       }
 
       #endregion

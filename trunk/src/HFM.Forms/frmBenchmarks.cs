@@ -32,7 +32,6 @@ using harlam357.Windows.Forms;
 using HFM.Forms.Controls;
 using HFM.Framework;
 using HFM.Framework.DataTypes;
-using HFM.Instances;
 
 namespace HFM.Forms
 {
@@ -78,8 +77,8 @@ namespace HFM.Forms
       private readonly IPreferenceSet _prefs;
       private readonly IProteinCollection _proteinCollection;
       private readonly IProteinBenchmarkContainer _benchmarkContainer;
-      private readonly List<Color> _graphColors;
-      private readonly InstanceCollection _instanceCollection;
+      private readonly IList<Color> _graphColors;
+      private readonly IEnumerable<IDisplayInstance> _displayCollection;
       private readonly IMessageBoxView _messageBoxView;
       private readonly IExternalProcessStarter _processStarter;
       private readonly ZedGraphManager _zedGraphManager;
@@ -88,21 +87,24 @@ namespace HFM.Forms
 
       #endregion
 
-      #region Form Constructor / functionality
+      #region Constructor
+
       public frmBenchmarks(IPreferenceSet prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer, 
-                           InstanceCollection instanceCollection, IMessageBoxView messageBoxView, IExternalProcessStarter processStarter)
+                           IDisplayInstanceCollection displayCollection, IMessageBoxView messageBoxView, IExternalProcessStarter processStarter)
       {
          _prefs = prefs;
          _proteinCollection = proteinCollection;
          _benchmarkContainer = benchmarkContainer;
          _graphColors = _prefs.GetPreference<List<Color>>(Preference.GraphColors);
-         _instanceCollection = instanceCollection;
+         _displayCollection = displayCollection;
          _messageBoxView = messageBoxView;
          _processStarter = processStarter;
          _zedGraphManager = new ZedGraphManager();
 
          InitializeComponent();
       }
+
+      #endregion
       
       public void SetManualStartPosition()
       {
@@ -130,8 +132,6 @@ namespace HFM.Forms
          _prefs.SetPreference(Preference.BenchmarksGraphLayoutType, GraphLayoutType);
          _prefs.Save();
       }
-
-      #endregion
 
       #region Event Handlers
 
@@ -162,7 +162,8 @@ namespace HFM.Forms
             IUnitInfoLogic unit = null;
             bool valuesOk = false;
 
-            var instance = _instanceCollection[benchmark.OwningInstanceName];
+            ProteinBenchmark benchmark1 = benchmark;
+            var instance = _displayCollection.FirstOrDefault(x => x.Name.Equals(benchmark1.OwningInstanceName));
             if (instance != null && instance.Owns(benchmark))
             {
                unit = instance.CurrentUnitInfo;

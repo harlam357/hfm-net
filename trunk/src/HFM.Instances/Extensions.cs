@@ -1,6 +1,6 @@
 /*
- * HFM.NET - Instance Collection Helper Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * HFM.NET - Instance Extensions Class
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,13 +25,13 @@ using HFM.Framework.DataTypes;
 
 namespace HFM.Instances
 {
-   internal static class InstanceCollectionHelpers
+   public static class Extensions
    {
       /// <summary>
       /// Get Totals for all Client Instances in given Collection
       /// </summary>
       /// <returns>Totals for all Instances (InstanceTotals Structure)</returns>
-      public static InstanceTotals GetInstanceTotals(IEnumerable<IDisplayInstance> instances)
+      public static InstanceTotals GetInstanceTotals(this IEnumerable<IDisplayInstance> instances)
       {
          var totals = new InstanceTotals();
          
@@ -63,6 +63,11 @@ namespace HFM.Instances
          }
 
          return totals;
+      }
+
+      public static bool HasInstances(this IDictionary<string, ClientInstance> instances)
+      {
+         return instances.Count != 0;
       }
    }
 }
