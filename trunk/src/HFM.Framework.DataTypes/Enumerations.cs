@@ -26,7 +26,8 @@ namespace HFM.Framework.DataTypes
    {
       PathInstance,
       FtpInstance,
-      HttpInstance
+      HttpInstance,
+      Version7
    }
 
    /// <summary>

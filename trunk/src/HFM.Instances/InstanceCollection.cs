@@ -231,73 +231,31 @@ namespace HFM.Instances
          lock (_instanceCollection)
          {
             _displayCollection.RaiseListChangedEvents = false;
-            ClearExternalDisplayInstances();
-            RefreshLocalInstances();
-            RefreshExternalInstances();
+            RefreshDisplayInstances();
             _displayCollection.RaiseListChangedEvents = true;
          }
-         _displayCollection.ResetBindings();
+         //_displayCollection.ResetBindings();
       }
 
       /// <summary>
       /// Call only from RefreshDisplayCollection()
       /// </summary>
-      private void ClearExternalDisplayInstances()
+      private void RefreshDisplayInstances()
       {
-         var displayCollectionCopy = _displayCollection.ToList();
-         foreach (var instance in displayCollectionCopy)
+         _displayCollection.Clear();
+
+         foreach (var instance in _instanceCollection.Values)
          {
-            if (instance.Settings.ExternalInstance ||
-                instance.ExternalInstanceName != null)
+            if (instance.DisplayInstances.Count == 0)
             {
-               _displayCollection.Remove(instance);
-            }     
-         }
-      }
-
-      /// <summary>
-      /// Call only from RefreshDisplayCollection()
-      /// </summary>
-      private void RefreshLocalInstances()
-      {
-         var localInstances = from instance in _instanceCollection.Values
-                              where instance.Settings.ExternalInstance == false
-                              select instance;
-
-         foreach (var instance in localInstances)
-         {
-            IDisplayInstance findInstance = FindDisplayInstance(instance.Settings.InstanceName);
-            if (findInstance == null)
-            {
-               _displayCollection.Add(instance.DisplayInstance);
-            }
-         }
-      }
-
-      /// <summary>
-      /// Call only from RefreshDisplayCollection()
-      /// </summary>
-      private void RefreshExternalInstances()
-      {
-         var externalInstances = from instance in _instanceCollection.Values
-                                 where instance.Settings.ExternalInstance
-                                 select instance;
-
-         foreach (var instance in externalInstances)
-         {
-            if (instance.ExternalDisplayInstances != null)
-            {
-               foreach (var displayInstance in instance.ExternalDisplayInstances)
-               {
-                  _displayCollection.Add(displayInstance);
-               }
+               _displayCollection.Add(instance.CreateDisplayInstance());
             }
             else
             {
-               // add the ExternalInstance directly to the display 
-               // collection, something must be shown to the user 
-               // so they can manipulate it.
-               _displayCollection.Add(instance.DisplayInstance);
+               foreach (var displayInstance in instance.DisplayInstances.Values)
+               {
+                  _displayCollection.Add(displayInstance);
+               }
             }
          }
       }
@@ -384,10 +342,13 @@ namespace HFM.Instances
          {
             foreach (ClientInstance instance in _instanceCollection.Values)
             {
-               // Don't save the UnitInfo object if the contained Project is Unknown
-               if (instance.CurrentUnitInfo.UnitInfoData.ProjectIsUnknown() == false)
+               foreach (var displayInstance in instance.DisplayInstances.Values)
                {
-                  _unitInfoContainer.Add((UnitInfo)instance.CurrentUnitInfo.UnitInfoData);
+                  // Don't save the UnitInfo object if the contained Project is Unknown
+                  if (displayInstance.CurrentUnitInfo.UnitInfoData.ProjectIsUnknown() == false)
+                  {
+                     _unitInfoContainer.Add((UnitInfo)displayInstance.CurrentUnitInfo.UnitInfoData);
+                  }
                }
             }
          }

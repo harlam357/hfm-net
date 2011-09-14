@@ -32,128 +32,86 @@ namespace HFM.Instances.Tests
    [TestFixture]
    public class MarkupGeneratorTests
    {
-      private MockRepository _mocks;
-
-      [SetUp]
-      public void Init()
-      {
-         _mocks = new MockRepository();
-      }
-      
       [Test]
       public void GenerateTest()
       {
-         IPreferenceSet prefs = SetupMockPreferenceSet();
-         Expect.Call(prefs.GetPreference<bool>(Preference.WebGenCopyXml)).Return(true);
-         Expect.Call(prefs.GetPreference<bool>(Preference.WebGenCopyHtml)).Return(true);
-         Expect.Call(prefs.GetPreference<bool>(Preference.WebGenCopyClientData)).Return(true);
+         IPreferenceSet prefs = SetupStubPreferenceSet();
+         prefs.Stub(x => x.GetPreference<bool>(Preference.WebGenCopyXml)).Return(true);
+         prefs.Stub(x => x.GetPreference<bool>(Preference.WebGenCopyHtml)).Return(true);
+         prefs.Stub(x => x.GetPreference<bool>(Preference.WebGenCopyClientData)).Return(true);
          
-         IEnumerable<IDisplayInstance> displayinstances = SetupMockDisplayInstanceCollection();
-         IEnumerable<ClientInstance> clientInstances = new List<ClientInstance>();
-
-         _mocks.ReplayAll();
-
+         IEnumerable<IDisplayInstance> displayinstances = SetupDisplayInstanceCollection();
          var markupGenerator = new MarkupGenerator(prefs);
-         markupGenerator.Generate(displayinstances, clientInstances);
+         markupGenerator.Generate(displayinstances);
          
          Assert.IsNotNull(markupGenerator.XmlFilePaths);
          Assert.IsNotNull(markupGenerator.HtmlFilePaths);
          Assert.IsNotNull(markupGenerator.ClientDataFilePath);
-         
-         _mocks.VerifyAll();
       }
 
       [Test]
       public void GenerateXmlOnlyTest()
       {
-         IPreferenceSet prefs = SetupMockPreferenceSet();
-         Expect.Call(prefs.GetPreference<bool>(Preference.WebGenCopyXml)).Return(true);
-         Expect.Call(prefs.GetPreference<bool>(Preference.WebGenCopyHtml)).Return(false);
-         Expect.Call(prefs.GetPreference<bool>(Preference.WebGenCopyClientData)).Return(false);
+         IPreferenceSet prefs = SetupStubPreferenceSet();
+         prefs.Stub(x => x.GetPreference<bool>(Preference.WebGenCopyXml)).Return(true);
+         prefs.Stub(x => x.GetPreference<bool>(Preference.WebGenCopyHtml)).Return(false);
+         prefs.Stub(x => x.GetPreference<bool>(Preference.WebGenCopyClientData)).Return(false);
 
-         IEnumerable<IDisplayInstance> displayinstances = SetupMockDisplayInstanceCollection();
-         IEnumerable<ClientInstance> clientInstances = new List<ClientInstance>();
-
-         _mocks.ReplayAll();
-
+         IEnumerable<IDisplayInstance> displayinstances = SetupDisplayInstanceCollection();
          var markupGenerator = new MarkupGenerator(prefs);
-         markupGenerator.Generate(displayinstances, clientInstances);
+         markupGenerator.Generate(displayinstances);
 
          Assert.IsNotNull(markupGenerator.XmlFilePaths);
          Assert.IsNull(markupGenerator.HtmlFilePaths);
          Assert.IsNull(markupGenerator.ClientDataFilePath);
-
-         _mocks.VerifyAll();
       }
 
       [Test]
       public void DontGenerateTest()
       {
-         IPreferenceSet prefs = SetupMockPreferenceSet();
-         Expect.Call(prefs.GetPreference<bool>(Preference.WebGenCopyXml)).Return(false);
-         Expect.Call(prefs.GetPreference<bool>(Preference.WebGenCopyHtml)).Return(false);
-         Expect.Call(prefs.GetPreference<bool>(Preference.WebGenCopyClientData)).Return(false);
+         IPreferenceSet prefs = SetupStubPreferenceSet();
+         prefs.Stub(x => x.GetPreference<bool>(Preference.WebGenCopyXml)).Return(false);
+         prefs.Stub(x => x.GetPreference<bool>(Preference.WebGenCopyHtml)).Return(false);
+         prefs.Stub(x => x.GetPreference<bool>(Preference.WebGenCopyClientData)).Return(false);
 
-         IEnumerable<IDisplayInstance> displayinstances = SetupMockDisplayInstanceCollection();
-         IEnumerable<ClientInstance> clientInstances = new List<ClientInstance>();
-
-         _mocks.ReplayAll();
-
+         IEnumerable<IDisplayInstance> displayinstances = SetupDisplayInstanceCollection();
          var markupGenerator = new MarkupGenerator(prefs);
-         markupGenerator.Generate(displayinstances, clientInstances);
+         markupGenerator.Generate(displayinstances);
 
          Assert.IsNull(markupGenerator.XmlFilePaths);
          Assert.IsNull(markupGenerator.HtmlFilePaths);
          Assert.IsNull(markupGenerator.ClientDataFilePath);
-
-         _mocks.VerifyAll();
       }
       
       [Test]
       [ExpectedException(typeof(ArgumentNullException))]
       public void GenerateArgumentNullTest1()
       {
-         var prefs = SetupMockPreferenceSet();
+         var prefs = SetupStubPreferenceSet();
          
          var markupGenerator = new MarkupGenerator(prefs);
-         markupGenerator.Generate(null, new List<ClientInstance>());
-      }
-
-      [Test]
-      [ExpectedException(typeof(ArgumentNullException))]
-      public void GenerateArgumentNullTest2()
-      {
-         var prefs = SetupMockPreferenceSet();
-
-         var markupGenerator = new MarkupGenerator(prefs);
-         markupGenerator.Generate(SetupMockDisplayInstanceCollection(), null);
+         markupGenerator.Generate(null);
       }
 
       [Test]
       public void GenerateXmlTest()
       {
-         IPreferenceSet prefs = SetupMockPreferenceSet();
-         IEnumerable<IDisplayInstance> instances = SetupMockDisplayInstanceCollection();
+         IPreferenceSet prefs = SetupStubPreferenceSet();
+         IEnumerable<IDisplayInstance> instances = SetupDisplayInstanceCollection();
          
-         _mocks.ReplayAll();
-
          var markupGenerator = new MarkupGenerator(prefs);
          markupGenerator.GenerateXml(instances);
          
          Assert.AreEqual(2, markupGenerator.XmlFilePaths.Count);
          Assert.AreEqual(Path.Combine(Path.GetTempPath(), "Overview.xml"), markupGenerator.XmlFilePaths[0]);
          Assert.AreEqual(Path.Combine(Path.GetTempPath(), "Instances.xml"), markupGenerator.XmlFilePaths[1]);
-         
-         _mocks.VerifyAll();
       }
 
       [Test]
       public void GenerateHtmlTest()
       {
-         IPreferenceSet prefs = SetupMockPreferenceSet();
-         IEnumerable<IDisplayInstance> instances = SetupMockDisplayInstanceCollection();
-
-         _mocks.ReplayAll();
+         IPreferenceSet prefs = SetupStubPreferenceSet();
+         IEnumerable<IDisplayInstance> instances = SetupDisplayInstanceCollection();
 
          var markupGenerator = new MarkupGenerator(prefs);
          markupGenerator.GenerateHtml(instances);
@@ -165,55 +123,65 @@ namespace HFM.Instances.Tests
          Assert.AreEqual(Path.Combine(Path.GetTempPath(), "mobilesummary.html"), markupGenerator.HtmlFilePaths[3]);
          Assert.AreEqual(Path.Combine(Path.GetTempPath(), "Test2.html"), markupGenerator.HtmlFilePaths[4]);
          Assert.AreEqual(Path.Combine(Path.GetTempPath(), "Test1.html"), markupGenerator.HtmlFilePaths[5]);
-         
-         _mocks.VerifyAll();
       }
 
       [Test]
       public void GenerateClientDataTest()
       {
-         IPreferenceSet prefs = SetupMockPreferenceSet();
-         IEnumerable<ClientInstance> instances = new List<ClientInstance>();
-
-         _mocks.ReplayAll();
+         IPreferenceSet prefs = SetupStubPreferenceSet();
+         IEnumerable<IDisplayInstance> instances = SetupDisplayInstanceCollection();
 
          var markupGenerator = new MarkupGenerator(prefs);
          markupGenerator.GenerateClientData(instances);
 
          Assert.IsNotNull(markupGenerator.ClientDataFilePath);
-
-         _mocks.VerifyAll();
       }
 
-      private IPreferenceSet SetupMockPreferenceSet()
+      private static IPreferenceSet SetupStubPreferenceSet()
       {
-         var prefs = _mocks.DynamicMock<IPreferenceSet>();
-         SetupResult.For(prefs.ApplicationPath).Return(@"..\..\..\HFM");
-         Expect.Call(prefs.GetPreference<string>(Preference.WebOverview)).Return("WebOverview.xslt").Repeat.Any();
-         Expect.Call(prefs.GetPreference<string>(Preference.WebMobileOverview)).Return("WebMobileOverview.xslt").Repeat.Any();
-         Expect.Call(prefs.GetPreference<string>(Preference.WebSummary)).Return("WebSummary.xslt").Repeat.Any();
-         Expect.Call(prefs.GetPreference<string>(Preference.WebMobileSummary)).Return("WebMobileSummary.xslt").Repeat.Any();
-         Expect.Call(prefs.GetPreference<string>(Preference.WebInstance)).Return("WebInstance.xslt").Repeat.Any();
+         var prefs = MockRepository.GenerateStub<IPreferenceSet>();
+         prefs.Stub(x => x.ApplicationPath).Return(@"..\..\..\HFM");
+         prefs.Stub(x => x.GetPreference<string>(Preference.WebOverview)).Return("WebOverview.xslt");
+         prefs.Stub(x => x.GetPreference<string>(Preference.WebMobileOverview)).Return("WebMobileOverview.xslt");
+         prefs.Stub(x => x.GetPreference<string>(Preference.WebSummary)).Return("WebSummary.xslt");
+         prefs.Stub(x => x.GetPreference<string>(Preference.WebMobileSummary)).Return("WebMobileSummary.xslt");
+         prefs.Stub(x => x.GetPreference<string>(Preference.WebInstance)).Return("WebInstance.xslt");
          return prefs;
       }
 
-      private IEnumerable<IDisplayInstance> SetupMockDisplayInstanceCollection()
+      private static IEnumerable<IDisplayInstance> SetupDisplayInstanceCollection()
       {
-         var newProtein = _mocks.DynamicMock<IProtein>();
-      
+         // setup stubs
+         var prefs = MockRepository.GenerateStub<IPreferenceSet>();
+         var proteinCollection = MockRepository.GenerateStub<IProteinCollection>();
+         proteinCollection.Stub(x => x.GetProtein(0, false)).IgnoreArguments().Return(new Protein());
+         var benchmarkContainer = MockRepository.GenerateStub<IProteinBenchmarkContainer>();
+
          var instances = new List<IDisplayInstance>();
-         var instance = _mocks.DynamicMock<IDisplayInstance>();
-         SetupResult.For(instance.CurrentProtein).Return(newProtein);
-         SetupResult.For(instance.CurrentLogLines).Return(new List<LogLine>());
-         SetupResult.For(instance.Name).Return("Test2");
+
+         // setup concrete instance with stubs
+         var instance = new DisplayInstance();
+         instance.Prefs = prefs;
+         instance.ProteinCollection = proteinCollection;
+         instance.BenchmarkContainer = benchmarkContainer;
+         // set concrete values
+         instance.UnitInfo = new UnitInfo();
+         instance.Settings = new ClientInstanceSettings { InstanceName = "Test2" };
+         instance.BuildUnitInfoLogic();
+         instance.CurrentLogLines = new List<LogLine>();
          instances.Add(instance);
 
-         instance = _mocks.DynamicMock<IDisplayInstance>();
+         // setup concrete instance with stubs
+         instance = new DisplayInstance();
+         instance.Prefs = prefs;
+         instance.ProteinCollection = proteinCollection;
+         instance.BenchmarkContainer = benchmarkContainer;
          // Test For - Issue 201 - Web Generation Fails when a Client with no CurrentLogLines is encountered.
          // Make sure we return null for CurrentLogLines in the second DataAggregator mock.
-         SetupResult.For(instance.CurrentProtein).Return(newProtein);
-         SetupResult.For(instance.CurrentLogLines).Return(null);
-         SetupResult.For(instance.Name).Return("Test1");
+         instance.UnitInfo = new UnitInfo();
+         instance.Settings = new ClientInstanceSettings { InstanceName = "Test1" };
+         instance.BuildUnitInfoLogic();
+         instance.CurrentLogLines = null;
          instances.Add(instance);
 
          return instances;

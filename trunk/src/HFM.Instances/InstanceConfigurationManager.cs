@@ -136,11 +136,14 @@ namespace HFM.Instances
          var instances = _instanceFactory.HandleImportResults(collectionDataInterface.Settings);
          foreach (var instance in instances)
          {
-            var restoreUnitInfo = _unitInfoContainer.RetrieveUnitInfo(instance);
-            if (restoreUnitInfo != null)
+            foreach (var displayInstance in instance.DisplayInstances.Values)
             {
-               instance.RestoreUnitInfo(restoreUnitInfo);
-               HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, instance.Settings.InstanceName, "Restored UnitInfo.");
+               var restoreUnitInfo = _unitInfoContainer.RetrieveUnitInfo(displayInstance);
+               if (restoreUnitInfo != null)
+               {
+                  displayInstance.RestoreUnitInfo(restoreUnitInfo);
+                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, instance.Settings.InstanceName, "Restored UnitInfo.");
+               }
             }
          }
 

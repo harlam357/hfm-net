@@ -58,7 +58,7 @@ namespace HFM.Instances
       /// <summary>
       /// Retrieve from the Container
       /// </summary>
-      UnitInfo RetrieveUnitInfo(ClientInstance instance);
+      UnitInfo RetrieveUnitInfo(DisplayInstance displayInstance);
 
       /// <summary>
       /// Read Binary File
@@ -117,10 +117,10 @@ namespace HFM.Instances
       /// <summary>
       /// Retrieve from the Container
       /// </summary>
-      /// <param name="instance">Client Instance</param>
-      public UnitInfo RetrieveUnitInfo(ClientInstance instance)
+      /// <param name="displayInstance"></param>
+      public UnitInfo RetrieveUnitInfo(DisplayInstance displayInstance)
       {
-         return _collection.UnitInfoList.Find(instance.DisplayInstance.Owns);
+         return _collection.UnitInfoList.Find(displayInstance.Owns);
       }
       
       #endregion

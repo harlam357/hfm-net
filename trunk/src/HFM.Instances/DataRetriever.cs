@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Data Retriever Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,27 +30,17 @@ namespace HFM.Instances
 {
    public interface IDataRetriever
    {
-      IClientInstanceSettings Settings { get; set; }
+      IClientInstanceSettings Settings { get; }
 
       /// <summary>
-      /// Retrieve the log and unit info files from the configured Local path
+      /// Execute Data Retrieve
       /// </summary>
-      void RetrievePathInstance();
-
-      /// <summary>
-      /// Retrieve the log and unit info files from the configured HTTP location
-      /// </summary>
-      void RetrieveHttpInstance();
-
-      /// <summary>
-      /// Retrieve the log and unit info files from the configured FTP location
-      /// </summary>
-      void RetrieveFtpInstance();
+      void Execute(IClientInstanceSettings settings);
    }
 
    public class DataRetriever : IDataRetriever
    {
-      public IClientInstanceSettings Settings { get; set; }
+      public IClientInstanceSettings Settings { get; private set; }
 
       private readonly IPreferenceSet _prefs;
       
@@ -58,11 +48,37 @@ namespace HFM.Instances
       {
          _prefs = prefs;
       }
-   
+
       /// <summary>
-      /// Retrieve the log and unit info files from the configured Local path
+      /// Execute Data Retrieve
       /// </summary>
-      public void RetrievePathInstance()
+      public void Execute(IClientInstanceSettings settings)
+      {
+         if (settings == null) throw new ArgumentNullException("settings");
+
+         Settings = settings;
+
+         switch (Settings.InstanceHostType)
+         {
+            case InstanceType.PathInstance:
+               RetrievePathInstance();
+               break;
+            case InstanceType.HttpInstance:
+               RetrieveHttpInstance();
+               break;
+            case InstanceType.FtpInstance:
+               RetrieveFtpInstance();
+               break;
+            case InstanceType.Version7:
+               // No Version 7 Retrieval Logic
+               break;
+            default:
+               throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
+                  "Instance Type '{0}' is not implemented", Settings.InstanceHostType));
+         }
+      }
+
+      private void RetrievePathInstance()
       {
          if (Settings.ExternalInstance)
          {
@@ -161,9 +177,6 @@ namespace HFM.Instances
          }
       }
 
-      /// <summary>
-      /// Retrieve the external data file from the configured Local path
-      /// </summary>
       private void RetrieveExternalPathInstance()
       {
          DateTime start = HfmTrace.ExecStart;
@@ -192,10 +205,7 @@ namespace HFM.Instances
          }
       }
 
-      /// <summary>
-      /// Retrieve the log and unit info files from the configured HTTP location
-      /// </summary>
-      public void RetrieveHttpInstance()
+      private void RetrieveHttpInstance()
       {
          if (Settings.ExternalInstance)
          {
@@ -268,9 +278,6 @@ namespace HFM.Instances
          }
       }
 
-      /// <summary>
-      /// Retrieve the external data file from the configured HTTP location
-      /// </summary>
       private void RetrieveExternalHttpInstance()
       {
          DateTime start = HfmTrace.ExecStart;
@@ -289,10 +296,7 @@ namespace HFM.Instances
          }
       }
 
-      /// <summary>
-      /// Retrieve the log and unit info files from the configured FTP location
-      /// </summary>
-      public void RetrieveFtpInstance()
+      private void RetrieveFtpInstance()
       {
          if (Settings.ExternalInstance)
          {
@@ -366,10 +370,7 @@ namespace HFM.Instances
          }
       }   
 
-      /// <summary>
-      /// Retrieve the external data file from the configured FTP location
-      /// </summary>
-      public void RetrieveExternalFtpInstance()
+      private void RetrieveExternalFtpInstance()
       {
          DateTime start = HfmTrace.ExecStart;
 

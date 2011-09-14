@@ -639,35 +639,28 @@ namespace HFM.Forms
       {
          try 
          {
-            //_clientInstances.RefreshDisplayCollection();
             if (dataGridView1.DataSource != null)
             {
                // Freeze the SelectionChanged Event when doing currency refresh
                dataGridView1.FreezeSelectionChanged = true;
             
-               //var cm = (CurrencyManager)dataGridView1.BindingContext[dataGridView1.DataSource];
-               //if (cm != null)
-               //{
-               //   if (InvokeRequired)
-               //   {
-               //      Invoke(new MethodInvoker(cm.Refresh));
-               //   }
-               //   else
-               //   {
-               //      cm.Refresh();
-               //   }
-               //}
-
                if (InvokeRequired)
                {
                   Invoke(new MethodInvoker(_instanceCollection.RefreshDisplayCollection));
+                  // sort BEFORE resetting data bindings
+                  ApplySort();
+                  Invoke(new Action<bool>(_displayBindingSource.ResetBindings), false);
                }
                else
                {
                   _instanceCollection.RefreshDisplayCollection();
+                  // sort BEFORE resetting data bindings
+                  ApplySort();
+                  _displayBindingSource.ResetBindings(false);
                }
 
-               ApplySort();
+               // not AFTER
+               //ApplySort();
 
                // Unfreeze the SelectionChanged Event after refresh
                // This removes the "stuttering log" effect seen as each client is refreshed
