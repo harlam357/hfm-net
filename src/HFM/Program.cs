@@ -168,12 +168,6 @@ namespace HFM
          var unitInfoContainer = InstanceProvider.GetInstance<IUnitInfoContainer>();
          unitInfoContainer.Read();
 
-         // Initialize the Instance Collection
-         var instanceCollection = InstanceProvider.GetInstance<InstanceCollection>();
-         instanceCollection.Initialize();
-         var retrievalLogic = InstanceProvider.GetInstance<RetrievalLogic>();
-         retrievalLogic.Initialize();
-
          frmMain frm;
          try
          {

@@ -158,7 +158,6 @@ namespace HFM.Forms
       
       private readonly IPreferenceSet _prefs;
       private readonly IXmlStatsDataContainer _statsData;
-      private readonly InstanceCollection _instanceCollection;
 
       #endregion
 
@@ -167,11 +166,10 @@ namespace HFM.Forms
       /// <summary>
       /// Main Form constructor
       /// </summary>
-      public frmMain(IPreferenceSet prefs, IXmlStatsDataContainer statsData, InstanceCollection instanceCollection)
+      public frmMain(IPreferenceSet prefs, IXmlStatsDataContainer statsData)
       {
          _prefs = prefs;
          _statsData = statsData;
-         _instanceCollection = instanceCollection;
          _displayBindingSource = new BindingSource();
 
          // This call is Required by the Windows Form Designer
@@ -207,7 +205,6 @@ namespace HFM.Forms
          // Give the Queue Control access to the Protein Collection
          queueControl.SetProteinCollection(proteinCollection);
 
-         SubscribeToInstanceCollectionEvents();
          SubscribeToPreferenceSetEvents();
          SubscribeToStatsLabelEvents();
 
@@ -221,12 +218,12 @@ namespace HFM.Forms
          {
             dataGridView1.RowEnter += delegate
             {
-               _instanceCollection.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
+               _presenter.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
             };
             // Use RowLeave to clear data grid when selection New file under Mono
             dataGridView1.RowLeave += delegate
             {
-               _instanceCollection.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
+               _presenter.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
             };
          }
       }
@@ -239,13 +236,6 @@ namespace HFM.Forms
          dataGridView1.AutoGenerateColumns = false;
          _displayBindingSource.DataSource = InstanceProvider.GetInstance<IDisplayInstanceCollection>();
          dataGridView1.DataSource = _displayBindingSource;
-      }
-
-      private void SubscribeToInstanceCollectionEvents()
-      {
-         // refactored events
-         _instanceCollection.OfflineLastChanged += delegate { ApplySort(); };
-         _instanceCollection.SelectedInstanceChanged += delegate { _presenter.DisplaySelectedInstance(); };
       }
 
       private void SubscribeToPreferenceSetEvents()
@@ -364,7 +354,7 @@ namespace HFM.Forms
       
       private void dataGridView1_SelectionChanged(object sender, EventArgs e)
       {
-         _instanceCollection.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
+         _presenter.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
       }
 
       public void SetClientMenuItemsVisible(bool filesMenu, bool cachedLog, bool seperator)
@@ -646,14 +636,14 @@ namespace HFM.Forms
             
                if (InvokeRequired)
                {
-                  Invoke(new MethodInvoker(_instanceCollection.RefreshDisplayCollection));
+                  Invoke(new MethodInvoker(_presenter.RefreshDisplayCollection));
                   // sort BEFORE resetting data bindings
                   ApplySort();
                   Invoke(new Action<bool>(_displayBindingSource.ResetBindings), false);
                }
                else
                {
-                  _instanceCollection.RefreshDisplayCollection();
+                  _presenter.RefreshDisplayCollection();
                   // sort BEFORE resetting data bindings
                   ApplySort();
                   _displayBindingSource.ResetBindings(false);
@@ -699,9 +689,9 @@ namespace HFM.Forms
             // forced here instead.
             if (PlatformOps.IsRunningOnMono())
             {
-               _instanceCollection.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
+               _presenter.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
             }
-            _instanceCollection.RaiseSelectedInstanceChanged();
+            _presenter.DisplaySelectedInstance();
          }
       }
       
@@ -771,7 +761,7 @@ namespace HFM.Forms
 
       private void RefreshControlsWithTotalsData()
       {
-         InstanceTotals totals = _instanceCollection.GetInstanceTotals();
+         InstanceTotals totals = _presenter.GetCurrentDisplayInstanceArray().GetInstanceTotals();
 
          double totalPPD = totals.PPD;
          int goodHosts = totals.WorkingClients;

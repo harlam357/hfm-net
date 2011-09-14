@@ -309,7 +309,7 @@ namespace HFM.Instances
          var fileList = new string[2];
       
          // Get instance totals
-         InstanceTotals totals = InstanceCollectionHelpers.GetInstanceTotals(instances);
+         InstanceTotals totals = instances.GetInstanceTotals();
 
          // Generate the Overview XML
          XmlDocument summaryXml = CreateSummaryXml(CreateOverviewXml(totals), instances);
