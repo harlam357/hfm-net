@@ -271,40 +271,9 @@ namespace HFM.Framework.DataTypes
          ClientTimeOffset = 0;
       }
 
-      private ClientInstanceSettings(ClientInstanceSettings settings)
+      public ClientInstanceSettings DeepClone()
       {
-         LoadSettings(settings);
-      }
-
-      /// <summary>
-      /// Load the Client Settings
-      /// </summary>
-      /// <param name="settings">Client Settings to Load</param>
-      /// <exception cref="ArgumentNullException">Throws when arugment is null.</exception>
-      private void LoadSettings(IClientInstanceSettings settings)
-      {
-         Debug.Assert(settings != null);
-
-         InstanceHostType = settings.InstanceHostType;
-         InstanceName = settings.InstanceName;
-         ExternalInstance = settings.ExternalInstance;
-         RemoteExternalFilename = settings.RemoteExternalFilename;
-         ClientProcessorMegahertz = settings.ClientProcessorMegahertz;
-         RemoteFAHLogFilename = settings.RemoteFAHLogFilename;
-         RemoteUnitInfoFilename = settings.RemoteUnitInfoFilename;
-         RemoteQueueFilename = settings.RemoteQueueFilename;
-         Path = settings.Path;
-         Server = settings.Server;
-         Username = settings.Username;
-         Password = settings.Password;
-         FtpMode = settings.FtpMode;
-         ClientIsOnVirtualMachine = settings.ClientIsOnVirtualMachine;
-         ClientTimeOffset = settings.ClientTimeOffset;
-      }
-
-      public ClientInstanceSettings DeepCopy()
-      {
-         return new ClientInstanceSettings(this);
+         return Serializer.DeepClone(this);
       }
 
       #region Cached Log File Name Properties

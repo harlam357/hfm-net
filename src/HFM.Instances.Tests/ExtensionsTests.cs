@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Duplicate Finder Test Class
+ * HFM.NET - Extensions Test Class
  * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -26,101 +26,78 @@ using HFM.Framework.DataTypes;
 namespace HFM.Instances.Tests
 {
    [TestFixture]
-   public class DuplicateFinderTests
+   public class ExtensionsTests
    {
-      private MockRepository _mocks;
-      
-      [SetUp]
-      public void Init()
-      {
-         _mocks = new MockRepository();
-      }
-   
+      #region DuplicateFinder
+
       [Test]
       public void DuplicateTestWithDuplicates()
       {
-         var instance1 = new DisplayInstance();
-         instance1.UserId = "1";
+         var instance1 = new DisplayInstance { UserId = "1" };
          var unitInfo1 = new UnitInfo { ProjectID = 1 };
-         var logic1 = _mocks.DynamicMock<IUnitInfoLogic>();
-         SetupResult.For(logic1.UnitInfoData).Return(unitInfo1);
+         var logic1 = MockRepository.GenerateStub<IUnitInfoLogic>();
+         logic1.Stub(x => x.UnitInfoData).Return(unitInfo1);
          instance1.CurrentUnitInfo = logic1;
 
-         var instance2 = new DisplayInstance();
-         instance2.UserId = "1";
+         var instance2 = new DisplayInstance { UserId = "1" };
          var unitInfo2 = new UnitInfo { ProjectID = 1 };
-         var logic2 = _mocks.DynamicMock<IUnitInfoLogic>();
-         SetupResult.For(logic2.UnitInfoData).Return(unitInfo2);
+         var logic2 = MockRepository.GenerateStub<IUnitInfoLogic>();
+         logic2.Stub(x => x.UnitInfoData).Return(unitInfo2);
          instance2.CurrentUnitInfo = logic2;
          
-         _mocks.ReplayAll();
-         
-         DuplicateFinder.FindDuplicates(new[] { instance1, instance2 });
+         (new[] { instance1, instance2 }).FindDuplicates();
          
          Assert.IsTrue(instance1.UserIdIsDuplicate);
          Assert.IsTrue(instance1.ProjectIsDuplicate);
          Assert.IsTrue(instance2.UserIdIsDuplicate);
          Assert.IsTrue(instance2.ProjectIsDuplicate);
-         
-         _mocks.VerifyAll();
       }
 
       [Test]
       public void DuplicateTestNoDuplicates()
       {
-         var instance1 = new DisplayInstance();
-         instance1.UserId = "1";
+         var instance1 = new DisplayInstance { UserId = "1" };
          var unitInfo1 = new UnitInfo { ProjectID = 1 };
-         var logic1 = _mocks.DynamicMock<IUnitInfoLogic>();
-         SetupResult.For(logic1.UnitInfoData).Return(unitInfo1);
+         var logic1 = MockRepository.GenerateStub<IUnitInfoLogic>();
+         logic1.Stub(x => x.UnitInfoData).Return(unitInfo1);
          instance1.CurrentUnitInfo = logic1;
 
-         var instance2 = new DisplayInstance();
-         instance2.UserId = "2";
+         var instance2 = new DisplayInstance { UserId = "2" };
          var unitInfo2 = new UnitInfo { ProjectID = 2 };
-         var logic2 = _mocks.DynamicMock<IUnitInfoLogic>();
-         SetupResult.For(logic2.UnitInfoData).Return(unitInfo2);
+         var logic2 = MockRepository.GenerateStub<IUnitInfoLogic>();
+         logic2.Stub(x => x.UnitInfoData).Return(unitInfo2);
          instance2.CurrentUnitInfo = logic2;
 
-         _mocks.ReplayAll();
-
-         DuplicateFinder.FindDuplicates(new[] { instance1, instance2 });
+         (new[] { instance1, instance2 }).FindDuplicates();
 
          Assert.IsFalse(instance1.UserIdIsDuplicate);
          Assert.IsFalse(instance1.ProjectIsDuplicate);
          Assert.IsFalse(instance2.UserIdIsDuplicate);
          Assert.IsFalse(instance2.ProjectIsDuplicate);
-
-         _mocks.VerifyAll();
       }
 
       [Test]
       public void DuplicateTestMixed()
       {
-         var instance1 = new DisplayInstance();
-         instance1.UserId = "1";
+         var instance1 = new DisplayInstance { UserId = "1" };
          var unitInfo1 = new UnitInfo { ProjectID = 1 };
-         var logic1 = _mocks.DynamicMock<IUnitInfoLogic>();
-         SetupResult.For(logic1.UnitInfoData).Return(unitInfo1);
+         var logic1 = MockRepository.GenerateStub<IUnitInfoLogic>();
+         logic1.Stub(x => x.UnitInfoData).Return(unitInfo1);
          instance1.CurrentUnitInfo = logic1;
 
-         var instance2 = new DisplayInstance();
-         instance2.UserId = "1";
+         var instance2 = new DisplayInstance { UserId = "1" };
          var unitInfo2 = new UnitInfo { ProjectID = 2 };
-         var logic2 = _mocks.DynamicMock<IUnitInfoLogic>();
-         SetupResult.For(logic2.UnitInfoData).Return(unitInfo2);
+         var logic2 = MockRepository.GenerateStub<IUnitInfoLogic>();
+         logic2.Stub(x => x.UnitInfoData).Return(unitInfo2);
          instance2.CurrentUnitInfo = logic2;
 
-         var instance3 = new DisplayInstance();
-         instance3.UserId = "2";
+         var instance3 = new DisplayInstance { UserId = "2" };
          var unitInfo3 = new UnitInfo { ProjectID = 1 };
-         var logic3 = _mocks.DynamicMock<IUnitInfoLogic>();
-         SetupResult.For(logic3.UnitInfoData).Return(unitInfo3);
+         var logic3 = MockRepository.GenerateStub<IUnitInfoLogic>();
+         logic3.Stub(x => x.UnitInfoData).Return(unitInfo3);
          instance3.CurrentUnitInfo = logic3;
 
-         _mocks.ReplayAll();
-
-         DuplicateFinder.FindDuplicates(new[] { instance1, instance2, instance3 });
+         (new[] { instance1, instance2, instance3 }).FindDuplicates();
 
          Assert.IsTrue(instance1.UserIdIsDuplicate);
          Assert.IsTrue(instance1.ProjectIsDuplicate);
@@ -128,8 +105,8 @@ namespace HFM.Instances.Tests
          Assert.IsFalse(instance2.ProjectIsDuplicate);
          Assert.IsFalse(instance3.UserIdIsDuplicate);
          Assert.IsTrue(instance3.ProjectIsDuplicate);
-
-         _mocks.VerifyAll();
       }
+
+      #endregion
    }
 }

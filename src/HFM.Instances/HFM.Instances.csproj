@@ -105,7 +105,6 @@
     <Compile Include="CompletedUnitsFileReader.cs" />
     <Compile Include="DataRetriever.cs" />
     <Compile Include="DisplayInstance.cs" />
-    <Compile Include="DuplicateFinder.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="InstanceCollection.cs" />
     <Compile Include="InstanceCollectionDataInterface.cs" />

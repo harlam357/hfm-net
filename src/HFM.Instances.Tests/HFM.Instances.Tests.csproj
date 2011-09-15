@@ -102,7 +102,7 @@
     <Compile Include="ClientInstanceXmlSerializerTests.cs" />
     <Compile Include="CompletedUnitsFileReaderTests.cs" />
     <Compile Include="DisplayInstanceTests.cs" />
-    <Compile Include="DuplicateFinderTests.cs" />
+    <Compile Include="ExtensionsTests.cs" />
     <Compile Include="InstanceConfigurationManagerTests.cs" />
     <Compile Include="MarkupGeneratorTests.cs" />
     <Compile Include="ProteinBenchmarkContainerTests.cs" />

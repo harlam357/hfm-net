@@ -65,6 +65,43 @@ namespace HFM.Instances
          return totals;
       }
 
+      /// <summary>
+      /// Find Clients with Duplicate UserIDs or Project (R/C/G)
+      /// </summary>
+      public static void FindDuplicates(this IEnumerable<IDisplayInstance> displayCollection) // Issue 19
+      {
+         FindDuplicateUserId(displayCollection);
+         FindDuplicateProjects(displayCollection);
+      }
+
+      private static void FindDuplicateUserId(IEnumerable<IDisplayInstance> instances)
+      {
+         var duplicates = (from x in instances
+                           group x by x.UserAndMachineId into g
+                           let count = g.Count()
+                           where count > 1 && g.First().UserIdUnknown == false
+                           select g.Key);
+
+         foreach (IDisplayInstance instance in instances)
+         {
+            instance.UserIdIsDuplicate = duplicates.Contains(instance.UserAndMachineId);
+         }
+      }
+
+      private static void FindDuplicateProjects(IEnumerable<IDisplayInstance> instances)
+      {
+         var duplicates = (from x in instances
+                           group x by x.CurrentUnitInfo.UnitInfoData.ProjectRunCloneGen() into g
+                           let count = g.Count()
+                           where count > 1 && g.First().CurrentUnitInfo.UnitInfoData.ProjectIsUnknown() == false
+                           select g.Key);
+
+         foreach (IDisplayInstance instance in instances)
+         {
+            instance.ProjectIsDuplicate = duplicates.Contains(instance.CurrentUnitInfo.UnitInfoData.ProjectRunCloneGen());
+         }
+      }
+
       public static bool HasInstances(this IDictionary<string, ClientInstance> instances)
       {
          return instances.Count != 0;
