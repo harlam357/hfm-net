@@ -1670,16 +1670,9 @@ namespace HFM.Forms
 
          foreach (var instance in _instanceCollection.Values)
          {
-            if (instance.DisplayInstances.Count == 0)
+            foreach (var displayInstance in instance.DisplayInstances.Values)
             {
-               _displayCollection.Add(instance.CreateDisplayInstance());
-            }
-            else
-            {
-               foreach (var displayInstance in instance.DisplayInstances.Values)
-               {
-                  _displayCollection.Add(displayInstance);
-               }
+               _displayCollection.Add(displayInstance);
             }
          }
       }

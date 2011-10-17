@@ -100,16 +100,12 @@ namespace HFM.Instances
          {
             Debug.Assert(value != null);
 
-            _settings = value;
-
-            DisplayInstances.Clear();
-            if (_settings.InstanceHostType.IsLegacyType() && !_settings.ExternalInstance)
+            if (_settings == null)
             {
-               // add default legacy display instance, external instances
-               // or version 7 client display instances will be added 
-               // during the retrieval process
-               DisplayInstances.Add(0, CreateDisplayInstance());
+               // add default instance for all client types
+               DisplayInstances.Add(0, CreateDisplayInstance(value));
             }
+            _settings = value;
          }
       }
       
@@ -141,18 +137,22 @@ namespace HFM.Instances
 
       #region Retrieval Methods
 
-      public DisplayInstance CreateDisplayInstance()
+      private DisplayInstance CreateDisplayInstance(ClientInstanceSettings settings)
+      {
+         return CreateDisplayInstance(settings, new Protein());
+      }
+
+      private DisplayInstance CreateDisplayInstance(ClientInstanceSettings settings, IProtein protein)
       {
          // Init User Specified Client Level Members
          var displayInstance = new DisplayInstance
                                {
                                   Prefs = _prefs,
-                                  ProteinCollection = _proteinCollection,
                                   BenchmarkContainer = _benchmarkContainer,
-                                  Settings = Settings,
+                                  Settings = settings,
                                   UnitInfo = new UnitInfo()
                                };
-         displayInstance.BuildUnitInfoLogic();
+         displayInstance.BuildUnitInfoLogic(protein ?? _proteinCollection.GetProtein(displayInstance.UnitInfo.ProjectID, false));
          displayInstance.InitClientLevelMembers();
 
          return displayInstance;
@@ -169,23 +169,38 @@ namespace HFM.Instances
          try
          {
             RetrievalInProgress = true;
-
-            _dataRetriever.Execute(Settings);
+            
             if (Settings.InstanceHostType.IsLegacyType())
             {
                if (Settings.ExternalInstance)
                {
-                  ReadExternalDataFile(Path.Combine(_prefs.CacheDirectory, Settings.CachedExternalName));
-                  //_displayInstance.Status = ClientStatus.Running;
+                  DisplayInstances.Clear();
+
+                  try
+                  {
+                     _dataRetriever.Execute(Settings);
+                     ReadExternalDataFile(Path.Combine(_prefs.CacheDirectory, Settings.CachedExternalName));
+                  }
+                  catch (Exception ex)
+                  {
+                     // problem retrieving or reading the external file
+                     // create a default display instance so we have something
+                     // to show on the data grid
+                     DisplayInstance displayInstance = CreateDisplayInstance(Settings);
+                     DisplayInstances.Add(0, displayInstance);
+
+                     displayInstance.Status = ClientStatus.Offline;
+                     HfmTrace.WriteToHfmConsole(displayInstance.Settings.InstanceName, ex);
+                  }
                }
                else
                {
                   Debug.Assert(DisplayInstances.Count == 1);
-
                   DisplayInstance displayInstance = DisplayInstances[0];
 
                   try
                   {
+                     _dataRetriever.Execute(Settings);
                      // Set successful Last Retrieval Time
                      displayInstance.LastRetrievalTime = DateTime.Now;
                      // Re-Init Client Level Members Before Processing
@@ -195,14 +210,14 @@ namespace HFM.Instances
                      ClientStatus returnedStatus = ProcessLegacy(displayInstance);
                      // Handle the status retured from the log parse
                      HandleReturnedStatus(returnedStatus, displayInstance);
+
+                     HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Client Status: {2}", HfmTrace.FunctionName, displayInstance.Settings.InstanceName, displayInstance.Status));
                   }
                   catch (Exception ex)
                   {
                      displayInstance.Status = ClientStatus.Offline;
                      HfmTrace.WriteToHfmConsole(displayInstance.Settings.InstanceName, ex);
                   }
-
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} ({1}) Client Status: {2}", HfmTrace.FunctionName, displayInstance.Settings.InstanceName, displayInstance.Status));
                }
             }
             else
@@ -220,7 +235,6 @@ namespace HFM.Instances
       {
          DateTime start = HfmTrace.ExecStart;
 
-         DisplayInstances.Clear();
          try
          {
             using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
@@ -235,11 +249,9 @@ namespace HFM.Instances
                   instance.Settings.InstanceName = String.Format(CultureInfo.InvariantCulture,
                      "{0} ({1})", instance.Name, instance.ExternalInstanceName);
                   instance.Prefs = _prefs;
-                  instance.ProteinCollection = _proteinCollection;
-                  instance.BuildUnitInfoLogic();
+                  instance.BuildUnitInfoLogic(_proteinCollection.GetProtein(instance.UnitInfo.ProjectID, false));
                }
                
-               //DisplayInstances = list.ConvertAll(x => (IDisplayInstance)x);
                for (int i = 0; i < list.Count; i++)
                {
                   DisplayInstances.Add(i, list[i]);
@@ -274,7 +286,7 @@ namespace HFM.Instances
          
          #region Run the Aggregator and Set ClientInstance Level Results
          
-         IList<IUnitInfo> units = _dataAggregator.AggregateData();
+         IList<UnitInfo> units = _dataAggregator.AggregateData();
          // Issue 126 - Use the Folding ID, Team, User ID, and Machine ID from the FAHlog data.
          // Use the Current Queue Entry as a backup data source.
          PopulateRunLevelData(_dataAggregator.CurrentClientRun, displayInstance);
@@ -295,7 +307,8 @@ namespace HFM.Instances
             if (units[i] != null)
             {
                IProtein protein = _proteinCollection.GetProtein(units[i].ProjectID);
-               parsedUnits[i] = new UnitInfoLogic(_prefs, protein, _benchmarkContainer, units[i], Settings, displayInstance);
+               units[i].UnitRetrievalTime = displayInstance.LastRetrievalTime;
+               parsedUnits[i] = new UnitInfoLogic(protein, _benchmarkContainer, units[i], Settings);
             }
          }
 
@@ -310,7 +323,9 @@ namespace HFM.Instances
             displayInstance.CurrentUnitInfo = parsedUnits[_dataAggregator.CurrentUnitIndex];
          }
          
-         displayInstance.CurrentUnitInfo.ShowPPDTrace();
+         displayInstance.CurrentUnitInfo.ShowPPDTrace(displayInstance.Status, 
+            _prefs.Get<PpdCalculationType>(Preference.PpdCalculation),
+            _prefs.Get<bool>(Preference.CalculateBonus));
          HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Settings.InstanceName, start);
 
          // Return the Status
@@ -374,7 +389,7 @@ namespace HFM.Instances
                              TimeOfLastFrameProgress = displayInstance.TimeOfLastFrameProgress,
                              CurrentStatus = displayInstance.Status,
                              ReturnedStatus = returnedStatus,
-                             FrameTime = displayInstance.CurrentUnitInfo.RawTimePerSection,
+                             FrameTime = displayInstance.CurrentUnitInfo.GetRawTime(_prefs.Get<PpdCalculationType>(Preference.PpdCalculation)),
                              AverageFrameTime = _benchmarkContainer.GetBenchmarkAverageFrameTime(displayInstance.CurrentUnitInfo),
                              TimeOfLastFrame = displayInstance.CurrentUnitInfo.UnitInfoData.CurrentFrame == null
                                                   ? TimeSpan.Zero

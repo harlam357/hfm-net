@@ -143,7 +143,7 @@ namespace HFM.DataAggregator
       /// <summary>
       /// Aggregate Data and return UnitInfo List
       /// </summary>
-      public IList<IUnitInfo> AggregateData()
+      public IList<UnitInfo> AggregateData()
       {
          var logLines = LogReader.GetLogLines(FahLogFilePath);
          var clientRuns = LogReader.GetClientRuns(logLines);
@@ -158,7 +158,7 @@ namespace HFM.DataAggregator
             HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, InstanceName, s);
          }
 
-         IList<IUnitInfo> parsedUnits;
+         IList<UnitInfo> parsedUnits;
          // Decision Time: If Queue Read fails parse from logs only
          QueueData qData = ReadQueueFile();
          if (qData != null)
@@ -214,9 +214,9 @@ namespace HFM.DataAggregator
          return null;
       }
 
-      private IUnitInfo[] GenerateUnitInfoDataFromLogs()
+      private UnitInfo[] GenerateUnitInfoDataFromLogs()
       {
-         var parsedUnits = new IUnitInfo[2];
+         var parsedUnits = new UnitInfo[2];
          _unitLogLines = new IList<LogLine>[2];
 
          if (_logInterpreterLegacy.PreviousWorkUnitLogLines != null)
@@ -238,9 +238,9 @@ namespace HFM.DataAggregator
          return parsedUnits;
       }
 
-      private IUnitInfo[] GenerateUnitInfoDataFromQueue(QueueData q)
+      private UnitInfo[] GenerateUnitInfoDataFromQueue(QueueData q)
       {
-         var parsedUnits = new IUnitInfo[10];
+         var parsedUnits = new UnitInfo[10];
          _unitLogLines = new IList<LogLine>[10];
 
          for (int queueIndex = 0; queueIndex < parsedUnits.Length; queueIndex++)
@@ -310,12 +310,12 @@ namespace HFM.DataAggregator
          }
       }
       
-      private IUnitInfo BuildUnitInfo(QueueEntry queueEntry, FahLogUnitData fahLogUnitData, UnitInfoLogData unitInfoLogData)
+      private UnitInfo BuildUnitInfo(QueueEntry queueEntry, FahLogUnitData fahLogUnitData, UnitInfoLogData unitInfoLogData)
       {
          return BuildUnitInfo(queueEntry, fahLogUnitData, unitInfoLogData, false);
       }
 
-      private IUnitInfo BuildUnitInfo(QueueEntry queueEntry, FahLogUnitData fahLogUnitData, UnitInfoLogData unitInfoLogData, bool matchOverride)
+      private UnitInfo BuildUnitInfo(QueueEntry queueEntry, FahLogUnitData fahLogUnitData, UnitInfoLogData unitInfoLogData, bool matchOverride)
       {
          var unit = new UnitInfo();
          unit.UnitStartTimeStamp = fahLogUnitData.UnitStartTimeStamp;
@@ -350,7 +350,7 @@ namespace HFM.DataAggregator
          return unit;
       }
 
-      private static void SearchFahLogUnitDataProjects(IUnitInfo unit, FahLogUnitData fahLogUnitData)
+      private static void SearchFahLogUnitDataProjects(UnitInfo unit, FahLogUnitData fahLogUnitData)
       {
          Debug.Assert(unit != null);
          for (int i = 0; i < fahLogUnitData.ProjectInfoList.Count; i++)
@@ -362,7 +362,7 @@ namespace HFM.DataAggregator
          }
       }
 
-      private static bool ProjectsMatch(IUnitInfo unit, IProjectInfo projectInfo)
+      private static bool ProjectsMatch(UnitInfo unit, IProjectInfo projectInfo)
       {
          Debug.Assert(unit != null);
          if (unit.ProjectIsUnknown() || projectInfo == null) return false;

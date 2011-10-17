@@ -104,6 +104,7 @@
     <Compile Include="DisplayInstanceTests.cs" />
     <Compile Include="ExtensionsTests.cs" />
     <Compile Include="InstanceConfigurationManagerTests.cs" />
+    <Compile Include="InstanceCollectionTests.cs" />
     <Compile Include="MarkupGeneratorTests.cs" />
     <Compile Include="ProteinBenchmarkContainerTests.cs" />
     <Compile Include="StatusTests.cs" />

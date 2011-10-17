@@ -28,7 +28,7 @@ namespace HFM.Framework
       /// <summary>
       /// Unit Info Data Class
       /// </summary>
-      IUnitInfo UnitInfoData { get; }
+      UnitInfo UnitInfoData { get; }
    
       /// <summary>
       /// Date/time the unit was downloaded
@@ -68,32 +68,32 @@ namespace HFM.Framework
       /// <summary>
       /// Time per frame (TPF) of the unit
       /// </summary>
-      TimeSpan TimePerFrame { get; }
+      TimeSpan GetFrameTime(PpdCalculationType calculationType);
 
       /// <summary>
       /// Work unit credit
       /// </summary>
-      double Credit { get; }
+      double GetCredit(ClientStatus status, PpdCalculationType calculationType, bool calculateBonus);
 
       /// <summary>
       /// Units per day (UPD) rating for this unit
       /// </summary>
-      double UPD { get; }
+      double GetUPD(PpdCalculationType calculationType);
 
       /// <summary>
       /// Points per day (PPD) rating for this unit
       /// </summary>
-      double PPD { get; }
+      double GetPPD(ClientStatus status, PpdCalculationType calculationType, bool calculateBonus);
 
       /// <summary>
       /// Esimated time of arrival (ETA) for this unit
       /// </summary>
-      TimeSpan ETA { get; }
+      TimeSpan GetEta(PpdCalculationType calculationType);
 
       /// <summary>
       /// Esimated time of arrival (ETA) for this unit
       /// </summary>
-      DateTime EtaDate { get; }
+      DateTime GetEtaDate(PpdCalculationType calculationType);
 
       /// <summary>
       /// Specifies if All Frames have been Completed
@@ -101,70 +101,10 @@ namespace HFM.Framework
       bool AllFramesCompleted { get; }
 
       /// <summary>
-      /// Average frame time since unit download
-      /// </summary>
-      int RawTimePerUnitDownload { get; }
-
-      /// <summary>
-      /// Average frame time since unit download
-      /// </summary>
-      TimeSpan TimePerUnitDownload { get; }
-
-      /// <summary>
-      /// PPD based on average frame time since unit download
-      /// </summary>
-      double PPDPerUnitDownload { get; }
-
-      /// <summary>
-      /// Average frame time over all sections
-      /// </summary>
-      int RawTimePerAllSections { get; }
-
-      /// <summary>
-      /// Average frame time over all sections
-      /// </summary>
-      TimeSpan TimePerAllSections { get; }
-
-      /// <summary>
-      /// PPD based on average frame time over all sections
-      /// </summary>
-      double PPDPerAllSections { get; }
-
-      /// <summary>
-      /// Average frame time over the last three sections
-      /// </summary>
-      int RawTimePerThreeSections { get; }
-
-      /// <summary>
-      /// Average frame time over the last three sections
-      /// </summary>
-      TimeSpan TimePerThreeSections { get; }
-
-      /// <summary>
-      /// PPD based on average frame time over the last three sections
-      /// </summary>
-      double PPDPerThreeSections { get; }
-
-      /// <summary>
-      /// Frame time of the last section
-      /// </summary>
-      int RawTimePerLastSection { get; }
-
-      /// <summary>
-      /// Frame time of the last section
-      /// </summary>
-      TimeSpan TimePerLastSection { get; }
-
-      /// <summary>
-      /// PPD based on frame time of the last section
-      /// </summary>
-      double PPDPerLastSection { get; }
-
-      /// <summary>
       /// Frame Time per section based on current PPD calculation setting (readonly)
       /// </summary>
-      int RawTimePerSection { get; }
+      int GetRawTime(PpdCalculationType calculationType);
 
-      void ShowPPDTrace();
+      void ShowPPDTrace(ClientStatus status, PpdCalculationType calculationType, bool calculateBonus);
    }
 }

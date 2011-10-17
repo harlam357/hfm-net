@@ -133,7 +133,7 @@ namespace HFM.Instances
          serializer.DataInterface = collectionDataInterface;
          serializer.Deserialize(filePath);
 
-         var instances = _instanceFactory.HandleImportResults(collectionDataInterface.Settings);
+         ICollection<ClientInstance> instances = _instanceFactory.HandleImportResults(collectionDataInterface.Settings);
          foreach (var instance in instances)
          {
             foreach (var displayInstance in instance.DisplayInstances.Values)
@@ -141,8 +141,8 @@ namespace HFM.Instances
                var restoreUnitInfo = _unitInfoContainer.RetrieveUnitInfo(displayInstance);
                if (restoreUnitInfo != null)
                {
-                  displayInstance.RestoreUnitInfo(restoreUnitInfo);
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, instance.Settings.InstanceName, "Restored UnitInfo.");
+                  //displayInstance.RestoreUnitInfo(restoreUnitInfo);
+                  //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, instance.Settings.InstanceName, "Restored UnitInfo.");
                }
             }
          }

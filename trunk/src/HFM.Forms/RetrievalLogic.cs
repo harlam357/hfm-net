@@ -357,7 +357,10 @@ namespace HFM.Forms
          // Disable timers if no hosts
          if (!_instanceCollection.HasInstances())
          {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, "No Hosts - Stopping All Background Timer Loops");
+            if (_workTimer.Enabled || _webTimer.Enabled)
+            {
+               HfmTrace.WriteToHfmConsole(TraceLevel.Info, "No Hosts - Stopping All Background Timer Loops");
+            }
             _workTimer.Stop();
             _webTimer.Stop();
             return;

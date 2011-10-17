@@ -71,7 +71,7 @@ namespace HFM.Instances.Tests
          var unitInfoLogic = _mocks.DynamicMock<IUnitInfoLogic>();
          SetupResult.For(unitInfoLogic.UnitInfoData).Return(unitInfo);
          SetupResult.For(unitInfoLogic.FramesComplete).Return(100);
-         SetupResult.For(unitInfoLogic.RawTimePerAllSections).Return(600);
+         SetupResult.For(unitInfoLogic.GetRawTime(PpdCalculationType.AllFrames)).Return(600);
 
          _mocks.ReplayAll();
 
@@ -130,7 +130,7 @@ namespace HFM.Instances.Tests
          var unitInfoLogic = _mocks.DynamicMock<IUnitInfoLogic>();
          SetupResult.For(unitInfoLogic.UnitInfoData).Return(unitInfo);
          SetupResult.For(unitInfoLogic.FramesComplete).Return(56);
-         SetupResult.For(unitInfoLogic.RawTimePerAllSections).Return(1000);
+         SetupResult.For(unitInfoLogic.GetRawTime(PpdCalculationType.AllFrames)).Return(1000);
 
          _mocks.ReplayAll();
 
@@ -189,7 +189,7 @@ namespace HFM.Instances.Tests
          var unitInfoLogic = _mocks.DynamicMock<IUnitInfoLogic>();
          SetupResult.For(unitInfoLogic.UnitInfoData).Return(unitInfo);
          SetupResult.For(unitInfoLogic.FramesComplete).Return(100);
-         SetupResult.For(unitInfoLogic.RawTimePerAllSections).Return(600);
+         SetupResult.For(unitInfoLogic.GetRawTime(PpdCalculationType.AllFrames)).Return(600);
 
          _mocks.ReplayAll();
 
