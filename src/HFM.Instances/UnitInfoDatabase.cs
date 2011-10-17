@@ -236,7 +236,7 @@ namespace HFM.Instances
          }
       }
       
-      private static bool ValidateUnitInfo(IUnitInfo unitInfo)
+      private static bool ValidateUnitInfo(UnitInfo unitInfo)
       {
          bool result = ValidateFinishedUnitInfo(unitInfo);
          if (!(result))
@@ -247,7 +247,7 @@ namespace HFM.Instances
          return result;
       }
       
-      private static bool ValidateFinishedUnitInfo(IUnitInfo unitInfo)
+      private static bool ValidateFinishedUnitInfo(UnitInfo unitInfo)
       {
          return unitInfo.ProjectIsUnknown() == false &&
                 unitInfo.UnitResult.Equals(WorkUnitResult.FinishedUnit) &&
@@ -255,7 +255,7 @@ namespace HFM.Instances
                 unitInfo.FinishedTime.Equals(DateTime.MinValue) == false;
       }
       
-      private static bool ValidateIncompleteUnitInfo(IUnitInfo unitInfo)
+      private static bool ValidateIncompleteUnitInfo(UnitInfo unitInfo)
       {
          // Finished Time will not be populated if any of these error
          // results are detected.  Only check for valid Project and 
@@ -320,7 +320,7 @@ namespace HFM.Instances
             command.Parameters.Add(coreVersion);
             var framesCompleted = new SQLiteParameter("FramesCompleted", DbType.Int32) { Value = unitInfoLogic.FramesComplete };
             command.Parameters.Add(framesCompleted);
-            var frameTime = new SQLiteParameter("FrameTime", DbType.Int32) { Value = unitInfoLogic.RawTimePerAllSections };
+            var frameTime = new SQLiteParameter("FrameTime", DbType.Int32) { Value = unitInfoLogic.GetRawTime(PpdCalculationType.AllFrames) };
             command.Parameters.Add(frameTime);
             var result = new SQLiteParameter("Result", DbType.Int32) { Value = (int)unitInfoLogic.UnitInfoData.UnitResult };
             command.Parameters.Add(result);

@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Data Aggregator Interface
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-using System;
 using System.Collections.Generic;
 
 using HFM.Framework.DataTypes;
@@ -74,6 +73,6 @@ namespace HFM.Framework
       /// <summary>
       /// Aggregate Data and return UnitInfo List
       /// </summary>
-      IList<IUnitInfo> AggregateData();
+      IList<UnitInfo> AggregateData();
    }
 }

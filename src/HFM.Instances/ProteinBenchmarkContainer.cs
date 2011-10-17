@@ -154,7 +154,7 @@ namespace HFM.Instances
       /// <param name="unit">The UnitInfo containing the UnitFrame data</param>
       /// <param name="startingFrame">Starting Frame Index</param>
       /// <param name="endingFrame">Ending Frame Index</param>
-      private void UpdateBenchmarkData(IUnitInfo unit, int startingFrame, int endingFrame)
+      private void UpdateBenchmarkData(UnitInfo unit, int startingFrame, int endingFrame)
       {
          Debug.Assert(unit != null);
 
@@ -192,7 +192,7 @@ namespace HFM.Instances
       /// <param name="startingFrame">Starting Frame Index</param>
       /// <param name="endingFrame">Ending Frame Index</param>
       /// <param name="benchmark">The InstanceProteinBenchmark to Update</param>
-      private static bool UpdateBenchmarkFrames(IUnitInfo unit, int startingFrame, int endingFrame, ProteinBenchmark benchmark)
+      private static bool UpdateBenchmarkFrames(UnitInfo unit, int startingFrame, int endingFrame, ProteinBenchmark benchmark)
       {
          bool result = false;
 
@@ -230,7 +230,7 @@ namespace HFM.Instances
       /// Find the Benchmark based on the Owner and Project info from the given UnitInfo
       /// </summary>
       /// <param name="unit">The UnitInfo containing the Owner and Project data</param>
-      private ProteinBenchmark FindBenchmark(IUnitInfo unit)
+      private ProteinBenchmark FindBenchmark(UnitInfo unit)
       {
          return _collection.BenchmarkList.Find(benchmark => benchmark.OwningInstanceName == unit.OwningInstanceName &&
                                                             Paths.Equal(benchmark.OwningInstancePath, unit.OwningInstancePath) &&

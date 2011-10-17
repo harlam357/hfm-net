@@ -37,10 +37,19 @@ namespace HFM.Instances
       public string ExternalInstanceName { get; set; }
       
       public IPreferenceSet Prefs { get; set; }
-      public IProteinCollection ProteinCollection { get; set; }
       public IProteinBenchmarkContainer BenchmarkContainer { get; set; }
 
       private IUnitInfoLogic _currentUnitInfo;
+
+      private PpdCalculationType CalculationType
+      {
+         get { return Prefs.Get<PpdCalculationType>(Preference.PpdCalculation); }
+      }
+
+      private bool CalculateBonus
+      {
+         get { return Prefs.Get<bool>(Preference.CalculateBonus); }
+      }
 
       /// <summary>
       /// Class member containing info specific to the current work unit
@@ -63,7 +72,7 @@ namespace HFM.Instances
          {
             if (CurrentUnitInfo != null)
             {
-               return (UnitInfo)CurrentUnitInfo.UnitInfoData;
+               return CurrentUnitInfo.UnitInfoData;
             }
             return null;
          }
@@ -73,12 +82,12 @@ namespace HFM.Instances
       [ProtoMember(2)]
       public ClientInstanceSettings Settings { get; set; }
       
-      public void BuildUnitInfoLogic()
+      public void BuildUnitInfoLogic(IProtein protein)
       {
+         if (protein == null) throw new ArgumentNullException("protein");
+
          if (_unitInfo == null) throw new InvalidOperationException();
-      
-         IProtein protein = ProteinCollection.GetProtein(_unitInfo.ProjectID, false);
-         CurrentUnitInfo = new UnitInfoLogic(Prefs, protein, BenchmarkContainer, _unitInfo, Settings, this);
+         CurrentUnitInfo = new UnitInfoLogic(protein, BenchmarkContainer, _unitInfo, Settings);
          _unitInfo = null;
       }
 
@@ -181,7 +190,7 @@ namespace HFM.Instances
          {
             if (ProductionValuesOk)
             {
-               return CurrentUnitInfo.TimePerFrame;
+               return CurrentUnitInfo.GetFrameTime(CalculationType);
             }
 
             return TimeSpan.Zero;
@@ -197,7 +206,7 @@ namespace HFM.Instances
          {
             if (ProductionValuesOk)
             {
-               return Math.Round(CurrentUnitInfo.PPD, Prefs.GetPreference<int>(Preference.DecimalPlaces));
+               return Math.Round(CurrentUnitInfo.GetPPD(Status, CalculationType, CalculateBonus), Prefs.GetPreference<int>(Preference.DecimalPlaces));
             }
 
             return 0;
@@ -213,7 +222,7 @@ namespace HFM.Instances
          {
             if (ProductionValuesOk)
             {
-               return CurrentUnitInfo.UPD;
+               return CurrentUnitInfo.GetUPD(CalculationType);
             }
 
             return 0;
@@ -239,7 +248,7 @@ namespace HFM.Instances
          {
             if (ProductionValuesOk)
             {
-               return CurrentUnitInfo.ETA;
+               return CurrentUnitInfo.GetEta(CalculationType);
             }
 
             return TimeSpan.Zero;
@@ -274,7 +283,7 @@ namespace HFM.Instances
          {
             if (ProductionValuesOk)
             {
-               return CurrentUnitInfo.Credit;
+               return CurrentUnitInfo.GetCredit(Status, CalculationType, CalculateBonus);
             }
 
             return CurrentUnitInfo.CurrentProtein.Credit;
@@ -559,7 +568,7 @@ namespace HFM.Instances
          {
             if (ProductionValuesOk)
             {
-               return CurrentUnitInfo.EtaDate;
+               return CurrentUnitInfo.GetEtaDate(CalculationType);
             }
 
             return DateTime.MinValue;
@@ -656,10 +665,11 @@ namespace HFM.Instances
       /// Restore the given UnitInfo into this Client Instance
       /// </summary>
       /// <param name="unitInfo">UnitInfo Object to Restore</param>
-      public void RestoreUnitInfo(UnitInfo unitInfo)
+      /// <param name="protein">Protein Object that corresponds to the UnitInfo Object</param>
+      public void RestoreUnitInfo(UnitInfo unitInfo, IProtein protein)
       {
          UnitInfo = unitInfo;
-         BuildUnitInfoLogic();
+         BuildUnitInfoLogic(protein);
       }
    }
 }

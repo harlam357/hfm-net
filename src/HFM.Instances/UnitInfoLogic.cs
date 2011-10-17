@@ -18,10 +18,7 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
 
 using HFM.Framework;
 using HFM.Framework.DataTypes;
@@ -30,11 +27,7 @@ namespace HFM.Instances
 {
    public sealed class UnitInfoLogic : IUnitInfoLogic
    {
-      #region Members
-      /// <summary>
-      /// Preferences Interface
-      /// </summary>
-      private readonly IPreferenceSet _prefs;
+      #region Fields
 
       /// <summary>
       /// Protein Collection Interface
@@ -45,7 +38,7 @@ namespace HFM.Instances
       /// <summary>
       /// Unit Info Data Class
       /// </summary>
-      public IUnitInfo UnitInfoData
+      public UnitInfo UnitInfoData
       {
          get { return _unitInfo; }
       }
@@ -55,23 +48,18 @@ namespace HFM.Instances
       /// </summary>
       private readonly IClientInstanceSettings _instanceSettings;
 
-      private readonly IDisplayInstance _displayInstance;
       #endregion
 
       #region Constructors
 
-      public UnitInfoLogic(IPreferenceSet prefs, IProtein protein, IProteinBenchmarkContainer benchmarkContainer, 
-                           IUnitInfo unitInfo, IClientInstanceSettings instanceSettings, IDisplayInstance displayInstance)
+      public UnitInfoLogic(IProtein protein, IProteinBenchmarkContainer benchmarkContainer, UnitInfo unitInfo, IClientInstanceSettings instanceSettings)
       {
-         _prefs = prefs;
          _benchmarkContainer = benchmarkContainer;
-         _unitInfo = (UnitInfo)unitInfo;
+         _unitInfo = unitInfo;
          _instanceSettings = instanceSettings;
-         _displayInstance = displayInstance;
 
          _unitInfo.OwningInstanceName = _instanceSettings.InstanceName;
          _unitInfo.OwningInstancePath = _instanceSettings.Path;
-         _unitInfo.UnitRetrievalTime = _displayInstance.LastRetrievalTime;
 
          CurrentProtein = protein;
          _unitInfo.TypeOfClient = UnitInfo.DetermineClientType(CurrentProtein.Core, _unitInfo.CoreID);
@@ -212,75 +200,93 @@ namespace HFM.Instances
       /// <summary>
       /// Frame Time per section based on current PPD calculation setting (readonly)
       /// </summary>
-      public int RawTimePerSection
+      public int GetRawTime(PpdCalculationType calculationType)
       {
-         get
+         switch (calculationType)
          {
-            switch (_prefs.GetPreference<PpdCalculationType>(Preference.PpdCalculation))
-            {
-               case PpdCalculationType.LastFrame:
-                  return RawTimePerLastSection;
-               case PpdCalculationType.LastThreeFrames:
-                  return RawTimePerThreeSections;
-               case PpdCalculationType.AllFrames:
-                  return RawTimePerAllSections;
-               case PpdCalculationType.EffectiveRate:
-                  return RawTimePerUnitDownload;
-            }
-
-            return 0;
+            case PpdCalculationType.LastFrame:
+               return _unitInfo.FramesObserved > 1 ? Convert.ToInt32(_unitInfo.CurrentFrame.FrameDuration.TotalSeconds) : 0;
+            case PpdCalculationType.LastThreeFrames:
+               return _unitInfo.FramesObserved > 3 ? GetDurationInSeconds(3) : 0;
+            case PpdCalculationType.AllFrames:
+               return _unitInfo.FramesObserved > 0 ? GetDurationInSeconds(_unitInfo.FramesObserved) : 0;
+            case PpdCalculationType.EffectiveRate:
+               return GetRawTimePerUnitDownload();
          }
+
+         return 0;
+      }
+
+      private int GetRawTimePerUnitDownload()
+      {
+         //if (_unitInfo.FramesObserved <= 0) return 0;
+
+         // was making the check on FramesObserved above - I believe this was in an
+         // attempt to validate that an object would be assigned to CurrentFrame.
+         // if this is truly what we're trying to validate, it would make more sense
+         // to simply check CurrentFrame for null - 2/7/11
+         if (_unitInfo.CurrentFrame == null) return 0;
+
+         // Make sure FrameID is greater than 0 to avoid DivideByZeroException - Issue 34
+         if (DownloadTime.IsUnknown() || _unitInfo.CurrentFrame.FrameID <= 0) { return 0; }
+
+         // Issue 92
+         TimeSpan timeSinceUnitDownload = _unitInfo.UnitRetrievalTime.Subtract(DownloadTime);
+         return (Convert.ToInt32(timeSinceUnitDownload.TotalSeconds) / _unitInfo.CurrentFrame.FrameID);
       }
       
       /// <summary>
       /// Time per frame (TPF) of the unit
       /// </summary>
-      public TimeSpan TimePerFrame
+      public TimeSpan GetFrameTime(PpdCalculationType calculationType)
       {
-         get
+         int rawTime = GetRawTime(calculationType);
+         if (rawTime != 0)
          {
-            if (RawTimePerSection != 0)
-            {
-               return TimeSpan.FromSeconds(RawTimePerSection);
-            }
-
-            // Issue 79 - no benchmark container is available to merged display instances
-            return _benchmarkContainer != null ? _benchmarkContainer.GetBenchmarkAverageFrameTime(this) : TimeSpan.Zero;
+            return TimeSpan.FromSeconds(rawTime);
          }
+
+         // Issue 79 - no benchmark container is available to merged display instances
+         return _benchmarkContainer != null ? _benchmarkContainer.GetBenchmarkAverageFrameTime(this) : TimeSpan.Zero;
       }
 
       /// <summary>
       /// Work unit credit
       /// </summary>
-      public double Credit
+      public double GetCredit(ClientStatus status, PpdCalculationType calculationType, bool calculateBonus)
       {
-         get { return GetCredit(EftByDownloadTime, EftByFrameTime); }
+         TimeSpan frameTime = GetFrameTime(calculationType);
+         return GetCredit(GetEftByDownloadTime(frameTime), GetEftByFrameTime(frameTime), status, calculateBonus);
       }
 
       /// <summary>
       /// Units per day (UPD) rating for this unit
       /// </summary>
-      public double UPD
+      public double GetUPD(PpdCalculationType calculationType)
       {
-         get { return CurrentProtein.GetUPD(TimePerFrame); }
+         return CurrentProtein.GetUPD(GetFrameTime(calculationType));
       }
 
       /// <summary>
       /// Points per day (PPD) rating for this unit
       /// </summary>
-      public double PPD
+      public double GetPPD(ClientStatus status, PpdCalculationType calculationType, bool calculateBonus)
       {
-         get { return GetPPD(TimePerFrame, EftByDownloadTime, EftByFrameTime); }
+         TimeSpan frameTime = GetFrameTime(calculationType);
+         return GetPPD(frameTime, GetEftByDownloadTime(frameTime), GetEftByFrameTime(frameTime), status, calculateBonus);
       }
 
       /// <summary>
       /// Esimated time of arrival (ETA) for this unit
       /// </summary>
-      public TimeSpan ETA
+      public TimeSpan GetEta(PpdCalculationType calculationType)
       {
-         get { return GetEta(TimePerFrame); }
+         return GetEta(GetFrameTime(calculationType));
       }
-      
+
+      /// <summary>
+      /// Esimated time of arrival (ETA) for this unit
+      /// </summary>
       private TimeSpan GetEta(TimeSpan frameTime)
       {
          return new TimeSpan((CurrentProtein.Frames - FramesComplete) * frameTime.Ticks);
@@ -289,9 +295,9 @@ namespace HFM.Instances
       /// <summary>
       /// Esimated time of arrival (ETA) for this unit
       /// </summary>
-      public DateTime EtaDate
+      public DateTime GetEtaDate(PpdCalculationType calculationType)
       {
-         get { return _unitInfo.UnitRetrievalTime.Add(ETA); }
+         return _unitInfo.UnitRetrievalTime.Add(GetEta(calculationType));
       }
 
       /// <summary>
@@ -303,11 +309,6 @@ namespace HFM.Instances
          get { return CurrentProtein.Frames == FramesComplete; }
       }
       
-      private TimeSpan EftByDownloadTime
-      {
-         get { return GetEftByDownloadTime(TimePerFrame); }
-      }
-
       /// <summary>
       /// Esimated Finishing Time (by Download Time)
       /// </summary>
@@ -338,11 +339,6 @@ namespace HFM.Instances
          return _unitInfo.UnitRetrievalTime.Add(eta).Subtract(DownloadTime);
       }
 
-      private TimeSpan EftByFrameTime
-      {
-         get { return GetEftByFrameTime(TimePerFrame); }
-      }
-
       /// <summary>
       /// Esimated Finishing Time (by Frame Time)
       /// </summary>
@@ -365,155 +361,9 @@ namespace HFM.Instances
 
       #endregion
 
-      #region Unit Production Variations
-
-      /// <summary>
-      /// Average frame time since unit download
-      /// </summary>
-      public int RawTimePerUnitDownload
-      {
-         get
-         {
-            //if (_unitInfo.FramesObserved <= 0) return 0;
-
-            // was making the check on FramesObserved above - I believe this was in an
-            // attempt to validate that an object would be assigned to CurrentFrame.
-            // if this is truly what we're trying to validate, it would make more sense
-            // to simply check CurrentFrame for null - 2/7/11
-            if (_unitInfo.CurrentFrame == null) return 0;
-
-            // Make sure FrameID is greater than 0 to avoid DivideByZeroException - Issue 34
-            if (DownloadTime.IsUnknown() || _unitInfo.CurrentFrame.FrameID <= 0) { return 0; }
-
-            // Issue 92
-            TimeSpan timeSinceUnitDownload = _unitInfo.UnitRetrievalTime.Subtract(DownloadTime);
-            return (Convert.ToInt32(timeSinceUnitDownload.TotalSeconds) / _unitInfo.CurrentFrame.FrameID);
-         }
-      }
-
-      /// <summary>
-      /// Average frame time since unit download
-      /// </summary>
-      public TimeSpan TimePerUnitDownload
-      {
-         get { return TimeSpan.FromSeconds(RawTimePerUnitDownload); }
-      }
-
-      /// <summary>
-      /// PPD based on average frame time since unit download
-      /// </summary>
-      public double PPDPerUnitDownload
-      {
-         get
-         {
-            return GetPPD(TimePerUnitDownload,
-                          GetEftByDownloadTime(TimePerUnitDownload),
-                          GetEftByFrameTime(TimePerUnitDownload));
-         }
-      }
-
-      /// <summary>
-      /// Average frame time over all sections
-      /// </summary>
-      public int RawTimePerAllSections
-      {
-         get { return _unitInfo.FramesObserved > 0 ? GetDurationInSeconds(_unitInfo.FramesObserved) : 0; }
-      }
-
-      /// <summary>
-      /// Average frame time over all sections
-      /// </summary>
-      public TimeSpan TimePerAllSections
-      {
-         get { return TimeSpan.FromSeconds(RawTimePerAllSections); }
-      }
-
-      /// <summary>
-      /// PPD based on average frame time over all sections
-      /// </summary>
-      public double PPDPerAllSections
-      {
-         get
-         {
-            return GetPPD(TimePerAllSections,
-                          GetEftByDownloadTime(TimePerAllSections),
-                          GetEftByFrameTime(TimePerAllSections));
-         }
-      }
-
-      /// <summary>
-      /// Average frame time over the last three sections
-      /// </summary>
-      public int RawTimePerThreeSections
-      {
-         get { return _unitInfo.FramesObserved > 3 ? GetDurationInSeconds(3) : 0; }
-      }
-
-      /// <summary>
-      /// Average frame time over the last three sections
-      /// </summary>
-      public TimeSpan TimePerThreeSections
-      {
-         get { return TimeSpan.FromSeconds(RawTimePerThreeSections); }
-      }
-
-      /// <summary>
-      /// PPD based on average frame time over the last three sections
-      /// </summary>
-      public double PPDPerThreeSections
-      {
-         get
-         {
-            return GetPPD(TimePerThreeSections,
-                          GetEftByDownloadTime(TimePerThreeSections),
-                          GetEftByFrameTime(TimePerThreeSections));
-         }
-      }
-
-      /// <summary>
-      /// Frame time of the last section
-      /// </summary>
-      public int RawTimePerLastSection
-      {
-         get
-         {
-            // time is valid for 1 "set" ago
-            return _unitInfo.FramesObserved > 1
-                      ? Convert.ToInt32(_unitInfo.CurrentFrame.FrameDuration.TotalSeconds) : 0;
-         }
-      }
-
-      /// <summary>
-      /// Frame time of the last section
-      /// </summary>
-      public TimeSpan TimePerLastSection
-      {
-         get
-         {
-            // time is valid for 1 "set" ago
-            return _unitInfo.FramesObserved > 1
-                      ? _unitInfo.CurrentFrame.FrameDuration : TimeSpan.Zero;
-         }
-      }
-
-      /// <summary>
-      /// PPD based on frame time of the last section
-      /// </summary>
-      public double PPDPerLastSection
-      {
-         get
-         {
-            return GetPPD(TimePerLastSection,
-                          GetEftByDownloadTime(TimePerLastSection),
-                          GetEftByFrameTime(TimePerLastSection));
-         }
-      }
-
-      #endregion
-      
       #region Calculate Credit and PPD
 
-      private double GetCredit(TimeSpan eftByDownloadTime, TimeSpan eftByFrameTime)
+      private double GetCredit(TimeSpan eftByDownloadTime, TimeSpan eftByFrameTime, ClientStatus status, bool calculateBonus)
       {
          if (CurrentProtein.IsUnknown)
          {
@@ -521,11 +371,11 @@ namespace HFM.Instances
          }
 
          // Issue 125
-         if (_prefs.GetPreference<bool>(Preference.CalculateBonus))
+         if (calculateBonus)
          {
             // Issue 183
-            if (_displayInstance.Status.Equals(ClientStatus.RunningAsync) ||
-                _displayInstance.Status.Equals(ClientStatus.RunningNoFrameTimes))
+            if (status.Equals(ClientStatus.RunningAsync) ||
+                status.Equals(ClientStatus.RunningNoFrameTimes))
             {
                return CurrentProtein.GetCredit(eftByFrameTime, true);
             }
@@ -536,7 +386,7 @@ namespace HFM.Instances
          return CurrentProtein.Credit;
       }
       
-      private double GetPPD(TimeSpan frameTime, TimeSpan eftByDownloadTime, TimeSpan eftByFrameTime)
+      private double GetPPD(TimeSpan frameTime, TimeSpan eftByDownloadTime, TimeSpan eftByFrameTime, ClientStatus status, bool calculateBonus)
       {
          if (CurrentProtein.IsUnknown)
          {
@@ -544,11 +394,11 @@ namespace HFM.Instances
          }
          
          // Issue 125
-         if (_prefs.GetPreference<bool>(Preference.CalculateBonus))
+         if (calculateBonus)
          {
             // Issue 183
-            if (_displayInstance.Status.Equals(ClientStatus.RunningAsync) ||
-                _displayInstance.Status.Equals(ClientStatus.RunningNoFrameTimes))
+            if (status.Equals(ClientStatus.RunningAsync) ||
+                status.Equals(ClientStatus.RunningNoFrameTimes))
             {
                return CurrentProtein.GetPPD(frameTime, eftByFrameTime, true);
             }
@@ -559,7 +409,7 @@ namespace HFM.Instances
          return CurrentProtein.GetPPD(frameTime);
       }
 
-      public void ShowPPDTrace()
+      public void ShowPPDTrace(ClientStatus status, PpdCalculationType calculationType, bool calculateBonus)
       {
          // set trace level
          const TraceLevel level = TraceLevel.Verbose;
@@ -573,12 +423,11 @@ namespace HFM.Instances
          }
 
          // Issue 125
-         var calculateBonus = _prefs.GetPreference<bool>(Preference.CalculateBonus);
          if (calculateBonus)
          {
             // Issue 183
-            if (_displayInstance.Status.Equals(ClientStatus.RunningAsync) ||
-                _displayInstance.Status.Equals(ClientStatus.RunningNoFrameTimes))
+            if (status.Equals(ClientStatus.RunningAsync) ||
+                status.Equals(ClientStatus.RunningNoFrameTimes))
             {
                HfmTrace.WriteToHfmConsole(level, _unitInfo.OwningInstanceName, "Calculate Bonus PPD by Frame Time.");
             }
@@ -592,7 +441,8 @@ namespace HFM.Instances
             HfmTrace.WriteToHfmConsole(level, _unitInfo.OwningInstanceName, "Calculate Standard PPD.");
          }
 
-         var values = CurrentProtein.GetProductionValues(TimePerFrame, EftByDownloadTime, EftByFrameTime, calculateBonus);
+         TimeSpan frameTime = GetFrameTime(calculationType);
+         var values = CurrentProtein.GetProductionValues(frameTime, GetEftByDownloadTime(frameTime), GetEftByFrameTime(frameTime), calculateBonus);
          HfmTrace.WriteToHfmConsole(level, values.ToMultiLineString());
       }
       

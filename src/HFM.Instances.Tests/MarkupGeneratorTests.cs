@@ -162,25 +162,23 @@ namespace HFM.Instances.Tests
          // setup concrete instance with stubs
          var instance = new DisplayInstance();
          instance.Prefs = prefs;
-         instance.ProteinCollection = proteinCollection;
          instance.BenchmarkContainer = benchmarkContainer;
          // set concrete values
          instance.UnitInfo = new UnitInfo();
          instance.Settings = new ClientInstanceSettings { InstanceName = "Test2" };
-         instance.BuildUnitInfoLogic();
+         instance.BuildUnitInfoLogic(new Protein());
          instance.CurrentLogLines = new List<LogLine>();
          instances.Add(instance);
 
          // setup concrete instance with stubs
          instance = new DisplayInstance();
          instance.Prefs = prefs;
-         instance.ProteinCollection = proteinCollection;
          instance.BenchmarkContainer = benchmarkContainer;
          // Test For - Issue 201 - Web Generation Fails when a Client with no CurrentLogLines is encountered.
          // Make sure we return null for CurrentLogLines in the second DataAggregator mock.
          instance.UnitInfo = new UnitInfo();
          instance.Settings = new ClientInstanceSettings { InstanceName = "Test1" };
-         instance.BuildUnitInfoLogic();
+         instance.BuildUnitInfoLogic(new Protein());
          instance.CurrentLogLines = null;
          instances.Add(instance);
 

@@ -32,13 +32,11 @@ namespace HFM.Instances.Tests
    public class UnitInfoLogicTests
    {
       private IProteinBenchmarkContainer _benchmarkContainer;
-      private IDisplayInstance _displayInstance;
 
       [SetUp]
       public void Init()
       {
          _benchmarkContainer = MockRepository.GenerateStub<IProteinBenchmarkContainer>();
-         _displayInstance = MockRepository.GenerateStub<IDisplayInstance>();
       }
       
       #region DownloadTime
@@ -404,14 +402,13 @@ namespace HFM.Instances.Tests
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:04:00", 1));
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:09:00", 2));
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:15:00", 3));
+         unitInfo.UnitRetrievalTime = unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(30));
          var settings = CreateClientInstanceSettings(true, 0);
          
-         _displayInstance.LastRetrievalTime = unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(30));
          var unitInfoLogic = CreateUnitInfoLogic(protein, unitInfo, settings);
-         
-         Assert.AreEqual(600, unitInfoLogic.RawTimePerUnitDownload);
-         Assert.AreEqual(TimeSpan.FromSeconds(600), unitInfoLogic.TimePerUnitDownload);
-         Assert.AreEqual(144, unitInfoLogic.PPDPerUnitDownload);
+         Assert.AreEqual(600, unitInfoLogic.GetRawTime(PpdCalculationType.EffectiveRate));
+         Assert.AreEqual(TimeSpan.FromSeconds(600), unitInfoLogic.GetFrameTime(PpdCalculationType.EffectiveRate));
+         Assert.AreEqual(144, unitInfoLogic.GetPPD(ClientStatus.Unknown, PpdCalculationType.EffectiveRate, false));
       }
 
       [Test]
@@ -420,9 +417,9 @@ namespace HFM.Instances.Tests
          var settings = CreateClientInstanceSettings(false, 0);
          var unitInfoLogic = CreateUnitInfoLogic(null, new UnitInfo(), settings);
 
-         Assert.AreEqual(0, unitInfoLogic.RawTimePerUnitDownload);
-         Assert.AreEqual(TimeSpan.FromSeconds(0), unitInfoLogic.TimePerUnitDownload);
-         Assert.AreEqual(0, unitInfoLogic.PPDPerUnitDownload);
+         Assert.AreEqual(0, unitInfoLogic.GetRawTime(PpdCalculationType.EffectiveRate));
+         Assert.AreEqual(TimeSpan.FromSeconds(0), unitInfoLogic.GetFrameTime(PpdCalculationType.EffectiveRate));
+         Assert.AreEqual(0, unitInfoLogic.GetPPD(ClientStatus.Unknown, PpdCalculationType.EffectiveRate, false));
       }
 
       [Test]
@@ -436,9 +433,9 @@ namespace HFM.Instances.Tests
          var settings = CreateClientInstanceSettings(false, 0);
          var unitInfoLogic = CreateUnitInfoLogic(null, unitInfo, settings);
 
-         Assert.AreEqual(0, unitInfoLogic.RawTimePerUnitDownload);
-         Assert.AreEqual(TimeSpan.FromSeconds(0), unitInfoLogic.TimePerUnitDownload);
-         Assert.AreEqual(0, unitInfoLogic.PPDPerUnitDownload);
+         Assert.AreEqual(0, unitInfoLogic.GetRawTime(PpdCalculationType.EffectiveRate));
+         Assert.AreEqual(TimeSpan.FromSeconds(0), unitInfoLogic.GetFrameTime(PpdCalculationType.EffectiveRate));
+         Assert.AreEqual(0, unitInfoLogic.GetPPD(ClientStatus.Unknown, PpdCalculationType.EffectiveRate, false));
       }
 
       [Test]
@@ -449,9 +446,9 @@ namespace HFM.Instances.Tests
          var settings = CreateClientInstanceSettings(false, 0);
          var unitInfoLogic = CreateUnitInfoLogic(null, unitInfo, settings);
 
-         Assert.AreEqual(0, unitInfoLogic.RawTimePerUnitDownload);
-         Assert.AreEqual(TimeSpan.FromSeconds(0), unitInfoLogic.TimePerUnitDownload);
-         Assert.AreEqual(0, unitInfoLogic.PPDPerUnitDownload);
+         Assert.AreEqual(0, unitInfoLogic.GetRawTime(PpdCalculationType.EffectiveRate));
+         Assert.AreEqual(TimeSpan.FromSeconds(0), unitInfoLogic.GetFrameTime(PpdCalculationType.EffectiveRate));
+         Assert.AreEqual(0, unitInfoLogic.GetPPD(ClientStatus.Unknown, PpdCalculationType.EffectiveRate, false));
       }
       
       [Test]
@@ -467,9 +464,9 @@ namespace HFM.Instances.Tests
          var settings = CreateClientInstanceSettings(false, 0);
          var unitInfoLogic = CreateUnitInfoLogic(protein, unitInfo, settings);
 
-         Assert.AreEqual(360, unitInfoLogic.RawTimePerAllSections);
-         Assert.AreEqual(TimeSpan.FromSeconds(360), unitInfoLogic.TimePerAllSections);
-         Assert.AreEqual(240, unitInfoLogic.PPDPerAllSections);
+         Assert.AreEqual(360, unitInfoLogic.GetRawTime(PpdCalculationType.AllFrames));
+         Assert.AreEqual(TimeSpan.FromSeconds(360), unitInfoLogic.GetFrameTime(PpdCalculationType.AllFrames));
+         Assert.AreEqual(240, unitInfoLogic.GetPPD(ClientStatus.Unknown, PpdCalculationType.AllFrames, false));
       }
 
       [Test]
@@ -478,9 +475,9 @@ namespace HFM.Instances.Tests
          var settings = CreateClientInstanceSettings(false, 0);
          var unitInfoLogic = CreateUnitInfoLogic(null, new UnitInfo(), settings);
 
-         Assert.AreEqual(0, unitInfoLogic.RawTimePerAllSections);
-         Assert.AreEqual(TimeSpan.FromSeconds(0), unitInfoLogic.TimePerAllSections);
-         Assert.AreEqual(0, unitInfoLogic.PPDPerAllSections);
+         Assert.AreEqual(0, unitInfoLogic.GetRawTime(PpdCalculationType.AllFrames));
+         Assert.AreEqual(TimeSpan.FromSeconds(0), unitInfoLogic.GetFrameTime(PpdCalculationType.AllFrames));
+         Assert.AreEqual(0, unitInfoLogic.GetPPD(ClientStatus.Unknown, PpdCalculationType.AllFrames, false));
       }
 
       [Test]
@@ -496,9 +493,9 @@ namespace HFM.Instances.Tests
          var settings = CreateClientInstanceSettings(false, 0);
          var unitInfoLogic = CreateUnitInfoLogic(protein, unitInfo, settings);
 
-         Assert.AreEqual(376, unitInfoLogic.RawTimePerThreeSections);
-         Assert.AreEqual(TimeSpan.FromSeconds(376), unitInfoLogic.TimePerThreeSections);
-         Assert.AreEqual(229.78723, unitInfoLogic.PPDPerThreeSections);
+         Assert.AreEqual(376, unitInfoLogic.GetRawTime(PpdCalculationType.LastThreeFrames));
+         Assert.AreEqual(TimeSpan.FromSeconds(376), unitInfoLogic.GetFrameTime(PpdCalculationType.LastThreeFrames));
+         Assert.AreEqual(229.78723, unitInfoLogic.GetPPD(ClientStatus.Unknown, PpdCalculationType.LastThreeFrames, false));
       }
 
       [Test]
@@ -507,9 +504,9 @@ namespace HFM.Instances.Tests
          var settings = CreateClientInstanceSettings(false, 0);
          var unitInfoLogic = CreateUnitInfoLogic(null, new UnitInfo(), settings);
 
-         Assert.AreEqual(0, unitInfoLogic.RawTimePerThreeSections);
-         Assert.AreEqual(TimeSpan.FromSeconds(0), unitInfoLogic.TimePerThreeSections);
-         Assert.AreEqual(0, unitInfoLogic.PPDPerThreeSections);
+         Assert.AreEqual(0, unitInfoLogic.GetRawTime(PpdCalculationType.LastThreeFrames));
+         Assert.AreEqual(TimeSpan.FromSeconds(0), unitInfoLogic.GetFrameTime(PpdCalculationType.LastThreeFrames));
+         Assert.AreEqual(0, unitInfoLogic.GetPPD(ClientStatus.Unknown, PpdCalculationType.LastThreeFrames, false));
       }
 
       [Test]
@@ -525,9 +522,9 @@ namespace HFM.Instances.Tests
          var settings = CreateClientInstanceSettings(false, 0);
          var unitInfoLogic = CreateUnitInfoLogic(protein, unitInfo, settings);
 
-         Assert.AreEqual(380, unitInfoLogic.RawTimePerLastSection);
-         Assert.AreEqual(TimeSpan.FromSeconds(380), unitInfoLogic.TimePerLastSection);
-         Assert.AreEqual(227.36842, unitInfoLogic.PPDPerLastSection);
+         Assert.AreEqual(380, unitInfoLogic.GetRawTime(PpdCalculationType.LastFrame));
+         Assert.AreEqual(TimeSpan.FromSeconds(380), unitInfoLogic.GetFrameTime(PpdCalculationType.LastFrame));
+         Assert.AreEqual(227.36842, unitInfoLogic.GetPPD(ClientStatus.Unknown, PpdCalculationType.LastFrame, false));
       }
 
       [Test]
@@ -536,9 +533,9 @@ namespace HFM.Instances.Tests
          var settings = CreateClientInstanceSettings(false, 0);
          var unitInfoLogic = CreateUnitInfoLogic(null, new UnitInfo(), settings);
 
-         Assert.AreEqual(0, unitInfoLogic.RawTimePerLastSection);
-         Assert.AreEqual(TimeSpan.FromSeconds(0), unitInfoLogic.TimePerLastSection);
-         Assert.AreEqual(0, unitInfoLogic.PPDPerLastSection);
+         Assert.AreEqual(0, unitInfoLogic.GetRawTime(PpdCalculationType.LastFrame));
+         Assert.AreEqual(TimeSpan.FromSeconds(0), unitInfoLogic.GetFrameTime(PpdCalculationType.LastFrame));
+         Assert.AreEqual(0, unitInfoLogic.GetPPD(ClientStatus.Unknown, PpdCalculationType.LastFrame, false));
       }
       
       [Test]
@@ -552,12 +549,9 @@ namespace HFM.Instances.Tests
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:24:00", 4));
          var settings = CreateClientInstanceSettings(false, 0);
 
-         var prefs = MockRepository.GenerateStub<IPreferenceSet>();
-         prefs.Stub(x => x.GetPreference<PpdCalculationType>(Preference.PpdCalculation)).Return(PpdCalculationType.LastFrame);
-         
-         var unitInfoLogic = CreateUnitInfoLogic(prefs, null, unitInfo, settings);
-         Assert.AreEqual(380, unitInfoLogic.RawTimePerSection);
-         Assert.AreEqual(TimeSpan.FromSeconds(380), unitInfoLogic.TimePerFrame);
+         var unitInfoLogic = CreateUnitInfoLogic(null, unitInfo, settings);
+         Assert.AreEqual(380, unitInfoLogic.GetRawTime(PpdCalculationType.LastFrame));
+         Assert.AreEqual(TimeSpan.FromSeconds(380), unitInfoLogic.GetFrameTime(PpdCalculationType.LastFrame));
       }
 
       [Test]
@@ -571,13 +565,9 @@ namespace HFM.Instances.Tests
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:24:00", 4));
          var settings = CreateClientInstanceSettings(false, 0);
 
-         var prefs = MockRepository.GenerateStub<IPreferenceSet>();
-         prefs.Stub(x => x.GetPreference<PpdCalculationType>(Preference.PpdCalculation)).Return(PpdCalculationType.LastThreeFrames);
-
-         var unitInfoLogic = CreateUnitInfoLogic(prefs, null, unitInfo, settings);
-
-         Assert.AreEqual(376, unitInfoLogic.RawTimePerSection);
-         Assert.AreEqual(TimeSpan.FromSeconds(376), unitInfoLogic.TimePerFrame);
+         var unitInfoLogic = CreateUnitInfoLogic(null, unitInfo, settings);
+         Assert.AreEqual(376, unitInfoLogic.GetRawTime(PpdCalculationType.LastThreeFrames));
+         Assert.AreEqual(TimeSpan.FromSeconds(376), unitInfoLogic.GetFrameTime(PpdCalculationType.LastThreeFrames));
       }
 
       [Test]
@@ -591,13 +581,9 @@ namespace HFM.Instances.Tests
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:24:00", 4));
          var settings = CreateClientInstanceSettings(false, 0);
 
-         var prefs = MockRepository.GenerateStub<IPreferenceSet>();
-         prefs.Stub(x => x.GetPreference<PpdCalculationType>(Preference.PpdCalculation)).Return(PpdCalculationType.AllFrames);
-
-         var unitInfoLogic = CreateUnitInfoLogic(prefs, null, unitInfo, settings);
-
-         Assert.AreEqual(360, unitInfoLogic.RawTimePerSection);
-         Assert.AreEqual(TimeSpan.FromSeconds(360), unitInfoLogic.TimePerFrame);
+         var unitInfoLogic = CreateUnitInfoLogic(null, unitInfo, settings);
+         Assert.AreEqual(360, unitInfoLogic.GetRawTime(PpdCalculationType.AllFrames));
+         Assert.AreEqual(TimeSpan.FromSeconds(360), unitInfoLogic.GetFrameTime(PpdCalculationType.AllFrames));
       }
 
       [Test]
@@ -609,16 +595,12 @@ namespace HFM.Instances.Tests
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:04:00", 1));
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:09:00", 2));
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:15:00", 3));
+         unitInfo.UnitRetrievalTime = unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(30));
          var settings = CreateClientInstanceSettings(true, 0);
 
-         _displayInstance.LastRetrievalTime = unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(30));
-         var prefs = MockRepository.GenerateStub<IPreferenceSet>();
-         prefs.Stub(x => x.GetPreference<PpdCalculationType>(Preference.PpdCalculation)).Return(PpdCalculationType.EffectiveRate);
-
-         var unitInfoLogic = CreateUnitInfoLogic(prefs, protein, unitInfo, settings);
-
-         Assert.AreEqual(600, unitInfoLogic.RawTimePerSection);
-         Assert.AreEqual(TimeSpan.FromSeconds(600), unitInfoLogic.TimePerFrame);
+         var unitInfoLogic = CreateUnitInfoLogic(protein, unitInfo, settings);
+         Assert.AreEqual(600, unitInfoLogic.GetRawTime(PpdCalculationType.EffectiveRate));
+         Assert.AreEqual(TimeSpan.FromSeconds(600), unitInfoLogic.GetFrameTime(PpdCalculationType.EffectiveRate));
       }
       
       [Test]
@@ -626,9 +608,8 @@ namespace HFM.Instances.Tests
       {
          var settings = CreateClientInstanceSettings(false, 0);
          _benchmarkContainer.Stub(x => x.GetBenchmarkAverageFrameTime(null)).IgnoreArguments().Return(TimeSpan.FromMinutes(10));
-
          var unitInfoLogic = CreateUnitInfoLogic(null, new UnitInfo(), settings);
-         Assert.AreEqual(TimeSpan.FromMinutes(10), unitInfoLogic.TimePerFrame);
+         Assert.AreEqual(TimeSpan.FromMinutes(10), unitInfoLogic.GetFrameTime(PpdCalculationType.LastFrame));
       }
 
       [Test]
@@ -637,7 +618,7 @@ namespace HFM.Instances.Tests
          var settings = CreateClientInstanceSettings(false, 0);
          _benchmarkContainer = null;
          var unitInfoLogic = CreateUnitInfoLogic(null, new UnitInfo(), settings);
-         Assert.AreEqual(TimeSpan.Zero, unitInfoLogic.TimePerFrame);
+         Assert.AreEqual(TimeSpan.Zero, unitInfoLogic.GetFrameTime(PpdCalculationType.LastFrame));
       }
 
       #endregion
@@ -656,14 +637,10 @@ namespace HFM.Instances.Tests
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:15:00", 3));
          var settings = CreateClientInstanceSettings(false, 0);
 
-         var prefs = MockRepository.GenerateStub<IPreferenceSet>();
-         prefs.Stub(x => x.GetPreference<bool>(Preference.CalculateBonus)).Return(true);
-         _displayInstance.Status = ClientStatus.RunningNoFrameTimes;
-
-         var unitInfoLogic = CreateUnitInfoLogic(prefs, protein, unitInfo, settings);
-         Assert.AreEqual(849, unitInfoLogic.Credit);
-         Assert.AreEqual(2.4, unitInfoLogic.UPD);
-         Assert.AreEqual(2036.46753, unitInfoLogic.PPD);
+         var unitInfoLogic = CreateUnitInfoLogic(protein, unitInfo, settings);
+         Assert.AreEqual(849, unitInfoLogic.GetCredit(ClientStatus.RunningNoFrameTimes, PpdCalculationType.LastFrame, true));
+         Assert.AreEqual(2.4, unitInfoLogic.GetUPD(PpdCalculationType.LastFrame));
+         Assert.AreEqual(2036.46753, unitInfoLogic.GetPPD(ClientStatus.RunningNoFrameTimes, PpdCalculationType.LastFrame, true));
       }
 
       [Test]
@@ -678,14 +655,10 @@ namespace HFM.Instances.Tests
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:15:00", 3));
          var settings = CreateClientInstanceSettings(false, 0);
 
-         var prefs = MockRepository.GenerateStub<IPreferenceSet>();
-         prefs.Stub(x => x.GetPreference<bool>(Preference.CalculateBonus)).Return(true);
-         _displayInstance.Status = ClientStatus.Running;
-
-         var unitInfoLogic = CreateUnitInfoLogic(prefs, protein, unitInfo, settings);
-         Assert.AreEqual(1897, unitInfoLogic.Credit);
-         Assert.AreEqual(2.4, unitInfoLogic.UPD);
-         Assert.AreEqual(4553.67983, unitInfoLogic.PPD);
+         var unitInfoLogic = CreateUnitInfoLogic(protein, unitInfo, settings);
+         Assert.AreEqual(1897, unitInfoLogic.GetCredit(ClientStatus.Running, PpdCalculationType.LastFrame, true));
+         Assert.AreEqual(2.4, unitInfoLogic.GetUPD(PpdCalculationType.LastFrame));
+         Assert.AreEqual(4553.67983, unitInfoLogic.GetPPD(ClientStatus.Running, PpdCalculationType.LastFrame, true));
       }
 
       [Test]
@@ -700,9 +673,9 @@ namespace HFM.Instances.Tests
          var settings = CreateClientInstanceSettings(false, 0);
 
          var unitInfoLogic = CreateUnitInfoLogic(protein, unitInfo, settings);
-         Assert.AreEqual(100, unitInfoLogic.Credit);
-         Assert.AreEqual(2.4, unitInfoLogic.UPD);
-         Assert.AreEqual(240, unitInfoLogic.PPD);
+         Assert.AreEqual(100, unitInfoLogic.GetCredit(ClientStatus.Unknown, PpdCalculationType.LastFrame, false));
+         Assert.AreEqual(2.4, unitInfoLogic.GetUPD(PpdCalculationType.LastFrame));
+         Assert.AreEqual(240, unitInfoLogic.GetPPD(ClientStatus.Unknown, PpdCalculationType.LastFrame, false));
       }
 
       [Test]
@@ -715,9 +688,9 @@ namespace HFM.Instances.Tests
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:15:00", 3));
          var settings = CreateClientInstanceSettings(false, 0);
          var unitInfoLogic = CreateUnitInfoLogic(null, unitInfo, settings);
-         Assert.AreEqual(0, unitInfoLogic.Credit);
-         Assert.AreEqual(2.4, unitInfoLogic.UPD);
-         Assert.AreEqual(0, unitInfoLogic.PPD);
+         Assert.AreEqual(0, unitInfoLogic.GetCredit(ClientStatus.Unknown, PpdCalculationType.LastFrame, false));
+         Assert.AreEqual(2.4, unitInfoLogic.GetUPD(PpdCalculationType.LastFrame));
+         Assert.AreEqual(0, unitInfoLogic.GetPPD(ClientStatus.Unknown, PpdCalculationType.LastFrame, false));
       }
       
       #endregion
@@ -734,7 +707,7 @@ namespace HFM.Instances.Tests
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:15:00", 3));
          var settings = CreateClientInstanceSettings(false, 0);
          var unitInfoLogic = CreateUnitInfoLogic(null, unitInfo, settings);
-         Assert.AreEqual(TimeSpan.FromMinutes(582), unitInfoLogic.ETA);
+         Assert.AreEqual(TimeSpan.FromMinutes(582), unitInfoLogic.GetEta(PpdCalculationType.LastFrame));
       }
 
       [Test]
@@ -745,12 +718,11 @@ namespace HFM.Instances.Tests
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:04:00", 1));
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:09:00", 2));
          unitInfo.SetCurrentFrame(MakeUnitFrame("00:15:00", 3));
+         unitInfo.UnitRetrievalTime = unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(30));
          var settings = CreateClientInstanceSettings(false, 0);
          
-         _displayInstance.LastRetrievalTime = unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(30));
-         
          var unitInfoLogic = CreateUnitInfoLogic(null, unitInfo, settings);
-         Assert.AreEqual(unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(612)), unitInfoLogic.EtaDate);
+         Assert.AreEqual(unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(612)), unitInfoLogic.GetEtaDate(PpdCalculationType.LastFrame));
       }
       
       #endregion
@@ -779,14 +751,9 @@ namespace HFM.Instances.Tests
 
       #region Helpers
 
-      private UnitInfoLogic CreateUnitInfoLogic(IProtein protein, IUnitInfo unitInfo, IClientInstanceSettings settings)
+      private UnitInfoLogic CreateUnitInfoLogic(IProtein protein, UnitInfo unitInfo, IClientInstanceSettings settings)
       {
-         return CreateUnitInfoLogic(MockRepository.GenerateMock<IPreferenceSet>(), protein, unitInfo, settings);
-      }
-      
-      private UnitInfoLogic CreateUnitInfoLogic(IPreferenceSet prefs, IProtein protein, IUnitInfo unitInfo, IClientInstanceSettings settings)
-      {
-         return new UnitInfoLogic(prefs, protein, _benchmarkContainer, unitInfo, settings, _displayInstance);
+         return new UnitInfoLogic(protein, _benchmarkContainer, unitInfo, settings);
       }
       
       private static IClientInstanceSettings CreateClientInstanceSettings(bool utcOffsetIsZero, int clientTimeOffset)

@@ -169,7 +169,7 @@ namespace HFM.Forms
                unit = instance.CurrentUnitInfo;
                valuesOk = instance.ProductionValuesOk;
             }
-            UpdateBenchmarkText(ToMultiLineString(benchmark, unit, _prefs.PpdFormatString, valuesOk));
+            UpdateBenchmarkText(ToMultiLineString(benchmark, instance, _prefs.PpdFormatString));
          }
 
          tabControl1.SuspendLayout();
@@ -270,10 +270,9 @@ namespace HFM.Forms
       /// Return Multi-Line String (Array)
       /// </summary>
       /// <param name="benchmark"></param>
-      /// <param name="unitInfo">Client Instance UnitInfo (null for unavailable)</param>
+      /// <param name="instance">Display Instance (null for unavailable)</param>
       /// <param name="ppdFormatString">PPD Format String</param>
-      /// <param name="productionValuesOk">Client Instance Production Values Flag</param>
-      private IEnumerable<string> ToMultiLineString(ProteinBenchmark benchmark, IUnitInfoLogic unitInfo, string ppdFormatString, bool productionValuesOk)
+      private IEnumerable<string> ToMultiLineString(ProteinBenchmark benchmark, IDisplayInstance instance, string ppdFormatString)
       {
          var output = new List<string>(12);
 
@@ -281,7 +280,7 @@ namespace HFM.Forms
          _proteinCollection.TryGetValue(benchmark.ProjectID, out protein);
          if (protein != null)
          {
-            var calculateBonus = _prefs.GetPreference<bool>(Preference.CalculateBonus);
+            var calculateBonus = _prefs.Get<bool>(Preference.CalculateBonus);
 
             output.Add(String.Empty);
             output.Add(String.Format(" Name: {0}", benchmark.OwningInstanceName));
@@ -293,16 +292,17 @@ namespace HFM.Forms
             output.Add(String.Format(" Avg. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
                benchmark.AverageFrameTime, protein.GetPPD(benchmark.AverageFrameTime, calculateBonus)));
 
-            if (unitInfo != null && unitInfo.UnitInfoData.ProjectID.Equals(protein.ProjectNumber) && productionValuesOk)
+            if (instance != null && instance.CurrentUnitInfo.UnitInfoData.ProjectID.Equals(protein.ProjectNumber) && instance.ProductionValuesOk)
             {
+               IUnitInfoLogic unitInfo = instance.CurrentUnitInfo;
                output.Add(String.Format(" Cur. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-                  unitInfo.TimePerLastSection, unitInfo.PPDPerLastSection));
+                  unitInfo.GetFrameTime(PpdCalculationType.LastFrame), unitInfo.GetPPD(instance.Status, PpdCalculationType.LastFrame, calculateBonus)));
                output.Add(String.Format(" R3F. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-                  unitInfo.TimePerThreeSections, unitInfo.PPDPerThreeSections));
+                  unitInfo.GetFrameTime(PpdCalculationType.LastThreeFrames), unitInfo.GetPPD(instance.Status, PpdCalculationType.LastThreeFrames, calculateBonus)));
                output.Add(String.Format(" All  Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-                  unitInfo.TimePerAllSections, unitInfo.PPDPerAllSections));
+                  unitInfo.GetFrameTime(PpdCalculationType.AllFrames), unitInfo.GetPPD(instance.Status, PpdCalculationType.AllFrames, calculateBonus)));
                output.Add(String.Format(" Eff. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-                  unitInfo.TimePerUnitDownload, unitInfo.PPDPerUnitDownload));
+                  unitInfo.GetFrameTime(PpdCalculationType.EffectiveRate), unitInfo.GetPPD(instance.Status, PpdCalculationType.EffectiveRate, calculateBonus)));
             }
 
             output.Add(String.Empty);
