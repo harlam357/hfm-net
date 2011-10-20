@@ -1,0 +1,952 @@
+
+
+--- Opening Log file [August 18 02:15:30 UTC] 
+
+
+# Windows CPU Console Edition #################################################
+###############################################################################
+
+                       Folding@Home Client Version 6.23
+
+                          http://folding.stanford.edu
+
+###############################################################################
+###############################################################################
+
+Launch directory: C:\Program Files\FAH1
+Executable: Folding@home-Win32-x86.exe
+Arguments: -configonly 
+
+[02:15:30] Configuring Folding@Home...
+
+
+[02:16:12] - Ask before connecting: No
+[02:16:12] - User name: harlam357 (Team 32)
+[02:16:12] - User ID: 4E34332601E26450
+[02:16:12] - Machine ID: 5
+[02:16:12] 
+[02:16:12] -configonly flag given, so exiting.
+
+
+--- Opening Log file [August 18 02:17:46 UTC] 
+
+
+# Windows CPU Console Edition #################################################
+###############################################################################
+
+                       Folding@Home Client Version 6.23
+
+                          http://folding.stanford.edu
+
+###############################################################################
+###############################################################################
+
+Launch directory: C:\Program Files\FAH1
+Executable: Folding@home-Win32-x86.exe
+Arguments: -verbosity 9 -forceasm 
+
+Warning:
+ By using the -forceasm flag, you are overriding
+ safeguards in the program. If you did not intend to
+ do this, please restart the program without -forceasm.
+ If work units are not completing fully (and particularly
+ if your machine is overclocked), then please discontinue
+ use of the flag.
+
+[02:17:46] - Ask before connecting: No
+[02:17:46] - User name: harlam357 (Team 32)
+[02:17:46] - User ID: 4E34332601E26450
+[02:17:46] - Machine ID: 5
+[02:17:46] 
+[02:17:46] Work directory not found. Creating...
+[02:17:46] Could not open work queue, generating new queue...
+[02:17:46] - Preparing to get new work unit...
+[02:17:46] - Autosending finished units... [August 18 02:17:46 UTC]
+[02:17:46] Trying to send all finished work units[02:17:46] + Attempting to get work packet
+
+[02:17:46] + No unsent completed units remaining.[02:17:46] - Will indicate memory of 2046 MB
+
+[02:17:46] - Autosend completed[02:17:46] - Detect CPU.
+ Vendor: GenuineIntel, Family: 6, Model: 15, Stepping: 2
+[02:17:46] - Connecting to assignment server
+[02:17:46] Connecting to http://assign.stanford.edu:8080/
+[02:17:47] Posted data.
+[02:17:47] Initial: 43AB; - Successful: assigned to (171.67.108.13).
+[02:17:47] + News From Folding@Home: Welcome to Folding@Home
+[02:17:47] Loaded queue successfully.
+[02:17:47] Connecting to http://171.67.108.13:8080/
+[02:17:48] Posted data.
+[02:17:48] Initial: 0000; - Receiving payload (expected size: 239349)
+[02:17:50] - Downloaded at ~116 kB/s
+[02:17:50] - Averaged speed for that direction ~116 kB/s
+[02:17:50] + Received work.
+[02:17:50] + Closed connections
+[02:17:50] 
+[02:17:50] + Processing work unit
+[02:17:50] Core required: FahCore_78.exe
+[02:17:50] Core not found.
+[02:17:50] - Core is not present or corrupted.
+[02:17:50] - Attempting to download new core...
+[02:17:50] + Downloading new core: FahCore_78.exe
+[02:17:50] Downloading core (/~pande/Win32/x86/Core_78.fah from www.stanford.edu)
+[02:17:50] Initial: AFDE; + 10240 bytes downloaded
+[02:17:50] Initial: 2993; + 20480 bytes downloaded
+[02:17:51] Initial: 4590; + 30720 bytes downloaded
+[02:17:51] Initial: 1F95; + 40960 bytes downloaded
+[02:17:51] Initial: 6459; + 51200 bytes downloaded
+[02:17:51] Initial: FD92; + 61440 bytes downloaded
+[02:17:51] Initial: 62E6; + 71680 bytes downloaded
+[02:17:51] Initial: 1F03; + 81920 bytes downloaded
+[02:17:51] Initial: 1707; + 92160 bytes downloaded
+[02:17:51] Initial: 8862; + 102400 bytes downloaded
+[02:17:51] Initial: B1CE; + 112640 bytes downloaded
+[02:17:51] Initial: D9DE; + 122880 bytes downloaded
+[02:17:51] Initial: 5C0A; + 133120 bytes downloaded
+[02:17:51] Initial: 3FF3; + 143360 bytes downloaded
+[02:17:51] Initial: 4529; + 153600 bytes downloaded
+[02:17:51] Initial: 635C; + 163840 bytes downloaded
+[02:17:51] Initial: 869F; + 174080 bytes downloaded
+[02:17:52] Initial: C8A8; + 184320 bytes downloaded
+[02:17:52] Initial: 1A54; + 194560 bytes downloaded
+[02:17:52] Initial: BDCB; + 204800 bytes downloaded
+[02:17:52] Initial: CC8C; + 215040 bytes downloaded
+[02:17:52] Initial: 12EB; + 225280 bytes downloaded
+[02:17:52] Initial: 4886; + 235520 bytes downloaded
+[02:17:52] Initial: 29D0; + 245760 bytes downloaded
+[02:17:52] Initial: AF1F; + 256000 bytes downloaded
+[02:17:52] Initial: 05BE; + 266240 bytes downloaded
+[02:17:52] Initial: D366; + 276480 bytes downloaded
+[02:17:52] Initial: A52F; + 286720 bytes downloaded
+[02:17:52] Initial: 1E70; + 296960 bytes downloaded
+[02:17:52] Initial: 7229; + 307200 bytes downloaded
+[02:17:52] Initial: A7F6; + 317440 bytes downloaded
+[02:17:52] Initial: 44C2; + 327680 bytes downloaded
+[02:17:52] Initial: A72B; + 337920 bytes downloaded
+[02:17:52] Initial: 9C10; + 348160 bytes downloaded
+[02:17:52] Initial: 891C; + 358400 bytes downloaded
+[02:17:52] Initial: F143; + 368640 bytes downloaded
+[02:17:52] Initial: 795C; + 378880 bytes downloaded
+[02:17:52] Initial: 8C2B; + 389120 bytes downloaded
+[02:17:52] Initial: FC93; + 399360 bytes downloaded
+[02:17:52] Initial: F24B; + 409600 bytes downloaded
+[02:17:52] Initial: 9D83; + 419840 bytes downloaded
+[02:17:52] Initial: 0F67; + 430080 bytes downloaded
+[02:17:52] Initial: FB4A; + 440320 bytes downloaded
+[02:17:52] Initial: F331; + 450560 bytes downloaded
+[02:17:52] Initial: 5BF6; + 460800 bytes downloaded
+[02:17:52] Initial: 240B; + 471040 bytes downloaded
+[02:17:52] Initial: 47D4; + 481280 bytes downloaded
+[02:17:52] Initial: 3AB2; + 491520 bytes downloaded
+[02:17:52] Initial: 0F84; + 501760 bytes downloaded
+[02:17:52] Initial: CA7A; + 512000 bytes downloaded
+[02:17:52] Initial: 3B69; + 522240 bytes downloaded
+[02:17:52] Initial: F0AA; + 532480 bytes downloaded
+[02:17:52] Initial: 1B36; + 542720 bytes downloaded
+[02:17:52] Initial: BCE4; + 552960 bytes downloaded
+[02:17:52] Initial: 9BEA; + 563200 bytes downloaded
+[02:17:52] Initial: E168; + 573440 bytes downloaded
+[02:17:52] Initial: C3A1; + 583680 bytes downloaded
+[02:17:52] Initial: 5920; + 593920 bytes downloaded
+[02:17:52] Initial: 1D0F; + 604160 bytes downloaded
+[02:17:52] Initial: E779; + 614400 bytes downloaded
+[02:17:52] Initial: E6CE; + 624640 bytes downloaded
+[02:17:52] Initial: 9E24; + 634880 bytes downloaded
+[02:17:53] Initial: EB69; + 645120 bytes downloaded
+[02:17:53] Initial: 38FC; + 655360 bytes downloaded
+[02:17:53] Initial: 6F35; + 665600 bytes downloaded
+[02:17:53] Initial: 8C15; + 675840 bytes downloaded
+[02:17:53] Initial: 21FE; + 686080 bytes downloaded
+[02:17:53] Initial: B05C; + 696320 bytes downloaded
+[02:17:53] Initial: 1BD5; + 706560 bytes downloaded
+[02:17:53] Initial: FD2D; + 716800 bytes downloaded
+[02:17:53] Initial: 2210; + 727040 bytes downloaded
+[02:17:53] Initial: BC67; + 737280 bytes downloaded
+[02:17:53] Initial: C396; + 747520 bytes downloaded
+[02:17:53] Initial: A39D; + 757760 bytes downloaded
+[02:17:53] Initial: D988; + 768000 bytes downloaded
+[02:17:53] Initial: 7358; + 778240 bytes downloaded
+[02:17:53] Initial: 3F63; + 788480 bytes downloaded
+[02:17:53] Initial: 7C28; + 798720 bytes downloaded
+[02:17:53] Initial: A4B3; + 808960 bytes downloaded
+[02:17:53] Initial: 9978; + 819200 bytes downloaded
+[02:17:53] Initial: C1AC; + 825633 bytes downloaded
+[02:17:53] Verifying core Core_78.fah...
+[02:17:53] Signature is VALID
+[02:17:53] 
+[02:17:53] Trying to unzip core FahCore_78.exe
+[02:17:53] Decompressed FahCore_78.exe (2338816 bytes) successfully
+[02:17:58] + Core successfully engaged
+[02:18:03] 
+[02:18:03] + Processing work unit
+[02:18:03] Core required: FahCore_78.exe
+[02:18:03] Core found.
+[02:18:03] Working on queue slot 01 [August 18 02:18:03 UTC]
+[02:18:03] + Working ...
+[02:18:03] - Calling '.\FahCore_78.exe -dir work/ -suffix 01 -checkpoint 30 -forceasm -verbose -lifeline 3492 -version 623'
+
+[02:18:03] 
+[02:18:03] *------------------------------*
+[02:18:03] Folding@Home Gromacs Core
+[02:18:03] Version 1.90 (March 8, 2006)
+[02:18:03] 
+[02:18:03] Preparing to commence simulation
+[02:18:03] - Assembly optimizations manually forced on.
+[02:18:03] - Not checking prior termination.
+[02:18:03] - Expanded 238837 -> 1166709 (decompressed 488.4 percent)
+[02:18:03] - Starting from initial work packet
+[02:18:03] 
+[02:18:03] Project: 4456 (Run 173, Clone 0, Gen 31)
+[02:18:03] 
+[02:18:04] Assembly optimizations on if available.
+[02:18:04] Entering M.D.
+[02:18:10] Protein: p4456_Seq50_Amber03
+[02:18:10] 
+[02:18:10] Writing local files
+[02:19:25] Extra SSE boost OK.
+[02:19:25] Writing local files
+[02:19:25] Completed 0 out of 1500000 steps  (0%)
+[02:32:01] Writing local files
+[02:32:01] Completed 15000 out of 1500000 steps  (1%)
+[02:44:46] Writing local files
+[02:44:46] Completed 30000 out of 1500000 steps  (2%)
+[02:57:28] Writing local files
+[02:57:28] Completed 45000 out of 1500000 steps  (3%)
+[03:10:10] Writing local files
+[03:10:10] Completed 60000 out of 1500000 steps  (4%)
+[03:22:52] Writing local files
+[03:22:52] Completed 75000 out of 1500000 steps  (5%)
+[03:35:37] Writing local files
+[03:35:37] Completed 90000 out of 1500000 steps  (6%)
+[03:48:19] Writing local files
+[03:48:19] Completed 105000 out of 1500000 steps  (7%)
+[04:01:02] Writing local files
+[04:01:02] Completed 120000 out of 1500000 steps  (8%)
+[04:13:46] Writing local files
+[04:13:46] Completed 135000 out of 1500000 steps  (9%)
+[04:26:16] Writing local files
+[04:26:16] Completed 150000 out of 1500000 steps  (10%)
+[04:38:40] Writing local files
+[04:38:40] Completed 165000 out of 1500000 steps  (11%)
+[04:51:03] Writing local files
+[04:51:03] Completed 180000 out of 1500000 steps  (12%)
+[05:03:27] Writing local files
+[05:03:27] Completed 195000 out of 1500000 steps  (13%)
+[05:15:50] Writing local files
+[05:15:50] Completed 210000 out of 1500000 steps  (14%)
+[05:28:14] Writing local files
+[05:28:14] Completed 225000 out of 1500000 steps  (15%)
+[05:40:37] Writing local files
+[05:40:37] Completed 240000 out of 1500000 steps  (16%)
+[05:53:00] Writing local files
+[05:53:01] Completed 255000 out of 1500000 steps  (17%)
+[06:05:33] Writing local files
+[06:05:33] Completed 270000 out of 1500000 steps  (18%)
+[06:18:07] Writing local files
+[06:18:07] Completed 285000 out of 1500000 steps  (19%)
+[06:30:40] Writing local files
+[06:30:40] Completed 300000 out of 1500000 steps  (20%)
+[06:43:15] Writing local files
+[06:43:15] Completed 315000 out of 1500000 steps  (21%)
+[06:55:49] Writing local files
+[06:55:49] Completed 330000 out of 1500000 steps  (22%)
+[07:08:24] Writing local files
+[07:08:24] Completed 345000 out of 1500000 steps  (23%)
+[07:21:00] Writing local files
+[07:21:00] Completed 360000 out of 1500000 steps  (24%)
+[07:33:31] Writing local files
+[07:33:31] Completed 375000 out of 1500000 steps  (25%)
+[07:46:05] Writing local files
+[07:46:05] Completed 390000 out of 1500000 steps  (26%)
+[07:58:36] Writing local files
+[07:58:36] Completed 405000 out of 1500000 steps  (27%)
+[08:11:07] Writing local files
+[08:11:07] Completed 420000 out of 1500000 steps  (28%)
+[08:17:46] - Autosending finished units... [August 18 08:17:46 UTC]
+[08:17:46] Trying to send all finished work units
+[08:17:46] + No unsent completed units remaining.
+[08:17:46] - Autosend completed
+[08:23:39] Writing local files
+[08:23:39] Completed 435000 out of 1500000 steps  (29%)
+[08:36:12] Writing local files
+[08:36:12] Completed 450000 out of 1500000 steps  (30%)
+[08:48:47] Writing local files
+[08:48:47] Completed 465000 out of 1500000 steps  (31%)
+[09:01:22] Writing local files
+[09:01:22] Completed 480000 out of 1500000 steps  (32%)
+[09:14:00] Writing local files
+[09:14:00] Completed 495000 out of 1500000 steps  (33%)
+[09:26:35] Writing local files
+[09:26:35] Completed 510000 out of 1500000 steps  (34%)
+[09:39:08] Writing local files
+[09:39:08] Completed 525000 out of 1500000 steps  (35%)
+[09:51:40] Writing local files
+[09:51:40] Completed 540000 out of 1500000 steps  (36%)
+[10:04:16] Writing local files
+[10:04:16] Completed 555000 out of 1500000 steps  (37%)
+[10:16:41] Writing local files
+[10:16:41] Completed 570000 out of 1500000 steps  (38%)
+[10:29:03] Writing local files
+[10:29:03] Completed 585000 out of 1500000 steps  (39%)
+[10:41:25] Writing local files
+[10:41:25] Completed 600000 out of 1500000 steps  (40%)
+[10:53:47] Writing local files
+[10:53:47] Completed 615000 out of 1500000 steps  (41%)
+[11:06:08] Writing local files
+[11:06:08] Completed 630000 out of 1500000 steps  (42%)
+[11:18:30] Writing local files
+[11:18:30] Completed 645000 out of 1500000 steps  (43%)
+[11:30:53] Writing local files
+[11:30:53] Completed 660000 out of 1500000 steps  (44%)
+[11:43:14] Writing local files
+[11:43:14] Completed 675000 out of 1500000 steps  (45%)
+[11:55:36] Writing local files
+[11:55:36] Completed 690000 out of 1500000 steps  (46%)
+[12:07:58] Writing local files
+[12:07:58] Completed 705000 out of 1500000 steps  (47%)
+[12:20:20] Writing local files
+[12:20:20] Completed 720000 out of 1500000 steps  (48%)
+[12:32:41] Writing local files
+[12:32:41] Completed 735000 out of 1500000 steps  (49%)
+[12:45:03] Writing local files
+[12:45:03] Completed 750000 out of 1500000 steps  (50%)
+[12:57:25] Writing local files
+[12:57:25] Completed 765000 out of 1500000 steps  (51%)
+[13:09:48] Writing local files
+[13:09:48] Completed 780000 out of 1500000 steps  (52%)
+[13:22:10] Writing local files
+[13:22:10] Completed 795000 out of 1500000 steps  (53%)
+[13:34:33] Writing local files
+[13:34:33] Completed 810000 out of 1500000 steps  (54%)
+[13:46:55] Writing local files
+[13:46:55] Completed 825000 out of 1500000 steps  (55%)
+[13:59:18] Writing local files
+[13:59:18] Completed 840000 out of 1500000 steps  (56%)
+[14:11:41] Writing local files
+[14:11:41] Completed 855000 out of 1500000 steps  (57%)
+[14:17:46] - Autosending finished units... [August 18 14:17:46 UTC]
+[14:17:46] Trying to send all finished work units
+[14:17:46] + No unsent completed units remaining.
+[14:17:46] - Autosend completed
+[14:24:04] Writing local files
+[14:24:04] Completed 870000 out of 1500000 steps  (58%)
+[14:36:27] Writing local files
+[14:36:27] Completed 885000 out of 1500000 steps  (59%)
+[14:48:51] Writing local files
+[14:48:51] Completed 900000 out of 1500000 steps  (60%)
+[15:01:14] Writing local files
+[15:01:14] Completed 915000 out of 1500000 steps  (61%)
+[15:13:37] Writing local files
+[15:13:37] Completed 930000 out of 1500000 steps  (62%)
+[15:26:00] Writing local files
+[15:26:00] Completed 945000 out of 1500000 steps  (63%)
+[15:38:23] Writing local files
+[15:38:23] Completed 960000 out of 1500000 steps  (64%)
+[15:50:46] Writing local files
+[15:50:46] Completed 975000 out of 1500000 steps  (65%)
+[16:03:09] Writing local files
+[16:03:09] Completed 990000 out of 1500000 steps  (66%)
+[16:15:32] Writing local files
+[16:15:32] Completed 1005000 out of 1500000 steps  (67%)
+[16:27:56] Writing local files
+[16:27:56] Completed 1020000 out of 1500000 steps  (68%)
+[16:40:29] Writing local files
+[16:40:29] Completed 1035000 out of 1500000 steps  (69%)
+[16:53:03] Writing local files
+[16:53:03] Completed 1050000 out of 1500000 steps  (70%)
+[17:05:36] Writing local files
+[17:05:36] Completed 1065000 out of 1500000 steps  (71%)
+[17:18:11] Writing local files
+[17:18:11] Completed 1080000 out of 1500000 steps  (72%)
+[17:30:46] Writing local files
+[17:30:46] Completed 1095000 out of 1500000 steps  (73%)
+[17:43:20] Writing local files
+[17:43:20] Completed 1110000 out of 1500000 steps  (74%)
+[17:55:53] Writing local files
+[17:55:53] Completed 1125000 out of 1500000 steps  (75%)
+[18:08:29] Writing local files
+[18:08:29] Completed 1140000 out of 1500000 steps  (76%)
+[18:21:01] Writing local files
+[18:21:01] Completed 1155000 out of 1500000 steps  (77%)
+[18:33:34] Writing local files
+[18:33:34] Completed 1170000 out of 1500000 steps  (78%)
+[18:46:01] Writing local files
+[18:46:01] Completed 1185000 out of 1500000 steps  (79%)
+[18:58:23] Writing local files
+[18:58:23] Completed 1200000 out of 1500000 steps  (80%)
+[19:10:46] Writing local files
+[19:10:46] Completed 1215000 out of 1500000 steps  (81%)
+[19:23:09] Writing local files
+[19:23:09] Completed 1230000 out of 1500000 steps  (82%)
+[19:35:32] Writing local files
+[19:35:32] Completed 1245000 out of 1500000 steps  (83%)
+[19:47:55] Writing local files
+[19:47:55] Completed 1260000 out of 1500000 steps  (84%)
+[20:00:17] Writing local files
+[20:00:17] Completed 1275000 out of 1500000 steps  (85%)
+[20:12:40] Writing local files
+[20:12:40] Completed 1290000 out of 1500000 steps  (86%)
+[20:17:46] - Autosending finished units... [August 18 20:17:46 UTC]
+[20:17:46] Trying to send all finished work units
+[20:17:46] + No unsent completed units remaining.
+[20:17:46] - Autosend completed
+[20:25:03] Writing local files
+[20:25:03] Completed 1305000 out of 1500000 steps  (87%)
+[20:37:25] Writing local files
+[20:37:25] Completed 1320000 out of 1500000 steps  (88%)
+[20:49:47] Writing local files
+[20:49:47] Completed 1335000 out of 1500000 steps  (89%)
+[21:02:10] Writing local files
+[21:02:10] Completed 1350000 out of 1500000 steps  (90%)
+[21:14:32] Writing local files
+[21:14:32] Completed 1365000 out of 1500000 steps  (91%)
+[21:26:55] Writing local files
+[21:26:55] Completed 1380000 out of 1500000 steps  (92%)
+[21:39:17] Writing local files
+[21:39:17] Completed 1395000 out of 1500000 steps  (93%)
+[21:51:40] Writing local files
+[21:51:40] Completed 1410000 out of 1500000 steps  (94%)
+[22:04:03] Writing local files
+[22:04:03] Completed 1425000 out of 1500000 steps  (95%)
+[22:16:26] Writing local files
+[22:16:26] Completed 1440000 out of 1500000 steps  (96%)
+[22:28:48] Writing local files
+[22:28:48] Completed 1455000 out of 1500000 steps  (97%)
+[22:41:11] Writing local files
+[22:41:11] Completed 1470000 out of 1500000 steps  (98%)
+[22:53:33] Writing local files
+[22:53:33] Completed 1485000 out of 1500000 steps  (99%)
+[23:05:55] Writing local files
+[23:05:55] Completed 1500000 out of 1500000 steps  (100%)
+[23:05:55] Writing final coordinates.
+[23:05:55] Past main M.D. loop
+[23:06:55] 
+[23:06:55] Finished Work Unit:
+[23:06:55] - Reading up to 188712 from "work/wudata_01.arc": Read 188712
+[23:06:55] - Reading up to 17680 from "work/wudata_01.xtc": Read 17680
+[23:06:55] goefile size: 0
+[23:06:55] logfile size: 51423
+[23:06:55] Leaving Run
+[23:06:59] - Writing 264819 bytes of core data to disk...
+[23:06:59] Done: 264307 -> 208325 (compressed to 78.8 percent)
+[23:06:59]   ... Done.
+[23:06:59] - Shutting down core
+[23:06:59] 
+[23:06:59] Folding@home Core Shutdown: FINISHED_UNIT
+[23:07:01] CoreStatus = 64 (100)
+[23:07:01] Unit 1 finished with 99 percent of time to deadline remaining.
+[23:07:01] Updated performance fraction: 0.986230
+[23:07:01] Sending work to server
+[23:07:01] Project: 4456 (Run 173, Clone 0, Gen 31)
+[23:07:01] - Read packet limit of 540015616... Set to 524286976.
+
+
+[23:07:01] + Attempting to send results [August 18 23:07:01 UTC]
+[23:07:01] - Reading file work/wuresults_01.dat from core
+[23:07:01]   (Read 208837 bytes from disk)
+[23:07:01] Connecting to http://171.67.108.13:8080/
+[23:07:03] Posted data.
+[23:07:03] Initial: 0000; - Uploaded at ~102 kB/s
+[23:07:03] - Averaged speed for that direction ~102 kB/s
+[23:07:03] + Results successfully sent
+[23:07:03] Thank you for your contribution to Folding@Home.
+[23:07:03] + Starting local stats count at 1
+[23:07:07] Trying to send all finished work units
+[23:07:07] + No unsent completed units remaining.
+[23:07:07] - Preparing to get new work unit...
+[23:07:07] + Attempting to get work packet
+[23:07:07] - Will indicate memory of 2046 MB
+[23:07:07] - Connecting to assignment server
+[23:07:07] Connecting to http://assign.stanford.edu:8080/
+[23:07:08] Posted data.
+[23:07:08] Initial: 43AB; - Successful: assigned to (171.67.108.12).
+[23:07:08] + News From Folding@Home: Welcome to Folding@Home
+[23:07:08] Loaded queue successfully.
+[23:07:08] Connecting to http://171.67.108.12:8080/
+[23:07:10] Posted data.
+[23:07:10] Initial: 0000; - Receiving payload (expected size: 1158479)
+[23:07:16] - Downloaded at ~188 kB/s
+[23:07:16] - Averaged speed for that direction ~152 kB/s
+[23:07:16] + Received work.
+[23:07:16] Trying to send all finished work units
+[23:07:16] + No unsent completed units remaining.
+[23:07:16] + Closed connections
+[23:07:16] 
+[23:07:16] + Processing work unit
+[23:07:16] Core required: FahCore_a0.exe
+[23:07:16] Core not found.
+[23:07:16] - Core is not present or corrupted.
+[23:07:16] - Attempting to download new core...
+[23:07:16] + Downloading new core: FahCore_a0.exe
+[23:07:16] Downloading core (/~pande/Win32/x86/Core_a0.fah from www.stanford.edu)
+[23:07:16] Initial: AFDE; + 10240 bytes downloaded
+[23:07:16] Initial: 0F82; + 20480 bytes downloaded
+[23:07:16] Initial: 0821; + 30720 bytes downloaded
+[23:07:16] Initial: B3D2; + 40960 bytes downloaded
+[23:07:17] Initial: C087; + 51200 bytes downloaded
+[23:07:17] Initial: 4B7F; + 61440 bytes downloaded
+[23:07:17] Initial: DB80; + 71680 bytes downloaded
+[23:07:17] Initial: A821; + 81920 bytes downloaded
+[23:07:17] Initial: 6C0D; + 92160 bytes downloaded
+[23:07:17] Initial: 1611; + 102400 bytes downloaded
+[23:07:17] Initial: 7D62; + 112640 bytes downloaded
+[23:07:17] Initial: 4DE2; + 122880 bytes downloaded
+[23:07:17] Initial: BD02; + 133120 bytes downloaded
+[23:07:17] Initial: 06C5; + 143360 bytes downloaded
+[23:07:17] Initial: B257; + 153600 bytes downloaded
+[23:07:17] Initial: 0306; + 163840 bytes downloaded
+[23:07:17] Initial: 919E; + 174080 bytes downloaded
+[23:07:17] Initial: AB41; + 184320 bytes downloaded
+[23:07:17] Initial: B9BF; + 194560 bytes downloaded
+[23:07:17] Initial: 6F61; + 204800 bytes downloaded
+[23:07:17] Initial: 348F; + 215040 bytes downloaded
+[23:07:17] Initial: 70CE; + 225280 bytes downloaded
+[23:07:18] Initial: 9954; + 235520 bytes downloaded
+[23:07:18] Initial: 5072; + 245760 bytes downloaded
+[23:07:18] Initial: 6890; + 256000 bytes downloaded
+[23:07:18] Initial: 8D4D; + 266240 bytes downloaded
+[23:07:18] Initial: 98ED; + 276480 bytes downloaded
+[23:07:18] Initial: 0FA3; + 286720 bytes downloaded
+[23:07:18] Initial: 069A; + 296960 bytes downloaded
+[23:07:18] Initial: 8719; + 307200 bytes downloaded
+[23:07:18] Initial: 123D; + 317440 bytes downloaded
+[23:07:18] Initial: 6773; + 327680 bytes downloaded
+[23:07:18] Initial: A177; + 337920 bytes downloaded
+[23:07:18] Initial: 545E; + 348160 bytes downloaded
+[23:07:18] Initial: 5F0B; + 358400 bytes downloaded
+[23:07:18] Initial: B9EC; + 368640 bytes downloaded
+[23:07:18] Initial: 87D8; + 378880 bytes downloaded
+[23:07:18] Initial: 26AF; + 389120 bytes downloaded
+[23:07:18] Initial: ED57; + 399360 bytes downloaded
+[23:07:18] Initial: 31DB; + 409600 bytes downloaded
+[23:07:18] Initial: AA54; + 419840 bytes downloaded
+[23:07:18] Initial: 69E9; + 430080 bytes downloaded
+[23:07:18] Initial: 5FCC; + 440320 bytes downloaded
+[23:07:18] Initial: 0B10; + 450560 bytes downloaded
+[23:07:18] Initial: 033D; + 460800 bytes downloaded
+[23:07:18] Initial: D120; + 471040 bytes downloaded
+[23:07:18] Initial: 5414; + 481280 bytes downloaded
+[23:07:18] Initial: 5D94; + 491520 bytes downloaded
+[23:07:18] Initial: 87C8; + 501760 bytes downloaded
+[23:07:18] Initial: F750; + 512000 bytes downloaded
+[23:07:18] Initial: 803B; + 522240 bytes downloaded
+[23:07:18] Initial: 2030; + 532480 bytes downloaded
+[23:07:18] Initial: E958; + 542720 bytes downloaded
+[23:07:18] Initial: 11C1; + 552960 bytes downloaded
+[23:07:18] Initial: E11F; + 563200 bytes downloaded
+[23:07:18] Initial: AF6F; + 573440 bytes downloaded
+[23:07:18] Initial: 0F1A; + 583680 bytes downloaded
+[23:07:18] Initial: A6C3; + 593920 bytes downloaded
+[23:07:18] Initial: E1DF; + 604160 bytes downloaded
+[23:07:18] Initial: BC0C; + 614400 bytes downloaded
+[23:07:18] Initial: 3507; + 624640 bytes downloaded
+[23:07:18] Initial: DE7F; + 634880 bytes downloaded
+[23:07:18] Initial: E990; + 645120 bytes downloaded
+[23:07:18] Initial: BB67; + 655360 bytes downloaded
+[23:07:18] Initial: 5AFE; + 665600 bytes downloaded
+[23:07:18] Initial: 6F1B; + 675840 bytes downloaded
+[23:07:19] Initial: 72B9; + 686080 bytes downloaded
+[23:07:19] Initial: D0C9; + 696320 bytes downloaded
+[23:07:19] Initial: 87A6; + 706560 bytes downloaded
+[23:07:19] Initial: D06C; + 716800 bytes downloaded
+[23:07:19] Initial: 5F69; + 727040 bytes downloaded
+[23:07:19] Initial: 012E; + 737280 bytes downloaded
+[23:07:19] Initial: A37B; + 747520 bytes downloaded
+[23:07:19] Initial: 9F21; + 757760 bytes downloaded
+[23:07:19] Initial: B987; + 768000 bytes downloaded
+[23:07:19] Initial: DA98; + 778240 bytes downloaded
+[23:07:19] Initial: B883; + 788480 bytes downloaded
+[23:07:19] Initial: AC62; + 798720 bytes downloaded
+[23:07:19] Initial: 42E7; + 808960 bytes downloaded
+[23:07:19] Initial: F09C; + 819200 bytes downloaded
+[23:07:19] Initial: 14D1; + 829440 bytes downloaded
+[23:07:19] Initial: 893A; + 839680 bytes downloaded
+[23:07:19] Initial: ED8F; + 849920 bytes downloaded
+[23:07:19] Initial: 67F1; + 860160 bytes downloaded
+[23:07:19] Initial: B404; + 870400 bytes downloaded
+[23:07:19] Initial: 844E; + 880640 bytes downloaded
+[23:07:19] Initial: 58BB; + 890880 bytes downloaded
+[23:07:19] Initial: DF39; + 901120 bytes downloaded
+[23:07:19] Initial: B927; + 911360 bytes downloaded
+[23:07:19] Initial: 3A8D; + 921600 bytes downloaded
+[23:07:19] Initial: BE8C; + 931840 bytes downloaded
+[23:07:19] Initial: 2AA5; + 942080 bytes downloaded
+[23:07:19] Initial: B137; + 952320 bytes downloaded
+[23:07:19] Initial: F981; + 962560 bytes downloaded
+[23:07:19] Initial: 46DB; + 972800 bytes downloaded
+[23:07:19] Initial: 4402; + 983040 bytes downloaded
+[23:07:19] Initial: 7FDA; + 993280 bytes downloaded
+[23:07:19] Initial: 51D3; + 1003520 bytes downloaded
+[23:07:19] Initial: 6596; + 1013760 bytes downloaded
+[23:07:19] Initial: D4AF; + 1024000 bytes downloaded
+[23:07:19] Initial: 26DA; + 1034240 bytes downloaded
+[23:07:19] Initial: 31E7; + 1044480 bytes downloaded
+[23:07:19] Initial: C73E; + 1054720 bytes downloaded
+[23:07:19] Initial: 4516; + 1064960 bytes downloaded
+[23:07:19] Initial: EE2D; + 1073182 bytes downloaded
+[23:07:19] Verifying core Core_a0.fah...
+[23:07:19] Signature is VALID
+[23:07:19] 
+[23:07:19] Trying to unzip core FahCore_a0.exe
+[23:07:20] Decompressed FahCore_a0.exe (1656832 bytes) successfully
+[23:07:20] Decompressed libfftw3f-3.dll (1382280 bytes) successfully
+[23:07:25] + Core successfully engaged
+[23:07:30] 
+[23:07:30] + Processing work unit
+[23:07:30] Core required: FahCore_a0.exe
+[23:07:30] Core found.
+[23:07:30] Working on queue slot 02 [August 18 23:07:30 UTC]
+[23:07:30] + Working ...
+[23:07:30] - Calling '.\FahCore_a0.exe -dir work/ -suffix 02 -checkpoint 30 -forceasm -verbose -lifeline 3492 -version 623'
+
+[23:07:30] 
+[23:07:30] *------------------------------*
+[23:07:30] Folding@Home Gromacs 3.3 Core
+[23:07:30] Version 1.93 (July 23, 2008)
+[23:07:30] 
+[23:07:30] Preparing to commence simulation
+[23:07:30] - Assembly optimizations manually forced on.
+[23:07:30] - Not checking prior termination.
+[23:07:30] - Expanded 1157967 -> 6173133 (decompressed 533.1 percent)
+[23:07:30] - Starting from initial work packet
+[23:07:30] 
+[23:07:30] Project: 5113 (Run 144, Clone 48, Gen 8)
+[23:07:30] 
+[23:07:31] Assembly optimizations on if available.
+[23:07:31] Entering M.D.
+[23:07:37] Rejecting checkpoint
+[23:07:37] Protein: Calmodulin in water
+[23:07:37] Writing local files
+[23:07:38] Extra SSE boost OK.
+[23:07:38] Writing local files
+[23:07:39] Completed 0 out of 500000 steps  (0 percent)
+[23:25:09] Writing local files
+[23:25:09] Completed 5000 out of 500000 steps  (1 percent)
+[23:42:39] Writing local files
+[23:42:39] Completed 10000 out of 500000 steps  (2 percent)
+[00:00:09] Writing local files
+[00:00:10] Completed 15000 out of 500000 steps  (3 percent)
+[00:17:40] Writing local files
+[00:17:40] Completed 20000 out of 500000 steps  (4 percent)
+[00:35:10] Writing local files
+[00:35:10] Completed 25000 out of 500000 steps  (5 percent)
+[00:52:40] Writing local files
+[00:52:40] Completed 30000 out of 500000 steps  (6 percent)
+[01:10:59] Writing local files
+[01:10:59] Completed 35000 out of 500000 steps  (7 percent)
+[01:29:57] Writing local files
+[01:29:57] Completed 40000 out of 500000 steps  (8 percent)
+[01:48:57] Writing local files
+[01:48:57] Completed 45000 out of 500000 steps  (9 percent)
+[02:07:46] Writing local files
+[02:07:46] Completed 50000 out of 500000 steps  (10 percent)
+[02:17:46] - Autosending finished units... [August 19 02:17:46 UTC]
+[02:17:46] Trying to send all finished work units
+[02:17:46] + No unsent completed units remaining.
+[02:17:46] - Autosend completed
+[02:26:08] Writing local files
+[02:26:08] Completed 55000 out of 500000 steps  (11 percent)
+[02:44:33] Writing local files
+[02:44:33] Completed 60000 out of 500000 steps  (12 percent)
+[03:02:57] Writing local files
+[03:02:58] Completed 65000 out of 500000 steps  (13 percent)
+[03:21:22] Writing local files
+[03:21:22] Completed 70000 out of 500000 steps  (14 percent)
+[03:39:48] Writing local files
+[03:39:48] Completed 75000 out of 500000 steps  (15 percent)
+[03:58:14] Writing local files
+[03:58:14] Completed 80000 out of 500000 steps  (16 percent)
+[04:16:40] Writing local files
+[04:16:40] Completed 85000 out of 500000 steps  (17 percent)
+[04:35:08] Writing local files
+[04:35:08] Completed 90000 out of 500000 steps  (18 percent)
+[04:53:37] Writing local files
+[04:53:37] Completed 95000 out of 500000 steps  (19 percent)
+[05:12:06] Writing local files
+[05:12:06] Completed 100000 out of 500000 steps  (20 percent)
+[05:30:34] Writing local files
+[05:30:34] Completed 105000 out of 500000 steps  (21 percent)
+[05:49:03] Writing local files
+[05:49:03] Completed 110000 out of 500000 steps  (22 percent)
+[06:07:30] Writing local files
+[06:07:31] Completed 115000 out of 500000 steps  (23 percent)
+[06:25:29] Writing local files
+[06:25:29] Completed 120000 out of 500000 steps  (24 percent)
+[06:43:00] Writing local files
+[06:43:00] Completed 125000 out of 500000 steps  (25 percent)
+[07:00:31] Writing local files
+[07:00:31] Completed 130000 out of 500000 steps  (26 percent)
+[07:18:02] Writing local files
+[07:18:02] Completed 135000 out of 500000 steps  (27 percent)
+[07:35:33] Writing local files
+[07:35:33] Completed 140000 out of 500000 steps  (28 percent)
+[07:53:03] Writing local files
+[07:53:03] Completed 145000 out of 500000 steps  (29 percent)
+[08:10:35] Writing local files
+[08:10:35] Completed 150000 out of 500000 steps  (30 percent)
+[08:17:46] - Autosending finished units... [August 19 08:17:46 UTC]
+[08:17:46] Trying to send all finished work units
+[08:17:46] + No unsent completed units remaining.
+[08:17:46] - Autosend completed
+[08:28:06] Writing local files
+[08:28:06] Completed 155000 out of 500000 steps  (31 percent)
+[08:45:37] Writing local files
+[08:45:37] Completed 160000 out of 500000 steps  (32 percent)
+[09:03:09] Writing local files
+[09:03:09] Completed 165000 out of 500000 steps  (33 percent)
+[09:20:40] Writing local files
+[09:20:40] Completed 170000 out of 500000 steps  (34 percent)
+[09:38:12] Writing local files
+[09:38:12] Completed 175000 out of 500000 steps  (35 percent)
+[09:55:43] Writing local files
+[09:55:43] Completed 180000 out of 500000 steps  (36 percent)
+[10:13:14] Writing local files
+[10:13:14] Completed 185000 out of 500000 steps  (37 percent)
+[10:30:45] Writing local files
+[10:30:45] Completed 190000 out of 500000 steps  (38 percent)
+[10:48:16] Writing local files
+[10:48:16] Completed 195000 out of 500000 steps  (39 percent)
+[11:05:47] Writing local files
+[11:05:47] Completed 200000 out of 500000 steps  (40 percent)
+[11:23:18] Writing local files
+[11:23:18] Completed 205000 out of 500000 steps  (41 percent)
+[11:40:49] Writing local files
+[11:40:49] Completed 210000 out of 500000 steps  (42 percent)
+[11:58:20] Writing local files
+[11:58:20] Completed 215000 out of 500000 steps  (43 percent)
+[12:15:50] Writing local files
+[12:15:51] Completed 220000 out of 500000 steps  (44 percent)
+[12:33:21] Writing local files
+[12:33:21] Completed 225000 out of 500000 steps  (45 percent)
+[12:51:25] Writing local files
+[12:51:25] Completed 230000 out of 500000 steps  (46 percent)
+[13:09:53] Writing local files
+[13:09:53] Completed 235000 out of 500000 steps  (47 percent)
+[13:28:22] Writing local files
+[13:28:22] Completed 240000 out of 500000 steps  (48 percent)
+[13:46:49] Writing local files
+[13:46:50] Completed 245000 out of 500000 steps  (49 percent)
+[14:05:18] Writing local files
+[14:05:18] Completed 250000 out of 500000 steps  (50 percent)
+[14:17:46] - Autosending finished units... [August 19 14:17:46 UTC]
+[14:17:46] Trying to send all finished work units
+[14:17:46] + No unsent completed units remaining.
+[14:17:46] - Autosend completed
+[14:23:46] Writing local files
+[14:23:46] Completed 255000 out of 500000 steps  (51 percent)
+[14:42:13] Writing local files
+[14:42:13] Completed 260000 out of 500000 steps  (52 percent)
+[15:00:41] Writing local files
+[15:00:41] Completed 265000 out of 500000 steps  (53 percent)
+[15:19:09] Writing local files
+[15:19:09] Completed 270000 out of 500000 steps  (54 percent)
+[15:37:36] Writing local files
+[15:37:36] Completed 275000 out of 500000 steps  (55 percent)
+[15:56:04] Writing local files
+[15:56:04] Completed 280000 out of 500000 steps  (56 percent)
+[16:14:33] Writing local files
+[16:14:33] Completed 285000 out of 500000 steps  (57 percent)
+[16:33:00] Writing local files
+[16:33:00] Completed 290000 out of 500000 steps  (58 percent)
+[16:51:28] Writing local files
+[16:51:28] Completed 295000 out of 500000 steps  (59 percent)
+[17:09:55] Writing local files
+[17:09:55] Completed 300000 out of 500000 steps  (60 percent)
+[17:28:23] Writing local files
+[17:28:24] Completed 305000 out of 500000 steps  (61 percent)
+[17:46:51] Writing local files
+[17:46:51] Completed 310000 out of 500000 steps  (62 percent)
+[18:05:19] Writing local files
+[18:05:19] Completed 315000 out of 500000 steps  (63 percent)
+[18:23:47] Writing local files
+[18:23:47] Completed 320000 out of 500000 steps  (64 percent)
+[18:42:15] Writing local files
+[18:42:15] Completed 325000 out of 500000 steps  (65 percent)
+[19:00:42] Writing local files
+[19:00:42] Completed 330000 out of 500000 steps  (66 percent)
+[19:19:09] Writing local files
+[19:19:09] Completed 335000 out of 500000 steps  (67 percent)
+[19:37:36] Writing local files
+[19:37:36] Completed 340000 out of 500000 steps  (68 percent)
+[19:56:03] Writing local files
+[19:56:03] Completed 345000 out of 500000 steps  (69 percent)
+[20:14:31] Writing local files
+[20:14:31] Completed 350000 out of 500000 steps  (70 percent)
+[20:17:46] - Autosending finished units... [August 19 20:17:46 UTC]
+[20:17:46] Trying to send all finished work units
+[20:17:46] + No unsent completed units remaining.
+[20:17:46] - Autosend completed
+[20:32:59] Writing local files
+[20:32:59] Completed 355000 out of 500000 steps  (71 percent)
+[20:51:28] Writing local files
+[20:51:28] Completed 360000 out of 500000 steps  (72 percent)
+[21:09:58] Writing local files
+[21:09:58] Completed 365000 out of 500000 steps  (73 percent)
+[21:28:56] Writing local files
+[21:28:56] Completed 370000 out of 500000 steps  (74 percent)
+[21:47:53] Writing local files
+[21:47:53] Completed 375000 out of 500000 steps  (75 percent)
+[22:06:51] Writing local files
+[22:06:51] Completed 380000 out of 500000 steps  (76 percent)
+[22:25:24] Writing local files
+[22:25:24] Completed 385000 out of 500000 steps  (77 percent)
+[22:43:52] Writing local files
+[22:43:52] Completed 390000 out of 500000 steps  (78 percent)
+[23:02:20] Writing local files
+[23:02:20] Completed 395000 out of 500000 steps  (79 percent)
+[23:20:47] Writing local files
+[23:20:47] Completed 400000 out of 500000 steps  (80 percent)
+[23:39:15] Writing local files
+[23:39:15] Completed 405000 out of 500000 steps  (81 percent)
+[23:57:42] Writing local files
+[23:57:42] Completed 410000 out of 500000 steps  (82 percent)
+[00:16:10] Writing local files
+[00:16:10] Completed 415000 out of 500000 steps  (83 percent)
+[00:33:45] Writing local files
+[00:33:46] Completed 420000 out of 500000 steps  (84 percent)
+[00:51:17] Writing local files
+[00:51:17] Completed 425000 out of 500000 steps  (85 percent)
+[01:08:42] Writing local files
+[01:08:42] Completed 430000 out of 500000 steps  (86 percent)
+[01:26:26] Writing local files
+[01:26:26] Completed 435000 out of 500000 steps  (87 percent)
+[01:44:10] Writing local files
+[01:44:10] Completed 440000 out of 500000 steps  (88 percent)
+[02:01:55] Writing local files
+[02:01:55] Completed 445000 out of 500000 steps  (89 percent)
+[02:17:46] - Autosending finished units... [August 20 02:17:46 UTC]
+[02:17:46] Trying to send all finished work units
+[02:17:46] + No unsent completed units remaining.
+[02:17:46] - Autosend completed
+[02:19:39] Writing local files
+[02:19:39] Completed 450000 out of 500000 steps  (90 percent)
+[02:37:23] Writing local files
+[02:37:23] Completed 455000 out of 500000 steps  (91 percent)
+[02:55:08] Writing local files
+[02:55:08] Completed 460000 out of 500000 steps  (92 percent)
+[03:12:52] Writing local files
+[03:12:53] Completed 465000 out of 500000 steps  (93 percent)
+[03:30:38] Writing local files
+[03:30:38] Completed 470000 out of 500000 steps  (94 percent)
+[03:48:22] Writing local files
+[03:48:22] Completed 475000 out of 500000 steps  (95 percent)
+[04:06:07] Writing local files
+[04:06:07] Completed 480000 out of 500000 steps  (96 percent)
+[04:17:02] ***** Got a SIGTERM signal (2)
+[04:17:02] Killing all core threads
+
+Folding@Home Client Shutdown.
+
+
+--- Opening Log file [August 20 04:17:29 UTC] 
+
+
+# Windows CPU Console Edition #################################################
+###############################################################################
+
+                       Folding@Home Client Version 6.23
+
+                          http://folding.stanford.edu
+
+###############################################################################
+###############################################################################
+
+Launch directory: C:\Program Files\FAH1
+Executable: Folding@home-Win32-x86.exe
+Arguments: -verbosity 9 -forceasm -oneunit 
+
+Warning:
+ By using the -forceasm flag, you are overriding
+ safeguards in the program. If you did not intend to
+ do this, please restart the program without -forceasm.
+ If work units are not completing fully (and particularly
+ if your machine is overclocked), then please discontinue
+ use of the flag.
+
+[04:17:29] - Ask before connecting: No
+[04:17:29] - User name: harlam357 (Team 32)
+[04:17:29] - User ID: 4E34332601E26450
+[04:17:29] - Machine ID: 5
+[04:17:29] 
+[04:17:29] Loaded queue successfully.
+[04:17:29] 
+[04:17:29] - Autosending finished units... [August 20 04:17:29 UTC]
+[04:17:29] Trying to send all finished work units
+[04:17:29] + No unsent completed units remaining.
+[04:17:29] + Processing work unit
+[04:17:29] - Autosend completed
+[04:17:29] Core required: FahCore_a0.exe
+[04:17:29] Core found.
+[04:17:29] Working on queue slot 02 [August 20 04:17:29 UTC]
+[04:17:29] + Working ...
+[04:17:29] - Calling '.\FahCore_a0.exe -dir work/ -suffix 02 -checkpoint 30 -forceasm -verbose -lifeline 696 -version 623'
+
+[04:17:29] 
+[04:17:29] *------------------------------*
+[04:17:29] Folding@Home Gromacs 3.3 Core
+[04:17:29] Version 1.93 (July 23, 2008)
+[04:17:29] 
+[04:17:29] Preparing to commence simulation
+[04:17:29] - Assembly optimizations manually forced on.
+[04:17:29] - Not checking prior termination.
+[04:17:30] - Expanded 1157967 -> 6173133 (decompressed 533.1 percent)
+[04:17:30] 
+[04:17:30] Project: 5113 (Run 144, Clone 48, Gen 8)
+[04:17:30] 
+[04:17:30] Assembly optimizations on if available.
+[04:17:30] Entering M.D.
+[04:17:36] FAH Init
+[04:17:36] Checkpoint file: 
+[04:17:41] (Starting from checkpoint)
+[04:17:41] Read checkpoint
+[04:17:41] Protein: Calmodulin in water
+[04:17:41] Writing local files
+[04:17:42] Completed 480000 out of 500000 steps  (96 percent)
+[04:17:42] Extra SSE boost OK.
+[04:35:25] Writing local files
+[04:35:25] Completed 485000 out of 500000 steps  (97 percent)
+[04:53:08] Writing local files
+[04:53:08] Completed 490000 out of 500000 steps  (98 percent)
+[05:10:52] Writing local files
+[05:10:52] Completed 495000 out of 500000 steps  (99 percent)
+[05:28:36] Writing local files
+[05:28:36] Completed 500000 out of 500000 steps  (100 percent)
+[05:28:36] Writing final coordinates.
+[05:28:36] Past main M.D. loop
+[05:29:36] 
+[05:29:36] Finished Work Unit:
+[05:29:36] - Reading up to 2051136 from "work/wudata_02.arc": Read 2051136
+[05:29:36] - Reading up to 226756 from "work/wudata_02.xtc": Read 226756
+[05:29:36] goefile size: 0
+[05:29:36] logfile size: 43039
+[05:29:36] Leaving Run
+[05:29:40] - Writing 2331347 bytes of core data to disk...
+[05:29:40]   ... Done.
+[05:29:40] - Error deleting work files.
+[05:29:40] - Shutting down core
+[05:29:40] 
+[05:29:40] Folding@home Core Shutdown: FINISHED_UNIT
+[05:29:44] CoreStatus = 64 (100)
+[05:29:44] Unit 2 finished with 97 percent of time to deadline remaining.
+[05:29:44] Updated performance fraction: 0.980459
+[05:29:44] Sending work to server
+[05:29:44] Project: 5113 (Run 144, Clone 48, Gen 8)
+[05:29:44] - Read packet limit of 540015616... Set to 524286976.
+
+
+[05:29:44] + Attempting to send results [August 20 05:29:44 UTC]
+[05:29:44] - Reading file work/wuresults_02.dat from core
+[05:29:44]   (Read 2331347 bytes from disk)
+[05:29:44] Connecting to http://171.67.108.12:8080/
+[05:29:56] Posted data.
+[05:29:56] Initial: 0000; - Uploaded at ~175 kB/s
+[05:29:57] - Averaged speed for that direction ~138 kB/s
+[05:29:57] + Results successfully sent
+[05:29:57] Thank you for your contribution to Folding@Home.
+[05:29:57] + Number of Units Completed: 2
+
+[05:30:01] Trying to send all finished work units
+[05:30:01] + No unsent completed units remaining.
+[05:30:01] + -oneunit flag given and have now finished a unit. Exiting.***** Got a SIGTERM signal (2)
+[05:30:01] Killing all core threads
+
+Folding@Home Client Shutdown.

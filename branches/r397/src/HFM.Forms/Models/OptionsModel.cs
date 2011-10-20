@@ -1,0 +1,303 @@
+﻿/*
+ * HFM.NET - Preferences - Options Tab - Binding Model
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License. See the included file GPLv2.TXT.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
+
+using HFM.Framework;
+
+namespace HFM.Forms.Models
+{
+   class OptionsModel : INotifyPropertyChanged
+   {
+      public OptionsModel(IPreferenceSet prefs)
+      {
+         Load(prefs);
+      }
+
+      public void Load(IPreferenceSet prefs)
+      {
+         OfflineLast = prefs.Get<bool>(Preference.OfflineLast);
+         ColorLogFile = prefs.Get<bool>(Preference.ColorLogFile);
+         AutoSaveConfig = prefs.Get<bool>(Preference.AutoSaveConfig);
+         MaintainSelectedClient = prefs.Get<bool>(Preference.MaintainSelectedClient);
+         PpdCalculation = prefs.Get<PpdCalculationType>(Preference.PpdCalculation);
+         DecimalPlaces = prefs.Get<int>(Preference.DecimalPlaces);
+         CalculateBonus = prefs.Get<bool>(Preference.CalculateBonus);
+         EtaDate = prefs.Get<bool>(Preference.EtaDate);
+         MessageLevel = (TraceLevel)prefs.Get<int>(Preference.MessageLevel);
+         FormShowStyle = prefs.Get<FormShowStyleType>(Preference.FormShowStyle);
+      }
+
+      public void Update(IPreferenceSet prefs)
+      {
+         prefs.Set(Preference.OfflineLast, OfflineLast);
+         prefs.Set(Preference.ColorLogFile, ColorLogFile);
+         prefs.Set(Preference.AutoSaveConfig, AutoSaveConfig);
+         prefs.Set(Preference.MaintainSelectedClient, MaintainSelectedClient);
+         prefs.Set(Preference.PpdCalculation, PpdCalculation);
+         prefs.Set(Preference.DecimalPlaces, DecimalPlaces);
+         prefs.Set(Preference.CalculateBonus, CalculateBonus);
+         prefs.Set(Preference.EtaDate, EtaDate);
+         prefs.Set(Preference.MessageLevel, (int)MessageLevel);
+         prefs.Set(Preference.FormShowStyle, FormShowStyle);
+      }
+
+      #region Interactive Options
+
+      private bool _offlineLast;
+
+      public bool OfflineLast
+      {
+         get { return _offlineLast; }
+         set
+         {
+            if (OfflineLast != value)
+            {
+               _offlineLast = value;
+               OnPropertyChanged("OfflineLast");
+            }
+         }
+      }
+
+      private bool _colorLogFile;
+
+      public bool ColorLogFile
+      {
+         get { return _colorLogFile; }
+         set
+         {
+            if (ColorLogFile != value)
+            {
+               _colorLogFile = value;
+               OnPropertyChanged("ColorLogFile");
+            }
+         }
+      }
+
+      private bool _autoSaveConfig;
+
+      public bool AutoSaveConfig
+      {
+         get { return _autoSaveConfig; }
+         set
+         {
+            if (AutoSaveConfig != value)
+            {
+               _autoSaveConfig = value;
+               OnPropertyChanged("AutoSaveConfig");
+            }
+         }
+      }
+
+      private bool _maintainSelectedClient;
+
+      public bool MaintainSelectedClient
+      {
+         get { return _maintainSelectedClient; }
+         set
+         {
+            if (MaintainSelectedClient != value)
+            {
+               _maintainSelectedClient = value;
+               OnPropertyChanged("MaintainSelectedClient");
+            }
+         }
+      }
+
+      private PpdCalculationType _ppdCalculation;
+      
+      public PpdCalculationType PpdCalculation
+      {
+         get { return _ppdCalculation; }
+         set
+         {
+            if (PpdCalculation != value)
+            {
+               _ppdCalculation = value;
+               OnPropertyChanged("PpdCalculation");
+            }
+         }
+      }
+
+      private int _decimalPlaces;
+
+      public int DecimalPlaces
+      {
+         get { return _decimalPlaces; }
+         set
+         {
+            if (DecimalPlaces != value)
+            {
+               _decimalPlaces = value;
+               OnPropertyChanged("DecimalPlaces");
+            }
+         }
+      }
+
+      private bool _calculateBonus;
+
+      public bool CalculateBonus
+      {
+         get { return _calculateBonus; }
+         set
+         {
+            if (CalculateBonus != value)
+            {
+               _calculateBonus = value;
+               OnPropertyChanged("CalculateBonus");
+            }
+         }
+      }
+
+      private bool _etaDate;
+      
+      public bool EtaDate
+      {
+         get { return _etaDate; }
+         set
+         {
+            if (EtaDate != value)
+            {
+               _etaDate = value;
+               OnPropertyChanged("EtaDate");
+            }
+         }
+      }
+      
+      #endregion
+
+      #region Debug Message Level
+
+      private TraceLevel _messageLevel;
+
+      public TraceLevel MessageLevel
+      {
+         get { return _messageLevel; }
+         set
+         {
+            if (MessageLevel != value)
+            {
+               _messageLevel = value;
+               OnPropertyChanged("MessageLevel");
+            }
+         }
+      }
+      
+      #endregion
+
+      #region Form Docking Style
+
+      private FormShowStyleType _formShowStyle;
+
+      public FormShowStyleType FormShowStyle
+      {
+         get { return _formShowStyle; }
+         set
+         {
+            if (FormShowStyle != value)
+            {
+               _formShowStyle = value;
+               OnPropertyChanged("FormShowStyle");
+            }
+         }
+      }
+      
+      #endregion
+   
+      #region INotifyPropertyChanged Members
+
+      public event PropertyChangedEventHandler PropertyChanged;
+
+      private void OnPropertyChanged(string propertyName)
+      {
+         if (PropertyChanged != null)
+         {
+            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+         }
+      }
+
+      #endregion
+
+      public static ReadOnlyCollection<ListItem> PpdCalculationList
+      {
+         get
+         {
+            var list = new List<ListItem>
+                       {
+                          new ListItem
+                          { DisplayMember = "Last Frame", ValueMember = PpdCalculationType.LastFrame },
+                          new ListItem
+                          { DisplayMember = "Last Three Frames", ValueMember = PpdCalculationType.LastThreeFrames },
+                          new ListItem
+                          { DisplayMember = "All Frames", ValueMember = PpdCalculationType.AllFrames },
+                          new ListItem
+                          { DisplayMember = "Effective Rate", ValueMember = PpdCalculationType.EffectiveRate }
+                       };
+            return list.AsReadOnly();
+         }
+      }
+
+      public static ReadOnlyCollection<ListItem> DebugList
+      {
+         get
+         {
+            var list = new List<ListItem>
+                       {
+                          new ListItem
+                          { DisplayMember = TraceLevel.Off.ToString(), ValueMember = TraceLevel.Off },
+                          new ListItem
+                          { DisplayMember = TraceLevel.Error.ToString(), ValueMember = TraceLevel.Error },
+                          new ListItem
+                          { DisplayMember = TraceLevel.Warning.ToString(), ValueMember = TraceLevel.Warning },
+                          new ListItem
+                          { DisplayMember = TraceLevel.Info.ToString(), ValueMember = TraceLevel.Info },
+                          new ListItem
+                          { DisplayMember = TraceLevel.Verbose.ToString(), ValueMember = TraceLevel.Verbose }
+                       };
+            return list.AsReadOnly();
+         }
+      }
+
+      public static ReadOnlyCollection<ListItem> DockingStyleList
+      {
+         get
+         {
+            var list = new List<ListItem>
+                       {
+                          new ListItem
+                          { DisplayMember = "System Tray", ValueMember = FormShowStyleType.SystemTray },
+                          new ListItem
+                          { DisplayMember = "Task Bar", ValueMember = FormShowStyleType.TaskBar },
+                          new ListItem
+                          { DisplayMember = "Both", ValueMember = FormShowStyleType.Both }
+                       };
+            return list.AsReadOnly();
+         }
+      }
+   }
+   
+   struct ListItem
+   {
+      public string DisplayMember { get; set; }
+      public object ValueMember { get; set; }
+   }
+}

@@ -1,0 +1,25 @@
+PyON 1 simulation-info
+{
+  "user": "ChasR",
+  "team": "32",
+  "project": 5788,
+  "run": 9,
+  "clone": 838,
+  "gen": 9,
+  "core_type": 17,
+  "core": "GROGPU2",
+  "description": "",
+  "total_iterations": 20000,
+  "iterations_done": 19200,
+  "energy": 0,
+  "temperature": 0,
+  "start_time": "17/Aug/2011-18:18:47",
+  "timeout": 0,
+  "deadline": 2809677412044885000,
+  "run_time": 7856,
+  "simulation_time": 0,
+  "eta": 262,
+  "news": ""
+}
+---
+

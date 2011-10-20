@@ -1,0 +1,138 @@
+PyON 1 info
+[
+  [
+    "Folding@home Client",
+    [
+      "Website",
+      "http://folding.stanford.edu/"
+    ],
+    [
+      "Copyright",
+      "(c) 2009,2010 Stanford University"
+    ],
+    [
+      "Author",
+      "Joseph Coffland <joseph@cauldrondevelopment.com>"
+    ],
+    [
+      "Args",
+      " --lifeline 4040 --command-port=36330"
+    ],
+    [
+      "Config",
+      "C:/folding/FAH-V7/config.xml"
+    ]
+  ],
+  [
+    "Build",
+    [
+      "Version",
+      "7.1.24"
+    ],
+    [
+      "Date",
+      "Apr  6 2011"
+    ],
+    [
+      "Time",
+      "21:37:50"
+    ],
+    [
+      "SVN Rev",
+      "2908"
+    ],
+    [
+      "Branch",
+      "fah/trunk/client"
+    ],
+    [
+      "Compiler",
+      "Intel(R) C++ MSVC 1500 mode 1110"
+    ],
+    [
+      "Options",
+      "/TP /nologo /EHa /wd4297 /wd4103 /wd1786 /Ox -arch:SSE /QaxSSE2,SSE3,SSSE3,SSE4.1,SSE4.2 /Qrestrict /MT"
+    ],
+    [
+      "Platform",
+      "win32 XP"
+    ],
+    [
+      "Bits",
+      "32"
+    ],
+    [
+      "Mode",
+      "Release"
+    ]
+  ],
+  [
+    "System",
+    [
+      "OS",
+      "Microsoft Windows XP Professional"
+    ],
+    [
+      "CPU",
+      "Intel(R) Core(TM)2 Quad  CPU   Q9450  @ 2.66GHz"
+    ],
+    [
+      "CPU ID",
+      "GenuineIntel Family 6 Model 23 Stepping 7"
+    ],
+    [
+      "CPUs",
+      "4"
+    ],
+    [
+      "Memory",
+      "3.25GiB"
+    ],
+    [
+      "Free Memory",
+      "2.54GiB"
+    ],
+    [
+      "Threads",
+      "WINDOWS_THREADS"
+    ],
+    [
+      "GPUs",
+      "1"
+    ],
+    [
+      "GPU 0",
+      "FERMI:1 GF106 [GeForce 450 GTS]"
+    ],
+    [
+      "CUDA",
+      "2.1"
+    ],
+    [
+      "CUDA Driver",
+      "3020"
+    ],
+    [
+      "On Battery",
+      "false"
+    ],
+    [
+      "UTC offset",
+      "-5"
+    ],
+    [
+      "PID",
+      "3204"
+    ],
+    [
+      "CWD",
+      "C:/folding/FAH-V7"
+    ],
+    [
+      "Win32 Service",
+      "false"
+    ]
+  ]
+]
+---
+

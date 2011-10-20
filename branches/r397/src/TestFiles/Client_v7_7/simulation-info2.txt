@@ -1,0 +1,25 @@
+PyON 1 simulation-info
+{
+  "user": "HayesK",
+  "team": "32",
+  "project": 6801,
+  "run": 6348,
+  "clone": 0,
+  "gen": 305,
+  "core_type": 21,
+  "core": "OPENMMGPU",
+  "description": "",
+  "total_iterations": 50000,
+  "iterations_done": 20000,
+  "energy": 0,
+  "temperature": 0,
+  "start_time": "23/Aug/2011-00:37:16",
+  "timeout": 1314491836,
+  "deadline": 1314923836,
+  "run_time": 5325,
+  "simulation_time": 0,
+  "eta": 7807,
+  "news": ""
+}
+---
+

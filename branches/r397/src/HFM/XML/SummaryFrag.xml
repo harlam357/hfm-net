@@ -1,0 +1,33 @@
+﻿<Instance>
+   <Status>Offline</Status>
+   <StatusColor>Red</StatusColor>
+   <StatusFontColor>Black</StatusFontColor>
+   <PercentComplete>?</PercentComplete>
+   <Name>Instance</Name>
+   <UserIDDuplicate>False</UserIDDuplicate>
+   <ClientType>N/A</ClientType>
+   <ClientVersion>N/A</ClientVersion>
+   <TPF>00:00:00</TPF>
+   <PPD>N/A</PPD>
+   <UPD>N/A</UPD>
+   <MHz>1</MHz>
+   <PPDMHz>N/A</PPDMHz>
+   <ETA>00:00:00</ETA>
+   <ETADate>1/1/2000 00:00 AM</ETADate>
+   <ShowETADate>False</ShowETADate>
+   <Core>N/A</Core>
+   <CoreVersion>N/A</CoreVersion>
+   <CoreID>N/A</CoreID>
+   <ProjectRunCloneGen>N/A</ProjectRunCloneGen>
+   <ProjectDuplicate>False</ProjectDuplicate>
+   <Credit>N/A</Credit>
+   <Completed>N/A</Completed>
+   <Failed>N/A</Failed>
+   <TotalCompleted>N/A</TotalCompleted>
+   <CompletedCountDisplay>ClientRunTotal</CompletedCountDisplay>
+   <Username>N/A</Username>
+   <UsernameMatch>True</UsernameMatch>
+   <ShowVersions>False</ShowVersions>
+   <DownloadTime>00:00:00</DownloadTime>
+   <Deadline>00:00:00</Deadline>
+</Instance>

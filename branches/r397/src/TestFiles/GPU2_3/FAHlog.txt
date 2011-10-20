@@ -1,0 +1,464 @@
+--- Opening Log file [August 18 03:26:33 UTC] 
+
+
+# Windows GPU Console Edition #################################################
+###############################################################################
+
+                       Folding@Home Client Version 6.23
+
+                          http://folding.stanford.edu
+
+###############################################################################
+###############################################################################
+
+Launch directory: D:\Programs\Folding@home -GPU
+Executable: D:\Programs\Folding@home -GPU\Folding@home-Win32-GPU.exe
+
+
+[03:26:33] - Ask before connecting: No
+[03:26:33] - User name: JollySwagman (Team 32)
+[03:26:33] - User ID: 1D1493BB0A79C9AE
+[03:26:33] - Machine ID: 2
+[03:26:33] 
+[03:26:33] Loaded queue successfully.
+[03:26:33] 
+[03:26:33] + Processing work unit
+[03:26:33] Core required: FahCore_14.exe
+[03:26:33] Core found.
+[03:26:33] Working on queue slot 06 [August 18 03:26:33 UTC]
+[03:26:33] + Working ...
+[03:26:34] 
+[03:26:34] *------------------------------*
+[03:26:34] Folding@Home GPU Core - Beta
+[03:26:34] Version 1.25 (Mon Mar 2 19:49:32 PST 2009)
+[03:26:34] 
+[03:26:34] Compiler  : Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 14.00.50727.762 for 80x86
+[03:26:34] Build host: vspm46
+[03:26:34] Board Type: Nvidia
+[03:26:34] Core      : 
+[03:26:34] Preparing to commence simulation
+[03:26:34] - Looking at optimizations...
+[03:26:34] - Files status OK
+[03:26:34] - Expanded 70304 -> 360060 (decompressed 512.1 percent)
+[03:26:34] Called DecompressByteArray: compressed_data_size=70304 data_size=360060, decompressed_data_size=360060 diff=0
+[03:26:34] - Digital signature verified
+[03:26:34] 
+[03:26:34] Project: 5906 (Run 1, Clone 229, Gen 41)
+[03:26:34] 
+[03:26:37] Assembly optimizations on if available.
+[03:26:37] Entering M.D.
+[03:26:43] Will resume from checkpoint file
+[03:26:44] Tpr hash work/wudata_06.tpr:  3974456976 2337663439 3856888350 2518847507 4037484901
+[03:28:49] Working on Protein
+
+Folding@Home Client Shutdown.
+
+
+--- Opening Log file [August 18 03:54:16 UTC] 
+
+
+# Windows GPU Console Edition #################################################
+###############################################################################
+
+                       Folding@Home Client Version 6.23
+
+                          http://folding.stanford.edu
+
+###############################################################################
+###############################################################################
+
+Launch directory: D:\Programs\Folding@home -GPU
+Executable: D:\Programs\Folding@home -GPU\Folding@home-Win32-GPU.exe
+
+
+[03:54:16] - Ask before connecting: No
+[03:54:16] - User name: JollySwagman (Team 32)
+[03:54:16] - User ID: 1D1493BB0A79C9AE
+[03:54:16] - Machine ID: 2
+[03:54:16] 
+[03:54:16] Loaded queue successfully.
+[03:54:16] 
+[03:54:16] + Processing work unit
+[03:54:16] Core required: FahCore_14.exe
+[03:54:16] Core found.
+[03:54:16] Working on queue slot 06 [August 18 03:54:16 UTC]
+[03:54:16] + Working ...
+[03:54:16] 
+[03:54:16] *------------------------------*
+[03:54:16] Folding@Home GPU Core - Beta
+[03:54:16] Version 1.25 (Mon Mar 2 19:49:32 PST 2009)
+[03:54:16] 
+[03:54:16] Compiler  : Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 14.00.50727.762 for 80x86
+[03:54:16] Build host: vspm46
+[03:54:16] Board Type: Nvidia
+[03:54:16] Core      : 
+[03:54:16] Preparing to commence simulation
+[03:54:16] - Looking at optimizations...
+[03:54:16] - Files status OK
+[03:54:17] - Expanded 70304 -> 360060 (decompressed 512.1 percent)
+[03:54:17] Called DecompressByteArray: compressed_data_size=70304 data_size=360060, decompressed_data_size=360060 diff=0
+[03:54:17] - Digital signature verified
+[03:54:17] 
+[03:54:17] Project: 5906 (Run 1, Clone 229, Gen 41)
+[03:54:17] 
+[03:54:17] Assembly optimizations on if available.
+[03:54:17] Entering M.D.
+[03:54:23] Will resume from checkpoint file
+[03:54:23] Tpr hash work/wudata_06.tpr:  3974456976 2337663439 3856888350 2518847507 4037484901
+[03:54:23] Working on Protein
+[03:54:24] Client config found, loading data.
+[03:54:24] Resuming from checkpoint
+[03:54:24] fcCheckPointResume: retrieved and current tpr file hash:
+[03:54:24]    0   3974456976   3974456976
+[03:54:24]    1   2337663439   2337663439
+[03:54:24]    2   3856888350   3856888350
+[03:54:24]    3   2518847507   2518847507
+[03:54:24]    4   4037484901   4037484901
+[03:54:24] Verified work/wudata_06.log
+[03:54:24] Verified work/wudata_06.edr
+[03:54:24] Verified work/wudata_06.xtc
+[03:54:24] Completed 44%
+[03:54:24] Starting GUI Server
+[03:55:39] Completed 45%
+[03:57:28] Completed 46%
+[03:59:07] Completed 47%
+[04:00:36] Completed 48%
+[04:02:09] Completed 49%
+[04:03:46] Completed 50%
+[04:05:14] Completed 51%
+[04:06:53] Completed 52%
+[04:08:27] Completed 53%
+[04:10:03] Completed 54%
+[04:11:37] Completed 55%
+[04:13:08] Completed 56%
+[04:14:37] Completed 57%
+[04:16:12] Completed 58%
+[04:17:50] Completed 59%
+[04:19:25] Completed 60%
+[04:21:05] Completed 61%
+[04:22:38] Completed 62%
+[04:24:20] Completed 63%
+[04:26:08] Completed 64%
+[04:27:46] Completed 65%
+[04:29:18] Completed 66%
+[04:30:49] Completed 67%
+[04:32:26] Completed 68%
+[04:34:01] Completed 69%
+[04:35:37] Completed 70%
+[04:37:13] Completed 71%
+[04:38:46] Completed 72%
+[04:40:22] Completed 73%
+[04:42:02] Completed 74%
+[04:43:42] Completed 75%
+[04:45:18] Completed 76%
+[04:46:54] Completed 77%
+[04:48:27] Completed 78%
+[04:50:03] Completed 79%
+[04:51:39] Completed 80%
+[04:53:08] Completed 81%
+[04:54:38] Completed 82%
+[04:56:18] Completed 83%
+[04:57:58] Completed 84%
+[04:59:32] Completed 85%
+[05:01:05] Completed 86%
+[05:02:37] Completed 87%
+[05:04:05] Completed 88%
+[05:05:38] Completed 89%
+[05:07:16] Completed 90%
+[05:08:47] Completed 91%
+[05:10:22] Completed 92%
+[05:11:55] Completed 93%
+[05:13:28] Completed 94%
+[05:15:07] Completed 95%
+[05:16:45] Completed 96%
+[05:18:18] Completed 97%
+[05:20:01] Completed 98%
+[05:21:35] Completed 99%
+[05:23:08] Completed 100%
+[05:23:08] Successful run
+[05:23:08] DynamicWrapper: Finished Work Unit: sleep=10000
+[05:23:18] Reserved 11252 bytes for xtc file; Cosm status=0
+[05:23:18] Allocated 11252 bytes for xtc file
+[05:23:18] - Reading up to 11252 from "work/wudata_06.xtc": Read 11252
+[05:23:18] Read 11252 bytes from xtc file; available packet space=786419212
+[05:23:18] xtc file hash check passed.
+[05:23:18] Reserved 23472 23472 786419212 bytes for arc file=<work/wudata_06.trr> Cosm status=0
+[05:23:18] Allocated 23472 bytes for arc file
+[05:23:18] - Reading up to 23472 from "work/wudata_06.trr": Read 23472
+[05:23:18] Read 23472 bytes from arc file; available packet space=786395740
+[05:23:18] trr file hash check passed.
+[05:23:18] Allocated 560 bytes for edr file
+[05:23:18] Read bedfile
+[05:23:18] edr file hash check passed.
+[05:23:18] Allocated 112194 bytes for logfile
+[05:23:18] Read logfile
+[05:23:18] GuardedRun: success in DynamicWrapper
+[05:23:18] GuardedRun: done
+[05:23:18] Run: GuardedRun completed.
+[05:23:22] - Writing 147990 bytes of core data to disk...
+[05:23:22] Done: 147478 -> 48528 (compressed to 32.9 percent)
+[05:23:22]   ... Done.
+[05:23:22] - Shutting down core 
+[05:23:22] 
+[05:23:22] Folding@home Core Shutdown: FINISHED_UNIT
+[05:23:25] CoreStatus = 64 (100)
+[05:23:25] Sending work to server
+[05:23:25] Project: 5906 (Run 1, Clone 229, Gen 41)
+
+
+[05:23:25] + Attempting to send results [August 18 05:23:25 UTC]
+[05:23:31] + Results successfully sent
+[05:23:31] Thank you for your contribution to Folding@Home.
+[05:23:31] + Number of Units Completed: 224
+
+[05:23:35] - Preparing to get new work unit...
+[05:23:35] + Attempting to get work packet
+[05:23:35] - Connecting to assignment server
+[05:23:35] - Successful: assigned to (171.67.108.11).
+[05:23:35] + News From Folding@Home: Welcome to Folding@Home
+[05:23:36] Loaded queue successfully.
+[05:23:38] + Closed connections
+[05:23:38] 
+[05:23:38] + Processing work unit
+[05:23:38] Core required: FahCore_11.exe
+[05:23:38] Core found.
+[05:23:38] Working on queue slot 07 [August 18 05:23:38 UTC]
+[05:23:38] + Working ...
+[05:23:38] 
+[05:23:38] *------------------------------*
+[05:23:38] Folding@Home GPU Core - Beta
+[05:23:38] Version 1.19 (Mon Nov 3 09:34:13 PST 2008)
+[05:23:38] 
+[05:23:38] Compiler  : Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 14.00.50727.762 for 80x86 
+[05:23:38] Build host: amoeba
+[05:23:38] Board Type: Nvidia
+[05:23:38] Core      : 
+[05:23:38] Preparing to commence simulation
+[05:23:38] - Looking at optimizations...
+[05:23:38] - Created dyn
+[05:23:38] - Files status OK
+[05:23:38] - Expanded 98888 -> 492276 (decompressed 497.8 percent)
+[05:23:38] Called DecompressByteArray: compressed_data_size=98888 data_size=492276, decompressed_data_size=492276 diff=0
+[05:23:38] - Digital signature verified
+[05:23:38] 
+[05:23:38] Project: 5756 (Run 6, Clone 32, Gen 480)
+[05:23:38] 
+[05:23:38] Assembly optimizations on if available.
+[05:23:38] Entering M.D.
+[05:23:44] Working on Protein
+[05:23:50] Client config found, loading data.
+[05:23:51] Starting GUI Server
+[05:26:03] Completed 1%
+[05:28:14] Completed 2%
+[05:30:25] Completed 3%
+[05:32:26] Completed 4%
+[05:32:26] mdrun_gpu returned 
+[05:32:26] NANs detected on GPU
+[05:32:26] 
+[05:32:26] Folding@home Core Shutdown: UNSTABLE_MACHINE
+[05:32:30] CoreStatus = 7A (122)
+[05:32:30] Sending work to server
+[05:32:30] Project: 5756 (Run 6, Clone 32, Gen 480)
+[05:32:30] - Error: Could not get length of results file work/wuresults_07.dat
+[05:32:30] - Error: Could not read unit 07 file. Removing from queue.
+[05:32:30] - Preparing to get new work unit...
+[05:32:30] + Attempting to get work packet
+[05:32:30] - Connecting to assignment server
+[05:32:31] - Successful: assigned to (171.67.108.11).
+[05:32:31] + News From Folding@Home: Welcome to Folding@Home
+[05:32:31] Loaded queue successfully.
+[05:32:33] + Closed connections
+[05:32:38] 
+[05:32:38] + Processing work unit
+[05:32:38] Core required: FahCore_11.exe
+[05:32:38] Core found.
+[05:32:38] Working on queue slot 08 [August 18 05:32:38 UTC]
+[05:32:38] + Working ...
+[05:32:38] 
+[05:32:38] *------------------------------*
+[05:32:38] Folding@Home GPU Core - Beta
+[05:32:38] Version 1.19 (Mon Nov 3 09:34:13 PST 2008)
+[05:32:38] 
+[05:32:38] Compiler  : Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 14.00.50727.762 for 80x86 
+[05:32:38] Build host: amoeba
+[05:32:38] Board Type: Nvidia
+[05:32:38] Core      : 
+[05:32:38] Preparing to commence simulation
+[05:32:38] - Looking at optimizations...
+[05:32:38] - Created dyn
+[05:32:38] - Files status OK
+[05:32:38] - Expanded 98888 -> 492276 (decompressed 497.8 percent)
+[05:32:38] Called DecompressByteArray: compressed_data_size=98888 data_size=492276, decompressed_data_size=492276 diff=0
+[05:32:38] - Digital signature verified
+[05:32:38] 
+[05:32:38] Project: 5756 (Run 6, Clone 32, Gen 480)
+[05:32:38] 
+[05:32:38] Assembly optimizations on if available.
+[05:32:38] Entering M.D.
+[05:32:45] Working on Protein
+[05:32:51] Client config found, loading data.
+[05:32:51] Starting GUI Server
+[05:35:03] Completed 1%
+[05:37:14] Completed 2%
+[05:39:25] Completed 3%
+[05:39:25] mdrun_gpu returned 
+[05:39:25] Nonzero force sum on GPU
+[05:39:25] 
+[05:39:25] Folding@home Core Shutdown: UNSTABLE_MACHINE
+[05:39:28] CoreStatus = 7A (122)
+[05:39:28] Sending work to server
+[05:39:28] Project: 5756 (Run 6, Clone 32, Gen 480)
+[05:39:28] - Error: Could not get length of results file work/wuresults_08.dat
+[05:39:28] - Error: Could not read unit 08 file. Removing from queue.
+[05:39:28] - Preparing to get new work unit...
+[05:39:28] + Attempting to get work packet
+[05:39:28] - Connecting to assignment server
+[05:39:30] - Successful: assigned to (171.67.108.11).
+[05:39:30] + News From Folding@Home: Welcome to Folding@Home
+[05:39:30] Loaded queue successfully.
+[05:39:32] + Closed connections
+[05:39:37] 
+[05:39:37] + Processing work unit
+[05:39:37] Core required: FahCore_11.exe
+[05:39:37] Core found.
+[05:39:37] Working on queue slot 09 [August 18 05:39:37 UTC]
+[05:39:37] + Working ...
+[05:39:37] 
+[05:39:37] *------------------------------*
+[05:39:37] Folding@Home GPU Core - Beta
+[05:39:37] Version 1.19 (Mon Nov 3 09:34:13 PST 2008)
+[05:39:37] 
+[05:39:37] Compiler  : Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 14.00.50727.762 for 80x86 
+[05:39:37] Build host: amoeba
+[05:39:37] Board Type: Nvidia
+[05:39:37] Core      : 
+[05:39:37] Preparing to commence simulation
+[05:39:37] - Looking at optimizations...
+[05:39:37] - Created dyn
+[05:39:37] - Files status OK
+[05:39:37] - Expanded 98888 -> 492276 (decompressed 497.8 percent)
+[05:39:37] Called DecompressByteArray: compressed_data_size=98888 data_size=492276, decompressed_data_size=492276 diff=0
+[05:39:37] - Digital signature verified
+[05:39:37] 
+[05:39:37] Project: 5756 (Run 6, Clone 32, Gen 480)
+[05:39:37] 
+[05:39:37] Assembly optimizations on if available.
+[05:39:37] Entering M.D.
+[05:39:44] Working on Protein
+[05:39:46] Client config found, loading data.
+[05:39:47] Starting GUI Server
+[05:41:58] Completed 1%
+[05:44:09] Completed 2%
+[05:46:21] Completed 3%
+[05:48:32] Completed 4%
+[05:50:44] Completed 5%
+[05:52:55] Completed 6%
+[05:54:50] Completed 7%
+[05:54:50] mdrun_gpu returned 
+[05:54:50] NANs detected on GPU
+[05:54:50] 
+[05:54:50] Folding@home Core Shutdown: UNSTABLE_MACHINE
+[05:54:53] CoreStatus = 7A (122)
+[05:54:53] Sending work to server
+[05:54:53] Project: 5756 (Run 6, Clone 32, Gen 480)
+[05:54:53] - Error: Could not get length of results file work/wuresults_09.dat
+[05:54:53] - Error: Could not read unit 09 file. Removing from queue.
+[05:54:53] - Preparing to get new work unit...
+[05:54:53] + Attempting to get work packet
+[05:54:53] - Connecting to assignment server
+[05:54:54] - Successful: assigned to (171.67.108.11).
+[05:54:54] + News From Folding@Home: Welcome to Folding@Home
+[05:54:54] Loaded queue successfully.
+[05:54:57] + Closed connections
+[05:55:02] 
+[05:55:02] + Processing work unit
+[05:55:02] Core required: FahCore_11.exe
+[05:55:02] Core found.
+[05:55:02] Working on queue slot 00 [August 18 05:55:02 UTC]
+[05:55:02] + Working ...
+[05:55:02] 
+[05:55:02] *------------------------------*
+[05:55:02] Folding@Home GPU Core - Beta
+[05:55:02] Version 1.19 (Mon Nov 3 09:34:13 PST 2008)
+[05:55:02] 
+[05:55:02] Compiler  : Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 14.00.50727.762 for 80x86 
+[05:55:02] Build host: amoeba
+[05:55:02] Board Type: Nvidia
+[05:55:02] Core      : 
+[05:55:02] Preparing to commence simulation
+[05:55:02] - Looking at optimizations...
+[05:55:02] - Created dyn
+[05:55:02] - Files status OK
+[05:55:02] - Expanded 98888 -> 492276 (decompressed 497.8 percent)
+[05:55:02] Called DecompressByteArray: compressed_data_size=98888 data_size=492276, decompressed_data_size=492276 diff=0
+[05:55:02] - Digital signature verified
+[05:55:02] 
+[05:55:02] Project: 5756 (Run 6, Clone 32, Gen 480)
+[05:55:02] 
+[05:55:02] Assembly optimizations on if available.
+[05:55:02] Entering M.D.
+[05:55:09] Working on Protein
+[05:55:15] Client config found, loading data.
+[05:55:15] Starting GUI Server
+[05:57:27] Completed 1%
+[05:59:10] Completed 2%
+[05:59:10] mdrun_gpu returned 
+[05:59:10] NANs detected on GPU
+[05:59:10] 
+[05:59:10] Folding@home Core Shutdown: UNSTABLE_MACHINE
+[05:59:14] CoreStatus = 7A (122)
+[05:59:14] Sending work to server
+[05:59:14] Project: 5756 (Run 6, Clone 32, Gen 480)
+[05:59:14] - Error: Could not get length of results file work/wuresults_00.dat
+[05:59:14] - Error: Could not read unit 00 file. Removing from queue.
+[05:59:14] - Preparing to get new work unit...
+[05:59:14] + Attempting to get work packet
+[05:59:14] - Connecting to assignment server
+[05:59:15] - Successful: assigned to (171.67.108.11).
+[05:59:15] + News From Folding@Home: Welcome to Folding@Home
+[05:59:15] Loaded queue successfully.
+[05:59:18] + Closed connections
+[05:59:23] 
+[05:59:23] + Processing work unit
+[05:59:23] Core required: FahCore_11.exe
+[05:59:23] Core found.
+[05:59:23] Working on queue slot 01 [August 18 05:59:23 UTC]
+[05:59:23] + Working ...
+[05:59:23] 
+[05:59:23] *------------------------------*
+[05:59:23] Folding@Home GPU Core - Beta
+[05:59:23] Version 1.19 (Mon Nov 3 09:34:13 PST 2008)
+[05:59:23] 
+[05:59:23] Compiler  : Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 14.00.50727.762 for 80x86 
+[05:59:23] Build host: amoeba
+[05:59:23] Board Type: Nvidia
+[05:59:23] Core      : 
+[05:59:23] Preparing to commence simulation
+[05:59:23] - Looking at optimizations...
+[05:59:23] - Created dyn
+[05:59:23] - Files status OK
+[05:59:23] - Expanded 98888 -> 492276 (decompressed 497.8 percent)
+[05:59:23] Called DecompressByteArray: compressed_data_size=98888 data_size=492276, decompressed_data_size=492276 diff=0
+[05:59:23] - Digital signature verified
+[05:59:23] 
+[05:59:23] Project: 5756 (Run 6, Clone 32, Gen 480)
+[05:59:23] 
+[05:59:23] Assembly optimizations on if available.
+[05:59:23] Entering M.D.
+[05:59:29] Working on Protein
+[05:59:35] Client config found, loading data.
+[05:59:35] Starting GUI Server
+[06:01:47] Completed 1%
+[06:03:58] Completed 2%
+[06:06:10] Completed 3%
+[06:07:44] Completed 4%
+[06:07:45] mdrun_gpu returned 
+[06:07:45] NANs detected on GPU
+[06:07:45] 
+[06:07:45] Folding@home Core Shutdown: UNSTABLE_MACHINE
+[06:07:47] CoreStatus = 7A (122)
+[06:07:47] Sending work to server
+[06:07:47] Project: 5756 (Run 6, Clone 32, Gen 480)
+[06:07:47] - Error: Could not get length of results file work/wuresults_01.dat
+[06:07:47] - Error: Could not read unit 01 file. Removing from queue.
+[06:07:47] EUE limit exceeded. Pausing 24 hours.

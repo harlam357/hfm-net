@@ -1,0 +1,11 @@
+From a Visual Studio Command Prompt (Run as administrator)
+
+> sn -Vr *,7ebdbc730b03d55d
+
+If you're developing on a 64-bit version of windows you'll need to run
+this same command from both the standard (x86) AND the Visual Studio 
+Command Prompt x64 (Run as administrator).
+
+See the following msdn page for more information:
+
+http://msdn.microsoft.com/en-us/library/k5b5tt23%28v=VS.100%29.aspx

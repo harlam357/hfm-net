@@ -1,0 +1,25 @@
+PyON 1 simulation-info
+{
+  "user": "The_Penguin",
+  "team": "32",
+  "project": 11294,
+  "run": 7,
+  "clone": 243,
+  "gen": 66,
+  "core_type": 22,
+  "core": "OPENMM_OPENCL",
+  "description": "",
+  "total_iterations": 50000,
+  "iterations_done": 49000,
+  "energy": 0,
+  "temperature": 0,
+  "start_time": "08/Aug/2011-16:21:25",
+  "timeout": 1313338885,
+  "deadline": 1313684485,
+  "run_time": 22732,
+  "simulation_time": 0,
+  "eta": 329,
+  "news": ""
+}
+---
+

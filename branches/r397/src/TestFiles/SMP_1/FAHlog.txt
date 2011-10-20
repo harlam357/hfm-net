@@ -1,0 +1,753 @@
+
+
+--- Opening Log file [July 30 00:40:27 UTC] 
+
+
+# Linux SMP Console Edition ###################################################
+###############################################################################
+
+                       Folding@Home Client Version 6.24beta
+
+                          http://folding.stanford.edu
+
+###############################################################################
+###############################################################################
+
+Launch directory: /home/harlarw/FAH
+Executable: ./fah6
+Arguments: -smp -verbosity 9 
+
+[00:40:27] - Ask before connecting: No
+[00:40:27] - User name: harlam357 (Team 32)
+[00:40:27] - User ID: 5131EA752EB60547
+[00:40:27] - Machine ID: 1
+[00:40:27] 
+[00:40:27] Loaded queue successfully.
+[00:40:27] - Autosending finished units... [July 30 00:40:27 UTC]
+[00:40:27] Trying to send all finished work units
+[00:40:27] + No unsent completed units remaining.
+[00:40:27] - Autosend completed
+[00:40:27] 
+[00:40:27] + Processing work unit
+[00:40:27] At least 4 processors must be requested.Core required: FahCore_a2.exe
+[00:40:27] Core found.
+[00:40:27] Working on queue slot 05 [July 30 00:40:27 UTC]
+[00:40:27] + Working ...
+[00:40:27] - Calling './mpiexec -np 4 -host 127.0.0.1 ./FahCore_a2.exe -dir work/ -suffix 05 -checkpoint 30 -verbose -lifeline 5452 -version 624'
+
+[00:40:27] 
+[00:40:28] *------------------------------*
+[00:40:28] Folding@Home Gromacs SMP Core
+[00:40:28] Version 2.08 (Mon May 18 14:47:42 PDT 2009)
+[00:40:28] 
+[00:40:28] Preparing to commence simulation
+[00:40:28] - Ensuring status. Please wait.
+[00:40:37] - Looking at optimizations...
+[00:40:37] - Working with standard loops on this execution.
+[00:40:37] - Files status OK
+[00:40:43] - Expanded 4841371 -> 24028029 (decompressed 496.3 percent)
+[00:40:45] Called DecompressByteArray: compressed_data_size=4841371 data_size=24028029, decompressed_data_size=24028029 diff=0
+[00:40:45] - Digital signature verified
+[00:40:45] 
+[00:40:45] Project: 2677 (Run 10, Clone 29, Gen 28)
+[00:40:45] 
+[00:40:46] Entering M.D.
+[00:40:52] Using Gromacs checkpoints
+[00:40:56] Resuming from checkpoint
+[00:40:56] Verified work/wudata_05.log
+[00:40:57] Verified work/wudata_05.trr
+[00:40:58] Verified work/wudata_05.xtc
+[00:40:58] Verified work/wudata_05.edr
+[00:40:59] Completed 165010 out of 250000 steps  (66%)
+[00:50:38] Completed 167500 out of 250000 steps  (67%)
+[01:00:18] Completed 170000 out of 250000 steps  (68%)
+[01:10:08] Completed 172500 out of 250000 steps  (69%)
+[01:20:06] Completed 175000 out of 250000 steps  (70%)
+[01:29:53] Completed 177500 out of 250000 steps  (71%)
+[01:39:45] Completed 180000 out of 250000 steps  (72%)
+[01:49:36] Completed 182500 out of 250000 steps  (73%)
+[01:59:22] Completed 185000 out of 250000 steps  (74%)
+[02:08:53] Completed 187500 out of 250000 steps  (75%)
+[02:18:56] Completed 190000 out of 250000 steps  (76%)
+[02:28:39] Completed 192500 out of 250000 steps  (77%)
+[02:38:15] Completed 195000 out of 250000 steps  (78%)
+[02:47:44] Completed 197500 out of 250000 steps  (79%)
+[02:57:19] Completed 200000 out of 250000 steps  (80%)
+[03:06:58] Completed 202500 out of 250000 steps  (81%)
+[03:16:49] Completed 205000 out of 250000 steps  (82%)
+[03:26:50] Completed 207500 out of 250000 steps  (83%)
+[03:36:54] Completed 210000 out of 250000 steps  (84%)
+[03:46:40] Completed 212500 out of 250000 steps  (85%)
+[03:56:24] Completed 215000 out of 250000 steps  (86%)
+[04:06:13] Completed 217500 out of 250000 steps  (87%)
+[04:16:22] Completed 220000 out of 250000 steps  (88%)
+[04:26:04] Completed 222500 out of 250000 steps  (89%)
+[04:36:12] Completed 225000 out of 250000 steps  (90%)
+[04:45:58] Completed 227500 out of 250000 steps  (91%)
+[04:55:50] Completed 230000 out of 250000 steps  (92%)
+[05:05:32] Completed 232500 out of 250000 steps  (93%)
+[05:15:04] Completed 235000 out of 250000 steps  (94%)
+[05:24:53] Completed 237500 out of 250000 steps  (95%)
+[05:34:39] Completed 240000 out of 250000 steps  (96%)
+[05:44:29] Completed 242500 out of 250000 steps  (97%)
+[05:54:12] Completed 245000 out of 250000 steps  (98%)
+[06:04:05] Completed 247500 out of 250000 steps  (99%)
+[06:14:01] Completed 250000 out of 250000 steps  (100%)
+[06:14:03] DynamicWrapper: Finished Work Unit: sleep=10000
+[06:14:13] 
+[06:14:13] Finished Work Unit:
+[06:14:14] - Reading up to 21176928 from "work/wudata_05.trr": Read 21176928
+[06:14:15] trr file hash check passed.
+[06:14:15] - Reading up to 27660944 from "work/wudata_05.xtc": Read 27660944
+[06:14:17] xtc file hash check passed.
+[06:14:17] edr file hash check passed.
+[06:14:17] logfile size: 182187
+[06:14:17] Leaving Run
+[06:14:17] - Writing 49164811 bytes of core data to disk...
+[06:14:19]   ... Done.
+[06:14:26] - Shutting down core
+[06:14:26] 
+[06:14:26] Folding@home Core Shutdown: FINISHED_UNIT
+[06:17:39] CoreStatus = 64 (100)
+[06:17:39] Unit 5 finished with 72 percent of time to deadline remaining.
+[06:17:39] Updated performance fraction: 0.761911
+[06:17:39] Sending work to server
+[06:17:39] Project: 2677 (Run 10, Clone 29, Gen 28)
+
+
+[06:17:39] + Attempting to send results [July 30 06:17:39 UTC]
+[06:17:39] - Reading file work/wuresults_05.dat from core
+[06:17:39]   (Read 49164811 bytes from disk)
+[06:17:39] Connecting to http://171.64.65.56:8080/
+[06:21:04] Posted data.
+[06:21:04] Initial: 0000; - Uploaded at ~226 kB/s
+[06:21:11] - Averaged speed for that direction ~219 kB/s
+[06:21:11] + Results successfully sent
+[06:21:11] Thank you for your contribution to Folding@Home.
+[06:21:11] + Number of Units Completed: 261
+
+[06:21:14] - Warning: Could not delete all work unit files (5): Core file absent
+[06:21:14] Trying to send all finished work units
+[06:21:14] + No unsent completed units remaining.
+[06:21:14] - Preparing to get new work unit...
+[06:21:14] + Attempting to get work packet
+[06:21:14] - Will indicate memory of 685 MB
+[06:21:14] - Connecting to assignment server
+[06:21:14] Connecting to http://assign.stanford.edu:8080/
+[06:21:15] Posted data.
+[06:21:15] Initial: 40AB; - Successful: assigned to (171.64.65.56).
+[06:21:15] + News From Folding@Home: Welcome to Folding@Home
+[06:21:15] Loaded queue successfully.
+[06:21:15] Connecting to http://171.64.65.56:8080/
+[06:21:21] Posted data.
+[06:21:21] Initial: 0000; - Receiving payload (expected size: 4831790)
+[06:21:35] - Downloaded at ~337 kB/s
+[06:21:35] - Averaged speed for that direction ~362 kB/s
+[06:21:35] + Received work.
+[06:21:35] Trying to send all finished work units
+[06:21:35] + No unsent completed units remaining.
+[06:21:35] + Closed connections
+[06:21:35] 
+[06:21:35] + Processing work unit
+[06:21:35] At least 4 processors must be requested.Core required: FahCore_a2.exe
+[06:21:35] Core found.
+[06:21:35] Working on queue slot 06 [July 30 06:21:35 UTC]
+[06:21:35] + Working ...
+[06:21:35] - Calling './mpiexec -np 4 -host 127.0.0.1 ./FahCore_a2.exe -dir work/ -suffix 06 -checkpoint 30 -verbose -lifeline 5452 -version 624'
+
+[06:21:35] 
+[06:21:35] *------------------------------*
+[06:21:35] Folding@Home Gromacs SMP Core
+[06:21:35] Version 2.08 (Mon May 18 14:47:42 PDT 2009)
+[06:21:35] 
+[06:21:35] Preparing to commence simulation
+[06:21:35] - Ensuring status. Please wait.
+[06:21:36] Called DecompressByteArray: compressed_data_size=4831278 data_size=23977245, decompressed_data_size=23977245 diff=0
+[06:21:36] - Digital signature verified
+[06:21:36] 
+[06:21:36] Project: 2669 (Run 16, Clone 37, Gen 195)
+[06:21:36] 
+[06:21:36] Assembly optimizations on if available.
+[06:21:36] Entering M.D.
+[06:21:45] un 16, Clone 37, Gen 195)
+[06:21:45] 
+[06:21:46] Entering M.D.
+[06:31:42] pleted 2500 out of 250000 steps  (1%)
+[06:40:27] - Autosending finished units... [July 30 06:40:27 UTC]
+[06:40:27] Trying to send all finished work units
+[06:40:27] + No unsent completed units remaining.
+[06:40:27] - Autosend completed
+[06:41:36] Completed 5000 out of 250000 steps  (2%)
+[06:51:31] Completed 7500 out of 250000 steps  (3%)
+[07:01:22] Completed 10000 out of 250000 steps  (4%)
+[07:11:03] Completed 12500 out of 250000 steps  (5%)
+[07:20:49] Completed 15000 out of 250000 steps  (6%)
+[07:30:55] Completed 17500 out of 250000 steps  (7%)
+[07:40:47] Completed 20000 out of 250000 steps  (8%)
+[07:50:26] Completed 22500 out of 250000 steps  (9%)
+[07:59:59] Completed 25000 out of 250000 steps  (10%)
+[08:09:34] Completed 27500 out of 250000 steps  (11%)
+[08:19:39] Completed 30000 out of 250000 steps  (12%)
+[08:29:33] Completed 32500 out of 250000 steps  (13%)
+[08:39:50] Completed 35000 out of 250000 steps  (14%)
+[08:49:23] Completed 37500 out of 250000 steps  (15%)
+[08:59:07] Completed 40000 out of 250000 steps  (16%)
+[09:09:02] Completed 42500 out of 250000 steps  (17%)
+[09:18:43] Completed 45000 out of 250000 steps  (18%)
+[09:28:36] Completed 47500 out of 250000 steps  (19%)
+[09:38:10] Completed 50000 out of 250000 steps  (20%)
+[09:47:56] Completed 52500 out of 250000 steps  (21%)
+[09:57:42] Completed 55000 out of 250000 steps  (22%)
+[10:07:41] Completed 57500 out of 250000 steps  (23%)
+[10:17:32] Completed 60000 out of 250000 steps  (24%)
+[10:27:40] Completed 62500 out of 250000 steps  (25%)
+[10:37:22] Completed 65000 out of 250000 steps  (26%)
+[10:47:09] Completed 67500 out of 250000 steps  (27%)
+[10:56:50] Completed 70000 out of 250000 steps  (28%)
+[11:06:48] Completed 72500 out of 250000 steps  (29%)
+[11:16:38] Completed 75000 out of 250000 steps  (30%)
+[11:26:13] Completed 77500 out of 250000 steps  (31%)
+[11:36:21] Completed 80000 out of 250000 steps  (32%)
+[11:46:21] Completed 82500 out of 250000 steps  (33%)
+[11:56:01] Completed 85000 out of 250000 steps  (34%)
+[12:05:45] Completed 87500 out of 250000 steps  (35%)
+[12:15:35] Completed 90000 out of 250000 steps  (36%)
+[12:25:17] Completed 92500 out of 250000 steps  (37%)
+[12:35:23] Completed 95000 out of 250000 steps  (38%)
+[12:40:27] - Autosending finished units... [July 30 12:40:27 UTC]
+[12:40:27] Trying to send all finished work units
+[12:40:27] + No unsent completed units remaining.
+[12:40:27] - Autosend completed
+[12:45:15] Completed 97500 out of 250000 steps  (39%)
+[12:55:07] Completed 100000 out of 250000 steps  (40%)
+[13:05:05] Completed 102500 out of 250000 steps  (41%)
+[13:15:07] Completed 105000 out of 250000 steps  (42%)
+[13:25:13] Completed 107500 out of 250000 steps  (43%)
+[13:35:01] Completed 110000 out of 250000 steps  (44%)
+[13:45:03] Completed 112500 out of 250000 steps  (45%)
+[13:55:14] Completed 115000 out of 250000 steps  (46%)
+[14:05:09] Completed 117500 out of 250000 steps  (47%)
+[14:14:48] Completed 120000 out of 250000 steps  (48%)
+[14:24:57] Completed 122500 out of 250000 steps  (49%)
+[14:35:02] Completed 125000 out of 250000 steps  (50%)
+[14:45:14] Completed 127500 out of 250000 steps  (51%)
+[14:54:54] Completed 130000 out of 250000 steps  (52%)
+[15:04:42] Completed 132500 out of 250000 steps  (53%)
+[15:14:44] Completed 135000 out of 250000 steps  (54%)
+[15:24:33] Completed 137500 out of 250000 steps  (55%)
+[15:34:05] Completed 140000 out of 250000 steps  (56%)
+[15:44:05] Completed 142500 out of 250000 steps  (57%)
+[15:54:09] Completed 145000 out of 250000 steps  (58%)
+[16:03:46] Completed 147500 out of 250000 steps  (59%)
+[16:14:00] Completed 150000 out of 250000 steps  (60%)
+[16:23:56] Completed 152500 out of 250000 steps  (61%)
+[16:33:43] Completed 155000 out of 250000 steps  (62%)
+[16:43:34] Completed 157500 out of 250000 steps  (63%)
+[16:53:25] Completed 160000 out of 250000 steps  (64%)
+[17:02:59] Completed 162500 out of 250000 steps  (65%)
+[17:13:00] Completed 165000 out of 250000 steps  (66%)
+[17:22:41] Completed 167500 out of 250000 steps  (67%)
+[17:32:43] Completed 170000 out of 250000 steps  (68%)
+[17:42:32] Completed 172500 out of 250000 steps  (69%)
+[17:52:10] Completed 175000 out of 250000 steps  (70%)
+[18:01:58] Completed 177500 out of 250000 steps  (71%)
+[18:11:50] Completed 180000 out of 250000 steps  (72%)
+[18:21:35] Completed 182500 out of 250000 steps  (73%)
+[18:31:27] Completed 185000 out of 250000 steps  (74%)
+[18:40:27] - Autosending finished units... [July 30 18:40:27 UTC]
+[18:40:27] Trying to send all finished work units
+[18:40:27] + No unsent completed units remaining.
+[18:40:27] - Autosend completed
+[18:41:17] Completed 187500 out of 250000 steps  (75%)
+[18:51:06] Completed 190000 out of 250000 steps  (76%)
+[19:00:57] Completed 192500 out of 250000 steps  (77%)
+[19:10:50] Completed 195000 out of 250000 steps  (78%)
+[19:20:37] Completed 197500 out of 250000 steps  (79%)
+[19:30:28] Completed 200000 out of 250000 steps  (80%)
+[19:40:32] Completed 202500 out of 250000 steps  (81%)
+[19:50:29] Completed 205000 out of 250000 steps  (82%)
+[20:00:15] Completed 207500 out of 250000 steps  (83%)
+[20:10:16] Completed 210000 out of 250000 steps  (84%)
+[20:20:10] Completed 212500 out of 250000 steps  (85%)
+[20:30:15] Completed 215000 out of 250000 steps  (86%)
+
+
+--- Opening Log file [July 31 00:07:43 UTC] 
+
+
+# Linux SMP Console Edition ###################################################
+###############################################################################
+
+                       Folding@Home Client Version 6.24beta
+
+                          http://folding.stanford.edu
+
+###############################################################################
+###############################################################################
+
+Launch directory: /home/harlarw/FAH
+Executable: ./fah6
+Arguments: -smp -verbosity 9 
+
+[00:07:43] - Ask before connecting: No
+[00:07:43] - User name: harlam357 (Team 32)
+[00:07:43] - User ID: 5131EA752EB60547
+[00:07:43] - Machine ID: 1
+[00:07:43] 
+[00:07:43] Loaded queue successfully.
+[00:07:43] - Autosending finished units... [July 31 00:07:43 UTC]
+[00:07:43] Trying to send all finished work units
+[00:07:43] + No unsent completed units remaining.
+[00:07:43] - Autosend completed
+[00:07:43] 
+[00:07:43] + Processing work unit
+[00:07:43] At least 4 processors must be requested.Core required: FahCore_a2.exe
+[00:07:43] Core found.
+[00:07:43] Working on queue slot 06 [July 31 00:07:43 UTC]
+[00:07:43] + Working ...
+[00:07:43] - Calling './mpiexec -np 4 -host 127.0.0.1 ./FahCore_a2.exe -dir work/ -suffix 06 -checkpoint 30 -verbose -lifeline 5506 -version 624'
+
+[00:07:44] 
+[00:07:44] *------------------------------*
+[00:07:44] Folding@Home Gromacs SMP Core
+[00:07:44] Version 2.08 (Mon May 18 14:47:42 PDT 2009)
+[00:07:44] 
+[00:07:44] Preparing to commence simulation
+[00:07:44] - Ensuring status. Please wait.
+[00:07:54] - Looking at optimizations...
+[00:07:54] - Working with standard loops on this execution.
+[00:07:54] - Files status OK
+[00:07:58] - Expanded 4831278 -> 23977245 (decompressed 496.2 percent)
+[00:07:59] Called DecompressByteArray: compressed_data_size=4831278 data_size=23977245, decompressed_data_size=23977245 diff=0
+[00:07:59] - Digital signature verified
+[00:07:59] 
+[00:07:59] Project: 2669 (Run 16, Clone 37, Gen 195)
+[00:07:59] 
+[00:07:59] Entering M.D.
+[00:08:05] Using Gromacs checkpoints
+[00:08:09] Resuming from checkpoint
+[00:08:09] Verified work/wudata_06.log
+[00:08:11] Verified work/wudata_06.trr
+[00:08:11] Verified work/wudata_06.xtc
+[00:08:11] Verified work/wudata_06.edr
+[00:08:12] Completed 215010 out of 250000 steps  (86%)
+[00:18:25] Completed 217500 out of 250000 steps  (87%)
+[00:28:17] Completed 220000 out of 250000 steps  (88%)
+[00:38:16] Completed 222500 out of 250000 steps  (89%)
+[00:47:59] Completed 225000 out of 250000 steps  (90%)
+[00:57:42] Completed 227500 out of 250000 steps  (91%)
+[01:07:21] Completed 230000 out of 250000 steps  (92%)
+[01:17:18] Completed 232500 out of 250000 steps  (93%)
+[01:26:58] Completed 235000 out of 250000 steps  (94%)
+[01:36:59] Completed 237500 out of 250000 steps  (95%)
+[01:46:31] Completed 240000 out of 250000 steps  (96%)
+[01:56:31] Completed 242500 out of 250000 steps  (97%)
+[02:06:50] Completed 245000 out of 250000 steps  (98%)
+[02:16:32] Completed 247500 out of 250000 steps  (99%)
+[02:26:39] Completed 250000 out of 250000 steps  (100%)
+[02:26:40] DynamicWrapper: Finished Work Unit: sleep=10000
+[02:26:50] 
+[02:26:50] Finished Work Unit:
+[02:26:50] - Reading up to 21124656 from "work/wudata_06.trr": Read 21124656
+[02:26:51] trr file hash check passed.
+[02:26:51] - Reading up to 4479480 from "work/wudata_06.xtc": Read 4479480
+[02:26:52] xtc file hash check passed.
+[02:26:52] edr file hash check passed.
+[02:26:52] logfile size: 182834
+[02:26:52] Leaving Run
+[02:26:55] - Writing 25931722 bytes of core data to disk...
+[02:26:55]   ... Done.
+[02:27:01] - Shutting down core
+[02:27:01] 
+[02:27:01] Folding@home Core Shutdown: FINISHED_UNIT
+[02:30:17] CoreStatus = 64 (100)
+[02:30:17] Unit 6 finished with 72 percent of time to deadline remaining.
+[02:30:17] Updated performance fraction: 0.753570
+[02:30:17] Sending work to server
+[02:30:17] Project: 2669 (Run 16, Clone 37, Gen 195)
+
+
+[02:30:17] + Attempting to send results [July 31 02:30:17 UTC]
+[02:30:17] - Reading file work/wuresults_06.dat from core
+[02:30:17]   (Read 25931722 bytes from disk)
+[02:30:17] Connecting to http://171.64.65.56:8080/
+[02:32:05] Posted data.
+[02:32:06] Initial: 0000; - Uploaded at ~214 kB/s
+[02:32:15] - Averaged speed for that direction ~218 kB/s
+[02:32:15] + Results successfully sent
+[02:32:15] Thank you for your contribution to Folding@Home.
+[02:32:15] + Number of Units Completed: 262
+
+[02:32:17] - Warning: Could not delete all work unit files (6): Core file absent
+[02:32:17] Trying to send all finished work units
+[02:32:17] + No unsent completed units remaining.
+[02:32:17] - Preparing to get new work unit...
+[02:32:17] + Attempting to get work packet
+[02:32:17] - Will indicate memory of 685 MB
+[02:32:17] - Connecting to assignment server
+[02:32:17] Connecting to http://assign.stanford.edu:8080/
+[02:32:18] Posted data.
+[02:32:18] Initial: 40AB; - Successful: assigned to (171.64.65.56).
+[02:32:18] + News From Folding@Home: Welcome to Folding@Home
+[02:32:18] Loaded queue successfully.
+[02:32:18] Connecting to http://171.64.65.56:8080/
+[02:32:27] Posted data.
+[02:32:27] Initial: 0000; - Receiving payload (expected size: 4828937)
+[02:32:43] - Downloaded at ~294 kB/s
+[02:32:43] - Averaged speed for that direction ~348 kB/s
+[02:32:43] + Received work.
+[02:32:43] Trying to send all finished work units
+[02:32:43] + No unsent completed units remaining.
+[02:32:43] + Closed connections
+[02:32:43] 
+[02:32:43] + Processing work unit
+[02:32:43] At least 4 processors must be requested.Core required: FahCore_a2.exe
+[02:32:43] Core found.
+[02:32:44] Working on queue slot 07 [July 31 02:32:44 UTC]
+[02:32:44] + Working ...
+[02:32:44] - Calling './mpiexec -np 4 -host 127.0.0.1 ./FahCore_a2.exe -dir work/ -suffix 07 -checkpoint 30 -verbose -lifeline 5506 -version 624'
+
+[02:32:44] 
+[02:32:44] *------------------------------*
+[02:32:44] Folding@Home Gromacs SMP Core
+[02:32:44] Version 2.08 (Mon May 18 14:47:42 PDT 2009)
+[02:32:44] 
+[02:32:44] Preparing to commence simulation
+[02:32:44] - Ensuring status. Please wait.
+[02:32:44] Called DecompressByteArray: compressed_data_size=4828425 data_size=24049357, decompressed_data_size=24049357 diff=0
+[02:32:45] - Digital signature verified
+[02:32:45] 
+[02:32:45] Project: 2677 (Run 21, Clone 10, Gen 29)
+[02:32:45] 
+[02:32:45] Assembly optimizations on if available.
+[02:32:45] Entering M.D.
+[02:32:54] Run 21, Clone 10, Gen 29)
+[02:32:54] 
+[02:32:54] Entering M.D.
+[02:42:41] pleted 2500 out of 250000 steps  (1%)
+[02:52:13] Completed 5000 out of 250000 steps  (2%)
+[03:01:42] Completed 7500 out of 250000 steps  (3%)
+[03:11:26] Completed 10000 out of 250000 steps  (4%)
+[03:20:58] Completed 12500 out of 250000 steps  (5%)
+[03:30:35] Completed 15000 out of 250000 steps  (6%)
+[03:40:22] Completed 17500 out of 250000 steps  (7%)
+[03:49:48] Completed 20000 out of 250000 steps  (8%)
+[03:59:13] Completed 22500 out of 250000 steps  (9%)
+[04:08:54] Completed 25000 out of 250000 steps  (10%)
+[04:18:27] Completed 27500 out of 250000 steps  (11%)
+[04:27:53] Completed 30000 out of 250000 steps  (12%)
+[04:37:38] Completed 32500 out of 250000 steps  (13%)
+[04:47:16] Completed 35000 out of 250000 steps  (14%)
+[04:56:49] Completed 37500 out of 250000 steps  (15%)
+[05:06:16] Completed 40000 out of 250000 steps  (16%)
+[05:15:40] Completed 42500 out of 250000 steps  (17%)
+[05:25:06] Completed 45000 out of 250000 steps  (18%)
+[05:34:29] Completed 47500 out of 250000 steps  (19%)
+[05:44:13] Completed 50000 out of 250000 steps  (20%)
+[05:53:35] Completed 52500 out of 250000 steps  (21%)
+[06:03:20] Completed 55000 out of 250000 steps  (22%)
+[06:07:43] - Autosending finished units... [July 31 06:07:43 UTC]
+[06:07:43] Trying to send all finished work units
+[06:07:43] + No unsent completed units remaining.
+[06:07:43] - Autosend completed
+[06:12:52] Completed 57500 out of 250000 steps  (23%)
+[06:22:19] Completed 60000 out of 250000 steps  (24%)
+[06:31:43] Completed 62500 out of 250000 steps  (25%)
+[06:41:32] Completed 65000 out of 250000 steps  (26%)
+[06:51:01] Completed 67500 out of 250000 steps  (27%)
+[07:00:46] Completed 70000 out of 250000 steps  (28%)
+[07:10:18] Completed 72500 out of 250000 steps  (29%)
+[07:19:50] Completed 75000 out of 250000 steps  (30%)
+[07:29:16] Completed 77500 out of 250000 steps  (31%)
+[07:38:47] Completed 80000 out of 250000 steps  (32%)
+[07:48:25] Completed 82500 out of 250000 steps  (33%)
+[07:57:48] Completed 85000 out of 250000 steps  (34%)
+[08:07:39] Completed 87500 out of 250000 steps  (35%)
+[08:17:06] Completed 90000 out of 250000 steps  (36%)
+[08:26:38] Completed 92500 out of 250000 steps  (37%)
+[08:36:04] Completed 95000 out of 250000 steps  (38%)
+[08:45:49] Completed 97500 out of 250000 steps  (39%)
+[08:55:14] Completed 100000 out of 250000 steps  (40%)
+[09:04:40] Completed 102500 out of 250000 steps  (41%)
+[09:14:07] Completed 105000 out of 250000 steps  (42%)
+[09:23:56] Completed 107500 out of 250000 steps  (43%)
+[09:33:29] Completed 110000 out of 250000 steps  (44%)
+[09:42:58] Completed 112500 out of 250000 steps  (45%)
+[09:52:26] Completed 115000 out of 250000 steps  (46%)
+[10:01:52] Completed 117500 out of 250000 steps  (47%)
+[10:11:20] Completed 120000 out of 250000 steps  (48%)
+[10:20:57] Completed 122500 out of 250000 steps  (49%)
+[10:30:53] Completed 125000 out of 250000 steps  (50%)
+[10:40:25] Completed 127500 out of 250000 steps  (51%)
+[10:50:07] Completed 130000 out of 250000 steps  (52%)
+[10:59:33] Completed 132500 out of 250000 steps  (53%)
+[11:08:59] Completed 135000 out of 250000 steps  (54%)
+[11:18:24] Completed 137500 out of 250000 steps  (55%)
+[11:27:53] Completed 140000 out of 250000 steps  (56%)
+[11:37:32] Completed 142500 out of 250000 steps  (57%)
+[11:47:07] Completed 145000 out of 250000 steps  (58%)
+[11:56:33] Completed 147500 out of 250000 steps  (59%)
+[12:05:56] Completed 150000 out of 250000 steps  (60%)
+[12:07:43] - Autosending finished units... [July 31 12:07:43 UTC]
+[12:07:43] Trying to send all finished work units
+[12:07:43] + No unsent completed units remaining.
+[12:07:43] - Autosend completed
+[12:15:34] Completed 152500 out of 250000 steps  (61%)
+[12:25:30] Completed 155000 out of 250000 steps  (62%)
+[12:35:05] Completed 157500 out of 250000 steps  (63%)
+[12:44:58] Completed 160000 out of 250000 steps  (64%)
+[12:54:21] Completed 162500 out of 250000 steps  (65%)
+[13:04:01] Completed 165000 out of 250000 steps  (66%)
+[13:13:42] Completed 167500 out of 250000 steps  (67%)
+[13:23:14] Completed 170000 out of 250000 steps  (68%)
+[13:32:53] Completed 172500 out of 250000 steps  (69%)
+[13:42:38] Completed 175000 out of 250000 steps  (70%)
+[13:52:05] Completed 177500 out of 250000 steps  (71%)
+[14:01:30] Completed 180000 out of 250000 steps  (72%)
+[14:11:03] Completed 182500 out of 250000 steps  (73%)
+[14:20:29] Completed 185000 out of 250000 steps  (74%)
+[14:29:57] Completed 187500 out of 250000 steps  (75%)
+[14:39:31] Completed 190000 out of 250000 steps  (76%)
+[14:49:07] Completed 192500 out of 250000 steps  (77%)
+[14:58:58] Completed 195000 out of 250000 steps  (78%)
+[15:08:47] Completed 197500 out of 250000 steps  (79%)
+[15:18:10] Completed 200000 out of 250000 steps  (80%)
+[15:27:42] Completed 202500 out of 250000 steps  (81%)
+[15:37:27] Completed 205000 out of 250000 steps  (82%)
+[15:46:56] Completed 207500 out of 250000 steps  (83%)
+[15:56:33] Completed 210000 out of 250000 steps  (84%)
+[16:06:05] Completed 212500 out of 250000 steps  (85%)
+[16:15:39] Completed 215000 out of 250000 steps  (86%)
+[16:25:25] Completed 217500 out of 250000 steps  (87%)
+[16:35:21] Completed 220000 out of 250000 steps  (88%)
+[16:44:52] Completed 222500 out of 250000 steps  (89%)
+[16:54:16] Completed 225000 out of 250000 steps  (90%)
+[17:03:43] Completed 227500 out of 250000 steps  (91%)
+[17:13:10] Completed 230000 out of 250000 steps  (92%)
+[17:22:56] Completed 232500 out of 250000 steps  (93%)
+[17:32:35] Completed 235000 out of 250000 steps  (94%)
+[17:42:02] Completed 237500 out of 250000 steps  (95%)
+[17:51:57] Completed 240000 out of 250000 steps  (96%)
+[18:01:38] Completed 242500 out of 250000 steps  (97%)
+[18:07:43] - Autosending finished units... [July 31 18:07:43 UTC]
+[18:07:43] Trying to send all finished work units
+[18:07:43] + No unsent completed units remaining.
+[18:07:43] - Autosend completed
+[18:11:08] Completed 245000 out of 250000 steps  (98%)
+[18:20:38] Completed 247500 out of 250000 steps  (99%)
+[18:30:12] Completed 250000 out of 250000 steps  (100%)
+[18:30:13] DynamicWrapper: Finished Work Unit: sleep=10000
+[18:30:23] 
+[18:30:23] Finished Work Unit:
+[18:30:23] - Reading up to 21198960 from "work/wudata_07.trr": Read 21198960
+[18:30:24] trr file hash check passed.
+[18:30:24] - Reading up to 27692244 from "work/wudata_07.xtc": Read 27692244
+[18:30:26] xtc file hash check passed.
+[18:30:26] edr file hash check passed.
+[18:30:26] logfile size: 181233
+[18:30:26] Leaving Run
+[18:30:31] - Writing 49217189 bytes of core data to disk...
+[18:30:32]   ... Done.
+[18:30:39] - Shutting down core
+[18:30:39] 
+[18:30:39] Folding@home Core Shutdown: FINISHED_UNIT
+[18:33:48] CoreStatus = 64 (100)
+[18:33:48] Unit 7 finished with 78 percent of time to deadline remaining.
+[18:33:48] Updated performance fraction: 0.758362
+[18:33:48] Sending work to server
+[18:33:48] Project: 2677 (Run 21, Clone 10, Gen 29)
+
+
+[18:33:48] + Attempting to send results [July 31 18:33:48 UTC]
+[18:33:48] - Reading file work/wuresults_07.dat from core
+[18:33:49]   (Read 49217189 bytes from disk)
+[18:33:49] Connecting to http://171.64.65.56:8080/
+[18:33:49] - Couldn't send HTTP request to server
+[18:33:49]   (Got status 503)
+[18:33:49] + Could not connect to Work Server (results)
+[18:33:49]     (171.64.65.56:8080)
+[18:33:49] + Retrying using alternative port
+[18:33:49] Connecting to http://171.64.65.56:80/
+[18:33:49] - Couldn't send HTTP request to server
+[18:33:49]   (Got status 503)
+[18:33:49] + Could not connect to Work Server (results)
+[18:33:49]     (171.64.65.56:80)
+[18:33:49] - Error: Could not transmit unit 07 (completed July 31) to work server.
+[18:33:49] - 1 failed uploads of this unit.
+[18:33:49]   Keeping unit 07 in queue.
+[18:33:49] Trying to send all finished work units
+[18:33:49] Project: 2677 (Run 21, Clone 10, Gen 29)
+
+
+[18:33:49] + Attempting to send results [July 31 18:33:49 UTC]
+[18:33:49] - Reading file work/wuresults_07.dat from core
+[18:33:49]   (Read 49217189 bytes from disk)
+[18:33:49] Connecting to http://171.64.65.56:8080/
+[18:33:50] - Couldn't send HTTP request to server
+[18:33:50]   (Got status 503)
+[18:33:50] + Could not connect to Work Server (results)
+[18:33:50]     (171.64.65.56:8080)
+[18:33:50] + Retrying using alternative port
+[18:33:50] Connecting to http://171.64.65.56:80/
+[18:33:50] - Couldn't send HTTP request to server
+[18:33:50]   (Got status 503)
+[18:33:50] + Could not connect to Work Server (results)
+[18:33:50]     (171.64.65.56:80)
+[18:33:50] - Error: Could not transmit unit 07 (completed July 31) to work server.
+[18:33:50] - 2 failed uploads of this unit.
+
+
+[18:33:50] + Attempting to send results [July 31 18:33:50 UTC]
+[18:33:50] - Reading file work/wuresults_07.dat from core
+[18:33:50]   (Read 49217189 bytes from disk)
+[18:33:50] Connecting to http://171.67.108.25:8080/
+[18:37:17] Posted data.
+[18:37:18] Initial: 0000; - Uploaded at ~231 kB/s
+[18:37:18] - Averaged speed for that direction ~221 kB/s
+[18:37:18] + Results successfully sent
+[18:37:18] Thank you for your contribution to Folding@Home.
+[18:37:18] + Number of Units Completed: 263
+
+[18:37:18]   Successfully sent unit 07 to Collection server.
+[18:37:21] + Sent 1 of 1 completed units to the server
+[18:37:21] - Preparing to get new work unit...
+[18:37:21] + Attempting to get work packet
+[18:37:21] - Will indicate memory of 685 MB
+[18:37:21] - Connecting to assignment server
+[18:37:21] Connecting to http://assign.stanford.edu:8080/
+[18:37:22] Posted data.
+[18:37:22] Initial: 40AB; - Successful: assigned to (171.64.65.56).
+[18:37:22] + News From Folding@Home: Welcome to Folding@Home
+[18:37:22] Loaded queue successfully.
+[18:37:22] Connecting to http://171.64.65.56:8080/
+[18:37:22] - Couldn't send HTTP request to server
+[18:37:22]   (Got status 503)
+[18:37:22] + Could not connect to Work Server
+[18:37:22] - Attempt #1  to get work failed, and no other work to do.
+Waiting before retry.
+[18:37:41] + Attempting to get work packet
+[18:37:41] - Will indicate memory of 685 MB
+[18:37:41] - Connecting to assignment server
+[18:37:41] Connecting to http://assign.stanford.edu:8080/
+[18:37:41] Posted data.
+[18:37:41] Initial: 40AB; - Successful: assigned to (171.64.65.56).
+[18:37:41] + News From Folding@Home: Welcome to Folding@Home
+[18:37:42] Loaded queue successfully.
+[18:37:42] Connecting to http://171.64.65.56:8080/
+[18:37:42] - Couldn't send HTTP request to server
+[18:37:42]   (Got status 503)
+[18:37:42] + Could not connect to Work Server
+[18:37:42] - Attempt #2  to get work failed, and no other work to do.
+Waiting before retry.
+[18:38:03] + Attempting to get work packet
+[18:38:03] - Will indicate memory of 685 MB
+[18:38:03] - Connecting to assignment server
+[18:38:03] Connecting to http://assign.stanford.edu:8080/
+[18:38:04] Posted data.
+[18:38:04] Initial: 40AB; - Successful: assigned to (171.64.65.56).
+[18:38:04] + News From Folding@Home: Welcome to Folding@Home
+[18:38:04] Loaded queue successfully.
+[18:38:04] Connecting to http://171.64.65.56:8080/
+[18:38:04] - Couldn't send HTTP request to server
+[18:38:04]   (Got status 503)
+[18:38:04] + Could not connect to Work Server
+[18:38:04] - Attempt #3  to get work failed, and no other work to do.
+Waiting before retry.
+[18:38:38] + Attempting to get work packet
+[18:38:38] - Will indicate memory of 685 MB
+[18:38:38] - Connecting to assignment server
+[18:38:38] Connecting to http://assign.stanford.edu:8080/
+[18:38:39] Posted data.
+[18:38:39] Initial: 40AB; - Successful: assigned to (171.64.65.56).
+[18:38:39] + News From Folding@Home: Welcome to Folding@Home
+[18:38:39] Loaded queue successfully.
+[18:38:39] Connecting to http://171.64.65.56:8080/
+[18:38:39] - Couldn't send HTTP request to server
+[18:38:39]   (Got status 503)
+[18:38:39] + Could not connect to Work Server
+[18:38:39] - Attempt #4  to get work failed, and no other work to do.
+Waiting before retry.
+[18:39:26] + Attempting to get work packet
+[18:39:26] - Will indicate memory of 685 MB
+[18:39:26] - Connecting to assignment server
+[18:39:26] Connecting to http://assign.stanford.edu:8080/
+[18:39:27] Posted data.
+[18:39:27] Initial: 40AB; - Successful: assigned to (171.64.65.56).
+[18:39:27] + News From Folding@Home: Welcome to Folding@Home
+[18:39:27] Loaded queue successfully.
+[18:39:27] Connecting to http://171.64.65.56:8080/
+[18:39:27] - Couldn't send HTTP request to server
+[18:39:27]   (Got status 503)
+[18:39:27] + Could not connect to Work Server
+[18:39:27] - Attempt #5  to get work failed, and no other work to do.
+Waiting before retry.
+[18:40:55] + Attempting to get work packet
+[18:40:55] - Will indicate memory of 685 MB
+[18:40:55] - Connecting to assignment server
+[18:40:55] Connecting to http://assign.stanford.edu:8080/
+[18:40:56] Posted data.
+[18:40:56] Initial: 40AB; - Successful: assigned to (171.64.65.56).
+[18:40:56] + News From Folding@Home: Welcome to Folding@Home
+[18:40:56] Loaded queue successfully.
+[18:40:56] Connecting to http://171.64.65.56:8080/
+[18:40:57] - Couldn't send HTTP request to server
+[18:40:57]   (Got status 503)
+[18:40:57] + Could not connect to Work Server
+[18:40:57] - Attempt #6  to get work failed, and no other work to do.
+Waiting before retry.
+[18:43:47] + Attempting to get work packet
+[18:43:47] - Will indicate memory of 685 MB
+[18:43:47] - Connecting to assignment server
+[18:43:47] Connecting to http://assign.stanford.edu:8080/
+[18:43:48] Posted data.
+[18:43:48] Initial: 40AB; - Successful: assigned to (171.64.65.56).
+[18:43:48] + News From Folding@Home: Welcome to Folding@Home
+[18:43:48] Loaded queue successfully.
+[18:43:48] Connecting to http://171.64.65.56:8080/
+[18:43:49] - Couldn't send HTTP request to server
+[18:43:49]   (Got status 503)
+[18:43:49] + Could not connect to Work Server
+[18:43:49] - Attempt #7  to get work failed, and no other work to do.
+Waiting before retry.
+[18:49:13] + Attempting to get work packet
+[18:49:13] - Will indicate memory of 685 MB
+[18:49:13] - Connecting to assignment server
+[18:49:13] Connecting to http://assign.stanford.edu:8080/
+[18:49:14] Posted data.
+[18:49:14] Initial: 40AB; - Successful: assigned to (171.64.65.56).
+[18:49:14] + News From Folding@Home: Welcome to Folding@Home
+[18:49:14] Loaded queue successfully.
+[18:49:14] Connecting to http://171.64.65.56:8080/
+[18:49:14] - Couldn't send HTTP request to server
+[18:49:14]   (Got status 503)
+[18:49:14] + Could not connect to Work Server
+[18:49:14] - Attempt #8  to get work failed, and no other work to do.
+Waiting before retry.
+[19:00:06] + Attempting to get work packet
+[19:00:06] - Will indicate memory of 685 MB
+[19:00:06] - Connecting to assignment server
+[19:00:06] Connecting to http://assign.stanford.edu:8080/
+[19:00:06] Posted data.
+[19:00:06] Initial: 40AB; - Successful: assigned to (171.64.65.56).
+[19:00:06] + News From Folding@Home: Welcome to Folding@Home
+[19:00:07] Loaded queue successfully.
+[19:00:07] Connecting to http://171.64.65.56:8080/
+[19:00:07] - Couldn't send HTTP request to server
+[19:00:07]   (Got status 503)
+[19:00:07] + Could not connect to Work Server
+[19:00:07] - Attempt #9  to get work failed, and no other work to do.
+Waiting before retry.
+[19:21:37] + Attempting to get work packet
+[19:21:37] - Will indicate memory of 685 MB
+[19:21:37] - Connecting to assignment server
+[19:21:37] Connecting to http://assign.stanford.edu:8080/
+[19:21:38] Posted data.
+[19:21:38] Initial: 40AB; - Successful: assigned to (171.64.65.56).
+[19:21:38] + News From Folding@Home: Welcome to Folding@Home
+[19:21:38] Loaded queue successfully.
+[19:21:38] Connecting to http://171.64.65.56:8080/
+[19:21:38] - Couldn't send HTTP request to server
+[19:21:38]   (Got status 503)
+[19:21:38] + Could not connect to Work Server
+[19:21:38] - Attempt #10  to get work failed, and no other work to do.
+Waiting before retry.

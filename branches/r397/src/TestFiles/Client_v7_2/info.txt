@@ -1,0 +1,134 @@
+PyON 1 info
+[
+  [
+    "Folding@home Client",
+    [
+      "Website",
+      "http://folding.stanford.edu/"
+    ],
+    [
+      "Copyright",
+      "(c) 2009,2010 Stanford University"
+    ],
+    [
+      "Author",
+      "Joseph Coffland <joseph@cauldrondevelopment.com>"
+    ],
+    [
+      "Args",
+      " --password yyyyy"
+    ],
+    [
+      "Config",
+      "/home/s.shelnutt/folding/FAHClient-7.1.24-Ubuntu-10.10-64bit-release/config.xml"
+    ]
+  ],
+  [
+    "Build",
+    [
+      "Version",
+      "7.1.24"
+    ],
+    [
+      "Date",
+      "Apr  6 2011"
+    ],
+    [
+      "Time",
+      "21:24:39"
+    ],
+    [
+      "SVN Rev",
+      "2908"
+    ],
+    [
+      "Branch",
+      "fah/trunk/client"
+    ],
+    [
+      "Compiler",
+      "Intel(R) C++ g++ 4.3 mode 1110"
+    ],
+    [
+      "Options",
+      "-std=gnu++98 -O3 -funroll-loops -msse2 -axSSE3,SSSE3,SSE4.1,SSE4.2 -restrict"
+    ],
+    [
+      "Platform",
+      "linux2 2.6.35-22-server"
+    ],
+    [
+      "Bits",
+      "64"
+    ],
+    [
+      "Mode",
+      "Release"
+    ]
+  ],
+  [
+    "System",
+    [
+      "OS",
+      "Linux 2.6.36-gentoo-r1 x86_64"
+    ],
+    [
+      "CPU",
+      "Intel(R) Core(TM)2 CPU          6300  @ 1.86GHz"
+    ],
+    [
+      "CPU ID",
+      "GenuineIntel Family 6 Model 15 Stepping 2"
+    ],
+    [
+      "CPUs",
+      "2"
+    ],
+    [
+      "Memory",
+      "1.96GiB"
+    ],
+    [
+      "Free Memory",
+      "237.61MiB"
+    ],
+    [
+      "Threads",
+      "POSIX_THREADS"
+    ],
+    [
+      "GPUs",
+      "1"
+    ],
+    [
+      "GPU 0",
+      "FERMI:1 GF104 [GeForce GTX 460]"
+    ],
+    [
+      "CUDA",
+      "2.1"
+    ],
+    [
+      "CUDA Driver",
+      "4000"
+    ],
+    [
+      "On Battery",
+      "false"
+    ],
+    [
+      "UTC offset",
+      "-4"
+    ],
+    [
+      "PID",
+      "1408"
+    ],
+    [
+      "CWD",
+      "/home/s.shelnutt/folding/FAHClient-7.1.24-Ubuntu-10.10-64bit-release"
+    ]
+  ]
+]
+---
+

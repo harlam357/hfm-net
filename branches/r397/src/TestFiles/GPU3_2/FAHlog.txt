@@ -1,0 +1,219 @@
+
+
+--- Opening Log file [February 17 17:19:31 UTC] 
+
+
+# Windows GPU Systray Edition #################################################
+###############################################################################
+
+                       Folding@Home Client Version 6.41r2
+
+                          http://folding.stanford.edu
+
+###############################################################################
+###############################################################################
+
+Launch directory: C:\folding\GPU-1
+Arguments: -gpu 0 -verbosity 9 -local -verbosity 9 
+
+[17:19:31] - Ask before connecting: No
+[17:19:31] - User name: HayesK (Team 32)
+[17:19:31] - User ID: 37114EB5198643C1
+[17:19:31] - Machine ID: 2
+[17:19:31] 
+[17:19:31] Gpu type=3 species=21.
+[17:19:31] Loaded queue successfully.
+[17:19:31] Initialization complete
+[17:19:31] 
+[17:19:31] + Processing work unit
+[17:19:31] - Autosending finished units... [February 17 17:19:31 UTC]
+[17:19:31] Trying to send all finished work units
+[17:19:31] + No unsent completed units remaining.
+[17:19:31] - Autosend completed
+[17:19:31] Core required: FahCore_15.exe
+[17:19:31] Core found.
+[17:19:31] Working on queue slot 03 [February 17 17:19:31 UTC]
+[17:19:31] + Working ...
+[17:19:31] - Calling '.\FahCore_15.exe -dir work/ -suffix 03 -nice 19 -priority 96 -nocpulock -checkpoint 30 -verbose -lifeline 1276 -version 641'
+
+[17:19:31] 
+[17:19:31] *------------------------------*
+[17:19:31] Folding@Home GPU Core
+[17:19:31] Version                2.19 (Thu Dec 9 14:30:54 PST 2010)
+[17:19:31] Compiler               cl: Command not found.
+[17:19:31] Build host             SimbiosNvdWin7
+[17:19:31] Board Type             NVIDIA/CUDA
+[17:19:31] Core                   15
+[17:19:31] 
+[17:19:31] Window's signal control handler registered.
+[17:19:31] Preparing to commence simulation
+[17:19:31] - Looking at optimizations...
+[17:19:31] - Files status OK
+[17:19:31] sizeof(CORE_PACKET_HDR) = 512 file=<>
+[17:19:31] - Expanded 43870 -> 163067 (decompressed 371.7 percent)
+[17:19:31] Called DecompressByteArray: compressed_data_size=43870 data_size=163067, decompressed_data_size=163067 diff=0
+[17:19:31] - Digital signature verified
+[17:19:31] 
+[17:19:31] Project: 10634 (Run 11, Clone 24, Gen 14)
+[17:19:31] 
+[17:19:31] Assembly optimizations on if available.
+[17:19:31] Entering M.D.
+[17:19:33] Will resume from checkpoint file work/wudata_03.ckp
+[17:19:33] Tpr hash work/wudata_03.tpr:  806654845 1376417289 919168281 2710417517 3589040769
+[17:19:33] calling fah_main gpuDeviceId=0
+[17:19:33] Working on 582 p2750_N68H_AM03
+[17:19:33] Client config found, loading data.
+[17:19:33] Starting GUI Server
+[17:20:43] Resuming from checkpoint
+[17:20:43] fcCheckPointResume: retreived and current tpr file hash:
+[17:20:43]    0    806654845    806654845
+[17:20:43]    1   1376417289   1376417289
+[17:20:43]    2    919168281    919168281
+[17:20:43]    3   2710417517   2710417517
+[17:20:43]    4   3589040769   3589040769
+[17:20:43] fcCheckPointResume: file hashes same.
+[17:20:43] fcCheckPointResume: state restored.
+[17:20:43] fcCheckPointResume: name work/wudata_03.log Verified work/wudata_03.log
+[17:20:43] fcCheckPointResume: name work/wudata_03.trr Verified work/wudata_03.trr
+[17:20:43] fcCheckPointResume: name work/wudata_03.xtc Verified work/wudata_03.xtc
+[17:20:43] fcCheckPointResume: name work/wudata_03.edr Verified work/wudata_03.edr
+[17:20:43] fcCheckPointResume: state restored 2
+[17:20:43] Resumed from checkpoint
+[17:20:43] Setting checkpoint frequency: 250000
+[17:20:43] Completed  22250001 out of 25000000 steps (89%).
+[17:21:38] Completed  22500000 out of 25000000 steps (90%).
+[17:22:33] Completed  22750000 out of 25000000 steps (91%).
+[17:23:28] Completed  23000000 out of 25000000 steps (92%).
+[17:24:24] Completed  23250000 out of 25000000 steps (93%).
+[17:25:18] Completed  23500000 out of 25000000 steps (94%).
+[17:26:13] Completed  23750000 out of 25000000 steps (95%).
+[17:27:08] Completed  24000000 out of 25000000 steps (96%).
+[17:28:04] Completed  24250000 out of 25000000 steps (97%).
+[17:28:58] Completed  24500000 out of 25000000 steps (98%).
+[17:29:53] Completed  24750000 out of 25000000 steps (99%).
+[17:30:47] Completed  25000000 out of 25000000 steps (100%).
+[17:30:47] Finished fah_main status=0
+[17:30:47] Successful run
+[17:30:47] DynamicWrapper: Finished Work Unit: sleep=10000
+[17:30:58] Reserved 11376 bytes for xtc file; Cosm status=0
+[17:30:58] Allocated 11376 bytes for xtc file
+[17:30:58] - Reading up to 11376 from "work/wudata_03.xtc": Read 11376
+[17:30:58] Read 11376 bytes from xtc file; available packet space=786419088
+[17:30:58] xtc file hash check passed.
+[17:30:58] Reserved 3621840 3621840 786419088 bytes for arc file=<work/wudata_03.trr> Cosm status=0
+[17:30:58] Allocated 3621840 bytes for arc file
+[17:30:58] - Reading up to 3621840 from "work/wudata_03.trr": Read 3621840
+[17:30:58] Read 3621840 bytes from arc file; available packet space=782797248
+[17:30:58] trr file hash check passed.
+[17:30:58] Allocated 544 bytes for edr file
+[17:30:58] Read bedfile
+[17:30:58] edr file hash check passed.
+[17:30:58] Allocated 492662 bytes for logfile
+[17:30:58] Read logfile
+[17:30:58] GuardedRun: success in DynamicWrapper
+[17:30:58] GuardedRun: done
+[17:30:58] Run: GuardedRun completed.
+[17:31:02] + Opened results file
+[17:31:02] - Writing 4126934 bytes of core data to disk...
+[17:31:03] Done: 4126422 -> 3218540 (compressed to 77.9 percent)
+[17:31:03]   ... Done.
+[17:31:03] DeleteFrameFiles: successfully deleted file=work/wudata_03.ckp
+[17:31:04] Shutting down core 
+[17:31:04] 
+[17:31:04] Folding@home Core Shutdown: FINISHED_UNIT
+[17:31:06] CoreStatus = 64 (100)
+[17:31:06] Unit 3 finished with 98 percent of time to deadline remaining.
+[17:31:06] Updated performance fraction: 0.978585
+[17:31:06] Sending work to server
+[17:31:06] Project: 10634 (Run 11, Clone 24, Gen 14)
+
+
+[17:31:06] + Attempting to send results [February 17 17:31:06 UTC]
+[17:31:06] - Reading file work/wuresults_03.dat from core
+[17:31:06]   (Read 3219052 bytes from disk)
+[17:31:06] Gpu type=3 species=21.
+[17:31:06] Connecting to http://171.67.108.20:8080/
+[17:31:16] Posted data.
+[17:31:16] Initial: 0000; - Uploaded at ~314 kB/s
+[17:31:16] - Averaged speed for that direction ~255 kB/s
+[17:31:16] + Results successfully sent
+[17:31:16] Thank you for your contribution to Folding@Home.
+[17:31:16] + Number of Units Completed: 847
+
+[17:31:20] Trying to send all finished work units
+[17:31:20] + No unsent completed units remaining.
+[17:31:20] - Preparing to get new work unit...
+[17:31:20] Cleaning up work directory
+[17:31:20] + Attempting to get work packet
+[17:31:20] Passkey found
+[17:31:20] - Will indicate memory of 4054 MB
+[17:31:20] Gpu type=3 species=21.
+[17:31:20] - Detect CPU. Vendor: GenuineIntel, Family: 6, Model: 14, Stepping: 5
+[17:31:20] - Connecting to assignment server
+[17:31:20] Connecting to http://assign-GPU.stanford.edu:8080/
+[17:31:21] Posted data.
+[17:31:21] Initial: 43AB; - Successful: assigned to (171.67.108.20).
+[17:31:21] + News From Folding@Home: Welcome to Folding@Home
+[17:31:21] Loaded queue successfully.
+[17:31:21] Gpu type=3 species=21.
+[17:31:21] Sent data
+[17:31:21] Connecting to http://171.67.108.20:8080/
+[17:31:22] Posted data.
+[17:31:22] Initial: 0000; - Receiving payload (expected size: 44206)
+[17:31:22] Conversation time very short, giving reduced weight in bandwidth avg
+[17:31:22] - Downloaded at ~86 kB/s
+[17:31:22] - Averaged speed for that direction ~66 kB/s
+[17:31:22] + Received work.
+[17:31:22] Trying to send all finished work units
+[17:31:22] + No unsent completed units remaining.
+[17:31:22] + Closed connections
+[17:31:22] 
+[17:31:22] + Processing work unit
+[17:31:22] Core required: FahCore_15.exe
+[17:31:22] Core found.
+[17:31:22] Working on queue slot 04 [February 17 17:31:22 UTC]
+[17:31:22] + Working ...
+[17:31:22] - Calling '.\FahCore_15.exe -dir work/ -suffix 04 -nice 19 -priority 96 -nocpulock -checkpoint 30 -verbose -lifeline 1276 -version 641'
+
+[17:31:22] 
+[17:31:22] *------------------------------*
+[17:31:22] Folding@Home GPU Core
+[17:31:22] Version                2.19 (Thu Dec 9 14:30:54 PST 2010)
+[17:31:22] Compiler               cl: Command not found.
+[17:31:22] Build host             SimbiosNvdWin7
+[17:31:22] Board Type             NVIDIA/CUDA
+[17:31:22] Core                   15
+[17:31:22] 
+[17:31:22] Window's signal control handler registered.
+[17:31:22] Preparing to commence simulation
+[17:31:22] - Looking at optimizations...
+[17:31:22] DeleteFrameFiles: successfully deleted file=work/wudata_04.ckp
+[17:31:22] - Created dyn
+[17:31:22] - Files status OK
+[17:31:22] sizeof(CORE_PACKET_HDR) = 512 file=<>
+[17:31:22] - Expanded 43694 -> 163067 (decompressed 373.2 percent)
+[17:31:22] Called DecompressByteArray: compressed_data_size=43694 data_size=163067, decompressed_data_size=163067 diff=0
+[17:31:22] - Digital signature verified
+[17:31:22] 
+[17:31:22] Project: 10634 (Run 8, Clone 24, Gen 24)
+[17:31:22] 
+[17:31:22] Assembly optimizations on if available.
+[17:31:22] Entering M.D.
+[17:31:24] Tpr hash work/wudata_04.tpr:  3096012613 474087296 4040827514 636481337 1433153490
+[17:31:24] calling fah_main gpuDeviceId=0
+[17:31:24] Working on 582 p2750_N68H_AM03
+[17:31:24] Client config found, loading data.
+[17:31:25] Starting GUI Server
+[17:32:34] Setting checkpoint frequency: 250000
+[17:32:34] Completed         0 out of 25000064 steps (0%).
+[17:33:29] Completed    250001 out of 25000064 steps (1%).
+[17:34:24] Completed    500002 out of 25000064 steps (2%).
+[17:35:18] Completed    750002 out of 25000064 steps (3%).
+[17:36:13] Completed   1000003 out of 25000064 steps (4%).
+[17:37:08] Completed   1250004 out of 25000064 steps (5%).
+[17:38:03] Completed   1500004 out of 25000064 steps (6%).
+[17:38:57] Completed   1750005 out of 25000064 steps (7%).
+[17:39:52] Completed   2000006 out of 25000064 steps (8%).
+[17:40:47] Completed   2250006 out of 25000064 steps (9%).
+[17:41:42] Completed   2500007 out of 25000064 steps (10%).
+[17:42:37] Completed   2750008 out of 25000064 steps (11%).
