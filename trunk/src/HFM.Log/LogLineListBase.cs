@@ -20,7 +20,7 @@
 using System;
 using System.Collections.Generic;
 
-using HFM.Framework.DataTypes;
+using HFM.Core.DataTypes;
 
 namespace HFM.Log
 {

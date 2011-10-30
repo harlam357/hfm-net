@@ -114,19 +114,19 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="..\HFM.Forms\Controls\RichTextBoxWrapper.cs">
-      <Link>RichTextBoxWrapper.cs</Link>
+    <Compile Include="..\HFM.Core\Application.cs">
+      <Link>Application.cs</Link>
+    </Compile>
+    <Compile Include="..\HFM.Forms\Controls\RichTextBoxExt.cs">
+      <Link>RichTextBoxExt.cs</Link>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="..\HFM.Forms\Controls\RichTextBoxWrapper.designer.cs">
-      <Link>RichTextBoxWrapper.designer.cs</Link>
-      <DependentUpon>RichTextBoxWrapper.cs</DependentUpon>
+    <Compile Include="..\HFM.Forms\Controls\RichTextBoxExt.designer.cs">
+      <Link>RichTextBoxExt.designer.cs</Link>
+      <DependentUpon>RichTextBoxExt.cs</DependentUpon>
     </Compile>
     <Compile Include="..\HFM.Forms\NativeMethods.cs">
       <Link>NativeMethods.cs</Link>
-    </Compile>
-    <Compile Include="..\HFM.Framework\PlatformOps.cs">
-      <Link>PlatformOps.cs</Link>
     </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -172,9 +172,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HFM.Framework.DataTypes\HFM.Framework.DataTypes.csproj">
-      <Project>{B294C8E0-63AD-47CF-8DE5-CE44C046DF89}</Project>
-      <Name>HFM.Framework.DataTypes</Name>
+    <ProjectReference Include="..\HFM.Core.DataTypes\HFM.Core.DataTypes.csproj">
+      <Project>{C198DA45-5B5B-4684-914B-97DED3F0BB40}</Project>
+      <Name>HFM.Core.DataTypes</Name>
     </ProjectReference>
     <ProjectReference Include="..\HFM.Log\HFM.Log.csproj">
       <Project>{2C3EA8A1-D17F-419D-A76A-970550FB5A09}</Project>
@@ -191,7 +191,7 @@ goto End
 
 :Merge
 set PATH=C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319;%25PATH%25
-..\..\..\..\tools\ILMerge\ILMerge.exe /keyfile:"$(AssemblyOriginatorKeyFile)" /t:winexe /ndebug /out:HFM.Log.exe HFM.Log.Tool.exe HFM.Log.dll HFM.Framework.DataTypes.dll
+..\..\..\..\tools\ILMerge\ILMerge.exe /keyfile:"$(AssemblyOriginatorKeyFile)" /t:winexe /ndebug /out:HFM.Log.exe HFM.Log.Tool.exe HFM.Log.dll HFM.Core.DataTypes.dll
 :End</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

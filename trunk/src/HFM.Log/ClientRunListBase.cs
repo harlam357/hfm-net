@@ -17,10 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System.Collections;
 using System.Collections.Generic;
 
-using HFM.Framework.DataTypes;
+using HFM.Core.DataTypes;
 
 namespace HFM.Log
 {
@@ -56,7 +55,7 @@ namespace HFM.Log
       /// <summary>
       /// Handles the given LogLineType and sets the correct position value.
       /// </summary>
-      private void HandleLogLine(ILogLine logLine)
+      private void HandleLogLine(LogLine logLine)
       {
          switch (logLine.LineType)
          {
@@ -101,50 +100,50 @@ namespace HFM.Log
          }
       }
 
-      protected virtual void HandleLogOpen(ILogLine logLine)
+      protected virtual void HandleLogOpen(LogLine logLine)
       {
          // Add a new ClientRun on LogOpen
          Add(new ClientRun(logLine.LineIndex));
       }
 
-      protected virtual void HandleLogHeader(ILogLine logLine)
+      protected virtual void HandleLogHeader(LogLine logLine)
       {
          
       }
       
-      protected virtual void HandleWorkUnitProcessing(ILogLine logLine)
+      protected virtual void HandleWorkUnitProcessing(LogLine logLine)
       {
          
       }
 
-      protected virtual void HandleWorkUnitCoreDownload(ILogLine logLine)
+      protected virtual void HandleWorkUnitCoreDownload(LogLine logLine)
       {
          
       }
 
-      protected virtual void HandleWorkUnitQueueIndex(ILogLine logLine)
+      protected virtual void HandleWorkUnitQueueIndex(LogLine logLine)
       {
          
       }
 
-      protected abstract void HandleWorkUnitWorking(ILogLine logLine);
+      protected abstract void HandleWorkUnitWorking(LogLine logLine);
 
-      protected virtual void HandleWorkUnitStart(ILogLine logLine)
+      protected virtual void HandleWorkUnitStart(LogLine logLine)
       {
          
       }
 
-      protected virtual void HandleWorkUnitRunning(ILogLine logLine)
+      protected virtual void HandleWorkUnitRunning(LogLine logLine)
       {
          
       }
 
-      protected virtual void HandleWorkUnitPaused(ILogLine logLine)
+      protected virtual void HandleWorkUnitPaused(LogLine logLine)
       {
          
       }
 
-      protected virtual void HandleWorkUnitCoreShutdown(ILogLine logLine)
+      protected virtual void HandleWorkUnitCoreShutdown(LogLine logLine)
       {
          if (CurrentClientRun != null)
          {
@@ -164,7 +163,7 @@ namespace HFM.Log
          }
       }
 
-      private void HandleClientNumberOfUnitsCompleted(ILogLine logLine)
+      private void HandleClientNumberOfUnitsCompleted(LogLine logLine)
       {
          if (CurrentClientRun != null)
          {
@@ -173,7 +172,7 @@ namespace HFM.Log
          }
       }
 
-      protected virtual void HandleWorkUnitCleaningUp(ILogLine logLine)
+      protected virtual void HandleWorkUnitCleaningUp(LogLine logLine)
       {
          
       }

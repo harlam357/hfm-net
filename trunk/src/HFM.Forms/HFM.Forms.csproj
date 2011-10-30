@@ -98,6 +98,12 @@
     <Compile Include="Controls\ComboBoxWrapper.Designer.cs">
       <DependentUpon>ComboBoxWrapper.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\RichTextBoxExt.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\RichTextBoxExt.Designer.cs">
+      <DependentUpon>RichTextBoxExt.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataGridViewColumnSelector.cs" />
     <Compile Include="Controls\DataGridViewExt.cs">
       <SubType>Component</SubType>
@@ -146,12 +152,6 @@
     </Compile>
     <Compile Include="Controls\RadioButtonWrapper.Designer.cs">
       <DependentUpon>RadioButtonWrapper.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\RichTextBoxWrapper.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\RichTextBoxWrapper.Designer.cs">
-      <DependentUpon>RichTextBoxWrapper.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\SplitContainerWrapper.cs">
       <SubType>Component</SubType>

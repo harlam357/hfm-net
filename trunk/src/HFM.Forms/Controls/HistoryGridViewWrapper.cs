@@ -23,9 +23,6 @@ namespace HFM.Forms.Controls
 {
    public partial class HistoryGridViewWrapper : DataGridView
    {
-      /// <summary>
-      /// Constructor
-      /// </summary>
       public HistoryGridViewWrapper()
       {
          InitializeComponent();

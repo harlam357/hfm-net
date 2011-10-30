@@ -20,7 +20,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-using HFM.Framework.DataTypes;
+using HFM.Core.DataTypes;
 
 namespace HFM.Log
 {
@@ -67,13 +67,13 @@ namespace HFM.Log
          _unitIndexData.Clear();
       }
 
-      protected override void HandleWorkUnitWorking(ILogLine logLine)
+      protected override void HandleWorkUnitWorking(LogLine logLine)
       {
          var queueIndex = (int)logLine.LineData;
          _unitIndexData[queueIndex] = new UnitIndexData { QueueIndex = queueIndex, WorkingIndex = logLine.LineIndex };
       }
 
-      protected override void HandleWorkUnitCleaningUp(ILogLine logLine)
+      protected override void HandleWorkUnitCleaningUp(LogLine logLine)
       {
          base.HandleWorkUnitCleaningUp(logLine);
 

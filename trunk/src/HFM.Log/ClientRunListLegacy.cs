@@ -21,7 +21,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-using HFM.Framework.DataTypes;
+using HFM.Core.DataTypes;
 
 namespace HFM.Log
 {
@@ -65,14 +65,14 @@ namespace HFM.Log
          DoRunLevelDetection(logLines);
       }
 
-      protected override void HandleLogOpen(ILogLine logLine)
+      protected override void HandleLogOpen(LogLine logLine)
       {
          base.HandleLogOpen(logLine);
 
          _currentLineType = logLine.LineType;
       }
 
-      protected override void HandleLogHeader(ILogLine logLine)
+      protected override void HandleLogHeader(LogLine logLine)
       {
          base.HandleLogHeader(logLine);
 
@@ -90,7 +90,7 @@ namespace HFM.Log
          _currentLineType = logLine.LineType;
       }
 
-      protected override void HandleWorkUnitProcessing(ILogLine logLine)
+      protected override void HandleWorkUnitProcessing(LogLine logLine)
       {
          base.HandleWorkUnitProcessing(logLine);
 
@@ -109,7 +109,7 @@ namespace HFM.Log
          _currentLineType = logLine.LineType;
       }
 
-      protected override void HandleWorkUnitCoreDownload(ILogLine logLine)
+      protected override void HandleWorkUnitCoreDownload(LogLine logLine)
       {
          base.HandleWorkUnitCoreDownload(logLine);
 
@@ -117,14 +117,14 @@ namespace HFM.Log
          _currentLineType = logLine.LineType;
       }
 
-      protected override void HandleWorkUnitQueueIndex(ILogLine logLine)
+      protected override void HandleWorkUnitQueueIndex(LogLine logLine)
       {
          base.HandleWorkUnitQueueIndex(logLine);
 
          _unitIndexData.QueueSlotIndex = (int)logLine.LineData;
       }
 
-      protected override void HandleWorkUnitWorking(ILogLine logLine)
+      protected override void HandleWorkUnitWorking(LogLine logLine)
       {
          // This first check allows us to overlook the "+ Working ..." message
          // that gets written after a client is Paused.  We don't want to key
@@ -141,13 +141,13 @@ namespace HFM.Log
          }
       }
 
-      protected override void HandleWorkUnitStart(ILogLine logLine)
+      protected override void HandleWorkUnitStart(LogLine logLine)
       {
          _unitIndexData.StartIndex = logLine.LineIndex;
          _currentLineType = logLine.LineType;
       }
 
-      protected override void HandleWorkUnitRunning(ILogLine logLine)
+      protected override void HandleWorkUnitRunning(LogLine logLine)
       {
          if (CurrentClientRun == null)
          {
@@ -183,14 +183,14 @@ namespace HFM.Log
          _unitIndexData.Initialize();
       }
 
-      protected override void HandleWorkUnitPaused(ILogLine logLine)
+      protected override void HandleWorkUnitPaused(LogLine logLine)
       {
          base.HandleWorkUnitPaused(logLine);
 
          _currentLineType = logLine.LineType;
       }
 
-      protected override void HandleWorkUnitCoreShutdown(ILogLine logLine)
+      protected override void HandleWorkUnitCoreShutdown(LogLine logLine)
       {
          if (_currentLineType.Equals(LogLineType.WorkUnitRunning))
          {

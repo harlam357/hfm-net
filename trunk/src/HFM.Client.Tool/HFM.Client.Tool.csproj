@@ -87,8 +87,8 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="..\HFM.Framework\PlatformOps.cs">
-      <Link>PlatformOps.cs</Link>
+    <Compile Include="..\HFM.Core\Application.cs">
+      <Link>Application.cs</Link>
     </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

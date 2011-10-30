@@ -21,7 +21,7 @@ using System;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 
-using HFM.Framework.DataTypes;
+using HFM.Core.DataTypes;
 
 namespace HFM.Log
 {
@@ -75,7 +75,7 @@ namespace HFM.Log
 
       #region Methods
       
-      internal virtual object GetLineData(ILogLine logLine)
+      internal virtual object GetLineData(LogLine logLine)
       {
          switch (logLine.LineType)
          {
@@ -127,7 +127,7 @@ namespace HFM.Log
       /// Check the given log line for Completed Frame information (All other clients).
       /// </summary>
       /// <param name="logLine">Log Line</param>
-      protected static UnitFrame GetUnitFrame(ILogLine logLine)
+      protected static UnitFrame GetUnitFrame(LogLine logLine)
       {
          Debug.Assert(logLine != null);
 
@@ -208,7 +208,7 @@ namespace HFM.Log
       /// Check the given log line for Completed Frame information (GPU Only).
       /// </summary>
       /// <param name="logLine">Log Line</param>
-      protected static UnitFrame GetGpuUnitFrame(ILogLine logLine)
+      protected static UnitFrame GetGpuUnitFrame(LogLine logLine)
       {
          Debug.Assert(logLine != null);
 
