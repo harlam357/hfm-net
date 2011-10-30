@@ -22,10 +22,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 
-using HFM.Framework.DataTypes;
+using HFM.Core.DataTypes;
 
 namespace HFM.Log
 {
@@ -168,7 +167,7 @@ namespace HFM.Log
          return data;
       }
 
-      private static void PopulateProjectData(ILogLine line, FahLogUnitData data)
+      private static void PopulateProjectData(LogLine line, FahLogUnitData data)
       {
          Debug.Assert(line != null);
          Debug.Assert(data != null);
@@ -361,12 +360,12 @@ namespace HFM.Log
       private static readonly Regex TimeStampRegex =
          new Regex("\\[?(?<Timestamp>.{8})[\\]|:]", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
-      #region ILogLine
+      #region LogLine
 
       /// <summary>
       /// Get the time stamp from the log line or return null.
       /// </summary>
-      public static TimeSpan? GetTimeStamp(this ILogLine logLine)
+      public static TimeSpan? GetTimeStamp(this LogLine logLine)
       {
          Match timeStampMatch;
          if ((timeStampMatch = TimeStampRegex.Match(logLine.LineRaw)).Success)
@@ -388,7 +387,7 @@ namespace HFM.Log
       /// Get the time stamp from the log line or throw.
       /// </summary>
       /// <exception cref="FormatException">Throws if time stamp string cannot be parsed.</exception>
-      public static TimeSpan ParseTimeStamp(this ILogLine logLine)
+      public static TimeSpan ParseTimeStamp(this LogLine logLine)
       {
          Match timeStampMatch;
          if ((timeStampMatch = TimeStampRegex.Match(logLine.LineRaw)).Success)

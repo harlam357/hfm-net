@@ -1,6 +1,6 @@
 namespace HFM.Forms.Controls
 {
-   partial class RichTextBoxWrapper
+   partial class RichTextBoxExt
    {
       /// <summary> 
       /// Required designer variable.

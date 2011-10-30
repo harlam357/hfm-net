@@ -62,12 +62,6 @@
     <AssemblyOriginatorKeyFile>..\harlam357public.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="harlam357.Net">
-      <HintPath>..\..\lib\harlam357-net\harlam357.Net.dll</HintPath>
-    </Reference>
-    <Reference Include="harlam357.Windows.Forms">
-      <HintPath>..\..\lib\harlam357-net\harlam357.Windows.Forms.dll</HintPath>
-    </Reference>
     <Reference Include="HTMLparser">
       <HintPath>..\..\lib\HTMLparser2\bin\Release\HTMLparser.dll</HintPath>
     </Reference>
@@ -80,18 +74,16 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="ProjectSummaryDownloader.cs" />
+    <Compile Include="HtmlSerializer.cs" />
+    <Compile Include="TabSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProteinCollection.cs" />
+    <Compile Include="ProteinDictionary.cs" />
+    <Compile Include="ProteinLoadInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HFM.Framework.DataTypes\HFM.Framework.DataTypes.csproj">
-      <Project>{B294C8E0-63AD-47CF-8DE5-CE44C046DF89}</Project>
-      <Name>HFM.Framework.DataTypes</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HFM.Framework\HFM.Framework.csproj">
-      <Project>{FFFF3DE4-8620-4C13-A968-ADF58133146B}</Project>
-      <Name>HFM.Framework</Name>
+    <ProjectReference Include="..\HFM.Core.DataTypes\HFM.Core.DataTypes.csproj">
+      <Project>{C198DA45-5B5B-4684-914B-97DED3F0BB40}</Project>
+      <Name>HFM.Core.DataTypes</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

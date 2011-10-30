@@ -21,7 +21,7 @@ using System;
 using System.Collections;
 using System.Text.RegularExpressions;
 
-using HFM.Framework.DataTypes;
+using HFM.Core.DataTypes;
 
 namespace HFM.Log
 {
@@ -87,7 +87,7 @@ namespace HFM.Log
 
       #region Methods
       
-      internal override object GetLineData(ILogLine logLine)
+      internal override object GetLineData(LogLine logLine)
       {
          var data = base.GetLineData(logLine);
          if (data != null)

@@ -44,7 +44,7 @@
          this.panel1 = new System.Windows.Forms.Panel();
          this.Version7RadioButton = new System.Windows.Forms.RadioButton();
          this.LegacyRadioButton = new System.Windows.Forms.RadioButton();
-         this.richTextBox1 = new HFM.Forms.Controls.RichTextBoxWrapper();
+         this.richTextBox1 = new HFM.Forms.Controls.RichTextBoxExt();
          this.splitContainer1.Panel1.SuspendLayout();
          this.splitContainer1.Panel2.SuspendLayout();
          this.splitContainer1.SuspendLayout();
@@ -261,7 +261,7 @@
       private System.Windows.Forms.TextBox txtLogPath;
       private System.Windows.Forms.Button btnBrowse;
       private System.Windows.Forms.Button btnParse;
-      private HFM.Forms.Controls.RichTextBoxWrapper richTextBox1;
+      private HFM.Forms.Controls.RichTextBoxExt richTextBox1;
       private System.Windows.Forms.TreeView treeView1;
       private System.Windows.Forms.Button btnGenCode;
       private System.Windows.Forms.SplitContainer splitContainer1;

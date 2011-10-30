@@ -24,8 +24,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 
-using HFM.Framework;
-using HFM.Framework.DataTypes;
+using HFM.Core.DataTypes;
 
 namespace HFM.Forms.Controls
 {
@@ -46,7 +45,7 @@ namespace HFM.Forms.Controls
       void ScrollToBottom();
    }
 
-   public partial class RichTextBoxWrapper : RichTextBox, ILogFileViewer
+   public partial class RichTextBoxExt : RichTextBox, ILogFileViewer
    {
       private IList<LogLine> _logLines;
       
@@ -57,7 +56,7 @@ namespace HFM.Forms.Controls
          get { return _logOwnedByInstanceName; }
       }
    
-      public RichTextBoxWrapper()
+      public RichTextBoxExt()
       {
          InitializeComponent();
       }
@@ -88,7 +87,7 @@ namespace HFM.Forms.Controls
          else
          {
             Rtf = null;
-            Lines = (from ILogLine line in _logLines select line.LineRaw).ToArray();
+            Lines = (from LogLine line in _logLines select line.LineRaw).ToArray();
          }
       }
 
@@ -109,7 +108,7 @@ namespace HFM.Forms.Controls
          return sb.ToString();
       }
 
-      private static string GetLineColor(ILogLine line)
+      private static string GetLineColor(LogLine line)
       {
          switch (line.LineType)
          {
@@ -143,8 +142,8 @@ namespace HFM.Forms.Controls
       public void ScrollToBottom()
       {
          SelectionStart = TextLength;
-      
-         if (PlatformOps.IsRunningOnMono())
+
+         if (Core.Application.IsRunningOnMono)
          {
             ScrollToCaret();
          }
@@ -156,7 +155,7 @@ namespace HFM.Forms.Controls
 
       public void ScrollToTop()
       {
-         if (PlatformOps.IsRunningOnMono())
+         if (Core.Application.IsRunningOnMono)
          {
             throw new NotImplementedException("This function is not implemented when running under the Mono Runtime.");
          }
@@ -166,7 +165,7 @@ namespace HFM.Forms.Controls
 
       public void ScrollLineDown()
       {
-         if (PlatformOps.IsRunningOnMono())
+         if (Core.Application.IsRunningOnMono)
          {
             throw new NotImplementedException("This function is not implemented when running under the Mono Runtime.");
          }
@@ -176,7 +175,7 @@ namespace HFM.Forms.Controls
 
       public void ScrollLineUp()
       {
-         if (PlatformOps.IsRunningOnMono())
+         if (Core.Application.IsRunningOnMono)
          {
             throw new NotImplementedException("This function is not implemented when running under the Mono Runtime.");
          }
@@ -186,7 +185,7 @@ namespace HFM.Forms.Controls
 
       public void ScrollToLine(int lineNumber)
       {
-         if (PlatformOps.IsRunningOnMono())
+         if (Core.Application.IsRunningOnMono)
          {
             throw new NotImplementedException("This function is not implemented when running under the Mono Runtime.");
          }

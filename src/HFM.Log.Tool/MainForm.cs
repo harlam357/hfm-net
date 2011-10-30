@@ -6,8 +6,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
-using HFM.Framework;
-using HFM.Framework.DataTypes;
+using HFM.Core.DataTypes;
 
 namespace HFM.Log.Tool
 {
@@ -20,7 +19,7 @@ namespace HFM.Log.Tool
       {
          InitializeComponent();
 
-         base.Text = String.Format("HFM Log Tool v{0}", PlatformOps.ApplicationVersionWithRevision);
+         base.Text = String.Format("HFM Log Tool v{0}", Core.Application.VersionWithRevision);
 #if !DEV
          btnGenCode.Visible = false;
 #endif

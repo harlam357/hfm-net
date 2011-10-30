@@ -61,17 +61,11 @@
     <AssemblyOriginatorKeyFile>..\harlam357public.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="harlam357.Windows.Forms">
-      <HintPath>..\..\lib\harlam357-net\harlam357.Windows.Forms.dll</HintPath>
-    </Reference>
     <Reference Include="HTMLparser">
       <HintPath>..\..\lib\HTMLparser2\bin\Release\HTMLparser.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\lib\NUnit\bin\net-2.0\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Rhino.Mocks">
-      <HintPath>..\..\lib\Rhino.Mocks\Rhino.Mocks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -82,18 +76,15 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="ProjectSummaryDownloaderTests.cs" />
-    <Compile Include="ProteinCollectionTests.cs" />
+    <Compile Include="HtmlSerializerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProteinDictionaryTests.cs" />
+    <Compile Include="TabSerializerTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HFM.Framework.DataTypes\HFM.Framework.DataTypes.csproj">
-      <Project>{B294C8E0-63AD-47CF-8DE5-CE44C046DF89}</Project>
-      <Name>HFM.Framework.DataTypes</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HFM.Framework\HFM.Framework.csproj">
-      <Project>{FFFF3DE4-8620-4C13-A968-ADF58133146B}</Project>
-      <Name>HFM.Framework</Name>
+    <ProjectReference Include="..\HFM.Core.DataTypes\HFM.Core.DataTypes.csproj">
+      <Project>{C198DA45-5B5B-4684-914B-97DED3F0BB40}</Project>
+      <Name>HFM.Core.DataTypes</Name>
     </ProjectReference>
     <ProjectReference Include="..\HFM.Proteins\HFM.Proteins.csproj">
       <Project>{7500A8CA-521D-4397-892B-27C6917847E1}</Project>
@@ -121,6 +112,12 @@
     <None Include="..\harlam357public.snk">
       <Link>Properties\harlam357public.snk</Link>
     </None>
+    <None Include="TestFiles\ProjectInfo.tab" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestFiles\psummary.html" />
+    <Content Include="TestFiles\psummaryB.html" />
+    <Content Include="TestFiles\psummaryC.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
