@@ -1,5 +1,5 @@
 ﻿
-using HFM.Framework;
+using HFM.Core;
 
 namespace HFM.Client
 {
