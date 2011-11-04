@@ -27,8 +27,6 @@ namespace HFM.Core
 {
    public interface IXmlStatsDataContainer
    {
-      string EocUserXml { get; set; }
-
       /// <summary>
       /// User Stats Data
       /// </summary>
@@ -45,15 +43,13 @@ namespace HFM.Core
       /// <param name="forceRefresh">Force Refresh or allow to check for next update time</param>
       void GetEocXmlData(bool forceRefresh);
 
-      /// <summary>
-      /// Read binary file (default file name).
-      /// </summary>
+      #region DataContainer<T>
+
       void Read();
 
-      /// <summary>
-      /// Write binary file (default file name).
-      /// </summary>
       void Write();
+
+      #endregion
    }
 
    public class XmlStatsDataContainer : DataContainer<XmlStatsData>, IXmlStatsDataContainer
@@ -66,9 +62,14 @@ namespace HFM.Core
       
       #endregion
 
-      #region Properties
+      #region Constructor
 
-      public string EocUserXml { get; set; }
+      private readonly IPreferenceSet _prefs;
+
+      public XmlStatsDataContainer(IPreferenceSet prefs)
+      {
+         _prefs = prefs;
+      }
 
       #endregion
       
@@ -150,7 +151,7 @@ namespace HFM.Core
                #region Get the XML Document
 
                var xmlData = new XmlDocument();
-               xmlData.Load(EocUserXml);
+               xmlData.Load(_prefs.EocUserXml);
                xmlData.RemoveChild(xmlData.ChildNodes[0]);
 
                XmlNode eocNode = GetXmlNode(xmlData, EocFoldingStatsNode);

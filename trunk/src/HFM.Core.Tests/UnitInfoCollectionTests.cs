@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - UnitInfo Container Class Tests
+ * HFM.NET - UnitInfo Collection Class Tests
  * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -20,7 +20,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 using NUnit.Framework;
 
@@ -30,58 +29,38 @@ using HFM.Core.DataTypes.Serializers;
 namespace HFM.Core.Tests
 {
    [TestFixture]
-   public class UnitInfoContainerTests
+   public class UnitInfoCollectionTests
    {
       [Test]
       public void ReadTest1()
       {
-         var container = new UnitInfoContainer
-                         {
-                            FileName = Path.Combine("..\\..\\TestFiles", Constants.UnitInfoCacheFileName),
-                            Serializer = new ProtoBufFileSerializer<List<UnitInfo>>()
-                         };
-
-         container.Read();
-         Assert.AreEqual(6, container.Count);
-      }
-
-      [Test]
-      public void ReadTest2()
-      {
-         var container = new UnitInfoContainer
+         var collection = new UnitInfoCollection
          {
             FileName = Path.Combine("..\\..\\TestFiles", Constants.UnitInfoCacheFileName),
             Serializer = new ProtoBufFileSerializer<List<UnitInfo>>()
          };
 
-         container.Read();
-         Assert.AreEqual(0, container.Count);
+         collection.Read();
+         Assert.AreEqual(6, collection.Count);
       }
 
       [Test]
       public void WriteTest1()
       {
-         var container = new UnitInfoContainer
-                         {
-                            FileName = "TestUnitInfoBinary.dat",
-                            Serializer = new ProtoBufFileSerializer<List<UnitInfo>>()
-                         };
-
-         var list = CreateTestList();
-         foreach (UnitInfo item in list)
+         var collection = new UnitInfoCollection
          {
-            container.Add(item);
-         }
-         Assert.AreEqual(list.Count, container.Count);
-         container.Write();
-         container.Clear();
-         Assert.AreEqual(0, container.Count);
-         container.Read();
-         Assert.AreEqual(list.Count, container.Count);
-         ValidateTestList(container.ToList());
+            FileName = "TestUnitInfoBinary.dat",
+            Serializer = new ProtoBufFileSerializer<List<UnitInfo>>()
+         };
+
+         collection.Data = CreateTestList();
+         collection.Write();
+         collection.Data = null;
+         collection.Read();
+         ValidateTestList(collection.Data);
       }
 
-      private static IList<UnitInfo> CreateTestList()
+      private static List<UnitInfo> CreateTestList()
       {
          var list = new List<UnitInfo>();
          for (int i = 0; i < 10; i++)
@@ -118,7 +97,7 @@ namespace HFM.Core.Tests
             list.Add(unitInfo);
          }
 
-         return list.AsReadOnly();
+         return list;
       }
 
       private static void ValidateTestList(IList<UnitInfo> list)

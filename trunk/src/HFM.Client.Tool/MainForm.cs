@@ -23,7 +23,7 @@ using System.IO;
 using System.Windows.Forms;
 
 using HFM.Client.DataTypes;
-using HFM.Framework;
+using HFM.Core;
 
 namespace HFM.Client.Tool
 {
