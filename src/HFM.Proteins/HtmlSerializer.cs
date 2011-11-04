@@ -12,7 +12,7 @@ using HFM.Core.DataTypes.Serializers;
 
 namespace HFM.Proteins
 {
-   public class HtmlSerializer : IProteinSerializer
+   public class HtmlSerializer : IFileSerializer<List<Protein>>
    {
       private readonly HTMLparser _htmlParser;
 
@@ -21,7 +21,7 @@ namespace HFM.Proteins
          _htmlParser = new HTMLparser();
       }
 
-      #region IProteinSerializer Members
+      #region IFileSerializer<List<Protein>> Members
 
       public string FileExtension
       {
@@ -33,7 +33,7 @@ namespace HFM.Proteins
          get { return "HTML Files|*.html"; }
       }
 
-      public IEnumerable<Protein> Deserialize(string fileName)
+      public List<Protein> Deserialize(string fileName)
       {
          var proteins = new List<Protein>();
 
@@ -54,7 +54,7 @@ namespace HFM.Proteins
             }
          }
 
-         return proteins.AsReadOnly();
+         return proteins;
       }
 
       #region HTML Parsing Methods
@@ -210,7 +210,7 @@ namespace HFM.Proteins
       }
       #endregion
 
-      public void Serialize(string fileName, IEnumerable<Protein> values)
+      public void Serialize(string fileName, List<Protein> value)
       {
          throw new NotSupportedException("HTML serialization is not supported.");
       }

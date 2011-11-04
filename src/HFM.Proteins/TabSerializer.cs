@@ -12,9 +12,9 @@ using HFM.Core.DataTypes.Serializers;
 
 namespace HFM.Proteins
 {
-   public sealed class TabSerializer : IProteinSerializer
+   public sealed class TabSerializer : IFileSerializer<List<Protein>>
    {
-      #region IProteinSerializer Members
+      #region IFileSerializer<List<Protein>> Members
 
       public string FileExtension
       {
@@ -26,7 +26,7 @@ namespace HFM.Proteins
          get { return "Project Info Tab Deliimited Files|*.tab"; }
       }
 
-      public IEnumerable<Protein> Deserialize(string fileName)
+      public List<Protein> Deserialize(string fileName)
       {
          var proteins = new List<Protein>();
 
@@ -62,15 +62,15 @@ namespace HFM.Proteins
             }
          }
 
-         return proteins.AsReadOnly();
+         return proteins;
       }
 
-      public void Serialize(string fileName, IEnumerable<Protein> values)
+      public void Serialize(string fileName, List<Protein> value)
       {
-         var lines = new string[values.Count()];
+         var lines = new string[value.Count()];
          int i = 0;
 
-         foreach (Protein protein in values)
+         foreach (Protein protein in value)
          {
             // Project Number, Server IP, Work Unit Name, Number of Atoms, Preferred (days),
             // Final Deadline (days), Credit, Frames, Code, Description, Contact, KFactor
