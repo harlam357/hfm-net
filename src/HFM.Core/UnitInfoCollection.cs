@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - UnitInfo Container Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * HFM.NET - UnitInfo Collection Class
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,25 +24,23 @@ using HFM.Core.DataTypes;
 
 namespace HFM.Core
 {
-   public interface IUnitInfoContainer : ICollection<UnitInfo>
+   public interface IUnitInfoCollection : ICollection<UnitInfo>
    {
       ///// <summary>
       ///// Retrieve from the Container
       ///// </summary>
       //UnitInfo RetrieveUnitInfo(DisplayInstance displayInstance);
 
-      /// <summary>
-      /// Read binary file (default file name).
-      /// </summary>
+      #region DataContainer<T>
+
       void Read();
 
-      /// <summary>
-      /// Write binary file (default file name).
-      /// </summary>
       void Write();
+
+      #endregion
    }
 
-   public class UnitInfoContainer : DataContainer<List<UnitInfo>>, IUnitInfoContainer
+   public class UnitInfoCollection : DataContainer<List<UnitInfo>>, IUnitInfoCollection
    {
       #region Methods
       

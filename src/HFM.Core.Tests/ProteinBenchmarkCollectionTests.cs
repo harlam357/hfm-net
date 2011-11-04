@@ -1,13 +1,28 @@
-﻿
+﻿/*
+ * HFM.NET - Benchmark Collection Class Tests
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License. See the included file GPLv2.TXT.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 using NUnit.Framework;
 using Rhino.Mocks;
-
-using Castle.Core.Logging;
 
 using HFM.Core.DataTypes;
 using HFM.Core.DataTypes.Serializers;
@@ -15,14 +30,14 @@ using HFM.Core.DataTypes.Serializers;
 namespace HFM.Core.Tests
 {
    [TestFixture]
-   public class ProteinBenchmarkContainerTests
+   public class ProteinBenchmarkCollectionTests
    {
       [Test]
       public void UpdateBenchmarkDataTest()
       {
          // setup
          var database = MockRepository.GenerateMock<IUnitInfoDatabase>();
-         var container = new ProteinBenchmarkContainer(database);
+         var container = new ProteinBenchmarkCollection(database);
 
          var unitInfo1 = new UnitInfo();
          unitInfo1.OwningInstanceName = "Owner";
@@ -88,76 +103,49 @@ namespace HFM.Core.Tests
       [Test]
       public void ReadTest1()
       {
-         var container = new ProteinBenchmarkContainer(MockRepository.GenerateStub<IUnitInfoDatabase>())
-                         {
-                            FileName = Path.Combine("..\\..\\TestFiles", Constants.BenchmarkCacheFileName),
-                            Serializer = new ProtoBufFileSerializer<List<ProteinBenchmark>>()
-                         };
+         var container = new ProteinBenchmarkCollection(MockRepository.GenerateStub<IUnitInfoDatabase>())
+         {
+            FileName = Path.Combine("..\\..\\TestFiles", Constants.BenchmarkCacheFileName),
+            Serializer = new ProtoBufFileSerializer<List<ProteinBenchmark>>()
+         };
 
          container.Read();
          Assert.AreEqual(1246, container.Count);
       }
 
       [Test]
-      public void ReadTest2()
-      {
-         var container = new ProteinBenchmarkContainer(MockRepository.GenerateStub<IUnitInfoDatabase>())
-         {
-            FileName = Path.Combine("..\\..\\DirectoryNotFound", Constants.BenchmarkCacheFileName),
-            Serializer = new ProtoBufFileSerializer<List<ProteinBenchmark>>()
-         };
-
-         container.Read();
-         Assert.AreEqual(0, container.Count);
-      }
-
-      [Test]
       public void WriteTest1()
       {
-         var container = new ProteinBenchmarkContainer(MockRepository.GenerateStub<IUnitInfoDatabase>())
+         var collection = new ProteinBenchmarkCollection(MockRepository.GenerateStub<IUnitInfoDatabase>())
          {
-            FileName = Path.Combine("TestProteinBenchmarkBinary.dat", Constants.BenchmarkCacheFileName),
+            FileName = "TestProteinBenchmarkBinary.dat",
             Serializer = new ProtoBufFileSerializer<List<ProteinBenchmark>>()
          };
 
-         var list = CreateTestList();
-         foreach (ProteinBenchmark benchmark in list)
-         {
-            container.Add(benchmark);
-         }
-         Assert.AreEqual(list.Count, container.Count);
-         container.Write();
-         container.Clear();
-         Assert.AreEqual(0, container.Count);
-         container.Read();
-         Assert.AreEqual(list.Count, container.Count);
-         ValidateTestList(container.ToList());
+         collection.Data = CreateTestList();
+         collection.Write();
+         collection.Data = null;
+         collection.Read();
+         ValidateTestList(collection.Data);
       }
 
       [Test]
       public void WriteTest2()
       {
-         var container = new ProteinBenchmarkContainer(MockRepository.GenerateStub<IUnitInfoDatabase>())
+         var collection = new ProteinBenchmarkCollection(MockRepository.GenerateStub<IUnitInfoDatabase>())
          {
-            FileName = Path.Combine("TestProteinBenchmark.xml", Constants.BenchmarkCacheFileName),
+            FileName = "TestProteinBenchmarkBinary.dat",
             Serializer = new XmlFileSerializer<List<ProteinBenchmark>>()
          };
 
-         var list = CreateTestList();
-         foreach (ProteinBenchmark item in list)
-         {
-            container.Add(item);
-         }
-         Assert.AreEqual(list.Count, container.Count);
-         container.Write();
-         container.Clear();
-         Assert.AreEqual(0, container.Count);
-         container.Read();
-         Assert.AreEqual(list.Count, container.Count);
-         ValidateTestList(container.ToList());
+         collection.Data = CreateTestList();
+         collection.Write();
+         collection.Data = null;
+         collection.Read();
+         ValidateTestList(collection.Data);
       }
       
-      private static IList<ProteinBenchmark> CreateTestList()
+      private static List<ProteinBenchmark> CreateTestList()
       {
          var list = new List<ProteinBenchmark>();
          for (int i = 0; i < 10; i++)
@@ -175,8 +163,8 @@ namespace HFM.Core.Tests
             }
             list.Add(benchmark);
          }
-         
-         return list.AsReadOnly();
+
+         return list;
       }
 
       private static void ValidateTestList(IList<ProteinBenchmark> list)

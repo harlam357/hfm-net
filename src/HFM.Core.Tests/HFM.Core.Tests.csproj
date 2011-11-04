@@ -76,9 +76,9 @@
     <Compile Include="Plugins\FileSerializerPluginManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AutoRunTests.cs" />
-    <Compile Include="ProteinBenchmarkContainerTests.cs" />
+    <Compile Include="ProteinBenchmarkCollectionTests.cs" />
     <Compile Include="StatusTests.cs" />
-    <Compile Include="UnitInfoContainerTests.cs" />
+    <Compile Include="UnitInfoCollectionTests.cs" />
     <Compile Include="UnitInfoLogicTests.cs" />
     <Compile Include="ValidateTests.cs" />
     <Compile Include="XmlStatsDataContainerTests.cs" />
@@ -99,6 +99,7 @@
     </None>
     <None Include="TestFiles\BenchmarkCache.dat" />
     <None Include="TestFiles\UnitInfoCache.dat" />
+    <None Include="TestFiles\UserStatsCache.dat" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

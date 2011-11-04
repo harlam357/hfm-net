@@ -21,6 +21,7 @@ using System;
 using System.IO;
 
 using NUnit.Framework;
+using Rhino.Mocks;
 
 using HFM.Core.DataTypes;
 using HFM.Core.DataTypes.Serializers;
@@ -33,9 +34,23 @@ namespace HFM.Core.Tests
       [Test]
       public void ReadTest1()
       {
-         var container = new XmlStatsDataContainer()
+         var container = new XmlStatsDataContainer(MockRepository.GenerateStub<IPreferenceSet>())
          {
             FileName = Path.Combine("..\\..\\TestFiles", Constants.UserStatsCacheFileName),
+            Serializer = new ProtoBufFileSerializer<XmlStatsData>()
+         };
+
+         container.Data = null;
+         container.Read();
+         Assert.IsNotNull(container.Data);
+      }
+
+      [Test]
+      public void WriteTest1()
+      {
+         var container = new XmlStatsDataContainer(MockRepository.GenerateStub<IPreferenceSet>())
+         {
+            FileName = "TestUserStatsBinary.dat",
             Serializer = new ProtoBufFileSerializer<XmlStatsData>()
          };
 
@@ -70,7 +85,7 @@ namespace HFM.Core.Tests
       [Test]
       public void TimeForNextUpdate()
       {
-         var container = new XmlStatsDataContainer();
+         var container = new XmlStatsDataContainer(MockRepository.GenerateStub<IPreferenceSet>());
          Assert.IsTrue(container.TimeForNextUpdate(DateTime.MinValue, DateTime.UtcNow, DateTime.Now.IsDaylightSavingTime()));
          Assert.IsTrue(container.TimeForNextUpdate(DateTime.UtcNow.Date, DateTime.UtcNow.Date.AddHours(4), false));
          Assert.IsFalse(container.TimeForNextUpdate(DateTime.UtcNow.Date, DateTime.UtcNow.Date.AddHours(2), false));

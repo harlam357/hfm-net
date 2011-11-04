@@ -109,9 +109,9 @@
     <Compile Include="Plugins\FileSerializerPluginManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AutoRun.cs" />
-    <Compile Include="ProteinBenchmarkContainer.cs" />
+    <Compile Include="ProteinBenchmarkCollection.cs" />
     <Compile Include="StatusLogic.cs" />
-    <Compile Include="UnitInfoContainer.cs" />
+    <Compile Include="UnitInfoCollection.cs" />
     <Compile Include="UnitInfoLogic.cs" />
     <Compile Include="Validate.cs" />
     <Compile Include="XmlStatsDataContainer.cs" />

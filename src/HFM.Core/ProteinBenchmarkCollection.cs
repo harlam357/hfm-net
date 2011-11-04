@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Benchmark Container Class
+ * HFM.NET - Benchmark Collection Class
  * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ using HFM.Core.DataTypes;
 
 namespace HFM.Core
 {
-   public interface IProteinBenchmarkContainer : ICollection<ProteinBenchmark>
+   public interface IProteinBenchmarkCollection : ICollection<ProteinBenchmark>
    {
       /// <summary>
       /// List of BenchmarkClient objects.
@@ -48,89 +48,87 @@ namespace HFM.Core
       ProteinBenchmark GetBenchmark(UnitInfo unitInfo);
 
       /// <summary>
-      /// Removes all the elements from the ProteinBenchmarkContainer that match the benchmarkClient.
+      /// Removes all the elements from the ProteinBenchmarkCollection that match the benchmarkClient.
       /// </summary>
-      /// <param name="benchmarkClient">The BenchmarkClient to remove from the ProteinBenchmarkContainer.</param>
+      /// <param name="benchmarkClient">The BenchmarkClient to remove from the ProteinBenchmarkCollection.</param>
       /// <exception cref="T:System.ArgumentNullException"><paramref name="benchmarkClient"/> is null.</exception>
       /// <exception cref="T:System.ArgumentException"><paramref name="benchmarkClient"/> represents all clients.</exception>
       void RemoveAll(BenchmarkClient benchmarkClient);
 
       /// <summary>
-      /// Removes all the elements from the ProteinBenchmarkContainer that match the benchmarkClient and projectId.
+      /// Removes all the elements from the ProteinBenchmarkCollection that match the benchmarkClient and projectId.
       /// </summary>
-      /// <param name="benchmarkClient">The BenchmarkClient to remove from the ProteinBenchmarkContainer.</param>
+      /// <param name="benchmarkClient">The BenchmarkClient to remove from the ProteinBenchmarkCollection.</param>
       /// <param name="projectId">The Folding@Home project number.</param>
       /// <exception cref="T:System.ArgumentNullException"><paramref name="benchmarkClient"/> is null.</exception>
       void RemoveAll(BenchmarkClient benchmarkClient, int projectId);
 
       /// <summary>
-      /// Determines whether the ProteinBenchmarkContainer contains a specific value.
+      /// Determines whether the ProteinBenchmarkCollection contains a specific value.
       /// </summary>
       /// <returns>
-      /// true if <paramref name="benchmarkClient"/> is found in the ProteinBenchmarkContainer; otherwise, false.
+      /// true if <paramref name="benchmarkClient"/> is found in the ProteinBenchmarkCollection; otherwise, false.
       /// </returns>
-      /// <param name="benchmarkClient">The BenchmarkClient to locate in the ProteinBenchmarkContainer.</param>
+      /// <param name="benchmarkClient">The BenchmarkClient to locate in the ProteinBenchmarkCollection.</param>
       /// <exception cref="T:System.ArgumentNullException"><paramref name="benchmarkClient"/> is null.</exception>
       bool Contains(BenchmarkClient benchmarkClient);
 
       /// <summary>
       /// Gets a list of benchmark project numbers.
       /// </summary>
-      /// <param name="benchmarkClient">The BenchmarkClient to locate in the ProteinBenchmarkContainer.</param>
+      /// <param name="benchmarkClient">The BenchmarkClient to locate in the ProteinBenchmarkCollection.</param>
       /// <exception cref="T:System.ArgumentNullException"><paramref name="benchmarkClient"/> is null.</exception>
       IEnumerable<int> GetBenchmarkProjects(BenchmarkClient benchmarkClient);
 
       /// <summary>
       /// Gets a list of ProteinBenchmark objects.
       /// </summary>
-      /// <param name="benchmarkClient">The BenchmarkClient to locate in the ProteinBenchmarkContainer.</param>
+      /// <param name="benchmarkClient">The BenchmarkClient to locate in the ProteinBenchmarkCollection.</param>
       /// <exception cref="T:System.ArgumentNullException"><paramref name="benchmarkClient"/> is null.</exception>
       IEnumerable<ProteinBenchmark> GetBenchmarks(BenchmarkClient benchmarkClient);
 
       /// <summary>
       /// Gets a list of ProteinBenchmark objects.
       /// </summary>
-      /// <param name="benchmarkClient">The BenchmarkClient to locate in the ProteinBenchmarkContainer.</param>
+      /// <param name="benchmarkClient">The BenchmarkClient to locate in the ProteinBenchmarkCollection.</param>
       /// <param name="projectId">The Folding@Home project number.</param>
       /// <exception cref="T:System.ArgumentNullException"><paramref name="benchmarkClient"/> is null.</exception>
       IEnumerable<ProteinBenchmark> GetBenchmarks(BenchmarkClient benchmarkClient, int projectId);
 
       /// <summary>
-      /// Updates the owner name of all the elements in ProteinBenchmarkContainer that match the benchmarkClient and projectId.
+      /// Updates the owner name of all the elements in ProteinBenchmarkCollection that match the benchmarkClient and projectId.
       /// </summary>
-      /// <param name="benchmarkClient">The BenchmarkClient to locate in the ProteinBenchmarkContainer.</param>
+      /// <param name="benchmarkClient">The BenchmarkClient to locate in the ProteinBenchmarkCollection.</param>
       /// <param name="name">The new benchmark owner name.</param>
       /// <exception cref="T:System.ArgumentNullException"><paramref name="benchmarkClient"/> is null or <paramref name="name"/> is null.</exception>
       void UpdateOwnerName(BenchmarkClient benchmarkClient, string name);
 
       /// <summary>
-      /// Updates the owner path of all the elements in ProteinBenchmarkContainer that match the benchmarkClient and projectId.
+      /// Updates the owner path of all the elements in ProteinBenchmarkCollection that match the benchmarkClient and projectId.
       /// </summary>
-      /// <param name="benchmarkClient">The BenchmarkClient to locate in the ProteinBenchmarkContainer.</param>
+      /// <param name="benchmarkClient">The BenchmarkClient to locate in the ProteinBenchmarkCollection.</param>
       /// <param name="path">The new benchmark owner path.</param>
       /// <exception cref="T:System.ArgumentNullException"><paramref name="benchmarkClient"/> is null or <paramref name="path"/> is null.</exception>
       void UpdateOwnerPath(BenchmarkClient benchmarkClient, string path);
 
       /// <summary>
-      /// Updates the minimum frame time of all the elements in ProteinBenchmarkContainer that match the benchmarkClient and projectId.
+      /// Updates the minimum frame time of all the elements in ProteinBenchmarkCollection that match the benchmarkClient and projectId.
       /// </summary>
-      /// <param name="benchmarkClient">The BenchmarkClient to locate in the ProteinBenchmarkContainer.</param>
+      /// <param name="benchmarkClient">The BenchmarkClient to locate in the ProteinBenchmarkCollection.</param>
       /// <param name="projectId">The Folding@Home project number.</param>
       /// <exception cref="T:System.ArgumentNullException"><paramref name="benchmarkClient"/> is null.</exception>
       void UpdateMinimumFrameTime(BenchmarkClient benchmarkClient, int projectId);
 
-      /// <summary>
-      /// Read a protein benchmark data file (default file and serializer).
-      /// </summary>
+      #region DataContainer<T>
+
       void Read();
 
-      /// <summary>
-      /// Write a protein benchmark data file (default file and serializer).
-      /// </summary>
       void Write();
+
+      #endregion
    }
 
-   public class ProteinBenchmarkContainer : DataContainer<List<ProteinBenchmark>>, IProteinBenchmarkContainer
+   public class ProteinBenchmarkCollection : DataContainer<List<ProteinBenchmark>>, IProteinBenchmarkCollection
    {
       #region Fields
       
@@ -162,7 +160,7 @@ namespace HFM.Core
 
       #region Constructor
 
-      public ProteinBenchmarkContainer(IUnitInfoDatabase database)
+      public ProteinBenchmarkCollection(IUnitInfoDatabase database)
       {
          _database = database;
       } 

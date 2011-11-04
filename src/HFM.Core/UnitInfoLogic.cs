@@ -118,7 +118,7 @@ namespace HFM.Core
       /// <summary>
       /// Protein Collection Interface
       /// </summary>
-      private readonly IProteinBenchmarkContainer _benchmarkContainer;
+      private readonly IProteinBenchmarkCollection _benchmarkCollection;
 
       private readonly UnitInfo _unitInfo;
       /// <summary>
@@ -137,9 +137,9 @@ namespace HFM.Core
 
       #region Constructors
 
-      public UnitInfoLogic(Protein protein, IProteinBenchmarkContainer benchmarkContainer, UnitInfo unitInfo)
+      public UnitInfoLogic(Protein protein, IProteinBenchmarkCollection benchmarkCollection, UnitInfo unitInfo)
       {
-         _benchmarkContainer = benchmarkContainer;
+         _benchmarkCollection = benchmarkCollection;
          _unitInfo = unitInfo;
 
          //_unitInfo.OwningInstanceName = _instanceSettings.InstanceName;
@@ -356,9 +356,9 @@ namespace HFM.Core
          }
 
          // Issue 79 - no benchmark container is available to merged display instances
-         if (_benchmarkContainer != null)
+         if (_benchmarkCollection != null)
          {
-            ProteinBenchmark benchmark = _benchmarkContainer.GetBenchmark(UnitInfoData);
+            ProteinBenchmark benchmark = _benchmarkCollection.GetBenchmark(UnitInfoData);
             if (benchmark != null)
             {
                return benchmark.AverageFrameTime;

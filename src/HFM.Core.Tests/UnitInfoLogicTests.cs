@@ -30,12 +30,12 @@ namespace HFM.Core.Tests
    [TestFixture]
    public class UnitInfoLogicTests
    {
-      private IProteinBenchmarkContainer _benchmarkContainer;
+      private IProteinBenchmarkCollection _benchmarkCollection;
 
       [SetUp]
       public void Init()
       {
-         _benchmarkContainer = MockRepository.GenerateStub<IProteinBenchmarkContainer>();
+         _benchmarkCollection = MockRepository.GenerateStub<IProteinBenchmarkCollection>();
       }
       
       #region DownloadTime
@@ -698,7 +698,7 @@ namespace HFM.Core.Tests
       [Test]
       public void TimePerSectionTest5()
       {
-         _benchmarkContainer.Stub(x => x.GetBenchmark(null)).IgnoreArguments().Return(new ProteinBenchmark { FrameTimes = { new ProteinFrameTime { Duration = TimeSpan.FromMinutes(10) } } });
+         _benchmarkCollection.Stub(x => x.GetBenchmark(null)).IgnoreArguments().Return(new ProteinBenchmark { FrameTimes = { new ProteinFrameTime { Duration = TimeSpan.FromMinutes(10) } } });
          var unitInfoLogic = CreateUnitInfoLogic(null, new UnitInfo());
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -708,7 +708,7 @@ namespace HFM.Core.Tests
       [Test]
       public void TimePerSectionTest6()
       {
-         _benchmarkContainer = null;
+         _benchmarkCollection = null;
          var unitInfoLogic = CreateUnitInfoLogic(null, new UnitInfo());
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -859,7 +859,7 @@ namespace HFM.Core.Tests
       
       private UnitInfoLogic CreateUnitInfoLogic(Protein protein, UnitInfo unitInfo)
       {
-         return new UnitInfoLogic(protein, _benchmarkContainer, unitInfo);
+         return new UnitInfoLogic(protein, _benchmarkCollection, unitInfo);
       }
       
       private static UnitFrame MakeUnitFrame(string timeStamp, int frameId)
