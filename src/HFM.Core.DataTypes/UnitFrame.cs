@@ -23,17 +23,8 @@ using ProtoBuf;
 
 namespace HFM.Core.DataTypes
 {
-   public interface IUnitFrame : IComparable<IUnitFrame>, IEquatable<IUnitFrame>
-   {
-      int FrameID { get; }
-   
-      TimeSpan TimeOfFrame { get; }
-
-      TimeSpan FrameDuration { get; }
-   }
-
    [ProtoContract]
-   public sealed class UnitFrame : IUnitFrame
+   public sealed class UnitFrame : IComparable<UnitFrame>, IEquatable<UnitFrame>
    {
       public int RawFramesComplete { get; set; }
 
@@ -72,18 +63,18 @@ namespace HFM.Core.DataTypes
       ///<filterpriority>2</filterpriority>
       public override bool Equals(object obj)
       {
-         var frame = obj as IUnitFrame;
+         var frame = obj as UnitFrame;
          return frame != null ? Equals(frame) : base.Equals(obj);
       }
 
       ///<summary>
-      ///Determines whether the specified <see cref="T:HFM.Framework.DataTypes.IUnitFrame"></see> is equal to the current <see cref="T:HFM.Framework.DataTypes.IUnitFrame"></see>.
+      ///Determines whether the specified <see cref="T:HFM.Core.DataTypes.UnitFrame"></see> is equal to the current <see cref="T:HFM.Core.DataTypes.UnitFrame"></see>.
       ///</summary>
       ///<returns>
-      ///true if the specified <see cref="T:HFM.Framework.DataTypes.IUnitFrame"></see> is equal to the current <see cref="T:HFM.Framework.DataTypes.IUnitFrame"></see>; otherwise, false.
+      ///true if the specified <see cref="T:HFM.Core.DataTypes.UnitFrame"></see> is equal to the current <see cref="T:HFM.Core.DataTypes.UnitFrame"></see>; otherwise, false.
       ///</returns>
-      ///<param name="other">The <see cref="T:HFM.Framework.DataTypes.IUnitFrame"></see> to compare with the current <see cref="T:HFM.Framework.DataTypes.IUnitFrame"></see>.</param>
-      public bool Equals(IUnitFrame other)
+      ///<param name="other">The <see cref="T:HFM.Core.DataTypes.UnitFrame"></see> to compare with the current <see cref="T:HFM.Core.DataTypes.UnitFrame"></see>.</param>
+      public bool Equals(UnitFrame other)
       {
          if (other == null) return false;
 
@@ -109,7 +100,7 @@ namespace HFM.Core.DataTypes
       ///A 32-bit signed integer that indicates the relative order of the objects being compared. The return value has the following meanings: Value Meaning Less than zero This object is less than the other parameter.Zero This object is equal to other. Greater than zero This object is greater than other. 
       ///</returns>
       ///<param name="other">An object to compare with this object.</param>
-      public int CompareTo(IUnitFrame other)
+      public int CompareTo(UnitFrame other)
       {
          if (other == null)
          {

@@ -59,11 +59,13 @@
     <Compile Include="Default.cs" />
     <Compile Include="Enumerations.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Serializers\IProteinSerializer.cs" />
+    <Compile Include="Serializers\IFileSerializer.cs" />
     <Compile Include="LogLine.cs" />
     <Compile Include="ProjectInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Protein.cs" />
+    <Compile Include="Serializers\XmlFileSerializer.cs" />
+    <Compile Include="Serializers\ProtoBufFileSerializer.cs" />
     <Compile Include="UnitFrame.cs" />
   </ItemGroup>
   <ItemGroup>

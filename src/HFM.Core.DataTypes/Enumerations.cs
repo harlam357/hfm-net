@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Framework.DataTypes Enumerations
+ * HFM.NET - Core.DataTypes Enumerations
  * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -49,15 +49,6 @@ namespace HFM.Core.DataTypes
       Uniprocessor,
       SMP,
       GPU
-   }
-
-   /// <summary>
-   /// Ftp Transfer Types
-   /// </summary>
-   public enum FtpType
-   {
-      Passive,
-      Active
    }
 
    /// <summary>
@@ -158,58 +149,6 @@ namespace HFM.Core.DataTypes
       ReadyForUpload,
       Abandonded,
       FetchingFromServer
-   }
-
-   /// <summary>
-   /// Work Unit History Production View Type
-   /// </summary>
-   public enum HistoryProductionView
-   {
-      BonusDownloadTime,
-      BonusFrameTime,
-      Standard
-   }
-
-   /// <summary>
-   /// Work Unit History Query Field Names
-   /// </summary>
-   public enum QueryFieldName
-   {
-      ID = -1,
-      ProjectID = 0,
-      ProjectRun,
-      ProjectClone,
-      ProjectGen,
-      InstanceName,
-      InstancePath,
-      Username,
-      Team,
-      CoreVersion,
-      FramesCompleted,
-      FrameTime,
-      Result,
-      DownloadDateTime,
-      CompletionDateTime,
-      WorkUnitName,
-      KFactor,
-      Core,
-      Frames,
-      Atoms,
-      ClientType,
-      PPD,
-      Credit
-   }
-
-   /// <summary>
-   /// Work Unit History Query Field Types
-   /// </summary>
-   public enum QueryFieldType
-   {
-      Equal,
-      GreaterThan,
-      GreaterThanOrEqual,
-      LessThan,
-      LessThanOrEqual,
    }
 
    /// <summary>
