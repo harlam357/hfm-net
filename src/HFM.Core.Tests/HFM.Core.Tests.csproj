@@ -46,8 +46,14 @@
     <Reference Include="Castle.Core">
       <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.Core.dll</HintPath>
     </Reference>
+    <Reference Include="harlam357.Net">
+      <HintPath>..\..\lib\harlam357-net\harlam357.Net.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\lib\NUnit\bin\net-2.0\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Rhino.Mocks">
+      <HintPath>..\..\lib\Rhino.Mocks\Rhino.Mocks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -64,11 +70,18 @@
     <Compile Include="DataTypes\BenchmarkClientTests.cs" />
     <Compile Include="DataTypes\QueryParametersTests.cs" />
     <Compile Include="DataTypes\UnitInfoTests.cs" />
+    <Compile Include="NetworkOpsTests.cs" />
     <Compile Include="PathsTests.cs" />
-    <Compile Include="Plugins\ProteinSerializerPluginManagerTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="ApplicationTests.cs" />
+    <Compile Include="Plugins\FileSerializerPluginManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AutoRunTests.cs" />
+    <Compile Include="ProteinBenchmarkContainerTests.cs" />
+    <Compile Include="StatusTests.cs" />
+    <Compile Include="UnitInfoContainerTests.cs" />
+    <Compile Include="UnitInfoLogicTests.cs" />
+    <Compile Include="ValidateTests.cs" />
+    <Compile Include="XmlStatsDataContainerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HFM.Core.DataTypes\HFM.Core.DataTypes.csproj">
@@ -84,6 +97,8 @@
     <None Include="..\harlam357public.snk">
       <Link>Properties\harlam357public.snk</Link>
     </None>
+    <None Include="TestFiles\BenchmarkCache.dat" />
+    <None Include="TestFiles\UnitInfoCache.dat" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

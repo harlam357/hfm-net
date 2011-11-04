@@ -22,13 +22,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-
-using ProtoBuf;
+using System.Runtime.Serialization;
 
 namespace HFM.Core.DataTypes
 {
-   [ProtoContract]
-   public class UnitInfo : IProjectInfo, IOwnedByClientSlot
+   [DataContract]
+   public class UnitInfo : IProjectInfo, IOwnedByClientSlot, IEquatable<UnitInfo>
    {
       public UnitInfo()
       {
@@ -53,13 +52,13 @@ namespace HFM.Core.DataTypes
       /// <summary>
       /// Name of the Client Instance that owns this UnitInfo
       /// </summary>
-      [ProtoMember(1)]
+      [DataMember(Order = 1)]
       public string OwningInstanceName { get; set; }
 
       /// <summary>
       /// Path of the Client Instance that owns this UnitInfo
       /// </summary>
-      [ProtoMember(2)]
+      [DataMember(Order = 2)]
       public string OwningInstancePath { get; set; }
 
       #endregion
@@ -69,7 +68,7 @@ namespace HFM.Core.DataTypes
       /// <summary>
       /// Local time the logs used to generate this UnitInfo were retrieved
       /// </summary>
-      [ProtoMember(3)]
+      [DataMember(Order = 3)]
       public DateTime UnitRetrievalTime { get; set; }
 
       #endregion
@@ -79,13 +78,13 @@ namespace HFM.Core.DataTypes
       /// <summary>
       /// The Folding ID (Username) attached to this work unit
       /// </summary>
-      [ProtoMember(4)]
+      [DataMember(Order = 4)]
       public string FoldingID { get; set; }
 
       /// <summary>
       /// The Team number attached to this work unit
       /// </summary>
-      [ProtoMember(5)]
+      [DataMember(Order = 5)]
       public int Team { get; set; }
 
       #endregion
@@ -95,80 +94,80 @@ namespace HFM.Core.DataTypes
       /// <summary>
       /// Client Type for this work unit
       /// </summary>
-      [ProtoMember(6)]
+      [DataMember(Order = 6)]
       public SlotType SlotType { get; set; }
 
       /// <summary>
       /// Date/time the unit was downloaded
       /// </summary>
-      [ProtoMember(7)]
+      [DataMember(Order = 7)]
       public DateTime DownloadTime { get; set; }
 
       /// <summary>
       /// Date/time the unit is due (preferred deadline)
       /// </summary>
-      [ProtoMember(8)]
+      [DataMember(Order = 8)]
       public DateTime DueTime { get; set; }
 
       /// <summary>
       /// Unit Start Time Stamp (Time Stamp from First Parsable Line in LogLines)
       /// </summary>
       /// <remarks>Used to Determine Status when a LogLine Time Stamp is not available - See ClientInstance.HandleReturnedStatus</remarks>
-      [ProtoMember(9)]
+      [DataMember(Order = 9)]
       public TimeSpan UnitStartTimeStamp { get; set; }
 
       /// <summary>
       /// Date/time the unit finished
       /// </summary>
-      [ProtoMember(10)]
+      [DataMember(Order = 10)]
       public DateTime FinishedTime { get; set; }
 
       /// <summary>
       /// Core Version Number
       /// </summary>
-      [ProtoMember(11)]
+      [DataMember(Order = 11)]
       public string CoreVersion { get; set; }
 
       /// <summary>
       /// Project ID Number
       /// </summary>
-      [ProtoMember(12)]
+      [DataMember(Order = 12)]
       public int ProjectID { get; set; }
 
       /// <summary>
       /// Project ID (Run)
       /// </summary>
-      [ProtoMember(13)]
+      [DataMember(Order = 13)]
       public int ProjectRun { get; set; }
 
       /// <summary>
       /// Project ID (Clone)
       /// </summary>
-      [ProtoMember(14)]
+      [DataMember(Order = 14)]
       public int ProjectClone { get; set; }
 
       /// <summary>
       /// Project ID (Gen)
       /// </summary>
-      [ProtoMember(15)]
+      [DataMember(Order = 15)]
       public int ProjectGen { get; set; }
 
       /// <summary>
       /// Name of the unit
       /// </summary>
-      [ProtoMember(16)]
+      [DataMember(Order = 16)]
       public string ProteinName { get; set; }
 
       /// <summary>
       /// Tag string as read from the UnitInfo.txt file
       /// </summary>
-      [ProtoMember(17)]
+      [DataMember(Order = 17)]
       public string ProteinTag { get; set; }
 
       /// <summary>
       /// The Result of this Work Unit
       /// </summary>
-      [ProtoMember(18)]
+      [DataMember(Order = 18)]
       public WorkUnitResult UnitResult { get; set; }
 
       #endregion
@@ -178,13 +177,13 @@ namespace HFM.Core.DataTypes
       /// <summary>
       /// Raw number of steps complete
       /// </summary>
-      [ProtoMember(19)]
+      [DataMember(Order = 19)]
       public int RawFramesComplete { get; set; }
 
       /// <summary>
       /// Raw total number of steps
       /// </summary>
-      [ProtoMember(20)]
+      [DataMember(Order = 20)]
       public int RawFramesTotal { get; set; }
 
       #endregion
@@ -194,16 +193,16 @@ namespace HFM.Core.DataTypes
       /// <summary>
       /// Number of Frames Observed since Last Unit Start or Resume from Pause
       /// </summary>
-      [ProtoMember(21)]
+      [DataMember(Order = 21)]
       public int FramesObserved { get; set; }
 
-      // Open ProtoMember - was of type UnitFrame
-      //[ProtoMember(22)]
+      // Open DataMember - was of type UnitFrame
+      //[DataMember(Order = 22)]
 
       /// <summary>
       /// Last Observed Frame on this Unit
       /// </summary>
-      public IUnitFrame CurrentFrame
+      public UnitFrame CurrentFrame
       {
          get
          {
@@ -223,13 +222,13 @@ namespace HFM.Core.DataTypes
       /// <summary>
       /// Frame Data for this Unit
       /// </summary>
-      [ProtoMember(23)]
+      [DataMember(Order = 23)]
       public Dictionary<int, UnitFrame> UnitFrames { get; private set; }
 
       /// <summary>
       /// Core ID (Hex) Value
       /// </summary>
-      [ProtoMember(24)]
+      [DataMember(Order = 24)]
       public string CoreID { get; set; }
 
       /// <summary>
@@ -285,7 +284,7 @@ namespace HFM.Core.DataTypes
       /// <summary>
       /// Get the UnitFrame Interface for this frameID
       /// </summary>
-      public IUnitFrame GetUnitFrame(int frameID)
+      public UnitFrame GetUnitFrame(int frameID)
       {
          if (UnitFrames.ContainsKey(frameID))
          {
@@ -390,5 +389,37 @@ namespace HFM.Core.DataTypes
                return SlotType.Unknown;
          }
       }
+
+      public UnitInfo DeepClone()
+      {
+         return ProtoBuf.Serializer.DeepClone(this);
+      }
+
+      #region IEquatable<UnitInfo> Members
+
+      public bool Equals(UnitInfo other)
+      {
+         if (other == null)
+         {
+            return false;
+         }
+
+         // if the Projects are known
+         if (!this.ProjectIsUnknown() && !other.ProjectIsUnknown())
+         {
+            // ReSharper disable RedundantThisQualifier
+            // equals the Project and Download Time
+            if (this.EqualsProject(other) &&
+                this.DownloadTime.Equals(other.DownloadTime))
+            {
+               return true;
+            }
+            // ReSharper restore RedundantThisQualifier
+         }
+
+         return false;
+      }
+
+      #endregion
    }
 }

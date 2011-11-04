@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - Owning Slot Interface
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * HFM.NET - Instance Totals Structure
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,23 +17,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace HFM.Core.DataTypes
 {
-   public interface IOwnedByClientSlot
+   [SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
+   public struct InstanceTotals
    {
-      /// <summary>
-      /// Name of the Client Instance that owns this Object
-      /// </summary>
-      string OwningInstanceName { get; }
-
-      /// <summary>
-      /// Path of the Client Instance that owns this Object
-      /// </summary>
-      string OwningInstancePath { get; }
-
-      /// <summary>
-      /// Project ID
-      /// </summary>
-      int ProjectID { get; }
+      public double PPD { get; set; }
+      public double UPD { get; set; }
+      public int TotalClients { get; set; }
+      public int WorkingClients { get; set; }
+      public int NonWorkingClients
+      {
+         get { return TotalClients - WorkingClients; }
+      }
+      public int TotalRunCompletedUnits { get; set; }
+      public int TotalRunFailedUnits { get; set; }
+      public int TotalClientCompletedUnits { get; set; }
    }
 }

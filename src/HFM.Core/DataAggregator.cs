@@ -189,8 +189,6 @@ namespace HFM.Core
 
       #endregion
 
-      private const string InstanceNameFormat = "({0}) {1}";
-
       private readonly ILogger _logger;
 
       public DataAggregator(ILogger logger)
@@ -215,7 +213,7 @@ namespace HFM.Core
          // report errors that came back from log parsing
          foreach (var s in _logInterpreterLegacy.LogLineParsingErrors)
          {
-            _logger.Debug(InstanceNameFormat, InstanceName, s);
+            _logger.Debug(Constants.InstanceNameFormat, InstanceName, s);
          }
 
          IList<UnitInfo> parsedUnits;
@@ -228,7 +226,7 @@ namespace HFM.Core
          }
          else
          {
-            _logger.Warn(InstanceNameFormat, InstanceName, 
+            _logger.Warn(Constants.InstanceNameFormat, InstanceName, 
                "Queue unavailable or failed read.  Parsing logs without queue.");
 
             parsedUnits = GenerateUnitInfoDataFromLogs();
@@ -267,7 +265,7 @@ namespace HFM.Core
             }
             catch (Exception ex)
             {
-               _logger.ErrorFormat(ex, InstanceNameFormat, ex.Message);
+               _logger.ErrorFormat(ex, Constants.InstanceNameFormat, ex.Message);
             }
          }
 
@@ -324,7 +322,7 @@ namespace HFM.Core
                {
                   string message = String.Format(CultureInfo.CurrentCulture,
                      "Could not verify log section for current queue entry ({0}). Trying to parse with most recent log section.", queueIndex);
-                  _logger.Warn(InstanceNameFormat, InstanceName, message);
+                  _logger.Warn(Constants.InstanceNameFormat, InstanceName, message);
 
                   _unitLogLines[queueIndex] = _logInterpreterLegacy.CurrentWorkUnitLogLines;
                   // If got no Work Unit Log Lines based on Current Work Unit Log Lines
@@ -351,7 +349,7 @@ namespace HFM.Core
                   // Just skip this unit and continue
                   string message = String.Format(CultureInfo.CurrentCulture,
                      "Could not find or verify log section for queue entry {0} (this is not a problem).", queueIndex);
-                  _logger.Debug(InstanceNameFormat, InstanceName, message);
+                  _logger.Debug(Constants.InstanceNameFormat, InstanceName, message);
                }
             }
          }
@@ -367,7 +365,7 @@ namespace HFM.Core
          }
          catch (Exception ex)
          {
-            _logger.WarnFormat(ex, InstanceNameFormat, InstanceName, ex.Message);
+            _logger.WarnFormat(ex, Constants.InstanceNameFormat, InstanceName, ex.Message);
             return null;
          }
       }

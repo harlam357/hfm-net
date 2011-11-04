@@ -127,12 +127,12 @@ namespace HFM.Core.DataTypes
       }
 
       ///<summary>
-      ///Determines whether the specified <see cref="T:HFM.Framework.DataTypes.BenchmarkClient"></see> is equal to the current <see cref="T:HFM.Framework.DataTypes.BenchmarkClient"></see>.
+      ///Determines whether the specified <see cref="T:HFM.Core.DataTypes.BenchmarkClient"></see> is equal to the current <see cref="T:HFM.Core.DataTypes.BenchmarkClient"></see>.
       ///</summary>
       ///<returns>
-      ///true if the specified <see cref="T:HFM.Framework.DataTypes.BenchmarkClient"></see> is equal to the current <see cref="T:HFM.Framework.DataTypes.BenchmarkClient"></see>; otherwise, false.
+      ///true if the specified <see cref="T:HFM.Core.DataTypes.BenchmarkClient"></see> is equal to the current <see cref="T:HFM.Core.DataTypes.BenchmarkClient"></see>; otherwise, false.
       ///</returns>
-      ///<param name="other">The <see cref="T:HFM.Framework.DataTypes.BenchmarkClient"></see> to compare with the current <see cref="T:HFM.Framework.DataTypes.BenchmarkClient"></see>.</param>
+      ///<param name="other">The <see cref="T:HFM.Core.DataTypes.BenchmarkClient"></see> to compare with the current <see cref="T:HFM.Core.DataTypes.BenchmarkClient"></see>.</param>
       public bool Equals(BenchmarkClient other)
       {
          if (other == null) return false;

@@ -20,14 +20,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Xml.Serialization;
-
-using ProtoBuf;
+using System.Runtime.Serialization;
 
 namespace HFM.Core.DataTypes
 {
-   [ProtoContract]
-   public sealed class ProteinBenchmark : IOwnedByClientSlot
+   [Serializable]
+   [DataContract]
+   public sealed class ProteinBenchmark : IOwnedByClientSlot, IEquatable<IOwnedByClientSlot>
    {
       private const int DefaultMaxFrames = 300;
 
@@ -40,13 +39,13 @@ namespace HFM.Core.DataTypes
       /// <summary>
       /// Name of the Client Instance that owns this Benchmark
       /// </summary>
-      [ProtoMember(1)]
+      [DataMember(Order = 1)]
       public string OwningInstanceName { get; set; }
 
       /// <summary>
       /// Path of the Client Instance that owns this Benchmark
       /// </summary>
-      [ProtoMember(2)]
+      [DataMember(Order = 2)]
       public string OwningInstancePath { get; set; }
 
       #endregion
@@ -54,21 +53,19 @@ namespace HFM.Core.DataTypes
       /// <summary>
       /// Project ID
       /// </summary>
-      [ProtoMember(3)]
+      [DataMember(Order = 3)]
       public int ProjectID { get; set; }
 
       /// <summary>
       /// Minimum Frame Time
       /// </summary>
-      [ProtoMember(4)]
-      [XmlIgnore]
       public TimeSpan MinimumFrameTime { get; set; }
 
       /// <summary>
       /// Minimum Frame Time (Ticks)
       /// </summary>
-      [XmlElement("MinimumFrameTime")]
       [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
+      [DataMember(Order = 4)]
       public long MinimumFrameTimeTicks
       {
          get { return MinimumFrameTime.Ticks; }
@@ -103,7 +100,7 @@ namespace HFM.Core.DataTypes
       /// <summary>
       /// Frame Times List
       /// </summary>
-      [ProtoMember(5)]
+      [DataMember(Order = 5)]
       public List<ProteinFrameTime> FrameTimes { get; set; }
 
       /// <summary>
@@ -163,7 +160,7 @@ namespace HFM.Core.DataTypes
       /// <summary>
       /// Refresh the Minimum Frame Time for this Benchmark based on current List of Frame Times
       /// </summary>
-      public void RefreshBenchmarkMinimumFrameTime()
+      public void UpdateMinimumFrameTime()
       {
          TimeSpan minimumFrameTime = TimeSpan.Zero;
          lock (FrameTimesListLock)
@@ -183,6 +180,17 @@ namespace HFM.Core.DataTypes
          }
       }
       
+      #endregion
+
+      #region IEquatable<ProteinBenchmark> Members
+
+      public bool Equals(IOwnedByClientSlot other)
+      {
+         return OwningInstanceName == other.OwningInstanceName &&
+                Paths.Equal(OwningInstancePath, other.OwningInstancePath) &&
+                ProjectID == other.ProjectID;
+      }
+
       #endregion
    }
 }
