@@ -3,7 +3,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 
-using HFM.Framework;
+using HFM.Core;
 
 namespace HFM.Client
 {

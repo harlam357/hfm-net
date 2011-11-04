@@ -57,7 +57,7 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="..\HFM.Framework\CoverageExcludeAttribute.cs">
+    <Compile Include="..\HFM.Core\CoverageExcludeAttribute.cs">
       <Link>CoverageExcludeAttribute.cs</Link>
     </Compile>
     <Compile Include="Connection.cs" />
