@@ -1,6 +1,6 @@
-﻿/*
- * HFM.NET - Owning Slot Interface
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+/*
+ * HFM.NET - Registry Operations Helper Class Tests
+ * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,23 +17,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace HFM.Core.DataTypes
+using System;
+
+using NUnit.Framework;
+
+namespace HFM.Core.Tests
 {
-   public interface IOwnedByClientSlot
+   [TestFixture]
+   public class RegistryOpsTests
    {
-      /// <summary>
-      /// Name of the Client Instance that owns this Object
-      /// </summary>
-      string OwningInstanceName { get; }
-
-      /// <summary>
-      /// Path of the Client Instance that owns this Object
-      /// </summary>
-      string OwningInstancePath { get; }
-
-      /// <summary>
-      /// Project ID
-      /// </summary>
-      int ProjectID { get; }
+      [Test]
+      public void SetFilePathTest()
+      {
+         var autoRun = new AutoRun(Castle.Core.Logging.NullLogger.Instance);
+         autoRun.SetFilePath(System.Reflection.Assembly.GetExecutingAssembly().Location);
+         Assert.AreEqual(true, autoRun.IsEnabled());
+         autoRun.SetFilePath(String.Empty);
+         Assert.AreEqual(false, autoRun.IsEnabled());
+      }
    }
 }

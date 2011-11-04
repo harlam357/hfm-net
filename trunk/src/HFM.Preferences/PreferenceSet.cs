@@ -30,29 +30,32 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
 
+using Castle.Core.Logging;
+
 using harlam357.Security;
 using harlam357.Security.Encryption;
 
-using HFM.Framework;
-using HFM.Framework.DataTypes;
+using HFM.Core;
 using HFM.Preferences.Properties;
 
 namespace HFM.Preferences
 {
    public sealed class PreferenceSet : IPreferenceSet
    {
-      #region Members
+      #region Fields
+
       private readonly Data _iv = new Data("3k1vKL=Cz6!wZS`I");
       private readonly Data _symmetricKey = new Data("%`Bb9ega;$.GUDaf");
 
       private readonly Dictionary<Preference, IMetadata> _prefs = new Dictionary<Preference, IMetadata>();
+
       #endregion
 
       #region Properties
 
       public string ApplicationPath
       {
-         get { return Application.StartupPath; }
+         get { return System.Windows.Forms.Application.StartupPath; }
       }
       
       public string ApplicationDataFolderPath
@@ -114,17 +117,24 @@ namespace HFM.Preferences
 
       #endregion
 
+      private readonly ILogger _logger;
+
+      public PreferenceSet(ILogger logger)
+      {
+         _logger = logger;
+      }
+
       #region Implementation
       
       public void Reset()
       {
-         HfmTrace.WriteToHfmConsole("Resetting user preferences...");
+         _logger.Debug("Resetting user preferences...");
          Settings.Default.Reset();
       }
 
       public void Upgrade()
       {
-         string appVersionString = PlatformOps.ApplicationVersionWithRevision;
+         string appVersionString = Core.Application.VersionWithRevision;
 
          if (Settings.Default.ApplicationVersion != appVersionString)
          {
@@ -209,7 +219,7 @@ namespace HFM.Preferences
 
       private void SetupDictionary()
       {
-         DateTime start = HfmTrace.ExecStart;
+         DateTime start = Instrumentation.ExecStart;
       
          _prefs.Add(Preference.FormLocation, new Metadata<Point>());
          _prefs.Add(Preference.FormSize, new Metadata<Size>());
@@ -312,7 +322,7 @@ namespace HFM.Preferences
 
          _prefs.Add(Preference.CacheFolder, new Metadata<string>());
 
-         Debug.WriteLine(String.Format("{0} Execution Time: {1}", HfmTrace.FunctionName, HfmTrace.GetExecTime(start)));
+         Debug.WriteLine(String.Format("{0} Execution Time: {1}", Instrumentation.FunctionName, Instrumentation.GetExecTime(start)));
       }
 
       /// <summary>
@@ -320,7 +330,7 @@ namespace HFM.Preferences
       /// </summary>
       public void Load()
       {
-         DateTime start = HfmTrace.ExecStart;
+         DateTime start = Instrumentation.ExecStart;
          var symmetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
 
          var location = new Point();
@@ -438,7 +448,7 @@ namespace HFM.Preferences
 
          Set(Preference.CacheFolder, Settings.Default.CacheFolder);
 
-         Debug.WriteLine(String.Format("{0} Execution Time: {1}", HfmTrace.FunctionName, HfmTrace.GetExecTime(start)));
+         Debug.WriteLine(String.Format("{0} Execution Time: {1}", Instrumentation.FunctionName, Instrumentation.GetExecTime(start)));
       }
 
       #region Load Support Methods
@@ -560,7 +570,7 @@ namespace HFM.Preferences
          { }
       }
 
-      private static string DecryptWebRoot(string encrypted, Symmetric symmetricProvider, Data iv, Data symmetricKey)
+      private string DecryptWebRoot(string encrypted, Symmetric symmetricProvider, Data iv, Data symmetricKey)
       {
          string webRoot = String.Empty;
          if (Settings.Default.WebRoot.Length > 0)
@@ -572,12 +582,12 @@ namespace HFM.Preferences
             }
             catch (FormatException)
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Web Generation Root Folder is not Base64 encoded... loading clear value.", true);
+               _logger.Warn("Web Generation Root Folder is not Base64 encoded... loading clear value.");
                webRoot = Settings.Default.WebRoot;
             }
             catch (CryptographicException)
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Cannot decrypt Web Generation Root Folder... loading clear value.", true);
+               _logger.Warn("Cannot decrypt Web Generation Root Folder... loading clear value.");
                webRoot = Settings.Default.WebRoot;
             }
          }
@@ -615,7 +625,7 @@ namespace HFM.Preferences
          }
       }
 
-      private static string DecryptEmailReportingServerPassword(string encrypted, Symmetric symmetricProvider, Data iv, Data symmetricKey)
+      private string DecryptEmailReportingServerPassword(string encrypted, Symmetric symmetricProvider, Data iv, Data symmetricKey)
       {
          string emailReportingServerPassword = String.Empty;
          if (Settings.Default.EmailReportingServerPassword.Length > 0)
@@ -628,12 +638,12 @@ namespace HFM.Preferences
             }
             catch (FormatException)
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Stmp Server Password is not Base64 encoded... loading clear value.", true);
+               _logger.Warn("Stmp Server Password is not Base64 encoded... loading clear value.");
                emailReportingServerPassword = Settings.Default.EmailReportingServerPassword;
             }
             catch (CryptographicException)
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Cannot decrypt Stmp Server Password... loading clear value.", true);
+               _logger.Warn("Cannot decrypt Stmp Server Password... loading clear value.");
                emailReportingServerPassword = Settings.Default.EmailReportingServerPassword;
             }
          }
@@ -641,7 +651,7 @@ namespace HFM.Preferences
          return emailReportingServerPassword;
       }
 
-      private static string DecryptProxyPass(string encrypted, Symmetric symmetricProvider, Data iv, Data symmetricKey)
+      private string DecryptProxyPass(string encrypted, Symmetric symmetricProvider, Data iv, Data symmetricKey)
       {
          string proxyPass = String.Empty;
          if (Settings.Default.ProxyPass.Length > 0)
@@ -653,12 +663,12 @@ namespace HFM.Preferences
             }
             catch (FormatException)
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Proxy Password is not Base64 encoded... loading clear value.", true);
+               _logger.Warn("Proxy Password is not Base64 encoded... loading clear value.");
                proxyPass = Settings.Default.ProxyPass;
             }
             catch (CryptographicException)
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Cannot decrypt Proxy Password... loading clear value.", true);
+               _logger.Warn("Cannot decrypt Proxy Password... loading clear value.");
                proxyPass = Settings.Default.ProxyPass;
             }
          }
@@ -692,7 +702,7 @@ namespace HFM.Preferences
       /// </summary>
       public void Save()
       {
-         DateTime start = HfmTrace.ExecStart;
+         DateTime start = Instrumentation.ExecStart;
 
          var symmetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
 
@@ -870,13 +880,14 @@ namespace HFM.Preferences
          }
          catch (Exception ex)
          {
-            HfmTrace.WriteToHfmConsole(ex);
+            _logger.ErrorFormat(ex, "{0}", ex.Message);
          }
 
-         Debug.WriteLine(String.Format("{0} Execution Time: {1}", HfmTrace.FunctionName, HfmTrace.GetExecTime(start)));
+         Debug.WriteLine(String.Format("{0} Execution Time: {1}", Instrumentation.FunctionName, Instrumentation.GetExecTime(start)));
       }
 
       #region Save Support Methods
+
       private static StringCollection GetGraphColorsStringCollection(IEnumerable<Color> collection)
       {
          var col = new StringCollection();
@@ -887,7 +898,7 @@ namespace HFM.Preferences
          return col;
       }
 
-      private static string EncryptWebRoot(string clear, Symmetric symmetricProvider, Data iv, Data symmetricKey)
+      private string EncryptWebRoot(string clear, Symmetric symmetricProvider, Data iv, Data symmetricKey)
       {
          string webRoot = String.Empty;
          if (clear.Length > 0)
@@ -899,7 +910,7 @@ namespace HFM.Preferences
             }
             catch (CryptographicException)
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Failed to encrypt Web Generation Root Folder... saving clear value.");
+               _logger.Warn("Failed to encrypt Web Generation Root Folder... saving clear value.");
                webRoot = clear;
             }
          }
@@ -907,7 +918,7 @@ namespace HFM.Preferences
          return webRoot;
       }
 
-      private static string EncryptEmailReportingServerPassword(string clear, Symmetric symmetricProvider, Data iv, Data symmetricKey)
+      private string EncryptEmailReportingServerPassword(string clear, Symmetric symmetricProvider, Data iv, Data symmetricKey)
       {
          string emailReportingServerPassword = String.Empty;
          if (clear.Length > 0)
@@ -919,7 +930,7 @@ namespace HFM.Preferences
             }
             catch (CryptographicException)
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Failed to encrypt Smtp Server Password... saving clear value.");
+               _logger.Warn("Failed to encrypt Smtp Server Password... saving clear value.");
                emailReportingServerPassword = clear;
             }
          }
@@ -927,7 +938,7 @@ namespace HFM.Preferences
          return emailReportingServerPassword;
       }
 
-      private static string EncryptProxyPass(string clear, Symmetric symmetricProvider, Data iv, Data symmetricKey)
+      private string EncryptProxyPass(string clear, Symmetric symmetricProvider, Data iv, Data symmetricKey)
       {
          string proxyPass = String.Empty;
          if (clear.Length > 0)
@@ -939,7 +950,7 @@ namespace HFM.Preferences
             }
             catch (CryptographicException)
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, "Failed to encrypt Proxy Password... saving clear value.");
+               _logger.Warn("Failed to encrypt Proxy Password... saving clear value.");
                proxyPass = clear;
             }
          }
@@ -952,6 +963,7 @@ namespace HFM.Preferences
       #endregion
 
       #region Event Wrappers
+
       /// <summary>
       /// Form Show Style Settings Changed
       /// </summary>
@@ -1059,9 +1071,11 @@ namespace HFM.Preferences
             CalculateBonusChanged(this, e);
          }
       } 
+
       #endregion
 
       #region Preference Validation
+
       private static int GetValidNumeric(string input, int defaultValue)
       {
          int output;
@@ -1069,26 +1083,18 @@ namespace HFM.Preferences
          {
             output = defaultValue;
          }
-         else if (StringOps.ValidateMinutes(output) == false)
+         else if (Validate.Minutes(output) == false)
          {
             output = defaultValue;
          }
          
          return output;
       }
-      
-      //public static bool ValidateDecimalPlaces(int Places)
-      //{
-      //   if ((Places > MaxDecimalPlaces) || (Places < MinDecimalPlaces))
-      //   {
-      //      return false;
-      //   }
 
-      //   return true;
-      //}
       #endregion
       
       #region Preference Formatting
+
       /// <summary>
       /// PPD String Formatter
       /// </summary>
@@ -1111,6 +1117,7 @@ namespace HFM.Preferences
             return sbldr.ToString();
          }
       }
+
       #endregion
    }
 }

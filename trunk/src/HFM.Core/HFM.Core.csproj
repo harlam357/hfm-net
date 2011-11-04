@@ -55,32 +55,47 @@
     <Reference Include="Castle.Windsor">
       <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="harlam357.Net">
+      <HintPath>..\..\lib\harlam357-net\harlam357.Net.dll</HintPath>
+    </Reference>
     <Reference Include="protobuf-net, Version=1.0.0.282, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\protobuf-net\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Constants.cs" />
+    <Compile Include="CoverageExcludeAttribute.cs" />
     <Compile Include="DataAggregator.cs" />
     <Compile Include="Application.cs" />
+    <Compile Include="DataContainer.cs" />
     <Compile Include="DataTypes\BenchmarkClient.cs" />
     <Compile Include="DataTypes\ClientQueue.cs" />
     <Compile Include="DataTypes\ClientQueueEntry.cs" />
+    <Compile Include="DataTypes\HistoryEntry.cs" />
     <Compile Include="DataTypes\IOwnedByClientSlot.cs" />
     <Compile Include="DataTypes\ProteinBenchmark.cs" />
     <Compile Include="DataTypes\ProteinFrameTime.cs" />
     <Compile Include="DataTypes\QueryParameters.cs" />
+    <Compile Include="DataTypes\StatusData.cs" />
     <Compile Include="DataTypes\UnitInfo.cs" />
+    <Compile Include="DataTypes\XmlStatsData.cs" />
+    <Compile Include="Enumerations.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="DataTypes\InstanceTotals.cs" />
+    <Compile Include="ExternalProcessStarter.cs" />
+    <Compile Include="InstanceProvider.cs" />
+    <Compile Include="Instrumentation.cs" />
+    <Compile Include="IPreferenceSet.cs" />
+    <Compile Include="IUnitInfoDatabase.cs" />
+    <Compile Include="NetworkOps.cs" />
     <Compile Include="Paths.cs" />
     <Compile Include="Plugins\PluginInfo.cs">
       <SubType>Code</SubType>
@@ -91,8 +106,15 @@
     <Compile Include="Plugins\PluginManager.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Plugins\ProteinSerializerPluginManager.cs" />
+    <Compile Include="Plugins\FileSerializerPluginManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AutoRun.cs" />
+    <Compile Include="ProteinBenchmarkContainer.cs" />
+    <Compile Include="StatusLogic.cs" />
+    <Compile Include="UnitInfoContainer.cs" />
+    <Compile Include="UnitInfoLogic.cs" />
+    <Compile Include="Validate.cs" />
+    <Compile Include="XmlStatsDataContainer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HFM.Core.DataTypes\HFM.Core.DataTypes.csproj">

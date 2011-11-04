@@ -6,19 +6,20 @@ using System.Linq;
 
 using NUnit.Framework;
 
+using HFM.Core.DataTypes;
 using HFM.Core.Plugins;
 
 namespace HFM.Core.Tests.Plugins
 {
    [TestFixture]
-   public class ProteinSerializerPluginManagerTests
+   public class FileSerializerPluginManagerTests
    {
-      private ProteinSerializerPluginManager _pluginManager;
+      private FileSerializerPluginManager<List<Protein>> _pluginManager;
 
       [SetUp]
       public void Init()
       {
-         _pluginManager = new ProteinSerializerPluginManager();
+         _pluginManager = new FileSerializerPluginManager<List<Protein>>();
       }
 
       [Test]

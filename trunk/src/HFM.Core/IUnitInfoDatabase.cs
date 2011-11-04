@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Owning Slot Interface
+ * HFM.NET - Work Unit History Database Interface
  * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -16,24 +16,37 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+ 
+using System.Collections.Generic;
 
-namespace HFM.Core.DataTypes
+using HFM.Core.DataTypes;
+
+namespace HFM.Core
 {
-   public interface IOwnedByClientSlot
+   public interface IUnitInfoDatabase
    {
       /// <summary>
-      /// Name of the Client Instance that owns this Object
+      /// Get or Set the Database File Path
       /// </summary>
-      string OwningInstanceName { get; }
+      string DatabaseFilePath { get; set; }
 
       /// <summary>
-      /// Path of the Client Instance that owns this Object
+      /// Flag that notes if the Database is safe to call
       /// </summary>
-      string OwningInstancePath { get; }
+      bool ConnectionOk { get; }
 
-      /// <summary>
-      /// Project ID
-      /// </summary>
-      int ProjectID { get; }
+      bool CheckConnection();
+
+      void DeleteAllUnitInfoData();
+      
+      void WriteUnitInfo(IUnitInfoLogic unitInfoLogic);
+
+      int DeleteUnitInfo(long id);
+      
+      void ImportCompletedUnits(ICollection<HistoryEntry> entries);
+      
+      IList<HistoryEntry> QueryUnitData(QueryParameters parameters);
+
+      IList<HistoryEntry> QueryUnitData(QueryParameters parameters, HistoryProductionView productionView);
    }
 }

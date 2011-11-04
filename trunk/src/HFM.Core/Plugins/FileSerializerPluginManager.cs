@@ -6,9 +6,9 @@ using HFM.Core.DataTypes.Serializers;
 
 namespace HFM.Core.Plugins
 {
-   internal class ProteinSerializerPluginManager : PluginManager<IProteinSerializer>
+   internal class FileSerializerPluginManager<T> : PluginManager<IFileSerializer<T>> where T : class, new()
    {
-      protected override bool ValidatePlugin(IProteinSerializer serializer)
+      protected override bool ValidatePlugin(IFileSerializer<T> serializer)
       {
          if (String.IsNullOrEmpty(serializer.FileExtension) ||
              String.IsNullOrEmpty(serializer.FileTypeFilter))

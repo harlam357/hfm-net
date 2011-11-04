@@ -62,6 +62,9 @@
     <AssemblyOriginatorKeyFile>..\harlam357public.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.Core.dll</HintPath>
+    </Reference>
     <Reference Include="harlam357.Security">
       <HintPath>..\..\lib\harlam357-net\harlam357.Security.dll</HintPath>
     </Reference>
@@ -97,13 +100,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HFM.Framework.DataTypes\HFM.Framework.DataTypes.csproj">
-      <Project>{B294C8E0-63AD-47CF-8DE5-CE44C046DF89}</Project>
-      <Name>HFM.Framework.DataTypes</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HFM.Framework\HFM.Framework.csproj">
-      <Project>{FFFF3DE4-8620-4C13-A968-ADF58133146B}</Project>
-      <Name>HFM.Framework</Name>
+    <ProjectReference Include="..\HFM.Core\HFM.Core.csproj">
+      <Project>{360034D2-9F6A-4377-B5B9-D82712171223}</Project>
+      <Name>HFM.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
