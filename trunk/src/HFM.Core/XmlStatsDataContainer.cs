@@ -30,7 +30,7 @@ namespace HFM.Core
       /// <summary>
       /// User Stats Data
       /// </summary>
-      XmlStatsData Data { get; }
+      XmlStatsData XmlStatsData { get; }
 
       /// <summary>
       /// Is it Time for a Stats Update?
@@ -60,6 +60,15 @@ namespace HFM.Core
       private const string EocStatusNode = "status";
       private const string EocUpdateStatusNode = "Update_Status";
       
+      #endregion
+
+      #region Properties
+
+      public XmlStatsData XmlStatsData
+      {
+         get { return Data; }
+      }
+
       #endregion
 
       #region Constructor
