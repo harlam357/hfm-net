@@ -31,7 +31,7 @@ namespace HFM.Core
       /// <summary>
       /// Unit Info Data Class
       /// </summary>
-      UnitInfo UnitInfoData { get; }
+      UnitInfo UnitInfoData { get; set; }
 
       /// <summary>
       /// Date/time the unit was downloaded
@@ -56,7 +56,7 @@ namespace HFM.Core
       /// <summary>
       /// Class member containing info on the currently running protein
       /// </summary>
-      Protein CurrentProtein { get; }
+      Protein CurrentProtein { get; set; }
 
       /// <summary>
       /// Frame progress of the unit
@@ -120,13 +120,24 @@ namespace HFM.Core
       /// </summary>
       private readonly IProteinBenchmarkCollection _benchmarkCollection;
 
-      private readonly UnitInfo _unitInfo;
+      private UnitInfo _unitInfo = new UnitInfo();
       /// <summary>
       /// Unit Info Data Class
       /// </summary>
       public UnitInfo UnitInfoData
       {
          get { return _unitInfo; }
+         set { _unitInfo = value ?? new UnitInfo(); }
+      }
+
+      private Protein _currentProtein = new Protein();
+      /// <summary>
+      /// Class member containing info on the currently running protein
+      /// </summary>
+      public Protein CurrentProtein
+      {
+         get { return _currentProtein; }
+         set { _currentProtein = value ?? new Protein(); }
       }
 
       public double ClientTimeOffset { get; set; }
@@ -137,16 +148,9 @@ namespace HFM.Core
 
       #region Constructors
 
-      public UnitInfoLogic(Protein protein, IProteinBenchmarkCollection benchmarkCollection, UnitInfo unitInfo)
+      public UnitInfoLogic(IProteinBenchmarkCollection benchmarkCollection)
       {
          _benchmarkCollection = benchmarkCollection;
-         _unitInfo = unitInfo;
-
-         //_unitInfo.OwningInstanceName = _instanceSettings.InstanceName;
-         //_unitInfo.OwningInstancePath = _instanceSettings.Path;
-
-         CurrentProtein = protein;
-         _unitInfo.SlotType = UnitInfo.DetermineSlotType(CurrentProtein.Core, _unitInfo.CoreID);
       }
 
       #endregion
@@ -238,16 +242,6 @@ namespace HFM.Core
          }
 
          return deadline;
-      }
-
-      private Protein _currentProtein;
-      /// <summary>
-      /// Class member containing info on the currently running protein
-      /// </summary>
-      public Protein CurrentProtein
-      {
-         get { return _currentProtein; }
-         private set { _currentProtein = value ?? new Protein(); }
       }
 
       #endregion

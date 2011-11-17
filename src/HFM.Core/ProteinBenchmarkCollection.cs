@@ -203,7 +203,7 @@ namespace HFM.Core
                   foundCurrent = false;
                }
 
-               // Even though the CurrentUnitInfo has been found in the parsed UnitInfoLogic array doesn't
+               // Even though the current UnitInfoLogic has been found in the parsed UnitInfoLogic array doesn't
                // mean that all entries in the array will be present.  See TestFiles\SMP_12\FAHlog.txt.
                if (parsedUnits[index] != null)
                {

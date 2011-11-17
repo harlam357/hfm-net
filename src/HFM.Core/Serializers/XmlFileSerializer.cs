@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.Serialization;
 
-using HFM.Plugins;
+using HFM.Core.Plugins;
 
 namespace HFM.Core.Serializers
 {
