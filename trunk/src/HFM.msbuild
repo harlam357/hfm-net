@@ -15,15 +15,6 @@
         AssemblyCompany="harlam357"
         AssemblyProduct="HFM.NET"
         AssemblyCopyright="Copyright © Ryan Harlamert 2009-2011."
-        AssemblyVersion="$(Major).$(Minor).$(Build).$(Revision)"
-        AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
-        Condition="$(Revision) != '0' "/>
-
-      <AssemblyInfo CodeLanguage="CS"
-        OutputFile="PluginsAssemblyVersion.cs"
-        AssemblyCompany="harlam357"
-        AssemblyProduct="HFM.NET Plugins"
-        AssemblyCopyright="Copyright © Ryan Harlamert 2009-2011."
         AssemblyVersion="1.0.0.0"
         AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
         Condition="$(Revision) != '0' "/>
