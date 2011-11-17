@@ -59,19 +59,21 @@
     <Compile Include="Default.cs" />
     <Compile Include="Enumerations.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Serializers\IFileSerializer.cs" />
     <Compile Include="LogLine.cs" />
     <Compile Include="ProjectInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Protein.cs" />
-    <Compile Include="Serializers\XmlFileSerializer.cs" />
-    <Compile Include="Serializers\ProtoBufFileSerializer.cs" />
     <Compile Include="UnitFrame.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\harlam357public.snk">
       <Link>Properties\harlam357public.snk</Link>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
+      <Link>Properties\CustomDictionary.xml</Link>
+    </CodeAnalysisDictionary>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

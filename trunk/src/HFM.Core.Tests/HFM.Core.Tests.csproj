@@ -70,6 +70,8 @@
     <Compile Include="DataTypes\BenchmarkClientTests.cs" />
     <Compile Include="DataTypes\QueryParametersTests.cs" />
     <Compile Include="DataTypes\UnitInfoTests.cs" />
+    <Compile Include="ExtensionsTests.cs" />
+    <Compile Include="ClientDictionaryTests.cs" />
     <Compile Include="NetworkOpsTests.cs" />
     <Compile Include="PathsTests.cs" />
     <Compile Include="ApplicationTests.cs" />
@@ -80,6 +82,7 @@
     <Compile Include="QueryParametersCollectionTests.cs" />
     <Compile Include="StatusTests.cs" />
     <Compile Include="UnitInfoCollectionTests.cs" />
+    <Compile Include="UnitInfoDatabaseTests.cs" />
     <Compile Include="UnitInfoLogicTests.cs" />
     <Compile Include="ValidateTests.cs" />
     <Compile Include="XmlStatsDataContainerTests.cs" />
@@ -88,6 +91,10 @@
     <ProjectReference Include="..\HFM.Core.DataTypes\HFM.Core.DataTypes.csproj">
       <Project>{C198DA45-5B5B-4684-914B-97DED3F0BB40}</Project>
       <Name>HFM.Core.DataTypes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Core.Plugins\HFM.Core.Plugins.csproj">
+      <Project>{E1415297-BD33-4508-A491-F3C13E5A5F7F}</Project>
+      <Name>HFM.Core.Plugins</Name>
     </ProjectReference>
     <ProjectReference Include="..\HFM.Core\HFM.Core.csproj">
       <Project>{360034D2-9F6A-4377-B5B9-D82712171223}</Project>
