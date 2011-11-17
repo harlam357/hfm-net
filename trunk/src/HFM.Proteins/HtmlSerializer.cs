@@ -8,7 +8,7 @@ using System.IO;
 using Majestic12;
 
 using HFM.Core.DataTypes;
-using HFM.Core.DataTypes.Serializers;
+using HFM.Core.Plugins;
 
 namespace HFM.Proteins
 {

@@ -20,7 +20,7 @@
 using System;
 using System.Windows.Forms;
 
-using HFM.Framework;
+using HFM.Core;
 
 namespace HFM.Forms.Controls
 {

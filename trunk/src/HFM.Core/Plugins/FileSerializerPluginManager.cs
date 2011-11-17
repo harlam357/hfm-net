@@ -2,8 +2,6 @@
 using System;
 using System.Linq;
 
-using HFM.Core.DataTypes.Serializers;
-
 namespace HFM.Core.Plugins
 {
    internal class FileSerializerPluginManager<T> : PluginManager<IFileSerializer<T>> where T : class, new()

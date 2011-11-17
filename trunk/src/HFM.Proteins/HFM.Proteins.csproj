@@ -85,6 +85,10 @@
       <Project>{C198DA45-5B5B-4684-914B-97DED3F0BB40}</Project>
       <Name>HFM.Core.DataTypes</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HFM.Core.Plugins\HFM.Core.Plugins.csproj">
+      <Project>{E1415297-BD33-4508-A491-F3C13E5A5F7F}</Project>
+      <Name>HFM.Core.Plugins</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

@@ -18,6 +18,15 @@
         AssemblyVersion="$(Major).$(Minor).$(Build).$(Revision)"
         AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
         Condition="$(Revision) != '0' "/>
+
+      <AssemblyInfo CodeLanguage="CS"
+        OutputFile="PluginsAssemblyVersion.cs"
+        AssemblyCompany="harlam357"
+        AssemblyProduct="HFM.NET Plugins"
+        AssemblyCopyright="Copyright © Ryan Harlamert 2009-2011."
+        AssemblyVersion="1.0.0.0"
+        AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
+        Condition="$(Revision) != '0' "/>
    </Target>
 
    <Target Name="Version">
@@ -62,11 +71,9 @@
 
    <Target Name="NUnit">
       <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Client.Tests\bin\Release\HFM.Client.Tests.dll /xml=$(ArtifactsPath)\HFM.Client.Tests.Results.xml //reg //a HFM.Client //ea $(NCoverExcludeList) //x $(ArtifactsPath)\HFM.Client.Tests.Coverage.xml" />
-      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Forms.Tests\bin\Release\HFM.Forms.Tests.dll /xml=$(ArtifactsPath)\HFM.Forms.Tests.Results.xml //reg //a HFM.Forms //ea $(NCoverExcludeList) //x $(ArtifactsPath)\HFM.Forms.Tests.Coverage.xml" />
-      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.DataAggregator.Tests\bin\Release\HFM.DataAggregator.Tests.dll /xml=$(ArtifactsPath)\HFM.DataAggregator.Tests.Results.xml //reg //a HFM.DataAggregator //ea $(NCoverExcludeList) //x $(ArtifactsPath)\HFM.DataAggregator.Tests.Coverage.xml" />
-      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Framework.Tests\bin\Release\HFM.Framework.Tests.dll /xml=$(ArtifactsPath)\HFM.Framework.Tests.Results.xml //reg //a HFM.Framework //ea $(NCoverExcludeList) //x $(ArtifactsPath)\HFM.Framework.Tests.Coverage.xml" />
-      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Framework.DataTypes.Tests\bin\Release\HFM.Framework.DataTypes.Tests.dll /xml=$(ArtifactsPath)\HFM.Framework.DataTypes.Tests.Results.xml //reg //a HFM.Framework.DataTypes //ea $(NCoverExcludeList) //x $(ArtifactsPath)\HFM.Framework.DataTypes.Tests.Coverage.xml" />
-      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Instances.Tests\bin\Release\HFM.Instances.Tests.dll /xml=$(ArtifactsPath)\HFM.Instances.Tests.Results.xml //reg //a HFM.Instances //ea $(NCoverExcludeList) //x $(ArtifactsPath)\HFM.Instances.Tests.Coverage.xml" />
+      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Core.Tests\bin\Release\HFM.Core.Tests.dll /xml=$(ArtifactsPath)\HFM.Core.Tests.Results.xml //reg //a HFM.Core //ea $(NCoverExcludeList) //x $(ArtifactsPath)\HFM.Core.Tests.Coverage.xml" />
+      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Core.DataTypes.Tests\bin\Release\HFM.Core.DataTypes.Tests.dll /xml=$(ArtifactsPath)\HFM.Core.DataTypes.Tests.Results.xml //reg //a HFM.Core.DataTypes //ea $(NCoverExcludeList) //x $(ArtifactsPath)\HFM.Core.DataTypes.Tests.Coverage.xml" />
+      <!--<Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Forms.Tests\bin\Release\HFM.Forms.Tests.dll /xml=$(ArtifactsPath)\HFM.Forms.Tests.Results.xml //reg //a HFM.Forms //ea $(NCoverExcludeList) //x $(ArtifactsPath)\HFM.Forms.Tests.Coverage.xml" />-->
       <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Log.Tests\bin\Release\HFM.Log.Tests.dll /xml=$(ArtifactsPath)\HFM.Log.Tests.Results.xml //reg //a HFM.Log //ea $(NCoverExcludeList) //x $(ArtifactsPath)\HFM.Log.Tests.Coverage.xml" />
       <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Proteins.Tests\bin\Release\HFM.Proteins.Tests.dll /xml=$(ArtifactsPath)\HFM.Proteins.Tests.Results.xml //reg //a HFM.Proteins //ea $(NCoverExcludeList) //x $(ArtifactsPath)\HFM.Proteins.Tests.Coverage.xml" />
       <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Queue.Tests\bin\Release\HFM.Queue.Tests.dll /xml=$(ArtifactsPath)\HFM.Queue.Tests.Results.xml //reg //a HFM.Queue //ea $(NCoverExcludeList) //x $(ArtifactsPath)\HFM.Queue.Tests.Coverage.xml" />
