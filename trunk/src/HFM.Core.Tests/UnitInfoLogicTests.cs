@@ -859,7 +859,11 @@ namespace HFM.Core.Tests
       
       private UnitInfoLogic CreateUnitInfoLogic(Protein protein, UnitInfo unitInfo)
       {
-         return new UnitInfoLogic(protein, _benchmarkCollection, unitInfo);
+         return new UnitInfoLogic(_benchmarkCollection)
+                {
+                   CurrentProtein = protein,
+                   UnitInfoData = unitInfo
+                };
       }
       
       private static UnitFrame MakeUnitFrame(string timeStamp, int frameId)

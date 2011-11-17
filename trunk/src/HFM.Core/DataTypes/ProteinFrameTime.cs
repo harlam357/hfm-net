@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Protein Frame Time Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,20 +19,16 @@
  
 using System;
 using System.ComponentModel;
-using System.Xml.Serialization;
-
-using ProtoBuf;
+using System.Runtime.Serialization;
 
 namespace HFM.Core.DataTypes
 {
-   [ProtoContract]
+   [DataContract]
    public sealed class ProteinFrameTime
    {
-      [XmlIgnore]
       public TimeSpan Duration { get; set; }
 
-      [ProtoMember(1)]
-      [XmlAttribute("Duration")]
+      [DataMember(Order = 1)]
       [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
       public long DurationTicks
       {
