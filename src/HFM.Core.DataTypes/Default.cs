@@ -32,7 +32,7 @@ namespace HFM.Core.DataTypes
       public const string FahLogFileName = "FAHlog.txt";
       public const string UnitInfoFileName = "unitinfo.txt";
       public const string QueueFileName = "queue.dat";
-      public const string ExternalDataFileName = "ClientData.dat";
+      //public const string ExternalDataFileName = "ClientData.dat";
 
       public const int MaxDecimalPlaces = 5;
 

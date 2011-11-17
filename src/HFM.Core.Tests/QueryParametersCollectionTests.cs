@@ -23,7 +23,7 @@ using System.IO;
 using NUnit.Framework;
 
 using HFM.Core.DataTypes;
-using HFM.Core.DataTypes.Serializers;
+using HFM.Core.Serializers;
 
 namespace HFM.Core.Tests
 {

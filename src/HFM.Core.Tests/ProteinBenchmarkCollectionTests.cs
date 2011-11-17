@@ -25,7 +25,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 
 using HFM.Core.DataTypes;
-using HFM.Core.DataTypes.Serializers;
+using HFM.Core.Serializers;
 
 namespace HFM.Core.Tests
 {
@@ -33,7 +33,7 @@ namespace HFM.Core.Tests
    public class ProteinBenchmarkCollectionTests
    {
       [Test]
-      public void UpdateBenchmarkDataTest()
+      public void UpdateDataTest()
       {
          // setup
          var database = MockRepository.GenerateMock<IUnitInfoDatabase>();
@@ -47,14 +47,15 @@ namespace HFM.Core.Tests
          unitInfo1.ProjectClone = 2;
          unitInfo1.ProjectGen = 3;
          unitInfo1.FinishedTime = new DateTime(2010, 1, 1);
-         var currentUnitInfo = new UnitInfoLogic(new Protein(), container, unitInfo1);
+         var currentUnitInfo = new UnitInfoLogic(container) { CurrentProtein = new Protein(), UnitInfoData = unitInfo1 };
+
 
          var unitInfo1Clone = unitInfo1.DeepClone();
          unitInfo1Clone.UnitFrames.Add(0, new UnitFrame { FrameDuration = TimeSpan.FromMinutes(0), FrameID = 0 });
          unitInfo1Clone.UnitFrames.Add(1, new UnitFrame { FrameDuration = TimeSpan.FromMinutes(5), FrameID = 1 });
          unitInfo1Clone.UnitFrames.Add(2, new UnitFrame { FrameDuration = TimeSpan.FromMinutes(5), FrameID = 2 });
          unitInfo1Clone.UnitFrames.Add(3, new UnitFrame { FrameDuration = TimeSpan.FromMinutes(5), FrameID = 3 });
-         var unitInfoLogic1 = new UnitInfoLogic(new Protein(), container, unitInfo1Clone);
+         var unitInfoLogic1 = new UnitInfoLogic(container) { CurrentProtein = new Protein(), UnitInfoData = unitInfo1Clone };
 
          var unitInfo2 = new UnitInfo();
          unitInfo2.OwningInstanceName = "Owner";
@@ -64,7 +65,7 @@ namespace HFM.Core.Tests
          unitInfo2.ProjectClone = 3;
          unitInfo2.ProjectGen = 4;
          unitInfo2.FinishedTime = new DateTime(2010, 1, 1);
-         var unitInfoLogic2 = new UnitInfoLogic(new Protein(), container, unitInfo2);
+         var unitInfoLogic2 = new UnitInfoLogic(container) { CurrentProtein = new Protein(), UnitInfoData = unitInfo2 };
 
          var unitInfo3 = new UnitInfo();
          unitInfo3.OwningInstanceName = "Owner";
@@ -74,7 +75,7 @@ namespace HFM.Core.Tests
          unitInfo3.ProjectClone = 4;
          unitInfo3.ProjectGen = 5;
          unitInfo3.FinishedTime = new DateTime(2010, 1, 1);
-         var unitInfoLogic3 = new UnitInfoLogic(new Protein(), container, unitInfo3);
+         var unitInfoLogic3 = new UnitInfoLogic(container) { CurrentProtein = new Protein(), UnitInfoData = unitInfo3 };
 
          var parsedUnits = new[] { unitInfoLogic1, unitInfoLogic2, unitInfoLogic3 };
 

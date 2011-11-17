@@ -6,16 +6,14 @@ if errorlevel 1 goto Error
 del /S /Q %1\*.*
 
 echo Deploying Assemblies...
-copy /y HFM.exe %1
-copy /y HFM.exe.config %1
+REM copy /y HFM.exe %1
+REM copy /y HFM.exe.config %1
 copy /y HFM.Client.dll %1
-copy /y HFM.DataAggregator.dll %1
-copy /y HFM.Forms.dll %1
-copy /y HFM.Framework.dll %1
-copy /y HFM.Framework.DataTypes.dll %1
-copy /Y HFM.Instances.dll %1
+copy /y HFM.Core.dll %1
+copy /y HFM.Core.DataTypes.dll %1
+copy /Y HFM.Core.Plugins.dll %1
+REM copy /y HFM.Forms.dll %1
 copy /Y HFM.Log.dll %1
-copy /Y HFM.Plugins.dll %1
 copy /Y HFM.Preferences.dll %1
 copy /Y HFM.Proteins.dll %1
 copy /Y HFM.Queue.dll %1
