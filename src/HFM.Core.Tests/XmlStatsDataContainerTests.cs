@@ -24,7 +24,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 
 using HFM.Core.DataTypes;
-using HFM.Core.DataTypes.Serializers;
+using HFM.Core.Serializers;
 
 namespace HFM.Core.Tests
 {

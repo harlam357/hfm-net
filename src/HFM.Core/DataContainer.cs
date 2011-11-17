@@ -3,8 +3,6 @@ using System;
 
 using Castle.Core.Logging;
 
-using HFM.Core.DataTypes.Serializers;
-
 namespace HFM.Core
 {
    public abstract class DataContainer<T> where T : class, new()
@@ -21,7 +19,7 @@ namespace HFM.Core
 
       public string FileName { get; set; }
 
-      public IFileSerializer<T> Serializer { get; set; }
+      public Plugins.IFileSerializer<T> Serializer { get; set; }
 
       protected DataContainer()
       {

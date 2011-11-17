@@ -112,7 +112,7 @@ namespace HFM.Core.DataTypes
       /// <summary>
       /// Unit Start Time Stamp (Time Stamp from First Parsable Line in LogLines)
       /// </summary>
-      /// <remarks>Used to Determine Status when a LogLine Time Stamp is not available - See ClientInstance.HandleReturnedStatus</remarks>
+      /// <remarks>Used to Determine Status when a LogLine Time Stamp is not available - See LegacyClient.HandleReturnedStatus</remarks>
       [DataMember(Order = 9)]
       public TimeSpan UnitStartTimeStamp { get; set; }
 

@@ -64,6 +64,14 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\..\lib\SQLite.NET\bin\System.Data.SQLite.DLL</HintPath>
+    </Reference>
+    <Reference Include="System.Linq.Dynamic">
+      <HintPath>..\..\lib\System.Linq.Dynamic\System.Linq.Dynamic.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -71,12 +79,20 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="IClient.cs" />
+    <Compile Include="ClientDictionary.cs" />
+    <Compile Include="Serializers\ProtoBufFileSerializer.cs" />
+    <Compile Include="Serializers\XmlFileSerializer.cs" />
+    <Compile Include="SlotModel.cs" />
+    <Compile Include="LegacyDataRetriever.cs" />
+    <Compile Include="LegacyClient.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="CoverageExcludeAttribute.cs" />
     <Compile Include="DataAggregator.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="DataContainer.cs" />
     <Compile Include="DataTypes\BenchmarkClient.cs" />
+    <Compile Include="DataTypes\ClientSettings.cs" />
     <Compile Include="DataTypes\ClientQueue.cs" />
     <Compile Include="DataTypes\ClientQueueEntry.cs" />
     <Compile Include="DataTypes\HistoryEntry.cs" />
@@ -94,7 +110,6 @@
     <Compile Include="InstanceProvider.cs" />
     <Compile Include="Instrumentation.cs" />
     <Compile Include="IPreferenceSet.cs" />
-    <Compile Include="IUnitInfoDatabase.cs" />
     <Compile Include="NetworkOps.cs" />
     <Compile Include="Paths.cs" />
     <Compile Include="Plugins\PluginInfo.cs">
@@ -113,6 +128,7 @@
     <Compile Include="QueryParametersCollection.cs" />
     <Compile Include="StatusLogic.cs" />
     <Compile Include="UnitInfoCollection.cs" />
+    <Compile Include="UnitInfoDatabase.cs" />
     <Compile Include="UnitInfoLogic.cs" />
     <Compile Include="Validate.cs" />
     <Compile Include="XmlStatsDataContainer.cs" />
@@ -121,6 +137,10 @@
     <ProjectReference Include="..\HFM.Core.DataTypes\HFM.Core.DataTypes.csproj">
       <Project>{C198DA45-5B5B-4684-914B-97DED3F0BB40}</Project>
       <Name>HFM.Core.DataTypes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Core.Plugins\HFM.Core.Plugins.csproj">
+      <Project>{E1415297-BD33-4508-A491-F3C13E5A5F7F}</Project>
+      <Name>HFM.Core.Plugins</Name>
     </ProjectReference>
     <ProjectReference Include="..\HFM.Log\HFM.Log.csproj">
       <Project>{2C3EA8A1-D17F-419D-A76A-970550FB5A09}</Project>
@@ -135,6 +155,11 @@
     <None Include="..\harlam357public.snk">
       <Link>Properties\harlam357public.snk</Link>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
+      <Link>Properties\CustomDictionary.xml</Link>
+    </CodeAnalysisDictionary>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
