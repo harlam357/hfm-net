@@ -80,7 +80,7 @@ namespace HFM.Core.Tests
          var parsedUnits = new[] { unitInfoLogic1, unitInfoLogic2, unitInfoLogic3 };
 
          // arrange
-         database.Stub(x => x.ConnectionOk).Return(true);
+         database.Stub(x => x.Connected).Return(true);
          database.Expect(x => x.WriteUnitInfo(null)).IgnoreArguments().Repeat.Times(3);
 
          var benchmarkClient = new BenchmarkClient("Owner", "Path");
@@ -107,7 +107,6 @@ namespace HFM.Core.Tests
          var container = new ProteinBenchmarkCollection(MockRepository.GenerateStub<IUnitInfoDatabase>())
          {
             FileName = Path.Combine("..\\..\\TestFiles", Constants.BenchmarkCacheFileName),
-            Serializer = new ProtoBufFileSerializer<List<ProteinBenchmark>>()
          };
 
          container.Read();
@@ -120,7 +119,6 @@ namespace HFM.Core.Tests
          var collection = new ProteinBenchmarkCollection(MockRepository.GenerateStub<IUnitInfoDatabase>())
          {
             FileName = "TestProteinBenchmarkBinary.dat",
-            Serializer = new ProtoBufFileSerializer<List<ProteinBenchmark>>()
          };
 
          collection.Data = CreateTestList();
@@ -133,17 +131,13 @@ namespace HFM.Core.Tests
       [Test]
       public void WriteTest2()
       {
-         var collection = new ProteinBenchmarkCollection(MockRepository.GenerateStub<IUnitInfoDatabase>())
-         {
-            FileName = "TestProteinBenchmarkBinary.dat",
-            Serializer = new XmlFileSerializer<List<ProteinBenchmark>>()
-         };
+         var collection = new ProteinBenchmarkCollection(MockRepository.GenerateStub<IUnitInfoDatabase>());
+         var serializer = new XmlFileSerializer<List<ProteinBenchmark>>();
 
          collection.Data = CreateTestList();
-         collection.Write();
-         collection.Data = null;
-         collection.Read();
-         ValidateTestList(collection.Data);
+         collection.Write("TestProteinBenchmarkXml.xml", serializer);
+         var data = collection.Read("TestProteinBenchmarkXml.xml", serializer);
+         ValidateTestList(data);
       }
       
       private static List<ProteinBenchmark> CreateTestList()

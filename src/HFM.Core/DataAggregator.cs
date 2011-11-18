@@ -26,6 +26,7 @@ using System.IO;
 
 using AutoMapper;
 using Castle.Core.Logging;
+
 using HFM.Core.DataTypes;
 using HFM.Log;
 using HFM.Queue;
@@ -179,21 +180,12 @@ namespace HFM.Core
          get { return _unitLogLines; }
       }
 
-      #region AutoMapper
+      private ILogger _logger = NullLogger.Instance;
 
-      public static void ConfigureMaps()
+      public ILogger Logger
       {
-         Mapper.CreateMap<QueueData, ClientQueue>();
-         Mapper.CreateMap<QueueEntry, ClientQueueEntry>();
-      }
-
-      #endregion
-
-      private readonly ILogger _logger;
-
-      public DataAggregator(ILogger logger)
-      {
-         _logger = logger;
+         get { return _logger; }
+         set { _logger = value; }
       }
 
       #region Aggregation Logic

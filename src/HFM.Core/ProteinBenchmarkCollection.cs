@@ -123,7 +123,11 @@ namespace HFM.Core
 
       void Read();
 
+      List<ProteinBenchmark> Read(string filePath, Plugins.IFileSerializer<List<ProteinBenchmark>> serializer);
+
       void Write();
+
+      void Write(string filePath, Plugins.IFileSerializer<List<ProteinBenchmark>> serializer);
 
       #endregion
    }
@@ -131,12 +135,17 @@ namespace HFM.Core
    public class ProteinBenchmarkCollection : DataContainer<List<ProteinBenchmark>>, IProteinBenchmarkCollection
    {
       #region Fields
-      
+
       private readonly IUnitInfoDatabase _database;
 
       #endregion
 
       #region Properties
+
+      public override Plugins.IFileSerializer<List<ProteinBenchmark>> DefaultSerializer
+      {
+         get { return new Serializers.ProtoBufFileSerializer<List<ProteinBenchmark>>(); }
+      }
 
       public IEnumerable<BenchmarkClient> BenchmarkClients
       {
@@ -161,9 +170,22 @@ namespace HFM.Core
       #region Constructor
 
       public ProteinBenchmarkCollection(IUnitInfoDatabase database)
+         : this(null, database)
       {
-         _database = database;
+         
       } 
+
+      public ProteinBenchmarkCollection(IPreferenceSet prefs, IUnitInfoDatabase database)
+      {
+         if (database == null) throw new ArgumentNullException("database");
+
+         _database = database;
+
+         if (prefs != null && !String.IsNullOrEmpty(prefs.ApplicationDataFolderPath))
+         {
+            FileName = System.IO.Path.Combine(prefs.ApplicationDataFolderPath, Constants.BenchmarkCacheFileName);
+         }
+      }
 
       #endregion
 
@@ -210,7 +232,7 @@ namespace HFM.Core
                   // Update benchmarks
                   UpdateData(parsedUnits[index].UnitInfoData, previousFramesComplete, parsedUnits[index].FramesComplete);
                   // Update history database
-                  if (_database.ConnectionOk)
+                  if (_database.Connected)
                   {
                      try
                      {

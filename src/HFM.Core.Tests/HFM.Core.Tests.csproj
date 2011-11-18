@@ -44,7 +44,10 @@
       <HintPath>..\..\lib\AutoMapper\AutoMapper.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Core">
-      <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.Core.dll</HintPath>
+      <HintPath>..\..\lib\Castle Windsor\dotNet35\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\..\lib\Castle Windsor\dotNet35\Castle.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="harlam357.Net">
       <HintPath>..\..\lib\harlam357-net\harlam357.Net.dll</HintPath>

@@ -119,7 +119,7 @@ namespace HFM.Core
       //   _unitInfo.OwningInstancePath = Settings.Path;
       //   _unitInfo.SlotType = UnitInfo.DetermineSlotType(protein.Core, _unitInfo.CoreID);
       //   // build unit info logic
-      //   var unitInfoLogic = InstanceProvider.GetInstance<IUnitInfoLogic>();
+      //   var unitInfoLogic = ServiceLocator.Resolve<IUnitInfoLogic>();
       //   unitInfoLogic.CurrentProtein = protein;
       //   unitInfoLogic.UnitInfoData = _unitInfo;
       //   // set the property
@@ -137,7 +137,7 @@ namespace HFM.Core
 
       public SlotModel()
       {
-         //_unitInfoLogic = InstanceProvider.GetInstance<UnitInfoLogic>();
+         //_unitInfoLogic = ServiceLocator.Resolve<UnitInfoLogic>();
 
          TimeOfLastUnitStart = DateTime.MinValue;
          TimeOfLastFrameProgress = DateTime.MinValue;

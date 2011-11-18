@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Instance Provider Class
+ * HFM.NET - Service Locator Class
  * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -20,12 +20,10 @@
 using System.Diagnostics.CodeAnalysis;
 
 using Castle.Windsor;
-using Castle.Windsor.Configuration.Interpreters;
-using Castle.Core.Resource;
 
 namespace HFM.Core
 {
-   public static class InstanceProvider
+   public static class ServiceLocator
    {
       private static IWindsorContainer _container;
 
@@ -34,24 +32,14 @@ namespace HFM.Core
          _container = container;
       }
 
-      public static void CreateContainer(IResource resource)
-      {
-         _container = new WindsorContainer(new XmlInterpreter(resource));
-      }
-
-      public static void DisposeContainer()
-      {
-         _container.Dispose();
-      }
-
       [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
-      public static T GetInstance<T>()
+      public static T Resolve<T>()
       {
          return _container.Resolve<T>();
       }
 
       [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
-      public static T GetInstance<T>(string key)
+      public static T Resolve<T>(string key)
       {
          return _container.Resolve<T>(key);
       }

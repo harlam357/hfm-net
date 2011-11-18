@@ -44,7 +44,7 @@ namespace HFM.Core
          set { _prefs = value; }
       }
 
-      private ILogger _logger;
+      private ILogger _logger = NullLogger.Instance;
       /// <summary>
       /// Logging Interface
       /// </summary>
@@ -226,7 +226,6 @@ namespace HFM.Core
          {
             if (units[i] != null)
             {
-               
                parsedUnits[i] = BuildUnitInfoLogic(units[i]);
             }
          }
@@ -265,7 +264,7 @@ namespace HFM.Core
          unitInfo.OwningInstancePath = Settings.Path;
          unitInfo.SlotType = UnitInfo.DetermineSlotType(protein.Core, unitInfo.CoreID);
          // build unit info logic
-         var unitInfoLogic = InstanceProvider.GetInstance<UnitInfoLogic>();
+         var unitInfoLogic = ServiceLocator.Resolve<UnitInfoLogic>();
          unitInfoLogic.CurrentProtein = protein;
          unitInfoLogic.UnitInfoData = unitInfo;
          return unitInfoLogic;

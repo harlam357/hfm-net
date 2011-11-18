@@ -33,13 +33,14 @@ namespace HFM.Core
 
       #endregion
 
-      private readonly ILogger _logger;
+      private ILogger _logger = NullLogger.Instance;
 
-      public AutoRun(ILogger logger)
+      public ILogger Logger
       {
-         _logger = logger;
+         get { return _logger; }
+         set { _logger = value; }
       }
-      
+     
       /// <summary>
       /// Does an Auto Run value exist?
       /// </summary>

@@ -35,13 +35,40 @@ namespace HFM.Core
 
       void Read();
 
+      List<UnitInfo> Read(string filePath, Plugins.IFileSerializer<List<UnitInfo>> serializer);
+
       void Write();
+
+      void Write(string filePath, Plugins.IFileSerializer<List<UnitInfo>> serializer);
 
       #endregion
    }
 
    public class UnitInfoCollection : DataContainer<List<UnitInfo>>, IUnitInfoCollection
    {
+      #region Properties
+
+      public override Plugins.IFileSerializer<List<UnitInfo>> DefaultSerializer
+      {
+         get { return new Serializers.ProtoBufFileSerializer<List<UnitInfo>>(); }
+      }
+
+      #endregion
+
+      public UnitInfoCollection()
+         : this(null)
+      {
+
+      }
+
+      public UnitInfoCollection(IPreferenceSet prefs)
+      {
+         if (prefs != null && !String.IsNullOrEmpty(prefs.ApplicationDataFolderPath))
+         {
+            FileName = System.IO.Path.Combine(prefs.ApplicationDataFolderPath, Constants.UnitInfoCacheFileName);
+         }
+      }
+
       #region Methods
       
       ///// <summary>

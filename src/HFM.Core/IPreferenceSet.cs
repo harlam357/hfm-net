@@ -55,13 +55,6 @@ namespace HFM.Core
 
       void Reset();
 
-      void Upgrade();
-
-      /// <summary>
-      /// Initialize the Preferences
-      /// </summary>
-      void Initialize();
-
       /// <summary>
       /// Get a Preference of Type T
       /// </summary>
@@ -95,11 +88,6 @@ namespace HFM.Core
       /// <param name="value">Preference Value</param>
       //[Obsolete("Use Set<T>()")]
       void SetPreference<T>(Preference key, T value);
-
-      /// <summary>
-      /// Load the Preferences Set
-      /// </summary>
-      void Load();
 
       /// <summary>
       /// Revert to the previously saved settings

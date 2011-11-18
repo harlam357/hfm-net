@@ -24,7 +24,6 @@ using System.IO;
 using NUnit.Framework;
 
 using HFM.Core.DataTypes;
-using HFM.Core.Serializers;
 
 namespace HFM.Core.Tests
 {
@@ -37,7 +36,6 @@ namespace HFM.Core.Tests
          var collection = new UnitInfoCollection
          {
             FileName = Path.Combine("..\\..\\TestFiles", Constants.UnitInfoCacheFileName),
-            Serializer = new ProtoBufFileSerializer<List<UnitInfo>>()
          };
 
          collection.Read();
@@ -50,7 +48,6 @@ namespace HFM.Core.Tests
          var collection = new UnitInfoCollection
          {
             FileName = "TestUnitInfoBinary.dat",
-            Serializer = new ProtoBufFileSerializer<List<UnitInfo>>()
          };
 
          collection.Data = CreateTestList();

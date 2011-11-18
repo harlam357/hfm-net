@@ -23,7 +23,6 @@ using System.IO;
 using NUnit.Framework;
 
 using HFM.Core.DataTypes;
-using HFM.Core.Serializers;
 
 namespace HFM.Core.Tests
 {
@@ -36,7 +35,6 @@ namespace HFM.Core.Tests
          var collection = new QueryParametersCollection
          {
             FileName = Path.Combine("..\\..\\TestFiles", Constants.QueryCacheFileName),
-            Serializer = new ProtoBufFileSerializer<List<QueryParameters>>()
          };
 
          collection.Read();
@@ -49,7 +47,6 @@ namespace HFM.Core.Tests
          var collection = new QueryParametersCollection
          {
             FileName = "TestQueryParametersBinary.dat",
-            Serializer = new ProtoBufFileSerializer<List<QueryParameters>>()
          };
 
          collection.Data = CreateTestList();

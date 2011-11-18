@@ -64,7 +64,8 @@ namespace HFM.Core.Tests
 
          var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo);
 
-         var database = new UnitInfoDatabase(_proteinDictionary) { DatabaseFilePath = testFile };
+         var database = CreateUnitInfoDatabase();
+         database.DatabaseFilePath = testFile;
          database.WriteUnitInfo(unitInfoLogic);
 
          var rows = database.QueryUnitData(new QueryParameters());
@@ -122,7 +123,8 @@ namespace HFM.Core.Tests
 
          var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo);
 
-         var database = new UnitInfoDatabase(_proteinDictionary) { DatabaseFilePath = testFile };
+         var database = CreateUnitInfoDatabase();
+         database.DatabaseFilePath = testFile;
          database.WriteUnitInfo(unitInfoLogic);
 
          var rows = database.QueryUnitData(new QueryParameters());
@@ -179,7 +181,8 @@ namespace HFM.Core.Tests
 
          var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo);
 
-         var database = new UnitInfoDatabase(_proteinDictionary) { DatabaseFilePath = testFile };
+         var database = CreateUnitInfoDatabase();
+         database.DatabaseFilePath = testFile;
          database.WriteUnitInfo(unitInfoLogic);
 
          var rows = database.QueryUnitData(new QueryParameters());
@@ -205,8 +208,8 @@ namespace HFM.Core.Tests
             File.Delete(testFile);
          }
 
-         var database = new UnitInfoDatabase(_proteinDictionary) { DatabaseFilePath = testFile };
-         database.CreateTable();
+         var database = CreateUnitInfoDatabase();
+         database.DatabaseFilePath = testFile;
          Assert.AreEqual(true, database.TableExists());
          database.DeleteAllUnitInfoData();
          Assert.AreEqual(false, database.TableExists());
@@ -233,7 +236,8 @@ namespace HFM.Core.Tests
          // the copied file.
          Thread.Sleep(100);
 
-         var database = new UnitInfoDatabase(_proteinDictionary) { DatabaseFilePath = testFile };
+         var database = CreateUnitInfoDatabase();
+         database.DatabaseFilePath = testFile;
          Assert.AreEqual(44, database.QueryUnitData(new QueryParameters()).Count);
          Assert.AreEqual(1, database.DeleteUnitInfo(15));
          Assert.AreEqual(43, database.QueryUnitData(new QueryParameters()).Count);
@@ -256,7 +260,8 @@ namespace HFM.Core.Tests
             File.Delete(testFile);
          }
 
-         var database = new UnitInfoDatabase(_proteinDictionary) { DatabaseFilePath = testFile };
+         var database = CreateUnitInfoDatabase();
+         database.DatabaseFilePath = testFile;
          Assert.AreEqual(0, database.DeleteUnitInfo(100));
 
          File.Delete(testFile);
@@ -265,7 +270,8 @@ namespace HFM.Core.Tests
       [Test]
       public void DeleteUnitInfoUnitNotExistTest()
       {
-         var database = new UnitInfoDatabase(_proteinDictionary) { DatabaseFilePath = TestDataFile };
+         var database = CreateUnitInfoDatabase();
+         database.DatabaseFilePath = TestDataFile;
          Assert.AreEqual(0, database.DeleteUnitInfo(100));
       }
 
@@ -293,7 +299,8 @@ namespace HFM.Core.Tests
       [Test]
       public void QueryUnitDataTest()
       {
-         var database = new UnitInfoDatabase(_proteinDictionary) { DatabaseFilePath = TestDataFile };
+         var database = CreateUnitInfoDatabase();
+         database.DatabaseFilePath = TestDataFile;
          var rows = database.QueryUnitData(new QueryParameters());
          Assert.AreEqual(44, rows.Count);
 
@@ -341,6 +348,11 @@ namespace HFM.Core.Tests
                    CurrentProtein = protein,
                    UnitInfoData = unitInfo
                 };
+      }
+
+      private UnitInfoDatabase CreateUnitInfoDatabase()
+      {
+         return new UnitInfoDatabase(null, _proteinDictionary);
       }
 
       private static IDictionary<int, Protein> CreateProteinDictionary()
