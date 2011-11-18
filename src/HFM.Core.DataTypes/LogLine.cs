@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Log Line Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,21 +16,21 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
- 
-using ProtoBuf;
+
+using System.Runtime.Serialization;
 
 namespace HFM.Core.DataTypes
 {
-   [ProtoContract]
+   [DataContract]
    public class LogLine
    {
-      [ProtoMember(1)]
+      [DataMember(Order = 1)]
       public LogLineType LineType { get; set; }
 
-      [ProtoMember(2)]
+      [DataMember(Order = 2)]
       public int LineIndex { get; set; }
 
-      [ProtoMember(3)]
+      [DataMember(Order = 3)]
       public string LineRaw { get; set; }
 
       // cannot serialize object type with protobuf-net

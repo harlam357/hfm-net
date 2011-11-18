@@ -21,12 +21,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-
-using ProtoBuf;
+using System.Runtime.Serialization;
 
 namespace HFM.Core.DataTypes
 {
-   [ProtoContract]
+   [DataContract]
    public class QueryParameters : IComparable<QueryParameters>
    {
       public const string SelectAll = "*** SELECT ALL ***";
@@ -38,12 +37,12 @@ namespace HFM.Core.DataTypes
 
       public QueryParameters DeepCopy()
       {
-         return Serializer.DeepClone(this);
+         return ProtoBuf.Serializer.DeepClone(this);
       }
 
-      [ProtoMember(1)]
+      [DataMember(Order = 1)]
       public string Name { get; set; }
-      [ProtoMember(2)]
+      [DataMember(Order = 2)]
       private readonly List<QueryField> _fields = new List<QueryField>();
 
       public List<QueryField> Fields
@@ -100,7 +99,7 @@ namespace HFM.Core.DataTypes
       #endregion
    }
 
-   [ProtoContract]
+   [DataContract]
    public class QueryField
    {
       public QueryField()
@@ -109,9 +108,9 @@ namespace HFM.Core.DataTypes
          Type = QueryFieldType.Equal;
       }
 
-      [ProtoMember(1)]
+      [DataMember(Order = 1)]
       public QueryFieldName Name { get; set; }
-      [ProtoMember(2)]
+      [DataMember(Order = 2)]
       [SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods")]
       public QueryFieldType Type { get; set; }
 
@@ -145,9 +144,9 @@ namespace HFM.Core.DataTypes
          }
       }
 
-      [ProtoMember(3)]
+      [DataMember(Order = 3)]
       private DateTime? _dateTimeValue;
-      [ProtoMember(4)]
+      [DataMember(Order = 4)]
       private string _stringValue;
 
       public string Operator

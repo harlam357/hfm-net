@@ -30,7 +30,7 @@ using HFM.Core;
 
 namespace HFM
 {
-   internal class BootStrapper
+   internal sealed class BootStrapper
    {
       public void Initialize(string[] args)
       {
