@@ -18,12 +18,11 @@
  */
 
 using System;
-
-using ProtoBuf;
+using System.Runtime.Serialization;
 
 namespace HFM.Core.DataTypes
 {
-   [ProtoContract]
+   [DataContract]
    public class XmlStatsData : IEquatable<XmlStatsData>
    {
       public XmlStatsData()
@@ -41,121 +40,121 @@ namespace HFM.Core.DataTypes
       /// <summary>
       /// Stats Last Updated
       /// </summary>
-      [ProtoMember(1)]
+      [DataMember(Order = 1)]
       public DateTime LastUpdated { get; private set; }
 
       /// <summary>
       /// User 24 Hour Points Average
       /// </summary>
-      [ProtoMember(2)]
+      [DataMember(Order = 2)]
       public long UserTwentyFourHourAvgerage { get; set; }
 
       /// <summary>
       /// User Points Today
       /// </summary>
-      [ProtoMember(3)]
+      [DataMember(Order = 3)]
       public long UserPointsToday { get; set; }
 
       /// <summary>
       /// User Points Week
       /// </summary>
-      [ProtoMember(4)]
+      [DataMember(Order = 4)]
       public long UserPointsWeek { get; set; }
 
       /// <summary>
       /// User Points Total
       /// </summary>
-      [ProtoMember(5)]
+      [DataMember(Order = 5)]
       public long UserPointsTotal { get; set; }
 
       /// <summary>
       /// User Work Units Total
       /// </summary>
-      [ProtoMember(6)]
+      [DataMember(Order = 6)]
       public long UserWorkUnitsTotal { get; set; }
 
       /// <summary>
       /// User Points Update
       /// </summary>
-      [ProtoMember(7)]
+      [DataMember(Order = 7)]
       public long UserPointsUpdate { get; set; }
 
       /// <summary>
       /// User Team Rank
       /// </summary>
-      [ProtoMember(8)]
+      [DataMember(Order = 8)]
       public int UserTeamRank { get; set; }
 
       /// <summary>
       /// User Overall Rank
       /// </summary>
-      [ProtoMember(9)]
+      [DataMember(Order = 9)]
       public int UserOverallRank { get; set; }
 
       /// <summary>
       /// User Change Rank Twenty Four Hours
       /// </summary>
-      [ProtoMember(10)]
+      [DataMember(Order = 10)]
       public int UserChangeRankTwentyFourHours { get; set; }
 
       /// <summary>
       /// User Change Rank Twenty Four Hours
       /// </summary>
-      [ProtoMember(11)]
+      [DataMember(Order = 11)]
       public int UserChangeRankSevenDays { get; set; }
 
       /// <summary>
       /// Team 24 Hour Points Average
       /// </summary>
-      [ProtoMember(12)]
+      [DataMember(Order = 12)]
       public long TeamTwentyFourHourAvgerage { get; set; }
 
       /// <summary>
       /// Team Points Today
       /// </summary>
-      [ProtoMember(13)]
+      [DataMember(Order = 13)]
       public long TeamPointsToday { get; set; }
 
       /// <summary>
       /// Team Points Week
       /// </summary>
-      [ProtoMember(14)]
+      [DataMember(Order = 14)]
       public long TeamPointsWeek { get; set; }
 
       /// <summary>
       /// Team Points Total
       /// </summary>
-      [ProtoMember(15)]
+      [DataMember(Order = 15)]
       public long TeamPointsTotal { get; set; }
 
       /// <summary>
       /// Team Work Units Total
       /// </summary>
-      [ProtoMember(16)]
+      [DataMember(Order = 16)]
       public long TeamWorkUnitsTotal { get; set; }
 
       /// <summary>
       /// Team Points Update
       /// </summary>
-      [ProtoMember(17)]
+      [DataMember(Order = 17)]
       public long TeamPointsUpdate { get; set; }
 
       /// <summary>
       /// Team Rank
       /// </summary>
-      [ProtoMember(18)]
+      [DataMember(Order = 18)]
       public int TeamRank { get; set; }
 
       /// <summary>
       /// Team Change Rank Twenty Four Hours
       /// </summary>
-      [ProtoMember(19)]
+      [DataMember(Order = 19)]
       public int TeamChangeRankTwentyFourHours { get; set; }
 
       /// <summary>
       /// Team Change Rank Twenty Four Hours
       /// </summary>
-      [ProtoMember(20)]
+      [DataMember(Order = 20)]
       public int TeamChangeRankSevenDays { get; set; }
       
       #endregion

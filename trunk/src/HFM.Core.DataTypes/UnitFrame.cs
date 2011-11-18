@@ -18,25 +18,24 @@
  */
 
 using System;
-
-using ProtoBuf;
+using System.Runtime.Serialization;
 
 namespace HFM.Core.DataTypes
 {
-   [ProtoContract]
+   [DataContract]
    public sealed class UnitFrame : IComparable<UnitFrame>, IEquatable<UnitFrame>
    {
       public int RawFramesComplete { get; set; }
 
       public int RawFramesTotal { get; set; }
    
-      [ProtoMember(1)]
+      [DataMember(Order = 1)]
       public int FrameID { get; set; }
 
-      [ProtoMember(2)]
+      [DataMember(Order = 2)]
       public TimeSpan TimeOfFrame { get; set; }
 
-      [ProtoMember(3)]
+      [DataMember(Order = 3)]
       public TimeSpan FrameDuration { get; set; }
 
       ///<summary>
