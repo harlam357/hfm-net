@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Protein Dictionary
+ * HFM.NET - Core Protein Dictionary
  * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -19,21 +19,57 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 
 using HFM.Core.DataTypes;
 
-namespace HFM.Proteins
+namespace HFM.Core
 {
-   public class ProteinDictionary : IDictionary<int, Protein>
+   public interface IProteinDictionary : IDictionary<int, Protein>
    {
-      private readonly SortedDictionary<int, Protein> _dictionary;
+      /// <summary>
+      /// Load element values into the ProteinDictionary and return an <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.
+      /// </summary>
+      /// <param name="values">The <paramref name="values"/> to load into the ProteinDictionary. <paramref name="values"/> cannot be null.</param>
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="values"/> is null.</exception>
+      /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.</returns>
+      IEnumerable<Proteins.ProteinLoadInfo> Load(IEnumerable<Protein> values);
 
-      public ProteinDictionary()
+      #region DataContainer<T>
+
+      void Read();
+
+      List<Protein> Read(string filePath, Plugins.IFileSerializer<List<Protein>> serializer);
+
+      void Write();
+
+      void Write(string filePath, Plugins.IFileSerializer<List<Protein>> serializer);
+
+      #endregion
+   }
+
+   public class ProteinDictionary : DataContainer<List<Protein>>, IProteinDictionary
+   {
+      private readonly Proteins.ProteinDictionary _dictionary;
+
+      public ProteinDictionary(IPreferenceSet prefs)
       {
-         _dictionary = new SortedDictionary<int, Protein>();
+         _dictionary = new Proteins.ProteinDictionary();
+
+         if (prefs != null && !String.IsNullOrEmpty(prefs.ApplicationDataFolderPath))
+         {
+            FileName = System.IO.Path.Combine(prefs.ApplicationDataFolderPath, Constants.ProjectInfoFileName);
+         }
       }
+
+      #region Properties
+
+      public override Plugins.IFileSerializer<List<Protein>> DefaultSerializer
+      {
+         get { return new Proteins.TabSerializer(); }
+      }
+
+      #endregion
 
       /// <summary>
       /// Load element values into the ProteinDictionary and return an <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.
@@ -41,54 +77,39 @@ namespace HFM.Proteins
       /// <param name="values">The <paramref name="values"/> to load into the ProteinDictionary. <paramref name="values"/> cannot be null.</param>
       /// <exception cref="T:System.ArgumentNullException"><paramref name="values"/> is null.</exception>
       /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.</returns>
-      public IEnumerable<ProteinLoadInfo> Load(IEnumerable<Protein> values)
+      public IEnumerable<Proteins.ProteinLoadInfo> Load(IEnumerable<Protein> values)
       {
-         if (values == null) throw new ArgumentNullException("values");
-
-         var loaded = new List<ProteinLoadInfo>(values.Count());
-         foreach (Protein protein in values)
-         {
-            if (!protein.IsValid())
-            {
-               continue;
-            }
-            
-            if (_dictionary.ContainsKey(protein.ProjectNumber))
-            {
-               var changes = GetChangedProperties(this[protein.ProjectNumber], protein);
-               loaded.Add(changes.Count == 0
-                             ? new ProteinLoadInfo(protein.ProjectNumber, ProteinLoadResult.NoChange)
-                             : new ProteinLoadInfo(protein.ProjectNumber, ProteinLoadResult.Change, changes));
-            }
-            else
-            {
-               _dictionary.Add(protein.ProjectNumber, protein);
-               loaded.Add(new ProteinLoadInfo(protein.ProjectNumber, ProteinLoadResult.Add));
-            }
-         }
-         
-         return loaded.AsReadOnly();
+         return _dictionary.Load(values);
       }
 
-      private static ICollection<ProteinPropertyChange> GetChangedProperties(Protein oldProtein, Protein newProtein)
+      #region DataContainer<T>
+
+      public override void Read()
       {
-         var changes = new List<ProteinPropertyChange>();
-         var properties = TypeDescriptor.GetProperties(oldProtein);
-         foreach (PropertyDescriptor prop in properties)
+         // read the List<Protein>
+         base.Read();
+         // add each protein to the Dictionary<int, Protein>
+         foreach (var protein in Data)
          {
-            object value1 = prop.GetValue(oldProtein);
-            object value2 = prop.GetValue(newProtein);
-            if (value1 == null || value2 == null)
-            {
-               continue;
-            }
-            if (!value1.Equals(value2))
-            {
-               changes.Add(new ProteinPropertyChange(prop.Name, value1.ToString(), value2.ToString()));
-            }
+            Add(protein.ProjectNumber, protein);
          }
-         return changes.AsReadOnly();
       }
+
+      public override void Write()
+      {
+         Data = _dictionary.Values.ToList();
+
+         base.Write();
+      }
+
+      public override void Write(string filePath, Plugins.IFileSerializer<List<Protein>> serializer)
+      {
+         Data = _dictionary.Values.ToList();
+
+         base.Write(filePath, serializer);
+      }
+
+      #endregion
 
       #region IDictionary<int,Protein> Members
 
@@ -101,7 +122,6 @@ namespace HFM.Proteins
       /// <exception cref="T:System.ArgumentException">An element with the same <paramref name="key"/> already exists in the ProteinDictionary.  The <paramref name="value"/> is not valid or the value's ProjectNumber does not match the <paramref name="key"/>.</exception>
       public void Add(int key, Protein value)
       {
-         CheckProtein(key, value);
          _dictionary.Add(key, value);
       }
 
@@ -178,18 +198,7 @@ namespace HFM.Proteins
       public Protein this[int key]
       {
          get { return _dictionary[key]; }
-         set
-         {
-            CheckProtein(key, value);
-            _dictionary[key] = value;
-         }
-      }
-
-      private static void CheckProtein(int key, Protein value)
-      {
-         if (value == null) throw new ArgumentNullException("value");
-         if (!value.IsValid()) throw new ArgumentException("The value is not valid.");
-         if (key != value.ProjectNumber) throw new ArgumentException("The ProjectNumber does not match the key.");
+         set { _dictionary[key] = value; }
       }
 
       #endregion
@@ -200,7 +209,7 @@ namespace HFM.Proteins
       /// Not Implemented.
       /// </summary>
       /// <exception cref="T:System.NotImplementedException">Not Implemented.</exception>
-      void ICollection<KeyValuePair<int,Protein>>.Add(KeyValuePair<int, Protein> item)
+      void ICollection<KeyValuePair<int, Protein>>.Add(KeyValuePair<int, Protein> item)
       {
          throw new NotImplementedException();
       }

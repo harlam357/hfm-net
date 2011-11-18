@@ -22,7 +22,6 @@
  */
 
 using System;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
@@ -32,11 +31,9 @@ using System.Runtime.Remoting.Channels.Ipc;
 using System.Security.Permissions;
 using System.Threading;
 
-using HFM.Framework;
-
-namespace HFM.Classes
+namespace HFM
 {
-   internal class SingleInstanceHelper : IDisposable
+   internal sealed class SingleInstanceHelper : IDisposable
    {
       private Mutex _mutex;
       
@@ -112,7 +109,6 @@ namespace HFM.Classes
                if (_mutex != null)
                {
                   _mutex.Close();
-                  HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Mutex Closed...", false);   
                }
             }
          }
