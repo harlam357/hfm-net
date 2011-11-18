@@ -29,7 +29,7 @@ namespace HFM.Core.Tests
       [Test]
       public void SetFilePathTest()
       {
-         var autoRun = new AutoRun(Castle.Core.Logging.NullLogger.Instance);
+         var autoRun = new AutoRun();
          autoRun.SetFilePath(System.Reflection.Assembly.GetExecutingAssembly().Location);
          Assert.AreEqual(true, autoRun.IsEnabled());
          autoRun.SetFilePath(String.Empty);

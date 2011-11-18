@@ -21,8 +21,6 @@ using System;
 
 using NUnit.Framework;
 
-using Castle.Core.Logging;
-
 using HFM.Core.DataTypes;
 
 namespace HFM.Core.Tests
@@ -35,7 +33,7 @@ namespace HFM.Core.Tests
       [SetUp]
       public void Init()
       {
-         _statusLogic = new StatusLogic(NullLogger.Instance);
+         _statusLogic = new StatusLogic();
       }
 
       // ReSharper disable InconsistentNaming

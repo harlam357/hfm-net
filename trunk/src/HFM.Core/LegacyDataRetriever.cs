@@ -42,13 +42,19 @@ namespace HFM.Core
    {
       public ClientSettings Settings { get; private set; }
 
+      private ILogger _logger = NullLogger.Instance;
+
+      public ILogger Logger
+      {
+         get { return _logger; }
+         set { _logger = value; }
+      }
+
       private readonly IPreferenceSet _prefs;
-      private readonly ILogger _logger;
       
-      public LegacyDataRetriever(IPreferenceSet prefs, ILogger logger)
+      public LegacyDataRetriever(IPreferenceSet prefs)
       {
          _prefs = prefs;
-         _logger = logger;
       }
 
       /// <summary>

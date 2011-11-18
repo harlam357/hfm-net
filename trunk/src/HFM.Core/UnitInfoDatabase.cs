@@ -39,14 +39,12 @@ namespace HFM.Core
       /// <summary>
       /// Get or Set the Database File Path
       /// </summary>
-      string DatabaseFilePath { get; set; }
+      string DatabaseFilePath { get; }
 
       /// <summary>
       /// Flag that notes if the Database is safe to call
       /// </summary>
-      bool ConnectionOk { get; }
-
-      bool CheckConnection();
+      bool Connected { get; }
 
       void DeleteAllUnitInfoData();
 
@@ -99,48 +97,76 @@ namespace HFM.Core
                                                                         "[DownloadDateTime]," +
                                                                         "[CompletionDateTime]) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
+      private string _databaseFilePath;
       /// <summary>
       /// Get or Set the Database File Path
       /// </summary>
-      public string DatabaseFilePath { get; set; }
+      public string DatabaseFilePath
+      {
+         get { return _databaseFilePath; }
+         set
+         {
+            _databaseFilePath = value;
+            CheckConnection();
+         }
+      }
 
       /// <summary>
       /// Flag that notes if the Database is safe to call
       /// </summary>
-      public bool ConnectionOk { get; private set; }
+      public bool Connected { get; private set; }
 
-      public ILogger Logger { get; set; }
+      private ILogger _logger = NullLogger.Instance;
+
+      public ILogger Logger
+      {
+         get { return _logger; }
+         set { _logger = value; }
+      }
 
       private readonly IDictionary<int, Protein> _proteinDictionary;
 
-      public UnitInfoDatabase(IDictionary<int, Protein> proteinDictionary)
+      public UnitInfoDatabase(IPreferenceSet prefs, IDictionary<int, Protein> proteinDictionary)
       {
+         if (proteinDictionary == null) throw new ArgumentNullException("proteinDictionary");
+
          _proteinDictionary = proteinDictionary;
 
-         Logger = NullLogger.Instance;
+         if (prefs != null && !String.IsNullOrEmpty(prefs.ApplicationDataFolderPath))
+         {
+            DatabaseFilePath = System.IO.Path.Combine(prefs.ApplicationDataFolderPath, Constants.SqLiteFilename);
+         }
       }
 
       /// <summary>
       /// Check the Database Connection
       /// </summary>
-      public bool CheckConnection()
+      private void CheckConnection()
       {
          using (var con = new SQLiteConnection(@"Data Source=" + DatabaseFilePath))
          {
-            con.Open();
-            if (!TableExists(con, WuHistoryTableName))
+            try
             {
-               CreateTable(con, WuHistoryTableName);
-            }
-            var parameters = new QueryParameters();
-            parameters.Fields.Add(new QueryField
+               con.Open();
+               if (!TableExists(con, WuHistoryTableName))
+               {
+                  CreateTable(con, WuHistoryTableName);
+               }
+               var parameters = new QueryParameters();
+               parameters.Fields.Add(new QueryField
                                      {
                                         Name = QueryFieldName.ID,
                                         Type = QueryFieldType.Equal,
                                         Value = 0
                                      });
-            ExecuteQueryUnitData(con, parameters);
-            return (ConnectionOk = true);
+               ExecuteQueryUnitData(con, parameters);
+               Connected = true;
+            }
+            catch (Exception ex)
+            {
+               _logger.ErrorFormat(ex, "{0}", ex.Message);
+               Connected = false;
+            }
          }
       }
       
@@ -423,7 +449,7 @@ namespace HFM.Core
       }
 
       private IList<HistoryEntry> ExecuteQueryUnitData(SQLiteConnection con, QueryParameters parameters,
-                                                              HistoryProductionView productionView, IDictionary<int, Protein> proteinDictionary)
+                                                       HistoryProductionView productionView, IDictionary<int, Protein> proteinDictionary)
       {
          if (TableExists(con, WuHistoryTableName))
          {

@@ -6,8 +6,8 @@ if errorlevel 1 goto Error
 del /S /Q %1\*.*
 
 echo Deploying Assemblies...
-REM copy /y HFM.exe %1
-REM copy /y HFM.exe.config %1
+copy /y HFM.exe %1
+copy /y HFM.exe.config %1
 copy /y HFM.Client.dll %1
 copy /y HFM.Core.dll %1
 copy /y HFM.Core.DataTypes.dll %1
@@ -23,8 +23,7 @@ copy /Y harlam357.Security.dll %1
 copy /Y harlam357.Windows.Forms.dll %1
 copy /Y ZedGraph.dll %1
 copy /Y Castle.Core.dll %1
-copy /Y Castle.DynamicProxy2.dll %1
-copy /Y Castle.MicroKernel.dll %1
+copy /Y Castle.Facilities.Logging.dll %1
 copy /Y Castle.Windsor.dll %1
 copy /Y protobuf-net.dll %1
 copy /Y System.Linq.Dynamic.dll %1
@@ -50,7 +49,7 @@ if not exist %1\Documentation\License md %1\Documentation\License
 copy /Y "..\..\..\..\doc\GPLv2.TXT" %1\Documentation\License
 copy /Y "..\..\..\..\lib\HTMLparser2\HTMLparser License.txt" %1\Documentation\License
 copy /Y "..\..\..\..\lib\ZedGraph\ZedGraph License.txt" %1\Documentation\License
-copy /Y "..\..\..\..\lib\Castle Windsor 2.0\Windsor License.txt" %1\Documentation\License
+copy /Y "..\..\..\..\lib\Castle Windsor\ASL - Apache Software Foundation License.txt" "%1\Documentation\License\Windsor License.txt"
 copy /Y "..\..\..\..\lib\protobuf-net\protobuf-net Licence.txt" %1\Documentation\License
 copy /Y "..\..\..\..\lib\protobuf-net\protoc-license.txt" %1\Documentation\License
 copy /Y "..\..\..\..\lib\AutoMapper\AutoMapper License.txt" %1\Documentation\License

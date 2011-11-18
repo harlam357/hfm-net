@@ -24,7 +24,6 @@ using NUnit.Framework;
 using Rhino.Mocks;
 
 using HFM.Core.DataTypes;
-using HFM.Core.Serializers;
 
 namespace HFM.Core.Tests
 {
@@ -37,7 +36,6 @@ namespace HFM.Core.Tests
          var container = new XmlStatsDataContainer(MockRepository.GenerateStub<IPreferenceSet>())
          {
             FileName = Path.Combine("..\\..\\TestFiles", Constants.UserStatsCacheFileName),
-            Serializer = new ProtoBufFileSerializer<XmlStatsData>()
          };
 
          container.Data = null;
@@ -51,7 +49,6 @@ namespace HFM.Core.Tests
          var container = new XmlStatsDataContainer(MockRepository.GenerateStub<IPreferenceSet>())
          {
             FileName = "TestUserStatsBinary.dat",
-            Serializer = new ProtoBufFileSerializer<XmlStatsData>()
          };
 
          container.Data = LoadTestData();

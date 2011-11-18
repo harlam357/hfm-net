@@ -47,7 +47,11 @@ namespace HFM.Core
 
       void Read();
 
+      XmlStatsData Read(string filePath, Plugins.IFileSerializer<XmlStatsData> serializer);
+
       void Write();
+
+      void Write(string filePath, Plugins.IFileSerializer<XmlStatsData> serializer);
 
       #endregion
    }
@@ -64,6 +68,11 @@ namespace HFM.Core
 
       #region Properties
 
+      public override Plugins.IFileSerializer<XmlStatsData> DefaultSerializer
+      {
+         get { return new Serializers.ProtoBufFileSerializer<XmlStatsData>(); }
+      }
+
       public XmlStatsData XmlStatsData
       {
          get { return Data; }
@@ -78,6 +87,11 @@ namespace HFM.Core
       public XmlStatsDataContainer(IPreferenceSet prefs)
       {
          _prefs = prefs;
+
+         if (prefs != null && !String.IsNullOrEmpty(prefs.ApplicationDataFolderPath))
+         {
+            FileName = System.IO.Path.Combine(prefs.ApplicationDataFolderPath, Constants.UserStatsCacheFileName);
+         }
       }
 
       #endregion

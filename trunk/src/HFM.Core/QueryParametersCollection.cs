@@ -30,7 +30,11 @@ namespace HFM.Core
 
       void Read();
 
+      List<QueryParameters> Read(string filePath, Plugins.IFileSerializer<List<QueryParameters>> serializer);
+
       void Write();
+
+      void Write(string filePath, Plugins.IFileSerializer<List<QueryParameters>> serializer);
 
       #endregion
    }
@@ -38,9 +42,29 @@ namespace HFM.Core
    public class QueryParametersCollection : DataContainer<List<QueryParameters>>, IQueryParametersCollection
    {
       public QueryParametersCollection()
+         : this(null)
+      {
+         
+      }
+
+      public QueryParametersCollection(IPreferenceSet prefs)
       {
          Data.Add(new QueryParameters());
+
+         if (prefs != null && !String.IsNullOrEmpty(prefs.ApplicationDataFolderPath))
+         {
+            FileName = System.IO.Path.Combine(prefs.ApplicationDataFolderPath, Constants.QueryCacheFileName);
+         }
       }
+
+      #region Properties
+
+      public override Plugins.IFileSerializer<List<QueryParameters>> DefaultSerializer
+      {
+         get { return new Serializers.ProtoBufFileSerializer<List<QueryParameters>>(); }
+      }
+
+      #endregion
 
       #region ICollection<QueryParameter> Members
 

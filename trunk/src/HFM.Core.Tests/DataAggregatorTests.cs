@@ -19,8 +19,6 @@
 
 using System;
 
-using AutoMapper;
-using Castle.Core.Logging;
 using NUnit.Framework;
 
 using HFM.Core.DataTypes;
@@ -41,15 +39,9 @@ namespace HFM.Core.Tests
       [SetUp]
       public void Init()
       {
-         _dataAggregator = new DataAggregator(NullLogger.Instance);
-         //TraceLevelSwitch.Instance.Level = TraceLevel.Verbose;
-         DataAggregator.ConfigureMaps();
-      }
-
-      [Test]
-      public void TestMaps()
-      {
-         Mapper.AssertConfigurationIsValid();
+         _dataAggregator = new DataAggregator();
+         // create maps
+         Configuration.ObjectMapper.CreateMaps();
       }
 
       // ReSharper disable InconsistentNaming

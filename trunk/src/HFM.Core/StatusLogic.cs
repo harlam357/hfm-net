@@ -38,11 +38,12 @@ namespace HFM.Core
 
    public class StatusLogic : IStatusLogic
    {
-      private readonly ILogger _logger;
+      private ILogger _logger = NullLogger.Instance;
 
-      public StatusLogic(ILogger logger)
+      public ILogger Logger
       {
-         _logger = logger;
+         get { return _logger; }
+         set { _logger = value; }
       }
 
       /// <summary>
