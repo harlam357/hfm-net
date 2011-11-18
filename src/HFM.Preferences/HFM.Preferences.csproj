@@ -62,8 +62,13 @@
     <AssemblyOriginatorKeyFile>..\harlam357public.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core">
-      <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.Core.dll</HintPath>
+    <Reference Include="Castle.Core, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Castle Windsor\dotNet35\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Castle Windsor\dotNet35\Castle.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="harlam357.Security">
       <HintPath>..\..\lib\harlam357-net\harlam357.Security.dll</HintPath>
@@ -80,6 +85,7 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Configuration\ContainerInstaller.cs" />
     <Compile Include="Metadata.cs" />
     <Compile Include="PreferenceSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

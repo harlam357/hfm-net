@@ -117,11 +117,21 @@ namespace HFM.Preferences
 
       #endregion
 
-      private readonly ILogger _logger;
+      private ILogger _logger = NullLogger.Instance;
 
-      public PreferenceSet(ILogger logger)
+      public ILogger Logger
       {
-         _logger = logger;
+         get { return _logger; }
+         set { _logger = value; }
+      }
+
+      public PreferenceSet()
+      {
+         Upgrade();
+         // 
+         SetupDictionary();
+         // Issue 176
+         Load();
       }
 
       #region Implementation
@@ -132,7 +142,7 @@ namespace HFM.Preferences
          Settings.Default.Reset();
       }
 
-      public void Upgrade()
+      private static void Upgrade()
       {
          string appVersionString = Core.Application.VersionWithRevision;
 
@@ -142,13 +152,6 @@ namespace HFM.Preferences
             Settings.Default.ApplicationVersion = appVersionString;
             Settings.Default.Save();
          }
-      }
-      
-      public void Initialize()
-      {
-         SetupDictionary();
-         // Issue 176
-         Load();
       }
       
       /// <summary>
@@ -328,7 +331,7 @@ namespace HFM.Preferences
       /// <summary>
       /// Load the Preferences Set
       /// </summary>
-      public void Load()
+      private void Load()
       {
          DateTime start = Instrumentation.ExecStart;
          var symmetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);

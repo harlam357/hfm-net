@@ -79,21 +79,14 @@
     <DelaySign>true</DelaySign>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.Core.dll</HintPath>
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\lib\Castle Windsor\dotNet35\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.DynamicProxy2, Version=2.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.DynamicProxy2.dll</HintPath>
+    <Reference Include="Castle.Facilities.Logging">
+      <HintPath>..\..\lib\Castle Windsor\dotNet35\loggingFacility\Castle.Facilities.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.MicroKernel, Version=2.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.MicroKernel.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.Windsor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.Windsor.dll</HintPath>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\..\lib\Castle Windsor\dotNet35\Castle.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="harlam357.Windows.Forms">
       <HintPath>..\..\lib\harlam357-net\harlam357.Windows.Forms.dll</HintPath>
@@ -113,9 +106,13 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="Classes\Arguments.cs" />
+    <Compile Include="ArgumentProcessor.cs" />
+    <Compile Include="Arguments.cs" />
+    <Compile Include="BootStrapper.cs" />
+    <Compile Include="Configuration\ContainerInstaller.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SingleInstanceHelper.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -126,7 +123,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Classes\SingleInstanceHelper.cs" />
     <None Include="..\harlam357public.snk">
       <Link>Properties\harlam357public.snk</Link>
     </None>
@@ -187,21 +183,17 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HFM.DataAggregator\HFM.DataAggregator.csproj">
-      <Project>{83BF1B7A-72B4-486B-A248-9E97814F62ED}</Project>
-      <Name>HFM.DataAggregator</Name>
+    <ProjectReference Include="..\HFM.Core.DataTypes\HFM.Core.DataTypes.csproj">
+      <Project>{C198DA45-5B5B-4684-914B-97DED3F0BB40}</Project>
+      <Name>HFM.Core.DataTypes</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HFM.Forms\HFM.Forms.csproj">
-      <Project>{C0B126D1-C495-4062-A8C8-4AAA69F35C9D}</Project>
-      <Name>HFM.Forms</Name>
+    <ProjectReference Include="..\HFM.Core.Plugins\HFM.Core.Plugins.csproj">
+      <Project>{E1415297-BD33-4508-A491-F3C13E5A5F7F}</Project>
+      <Name>HFM.Core.Plugins</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HFM.Framework\HFM.Framework.csproj">
-      <Project>{FFFF3DE4-8620-4C13-A968-ADF58133146B}</Project>
-      <Name>HFM.Framework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HFM.Instances\HFM.Instances.csproj">
-      <Project>{B8614309-B90A-4B86-97FF-3A9E64B9658F}</Project>
-      <Name>HFM.Instances</Name>
+    <ProjectReference Include="..\HFM.Core\HFM.Core.csproj">
+      <Project>{360034D2-9F6A-4377-B5B9-D82712171223}</Project>
+      <Name>HFM.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\HFM.Preferences\HFM.Preferences.csproj">
       <Project>{0CAF91A3-D5F1-44C9-BAEB-FB81DFBF9C47}</Project>
