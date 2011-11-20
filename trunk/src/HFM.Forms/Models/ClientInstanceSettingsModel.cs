@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Client Instance Settings Model
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,134 +20,23 @@
 using System;
 using System.ComponentModel;
 
-using HFM.Framework;
-using HFM.Framework.DataTypes;
+using HFM.Core;
+using HFM.Core.DataTypes;
 
 namespace HFM.Forms.Models
 {
-   public interface IClientInstanceSettingsModel : INotifyPropertyChanged
-   {
-      bool Error { get; }
-
-      /// <summary>
-      /// Client host type (Path, FTP, or HTTP)
-      /// </summary>
-      InstanceType InstanceHostType { get; set; }
-
-      /// <summary>
-      /// The name assigned to this client instance
-      /// </summary>
-      string InstanceName { get; set; }
-
-      bool InstanceNameEmpty { get; }
-      
-      bool InstanceNameError { get; }
-
-      bool ExternalInstance { get; }
-
-      /// <summary>
-      /// External data file name
-      /// </summary>
-      string RemoteExternalFilename { get; set; }
-
-      bool RemoteExternalFilenameError { get; }
-
-      /// <summary>
-      /// The number of processor megahertz for this client instance
-      /// </summary>
-      int ClientProcessorMegahertz { get; set; }
-
-      bool ClientProcessorMegahertzError { get; }
-
-      /// <summary>
-      /// Remote client log file name
-      /// </summary>
-      string RemoteFAHLogFilename { get; set; }
-
-      bool RemoteFAHLogFilenameError { get; }
-
-      /// <summary>
-      /// Remote client unit info log file name
-      /// </summary>
-      string RemoteUnitInfoFilename { get; set; }
-
-      bool RemoteUnitInfoFilenameError { get; }
-
-      /// <summary>
-      /// Remote client queue.dat file name
-      /// </summary>
-      string RemoteQueueFilename { get; set; }
-
-      bool RemoteQueueFilenameError { get; }
-
-      /// <summary>
-      /// Location of log files for this instance
-      /// </summary>
-      string Path { get; set; }
-
-      bool PathEmpty { get; }
-      
-      bool PathError { get; }
-
-      /// <summary>
-      /// FTP Server name or IP Address
-      /// </summary>
-      string Server { get; set; }
-
-      bool ServerError { get; }
-
-      /// <summary>
-      /// Username on remote server
-      /// </summary>
-      string Username { get; set; }
-
-      bool UsernameError { get; }
-
-      /// <summary>
-      /// Password on remote server
-      /// </summary>
-      string Password { get; set; }
-
-      bool PasswordError { get; }
-      
-      bool CredentialsError { get; }
-      
-      string CredentialsErrorMessage { get; }
-
-      /// <summary>
-      /// Specifies the FTP Communication Mode for this client
-      /// </summary>
-      FtpType FtpMode { get; set; }
-
-      /// <summary>
-      /// Specifies that this client is on a VM that reports local time as UTC
-      /// </summary>
-      bool ClientIsOnVirtualMachine { get; set; }
-
-      /// <summary>
-      /// Specifies the number of minutes (+/-) this client's clock differentiates
-      /// </summary>
-      int ClientTimeOffset { get; set; }
-
-      bool ClientTimeOffsetError { get; }
-      
-      string Dummy { get; }
-      
-      ClientInstanceSettings Settings { get; }
-   }
-
-   internal sealed class ClientInstanceSettingsModel : IClientInstanceSettingsModel
+   public sealed class ClientInstanceSettingsModel : INotifyPropertyChanged
    {
       public bool Error
       {
          get
          {
-            return (InstanceNameError ||
-                    RemoteExternalFilenameError ||
+            return (NameError ||
+                    //ExternalFilenameError ||
                     ClientProcessorMegahertzError ||
-                    RemoteFAHLogFilenameError ||
-                    RemoteUnitInfoFilenameError ||
-                    RemoteQueueFilenameError ||
+                    FahLogFileNameError ||
+                    UnitInfoFileNameError ||
+                    QueueFileNameError ||
                     PathError ||
                     ServerError ||
                     CredentialsError ||
@@ -155,87 +44,91 @@ namespace HFM.Forms.Models
          }
       }
 
+      private LegacyClientSubType _legacyClientSubType;
       /// <summary>
       /// Client host type (Path, FTP, or HTTP)
       /// </summary>
-      public InstanceType InstanceHostType
+      public LegacyClientSubType LegacyClientSubType
       {
-         get { return _settings.InstanceHostType; }
+         get { return _legacyClientSubType; }
          set
          {
-            if (_settings.InstanceHostType != value)
+            if (_legacyClientSubType != value)
             {
-               _settings.InstanceHostType = value;
+               _legacyClientSubType = value;
                ClearAccessSettings();
                OnPropertyChanged("Dummy");
             }
          }
       }
 
+      private string _name;
       /// <summary>
       /// The name assigned to this client instance
       /// </summary>
-      public string InstanceName
+      public string Name
       {
-         get { return _settings.InstanceName; }
+         get { return _name; }
          set
          {
-            if (_settings.InstanceName != value)
+            if (_name != value)
             {
-               _settings.InstanceName = value == null ? String.Empty : value.Trim();
-               OnPropertyChanged("InstanceName");
+               _name = value == null ? String.Empty : value.Trim();
+               OnPropertyChanged("Name");
             }
          }
       }
       
-      public bool InstanceNameEmpty
+      public bool NameEmpty
       {
-         get { return InstanceName.Length == 0; }
+         get { return Name.Length == 0; }
       }
       
-      public bool InstanceNameError
+      public bool NameError
       {
-         get { return !StringOps.ValidateInstanceName(InstanceName); }
+         get { return !Validate.ClientName(Name); }
       }
 
-      public bool ExternalInstance
-      {
-         get { return _settings.ExternalInstance; }
-         //private set { _settings.ExternalInstance = value; }
-      }
+      #region External Client (commented)
 
-      /// <summary>
-      /// External data file name
-      /// </summary>
-      public string RemoteExternalFilename
-      {
-         get { return _settings.RemoteExternalFilename; }
-         set
-         {
-            if (_settings.RemoteExternalFilename != value)
-            {
-               _settings.RemoteExternalFilename = value == null ? String.Empty : value.Trim();
-               OnPropertyChanged("RemoteExternalFilename");
-            }
-         }
-      }
+      //public bool ExternalClient { get; set; }
 
-      public bool RemoteExternalFilenameError
-      {
-         get { return !StringOps.ValidateFileName(RemoteExternalFilename); }
-      }
+      //private string _externalFilename;
+      ///// <summary>
+      ///// External data file name
+      ///// </summary>
+      //public string ExternalFilename
+      //{
+      //   get { return _externalFilename; }
+      //   set
+      //   {
+      //      if (_externalFilename != value)
+      //      {
+      //         _externalFilename = value == null ? String.Empty : value.Trim();
+      //         OnPropertyChanged("ExternalFilename");
+      //      }
+      //   }
+      //}
 
+      //public bool ExternalFilenameError
+      //{
+      //   get { return !Validate.FileName(ExternalFilename); }
+      //}
+
+      #endregion
+
+      private int _clientProcessorMegahertz;
       /// <summary>
       /// The number of processor megahertz for this client instance
       /// </summary>
       public int ClientProcessorMegahertz
       {
-         get { return _settings.ClientProcessorMegahertz; }
+         get { return _clientProcessorMegahertz; }
          set
          {
-            if (_settings.ClientProcessorMegahertz != value)
+            if (_clientProcessorMegahertz != value)
             {
-               _settings.ClientProcessorMegahertz = value;
+               _clientProcessorMegahertz = value;
                OnPropertyChanged("ClientProcessorMegahertz");
             }
          }
@@ -246,82 +139,86 @@ namespace HFM.Forms.Models
          get { return ClientProcessorMegahertz < 1; }
       }
 
+      private string _fahLogFileName;
       /// <summary>
       /// Remote client log file name
       /// </summary>
-      public string RemoteFAHLogFilename
+      public string FahLogFileName
       {
-         get { return _settings.RemoteFAHLogFilename; }
+         get { return _fahLogFileName; }
          set
          {
-            if (_settings.RemoteFAHLogFilename != value)
+            if (_fahLogFileName != value)
             {
-               _settings.RemoteFAHLogFilename = value == null ? String.Empty : value.Trim();
-               OnPropertyChanged("RemoteFAHLogFilename");
+               _fahLogFileName = value == null ? String.Empty : value.Trim();
+               OnPropertyChanged("FahLogFileName");
             }
          }
       }
       
-      public bool RemoteFAHLogFilenameError
+      public bool FahLogFileNameError
       {
-         get { return !StringOps.ValidateFileName(RemoteFAHLogFilename); }
+         get { return !Validate.FileName(FahLogFileName); }
       }
 
+      private string _unitInfoFileName;
       /// <summary>
       /// Remote client unit info log file name
       /// </summary>
-      public string RemoteUnitInfoFilename
+      public string UnitInfoFileName
       {
-         get { return _settings.RemoteUnitInfoFilename; }
+         get { return _unitInfoFileName; }
          set
          {
-            if (_settings.RemoteUnitInfoFilename != value)
+            if (_unitInfoFileName != value)
             {
-               _settings.RemoteUnitInfoFilename = value == null ? String.Empty : value.Trim();
-               OnPropertyChanged("RemoteUnitInfoFilename");
+               _unitInfoFileName = value == null ? String.Empty : value.Trim();
+               OnPropertyChanged("UnitInfoFileName");
             }
          }
       }
 
-      public bool RemoteUnitInfoFilenameError
+      public bool UnitInfoFileNameError
       {
-         get { return !StringOps.ValidateFileName(RemoteUnitInfoFilename); }
+         get { return !Validate.FileName(UnitInfoFileName); }
       }
 
+      private string _queueFileName;
       /// <summary>
       /// Remote client queue.dat file name
       /// </summary>
-      public string RemoteQueueFilename
+      public string QueueFileName
       {
-         get { return _settings.RemoteQueueFilename; }
+         get { return _queueFileName; }
          set
          {
-            if (_settings.RemoteQueueFilename != value)
+            if (_queueFileName != value)
             {
-               _settings.RemoteQueueFilename = value == null ? String.Empty : value.Trim();
-               OnPropertyChanged("RemoteQueueFilename");
+               _queueFileName = value == null ? String.Empty : value.Trim();
+               OnPropertyChanged("QueueFileName");
             }
          }
       }
 
-      public bool RemoteQueueFilenameError
+      public bool QueueFileNameError
       {
-         get { return !StringOps.ValidateFileName(RemoteQueueFilename); }
+         get { return !Validate.FileName(QueueFileName); }
       }
 
+      private string _path;
       /// <summary>
       /// Location of log files for this instance
       /// </summary>
       public string Path
       {
-         get { return _settings.Path; }
+         get { return _path; }
          set
          {
-            if (_settings.Path != value)
+            if (_path != value)
             {
                string path = value == null ? String.Empty : value.Trim();
                path = StripFahClientFileNames(path);
-               _settings.Path = path;
+               _path = path;
                OnPropertyChanged("Path");
             }
          }
@@ -354,39 +251,40 @@ namespace HFM.Forms.Models
       {
          get
          {
-            switch (InstanceHostType)
+            switch (LegacyClientSubType)
             {
-               case InstanceType.PathInstance:
+               case LegacyClientSubType.Path:
                   if (Path.Length < 2)
                   {
                      return true;
                   }
-                  return !StringOps.ValidatePathInstancePath(Path);
-               case InstanceType.HttpInstance:
-                  return !StringOps.ValidateHttpUrl(Path);
-               case InstanceType.FtpInstance:
+                  return !Validate.PathInstancePath(Path);
+               case LegacyClientSubType.Http:
+                  return !Validate.HttpUrl(Path);
+               case LegacyClientSubType.Ftp:
                   if (Path == "/")
                   {
                      return false;
                   }
-                  return !StringOps.ValidateFtpPath(Path);
+                  return !Validate.FtpPath(Path);
                default:
                   return true;
             }
          }
       }
 
+      private string _server;
       /// <summary>
       /// FTP Server name or IP Address
       /// </summary>
       public string Server
       {
-         get { return _settings.Server; }
+         get { return _server; }
          set
          {
-            if (_settings.Server != value)
+            if (_server != value)
             {
-               _settings.Server = value == null ? String.Empty : value.Trim();
+               _server = value == null ? String.Empty : value.Trim();
                OnPropertyChanged("Server");
             }
          }
@@ -396,30 +294,31 @@ namespace HFM.Forms.Models
       {
          get
          {
-            switch (InstanceHostType)
+            switch (LegacyClientSubType)
             {
-               case InstanceType.PathInstance:
-               case InstanceType.HttpInstance:
+               case LegacyClientSubType.Path:
+               case LegacyClientSubType.Http:
                   return false;
-               case InstanceType.FtpInstance:
-                  return !StringOps.ValidateServerName(Server);
+               case LegacyClientSubType.Ftp:
+                  return !Validate.ServerName(Server);
                default:
                   return true;
             }
          }
       }
 
+      private string _username;
       /// <summary>
       /// Username on remote server
       /// </summary>
       public string Username
       {
-         get { return _settings.Username; } 
+         get { return _username; } 
          set
          {
-            if (_settings.Username != value)
+            if (_username != value)
             {
-               _settings.Username = value == null ? String.Empty : value.Trim();
+               _username = value == null ? String.Empty : value.Trim();
                OnPropertyChanged("Password");
                OnPropertyChanged("Username");
             }
@@ -431,17 +330,18 @@ namespace HFM.Forms.Models
          get { return CredentialsError; }
       }
 
+      private string _password;
       /// <summary>
       /// Password on remote server
       /// </summary>
       public string Password
       {
-         get { return _settings.Password; }
+         get { return _password; }
          set
          {
-            if (_settings.Password != value)
+            if (_password != value)
             {
-               _settings.Password = value == null ? String.Empty : value.Trim();
+               _password = value == null ? String.Empty : value.Trim();
                OnPropertyChanged("Username");
                OnPropertyChanged("Password");
             }
@@ -457,13 +357,13 @@ namespace HFM.Forms.Models
       {
          get
          {
-            switch (InstanceHostType)
+            switch (LegacyClientSubType)
             {
-               case InstanceType.PathInstance:
+               case LegacyClientSubType.Path:
                   return false;
-               case InstanceType.HttpInstance:
+               case LegacyClientSubType.Http:
                   return !ValidateCredentials(false);
-               case InstanceType.FtpInstance:
+               case LegacyClientSubType.Ftp:
                   return !ValidateCredentials(true);
                default:
                   return true;
@@ -476,7 +376,7 @@ namespace HFM.Forms.Models
          try
          {
             // This will violate FxCop rule (rule ID)
-            StringOps.ValidateUsernamePasswordPair(Username, Password, throwOnEmpty);
+            Validate.UsernamePasswordPair(Username, Password, throwOnEmpty);
             CredentialsErrorMessage = String.Empty;
             return true;
          }
@@ -489,17 +389,18 @@ namespace HFM.Forms.Models
 
       public string CredentialsErrorMessage { get; private set; }
 
+      private FtpType _ftpMode;
       /// <summary>
       /// Specifies the FTP Communication Mode for this client
       /// </summary>
       public FtpType FtpMode
       {
-         get { return _settings.FtpMode; }
+         get { return _ftpMode; }
          set
          {
-            if (_settings.FtpMode != value)
+            if (_ftpMode != value)
             {
-               _settings.FtpMode = value;
+               _ftpMode = value;
                OnPropertyChanged("FtpMode");
             }
          }
@@ -508,20 +409,12 @@ namespace HFM.Forms.Models
       /// <summary>
       /// Specifies that this client is on a VM that reports local time as UTC
       /// </summary>
-      public bool ClientIsOnVirtualMachine
-      {
-         get { return _settings.ClientIsOnVirtualMachine; } 
-         set { _settings.ClientIsOnVirtualMachine = value; }
-      }
+      public bool UtcOffsetIsZero { get; set; }
 
       /// <summary>
       /// Specifies the number of minutes (+/-) this client's clock differentiates
       /// </summary>
-      public int ClientTimeOffset
-      {
-         get { return _settings.ClientTimeOffset; }
-         set { _settings.ClientTimeOffset = value; }
-      }
+      public int ClientTimeOffset { get; set; }
       
       public bool ClientTimeOffsetError
       {
@@ -535,23 +428,6 @@ namespace HFM.Forms.Models
       public string Dummy
       {
          get { return String.Empty; }
-      }
-
-      private readonly ClientInstanceSettings _settings;
-      
-      public ClientInstanceSettings Settings
-      {
-         get { return _settings; }
-      }
-
-      public ClientInstanceSettingsModel()
-      {
-         _settings = new ClientInstanceSettings();
-      }
-
-      public ClientInstanceSettingsModel(ClientInstanceSettings settings)
-      {
-         _settings = settings;
       }
 
       private void ClearAccessSettings()

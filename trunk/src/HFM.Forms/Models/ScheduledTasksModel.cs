@@ -21,8 +21,7 @@ using System;
 using System.IO;
 using System.ComponentModel;
 
-using HFM.Framework;
-using HFM.Framework.DataTypes;
+using HFM.Core;
 
 namespace HFM.Forms.Models
 {
@@ -154,7 +153,7 @@ namespace HFM.Forms.Models
          get
          {
             if (SyncOnSchedule == false) return false;
-            return !StringOps.ValidateMinutes(SyncTimeMinutes);
+            return !Validate.Minutes(SyncTimeMinutes);
          }
       }
 
@@ -232,7 +231,7 @@ namespace HFM.Forms.Models
          get
          {
             if (GenerateIntervalEnabled == false) return false;
-            return !StringOps.ValidateMinutes(GenerateInterval);
+            return !Validate.Minutes(GenerateInterval);
          }
       }
 
@@ -264,12 +263,12 @@ namespace HFM.Forms.Models
                string newValue = value == null ? String.Empty : value.Trim();
                if (newValue.Length > 1)
                {
-                  if ((StringOps.ValidatePathInstancePath(newValue) || StringOps.ValidatePathInstancePath(newValue + Path.DirectorySeparatorChar)) &&
+                  if ((Validate.PathInstancePath(newValue) || Validate.PathInstancePath(newValue + Path.DirectorySeparatorChar)) &&
                        newValue.EndsWith(Path.DirectorySeparatorChar.ToString()) == false)
                   {
                      newValue += Path.DirectorySeparatorChar;
                   }
-                  else if ((StringOps.ValidateFtpWithUserPassUrl(newValue) || StringOps.ValidateFtpWithUserPassUrl(newValue + "/")) && 
+                  else if ((Validate.FtpWithUserPassUrl(newValue) || Validate.FtpWithUserPassUrl(newValue + "/")) && 
                             newValue.EndsWith("/") == false)
                   {
                      newValue += "/";
@@ -301,12 +300,12 @@ namespace HFM.Forms.Models
       
       private bool IsWebRootPath
       {
-         get { return StringOps.ValidatePathInstancePath(WebRoot); }
+         get { return Validate.PathInstancePath(WebRoot); }
       }
 
       private bool IsWebRootFtp
       {
-         get { return StringOps.ValidateFtpWithUserPassUrl(WebRoot); }
+         get { return Validate.FtpWithUserPassUrl(WebRoot); }
       }
 
       private bool _copyHtml;
