@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 
+using HFM.Core;
 using HFM.Core.DataTypes;
 
 namespace HFM.Forms.Controls

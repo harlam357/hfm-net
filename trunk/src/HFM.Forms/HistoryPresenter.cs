@@ -37,7 +37,7 @@ namespace HFM.Forms
    
       private readonly IPreferenceSet _prefs;
       private readonly IUnitInfoDatabase _database;
-      private readonly IQueryParametersCollection _queryContainer;
+      private readonly IQueryParametersCollection _queryCollection;
       private readonly IHistoryView _view;
       private readonly IQueryView _queryView;
       //private readonly IProgressDialogView _unitImportView;
@@ -53,17 +53,17 @@ namespace HFM.Forms
       
       public int NumberOfQueries
       {
-         get { return _queryContainer.Count; }
+         get { return _queryCollection.Count; }
       }
 
-      public HistoryPresenter(IPreferenceSet prefs, IUnitInfoDatabase database, IQueryParametersCollection queryContainer, IHistoryView view,
+      public HistoryPresenter(IPreferenceSet prefs, IUnitInfoDatabase database, IQueryParametersCollection queryCollection, IHistoryView view,
                               IQueryView queryView, // IProgressDialogView unitImportView, ICompletedUnitsFileReader completedUnitsReader, 
                               IOpenFileDialogView openFileView, ISaveFileDialogView saveFileView, IMessageBoxView messageBoxView, 
                               IHistoryPresenterModel model)
       {
          _prefs = prefs;
          _database = database;
-         _queryContainer = queryContainer;
+         _queryCollection = queryCollection;
          _view = view;
          _queryView = queryView;
          //_unitImportView = unitImportView;
@@ -84,8 +84,8 @@ namespace HFM.Forms
          _view.AttachPresenter(this);
          _model.LoadPreferences();
          _view.DataBindModel(_model);
-         _queryContainer.Sort();
-         _view.QueryComboRefreshList(_queryContainer);
+         _queryCollection.Sort();
+         _view.QueryComboRefreshList(_queryCollection);
       }
 
       public void Show()
@@ -137,16 +137,16 @@ namespace HFM.Forms
       {
          CheckQueryParametersForAddOrReplace(parameters);
 
-         if (_queryContainer.FirstOrDefault(x => x.Name == parameters.Name) != null)
+         if (_queryCollection.FirstOrDefault(x => x.Name == parameters.Name) != null)
          {
             throw new ArgumentException(String.Format(CultureInfo.CurrentCulture,
                "A query with name '{0}' already exists.", parameters.Name));
          }
          
-         _queryContainer.Add(parameters);
-         _queryContainer.Sort();
-         _queryContainer.Write();
-         _view.QueryComboRefreshList(_queryContainer);
+         _queryCollection.Add(parameters);
+         _queryCollection.Sort();
+         _queryCollection.Write();
+         _view.QueryComboRefreshList(_queryCollection);
       }
       
       public void ReplaceQuery(int index, QueryParameters parameters)
@@ -158,18 +158,18 @@ namespace HFM.Forms
 
          CheckQueryParametersForAddOrReplace(parameters);
 
-         var existing = _queryContainer.FirstOrDefault(x => x.Name == parameters.Name);
-         if (existing != null && existing.Name != _queryContainer[index].Name)
+         var existing = _queryCollection.FirstOrDefault(x => x.Name == parameters.Name);
+         if (existing != null && existing.Name != _queryCollection[index].Name)
          {
             throw new ArgumentException(String.Format(CultureInfo.CurrentCulture,
                "A query with name '{0}' already exists.", parameters.Name));
          }
          
-         _queryContainer.RemoveAt(index);
-         _queryContainer.Add(parameters);
-         _queryContainer.Sort();
-         _queryContainer.Write();
-         _view.QueryComboRefreshList(_queryContainer);
+         _queryCollection.RemoveAt(index);
+         _queryCollection.Add(parameters);
+         _queryCollection.Sort();
+         _queryCollection.Write();
+         _view.QueryComboRefreshList(_queryCollection);
       }
       
       private static void CheckQueryParametersForAddOrReplace(QueryParameters parameters)
@@ -200,14 +200,14 @@ namespace HFM.Forms
             throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, "Cannot remove '{0}' query.", QueryParameters.SelectAll));
          }
 
-         _queryContainer.Remove(parameters);
-         _queryContainer.Write();
-         _view.QueryComboRefreshList(_queryContainer);
+         _queryCollection.Remove(parameters);
+         _queryCollection.Write();
+         _view.QueryComboRefreshList(_queryCollection);
       }
 
       public void SelectQuery(int index)
       {
-         if (index < 0 || index >= _queryContainer.Count)
+         if (index < 0 || index >= _queryCollection.Count)
          {
             throw new ArgumentOutOfRangeException("index");
          }
@@ -215,7 +215,7 @@ namespace HFM.Forms
          _view.EditButtonEnabled = index != 0;
          _view.DeleteButtonEnabled = index != 0;
 
-         _currentHistoryEntries = _database.QueryUnitData(_queryContainer[index], _model.ProductionView);
+         _currentHistoryEntries = _database.QueryUnitData(_queryCollection[index], _model.ProductionView);
          var showEntries = _currentHistoryEntries;
          if (_model.ShowFirstChecked)
          {
@@ -243,7 +243,7 @@ namespace HFM.Forms
                try
                {
                   AddQuery(_queryView.Query);
-                  _view.QueryComboSelectedIndex = _queryContainer.Count - 1;
+                  _view.QueryComboSelectedIndex = _queryCollection.Count - 1;
                   showDialog = false;
                }
                catch (ArgumentException ex)

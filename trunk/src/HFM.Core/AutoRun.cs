@@ -1,6 +1,6 @@
 /*
- * HFM.NET - Registry Operations Helper Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * HFM.NET - AutoRun Registry Class
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,7 +24,24 @@ using Castle.Core.Logging;
 
 namespace HFM.Core
 {
-   public class AutoRun
+   public interface IAutoRun
+   {
+      ILogger Logger { get; set; }
+
+      /// <summary>
+      /// Does an Auto Run value exist?
+      /// </summary>
+      bool IsEnabled();
+
+      /// <summary>
+      /// Set HFM.NET Auto Run Status.
+      /// </summary>
+      /// <param name="filePath">File Path to HFM.exe executable.</param>
+      /// <exception cref="InvalidOperationException">When Auto Run value cannot be set.</exception>
+      void SetFilePath(string filePath);
+   }
+
+   public class AutoRun : IAutoRun
    {
       #region Constants
 

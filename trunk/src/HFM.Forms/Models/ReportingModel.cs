@@ -137,7 +137,7 @@ namespace HFM.Forms.Models
             if (ReportingEnabled == false) return false;
             if (FromAddress.Length == 0) return true;
 
-            return !StringOps.ValidateEmailAddress(FromAddress);
+            return !Validate.EmailAddress(FromAddress);
          }
       }
 
@@ -193,7 +193,7 @@ namespace HFM.Forms.Models
             try
             {
                // This will violate FxCop rule (rule ID)
-               StringOps.ValidateServerPortPair(ServerAddress, ServerPort.ToString());
+               Validate.ServerPortPair(ServerAddress, ServerPort.ToString());
                ServerPortPairErrorMessage = String.Empty;
                return false;
             }
@@ -260,7 +260,7 @@ namespace HFM.Forms.Models
             try
             {
                // This will violate FxCop rule (rule ID)
-               StringOps.ValidateUsernamePasswordPair(ServerUsername, ServerPassword);
+               Validate.UsernamePasswordPair(ServerUsername, ServerPassword);
                UsernamePasswordPairErrorMessage = String.Empty;
                return false;
             }
