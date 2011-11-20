@@ -21,8 +21,8 @@ using System;
 using System.Globalization;
 using System.Windows.Forms;
 
-using HFM.Framework;
-using HFM.Framework.DataTypes;
+using HFM.Core;
+using HFM.Core.DataTypes;
 
 namespace HFM.Forms.Controls
 {
@@ -57,10 +57,10 @@ namespace HFM.Forms.Controls
       public event EventHandler<QueueIndexChangedEventArgs> QueueIndexChanged;
    
       private ClientQueue _qBase;
-      private IProteinCollection _proteinCollection;
-      
-      private ClientType _clientType = ClientType.Unknown;
-      private bool _clientIsOnVirtualMachine;
+      private IProteinDictionary _proteinCollection;
+
+      private SlotType _slotType = SlotType.Unknown;
+      private bool _utcOffsetIsZero;
       
       private const int DefaultRowHeight = 23;
    
@@ -69,7 +69,7 @@ namespace HFM.Forms.Controls
          InitializeComponent();
       }
       
-      public void SetProteinCollection(IProteinCollection proteinCollection)
+      public void SetProteinCollection(IProteinDictionary proteinCollection)
       {
          _proteinCollection = proteinCollection;
       }
@@ -84,16 +84,16 @@ namespace HFM.Forms.Controls
       
       public void SetQueue(ClientQueue qBase)
       {
-         SetQueue(qBase, ClientType.Unknown, false);
+         SetQueue(qBase, SlotType.Unknown, false);
       }
 
-      public void SetQueue(ClientQueue qBase, ClientType type, bool vm)
+      public void SetQueue(ClientQueue qBase, SlotType type, bool utcOffsetIsZero)
       {
          if (qBase != null)
          {
             _qBase = qBase;
-            _clientType = type;
-            _clientIsOnVirtualMachine = vm;
+            _slotType = type;
+            _utcOffsetIsZero = utcOffsetIsZero;
             
             cboQueueIndex.SelectedIndexChanged -= cboQueueIndex_SelectedIndexChanged;
             cboQueueIndex.DataSource = _qBase.EntryNameCollection;
@@ -105,8 +105,8 @@ namespace HFM.Forms.Controls
          else
          {
             _qBase = null;
-            _clientType = ClientType.Unknown;
-            _clientIsOnVirtualMachine = false;
+            _slotType = SlotType.Unknown;
+            _utcOffsetIsZero = false;
             SetControlsVisible(false);
          }
       }
@@ -122,7 +122,7 @@ namespace HFM.Forms.Controls
             ClientQueueEntry entry = _qBase.GetQueueEntry(cboQueueIndex.SelectedIndex);
             txtStatus.Text = entry.EntryStatusLiteral;
             txtCredit.Text = _proteinCollection.ContainsKey(entry.ProjectID) ? _proteinCollection[entry.ProjectID].Credit.ToString(CultureInfo.CurrentCulture) : "0";
-            if (_clientIsOnVirtualMachine)
+            if (_utcOffsetIsZero)
             {
                txtBeginDate.Text = String.Format("{0} {1}", entry.BeginTimeUtc.ToShortDateString(), entry.BeginTimeUtc.ToShortTimeString());
             }
@@ -136,7 +136,7 @@ namespace HFM.Forms.Controls
             }
             else
             {
-               if (_clientIsOnVirtualMachine)
+               if (_utcOffsetIsZero)
                {
                   txtEndDate.Text = String.Format("{0} {1}", entry.EndTimeUtc.ToShortDateString(), entry.EndTimeUtc.ToShortTimeString());
                }
@@ -231,10 +231,10 @@ namespace HFM.Forms.Controls
          }
          else
          {
-            switch (_clientType)
+            switch (_slotType)
             {
-               case ClientType.Unknown:
-               case ClientType.Standard:
+               case SlotType.Unknown:
+               case SlotType.Uniprocessor:
                   // Set Rows to Zero Height and Hide Labels First
                   txtSmpCores.Visible = false;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = 0;
@@ -244,7 +244,7 @@ namespace HFM.Forms.Controls
                   txtBenchmark.Visible = true;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = DefaultRowHeight;
                   break;
-               case ClientType.GPU:
+               case SlotType.GPU:
                   // Set Rows to Zero Height and Hide Labels First
                   txtBenchmark.Visible = false;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = 0;
@@ -254,7 +254,7 @@ namespace HFM.Forms.Controls
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = 0;
                   // Then Show the Client Specific Queue Row(s)
                   break;
-               case ClientType.SMP:
+               case SlotType.SMP:
                   // Set Rows to Zero Height and Hide Labels First
                   txtBenchmark.Visible = false;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = 0;

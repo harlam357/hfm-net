@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Work Unit History Presenter
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,28 +21,27 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 using harlam357.Windows.Forms;
 
+using HFM.Core;
+using HFM.Core.DataTypes;
 using HFM.Forms.Models;
-using HFM.Framework;
-using HFM.Framework.DataTypes;
 
 namespace HFM.Forms
 {
    public class HistoryPresenter
    {
-      private const string CsvFilter = "CSV Files|*.csv";
+      //private const string CsvFilter = "CSV Files|*.csv";
    
       private readonly IPreferenceSet _prefs;
       private readonly IUnitInfoDatabase _database;
-      private readonly IQueryParameterContainer _queryContainer;
+      private readonly IQueryParametersCollection _queryContainer;
       private readonly IHistoryView _view;
       private readonly IQueryView _queryView;
-      private readonly IProgressDialogView _unitImportView;
-      private readonly ICompletedUnitsFileReader _completedUnitsReader;
+      //private readonly IProgressDialogView _unitImportView;
+      //private readonly ICompletedUnitsFileReader _completedUnitsReader;
       private readonly IOpenFileDialogView _openFileView;
       private readonly ISaveFileDialogView _saveFileView;
       private readonly IMessageBoxView _messageBoxView;
@@ -54,11 +53,11 @@ namespace HFM.Forms
       
       public int NumberOfQueries
       {
-         get { return _queryContainer.QueryList.Count; }
+         get { return _queryContainer.Count; }
       }
 
-      public HistoryPresenter(IPreferenceSet prefs, IUnitInfoDatabase database, IQueryParameterContainer queryContainer, IHistoryView view,
-                              IQueryView queryView, IProgressDialogView unitImportView, ICompletedUnitsFileReader completedUnitsReader, 
+      public HistoryPresenter(IPreferenceSet prefs, IUnitInfoDatabase database, IQueryParametersCollection queryContainer, IHistoryView view,
+                              IQueryView queryView, // IProgressDialogView unitImportView, ICompletedUnitsFileReader completedUnitsReader, 
                               IOpenFileDialogView openFileView, ISaveFileDialogView saveFileView, IMessageBoxView messageBoxView, 
                               IHistoryPresenterModel model)
       {
@@ -67,15 +66,15 @@ namespace HFM.Forms
          _queryContainer = queryContainer;
          _view = view;
          _queryView = queryView;
-         _unitImportView = unitImportView;
-         _completedUnitsReader = completedUnitsReader;
+         //_unitImportView = unitImportView;
+         //_completedUnitsReader = completedUnitsReader;
          _openFileView = openFileView;
          _saveFileView = saveFileView;
          _messageBoxView = messageBoxView;
          _model = model;
 
-         _unitImportView.OwnerWindow = _view;
-         _unitImportView.ProcessRunner = _completedUnitsReader;
+         //_unitImportView.OwnerWindow = _view;
+         //_unitImportView.ProcessRunner = _completedUnitsReader;
          
          _currentHistoryEntries = new List<HistoryEntry>();
       }
@@ -85,8 +84,8 @@ namespace HFM.Forms
          _view.AttachPresenter(this);
          _model.LoadPreferences();
          _view.DataBindModel(_model);
-         _queryContainer.QueryList.Sort();
-         _view.QueryComboRefreshList(_queryContainer.QueryList);
+         _queryContainer.Sort();
+         _view.QueryComboRefreshList(_queryContainer);
       }
 
       public void Show()
@@ -138,16 +137,16 @@ namespace HFM.Forms
       {
          CheckQueryParametersForAddOrReplace(parameters);
 
-         if (_queryContainer.QueryList.Find(x => x.Name == parameters.Name) != null)
+         if (_queryContainer.FirstOrDefault(x => x.Name == parameters.Name) != null)
          {
             throw new ArgumentException(String.Format(CultureInfo.CurrentCulture,
                "A query with name '{0}' already exists.", parameters.Name));
          }
          
-         _queryContainer.QueryList.Add(parameters);
-         _queryContainer.QueryList.Sort();
+         _queryContainer.Add(parameters);
+         _queryContainer.Sort();
          _queryContainer.Write();
-         _view.QueryComboRefreshList(_queryContainer.QueryList);
+         _view.QueryComboRefreshList(_queryContainer);
       }
       
       public void ReplaceQuery(int index, QueryParameters parameters)
@@ -159,18 +158,18 @@ namespace HFM.Forms
 
          CheckQueryParametersForAddOrReplace(parameters);
 
-         var existing = _queryContainer.QueryList.Find(x => x.Name == parameters.Name);
-         if (existing != null && existing.Name != _queryContainer.QueryList[index].Name)
+         var existing = _queryContainer.FirstOrDefault(x => x.Name == parameters.Name);
+         if (existing != null && existing.Name != _queryContainer[index].Name)
          {
             throw new ArgumentException(String.Format(CultureInfo.CurrentCulture,
                "A query with name '{0}' already exists.", parameters.Name));
          }
          
-         _queryContainer.QueryList.RemoveAt(index);
-         _queryContainer.QueryList.Add(parameters);
-         _queryContainer.QueryList.Sort();
+         _queryContainer.RemoveAt(index);
+         _queryContainer.Add(parameters);
+         _queryContainer.Sort();
          _queryContainer.Write();
-         _view.QueryComboRefreshList(_queryContainer.QueryList);
+         _view.QueryComboRefreshList(_queryContainer);
       }
       
       private static void CheckQueryParametersForAddOrReplace(QueryParameters parameters)
@@ -201,14 +200,14 @@ namespace HFM.Forms
             throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, "Cannot remove '{0}' query.", QueryParameters.SelectAll));
          }
 
-         _queryContainer.QueryList.Remove(parameters);
+         _queryContainer.Remove(parameters);
          _queryContainer.Write();
-         _view.QueryComboRefreshList(_queryContainer.QueryList);
+         _view.QueryComboRefreshList(_queryContainer);
       }
 
       public void SelectQuery(int index)
       {
-         if (index < 0 || index >= _queryContainer.QueryList.Count)
+         if (index < 0 || index >= _queryContainer.Count)
          {
             throw new ArgumentOutOfRangeException("index");
          }
@@ -216,7 +215,7 @@ namespace HFM.Forms
          _view.EditButtonEnabled = index != 0;
          _view.DeleteButtonEnabled = index != 0;
 
-         _currentHistoryEntries = _database.QueryUnitData(_queryContainer.QueryList[index], _model.ProductionView);
+         _currentHistoryEntries = _database.QueryUnitData(_queryContainer[index], _model.ProductionView);
          var showEntries = _currentHistoryEntries;
          if (_model.ShowFirstChecked)
          {
@@ -244,12 +243,12 @@ namespace HFM.Forms
                try
                {
                   AddQuery(_queryView.Query);
-                  _view.QueryComboSelectedIndex = _queryContainer.QueryList.Count - 1;
+                  _view.QueryComboSelectedIndex = _queryContainer.Count - 1;
                   showDialog = false;
                }
                catch (ArgumentException ex)
                {
-                  _messageBoxView.ShowError(_view, ex.Message, PlatformOps.ApplicationNameAndVersion);
+                  _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
                }
             }
             else
@@ -275,7 +274,7 @@ namespace HFM.Forms
                }
                catch (ArgumentException ex)
                {
-                  _messageBoxView.ShowError(_view, ex.Message, PlatformOps.ApplicationNameAndVersion);
+                  _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
                }
             }
             else
@@ -287,7 +286,7 @@ namespace HFM.Forms
 
       public void DeleteQueryClick()
       {
-         var result = _messageBoxView.AskYesNoQuestion(_view, "Are you sure?", PlatformOps.ApplicationNameAndVersion);
+         var result = _messageBoxView.AskYesNoQuestion(_view, "Are you sure?", Core.Application.NameAndVersion);
          if (result.Equals(DialogResult.Yes))
          {
             try
@@ -296,7 +295,7 @@ namespace HFM.Forms
             }
             catch (ArgumentException ex)
             {
-               _messageBoxView.ShowError(_view, ex.Message, PlatformOps.ApplicationNameAndVersion);
+               _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
             }
          }
       }
@@ -306,11 +305,11 @@ namespace HFM.Forms
          var entry = _view.DataGridSelectedHistoryEntry;
          if (entry == null)
          {
-            _messageBoxView.ShowInformation(_view, "No work unit selected.", PlatformOps.ApplicationNameAndVersion);
+            _messageBoxView.ShowInformation(_view, "No work unit selected.", Core.Application.NameAndVersion);
          }
          else
          {
-            var result = _messageBoxView.AskYesNoQuestion(_view, "Are you sure?", PlatformOps.ApplicationNameAndVersion);
+            var result = _messageBoxView.AskYesNoQuestion(_view, "Are you sure?", Core.Application.NameAndVersion);
             if (result.Equals(DialogResult.Yes))
             {
                if (_database.DeleteUnitInfo(entry.ID) != 0)
@@ -327,89 +326,93 @@ namespace HFM.Forms
          _model.SortOrder = sortOrder;
       }
 
-      public void ImportCompletedUnitsClick()
-      {
-         _openFileView.Filter = CsvFilter;
-         _openFileView.FileName = Constants.CompletedUnitsCsvFileName;
-         _openFileView.InitialDirectory = _prefs.ApplicationDataFolderPath;
-         if (_openFileView.ShowDialog(_view).Equals(DialogResult.OK))
-         {
-            _completedUnitsReader.CompletedUnitsFilePath = _openFileView.FileName;
-            
-            _unitImportView.UpdateMessage(String.Empty);
-            _unitImportView.UpdateProgress(0);
-            _unitImportView.Process();
-            if (_unitImportView.ProcessRunner.Exception != null)
-            {
-               Exception ex = _unitImportView.ProcessRunner.Exception;
-               HfmTrace.WriteToHfmConsole(ex);
-               _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture, 
-                  "Import Failed with the following error:{0}{0}{1}", Environment.NewLine, ex.Message), 
-                  PlatformOps.ApplicationNameAndVersion);
-                  
-               return;
-            }
-            ShowImportResultDialog(_completedUnitsReader.Result);
-            _database.ImportCompletedUnits(_completedUnitsReader.Result.Entries);
-            _view.QueryComboSelectedIndex = 0;
-         }
-      }
-      
-      public void ShowImportResultDialog(CompletedUnitsReadResult result)
-      {
-         if (result.ErrorLines.Count != 0)
-         {
-            if (_messageBoxView.AskYesNoQuestion(_view, GetImportResultMessage(result),
-                                                 PlatformOps.ApplicationNameAndVersion).Equals(DialogResult.Yes))
-            {
-               _saveFileView.Filter = CsvFilter;
-               _saveFileView.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-               if (_saveFileView.ShowDialog(_view).Equals(DialogResult.OK))
-               {
-                  SaveErrorLines(_saveFileView.FileName, result.ErrorLines);
-               }
-            }
-         }
-         else
-         {
-            _messageBoxView.ShowInformation(_view, GetImportResultMessage(result), PlatformOps.ApplicationNameAndVersion);
-         }
-      }
-      
-      private void SaveErrorLines(string filePath, IEnumerable<string> lines)
-      {
-         try
-         {
-            _completedUnitsReader.WriteCompletedUnitErrorLines(filePath, lines);
-         }
-         catch (Exception ex)
-         {
-            HfmTrace.WriteToHfmConsole(ex);
-            _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
-               "Save Failed with the following error:{0}{0}{1}", Environment.NewLine, ex.Message),
-               PlatformOps.ApplicationNameAndVersion);
-         }
-      }
-      
-      private static string GetImportResultMessage(CompletedUnitsReadResult result)
-      {
-         var sb = new StringBuilder();
-         sb.AppendFormat("{0} imported {1} unit result(s) successfully.", Constants.ApplicationName, result.Entries.Count);
-         if (result.Duplicates != 0)
-         {
-            sb.AppendLine();
-            sb.AppendLine();
-            sb.AppendFormat("{0} result(s) are duplicates and were not imported.", result.Duplicates);
-         }
-         if (result.ErrorLines.Count != 0)
-         {
-            sb.AppendLine();
-            sb.AppendLine();
-            sb.AppendFormat("{0} result(s) could not be imported.  You may save these lines incapable of being imported to another file.  There you may edit the lines to fix the problems with the csv format.  Would you like to save those lines now?", result.ErrorLines.Count);
-         }
+      #region ImportCompletedUnits
 
-         return sb.ToString();
-      }
+      //public void ImportCompletedUnitsClick()
+      //{
+      //   _openFileView.Filter = CsvFilter;
+      //   _openFileView.FileName = Constants.CompletedUnitsCsvFileName;
+      //   _openFileView.InitialDirectory = _prefs.ApplicationDataFolderPath;
+      //   if (_openFileView.ShowDialog(_view).Equals(DialogResult.OK))
+      //   {
+      //      _completedUnitsReader.CompletedUnitsFilePath = _openFileView.FileName;
+            
+      //      _unitImportView.UpdateMessage(String.Empty);
+      //      _unitImportView.UpdateProgress(0);
+      //      _unitImportView.Process();
+      //      if (_unitImportView.ProcessRunner.Exception != null)
+      //      {
+      //         Exception ex = _unitImportView.ProcessRunner.Exception;
+      //         HfmTrace.WriteToHfmConsole(ex);
+      //         _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture, 
+      //            "Import Failed with the following error:{0}{0}{1}", Environment.NewLine, ex.Message), 
+      //            Core.Application.NameAndVersion);
+                  
+      //         return;
+      //      }
+      //      ShowImportResultDialog(_completedUnitsReader.Result);
+      //      _database.ImportCompletedUnits(_completedUnitsReader.Result.Entries);
+      //      _view.QueryComboSelectedIndex = 0;
+      //   }
+      //}
+      
+      //public void ShowImportResultDialog(CompletedUnitsReadResult result)
+      //{
+      //   if (result.ErrorLines.Count != 0)
+      //   {
+      //      if (_messageBoxView.AskYesNoQuestion(_view, GetImportResultMessage(result),
+      //                                           Core.Application.NameAndVersion).Equals(DialogResult.Yes))
+      //      {
+      //         _saveFileView.Filter = CsvFilter;
+      //         _saveFileView.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+      //         if (_saveFileView.ShowDialog(_view).Equals(DialogResult.OK))
+      //         {
+      //            SaveErrorLines(_saveFileView.FileName, result.ErrorLines);
+      //         }
+      //      }
+      //   }
+      //   else
+      //   {
+      //      _messageBoxView.ShowInformation(_view, GetImportResultMessage(result), Core.Application.NameAndVersion);
+      //   }
+      //}
+      
+      //private void SaveErrorLines(string filePath, IEnumerable<string> lines)
+      //{
+      //   try
+      //   {
+      //      _completedUnitsReader.WriteCompletedUnitErrorLines(filePath, lines);
+      //   }
+      //   catch (Exception ex)
+      //   {
+      //      HfmTrace.WriteToHfmConsole(ex);
+      //      _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
+      //         "Save Failed with the following error:{0}{0}{1}", Environment.NewLine, ex.Message),
+      //         Core.Application.NameAndVersion);
+      //   }
+      //}
+      
+      //private static string GetImportResultMessage(CompletedUnitsReadResult result)
+      //{
+      //   var sb = new StringBuilder();
+      //   sb.AppendFormat("{0} imported {1} unit result(s) successfully.", Constants.ApplicationName, result.Entries.Count);
+      //   if (result.Duplicates != 0)
+      //   {
+      //      sb.AppendLine();
+      //      sb.AppendLine();
+      //      sb.AppendFormat("{0} result(s) are duplicates and were not imported.", result.Duplicates);
+      //   }
+      //   if (result.ErrorLines.Count != 0)
+      //   {
+      //      sb.AppendLine();
+      //      sb.AppendLine();
+      //      sb.AppendFormat("{0} result(s) could not be imported.  You may save these lines incapable of being imported to another file.  There you may edit the lines to fix the problems with the csv format.  Would you like to save those lines now?", result.ErrorLines.Count);
+      //   }
+
+      //   return sb.ToString();
+      //}
+
+      #endregion
 
       public static string[] GetQueryFieldColumnNames()
       {

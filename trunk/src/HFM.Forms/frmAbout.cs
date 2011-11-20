@@ -1,6 +1,6 @@
 /*
  * HFM.NET - About Form
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,7 +25,6 @@ using System.Reflection;
 using System.Windows.Forms;
 
 using HFM.Forms.Controls;
-using HFM.Framework;
 
 namespace HFM.Forms
 {
@@ -37,7 +36,7 @@ namespace HFM.Forms
       public frmAbout()
       {
          InitializeComponent();
-         int[] versions = PlatformOps.GetVersionNumbers();
+         int[] versions = Core.Application.GetVersionNumbers();
          Debug.Assert(versions.Length == 4);
          lblVersion.Text = String.Format(CultureInfo.InvariantCulture, "Version {0}.{1}.{2} - Revision {3}",
                                          versions[0], versions[1], versions[2], versions[3]);

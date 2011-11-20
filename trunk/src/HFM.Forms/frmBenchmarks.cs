@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -27,11 +26,13 @@ using System.Windows.Forms;
 
 using ZedGraph;
 
+using Castle.Core.Logging;
+
 using harlam357.Windows.Forms;
 
+using HFM.Core;
+using HFM.Core.DataTypes;
 using HFM.Forms.Controls;
-using HFM.Framework;
-using HFM.Framework.DataTypes;
 
 namespace HFM.Forms
 {
@@ -67,7 +68,15 @@ namespace HFM.Forms
       public int LoadProjectID { get; set; }
 
       public GraphLayoutType GraphLayoutType { get; set; }
-      
+
+      private ILogger _logger = NullLogger.Instance;
+
+      public ILogger Logger
+      {
+         get { return _logger; }
+         set { _logger = value; }
+      }
+
       #endregion
    
       #region Fields
@@ -75,10 +84,10 @@ namespace HFM.Forms
       private int _currentNumberOfGraphs = 1;
 
       private readonly IPreferenceSet _prefs;
-      private readonly IProteinCollection _proteinCollection;
-      private readonly IProteinBenchmarkContainer _benchmarkContainer;
+      private readonly IProteinDictionary _proteinDictionary;
+      private readonly IProteinBenchmarkCollection _benchmarkCollection;
       private readonly IList<Color> _graphColors;
-      private readonly IEnumerable<IDisplayInstance> _displayCollection;
+      private readonly IEnumerable<SlotModel> _slotModels;
       private readonly IMessageBoxView _messageBoxView;
       private readonly IExternalProcessStarter _processStarter;
       private readonly ZedGraphManager _zedGraphManager;
@@ -89,14 +98,14 @@ namespace HFM.Forms
 
       #region Constructor
 
-      public frmBenchmarks(IPreferenceSet prefs, IProteinCollection proteinCollection, IProteinBenchmarkContainer benchmarkContainer, 
-                           IDisplayInstanceCollection displayCollection, IMessageBoxView messageBoxView, IExternalProcessStarter processStarter)
+      public frmBenchmarks(IPreferenceSet prefs, IProteinDictionary proteinDictionary, IProteinBenchmarkCollection benchmarkCollection,
+                           IEnumerable<SlotModel> slotModels, IMessageBoxView messageBoxView, IExternalProcessStarter processStarter)
       {
          _prefs = prefs;
-         _proteinCollection = proteinCollection;
-         _benchmarkContainer = benchmarkContainer;
+         _proteinDictionary = proteinDictionary;
+         _benchmarkCollection = benchmarkCollection;
          _graphColors = _prefs.GetPreference<List<Color>>(Preference.GraphColors);
-         _displayCollection = displayCollection;
+         _slotModels = slotModels;
          _messageBoxView = messageBoxView;
          _processStarter = processStarter;
          _zedGraphManager = new ZedGraphManager();
@@ -152,10 +161,10 @@ namespace HFM.Forms
 
          UpdateBenchmarkText(lines);
 
-         List<ProteinBenchmark> list = _benchmarkContainer.GetBenchmarks(_currentBenchmarkClient, projectID).ToList();
+         List<ProteinBenchmark> list = _benchmarkCollection.GetBenchmarks(_currentBenchmarkClient, projectID).ToList();
          list.Sort((benchmark1, benchmark2) => benchmark1.OwningInstanceName.CompareTo(benchmark2.OwningInstanceName));
-         IProtein protein;
-         _proteinCollection.TryGetValue(projectID, out protein);
+         Protein protein;
+         _proteinDictionary.TryGetValue(projectID, out protein);
 
          foreach (ProteinBenchmark benchmark in list)
          {
@@ -163,10 +172,10 @@ namespace HFM.Forms
             bool valuesOk = false;
 
             ProteinBenchmark benchmark1 = benchmark;
-            var instance = _displayCollection.FirstOrDefault(x => x.Name.Equals(benchmark1.OwningInstanceName));
+            var instance = _slotModels.FirstOrDefault(x => x.Name.Equals(benchmark1.OwningInstanceName));
             if (instance != null && instance.Owns(benchmark))
             {
-               unit = instance.CurrentUnitInfo;
+               unit = instance.UnitInfoLogic;
                valuesOk = instance.ProductionValuesOk;
             }
             UpdateBenchmarkText(ToMultiLineString(benchmark, instance, _prefs.PpdFormatString));
@@ -249,7 +258,7 @@ namespace HFM.Forms
          _currentNumberOfGraphs = graphs;
       }
 
-      private void DrawGraphs(int tabIndex, IList<string> lines, IEnumerable<ProteinBenchmark> benchmarks, IProtein protein)
+      private void DrawGraphs(int tabIndex, IList<string> lines, IEnumerable<ProteinBenchmark> benchmarks, Protein protein)
       {
          _zedGraphManager.CreateFrameTimeGraph(GetFrameTimeGraph(tabIndex), lines, benchmarks, _graphColors);
          _zedGraphManager.CreatePpdGraph(GetPpdGraph(tabIndex), lines, benchmarks, _graphColors,
@@ -270,14 +279,14 @@ namespace HFM.Forms
       /// Return Multi-Line String (Array)
       /// </summary>
       /// <param name="benchmark"></param>
-      /// <param name="instance">Display Instance (null for unavailable)</param>
+      /// <param name="slotModel">Slot Model (null for unavailable)</param>
       /// <param name="ppdFormatString">PPD Format String</param>
-      private IEnumerable<string> ToMultiLineString(ProteinBenchmark benchmark, IDisplayInstance instance, string ppdFormatString)
+      private IEnumerable<string> ToMultiLineString(ProteinBenchmark benchmark, SlotModel slotModel, string ppdFormatString)
       {
          var output = new List<string>(12);
 
-         IProtein protein;
-         _proteinCollection.TryGetValue(benchmark.ProjectID, out protein);
+         Protein protein;
+         _proteinDictionary.TryGetValue(benchmark.ProjectID, out protein);
          if (protein != null)
          {
             var calculateBonus = _prefs.Get<bool>(Preference.CalculateBonus);
@@ -292,25 +301,24 @@ namespace HFM.Forms
             output.Add(String.Format(" Avg. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
                benchmark.AverageFrameTime, protein.GetPPD(benchmark.AverageFrameTime, calculateBonus)));
 
-            if (instance != null && instance.CurrentUnitInfo.UnitInfoData.ProjectID.Equals(protein.ProjectNumber) && instance.ProductionValuesOk)
+            if (slotModel != null && slotModel.UnitInfoLogic.UnitInfoData.ProjectID.Equals(protein.ProjectNumber) && slotModel.ProductionValuesOk)
             {
-               IUnitInfoLogic unitInfo = instance.CurrentUnitInfo;
+               IUnitInfoLogic unitInfo = slotModel.UnitInfoLogic;
                output.Add(String.Format(" Cur. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-                  unitInfo.GetFrameTime(PpdCalculationType.LastFrame), unitInfo.GetPPD(instance.Status, PpdCalculationType.LastFrame, calculateBonus)));
+                  unitInfo.GetFrameTime(PpdCalculationType.LastFrame), unitInfo.GetPPD(slotModel.Status, PpdCalculationType.LastFrame, calculateBonus)));
                output.Add(String.Format(" R3F. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-                  unitInfo.GetFrameTime(PpdCalculationType.LastThreeFrames), unitInfo.GetPPD(instance.Status, PpdCalculationType.LastThreeFrames, calculateBonus)));
+                  unitInfo.GetFrameTime(PpdCalculationType.LastThreeFrames), unitInfo.GetPPD(slotModel.Status, PpdCalculationType.LastThreeFrames, calculateBonus)));
                output.Add(String.Format(" All  Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-                  unitInfo.GetFrameTime(PpdCalculationType.AllFrames), unitInfo.GetPPD(instance.Status, PpdCalculationType.AllFrames, calculateBonus)));
+                  unitInfo.GetFrameTime(PpdCalculationType.AllFrames), unitInfo.GetPPD(slotModel.Status, PpdCalculationType.AllFrames, calculateBonus)));
                output.Add(String.Format(" Eff. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-                  unitInfo.GetFrameTime(PpdCalculationType.EffectiveRate), unitInfo.GetPPD(instance.Status, PpdCalculationType.EffectiveRate, calculateBonus)));
+                  unitInfo.GetFrameTime(PpdCalculationType.EffectiveRate), unitInfo.GetPPD(slotModel.Status, PpdCalculationType.EffectiveRate, calculateBonus)));
             }
 
             output.Add(String.Empty);
          }
          else
          {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
-                                       String.Format("{0} could not find Project ID '{1}'.", HfmTrace.FunctionName, benchmark.ProjectID));
+            _logger.Warn("Could not find Project {0}.", benchmark.ProjectID);
          }
 
          return output.ToArray();
@@ -341,7 +349,7 @@ namespace HFM.Forms
                _currentBenchmarkClient.NameAndPath, listBox1.SelectedItem),
                   Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
          {
-            _benchmarkContainer.RefreshMinimumFrameTime(_currentBenchmarkClient, (int)listBox1.SelectedItem);
+            _benchmarkCollection.UpdateMinimumFrameTime(_currentBenchmarkClient, (int)listBox1.SelectedItem);
             listBox1_SelectedIndexChanged(sender, e);
          }
       }
@@ -353,9 +361,9 @@ namespace HFM.Forms
                _currentBenchmarkClient.NameAndPath, listBox1.SelectedItem),
                   Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
          {
-            _benchmarkContainer.Delete(_currentBenchmarkClient, (int)listBox1.SelectedItem);
+            _benchmarkCollection.RemoveAll(_currentBenchmarkClient, (int)listBox1.SelectedItem);
             UpdateProjectListBoxBinding();
-            if (_benchmarkContainer.ContainsClient(_currentBenchmarkClient) == false)
+            if (_benchmarkCollection.BenchmarkClients.Contains(_currentBenchmarkClient) == false)
             {
                UpdateClientsComboBinding();
             }
@@ -373,7 +381,7 @@ namespace HFM.Forms
                      Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
          {
             int currentIndex = cboClients.SelectedIndex;
-            _benchmarkContainer.Delete(_currentBenchmarkClient);
+            _benchmarkCollection.RemoveAll(_currentBenchmarkClient);
             UpdateClientsComboBinding(currentIndex);
          }
       }
@@ -503,8 +511,8 @@ namespace HFM.Forms
       {
          var lines = new List<string>(5);
 
-         IProtein protein;
-         _proteinCollection.TryGetValue(projectID, out protein);
+         Protein protein;
+         _proteinDictionary.TryGetValue(projectID, out protein);
 
          if (protein != null)
          {
@@ -512,11 +520,11 @@ namespace HFM.Forms
             txtCredit.Text = protein.Credit.ToString();
             txtKFactor.Text = protein.KFactor.ToString();
             txtFrames.Text = protein.Frames.ToString();
-            txtAtoms.Text = protein.NumAtoms.ToString();
+            txtAtoms.Text = protein.NumberOfAtoms.ToString();
             txtCore.Text = protein.Core;
             linkDescription.Text = protein.Description;
             txtPreferredDays.Text = protein.PreferredDays.ToString();
-            txtMaximumDays.Text = protein.MaxDays.ToString();
+            txtMaximumDays.Text = protein.MaximumDays.ToString();
             txtContact.Text = protein.Contact;
             txtServerIP.Text = protein.ServerIP;
 
@@ -540,8 +548,7 @@ namespace HFM.Forms
             txtContact.Text = String.Empty;
             txtServerIP.Text = String.Empty;
          
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning,
-                                       String.Format("{0} could not find Project ID '{1}'.", HfmTrace.FunctionName, projectID));
+            _logger.Warn("Could not find Project {0}.", projectID);
          }
 
          return lines.ToArray();
@@ -557,7 +564,7 @@ namespace HFM.Forms
       private void UpdateClientsComboBinding(int index)
       {
          cboClients.DataBindings.Clear();
-         cboClients.DataSource = _benchmarkContainer.GetBenchmarkClients();
+         cboClients.DataSource = _benchmarkCollection.BenchmarkClients;
          cboClients.DisplayMember = "NameAndPath";
          cboClients.ValueMember = "Client";
          
@@ -582,14 +589,7 @@ namespace HFM.Forms
       private void UpdateProjectListBoxBinding(int initialProjectID)
       {
          listBox1.DataBindings.Clear();
-         if (_currentBenchmarkClient.AllClients)
-         {
-            listBox1.DataSource = _benchmarkContainer.GetBenchmarkProjects();
-         }
-         else
-         {
-            listBox1.DataSource = _benchmarkContainer.GetBenchmarkProjects(_currentBenchmarkClient);
-         }
+         listBox1.DataSource = _benchmarkCollection.GetBenchmarkProjects(_currentBenchmarkClient);
          
          int index = listBox1.Items.IndexOf(initialProjectID);
          if (index > -1)

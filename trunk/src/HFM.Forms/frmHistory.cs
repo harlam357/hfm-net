@@ -26,10 +26,10 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
+using HFM.Core;
+using HFM.Core.DataTypes;
 using HFM.Forms.Models;
 using HFM.Forms.Controls;
-using HFM.Framework;
-using HFM.Framework.DataTypes;
 
 namespace HFM.Forms
 {
@@ -39,7 +39,7 @@ namespace HFM.Forms
 
       void DataBindModel(IHistoryPresenterModel model);
 
-      void QueryComboRefreshList(IList<QueryParameters> queryList);
+      void QueryComboRefreshList(ICollection<QueryParameters> queryList);
       
       int QueryComboSelectedIndex { get; set; }
 
@@ -123,7 +123,7 @@ namespace HFM.Forms
          RestoreColumnSettings(model.FormColumns);
       }
       
-      public void QueryComboRefreshList(IList<QueryParameters> queryList)
+      public void QueryComboRefreshList(ICollection<QueryParameters> queryList)
       {
          if (queryList.Count == 0)
          {
@@ -284,7 +284,7 @@ namespace HFM.Forms
 
       private void mnuFileImportCompletedUnits_Click(object sender, EventArgs e)
       {
-         _presenter.ImportCompletedUnitsClick();
+         //_presenter.ImportCompletedUnitsClick();
       }
 
       private void mnuFileExit_Click(object sender, EventArgs e)

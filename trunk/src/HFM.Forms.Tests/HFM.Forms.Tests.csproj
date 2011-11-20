@@ -83,21 +83,21 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="HistoryPresenterTests.cs" />
-    <Compile Include="InstanceSettingsPresenterTests.cs" />
+    <Compile Include="LegacyClientSetupPresenterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HFM.Core.DataTypes\HFM.Core.DataTypes.csproj">
+      <Project>{C198DA45-5B5B-4684-914B-97DED3F0BB40}</Project>
+      <Name>HFM.Core.DataTypes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Core\HFM.Core.csproj">
+      <Project>{360034D2-9F6A-4377-B5B9-D82712171223}</Project>
+      <Name>HFM.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HFM.Forms\HFM.Forms.csproj">
       <Project>{C0B126D1-C495-4062-A8C8-4AAA69F35C9D}</Project>
       <Name>HFM.Forms</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HFM.Framework.DataTypes\HFM.Framework.DataTypes.csproj">
-      <Project>{B294C8E0-63AD-47CF-8DE5-CE44C046DF89}</Project>
-      <Name>HFM.Framework.DataTypes</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HFM.Framework\HFM.Framework.csproj">
-      <Project>{FFFF3DE4-8620-4C13-A968-ADF58133146B}</Project>
-      <Name>HFM.Framework</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

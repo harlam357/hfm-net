@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Display Instance Sortable Binding List Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,14 +21,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-using HFM.Framework;
-using HFM.Framework.DataTypes;
+using HFM.Core;
+using HFM.Core.DataTypes;
 
 namespace HFM.Forms
 {
    [Serializable]
    [CoverageExclude]
-   public class DisplayInstanceSortableBindingList : SortableBindingList<IDisplayInstance>, IDisplayInstanceCollection
+   public class DisplayInstanceSortableBindingList : SortableBindingList<SlotModel>
    {
       #region Fields
 
