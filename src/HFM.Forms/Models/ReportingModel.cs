@@ -20,7 +20,7 @@
 using System;
 using System.ComponentModel;
 
-using HFM.Framework;
+using HFM.Core;
 
 namespace HFM.Forms.Models
 {
@@ -110,7 +110,7 @@ namespace HFM.Forms.Models
             if (ReportingEnabled == false) return false;
             if (ToAddress.Length == 0) return true;
 
-            return !StringOps.ValidateEmailAddress(ToAddress);
+            return !Validate.EmailAddress(ToAddress);
          }
       }
 

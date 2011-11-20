@@ -20,7 +20,7 @@
 using System;
 using System.ComponentModel;
 
-using HFM.Framework;
+using HFM.Core;
 
 namespace HFM.Forms.Models
 {
