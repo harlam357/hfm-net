@@ -24,8 +24,12 @@ using HFM.Core.DataTypes;
 
 namespace HFM.Core
 {
-   public interface IQueryParametersCollection : ICollection<QueryParameters>
+   public interface IQueryParametersCollection : IList<QueryParameters>
    {
+      QueryParameters Find(Predicate<QueryParameters> match);
+
+      void Sort();
+
       #region DataContainer<T>
 
       void Read();
@@ -62,6 +66,73 @@ namespace HFM.Core
       public override Plugins.IFileSerializer<List<QueryParameters>> DefaultSerializer
       {
          get { return new Serializers.ProtoBufFileSerializer<List<QueryParameters>>(); }
+      }
+
+      #endregion
+
+      public QueryParameters Find(Predicate<QueryParameters> match)
+      {
+         return Data.Find(match);
+      }
+      
+      public void Sort()
+      {
+         Data.Sort();
+      }
+
+      #region IList<QueryParameters> Members
+
+      /// <summary>
+      /// Determines the index of a specific item in the <see cref="T:System.Collections.Generic.IList`1"/>.
+      /// </summary>
+      /// <returns>
+      /// The index of <paramref name="item"/> if found in the list; otherwise, -1.
+      /// </returns>
+      /// <param name="item">The object to locate in the <see cref="T:System.Collections.Generic.IList`1"/>.</param>
+      public int IndexOf(QueryParameters item)
+      {
+         return Data.IndexOf(item);
+      }
+
+      /// <summary>
+      /// Inserts an item to the <see cref="T:System.Collections.Generic.IList`1"/> at the specified index.
+      /// </summary>
+      /// <param name="index">The zero-based index at which <paramref name="item"/> should be inserted.</param>
+      /// <param name="item">The object to insert into the <see cref="T:System.Collections.Generic.IList`1"/>.</param>
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="item"/> is null.</exception>
+      /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in the <see cref="T:System.Collections.Generic.IList`1"/>.</exception>
+      /// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.IList`1"/> is read-only.</exception>
+      public void Insert(int index, QueryParameters item)
+      {
+         if (item == null) throw new ArgumentNullException("item");
+
+         Data.Insert(index, item);
+      }
+
+      /// <summary>
+      /// Removes the <see cref="T:System.Collections.Generic.IList`1"/> item at the specified index.
+      /// </summary>
+      /// <param name="index">The zero-based index of the item to remove.</param>
+      /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in the <see cref="T:System.Collections.Generic.IList`1"/>.</exception>
+      /// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.IList`1"/> is read-only.</exception>
+      public void RemoveAt(int index)
+      {
+         Data.RemoveAt(0);
+      }
+
+      /// <summary>
+      /// Gets or sets the element at the specified index.
+      /// </summary>
+      /// <returns>
+      /// The element at the specified index.
+      /// </returns>
+      /// <param name="index">The zero-based index of the element to get or set.</param>
+      /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in the <see cref="T:System.Collections.Generic.IList`1"/>.</exception>
+      /// <exception cref="T:System.NotSupportedException">The property is set and the <see cref="T:System.Collections.Generic.IList`1"/> is read-only.</exception>
+      public QueryParameters this[int index]
+      {
+         get { return Data[index]; }
+         set { Data[index] = value; }
       }
 
       #endregion

@@ -53,7 +53,7 @@ namespace HFM.Core
       /// <summary>
       /// Validate Instance Name
       /// </summary>
-      public static bool InstanceName(string name)
+      public static bool ClientName(string name)
       {
          if (name == null) return false;
 
