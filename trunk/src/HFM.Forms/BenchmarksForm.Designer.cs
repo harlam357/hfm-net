@@ -2,7 +2,7 @@ using HFM.Forms.Controls;
 
 namespace HFM.Forms
 {
-   partial class frmBenchmarks
+   partial class BenchmarksForm
    {
       /// <summary>
       /// Required designer variable.
@@ -31,7 +31,7 @@ namespace HFM.Forms
       private void InitializeComponent()
       {
          this.components = new System.ComponentModel.Container();
-         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBenchmarks));
+         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BenchmarksForm));
          this.grpProjectInfo = new HFM.Forms.Controls.GroupBoxWrapper();
          this.txtKFactor = new HFM.Forms.Controls.TextBoxWrapper();
          this.lblKFactor = new HFM.Forms.Controls.LabelWrapper();
@@ -720,7 +720,7 @@ namespace HFM.Forms
             0});
          this.udClientsPerGraph.ValueChanged += new System.EventHandler(this.udClientsPerGraph_ValueChanged);
          // 
-         // frmBenchmarks
+         // BenchmarksForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -729,7 +729,7 @@ namespace HFM.Forms
          this.Controls.Add(this.tableLayoutPanel1);
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
          this.MinimumSize = new System.Drawing.Size(564, 300);
-         this.Name = "frmBenchmarks";
+         this.Name = "BenchmarksForm";
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
          this.Text = "Benchmarks Viewer";
          this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmBenchmarks_FormClosing);

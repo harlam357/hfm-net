@@ -2,7 +2,7 @@ using HFM.Forms.Controls;
 
 namespace HFM.Forms
 {
-   partial class frmMessages
+   partial class MessagesForm
    {
       /// <summary>
       /// Required designer variable.
@@ -30,7 +30,7 @@ namespace HFM.Forms
       /// </summary>
       private void InitializeComponent()
       {
-         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMessages));
+         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MessagesForm));
          this.txtMessages = new TextBoxWrapper();
          this.SuspendLayout();
          // 
@@ -49,14 +49,14 @@ namespace HFM.Forms
          this.txtMessages.WordWrap = false;
          this.txtMessages.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtMessages_KeyDown);
          // 
-         // frmMessages
+         // MessagesForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.ClientSize = new System.Drawing.Size(701, 455);
          this.Controls.Add(this.txtMessages);
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-         this.Name = "frmMessages";
+         this.Name = "MessagesForm";
          this.Text = "Messages";
          this.ResumeLayout(false);
          this.PerformLayout();

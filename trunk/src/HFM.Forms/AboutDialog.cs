@@ -1,5 +1,5 @@
 /*
- * HFM.NET - About Form
+ * HFM.NET - About Dialog
  * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -28,12 +28,10 @@ using HFM.Forms.Controls;
 
 namespace HFM.Forms
 {
-   // ReSharper disable InconsistentNaming
-   public partial class frmAbout : FormWrapper
-   // ReSharper restore InconsistentNaming
+   public partial class AboutDialog : FormWrapper
    {
       #region Constructor
-      public frmAbout()
+      public AboutDialog()
       {
          InitializeComponent();
          int[] versions = Core.Application.GetVersionNumbers();

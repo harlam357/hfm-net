@@ -80,13 +80,11 @@ namespace HFM.Forms
       #endregion
    }
 
-   // ReSharper disable InconsistentNaming
-   public partial class frmHistory : FormWrapper, IHistoryView
-   // ReSharper restore InconsistentNaming
+   public partial class HistoryForm : FormWrapper, IHistoryView
    {
       private HistoryPresenter _presenter;
    
-      public frmHistory(IPreferenceSet prefs)
+      public HistoryForm(IPreferenceSet prefs)
       {
          InitializeComponent();
 

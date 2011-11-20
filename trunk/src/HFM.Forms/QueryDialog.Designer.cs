@@ -2,7 +2,7 @@
 
 namespace HFM.Forms
 {
-   partial class frmQuery
+   partial class QueryDialog
    {
       /// <summary>
       /// Required designer variable.
@@ -30,7 +30,7 @@ namespace HFM.Forms
       /// </summary>
       private void InitializeComponent()
       {
-         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmQuery));
+         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(QueryDialog));
          this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
          this.panel1 = new System.Windows.Forms.Panel();
          this.txtName = new TextBoxWrapper();
@@ -163,7 +163,7 @@ namespace HFM.Forms
          this.btnCancel.UseVisualStyleBackColor = true;
          this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
          // 
-         // frmQuery
+         // QueryDialog
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -173,7 +173,7 @@ namespace HFM.Forms
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
          this.MaximizeBox = false;
          this.MinimizeBox = false;
-         this.Name = "frmQuery";
+         this.Name = "QueryDialog";
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
          this.Text = "History Query";
          this.tableLayoutPanel1.ResumeLayout(false);
