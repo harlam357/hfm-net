@@ -452,8 +452,8 @@ namespace HFM.Core
          if (benchmarkClient == null) throw new ArgumentNullException("benchmarkClient");
          if (name == null) throw new ArgumentNullException("name");
          
-         // Core library - should have a valid instance name 
-         Debug.Assert(Validate.InstanceName(name));
+         // Core library - should have a valid client name 
+         Debug.Assert(Validate.ClientName(name));
 
          IEnumerable<ProteinBenchmark> benchmarks = GetBenchmarks(benchmarkClient);
          foreach (ProteinBenchmark benchmark in benchmarks)

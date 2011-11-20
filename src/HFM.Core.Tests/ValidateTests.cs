@@ -29,40 +29,40 @@ namespace HFM.Core.Tests
       [Test]
       public void InstanceNameTest()
       {
-         Assert.IsTrue(Validate.InstanceName("+a+"));
-         Assert.IsTrue(Validate.InstanceName("=a="));
-         Assert.IsTrue(Validate.InstanceName("-a-"));
-         Assert.IsTrue(Validate.InstanceName("_a_"));
-         Assert.IsTrue(Validate.InstanceName("$a$"));
-         Assert.IsTrue(Validate.InstanceName("&a&"));
-         Assert.IsTrue(Validate.InstanceName("^a^"));
-         Assert.IsTrue(Validate.InstanceName("[a["));
-         Assert.IsTrue(Validate.InstanceName("]a]"));
+         Assert.IsTrue(Validate.ClientName("+a+"));
+         Assert.IsTrue(Validate.ClientName("=a="));
+         Assert.IsTrue(Validate.ClientName("-a-"));
+         Assert.IsTrue(Validate.ClientName("_a_"));
+         Assert.IsTrue(Validate.ClientName("$a$"));
+         Assert.IsTrue(Validate.ClientName("&a&"));
+         Assert.IsTrue(Validate.ClientName("^a^"));
+         Assert.IsTrue(Validate.ClientName("[a["));
+         Assert.IsTrue(Validate.ClientName("]a]"));
 
-         Assert.IsFalse(Validate.InstanceName("}a}"));
-         Assert.IsFalse(Validate.InstanceName("\\a\\"));
-         Assert.IsFalse(Validate.InstanceName("|a|"));
-         Assert.IsFalse(Validate.InstanceName(";a;"));
-         Assert.IsFalse(Validate.InstanceName(":a:"));
-         Assert.IsFalse(Validate.InstanceName("\'a\'"));
-         Assert.IsFalse(Validate.InstanceName("\"a\""));
-         Assert.IsFalse(Validate.InstanceName(",a,"));
-         Assert.IsFalse(Validate.InstanceName("<a<"));
-         Assert.IsFalse(Validate.InstanceName(">a>"));
-         Assert.IsFalse(Validate.InstanceName("/a/"));
-         Assert.IsFalse(Validate.InstanceName("?a?"));
-         Assert.IsFalse(Validate.InstanceName("`a`"));
-         Assert.IsFalse(Validate.InstanceName("~a~"));
-         Assert.IsFalse(Validate.InstanceName("!a!"));
-         Assert.IsFalse(Validate.InstanceName("@a@"));
-         Assert.IsFalse(Validate.InstanceName("#a#"));
-         Assert.IsFalse(Validate.InstanceName("%a%"));
-         Assert.IsFalse(Validate.InstanceName("*a*"));
-         Assert.IsFalse(Validate.InstanceName("(a("));
-         Assert.IsFalse(Validate.InstanceName(")a)"));
+         Assert.IsFalse(Validate.ClientName("}a}"));
+         Assert.IsFalse(Validate.ClientName("\\a\\"));
+         Assert.IsFalse(Validate.ClientName("|a|"));
+         Assert.IsFalse(Validate.ClientName(";a;"));
+         Assert.IsFalse(Validate.ClientName(":a:"));
+         Assert.IsFalse(Validate.ClientName("\'a\'"));
+         Assert.IsFalse(Validate.ClientName("\"a\""));
+         Assert.IsFalse(Validate.ClientName(",a,"));
+         Assert.IsFalse(Validate.ClientName("<a<"));
+         Assert.IsFalse(Validate.ClientName(">a>"));
+         Assert.IsFalse(Validate.ClientName("/a/"));
+         Assert.IsFalse(Validate.ClientName("?a?"));
+         Assert.IsFalse(Validate.ClientName("`a`"));
+         Assert.IsFalse(Validate.ClientName("~a~"));
+         Assert.IsFalse(Validate.ClientName("!a!"));
+         Assert.IsFalse(Validate.ClientName("@a@"));
+         Assert.IsFalse(Validate.ClientName("#a#"));
+         Assert.IsFalse(Validate.ClientName("%a%"));
+         Assert.IsFalse(Validate.ClientName("*a*"));
+         Assert.IsFalse(Validate.ClientName("(a("));
+         Assert.IsFalse(Validate.ClientName(")a)"));
 
-         Assert.IsFalse(Validate.InstanceName(String.Empty));
-         Assert.IsFalse(Validate.InstanceName(null));
+         Assert.IsFalse(Validate.ClientName(String.Empty));
+         Assert.IsFalse(Validate.ClientName(null));
       }
       
       [Test]
