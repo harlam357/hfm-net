@@ -26,8 +26,6 @@ namespace HFM.Core
 {
    public interface IQueryParametersCollection : IList<QueryParameters>
    {
-      QueryParameters Find(Predicate<QueryParameters> match);
-
       void Sort();
 
       #region DataContainer<T>
@@ -70,11 +68,6 @@ namespace HFM.Core
 
       #endregion
 
-      public QueryParameters Find(Predicate<QueryParameters> match)
-      {
-         return Data.Find(match);
-      }
-      
       public void Sort()
       {
          Data.Sort();

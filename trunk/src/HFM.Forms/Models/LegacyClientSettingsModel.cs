@@ -1,5 +1,5 @@
 /*
- * HFM.NET - Client Instance Settings Model
+ * HFM.NET - Legacy Client Settings Model
  * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ using HFM.Core.DataTypes;
 
 namespace HFM.Forms.Models
 {
-   public sealed class ClientInstanceSettingsModel : INotifyPropertyChanged
+   public sealed class LegacyClientSettingsModel : INotifyPropertyChanged
    {
       public bool Error
       {
