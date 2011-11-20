@@ -24,8 +24,8 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Windows.Forms;
 
-using HFM.Framework;
-using HFM.Framework.DataTypes;
+using HFM.Core;
+using HFM.Core.DataTypes;
 
 namespace HFM.Forms
 {
@@ -120,7 +120,7 @@ namespace HFM.Forms
          var columnChoices = new List<Choice>();
          
          // On Mono the ComboBox choices must exactly match the enumeration name - LAME!!!
-         if (PlatformOps.IsRunningOnMono())
+         if (Core.Application.IsRunningOnMono)
          {
             columnChoices.Add(new Choice(QueryFieldName.ProjectID.ToString(), QueryFieldName.ProjectID));
             columnChoices.Add(new Choice(QueryFieldName.WorkUnitName.ToString(), QueryFieldName.WorkUnitName));
@@ -178,7 +178,7 @@ namespace HFM.Forms
       private static List<Choice> GetOperatorFieldChoices()
       {
          var columnChoices = new List<Choice>();
-         if (PlatformOps.IsRunningOnMono())
+         if (Core.Application.IsRunningOnMono)
          {
             columnChoices.Add(new Choice(QueryFieldType.Equal.ToString(), QueryFieldType.Equal));
             columnChoices.Add(new Choice(QueryFieldType.GreaterThan.ToString(), QueryFieldType.GreaterThan));
@@ -311,7 +311,7 @@ namespace HFM.Forms
       public override void InitializeEditingControl(int rowIndex, object
           initialFormattedValue, DataGridViewCellStyle dataGridViewCellStyle)
       {
-         if (PlatformOps.IsRunningOnMono()) return;
+         if (Core.Application.IsRunningOnMono) return;
 
          // Set the value of the editing control to the current cell value.
          base.InitializeEditingControl(rowIndex, initialFormattedValue, dataGridViewCellStyle);

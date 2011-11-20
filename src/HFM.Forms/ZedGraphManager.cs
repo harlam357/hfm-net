@@ -25,7 +25,7 @@ using System.Text;
 
 using ZedGraph;
 
-using HFM.Framework.DataTypes;
+using HFM.Core.DataTypes;
 
 namespace HFM.Forms
 {
@@ -45,7 +45,7 @@ namespace HFM.Forms
       public void CreatePpdGraph(ZedGraphControl zg, IList<string> projectInfo, 
                                  IEnumerable<ProteinBenchmark> benchmarks,
                                  IList<Color> graphColors, int decimalPlaces,
-                                 IProtein protein, bool calculateBonus)
+                                 Protein protein, bool calculateBonus)
       {
          Debug.Assert(zg != null);
 

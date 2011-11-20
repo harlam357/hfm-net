@@ -1,7 +1,7 @@
 /*
  * HFM.NET - Host Configuration Form
  * Copyright (C) 2006-2007 David Rawling
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,13 +26,13 @@ using System.Windows.Forms;
 
 using harlam357.Windows.Forms;
 
-using HFM.Forms.Models;
+using HFM.Core;
 using HFM.Forms.Controls;
-using HFM.Framework;
+using HFM.Forms.Models;
 
 namespace HFM.Forms
 {
-   public interface IInstanceSettingsView : IWin32Window
+   public interface ILegacyClientSetupView : IWin32Window
    {
       /// <summary>
       /// Maximum Dialog Height
@@ -44,9 +44,9 @@ namespace HFM.Forms
       /// </summary>
       int MaxWidth { get; }
 
-      void AttachPresenter(InstanceSettingsPresenter presenter);
+      void AttachPresenter(LegacyClientSetupPresenter presenter);
    
-      void DataBind(IClientInstanceSettingsModel settings);
+      void DataBind(LegacyClientSettingsModel settings);
 
       List<IValidatingControl> FindValidatingControls();
 
@@ -91,9 +91,7 @@ namespace HFM.Forms
       #endregion
    }
 
-   // ReSharper disable InconsistentNaming
-   public partial class frmHost : FormWrapper, IInstanceSettingsView
-   // ReSharper restore InconsistentNaming
+   public partial class LegacyClientSetupDialog : FormWrapper, ILegacyClientSetupView
    {
       #region Members
       
@@ -107,13 +105,13 @@ namespace HFM.Forms
       /// </summary>
       public int MaxWidth { get; private set; }
 
-      private InstanceSettingsPresenter _presenter;
+      private LegacyClientSetupPresenter _presenter;
 
       #endregion
    
       #region Constructor
       
-      public frmHost()
+      public LegacyClientSetupDialog()
       {
          InitializeComponent();
          
@@ -126,26 +124,26 @@ namespace HFM.Forms
       
       #endregion
       
-      public void AttachPresenter(InstanceSettingsPresenter presenter)
+      public void AttachPresenter(LegacyClientSetupPresenter presenter)
       {
          _presenter = presenter;
       }
 
-      private void frmHost_Shown(object sender, EventArgs e)
+      private void LegacyClientSetupDialogShown(object sender, EventArgs e)
       {
          txtDummy.Visible = false;
       }
       
-      public void DataBind(IClientInstanceSettingsModel settings)
+      public void DataBind(LegacyClientSettingsModel settings)
       {
-         txtName.DataBindings.Add("Text", settings, "InstanceName", false, DataSourceUpdateMode.OnValidation);
-         txtMergeFileName.DataBindings.Add("Text", settings, "RemoteExternalFilename", false, DataSourceUpdateMode.OnValidation);
+         txtName.DataBindings.Add("Text", settings, "Name", false, DataSourceUpdateMode.OnValidation);
+         //txtMergeFileName.DataBindings.Add("Text", settings, "ExternalFileName", false, DataSourceUpdateMode.OnValidation);
          txtClientMegahertz.DataBindings.Add("Text", settings, "ClientProcessorMegahertz", false, DataSourceUpdateMode.OnValidation);
-         txtLogFileName.DataBindings.Add("Text", settings, "RemoteFAHLogFilename", false, DataSourceUpdateMode.OnValidation);
-         txtUnitFileName.DataBindings.Add("Text", settings, "RemoteUnitInfoFilename", false, DataSourceUpdateMode.OnValidation);
-         txtQueueFileName.DataBindings.Add("Text", settings, "RemoteQueueFilename", false, DataSourceUpdateMode.OnValidation);
+         txtLogFileName.DataBindings.Add("Text", settings, "FahLogFileName", false, DataSourceUpdateMode.OnValidation);
+         txtUnitFileName.DataBindings.Add("Text", settings, "UnitInfoFileName", false, DataSourceUpdateMode.OnValidation);
+         txtQueueFileName.DataBindings.Add("Text", settings, "QueueFileName", false, DataSourceUpdateMode.OnValidation);
          pnlHostType.DataSource = settings;
-         pnlHostType.ValueMember = "InstanceHostType";
+         pnlHostType.ValueMember = "ClientLegacySubType";
          txtLocalPath.DataBindings.Add("Text", settings, "Path", false, DataSourceUpdateMode.OnValidation);
          txtWebURL.DataBindings.Add("Text", settings, "Path", false, DataSourceUpdateMode.OnValidation);
          txtWebUser.DataBindings.Add("Text", settings, "Username", false, DataSourceUpdateMode.OnValidation);
@@ -160,7 +158,7 @@ namespace HFM.Forms
          txtFTPPass.DataBindings.Add("ErrorToolTipText", settings, "CredentialsErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
          pnlFtpMode.DataSource = settings;
          pnlFtpMode.ValueMember = "FtpMode";
-         chkClientVM.DataBindings.Add("Checked", settings, "ClientIsOnVirtualMachine", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkClientVM.DataBindings.Add("Checked", settings, "UtcOffsetIsZero", false, DataSourceUpdateMode.OnPropertyChanged);
          numOffset.DataBindings.Add("Value", settings, "ClientTimeOffset", false, DataSourceUpdateMode.OnPropertyChanged);
          txtDummy.DataBindings.Add("Text", settings, "Dummy", false, DataSourceUpdateMode.Never);
       }
@@ -213,11 +211,11 @@ namespace HFM.Forms
             lblQueueFileName.Visible = value;
             txtQueueFileName.Visible = value;
 
-            pnlHostType.Top = pnlHostType.Top - InstanceSettingsPresenter.LogFileNamesVisibleOffset;
-            btnTestConnection.Top = btnTestConnection.Top - InstanceSettingsPresenter.LogFileNamesVisibleOffset;
-            grpLocal.Top = grpLocal.Top - InstanceSettingsPresenter.LogFileNamesVisibleOffset;
-            grpHTTP.Top = grpHTTP.Top - InstanceSettingsPresenter.LogFileNamesVisibleOffset;
-            grpFTP.Top = grpFTP.Top - InstanceSettingsPresenter.LogFileNamesVisibleOffset;
+            pnlHostType.Top = pnlHostType.Top - LegacyClientSetupPresenter.LogFileNamesVisibleOffset;
+            btnTestConnection.Top = btnTestConnection.Top - LegacyClientSetupPresenter.LogFileNamesVisibleOffset;
+            grpLocal.Top = grpLocal.Top - LegacyClientSetupPresenter.LogFileNamesVisibleOffset;
+            grpHTTP.Top = grpHTTP.Top - LegacyClientSetupPresenter.LogFileNamesVisibleOffset;
+            grpFTP.Top = grpFTP.Top - LegacyClientSetupPresenter.LogFileNamesVisibleOffset;
          }
       }
 
@@ -302,7 +300,7 @@ namespace HFM.Forms
             return;
          }
 
-         MessageBox.Show(this, "Test Connection Succeeded", PlatformOps.ApplicationNameAndVersion,
+         MessageBox.Show(this, "Test Connection Succeeded", Core.Application.NameAndVersion,
             MessageBoxButtons.OK, MessageBoxIcon.Information);
       }
 
@@ -315,7 +313,7 @@ namespace HFM.Forms
          }
 
          MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture, "Test Connection Failed{0}{0}{1}",
-            Environment.NewLine, message), PlatformOps.ApplicationNameAndVersion, MessageBoxButtons.OK,
+            Environment.NewLine, message), Core.Application.NameAndVersion, MessageBoxButtons.OK,
                MessageBoxIcon.Error);
       }
 

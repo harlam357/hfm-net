@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Sortable Binding List Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 
-using HFM.Framework;
+using HFM.Core;
 
 namespace HFM.Forms
 {

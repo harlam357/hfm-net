@@ -26,37 +26,32 @@ using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
+using Castle.Core.Logging;
+
 using harlam357.Windows.Forms;
 
+using HFM.Core;
+using HFM.Core.DataTypes;
 using HFM.Forms.Models;
-using HFM.Framework;
-using HFM.Framework.DataTypes;
 
 namespace HFM.Forms
 {
-   public interface IInstanceSettingsPresenter
+   public interface ILegacyClientSetupPresenter
    {
-      /// <summary>
-      /// Client Instance being Edited
-      /// </summary>
-      IClientInstanceSettingsModel SettingsModel { get; set; }
+      LegacyClientSettingsModel SettingsModel { get; set; }
 
       DialogResult ShowDialog(IWin32Window owner);
    }
 
-   public class InstanceSettingsPresenter : IInstanceSettingsPresenter
+   public class LegacyClientSetupPresenter : ILegacyClientSetupPresenter
    {
       public const int LogFileNamesVisibleOffset = 70;
    
       #region Fields
 
-      private bool _isRunningOnMono;
-      
-      private IClientInstanceSettingsModel _settingsModel;
-      /// <summary>
-      /// Client Instance being Edited
-      /// </summary>
-      public IClientInstanceSettingsModel SettingsModel
+      private LegacyClientSettingsModel _settingsModel;
+
+      public LegacyClientSettingsModel SettingsModel
       {
          get { return _settingsModel; }
          set
@@ -68,14 +63,22 @@ namespace HFM.Forms
             _settingsView.DataBind(_settingsModel);
             _propertyCollection = TypeDescriptor.GetProperties(_settingsModel);
             _settingsModel.PropertyChanged += SettingsModelPropertyChanged;
-            SetViewInstanceType();
+            //SetViewInstanceType();
             SetViewHostType();
          }
       }
 
       private PropertyDescriptorCollection _propertyCollection;
 
-      private readonly IInstanceSettingsView _settingsView;
+      private ILogger _logger = NullLogger.Instance;
+
+      public ILogger Logger
+      {
+         get { return _logger; }
+         set { _logger = value; }
+      }
+
+      private readonly ILegacyClientSetupView _settingsView;
 
       /// <summary>
       /// Network Operations Interface
@@ -92,7 +95,7 @@ namespace HFM.Forms
 
       #region Constructor
 
-      public InstanceSettingsPresenter(IInstanceSettingsView settingsView, INetworkOps networkOps, IMessageBoxView messageBoxView, IFolderBrowserView folderBrowserView)
+      public LegacyClientSetupPresenter(ILegacyClientSetupView settingsView, INetworkOps networkOps, IMessageBoxView messageBoxView, IFolderBrowserView folderBrowserView)
       {
          _settingsView = settingsView;
          _settingsView.AttachPresenter(this);
@@ -100,8 +103,6 @@ namespace HFM.Forms
          _messageBoxView = messageBoxView;
          _folderBrowserView = folderBrowserView;
          _validatingControls = _settingsView.FindValidatingControls();
-         
-         _isRunningOnMono = PlatformOps.IsRunningOnMono();
       }
       
       #endregion
@@ -119,62 +120,61 @@ namespace HFM.Forms
             SetViewHostType();
          }
          SetPropertyErrorState(e.PropertyName, true);
-         if (_isRunningOnMono) HandleSettingsModelPropertyChangedForMono(e.PropertyName);
+         if (Core.Application.IsRunningOnMono) HandleSettingsModelPropertyChangedForMono(e.PropertyName);
       }
       
-      private void SetViewInstanceType()
-      {
-         if (_settingsModel.ExternalInstance)
-         {
-            _settingsView.Text = "Client Data Merge Setup"; 
-            _settingsView.ClientMegahertzLabelText = "Merge File Name:";
-            _settingsView.MergeFileNameVisible = true;
-            _settingsView.LogFileNamesVisible = false;
-            _settingsView.ClientIsOnVirtualMachineVisible = false;
-            _settingsView.ClientTimeOffsetVisible = false;
-         }
-      }
+      //private void SetViewInstanceType()
+      //{
+      //   if (_settingsModel.ExternalInstance)
+      //   {
+      //      _settingsView.Text = "Client Data Merge Setup"; 
+      //      _settingsView.ClientMegahertzLabelText = "Merge File Name:";
+      //      _settingsView.MergeFileNameVisible = true;
+      //      _settingsView.LogFileNamesVisible = false;
+      //      _settingsView.ClientIsOnVirtualMachineVisible = false;
+      //      _settingsView.ClientTimeOffsetVisible = false;
+      //   }
+      //}
       
       private void SetViewHostType()
       {
-         switch (_settingsModel.InstanceHostType)
+         switch (_settingsModel.LegacyClientSubType)
          {
-            case InstanceType.PathInstance:
-               if (_settingsModel.ExternalInstance)
-               {
-                  
-                  _settingsView.Size = new Size(_settingsView.MaxWidth, _settingsView.MaxHeight - 78 - LogFileNamesVisibleOffset);
-               }
-               else
-               {
+            case LegacyClientSubType.Path:
+               //if (_settingsModel.ExternalInstance)
+               //{
+               //   _settingsView.Size = new Size(_settingsView.MaxWidth, _settingsView.MaxHeight - 78 - LogFileNamesVisibleOffset);
+               //}
+               //else
+               //{
                   _settingsView.Size = new Size(_settingsView.MaxWidth, _settingsView.MaxHeight - 78);
-               }
+               //}
                _settingsView.PathGroupVisible = true;
                _settingsView.HttpGroupVisible = false;
                _settingsView.FtpGroupVisible = false;
                break;
-            case InstanceType.HttpInstance:
-               if (_settingsModel.ExternalInstance)
-               {
-                  _settingsView.Size = new Size(_settingsView.MaxWidth, _settingsView.MaxHeight - 50 - LogFileNamesVisibleOffset);
-               }
-               else
-               {
+            case LegacyClientSubType.Http:
+               //if (_settingsModel.ExternalInstance)
+               //{
+               //   _settingsView.Size = new Size(_settingsView.MaxWidth, _settingsView.MaxHeight - 50 - LogFileNamesVisibleOffset);
+               //}
+               //else
+               //{
                   _settingsView.Size = new Size(_settingsView.MaxWidth, _settingsView.MaxHeight - 50);
-               }
+               //}
                _settingsView.PathGroupVisible = false;
                _settingsView.HttpGroupVisible = true;
                _settingsView.FtpGroupVisible = false;
                break;
-            case InstanceType.FtpInstance:
-               if (_settingsModel.ExternalInstance)
-               {
-                  _settingsView.Size = new Size(_settingsView.MaxWidth, _settingsView.MaxHeight - LogFileNamesVisibleOffset);
-               }
-               else
-               {
+            case LegacyClientSubType.Ftp:
+               //if (_settingsModel.ExternalInstance)
+               //{
+               //   _settingsView.Size = new Size(_settingsView.MaxWidth, _settingsView.MaxHeight - LogFileNamesVisibleOffset);
+               //}
+               //else
+               //{
                   _settingsView.Size = new Size(_settingsView.MaxWidth, _settingsView.MaxHeight);
-               }
+               //}
                _settingsView.PathGroupVisible = false;
                _settingsView.HttpGroupVisible = false;
                _settingsView.FtpGroupVisible = true;
@@ -258,16 +258,16 @@ namespace HFM.Forms
          //try
          //{
             _settingsView.SetWaitCursor();
-            if (_settingsModel.InstanceHostType.Equals(InstanceType.PathInstance))
+            if (_settingsModel.LegacyClientSubType.Equals(LegacyClientSubType.Path))
             {
                var action = new Action(() => CheckFileConnection(SettingsModel.Path));
                action.BeginInvoke(CheckConnectionCallback, action);
             }
-            else if (_settingsModel.InstanceHostType.Equals(InstanceType.FtpInstance))
+            else if (_settingsModel.LegacyClientSubType.Equals(LegacyClientSubType.Ftp))
             {
                _networkOps.BeginFtpCheckConnection(SettingsModel.Server, SettingsModel.Path, SettingsModel.Username, SettingsModel.Password, SettingsModel.FtpMode, CheckConnectionCallback);
             }
-            else if (_settingsModel.InstanceHostType.Equals(InstanceType.HttpInstance))
+            else if (_settingsModel.LegacyClientSubType.Equals(LegacyClientSubType.Http))
             {
                _networkOps.BeginHttpCheckConnection(SettingsModel.Path, SettingsModel.Username, SettingsModel.Password, CheckConnectionCallback);
             }
@@ -298,7 +298,7 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            HfmTrace.WriteToHfmConsole(ex);
+            _logger.ErrorFormat(ex, "{0}", ex.Message);
             _settingsView.ShowConnectionFailedMessage(ex.Message);
          }
          finally
@@ -320,11 +320,11 @@ namespace HFM.Forms
       {
          SetPropertyErrorState();
          // Check for error conditions
-         if (SettingsModel.InstanceNameError ||
+         if (SettingsModel.NameError ||
              SettingsModel.ClientProcessorMegahertzError ||
-             SettingsModel.RemoteFAHLogFilenameError ||
-             SettingsModel.RemoteUnitInfoFilenameError ||
-             SettingsModel.RemoteQueueFilenameError ||
+             SettingsModel.FahLogFileNameError ||
+             SettingsModel.UnitInfoFileNameError ||
+             SettingsModel.QueueFileNameError ||
              SettingsModel.ServerError ||
              SettingsModel.CredentialsError ||
              SettingsModel.PathEmpty)

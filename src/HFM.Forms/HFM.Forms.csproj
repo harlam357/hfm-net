@@ -61,6 +61,9 @@
     <DelaySign>true</DelaySign>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\lib\Castle Windsor\dotNet35\Castle.Core.dll</HintPath>
+    </Reference>
     <Reference Include="harlam357.Windows.Forms">
       <HintPath>..\..\lib\harlam357-net\harlam357.Windows.Forms.dll</HintPath>
     </Reference>
@@ -124,7 +127,7 @@
     <Compile Include="Controls\GroupBoxWrapper.Designer.cs">
       <DependentUpon>GroupBoxWrapper.cs</DependentUpon>
     </Compile>
-    <Compile Include="DisplayInstanceSortableBindingList.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="HistoryEntrySortableBindingList.cs" />
     <Compile Include="Controls\HistoryGridViewWrapper.cs">
       <SubType>Component</SubType>
@@ -138,8 +141,15 @@
     <Compile Include="Controls\LabelWrapper.Designer.cs">
       <DependentUpon>LabelWrapper.cs</DependentUpon>
     </Compile>
+    <Compile Include="LegacyClientSetupDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LegacyClientSetupDialog.Designer.cs">
+      <DependentUpon>LegacyClientSetupDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LegacyClientSetupPresenter.cs" />
     <Compile Include="MainPresenter.cs" />
-    <Compile Include="Models\ClientInstanceSettingsModel.cs" />
+    <Compile Include="Models\LegacyClientSettingsModel.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Controls\QueueControl.cs">
       <SubType>UserControl</SubType>
@@ -166,6 +176,7 @@
       <DependentUpon>TextBoxWrapper.cs</DependentUpon>
     </Compile>
     <Compile Include="RetrievalLogic.cs" />
+    <Compile Include="SlotModelSortableBindingList.cs" />
     <Compile Include="SortableBindingList.cs" />
     <Compile Include="UpdateLogic.cs" />
     <Compile Include="frmAbout.cs">
@@ -185,12 +196,6 @@
     </Compile>
     <Compile Include="frmHistory.Designer.cs">
       <DependentUpon>frmHistory.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmHost.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmHost.Designer.cs">
-      <DependentUpon>frmHost.cs</DependentUpon>
     </Compile>
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
@@ -232,7 +237,6 @@
       <DependentUpon>frmUnitImport.cs</DependentUpon>
     </Compile>
     <Compile Include="HistoryPresenter.cs" />
-    <Compile Include="InstanceSettingsPresenter.cs" />
     <Compile Include="Models\HistoryPresenterModel.cs" />
     <Compile Include="Models\OptionsModel.cs" />
     <Compile Include="Models\ReportingModel.cs" />
@@ -263,10 +267,6 @@
     <EmbeddedResource Include="frmHistory.resx">
       <DependentUpon>frmHistory.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmHost.resx">
-      <DependentUpon>frmHost.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -287,6 +287,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmUnitImport.resx">
       <DependentUpon>frmUnitImport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LegacyClientSetupDialog.resx">
+      <DependentUpon>LegacyClientSetupDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -348,17 +351,13 @@
     <None Include="Resources\UpArrow.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HFM.Framework.DataTypes\HFM.Framework.DataTypes.csproj">
-      <Project>{B294C8E0-63AD-47CF-8DE5-CE44C046DF89}</Project>
-      <Name>HFM.Framework.DataTypes</Name>
+    <ProjectReference Include="..\HFM.Core.DataTypes\HFM.Core.DataTypes.csproj">
+      <Project>{C198DA45-5B5B-4684-914B-97DED3F0BB40}</Project>
+      <Name>HFM.Core.DataTypes</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HFM.Framework\HFM.Framework.csproj">
-      <Project>{FFFF3DE4-8620-4C13-A968-ADF58133146B}</Project>
-      <Name>HFM.Framework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HFM.Instances\HFM.Instances.csproj">
-      <Project>{B8614309-B90A-4B86-97FF-3A9E64B9658F}</Project>
-      <Name>HFM.Instances</Name>
+    <ProjectReference Include="..\HFM.Core\HFM.Core.csproj">
+      <Project>{360034D2-9F6A-4377-B5B9-D82712171223}</Project>
+      <Name>HFM.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -382,6 +381,9 @@
     <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
       <Link>Properties\CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Configuration\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

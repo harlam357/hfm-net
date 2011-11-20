@@ -32,10 +32,10 @@ using System.Windows.Forms;
 
 using harlam357.Windows.Forms;
 
+using HFM.Core;
+using HFM.Core.DataTypes;
 using HFM.Forms.Models;
 using HFM.Forms.Controls;
-using HFM.Framework;
-using HFM.Framework.DataTypes;
 
 namespace HFM.Forms
 {

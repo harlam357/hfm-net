@@ -24,7 +24,7 @@ using HFM.Forms.Controls;
 
 namespace HFM.Forms
 {
-   partial class frmHost
+   partial class LegacyClientSetupDialog
    {
       /// <summary>
       /// Required designer variable.
@@ -53,7 +53,7 @@ namespace HFM.Forms
       private void InitializeComponent()
       {
          this.components = new System.ComponentModel.Container();
-         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmHost));
+         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LegacyClientSetupDialog));
          this.btnOK = new ButtonWrapper();
          this.btnCancel = new ButtonWrapper();
          this.txtLocalPath = new harlam357.Windows.Forms.ValidatingTextBox();
@@ -692,7 +692,7 @@ namespace HFM.Forms
          this.txtMergeFileName.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          this.txtMergeFileName.Visible = false;
          // 
-         // frmHost
+         // LegacyClientSetupDialog
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -723,11 +723,11 @@ namespace HFM.Forms
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
          this.MaximizeBox = false;
          this.MinimizeBox = false;
-         this.Name = "frmHost";
+         this.Name = "LegacyClientSetupDialog";
          this.ShowInTaskbar = false;
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
          this.Text = "Folding Instance Setup";
-         this.Shown += new System.EventHandler(this.frmHost_Shown);
+         this.Shown += new System.EventHandler(this.LegacyClientSetupDialogShown);
          ((System.ComponentModel.ISupportInitialize)(this.numOffset)).EndInit();
          this.grpLocal.ResumeLayout(false);
          this.grpLocal.PerformLayout();
