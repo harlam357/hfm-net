@@ -12,7 +12,7 @@ copy /y HFM.Client.dll %1
 copy /y HFM.Core.dll %1
 copy /y HFM.Core.DataTypes.dll %1
 copy /Y HFM.Core.Plugins.dll %1
-REM copy /y HFM.Forms.dll %1
+copy /y HFM.Forms.dll %1
 copy /Y HFM.Log.dll %1
 copy /Y HFM.Preferences.dll %1
 copy /Y HFM.Proteins.dll %1

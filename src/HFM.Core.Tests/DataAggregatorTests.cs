@@ -41,7 +41,7 @@ namespace HFM.Core.Tests
       {
          _dataAggregator = new DataAggregator();
          // create maps
-         Configuration.ObjectMapper.CreateMaps();
+         Core.Configuration.ObjectMapper.CreateMaps();
       }
 
       // ReSharper disable InconsistentNaming
