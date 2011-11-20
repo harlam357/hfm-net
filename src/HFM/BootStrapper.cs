@@ -51,6 +51,7 @@ namespace HFM
          #region Create Object Maps
 
          Core.Configuration.ObjectMapper.CreateMaps();
+         Forms.Configuration.ObjectMapper.CreateMaps();
 
          #endregion
 
@@ -153,7 +154,7 @@ namespace HFM
             //frmMain frm;
             //try
             //{
-            //   frm = (frmMain)ServiceLocator.Resolve<IMainView>();
+            //   frm = (Form)ServiceLocator.Resolve<IMainView>();
             //   frm.Initialize(ServiceLocator.Resolve<MainPresenter>(), proteinCollection);
             //   frm.WorkUnitHistoryMenuEnabled = connectionOk;
             //}

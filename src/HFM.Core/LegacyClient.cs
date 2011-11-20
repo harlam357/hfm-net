@@ -119,7 +119,7 @@ namespace HFM.Core
       }
       
       #region Retrieval Properties
-      
+
       private volatile bool _retrievalInProgress;
       /// <summary>
       /// Local flag set when log retrieval is in progress
@@ -127,11 +127,9 @@ namespace HFM.Core
       public bool RetrievalInProgress
       {
          get { return _retrievalInProgress; }
-         private set 
-         { 
-            _retrievalInProgress = value;
-         }
       }
+
+      private bool _abort;
 
       /// <summary>
       /// When the data was last successfully retrieved
@@ -142,24 +140,41 @@ namespace HFM.Core
 
       #region Retrieval Methods
 
+      public void Abort()
+      {
+         _abort = true;
+      }
+
+      private bool AbortRetrieve
+      {
+         get { return _retrievalInProgress && _abort; }
+      }
+
       /// <summary>
       /// Retrieve Instance Log Files based on Instance Type
       /// </summary>
       public void Retrieve()
       {
-         // Don't allow this to fire more than once at a time
-         if (RetrievalInProgress) return;
+         Debug.Assert(Slots.Count == 1);
+         RetrieveInternal(Slots[0]);
+      }
 
+      /// <summary>
+      /// Retrieve Instance Log Files based on Instance Type
+      /// </summary>
+      private void RetrieveInternal(SlotModel defaultSlotModel)
+      {
          try
          {
-            RetrievalInProgress = true;
-            
-            Debug.Assert(Slots.Count == 1);
-            SlotModel defaultSlotModel = Slots[0];
+            // Don't allow this to fire more than once at a time
+            if (_retrievalInProgress) return;
+         
+            _retrievalInProgress = true;
+            _abort = false;
 
-            try
+            _dataRetriever.Execute(Settings);
+            if (!AbortRetrieve)
             {
-               _dataRetriever.Execute(Settings);
                // Set successful Last Retrieval Time
                LastRetrievalTime = DateTime.Now;
                // Re-Init Client Level Members Before Processing
@@ -172,15 +187,21 @@ namespace HFM.Core
 
                _logger.Info("{0} ({1}) Client Status: {2}", Instrumentation.FunctionName, defaultSlotModel.Settings.Name, defaultSlotModel.Status);
             }
-            catch (Exception ex)
+            else
             {
                defaultSlotModel.Status = ClientStatus.Offline;
-               _logger.ErrorFormat(ex, Constants.InstanceNameFormat, defaultSlotModel.Settings.Name, ex.Message);
+               _logger.Info(Constants.InstanceNameFormat, defaultSlotModel.Settings.Name, "Retrieval Aborted...");
             }
+         }
+         catch (Exception ex)
+         {
+            defaultSlotModel.Status = ClientStatus.Offline;
+            _logger.ErrorFormat(ex, Constants.InstanceNameFormat, defaultSlotModel.Settings.Name, ex.Message);
          }
          finally
          {
-            RetrievalInProgress = false;
+            _retrievalInProgress = false;
+            _abort = false;
          }
       }
       

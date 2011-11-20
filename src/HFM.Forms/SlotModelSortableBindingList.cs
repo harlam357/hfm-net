@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Display Instance Sortable Binding List Class
+ * HFM.NET - Slot Model Sortable Binding List Class
  * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@ namespace HFM.Forms
 {
    [Serializable]
    [CoverageExclude]
-   public class DisplayInstanceSortableBindingList : SortableBindingList<SlotModel>
+   public class SlotModelSortableBindingList : SortableBindingList<SlotModel>
    {
       #region Fields
 
@@ -54,15 +54,15 @@ namespace HFM.Forms
 
       protected override void ApplySortCore(PropertyDescriptor property, ListSortDirection direction)
       {
-         var items = Items as List<IDisplayInstance>;
+         var items = Items as List<SlotModel>;
 
          if ((null != items) && (null != property))
          {
-            var pc = new DisplayInstancePropertyComparer<IDisplayInstance>(property,
-                                                                           FindPropertyDescriptor(StatusColumnName),
-                                                                           FindPropertyDescriptor(NameColumnName),
-                                                                           direction,
-                                                                           OfflineClientsLast);
+            var pc = new DisplayInstancePropertyComparer<SlotModel>(property,
+                                                                    FindPropertyDescriptor(StatusColumnName),
+                                                                    FindPropertyDescriptor(NameColumnName),
+                                                                    direction,
+                                                                    OfflineClientsLast);
             items.Sort(pc);
 
             /* Set sorted */
@@ -91,11 +91,11 @@ namespace HFM.Forms
 
          if (key is String)
          {
-            var list = Items as List<IDisplayInstance>;
+            var list = Items as List<SlotModel>;
 
             if ((null != list))
             {
-               return list.FindIndex(delegate(IDisplayInstance item)
+               return list.FindIndex(delegate(SlotModel item)
                {
                   if (prop.GetValue(item).Equals(key))
                   {

@@ -57,11 +57,11 @@ namespace HFM.Forms.Tests
       }
       
       [Test]
-      public void ClientInstanceSettingsPathTest()
+      public void ClientSettingsPathTest()
       {
          // Arrange
          var settings = new LegacyClientSettingsModel();
-         //Expect.Call(() => settings.PropertyChanged += null).Constraints(Rhino.Mocks.Constraints.Is.NotNull());
+         settings.LegacyClientSubType = LegacyClientSubType.Path;
 
          _settingsView.Expect(x => x.DataBind(settings));
          _settingsView.Expect(x => x.PathGroupVisible = true);
@@ -78,12 +78,11 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void ClientInstanceSettingsHttpTest()
+      public void ClientSettingsHttpTest()
       {
          // Arrange
          var settings = new LegacyClientSettingsModel();
          settings.LegacyClientSubType = LegacyClientSubType.Http;
-         //Expect.Call(() => settings.PropertyChanged += null).Constraints(Rhino.Mocks.Constraints.Is.NotNull());
 
          _settingsView.Expect(x => x.DataBind(settings));
          _settingsView.Expect(x => x.PathGroupVisible = false);
@@ -97,12 +96,11 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void ClientInstanceSettingsFtpTest()
+      public void ClientSettingsFtpTest()
       {
          // Arrange
          var settings = new LegacyClientSettingsModel();
          settings.LegacyClientSubType = LegacyClientSubType.Ftp;
-         //Expect.Call(() => settings.PropertyChanged += null).Constraints(Rhino.Mocks.Constraints.Is.NotNull());
 
          _settingsView.Expect(x => x.DataBind(settings));
          _settingsView.Expect(x => x.PathGroupVisible = false);

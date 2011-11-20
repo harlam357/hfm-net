@@ -29,6 +29,9 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Application = System.Windows.Forms.Application;
+
+using Castle.Core.Logging;
 
 using harlam357.Windows.Forms;
 
@@ -56,7 +59,7 @@ namespace HFM.Forms
          WebVisualStyles
       }
    
-      #region Members
+      #region Fields
 
       private const string XsltExt = "xslt";
       private const string XsltFilter = "XML Transform (*.xslt;*.xsl)|*.xslt;*.xsl";
@@ -66,13 +69,21 @@ namespace HFM.Forms
       private const string ExeFilter = "Program Files|*.exe";
       
       private readonly IPreferenceSet _prefs;
-      private readonly bool _isRunningOnMono;
+      private readonly IAutoRun _autoRun;
       
       private readonly List<IValidatingControl>[] _validatingControls;
       private readonly PropertyDescriptorCollection[] _propertyCollection;
       private readonly object[] _models;
       
       private readonly WebBrowser _cssSampleBrowser;
+
+      private ILogger _logger = NullLogger.Instance;
+
+      public ILogger Logger
+      {
+         get { return _logger; }
+         set { _logger = value; }
+      }
 
       /// <summary>
       /// Network Operations Interface
@@ -89,10 +100,11 @@ namespace HFM.Forms
       #endregion
 
       #region Constructor And Binding/Load Methods
-      public frmPreferences(IPreferenceSet prefs)
+
+      public frmPreferences(IPreferenceSet prefs, IAutoRun autoRun)
       {
          _prefs = prefs;
-         _isRunningOnMono = PlatformOps.IsRunningOnMono();
+         _autoRun = autoRun;
       
          InitializeComponent();
 
@@ -102,7 +114,7 @@ namespace HFM.Forms
          _validatingControls = new List<IValidatingControl>[tabControl1.TabCount];
          _propertyCollection = new PropertyDescriptorCollection[tabControl1.TabCount];
          _models = new object[tabControl1.TabCount];
-         if (_isRunningOnMono == false)
+         if (Core.Application.IsRunningOnMono == false)
          {
             _cssSampleBrowser = new WebBrowser();
 
@@ -178,7 +190,7 @@ namespace HFM.Forms
       private void ScheduledTasksPropertyChanged(object sender, PropertyChangedEventArgs e)
       {
          SetPropertyErrorState((int)TabName.ScheduledTasks, e.PropertyName, true);
-         if (_isRunningOnMono)
+         if (Core.Application.IsRunningOnMono)
          {
             HandleScheduledTasksPropertyEnabledForMono(e.PropertyName);
             HandleScheduledTasksPropertyChangedForMono(e.PropertyName);
@@ -231,7 +243,7 @@ namespace HFM.Forms
       
       private void StartupAndExternalPropertyChanged(object sender, PropertyChangedEventArgs e)
       {
-         if (_isRunningOnMono)
+         if (Core.Application.IsRunningOnMono)
          {
             HandleStartupAndExternalPropertyEnabledForMono(e.PropertyName);
             HandleStartupAndExternalPropertyChangedForMono(e.PropertyName);
@@ -268,7 +280,7 @@ namespace HFM.Forms
       private void ReportingPropertyChanged(object sender, PropertyChangedEventArgs e)
       {
          SetPropertyErrorState((int)TabName.Reporting, e.PropertyName, true);
-         if (_isRunningOnMono) HandleReportingPropertyEnabledForMono(e.PropertyName);
+         if (Core.Application.IsRunningOnMono) HandleReportingPropertyEnabledForMono(e.PropertyName);
       }
 
       private void HandleReportingPropertyEnabledForMono(string propertyName)
@@ -292,7 +304,7 @@ namespace HFM.Forms
       private void WebSettingsChanged(object sender, PropertyChangedEventArgs e)
       {
          SetPropertyErrorState((int)TabName.WebSettings, e.PropertyName, true);
-         if (_isRunningOnMono) HandleWebSettingsPropertyEnabledForMono(e.PropertyName);
+         if (Core.Application.IsRunningOnMono) HandleWebSettingsPropertyEnabledForMono(e.PropertyName);
       }
 
       private void HandleWebSettingsPropertyEnabledForMono(string propertyName)
@@ -313,7 +325,7 @@ namespace HFM.Forms
 
       private void WebVisualStylesPropertyChanged(object sender, PropertyChangedEventArgs e)
       {
-         if (_isRunningOnMono) HandleWebVisualStylesPropertyChangedForMono(e.PropertyName);
+         if (Core.Application.IsRunningOnMono) HandleWebVisualStylesPropertyChangedForMono(e.PropertyName);
       }
 
       private void HandleWebVisualStylesPropertyChangedForMono(string propertyName)
@@ -443,9 +455,9 @@ namespace HFM.Forms
       
          #region Startup
          /*** Auto-Run Is Not DataBound ***/
-         if (_isRunningOnMono == false)
+         if (Core.Application.IsRunningOnMono == false)
          {
-            chkAutoRun.Checked = RegistryOps.IsHfmAutoRunSet();
+            chkAutoRun.Checked = _autoRun.IsEnabled();
          }
          else
          {
@@ -662,7 +674,7 @@ namespace HFM.Forms
             }
             catch (Exception ex)
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
+               _logger.WarnFormat(ex, "{0}", ex.Message);
                MessageBox.Show(this, String.Format("Test Email failed to send.  Please check your Email settings.{0}{0}Error: {1}", Environment.NewLine, ex.Message), 
                   Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -682,6 +694,7 @@ namespace HFM.Forms
       #endregion
 
       #region Web Tab
+
       private void linkEOC_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
       {
          try
@@ -690,7 +703,7 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            HfmTrace.WriteToHfmConsole(ex);
+            _logger.ErrorFormat(ex, "{0}", ex.Message);
             MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "EOC User Stats page"));
          }
       }
@@ -703,7 +716,7 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            HfmTrace.WriteToHfmConsole(ex);
+            _logger.ErrorFormat(ex, "{0}", ex.Message);
             MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "Stanford User Stats page"));
          }
       }
@@ -716,10 +729,11 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            HfmTrace.WriteToHfmConsole(ex);
+            _logger.ErrorFormat(ex, "{0}", ex.Message);
             MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "EOC Team Stats page"));
          }
       }
+
       #endregion
 
       #region Visual Style Tab
@@ -730,7 +744,7 @@ namespace HFM.Forms
 
       private void ShowCssPreview()
       {
-         if (_isRunningOnMono) return;
+         if (Core.Application.IsRunningOnMono) return;
          
          string sStylesheet = Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.CssFolderName), _webVisualStylesModel.CssFile);
          var sb = new StringBuilder();
@@ -782,7 +796,7 @@ namespace HFM.Forms
          try
          {
             SetWaitCursor();
-            Match mMatchFtpWithUserPassUrl = StringOps.MatchFtpWithUserPassUrl(txtWebSiteBase.Text);
+            Match mMatchFtpWithUserPassUrl = Core.Validate.MatchFtpWithUserPassUrl(txtWebSiteBase.Text);
             if (mMatchFtpWithUserPassUrl.Success == false)
             {
                Action<string> del = CheckFileConnection;
@@ -801,7 +815,7 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            HfmTrace.WriteToHfmConsole(ex);
+            _logger.ErrorFormat(ex, "{0}", ex.Message);
             ShowConnectionFailedMessage(ex.Message);
          }
       }
@@ -825,7 +839,7 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            HfmTrace.WriteToHfmConsole(ex);
+            _logger.ErrorFormat(ex, "{0}", ex.Message);
             ShowConnectionFailedMessage(ex.Message);
          }
          finally
@@ -844,7 +858,7 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            HfmTrace.WriteToHfmConsole(ex);
+            _logger.ErrorFormat(ex, "{0}", ex.Message);
             ShowConnectionFailedMessage(ex.Message);
          }
          finally
@@ -861,7 +875,7 @@ namespace HFM.Forms
             return;
          }
 
-         MessageBox.Show(this, "Test Connection Succeeded", PlatformOps.ApplicationNameAndVersion,
+         MessageBox.Show(this, "Test Connection Succeeded", Core.Application.NameAndVersion,
             MessageBoxButtons.OK, MessageBoxIcon.Information);
       }
 
@@ -874,7 +888,7 @@ namespace HFM.Forms
          }
 
          MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture, "Test Connection Failed{0}{0}{1}",
-            Environment.NewLine, message), PlatformOps.ApplicationNameAndVersion, MessageBoxButtons.OK,
+            Environment.NewLine, message), Core.Application.NameAndVersion, MessageBoxButtons.OK,
                MessageBoxIcon.Error);
       }
       
@@ -942,22 +956,22 @@ namespace HFM.Forms
 
       private void GetAutoRun()
       {
-         if (_isRunningOnMono) return;
+         if (Core.Application.IsRunningOnMono) return;
          
          try
          {
             if (chkAutoRun.Checked)
             {
-               RegistryOps.SetHfmAutoRun(Application.ExecutablePath);
+               _autoRun.SetFilePath(Application.ExecutablePath);
             }
             else
             {
-               RegistryOps.SetHfmAutoRun(String.Empty);
+               _autoRun.SetFilePath(String.Empty);
             }
          }
          catch (InvalidOperationException ex)
          {
-            HfmTrace.WriteToHfmConsole(ex);
+            _logger.ErrorFormat(ex, "{0}", ex.Message);
             MessageBox.Show(this, "Failed to save HFM.NET Auto Run Registry Value.  Please see the Messages Windows for detailed error information.",
                Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
          }

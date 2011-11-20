@@ -22,6 +22,7 @@ using System.Drawing;
 using System.Windows.Forms;
 
 using HFM.Core;
+using HFM.Core.Logging;
 using HFM.Forms.Controls;
 
 namespace HFM.Forms
@@ -50,16 +51,25 @@ namespace HFM.Forms
       private readonly IPreferenceSet _prefs;
       private volatile List<string> _lines = new List<string>(500);
 
+      // concrete HFM.Core.Logger instance
+      private readonly Logger _logger;
+
       #region Constructor
-      public frmMessages(IPreferenceSet prefs)
+
+      public frmMessages(IPreferenceSet prefs, Logger logger)
       {
          _prefs = prefs;
+         _logger = logger;
       
          InitializeComponent();
+
+         _logger.TextMessage += (sender, e) => AddMessage(e.Message);
       } 
+
       #endregion
 
       #region Implementation
+
       public void AddMessage(string message)
       {
          if (_lines.Count > 500)
@@ -131,6 +141,7 @@ namespace HFM.Forms
          e.Cancel = true;
          base.OnClosing(e);
       } 
+
       #endregion
    }
 }

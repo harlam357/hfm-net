@@ -157,7 +157,7 @@ namespace HFM.Forms.Models
 
       public bool ProjectDownloadUrlError
       {
-         get { return !StringOps.ValidateHttpUrl(ProjectDownloadUrl); }
+         get { return !Validate.HttpUrl(ProjectDownloadUrl); }
       }
       
       #endregion
@@ -216,7 +216,7 @@ namespace HFM.Forms.Models
             try
             {
                // This will violate FxCop rule (rule ID)
-               StringOps.ValidateServerPortPair(ProxyServer, ProxyPort.ToString());
+               Validate.ServerPortPair(ProxyServer, ProxyPort.ToString());
                ServerPortPairErrorMessage = String.Empty;
                return false;
             }
@@ -299,7 +299,7 @@ namespace HFM.Forms.Models
             try
             {
                // This will violate FxCop rule (rule ID)
-               StringOps.ValidateUsernamePasswordPair(ProxyUser, ProxyPass, true);
+               Validate.UsernamePasswordPair(ProxyUser, ProxyPass, true);
                UsernamePasswordPairErrorMessage = String.Empty;
                return false;
             }
