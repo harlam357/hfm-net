@@ -69,6 +69,7 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Configuration\ObjectMapperTests.cs" />
     <Compile Include="DataAggregatorTests.cs" />
     <Compile Include="DataTypes\BenchmarkClientTests.cs" />
     <Compile Include="DataTypes\QueryParametersTests.cs" />

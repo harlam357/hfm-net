@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Core ObjectMapper Class
+ * HFM.NET - Core ObjectMapper Class Tests
  * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -18,18 +18,20 @@
  */
 
 using AutoMapper;
+using NUnit.Framework;
 
-using HFM.Core.DataTypes;
-using HFM.Queue;
+using HFM.Core.Configuration;
 
-namespace HFM.Core.Configuration
+namespace HFM.Core.Tests.Configuration
 {
-   public static class ObjectMapper
+   [TestFixture]
+   public class ObjectMapperTests
    {
-      public static void CreateMaps()
+      [Test]
+      public void CreateMapsTest()
       {
-         Mapper.CreateMap<QueueData, ClientQueue>();
-         Mapper.CreateMap<QueueEntry, ClientQueueEntry>();
+         ObjectMapper.CreateMaps();
+         Mapper.AssertConfigurationIsValid();
       }
    }
 }
