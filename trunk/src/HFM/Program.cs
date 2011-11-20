@@ -18,16 +18,10 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Runtime.Remoting.Messaging;
-using System.Windows.Forms;
 
-using Castle.Core.Resource;
-using Castle.MicroKernel.Registration;
-using Castle.Windsor;
-using Castle.Windsor.Configuration.Interpreters;
+using Application = System.Windows.Forms.Application;
 
 namespace HFM
 {
@@ -44,10 +38,16 @@ namespace HFM
 
          Application.EnableVisualStyles();
          Application.SetCompatibleTextRenderingDefault(false);
-         
-         
 
-         
+         try
+         {
+            var bootStrapper = new BootStrapper();
+            bootStrapper.Strap(args);
+         }
+         catch (Exception ex)
+         {
+            BootStrapper.ShowStartupError(ex, null);
+         }
       }
       
       private static void ApplicationExit(object sender, EventArgs e)

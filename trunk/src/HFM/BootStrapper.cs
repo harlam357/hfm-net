@@ -32,7 +32,7 @@ namespace HFM
 {
    internal sealed class BootStrapper
    {
-      public void Initialize(string[] args)
+      public void Strap(string[] args)
       {
          #region Configure Container
 
@@ -71,7 +71,7 @@ namespace HFM
          #endregion
 
          #region Process Arguments
-
+         
          var processor = container.Resolve<ArgumentProcessor>();
          if (!processor.Process(arguments))
          {
@@ -104,9 +104,9 @@ namespace HFM
 
             #region Set Logging Level
 
-            var logger = (Core.Logging.Logger)container.Resolve<ILogger>();
+            var logger = (TraceLogger)container.Resolve<ILogger>();
             var prefs = container.Resolve<IPreferenceSet>();
-            logger.Level = (LoggerLevel)prefs.GetPreference<int>(Preference.MessageLevel);
+            logger.Level = (LoggerLevel)prefs.Get<int>(Preference.MessageLevel);
 
             #endregion
 
@@ -128,45 +128,63 @@ namespace HFM
             //unitInfoContainer.Read();
 
             //#endregion
+
+            #region Load Plugins
+
+            var pluginLoader = container.Resolve<Core.Plugins.PluginLoader>();
+            pluginLoader.Load();
+
+            #endregion
+
+            #region Register IPC Channel
+
+            try
+            {
+               SingleInstanceHelper.RegisterIpcChannel(NewInstanceDetected);
+            }
+            catch (Exception ex)
+            {
+               ShowStartupError(ex, "Single Instance IPC channel failed to register.");
+               return;
+            }
+
+            #region Initialize Main View
+
+            //frmMain frm;
+            //try
+            //{
+            //   frm = (frmMain)ServiceLocator.Resolve<IMainView>();
+            //   frm.Initialize(ServiceLocator.Resolve<MainPresenter>(), proteinCollection);
+            //   frm.WorkUnitHistoryMenuEnabled = connectionOk;
+            //}
+            //catch (Exception ex)
+            //{
+            //   ShowStartupError(ex, "Primary UI failed to initialize.");
+            //   return;
+            //}
+
+            #endregion
+
+            // Register the Unhandled Exception Dialog
+            ExceptionDialog.RegisterForUnhandledExceptions(Application.NameAndVersionWithRevision,
+               Environment.OSVersion.VersionString, ExceptionLogger);
+
+            //System.Windows.Forms.Application.Run(frm);
          }
-
-         #region Primary Initialization
-
-         //frmMain frm;
-         //try
-         //{
-         //   frm = (frmMain)ServiceLocator.Resolve<IMainView>();
-         //   frm.Initialize(ServiceLocator.Resolve<MainPresenter>(), proteinCollection);
-         //   frm.WorkUnitHistoryMenuEnabled = connectionOk;
-         //}
-         //catch (Exception ex)
-         //{
-         //   ShowStartupError(ex, "Primary UI failed to initialize.");
-         //   return;
-         //}
-
-         //try
-         //{
-         //   SingleInstanceHelper.RegisterIpcChannel(frm.SecondInstanceStarted);
-         //}
-         //catch (Exception ex)
-         //{
-         //   ShowStartupError(ex, "Single Instance IPC channel failed to register.");
-         //   return;
-         //}
-
-         // Register the Unhandled Exception Dialog
-         ExceptionDialog.RegisterForUnhandledExceptions(Application.NameAndVersionWithRevision,
-            Environment.OSVersion.VersionString, ExceptionLogger);
-
-         //System.Windows.Forms.Application.Run(frm);
 
          #endregion
       }
 
-      private void ExceptionLogger(Exception ex)
+      private void NewInstanceDetected(object sender, NewInstanceDetectedEventArgs e)
       {
-         //_logger.ErrorFormat(ex, "{0}", ex.Message);
+         //var mainView = ServiceLocator.Resolve<IMainView>();
+         //mainView.SecondInstanceStarted(e.Args);
+      }
+
+      private static void ExceptionLogger(Exception ex)
+      {
+         var logger = ServiceLocator.Resolve<ILogger>();
+         logger.ErrorFormat(ex, "{0}", ex.Message);
       }
 
       internal static void ShowStartupError(Exception ex, string message)
@@ -174,7 +192,7 @@ namespace HFM
          ExceptionDialog.ShowErrorDialog(ex, Application.NameAndVersionWithRevision, Environment.OSVersion.VersionString,
             message, Constants.GoogleGroupUrl, true);
       }
-
+      
       //try
       //{
       //   ClearCacheFolder(prefs);

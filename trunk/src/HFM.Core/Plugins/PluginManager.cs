@@ -133,6 +133,21 @@ namespace HFM.Core.Plugins
          return results.AsReadOnly();
       }
 
+      /// <summary>
+      /// Register an existing plugin instance.
+      /// </summary>
+      /// <param name="name">The plugin name.</param>
+      /// <param name="plugin">The plugin instance.</param>
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="name"/> or <paramref name="plugin"/> is null.</exception>
+      public void RegisterPlugin(string name, T plugin)
+      {
+         if (name == null) throw new ArgumentNullException("name");
+         if (plugin == null) throw new ArgumentNullException("plugin");
+
+         var pluginInfo = new PluginInfo<T>(name, plugin);
+         _plugins.Add(pluginInfo.Name, pluginInfo);
+      }
+
       private static T CreatePluginInstance(string assemblyFile)
       {
          Debug.Assert(assemblyFile != null);

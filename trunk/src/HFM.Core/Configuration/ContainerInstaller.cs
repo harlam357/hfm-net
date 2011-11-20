@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using Castle.Core.Logging;
+using System.Collections.Generic;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
@@ -31,11 +31,6 @@ namespace HFM.Core.Configuration
       public void Install(IWindsorContainer container, IConfigurationStore store)
       {
          #region Service Interfaces
-
-         // ILogger - Singleton
-         container.Register(
-            Component.For<ILogger>()
-               .ImplementedBy<Logging.Logger>());
 
          // IDataAggregator - Transient
          container.Register(
@@ -98,6 +93,24 @@ namespace HFM.Core.Configuration
             Component.For<IProteinDictionary>()
                .ImplementedBy<ProteinDictionary>()
                .OnCreate((kernel, instance) => instance.Read()));
+
+         // PluginLoader - Transient
+         container.Register(
+            Component.For<Plugins.PluginLoader>()
+            .LifeStyle.Transient);
+
+         #region Plugins
+
+         // IPluginManager<Plugins.IFileSerializer<T>> - Singleton
+         container.Register(
+            Component.For<Plugins.IFileSerializerPluginManager<List<DataTypes.Protein>>>()
+               .ImplementedBy<Plugins.FileSerializerPluginManager<List<DataTypes.Protein>>>(),
+               //.Named("PluginManager.ProteinFileSerializer"),
+            Component.For<Plugins.IFileSerializerPluginManager<List<DataTypes.ProteinBenchmark>>>()
+               .ImplementedBy<Plugins.FileSerializerPluginManager<List<DataTypes.ProteinBenchmark>>>());
+               //.Named("PluginManager.ProteinBenchmarkFileSerializer"));
+
+         #endregion
 
          #endregion
       }

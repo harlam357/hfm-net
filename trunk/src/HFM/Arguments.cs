@@ -24,7 +24,6 @@ namespace HFM
 {
    internal enum ArgumentType
    {
-      Service,
       ResetPrefs,
       OpenFile
    }
@@ -69,9 +68,10 @@ namespace HFM
       }
    }
    
-   internal class Argument
+   internal sealed class Argument
    {
       public ArgumentType Type { get; set; }
+
       public string Data { get; set; }
    }
 }

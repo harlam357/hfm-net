@@ -35,7 +35,10 @@ namespace HFM.Core
       public const string UserStatsCacheFileName = "UserStatsCache.dat";
       public const string QueryCacheFileName = "WuHistoryQuery.dat";
 
+      // Plugins Folder Constants
       public const string PluginsFolderName = "Plugins";
+      public const string PluginsProteinsFolderName = "Proteins";
+      public const string PluginsBenchmarksFolderName = "Benchmarks";
 
       public const string CssFolderName = "CSS";
       public const string XmlFolderName = "XML";

@@ -22,7 +22,6 @@
  */
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.Remoting;
@@ -55,7 +54,7 @@ namespace HFM
          return onlyInstance;
       }
       
-      public static void RegisterIpcChannel(NewInstanceHandler handler)
+      public static void RegisterIpcChannel(NewInstanceDetectedHandler handler)
       {
          IChannel ipcChannel = new IpcServerChannel(AssemblyGuid);
          ChannelServices.RegisterChannel(ipcChannel, false);
@@ -124,22 +123,20 @@ namespace HFM
       #endregion
    }
 
-   public delegate void NewInstanceHandler(string[] args);
+   public delegate void NewInstanceDetectedHandler(object sender, NewInstanceDetectedEventArgs e);
 
    public class IpcObject : MarshalByRefObject
    {
-      [SuppressMessage("Microsoft.Design", "CA1009:DeclareEventHandlersCorrectly")]
-      [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
-      public event NewInstanceHandler NewInstance;
+      public event NewInstanceDetectedHandler NewInstanceDetected;
 
-      public IpcObject(NewInstanceHandler handler)
+      public IpcObject(NewInstanceDetectedHandler handler)
       {
-         NewInstance += handler;
+         NewInstanceDetected += handler;
       }
 
       public void SignalNewInstance(string[] args)
       {
-         NewInstance(args);
+         NewInstanceDetected(this, new NewInstanceDetectedEventArgs(args));
       }
 
       // Make sure the object exists "forever"
@@ -147,6 +144,21 @@ namespace HFM
       public override object InitializeLifetimeService()
       {
          return null;
+      }
+   }
+
+   public class NewInstanceDetectedEventArgs : EventArgs
+   {
+      private readonly string[] _args;
+      
+      public string[] Args
+      {
+         get { return _args; }
+      }
+
+      public NewInstanceDetectedEventArgs(string[] args)
+      {
+         _args = args;
       }
    }
 }

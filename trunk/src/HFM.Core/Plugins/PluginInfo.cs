@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace HFM.Core.Plugins
 {
-   public sealed class PluginInfo<T>
+   public sealed class PluginInfo<T> where T : class
    {
       public T Interface { get; set; }
       
@@ -56,6 +56,15 @@ namespace HFM.Core.Plugins
          if (fvi.FileVersion != null) _fileVersion = fvi.FileVersion;
          if (fvi.Comments != null) _description = fvi.Comments;
          if (fvi.CompanyName != null) _author = fvi.CompanyName;
+      }
+
+      internal PluginInfo(string name, T plugin)
+      {
+         if (name == null) throw new ArgumentNullException("name");
+         if (plugin == null) throw new ArgumentNullException("plugin");
+
+         _name = name;
+         Interface = plugin;
       }
    }
 }
