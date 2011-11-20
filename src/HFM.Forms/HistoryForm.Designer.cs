@@ -2,7 +2,7 @@
 
 namespace HFM.Forms
 {
-   partial class frmHistory
+   partial class HistoryForm
    {
       /// <summary>
       /// Required designer variable.
@@ -34,7 +34,7 @@ namespace HFM.Forms
          System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
          System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
          System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmHistory));
+         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HistoryForm));
          this.menuStrip1 = new System.Windows.Forms.MenuStrip();
          this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuFileImportCompletedUnits = new System.Windows.Forms.ToolStripMenuItem();
@@ -438,7 +438,7 @@ namespace HFM.Forms
          this.splitContainerWrapper1.SplitterDistance = 90;
          this.splitContainerWrapper1.TabIndex = 8;
          // 
-         // frmHistory
+         // HistoryForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -447,7 +447,7 @@ namespace HFM.Forms
          this.Controls.Add(this.menuStrip1);
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
          this.MinimumSize = new System.Drawing.Size(800, 350);
-         this.Name = "frmHistory";
+         this.Name = "HistoryForm";
          this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
          this.Text = "Work Unit History";
          this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmHistory_FormClosed);

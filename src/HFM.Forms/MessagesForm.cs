@@ -46,7 +46,7 @@ namespace HFM.Forms
       bool Visible { get; set; }
    }
 
-   public partial class frmMessages : FormWrapper, IMessagesView
+   public partial class MessagesForm : FormWrapper, IMessagesView
    {
       private readonly IPreferenceSet _prefs;
       private volatile List<string> _lines = new List<string>(500);
@@ -56,7 +56,7 @@ namespace HFM.Forms
 
       #region Constructor
 
-      public frmMessages(IPreferenceSet prefs, Logger logger)
+      public MessagesForm(IPreferenceSet prefs, Logger logger)
       {
          _prefs = prefs;
          _logger = logger;

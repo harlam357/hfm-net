@@ -56,9 +56,7 @@ namespace HFM.Forms
       #endregion
    }
 
-   // ReSharper disable InconsistentNaming
-   public partial class frmBenchmarks : FormWrapper, IBenchmarksView
-   // ReSharper restore InconsistentNaming
+   public partial class BenchmarksForm : FormWrapper, IBenchmarksView
    {
       #region Properties
       
@@ -98,7 +96,7 @@ namespace HFM.Forms
 
       #region Constructor
 
-      public frmBenchmarks(IPreferenceSet prefs, IProteinDictionary proteinDictionary, IProteinBenchmarkCollection benchmarkCollection,
+      public BenchmarksForm(IPreferenceSet prefs, IProteinDictionary proteinDictionary, IProteinBenchmarkCollection benchmarkCollection,
                            IEnumerable<SlotModel> slotModels, IMessageBoxView messageBoxView, IExternalProcessStarter processStarter)
       {
          _prefs = prefs;

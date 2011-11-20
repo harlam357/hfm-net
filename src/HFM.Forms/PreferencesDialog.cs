@@ -42,9 +42,7 @@ using HFM.Forms.Controls;
 
 namespace HFM.Forms
 {
-   // ReSharper disable InconsistentNaming
-   public partial class frmPreferences : FormWrapper
-   // ReSharper restore InconsistentNaming
+   public partial class PreferencesDialog : FormWrapper
    {
       /// <summary>
       /// Tab Name Enumeration (maintain in same order as tab pages)
@@ -101,7 +99,7 @@ namespace HFM.Forms
 
       #region Constructor And Binding/Load Methods
 
-      public frmPreferences(IPreferenceSet prefs, IAutoRun autoRun)
+      public PreferencesDialog(IPreferenceSet prefs, IAutoRun autoRun)
       {
          _prefs = prefs;
          _autoRun = autoRun;
