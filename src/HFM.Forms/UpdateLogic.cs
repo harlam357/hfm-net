@@ -18,13 +18,14 @@
  */
 
 using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.Net;
 
+using Castle.Core.Logging;
+
 using harlam357.Windows.Forms;
 
-using HFM.Framework;
+using HFM.Core;
 
 namespace HFM.Forms
 {
@@ -58,6 +59,14 @@ namespace HFM.Forms
       public bool CheckInProgress { get; private set; }
       
       public string UpdateFilePath { get; private set; }
+      
+      private ILogger _logger = NullLogger.Instance;
+
+      public ILogger Logger
+      {
+         get { return _logger; }
+         set { _logger = value; }
+      }
       
       #endregion
       
@@ -131,7 +140,7 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            HfmTrace.WriteToHfmConsole(ex);
+            _logger.ErrorFormat(ex, "{0}", ex.Message);
             if (_userInvoked)
             {
                string message = String.Format(CultureInfo.CurrentCulture, "{0} encountered the following error while checking for an update:{1}{1}{2}.",
@@ -145,17 +154,17 @@ namespace HFM.Forms
          }
       }
 
-      private static bool NewVersionAvailable(string updateVersion)
+      private bool NewVersionAvailable(string updateVersion)
       {
          if (updateVersion == null) return false;
 
          try
          {
-            return PlatformOps.ParseVersion(updateVersion) > PlatformOps.VersionNumber;
+            return Application.ParseVersion(updateVersion) > Application.VersionNumber;
          }
          catch (FormatException ex)
          {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
+            _logger.WarnFormat(ex, "{0}", ex.Message);
             return false;
          }
       }
@@ -168,17 +177,22 @@ namespace HFM.Forms
             return;
          }
 
-         var updatePresenter = new UpdatePresenter(HfmTrace.WriteToHfmConsole,
-            update, _proxy, Constants.ApplicationName, PlatformOps.ApplicationVersionWithRevision);
+         var updatePresenter = new UpdatePresenter(ExceptionLogger,
+            update, _proxy, Constants.ApplicationName, Application.VersionWithRevision);
          updatePresenter.Show(Owner);
          HandleUpdatePresenterResults(updatePresenter);
+      }
+
+      private void ExceptionLogger(Exception ex)
+      {
+         _logger.ErrorFormat(ex, "{0}", ex.Message);
       }
 
       private void HandleUpdatePresenterResults(UpdatePresenter presenter)
       {
          if (presenter.UpdateReady &&
              presenter.SelectedUpdate.UpdateType == 0 &&
-             PlatformOps.IsRunningOnMono() == false)
+             Application.IsRunningOnMono == false)
          {
             string message = String.Format(CultureInfo.CurrentCulture,
                                            "{0} will install the new version when you exit the application.",
