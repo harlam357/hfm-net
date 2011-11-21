@@ -269,6 +269,7 @@ namespace HFM.Forms.Controls
       }
    }
    
+   [CoverageExclude]
    public class QueueIndexChangedEventArgs : EventArgs
    {
       private readonly int _index;

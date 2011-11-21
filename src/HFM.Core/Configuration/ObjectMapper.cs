@@ -24,6 +24,7 @@ using HFM.Queue;
 
 namespace HFM.Core.Configuration
 {
+   [CoverageExclude]
    public static class ObjectMapper
    {
       public static void CreateMaps()

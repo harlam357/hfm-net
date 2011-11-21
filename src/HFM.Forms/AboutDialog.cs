@@ -24,16 +24,19 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 
+using HFM.Core;
 using HFM.Forms.Controls;
 
 namespace HFM.Forms
 {
+   [CoverageExclude]
    public partial class AboutDialog : FormWrapper
    {
       #region Constructor
       public AboutDialog()
       {
          InitializeComponent();
+
          int[] versions = Core.Application.GetVersionNumbers();
          Debug.Assert(versions.Length == 4);
          lblVersion.Text = String.Format(CultureInfo.InvariantCulture, "Version {0}.{1}.{2} - Revision {3}",
@@ -42,7 +45,7 @@ namespace HFM.Forms
          if (String.IsNullOrEmpty(assemblyLocation) == false)
          {
             DateTime buildDate = new FileInfo(assemblyLocation).LastWriteTime;
-            // TODO: When localizing use ToLongDateString() instead.
+            // When localizing use ToLongDateString() instead.
             //lblDate.Text = "Built on: " + buildDate.ToLongDateString();
             lblDate.Text = "Built on: " + buildDate.ToString("D", CultureInfo.InvariantCulture);
          }

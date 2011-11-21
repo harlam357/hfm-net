@@ -23,6 +23,7 @@ using Castle.Windsor;
 
 namespace HFM.Core
 {
+   [CoverageExclude]
    public static class ServiceLocator
    {
       private static IWindsorContainer _container;

@@ -46,6 +46,7 @@ namespace HFM.Forms.Controls
       void ScrollToBottom();
    }
 
+   [CoverageExclude]
    public partial class RichTextBoxExt : RichTextBox, ILogFileViewer
    {
       private IList<LogLine> _logLines;
