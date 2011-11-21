@@ -23,9 +23,9 @@ using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 
+using HFM.Core;
+using HFM.Core.DataTypes;
 using HFM.Forms.Controls;
-using HFM.Framework;
-using HFM.Framework.DataTypes;
 
 namespace HFM.Forms
 {

@@ -118,13 +118,13 @@
     <Compile Include="Controls\ComboBoxWrapper.Designer.cs">
       <DependentUpon>ComboBoxWrapper.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\DataGridViewColumnSelector.cs" />
     <Compile Include="Controls\RichTextBoxExt.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\RichTextBoxExt.Designer.cs">
       <DependentUpon>RichTextBoxExt.cs</DependentUpon>
     </Compile>
-    <Compile Include="DataGridViewColumnSelector.cs" />
     <Compile Include="Controls\DataGridViewExt.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -209,6 +209,12 @@
     <Compile Include="PreferencesDialog.Designer.cs">
       <DependentUpon>PreferencesDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="QueryDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="QueryDialog.Designer.cs">
+      <DependentUpon>QueryDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="SlotModelSortableBindingList.cs" />
     <Compile Include="SortableBindingList.cs" />
     <Compile Include="UpdateLogic.cs" />
@@ -217,12 +223,6 @@
     </Compile>
     <Compile Include="frmProjects.Designer.cs">
       <DependentUpon>frmProjects.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmQuery.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmQuery.Designer.cs">
-      <DependentUpon>frmQuery.cs</DependentUpon>
     </Compile>
     <Compile Include="frmUnitImport.cs">
       <SubType>Form</SubType>
@@ -259,9 +259,6 @@
     <EmbeddedResource Include="frmProjects.resx">
       <DependentUpon>frmProjects.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmQuery.resx">
-      <DependentUpon>frmQuery.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmUnitImport.resx">
       <DependentUpon>frmUnitImport.cs</DependentUpon>
     </EmbeddedResource>
@@ -280,6 +277,9 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="QueryDialog.resx">
+      <DependentUpon>QueryDialog.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
