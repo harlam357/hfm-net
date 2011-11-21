@@ -19,8 +19,11 @@
 
 using System.Windows.Forms;
 
+using HFM.Core;
+
 namespace HFM.Forms.Controls
 {
+   [CoverageExclude]
    public partial class HistoryGridViewWrapper : DataGridView
    {
       public HistoryGridViewWrapper()

@@ -19,11 +19,13 @@
 
 using AutoMapper;
 
+using HFM.Core;
 using HFM.Core.DataTypes;
 using HFM.Forms.Models;
 
 namespace HFM.Forms.Configuration
 {
+   [CoverageExclude]
    public static class ObjectMapper
    {
       public static void CreateMaps()

@@ -30,13 +30,16 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Drawing;
 
-namespace HFM.Forms
+using HFM.Core;
+
+namespace HFM.Forms.Controls
 {
    /// <summary>
    /// Add column show/hide capability to a DataGridView. When user right-clicks 
    /// the cell origin a popup, containing a list of checkbox and column names, is
    /// shown. 
    /// </summary>
+   [CoverageExclude]
    internal class DataGridViewColumnSelector : IDisposable
    {
       // the DataGridView to which the DataGridViewColumnSelector is attached
