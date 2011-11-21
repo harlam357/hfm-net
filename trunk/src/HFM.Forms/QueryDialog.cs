@@ -40,14 +40,12 @@ namespace HFM.Forms
       void Close();
    }
 
-   // ReSharper disable InconsistentNaming
-   public partial class frmQuery : Form, IQueryView
-   // ReSharper restore InconsistentNaming
+   public partial class QueryDialog : Form, IQueryView
    {
       private QueryParameters _query;
       private BindingList<QueryField> _queryFieldList;
 
-      public frmQuery()
+      public QueryDialog()
       {
          InitializeComponent();
          SetupDataGridViewColumns();
