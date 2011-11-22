@@ -118,7 +118,12 @@
     <Compile Include="Controls\ComboBoxWrapper.Designer.cs">
       <DependentUpon>ComboBoxWrapper.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\DataGridViewCalendarEditingControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\DataGridViewColumnSelector.cs" />
+    <Compile Include="Controls\DataGridViewQueryValueColumn.cs" />
+    <Compile Include="Controls\DataGridViewQueryValueTextBoxCell.cs" />
     <Compile Include="Controls\RichTextBoxExt.cs">
       <SubType>Component</SubType>
     </Compile>
