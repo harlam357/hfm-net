@@ -37,7 +37,9 @@ namespace HFM.Core
 
       public ILogger Logger
       {
+         [CoverageExclude]
          get { return _logger; }
+         [CoverageExclude]
          set { _logger = value; }
       }
 

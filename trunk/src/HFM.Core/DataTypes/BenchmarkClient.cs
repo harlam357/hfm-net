@@ -25,7 +25,7 @@ namespace HFM.Core.DataTypes
    /// <summary>
    /// Container Class used to Bind Benchmark Client Data to the Benchmarks Form
    /// </summary>
-   public class BenchmarkClient : IComparable<BenchmarkClient>, IEquatable<BenchmarkClient>
+   public sealed class BenchmarkClient : IComparable<BenchmarkClient>, IEquatable<BenchmarkClient>
    {
       #region Fields and Properties
 
@@ -98,73 +98,95 @@ namespace HFM.Core.DataTypes
 
       #endregion
 
-      ///<summary>
-      ///Serves as a hash function for a particular type. <see cref="M:System.Object.GetHashCode"></see> is suitable for use in hashing algorithms and data structures like a hash table.
-      ///</summary>
-      ///<returns>
-      ///A hash code for the current <see cref="T:System.Object"></see>.
-      ///</returns>
-      ///<filterpriority>2</filterpriority>
-      public override int GetHashCode()
-      {
-         return Name.GetHashCode() ^
-                Path.GetHashCode() ^
-                AllClients.GetHashCode();
-      }
-
-      ///<summary>
-      ///Determines whether the specified <see cref="T:System.Object"></see> is equal to the current <see cref="T:System.Object"></see>.
-      ///</summary>
-      ///<returns>
-      ///true if the specified <see cref="T:System.Object"></see> is equal to the current <see cref="T:System.Object"></see>; otherwise, false.
-      ///</returns>
-      ///<param name="obj">The <see cref="T:System.Object"></see> to compare with the current <see cref="T:System.Object"></see>.</param>
-      ///<filterpriority>2</filterpriority>
+      /// <summary>
+      /// Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
+      /// </summary>
+      /// <returns>
+      /// true if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, false.
+      /// </returns>
+      /// <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>.</param>
+      /// <exception cref="T:System.NullReferenceException">The <paramref name="obj"/> parameter is null.</exception>
+      /// <filterpriority>2</filterpriority>
       public override bool Equals(object obj)
       {
-         var client = obj as BenchmarkClient;
-         return client != null ? Equals(client) : base.Equals(obj);
+         if (ReferenceEquals(null, obj)) return false;
+         if (ReferenceEquals(this, obj)) return true;
+         if (obj.GetType() != typeof(BenchmarkClient)) return false;
+         return Equals((BenchmarkClient)obj);
       }
 
-      ///<summary>
-      ///Determines whether the specified <see cref="T:HFM.Core.DataTypes.BenchmarkClient"></see> is equal to the current <see cref="T:HFM.Core.DataTypes.BenchmarkClient"></see>.
-      ///</summary>
-      ///<returns>
-      ///true if the specified <see cref="T:HFM.Core.DataTypes.BenchmarkClient"></see> is equal to the current <see cref="T:HFM.Core.DataTypes.BenchmarkClient"></see>; otherwise, false.
-      ///</returns>
-      ///<param name="other">The <see cref="T:HFM.Core.DataTypes.BenchmarkClient"></see> to compare with the current <see cref="T:HFM.Core.DataTypes.BenchmarkClient"></see>.</param>
+      /// <summary>
+      /// Serves as a hash function for a particular type. 
+      /// </summary>
+      /// <returns>
+      /// A hash code for the current <see cref="T:System.Object"/>.
+      /// </returns>
+      /// <filterpriority>2</filterpriority>
+      public override int GetHashCode()
+      {
+         unchecked
+         {
+            int result = _name.GetHashCode();
+            result = (result*397) ^ _path.GetHashCode();
+            result = (result*397) ^ _allClients.GetHashCode();
+            return result;
+         }
+      }
+
+      public static bool operator == (BenchmarkClient left, BenchmarkClient right)
+      {
+         return Equals(left, right);
+      }
+
+      public static bool operator != (BenchmarkClient left, BenchmarkClient right)
+      {
+         return !Equals(left, right);
+      }
+
+      #region IEquatable<BenchmarkClient> Members
+
+      /// <summary>
+      /// Determines whether the specified <see cref="T:HFM.Core.DataTypes.BenchmarkClient"></see> is equal to the current <see cref="T:HFM.Core.DataTypes.BenchmarkClient"></see>.
+      /// </summary>
+      /// <returns>
+      /// true if the specified <see cref="T:HFM.Core.DataTypes.BenchmarkClient"></see> is equal to the current <see cref="T:HFM.Core.DataTypes.BenchmarkClient"></see>; otherwise, false.
+      /// </returns>
+      /// <param name="other">The <see cref="T:HFM.Core.DataTypes.BenchmarkClient"></see> to compare with the current <see cref="T:HFM.Core.DataTypes.BenchmarkClient"></see>.</param>
       public bool Equals(BenchmarkClient other)
       {
-         if (other == null) return false;
-
-         return Name.Equals(other.Name) &&
-                Paths.Equal(Path, other.Path) &&
-                AllClients.Equals(other.AllClients);
+         //if (ReferenceEquals(null, other)) return false;
+         //if (ReferenceEquals(this, other)) return true;
+         return CompareTo(other) == 0;
       }
 
-      public static bool operator == (BenchmarkClient bc1, BenchmarkClient bc2)
+      #endregion
+
+      public static bool operator < (BenchmarkClient left, BenchmarkClient right)
       {
-         return ReferenceEquals(bc1, null) ? ReferenceEquals(bc2, null) : bc1.Equals(bc2);
+         return left == null ? right != null : left.CompareTo(right) < 0;
       }
 
-      public static bool operator != (BenchmarkClient bc1, BenchmarkClient bc2)
+      public static bool operator > (BenchmarkClient left, BenchmarkClient right)
       {
-         return !(bc1 == bc2);
+         return right == null ? left != null : right.CompareTo(left) < 0;
       }
 
-      ///<summary>
-      ///Compares the current object with another object of the same type.
-      ///</summary>
-      ///<returns>
-      ///A 32-bit signed integer that indicates the relative order of the objects being compared. The return value has the following meanings: Value Meaning Less than zero This object is less than the other parameter.Zero This object is equal to other. Greater than zero This object is greater than other. 
-      ///</returns>
-      ///<param name="other">An object to compare with this object.</param>
+      #region IComparable<BenchmarkClient> Members
+
+      /// <summary>
+      /// Compares the current object with another object of the same type.
+      /// </summary>
+      /// <returns>
+      /// A 32-bit signed integer that indicates the relative order of the objects being compared. The return value has the following meanings: 
+      /// Less than zero - This object is less than the <paramref name="other"/> parameter.
+      /// Zero - This object is equal to <paramref name="other"/>. 
+      /// Greater than zero - This object is greater than <paramref name="other"/>. 
+      /// </returns>
+      /// <param name="other">An object to compare with this object.</param>
       public int CompareTo(BenchmarkClient other)
       {
-         if (other == null)
-         {
-            return 1;
-         }
+         if (ReferenceEquals(null, other)) return 1;
+         if (ReferenceEquals(this, other)) return 0;
 
          // both All Clients true (equal)
          if (AllClients && other.AllClients) return 0;
@@ -192,14 +214,6 @@ namespace HFM.Core.DataTypes
          return 1;
       }
 
-      public static bool operator < (BenchmarkClient bc1, BenchmarkClient bc2)
-      {
-         return bc1 == null ? bc2 != null : bc1.CompareTo(bc2) < 0;
-      }
-
-      public static bool operator > (BenchmarkClient bc1, BenchmarkClient bc2)
-      {
-         return bc2 == null ? bc1 != null : bc2.CompareTo(bc1) < 0;
-      }
+      #endregion
    }
 }

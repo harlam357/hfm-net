@@ -82,14 +82,14 @@ namespace HFM.Core.Tests.DataTypes
       public void HashCodeTest1()
       {
          var client = new BenchmarkClient();
-         Assert.AreEqual(1, client.GetHashCode());
+         Assert.AreEqual(666477113, client.GetHashCode());
       }
 
       [Test]
       public void HashCodeTest2()
       {
          var client = new BenchmarkClient("name", "path");
-         Assert.AreEqual(1548099437, client.GetHashCode());
+         Assert.AreEqual(501652245, client.GetHashCode());
       }
 
       [Test]

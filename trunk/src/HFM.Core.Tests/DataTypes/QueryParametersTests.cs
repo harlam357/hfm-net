@@ -44,7 +44,7 @@ namespace HFM.Core.Tests.DataTypes
          param.Fields.Add(new QueryField { Name = QueryFieldName.InstanceName, Type = QueryFieldType.Equal, Value = "Test Instance" });
          param.Fields.Add(new QueryField { Name = QueryFieldName.DownloadDateTime, Type = QueryFieldType.GreaterThan, Value = new DateTime(2000, 1, 1) });
 
-         var copy = param.DeepCopy();
+         var copy = param.DeepClone();
          Assert.AreNotSame(param, copy);
          Assert.AreEqual(param.Name, copy.Name);
          for (int i = 0; i < param.Fields.Count; i++)

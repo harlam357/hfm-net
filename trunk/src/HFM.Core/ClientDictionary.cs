@@ -22,22 +22,82 @@ using System.Collections.Generic;
 
 namespace HFM.Core
 {
-   public sealed class ClientDictionary : IDictionary<string, IClient>
+   public interface IClientDictionary : IDictionary<string, IClient>
    {
-      private readonly Dictionary<string, IClient> _clientDictionary;
+      event EventHandler DictionaryChanged;
 
-      public bool Dirty { get; private set; }
+      bool IsDirty { get; }
+
+      /// <summary>
+      /// Clears the dictionary and loads a collection of IClient objects.
+      /// </summary>
+      /// <remarks>This method will clear the dictionary, per implementaiton of the Clear() method, and raise the DictionaryChanged event if items were loaded.</remarks>
+      /// <param name="clients"><see cref="T:System.Collections.Generic.IEnumerable`1"/> collection of IClient objects.</param>
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="clients"/> is null.</exception>
+      void Load(IEnumerable<IClient> clients);
+
+      #region IDictionary<string,IClient> Members
+
+      // Override Default Interface Documentation
+
+      /// <summary>
+      /// Adds an <see cref="T:HFM.Core.IClient"/> element with the provided key and value to the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+      /// </summary>
+      /// <remarks>Sets the IsDirty property to true and raises the DictionaryChanged event.</remarks>
+      /// <param name="key">The string to use as the key of the element to add.</param>
+      /// <param name="value">The <see cref="T:HFM.Core.IClient"/> object to use as the value of the element to add.</param>
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="key"/> or <paramref name="value"/> is null.</exception>
+      /// <exception cref="T:System.ArgumentException">An element with the same key already exists in the <see cref="T:System.Collections.Generic.IDictionary`2"/>.</exception>
+      new void Add(string key, IClient value);
+
+      /// <summary>
+      /// Removes the <see cref="T:HFM.Core.IClient"/> element with the specified key from the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+      /// </summary>
+      /// <returns>
+      /// true if the element is successfully removed; otherwise, false.  This method also returns false if <paramref name="key"/> was not found in the original <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+      /// </returns>
+      /// <remarks>Sets the IsDirty property to true and raises the DictionaryChanged event when successful.</remarks>
+      /// <param name="key">The key of the element to remove.</param>
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="key"/> is null.</exception>
+      new bool Remove(string key);
+      
+      #endregion
+
+      #region ICollection<KeyValuePair<string,IClient>> Members
+
+      // Override Default Interface Documentation
+
+      /// <summary>
+      /// Removes all items from the <see cref="T:System.Collections.Generic.ICollection`1"/>.
+      /// </summary>
+      /// <remarks>Sets the IsDirty property to false and raises the DictionaryChanged event if values existed before this call.</remarks>
+      new void Clear();
+
+      #endregion
+   }
+
+   public sealed class ClientDictionary : IClientDictionary
+   {
+      public event EventHandler DictionaryChanged;
+
+      private void OnDictionaryChanged(EventArgs e)
+      {
+         if (DictionaryChanged != null)
+         {
+            DictionaryChanged(this, e);
+         }
+      }
+
+      public bool IsDirty { get; private set; }
+
+      private readonly Dictionary<string, IClient> _clientDictionary;
 
       public ClientDictionary()
       {
          _clientDictionary = new Dictionary<string, IClient>();
       }
 
-      /// <summary>
-      /// Method to load IClient objects from file.  This method will set the dirty flag to false.
-      /// </summary>
-      /// <param name="clients">Enumerable collection of IClient objects.</param>
-      public void LoadClients(IEnumerable<IClient> clients)
+      public void Load(IEnumerable<IClient> clients)
       {
          if (clients == null) throw new ArgumentNullException("clients");
 
@@ -59,28 +119,20 @@ namespace HFM.Core
          }
       }
 
-      public event EventHandler DictionaryChanged;
-
-      private void OnDictionaryChanged(EventArgs e)
-      {
-         if (DictionaryChanged != null)
-         {
-            DictionaryChanged(this, e);
-         }
-      }
-
-      #region IDictionary<string,IClient> Implementation
-
       #region IDictionary<string,IClient> Members
 
       public void Add(string key, IClient value)
       {
+         if (key == null) throw new ArgumentNullException("key");
+         if (value == null) throw new ArgumentNullException("value");
+
          _clientDictionary.Add(key, value);
 
-         Dirty = true;
+         IsDirty = true;
          OnDictionaryChanged(EventArgs.Empty);
       }
 
+      [CoverageExclude]
       public bool ContainsKey(string key)
       {
          return _clientDictionary.ContainsKey(key);
@@ -88,6 +140,7 @@ namespace HFM.Core
 
       public ICollection<string> Keys
       {
+         [CoverageExclude]
          get { return _clientDictionary.Keys; }
       }
 
@@ -96,12 +149,13 @@ namespace HFM.Core
          bool result = _clientDictionary.Remove(key);
          if (result)
          {
-            Dirty = true;
+            IsDirty = true;
             OnDictionaryChanged(EventArgs.Empty);   
          }
          return result;
       }
 
+      [CoverageExclude]
       public bool TryGetValue(string key, out IClient value)
       {
          return _clientDictionary.TryGetValue(key, out value);
@@ -109,12 +163,15 @@ namespace HFM.Core
 
       public ICollection<IClient> Values
       {
+         [CoverageExclude]
          get { return _clientDictionary.Values; }
       }
 
       public IClient this[string key]
       {
+         [CoverageExclude]
          get { return _clientDictionary[key]; }
+         [CoverageExclude]
          set { _clientDictionary[key] = value; }
       }
 
@@ -122,47 +179,51 @@ namespace HFM.Core
 
       #region ICollection<KeyValuePair<string,IClient>> Members
 
-      void ICollection<KeyValuePair<string,IClient>>.Add(KeyValuePair<string, IClient> item)
+      [CoverageExclude]
+      void ICollection<KeyValuePair<string, IClient>>.Add(KeyValuePair<string, IClient> item)
       {
          throw new NotImplementedException();
       }
 
-      /// <summary>
-      /// Removes all keys and values from the collection and set the dirty flag to false.
-      /// </summary>
       public void Clear()
       {
          bool hasValues = Count != 0;
+
          _clientDictionary.Clear();
 
-         Dirty = false;
+         IsDirty = false;
          if (hasValues)
          {
             OnDictionaryChanged(EventArgs.Empty);   
          }
       }
 
-      bool ICollection<KeyValuePair<string,IClient>>.Contains(KeyValuePair<string, IClient> item)
+      [CoverageExclude]
+      bool ICollection<KeyValuePair<string, IClient>>.Contains(KeyValuePair<string, IClient> item)
       {
          throw new NotImplementedException();
       }
 
-      void ICollection<KeyValuePair<string,IClient>>.CopyTo(KeyValuePair<string, IClient>[] array, int arrayIndex)
+      [CoverageExclude]
+      void ICollection<KeyValuePair<string, IClient>>.CopyTo(KeyValuePair<string, IClient>[] array, int arrayIndex)
       {
          throw new NotImplementedException();
       }
 
       public int Count
       {
+         [CoverageExclude]
          get { return _clientDictionary.Count; }
       }
 
       bool ICollection<KeyValuePair<string,IClient>>.IsReadOnly
       {
-         get { throw new NotImplementedException(); }
+         [CoverageExclude]
+         get { return false; }
       }
 
-      bool ICollection<KeyValuePair<string,IClient>>.Remove(KeyValuePair<string, IClient> item)
+      [CoverageExclude]
+      bool ICollection<KeyValuePair<string, IClient>>.Remove(KeyValuePair<string, IClient> item)
       {
          throw new NotImplementedException();
       }
@@ -171,6 +232,7 @@ namespace HFM.Core
 
       #region IEnumerable<KeyValuePair<string,IClient>> Members
 
+      [CoverageExclude]
       public IEnumerator<KeyValuePair<string, IClient>> GetEnumerator()
       {
          return _clientDictionary.GetEnumerator();
@@ -180,12 +242,11 @@ namespace HFM.Core
 
       #region IEnumerable Members
 
+      [CoverageExclude]
       System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
       {
          return GetEnumerator();
       }
-
-      #endregion
 
       #endregion
    }

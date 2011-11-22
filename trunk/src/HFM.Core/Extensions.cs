@@ -122,11 +122,6 @@ namespace HFM.Core
          }
       }
 
-      //public static bool HasInstances(this IDictionary<string, ClientInstance> slots)
-      //{
-      //   return slots.Count != 0;
-      //}
-
       //#region ClientStatus
 
       ///// <summary>
