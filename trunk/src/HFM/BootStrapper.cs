@@ -27,6 +27,7 @@ using Castle.Windsor;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
+using HFM.Core.Logging;
 
 namespace HFM
 {
@@ -105,7 +106,7 @@ namespace HFM
 
             #region Set Logging Level
 
-            var logger = (TraceLogger)container.Resolve<ILogger>();
+            var logger = container.Resolve<Logger>();
             var prefs = container.Resolve<IPreferenceSet>();
             logger.Level = (LoggerLevel)prefs.Get<int>(Preference.MessageLevel);
 

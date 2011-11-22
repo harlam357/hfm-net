@@ -112,6 +112,9 @@
     <Compile Include="..\HFM.Core\Application.cs">
       <Link>Application.cs</Link>
     </Compile>
+    <Compile Include="..\HFM.Core\CoverageExcludeAttribute.cs">
+      <Link>CoverageExcludeAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\HFM.Forms\Controls\RichTextBoxExt.cs">
       <Link>RichTextBoxExt.cs</Link>
       <SubType>Component</SubType>
