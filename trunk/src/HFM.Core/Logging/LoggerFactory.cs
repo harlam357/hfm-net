@@ -21,6 +21,7 @@ using Castle.Core.Logging;
 
 namespace HFM.Core.Logging
 {
+   [CoverageExclude]
    public class LoggerFactory : AbstractLoggerFactory
    {
       private static ILogger _logger;

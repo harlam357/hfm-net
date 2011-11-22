@@ -28,6 +28,34 @@ namespace HFM.Core
    {
       void Sort();
 
+      #region IList<QueryParameters> Members
+
+      // Override Default Interface Documentation
+
+      /// <summary>
+      /// Inserts an item to the <see cref="T:System.Collections.Generic.IList`1"/> at the specified index.
+      /// </summary>
+      /// <param name="index">The zero-based index at which <paramref name="item"/> should be inserted.</param>
+      /// <param name="item">The object to insert into the <see cref="T:System.Collections.Generic.IList`1"/>.</param>
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="item"/> is null.</exception>
+      /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in the <see cref="T:System.Collections.Generic.IList`1"/>.</exception>
+      new void Insert(int index, QueryParameters item);
+
+      #endregion
+
+      #region ICollection<QueryParameter> Members
+
+      // Override Default Interface Documentation
+
+      /// <summary>
+      /// Adds a QueryParameters to the <see cref="T:System.Collections.Generic.ICollection`1"/>.
+      /// </summary>
+      /// <param name="item">The QueryParameters to add to the <see cref="T:System.Collections.Generic.ICollection`1"/>.</param>
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="item"/> is null.</exception>
+      new void Add(QueryParameters item);
+
+      #endregion
+
       #region DataContainer<T>
 
       void Read();
@@ -75,26 +103,12 @@ namespace HFM.Core
 
       #region IList<QueryParameters> Members
 
-      /// <summary>
-      /// Determines the index of a specific item in the <see cref="T:System.Collections.Generic.IList`1"/>.
-      /// </summary>
-      /// <returns>
-      /// The index of <paramref name="item"/> if found in the list; otherwise, -1.
-      /// </returns>
-      /// <param name="item">The object to locate in the <see cref="T:System.Collections.Generic.IList`1"/>.</param>
+      [CoverageExclude]
       public int IndexOf(QueryParameters item)
       {
          return Data.IndexOf(item);
       }
 
-      /// <summary>
-      /// Inserts an item to the <see cref="T:System.Collections.Generic.IList`1"/> at the specified index.
-      /// </summary>
-      /// <param name="index">The zero-based index at which <paramref name="item"/> should be inserted.</param>
-      /// <param name="item">The object to insert into the <see cref="T:System.Collections.Generic.IList`1"/>.</param>
-      /// <exception cref="T:System.ArgumentNullException"><paramref name="item"/> is null.</exception>
-      /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in the <see cref="T:System.Collections.Generic.IList`1"/>.</exception>
-      /// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.IList`1"/> is read-only.</exception>
       public void Insert(int index, QueryParameters item)
       {
          if (item == null) throw new ArgumentNullException("item");
@@ -102,29 +116,17 @@ namespace HFM.Core
          Data.Insert(index, item);
       }
 
-      /// <summary>
-      /// Removes the <see cref="T:System.Collections.Generic.IList`1"/> item at the specified index.
-      /// </summary>
-      /// <param name="index">The zero-based index of the item to remove.</param>
-      /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in the <see cref="T:System.Collections.Generic.IList`1"/>.</exception>
-      /// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.IList`1"/> is read-only.</exception>
+      [CoverageExclude]
       public void RemoveAt(int index)
       {
-         Data.RemoveAt(0);
+         Data.RemoveAt(index);
       }
 
-      /// <summary>
-      /// Gets or sets the element at the specified index.
-      /// </summary>
-      /// <returns>
-      /// The element at the specified index.
-      /// </returns>
-      /// <param name="index">The zero-based index of the element to get or set.</param>
-      /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in the <see cref="T:System.Collections.Generic.IList`1"/>.</exception>
-      /// <exception cref="T:System.NotSupportedException">The property is set and the <see cref="T:System.Collections.Generic.IList`1"/> is read-only.</exception>
       public QueryParameters this[int index]
       {
+         [CoverageExclude]
          get { return Data[index]; }
+         [CoverageExclude]
          set { Data[index] = value; }
       }
 
@@ -132,11 +134,6 @@ namespace HFM.Core
 
       #region ICollection<QueryParameter> Members
 
-      /// <summary>
-      /// Adds a QueryParameters to the <see cref="T:System.Collections.Generic.ICollection`1"/>.
-      /// </summary>
-      /// <param name="item">The QueryParameters to add to the <see cref="T:System.Collections.Generic.ICollection`1"/>.</param>
-      /// <exception cref="T:System.ArgumentNullException"><paramref name="item"/> is null.</exception>
       public void Add(QueryParameters item)
       {
          if (item == null) throw new ArgumentNullException("item");
@@ -144,73 +141,35 @@ namespace HFM.Core
          Data.Add(item);
       }
 
-      /// <summary>
-      /// Removes all items from the <see cref="T:System.Collections.Generic.ICollection`1"/>.
-      /// </summary>
+      [CoverageExclude]
       public void Clear()
       {
          Data.Clear();
       }
 
-      /// <summary>
-      /// Determines whether the <see cref="T:System.Collections.Generic.ICollection`1"/> contains a specific value.
-      /// </summary>
-      /// <returns>
-      /// true if <paramref name="item"/> is found in the <see cref="T:System.Collections.Generic.ICollection`1"/>; otherwise, false.
-      /// </returns>
-      /// <param name="item">The QueryParameters to locate in the <see cref="T:System.Collections.Generic.ICollection`1"/>.</param>
       public bool Contains(QueryParameters item)
       {
          return item != null && Data.Contains(item);
       }
 
-      /// <summary>
-      /// Copies the elements of the <see cref="T:System.Collections.Generic.ICollection`1"/> to an <see cref="T:System.Array"/>, starting at a particular <see cref="T:System.Array"/> index.
-      /// </summary>
-      /// <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the elements copied from <see cref="T:System.Collections.Generic.ICollection`1"/>. The <see cref="T:System.Array"/> must have zero-based indexing.</param>
-      /// <param name="arrayIndex">The zero-based index in <paramref name="array"/> at which copying begins.</param>
-      /// <exception cref="T:System.ArgumentNullException"><paramref name="array"/> is null.</exception>
-      /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than 0.</exception>
-      /// <exception cref="T:System.ArgumentException"><paramref name="array"/> is multidimensional.
-      ///     -or-
-      ///     <paramref name="arrayIndex"/> is equal to or greater than the length of <paramref name="array"/>.
-      ///     -or-
-      ///     The number of elements in the source <see cref="T:System.Collections.Generic.ICollection`1"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination <paramref name="array"/>.
-      /// </exception>
+      [CoverageExclude]
       void ICollection<QueryParameters>.CopyTo(QueryParameters[] array, int arrayIndex)
       {
          Data.CopyTo(array, arrayIndex);
       }
 
-      /// <summary>
-      /// Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"/>.
-      /// </summary>
-      /// <returns>
-      /// The number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"/>.
-      /// </returns>
       public int Count
       {
+         [CoverageExclude]
          get { return Data.Count; }
       }
 
-      /// <summary>
-      /// Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.
-      /// </summary>
-      /// <returns>
-      /// true if the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only; otherwise, false.
-      /// </returns>
       bool ICollection<QueryParameters>.IsReadOnly
       {
+         [CoverageExclude]
          get { return false; }
       }
 
-      /// <summary>
-      /// Removes the first occurrence of a specific object from the <see cref="T:System.Collections.Generic.ICollection`1"/>.
-      /// </summary>
-      /// <returns>
-      /// true if <paramref name="item"/> was successfully removed from the <see cref="T:System.Collections.Generic.ICollection`1"/>; otherwise, false. This method also returns false if <paramref name="item"/> is not found in the original <see cref="T:System.Collections.Generic.ICollection`1"/>.
-      /// </returns>
-      /// <param name="item">The QueryParameters to remove from the <see cref="T:System.Collections.Generic.ICollection`1"/>.</param>
       public bool Remove(QueryParameters item)
       {
          return item != null && Data.Remove(item);
@@ -220,13 +179,7 @@ namespace HFM.Core
 
       #region IEnumerable<QueryParameters> Members
 
-      /// <summary>
-      /// Returns an enumerator that iterates through the collection.
-      /// </summary>
-      /// <returns>
-      /// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
-      /// </returns>
-      /// <filterpriority>1</filterpriority>
+      [CoverageExclude]
       public IEnumerator<QueryParameters> GetEnumerator()
       {
          return Data.GetEnumerator();
@@ -236,13 +189,7 @@ namespace HFM.Core
 
       #region IEnumerable Members
 
-      /// <summary>
-      /// Returns an enumerator that iterates through a collection.
-      /// </summary>
-      /// <returns>
-      /// An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
-      /// </returns>
-      /// <filterpriority>2</filterpriority>
+      [CoverageExclude]
       System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
       {
          return GetEnumerator();
