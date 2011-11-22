@@ -4,6 +4,7 @@ using System.Diagnostics;
 
 namespace HFM.Core
 {
+   [CoverageExclude]
    public static class Instrumentation
    {
       /// <summary>

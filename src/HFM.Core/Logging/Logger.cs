@@ -5,6 +5,7 @@ using Castle.Core.Logging;
 
 namespace HFM.Core.Logging
 {
+   [CoverageExclude]
    public class Logger : TraceLogger
    {
       public Logger(string name)
@@ -44,6 +45,7 @@ namespace HFM.Core.Logging
       #endregion
    }
 
+   [CoverageExclude]
    public class TextMessageEventArgs : EventArgs
    {
       private readonly string _message;
