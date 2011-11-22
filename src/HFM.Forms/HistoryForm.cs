@@ -130,7 +130,7 @@ namespace HFM.Forms
       
          var selectedIndex = cboSortView.SelectedIndex;
 
-         var names = queryList.Select(query => new Choice(query.Name, query)).ToList();
+         var names = queryList.Select(query => new QueryColumnChoice(query.Name, query)).ToList();
          cboSortView.DataSource = names;
          cboSortView.DisplayMember = "Display";
          cboSortView.ValueMember = "Value";

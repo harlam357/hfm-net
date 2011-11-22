@@ -260,7 +260,7 @@ namespace HFM.Forms
       
       public void EditQueryClick()
       {
-         _queryView.Query = _view.QueryComboSelectedValue.DeepCopy();
+         _queryView.Query = _view.QueryComboSelectedValue.DeepClone();
 
          bool showDialog = true;
          while (showDialog)

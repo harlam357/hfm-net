@@ -22,11 +22,14 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
+using HFM.Core;
+
 namespace HFM.Forms.Controls
 {
    // Code from: http://social.msdn.microsoft.com/Forums/en-US/winformsdatacontrols/thread/769ca9d6-1e9d-4d76-8c23-db535b2f19c2
 
-   public class DataGridViewProgressColumn : DataGridViewImageColumn
+   [CoverageExclude]
+   internal class DataGridViewProgressColumn : DataGridViewImageColumn
    {
       public DataGridViewProgressColumn()
       {
@@ -34,7 +37,8 @@ namespace HFM.Forms.Controls
       }
    }
 
-   class DataGridViewProgressCell : DataGridViewImageCell
+   [CoverageExclude]
+   internal class DataGridViewProgressCell : DataGridViewImageCell
    {
       // Used to make custom cell consistent with a DataGridViewImageCell
       static readonly Image EmptyImage;
