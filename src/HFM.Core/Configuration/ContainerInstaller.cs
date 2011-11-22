@@ -24,6 +24,7 @@ using Castle.Windsor;
 
 namespace HFM.Core.Configuration
 {
+   [CoverageExclude]
    public class ContainerInstaller : IWindsorInstaller
    {
       #region IWindsorInstaller Members

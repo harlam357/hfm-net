@@ -26,7 +26,7 @@ using System.Runtime.Serialization;
 namespace HFM.Core.DataTypes
 {
    [DataContract]
-   public class QueryParameters : IComparable<QueryParameters>
+   public class QueryParameters : IComparable<QueryParameters>, IEquatable<QueryParameters>
    {
       public const string SelectAll = "*** SELECT ALL ***";
 
@@ -35,7 +35,7 @@ namespace HFM.Core.DataTypes
          Name = SelectAll;
       }
 
-      public QueryParameters DeepCopy()
+      public QueryParameters DeepClone()
       {
          return ProtoBuf.Serializer.DeepClone(this);
       }
@@ -50,15 +50,79 @@ namespace HFM.Core.DataTypes
          get { return _fields; }
       }
 
+      /// <summary>
+      /// Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
+      /// </summary>
+      /// <returns>
+      /// true if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, false.
+      /// </returns>
+      /// <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>.</param>
+      /// <exception cref="T:System.NullReferenceException">The <paramref name="obj"/> parameter is null.</exception>
+      /// <filterpriority>2</filterpriority>
+      public override bool Equals(object obj)
+      {
+         if (ReferenceEquals(null, obj)) return false;
+         if (ReferenceEquals(this, obj)) return true;
+         if (obj.GetType() != typeof(QueryParameters)) return false;
+         return Equals((QueryParameters)obj);
+      }
+
+      /// <summary>
+      /// Serves as a hash function for a particular type. 
+      /// </summary>
+      /// <returns>
+      /// A hash code for the current <see cref="T:System.Object"/>.
+      /// </returns>
+      /// <filterpriority>2</filterpriority>
+      public override int GetHashCode()
+      {
+         return (Name != null ? Name.GetHashCode() : 0);
+      }
+
+      public static bool operator == (QueryParameters left, QueryParameters right)
+      {
+         return Equals(left, right);
+      }
+
+      public static bool operator != (QueryParameters left, QueryParameters right)
+      {
+         return !Equals(left, right);
+      }
+
+      #region IEquatable<QueryParameters> Members
+
+      /// <summary>
+      /// Indicates whether the current object is equal to another object of the same type.
+      /// </summary>
+      /// <returns>
+      /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
+      /// </returns>
+      /// <param name="other">An object to compare with this object.</param>
+      public bool Equals(QueryParameters other)
+      {
+         //if (ReferenceEquals(null, other)) return false;
+         //if (ReferenceEquals(this, other)) return true;
+         return CompareTo(other) == 0;
+      }
+
+      #endregion
+
+      public static bool operator < (QueryParameters left, QueryParameters right)
+      {
+         return left == null ? right != null : left.CompareTo(right) < 0;
+      }
+
+      public static bool operator > (QueryParameters left, QueryParameters right)
+      {
+         return right == null ? left != null : right.CompareTo(left) < 0;
+      }
+
       #region IComparable<QueryParameters> Members
 
       public int CompareTo(QueryParameters other)
       {
-         // other null, this is greater
-         if (other == null)
-         {
-            return 1;
-         }
+         if (ReferenceEquals(null, other)) return 1;
+         if (ReferenceEquals(this, other)) return 0;
 
          // other not null, check this Name
          if (Name == null)
@@ -171,7 +235,7 @@ namespace HFM.Core.DataTypes
             case QueryFieldType.LessThanOrEqual:
                return "<=";
             default:
-               throw new NotImplementedException(String.Format(CultureInfo.CurrentCulture,
+               throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
                   "Query Field Type '{0}' is not implemented.", type));
          }
       }

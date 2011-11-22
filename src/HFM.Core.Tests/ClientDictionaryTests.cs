@@ -37,39 +37,39 @@ namespace HFM.Core.Tests
       [Test]
       public void LoadInstancesTest1()
       {
-         Assert.IsFalse(_clientDictionary.Dirty);
-         _clientDictionary.LoadClients(new[] { new LegacyClient { Settings = new ClientSettings { Name = "test"} } });
-         Assert.IsFalse(_clientDictionary.Dirty);
+         Assert.IsFalse(_clientDictionary.IsDirty);
+         _clientDictionary.Load(new[] { new LegacyClient { Settings = new ClientSettings { Name = "test"} } });
+         Assert.IsFalse(_clientDictionary.IsDirty);
       }
 
       [Test]
       public void LoadInstancesTest2()
       {
-         Assert.IsFalse(_clientDictionary.Dirty);
+         Assert.IsFalse(_clientDictionary.IsDirty);
          _clientDictionary.Add("test", new LegacyClient());
-         Assert.IsTrue(_clientDictionary.Dirty);
-         _clientDictionary.LoadClients(new[] { new LegacyClient { Settings = new ClientSettings { Name = "test" } } });
-         Assert.IsFalse(_clientDictionary.Dirty);
+         Assert.IsTrue(_clientDictionary.IsDirty);
+         _clientDictionary.Load(new[] { new LegacyClient { Settings = new ClientSettings { Name = "test" } } });
+         Assert.IsFalse(_clientDictionary.IsDirty);
       }
 
       [Test]
       public void LoadInstancesTest3()
       {
-         Assert.IsFalse(_clientDictionary.Dirty);
+         Assert.IsFalse(_clientDictionary.IsDirty);
          _clientDictionary.Add("test", new LegacyClient());
-         Assert.IsTrue(_clientDictionary.Dirty);
+         Assert.IsTrue(_clientDictionary.IsDirty);
          _clientDictionary.Remove("test");
-         Assert.IsTrue(_clientDictionary.Dirty);
-         _clientDictionary.LoadClients(new[] { new LegacyClient { Settings = new ClientSettings { Name = "test" } } });
-         Assert.IsFalse(_clientDictionary.Dirty);
+         Assert.IsTrue(_clientDictionary.IsDirty);
+         _clientDictionary.Load(new[] { new LegacyClient { Settings = new ClientSettings { Name = "test" } } });
+         Assert.IsFalse(_clientDictionary.IsDirty);
       }
 
       [Test]
       public void AddTest1()
       {
-         Assert.IsFalse(_clientDictionary.Dirty);
+         Assert.IsFalse(_clientDictionary.IsDirty);
          _clientDictionary.Add("test", new LegacyClient());
-         Assert.IsTrue(_clientDictionary.Dirty);
+         Assert.IsTrue(_clientDictionary.IsDirty);
       }
 
       [Test]
@@ -84,18 +84,18 @@ namespace HFM.Core.Tests
       [Test]
       public void RemoveTest1()
       {
-         Assert.IsFalse(_clientDictionary.Dirty);
+         Assert.IsFalse(_clientDictionary.IsDirty);
          Assert.IsFalse(_clientDictionary.Remove("test"));
-         Assert.IsFalse(_clientDictionary.Dirty);
+         Assert.IsFalse(_clientDictionary.IsDirty);
       }
 
       [Test]
       public void RemoveTest2()
       {
-         Assert.IsFalse(_clientDictionary.Dirty);
+         Assert.IsFalse(_clientDictionary.IsDirty);
          _clientDictionary.Add("test", new LegacyClient());
          Assert.IsTrue(_clientDictionary.Remove("test"));
-         Assert.IsTrue(_clientDictionary.Dirty);
+         Assert.IsTrue(_clientDictionary.IsDirty);
       }
 
       [Test]
@@ -120,31 +120,31 @@ namespace HFM.Core.Tests
       [Test]
       public void ClearTest1()
       {
-         Assert.IsFalse(_clientDictionary.Dirty);
+         Assert.IsFalse(_clientDictionary.IsDirty);
          _clientDictionary.Clear();
-         Assert.IsFalse(_clientDictionary.Dirty);
+         Assert.IsFalse(_clientDictionary.IsDirty);
       }
 
       [Test]
       public void ClearTest2()
       {
-         Assert.IsFalse(_clientDictionary.Dirty);
+         Assert.IsFalse(_clientDictionary.IsDirty);
          _clientDictionary.Add("test", new LegacyClient());
-         Assert.IsTrue(_clientDictionary.Dirty);
+         Assert.IsTrue(_clientDictionary.IsDirty);
          _clientDictionary.Clear();
-         Assert.IsFalse(_clientDictionary.Dirty);
+         Assert.IsFalse(_clientDictionary.IsDirty);
       }
 
       [Test]
       public void ClearTest3()
       {
-         Assert.IsFalse(_clientDictionary.Dirty);
+         Assert.IsFalse(_clientDictionary.IsDirty);
          _clientDictionary.Add("test", new LegacyClient());
-         Assert.IsTrue(_clientDictionary.Dirty);
+         Assert.IsTrue(_clientDictionary.IsDirty);
          _clientDictionary.Remove("test");
-         Assert.IsTrue(_clientDictionary.Dirty);
+         Assert.IsTrue(_clientDictionary.IsDirty);
          _clientDictionary.Clear();
-         Assert.IsFalse(_clientDictionary.Dirty);
+         Assert.IsFalse(_clientDictionary.IsDirty);
       }
 
       [Test]
