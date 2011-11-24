@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
@@ -230,7 +231,7 @@ namespace HFM.Preferences
          _prefs.Add(Preference.FormSize, new Metadata<Size>());
          _prefs.Add(Preference.FormColumns, new Metadata<StringCollection>());
          _prefs.Add(Preference.FormSortColumn, new Metadata<string>());
-         _prefs.Add(Preference.FormSortOrder, new Metadata<SortOrder>());
+         _prefs.Add(Preference.FormSortOrder, new Metadata<ListSortDirection>());
          _prefs.Add(Preference.FormSplitLocation, new Metadata<int>());
          _prefs.Add(Preference.FormLogWindowHeight, new Metadata<int>());
          _prefs.Add(Preference.FormLogVisible, new Metadata<bool>());
@@ -471,9 +472,9 @@ namespace HFM.Preferences
          { }
       }
 
-      private static SortOrder GetFormSortOrder()
+      private static ListSortDirection GetFormSortOrder()
       {
-         SortOrder order = SortOrder.None;
+         ListSortDirection order = ListSortDirection.Ascending;
          try
          {
             order = Settings.Default.FormSortOrder;
@@ -727,7 +728,7 @@ namespace HFM.Preferences
             Settings.Default.FormSize = Get<Size>(Preference.FormSize);
             Settings.Default.FormColumns = Get<StringCollection>(Preference.FormColumns);
             Settings.Default.FormSortColumn = Get<string>(Preference.FormSortColumn);
-            Settings.Default.FormSortOrder = Get<SortOrder>(Preference.FormSortOrder);
+            Settings.Default.FormSortOrder = Get<ListSortDirection>(Preference.FormSortOrder);
             Settings.Default.FormSplitLocation = Get<int>(Preference.FormSplitLocation);
             Settings.Default.FormLogWindowHeight = Get<int>(Preference.FormLogWindowHeight);
             Settings.Default.FormLogVisible = Get<bool>(Preference.FormLogVisible);

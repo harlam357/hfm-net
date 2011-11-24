@@ -23,7 +23,6 @@ copy /Y harlam357.Security.dll %1
 copy /Y harlam357.Windows.Forms.dll %1
 copy /Y ZedGraph.dll %1
 copy /Y Castle.Core.dll %1
-copy /Y Castle.Facilities.Logging.dll %1
 copy /Y Castle.Windsor.dll %1
 copy /Y protobuf-net.dll %1
 copy /Y System.Linq.Dynamic.dll %1

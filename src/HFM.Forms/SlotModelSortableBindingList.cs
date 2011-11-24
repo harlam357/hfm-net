@@ -26,31 +26,24 @@ using HFM.Core.DataTypes;
 
 namespace HFM.Forms
 {
-   [Serializable]
    [CoverageExclude]
    public class SlotModelSortableBindingList : SortableBindingList<SlotModel>
    {
-      #region Fields
+      #region Constants
 
-      private const string StatusColumnName = "Status";
-      private const string NameColumnName = "Name";
-
-      [NonSerialized]
-      private bool _offlineClientsLast = true; 
+      private const string StatusPropertyName = "Status";
+      private const string NamePropertyName = "Name";
       
       #endregion
 
-      #region Properties
-      
-      public bool OfflineClientsLast
+      public SlotModelSortableBindingList(bool offlineClientsLast)
       {
-         get { return _offlineClientsLast; }
-         set { _offlineClientsLast = value; }
+         OfflineClientsLast = offlineClientsLast;
       }
-      
-      #endregion
 
       #region BindingList<T> Sorting Overrides
+
+      public bool OfflineClientsLast { get; set; }
 
       protected override void ApplySortCore(PropertyDescriptor property, ListSortDirection direction)
       {
@@ -58,11 +51,15 @@ namespace HFM.Forms
 
          if ((null != items) && (null != property))
          {
-            var pc = new DisplayInstancePropertyComparer<SlotModel>(property,
-                                                                    FindPropertyDescriptor(StatusColumnName),
-                                                                    FindPropertyDescriptor(NameColumnName),
-                                                                    direction,
-                                                                    OfflineClientsLast);
+            /* Set the sort property and direction */
+            SortProperty = property;
+            SortDirection = direction;
+
+            var pc = new SlotModelPropertyComparer<SlotModel>(property,
+                                                              FindPropertyDescriptor(StatusPropertyName),
+                                                              FindPropertyDescriptor(NamePropertyName),
+                                                              direction,
+                                                              OfflineClientsLast);
             items.Sort(pc);
 
             /* Set sorted */
@@ -89,20 +86,19 @@ namespace HFM.Forms
          // This key seems to always be null under Mono
          if (key == null) return -1;
 
-         if (key is String)
+         if (key is string)
          {
             var list = Items as List<SlotModel>;
-
             if ((null != list))
             {
-               return list.FindIndex(delegate(SlotModel item)
-               {
-                  if (prop.GetValue(item).Equals(key))
-                  {
-                     return true;
-                  }
-                  return false;
-               });
+               return list.FindIndex(item =>
+                                     {
+                                        if (prop.GetValue(item).Equals(key))
+                                        {
+                                           return true;
+                                        }
+                                        return false;
+                                     });
             }
 
             return -1;
@@ -113,10 +109,10 @@ namespace HFM.Forms
 
       #endregion
 
-      #region DisplayInstancePropertyComparer<T>
+      #region SlotModelPropertyComparer<T>
 
       [CoverageExclude]
-      internal class DisplayInstancePropertyComparer<T> : IComparer<T>
+      private class SlotModelPropertyComparer<T> : IComparer<T>
       {
          /*
          * The following code contains code implemented by Rockford Lhotka:
@@ -129,8 +125,8 @@ namespace HFM.Forms
          private readonly ListSortDirection _direction;
          private readonly bool _offlineClientsLast;
 
-         public DisplayInstancePropertyComparer(PropertyDescriptor property, PropertyDescriptor statusProperty, PropertyDescriptor nameProperty,
-                                                ListSortDirection direction, bool offlineClientsLast)
+         public SlotModelPropertyComparer(PropertyDescriptor property, PropertyDescriptor statusProperty, PropertyDescriptor nameProperty,
+                                          ListSortDirection direction, bool offlineClientsLast)
          {
             _property = property;
             _statusProperty = statusProperty;

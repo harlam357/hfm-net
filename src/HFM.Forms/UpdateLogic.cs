@@ -64,7 +64,9 @@ namespace HFM.Forms
 
       public ILogger Logger
       {
+         [CoverageExclude]
          get { return _logger; }
+         [CoverageExclude]
          set { _logger = value; }
       }
       

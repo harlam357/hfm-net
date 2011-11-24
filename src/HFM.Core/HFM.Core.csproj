@@ -81,7 +81,6 @@
     <Compile Include="IClient.cs" />
     <Compile Include="ClientDictionary.cs" />
     <Compile Include="Logging\Logger.cs" />
-    <Compile Include="Logging\LoggerFactory.cs" />
     <Compile Include="Plugins\PluginLoader.cs" />
     <Compile Include="ProteinDictionary.cs" />
     <Compile Include="Serializers\ProtoBufFileSerializer.cs" />

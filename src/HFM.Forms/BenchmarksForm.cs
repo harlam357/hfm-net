@@ -87,7 +87,7 @@ namespace HFM.Forms
       private readonly IProteinDictionary _proteinDictionary;
       private readonly IProteinBenchmarkCollection _benchmarkCollection;
       private readonly IList<Color> _graphColors;
-      private readonly IEnumerable<SlotModel> _slotModels;
+      private readonly IClientDictionary _clientDictionary;
       private readonly IMessageBoxView _messageBoxView;
       private readonly IExternalProcessStarter _processStarter;
       private readonly ZedGraphManager _zedGraphManager;
@@ -99,13 +99,13 @@ namespace HFM.Forms
       #region Constructor
 
       public BenchmarksForm(IPreferenceSet prefs, IProteinDictionary proteinDictionary, IProteinBenchmarkCollection benchmarkCollection,
-                           IEnumerable<SlotModel> slotModels, IMessageBoxView messageBoxView, IExternalProcessStarter processStarter)
+                            IClientDictionary clientDictionary, IMessageBoxView messageBoxView, IExternalProcessStarter processStarter)
       {
          _prefs = prefs;
          _proteinDictionary = proteinDictionary;
          _benchmarkCollection = benchmarkCollection;
-         _graphColors = _prefs.GetPreference<List<Color>>(Preference.GraphColors);
-         _slotModels = slotModels;
+         _graphColors = _prefs.Get<List<Color>>(Preference.GraphColors);
+         _clientDictionary = clientDictionary;
          _messageBoxView = messageBoxView;
          _processStarter = processStarter;
          _zedGraphManager = new ZedGraphManager();
@@ -172,7 +172,7 @@ namespace HFM.Forms
             bool valuesOk = false;
 
             ProteinBenchmark benchmark1 = benchmark;
-            var instance = _slotModels.FirstOrDefault(x => x.Name.Equals(benchmark1.OwningInstanceName));
+            var instance = _clientDictionary.Slots.FirstOrDefault(x => x.Name.Equals(benchmark1.OwningInstanceName));
             if (instance != null && instance.Owns(benchmark))
             {
                unit = instance.UnitInfoLogic;

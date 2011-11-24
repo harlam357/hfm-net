@@ -20,8 +20,9 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-
 using Application = System.Windows.Forms.Application;
+
+using Castle.Windsor;
 
 namespace HFM
 {
@@ -41,7 +42,27 @@ namespace HFM
 
          try
          {
-            var bootStrapper = new BootStrapper();
+            #region Configure Container
+
+            IWindsorContainer container = new WindsorContainer();
+            // Components
+            container.Install(new Configuration.ContainerInstaller(),
+                              new Preferences.Configuration.ContainerInstaller(),
+                              new Core.Configuration.ContainerInstaller(),
+                              new Forms.Configuration.ContainerInstaller());
+
+            Core.ServiceLocator.SetContainer(container);
+
+            #endregion
+
+            #region Create Object Maps
+
+            Core.Configuration.ObjectMapper.CreateMaps();
+            Forms.Configuration.ObjectMapper.CreateMaps();
+
+            #endregion
+
+            var bootStrapper = container.Resolve<BootStrapper>();
             bootStrapper.Strap(args);
          }
          catch (Exception ex)

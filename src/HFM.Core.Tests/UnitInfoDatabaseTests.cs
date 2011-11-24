@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 
@@ -34,7 +33,7 @@ namespace HFM.Core.Tests
    {
       private const string TestDataFile = "..\\..\\TestFiles\\TestData.db3";
 
-      private readonly IDictionary<int, Protein> _proteinDictionary = CreateProteinDictionary();
+      private readonly IProteinDictionary _proteinDictionary = CreateProteinDictionary();
 
       [Test]
       public void WriteUnitInfoTest1()
@@ -355,9 +354,9 @@ namespace HFM.Core.Tests
          return new UnitInfoDatabase(null, _proteinDictionary);
       }
 
-      private static IDictionary<int, Protein> CreateProteinDictionary()
+      private static IProteinDictionary CreateProteinDictionary()
       {
-         var proteins = new Dictionary<int, Protein>();
+         var proteins = new ProteinDictionary();
 
          var protein = new Protein();
          protein.ProjectNumber = 6600;
@@ -367,6 +366,8 @@ namespace HFM.Core.Tests
          protein.KFactor = 0;
          protein.Frames = 100;
          protein.NumberOfAtoms = 5000;
+         protein.PreferredDays = 2;
+         protein.MaximumDays = 3;
          proteins.Add(protein.ProjectNumber, protein);
 
          protein = new Protein();
@@ -377,6 +378,8 @@ namespace HFM.Core.Tests
          protein.KFactor = 0;
          protein.Frames = 100;
          protein.NumberOfAtoms = 7000;
+         protein.PreferredDays = 2;
+         protein.MaximumDays = 3;
          proteins.Add(protein.ProjectNumber, protein);
 
          return proteins;

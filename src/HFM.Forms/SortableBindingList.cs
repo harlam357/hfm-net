@@ -31,21 +31,12 @@ using HFM.Core;
 
 namespace HFM.Forms
 {
-   [Serializable]
    [CoverageExclude]
    public class SortableBindingList<T> : BindingList<T>, ITypedList
    {
       #region Fields
 
-      protected bool IsSorted { get; set; }
-      private ListSortDirection _dir = ListSortDirection.Ascending;
-      private bool _sortColumns;
-
-      [NonSerialized]
       private PropertyDescriptorCollection _shape;
-
-      [NonSerialized]
-      private PropertyDescriptor _sort;
 
       #endregion
       
@@ -72,7 +63,9 @@ namespace HFM.Forms
 
       #endregion
 
-      #region SortedBindingList<T> Column Sorting API
+      #region SortableBindingList<T> Column Sorting API
+
+      private bool _sortColumns;
 
       public bool SortColumns
       {
@@ -99,31 +92,74 @@ namespace HFM.Forms
 
       public void Sort()
       {
-         ApplySortCore(_sort, _dir);
+         ApplySortCore(SortProperty, SortDirection);
       }
 
       public void Sort(string property)
       {
-         /* Get the PD */
-         _sort = FindPropertyDescriptor(property);
+         /* Set the sort property */
+         SortProperty = FindPropertyDescriptor(property);
 
          /* Sort */
-         ApplySortCore(_sort, _dir);
+         ApplySortCore(SortProperty, SortDirection);
       }
 
       public void Sort(string property, ListSortDirection direction)
       {
-         /* Get the sort property */
-         _sort = FindPropertyDescriptor(property);
-         _dir = direction;
+         /* Set the sort property and direction */
+         SortProperty = FindPropertyDescriptor(property);
+         SortDirection = direction;
 
          /* Sort */
-         ApplySortCore(_sort, _dir);
+         ApplySortCore(SortProperty, SortDirection);
       }
+
       #endregion
 
       #region BindingList<T> Sorting Overrides
 
+      protected bool IsSorted { get; set; }
+      /// <summary>
+      /// Gets a value indicating whether the list is sorted. 
+      /// </summary>
+      /// <returns>
+      /// true if the list is sorted; otherwise, false. The default is false.
+      /// </returns>
+      protected override bool IsSortedCore
+      {
+         get { return IsSorted; }
+      }
+
+      protected ListSortDirection SortDirection { get; set; }
+      /// <summary>
+      /// Gets the direction the list is sorted.
+      /// </summary>
+      /// <returns>
+      /// One of the <see cref="T:System.ComponentModel.ListSortDirection"/> values. The default is <see cref="F:System.ComponentModel.ListSortDirection.Ascending"/>. 
+      /// </returns>
+      protected override ListSortDirection SortDirectionCore
+      {
+         get { return SortDirection; }
+      }
+
+      protected PropertyDescriptor SortProperty { get; set; }
+      /// <summary>
+      /// Gets the property descriptor that is used for sorting the list if sorting is implemented in a derived class; otherwise, returns null. 
+      /// </summary>
+      /// <returns>
+      /// The <see cref="T:System.ComponentModel.PropertyDescriptor"/> used for sorting the list.
+      /// </returns>
+      protected override PropertyDescriptor SortPropertyCore
+      {
+         get { return SortProperty; }
+      }
+
+      /// <summary>
+      /// Gets a value indicating whether the list supports sorting.
+      /// </summary>
+      /// <returns>
+      /// true if the list supports sorting; otherwise, false. The default is false.
+      /// </returns>
       protected override bool SupportsSortingCore
       {
          get { return true; }
@@ -135,6 +171,10 @@ namespace HFM.Forms
 
          if ((null != items) && (null != property))
          {
+            /* Set the sort property and direction */
+            SortProperty = property;
+            SortDirection = direction;
+
             var pc = new PropertyComparer<T>(property, direction);
             items.Sort(pc);
 
@@ -148,11 +188,6 @@ namespace HFM.Forms
          }
       }
 
-      protected override bool IsSortedCore
-      {
-         get { return IsSorted; }
-      }
-
       protected override void RemoveSortCore()
       {
          IsSorted = false;
@@ -160,7 +195,7 @@ namespace HFM.Forms
 
       #endregion
 
-      #region SortedBindingList<T> Private Sorting API
+      #region SortableBindingList<T> Private Sorting API
 
       protected PropertyDescriptor FindPropertyDescriptor(string property)
       {
@@ -190,10 +225,10 @@ namespace HFM.Forms
 
       #endregion
 
-      #region PropertyComparer<T>
+      #region PropertyComparer<TKey>
 
       [CoverageExclude]
-      internal class PropertyComparer<TKey> : IComparer<TKey>
+      private class PropertyComparer<TKey> : IComparer<TKey>
       {
          /*
          * The following code contains code implemented by Rockford Lhotka:

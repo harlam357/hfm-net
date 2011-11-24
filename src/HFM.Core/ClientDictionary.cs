@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HFM.Core
 {
@@ -35,6 +36,11 @@ namespace HFM.Core
       /// <param name="clients"><see cref="T:System.Collections.Generic.IEnumerable`1"/> collection of IClient objects.</param>
       /// <exception cref="T:System.ArgumentNullException"><paramref name="clients"/> is null.</exception>
       void Load(IEnumerable<IClient> clients);
+
+      /// <summary>
+      /// Gets an enumerable collection of all slots.
+      /// </summary>
+      IEnumerable<SlotModel> Slots { get; }
 
       #region IDictionary<string,IClient> Members
 
@@ -117,6 +123,11 @@ namespace HFM.Core
          {
             OnDictionaryChanged(EventArgs.Empty);
          }
+      }
+
+      public IEnumerable<SlotModel> Slots
+      {
+         get { return Values.SelectMany(client => client.Slots).Select(kvp => kvp.Value); }
       }
 
       #region IDictionary<string,IClient> Members

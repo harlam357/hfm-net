@@ -23,8 +23,9 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
 
-using HFM.Framework;
-using HFM.Instances;
+using Castle.Core.Logging;
+
+using HFM.Core;
 
 namespace HFM.Forms
 {
@@ -50,12 +51,12 @@ namespace HFM.Forms
          {
             if (value)
             {
-               _retrieveExecStart = HfmTrace.ExecStart;
+               _retrieveExecStart = Instrumentation.ExecStart;
                _retrievalInProgress = true;
             }
             else
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Total Retrieval Execution Time: {0}", HfmTrace.GetExecTime(_retrieveExecStart)));
+               _logger.Info(String.Format("Total Retrieval Execution Time: {0}", Instrumentation.GetExecTime(_retrieveExecStart)));
                _retrievalInProgress = false;
             }
          }
@@ -73,27 +74,35 @@ namespace HFM.Forms
 
       #region Service Interfaces
 
+      private ILogger _logger = NullLogger.Instance;
+
+      public ILogger Logger
+      {
+         get { return _logger; }
+         set { _logger = value; }
+      }
+
       private MainPresenter _presenter;
       
-      private IMarkupGenerator _markupGenerator;
+      //private IMarkupGenerator _markupGenerator;
 
-      private IWebsiteDeployer _websiteDeployer;
+      //private IWebsiteDeployer _websiteDeployer;
 
       private readonly IPreferenceSet _prefs;
 
-      private readonly InstanceCollection _instanceCollection;
+      private readonly IClientDictionary _clientDictionary;
 
-      private readonly IProteinBenchmarkContainer _benchmarkContainer;
-
-      #endregion
+      //private readonly IProteinBenchmarkCollection _benchmarkCollection;
 
       #endregion
 
-      public RetrievalLogic(IPreferenceSet prefs, InstanceCollection instanceCollection, IProteinBenchmarkContainer benchmarkContainer)
+      #endregion
+
+      public RetrievalLogic(IPreferenceSet prefs, IClientDictionary clientDictionary)
       {
          _prefs = prefs;
-         _instanceCollection = instanceCollection;
-         _benchmarkContainer = benchmarkContainer;
+         _clientDictionary = clientDictionary;
+         //_benchmarkCollection = benchmarkCollection;
       }
 
       public void Initialize(MainPresenter presenter)
@@ -117,7 +126,7 @@ namespace HFM.Forms
       /// </summary>
       private void WorkTimerTick(object sender, EventArgs e)
       {
-         HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Running Retrieval Process...");
+         _logger.Info("Running Retrieval Process...");
          QueueNewRetrieval();
       }
 
@@ -126,10 +135,10 @@ namespace HFM.Forms
       /// </summary>
       private void WebGenTimerTick(object sender, EventArgs e)
       {
-         Debug.Assert(_prefs.GetPreference<bool>(Preference.GenerateWeb));
-         Debug.Assert(_prefs.GetPreference<bool>(Preference.WebGenAfterRefresh) == false);
+         Debug.Assert(_prefs.Get<bool>(Preference.GenerateWeb));
+         Debug.Assert(_prefs.Get<bool>(Preference.WebGenAfterRefresh) == false);
 
-         HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping Web Generation Timer");
+         _logger.Info("Stopping web generation timer loop.");
          _webTimer.Stop();
 
          DoWebGeneration();
@@ -139,36 +148,35 @@ namespace HFM.Forms
 
       private void DoWebGeneration()
       {
-         Debug.Assert(_prefs.GetPreference<bool>(Preference.GenerateWeb));
+         //Debug.Assert(_prefs.Get<bool>(Preference.GenerateWeb));
 
-         // lazy initialize
-         if (_markupGenerator == null) _markupGenerator = InstanceProvider.GetInstance<IMarkupGenerator>();
-         if (_websiteDeployer == null) _websiteDeployer = InstanceProvider.GetInstance<IWebsiteDeployer>();
+         //// lazy initialize
+         //if (_markupGenerator == null) _markupGenerator = ServiceLocator.Resolve<IMarkupGenerator>();
+         //if (_websiteDeployer == null) _websiteDeployer = ServiceLocator.Resolve<IWebsiteDeployer>();
 
-         try
-         {
-            if (_markupGenerator.GenerationInProgress)
-            {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Web Generation already in progress...");
-            }
-            else
-            {
-               DateTime start = HfmTrace.ExecStart;
+         //try
+         //{
+         //   if (_markupGenerator.GenerationInProgress)
+         //   {
+         //      _logger.Info("Web Generation already in progress...");
+         //   }
+         //   else
+         //   {
+         //      DateTime start = Instrumentation.ExecStart;
 
-               HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Starting Web Generation...");
+         //      _logger.Info("Starting Web Generation...");
 
-               ICollection<IDisplayInstance> displayInstances = _presenter.GetCurrentDisplayInstanceArray();
-               _markupGenerator.Generate(displayInstances);
-               _websiteDeployer.DeployWebsite(_markupGenerator.HtmlFilePaths, _markupGenerator.XmlFilePaths, _markupGenerator.ClientDataFilePath, displayInstances);
+         //      ICollection<IDisplayInstance> displayInstances = _presenter.GetCurrentDisplayInstanceArray();
+         //      _markupGenerator.Generate(displayInstances);
+         //      _websiteDeployer.DeployWebsite(_markupGenerator.HtmlFilePaths, _markupGenerator.XmlFilePaths, _markupGenerator.ClientDataFilePath, displayInstances);
 
-               HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format(CultureInfo.CurrentCulture,
-                  "Total Web Generation Execution Time: {0}", HfmTrace.GetExecTime(start)));
-            }
-         }
-         catch (Exception ex)
-         {
-            HfmTrace.WriteToHfmConsole(ex);
-         }
+         //      _logger.Info("Total Web Generation Execution Time: {0}", Instrumentation.GetExecTime(start));
+         //   }
+         //}
+         //catch (Exception ex)
+         //{
+         //   _logger.ErrorFormat(ex, "{0}", ex.Message);
+         //}
       }
 
       /// <summary>
@@ -179,14 +187,14 @@ namespace HFM.Forms
          // don't fire this process twice
          if (RetrievalInProgress)
          {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("{0} Retrieval Already In Progress...", HfmTrace.FunctionName));
+            _logger.Info("Retrieval already in progress...");
             return;
          }
 
          // only fire if there are Hosts
-         if (_instanceCollection.HasInstances())
+         if (_clientDictionary.Count != 0)
          {
-            HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping Retrieval Timer Loop");
+            _logger.Info("Stopping retrieval timer loop.");
             _workTimer.Stop();
 
             // fire the retrieval wrapper thread (basically a wait thread off the UI thread)
@@ -210,20 +218,20 @@ namespace HFM.Forms
             async.AsyncWaitHandle.WaitOne();
 
             // run post retrieval processes
-            if (_prefs.GetPreference<bool>(Preference.GenerateWeb) &&
-                _prefs.GetPreference<bool>(Preference.WebGenAfterRefresh))
+            if (_prefs.Get<bool>(Preference.GenerateWeb) &&
+                _prefs.Get<bool>(Preference.WebGenAfterRefresh))
             {
                // do a web gen (on another thread)
                new Action(DoWebGeneration).BeginInvoke(null, null);
             }
 
-            if (_prefs.GetPreference<bool>(Preference.ShowXmlStats))
+            if (_prefs.Get<bool>(Preference.ShowXmlStats))
             {
-               _presenter.RefreshUserStatsData(false);
+               //_presenter.RefreshUserStatsData(false);
             }
 
             // Enable the data retrieval timer
-            if (_prefs.GetPreference<bool>(Preference.SyncOnSchedule))
+            if (_prefs.Get<bool>(Preference.SyncOnSchedule))
             {
                StartBackgroundTimer();
             }
@@ -242,12 +250,12 @@ namespace HFM.Forms
       {
          // get flag synchronous or asynchronous - we don't want this flag to change on us
          // in the middle of a retrieve, so grab it now and use the local copy
-         bool synchronous = _prefs.GetPreference<bool>(Preference.SyncOnLoad);
+         bool synchronous = _prefs.Get<bool>(Preference.SyncOnLoad);
 
          // copy the current instance keys into local array
-         int numInstances = _instanceCollection.Count;
+         int numInstances = _clientDictionary.Count;
          string[] instanceKeys = new string[numInstances];
-         _instanceCollection.Keys.CopyTo(instanceKeys, 0);
+         _clientDictionary.Keys.CopyTo(instanceKeys, 0);
 
          List<WaitHandle> waitHandleList = new List<WaitHandle>();
          for (int i = 0; i < numInstances; )
@@ -259,19 +267,23 @@ namespace HFM.Forms
             {
                // try to get the key value from the collection, if the value is not found then
                // the user removed a client in the middle of a retrieve process, ignore the key
-               ClientInstance instance;
-               if (_instanceCollection.TryGetValue(instanceKeys[i], out instance))
+               IClient client;
+               if (_clientDictionary.TryGetValue(instanceKeys[i], out client))
                {
-                  if (synchronous) // do the individual retrieves on a single thread
+                  var legacyClient = client as LegacyClient;
+                  if (legacyClient != null)
                   {
-                     RetrieveInstance(instance);
-                  }
-                  else // fire individual threads to do the their own retrieve simultaneously
-                  {
-                     IAsyncResult async = QueueNewRetrieval(instance);
+                     if (synchronous) // do the individual retrieves on a single thread
+                     {
+                        RetrieveInstance(legacyClient);
+                     }
+                     else // fire individual threads to do the their own retrieve simultaneously
+                     {
+                        IAsyncResult async = QueueNewRetrieval(legacyClient);
 
-                     // get the wait handle for each invoked delegate
-                     waitHandleList.Add(async.AsyncWaitHandle);
+                        // get the wait handle for each invoked delegate
+                        waitHandleList.Add(async.AsyncWaitHandle);
+                     }
                   }
                }
 
@@ -290,62 +302,66 @@ namespace HFM.Forms
          _presenter.FindDuplicates();
 
          // Save the benchmark collection
-         _benchmarkContainer.Write();
+         //_benchmarkCollection.Write();
       }
 
       /// <summary>
       /// Stick this Instance in the background thread queue to retrieve the info for the given Instance
       /// </summary>
-      private IAsyncResult QueueNewRetrieval(ClientInstance instance)
+      private IAsyncResult QueueNewRetrieval(LegacyClient legacyClient)
       {
-         return new Action<ClientInstance>(RetrieveInstance).BeginInvoke(instance, null, null);
+         return new Action<LegacyClient>(RetrieveInstance).BeginInvoke(legacyClient, null, null);
       }
 
       /// <summary>
       /// Stub to execute retrieve and refresh display
       /// </summary>
-      private void RetrieveInstance(ClientInstance instance)
+      private void RetrieveInstance(LegacyClient legacyClient)
       {
-         if (instance.RetrievalInProgress == false)
+         if (legacyClient.RetrievalInProgress == false)
          {
-            instance.Retrieve();
+            legacyClient.Retrieve();
             // signal the UI to update
-            _presenter.RefreshDisplay();
+            //_presenter.RefreshDisplay();
          }
       }
 
       /// <summary>
       /// Retrieve the given Client Instance
       /// </summary>
-      public void RetrieveSingleClient(string instanceName)
+      public void RetrieveSingleClient(string name)
       {
-         RetrieveSingleClient(_instanceCollection[instanceName]);
+         var legacyClient = _clientDictionary[name] as LegacyClient;
+         if (legacyClient != null)
+         {
+            RetrieveSingleClient(legacyClient);
+         }
       }
 
       /// <summary>
       /// Retrieve the given Client Instance
       /// </summary>
-      public void RetrieveSingleClient(ClientInstance instance)
+      public void RetrieveSingleClient(LegacyClient legacyClient)
       {
          // fire the actual retrieval thread
-         new Action<ClientInstance>(DoSingleClientRetieval).BeginInvoke(instance, null, null);
+         new Action<LegacyClient>(DoSingleClientRetieval).BeginInvoke(legacyClient, null, null);
       }
 
       /// <summary>
       /// Do a single retrieval operation on the given Client Instance
       /// </summary>
-      private void DoSingleClientRetieval(ClientInstance instance)
+      private void DoSingleClientRetieval(LegacyClient legacyClient)
       {
-         if (instance.RetrievalInProgress == false)
+         if (legacyClient.RetrievalInProgress == false)
          {
-            IAsyncResult async = QueueNewRetrieval(instance);
+            IAsyncResult async = QueueNewRetrieval(legacyClient);
             async.AsyncWaitHandle.WaitOne();
 
             // check for clients with duplicate Project (Run, Clone, Gen) or UserID
             _presenter.FindDuplicates();
 
             // Save the benchmark collection
-            _benchmarkContainer.Write();
+            //_benchmarkCollection.Write();
          }
       }
 
@@ -355,11 +371,11 @@ namespace HFM.Forms
       public void SetTimerState()
       {
          // Disable timers if no hosts
-         if (!_instanceCollection.HasInstances())
+         if (_clientDictionary.Count == 0)
          {
             if (_workTimer.Enabled || _webTimer.Enabled)
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Info, "No Hosts - Stopping All Background Timer Loops");
+               _logger.Info("No Hosts - Stopping All Background Timer Loops");
             }
             _workTimer.Stop();
             _webTimer.Stop();
@@ -367,7 +383,7 @@ namespace HFM.Forms
          }
 
          // Enable the data retrieval timer
-         if (_prefs.GetPreference<bool>(Preference.SyncOnSchedule))
+         if (_prefs.Get<bool>(Preference.SyncOnSchedule))
          {
             if (RetrievalInProgress == false)
             {
@@ -378,14 +394,14 @@ namespace HFM.Forms
          {
             if (_workTimer.Enabled)
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping Retrieval Timer Loop");
+               _logger.Info("Stopping Retrieval Timer Loop");
                _workTimer.Stop();
             }
          }
 
          // Enable the web generation timer
-         if (_prefs.GetPreference<bool>(Preference.GenerateWeb) &&
-             _prefs.GetPreference<bool>(Preference.WebGenAfterRefresh) == false)
+         if (_prefs.Get<bool>(Preference.GenerateWeb) &&
+             _prefs.Get<bool>(Preference.WebGenAfterRefresh) == false)
          {
             StartWebGenTimer();
          }
@@ -393,7 +409,7 @@ namespace HFM.Forms
          {
             if (_webTimer.Enabled)
             {
-               HfmTrace.WriteToHfmConsole(TraceLevel.Info, "Stopping Web Generation Timer Loop");
+               _logger.Info("Stopping Web Generation Timer Loop");
                _webTimer.Stop();
             }
          }
@@ -404,10 +420,10 @@ namespace HFM.Forms
       /// </summary>
       private void StartBackgroundTimer()
       {
-         var syncTimeMinutes = _prefs.GetPreference<int>(Preference.SyncTimeMinutes);
+         var syncTimeMinutes = _prefs.Get<int>(Preference.SyncTimeMinutes);
 
          _workTimer.Interval = syncTimeMinutes * Constants.MinToMillisec;
-         HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format("Starting Retrieval Timer Loop: {0} Minutes", syncTimeMinutes));
+         _logger.Info(String.Format("Starting Retrieval Timer Loop: {0} Minutes", syncTimeMinutes));
          _workTimer.Start();
       }
 
@@ -416,13 +432,13 @@ namespace HFM.Forms
       /// </summary>
       private void StartWebGenTimer()
       {
-         Debug.Assert(_prefs.GetPreference<bool>(Preference.GenerateWeb));
-         Debug.Assert(_prefs.GetPreference<bool>(Preference.WebGenAfterRefresh) == false);
+         Debug.Assert(_prefs.Get<bool>(Preference.GenerateWeb));
+         Debug.Assert(_prefs.Get<bool>(Preference.WebGenAfterRefresh) == false);
 
-         var generateInterval = _prefs.GetPreference<int>(Preference.GenerateInterval);
+         var generateInterval = _prefs.Get<int>(Preference.GenerateInterval);
 
          _webTimer.Interval = generateInterval * Constants.MinToMillisec;
-         HfmTrace.WriteToHfmConsole(TraceLevel.Info, String.Format(CultureInfo.CurrentCulture,
+         _logger.Info(String.Format(CultureInfo.CurrentCulture,
             "Starting Web Generation Timer Loop: {0} Minutes", generateInterval));
          _webTimer.Start();
       }

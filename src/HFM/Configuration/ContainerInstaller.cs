@@ -29,6 +29,10 @@ namespace HFM.Configuration
 
       public void Install(IWindsorContainer container, IConfigurationStore store)
       {
+         // BootStrapper - Singleton
+         container.Register(
+            Component.For<BootStrapper>());
+
          // ArgumentProcessor - Transient
          container.Register(
             Component.For<ArgumentProcessor>()

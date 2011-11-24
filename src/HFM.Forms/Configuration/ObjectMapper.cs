@@ -31,6 +31,7 @@ namespace HFM.Forms.Configuration
       public static void CreateMaps()
       {
          Mapper.CreateMap<ClientSettings, LegacyClientSettingsModel>();
+         Mapper.CreateMap<XmlStatsData, UserStatsDataModel>();
       }
    }
 }

@@ -18,6 +18,8 @@
  */
 
 using System.Collections.Generic;
+
+using Castle.Core.Logging;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
@@ -32,6 +34,11 @@ namespace HFM.Core.Configuration
       public void Install(IWindsorContainer container, IConfigurationStore store)
       {
          #region Service Interfaces
+
+         // ILogger - Singleton
+         container.Register(
+            Component.For<ILogger>()
+               .ImplementedBy<Logging.Logger>());
 
          // IDataAggregator - Transient
          container.Register(
@@ -66,16 +73,21 @@ namespace HFM.Core.Configuration
             Component.For<IUnitInfoDatabase>()
                .ImplementedBy<UnitInfoDatabase>());
 
-         // IProteinBenchmarkCollection - Singleton
+         // IClientDictionary - Singleton
          container.Register(
-            Component.For<IProteinBenchmarkCollection>()
-               .ImplementedBy<ProteinBenchmarkCollection>()
-               .OnCreate((kernel, instance) => instance.Read()));
+            Component.For<IClientDictionary>()
+               .ImplementedBy<ClientDictionary>());
 
          // IQueryParametersCollection - Singleton
          container.Register(
             Component.For<IQueryParametersCollection>()
                .ImplementedBy<QueryParametersCollection>());
+
+         // IProteinBenchmarkCollection - Singleton
+         container.Register(
+            Component.For<IProteinBenchmarkCollection>()
+               .ImplementedBy<ProteinBenchmarkCollection>()
+               .OnCreate((kernel, instance) => instance.Read()));
 
          // IUnitInfoCollection - Singleton
          container.Register(

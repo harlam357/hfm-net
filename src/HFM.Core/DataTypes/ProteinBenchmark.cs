@@ -59,18 +59,8 @@ namespace HFM.Core.DataTypes
       /// <summary>
       /// Minimum Frame Time
       /// </summary>
-      public TimeSpan MinimumFrameTime { get; set; }
-
-      /// <summary>
-      /// Minimum Frame Time (Ticks)
-      /// </summary>
-      [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
       [DataMember(Order = 4)]
-      public long MinimumFrameTimeTicks
-      {
-         get { return MinimumFrameTime.Ticks; }
-         set { MinimumFrameTime = new TimeSpan(value); }
-      }
+      public TimeSpan MinimumFrameTime { get; set; }
 
       /// <summary>
       /// Average Frame Time

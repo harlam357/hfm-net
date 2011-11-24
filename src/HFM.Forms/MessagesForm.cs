@@ -21,6 +21,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
+using Castle.Core.Logging;
+
 using HFM.Core;
 using HFM.Core.Logging;
 using HFM.Forms.Controls;
@@ -56,10 +58,10 @@ namespace HFM.Forms
 
       #region Constructor
 
-      public MessagesForm(IPreferenceSet prefs, Logger logger)
+      public MessagesForm(IPreferenceSet prefs, ILogger logger)
       {
          _prefs = prefs;
-         _logger = logger;
+         _logger = (Logger)logger;
       
          InitializeComponent();
 

@@ -24,9 +24,10 @@ using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 
+using HFM.Core;
+using HFM.Core.DataTypes;
 using HFM.Forms.Controls;
-using HFM.Framework;
-using HFM.Framework.DataTypes;
+using HFM.Forms.Models;
 
 namespace HFM.Forms
 {
@@ -80,7 +81,7 @@ namespace HFM.Forms
       
       #region Methods
 
-      void Initialize(MainPresenter presenter, IProteinCollection proteinCollection);
+      void Initialize(MainPresenter presenter);
 
       void SetManualStartPosition();
 
@@ -100,10 +101,6 @@ namespace HFM.Forms
 
       void ShowNotifyToolTip(string text);
       
-      void RefreshUserStatsControls(XmlStatsData data);
-
-      void SetStatsControlsVisible(bool visible);
-
       #region Background Processing Methods
       
       string GetSelectedRowInstanceName(System.Collections.IList selectedRows);
@@ -150,6 +147,7 @@ namespace HFM.Forms
       private NotifyIcon _notifyIcon;
 
       private readonly IPreferenceSet _prefs;
+      private readonly UserStatsDataModel _userStatsDataModel;
 
       #endregion
 
@@ -158,18 +156,19 @@ namespace HFM.Forms
       /// <summary>
       /// Main Form Constructor
       /// </summary>
-      public frmMain(IPreferenceSet prefs)
+      public frmMain(IPreferenceSet prefs, UserStatsDataModel userStatsDataModel)
       {
          _prefs = prefs;
+         _userStatsDataModel = userStatsDataModel;
 
          // This call is Required by the Windows Form Designer
          InitializeComponent();
 
          // Set Main Form Text
 #if BETA
-         base.Text = String.Format("HFM.NET v{0} - Beta", PlatformOps.ApplicationVersion);
+         base.Text = String.Format("HFM.NET v{0} - Beta", Core.Application.Version);
 #else
-         base.Text = String.Format("HFM.NET v{0}", PlatformOps.ApplicationVersion);
+         base.Text = String.Format("HFM.NET v{0}", Core.Application.Version);
 #endif
       }
       
@@ -177,7 +176,7 @@ namespace HFM.Forms
       
       #region Initialize
 
-      public void Initialize(MainPresenter presenter, IProteinCollection proteinCollection)
+      public void Initialize(MainPresenter presenter)
       {
          _presenter = presenter;
          // Resize can be invoked when InitializeComponent() is call
@@ -193,13 +192,14 @@ namespace HFM.Forms
          // Add Column Selector
          new DataGridViewColumnSelector(dataGridView1);
          // Give the Queue Control access to the Protein Collection
-         queueControl.SetProteinCollection(proteinCollection);
+         queueControl.SetProteinCollection(ServiceLocator.Resolve<IProteinDictionary>());
 
          #endregion
 
          // Initialize the Presenter
          _presenter.Initialize();
 
+         BindToUserStatsDataModel();
          // Hook-up Status Label Event Handlers
          SubscribeToStatsLabelEvents();
          
@@ -208,20 +208,39 @@ namespace HFM.Forms
          // If Mono, use the RowEnter Event (which was what 0.3.0 and prior used)
          // to set the CurrentInstance selection.  Obviously Mono doesn't fire the
          // DataGridView.SelectionChanged Event.
-         if (PlatformOps.IsRunningOnMono())
+         if (Core.Application.IsRunningOnMono)
          {
-            dataGridView1.RowEnter += delegate
-            {
-               _presenter.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
-            };
-            // Use RowLeave to clear data grid when selecting New file under Mono
-            dataGridView1.RowLeave += delegate
-            {
-               _presenter.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
-            };
+            //dataGridView1.RowEnter += delegate
+            //{
+            //   _presenter.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
+            //};
+            //// Use RowLeave to clear data grid when selecting New file under Mono
+            //dataGridView1.RowLeave += delegate
+            //{
+            //   _presenter.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
+            //};
          }
 
          #endregion
+      }
+
+      private void BindToUserStatsDataModel()
+      {
+         statusUserTeamRank.DataBindings.Add("Text", _userStatsDataModel, "Rank", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUserProjectRank.DataBindings.Add("Text", _userStatsDataModel, "OverallRank", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUser24hr.DataBindings.Add("Text", _userStatsDataModel, "TwentyFourHourAvgerage", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUserToday.DataBindings.Add("Text", _userStatsDataModel, "PointsToday", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUserWeek.DataBindings.Add("Text", _userStatsDataModel, "PointsWeek", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUserTotal.DataBindings.Add("Text", _userStatsDataModel, "PointsTotal", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUserWUs.DataBindings.Add("Text", _userStatsDataModel, "WorkUnitsTotal", false, DataSourceUpdateMode.OnPropertyChanged);
+
+         statusUserTeamRank.DataBindings.Add("Visible", _userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUserProjectRank.DataBindings.Add("Visible", _userStatsDataModel, "OverallRankVisible", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUser24hr.DataBindings.Add("Visible", _userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUserToday.DataBindings.Add("Visible", _userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUserWeek.DataBindings.Add("Visible", _userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUserTotal.DataBindings.Add("Visible", _userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUserWUs.DataBindings.Add("Visible", _userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
       }
       
       private void SubscribeToStatsLabelEvents()
@@ -239,30 +258,30 @@ namespace HFM.Forms
       
       #region Form Handlers
 
-      public void SecondInstanceStarted(string[] args)
-      {
-         if (InvokeRequired)
-         {
-            BeginInvoke((MethodInvoker)(() => SecondInstanceStarted(args)));
-            return;
-         }
+      //public void SecondInstanceStarted(string[] args)
+      //{
+      //   if (InvokeRequired)
+      //   {
+      //      BeginInvoke((MethodInvoker)(() => SecondInstanceStarted(args)));
+      //      return;
+      //   }
       
-         if (WindowState == FormWindowState.Minimized)
-         {
-            WindowState = _presenter.OriginalWindowState;
-         }
-         else
-         {
-            if (PlatformOps.IsRunningOnMono())
-            {
-               Activate();
-            }
-            else
-            {
-               NativeMethods.SetForegroundWindow(Handle);
-            }
-         }
-      }
+      //   if (WindowState == FormWindowState.Minimized)
+      //   {
+      //      WindowState = _presenter.OriginalWindowState;
+      //   }
+      //   else
+      //   {
+      //      if (Core.Application.IsRunningOnMono)
+      //      {
+      //         Activate();
+      //      }
+      //      else
+      //      {
+      //         NativeMethods.SetForegroundWindow(Handle);
+      //      }
+      //   }
+      //}
 
       private void frmMain_Shown(object sender, EventArgs e)
       {
@@ -321,7 +340,7 @@ namespace HFM.Forms
       
       private void dataGridView1_SelectionChanged(object sender, EventArgs e)
       {
-         _presenter.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
+         //_presenter.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
       }
 
       public void SetClientMenuItemsVisible(bool filesMenu, bool cachedLog, bool seperator)
@@ -338,7 +357,7 @@ namespace HFM.Forms
 
       private void dataGridView1_Sorted(object sender, EventArgs e)
       {
-         _presenter.DataGridViewSorted();
+         //_presenter.DataGridViewSorted();
       }
 
       private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
@@ -393,7 +412,7 @@ namespace HFM.Forms
 
       private void mnuEditPreferences_Click(object sender, EventArgs e)
       {
-         var prefDialog = new frmPreferences(_prefs);
+         var prefDialog = ServiceLocator.Resolve<PreferencesDialog>();
          prefDialog.ShowDialog();
          
          dataGridView1.Invalidate();
@@ -425,7 +444,7 @@ namespace HFM.Forms
       
       private void mnuHelpAbout_Click(object sender, EventArgs e)
       {
-         var about = new frmAbout();
+         var about = new AboutDialog();
          about.ShowDialog(this);
       }
 
@@ -580,7 +599,7 @@ namespace HFM.Forms
 
       private void mnuWebRefreshUserStats_Click(object sender, EventArgs e)
       {
-         _presenter.RefreshUserStatsClick();
+         _userStatsDataModel.Refresh(true);
       }
 
       private void mnuWebHFMGoogleCode_Click(object sender, EventArgs e)
@@ -693,7 +712,7 @@ namespace HFM.Forms
          {
             var statusLabel = (ToolStripStatusLabel)sender;
             // Issue 235
-            if (PlatformOps.IsRunningOnMono())
+            if (Core.Application.IsRunningOnMono)
             {
                statsContextMenuStrip.Show(statusStrip, e.X, e.Y);
             }
@@ -703,54 +722,15 @@ namespace HFM.Forms
             }
          }
       }
-      
-      public void RefreshUserStatsControls(XmlStatsData data)
-      {
-         if (_prefs.GetPreference<bool>(Preference.ShowTeamStats))
-         {
-            ApplyUserStats(data.TeamRank, 0, data.TeamTwentyFourHourAvgerage, data.TeamPointsToday, 
-                           data.TeamPointsWeek, data.TeamPointsTotal, data.TeamWorkUnitsTotal);
-         }
-         else
-         {
-            ApplyUserStats(data.UserTeamRank, data.UserOverallRank, data.UserTwentyFourHourAvgerage, data.UserPointsToday,
-                           data.UserPointsWeek, data.UserPointsTotal, data.UserWorkUnitsTotal);
-         }
-      }
-      
-      private void ApplyUserStats(int teamRank, int projectRank, long twentyFourHour, long today, long week, long totalPoints, long totalWUs)
-      {
-         statusUserTeamRank.Text = String.Format(CultureInfo.CurrentCulture, String.Concat("Team: ", Constants.EocStatsFormat), teamRank);
-         statusUserProjectRank.Text = String.Format(CultureInfo.CurrentCulture, String.Concat("Project: ", Constants.EocStatsFormat), projectRank);
-         statusUser24hr.Text = String.Format(CultureInfo.CurrentCulture, String.Concat("24hr: ", Constants.EocStatsFormat), twentyFourHour);
-         statusUserToday.Text = String.Format(CultureInfo.CurrentCulture, String.Concat("Today: ", Constants.EocStatsFormat), today);
-         statusUserWeek.Text = String.Format(CultureInfo.CurrentCulture, String.Concat("Week: ", Constants.EocStatsFormat), week);
-         statusUserTotal.Text = String.Format(CultureInfo.CurrentCulture, String.Concat("Total: ", Constants.EocStatsFormat), totalPoints);
-         statusUserWUs.Text = String.Format(CultureInfo.CurrentCulture, String.Concat("WUs: ", Constants.EocStatsFormat), totalWUs);
-      }
-      
-      public void SetStatsControlsVisible(bool visible)
-      {
-         mnuWebRefreshUserStats.Visible = visible;
-         mnuWebSep2.Visible = visible;
-         statusUserTeamRank.Visible = visible;
-         statusUserProjectRank.Visible = !_prefs.GetPreference<bool>(Preference.ShowTeamStats) && visible;
-         statusUser24hr.Visible = visible;
-         statusUserToday.Visible = visible;
-         statusUserWeek.Visible = visible;
-         statusUserTotal.Visible = visible;
-         statusUserWUs.Visible = visible;
-         statusLabelMiddle.Visible = visible;
-      }
 
       private void mnuContextShowUserStats_Click(object sender, EventArgs e)
       {
-         _presenter.ShowUserStatsClick();
+         _userStatsDataModel.SetViewStyle(false);
       }
 
       private void mnuContextShowTeamStats_Click(object sender, EventArgs e)
       {
-         _presenter.ShowTeamStatsClick();
+         _userStatsDataModel.SetViewStyle(true);
       }
 
       #endregion

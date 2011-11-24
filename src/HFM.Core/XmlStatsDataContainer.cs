@@ -27,6 +27,8 @@ namespace HFM.Core
 {
    public interface IXmlStatsDataContainer
    {
+      event EventHandler XmlStatsDataChanged;
+
       /// <summary>
       /// User Stats Data
       /// </summary>
@@ -56,7 +58,7 @@ namespace HFM.Core
       #endregion
    }
 
-   public class XmlStatsDataContainer : DataContainer<XmlStatsData>, IXmlStatsDataContainer
+   public sealed class XmlStatsDataContainer : DataContainer<XmlStatsData>, IXmlStatsDataContainer
    {
       #region Constants
       
@@ -65,6 +67,16 @@ namespace HFM.Core
       private const string EocUpdateStatusNode = "Update_Status";
       
       #endregion
+
+      public event EventHandler XmlStatsDataChanged;
+
+      private void OnXmlStatsDataChanged(EventArgs e)
+      {
+         if (XmlStatsDataChanged != null)
+         {
+            XmlStatsDataChanged(this, e);
+         }
+      }
 
       #region Properties
 
@@ -192,6 +204,7 @@ namespace HFM.Core
                if (forceRefresh || !(Data.Equals(newStatsData)) || updateStatus == "Current")
                {
                   Data = newStatsData;
+                  OnXmlStatsDataChanged(EventArgs.Empty);
                   Write();
                }
             }

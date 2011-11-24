@@ -164,7 +164,7 @@ namespace HFM.Forms
                var instance = _presenter.FindDisplayInstance(dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString());
                if (_prefs.GetPreference<bool>(Preference.EtaDate))
                {
-                  PaintGridCell(PaintCell.EtaDate, instance.EtaDate, e);
+                  PaintGridCell(PaintCell.EtaDate, instance.ETADate, e);
                }
                #endregion
             }
@@ -242,7 +242,7 @@ namespace HFM.Forms
 
                #region Draw the bottom grid line
                
-               if (PlatformOps.IsRunningOnMono())
+               if (Core.Application.IsRunningOnMono)
                {
                   e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
                                       e.CellBounds.Top, e.CellBounds.Right,
@@ -400,7 +400,7 @@ namespace HFM.Forms
                         _prefs.GetPreference<bool>(Preference.EtaDate))
                {
                   var instance = _presenter.FindDisplayInstance(dataGridView1.Rows[i].Cells["Name"].Value.ToString());
-                  formattedString = GetEtaDateString(instance.EtaDate);
+                  formattedString = GetEtaDateString(instance.ETADate);
                }
                else if (dataGridView1.Columns["DownloadTime"].Index == columnIndex ||
                         dataGridView1.Columns["Deadline"].Index == columnIndex)
