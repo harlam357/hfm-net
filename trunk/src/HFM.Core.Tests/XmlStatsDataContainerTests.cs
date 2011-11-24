@@ -51,14 +51,14 @@ namespace HFM.Core.Tests
             FileName = "TestUserStatsBinary.dat",
          };
 
-         container.Data = LoadTestData();
+         container.Data = CreateTestData();
          container.Write();
          container.Data = null;
          container.Read();
          ValidateTestData(container.Data);
       }
 
-      private static XmlStatsData LoadTestData()
+      private static XmlStatsData CreateTestData()
       {
          var testData = new XmlStatsData();
          testData.UserTwentyFourHourAvgerage = 36123;

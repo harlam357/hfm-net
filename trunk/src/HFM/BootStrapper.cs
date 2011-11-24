@@ -19,43 +19,32 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Windows.Forms;
 
 using Castle.Core.Logging;
-using Castle.Facilities.Logging;
-using Castle.Windsor;
 
 using harlam357.Windows.Forms;
 
 using HFM.Core;
-using HFM.Core.Logging;
+using HFM.Forms;
 
 namespace HFM
 {
    internal sealed class BootStrapper
    {
+      private readonly IPreferenceSet _prefs;
+      private readonly ILogger _logger;
+
+      public BootStrapper(IPreferenceSet prefs, ILogger logger)
+      {
+         _prefs = prefs;
+         _logger = logger;
+      }
+
       public void Strap(string[] args)
       {
-         #region Configure Container
-
-         IWindsorContainer container = new WindsorContainer();
-         // Facilities
-         container.AddFacility<LoggingFacility>(f => f.LogUsing<Core.Logging.LoggerFactory>());
-         // Components
-         container.Install(new Configuration.ContainerInstaller(),
-                           new Preferences.Configuration.ContainerInstaller(),
-                           new Core.Configuration.ContainerInstaller());
-         
-         ServiceLocator.SetContainer(container);
-
-         #endregion
-
-         #region Create Object Maps
-
-         Core.Configuration.ObjectMapper.CreateMaps();
-         Forms.Configuration.ObjectMapper.CreateMaps();
-
-         #endregion
-
          #region Parse Arguments
 
          ICollection<Argument> arguments;
@@ -74,7 +63,7 @@ namespace HFM
 
          #region Process Arguments
          
-         var processor = container.Resolve<ArgumentProcessor>();
+         var processor = ServiceLocator.Resolve<ArgumentProcessor>();
          if (!processor.Process(arguments))
          {
             // arguments specified to exit the application
@@ -104,36 +93,39 @@ namespace HFM
 
             #endregion
 
-            #region Set Logging Level
+            #region Setup Logging
 
-            var logger = container.Resolve<Logger>();
-            var prefs = container.Resolve<IPreferenceSet>();
-            logger.Level = (LoggerLevel)prefs.Get<int>(Preference.MessageLevel);
+            // create messages view (hooks into logging messages)
+            ServiceLocator.Resolve<IMessagesView>();
+            // write log header
+            _logger.Info(String.Empty);
+            _logger.Info(String.Format(CultureInfo.InvariantCulture, "Starting - HFM.NET v{0}", Core.Application.VersionWithRevision));
+            _logger.Info(String.Empty);
+            // check for Mono runtime
+            if (Core.Application.IsRunningOnMono)
+            {
+               _logger.Info("Running on Mono...");
+            }
 
             #endregion
 
-            if (Application.IsRunningOnMono)
+            #region Setup Cache Folder
+
+            try
             {
-               logger.Info("Running on Mono...");
+               ClearCacheFolder();
+            }
+            catch (Exception ex)
+            {
+               ShowStartupError(ex, "Failed to create or clear the data cache folder.");
+               return;
             }
 
-            // Handled by ContainerInstaller
-            //#region Read Data Containers
-
-            //var statsData = container.Resolve<IXmlStatsDataContainer>();
-            //statsData.Read();
-            //var proteinCollection = container.Resolve<IProteinDictionary>();
-            //proteinCollection.Read();
-            //var benchmarkContainer = container.Resolve<IProteinBenchmarkCollection>();
-            //benchmarkContainer.Read();
-            //var unitInfoContainer = container.Resolve<IUnitInfoCollection>();
-            //unitInfoContainer.Read();
-
-            //#endregion
+            #endregion
 
             #region Load Plugins
 
-            var pluginLoader = container.Resolve<Core.Plugins.PluginLoader>();
+            var pluginLoader = ServiceLocator.Resolve<Core.Plugins.PluginLoader>();
             pluginLoader.Load();
 
             #endregion
@@ -150,31 +142,34 @@ namespace HFM
                return;
             }
 
+            #endregion
+
             #region Initialize Main View
 
-            //frmMain frm;
-            //try
-            //{
-            //   frm = (Form)ServiceLocator.Resolve<IMainView>();
-            //   frm.Initialize(ServiceLocator.Resolve<MainPresenter>(), proteinCollection);
-            //   frm.WorkUnitHistoryMenuEnabled = connectionOk;
-            //}
-            //catch (Exception ex)
-            //{
-            //   ShowStartupError(ex, "Primary UI failed to initialize.");
-            //   return;
-            //}
+            IMainView frm;
+            try
+            {
+               frm = ServiceLocator.Resolve<IMainView>();
+               frm.Initialize(ServiceLocator.Resolve<MainPresenter>());
+               //frm.WorkUnitHistoryMenuEnabled = connectionOk;
+            }
+            catch (Exception ex)
+            {
+               ShowStartupError(ex, "Primary UI failed to initialize.");
+               return;
+            }
 
             #endregion
 
-            // Register the Unhandled Exception Dialog
-            ExceptionDialog.RegisterForUnhandledExceptions(Application.NameAndVersionWithRevision,
+            #region Register the Unhandled Exception Dialog
+
+            ExceptionDialog.RegisterForUnhandledExceptions(Core.Application.NameAndVersionWithRevision,
                Environment.OSVersion.VersionString, ExceptionLogger);
 
-            //System.Windows.Forms.Application.Run(frm);
-         }
+            #endregion
 
-         #endregion
+            System.Windows.Forms.Application.Run((Form)frm);
+         }
       }
 
       private void NewInstanceDetected(object sender, NewInstanceDetectedEventArgs e)
@@ -191,83 +186,35 @@ namespace HFM
 
       internal static void ShowStartupError(Exception ex, string message)
       {
-         ExceptionDialog.ShowErrorDialog(ex, Application.NameAndVersionWithRevision, Environment.OSVersion.VersionString,
+         ExceptionDialog.ShowErrorDialog(ex, Core.Application.NameAndVersionWithRevision, Environment.OSVersion.VersionString,
             message, Constants.GoogleGroupUrl, true);
       }
       
-      //try
-      //{
-      //   ClearCacheFolder(prefs);
-      //}
-      //catch (Exception ex)
-      //{
-      //   ShowStartupError(ex, "Failed to create or clear the data cache folder.");
-      //   return;
-      //}
-
-      ///// <summary>
-      ///// Clears the log cache folder specified by the CacheFolder setting
-      ///// </summary>
-      //private void ClearCacheFolder(IPreferenceSet prefs)
-      //{
-      //   string cacheFolder = Path.Combine(prefs.CacheDirectory,
-      //                                     prefs.GetPreference<string>(Preference.CacheFolder));
-
-      //   var di = new DirectoryInfo(cacheFolder);
-      //   if (di.Exists == false)
-      //   {
-      //      di.Create();
-      //   }
-      //   else
-      //   {
-      //      foreach (var fi in di.GetFiles())
-      //      {
-      //         try
-      //         {
-      //            fi.Delete();
-      //         }
-      //         catch (Exception ex)
-      //         {
-      //            _logger.WarnFormat(ex, "Failed to clear cache file '{0}'.", fi.Name);
-      //         }
-      //      }
-      //   }
-      //}
-
-      ///// <summary>
-      ///// Creates Trace Listener for Log File writing and Message Window output
-      ///// </summary>
-      //private static void SetupTraceListeners(IPreferenceSet prefs, IMessagesView messagesView)
-      //{
-      //   // Ensure the HFM User Application Data Folder Exists
-      //   var applicationDataFolderPath = prefs.ApplicationDataFolderPath;
-      //   if (Directory.Exists(applicationDataFolderPath) == false)
-      //   {
-      //      Directory.CreateDirectory(applicationDataFolderPath);
-      //   }
-
-      //   string logFilePath = Path.Combine(applicationDataFolderPath, Constants.HfmLogFileName);
-      //   string prevLogFilePath = Path.Combine(applicationDataFolderPath, Constants.HfmPrevLogFileName);
-
-      //   var fi = new FileInfo(logFilePath);
-      //   if (fi.Exists && fi.Length > 512000)
-      //   {
-      //      var fi2 = new FileInfo(prevLogFilePath);
-      //      if (fi2.Exists)
-      //      {
-      //         fi2.Delete();
-      //      }
-      //      fi.MoveTo(prevLogFilePath);
-      //   }
-
-      //   var listener = new TextWriterTraceListener(logFilePath);
-      //   Trace.Listeners.Add(listener);
-      //   Trace.AutoFlush = true;
-
-      //   HfmTrace.Instance.TextMessage += ((sender, e) => messagesView.AddMessage(e.Message));
-      //   HfmTrace.WriteToHfmConsole(String.Empty);
-      //   HfmTrace.WriteToHfmConsole(String.Format(CultureInfo.InvariantCulture, "Starting - HFM.NET v{0}", PlatformOps.ApplicationVersionWithRevision));
-      //   HfmTrace.WriteToHfmConsole(String.Empty);
-      //}
+      /// <summary>
+      /// Clears the log cache folder specified by the CacheFolder setting
+      /// </summary>
+      private void ClearCacheFolder()
+      {
+         string path = Path.Combine(_prefs.CacheDirectory, _prefs.GetPreference<string>(Preference.CacheFolder));
+         var di = new DirectoryInfo(path);
+         if (!di.Exists)
+         {
+            di.Create();
+         }
+         else
+         {
+            foreach (var fi in di.GetFiles())
+            {
+               try
+               {
+                  fi.Delete();
+               }
+               catch (Exception ex)
+               {
+                  _logger.WarnFormat(ex, "Failed to clear cache file '{0}'.", fi.Name);
+               }
+            }
+         }
+      }
    }
 }

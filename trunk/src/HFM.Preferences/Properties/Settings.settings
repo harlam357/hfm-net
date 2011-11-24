@@ -68,7 +68,7 @@
     <Setting Name="FormLogVisible" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="FormSortOrder" Type="System.Windows.Forms.SortOrder" Scope="User">
+    <Setting Name="FormSortOrder" Type="System.ComponentModel.ListSortDirection" Scope="User">
       <Value Profile="(Default)">Ascending</Value>
     </Setting>
     <Setting Name="FormSortColumn" Type="System.String" Scope="User">

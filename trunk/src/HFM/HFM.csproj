@@ -82,9 +82,6 @@
     <Reference Include="Castle.Core">
       <HintPath>..\..\lib\Castle Windsor\dotNet35\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.Facilities.Logging">
-      <HintPath>..\..\lib\Castle Windsor\dotNet35\loggingFacility\Castle.Facilities.Logging.dll</HintPath>
-    </Reference>
     <Reference Include="Castle.Windsor">
       <HintPath>..\..\lib\Castle Windsor\dotNet35\Castle.Windsor.dll</HintPath>
     </Reference>

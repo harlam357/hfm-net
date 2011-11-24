@@ -126,9 +126,9 @@ namespace HFM.Core
          set { _logger = value; }
       }
 
-      private readonly IDictionary<int, Protein> _proteinDictionary;
+      private readonly IProteinDictionary _proteinDictionary;
 
-      public UnitInfoDatabase(IPreferenceSet prefs, IDictionary<int, Protein> proteinDictionary)
+      public UnitInfoDatabase(IPreferenceSet prefs, IProteinDictionary proteinDictionary)
       {
          if (proteinDictionary == null) throw new ArgumentNullException("proteinDictionary");
 

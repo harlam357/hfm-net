@@ -53,6 +53,12 @@ namespace HFM.Core
    {
       private readonly Proteins.ProteinDictionary _dictionary;
 
+      public ProteinDictionary()
+         : this(null)
+      {
+         
+      }
+
       public ProteinDictionary(IPreferenceSet prefs)
       {
          _dictionary = new Proteins.ProteinDictionary();
