@@ -48,13 +48,13 @@ namespace HFM.Client.DataTypes
       public string ClientSubType { get; set; }
 
       [MessageProperty("client-subtype", typeof(ClientSubTypeConverter))]
-      public ClientSubType ClientSubTypeEnum { get; set; }
+      public FahClientSubType FahClientSubTypeEnum { get; set; }
 
       [MessageProperty("client-type")]
       public string ClientType { get; set; }
 
       [MessageProperty("client-type", typeof(ClientTypeConverter))]
-      public ClientType ClientTypeEnum { get; set; }
+      public FahClientType FahClientTypeEnum { get; set; }
 
       // could be IP Address type
       [MessageProperty("command-address")]

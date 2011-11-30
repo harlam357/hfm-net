@@ -77,13 +77,13 @@ namespace HFM.Client.Converters
          switch (inputString)
          {
             case "PAUSED":
-               return SlotStatus.Paused;
+               return FahSlotStatus.Paused;
             case "RUNNING":
-               return SlotStatus.Running;
+               return FahSlotStatus.Running;
             case "FINISHING":
-               return SlotStatus.Finishing;
+               return FahSlotStatus.Finishing;
             case "SEND":
-               return SlotStatus.Send;
+               return FahSlotStatus.Send;
          }
 
          throw new FormatException(String.Format(CultureInfo.InvariantCulture,

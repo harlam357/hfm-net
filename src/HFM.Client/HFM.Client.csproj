@@ -53,15 +53,13 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="..\HFM.Core\CoverageExcludeAttribute.cs">
-      <Link>CoverageExcludeAttribute.cs</Link>
-    </Compile>
     <Compile Include="Connection.cs" />
     <Compile Include="Converters\GeneralConverters.cs" />
     <Compile Include="Converters\InfoConverters.cs" />
     <Compile Include="Converters\OptionsConverters.cs" />
     <Compile Include="Converters\SimulationInfoConverters.cs" />
     <Compile Include="Converters\UnitCollectionConverters.cs" />
+    <Compile Include="CoverageExcludeAttribute.cs" />
     <Compile Include="DataTypes\Enumerations.cs" />
     <Compile Include="DataTypes\LogFragment.cs" />
     <Compile Include="DataTypes\Heartbeat.cs" />

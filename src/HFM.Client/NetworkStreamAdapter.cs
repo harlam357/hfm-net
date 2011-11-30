@@ -4,8 +4,6 @@ using System.IO;
 using System.Net.Sockets;
 using System.Runtime.Remoting;
 
-using HFM.Core;
-
 namespace HFM.Client
 {
    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix")]

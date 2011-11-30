@@ -3,8 +3,6 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 
-using HFM.Core;
-
 namespace HFM.Client
 {
    public interface ITcpClient : IDisposable

@@ -32,13 +32,13 @@ namespace HFM.Client.Converters
          switch (inputString)
          {
             case "normal":
-               return ClientType.Normal;
+               return FahClientType.Normal;
             case "advanced":
-               return ClientType.Advanced;
+               return FahClientType.Advanced;
             case "bigadv":
-               return ClientType.BigAdv;
+               return FahClientType.BigAdv;
             case "beta":
-               return ClientType.Beta;
+               return FahClientType.Beta;
          }
 
          throw new FormatException(String.Format(CultureInfo.InvariantCulture,
@@ -54,15 +54,15 @@ namespace HFM.Client.Converters
          switch (inputString)
          {
             case "normal":
-               return ClientSubType.Normal;
+               return FahClientSubType.Normal;
             case "SMP":
-               return ClientSubType.SMP;
+               return FahClientSubType.SMP;
             case "GPU":
-               return ClientSubType.GPU;
+               return FahClientSubType.GPU;
             case "STDCLI":
-               return ClientSubType.StdCli;
+               return FahClientSubType.StdCli;
             case "LINUX":
-               return ClientSubType.Linux;
+               return FahClientSubType.Linux;
          }
 
          throw new FormatException(String.Format(CultureInfo.InvariantCulture,
