@@ -24,7 +24,7 @@ namespace HFM.Core.DataTypes
    /// </summary>
    public enum ClientType
    {
-      Version7,
+      FahClient,
       Legacy,
       External //?
    }
@@ -45,10 +45,31 @@ namespace HFM.Core.DataTypes
    /// </summary>
    public enum SlotType
    {
-      Unknown, // for Legacy Clients
+      Unknown,
       Uniprocessor,
       SMP,
       GPU
+   }
+
+   /// <summary>
+   /// Slot Status Types
+   /// </summary>
+   public enum SlotStatus
+   {
+      // Matches HFM.Client.DataTypes.FahSlotStatus
+      Unknown,
+      Paused,
+      Running,
+      Finishing,
+      SendingWorkPacket,
+      // Extended entries for Legacy clients
+      Stopped,
+      EuePause,
+      Hung,
+      RunningNoFrameTimes,
+      RunningAsync,
+      GettingWorkPacket,
+      Offline
    }
 
    /// <summary>
@@ -114,24 +135,6 @@ namespace HFM.Core.DataTypes
       BadWorkUnit,
       CoreOutdated,
       ClientCoreError
-   }
-
-   /// <summary>
-   /// Client Status Types
-   /// </summary>
-   public enum ClientStatus
-   {
-      Unknown,
-      Offline,
-      Stopped,
-      EuePause,
-      Hung,
-      Paused,
-      SendingWorkPacket,
-      GettingWorkPacket,
-      RunningNoFrameTimes,
-      RunningAsync,
-      Running
    }
 
    /// <summary>

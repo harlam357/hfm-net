@@ -26,7 +26,7 @@ namespace HFM.Core.DataTypes
    public class ClientSettings
    {
       /// <summary>
-      /// Client Type (Version7, Legacy, or External)
+      /// Client Type (FahClient, Legacy, or External)
       /// </summary>
       [DataMember(Order = 1)]
       public ClientType ClientType { get; private set; }
@@ -153,7 +153,7 @@ namespace HFM.Core.DataTypes
       public int ClientTimeOffset { get; set; }
       
       public ClientSettings()
-         : this(ClientType.Version7)
+         : this(ClientType.FahClient)
       {
          
       }

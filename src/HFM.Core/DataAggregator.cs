@@ -328,7 +328,7 @@ namespace HFM.Core
                   }
                   fahLogUnitData = LogReader.GetFahLogDataFromLogLines(_unitLogLines[queueIndex]);
 
-                  if (_currentClientRun.Status.Equals(ClientStatus.GettingWorkPacket))
+                  if (_currentClientRun.Status.Equals(SlotStatus.GettingWorkPacket))
                   {
                      // Use either the current Work Unit log lines or current Client Run log lines
                      // as decided upon above... don't clear it here and show the user nothing - 10/9/10

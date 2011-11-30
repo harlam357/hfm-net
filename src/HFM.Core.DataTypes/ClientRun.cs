@@ -61,7 +61,7 @@ namespace HFM.Core.DataTypes
          FoldingID = Default.FoldingID;
          Team = Default.Team;
          UserID = String.Empty;
-         Status = ClientStatus.Unknown;
+         Status = SlotStatus.Unknown;
       }
       
       #endregion
@@ -116,7 +116,7 @@ namespace HFM.Core.DataTypes
       /// <summary>
       /// Client Status
       /// </summary>
-      public ClientStatus Status { get; set; }
+      public SlotStatus Status { get; set; }
 
       #endregion
    }

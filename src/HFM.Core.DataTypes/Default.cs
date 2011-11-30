@@ -63,13 +63,5 @@ namespace HFM.Core.DataTypes
             return style;
          }
       }
-
-      /// <summary>
-      /// String Comparison for Paths (case sensetive on Mono / case insensetive on .NET)
-      /// </summary>
-      public static StringComparison PathComparison
-      {
-         get { return IsRunningOnMono ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase; }
-      }
    }
 }
