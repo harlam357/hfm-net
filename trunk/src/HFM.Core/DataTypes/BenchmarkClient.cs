@@ -201,7 +201,7 @@ namespace HFM.Core.DataTypes
                   return 0;
                }
 
-               return String.Compare(Path, other.Path, Default.PathComparison);
+               return String.Compare(Path, other.Path, Paths.StringComparison);
             }
 
             return String.Compare(Name, other.Name, StringComparison.OrdinalIgnoreCase);

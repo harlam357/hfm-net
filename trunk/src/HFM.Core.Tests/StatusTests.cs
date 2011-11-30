@@ -51,8 +51,8 @@ namespace HFM.Core.Tests
          statusData.UtcOffset = TimeSpan.Zero;
          statusData.AllowRunningAsync = false;
 
-         statusData.CurrentStatus = ClientStatus.GettingWorkPacket;
-         statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
+         statusData.CurrentStatus = SlotStatus.GettingWorkPacket;
+         statusData.ReturnedStatus = SlotStatus.RunningNoFrameTimes;
 
          statusData.LastRetrievalTime = date.Add(new TimeSpan(3, 0, 0));
 
@@ -64,7 +64,7 @@ namespace HFM.Core.Tests
          statusData.FrameTime = 0;
          statusData.AverageFrameTime = new TimeSpan(0, 12, 35);
 
-         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _statusLogic.HandleStatusData(statusData));
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, _statusLogic.HandleStatusData(statusData));
       }
 
       [Test]
@@ -80,8 +80,8 @@ namespace HFM.Core.Tests
          statusData.UtcOffset = TimeSpan.Zero;
          statusData.AllowRunningAsync = false;
 
-         statusData.CurrentStatus = ClientStatus.Running;
-         statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
+         statusData.CurrentStatus = SlotStatus.Running;
+         statusData.ReturnedStatus = SlotStatus.RunningNoFrameTimes;
 
          statusData.LastRetrievalTime = date.Add(new TimeSpan(3, 0, 0));
 
@@ -93,7 +93,7 @@ namespace HFM.Core.Tests
          statusData.FrameTime = 750;
          statusData.AverageFrameTime = new TimeSpan(0, 12, 35);
 
-         Assert.AreEqual(ClientStatus.Running, _statusLogic.HandleStatusData(statusData));
+         Assert.AreEqual(SlotStatus.Running, _statusLogic.HandleStatusData(statusData));
       }
 
       [Test]
@@ -109,8 +109,8 @@ namespace HFM.Core.Tests
          statusData.UtcOffset = TimeSpan.FromHours(-6);
          statusData.AllowRunningAsync = false;
 
-         statusData.CurrentStatus = ClientStatus.Running;
-         statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
+         statusData.CurrentStatus = SlotStatus.Running;
+         statusData.ReturnedStatus = SlotStatus.RunningNoFrameTimes;
 
          statusData.LastRetrievalTime = date.Add(new TimeSpan(3, 0, 0));
 
@@ -122,7 +122,7 @@ namespace HFM.Core.Tests
          statusData.FrameTime = 750;
          statusData.AverageFrameTime = new TimeSpan(0, 12, 35);
 
-         Assert.AreEqual(ClientStatus.Running, _statusLogic.HandleStatusData(statusData));
+         Assert.AreEqual(SlotStatus.Running, _statusLogic.HandleStatusData(statusData));
       }
 
       [Test]
@@ -138,8 +138,8 @@ namespace HFM.Core.Tests
          statusData.UtcOffset = TimeSpan.Zero;
          statusData.AllowRunningAsync = true;
 
-         statusData.CurrentStatus = ClientStatus.GettingWorkPacket;
-         statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
+         statusData.CurrentStatus = SlotStatus.GettingWorkPacket;
+         statusData.ReturnedStatus = SlotStatus.RunningNoFrameTimes;
 
          statusData.LastRetrievalTime = date.Add(new TimeSpan(3, 0, 0));
 
@@ -152,7 +152,7 @@ namespace HFM.Core.Tests
          statusData.FrameTime = 0;
          statusData.AverageFrameTime = new TimeSpan(0, 12, 35);
 
-         Assert.AreEqual(ClientStatus.RunningNoFrameTimes, _statusLogic.HandleStatusData(statusData));
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, _statusLogic.HandleStatusData(statusData));
       }
 
       [Test]
@@ -168,8 +168,8 @@ namespace HFM.Core.Tests
          statusData.UtcOffset = TimeSpan.Zero;
          statusData.AllowRunningAsync = false;
 
-         statusData.CurrentStatus = ClientStatus.GettingWorkPacket;
-         statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
+         statusData.CurrentStatus = SlotStatus.GettingWorkPacket;
+         statusData.ReturnedStatus = SlotStatus.RunningNoFrameTimes;
 
          statusData.LastRetrievalTime = date.Add(new TimeSpan(3, 0, 0));
 
@@ -183,7 +183,7 @@ namespace HFM.Core.Tests
          statusData.AverageFrameTime = new TimeSpan(0, 12, 35);
 
          statusData.AllowRunningAsync = false;
-         Assert.AreEqual(ClientStatus.Hung, _statusLogic.HandleStatusData(statusData));
+         Assert.AreEqual(SlotStatus.Hung, _statusLogic.HandleStatusData(statusData));
       }
 
       [Test]
@@ -199,8 +199,8 @@ namespace HFM.Core.Tests
          statusData.UtcOffset = TimeSpan.Zero;
          statusData.AllowRunningAsync = true;
 
-         statusData.CurrentStatus = ClientStatus.RunningAsync;
-         statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
+         statusData.CurrentStatus = SlotStatus.RunningAsync;
+         statusData.ReturnedStatus = SlotStatus.RunningNoFrameTimes;
 
          statusData.LastRetrievalTime = date.Add(new TimeSpan(12, 0, 0));
 
@@ -213,7 +213,7 @@ namespace HFM.Core.Tests
          statusData.FrameTime = 633; // 10 Minutes 33 Seconds
          statusData.AverageFrameTime = new TimeSpan(0, 10, 25);
 
-         Assert.AreEqual(ClientStatus.RunningAsync, _statusLogic.HandleStatusData(statusData));
+         Assert.AreEqual(SlotStatus.RunningAsync, _statusLogic.HandleStatusData(statusData));
       }
 
       [Test]
@@ -229,8 +229,8 @@ namespace HFM.Core.Tests
          statusData.UtcOffset = TimeSpan.Zero;
          statusData.AllowRunningAsync = true;
 
-         statusData.CurrentStatus = ClientStatus.Hung;
-         statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
+         statusData.CurrentStatus = SlotStatus.Hung;
+         statusData.ReturnedStatus = SlotStatus.RunningNoFrameTimes;
 
          statusData.LastRetrievalTime = date.Add(new TimeSpan(12, 0, 0));
 
@@ -243,7 +243,7 @@ namespace HFM.Core.Tests
          statusData.FrameTime = 633; // 10 Minutes 33 Seconds
          statusData.AverageFrameTime = new TimeSpan(0, 10, 25);
 
-         Assert.AreEqual(ClientStatus.Hung, _statusLogic.HandleStatusData(statusData));
+         Assert.AreEqual(SlotStatus.Hung, _statusLogic.HandleStatusData(statusData));
       }
 
       [Test]
@@ -259,8 +259,8 @@ namespace HFM.Core.Tests
          statusData.UtcOffset = TimeSpan.Zero;
          statusData.AllowRunningAsync = false;
 
-         statusData.CurrentStatus = ClientStatus.Hung;
-         statusData.ReturnedStatus = ClientStatus.RunningNoFrameTimes;
+         statusData.CurrentStatus = SlotStatus.Hung;
+         statusData.ReturnedStatus = SlotStatus.RunningNoFrameTimes;
 
          statusData.LastRetrievalTime = date.Add(new TimeSpan(12, 0, 0));
 
@@ -274,7 +274,7 @@ namespace HFM.Core.Tests
          statusData.AverageFrameTime = new TimeSpan(0, 10, 25);
 
          statusData.AllowRunningAsync = false;
-         Assert.AreEqual(ClientStatus.Hung, _statusLogic.HandleStatusData(statusData));
+         Assert.AreEqual(SlotStatus.Hung, _statusLogic.HandleStatusData(statusData));
       }
 
       // ReSharper restore InconsistentNaming

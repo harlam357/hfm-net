@@ -41,9 +41,9 @@ namespace HFM.Core.DataTypes
 
       public DateTime TimeOfLastFrameProgress { get; set; }
 
-      public ClientStatus CurrentStatus { get; set; }
+      public SlotStatus CurrentStatus { get; set; }
 
-      public ClientStatus ReturnedStatus { get; set; }
+      public SlotStatus ReturnedStatus { get; set; }
 
       public int FrameTime { get; set; }
 
