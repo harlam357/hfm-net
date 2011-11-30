@@ -93,11 +93,8 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyVersion.cs">
@@ -180,14 +177,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HFM.Core.DataTypes\HFM.Core.DataTypes.csproj">
-      <Project>{C198DA45-5B5B-4684-914B-97DED3F0BB40}</Project>
-      <Name>HFM.Core.DataTypes</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HFM.Core.Plugins\HFM.Core.Plugins.csproj">
-      <Project>{E1415297-BD33-4508-A491-F3C13E5A5F7F}</Project>
-      <Name>HFM.Core.Plugins</Name>
-    </ProjectReference>
     <ProjectReference Include="..\HFM.Core\HFM.Core.csproj">
       <Project>{360034D2-9F6A-4377-B5B9-D82712171223}</Project>
       <Name>HFM.Core</Name>
@@ -199,10 +188,6 @@
     <ProjectReference Include="..\HFM.Preferences\HFM.Preferences.csproj">
       <Project>{0CAF91A3-D5F1-44C9-BAEB-FB81DFBF9C47}</Project>
       <Name>HFM.Preferences</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HFM.Proteins\HFM.Proteins.csproj">
-      <Project>{7500A8CA-521D-4397-892B-27C6917847E1}</Project>
-      <Name>HFM.Proteins</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -209,7 +209,7 @@ namespace HFM.Core
       /// Status of this client
       /// </summary>
       [DataMember(Order = 6)]
-      public ClientStatus Status { get; set; }
+      public SlotStatus Status { get; set; }
 
       public float Progress
       {
@@ -221,12 +221,27 @@ namespace HFM.Core
       /// </summary>
       public int PercentComplete
       {
-         get { return ProductionValuesOk || Status.Equals(ClientStatus.Paused) ? UnitInfoLogic.PercentComplete : 0; }
+         get { return ProductionValuesOk || Status.Equals(SlotStatus.Paused) ? UnitInfoLogic.PercentComplete : 0; }
       }
 
       public string Name
       {
-         get { return Settings.Name; }
+         get
+         {
+            if (Settings.ClientType.Equals(DataTypes.ClientType.FahClient) && SlotId != -1)
+            {
+               return Settings.Name + " Slot " + SlotId;
+            }
+            return Settings.Name;
+         }
+      }
+      
+      private int _slotId = -1;
+
+      public int SlotId
+      {
+         get { return _slotId; }
+         set { _slotId = value; }
       }
 
       public string ClientType
@@ -372,9 +387,9 @@ namespace HFM.Core
       {
          get
          {
-            return Status.Equals(ClientStatus.Running) ||
-                   Status.Equals(ClientStatus.RunningAsync) ||
-                   Status.Equals(ClientStatus.RunningNoFrameTimes);
+            return Status.Equals(SlotStatus.Running) ||
+                   Status.Equals(SlotStatus.RunningAsync) ||
+                   Status.Equals(SlotStatus.RunningNoFrameTimes);
          }
       }
 
@@ -445,7 +460,7 @@ namespace HFM.Core
 
             if ((UnitInfo.FoldingID != Prefs.Get<string>(Preference.StanfordId) ||
                       UnitInfo.Team != Prefs.Get<int>(Preference.TeamId)) &&
-                (Status.Equals(ClientStatus.Unknown) == false && Status.Equals(ClientStatus.Offline) == false))
+                (Status.Equals(SlotStatus.Unknown) == false && Status.Equals(SlotStatus.Offline) == false))
             {
                return false;
             }

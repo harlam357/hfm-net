@@ -148,13 +148,13 @@ namespace HFM.Forms
             // check for offline clients first
             if (_offlineClientsLast)
             {
-               if (((ClientStatus)xStatusValue).Equals(ClientStatus.Offline) &&
-                   ((ClientStatus)yStatusValue).Equals(ClientStatus.Offline) == false)
+               if (((SlotStatus)xStatusValue).Equals(SlotStatus.Offline) &&
+                   ((SlotStatus)yStatusValue).Equals(SlotStatus.Offline) == false)
                {
                   return 1;
                }
-               if (((ClientStatus)yStatusValue).Equals(ClientStatus.Offline) &&
-                   ((ClientStatus)xStatusValue).Equals(ClientStatus.Offline) == false)
+               if (((SlotStatus)yStatusValue).Equals(SlotStatus.Offline) &&
+                   ((SlotStatus)xStatusValue).Equals(SlotStatus.Offline) == false)
                {
                   return -1;
                }

@@ -24,13 +24,16 @@ namespace HFM.Core.Plugins
       private readonly IPreferenceSet _prefs;
       private readonly IFileSerializerPluginManager<List<DataTypes.Protein>> _proteinPluginManager;
       private readonly IFileSerializerPluginManager<List<DataTypes.ProteinBenchmark>> _benchmarkPluginManager;
+      private readonly IFileSerializerPluginManager<List<DataTypes.ClientSettings>> _clientSettingsPluginManager;
 
       public PluginLoader(IPreferenceSet prefs, IFileSerializerPluginManager<List<DataTypes.Protein>> proteinPluginManager,
-                                                IFileSerializerPluginManager<List<DataTypes.ProteinBenchmark>> benchmarkPluginManager)
+                                                IFileSerializerPluginManager<List<DataTypes.ProteinBenchmark>> benchmarkPluginManager,
+                                                IFileSerializerPluginManager<List<DataTypes.ClientSettings>> clientSettingsPluginManager)
       {
          _prefs = prefs;
          _proteinPluginManager = proteinPluginManager;
          _benchmarkPluginManager = benchmarkPluginManager;
+         _clientSettingsPluginManager = clientSettingsPluginManager;
       }
 
       private string PluginsFolder
@@ -64,6 +67,20 @@ namespace HFM.Core.Plugins
          if (Directory.Exists(path))
          {
             LogResults(_benchmarkPluginManager.LoadAllPlugins(path));
+         }
+
+         #endregion
+
+         #region ClientSettings Serializer Plugins
+
+         // register built in types
+         _clientSettingsPluginManager.RegisterPlugin(typeof(XmlFileSerializer<>).Name, new XmlFileSerializer<List<DataTypes.ClientSettings>>());
+         _clientSettingsPluginManager.RegisterPlugin(typeof(ProtoBufFileSerializer<>).Name, new ProtoBufFileSerializer<List<DataTypes.ClientSettings>>());
+         // load from plugin folder
+         path = Path.Combine(PluginsFolder, Constants.PluginsClientSettingsFolderName);
+         if (Directory.Exists(path))
+         {
+            LogResults(_clientSettingsPluginManager.LoadAllPlugins(path));
          }
 
          #endregion

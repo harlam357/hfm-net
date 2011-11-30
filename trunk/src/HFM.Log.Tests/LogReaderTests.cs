@@ -53,7 +53,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 1;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 261;
-         expectedRun.Status = ClientStatus.RunningNoFrameTimes;
+         expectedRun.Status = SlotStatus.RunningNoFrameTimes;
 
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
@@ -69,7 +69,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 2;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 263;
-         expectedRun.Status = ClientStatus.GettingWorkPacket;
+         expectedRun.Status = SlotStatus.GettingWorkPacket;
 
          DoClientRunCheck(expectedRun, clientRuns[1]);
 
@@ -104,7 +104,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 2;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 292;
-         expectedRun.Status = ClientStatus.SendingWorkPacket;
+         expectedRun.Status = SlotStatus.SendingWorkPacket;
 
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
@@ -144,7 +144,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 1;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 0; //TODO: not capturing line "+ Starting local stats count at 1"
-         expectedRun.Status = ClientStatus.RunningNoFrameTimes;
+         expectedRun.Status = SlotStatus.RunningNoFrameTimes;
 
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
@@ -178,7 +178,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 0;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 0;
-         expectedRun.Status = ClientStatus.RunningNoFrameTimes;
+         expectedRun.Status = SlotStatus.RunningNoFrameTimes;
 
          DoClientRunCheck(expectedRun, clientRuns[5]);
 
@@ -245,7 +245,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 1;
          expectedRun.FailedUnits = 33;
          expectedRun.TotalCompletedUnits = 617;
-         expectedRun.Status = ClientStatus.EuePause;
+         expectedRun.Status = SlotStatus.EuePause;
 
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
@@ -284,7 +284,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 1;
          expectedRun.FailedUnits = 5;
          expectedRun.TotalCompletedUnits = 0; //TODO: not capturing line "+ Starting local stats count at 1"
-         expectedRun.Status = ClientStatus.Stopped;
+         expectedRun.Status = SlotStatus.Stopped;
 
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
@@ -311,7 +311,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 11;
          expectedRun.FailedUnits = 1;
          expectedRun.TotalCompletedUnits = 12;
-         expectedRun.Status = ClientStatus.RunningNoFrameTimes;
+         expectedRun.Status = SlotStatus.RunningNoFrameTimes;
 
          DoClientRunCheck(expectedRun, clientRuns[1]);
 
@@ -347,7 +347,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 2;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 4221;
-         expectedRun.Status = ClientStatus.Stopped;
+         expectedRun.Status = SlotStatus.Stopped;
 
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
@@ -381,7 +381,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 0;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 0;
-         expectedRun.Status = ClientStatus.Stopped;
+         expectedRun.Status = SlotStatus.Stopped;
 
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
@@ -401,7 +401,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 1;
          expectedRun.FailedUnits = 5;
          expectedRun.TotalCompletedUnits = 224;
-         expectedRun.Status = ClientStatus.EuePause;
+         expectedRun.Status = SlotStatus.EuePause;
 
          DoClientRunCheck(expectedRun, clientRuns[1]);
 
@@ -438,7 +438,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 0;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 1994;
-         expectedRun.Status = ClientStatus.RunningNoFrameTimes;
+         expectedRun.Status = SlotStatus.RunningNoFrameTimes;
 
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
@@ -489,7 +489,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 1;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 847;
-         expectedRun.Status = ClientStatus.RunningNoFrameTimes;
+         expectedRun.Status = SlotStatus.RunningNoFrameTimes;
 
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
@@ -553,7 +553,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 1;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 0; //TODO: not capturing line "+ Starting local stats count at 1"
-         expectedRun.Status = ClientStatus.Stopped;
+         expectedRun.Status = SlotStatus.Stopped;
 
          DoClientRunCheck(expectedRun, clientRuns[1]);
 
@@ -568,7 +568,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 1;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 2;
-         expectedRun.Status = ClientStatus.Stopped;
+         expectedRun.Status = SlotStatus.Stopped;
 
          DoClientRunCheck(expectedRun, clientRuns[2]);
 
@@ -602,7 +602,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 0;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 0;
-         expectedRun.Status = ClientStatus.RunningNoFrameTimes;
+         expectedRun.Status = SlotStatus.RunningNoFrameTimes;
 
          DoClientRunCheck(expectedRun, clientRuns[3]);
          
@@ -617,7 +617,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 0;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 0;
-         expectedRun.Status = ClientStatus.RunningNoFrameTimes;
+         expectedRun.Status = SlotStatus.RunningNoFrameTimes;
 
          DoClientRunCheck(expectedRun, clientRuns[4]);
 
@@ -677,7 +677,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 8;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 229;
-         expectedRun.Status = ClientStatus.Paused;
+         expectedRun.Status = SlotStatus.Paused;
 
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
@@ -737,7 +737,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 21;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 0;
-         expectedRun.Status = ClientStatus.Unknown;
+         expectedRun.Status = SlotStatus.Unknown;
 
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
@@ -796,7 +796,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 5;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 0;
-         expectedRun.Status = ClientStatus.Unknown;
+         expectedRun.Status = SlotStatus.Unknown;
 
          DoClientRunCheck(expectedRun, clientRuns[0]);
 
@@ -848,7 +848,7 @@ namespace HFM.Log.Tests
          expectedRun.CompletedUnits = 0;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 0;
-         expectedRun.Status = ClientStatus.Unknown;
+         expectedRun.Status = SlotStatus.Unknown;
 
          DoClientRunCheck(expectedRun, clientRuns[0]);
 

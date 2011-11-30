@@ -26,13 +26,18 @@ using System.Reflection;
 
 namespace HFM.Core.Plugins
 {
-   internal abstract class PluginManager<T> where T : class
+   internal abstract class PluginManager<T> : IEnumerable<PluginInfo<T>> where T : class
    {
       private readonly Dictionary<string, PluginInfo<T>> _plugins;
 
       protected PluginManager()
       {
          _plugins = new Dictionary<string, PluginInfo<T>>();
+      }
+
+      public PluginInfo<T> this[int index]
+      {
+         get { return _plugins.Values.ElementAt(index); }
       }
 
       /// <summary>
@@ -176,5 +181,23 @@ namespace HFM.Core.Plugins
       {
          return true;
       }
+
+      #region IEnumerable<T> Members
+
+      public IEnumerator<PluginInfo<T>> GetEnumerator()
+      {
+         return _plugins.Values.GetEnumerator();
+      }
+
+      #endregion
+
+      #region IEnumerable Members
+
+      System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+      {
+         return GetEnumerator();
+      }
+
+      #endregion
    }
 }

@@ -142,6 +142,15 @@ namespace HFM.Core
       }
 
       /// <summary>
+      /// Validate Server Port Number
+      /// </summary>
+      /// <param name="val">Value to validate</param>
+      public static bool ServerPort(int val)
+      {
+         return val > 0 && val < UInt16.MaxValue;
+      }
+
+      /// <summary>
       /// Validate FtpInstance Path
       /// </summary>
       /// <param name="val">String to validate</param>

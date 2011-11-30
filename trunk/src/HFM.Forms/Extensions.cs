@@ -57,12 +57,12 @@ namespace HFM.Forms
 
       #endregion
 
-      #region ClientStatus
+      #region SlotStatus
 
       /// <summary>
       /// Gets Status Color Pen Object
       /// </summary>
-      public static Pen GetDrawingPen(this ClientStatus status)
+      public static Pen GetDrawingPen(this SlotStatus status)
       {
          return new Pen(GetStatusColor(status));
       }
@@ -70,7 +70,7 @@ namespace HFM.Forms
       /// <summary>
       /// Gets Status Color Brush Object
       /// </summary>
-      public static SolidBrush GetDrawingBrush(this ClientStatus status)
+      public static SolidBrush GetDrawingBrush(this SlotStatus status)
       {
          return new SolidBrush(GetStatusColor(status));
       }
@@ -78,7 +78,7 @@ namespace HFM.Forms
       /// <summary>
       /// Gets Status Html Color String
       /// </summary>
-      public static string GetHtmlColor(this ClientStatus status)
+      public static string GetHtmlColor(this SlotStatus status)
       {
          return ColorTranslator.ToHtml(GetStatusColor(status));
       }
@@ -86,26 +86,26 @@ namespace HFM.Forms
       /// <summary>
       /// Gets Status Html Font Color String
       /// </summary>
-      public static string GetHtmlFontColor(this ClientStatus status)
+      public static string GetHtmlFontColor(this SlotStatus status)
       {
          switch (status)
          {
-            case ClientStatus.Running:
+            case SlotStatus.Running:
                return ColorTranslator.ToHtml(Color.White);
-            case ClientStatus.RunningAsync:
+            case SlotStatus.RunningAsync:
                return ColorTranslator.ToHtml(Color.White);
-            case ClientStatus.RunningNoFrameTimes:
+            case SlotStatus.RunningNoFrameTimes:
                return ColorTranslator.ToHtml(Color.Black);
-            case ClientStatus.Stopped:
-            case ClientStatus.EuePause:
-            case ClientStatus.Hung:
+            case SlotStatus.Stopped:
+            case SlotStatus.EuePause:
+            case SlotStatus.Hung:
                return ColorTranslator.ToHtml(Color.White);
-            case ClientStatus.Paused:
+            case SlotStatus.Paused:
                return ColorTranslator.ToHtml(Color.Black);
-            case ClientStatus.SendingWorkPacket:
-            case ClientStatus.GettingWorkPacket:
+            case SlotStatus.SendingWorkPacket:
+            case SlotStatus.GettingWorkPacket:
                return ColorTranslator.ToHtml(Color.White);
-            case ClientStatus.Offline:
+            case SlotStatus.Offline:
                return ColorTranslator.ToHtml(Color.Black);
             default:
                return ColorTranslator.ToHtml(Color.Black);
@@ -115,26 +115,26 @@ namespace HFM.Forms
       /// <summary>
       /// Gets Status Color Object
       /// </summary>
-      private static Color GetStatusColor(ClientStatus status)
+      private static Color GetStatusColor(SlotStatus status)
       {
          switch (status)
          {
-            case ClientStatus.Running:
+            case SlotStatus.Running:
                return Color.Green;
-            case ClientStatus.RunningAsync:
+            case SlotStatus.RunningAsync:
                return Color.Blue;
-            case ClientStatus.RunningNoFrameTimes:
+            case SlotStatus.RunningNoFrameTimes:
                return Color.Yellow;
-            case ClientStatus.Stopped:
-            case ClientStatus.EuePause:
-            case ClientStatus.Hung:
+            case SlotStatus.Stopped:
+            case SlotStatus.EuePause:
+            case SlotStatus.Hung:
                return Color.DarkRed;
-            case ClientStatus.Paused:
+            case SlotStatus.Paused:
                return Color.Orange;
-            case ClientStatus.SendingWorkPacket:
-            case ClientStatus.GettingWorkPacket:
+            case SlotStatus.SendingWorkPacket:
+            case SlotStatus.GettingWorkPacket:
                return Color.Purple;
-            case ClientStatus.Offline:
+            case SlotStatus.Offline:
                return Color.Gray;
             default:
                return Color.Gray;
