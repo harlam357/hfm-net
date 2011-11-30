@@ -33,7 +33,7 @@ namespace HFM.Core
       /// Handles the Client Status Returned by Log Parsing and then determine the Status.
       /// </summary>
       /// <param name="statusData">Client Status Data</param>
-      ClientStatus HandleStatusData(StatusData statusData);
+      SlotStatus HandleStatusData(StatusData statusData);
    }
 
    public class StatusLogic : IStatusLogic
@@ -52,25 +52,25 @@ namespace HFM.Core
       /// Handles the Client Status Returned by Log Parsing and then determine the Status.
       /// </summary>
       /// <param name="statusData">Client Status Data</param>
-      public ClientStatus HandleStatusData(StatusData statusData)
+      public SlotStatus HandleStatusData(StatusData statusData)
       {
          switch (statusData.ReturnedStatus)
          {
-            case ClientStatus.Running:      // at this point, we should not see Running Status
-            case ClientStatus.RunningAsync: // at this point, we should not see RunningAsync Status
-            case ClientStatus.RunningNoFrameTimes:
+            case SlotStatus.Running:      // at this point, we should not see Running Status
+            case SlotStatus.RunningAsync: // at this point, we should not see RunningAsync Status
+            case SlotStatus.RunningNoFrameTimes:
                break;
-            case ClientStatus.Unknown:
+            case SlotStatus.Unknown:
                _logger.Error("Unable to Determine Status for Client '{0}'", statusData.InstanceName);
                // Update Client Status - don't call Determine Status
                return statusData.ReturnedStatus;
-            case ClientStatus.Offline:
-            case ClientStatus.Stopped:
-            case ClientStatus.EuePause:
-            case ClientStatus.Hung:
-            case ClientStatus.Paused:
-            case ClientStatus.SendingWorkPacket:
-            case ClientStatus.GettingWorkPacket:
+            case SlotStatus.Offline:
+            case SlotStatus.Stopped:
+            case SlotStatus.EuePause:
+            case SlotStatus.Hung:
+            case SlotStatus.Paused:
+            case SlotStatus.SendingWorkPacket:
+            case SlotStatus.GettingWorkPacket:
                // Update Client Status - don't call Determine Status
                return statusData.ReturnedStatus;
          }
@@ -78,8 +78,8 @@ namespace HFM.Core
          // if we have a frame time, use it
          if (statusData.FrameTime > 0)
          {
-            ClientStatus status = DetermineStatus(statusData);
-            if (status.Equals(ClientStatus.Hung) && statusData.AllowRunningAsync) // Issue 124
+            SlotStatus status = DetermineStatus(statusData);
+            if (status.Equals(SlotStatus.Hung) && statusData.AllowRunningAsync) // Issue 124
             {
                return DetermineAsyncStatus(statusData);
             }
@@ -100,14 +100,14 @@ namespace HFM.Core
             }
 
             statusData.FrameTime = GetBaseFrameTime(statusData.AverageFrameTime, statusData.SlotType);
-            if (DetermineStatus(statusData).Equals(ClientStatus.Hung))
+            if (DetermineStatus(statusData).Equals(SlotStatus.Hung))
             {
                // Issue 124
                if (statusData.AllowRunningAsync)
                {
-                  if (DetermineAsyncStatus(statusData).Equals(ClientStatus.Hung))
+                  if (DetermineAsyncStatus(statusData).Equals(SlotStatus.Hung))
                   {
-                     return ClientStatus.Hung;
+                     return SlotStatus.Hung;
                   }
                   else
                   {
@@ -115,7 +115,7 @@ namespace HFM.Core
                   }
                }
 
-               return ClientStatus.Hung;
+               return SlotStatus.Hung;
             }
             else
             {
@@ -156,7 +156,7 @@ namespace HFM.Core
       /// Determine Client Status
       /// </summary>
       /// <param name="statusData">Client Status Data</param>
-      private ClientStatus DetermineStatus(StatusData statusData)
+      private SlotStatus DetermineStatus(StatusData statusData)
       {
          #region Get Terminal Time
          // Terminal Time - defined as last retrieval time minus twice (7 times for GPU) the current Raw Time per Section.
@@ -252,11 +252,11 @@ namespace HFM.Core
 
          if (currentFrameDateTime > terminalDateTime)
          {
-            return ClientStatus.Running;
+            return SlotStatus.Running;
          }
          else // current frame is less than terminal time
          {
-            return ClientStatus.Hung;
+            return SlotStatus.Hung;
          }
       }
 
@@ -264,7 +264,7 @@ namespace HFM.Core
       /// Determine Client Status
       /// </summary>
       /// <param name="statusData">Client Status Data</param>
-      private ClientStatus DetermineAsyncStatus(StatusData statusData)
+      private SlotStatus DetermineAsyncStatus(StatusData statusData)
       {
          #region Get Terminal Time
          // Terminal Time - defined as last retrieval time minus twice (7 times for GPU) the current Raw Time per Section.
@@ -306,11 +306,11 @@ namespace HFM.Core
 
          if (lastProgress > terminalDateTime)
          {
-            return ClientStatus.RunningAsync;
+            return SlotStatus.RunningAsync;
          }
          else // time of last progress is less than terminal time
          {
-            return ClientStatus.Hung;
+            return SlotStatus.Hung;
          }
       }
    }

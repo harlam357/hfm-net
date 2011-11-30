@@ -20,11 +20,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace HFM.Core.Plugins
 {
-   public interface IFileSerializerPluginManager<T> where T : class, new()
+   public interface IFileSerializerPluginManager<T> : IEnumerable<PluginInfo<IFileSerializer<T>>> where T : class, new()
    {
+      /// <summary>
+      /// Gets the file type filter string for the loaded plugins.
+      /// </summary>
+      string FileTypeFilters { get; }
+
+      /// <summary>
+      /// Returns a PluginInfo from the PluginManager.
+      /// </summary>
+      /// <param name="index">Plugin index.</param>
+      /// <returns>A PluginInfo from the PluginManager if it exists or null if it does not.</returns>
+      PluginInfo<IFileSerializer<T>> this[int index] { get; }
+
       /// <summary>
       /// Gets an <see cref="T:System.Collections.Generic.ICollection`1"/> containing the keys of the PluginManager.
       /// </summary>
@@ -93,6 +106,22 @@ namespace HFM.Core.Plugins
          }
 
          return true;
+      }
+
+      public string FileTypeFilters
+      {
+         get
+         {
+            var sb = new StringBuilder();
+            foreach (var plugin in this)
+            {
+               sb.Append(plugin.Interface.FileTypeFilter);
+               sb.Append("|");
+            }
+
+            sb.Length = sb.Length - 1;
+            return sb.ToString();
+         }
       }
    }
 }

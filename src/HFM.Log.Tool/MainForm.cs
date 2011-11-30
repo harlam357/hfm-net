@@ -163,7 +163,7 @@ namespace HFM.Log.Tool
             sb.AppendLine("expectedRun.CompletedUnits = " + _clientRuns[i].CompletedUnits + ";");
             sb.AppendLine("expectedRun.FailedUnits = " + _clientRuns[i].FailedUnits + ";");
             sb.AppendLine("expectedRun.TotalCompletedUnits = " + _clientRuns[i].TotalCompletedUnits + ";");
-            sb.AppendLine("expectedRun.Status = ClientStatus." + _clientRuns[i].Status + ";");
+            sb.AppendLine("expectedRun.Status = SlotStatus." + _clientRuns[i].Status + ";");
             sb.AppendLine();
             sb.AppendLine("DoClientRunCheck(expectedRun, clientRuns[" + i + "]);");
          }

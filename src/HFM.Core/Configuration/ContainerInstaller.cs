@@ -120,8 +120,11 @@ namespace HFM.Core.Configuration
                .ImplementedBy<Plugins.FileSerializerPluginManager<List<DataTypes.Protein>>>(),
                //.Named("PluginManager.ProteinFileSerializer"),
             Component.For<Plugins.IFileSerializerPluginManager<List<DataTypes.ProteinBenchmark>>>()
-               .ImplementedBy<Plugins.FileSerializerPluginManager<List<DataTypes.ProteinBenchmark>>>());
+               .ImplementedBy<Plugins.FileSerializerPluginManager<List<DataTypes.ProteinBenchmark>>>(),
                //.Named("PluginManager.ProteinBenchmarkFileSerializer"));
+            Component.For<Plugins.IFileSerializerPluginManager<List<DataTypes.ClientSettings>>>()
+               .ImplementedBy<Plugins.FileSerializerPluginManager<List<DataTypes.ClientSettings>>>());
+               //.Named("PluginManager.ClientSettingsFileSerializer"));
 
          #endregion
 

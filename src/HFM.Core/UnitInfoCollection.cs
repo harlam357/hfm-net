@@ -57,7 +57,7 @@ namespace HFM.Core
       #endregion
    }
 
-   public class UnitInfoCollection : DataContainer<List<UnitInfo>>, IUnitInfoCollection
+   public sealed class UnitInfoCollection : DataContainer<List<UnitInfo>>, IUnitInfoCollection
    {
       #region Properties
 

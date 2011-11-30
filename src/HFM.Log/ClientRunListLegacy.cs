@@ -251,29 +251,29 @@ namespace HFM.Log
                    logLines[j].LineType.Equals(LogLineType.WorkUnitFrame) ||
                    logLines[j].LineType.Equals(LogLineType.WorkUnitResumeFromBattery))
                {
-                  this[i].Status = ClientStatus.RunningNoFrameTimes;
+                  this[i].Status = SlotStatus.RunningNoFrameTimes;
                }
                else if (logLines[j].LineType.Equals(LogLineType.WorkUnitPaused) ||
                         logLines[j].LineType.Equals(LogLineType.WorkUnitPausedForBattery))
                {
-                  this[i].Status = ClientStatus.Paused;
+                  this[i].Status = SlotStatus.Paused;
                }
                else if (logLines[j].LineType.Equals(LogLineType.ClientSendWorkToServer))
                {
-                  this[i].Status = ClientStatus.SendingWorkPacket;
+                  this[i].Status = SlotStatus.SendingWorkPacket;
                }
                else if (logLines[j].LineType.Equals(LogLineType.ClientAttemptGetWorkPacket))
                {
-                  this[i].Status = ClientStatus.GettingWorkPacket;
+                  this[i].Status = SlotStatus.GettingWorkPacket;
                }
                else if (logLines[j].LineType.Equals(LogLineType.ClientEuePauseState))
                {
-                  this[i].Status = ClientStatus.EuePause;
+                  this[i].Status = SlotStatus.EuePause;
                }
                else if (logLines[j].LineType.Equals(LogLineType.ClientShutdown) ||
                         logLines[j].LineType.Equals(LogLineType.ClientCoreCommunicationsErrorShutdown))
                {
-                  this[i].Status = ClientStatus.Stopped;
+                  this[i].Status = SlotStatus.Stopped;
                }
 
                #endregion

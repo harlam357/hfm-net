@@ -49,7 +49,7 @@ namespace HFM.Core
    }
 
    [CoverageExclude]
-   public class ProteinDictionary : DataContainer<List<Protein>>, IProteinDictionary
+   public sealed class ProteinDictionary : DataContainer<List<Protein>>, IProteinDictionary
    {
       private readonly Proteins.ProteinDictionary _dictionary;
 

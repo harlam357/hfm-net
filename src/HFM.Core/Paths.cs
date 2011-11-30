@@ -38,7 +38,7 @@ namespace HFM.Core
          {
             foreach (var variation2 in path2Variations)
             {
-               if (String.Equals(variation1, variation2, DataTypes.Default.PathComparison))
+               if (String.Equals(variation1, variation2, StringComparison))
                {
                   return true;
                }
@@ -62,6 +62,14 @@ namespace HFM.Core
             pathVariations.Add(String.Concat(path, "/"));
          }
          return pathVariations;
+      }
+
+      /// <summary>
+      /// String Comparison for Paths (case sensetive on Mono / case insensetive on .NET)
+      /// </summary>
+      public static StringComparison StringComparison
+      {
+         get { return Application.IsRunningOnMono ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase; }
       }
    }
 }

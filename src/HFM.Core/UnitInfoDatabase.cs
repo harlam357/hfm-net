@@ -59,7 +59,7 @@ namespace HFM.Core
       IList<HistoryEntry> QueryUnitData(QueryParameters parameters, HistoryProductionView productionView);
    }
 
-   public class UnitInfoDatabase : IUnitInfoDatabase
+   public sealed class UnitInfoDatabase : IUnitInfoDatabase
    {
       public const string WuHistoryTableName = "WuHistory";
 
