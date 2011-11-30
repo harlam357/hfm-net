@@ -38,7 +38,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(1, slotCollection.Count);
          Assert.AreEqual(0, slotCollection[0].Id);
          Assert.AreEqual("RUNNING", slotCollection[0].Status);
-         Assert.AreEqual(SlotStatus.Running, slotCollection[0].StatusEnum);
+         Assert.AreEqual(FahSlotStatus.Running, slotCollection[0].StatusEnum);
          Assert.AreEqual("smp:4", slotCollection[0].Description);
          Assert.AreEqual(true, slotCollection[0].SlotOptions.PauseOnStart);
       }
@@ -54,7 +54,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("00", ((SlotDerived)slotCollection[0]).IdString);
          Assert.AreEqual(null, ((SlotDerived)slotCollection[0]).IdBool);
          Assert.AreEqual("RUNNING", slotCollection[0].Status);
-         Assert.AreEqual(SlotStatus.Running, slotCollection[0].StatusEnum);
+         Assert.AreEqual(FahSlotStatus.Running, slotCollection[0].StatusEnum);
          Assert.AreEqual("smp:4", slotCollection[0].Description);
          Assert.AreEqual(true, slotCollection[0].SlotOptions.PauseOnStart);
          Assert.AreEqual("true", ((SlotOptionsDerived)slotCollection[0].SlotOptions).PauseOnStartString);
@@ -78,7 +78,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(1, slotCollection.Count);
          Assert.AreEqual(0, slotCollection[0].Id);
          Assert.AreEqual("RUNNING", slotCollection[0].Status);
-         Assert.AreEqual(SlotStatus.Running, slotCollection[0].StatusEnum);
+         Assert.AreEqual(FahSlotStatus.Running, slotCollection[0].StatusEnum);
          Assert.AreEqual("uniprocessor", slotCollection[0].Description);
       }
 
@@ -91,7 +91,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(1, slotCollection.Count);
          Assert.AreEqual(0, slotCollection[0].Id);
          Assert.AreEqual("RUNNING", slotCollection[0].Status);
-         Assert.AreEqual(SlotStatus.Running, slotCollection[0].StatusEnum);
+         Assert.AreEqual(FahSlotStatus.Running, slotCollection[0].StatusEnum);
          Assert.AreEqual("smp:8", slotCollection[0].Description);
       }
 
@@ -105,29 +105,29 @@ namespace HFM.Client.Tests.DataTypes
 
          Assert.AreEqual(0, slotCollection[0].Id);
          Assert.AreEqual("RUNNING", slotCollection[0].Status);
-         Assert.AreEqual(SlotStatus.Running, slotCollection[0].StatusEnum);
+         Assert.AreEqual(FahSlotStatus.Running, slotCollection[0].StatusEnum);
          Assert.AreEqual("smp:4", slotCollection[0].Description);
          Assert.AreEqual("beta", slotCollection[0].SlotOptions.ClientType);
-         Assert.AreEqual(ClientType.Beta, slotCollection[0].SlotOptions.ClientTypeEnum);
+         Assert.AreEqual(FahClientType.Beta, slotCollection[0].SlotOptions.FahClientTypeEnum);
          Assert.AreEqual("big", slotCollection[0].SlotOptions.MaxPacketSize);
          Assert.AreEqual(MaxPacketSize.Big, slotCollection[0].SlotOptions.MaxPacketSizeEnum);
          Assert.AreEqual(100, slotCollection[0].SlotOptions.NextUnitPercentage);
 
          Assert.AreEqual(1, slotCollection[1].Id);
          Assert.AreEqual("RUNNING", slotCollection[1].Status);
-         Assert.AreEqual(SlotStatus.Running, slotCollection[1].StatusEnum);
+         Assert.AreEqual(FahSlotStatus.Running, slotCollection[1].StatusEnum);
          Assert.AreEqual("gpu:0:\"GT200 [GeForce GTX 260]\"", slotCollection[1].Description);
          Assert.AreEqual("beta", slotCollection[1].SlotOptions.ClientType);
-         Assert.AreEqual(ClientType.Beta, slotCollection[1].SlotOptions.ClientTypeEnum);
+         Assert.AreEqual(FahClientType.Beta, slotCollection[1].SlotOptions.FahClientTypeEnum);
          Assert.AreEqual("low", slotCollection[1].SlotOptions.CorePriority);
          Assert.AreEqual(CorePriority.Low, slotCollection[1].SlotOptions.CorePriorityEnum);
 
          Assert.AreEqual(2, slotCollection[2].Id);
          Assert.AreEqual("RUNNING", slotCollection[2].Status);
-         Assert.AreEqual(SlotStatus.Running, slotCollection[2].StatusEnum);
+         Assert.AreEqual(FahSlotStatus.Running, slotCollection[2].StatusEnum);
          Assert.AreEqual("gpu:1:\"G92 [GeForce 9800 GTX]\"", slotCollection[2].Description);
          Assert.AreEqual("beta", slotCollection[2].SlotOptions.ClientType);
-         Assert.AreEqual(ClientType.Beta, slotCollection[2].SlotOptions.ClientTypeEnum);
+         Assert.AreEqual(FahClientType.Beta, slotCollection[2].SlotOptions.FahClientTypeEnum);
          Assert.AreEqual("low", slotCollection[2].SlotOptions.CorePriority);
          Assert.AreEqual(CorePriority.Low, slotCollection[2].SlotOptions.CorePriorityEnum);
       }
@@ -142,12 +142,12 @@ namespace HFM.Client.Tests.DataTypes
 
          Assert.AreEqual(0, slotCollection[0].Id);
          Assert.AreEqual("RUNNING", slotCollection[0].Status);
-         Assert.AreEqual(SlotStatus.Running, slotCollection[0].StatusEnum);
+         Assert.AreEqual(FahSlotStatus.Running, slotCollection[0].StatusEnum);
          Assert.AreEqual("smp:4", slotCollection[0].Description);
 
          Assert.AreEqual(1, slotCollection[1].Id);
          Assert.AreEqual("RUNNING", slotCollection[1].Status);
-         Assert.AreEqual(SlotStatus.Running, slotCollection[1].StatusEnum);
+         Assert.AreEqual(FahSlotStatus.Running, slotCollection[1].StatusEnum);
          Assert.AreEqual("gpu:0:\"Radeon HD 5870 (Cypress)\"", slotCollection[1].Description);
       }
 
@@ -160,7 +160,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(1, slotCollection.Count);
          Assert.AreEqual(0, slotCollection[0].Id);
          Assert.AreEqual("RUNNING", slotCollection[0].Status);
-         Assert.AreEqual(SlotStatus.Running, slotCollection[0].StatusEnum);
+         Assert.AreEqual(FahSlotStatus.Running, slotCollection[0].StatusEnum);
          Assert.AreEqual("uniprocessor", slotCollection[0].Description);
       }
 
@@ -174,17 +174,17 @@ namespace HFM.Client.Tests.DataTypes
 
          Assert.AreEqual(0, slotCollection[0].Id);
          Assert.AreEqual("FINISHING", slotCollection[0].Status);
-         Assert.AreEqual(SlotStatus.Finishing, slotCollection[0].StatusEnum);
+         Assert.AreEqual(FahSlotStatus.Finishing, slotCollection[0].StatusEnum);
          Assert.AreEqual("smp:4", slotCollection[0].Description);
          Assert.AreEqual("beta", slotCollection[0].SlotOptions.ClientType);
-         Assert.AreEqual(ClientType.Beta, slotCollection[0].SlotOptions.ClientTypeEnum);
+         Assert.AreEqual(FahClientType.Beta, slotCollection[0].SlotOptions.FahClientTypeEnum);
          Assert.AreEqual("big", slotCollection[0].SlotOptions.MaxPacketSize);
          Assert.AreEqual(MaxPacketSize.Big, slotCollection[0].SlotOptions.MaxPacketSizeEnum);
          Assert.AreEqual(100, slotCollection[0].SlotOptions.NextUnitPercentage);
 
          Assert.AreEqual(1, slotCollection[1].Id);
          Assert.AreEqual("RUNNING", slotCollection[1].Status);
-         Assert.AreEqual(SlotStatus.Running, slotCollection[1].StatusEnum);
+         Assert.AreEqual(FahSlotStatus.Running, slotCollection[1].StatusEnum);
          Assert.AreEqual("gpu:0:\"GF106 [GeForce 450 GTS]\"", slotCollection[1].Description);
       }
    }

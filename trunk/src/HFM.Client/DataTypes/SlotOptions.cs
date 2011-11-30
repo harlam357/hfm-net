@@ -33,13 +33,13 @@ namespace HFM.Client.DataTypes
       public string ClientType { get; set; }
 
       [MessageProperty("client-type", typeof(ClientTypeConverter))]
-      public ClientType ClientTypeEnum { get; set; }
+      public FahClientType FahClientTypeEnum { get; set; }
 
       [MessageProperty("client-subtype")]
       public string ClientSubType { get; set; }
 
       [MessageProperty("client-subtype", typeof(ClientSubTypeConverter))]
-      public ClientSubType ClientSubTypeEnum { get; set; }
+      public FahClientSubType FahClientSubTypeEnum { get; set; }
 
       [MessageProperty("machine-id")]
       public int? MachineId { get; set; }

@@ -258,7 +258,7 @@ namespace HFM.Client.DataTypes
       public string State { get; set; }
 
       [MessageProperty("state", typeof(SlotStatusConverter))]
-      public SlotStatus StateEnum { get; set; }
+      public FahSlotStatus StateEnum { get; set; }
 
       [MessageProperty("project")]
       public int Project { get; set; }

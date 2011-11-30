@@ -1,6 +1,4 @@
 ﻿
-using HFM.Core;
-
 namespace HFM.Client
 {
    public interface ITcpClientFactory

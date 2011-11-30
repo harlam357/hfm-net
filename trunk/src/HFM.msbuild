@@ -47,7 +47,7 @@
 
    <PropertyGroup>
       <NCoverPath>&quot;..\tools\NCover\NCover.Console.exe&quot;</NCoverPath>
-      <NCoverExcludeList>System.Runtime.CompilerServices.CompilerGeneratedAttribute;HFM.Core.CoverageExcludeAttribute</NCoverExcludeList>
+      <NCoverExcludeList>System.Runtime.CompilerServices.CompilerGeneratedAttribute;HFM.Core.CoverageExcludeAttribute;HFM.Client.CoverageExcludeAttribute</NCoverExcludeList>
       <NCoverExpPath>&quot;..\tools\NCoverExplorer\NCoverExplorer.Console.exe&quot;</NCoverExpPath>
       <NUnitPath>&quot;..\lib\NUnit\bin\net-2.0\nunit-console-x86.exe&quot;</NUnitPath>
       <FxCopPath>&quot;$(ProgramFiles)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\FxCopCmd.exe&quot;</FxCopPath>

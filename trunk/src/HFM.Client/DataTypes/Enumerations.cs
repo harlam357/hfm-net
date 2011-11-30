@@ -19,6 +19,53 @@
 
 namespace HFM.Client.DataTypes
 {
+   public enum FahClientType
+   {
+      Unknown,
+      Normal,
+      Advanced,
+      BigAdv,
+      Beta
+   }
+
+   // ReSharper disable InconsistentNaming
+
+   public enum FahClientSubType
+   {
+      Unknown = 0,
+      Normal = 1,    // ???
+      StdCli = 1,    // appears to be uniprocessor (Normal) on Windows
+      Linux = 1,     // appears to be uniprocessor (Normal) on Linux
+      SMP = 2,
+      GPU = 3,
+   }
+
+   // ReSharper restore InconsistentNaming
+
+   public enum FahSlotStatus
+   {
+      Unknown,
+      Paused,
+      Running,
+      Finishing,
+      Send
+   }
+
+   public enum MaxPacketSize
+   {
+      Unknown,
+      Small,
+      Normal,
+      Big
+   }
+
+   public enum CorePriority
+   {
+      Unknown,
+      Idle,
+      Low
+   }
+
    // ReSharper disable InconsistentNaming
 
    public enum OperatingSystemType
@@ -37,57 +84,6 @@ namespace HFM.Client.DataTypes
 
       // Expand Linux and OSX members if necessary
    }
-
-   // ReSharper restore InconsistentNaming
-
-   public enum ClientType
-   {
-      Unknown,
-      Normal,
-      Advanced,
-      BigAdv,
-      Beta
-   }
-
-   // ReSharper disable InconsistentNaming
-
-   public enum ClientSubType
-   {
-      Unknown = 0,
-      Normal = 1,    // ???
-      StdCli = 1,    // appears to be uniprocessor (Normal) on Windows
-      Linux = 1,     // appears to be uniprocessor (Normal) on Linux
-      SMP = 2,
-      GPU = 3,
-   }
-
-   // ReSharper restore InconsistentNaming
-
-   public enum MaxPacketSize
-   {
-      Unknown,
-      Small,
-      Normal,
-      Big
-   }
-
-   public enum CorePriority
-   {
-      Unknown,
-      Idle,
-      Low
-   }
-
-   public enum SlotStatus
-   {
-      Unknown,
-      Paused,
-      Running,
-      Finishing,
-      Send
-   }
-
-   // ReSharper disable InconsistentNaming
 
    public enum CpuManufacturer
    {
