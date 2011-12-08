@@ -33,9 +33,7 @@ namespace HFM.Client.DataTypes
    public enum FahClientSubType
    {
       Unknown = 0,
-      Normal = 1,    // ???
-      StdCli = 1,    // appears to be uniprocessor (Normal) on Windows
-      Linux = 1,     // appears to be uniprocessor (Normal) on Linux
+      Uniprocessor = 1,
       SMP = 2,
       GPU = 3,
    }

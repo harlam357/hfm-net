@@ -24,7 +24,7 @@ using HFM.Client.DataTypes;
 
 namespace HFM.Client.Converters
 {
-   internal sealed class ClientTypeConverter : IConversionProvider
+   internal sealed class FahClientTypeConverter : IConversionProvider
    {
       public object Convert(object input)
       {
@@ -46,7 +46,7 @@ namespace HFM.Client.Converters
       }
    }
 
-   internal sealed class ClientSubTypeConverter : IConversionProvider
+   internal sealed class FahClientSubTypeConverter : IConversionProvider
    {
       public object Convert(object input)
       {
@@ -54,15 +54,15 @@ namespace HFM.Client.Converters
          switch (inputString)
          {
             case "normal":
-               return FahClientSubType.Normal;
+               return FahClientSubType.Uniprocessor;
             case "SMP":
                return FahClientSubType.SMP;
             case "GPU":
                return FahClientSubType.GPU;
-            case "STDCLI":
-               return FahClientSubType.StdCli;
-            case "LINUX":
-               return FahClientSubType.Linux;
+            case "STDCLI": // uniprocessor on Windows
+               return FahClientSubType.Uniprocessor;
+            case "LINUX":  // uniprocessor on Linux
+               return FahClientSubType.Uniprocessor;
          }
 
          throw new FormatException(String.Format(CultureInfo.InvariantCulture,

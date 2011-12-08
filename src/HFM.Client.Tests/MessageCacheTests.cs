@@ -58,10 +58,13 @@ namespace HFM.Client.Tests
 
             MessageUpdatedEventArgs e = null;
             messageCache.MessageUpdated += (sender, args) => e = args;
+            bool updateFinishedRaised = false;
+            messageCache.UpdateFinished += delegate { updateFinishedRaised = true; };
             messageCache.SocketTimerElapsed(null, null);
 
             Assert.AreEqual("units", e.Key);
             Assert.IsNull(e.DataType);
+            Assert.IsTrue(updateFinishedRaised);
             Assert.IsNotNull(messageCache.GetJsonMessage(JsonMessageKey.QueueInfo));
          }
 

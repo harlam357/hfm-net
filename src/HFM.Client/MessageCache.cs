@@ -35,7 +35,11 @@ namespace HFM.Client
       /// Fired when a new or updated message is received.
       /// </summary>
       public event EventHandler<MessageUpdatedEventArgs> MessageUpdated;
-
+      /// <summary>
+      /// Fired when a data update is complete.
+      /// </summary>
+      public event EventHandler UpdateFinished;
+      
       #endregion
 
       #region Constants
@@ -108,6 +112,8 @@ namespace HFM.Client
             OnMessageUpdated(new MessageUpdatedEventArgs(json.Key));
          }
          _readBuffer.Append(bufferValue);
+         // send update finished event
+         OnUpdateFinished(EventArgs.Empty);
       }
 
       /// <summary>
@@ -204,6 +210,14 @@ namespace HFM.Client
          if (MessageUpdated != null)
          {
             MessageUpdated(this, e);
+         }
+      }
+
+      private void OnUpdateFinished(EventArgs e)
+      {
+         if (UpdateFinished != null)
+         {
+            UpdateFinished(this, e);
          }
       }
 
