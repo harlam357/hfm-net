@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Data Aggregator Class Tests
+ * HFM.NET - Legacy Data Aggregator Class Tests
  * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ using HFM.Core.DataTypes;
 namespace HFM.Core.Tests
 {
    [TestFixture]
-   public class DataAggregatorTests
+   public class LegacyDataAggregatorTests
    {
       // ReSharper disable InconsistentNaming
       private const string queue = "queue.dat";
@@ -34,12 +34,12 @@ namespace HFM.Core.Tests
       private const string unitinfo = "unitinfo.txt";
       // ReSharper restore InconsistentNaming
 
-      private DataAggregator _dataAggregator;
+      private LegacyDataAggregator _dataAggregator;
    
       [SetUp]
       public void Init()
       {
-         _dataAggregator = new DataAggregator();
+         _dataAggregator = new LegacyDataAggregator();
          // create maps
          Core.Configuration.ObjectMapper.CreateMaps();
       }
@@ -50,7 +50,7 @@ namespace HFM.Core.Tests
       public void SMP_3()
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_3";
-         _dataAggregator.InstanceName = "SMP_3";
+         _dataAggregator.ClientName = "SMP_3";
          _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
@@ -107,7 +107,7 @@ namespace HFM.Core.Tests
       public void SMP_7()
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_7";
-         _dataAggregator.InstanceName = "SMP_7";
+         _dataAggregator.ClientName = "SMP_7";
          _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
@@ -187,7 +187,7 @@ namespace HFM.Core.Tests
           ***/
 
          const string path = "..\\..\\..\\TestFiles\\SMP_8";
-         _dataAggregator.InstanceName = "SMP_8_1";
+         _dataAggregator.ClientName = "SMP_8_1";
          _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, "wrong_file_name.txt");
@@ -263,7 +263,7 @@ namespace HFM.Core.Tests
           ***/
 
          const string path = "..\\..\\..\\TestFiles\\SMP_8";
-         _dataAggregator.InstanceName = "SMP_8_2";
+         _dataAggregator.ClientName = "SMP_8_2";
          _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, "wrong_file_name.dat");
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
@@ -318,7 +318,7 @@ namespace HFM.Core.Tests
       public void SMP_9()
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_9";
-         _dataAggregator.InstanceName = "SMP_9";
+         _dataAggregator.ClientName = "SMP_9";
          _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
@@ -391,7 +391,7 @@ namespace HFM.Core.Tests
       public void SMP_11() // mangled Project string on current WU
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_11";
-         _dataAggregator.InstanceName = "SMP_11";
+         _dataAggregator.ClientName = "SMP_11";
          _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
@@ -464,7 +464,7 @@ namespace HFM.Core.Tests
       public void SMP_12() // CoreOutdated on last Queue Index 6
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_12";
-         _dataAggregator.InstanceName = "SMP_12";
+         _dataAggregator.ClientName = "SMP_12";
          _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
@@ -537,7 +537,7 @@ namespace HFM.Core.Tests
       public void SMP_13() // ReadyForUpload queue status now populates the FinishedTime property
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_13";
-         _dataAggregator.InstanceName = "SMP_13";
+         _dataAggregator.ClientName = "SMP_13";
          _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
@@ -610,7 +610,7 @@ namespace HFM.Core.Tests
       public void SMP_14() // GettingWorkPacket - queue entry available before any log data
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_14";
-         _dataAggregator.InstanceName = "SMP_14";
+         _dataAggregator.ClientName = "SMP_14";
          _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
@@ -685,7 +685,7 @@ namespace HFM.Core.Tests
       public void SMP_15() // lots of Client-core communications error
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_15";
-         _dataAggregator.InstanceName = "SMP_15";
+         _dataAggregator.ClientName = "SMP_15";
          _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
@@ -759,7 +759,7 @@ namespace HFM.Core.Tests
       public void GPU2_3()
       {
          const string path = "..\\..\\..\\TestFiles\\GPU2_3";
-         _dataAggregator.InstanceName = "GPU2_3";
+         _dataAggregator.ClientName = "GPU2_3";
          _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
@@ -816,7 +816,7 @@ namespace HFM.Core.Tests
       public void GPU2_6_1()
       {
          const string path = "..\\..\\..\\TestFiles\\GPU2_6";
-         _dataAggregator.InstanceName = "GPU2_6_1";
+         _dataAggregator.ClientName = "GPU2_6_1";
          _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
@@ -889,7 +889,7 @@ namespace HFM.Core.Tests
       public void GPU2_6_2_QueueClearTest()
       {
          const string path = "..\\..\\..\\TestFiles\\GPU2_6";
-         _dataAggregator.InstanceName = "GPU2_6_2";
+         _dataAggregator.ClientName = "GPU2_6_2";
          _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
@@ -906,7 +906,7 @@ namespace HFM.Core.Tests
       public void GPU2_7()
       {
          const string path = "..\\..\\..\\TestFiles\\GPU2_7";
-         _dataAggregator.InstanceName = "GPU2_7";
+         _dataAggregator.ClientName = "GPU2_7";
          _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
@@ -963,7 +963,7 @@ namespace HFM.Core.Tests
       public void GPU2_8_1()
       {
          const string path = "..\\..\\..\\TestFiles\\GPU2_8";
-         _dataAggregator.InstanceName = "GPU2_8_1";
+         _dataAggregator.ClientName = "GPU2_8_1";
          _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
@@ -1034,7 +1034,7 @@ namespace HFM.Core.Tests
       public void GPU2_8_2()
       {
          const string path = "..\\..\\..\\TestFiles\\GPU2_8";
-         _dataAggregator.InstanceName = "GPU2_8_2";
+         _dataAggregator.ClientName = "GPU2_8_2";
          _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, "wrong_file_name.dat");
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
@@ -1089,7 +1089,7 @@ namespace HFM.Core.Tests
       public void GPU3_1()
       {
          const string path = "..\\..\\..\\TestFiles\\GPU3_1";
-         _dataAggregator.InstanceName = "GPU3_1";
+         _dataAggregator.ClientName = "GPU3_1";
          _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
@@ -1188,7 +1188,7 @@ namespace HFM.Core.Tests
       public void Standard_5() // multiple Project strings before WU start
       {
          const string path = "..\\..\\..\\TestFiles\\Standard_5";
-         _dataAggregator.InstanceName = "Standard_5";
+         _dataAggregator.ClientName = "Standard_5";
          _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
@@ -1261,7 +1261,7 @@ namespace HFM.Core.Tests
       public void Standard_7() // new ProtoMol - progress not on percent boundry
       {
          const string path = "..\\..\\..\\TestFiles\\Standard_7";
-         _dataAggregator.InstanceName = "Standard_7";
+         _dataAggregator.ClientName = "Standard_7";
          _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
@@ -1318,7 +1318,7 @@ namespace HFM.Core.Tests
       public void Standard_8() // Battery Pause w/SendingWorkPacket during pause
       {
          const string path = "..\\..\\..\\TestFiles\\Standard_8";
-         _dataAggregator.InstanceName = "Standard_8";
+         _dataAggregator.ClientName = "Standard_8";
          _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);

@@ -157,6 +157,12 @@ namespace HFM.Core.DataTypes
       {
          if (logLines == null) throw new ArgumentNullException("logLines");
 
+         // end index cannot be less than start
+         if (endIndex < startIndex)
+         {
+            // if so, return everything > than start index
+            logLines.Where(x => x.LineIndex >= startIndex);
+         }
          return logLines.Where(x => x.LineIndex >= startIndex && x.LineIndex <= endIndex);
       }
 

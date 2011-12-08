@@ -34,6 +34,8 @@ namespace HFM.Core.DataTypes
       public const string QueueFileName = "queue.dat";
       //public const string ExternalDataFileName = "ClientData.dat";
 
+      public const int FahClientPort = 36330;
+
       public const int MaxDecimalPlaces = 5;
 
       private static readonly bool IsRunningOnMono = Type.GetType("Mono.Runtime") != null;

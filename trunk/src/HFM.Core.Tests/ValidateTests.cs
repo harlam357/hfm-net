@@ -68,17 +68,17 @@ namespace HFM.Core.Tests
       [Test]
       public void CleanInstanceNameTest()
       {
-         string str = Validate.CleanInstanceName("+a}");
+         string str = Validate.CleanClientName("+a}");
          Assert.AreEqual("+a", str);
-         str = Validate.CleanInstanceName("}a+");
+         str = Validate.CleanClientName("}a+");
          Assert.AreEqual("a+", str);
-         str = Validate.CleanInstanceName("=a\\");
+         str = Validate.CleanClientName("=a\\");
          Assert.AreEqual("=a", str);
-         str = Validate.CleanInstanceName("\\a=");
+         str = Validate.CleanClientName("\\a=");
          Assert.AreEqual("a=", str);
-         str = Validate.CleanInstanceName(String.Empty);
+         str = Validate.CleanClientName(String.Empty);
          Assert.AreEqual(String.Empty, str);
-         str = Validate.CleanInstanceName(null);
+         str = Validate.CleanClientName(null);
          Assert.AreEqual(null, str);
       }
 
