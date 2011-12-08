@@ -65,6 +65,12 @@ namespace HFM.Forms.Controls
 
       public void SetLogLines(IEnumerable<LogLine> lines, string logOwnedByInstance, bool highlightLines)
       {
+         if (InvokeRequired)
+         {
+            Invoke(new Action<IEnumerable<LogLine>, string, bool>(SetLogLines), lines, logOwnedByInstance, highlightLines);
+            return;
+         }
+
          _logOwnedByInstanceName = logOwnedByInstance;
 
 #if !LOGTOOL
@@ -133,6 +139,12 @@ namespace HFM.Forms.Controls
       
       public void SetNoLogLines()
       {
+         if (InvokeRequired)
+         {
+            Invoke(new MethodInvoker(SetNoLogLines));
+            return;
+         }
+
          _logLines = null;
 
          Rtf = null;
@@ -143,6 +155,12 @@ namespace HFM.Forms.Controls
 
       public void ScrollToBottom()
       {
+         if (InvokeRequired)
+         {
+            Invoke(new MethodInvoker(ScrollToBottom));
+            return;
+         }
+
          SelectionStart = TextLength;
 
          if (Core.Application.IsRunningOnMono)

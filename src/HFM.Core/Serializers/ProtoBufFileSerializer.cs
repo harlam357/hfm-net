@@ -7,8 +7,6 @@ namespace HFM.Core.Serializers
 {
    public class ProtoBufFileSerializer<T> : IFileSerializer<T> where T : class, new()
    {
-      #region IFileSerializer<T> Members
-
       public virtual string FileExtension
       {
          get { return "dat"; }
@@ -34,7 +32,5 @@ namespace HFM.Core.Serializers
             ProtoBuf.Serializer.Serialize(fileStream, value);
          }
       }
-
-      #endregion
    }
 }

@@ -28,8 +28,6 @@ namespace HFM.Forms.Controls
    {
       #region System.Windows.Forms.DataGridView Properties
 
-      bool AutoGenerateColumns { get; set; }
-
       DataGridViewCell CurrentCell { get; }
 
       object DataSource { get; set; }
