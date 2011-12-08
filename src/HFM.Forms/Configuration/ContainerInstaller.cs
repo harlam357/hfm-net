@@ -80,10 +80,28 @@ namespace HFM.Forms.Configuration
                .ImplementedBy<HistoryForm>()
                .LifeStyle.Transient);
 
+         // IFahClientSetupView - Transient
+         container.Register(
+            Component.For<IFahClientSetupView>()
+               .ImplementedBy<FahClientSetupDialog>()
+               .LifeStyle.Transient);
+
+         // IFahClientSetupPresenter - Transient
+         container.Register(
+            Component.For<IFahClientSetupPresenter>()
+               .ImplementedBy<FahClientSetupPresenter>()
+               .LifeStyle.Transient);
+
          // ILegacyClientSetupView - Transient
          container.Register(
             Component.For<ILegacyClientSetupView>()
                .ImplementedBy<LegacyClientSetupDialog>()
+               .LifeStyle.Transient);
+
+         // ILegacyClientSetupPresenter - Transient
+         container.Register(
+            Component.For<ILegacyClientSetupPresenter>()
+               .ImplementedBy<LegacyClientSetupPresenter>()
                .LifeStyle.Transient);
 
          // IMainView - Singleton

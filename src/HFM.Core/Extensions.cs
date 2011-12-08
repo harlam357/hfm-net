@@ -30,19 +30,37 @@ namespace HFM.Core
    {
       #region ClientSettings
 
+      public static bool IsFahClient(this ClientSettings settings)
+      {
+         return settings == null ? false : settings.ClientType.Equals(ClientType.FahClient);
+      }
+
+      public static bool IsLegacy(this ClientSettings settings)
+      {
+         return settings == null ? false : settings.ClientType.Equals(ClientType.Legacy);
+      }
+
+      /// <summary>
+      /// Used to supply a "path" value to the benchmarks and unit info database.
+      /// </summary>
+      public static string FahClientPath(this ClientSettings settings)
+      {
+         return settings == null ? String.Empty : String.Format(CultureInfo.InvariantCulture, "{0}:{1}", settings.Server, settings.Port);
+      }
+
       public static string CachedFahLogFileName(this ClientSettings settings)
       {
-         return String.Format(CultureInfo.InvariantCulture, "{0}-{1}", settings.Name, Default.FahLogFileName);
+         return settings == null ? String.Empty : String.Format(CultureInfo.InvariantCulture, "{0}-{1}", settings.Name, Default.FahLogFileName);
       }
 
       public static string CachedUnitInfoFileName(this ClientSettings settings)
       {
-         return String.Format(CultureInfo.InvariantCulture, "{0}-{1}", settings.Name, Default.UnitInfoFileName);
+         return settings == null ? String.Empty : String.Format(CultureInfo.InvariantCulture, "{0}-{1}", settings.Name, Default.UnitInfoFileName);
       }
 
       public static string CachedQueueFileName(this ClientSettings settings)
       {
-         return String.Format(CultureInfo.InvariantCulture, "{0}-{1}", settings.Name, Default.QueueFileName);
+         return settings == null ? String.Empty : String.Format(CultureInfo.InvariantCulture, "{0}-{1}", settings.Name, Default.QueueFileName);
       }
 
       #endregion
@@ -51,9 +69,9 @@ namespace HFM.Core
       /// Get the totals for all slots.
       /// </summary>
       /// <returns>The totals for all slots.</returns>
-      public static InstanceTotals GetSlotTotals(this IEnumerable<SlotModel> slots)
+      public static SlotTotals GetSlotTotals(this IEnumerable<SlotModel> slots)
       {
-         var totals = new InstanceTotals();
+         var totals = new SlotTotals();
 
          // If no Instance Collection, return initialized totals.
          // Added this check because this function is now being passed a copy of the client 

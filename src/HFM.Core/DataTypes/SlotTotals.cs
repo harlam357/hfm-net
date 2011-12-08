@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - Instance Totals Structure
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * HFM.NET - Slot Totals Structure
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,7 +22,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace HFM.Core.DataTypes
 {
    [SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
-   public struct InstanceTotals
+   public struct SlotTotals
    {
       public double PPD { get; set; }
       public double UPD { get; set; }

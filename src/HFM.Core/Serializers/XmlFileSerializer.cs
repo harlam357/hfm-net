@@ -8,8 +8,6 @@ namespace HFM.Core.Serializers
 {
    public class XmlFileSerializer<T> : IFileSerializer<T> where T : class, new()
    {
-      #region IProteinBenchmarkSerializer Members
-
       public string FileExtension
       {
          get { return "xml"; }
@@ -37,7 +35,5 @@ namespace HFM.Core.Serializers
             serializer.WriteObject(fileStream, value);
          }
       }
-
-      #endregion
    }
 }
