@@ -68,7 +68,7 @@ namespace HFM.Forms
          #region Draw or Hide the Tooltip
          if (info.RowIndex > -1)
          {
-            var instance = _presenter.FindDisplayInstance(dataGridView1.Rows[info.RowIndex].Cells["Name"].Value.ToString());
+            var instance = _presenter.FindSlotModel(dataGridView1.Rows[info.RowIndex].Cells["Name"].Value.ToString());
 
             // ReSharper disable PossibleNullReferenceException
             if (dataGridView1.Columns["Status"].Index == info.ColumnIndex)
@@ -123,7 +123,7 @@ namespace HFM.Forms
             else if (dataGridView1.Columns["Name"].Index == e.ColumnIndex)
             {
                #region Duplicate User and Machine ID Custom Paint
-               var instance = _presenter.FindDisplayInstance(dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString());
+               var instance = _presenter.FindSlotModel(dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString());
                if (_prefs.GetPreference<bool>(Preference.DuplicateUserIdCheck) && instance.UserIdIsDuplicate)
                {
                   PaintGridCell(PaintCell.Warning, e);
@@ -133,7 +133,7 @@ namespace HFM.Forms
             else if (dataGridView1.Columns["ProjectRunCloneGen"].Index == e.ColumnIndex)
             {
                #region Duplicate Project Custom Paint
-               var instance = _presenter.FindDisplayInstance(dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString());
+               var instance = _presenter.FindSlotModel(dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString());
                if (_prefs.GetPreference<bool>(Preference.DuplicateProjectCheck) && instance.ProjectIsDuplicate)
                {
                   PaintGridCell(PaintCell.Warning, e);
@@ -143,7 +143,7 @@ namespace HFM.Forms
             else if (dataGridView1.Columns["Username"].Index == e.ColumnIndex)
             {
                #region Username Incorrect Custom Paint
-               var instance = _presenter.FindDisplayInstance(dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString());
+               var instance = _presenter.FindSlotModel(dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString());
                if (instance.UsernameOk == false)
                {
                   PaintGridCell(PaintCell.Warning, e);
@@ -161,7 +161,7 @@ namespace HFM.Forms
             else if (dataGridView1.Columns["ETA"].Index == e.ColumnIndex)
             {
                #region ETA as Date Custom Paint
-               var instance = _presenter.FindDisplayInstance(dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString());
+               var instance = _presenter.FindSlotModel(dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString());
                if (_prefs.GetPreference<bool>(Preference.EtaDate))
                {
                   PaintGridCell(PaintCell.EtaDate, instance.ETADate, e);
@@ -265,7 +265,7 @@ namespace HFM.Forms
                                               e.CellBounds.Width - 10, e.CellBounds.Height - 10);
 
                   // Draw the inset highlight box.
-                  var status = (ClientStatus)e.Value;
+                  var status = (SlotStatus)e.Value;
                   e.Graphics.DrawRectangle(status.GetDrawingPen(), newRect);
                   e.Graphics.FillRectangle(status.GetDrawingBrush(), newRect);
                }
@@ -399,7 +399,7 @@ namespace HFM.Forms
                else if (dataGridView1.Columns["ETA"].Index == columnIndex &&
                         _prefs.GetPreference<bool>(Preference.EtaDate))
                {
-                  var instance = _presenter.FindDisplayInstance(dataGridView1.Rows[i].Cells["Name"].Value.ToString());
+                  var instance = _presenter.FindSlotModel(dataGridView1.Rows[i].Cells["Name"].Value.ToString());
                   formattedString = GetEtaDateString(instance.ETADate);
                }
                else if (dataGridView1.Columns["DownloadTime"].Index == columnIndex ||

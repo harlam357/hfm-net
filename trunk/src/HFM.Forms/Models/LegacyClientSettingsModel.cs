@@ -64,7 +64,7 @@ namespace HFM.Forms.Models
 
       private string _name;
       /// <summary>
-      /// The name assigned to this client instance
+      /// The name assigned to this client.
       /// </summary>
       public string Name
       {
