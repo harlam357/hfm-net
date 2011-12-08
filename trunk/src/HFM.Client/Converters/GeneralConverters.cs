@@ -41,15 +41,24 @@ namespace HFM.Client.Converters
             return null;
          }
 
+         // ISO 8601
+         try
+         {
+            return DateTime.ParseExact(inputString, "s", CultureInfo.InvariantCulture);
+         }
+         catch (FormatException)
+         { }
+
+         // custom format for older v7 clients
          try
          {
             return DateTime.ParseExact(inputString, "dd/MMM/yyyy-HH:mm:ss", CultureInfo.InvariantCulture);
          }
-         catch (FormatException ex)
-         {
-            throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-               "Failed to parse date time value of '{0}'.", inputString), ex);
-         }
+         catch (FormatException)
+         { }
+
+         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
+            "Failed to parse date time value of '{0}'.", inputString));
       }
    }
 

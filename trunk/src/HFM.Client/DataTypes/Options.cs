@@ -45,15 +45,15 @@ namespace HFM.Client.DataTypes
       public bool? Child { get; set; }
 
       [MessageProperty("client-subtype")]
-      public string ClientSubType { get; set; }
+      public string FahClientSubType { get; set; }
 
-      [MessageProperty("client-subtype", typeof(ClientSubTypeConverter))]
+      [MessageProperty("client-subtype", typeof(FahClientSubTypeConverter))]
       public FahClientSubType FahClientSubTypeEnum { get; set; }
 
       [MessageProperty("client-type")]
-      public string ClientType { get; set; }
+      public string FahClientType { get; set; }
 
-      [MessageProperty("client-type", typeof(ClientTypeConverter))]
+      [MessageProperty("client-type", typeof(FahClientTypeConverter))]
       public FahClientType FahClientTypeEnum { get; set; }
 
       // could be IP Address type
