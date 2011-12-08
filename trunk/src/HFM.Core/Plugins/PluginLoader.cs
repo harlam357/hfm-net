@@ -74,8 +74,8 @@ namespace HFM.Core.Plugins
          #region ClientSettings Serializer Plugins
 
          // register built in types
-         _clientSettingsPluginManager.RegisterPlugin(typeof(XmlFileSerializer<>).Name, new XmlFileSerializer<List<DataTypes.ClientSettings>>());
-         _clientSettingsPluginManager.RegisterPlugin(typeof(ProtoBufFileSerializer<>).Name, new ProtoBufFileSerializer<List<DataTypes.ClientSettings>>());
+         _clientSettingsPluginManager.RegisterPlugin(typeof(HfmFileSerializer).Name, new HfmFileSerializer());
+         _clientSettingsPluginManager.RegisterPlugin(typeof(HfmLegacyFileSerializer).Name, new HfmLegacyFileSerializer { Logger = _logger });
          // load from plugin folder
          path = Path.Combine(PluginsFolder, Constants.PluginsClientSettingsFolderName);
          if (Directory.Exists(path))

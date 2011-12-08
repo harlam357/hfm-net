@@ -80,5 +80,7 @@ namespace HFM.Core
       public const int MaxDisplayableLogLines = 500;
 
       public const string InstanceNameFormat = "({0}) {1}";
+
+      public const string FahClientSlotOptions = "slot-options {0} client-type client-subtype machine-id max-packet-size core-priority next-unit-percentage max-units checkpoint pause-on-start gpu-vendor-id gpu-device-id";
    }
 }

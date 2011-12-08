@@ -148,6 +148,11 @@ namespace HFM.Core
 
       #region Constructors
 
+      public UnitInfoLogic()
+      {
+         
+      }
+
       public UnitInfoLogic(IProteinBenchmarkCollection benchmarkCollection)
       {
          _benchmarkCollection = benchmarkCollection;

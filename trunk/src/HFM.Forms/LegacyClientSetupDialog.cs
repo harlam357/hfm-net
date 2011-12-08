@@ -32,7 +32,7 @@ using HFM.Forms.Models;
 
 namespace HFM.Forms
 {
-   public interface ILegacyClientSetupView : IWin32Window
+   public interface ILegacyClientSetupView : IWin32Window, IDisposable
    {
       /// <summary>
       /// Maximum Dialog Height
@@ -115,8 +115,8 @@ namespace HFM.Forms
       {
          InitializeComponent();
          
-         numOffset.Minimum = Constants.MinOffsetMinutes;
-         numOffset.Maximum = Constants.MaxOffsetMinutes;
+         ClientTimeOffsetUpDown.Minimum = Constants.MinOffsetMinutes;
+         ClientTimeOffsetUpDown.Maximum = Constants.MaxOffsetMinutes;
          
          MaxHeight = Height;
          MaxWidth = Width;
@@ -131,36 +131,36 @@ namespace HFM.Forms
 
       private void LegacyClientSetupDialogShown(object sender, EventArgs e)
       {
-         txtDummy.Visible = false;
+         DummyTextBox.Visible = false;
       }
       
       public void DataBind(LegacyClientSettingsModel settings)
       {
-         txtName.DataBindings.Add("Text", settings, "Name", false, DataSourceUpdateMode.OnValidation);
+         ClientNameTextBox.DataBindings.Add("Text", settings, "Name", false, DataSourceUpdateMode.OnValidation);
          //txtMergeFileName.DataBindings.Add("Text", settings, "ExternalFileName", false, DataSourceUpdateMode.OnValidation);
          txtClientMegahertz.DataBindings.Add("Text", settings, "ClientProcessorMegahertz", false, DataSourceUpdateMode.OnValidation);
          txtLogFileName.DataBindings.Add("Text", settings, "FahLogFileName", false, DataSourceUpdateMode.OnValidation);
          txtUnitFileName.DataBindings.Add("Text", settings, "UnitInfoFileName", false, DataSourceUpdateMode.OnValidation);
          txtQueueFileName.DataBindings.Add("Text", settings, "QueueFileName", false, DataSourceUpdateMode.OnValidation);
          pnlHostType.DataSource = settings;
-         pnlHostType.ValueMember = "ClientLegacySubType";
+         pnlHostType.ValueMember = "LegacyClientSubType";
          txtLocalPath.DataBindings.Add("Text", settings, "Path", false, DataSourceUpdateMode.OnValidation);
          txtWebURL.DataBindings.Add("Text", settings, "Path", false, DataSourceUpdateMode.OnValidation);
          txtWebUser.DataBindings.Add("Text", settings, "Username", false, DataSourceUpdateMode.OnValidation);
          txtWebUser.DataBindings.Add("ErrorToolTipText", settings, "CredentialsErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
          txtWebPass.DataBindings.Add("Text", settings, "Password", false, DataSourceUpdateMode.OnValidation);
          txtWebPass.DataBindings.Add("ErrorToolTipText", settings, "CredentialsErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
-         txtFTPServer.DataBindings.Add("Text", settings, "Server", false, DataSourceUpdateMode.OnValidation);
+         FtpServerNameTextBox.DataBindings.Add("Text", settings, "Server", false, DataSourceUpdateMode.OnValidation);
          txtFTPPath.DataBindings.Add("Text", settings, "Path", false, DataSourceUpdateMode.OnValidation);
          txtFTPUser.DataBindings.Add("Text", settings, "Username", false, DataSourceUpdateMode.OnValidation);
          txtFTPUser.DataBindings.Add("ErrorToolTipText", settings, "CredentialsErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
-         txtFTPPass.DataBindings.Add("Text", settings, "Password", false, DataSourceUpdateMode.OnValidation);
-         txtFTPPass.DataBindings.Add("ErrorToolTipText", settings, "CredentialsErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
+         FtpPasswordTextBox.DataBindings.Add("Text", settings, "Password", false, DataSourceUpdateMode.OnValidation);
+         FtpPasswordTextBox.DataBindings.Add("ErrorToolTipText", settings, "CredentialsErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
          pnlFtpMode.DataSource = settings;
          pnlFtpMode.ValueMember = "FtpMode";
-         chkClientVM.DataBindings.Add("Checked", settings, "UtcOffsetIsZero", false, DataSourceUpdateMode.OnPropertyChanged);
-         numOffset.DataBindings.Add("Value", settings, "ClientTimeOffset", false, DataSourceUpdateMode.OnPropertyChanged);
-         txtDummy.DataBindings.Add("Text", settings, "Dummy", false, DataSourceUpdateMode.Never);
+         ClientNoUtcOffsetCheckBox.DataBindings.Add("Checked", settings, "UtcOffsetIsZero", false, DataSourceUpdateMode.OnPropertyChanged);
+         ClientTimeOffsetUpDown.DataBindings.Add("Value", settings, "ClientTimeOffset", false, DataSourceUpdateMode.OnPropertyChanged);
+         DummyTextBox.DataBindings.Add("Text", settings, "Dummy", false, DataSourceUpdateMode.Never);
       }
 
       public List<IValidatingControl> FindValidatingControls()
@@ -247,10 +247,10 @@ namespace HFM.Forms
          set
          {
             grpFTP.Visible = value;
-            txtFTPServer.Enabled = value;
+            FtpServerNameTextBox.Enabled = value;
             txtFTPPath.Enabled = value;
             txtFTPUser.Enabled = value;
-            txtFTPPass.Enabled = value;
+            FtpPasswordTextBox.Enabled = value;
          }
       }
       
@@ -261,15 +261,15 @@ namespace HFM.Forms
       
       public bool ClientIsOnVirtualMachineVisible
       {
-         set { chkClientVM.Visible = value; }
+         set { ClientNoUtcOffsetCheckBox.Visible = value; }
       }
       
       public bool ClientTimeOffsetVisible
       {
          set
          {
-            numOffset.Visible = value;
-            lblOffset.Visible = value;
+            ClientTimeOffsetUpDown.Visible = value;
+            ClientTimeOffsetLabel.Visible = value;
          }
       }
 

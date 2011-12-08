@@ -36,7 +36,7 @@ using HFM.Forms.Models;
 
 namespace HFM.Forms
 {
-   public interface ILegacyClientSetupPresenter
+   public interface ILegacyClientSetupPresenter : IDisposable
    {
       LegacyClientSettingsModel SettingsModel { get; set; }
 
@@ -351,5 +351,14 @@ namespace HFM.Forms
 
          return true;
       }
+
+      #region IDisposable Members
+
+      public void Dispose()
+      {
+         _settingsView.Dispose();
+      }
+
+      #endregion
    }
 }

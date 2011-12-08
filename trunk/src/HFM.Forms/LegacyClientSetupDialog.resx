@@ -120,15 +120,7 @@
   <metadata name="toolTipHost.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>32, 23</value>
   </metadata>
-  <data name="chkClientVM.ToolTip" xml:space="preserve">
-    <value>This option only needs checked if the
-client reports local time as UTC.  This
-is typically the case with VMs that cannot
-be configured with a time zone offset.
-
-example: notfred's Virtual Appliance</value>
-  </data>
-  <data name="numOffset.ToolTip" xml:space="preserve">
+  <data name="ClientTimeOffsetUpDown.ToolTip" xml:space="preserve">
     <value>Allows you to make adjustments for 
 the client's reported frame times.
 

@@ -54,55 +54,55 @@ namespace HFM.Forms
       {
          this.components = new System.ComponentModel.Container();
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LegacyClientSetupDialog));
-         this.btnOK = new ButtonWrapper();
-         this.btnCancel = new ButtonWrapper();
+         this.DialogOkButton = new HFM.Forms.Controls.ButtonWrapper();
+         this.DialogCancelButton = new HFM.Forms.Controls.ButtonWrapper();
          this.txtLocalPath = new harlam357.Windows.Forms.ValidatingTextBox();
          this.toolTipHost = new System.Windows.Forms.ToolTip(this.components);
-         this.chkClientVM = new CheckBoxWrapper();
-         this.numOffset = new System.Windows.Forms.NumericUpDown();
-         this.btnBrowseLocal = new ButtonWrapper();
-         this.radioLocal = new RadioButtonWrapper();
-         this.txtName = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lblInstanceName = new LabelWrapper();
-         this.radioFTP = new RadioButtonWrapper();
-         this.lblFTPServer = new LabelWrapper();
-         this.txtFTPServer = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lblFTPPath = new LabelWrapper();
+         this.ClientNoUtcOffsetCheckBox = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.ClientTimeOffsetUpDown = new System.Windows.Forms.NumericUpDown();
+         this.btnBrowseLocal = new HFM.Forms.Controls.ButtonWrapper();
+         this.radioLocal = new HFM.Forms.Controls.RadioButtonWrapper();
+         this.ClientNameTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.ClientNameLabel = new HFM.Forms.Controls.LabelWrapper();
+         this.radioFTP = new HFM.Forms.Controls.RadioButtonWrapper();
+         this.FtpServerNameLabel = new HFM.Forms.Controls.LabelWrapper();
+         this.FtpServerNameTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.lblFTPPath = new HFM.Forms.Controls.LabelWrapper();
          this.txtFTPPath = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.radioHTTP = new RadioButtonWrapper();
+         this.radioHTTP = new HFM.Forms.Controls.RadioButtonWrapper();
          this.txtWebURL = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lblWebURL = new LabelWrapper();
+         this.lblWebURL = new HFM.Forms.Controls.LabelWrapper();
          this.txtFTPUser = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lblFTPUser = new LabelWrapper();
-         this.txtFTPPass = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lblFTPPass = new LabelWrapper();
+         this.lblFTPUser = new HFM.Forms.Controls.LabelWrapper();
+         this.FtpPasswordTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.FtpPasswordLabel = new HFM.Forms.Controls.LabelWrapper();
          this.txtWebUser = new harlam357.Windows.Forms.ValidatingTextBox();
          this.txtWebPass = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lblWebUser = new LabelWrapper();
-         this.lblWebPass = new LabelWrapper();
-         this.grpLocal = new GroupBoxWrapper();
-         this.lblLogFolder = new LabelWrapper();
-         this.grpFTP = new GroupBoxWrapper();
+         this.lblWebUser = new HFM.Forms.Controls.LabelWrapper();
+         this.lblWebPass = new HFM.Forms.Controls.LabelWrapper();
+         this.grpLocal = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.lblLogFolder = new HFM.Forms.Controls.LabelWrapper();
+         this.grpFTP = new HFM.Forms.Controls.GroupBoxWrapper();
          this.pnlFtpMode = new harlam357.Windows.Forms.RadioPanel();
-         this.radioActive = new RadioButtonWrapper();
-         this.radioPassive = new RadioButtonWrapper();
-         this.labelWrapper1 = new LabelWrapper();
-         this.grpHTTP = new GroupBoxWrapper();
+         this.radioActive = new HFM.Forms.Controls.RadioButtonWrapper();
+         this.radioPassive = new HFM.Forms.Controls.RadioButtonWrapper();
+         this.labelWrapper1 = new HFM.Forms.Controls.LabelWrapper();
+         this.grpHTTP = new HFM.Forms.Controls.GroupBoxWrapper();
          this.openLogFolder = new System.Windows.Forms.FolderBrowserDialog();
          this.txtLogFileName = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lblLogFileName = new LabelWrapper();
+         this.lblLogFileName = new HFM.Forms.Controls.LabelWrapper();
          this.txtUnitFileName = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lblUnitFileName = new LabelWrapper();
-         this.lblClientMegahertz = new LabelWrapper();
+         this.lblUnitFileName = new HFM.Forms.Controls.LabelWrapper();
+         this.lblClientMegahertz = new HFM.Forms.Controls.LabelWrapper();
          this.txtClientMegahertz = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lblOffset = new LabelWrapper();
-         this.lblQueueFileName = new LabelWrapper();
+         this.ClientTimeOffsetLabel = new HFM.Forms.Controls.LabelWrapper();
+         this.lblQueueFileName = new HFM.Forms.Controls.LabelWrapper();
          this.txtQueueFileName = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.btnTestConnection = new ButtonWrapper();
+         this.btnTestConnection = new HFM.Forms.Controls.ButtonWrapper();
          this.pnlHostType = new harlam357.Windows.Forms.RadioPanel();
-         this.txtDummy = new TextBoxWrapper();
+         this.DummyTextBox = new HFM.Forms.Controls.TextBoxWrapper();
          this.txtMergeFileName = new harlam357.Windows.Forms.ValidatingTextBox();
-         ((System.ComponentModel.ISupportInitialize)(this.numOffset)).BeginInit();
+         ((System.ComponentModel.ISupportInitialize)(this.ClientTimeOffsetUpDown)).BeginInit();
          this.grpLocal.SuspendLayout();
          this.grpFTP.SuspendLayout();
          this.pnlFtpMode.SuspendLayout();
@@ -110,28 +110,28 @@ namespace HFM.Forms
          this.pnlHostType.SuspendLayout();
          this.SuspendLayout();
          // 
-         // btnOK
+         // DialogOkButton
          // 
-         this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-         this.btnOK.Location = new System.Drawing.Point(212, 350);
-         this.btnOK.Name = "btnOK";
-         this.btnOK.Size = new System.Drawing.Size(81, 25);
-         this.btnOK.TabIndex = 18;
-         this.btnOK.Text = "OK";
-         this.btnOK.UseVisualStyleBackColor = true;
-         this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+         this.DialogOkButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+         this.DialogOkButton.Location = new System.Drawing.Point(212, 350);
+         this.DialogOkButton.Name = "DialogOkButton";
+         this.DialogOkButton.Size = new System.Drawing.Size(81, 25);
+         this.DialogOkButton.TabIndex = 18;
+         this.DialogOkButton.Text = "OK";
+         this.DialogOkButton.UseVisualStyleBackColor = true;
+         this.DialogOkButton.Click += new System.EventHandler(this.btnOK_Click);
          // 
-         // btnCancel
+         // DialogCancelButton
          // 
-         this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-         this.btnCancel.CausesValidation = false;
-         this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-         this.btnCancel.Location = new System.Drawing.Point(304, 350);
-         this.btnCancel.Name = "btnCancel";
-         this.btnCancel.Size = new System.Drawing.Size(81, 25);
-         this.btnCancel.TabIndex = 19;
-         this.btnCancel.Text = "Cancel";
-         this.btnCancel.UseVisualStyleBackColor = true;
+         this.DialogCancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+         this.DialogCancelButton.CausesValidation = false;
+         this.DialogCancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+         this.DialogCancelButton.Location = new System.Drawing.Point(304, 350);
+         this.DialogCancelButton.Name = "DialogCancelButton";
+         this.DialogCancelButton.Size = new System.Drawing.Size(81, 25);
+         this.DialogCancelButton.TabIndex = 19;
+         this.DialogCancelButton.Text = "Cancel";
+         this.DialogCancelButton.UseVisualStyleBackColor = true;
          // 
          // txtLocalPath
          // 
@@ -150,26 +150,28 @@ namespace HFM.Forms
          this.txtLocalPath.TabIndex = 1;
          this.txtLocalPath.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
-         // chkClientVM
+         // ClientNoUtcOffsetCheckBox
          // 
-         this.chkClientVM.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-         this.chkClientVM.AutoSize = true;
-         this.chkClientVM.Location = new System.Drawing.Point(12, 326);
-         this.chkClientVM.Name = "chkClientVM";
-         this.chkClientVM.Size = new System.Drawing.Size(301, 17);
-         this.chkClientVM.TabIndex = 15;
-         this.chkClientVM.Text = "Client is on Virtual Machine (and reports UTC as local time)";
-         this.toolTipHost.SetToolTip(this.chkClientVM, resources.GetString("chkClientVM.ToolTip"));
-         this.chkClientVM.UseVisualStyleBackColor = true;
+         this.ClientNoUtcOffsetCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+         this.ClientNoUtcOffsetCheckBox.AutoSize = true;
+         this.ClientNoUtcOffsetCheckBox.Location = new System.Drawing.Point(12, 326);
+         this.ClientNoUtcOffsetCheckBox.Name = "ClientNoUtcOffsetCheckBox";
+         this.ClientNoUtcOffsetCheckBox.Size = new System.Drawing.Size(144, 17);
+         this.ClientNoUtcOffsetCheckBox.TabIndex = 15;
+         this.ClientNoUtcOffsetCheckBox.Text = "Client has no UTC offset.";
+         this.toolTipHost.SetToolTip(this.ClientNoUtcOffsetCheckBox, "This option only needs checked if the\r\nclient reports local time as UTC.  This\r\ni" +
+        "s typically the case with VMs that cannot\r\nbe configured with a time zone offset" +
+        ".");
+         this.ClientNoUtcOffsetCheckBox.UseVisualStyleBackColor = true;
          // 
-         // numOffset
+         // ClientTimeOffsetUpDown
          // 
-         this.numOffset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-         this.numOffset.Location = new System.Drawing.Point(8, 352);
-         this.numOffset.Name = "numOffset";
-         this.numOffset.Size = new System.Drawing.Size(54, 20);
-         this.numOffset.TabIndex = 16;
-         this.toolTipHost.SetToolTip(this.numOffset, resources.GetString("numOffset.ToolTip"));
+         this.ClientTimeOffsetUpDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+         this.ClientTimeOffsetUpDown.Location = new System.Drawing.Point(8, 352);
+         this.ClientTimeOffsetUpDown.Name = "ClientTimeOffsetUpDown";
+         this.ClientTimeOffsetUpDown.Size = new System.Drawing.Size(54, 20);
+         this.ClientTimeOffsetUpDown.TabIndex = 16;
+         this.toolTipHost.SetToolTip(this.ClientTimeOffsetUpDown, resources.GetString("ClientTimeOffsetUpDown.ToolTip"));
          // 
          // btnBrowseLocal
          // 
@@ -194,33 +196,33 @@ namespace HFM.Forms
          this.radioLocal.Text = "Local Path";
          this.radioLocal.UseVisualStyleBackColor = true;
          // 
-         // txtName
+         // ClientNameTextBox
          // 
-         this.txtName.BackColor = System.Drawing.SystemColors.Window;
-         this.txtName.DoubleBuffered = true;
-         this.txtName.ErrorBackColor = System.Drawing.Color.Yellow;
-         this.txtName.ErrorState = false;
-         this.txtName.ErrorToolTip = this.toolTipHost;
-         this.txtName.ErrorToolTipDuration = 5000;
-         this.txtName.ErrorToolTipPoint = new System.Drawing.Point(230, -20);
-         this.txtName.ErrorToolTipText = "Instance name can contain only letters, numbers,\r\nand basic symbols (+=-_$&^.[])." +
-             " It must be at\r\nleast three characters long and must not begin or\r\nend with a do" +
-             "t (.) or a space.";
-         this.txtName.Location = new System.Drawing.Point(146, 12);
-         this.txtName.MaxLength = 100;
-         this.txtName.Name = "txtName";
-         this.txtName.Size = new System.Drawing.Size(237, 20);
-         this.txtName.TabIndex = 1;
-         this.txtName.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         this.ClientNameTextBox.BackColor = System.Drawing.SystemColors.Window;
+         this.ClientNameTextBox.DoubleBuffered = true;
+         this.ClientNameTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.ClientNameTextBox.ErrorState = false;
+         this.ClientNameTextBox.ErrorToolTip = this.toolTipHost;
+         this.ClientNameTextBox.ErrorToolTipDuration = 5000;
+         this.ClientNameTextBox.ErrorToolTipPoint = new System.Drawing.Point(230, -20);
+         this.ClientNameTextBox.ErrorToolTipText = "Instance name can contain only letters, numbers,\r\nand basic symbols (+=-_$&^.[])." +
+    " It must be at\r\nleast three characters long and must not begin or\r\nend with a do" +
+    "t (.) or a space.";
+         this.ClientNameTextBox.Location = new System.Drawing.Point(146, 12);
+         this.ClientNameTextBox.MaxLength = 100;
+         this.ClientNameTextBox.Name = "ClientNameTextBox";
+         this.ClientNameTextBox.Size = new System.Drawing.Size(237, 20);
+         this.ClientNameTextBox.TabIndex = 1;
+         this.ClientNameTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
-         // lblInstanceName
+         // ClientNameLabel
          // 
-         this.lblInstanceName.AutoSize = true;
-         this.lblInstanceName.Location = new System.Drawing.Point(6, 15);
-         this.lblInstanceName.Name = "lblInstanceName";
-         this.lblInstanceName.Size = new System.Drawing.Size(82, 13);
-         this.lblInstanceName.TabIndex = 0;
-         this.lblInstanceName.Text = "Instance Name:";
+         this.ClientNameLabel.AutoSize = true;
+         this.ClientNameLabel.Location = new System.Drawing.Point(6, 15);
+         this.ClientNameLabel.Name = "ClientNameLabel";
+         this.ClientNameLabel.Size = new System.Drawing.Size(67, 13);
+         this.ClientNameLabel.TabIndex = 0;
+         this.ClientNameLabel.Text = "Client Name:";
          // 
          // radioFTP
          // 
@@ -234,30 +236,30 @@ namespace HFM.Forms
          this.radioFTP.Text = "FTP Server";
          this.radioFTP.UseVisualStyleBackColor = true;
          // 
-         // lblFTPServer
+         // FtpServerNameLabel
          // 
-         this.lblFTPServer.AutoSize = true;
-         this.lblFTPServer.Location = new System.Drawing.Point(11, 18);
-         this.lblFTPServer.Name = "lblFTPServer";
-         this.lblFTPServer.Size = new System.Drawing.Size(116, 13);
-         this.lblFTPServer.TabIndex = 0;
-         this.lblFTPServer.Text = "FTP Server Name / IP:";
+         this.FtpServerNameLabel.AutoSize = true;
+         this.FtpServerNameLabel.Location = new System.Drawing.Point(11, 18);
+         this.FtpServerNameLabel.Name = "FtpServerNameLabel";
+         this.FtpServerNameLabel.Size = new System.Drawing.Size(116, 13);
+         this.FtpServerNameLabel.TabIndex = 0;
+         this.FtpServerNameLabel.Text = "FTP Server Name / IP:";
          // 
-         // txtFTPServer
+         // FtpServerNameTextBox
          // 
-         this.txtFTPServer.BackColor = System.Drawing.SystemColors.Window;
-         this.txtFTPServer.DoubleBuffered = true;
-         this.txtFTPServer.ErrorBackColor = System.Drawing.Color.Yellow;
-         this.txtFTPServer.ErrorState = false;
-         this.txtFTPServer.ErrorToolTip = this.toolTipHost;
-         this.txtFTPServer.ErrorToolTipDuration = 5000;
-         this.txtFTPServer.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-         this.txtFTPServer.ErrorToolTipText = "FTP server must be a valid host name or IP address.";
-         this.txtFTPServer.Location = new System.Drawing.Point(152, 15);
-         this.txtFTPServer.Name = "txtFTPServer";
-         this.txtFTPServer.Size = new System.Drawing.Size(215, 20);
-         this.txtFTPServer.TabIndex = 1;
-         this.txtFTPServer.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         this.FtpServerNameTextBox.BackColor = System.Drawing.SystemColors.Window;
+         this.FtpServerNameTextBox.DoubleBuffered = true;
+         this.FtpServerNameTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.FtpServerNameTextBox.ErrorState = false;
+         this.FtpServerNameTextBox.ErrorToolTip = this.toolTipHost;
+         this.FtpServerNameTextBox.ErrorToolTipDuration = 5000;
+         this.FtpServerNameTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.FtpServerNameTextBox.ErrorToolTipText = "FTP server must be a valid host name or IP address.";
+         this.FtpServerNameTextBox.Location = new System.Drawing.Point(152, 15);
+         this.FtpServerNameTextBox.Name = "FtpServerNameTextBox";
+         this.FtpServerNameTextBox.Size = new System.Drawing.Size(215, 20);
+         this.FtpServerNameTextBox.TabIndex = 1;
+         this.FtpServerNameTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // lblFTPPath
          // 
@@ -278,7 +280,7 @@ namespace HFM.Forms
          this.txtFTPPath.ErrorToolTipDuration = 5000;
          this.txtFTPPath.ErrorToolTipPoint = new System.Drawing.Point(10, -40);
          this.txtFTPPath.ErrorToolTipText = "FTP path must be the full path to the folder\r\ncontaining the log files (including" +
-             " the trailing /).";
+    " the trailing /).";
          this.txtFTPPath.Location = new System.Drawing.Point(152, 42);
          this.txtFTPPath.Name = "txtFTPPath";
          this.txtFTPPath.Size = new System.Drawing.Size(215, 20);
@@ -299,8 +301,8 @@ namespace HFM.Forms
          // 
          // txtWebURL
          // 
-         this.txtWebURL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                     | System.Windows.Forms.AnchorStyles.Right)));
+         this.txtWebURL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
          this.txtWebURL.BackColor = System.Drawing.SystemColors.Window;
          this.txtWebURL.DoubleBuffered = true;
          this.txtWebURL.ErrorBackColor = System.Drawing.Color.Yellow;
@@ -349,36 +351,36 @@ namespace HFM.Forms
          this.lblFTPUser.TabIndex = 4;
          this.lblFTPUser.Text = "FTP Username:";
          // 
-         // txtFTPPass
+         // FtpPasswordTextBox
          // 
-         this.txtFTPPass.BackColor = System.Drawing.SystemColors.Window;
-         this.txtFTPPass.DoubleBuffered = true;
-         this.txtFTPPass.ErrorBackColor = System.Drawing.Color.Yellow;
-         this.txtFTPPass.ErrorState = false;
-         this.txtFTPPass.ErrorToolTip = this.toolTipHost;
-         this.txtFTPPass.ErrorToolTipDuration = 5000;
-         this.txtFTPPass.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-         this.txtFTPPass.ErrorToolTipText = "";
-         this.txtFTPPass.Location = new System.Drawing.Point(152, 96);
-         this.txtFTPPass.Name = "txtFTPPass";
-         this.txtFTPPass.Size = new System.Drawing.Size(215, 20);
-         this.txtFTPPass.TabIndex = 7;
-         this.txtFTPPass.UseSystemPasswordChar = true;
-         this.txtFTPPass.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         this.FtpPasswordTextBox.BackColor = System.Drawing.SystemColors.Window;
+         this.FtpPasswordTextBox.DoubleBuffered = true;
+         this.FtpPasswordTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.FtpPasswordTextBox.ErrorState = false;
+         this.FtpPasswordTextBox.ErrorToolTip = this.toolTipHost;
+         this.FtpPasswordTextBox.ErrorToolTipDuration = 5000;
+         this.FtpPasswordTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.FtpPasswordTextBox.ErrorToolTipText = "";
+         this.FtpPasswordTextBox.Location = new System.Drawing.Point(152, 96);
+         this.FtpPasswordTextBox.Name = "FtpPasswordTextBox";
+         this.FtpPasswordTextBox.Size = new System.Drawing.Size(215, 20);
+         this.FtpPasswordTextBox.TabIndex = 7;
+         this.FtpPasswordTextBox.UseSystemPasswordChar = true;
+         this.FtpPasswordTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
-         // lblFTPPass
+         // FtpPasswordLabel
          // 
-         this.lblFTPPass.AutoSize = true;
-         this.lblFTPPass.Location = new System.Drawing.Point(11, 99);
-         this.lblFTPPass.Name = "lblFTPPass";
-         this.lblFTPPass.Size = new System.Drawing.Size(79, 13);
-         this.lblFTPPass.TabIndex = 6;
-         this.lblFTPPass.Text = "FTP Password:";
+         this.FtpPasswordLabel.AutoSize = true;
+         this.FtpPasswordLabel.Location = new System.Drawing.Point(11, 99);
+         this.FtpPasswordLabel.Name = "FtpPasswordLabel";
+         this.FtpPasswordLabel.Size = new System.Drawing.Size(79, 13);
+         this.FtpPasswordLabel.TabIndex = 6;
+         this.FtpPasswordLabel.Text = "FTP Password:";
          // 
          // txtWebUser
          // 
-         this.txtWebUser.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                     | System.Windows.Forms.AnchorStyles.Right)));
+         this.txtWebUser.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
          this.txtWebUser.BackColor = System.Drawing.SystemColors.Window;
          this.txtWebUser.DoubleBuffered = true;
          this.txtWebUser.ErrorBackColor = System.Drawing.Color.Yellow;
@@ -395,8 +397,8 @@ namespace HFM.Forms
          // 
          // txtWebPass
          // 
-         this.txtWebPass.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                     | System.Windows.Forms.AnchorStyles.Right)));
+         this.txtWebPass.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
          this.txtWebPass.BackColor = System.Drawing.SystemColors.Window;
          this.txtWebPass.DoubleBuffered = true;
          this.txtWebPass.ErrorBackColor = System.Drawing.Color.Yellow;
@@ -456,12 +458,12 @@ namespace HFM.Forms
          // 
          this.grpFTP.Controls.Add(this.pnlFtpMode);
          this.grpFTP.Controls.Add(this.labelWrapper1);
-         this.grpFTP.Controls.Add(this.lblFTPServer);
+         this.grpFTP.Controls.Add(this.FtpServerNameLabel);
          this.grpFTP.Controls.Add(this.lblFTPPath);
-         this.grpFTP.Controls.Add(this.txtFTPPass);
+         this.grpFTP.Controls.Add(this.FtpPasswordTextBox);
          this.grpFTP.Controls.Add(this.lblFTPUser);
-         this.grpFTP.Controls.Add(this.txtFTPServer);
-         this.grpFTP.Controls.Add(this.lblFTPPass);
+         this.grpFTP.Controls.Add(this.FtpServerNameTextBox);
+         this.grpFTP.Controls.Add(this.FtpPasswordLabel);
          this.grpFTP.Controls.Add(this.txtFTPPath);
          this.grpFTP.Controls.Add(this.txtFTPUser);
          this.grpFTP.Location = new System.Drawing.Point(7, 166);
@@ -610,15 +612,15 @@ namespace HFM.Forms
          this.txtClientMegahertz.Text = "1";
          this.txtClientMegahertz.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
-         // lblOffset
+         // ClientTimeOffsetLabel
          // 
-         this.lblOffset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-         this.lblOffset.AutoSize = true;
-         this.lblOffset.Location = new System.Drawing.Point(64, 355);
-         this.lblOffset.Name = "lblOffset";
-         this.lblOffset.Size = new System.Drawing.Size(136, 13);
-         this.lblOffset.TabIndex = 17;
-         this.lblOffset.Text = "Client Time Offset (Minutes)";
+         this.ClientTimeOffsetLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+         this.ClientTimeOffsetLabel.AutoSize = true;
+         this.ClientTimeOffsetLabel.Location = new System.Drawing.Point(64, 355);
+         this.ClientTimeOffsetLabel.Name = "ClientTimeOffsetLabel";
+         this.ClientTimeOffsetLabel.Size = new System.Drawing.Size(136, 13);
+         this.ClientTimeOffsetLabel.TabIndex = 17;
+         this.ClientTimeOffsetLabel.Text = "Client Time Offset (Minutes)";
          // 
          // lblQueueFileName
          // 
@@ -667,12 +669,12 @@ namespace HFM.Forms
          this.pnlHostType.TabIndex = 10;
          this.pnlHostType.ValueMember = null;
          // 
-         // txtDummy
+         // DummyTextBox
          // 
-         this.txtDummy.Location = new System.Drawing.Point(331, 324);
-         this.txtDummy.Name = "txtDummy";
-         this.txtDummy.Size = new System.Drawing.Size(49, 20);
-         this.txtDummy.TabIndex = 20;
+         this.DummyTextBox.Location = new System.Drawing.Point(331, 324);
+         this.DummyTextBox.Name = "DummyTextBox";
+         this.DummyTextBox.Size = new System.Drawing.Size(49, 20);
+         this.DummyTextBox.TabIndex = 20;
          // 
          // txtMergeFileName
          // 
@@ -700,21 +702,21 @@ namespace HFM.Forms
          this.Controls.Add(this.grpLocal);
          this.Controls.Add(this.grpHTTP);
          this.Controls.Add(this.txtMergeFileName);
-         this.Controls.Add(this.txtDummy);
+         this.Controls.Add(this.DummyTextBox);
          this.Controls.Add(this.pnlHostType);
          this.Controls.Add(this.btnTestConnection);
          this.Controls.Add(this.txtQueueFileName);
          this.Controls.Add(this.lblQueueFileName);
-         this.Controls.Add(this.lblOffset);
-         this.Controls.Add(this.numOffset);
+         this.Controls.Add(this.ClientTimeOffsetLabel);
+         this.Controls.Add(this.ClientTimeOffsetUpDown);
          this.Controls.Add(this.txtClientMegahertz);
          this.Controls.Add(this.lblClientMegahertz);
-         this.Controls.Add(this.chkClientVM);
-         this.Controls.Add(this.lblInstanceName);
-         this.Controls.Add(this.btnCancel);
-         this.Controls.Add(this.txtName);
+         this.Controls.Add(this.ClientNoUtcOffsetCheckBox);
+         this.Controls.Add(this.ClientNameLabel);
+         this.Controls.Add(this.DialogCancelButton);
+         this.Controls.Add(this.ClientNameTextBox);
          this.Controls.Add(this.lblLogFileName);
-         this.Controls.Add(this.btnOK);
+         this.Controls.Add(this.DialogOkButton);
          this.Controls.Add(this.lblUnitFileName);
          this.Controls.Add(this.txtLogFileName);
          this.Controls.Add(this.txtUnitFileName);
@@ -726,9 +728,9 @@ namespace HFM.Forms
          this.Name = "LegacyClientSetupDialog";
          this.ShowInTaskbar = false;
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-         this.Text = "Folding Instance Setup";
+         this.Text = "Legacy Client Setup";
          this.Shown += new System.EventHandler(this.LegacyClientSetupDialogShown);
-         ((System.ComponentModel.ISupportInitialize)(this.numOffset)).EndInit();
+         ((System.ComponentModel.ISupportInitialize)(this.ClientTimeOffsetUpDown)).EndInit();
          this.grpLocal.ResumeLayout(false);
          this.grpLocal.PerformLayout();
          this.grpFTP.ResumeLayout(false);
@@ -744,24 +746,24 @@ namespace HFM.Forms
 
       }
 
-      private ButtonWrapper btnOK;
-      private ButtonWrapper btnCancel;
+      private ButtonWrapper DialogOkButton;
+      private ButtonWrapper DialogCancelButton;
       private ButtonWrapper btnBrowseLocal;
-      private LabelWrapper lblInstanceName;
-      private LabelWrapper lblFTPServer;
+      private LabelWrapper ClientNameLabel;
+      private LabelWrapper FtpServerNameLabel;
       private LabelWrapper lblFTPPath;
       private LabelWrapper lblWebURL;
       private LabelWrapper lblFTPUser;
-      private LabelWrapper lblFTPPass;
+      private LabelWrapper FtpPasswordLabel;
       private LabelWrapper lblWebUser;
       private LabelWrapper lblWebPass;
       private ValidatingTextBox txtLocalPath;
-      private ValidatingTextBox txtName;
-      private ValidatingTextBox txtFTPServer;
+      private ValidatingTextBox ClientNameTextBox;
+      private ValidatingTextBox FtpServerNameTextBox;
       private ValidatingTextBox txtFTPPath;
       private ValidatingTextBox txtWebURL;
       private ValidatingTextBox txtFTPUser;
-      private ValidatingTextBox txtFTPPass;
+      private ValidatingTextBox FtpPasswordTextBox;
       private ValidatingTextBox txtWebUser;
       private ValidatingTextBox txtWebPass;
       private GroupBoxWrapper grpLocal;
@@ -775,11 +777,11 @@ namespace HFM.Forms
       private LabelWrapper lblLogFileName;
       private ValidatingTextBox txtUnitFileName;
       private LabelWrapper lblUnitFileName;
-      private CheckBoxWrapper chkClientVM;
+      private CheckBoxWrapper ClientNoUtcOffsetCheckBox;
       private LabelWrapper lblClientMegahertz;
       private ValidatingTextBox txtClientMegahertz;
-      private LabelWrapper lblOffset;
-      private System.Windows.Forms.NumericUpDown numOffset;
+      private LabelWrapper ClientTimeOffsetLabel;
+      private System.Windows.Forms.NumericUpDown ClientTimeOffsetUpDown;
       private RadioButtonWrapper radioLocal;
       private RadioButtonWrapper radioFTP;
       private RadioButtonWrapper radioHTTP;
@@ -792,7 +794,7 @@ namespace HFM.Forms
       private ButtonWrapper btnTestConnection;
       private RadioPanel pnlHostType;
       private RadioPanel pnlFtpMode;
-      private TextBoxWrapper txtDummy;
+      private TextBoxWrapper DummyTextBox;
       private ValidatingTextBox txtMergeFileName;
 
    }

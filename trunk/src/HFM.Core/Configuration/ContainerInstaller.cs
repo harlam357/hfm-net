@@ -40,10 +40,16 @@ namespace HFM.Core.Configuration
             Component.For<ILogger>()
                .ImplementedBy<Logging.Logger>());
 
-         // IDataAggregator - Transient
+         // IFahClientDataAggregator - Transient
          container.Register(
-            Component.For<IDataAggregator>()
-               .ImplementedBy<DataAggregator>()
+            Component.For<IFahClientDataAggregator>()
+               .ImplementedBy<FahClientDataAggregator>()
+               .LifeStyle.Transient);
+
+         // ILegacyDataAggregator - Transient
+         container.Register(
+            Component.For<ILegacyDataAggregator>()
+               .ImplementedBy<LegacyDataAggregator>()
                .LifeStyle.Transient);
 
          // IDataRetriever - Transient
@@ -63,6 +69,12 @@ namespace HFM.Core.Configuration
                .ImplementedBy<NetworkOps>()
                .LifeStyle.Transient);
 
+         // IFahClientInterface - Transient
+         container.Register(
+            Component.For<IFahClientInterface>()
+               .ImplementedBy<FahClientInterfaceAdapter>()
+               .LifeStyle.Transient);
+
          // IStatusLogic - Singleton
          container.Register(
             Component.For<IStatusLogic>()
@@ -77,6 +89,26 @@ namespace HFM.Core.Configuration
          container.Register(
             Component.For<IClientDictionary>()
                .ImplementedBy<ClientDictionary>());
+
+         // IClientFactory - Singleton
+         container.Register(
+            Component.For<IClientFactory>()
+               .ImplementedBy<ClientFactory>());
+
+         // FahClient - Transient
+         container.Register(
+            Component.For<FahClient>()
+            .LifeStyle.Transient);
+
+         // LegacyClient - Transient
+         container.Register(
+            Component.For<LegacyClient>()
+            .LifeStyle.Transient);
+
+         // IClientSettingsManager - Singleton
+         container.Register(
+            Component.For<IClientSettingsManager>()
+               .ImplementedBy<ClientSettingsManager>());
 
          // IQueryParametersCollection - Singleton
          container.Register(
