@@ -700,8 +700,8 @@ namespace HFM.Log.Tests
       public void Client_v7_1()
       {
          // Scan
-         IList<LogLine> logLines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_1\\log.txt"), LogFileType.Version7);
-         IList<ClientRun> clientRuns = LogReader.GetClientRuns(logLines, LogFileType.Version7);
+         IList<LogLine> logLines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_1\\log.txt"), LogFileType.FahClient);
+         IList<ClientRun> clientRuns = LogReader.GetClientRuns(logLines, LogFileType.FahClient);
          
          // Check Run 0 Positions
          var expectedRun = new ClientRun(1);
@@ -775,8 +775,8 @@ namespace HFM.Log.Tests
       public void Client_v7_7()
       {
          // Scan
-         IList<LogLine> logLines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_7\\log.txt"), LogFileType.Version7);
-         IList<ClientRun> clientRuns = LogReader.GetClientRuns(logLines, LogFileType.Version7);
+         IList<LogLine> logLines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_7\\log.txt"), LogFileType.FahClient);
+         IList<ClientRun> clientRuns = LogReader.GetClientRuns(logLines, LogFileType.FahClient);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(1);
@@ -834,8 +834,8 @@ namespace HFM.Log.Tests
       public void Client_v7_8()
       {
          // Scan
-         IList<LogLine> logLines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_8\\log.txt"), LogFileType.Version7);
-         IList<ClientRun> clientRuns = LogReader.GetClientRuns(logLines, LogFileType.Version7);
+         IList<LogLine> logLines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_8\\log.txt"), LogFileType.FahClient);
+         IList<ClientRun> clientRuns = LogReader.GetClientRuns(logLines, LogFileType.FahClient);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(1);

@@ -31,7 +31,7 @@ namespace HFM.Log
    public enum LogFileType
    {
       Legacy,
-      Version7
+      FahClient
    }
 
    /// <summary>
@@ -281,7 +281,7 @@ namespace HFM.Log
       /// Determine log line types and data.
       /// </summary>
       /// <param name="logFilePath">Path to the log file.</param>
-      /// <param name="logFileType">File Type - Legacy or Version 7</param>
+      /// <param name="logFileType">File Type - Legacy or FahClient</param>
       /// <exception cref="ArgumentNullException">Throws if logFilePath is null.</exception>
       /// <exception cref="ArgumentException">Throws if logFilePath is empty.</exception>
       public static List<LogLine> GetLogLines(string logFilePath, LogFileType logFileType)
@@ -310,7 +310,7 @@ namespace HFM.Log
       /// Determine log line types and data.
       /// </summary>
       /// <param name="logLines">List of log lines.</param>
-      /// <param name="logFileType">File Type - Legacy or Version 7</param>
+      /// <param name="logFileType">File Type - Legacy or FahClient</param>
       /// <exception cref="ArgumentNullException">Throws if logLines is null.</exception>
       public static List<LogLine> GetLogLines(IList<string> logLines, LogFileType logFileType)
       {
@@ -337,7 +337,7 @@ namespace HFM.Log
       /// Scan the log lines to find client run data and work unit start positions.
       /// </summary>
       /// <param name="logLines">Log lines to scan.</param>
-      /// <param name="logFileType">File Type - Legacy or Version 7</param>
+      /// <param name="logFileType">File Type - Legacy or FahClient</param>
       /// <exception cref="ArgumentNullException">Throws if logLines is null.</exception>
       public static List<ClientRun> GetClientRuns(IList<LogLine> logLines, LogFileType logFileType)
       {
@@ -406,8 +406,6 @@ namespace HFM.Log
       }
 
       #endregion
-
-      
 
       #region LogFileType
 

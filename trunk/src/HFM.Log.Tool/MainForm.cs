@@ -127,7 +127,7 @@ namespace HFM.Log.Tool
 
       private LogFileType GetLogFileType()
       {
-         return LegacyRadioButton.Checked ? LogFileType.Legacy : LogFileType.Version7;
+         return LegacyRadioButton.Checked ? LogFileType.Legacy : LogFileType.FahClient;
       }
 
       private void PopulateClientRunsInTree(IList<ClientRun> clientRunList)
