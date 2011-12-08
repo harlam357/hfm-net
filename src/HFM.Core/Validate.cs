@@ -65,7 +65,7 @@ namespace HFM.Core
       /// <summary>
       /// Clean Instance Name
       /// </summary>
-      public static string CleanInstanceName(string name)
+      public static string CleanClientName(string name)
       {
          if (name == null) return null;
 

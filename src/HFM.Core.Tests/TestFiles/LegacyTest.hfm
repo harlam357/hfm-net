@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Hosts>
+  <Instance Name="nVidia GPU - GTX260-216 - 2">
+    <FAHLogFile>FAHlog.txt</FAHLogFile>
+    <UnitInfoFile>unitinfo.txt</UnitInfoFile>
+    <QueueFile>queue.dat</QueueFile>
+    <ClientMHz>1458</ClientMHz>
+    <ClientVM>False</ClientVM>
+    <ClientOffset>0</ClientOffset>
+    <HostType>PathInstance</HostType>
+    <Path>\\q9550\Folding@home-gpu\</Path>
+    <Server>
+    </Server>
+    <Username>
+    </Username>
+    <Password>
+    </Password>
+    <PassiveFtpMode>Passive</PassiveFtpMode>
+  </Instance>
+  <Instance Name="nVidia GPU - GTX285 - 1">
+    <FAHLogFile>FAHLog.txt</FAHLogFile>
+    <UnitInfoFile>UnitInfo.txt</UnitInfoFile>
+    <QueueFile>queue.dat</QueueFile>
+    <ClientMHz>1548</ClientMHz>
+    <ClientVM>False</ClientVM>
+    <ClientOffset>0</ClientOffset>
+    <HostType>PathInstance</HostType>
+    <Path>\\win7i7\Users\AppData\Roaming\Folding@home-gpu\</Path>
+    <Server>
+    </Server>
+    <Username>
+    </Username>
+    <Password>
+    </Password>
+    <PassiveFtpMode>Passive</PassiveFtpMode>
+  </Instance>
+  <Instance Name="nVidia GPU - GTX285 - 2">
+    <FAHLogFile>FAHLog.txt</FAHLogFile>
+    <UnitInfoFile>UnitInfo.txt</UnitInfoFile>
+    <QueueFile>queue.dat</QueueFile>
+    <ClientMHz>1548</ClientMHz>
+    <ClientVM>False</ClientVM>
+    <ClientOffset>0</ClientOffset>
+    <HostType>PathInstance</HostType>
+    <Path>\\win7i7\Users\AppData\Roaming\Folding@home-gpu1\</Path>
+    <Server>
+    </Server>
+    <Username>
+    </Username>
+    <Password>
+    </Password>
+    <PassiveFtpMode>Passive</PassiveFtpMode>
+  </Instance>
+</Hosts>
