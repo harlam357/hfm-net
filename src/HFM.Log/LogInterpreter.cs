@@ -46,8 +46,8 @@ namespace HFM.Log
       public IList<LogLine> GetLogLinesForQueueIndex(int queueIndex, IProjectInfo projectInfo)
       {
          // walk backwards through the ClientRunList and then backward
-         // through the UnitQueueIndex list.  Find the first (really last
-         // because we're itterating in reverse) UnitQueueIndex that matches
+         // through the UnitIndexes list.  Find the first (really last
+         // because we're itterating in reverse) UnitIndex that matches
          // the given queueIndex.
          for (int i = ClientRunList.Count - 1; i >= 0; i--)
          {
