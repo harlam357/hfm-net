@@ -19,28 +19,55 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
+
+using HFM.Core.DataTypes;
 
 namespace HFM.Core
 {
    public interface IClientDictionary : IDictionary<string, IClient>
    {
       event EventHandler DictionaryChanged;
+      event EventHandler<ClientDataDirtyEventArgs> ClientDataDirty;
+      event EventHandler ClientRemoved;
+      event EventHandler<ClientEditedEventArgs> ClientEdited;
+      event EventHandler ClientDataInvalidated;
 
-      bool IsDirty { get; }
+      bool IsDirty { get; set; }
 
       /// <summary>
-      /// Clears the dictionary and loads a collection of IClient objects.
+      /// Clears the dictionary and loads a collection of ClientSettings objects.
       /// </summary>
       /// <remarks>This method will clear the dictionary, per implementaiton of the Clear() method, and raise the DictionaryChanged event if items were loaded.</remarks>
-      /// <param name="clients"><see cref="T:System.Collections.Generic.IEnumerable`1"/> collection of IClient objects.</param>
-      /// <exception cref="T:System.ArgumentNullException"><paramref name="clients"/> is null.</exception>
-      void Load(IEnumerable<IClient> clients);
+      /// <param name="settingsCollection"><see cref="T:System.Collections.Generic.IEnumerable`1"/> collection of ClientSettings objects.</param>
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="settingsCollection"/> is null.</exception>
+      void Load(IEnumerable<ClientSettings> settingsCollection);
 
       /// <summary>
       /// Gets an enumerable collection of all slots.
       /// </summary>
       IEnumerable<SlotModel> Slots { get; }
+
+      /// <summary>
+      /// Adds an <see cref="T:HFM.Core.IClient"/> element with the provided key and value to the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+      /// </summary>
+      /// <remarks>Sets the IsDirty property to true and raises the DictionaryChanged event.</remarks>
+      /// <param name="settings">The <see cref="T:HFM.Core.DataTypes.ClientSettings"/> object to use as the value of the element to add.</param>
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="settings"/> is null.</exception>
+      /// <exception cref="T:System.ArgumentException">An element with the same key already exists in the <see cref="T:System.Collections.Generic.IDictionary`2"/> or the settings are not valid.</exception>
+      void Add(ClientSettings settings);
+
+      /// <summary>
+      /// Edits an <see cref="T:HFM.Core.IClient"/> element with the provided key and in the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+      /// </summary>
+      /// <remarks>Sets the IsDirty property to true and raises the DictionaryChanged event.</remarks>
+      /// <param name="key">The string to use as the key of the element to edit.</param>
+      /// <param name="settings">The <see cref="T:HFM.Core.DataTypes.ClientSettings"/> object to use as the value of the element to edit.</param>
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="key"/> or <paramref name="settings"/> is null.</exception>
+      /// <exception cref="T:System.ArgumentException">If the settings name changed, an element with the new settings name already exists in the <see cref="T:System.Collections.Generic.IDictionary`2"/>.</exception>
+      void Edit(string key, ClientSettings settings);
 
       #region IDictionary<string,IClient> Members
 
@@ -84,6 +111,8 @@ namespace HFM.Core
 
    public sealed class ClientDictionary : IClientDictionary
    {
+      #region Events
+
       public event EventHandler DictionaryChanged;
 
       private void OnDictionaryChanged(EventArgs e)
@@ -94,40 +123,180 @@ namespace HFM.Core
          }
       }
 
-      public bool IsDirty { get; private set; }
+      public event EventHandler<ClientDataDirtyEventArgs> ClientDataDirty;
 
-      private readonly Dictionary<string, IClient> _clientDictionary;
-
-      public ClientDictionary()
+      private void OnClientDataDirty(ClientDataDirtyEventArgs e)
       {
-         _clientDictionary = new Dictionary<string, IClient>();
+         if (ClientDataDirty != null)
+         {
+            ClientDataDirty(this, e);
+         }
       }
 
-      public void Load(IEnumerable<IClient> clients)
+      public event EventHandler ClientRemoved;
+
+      private void OnClientRemoved(EventArgs e)
       {
-         if (clients == null) throw new ArgumentNullException("clients");
+         if (ClientRemoved != null)
+         {
+            ClientRemoved(this, e);
+         }
+      }
+
+      public event EventHandler<ClientEditedEventArgs> ClientEdited;
+
+      private void OnClientEdited(ClientEditedEventArgs e)
+      {
+         if (ClientEdited != null)
+         {
+            ClientEdited(this, e);
+         }
+      }
+
+      public event EventHandler ClientDataInvalidated;
+
+      private void OnClientDataInvalidated(EventArgs e)
+      {
+         if (ClientDataInvalidated != null)
+         {
+            ClientDataInvalidated(this, e);
+         }   
+      }
+
+      #endregion
+
+      #region Properties
+
+      public bool IsDirty { get; set; }
+
+      #endregion
+
+      private readonly IClientFactory _factory;
+      private readonly Dictionary<string, IClient> _clientDictionary;
+      private readonly ReaderWriterLockSlim _cacheLock;
+
+      public ClientDictionary(IClientFactory factory)
+      {
+         _factory = factory;
+         _clientDictionary = new Dictionary<string, IClient>();
+         _cacheLock = new ReaderWriterLockSlim();
+      }
+
+      public void Load(IEnumerable<ClientSettings> settingsCollection)
+      {
+         if (settingsCollection == null) throw new ArgumentNullException("settingsCollection");
 
          Clear();
 
          int added = 0;
-         // add each instance to the collection
-         foreach (var instance in clients)
+         // don't enter write lock before Clear(), would result in deadlock
+         _cacheLock.EnterWriteLock();
+         try
          {
-            if (instance != null)
+            // add each instance to the collection
+            foreach (var client in _factory.CreateCollection(settingsCollection))
             {
-               _clientDictionary.Add(instance.Settings.Name, instance);
-               added++;
+               if (client != null)
+               {
+                  _clientDictionary.Add(client.Settings.Name, client);
+                  added++;
+               }
             }
          }
+         finally
+         {
+            _cacheLock.ExitWriteLock();
+         }
+
          if (added != 0)
          {
             OnDictionaryChanged(EventArgs.Empty);
+            OnClientDataDirty(new ClientDataDirtyEventArgs());
          }
       }
 
       public IEnumerable<SlotModel> Slots
       {
-         get { return Values.SelectMany(client => client.Slots).Select(kvp => kvp.Value); }
+         // cacheLock handled by Values property
+         get { return Values.SelectMany(client => client.Slots); }
+      }
+
+      public void Add(ClientSettings settings)
+      {
+         if (settings == null) throw new ArgumentNullException("settings");
+
+         // cacheLock handled in Add(string, IClient)
+         Add(settings.Name, _factory.Create(settings));
+      }
+
+      public void Edit(string key, ClientSettings settings)
+      {
+         if (key == null) throw new ArgumentNullException("key");
+         if (settings == null) throw new ArgumentNullException("settings");
+
+         // Edit is only called after a client setup dialog
+         // has returned.  At this point the client name
+         // has already been validated.  Just make sure we
+         // have a value here.
+         Debug.Assert(!String.IsNullOrEmpty(settings.Name));
+
+         ClientEditedEventArgs e;
+
+         _cacheLock.EnterWriteLock();
+         try
+         {
+            bool keyChanged = key != settings.Name;
+            if (keyChanged && _clientDictionary.ContainsKey(settings.Name))
+            {
+               // would like to eventually use the exact same
+               // exception message that would be used by
+               // the inner dictionary object.
+               throw new ArgumentException("An element with the same key already exists.");
+            }
+         
+            IClient client = _clientDictionary[key];
+            string existingName = client.Settings.Name;
+            string existingPath = client.Settings.Path;
+            string existingFahClientPath = client.Settings.FahClientPath();
+            
+            // update the settings
+            client.Settings = settings;
+            // if the key changed the client object
+            // needs removed and readded with the 
+            // correct key
+            if (keyChanged)
+            {
+               //client.ClearEventSubscriptions();
+               _clientDictionary.Remove(key);
+
+               //client.SlotsChanged += delegate { OnClientDataInvalidated(EventArgs.Empty); };
+               //client.RetrievalFinished += delegate { OnClientDataInvalidated(EventArgs.Empty); };
+               _clientDictionary.Add(settings.Name, client);
+            }
+            
+            if (settings.IsFahClient())
+            {
+               e = new ClientEditedEventArgs(existingName, settings.Name, existingFahClientPath, settings.FahClientPath());
+            }
+            else if (settings.IsLegacy())
+            {
+               e = new ClientEditedEventArgs(existingName, settings.Name, existingPath, settings.Path);
+            }
+            else
+            {
+               // no External support yet
+               throw new InvalidOperationException("Client type is not supported.");
+            }
+         }
+         finally
+         {
+            _cacheLock.ExitWriteLock();
+         }
+
+         IsDirty = true;
+         OnDictionaryChanged(EventArgs.Empty);
+         OnClientEdited(e);
+         OnClientDataDirty(new ClientDataDirtyEventArgs(settings.Name));
       }
 
       #region IDictionary<string,IClient> Members
@@ -137,31 +306,79 @@ namespace HFM.Core
          if (key == null) throw new ArgumentNullException("key");
          if (value == null) throw new ArgumentNullException("value");
 
-         _clientDictionary.Add(key, value);
+         _cacheLock.EnterWriteLock();
+         try
+         {
+            value.SlotsChanged += delegate { OnClientDataInvalidated(EventArgs.Empty); };
+            value.RetrievalFinished += delegate { OnClientDataInvalidated(EventArgs.Empty); };
+            _clientDictionary.Add(key, value);
+         }
+         finally
+         {
+            _cacheLock.ExitWriteLock();
+         }
 
          IsDirty = true;
          OnDictionaryChanged(EventArgs.Empty);
+         OnClientDataDirty(new ClientDataDirtyEventArgs(key));
       }
 
       [CoverageExclude]
       public bool ContainsKey(string key)
       {
-         return _clientDictionary.ContainsKey(key);
+         _cacheLock.EnterReadLock();
+         try
+         {
+            return _clientDictionary.ContainsKey(key);
+         }
+         finally
+         {
+            _cacheLock.ExitReadLock();
+         }
       }
 
       public ICollection<string> Keys
       {
          [CoverageExclude]
-         get { return _clientDictionary.Keys; }
+         get
+         {
+            _cacheLock.EnterReadLock();
+            try
+            {
+               return _clientDictionary.Keys;
+            }
+            finally
+            {
+               _cacheLock.ExitReadLock();
+            }
+         }
       }
 
       public bool Remove(string key)
       {
-         bool result = _clientDictionary.Remove(key);
+         if (key == null) throw new ArgumentNullException("key");
+
+         bool result;
+
+         _cacheLock.EnterWriteLock();
+         try
+         {
+            if (_clientDictionary.ContainsKey(key))
+            {
+               _clientDictionary[key].ClearEventSubscriptions();
+            }
+            result = _clientDictionary.Remove(key);
+         }
+         finally
+         {
+            _cacheLock.ExitWriteLock();
+         }
+
          if (result)
          {
             IsDirty = true;
-            OnDictionaryChanged(EventArgs.Empty);   
+            OnDictionaryChanged(EventArgs.Empty);
+            OnClientRemoved(EventArgs.Empty);
          }
          return result;
       }
@@ -169,21 +386,51 @@ namespace HFM.Core
       [CoverageExclude]
       public bool TryGetValue(string key, out IClient value)
       {
-         return _clientDictionary.TryGetValue(key, out value);
+         _cacheLock.EnterReadLock();
+         try
+         {
+            return _clientDictionary.TryGetValue(key, out value);
+         }
+         finally
+         {
+            _cacheLock.ExitReadLock();
+         }
       }
 
       public ICollection<IClient> Values
       {
          [CoverageExclude]
-         get { return _clientDictionary.Values; }
+         get
+         {
+            _cacheLock.EnterReadLock();
+            try
+            {
+               return _clientDictionary.Values;
+            }
+            finally
+            {
+               _cacheLock.ExitReadLock();
+            }
+         }
       }
 
       public IClient this[string key]
       {
          [CoverageExclude]
-         get { return _clientDictionary[key]; }
+         get
+         {
+            _cacheLock.EnterReadLock();
+            try
+            {
+               return _clientDictionary[key];
+            }
+            finally
+            {
+               _cacheLock.ExitReadLock();
+            }
+         }
          [CoverageExclude]
-         set { _clientDictionary[key] = value; }
+         set { throw new NotImplementedException(); }
       }
 
       #endregion
@@ -198,14 +445,28 @@ namespace HFM.Core
 
       public void Clear()
       {
-         bool hasValues = Count != 0;
+         bool hasValues;
 
-         _clientDictionary.Clear();
+         _cacheLock.EnterWriteLock();
+         try
+         {
+            hasValues = _clientDictionary.Count != 0;
+            // clear subscriptions
+            foreach (var client in _clientDictionary.Values)
+            {
+               client.ClearEventSubscriptions();
+            }
+            _clientDictionary.Clear();
+         }
+         finally
+         {
+            _cacheLock.ExitWriteLock();
+         }
 
          IsDirty = false;
          if (hasValues)
          {
-            OnDictionaryChanged(EventArgs.Empty);   
+            OnDictionaryChanged(EventArgs.Empty);
          }
       }
 
@@ -224,7 +485,18 @@ namespace HFM.Core
       public int Count
       {
          [CoverageExclude]
-         get { return _clientDictionary.Count; }
+         get
+         {
+            _cacheLock.EnterReadLock();
+            try
+            {
+               return _clientDictionary.Count;
+            }
+            finally
+            {
+               _cacheLock.ExitReadLock();
+            }
+         }
       }
 
       bool ICollection<KeyValuePair<string,IClient>>.IsReadOnly
@@ -246,7 +518,15 @@ namespace HFM.Core
       [CoverageExclude]
       public IEnumerator<KeyValuePair<string, IClient>> GetEnumerator()
       {
-         return _clientDictionary.GetEnumerator();
+         _cacheLock.EnterReadLock();
+         try
+         {
+            return _clientDictionary.GetEnumerator();
+         }
+         finally 
+         {
+            _cacheLock.ExitReadLock();
+         }
       }
 
       #endregion
@@ -260,5 +540,61 @@ namespace HFM.Core
       }
 
       #endregion
+   }
+
+   public sealed class ClientDataDirtyEventArgs : EventArgs
+   {
+      private readonly string _name;
+
+      public string Name
+      {
+         get { return _name; }
+      }
+
+      public ClientDataDirtyEventArgs()
+      {
+         _name = null;
+      }
+
+      public ClientDataDirtyEventArgs(string name)
+      {
+         _name = name;
+      }
+   }
+
+   public sealed class ClientEditedEventArgs : EventArgs
+   {
+      private readonly string _previousName;
+      public string PreviousName
+      {
+         get { return _previousName; }
+      }
+
+      private readonly string _newName;
+      public string NewName
+      {
+         get { return _newName; }
+      }
+
+      private readonly string _previousPath;
+      public string PreviousPath
+      {
+         get { return _previousPath; }
+      }
+
+      private readonly string _newPath;
+      public string NewPath
+      {
+         get { return _newPath; }
+      }
+
+      public ClientEditedEventArgs(string previousName, string newName,
+                                   string previousPath, string newPath)
+      {
+         _previousName = previousName;
+         _newName = newName;
+         _previousPath = previousPath;
+         _newPath = newPath;
+      }
    }
 }
