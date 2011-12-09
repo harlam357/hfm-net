@@ -47,7 +47,7 @@ namespace HFM.Core.Logging
       protected override void Log(LoggerLevel loggerLevel, string loggerName, string message, Exception exception)
       {
          string formattedMessage = FormatMessage(loggerLevel, message);
-         if (loggerLevel >= Level)
+         if (loggerLevel <= Level)
          {
             OnTextMessage(new TextMessageEventArgs(formattedMessage));
 

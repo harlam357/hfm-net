@@ -366,6 +366,7 @@ namespace HFM.Core
             if (_clientDictionary.ContainsKey(key))
             {
                _clientDictionary[key].ClearEventSubscriptions();
+               _clientDictionary[key].Abort();
             }
             result = _clientDictionary.Remove(key);
          }

@@ -341,6 +341,7 @@ namespace HFM.Core.Tests
          var client = MockRepository.GenerateMock<IClient>();
          _clientDictionary.Add("test", client);
          client.Expect(x => x.ClearEventSubscriptions());
+         client.Expect(x => x.Abort());
          // Act
          _clientDictionary.Remove("test");
          // Assert
