@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Globalization;
 using System.Runtime.Serialization;
 
 namespace HFM.Core.DataTypes
@@ -132,6 +133,13 @@ namespace HFM.Core.DataTypes
       public static bool operator > (UnitFrame uf1, UnitFrame uf2)
       {
          return uf2 == null ? uf1 != null : uf2.CompareTo(uf1) < 0;
+      }
+
+      public override string ToString()
+      {
+         return String.Format(CultureInfo.CurrentCulture, 
+            "Frame ID: {0} / Raw Complete: {1} / Raw Total: {2} / Time Stamp: {3} / Duration: {4}",
+            FrameID, RawFramesComplete, RawFramesTotal, TimeOfFrame, FrameDuration);
       }
    }
 }
