@@ -20,7 +20,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
+
+using Castle.Core.Logging;
 
 using HFM.Core;
 
@@ -43,7 +44,7 @@ namespace HFM.Forms.Models
          DecimalPlaces = prefs.Get<int>(Preference.DecimalPlaces);
          CalculateBonus = prefs.Get<bool>(Preference.CalculateBonus);
          EtaDate = prefs.Get<bool>(Preference.EtaDate);
-         MessageLevel = (TraceLevel)prefs.Get<int>(Preference.MessageLevel);
+         MessageLevel = (LoggerLevel)prefs.Get<int>(Preference.MessageLevel);
          FormShowStyle = prefs.Get<FormShowStyleType>(Preference.FormShowStyle);
       }
 
@@ -187,9 +188,9 @@ namespace HFM.Forms.Models
 
       #region Debug Message Level
 
-      private TraceLevel _messageLevel;
+      private LoggerLevel _messageLevel;
 
-      public TraceLevel MessageLevel
+      public LoggerLevel MessageLevel
       {
          get { return _messageLevel; }
          set
@@ -263,15 +264,17 @@ namespace HFM.Forms.Models
             var list = new List<ListItem>
                        {
                           new ListItem
-                          { DisplayMember = TraceLevel.Off.ToString(), ValueMember = TraceLevel.Off },
+                          { DisplayMember = LoggerLevel.Off.ToString(), ValueMember = LoggerLevel.Off },
                           new ListItem
-                          { DisplayMember = TraceLevel.Error.ToString(), ValueMember = TraceLevel.Error },
+                          { DisplayMember = LoggerLevel.Fatal.ToString(), ValueMember = LoggerLevel.Fatal },
                           new ListItem
-                          { DisplayMember = TraceLevel.Warning.ToString(), ValueMember = TraceLevel.Warning },
+                          { DisplayMember = LoggerLevel.Error.ToString(), ValueMember = LoggerLevel.Error },
                           new ListItem
-                          { DisplayMember = TraceLevel.Info.ToString(), ValueMember = TraceLevel.Info },
+                          { DisplayMember = LoggerLevel.Warn.ToString(), ValueMember = LoggerLevel.Warn },
                           new ListItem
-                          { DisplayMember = TraceLevel.Verbose.ToString(), ValueMember = TraceLevel.Verbose }
+                          { DisplayMember = LoggerLevel.Info.ToString(), ValueMember = LoggerLevel.Info },
+                          new ListItem
+                          { DisplayMember = LoggerLevel.Debug.ToString(), ValueMember = LoggerLevel.Debug }
                        };
             return list.AsReadOnly();
          }

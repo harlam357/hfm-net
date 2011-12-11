@@ -7,8 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		HFM.msbuild = HFM.msbuild
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Instances.Tests", "HFM.Instances.Tests\HFM.Instances.Tests.csproj", "{C3D60E2F-E00D-485B-8B78-F285132AA229}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Proteins.Tests", "HFM.Proteins.Tests\HFM.Proteins.Tests.csproj", "{04744056-F956-4E20-B229-28E2FC154509}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Log.Tests", "HFM.Log.Tests\HFM.Log.Tests.csproj", "{9EA57D40-ECE3-4F75-AD89-72960B847F1F}"
@@ -16,8 +14,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Queue.Tests", "HFM.Queue.Tests\HFM.Queue.Tests.csproj", "{E46CE8E6-13F3-4B74-A95E-2C29A5CDBE95}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM", "HFM\HFM.csproj", "{A032015C-AA3F-4610-A107-46FB89E41485}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Instances", "HFM.Instances\HFM.Instances.csproj", "{B8614309-B90A-4B86-97FF-3A9E64B9658F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Log", "HFM.Log\HFM.Log.csproj", "{2C3EA8A1-D17F-419D-A76A-970550FB5A09}"
 EndProject
@@ -58,9 +54,6 @@ Global
 		ScriptedRelease|Any CPU = ScriptedRelease|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C3D60E2F-E00D-485B-8B78-F285132AA229}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C3D60E2F-E00D-485B-8B78-F285132AA229}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C3D60E2F-E00D-485B-8B78-F285132AA229}.ScriptedRelease|Any CPU.ActiveCfg = Release|Any CPU
 		{04744056-F956-4E20-B229-28E2FC154509}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{04744056-F956-4E20-B229-28E2FC154509}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04744056-F956-4E20-B229-28E2FC154509}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -85,9 +78,6 @@ Global
 		{A032015C-AA3F-4610-A107-46FB89E41485}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A032015C-AA3F-4610-A107-46FB89E41485}.ScriptedRelease|Any CPU.ActiveCfg = ScriptedRelease|Any CPU
 		{A032015C-AA3F-4610-A107-46FB89E41485}.ScriptedRelease|Any CPU.Build.0 = ScriptedRelease|Any CPU
-		{B8614309-B90A-4B86-97FF-3A9E64B9658F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B8614309-B90A-4B86-97FF-3A9E64B9658F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B8614309-B90A-4B86-97FF-3A9E64B9658F}.ScriptedRelease|Any CPU.ActiveCfg = Release|Any CPU
 		{2C3EA8A1-D17F-419D-A76A-970550FB5A09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2C3EA8A1-D17F-419D-A76A-970550FB5A09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C3EA8A1-D17F-419D-A76A-970550FB5A09}.Release|Any CPU.ActiveCfg = Release|Any CPU

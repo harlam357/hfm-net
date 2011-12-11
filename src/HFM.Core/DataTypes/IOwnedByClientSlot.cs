@@ -24,12 +24,12 @@ namespace HFM.Core.DataTypes
       /// <summary>
       /// Name of the Client Instance that owns this Object
       /// </summary>
-      string OwningInstanceName { get; }
+      string OwningSlotName { get; }
 
       /// <summary>
       /// Path of the Client Instance that owns this Object
       /// </summary>
-      string OwningInstancePath { get; }
+      string OwningSlotPath { get; }
 
       /// <summary>
       /// Project ID

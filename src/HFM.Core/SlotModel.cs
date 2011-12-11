@@ -89,11 +89,21 @@ namespace HFM.Core
 
       public bool Owns(IOwnedByClientSlot value)
       {
-         // External Instances don't own anything local
-         if (value.OwningInstanceName.Equals(Settings.Name) &&
-             Paths.Equal(value.OwningInstancePath, Settings.Path))
+         if (Settings.IsFahClient())
          {
-            return true;
+            if (value.OwningSlotName.Equals(Name) &&
+                value.OwningSlotPath.Equals(Settings.DataPath()))
+            {
+               return true;
+            }
+         }
+         else if (Settings.IsLegacy())
+         {
+            if (value.OwningSlotName.Equals(Name) &&
+                Paths.Equal(value.OwningSlotPath, Settings.DataPath()))
+            {
+               return true;
+            }   
          }
 
          return false;
@@ -115,8 +125,8 @@ namespace HFM.Core
       //   if (protein == null) throw new ArgumentNullException("protein");
       //   if (_unitInfo == null) throw new InvalidOperationException();
       //   // update the data
-      //   _unitInfo.OwningInstanceName = Settings.Name;
-      //   _unitInfo.OwningInstancePath = Settings.Path;
+      //   _unitInfo.OwningSlotName = Settings.Name;
+      //   _unitInfo.OwningSlotPath = Settings.Path;
       //   _unitInfo.SlotType = UnitInfo.DetermineSlotType(protein.Core, _unitInfo.CoreID);
       //   // build unit info logic
       //   var unitInfoLogic = ServiceLocator.Resolve<IUnitInfoLogic>();
@@ -137,8 +147,9 @@ namespace HFM.Core
 
       public SlotModel()
       {
-         //_unitInfoLogic = ServiceLocator.Resolve<UnitInfoLogic>();
+         _unitInfoLogic = new UnitInfoLogic();
 
+         Initialize();
          TimeOfLastUnitStart = DateTime.MinValue;
          TimeOfLastFrameProgress = DateTime.MinValue;
       }

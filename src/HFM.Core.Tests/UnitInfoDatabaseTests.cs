@@ -49,8 +49,8 @@ namespace HFM.Core.Tests
          unitInfo.ProjectRun = 1;
          unitInfo.ProjectClone = 2;
          unitInfo.ProjectGen = 3;
-         unitInfo.OwningInstanceName = "Owner";
-         unitInfo.OwningInstancePath = "Path";
+         unitInfo.OwningSlotName = "Owner";
+         unitInfo.OwningSlotPath = "Path";
          unitInfo.FoldingID = "harlam357";
          unitInfo.Team = 32;
          unitInfo.CoreVersion = "2.09";
@@ -108,8 +108,8 @@ namespace HFM.Core.Tests
          unitInfo.ProjectRun = 4;
          unitInfo.ProjectClone = 5;
          unitInfo.ProjectGen = 6;
-         unitInfo.OwningInstanceName = "Owner's";
-         unitInfo.OwningInstancePath = "The Path's";
+         unitInfo.OwningSlotName = "Owner's";
+         unitInfo.OwningSlotPath = "The Path's";
          unitInfo.FoldingID = "harlam357's";
          unitInfo.Team = 100;
          unitInfo.CoreVersion = "2.27";
@@ -167,8 +167,8 @@ namespace HFM.Core.Tests
          unitInfo.ProjectRun = 2;
          unitInfo.ProjectClone = 3;
          unitInfo.ProjectGen = 4;
-         unitInfo.OwningInstanceName = "Owner";
-         unitInfo.OwningInstancePath = "Path";
+         unitInfo.OwningSlotName = "Owner";
+         unitInfo.OwningSlotPath = "Path";
          unitInfo.FoldingID = "harlam357";
          unitInfo.Team = 32;
          unitInfo.CoreVersion = "2.09";

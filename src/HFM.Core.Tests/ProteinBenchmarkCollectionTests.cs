@@ -40,8 +40,8 @@ namespace HFM.Core.Tests
          var container = new ProteinBenchmarkCollection(database);
 
          var unitInfo1 = new UnitInfo();
-         unitInfo1.OwningInstanceName = "Owner";
-         unitInfo1.OwningInstancePath = "Path";
+         unitInfo1.OwningSlotName = "Owner";
+         unitInfo1.OwningSlotPath = "Path";
          unitInfo1.ProjectID = 2669;
          unitInfo1.ProjectRun = 1;
          unitInfo1.ProjectClone = 2;
@@ -58,8 +58,8 @@ namespace HFM.Core.Tests
          var unitInfoLogic1 = new UnitInfoLogic(container) { CurrentProtein = new Protein(), UnitInfoData = unitInfo1Clone };
 
          var unitInfo2 = new UnitInfo();
-         unitInfo2.OwningInstanceName = "Owner";
-         unitInfo2.OwningInstancePath = "Path";
+         unitInfo2.OwningSlotName = "Owner";
+         unitInfo2.OwningSlotPath = "Path";
          unitInfo2.ProjectID = 2669;
          unitInfo2.ProjectRun = 2;
          unitInfo2.ProjectClone = 3;
@@ -68,8 +68,8 @@ namespace HFM.Core.Tests
          var unitInfoLogic2 = new UnitInfoLogic(container) { CurrentProtein = new Protein(), UnitInfoData = unitInfo2 };
 
          var unitInfo3 = new UnitInfo();
-         unitInfo3.OwningInstanceName = "Owner";
-         unitInfo3.OwningInstancePath = "Path";
+         unitInfo3.OwningSlotName = "Owner";
+         unitInfo3.OwningSlotPath = "Path";
          unitInfo3.ProjectID = 2669;
          unitInfo3.ProjectRun = 3;
          unitInfo3.ProjectClone = 4;
@@ -147,8 +147,8 @@ namespace HFM.Core.Tests
          {
             var benchmark = new ProteinBenchmark
                             {
-                               OwningInstanceName = "TestOwner",
-                               OwningInstancePath = "TestPath",
+                               OwningSlotName = "TestOwner",
+                               OwningSlotPath = "TestPath",
                                ProjectID = 100 + i
                             };
             
@@ -167,8 +167,8 @@ namespace HFM.Core.Tests
          for (int i = 0; i < 10; i++)
          {
             ProteinBenchmark benchmark = list[i];
-            Assert.AreEqual("TestOwner", benchmark.OwningInstanceName);
-            Assert.AreEqual("TestPath", benchmark.OwningInstancePath);
+            Assert.AreEqual("TestOwner", benchmark.OwningSlotName);
+            Assert.AreEqual("TestPath", benchmark.OwningSlotPath);
             Assert.AreEqual(100 + i, benchmark.ProjectID);
             
             int index = 0;

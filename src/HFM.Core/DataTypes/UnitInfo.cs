@@ -53,13 +53,13 @@ namespace HFM.Core.DataTypes
       /// Name of the Client Instance that owns this UnitInfo
       /// </summary>
       [DataMember(Order = 1)]
-      public string OwningInstanceName { get; set; }
+      public string OwningSlotName { get; set; }
 
       /// <summary>
       /// Path of the Client Instance that owns this UnitInfo
       /// </summary>
       [DataMember(Order = 2)]
-      public string OwningInstancePath { get; set; }
+      public string OwningSlotPath { get; set; }
 
       #endregion
 

@@ -367,9 +367,9 @@ namespace HFM.Core
             command.Parameters.Add(projectClone);
             var projectGen = new SQLiteParameter("ProjectGen", DbType.Int32) { Value = unitInfoLogic.UnitInfoData.ProjectGen };
             command.Parameters.Add(projectGen);
-            var instanceName = new SQLiteParameter("InstanceName", DbType.String) { Value = unitInfoLogic.UnitInfoData.OwningInstanceName };
+            var instanceName = new SQLiteParameter("InstanceName", DbType.String) { Value = unitInfoLogic.UnitInfoData.OwningSlotName };
             command.Parameters.Add(instanceName);
-            var instancePath = new SQLiteParameter("InstancePath", DbType.String) { Value = unitInfoLogic.UnitInfoData.OwningInstancePath };
+            var instancePath = new SQLiteParameter("InstancePath", DbType.String) { Value = unitInfoLogic.UnitInfoData.OwningSlotPath };
             command.Parameters.Add(instancePath);
             var username = new SQLiteParameter("Username", DbType.String) { Value = unitInfoLogic.UnitInfoData.FoldingID };
             command.Parameters.Add(username);
