@@ -75,8 +75,8 @@ namespace HFM.Core.Tests
          var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
-         Assert.AreEqual(null, unitInfoData.OwningInstanceName);
-         Assert.AreEqual(null, unitInfoData.OwningInstancePath);
+         Assert.AreEqual(null, unitInfoData.OwningSlotName);
+         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -148,8 +148,8 @@ namespace HFM.Core.Tests
          var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
-         Assert.AreEqual(null, unitInfoData.OwningInstanceName);
-         Assert.AreEqual(null, unitInfoData.OwningInstancePath);
+         Assert.AreEqual(null, unitInfoData.OwningSlotName);
+         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -228,8 +228,8 @@ namespace HFM.Core.Tests
          var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
-         Assert.AreEqual(null, unitInfoData.OwningInstanceName);
-         Assert.AreEqual(null, unitInfoData.OwningInstancePath);
+         Assert.AreEqual(null, unitInfoData.OwningSlotName);
+         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -288,8 +288,8 @@ namespace HFM.Core.Tests
          var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
-         Assert.AreEqual(null, unitInfoData.OwningInstanceName);
-         Assert.AreEqual(null, unitInfoData.OwningInstancePath);
+         Assert.AreEqual(null, unitInfoData.OwningSlotName);
+         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -359,8 +359,8 @@ namespace HFM.Core.Tests
          var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
-         Assert.AreEqual(null, unitInfoData.OwningInstanceName);
-         Assert.AreEqual(null, unitInfoData.OwningInstancePath);
+         Assert.AreEqual(null, unitInfoData.OwningSlotName);
+         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("coccola", unitInfoData.FoldingID);
          Assert.AreEqual(86565, unitInfoData.Team);
@@ -432,8 +432,8 @@ namespace HFM.Core.Tests
          var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
-         Assert.AreEqual(null, unitInfoData.OwningInstanceName);
-         Assert.AreEqual(null, unitInfoData.OwningInstancePath);
+         Assert.AreEqual(null, unitInfoData.OwningSlotName);
+         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("Felix_Pasqualli", unitInfoData.FoldingID);
          Assert.AreEqual(52523, unitInfoData.Team);
@@ -505,8 +505,8 @@ namespace HFM.Core.Tests
          var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
-         Assert.AreEqual(null, unitInfoData.OwningInstanceName);
-         Assert.AreEqual(null, unitInfoData.OwningInstancePath);
+         Assert.AreEqual(null, unitInfoData.OwningSlotName);
+         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -578,8 +578,8 @@ namespace HFM.Core.Tests
          var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
-         Assert.AreEqual(null, unitInfoData.OwningInstanceName);
-         Assert.AreEqual(null, unitInfoData.OwningInstancePath);
+         Assert.AreEqual(null, unitInfoData.OwningSlotName);
+         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -651,8 +651,8 @@ namespace HFM.Core.Tests
          var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
-         Assert.AreEqual(null, unitInfoData.OwningInstanceName);
-         Assert.AreEqual(null, unitInfoData.OwningInstancePath);
+         Assert.AreEqual(null, unitInfoData.OwningSlotName);
+         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -726,8 +726,8 @@ namespace HFM.Core.Tests
          var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
-         Assert.AreEqual(null, unitInfoData.OwningInstanceName);
-         Assert.AreEqual(null, unitInfoData.OwningInstancePath);
+         Assert.AreEqual(null, unitInfoData.OwningSlotName);
+         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -784,8 +784,8 @@ namespace HFM.Core.Tests
          var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
-         Assert.AreEqual(null, unitInfoData.OwningInstanceName);
-         Assert.AreEqual(null, unitInfoData.OwningInstancePath);
+         Assert.AreEqual(null, unitInfoData.OwningSlotName);
+         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("JollySwagman", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -857,8 +857,8 @@ namespace HFM.Core.Tests
          var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
          
          #region Check Unit Info Data Values
-         Assert.AreEqual(null, unitInfoData.OwningInstanceName);
-         Assert.AreEqual(null, unitInfoData.OwningInstancePath);
+         Assert.AreEqual(null, unitInfoData.OwningSlotName);
+         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -931,8 +931,8 @@ namespace HFM.Core.Tests
          var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
-         Assert.AreEqual(null, unitInfoData.OwningInstanceName);
-         Assert.AreEqual(null, unitInfoData.OwningInstancePath);
+         Assert.AreEqual(null, unitInfoData.OwningSlotName);
+         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("Zagen30", unitInfoData.FoldingID);
          Assert.AreEqual(46301, unitInfoData.Team);
@@ -1004,8 +1004,8 @@ namespace HFM.Core.Tests
          var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
-         Assert.AreEqual(null, unitInfoData.OwningInstanceName);
-         Assert.AreEqual(null, unitInfoData.OwningInstancePath);
+         Assert.AreEqual(null, unitInfoData.OwningSlotName);
+         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -1059,8 +1059,8 @@ namespace HFM.Core.Tests
          var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
-         Assert.AreEqual(null, unitInfoData.OwningInstanceName);
-         Assert.AreEqual(null, unitInfoData.OwningInstancePath);
+         Assert.AreEqual(null, unitInfoData.OwningSlotName);
+         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -1130,8 +1130,8 @@ namespace HFM.Core.Tests
          var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex - 1];
 
          #region Check Unit Info Data Values
-         Assert.AreEqual(null, unitInfoData.OwningInstanceName);
-         Assert.AreEqual(null, unitInfoData.OwningInstancePath);
+         Assert.AreEqual(null, unitInfoData.OwningSlotName);
+         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -1158,8 +1158,8 @@ namespace HFM.Core.Tests
          unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
-         Assert.AreEqual(null, unitInfoData.OwningInstanceName);
-         Assert.AreEqual(null, unitInfoData.OwningInstancePath);
+         Assert.AreEqual(null, unitInfoData.OwningSlotName);
+         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -1229,8 +1229,8 @@ namespace HFM.Core.Tests
          var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
-         Assert.AreEqual(null, unitInfoData.OwningInstanceName);
-         Assert.AreEqual(null, unitInfoData.OwningInstancePath);
+         Assert.AreEqual(null, unitInfoData.OwningSlotName);
+         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("borden.b", unitInfoData.FoldingID);
          Assert.AreEqual(131, unitInfoData.Team);
@@ -1286,8 +1286,8 @@ namespace HFM.Core.Tests
          var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
-         Assert.AreEqual(null, unitInfoData.OwningInstanceName);
-         Assert.AreEqual(null, unitInfoData.OwningInstancePath);
+         Assert.AreEqual(null, unitInfoData.OwningSlotName);
+         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("NerdZone", unitInfoData.FoldingID);
          Assert.AreEqual(155945, unitInfoData.Team);
@@ -1343,8 +1343,8 @@ namespace HFM.Core.Tests
          var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
-         Assert.AreEqual(null, unitInfoData.OwningInstanceName);
-         Assert.AreEqual(null, unitInfoData.OwningInstancePath);
+         Assert.AreEqual(null, unitInfoData.OwningSlotName);
+         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("DrSpalding", unitInfoData.FoldingID);
          Assert.AreEqual(48083, unitInfoData.Team);

@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Data Aggregator Class
+ * HFM.NET - Legacy Data Aggregator Class
  * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -33,67 +33,14 @@ using HFM.Queue;
 
 namespace HFM.Core
 {
-   public interface IDataAggregator
-   {
-      /// <summary>
-      /// Instance Name
-      /// </summary>
-      string InstanceName { get; set; }
-
-      /// <summary>
-      /// queue.dat File Path
-      /// </summary>
-      string QueueFilePath { get; set; }
-
-      /// <summary>
-      /// FAHlog.txt File Path
-      /// </summary>
-      string FahLogFilePath { get; set; }
-
-      /// <summary>
-      /// unitinfo.txt File Path
-      /// </summary>
-      string UnitInfoLogFilePath { get; set; }
-
-      /// <summary>
-      /// Client Queue
-      /// </summary>
-      ClientQueue Queue { get; }
-
-      /// <summary>
-      /// Current Index in List of returned UnitInfo and UnitLogLines
-      /// </summary>
-      int CurrentUnitIndex { get; }
-
-      /// <summary>
-      /// Client Run Data for the Current Run
-      /// </summary>
-      ClientRun CurrentClientRun { get; }
-
-      /// <summary>
-      /// Current Log Lines based on UnitLogLines Array and CurrentUnitIndex
-      /// </summary>
-      IList<LogLine> CurrentLogLines { get; }
-
-      /// <summary>
-      /// Array of LogLine Lists
-      /// </summary>
-      IList<LogLine>[] UnitLogLines { get; }
-
-      /// <summary>
-      /// Aggregate Data and return UnitInfo List
-      /// </summary>
-      IList<UnitInfo> AggregateData();
-   }
-
-   public class DataAggregator : IDataAggregator
+   public class LegacyDataAggregator : ILegacyDataAggregator
    {
       private LogInterpreterLegacy _logInterpreterLegacy;
 
       /// <summary>
       /// Instance Name
       /// </summary>
-      public string InstanceName { get; set; }
+      public string ClientName { get; set; }
 
       /// <summary>
       /// queue.dat File Path
@@ -116,10 +63,7 @@ namespace HFM.Core
       /// </summary>
       public ClientQueue Queue
       {
-         get
-         {
-            return _clientQueue;
-         }
+         get { return _clientQueue; }
       }
 
       /// <summary>
@@ -198,16 +142,14 @@ namespace HFM.Core
       public IList<UnitInfo> AggregateData()
       {
          var logLines = LogReader.GetLogLines(FahLogFilePath);
-         var clientRuns = LogReader.GetClientRuns(logLines);
-
-         _logInterpreterLegacy = new LogInterpreterLegacy(logLines, clientRuns);
+         _logInterpreterLegacy = new LogInterpreterLegacy(logLines, LogReader.GetClientRuns(logLines));
          _currentClientRun = _logInterpreterLegacy.CurrentClientRun;
          _currentClientRunLogLines = _logInterpreterLegacy.CurrentClientRunLogLines;
          
          // report errors that came back from log parsing
          foreach (var s in _logInterpreterLegacy.LogLineParsingErrors)
          {
-            _logger.Debug(Constants.InstanceNameFormat, InstanceName, s);
+            _logger.Debug(Constants.InstanceNameFormat, ClientName, s);
          }
 
          IList<UnitInfo> parsedUnits;
@@ -220,7 +162,7 @@ namespace HFM.Core
          }
          else
          {
-            _logger.Warn(Constants.InstanceNameFormat, InstanceName, 
+            _logger.Warn(Constants.InstanceNameFormat, ClientName, 
                "Queue unavailable or failed read.  Parsing logs without queue.");
 
             parsedUnits = GenerateUnitInfoDataFromLogs();
@@ -316,7 +258,7 @@ namespace HFM.Core
                {
                   string message = String.Format(CultureInfo.CurrentCulture,
                      "Could not verify log section for current queue entry ({0}). Trying to parse with most recent log section.", queueIndex);
-                  _logger.Warn(Constants.InstanceNameFormat, InstanceName, message);
+                  _logger.Warn(Constants.InstanceNameFormat, ClientName, message);
 
                   _unitLogLines[queueIndex] = _logInterpreterLegacy.CurrentWorkUnitLogLines;
                   // If got no Work Unit Log Lines based on Current Work Unit Log Lines
@@ -343,7 +285,7 @@ namespace HFM.Core
                   // Just skip this unit and continue
                   string message = String.Format(CultureInfo.CurrentCulture,
                      "Could not find or verify log section for queue entry {0} (this is not a problem).", queueIndex);
-                  _logger.Debug(Constants.InstanceNameFormat, InstanceName, message);
+                  _logger.Debug(Constants.InstanceNameFormat, ClientName, message);
                }
             }
          }
@@ -359,7 +301,7 @@ namespace HFM.Core
          }
          catch (Exception ex)
          {
-            _logger.WarnFormat(ex, Constants.InstanceNameFormat, InstanceName, ex.Message);
+            _logger.WarnFormat(ex, Constants.InstanceNameFormat, ClientName, ex.Message);
             return null;
          }
       }
@@ -428,6 +370,7 @@ namespace HFM.Core
       }
 
       #region Unit Population Methods
+
       private static void PopulateUnitInfoFromQueueEntry(QueueEntry entry, UnitInfo unit)
       {
          // convert to enum
@@ -559,6 +502,7 @@ namespace HFM.Core
             unit.SetCurrentFrame(frame);
          }
       }
+
       #endregion
       
       #endregion

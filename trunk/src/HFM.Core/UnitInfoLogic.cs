@@ -148,7 +148,7 @@ namespace HFM.Core
 
       #region Constructors
 
-      public UnitInfoLogic()
+      internal UnitInfoLogic()
       {
          
       }
@@ -532,7 +532,7 @@ namespace HFM.Core
       
          if (CurrentProtein.IsUnknown())
          {
-            logger.DebugFormat(Constants.InstanceNameFormat, _unitInfo.OwningInstanceName, "Protein is unknown... 0 PPD.");
+            logger.DebugFormat(Constants.InstanceNameFormat, _unitInfo.OwningSlotName, "Protein is unknown... 0 PPD.");
             return;
          }
 
@@ -543,16 +543,16 @@ namespace HFM.Core
             if (status.Equals(SlotStatus.RunningAsync) ||
                 status.Equals(SlotStatus.RunningNoFrameTimes))
             {
-               logger.DebugFormat(Constants.InstanceNameFormat, _unitInfo.OwningInstanceName, "Calculate Bonus PPD by Frame Time.");
+               logger.DebugFormat(Constants.InstanceNameFormat, _unitInfo.OwningSlotName, "Calculate Bonus PPD by Frame Time.");
             }
             else
             {
-               logger.DebugFormat(Constants.InstanceNameFormat, _unitInfo.OwningInstanceName, "Calculate Bonus PPD by Download Time.");
+               logger.DebugFormat(Constants.InstanceNameFormat, _unitInfo.OwningSlotName, "Calculate Bonus PPD by Download Time.");
             }
          }
          else
          {
-            logger.DebugFormat(Constants.InstanceNameFormat, _unitInfo.OwningInstanceName, "Calculate Standard PPD.");
+            logger.DebugFormat(Constants.InstanceNameFormat, _unitInfo.OwningSlotName, "Calculate Standard PPD.");
          }
 
          TimeSpan frameTime = GetFrameTime(calculationType);

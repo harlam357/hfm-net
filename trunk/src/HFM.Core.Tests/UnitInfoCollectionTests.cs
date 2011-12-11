@@ -63,8 +63,8 @@ namespace HFM.Core.Tests
          for (int i = 0; i < 10; i++)
          {
             var unitInfo = new UnitInfo();
-            unitInfo.OwningInstanceName = "TestOwner";
-            unitInfo.OwningInstancePath = "TestPath";
+            unitInfo.OwningSlotName = "TestOwner";
+            unitInfo.OwningSlotPath = "TestPath";
             unitInfo.UnitRetrievalTime = new DateTime((2000 + i), 1, 1, 0, 0, 0);
             unitInfo.FoldingID = "TestID";
             unitInfo.Team = 32;
@@ -103,8 +103,8 @@ namespace HFM.Core.Tests
          {
             UnitInfo unitInfo = list[i];
             
-            Assert.AreEqual("TestOwner", unitInfo.OwningInstanceName);
-            Assert.AreEqual("TestPath", unitInfo.OwningInstancePath);
+            Assert.AreEqual("TestOwner", unitInfo.OwningSlotName);
+            Assert.AreEqual("TestPath", unitInfo.OwningSlotPath);
             Assert.AreEqual(new DateTime((2000 + i), 1, 1, 0, 0, 0), unitInfo.UnitRetrievalTime);
             Assert.AreEqual("TestID", unitInfo.FoldingID);
             Assert.AreEqual(32, unitInfo.Team);

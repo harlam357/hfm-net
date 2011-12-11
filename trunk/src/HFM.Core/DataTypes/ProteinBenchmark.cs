@@ -40,13 +40,13 @@ namespace HFM.Core.DataTypes
       /// Name of the Client Instance that owns this Benchmark
       /// </summary>
       [DataMember(Order = 1)]
-      public string OwningInstanceName { get; set; }
+      public string OwningSlotName { get; set; }
 
       /// <summary>
       /// Path of the Client Instance that owns this Benchmark
       /// </summary>
       [DataMember(Order = 2)]
-      public string OwningInstancePath { get; set; }
+      public string OwningSlotPath { get; set; }
 
       #endregion
 
@@ -98,7 +98,7 @@ namespace HFM.Core.DataTypes
       /// </summary>
       public BenchmarkClient Client
       {
-         get { return new BenchmarkClient(OwningInstanceName, OwningInstancePath); }
+         get { return new BenchmarkClient(OwningSlotName, OwningSlotPath); }
       }
       
       #endregion
@@ -176,8 +176,8 @@ namespace HFM.Core.DataTypes
 
       public bool Equals(IOwnedByClientSlot other)
       {
-         return OwningInstanceName == other.OwningInstanceName &&
-                Paths.Equal(OwningInstancePath, other.OwningInstancePath) &&
+         return OwningSlotName == other.OwningSlotName &&
+                Paths.Equal(OwningSlotPath, other.OwningSlotPath) &&
                 ProjectID == other.ProjectID;
       }
 

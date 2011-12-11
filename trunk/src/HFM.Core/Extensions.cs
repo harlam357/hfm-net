@@ -43,9 +43,15 @@ namespace HFM.Core
       /// <summary>
       /// Used to supply a "path" value to the benchmarks and unit info database.
       /// </summary>
-      public static string FahClientPath(this ClientSettings settings)
+      public static string DataPath(this ClientSettings settings)
       {
-         return settings == null ? String.Empty : String.Format(CultureInfo.InvariantCulture, "{0}:{1}", settings.Server, settings.Port);
+         if (settings == null) return String.Empty;
+
+         if (settings.IsFahClient())
+         {
+            return String.Format(CultureInfo.InvariantCulture, "{0}-{1}", settings.Server, settings.Port);
+         }
+         return settings.Path;
       }
 
       public static string CachedFahLogFileName(this ClientSettings settings)

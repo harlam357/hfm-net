@@ -58,6 +58,12 @@ namespace HFM.Core.Configuration
                .ImplementedBy<LegacyDataRetriever>()
                .LifeStyle.Transient);
 
+         // UnitInfoLogic - Transient
+         container.Register(
+            Component.For<UnitInfoLogic>()
+               //.ImplementedBy<UnitInfoLogic>()
+               .LifeStyle.Transient);
+
          // IExternalProcessStarter - Singleton
          container.Register(
             Component.For<IExternalProcessStarter>()

@@ -256,8 +256,7 @@ namespace HFM.Core
          
             IClient client = _clientDictionary[key];
             string existingName = client.Settings.Name;
-            string existingPath = client.Settings.Path;
-            string existingFahClientPath = client.Settings.FahClientPath();
+            string existingPath = client.Settings.DataPath();
             
             // update the settings
             client.Settings = settings;
@@ -274,13 +273,9 @@ namespace HFM.Core
                _clientDictionary.Add(settings.Name, client);
             }
             
-            if (settings.IsFahClient())
+            if (settings.IsFahClient() || settings.IsLegacy())
             {
-               e = new ClientEditedEventArgs(existingName, settings.Name, existingFahClientPath, settings.FahClientPath());
-            }
-            else if (settings.IsLegacy())
-            {
-               e = new ClientEditedEventArgs(existingName, settings.Name, existingPath, settings.Path);
+               e = new ClientEditedEventArgs(existingName, settings.Name, existingPath, settings.DataPath());
             }
             else
             {
@@ -456,6 +451,7 @@ namespace HFM.Core
             foreach (var client in _clientDictionary.Values)
             {
                client.ClearEventSubscriptions();
+               client.Abort();
             }
             _clientDictionary.Clear();
          }

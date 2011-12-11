@@ -1,6 +1,5 @@
 /*
- * HFM.NET - Client Instance Class
- * Copyright (C) 2006 David Rawling
+ * HFM.NET - Legacy Client Class
  * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -23,188 +22,101 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
-using Castle.Core.Logging;
-
 using HFM.Core.DataTypes;
 
 namespace HFM.Core
 {
-   public sealed class LegacyClient : IClient
+   public sealed class LegacyClient : Client
    {
-      #region Fields
-
       #region Injection Properties
 
-      private IPreferenceSet _prefs;
-      /// <summary>
-      /// PreferenceSet Interface
-      /// </summary>
-      public IPreferenceSet Prefs
-      {
-         set { _prefs = value; }
-      }
+      public IProteinBenchmarkCollection BenchmarkCollection { get; set; }
 
-      private ILogger _logger = NullLogger.Instance;
-      /// <summary>
-      /// Logging Interface
-      /// </summary>
-      public ILogger Logger
-      {
-         [CoverageExclude]
-         get { return _logger; }
-         [CoverageExclude]
-         set { _logger = value; }
-      }
+      public IStatusLogic StatusLogic { get; set; }
 
-      private IDictionary<int, Protein> _proteinDictionary;
-      /// <summary>
-      /// Protein Collection Interface
-      /// </summary>
-      public IDictionary<int, Protein> ProteinDictionary
-      {
-         set { _proteinDictionary = value; }
-      }
+      public IDataRetriever DataRetriever { get; set; }
 
-      private IProteinBenchmarkCollection _benchmarkCollection;
-      /// <summary>
-      /// Benchmark Collection Interface
-      /// </summary>
-      public IProteinBenchmarkCollection BenchmarkCollection
-      {
-         set { _benchmarkCollection = value; }
-      }
-
-      private IStatusLogic _statusLogic;
-      /// <summary>
-      /// Status Logic Interface
-      /// </summary>
-      public IStatusLogic StatusLogic
-      {
-         set { _statusLogic = value; }
-      }
-
-      private IDataRetriever _dataRetriever;
-      /// <summary>
-      /// Data Retriever Interface
-      /// </summary>
-      public IDataRetriever DataRetriever
-      {
-         set { _dataRetriever = value; }
-      }
-
-      private IDataAggregator _dataAggregator;
-      /// <summary>
-      /// Data Aggregator Interface
-      /// </summary>
-      public IDataAggregator DataAggregator
-      {
-         set { _dataAggregator = value; }
-      }
+      public ILegacyDataAggregator DataAggregator { get; set; }
 
       #endregion
 
-      public ClientSettings Settings { get; set; }
+      #region Properties
 
-      private readonly IDictionary<int, SlotModel> _slots;
+      private ClientSettings _settings;
+      private SlotModel _slotModel;
       
-      public IDictionary<int, SlotModel> Slots
+      public override ClientSettings Settings
       {
-         get { return _slots; }
+         get { return _settings; }
+         set
+         {
+            Debug.Assert(value.IsLegacy());
+
+            _settings = value;
+            if (_slotModel == null)
+            {
+               // default slot model
+               _slotModel = new SlotModel { Prefs = Prefs };
+            }
+            _slotModel.Settings = _settings;
+         }
       }
 
-      #endregion
-
-      public LegacyClient()
+      public override IEnumerable<SlotModel> Slots
       {
-         _slots = new Dictionary<int, SlotModel> { { 0, new SlotModel() } };
-
-         LastRetrievalTime = DateTime.MinValue;
+         get { return new[] { _slotModel }; }
       }
-      
-      #region Retrieval Properties
-
-      private volatile bool _retrievalInProgress;
-      /// <summary>
-      /// Local flag set when log retrieval is in progress
-      /// </summary>
-      public bool RetrievalInProgress
-      {
-         get { return _retrievalInProgress; }
-      }
-
-      private bool _abort;
-
-      /// <summary>
-      /// When the data was last successfully retrieved
-      /// </summary>
-      public DateTime LastRetrievalTime { get; private set; } // should be init to DateTime.MinValue
 
       #endregion
 
       #region Retrieval Methods
 
-      public void Abort()
-      {
-         _abort = true;
-      }
-
       private bool AbortRetrieve
       {
-         get { return _retrievalInProgress && _abort; }
+         get { return RetrievalInProgress && AbortFlag; }
       }
 
-      /// <summary>
-      /// Retrieve Instance Log Files based on Instance Type
-      /// </summary>
-      public void Retrieve()
+      protected override void RetrieveInternal()
       {
-         Debug.Assert(Slots.Count == 1);
-         RetrieveInternal(Slots[0]);
-      }
+         AbortFlag = false;
 
-      /// <summary>
-      /// Retrieve Instance Log Files based on Instance Type
-      /// </summary>
-      private void RetrieveInternal(SlotModel defaultSlotModel)
-      {
          try
          {
-            // Don't allow this to fire more than once at a time
-            if (_retrievalInProgress) return;
-         
-            _retrievalInProgress = true;
-            _abort = false;
-
-            _dataRetriever.Execute(Settings);
-            if (!AbortRetrieve)
+            try
             {
-               // Set successful Last Retrieval Time
-               LastRetrievalTime = DateTime.Now;
-               // Re-Init Client Level Members Before Processing
-               defaultSlotModel.Initialize();
-               // Process the retrieved logs
+               DataRetriever.Execute(Settings);
+               if (!AbortRetrieve)
+               {
+                  // Set successful Last Retrieval Time
+                  LastRetrievalTime = DateTime.Now;
+                  // Re-Init Client Level Members Before Processing
+                  _slotModel.Initialize();
+                  // Process the retrieved logs
+                  SlotStatus returnedStatus = Process();
+                  // Handle the status retured from the log parse
+                  HandleReturnedStatus(returnedStatus, _slotModel);
 
-               ClientStatus returnedStatus = ProcessLegacy(defaultSlotModel);
-               // Handle the status retured from the log parse
-               HandleReturnedStatus(returnedStatus, defaultSlotModel);
-
-               _logger.Info("{0} ({1}) Client Status: {2}", Instrumentation.FunctionName, defaultSlotModel.Settings.Name, defaultSlotModel.Status);
+                  Logger.Info("{0} ({1}) Client Status: {2}", Instrumentation.FunctionName, _slotModel.Settings.Name, _slotModel.Status);
+               }
+               else
+               {
+                  _slotModel.Status = SlotStatus.Offline;
+                  Logger.Info(Constants.InstanceNameFormat, _slotModel.Settings.Name, "Retrieval Aborted...");
+               }
             }
-            else
+            catch (Exception ex)
             {
-               defaultSlotModel.Status = ClientStatus.Offline;
-               _logger.Info(Constants.InstanceNameFormat, defaultSlotModel.Settings.Name, "Retrieval Aborted...");
+               _slotModel.Status = SlotStatus.Offline;
+               Logger.ErrorFormat(ex, Constants.InstanceNameFormat, _slotModel.Settings.Name, ex.Message);
             }
-         }
-         catch (Exception ex)
-         {
-            defaultSlotModel.Status = ClientStatus.Offline;
-            _logger.ErrorFormat(ex, Constants.InstanceNameFormat, defaultSlotModel.Settings.Name, ex.Message);
+            finally
+            {
+               if (!AbortRetrieve) OnRetrievalFinished(EventArgs.Empty);
+            }
          }
          finally
          {
-            _retrievalInProgress = false;
-            _abort = false;
+            AbortFlag = false;
          }
       }
       
@@ -215,33 +127,33 @@ namespace HFM.Core
       /// <summary>
       /// Process the cached log files that exist on this machine
       /// </summary>
-      private ClientStatus ProcessLegacy(SlotModel defaultSlotModel)
+      private SlotStatus Process()
       {
          DateTime start = Instrumentation.ExecStart;
 
          #region Setup UnitInfo Aggregator
 
-         _dataAggregator.InstanceName = Settings.Name;
-         _dataAggregator.QueueFilePath = Path.Combine(_prefs.CacheDirectory, Settings.CachedQueueFileName());
-         _dataAggregator.FahLogFilePath = Path.Combine(_prefs.CacheDirectory, Settings.CachedFahLogFileName());
-         _dataAggregator.UnitInfoLogFilePath = Path.Combine(_prefs.CacheDirectory, Settings.CachedUnitInfoFileName()); 
+         DataAggregator.ClientName = Settings.Name;
+         DataAggregator.QueueFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedQueueFileName());
+         DataAggregator.FahLogFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedFahLogFileName());
+         DataAggregator.UnitInfoLogFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedUnitInfoFileName()); 
          
          #endregion
          
          #region Run the Aggregator and Set LegacyClient Level Results
          
-         IList<UnitInfo> units = _dataAggregator.AggregateData();
+         IList<UnitInfo> units = DataAggregator.AggregateData();
          // Issue 126 - Use the Folding ID, Team, User ID, and Machine ID from the FAHlog data.
          // Use the Current Queue Entry as a backup data source.
-         PopulateRunLevelData(_dataAggregator.CurrentClientRun, defaultSlotModel);
-         if (_dataAggregator.Queue != null)
+         PopulateRunLevelData(DataAggregator.CurrentClientRun, _slotModel);
+         if (DataAggregator.Queue != null)
          {
-            PopulateRunLevelData(_dataAggregator.Queue.CurrentQueueEntry, defaultSlotModel);
+            PopulateRunLevelData(DataAggregator.Queue.CurrentQueueEntry, _slotModel);
          }
 
-         defaultSlotModel.Queue = _dataAggregator.Queue;
-         defaultSlotModel.CurrentLogLines = _dataAggregator.CurrentLogLines;
-         defaultSlotModel.UnitLogLines = _dataAggregator.UnitLogLines;
+         _slotModel.Queue = DataAggregator.Queue;
+         _slotModel.CurrentLogLines = DataAggregator.CurrentLogLines;
+         _slotModel.UnitLogLines = DataAggregator.UnitLogLines;
          
          #endregion
          
@@ -256,19 +168,20 @@ namespace HFM.Core
 
          // *** THIS HAS TO BE DONE BEFORE UPDATING THE UnitInfoLogic ***
          // Update Benchmarks from parsedUnits array 
-         _benchmarkCollection.UpdateData(defaultSlotModel.UnitInfoLogic, parsedUnits, _dataAggregator.CurrentUnitIndex);
+         //BenchmarkCollection.UpdateData(_slotModel.UnitInfoLogic, parsedUnits, DataAggregator.CurrentUnitIndex);
 
          // Update the UnitInfoLogic if we have a Status
-         ClientStatus currentWorkUnitStatus = _dataAggregator.CurrentClientRun.Status;
-         if (currentWorkUnitStatus.Equals(ClientStatus.Unknown) == false)
+         SlotStatus currentWorkUnitStatus = DataAggregator.CurrentClientRun.Status;
+         if (!currentWorkUnitStatus.Equals(SlotStatus.Unknown))
          {
-            defaultSlotModel.UnitInfoLogic = parsedUnits[_dataAggregator.CurrentUnitIndex];
+            _slotModel.UnitInfoLogic = parsedUnits[DataAggregator.CurrentUnitIndex];
          }
          
-         defaultSlotModel.UnitInfoLogic.ShowPPDTrace(_logger, defaultSlotModel.Status, 
-            _prefs.Get<PpdCalculationType>(Preference.PpdCalculation),
-            _prefs.Get<bool>(Preference.CalculateBonus));
-         _logger.Debug(Constants.InstanceNameFormat, Settings.Name, Instrumentation.GetExecTime(start));
+         _slotModel.UnitInfoLogic.ShowPPDTrace(Logger, _slotModel.Status, 
+            Prefs.Get<PpdCalculationType>(Preference.PpdCalculation),
+            Prefs.Get<bool>(Preference.CalculateBonus));
+
+         Logger.Info(Constants.InstanceNameFormat, Settings.Name, Instrumentation.GetExecTime(start));
 
          // Return the Status
          return currentWorkUnitStatus;
@@ -278,14 +191,14 @@ namespace HFM.Core
       {
          Debug.Assert(unitInfo != null);
 
-         Protein protein = _proteinDictionary.ContainsKey(unitInfo.ProjectID)
-                              ? _proteinDictionary[unitInfo.ProjectID]
+         Protein protein = ProteinDictionary.ContainsKey(unitInfo.ProjectID)
+                              ? ProteinDictionary[unitInfo.ProjectID]
                               : new Protein();
 
          // update the data
          unitInfo.UnitRetrievalTime = LastRetrievalTime;
-         unitInfo.OwningInstanceName = Settings.Name;
-         unitInfo.OwningInstancePath = Settings.Path;
+         unitInfo.OwningSlotName = Settings.Name;
+         unitInfo.OwningSlotPath = Settings.DataPath();
          unitInfo.SlotType = UnitInfo.DetermineSlotType(protein.Core, unitInfo.CoreID);
          // build unit info logic
          var unitInfoLogic = ServiceLocator.Resolve<UnitInfoLogic>();
@@ -294,28 +207,28 @@ namespace HFM.Core
          return unitInfoLogic;
       }
 
-      private static void PopulateRunLevelData(ClientRun run, SlotModel displayInstance)
+      private static void PopulateRunLevelData(ClientRun run, SlotModel slotModel)
       {
-         displayInstance.Arguments = run.Arguments;
-         displayInstance.ClientVersion = run.ClientVersion;
+         slotModel.Arguments = run.Arguments;
+         slotModel.ClientVersion = run.ClientVersion;
 
-         displayInstance.UserId = run.UserID;
-         displayInstance.MachineId = run.MachineID;
+         slotModel.UserId = run.UserID;
+         slotModel.MachineId = run.MachineID;
 
-         displayInstance.TotalRunCompletedUnits = run.CompletedUnits;
-         displayInstance.TotalRunFailedUnits = run.FailedUnits;
-         displayInstance.TotalClientCompletedUnits = run.TotalCompletedUnits;
+         slotModel.TotalRunCompletedUnits = run.CompletedUnits;
+         slotModel.TotalRunFailedUnits = run.FailedUnits;
+         slotModel.TotalClientCompletedUnits = run.TotalCompletedUnits;
       }
 
-      private static void PopulateRunLevelData(ClientQueueEntry queueEntry, SlotModel displayInstance)
+      private static void PopulateRunLevelData(ClientQueueEntry queueEntry, SlotModel slotModel)
       {
-         if (displayInstance.UserId == Constants.DefaultUserID)
+         if (slotModel.UserId == Constants.DefaultUserID)
          {
-            displayInstance.UserId = queueEntry.UserID;
+            slotModel.UserId = queueEntry.UserID;
          }
-         if (displayInstance.MachineId == Constants.DefaultMachineID)
+         if (slotModel.MachineId == Constants.DefaultMachineID)
          {
-            displayInstance.MachineId = queueEntry.MachineID;
+            slotModel.MachineId = queueEntry.MachineID;
          }
       }
       
@@ -326,7 +239,7 @@ namespace HFM.Core
       /// <summary>
       /// Handles the Client Status Returned by Log Parsing and then determines what values to feed the DetermineStatus routine.
       /// </summary>
-      private void HandleReturnedStatus(ClientStatus returnedStatus, SlotModel slot)
+      private void HandleReturnedStatus(SlotStatus returnedStatus, SlotModel slot)
       {
          var statusData = new StatusData
                           {
@@ -340,36 +253,42 @@ namespace HFM.Core
                              TimeOfLastFrameProgress = slot.TimeOfLastFrameProgress,
                              CurrentStatus = slot.Status,
                              ReturnedStatus = returnedStatus,
-                             FrameTime = slot.UnitInfoLogic.GetRawTime(_prefs.Get<PpdCalculationType>(Preference.PpdCalculation)),
-                             AverageFrameTime = _benchmarkCollection.GetBenchmark(slot.UnitInfo).AverageFrameTime,
+                             FrameTime = slot.UnitInfoLogic.GetRawTime(Prefs.Get<PpdCalculationType>(Preference.PpdCalculation)),
+                             AverageFrameTime = GetBenchmarkAverageFrameTimeOrDefault(slot.UnitInfo),
                              TimeOfLastFrame = slot.UnitInfoLogic.UnitInfoData.CurrentFrame == null
                                                   ? TimeSpan.Zero
                                                   : slot.UnitInfoLogic.UnitInfoData.CurrentFrame.TimeOfFrame,
                              UnitStartTimeStamp = slot.UnitInfoLogic.UnitInfoData.UnitStartTimeStamp,
-                             AllowRunningAsync = _prefs.Get<bool>(Preference.AllowRunningAsync)
+                             AllowRunningAsync = Prefs.Get<bool>(Preference.AllowRunningAsync)
                           };
 
          // If the returned status is EuePause and current status is not
-         if (statusData.ReturnedStatus.Equals(ClientStatus.EuePause) && statusData.CurrentStatus.Equals(ClientStatus.EuePause) == false)
+         if (statusData.ReturnedStatus.Equals(SlotStatus.EuePause) && statusData.CurrentStatus.Equals(SlotStatus.EuePause) == false)
          {
-            if (_prefs.Get<bool>(Preference.EmailReportingEnabled) &&
-                _prefs.Get<bool>(Preference.ReportEuePause))
+            if (Prefs.Get<bool>(Preference.EmailReportingEnabled) &&
+                Prefs.Get<bool>(Preference.ReportEuePause))
             {
                SendEuePauseEmail(statusData.InstanceName);
             }
          }
 
          // If the returned status is Hung and current status is not
-         if (statusData.ReturnedStatus.Equals(ClientStatus.Hung) && statusData.CurrentStatus.Equals(ClientStatus.Hung) == false)
+         if (statusData.ReturnedStatus.Equals(SlotStatus.Hung) && statusData.CurrentStatus.Equals(SlotStatus.Hung) == false)
          {
-            if (_prefs.Get<bool>(Preference.EmailReportingEnabled) &&
-                _prefs.Get<bool>(Preference.ReportHung))
+            if (Prefs.Get<bool>(Preference.EmailReportingEnabled) &&
+                Prefs.Get<bool>(Preference.ReportHung))
             {
                SendHungEmail(statusData.InstanceName);
             }
          }
 
-         slot.Status = _statusLogic.HandleStatusData(statusData);
+         slot.Status = StatusLogic.HandleStatusData(statusData);
+      }
+
+      private TimeSpan GetBenchmarkAverageFrameTimeOrDefault(UnitInfo unitInfo)
+      {
+         var benchmark = BenchmarkCollection.GetBenchmark(unitInfo);
+         return benchmark != null ? benchmark.AverageFrameTime : TimeSpan.Zero;
       }
 
       /// <summary>
@@ -380,18 +299,18 @@ namespace HFM.Core
          string messageBody = String.Format("HFM.NET detected that Client '{0}' has entered a 24 hour EUE Pause state.", name);
          try
          {
-            NetworkOps.SendEmail(_prefs.Get<bool>(Preference.EmailReportingServerSecure),
-                                 _prefs.Get<string>(Preference.EmailReportingFromAddress),
-                                 _prefs.Get<string>(Preference.EmailReportingToAddress),
+            NetworkOps.SendEmail(Prefs.Get<bool>(Preference.EmailReportingServerSecure),
+                                 Prefs.Get<string>(Preference.EmailReportingFromAddress),
+                                 Prefs.Get<string>(Preference.EmailReportingToAddress),
                                  "HFM.NET - Client EUE Pause Error", messageBody,
-                                 _prefs.Get<string>(Preference.EmailReportingServerAddress),
-                                 _prefs.Get<int>(Preference.EmailReportingServerPort),
-                                 _prefs.Get<string>(Preference.EmailReportingServerUsername),
-                                 _prefs.Get<string>(Preference.EmailReportingServerPassword));
+                                 Prefs.Get<string>(Preference.EmailReportingServerAddress),
+                                 Prefs.Get<int>(Preference.EmailReportingServerPort),
+                                 Prefs.Get<string>(Preference.EmailReportingServerUsername),
+                                 Prefs.Get<string>(Preference.EmailReportingServerPassword));
          }
          catch (Exception ex)
          {
-            _logger.ErrorFormat(ex, "{0}", ex.Message);
+            Logger.ErrorFormat(ex, "{0}", ex.Message);
          }
       }
 
@@ -403,18 +322,18 @@ namespace HFM.Core
          string messageBody = String.Format("HFM.NET detected that Client '{0}' has entered a Hung state.", name);
          try
          {
-            NetworkOps.SendEmail(_prefs.Get<bool>(Preference.EmailReportingServerSecure),
-                                 _prefs.Get<string>(Preference.EmailReportingFromAddress),
-                                 _prefs.Get<string>(Preference.EmailReportingToAddress),
+            NetworkOps.SendEmail(Prefs.Get<bool>(Preference.EmailReportingServerSecure),
+                                 Prefs.Get<string>(Preference.EmailReportingFromAddress),
+                                 Prefs.Get<string>(Preference.EmailReportingToAddress),
                                  "HFM.NET - Client Hung Error", messageBody,
-                                 _prefs.Get<string>(Preference.EmailReportingServerAddress),
-                                 _prefs.Get<int>(Preference.EmailReportingServerPort),
-                                 _prefs.Get<string>(Preference.EmailReportingServerUsername),
-                                 _prefs.Get<string>(Preference.EmailReportingServerPassword));
+                                 Prefs.Get<string>(Preference.EmailReportingServerAddress),
+                                 Prefs.Get<int>(Preference.EmailReportingServerPort),
+                                 Prefs.Get<string>(Preference.EmailReportingServerUsername),
+                                 Prefs.Get<string>(Preference.EmailReportingServerPassword));
          }
          catch (Exception ex)
          {
-            _logger.ErrorFormat(ex, "{0}", ex.Message);
+            Logger.ErrorFormat(ex, "{0}", ex.Message);
          }
       }
 
