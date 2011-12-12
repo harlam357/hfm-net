@@ -91,7 +91,7 @@ namespace HFM.Forms
                yPoints[0] = Math.Round(minimumFrameTimePPD, decimalPlaces);
                yPoints[1] = Math.Round(averageFrameTimePPD, decimalPlaces);
 
-               CreateBar(i, myPane, benchmark.OwningInstanceName, yPoints, graphColors);
+               CreateBar(i, myPane, benchmark.OwningSlotName, yPoints, graphColors);
                i++;
             }
 
@@ -186,7 +186,7 @@ namespace HFM.Forms
                yPoints[0] = benchmark.MinimumFrameTime.TotalSeconds;
                yPoints[1] = benchmark.AverageFrameTime.TotalSeconds;
 
-               CreateBar(i, myPane, benchmark.OwningInstanceName, yPoints, graphColors);
+               CreateBar(i, myPane, benchmark.OwningSlotName, yPoints, graphColors);
                i++;
             }
 

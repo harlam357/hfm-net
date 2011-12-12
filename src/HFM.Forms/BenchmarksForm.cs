@@ -162,7 +162,7 @@ namespace HFM.Forms
          UpdateBenchmarkText(lines);
 
          List<ProteinBenchmark> list = _benchmarkCollection.GetBenchmarks(_currentBenchmarkClient, projectID).ToList();
-         list.Sort((benchmark1, benchmark2) => benchmark1.OwningInstanceName.CompareTo(benchmark2.OwningInstanceName));
+         list.Sort((benchmark1, benchmark2) => benchmark1.OwningSlotName.CompareTo(benchmark2.OwningSlotName));
          Protein protein;
          _proteinDictionary.TryGetValue(projectID, out protein);
 
@@ -172,7 +172,7 @@ namespace HFM.Forms
             bool valuesOk = false;
 
             ProteinBenchmark benchmark1 = benchmark;
-            var instance = _clientDictionary.Slots.FirstOrDefault(x => x.Name.Equals(benchmark1.OwningInstanceName));
+            var instance = _clientDictionary.Slots.FirstOrDefault(x => x.Name.Equals(benchmark1.OwningSlotName));
             if (instance != null && instance.Owns(benchmark))
             {
                unit = instance.UnitInfoLogic;
@@ -292,8 +292,8 @@ namespace HFM.Forms
             var calculateBonus = _prefs.Get<bool>(Preference.CalculateBonus);
 
             output.Add(String.Empty);
-            output.Add(String.Format(" Name: {0}", benchmark.OwningInstanceName));
-            output.Add(String.Format(" Path: {0}", benchmark.OwningInstancePath));
+            output.Add(String.Format(" Name: {0}", benchmark.OwningSlotName));
+            output.Add(String.Format(" Path: {0}", benchmark.OwningSlotPath));
             output.Add(String.Format(" Number of Frames Observed: {0}", benchmark.FrameTimes.Count));
             output.Add(String.Empty);
             output.Add(String.Format(" Min. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
