@@ -68,18 +68,22 @@ namespace HFM.Forms
          #region Draw or Hide the Tooltip
          if (info.RowIndex > -1)
          {
-            var instance = _presenter.FindSlotModel(dataGridView1.Rows[info.RowIndex].Cells["Name"].Value.ToString());
+            var slotModel = _presenter.FindSlotModel(dataGridView1.Rows[info.RowIndex].Cells["Name"].Value.ToString());
+            if (slotModel == null)
+            {
+               return;
+            }
 
             // ReSharper disable PossibleNullReferenceException
             if (dataGridView1.Columns["Status"].Index == info.ColumnIndex)
             {
-               toolTipGrid.Show(instance.Status.ToString(), dataGridView1, e.X + 15, e.Y);
+               toolTipGrid.Show(slotModel.Status.ToString(), dataGridView1, e.X + 15, e.Y);
                return;
             }
             
             if (dataGridView1.Columns["Username"].Index == info.ColumnIndex)
             {
-               if (instance.UsernameOk == false)
+               if (slotModel.UsernameOk == false)
                {
                   toolTipGrid.Show("Client's User Name does not match the configured User Name", dataGridView1, e.X + 15, e.Y);
                   return;
@@ -87,7 +91,7 @@ namespace HFM.Forms
             }
             else if (dataGridView1.Columns["ProjectRunCloneGen"].Index == info.ColumnIndex)
             {
-               if (_prefs.GetPreference<bool>(Preference.DuplicateProjectCheck) && instance.ProjectIsDuplicate)
+               if (_prefs.Get<bool>(Preference.DuplicateProjectCheck) && slotModel.ProjectIsDuplicate)
                {
                   toolTipGrid.Show("Client is working on the same work unit as another client", dataGridView1, e.X + 15, e.Y);
                   return;
@@ -95,7 +99,7 @@ namespace HFM.Forms
             }
             else if (dataGridView1.Columns["Name"].Index == info.ColumnIndex)
             {
-               if (_prefs.GetPreference<bool>(Preference.DuplicateUserIdCheck) && instance.UserIdIsDuplicate)
+               if (_prefs.Get<bool>(Preference.DuplicateUserIdCheck) && slotModel.UserIdIsDuplicate)
                {
                   toolTipGrid.Show("Client is working with the same User and Machine ID as another client", dataGridView1, e.X + 15, e.Y);
                   return;
@@ -123,28 +127,35 @@ namespace HFM.Forms
             else if (dataGridView1.Columns["Name"].Index == e.ColumnIndex)
             {
                #region Duplicate User and Machine ID Custom Paint
-               var instance = _presenter.FindSlotModel(dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString());
-               if (_prefs.GetPreference<bool>(Preference.DuplicateUserIdCheck) && instance.UserIdIsDuplicate)
+               if (_prefs.Get<bool>(Preference.DuplicateUserIdCheck))
                {
-                  PaintGridCell(PaintCell.Warning, e);
+                  var slotModel = _presenter.FindSlotModel(dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString());
+                  if (slotModel != null && slotModel.UserIdIsDuplicate)
+                  {
+                     PaintGridCell(PaintCell.Warning, e);
+                  }
                }
                #endregion
             }
             else if (dataGridView1.Columns["ProjectRunCloneGen"].Index == e.ColumnIndex)
             {
                #region Duplicate Project Custom Paint
-               var instance = _presenter.FindSlotModel(dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString());
-               if (_prefs.GetPreference<bool>(Preference.DuplicateProjectCheck) && instance.ProjectIsDuplicate)
+               
+               if (_prefs.Get<bool>(Preference.DuplicateProjectCheck))
                {
-                  PaintGridCell(PaintCell.Warning, e);
+                  var slotModel = _presenter.FindSlotModel(dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString());
+                  if (slotModel != null && slotModel.ProjectIsDuplicate)
+                  {
+                     PaintGridCell(PaintCell.Warning, e);
+                  }
                }
                #endregion
             }
             else if (dataGridView1.Columns["Username"].Index == e.ColumnIndex)
             {
                #region Username Incorrect Custom Paint
-               var instance = _presenter.FindSlotModel(dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString());
-               if (instance.UsernameOk == false)
+               var slotModel = _presenter.FindSlotModel(dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString());
+               if (slotModel != null && !slotModel.UsernameOk)
                {
                   PaintGridCell(PaintCell.Warning, e);
                }
@@ -154,17 +165,20 @@ namespace HFM.Forms
                       dataGridView1.Columns["ETA"].Index == e.ColumnIndex ||
                       dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex ||
                       dataGridView1.Columns["Deadline"].Index == e.ColumnIndex) &&
-                      _prefs.GetPreference<TimeStyleType>(Preference.TimeStyle).Equals(TimeStyleType.Formatted))
+                      _prefs.Get<TimeStyleType>(Preference.TimeStyle).Equals(TimeStyleType.Formatted))
             {
                PaintGridCell(PaintCell.Time, e);
             }
             else if (dataGridView1.Columns["ETA"].Index == e.ColumnIndex)
             {
                #region ETA as Date Custom Paint
-               var instance = _presenter.FindSlotModel(dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString());
-               if (_prefs.GetPreference<bool>(Preference.EtaDate))
+               if (_prefs.Get<bool>(Preference.EtaDate))
                {
-                  PaintGridCell(PaintCell.EtaDate, instance.ETADate, e);
+                  var slotModel = _presenter.FindSlotModel(dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString());
+                  if (slotModel != null)
+                  {
+                     PaintGridCell(PaintCell.EtaDate, slotModel.ETADate, e);
+                  }
                }
                #endregion
             }
@@ -373,7 +387,7 @@ namespace HFM.Forms
                     dataGridView1.Columns["ETA"].Index == columnIndex ||
                     dataGridView1.Columns["DownloadTime"].Index == columnIndex ||
                     dataGridView1.Columns["Deadline"].Index == columnIndex) &&
-                    _prefs.GetPreference<TimeStyleType>(Preference.TimeStyle).Equals(TimeStyleType.Formatted))
+                    _prefs.Get<TimeStyleType>(Preference.TimeStyle).Equals(TimeStyleType.Formatted))
                {
                   if (dataGridView1.Columns["TPF"].Index == columnIndex)
                   {
@@ -397,7 +411,7 @@ namespace HFM.Forms
                   }
                }
                else if (dataGridView1.Columns["ETA"].Index == columnIndex &&
-                        _prefs.GetPreference<bool>(Preference.EtaDate))
+                        _prefs.Get<bool>(Preference.EtaDate))
                {
                   var instance = _presenter.FindSlotModel(dataGridView1.Rows[i].Cells["Name"].Value.ToString());
                   formattedString = GetEtaDateString(instance.ETADate);

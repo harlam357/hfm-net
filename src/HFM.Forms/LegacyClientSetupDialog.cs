@@ -1,5 +1,5 @@
 /*
- * HFM.NET - Host Configuration Form
+ * HFM.NET - Legacy Client Setup Dialog
  * Copyright (C) 2006-2007 David Rawling
  * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
  *

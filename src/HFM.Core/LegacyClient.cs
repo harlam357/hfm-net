@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 
 using HFM.Core.DataTypes;
@@ -181,7 +182,8 @@ namespace HFM.Core
             Prefs.Get<PpdCalculationType>(Preference.PpdCalculation),
             Prefs.Get<bool>(Preference.CalculateBonus));
 
-         Logger.Info(Constants.InstanceNameFormat, Settings.Name, Instrumentation.GetExecTime(start));
+         string message = String.Format(CultureInfo.CurrentCulture, "Retrieval finished in {0}", Instrumentation.GetExecTime(start));
+         Logger.Info(Constants.InstanceNameFormat, Settings.Name, message);
 
          // Return the Status
          return currentWorkUnitStatus;

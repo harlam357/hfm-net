@@ -96,12 +96,28 @@ namespace HFM.Core.Tests
          _clientDictionary.DictionaryChanged += delegate { dictionaryChangedFired = true; };
          ClientDataDirtyEventArgs dataDirtyEventArgs = null;
          _clientDictionary.ClientDataDirty += (sender, e) => dataDirtyEventArgs = e;
-         // Assert
+         // Act
          _clientDictionary.Load(settingsCollection);
          // Assert
          Assert.IsTrue(dictionaryChangedFired);
          Assert.IsNull(dataDirtyEventArgs.Name);
          _factory.VerifyAllExpectations();
+      }
+
+      [Test]
+      public void LoadVerifySubscriptionTest1()
+      {
+         // Arrange
+         var settingsCollection = new[] { new ClientSettings(ClientType.Legacy) { Name = "test" } };
+         var client1 = MockRepository.GenerateMock<IClient>();
+         client1.Stub(x => x.Settings).Return(settingsCollection[0]);
+         _factory.Expect(x => x.CreateCollection(settingsCollection)).Return(new[] { client1 });
+         // Act
+         _clientDictionary.Load(settingsCollection);
+         // Assert
+         _factory.VerifyAllExpectations();
+         client1.AssertWasCalled(x => x.SlotsChanged += Arg<EventHandler>.Is.Anything);
+         client1.AssertWasCalled(x => x.RetrievalFinished += Arg<EventHandler>.Is.Anything);
       }
 
       [Test]

@@ -66,7 +66,7 @@ namespace HFM.Forms.Controls
                                     DataGridViewAdvancedBorderStyle advancedBorderStyle, DataGridViewPaintParts paintParts)
       {
          var percentage = (float)value;
-         var progressVal = (int)(percentage * 100);
+         var progressVal = Convert.ToInt32(percentage * 100);
          Brush foreColorBrush = new SolidBrush(cellStyle.ForeColor);
 
          // Draws the cell grid

@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading;
 
 using HFM.Client;
@@ -85,7 +86,7 @@ namespace HFM.Core
                if (DefaultSlotActive)
                {
                   // return default slot (for grid binding)
-                  return new[] { new SlotModel { Settings = _settings, Prefs = Prefs } };
+                  return new[] { new SlotModel { Settings = _settings, Prefs = Prefs, Status = SlotStatus.Offline } };
                }
                return _slots.AsReadOnly();
             }
@@ -101,7 +102,7 @@ namespace HFM.Core
       private readonly IFahClientInterface _fahClient;
       private readonly List<SlotModel> _slots;
       private readonly ReaderWriterLockSlim _slotsLock;
-      private readonly List<LogLine> _logLines;
+      private readonly StringBuilder _logText;
       private readonly List<MessageUpdatedEventArgs> _newMessages;
 
       private SlotCollection _slotCollection;
@@ -112,7 +113,7 @@ namespace HFM.Core
          _fahClient = fahClient;
          _slots = new List<SlotModel>();
          _slotsLock = new ReaderWriterLockSlim();
-         _logLines = new List<LogLine>();
+         _logText = new StringBuilder();
          _newMessages = new List<MessageUpdatedEventArgs>();
 
          _slotOptions = new List<SlotOptions>();
@@ -147,16 +148,14 @@ namespace HFM.Core
          }
          else if (e.DataType.Equals(typeof(LogRestart)))
          {
-            _logLines.Clear();
-
-            var lines = _fahClient.GetMessage<LogRestart>().Value.Split('\n');
-            _logLines.AddRange(LogReader.GetLogLines(lines, LogFileType.FahClient));
+            // clear
+            _logText.Length = 0;
+            _logText.Append(_fahClient.GetMessage<LogRestart>().Value);
             // write new local log file
          }
          else if (e.DataType.Equals(typeof(LogUpdate)))
          {
-            var lines = _fahClient.GetMessage<LogUpdate>().Value.Split('\n');
-            _logLines.AddRange(LogReader.GetLogLines(lines, LogFileType.FahClient));
+            _logText.Append(_fahClient.GetMessage<LogUpdate>().Value);
             // append to local log file
          }
       }
@@ -195,10 +194,11 @@ namespace HFM.Core
       {
          if (!e.Connected)
          {
-            _logLines.Clear();
+            // clear
+            _logText.Length = 0;
             _slotCollection = null;
+            RefreshSlots();
          }
-         //RefreshSlots();
       }
 
       private void RefreshSlots()
@@ -207,21 +207,19 @@ namespace HFM.Core
          try
          {
             _slots.Clear();
-            if (_slotCollection == null)
+            if (_slotCollection != null)
             {
-               // no data
-               return;
-            }
-
-            // itterate through slot collection
-            foreach (var slot in _slotCollection)
-            {
-               // add slot model to the collection
-               var slotModel = new SlotModel { Settings = _settings, Prefs = Prefs };
-               slotModel.Status = (SlotStatus)slot.StatusEnum;
-               slotModel.SlotId = slot.Id;
-               slotModel.MachineId = slot.SlotOptions.MachineId.GetValueOrDefault();
-               _slots.Add(slotModel);
+               // itterate through slot collection
+               foreach (var slot in _slotCollection)
+               {
+                  // add slot model to the collection
+                  var slotModel = new SlotModel { Settings = _settings, Prefs = Prefs };
+                  slotModel.Status = (SlotStatus)slot.StatusEnum;
+                  slotModel.SlotId = slot.Id;
+                  slotModel.MachineId = slot.SlotOptions.MachineId.GetValueOrDefault();
+                  slotModel.SlotOptions = slot.SlotOptions;
+                  _slots.Add(slotModel);
+               }
             }
          }
          finally
@@ -260,6 +258,10 @@ namespace HFM.Core
                return;
             }
          }
+         else
+         {
+            Process();
+         }
       }
 
       private void SetUpdateCommands()
@@ -288,7 +290,8 @@ namespace HFM.Core
             var options = _fahClient.GetMessage<Options>();
             var info = _fahClient.GetMessage<Info>();
 
-            IList<UnitInfo> units = DataAggregator.AggregateData(_logLines, unitCollection, options, slotModel.SlotId);
+            var lines = _logText.ToString().Split('\n').Where(x => x.Length != 0).ToList();
+            IList<UnitInfo> units = DataAggregator.AggregateData(LogReader.GetLogLines(lines, LogFileType.FahClient), unitCollection, options, slotModel.SlotOptions, slotModel.SlotId);
             // Issue 126 - Use the Folding ID, Team, User ID, and Machine ID from the FAHlog data.
             // Use the Current Queue Entry as a backup data source.
             PopulateRunLevelData(DataAggregator.CurrentClientRun, info, slotModel);
@@ -322,7 +325,8 @@ namespace HFM.Core
                Prefs.Get<bool>(Preference.CalculateBonus));
          }
 
-         Logger.Info(Constants.InstanceNameFormat, Settings.Name, Instrumentation.GetExecTime(start));
+         string message = String.Format(CultureInfo.CurrentCulture, "Retrieval finished in {0}", Instrumentation.GetExecTime(start));
+         Logger.Info(Constants.InstanceNameFormat, Settings.Name, message);
 
          OnRetrievalFinished(EventArgs.Empty);
       }

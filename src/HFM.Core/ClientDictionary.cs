@@ -198,6 +198,8 @@ namespace HFM.Core
             {
                if (client != null)
                {
+                  client.SlotsChanged += delegate { OnClientDataInvalidated(EventArgs.Empty); };
+                  client.RetrievalFinished += delegate { OnClientDataInvalidated(EventArgs.Empty); };
                   _clientDictionary.Add(client.Settings.Name, client);
                   added++;
                }
