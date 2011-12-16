@@ -56,7 +56,7 @@ namespace HFM.Core
       /// <summary>
       /// Aggregate Data and return UnitInfo List
       /// </summary>
-      IList<UnitInfo> AggregateData(IList<LogLine> logLines, UnitCollection unitCollection, Options options, int slotId);
+      IList<UnitInfo> AggregateData(IList<LogLine> logLines, UnitCollection unitCollection, Options options, SlotOptions slotOptions, int slotId);
    }
 
    public interface ILegacyDataAggregator : IDataAggregator

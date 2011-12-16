@@ -89,7 +89,7 @@ namespace HFM.Core
       /// <summary>
       /// Aggregate Data and return UnitInfo List
       /// </summary>
-      public IList<UnitInfo> AggregateData(IList<LogLine> logLines, UnitCollection unitCollection, Options options, int slotId)
+      public IList<UnitInfo> AggregateData(IList<LogLine> logLines, UnitCollection unitCollection, Options options, SlotOptions slotOptions, int slotId)
       {
          _currentUnitIndex = -1;
          _currentLogLines = logLines;
@@ -102,7 +102,7 @@ namespace HFM.Core
             _logger.Debug(Constants.InstanceNameFormat, ClientName, s);
          }
 
-         IList<UnitInfo> parsedUnits = GenerateUnitInfoDataFromQueue(unitCollection, options, slotId);
+         IList<UnitInfo> parsedUnits = GenerateUnitInfoDataFromQueue(unitCollection, options, slotOptions, slotId);
          _clientQueue = null; // BuildClientQueue(qData);
          _logInterpreter = null;
 
@@ -120,7 +120,7 @@ namespace HFM.Core
       //   return cq;
       //}
 
-      private IList<UnitInfo> GenerateUnitInfoDataFromQueue(IEnumerable<Unit> unitCollection, Options options, int slotId)
+      private IList<UnitInfo> GenerateUnitInfoDataFromQueue(IEnumerable<Unit> unitCollection, Options options, SlotOptions slotOptions, int slotId)
       {
          var parsedUnits = new List<UnitInfo>();
 
@@ -146,7 +146,7 @@ namespace HFM.Core
             // Get the FAH Log Data from the Log Lines
             FahLogUnitData fahLogUnitData = LogReader.GetFahLogDataFromLogLines(logLines);
 
-            UnitInfo unitInfo = BuildUnitInfo(unit, options, fahLogUnitData);
+            UnitInfo unitInfo = BuildUnitInfo(unit, options, slotOptions, fahLogUnitData);
             if (unitInfo != null)
             {
                parsedUnits.Add(unitInfo);
@@ -160,7 +160,7 @@ namespace HFM.Core
          return parsedUnits.AsReadOnly();
       }
 
-      private static UnitInfo BuildUnitInfo(Unit queueEntry, Options options, FahLogUnitData fahLogUnitData)
+      private static UnitInfo BuildUnitInfo(Unit queueEntry, Options options, SlotOptions slotOptions, FahLogUnitData fahLogUnitData)
       {
          Debug.Assert(queueEntry != null);
          Debug.Assert(fahLogUnitData != null);
@@ -171,7 +171,7 @@ namespace HFM.Core
          unit.CoreVersion = fahLogUnitData.CoreVersion;
          unit.UnitResult = fahLogUnitData.UnitResult;
 
-         PopulateUnitInfoFromQueueEntry(queueEntry, options, unit);
+         PopulateUnitInfoFromQueueEntry(queueEntry, options, slotOptions, unit);
          // parse the frame data
          ParseFrameData(fahLogUnitData.FrameDataList, unit);
 
@@ -180,43 +180,34 @@ namespace HFM.Core
 
       #region Unit Population Methods
 
-      private static void PopulateUnitInfoFromQueueEntry(Unit entry, Options options, UnitInfo unit)
+      private static void PopulateUnitInfoFromQueueEntry(Unit entry, Options options, SlotOptions slotOptions, UnitInfo unit)
       {
-         //// convert to enum
-         //var queueEntryStatus = (QueueEntryStatus)entry.StateEnum.EntryStatus;
+         /* DownloadTime (AssignedDateTime from HFM.Client API) */
+         unit.DownloadTime = entry.AssignedDateTime.GetValueOrDefault();
 
-         //if ((queueEntryStatus.Equals(QueueEntryStatus.Unknown) ||
-         //     queueEntryStatus.Equals(QueueEntryStatus.Empty) ||
-         //     queueEntryStatus.Equals(QueueEntryStatus.Garbage) ||
-         //     queueEntryStatus.Equals(QueueEntryStatus.Abandonded)) == false)
+         /* DueTime (TimeoutDateTime from HFM.Client API) */
+         unit.DueTime = entry.TimeoutDateTime.GetValueOrDefault();
+
+         /* FinishedTime */
+         //if (queueEntryStatus.Equals(QueueEntryStatus.Finished) ||
+         //    queueEntryStatus.Equals(QueueEntryStatus.ReadyForUpload))
          //{
-            /* DownloadTime (AssignedDateTime from HFM.Client API) */
-            unit.DownloadTime = entry.AssignedDateTime.GetValueOrDefault();
-
-            /* DueTime (TimeoutDateTime from HFM.Client API) */
-            unit.DueTime = entry.TimeoutDateTime.GetValueOrDefault();
-
-            /* FinishedTime */
-            //if (queueEntryStatus.Equals(QueueEntryStatus.Finished) ||
-            //    queueEntryStatus.Equals(QueueEntryStatus.ReadyForUpload))
-            //{
-            //   unit.FinishedTime = entry.EndTimeUtc;
-            //}
-
-            /* Project (R/C/G) */
-            unit.ProjectID = entry.Project;
-            unit.ProjectRun = entry.Run;
-            unit.ProjectClone = entry.Clone;
-            unit.ProjectGen = entry.Gen;
-
-            /* FoldingID and Team from Queue Entry */
-            unit.FoldingID = options.User;
-            unit.Team = options.Team.GetValueOrDefault();
-            unit.SlotType = (SlotType)options.FahClientSubTypeEnum;
-
-            /* Core ID */
-            unit.CoreID = entry.Core.Replace("0x", String.Empty).ToUpperInvariant();
+         //   unit.FinishedTime = entry.EndTimeUtc;
          //}
+
+         /* Project (R/C/G) */
+         unit.ProjectID = entry.Project;
+         unit.ProjectRun = entry.Run;
+         unit.ProjectClone = entry.Clone;
+         unit.ProjectGen = entry.Gen;
+
+         /* FoldingID and Team from Queue Entry */
+         unit.FoldingID = options.User;
+         unit.Team = options.Team.GetValueOrDefault();
+         unit.SlotType = (SlotType)slotOptions.FahClientSubTypeEnum;
+
+         /* Core ID */
+         unit.CoreID = entry.Core.Replace("0x", String.Empty).ToUpperInvariant();
       }
 
       private static void ParseFrameData(IEnumerable<LogLine> frameData, UnitInfo unit)

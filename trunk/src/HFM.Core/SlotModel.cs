@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.Serialization;
 
+using HFM.Client.DataTypes;
 using HFM.Core.DataTypes;
 
 namespace HFM.Core
@@ -140,6 +141,9 @@ namespace HFM.Core
       
       [DataMember(Order = 2)]
       public ClientSettings Settings { get; set; }
+
+      // temporary and only used with FahClient type
+      public SlotOptions SlotOptions { get; set; }
 
       #endregion
 
