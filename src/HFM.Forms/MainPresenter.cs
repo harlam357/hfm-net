@@ -29,6 +29,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -51,16 +52,13 @@ namespace HFM.Forms
       /// </summary>
       public FormWindowState OriginalWindowState { get; private set; }
 
-      /// <summary>
-      /// Denotes the Saved State of the Current Client Configuration (false == saved, true == unsaved)
-      /// </summary>
-      private bool ChangedAfterSave { get; set; }
-
       private ILogger _logger = NullLogger.Instance;
 
       public ILogger Logger
       {
+         [CoverageExclude]
          get { return _logger; }
+         [CoverageExclude]
          set { _logger = value; }
       }
       
@@ -84,6 +82,7 @@ namespace HFM.Forms
       #region Collections
 
       private readonly IClientDictionary _clientDictionary;
+      private readonly IUnitInfoCollection _unitInfoCollection;
 
       #endregion
 
@@ -98,6 +97,7 @@ namespace HFM.Forms
       #region Data Services
 
       private readonly IPreferenceSet _prefs;
+      private readonly IClientSettingsManager _settingsManager;
       
       #endregion
 
@@ -107,18 +107,26 @@ namespace HFM.Forms
 
       public MainPresenter(IMainView view, IMessagesView messagesView, IMessageBoxView messageBoxView,
                            IOpenFileDialogView openFileDialogView, ISaveFileDialogView saveFileDialogView,
-                           IClientDictionary clientDictionary, IUpdateLogic updateLogic, 
-                           RetrievalLogic retrievalLogic, IExternalProcessStarter processStarter, 
-                           IPreferenceSet prefs)
+                           IClientDictionary clientDictionary, IUnitInfoCollection unitInfoCollection, 
+                           IUpdateLogic updateLogic, RetrievalLogic retrievalLogic, 
+                           IExternalProcessStarter processStarter, IPreferenceSet prefs, 
+                           IClientSettingsManager settingsManager)
       {
-         _gridModel = new MainGridModel(prefs, clientDictionary);
-         _gridModel.BeforeResetBindings += delegate { _view.DataGridView.FreezeSelectionChanged = true; };
-         _gridModel.AfterResetBindings += delegate { _view.DataGridView.FreezeSelectionChanged = false; };
+         _gridModel = new MainGridModel(prefs, view, clientDictionary);
+         //_gridModel.BeforeResetBindings += delegate { _view.DataGridView.FreezeSelectionChanged = true; };
+         _gridModel.AfterResetBindings += delegate
+                                          {
+                                             //_view.DataGridView.FreezeSelectionChanged = false;
+                                             DisplaySelectedSlotData();
+                                             _view.RefreshControlsWithTotalsData(_clientDictionary.Slots.GetSlotTotals());
+                                          };
          _gridModel.SelectedSlotChanged += (sender, e) =>
                                            {
-                                              _view.DataGridView.Rows[e.Index].Selected = true;
-                                              DisplaySelectedSlotData();
-                                              _view.RefreshControlsWithTotalsData(_clientDictionary.Slots.GetSlotTotals());
+                                              if (e.Index >=0 && e.Index < _view.DataGridView.Rows.Count)
+                                              {
+                                                 _view.DataGridView.Rows[e.Index].Selected = true;
+                                                 DisplaySelectedSlotData();
+                                              }
                                            };
 
          // Views
@@ -129,6 +137,7 @@ namespace HFM.Forms
          _saveFileDialogView = saveFileDialogView;
          // Collections
          _clientDictionary = clientDictionary;
+         _unitInfoCollection = unitInfoCollection;
          // Logic Services
          _updateLogic = updateLogic;
          _updateLogic.Owner = _view;
@@ -137,9 +146,12 @@ namespace HFM.Forms
          _processStarter = processStarter;
          // Data Services
          _prefs = prefs;
+         _settingsManager = settingsManager;
 
          // Hook-up Event Handlers
          //_proteinCollection.Downloader.ProjectInfoUpdated += delegate { _retrievalLogic.QueueNewRetrieval(); };
+
+         _clientDictionary.DictionaryChanged += delegate { AutoSaveConfig(); };
       }
       
       #endregion
@@ -148,11 +160,10 @@ namespace HFM.Forms
 
       public void Initialize()
       {
-         // Restore Form Preferences (must be done AFTER DataGridView columns are setup)
+         // Restore View Preferences (must be done AFTER DataGridView columns are setup)
          RestoreViewPreferences();
          // 
-         _view.DataGridView.AutoGenerateColumns = false;
-         _view.DataGridView.DataSource = _gridModel.BindingSource;
+         _view.SetGridDataSource(_gridModel.BindingSource);
          // 
          _prefs.FormShowStyleSettingsChanged += delegate { SetViewShowStyle(); };
          _prefs.ColorLogFileChanged += delegate { ApplyColorLogFileSetting(); };
@@ -171,29 +182,29 @@ namespace HFM.Forms
          //}
 
          // Look for start position
-         var location = _prefs.GetPreference<Point>(Preference.FormLocation);
+         var location = _prefs.Get<Point>(Preference.FormLocation);
          if (location.X != 0 && location.Y != 0)
          {
             _view.SetManualStartPosition();
             _view.Location = location;
          }
          // Look for view size
-         var size = _prefs.GetPreference<Size>(Preference.FormSize);
+         var size = _prefs.Get<Size>(Preference.FormSize);
          if (size.Width != 0 && size.Height != 0)
          {
-            if (!_prefs.GetPreference<bool>(Preference.FormLogVisible))
+            if (!_prefs.Get<bool>(Preference.FormLogVisible))
             {
-               size = new Size(size.Width, size.Height + _prefs.GetPreference<int>(Preference.FormLogWindowHeight));
+               size = new Size(size.Width, size.Height + _prefs.Get<int>(Preference.FormLogWindowHeight));
             }
             _view.Size = size;
-            _view.SplitContainer.SplitterDistance = _prefs.GetPreference<int>(Preference.FormSplitLocation);
+            _view.SplitContainer.SplitterDistance = _prefs.Get<int>(Preference.FormSplitLocation);
          }
 
-         if (!_prefs.GetPreference<bool>(Preference.FormLogVisible))
+         if (!_prefs.Get<bool>(Preference.FormLogVisible))
          {
             ShowHideLogWindow(false);
          }
-         if (!_prefs.GetPreference<bool>(Preference.QueueViewerVisible))
+         if (!_prefs.Get<bool>(Preference.QueueViewerVisible))
          {
             ShowHideQueue(false);
          }
@@ -201,14 +212,14 @@ namespace HFM.Forms
          //if (Prefs.FormSortColumn != String.Empty &&
          //    Prefs.FormSortOrder != SortOrder.None)
          //{
-            _gridModel.SortColumnName = _prefs.GetPreference<string>(Preference.FormSortColumn);
-            _gridModel.SortColumnOrder = _prefs.GetPreference<ListSortDirection>(Preference.FormSortOrder);
+            _gridModel.SortColumnName = _prefs.Get<string>(Preference.FormSortColumn);
+            _gridModel.SortColumnOrder = _prefs.Get<ListSortDirection>(Preference.FormSortOrder);
          //}
 
          try
          {
             // Restore the columns' state
-            var cols = _prefs.GetPreference<StringCollection>(Preference.FormColumns);
+            var cols = _prefs.Get<StringCollection>(Preference.FormColumns);
             var colsArray = new string[cols.Count];
 
             cols.CopyTo(colsArray, 0);
@@ -251,14 +262,14 @@ namespace HFM.Forms
                                                   _prefs.Save();
                                                };
 
-         if (_prefs.GetPreference<bool>(Preference.RunMinimized))
+         if (_prefs.Get<bool>(Preference.RunMinimized))
          {
             _view.WindowState = FormWindowState.Minimized;
          }
 
-         if (_prefs.GetPreference<bool>(Preference.UseDefaultConfigFile))
+         if (_prefs.Get<bool>(Preference.UseDefaultConfigFile))
          {
-            var fileName = _prefs.GetPreference<string>(Preference.DefaultConfigFile);
+            var fileName = _prefs.Get<string>(Preference.DefaultConfigFile);
             if (!String.IsNullOrEmpty(fileName))
             {
                LoadConfigFile(fileName);
@@ -267,7 +278,7 @@ namespace HFM.Forms
 
          SetViewShowStyle();
 
-         if (_prefs.GetPreference<bool>(Preference.StartupCheckForUpdate))
+         if (_prefs.Get<bool>(Preference.StartupCheckForUpdate))
          {
             _updateLogic.CheckForUpdate();
          }
@@ -291,7 +302,7 @@ namespace HFM.Forms
          // changes based on the height of Panel1 - Issue 8
          if (_view.Visible && _view.SplitContainer.Panel2Collapsed)
          {
-            _prefs.SetPreference(Preference.FormSplitLocation, _view.SplitContainer.Panel1.Height);
+            _prefs.Set(Preference.FormSplitLocation, _view.SplitContainer.Panel1.Height);
          }
       }
 
@@ -303,23 +314,22 @@ namespace HFM.Forms
          }
 
          SaveColumnSettings();
-         SaveSortColumn();
 
          // Save location and size data
          // RestoreBounds remembers normal position if minimized or maximized
          if (_view.WindowState == FormWindowState.Normal)
          {
-            _prefs.SetPreference(Preference.FormLocation, _view.Location);
-            _prefs.SetPreference(Preference.FormSize, _view.Size);
+            _prefs.Set(Preference.FormLocation, _view.Location);
+            _prefs.Set(Preference.FormSize, _view.Size);
          }
          else
          {
-            _prefs.SetPreference(Preference.FormLocation, _view.RestoreBounds.Location);
-            _prefs.SetPreference(Preference.FormSize, _view.RestoreBounds.Size);
+            _prefs.Set(Preference.FormLocation, _view.RestoreBounds.Location);
+            _prefs.Set(Preference.FormSize, _view.RestoreBounds.Size);
          }
 
-         _prefs.SetPreference(Preference.FormLogVisible, _view.LogFileViewer.Visible);
-         _prefs.SetPreference(Preference.QueueViewerVisible, _view.QueueControl.Visible);
+         _prefs.Set(Preference.FormLogVisible, _view.LogFileViewer.Visible);
+         _prefs.Set(Preference.QueueViewerVisible, _view.QueueControlVisible);
 
          CheckForAndFireUpdateProcess();
 
@@ -328,7 +338,7 @@ namespace HFM.Forms
       
       public void SetViewShowStyle()
       {
-         switch (_prefs.GetPreference<FormShowStyleType>(Preference.FormShowStyle))
+         switch (_prefs.Get<FormShowStyleType>(Preference.FormShowStyle))
          {
             case FormShowStyleType.SystemTray:
                _view.SetNotifyIconVisible(true);
@@ -380,9 +390,9 @@ namespace HFM.Forms
 
             _view.StatusLabelLeftText = _gridModel.SelectedSlot.ClientPathAndArguments;
 
-            _view.QueueControl.SetQueue(_gridModel.SelectedSlot.Queue,
-                                        _gridModel.SelectedSlot.UnitInfo.SlotType,
-                                        _gridModel.SelectedSlot.Settings.UtcOffsetIsZero);
+            _view.SetQueue(_gridModel.SelectedSlot.Queue,
+                           _gridModel.SelectedSlot.UnitInfo.SlotType,
+                           _gridModel.SelectedSlot.Settings.UtcOffsetIsZero);
 
             // if we've got a good queue read, let queueControl_QueueIndexChanged()
             // handle populating the log lines.
@@ -437,7 +447,7 @@ namespace HFM.Forms
          // clear the log text
          _view.LogFileViewer.SetNoLogLines();
          // clear the queue control
-         _view.QueueControl.SetQueue(null);
+         _view.SetQueue(null);
       }
 
       private void SetLogLines(SlotModel instance, IList<LogLine> logLines)
@@ -448,7 +458,7 @@ namespace HFM.Forms
             // Different Client... Load LogLines
             if (_view.LogFileViewer.LogOwnedByInstanceName.Equals(instance.Name) == false)
             {
-               _view.LogFileViewer.SetLogLines(logLines, instance.Name, _prefs.GetPreference<bool>(Preference.ColorLogFile));
+               _view.LogFileViewer.SetLogLines(logLines, instance.Name, _prefs.Get<bool>(Preference.ColorLogFile));
 
                //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("Set Log Lines (Changed Client - {0})", instance.Name));
             }
@@ -472,7 +482,7 @@ namespace HFM.Forms
                // Otherwise, the log has not changed, don't update and perform the log "flicker".
                if (_view.LogFileViewer.Lines[_view.LogFileViewer.Lines.Length - 1].Equals(lastLogLine) == false)
                {
-                  _view.LogFileViewer.SetLogLines(logLines, instance.Name, _prefs.GetPreference<bool>(Preference.ColorLogFile));
+                  _view.LogFileViewer.SetLogLines(logLines, instance.Name, _prefs.Get<bool>(Preference.ColorLogFile));
 
                   //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Set Log Lines (log lines different)");
                }
@@ -480,7 +490,7 @@ namespace HFM.Forms
             // Nothing in the Textbox... Load LogLines
             else
             {
-               _view.LogFileViewer.SetLogLines(logLines, instance.Name, _prefs.GetPreference<bool>(Preference.ColorLogFile));
+               _view.LogFileViewer.SetLogLines(logLines, instance.Name, _prefs.Get<bool>(Preference.ColorLogFile));
             }
          }
          else
@@ -529,21 +539,12 @@ namespace HFM.Forms
                                     i++));
          }
 
-         _prefs.SetPreference(Preference.FormColumns, stringCollection);
-      }
-
-      private void SaveSortColumn()
-      {
-         _prefs.Set(Preference.FormSortColumn, _gridModel.SortColumnName);
-         _prefs.Set(Preference.FormSortOrder, _gridModel.SortColumnOrder);
+         _prefs.Set(Preference.FormColumns, stringCollection);
       }
 
       public void DataGridViewSorted()
       {
-         //SaveSortColumn(); // Save Column Sort Order - Issue 73
-         //_prefs.Save();
-
-         //SelectCurrentRowKey();
+         _gridModel.ResetSelectedSlot();
       }
 
       public void DataGridViewMouseDown(int coordX, int coordY, MouseButtons button, int clicks)
@@ -598,89 +599,90 @@ namespace HFM.Forms
 
          if (CheckForConfigurationChanges())
          {
-            // clear the clients and UI
-            Clear();
+            ClearConfiguration();
          }
       }
 
       public void FileOpenClick()
       {
-         //if (_retrievalLogic.RetrievalInProgress)
-         //{
-         //   _messageBoxView.ShowInformation(_view, "Retrieval in progress... please wait to open another config file.", _view.Text);
-         //   return;
-         //}
+         if (_retrievalLogic.RetrievalInProgress)
+         {
+            _messageBoxView.ShowInformation(_view, "Retrieval in progress... please wait to open another config file.", _view.Text);
+            return;
+         }
 
-         //if (CheckForConfigurationChanges())
-         //{
-         //   _openFileDialogView.DefaultExt = _configurationManager.ConfigFileExtension;
-         //   _openFileDialogView.Filter = _configurationManager.FileTypeFilters;
-         //   _openFileDialogView.FileName = _configurationManager.ConfigFilename;
-         //   _openFileDialogView.RestoreDirectory = true;
-         //   if (_openFileDialogView.ShowDialog() == DialogResult.OK)
-         //   {
-         //      // clear the clients and UI
-         //      Clear();
-         //      // 
-         //      LoadConfigFile(_openFileDialogView.FileName, _openFileDialogView.FilterIndex);
-         //   }
-         //}
+         if (CheckForConfigurationChanges())
+         {
+            _openFileDialogView.DefaultExt = _settingsManager.FileExtension;
+            _openFileDialogView.Filter = _settingsManager.FileTypeFilters;
+            _openFileDialogView.FileName = _settingsManager.FileName;
+            _openFileDialogView.RestoreDirectory = true;
+            if (_openFileDialogView.ShowDialog().Equals(DialogResult.OK))
+            {
+               ClearConfiguration();
+               // 
+               LoadConfigFile(_openFileDialogView.FileName, _openFileDialogView.FilterIndex);
+            }
+         }
+      }
+
+      private void ClearConfiguration()
+      {
+         // clear the clients and UI
+         _settingsManager.ClearFileName();
+         // 
+         if (_clientDictionary.Count != 0)
+         {
+            SaveCurrentUnitInfo();
+         }
+         _clientDictionary.Clear();
+      }
+
+      private void SaveCurrentUnitInfo()
+      {
+         // If no clients loaded, stub out
+         if (_clientDictionary.Count == 0) return;
+
+         _unitInfoCollection.Clear();
+
+         foreach (var slotModel in _clientDictionary.Slots)
+         {
+            // Don't save the UnitInfo object if the contained Project is Unknown
+            if (!slotModel.UnitInfo.ProjectIsUnknown())
+            {
+               _unitInfoCollection.Add(slotModel.UnitInfo);
+            }
+         }
+
+         _unitInfoCollection.Write();
       }
 
       private void LoadConfigFile(string filePath, int filterIndex = 1)
       {
-         //Debug.Assert(filePath != null);
+         Debug.Assert(filePath != null);
 
-         //try
-         //{
-         //   // Read the config file
-         //   ReadConfigFile(filePath, filterIndex);
+         try
+         {
+            // Read the config file
+            _clientDictionary.Load(_settingsManager.Read(filePath, filterIndex));
 
-         //   if (!_clientDictionary.HasInstances())
-         //   {
-         //      _messageBoxView.ShowError(_view, "No client configurations were loaded from the given config file.", _view.Text);
-         //   }
-         //}
-         //catch (Exception ex)
-         //{
-         //   HfmTrace.WriteToHfmConsole(ex);
-         //   _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
-         //      "No client configurations were loaded from the given config file.{0}{0}{1}", Environment.NewLine, ex.Message),
-         //      _view.Text);
-         //}
-      }
-
-      /// <summary>
-      /// Reads a collection of Client Instance Settings from file
-      /// </summary>
-      /// <param name="filePath">Path to Config File</param>
-      /// <param name="filterIndex">Dialog file type filter index (1 based)</param>
-      private void ReadConfigFile(string filePath, int filterIndex)
-      {
-         //Debug.Assert(filePath != null);
-
-         //if (filterIndex > _configurationManager.SettingsPluginsCount)
-         //{
-         //   throw new ArgumentOutOfRangeException("filterIndex", String.Format(CultureInfo.CurrentCulture,
-         //      "Argument 'filterIndex' must be between 1 and {0}.", _configurationManager.SettingsPluginsCount));
-         //}
-
-         //ICollection<ClientInstance> instances = _configurationManager.ReadConfigFile(filePath, filterIndex);
-         //_clientDictionary.LoadInstances(instances);
-
-         //if (_clientDictionary.HasInstances())
-         //{
-         //   RefreshDisplay();
-         //   // Get client logs         
-         //   _retrievalLogic.QueueNewRetrieval();
-         //   // Start Retrieval and Web Generation Timers
-         //   _retrievalLogic.SetTimerState();
-         //}
+            if (_clientDictionary.Count == 0)
+            {
+               _messageBoxView.ShowError(_view, "No client configurations were loaded from the given config file.", _view.Text);
+            }
+         }
+         catch (Exception ex)
+         {
+            _logger.ErrorFormat(ex, "{0}", ex.Message);
+            _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
+               "No client configurations were loaded from the given config file.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
+         }
       }
 
       private void AutoSaveConfig()
       {
-         if (_prefs.GetPreference<bool>(Preference.AutoSaveConfig))
+         if (_prefs.Get<bool>(Preference.AutoSaveConfig) &&
+             _clientDictionary.IsDirty)
          {
             FileSaveClick();
          }
@@ -688,80 +690,56 @@ namespace HFM.Forms
 
       public void FileSaveClick()
       {
-         //if (!_configurationManager.HasConfigFilename)
-         //{
-         //   FileSaveAsClick();
-         //}
-         //else
-         //{
-         //   try
-         //   {
-         //      WriteConfigFile();
-         //   }
-         //   catch (Exception ex)
-         //   {
-         //      HfmTrace.WriteToHfmConsole(ex);
-         //      _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
-         //         "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message),
-         //         _view.Text);
-         //   }
-         //}
-      }
+         // no clients, stub out
+         if (_clientDictionary.Count == 0) return;
 
-      private void WriteConfigFile()
-      {
-         //WriteConfigFile(_configurationManager.ConfigFilename, _configurationManager.SettingsPluginIndex);
+         if (_settingsManager.FileName.Length == 0)
+         {
+            FileSaveAsClick();
+         }
+         else
+         {
+            try
+            {
+               _settingsManager.Write(_clientDictionary.Values.Select(x => x.Settings), _settingsManager.FileName, _settingsManager.FilterIndex);
+               _clientDictionary.IsDirty = false;
+            }
+            catch (Exception ex)
+            {
+               _logger.ErrorFormat(ex, "{0}", ex.Message);
+               _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
+                  "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
+            }
+         }
       }
 
       public void FileSaveAsClick()
       {
-         //// No Config File and no Instances, stub out
-         //if (!_configurationManager.HasConfigFilename && !_clientDictionary.HasInstances()) return;
+         // no clients, stub out
+         if (_clientDictionary.Count == 0) return;
 
-         //_saveFileDialogView.DefaultExt = _configurationManager.ConfigFileExtension;
-         //_saveFileDialogView.Filter = _configurationManager.FileTypeFilters;
-         //if (_saveFileDialogView.ShowDialog() == DialogResult.OK)
-         //{
-         //   try
-         //   {
-         //      WriteConfigFile(_saveFileDialogView.FileName, _saveFileDialogView.FilterIndex); // Issue 75
-         //   }
-         //   catch (Exception ex)
-         //   {
-         //      HfmTrace.WriteToHfmConsole(ex);
-         //      _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
-         //         "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message),
-         //         _view.Text);
-         //   }
-         //}
-      }
-
-      /// <summary>
-      /// Saves the current collection of Client Instances to file
-      /// </summary>
-      /// <param name="filePath">Path to Config File</param>
-      /// <param name="filterIndex">Dialog file type filter index (1 based)</param>
-      private void WriteConfigFile(string filePath, int filterIndex)
-      {
-         //if (String.IsNullOrEmpty(filePath))
-         //{
-         //   throw new ArgumentException("Argument 'filePath' cannot be a null or empty string.", "filePath");
-         //}
-
-         //if (filterIndex > _configurationManager.SettingsPluginsCount)
-         //{
-         //   throw new ArgumentOutOfRangeException("filterIndex", String.Format(CultureInfo.CurrentCulture,
-         //      "Argument 'filterIndex' must be between 1 and {0}.", _configurationManager.SettingsPluginsCount));
-         //}
-
-         //_configurationManager.WriteConfigFile(GetCurrentInstanceArray(), filePath, filterIndex);
-
-         //ChangedAfterSave = false;
+         _saveFileDialogView.DefaultExt = _settingsManager.FileExtension;
+         _saveFileDialogView.Filter = _settingsManager.FileTypeFilters;
+         if (_saveFileDialogView.ShowDialog().Equals(DialogResult.OK))
+         {
+            try
+            {
+               // Issue 75
+               _settingsManager.Write(_clientDictionary.Values.Select(x => x.Settings), _saveFileDialogView.FileName, _saveFileDialogView.FilterIndex);
+               _clientDictionary.IsDirty = false;
+            }
+            catch (Exception ex)
+            {
+               _logger.ErrorFormat(ex, "{0}", ex.Message);
+               _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
+                  "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
+            }
+         }
       }
 
       private bool CheckForConfigurationChanges()
       {
-         if (ChangedAfterSave)
+         if (_clientDictionary.Count != 0 && _clientDictionary.IsDirty)
          {
             DialogResult result = _messageBoxView.AskYesNoCancelQuestion(_view,
                String.Format("There are changes to the configuration that have not been saved.  Would you like to save these changes?{0}{0}Yes - Continue and save the changes / No - Continue and do not save the changes / Cancel - Do not continue", Environment.NewLine),
@@ -771,7 +749,7 @@ namespace HFM.Forms
             {
                case DialogResult.Yes:
                   FileSaveClick();
-                  return !(ChangedAfterSave);
+                  return !(_clientDictionary.IsDirty);
                case DialogResult.No:
                   return true;
                case DialogResult.Cancel:
@@ -814,57 +792,136 @@ namespace HFM.Forms
       
       #region Clients Menu Handling Methods
 
-      public void ClientsAddClick()
+      internal void ClientsAddClick()
       {
-         //var settings = new ClientInstanceSettings();
-         //var newHost = InstanceProvider.GetInstance<ILegacyClientSetupPresenter>();
-         //newHost.SettingsModel = new LegacyClientSettingsModel(settings);
-         //while (newHost.ShowDialog(_view).Equals(DialogResult.OK))
-         //{
-         //   try
-         //   {
-         //      Add(newHost.SettingsModel.Settings);
-         //      break;
-         //   }
-         //   catch (InvalidOperationException ex)
-         //   {
-         //      HfmTrace.WriteToHfmConsole(ex);
-         //      _messageBoxView.ShowError(_view, ex.Message, _view.Text);
-         //   }
-         //}
+         using (var dialog = ServiceLocator.Resolve<IFahClientSetupPresenter>())
+         {
+            dialog.SettingsModel = new FahClientSettingsModel();
+            while (dialog.ShowDialog(_view).Equals(DialogResult.OK))
+            {
+               var settings = AutoMapper.Mapper.Map<FahClientSettingsModel, ClientSettings>(dialog.SettingsModel);
+               //if (_clientDictionary.ContainsKey(settings.Name))
+               //{
+               //   string message = String.Format(CultureInfo.CurrentCulture, "Client name '{0}' already exists.", settings.Name);
+               //   _messageBoxView.ShowError(_view, Core.Application.NameAndVersion, message);
+               //   continue;
+               //}
+               // perform the add
+               try
+               {
+                  _clientDictionary.Add(settings);
+                  break;
+               }
+               catch (ArgumentException ex)
+               {
+                  _messageBoxView.ShowError(_view, Core.Application.NameAndVersion, ex.Message);
+               }
+            }
+         }
+      }
+
+      internal void ClientsAddLegacyClick()
+      {
+         using (var dialog = ServiceLocator.Resolve<ILegacyClientSetupPresenter>())
+         {
+            dialog.SettingsModel = new LegacyClientSettingsModel();
+            while (dialog.ShowDialog(_view).Equals(DialogResult.OK))
+            {
+               var settings = AutoMapper.Mapper.Map<LegacyClientSettingsModel, ClientSettings>(dialog.SettingsModel);
+               // perform the add
+               try
+               {
+                  _clientDictionary.Add(settings);
+                  break;
+               }
+               catch (ArgumentException ex)
+               {
+                  _messageBoxView.ShowError(_view, Core.Application.NameAndVersion, ex.Message);
+               }
+            }
+         }
       }
 
       public void ClientsEditClick()
       {
-         //// Check for SelectedClientInstance, and get out if not found
-         //if (SelectedClientInstance == null) return;
+         // Check for SelectedSlot, and get out if not found
+         if (_gridModel.SelectedSlot == null) return;
 
-         //var settings = SelectedClientInstance.Settings.DeepClone();
-         //string previousName = settings.InstanceName;
-         //string previousPath = settings.Path;
-         //var editHost = InstanceProvider.GetInstance<ILegacyClientSetupPresenter>();
-         //editHost.SettingsModel = new LegacyClientSettingsModel(settings);
-         //while (editHost.ShowDialog(_view).Equals(DialogResult.OK))
-         //{
-         //   try
-         //   {
-         //      Edit(previousName, previousPath, editHost.SettingsModel.Settings);
-         //      break;
-         //   }
-         //   catch (InvalidOperationException ex)
-         //   {
-         //      HfmTrace.WriteToHfmConsole(ex);
-         //      _messageBoxView.ShowError(_view, ex.Message, _view.Text);
-         //   }
-         //}
+         if (_gridModel.SelectedSlot.Settings.IsFahClient())
+         {
+            EditFahClient();
+         }
+         else if (_gridModel.SelectedSlot.Settings.IsLegacy())
+         {
+            EditLegacyClient();
+         }
+         else
+         {
+            // no External support yet
+            throw new InvalidOperationException("Client type is not supported.");
+         }
+      }
+
+      private void EditFahClient()
+      {
+         Debug.Assert(_gridModel.SelectedSlot != null);
+         IClient client = _clientDictionary[_gridModel.SelectedSlot.Settings.Name];
+         ClientSettings originalSettings = client.Settings;
+         Debug.Assert(originalSettings.IsFahClient());
+
+         using (var dialog = ServiceLocator.Resolve<IFahClientSetupPresenter>())
+         {
+            dialog.SettingsModel = AutoMapper.Mapper.Map<ClientSettings, FahClientSettingsModel>(originalSettings);
+            while (dialog.ShowDialog(_view).Equals(DialogResult.OK))
+            {
+               var newSettings = AutoMapper.Mapper.Map<FahClientSettingsModel, ClientSettings>(dialog.SettingsModel);
+               // perform the edit
+               try
+               {
+                  _clientDictionary.Edit(originalSettings.Name, newSettings);
+                  break;
+               }
+               catch (ArgumentException ex)
+               {
+                  _messageBoxView.ShowError(_view, Core.Application.NameAndVersion, ex.Message);
+               }
+            }
+         }
+      }
+
+      private void EditLegacyClient()
+      {
+         Debug.Assert(_gridModel.SelectedSlot != null);
+         IClient client = _clientDictionary[_gridModel.SelectedSlot.Settings.Name];
+         ClientSettings originalSettings = client.Settings;
+         Debug.Assert(originalSettings.IsLegacy());
+
+         using (var dialog = ServiceLocator.Resolve<ILegacyClientSetupPresenter>())
+         {
+            dialog.SettingsModel = AutoMapper.Mapper.Map<ClientSettings, LegacyClientSettingsModel>(originalSettings);
+            while (dialog.ShowDialog(_view).Equals(DialogResult.OK))
+            {
+               var newSettings = AutoMapper.Mapper.Map<LegacyClientSettingsModel, ClientSettings>(dialog.SettingsModel);
+               // perform the edit
+               try
+               {
+                  _clientDictionary.Edit(originalSettings.Name, newSettings);
+                  break;
+               }
+               catch (ArgumentException ex)
+               {
+                  _messageBoxView.ShowError(_view, Core.Application.NameAndVersion, ex.Message);
+               }
+            }
+         }
       }
 
       public void ClientsDeleteClick()
       {
-         //// Check for SelectedClientInstance, and get out if not found
-         //if (SelectedClientInstance == null) return;
+         // Check for SelectedSlot, and get out if not found
+         if (_gridModel.SelectedSlot == null) return;
 
-         //Remove(SelectedClientInstance.Settings.InstanceName);
+         _clientDictionary.Remove(_gridModel.SelectedSlot.Settings.Name);
       }
 
       public void ClientsMergeClick()
@@ -889,10 +946,10 @@ namespace HFM.Forms
 
       public void ClientsRefreshSelectedClick()
       {
-         //// Check for SelectedClientInstance, and get out if not found
-         //if (SelectedClientInstance == null) return;
+         // Check for SelectedSlot, and get out if not found
+         if (_gridModel.SelectedSlot == null) return;
 
-         //_retrievalLogic.RetrieveSingleClient(SelectedClientInstance.Settings.InstanceName);
+         _retrievalLogic.RetrieveSingleClient(_gridModel.SelectedSlot.Settings.Name);
       }
       
       public void ClientsRefreshAllClick()
@@ -902,185 +959,35 @@ namespace HFM.Forms
 
       public void ClientsViewCachedLogClick()
       {
-         //// Check for SelectedClientInstance, and get out if not found
-         //if (SelectedClientInstance == null) return;
+         // Check for SelectedSlot, and get out if not found
+         if (_gridModel.SelectedSlot == null) return;
 
-         //string logFilePath = Path.Combine(_prefs.CacheDirectory, SelectedClientInstance.Settings.CachedFahLogName);
-         //if (File.Exists(logFilePath))
-         //{
-         //   HandleProcessStartResult(_processStarter.ShowCachedLogFile(logFilePath));
-         //}
-         //else
-         //{
-         //   string message = String.Format(CultureInfo.CurrentCulture, "The FAHlog.txt file for '{0}' does not exist.",
-         //                                  SelectedClientInstance.Settings.InstanceName);
-         //   _messageBoxView.ShowInformation(_view, message, _view.Text);
-         //}
+         string logFilePath = Path.Combine(_prefs.CacheDirectory, _gridModel.SelectedSlot.Settings.CachedFahLogFileName());
+         if (File.Exists(logFilePath))
+         {
+            HandleProcessStartResult(_processStarter.ShowCachedLogFile(logFilePath));
+         }
+         else
+         {
+            string message = String.Format(CultureInfo.CurrentCulture, "The log file for '{0}' does not exist.",
+                                           _gridModel.SelectedSlot.Settings.Name);
+            _messageBoxView.ShowInformation(_view, message, _view.Text);
+         }
       }
 
       public void ClientsViewClientFilesClick()
       {
-         //// Check for SelectedClientInstance, and get out if not found
-         //if (SelectedClientInstance == null) return;
+         // Check for SelectedSlot, and get out if not found);
+         if (_gridModel.SelectedSlot == null) return;
+         Debug.Assert(_gridModel.SelectedSlot.Settings.IsLegacy());
 
-         //if (SelectedClientInstance.Settings.InstanceHostType.Equals(InstanceType.PathInstance))
-         //{
-         //   HandleProcessStartResult(_processStarter.ShowFileExplorer(SelectedClientInstance.Settings.Path));
-         //}
+         if (_gridModel.SelectedSlot.Settings.LegacyClientSubType.Equals(LegacyClientSubType.Path))
+         {
+            HandleProcessStartResult(_processStarter.ShowFileExplorer(_gridModel.SelectedSlot.Settings.DataPath()));
+         }
       }
       
       #endregion
-
-      ///// <summary>
-      ///// Add an Instance
-      ///// </summary>
-      ///// <param name="settings">Client Instance Settings</param>
-      //private void Add(ClientInstanceSettings settings)
-      //{
-      //   Debug.Assert(settings != null);
-
-      //   ClientInstance instance = _instanceFactory.Create(settings);
-      //   if (_clientDictionary.ContainsKey(instance.Settings.InstanceName))
-      //   {
-      //      throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
-      //         "Client Name '{0}' already exists.", instance.Settings.InstanceName));
-      //   }
-
-      //   // Issue 230
-      //   bool hasInstances = _clientDictionary.HasInstances();
-
-      //   // lock added here - 9/28/10
-      //   lock (_clientDictionary)
-      //   {
-      //      _clientDictionary.Add(instance.Settings.InstanceName, instance);
-      //   }
-      //   RefreshDisplay();
-
-      //   _retrievalLogic.RetrieveSingleClient(instance);
-
-      //   ChangedAfterSave = true;
-      //   AutoSaveConfig();
-
-      //   // Issue 230
-      //   if (!hasInstances)
-      //   {
-      //      _retrievalLogic.SetTimerState();
-      //   }
-      //}
-
-      ///// <summary>
-      ///// Edit the ClientInstance Name and Path
-      ///// </summary>
-      ///// <param name="previousName"></param>
-      ///// <param name="previousPath"></param>
-      ///// <param name="settings">Client Instance Settings</param>
-      //private void Edit(string previousName, string previousPath, ClientInstanceSettings settings)
-      //{
-      //   Debug.Assert(previousName != null);
-      //   Debug.Assert(previousPath != null);
-      //   Debug.Assert(settings != null);
-
-      //   Debug.Assert(_clientDictionary.ContainsKey(previousName));
-
-      //   // if the host key changed
-      //   if (previousName != settings.InstanceName)
-      //   {
-      //      // check for a duplicate name
-      //      if (_clientDictionary.ContainsKey(settings.InstanceName))
-      //      {
-      //         throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
-      //            "Client Name '{0}' already exists.", settings.InstanceName));
-      //      }
-      //   }
-
-      //   var instance = _clientDictionary[previousName];
-      //   // load the new settings
-      //   instance.Settings = settings;
-
-      //   // Instance Name changed but isn't an already existing key
-      //   if (previousName != instance.Settings.InstanceName)
-      //   {
-      //      // lock added here - 9/28/10
-      //      lock (_clientDictionary)
-      //      {
-      //         // update InstanceCollection
-      //         _clientDictionary.Remove(previousName);
-      //         _clientDictionary.Add(instance.Settings.InstanceName, instance);
-      //      }
-
-      //      // Issue 79 - 9/28/10
-      //      if (!instance.Settings.ExternalInstance)
-      //      {
-      //         // update the Names in the BenchmarkContainer
-      //         _benchmarkContainer.UpdateInstanceName(new BenchmarkClient(previousName, instance.Settings.Path), instance.Settings.InstanceName);
-      //      }
-      //   }
-      //   // the path changed
-      //   if (!Paths.Equal(previousPath, instance.Settings.Path))
-      //   {
-      //      // Issue 79 - 9/28/10
-      //      if (!instance.Settings.ExternalInstance)
-      //      {
-      //         // update the Paths in the BenchmarkContainer
-      //         _benchmarkContainer.UpdateInstancePath(new BenchmarkClient(instance.Settings.InstanceName, previousPath), instance.Settings.Path);
-      //      }
-      //   }
-
-      //   _retrievalLogic.RetrieveSingleClient(instance);
-
-      //   ChangedAfterSave = true;
-      //   AutoSaveConfig();
-      //}
-
-      ///// <summary>
-      ///// Remove an Instance by Name
-      ///// </summary>
-      ///// <param name="instanceName">Instance Name</param>
-      //private void Remove(string instanceName)
-      //{
-      //   Debug.Assert(instanceName != null);
-
-      //   // lock added here - 9/28/10
-      //   lock (_clientDictionary)
-      //   {
-      //      _clientDictionary.Remove(instanceName);
-      //      var findInstance = FindDisplayInstance(instanceName);
-      //      if (findInstance != null)
-      //      {
-      //         _displayCollection.Remove(findInstance);
-      //      }
-      //   }
-      //   RefreshDisplay();
-
-      //   ChangedAfterSave = true;
-      //   AutoSaveConfig();
-
-      //   FindDuplicates();
-      //}
-
-      /// <summary>
-      /// Clear All Instance Data
-      /// </summary>
-      private void Clear()
-      {
-         //// new config filename
-         //_configurationManager.ClearConfigFilename();
-         //// collection has not changed
-         //ChangedAfterSave = false;
-
-         //if (_clientDictionary.HasInstances())
-         //{
-         //   SaveCurrentUnitInfo();
-         //}
-
-         //_clientDictionary.Clear();
-         //_displayCollection.Clear();
-
-         //// This will disable the timers, we have no hosts
-         //_retrievalLogic.SetTimerState();
-
-         //RefreshDisplay();
-      }
 
       #region View Menu Handling Methods
 
@@ -1093,8 +1000,8 @@ namespace HFM.Forms
          else
          {
             // Restore state data
-            var location = _prefs.GetPreference<Point>(Preference.MessagesFormLocation);
-            var size = _prefs.GetPreference<Size>(Preference.MessagesFormSize);
+            var location = _prefs.Get<Point>(Preference.MessagesFormLocation);
+            var size = _prefs.Get<Size>(Preference.MessagesFormSize);
 
             if (location.X != 0 && location.Y != 0)
             {
@@ -1123,14 +1030,14 @@ namespace HFM.Forms
          {
             _view.LogFileViewer.Visible = false;
             _view.SplitContainer.Panel2Collapsed = true;
-            _prefs.SetPreference(Preference.FormLogWindowHeight, (_view.SplitContainer.Height - _view.SplitContainer.SplitterDistance));
-            _view.Size = new Size(_view.Size.Width, _view.Size.Height - _prefs.GetPreference<int>(Preference.FormLogWindowHeight));
+            _prefs.Set(Preference.FormLogWindowHeight, (_view.SplitContainer.Height - _view.SplitContainer.SplitterDistance));
+            _view.Size = new Size(_view.Size.Width, _view.Size.Height - _prefs.Get<int>(Preference.FormLogWindowHeight));
          }
          else
          {
             _view.LogFileViewer.Visible = true;
             _view.DisableViewResizeEvent();  // disable Form resize event for this operation
-            _view.Size = new Size(_view.Size.Width, _view.Size.Height + _prefs.GetPreference<int>(Preference.FormLogWindowHeight));
+            _view.Size = new Size(_view.Size.Width, _view.Size.Height + _prefs.Get<int>(Preference.FormLogWindowHeight));
             _view.EnableViewResizeEvent();   // re-enable
             _view.SplitContainer.Panel2Collapsed = false;
          }
@@ -1138,20 +1045,20 @@ namespace HFM.Forms
       
       public void ShowHideQueue()
       {
-         ShowHideQueue(!_view.QueueControl.Visible);
+         ShowHideQueue(!_view.QueueControlVisible);
       }
 
       private void ShowHideQueue(bool show)
       {
          if (!show)
          {
-            _view.QueueControl.Visible = false;
+            _view.QueueControlVisible = false;
             _view.SetQueueButtonText(String.Format(CultureInfo.CurrentCulture, "S{0}h{0}o{0}w{0}{0}Q{0}u{0}e{0}u{0}e", Environment.NewLine));
             _view.SplitContainer2.SplitterDistance = 27;
          }
          else
          {
-            _view.QueueControl.Visible = true;
+            _view.QueueControlVisible = true;
             _view.SetQueueButtonText(String.Format(CultureInfo.CurrentCulture, "H{0}i{0}d{0}e{0}{0}Q{0}u{0}e{0}u{0}e", Environment.NewLine));
             _view.SplitContainer2.SplitterDistance = 289;
          }
@@ -1159,8 +1066,8 @@ namespace HFM.Forms
 
       public void ViewToggleDateTimeClick()
       {
-         var style = _prefs.GetPreference<TimeStyleType>(Preference.TimeStyle);
-         _prefs.SetPreference(Preference.TimeStyle, style.Equals(TimeStyleType.Standard) 
+         var style = _prefs.Get<TimeStyleType>(Preference.TimeStyle);
+         _prefs.Set(Preference.TimeStyle, style.Equals(TimeStyleType.Standard) 
                                  ? TimeStyleType.Formatted 
                                  : TimeStyleType.Standard);
 
@@ -1169,8 +1076,8 @@ namespace HFM.Forms
 
       public void ViewToggleCompletedCountStyleClick()
       {
-         var style = _prefs.GetPreference<CompletedCountDisplayType>(Preference.CompletedCountDisplay);
-         _prefs.SetPreference(Preference.CompletedCountDisplay, style.Equals(CompletedCountDisplayType.ClientTotal)
+         var style = _prefs.Get<CompletedCountDisplayType>(Preference.CompletedCountDisplay);
+         _prefs.Set(Preference.CompletedCountDisplay, style.Equals(CompletedCountDisplayType.ClientTotal)
                                  ? CompletedCountDisplayType.ClientRunTotal
                                  : CompletedCountDisplayType.ClientTotal);
 
@@ -1179,21 +1086,21 @@ namespace HFM.Forms
 
       public void ViewToggleVersionInformationClick()
       {
-         _prefs.SetPreference(Preference.ShowVersions, !_prefs.GetPreference<bool>(Preference.ShowVersions));
+         _prefs.Set(Preference.ShowVersions, !_prefs.Get<bool>(Preference.ShowVersions));
          _view.DataGridView.Invalidate();
       }
 
       public void ViewToggleBonusCalculationClick()
       {
-         bool value = !_prefs.GetPreference<bool>(Preference.CalculateBonus);
-         _prefs.SetPreference(Preference.CalculateBonus, value);
+         bool value = !_prefs.Get<bool>(Preference.CalculateBonus);
+         _prefs.Set(Preference.CalculateBonus, value);
          _view.ShowNotifyToolTip(value ? "Bonus On" : "Bonus Off");
          _view.DataGridView.Invalidate();
       }
 
       public void ViewCycleCalculationClick()
       {
-         var calculationType = _prefs.GetPreference<PpdCalculationType>(Preference.PpdCalculation);
+         var calculationType = _prefs.Get<PpdCalculationType>(Preference.PpdCalculation);
          int typeIndex = 0;
          // EffectiveRate is always LAST entry
          if (calculationType.Equals(PpdCalculationType.EffectiveRate) == false)
@@ -1203,7 +1110,7 @@ namespace HFM.Forms
          }
 
          calculationType = (PpdCalculationType)typeIndex;
-         _prefs.SetPreference(Preference.PpdCalculation, calculationType);
+         _prefs.Set(Preference.PpdCalculation, calculationType);
          string calculationTypeString = (from item in OptionsModel.PpdCalculationList
                                          where ((PpdCalculationType)item.ValueMember) == calculationType
                                          select item.DisplayMember).First();
@@ -1224,7 +1131,7 @@ namespace HFM.Forms
          //var projectDownloadView = InstanceProvider.GetInstance<IProgressDialogView>("projectDownloadView");
          //projectDownloadView.OwnerWindow = _view;
          //projectDownloadView.ProcessRunner = _proteinCollection.Downloader;
-         //projectDownloadView.UpdateMessage(_proteinCollection.Downloader.Prefs.GetPreference<string>(Preference.ProjectDownloadUrl));
+         //projectDownloadView.UpdateMessage(_proteinCollection.Downloader.Prefs.Get<string>(Preference.ProjectDownloadUrl));
          //projectDownloadView.Process();
       }
 
@@ -1243,8 +1150,8 @@ namespace HFM.Forms
          frm.LoadProjectID = projectId;
 
          // Restore state data
-         var location = _prefs.GetPreference<Point>(Preference.BenchmarksFormLocation);
-         var size = _prefs.GetPreference<Size>(Preference.BenchmarksFormSize);
+         var location = _prefs.Get<Point>(Preference.BenchmarksFormLocation);
+         var size = _prefs.Get<Size>(Preference.BenchmarksFormSize);
 
          if (location.X != 0 && location.Y != 0)
          {
@@ -1354,7 +1261,7 @@ namespace HFM.Forms
 
       private void ApplyColorLogFileSetting()
       {
-         _view.LogFileViewer.HighlightLines(_prefs.GetPreference<bool>(Preference.ColorLogFile));
+         _view.LogFileViewer.HighlightLines(_prefs.Get<bool>(Preference.ColorLogFile));
       }
 
       private void HandleProcessStartResult(string message)
@@ -1370,41 +1277,9 @@ namespace HFM.Forms
       /// <summary>
       /// Finds the SlotModel by key (Name).
       /// </summary>
-      public SlotModel FindDisplayInstance(string key)
+      public SlotModel FindSlotModel(string key)
       {
          return _clientDictionary.Slots.FirstOrDefault(slot => slot.Name == key);
-      }
-
-      //private void SaveCurrentUnitInfo()
-      //{
-      //   // If no clients loaded, stub out
-      //   if (!_clientDictionary.HasInstances()) return;
-
-      //   _unitInfoContainer.Clear();
-
-      //   lock (_clientDictionary)
-      //   {
-      //      foreach (ClientInstance instance in _clientDictionary.Values)
-      //      {
-      //         foreach (var displayInstance in instance.DisplayInstances.Values)
-      //         {
-      //            // Don't save the UnitInfo object if the contained Project is Unknown
-      //            if (displayInstance.CurrentUnitInfo.UnitInfoData.ProjectIsUnknown() == false)
-      //            {
-      //               _unitInfoContainer.Add((UnitInfo)displayInstance.CurrentUnitInfo.UnitInfoData);
-      //            }
-      //         }
-      //      }
-      //   }
-
-      //   _unitInfoContainer.Write();
-      //}
-
-      public void FindDuplicates()
-      {
-         // check for clients with duplicate Project (Run, Clone, Gen) or UserID
-         _clientDictionary.Slots.FindDuplicates();
-         _view.DataGridView.Invalidate();
       }
    }
 }

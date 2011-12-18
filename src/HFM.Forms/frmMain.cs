@@ -19,7 +19,7 @@
  */
  
 using System;
-using System.Diagnostics;
+using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
@@ -31,7 +31,7 @@ using HFM.Forms.Models;
 
 namespace HFM.Forms
 {
-   public interface IMainView : IWin32Window
+   public interface IMainView : IWin32Window, ISynchronizeInvoke
    {
       #region System.Windows.Forms.Form Properties
 
@@ -49,18 +49,8 @@ namespace HFM.Forms
 
       Rectangle RestoreBounds { get; }
 
-      bool InvokeRequired { get; }
-      
       #endregion
 
-      #region System.Windows.Forms.Form Methods
-
-      object Invoke(Delegate method);
-
-      object Invoke(Delegate method, params object[] args);
-      
-      #endregion
-      
       #region Properties
 
       string StatusLabelLeftText { get; set; }
@@ -75,13 +65,17 @@ namespace HFM.Forms
 
       SplitContainer SplitContainer2 { get; }
 
-      QueueControl QueueControl { get; }
-      
+      bool QueueControlVisible { get; set; }
+
       #endregion
       
       #region Methods
 
       void Initialize(MainPresenter presenter);
+
+      void SetGridDataSource(object dataSource);
+
+      void SecondInstanceStarted(string[] args);
 
       void SetManualStartPosition();
 
@@ -100,19 +94,18 @@ namespace HFM.Forms
       void SetQueueButtonText(string text);
 
       void ShowNotifyToolTip(string text);
-      
-      #region Background Processing Methods
-      
-      string GetSelectedRowInstanceName(System.Collections.IList selectedRows);
 
-      void RefreshControlsWithTotalsData(InstanceTotals totals);
+      void SetQueue(ClientQueue queue);
+
+      void SetQueue(ClientQueue queue, SlotType slotType, bool utcOffsetIsZero);
       
-      #endregion
+      void RefreshControlsWithTotalsData(SlotTotals totals);
       
       #endregion
    }
 
    // ReSharper disable InconsistentNaming
+
    public partial class frmMain : FormWrapper, IMainView
    {
       #region Properties
@@ -137,7 +130,11 @@ namespace HFM.Forms
 
       public SplitContainer SplitContainer2 { get { return splitContainer2; } }
 
-      public QueueControl QueueControl { get { return queueControl; } }
+      public bool QueueControlVisible
+      {
+         get { return queueControl.Visible; }
+         set { queueControl.Visible = value; }
+      }
       
       #endregion
       
@@ -188,6 +185,7 @@ namespace HFM.Forms
          #region Initialize Controls
 
          // Manually Create the Columns - Issue 41
+         dataGridView1.AutoGenerateColumns = false;
          SetupDataGridViewColumns(dataGridView1);
          // Add Column Selector
          new DataGridViewColumnSelector(dataGridView1);
@@ -254,34 +252,39 @@ namespace HFM.Forms
          statusUserWUs.MouseDown += StatsLabelMouseDown;
       }
 
+      public void SetGridDataSource(object dataSource)
+      {
+         dataGridView1.DataSource = dataSource;
+      }
+
       #endregion
       
       #region Form Handlers
 
-      //public void SecondInstanceStarted(string[] args)
-      //{
-      //   if (InvokeRequired)
-      //   {
-      //      BeginInvoke((MethodInvoker)(() => SecondInstanceStarted(args)));
-      //      return;
-      //   }
-      
-      //   if (WindowState == FormWindowState.Minimized)
-      //   {
-      //      WindowState = _presenter.OriginalWindowState;
-      //   }
-      //   else
-      //   {
-      //      if (Core.Application.IsRunningOnMono)
-      //      {
-      //         Activate();
-      //      }
-      //      else
-      //      {
-      //         NativeMethods.SetForegroundWindow(Handle);
-      //      }
-      //   }
-      //}
+      public void SecondInstanceStarted(string[] args)
+      {
+         if (InvokeRequired)
+         {
+            BeginInvoke(new Action<string[]>(SecondInstanceStarted), args);
+            return;
+         }
+
+         if (WindowState == FormWindowState.Minimized)
+         {
+            WindowState = _presenter.OriginalWindowState;
+         }
+         else
+         {
+            if (Core.Application.IsRunningOnMono)
+            {
+               Activate();
+            }
+            else
+            {
+               NativeMethods.SetForegroundWindow(Handle);
+            }
+         }
+      }
 
       private void frmMain_Shown(object sender, EventArgs e)
       {
@@ -338,13 +341,14 @@ namespace HFM.Forms
       
       #region Data Grid View Handlers
       
-      private void dataGridView1_SelectionChanged(object sender, EventArgs e)
-      {
-         //_presenter.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
-      }
-
       public void SetClientMenuItemsVisible(bool filesMenu, bool cachedLog, bool seperator)
       {
+         if (InvokeRequired)
+         {
+            Invoke(new Action<bool, bool, bool>(SetClientMenuItemsVisible), filesMenu, cachedLog, seperator);
+            return;
+         }
+
          mnuClientsViewClientFiles.Visible = filesMenu;
          mnuClientsViewCachedLog.Visible = cachedLog;
          mnuClientsSep4.Visible = seperator;
@@ -357,7 +361,7 @@ namespace HFM.Forms
 
       private void dataGridView1_Sorted(object sender, EventArgs e)
       {
-         //_presenter.DataGridViewSorted();
+         _presenter.DataGridViewSorted();
       }
 
       private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
@@ -467,6 +471,11 @@ namespace HFM.Forms
          _presenter.ClientsAddClick();
       }
 
+      private void mnuClientsAddLegacy_Click(object sender, EventArgs e)
+      {
+         _presenter.ClientsAddLegacyClick();
+      }
+
       private void mnuClientsEdit_Click(object sender, EventArgs e)
       {
          _presenter.ClientsEditClick();
@@ -558,6 +567,28 @@ namespace HFM.Forms
       {
          toolTipNotify.Show(text, this, Size.Width - 150, 8, 2000);
       }
+
+      public void SetQueue(ClientQueue queue)
+      {
+         if (InvokeRequired)
+         {
+            Invoke(new Action<ClientQueue>(SetQueue), queue);
+            return;
+         }
+
+         queueControl.SetQueue(queue);
+      }
+
+      public void SetQueue(ClientQueue queue, SlotType slotType, bool utcOffsetIsZero)
+      {
+         if (InvokeRequired)
+         {
+            Invoke(new Action<ClientQueue, SlotType, bool>(SetQueue), queue, slotType, utcOffsetIsZero);
+            return;
+         }
+
+         queueControl.SetQueue(queue, slotType, utcOffsetIsZero);
+      }
       
       #endregion
 
@@ -611,27 +642,7 @@ namespace HFM.Forms
 
       #region Background Work Routines
 
-      public string GetSelectedRowInstanceName(System.Collections.IList selectedRows)
-      {
-         if (selectedRows.Count > 0)
-         {
-            Debug.Assert(selectedRows.Count == 1);
-
-            var selectedClient = selectedRows[0] as DataGridViewRow;
-            if (selectedClient != null)
-            {
-               var nameColumnValue = selectedClient.Cells["Name"].Value;
-               if (nameColumnValue != null)
-               {
-                  return nameColumnValue.ToString();
-               }
-            }
-         }
-
-         return null;
-      }
-      
-      public void RefreshControlsWithTotalsData(InstanceTotals totals)
+      public void RefreshControlsWithTotalsData(SlotTotals totals)
       {
          SetNotifyIconText(String.Format("{0} Working Clients{3}{1} Non-Working Clients{3}{2:" + _prefs.PpdFormatString + "} PPD",
                                          totals.WorkingClients, totals.NonWorkingClients, totals.PPD, Environment.NewLine));
@@ -735,5 +746,6 @@ namespace HFM.Forms
 
       #endregion
    }
+
    // ReSharper restore InconsistentNaming
 }

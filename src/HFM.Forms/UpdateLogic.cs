@@ -136,7 +136,7 @@ namespace HFM.Forms
                else if (_userInvoked)
                {
                   Owner.Invoke(new Action(() => _messageBoxView.ShowInformation(Owner, String.Format(CultureInfo.CurrentCulture,
-                                                   "{0} is already up-to-date.", Constants.ApplicationName), Owner.Text)));
+                                                   "{0} is already up-to-date.", Constants.ApplicationName), Owner.Text)), null);
                }
             }
          }
@@ -147,7 +147,7 @@ namespace HFM.Forms
             {
                string message = String.Format(CultureInfo.CurrentCulture, "{0} encountered the following error while checking for an update:{1}{1}{2}.",
                                               Constants.ApplicationName, Environment.NewLine, ex.Message);
-               Owner.Invoke(new Action(() => _messageBoxView.ShowError(Owner, message, Owner.Text)));
+               Owner.Invoke(new Action(() => _messageBoxView.ShowError(Owner, message, Owner.Text)), null);
             }
          }
          finally
@@ -175,7 +175,7 @@ namespace HFM.Forms
       {
          if (Owner.InvokeRequired)
          {
-            Owner.Invoke(new Action(() => ShowUpdate(update)));
+            Owner.Invoke(new Action(() => ShowUpdate(update)), null);
             return;
          }
 

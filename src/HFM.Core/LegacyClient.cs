@@ -58,6 +58,8 @@ namespace HFM.Core
             {
                // default slot model
                _slotModel = new SlotModel { Prefs = Prefs };
+               // restore unit info if available
+               RestoreUnitInfo();
             }
             _slotModel.Settings = _settings;
          }
@@ -69,6 +71,20 @@ namespace HFM.Core
       }
 
       #endregion
+
+      private void RestoreUnitInfo()
+      {
+         if (UnitInfoCollection == null) return;
+
+         foreach (var unitInfo in UnitInfoCollection)
+         {
+            if (_slotModel.Owns(unitInfo))
+            {
+               _slotModel.UnitInfoLogic = BuildUnitInfoLogic(unitInfo);
+               break;
+            }
+         }
+      }
 
       #region Retrieval Methods
 
@@ -97,7 +113,8 @@ namespace HFM.Core
                   // Handle the status retured from the log parse
                   HandleReturnedStatus(returnedStatus, _slotModel);
 
-                  Logger.Info("{0} ({1}) Client Status: {2}", Instrumentation.FunctionName, _slotModel.Settings.Name, _slotModel.Status);
+                  string message = String.Format(CultureInfo.CurrentCulture, "Client Status: {0}", _slotModel.Status);
+                  Logger.Info(Constants.InstanceNameFormat, _slotModel.Settings.Name, message);
                }
                else
                {

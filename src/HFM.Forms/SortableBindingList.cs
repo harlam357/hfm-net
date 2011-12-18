@@ -34,9 +34,22 @@ namespace HFM.Forms
    [CoverageExclude]
    public class SortableBindingList<T> : BindingList<T>, ITypedList
    {
+      #region Events
+
+      public event EventHandler<SortedEventArgs> Sorted;
+
+      protected virtual void OnSorted(SortedEventArgs e)
+      {
+         if (Sorted != null) Sorted(this, e);
+      }
+
+      #endregion
+
       #region Fields
 
       private PropertyDescriptorCollection _shape;
+      private readonly ISynchronizeInvoke _syncObject;
+      private readonly Action<ListChangedEventArgs> _fireEventAction;
 
       #endregion
       
@@ -59,6 +72,35 @@ namespace HFM.Forms
 
          /* Get shape (only get public properties marked browsable true) */
          _shape = GetShape();
+      }
+
+      public SortableBindingList(ISynchronizeInvoke syncObject)
+      {
+         /* Default to non-sorted columns */
+         _sortColumns = false;
+
+         /* Get shape (only get public properties marked browsable true) */
+         _shape = GetShape();
+
+         _syncObject = syncObject;
+         _fireEventAction = FireEvent;
+      }
+
+      protected override void OnListChanged(ListChangedEventArgs args)
+      {
+         if (_syncObject == null)
+         {
+            FireEvent(args);
+         }
+         else
+         {
+            _syncObject.Invoke(_fireEventAction, new object[] { args });
+         }
+      }
+
+      private void FireEvent(ListChangedEventArgs args)
+      {
+         base.OnListChanged(args);
       }
 
       #endregion
@@ -180,6 +222,8 @@ namespace HFM.Forms
 
             /* Set sorted */
             IsSorted = true;
+
+            OnSorted(new SortedEventArgs(property.Name, direction));
          }
          else
          {
@@ -337,5 +381,28 @@ namespace HFM.Forms
       }
 
       #endregion
+   }
+
+   public class SortedEventArgs : EventArgs
+   {
+      private readonly string _name;
+
+      public string Name
+      {
+         get { return _name; }
+      }
+
+      private readonly ListSortDirection _direction;
+
+      public ListSortDirection Direction
+      {
+         get { return _direction; }
+      }
+
+      public SortedEventArgs(string name, ListSortDirection direction)
+      {
+         _name = name;
+         _direction = direction;
+      }
    }
 }

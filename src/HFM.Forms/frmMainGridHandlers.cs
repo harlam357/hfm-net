@@ -413,8 +413,8 @@ namespace HFM.Forms
                else if (dataGridView1.Columns["ETA"].Index == columnIndex &&
                         _prefs.Get<bool>(Preference.EtaDate))
                {
-                  var instance = _presenter.FindSlotModel(dataGridView1.Rows[i].Cells["Name"].Value.ToString());
-                  formattedString = GetEtaDateString(instance.ETADate);
+                  var slotModel = _presenter.FindSlotModel(dataGridView1.Rows[i].Cells["Name"].Value.ToString());
+                  formattedString = GetEtaDateString(slotModel.ETADate);
                }
                else if (dataGridView1.Columns["DownloadTime"].Index == columnIndex ||
                         dataGridView1.Columns["Deadline"].Index == columnIndex)

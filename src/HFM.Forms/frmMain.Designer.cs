@@ -66,6 +66,7 @@ namespace HFM.Forms
          this.mnuEditPreferences = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuClients = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuClientsAdd = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuClientsAddLegacy = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuClientsSep1 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuClientsEdit = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuClientsDelete = new System.Windows.Forms.ToolStripMenuItem();
@@ -115,7 +116,6 @@ namespace HFM.Forms
          this.gridContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
          this.mnuContextClientsRefreshSelected = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuContextClientsSep1 = new System.Windows.Forms.ToolStripSeparator();
-         this.mnuContextClientsAdd = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuContextClientsEdit = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuContextClientsDelete = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuContextClientsSep2 = new System.Windows.Forms.ToolStripSeparator();
@@ -170,108 +170,108 @@ namespace HFM.Forms
          // 
          // statusLabelLeft
          // 
-         this.statusLabelLeft.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+         this.statusLabelLeft.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
          this.statusLabelLeft.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
          this.statusLabelLeft.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
          this.statusLabelLeft.Name = "statusLabelLeft";
-         this.statusLabelLeft.Size = new System.Drawing.Size(402, 24);
+         this.statusLabelLeft.Size = new System.Drawing.Size(363, 24);
          this.statusLabelLeft.Spring = true;
          this.statusLabelLeft.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
          // 
          // statusUserTeamRank
          // 
-         this.statusUserTeamRank.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+         this.statusUserTeamRank.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
          this.statusUserTeamRank.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
          this.statusUserTeamRank.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
          this.statusUserTeamRank.Name = "statusUserTeamRank";
-         this.statusUserTeamRank.Size = new System.Drawing.Size(62, 24);
+         this.statusUserTeamRank.Size = new System.Drawing.Size(69, 24);
          this.statusUserTeamRank.Text = "Team: N/A";
          // 
          // statusUserProjectRank
          // 
-         this.statusUserProjectRank.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+         this.statusUserProjectRank.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
          this.statusUserProjectRank.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
          this.statusUserProjectRank.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
          this.statusUserProjectRank.Name = "statusUserProjectRank";
-         this.statusUserProjectRank.Size = new System.Drawing.Size(70, 24);
+         this.statusUserProjectRank.Size = new System.Drawing.Size(76, 24);
          this.statusUserProjectRank.Text = "Project: N/A";
          // 
          // statusUser24hr
          // 
-         this.statusUser24hr.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+         this.statusUser24hr.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
          this.statusUser24hr.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
          this.statusUser24hr.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
          this.statusUser24hr.Name = "statusUser24hr";
-         this.statusUser24hr.Size = new System.Drawing.Size(58, 24);
+         this.statusUser24hr.Size = new System.Drawing.Size(62, 24);
          this.statusUser24hr.Text = "24hr: N/A";
          // 
          // statusUserToday
          // 
-         this.statusUserToday.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+         this.statusUserToday.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
          this.statusUserToday.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
          this.statusUserToday.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
          this.statusUserToday.Name = "statusUserToday";
-         this.statusUserToday.Size = new System.Drawing.Size(66, 24);
+         this.statusUserToday.Size = new System.Drawing.Size(72, 24);
          this.statusUserToday.Text = "Today: N/A";
          // 
          // statusUserWeek
          // 
-         this.statusUserWeek.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+         this.statusUserWeek.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
          this.statusUserWeek.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
          this.statusUserWeek.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
          this.statusUserWeek.Name = "statusUserWeek";
-         this.statusUserWeek.Size = new System.Drawing.Size(63, 24);
+         this.statusUserWeek.Size = new System.Drawing.Size(68, 24);
          this.statusUserWeek.Text = "Week: N/A";
          // 
          // statusUserTotal
          // 
-         this.statusUserTotal.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+         this.statusUserTotal.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
          this.statusUserTotal.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
          this.statusUserTotal.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
          this.statusUserTotal.Name = "statusUserTotal";
-         this.statusUserTotal.Size = new System.Drawing.Size(60, 24);
+         this.statusUserTotal.Size = new System.Drawing.Size(66, 24);
          this.statusUserTotal.Text = "Total: N/A";
          // 
          // statusUserWUs
          // 
-         this.statusUserWUs.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+         this.statusUserWUs.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
          this.statusUserWUs.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
          this.statusUserWUs.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
          this.statusUserWUs.Name = "statusUserWUs";
-         this.statusUserWUs.Size = new System.Drawing.Size(58, 24);
+         this.statusUserWUs.Size = new System.Drawing.Size(63, 24);
          this.statusUserWUs.Text = "WUs: N/A";
          // 
          // statusLabelMiddle
          // 
          this.statusLabelMiddle.AutoSize = false;
-         this.statusLabelMiddle.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+         this.statusLabelMiddle.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
          this.statusLabelMiddle.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
          this.statusLabelMiddle.Name = "statusLabelMiddle";
          this.statusLabelMiddle.Size = new System.Drawing.Size(50, 24);
          // 
          // statusLabelHosts
          // 
-         this.statusLabelHosts.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+         this.statusLabelHosts.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
          this.statusLabelHosts.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
          this.statusLabelHosts.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
          this.statusLabelHosts.Name = "statusLabelHosts";
@@ -281,9 +281,9 @@ namespace HFM.Forms
          // 
          // statusLabelPPW
          // 
-         this.statusLabelPPW.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+         this.statusLabelPPW.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
          this.statusLabelPPW.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
          this.statusLabelPPW.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
          this.statusLabelPPW.Name = "statusLabelPPW";
@@ -294,9 +294,9 @@ namespace HFM.Forms
          // statusLabelRight
          // 
          this.statusLabelRight.AutoSize = false;
-         this.statusLabelRight.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                     | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+         this.statusLabelRight.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
          this.statusLabelRight.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
          this.statusLabelRight.Name = "statusLabelRight";
          this.statusLabelRight.Size = new System.Drawing.Size(50, 24);
@@ -376,7 +376,7 @@ namespace HFM.Forms
             this.mnuFileSep1,
             this.mnuFileQuit});
          this.mnuFile.Name = "mnuFile";
-         this.mnuFile.Size = new System.Drawing.Size(35, 20);
+         this.mnuFile.Size = new System.Drawing.Size(37, 20);
          this.mnuFile.Text = "&File";
          // 
          // mnuFileNew
@@ -384,7 +384,7 @@ namespace HFM.Forms
          this.mnuFileNew.Image = global::HFM.Forms.Properties.Resources.New;
          this.mnuFileNew.Name = "mnuFileNew";
          this.mnuFileNew.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-         this.mnuFileNew.Size = new System.Drawing.Size(260, 22);
+         this.mnuFileNew.Size = new System.Drawing.Size(263, 22);
          this.mnuFileNew.Text = "&New Configuration";
          this.mnuFileNew.ToolTipText = "Create a new configuration file";
          this.mnuFileNew.Click += new System.EventHandler(this.mnuFileNew_Click);
@@ -394,7 +394,7 @@ namespace HFM.Forms
          this.mnuFileOpen.Image = global::HFM.Forms.Properties.Resources.Open;
          this.mnuFileOpen.Name = "mnuFileOpen";
          this.mnuFileOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-         this.mnuFileOpen.Size = new System.Drawing.Size(260, 22);
+         this.mnuFileOpen.Size = new System.Drawing.Size(263, 22);
          this.mnuFileOpen.Text = "&Open Configuration";
          this.mnuFileOpen.Click += new System.EventHandler(this.mnuFileOpen_Click);
          // 
@@ -403,7 +403,7 @@ namespace HFM.Forms
          this.mnuFileSave.Image = global::HFM.Forms.Properties.Resources.Save;
          this.mnuFileSave.Name = "mnuFileSave";
          this.mnuFileSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-         this.mnuFileSave.Size = new System.Drawing.Size(260, 22);
+         this.mnuFileSave.Size = new System.Drawing.Size(263, 22);
          this.mnuFileSave.Text = "&Save Configuration";
          this.mnuFileSave.Click += new System.EventHandler(this.mnuFileSave_Click);
          // 
@@ -411,22 +411,22 @@ namespace HFM.Forms
          // 
          this.mnuFileSaveas.Image = global::HFM.Forms.Properties.Resources.SaveAs;
          this.mnuFileSaveas.Name = "mnuFileSaveas";
-         this.mnuFileSaveas.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
-                     | System.Windows.Forms.Keys.S)));
-         this.mnuFileSaveas.Size = new System.Drawing.Size(260, 22);
+         this.mnuFileSaveas.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.S)));
+         this.mnuFileSaveas.Size = new System.Drawing.Size(263, 22);
          this.mnuFileSaveas.Text = "Save Configuration &As";
          this.mnuFileSaveas.Click += new System.EventHandler(this.mnuFileSaveas_Click);
          // 
          // mnuFileSep1
          // 
          this.mnuFileSep1.Name = "mnuFileSep1";
-         this.mnuFileSep1.Size = new System.Drawing.Size(257, 6);
+         this.mnuFileSep1.Size = new System.Drawing.Size(260, 6);
          // 
          // mnuFileQuit
          // 
          this.mnuFileQuit.Image = global::HFM.Forms.Properties.Resources.Quit;
          this.mnuFileQuit.Name = "mnuFileQuit";
-         this.mnuFileQuit.Size = new System.Drawing.Size(260, 22);
+         this.mnuFileQuit.Size = new System.Drawing.Size(263, 22);
          this.mnuFileQuit.Text = "&Exit";
          this.mnuFileQuit.Click += new System.EventHandler(this.mnuFileQuit_Click);
          // 
@@ -435,13 +435,13 @@ namespace HFM.Forms
          this.mnuEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuEditPreferences});
          this.mnuEdit.Name = "mnuEdit";
-         this.mnuEdit.Size = new System.Drawing.Size(37, 20);
+         this.mnuEdit.Size = new System.Drawing.Size(39, 20);
          this.mnuEdit.Text = "&Edit";
          // 
          // mnuEditPreferences
          // 
          this.mnuEditPreferences.Name = "mnuEditPreferences";
-         this.mnuEditPreferences.Size = new System.Drawing.Size(152, 22);
+         this.mnuEditPreferences.Size = new System.Drawing.Size(135, 22);
          this.mnuEditPreferences.Text = "&Preferences";
          this.mnuEditPreferences.Click += new System.EventHandler(this.mnuEditPreferences_Click);
          // 
@@ -449,6 +449,7 @@ namespace HFM.Forms
          // 
          this.mnuClients.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuClientsAdd,
+            this.mnuClientsAddLegacy,
             this.mnuClientsSep1,
             this.mnuClientsEdit,
             this.mnuClientsDelete,
@@ -461,7 +462,7 @@ namespace HFM.Forms
             this.mnuClientsRefreshSelected,
             this.mnuClientsRefreshAll});
          this.mnuClients.Name = "mnuClients";
-         this.mnuClients.Size = new System.Drawing.Size(51, 20);
+         this.mnuClients.Size = new System.Drawing.Size(55, 20);
          this.mnuClients.Text = "&Clients";
          // 
          // mnuClientsAdd
@@ -470,6 +471,13 @@ namespace HFM.Forms
          this.mnuClientsAdd.Size = new System.Drawing.Size(186, 22);
          this.mnuClientsAdd.Text = "&Add Client";
          this.mnuClientsAdd.Click += new System.EventHandler(this.mnuClientsAdd_Click);
+         // 
+         // mnuClientsAddLegacy
+         // 
+         this.mnuClientsAddLegacy.Name = "mnuClientsAddLegacy";
+         this.mnuClientsAddLegacy.Size = new System.Drawing.Size(186, 22);
+         this.mnuClientsAddLegacy.Text = "Add Legacy Client";
+         this.mnuClientsAddLegacy.Click += new System.EventHandler(this.mnuClientsAddLegacy_Click);
          // 
          // mnuClientsSep1
          // 
@@ -500,12 +508,14 @@ namespace HFM.Forms
          this.mnuClientsMergeClientData.Name = "mnuClientsMergeClientData";
          this.mnuClientsMergeClientData.Size = new System.Drawing.Size(186, 22);
          this.mnuClientsMergeClientData.Text = "&Merge Client Data";
+         this.mnuClientsMergeClientData.Visible = false;
          this.mnuClientsMergeClientData.Click += new System.EventHandler(this.mnuClientsMerge_Click);
          // 
          // mnuClientsSep3
          // 
          this.mnuClientsSep3.Name = "mnuClientsSep3";
          this.mnuClientsSep3.Size = new System.Drawing.Size(183, 6);
+         this.mnuClientsSep3.Visible = false;
          // 
          // mnuClientsViewCachedLog
          // 
@@ -557,26 +567,26 @@ namespace HFM.Forms
             this.mnuViewToggleBonusCalculation,
             this.mnuViewCycleCalculationStyle});
          this.mnuView.Name = "mnuView";
-         this.mnuView.Size = new System.Drawing.Size(41, 20);
+         this.mnuView.Size = new System.Drawing.Size(44, 20);
          this.mnuView.Text = "&View";
          // 
          // mnuViewAutoSizeGridColumns
          // 
          this.mnuViewAutoSizeGridColumns.Name = "mnuViewAutoSizeGridColumns";
-         this.mnuViewAutoSizeGridColumns.Size = new System.Drawing.Size(295, 22);
+         this.mnuViewAutoSizeGridColumns.Size = new System.Drawing.Size(311, 22);
          this.mnuViewAutoSizeGridColumns.Text = "Auto Size &Grid Columns";
          this.mnuViewAutoSizeGridColumns.Click += new System.EventHandler(this.mnuViewAutoSizeGridColumns_Click);
          // 
          // mnuViewSep1
          // 
          this.mnuViewSep1.Name = "mnuViewSep1";
-         this.mnuViewSep1.Size = new System.Drawing.Size(292, 6);
+         this.mnuViewSep1.Size = new System.Drawing.Size(308, 6);
          // 
          // mnuViewMessages
          // 
          this.mnuViewMessages.Name = "mnuViewMessages";
          this.mnuViewMessages.ShortcutKeys = System.Windows.Forms.Keys.F7;
-         this.mnuViewMessages.Size = new System.Drawing.Size(295, 22);
+         this.mnuViewMessages.Size = new System.Drawing.Size(311, 22);
          this.mnuViewMessages.Text = "Show/Hide &Messages Window";
          this.mnuViewMessages.Click += new System.EventHandler(this.mnuViewMessages_Click);
          // 
@@ -584,20 +594,20 @@ namespace HFM.Forms
          // 
          this.mnuViewShowHideLog.Name = "mnuViewShowHideLog";
          this.mnuViewShowHideLog.ShortcutKeys = System.Windows.Forms.Keys.F8;
-         this.mnuViewShowHideLog.Size = new System.Drawing.Size(295, 22);
+         this.mnuViewShowHideLog.Size = new System.Drawing.Size(311, 22);
          this.mnuViewShowHideLog.Text = "Show/Hide &Log/Queue Viewer";
          this.mnuViewShowHideLog.Click += new System.EventHandler(this.mnuViewShowHideLog_Click);
          // 
          // mnuViewSep2
          // 
          this.mnuViewSep2.Name = "mnuViewSep2";
-         this.mnuViewSep2.Size = new System.Drawing.Size(292, 6);
+         this.mnuViewSep2.Size = new System.Drawing.Size(308, 6);
          // 
          // mnuViewToggleDateTime
          // 
          this.mnuViewToggleDateTime.Name = "mnuViewToggleDateTime";
          this.mnuViewToggleDateTime.ShortcutKeys = System.Windows.Forms.Keys.F9;
-         this.mnuViewToggleDateTime.Size = new System.Drawing.Size(295, 22);
+         this.mnuViewToggleDateTime.Size = new System.Drawing.Size(311, 22);
          this.mnuViewToggleDateTime.Text = "Toggle &Date/Time Style";
          this.mnuViewToggleDateTime.Click += new System.EventHandler(this.mnuViewToggleDateTime_Click);
          // 
@@ -605,7 +615,7 @@ namespace HFM.Forms
          // 
          this.mnuViewToggleCompletedCountStyle.Name = "mnuViewToggleCompletedCountStyle";
          this.mnuViewToggleCompletedCountStyle.ShortcutKeys = System.Windows.Forms.Keys.F10;
-         this.mnuViewToggleCompletedCountStyle.Size = new System.Drawing.Size(295, 22);
+         this.mnuViewToggleCompletedCountStyle.Size = new System.Drawing.Size(311, 22);
          this.mnuViewToggleCompletedCountStyle.Text = "Toggle &Completed Count Style";
          this.mnuViewToggleCompletedCountStyle.Click += new System.EventHandler(this.mnuViewToggleCompletedCountStyle_Click);
          // 
@@ -613,20 +623,20 @@ namespace HFM.Forms
          // 
          this.mnuViewToggleVersionInformation.Name = "mnuViewToggleVersionInformation";
          this.mnuViewToggleVersionInformation.ShortcutKeys = System.Windows.Forms.Keys.F11;
-         this.mnuViewToggleVersionInformation.Size = new System.Drawing.Size(295, 22);
+         this.mnuViewToggleVersionInformation.Size = new System.Drawing.Size(311, 22);
          this.mnuViewToggleVersionInformation.Text = "Toggle &Version Information";
          this.mnuViewToggleVersionInformation.Click += new System.EventHandler(this.mnuViewToggleVersionInformation_Click);
          // 
          // mnuViewSep3
          // 
          this.mnuViewSep3.Name = "mnuViewSep3";
-         this.mnuViewSep3.Size = new System.Drawing.Size(292, 6);
+         this.mnuViewSep3.Size = new System.Drawing.Size(308, 6);
          // 
          // mnuViewToggleBonusCalculation
          // 
          this.mnuViewToggleBonusCalculation.Name = "mnuViewToggleBonusCalculation";
          this.mnuViewToggleBonusCalculation.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.O)));
-         this.mnuViewToggleBonusCalculation.Size = new System.Drawing.Size(295, 22);
+         this.mnuViewToggleBonusCalculation.Size = new System.Drawing.Size(311, 22);
          this.mnuViewToggleBonusCalculation.Text = "Toggle Bo&nus PPD/Credit Calculation";
          this.mnuViewToggleBonusCalculation.Click += new System.EventHandler(this.mnuViewToggleBonusCalculation_Click);
          // 
@@ -634,7 +644,7 @@ namespace HFM.Forms
          // 
          this.mnuViewCycleCalculationStyle.Name = "mnuViewCycleCalculationStyle";
          this.mnuViewCycleCalculationStyle.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.P)));
-         this.mnuViewCycleCalculationStyle.Size = new System.Drawing.Size(295, 22);
+         this.mnuViewCycleCalculationStyle.Size = new System.Drawing.Size(311, 22);
          this.mnuViewCycleCalculationStyle.Text = "Cycle &PPD/Credit Calculation";
          this.mnuViewCycleCalculationStyle.Click += new System.EventHandler(this.mnuViewCycleCalculation_Click);
          // 
@@ -645,14 +655,14 @@ namespace HFM.Forms
             this.mnuToolsHistory,
             this.mnuToolsDownloadProjects});
          this.mnuTools.Name = "mnuTools";
-         this.mnuTools.Size = new System.Drawing.Size(44, 20);
+         this.mnuTools.Size = new System.Drawing.Size(48, 20);
          this.mnuTools.Text = "&Tools";
          // 
          // mnuToolsBenchmarks
          // 
          this.mnuToolsBenchmarks.Name = "mnuToolsBenchmarks";
          this.mnuToolsBenchmarks.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
-         this.mnuToolsBenchmarks.Size = new System.Drawing.Size(246, 22);
+         this.mnuToolsBenchmarks.Size = new System.Drawing.Size(252, 22);
          this.mnuToolsBenchmarks.Text = "&Benchmarks Viewer";
          this.mnuToolsBenchmarks.Click += new System.EventHandler(this.mnuToolsBenchmarks_Click);
          // 
@@ -660,14 +670,14 @@ namespace HFM.Forms
          // 
          this.mnuToolsHistory.Name = "mnuToolsHistory";
          this.mnuToolsHistory.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
-         this.mnuToolsHistory.Size = new System.Drawing.Size(246, 22);
+         this.mnuToolsHistory.Size = new System.Drawing.Size(252, 22);
          this.mnuToolsHistory.Text = "Work Unit &History Viewer";
          this.mnuToolsHistory.Click += new System.EventHandler(this.mnuToolsHistory_Click);
          // 
          // mnuToolsDownloadProjects
          // 
          this.mnuToolsDownloadProjects.Name = "mnuToolsDownloadProjects";
-         this.mnuToolsDownloadProjects.Size = new System.Drawing.Size(246, 22);
+         this.mnuToolsDownloadProjects.Size = new System.Drawing.Size(252, 22);
          this.mnuToolsDownloadProjects.Text = "Download &Projects From Stanford";
          this.mnuToolsDownloadProjects.Click += new System.EventHandler(this.mnuToolsDownloadProjects_Click);
          // 
@@ -682,14 +692,14 @@ namespace HFM.Forms
             this.mnuWebSep2,
             this.mnuWebHFMGoogleCode});
          this.mnuWeb.Name = "mnuWeb";
-         this.mnuWeb.Size = new System.Drawing.Size(41, 20);
+         this.mnuWeb.Size = new System.Drawing.Size(43, 20);
          this.mnuWeb.Text = "&Web";
          // 
          // mnuWebEOCUser
          // 
          this.mnuWebEOCUser.Name = "mnuWebEOCUser";
          this.mnuWebEOCUser.ShortcutKeys = System.Windows.Forms.Keys.F2;
-         this.mnuWebEOCUser.Size = new System.Drawing.Size(226, 22);
+         this.mnuWebEOCUser.Size = new System.Drawing.Size(221, 22);
          this.mnuWebEOCUser.Text = "&EOC User Stats Page";
          this.mnuWebEOCUser.Click += new System.EventHandler(this.mnuWebEOCUser_Click);
          // 
@@ -697,7 +707,7 @@ namespace HFM.Forms
          // 
          this.mnuWebStanfordUser.Name = "mnuWebStanfordUser";
          this.mnuWebStanfordUser.ShortcutKeys = System.Windows.Forms.Keys.F3;
-         this.mnuWebStanfordUser.Size = new System.Drawing.Size(226, 22);
+         this.mnuWebStanfordUser.Size = new System.Drawing.Size(221, 22);
          this.mnuWebStanfordUser.Text = "&Stanford User Stats Page";
          this.mnuWebStanfordUser.Click += new System.EventHandler(this.mnuWebStanfordUser_Click);
          // 
@@ -705,31 +715,31 @@ namespace HFM.Forms
          // 
          this.mnuWebEOCTeam.Name = "mnuWebEOCTeam";
          this.mnuWebEOCTeam.ShortcutKeys = System.Windows.Forms.Keys.F4;
-         this.mnuWebEOCTeam.Size = new System.Drawing.Size(226, 22);
+         this.mnuWebEOCTeam.Size = new System.Drawing.Size(221, 22);
          this.mnuWebEOCTeam.Text = "EOC &Team Stats Page";
          this.mnuWebEOCTeam.Click += new System.EventHandler(this.mnuWebEOCTeam_Click);
          // 
          // mnuWebSep1
          // 
          this.mnuWebSep1.Name = "mnuWebSep1";
-         this.mnuWebSep1.Size = new System.Drawing.Size(223, 6);
+         this.mnuWebSep1.Size = new System.Drawing.Size(218, 6);
          // 
          // mnuWebRefreshUserStats
          // 
          this.mnuWebRefreshUserStats.Name = "mnuWebRefreshUserStats";
-         this.mnuWebRefreshUserStats.Size = new System.Drawing.Size(226, 22);
+         this.mnuWebRefreshUserStats.Size = new System.Drawing.Size(221, 22);
          this.mnuWebRefreshUserStats.Text = "Force &Refresh EOC Stats";
          this.mnuWebRefreshUserStats.Click += new System.EventHandler(this.mnuWebRefreshUserStats_Click);
          // 
          // mnuWebSep2
          // 
          this.mnuWebSep2.Name = "mnuWebSep2";
-         this.mnuWebSep2.Size = new System.Drawing.Size(223, 6);
+         this.mnuWebSep2.Size = new System.Drawing.Size(218, 6);
          // 
          // mnuWebHFMGoogleCode
          // 
          this.mnuWebHFMGoogleCode.Name = "mnuWebHFMGoogleCode";
-         this.mnuWebHFMGoogleCode.Size = new System.Drawing.Size(226, 22);
+         this.mnuWebHFMGoogleCode.Size = new System.Drawing.Size(221, 22);
          this.mnuWebHFMGoogleCode.Text = "HFM.NET on &Google Code";
          this.mnuWebHFMGoogleCode.Click += new System.EventHandler(this.mnuWebHFMGoogleCode_Click);
          // 
@@ -747,34 +757,34 @@ namespace HFM.Forms
             this.mnuHelpSep3,
             this.mnuHelpAbout});
          this.mnuHelp.Name = "mnuHelp";
-         this.mnuHelp.Size = new System.Drawing.Size(40, 20);
+         this.mnuHelp.Size = new System.Drawing.Size(44, 20);
          this.mnuHelp.Text = "&Help";
          // 
          // mnuHelpHfmLogFile
          // 
          this.mnuHelpHfmLogFile.Name = "mnuHelpHfmLogFile";
-         this.mnuHelpHfmLogFile.Size = new System.Drawing.Size(204, 22);
+         this.mnuHelpHfmLogFile.Size = new System.Drawing.Size(206, 22);
          this.mnuHelpHfmLogFile.Text = "View HFM.NET &Log File";
          this.mnuHelpHfmLogFile.Click += new System.EventHandler(this.mnuHelpHfmLogFile_Click);
          // 
          // mnuHelpHfmDataFiles
          // 
          this.mnuHelpHfmDataFiles.Name = "mnuHelpHfmDataFiles";
-         this.mnuHelpHfmDataFiles.Size = new System.Drawing.Size(204, 22);
+         this.mnuHelpHfmDataFiles.Size = new System.Drawing.Size(206, 22);
          this.mnuHelpHfmDataFiles.Text = "View HFM.NET &Data Files";
          this.mnuHelpHfmDataFiles.Click += new System.EventHandler(this.mnuHelpHfmDataFiles_Click);
          // 
          // mnuHelpSep1
          // 
          this.mnuHelpSep1.Name = "mnuHelpSep1";
-         this.mnuHelpSep1.Size = new System.Drawing.Size(201, 6);
+         this.mnuHelpSep1.Size = new System.Drawing.Size(203, 6);
          this.mnuHelpSep1.Visible = false;
          // 
          // mnuHelpContents
          // 
          this.mnuHelpContents.Image = global::HFM.Forms.Properties.Resources.HelpContents;
          this.mnuHelpContents.Name = "mnuHelpContents";
-         this.mnuHelpContents.Size = new System.Drawing.Size(204, 22);
+         this.mnuHelpContents.Size = new System.Drawing.Size(206, 22);
          this.mnuHelpContents.Text = "&Contents";
          this.mnuHelpContents.Visible = false;
          this.mnuHelpContents.Click += new System.EventHandler(this.mnuHelpContents_Click);
@@ -782,7 +792,7 @@ namespace HFM.Forms
          // mnuHelpIndex
          // 
          this.mnuHelpIndex.Name = "mnuHelpIndex";
-         this.mnuHelpIndex.Size = new System.Drawing.Size(204, 22);
+         this.mnuHelpIndex.Size = new System.Drawing.Size(206, 22);
          this.mnuHelpIndex.Text = "&Index";
          this.mnuHelpIndex.Visible = false;
          this.mnuHelpIndex.Click += new System.EventHandler(this.mnuHelpIndex_Click);
@@ -790,32 +800,32 @@ namespace HFM.Forms
          // mnuHelpSep2
          // 
          this.mnuHelpSep2.Name = "mnuHelpSep2";
-         this.mnuHelpSep2.Size = new System.Drawing.Size(201, 6);
+         this.mnuHelpSep2.Size = new System.Drawing.Size(203, 6);
          // 
          // mnuHelpHfmGroup
          // 
          this.mnuHelpHfmGroup.Name = "mnuHelpHfmGroup";
-         this.mnuHelpHfmGroup.Size = new System.Drawing.Size(204, 22);
+         this.mnuHelpHfmGroup.Size = new System.Drawing.Size(206, 22);
          this.mnuHelpHfmGroup.Text = "HFM.NET &Google Group";
          this.mnuHelpHfmGroup.Click += new System.EventHandler(this.mnuHelpHfmGroup_Click);
          // 
          // mnuHelpCheckForUpdate
          // 
          this.mnuHelpCheckForUpdate.Name = "mnuHelpCheckForUpdate";
-         this.mnuHelpCheckForUpdate.Size = new System.Drawing.Size(204, 22);
+         this.mnuHelpCheckForUpdate.Size = new System.Drawing.Size(206, 22);
          this.mnuHelpCheckForUpdate.Text = "Check for &Updates...";
          this.mnuHelpCheckForUpdate.Click += new System.EventHandler(this.mnuHelpCheckForUpdate_Click);
          // 
          // mnuHelpSep3
          // 
          this.mnuHelpSep3.Name = "mnuHelpSep3";
-         this.mnuHelpSep3.Size = new System.Drawing.Size(201, 6);
+         this.mnuHelpSep3.Size = new System.Drawing.Size(203, 6);
          // 
          // mnuHelpAbout
          // 
          this.mnuHelpAbout.Image = global::HFM.Forms.Properties.Resources.About;
          this.mnuHelpAbout.Name = "mnuHelpAbout";
-         this.mnuHelpAbout.Size = new System.Drawing.Size(204, 22);
+         this.mnuHelpAbout.Size = new System.Drawing.Size(206, 22);
          this.mnuHelpAbout.Text = "&About";
          this.mnuHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
          // 
@@ -824,64 +834,56 @@ namespace HFM.Forms
          this.gridContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuContextClientsRefreshSelected,
             this.mnuContextClientsSep1,
-            this.mnuContextClientsAdd,
             this.mnuContextClientsEdit,
             this.mnuContextClientsDelete,
             this.mnuContextClientsSep2,
             this.mnuContextClientsViewCachedLog,
             this.mnuContextClientsViewClientFiles});
          this.gridContextMenuStrip.Name = "contextMenuStrip1";
-         this.gridContextMenuStrip.Size = new System.Drawing.Size(186, 148);
+         this.gridContextMenuStrip.Size = new System.Drawing.Size(187, 148);
          // 
          // mnuContextClientsRefreshSelected
          // 
          this.mnuContextClientsRefreshSelected.Name = "mnuContextClientsRefreshSelected";
-         this.mnuContextClientsRefreshSelected.Size = new System.Drawing.Size(185, 22);
+         this.mnuContextClientsRefreshSelected.Size = new System.Drawing.Size(186, 22);
          this.mnuContextClientsRefreshSelected.Text = "Refresh Selected";
          this.mnuContextClientsRefreshSelected.Click += new System.EventHandler(this.mnuClientsRefreshSelected_Click);
          // 
          // mnuContextClientsSep1
          // 
          this.mnuContextClientsSep1.Name = "mnuContextClientsSep1";
-         this.mnuContextClientsSep1.Size = new System.Drawing.Size(182, 6);
-         // 
-         // mnuContextClientsAdd
-         // 
-         this.mnuContextClientsAdd.Name = "mnuContextClientsAdd";
-         this.mnuContextClientsAdd.Size = new System.Drawing.Size(185, 22);
-         this.mnuContextClientsAdd.Text = "Add Client";
-         this.mnuContextClientsAdd.Click += new System.EventHandler(this.mnuClientsAdd_Click);
+         this.mnuContextClientsSep1.Size = new System.Drawing.Size(183, 6);
          // 
          // mnuContextClientsEdit
          // 
          this.mnuContextClientsEdit.Name = "mnuContextClientsEdit";
-         this.mnuContextClientsEdit.Size = new System.Drawing.Size(185, 22);
+         this.mnuContextClientsEdit.Size = new System.Drawing.Size(186, 22);
          this.mnuContextClientsEdit.Text = "Edit Client";
          this.mnuContextClientsEdit.Click += new System.EventHandler(this.mnuClientsEdit_Click);
          // 
          // mnuContextClientsDelete
          // 
          this.mnuContextClientsDelete.Name = "mnuContextClientsDelete";
-         this.mnuContextClientsDelete.Size = new System.Drawing.Size(185, 22);
+         this.mnuContextClientsDelete.Size = new System.Drawing.Size(186, 22);
          this.mnuContextClientsDelete.Text = "Delete Client";
          this.mnuContextClientsDelete.Click += new System.EventHandler(this.mnuClientsDelete_Click);
          // 
          // mnuContextClientsSep2
          // 
          this.mnuContextClientsSep2.Name = "mnuContextClientsSep2";
-         this.mnuContextClientsSep2.Size = new System.Drawing.Size(182, 6);
+         this.mnuContextClientsSep2.Size = new System.Drawing.Size(183, 6);
          // 
          // mnuContextClientsViewCachedLog
          // 
          this.mnuContextClientsViewCachedLog.Name = "mnuContextClientsViewCachedLog";
-         this.mnuContextClientsViewCachedLog.Size = new System.Drawing.Size(185, 22);
+         this.mnuContextClientsViewCachedLog.Size = new System.Drawing.Size(186, 22);
          this.mnuContextClientsViewCachedLog.Text = "View Cached Log File";
          this.mnuContextClientsViewCachedLog.Click += new System.EventHandler(this.mnuClientsViewCachedLog_Click);
          // 
          // mnuContextClientsViewClientFiles
          // 
          this.mnuContextClientsViewClientFiles.Name = "mnuContextClientsViewClientFiles";
-         this.mnuContextClientsViewClientFiles.Size = new System.Drawing.Size(185, 22);
+         this.mnuContextClientsViewClientFiles.Size = new System.Drawing.Size(186, 22);
          this.mnuContextClientsViewClientFiles.Text = "View Client Files";
          this.mnuContextClientsViewClientFiles.Click += new System.EventHandler(this.mnuClientsViewClientFiles_Click);
          // 
@@ -934,8 +936,6 @@ namespace HFM.Forms
          dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
          this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle3;
          this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.dataGridView1.FreezeSelectionChanged = false;
-         this.dataGridView1.FreezeSorted = false;
          this.dataGridView1.Location = new System.Drawing.Point(0, 0);
          this.dataGridView1.MultiSelect = false;
          this.dataGridView1.Name = "dataGridView1";
@@ -946,12 +946,11 @@ namespace HFM.Forms
          this.dataGridView1.ShowCellToolTips = false;
          this.dataGridView1.Size = new System.Drawing.Size(988, 360);
          this.dataGridView1.TabIndex = 0;
-         this.dataGridView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseDown);
-         this.dataGridView1.Sorted += new System.EventHandler(this.dataGridView1_Sorted);
-         this.dataGridView1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseMove);
-         this.dataGridView1.ColumnDividerDoubleClick += new System.Windows.Forms.DataGridViewColumnDividerDoubleClickEventHandler(this.dataGridView1_ColumnDividerDoubleClick);
          this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
-         this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
+         this.dataGridView1.ColumnDividerDoubleClick += new System.Windows.Forms.DataGridViewColumnDividerDoubleClickEventHandler(this.dataGridView1_ColumnDividerDoubleClick);
+         this.dataGridView1.Sorted += new System.EventHandler(this.dataGridView1_Sorted);
+         this.dataGridView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseDown);
+         this.dataGridView1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseMove);
          // 
          // splitContainer2
          // 
@@ -975,9 +974,9 @@ namespace HFM.Forms
          // 
          // queueControl
          // 
-         this.queueControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                     | System.Windows.Forms.AnchorStyles.Left)
-                     | System.Windows.Forms.AnchorStyles.Right)));
+         this.queueControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
          this.queueControl.BackColor = System.Drawing.SystemColors.Window;
          this.queueControl.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
          this.queueControl.Location = new System.Drawing.Point(31, 0);
@@ -988,8 +987,8 @@ namespace HFM.Forms
          // 
          // btnQueue
          // 
-         this.btnQueue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                     | System.Windows.Forms.AnchorStyles.Left)));
+         this.btnQueue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
          this.btnQueue.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
          this.btnQueue.Location = new System.Drawing.Point(2, 0);
          this.btnQueue.Name = "btnQueue";
@@ -1060,8 +1059,8 @@ namespace HFM.Forms
          this.Name = "frmMain";
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
          this.Text = "HFM.NET";
-         this.Shown += new System.EventHandler(this.frmMain_Shown);
          this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
+         this.Shown += new System.EventHandler(this.frmMain_Shown);
          this.statusStrip.ResumeLayout(false);
          this.statusStrip.PerformLayout();
          this.notifyMenu.ResumeLayout(false);
@@ -1125,7 +1124,6 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripMenuItem mnuClientsViewCachedLog;
       private System.Windows.Forms.ToolStripMenuItem mnuToolsDownloadProjects;
       private System.Windows.Forms.ContextMenuStrip gridContextMenuStrip;
-      private System.Windows.Forms.ToolStripMenuItem mnuContextClientsAdd;
       private System.Windows.Forms.ToolStripSeparator mnuContextClientsSep1;
       private System.Windows.Forms.ToolStripMenuItem mnuContextClientsRefreshSelected;
       private System.Windows.Forms.ToolStripMenuItem mnuContextClientsEdit;
@@ -1182,5 +1180,6 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolTip toolTipNotify;
       private System.Windows.Forms.ToolStripMenuItem mnuClientsMergeClientData;
       private System.Windows.Forms.ToolStripSeparator mnuClientsSep3;
+      private System.Windows.Forms.ToolStripMenuItem mnuClientsAddLegacy;
    }
 }

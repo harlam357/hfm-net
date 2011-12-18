@@ -29,16 +29,17 @@ namespace HFM.Forms.Controls
    // Code from: http://social.msdn.microsoft.com/Forums/en-US/winformsdatacontrols/thread/769ca9d6-1e9d-4d76-8c23-db535b2f19c2
 
    [CoverageExclude]
-   internal class DataGridViewProgressColumn : DataGridViewImageColumn
+   internal class DataGridViewProgressColumn : DataGridViewColumn
    {
       public DataGridViewProgressColumn()
       {
          CellTemplate = new DataGridViewProgressCell();
+         SortMode = DataGridViewColumnSortMode.Automatic;
       }
    }
 
    [CoverageExclude]
-   internal class DataGridViewProgressCell : DataGridViewImageCell
+   internal class DataGridViewProgressCell : DataGridViewTextBoxCell
    {
       // Used to make custom cell consistent with a DataGridViewImageCell
       static readonly Image EmptyImage;

@@ -80,12 +80,10 @@ namespace HFM.Core
          }
       }
 
-      private UnitInfo _unitInfo;
       [DataMember(Order = 1)]
       public UnitInfo UnitInfo
       {
          get { return UnitInfoLogic != null ? UnitInfoLogic.UnitInfoData : null; }
-         set { _unitInfo = value; }
       }
 
       public bool Owns(IOwnedByClientSlot value)
@@ -110,35 +108,6 @@ namespace HFM.Core
          return false;
       }
 
-      ///// <summary>
-      ///// Restore the given UnitInfo into this Client Instance
-      ///// </summary>
-      ///// <param name="unitInfo">UnitInfo Object to Restore</param>
-      ///// <param name="protein">Protein Object that corresponds to the UnitInfo Object</param>
-      //public void RestoreUnitInfo(UnitInfo unitInfo, Protein protein)
-      //{
-      //   UnitInfo = unitInfo;
-      //   BuildUnitInfoLogic(protein);
-      //}
-
-      //public void BuildUnitInfoLogic(Protein protein)
-      //{
-      //   if (protein == null) throw new ArgumentNullException("protein");
-      //   if (_unitInfo == null) throw new InvalidOperationException();
-      //   // update the data
-      //   _unitInfo.OwningSlotName = Settings.Name;
-      //   _unitInfo.OwningSlotPath = Settings.Path;
-      //   _unitInfo.SlotType = UnitInfo.DetermineSlotType(protein.Core, _unitInfo.CoreID);
-      //   // build unit info logic
-      //   var unitInfoLogic = ServiceLocator.Resolve<IUnitInfoLogic>();
-      //   unitInfoLogic.CurrentProtein = protein;
-      //   unitInfoLogic.UnitInfoData = _unitInfo;
-      //   // set the property
-      //   UnitInfoLogic = unitInfoLogic;
-      //   // clear the local field (no longer needed - data contained in UnitInfoLogic)
-      //   _unitInfo = null;
-      //}
-      
       [DataMember(Order = 2)]
       public ClientSettings Settings { get; set; }
 
