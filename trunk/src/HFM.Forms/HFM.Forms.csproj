@@ -239,6 +239,18 @@
     <Compile Include="PreferencesDialog.Designer.cs">
       <DependentUpon>PreferencesDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="ProjectDownloadDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProjectDownloadDialog.Designer.cs">
+      <DependentUpon>ProjectDownloadDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProteinLoadResultsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProteinLoadResultsDialog.Designer.cs">
+      <DependentUpon>ProteinLoadResultsDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="QueryDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -249,18 +261,6 @@
     <Compile Include="SlotModelSortableBindingList.cs" />
     <Compile Include="SortableBindingList.cs" />
     <Compile Include="UpdateLogic.cs" />
-    <Compile Include="frmProjects.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmProjects.Designer.cs">
-      <DependentUpon>frmProjects.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmUnitImport.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmUnitImport.Designer.cs">
-      <DependentUpon>frmUnitImport.cs</DependentUpon>
-    </Compile>
     <Compile Include="HistoryPresenter.cs" />
     <Compile Include="Models\HistoryPresenterModel.cs" />
     <Compile Include="Models\OptionsModel.cs" />
@@ -293,12 +293,6 @@
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmProjects.resx">
-      <DependentUpon>frmProjects.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmUnitImport.resx">
-      <DependentUpon>frmUnitImport.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="HistoryForm.resx">
       <DependentUpon>HistoryForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -311,9 +305,15 @@
     <EmbeddedResource Include="PreferencesDialog.resx">
       <DependentUpon>PreferencesDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ProjectDownloadDialog.resx">
+      <DependentUpon>ProjectDownloadDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProteinLoadResultsDialog.resx">
+      <DependentUpon>ProteinLoadResultsDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="QueryDialog.resx">
       <DependentUpon>QueryDialog.cs</DependentUpon>
@@ -382,9 +382,17 @@
       <Project>{C198DA45-5B5B-4684-914B-97DED3F0BB40}</Project>
       <Name>HFM.Core.DataTypes</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HFM.Core.Plugins\HFM.Core.Plugins.csproj">
+      <Project>{E1415297-BD33-4508-A491-F3C13E5A5F7F}</Project>
+      <Name>HFM.Core.Plugins</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HFM.Core\HFM.Core.csproj">
       <Project>{360034D2-9F6A-4377-B5B9-D82712171223}</Project>
       <Name>HFM.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Proteins\HFM.Proteins.csproj">
+      <Project>{7500A8CA-521D-4397-892B-27C6917847E1}</Project>
+      <Name>HFM.Proteins</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
