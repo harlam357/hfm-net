@@ -168,17 +168,17 @@ namespace HFM.Forms
 
          foreach (ProteinBenchmark benchmark in list)
          {
-            IUnitInfoLogic unit = null;
+            UnitInfoLogic unit = null;
             bool valuesOk = false;
 
             ProteinBenchmark benchmark1 = benchmark;
-            var instance = _clientDictionary.Slots.FirstOrDefault(x => x.Name.Equals(benchmark1.OwningSlotName));
-            if (instance != null && instance.Owns(benchmark))
+            var slotModel = _clientDictionary.Slots.FirstOrDefault(x => x.Name.Equals(benchmark1.OwningSlotName));
+            if (slotModel != null && slotModel.Owns(benchmark))
             {
-               unit = instance.UnitInfoLogic;
-               valuesOk = instance.ProductionValuesOk;
+               unit = slotModel.UnitInfoLogic;
+               valuesOk = slotModel.ProductionValuesOk;
             }
-            UpdateBenchmarkText(ToMultiLineString(benchmark, instance, _prefs.PpdFormatString));
+            UpdateBenchmarkText(ToMultiLineString(benchmark, slotModel, _prefs.PpdFormatString));
          }
 
          tabControl1.SuspendLayout();
@@ -303,7 +303,7 @@ namespace HFM.Forms
 
             if (slotModel != null && slotModel.UnitInfoLogic.UnitInfoData.ProjectID.Equals(protein.ProjectNumber) && slotModel.ProductionValuesOk)
             {
-               IUnitInfoLogic unitInfo = slotModel.UnitInfoLogic;
+               UnitInfoLogic unitInfo = slotModel.UnitInfoLogic;
                output.Add(String.Format(" Cur. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
                   unitInfo.GetFrameTime(PpdCalculationType.LastFrame), unitInfo.GetPPD(slotModel.Status, PpdCalculationType.LastFrame, calculateBonus)));
                output.Add(String.Format(" R3F. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",

@@ -117,6 +117,10 @@ namespace HFM.Core
       public IProteinDictionary ProteinDictionary { get; set; }
 
       public IUnitInfoCollection UnitInfoCollection { get; set; }
+
+      public IProteinBenchmarkCollection BenchmarkCollection { get; set; }
+
+      public IUnitInfoDatabase UnitInfoDatabase { get; set; }
       
       private ILogger _logger = NullLogger.Instance;
 
@@ -169,6 +173,7 @@ namespace HFM.Core
             if (RetrievalInProgress) return;
 
             RetrievalInProgress = true;
+            AbortFlag = false;
 
             // perform the client specific retrieval
             RetrieveInternal();
@@ -176,6 +181,7 @@ namespace HFM.Core
          finally
          {
             RetrievalInProgress = false;
+            AbortFlag = false;
          }
       }
 

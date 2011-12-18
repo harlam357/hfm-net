@@ -52,6 +52,9 @@
     <Reference Include="harlam357.Net">
       <HintPath>..\..\lib\harlam357-net\harlam357.Net.dll</HintPath>
     </Reference>
+    <Reference Include="harlam357.Windows.Forms">
+      <HintPath>..\..\lib\harlam357-net\harlam357.Windows.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\lib\NUnit\bin\net-2.0\nunit.framework.dll</HintPath>
     </Reference>
@@ -77,6 +80,8 @@
     <Compile Include="ExtensionsTests.cs" />
     <Compile Include="ClientDictionaryTests.cs" />
     <Compile Include="ClientSettingsManagerTests.cs" />
+    <Compile Include="FahClientTests.cs" />
+    <Compile Include="LegacyClientTests.cs" />
     <Compile Include="LegacyDataAggregatorTests.cs" />
     <Compile Include="NetworkOpsTests.cs" />
     <Compile Include="PathsTests.cs" />
@@ -85,6 +90,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AutoRunTests.cs" />
     <Compile Include="ProteinBenchmarkCollectionTests.cs" />
+    <Compile Include="ProteinDictionaryTests.cs" />
     <Compile Include="QueryParametersCollectionTests.cs" />
     <Compile Include="StatusTests.cs" />
     <Compile Include="UnitInfoCollectionTests.cs" />

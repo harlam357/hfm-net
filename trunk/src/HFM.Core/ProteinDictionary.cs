@@ -22,18 +22,26 @@ using System.Collections.Generic;
 using System.Linq;
 
 using HFM.Core.DataTypes;
+using HFM.Proteins;
 
 namespace HFM.Core
 {
    public interface IProteinDictionary : IDictionary<int, Protein>
    {
       /// <summary>
+      /// Clear the Projects not found cache
+      /// </summary>
+      void ClearProjectsNotFoundCache();
+
+      Protein GetProteinOrDownload(int projectId);
+
+      /// <summary>
       /// Load element values into the ProteinDictionary and return an <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.
       /// </summary>
       /// <param name="values">The <paramref name="values"/> to load into the ProteinDictionary. <paramref name="values"/> cannot be null.</param>
       /// <exception cref="T:System.ArgumentNullException"><paramref name="values"/> is null.</exception>
       /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.</returns>
-      IEnumerable<Proteins.ProteinLoadInfo> Load(IEnumerable<Protein> values);
+      IEnumerable<ProteinLoadInfo> Load(IEnumerable<Protein> values);
 
       #region DataContainer<T>
 
@@ -51,17 +59,24 @@ namespace HFM.Core
    [CoverageExclude]
    public sealed class ProteinDictionary : DataContainer<List<Protein>>, IProteinDictionary
    {
+      /// <summary>
+      /// List of Projects that were not found.
+      /// </summary>
+      private readonly Dictionary<Int32, DateTime> _projectsNotFound;
       private readonly Proteins.ProteinDictionary _dictionary;
+      private readonly IProjectSummaryDownloader _downloader;
 
       public ProteinDictionary()
-         : this(null)
+         : this(null, null)
       {
          
       }
 
-      public ProteinDictionary(IPreferenceSet prefs)
+      public ProteinDictionary(IPreferenceSet prefs, IProjectSummaryDownloader downloader)
       {
+         _projectsNotFound = new Dictionary<Int32, DateTime>(); 
          _dictionary = new Proteins.ProteinDictionary();
+         _downloader = downloader;
 
          if (prefs != null && !String.IsNullOrEmpty(prefs.ApplicationDataFolderPath))
          {
@@ -73,12 +88,112 @@ namespace HFM.Core
 
       public override Plugins.IFileSerializer<List<Protein>> DefaultSerializer
       {
-         get { return new Proteins.TabSerializer(); }
+         get { return new TabSerializer(); }
       }
 
       #endregion
 
-      public IEnumerable<Proteins.ProteinLoadInfo> Load(IEnumerable<Protein> values)
+      /// <summary>
+      /// Clear the Projects not found cache
+      /// </summary>
+      public void ClearProjectsNotFoundCache()
+      {
+         _projectsNotFound.Clear();
+      }
+
+      public Protein GetProteinOrDownload(int projectId)
+      {
+         if (projectId == 0) return new Protein();
+         if (ContainsKey(projectId)) return this[projectId];
+
+         if (CheckProjectsNotFound(projectId))
+         {
+            return new Protein();
+         }
+
+         Logger.Info("Project ID '{0}' not found.", projectId);
+
+         if (_downloader != null)
+         {
+            // Execute a Download (Stanford)
+            _downloader.DownloadFromStanford();
+            try
+            {
+               Load(Read(_downloader.DownloadFilePath, new HtmlSerializer()));
+            }
+            catch (Exception ex)
+            {
+               Logger.ErrorFormat(ex, "{0}", ex.Message);
+            }
+
+            if (ContainsKey(projectId))
+            {
+               // remove it from the not found list and return it
+               _projectsNotFound.Remove(projectId);
+               return this[projectId];
+            }
+
+            // Execute a Download (HFM Web)
+            _downloader.DownloadFromHfmWeb();
+            try
+            {
+               var proteinList = Read(_downloader.DownloadFilePath, new Serializers.XmlFileSerializer<List<Protein>>());
+               var protein = proteinList.FirstOrDefault(x => x.ProjectNumber == projectId);
+               if (protein != null)
+               {
+                  Add(protein.ProjectNumber, protein);
+               }
+            }
+            catch (Exception ex)
+            {
+               Logger.ErrorFormat(ex, "{0}", ex.Message);
+            }
+
+            if (ContainsKey(projectId))
+            {
+               // remove it from the not found list and return it
+               _projectsNotFound.Remove(projectId);
+               return this[projectId];
+            }
+         }
+
+         AddToProjectsNotFound(projectId);
+
+         // return a blank protein
+         return new Protein();
+      }
+
+      private bool CheckProjectsNotFound(int projectId)
+      {
+         // if this project has already been looked for previously
+         if (_projectsNotFound.ContainsKey(projectId))
+         {
+            // if it has been less than one day since this project triggered an
+            // automatic download attempt just return a blank protein.
+            if (DateTime.Now.Subtract(_projectsNotFound[projectId]).TotalDays < 1)
+            {
+               return true;
+            }
+         }
+
+         return false;
+      }
+
+      private void AddToProjectsNotFound(int projectId)
+      {
+         // if already on the not found list
+         if (_projectsNotFound.ContainsKey(projectId))
+         {
+            // update the last download attempt date
+            _projectsNotFound[projectId] = DateTime.Now;
+         }
+         else
+         {
+            _projectsNotFound.Add(projectId, DateTime.Now);
+         }
+      }
+
+      public IEnumerable<ProteinLoadInfo> Load(IEnumerable<Protein> values)
       {
          return _dictionary.Load(values);
       }

@@ -31,8 +31,6 @@ namespace HFM.Core
    {
       #region Injection Properties
 
-      public IProteinBenchmarkCollection BenchmarkCollection { get; set; }
-
       public IStatusLogic StatusLogic { get; set; }
 
       public IDataRetriever DataRetriever { get; set; }
@@ -88,53 +86,30 @@ namespace HFM.Core
 
       #region Retrieval Methods
 
-      private bool AbortRetrieve
-      {
-         get { return RetrievalInProgress && AbortFlag; }
-      }
-
       protected override void RetrieveInternal()
       {
-         AbortFlag = false;
-
          try
          {
-            try
+            DataRetriever.Execute(Settings);
+            if (!AbortFlag)
             {
-               DataRetriever.Execute(Settings);
-               if (!AbortRetrieve)
-               {
-                  // Set successful Last Retrieval Time
-                  LastRetrievalTime = DateTime.Now;
-                  // Re-Init Client Level Members Before Processing
-                  _slotModel.Initialize();
-                  // Process the retrieved logs
-                  SlotStatus returnedStatus = Process();
-                  // Handle the status retured from the log parse
-                  HandleReturnedStatus(returnedStatus, _slotModel);
-
-                  string message = String.Format(CultureInfo.CurrentCulture, "Client Status: {0}", _slotModel.Status);
-                  Logger.Info(Constants.InstanceNameFormat, _slotModel.Settings.Name, message);
-               }
-               else
-               {
-                  _slotModel.Status = SlotStatus.Offline;
-                  Logger.Info(Constants.InstanceNameFormat, _slotModel.Settings.Name, "Retrieval Aborted...");
-               }
+               // Process the retrieved logs
+               Process();
             }
-            catch (Exception ex)
+            else
             {
                _slotModel.Status = SlotStatus.Offline;
-               Logger.ErrorFormat(ex, Constants.InstanceNameFormat, _slotModel.Settings.Name, ex.Message);
+               //Logger.Info(Constants.InstanceNameFormat, Settings.Name, "Retrieval Aborted...");
             }
-            finally
-            {
-               if (!AbortRetrieve) OnRetrievalFinished(EventArgs.Empty);
-            }
+         }
+         catch (Exception ex)
+         {
+            _slotModel.Status = SlotStatus.Offline;
+            Logger.ErrorFormat(ex, Constants.InstanceNameFormat, Settings.Name, ex.Message);
          }
          finally
          {
-            AbortFlag = false;
+            if (!AbortFlag) OnRetrievalFinished(EventArgs.Empty);
          }
       }
       
@@ -145,11 +120,16 @@ namespace HFM.Core
       /// <summary>
       /// Process the cached log files that exist on this machine
       /// </summary>
-      private SlotStatus Process()
+      private void Process()
       {
          DateTime start = Instrumentation.ExecStart;
 
-         #region Setup UnitInfo Aggregator
+         // Set successful Last Retrieval Time
+         LastRetrievalTime = DateTime.Now;
+         // Re-Init Slot Level Members Before Processing
+         _slotModel.Initialize();
+
+         #region Setup Aggregator
 
          DataAggregator.ClientName = Settings.Name;
          DataAggregator.QueueFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedQueueFileName());
@@ -158,7 +138,7 @@ namespace HFM.Core
          
          #endregion
          
-         #region Run the Aggregator and Set LegacyClient Level Results
+         #region Run the Aggregator
          
          IList<UnitInfo> units = DataAggregator.AggregateData();
          // Issue 126 - Use the Folding ID, Team, User ID, and Machine ID from the FAHlog data.
@@ -184,9 +164,8 @@ namespace HFM.Core
             }
          }
 
-         // *** THIS HAS TO BE DONE BEFORE UPDATING THE UnitInfoLogic ***
-         // Update Benchmarks from parsedUnits array 
-         //BenchmarkCollection.UpdateData(_slotModel.UnitInfoLogic, parsedUnits, DataAggregator.CurrentUnitIndex);
+         // *** THIS HAS TO BE DONE BEFORE UPDATING SlotModel.UnitInfoLogic ***
+         UpdateBenchmarkData(_slotModel.UnitInfoLogic, parsedUnits, DataAggregator.CurrentUnitIndex);
 
          // Update the UnitInfoLogic if we have a Status
          SlotStatus currentWorkUnitStatus = DataAggregator.CurrentClientRun.Status;
@@ -194,25 +173,25 @@ namespace HFM.Core
          {
             _slotModel.UnitInfoLogic = parsedUnits[DataAggregator.CurrentUnitIndex];
          }
+
+         HandleReturnedStatus(currentWorkUnitStatus, _slotModel);
          
          _slotModel.UnitInfoLogic.ShowPPDTrace(Logger, _slotModel.Status, 
             Prefs.Get<PpdCalculationType>(Preference.PpdCalculation),
             Prefs.Get<bool>(Preference.CalculateBonus));
 
+         string statusMessage = String.Format(CultureInfo.CurrentCulture, "Client Status: {0}", _slotModel.Status);
+         Logger.Info(Constants.InstanceNameFormat, _slotModel.Name, statusMessage);
+
          string message = String.Format(CultureInfo.CurrentCulture, "Retrieval finished in {0}", Instrumentation.GetExecTime(start));
          Logger.Info(Constants.InstanceNameFormat, Settings.Name, message);
-
-         // Return the Status
-         return currentWorkUnitStatus;
       }
 
       private UnitInfoLogic BuildUnitInfoLogic(UnitInfo unitInfo)
       {
          Debug.Assert(unitInfo != null);
 
-         Protein protein = ProteinDictionary.ContainsKey(unitInfo.ProjectID)
-                              ? ProteinDictionary[unitInfo.ProjectID]
-                              : new Protein();
+         Protein protein = ProteinDictionary.GetProteinOrDownload(unitInfo.ProjectID);
 
          // update the data
          unitInfo.UnitRetrievalTime = LastRetrievalTime;
@@ -249,6 +228,86 @@ namespace HFM.Core
          {
             slotModel.MachineId = queueEntry.MachineID;
          }
+      }
+
+      /// <summary>
+      /// Update Project Benchmarks
+      /// </summary>
+      /// <param name="currentUnitInfo">Current UnitInfo</param>
+      /// <param name="parsedUnits">Parsed UnitInfo Array</param>
+      /// <param name="nextUnitIndex">Index of Current UnitInfo</param>
+      internal void UpdateBenchmarkData(UnitInfoLogic currentUnitInfo, UnitInfoLogic[] parsedUnits, int nextUnitIndex)
+      {
+         var foundCurrent = false;
+         var processUpdates = false;
+         var index = GetStartingIndex(nextUnitIndex, parsedUnits.Length);
+
+         while (index != -1)
+         {
+            // If Current has not been found, check the nextUnitIndex
+            // or try to match the Current Project and Raw Download Time
+            if (parsedUnits[index] != null && processUpdates == false && (index == nextUnitIndex || currentUnitInfo.UnitInfoData.Equals(parsedUnits[index].UnitInfoData)))
+            {
+               foundCurrent = true;
+               processUpdates = true;
+            }
+
+            if (processUpdates)
+            {
+               int previousFramesComplete = 0;
+               if (foundCurrent)
+               {
+                  // current frame has already been recorded, increment to the next frame
+                  previousFramesComplete = currentUnitInfo.FramesComplete + 1;
+                  foundCurrent = false;
+               }
+
+               // Even though the current UnitInfoLogic has been found in the parsed UnitInfoLogic array doesn't
+               // mean that all entries in the array will be present.  See TestFiles\SMP_12\FAHlog.txt.
+               if (parsedUnits[index] != null)
+               {
+                  // Update benchmarks
+                  BenchmarkCollection.UpdateData(parsedUnits[index].UnitInfoData, previousFramesComplete, parsedUnits[index].FramesComplete);
+                  // Update history database
+                  if (UnitInfoDatabase != null && UnitInfoDatabase.Connected)
+                  {
+                     try
+                     {
+                        UnitInfoDatabase.WriteUnitInfo(parsedUnits[index]);
+                     }
+                     catch (Exception ex)
+                     {
+                        Logger.ErrorFormat(ex, "{0}", ex.Message);
+                     }
+                  }
+               }
+            }
+
+            #region Increment to the next unit or set terminal value
+            if (index == nextUnitIndex)
+            {
+               index = -1;
+            }
+            else if (index == parsedUnits.Length - 1)
+            {
+               index = 0;
+            }
+            else
+            {
+               index++;
+            }
+            #endregion
+         }
+      }
+
+      private static int GetStartingIndex(int nextUnitIndex, int numberOfUnits)
+      {
+         if (nextUnitIndex == numberOfUnits - 1)
+         {
+            return 0;
+         }
+
+         return nextUnitIndex + 1;
       }
       
       #endregion

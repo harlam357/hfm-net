@@ -63,11 +63,11 @@ namespace HFM.Core
 
       #region Root Data Types
 
-      private IUnitInfoLogic _unitInfoLogic;
+      private UnitInfoLogic _unitInfoLogic;
       /// <summary>
       /// Class member containing info specific to the current work unit
       /// </summary>
-      public IUnitInfoLogic UnitInfoLogic
+      public UnitInfoLogic UnitInfoLogic
       {
          get { return _unitInfoLogic; }
          set
@@ -80,10 +80,12 @@ namespace HFM.Core
          }
       }
 
+      private UnitInfo _unitInfo;
       [DataMember(Order = 1)]
       public UnitInfo UnitInfo
       {
          get { return UnitInfoLogic != null ? UnitInfoLogic.UnitInfoData : null; }
+         set { _unitInfo = value; }
       }
 
       public bool Owns(IOwnedByClientSlot value)
@@ -245,6 +247,11 @@ namespace HFM.Core
       /// </summary>
       [DataMember(Order = 7)]
       public string ClientVersion { get; set; }
+
+      public bool IsUsingBenchmarkFrameTime
+      {
+         get { return ProductionValuesOk && UnitInfoLogic.IsUsingBenchmarkFrameTime(CalculationType); }
+      }
 
       /// <summary>
       /// Time per frame (TPF) of the unit
@@ -470,7 +477,7 @@ namespace HFM.Core
       /// <summary>
       /// Update Time of Last Frame Progress based on Current and Parsed UnitInfo
       /// </summary>
-      private void UpdateTimeOfLastProgress(IUnitInfoLogic parsedUnitInfo)
+      private void UpdateTimeOfLastProgress(UnitInfoLogic parsedUnitInfo)
       {
          // Matches the Current Project and Raw Download Time
          if (UnitInfoLogic.UnitInfoData.Equals(parsedUnitInfo.UnitInfoData))

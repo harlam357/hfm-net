@@ -26,92 +26,7 @@ using HFM.Core.DataTypes;
 
 namespace HFM.Core
 {
-   public interface IUnitInfoLogic
-   {
-      /// <summary>
-      /// Unit Info Data Class
-      /// </summary>
-      UnitInfo UnitInfoData { get; set; }
-
-      /// <summary>
-      /// Date/time the unit was downloaded
-      /// </summary>
-      DateTime DownloadTime { get; }
-
-      /// <summary>
-      /// Work Unit Preferred Deadline
-      /// </summary>
-      DateTime PreferredDeadline { get; }
-
-      /// <summary>
-      /// Work Unit Preferred Deadline
-      /// </summary>
-      DateTime FinalDeadline { get; }
-
-      /// <summary>
-      /// Date/time the unit finished
-      /// </summary>
-      DateTime FinishedTime { get; }
-
-      /// <summary>
-      /// Class member containing info on the currently running protein
-      /// </summary>
-      Protein CurrentProtein { get; set; }
-
-      /// <summary>
-      /// Frame progress of the unit
-      /// </summary>
-      int FramesComplete { get; }
-
-      /// <summary>
-      /// Current progress (percentage) of the unit
-      /// </summary>
-      int PercentComplete { get; }
-
-      /// <summary>
-      /// Time per frame (TPF) of the unit
-      /// </summary>
-      TimeSpan GetFrameTime(PpdCalculationType calculationType);
-
-      /// <summary>
-      /// Work unit credit
-      /// </summary>
-      double GetCredit(SlotStatus status, PpdCalculationType calculationType, bool calculateBonus);
-
-      /// <summary>
-      /// Units per day (UPD) rating for this unit
-      /// </summary>
-      double GetUPD(PpdCalculationType calculationType);
-
-      /// <summary>
-      /// Points per day (PPD) rating for this unit
-      /// </summary>
-      double GetPPD(SlotStatus status, PpdCalculationType calculationType, bool calculateBonus);
-
-      /// <summary>
-      /// Esimated time of arrival (ETA) for this unit
-      /// </summary>
-      TimeSpan GetEta(PpdCalculationType calculationType);
-
-      /// <summary>
-      /// Esimated time of arrival (ETA) for this unit
-      /// </summary>
-      DateTime GetEtaDate(PpdCalculationType calculationType);
-
-      /// <summary>
-      /// Specifies if All Frames have been Completed
-      /// </summary>
-      bool AllFramesCompleted { get; }
-
-      /// <summary>
-      /// Frame Time per section based on current PPD calculation setting (readonly)
-      /// </summary>
-      int GetRawTime(PpdCalculationType calculationType);
-
-      void ShowPPDTrace(ILogger logger, SlotStatus status, PpdCalculationType calculationType, bool calculateBonus);
-   }
-
-   public sealed class UnitInfoLogic : IUnitInfoLogic
+   public sealed class UnitInfoLogic
    {
       #region Fields
 
@@ -341,6 +256,11 @@ namespace HFM.Core
          // Issue 92
          TimeSpan timeSinceUnitDownload = _unitInfo.UnitRetrievalTime.Subtract(DownloadTime);
          return (Convert.ToInt32(timeSinceUnitDownload.TotalSeconds) / _unitInfo.CurrentFrame.FrameID);
+      }
+
+      public bool IsUsingBenchmarkFrameTime(PpdCalculationType calculationType)
+      {
+         return GetRawTime(calculationType) == 0;
       }
       
       /// <summary>

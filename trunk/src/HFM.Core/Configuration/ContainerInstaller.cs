@@ -18,7 +18,7 @@
  */
 
 using System.Collections.Generic;
-
+using System.IO;
 using Castle.Core.Logging;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
@@ -149,6 +149,12 @@ namespace HFM.Core.Configuration
          container.Register(
             Component.For<Plugins.PluginLoader>()
             .LifeStyle.Transient);
+
+         // IProjectSummaryDownloader - Singleton
+         container.Register(
+            Component.For<IProjectSummaryDownloader>()
+               .ImplementedBy<ProjectSummaryDownloader>()
+               .OnCreate((kernel, instance) => instance.DownloadFilePath = Path.GetTempFileName()));
 
          #region Plugins
 

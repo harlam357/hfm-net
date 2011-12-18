@@ -120,6 +120,12 @@ namespace HFM.Forms.Configuration
                .ImplementedBy<QueryDialog>()
                .LifeStyle.Transient);
 
+         // IProgressDialogView - Transient
+         container.Register(
+            Component.For<IProgressDialogView>()
+               .ImplementedBy<ProjectDownloadDialog>()
+               .LifeStyle.Transient);
+
          #endregion
 
          #region Presenters

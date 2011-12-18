@@ -55,15 +55,16 @@ namespace HFM.Proteins
             
             if (_dictionary.ContainsKey(protein.ProjectNumber))
             {
-               var changes = GetChangedProperties(this[protein.ProjectNumber], protein);
+               var changes = GetChangedProperties(_dictionary[protein.ProjectNumber], protein);
                loaded.Add(changes.Count == 0
                              ? new ProteinLoadInfo(protein.ProjectNumber, ProteinLoadResult.NoChange)
-                             : new ProteinLoadInfo(protein.ProjectNumber, ProteinLoadResult.Change, changes));
+                             : new ProteinLoadInfo(protein.ProjectNumber, ProteinLoadResult.Changed, changes));
+               _dictionary[protein.ProjectNumber] = protein;
             }
             else
             {
+               loaded.Add(new ProteinLoadInfo(protein.ProjectNumber, ProteinLoadResult.Added));
                _dictionary.Add(protein.ProjectNumber, protein);
-               loaded.Add(new ProteinLoadInfo(protein.ProjectNumber, ProteinLoadResult.Add));
             }
          }
          

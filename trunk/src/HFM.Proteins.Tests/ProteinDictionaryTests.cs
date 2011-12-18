@@ -1,4 +1,22 @@
-﻿
+﻿/*
+ * HFM.NET - Protein Dictionary Tests
+ * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License. See the included file GPLv2.TXT.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,10 +53,10 @@ namespace HFM.Proteins.Tests
          // check the results
          Assert.AreEqual(2, results.Count);
          Assert.AreEqual(1, results[0].ProjectNumber);
-         Assert.AreEqual(ProteinLoadResult.Add, results[0].Result);
+         Assert.AreEqual(ProteinLoadResult.Added, results[0].Result);
          Assert.IsNull(results[0].Changes);
          Assert.AreEqual(2, results[1].ProjectNumber);
-         Assert.AreEqual(ProteinLoadResult.Add, results[1].Result);
+         Assert.AreEqual(ProteinLoadResult.Added, results[1].Result);
          Assert.IsNull(results[1].Changes);
       }
 
@@ -69,7 +87,7 @@ namespace HFM.Proteins.Tests
 
          // check index 0
          Assert.AreEqual(1, results[0].ProjectNumber);
-         Assert.AreEqual(ProteinLoadResult.Change, results[0].Result);
+         Assert.AreEqual(ProteinLoadResult.Changed, results[0].Result);
          var changes = results[0].Changes.ToList();
          Assert.AreEqual(1, changes.Count);
          Assert.AreEqual("Credit", changes[0].Name);
@@ -78,7 +96,7 @@ namespace HFM.Proteins.Tests
 
          // check index 1
          Assert.AreEqual(2, results[1].ProjectNumber);
-         Assert.AreEqual(ProteinLoadResult.Change, results[1].Result);
+         Assert.AreEqual(ProteinLoadResult.Changed, results[1].Result);
          changes = results[1].Changes.ToList();
          Assert.AreEqual(2, changes.Count);
          Assert.AreEqual("MaximumDays", changes[0].Name);
@@ -92,6 +110,44 @@ namespace HFM.Proteins.Tests
          Assert.AreEqual(3, results[2].ProjectNumber);
          Assert.AreEqual(ProteinLoadResult.NoChange, results[2].Result);
          Assert.IsNull(results[2].Changes);
+      }
+
+      [Test]
+      public void LoadTest3()
+      {
+         // add proteins so we have something that already exists
+         _dictionary.Add(1, CreateValidProtein(1));
+         _dictionary.Add(2, CreateValidProtein(2));
+         _dictionary.Add(3, CreateValidProtein(3));
+
+         // build the collection of proteins to load
+         var values = new List<Protein>();
+         var protein = CreateValidProtein(1);
+         protein.Credit = 100;
+         values.Add(protein);
+         protein = CreateValidProtein(2);
+         protein.MaximumDays = 3;
+         protein.KFactor = 26.4;
+         values.Add(protein);
+         values.Add(CreateValidProtein(3));
+
+         // execute load
+         var results = _dictionary.Load(values).ToList();
+
+         // check the results
+         Assert.AreEqual(3, _dictionary.Count);
+
+         // check project 1
+         Assert.AreEqual(1, _dictionary[1].ProjectNumber);
+         Assert.AreEqual(100, _dictionary[1].Credit);
+
+         // check project 2
+         Assert.AreEqual(2, _dictionary[2].ProjectNumber);
+         Assert.AreEqual(3, _dictionary[2].MaximumDays);
+         Assert.AreEqual(26.4, _dictionary[2].KFactor);
+
+         // check project 3
+         Assert.AreEqual(3, results[3].ProjectNumber);
       }
 
       [Test]
