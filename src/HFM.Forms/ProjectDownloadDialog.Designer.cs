@@ -1,6 +1,6 @@
 ﻿namespace HFM.Forms
 {
-   partial class frmUnitImport
+   partial class ProjectDownloadDialog
    {
       /// <summary>
       /// Required designer variable.
@@ -15,6 +15,7 @@
       {
          if (disposing && (components != null))
          {
+            _timer.Dispose();
             components.Dispose();
          }
          base.Dispose(disposing);
@@ -28,14 +29,14 @@
       /// </summary>
       private void InitializeComponent()
       {
-         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmUnitImport));
+         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProjectDownloadDialog));
          this.SuspendLayout();
          // 
-         // frmUnitImport
+         // ProjectDownloadDialog
          // 
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-         this.Name = "frmUnitImport";
-         this.Text = "Completed Units Import";
+         this.Name = "ProjectDownloadDialog";
+         this.Text = "Project Download";
          this.ResumeLayout(false);
       }
 
