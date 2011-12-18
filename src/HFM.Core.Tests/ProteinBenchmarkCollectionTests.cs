@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using System.IO;
 
 using NUnit.Framework;
-using Rhino.Mocks;
 
 using HFM.Core.DataTypes;
 using HFM.Core.Serializers;
@@ -33,78 +32,9 @@ namespace HFM.Core.Tests
    public class ProteinBenchmarkCollectionTests
    {
       [Test]
-      public void UpdateDataTest()
-      {
-         // setup
-         var database = MockRepository.GenerateMock<IUnitInfoDatabase>();
-         var container = new ProteinBenchmarkCollection(database);
-
-         var unitInfo1 = new UnitInfo();
-         unitInfo1.OwningSlotName = "Owner";
-         unitInfo1.OwningSlotPath = "Path";
-         unitInfo1.ProjectID = 2669;
-         unitInfo1.ProjectRun = 1;
-         unitInfo1.ProjectClone = 2;
-         unitInfo1.ProjectGen = 3;
-         unitInfo1.FinishedTime = new DateTime(2010, 1, 1);
-         var currentUnitInfo = new UnitInfoLogic(container) { CurrentProtein = new Protein(), UnitInfoData = unitInfo1 };
-
-
-         var unitInfo1Clone = unitInfo1.DeepClone();
-         unitInfo1Clone.UnitFrames.Add(0, new UnitFrame { FrameDuration = TimeSpan.FromMinutes(0), FrameID = 0 });
-         unitInfo1Clone.UnitFrames.Add(1, new UnitFrame { FrameDuration = TimeSpan.FromMinutes(5), FrameID = 1 });
-         unitInfo1Clone.UnitFrames.Add(2, new UnitFrame { FrameDuration = TimeSpan.FromMinutes(5), FrameID = 2 });
-         unitInfo1Clone.UnitFrames.Add(3, new UnitFrame { FrameDuration = TimeSpan.FromMinutes(5), FrameID = 3 });
-         var unitInfoLogic1 = new UnitInfoLogic(container) { CurrentProtein = new Protein(), UnitInfoData = unitInfo1Clone };
-
-         var unitInfo2 = new UnitInfo();
-         unitInfo2.OwningSlotName = "Owner";
-         unitInfo2.OwningSlotPath = "Path";
-         unitInfo2.ProjectID = 2669;
-         unitInfo2.ProjectRun = 2;
-         unitInfo2.ProjectClone = 3;
-         unitInfo2.ProjectGen = 4;
-         unitInfo2.FinishedTime = new DateTime(2010, 1, 1);
-         var unitInfoLogic2 = new UnitInfoLogic(container) { CurrentProtein = new Protein(), UnitInfoData = unitInfo2 };
-
-         var unitInfo3 = new UnitInfo();
-         unitInfo3.OwningSlotName = "Owner";
-         unitInfo3.OwningSlotPath = "Path";
-         unitInfo3.ProjectID = 2669;
-         unitInfo3.ProjectRun = 3;
-         unitInfo3.ProjectClone = 4;
-         unitInfo3.ProjectGen = 5;
-         unitInfo3.FinishedTime = new DateTime(2010, 1, 1);
-         var unitInfoLogic3 = new UnitInfoLogic(container) { CurrentProtein = new Protein(), UnitInfoData = unitInfo3 };
-
-         var parsedUnits = new[] { unitInfoLogic1, unitInfoLogic2, unitInfoLogic3 };
-
-         // arrange
-         database.Stub(x => x.Connected).Return(true);
-         database.Expect(x => x.WriteUnitInfo(null)).IgnoreArguments().Repeat.Times(3);
-
-         var benchmarkClient = new BenchmarkClient("Owner", "Path");
-
-         // assert before act
-         Assert.AreEqual(false, container.Contains(benchmarkClient));
-         Assert.AreEqual(false, new List<int>(container.GetBenchmarkProjects(benchmarkClient)).Contains(2669));
-         Assert.IsNull(container.GetBenchmark(currentUnitInfo.UnitInfoData));
-         
-         // act
-         container.UpdateData(currentUnitInfo, parsedUnits, 2);
-
-         // assert after act
-         Assert.AreEqual(true, container.Contains(benchmarkClient));
-         Assert.AreEqual(true, new List<int>(container.GetBenchmarkProjects(benchmarkClient)).Contains(2669));
-         Assert.AreEqual(TimeSpan.FromMinutes(5), container.GetBenchmark(currentUnitInfo.UnitInfoData).AverageFrameTime);
-         
-         database.VerifyAllExpectations();
-      }
-
-      [Test]
       public void ReadTest1()
       {
-         var container = new ProteinBenchmarkCollection(MockRepository.GenerateStub<IUnitInfoDatabase>())
+         var container = new ProteinBenchmarkCollection
          {
             FileName = Path.Combine("..\\..\\TestFiles", Constants.BenchmarkCacheFileName),
          };
@@ -116,7 +46,7 @@ namespace HFM.Core.Tests
       [Test]
       public void WriteTest1()
       {
-         var collection = new ProteinBenchmarkCollection(MockRepository.GenerateStub<IUnitInfoDatabase>())
+         var collection = new ProteinBenchmarkCollection
          {
             FileName = "TestProteinBenchmarkBinary.dat",
          };
@@ -131,7 +61,7 @@ namespace HFM.Core.Tests
       [Test]
       public void WriteTest2()
       {
-         var collection = new ProteinBenchmarkCollection(MockRepository.GenerateStub<IUnitInfoDatabase>());
+         var collection = new ProteinBenchmarkCollection();
          var serializer = new XmlFileSerializer<List<ProteinBenchmark>>();
 
          collection.Data = CreateTestList();

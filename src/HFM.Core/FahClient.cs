@@ -146,10 +146,6 @@ namespace HFM.Core
          _fahClient.MessageUpdated += FahClientMessageUpdated;
          _fahClient.UpdateFinished += FahClientUpdateFinished;
          _fahClient.ConnectedChanged += FahClientConnectedChanged;
-         //_fahClient.DataLengthSent += FahClientDataLengthSent;
-         //_fahClient.DataLengthReceived += FahClientDataLengthReceived;
-         //_fahClient.StatusMessage += FahClientStatusMessage;
-         //_fahClient.DebugReceiveBuffer = true;
       }
 
       private void FahClientMessageUpdated(object sender, MessageUpdatedEventArgs e)
@@ -164,7 +160,6 @@ namespace HFM.Core
             foreach (var slot in _slotCollection)
             {
                _fahClient.SendCommand(String.Format(CultureInfo.InvariantCulture, Constants.FahClientSlotOptions, slot.Id));
-               //_fahClient.SendCommand("simulation-info " + slot.Id);
             }
          }
          else if (e.DataType.Equals(typeof(SlotOptions)))
@@ -206,12 +201,10 @@ namespace HFM.Core
          }
          if (!DefaultSlotActive && _newMessages.ContainsUpdates())
          {
-            // Set successful Last Retrieval Time
-            LastRetrievalTime = DateTime.Now;
             // clear the new messages buffer
             _newMessages.Clear();
             // Process the retrieved logs
-            Process();
+            Retrieve();
          }
       }
 
@@ -270,8 +263,6 @@ namespace HFM.Core
          // connect if not connected
          if (!_fahClient.Connected)
          {
-            AbortFlag = false;
-
             try
             {
                _fahClient.Connect(Settings.Server, Settings.Port, Settings.Password);
@@ -279,13 +270,23 @@ namespace HFM.Core
             }
             catch (Exception ex)
             {
-               Logger.ErrorFormat(ex, "{0}", ex.Message);
-               return;
+               Logger.ErrorFormat(ex, Constants.InstanceNameFormat, Settings.Name, ex.Message);
             }
+            return;
          }
-         else
+
+         try
          {
+            // Process the retrieved data
             Process();
+         }
+         catch (Exception ex)
+         {
+            Logger.ErrorFormat(ex, Constants.InstanceNameFormat, Settings.Name, ex.Message);
+         }
+         finally
+         {
+            if (!AbortFlag) OnRetrievalFinished(EventArgs.Empty);
          }
       }
 
@@ -304,12 +305,15 @@ namespace HFM.Core
       {
          DateTime start = Instrumentation.ExecStart;
 
+         // Set successful Last Retrieval Time
+         LastRetrievalTime = DateTime.Now;
+
          foreach (var slotModel in Slots)
          {
-            // Re-Init Client Level Members Before Processing
+            // Re-Init Slot Level Members Before Processing
             slotModel.Initialize();
 
-            #region Run the Aggregator and Set LegacyClient Level Results
+            #region Run the Aggregator
 
             var unitCollection = _fahClient.GetMessage<UnitCollection>();
             var options = _fahClient.GetMessage<Options>();
@@ -336,33 +340,34 @@ namespace HFM.Core
                }
             }
 
-            // *** THIS HAS TO BE DONE BEFORE UPDATING THE UnitInfoLogic ***
-            // Update Benchmarks from parsedUnits array 
-            //BenchmarkCollection.UpdateData(slotModel.UnitInfoLogic, parsedUnits, DataAggregator.CurrentUnitIndex);
-
             if (DataAggregator.CurrentUnitIndex != -1)
             {
+               // *** THIS HAS TO BE DONE BEFORE UPDATING SlotModel.UnitInfoLogic ***
+               UpdateBenchmarkData(slotModel.UnitInfoLogic, parsedUnits[DataAggregator.CurrentUnitIndex]);
+               // 
                slotModel.UnitInfoLogic = parsedUnits[DataAggregator.CurrentUnitIndex];
             }
+
+            SetSlotStatus(slotModel);
 
             slotModel.UnitInfoLogic.ShowPPDTrace(Logger, slotModel.Status,
                Prefs.Get<PpdCalculationType>(Preference.PpdCalculation),
                Prefs.Get<bool>(Preference.CalculateBonus));
+
+            string statusMessage = String.Format(CultureInfo.CurrentCulture, "Slot Status: {0}", slotModel.Status);
+            Logger.Info(Constants.InstanceNameFormat, slotModel.Settings.Name, statusMessage);
          }
 
          string message = String.Format(CultureInfo.CurrentCulture, "Retrieval finished in {0}", Instrumentation.GetExecTime(start));
          Logger.Info(Constants.InstanceNameFormat, Settings.Name, message);
-
-         OnRetrievalFinished(EventArgs.Empty);
       }
 
       private UnitInfoLogic BuildUnitInfoLogic(SlotModel slotModel, UnitInfo unitInfo)
       {
+         Debug.Assert(slotModel != null);
          Debug.Assert(unitInfo != null);
 
-         Protein protein = ProteinDictionary.ContainsKey(unitInfo.ProjectID)
-                              ? ProteinDictionary[unitInfo.ProjectID]
-                              : new Protein();
+         Protein protein = ProteinDictionary.GetProteinOrDownload(unitInfo.ProjectID);
 
          // update the data
          unitInfo.UnitRetrievalTime = LastRetrievalTime;
@@ -376,6 +381,15 @@ namespace HFM.Core
          return unitInfoLogic;
       }
 
+      private static void SetSlotStatus(SlotModel slotModel)
+      {
+         if (slotModel.Status.Equals(SlotStatus.Running) ||
+             slotModel.Status.Equals(SlotStatus.RunningNoFrameTimes))
+         {
+            slotModel.Status = slotModel.IsUsingBenchmarkFrameTime ? SlotStatus.RunningNoFrameTimes : SlotStatus.Running;
+         }
+      }
+
       private static void PopulateRunLevelData(ClientRun run, Info info, SlotModel slotModel)
       {
          //slotModel.Arguments = run.Arguments;
@@ -387,6 +401,29 @@ namespace HFM.Core
          slotModel.TotalRunCompletedUnits = run.CompletedUnits;
          slotModel.TotalRunFailedUnits = run.FailedUnits;
          //slotModel.TotalClientCompletedUnits = run.TotalCompletedUnits;
+      }
+
+      internal void UpdateBenchmarkData(UnitInfoLogic currentUnitInfo, UnitInfoLogic parsedUnitInfo)
+      {
+         if (parsedUnitInfo == null) return;
+
+         // current frame has already been recorded, increment to the next frame
+         int previousFramesComplete = currentUnitInfo.FramesComplete + 1;
+
+         // Update benchmarks
+         BenchmarkCollection.UpdateData(parsedUnitInfo.UnitInfoData, previousFramesComplete, parsedUnitInfo.FramesComplete);
+         // Update history database
+         if (UnitInfoDatabase != null && UnitInfoDatabase.Connected)
+         {
+            try
+            {
+               UnitInfoDatabase.WriteUnitInfo(parsedUnitInfo);
+            }
+            catch (Exception ex)
+            {
+               Logger.ErrorFormat(ex, "{0}", ex.Message);
+            }
+         }
       }
    }
 

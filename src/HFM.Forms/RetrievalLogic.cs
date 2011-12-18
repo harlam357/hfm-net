@@ -82,8 +82,6 @@ namespace HFM.Forms
          set { _logger = value; }
       }
 
-      private MainPresenter _presenter;
-      
       //private IMarkupGenerator _markupGenerator;
 
       //private IWebsiteDeployer _websiteDeployer;
@@ -117,12 +115,8 @@ namespace HFM.Forms
          //_benchmarkCollection = benchmarkCollection;
       }
 
-      public void Initialize(MainPresenter presenter)
+      public void Initialize()
       {
-         if (presenter == null) throw new ArgumentNullException("presenter");
-
-         _presenter = presenter;
-
          // Hook up Retrieval Timer Event Handler
          _workTimer.Elapsed += WorkTimerTick;
          // Hook up Web Generation Timer Event Handler

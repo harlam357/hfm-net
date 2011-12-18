@@ -57,6 +57,9 @@
     <Reference Include="harlam357.Security">
       <HintPath>..\..\lib\harlam357-net\harlam357.Security.dll</HintPath>
     </Reference>
+    <Reference Include="harlam357.Windows.Forms">
+      <HintPath>..\..\lib\harlam357-net\harlam357.Windows.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="protobuf-net, Version=1.0.0.282, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\protobuf-net\protobuf-net.dll</HintPath>
@@ -80,6 +83,7 @@
     </Compile>
     <Compile Include="Client.cs" />
     <Compile Include="ClientFactory.cs" />
+    <Compile Include="ProjectSummaryDownloader.cs" />
     <Compile Include="Serializers\HfmLegacyFileSerializer.cs" />
     <Compile Include="Configuration\ContainerInstaller.cs" />
     <Compile Include="Configuration\ObjectMapper.cs" />

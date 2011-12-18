@@ -270,9 +270,9 @@ namespace HFM.Core.Tests
          Assert.IsTrue(_clientDictionary.ContainsKey("test2"));
          Assert.IsTrue(dictionaryChangedFired);
          Assert.AreEqual("test", editedEventArgs.PreviousName);
-         Assert.AreEqual("server:36330", editedEventArgs.PreviousPath);
+         Assert.AreEqual("server-36330", editedEventArgs.PreviousPath);
          Assert.AreEqual("test2", editedEventArgs.NewName);
-         Assert.AreEqual("server1:36331", editedEventArgs.NewPath);
+         Assert.AreEqual("server1-36331", editedEventArgs.NewPath);
          Assert.AreEqual("test2", dataDirtyEventArgs.Name);
       }
 

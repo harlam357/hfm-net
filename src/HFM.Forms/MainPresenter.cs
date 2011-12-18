@@ -40,6 +40,7 @@ using harlam357.Windows.Forms;
 using HFM.Core;
 using HFM.Core.DataTypes;
 using HFM.Forms.Models;
+using HFM.Proteins;
 
 namespace HFM.Forms
 {
@@ -82,6 +83,7 @@ namespace HFM.Forms
       #region Collections
 
       private readonly IClientDictionary _clientDictionary;
+      private readonly IProteinDictionary _proteinDictionary;
       private readonly IUnitInfoCollection _unitInfoCollection;
 
       #endregion
@@ -107,10 +109,10 @@ namespace HFM.Forms
 
       public MainPresenter(IMainView view, IMessagesView messagesView, IMessageBoxView messageBoxView,
                            IOpenFileDialogView openFileDialogView, ISaveFileDialogView saveFileDialogView,
-                           IClientDictionary clientDictionary, IUnitInfoCollection unitInfoCollection, 
-                           IUpdateLogic updateLogic, RetrievalLogic retrievalLogic, 
-                           IExternalProcessStarter processStarter, IPreferenceSet prefs, 
-                           IClientSettingsManager settingsManager)
+                           IClientDictionary clientDictionary, IProteinDictionary proteinDictionary,
+                           IUnitInfoCollection unitInfoCollection, IUpdateLogic updateLogic, 
+                           RetrievalLogic retrievalLogic, IExternalProcessStarter processStarter, 
+                           IPreferenceSet prefs, IClientSettingsManager settingsManager)
       {
          _gridModel = new MainGridModel(prefs, view, clientDictionary);
          //_gridModel.BeforeResetBindings += delegate { _view.DataGridView.FreezeSelectionChanged = true; };
@@ -137,12 +139,13 @@ namespace HFM.Forms
          _saveFileDialogView = saveFileDialogView;
          // Collections
          _clientDictionary = clientDictionary;
+         _proteinDictionary = proteinDictionary;
          _unitInfoCollection = unitInfoCollection;
          // Logic Services
          _updateLogic = updateLogic;
          _updateLogic.Owner = _view;
          _retrievalLogic = retrievalLogic;
-         _retrievalLogic.Initialize(this);
+         _retrievalLogic.Initialize();
          _processStarter = processStarter;
          // Data Services
          _prefs = prefs;
@@ -1124,15 +1127,39 @@ namespace HFM.Forms
 
       public void ToolsDownloadProjectsClick()
       {
-         //// Clear the Project Not Found Cache and Last Download Time
-         //_proteinCollection.ClearProjectsNotFoundCache();
-         //_proteinCollection.Downloader.ResetLastDownloadTime();
-         //// Execute Asynchronous Download
-         //var projectDownloadView = InstanceProvider.GetInstance<IProgressDialogView>("projectDownloadView");
-         //projectDownloadView.OwnerWindow = _view;
-         //projectDownloadView.ProcessRunner = _proteinCollection.Downloader;
-         //projectDownloadView.UpdateMessage(_proteinCollection.Downloader.Prefs.Get<string>(Preference.ProjectDownloadUrl));
-         //projectDownloadView.Process();
+         var projectSummaryDownloader = ServiceLocator.Resolve<IProjectSummaryDownloader>();
+         // Clear the Project Not Found Cache and Last Download Time
+         _proteinDictionary.ClearProjectsNotFoundCache();
+         projectSummaryDownloader.ResetLastDownloadTime();
+         // Execute Asynchronous Download
+         var projectDownloadView = ServiceLocator.Resolve<IProgressDialogView>();
+         projectDownloadView.OwnerWindow = _view;
+         projectDownloadView.ProcessRunner = projectSummaryDownloader;
+         projectDownloadView.UpdateMessage(_prefs.Get<string>(Preference.ProjectDownloadUrl));
+         projectDownloadView.Process();
+
+         IEnumerable<ProteinLoadInfo> loadInfo;
+         try
+         {
+            loadInfo = _proteinDictionary.Load(_proteinDictionary.Read(projectSummaryDownloader.DownloadFilePath, new HtmlSerializer()));
+            _proteinDictionary.Write();
+            //_proteinDictionary.Write(Path.Combine(_prefs.ApplicationDataFolderPath, "ProjectInfo.xml"), new Core.Serializers.XmlFileSerializer<List<Protein>>());
+         }
+         catch (Exception ex)
+         {
+            _logger.ErrorFormat(ex, "{0}", ex.Message);
+            return;
+         }
+
+         if (loadInfo.Where(x => !x.Result.Equals(ProteinLoadResult.NoChange)).Count() != 0)
+         {
+            _retrievalLogic.QueueNewRetrieval();
+            using (var dlg = new ProteinLoadResultsDialog())
+            {
+               dlg.DataBind(loadInfo);
+               dlg.ShowDialog(_view);
+            }
+         }
       }
 
       public void ToolsBenchmarksClick()

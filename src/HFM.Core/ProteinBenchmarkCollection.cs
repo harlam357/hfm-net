@@ -32,13 +32,7 @@ namespace HFM.Core
       /// </summary>
       IEnumerable<BenchmarkClient> BenchmarkClients { get; }
 
-      /// <summary>
-      /// Update Project Benchmarks
-      /// </summary>
-      /// <param name="currentUnitInfo">Current UnitInfo</param>
-      /// <param name="parsedUnits">Parsed UnitInfo Array</param>
-      /// <param name="nextUnitIndex">Index of Current UnitInfo</param>
-      void UpdateData(IUnitInfoLogic currentUnitInfo, IUnitInfoLogic[] parsedUnits, int nextUnitIndex);
+      void UpdateData(UnitInfo unit, int startingFrame, int endingFrame);
 
       /// <summary>
       /// Gets the ProteinBenchmark based on the UnitInfo owner and project data.
@@ -148,12 +142,6 @@ namespace HFM.Core
 
    public sealed class ProteinBenchmarkCollection : DataContainer<List<ProteinBenchmark>>, IProteinBenchmarkCollection
    {
-      #region Fields
-
-      private readonly IUnitInfoDatabase _database;
-
-      #endregion
-
       #region Properties
 
       public override Plugins.IFileSerializer<List<ProteinBenchmark>> DefaultSerializer
@@ -183,18 +171,14 @@ namespace HFM.Core
 
       #region Constructor
 
-      public ProteinBenchmarkCollection(IUnitInfoDatabase database)
-         : this(null, database)
+      public ProteinBenchmarkCollection()
+         : this(null)
       {
          
       } 
 
-      public ProteinBenchmarkCollection(IPreferenceSet prefs, IUnitInfoDatabase database)
+      public ProteinBenchmarkCollection(IPreferenceSet prefs)
       {
-         if (database == null) throw new ArgumentNullException("database");
-
-         _database = database;
-
          if (prefs != null && !String.IsNullOrEmpty(prefs.ApplicationDataFolderPath))
          {
             FileName = System.IO.Path.Combine(prefs.ApplicationDataFolderPath, Constants.BenchmarkCacheFileName);
@@ -207,87 +191,7 @@ namespace HFM.Core
 
       #region UpdateData
 
-      /// <summary>
-      /// Update Project Benchmarks
-      /// </summary>
-      /// <param name="currentUnitInfo">Current UnitInfo</param>
-      /// <param name="parsedUnits">Parsed UnitInfo Array</param>
-      /// <param name="nextUnitIndex">Index of Current UnitInfo</param>
-      public void UpdateData(IUnitInfoLogic currentUnitInfo, IUnitInfoLogic[] parsedUnits, int nextUnitIndex)
-      {
-         var foundCurrent = false;
-         var processUpdates = false;
-         var index = GetStartingIndex(nextUnitIndex, parsedUnits.Length);
-
-         while (index != -1)
-         {
-            // If Current has not been found, check the nextUnitIndex
-            // or try to match the Current Project and Raw Download Time
-            if (processUpdates == false && (index == nextUnitIndex || currentUnitInfo.UnitInfoData.Equals(parsedUnits[index].UnitInfoData)))
-            {
-               foundCurrent = true;
-               processUpdates = true;
-            }
-
-            if (processUpdates)
-            {
-               int previousFramesComplete = 0;
-               if (foundCurrent)
-               {
-                  // current frame has already been recorded, increment to the next frame
-                  previousFramesComplete = currentUnitInfo.FramesComplete + 1;
-                  foundCurrent = false;
-               }
-
-               // Even though the current UnitInfoLogic has been found in the parsed UnitInfoLogic array doesn't
-               // mean that all entries in the array will be present.  See TestFiles\SMP_12\FAHlog.txt.
-               if (parsedUnits[index] != null)
-               {
-                  // Update benchmarks
-                  UpdateData(parsedUnits[index].UnitInfoData, previousFramesComplete, parsedUnits[index].FramesComplete);
-                  // Update history database
-                  if (_database.Connected)
-                  {
-                     try
-                     {
-                        _database.WriteUnitInfo(parsedUnits[index]);
-                     }
-                     catch (Exception ex)
-                     {
-                        Logger.ErrorFormat(ex, "{0}", ex.Message);
-                     }
-                  }
-               }
-            }
-
-            #region Increment to the next unit or set terminal value
-            if (index == nextUnitIndex)
-            {
-               index = -1;
-            }
-            else if (index == parsedUnits.Length - 1)
-            {
-               index = 0;
-            }
-            else
-            {
-               index++;
-            }
-            #endregion
-         }
-      }
-      
-      private static int GetStartingIndex(int nextUnitIndex, int numberOfUnits)
-      {
-         if (nextUnitIndex == numberOfUnits - 1)
-         {
-            return 0;
-         }
-
-         return nextUnitIndex + 1;
-      }
-      
-      private void UpdateData(UnitInfo unit, int startingFrame, int endingFrame)
+      public void UpdateData(UnitInfo unit, int startingFrame, int endingFrame)
       {
          Debug.Assert(unit != null);
 
@@ -302,8 +206,8 @@ namespace HFM.Core
          {
             var newBenchmark = new ProteinBenchmark
                                {
-                                  OwningInstanceName = unit.OwningInstanceName,
-                                  OwningInstancePath = unit.OwningInstancePath,
+                                  OwningSlotName = unit.OwningSlotName,
+                                  OwningSlotPath = unit.OwningSlotPath,
                                   ProjectID = unit.ProjectID
                                };
 
@@ -334,7 +238,7 @@ namespace HFM.Core
             }
             else
             {
-               Logger.DebugFormat("({0}) FrameID '{1}' not found for Project {2}", unit.OwningInstanceName, i, unit.ProjectID);
+               Logger.DebugFormat("({0}) FrameID '{1}' not found for Project {2}", unit.OwningSlotName, i, unit.ProjectID);
             }
          }
 
@@ -472,7 +376,7 @@ namespace HFM.Core
          IEnumerable<ProteinBenchmark> benchmarks = GetBenchmarks(benchmarkClient);
          foreach (ProteinBenchmark benchmark in benchmarks)
          {
-            benchmark.OwningInstanceName = name;
+            benchmark.OwningSlotName = name;
          }
          Write();
       }
@@ -485,7 +389,7 @@ namespace HFM.Core
          IEnumerable<ProteinBenchmark> benchmarks = GetBenchmarks(benchmarkClient);
          foreach (ProteinBenchmark benchmark in benchmarks)
          {
-            benchmark.OwningInstancePath = path;
+            benchmark.OwningSlotPath = path;
          }
          Write();
       }

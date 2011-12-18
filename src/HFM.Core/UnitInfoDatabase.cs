@@ -48,7 +48,7 @@ namespace HFM.Core
 
       void DeleteAllUnitInfoData();
 
-      void WriteUnitInfo(IUnitInfoLogic unitInfoLogic);
+      void WriteUnitInfo(UnitInfoLogic unitInfoLogic);
 
       int DeleteUnitInfo(long id);
 
@@ -202,7 +202,7 @@ namespace HFM.Core
          }
       }
    
-      public void WriteUnitInfo(IUnitInfoLogic unitInfoLogic)
+      public void WriteUnitInfo(UnitInfoLogic unitInfoLogic)
       {
          // validate the UnitInfoLogic before opening the connection
          if (ValidateUnitInfo(unitInfoLogic.UnitInfoData) == false) return;
@@ -299,7 +299,7 @@ namespace HFM.Core
       private static bool ValidateUnitInfo(UnitInfo unitInfo)
       {
          bool result = ValidateFinishedUnitInfo(unitInfo);
-         if (!(result))
+         if (!result)
          {
             // Issue 233
             result = ValidateIncompleteUnitInfo(unitInfo);
@@ -330,7 +330,7 @@ namespace HFM.Core
                 unitInfo.DownloadTime.Equals(DateTime.MinValue) == false;
       }
 
-      private bool UnitInfoExists(SQLiteConnection con, IUnitInfoLogic unitInfoLogic)
+      private bool UnitInfoExists(SQLiteConnection con, UnitInfoLogic unitInfoLogic)
       {
          var rows = ExecuteQueryUnitData(con, BuildUnitKeyQueryParameters(unitInfoLogic));
          return rows.Count != 0;
@@ -342,7 +342,7 @@ namespace HFM.Core
       //   return rows.Length != 0;
       //}
       
-      private static QueryParameters BuildUnitKeyQueryParameters(IUnitInfoLogic unitInfoLogic)
+      private static QueryParameters BuildUnitKeyQueryParameters(UnitInfoLogic unitInfoLogic)
       {
          var parameters = new QueryParameters();
          parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectID, Type = QueryFieldType.Equal, Value = unitInfoLogic.UnitInfoData.ProjectID });
@@ -353,7 +353,7 @@ namespace HFM.Core
          return parameters;
       }
 
-      private void WriteUnitInfoToDatabase(SQLiteConnection con, IUnitInfoLogic unitInfoLogic)
+      private void WriteUnitInfoToDatabase(SQLiteConnection con, UnitInfoLogic unitInfoLogic)
       {
          using (var command = new SQLiteCommand(con))
          {
