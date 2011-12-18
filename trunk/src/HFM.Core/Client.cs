@@ -115,6 +115,8 @@ namespace HFM.Core
       public IPreferenceSet Prefs { get; set; }
 
       public IProteinDictionary ProteinDictionary { get; set; }
+
+      public IUnitInfoCollection UnitInfoCollection { get; set; }
       
       private ILogger _logger = NullLogger.Instance;
 

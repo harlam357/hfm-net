@@ -99,6 +99,31 @@ namespace HFM.Core
 
       #endregion
 
+      //private void RestoreUnitInfo()
+      //{
+      //   if (UnitInfoCollection == null) return;
+      //
+      //   _slotsLock.EnterReadLock();
+      //   try
+      //   {
+      //      foreach (var slotModel in _slots)
+      //      {
+      //         foreach (var unitInfo in UnitInfoCollection)
+      //         {
+      //            if (slotModel.Owns(unitInfo))
+      //            {
+      //               slotModel.UnitInfoLogic = BuildUnitInfoLogic(slotModel, unitInfo);
+      //               break;
+      //            }
+      //         }
+      //      }
+      //   }
+      //   finally
+      //   {
+      //      _slotsLock.ExitReadLock();
+      //   }
+      //}
+
       private readonly IFahClientInterface _fahClient;
       private readonly List<SlotModel> _slots;
       private readonly ReaderWriterLockSlim _slotsLock;

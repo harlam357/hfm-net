@@ -36,7 +36,8 @@ namespace HFM.Forms
       
       #endregion
 
-      public SlotModelSortableBindingList(bool offlineClientsLast)
+      public SlotModelSortableBindingList(bool offlineClientsLast, ISynchronizeInvoke syncObject)
+         : base(syncObject)
       {
          OfflineClientsLast = offlineClientsLast;
       }
@@ -64,6 +65,8 @@ namespace HFM.Forms
 
             /* Set sorted */
             IsSorted = true;
+
+            OnSorted(new SortedEventArgs(property.Name, direction));
          }
          else
          {

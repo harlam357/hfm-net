@@ -38,8 +38,11 @@ namespace HFM.Forms.Models
          get { return _selectedSlot; }
          set
          {
-            _selectedSlot = value;
-            OnSelectedSlotChanged(new IndexChangedEventArgs(_bindingSource.Position));
+            if (!ReferenceEquals(_selectedSlot, value))
+            {
+               _selectedSlot = value;
+               OnSelectedSlotChanged(new IndexChangedEventArgs(_bindingSource.Position));
+            }
          }
       }
 
@@ -62,28 +65,15 @@ namespace HFM.Forms.Models
       /// <summary>
       /// Holds current Sort Column Name
       /// </summary>
-      public string SortColumnName
-      {
-         get { return _bindingSource.SortProperty == null ? String.Empty : _bindingSource.SortProperty.Name; }
-         set
-         {
-            SetSortProperty(value, SortColumnOrder);
-         }
-      }
+      public string SortColumnName { get; set; }
 
       /// <summary>
       /// Holds current Sort Column Order
       /// </summary>
-      public ListSortDirection SortColumnOrder
-      {
-         get { return _bindingSource.SortDirection; }
-         set
-         {
-            SetSortProperty(SortColumnName, value);
-         }
-      }
+      public ListSortDirection SortColumnOrder { get; set; }
 
       private readonly IPreferenceSet _prefs;
+      private readonly ISynchronizeInvoke _syncObject;
       private readonly IClientDictionary _clientDictionary;
       private readonly SlotModelSortableBindingList _slotList;
       private readonly BindingSource _bindingSource;
@@ -92,71 +82,113 @@ namespace HFM.Forms.Models
          get { return _bindingSource; }
       }
 
-      public MainGridModel(IPreferenceSet prefs, IClientDictionary clientDictionary)
+      public MainGridModel(IPreferenceSet prefs, ISynchronizeInvoke syncObject, IClientDictionary clientDictionary)
       {
          _prefs = prefs;
+         _syncObject = syncObject;
          _clientDictionary = clientDictionary;
-         _slotList = new SlotModelSortableBindingList(_prefs.Get<bool>(Preference.OfflineLast));
+         _slotList = new SlotModelSortableBindingList(_prefs.Get<bool>(Preference.OfflineLast), _syncObject);
+         _slotList.Sorted += (sender, e) =>
+                             {
+                                SortColumnName = e.Name;
+                                _prefs.Set(Preference.FormSortColumn, SortColumnName);
+                                SortColumnOrder = e.Direction;
+                                _prefs.Set(Preference.FormSortOrder, SortColumnOrder);
+                             };
          _bindingSource = new BindingSource();
          _bindingSource.DataSource = _slotList;
-         _bindingSource.CurrentItemChanged += delegate { SelectedSlot = (SlotModel)_bindingSource.Current; };
+         _bindingSource.CurrentItemChanged += delegate
+                                              {
+                                                 SelectedSlot = (SlotModel)_bindingSource.Current;
+                                              };
 
          // Subscribe to PreferenceSet events
          _prefs.OfflineLastChanged += delegate
                                       {
                                          _slotList.OfflineClientsLast = _prefs.Get<bool>(Preference.OfflineLast);
-                                         ResetBindings();
+                                         Sort();
                                       };
          _prefs.PpdCalculationChanged += delegate { ResetBindings(); };
          _prefs.DecimalPlacesChanged += delegate { ResetBindings(); };
          _prefs.CalculateBonusChanged += delegate { ResetBindings(); };
-      }
 
-      private void SetSortProperty()
-      {
-         SetSortProperty(SortColumnName, SortColumnOrder);
-      }
-
-      private void SetSortProperty(string sortColumn, ListSortDirection sortOrder)
-      {
-         _bindingSource.Sort = sortColumn + " " + GetListDirectionString(sortOrder);
+         // Subscribe to ClientDictionary events
+         _clientDictionary.DictionaryChanged += delegate { ResetBindings(); };
+         _clientDictionary.ClientDataInvalidated += delegate { ResetBindings(); };
       }
 
       private static string GetListDirectionString(ListSortDirection direction)
       {
-         if (direction.Equals(ListSortDirection.Descending))
-         {
-            return "DESC";
-         }
-         return "ASC";
+         return direction.Equals(ListSortDirection.Descending) ? "DESC" : "ASC";
       }
 
       public void ResetBindings()
       {
+         if (_syncObject.InvokeRequired)
+         {
+            _syncObject.Invoke(new MethodInvoker(ResetBindings), null);
+            return;
+         }
+
          OnBeforeResetBindings(EventArgs.Empty);
          // halt binding source updates
          _bindingSource.RaiseListChangedEvents = false;
          // refresh the underlying binding list
          RefreshSlotList();
          // sort the list
-         Sort(); // sort BEFORE reset
-         // 
-         _bindingSource.ResetBindings(false);
+         _bindingSource.Sort = null;
+         _bindingSource.Sort = SortColumnName + " " + GetListDirectionString(SortColumnOrder);
+         // reset selected slot
+         ResetSelectedSlot();
+         // find duplicates
+         FindDuplicates();
          // enable binding source updates
          _bindingSource.RaiseListChangedEvents = true;
+         // reset AFTER RaiseListChangedEvents is enabled
+         _bindingSource.ResetBindings(false);
          // restore binding source updates
          OnAfterResetBindings(EventArgs.Empty);
-         // restore the currently selected slot
-         ResetSelectedSlot();
       }
 
-      private void ResetSelectedSlot()
+      /// <summary>
+      /// Refresh the SlotModel list from the ClientDictionary.
+      /// </summary>
+      private void RefreshSlotList()
       {
+         _slotList.Clear();
+         foreach (var slot in _clientDictionary.Slots)
+         {
+            _slotList.Add(slot);
+         }
+      }
+
+      /// <summary>
+      /// Sort the grid model
+      /// </summary>
+      public void Sort()
+      {
+         _bindingSource.RaiseListChangedEvents = false;
+         // sort the list
+         _bindingSource.Sort = null;
+         _bindingSource.Sort = SortColumnName + " " + GetListDirectionString(SortColumnOrder);
+         // enable binding source updates
+         _bindingSource.RaiseListChangedEvents = true;
+      }
+
+      public void ResetSelectedSlot()
+      {
+         if (SelectedSlot == null) return;
+
          int row = _bindingSource.Find("Name", SelectedSlot.Name);
          if (row > -1)
          {
             _bindingSource.Position = row;
          }
+      }
+
+      public void FindDuplicates()
+      {
+         _clientDictionary.Slots.FindDuplicates();
       }
 
       private void OnBeforeResetBindings(EventArgs e)
@@ -182,28 +214,6 @@ namespace HFM.Forms.Models
             SelectedSlotChanged(this, e);
          }
       }
-
-      /// <summary>
-      /// Refresh the SlotModel list from the ClientDictionary.
-      /// </summary>
-      private void RefreshSlotList()
-      {
-         _slotList.Clear();
-         foreach (var slot in _clientDictionary.Slots)
-         {
-            _slotList.Add(slot);
-         }
-      }
-
-      /// <summary>
-      /// Sort the grid model
-      /// </summary>
-      public void Sort()
-      {
-         SetSortProperty();
-      }
-
-      
    }
 
    [CoverageExclude]

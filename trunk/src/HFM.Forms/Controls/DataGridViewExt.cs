@@ -28,19 +28,11 @@ namespace HFM.Forms.Controls
    {
       #region System.Windows.Forms.DataGridView Properties
 
-      DataGridViewCell CurrentCell { get; }
-
       object DataSource { get; set; }
 
       DataGridViewRowCollection Rows { get; }
 
       DataGridViewColumnCollection Columns { get; }
-
-      DataGridViewSelectedRowCollection SelectedRows { get; }
-
-      DataGridViewColumn SortedColumn { get; }
-
-      SortOrder SortOrder { get; }
 
       #endregion
 
@@ -56,8 +48,6 @@ namespace HFM.Forms.Controls
 
       void Invalidate();
 
-      void Sort(DataGridViewColumn dataGridViewColumn, System.ComponentModel.ListSortDirection direction);
-
       #endregion
 
       #region System.Windows.Forms.Control Methods
@@ -65,63 +55,17 @@ namespace HFM.Forms.Controls
       System.Drawing.Point PointToScreen(System.Drawing.Point p);
 
       #endregion
-
-      /// <summary>
-      /// Local Flag That Halts the SelectionChanged Event
-      /// </summary>
-      bool FreezeSelectionChanged { get; set; }
-
-      /// <summary>
-      /// Local Flag That Halts the Sorted Event
-      /// </summary>
-      bool FreezeSorted { get; set; }
-
-      /// <summary>
-      /// Key for the Currently Selected Row
-      /// </summary>
-      string CurrentRowKey { get; }
    }
 
    [CoverageExclude]
    public partial class DataGridViewExt : DataGridView, IDataGridView
    {
       /// <summary>
-      /// Local Flag That Halts the SelectionChanged Event
-      /// </summary>
-      public bool FreezeSelectionChanged { get; set; }
-
-      /// <summary>
-      /// Local Flag That Halts the Sorted Event
-      /// </summary>
-      public bool FreezeSorted { get; set; }
-
-      /// <summary>
-      /// Key for the Currently Selected Row
-      /// </summary>
-      public string CurrentRowKey { get; private set; }
-
-      /// <summary>
       /// Constructor
       /// </summary>
       public DataGridViewExt()
       {
          InitializeComponent();
-      }
-
-      protected override void OnSelectionChanged(EventArgs e)
-      {
-         if (FreezeSelectionChanged) return;
-
-         CurrentRowKey = SelectedRows.Count != 0 ? SelectedRows[0].Cells["Name"].Value.ToString() : String.Empty;
-      
-         base.OnSelectionChanged(e);
-      }
-
-      protected override void OnSorted(EventArgs e)
-      {
-         if (FreezeSorted) return;
-      
-         base.OnSorted(e);
       }
    }
 }

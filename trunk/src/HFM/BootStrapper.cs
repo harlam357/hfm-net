@@ -172,10 +172,10 @@ namespace HFM
          }
       }
 
-      private void NewInstanceDetected(object sender, NewInstanceDetectedEventArgs e)
+      private static void NewInstanceDetected(object sender, NewInstanceDetectedEventArgs e)
       {
-         //var mainView = ServiceLocator.Resolve<IMainView>();
-         //mainView.SecondInstanceStarted(e.Args);
+         var mainView = ServiceLocator.Resolve<IMainView>();
+         mainView.SecondInstanceStarted(e.Args);
       }
 
       private static void ExceptionLogger(Exception ex)

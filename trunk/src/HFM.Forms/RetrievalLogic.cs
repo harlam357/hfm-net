@@ -102,6 +102,18 @@ namespace HFM.Forms
       {
          _prefs = prefs;
          _clientDictionary = clientDictionary;
+         _clientDictionary.DictionaryChanged += delegate { SetTimerState(); };
+         _clientDictionary.ClientDataDirty += (sender, e) =>
+                                                    {
+                                                       if (e.Name == null)
+                                                       {
+                                                          QueueNewRetrieval();
+                                                       }
+                                                       else
+                                                       {
+                                                          RetrieveSingleClient(e.Name);
+                                                       }
+                                                    };
          //_benchmarkCollection = benchmarkCollection;
       }
 
@@ -254,10 +266,10 @@ namespace HFM.Forms
 
          // copy the current instance keys into local array
          int numInstances = _clientDictionary.Count;
-         string[] instanceKeys = new string[numInstances];
+         var instanceKeys = new string[numInstances];
          _clientDictionary.Keys.CopyTo(instanceKeys, 0);
 
-         List<WaitHandle> waitHandleList = new List<WaitHandle>();
+         var waitHandleList = new List<WaitHandle>();
          for (int i = 0; i < numInstances; )
          {
             waitHandleList.Clear();
@@ -270,20 +282,16 @@ namespace HFM.Forms
                IClient client;
                if (_clientDictionary.TryGetValue(instanceKeys[i], out client))
                {
-                  var legacyClient = client as LegacyClient;
-                  if (legacyClient != null)
+                  if (synchronous) // do the individual retrieves on a single thread
                   {
-                     if (synchronous) // do the individual retrieves on a single thread
-                     {
-                        RetrieveInstance(legacyClient);
-                     }
-                     else // fire individual threads to do the their own retrieve simultaneously
-                     {
-                        IAsyncResult async = QueueNewRetrieval(legacyClient);
+                     RetrieveInstance(client);
+                  }
+                  else // fire individual threads to do the their own retrieve simultaneously
+                  {
+                     IAsyncResult async = QueueNewRetrieval(client);
 
-                        // get the wait handle for each invoked delegate
-                        waitHandleList.Add(async.AsyncWaitHandle);
-                     }
+                     // get the wait handle for each invoked delegate
+                     waitHandleList.Add(async.AsyncWaitHandle);
                   }
                }
 
@@ -298,9 +306,6 @@ namespace HFM.Forms
             }
          }
 
-         // check for clients with duplicate Project (Run, Clone, Gen) or UserID
-         _presenter.FindDuplicates();
-
          // Save the benchmark collection
          //_benchmarkCollection.Write();
       }
@@ -308,21 +313,19 @@ namespace HFM.Forms
       /// <summary>
       /// Stick this Instance in the background thread queue to retrieve the info for the given Instance
       /// </summary>
-      private IAsyncResult QueueNewRetrieval(LegacyClient legacyClient)
+      private IAsyncResult QueueNewRetrieval(IClient client)
       {
-         return new Action<LegacyClient>(RetrieveInstance).BeginInvoke(legacyClient, null, null);
+         return new Action<IClient>(RetrieveInstance).BeginInvoke(client, null, null);
       }
 
       /// <summary>
       /// Stub to execute retrieve and refresh display
       /// </summary>
-      private void RetrieveInstance(LegacyClient legacyClient)
+      private void RetrieveInstance(IClient client)
       {
-         if (legacyClient.RetrievalInProgress == false)
+         if (client.RetrievalInProgress == false)
          {
-            legacyClient.Retrieve();
-            // signal the UI to update
-            //_presenter.RefreshDisplay();
+            client.Retrieve();
          }
       }
 
@@ -331,34 +334,27 @@ namespace HFM.Forms
       /// </summary>
       public void RetrieveSingleClient(string name)
       {
-         var legacyClient = _clientDictionary[name] as LegacyClient;
-         if (legacyClient != null)
-         {
-            RetrieveSingleClient(legacyClient);
-         }
+         RetrieveSingleClient(_clientDictionary[name]);
       }
 
       /// <summary>
       /// Retrieve the given Client Instance
       /// </summary>
-      public void RetrieveSingleClient(LegacyClient legacyClient)
+      public void RetrieveSingleClient(IClient client)
       {
          // fire the actual retrieval thread
-         new Action<LegacyClient>(DoSingleClientRetieval).BeginInvoke(legacyClient, null, null);
+         new Action<IClient>(DoSingleClientRetieval).BeginInvoke(client, null, null);
       }
 
       /// <summary>
       /// Do a single retrieval operation on the given Client Instance
       /// </summary>
-      private void DoSingleClientRetieval(LegacyClient legacyClient)
+      private void DoSingleClientRetieval(IClient client)
       {
-         if (legacyClient.RetrievalInProgress == false)
+         if (client.RetrievalInProgress == false)
          {
-            IAsyncResult async = QueueNewRetrieval(legacyClient);
+            IAsyncResult async = QueueNewRetrieval(client);
             async.AsyncWaitHandle.WaitOne();
-
-            // check for clients with duplicate Project (Run, Clone, Gen) or UserID
-            _presenter.FindDuplicates();
 
             // Save the benchmark collection
             //_benchmarkCollection.Write();
@@ -420,6 +416,9 @@ namespace HFM.Forms
       /// </summary>
       private void StartBackgroundTimer()
       {
+         // don't start if already started
+         if (_workTimer.Enabled) return;
+
          var syncTimeMinutes = _prefs.Get<int>(Preference.SyncTimeMinutes);
 
          _workTimer.Interval = syncTimeMinutes * Constants.MinToMillisec;
@@ -432,6 +431,9 @@ namespace HFM.Forms
       /// </summary>
       private void StartWebGenTimer()
       {
+         // don't start if already started
+         if (_webTimer.Enabled) return;
+
          Debug.Assert(_prefs.Get<bool>(Preference.GenerateWeb));
          Debug.Assert(_prefs.Get<bool>(Preference.WebGenAfterRefresh) == false);
 
