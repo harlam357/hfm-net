@@ -295,7 +295,7 @@ namespace HFM.Forms
                   if (e.Value != null)
                   {
                      Debug.Assert(data != null);
-                     DrawText(GetEtaDateString((DateTime)data), textColor, e);
+                     DrawText(((DateTime)data).ToDateString(), textColor, e);
                   }
                }
                else if (paint.Equals(PaintCell.Warning))
@@ -414,14 +414,14 @@ namespace HFM.Forms
                         _prefs.Get<bool>(Preference.EtaDate))
                {
                   var slotModel = _presenter.FindSlotModel(dataGridView1.Rows[i].Cells["Name"].Value.ToString());
-                  formattedString = GetEtaDateString(slotModel.ETADate);
+                  formattedString = slotModel.ETADate.ToDateString();
                }
                else if (dataGridView1.Columns["DownloadTime"].Index == columnIndex ||
                         dataGridView1.Columns["Deadline"].Index == columnIndex)
                {
                   formattedString =
-                     GetFormattedDateStringForMeasurement((DateTime)dataGridView1.Rows[i].Cells[columnIndex].Value,
-                                                                    dataGridView1.Rows[i].Cells[columnIndex].FormattedValue.ToString());
+                     ((DateTime)dataGridView1.Rows[i].Cells[columnIndex].Value).ToDateString(
+                     dataGridView1.Rows[i].Cells[columnIndex].FormattedValue.ToString());
                }
                else
                {
@@ -503,17 +503,6 @@ namespace HFM.Forms
          return String.Format(formatString, span.Days, span.Hours, span.Minutes);
       }
       
-      private static string GetEtaDateString(DateTime date)
-      {
-         return GetFormattedDateStringForMeasurement(date, String.Format(CultureInfo.CurrentCulture,
-                  "{0} {1}", date.ToShortDateString(), date.ToShortTimeString()));
-      }
-
-      private static string GetFormattedDateStringForMeasurement(IEquatable<DateTime> date, string formattedValue)
-      {
-         return date.Equals(DateTime.MinValue) ? "Unknown" : formattedValue;
-      }
-
       #endregion
 
       public const int NumberOfDisplayFields = 19;
@@ -530,28 +519,28 @@ namespace HFM.Forms
          dgv.Columns["Progress"].DataPropertyName = "Progress";
          dgv.Columns.Add("Name", "Name");
          dgv.Columns["Name"].DataPropertyName = "Name";
-         dgv.Columns.Add("ClientType", "Client Type");
-         dgv.Columns["ClientType"].DataPropertyName = "ClientType";
+         dgv.Columns.Add("SlotType", "Slot Type");
+         dgv.Columns["SlotType"].DataPropertyName = "SlotType";
          dgv.Columns.Add("TPF", "TPF");
          dgv.Columns["TPF"].DataPropertyName = "TPF";
          dgv.Columns.Add("PPD", "PPD");
          dgv.Columns["PPD"].DataPropertyName = "PPD";
          dgv.Columns.Add("MHz", "MHz");
          dgv.Columns["MHz"].DataPropertyName = "MHz";
-         dgv.Columns.Add("PpdMHz", "PPD/MHz");
-         dgv.Columns["PpdMHz"].DataPropertyName = "PpdMHz";
+         dgv.Columns.Add("PPDMHz", "PPD/MHz");
+         dgv.Columns["PPDMHz"].DataPropertyName = "PPDMHz";
          dgv.Columns.Add("ETA", "ETA");
          dgv.Columns["ETA"].DataPropertyName = "ETA";
          dgv.Columns.Add("Core", "Core");
          dgv.Columns["Core"].DataPropertyName = "Core";
-         dgv.Columns.Add("CoreID", "Core ID");
-         dgv.Columns["CoreID"].DataPropertyName = "CoreID";
+         dgv.Columns.Add("CoreId", "Core ID");
+         dgv.Columns["CoreId"].DataPropertyName = "CoreId";
          dgv.Columns.Add("ProjectRunCloneGen", "Project (Run, Clone, Gen)");
          dgv.Columns["ProjectRunCloneGen"].DataPropertyName = "ProjectRunCloneGen";
          dgv.Columns.Add("Credit", "Credit");
          dgv.Columns["Credit"].DataPropertyName = "Credit";
-         dgv.Columns.Add("Complete", "Complete");
-         dgv.Columns["Complete"].DataPropertyName = "Complete";
+         dgv.Columns.Add("Completed", "Completed");
+         dgv.Columns["Completed"].DataPropertyName = "Completed";
          dgv.Columns.Add("Failed", "Failed");
          dgv.Columns["Failed"].DataPropertyName = "TotalRunFailedUnits";
          dgv.Columns.Add("Username", "User Name");

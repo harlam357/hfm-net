@@ -400,7 +400,7 @@ namespace HFM.Core
 
          slotModel.TotalRunCompletedUnits = run.CompletedUnits;
          slotModel.TotalRunFailedUnits = run.FailedUnits;
-         //slotModel.TotalClientCompletedUnits = run.TotalCompletedUnits;
+         //slotModel.TotalCompletedUnits = run.TotalCompletedUnits;
       }
 
       internal void UpdateBenchmarkData(UnitInfoLogic currentUnitInfo, UnitInfoLogic parsedUnitInfo)

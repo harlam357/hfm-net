@@ -26,7 +26,7 @@ using System.Runtime.Serialization;
 
 namespace HFM.Core.DataTypes
 {
-   [DataContract]
+   [DataContract(Namespace = "")]
    public class UnitInfo : IProjectInfo, IOwnedByClientSlot, IEquatable<UnitInfo>
    {
       public UnitInfo()

@@ -645,10 +645,10 @@ namespace HFM.Forms
       public void RefreshControlsWithTotalsData(SlotTotals totals)
       {
          SetNotifyIconText(String.Format("{0} Working Clients{3}{1} Non-Working Clients{3}{2:" + _prefs.PpdFormatString + "} PPD",
-                                         totals.WorkingClients, totals.NonWorkingClients, totals.PPD, Environment.NewLine));
+                                         totals.WorkingSlots, totals.NonWorkingSlots, totals.PPD, Environment.NewLine));
 
-         string clientLabel = totals.WorkingClients == 1 ? "Client" : "Clients";
-         SetStatusLabelHostsText(String.Format(CultureInfo.CurrentCulture, "{0} {1}", totals.WorkingClients, clientLabel));
+         string clientLabel = totals.WorkingSlots == 1 ? "Client" : "Clients";
+         SetStatusLabelHostsText(String.Format(CultureInfo.CurrentCulture, "{0} {1}", totals.WorkingSlots, clientLabel));
          SetStatusLabelPPDText(String.Format(CultureInfo.CurrentCulture, "{0:" + _prefs.PpdFormatString + "} PPD", totals.PPD));
       }
 

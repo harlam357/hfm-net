@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:msxsl="urn:schemas-microsoft-com:xslt"
+    xmlns:user="http://www.tempuri.org/User">
    <xsl:output method="html" encoding="utf-8" doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" doctype-system="http://www.w3.org/TR/html4/loose.dtd" />
-   <xsl:template match="Instance">
+   <xsl:template match="SlotDetail">
       <html>
          <head>
-            <title>Client Instance Data</title>
+            <title>Slot Data</title>
             <meta http-equiv="Pragma" content="no-cache" />
             <meta http-equiv="Cache-Control" content="no-cache" />
             <link rel="stylesheet" type="text/css" href="$CSSFILE" />
@@ -13,7 +16,7 @@
             <table class="Instance">
                <tr>
                   <td class="Heading">
-                     <xsl:value-of select="@Name"/>
+                     <xsl:value-of select="GridData/Name"/>
                   </td>
                   <td class="Plain">
                      <a href="index.html">Overview Page</a>
@@ -21,30 +24,85 @@
                      <a href="summary.html">Summary Page</a>
                   </td>
                </tr>
-               <xsl:apply-templates select="UnitInfo" />
+               <tr>
+                  <td class="AltLeftCol">
+                     Current Progress
+                  </td>
+                  <td class="AltRightCol">
+                     <xsl:value-of select="GridData/PercentComplete"/> Percent Complete
+                  </td>
+               </tr>
+               <tr>
+                  <td class="LeftCol">
+                     Time Per Frame
+                  </td>
+                  <td class="RightCol">
+                     <xsl:value-of select="GridData/TPF"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td class="AltLeftCol">
+                     PPD
+                  </td>
+                  <td class="AltRightCol">
+                     <xsl:value-of select="GridData/PPD"/> (<xsl:value-of select="GridData/UPD"/> WUs)
+                  </td>
+               </tr>
+               <tr>
+                  <td class="LeftCol">
+                     PPW
+                  </td>
+                  <td class="RightCol">
+                     <xsl:value-of select="GridData/PPD * 7"/> (<xsl:value-of select="GridData/UPD * 7"/> WUs)
+                  </td>
+               </tr>
+               <tr>
+                  <td class="AltLeftCol">
+                     Work Units
+                  </td>
+                  <td class="AltRightCol">
+                     Completed: <xsl:value-of select="TotalRunCompletedUnits"/> - Failed: <xsl:value-of select="TotalRunFailedUnits"/> - Total: <xsl:value-of select="TotalCompletedUnits"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td class="LeftCol">
+                     Download Time
+                  </td>
+                  <td class="RightCol">
+                     <xsl:value-of select="GridData/DownloadTime"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td class="AltLeftCol">
+                     Expected Completion
+                  </td>
+                  <td class="AltRightCol">
+                     <xsl:value-of select="GridData/ETA"/>
+                  </td>
+               </tr>
                <tr>
                   <td class="Plain" colspan="2" align="center">
                   </td>
                </tr>
                <tr>
                   <td class="Heading">
-                     Log<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>File
+                     Log File
                   </td>
                   <td class="Plain">
                      <xsl:choose>
-                        <xsl:when test="UnitLog/FullLogFile=''">
-                           <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                        <xsl:when test="LogFilesAvailable='true' and LogFileName!=''">
+                           <a><xsl:attribute name="href"><xsl:value-of select="LogFileName"/></xsl:attribute>Full Log File</a>
                         </xsl:when>
-                        <xsl:otherwise>
-                           <a>
-                              <xsl:attribute name="href"><xsl:value-of select="UnitLog/FullLogFile"/></xsl:attribute>
-                              FAHlog<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>File
-                           </a>
-                        </xsl:otherwise>
                      </xsl:choose>
                   </td>
                </tr>
-               <xsl:apply-templates select="UnitLog" />
+               <tr>
+                  <td class="LeftCol" colspan="2">
+                     <xsl:for-each select="GridData/CurrentLogLines/LogLine">
+                        <xsl:value-of select="LineRaw" disable-output-escaping="yes"/><xsl:element name="br"/>
+                     </xsl:for-each>
+                  </td>
+               </tr>
                <tr>
                   <td class="Plain" colspan="2" align="center">
                   </td>
@@ -62,96 +120,24 @@
                </tr>
                <tr>
                   <td class="Plain" colspan="2" align="center">
-                     Page rendered by <a href="http://code.google.com/p/hfm-net/">HFM.NET</a><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="HFMVersion"/> on <xsl:value-of select="LastUpdatedDate"/>
-                     at <xsl:value-of select="LastUpdatedTime"/>
-                  </td>
-               </tr>
-               <tr>
-                  <td class="Plain" colspan="2" align="center">
-                     Data last updated on <xsl:value-of select="LastRetrievedDate"/>
-                     at <xsl:value-of select="LastRetrievedTime"/>
+                     Page rendered by <a href="http://code.google.com/p/hfm-net/">HFM.NET</a><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="HfmVersion"/> on <xsl:value-of select="user:FormatDate(UpdateDateTime)"/>
                   </td>
                </tr>
             </table>
          </body>
       </html>
    </xsl:template>
-   <xsl:template match="UnitInfo">
-      <tr>
-         <td class="AltLeftCol">
-            Current<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Progress
-         </td>
-         <td class="AltRightCol">
-            <xsl:value-of select="FramesComplete"/> Frames Complete (<xsl:value-of select="PercentComplete"/>%)
-         </td>
-      </tr>
-      <tr>
-         <td class="LeftCol">
-            Time<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Per<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Frame
-         </td>
-         <td class="RightCol">
-            <xsl:value-of select="TimePerFrame"/>
-         </td>
-      </tr>
-      <tr>
-         <td class="AltLeftCol">
-            PPD
-         </td>
-         <td class="AltRightCol">
-            <xsl:value-of select="EstPPD"/> (<xsl:value-of select="EstUPD"/> WUs)
-         </td>
-      </tr>
-      <tr>
-         <td class="LeftCol">
-            PPW
-         </td>
-         <td class="RightCol">
-            <xsl:value-of select="EstPPW"/> (<xsl:value-of select="EstUPW"/> WUs)
-         </td>
-      </tr>
-      <tr>
-         <td class="AltLeftCol">
-            Work<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Units
-         </td>
-         <td class="AltRightCol">
-            Completed: <xsl:value-of select="Completed"/> - Failed: <xsl:value-of select="Failed"/> - Total: <xsl:value-of select="TotalCompleted"/>
-         </td>
-      </tr>
-      <tr>
-         <td class="LeftCol">
-            Download<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Time
-         </td>
-         <td class="RightCol">
-            <xsl:value-of select="DownloadTime"/>
-         </td>
-      </tr>
-      <tr>
-         <td class="AltLeftCol">
-            Expected<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Completion
-         </td>
-         <td class="AltRightCol">
-            <xsl:value-of select="ExpectedCompletionDate"/>
-         </td>
-      </tr>
-   </xsl:template>
-   <xsl:template match="UnitLog">
-      <tr>
-         <td class="LeftCol" colspan="2">
-            <xsl:value-of select="Text" disable-output-escaping="yes"/>
-         </td>
-      </tr>
-   </xsl:template>
    <xsl:template match="Protein">
       <tr>
-         <td class="AltLeftCol">Project<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>ID</td>
+         <td class="AltLeftCol">Project ID</td>
          <td class="AltRightCol">
             <xsl:value-of select="ProjectNumber"/>
          </td>
       </tr>
       <tr>
-         <td class="LeftCol">Work<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Unit</td>
+         <td class="LeftCol">Work Unit</td>
          <td class="RightCol">
-            <xsl:value-of select="WorkUnit"/>
+            <xsl:value-of select="WorkUnitName"/>
          </td>
       </tr>
       <tr>
@@ -167,7 +153,7 @@
          </td>
       </tr>
       <tr>
-         <td class="AltLeftCol">Number<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>of<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Frames</td>
+         <td class="AltLeftCol">Number of Frames</td>
          <td class="AltRightCol">
             <xsl:value-of select="Frames"/>
          </td>
@@ -179,31 +165,31 @@
          </td>
       </tr>
       <tr>
-         <td class="AltLeftCol">Number<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>of<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Atoms</td>
+         <td class="AltLeftCol">Number of Atoms</td>
          <td class="AltRightCol">
-            <xsl:value-of select="NumAtoms"/>
+            <xsl:value-of select="NumberOfAtoms"/>
          </td>
       </tr>
       <tr>
-         <td class="LeftCol">Preferred<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Deadline</td>
+         <td class="LeftCol">Preferred Deadline</td>
          <td class="RightCol">
             <xsl:value-of select="PreferredDays"/> Days
          </td>
       </tr>
       <tr>
-         <td class="AltLeftCol">Final<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Deadline</td>
+         <td class="AltLeftCol">Final Deadline</td>
          <td class="AltRightCol">
-            <xsl:value-of select="MaxDays"/> Days
+            <xsl:value-of select="MaximumDays"/> Days
          </td>
       </tr>
       <tr>
-         <td class="LeftCol">Contact<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Person</td>
+         <td class="LeftCol">Contact Person</td>
          <td class="RightCol">
             <xsl:value-of select="Contact"/>
          </td>
       </tr>
       <tr>
-         <td class="AltLeftCol">Server<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>IP</td>
+         <td class="AltLeftCol">Server IP</td>
          <td class="AltRightCol">
             <xsl:value-of select="ServerIP"/>
          </td>
@@ -215,4 +201,24 @@
          </td>
       </tr>
    </xsl:template>
+
+   <msxsl:script implements-prefix="user" language="C#">
+      <![CDATA[
+         public string FormatNumber(string format, string value)
+         {
+            decimal decimalValue;
+            if (Decimal.TryParse(value, out decimalValue))
+            {
+               return decimalValue.ToString(format);
+            }
+            return String.Empty;
+         }
+
+         public string FormatDate(string dateValue)
+         {
+            DateTime value = DateTime.Parse(dateValue);
+            return String.Format("{0} at {1}", value.ToLongDateString(), value.ToString("h:mm:ss tt zzz"));
+         }
+      ]]>
+   </msxsl:script>
 </xsl:stylesheet>

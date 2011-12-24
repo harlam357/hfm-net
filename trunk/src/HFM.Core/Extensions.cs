@@ -71,6 +71,17 @@ namespace HFM.Core
 
       #endregion
 
+      public static string ToDateString(this DateTime date)
+      {
+         return ToDateString(date, String.Format(CultureInfo.CurrentCulture,
+                  "{0} {1}", date.ToShortDateString(), date.ToShortTimeString()));
+      }
+
+      public static string ToDateString(this IEquatable<DateTime> date, string formattedValue)
+      {
+         return date.Equals(DateTime.MinValue) ? "Unknown" : formattedValue;
+      }
+
       /// <summary>
       /// Get the totals for all slots.
       /// </summary>
@@ -90,7 +101,7 @@ namespace HFM.Core
             return totals;
          }
 
-         totals.TotalClients = slots.Count();
+         totals.TotalSlots = slots.Count();
 
          foreach (SlotModel slot in slots)
          {
@@ -98,11 +109,11 @@ namespace HFM.Core
             totals.UPD += slot.UPD;
             totals.TotalRunCompletedUnits += slot.TotalRunCompletedUnits;
             totals.TotalRunFailedUnits += slot.TotalRunFailedUnits;
-            totals.TotalClientCompletedUnits += slot.TotalClientCompletedUnits;
+            totals.TotalCompletedUnits += slot.TotalCompletedUnits;
 
             if (slot.ProductionValuesOk)
             {
-               totals.WorkingClients++;
+               totals.WorkingSlots++;
             }
          }
 

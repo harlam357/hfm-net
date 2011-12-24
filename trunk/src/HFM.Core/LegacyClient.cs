@@ -215,7 +215,7 @@ namespace HFM.Core
 
          slotModel.TotalRunCompletedUnits = run.CompletedUnits;
          slotModel.TotalRunFailedUnits = run.FailedUnits;
-         slotModel.TotalClientCompletedUnits = run.TotalCompletedUnits;
+         slotModel.TotalCompletedUnits = run.TotalCompletedUnits;
       }
 
       private static void PopulateRunLevelData(ClientQueueEntry queueEntry, SlotModel slotModel)

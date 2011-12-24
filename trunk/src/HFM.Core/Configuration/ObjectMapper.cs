@@ -31,6 +31,15 @@ namespace HFM.Core.Configuration
       {
          Mapper.CreateMap<QueueData, ClientQueue>();
          Mapper.CreateMap<QueueEntry, ClientQueueEntry>();
+         Mapper.CreateMap<SlotModel, SlotData>()
+            .ForMember(dest => dest.GridData, opt => opt.MapFrom(Mapper.Map<SlotModel, GridData>));
+         Mapper.CreateMap<SlotModel, GridData>()
+            .ForMember(dest => dest.StatusColor, opt => opt.MapFrom(src => src.Status.GetHtmlColor()))
+            .ForMember(dest => dest.StatusFontColor, opt => opt.MapFrom(src => src.Status.GetHtmlFontColor()))
+            .ForMember(dest => dest.ETA, opt => opt.MapFrom(src => src.ShowETADate ? src.ETADate.ToDateString() : src.ETA.ToString()))
+            .ForMember(dest => dest.Failed, opt => opt.MapFrom(src => src.TotalRunFailedUnits))
+            .ForMember(dest => dest.DownloadTime, opt => opt.MapFrom(src => src.DownloadTime.ToDateString()))
+            .ForMember(dest => dest.PreferredDeadline, opt => opt.MapFrom(src => src.PreferredDeadline.ToDateString()));
       }
    }
 }

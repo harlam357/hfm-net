@@ -116,6 +116,16 @@ namespace HFM.Core.Configuration
             Component.For<IClientSettingsManager>()
                .ImplementedBy<ClientSettingsManager>());
 
+         // IMarkupGenerator - Singleton
+         container.Register(
+            Component.For<IMarkupGenerator>()
+               .ImplementedBy<MarkupGenerator>());
+
+         // IWebsiteDeployer - Singleton
+         container.Register(
+            Component.For<IWebsiteDeployer>()
+               .ImplementedBy<WebsiteDeployer>());
+
          // IQueryParametersCollection - Singleton
          container.Register(
             Component.For<IQueryParametersCollection>()

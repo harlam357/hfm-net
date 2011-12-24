@@ -132,7 +132,7 @@ namespace HFM.Proteins.Tests
          values.Add(CreateValidProtein(3));
 
          // execute load
-         var results = _dictionary.Load(values).ToList();
+         _dictionary.Load(values).ToList();
 
          // check the results
          Assert.AreEqual(3, _dictionary.Count);
@@ -147,7 +147,7 @@ namespace HFM.Proteins.Tests
          Assert.AreEqual(26.4, _dictionary[2].KFactor);
 
          // check project 3
-         Assert.AreEqual(3, results[3].ProjectNumber);
+         Assert.AreEqual(3, _dictionary[3].ProjectNumber);
       }
 
       [Test]

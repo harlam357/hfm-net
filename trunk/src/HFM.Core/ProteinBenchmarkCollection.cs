@@ -220,6 +220,7 @@ namespace HFM.Core
          {
             UpdateFrames(unit, startingFrame, endingFrame, findBenchmark);
          }
+         Write();
       }
 
       private bool UpdateFrames(UnitInfo unit, int startingFrame, int endingFrame, ProteinBenchmark benchmark)
