@@ -192,7 +192,7 @@ namespace HFM.Forms
          this.radioLocal.Name = "radioLocal";
          this.radioLocal.Size = new System.Drawing.Size(76, 17);
          this.radioLocal.TabIndex = 10;
-         this.radioLocal.Tag = "0";
+         this.radioLocal.Tag = "1";
          this.radioLocal.Text = "Local Path";
          this.radioLocal.UseVisualStyleBackColor = true;
          // 
@@ -232,7 +232,7 @@ namespace HFM.Forms
          this.radioFTP.Name = "radioFTP";
          this.radioFTP.Size = new System.Drawing.Size(79, 17);
          this.radioFTP.TabIndex = 12;
-         this.radioFTP.Tag = "1";
+         this.radioFTP.Tag = "2";
          this.radioFTP.Text = "FTP Server";
          this.radioFTP.UseVisualStyleBackColor = true;
          // 
@@ -295,7 +295,7 @@ namespace HFM.Forms
          this.radioHTTP.Name = "radioHTTP";
          this.radioHTTP.Size = new System.Drawing.Size(82, 17);
          this.radioHTTP.TabIndex = 11;
-         this.radioHTTP.Tag = "2";
+         this.radioHTTP.Tag = "3";
          this.radioHTTP.Text = "Web Server";
          this.radioHTTP.UseVisualStyleBackColor = true;
          // 
