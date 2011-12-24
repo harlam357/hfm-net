@@ -20,6 +20,7 @@
 using AutoMapper;
 
 using HFM.Core.DataTypes;
+using HFM.Core.DataTypes.Markup;
 using HFM.Queue;
 
 namespace HFM.Core.Configuration

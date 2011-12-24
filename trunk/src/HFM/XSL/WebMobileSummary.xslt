@@ -37,16 +37,16 @@
                </tr>
                <tr>
                   <td class="RightCol" colspan="2">
-                     <xsl:value-of select="SlotTotals/WorkingSlots"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Clients
+                     <xsl:value-of select="SlotTotals/WorkingSlots"/> Clients
                   </td>
                   <td class="RightCol" colspan="2">
-                     <xsl:value-of select="SlotTotals/PPD"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPD
+                     <xsl:value-of select="user:FormatNumber(NumberFormat, SlotTotals/PPD)"/> PPD
                   </td>
                </tr>
                <tr>
                   <td class="Plain" colspan="4" align="center">
                      <a href="summary.html">
-                        Standard<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Version
+                        Standard Version
                      </a>
                   </td>
                </tr>

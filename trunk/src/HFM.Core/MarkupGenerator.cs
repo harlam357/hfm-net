@@ -23,14 +23,13 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
 using System.Xml.Xsl;
 
 using Castle.Core.Logging;
 
-using HFM.Core.DataTypes;
+using HFM.Core.DataTypes.Markup;
 using HFM.Core.Serializers;
 
 namespace HFM.Core
@@ -109,7 +108,6 @@ namespace HFM.Core
          {
             var copyHtml = _prefs.Get<bool>(Preference.WebGenCopyHtml);
             var copyXml = _prefs.Get<bool>(Preference.WebGenCopyXml);
-            //var copyClientData = _prefs.Get<bool>(Preference.WebGenCopyClientData);
 
             if (copyHtml)
             {
@@ -121,12 +119,6 @@ namespace HFM.Core
             {
                GenerateXml(slots);
             }
-
-            //// Issue 79
-            //if (copyClientData)
-            //{
-            //   GenerateClientData(slots);
-            //}
          }
          finally
          {
@@ -349,168 +341,5 @@ namespace HFM.Core
       }
       
       #endregion
-   }
-
-   [DataContract(Namespace = "")]
-   public class SlotSummary
-   {
-      [DataMember(Order = 1)]
-      public string HfmVersion { get; set; }
-
-      [DataMember(Order = 2)]
-      public string NumberFormat { get; set; }
-
-      [DataMember(Order = 3)]
-      public DateTime UpdateDateTime { get; set; }
-
-      [DataMember(Order = 4)]
-      public SlotTotals SlotTotals { get; set; }
-
-      [DataMember(Order = 5)]
-      public List<SlotData> Slots { get; set; }
-   }
-
-   [DataContract(Namespace = "")]
-   public class SlotData
-   {
-      [DataMember(Order = 1)]
-      public string Arguments { get; set; }
-
-      [DataMember(Order = 2)]
-      public string ClientVersion { get; set; }
-
-      [DataMember(Order = 3)]
-      public string UserId { get; set; }
-
-      [DataMember(Order = 4)]
-      public int MachineId { get; set; }
-
-      [DataMember(Order = 5)]
-      public int TotalRunCompletedUnits { get; set; }
-
-      [DataMember(Order = 6)]
-      public int TotalCompletedUnits { get; set; }
-
-      [DataMember(Order = 7)]
-      public int TotalRunFailedUnits { get; set; }
-
-      [DataMember(Order = 8)]
-      public GridData GridData { get; set; }
-
-      [DataMember(Order = 9)]
-      public UnitInfo UnitInfo { get; set; }
-   }
-
-   [DataContract(Namespace = "")]
-   public class GridData
-   {
-      [DataMember(Order = 1)]
-      public SlotStatus Status { get; set; }
-
-      [DataMember(Order = 2)]
-      public string StatusColor { get; set; }
-
-      [DataMember(Order = 3)]
-      public string StatusFontColor { get; set; }
-
-      [DataMember(Order = 4)]
-      public int PercentComplete { get; set; }
-
-      [DataMember(Order = 5)]
-      public bool UserIdIsDuplicate { get; set; }
-
-      [DataMember(Order = 6)]
-      public string Name { get; set; }
-
-      [DataMember(Order = 7)]
-      public string SlotType { get; set; }
-
-      [DataMember(Order = 8)]
-      public string TPF { get; set; }
-
-      [DataMember(Order = 9)]
-      public double PPD { get; set; }
-
-      [DataMember(Order = 10)]
-      public double UPD { get; set; }
-
-      [DataMember(Order = 11)]
-      public int MHz { get; set; }
-
-      [DataMember(Order = 12)]
-      public double PPDMHz { get; set; }
-
-      [DataMember(Order = 13)]
-      public string ETA { get; set; }
-
-      [DataMember(Order = 14)]
-      public string Core { get; set; }
-
-      [DataMember(Order = 15)]
-      public string CoreId { get; set; }
-
-      [DataMember(Order = 16)]
-      public bool ProjectIsDuplicate { get; set; }
-
-      [DataMember(Order = 17)]
-      public string ProjectRunCloneGen { get; set; }
-
-      [DataMember(Order = 18)]
-      public double Credit { get; set; }
-
-      [DataMember(Order = 19)]
-      public int Completed { get; set; }
-
-      [DataMember(Order = 20)]
-      public int Failed { get; set; }
-
-      [DataMember(Order = 21)]
-      public bool UsernameOk { get; set; }
-
-      [DataMember(Order = 22)]
-      public string Username { get; set; }
-
-      [DataMember(Order = 23)]
-      public string DownloadTime { get; set; }
-
-      [DataMember(Order = 24)]
-      public string PreferredDeadline { get; set; }
-
-      [DataMember(Order = 25)]
-      public IList<LogLine> CurrentLogLines { get; set; }
-   }
-
-   [DataContract(Namespace = "")]
-   public class SlotDetail
-   {
-      [DataMember(Order = 1)]
-      public string HfmVersion { get; set; }
-
-      [DataMember(Order = 2)]
-      public string NumberFormat { get; set; }
-
-      [DataMember(Order = 3)]
-      public DateTime UpdateDateTime { get; set; }
-
-      [DataMember(Order = 4)]
-      public bool LogFilesAvailable { get; set; }
-
-      [DataMember(Order = 5)]
-      public string LogFileName { get; set; }
-
-      [DataMember(Order = 6)]
-      public int TotalRunCompletedUnits { get; set; }
-
-      [DataMember(Order = 7)]
-      public int TotalCompletedUnits { get; set; }
-
-      [DataMember(Order = 8)]
-      public int TotalRunFailedUnits { get; set; }
-
-      [DataMember(Order = 9)]
-      public GridData GridData { get; set; }
-
-      [DataMember(Order = 10)]
-      public Protein Protein { get; set; }
    }
 }

@@ -59,7 +59,6 @@ namespace HFM.Core
 
          var copyHtml = _prefs.GetPreference<bool>(Preference.WebGenCopyHtml);
          var copyXml = _prefs.GetPreference<bool>(Preference.WebGenCopyXml);
-         //var copyClientData = _prefs.GetPreference<bool>(Preference.WebGenCopyClientData);
 
          Match match = Validate.MatchFtpWithUserPassUrl(_prefs.GetPreference<string>(Preference.WebRoot));
          if (match.Success)
@@ -77,11 +76,6 @@ namespace HFM.Core
             {
                FtpXmlUpload(server, ftpPath, username, password, xmlFilePaths);
             }
-            //if (copyClientData && clientDataFilePath != null)
-            //{
-            //   // Issue 79
-            //   _networkOps.FtpUploadHelper(server, ftpPath, clientDataFilePath, username, password, _prefs.GetPreference<FtpType>(Preference.WebGenFtpMode));
-            //}
          }
          else
          {
@@ -127,11 +121,6 @@ namespace HFM.Core
                   File.Copy(filePath, Path.Combine(webRoot, Path.GetFileName(filePath)), true);
                }
             }
-            //if (copyClientData && clientDataFilePath != null)
-            //{
-            //   // Issue 79
-            //   File.Copy(clientDataFilePath, Path.Combine(webRoot, Path.GetFileName(clientDataFilePath)), true);
-            //}
          }
       }
 

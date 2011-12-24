@@ -267,7 +267,6 @@ namespace HFM.Preferences
          _prefs.Add(Preference.WebGenFtpMode, new Metadata<FtpType>());
          _prefs.Add(Preference.WebGenCopyHtml, new Metadata<bool>());
          _prefs.Add(Preference.WebGenCopyXml, new Metadata<bool>());
-         _prefs.Add(Preference.WebGenCopyClientData, new Metadata<bool>());
          _prefs.Add(Preference.WebGenLimitLogSize, new Metadata<bool>());
          _prefs.Add(Preference.WebGenLimitLogSizeLength, new Metadata<int>());
          _prefs.Add(Preference.CssFile, new Metadata<string>());
@@ -285,7 +284,6 @@ namespace HFM.Preferences
          _prefs.Add(Preference.OfflineLast, new Metadata<bool>());
          _prefs.Add(Preference.ColorLogFile, new Metadata<bool>());
          _prefs.Add(Preference.AutoSaveConfig, new Metadata<bool>());
-         _prefs.Add(Preference.MaintainSelectedClient, new Metadata<bool>());
          _prefs.Add(Preference.PpdCalculation, new Metadata<PpdCalculationType>());
          _prefs.Add(Preference.DecimalPlaces, new Metadata<int>());
          _prefs.Add(Preference.CalculateBonus, new Metadata<bool>());
@@ -389,7 +387,6 @@ namespace HFM.Preferences
          Set(Preference.WebGenFtpMode, GetFtpType());
          Set(Preference.WebGenCopyHtml, Settings.Default.WebGenCopyHtml);
          Set(Preference.WebGenCopyXml, Settings.Default.WebGenCopyXml);
-         Set(Preference.WebGenCopyClientData, Settings.Default.WebGenCopyClientData);
          Set(Preference.WebGenLimitLogSize, Settings.Default.WebGenLimitLogSize);
          Set(Preference.WebGenLimitLogSizeLength, Settings.Default.WebGenLimitLogSizeLength);
          Set(Preference.CssFile, Settings.Default.CSSFile);
@@ -407,7 +404,6 @@ namespace HFM.Preferences
          Set(Preference.OfflineLast, Settings.Default.OfflineLast);
          Set(Preference.ColorLogFile, Settings.Default.ColorLogFile);
          Set(Preference.AutoSaveConfig, Settings.Default.AutoSaveConfig);
-         Set(Preference.MaintainSelectedClient, Settings.Default.MaintainSelectedClient);
          Set(Preference.PpdCalculation, GetPpdCalculation());
          Set(Preference.DecimalPlaces, Settings.Default.DecimalPlaces);
          Set(Preference.CalculateBonus, Settings.Default.CalculateBonus);
@@ -783,7 +779,6 @@ namespace HFM.Preferences
             Settings.Default.WebGenFtpMode = Get<FtpType>(Preference.WebGenFtpMode).ToString();
             Settings.Default.WebGenCopyHtml = Get<bool>(Preference.WebGenCopyHtml);
             Settings.Default.WebGenCopyXml = Get<bool>(Preference.WebGenCopyXml);
-            Settings.Default.WebGenCopyClientData = Get<bool>(Preference.WebGenCopyClientData);
             Settings.Default.WebGenLimitLogSize = Get<bool>(Preference.WebGenLimitLogSize);
             Settings.Default.WebGenLimitLogSizeLength = Get<int>(Preference.WebGenLimitLogSizeLength);
             Settings.Default.CSSFile = Get<string>(Preference.CssFile);
@@ -815,7 +810,6 @@ namespace HFM.Preferences
             }
             Settings.Default.ColorLogFile = Get<bool>(Preference.ColorLogFile);
             Settings.Default.AutoSaveConfig = Get<bool>(Preference.AutoSaveConfig);
-            Settings.Default.MaintainSelectedClient = Get<bool>(Preference.MaintainSelectedClient);
             if (Settings.Default.PpdCalculation != Get<PpdCalculationType>(Preference.PpdCalculation).ToString())
             {
                raisePpdCalculationChanged = true;
