@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:msxsl="urn:schemas-microsoft-com:xslt"
+    xmlns:user="http://www.tempuri.org/User">
    <xsl:output method="html" encoding="utf-8" doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" doctype-system="http://www.w3.org/TR/html4/loose.dtd" />
-   <xsl:template match="Overview">
+   <xsl:template match="SlotSummary">
       <html>
          <head>
             <title>Folding Client Overview (mobile)</title>
@@ -10,21 +13,23 @@
             <link rel="stylesheet" type="text/css" href="$CSSFILE" />
          </head>
          <body>
+            <xsl:variable name="PPW" select="SlotTotals/PPD * 7"/>
+            <xsl:variable name="UPW" select="SlotTotals/UPD * 7"/>
             <table class="Overview" width="85">
                <tr>
                   <td class="Heading" width="60">Overview</td>
                   <td class="Plain" width="25">
                      <a href="mobilesummary.html">
-                        Summary<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Page
+                        Summary Page
                      </a>
                   </td>
                </tr>
                <tr>
                   <td class="LeftCol" width="60">
-                     Total<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Clients
+                     Total Clients
                   </td>
                   <td class="RightCol" width="25">
-                     <xsl:value-of select="TotalHosts"/>
+                     <xsl:value-of select="SlotTotals/TotalSlots"/>
                   </td>
                </tr>
                <tr>
@@ -32,7 +37,7 @@
                      Working
                   </td>
                   <td class="AltRightCol" width="25">
-                     <xsl:value-of select="GoodHosts"/>
+                     <xsl:value-of select="SlotTotals/WorkingSlots"/>
                   </td>
                </tr>
                <tr>
@@ -40,95 +45,95 @@
                      Non-Working
                   </td>
                   <td class="RightCol" width="25">
-                     <xsl:value-of select="BadHosts"/>
+                     <xsl:value-of select="SlotTotals/TotalSlots - SlotTotals/WorkingSlots"/>
                   </td>
                </tr>
                <tr>
                   <td class="AltLeftCol" width="60">
-                     Total<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPD
+                     Total PPD
                   </td>
                   <td class="AltRightCol" width="25">
-                     <xsl:value-of select="EstPPD"/>
+                     <xsl:value-of select="user:FormatNumber(NumberFormat, SlotTotals/PPD)"/>
                   </td>
                </tr>
                <tr>
                   <td class="LeftCol" width="60">
-                     Total<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPW
+                     Total PPW
                   </td>
                   <td class="RightCol" width="25">
-                     <xsl:value-of select="EstPPW"/>
+                     <xsl:value-of select="user:FormatNumber(NumberFormat, $PPW)"/>
                   </td>
                </tr>
                <tr>
                   <td class="AltLeftCol" width="60">
-                     Total<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>UPD
+                     Total UPD
                   </td>
                   <td class="AltRightCol" width="25">
-                     <xsl:value-of select="EstUPD"/>
+                     <xsl:value-of select="user:FormatNumber(NumberFormat, SlotTotals/UPD)"/>
                   </td>
                </tr>
                <tr>
                   <td class="LeftCol" width="60">
-                     Total<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>UPW
+                     Total UPW
                   </td>
                   <td class="RightCol" width="25">
-                     <xsl:value-of select="EstUPW"/>
+                     <xsl:value-of select="user:FormatNumber(NumberFormat, $UPW)"/>
                   </td>
                </tr>
                <tr>
                   <td class="AltLeftCol" width="60">
-                     Average<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPD
+                     Average PPD
                   </td>
                   <td class="AltRightCol" width="25">
-                     <xsl:value-of select="AvEstPPD"/>
+                     <xsl:value-of select="user:FormatNumber(NumberFormat, SlotTotals/PPD div SlotTotals/WorkingSlots)"/>
                   </td>
                </tr>
                <tr>
                   <td class="LeftCol" width="60">
-                     Average<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPW
+                     Average PPW
                   </td>
                   <td class="RightCol" width="25">
-                     <xsl:value-of select="AvEstPPW"/>
+                     <xsl:value-of select="user:FormatNumber(NumberFormat, $PPW div SlotTotals/WorkingSlots)"/>
                   </td>
                </tr>
                <tr>
                   <td class="AltLeftCol" width="60">
-                     Average<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>UPD
+                     Average UPD
                   </td>
                   <td class="AltRightCol" width="25">
-                     <xsl:value-of select="AvEstUPD"/>
+                     <xsl:value-of select="user:FormatNumber(NumberFormat, SlotTotals/UPD div SlotTotals/WorkingSlots)"/>
                   </td>
                </tr>
                <tr>
                   <td class="LeftCol" width="60">
-                     Average<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>UPW
+                     Average UPW
                   </td>
                   <td class="RightCol" width="25">
-                     <xsl:value-of select="AvEstUPW"/>
+                     <xsl:value-of select="user:FormatNumber(NumberFormat, $UPW div SlotTotals/WorkingSlots)"/>
                   </td>
                </tr>
                <tr>
                   <td class="AltLeftCol" width="60">Completed Units</td>
                   <td class="AltRightCol" width="25">
-                     <xsl:value-of select="Completed"/>
+                     <xsl:value-of select="SlotTotals/TotalRunCompletedUnits"/>
                   </td>
                </tr>
                <tr>
                   <td class="LeftCol" width="60">Failed Units</td>
                   <td class="RightCol" width="25">
-                     <xsl:value-of select="Failed"/>
+                     <xsl:value-of select="SlotTotals/TotalRunFailedUnits"/>
                   </td>
                </tr>
                <tr>
                   <td class="AltLeftCol" width="60">Total Completed Units</td>
                   <td class="AltRightCol" width="25">
-                     <xsl:value-of select="TotalCompleted"/>
+                     <xsl:value-of select="SlotTotals/TotalCompletedUnits"/>
                   </td>
                </tr>
                <tr>
                   <td class="Plain" colspan="2" align="center">
                      <a href="index.html">
-                        Standard<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Version
+                        Standard Version
                      </a>
                   </td>
                </tr>
@@ -138,12 +143,31 @@
                </tr>
                <tr>
                   <td class="Plain" colspan="2" align="center">
-                     Page rendered by <a href="http://code.google.com/p/hfm-net/">HFM.NET</a><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="HFMVersion"/> on <xsl:value-of select="LastUpdatedDate"/>
-                     at <xsl:value-of select="LastUpdatedTime"/>
+                     Page rendered by <a href="http://code.google.com/p/hfm-net/">HFM.NET</a><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="HfmVersion"/> on <xsl:value-of select="user:FormatDate(UpdateDateTime)"/>
                   </td>
                </tr>
             </table>
          </body>
       </html>
    </xsl:template>
+
+   <msxsl:script implements-prefix="user" language="C#">
+      <![CDATA[
+         public string FormatNumber(string format, string value)
+         {
+            decimal decimalValue;
+            if (Decimal.TryParse(value, out decimalValue))
+            {
+               return decimalValue.ToString(format);
+            }
+            return String.Empty;
+         }
+
+         public string FormatDate(string dateValue)
+         {
+            DateTime value = DateTime.Parse(dateValue);
+            return String.Format("{0} at {1}", value.ToLongDateString(), value.ToString("h:mm:ss tt zzz"));
+         }
+      ]]>
+   </msxsl:script>
 </xsl:stylesheet>

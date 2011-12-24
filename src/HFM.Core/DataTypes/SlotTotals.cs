@@ -17,23 +17,38 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System.Diagnostics.CodeAnalysis;
+
+using System.Runtime.Serialization;
 
 namespace HFM.Core.DataTypes
 {
-   [SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
-   public struct SlotTotals
+   [DataContract(Namespace = "")]
+   public class SlotTotals
    {
+      [DataMember]
       public double PPD { get; set; }
+
+      [DataMember]
       public double UPD { get; set; }
-      public int TotalClients { get; set; }
-      public int WorkingClients { get; set; }
-      public int NonWorkingClients
+
+      [DataMember]
+      public int TotalSlots { get; set; }
+
+      [DataMember]
+      public int WorkingSlots { get; set; }
+
+      public int NonWorkingSlots
       {
-         get { return TotalClients - WorkingClients; }
+         get { return TotalSlots - WorkingSlots; }
       }
+
+      [DataMember]
       public int TotalRunCompletedUnits { get; set; }
+
+      [DataMember]
       public int TotalRunFailedUnits { get; set; }
-      public int TotalClientCompletedUnits { get; set; }
+
+      [DataMember]
+      public int TotalCompletedUnits { get; set; }
    }
 }

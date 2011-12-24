@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -253,6 +254,76 @@ namespace HFM.Core.DataTypes
             ProjectClone = Int32.Parse(match.Result("${Clone}")),
             ProjectGen = Int32.Parse(match.Result("${Gen}"))
          };
+      }
+
+      #endregion
+
+      #region SlotStatus
+
+      /// <summary>
+      /// Gets Status Html Color String
+      /// </summary>
+      public static string GetHtmlColor(this SlotStatus status)
+      {
+         return ColorTranslator.ToHtml(status.GetStatusColor());
+      }
+
+      /// <summary>
+      /// Gets Status Html Font Color String
+      /// </summary>
+      public static string GetHtmlFontColor(this SlotStatus status)
+      {
+         switch (status)
+         {
+            case SlotStatus.Running:
+               return ColorTranslator.ToHtml(Color.White);
+            case SlotStatus.RunningAsync:
+               return ColorTranslator.ToHtml(Color.White);
+            case SlotStatus.RunningNoFrameTimes:
+               return ColorTranslator.ToHtml(Color.Black);
+            case SlotStatus.Stopped:
+            case SlotStatus.EuePause:
+            case SlotStatus.Hung:
+               return ColorTranslator.ToHtml(Color.White);
+            case SlotStatus.Paused:
+               return ColorTranslator.ToHtml(Color.Black);
+            case SlotStatus.SendingWorkPacket:
+            case SlotStatus.GettingWorkPacket:
+               return ColorTranslator.ToHtml(Color.White);
+            case SlotStatus.Offline:
+               return ColorTranslator.ToHtml(Color.Black);
+            default:
+               return ColorTranslator.ToHtml(Color.Black);
+         }
+      }
+
+      /// <summary>
+      /// Gets Status Color Object
+      /// </summary>
+      public static Color GetStatusColor(this SlotStatus status)
+      {
+         switch (status)
+         {
+            case SlotStatus.Running:
+               return Color.Green;
+            case SlotStatus.RunningAsync:
+               return Color.Blue;
+            case SlotStatus.RunningNoFrameTimes:
+               return Color.Yellow;
+            case SlotStatus.Stopped:
+            case SlotStatus.EuePause:
+            case SlotStatus.Hung:
+               return Color.DarkRed;
+            case SlotStatus.Paused:
+               return Color.Orange;
+            case SlotStatus.SendingWorkPacket:
+            case SlotStatus.GettingWorkPacket:
+               return Color.Purple;
+            case SlotStatus.Offline:
+               return Color.Gray;
+            default:
+               return Color.Gray;
+         }
       }
 
       #endregion

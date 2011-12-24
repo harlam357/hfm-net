@@ -20,7 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
+using System.Linq;
 using System.Threading;
 
 using Castle.Core.Logging;
@@ -82,15 +82,11 @@ namespace HFM.Forms
          set { _logger = value; }
       }
 
-      //private IMarkupGenerator _markupGenerator;
-
-      //private IWebsiteDeployer _websiteDeployer;
+      private IMarkupGenerator _markupGenerator;
+      private IWebsiteDeployer _websiteDeployer;
 
       private readonly IPreferenceSet _prefs;
-
       private readonly IClientDictionary _clientDictionary;
-
-      //private readonly IProteinBenchmarkCollection _benchmarkCollection;
 
       #endregion
 
@@ -112,7 +108,6 @@ namespace HFM.Forms
                                                           RetrieveSingleClient(e.Name);
                                                        }
                                                     };
-         //_benchmarkCollection = benchmarkCollection;
       }
 
       public void Initialize()
@@ -122,7 +117,14 @@ namespace HFM.Forms
          // Hook up Web Generation Timer Event Handler
          _webTimer.Elapsed += WebGenTimerTick;
 
-         _prefs.TimerSettingsChanged += delegate { SetTimerState(); };
+         _prefs.TimerSettingsChanged += delegate
+                                        {
+                                           // stop
+                                           _workTimer.Stop();
+                                           _webTimer.Stop();
+                                           // then reset
+                                           SetTimerState();
+                                        };
       }
 
       #region Retrieval Logic
@@ -154,35 +156,35 @@ namespace HFM.Forms
 
       private void DoWebGeneration()
       {
-         //Debug.Assert(_prefs.Get<bool>(Preference.GenerateWeb));
+         Debug.Assert(_prefs.Get<bool>(Preference.GenerateWeb));
 
-         //// lazy initialize
-         //if (_markupGenerator == null) _markupGenerator = ServiceLocator.Resolve<IMarkupGenerator>();
-         //if (_websiteDeployer == null) _websiteDeployer = ServiceLocator.Resolve<IWebsiteDeployer>();
+         // lazy initialize
+         if (_markupGenerator == null) _markupGenerator = ServiceLocator.Resolve<IMarkupGenerator>();
+         if (_websiteDeployer == null) _websiteDeployer = ServiceLocator.Resolve<IWebsiteDeployer>();
 
-         //try
-         //{
-         //   if (_markupGenerator.GenerationInProgress)
-         //   {
-         //      _logger.Info("Web Generation already in progress...");
-         //   }
-         //   else
-         //   {
-         //      DateTime start = Instrumentation.ExecStart;
+         try
+         {
+            if (_markupGenerator.GenerationInProgress)
+            {
+               _logger.Info("Web Generation already in progress...");
+            }
+            else
+            {
+               DateTime start = Instrumentation.ExecStart;
 
-         //      _logger.Info("Starting Web Generation...");
+               _logger.Info("Starting Web Generation...");
 
-         //      ICollection<IDisplayInstance> displayInstances = _presenter.GetCurrentDisplayInstanceArray();
-         //      _markupGenerator.Generate(displayInstances);
-         //      _websiteDeployer.DeployWebsite(_markupGenerator.HtmlFilePaths, _markupGenerator.XmlFilePaths, _markupGenerator.ClientDataFilePath, displayInstances);
+               var slots = _clientDictionary.Slots.ToList();
+               _markupGenerator.Generate(slots);
+               _websiteDeployer.DeployWebsite(_markupGenerator.HtmlFilePaths, _markupGenerator.XmlFilePaths, slots);
 
-         //      _logger.Info("Total Web Generation Execution Time: {0}", Instrumentation.GetExecTime(start));
-         //   }
-         //}
-         //catch (Exception ex)
-         //{
-         //   _logger.ErrorFormat(ex, "{0}", ex.Message);
-         //}
+               _logger.Info("Total Web Generation Execution Time: {0}", Instrumentation.GetExecTime(start));
+            }
+         }
+         catch (Exception ex)
+         {
+            _logger.ErrorFormat(ex, "{0}", ex.Message);
+         }
       }
 
       /// <summary>
@@ -299,15 +301,12 @@ namespace HFM.Forms
                WaitHandle.WaitAll(waitHandles);
             }
          }
-
-         // Save the benchmark collection
-         //_benchmarkCollection.Write();
       }
 
       /// <summary>
       /// Stick this Instance in the background thread queue to retrieve the info for the given Instance
       /// </summary>
-      private IAsyncResult QueueNewRetrieval(IClient client)
+      private static IAsyncResult QueueNewRetrieval(IClient client)
       {
          return new Action<IClient>(RetrieveInstance).BeginInvoke(client, null, null);
       }
@@ -315,7 +314,7 @@ namespace HFM.Forms
       /// <summary>
       /// Stub to execute retrieve and refresh display
       /// </summary>
-      private void RetrieveInstance(IClient client)
+      private static void RetrieveInstance(IClient client)
       {
          if (client.RetrievalInProgress == false)
          {
@@ -343,15 +342,12 @@ namespace HFM.Forms
       /// <summary>
       /// Do a single retrieval operation on the given Client Instance
       /// </summary>
-      private void DoSingleClientRetieval(IClient client)
+      private static void DoSingleClientRetieval(IClient client)
       {
          if (client.RetrievalInProgress == false)
          {
             IAsyncResult async = QueueNewRetrieval(client);
             async.AsyncWaitHandle.WaitOne();
-
-            // Save the benchmark collection
-            //_benchmarkCollection.Write();
          }
       }
 
@@ -375,7 +371,7 @@ namespace HFM.Forms
          // Enable the data retrieval timer
          if (_prefs.Get<bool>(Preference.SyncOnSchedule))
          {
-            if (RetrievalInProgress == false)
+            if (!RetrievalInProgress)
             {
                StartBackgroundTimer();
             }
@@ -416,7 +412,7 @@ namespace HFM.Forms
          var syncTimeMinutes = _prefs.Get<int>(Preference.SyncTimeMinutes);
 
          _workTimer.Interval = syncTimeMinutes * Constants.MinToMillisec;
-         _logger.Info(String.Format("Starting Retrieval Timer Loop: {0} Minutes", syncTimeMinutes));
+         _logger.Info("Starting Retrieval Timer Loop: {0} Minutes", syncTimeMinutes);
          _workTimer.Start();
       }
 
@@ -434,8 +430,7 @@ namespace HFM.Forms
          var generateInterval = _prefs.Get<int>(Preference.GenerateInterval);
 
          _webTimer.Interval = generateInterval * Constants.MinToMillisec;
-         _logger.Info(String.Format(CultureInfo.CurrentCulture,
-            "Starting Web Generation Timer Loop: {0} Minutes", generateInterval));
+         _logger.Info("Starting Web Generation Timer Loop: {0} Minutes", generateInterval);
          _webTimer.Start();
       }
 

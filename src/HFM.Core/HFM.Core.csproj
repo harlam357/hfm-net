@@ -83,6 +83,7 @@
     </Compile>
     <Compile Include="Client.cs" />
     <Compile Include="ClientFactory.cs" />
+    <Compile Include="MarkupGenerator.cs" />
     <Compile Include="ProjectSummaryDownloader.cs" />
     <Compile Include="Serializers\HfmLegacyFileSerializer.cs" />
     <Compile Include="Configuration\ContainerInstaller.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="UnitInfoDatabase.cs" />
     <Compile Include="UnitInfoLogic.cs" />
     <Compile Include="Validate.cs" />
+    <Compile Include="WebsiteDeployer.cs" />
     <Compile Include="XmlStatsDataContainer.cs" />
   </ItemGroup>
   <ItemGroup>

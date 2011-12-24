@@ -21,7 +21,7 @@ using System.Runtime.Serialization;
 
 namespace HFM.Core.DataTypes
 {
-   [DataContract]
+   [DataContract(Namespace = "")]
    public class LogLine
    {
       [DataMember(Order = 1)]

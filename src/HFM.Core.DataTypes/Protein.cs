@@ -25,8 +25,7 @@ using System.Runtime.Serialization;
 
 namespace HFM.Core.DataTypes
 {
-   [Serializable]
-   [DataContract]
+   [DataContract(Namespace = "")]
    public class Protein
    {
       public Protein()

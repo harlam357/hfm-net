@@ -696,6 +696,12 @@ namespace HFM.Forms
          // no clients, stub out
          if (_clientDictionary.Count == 0) return;
 
+         // index 2 is hard coded to legacy serializer
+         if (_settingsManager.FilterIndex == 2)
+         {
+            _settingsManager.ClearFileName();
+         }
+
          if (_settingsManager.FileName.Length == 0)
          {
             FileSaveAsClick();
@@ -704,7 +710,8 @@ namespace HFM.Forms
          {
             try
             {
-               _settingsManager.Write(_clientDictionary.Values.Select(x => x.Settings), _settingsManager.FileName, _settingsManager.FilterIndex);
+               _settingsManager.Write(_clientDictionary.Values.Select(x => x.Settings), _settingsManager.FileName, 
+                                      _settingsManager.FilterIndex == 2 ? 1 : _settingsManager.FilterIndex);
                _clientDictionary.IsDirty = false;
             }
             catch (Exception ex)

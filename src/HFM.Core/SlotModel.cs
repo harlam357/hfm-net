@@ -20,14 +20,12 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Runtime.Serialization;
 
 using HFM.Client.DataTypes;
 using HFM.Core.DataTypes;
 
 namespace HFM.Core
 {
-   [DataContract]
    public class SlotModel
    {
       #region IPreferenceSet
@@ -44,7 +42,7 @@ namespace HFM.Core
          get { return Prefs.Get<bool>(Preference.CalculateBonus); }
       }
 
-      private bool ShowVersions
+      public bool ShowVersions
       {
          get { return Prefs.Get<bool>(Preference.ShowVersions); }
       }
@@ -57,6 +55,11 @@ namespace HFM.Core
       private CompletedCountDisplayType CompletedCountDisplay
       {
          get { return Prefs.Get<CompletedCountDisplayType>(Preference.CompletedCountDisplay); }
+      }
+
+      public bool ShowETADate
+      {
+         get { return Prefs.Get<bool>(Preference.EtaDate); }
       }
 
       #endregion
@@ -81,7 +84,6 @@ namespace HFM.Core
       }
 
       private UnitInfo _unitInfo;
-      [DataMember(Order = 1)]
       public UnitInfo UnitInfo
       {
          get { return UnitInfoLogic != null ? UnitInfoLogic.UnitInfoData : null; }
@@ -110,7 +112,6 @@ namespace HFM.Core
          return false;
       }
 
-      [DataMember(Order = 2)]
       public ClientSettings Settings { get; set; }
 
       // temporary and only used with FahClient type
@@ -137,7 +138,7 @@ namespace HFM.Core
          // Status = 
          ClientVersion = String.Empty;
          TotalRunCompletedUnits = 0;
-         TotalClientCompletedUnits = 0;
+         TotalCompletedUnits = 0;
          TotalRunFailedUnits = 0;
       }
 
@@ -148,7 +149,6 @@ namespace HFM.Core
       /// <summary>
       /// Client Startup Arguments
       /// </summary>
-      [DataMember(Order = 3)]
       public string Arguments { get; set; }
 
       /// <summary>
@@ -162,7 +162,6 @@ namespace HFM.Core
       /// <summary>
       /// User ID associated with this client
       /// </summary>
-      [DataMember(Order = 4)]
       public string UserId { get; set; }
 
       /// <summary>
@@ -176,7 +175,6 @@ namespace HFM.Core
       /// <summary>
       /// Machine ID associated with this client
       /// </summary>
-      [DataMember(Order = 5)]
       public int MachineId { get; set; }
 
       /// <summary>
@@ -194,7 +192,6 @@ namespace HFM.Core
       /// <summary>
       /// Status of this client
       /// </summary>
-      [DataMember(Order = 6)]
       public SlotStatus Status { get; set; }
 
       public float Progress
@@ -214,7 +211,7 @@ namespace HFM.Core
       {
          get
          {
-            if (Settings.ClientType.Equals(DataTypes.ClientType.FahClient) && SlotId != -1)
+            if (Settings.ClientType.Equals(ClientType.FahClient) && SlotId != -1)
             {
                return Settings.Name + " Slot " + SlotId;
             }
@@ -230,7 +227,7 @@ namespace HFM.Core
          set { _slotId = value; }
       }
 
-      public string ClientType
+      public string SlotType
       {
          get
          {
@@ -245,7 +242,6 @@ namespace HFM.Core
       /// <summary>
       /// Client Version
       /// </summary>
-      [DataMember(Order = 7)]
       public string ClientVersion { get; set; }
 
       public bool IsUsingBenchmarkFrameTime
@@ -274,7 +270,7 @@ namespace HFM.Core
       /// </summary>
       public double UPD
       {
-         get { return ProductionValuesOk ? UnitInfoLogic.GetUPD(CalculationType) : 0; }
+         get { return ProductionValuesOk ? Math.Round(UnitInfoLogic.GetUPD(CalculationType), 3) : 0; }
       }
 
       public int MHz
@@ -302,7 +298,7 @@ namespace HFM.Core
       {
          get { return ProductionValuesOk ? UnitInfoLogic.GetEtaDate(CalculationType) : DateTime.MinValue; }
       }
-      
+
       public string Core
       {
          get
@@ -315,7 +311,7 @@ namespace HFM.Core
          }
       }
 
-      public string CoreID
+      public string CoreId
       {
          get { return UnitInfo.CoreID; }
       }
@@ -330,27 +326,24 @@ namespace HFM.Core
          get { return ProductionValuesOk ? UnitInfoLogic.GetCredit(Status, CalculationType, CalculateBonus) : UnitInfoLogic.CurrentProtein.Credit; }
       }
 
-      public int Complete
+      public int Completed
       {
-         get { return CompletedCountDisplay.Equals(CompletedCountDisplayType.ClientTotal) ? TotalClientCompletedUnits : TotalRunCompletedUnits; }
+         get { return CompletedCountDisplay.Equals(CompletedCountDisplayType.ClientTotal) ? TotalCompletedUnits : TotalRunCompletedUnits; }
       }
 
       /// <summary>
       /// Number of completed units since the last client start
       /// </summary>
-      [DataMember(Order = 8)]
       public int TotalRunCompletedUnits { get; set; }
 
       /// <summary>
       /// Total Units Completed for lifetime of the client (read from log file)
       /// </summary>
-      [DataMember(Order = 9)]
-      public int TotalClientCompletedUnits { get; set; }
+      public int TotalCompletedUnits { get; set; }
 
       /// <summary>
       /// Number of failed units since the last client start
       /// </summary>
-      [DataMember(Order = 10)]
       public int TotalRunFailedUnits { get; set; }
 
       /// <summary>
@@ -391,7 +384,6 @@ namespace HFM.Core
       /// <summary>
       /// Current Log Lines based on UnitLogLines Array and CurrentUnitIndex
       /// </summary>
-      [DataMember(Order = 11)]
       public IList<LogLine> CurrentLogLines { get; set; }
 
       /// <summary>
@@ -467,12 +459,12 @@ namespace HFM.Core
       /// <summary>
       /// Local Time when this Client last detected Frame Progress
       /// </summary>
-      internal DateTime TimeOfLastUnitStart { get; set; } // should be init to DateTime.MinValue
+      public DateTime TimeOfLastUnitStart { get; set; } // should be init to DateTime.MinValue
 
       /// <summary>
       /// Local Time when this Client last detected Frame Progress
       /// </summary>
-      internal DateTime TimeOfLastFrameProgress { get; set; } // should be init to DateTime.MinValue
+      public DateTime TimeOfLastFrameProgress { get; set; } // should be init to DateTime.MinValue
 
       /// <summary>
       /// Update Time of Last Frame Progress based on Current and Parsed UnitInfo
