@@ -44,6 +44,15 @@ namespace HFM.Forms.Models
          }
       }
 
+      public LegacyClientSettingsModel()
+      {
+         _legacyClientSubType = LegacyClientSubType.Path;
+         _clientProcessorMegahertz = 1;
+         _fahLogFileName = Default.FahLogFileName;
+         _unitInfoFileName = Default.UnitInfoFileName;
+         _queueFileName = Default.QueueFileName;
+      }
+
       private LegacyClientSubType _legacyClientSubType;
       /// <summary>
       /// Client host type (Path, FTP, or HTTP)

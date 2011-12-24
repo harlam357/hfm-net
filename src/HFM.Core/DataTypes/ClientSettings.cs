@@ -22,7 +22,7 @@ using System.Runtime.Serialization;
 
 namespace HFM.Core.DataTypes
 {
-   [DataContract(Namespace = "")]
+   [DataContract]
    public class ClientSettings
    {
       /// <summary>
