@@ -24,7 +24,7 @@
                   <td class="Heading">Status</td>
                   <td class="Heading">Progress</td>
                   <td class="Heading">Name</td>
-                  <td class="Heading">Client<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Type</td>
+                  <td class="Heading">Client Type</td>
                   <td class="Heading">TPF</td>
                   <td class="Heading">PPD</td>
                   <td class="Heading">MHz</td>
@@ -32,12 +32,12 @@
                   <td class="Heading">ETA</td>
                   <td class="Heading">Core</td>
                   <td class="Heading">Core ID</td>
-                  <td class="Heading">Project<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>(Run,<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Clone,<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Gen)</td>
+                  <td class="Heading">Project (Run, Clone, Gen)</td>
                   <td class="Heading">Credit</td>
                   <td class="Heading">Completed</td>
                   <td class="Heading">Failed</td>
-                  <td class="Heading">User<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Name</td>
-                  <td class="Heading">Download<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Time</td>
+                  <td class="Heading">User Name</td>
+                  <td class="Heading">Download Time</td>
                   <td class="Heading">Deadline</td>
                </tr>
                <xsl:apply-templates select="Slots/SlotData" />
@@ -52,17 +52,17 @@
                </tr>
                <tr>
                   <td class="RightCol" colspan="1">
-                     <xsl:value-of select="SlotTotals/WorkingSlots"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Clients
+                     <xsl:value-of select="SlotTotals/WorkingSlots"/> Clients
                   </td>
                   <td class="RightCol" colspan="1">
-                     <xsl:value-of select="SlotTotals/PPD"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPD
+                     <xsl:value-of select="user:FormatNumber(NumberFormat, SlotTotals/PPD)"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPD
                   </td>
                   <td class="Plain" colspan="16"></td>
                </tr>
                <tr>
                   <td class="Plain" colspan="18" align="center">
                      <a href="mobilesummary.html">
-                        Mobile<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Version
+                        Mobile Version
                      </a>
                   </td>
                </tr>

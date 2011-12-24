@@ -61,138 +61,136 @@ namespace HFM.Forms
          this.locateWebFolder = new System.Windows.Forms.FolderBrowserDialog();
          this.tabControl1 = new System.Windows.Forms.TabControl();
          this.tabSchdTasks = new System.Windows.Forms.TabPage();
-         this.grpUpdateData = new GroupBoxWrapper();
-         this.chkAllowRunningAsync = new CheckBoxWrapper();
-         this.chkDuplicateProject = new CheckBoxWrapper();
-         this.chkDuplicateUserID = new CheckBoxWrapper();
-         this.chkShowUserStats = new CheckBoxWrapper();
+         this.grpUpdateData = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.chkAllowRunningAsync = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.chkDuplicateProject = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.chkDuplicateUserID = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.chkShowUserStats = new HFM.Forms.Controls.CheckBoxWrapper();
          this.txtCollectMinutes = new harlam357.Windows.Forms.ValidatingTextBox();
          this.toolTipPrefs = new System.Windows.Forms.ToolTip(this.components);
-         this.lbl2SchedExplain = new LabelWrapper();
-         this.chkScheduled = new CheckBoxWrapper();
-         this.chkSynchronous = new CheckBoxWrapper();
-         this.grpHTMLOutput = new GroupBoxWrapper();
-         this.chkClientData = new CheckBoxWrapper();
+         this.lbl2SchedExplain = new HFM.Forms.Controls.LabelWrapper();
+         this.chkScheduled = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.chkSynchronous = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.grpHTMLOutput = new HFM.Forms.Controls.GroupBoxWrapper();
          this.pnlFtpMode = new harlam357.Windows.Forms.RadioPanel();
-         this.radioActive = new RadioButtonWrapper();
-         this.radioPassive = new RadioButtonWrapper();
-         this.lblFtpMode = new LabelWrapper();
+         this.radioActive = new HFM.Forms.Controls.RadioButtonWrapper();
+         this.radioPassive = new HFM.Forms.Controls.RadioButtonWrapper();
+         this.lblFtpMode = new HFM.Forms.Controls.LabelWrapper();
          this.udLimitSize = new System.Windows.Forms.NumericUpDown();
-         this.chkLimitSize = new CheckBoxWrapper();
-         this.chkXml = new CheckBoxWrapper();
-         this.chkHtml = new CheckBoxWrapper();
-         this.btnTestConnection = new ButtonWrapper();
-         this.chkFAHlog = new CheckBoxWrapper();
-         this.radioFullRefresh = new RadioButtonWrapper();
-         this.radioSchedule = new RadioButtonWrapper();
+         this.chkLimitSize = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.chkXml = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.chkHtml = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.btnTestConnection = new HFM.Forms.Controls.ButtonWrapper();
+         this.chkFAHlog = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.radioFullRefresh = new HFM.Forms.Controls.RadioButtonWrapper();
+         this.radioSchedule = new HFM.Forms.Controls.RadioButtonWrapper();
          this.txtWebGenMinutes = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lbl2MinutesToGen = new LabelWrapper();
-         this.btnBrowseWebFolder = new ButtonWrapper();
+         this.lbl2MinutesToGen = new HFM.Forms.Controls.LabelWrapper();
+         this.btnBrowseWebFolder = new HFM.Forms.Controls.ButtonWrapper();
          this.txtWebSiteBase = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lbl2WebSiteDir = new LabelWrapper();
-         this.chkWebSiteGenerator = new CheckBoxWrapper();
+         this.lbl2WebSiteDir = new HFM.Forms.Controls.LabelWrapper();
+         this.chkWebSiteGenerator = new HFM.Forms.Controls.CheckBoxWrapper();
          this.tabStartup = new System.Windows.Forms.TabPage();
-         this.grpFileExplorer = new GroupBoxWrapper();
-         this.btnBrowseFileExplorer = new ButtonWrapper();
-         this.label4 = new LabelWrapper();
+         this.grpFileExplorer = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.btnBrowseFileExplorer = new HFM.Forms.Controls.ButtonWrapper();
+         this.label4 = new HFM.Forms.Controls.LabelWrapper();
          this.txtFileExplorer = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.grpLogFileViewer = new GroupBoxWrapper();
-         this.btnBrowseLogViewer = new ButtonWrapper();
-         this.label3 = new LabelWrapper();
+         this.grpLogFileViewer = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.btnBrowseLogViewer = new HFM.Forms.Controls.ButtonWrapper();
+         this.label3 = new HFM.Forms.Controls.LabelWrapper();
          this.txtLogFileViewer = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.grpDefaultConfig = new GroupBoxWrapper();
-         this.chkDefaultConfig = new CheckBoxWrapper();
-         this.btnBrowseConfigFile = new ButtonWrapper();
+         this.grpDefaultConfig = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.chkDefaultConfig = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.btnBrowseConfigFile = new HFM.Forms.Controls.ButtonWrapper();
          this.txtDefaultConfigFile = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.label1 = new LabelWrapper();
-         this.grpStartup = new GroupBoxWrapper();
-         this.chkCheckForUpdate = new CheckBoxWrapper();
-         this.chkAutoRun = new CheckBoxWrapper();
-         this.chkRunMinimized = new CheckBoxWrapper();
+         this.label1 = new HFM.Forms.Controls.LabelWrapper();
+         this.grpStartup = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.chkCheckForUpdate = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.chkAutoRun = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.chkRunMinimized = new HFM.Forms.Controls.CheckBoxWrapper();
          this.tabOptions = new System.Windows.Forms.TabPage();
-         this.grpShowStyle = new GroupBoxWrapper();
-         this.cboShowStyle = new ComboBoxWrapper();
-         this.labelWrapper2 = new LabelWrapper();
-         this.grpInteractiveOptions = new GroupBoxWrapper();
-         this.chkEtaAsDate = new CheckBoxWrapper();
-         this.chkMaintainSelected = new CheckBoxWrapper();
-         this.chkCalcBonus = new CheckBoxWrapper();
-         this.label2 = new LabelWrapper();
-         this.cboPpdCalc = new ComboBoxWrapper();
-         this.chkOffline = new CheckBoxWrapper();
-         this.chkColorLog = new CheckBoxWrapper();
+         this.grpShowStyle = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.cboShowStyle = new HFM.Forms.Controls.ComboBoxWrapper();
+         this.labelWrapper2 = new HFM.Forms.Controls.LabelWrapper();
+         this.grpInteractiveOptions = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.chkEtaAsDate = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.chkCalcBonus = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.label2 = new HFM.Forms.Controls.LabelWrapper();
+         this.cboPpdCalc = new HFM.Forms.Controls.ComboBoxWrapper();
+         this.chkOffline = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.chkColorLog = new HFM.Forms.Controls.CheckBoxWrapper();
          this.udDecimalPlaces = new System.Windows.Forms.NumericUpDown();
-         this.chkAutoSave = new CheckBoxWrapper();
-         this.labelWrapper1 = new LabelWrapper();
-         this.grpDebugMessageLevel = new GroupBoxWrapper();
-         this.cboMessageLevel = new ComboBoxWrapper();
-         this.label6 = new LabelWrapper();
+         this.chkAutoSave = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.labelWrapper1 = new HFM.Forms.Controls.LabelWrapper();
+         this.grpDebugMessageLevel = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.cboMessageLevel = new HFM.Forms.Controls.ComboBoxWrapper();
+         this.label6 = new HFM.Forms.Controls.LabelWrapper();
          this.tabReporting = new System.Windows.Forms.TabPage();
-         this.grpReportSelections = new GroupBoxWrapper();
-         this.chkClientEuePause = new CheckBoxWrapper();
-         this.grpEmailSettings = new GroupBoxWrapper();
+         this.grpReportSelections = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.chkClientHung = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.chkClientEuePause = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.grpEmailSettings = new HFM.Forms.Controls.GroupBoxWrapper();
          this.txtSmtpServerPort = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.labelWrapper3 = new LabelWrapper();
-         this.chkEmailSecure = new CheckBoxWrapper();
-         this.btnTestEmail = new ButtonWrapper();
+         this.labelWrapper3 = new HFM.Forms.Controls.LabelWrapper();
+         this.chkEmailSecure = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.btnTestEmail = new HFM.Forms.Controls.ButtonWrapper();
          this.txtSmtpPassword = new harlam357.Windows.Forms.ValidatingTextBox();
          this.txtSmtpUsername = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.labelWrapper4 = new LabelWrapper();
-         this.labelWrapper5 = new LabelWrapper();
-         this.lblFromEmailAddress = new LabelWrapper();
+         this.labelWrapper4 = new HFM.Forms.Controls.LabelWrapper();
+         this.labelWrapper5 = new HFM.Forms.Controls.LabelWrapper();
+         this.lblFromEmailAddress = new HFM.Forms.Controls.LabelWrapper();
          this.txtFromEmailAddress = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.chkEnableEmail = new CheckBoxWrapper();
-         this.lblSmtpServer = new LabelWrapper();
-         this.lblToAddress = new LabelWrapper();
+         this.chkEnableEmail = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.lblSmtpServer = new HFM.Forms.Controls.LabelWrapper();
+         this.lblToAddress = new HFM.Forms.Controls.LabelWrapper();
          this.txtSmtpServer = new harlam357.Windows.Forms.ValidatingTextBox();
          this.txtToEmailAddress = new harlam357.Windows.Forms.ValidatingTextBox();
          this.tabWeb = new System.Windows.Forms.TabPage();
-         this.grpProjectDownload = new GroupBoxWrapper();
+         this.grpProjectDownload = new HFM.Forms.Controls.GroupBoxWrapper();
          this.txtProjectDownloadUrl = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.label5 = new LabelWrapper();
-         this.grpWebStats = new GroupBoxWrapper();
-         this.lbl3EOCUserID = new LabelWrapper();
-         this.lbl3StanfordUserID = new LabelWrapper();
+         this.label5 = new HFM.Forms.Controls.LabelWrapper();
+         this.grpWebStats = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.lbl3EOCUserID = new HFM.Forms.Controls.LabelWrapper();
+         this.lbl3StanfordUserID = new HFM.Forms.Controls.LabelWrapper();
          this.linkTeam = new System.Windows.Forms.LinkLabel();
          this.txtEOCUserID = new harlam357.Windows.Forms.ValidatingTextBox();
          this.txtStanfordTeamID = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lbl3StanfordTeamID = new LabelWrapper();
+         this.lbl3StanfordTeamID = new HFM.Forms.Controls.LabelWrapper();
          this.linkStanford = new System.Windows.Forms.LinkLabel();
          this.txtStanfordUserID = new harlam357.Windows.Forms.ValidatingTextBox();
          this.linkEOC = new System.Windows.Forms.LinkLabel();
-         this.grpWebProxy = new GroupBoxWrapper();
-         this.chkUseProxy = new CheckBoxWrapper();
-         this.chkUseProxyAuth = new CheckBoxWrapper();
+         this.grpWebProxy = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.chkUseProxy = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.chkUseProxyAuth = new HFM.Forms.Controls.CheckBoxWrapper();
          this.txtProxyPass = new harlam357.Windows.Forms.ValidatingTextBox();
          this.txtProxyUser = new harlam357.Windows.Forms.ValidatingTextBox();
          this.txtProxyPort = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lbl3ProxyPass = new LabelWrapper();
+         this.lbl3ProxyPass = new HFM.Forms.Controls.LabelWrapper();
          this.txtProxyServer = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lbl3ProxyUser = new LabelWrapper();
-         this.lbl3Port = new LabelWrapper();
-         this.lbl3Proxy = new LabelWrapper();
+         this.lbl3ProxyUser = new HFM.Forms.Controls.LabelWrapper();
+         this.lbl3Port = new HFM.Forms.Controls.LabelWrapper();
+         this.lbl3Proxy = new HFM.Forms.Controls.LabelWrapper();
          this.tabVisStyles = new System.Windows.Forms.TabPage();
-         this.btnMobileSummaryBrowse = new ButtonWrapper();
+         this.btnMobileSummaryBrowse = new HFM.Forms.Controls.ButtonWrapper();
          this.txtMobileSummary = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lblMobileSummary = new LabelWrapper();
-         this.btnMobileOverviewBrowse = new ButtonWrapper();
+         this.lblMobileSummary = new HFM.Forms.Controls.LabelWrapper();
+         this.btnMobileOverviewBrowse = new HFM.Forms.Controls.ButtonWrapper();
          this.txtMobileOverview = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lblMobileOverview = new LabelWrapper();
-         this.btnInstanceBrowse = new ButtonWrapper();
+         this.lblMobileOverview = new HFM.Forms.Controls.LabelWrapper();
+         this.btnInstanceBrowse = new HFM.Forms.Controls.ButtonWrapper();
          this.txtInstance = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lblInstance = new LabelWrapper();
-         this.btnSummaryBrowse = new ButtonWrapper();
+         this.lblInstance = new HFM.Forms.Controls.LabelWrapper();
+         this.btnSummaryBrowse = new HFM.Forms.Controls.ButtonWrapper();
          this.txtSummary = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lblSummary = new LabelWrapper();
-         this.btnOverviewBrowse = new ButtonWrapper();
+         this.lblSummary = new HFM.Forms.Controls.LabelWrapper();
+         this.btnOverviewBrowse = new HFM.Forms.Controls.ButtonWrapper();
          this.txtOverview = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lblOverview = new LabelWrapper();
-         this.lbl1Preview = new LabelWrapper();
-         this.lbl1Style = new LabelWrapper();
+         this.lblOverview = new HFM.Forms.Controls.LabelWrapper();
+         this.lbl1Preview = new HFM.Forms.Controls.LabelWrapper();
+         this.lbl1Style = new HFM.Forms.Controls.LabelWrapper();
          this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
-         this.btnOK = new ButtonWrapper();
-         this.btnCancel = new ButtonWrapper();
-         this.chkClientHung = new CheckBoxWrapper();
+         this.btnOK = new HFM.Forms.Controls.ButtonWrapper();
+         this.btnCancel = new HFM.Forms.Controls.ButtonWrapper();
          this.tabControl1.SuspendLayout();
          this.tabSchdTasks.SuspendLayout();
          this.grpUpdateData.SuspendLayout();
@@ -377,7 +375,6 @@ namespace HFM.Forms
          // 
          // grpHTMLOutput
          // 
-         this.grpHTMLOutput.Controls.Add(this.chkClientData);
          this.grpHTMLOutput.Controls.Add(this.pnlFtpMode);
          this.grpHTMLOutput.Controls.Add(this.udLimitSize);
          this.grpHTMLOutput.Controls.Add(this.chkLimitSize);
@@ -399,17 +396,6 @@ namespace HFM.Forms
          this.grpHTMLOutput.TabIndex = 0;
          this.grpHTMLOutput.TabStop = false;
          this.grpHTMLOutput.Text = "Web Generation";
-         // 
-         // chkClientData
-         // 
-         this.chkClientData.AutoSize = true;
-         this.chkClientData.Enabled = false;
-         this.chkClientData.Location = new System.Drawing.Point(10, 121);
-         this.chkClientData.Name = "chkClientData";
-         this.chkClientData.Size = new System.Drawing.Size(151, 17);
-         this.chkClientData.TabIndex = 11;
-         this.chkClientData.Text = "Copy Client Data to Target";
-         this.chkClientData.UseVisualStyleBackColor = true;
          // 
          // pnlFtpMode
          // 
@@ -893,7 +879,6 @@ namespace HFM.Forms
          // grpInteractiveOptions
          // 
          this.grpInteractiveOptions.Controls.Add(this.chkEtaAsDate);
-         this.grpInteractiveOptions.Controls.Add(this.chkMaintainSelected);
          this.grpInteractiveOptions.Controls.Add(this.chkCalcBonus);
          this.grpInteractiveOptions.Controls.Add(this.label2);
          this.grpInteractiveOptions.Controls.Add(this.cboPpdCalc);
@@ -918,16 +903,6 @@ namespace HFM.Forms
          this.chkEtaAsDate.TabIndex = 9;
          this.chkEtaAsDate.Text = "Show ETA value as a Date and Time";
          this.chkEtaAsDate.UseVisualStyleBackColor = true;
-         // 
-         // chkMaintainSelected
-         // 
-         this.chkMaintainSelected.AutoSize = true;
-         this.chkMaintainSelected.Location = new System.Drawing.Point(10, 98);
-         this.chkMaintainSelected.Name = "chkMaintainSelected";
-         this.chkMaintainSelected.Size = new System.Drawing.Size(195, 17);
-         this.chkMaintainSelected.TabIndex = 3;
-         this.chkMaintainSelected.Text = "Maintain Selected Client on Refresh";
-         this.chkMaintainSelected.UseVisualStyleBackColor = true;
          // 
          // chkCalcBonus
          // 
@@ -972,9 +947,9 @@ namespace HFM.Forms
          this.chkColorLog.AutoSize = true;
          this.chkColorLog.Location = new System.Drawing.Point(10, 46);
          this.chkColorLog.Name = "chkColorLog";
-         this.chkColorLog.Size = new System.Drawing.Size(165, 17);
+         this.chkColorLog.Size = new System.Drawing.Size(148, 17);
          this.chkColorLog.TabIndex = 1;
-         this.chkColorLog.Text = "Color the FAHlog Viewer Text";
+         this.chkColorLog.Text = "Color the Log Viewer Text";
          this.chkColorLog.UseVisualStyleBackColor = true;
          // 
          // udDecimalPlaces
@@ -1053,8 +1028,19 @@ namespace HFM.Forms
          this.grpReportSelections.Size = new System.Drawing.Size(489, 114);
          this.grpReportSelections.TabIndex = 1;
          this.grpReportSelections.TabStop = false;
-         this.grpReportSelections.Text = "Report Selections";
+         this.grpReportSelections.Text = "Report Selections (Legacy Clients Only)";
          this.grpReportSelections.EnabledChanged += new System.EventHandler(this.grpReportSelections_EnabledChanged);
+         // 
+         // chkClientHung
+         // 
+         this.chkClientHung.AutoSize = true;
+         this.chkClientHung.Enabled = false;
+         this.chkClientHung.Location = new System.Drawing.Point(10, 43);
+         this.chkClientHung.Name = "chkClientHung";
+         this.chkClientHung.Size = new System.Drawing.Size(137, 17);
+         this.chkClientHung.TabIndex = 1;
+         this.chkClientHung.Text = "Client Hung Notification";
+         this.chkClientHung.UseVisualStyleBackColor = true;
          // 
          // chkClientEuePause
          // 
@@ -1884,17 +1870,6 @@ namespace HFM.Forms
          this.btnCancel.UseVisualStyleBackColor = true;
          this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
          // 
-         // chkClientHung
-         // 
-         this.chkClientHung.AutoSize = true;
-         this.chkClientHung.Enabled = false;
-         this.chkClientHung.Location = new System.Drawing.Point(10, 43);
-         this.chkClientHung.Name = "chkClientHung";
-         this.chkClientHung.Size = new System.Drawing.Size(137, 17);
-         this.chkClientHung.TabIndex = 1;
-         this.chkClientHung.Text = "Client Hung Notification";
-         this.chkClientHung.UseVisualStyleBackColor = true;
-         // 
          // PreferencesDialog
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1912,7 +1887,7 @@ namespace HFM.Forms
          this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
          this.Text = "Preferences";
-         this.Load += new System.EventHandler(this.frmPreferences_Load);
+         this.Load += new System.EventHandler(this.PreferencesDialogLoad);
          this.tabControl1.ResumeLayout(false);
          this.tabSchdTasks.ResumeLayout(false);
          this.grpUpdateData.ResumeLayout(false);
@@ -2087,14 +2062,12 @@ namespace HFM.Forms
       private ButtonWrapper btnBrowseLogViewer;
       private LabelWrapper label3;
       private ValidatingTextBox txtLogFileViewer;
-      private CheckBoxWrapper chkMaintainSelected;
       private CheckBoxWrapper chkHtml;
       private CheckBoxWrapper chkXml;
       private System.Windows.Forms.NumericUpDown udLimitSize;
       private CheckBoxWrapper chkLimitSize;
       private RadioPanel pnlFtpMode;
       private CheckBoxWrapper chkEtaAsDate;
-      private CheckBoxWrapper chkClientData;
       private CheckBoxWrapper chkClientHung;
    }
 }

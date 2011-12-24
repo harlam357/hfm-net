@@ -83,6 +83,7 @@
     </Compile>
     <Compile Include="Client.cs" />
     <Compile Include="ClientFactory.cs" />
+    <Compile Include="DataTypes\Markup\GridData.cs" />
     <Compile Include="MarkupGenerator.cs" />
     <Compile Include="ProjectSummaryDownloader.cs" />
     <Compile Include="Serializers\HfmLegacyFileSerializer.cs" />
@@ -104,6 +105,8 @@
     <Compile Include="Serializers\ProtoBufFileSerializer.cs" />
     <Compile Include="Serializers\XmlFileSerializer.cs" />
     <Compile Include="ServiceLocator.cs" />
+    <Compile Include="DataTypes\Markup\SlotData.cs" />
+    <Compile Include="DataTypes\Markup\SlotDetail.cs" />
     <Compile Include="SlotModel.cs" />
     <Compile Include="LegacyDataRetriever.cs" />
     <Compile Include="LegacyClient.cs" />
@@ -144,6 +147,7 @@
     <Compile Include="AutoRun.cs" />
     <Compile Include="ProteinBenchmarkCollection.cs" />
     <Compile Include="QueryParametersCollection.cs" />
+    <Compile Include="DataTypes\Markup\SlotSummary.cs" />
     <Compile Include="StatusLogic.cs" />
     <Compile Include="UnitInfoCollection.cs" />
     <Compile Include="UnitInfoDatabase.cs" />

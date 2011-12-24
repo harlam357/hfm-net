@@ -29,7 +29,6 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Application = System.Windows.Forms.Application;
 
 using Castle.Core.Logging;
 
@@ -140,7 +139,7 @@ namespace HFM.Forms
          _webVisualStylesModel = new WebVisualStylesModel(prefs);
       }
 
-      private void frmPreferences_Load(object sender, EventArgs e)
+      private void PreferencesDialogLoad(object sender, EventArgs e)
       {
          LoadScheduledTasksTab();
          LoadStartupTab();
@@ -211,7 +210,6 @@ namespace HFM.Forms
                txtWebSiteBase.Enabled = _scheduledTasksModel.GenerateWeb;
                chkHtml.Enabled = _scheduledTasksModel.GenerateWeb;
                chkXml.Enabled = _scheduledTasksModel.GenerateWeb;
-               chkClientData.Enabled = _scheduledTasksModel.GenerateWeb;
                chkFAHlog.Enabled = _scheduledTasksModel.GenerateWeb;
                btnTestConnection.Enabled = _scheduledTasksModel.GenerateWeb;
                btnBrowseWebFolder.Enabled = _scheduledTasksModel.GenerateWeb;
@@ -372,7 +370,7 @@ namespace HFM.Forms
 
       private void SetPropertyErrorState(int index, string boundProperty, PropertyDescriptor errorProperty, bool showToolTip)
       {
-         ICollection<IValidatingControl> validatingControls = FindBoundControls(index, boundProperty);
+         IEnumerable<IValidatingControl> validatingControls = FindBoundControls(index, boundProperty);
          var errorState = (bool)errorProperty.GetValue(_models[index]);
          foreach (var control in validatingControls)
          {
@@ -381,7 +379,7 @@ namespace HFM.Forms
          }
       }
 
-      private ReadOnlyCollection<IValidatingControl> FindBoundControls(int index, string propertyName)
+      private IEnumerable<IValidatingControl> FindBoundControls(int index, string propertyName)
       {
          return _validatingControls[index].FindAll(x => x.DataBindings["Text"].BindingMemberInfo.BindingField == propertyName).AsReadOnly();
       }
@@ -429,8 +427,6 @@ namespace HFM.Forms
          chkHtml.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
          chkXml.DataBindings.Add("Checked", _scheduledTasksModel, "CopyXml", false, DataSourceUpdateMode.OnPropertyChanged);
          chkXml.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkClientData.DataBindings.Add("Checked", _scheduledTasksModel, "CopyClientData", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkClientData.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
          chkFAHlog.DataBindings.Add("Checked", _scheduledTasksModel, "CopyFAHlog", false, DataSourceUpdateMode.OnPropertyChanged);
          chkFAHlog.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
          pnlFtpMode.DataSource = _scheduledTasksModel;
@@ -492,7 +488,6 @@ namespace HFM.Forms
          chkOffline.DataBindings.Add("Checked", _optionsModel, "OfflineLast", false, DataSourceUpdateMode.OnPropertyChanged);
          chkColorLog.DataBindings.Add("Checked", _optionsModel, "ColorLogFile", false, DataSourceUpdateMode.OnPropertyChanged);
          chkAutoSave.DataBindings.Add("Checked", _optionsModel, "AutoSaveConfig", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkMaintainSelected.DataBindings.Add("Checked", _optionsModel, "MaintainSelectedClient", false, DataSourceUpdateMode.OnPropertyChanged);
 
          cboPpdCalc.DataSource = OptionsModel.PpdCalculationList;
          cboPpdCalc.DisplayMember = "DisplayMember";
@@ -632,9 +627,11 @@ namespace HFM.Forms
             ShowCssPreview();
          }
       }
+
       #endregion
 
       #region Scheduled Tasks Tab
+
       private void btnBrowseWebFolder_Click(object sender, EventArgs e)
       {
          if (_scheduledTasksModel.WebRoot.Length != 0)
@@ -646,9 +643,11 @@ namespace HFM.Forms
             _scheduledTasksModel.WebRoot = locateWebFolder.SelectedPath;
          }
       }
+
       #endregion
       
       #region Reporting Tab
+
       private void txtFromEmailAddress_MouseHover(object sender, EventArgs e)
       {
          if (txtFromEmailAddress.BackColor.Equals(Color.Yellow)) return;
@@ -691,6 +690,7 @@ namespace HFM.Forms
             }
          }
       }
+
       #endregion
 
       #region Web Tab
@@ -737,6 +737,7 @@ namespace HFM.Forms
       #endregion
 
       #region Visual Style Tab
+
       private void StyleList_SelectedIndexChanged(object sender, EventArgs e)
       {
          ShowCssPreview();
@@ -782,6 +783,7 @@ namespace HFM.Forms
 
          _cssSampleBrowser.DocumentText = sb.ToString();
       }
+
       #endregion
 
       #region Button Click Event Handlers
@@ -962,7 +964,7 @@ namespace HFM.Forms
          {
             if (chkAutoRun.Checked)
             {
-               _autoRun.SetFilePath(Application.ExecutablePath);
+               _autoRun.SetFilePath(System.Windows.Forms.Application.ExecutablePath);
             }
             else
             {
@@ -983,6 +985,7 @@ namespace HFM.Forms
       }
 
       #region Folder Browsing
+
       private void btnBrowseConfigFile_Click(object sender, EventArgs e)
       {
          string path = DoFolderBrowse(_startupAndExternalModel.DefaultConfigFile, HfmExt, HfmFilter);
@@ -1140,11 +1143,13 @@ namespace HFM.Forms
          
          return null;
       }
+
       #endregion
       
       #endregion
 
       #region TextBox KeyPress Event Handler (to enforce digits only)
+
       private void txtDigitsOnly_KeyPress(object sender, KeyPressEventArgs e)
       {
          Debug.WriteLine(String.Format("Keystroke: {0}", (int)e.KeyChar));
@@ -1161,6 +1166,7 @@ namespace HFM.Forms
             e.Handled = true;
          }
       }
+
       #endregion
    }
 }

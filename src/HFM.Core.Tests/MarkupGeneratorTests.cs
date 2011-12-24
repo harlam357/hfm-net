@@ -44,11 +44,10 @@ namespace HFM.Core.Tests
          IPreferenceSet prefs = SetupStubPreferenceSet();
          prefs.Stub(x => x.Get<bool>(Preference.WebGenCopyXml)).Return(true);
          prefs.Stub(x => x.Get<bool>(Preference.WebGenCopyHtml)).Return(true);
-         prefs.Stub(x => x.Get<bool>(Preference.WebGenCopyClientData)).Return(true);
          
-         IEnumerable<SlotModel> displayinstances = CreateSlotModelCollection();
+         IEnumerable<SlotModel> slots = CreateSlotModelCollection();
          var markupGenerator = new MarkupGenerator(prefs);
-         markupGenerator.Generate(displayinstances);
+         markupGenerator.Generate(slots);
          
          Assert.IsNotNull(markupGenerator.XmlFilePaths);
          Assert.IsNotNull(markupGenerator.HtmlFilePaths);
@@ -60,11 +59,10 @@ namespace HFM.Core.Tests
          IPreferenceSet prefs = SetupStubPreferenceSet();
          prefs.Stub(x => x.Get<bool>(Preference.WebGenCopyXml)).Return(true);
          prefs.Stub(x => x.Get<bool>(Preference.WebGenCopyHtml)).Return(false);
-         prefs.Stub(x => x.Get<bool>(Preference.WebGenCopyClientData)).Return(false);
 
-         IEnumerable<SlotModel> displayinstances = CreateSlotModelCollection();
+         IEnumerable<SlotModel> slots = CreateSlotModelCollection();
          var markupGenerator = new MarkupGenerator(prefs);
-         markupGenerator.Generate(displayinstances);
+         markupGenerator.Generate(slots);
 
          Assert.IsNotNull(markupGenerator.XmlFilePaths);
          Assert.IsNull(markupGenerator.HtmlFilePaths);
@@ -76,11 +74,10 @@ namespace HFM.Core.Tests
          IPreferenceSet prefs = SetupStubPreferenceSet();
          prefs.Stub(x => x.Get<bool>(Preference.WebGenCopyXml)).Return(false);
          prefs.Stub(x => x.Get<bool>(Preference.WebGenCopyHtml)).Return(false);
-         prefs.Stub(x => x.Get<bool>(Preference.WebGenCopyClientData)).Return(false);
 
-         IEnumerable<SlotModel> displayinstances = CreateSlotModelCollection();
+         IEnumerable<SlotModel> slots = CreateSlotModelCollection();
          var markupGenerator = new MarkupGenerator(prefs);
-         markupGenerator.Generate(displayinstances);
+         markupGenerator.Generate(slots);
 
          Assert.IsNull(markupGenerator.XmlFilePaths);
          Assert.IsNull(markupGenerator.HtmlFilePaths);
@@ -100,10 +97,10 @@ namespace HFM.Core.Tests
       public void GenerateXmlTest()
       {
          IPreferenceSet prefs = SetupStubPreferenceSet();
-         IEnumerable<SlotModel> instances = CreateSlotModelCollection();
+         IEnumerable<SlotModel> slots = CreateSlotModelCollection();
          
          var markupGenerator = new MarkupGenerator(prefs);
-         markupGenerator.GenerateXml(instances);
+         markupGenerator.GenerateXml(slots);
          
          Assert.AreEqual(3, markupGenerator.XmlFilePaths.Count());
          Assert.AreEqual(Path.Combine(Path.GetTempPath(), "SlotSummary.xml"), markupGenerator.XmlFilePaths.ElementAt(0));
@@ -162,7 +159,7 @@ namespace HFM.Core.Tests
          instance = new SlotModel();
          instance.Prefs = prefs;
          // Test For - Issue 201 - Web Generation Fails when a Client with no CurrentLogLines is encountered.
-         // Make sure we return null for CurrentLogLines in the second DataAggregator mock.
+         // Make sure we return null for CurrentLogLines in the second SlotModel.
          instance.Settings = new ClientSettings { Name = "Test1" };
          instance.CurrentLogLines = null;
          instances.Add(instance);

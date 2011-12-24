@@ -56,7 +56,6 @@ namespace HFM.Forms.Models
          WebRoot = prefs.Get<string>(Preference.WebRoot);
          CopyHtml = prefs.Get<bool>(Preference.WebGenCopyHtml);
          CopyXml = prefs.Get<bool>(Preference.WebGenCopyXml);
-         CopyClientData = prefs.Get<bool>(Preference.WebGenCopyClientData);
          CopyFAHlog = prefs.Get<bool>(Preference.WebGenCopyFAHlog);
          FtpMode = prefs.Get<FtpType>(Preference.WebGenFtpMode);
          LimitLogSize = prefs.Get<bool>(Preference.WebGenLimitLogSize);
@@ -78,7 +77,6 @@ namespace HFM.Forms.Models
          prefs.Set(Preference.WebRoot, WebRoot);
          prefs.Set(Preference.WebGenCopyHtml, CopyHtml);
          prefs.Set(Preference.WebGenCopyXml, CopyXml);
-         prefs.Set(Preference.WebGenCopyClientData, CopyClientData);
          prefs.Set(Preference.WebGenCopyFAHlog, CopyFAHlog);
          prefs.Set(Preference.WebGenFtpMode, FtpMode);
          prefs.Set(Preference.WebGenLimitLogSize, LimitLogSize);
@@ -317,9 +315,7 @@ namespace HFM.Forms.Models
          {
             if (CopyHtml != value)
             {
-               if (value == false && 
-                   CopyXml == false &&
-                   CopyClientData == false)
+               if (value == false && CopyXml == false)
                {
                   return;
                }
@@ -338,35 +334,12 @@ namespace HFM.Forms.Models
          {
             if (CopyXml != value)
             {
-               if (value == false && 
-                   CopyHtml == false &&
-                   CopyClientData == false)
+               if (value == false && CopyHtml == false)
                {
                   CopyHtml = true;
                }
                _copyXml = value;
                OnPropertyChanged("CopyXml");
-            }
-         }
-      }
-
-      private bool _copyClientData;
-      
-      public bool CopyClientData
-      {
-         get { return _copyClientData; }
-         set
-         {
-            if (CopyClientData != value)
-            {
-               if (value == false && 
-                   CopyHtml == false &&
-                   CopyXml == false)
-               {
-                  CopyHtml = true;
-               }
-               _copyClientData = value;
-               OnPropertyChanged("CopyClientData");
             }
          }
       }

@@ -39,7 +39,6 @@ namespace HFM.Forms.Models
          OfflineLast = prefs.Get<bool>(Preference.OfflineLast);
          ColorLogFile = prefs.Get<bool>(Preference.ColorLogFile);
          AutoSaveConfig = prefs.Get<bool>(Preference.AutoSaveConfig);
-         MaintainSelectedClient = prefs.Get<bool>(Preference.MaintainSelectedClient);
          PpdCalculation = prefs.Get<PpdCalculationType>(Preference.PpdCalculation);
          DecimalPlaces = prefs.Get<int>(Preference.DecimalPlaces);
          CalculateBonus = prefs.Get<bool>(Preference.CalculateBonus);
@@ -53,7 +52,6 @@ namespace HFM.Forms.Models
          prefs.Set(Preference.OfflineLast, OfflineLast);
          prefs.Set(Preference.ColorLogFile, ColorLogFile);
          prefs.Set(Preference.AutoSaveConfig, AutoSaveConfig);
-         prefs.Set(Preference.MaintainSelectedClient, MaintainSelectedClient);
          prefs.Set(Preference.PpdCalculation, PpdCalculation);
          prefs.Set(Preference.DecimalPlaces, DecimalPlaces);
          prefs.Set(Preference.CalculateBonus, CalculateBonus);
@@ -105,21 +103,6 @@ namespace HFM.Forms.Models
             {
                _autoSaveConfig = value;
                OnPropertyChanged("AutoSaveConfig");
-            }
-         }
-      }
-
-      private bool _maintainSelectedClient;
-
-      public bool MaintainSelectedClient
-      {
-         get { return _maintainSelectedClient; }
-         set
-         {
-            if (MaintainSelectedClient != value)
-            {
-               _maintainSelectedClient = value;
-               OnPropertyChanged("MaintainSelectedClient");
             }
          }
       }

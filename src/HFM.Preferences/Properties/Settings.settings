@@ -223,9 +223,6 @@
     <Setting Name="StartupCheckForUpdate" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="MaintainSelectedClient" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="WebGenCopyHtml" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
@@ -272,9 +269,6 @@
       <Value Profile="(Default)">1000</Value>
     </Setting>
     <Setting Name="ShowLastChecked" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="WebGenCopyClientData" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="ReportHung" Type="System.Boolean" Scope="User">
