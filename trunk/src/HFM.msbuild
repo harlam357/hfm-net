@@ -37,12 +37,16 @@
       <Exec Command="..\..\..\Deploy.bat ..\..\..\Artifacts\HFM.NET" WorkingDirectory="HFM\bin\Release"/>
    </Target>
 
-   <Target Name="Compile" DependsOnTargets="AssemblyVersion">
+   <Target Name="Compile" DependsOnTargets="AssemblyVersion;CreateArtifactsFolder">
       <MSBuild Projects="HFM.All.sln"
                Targets="Rebuild"
                Properties="Configuration=ScriptedRelease" />
 
       <CallTarget Targets="NUnit" />
+   </Target>
+
+   <Target Name="CreateArtifactsFolder">
+      <MakeDir Directories="$(ArtifactsPath)"/>
    </Target>
 
    <PropertyGroup>
