@@ -383,6 +383,7 @@ namespace HFM.Forms
       #endregion
    }
 
+   [CoverageExclude]
    public class SortedEventArgs : EventArgs
    {
       private readonly string _name;

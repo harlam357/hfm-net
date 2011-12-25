@@ -91,6 +91,7 @@ namespace HFM.Forms
       #endregion
    }
 
+   [CoverageExclude]
    public partial class LegacyClientSetupDialog : FormWrapper, ILegacyClientSetupView
    {
       #region Members

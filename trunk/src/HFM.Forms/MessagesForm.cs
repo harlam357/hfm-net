@@ -48,6 +48,7 @@ namespace HFM.Forms
       bool Visible { get; set; }
    }
 
+   [CoverageExclude]
    public partial class MessagesForm : FormWrapper, IMessagesView
    {
       private readonly IPreferenceSet _prefs;

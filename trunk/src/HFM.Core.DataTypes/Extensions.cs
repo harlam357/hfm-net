@@ -95,11 +95,15 @@ namespace HFM.Core.DataTypes
 
       public static bool IsUnknown(this Protein protein)
       {
+         if (protein == null) return true;
+
          return protein.ProjectNumber == 0;
       }
 
       public static bool IsValid(this Protein protein)
       {
+         if (protein == null) return false;
+
          return (protein.ProjectNumber > 0 &&
                  protein.PreferredDays > 0 &&
                  protein.MaximumDays > 0 &&

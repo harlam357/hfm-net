@@ -26,6 +26,7 @@ using HFM.Core.DataTypes;
 
 namespace HFM.Forms.Controls
 {
+   [CoverageExclude]
    public sealed partial class QueueControl : UserControl
    {
       // ReSharper disable UnusedMember.Local

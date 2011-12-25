@@ -21,8 +21,11 @@ using System;
 
 using harlam357.Windows.Forms;
 
+using HFM.Core;
+
 namespace HFM.Forms
 {
+   [CoverageExclude]
    public partial class ProjectDownloadDialog : ProgressDialog
    {
       private readonly System.Timers.Timer _timer;
