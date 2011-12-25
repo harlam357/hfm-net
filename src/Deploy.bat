@@ -59,10 +59,6 @@ if not exist %1\CSS md %1\CSS
 if errorlevel 1 goto Error
 xcopy /Y CSS %1\CSS
 
-if not exist %1\XML md %1\XML
-if errorlevel 1 goto Error
-xcopy /Y XML %1\XML
-
 if not exist %1\XSL md %1\XSL
 if errorlevel 1 goto Error
 xcopy /Y XSL %1\XSL

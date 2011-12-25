@@ -51,6 +51,7 @@ namespace HFM.Forms.Models
          _fahLogFileName = Default.FahLogFileName;
          _unitInfoFileName = Default.UnitInfoFileName;
          _queueFileName = Default.QueueFileName;
+         _path = String.Empty;
       }
 
       private LegacyClientSubType _legacyClientSubType;

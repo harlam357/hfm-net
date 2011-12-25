@@ -56,6 +56,7 @@ namespace HFM.Forms
       #endregion
    }
 
+   [CoverageExclude]
    public partial class FahClientSetupDialog : FormWrapper, IFahClientSetupView
    {
       private FahClientSetupPresenter _presenter;
