@@ -192,22 +192,22 @@ namespace HFM.Core
          // Success, add it to the list
          fileList.Add(filePath);
 
-         string instanceXslt = GetXsltFileName(Preference.WebInstance);
+         string slotXslt = GetXsltFileName(Preference.WebSlot);
          // Generate a page per slot
          foreach (var slot in slots)
          {
             // Load the Instances XML
-            var instancesXml = new XmlDocument();
+            var slotXml = new XmlDocument();
             SlotModel slot1 = slot;
             string xmlFile = xmlFiles.FirstOrDefault(x => Path.GetFileName(x).StartsWith(slot1.Name));
             if (xmlFile != null)
             {
-               instancesXml.Load(xmlFile);
+               slotXml.Load(xmlFile);
 
                filePath = Path.Combine(folderPath, String.Concat(slot.Name, ".html"));
                using (sw = new StreamWriter(filePath, false))
                {
-                  sw.Write(Transform(instancesXml, instanceXslt, cssFileName));
+                  sw.Write(Transform(slotXml, slotXslt, cssFileName));
                }
                // Success, add it to the list
                fileList.Add(filePath);

@@ -30,7 +30,7 @@ using harlam357.Net;
 
 namespace HFM.Core
 {
-   public delegate void FtpCheckConnectionAction(string server, string ftpPath, string username, string password, FtpType ftpMode);
+   public delegate void FtpCheckConnectionAction(string server, int port, string ftpPath, string username, string password, FtpType ftpMode);
    public delegate void HttpCheckConnectionAction(string url, string username, string password);
 
    public interface INetworkOps
@@ -59,29 +59,31 @@ namespace HFM.Core
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentException">Throws if Server or FtpPath, or localFilePath is null or empty.</exception>
       void FtpUploadHelper(string server, string ftpPath, string localFilePath, int maximumLength, string username, string password, FtpType ftpMode);
-   
+
       /// <summary>
       /// Check an FTP Connection.
       /// </summary>
       /// <param name="server">Server Name or IP.</param>
+      /// <param name="port">Server Port.</param>
       /// <param name="ftpPath">Path to upload to on remote Ftp server.</param>
       /// <param name="username">Ftp Login Username.</param>
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <param name="callback"></param>
       /// <exception cref="ArgumentException">Throws if Server or FtpPath is null or empty.</exception>
-      IAsyncResult BeginFtpCheckConnection(string server, string ftpPath, string username, string password, FtpType ftpMode, AsyncCallback callback);
-   
+      IAsyncResult BeginFtpCheckConnection(string server, int port, string ftpPath, string username, string password, FtpType ftpMode, AsyncCallback callback);
+
       /// <summary>
       /// Check an FTP Connection.
       /// </summary>
       /// <param name="server">Server Name or IP.</param>
+      /// <param name="port">Server Port.</param>
       /// <param name="ftpPath">Path to upload to on remote Ftp server.</param>
       /// <param name="username">Ftp Login Username.</param>
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentException">Throws if Server or FtpPath is null or empty.</exception>
-      void FtpCheckConnection(string server, string ftpPath, string username, string password, FtpType ftpMode);
+      void FtpCheckConnection(string server, int port, string ftpPath, string username, string password, FtpType ftpMode);
 
       /// <summary>
       /// Check an HTTP Connection.
@@ -507,15 +509,16 @@ namespace HFM.Core
       /// Check an FTP Connection.
       /// </summary>
       /// <param name="server">Server Name or IP.</param>
+      /// <param name="port">Server Port.</param>
       /// <param name="ftpPath">Path to upload to on remote Ftp server.</param>
       /// <param name="username">Ftp Login Username.</param>
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <param name="callback"></param>
       /// <exception cref="ArgumentException">Throws if Server or FtpPath is null or empty.</exception>
-      public IAsyncResult BeginFtpCheckConnection(string server, string ftpPath, string username, string password, FtpType ftpMode, AsyncCallback callback)
+      public IAsyncResult BeginFtpCheckConnection(string server, int port, string ftpPath, string username, string password, FtpType ftpMode, AsyncCallback callback)
       {
-         var action = new Action(() => FtpCheckConnection(server, ftpPath, username, password, ftpMode));
+         var action = new Action(() => FtpCheckConnection(server, port, ftpPath, username, password, ftpMode));
          return action.BeginInvoke(callback, action);
       }
       
@@ -523,18 +526,19 @@ namespace HFM.Core
       /// Check an FTP Connection.
       /// </summary>
       /// <param name="server">Server Name or IP.</param>
+      /// <param name="port">Server Port.</param>
       /// <param name="ftpPath">Path to upload to on remote Ftp server.</param>
       /// <param name="username">Ftp Login Username.</param>
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentException">Throws if Server or FtpPath is null or empty.</exception>
-      public void FtpCheckConnection(string server, string ftpPath, string username, string password, FtpType ftpMode)
+      public void FtpCheckConnection(string server, int port, string ftpPath, string username, string password, FtpType ftpMode)
       {
          if (String.IsNullOrEmpty(server)) throw new ArgumentException("Argument 'server' cannot be a null or empty string.");
          if (String.IsNullOrEmpty(ftpPath)) throw new ArgumentException("Argument 'ftpPath' cannot be a null or empty string.");
 
          var ftpWebOperation = (FtpWebOperation)WebOperation.Create(new Uri(
-            String.Format(CultureInfo.InvariantCulture, "ftp://{0}{1}", server, ftpPath)));
+            String.Format(CultureInfo.InvariantCulture, "ftp://{0}:{1}{2}", server, port, ftpPath)));
          FtpCheckConnection(ftpWebOperation, username, password, ftpMode);
       }
 

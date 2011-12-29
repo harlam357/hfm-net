@@ -41,7 +41,7 @@ namespace HFM.Core.Tests
       [Test]
       public void GenerateTest()
       {
-         IPreferenceSet prefs = SetupStubPreferenceSet();
+         IPreferenceSet prefs = CreatePreferenceSet();
          prefs.Stub(x => x.Get<bool>(Preference.WebGenCopyXml)).Return(true);
          prefs.Stub(x => x.Get<bool>(Preference.WebGenCopyHtml)).Return(true);
          
@@ -56,7 +56,7 @@ namespace HFM.Core.Tests
       [Test]
       public void GenerateXmlOnlyTest()
       {
-         IPreferenceSet prefs = SetupStubPreferenceSet();
+         IPreferenceSet prefs = CreatePreferenceSet();
          prefs.Stub(x => x.Get<bool>(Preference.WebGenCopyXml)).Return(true);
          prefs.Stub(x => x.Get<bool>(Preference.WebGenCopyHtml)).Return(false);
 
@@ -71,7 +71,7 @@ namespace HFM.Core.Tests
       [Test]
       public void DontGenerateTest()
       {
-         IPreferenceSet prefs = SetupStubPreferenceSet();
+         IPreferenceSet prefs = CreatePreferenceSet();
          prefs.Stub(x => x.Get<bool>(Preference.WebGenCopyXml)).Return(false);
          prefs.Stub(x => x.Get<bool>(Preference.WebGenCopyHtml)).Return(false);
 
@@ -87,7 +87,7 @@ namespace HFM.Core.Tests
       [ExpectedException(typeof(ArgumentNullException))]
       public void GenerateArgumentNullTest1()
       {
-         var prefs = SetupStubPreferenceSet();
+         var prefs = CreatePreferenceSet();
          
          var markupGenerator = new MarkupGenerator(prefs);
          markupGenerator.Generate(null);
@@ -96,7 +96,7 @@ namespace HFM.Core.Tests
       [Test]
       public void GenerateXmlTest()
       {
-         IPreferenceSet prefs = SetupStubPreferenceSet();
+         IPreferenceSet prefs = CreatePreferenceSet();
          IEnumerable<SlotModel> slots = CreateSlotModelCollection();
          
          var markupGenerator = new MarkupGenerator(prefs);
@@ -111,11 +111,11 @@ namespace HFM.Core.Tests
       [Test]
       public void GenerateHtmlTest()
       {
-         IPreferenceSet prefs = SetupStubPreferenceSet();
-         IEnumerable<SlotModel> instances = CreateSlotModelCollection();
+         IPreferenceSet prefs = CreatePreferenceSet();
+         IEnumerable<SlotModel> slots = CreateSlotModelCollection();
 
          var markupGenerator = new MarkupGenerator(prefs);
-         markupGenerator.GenerateHtml(instances);
+         markupGenerator.GenerateHtml(slots);
 
          Assert.AreEqual(6, markupGenerator.HtmlFilePaths.Count());
          Assert.AreEqual(Path.Combine(Path.GetTempPath(), "index.html"), markupGenerator.HtmlFilePaths.ElementAt(0));
@@ -126,7 +126,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(Path.Combine(Path.GetTempPath(), "Test1.html"), markupGenerator.HtmlFilePaths.ElementAt(5));
       }
 
-      private static IPreferenceSet SetupStubPreferenceSet()
+      private static IPreferenceSet CreatePreferenceSet()
       {
          var prefs = MockRepository.GenerateStub<IPreferenceSet>();
          prefs.Stub(x => x.ApplicationPath).Return(@"..\..\..\HFM");
@@ -134,7 +134,7 @@ namespace HFM.Core.Tests
          prefs.Stub(x => x.Get<string>(Preference.WebMobileOverview)).Return("WebMobileOverview.xslt");
          prefs.Stub(x => x.Get<string>(Preference.WebSummary)).Return("WebSummary.xslt");
          prefs.Stub(x => x.Get<string>(Preference.WebMobileSummary)).Return("WebMobileSummary.xslt");
-         prefs.Stub(x => x.Get<string>(Preference.WebInstance)).Return("WebInstance.xslt");
+         prefs.Stub(x => x.Get<string>(Preference.WebSlot)).Return("WebSlot.xslt");
          return prefs;
       }
 
@@ -145,26 +145,26 @@ namespace HFM.Core.Tests
          var proteinCollection = MockRepository.GenerateStub<IProteinDictionary>();
          proteinCollection.Stub(x => x.GetProteinOrDownload(0)).IgnoreArguments().Return(new Protein());
 
-         var instances = new List<SlotModel>();
+         var slots = new List<SlotModel>();
 
-         // setup concrete instance with stubs
-         var instance = new SlotModel();
-         instance.Prefs = prefs;
+         // setup slot
+         var slot = new SlotModel();
+         slot.Prefs = prefs;
          // set concrete values
-         instance.Settings = new ClientSettings { Name = "Test2" };
-         instance.CurrentLogLines = new List<LogLine>();
-         instances.Add(instance);
+         slot.Settings = new ClientSettings { Name = "Test2" };
+         slot.CurrentLogLines = new List<LogLine>();
+         slots.Add(slot);
 
-         // setup concrete instance with stubs
-         instance = new SlotModel();
-         instance.Prefs = prefs;
+         // setup slot
+         slot = new SlotModel();
+         slot.Prefs = prefs;
          // Test For - Issue 201 - Web Generation Fails when a Client with no CurrentLogLines is encountered.
          // Make sure we return null for CurrentLogLines in the second SlotModel.
-         instance.Settings = new ClientSettings { Name = "Test1" };
-         instance.CurrentLogLines = null;
-         instances.Add(instance);
+         slot.Settings = new ClientSettings { Name = "Test1" };
+         slot.CurrentLogLines = null;
+         slots.Add(slot);
 
-         return instances;
+         return slots;
       }
    }
 }
