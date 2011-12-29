@@ -56,59 +56,59 @@ namespace HFM.Forms
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LegacyClientSetupDialog));
          this.DialogOkButton = new HFM.Forms.Controls.ButtonWrapper();
          this.DialogCancelButton = new HFM.Forms.Controls.ButtonWrapper();
-         this.txtLocalPath = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.LogFolderTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
          this.toolTipHost = new System.Windows.Forms.ToolTip(this.components);
          this.ClientNoUtcOffsetCheckBox = new HFM.Forms.Controls.CheckBoxWrapper();
          this.ClientTimeOffsetUpDown = new System.Windows.Forms.NumericUpDown();
-         this.btnBrowseLocal = new HFM.Forms.Controls.ButtonWrapper();
-         this.radioLocal = new HFM.Forms.Controls.RadioButtonWrapper();
+         this.LogFolderBrowseButton = new HFM.Forms.Controls.ButtonWrapper();
+         this.LegacyClientSubTypeLocalPathRadioButton = new HFM.Forms.Controls.RadioButtonWrapper();
          this.ClientNameTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
          this.ClientNameLabel = new HFM.Forms.Controls.LabelWrapper();
-         this.radioFTP = new HFM.Forms.Controls.RadioButtonWrapper();
+         this.LegacyClientSubTypeFtpRadioButton = new HFM.Forms.Controls.RadioButtonWrapper();
          this.FtpServerNameLabel = new HFM.Forms.Controls.LabelWrapper();
          this.FtpServerNameTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
          this.FtpServerPathLabel = new HFM.Forms.Controls.LabelWrapper();
          this.FtpServerPathTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.radioHTTP = new HFM.Forms.Controls.RadioButtonWrapper();
-         this.txtWebURL = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lblWebURL = new HFM.Forms.Controls.LabelWrapper();
+         this.LegacyClientSubTypeHttpRadioButton = new HFM.Forms.Controls.RadioButtonWrapper();
+         this.WebUrlTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.WebUrlLabel = new HFM.Forms.Controls.LabelWrapper();
          this.FtpUsernameTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
          this.FtpUsernameLabel = new HFM.Forms.Controls.LabelWrapper();
          this.FtpPasswordTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
          this.FtpPasswordLabel = new HFM.Forms.Controls.LabelWrapper();
-         this.txtWebUser = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.txtWebPass = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lblWebUser = new HFM.Forms.Controls.LabelWrapper();
-         this.lblWebPass = new HFM.Forms.Controls.LabelWrapper();
-         this.grpLocal = new HFM.Forms.Controls.GroupBoxWrapper();
-         this.lblLogFolder = new HFM.Forms.Controls.LabelWrapper();
-         this.grpFTP = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.WebUsernameTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.WebPasswordTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.WebUsernameLabel = new HFM.Forms.Controls.LabelWrapper();
+         this.WebPasswordLabel = new HFM.Forms.Controls.LabelWrapper();
+         this.LocalPathGroupBox = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.LogFolderLabel = new HFM.Forms.Controls.LabelWrapper();
+         this.FtpGroupBox = new HFM.Forms.Controls.GroupBoxWrapper();
          this.FtpServerPortTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
          this.FtpServerPortLabel = new HFM.Forms.Controls.LabelWrapper();
-         this.pnlFtpMode = new harlam357.Windows.Forms.RadioPanel();
-         this.radioActive = new HFM.Forms.Controls.RadioButtonWrapper();
-         this.radioPassive = new HFM.Forms.Controls.RadioButtonWrapper();
-         this.labelWrapper1 = new HFM.Forms.Controls.LabelWrapper();
-         this.grpHTTP = new HFM.Forms.Controls.GroupBoxWrapper();
-         this.openLogFolder = new System.Windows.Forms.FolderBrowserDialog();
-         this.txtLogFileName = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lblLogFileName = new HFM.Forms.Controls.LabelWrapper();
-         this.txtUnitFileName = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lblUnitFileName = new HFM.Forms.Controls.LabelWrapper();
-         this.lblClientMegahertz = new HFM.Forms.Controls.LabelWrapper();
-         this.txtClientMegahertz = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.FtpModePanel = new harlam357.Windows.Forms.RadioPanel();
+         this.FtpModeActiveRadioButton = new HFM.Forms.Controls.RadioButtonWrapper();
+         this.FtpModePassiveRadioButton = new HFM.Forms.Controls.RadioButtonWrapper();
+         this.FtpModeLabel = new HFM.Forms.Controls.LabelWrapper();
+         this.HttpGroupBox = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.LogFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+         this.LogFileNameTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.LogFileNameLabel = new HFM.Forms.Controls.LabelWrapper();
+         this.UnitInfoFileNameTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.UnitInfoFileNameLabel = new HFM.Forms.Controls.LabelWrapper();
+         this.ClientMegahertzLabel = new HFM.Forms.Controls.LabelWrapper();
+         this.ClientMegahertzTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
          this.ClientTimeOffsetLabel = new HFM.Forms.Controls.LabelWrapper();
-         this.lblQueueFileName = new HFM.Forms.Controls.LabelWrapper();
-         this.txtQueueFileName = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.btnTestConnection = new HFM.Forms.Controls.ButtonWrapper();
-         this.pnlHostType = new harlam357.Windows.Forms.RadioPanel();
+         this.QueueFileNameLabel = new HFM.Forms.Controls.LabelWrapper();
+         this.QueueFileNameTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.TestConnectionButton = new HFM.Forms.Controls.ButtonWrapper();
+         this.LegacyClientSubTypePanel = new harlam357.Windows.Forms.RadioPanel();
          this.DummyTextBox = new HFM.Forms.Controls.TextBoxWrapper();
          ((System.ComponentModel.ISupportInitialize)(this.ClientTimeOffsetUpDown)).BeginInit();
-         this.grpLocal.SuspendLayout();
-         this.grpFTP.SuspendLayout();
-         this.pnlFtpMode.SuspendLayout();
-         this.grpHTTP.SuspendLayout();
-         this.pnlHostType.SuspendLayout();
+         this.LocalPathGroupBox.SuspendLayout();
+         this.FtpGroupBox.SuspendLayout();
+         this.FtpModePanel.SuspendLayout();
+         this.HttpGroupBox.SuspendLayout();
+         this.LegacyClientSubTypePanel.SuspendLayout();
          this.SuspendLayout();
          // 
          // DialogOkButton
@@ -134,22 +134,22 @@ namespace HFM.Forms
          this.DialogCancelButton.Text = "Cancel";
          this.DialogCancelButton.UseVisualStyleBackColor = true;
          // 
-         // txtLocalPath
+         // LogFolderTextBox
          // 
-         this.txtLocalPath.Anchor = System.Windows.Forms.AnchorStyles.Left;
-         this.txtLocalPath.BackColor = System.Drawing.SystemColors.Window;
-         this.txtLocalPath.DoubleBuffered = true;
-         this.txtLocalPath.ErrorBackColor = System.Drawing.Color.Yellow;
-         this.txtLocalPath.ErrorState = false;
-         this.txtLocalPath.ErrorToolTip = this.toolTipHost;
-         this.txtLocalPath.ErrorToolTipDuration = 5000;
-         this.txtLocalPath.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-         this.txtLocalPath.ErrorToolTipText = "Log Folder must be a valid local or network (UNC) path.";
-         this.txtLocalPath.Location = new System.Drawing.Point(11, 35);
-         this.txtLocalPath.Name = "txtLocalPath";
-         this.txtLocalPath.Size = new System.Drawing.Size(320, 20);
-         this.txtLocalPath.TabIndex = 1;
-         this.txtLocalPath.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         this.LogFolderTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+         this.LogFolderTextBox.BackColor = System.Drawing.SystemColors.Window;
+         this.LogFolderTextBox.DoubleBuffered = true;
+         this.LogFolderTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.LogFolderTextBox.ErrorState = false;
+         this.LogFolderTextBox.ErrorToolTip = this.toolTipHost;
+         this.LogFolderTextBox.ErrorToolTipDuration = 5000;
+         this.LogFolderTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.LogFolderTextBox.ErrorToolTipText = "Log Folder must be a valid local or network (UNC) path.";
+         this.LogFolderTextBox.Location = new System.Drawing.Point(11, 35);
+         this.LogFolderTextBox.Name = "LogFolderTextBox";
+         this.LogFolderTextBox.Size = new System.Drawing.Size(320, 20);
+         this.LogFolderTextBox.TabIndex = 1;
+         this.LogFolderTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // ClientNoUtcOffsetCheckBox
          // 
@@ -174,28 +174,28 @@ namespace HFM.Forms
          this.ClientTimeOffsetUpDown.TabIndex = 16;
          this.toolTipHost.SetToolTip(this.ClientTimeOffsetUpDown, resources.GetString("ClientTimeOffsetUpDown.ToolTip"));
          // 
-         // btnBrowseLocal
+         // LogFolderBrowseButton
          // 
-         this.btnBrowseLocal.Anchor = System.Windows.Forms.AnchorStyles.Left;
-         this.btnBrowseLocal.Location = new System.Drawing.Point(337, 33);
-         this.btnBrowseLocal.Name = "btnBrowseLocal";
-         this.btnBrowseLocal.Size = new System.Drawing.Size(30, 24);
-         this.btnBrowseLocal.TabIndex = 2;
-         this.btnBrowseLocal.Text = "...";
-         this.btnBrowseLocal.UseVisualStyleBackColor = true;
-         this.btnBrowseLocal.Click += new System.EventHandler(this.btnBrowseLocal_Click);
+         this.LogFolderBrowseButton.Anchor = System.Windows.Forms.AnchorStyles.Left;
+         this.LogFolderBrowseButton.Location = new System.Drawing.Point(337, 33);
+         this.LogFolderBrowseButton.Name = "LogFolderBrowseButton";
+         this.LogFolderBrowseButton.Size = new System.Drawing.Size(30, 24);
+         this.LogFolderBrowseButton.TabIndex = 2;
+         this.LogFolderBrowseButton.Text = "...";
+         this.LogFolderBrowseButton.UseVisualStyleBackColor = true;
+         this.LogFolderBrowseButton.Click += new System.EventHandler(this.btnBrowseLocal_Click);
          // 
-         // radioLocal
+         // LegacyClientSubTypeLocalPathRadioButton
          // 
-         this.radioLocal.AutoSize = true;
-         this.radioLocal.CausesValidation = false;
-         this.radioLocal.Location = new System.Drawing.Point(3, 6);
-         this.radioLocal.Name = "radioLocal";
-         this.radioLocal.Size = new System.Drawing.Size(76, 17);
-         this.radioLocal.TabIndex = 10;
-         this.radioLocal.Tag = "1";
-         this.radioLocal.Text = "Local Path";
-         this.radioLocal.UseVisualStyleBackColor = true;
+         this.LegacyClientSubTypeLocalPathRadioButton.AutoSize = true;
+         this.LegacyClientSubTypeLocalPathRadioButton.CausesValidation = false;
+         this.LegacyClientSubTypeLocalPathRadioButton.Location = new System.Drawing.Point(3, 6);
+         this.LegacyClientSubTypeLocalPathRadioButton.Name = "LegacyClientSubTypeLocalPathRadioButton";
+         this.LegacyClientSubTypeLocalPathRadioButton.Size = new System.Drawing.Size(76, 17);
+         this.LegacyClientSubTypeLocalPathRadioButton.TabIndex = 10;
+         this.LegacyClientSubTypeLocalPathRadioButton.Tag = "1";
+         this.LegacyClientSubTypeLocalPathRadioButton.Text = "Local Path";
+         this.LegacyClientSubTypeLocalPathRadioButton.UseVisualStyleBackColor = true;
          // 
          // ClientNameTextBox
          // 
@@ -225,17 +225,17 @@ namespace HFM.Forms
          this.ClientNameLabel.TabIndex = 0;
          this.ClientNameLabel.Text = "Client Name:";
          // 
-         // radioFTP
+         // LegacyClientSubTypeFtpRadioButton
          // 
-         this.radioFTP.AutoSize = true;
-         this.radioFTP.CausesValidation = false;
-         this.radioFTP.Location = new System.Drawing.Point(174, 6);
-         this.radioFTP.Name = "radioFTP";
-         this.radioFTP.Size = new System.Drawing.Size(79, 17);
-         this.radioFTP.TabIndex = 12;
-         this.radioFTP.Tag = "2";
-         this.radioFTP.Text = "FTP Server";
-         this.radioFTP.UseVisualStyleBackColor = true;
+         this.LegacyClientSubTypeFtpRadioButton.AutoSize = true;
+         this.LegacyClientSubTypeFtpRadioButton.CausesValidation = false;
+         this.LegacyClientSubTypeFtpRadioButton.Location = new System.Drawing.Point(174, 6);
+         this.LegacyClientSubTypeFtpRadioButton.Name = "LegacyClientSubTypeFtpRadioButton";
+         this.LegacyClientSubTypeFtpRadioButton.Size = new System.Drawing.Size(79, 17);
+         this.LegacyClientSubTypeFtpRadioButton.TabIndex = 12;
+         this.LegacyClientSubTypeFtpRadioButton.Tag = "2";
+         this.LegacyClientSubTypeFtpRadioButton.Text = "FTP Server";
+         this.LegacyClientSubTypeFtpRadioButton.UseVisualStyleBackColor = true;
          // 
          // FtpServerNameLabel
          // 
@@ -287,44 +287,44 @@ namespace HFM.Forms
          this.FtpServerPathTextBox.TabIndex = 3;
          this.FtpServerPathTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
-         // radioHTTP
+         // LegacyClientSubTypeHttpRadioButton
          // 
-         this.radioHTTP.AutoSize = true;
-         this.radioHTTP.CausesValidation = false;
-         this.radioHTTP.Location = new System.Drawing.Point(85, 6);
-         this.radioHTTP.Name = "radioHTTP";
-         this.radioHTTP.Size = new System.Drawing.Size(82, 17);
-         this.radioHTTP.TabIndex = 11;
-         this.radioHTTP.Tag = "3";
-         this.radioHTTP.Text = "Web Server";
-         this.radioHTTP.UseVisualStyleBackColor = true;
+         this.LegacyClientSubTypeHttpRadioButton.AutoSize = true;
+         this.LegacyClientSubTypeHttpRadioButton.CausesValidation = false;
+         this.LegacyClientSubTypeHttpRadioButton.Location = new System.Drawing.Point(85, 6);
+         this.LegacyClientSubTypeHttpRadioButton.Name = "LegacyClientSubTypeHttpRadioButton";
+         this.LegacyClientSubTypeHttpRadioButton.Size = new System.Drawing.Size(82, 17);
+         this.LegacyClientSubTypeHttpRadioButton.TabIndex = 11;
+         this.LegacyClientSubTypeHttpRadioButton.Tag = "3";
+         this.LegacyClientSubTypeHttpRadioButton.Text = "Web Server";
+         this.LegacyClientSubTypeHttpRadioButton.UseVisualStyleBackColor = true;
          // 
-         // txtWebURL
+         // WebUrlTextBox
          // 
-         this.txtWebURL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+         this.WebUrlTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-         this.txtWebURL.BackColor = System.Drawing.SystemColors.Window;
-         this.txtWebURL.DoubleBuffered = true;
-         this.txtWebURL.ErrorBackColor = System.Drawing.Color.Yellow;
-         this.txtWebURL.ErrorState = false;
-         this.txtWebURL.ErrorToolTip = this.toolTipHost;
-         this.txtWebURL.ErrorToolTipDuration = 5000;
-         this.txtWebURL.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-         this.txtWebURL.ErrorToolTipText = "URL must be the full path to the location containing the log files.";
-         this.txtWebURL.Location = new System.Drawing.Point(152, 15);
-         this.txtWebURL.Name = "txtWebURL";
-         this.txtWebURL.Size = new System.Drawing.Size(215, 20);
-         this.txtWebURL.TabIndex = 1;
-         this.txtWebURL.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         this.WebUrlTextBox.BackColor = System.Drawing.SystemColors.Window;
+         this.WebUrlTextBox.DoubleBuffered = true;
+         this.WebUrlTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.WebUrlTextBox.ErrorState = false;
+         this.WebUrlTextBox.ErrorToolTip = this.toolTipHost;
+         this.WebUrlTextBox.ErrorToolTipDuration = 5000;
+         this.WebUrlTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.WebUrlTextBox.ErrorToolTipText = "URL must be the full path to the location containing the log files.";
+         this.WebUrlTextBox.Location = new System.Drawing.Point(152, 15);
+         this.WebUrlTextBox.Name = "WebUrlTextBox";
+         this.WebUrlTextBox.Size = new System.Drawing.Size(215, 20);
+         this.WebUrlTextBox.TabIndex = 1;
+         this.WebUrlTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
-         // lblWebURL
+         // WebUrlLabel
          // 
-         this.lblWebURL.AutoSize = true;
-         this.lblWebURL.Location = new System.Drawing.Point(11, 18);
-         this.lblWebURL.Name = "lblWebURL";
-         this.lblWebURL.Size = new System.Drawing.Size(110, 13);
-         this.lblWebURL.TabIndex = 0;
-         this.lblWebURL.Text = "URL to Log Directory:";
+         this.WebUrlLabel.AutoSize = true;
+         this.WebUrlLabel.Location = new System.Drawing.Point(11, 18);
+         this.WebUrlLabel.Name = "WebUrlLabel";
+         this.WebUrlLabel.Size = new System.Drawing.Size(110, 13);
+         this.WebUrlLabel.TabIndex = 0;
+         this.WebUrlLabel.Text = "URL to Log Directory:";
          // 
          // FtpUsernameTextBox
          // 
@@ -377,102 +377,102 @@ namespace HFM.Forms
          this.FtpPasswordLabel.TabIndex = 6;
          this.FtpPasswordLabel.Text = "Password:";
          // 
-         // txtWebUser
+         // WebUsernameTextBox
          // 
-         this.txtWebUser.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+         this.WebUsernameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-         this.txtWebUser.BackColor = System.Drawing.SystemColors.Window;
-         this.txtWebUser.DoubleBuffered = true;
-         this.txtWebUser.ErrorBackColor = System.Drawing.Color.Yellow;
-         this.txtWebUser.ErrorState = false;
-         this.txtWebUser.ErrorToolTip = this.toolTipHost;
-         this.txtWebUser.ErrorToolTipDuration = 5000;
-         this.txtWebUser.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-         this.txtWebUser.ErrorToolTipText = "";
-         this.txtWebUser.Location = new System.Drawing.Point(152, 42);
-         this.txtWebUser.Name = "txtWebUser";
-         this.txtWebUser.Size = new System.Drawing.Size(215, 20);
-         this.txtWebUser.TabIndex = 3;
-         this.txtWebUser.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         this.WebUsernameTextBox.BackColor = System.Drawing.SystemColors.Window;
+         this.WebUsernameTextBox.DoubleBuffered = true;
+         this.WebUsernameTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.WebUsernameTextBox.ErrorState = false;
+         this.WebUsernameTextBox.ErrorToolTip = this.toolTipHost;
+         this.WebUsernameTextBox.ErrorToolTipDuration = 5000;
+         this.WebUsernameTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.WebUsernameTextBox.ErrorToolTipText = "";
+         this.WebUsernameTextBox.Location = new System.Drawing.Point(152, 42);
+         this.WebUsernameTextBox.Name = "WebUsernameTextBox";
+         this.WebUsernameTextBox.Size = new System.Drawing.Size(215, 20);
+         this.WebUsernameTextBox.TabIndex = 3;
+         this.WebUsernameTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
-         // txtWebPass
+         // WebPasswordTextBox
          // 
-         this.txtWebPass.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+         this.WebPasswordTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-         this.txtWebPass.BackColor = System.Drawing.SystemColors.Window;
-         this.txtWebPass.DoubleBuffered = true;
-         this.txtWebPass.ErrorBackColor = System.Drawing.Color.Yellow;
-         this.txtWebPass.ErrorState = false;
-         this.txtWebPass.ErrorToolTip = this.toolTipHost;
-         this.txtWebPass.ErrorToolTipDuration = 5000;
-         this.txtWebPass.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-         this.txtWebPass.ErrorToolTipText = "";
-         this.txtWebPass.Location = new System.Drawing.Point(152, 69);
-         this.txtWebPass.Name = "txtWebPass";
-         this.txtWebPass.PasswordChar = '#';
-         this.txtWebPass.Size = new System.Drawing.Size(215, 20);
-         this.txtWebPass.TabIndex = 5;
-         this.txtWebPass.UseSystemPasswordChar = true;
-         this.txtWebPass.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         this.WebPasswordTextBox.BackColor = System.Drawing.SystemColors.Window;
+         this.WebPasswordTextBox.DoubleBuffered = true;
+         this.WebPasswordTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.WebPasswordTextBox.ErrorState = false;
+         this.WebPasswordTextBox.ErrorToolTip = this.toolTipHost;
+         this.WebPasswordTextBox.ErrorToolTipDuration = 5000;
+         this.WebPasswordTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.WebPasswordTextBox.ErrorToolTipText = "";
+         this.WebPasswordTextBox.Location = new System.Drawing.Point(152, 69);
+         this.WebPasswordTextBox.Name = "WebPasswordTextBox";
+         this.WebPasswordTextBox.PasswordChar = '#';
+         this.WebPasswordTextBox.Size = new System.Drawing.Size(215, 20);
+         this.WebPasswordTextBox.TabIndex = 5;
+         this.WebPasswordTextBox.UseSystemPasswordChar = true;
+         this.WebPasswordTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
-         // lblWebUser
+         // WebUsernameLabel
          // 
-         this.lblWebUser.AutoSize = true;
-         this.lblWebUser.Location = new System.Drawing.Point(11, 45);
-         this.lblWebUser.Name = "lblWebUser";
-         this.lblWebUser.Size = new System.Drawing.Size(118, 13);
-         this.lblWebUser.TabIndex = 2;
-         this.lblWebUser.Text = "Web Server Username:";
+         this.WebUsernameLabel.AutoSize = true;
+         this.WebUsernameLabel.Location = new System.Drawing.Point(11, 45);
+         this.WebUsernameLabel.Name = "WebUsernameLabel";
+         this.WebUsernameLabel.Size = new System.Drawing.Size(118, 13);
+         this.WebUsernameLabel.TabIndex = 2;
+         this.WebUsernameLabel.Text = "Web Server Username:";
          // 
-         // lblWebPass
+         // WebPasswordLabel
          // 
-         this.lblWebPass.AutoSize = true;
-         this.lblWebPass.Location = new System.Drawing.Point(11, 72);
-         this.lblWebPass.Name = "lblWebPass";
-         this.lblWebPass.Size = new System.Drawing.Size(116, 13);
-         this.lblWebPass.TabIndex = 4;
-         this.lblWebPass.Text = "Web Server Password:";
+         this.WebPasswordLabel.AutoSize = true;
+         this.WebPasswordLabel.Location = new System.Drawing.Point(11, 72);
+         this.WebPasswordLabel.Name = "WebPasswordLabel";
+         this.WebPasswordLabel.Size = new System.Drawing.Size(116, 13);
+         this.WebPasswordLabel.TabIndex = 4;
+         this.WebPasswordLabel.Text = "Web Server Password:";
          // 
-         // grpLocal
+         // LocalPathGroupBox
          // 
-         this.grpLocal.Controls.Add(this.btnBrowseLocal);
-         this.grpLocal.Controls.Add(this.txtLocalPath);
-         this.grpLocal.Controls.Add(this.lblLogFolder);
-         this.grpLocal.Location = new System.Drawing.Point(7, 166);
-         this.grpLocal.Name = "grpLocal";
-         this.grpLocal.Size = new System.Drawing.Size(378, 69);
-         this.grpLocal.TabIndex = 11;
-         this.grpLocal.TabStop = false;
+         this.LocalPathGroupBox.Controls.Add(this.LogFolderBrowseButton);
+         this.LocalPathGroupBox.Controls.Add(this.LogFolderTextBox);
+         this.LocalPathGroupBox.Controls.Add(this.LogFolderLabel);
+         this.LocalPathGroupBox.Location = new System.Drawing.Point(7, 166);
+         this.LocalPathGroupBox.Name = "LocalPathGroupBox";
+         this.LocalPathGroupBox.Size = new System.Drawing.Size(378, 69);
+         this.LocalPathGroupBox.TabIndex = 11;
+         this.LocalPathGroupBox.TabStop = false;
          // 
-         // lblLogFolder
+         // LogFolderLabel
          // 
-         this.lblLogFolder.Anchor = System.Windows.Forms.AnchorStyles.Left;
-         this.lblLogFolder.AutoSize = true;
-         this.lblLogFolder.Location = new System.Drawing.Point(11, 16);
-         this.lblLogFolder.Name = "lblLogFolder";
-         this.lblLogFolder.Size = new System.Drawing.Size(60, 13);
-         this.lblLogFolder.TabIndex = 0;
-         this.lblLogFolder.Text = "Log Folder:";
+         this.LogFolderLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+         this.LogFolderLabel.AutoSize = true;
+         this.LogFolderLabel.Location = new System.Drawing.Point(11, 16);
+         this.LogFolderLabel.Name = "LogFolderLabel";
+         this.LogFolderLabel.Size = new System.Drawing.Size(60, 13);
+         this.LogFolderLabel.TabIndex = 0;
+         this.LogFolderLabel.Text = "Log Folder:";
          // 
-         // grpFTP
+         // FtpGroupBox
          // 
-         this.grpFTP.Controls.Add(this.FtpServerPortTextBox);
-         this.grpFTP.Controls.Add(this.FtpServerPortLabel);
-         this.grpFTP.Controls.Add(this.pnlFtpMode);
-         this.grpFTP.Controls.Add(this.labelWrapper1);
-         this.grpFTP.Controls.Add(this.FtpServerNameLabel);
-         this.grpFTP.Controls.Add(this.FtpServerPathLabel);
-         this.grpFTP.Controls.Add(this.FtpPasswordTextBox);
-         this.grpFTP.Controls.Add(this.FtpUsernameLabel);
-         this.grpFTP.Controls.Add(this.FtpServerNameTextBox);
-         this.grpFTP.Controls.Add(this.FtpPasswordLabel);
-         this.grpFTP.Controls.Add(this.FtpServerPathTextBox);
-         this.grpFTP.Controls.Add(this.FtpUsernameTextBox);
-         this.grpFTP.Location = new System.Drawing.Point(7, 166);
-         this.grpFTP.Name = "grpFTP";
-         this.grpFTP.Size = new System.Drawing.Size(378, 152);
-         this.grpFTP.TabIndex = 13;
-         this.grpFTP.TabStop = false;
+         this.FtpGroupBox.Controls.Add(this.FtpServerPortTextBox);
+         this.FtpGroupBox.Controls.Add(this.FtpServerPortLabel);
+         this.FtpGroupBox.Controls.Add(this.FtpModePanel);
+         this.FtpGroupBox.Controls.Add(this.FtpModeLabel);
+         this.FtpGroupBox.Controls.Add(this.FtpServerNameLabel);
+         this.FtpGroupBox.Controls.Add(this.FtpServerPathLabel);
+         this.FtpGroupBox.Controls.Add(this.FtpPasswordTextBox);
+         this.FtpGroupBox.Controls.Add(this.FtpUsernameLabel);
+         this.FtpGroupBox.Controls.Add(this.FtpServerNameTextBox);
+         this.FtpGroupBox.Controls.Add(this.FtpPasswordLabel);
+         this.FtpGroupBox.Controls.Add(this.FtpServerPathTextBox);
+         this.FtpGroupBox.Controls.Add(this.FtpUsernameTextBox);
+         this.FtpGroupBox.Location = new System.Drawing.Point(7, 166);
+         this.FtpGroupBox.Name = "FtpGroupBox";
+         this.FtpGroupBox.Size = new System.Drawing.Size(378, 152);
+         this.FtpGroupBox.TabIndex = 13;
+         this.FtpGroupBox.TabStop = false;
          // 
          // FtpServerPortTextBox
          // 
@@ -500,146 +500,146 @@ namespace HFM.Forms
          this.FtpServerPortLabel.TabIndex = 12;
          this.FtpServerPortLabel.Text = "FTP Server Port:";
          // 
-         // pnlFtpMode
+         // FtpModePanel
          // 
-         this.pnlFtpMode.Controls.Add(this.radioActive);
-         this.pnlFtpMode.Controls.Add(this.radioPassive);
-         this.pnlFtpMode.Location = new System.Drawing.Point(75, 118);
-         this.pnlFtpMode.Name = "pnlFtpMode";
-         this.pnlFtpMode.Size = new System.Drawing.Size(134, 30);
-         this.pnlFtpMode.TabIndex = 11;
-         this.pnlFtpMode.ValueMember = null;
+         this.FtpModePanel.Controls.Add(this.FtpModeActiveRadioButton);
+         this.FtpModePanel.Controls.Add(this.FtpModePassiveRadioButton);
+         this.FtpModePanel.Location = new System.Drawing.Point(75, 118);
+         this.FtpModePanel.Name = "FtpModePanel";
+         this.FtpModePanel.Size = new System.Drawing.Size(134, 30);
+         this.FtpModePanel.TabIndex = 11;
+         this.FtpModePanel.ValueMember = null;
          // 
-         // radioActive
+         // FtpModeActiveRadioButton
          // 
-         this.radioActive.AutoSize = true;
-         this.radioActive.Location = new System.Drawing.Point(73, 7);
-         this.radioActive.Name = "radioActive";
-         this.radioActive.Size = new System.Drawing.Size(55, 17);
-         this.radioActive.TabIndex = 9;
-         this.radioActive.Tag = "1";
-         this.radioActive.Text = "Active";
-         this.radioActive.UseVisualStyleBackColor = true;
+         this.FtpModeActiveRadioButton.AutoSize = true;
+         this.FtpModeActiveRadioButton.Location = new System.Drawing.Point(73, 7);
+         this.FtpModeActiveRadioButton.Name = "FtpModeActiveRadioButton";
+         this.FtpModeActiveRadioButton.Size = new System.Drawing.Size(55, 17);
+         this.FtpModeActiveRadioButton.TabIndex = 9;
+         this.FtpModeActiveRadioButton.Tag = "1";
+         this.FtpModeActiveRadioButton.Text = "Active";
+         this.FtpModeActiveRadioButton.UseVisualStyleBackColor = true;
          // 
-         // radioPassive
+         // FtpModePassiveRadioButton
          // 
-         this.radioPassive.AutoSize = true;
-         this.radioPassive.Checked = true;
-         this.radioPassive.Location = new System.Drawing.Point(5, 7);
-         this.radioPassive.Name = "radioPassive";
-         this.radioPassive.Size = new System.Drawing.Size(62, 17);
-         this.radioPassive.TabIndex = 8;
-         this.radioPassive.TabStop = true;
-         this.radioPassive.Tag = "0";
-         this.radioPassive.Text = "Passive";
-         this.radioPassive.UseVisualStyleBackColor = true;
+         this.FtpModePassiveRadioButton.AutoSize = true;
+         this.FtpModePassiveRadioButton.Checked = true;
+         this.FtpModePassiveRadioButton.Location = new System.Drawing.Point(5, 7);
+         this.FtpModePassiveRadioButton.Name = "FtpModePassiveRadioButton";
+         this.FtpModePassiveRadioButton.Size = new System.Drawing.Size(62, 17);
+         this.FtpModePassiveRadioButton.TabIndex = 8;
+         this.FtpModePassiveRadioButton.TabStop = true;
+         this.FtpModePassiveRadioButton.Tag = "0";
+         this.FtpModePassiveRadioButton.Text = "Passive";
+         this.FtpModePassiveRadioButton.UseVisualStyleBackColor = true;
          // 
-         // labelWrapper1
+         // FtpModeLabel
          // 
-         this.labelWrapper1.AutoSize = true;
-         this.labelWrapper1.Location = new System.Drawing.Point(11, 126);
-         this.labelWrapper1.Name = "labelWrapper1";
-         this.labelWrapper1.Size = new System.Drawing.Size(60, 13);
-         this.labelWrapper1.TabIndex = 10;
-         this.labelWrapper1.Text = "FTP Mode:";
+         this.FtpModeLabel.AutoSize = true;
+         this.FtpModeLabel.Location = new System.Drawing.Point(11, 126);
+         this.FtpModeLabel.Name = "FtpModeLabel";
+         this.FtpModeLabel.Size = new System.Drawing.Size(60, 13);
+         this.FtpModeLabel.TabIndex = 10;
+         this.FtpModeLabel.Text = "FTP Mode:";
          // 
-         // grpHTTP
+         // HttpGroupBox
          // 
-         this.grpHTTP.Controls.Add(this.txtWebPass);
-         this.grpHTTP.Controls.Add(this.txtWebURL);
-         this.grpHTTP.Controls.Add(this.txtWebUser);
-         this.grpHTTP.Controls.Add(this.lblWebPass);
-         this.grpHTTP.Controls.Add(this.lblWebUser);
-         this.grpHTTP.Controls.Add(this.lblWebURL);
-         this.grpHTTP.Location = new System.Drawing.Point(7, 166);
-         this.grpHTTP.Name = "grpHTTP";
-         this.grpHTTP.Size = new System.Drawing.Size(378, 99);
-         this.grpHTTP.TabIndex = 12;
-         this.grpHTTP.TabStop = false;
+         this.HttpGroupBox.Controls.Add(this.WebPasswordTextBox);
+         this.HttpGroupBox.Controls.Add(this.WebUrlTextBox);
+         this.HttpGroupBox.Controls.Add(this.WebUsernameTextBox);
+         this.HttpGroupBox.Controls.Add(this.WebPasswordLabel);
+         this.HttpGroupBox.Controls.Add(this.WebUsernameLabel);
+         this.HttpGroupBox.Controls.Add(this.WebUrlLabel);
+         this.HttpGroupBox.Location = new System.Drawing.Point(7, 166);
+         this.HttpGroupBox.Name = "HttpGroupBox";
+         this.HttpGroupBox.Size = new System.Drawing.Size(378, 99);
+         this.HttpGroupBox.TabIndex = 12;
+         this.HttpGroupBox.TabStop = false;
          // 
-         // openLogFolder
+         // LogFolderBrowserDialog
          // 
-         this.openLogFolder.ShowNewFolderButton = false;
+         this.LogFolderBrowserDialog.ShowNewFolderButton = false;
          // 
-         // txtLogFileName
+         // LogFileNameTextBox
          // 
-         this.txtLogFileName.BackColor = System.Drawing.SystemColors.Window;
-         this.txtLogFileName.DoubleBuffered = true;
-         this.txtLogFileName.ErrorBackColor = System.Drawing.Color.Yellow;
-         this.txtLogFileName.ErrorState = false;
-         this.txtLogFileName.ErrorToolTip = this.toolTipHost;
-         this.txtLogFileName.ErrorToolTipDuration = 5000;
-         this.txtLogFileName.ErrorToolTipPoint = new System.Drawing.Point(230, 0);
-         this.txtLogFileName.ErrorToolTipText = "File name contains invalid characters.";
-         this.txtLogFileName.Location = new System.Drawing.Point(146, 64);
-         this.txtLogFileName.MaxLength = 100;
-         this.txtLogFileName.Name = "txtLogFileName";
-         this.txtLogFileName.Size = new System.Drawing.Size(237, 20);
-         this.txtLogFileName.TabIndex = 5;
-         this.txtLogFileName.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         this.LogFileNameTextBox.BackColor = System.Drawing.SystemColors.Window;
+         this.LogFileNameTextBox.DoubleBuffered = true;
+         this.LogFileNameTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.LogFileNameTextBox.ErrorState = false;
+         this.LogFileNameTextBox.ErrorToolTip = this.toolTipHost;
+         this.LogFileNameTextBox.ErrorToolTipDuration = 5000;
+         this.LogFileNameTextBox.ErrorToolTipPoint = new System.Drawing.Point(230, 0);
+         this.LogFileNameTextBox.ErrorToolTipText = "File name contains invalid characters.";
+         this.LogFileNameTextBox.Location = new System.Drawing.Point(146, 64);
+         this.LogFileNameTextBox.MaxLength = 100;
+         this.LogFileNameTextBox.Name = "LogFileNameTextBox";
+         this.LogFileNameTextBox.Size = new System.Drawing.Size(237, 20);
+         this.LogFileNameTextBox.TabIndex = 5;
+         this.LogFileNameTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
-         // lblLogFileName
+         // LogFileNameLabel
          // 
-         this.lblLogFileName.AutoSize = true;
-         this.lblLogFileName.Location = new System.Drawing.Point(6, 67);
-         this.lblLogFileName.Name = "lblLogFileName";
-         this.lblLogFileName.Size = new System.Drawing.Size(116, 13);
-         this.lblLogFileName.TabIndex = 4;
-         this.lblLogFileName.Text = "Filename for FAHlog.txt";
+         this.LogFileNameLabel.AutoSize = true;
+         this.LogFileNameLabel.Location = new System.Drawing.Point(6, 67);
+         this.LogFileNameLabel.Name = "LogFileNameLabel";
+         this.LogFileNameLabel.Size = new System.Drawing.Size(116, 13);
+         this.LogFileNameLabel.TabIndex = 4;
+         this.LogFileNameLabel.Text = "Filename for FAHlog.txt";
          // 
-         // txtUnitFileName
+         // UnitInfoFileNameTextBox
          // 
-         this.txtUnitFileName.BackColor = System.Drawing.SystemColors.Window;
-         this.txtUnitFileName.DoubleBuffered = true;
-         this.txtUnitFileName.ErrorBackColor = System.Drawing.Color.Yellow;
-         this.txtUnitFileName.ErrorState = false;
-         this.txtUnitFileName.ErrorToolTip = this.toolTipHost;
-         this.txtUnitFileName.ErrorToolTipDuration = 5000;
-         this.txtUnitFileName.ErrorToolTipPoint = new System.Drawing.Point(230, 0);
-         this.txtUnitFileName.ErrorToolTipText = "File name contains invalid characters.";
-         this.txtUnitFileName.Location = new System.Drawing.Point(146, 90);
-         this.txtUnitFileName.MaxLength = 100;
-         this.txtUnitFileName.Name = "txtUnitFileName";
-         this.txtUnitFileName.Size = new System.Drawing.Size(237, 20);
-         this.txtUnitFileName.TabIndex = 7;
-         this.txtUnitFileName.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         this.UnitInfoFileNameTextBox.BackColor = System.Drawing.SystemColors.Window;
+         this.UnitInfoFileNameTextBox.DoubleBuffered = true;
+         this.UnitInfoFileNameTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.UnitInfoFileNameTextBox.ErrorState = false;
+         this.UnitInfoFileNameTextBox.ErrorToolTip = this.toolTipHost;
+         this.UnitInfoFileNameTextBox.ErrorToolTipDuration = 5000;
+         this.UnitInfoFileNameTextBox.ErrorToolTipPoint = new System.Drawing.Point(230, 0);
+         this.UnitInfoFileNameTextBox.ErrorToolTipText = "File name contains invalid characters.";
+         this.UnitInfoFileNameTextBox.Location = new System.Drawing.Point(146, 90);
+         this.UnitInfoFileNameTextBox.MaxLength = 100;
+         this.UnitInfoFileNameTextBox.Name = "UnitInfoFileNameTextBox";
+         this.UnitInfoFileNameTextBox.Size = new System.Drawing.Size(237, 20);
+         this.UnitInfoFileNameTextBox.TabIndex = 7;
+         this.UnitInfoFileNameTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
-         // lblUnitFileName
+         // UnitInfoFileNameLabel
          // 
-         this.lblUnitFileName.AutoSize = true;
-         this.lblUnitFileName.Location = new System.Drawing.Point(6, 93);
-         this.lblUnitFileName.Name = "lblUnitFileName";
-         this.lblUnitFileName.Size = new System.Drawing.Size(115, 13);
-         this.lblUnitFileName.TabIndex = 6;
-         this.lblUnitFileName.Text = "Filename for unitinfo.txt";
+         this.UnitInfoFileNameLabel.AutoSize = true;
+         this.UnitInfoFileNameLabel.Location = new System.Drawing.Point(6, 93);
+         this.UnitInfoFileNameLabel.Name = "UnitInfoFileNameLabel";
+         this.UnitInfoFileNameLabel.Size = new System.Drawing.Size(115, 13);
+         this.UnitInfoFileNameLabel.TabIndex = 6;
+         this.UnitInfoFileNameLabel.Text = "Filename for unitinfo.txt";
          // 
-         // lblClientMegahertz
+         // ClientMegahertzLabel
          // 
-         this.lblClientMegahertz.AutoSize = true;
-         this.lblClientMegahertz.Location = new System.Drawing.Point(6, 41);
-         this.lblClientMegahertz.Name = "lblClientMegahertz";
-         this.lblClientMegahertz.Size = new System.Drawing.Size(111, 13);
-         this.lblClientMegahertz.TabIndex = 2;
-         this.lblClientMegahertz.Text = "Client Processor MHz:";
+         this.ClientMegahertzLabel.AutoSize = true;
+         this.ClientMegahertzLabel.Location = new System.Drawing.Point(6, 41);
+         this.ClientMegahertzLabel.Name = "ClientMegahertzLabel";
+         this.ClientMegahertzLabel.Size = new System.Drawing.Size(111, 13);
+         this.ClientMegahertzLabel.TabIndex = 2;
+         this.ClientMegahertzLabel.Text = "Client Processor MHz:";
          // 
-         // txtClientMegahertz
+         // ClientMegahertzTextBox
          // 
-         this.txtClientMegahertz.BackColor = System.Drawing.SystemColors.Window;
-         this.txtClientMegahertz.DoubleBuffered = true;
-         this.txtClientMegahertz.ErrorBackColor = System.Drawing.Color.Yellow;
-         this.txtClientMegahertz.ErrorState = false;
-         this.txtClientMegahertz.ErrorToolTip = this.toolTipHost;
-         this.txtClientMegahertz.ErrorToolTipDuration = 5000;
-         this.txtClientMegahertz.ErrorToolTipPoint = new System.Drawing.Point(230, 0);
-         this.txtClientMegahertz.ErrorToolTipText = "Client Processor Megahertz must be numeric and greater than zero.";
-         this.txtClientMegahertz.Location = new System.Drawing.Point(146, 38);
-         this.txtClientMegahertz.MaxLength = 9;
-         this.txtClientMegahertz.Name = "txtClientMegahertz";
-         this.txtClientMegahertz.Size = new System.Drawing.Size(237, 20);
-         this.txtClientMegahertz.TabIndex = 3;
-         this.txtClientMegahertz.Text = "1";
-         this.txtClientMegahertz.ValidationType = harlam357.Windows.Forms.ValidationType.None;
-         this.txtClientMegahertz.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
+         this.ClientMegahertzTextBox.BackColor = System.Drawing.SystemColors.Window;
+         this.ClientMegahertzTextBox.DoubleBuffered = true;
+         this.ClientMegahertzTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.ClientMegahertzTextBox.ErrorState = false;
+         this.ClientMegahertzTextBox.ErrorToolTip = this.toolTipHost;
+         this.ClientMegahertzTextBox.ErrorToolTipDuration = 5000;
+         this.ClientMegahertzTextBox.ErrorToolTipPoint = new System.Drawing.Point(230, 0);
+         this.ClientMegahertzTextBox.ErrorToolTipText = "Client Processor Megahertz must be numeric and greater than zero.";
+         this.ClientMegahertzTextBox.Location = new System.Drawing.Point(146, 38);
+         this.ClientMegahertzTextBox.MaxLength = 9;
+         this.ClientMegahertzTextBox.Name = "ClientMegahertzTextBox";
+         this.ClientMegahertzTextBox.Size = new System.Drawing.Size(237, 20);
+         this.ClientMegahertzTextBox.TabIndex = 3;
+         this.ClientMegahertzTextBox.Text = "1";
+         this.ClientMegahertzTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         this.ClientMegahertzTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
          // 
          // ClientTimeOffsetLabel
          // 
@@ -651,52 +651,52 @@ namespace HFM.Forms
          this.ClientTimeOffsetLabel.TabIndex = 17;
          this.ClientTimeOffsetLabel.Text = "Client Time Offset (Minutes)";
          // 
-         // lblQueueFileName
+         // QueueFileNameLabel
          // 
-         this.lblQueueFileName.AutoSize = true;
-         this.lblQueueFileName.Location = new System.Drawing.Point(6, 119);
-         this.lblQueueFileName.Name = "lblQueueFileName";
-         this.lblQueueFileName.Size = new System.Drawing.Size(115, 13);
-         this.lblQueueFileName.TabIndex = 8;
-         this.lblQueueFileName.Text = "Filename for queue.dat";
+         this.QueueFileNameLabel.AutoSize = true;
+         this.QueueFileNameLabel.Location = new System.Drawing.Point(6, 119);
+         this.QueueFileNameLabel.Name = "QueueFileNameLabel";
+         this.QueueFileNameLabel.Size = new System.Drawing.Size(115, 13);
+         this.QueueFileNameLabel.TabIndex = 8;
+         this.QueueFileNameLabel.Text = "Filename for queue.dat";
          // 
-         // txtQueueFileName
+         // QueueFileNameTextBox
          // 
-         this.txtQueueFileName.BackColor = System.Drawing.SystemColors.Window;
-         this.txtQueueFileName.DoubleBuffered = true;
-         this.txtQueueFileName.ErrorBackColor = System.Drawing.Color.Yellow;
-         this.txtQueueFileName.ErrorState = false;
-         this.txtQueueFileName.ErrorToolTip = this.toolTipHost;
-         this.txtQueueFileName.ErrorToolTipDuration = 5000;
-         this.txtQueueFileName.ErrorToolTipPoint = new System.Drawing.Point(230, 0);
-         this.txtQueueFileName.ErrorToolTipText = "File name contains invalid characters.";
-         this.txtQueueFileName.Location = new System.Drawing.Point(146, 116);
-         this.txtQueueFileName.MaxLength = 100;
-         this.txtQueueFileName.Name = "txtQueueFileName";
-         this.txtQueueFileName.Size = new System.Drawing.Size(237, 20);
-         this.txtQueueFileName.TabIndex = 9;
-         this.txtQueueFileName.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         this.QueueFileNameTextBox.BackColor = System.Drawing.SystemColors.Window;
+         this.QueueFileNameTextBox.DoubleBuffered = true;
+         this.QueueFileNameTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.QueueFileNameTextBox.ErrorState = false;
+         this.QueueFileNameTextBox.ErrorToolTip = this.toolTipHost;
+         this.QueueFileNameTextBox.ErrorToolTipDuration = 5000;
+         this.QueueFileNameTextBox.ErrorToolTipPoint = new System.Drawing.Point(230, 0);
+         this.QueueFileNameTextBox.ErrorToolTipText = "File name contains invalid characters.";
+         this.QueueFileNameTextBox.Location = new System.Drawing.Point(146, 116);
+         this.QueueFileNameTextBox.MaxLength = 100;
+         this.QueueFileNameTextBox.Name = "QueueFileNameTextBox";
+         this.QueueFileNameTextBox.Size = new System.Drawing.Size(237, 20);
+         this.QueueFileNameTextBox.TabIndex = 9;
+         this.QueueFileNameTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
-         // btnTestConnection
+         // TestConnectionButton
          // 
-         this.btnTestConnection.Location = new System.Drawing.Point(271, 142);
-         this.btnTestConnection.Name = "btnTestConnection";
-         this.btnTestConnection.Size = new System.Drawing.Size(114, 24);
-         this.btnTestConnection.TabIndex = 14;
-         this.btnTestConnection.Text = "Test Connection";
-         this.btnTestConnection.UseVisualStyleBackColor = true;
-         this.btnTestConnection.Click += new System.EventHandler(this.btnTestConnection_Click);
+         this.TestConnectionButton.Location = new System.Drawing.Point(271, 142);
+         this.TestConnectionButton.Name = "TestConnectionButton";
+         this.TestConnectionButton.Size = new System.Drawing.Size(114, 24);
+         this.TestConnectionButton.TabIndex = 14;
+         this.TestConnectionButton.Text = "Test Connection";
+         this.TestConnectionButton.UseVisualStyleBackColor = true;
+         this.TestConnectionButton.Click += new System.EventHandler(this.btnTestConnection_Click);
          // 
-         // pnlHostType
+         // LegacyClientSubTypePanel
          // 
-         this.pnlHostType.Controls.Add(this.radioLocal);
-         this.pnlHostType.Controls.Add(this.radioFTP);
-         this.pnlHostType.Controls.Add(this.radioHTTP);
-         this.pnlHostType.Location = new System.Drawing.Point(8, 139);
-         this.pnlHostType.Name = "pnlHostType";
-         this.pnlHostType.Size = new System.Drawing.Size(257, 30);
-         this.pnlHostType.TabIndex = 10;
-         this.pnlHostType.ValueMember = null;
+         this.LegacyClientSubTypePanel.Controls.Add(this.LegacyClientSubTypeLocalPathRadioButton);
+         this.LegacyClientSubTypePanel.Controls.Add(this.LegacyClientSubTypeFtpRadioButton);
+         this.LegacyClientSubTypePanel.Controls.Add(this.LegacyClientSubTypeHttpRadioButton);
+         this.LegacyClientSubTypePanel.Location = new System.Drawing.Point(8, 139);
+         this.LegacyClientSubTypePanel.Name = "LegacyClientSubTypePanel";
+         this.LegacyClientSubTypePanel.Size = new System.Drawing.Size(257, 30);
+         this.LegacyClientSubTypePanel.TabIndex = 10;
+         this.LegacyClientSubTypePanel.ValueMember = null;
          // 
          // DummyTextBox
          // 
@@ -710,27 +710,27 @@ namespace HFM.Forms
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.ClientSize = new System.Drawing.Size(392, 385);
-         this.Controls.Add(this.grpFTP);
-         this.Controls.Add(this.grpLocal);
+         this.Controls.Add(this.LocalPathGroupBox);
          this.Controls.Add(this.DummyTextBox);
-         this.Controls.Add(this.pnlHostType);
-         this.Controls.Add(this.btnTestConnection);
-         this.Controls.Add(this.txtQueueFileName);
-         this.Controls.Add(this.lblQueueFileName);
+         this.Controls.Add(this.LegacyClientSubTypePanel);
+         this.Controls.Add(this.TestConnectionButton);
+         this.Controls.Add(this.QueueFileNameTextBox);
+         this.Controls.Add(this.QueueFileNameLabel);
          this.Controls.Add(this.ClientTimeOffsetLabel);
          this.Controls.Add(this.ClientTimeOffsetUpDown);
-         this.Controls.Add(this.txtClientMegahertz);
-         this.Controls.Add(this.lblClientMegahertz);
+         this.Controls.Add(this.ClientMegahertzTextBox);
+         this.Controls.Add(this.ClientMegahertzLabel);
          this.Controls.Add(this.ClientNoUtcOffsetCheckBox);
          this.Controls.Add(this.ClientNameLabel);
          this.Controls.Add(this.DialogCancelButton);
          this.Controls.Add(this.ClientNameTextBox);
-         this.Controls.Add(this.lblLogFileName);
+         this.Controls.Add(this.LogFileNameLabel);
          this.Controls.Add(this.DialogOkButton);
-         this.Controls.Add(this.lblUnitFileName);
-         this.Controls.Add(this.txtLogFileName);
-         this.Controls.Add(this.txtUnitFileName);
-         this.Controls.Add(this.grpHTTP);
+         this.Controls.Add(this.UnitInfoFileNameLabel);
+         this.Controls.Add(this.LogFileNameTextBox);
+         this.Controls.Add(this.UnitInfoFileNameTextBox);
+         this.Controls.Add(this.HttpGroupBox);
+         this.Controls.Add(this.FtpGroupBox);
          this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
          this.MaximizeBox = false;
@@ -741,16 +741,16 @@ namespace HFM.Forms
          this.Text = "Legacy Client Setup";
          this.Shown += new System.EventHandler(this.LegacyClientSetupDialogShown);
          ((System.ComponentModel.ISupportInitialize)(this.ClientTimeOffsetUpDown)).EndInit();
-         this.grpLocal.ResumeLayout(false);
-         this.grpLocal.PerformLayout();
-         this.grpFTP.ResumeLayout(false);
-         this.grpFTP.PerformLayout();
-         this.pnlFtpMode.ResumeLayout(false);
-         this.pnlFtpMode.PerformLayout();
-         this.grpHTTP.ResumeLayout(false);
-         this.grpHTTP.PerformLayout();
-         this.pnlHostType.ResumeLayout(false);
-         this.pnlHostType.PerformLayout();
+         this.LocalPathGroupBox.ResumeLayout(false);
+         this.LocalPathGroupBox.PerformLayout();
+         this.FtpGroupBox.ResumeLayout(false);
+         this.FtpGroupBox.PerformLayout();
+         this.FtpModePanel.ResumeLayout(false);
+         this.FtpModePanel.PerformLayout();
+         this.HttpGroupBox.ResumeLayout(false);
+         this.HttpGroupBox.PerformLayout();
+         this.LegacyClientSubTypePanel.ResumeLayout(false);
+         this.LegacyClientSubTypePanel.PerformLayout();
          this.ResumeLayout(false);
          this.PerformLayout();
 
@@ -758,52 +758,52 @@ namespace HFM.Forms
 
       private ButtonWrapper DialogOkButton;
       private ButtonWrapper DialogCancelButton;
-      private ButtonWrapper btnBrowseLocal;
+      private ButtonWrapper LogFolderBrowseButton;
       private LabelWrapper ClientNameLabel;
       private LabelWrapper FtpServerNameLabel;
       private LabelWrapper FtpServerPathLabel;
-      private LabelWrapper lblWebURL;
+      private LabelWrapper WebUrlLabel;
       private LabelWrapper FtpUsernameLabel;
       private LabelWrapper FtpPasswordLabel;
-      private LabelWrapper lblWebUser;
-      private LabelWrapper lblWebPass;
-      private ValidatingTextBox txtLocalPath;
+      private LabelWrapper WebUsernameLabel;
+      private LabelWrapper WebPasswordLabel;
+      private ValidatingTextBox LogFolderTextBox;
       private ValidatingTextBox ClientNameTextBox;
       private ValidatingTextBox FtpServerNameTextBox;
       private ValidatingTextBox FtpServerPathTextBox;
-      private ValidatingTextBox txtWebURL;
+      private ValidatingTextBox WebUrlTextBox;
       private ValidatingTextBox FtpUsernameTextBox;
       private ValidatingTextBox FtpPasswordTextBox;
-      private ValidatingTextBox txtWebUser;
-      private ValidatingTextBox txtWebPass;
-      private GroupBoxWrapper grpLocal;
-      private LabelWrapper lblLogFolder;
-      private GroupBoxWrapper grpFTP;
-      private GroupBoxWrapper grpHTTP;
+      private ValidatingTextBox WebUsernameTextBox;
+      private ValidatingTextBox WebPasswordTextBox;
+      private GroupBoxWrapper LocalPathGroupBox;
+      private LabelWrapper LogFolderLabel;
+      private GroupBoxWrapper FtpGroupBox;
+      private GroupBoxWrapper HttpGroupBox;
 
       #endregion
-      private System.Windows.Forms.FolderBrowserDialog openLogFolder;
-      private ValidatingTextBox txtLogFileName;
-      private LabelWrapper lblLogFileName;
-      private ValidatingTextBox txtUnitFileName;
-      private LabelWrapper lblUnitFileName;
+      private System.Windows.Forms.FolderBrowserDialog LogFolderBrowserDialog;
+      private ValidatingTextBox LogFileNameTextBox;
+      private LabelWrapper LogFileNameLabel;
+      private ValidatingTextBox UnitInfoFileNameTextBox;
+      private LabelWrapper UnitInfoFileNameLabel;
       private CheckBoxWrapper ClientNoUtcOffsetCheckBox;
-      private LabelWrapper lblClientMegahertz;
-      private ValidatingTextBox txtClientMegahertz;
+      private LabelWrapper ClientMegahertzLabel;
+      private ValidatingTextBox ClientMegahertzTextBox;
       private LabelWrapper ClientTimeOffsetLabel;
       private System.Windows.Forms.NumericUpDown ClientTimeOffsetUpDown;
-      private RadioButtonWrapper radioLocal;
-      private RadioButtonWrapper radioFTP;
-      private RadioButtonWrapper radioHTTP;
-      private LabelWrapper lblQueueFileName;
-      private ValidatingTextBox txtQueueFileName;
-      private RadioButtonWrapper radioPassive;
-      private RadioButtonWrapper radioActive;
-      private LabelWrapper labelWrapper1;
+      private RadioButtonWrapper LegacyClientSubTypeLocalPathRadioButton;
+      private RadioButtonWrapper LegacyClientSubTypeFtpRadioButton;
+      private RadioButtonWrapper LegacyClientSubTypeHttpRadioButton;
+      private LabelWrapper QueueFileNameLabel;
+      private ValidatingTextBox QueueFileNameTextBox;
+      private RadioButtonWrapper FtpModePassiveRadioButton;
+      private RadioButtonWrapper FtpModeActiveRadioButton;
+      private LabelWrapper FtpModeLabel;
       private System.Windows.Forms.ToolTip toolTipHost;
-      private ButtonWrapper btnTestConnection;
-      private RadioPanel pnlHostType;
-      private RadioPanel pnlFtpMode;
+      private ButtonWrapper TestConnectionButton;
+      private RadioPanel LegacyClientSubTypePanel;
+      private RadioPanel FtpModePanel;
       private TextBoxWrapper DummyTextBox;
       private ValidatingTextBox FtpServerPortTextBox;
       private LabelWrapper FtpServerPortLabel;
