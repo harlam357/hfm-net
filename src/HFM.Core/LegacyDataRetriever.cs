@@ -318,7 +318,7 @@ namespace HFM.Core
          try
          {
             string localFilePath = Path.Combine(_prefs.CacheDirectory, Settings.CachedFahLogFileName());
-            net.FtpDownloadHelper(Settings.Server, Settings.Path, Settings.FahLogFileName, localFilePath,
+            net.FtpDownloadHelper(Settings.Server, Settings.Port, Settings.Path, Settings.FahLogFileName, localFilePath,
                                   Settings.Username, Settings.Password, Settings.FtpMode);
 
             try
@@ -329,7 +329,7 @@ namespace HFM.Core
                                                       Settings.Username, Settings.Password, Settings.FtpMode);
                if (length < Constants.UnitInfoMax)
                {
-                  net.FtpDownloadHelper(Settings.Server, Settings.Path, Settings.UnitInfoFileName, localFilePath,
+                  net.FtpDownloadHelper(Settings.Server, Settings.Port, Settings.Path, Settings.UnitInfoFileName, localFilePath,
                                         Settings.Username, Settings.Password, Settings.FtpMode);
                }
                else
@@ -357,7 +357,7 @@ namespace HFM.Core
             try
             {
                localFilePath = Path.Combine(_prefs.CacheDirectory, Settings.CachedQueueFileName());
-               net.FtpDownloadHelper(Settings.Server, Settings.Path, Settings.QueueFileName, localFilePath,
+               net.FtpDownloadHelper(Settings.Server, Settings.Port, Settings.Path, Settings.QueueFileName, localFilePath,
                                      Settings.Username, Settings.Password, Settings.FtpMode);
             }
             /*** Remove Requirement for Queue to be Present ***/

@@ -192,7 +192,7 @@ namespace HFM.Forms
          this.LegacyClientSubTypeLocalPathRadioButton.Location = new System.Drawing.Point(3, 6);
          this.LegacyClientSubTypeLocalPathRadioButton.Name = "LegacyClientSubTypeLocalPathRadioButton";
          this.LegacyClientSubTypeLocalPathRadioButton.Size = new System.Drawing.Size(76, 17);
-         this.LegacyClientSubTypeLocalPathRadioButton.TabIndex = 10;
+         this.LegacyClientSubTypeLocalPathRadioButton.TabIndex = 0;
          this.LegacyClientSubTypeLocalPathRadioButton.Tag = "1";
          this.LegacyClientSubTypeLocalPathRadioButton.Text = "Local Path";
          this.LegacyClientSubTypeLocalPathRadioButton.UseVisualStyleBackColor = true;
@@ -232,7 +232,7 @@ namespace HFM.Forms
          this.LegacyClientSubTypeFtpRadioButton.Location = new System.Drawing.Point(174, 6);
          this.LegacyClientSubTypeFtpRadioButton.Name = "LegacyClientSubTypeFtpRadioButton";
          this.LegacyClientSubTypeFtpRadioButton.Size = new System.Drawing.Size(79, 17);
-         this.LegacyClientSubTypeFtpRadioButton.TabIndex = 12;
+         this.LegacyClientSubTypeFtpRadioButton.TabIndex = 2;
          this.LegacyClientSubTypeFtpRadioButton.Tag = "2";
          this.LegacyClientSubTypeFtpRadioButton.Text = "FTP Server";
          this.LegacyClientSubTypeFtpRadioButton.UseVisualStyleBackColor = true;
@@ -268,7 +268,7 @@ namespace HFM.Forms
          this.FtpServerPathLabel.Location = new System.Drawing.Point(11, 72);
          this.FtpServerPathLabel.Name = "FtpServerPathLabel";
          this.FtpServerPathLabel.Size = new System.Drawing.Size(104, 13);
-         this.FtpServerPathLabel.TabIndex = 2;
+         this.FtpServerPathLabel.TabIndex = 4;
          this.FtpServerPathLabel.Text = "Log Path (Directory):";
          // 
          // FtpServerPathTextBox
@@ -284,7 +284,7 @@ namespace HFM.Forms
          this.FtpServerPathTextBox.Location = new System.Drawing.Point(139, 69);
          this.FtpServerPathTextBox.Name = "FtpServerPathTextBox";
          this.FtpServerPathTextBox.Size = new System.Drawing.Size(228, 20);
-         this.FtpServerPathTextBox.TabIndex = 3;
+         this.FtpServerPathTextBox.TabIndex = 5;
          this.FtpServerPathTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // LegacyClientSubTypeHttpRadioButton
@@ -294,7 +294,7 @@ namespace HFM.Forms
          this.LegacyClientSubTypeHttpRadioButton.Location = new System.Drawing.Point(85, 6);
          this.LegacyClientSubTypeHttpRadioButton.Name = "LegacyClientSubTypeHttpRadioButton";
          this.LegacyClientSubTypeHttpRadioButton.Size = new System.Drawing.Size(82, 17);
-         this.LegacyClientSubTypeHttpRadioButton.TabIndex = 11;
+         this.LegacyClientSubTypeHttpRadioButton.TabIndex = 1;
          this.LegacyClientSubTypeHttpRadioButton.Tag = "3";
          this.LegacyClientSubTypeHttpRadioButton.Text = "Web Server";
          this.LegacyClientSubTypeHttpRadioButton.UseVisualStyleBackColor = true;
@@ -339,7 +339,7 @@ namespace HFM.Forms
          this.FtpUsernameTextBox.Location = new System.Drawing.Point(75, 96);
          this.FtpUsernameTextBox.Name = "FtpUsernameTextBox";
          this.FtpUsernameTextBox.Size = new System.Drawing.Size(106, 20);
-         this.FtpUsernameTextBox.TabIndex = 5;
+         this.FtpUsernameTextBox.TabIndex = 7;
          this.FtpUsernameTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // FtpUsernameLabel
@@ -348,7 +348,7 @@ namespace HFM.Forms
          this.FtpUsernameLabel.Location = new System.Drawing.Point(11, 99);
          this.FtpUsernameLabel.Name = "FtpUsernameLabel";
          this.FtpUsernameLabel.Size = new System.Drawing.Size(58, 13);
-         this.FtpUsernameLabel.TabIndex = 4;
+         this.FtpUsernameLabel.TabIndex = 6;
          this.FtpUsernameLabel.Text = "Username:";
          // 
          // FtpPasswordTextBox
@@ -364,7 +364,7 @@ namespace HFM.Forms
          this.FtpPasswordTextBox.Location = new System.Drawing.Point(249, 96);
          this.FtpPasswordTextBox.Name = "FtpPasswordTextBox";
          this.FtpPasswordTextBox.Size = new System.Drawing.Size(118, 20);
-         this.FtpPasswordTextBox.TabIndex = 7;
+         this.FtpPasswordTextBox.TabIndex = 9;
          this.FtpPasswordTextBox.UseSystemPasswordChar = true;
          this.FtpPasswordTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
@@ -374,7 +374,7 @@ namespace HFM.Forms
          this.FtpPasswordLabel.Location = new System.Drawing.Point(187, 99);
          this.FtpPasswordLabel.Name = "FtpPasswordLabel";
          this.FtpPasswordLabel.Size = new System.Drawing.Size(56, 13);
-         this.FtpPasswordLabel.TabIndex = 6;
+         this.FtpPasswordLabel.TabIndex = 8;
          this.FtpPasswordLabel.Text = "Password:";
          // 
          // WebUsernameTextBox
@@ -487,7 +487,7 @@ namespace HFM.Forms
          this.FtpServerPortTextBox.Location = new System.Drawing.Point(139, 42);
          this.FtpServerPortTextBox.Name = "FtpServerPortTextBox";
          this.FtpServerPortTextBox.Size = new System.Drawing.Size(54, 20);
-         this.FtpServerPortTextBox.TabIndex = 13;
+         this.FtpServerPortTextBox.TabIndex = 3;
          this.FtpServerPortTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          this.FtpServerPortTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
          // 
@@ -497,7 +497,7 @@ namespace HFM.Forms
          this.FtpServerPortLabel.Location = new System.Drawing.Point(11, 45);
          this.FtpServerPortLabel.Name = "FtpServerPortLabel";
          this.FtpServerPortLabel.Size = new System.Drawing.Size(86, 13);
-         this.FtpServerPortLabel.TabIndex = 12;
+         this.FtpServerPortLabel.TabIndex = 2;
          this.FtpServerPortLabel.Text = "FTP Server Port:";
          // 
          // FtpModePanel
@@ -516,7 +516,7 @@ namespace HFM.Forms
          this.FtpModeActiveRadioButton.Location = new System.Drawing.Point(73, 7);
          this.FtpModeActiveRadioButton.Name = "FtpModeActiveRadioButton";
          this.FtpModeActiveRadioButton.Size = new System.Drawing.Size(55, 17);
-         this.FtpModeActiveRadioButton.TabIndex = 9;
+         this.FtpModeActiveRadioButton.TabIndex = 1;
          this.FtpModeActiveRadioButton.Tag = "1";
          this.FtpModeActiveRadioButton.Text = "Active";
          this.FtpModeActiveRadioButton.UseVisualStyleBackColor = true;
@@ -528,7 +528,7 @@ namespace HFM.Forms
          this.FtpModePassiveRadioButton.Location = new System.Drawing.Point(5, 7);
          this.FtpModePassiveRadioButton.Name = "FtpModePassiveRadioButton";
          this.FtpModePassiveRadioButton.Size = new System.Drawing.Size(62, 17);
-         this.FtpModePassiveRadioButton.TabIndex = 8;
+         this.FtpModePassiveRadioButton.TabIndex = 0;
          this.FtpModePassiveRadioButton.TabStop = true;
          this.FtpModePassiveRadioButton.Tag = "0";
          this.FtpModePassiveRadioButton.Text = "Passive";
@@ -710,6 +710,7 @@ namespace HFM.Forms
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.ClientSize = new System.Drawing.Size(392, 385);
+         this.Controls.Add(this.FtpGroupBox);
          this.Controls.Add(this.LocalPathGroupBox);
          this.Controls.Add(this.DummyTextBox);
          this.Controls.Add(this.LegacyClientSubTypePanel);
@@ -730,7 +731,6 @@ namespace HFM.Forms
          this.Controls.Add(this.LogFileNameTextBox);
          this.Controls.Add(this.UnitInfoFileNameTextBox);
          this.Controls.Add(this.HttpGroupBox);
-         this.Controls.Add(this.FtpGroupBox);
          this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
          this.MaximizeBox = false;
