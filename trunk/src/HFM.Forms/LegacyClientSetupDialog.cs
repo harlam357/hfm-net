@@ -52,9 +52,9 @@ namespace HFM.Forms
 
       string ClientMegahertzLabelText { get; set; }
       
-      bool MergeFileNameVisible { get; set; }
+      //bool MergeFileNameVisible { get; set; }
 
-      bool LogFileNamesVisible { set; }
+      //bool LogFileNamesVisible { set; }
       
       bool PathGroupVisible { set; }
 
@@ -152,9 +152,10 @@ namespace HFM.Forms
          txtWebPass.DataBindings.Add("Text", settings, "Password", false, DataSourceUpdateMode.OnValidation);
          txtWebPass.DataBindings.Add("ErrorToolTipText", settings, "CredentialsErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
          FtpServerNameTextBox.DataBindings.Add("Text", settings, "Server", false, DataSourceUpdateMode.OnValidation);
-         txtFTPPath.DataBindings.Add("Text", settings, "Path", false, DataSourceUpdateMode.OnValidation);
-         txtFTPUser.DataBindings.Add("Text", settings, "Username", false, DataSourceUpdateMode.OnValidation);
-         txtFTPUser.DataBindings.Add("ErrorToolTipText", settings, "CredentialsErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
+         FtpServerPortTextBox.DataBindings.Add("Text", settings, "Port", false, DataSourceUpdateMode.OnValidation);
+         FtpServerPathTextBox.DataBindings.Add("Text", settings, "Path", false, DataSourceUpdateMode.OnValidation);
+         FtpUsernameTextBox.DataBindings.Add("Text", settings, "Username", false, DataSourceUpdateMode.OnValidation);
+         FtpUsernameTextBox.DataBindings.Add("ErrorToolTipText", settings, "CredentialsErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
          FtpPasswordTextBox.DataBindings.Add("Text", settings, "Password", false, DataSourceUpdateMode.OnValidation);
          FtpPasswordTextBox.DataBindings.Add("ErrorToolTipText", settings, "CredentialsErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
          pnlFtpMode.DataSource = settings;
@@ -193,32 +194,32 @@ namespace HFM.Forms
          set { lblClientMegahertz.Text = value; }
       }
 
-      public bool MergeFileNameVisible
-      {
-         get { return txtMergeFileName.Visible; }
-         set { txtMergeFileName.Visible = value; }
-      }
+      //public bool MergeFileNameVisible
+      //{
+      //   get { return txtMergeFileName.Visible; }
+      //   set { txtMergeFileName.Visible = value; }
+      //}
       
-      public bool LogFileNamesVisible
-      {
-         set 
-         { 
-            //lblClientMegahertz.Visible = value;
-            //txtClientMegahertz.Visible = value;
-            lblLogFileName.Visible = value;
-            txtLogFileName.Visible = value;
-            lblUnitFileName.Visible = value;
-            txtUnitFileName.Visible = value;
-            lblQueueFileName.Visible = value;
-            txtQueueFileName.Visible = value;
+      //public bool LogFileNamesVisible
+      //{
+      //   set 
+      //   { 
+      //      //lblClientMegahertz.Visible = value;
+      //      //txtClientMegahertz.Visible = value;
+      //      lblLogFileName.Visible = value;
+      //      txtLogFileName.Visible = value;
+      //      lblUnitFileName.Visible = value;
+      //      txtUnitFileName.Visible = value;
+      //      lblQueueFileName.Visible = value;
+      //      txtQueueFileName.Visible = value;
 
-            pnlHostType.Top = pnlHostType.Top - LegacyClientSetupPresenter.LogFileNamesVisibleOffset;
-            btnTestConnection.Top = btnTestConnection.Top - LegacyClientSetupPresenter.LogFileNamesVisibleOffset;
-            grpLocal.Top = grpLocal.Top - LegacyClientSetupPresenter.LogFileNamesVisibleOffset;
-            grpHTTP.Top = grpHTTP.Top - LegacyClientSetupPresenter.LogFileNamesVisibleOffset;
-            grpFTP.Top = grpFTP.Top - LegacyClientSetupPresenter.LogFileNamesVisibleOffset;
-         }
-      }
+      //      pnlHostType.Top = pnlHostType.Top - LegacyClientSetupPresenter.LogFileNamesVisibleOffset;
+      //      btnTestConnection.Top = btnTestConnection.Top - LegacyClientSetupPresenter.LogFileNamesVisibleOffset;
+      //      grpLocal.Top = grpLocal.Top - LegacyClientSetupPresenter.LogFileNamesVisibleOffset;
+      //      grpHTTP.Top = grpHTTP.Top - LegacyClientSetupPresenter.LogFileNamesVisibleOffset;
+      //      grpFTP.Top = grpFTP.Top - LegacyClientSetupPresenter.LogFileNamesVisibleOffset;
+      //   }
+      //}
 
       public bool PathGroupVisible
       {
@@ -249,8 +250,9 @@ namespace HFM.Forms
          {
             grpFTP.Visible = value;
             FtpServerNameTextBox.Enabled = value;
-            txtFTPPath.Enabled = value;
-            txtFTPUser.Enabled = value;
+            FtpServerPathTextBox.Enabled = value;
+            FtpServerPortTextBox.Enabled = value;
+            FtpUsernameTextBox.Enabled = value;
             FtpPasswordTextBox.Enabled = value;
          }
       }
@@ -339,5 +341,26 @@ namespace HFM.Forms
 
          Cursor = Cursors.WaitCursor;
       }
+
+      #region TextBox KeyPress Event Handler (to enforce digits only)
+
+      private void TextBoxDigitsOnlyKeyPress(object sender, KeyPressEventArgs e)
+      {
+         //Debug.WriteLine(String.Format("Keystroke: {0}", (int)e.KeyChar));
+
+         // only allow digits special keystrokes - Issue 65
+         if (char.IsDigit(e.KeyChar) == false &&
+               e.KeyChar != 8 &&       // backspace 
+               e.KeyChar != 26 &&      // Ctrl+Z
+               e.KeyChar != 24 &&      // Ctrl+X
+               e.KeyChar != 3 &&       // Ctrl+C
+               e.KeyChar != 22 &&      // Ctrl+V
+               e.KeyChar != 25)        // Ctrl+Y
+         {
+            e.Handled = true;
+         }
+      }
+
+      #endregion
    }
 }

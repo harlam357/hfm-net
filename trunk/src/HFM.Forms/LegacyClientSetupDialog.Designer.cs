@@ -67,13 +67,13 @@ namespace HFM.Forms
          this.radioFTP = new HFM.Forms.Controls.RadioButtonWrapper();
          this.FtpServerNameLabel = new HFM.Forms.Controls.LabelWrapper();
          this.FtpServerNameTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lblFTPPath = new HFM.Forms.Controls.LabelWrapper();
-         this.txtFTPPath = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.FtpServerPathLabel = new HFM.Forms.Controls.LabelWrapper();
+         this.FtpServerPathTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
          this.radioHTTP = new HFM.Forms.Controls.RadioButtonWrapper();
          this.txtWebURL = new harlam357.Windows.Forms.ValidatingTextBox();
          this.lblWebURL = new HFM.Forms.Controls.LabelWrapper();
-         this.txtFTPUser = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lblFTPUser = new HFM.Forms.Controls.LabelWrapper();
+         this.FtpUsernameTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.FtpUsernameLabel = new HFM.Forms.Controls.LabelWrapper();
          this.FtpPasswordTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
          this.FtpPasswordLabel = new HFM.Forms.Controls.LabelWrapper();
          this.txtWebUser = new harlam357.Windows.Forms.ValidatingTextBox();
@@ -83,6 +83,8 @@ namespace HFM.Forms
          this.grpLocal = new HFM.Forms.Controls.GroupBoxWrapper();
          this.lblLogFolder = new HFM.Forms.Controls.LabelWrapper();
          this.grpFTP = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.FtpServerPortTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.FtpServerPortLabel = new HFM.Forms.Controls.LabelWrapper();
          this.pnlFtpMode = new harlam357.Windows.Forms.RadioPanel();
          this.radioActive = new HFM.Forms.Controls.RadioButtonWrapper();
          this.radioPassive = new HFM.Forms.Controls.RadioButtonWrapper();
@@ -101,7 +103,6 @@ namespace HFM.Forms
          this.btnTestConnection = new HFM.Forms.Controls.ButtonWrapper();
          this.pnlHostType = new harlam357.Windows.Forms.RadioPanel();
          this.DummyTextBox = new HFM.Forms.Controls.TextBoxWrapper();
-         this.txtMergeFileName = new harlam357.Windows.Forms.ValidatingTextBox();
          ((System.ComponentModel.ISupportInitialize)(this.ClientTimeOffsetUpDown)).BeginInit();
          this.grpLocal.SuspendLayout();
          this.grpFTP.SuspendLayout();
@@ -255,37 +256,36 @@ namespace HFM.Forms
          this.FtpServerNameTextBox.ErrorToolTipDuration = 5000;
          this.FtpServerNameTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
          this.FtpServerNameTextBox.ErrorToolTipText = "FTP server must be a valid host name or IP address.";
-         this.FtpServerNameTextBox.Location = new System.Drawing.Point(152, 15);
+         this.FtpServerNameTextBox.Location = new System.Drawing.Point(139, 15);
          this.FtpServerNameTextBox.Name = "FtpServerNameTextBox";
-         this.FtpServerNameTextBox.Size = new System.Drawing.Size(215, 20);
+         this.FtpServerNameTextBox.Size = new System.Drawing.Size(228, 20);
          this.FtpServerNameTextBox.TabIndex = 1;
          this.FtpServerNameTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
-         // lblFTPPath
+         // FtpServerPathLabel
          // 
-         this.lblFTPPath.AutoSize = true;
-         this.lblFTPPath.Location = new System.Drawing.Point(11, 45);
-         this.lblFTPPath.Name = "lblFTPPath";
-         this.lblFTPPath.Size = new System.Drawing.Size(104, 13);
-         this.lblFTPPath.TabIndex = 2;
-         this.lblFTPPath.Text = "Log Path (Directory):";
+         this.FtpServerPathLabel.AutoSize = true;
+         this.FtpServerPathLabel.Location = new System.Drawing.Point(11, 72);
+         this.FtpServerPathLabel.Name = "FtpServerPathLabel";
+         this.FtpServerPathLabel.Size = new System.Drawing.Size(104, 13);
+         this.FtpServerPathLabel.TabIndex = 2;
+         this.FtpServerPathLabel.Text = "Log Path (Directory):";
          // 
-         // txtFTPPath
+         // FtpServerPathTextBox
          // 
-         this.txtFTPPath.BackColor = System.Drawing.SystemColors.Window;
-         this.txtFTPPath.DoubleBuffered = true;
-         this.txtFTPPath.ErrorBackColor = System.Drawing.Color.Yellow;
-         this.txtFTPPath.ErrorState = false;
-         this.txtFTPPath.ErrorToolTip = this.toolTipHost;
-         this.txtFTPPath.ErrorToolTipDuration = 5000;
-         this.txtFTPPath.ErrorToolTipPoint = new System.Drawing.Point(10, -40);
-         this.txtFTPPath.ErrorToolTipText = "FTP path must be the full path to the folder\r\ncontaining the log files (including" +
-    " the trailing /).";
-         this.txtFTPPath.Location = new System.Drawing.Point(152, 42);
-         this.txtFTPPath.Name = "txtFTPPath";
-         this.txtFTPPath.Size = new System.Drawing.Size(215, 20);
-         this.txtFTPPath.TabIndex = 3;
-         this.txtFTPPath.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         this.FtpServerPathTextBox.BackColor = System.Drawing.SystemColors.Window;
+         this.FtpServerPathTextBox.DoubleBuffered = true;
+         this.FtpServerPathTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.FtpServerPathTextBox.ErrorState = false;
+         this.FtpServerPathTextBox.ErrorToolTip = this.toolTipHost;
+         this.FtpServerPathTextBox.ErrorToolTipDuration = 5000;
+         this.FtpServerPathTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -40);
+         this.FtpServerPathTextBox.ErrorToolTipText = "FTP path must be the full path to the folder\r\ncontaining the log files.";
+         this.FtpServerPathTextBox.Location = new System.Drawing.Point(139, 69);
+         this.FtpServerPathTextBox.Name = "FtpServerPathTextBox";
+         this.FtpServerPathTextBox.Size = new System.Drawing.Size(228, 20);
+         this.FtpServerPathTextBox.TabIndex = 3;
+         this.FtpServerPathTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // radioHTTP
          // 
@@ -310,7 +310,7 @@ namespace HFM.Forms
          this.txtWebURL.ErrorToolTip = this.toolTipHost;
          this.txtWebURL.ErrorToolTipDuration = 5000;
          this.txtWebURL.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-         this.txtWebURL.ErrorToolTipText = "URL must be a the full path to the location containing the log files.";
+         this.txtWebURL.ErrorToolTipText = "URL must be the full path to the location containing the log files.";
          this.txtWebURL.Location = new System.Drawing.Point(152, 15);
          this.txtWebURL.Name = "txtWebURL";
          this.txtWebURL.Size = new System.Drawing.Size(215, 20);
@@ -326,30 +326,30 @@ namespace HFM.Forms
          this.lblWebURL.TabIndex = 0;
          this.lblWebURL.Text = "URL to Log Directory:";
          // 
-         // txtFTPUser
+         // FtpUsernameTextBox
          // 
-         this.txtFTPUser.BackColor = System.Drawing.SystemColors.Window;
-         this.txtFTPUser.DoubleBuffered = true;
-         this.txtFTPUser.ErrorBackColor = System.Drawing.Color.Yellow;
-         this.txtFTPUser.ErrorState = false;
-         this.txtFTPUser.ErrorToolTip = this.toolTipHost;
-         this.txtFTPUser.ErrorToolTipDuration = 5000;
-         this.txtFTPUser.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-         this.txtFTPUser.ErrorToolTipText = "";
-         this.txtFTPUser.Location = new System.Drawing.Point(152, 69);
-         this.txtFTPUser.Name = "txtFTPUser";
-         this.txtFTPUser.Size = new System.Drawing.Size(215, 20);
-         this.txtFTPUser.TabIndex = 5;
-         this.txtFTPUser.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         this.FtpUsernameTextBox.BackColor = System.Drawing.SystemColors.Window;
+         this.FtpUsernameTextBox.DoubleBuffered = true;
+         this.FtpUsernameTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.FtpUsernameTextBox.ErrorState = false;
+         this.FtpUsernameTextBox.ErrorToolTip = this.toolTipHost;
+         this.FtpUsernameTextBox.ErrorToolTipDuration = 5000;
+         this.FtpUsernameTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.FtpUsernameTextBox.ErrorToolTipText = "";
+         this.FtpUsernameTextBox.Location = new System.Drawing.Point(75, 96);
+         this.FtpUsernameTextBox.Name = "FtpUsernameTextBox";
+         this.FtpUsernameTextBox.Size = new System.Drawing.Size(106, 20);
+         this.FtpUsernameTextBox.TabIndex = 5;
+         this.FtpUsernameTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
-         // lblFTPUser
+         // FtpUsernameLabel
          // 
-         this.lblFTPUser.AutoSize = true;
-         this.lblFTPUser.Location = new System.Drawing.Point(11, 72);
-         this.lblFTPUser.Name = "lblFTPUser";
-         this.lblFTPUser.Size = new System.Drawing.Size(81, 13);
-         this.lblFTPUser.TabIndex = 4;
-         this.lblFTPUser.Text = "FTP Username:";
+         this.FtpUsernameLabel.AutoSize = true;
+         this.FtpUsernameLabel.Location = new System.Drawing.Point(11, 99);
+         this.FtpUsernameLabel.Name = "FtpUsernameLabel";
+         this.FtpUsernameLabel.Size = new System.Drawing.Size(58, 13);
+         this.FtpUsernameLabel.TabIndex = 4;
+         this.FtpUsernameLabel.Text = "Username:";
          // 
          // FtpPasswordTextBox
          // 
@@ -361,9 +361,9 @@ namespace HFM.Forms
          this.FtpPasswordTextBox.ErrorToolTipDuration = 5000;
          this.FtpPasswordTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
          this.FtpPasswordTextBox.ErrorToolTipText = "";
-         this.FtpPasswordTextBox.Location = new System.Drawing.Point(152, 96);
+         this.FtpPasswordTextBox.Location = new System.Drawing.Point(249, 96);
          this.FtpPasswordTextBox.Name = "FtpPasswordTextBox";
-         this.FtpPasswordTextBox.Size = new System.Drawing.Size(215, 20);
+         this.FtpPasswordTextBox.Size = new System.Drawing.Size(118, 20);
          this.FtpPasswordTextBox.TabIndex = 7;
          this.FtpPasswordTextBox.UseSystemPasswordChar = true;
          this.FtpPasswordTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
@@ -371,11 +371,11 @@ namespace HFM.Forms
          // FtpPasswordLabel
          // 
          this.FtpPasswordLabel.AutoSize = true;
-         this.FtpPasswordLabel.Location = new System.Drawing.Point(11, 99);
+         this.FtpPasswordLabel.Location = new System.Drawing.Point(187, 99);
          this.FtpPasswordLabel.Name = "FtpPasswordLabel";
-         this.FtpPasswordLabel.Size = new System.Drawing.Size(79, 13);
+         this.FtpPasswordLabel.Size = new System.Drawing.Size(56, 13);
          this.FtpPasswordLabel.TabIndex = 6;
-         this.FtpPasswordLabel.Text = "FTP Password:";
+         this.FtpPasswordLabel.Text = "Password:";
          // 
          // txtWebUser
          // 
@@ -456,27 +456,55 @@ namespace HFM.Forms
          // 
          // grpFTP
          // 
+         this.grpFTP.Controls.Add(this.FtpServerPortTextBox);
+         this.grpFTP.Controls.Add(this.FtpServerPortLabel);
          this.grpFTP.Controls.Add(this.pnlFtpMode);
          this.grpFTP.Controls.Add(this.labelWrapper1);
          this.grpFTP.Controls.Add(this.FtpServerNameLabel);
-         this.grpFTP.Controls.Add(this.lblFTPPath);
+         this.grpFTP.Controls.Add(this.FtpServerPathLabel);
          this.grpFTP.Controls.Add(this.FtpPasswordTextBox);
-         this.grpFTP.Controls.Add(this.lblFTPUser);
+         this.grpFTP.Controls.Add(this.FtpUsernameLabel);
          this.grpFTP.Controls.Add(this.FtpServerNameTextBox);
          this.grpFTP.Controls.Add(this.FtpPasswordLabel);
-         this.grpFTP.Controls.Add(this.txtFTPPath);
-         this.grpFTP.Controls.Add(this.txtFTPUser);
+         this.grpFTP.Controls.Add(this.FtpServerPathTextBox);
+         this.grpFTP.Controls.Add(this.FtpUsernameTextBox);
          this.grpFTP.Location = new System.Drawing.Point(7, 166);
          this.grpFTP.Name = "grpFTP";
          this.grpFTP.Size = new System.Drawing.Size(378, 152);
          this.grpFTP.TabIndex = 13;
          this.grpFTP.TabStop = false;
          // 
+         // FtpServerPortTextBox
+         // 
+         this.FtpServerPortTextBox.BackColor = System.Drawing.SystemColors.Window;
+         this.FtpServerPortTextBox.DoubleBuffered = true;
+         this.FtpServerPortTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.FtpServerPortTextBox.ErrorState = false;
+         this.FtpServerPortTextBox.ErrorToolTip = this.toolTipHost;
+         this.FtpServerPortTextBox.ErrorToolTipDuration = 5000;
+         this.FtpServerPortTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.FtpServerPortTextBox.ErrorToolTipText = "";
+         this.FtpServerPortTextBox.Location = new System.Drawing.Point(139, 42);
+         this.FtpServerPortTextBox.Name = "FtpServerPortTextBox";
+         this.FtpServerPortTextBox.Size = new System.Drawing.Size(54, 20);
+         this.FtpServerPortTextBox.TabIndex = 13;
+         this.FtpServerPortTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         this.FtpServerPortTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
+         // 
+         // FtpServerPortLabel
+         // 
+         this.FtpServerPortLabel.AutoSize = true;
+         this.FtpServerPortLabel.Location = new System.Drawing.Point(11, 45);
+         this.FtpServerPortLabel.Name = "FtpServerPortLabel";
+         this.FtpServerPortLabel.Size = new System.Drawing.Size(86, 13);
+         this.FtpServerPortLabel.TabIndex = 12;
+         this.FtpServerPortLabel.Text = "FTP Server Port:";
+         // 
          // pnlFtpMode
          // 
          this.pnlFtpMode.Controls.Add(this.radioActive);
          this.pnlFtpMode.Controls.Add(this.radioPassive);
-         this.pnlFtpMode.Location = new System.Drawing.Point(152, 118);
+         this.pnlFtpMode.Location = new System.Drawing.Point(75, 118);
          this.pnlFtpMode.Name = "pnlFtpMode";
          this.pnlFtpMode.Size = new System.Drawing.Size(134, 30);
          this.pnlFtpMode.TabIndex = 11;
@@ -611,6 +639,7 @@ namespace HFM.Forms
          this.txtClientMegahertz.TabIndex = 3;
          this.txtClientMegahertz.Text = "1";
          this.txtClientMegahertz.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         this.txtClientMegahertz.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
          // 
          // ClientTimeOffsetLabel
          // 
@@ -676,32 +705,13 @@ namespace HFM.Forms
          this.DummyTextBox.Size = new System.Drawing.Size(49, 20);
          this.DummyTextBox.TabIndex = 20;
          // 
-         // txtMergeFileName
-         // 
-         this.txtMergeFileName.BackColor = System.Drawing.SystemColors.Window;
-         this.txtMergeFileName.DoubleBuffered = true;
-         this.txtMergeFileName.ErrorBackColor = System.Drawing.Color.Yellow;
-         this.txtMergeFileName.ErrorState = false;
-         this.txtMergeFileName.ErrorToolTip = this.toolTipHost;
-         this.txtMergeFileName.ErrorToolTipDuration = 5000;
-         this.txtMergeFileName.ErrorToolTipPoint = new System.Drawing.Point(230, 0);
-         this.txtMergeFileName.ErrorToolTipText = "File name contains invalid characters.";
-         this.txtMergeFileName.Location = new System.Drawing.Point(146, 38);
-         this.txtMergeFileName.MaxLength = 100;
-         this.txtMergeFileName.Name = "txtMergeFileName";
-         this.txtMergeFileName.Size = new System.Drawing.Size(237, 20);
-         this.txtMergeFileName.TabIndex = 3;
-         this.txtMergeFileName.ValidationType = harlam357.Windows.Forms.ValidationType.None;
-         this.txtMergeFileName.Visible = false;
-         // 
          // LegacyClientSetupDialog
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.ClientSize = new System.Drawing.Size(392, 385);
+         this.Controls.Add(this.grpFTP);
          this.Controls.Add(this.grpLocal);
-         this.Controls.Add(this.grpHTTP);
-         this.Controls.Add(this.txtMergeFileName);
          this.Controls.Add(this.DummyTextBox);
          this.Controls.Add(this.pnlHostType);
          this.Controls.Add(this.btnTestConnection);
@@ -720,7 +730,7 @@ namespace HFM.Forms
          this.Controls.Add(this.lblUnitFileName);
          this.Controls.Add(this.txtLogFileName);
          this.Controls.Add(this.txtUnitFileName);
-         this.Controls.Add(this.grpFTP);
+         this.Controls.Add(this.grpHTTP);
          this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
          this.MaximizeBox = false;
@@ -751,18 +761,18 @@ namespace HFM.Forms
       private ButtonWrapper btnBrowseLocal;
       private LabelWrapper ClientNameLabel;
       private LabelWrapper FtpServerNameLabel;
-      private LabelWrapper lblFTPPath;
+      private LabelWrapper FtpServerPathLabel;
       private LabelWrapper lblWebURL;
-      private LabelWrapper lblFTPUser;
+      private LabelWrapper FtpUsernameLabel;
       private LabelWrapper FtpPasswordLabel;
       private LabelWrapper lblWebUser;
       private LabelWrapper lblWebPass;
       private ValidatingTextBox txtLocalPath;
       private ValidatingTextBox ClientNameTextBox;
       private ValidatingTextBox FtpServerNameTextBox;
-      private ValidatingTextBox txtFTPPath;
+      private ValidatingTextBox FtpServerPathTextBox;
       private ValidatingTextBox txtWebURL;
-      private ValidatingTextBox txtFTPUser;
+      private ValidatingTextBox FtpUsernameTextBox;
       private ValidatingTextBox FtpPasswordTextBox;
       private ValidatingTextBox txtWebUser;
       private ValidatingTextBox txtWebPass;
@@ -795,7 +805,8 @@ namespace HFM.Forms
       private RadioPanel pnlHostType;
       private RadioPanel pnlFtpMode;
       private TextBoxWrapper DummyTextBox;
-      private ValidatingTextBox txtMergeFileName;
+      private ValidatingTextBox FtpServerPortTextBox;
+      private LabelWrapper FtpServerPortLabel;
 
    }
 }

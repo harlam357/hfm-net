@@ -35,6 +35,7 @@ namespace HFM.Core.DataTypes
       //public const string ExternalDataFileName = "ClientData.dat";
 
       public const int FahClientPort = 36330;
+      public const int FtpPort = 21;
 
       public const int MaxDecimalPlaces = 5;
 
