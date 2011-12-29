@@ -89,6 +89,7 @@
     <Compile Include="Configuration\ObjectMapperTests.cs" />
     <Compile Include="HistoryPresenterTests.cs" />
     <Compile Include="LegacyClientSetupPresenterTests.cs" />
+    <Compile Include="Models\LegacyClientSettingsModelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

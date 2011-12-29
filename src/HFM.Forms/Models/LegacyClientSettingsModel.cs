@@ -39,6 +39,7 @@ namespace HFM.Forms.Models
                     QueueFileNameError ||
                     PathError ||
                     ServerError ||
+                    PortError ||
                     CredentialsError ||
                     ClientTimeOffsetError);
          }
@@ -47,11 +48,16 @@ namespace HFM.Forms.Models
       public LegacyClientSettingsModel()
       {
          _legacyClientSubType = LegacyClientSubType.Path;
+         _name = String.Empty;
          _clientProcessorMegahertz = 1;
          _fahLogFileName = Default.FahLogFileName;
          _unitInfoFileName = Default.UnitInfoFileName;
          _queueFileName = Default.QueueFileName;
          _path = String.Empty;
+         _server = String.Empty;
+         _port = Default.FtpPort;
+         _username = String.Empty;
+         _password = String.Empty;
       }
 
       private LegacyClientSubType _legacyClientSubType;
@@ -63,7 +69,8 @@ namespace HFM.Forms.Models
          get { return _legacyClientSubType; }
          set
          {
-            if (_legacyClientSubType != value)
+            if (_legacyClientSubType != value &&
+                !value.Equals(LegacyClientSubType.None))
             {
                _legacyClientSubType = value;
                ClearAccessSettings();
@@ -306,13 +313,41 @@ namespace HFM.Forms.Models
          {
             switch (LegacyClientSubType)
             {
-               case LegacyClientSubType.Path:
-               case LegacyClientSubType.Http:
-                  return false;
                case LegacyClientSubType.Ftp:
                   return !Validate.ServerName(Server);
                default:
-                  return true;
+                  return false;
+            }
+         }
+      }
+
+      private int _port;
+      /// <summary>
+      /// FTP Server Port
+      /// </summary>
+      public int Port
+      {
+         get { return _port; }
+         set
+         {
+            if (_port != value)
+            {
+               _port = value;
+               OnPropertyChanged("Port");
+            }
+         }
+      }
+
+      public bool PortError
+      {
+         get
+         {
+            switch (LegacyClientSubType)
+            {
+               case LegacyClientSubType.Ftp:
+                  return !Validate.ServerPort(Port);
+               default:
+                  return false;
             }
          }
       }
@@ -369,14 +404,12 @@ namespace HFM.Forms.Models
          {
             switch (LegacyClientSubType)
             {
-               case LegacyClientSubType.Path:
-                  return false;
                case LegacyClientSubType.Http:
                   return !ValidateCredentials(false);
                case LegacyClientSubType.Ftp:
                   return !ValidateCredentials(true);
                default:
-                  return true;
+                  return false;
             }
          }
       }
@@ -444,6 +477,7 @@ namespace HFM.Forms.Models
       {
          Path = String.Empty;
          Server = String.Empty;
+         Port = Default.FtpPort;
          Username = String.Empty;
          Password = String.Empty;
          CredentialsErrorMessage = String.Empty;

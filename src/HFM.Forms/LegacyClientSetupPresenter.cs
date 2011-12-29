@@ -45,7 +45,7 @@ namespace HFM.Forms
 
    public class LegacyClientSetupPresenter : ILegacyClientSetupPresenter
    {
-      public const int LogFileNamesVisibleOffset = 70;
+      //private const int LogFileNamesVisibleOffset = 70;
    
       #region Fields
 
@@ -81,16 +81,9 @@ namespace HFM.Forms
       }
 
       private readonly ILegacyClientSetupView _settingsView;
-
-      /// <summary>
-      /// Network Operations Interface
-      /// </summary>
       private readonly INetworkOps _networkOps;
-
       private readonly IMessageBoxView _messageBoxView;
-
       private readonly IFolderBrowserView _folderBrowserView;
-
       private readonly List<IValidatingControl> _validatingControls;
 
       #endregion
@@ -257,28 +250,20 @@ namespace HFM.Forms
 
       public void TestConnectionClicked()
       {
-         //try
-         //{
-            _settingsView.SetWaitCursor();
-            if (_settingsModel.LegacyClientSubType.Equals(LegacyClientSubType.Path))
-            {
-               var action = new Action(() => CheckFileConnection(SettingsModel.Path));
-               action.BeginInvoke(CheckConnectionCallback, action);
-            }
-            else if (_settingsModel.LegacyClientSubType.Equals(LegacyClientSubType.Ftp))
-            {
-               _networkOps.BeginFtpCheckConnection(SettingsModel.Server, SettingsModel.Path, SettingsModel.Username, SettingsModel.Password, SettingsModel.FtpMode, CheckConnectionCallback);
-            }
-            else if (_settingsModel.LegacyClientSubType.Equals(LegacyClientSubType.Http))
-            {
-               _networkOps.BeginHttpCheckConnection(SettingsModel.Path, SettingsModel.Username, SettingsModel.Password, CheckConnectionCallback);
-            }
-         //}
-         //catch (Exception ex)
-         //{
-         //   HfmTrace.WriteToHfmConsole(ex);
-         //   _settingsView.ShowConnectionFailedMessage(ex.Message);
-         //}
+         _settingsView.SetWaitCursor();
+         if (_settingsModel.LegacyClientSubType.Equals(LegacyClientSubType.Path))
+         {
+            var action = new Action(() => CheckFileConnection(SettingsModel.Path));
+            action.BeginInvoke(CheckConnectionCallback, action);
+         }
+         else if (_settingsModel.LegacyClientSubType.Equals(LegacyClientSubType.Ftp))
+         {
+            _networkOps.BeginFtpCheckConnection(SettingsModel.Server, SettingsModel.Path, SettingsModel.Username, SettingsModel.Password, SettingsModel.FtpMode, CheckConnectionCallback);
+         }
+         else if (_settingsModel.LegacyClientSubType.Equals(LegacyClientSubType.Http))
+         {
+            _networkOps.BeginHttpCheckConnection(SettingsModel.Path, SettingsModel.Username, SettingsModel.Password, CheckConnectionCallback);
+         }
       }
 
       public void CheckFileConnection(string directory)
@@ -328,12 +313,13 @@ namespace HFM.Forms
              SettingsModel.UnitInfoFileNameError ||
              SettingsModel.QueueFileNameError ||
              SettingsModel.ServerError ||
+             SettingsModel.PortError ||
              SettingsModel.CredentialsError ||
              SettingsModel.PathEmpty)
          {
             _messageBoxView.ShowError(_settingsView, 
                "There are validation errors.  Please correct the yellow highlighted fields.", 
-                  Constants.ApplicationName);
+                  Core.Application.NameAndVersion);
             return false;
          }
 
@@ -341,7 +327,7 @@ namespace HFM.Forms
          {
             if (_messageBoxView.AskYesNoQuestion(_settingsView, 
                "There are validation errors.  Do you wish to accept the input anyway?", 
-                  Constants.ApplicationName) == DialogResult.Yes)
+                  Core.Application.NameAndVersion) == DialogResult.Yes)
             {
                return true;
             }
