@@ -44,7 +44,7 @@ namespace HFM.Forms.Models
          WebMobileOverview = prefs.Get<string>(Preference.WebMobileOverview);
          WebSummary = prefs.Get<string>(Preference.WebSummary);
          WebMobileSummary = prefs.Get<string>(Preference.WebMobileSummary);
-         WebInstance = prefs.Get<string>(Preference.WebInstance);
+         WebSlot = prefs.Get<string>(Preference.WebSlot);
       }
 
       public void Update(IPreferenceSet prefs)
@@ -54,7 +54,7 @@ namespace HFM.Forms.Models
          prefs.Set(Preference.WebMobileOverview, WebMobileOverview);
          prefs.Set(Preference.WebSummary, WebSummary);
          prefs.Set(Preference.WebMobileSummary, WebMobileSummary);
-         prefs.Set(Preference.WebInstance, WebInstance);
+         prefs.Set(Preference.WebSlot, WebSlot);
       }
 
       private string ApplicationPath { get; set; }
@@ -160,18 +160,18 @@ namespace HFM.Forms.Models
          }
       }
 
-      private string _webInstance;
+      private string _webSlot;
 
-      public string WebInstance
+      public string WebSlot
       {
-         get { return _webInstance; }
+         get { return _webSlot; }
          set
          {
-            if (WebInstance != value)
+            if (WebSlot != value)
             {
                string newValue = value == null ? String.Empty : value.Trim();
-               _webInstance = newValue;
-               OnPropertyChanged("WebInstance");
+               _webSlot = newValue;
+               OnPropertyChanged("WebSlot");
             }
          }
       }

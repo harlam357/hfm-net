@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.IO;
 using System.ComponentModel;
 
 using HFM.Core;
@@ -33,7 +32,11 @@ namespace HFM.Forms.Models
          {
             return SyncTimeMinutesError ||
                    GenerateIntervalError ||
-                   WebRootError;
+                   WebRootError ||
+                   WebGenServerError ||
+                   WebGenPortError ||
+                   WebGenUsernameError ||
+                   WebGenPasswordError;
          }
       }
 
@@ -44,16 +47,19 @@ namespace HFM.Forms.Models
    
       public void Load(IPreferenceSet prefs)
       {
-         SyncOnLoad = prefs.Get<bool>(Preference.SyncOnLoad);
-         DuplicateProjectCheck = prefs.Get<bool>(Preference.DuplicateProjectCheck);
-         DuplicateUserIdCheck = prefs.Get<bool>(Preference.DuplicateUserIdCheck);
          SyncTimeMinutes = prefs.Get<int>(Preference.SyncTimeMinutes);
          SyncOnSchedule = prefs.Get<bool>(Preference.SyncOnSchedule);
+         SyncOnLoad = prefs.Get<bool>(Preference.SyncOnLoad);
          AllowRunningAsync = prefs.Get<bool>(Preference.AllowRunningAsync);
-         ShowXmlStats = prefs.Get<bool>(Preference.ShowXmlStats);
+
+         WebGenType = prefs.Get<WebGenType>(Preference.WebGenType);
          GenerateInterval = prefs.Get<int>(Preference.GenerateInterval);
          WebGenAfterRefresh = prefs.Get<bool>(Preference.WebGenAfterRefresh);
          WebRoot = prefs.Get<string>(Preference.WebRoot);
+         WebGenServer = prefs.Get<string>(Preference.WebGenServer);
+         WebGenPort = prefs.Get<int>(Preference.WebGenPort);
+         WebGenUsername = prefs.Get<string>(Preference.WebGenUsername);
+         WebGenPassword = prefs.Get<string>(Preference.WebGenPassword);
          CopyHtml = prefs.Get<bool>(Preference.WebGenCopyHtml);
          CopyXml = prefs.Get<bool>(Preference.WebGenCopyXml);
          CopyFAHlog = prefs.Get<bool>(Preference.WebGenCopyFAHlog);
@@ -65,16 +71,26 @@ namespace HFM.Forms.Models
 
       public void Update(IPreferenceSet prefs)
       {
-         prefs.Set(Preference.SyncOnLoad, SyncOnLoad);
-         prefs.Set(Preference.DuplicateProjectCheck, DuplicateProjectCheck);
-         prefs.Set(Preference.DuplicateUserIdCheck, DuplicateUserIdCheck);
          prefs.Set(Preference.SyncTimeMinutes, SyncTimeMinutes);
          prefs.Set(Preference.SyncOnSchedule, SyncOnSchedule);
+         prefs.Set(Preference.SyncOnLoad, SyncOnLoad);
          prefs.Set(Preference.AllowRunningAsync, AllowRunningAsync);
-         prefs.Set(Preference.ShowXmlStats, ShowXmlStats);
+
+         prefs.Set(Preference.WebGenType, WebGenType);
          prefs.Set(Preference.GenerateInterval, GenerateInterval);
          prefs.Set(Preference.WebGenAfterRefresh, WebGenAfterRefresh);
-         prefs.Set(Preference.WebRoot, WebRoot);
+         if (WebGenType.Equals(WebGenType.Ftp))
+         {
+            prefs.Set(Preference.WebRoot, Paths.AddUnixTrailingSlash(WebRoot));
+         }
+         else
+         {
+            prefs.Set(Preference.WebRoot, Paths.AddTrailingSlash(WebRoot));
+         }
+         prefs.Set(Preference.WebGenServer, WebGenServer);
+         prefs.Set(Preference.WebGenPort, WebGenPort);
+         prefs.Set(Preference.WebGenUsername, WebGenUsername);
+         prefs.Set(Preference.WebGenPassword, WebGenPassword);
          prefs.Set(Preference.WebGenCopyHtml, CopyHtml);
          prefs.Set(Preference.WebGenCopyXml, CopyXml);
          prefs.Set(Preference.WebGenCopyFAHlog, CopyFAHlog);
@@ -85,51 +101,6 @@ namespace HFM.Forms.Models
       }
 
       #region Refresh Data
-
-      private bool _syncLoad;
-
-      public bool SyncOnLoad
-      {
-         get { return _syncLoad; }
-         set
-         {
-            if (SyncOnLoad != value)
-            {
-               _syncLoad = value;
-               OnPropertyChanged("SyncOnLoad");
-            }
-         }
-      }
-
-      private bool _duplicateProjectCheck;
-
-      public bool DuplicateProjectCheck
-      {
-         get { return _duplicateProjectCheck; }
-         set
-         {
-            if (DuplicateProjectCheck != value)
-            {
-               _duplicateProjectCheck = value;
-               OnPropertyChanged("DuplicateProjectCheck");
-            }
-         }
-      }
-
-      private bool _duplicateUserIdCheck;
-
-      public bool DuplicateUserIdCheck
-      {
-         get { return _duplicateUserIdCheck; }
-         set
-         {
-            if (DuplicateUserIdCheck != value)
-            {
-               _duplicateUserIdCheck = value;
-               OnPropertyChanged("DuplicateUserIdCheck");
-            }
-         }
-      }
 
       private int _syncTimeMinutes;
 
@@ -170,6 +141,21 @@ namespace HFM.Forms.Models
          }
       }
 
+      private bool _syncLoad;
+
+      public bool SyncOnLoad
+      {
+         get { return _syncLoad; }
+         set
+         {
+            if (SyncOnLoad != value)
+            {
+               _syncLoad = value;
+               OnPropertyChanged("SyncOnLoad");
+            }
+         }
+      }
+
       private bool _allowRunningAsync;
 
       public bool AllowRunningAsync
@@ -185,25 +171,29 @@ namespace HFM.Forms.Models
          }
       }
 
-      private bool _showXmlStats;
-
-      public bool ShowXmlStats
-      {
-         get { return _showXmlStats; }
-         set
-         {
-            if (ShowXmlStats != value)
-            {
-               _showXmlStats = value;
-               OnPropertyChanged("ShowXmlStats");
-            }
-         }
-      }
-      
       #endregion
 
       #region Web Generation
 
+      private WebGenType _webGenType;
+
+      public WebGenType WebGenType
+      {
+         get { return _webGenType; }
+         set
+         {
+            if (WebGenType != value)
+            {
+               _webGenType = value;
+               OnPropertyChanged("WebGenType");
+               OnPropertyChanged("FtpModeEnabled");
+               OnPropertyChanged("BrowseLocalPathEnabled");
+               OnPropertyChanged("LimitLogSizeEnabled");
+               OnPropertyChanged("LimitLogSizeLengthEnabled");
+            }
+         }
+      }
+      
       private int _generateInterval;
 
       public int GenerateInterval
@@ -258,25 +248,8 @@ namespace HFM.Forms.Models
          {
             if (WebRoot != value)
             {
-               string newValue = value == null ? String.Empty : value.Trim();
-               if (newValue.Length > 1)
-               {
-                  if ((Validate.PathInstancePath(newValue) || Validate.PathInstancePath(newValue + Path.DirectorySeparatorChar)) &&
-                       newValue.EndsWith(Path.DirectorySeparatorChar.ToString()) == false)
-                  {
-                     newValue += Path.DirectorySeparatorChar;
-                  }
-                  else if ((Validate.FtpWithUserPassUrl(newValue) || Validate.FtpWithUserPassUrl(newValue + "/")) && 
-                            newValue.EndsWith("/") == false)
-                  {
-                     newValue += "/";
-                  }
-               }
-               _webRoot = newValue;
+               _webRoot = value == null ? String.Empty : value.Trim();
                OnPropertyChanged("WebRoot");
-               OnPropertyChanged("FtpModeEnabled");
-               OnPropertyChanged("LimitLogSizeEnabled");
-               OnPropertyChanged("LimitLogSizeLengthEnabled");
             }
          }
       }
@@ -286,25 +259,154 @@ namespace HFM.Forms.Models
          get
          {
             if (GenerateWeb == false) return false;
-            if (WebRoot.Length == 0) return true;
-         
-            if (IsWebRootPath || IsWebRootFtp)
+
+            switch (WebGenType)
             {
-               return false;
+               case WebGenType.Path:
+                  if (WebRoot.Length < 2)
+                  {
+                     return true;
+                  }
+                  return !Validate.Path(WebRoot);
+               case WebGenType.Ftp:
+                  return !Validate.FtpPath(WebRoot);
+               default:
+                  return true;
             }
-            return true;
          }
       }
-      
-      private bool IsWebRootPath
+
+      private string _webGenServer;
+
+      public string WebGenServer
       {
-         get { return Validate.PathInstancePath(WebRoot); }
+         get { return _webGenServer; }
+         set
+         {
+            if (WebGenServer != value)
+            {
+               _webGenServer = value == null ? String.Empty : value.Trim();
+               OnPropertyChanged("WebGenServer");
+            }
+         }
       }
 
-      private bool IsWebRootFtp
+      public bool WebGenServerError
       {
-         get { return Validate.FtpWithUserPassUrl(WebRoot); }
+         get
+         {
+            switch (WebGenType)
+            {
+               case WebGenType.Ftp:
+                  return !Validate.ServerName(WebGenServer);
+               default:
+                  return false;
+            }
+         }
       }
+
+      private int _webGenPort;
+
+      public int WebGenPort
+      {
+         get { return _webGenPort; }
+         set
+         {
+            if (WebGenPort != value)
+            {
+               _webGenPort = value;
+               OnPropertyChanged("WebGenPort");
+            }
+         }
+      }
+
+      public bool WebGenPortError
+      {
+         get
+         {
+            switch (WebGenType)
+            {
+               case WebGenType.Ftp:
+                  return !Validate.ServerPort(WebGenPort);
+               default:
+                  return false;
+            }
+         }
+      }
+
+      private string _webGenUsername;
+
+      public string WebGenUsername
+      {
+         get { return _webGenUsername; }
+         set
+         {
+            if (WebGenUsername != value)
+            {
+               _webGenUsername = value == null ? String.Empty : value.Trim();
+               OnPropertyChanged("WebGenPassword");
+               OnPropertyChanged("WebGenUsername");
+            }
+         }
+      }
+
+      public bool WebGenUsernameError
+      {
+         get { return CredentialsError; }
+      }
+
+      private string _webGenPassword;
+
+      public string WebGenPassword
+      {
+         get { return _webGenPassword; }
+         set
+         {
+            if (WebGenPassword != value)
+            {
+               _webGenPassword = value == null ? String.Empty : value.Trim();
+               OnPropertyChanged("WebGenUsername");
+               OnPropertyChanged("WebGenPassword");
+            }
+         }
+      }
+
+      public bool WebGenPasswordError
+      {
+         get { return CredentialsError; }
+      }
+
+      public bool CredentialsError
+      {
+         get
+         {
+            switch (WebGenType)
+            {
+               case WebGenType.Ftp:
+                  return !ValidateCredentials(true);
+               default:
+                  return false;
+            }
+         }
+      }
+
+      private bool ValidateCredentials(bool throwOnEmpty)
+      {
+         try
+         {
+            // This will violate FxCop rule (rule ID)
+            Validate.UsernamePasswordPair(WebGenUsername, WebGenPassword, throwOnEmpty);
+            CredentialsErrorMessage = String.Empty;
+            return true;
+         }
+         catch (ArgumentException ex)
+         {
+            CredentialsErrorMessage = ex.Message;
+            return false;
+         }
+      }
+
+      public string CredentialsErrorMessage { get; private set; }
 
       private bool _copyHtml;
 
@@ -380,7 +482,12 @@ namespace HFM.Forms.Models
 
       public bool FtpModeEnabled
       {
-         get { return GenerateWeb && IsWebRootFtp; }
+         get { return GenerateWeb && WebGenType.Equals(WebGenType.Ftp); }
+      }
+
+      public bool BrowseLocalPathEnabled
+      {
+         get { return GenerateWeb && WebGenType.Equals(WebGenType.Path); }
       }
 
       private bool _limitLogSize;
@@ -402,7 +509,7 @@ namespace HFM.Forms.Models
       
       public bool LimitLogSizeEnabled
       {
-         get { return GenerateWeb && IsWebRootFtp && CopyFAHlog; }
+         get { return GenerateWeb && WebGenType.Equals(WebGenType.Ftp) && CopyFAHlog; }
       }
 
       private int _limitLogSizeLength;
@@ -438,6 +545,7 @@ namespace HFM.Forms.Models
                OnPropertyChanged("GenerateWeb");
                OnPropertyChanged("GenerateIntervalEnabled");
                OnPropertyChanged("FtpModeEnabled");
+               OnPropertyChanged("BrowseLocalPathEnabled");
                OnPropertyChanged("LimitLogSizeEnabled");
                OnPropertyChanged("LimitLogSizeLengthEnabled");
             }

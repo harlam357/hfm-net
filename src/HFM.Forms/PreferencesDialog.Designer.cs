@@ -63,16 +63,25 @@ namespace HFM.Forms
          this.tabSchdTasks = new System.Windows.Forms.TabPage();
          this.grpUpdateData = new HFM.Forms.Controls.GroupBoxWrapper();
          this.chkAllowRunningAsync = new HFM.Forms.Controls.CheckBoxWrapper();
-         this.chkDuplicateProject = new HFM.Forms.Controls.CheckBoxWrapper();
-         this.chkDuplicateUserID = new HFM.Forms.Controls.CheckBoxWrapper();
-         this.chkShowUserStats = new HFM.Forms.Controls.CheckBoxWrapper();
          this.txtCollectMinutes = new harlam357.Windows.Forms.ValidatingTextBox();
          this.toolTipPrefs = new System.Windows.Forms.ToolTip(this.components);
          this.lbl2SchedExplain = new HFM.Forms.Controls.LabelWrapper();
          this.chkScheduled = new HFM.Forms.Controls.CheckBoxWrapper();
          this.chkSynchronous = new HFM.Forms.Controls.CheckBoxWrapper();
          this.grpHTMLOutput = new HFM.Forms.Controls.GroupBoxWrapper();
-         this.pnlFtpMode = new harlam357.Windows.Forms.RadioPanel();
+         this.WebSitePortTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.WebSitePortLabel = new HFM.Forms.Controls.LabelWrapper();
+         this.WebSitePasswordTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.WebSiteUsernameTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.WebSiteServerTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.WebGenTypePanel = new harlam357.Windows.Forms.RadioPanel();
+         this.UploadTypeLabel = new HFM.Forms.Controls.LabelWrapper();
+         this.WebGenTypeFtpRadioButton = new HFM.Forms.Controls.RadioButtonWrapper();
+         this.WebGenTypePathRadioButton = new HFM.Forms.Controls.RadioButtonWrapper();
+         this.WebSitePasswordLabel = new HFM.Forms.Controls.LabelWrapper();
+         this.WebSiteUsernameLabel = new HFM.Forms.Controls.LabelWrapper();
+         this.WebSiteServerLabel = new HFM.Forms.Controls.LabelWrapper();
+         this.FtpModePanel = new harlam357.Windows.Forms.RadioPanel();
          this.radioActive = new HFM.Forms.Controls.RadioButtonWrapper();
          this.radioPassive = new HFM.Forms.Controls.RadioButtonWrapper();
          this.lblFtpMode = new HFM.Forms.Controls.LabelWrapper();
@@ -80,15 +89,15 @@ namespace HFM.Forms
          this.chkLimitSize = new HFM.Forms.Controls.CheckBoxWrapper();
          this.chkXml = new HFM.Forms.Controls.CheckBoxWrapper();
          this.chkHtml = new HFM.Forms.Controls.CheckBoxWrapper();
-         this.btnTestConnection = new HFM.Forms.Controls.ButtonWrapper();
+         this.TestConnectionButton = new HFM.Forms.Controls.ButtonWrapper();
          this.chkFAHlog = new HFM.Forms.Controls.CheckBoxWrapper();
          this.radioFullRefresh = new HFM.Forms.Controls.RadioButtonWrapper();
          this.radioSchedule = new HFM.Forms.Controls.RadioButtonWrapper();
          this.txtWebGenMinutes = new harlam357.Windows.Forms.ValidatingTextBox();
          this.lbl2MinutesToGen = new HFM.Forms.Controls.LabelWrapper();
          this.btnBrowseWebFolder = new HFM.Forms.Controls.ButtonWrapper();
-         this.txtWebSiteBase = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lbl2WebSiteDir = new HFM.Forms.Controls.LabelWrapper();
+         this.WebSiteTargetPathTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
+         this.WebSiteTargetPathLabel = new HFM.Forms.Controls.LabelWrapper();
          this.chkWebSiteGenerator = new HFM.Forms.Controls.CheckBoxWrapper();
          this.tabStartup = new System.Windows.Forms.TabPage();
          this.grpFileExplorer = new HFM.Forms.Controls.GroupBoxWrapper();
@@ -113,6 +122,9 @@ namespace HFM.Forms
          this.cboShowStyle = new HFM.Forms.Controls.ComboBoxWrapper();
          this.labelWrapper2 = new HFM.Forms.Controls.LabelWrapper();
          this.grpInteractiveOptions = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.ShowUserStatsCheckBox = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.DuplicateUserCheckBox = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.DuplicateProjectCheckBox = new HFM.Forms.Controls.CheckBoxWrapper();
          this.chkEtaAsDate = new HFM.Forms.Controls.CheckBoxWrapper();
          this.chkCalcBonus = new HFM.Forms.Controls.CheckBoxWrapper();
          this.label2 = new HFM.Forms.Controls.LabelWrapper();
@@ -179,7 +191,7 @@ namespace HFM.Forms
          this.lblMobileOverview = new HFM.Forms.Controls.LabelWrapper();
          this.btnInstanceBrowse = new HFM.Forms.Controls.ButtonWrapper();
          this.txtInstance = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.lblInstance = new HFM.Forms.Controls.LabelWrapper();
+         this.SlotXsltLabel = new HFM.Forms.Controls.LabelWrapper();
          this.btnSummaryBrowse = new HFM.Forms.Controls.ButtonWrapper();
          this.txtSummary = new harlam357.Windows.Forms.ValidatingTextBox();
          this.lblSummary = new HFM.Forms.Controls.LabelWrapper();
@@ -195,7 +207,8 @@ namespace HFM.Forms
          this.tabSchdTasks.SuspendLayout();
          this.grpUpdateData.SuspendLayout();
          this.grpHTMLOutput.SuspendLayout();
-         this.pnlFtpMode.SuspendLayout();
+         this.WebGenTypePanel.SuspendLayout();
+         this.FtpModePanel.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.udLimitSize)).BeginInit();
          this.tabStartup.SuspendLayout();
          this.grpFileExplorer.SuspendLayout();
@@ -268,16 +281,13 @@ namespace HFM.Forms
          // grpUpdateData
          // 
          this.grpUpdateData.Controls.Add(this.chkAllowRunningAsync);
-         this.grpUpdateData.Controls.Add(this.chkDuplicateProject);
-         this.grpUpdateData.Controls.Add(this.chkDuplicateUserID);
-         this.grpUpdateData.Controls.Add(this.chkShowUserStats);
          this.grpUpdateData.Controls.Add(this.txtCollectMinutes);
          this.grpUpdateData.Controls.Add(this.lbl2SchedExplain);
          this.grpUpdateData.Controls.Add(this.chkScheduled);
          this.grpUpdateData.Controls.Add(this.chkSynchronous);
          this.grpUpdateData.Location = new System.Drawing.Point(6, 9);
          this.grpUpdateData.Name = "grpUpdateData";
-         this.grpUpdateData.Size = new System.Drawing.Size(489, 105);
+         this.grpUpdateData.Size = new System.Drawing.Size(489, 51);
          this.grpUpdateData.TabIndex = 0;
          this.grpUpdateData.TabStop = false;
          this.grpUpdateData.Text = "Refresh Client Data";
@@ -285,42 +295,12 @@ namespace HFM.Forms
          // chkAllowRunningAsync
          // 
          this.chkAllowRunningAsync.AutoSize = true;
-         this.chkAllowRunningAsync.Location = new System.Drawing.Point(270, 46);
+         this.chkAllowRunningAsync.Location = new System.Drawing.Point(331, 20);
          this.chkAllowRunningAsync.Name = "chkAllowRunningAsync";
          this.chkAllowRunningAsync.Size = new System.Drawing.Size(156, 17);
          this.chkAllowRunningAsync.TabIndex = 6;
          this.chkAllowRunningAsync.Text = "Allow Asynchronous Clocks";
          this.chkAllowRunningAsync.UseVisualStyleBackColor = true;
-         // 
-         // chkDuplicateProject
-         // 
-         this.chkDuplicateProject.AutoSize = true;
-         this.chkDuplicateProject.Location = new System.Drawing.Point(10, 46);
-         this.chkDuplicateProject.Name = "chkDuplicateProject";
-         this.chkDuplicateProject.Size = new System.Drawing.Size(183, 17);
-         this.chkDuplicateProject.TabIndex = 1;
-         this.chkDuplicateProject.Text = "Duplicate Project (R/C/G) Check";
-         this.chkDuplicateProject.UseVisualStyleBackColor = true;
-         // 
-         // chkDuplicateUserID
-         // 
-         this.chkDuplicateUserID.AutoSize = true;
-         this.chkDuplicateUserID.Location = new System.Drawing.Point(10, 72);
-         this.chkDuplicateUserID.Name = "chkDuplicateUserID";
-         this.chkDuplicateUserID.Size = new System.Drawing.Size(190, 17);
-         this.chkDuplicateUserID.TabIndex = 2;
-         this.chkDuplicateUserID.Text = "Duplicate User/Machine ID Check";
-         this.chkDuplicateUserID.UseVisualStyleBackColor = true;
-         // 
-         // chkShowUserStats
-         // 
-         this.chkShowUserStats.AutoSize = true;
-         this.chkShowUserStats.Location = new System.Drawing.Point(270, 72);
-         this.chkShowUserStats.Name = "chkShowUserStats";
-         this.chkShowUserStats.Size = new System.Drawing.Size(194, 17);
-         this.chkShowUserStats.TabIndex = 7;
-         this.chkShowUserStats.Text = "Retrieve and Show EOC User Stats";
-         this.chkShowUserStats.UseVisualStyleBackColor = true;
          // 
          // txtCollectMinutes
          // 
@@ -333,7 +313,7 @@ namespace HFM.Forms
          this.txtCollectMinutes.ErrorToolTipDuration = 5000;
          this.txtCollectMinutes.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
          this.txtCollectMinutes.ErrorToolTipText = "";
-         this.txtCollectMinutes.Location = new System.Drawing.Point(323, 18);
+         this.txtCollectMinutes.Location = new System.Drawing.Point(61, 18);
          this.txtCollectMinutes.MaxLength = 3;
          this.txtCollectMinutes.Name = "txtCollectMinutes";
          this.txtCollectMinutes.ReadOnly = true;
@@ -342,12 +322,12 @@ namespace HFM.Forms
          this.txtCollectMinutes.Text = "15";
          this.txtCollectMinutes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          this.txtCollectMinutes.ValidationType = harlam357.Windows.Forms.ValidationType.None;
-         this.txtCollectMinutes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
+         this.txtCollectMinutes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
          // 
          // lbl2SchedExplain
          // 
          this.lbl2SchedExplain.AutoSize = true;
-         this.lbl2SchedExplain.Location = new System.Drawing.Point(364, 22);
+         this.lbl2SchedExplain.Location = new System.Drawing.Point(103, 22);
          this.lbl2SchedExplain.Name = "lbl2SchedExplain";
          this.lbl2SchedExplain.Size = new System.Drawing.Size(44, 13);
          this.lbl2SchedExplain.TabIndex = 5;
@@ -356,7 +336,7 @@ namespace HFM.Forms
          // chkScheduled
          // 
          this.chkScheduled.AutoSize = true;
-         this.chkScheduled.Location = new System.Drawing.Point(270, 20);
+         this.chkScheduled.Location = new System.Drawing.Point(10, 20);
          this.chkScheduled.Name = "chkScheduled";
          this.chkScheduled.Size = new System.Drawing.Size(53, 17);
          this.chkScheduled.TabIndex = 3;
@@ -366,7 +346,7 @@ namespace HFM.Forms
          // chkSynchronous
          // 
          this.chkSynchronous.AutoSize = true;
-         this.chkSynchronous.Location = new System.Drawing.Point(10, 20);
+         this.chkSynchronous.Location = new System.Drawing.Point(153, 20);
          this.chkSynchronous.Name = "chkSynchronous";
          this.chkSynchronous.Size = new System.Drawing.Size(176, 17);
          this.chkSynchronous.TabIndex = 0;
@@ -375,38 +355,199 @@ namespace HFM.Forms
          // 
          // grpHTMLOutput
          // 
-         this.grpHTMLOutput.Controls.Add(this.pnlFtpMode);
+         this.grpHTMLOutput.Controls.Add(this.WebSitePortTextBox);
+         this.grpHTMLOutput.Controls.Add(this.WebSitePortLabel);
+         this.grpHTMLOutput.Controls.Add(this.WebSitePasswordTextBox);
+         this.grpHTMLOutput.Controls.Add(this.WebSiteUsernameTextBox);
+         this.grpHTMLOutput.Controls.Add(this.WebSiteServerTextBox);
+         this.grpHTMLOutput.Controls.Add(this.WebGenTypePanel);
+         this.grpHTMLOutput.Controls.Add(this.WebSitePasswordLabel);
+         this.grpHTMLOutput.Controls.Add(this.WebSiteUsernameLabel);
+         this.grpHTMLOutput.Controls.Add(this.WebSiteServerLabel);
+         this.grpHTMLOutput.Controls.Add(this.FtpModePanel);
          this.grpHTMLOutput.Controls.Add(this.udLimitSize);
          this.grpHTMLOutput.Controls.Add(this.chkLimitSize);
          this.grpHTMLOutput.Controls.Add(this.chkXml);
          this.grpHTMLOutput.Controls.Add(this.chkHtml);
-         this.grpHTMLOutput.Controls.Add(this.btnTestConnection);
+         this.grpHTMLOutput.Controls.Add(this.TestConnectionButton);
          this.grpHTMLOutput.Controls.Add(this.chkFAHlog);
          this.grpHTMLOutput.Controls.Add(this.radioFullRefresh);
          this.grpHTMLOutput.Controls.Add(this.radioSchedule);
          this.grpHTMLOutput.Controls.Add(this.txtWebGenMinutes);
          this.grpHTMLOutput.Controls.Add(this.lbl2MinutesToGen);
          this.grpHTMLOutput.Controls.Add(this.btnBrowseWebFolder);
-         this.grpHTMLOutput.Controls.Add(this.txtWebSiteBase);
-         this.grpHTMLOutput.Controls.Add(this.lbl2WebSiteDir);
+         this.grpHTMLOutput.Controls.Add(this.WebSiteTargetPathTextBox);
+         this.grpHTMLOutput.Controls.Add(this.WebSiteTargetPathLabel);
          this.grpHTMLOutput.Controls.Add(this.chkWebSiteGenerator);
-         this.grpHTMLOutput.Location = new System.Drawing.Point(6, 120);
+         this.grpHTMLOutput.Location = new System.Drawing.Point(6, 66);
          this.grpHTMLOutput.Name = "grpHTMLOutput";
-         this.grpHTMLOutput.Size = new System.Drawing.Size(489, 173);
+         this.grpHTMLOutput.Size = new System.Drawing.Size(489, 227);
          this.grpHTMLOutput.TabIndex = 0;
          this.grpHTMLOutput.TabStop = false;
          this.grpHTMLOutput.Text = "Web Generation";
          // 
-         // pnlFtpMode
+         // WebSitePortTextBox
          // 
-         this.pnlFtpMode.Controls.Add(this.radioActive);
-         this.pnlFtpMode.Controls.Add(this.radioPassive);
-         this.pnlFtpMode.Controls.Add(this.lblFtpMode);
-         this.pnlFtpMode.Location = new System.Drawing.Point(276, 71);
-         this.pnlFtpMode.Name = "pnlFtpMode";
-         this.pnlFtpMode.Size = new System.Drawing.Size(199, 26);
-         this.pnlFtpMode.TabIndex = 15;
-         this.pnlFtpMode.ValueMember = null;
+         this.WebSitePortTextBox.BackColor = System.Drawing.SystemColors.Control;
+         this.WebSitePortTextBox.DoubleBuffered = true;
+         this.WebSitePortTextBox.Enabled = false;
+         this.WebSitePortTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.WebSitePortTextBox.ErrorState = false;
+         this.WebSitePortTextBox.ErrorToolTip = null;
+         this.WebSitePortTextBox.ErrorToolTipDuration = 5000;
+         this.WebSitePortTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.WebSitePortTextBox.ErrorToolTipText = "";
+         this.WebSitePortTextBox.Location = new System.Drawing.Point(308, 105);
+         this.WebSitePortTextBox.Name = "WebSitePortTextBox";
+         this.WebSitePortTextBox.ReadOnly = true;
+         this.WebSitePortTextBox.Size = new System.Drawing.Size(54, 20);
+         this.WebSitePortTextBox.TabIndex = 13;
+         this.WebSitePortTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         // 
+         // WebSitePortLabel
+         // 
+         this.WebSitePortLabel.AutoSize = true;
+         this.WebSitePortLabel.Location = new System.Drawing.Point(273, 108);
+         this.WebSitePortLabel.Name = "WebSitePortLabel";
+         this.WebSitePortLabel.Size = new System.Drawing.Size(29, 13);
+         this.WebSitePortLabel.TabIndex = 12;
+         this.WebSitePortLabel.Text = "Port:";
+         // 
+         // WebSitePasswordTextBox
+         // 
+         this.WebSitePasswordTextBox.BackColor = System.Drawing.SystemColors.Control;
+         this.WebSitePasswordTextBox.DoubleBuffered = true;
+         this.WebSitePasswordTextBox.Enabled = false;
+         this.WebSitePasswordTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.WebSitePasswordTextBox.ErrorState = false;
+         this.WebSitePasswordTextBox.ErrorToolTip = this.toolTipPrefs;
+         this.WebSitePasswordTextBox.ErrorToolTipDuration = 5000;
+         this.WebSitePasswordTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.WebSitePasswordTextBox.ErrorToolTipText = "";
+         this.WebSitePasswordTextBox.Location = new System.Drawing.Point(79, 159);
+         this.WebSitePasswordTextBox.Name = "WebSitePasswordTextBox";
+         this.WebSitePasswordTextBox.ReadOnly = true;
+         this.WebSitePasswordTextBox.Size = new System.Drawing.Size(187, 20);
+         this.WebSitePasswordTextBox.TabIndex = 17;
+         this.WebSitePasswordTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         // 
+         // WebSiteUsernameTextBox
+         // 
+         this.WebSiteUsernameTextBox.BackColor = System.Drawing.SystemColors.Control;
+         this.WebSiteUsernameTextBox.DoubleBuffered = true;
+         this.WebSiteUsernameTextBox.Enabled = false;
+         this.WebSiteUsernameTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.WebSiteUsernameTextBox.ErrorState = false;
+         this.WebSiteUsernameTextBox.ErrorToolTip = this.toolTipPrefs;
+         this.WebSiteUsernameTextBox.ErrorToolTipDuration = 5000;
+         this.WebSiteUsernameTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.WebSiteUsernameTextBox.ErrorToolTipText = "";
+         this.WebSiteUsernameTextBox.Location = new System.Drawing.Point(79, 132);
+         this.WebSiteUsernameTextBox.Name = "WebSiteUsernameTextBox";
+         this.WebSiteUsernameTextBox.ReadOnly = true;
+         this.WebSiteUsernameTextBox.Size = new System.Drawing.Size(187, 20);
+         this.WebSiteUsernameTextBox.TabIndex = 15;
+         this.WebSiteUsernameTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         // 
+         // WebSiteServerTextBox
+         // 
+         this.WebSiteServerTextBox.BackColor = System.Drawing.SystemColors.Control;
+         this.WebSiteServerTextBox.DoubleBuffered = true;
+         this.WebSiteServerTextBox.Enabled = false;
+         this.WebSiteServerTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.WebSiteServerTextBox.ErrorState = false;
+         this.WebSiteServerTextBox.ErrorToolTip = this.toolTipPrefs;
+         this.WebSiteServerTextBox.ErrorToolTipDuration = 5000;
+         this.WebSiteServerTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+         this.WebSiteServerTextBox.ErrorToolTipText = "FTP server must be a valid host name or IP address.";
+         this.WebSiteServerTextBox.Location = new System.Drawing.Point(79, 105);
+         this.WebSiteServerTextBox.Name = "WebSiteServerTextBox";
+         this.WebSiteServerTextBox.ReadOnly = true;
+         this.WebSiteServerTextBox.Size = new System.Drawing.Size(187, 20);
+         this.WebSiteServerTextBox.TabIndex = 11;
+         this.WebSiteServerTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         // 
+         // WebGenTypePanel
+         // 
+         this.WebGenTypePanel.Controls.Add(this.UploadTypeLabel);
+         this.WebGenTypePanel.Controls.Add(this.WebGenTypeFtpRadioButton);
+         this.WebGenTypePanel.Controls.Add(this.WebGenTypePathRadioButton);
+         this.WebGenTypePanel.Location = new System.Drawing.Point(3, 46);
+         this.WebGenTypePanel.Name = "WebGenTypePanel";
+         this.WebGenTypePanel.Size = new System.Drawing.Size(256, 26);
+         this.WebGenTypePanel.TabIndex = 6;
+         this.WebGenTypePanel.ValueMember = null;
+         // 
+         // UploadTypeLabel
+         // 
+         this.UploadTypeLabel.AutoSize = true;
+         this.UploadTypeLabel.Location = new System.Drawing.Point(4, 6);
+         this.UploadTypeLabel.Name = "UploadTypeLabel";
+         this.UploadTypeLabel.Size = new System.Drawing.Size(71, 13);
+         this.UploadTypeLabel.TabIndex = 0;
+         this.UploadTypeLabel.Text = "Upload Type:";
+         // 
+         // WebGenTypeFtpRadioButton
+         // 
+         this.WebGenTypeFtpRadioButton.AutoSize = true;
+         this.WebGenTypeFtpRadioButton.Location = new System.Drawing.Point(170, 4);
+         this.WebGenTypeFtpRadioButton.Name = "WebGenTypeFtpRadioButton";
+         this.WebGenTypeFtpRadioButton.Size = new System.Drawing.Size(79, 17);
+         this.WebGenTypeFtpRadioButton.TabIndex = 2;
+         this.WebGenTypeFtpRadioButton.TabStop = true;
+         this.WebGenTypeFtpRadioButton.Tag = "1";
+         this.WebGenTypeFtpRadioButton.Text = "FTP Server";
+         this.WebGenTypeFtpRadioButton.UseVisualStyleBackColor = true;
+         // 
+         // WebGenTypePathRadioButton
+         // 
+         this.WebGenTypePathRadioButton.AutoSize = true;
+         this.WebGenTypePathRadioButton.Location = new System.Drawing.Point(84, 4);
+         this.WebGenTypePathRadioButton.Name = "WebGenTypePathRadioButton";
+         this.WebGenTypePathRadioButton.Size = new System.Drawing.Size(76, 17);
+         this.WebGenTypePathRadioButton.TabIndex = 1;
+         this.WebGenTypePathRadioButton.TabStop = true;
+         this.WebGenTypePathRadioButton.Tag = "0";
+         this.WebGenTypePathRadioButton.Text = "Local Path";
+         this.WebGenTypePathRadioButton.UseVisualStyleBackColor = true;
+         // 
+         // WebSitePasswordLabel
+         // 
+         this.WebSitePasswordLabel.AutoSize = true;
+         this.WebSitePasswordLabel.Location = new System.Drawing.Point(7, 162);
+         this.WebSitePasswordLabel.Name = "WebSitePasswordLabel";
+         this.WebSitePasswordLabel.Size = new System.Drawing.Size(56, 13);
+         this.WebSitePasswordLabel.TabIndex = 16;
+         this.WebSitePasswordLabel.Text = "Password:";
+         // 
+         // WebSiteUsernameLabel
+         // 
+         this.WebSiteUsernameLabel.AutoSize = true;
+         this.WebSiteUsernameLabel.Location = new System.Drawing.Point(7, 135);
+         this.WebSiteUsernameLabel.Name = "WebSiteUsernameLabel";
+         this.WebSiteUsernameLabel.Size = new System.Drawing.Size(58, 13);
+         this.WebSiteUsernameLabel.TabIndex = 14;
+         this.WebSiteUsernameLabel.Text = "Username:";
+         // 
+         // WebSiteServerLabel
+         // 
+         this.WebSiteServerLabel.AutoSize = true;
+         this.WebSiteServerLabel.Location = new System.Drawing.Point(7, 108);
+         this.WebSiteServerLabel.Name = "WebSiteServerLabel";
+         this.WebSiteServerLabel.Size = new System.Drawing.Size(41, 13);
+         this.WebSiteServerLabel.TabIndex = 10;
+         this.WebSiteServerLabel.Text = "Server:";
+         // 
+         // FtpModePanel
+         // 
+         this.FtpModePanel.Controls.Add(this.radioActive);
+         this.FtpModePanel.Controls.Add(this.radioPassive);
+         this.FtpModePanel.Controls.Add(this.lblFtpMode);
+         this.FtpModePanel.Location = new System.Drawing.Point(4, 191);
+         this.FtpModePanel.Name = "FtpModePanel";
+         this.FtpModePanel.Size = new System.Drawing.Size(199, 26);
+         this.FtpModePanel.TabIndex = 18;
+         this.FtpModePanel.ValueMember = null;
          // 
          // radioActive
          // 
@@ -444,7 +585,7 @@ namespace HFM.Forms
          // udLimitSize
          // 
          this.udLimitSize.Enabled = false;
-         this.udLimitSize.Location = new System.Drawing.Point(322, 143);
+         this.udLimitSize.Location = new System.Drawing.Point(419, 204);
          this.udLimitSize.Maximum = new decimal(new int[] {
             10240,
             0,
@@ -457,7 +598,7 @@ namespace HFM.Forms
             0});
          this.udLimitSize.Name = "udLimitSize";
          this.udLimitSize.Size = new System.Drawing.Size(62, 20);
-         this.udLimitSize.TabIndex = 14;
+         this.udLimitSize.TabIndex = 23;
          this.udLimitSize.Value = new decimal(new int[] {
             1,
             0,
@@ -468,21 +609,21 @@ namespace HFM.Forms
          // 
          this.chkLimitSize.AutoSize = true;
          this.chkLimitSize.Enabled = false;
-         this.chkLimitSize.Location = new System.Drawing.Point(164, 144);
+         this.chkLimitSize.Location = new System.Drawing.Point(276, 205);
          this.chkLimitSize.Name = "chkLimitSize";
-         this.chkLimitSize.Size = new System.Drawing.Size(158, 17);
-         this.chkLimitSize.TabIndex = 13;
-         this.chkLimitSize.Text = "Limit FAHlog.txt size to (KB):";
+         this.chkLimitSize.Size = new System.Drawing.Size(139, 17);
+         this.chkLimitSize.TabIndex = 22;
+         this.chkLimitSize.Text = "Limit log file size to (KB):";
          this.chkLimitSize.UseVisualStyleBackColor = true;
          // 
          // chkXml
          // 
          this.chkXml.AutoSize = true;
          this.chkXml.Enabled = false;
-         this.chkXml.Location = new System.Drawing.Point(10, 98);
+         this.chkXml.Location = new System.Drawing.Point(276, 159);
          this.chkXml.Name = "chkXml";
          this.chkXml.Size = new System.Drawing.Size(121, 17);
-         this.chkXml.TabIndex = 10;
+         this.chkXml.TabIndex = 20;
          this.chkXml.Text = "Copy XML to Target";
          this.chkXml.UseVisualStyleBackColor = true;
          // 
@@ -490,32 +631,32 @@ namespace HFM.Forms
          // 
          this.chkHtml.AutoSize = true;
          this.chkHtml.Enabled = false;
-         this.chkHtml.Location = new System.Drawing.Point(10, 75);
+         this.chkHtml.Location = new System.Drawing.Point(276, 136);
          this.chkHtml.Name = "chkHtml";
          this.chkHtml.Size = new System.Drawing.Size(129, 17);
-         this.chkHtml.TabIndex = 9;
+         this.chkHtml.TabIndex = 19;
          this.chkHtml.Text = "Copy HTML to Target";
          this.chkHtml.UseVisualStyleBackColor = true;
          // 
-         // btnTestConnection
+         // TestConnectionButton
          // 
-         this.btnTestConnection.Enabled = false;
-         this.btnTestConnection.Location = new System.Drawing.Point(383, 15);
-         this.btnTestConnection.Name = "btnTestConnection";
-         this.btnTestConnection.Size = new System.Drawing.Size(100, 24);
-         this.btnTestConnection.TabIndex = 5;
-         this.btnTestConnection.Text = "Test Connection";
-         this.btnTestConnection.UseVisualStyleBackColor = true;
-         this.btnTestConnection.Click += new System.EventHandler(this.btnTestConnection_Click);
+         this.TestConnectionButton.Enabled = false;
+         this.TestConnectionButton.Location = new System.Drawing.Point(383, 15);
+         this.TestConnectionButton.Name = "TestConnectionButton";
+         this.TestConnectionButton.Size = new System.Drawing.Size(100, 24);
+         this.TestConnectionButton.TabIndex = 5;
+         this.TestConnectionButton.Text = "Test Connection";
+         this.TestConnectionButton.UseVisualStyleBackColor = true;
+         this.TestConnectionButton.Click += new System.EventHandler(this.TestConnectionButtonClick);
          // 
          // chkFAHlog
          // 
          this.chkFAHlog.AutoSize = true;
          this.chkFAHlog.Enabled = false;
-         this.chkFAHlog.Location = new System.Drawing.Point(10, 144);
+         this.chkFAHlog.Location = new System.Drawing.Point(276, 182);
          this.chkFAHlog.Name = "chkFAHlog";
          this.chkFAHlog.Size = new System.Drawing.Size(148, 17);
-         this.chkFAHlog.TabIndex = 12;
+         this.chkFAHlog.TabIndex = 21;
          this.chkFAHlog.Text = "Copy FAHlog.txt to Target";
          this.chkFAHlog.UseVisualStyleBackColor = true;
          // 
@@ -564,7 +705,7 @@ namespace HFM.Forms
          this.txtWebGenMinutes.Text = "15";
          this.txtWebGenMinutes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
          this.txtWebGenMinutes.ValidationType = harlam357.Windows.Forms.ValidationType.None;
-         this.txtWebGenMinutes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
+         this.txtWebGenMinutes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
          // 
          // lbl2MinutesToGen
          // 
@@ -579,40 +720,41 @@ namespace HFM.Forms
          // btnBrowseWebFolder
          // 
          this.btnBrowseWebFolder.Enabled = false;
-         this.btnBrowseWebFolder.Location = new System.Drawing.Point(457, 43);
+         this.btnBrowseWebFolder.Location = new System.Drawing.Point(459, 76);
          this.btnBrowseWebFolder.Name = "btnBrowseWebFolder";
          this.btnBrowseWebFolder.Size = new System.Drawing.Size(24, 23);
-         this.btnBrowseWebFolder.TabIndex = 8;
+         this.btnBrowseWebFolder.TabIndex = 9;
          this.btnBrowseWebFolder.Text = "...";
          this.btnBrowseWebFolder.UseVisualStyleBackColor = true;
          this.btnBrowseWebFolder.Click += new System.EventHandler(this.btnBrowseWebFolder_Click);
          // 
-         // txtWebSiteBase
+         // WebSiteTargetPathTextBox
          // 
-         this.txtWebSiteBase.BackColor = System.Drawing.SystemColors.Control;
-         this.txtWebSiteBase.DoubleBuffered = true;
-         this.txtWebSiteBase.Enabled = false;
-         this.txtWebSiteBase.ErrorBackColor = System.Drawing.Color.Yellow;
-         this.txtWebSiteBase.ErrorState = false;
-         this.txtWebSiteBase.ErrorToolTip = this.toolTipPrefs;
-         this.txtWebSiteBase.ErrorToolTipDuration = 5000;
-         this.txtWebSiteBase.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-         this.txtWebSiteBase.ErrorToolTipText = "HTML Output Folder must be a valid local path, network (UNC) path, or FTP URL.";
-         this.txtWebSiteBase.Location = new System.Drawing.Point(119, 45);
-         this.txtWebSiteBase.Name = "txtWebSiteBase";
-         this.txtWebSiteBase.ReadOnly = true;
-         this.txtWebSiteBase.Size = new System.Drawing.Size(332, 20);
-         this.txtWebSiteBase.TabIndex = 7;
-         this.txtWebSiteBase.ValidationType = harlam357.Windows.Forms.ValidationType.None;
+         this.WebSiteTargetPathTextBox.BackColor = System.Drawing.SystemColors.Control;
+         this.WebSiteTargetPathTextBox.DoubleBuffered = true;
+         this.WebSiteTargetPathTextBox.Enabled = false;
+         this.WebSiteTargetPathTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+         this.WebSiteTargetPathTextBox.ErrorState = false;
+         this.WebSiteTargetPathTextBox.ErrorToolTip = this.toolTipPrefs;
+         this.WebSiteTargetPathTextBox.ErrorToolTipDuration = 5000;
+         this.WebSiteTargetPathTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -40);
+         this.WebSiteTargetPathTextBox.ErrorToolTipText = "Web Generation target path must be a valid local path, network (UNC) path,\r\nor Un" +
+    "ix style path when the upload type is FTP server.";
+         this.WebSiteTargetPathTextBox.Location = new System.Drawing.Point(79, 78);
+         this.WebSiteTargetPathTextBox.Name = "WebSiteTargetPathTextBox";
+         this.WebSiteTargetPathTextBox.ReadOnly = true;
+         this.WebSiteTargetPathTextBox.Size = new System.Drawing.Size(374, 20);
+         this.WebSiteTargetPathTextBox.TabIndex = 8;
+         this.WebSiteTargetPathTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
-         // lbl2WebSiteDir
+         // WebSiteTargetPathLabel
          // 
-         this.lbl2WebSiteDir.AutoSize = true;
-         this.lbl2WebSiteDir.Location = new System.Drawing.Point(7, 48);
-         this.lbl2WebSiteDir.Name = "lbl2WebSiteDir";
-         this.lbl2WebSiteDir.Size = new System.Drawing.Size(110, 13);
-         this.lbl2WebSiteDir.TabIndex = 6;
-         this.lbl2WebSiteDir.Text = "Target Folder or URL:";
+         this.WebSiteTargetPathLabel.AutoSize = true;
+         this.WebSiteTargetPathLabel.Location = new System.Drawing.Point(7, 81);
+         this.WebSiteTargetPathLabel.Name = "WebSiteTargetPathLabel";
+         this.WebSiteTargetPathLabel.Size = new System.Drawing.Size(66, 13);
+         this.WebSiteTargetPathLabel.TabIndex = 7;
+         this.WebSiteTargetPathLabel.Text = "Target Path:";
          // 
          // chkWebSiteGenerator
          // 
@@ -878,6 +1020,9 @@ namespace HFM.Forms
          // 
          // grpInteractiveOptions
          // 
+         this.grpInteractiveOptions.Controls.Add(this.ShowUserStatsCheckBox);
+         this.grpInteractiveOptions.Controls.Add(this.DuplicateUserCheckBox);
+         this.grpInteractiveOptions.Controls.Add(this.DuplicateProjectCheckBox);
          this.grpInteractiveOptions.Controls.Add(this.chkEtaAsDate);
          this.grpInteractiveOptions.Controls.Add(this.chkCalcBonus);
          this.grpInteractiveOptions.Controls.Add(this.label2);
@@ -889,10 +1034,40 @@ namespace HFM.Forms
          this.grpInteractiveOptions.Controls.Add(this.labelWrapper1);
          this.grpInteractiveOptions.Location = new System.Drawing.Point(6, 9);
          this.grpInteractiveOptions.Name = "grpInteractiveOptions";
-         this.grpInteractiveOptions.Size = new System.Drawing.Size(489, 127);
+         this.grpInteractiveOptions.Size = new System.Drawing.Size(489, 151);
          this.grpInteractiveOptions.TabIndex = 0;
          this.grpInteractiveOptions.TabStop = false;
          this.grpInteractiveOptions.Text = "Interactive Options";
+         // 
+         // ShowUserStatsCheckBox
+         // 
+         this.ShowUserStatsCheckBox.AutoSize = true;
+         this.ShowUserStatsCheckBox.Location = new System.Drawing.Point(256, 124);
+         this.ShowUserStatsCheckBox.Name = "ShowUserStatsCheckBox";
+         this.ShowUserStatsCheckBox.Size = new System.Drawing.Size(194, 17);
+         this.ShowUserStatsCheckBox.TabIndex = 12;
+         this.ShowUserStatsCheckBox.Text = "Retrieve and Show EOC User Stats";
+         this.ShowUserStatsCheckBox.UseVisualStyleBackColor = true;
+         // 
+         // DuplicateUserCheckBox
+         // 
+         this.DuplicateUserCheckBox.AutoSize = true;
+         this.DuplicateUserCheckBox.Location = new System.Drawing.Point(10, 124);
+         this.DuplicateUserCheckBox.Name = "DuplicateUserCheckBox";
+         this.DuplicateUserCheckBox.Size = new System.Drawing.Size(190, 17);
+         this.DuplicateUserCheckBox.TabIndex = 11;
+         this.DuplicateUserCheckBox.Text = "Duplicate User/Machine ID Check";
+         this.DuplicateUserCheckBox.UseVisualStyleBackColor = true;
+         // 
+         // DuplicateProjectCheckBox
+         // 
+         this.DuplicateProjectCheckBox.AutoSize = true;
+         this.DuplicateProjectCheckBox.Location = new System.Drawing.Point(10, 98);
+         this.DuplicateProjectCheckBox.Name = "DuplicateProjectCheckBox";
+         this.DuplicateProjectCheckBox.Size = new System.Drawing.Size(183, 17);
+         this.DuplicateProjectCheckBox.TabIndex = 10;
+         this.DuplicateProjectCheckBox.Text = "Duplicate Project (R/C/G) Check";
+         this.DuplicateProjectCheckBox.UseVisualStyleBackColor = true;
          // 
          // chkEtaAsDate
          // 
@@ -1095,7 +1270,7 @@ namespace HFM.Forms
          this.txtSmtpServerPort.Size = new System.Drawing.Size(54, 20);
          this.txtSmtpServerPort.TabIndex = 9;
          this.txtSmtpServerPort.ValidationType = harlam357.Windows.Forms.ValidationType.None;
-         this.txtSmtpServerPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
+         this.txtSmtpServerPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
          // 
          // labelWrapper3
          // 
@@ -1393,7 +1568,7 @@ namespace HFM.Forms
          this.txtEOCUserID.Size = new System.Drawing.Size(138, 20);
          this.txtEOCUserID.TabIndex = 3;
          this.txtEOCUserID.ValidationType = harlam357.Windows.Forms.ValidationType.None;
-         this.txtEOCUserID.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
+         this.txtEOCUserID.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
          // 
          // txtStanfordTeamID
          // 
@@ -1411,7 +1586,7 @@ namespace HFM.Forms
          this.txtStanfordTeamID.Size = new System.Drawing.Size(138, 20);
          this.txtStanfordTeamID.TabIndex = 5;
          this.txtStanfordTeamID.ValidationType = harlam357.Windows.Forms.ValidationType.None;
-         this.txtStanfordTeamID.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
+         this.txtStanfordTeamID.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
          // 
          // lbl3StanfordTeamID
          // 
@@ -1555,7 +1730,7 @@ namespace HFM.Forms
          this.txtProxyPort.Size = new System.Drawing.Size(94, 20);
          this.txtProxyPort.TabIndex = 4;
          this.txtProxyPort.ValidationType = harlam357.Windows.Forms.ValidationType.None;
-         this.txtProxyPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDigitsOnly_KeyPress);
+         this.txtProxyPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
          // 
          // lbl3ProxyPass
          // 
@@ -1622,7 +1797,7 @@ namespace HFM.Forms
          this.tabVisStyles.Controls.Add(this.lblMobileOverview);
          this.tabVisStyles.Controls.Add(this.btnInstanceBrowse);
          this.tabVisStyles.Controls.Add(this.txtInstance);
-         this.tabVisStyles.Controls.Add(this.lblInstance);
+         this.tabVisStyles.Controls.Add(this.SlotXsltLabel);
          this.tabVisStyles.Controls.Add(this.btnSummaryBrowse);
          this.tabVisStyles.Controls.Add(this.txtSummary);
          this.tabVisStyles.Controls.Add(this.lblSummary);
@@ -1741,15 +1916,15 @@ namespace HFM.Forms
          this.txtInstance.TabIndex = 17;
          this.txtInstance.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
          // 
-         // lblInstance
+         // SlotXsltLabel
          // 
-         this.lblInstance.AutoSize = true;
-         this.lblInstance.Location = new System.Drawing.Point(45, 278);
-         this.lblInstance.Name = "lblInstance";
-         this.lblInstance.Size = new System.Drawing.Size(81, 13);
-         this.lblInstance.TabIndex = 16;
-         this.lblInstance.Text = "Instance XSLT:";
-         this.lblInstance.TextAlign = System.Drawing.ContentAlignment.TopRight;
+         this.SlotXsltLabel.AutoSize = true;
+         this.SlotXsltLabel.Location = new System.Drawing.Point(68, 278);
+         this.SlotXsltLabel.Name = "SlotXsltLabel";
+         this.SlotXsltLabel.Size = new System.Drawing.Size(58, 13);
+         this.SlotXsltLabel.TabIndex = 16;
+         this.SlotXsltLabel.Text = "Slot XSLT:";
+         this.SlotXsltLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
          // 
          // btnSummaryBrowse
          // 
@@ -1894,8 +2069,10 @@ namespace HFM.Forms
          this.grpUpdateData.PerformLayout();
          this.grpHTMLOutput.ResumeLayout(false);
          this.grpHTMLOutput.PerformLayout();
-         this.pnlFtpMode.ResumeLayout(false);
-         this.pnlFtpMode.PerformLayout();
+         this.WebGenTypePanel.ResumeLayout(false);
+         this.WebGenTypePanel.PerformLayout();
+         this.FtpModePanel.ResumeLayout(false);
+         this.FtpModePanel.PerformLayout();
          ((System.ComponentModel.ISupportInitialize)(this.udLimitSize)).EndInit();
          this.tabStartup.ResumeLayout(false);
          this.grpFileExplorer.ResumeLayout(false);
@@ -1943,7 +2120,7 @@ namespace HFM.Forms
       private LabelWrapper lbl1Style;
       private LabelWrapper lbl1Preview;
       private GroupBoxWrapper grpHTMLOutput;
-      private LabelWrapper lbl2WebSiteDir;
+      private LabelWrapper WebSiteTargetPathLabel;
       private ButtonWrapper btnBrowseWebFolder;
       private LabelWrapper lbl2MinutesToGen;
       private System.Windows.Forms.FolderBrowserDialog locateWebFolder;
@@ -1965,7 +2142,7 @@ namespace HFM.Forms
       private CheckBoxWrapper chkSynchronous;
       private ValidatingTextBox txtWebGenMinutes;
       private CheckBoxWrapper chkWebSiteGenerator;
-      private ValidatingTextBox txtWebSiteBase;
+      private ValidatingTextBox WebSiteTargetPathTextBox;
       private GroupBoxWrapper grpWebStats;
       private GroupBoxWrapper grpWebProxy;
       private ValidatingTextBox txtProxyServer;
@@ -1991,9 +2168,6 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolTip toolTipPrefs;
       private LabelWrapper labelWrapper1;
       private System.Windows.Forms.NumericUpDown udDecimalPlaces;
-      private CheckBoxWrapper chkShowUserStats;
-      private CheckBoxWrapper chkDuplicateProject;
-      private CheckBoxWrapper chkDuplicateUserID;
       private System.Windows.Forms.TabPage tabReporting;
       private GroupBoxWrapper grpEmailSettings;
       private LabelWrapper lblSmtpServer;
@@ -2031,10 +2205,10 @@ namespace HFM.Forms
       private RadioButtonWrapper radioActive;
       private RadioButtonWrapper radioPassive;
       private LabelWrapper lblFtpMode;
-      private ButtonWrapper btnTestConnection;
+      private ButtonWrapper TestConnectionButton;
       private ButtonWrapper btnInstanceBrowse;
       private ValidatingTextBox txtInstance;
-      private LabelWrapper lblInstance;
+      private LabelWrapper SlotXsltLabel;
       private ButtonWrapper btnSummaryBrowse;
       private ValidatingTextBox txtSummary;
       private LabelWrapper lblSummary;
@@ -2066,8 +2240,23 @@ namespace HFM.Forms
       private CheckBoxWrapper chkXml;
       private System.Windows.Forms.NumericUpDown udLimitSize;
       private CheckBoxWrapper chkLimitSize;
-      private RadioPanel pnlFtpMode;
+      private RadioPanel FtpModePanel;
       private CheckBoxWrapper chkEtaAsDate;
       private CheckBoxWrapper chkClientHung;
+      private LabelWrapper WebSiteServerLabel;
+      private LabelWrapper WebSitePasswordLabel;
+      private LabelWrapper WebSiteUsernameLabel;
+      private CheckBoxWrapper DuplicateUserCheckBox;
+      private CheckBoxWrapper DuplicateProjectCheckBox;
+      private RadioPanel WebGenTypePanel;
+      private ValidatingTextBox WebSitePasswordTextBox;
+      private ValidatingTextBox WebSiteUsernameTextBox;
+      private ValidatingTextBox WebSiteServerTextBox;
+      private CheckBoxWrapper ShowUserStatsCheckBox;
+      private LabelWrapper UploadTypeLabel;
+      private RadioButtonWrapper WebGenTypeFtpRadioButton;
+      private RadioButtonWrapper WebGenTypePathRadioButton;
+      private ValidatingTextBox WebSitePortTextBox;
+      private LabelWrapper WebSitePortLabel;
    }
 }

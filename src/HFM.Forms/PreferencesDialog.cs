@@ -20,14 +20,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 using Castle.Core.Logging;
@@ -113,7 +111,7 @@ namespace HFM.Forms
          _validatingControls = new List<IValidatingControl>[tabControl1.TabCount];
          _propertyCollection = new PropertyDescriptorCollection[tabControl1.TabCount];
          _models = new object[tabControl1.TabCount];
-         if (Core.Application.IsRunningOnMono == false)
+         if (!Core.Application.IsRunningOnMono)
          {
             _cssSampleBrowser = new WebBrowser();
 
@@ -207,18 +205,29 @@ namespace HFM.Forms
                radioSchedule.Enabled = _scheduledTasksModel.GenerateWeb;
                lbl2MinutesToGen.Enabled = _scheduledTasksModel.GenerateWeb;
                radioFullRefresh.Enabled = _scheduledTasksModel.GenerateWeb;
-               txtWebSiteBase.Enabled = _scheduledTasksModel.GenerateWeb;
+               WebSiteTargetPathTextBox.Enabled = _scheduledTasksModel.GenerateWeb;
                chkHtml.Enabled = _scheduledTasksModel.GenerateWeb;
                chkXml.Enabled = _scheduledTasksModel.GenerateWeb;
                chkFAHlog.Enabled = _scheduledTasksModel.GenerateWeb;
-               btnTestConnection.Enabled = _scheduledTasksModel.GenerateWeb;
-               btnBrowseWebFolder.Enabled = _scheduledTasksModel.GenerateWeb;
+               TestConnectionButton.Enabled = _scheduledTasksModel.GenerateWeb;
                break;
             case "GenerateIntervalEnabled":
                txtWebGenMinutes.Enabled = _scheduledTasksModel.GenerateIntervalEnabled;
                break;
             case "FtpModeEnabled":
-               pnlFtpMode.Enabled = _scheduledTasksModel.FtpModeEnabled;
+               WebGenTypePanel.Enabled = _scheduledTasksModel.FtpModeEnabled;
+               WebSiteServerTextBox.Enabled = _scheduledTasksModel.FtpModeEnabled;
+               WebSiteServerLabel.Enabled = _scheduledTasksModel.FtpModeEnabled;
+               WebSitePortTextBox.Enabled = _scheduledTasksModel.FtpModeEnabled;
+               WebSitePortLabel.Enabled = _scheduledTasksModel.FtpModeEnabled;
+               WebSiteUsernameTextBox.Enabled = _scheduledTasksModel.FtpModeEnabled;
+               WebSiteUsernameLabel.Enabled = _scheduledTasksModel.FtpModeEnabled;
+               WebSitePasswordTextBox.Enabled = _scheduledTasksModel.FtpModeEnabled;
+               WebSitePasswordLabel.Enabled = _scheduledTasksModel.FtpModeEnabled;
+               FtpModePanel.Enabled = _scheduledTasksModel.FtpModeEnabled;
+               break;
+            case "BrowseLocalPathEnabled":
+               btnBrowseWebFolder.Enabled = _scheduledTasksModel.BrowseLocalPathEnabled;
                break;
             case "LimitLogSizeEnabled":
                chkLimitSize.Enabled = _scheduledTasksModel.LimitLogSizeEnabled;
@@ -234,7 +243,7 @@ namespace HFM.Forms
          switch (propertyName)
          {
             case "WebRoot":
-               txtWebSiteBase.Text = _scheduledTasksModel.WebRoot;
+               WebSiteTargetPathTextBox.Text = _scheduledTasksModel.WebRoot;
                break;
          }
       }
@@ -342,8 +351,8 @@ namespace HFM.Forms
             case "WebMobileSummary":
                txtMobileSummary.Text = _webVisualStylesModel.WebMobileSummary;
                break;
-            case "WebInstance":
-               txtInstance.Text = _webVisualStylesModel.WebInstance;
+            case "WebSlot":
+               txtInstance.Text = _webVisualStylesModel.WebSlot;
                break;
          }
       }
@@ -381,6 +390,11 @@ namespace HFM.Forms
 
       private IEnumerable<IValidatingControl> FindBoundControls(int index, string propertyName)
       {
+         //foreach (var control in _validatingControls[index])
+         //{
+         //   Debug.WriteLine(control.DataBindings["Text"].BindingMemberInfo.BindingField);
+         //}
+
          return _validatingControls[index].FindAll(x => x.DataBindings["Text"].BindingMemberInfo.BindingField == propertyName).AsReadOnly();
       }
 
@@ -390,57 +404,78 @@ namespace HFM.Forms
          _models[(int)TabName.ScheduledTasks] = _scheduledTasksModel;
       
          #region Refresh Data
-         chkSynchronous.DataBindings.Add("Checked", _scheduledTasksModel, "SyncOnLoad", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkDuplicateProject.DataBindings.Add("Checked", _scheduledTasksModel, "DuplicateProjectCheck", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkDuplicateUserID.DataBindings.Add("Checked", _scheduledTasksModel, "DuplicateUserIdCheck", false, DataSourceUpdateMode.OnPropertyChanged);
-
          // Always Add Bindings for CheckBoxes that control input TextBoxes after
          // the data has been bound to the TextBox
          
          // Add the CheckBox.Checked => TextBox.Enabled Binding
-         txtCollectMinutes.DataBindings.Add("Enabled", _scheduledTasksModel, "SyncOnSchedule", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtCollectMinutes.BindEnabled(_scheduledTasksModel, "SyncOnSchedule");
          // Bind the value to the TextBox
-         txtCollectMinutes.DataBindings.Add("Text", _scheduledTasksModel, "SyncTimeMinutes", false, DataSourceUpdateMode.OnValidation);
+         txtCollectMinutes.BindText(_scheduledTasksModel, "SyncTimeMinutes");
          // Finally, add the CheckBox.Checked Binding
-         chkScheduled.DataBindings.Add("Checked", _scheduledTasksModel, "SyncOnSchedule", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkScheduled.BindChecked(_scheduledTasksModel, "SyncOnSchedule");
 
-         chkAllowRunningAsync.DataBindings.Add("Checked", _scheduledTasksModel, "AllowRunningAsync", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkShowUserStats.DataBindings.Add("Checked", _scheduledTasksModel, "ShowXmlStats", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkSynchronous.BindChecked(_scheduledTasksModel, "SyncOnLoad");
+
+         chkAllowRunningAsync.BindChecked(_scheduledTasksModel, "AllowRunningAsync");
          #endregion
 
          #region Web Generation
          // Always Add Bindings for CheckBoxes that control input TextBoxes after
          // the data has been bound to the TextBox
 
-         radioSchedule.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
-         lbl2MinutesToGen.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
+         radioSchedule.BindEnabled(_scheduledTasksModel, "GenerateWeb");
+         lbl2MinutesToGen.BindEnabled(_scheduledTasksModel, "GenerateWeb");
          // Bind the value to the TextBox
-         txtWebGenMinutes.DataBindings.Add("Text", _scheduledTasksModel, "GenerateInterval", false, DataSourceUpdateMode.OnValidation);
+         txtWebGenMinutes.BindText(_scheduledTasksModel, "GenerateInterval");
          txtWebGenMinutes.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateIntervalEnabled", false, DataSourceUpdateMode.OnValidation);
          // Finally, add the RadioButton.Checked Binding
-         radioFullRefresh.DataBindings.Add("Checked", _scheduledTasksModel, "WebGenAfterRefresh", false, DataSourceUpdateMode.OnPropertyChanged);
-         radioFullRefresh.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
+         radioFullRefresh.BindChecked(_scheduledTasksModel, "WebGenAfterRefresh");
+         radioFullRefresh.BindEnabled(_scheduledTasksModel, "GenerateWeb");
 
-         txtWebSiteBase.DataBindings.Add("Text", _scheduledTasksModel, "WebRoot", false, DataSourceUpdateMode.OnValidation);
-         txtWebSiteBase.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkHtml.DataBindings.Add("Checked", _scheduledTasksModel, "CopyHtml", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkHtml.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkXml.DataBindings.Add("Checked", _scheduledTasksModel, "CopyXml", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkXml.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkFAHlog.DataBindings.Add("Checked", _scheduledTasksModel, "CopyFAHlog", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkFAHlog.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
-         pnlFtpMode.DataSource = _scheduledTasksModel;
-         pnlFtpMode.ValueMember = "FtpMode";
-         pnlFtpMode.DataBindings.Add("Enabled", _scheduledTasksModel, "FtpModeEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkLimitSize.DataBindings.Add("Checked", _scheduledTasksModel, "LimitLogSize", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkLimitSize.DataBindings.Add("Enabled", _scheduledTasksModel, "LimitLogSizeEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+         WebGenTypePanel.DataSource = _scheduledTasksModel;
+         WebGenTypePanel.ValueMember = "WebGenType";
+         WebGenTypePanel.BindEnabled(_scheduledTasksModel, "GenerateWeb");
+
+         WebSiteTargetPathTextBox.BindText(_scheduledTasksModel, "WebRoot");
+         WebSiteTargetPathTextBox.BindEnabled(_scheduledTasksModel, "GenerateWeb");
+         WebSiteTargetPathLabel.BindEnabled(_scheduledTasksModel, "GenerateWeb");
+
+         WebSiteServerTextBox.BindText(_scheduledTasksModel, "WebGenServer");
+         WebSiteServerTextBox.BindEnabled(_scheduledTasksModel, "FtpModeEnabled");
+         WebSiteServerLabel.BindEnabled(_scheduledTasksModel, "FtpModeEnabled");
+
+         WebSitePortTextBox.BindText(_scheduledTasksModel, "WebGenPort");
+         WebSitePortTextBox.BindEnabled(_scheduledTasksModel, "FtpModeEnabled");
+         WebSitePortLabel.BindEnabled(_scheduledTasksModel, "FtpModeEnabled");
+
+         WebSiteUsernameTextBox.BindText(_scheduledTasksModel, "WebGenUsername");
+         WebSiteUsernameTextBox.BindEnabled(_scheduledTasksModel, "FtpModeEnabled");
+         WebSiteUsernameTextBox.DataBindings.Add("ErrorToolTipText", _scheduledTasksModel, "CredentialsErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
+         WebSiteUsernameLabel.BindEnabled(_scheduledTasksModel, "FtpModeEnabled");
+
+         WebSitePasswordTextBox.BindText(_scheduledTasksModel, "WebGenPassword");
+         WebSitePasswordTextBox.BindEnabled(_scheduledTasksModel, "FtpModeEnabled");
+         WebSitePasswordTextBox.DataBindings.Add("ErrorToolTipText", _scheduledTasksModel, "CredentialsErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
+         WebSitePasswordLabel.BindEnabled(_scheduledTasksModel, "FtpModeEnabled");
+
+         chkHtml.BindChecked(_scheduledTasksModel, "CopyHtml");
+         chkHtml.BindEnabled(_scheduledTasksModel, "GenerateWeb");
+         chkXml.BindChecked(_scheduledTasksModel, "CopyXml");
+         chkXml.BindEnabled(_scheduledTasksModel, "GenerateWeb");
+         chkFAHlog.BindChecked(_scheduledTasksModel, "CopyFAHlog");
+         chkFAHlog.BindEnabled(_scheduledTasksModel, "GenerateWeb");
+         FtpModePanel.DataSource = _scheduledTasksModel;
+         FtpModePanel.ValueMember = "FtpMode";
+         FtpModePanel.BindEnabled(_scheduledTasksModel, "FtpModeEnabled");
+         chkLimitSize.BindChecked(_scheduledTasksModel, "LimitLogSize");
+         chkLimitSize.BindEnabled(_scheduledTasksModel, "LimitLogSizeEnabled");
          udLimitSize.DataBindings.Add("Value", _scheduledTasksModel, "LimitLogSizeLength", false, DataSourceUpdateMode.OnPropertyChanged);
-         udLimitSize.DataBindings.Add("Enabled", _scheduledTasksModel, "LimitLogSizeLengthEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+         udLimitSize.BindEnabled(_scheduledTasksModel, "LimitLogSizeLengthEnabled");
          
          // Finally, add the CheckBox.Checked Binding
-         btnTestConnection.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
-         btnBrowseWebFolder.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkWebSiteGenerator.DataBindings.Add("Checked", _scheduledTasksModel, "GenerateWeb", false, DataSourceUpdateMode.OnPropertyChanged);
+         TestConnectionButton.BindEnabled(_scheduledTasksModel, "GenerateWeb");
+         btnBrowseWebFolder.BindEnabled(_scheduledTasksModel, "BrowseLocalPathEnabled");
+         chkWebSiteGenerator.BindChecked(_scheduledTasksModel, "GenerateWeb");
          #endregion
       }
       
@@ -451,7 +486,7 @@ namespace HFM.Forms
       
          #region Startup
          /*** Auto-Run Is Not DataBound ***/
-         if (Core.Application.IsRunningOnMono == false)
+         if (!Core.Application.IsRunningOnMono)
          {
             chkAutoRun.Checked = _autoRun.IsEnabled();
          }
@@ -461,21 +496,21 @@ namespace HFM.Forms
             chkAutoRun.Enabled = false;
          }
          
-         chkRunMinimized.DataBindings.Add("Checked", _startupAndExternalModel, "RunMinimized", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkCheckForUpdate.DataBindings.Add("Checked", _startupAndExternalModel, "StartupCheckForUpdate", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkRunMinimized.BindChecked(_startupAndExternalModel, "RunMinimized");
+         chkCheckForUpdate.BindChecked(_startupAndExternalModel, "StartupCheckForUpdate");
          #endregion
 
          #region Configuration File
-         txtDefaultConfigFile.DataBindings.Add("Enabled", _startupAndExternalModel, "UseDefaultConfigFile", false, DataSourceUpdateMode.OnPropertyChanged);
-         btnBrowseConfigFile.DataBindings.Add("Enabled", _startupAndExternalModel, "UseDefaultConfigFile", false, DataSourceUpdateMode.OnPropertyChanged);
-         txtDefaultConfigFile.DataBindings.Add("Text", _startupAndExternalModel, "DefaultConfigFile", false, DataSourceUpdateMode.OnValidation);
+         txtDefaultConfigFile.BindEnabled(_startupAndExternalModel, "UseDefaultConfigFile");
+         btnBrowseConfigFile.BindEnabled(_startupAndExternalModel, "UseDefaultConfigFile");
+         txtDefaultConfigFile.BindText(_startupAndExternalModel, "DefaultConfigFile");
          
-         chkDefaultConfig.DataBindings.Add("Checked", _startupAndExternalModel, "UseDefaultConfigFile", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkDefaultConfig.BindChecked(_startupAndExternalModel, "UseDefaultConfigFile");
          #endregion
 
          #region External Programs
-         txtLogFileViewer.DataBindings.Add("Text", _startupAndExternalModel, "LogFileViewer", false, DataSourceUpdateMode.OnValidation);
-         txtFileExplorer.DataBindings.Add("Text", _startupAndExternalModel, "FileExplorer", false, DataSourceUpdateMode.OnValidation);
+         txtLogFileViewer.BindText(_startupAndExternalModel, "LogFileViewer");
+         txtFileExplorer.BindText(_startupAndExternalModel, "FileExplorer");
          #endregion
       }
 
@@ -485,17 +520,20 @@ namespace HFM.Forms
          _models[(int)TabName.Options] = _optionsModel;
       
          #region Interactive Options
-         chkOffline.DataBindings.Add("Checked", _optionsModel, "OfflineLast", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkColorLog.DataBindings.Add("Checked", _optionsModel, "ColorLogFile", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkAutoSave.DataBindings.Add("Checked", _optionsModel, "AutoSaveConfig", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkOffline.BindChecked(_optionsModel, "OfflineLast");
+         chkColorLog.BindChecked(_optionsModel, "ColorLogFile");
+         chkAutoSave.BindChecked(_optionsModel, "AutoSaveConfig");
+         DuplicateProjectCheckBox.BindChecked(_optionsModel, "DuplicateProjectCheck");
+         DuplicateUserCheckBox.BindChecked(_optionsModel, "DuplicateUserIdCheck");
+         ShowUserStatsCheckBox.BindChecked(_optionsModel, "ShowXmlStats");
 
          cboPpdCalc.DataSource = OptionsModel.PpdCalculationList;
          cboPpdCalc.DisplayMember = "DisplayMember";
          cboPpdCalc.ValueMember = "ValueMember";
          cboPpdCalc.DataBindings.Add("SelectedValue", _optionsModel, "PpdCalculation", false, DataSourceUpdateMode.OnPropertyChanged);
          udDecimalPlaces.DataBindings.Add("Value", _optionsModel, "DecimalPlaces", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkCalcBonus.DataBindings.Add("Checked", _optionsModel, "CalculateBonus", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkEtaAsDate.DataBindings.Add("Checked", _optionsModel, "EtaDate", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkCalcBonus.BindChecked(_optionsModel, "CalculateBonus");
+         chkEtaAsDate.BindChecked(_optionsModel, "EtaDate");
          #endregion
 
          #region Debug Message Level
@@ -519,40 +557,40 @@ namespace HFM.Forms
          _models[(int)TabName.Reporting] = _reportingModel;
       
          #region Email Settings
-         chkEmailSecure.DataBindings.Add("Checked", _reportingModel, "ServerSecure", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkEmailSecure.DataBindings.Add("Enabled", _reportingModel, "ReportingEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkEmailSecure.BindChecked(_reportingModel, "ServerSecure");
+         chkEmailSecure.BindEnabled(_reportingModel, "ReportingEnabled");
 
-         btnTestEmail.DataBindings.Add("Enabled", _reportingModel, "ReportingEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+         btnTestEmail.BindEnabled(_reportingModel, "ReportingEnabled");
          
-         txtToEmailAddress.DataBindings.Add("Text", _reportingModel, "ToAddress", false, DataSourceUpdateMode.OnValidation);
-         txtToEmailAddress.DataBindings.Add("Enabled", _reportingModel, "ReportingEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtToEmailAddress.BindText(_reportingModel, "ToAddress");
+         txtToEmailAddress.BindEnabled(_reportingModel, "ReportingEnabled");
          
-         txtFromEmailAddress.DataBindings.Add("Text", _reportingModel, "FromAddress", false, DataSourceUpdateMode.OnValidation);
-         txtFromEmailAddress.DataBindings.Add("Enabled", _reportingModel, "ReportingEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtFromEmailAddress.BindText(_reportingModel, "FromAddress");
+         txtFromEmailAddress.BindEnabled(_reportingModel, "ReportingEnabled");
          
-         txtSmtpServer.DataBindings.Add("Text", _reportingModel, "ServerAddress", false, DataSourceUpdateMode.OnValidation);
+         txtSmtpServer.BindText(_reportingModel, "ServerAddress");
          txtSmtpServer.DataBindings.Add("ErrorToolTipText", _reportingModel, "ServerPortPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
-         txtSmtpServer.DataBindings.Add("Enabled", _reportingModel, "ReportingEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtSmtpServer.BindEnabled(_reportingModel, "ReportingEnabled");
          
-         txtSmtpServerPort.DataBindings.Add("Text", _reportingModel, "ServerPort", false, DataSourceUpdateMode.OnValidation);
+         txtSmtpServerPort.BindText(_reportingModel, "ServerPort");
          txtSmtpServerPort.DataBindings.Add("ErrorToolTipText", _reportingModel, "ServerPortPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
-         txtSmtpServerPort.DataBindings.Add("Enabled", _reportingModel, "ReportingEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtSmtpServerPort.BindEnabled(_reportingModel, "ReportingEnabled");
          
-         txtSmtpUsername.DataBindings.Add("Text", _reportingModel, "ServerUsername", false, DataSourceUpdateMode.OnValidation);
+         txtSmtpUsername.BindText(_reportingModel, "ServerUsername");
          txtSmtpUsername.DataBindings.Add("ErrorToolTipText", _reportingModel, "UsernamePasswordPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
-         txtSmtpUsername.DataBindings.Add("Enabled", _reportingModel, "ReportingEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtSmtpUsername.BindEnabled(_reportingModel, "ReportingEnabled");
          
-         txtSmtpPassword.DataBindings.Add("Text", _reportingModel, "ServerPassword", false, DataSourceUpdateMode.OnValidation);
+         txtSmtpPassword.BindText(_reportingModel, "ServerPassword");
          txtSmtpPassword.DataBindings.Add("ErrorToolTipText", _reportingModel, "UsernamePasswordPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
-         txtSmtpPassword.DataBindings.Add("Enabled", _reportingModel, "ReportingEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtSmtpPassword.BindEnabled(_reportingModel, "ReportingEnabled");
 
-         chkEnableEmail.DataBindings.Add("Checked", _reportingModel, "ReportingEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkEnableEmail.BindChecked(_reportingModel, "ReportingEnabled");
          #endregion
          
          #region Report Selections
-         grpReportSelections.DataBindings.Add("Enabled", _reportingModel, "ReportingEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkClientEuePause.DataBindings.Add("Checked", _reportingModel, "ReportEuePause", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkClientHung.DataBindings.Add("Checked", _reportingModel, "ReportHung", false, DataSourceUpdateMode.OnPropertyChanged);
+         grpReportSelections.BindEnabled(_reportingModel, "ReportingEnabled");
+         chkClientEuePause.BindChecked(_reportingModel, "ReportEuePause");
+         chkClientHung.BindChecked(_reportingModel, "ReportHung");
          #endregion
       }
 
@@ -562,42 +600,42 @@ namespace HFM.Forms
          _models[(int)TabName.WebSettings] = _webSettingsModel;
       
          #region Web Statistics
-         txtEOCUserID.DataBindings.Add("Text", _webSettingsModel, "EocUserId", false, DataSourceUpdateMode.OnValidation);
-         txtStanfordUserID.DataBindings.Add("Text", _webSettingsModel, "StanfordId", false, DataSourceUpdateMode.OnValidation);
-         txtStanfordTeamID.DataBindings.Add("Text", _webSettingsModel, "TeamId", false, DataSourceUpdateMode.OnValidation);
+         txtEOCUserID.BindText(_webSettingsModel, "EocUserId");
+         txtStanfordUserID.BindText(_webSettingsModel, "StanfordId");
+         txtStanfordTeamID.BindText(_webSettingsModel, "TeamId");
          #endregion
          
          #region Project Download URL
-         txtProjectDownloadUrl.DataBindings.Add("Text", _webSettingsModel, "ProjectDownloadUrl", false, DataSourceUpdateMode.OnValidation);
+         txtProjectDownloadUrl.BindText(_webSettingsModel, "ProjectDownloadUrl");
          #endregion
 
          #region Web Proxy Settings
          // Always Add Bindings for CheckBoxes that control input TextBoxes after
          // the data has been bound to the TextBox
-         txtProxyServer.DataBindings.Add("Text", _webSettingsModel, "ProxyServer", false, DataSourceUpdateMode.OnValidation);
+         txtProxyServer.BindText(_webSettingsModel, "ProxyServer");
          txtProxyServer.DataBindings.Add("ErrorToolTipText", _webSettingsModel, "ServerPortPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
-         txtProxyServer.DataBindings.Add("Enabled", _webSettingsModel, "UseProxy", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtProxyServer.BindEnabled(_webSettingsModel, "UseProxy");
 
-         txtProxyPort.DataBindings.Add("Text", _webSettingsModel, "ProxyPort", false, DataSourceUpdateMode.OnValidation);
+         txtProxyPort.BindText(_webSettingsModel, "ProxyPort");
          txtProxyPort.DataBindings.Add("ErrorToolTipText", _webSettingsModel, "ServerPortPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
-         txtProxyPort.DataBindings.Add("Enabled", _webSettingsModel, "UseProxy", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtProxyPort.BindEnabled(_webSettingsModel, "UseProxy");
 
          // Finally, add the CheckBox.Checked Binding
-         chkUseProxy.DataBindings.Add("Checked", _webSettingsModel, "UseProxy", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkUseProxyAuth.DataBindings.Add("Enabled", _webSettingsModel, "UseProxy", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkUseProxy.BindChecked(_webSettingsModel, "UseProxy");
+         chkUseProxyAuth.BindEnabled(_webSettingsModel, "UseProxy");
 
          // Always Add Bindings for CheckBoxes that control input TextBoxes after
          // the data has been bound to the TextBox
-         txtProxyUser.DataBindings.Add("Text", _webSettingsModel, "ProxyUser", false, DataSourceUpdateMode.OnValidation);
+         txtProxyUser.BindText(_webSettingsModel, "ProxyUser");
          txtProxyUser.DataBindings.Add("ErrorToolTipText", _webSettingsModel, "UsernamePasswordPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
-         txtProxyUser.DataBindings.Add("Enabled", _webSettingsModel, "ProxyAuthEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtProxyUser.BindEnabled(_webSettingsModel, "ProxyAuthEnabled");
 
-         txtProxyPass.DataBindings.Add("Text", _webSettingsModel, "ProxyPass", false, DataSourceUpdateMode.OnValidation);
+         txtProxyPass.BindText(_webSettingsModel, "ProxyPass");
          txtProxyPass.DataBindings.Add("ErrorToolTipText", _webSettingsModel, "UsernamePasswordPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
-         txtProxyPass.DataBindings.Add("Enabled", _webSettingsModel, "ProxyAuthEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtProxyPass.BindEnabled(_webSettingsModel, "ProxyAuthEnabled");
 
          // Finally, add the CheckBox.Checked Binding
-         chkUseProxyAuth.DataBindings.Add("Checked", _webSettingsModel, "UseProxyAuth", false, DataSourceUpdateMode.OnPropertyChanged);
+         chkUseProxyAuth.BindChecked(_webSettingsModel, "UseProxyAuth");
          #endregion
       }
       
@@ -615,7 +653,7 @@ namespace HFM.Forms
          txtMobileOverview.DataBindings.Add("Text", _webVisualStylesModel, "WebMobileOverview", false, DataSourceUpdateMode.OnPropertyChanged);
          txtSummary.DataBindings.Add("Text", _webVisualStylesModel, "WebSummary", false, DataSourceUpdateMode.OnPropertyChanged);
          txtMobileSummary.DataBindings.Add("Text", _webVisualStylesModel, "WebMobileSummary", false, DataSourceUpdateMode.OnPropertyChanged);
-         txtInstance.DataBindings.Add("Text", _webVisualStylesModel, "WebInstance", false, DataSourceUpdateMode.OnPropertyChanged);
+         txtInstance.DataBindings.Add("Text", _webVisualStylesModel, "WebSlot", false, DataSourceUpdateMode.OnPropertyChanged);
       }
 
       private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
@@ -788,7 +826,7 @@ namespace HFM.Forms
 
       #region Button Click Event Handlers
 
-      private void btnTestConnection_Click(object sender, EventArgs e)
+      private void TestConnectionButtonClick(object sender, EventArgs e)
       {
          if (_net == null)
          {
@@ -798,21 +836,21 @@ namespace HFM.Forms
          try
          {
             SetWaitCursor();
-            Match mMatchFtpWithUserPassUrl = Core.Validate.MatchFtpWithUserPassUrl(txtWebSiteBase.Text);
-            if (mMatchFtpWithUserPassUrl.Success == false)
+            if (!_scheduledTasksModel.FtpModeEnabled)
             {
                Action<string> del = CheckFileConnection;
-               del.BeginInvoke(txtWebSiteBase.Text, CheckFileConnectionCallback, del);
+               del.BeginInvoke(WebSiteTargetPathTextBox.Text, CheckFileConnectionCallback, del);
             }
             else
             {
-               string server = mMatchFtpWithUserPassUrl.Result("${domain}");
-               string path = mMatchFtpWithUserPassUrl.Result("${file}");
-               string username = mMatchFtpWithUserPassUrl.Result("${username}");
-               string password = mMatchFtpWithUserPassUrl.Result("${password}");
+               string path = _scheduledTasksModel.WebRoot;
+               string server = _scheduledTasksModel.WebGenServer;
+               int port = _scheduledTasksModel.WebGenPort;
+               string username = _scheduledTasksModel.WebGenUsername;
+               string password = _scheduledTasksModel.WebGenPassword;
                
                FtpCheckConnectionAction del = _net.FtpCheckConnection;
-               del.BeginInvoke(server, path, username, password, _scheduledTasksModel.FtpMode, FtpCheckConnectionCallback, del);
+               del.BeginInvoke(server, port, path, username, password, _scheduledTasksModel.FtpMode, FtpCheckConnectionCallback, del);
             }
          }
          catch (Exception ex)
@@ -1087,10 +1125,10 @@ namespace HFM.Forms
 
       private void btnInstanceBrowse_Click(object sender, EventArgs e)
       {
-         string path = DoXsltBrowse(_webVisualStylesModel.WebInstance, XsltExt, XsltFilter);
+         string path = DoXsltBrowse(_webVisualStylesModel.WebSlot, XsltExt, XsltFilter);
          if (String.IsNullOrEmpty(path) == false)
          {
-            _webVisualStylesModel.WebInstance = path;
+            _webVisualStylesModel.WebSlot = path;
          }
       }
 
@@ -1150,7 +1188,7 @@ namespace HFM.Forms
 
       #region TextBox KeyPress Event Handler (to enforce digits only)
 
-      private void txtDigitsOnly_KeyPress(object sender, KeyPressEventArgs e)
+      private void TextBoxDigitsOnlyKeyPress(object sender, KeyPressEventArgs e)
       {
          Debug.WriteLine(String.Format("Keystroke: {0}", (int)e.KeyChar));
       

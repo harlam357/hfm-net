@@ -118,7 +118,7 @@ namespace HFM.Forms
       private ApplicationUpdate DoCheckForUpdate()
       {
          var updateChecker = new UpdateChecker();
-         return updateChecker.CheckForUpdate(Constants.ApplicationName, _proxy);
+         return updateChecker.CheckForUpdate(Application.NameAndVersion, _proxy);
       }
 
       private void CheckForUpdateCallback(IAsyncResult result)
@@ -136,7 +136,7 @@ namespace HFM.Forms
                else if (_userInvoked)
                {
                   Owner.Invoke(new Action(() => _messageBoxView.ShowInformation(Owner, String.Format(CultureInfo.CurrentCulture,
-                                                   "{0} is already up-to-date.", Constants.ApplicationName), Owner.Text)), null);
+                                                   "{0} is already up-to-date.", Application.NameAndVersion), Owner.Text)), null);
                }
             }
          }
@@ -146,7 +146,7 @@ namespace HFM.Forms
             if (_userInvoked)
             {
                string message = String.Format(CultureInfo.CurrentCulture, "{0} encountered the following error while checking for an update:{1}{1}{2}.",
-                                              Constants.ApplicationName, Environment.NewLine, ex.Message);
+                                              Application.NameAndVersion, Environment.NewLine, ex.Message);
                Owner.Invoke(new Action(() => _messageBoxView.ShowError(Owner, message, Owner.Text)), null);
             }
          }
@@ -180,7 +180,7 @@ namespace HFM.Forms
          }
 
          var updatePresenter = new UpdatePresenter(ExceptionLogger,
-            update, _proxy, Constants.ApplicationName, Application.VersionWithRevision);
+            update, _proxy, Application.NameAndVersion, Application.VersionWithRevision);
          updatePresenter.Show(Owner);
          HandleUpdatePresenterResults(updatePresenter);
       }
@@ -198,7 +198,7 @@ namespace HFM.Forms
          {
             string message = String.Format(CultureInfo.CurrentCulture,
                                            "{0} will install the new version when you exit the application.",
-                                           Constants.ApplicationName);
+                                           Application.NameAndVersion);
             _messageBoxView.ShowInformation(Owner, message, Owner.Text);
             UpdateFilePath = presenter.LocalFilePath;
          }

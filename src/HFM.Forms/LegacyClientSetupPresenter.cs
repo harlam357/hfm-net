@@ -258,7 +258,7 @@ namespace HFM.Forms
          }
          else if (_settingsModel.LegacyClientSubType.Equals(LegacyClientSubType.Ftp))
          {
-            _networkOps.BeginFtpCheckConnection(SettingsModel.Server, SettingsModel.Path, SettingsModel.Username, SettingsModel.Password, SettingsModel.FtpMode, CheckConnectionCallback);
+            _networkOps.BeginFtpCheckConnection(SettingsModel.Server, SettingsModel.Port, SettingsModel.Path, SettingsModel.Username, SettingsModel.Password, SettingsModel.FtpMode, CheckConnectionCallback);
          }
          else if (_settingsModel.LegacyClientSubType.Equals(LegacyClientSubType.Http))
          {

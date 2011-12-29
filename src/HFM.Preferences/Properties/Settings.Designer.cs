@@ -797,13 +797,13 @@ namespace HFM.Preferences.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("WebInstance.xslt")]
-        public string WebInstance {
+        [global::System.Configuration.DefaultSettingValueAttribute("WebSlot.xslt")]
+        public string WebSlot {
             get {
-                return ((string)(this["WebInstance"]));
+                return ((string)(this["WebSlot"]));
             }
             set {
-                this["WebInstance"] = value;
+                this["WebSlot"] = value;
             }
         }
         
@@ -1089,6 +1089,66 @@ namespace HFM.Preferences.Properties {
             }
             set {
                 this["BenchmarksClientsPerGraph"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string WebGenServer {
+            get {
+                return ((string)(this["WebGenServer"]));
+            }
+            set {
+                this["WebGenServer"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("21")]
+        public int WebGenPort {
+            get {
+                return ((int)(this["WebGenPort"]));
+            }
+            set {
+                this["WebGenPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string WebGenUsername {
+            get {
+                return ((string)(this["WebGenUsername"]));
+            }
+            set {
+                this["WebGenUsername"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string WebGenPassword {
+            get {
+                return ((string)(this["WebGenPassword"]));
+            }
+            set {
+                this["WebGenPassword"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string WebGenType {
+            get {
+                return ((string)(this["WebGenType"]));
+            }
+            set {
+                this["WebGenType"] = value;
             }
         }
     }

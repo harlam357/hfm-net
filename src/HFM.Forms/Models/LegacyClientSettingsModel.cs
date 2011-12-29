@@ -275,14 +275,10 @@ namespace HFM.Forms.Models
                   {
                      return true;
                   }
-                  return !Validate.PathInstancePath(Path);
+                  return !Validate.Path(Path);
                case LegacyClientSubType.Http:
                   return !Validate.HttpUrl(Path);
                case LegacyClientSubType.Ftp:
-                  if (Path == "/")
-                  {
-                     return false;
-                  }
                   return !Validate.FtpPath(Path);
                default:
                   return true;

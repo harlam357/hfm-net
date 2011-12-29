@@ -43,6 +43,9 @@ namespace HFM.Forms.Models
          DecimalPlaces = prefs.Get<int>(Preference.DecimalPlaces);
          CalculateBonus = prefs.Get<bool>(Preference.CalculateBonus);
          EtaDate = prefs.Get<bool>(Preference.EtaDate);
+         DuplicateProjectCheck = prefs.Get<bool>(Preference.DuplicateProjectCheck);
+         DuplicateUserIdCheck = prefs.Get<bool>(Preference.DuplicateUserIdCheck);
+         ShowXmlStats = prefs.Get<bool>(Preference.ShowXmlStats);
          MessageLevel = (LoggerLevel)prefs.Get<int>(Preference.MessageLevel);
          FormShowStyle = prefs.Get<FormShowStyleType>(Preference.FormShowStyle);
       }
@@ -56,6 +59,9 @@ namespace HFM.Forms.Models
          prefs.Set(Preference.DecimalPlaces, DecimalPlaces);
          prefs.Set(Preference.CalculateBonus, CalculateBonus);
          prefs.Set(Preference.EtaDate, EtaDate);
+         prefs.Set(Preference.DuplicateProjectCheck, DuplicateProjectCheck);
+         prefs.Set(Preference.DuplicateUserIdCheck, DuplicateUserIdCheck);
+         prefs.Set(Preference.ShowXmlStats, ShowXmlStats);
          prefs.Set(Preference.MessageLevel, (int)MessageLevel);
          prefs.Set(Preference.FormShowStyle, FormShowStyle);
       }
@@ -163,6 +169,51 @@ namespace HFM.Forms.Models
             {
                _etaDate = value;
                OnPropertyChanged("EtaDate");
+            }
+         }
+      }
+
+      private bool _duplicateProjectCheck;
+
+      public bool DuplicateProjectCheck
+      {
+         get { return _duplicateProjectCheck; }
+         set
+         {
+            if (DuplicateProjectCheck != value)
+            {
+               _duplicateProjectCheck = value;
+               OnPropertyChanged("DuplicateProjectCheck");
+            }
+         }
+      }
+
+      private bool _duplicateUserIdCheck;
+
+      public bool DuplicateUserIdCheck
+      {
+         get { return _duplicateUserIdCheck; }
+         set
+         {
+            if (DuplicateUserIdCheck != value)
+            {
+               _duplicateUserIdCheck = value;
+               OnPropertyChanged("DuplicateUserIdCheck");
+            }
+         }
+      }
+
+      private bool _showXmlStats;
+
+      public bool ShowXmlStats
+      {
+         get { return _showXmlStats; }
+         set
+         {
+            if (ShowXmlStats != value)
+            {
+               _showXmlStats = value;
+               OnPropertyChanged("ShowXmlStats");
             }
          }
       }

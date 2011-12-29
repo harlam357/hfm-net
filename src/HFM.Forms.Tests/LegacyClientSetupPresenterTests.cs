@@ -166,7 +166,7 @@ namespace HFM.Forms.Tests
          // Arrange
          var settings = new LegacyClientSettingsModel();
          settings.LegacyClientSubType = LegacyClientSubType.Ftp;
-         _networkOps.Expect(x => x.BeginFtpCheckConnection(null, null, null, null, FtpType.Passive, null)).IgnoreArguments().Return(null);
+         _networkOps.Expect(x => x.BeginFtpCheckConnection(null, 21, null, null, null, FtpType.Passive, null)).IgnoreArguments().Return(null);
          // Act
          _presenter = CreatePresenter();
          _presenter.SettingsModel = settings;
