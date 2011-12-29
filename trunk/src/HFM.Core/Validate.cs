@@ -51,7 +51,7 @@ namespace HFM.Core
       #region Methods
 
       /// <summary>
-      /// Validate Instance Name
+      /// Validate Client Name
       /// </summary>
       public static bool ClientName(string name)
       {
@@ -63,7 +63,7 @@ namespace HFM.Core
       }
 
       /// <summary>
-      /// Clean Instance Name
+      /// Clean Client Name
       /// </summary>
       public static string CleanClientName(string name)
       {
@@ -105,122 +105,136 @@ namespace HFM.Core
       /// <summary>
       /// Validate File Name
       /// </summary>
-      /// <param name="val">String to validate</param>
-      public static bool FileName(string val)
+      public static bool FileName(string value)
       {
-         if (val == null) return false;
-         if (val.Trim().Length == 0) return false;
+         if (value == null) return false;
+         value = value.Trim();
+         if (value.Length == 0) return false;
       
-         Regex rValidFileName = new Regex(ValidFileName, RegexOptions.Singleline | RegexOptions.IgnoreCase);
-         
-         return rValidFileName.IsMatch(val);
+         var validFileName = new Regex(ValidFileName, RegexOptions.Singleline | RegexOptions.IgnoreCase);
+         return validFileName.IsMatch(value);
       }
 
       /// <summary>
-      /// Validate PathInstance Path
+      /// Validate Path
       /// </summary>
-      /// <param name="val">String to validate</param>
-      public static bool PathInstancePath(string val)
+      public static bool Path(string value)
       {
+         if (value == null) return false;
+         value = value.Trim();
+         if (value.Length == 0) return false;
+
          System.Diagnostics.Debug.WriteLine(Environment.OSVersion.VersionString);
          
-         Regex rValidPathWin = new Regex(ValidWinPath, RegexOptions.Singleline | RegexOptions.IgnoreCase);
-         Regex rValidPathUnix = new Regex(ValidUnixPath, RegexOptions.Singleline | RegexOptions.IgnoreCase);
+         var validPathWin = new Regex(ValidWinPath, RegexOptions.Singleline | RegexOptions.IgnoreCase);
+         var validUnixPath = new Regex(ValidUnixPath, RegexOptions.Singleline | RegexOptions.IgnoreCase);
 
-         return (rValidPathWin.IsMatch(val) || rValidPathUnix.IsMatch(val));
+         return (validPathWin.IsMatch(value) || validUnixPath.IsMatch(value));
       }
 
       /// <summary>
-      /// Validate FTP Server Name
+      /// Validate Server Name
       /// </summary>
-      /// <param name="val">String to validate</param>
-      public static bool ServerName(string val)
+      public static bool ServerName(string value)
       {
-         Regex rValidServer = new Regex(ValidServer, RegexOptions.Singleline | RegexOptions.IgnoreCase);
-         
-         return rValidServer.IsMatch(val);
+         if (value == null) return false;
+         value = value.Trim();
+         if (value.Length == 0) return false;
+
+         var validServer = new Regex(ValidServer, RegexOptions.Singleline | RegexOptions.IgnoreCase);
+         return validServer.IsMatch(value);
       }
 
       /// <summary>
       /// Validate Server Port Number
       /// </summary>
-      /// <param name="val">Value to validate</param>
-      public static bool ServerPort(int val)
+      public static bool ServerPort(int value)
       {
-         return val > 0 && val < UInt16.MaxValue;
+         return value > 0 && value < UInt16.MaxValue;
       }
 
       /// <summary>
-      /// Validate FtpInstance Path
+      /// Validate Ftp Path
       /// </summary>
-      /// <param name="val">String to validate</param>
-      public static bool FtpPath(string val)
+      public static bool FtpPath(string value)
       {
-         Regex rValidPathUnix = new Regex(ValidUnixPath, RegexOptions.Singleline | RegexOptions.IgnoreCase); 
-         
-         return rValidPathUnix.IsMatch(val);
+         if (value == null) return false;
+         value = value.Trim();
+         if (value.Length == 0) return false;
+         if (value == "/") return true;
+
+         var validUnixPath = new Regex(ValidUnixPath, RegexOptions.Singleline | RegexOptions.IgnoreCase); 
+         return validUnixPath.IsMatch(value);
       }
 
       /// <summary>
-      /// Validate HttpInstance URL
+      /// Validate Http URL
       /// </summary>
-      /// <param name="val">String to validate</param>
-      public static bool HttpUrl(string val)
+      public static bool HttpUrl(string value)
       {
-         Regex rValidHttpUrl = new Regex(ValidHttpUrl, RegexOptions.Singleline | RegexOptions.IgnoreCase);
+         if (value == null) return false;
+         value = value.Trim();
+         if (value.Length == 0) return false;
 
-         return rValidHttpUrl.IsMatch(val);
+         var validHttpUrl = new Regex(ValidHttpUrl, RegexOptions.Singleline | RegexOptions.IgnoreCase);
+         return validHttpUrl.IsMatch(value);
       }
 
       /// <summary>
       /// Validate Http or Ftp URL
       /// </summary>
-      /// <param name="val">String to validate</param>
-      public static bool HttpOrFtpUrl(string val)
+      public static bool HttpOrFtpUrl(string value)
       {
-         return MatchHttpOrFtpUrl(val).Success;
+         var match = MatchHttpOrFtpUrl(value);
+         return match != null && match.Success;
       }
 
       /// <summary>
-      /// Match HTTP or FTP URL String
+      /// Match Http or Ftp URL
       /// </summary>
-      /// <param name="val"></param>
-      public static Match MatchHttpOrFtpUrl(string val)
+      public static Match MatchHttpOrFtpUrl(string value)
       {
-         Regex rValidHttpOrFtpUrl = new Regex(ValidMatchHttpOrFtpUrl, RegexOptions.Singleline | RegexOptions.IgnoreCase);
-         
-         return rValidHttpOrFtpUrl.Match(val);
+         if (value == null) return null;
+         value = value.Trim();
+         if (value.Length == 0) return null;
+
+         var validHttpOrFtpUrl = new Regex(ValidMatchHttpOrFtpUrl, RegexOptions.Singleline | RegexOptions.IgnoreCase);
+         return validHttpOrFtpUrl.Match(value);
       }
 
       /// <summary>
-      /// Validate FTP URL String with Username and Password
+      /// Validate Ftp URL with Username and Password
       /// </summary>
-      /// <param name="val">String to validate</param>
-      public static bool FtpWithUserPassUrl(string val)
+      public static bool FtpWithUserPassUrl(string value)
       {
-         return MatchFtpWithUserPassUrl(val).Success;
+         var match = MatchFtpWithUserPassUrl(value);
+         return match != null && match.Success;
       }
 
       /// <summary>
       /// Match FTP URL String with Username and Password
       /// </summary>
-      /// <param name="val">String to validate</param>
-      public static Match MatchFtpWithUserPassUrl(string val)
+      public static Match MatchFtpWithUserPassUrl(string value)
       {
-         Regex rValidFtpWithUserPassUrl = new Regex(ValidMatchFtpWithUserPassUrl, RegexOptions.Singleline | RegexOptions.IgnoreCase);
+         if (value == null) return null;
+         value = value.Trim();
+         if (value.Length == 0) return null;
 
-         return rValidFtpWithUserPassUrl.Match(val);
+         var validFtpWithUserPassUrl = new Regex(ValidMatchFtpWithUserPassUrl, RegexOptions.Singleline | RegexOptions.IgnoreCase);
+         return validFtpWithUserPassUrl.Match(value);
       }
       
       /// <summary>
-      /// Validate Email Address String
+      /// Validate Email Address
       /// </summary>
-      /// <param name="val">String to validate</param>
-      public static bool EmailAddress(string val)
+      public static bool EmailAddress(string value)
       {
-         Regex rValidEmailAddress = new Regex(ValidEmailAddress, RegexOptions.Singleline | RegexOptions.IgnoreCase);
+         if (value == null) return false;
+         value = value.Trim();
+         if (value.Length == 0) return false;
 
-         return rValidEmailAddress.IsMatch(val);
+         var validEmailAddress = new Regex(ValidEmailAddress, RegexOptions.Singleline | RegexOptions.IgnoreCase);
+         return validEmailAddress.IsMatch(value);
       }
       
       /// <summary>

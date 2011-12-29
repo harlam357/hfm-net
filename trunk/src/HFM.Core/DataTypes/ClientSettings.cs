@@ -109,23 +109,11 @@ namespace HFM.Core.DataTypes
                switch (LegacyClientSubType)
                {
                   case LegacyClientSubType.Path:
-                     // if the path is of sufficient length but does not
-                     // end with a directory separator character (for any
-                     // filesystem), then append the current platform
-                     // separator character
-                     if (_path.Length > 2 &&
-                        (_path.EndsWith("\\") ||
-                         _path.EndsWith("/")) == false)
-                     {
-                        _path = String.Concat(_path, System.IO.Path.DirectorySeparatorChar);
-                     }
+                     _path = Paths.AddTrailingSlash(_path);
                      break;
                   case LegacyClientSubType.Http:
                   case LegacyClientSubType.Ftp:
-                     if (_path.EndsWith("/") == false)
-                     {
-                        _path = String.Concat(_path, "/");
-                     }
+                     _path = Paths.AddUnixTrailingSlash(_path);
                      break;
                }
             }

@@ -112,6 +112,12 @@ namespace HFM.Core
       LessThan,
       LessThanOrEqual,
    }
+
+   public enum WebGenType
+   {
+      Path,
+      Ftp
+   }
    
    public enum Preference
    {
@@ -146,7 +152,12 @@ namespace HFM.Core
       GenerateWeb,
       GenerateInterval,
       WebGenAfterRefresh,
+      WebGenType,
       WebRoot,
+      WebGenServer,
+      WebGenPort,
+      WebGenUsername,
+      WebGenPassword,
       WebGenCopyFAHlog,
       WebGenFtpMode,
       WebGenCopyHtml,
@@ -158,7 +169,7 @@ namespace HFM.Core
       WebMobileOverview,
       WebSummary,
       WebMobileSummary,
-      WebInstance,
+      WebSlot,
       RunMinimized,
       StartupCheckForUpdate,
       UseDefaultConfigFile,

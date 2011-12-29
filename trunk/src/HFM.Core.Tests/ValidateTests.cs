@@ -104,37 +104,37 @@ namespace HFM.Core.Tests
       public void PathInstancePath()
       {
          // Windows
-         Assert.IsTrue(Validate.PathInstancePath(@"C:\"));
-         Assert.IsTrue(Validate.PathInstancePath(@"C:\Data\Subfolder"));
-         Assert.IsTrue(Validate.PathInstancePath(@"C:\Data\Subfolder\"));
-         Assert.IsTrue(Validate.PathInstancePath(@"C:\Data\Subfolder\MyFile.txt"));
-         Assert.IsTrue(Validate.PathInstancePath(@"C:\My Documents\My Letters"));
-         Assert.IsTrue(Validate.PathInstancePath(@"C:\My Documents\My Letters\"));
-         Assert.IsTrue(Validate.PathInstancePath(@"C:\My Documents\My Letters\My Letter.txt"));
+         Assert.IsTrue(Validate.Path(@"C:\"));
+         Assert.IsTrue(Validate.Path(@"C:\Data\Subfolder"));
+         Assert.IsTrue(Validate.Path(@"C:\Data\Subfolder\"));
+         Assert.IsTrue(Validate.Path(@"C:\Data\Subfolder\MyFile.txt"));
+         Assert.IsTrue(Validate.Path(@"C:\My Documents\My Letters"));
+         Assert.IsTrue(Validate.Path(@"C:\My Documents\My Letters\"));
+         Assert.IsTrue(Validate.Path(@"C:\My Documents\My Letters\My Letter.txt"));
          
          // UNC
-         Assert.IsFalse(Validate.PathInstancePath(@"\\server\"));
-         Assert.IsFalse(Validate.PathInstancePath(@"\\server\c$"));
-         Assert.IsTrue(Validate.PathInstancePath(@"\\server\c$\"));
-         Assert.IsTrue(Validate.PathInstancePath(@"\\server\c$\autoexec.bat"));
-         Assert.IsTrue(Validate.PathInstancePath(@"\\server\data\Subfolder"));
-         Assert.IsTrue(Validate.PathInstancePath(@"\\server\data\Subfo$#!@$^%$#(lder\"));
-         Assert.IsTrue(Validate.PathInstancePath(@"\\server\data\Subfolder\MyFile.txt"));
-         Assert.IsTrue(Validate.PathInstancePath(@"\\server\docs\My Letters"));
-         Assert.IsTrue(Validate.PathInstancePath(@"\\server\docs\My Letters\"));
-         Assert.IsTrue(Validate.PathInstancePath(@"\\server\docs\My Letters\My Letter.txt"));
-         Assert.IsTrue(Validate.PathInstancePath(@"\\server4\Folding@h`~!@#$%^&()_-ome-gpu\"));
+         Assert.IsFalse(Validate.Path(@"\\server\"));
+         Assert.IsFalse(Validate.Path(@"\\server\c$"));
+         Assert.IsTrue(Validate.Path(@"\\server\c$\"));
+         Assert.IsTrue(Validate.Path(@"\\server\c$\autoexec.bat"));
+         Assert.IsTrue(Validate.Path(@"\\server\data\Subfolder"));
+         Assert.IsTrue(Validate.Path(@"\\server\data\Subfo$#!@$^%$#(lder\"));
+         Assert.IsTrue(Validate.Path(@"\\server\data\Subfolder\MyFile.txt"));
+         Assert.IsTrue(Validate.Path(@"\\server\docs\My Letters"));
+         Assert.IsTrue(Validate.Path(@"\\server\docs\My Letters\"));
+         Assert.IsTrue(Validate.Path(@"\\server\docs\My Letters\My Letter.txt"));
+         Assert.IsTrue(Validate.Path(@"\\server4\Folding@h`~!@#$%^&()_-ome-gpu\"));
          
          // Unix-Like
-         Assert.IsTrue(Validate.PathInstancePath(@"/somewhere/somewhereelse"));
-         Assert.IsTrue(Validate.PathInstancePath(@"/somewhere/somewhereelse/"));
-         Assert.IsTrue(Validate.PathInstancePath(@"/somewhere/somewhereelse/fasfsdf"));
-         Assert.IsTrue(Validate.PathInstancePath(@"/somewhere/somewhereelse/fasfsdf/"));
-         Assert.IsTrue(Validate.PathInstancePath(@"~/somesubhomefolder"));
-         Assert.IsTrue(Validate.PathInstancePath(@"~/somesubhomefolder/"));
-         Assert.IsTrue(Validate.PathInstancePath(@"~/somesubhomefolder/subagain"));
-         Assert.IsTrue(Validate.PathInstancePath(@"~/somesubhomefolder/subagain/"));
-         Assert.IsTrue(Validate.PathInstancePath(@"/b/"));
+         Assert.IsTrue(Validate.Path(@"/somewhere/somewhereelse"));
+         Assert.IsTrue(Validate.Path(@"/somewhere/somewhereelse/"));
+         Assert.IsTrue(Validate.Path(@"/somewhere/somewhereelse/fasfsdf"));
+         Assert.IsTrue(Validate.Path(@"/somewhere/somewhereelse/fasfsdf/"));
+         Assert.IsTrue(Validate.Path(@"~/somesubhomefolder"));
+         Assert.IsTrue(Validate.Path(@"~/somesubhomefolder/"));
+         Assert.IsTrue(Validate.Path(@"~/somesubhomefolder/subagain"));
+         Assert.IsTrue(Validate.Path(@"~/somesubhomefolder/subagain/"));
+         Assert.IsTrue(Validate.Path(@"/b/"));
       }
       
       [Test]
@@ -173,6 +173,10 @@ namespace HFM.Core.Tests
          Assert.IsTrue(Validate.FtpPath(@"~/somesubhomefolder/subagain"));
          Assert.IsTrue(Validate.FtpPath(@"~/somesubhomefolder/subagain/"));
          Assert.IsTrue(Validate.FtpPath(@"/b/"));
+         Assert.IsTrue(Validate.FtpPath(@"/"));
+
+         Assert.IsFalse(Validate.FtpPath(null));
+         Assert.IsFalse(Validate.FtpPath(String.Empty));
       }
       
       [Test]

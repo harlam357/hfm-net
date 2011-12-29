@@ -71,5 +71,41 @@ namespace HFM.Core
       {
          get { return Application.IsRunningOnMono ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase; }
       }
+
+      /// <summary>
+      /// Add trailing path slash (Windows or Unix).
+      /// </summary>
+      public static string AddTrailingSlash(string path)
+      {
+         if (path == null) return String.Empty;
+
+         // if the path is of sufficient length but does not
+         // end with a directory separator character (for any
+         // filesystem), then append the current platform
+         // separator character
+         if (path.Length > 2 &&
+            (path.EndsWith("\\") ||
+             path.EndsWith("/")) == false)
+         {
+            path = String.Concat(path, System.IO.Path.DirectorySeparatorChar);
+         }
+
+         return path;
+      }
+
+      /// <summary>
+      /// Add Unix style trailing path slash.
+      /// </summary>
+      public static string AddUnixTrailingSlash(string path)
+      {
+         if (path == null) return String.Empty;
+
+         if (!path.EndsWith("/"))
+         {
+            path = String.Concat(path, "/");
+         }
+
+         return path;
+      }
    }
 }
