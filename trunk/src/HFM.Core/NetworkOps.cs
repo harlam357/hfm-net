@@ -44,7 +44,7 @@ namespace HFM.Core
       /// <param name="username">Ftp Login Username.</param>
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
-      /// <exception cref="ArgumentException">Throws if Server or FtpPath, or LocalFilePath is null or empty.</exception>
+      /// <exception cref="ArgumentException">Throws if Server or FtpPath, or localFilePath is null or empty.</exception>
       void FtpUploadHelper(string server, string ftpPath, string localFilePath, string username, string password, FtpType ftpMode);
 
       /// <summary>
@@ -57,7 +57,7 @@ namespace HFM.Core
       /// <param name="username">Ftp Login Username.</param>
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
-      /// <exception cref="ArgumentException">Throws if Server or FtpPath, or LocalFilePath is null or empty.</exception>
+      /// <exception cref="ArgumentException">Throws if Server or FtpPath, or localFilePath is null or empty.</exception>
       void FtpUploadHelper(string server, string ftpPath, string localFilePath, int maximumLength, string username, string password, FtpType ftpMode);
    
       /// <summary>
@@ -145,7 +145,7 @@ namespace HFM.Core
       /// <param name="username">Ftp Login Username.</param>
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
-      /// <exception cref="ArgumentException">Throws if Server or FtpPath, or LocalFilePath is null or empty.</exception>
+      /// <exception cref="ArgumentException">Throws if Server or FtpPath, or localFilePath is null or empty.</exception>
       public void FtpUploadHelper(string server, string ftpPath, string localFilePath, string username, string password, FtpType ftpMode)
       {
          FtpUploadHelper(server, ftpPath, localFilePath, -1, username, password, ftpMode);
@@ -161,13 +161,12 @@ namespace HFM.Core
       /// <param name="username">Ftp Login Username.</param>
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
-      /// <exception cref="ArgumentException">Throws if Server or FtpPath, or LocalFilePath is null or empty.</exception>
+      /// <exception cref="ArgumentException">Throws if Server or FtpPath, or localFilePath is null or empty.</exception>
       public void FtpUploadHelper(string server, string ftpPath, string localFilePath, int maximumLength, string username, string password, FtpType ftpMode)
       {
-         if (String.IsNullOrEmpty(server) || String.IsNullOrEmpty(ftpPath) || String.IsNullOrEmpty(localFilePath))
-         {
-            throw new ArgumentException("Arguments 'Server', 'FtpPath', and 'LocalFilePath' cannot be a null or empty string.");
-         }
+         if (String.IsNullOrEmpty(server)) throw new ArgumentException("Argument 'server' cannot be a null or empty string.");
+         if (String.IsNullOrEmpty(ftpPath)) throw new ArgumentException("Argument 'ftpPath' cannot be a null or empty string.");
+         if (String.IsNullOrEmpty(localFilePath)) throw new ArgumentException("Argument 'localFilePath' cannot be a null or empty string.");
 
          FtpUploadHelper(new Uri(String.Format(CultureInfo.InvariantCulture, "ftp://{0}{1}{2}",
             server, ftpPath, Path.GetFileName(localFilePath))), localFilePath, maximumLength, username, password, ftpMode);
@@ -181,7 +180,7 @@ namespace HFM.Core
       /// <param name="username">Ftp Login Username.</param>
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
-      /// <exception cref="ArgumentNullException">Throws if ResourceUri is null.</exception>
+      /// <exception cref="ArgumentNullException">Throws if resourceUri is null.</exception>
       public void FtpUploadHelper(Uri resourceUri, string localFilePath, string username, string password, FtpType ftpMode)
       {
          FtpUploadHelper(resourceUri, localFilePath, -1, username, password, ftpMode);
@@ -196,10 +195,10 @@ namespace HFM.Core
       /// <param name="username">Ftp Login Username.</param>
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
-      /// <exception cref="ArgumentNullException">Throws if ResourceUri is null.</exception>
+      /// <exception cref="ArgumentNullException">Throws if resourceUri is null.</exception>
       public void FtpUploadHelper(Uri resourceUri, string localFilePath, int maximumLength, string username, string password, FtpType ftpMode)
       {
-         if (resourceUri == null) throw new ArgumentNullException("resourceUri", "Argument 'ResourceUri' cannot be null.");
+         if (resourceUri == null) throw new ArgumentNullException("resourceUri");
 
          FtpUploadHelper((FtpWebOperation)WebOperation.Create(resourceUri), localFilePath, maximumLength, username, password, ftpMode);
       }
@@ -213,7 +212,7 @@ namespace HFM.Core
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentNullException">Throws if ftpWebOperation is null.</exception>
-      /// <exception cref="ArgumentException">Throws if LocalFilePath is null or empty.</exception>
+      /// <exception cref="ArgumentException">Throws if localFilePath is null or empty.</exception>
       public void FtpUploadHelper(IFtpWebOperation ftpWebOperation, string localFilePath, string username, string password, FtpType ftpMode)
       {
          FtpUploadHelper(ftpWebOperation, localFilePath, -1, username, password, ftpMode);
@@ -229,15 +228,11 @@ namespace HFM.Core
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentNullException">Throws if ftpWebOperation is null.</exception>
-      /// <exception cref="ArgumentException">Throws if LocalFilePath is null or empty.</exception>
+      /// <exception cref="ArgumentException">Throws if localFilePath is null or empty.</exception>
       public void FtpUploadHelper(IFtpWebOperation ftpWebOperation, string localFilePath, int maximumLength, string username, string password, FtpType ftpMode)
       {
-         if (ftpWebOperation == null) throw new ArgumentNullException("ftpWebOperation", "Argument 'ftpWebOperation' cannot be null.");
-
-         if (String.IsNullOrEmpty(localFilePath))
-         {
-            throw new ArgumentException("Argument 'LocalFilePath' cannot be a null or empty string.");
-         }
+         if (ftpWebOperation == null) throw new ArgumentNullException("ftpWebOperation");
+         if (String.IsNullOrEmpty(localFilePath)) throw new ArgumentException("Argument 'localFilePath' cannot be a null or empty string.");
 
          _ftpWebOperation = ftpWebOperation;
          _ftpWebOperation.WebOperationProgress += OnFtpWebOperationProgress;
@@ -258,17 +253,39 @@ namespace HFM.Core
       /// <param name="username">Ftp Login Username.</param>
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
-      /// <exception cref="ArgumentException">Throws if Server, FtpPath, or RemoteFileName is null or empty.</exception>
+      /// <exception cref="ArgumentException">Throws if server, ftpPath, or remoteFileName is null or empty.</exception>
       public void FtpDownloadHelper(string server, string ftpPath, string remoteFileName, string localFilePath, 
                                     string username, string password, FtpType ftpMode)
       {
-         if (String.IsNullOrEmpty(server) || String.IsNullOrEmpty(ftpPath) || String.IsNullOrEmpty(remoteFileName))
-         {
-            throw new ArgumentException("Arguments 'Server', 'FtpPath', and 'RemoteFileName'cannot be a null or empty string.");
-         }
+         if (String.IsNullOrEmpty(server)) throw new ArgumentException("Argument 'server' cannot be a null or empty string.");
+         if (String.IsNullOrEmpty(ftpPath)) throw new ArgumentException("Argument 'ftpPath' cannot be a null or empty string.");
+         if (String.IsNullOrEmpty(remoteFileName)) throw new ArgumentException("Argument 'remoteFileName' cannot be a null or empty string.");
 
          FtpDownloadHelper(new Uri(String.Format(CultureInfo.InvariantCulture, "ftp://{0}{1}{2}",
             server, ftpPath, remoteFileName)), localFilePath, username, password, ftpMode);
+      }
+
+      /// <summary>
+      /// Download a File via Ftp.
+      /// </summary>
+      /// <param name="server">Server Name or IP.</param>
+      /// <param name="port">Server Port.</param>
+      /// <param name="ftpPath">Path to download from on remote Ftp server.</param>
+      /// <param name="remoteFileName">Remote file to download.</param>
+      /// <param name="localFilePath">Path to local file.</param>
+      /// <param name="username">Ftp Login Username.</param>
+      /// <param name="password">Ftp Login Password.</param>
+      /// <param name="ftpMode">Ftp Transfer Mode.</param>
+      /// <exception cref="ArgumentException">Throws if server, ftpPath, or remoteFileName is null or empty.</exception>
+      public void FtpDownloadHelper(string server, int port, string ftpPath, string remoteFileName, string localFilePath,
+                                    string username, string password, FtpType ftpMode)
+      {
+         if (String.IsNullOrEmpty(server)) throw new ArgumentException("Argument 'server' cannot be a null or empty string.");
+         if (String.IsNullOrEmpty(ftpPath)) throw new ArgumentException("Argument 'ftpPath' cannot be a null or empty string.");
+         if (String.IsNullOrEmpty(remoteFileName)) throw new ArgumentException("Argument 'remoteFileName' cannot be a null or empty string.");
+
+         FtpDownloadHelper(new Uri(String.Format(CultureInfo.InvariantCulture, "ftp://{0}:{1}{2}{3}",
+            server, port, ftpPath, remoteFileName)), localFilePath, username, password, ftpMode);
       }
 
       /// <summary>
@@ -279,10 +296,10 @@ namespace HFM.Core
       /// <param name="username">Ftp Login Username.</param>
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
-      /// <exception cref="ArgumentNullException">Throws if ResourceUri is null.</exception>
+      /// <exception cref="ArgumentNullException">Throws if resourceUri is null.</exception>
       public void FtpDownloadHelper(Uri resourceUri, string localFilePath, string username, string password, FtpType ftpMode)
       {
-         if (resourceUri == null) throw new ArgumentNullException("resourceUri", "Argument 'ResourceUri' cannot be null.");
+         if (resourceUri == null) throw new ArgumentNullException("resourceUri");
       
          FtpDownloadHelper((FtpWebOperation)WebOperation.Create(resourceUri), localFilePath, username, password, ftpMode);
       }
@@ -296,15 +313,11 @@ namespace HFM.Core
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentNullException">Throws if ftpWebOperation is null.</exception>
-      /// <exception cref="ArgumentException">Throws if LocalFilePath is null or empty.</exception>
+      /// <exception cref="ArgumentException">Throws if localFilePath is null or empty.</exception>
       public void FtpDownloadHelper(IFtpWebOperation ftpWebOperation, string localFilePath, string username, string password, FtpType ftpMode)
       {
-         if (ftpWebOperation == null) throw new ArgumentNullException("ftpWebOperation", "Argument 'ftpWebOperation' cannot be null.");
-
-         if (String.IsNullOrEmpty(localFilePath))
-         {
-            throw new ArgumentException("Argument 'LocalFilePath' cannot be a null or empty string.");
-         }
+         if (ftpWebOperation == null) throw new ArgumentNullException("ftpWebOperation");
+         if (String.IsNullOrEmpty(localFilePath)) throw new ArgumentException("Argument 'localFilePath' cannot be a null or empty string.");
 
          _ftpWebOperation = ftpWebOperation;
          _ftpWebOperation.WebOperationProgress += OnFtpWebOperationProgress;
@@ -327,10 +340,9 @@ namespace HFM.Core
       /// <exception cref="ArgumentException">Throws if Url is null or empty.</exception>
       public long GetFtpDownloadLength(string server, string ftpPath, string remoteFileName, string username, string password, FtpType ftpMode)
       {
-         if (String.IsNullOrEmpty(server) || String.IsNullOrEmpty(ftpPath) || String.IsNullOrEmpty(remoteFileName))
-         {
-            throw new ArgumentException("Arguments 'Server', 'FtpPath', and 'RemoteFileName'cannot be a null or empty string.");
-         }
+         if (String.IsNullOrEmpty(server)) throw new ArgumentException("Argument 'server' cannot be a null or empty string.");
+         if (String.IsNullOrEmpty(ftpPath)) throw new ArgumentException("Argument 'ftpPath' cannot be a null or empty string.");
+         if (String.IsNullOrEmpty(remoteFileName)) throw new ArgumentException("Argument 'remoteFileName' cannot be a null or empty string.");
 
          return GetFtpDownloadLength(new Uri(String.Format(CultureInfo.InvariantCulture, "ftp://{0}{1}{2}",
             server, ftpPath, remoteFileName)), username, password, ftpMode);
@@ -343,10 +355,10 @@ namespace HFM.Core
       /// <param name="username">Http Login Username.</param>
       /// <param name="password">Http Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
-      /// <exception cref="ArgumentNullException">Throws if ResourceUri is null.</exception>
+      /// <exception cref="ArgumentNullException">Throws if resourceUri is null.</exception>
       public long GetFtpDownloadLength(Uri resourceUri, string username, string password, FtpType ftpMode)
       {
-         if (resourceUri == null) throw new ArgumentNullException("resourceUri", "Argument 'ResourceUri' cannot be null.");
+         if (resourceUri == null) throw new ArgumentNullException("resourceUri", "Argument 'resourceUri' cannot be null.");
 
          return GetFtpDownloadLength((IFtpWebOperation)WebOperation.Create(resourceUri), username, password, ftpMode);
       }
@@ -358,7 +370,7 @@ namespace HFM.Core
       /// <param name="username">Http Login Username.</param>
       /// <param name="password">Http Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
-      /// <exception cref="ArgumentNullException">Throws if ResourceUri is null.</exception>
+      /// <exception cref="ArgumentNullException">Throws if resourceUri is null.</exception>
       public long GetFtpDownloadLength(IFtpWebOperation ftpWebOperation, string username, string password, FtpType ftpMode)
       {
          if (ftpWebOperation == null) throw new ArgumentNullException("ftpWebOperation", "Argument 'httpWebOperation' cannot be null.");
@@ -397,10 +409,7 @@ namespace HFM.Core
       /// <exception cref="ArgumentException">Throws if Url is null or empty.</exception>
       public void HttpDownloadHelper(string url, string localFilePath, string username, string password)
       {
-         if (String.IsNullOrEmpty(url))
-         {
-            throw new ArgumentException("Argument 'Url' cannot be a null or empty string.");
-         }
+         if (String.IsNullOrEmpty(url)) throw new ArgumentException("Argument 'url' cannot be a null or empty string.");
          
          HttpDownloadHelper(new Uri(url), localFilePath, username, password);
       }
@@ -412,11 +421,11 @@ namespace HFM.Core
       /// <param name="localFilePath">Path to local file.</param>
       /// <param name="username">Http Login Username.</param>
       /// <param name="password">Http Login Password.</param>
-      /// <exception cref="ArgumentNullException">Throws if ResourceUri is null.</exception>
-      /// <exception cref="ArgumentException">Throws if LocalFilePath is null or empty.</exception>
+      /// <exception cref="ArgumentNullException">Throws if resourceUri is null.</exception>
+      /// <exception cref="ArgumentException">Throws if localFilePath is null or empty.</exception>
       public void HttpDownloadHelper(Uri resourceUri, string localFilePath, string username, string password)
       {
-         if (resourceUri == null) throw new ArgumentNullException("resourceUri", "Argument 'ResourceUri' cannot be null.");
+         if (resourceUri == null) throw new ArgumentNullException("resourceUri");
       
          HttpDownloadHelper(WebOperation.Create(resourceUri), localFilePath, username, password);
       }
@@ -428,16 +437,12 @@ namespace HFM.Core
       /// <param name="localFilePath">Path to local file.</param>
       /// <param name="username">Http Login Username.</param>
       /// <param name="password">Http Login Password.</param>
-      /// <exception cref="ArgumentNullException">Throws if ResourceUri is null.</exception>
-      /// <exception cref="ArgumentException">Throws if LocalFilePath is null or empty.</exception>
+      /// <exception cref="ArgumentNullException">Throws if resourceUri is null.</exception>
+      /// <exception cref="ArgumentException">Throws if localFilePath is null or empty.</exception>
       public void HttpDownloadHelper(IWebOperation httpWebOperation, string localFilePath, string username, string password)
       {
-         if (httpWebOperation == null) throw new ArgumentNullException("httpWebOperation", "Argument 'httpWebOperation' cannot be null.");
-
-         if (String.IsNullOrEmpty(localFilePath))
-         {
-            throw new ArgumentException("Argument 'LocalFilePath' cannot be a null or empty string.");
-         }
+         if (httpWebOperation == null) throw new ArgumentNullException("httpWebOperation");
+         if (String.IsNullOrEmpty(localFilePath)) throw new ArgumentException("Argument 'localFilePath' cannot be a null or empty string.");
 
          _httpWebOperation = httpWebOperation;
          _httpWebOperation.WebOperationProgress += OnHttpWebOperationProgress;
@@ -458,10 +463,7 @@ namespace HFM.Core
       /// <exception cref="ArgumentException">Throws if Url is null or empty.</exception>
       public long GetHttpDownloadLength(string url, string username, string password)
       {
-         if (String.IsNullOrEmpty(url))
-         {
-            throw new ArgumentException("Argument 'Url' cannot be a null or empty string.");
-         }
+         if (String.IsNullOrEmpty(url)) throw new ArgumentException("Argument 'url' cannot be a null or empty string.");
 
          return GetHttpDownloadLength(new Uri(url), username, password);
       }
@@ -472,10 +474,10 @@ namespace HFM.Core
       /// <param name="resourceUri">Web Resource Uri.</param>
       /// <param name="username">Http Login Username.</param>
       /// <param name="password">Http Login Password.</param>
-      /// <exception cref="ArgumentNullException">Throws if ResourceUri is null.</exception>
+      /// <exception cref="ArgumentNullException">Throws if resourceUri is null.</exception>
       public long GetHttpDownloadLength(Uri resourceUri, string username, string password)
       {
-         if (resourceUri == null) throw new ArgumentNullException("resourceUri", "Argument 'ResourceUri' cannot be null.");
+         if (resourceUri == null) throw new ArgumentNullException("resourceUri");
       
          return GetHttpDownloadLength(WebOperation.Create(resourceUri), username, password);
       }
@@ -486,10 +488,10 @@ namespace HFM.Core
       /// <param name="httpWebOperation">Web Operation.</param>
       /// <param name="username">Http Login Username.</param>
       /// <param name="password">Http Login Password.</param>
-      /// <exception cref="ArgumentNullException">Throws if ResourceUri is null.</exception>
+      /// <exception cref="ArgumentNullException">Throws if resourceUri is null.</exception>
       public long GetHttpDownloadLength(IWebOperation httpWebOperation, string username, string password)
       {
-         if (httpWebOperation == null) throw new ArgumentNullException("httpWebOperation", "Argument 'httpWebOperation' cannot be null.");
+         if (httpWebOperation == null) throw new ArgumentNullException("httpWebOperation");
 
          _httpWebOperation = httpWebOperation;
          _httpWebOperation.WebOperationProgress += OnHttpWebOperationProgress;
@@ -528,10 +530,8 @@ namespace HFM.Core
       /// <exception cref="ArgumentException">Throws if Server or FtpPath is null or empty.</exception>
       public void FtpCheckConnection(string server, string ftpPath, string username, string password, FtpType ftpMode)
       {
-         if (String.IsNullOrEmpty(server) || String.IsNullOrEmpty(ftpPath))
-         {
-            throw new ArgumentException("Arguments 'server' and 'ftpPath' cannot be a null or empty string.");
-         }
+         if (String.IsNullOrEmpty(server)) throw new ArgumentException("Argument 'server' cannot be a null or empty string.");
+         if (String.IsNullOrEmpty(ftpPath)) throw new ArgumentException("Argument 'ftpPath' cannot be a null or empty string.");
 
          var ftpWebOperation = (FtpWebOperation)WebOperation.Create(new Uri(
             String.Format(CultureInfo.InvariantCulture, "ftp://{0}{1}", server, ftpPath)));
@@ -548,7 +548,7 @@ namespace HFM.Core
       /// <exception cref="ArgumentException">Throws if ftpWebOperation is null.</exception>
       public void FtpCheckConnection(IFtpWebOperation ftpWebOperation, string username, string password, FtpType ftpMode)
       {
-         if (ftpWebOperation == null) throw new ArgumentNullException("ftpWebOperation", "Argument 'ftpWebOperation' cannot be null.");
+         if (ftpWebOperation == null) throw new ArgumentNullException("ftpWebOperation");
 
          ftpWebOperation.FtpOperationRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
          ftpWebOperation.FtpOperationRequest.KeepAlive = false; // Close the Request
@@ -583,10 +583,7 @@ namespace HFM.Core
       /// <exception cref="ArgumentException">Throws if Url is null or empty.</exception>
       public void HttpCheckConnection(string url, string username, string password)
       {
-         if (String.IsNullOrEmpty(url))
-         {
-            throw new ArgumentException("Argument 'url' cannot be a null or empty string.");
-         }
+         if (String.IsNullOrEmpty(url)) throw new ArgumentException("Argument 'url' cannot be a null or empty string.");
 
          WebOperation webOperation = WebOperation.Create(new Uri(url));
          HttpCheckConnection(webOperation, username, password);

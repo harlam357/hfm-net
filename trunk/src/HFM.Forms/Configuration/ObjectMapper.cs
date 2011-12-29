@@ -32,7 +32,8 @@ namespace HFM.Forms.Configuration
       {
          // legacy settings model
          Mapper.CreateMap<ClientSettings, LegacyClientSettingsModel>();
-         Mapper.CreateMap<LegacyClientSettingsModel, ClientSettings>();
+         Mapper.CreateMap<LegacyClientSettingsModel, ClientSettings>()
+            .ForMember(dest => dest.ClientType, opt => opt.UseValue(ClientType.Legacy));
          // fahclient settings model
          Mapper.CreateMap<ClientSettings, FahClientSettingsModel>();
          Mapper.CreateMap<FahClientSettingsModel, ClientSettings>();
