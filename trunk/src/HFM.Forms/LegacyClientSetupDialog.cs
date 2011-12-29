@@ -139,18 +139,18 @@ namespace HFM.Forms
       {
          ClientNameTextBox.DataBindings.Add("Text", settings, "Name", false, DataSourceUpdateMode.OnValidation);
          //txtMergeFileName.DataBindings.Add("Text", settings, "ExternalFileName", false, DataSourceUpdateMode.OnValidation);
-         txtClientMegahertz.DataBindings.Add("Text", settings, "ClientProcessorMegahertz", false, DataSourceUpdateMode.OnValidation);
-         txtLogFileName.DataBindings.Add("Text", settings, "FahLogFileName", false, DataSourceUpdateMode.OnValidation);
-         txtUnitFileName.DataBindings.Add("Text", settings, "UnitInfoFileName", false, DataSourceUpdateMode.OnValidation);
-         txtQueueFileName.DataBindings.Add("Text", settings, "QueueFileName", false, DataSourceUpdateMode.OnValidation);
-         pnlHostType.DataSource = settings;
-         pnlHostType.ValueMember = "LegacyClientSubType";
-         txtLocalPath.DataBindings.Add("Text", settings, "Path", false, DataSourceUpdateMode.OnValidation);
-         txtWebURL.DataBindings.Add("Text", settings, "Path", false, DataSourceUpdateMode.OnValidation);
-         txtWebUser.DataBindings.Add("Text", settings, "Username", false, DataSourceUpdateMode.OnValidation);
-         txtWebUser.DataBindings.Add("ErrorToolTipText", settings, "CredentialsErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
-         txtWebPass.DataBindings.Add("Text", settings, "Password", false, DataSourceUpdateMode.OnValidation);
-         txtWebPass.DataBindings.Add("ErrorToolTipText", settings, "CredentialsErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
+         ClientMegahertzTextBox.DataBindings.Add("Text", settings, "ClientProcessorMegahertz", false, DataSourceUpdateMode.OnValidation);
+         LogFileNameTextBox.DataBindings.Add("Text", settings, "FahLogFileName", false, DataSourceUpdateMode.OnValidation);
+         UnitInfoFileNameTextBox.DataBindings.Add("Text", settings, "UnitInfoFileName", false, DataSourceUpdateMode.OnValidation);
+         QueueFileNameTextBox.DataBindings.Add("Text", settings, "QueueFileName", false, DataSourceUpdateMode.OnValidation);
+         LegacyClientSubTypePanel.DataSource = settings;
+         LegacyClientSubTypePanel.ValueMember = "LegacyClientSubType";
+         LogFolderTextBox.DataBindings.Add("Text", settings, "Path", false, DataSourceUpdateMode.OnValidation);
+         WebUrlTextBox.DataBindings.Add("Text", settings, "Path", false, DataSourceUpdateMode.OnValidation);
+         WebUsernameTextBox.DataBindings.Add("Text", settings, "Username", false, DataSourceUpdateMode.OnValidation);
+         WebUsernameTextBox.DataBindings.Add("ErrorToolTipText", settings, "CredentialsErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
+         WebPasswordTextBox.DataBindings.Add("Text", settings, "Password", false, DataSourceUpdateMode.OnValidation);
+         WebPasswordTextBox.DataBindings.Add("ErrorToolTipText", settings, "CredentialsErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
          FtpServerNameTextBox.DataBindings.Add("Text", settings, "Server", false, DataSourceUpdateMode.OnValidation);
          FtpServerPortTextBox.DataBindings.Add("Text", settings, "Port", false, DataSourceUpdateMode.OnValidation);
          FtpServerPathTextBox.DataBindings.Add("Text", settings, "Path", false, DataSourceUpdateMode.OnValidation);
@@ -158,8 +158,8 @@ namespace HFM.Forms
          FtpUsernameTextBox.DataBindings.Add("ErrorToolTipText", settings, "CredentialsErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
          FtpPasswordTextBox.DataBindings.Add("Text", settings, "Password", false, DataSourceUpdateMode.OnValidation);
          FtpPasswordTextBox.DataBindings.Add("ErrorToolTipText", settings, "CredentialsErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
-         pnlFtpMode.DataSource = settings;
-         pnlFtpMode.ValueMember = "FtpMode";
+         FtpModePanel.DataSource = settings;
+         FtpModePanel.ValueMember = "FtpMode";
          ClientNoUtcOffsetCheckBox.DataBindings.Add("Checked", settings, "UtcOffsetIsZero", false, DataSourceUpdateMode.OnPropertyChanged);
          ClientTimeOffsetUpDown.DataBindings.Add("Value", settings, "ClientTimeOffset", false, DataSourceUpdateMode.OnPropertyChanged);
          DummyTextBox.DataBindings.Add("Text", settings, "Dummy", false, DataSourceUpdateMode.Never);
@@ -190,8 +190,8 @@ namespace HFM.Forms
 
       public string ClientMegahertzLabelText
       {
-         get { return lblClientMegahertz.Text; }
-         set { lblClientMegahertz.Text = value; }
+         get { return ClientMegahertzLabel.Text; }
+         set { ClientMegahertzLabel.Text = value; }
       }
 
       //public bool MergeFileNameVisible
@@ -226,8 +226,8 @@ namespace HFM.Forms
          //get { return grpLocal.Visible; }
          set
          {
-            grpLocal.Visible = value;
-            txtLocalPath.Enabled = value;
+            LocalPathGroupBox.Visible = value;
+            LogFolderTextBox.Enabled = value;
          }
       }
 
@@ -236,10 +236,10 @@ namespace HFM.Forms
          //get { return grpHTTP.Visible; }
          set
          {
-            grpHTTP.Visible = value;
-            txtWebURL.Enabled = value;
-            txtWebUser.Enabled = value;
-            txtWebPass.Enabled = value;
+            HttpGroupBox.Visible = value;
+            WebUrlTextBox.Enabled = value;
+            WebUsernameTextBox.Enabled = value;
+            WebPasswordTextBox.Enabled = value;
          }
       }
 
@@ -248,7 +248,7 @@ namespace HFM.Forms
          //get { return grpFTP.Visible; }
          set
          {
-            grpFTP.Visible = value;
+            FtpGroupBox.Visible = value;
             FtpServerNameTextBox.Enabled = value;
             FtpServerPathTextBox.Enabled = value;
             FtpServerPortTextBox.Enabled = value;
@@ -259,7 +259,7 @@ namespace HFM.Forms
       
       public string LocalPathText
       {
-         set { txtLocalPath.Text = value; }
+         set { LogFolderTextBox.Text = value; }
       }
       
       public bool ClientIsOnVirtualMachineVisible
