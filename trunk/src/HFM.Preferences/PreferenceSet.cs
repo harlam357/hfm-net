@@ -262,7 +262,12 @@ namespace HFM.Preferences
          _prefs.Add(Preference.GenerateWeb, new Metadata<bool>());
          _prefs.Add(Preference.GenerateInterval, new Metadata<int>());
          _prefs.Add(Preference.WebGenAfterRefresh, new Metadata<bool>());
+         _prefs.Add(Preference.WebGenType, new Metadata<WebGenType>());
          _prefs.Add(Preference.WebRoot, new Metadata<string>());
+         _prefs.Add(Preference.WebGenServer, new Metadata<string>());
+         _prefs.Add(Preference.WebGenPort, new Metadata<int>());
+         _prefs.Add(Preference.WebGenUsername, new Metadata<string>());
+         _prefs.Add(Preference.WebGenPassword, new Metadata<string>());
          _prefs.Add(Preference.WebGenCopyFAHlog, new Metadata<bool>());
          _prefs.Add(Preference.WebGenFtpMode, new Metadata<FtpType>());
          _prefs.Add(Preference.WebGenCopyHtml, new Metadata<bool>());
@@ -274,7 +279,7 @@ namespace HFM.Preferences
          _prefs.Add(Preference.WebMobileOverview, new Metadata<string>());
          _prefs.Add(Preference.WebSummary, new Metadata<string>());
          _prefs.Add(Preference.WebMobileSummary, new Metadata<string>());
-         _prefs.Add(Preference.WebInstance, new Metadata<string>());
+         _prefs.Add(Preference.WebSlot, new Metadata<string>());
 
          _prefs.Add(Preference.RunMinimized, new Metadata<bool>());
          _prefs.Add(Preference.StartupCheckForUpdate, new Metadata<bool>());
@@ -382,7 +387,12 @@ namespace HFM.Preferences
          Set(Preference.GenerateWeb, Settings.Default.GenerateWeb);
          Set(Preference.GenerateInterval, GetValidNumeric(Settings.Default.GenerateInterval, Constants.MinutesDefault));
          Set(Preference.WebGenAfterRefresh, Settings.Default.WebGenAfterRefresh);
-         Set(Preference.WebRoot, DecryptWebRoot(Settings.Default.WebRoot, symmetricProvider, _iv, _symmetricKey));
+         Set(Preference.WebGenType, GetWebGenType());
+         Set(Preference.WebRoot, Settings.Default.WebRoot);
+         Set(Preference.WebGenServer, Settings.Default.WebGenServer);
+         Set(Preference.WebGenPort, Settings.Default.WebGenPort);
+         Set(Preference.WebGenUsername, Settings.Default.WebGenUsername);
+         Set(Preference.WebGenPassword, DecryptWebGenPassword(Settings.Default.WebGenPassword, symmetricProvider));
          Set(Preference.WebGenCopyFAHlog, Settings.Default.WebGenCopyFAHlog);
          Set(Preference.WebGenFtpMode, GetFtpType());
          Set(Preference.WebGenCopyHtml, Settings.Default.WebGenCopyHtml);
@@ -394,7 +404,7 @@ namespace HFM.Preferences
          Set(Preference.WebMobileOverview, Settings.Default.WebMobileOverview);
          Set(Preference.WebSummary, Settings.Default.WebSummary);
          Set(Preference.WebMobileSummary, Settings.Default.WebMobileSummary);
-         Set(Preference.WebInstance, Settings.Default.WebInstance);
+         Set(Preference.WebSlot, Settings.Default.WebSlot);
 
          Set(Preference.RunMinimized, Settings.Default.RunMinimized);
          Set(Preference.StartupCheckForUpdate, Settings.Default.StartupCheckForUpdate);
@@ -419,7 +429,7 @@ namespace HFM.Preferences
          Set(Preference.EmailReportingServerAddress, Settings.Default.EmailReportingServerAddress);
          Set(Preference.EmailReportingServerPort, Settings.Default.EmailReportingServerPort);
          Set(Preference.EmailReportingServerUsername, Settings.Default.EmailReportingServerUsername);
-         Set(Preference.EmailReportingServerPassword, DecryptEmailReportingServerPassword(Settings.Default.EmailReportingServerPassword, symmetricProvider, _iv, _symmetricKey));
+         Set(Preference.EmailReportingServerPassword, DecryptEmailReportingServerPassword(Settings.Default.EmailReportingServerPassword, symmetricProvider));
          Set(Preference.ReportEuePause, Settings.Default.ReportEuePause);
          Set(Preference.ReportHung, Settings.Default.ReportHung);
          
@@ -432,7 +442,7 @@ namespace HFM.Preferences
          Set(Preference.ProxyPort, Settings.Default.ProxyPort);
          Set(Preference.UseProxyAuth, Settings.Default.UseProxyAuth);
          Set(Preference.ProxyUser, Settings.Default.ProxyUser);
-         Set(Preference.ProxyPass, DecryptProxyPass(Settings.Default.ProxyPass, symmetricProvider, _iv, _symmetricKey));
+         Set(Preference.ProxyPass, DecryptProxyPass(Settings.Default.ProxyPass, symmetricProvider));
 
          Set(Preference.HistoryProductionType, (HistoryProductionView)Settings.Default.HistoryProductionView);
          Set(Preference.ShowFirstChecked, Settings.Default.ShowFirstChecked);
@@ -561,6 +571,19 @@ namespace HFM.Preferences
          }
       }
 
+      private static WebGenType GetWebGenType()
+      {
+         switch (Settings.Default.WebGenType)
+         {
+            case "Path":
+               return WebGenType.Path;
+            case "Ftp":
+               return WebGenType.Ftp;
+            default:
+               return WebGenType.Path;
+         }
+      }
+
       private static void GetMessagesFormStateValues(ref Point location, ref Size size)
       {
          try
@@ -572,29 +595,32 @@ namespace HFM.Preferences
          { }
       }
 
-      private string DecryptWebRoot(string encrypted, Symmetric symmetricProvider, Data iv, Data symmetricKey)
+      private string DecryptWebGenPassword(string value, Symmetric symmetricProvider)
       {
-         string webRoot = String.Empty;
-         if (Settings.Default.WebRoot.Length > 0)
+         Debug.Assert(value != null);
+         Debug.Assert(symmetricProvider != null);
+
+         string webGenPassword = String.Empty;
+         if (value.Length > 0)
          {
             try
             {
-               symmetricProvider.IntializationVector = iv;
-               webRoot = symmetricProvider.Decrypt(new Data(Utils.FromBase64(encrypted)), symmetricKey).ToString();
+               symmetricProvider.IntializationVector = _iv;
+               webGenPassword = symmetricProvider.Decrypt(new Data(Utils.FromBase64(value)), _symmetricKey).ToString();
             }
             catch (FormatException)
             {
-               _logger.Warn("Web Generation Root Folder is not Base64 encoded... loading clear value.");
-               webRoot = Settings.Default.WebRoot;
+               _logger.Warn("Cannot decrypt Web Generation Password... loading clear value.");
+               webGenPassword = value;
             }
             catch (CryptographicException)
             {
-               _logger.Warn("Cannot decrypt Web Generation Root Folder... loading clear value.");
-               webRoot = Settings.Default.WebRoot;
+               _logger.Warn("Cannot decrypt Web Generation Password... loading clear value.");
+               webGenPassword = value;
             }
          }
 
-         return webRoot;
+         return webGenPassword;
       }
       
       private static FtpType GetFtpType()
@@ -627,51 +653,56 @@ namespace HFM.Preferences
          }
       }
 
-      private string DecryptEmailReportingServerPassword(string encrypted, Symmetric symmetricProvider, Data iv, Data symmetricKey)
+      private string DecryptEmailReportingServerPassword(string value, Symmetric symmetricProvider)
       {
+         Debug.Assert(value != null);
+         Debug.Assert(symmetricProvider != null);
+
          string emailReportingServerPassword = String.Empty;
-         if (Settings.Default.EmailReportingServerPassword.Length > 0)
+         if (value.Length > 0)
          {
             try
             {
-               symmetricProvider.IntializationVector = iv;
-               emailReportingServerPassword =
-                  symmetricProvider.Decrypt(new Data(Utils.FromBase64(encrypted)), symmetricKey).ToString();
+               symmetricProvider.IntializationVector = _iv;
+               emailReportingServerPassword = symmetricProvider.Decrypt(new Data(Utils.FromBase64(value)), _symmetricKey).ToString();
             }
             catch (FormatException)
             {
-               _logger.Warn("Stmp Server Password is not Base64 encoded... loading clear value.");
-               emailReportingServerPassword = Settings.Default.EmailReportingServerPassword;
+               _logger.Warn("Cannot decrypt Stmp Server Password... loading clear value.");
+               emailReportingServerPassword = value;
             }
             catch (CryptographicException)
             {
                _logger.Warn("Cannot decrypt Stmp Server Password... loading clear value.");
-               emailReportingServerPassword = Settings.Default.EmailReportingServerPassword;
+               emailReportingServerPassword = value;
             }
          }
          
          return emailReportingServerPassword;
       }
 
-      private string DecryptProxyPass(string encrypted, Symmetric symmetricProvider, Data iv, Data symmetricKey)
+      private string DecryptProxyPass(string value, Symmetric symmetricProvider)
       {
+         Debug.Assert(value != null);
+         Debug.Assert(symmetricProvider != null);
+
          string proxyPass = String.Empty;
-         if (Settings.Default.ProxyPass.Length > 0)
+         if (value.Length > 0)
          {
             try
             {
-               symmetricProvider.IntializationVector = iv;
-               proxyPass = symmetricProvider.Decrypt(new Data(Utils.FromBase64(encrypted)), symmetricKey).ToString();
+               symmetricProvider.IntializationVector = _iv;
+               proxyPass = symmetricProvider.Decrypt(new Data(Utils.FromBase64(value)), _symmetricKey).ToString();
             }
             catch (FormatException)
             {
-               _logger.Warn("Proxy Password is not Base64 encoded... loading clear value.");
-               proxyPass = Settings.Default.ProxyPass;
+               _logger.Warn("Cannot decrypt Proxy Password... loading clear value.");
+               proxyPass = value;
             }
             catch (CryptographicException)
             {
                _logger.Warn("Cannot decrypt Proxy Password... loading clear value.");
-               proxyPass = Settings.Default.ProxyPass;
+               proxyPass = value;
             }
          }
 
@@ -774,7 +805,12 @@ namespace HFM.Preferences
             Settings.Default.GenerateWeb = Get<bool>(Preference.GenerateWeb);
             Settings.Default.GenerateInterval = Get<int>(Preference.GenerateInterval).ToString();
             Settings.Default.WebGenAfterRefresh = Get<bool>(Preference.WebGenAfterRefresh);
-            Settings.Default.WebRoot = EncryptWebRoot(Get<string>(Preference.WebRoot), symmetricProvider, _iv, _symmetricKey);
+            Settings.Default.WebGenType = Get<WebGenType>(Preference.WebGenType).ToString();
+            Settings.Default.WebRoot = Get<string>(Preference.WebRoot);
+            Settings.Default.WebGenServer = Get<string>(Preference.WebGenServer);
+            Settings.Default.WebGenPort = Get<int>(Preference.WebGenPort);
+            Settings.Default.WebGenUsername = Get<string>(Preference.WebGenUsername);
+            Settings.Default.WebGenPassword = EncryptWebGenPassword(Get<string>(Preference.WebGenPassword), symmetricProvider);
             Settings.Default.WebGenCopyFAHlog = Get<bool>(Preference.WebGenCopyFAHlog);
             Settings.Default.WebGenFtpMode = Get<FtpType>(Preference.WebGenFtpMode).ToString();
             Settings.Default.WebGenCopyHtml = Get<bool>(Preference.WebGenCopyHtml);
@@ -786,7 +822,7 @@ namespace HFM.Preferences
             Settings.Default.WebMobileOverview = Get<string>(Preference.WebMobileOverview);
             Settings.Default.WebSummary = Get<string>(Preference.WebSummary);
             Settings.Default.WebMobileSummary = Get<string>(Preference.WebMobileSummary);
-            Settings.Default.WebInstance = Get<string>(Preference.WebInstance);
+            Settings.Default.WebSlot = Get<string>(Preference.WebSlot);
 
             Settings.Default.RunMinimized = Get<bool>(Preference.RunMinimized);
             Settings.Default.StartupCheckForUpdate = Get<bool>(Preference.StartupCheckForUpdate);
@@ -841,7 +877,7 @@ namespace HFM.Preferences
             Settings.Default.EmailReportingServerAddress = Get<string>(Preference.EmailReportingServerAddress);
             Settings.Default.EmailReportingServerPort = Get<int>(Preference.EmailReportingServerPort);
             Settings.Default.EmailReportingServerUsername = Get<string>(Preference.EmailReportingServerUsername);
-            Settings.Default.EmailReportingServerPassword = EncryptEmailReportingServerPassword(Get<string>(Preference.EmailReportingServerPassword), symmetricProvider, _iv, _symmetricKey);
+            Settings.Default.EmailReportingServerPassword = EncryptEmailReportingServerPassword(Get<string>(Preference.EmailReportingServerPassword), symmetricProvider);
             Settings.Default.ReportEuePause = Get<bool>(Preference.ReportEuePause);
             Settings.Default.ReportHung = Get<bool>(Preference.ReportHung);
 
@@ -854,7 +890,7 @@ namespace HFM.Preferences
             Settings.Default.ProxyPort = Get<int>(Preference.ProxyPort);
             Settings.Default.UseProxyAuth = Get<bool>(Preference.UseProxyAuth);
             Settings.Default.ProxyUser = Get<string>(Preference.ProxyUser);
-            Settings.Default.ProxyPass = EncryptProxyPass(Get<string>(Preference.ProxyPass), symmetricProvider, _iv, _symmetricKey);
+            Settings.Default.ProxyPass = EncryptProxyPass(Get<string>(Preference.ProxyPass), symmetricProvider);
 
             Settings.Default.HistoryProductionView = (int)Get<HistoryProductionView>(Preference.HistoryProductionType);
             Settings.Default.ShowFirstChecked = Get<bool>(Preference.ShowFirstChecked);
@@ -898,60 +934,60 @@ namespace HFM.Preferences
          return col;
       }
 
-      private string EncryptWebRoot(string clear, Symmetric symmetricProvider, Data iv, Data symmetricKey)
+      private string EncryptWebGenPassword(string value, Symmetric symmetricProvider)
       {
-         string webRoot = String.Empty;
-         if (clear.Length > 0)
+         string webGenPassword = String.Empty;
+         if (value.Length > 0)
          {
             try
             {
-               symmetricProvider.IntializationVector = iv;
-               webRoot = symmetricProvider.Encrypt(new Data(clear), symmetricKey).ToBase64();
+               symmetricProvider.IntializationVector = _iv;
+               webGenPassword = symmetricProvider.Encrypt(new Data(value), _symmetricKey).ToBase64();
             }
             catch (CryptographicException)
             {
-               _logger.Warn("Failed to encrypt Web Generation Root Folder... saving clear value.");
-               webRoot = clear;
+               _logger.Warn("Failed to encrypt Web Generation Password... saving clear value.");
+               webGenPassword = value;
             }
          }
          
-         return webRoot;
+         return webGenPassword;
       }
 
-      private string EncryptEmailReportingServerPassword(string clear, Symmetric symmetricProvider, Data iv, Data symmetricKey)
+      private string EncryptEmailReportingServerPassword(string value, Symmetric symmetricProvider)
       {
          string emailReportingServerPassword = String.Empty;
-         if (clear.Length > 0)
+         if (value.Length > 0)
          {
             try
             {
-               symmetricProvider.IntializationVector = iv;
-               emailReportingServerPassword = symmetricProvider.Encrypt(new Data(clear), symmetricKey).ToBase64();
+               symmetricProvider.IntializationVector = _iv;
+               emailReportingServerPassword = symmetricProvider.Encrypt(new Data(value), _symmetricKey).ToBase64();
             }
             catch (CryptographicException)
             {
                _logger.Warn("Failed to encrypt Smtp Server Password... saving clear value.");
-               emailReportingServerPassword = clear;
+               emailReportingServerPassword = value;
             }
          }
          
          return emailReportingServerPassword;
       }
 
-      private string EncryptProxyPass(string clear, Symmetric symmetricProvider, Data iv, Data symmetricKey)
+      private string EncryptProxyPass(string value, Symmetric symmetricProvider)
       {
          string proxyPass = String.Empty;
-         if (clear.Length > 0)
+         if (value.Length > 0)
          {
             try
             {
-               symmetricProvider.IntializationVector = iv;
-               proxyPass = symmetricProvider.Encrypt(new Data(clear), symmetricKey).ToBase64();
+               symmetricProvider.IntializationVector = _iv;
+               proxyPass = symmetricProvider.Encrypt(new Data(value), _symmetricKey).ToBase64();
             }
             catch (CryptographicException)
             {
                _logger.Warn("Failed to encrypt Proxy Password... saving clear value.");
-               proxyPass = clear;
+               proxyPass = value;
             }
          }
 

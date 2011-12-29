@@ -241,7 +241,7 @@ namespace HFM.Forms
          {
             _messageBoxView.ShowError(_settingsView,
                "There are validation errors.  Please correct the yellow highlighted fields.",
-                  Constants.ApplicationName);
+                  Core.Application.NameAndVersion);
             return false;
          }
 

@@ -205,8 +205,8 @@
     <Setting Name="WebMobileSummary" Type="System.String" Scope="User">
       <Value Profile="(Default)">WebMobileSummary.xslt</Value>
     </Setting>
-    <Setting Name="WebInstance" Type="System.String" Scope="User">
-      <Value Profile="(Default)">WebInstance.xslt</Value>
+    <Setting Name="WebSlot" Type="System.String" Scope="User">
+      <Value Profile="(Default)">WebSlot.xslt</Value>
     </Setting>
     <Setting Name="FormShowStyle" Type="System.String" Scope="User">
       <Value Profile="(Default)">SystemTray</Value>
@@ -279,6 +279,21 @@
     </Setting>
     <Setting Name="BenchmarksClientsPerGraph" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="WebGenServer" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="WebGenPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">21</Value>
+    </Setting>
+    <Setting Name="WebGenUsername" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="WebGenPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="WebGenType" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>
