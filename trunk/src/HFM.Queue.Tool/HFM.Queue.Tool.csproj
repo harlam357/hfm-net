@@ -77,8 +77,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\AssemblyVersion.cs">
-      <Link>Properties\AssemblyVersion.cs</Link>
+    <Compile Include="..\ExeAssemblyVersion.cs">
+      <Link>Properties\ExeAssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Arguments.cs" />
     <Compile Include="Program.cs" />

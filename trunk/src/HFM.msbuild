@@ -4,17 +4,26 @@
 
    <PropertyGroup>
       <Major>0</Major>
-      <Minor>7</Minor>
+      <Minor>9</Minor>
       <Build>0</Build>
       <Revision>0</Revision>
    </PropertyGroup>
 
    <Target Name="AssemblyVersion" DependsOnTargets="Version">
       <AssemblyInfo CodeLanguage="CS"
+        OutputFile="ExeAssemblyVersion.cs"
+        AssemblyCompany="harlam357"
+        AssemblyProduct="HFM.NET"
+        AssemblyCopyright="Copyright © Ryan Harlamert 2009-2012."
+        AssemblyVersion="$(Major).$(Minor).$(Build).$(Revision)"
+        AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
+        Condition="$(Revision) != '0' "/>
+
+      <AssemblyInfo CodeLanguage="CS"
         OutputFile="AssemblyVersion.cs"
         AssemblyCompany="harlam357"
         AssemblyProduct="HFM.NET"
-        AssemblyCopyright="Copyright © Ryan Harlamert 2009-2011."
+        AssemblyCopyright="Copyright © Ryan Harlamert 2009-2012."
         AssemblyVersion="1.0.0.0"
         AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
         Condition="$(Revision) != '0' "/>
