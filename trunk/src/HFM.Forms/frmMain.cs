@@ -631,7 +631,7 @@ namespace HFM.Forms
 
       private void mnuWebRefreshUserStats_Click(object sender, EventArgs e)
       {
-         _userStatsDataModel.Refresh(true);
+         _userStatsDataModel.Refresh();
       }
 
       private void mnuWebHFMGoogleCode_Click(object sender, EventArgs e)

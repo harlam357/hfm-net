@@ -40,6 +40,11 @@ namespace HFM.Core
       bool TimeForUpdate();
 
       /// <summary>
+      /// Get the time for the next update in UTC.
+      /// </summary>
+      DateTime GetNextUpdateTime();
+
+      /// <summary>
       /// Get Overall User Data from EOC XML
       /// </summary>
       /// <param name="forceRefresh">Force Refresh or allow to check for next update time</param>
@@ -131,8 +136,8 @@ namespace HFM.Core
 
          DateTime nextUpdateTime = GetNextUpdateTime(lastUpdated, isDaylightSavingTime);
 
-         Logger.Debug("{0} Current Time: {1} (UTC)", Instrumentation.FunctionName, utcNow);
-         Logger.Debug("{0} Next Update Time: {1} (UTC)", Instrumentation.FunctionName, nextUpdateTime);
+         Logger.Debug("Current Time: {0} (UTC)", utcNow);
+         Logger.Debug("Next EOC Stats Update Time: {0} (UTC)", nextUpdateTime);
 
          if (utcNow > nextUpdateTime)
          {
@@ -140,6 +145,14 @@ namespace HFM.Core
          }
 
          return false;
+      }
+
+      /// <summary>
+      /// Get the time for the next update in UTC.
+      /// </summary>
+      public DateTime GetNextUpdateTime()
+      {
+         return GetNextUpdateTime(Data.LastUpdated, DateTime.Now.IsDaylightSavingTime());
       }
 
       internal static DateTime GetNextUpdateTime(DateTime lastUpdated, bool isDaylightSavingTime)
@@ -179,7 +192,7 @@ namespace HFM.Core
          // if Forced or Time For an Update
          if (forceRefresh || TimeForUpdate())
          {
-            //DateTime start = HfmTrace.ExecStart;
+            DateTime start = Instrumentation.ExecStart;
 
             try
             {
@@ -212,13 +225,13 @@ namespace HFM.Core
             {
                Logger.ErrorFormat(ex, "{0}", ex.Message);
             }
-            //finally
-            //{
-            //   HfmTrace.WriteToHfmConsole(TraceLevel.Info, start);
-            //}
+            finally
+            {
+               Logger.Info("EOC Stats Updated in {0}", Instrumentation.GetExecTime(start));
+            }
          }
 
-         Logger.Info("{0} Last EOC Stats Update: {1} (UTC)", Instrumentation.FunctionName, Data.LastUpdated);
+         Logger.Info("Last EOC Stats Update: {0} (UTC)", Data.LastUpdated);
       }
 
       /// <summary>
