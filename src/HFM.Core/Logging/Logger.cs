@@ -36,7 +36,7 @@ namespace HFM.Core.Logging
          _prefs = prefs;
 
          Initialize();
-         Level = (LoggerLevel)_prefs.Get<int>(Preference.MessageLevel);
+         Level = GetLoggerLevel();
       }
 
       public override ILogger CreateChildLogger(string loggerName)
@@ -139,6 +139,17 @@ namespace HFM.Core.Logging
                Info("Debug Message Level Changed: {0}", newLevel);
             }
          };
+      }
+
+      private LoggerLevel GetLoggerLevel()
+      {
+         var messageLevel = _prefs.Get<int>(Preference.MessageLevel);
+         if (messageLevel < 4)
+         {
+            messageLevel = 4;
+            _prefs.Set(Preference.MessageLevel, messageLevel);
+         }
+         return (LoggerLevel)messageLevel;
       }
    }
 

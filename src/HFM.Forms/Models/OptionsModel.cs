@@ -297,14 +297,14 @@ namespace HFM.Forms.Models
          {
             var list = new List<ListItem>
                        {
-                          new ListItem
-                          { DisplayMember = LoggerLevel.Off.ToString(), ValueMember = LoggerLevel.Off },
-                          new ListItem
-                          { DisplayMember = LoggerLevel.Fatal.ToString(), ValueMember = LoggerLevel.Fatal },
-                          new ListItem
-                          { DisplayMember = LoggerLevel.Error.ToString(), ValueMember = LoggerLevel.Error },
-                          new ListItem
-                          { DisplayMember = LoggerLevel.Warn.ToString(), ValueMember = LoggerLevel.Warn },
+                          //new ListItem
+                          //{ DisplayMember = LoggerLevel.Off.ToString(), ValueMember = LoggerLevel.Off },
+                          //new ListItem
+                          //{ DisplayMember = LoggerLevel.Fatal.ToString(), ValueMember = LoggerLevel.Fatal },
+                          //new ListItem
+                          //{ DisplayMember = LoggerLevel.Error.ToString(), ValueMember = LoggerLevel.Error },
+                          //new ListItem
+                          //{ DisplayMember = LoggerLevel.Warn.ToString(), ValueMember = LoggerLevel.Warn },
                           new ListItem
                           { DisplayMember = LoggerLevel.Info.ToString(), ValueMember = LoggerLevel.Info },
                           new ListItem

@@ -97,8 +97,8 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\AssemblyVersion.cs">
-      <Link>Properties\AssemblyVersion.cs</Link>
+    <Compile Include="..\ExeAssemblyVersion.cs">
+      <Link>ExeAssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="ArgumentProcessor.cs" />
     <Compile Include="Arguments.cs" />

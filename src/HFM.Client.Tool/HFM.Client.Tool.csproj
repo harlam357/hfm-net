@@ -80,8 +80,8 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\AssemblyVersion.cs">
-      <Link>Properties\AssemblyVersion.cs</Link>
+    <Compile Include="..\ExeAssemblyVersion.cs">
+      <Link>Properties\ExeAssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="..\HFM.Core\Application.cs">
       <Link>Application.cs</Link>
