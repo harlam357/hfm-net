@@ -105,13 +105,13 @@ namespace HFM.Core
             else
             {
                _slotModel.Status = SlotStatus.Offline;
-               //Logger.Info(Constants.InstanceNameFormat, Settings.Name, "Retrieval Aborted...");
+               //Logger.Info(Constants.ClientNameFormat, Settings.Name, "Retrieval Aborted...");
             }
          }
          catch (Exception ex)
          {
             _slotModel.Status = SlotStatus.Offline;
-            Logger.ErrorFormat(ex, Constants.InstanceNameFormat, Settings.Name, ex.Message);
+            Logger.ErrorFormat(ex, Constants.ClientNameFormat, Settings.Name, ex.Message);
          }
          finally
          {
@@ -187,10 +187,10 @@ namespace HFM.Core
             Prefs.Get<bool>(Preference.CalculateBonus));
 
          string statusMessage = String.Format(CultureInfo.CurrentCulture, "Client Status: {0}", _slotModel.Status);
-         Logger.Info(Constants.InstanceNameFormat, _slotModel.Name, statusMessage);
+         Logger.Info(Constants.ClientNameFormat, _slotModel.Name, statusMessage);
 
          string message = String.Format(CultureInfo.CurrentCulture, "Retrieval finished in {0}", Instrumentation.GetExecTime(start));
-         Logger.Info(Constants.InstanceNameFormat, Settings.Name, message);
+         Logger.Info(Constants.ClientNameFormat, Settings.Name, message);
       }
 
       private UnitInfoLogic BuildUnitInfoLogic(UnitInfo unitInfo, bool updateUnitInfo)

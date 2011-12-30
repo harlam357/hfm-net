@@ -149,7 +149,7 @@ namespace HFM.Core
          // report errors that came back from log parsing
          foreach (var s in _logInterpreterLegacy.LogLineParsingErrors)
          {
-            _logger.Debug(Constants.InstanceNameFormat, ClientName, s);
+            _logger.Debug(Constants.ClientNameFormat, ClientName, s);
          }
 
          IList<UnitInfo> parsedUnits;
@@ -162,7 +162,7 @@ namespace HFM.Core
          }
          else
          {
-            _logger.Warn(Constants.InstanceNameFormat, ClientName, 
+            _logger.Warn(Constants.ClientNameFormat, ClientName, 
                "Queue unavailable or failed read.  Parsing logs without queue.");
 
             parsedUnits = GenerateUnitInfoDataFromLogs();
@@ -201,7 +201,7 @@ namespace HFM.Core
             }
             catch (Exception ex)
             {
-               _logger.ErrorFormat(ex, Constants.InstanceNameFormat, ex.Message);
+               _logger.ErrorFormat(ex, Constants.ClientNameFormat, ex.Message);
             }
          }
 
@@ -258,7 +258,7 @@ namespace HFM.Core
                {
                   string message = String.Format(CultureInfo.CurrentCulture,
                      "Could not verify log section for current queue entry ({0}). Trying to parse with most recent log section.", queueIndex);
-                  _logger.Warn(Constants.InstanceNameFormat, ClientName, message);
+                  _logger.Warn(Constants.ClientNameFormat, ClientName, message);
 
                   _unitLogLines[queueIndex] = _logInterpreterLegacy.CurrentWorkUnitLogLines;
                   // If got no Work Unit Log Lines based on Current Work Unit Log Lines
@@ -285,7 +285,7 @@ namespace HFM.Core
                   // Just skip this unit and continue
                   string message = String.Format(CultureInfo.CurrentCulture,
                      "Could not find or verify log section for queue entry {0} (this is not a problem).", queueIndex);
-                  _logger.Debug(Constants.InstanceNameFormat, ClientName, message);
+                  _logger.Debug(Constants.ClientNameFormat, ClientName, message);
                }
             }
          }
@@ -301,7 +301,7 @@ namespace HFM.Core
          }
          catch (Exception ex)
          {
-            _logger.WarnFormat(ex, Constants.InstanceNameFormat, ClientName, ex.Message);
+            _logger.WarnFormat(ex, Constants.ClientNameFormat, ClientName, ex.Message);
             return null;
          }
       }

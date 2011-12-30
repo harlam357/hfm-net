@@ -479,7 +479,7 @@ namespace HFM.Forms
                {
                   // even though i've checked the count above, it could have changed in between then
                   // and now... and if the count is 0 it will yield this exception.  Log It!!!
-                  _logger.WarnFormat(ex, Constants.InstanceNameFormat, instance.Name, ex.Message);
+                  _logger.WarnFormat(ex, Constants.ClientNameFormat, instance.Name, ex.Message);
                }
 
                // If the last text line in the textbox DOES NOT equal the last LogLine Text... Load LogLines.
