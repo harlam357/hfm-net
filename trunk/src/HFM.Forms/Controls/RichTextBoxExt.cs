@@ -127,6 +127,7 @@ namespace HFM.Forms.Controls
             case LogLineType.ClientCoreCommunicationsErrorShutdown:
             case LogLineType.ClientEuePauseState:
             case LogLineType.WorkUnitCoreShutdown:
+            case LogLineType.WorkUnitCoreReturn:
                return @"\cf2 ";
             case LogLineType.Error:
                return @"\cf3 ";
