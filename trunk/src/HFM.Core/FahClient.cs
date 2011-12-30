@@ -270,7 +270,7 @@ namespace HFM.Core
             }
             catch (Exception ex)
             {
-               Logger.ErrorFormat(ex, Constants.InstanceNameFormat, Settings.Name, ex.Message);
+               Logger.ErrorFormat(ex, Constants.ClientNameFormat, Settings.Name, ex.Message);
             }
             return;
          }
@@ -282,7 +282,7 @@ namespace HFM.Core
          }
          catch (Exception ex)
          {
-            Logger.ErrorFormat(ex, Constants.InstanceNameFormat, Settings.Name, ex.Message);
+            Logger.ErrorFormat(ex, Constants.ClientNameFormat, Settings.Name, ex.Message);
          }
          finally
          {
@@ -355,11 +355,11 @@ namespace HFM.Core
                Prefs.Get<bool>(Preference.CalculateBonus));
 
             string statusMessage = String.Format(CultureInfo.CurrentCulture, "Slot Status: {0}", slotModel.Status);
-            Logger.Info(Constants.InstanceNameFormat, slotModel.Name, statusMessage);
+            Logger.Info(Constants.ClientNameFormat, slotModel.Name, statusMessage);
          }
 
          string message = String.Format(CultureInfo.CurrentCulture, "Retrieval finished in {0}", Instrumentation.GetExecTime(start));
-         Logger.Info(Constants.InstanceNameFormat, Settings.Name, message);
+         Logger.Info(Constants.ClientNameFormat, Settings.Name, message);
       }
 
       private UnitInfoLogic BuildUnitInfoLogic(SlotModel slotModel, UnitInfo unitInfo)

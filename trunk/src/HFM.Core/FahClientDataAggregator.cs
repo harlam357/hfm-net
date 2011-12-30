@@ -99,7 +99,7 @@ namespace HFM.Core
          // report errors that came back from log parsing
          foreach (var s in _logInterpreter.LogLineParsingErrors)
          {
-            _logger.Debug(Constants.InstanceNameFormat, ClientName, s);
+            _logger.Debug(Constants.ClientNameFormat, ClientName, s);
          }
 
          IList<UnitInfo> parsedUnits = GenerateUnitInfoDataFromQueue(unitCollection, options, slotOptions, slotId);
