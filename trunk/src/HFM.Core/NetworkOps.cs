@@ -39,18 +39,20 @@ namespace HFM.Core
       /// Upload a File via Ftp.
       /// </summary>
       /// <param name="server">Server Name or IP.</param>
+      /// <param name="port">Server Port.</param>
       /// <param name="ftpPath">Path to upload to on remote Ftp server.</param>
       /// <param name="localFilePath">Path to local file.</param>
       /// <param name="username">Ftp Login Username.</param>
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentException">Throws if Server or FtpPath, or localFilePath is null or empty.</exception>
-      void FtpUploadHelper(string server, string ftpPath, string localFilePath, string username, string password, FtpType ftpMode);
+      void FtpUploadHelper(string server, int port, string ftpPath, string localFilePath, string username, string password, FtpType ftpMode);
 
       /// <summary>
       /// Upload a File via Ftp.
       /// </summary>
       /// <param name="server">Server Name or IP.</param>
+      /// <param name="port">Server Port.</param>
       /// <param name="ftpPath">Path to upload to on remote Ftp server.</param>
       /// <param name="localFilePath">Path to local file.</param>
       /// <param name="maximumLength"></param>
@@ -58,7 +60,7 @@ namespace HFM.Core
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentException">Throws if Server or FtpPath, or localFilePath is null or empty.</exception>
-      void FtpUploadHelper(string server, string ftpPath, string localFilePath, int maximumLength, string username, string password, FtpType ftpMode);
+      void FtpUploadHelper(string server, int port, string ftpPath, string localFilePath, int maximumLength, string username, string password, FtpType ftpMode);
 
       /// <summary>
       /// Check an FTP Connection.
@@ -142,21 +144,23 @@ namespace HFM.Core
       /// Upload a File via Ftp.
       /// </summary>
       /// <param name="server">Server Name or IP.</param>
+      /// <param name="port">Server Port.</param>
       /// <param name="ftpPath">Path to upload to on remote Ftp server.</param>
       /// <param name="localFilePath">Path to local file.</param>
       /// <param name="username">Ftp Login Username.</param>
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentException">Throws if Server or FtpPath, or localFilePath is null or empty.</exception>
-      public void FtpUploadHelper(string server, string ftpPath, string localFilePath, string username, string password, FtpType ftpMode)
+      public void FtpUploadHelper(string server, int port, string ftpPath, string localFilePath, string username, string password, FtpType ftpMode)
       {
-         FtpUploadHelper(server, ftpPath, localFilePath, -1, username, password, ftpMode);
+         FtpUploadHelper(server, port, ftpPath, localFilePath, -1, username, password, ftpMode);
       }
 
       /// <summary>
       /// Upload a File via Ftp.
       /// </summary>
       /// <param name="server">Server Name or IP.</param>
+      /// <param name="port">Server Port.</param>
       /// <param name="ftpPath">Path to upload to on remote Ftp server.</param>
       /// <param name="localFilePath">Path to local file.</param>
       /// <param name="maximumLength"></param>
@@ -164,14 +168,14 @@ namespace HFM.Core
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentException">Throws if Server or FtpPath, or localFilePath is null or empty.</exception>
-      public void FtpUploadHelper(string server, string ftpPath, string localFilePath, int maximumLength, string username, string password, FtpType ftpMode)
+      public void FtpUploadHelper(string server, int port, string ftpPath, string localFilePath, int maximumLength, string username, string password, FtpType ftpMode)
       {
          if (String.IsNullOrEmpty(server)) throw new ArgumentException("Argument 'server' cannot be a null or empty string.");
          if (String.IsNullOrEmpty(ftpPath)) throw new ArgumentException("Argument 'ftpPath' cannot be a null or empty string.");
          if (String.IsNullOrEmpty(localFilePath)) throw new ArgumentException("Argument 'localFilePath' cannot be a null or empty string.");
 
-         FtpUploadHelper(new Uri(String.Format(CultureInfo.InvariantCulture, "ftp://{0}{1}{2}",
-            server, ftpPath, Path.GetFileName(localFilePath))), localFilePath, maximumLength, username, password, ftpMode);
+         FtpUploadHelper(new Uri(String.Format(CultureInfo.InvariantCulture, "ftp://{0}:{1}{2}{3}",
+            server, port, ftpPath, Path.GetFileName(localFilePath))), localFilePath, maximumLength, username, password, ftpMode);
       }
 
       /// <summary>

@@ -87,16 +87,10 @@ namespace HFM.Core
 
       private void RetrievePathInstance()
       {
-         //if (Settings.ExternalInstance)
-         //{
-         //   RetrieveExternalPathInstance();
-         //   return;
-         //}
-      
-         DateTime start = Instrumentation.ExecStart;
+         //DateTime start = Instrumentation.ExecStart;
 
-         try
-         {
+         //try
+         //{
             var remoteFahLogFileInfo = new FileInfo(Path.Combine(Settings.Path, Settings.FahLogFileName));
             string fahLogPath = Path.Combine(_prefs.CacheDirectory, Settings.CachedFahLogFileName());
             var cachedFahLogFileInfo = new FileInfo(fahLogPath);
@@ -177,55 +171,21 @@ namespace HFM.Core
                string message = String.Format(CultureInfo.CurrentCulture, "The path {0} is inaccessible.", queueFileInfo.FullName);
                _logger.Warn(Constants.InstanceNameFormat, Settings.Name, message);
             }
-         }
-         finally
-         {
-            _logger.Info(Constants.InstanceNameFormat, Settings.Name, Instrumentation.GetExecTime(start));
-         }
+         //}
+         //finally
+         //{
+         //   _logger.Info(Constants.InstanceNameFormat, Settings.Name, Instrumentation.GetExecTime(start));
+         //}
       }
-
-      //private void RetrieveExternalPathInstance()
-      //{
-      //   DateTime start = Instrumentation.ExecStart;
-
-      //   try
-      //   {
-      //      var fileInfo = new FileInfo(Path.Combine(Settings.Path, Settings.RemoteExternalFilename));
-      //      string filePath = Path.Combine(_prefs.CacheDirectory, Settings.CachedExternalName);
-
-      //      HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Settings.Name, "External Data copy (start)");
-
-      //      if (fileInfo.Exists)
-      //      {
-      //         fileInfo.CopyTo(filePath, true);
-      //         HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, Settings.Name, "External Data copy (success)");
-      //      }
-      //      else
-      //      {
-      //         throw new FileNotFoundException(String.Format(CultureInfo.CurrentCulture,
-      //            "The path {0} is inaccessible.", fileInfo.FullName));
-      //      }
-      //   }
-      //   finally
-      //   {
-      //      HfmTrace.WriteToHfmConsole(TraceLevel.Info, Settings.Name, start);
-      //   }
-      //}
 
       private void RetrieveHttpInstance()
       {
-         //if (Settings.ExternalInstance)
-         //{
-         //   RetrieveExternalHttpInstance();
-         //   return;
-         //}
-      
-         DateTime start = Instrumentation.ExecStart;
-
          var net = new NetworkOps(_prefs);
 
-         try
-         {
+         //DateTime start = Instrumentation.ExecStart;
+
+         //try
+         //{
             string httpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Settings.Path, "/", Settings.FahLogFileName);
             string localFile = Path.Combine(_prefs.CacheDirectory, Settings.CachedFahLogFileName());
             net.HttpDownloadHelper(httpPath, localFile, Settings.Username, Settings.Password);
@@ -278,45 +238,21 @@ namespace HFM.Core
                string message = String.Format(CultureInfo.CurrentCulture, "queue download failed: {0}", ex.Message);
                _logger.Warn(Constants.InstanceNameFormat, Settings.Name, message);
             }
-         }
-         finally
-         {
-            _logger.Info(Constants.InstanceNameFormat, Settings.Name, Instrumentation.GetExecTime(start));
-         }
+         //}
+         //finally
+         //{
+         //   _logger.Info(Constants.InstanceNameFormat, Settings.Name, Instrumentation.GetExecTime(start));
+         //}
       }
-
-      //private void RetrieveExternalHttpInstance()
-      //{
-      //   DateTime start = Instrumentation.ExecStart;
-         
-      //   var net = new NetworkOps(_prefs);
-
-      //   try
-      //   {
-      //      string httpPath = String.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", Settings.Path, "/", Settings.RemoteExternalFilename);
-      //      string localFile = Path.Combine(_prefs.CacheDirectory, Settings.CachedExternalName);
-      //      net.HttpDownloadHelper(httpPath, localFile, Settings.Username, Settings.Password);
-      //   }
-      //   finally
-      //   {
-      //      HfmTrace.WriteToHfmConsole(TraceLevel.Info, Settings.Name, start);
-      //   }
-      //}
 
       private void RetrieveFtpInstance()
       {
-         //if (Settings.ExternalInstance)
-         //{
-         //   RetrieveExternalFtpInstance();
-         //   return;
-         //}
-      
-         DateTime start = Instrumentation.ExecStart;
-
          var net = new NetworkOps(_prefs);
 
-         try
-         {
+         //DateTime start = Instrumentation.ExecStart;
+
+         //try
+         //{
             string localFilePath = Path.Combine(_prefs.CacheDirectory, Settings.CachedFahLogFileName());
             net.FtpDownloadHelper(Settings.Server, Settings.Port, Settings.Path, Settings.FahLogFileName, localFilePath,
                                   Settings.Username, Settings.Password, Settings.FtpMode);
@@ -370,29 +306,11 @@ namespace HFM.Core
                string message = String.Format(CultureInfo.CurrentCulture, "queue download failed: {0}", ex.Message);
                _logger.Warn(Constants.InstanceNameFormat, Settings.Name, message);
             }
-         }
-         finally
-         {
-            _logger.Info(Constants.InstanceNameFormat, Settings.Name, Instrumentation.GetExecTime(start));
-         }
+         //}
+         //finally
+         //{
+         //   _logger.Info(Constants.InstanceNameFormat, Settings.Name, Instrumentation.GetExecTime(start));
+         //}
       }   
-
-      //private void RetrieveExternalFtpInstance()
-      //{
-      //   DateTime start = Instrumentation.ExecStart;
-
-      //   var net = new NetworkOps(_prefs);
-
-      //   try
-      //   {
-      //      string localFilePath = Path.Combine(_prefs.CacheDirectory, Settings.CachedExternalName);
-      //      net.FtpDownloadHelper(Settings.Server, Settings.Path, Settings.RemoteExternalFilename, localFilePath,
-      //                            Settings.Username, Settings.Password, Settings.FtpMode);
-      //   }
-      //   finally
-      //   {
-      //      HfmTrace.WriteToHfmConsole(TraceLevel.Info, Settings.Name, start);
-      //   }
-      //}
    }
 }

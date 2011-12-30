@@ -225,7 +225,7 @@ namespace HFM.Preferences
 
       private void SetupDictionary()
       {
-         DateTime start = Instrumentation.ExecStart;
+         //DateTime start = Instrumentation.ExecStart;
       
          _prefs.Add(Preference.FormLocation, new Metadata<Point>());
          _prefs.Add(Preference.FormSize, new Metadata<Size>());
@@ -331,7 +331,7 @@ namespace HFM.Preferences
 
          _prefs.Add(Preference.CacheFolder, new Metadata<string>());
 
-         Debug.WriteLine(String.Format("{0} Execution Time: {1}", Instrumentation.FunctionName, Instrumentation.GetExecTime(start)));
+         //Debug.WriteLine(String.Format("{0} Execution Time: {1}", Instrumentation.FunctionName, Instrumentation.GetExecTime(start)));
       }
 
       /// <summary>
@@ -339,7 +339,7 @@ namespace HFM.Preferences
       /// </summary>
       private void Load()
       {
-         DateTime start = Instrumentation.ExecStart;
+         //DateTime start = Instrumentation.ExecStart;
          var symmetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
 
          var location = new Point();
@@ -460,7 +460,7 @@ namespace HFM.Preferences
 
          Set(Preference.CacheFolder, Settings.Default.CacheFolder);
 
-         Debug.WriteLine(String.Format("{0} Execution Time: {1}", Instrumentation.FunctionName, Instrumentation.GetExecTime(start)));
+         //Debug.WriteLine(String.Format("{0} Execution Time: {1}", Instrumentation.FunctionName, Instrumentation.GetExecTime(start)));
       }
 
       #region Load Support Methods
@@ -735,8 +735,7 @@ namespace HFM.Preferences
       /// </summary>
       public void Save()
       {
-         DateTime start = Instrumentation.ExecStart;
-
+         //DateTime start = Instrumentation.ExecStart;
          var symmetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
 
          bool raiseFormShowStyleChanged = false;
@@ -919,7 +918,7 @@ namespace HFM.Preferences
             _logger.ErrorFormat(ex, "{0}", ex.Message);
          }
 
-         Debug.WriteLine(String.Format("{0} Execution Time: {1}", Instrumentation.FunctionName, Instrumentation.GetExecTime(start)));
+         //Debug.WriteLine(String.Format("{0} Execution Time: {1}", Instrumentation.FunctionName, Instrumentation.GetExecTime(start)));
       }
 
       #region Save Support Methods

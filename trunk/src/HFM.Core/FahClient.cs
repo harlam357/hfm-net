@@ -355,7 +355,7 @@ namespace HFM.Core
                Prefs.Get<bool>(Preference.CalculateBonus));
 
             string statusMessage = String.Format(CultureInfo.CurrentCulture, "Slot Status: {0}", slotModel.Status);
-            Logger.Info(Constants.InstanceNameFormat, slotModel.Settings.Name, statusMessage);
+            Logger.Info(Constants.InstanceNameFormat, slotModel.Name, statusMessage);
          }
 
          string message = String.Format(CultureInfo.CurrentCulture, "Retrieval finished in {0}", Instrumentation.GetExecTime(start));

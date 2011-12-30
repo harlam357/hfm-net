@@ -56,10 +56,16 @@ namespace HFM.Core
             {
                // default slot model
                _slotModel = new SlotModel { Prefs = Prefs };
+               // set settings
+               _slotModel.Settings = _settings;
                // restore unit info if available
                RestoreUnitInfo();
             }
-            _slotModel.Settings = _settings;
+            else
+            {
+               // just change settings
+               _slotModel.Settings = _settings;
+            }
          }
       }
 
@@ -78,7 +84,7 @@ namespace HFM.Core
          {
             if (_slotModel.Owns(unitInfo))
             {
-               _slotModel.UnitInfoLogic = BuildUnitInfoLogic(unitInfo);
+               _slotModel.UnitInfoLogic = BuildUnitInfoLogic(unitInfo, false);
                break;
             }
          }
@@ -160,7 +166,7 @@ namespace HFM.Core
          {
             if (units[i] != null)
             {
-               parsedUnits[i] = BuildUnitInfoLogic(units[i]);
+               parsedUnits[i] = BuildUnitInfoLogic(units[i], true);
             }
          }
 
@@ -187,17 +193,20 @@ namespace HFM.Core
          Logger.Info(Constants.InstanceNameFormat, Settings.Name, message);
       }
 
-      private UnitInfoLogic BuildUnitInfoLogic(UnitInfo unitInfo)
+      private UnitInfoLogic BuildUnitInfoLogic(UnitInfo unitInfo, bool updateUnitInfo)
       {
          Debug.Assert(unitInfo != null);
 
          Protein protein = ProteinDictionary.GetProteinOrDownload(unitInfo.ProjectID);
 
-         // update the data
-         unitInfo.UnitRetrievalTime = LastRetrievalTime;
-         unitInfo.OwningSlotName = Settings.Name;
-         unitInfo.OwningSlotPath = Settings.DataPath();
-         unitInfo.SlotType = UnitInfo.DetermineSlotType(protein.Core, unitInfo.CoreID);
+         if (updateUnitInfo)
+         {
+            // update the data
+            unitInfo.UnitRetrievalTime = LastRetrievalTime;
+            unitInfo.OwningSlotName = Settings.Name;
+            unitInfo.OwningSlotPath = Settings.DataPath();
+            unitInfo.SlotType = UnitInfo.DetermineSlotType(protein.Core, unitInfo.CoreID);
+         }
          // build unit info logic
          var unitInfoLogic = ServiceLocator.Resolve<UnitInfoLogic>();
          unitInfoLogic.CurrentProtein = protein;

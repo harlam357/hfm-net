@@ -317,6 +317,7 @@ namespace HFM.Forms
          }
 
          SaveColumnSettings();
+         SaveCurrentUnitInfo();
 
          // Save location and size data
          // RestoreBounds remembers normal position if minimized or maximized
