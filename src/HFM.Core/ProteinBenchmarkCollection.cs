@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 
 using HFM.Core.DataTypes;
 
@@ -169,6 +170,8 @@ namespace HFM.Core
 
       #endregion
 
+      private readonly ReaderWriterLockSlim _cacheLock;
+
       #region Constructor
 
       public ProteinBenchmarkCollection()
@@ -183,6 +186,7 @@ namespace HFM.Core
          {
             FileName = System.IO.Path.Combine(prefs.ApplicationDataFolderPath, Constants.BenchmarkCacheFileName);
          }
+         _cacheLock = new ReaderWriterLockSlim();
       }
 
       #endregion
@@ -201,26 +205,37 @@ namespace HFM.Core
          // no progress has been made so stub out
          if (startingFrame > endingFrame) return;
 
+         // GetBenchmark() BEFORE entering write lock 
+         // because it uses a read lock
          ProteinBenchmark findBenchmark = GetBenchmark(unit);
-         if (findBenchmark == null)
+         // write lock
+         _cacheLock.EnterWriteLock();
+         try
          {
-            var newBenchmark = new ProteinBenchmark
-                               {
-                                  OwningSlotName = unit.OwningSlotName,
-                                  OwningSlotPath = unit.OwningSlotPath,
-                                  ProjectID = unit.ProjectID
-                               };
-
-            if (UpdateFrames(unit, startingFrame, endingFrame, newBenchmark))
+            if (findBenchmark == null)
             {
-               Data.Add(newBenchmark);
+               var newBenchmark = new ProteinBenchmark
+                                  {
+                                     OwningSlotName = unit.OwningSlotName,
+                                     OwningSlotPath = unit.OwningSlotPath,
+                                     ProjectID = unit.ProjectID
+                                  };
+
+               if (UpdateFrames(unit, startingFrame, endingFrame, newBenchmark))
+               {
+                  Data.Add(newBenchmark);
+               }
             }
+            else
+            {
+               UpdateFrames(unit, startingFrame, endingFrame, findBenchmark);
+            }
+            Write();
          }
-         else
+         finally
          {
-            UpdateFrames(unit, startingFrame, endingFrame, findBenchmark);
+            _cacheLock.ExitWriteLock();
          }
-         Write();
       }
 
       private bool UpdateFrames(UnitInfo unit, int startingFrame, int endingFrame, ProteinBenchmark benchmark)
@@ -252,7 +267,15 @@ namespace HFM.Core
       {
          if (unitInfo == null) throw new ArgumentNullException("unitInfo");
 
-         return Data.Find(benchmark => benchmark.Equals(unitInfo));
+         _cacheLock.EnterReadLock();
+         try
+         {
+            return Data.Find(benchmark => benchmark.Equals(unitInfo));
+         }
+         finally
+         {
+            _cacheLock.ExitReadLock();
+         }
       }
 
       public void RemoveAll(BenchmarkClient benchmarkClient)
@@ -260,110 +283,158 @@ namespace HFM.Core
          if (benchmarkClient == null) throw new ArgumentNullException("benchmarkClient");
          if (benchmarkClient.AllClients) throw new ArgumentException("Cannot remove all clients.");
 
-         Data.RemoveAll(benchmark => benchmark.Client.Equals(benchmarkClient));
-         Write();
+         _cacheLock.EnterWriteLock();
+         try
+         {
+            Data.RemoveAll(benchmark => benchmark.Client.Equals(benchmarkClient));
+            Write();
+         }
+         finally
+         {
+            _cacheLock.ExitWriteLock();
+         }
       }
 
       public void RemoveAll(BenchmarkClient benchmarkClient, int projectId)
       {
          if (benchmarkClient == null) throw new ArgumentNullException("benchmarkClient");
 
-         Data.RemoveAll(benchmark =>
-                         {
-                            if (benchmarkClient.AllClients)
-                            {
-                               return benchmark.ProjectID.Equals(projectId);
-                            }
-                            if (benchmark.Client.Equals(benchmarkClient))
-                            {
-                               return benchmark.ProjectID.Equals(projectId);
-                            }
-                            return false;
-                         });
-         Write();
+         _cacheLock.EnterWriteLock();
+         try
+         {
+            Data.RemoveAll(benchmark =>
+                           {
+                              if (benchmarkClient.AllClients)
+                              {
+                                 return benchmark.ProjectID.Equals(projectId);
+                              }
+                              if (benchmark.Client.Equals(benchmarkClient))
+                              {
+                                 return benchmark.ProjectID.Equals(projectId);
+                              }
+                              return false;
+                           });
+            Write();
+         }
+         finally
+         {
+            _cacheLock.ExitWriteLock();
+         }
       }
 
       public bool Contains(BenchmarkClient benchmarkClient)
       {
          if (benchmarkClient == null) throw new ArgumentNullException("benchmarkClient");
 
-         return Data.Find(benchmark =>
-                           {
-                              if (benchmarkClient.AllClients)
-                              {
-                                 return true;
-                              }
-                              if (benchmark.Client.Equals(benchmarkClient))
-                              {
-                                 return true;
-                              }
-                              return false;
-                           }) != null;
+         _cacheLock.EnterReadLock();
+         try
+         {
+            return Data.Find(benchmark =>
+                             {
+                                if (benchmarkClient.AllClients)
+                                {
+                                   return true;
+                                }
+                                if (benchmark.Client.Equals(benchmarkClient))
+                                {
+                                   return true;
+                                }
+                                return false;
+                             }) != null;
+         }
+         finally
+         {
+            _cacheLock.ExitReadLock();
+         }
       }
 
       public IEnumerable<int> GetBenchmarkProjects(BenchmarkClient benchmarkClient)
       {
          if (benchmarkClient == null) throw new ArgumentNullException("benchmarkClient");
 
-         var projects = new List<int>();
-         foreach (var benchmark in Data)
+         _cacheLock.EnterReadLock();
+         try
          {
-            if (projects.Contains(benchmark.ProjectID))
+            var projects = new List<int>();
+            foreach (var benchmark in Data)
             {
-               continue;
-            }
+               if (projects.Contains(benchmark.ProjectID))
+               {
+                  continue;
+               }
 
-            if (benchmarkClient.AllClients)
-            {
-               projects.Add(benchmark.ProjectID);
-            }
-            else
-            {
-               if (benchmark.Client.Equals(benchmarkClient))
+               if (benchmarkClient.AllClients)
                {
                   projects.Add(benchmark.ProjectID);
                }
+               else
+               {
+                  if (benchmark.Client.Equals(benchmarkClient))
+                  {
+                     projects.Add(benchmark.ProjectID);
+                  }
+               }
             }
-         }
 
-         projects.Sort();
-         return projects.AsReadOnly();
+            projects.Sort();
+            return projects.AsReadOnly();
+         }
+         finally
+         {
+            _cacheLock.ExitReadLock();
+         }
       }
 
       public IEnumerable<ProteinBenchmark> GetBenchmarks(BenchmarkClient benchmarkClient)
       {
          if (benchmarkClient == null) throw new ArgumentNullException("benchmarkClient");
 
-         var list = Data.FindAll(benchmark =>
-                                  {
-                                     if (benchmarkClient.AllClients)
-                                     {
-                                        return true;
-                                     }
-                                     return benchmark.Client.Equals(benchmarkClient);
-                                  });
+         _cacheLock.EnterReadLock();
+         try
+         {
+            var list = Data.FindAll(benchmark =>
+                                    {
+                                       if (benchmarkClient.AllClients)
+                                       {
+                                          return true;
+                                       }
+                                       return benchmark.Client.Equals(benchmarkClient);
+                                    });
 
-         return list.AsReadOnly();
+            return list.AsReadOnly();
+         }
+         finally
+         {
+            _cacheLock.ExitReadLock();
+         }
       }
 
       public IEnumerable<ProteinBenchmark> GetBenchmarks(BenchmarkClient benchmarkClient, int projectId)
       {
          if (benchmarkClient == null) throw new ArgumentNullException("benchmarkClient");
 
-         var list = Data.FindAll(benchmark =>
-                                  {
-                                     if (benchmarkClient.AllClients)
-                                     {
-                                        return benchmark.ProjectID.Equals(projectId);
-                                     }
-                                     if (benchmark.Client.Equals(benchmarkClient))
-                                     {
-                                        return benchmark.ProjectID.Equals(projectId);
-                                     }
-                                     return false;
-                                  });
+         _cacheLock.EnterReadLock();
+         try
+         {
+            var list = Data.FindAll(benchmark =>
+                                    {
+                                       if (benchmarkClient.AllClients)
+                                       {
+                                          return benchmark.ProjectID.Equals(projectId);
+                                       }
+                                       if (benchmark.Client.Equals(benchmarkClient))
+                                       {
+                                          return benchmark.ProjectID.Equals(projectId);
+                                       }
+                                       return false;
+                                    });
 
-         return list.AsReadOnly();
+            return list.AsReadOnly();
+         }
+         finally
+         {
+            _cacheLock.ExitReadLock();
+         }
       }
 
       public void UpdateOwnerName(BenchmarkClient benchmarkClient, string name)
@@ -374,12 +445,23 @@ namespace HFM.Core
          // Core library - should have a valid client name 
          Debug.Assert(Validate.ClientName(name));
 
+         // GetBenchmarks() BEFORE entering write lock 
+         // because it uses a read lock
          IEnumerable<ProteinBenchmark> benchmarks = GetBenchmarks(benchmarkClient);
-         foreach (ProteinBenchmark benchmark in benchmarks)
+         // write lock
+         _cacheLock.EnterWriteLock();
+         try
          {
-            benchmark.OwningSlotName = name;
+            foreach (ProteinBenchmark benchmark in benchmarks)
+            {
+               benchmark.OwningSlotName = name;
+            }
+            Write();
          }
-         Write();
+         finally
+         {
+            _cacheLock.ExitWriteLock();
+         }
       }
 
       public void UpdateOwnerPath(BenchmarkClient benchmarkClient, string path)
@@ -387,24 +469,46 @@ namespace HFM.Core
          if (benchmarkClient == null) throw new ArgumentNullException("benchmarkClient");
          if (path == null) throw new ArgumentNullException("path");
 
+         // GetBenchmarks() BEFORE entering write lock 
+         // because it uses a read lock
          IEnumerable<ProteinBenchmark> benchmarks = GetBenchmarks(benchmarkClient);
-         foreach (ProteinBenchmark benchmark in benchmarks)
+         // write lock
+         _cacheLock.EnterWriteLock();
+         try
          {
-            benchmark.OwningSlotPath = path;
+            foreach (ProteinBenchmark benchmark in benchmarks)
+            {
+               benchmark.OwningSlotPath = path;
+            }
+            Write();
          }
-         Write();
+         finally
+         {
+            _cacheLock.ExitWriteLock();
+         }
       }
 
       public void UpdateMinimumFrameTime(BenchmarkClient benchmarkClient, int projectId)
       {
          if (benchmarkClient == null) throw new ArgumentNullException("benchmarkClient");
 
+         // GetBenchmarks() BEFORE entering write lock 
+         // because it uses a read lock
          IEnumerable<ProteinBenchmark> benchmarks = GetBenchmarks(benchmarkClient, projectId);
-         foreach (ProteinBenchmark benchmark in benchmarks)
+         // write lock
+         _cacheLock.EnterWriteLock();
+         try
          {
-            benchmark.UpdateMinimumFrameTime();
+            foreach (ProteinBenchmark benchmark in benchmarks)
+            {
+               benchmark.UpdateMinimumFrameTime();
+            }
+            Write();
          }
-         Write();
+         finally
+         {
+            _cacheLock.ExitWriteLock();
+         }
       }
       
       #endregion
@@ -414,32 +518,75 @@ namespace HFM.Core
       public void Add(ProteinBenchmark item)
       {
          if (item == null) throw new ArgumentNullException("item");
-         if (Contains(item)) throw new ArgumentException("The benchmark already exists.", "item");
+         if (Data.Contains(item)) throw new ArgumentException("The benchmark already exists.", "item");
 
-         Data.Add(item);
+         _cacheLock.EnterWriteLock();
+         try
+         {
+            Data.Add(item);
+         }
+         finally
+         {
+            _cacheLock.ExitWriteLock();
+         }
       }
 
       [CoverageExclude]
       public void Clear()
       {
-         Data.Clear();
+         _cacheLock.EnterWriteLock();
+         try
+         {
+            Data.Clear();
+         }
+         finally
+         {
+            _cacheLock.ExitWriteLock();
+         }
       }
 
       public bool Contains(ProteinBenchmark item)
       {
-         return item != null && Data.Contains(item);
+         _cacheLock.EnterReadLock();
+         try
+         {
+            return item != null && Data.Contains(item);
+         }
+         finally
+         {
+            _cacheLock.ExitReadLock();
+         }
       }
 
       [CoverageExclude]
       void ICollection<ProteinBenchmark>.CopyTo(ProteinBenchmark[] array, int arrayIndex)
       {
-         Data.CopyTo(array, arrayIndex);
+         _cacheLock.EnterReadLock();
+         try
+         {
+            Data.CopyTo(array, arrayIndex);
+         }
+         finally
+         {
+            _cacheLock.ExitReadLock();
+         }
       }
 
       public int Count
       {
          [CoverageExclude]
-         get { return Data.Count; }
+         get
+         {
+            _cacheLock.EnterReadLock();
+            try
+            {
+               return Data.Count;
+            }
+            finally
+            {
+               _cacheLock.ExitReadLock();
+            }
+         }
       }
 
       bool ICollection<ProteinBenchmark>.IsReadOnly
@@ -450,7 +597,15 @@ namespace HFM.Core
 
       public bool Remove(ProteinBenchmark item)
       {
-         return item != null && Data.Remove(item);
+         _cacheLock.EnterWriteLock();
+         try
+         {
+            return item != null && Data.Remove(item);
+         }
+         finally
+         {
+            _cacheLock.ExitWriteLock();
+         }
       }
 
       #endregion
@@ -460,7 +615,15 @@ namespace HFM.Core
       [CoverageExclude]
       public IEnumerator<ProteinBenchmark> GetEnumerator()
       {
-         return Data.GetEnumerator();
+         _cacheLock.EnterReadLock();
+         try
+         {
+            return Data.GetEnumerator();
+         }
+         finally
+         {
+            _cacheLock.ExitReadLock();
+         }
       }
 
       #endregion
