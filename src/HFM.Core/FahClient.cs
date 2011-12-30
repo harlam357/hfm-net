@@ -319,6 +319,7 @@ namespace HFM.Core
             var options = _fahClient.GetMessage<Options>();
             var info = _fahClient.GetMessage<Info>();
 
+            DataAggregator.ClientName = slotModel.Name;
             var lines = _logText.ToString().Split('\n').Where(x => x.Length != 0).ToList();
             IList<UnitInfo> units = DataAggregator.AggregateData(LogReader.GetLogLines(lines, LogFileType.FahClient), unitCollection, options, slotModel.SlotOptions, slotModel.SlotId);
             // Issue 126 - Use the Folding ID, Team, User ID, and Machine ID from the FAHlog data.

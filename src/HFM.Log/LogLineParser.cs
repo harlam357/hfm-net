@@ -32,7 +32,7 @@ namespace HFM.Log
          new Regex("(?<Timestamp>.{8}):Starting Unit (?<UnitIndex>\\d{2})", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       private static readonly Regex WorkUnitCoreReturnRegex =
-         new Regex("(?<Timestamp>.{8}):FahCore, running Unit (?<UnitIndex>\\d{2}), returned: (?<UnitResult>.*) \\(\\d{1,3}\\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+         new Regex("(?<Timestamp>.{8}):FahCore, running Unit (?<UnitIndex>\\d{2}), returned: (?<UnitResult>.*) \\(.*\\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       private static readonly Regex WorkUnitCleanUpRegex =
          new Regex("(?<Timestamp>.{8}):Cleaning up Unit (?<UnitIndex>\\d{2})", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);

@@ -115,7 +115,9 @@ namespace HFM.Log
                Match coreShutdownMatch;
                if ((coreShutdownMatch = CoreShutdownRegex.Match(logLine.LineRaw)).Success)
                {
-                  return coreShutdownMatch.Result("${UnitResult}").ToWorkUnitResult();
+                  // remove any carriage returns from fahclient log lines - 12/30/11
+                  string unitResultValue = coreShutdownMatch.Result("${UnitResult}").Replace("\r", String.Empty);
+                  return unitResultValue.ToWorkUnitResult();
                }
                return new LogLineError(String.Format("Failed to parse Work Unit Result value from '{0}'", logLine.LineRaw));
          }
