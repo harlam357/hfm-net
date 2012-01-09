@@ -250,8 +250,8 @@
     <Setting Name="HistorySortColumnName" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="HistorySortOrder" Type="System.Windows.Forms.SortOrder" Scope="User">
-      <Value Profile="(Default)">None</Value>
+    <Setting Name="HistorySortOrder" Type="System.ComponentModel.ListSortDirection" Scope="User">
+      <Value Profile="(Default)">Ascending</Value>
     </Setting>
     <Setting Name="HistoryFormLocation" Type="System.Drawing.Point" Scope="User">
       <Value Profile="(Default)" />

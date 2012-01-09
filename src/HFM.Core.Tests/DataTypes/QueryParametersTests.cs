@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Query Parameters Class Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -41,7 +41,7 @@ namespace HFM.Core.Tests.DataTypes
       {
          var param = new QueryParameters();
          param.Name = "Test";
-         param.Fields.Add(new QueryField { Name = QueryFieldName.InstanceName, Type = QueryFieldType.Equal, Value = "Test Instance" });
+         param.Fields.Add(new QueryField { Name = QueryFieldName.Name, Type = QueryFieldType.Equal, Value = "Test Instance" });
          param.Fields.Add(new QueryField { Name = QueryFieldName.DownloadDateTime, Type = QueryFieldType.GreaterThan, Value = new DateTime(2000, 1, 1) });
 
          var copy = param.DeepClone();

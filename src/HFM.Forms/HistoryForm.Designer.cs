@@ -37,7 +37,6 @@ namespace HFM.Forms
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HistoryForm));
          this.menuStrip1 = new System.Windows.Forms.MenuStrip();
          this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
-         this.mnuFileImportCompletedUnits = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuFileSep1 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuFileExit = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuView = new System.Windows.Forms.ToolStripMenuItem();
@@ -46,34 +45,34 @@ namespace HFM.Forms
          this.mnuViewRefresh = new System.Windows.Forms.ToolStripMenuItem();
          this.dataGridMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
          this.dataGridDeleteWorkUnitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.dataGridView1 = new HistoryGridViewWrapper();
-         this.btnRefresh = new ButtonWrapper();
-         this.chkFirst = new CheckBoxWrapper();
-         this.lblResults = new LabelWrapper();
-         this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-         this.txtResults = new TextBoxWrapper();
-         this.lblView = new LabelWrapper();
-         this.txtShown = new TextBoxWrapper();
-         this.lblPpdCalc = new LabelWrapper();
+         this.dataGridView1 = new HFM.Forms.Controls.HistoryGridViewWrapper();
+         this.ResultsRefreshButton = new HFM.Forms.Controls.ButtonWrapper();
+         this.ShowFirstCheckBox = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.ResultsLabel = new HFM.Forms.Controls.LabelWrapper();
+         this.ResultNumberUpDownControl = new System.Windows.Forms.NumericUpDown();
+         this.ResultsTextBox = new HFM.Forms.Controls.TextBoxWrapper();
+         this.ShownLabel = new HFM.Forms.Controls.LabelWrapper();
+         this.ShownTextBox = new HFM.Forms.Controls.TextBoxWrapper();
+         this.PpdCalculationLabel = new HFM.Forms.Controls.LabelWrapper();
          this.rdoPanelProduction = new harlam357.Windows.Forms.RadioPanel();
-         this.rdoStandard = new RadioButtonWrapper();
-         this.rdoBonusFrame = new RadioButtonWrapper();
-         this.rdoBonusDownload = new RadioButtonWrapper();
-         this.grpDataView = new GroupBoxWrapper();
-         this.btnNew = new ButtonWrapper();
-         this.cboSortView = new ComboBoxWrapper();
-         this.btnDelete = new ButtonWrapper();
-         this.btnEdit = new ButtonWrapper();
-         this.grpResults = new GroupBoxWrapper();
-         this.chkLast = new CheckBoxWrapper();
-         this.splitContainerWrapper1 = new SplitContainerWrapper();
+         this.PpdCalculationStandardRadioButton = new HFM.Forms.Controls.RadioButtonWrapper();
+         this.PpdCalculationBonusFrameTimeRadioButton = new HFM.Forms.Controls.RadioButtonWrapper();
+         this.PpdCalculationBonusDownloadTimeRadioButton = new HFM.Forms.Controls.RadioButtonWrapper();
+         this.DataViewGroupBox = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.DataViewNewButton = new HFM.Forms.Controls.ButtonWrapper();
+         this.DataViewComboBox = new HFM.Forms.Controls.ComboBoxWrapper();
+         this.DataViewDeleteButton = new HFM.Forms.Controls.ButtonWrapper();
+         this.DataViewEditButton = new HFM.Forms.Controls.ButtonWrapper();
+         this.ResultsGroupBox = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.ShowLastCheckBox = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.splitContainerWrapper1 = new HFM.Forms.Controls.SplitContainerWrapper();
          this.menuStrip1.SuspendLayout();
          this.dataGridMenuStrip.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-         ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+         ((System.ComponentModel.ISupportInitialize)(this.ResultNumberUpDownControl)).BeginInit();
          this.rdoPanelProduction.SuspendLayout();
-         this.grpDataView.SuspendLayout();
-         this.grpResults.SuspendLayout();
+         this.DataViewGroupBox.SuspendLayout();
+         this.ResultsGroupBox.SuspendLayout();
          this.splitContainerWrapper1.Panel1.SuspendLayout();
          this.splitContainerWrapper1.Panel2.SuspendLayout();
          this.splitContainerWrapper1.SuspendLayout();
@@ -93,29 +92,22 @@ namespace HFM.Forms
          // mnuFile
          // 
          this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuFileImportCompletedUnits,
             this.mnuFileSep1,
             this.mnuFileExit});
          this.mnuFile.Name = "mnuFile";
-         this.mnuFile.Size = new System.Drawing.Size(35, 20);
+         this.mnuFile.Size = new System.Drawing.Size(37, 20);
          this.mnuFile.Text = "&File";
-         // 
-         // mnuFileImportCompletedUnits
-         // 
-         this.mnuFileImportCompletedUnits.Name = "mnuFileImportCompletedUnits";
-         this.mnuFileImportCompletedUnits.Size = new System.Drawing.Size(215, 22);
-         this.mnuFileImportCompletedUnits.Text = "Import &CompletedUnits.csv";
-         this.mnuFileImportCompletedUnits.Click += new System.EventHandler(this.mnuFileImportCompletedUnits_Click);
          // 
          // mnuFileSep1
          // 
          this.mnuFileSep1.Name = "mnuFileSep1";
-         this.mnuFileSep1.Size = new System.Drawing.Size(212, 6);
+         this.mnuFileSep1.Size = new System.Drawing.Size(89, 6);
+         this.mnuFileSep1.Visible = false;
          // 
          // mnuFileExit
          // 
          this.mnuFileExit.Name = "mnuFileExit";
-         this.mnuFileExit.Size = new System.Drawing.Size(215, 22);
+         this.mnuFileExit.Size = new System.Drawing.Size(92, 22);
          this.mnuFileExit.Text = "&Exit";
          this.mnuFileExit.Click += new System.EventHandler(this.mnuFileExit_Click);
          // 
@@ -126,26 +118,26 @@ namespace HFM.Forms
             this.mnuViewSep1,
             this.mnuViewRefresh});
          this.mnuView.Name = "mnuView";
-         this.mnuView.Size = new System.Drawing.Size(41, 20);
+         this.mnuView.Size = new System.Drawing.Size(44, 20);
          this.mnuView.Text = "&View";
          // 
          // mnuViewAutoSizeGrid
          // 
          this.mnuViewAutoSizeGrid.Name = "mnuViewAutoSizeGrid";
-         this.mnuViewAutoSizeGrid.Size = new System.Drawing.Size(195, 22);
+         this.mnuViewAutoSizeGrid.Size = new System.Drawing.Size(199, 22);
          this.mnuViewAutoSizeGrid.Text = "Auto Size &Grid Columns";
          this.mnuViewAutoSizeGrid.Click += new System.EventHandler(this.mnuViewAutoSizeGrid_Click);
          // 
          // mnuViewSep1
          // 
          this.mnuViewSep1.Name = "mnuViewSep1";
-         this.mnuViewSep1.Size = new System.Drawing.Size(192, 6);
+         this.mnuViewSep1.Size = new System.Drawing.Size(196, 6);
          // 
          // mnuViewRefresh
          // 
          this.mnuViewRefresh.Name = "mnuViewRefresh";
          this.mnuViewRefresh.ShortcutKeys = System.Windows.Forms.Keys.F5;
-         this.mnuViewRefresh.Size = new System.Drawing.Size(195, 22);
+         this.mnuViewRefresh.Size = new System.Drawing.Size(199, 22);
          this.mnuViewRefresh.Text = "&Refresh";
          this.mnuViewRefresh.Click += new System.EventHandler(this.mnuViewRefresh_Click);
          // 
@@ -199,223 +191,221 @@ namespace HFM.Forms
          this.dataGridView1.ShowCellToolTips = false;
          this.dataGridView1.Size = new System.Drawing.Size(903, 198);
          this.dataGridView1.TabIndex = 0;
-         this.dataGridView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseDown);
-         this.dataGridView1.Sorted += new System.EventHandler(this.dataGridView1_Sorted);
          this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
+         this.dataGridView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseDown);
          // 
-         // btnRefresh
+         // ResultsRefreshButton
          // 
-         this.btnRefresh.Location = new System.Drawing.Point(481, 50);
-         this.btnRefresh.Name = "btnRefresh";
-         this.btnRefresh.Size = new System.Drawing.Size(70, 23);
-         this.btnRefresh.TabIndex = 5;
-         this.btnRefresh.Text = "Refresh";
-         this.btnRefresh.UseVisualStyleBackColor = true;
-         this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+         this.ResultsRefreshButton.Location = new System.Drawing.Point(481, 50);
+         this.ResultsRefreshButton.Name = "ResultsRefreshButton";
+         this.ResultsRefreshButton.Size = new System.Drawing.Size(70, 23);
+         this.ResultsRefreshButton.TabIndex = 5;
+         this.ResultsRefreshButton.Text = "Refresh";
+         this.ResultsRefreshButton.UseVisualStyleBackColor = true;
+         this.ResultsRefreshButton.Click += new System.EventHandler(this.btnRefresh_Click);
          // 
-         // chkFirst
+         // ShowFirstCheckBox
          // 
-         this.chkFirst.AutoSize = true;
-         this.chkFirst.Location = new System.Drawing.Point(266, 54);
-         this.chkFirst.Name = "chkFirst";
-         this.chkFirst.Size = new System.Drawing.Size(75, 17);
-         this.chkFirst.TabIndex = 1;
-         this.chkFirst.Text = "Show First";
-         this.chkFirst.UseVisualStyleBackColor = true;
+         this.ShowFirstCheckBox.AutoSize = true;
+         this.ShowFirstCheckBox.Location = new System.Drawing.Point(266, 54);
+         this.ShowFirstCheckBox.Name = "ShowFirstCheckBox";
+         this.ShowFirstCheckBox.Size = new System.Drawing.Size(75, 17);
+         this.ShowFirstCheckBox.TabIndex = 1;
+         this.ShowFirstCheckBox.Text = "Show First";
+         this.ShowFirstCheckBox.UseVisualStyleBackColor = true;
          // 
-         // lblResults
+         // ResultsLabel
          // 
-         this.lblResults.AutoSize = true;
-         this.lblResults.Location = new System.Drawing.Point(9, 55);
-         this.lblResults.Name = "lblResults";
-         this.lblResults.Size = new System.Drawing.Size(48, 13);
-         this.lblResults.TabIndex = 0;
-         this.lblResults.Text = "Results: ";
+         this.ResultsLabel.AutoSize = true;
+         this.ResultsLabel.Location = new System.Drawing.Point(9, 55);
+         this.ResultsLabel.Name = "ResultsLabel";
+         this.ResultsLabel.Size = new System.Drawing.Size(48, 13);
+         this.ResultsLabel.TabIndex = 0;
+         this.ResultsLabel.Text = "Results: ";
          // 
-         // numericUpDown1
+         // ResultNumberUpDownControl
          // 
-         this.numericUpDown1.Location = new System.Drawing.Point(424, 52);
-         this.numericUpDown1.Maximum = new decimal(new int[] {
+         this.ResultNumberUpDownControl.Location = new System.Drawing.Point(424, 52);
+         this.ResultNumberUpDownControl.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
-         this.numericUpDown1.Minimum = new decimal(new int[] {
+         this.ResultNumberUpDownControl.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-         this.numericUpDown1.Name = "numericUpDown1";
-         this.numericUpDown1.Size = new System.Drawing.Size(46, 20);
-         this.numericUpDown1.TabIndex = 2;
-         this.numericUpDown1.Value = new decimal(new int[] {
+         this.ResultNumberUpDownControl.Name = "ResultNumberUpDownControl";
+         this.ResultNumberUpDownControl.Size = new System.Drawing.Size(46, 20);
+         this.ResultNumberUpDownControl.TabIndex = 2;
+         this.ResultNumberUpDownControl.Value = new decimal(new int[] {
             1000,
             0,
             0,
             0});
          // 
-         // txtResults
+         // ResultsTextBox
          // 
-         this.txtResults.Location = new System.Drawing.Point(63, 52);
-         this.txtResults.Name = "txtResults";
-         this.txtResults.ReadOnly = true;
-         this.txtResults.Size = new System.Drawing.Size(65, 20);
-         this.txtResults.TabIndex = 6;
+         this.ResultsTextBox.Location = new System.Drawing.Point(63, 52);
+         this.ResultsTextBox.Name = "ResultsTextBox";
+         this.ResultsTextBox.ReadOnly = true;
+         this.ResultsTextBox.Size = new System.Drawing.Size(65, 20);
+         this.ResultsTextBox.TabIndex = 6;
          // 
-         // lblView
+         // ShownLabel
          // 
-         this.lblView.AutoSize = true;
-         this.lblView.Location = new System.Drawing.Point(134, 55);
-         this.lblView.Name = "lblView";
-         this.lblView.Size = new System.Drawing.Size(43, 13);
-         this.lblView.TabIndex = 7;
-         this.lblView.Text = "Shown:";
+         this.ShownLabel.AutoSize = true;
+         this.ShownLabel.Location = new System.Drawing.Point(134, 55);
+         this.ShownLabel.Name = "ShownLabel";
+         this.ShownLabel.Size = new System.Drawing.Size(43, 13);
+         this.ShownLabel.TabIndex = 7;
+         this.ShownLabel.Text = "Shown:";
          // 
-         // txtShown
+         // ShownTextBox
          // 
-         this.txtShown.Location = new System.Drawing.Point(183, 52);
-         this.txtShown.Name = "txtShown";
-         this.txtShown.ReadOnly = true;
-         this.txtShown.Size = new System.Drawing.Size(65, 20);
-         this.txtShown.TabIndex = 8;
+         this.ShownTextBox.Location = new System.Drawing.Point(183, 52);
+         this.ShownTextBox.Name = "ShownTextBox";
+         this.ShownTextBox.ReadOnly = true;
+         this.ShownTextBox.Size = new System.Drawing.Size(65, 20);
+         this.ShownTextBox.TabIndex = 8;
          // 
-         // lblPpdCalc
+         // PpdCalculationLabel
          // 
-         this.lblPpdCalc.AutoSize = true;
-         this.lblPpdCalc.Location = new System.Drawing.Point(9, 28);
-         this.lblPpdCalc.Name = "lblPpdCalc";
-         this.lblPpdCalc.Size = new System.Drawing.Size(119, 13);
-         this.lblPpdCalc.TabIndex = 12;
-         this.lblPpdCalc.Text = "PPD/Credit Calculation:";
+         this.PpdCalculationLabel.AutoSize = true;
+         this.PpdCalculationLabel.Location = new System.Drawing.Point(9, 28);
+         this.PpdCalculationLabel.Name = "PpdCalculationLabel";
+         this.PpdCalculationLabel.Size = new System.Drawing.Size(119, 13);
+         this.PpdCalculationLabel.TabIndex = 12;
+         this.PpdCalculationLabel.Text = "PPD/Credit Calculation:";
          // 
          // rdoPanelProduction
          // 
-         this.rdoPanelProduction.Controls.Add(this.rdoStandard);
-         this.rdoPanelProduction.Controls.Add(this.rdoBonusFrame);
-         this.rdoPanelProduction.Controls.Add(this.rdoBonusDownload);
+         this.rdoPanelProduction.Controls.Add(this.PpdCalculationStandardRadioButton);
+         this.rdoPanelProduction.Controls.Add(this.PpdCalculationBonusFrameTimeRadioButton);
+         this.rdoPanelProduction.Controls.Add(this.PpdCalculationBonusDownloadTimeRadioButton);
          this.rdoPanelProduction.Location = new System.Drawing.Point(130, 24);
          this.rdoPanelProduction.Name = "rdoPanelProduction";
          this.rdoPanelProduction.Size = new System.Drawing.Size(342, 24);
          this.rdoPanelProduction.TabIndex = 13;
          this.rdoPanelProduction.ValueMember = null;
          // 
-         // rdoStandard
+         // PpdCalculationStandardRadioButton
          // 
-         this.rdoStandard.AutoSize = true;
-         this.rdoStandard.Location = new System.Drawing.Point(272, 3);
-         this.rdoStandard.Name = "rdoStandard";
-         this.rdoStandard.Size = new System.Drawing.Size(68, 17);
-         this.rdoStandard.TabIndex = 9;
-         this.rdoStandard.TabStop = true;
-         this.rdoStandard.Tag = "2";
-         this.rdoStandard.Text = "Standard";
-         this.rdoStandard.UseVisualStyleBackColor = true;
+         this.PpdCalculationStandardRadioButton.AutoSize = true;
+         this.PpdCalculationStandardRadioButton.Location = new System.Drawing.Point(272, 3);
+         this.PpdCalculationStandardRadioButton.Name = "PpdCalculationStandardRadioButton";
+         this.PpdCalculationStandardRadioButton.Size = new System.Drawing.Size(68, 17);
+         this.PpdCalculationStandardRadioButton.TabIndex = 9;
+         this.PpdCalculationStandardRadioButton.TabStop = true;
+         this.PpdCalculationStandardRadioButton.Tag = "2";
+         this.PpdCalculationStandardRadioButton.Text = "Standard";
+         this.PpdCalculationStandardRadioButton.UseVisualStyleBackColor = true;
          // 
-         // rdoBonusFrame
+         // PpdCalculationBonusFrameTimeRadioButton
          // 
-         this.rdoBonusFrame.AutoSize = true;
-         this.rdoBonusFrame.Location = new System.Drawing.Point(147, 3);
-         this.rdoBonusFrame.Name = "rdoBonusFrame";
-         this.rdoBonusFrame.Size = new System.Drawing.Size(119, 17);
-         this.rdoBonusFrame.TabIndex = 10;
-         this.rdoBonusFrame.TabStop = true;
-         this.rdoBonusFrame.Tag = "1";
-         this.rdoBonusFrame.Text = "Bonus (Frame Time)";
-         this.rdoBonusFrame.UseVisualStyleBackColor = true;
+         this.PpdCalculationBonusFrameTimeRadioButton.AutoSize = true;
+         this.PpdCalculationBonusFrameTimeRadioButton.Location = new System.Drawing.Point(147, 3);
+         this.PpdCalculationBonusFrameTimeRadioButton.Name = "PpdCalculationBonusFrameTimeRadioButton";
+         this.PpdCalculationBonusFrameTimeRadioButton.Size = new System.Drawing.Size(119, 17);
+         this.PpdCalculationBonusFrameTimeRadioButton.TabIndex = 10;
+         this.PpdCalculationBonusFrameTimeRadioButton.TabStop = true;
+         this.PpdCalculationBonusFrameTimeRadioButton.Tag = "1";
+         this.PpdCalculationBonusFrameTimeRadioButton.Text = "Bonus (Frame Time)";
+         this.PpdCalculationBonusFrameTimeRadioButton.UseVisualStyleBackColor = true;
          // 
-         // rdoBonusDownload
+         // PpdCalculationBonusDownloadTimeRadioButton
          // 
-         this.rdoBonusDownload.AutoSize = true;
-         this.rdoBonusDownload.Location = new System.Drawing.Point(3, 3);
-         this.rdoBonusDownload.Name = "rdoBonusDownload";
-         this.rdoBonusDownload.Size = new System.Drawing.Size(138, 17);
-         this.rdoBonusDownload.TabIndex = 11;
-         this.rdoBonusDownload.TabStop = true;
-         this.rdoBonusDownload.Tag = "0";
-         this.rdoBonusDownload.Text = "Bonus (Download Time)";
-         this.rdoBonusDownload.UseVisualStyleBackColor = true;
+         this.PpdCalculationBonusDownloadTimeRadioButton.AutoSize = true;
+         this.PpdCalculationBonusDownloadTimeRadioButton.Location = new System.Drawing.Point(3, 3);
+         this.PpdCalculationBonusDownloadTimeRadioButton.Name = "PpdCalculationBonusDownloadTimeRadioButton";
+         this.PpdCalculationBonusDownloadTimeRadioButton.Size = new System.Drawing.Size(138, 17);
+         this.PpdCalculationBonusDownloadTimeRadioButton.TabIndex = 11;
+         this.PpdCalculationBonusDownloadTimeRadioButton.TabStop = true;
+         this.PpdCalculationBonusDownloadTimeRadioButton.Tag = "0";
+         this.PpdCalculationBonusDownloadTimeRadioButton.Text = "Bonus (Download Time)";
+         this.PpdCalculationBonusDownloadTimeRadioButton.UseVisualStyleBackColor = true;
          // 
-         // grpDataView
+         // DataViewGroupBox
          // 
-         this.grpDataView.Controls.Add(this.btnNew);
-         this.grpDataView.Controls.Add(this.cboSortView);
-         this.grpDataView.Controls.Add(this.btnDelete);
-         this.grpDataView.Controls.Add(this.btnEdit);
-         this.grpDataView.Location = new System.Drawing.Point(3, 3);
-         this.grpDataView.Name = "grpDataView";
-         this.grpDataView.Size = new System.Drawing.Size(331, 84);
-         this.grpDataView.TabIndex = 5;
-         this.grpDataView.TabStop = false;
-         this.grpDataView.Text = "Data View";
+         this.DataViewGroupBox.Controls.Add(this.DataViewNewButton);
+         this.DataViewGroupBox.Controls.Add(this.DataViewComboBox);
+         this.DataViewGroupBox.Controls.Add(this.DataViewDeleteButton);
+         this.DataViewGroupBox.Controls.Add(this.DataViewEditButton);
+         this.DataViewGroupBox.Location = new System.Drawing.Point(3, 3);
+         this.DataViewGroupBox.Name = "DataViewGroupBox";
+         this.DataViewGroupBox.Size = new System.Drawing.Size(331, 84);
+         this.DataViewGroupBox.TabIndex = 5;
+         this.DataViewGroupBox.TabStop = false;
+         this.DataViewGroupBox.Text = "Data View";
          // 
-         // btnNew
+         // DataViewNewButton
          // 
-         this.btnNew.Location = new System.Drawing.Point(19, 23);
-         this.btnNew.Name = "btnNew";
-         this.btnNew.Size = new System.Drawing.Size(95, 23);
-         this.btnNew.TabIndex = 2;
-         this.btnNew.Text = "New";
-         this.btnNew.UseVisualStyleBackColor = true;
-         this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
+         this.DataViewNewButton.Location = new System.Drawing.Point(19, 23);
+         this.DataViewNewButton.Name = "DataViewNewButton";
+         this.DataViewNewButton.Size = new System.Drawing.Size(95, 23);
+         this.DataViewNewButton.TabIndex = 2;
+         this.DataViewNewButton.Text = "New";
+         this.DataViewNewButton.UseVisualStyleBackColor = true;
+         this.DataViewNewButton.Click += new System.EventHandler(this.btnNew_Click);
          // 
-         // cboSortView
+         // DataViewComboBox
          // 
-         this.cboSortView.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-         this.cboSortView.FormattingEnabled = true;
-         this.cboSortView.Location = new System.Drawing.Point(19, 52);
-         this.cboSortView.Name = "cboSortView";
-         this.cboSortView.Size = new System.Drawing.Size(297, 21);
-         this.cboSortView.TabIndex = 0;
-         this.cboSortView.SelectedIndexChanged += new System.EventHandler(this.cboSortView_SelectedIndexChanged);
+         this.DataViewComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+         this.DataViewComboBox.FormattingEnabled = true;
+         this.DataViewComboBox.Location = new System.Drawing.Point(19, 52);
+         this.DataViewComboBox.Name = "DataViewComboBox";
+         this.DataViewComboBox.Size = new System.Drawing.Size(297, 21);
+         this.DataViewComboBox.TabIndex = 0;
          // 
-         // btnDelete
+         // DataViewDeleteButton
          // 
-         this.btnDelete.Location = new System.Drawing.Point(221, 23);
-         this.btnDelete.Name = "btnDelete";
-         this.btnDelete.Size = new System.Drawing.Size(95, 23);
-         this.btnDelete.TabIndex = 3;
-         this.btnDelete.Text = "Delete";
-         this.btnDelete.UseVisualStyleBackColor = true;
-         this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+         this.DataViewDeleteButton.Location = new System.Drawing.Point(221, 23);
+         this.DataViewDeleteButton.Name = "DataViewDeleteButton";
+         this.DataViewDeleteButton.Size = new System.Drawing.Size(95, 23);
+         this.DataViewDeleteButton.TabIndex = 3;
+         this.DataViewDeleteButton.Text = "Delete";
+         this.DataViewDeleteButton.UseVisualStyleBackColor = true;
+         this.DataViewDeleteButton.Click += new System.EventHandler(this.btnDelete_Click);
          // 
-         // btnEdit
+         // DataViewEditButton
          // 
-         this.btnEdit.Location = new System.Drawing.Point(120, 23);
-         this.btnEdit.Name = "btnEdit";
-         this.btnEdit.Size = new System.Drawing.Size(95, 23);
-         this.btnEdit.TabIndex = 4;
-         this.btnEdit.Text = "Edit";
-         this.btnEdit.UseVisualStyleBackColor = true;
-         this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
+         this.DataViewEditButton.Location = new System.Drawing.Point(120, 23);
+         this.DataViewEditButton.Name = "DataViewEditButton";
+         this.DataViewEditButton.Size = new System.Drawing.Size(95, 23);
+         this.DataViewEditButton.TabIndex = 4;
+         this.DataViewEditButton.Text = "Edit";
+         this.DataViewEditButton.UseVisualStyleBackColor = true;
+         this.DataViewEditButton.Click += new System.EventHandler(this.btnEdit_Click);
          // 
-         // grpResults
+         // ResultsGroupBox
          // 
-         this.grpResults.Controls.Add(this.chkLast);
-         this.grpResults.Controls.Add(this.rdoPanelProduction);
-         this.grpResults.Controls.Add(this.lblPpdCalc);
-         this.grpResults.Controls.Add(this.txtShown);
-         this.grpResults.Controls.Add(this.lblView);
-         this.grpResults.Controls.Add(this.txtResults);
-         this.grpResults.Controls.Add(this.numericUpDown1);
-         this.grpResults.Controls.Add(this.lblResults);
-         this.grpResults.Controls.Add(this.chkFirst);
-         this.grpResults.Controls.Add(this.btnRefresh);
-         this.grpResults.Location = new System.Drawing.Point(340, 3);
-         this.grpResults.Name = "grpResults";
-         this.grpResults.Size = new System.Drawing.Size(560, 84);
-         this.grpResults.TabIndex = 7;
-         this.grpResults.TabStop = false;
-         this.grpResults.Text = "Results";
+         this.ResultsGroupBox.Controls.Add(this.ShowLastCheckBox);
+         this.ResultsGroupBox.Controls.Add(this.rdoPanelProduction);
+         this.ResultsGroupBox.Controls.Add(this.PpdCalculationLabel);
+         this.ResultsGroupBox.Controls.Add(this.ShownTextBox);
+         this.ResultsGroupBox.Controls.Add(this.ShownLabel);
+         this.ResultsGroupBox.Controls.Add(this.ResultsTextBox);
+         this.ResultsGroupBox.Controls.Add(this.ResultNumberUpDownControl);
+         this.ResultsGroupBox.Controls.Add(this.ResultsLabel);
+         this.ResultsGroupBox.Controls.Add(this.ShowFirstCheckBox);
+         this.ResultsGroupBox.Controls.Add(this.ResultsRefreshButton);
+         this.ResultsGroupBox.Location = new System.Drawing.Point(340, 3);
+         this.ResultsGroupBox.Name = "ResultsGroupBox";
+         this.ResultsGroupBox.Size = new System.Drawing.Size(560, 84);
+         this.ResultsGroupBox.TabIndex = 7;
+         this.ResultsGroupBox.TabStop = false;
+         this.ResultsGroupBox.Text = "Results";
          // 
-         // chkLast
+         // ShowLastCheckBox
          // 
-         this.chkLast.AutoSize = true;
-         this.chkLast.Location = new System.Drawing.Point(345, 54);
-         this.chkLast.Name = "chkLast";
-         this.chkLast.Size = new System.Drawing.Size(76, 17);
-         this.chkLast.TabIndex = 14;
-         this.chkLast.Text = "Show Last";
-         this.chkLast.UseVisualStyleBackColor = true;
+         this.ShowLastCheckBox.AutoSize = true;
+         this.ShowLastCheckBox.Location = new System.Drawing.Point(345, 54);
+         this.ShowLastCheckBox.Name = "ShowLastCheckBox";
+         this.ShowLastCheckBox.Size = new System.Drawing.Size(76, 17);
+         this.ShowLastCheckBox.TabIndex = 14;
+         this.ShowLastCheckBox.Text = "Show Last";
+         this.ShowLastCheckBox.UseVisualStyleBackColor = true;
          // 
          // splitContainerWrapper1
          // 
@@ -428,8 +418,8 @@ namespace HFM.Forms
          // 
          // splitContainerWrapper1.Panel1
          // 
-         this.splitContainerWrapper1.Panel1.Controls.Add(this.grpDataView);
-         this.splitContainerWrapper1.Panel1.Controls.Add(this.grpResults);
+         this.splitContainerWrapper1.Panel1.Controls.Add(this.DataViewGroupBox);
+         this.splitContainerWrapper1.Panel1.Controls.Add(this.ResultsGroupBox);
          // 
          // splitContainerWrapper1.Panel2
          // 
@@ -446,22 +436,22 @@ namespace HFM.Forms
          this.Controls.Add(this.splitContainerWrapper1);
          this.Controls.Add(this.menuStrip1);
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-         this.MinimumSize = new System.Drawing.Size(800, 350);
+         this.MinimumSize = new System.Drawing.Size(919, 350);
          this.Name = "HistoryForm";
          this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
          this.Text = "Work Unit History";
-         this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmHistory_FormClosed);
          this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmHistory_FormClosing);
+         this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmHistory_FormClosed);
          this.menuStrip1.ResumeLayout(false);
          this.menuStrip1.PerformLayout();
          this.dataGridMenuStrip.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-         ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+         ((System.ComponentModel.ISupportInitialize)(this.ResultNumberUpDownControl)).EndInit();
          this.rdoPanelProduction.ResumeLayout(false);
          this.rdoPanelProduction.PerformLayout();
-         this.grpDataView.ResumeLayout(false);
-         this.grpResults.ResumeLayout(false);
-         this.grpResults.PerformLayout();
+         this.DataViewGroupBox.ResumeLayout(false);
+         this.ResultsGroupBox.ResumeLayout(false);
+         this.ResultsGroupBox.PerformLayout();
          this.splitContainerWrapper1.Panel1.ResumeLayout(false);
          this.splitContainerWrapper1.Panel2.ResumeLayout(false);
          this.splitContainerWrapper1.ResumeLayout(false);
@@ -474,35 +464,34 @@ namespace HFM.Forms
 
       private System.Windows.Forms.MenuStrip menuStrip1;
       private System.Windows.Forms.ToolStripMenuItem mnuFile;
-      private System.Windows.Forms.ToolStripMenuItem mnuFileImportCompletedUnits;
       private System.Windows.Forms.ToolStripMenuItem mnuView;
       private System.Windows.Forms.ToolStripMenuItem mnuViewAutoSizeGrid;
       private System.Windows.Forms.ContextMenuStrip dataGridMenuStrip;
       private System.Windows.Forms.ToolStripMenuItem dataGridDeleteWorkUnitMenuItem;
       private HistoryGridViewWrapper dataGridView1;
-      private ButtonWrapper btnRefresh;
-      private CheckBoxWrapper chkFirst;
-      private LabelWrapper lblResults;
-      private System.Windows.Forms.NumericUpDown numericUpDown1;
-      private TextBoxWrapper txtResults;
-      private LabelWrapper lblView;
-      private TextBoxWrapper txtShown;
-      private LabelWrapper lblPpdCalc;
+      private ButtonWrapper ResultsRefreshButton;
+      private CheckBoxWrapper ShowFirstCheckBox;
+      private LabelWrapper ResultsLabel;
+      private System.Windows.Forms.NumericUpDown ResultNumberUpDownControl;
+      private TextBoxWrapper ResultsTextBox;
+      private LabelWrapper ShownLabel;
+      private TextBoxWrapper ShownTextBox;
+      private LabelWrapper PpdCalculationLabel;
       private harlam357.Windows.Forms.RadioPanel rdoPanelProduction;
-      private RadioButtonWrapper rdoStandard;
-      private RadioButtonWrapper rdoBonusFrame;
-      private RadioButtonWrapper rdoBonusDownload;
-      private GroupBoxWrapper grpDataView;
-      private ButtonWrapper btnNew;
-      private ComboBoxWrapper cboSortView;
-      private ButtonWrapper btnDelete;
-      private ButtonWrapper btnEdit;
-      private GroupBoxWrapper grpResults;
+      private RadioButtonWrapper PpdCalculationStandardRadioButton;
+      private RadioButtonWrapper PpdCalculationBonusFrameTimeRadioButton;
+      private RadioButtonWrapper PpdCalculationBonusDownloadTimeRadioButton;
+      private GroupBoxWrapper DataViewGroupBox;
+      private ButtonWrapper DataViewNewButton;
+      private ComboBoxWrapper DataViewComboBox;
+      private ButtonWrapper DataViewDeleteButton;
+      private ButtonWrapper DataViewEditButton;
+      private GroupBoxWrapper ResultsGroupBox;
       private SplitContainerWrapper splitContainerWrapper1;
       private System.Windows.Forms.ToolStripSeparator mnuFileSep1;
       private System.Windows.Forms.ToolStripMenuItem mnuFileExit;
       private System.Windows.Forms.ToolStripSeparator mnuViewSep1;
       private System.Windows.Forms.ToolStripMenuItem mnuViewRefresh;
-      private CheckBoxWrapper chkLast;
+      private CheckBoxWrapper ShowLastCheckBox;
    }
 }

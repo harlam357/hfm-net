@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - History Entry Sortable Binding List Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,15 +26,19 @@ using HFM.Core.DataTypes;
 
 namespace HFM.Forms
 {
-   [Serializable]
    [CoverageExclude]
    internal class HistoryEntrySortableBindingList : SortableBindingList<HistoryEntry>
    {
-      #region Fields
+      #region Constants
 
       private const string IdColumnName = "ID";
-
+      
       #endregion
+
+      public HistoryEntrySortableBindingList()
+      {
+
+      }
 
       public HistoryEntrySortableBindingList(IList<HistoryEntry> list)
          : base(list)
@@ -50,6 +54,10 @@ namespace HFM.Forms
 
          if ((null != items) && (null != property))
          {
+            /* Set the sort property and direction */
+            SortProperty = property;
+            SortDirection = direction;
+
             var pc = new HistoryEntryPropertyComparer<HistoryEntry>(property,
                                                                     FindPropertyDescriptor(IdColumnName),
                                                                     direction);
@@ -57,6 +65,8 @@ namespace HFM.Forms
 
             /* Set sorted */
             IsSorted = true;
+
+            OnSorted(new SortedEventArgs(property.Name, direction));
          }
          else
          {
@@ -64,13 +74,13 @@ namespace HFM.Forms
             IsSorted = false;
          }
       }
-
+      
       #endregion
 
       #region HistoryEntryPropertyComparer<T>
 
       [CoverageExclude]
-      internal class HistoryEntryPropertyComparer<T> : IComparer<T>
+      private class HistoryEntryPropertyComparer<T> : IComparer<T>
       {
          /*
          * The following code contains code implemented by Rockford Lhotka:

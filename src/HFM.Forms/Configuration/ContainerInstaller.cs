@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Forms Container Installer
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -40,6 +40,11 @@ namespace HFM.Forms.Configuration
          container.Register(
             Component.For<Models.UserStatsDataModel>());
 
+         // HistoryPresenterModel - Transient
+         container.Register(
+            Component.For<Models.HistoryPresenterModel>()
+               .LifeStyle.Transient);
+
          #endregion
 
          #region View Interfaces
@@ -78,6 +83,11 @@ namespace HFM.Forms.Configuration
          container.Register(
             Component.For<IHistoryView>()
                .ImplementedBy<HistoryForm>()
+               .LifeStyle.Transient);
+
+         // HistoryPresenter - Transient
+         container.Register(
+            Component.For<HistoryPresenter>()
                .LifeStyle.Transient);
 
          // IFahClientSetupView - Transient

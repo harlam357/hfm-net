@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Core Enumerations
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -81,8 +81,8 @@ namespace HFM.Core
       ProjectRun,
       ProjectClone,
       ProjectGen,
-      InstanceName,
-      InstancePath,
+      Name,
+      Path,
       Username,
       Team,
       CoreVersion,
@@ -96,7 +96,7 @@ namespace HFM.Core
       Core,
       Frames,
       Atoms,
-      ClientType,
+      SlotType,
       PPD,
       Credit
    }
