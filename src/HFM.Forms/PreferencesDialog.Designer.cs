@@ -429,6 +429,7 @@ namespace HFM.Forms
          this.WebSitePasswordTextBox.ReadOnly = true;
          this.WebSitePasswordTextBox.Size = new System.Drawing.Size(187, 20);
          this.WebSitePasswordTextBox.TabIndex = 17;
+         this.WebSitePasswordTextBox.UseSystemPasswordChar = true;
          this.WebSitePasswordTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // WebSiteUsernameTextBox

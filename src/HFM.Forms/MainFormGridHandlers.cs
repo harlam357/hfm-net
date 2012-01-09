@@ -38,7 +38,7 @@ namespace HFM.Forms
    }
 
    // ReSharper disable InconsistentNaming
-   public partial class frmMain
+   public partial class MainForm
    // ReSharper restore InconsistentNaming
    {
       /// <summary>

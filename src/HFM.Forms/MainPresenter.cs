@@ -507,7 +507,7 @@ namespace HFM.Forms
 
       private void DataGridViewColumnDisplayIndexChanged()
       {
-         if (_view.DataGridView.Columns.Count == frmMain.NumberOfDisplayFields)
+         if (_view.DataGridView.Columns.Count == MainForm.NumberOfDisplayFields)
          {
             foreach (DataGridViewColumn column in _view.DataGridView.Columns)
             {

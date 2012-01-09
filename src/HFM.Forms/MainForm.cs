@@ -107,7 +107,7 @@ namespace HFM.Forms
    // ReSharper disable InconsistentNaming
 
    [CoverageExclude]
-   public partial class frmMain : FormWrapper, IMainView
+   public partial class MainForm : FormWrapper, IMainView
    {
       #region Properties
    
@@ -154,7 +154,7 @@ namespace HFM.Forms
       /// <summary>
       /// Main Form Constructor
       /// </summary>
-      public frmMain(IPreferenceSet prefs, UserStatsDataModel userStatsDataModel)
+      public MainForm(IPreferenceSet prefs, UserStatsDataModel userStatsDataModel)
       {
          _prefs = prefs;
          _userStatsDataModel = userStatsDataModel;

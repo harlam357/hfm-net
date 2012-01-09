@@ -117,7 +117,7 @@ namespace HFM.Forms.Configuration
          // IMainView - Singleton
          container.Register(
             Component.For<IMainView>()
-               .ImplementedBy<frmMain>());
+               .ImplementedBy<MainForm>());
 
          // IMainView - Singleton
          container.Register(
