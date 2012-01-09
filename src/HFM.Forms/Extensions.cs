@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -74,6 +75,15 @@ namespace HFM.Forms
       public static SolidBrush GetDrawingBrush(this SlotStatus status)
       {
          return new SolidBrush(status.GetStatusColor());
+      }
+
+      #endregion
+
+      #region ListSortDirection
+
+      public static string ToDirectionString(this ListSortDirection direction)
+      {
+         return direction.Equals(ListSortDirection.Descending) ? "DESC" : "ASC";
       }
 
       #endregion

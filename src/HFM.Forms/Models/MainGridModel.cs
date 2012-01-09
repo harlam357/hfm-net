@@ -117,11 +117,6 @@ namespace HFM.Forms.Models
          _clientDictionary.ClientDataInvalidated += delegate { ResetBindings(); };
       }
 
-      private static string GetListDirectionString(ListSortDirection direction)
-      {
-         return direction.Equals(ListSortDirection.Descending) ? "DESC" : "ASC";
-      }
-
       public void ResetBindings()
       {
          if (_syncObject.InvokeRequired)
@@ -137,7 +132,7 @@ namespace HFM.Forms.Models
          RefreshSlotList();
          // sort the list
          _bindingSource.Sort = null;
-         _bindingSource.Sort = SortColumnName + " " + GetListDirectionString(SortColumnOrder);
+         _bindingSource.Sort = SortColumnName + " " + SortColumnOrder.ToDirectionString();
          // reset selected slot
          ResetSelectedSlot();
          // find duplicates
