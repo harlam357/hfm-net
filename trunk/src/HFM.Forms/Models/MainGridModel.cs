@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Main Grid Data Model
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -165,7 +165,7 @@ namespace HFM.Forms.Models
          _bindingSource.RaiseListChangedEvents = false;
          // sort the list
          _bindingSource.Sort = null;
-         _bindingSource.Sort = SortColumnName + " " + GetListDirectionString(SortColumnOrder);
+         _bindingSource.Sort = SortColumnName + " " + SortColumnOrder.ToDirectionString();
          // enable binding source updates
          _bindingSource.RaiseListChangedEvents = true;
       }

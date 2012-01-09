@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Fah Client Data Aggregator Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -116,7 +116,7 @@ namespace HFM.Core
       //   {
       //      Mapper.Map(q.GetQueueEntry((uint)i), cq.GetQueueEntry(i));
       //   }
-
+      //
       //   return cq;
       //}
 
@@ -170,6 +170,15 @@ namespace HFM.Core
          unit.FramesObserved = fahLogUnitData.FramesObserved;
          unit.CoreVersion = fahLogUnitData.CoreVersion;
          unit.UnitResult = fahLogUnitData.UnitResult;
+         // there is no finished time available from the client API
+         // since the unit history database won't write the same
+         // result twice, the first time this hits use the local UTC
+         // value for the finished time... not as good as what was
+         // available with v6.
+         if (unit.UnitResult.Equals(WorkUnitResult.FinishedUnit))
+         {
+            unit.FinishedTime = DateTime.UtcNow;
+         }
 
          PopulateUnitInfoFromQueueEntry(queueEntry, options, slotOptions, unit);
          // parse the frame data
