@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Query Parameters Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -161,6 +161,11 @@ namespace HFM.Core.DataTypes
       }
 
       #endregion
+
+      public override string ToString()
+      {
+         return Name;
+      }
    }
 
    [DataContract]

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Data Type Extension Methods
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -126,7 +126,6 @@ namespace HFM.Core.DataTypes
       /// <summary>
       /// Get the WorkUnitResult Enum representation of the given result string.
       /// </summary>
-      /// <param name="result">Work Unit Result as String.</param>
       public static WorkUnitResult ToWorkUnitResult(this string result)
       {
          switch (result)
@@ -145,6 +144,32 @@ namespace HFM.Core.DataTypes
                return WorkUnitResult.CoreOutdated;
             default:
                return WorkUnitResult.Unknown;
+         }
+      }
+
+      public static string ToWorkUnitResultString(this int result)
+      {
+         return ToWorkUnitResultString((WorkUnitResult)result);
+      }
+
+      public static string ToWorkUnitResultString(this WorkUnitResult result)
+      {
+         switch (result)
+         {
+            case WorkUnitResult.FinishedUnit:
+               return FinishedUnit;
+            case WorkUnitResult.EarlyUnitEnd:
+               return EarlyUnitEnd;
+            case WorkUnitResult.UnstableMachine:
+               return UnstableMachine;
+            case WorkUnitResult.Interrupted:
+               return Interrupted;
+            case WorkUnitResult.BadWorkUnit:
+               return BadWorkUnit;
+            case WorkUnitResult.CoreOutdated:
+               return CoreOutdated;
+            default:
+               return String.Empty;
          }
       }
 

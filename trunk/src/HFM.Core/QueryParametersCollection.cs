@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Query Parameters Collection Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,25 +24,8 @@ using HFM.Core.DataTypes;
 
 namespace HFM.Core
 {
-   public interface IQueryParametersCollection : IList<QueryParameters>
+   public interface IQueryParametersCollection : ICollection<QueryParameters>
    {
-      void Sort();
-
-      #region IList<QueryParameters> Members
-
-      // Override Default Interface Documentation
-
-      /// <summary>
-      /// Inserts an item to the <see cref="T:System.Collections.Generic.IList`1"/> at the specified index.
-      /// </summary>
-      /// <param name="index">The zero-based index at which <paramref name="item"/> should be inserted.</param>
-      /// <param name="item">The object to insert into the <see cref="T:System.Collections.Generic.IList`1"/>.</param>
-      /// <exception cref="T:System.ArgumentNullException"><paramref name="item"/> is null.</exception>
-      /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in the <see cref="T:System.Collections.Generic.IList`1"/>.</exception>
-      new void Insert(int index, QueryParameters item);
-
-      #endregion
-
       #region ICollection<QueryParameter> Members
 
       // Override Default Interface Documentation
@@ -79,8 +62,6 @@ namespace HFM.Core
 
       public QueryParametersCollection(IPreferenceSet prefs)
       {
-         Data.Add(new QueryParameters());
-
          if (prefs != null && !String.IsNullOrEmpty(prefs.ApplicationDataFolderPath))
          {
             FileName = System.IO.Path.Combine(prefs.ApplicationDataFolderPath, Constants.QueryCacheFileName);
@@ -92,42 +73,6 @@ namespace HFM.Core
       public override Plugins.IFileSerializer<List<QueryParameters>> DefaultSerializer
       {
          get { return new Serializers.ProtoBufFileSerializer<List<QueryParameters>>(); }
-      }
-
-      #endregion
-
-      public void Sort()
-      {
-         Data.Sort();
-      }
-
-      #region IList<QueryParameters> Members
-
-      [CoverageExclude]
-      public int IndexOf(QueryParameters item)
-      {
-         return Data.IndexOf(item);
-      }
-
-      public void Insert(int index, QueryParameters item)
-      {
-         if (item == null) throw new ArgumentNullException("item");
-
-         Data.Insert(index, item);
-      }
-
-      [CoverageExclude]
-      public void RemoveAt(int index)
-      {
-         Data.RemoveAt(index);
-      }
-
-      public QueryParameters this[int index]
-      {
-         [CoverageExclude]
-         get { return Data[index]; }
-         [CoverageExclude]
-         set { Data[index] = value; }
       }
 
       #endregion

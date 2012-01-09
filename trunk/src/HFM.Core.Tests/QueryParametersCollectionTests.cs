@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Query Parameters Collection Class Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -63,7 +63,7 @@ namespace HFM.Core.Tests
          {
             var queryParameters = new QueryParameters();
             queryParameters.Name = "Test" + i;
-            queryParameters.Fields.Add(new QueryField { Name = QueryFieldName.InstanceName, Type = QueryFieldType.Equal, Value = "Test" + i });
+            queryParameters.Fields.Add(new QueryField { Name = QueryFieldName.Name, Type = QueryFieldType.Equal, Value = "Test" + i });
             list.Add(queryParameters);
          }
 
@@ -76,7 +76,7 @@ namespace HFM.Core.Tests
          {
             QueryParameters queryParameters = list[i];
             Assert.AreEqual("Test" + i, queryParameters.Name);
-            Assert.AreEqual(QueryFieldName.InstanceName, queryParameters.Fields[0].Name);
+            Assert.AreEqual(QueryFieldName.Name, queryParameters.Fields[0].Name);
             Assert.AreEqual(QueryFieldType.Equal, queryParameters.Fields[0].Type);
             Assert.AreEqual("Test" + i, queryParameters.Fields[0].Value);
          }

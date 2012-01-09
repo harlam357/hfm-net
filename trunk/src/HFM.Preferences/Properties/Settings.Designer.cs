@@ -977,10 +977,10 @@ namespace HFM.Preferences.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("None")]
-        public global::System.Windows.Forms.SortOrder HistorySortOrder {
+        [global::System.Configuration.DefaultSettingValueAttribute("Ascending")]
+        public global::System.ComponentModel.ListSortDirection HistorySortOrder {
             get {
-                return ((global::System.Windows.Forms.SortOrder)(this["HistorySortOrder"]));
+                return ((global::System.ComponentModel.ListSortDirection)(this["HistorySortOrder"]));
             }
             set {
                 this["HistorySortOrder"] = value;

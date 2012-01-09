@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Work Unit History Query UI Form
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -123,11 +123,11 @@ namespace HFM.Forms
          {
             columnChoices.Add(new QueryColumnChoice(QueryFieldName.ProjectID.ToString(), QueryFieldName.ProjectID));
             columnChoices.Add(new QueryColumnChoice(QueryFieldName.WorkUnitName.ToString(), QueryFieldName.WorkUnitName));
-            columnChoices.Add(new QueryColumnChoice(QueryFieldName.InstanceName.ToString(), QueryFieldName.InstanceName));
-            columnChoices.Add(new QueryColumnChoice(QueryFieldName.InstancePath.ToString(), QueryFieldName.InstancePath));
+            columnChoices.Add(new QueryColumnChoice(QueryFieldName.Name.ToString(), QueryFieldName.Name));
+            columnChoices.Add(new QueryColumnChoice(QueryFieldName.Path.ToString(), QueryFieldName.Path));
             columnChoices.Add(new QueryColumnChoice(QueryFieldName.Username.ToString(), QueryFieldName.Username));
             columnChoices.Add(new QueryColumnChoice(QueryFieldName.Team.ToString(), QueryFieldName.Team));
-            columnChoices.Add(new QueryColumnChoice(QueryFieldName.ClientType.ToString(), QueryFieldName.ClientType));
+            columnChoices.Add(new QueryColumnChoice(QueryFieldName.SlotType.ToString(), QueryFieldName.SlotType));
             columnChoices.Add(new QueryColumnChoice(QueryFieldName.Core.ToString(), QueryFieldName.Core));
             columnChoices.Add(new QueryColumnChoice(QueryFieldName.CoreVersion.ToString(), QueryFieldName.CoreVersion));
             columnChoices.Add(new QueryColumnChoice(QueryFieldName.FrameTime.ToString(), QueryFieldName.FrameTime));
@@ -149,11 +149,11 @@ namespace HFM.Forms
             var names = HistoryPresenter.GetQueryFieldColumnNames();
             columnChoices.Add(new QueryColumnChoice(names[(int)QueryFieldName.ProjectID], QueryFieldName.ProjectID));
             columnChoices.Add(new QueryColumnChoice(names[(int)QueryFieldName.WorkUnitName], QueryFieldName.WorkUnitName));
-            columnChoices.Add(new QueryColumnChoice(names[(int)QueryFieldName.InstanceName], QueryFieldName.InstanceName));
-            columnChoices.Add(new QueryColumnChoice(names[(int)QueryFieldName.InstancePath], QueryFieldName.InstancePath));
+            columnChoices.Add(new QueryColumnChoice(names[(int)QueryFieldName.Name], QueryFieldName.Name));
+            columnChoices.Add(new QueryColumnChoice(names[(int)QueryFieldName.Path], QueryFieldName.Path));
             columnChoices.Add(new QueryColumnChoice(names[(int)QueryFieldName.Username], QueryFieldName.Username));
             columnChoices.Add(new QueryColumnChoice(names[(int)QueryFieldName.Team], QueryFieldName.Team));
-            columnChoices.Add(new QueryColumnChoice(names[(int)QueryFieldName.ClientType], QueryFieldName.ClientType));
+            columnChoices.Add(new QueryColumnChoice(names[(int)QueryFieldName.SlotType], QueryFieldName.SlotType));
             columnChoices.Add(new QueryColumnChoice(names[(int)QueryFieldName.Core], QueryFieldName.Core));
             columnChoices.Add(new QueryColumnChoice(names[(int)QueryFieldName.CoreVersion], QueryFieldName.CoreVersion));
             columnChoices.Add(new QueryColumnChoice(names[(int)QueryFieldName.FrameTime], QueryFieldName.FrameTime));

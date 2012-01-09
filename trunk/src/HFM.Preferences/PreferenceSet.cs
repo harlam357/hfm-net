@@ -1,7 +1,7 @@
 /*
  * HFM.NET - User Preferences Class
  * Copyright (C) 2006-2007 David Rawling
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -324,7 +324,7 @@ namespace HFM.Preferences
          _prefs.Add(Preference.ShowLastChecked, new Metadata<bool>());
          _prefs.Add(Preference.ShowEntriesValue, new Metadata<int>());
          _prefs.Add(Preference.HistorySortColumnName, new Metadata<string>());
-         _prefs.Add(Preference.HistorySortOrder, new Metadata<SortOrder>());
+         _prefs.Add(Preference.HistorySortOrder, new Metadata<ListSortDirection>());
          _prefs.Add(Preference.HistoryFormLocation, new Metadata<Point>());
          _prefs.Add(Preference.HistoryFormSize, new Metadata<Size>());
          _prefs.Add(Preference.HistoryFormColumns, new Metadata<StringCollection>());
@@ -896,7 +896,7 @@ namespace HFM.Preferences
             Settings.Default.ShowLastChecked = Get<bool>(Preference.ShowLastChecked);
             Settings.Default.ShowEntriesValue = Get<int>(Preference.ShowEntriesValue);
             Settings.Default.HistorySortColumnName = Get<string>(Preference.HistorySortColumnName);
-            Settings.Default.HistorySortOrder = Get<SortOrder>(Preference.HistorySortOrder);
+            Settings.Default.HistorySortOrder = Get<ListSortDirection>(Preference.HistorySortOrder);
             Settings.Default.HistoryFormLocation = Get<Point>(Preference.HistoryFormLocation);
             Settings.Default.HistoryFormSize = Get<Size>(Preference.HistoryFormSize);
             Settings.Default.HistoryFormColumns = Get<StringCollection>(Preference.HistoryFormColumns);

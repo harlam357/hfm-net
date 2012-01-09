@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Work Unit History Database
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -52,7 +52,7 @@ namespace HFM.Core
 
       int DeleteUnitInfo(long id);
 
-      void ImportCompletedUnits(ICollection<HistoryEntry> entries);
+      //void ImportCompletedUnits(ICollection<HistoryEntry> entries);
 
       IList<HistoryEntry> QueryUnitData(QueryParameters parameters);
 
@@ -244,31 +244,31 @@ namespace HFM.Core
          }
       }
       
-      public void ImportCompletedUnits(ICollection<HistoryEntry> entries)
-      {
-         using (var con = new SQLiteConnection(@"Data Source=" + DatabaseFilePath))
-         {
-            con.Open();
-            if (TableExists(con, WuHistoryTableName))
-            {
-               // do upgrade
-            }
-            else
-            {
-               CreateTable(con, WuHistoryTableName);
-               Debug.Assert(TableExists(con, WuHistoryTableName));
-            }
+      //public void ImportCompletedUnits(ICollection<HistoryEntry> entries)
+      //{
+      //   using (var con = new SQLiteConnection(@"Data Source=" + DatabaseFilePath))
+      //   {
+      //      con.Open();
+      //      if (TableExists(con, WuHistoryTableName))
+      //      {
+      //         // do upgrade
+      //      }
+      //      else
+      //      {
+      //         CreateTable(con, WuHistoryTableName);
+      //         Debug.Assert(TableExists(con, WuHistoryTableName));
+      //      }
 
-            using (var trans = con.BeginTransaction())
-            {
-               foreach (var historyEntry in entries)
-               {
-                  WriteUnitInfoToDatabase(con, historyEntry);
-               }
-               trans.Commit();
-            }
-         }
-      }
+      //      using (var trans = con.BeginTransaction())
+      //      {
+      //         foreach (var historyEntry in entries)
+      //         {
+      //            WriteUnitInfoToDatabase(con, historyEntry);
+      //         }
+      //         trans.Commit();
+      //      }
+      //   }
+      //}
       
       private static bool TableExists(DbConnection con, string tableName)
       {
@@ -393,43 +393,43 @@ namespace HFM.Core
          }
       }
       
-      private static void WriteUnitInfoToDatabase(SQLiteConnection con, HistoryEntry entry)
-      {
-         using (var command = new SQLiteCommand(con))
-         {
-            var projectID = new SQLiteParameter("ProjectID", DbType.Int32) { Value = entry.ProjectID };
-            command.Parameters.Add(projectID);
-            var projectRun = new SQLiteParameter("ProjectRun", DbType.Int32) { Value = entry.ProjectRun };
-            command.Parameters.Add(projectRun);
-            var projectClone = new SQLiteParameter("ProjectClone", DbType.Int32) { Value = entry.ProjectClone };
-            command.Parameters.Add(projectClone);
-            var projectGen = new SQLiteParameter("ProjectGen", DbType.Int32) { Value = entry.ProjectGen };
-            command.Parameters.Add(projectGen);
-            var instanceName = new SQLiteParameter("InstanceName", DbType.String) { Value = entry.InstanceName };
-            command.Parameters.Add(instanceName);
-            var instancePath = new SQLiteParameter("InstancePath", DbType.String) { Value = entry.InstancePath };
-            command.Parameters.Add(instancePath);
-            var username = new SQLiteParameter("Username", DbType.String) { Value = entry.Username };
-            command.Parameters.Add(username);
-            var team = new SQLiteParameter("Team", DbType.Int32) { Value = entry.Team };
-            command.Parameters.Add(team);
-            var coreVersion = new SQLiteParameter("CoreVersion", DbType.Single) { Value = entry.CoreVersion };
-            command.Parameters.Add(coreVersion);
-            var framesCompleted = new SQLiteParameter("FramesCompleted", DbType.Int32) { Value = entry.FramesCompleted };
-            command.Parameters.Add(framesCompleted);
-            var frameTime = new SQLiteParameter("FrameTime", DbType.Int32) { Value = entry.FrameTime.TotalSeconds };
-            command.Parameters.Add(frameTime);
-            var result = new SQLiteParameter("Result", DbType.Int32) { Value = (int)entry.Result };
-            command.Parameters.Add(result);
-            var downloadDateTime = new SQLiteParameter("DownloadDateTime", DbType.DateTime) { Value = entry.DownloadDateTime };
-            command.Parameters.Add(downloadDateTime);
-            var completionDateTime = new SQLiteParameter("CompletionDateTime", DbType.DateTime) { Value = entry.CompletionDateTime };
-            command.Parameters.Add(completionDateTime);
+      //private static void WriteUnitInfoToDatabase(SQLiteConnection con, HistoryEntry entry)
+      //{
+      //   using (var command = new SQLiteCommand(con))
+      //   {
+      //      var projectID = new SQLiteParameter("ProjectID", DbType.Int32) { Value = entry.ProjectID };
+      //      command.Parameters.Add(projectID);
+      //      var projectRun = new SQLiteParameter("ProjectRun", DbType.Int32) { Value = entry.ProjectRun };
+      //      command.Parameters.Add(projectRun);
+      //      var projectClone = new SQLiteParameter("ProjectClone", DbType.Int32) { Value = entry.ProjectClone };
+      //      command.Parameters.Add(projectClone);
+      //      var projectGen = new SQLiteParameter("ProjectGen", DbType.Int32) { Value = entry.ProjectGen };
+      //      command.Parameters.Add(projectGen);
+      //      var instanceName = new SQLiteParameter("InstanceName", DbType.String) { Value = entry.InstanceName };
+      //      command.Parameters.Add(instanceName);
+      //      var instancePath = new SQLiteParameter("InstancePath", DbType.String) { Value = entry.InstancePath };
+      //      command.Parameters.Add(instancePath);
+      //      var username = new SQLiteParameter("Username", DbType.String) { Value = entry.Username };
+      //      command.Parameters.Add(username);
+      //      var team = new SQLiteParameter("Team", DbType.Int32) { Value = entry.Team };
+      //      command.Parameters.Add(team);
+      //      var coreVersion = new SQLiteParameter("CoreVersion", DbType.Single) { Value = entry.CoreVersion };
+      //      command.Parameters.Add(coreVersion);
+      //      var framesCompleted = new SQLiteParameter("FramesCompleted", DbType.Int32) { Value = entry.FramesCompleted };
+      //      command.Parameters.Add(framesCompleted);
+      //      var frameTime = new SQLiteParameter("FrameTime", DbType.Int32) { Value = entry.FrameTime.TotalSeconds };
+      //      command.Parameters.Add(frameTime);
+      //      var result = new SQLiteParameter("Result", DbType.Int32) { Value = (int)entry.Result.ToWorkUnitResult() };
+      //      command.Parameters.Add(result);
+      //      var downloadDateTime = new SQLiteParameter("DownloadDateTime", DbType.DateTime) { Value = entry.DownloadDateTime };
+      //      command.Parameters.Add(downloadDateTime);
+      //      var completionDateTime = new SQLiteParameter("CompletionDateTime", DbType.DateTime) { Value = entry.CompletionDateTime };
+      //      command.Parameters.Add(completionDateTime);
 
-            command.CommandText = String.Format(CultureInfo.InvariantCulture, WuHistoryTableInsertSql, WuHistoryTableName);
-            command.ExecuteNonQuery();
-         }
-      }
+      //      command.CommandText = String.Format(CultureInfo.InvariantCulture, WuHistoryTableInsertSql, WuHistoryTableName);
+      //      command.ExecuteNonQuery();
+      //   }
+      //}
 
       public IList<HistoryEntry> QueryUnitData(QueryParameters parameters)
       {
@@ -466,14 +466,14 @@ namespace HFM.Core
                   ProjectRun = wu.Field<int>("ProjectRun"),
                   ProjectClone = wu.Field<int>("ProjectClone"),
                   ProjectGen = wu.Field<int>("ProjectGen"),
-                  InstanceName = wu.Field<string>("InstanceName"),
-                  InstancePath = wu.Field<string>("InstancePath"),
+                  Name = wu.Field<string>("InstanceName"),
+                  Path = wu.Field<string>("InstancePath"),
                   Username = wu.Field<string>("Username"),
                   Team = wu.Field<int>("Team"),
                   CoreVersion = (float)wu.Field<double>("CoreVersion"),
                   FramesCompleted = wu.Field<int>("FramesCompleted"),
                   FrameTime = TimeSpan.FromSeconds(wu.Field<int>("FrameTime")),
-                  Result = (WorkUnitResult)wu.Field<int>("Result"),
+                  Result = wu.Field<int>("Result").ToWorkUnitResultString(),
                   DownloadDateTime = DateTime.SpecifyKind(wu.Field<DateTime>("DownloadDateTime"), DateTimeKind.Utc),
                   CompletionDateTime = DateTime.SpecifyKind(wu.Field<DateTime>("CompletionDateTime"), DateTimeKind.Utc),
                   ProductionView = productionView
@@ -536,7 +536,7 @@ namespace HFM.Core
                 field.Name.Equals(QueryFieldName.Core) ||
                 field.Name.Equals(QueryFieldName.Frames) ||
                 field.Name.Equals(QueryFieldName.Atoms) ||
-                field.Name.Equals(QueryFieldName.ClientType) ||
+                field.Name.Equals(QueryFieldName.SlotType) ||
                 field.Name.Equals(QueryFieldName.PPD) ||
                 field.Name.Equals(QueryFieldName.Credit))
             {
@@ -558,7 +558,8 @@ namespace HFM.Core
       {
          string valueFormat = "{2}";
          if (queryField.Name.Equals(QueryFieldName.WorkUnitName) ||
-             queryField.Name.Equals(QueryFieldName.Core))
+             queryField.Name.Equals(QueryFieldName.Core) ||
+             queryField.Name.Equals(QueryFieldName.SlotType))
          {
             valueFormat = "\"{2}\"";
          }
@@ -599,8 +600,8 @@ namespace HFM.Core
                 field.Name.Equals(QueryFieldName.ProjectRun) ||
                 field.Name.Equals(QueryFieldName.ProjectClone) ||
                 field.Name.Equals(QueryFieldName.ProjectGen) ||
-                field.Name.Equals(QueryFieldName.InstanceName) ||
-                field.Name.Equals(QueryFieldName.InstancePath) ||
+                field.Name.Equals(QueryFieldName.Name) ||
+                field.Name.Equals(QueryFieldName.Path) ||
                 field.Name.Equals(QueryFieldName.Username) ||
                 field.Name.Equals(QueryFieldName.Team) ||
                 field.Name.Equals(QueryFieldName.CoreVersion) ||
@@ -632,10 +633,24 @@ namespace HFM.Core
          _appendAnd = true;
 
          var sbWhere = new StringBuilder();
-         sbWhere.AppendFormat(CultureInfo.InvariantCulture, "[{0}] ", queryField.Name);
+         sbWhere.AppendFormat(CultureInfo.InvariantCulture, "[{0}] ", GetDatabaseColumnName(queryField.Name));
          sbWhere.Append(BuildValueCondition(queryField.Operator, queryField.Value));
 
          return sbWhere.ToString();
+      }
+
+      private static string GetDatabaseColumnName(QueryFieldName fieldName)
+      {
+         // changed enumerations, this provides compatibility with the existing column names
+         switch (fieldName)
+         {
+            case QueryFieldName.Name:
+               return "InstanceName";
+            case QueryFieldName.Path:
+               return "InstancePath";
+            default:
+               return fieldName.ToString();
+         }
       }
 
       private static string BuildValueCondition(string oper, object value)
@@ -649,6 +664,14 @@ namespace HFM.Core
          {
             var dateTime = (DateTime)value;
             return String.Format(CultureInfo.InvariantCulture, "'{0}'", dateTime.ToString("yyyy-MM-dd HH:mm:ss"));
+         }
+         if (value is string)
+         {
+            WorkUnitResult workUnitResult = value.ToString().ToWorkUnitResult();
+            if (!workUnitResult.Equals(WorkUnitResult.Unknown))
+            {
+               value = (int)workUnitResult;
+            }
          }
 
          return String.Format(CultureInfo.InvariantCulture, "'{0}'", value);

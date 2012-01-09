@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Work Unit History UI Form
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,18 +18,14 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
-using System.Linq;
 using System.Windows.Forms;
 
 using HFM.Core;
-using HFM.Core.DataTypes;
-using HFM.Forms.Models;
 using HFM.Forms.Controls;
+using HFM.Forms.Models;
 
 namespace HFM.Forms
 {
@@ -37,27 +33,9 @@ namespace HFM.Forms
    {
       void AttachPresenter(HistoryPresenter presenter);
 
-      void DataBindModel(IHistoryPresenterModel model);
-
-      void QueryComboRefreshList(ICollection<QueryParameters> queryList);
-      
-      int QueryComboSelectedIndex { get; set; }
-
-      QueryParameters QueryComboSelectedValue { get; }
-
-      bool EditButtonEnabled { get; set; }
-      
-      bool DeleteButtonEnabled { get; set; }
-      
-      HistoryEntry DataGridSelectedHistoryEntry { get; }
-      
-      void DataGridSetDataSource(IList<HistoryEntry> list);
-
-      void DataGridSetDataSource(int totalResults, IList<HistoryEntry> list);
+      void DataBindModel(HistoryPresenterModel model);
 
       StringCollection GetColumnSettings();
-
-      void ApplySort(string sortColumnName, SortOrder sortOrder);
 
       #region System.Windows.Forms.Form Exposure
 
@@ -108,111 +86,25 @@ namespace HFM.Forms
          _presenter = presenter;
       }
       
-      public void DataBindModel(IHistoryPresenterModel model)
+      public void DataBindModel(HistoryPresenterModel model)
       {
+         DataViewComboBox.DataSource = model.QueryBindingSource;
+         DataViewEditButton.DataBindings.Add("Enabled", model, "EditAndDeleteButtonsEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+         DataViewDeleteButton.DataBindings.Add("Enabled", model, "EditAndDeleteButtonsEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+
          rdoPanelProduction.DataSource = model;
          rdoPanelProduction.ValueMember = "ProductionView";
-         chkFirst.DataBindings.Add("Checked", model, "ShowFirstChecked", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkLast.DataBindings.Add("Checked", model, "ShowLastChecked", false, DataSourceUpdateMode.OnPropertyChanged);
-         numericUpDown1.DataBindings.Add("Value", model, "ShowEntriesValue", false, DataSourceUpdateMode.OnPropertyChanged);
+         ResultsTextBox.DataBindings.Add("Text", model, "TotalEntries", false, DataSourceUpdateMode.OnPropertyChanged);
+         ShownTextBox.DataBindings.Add("Text", model, "ShownEntries", false, DataSourceUpdateMode.OnPropertyChanged);
+         ShowFirstCheckBox.DataBindings.Add("Checked", model, "ShowFirstChecked", false, DataSourceUpdateMode.OnPropertyChanged);
+         ShowLastCheckBox.DataBindings.Add("Checked", model, "ShowLastChecked", false, DataSourceUpdateMode.OnPropertyChanged);
+         ResultNumberUpDownControl.DataBindings.Add("Value", model, "ShowEntriesValue", false, DataSourceUpdateMode.OnPropertyChanged);
+
+         dataGridView1.DataSource = model.HistoryBindingSource;
 
          Location = model.FormLocation;
          Size = model.FormSize;
          RestoreColumnSettings(model.FormColumns);
-      }
-      
-      public void QueryComboRefreshList(ICollection<QueryParameters> queryList)
-      {
-         if (queryList.Count == 0)
-         {
-            throw new ArgumentException("Query list must have at least one query.");
-         }
-      
-         var selectedIndex = cboSortView.SelectedIndex;
-
-         var names = queryList.Select(query => new QueryColumnChoice(query.Name, query)).ToList();
-         cboSortView.DataSource = names;
-         cboSortView.DisplayMember = "Display";
-         cboSortView.ValueMember = "Value";
-
-         if (selectedIndex >= 0 && selectedIndex < cboSortView.Items.Count)
-         {
-            cboSortView.SelectedIndex = selectedIndex;
-         }
-         else
-         {
-            cboSortView.SelectedIndex = 0;
-         }
-      }
-
-      public int QueryComboSelectedIndex
-      {
-         get { return cboSortView.SelectedIndex; }
-         set { cboSortView.SelectedIndex = value; }
-      }
-      
-      public QueryParameters QueryComboSelectedValue
-      {
-         get { return (QueryParameters)cboSortView.SelectedValue; }
-      }
-
-      public bool EditButtonEnabled
-      {
-         get { return btnEdit.Enabled; }
-         set { btnEdit.Enabled = value; }
-      }
-      
-      public bool DeleteButtonEnabled
-      {
-         get { return btnDelete.Enabled; }
-         set { btnDelete.Enabled = value; }
-      }
-      
-      public HistoryEntry DataGridSelectedHistoryEntry
-      {
-         get
-         {
-            if (dataGridView1.DataSource != null)
-            {
-               var cm = (CurrencyManager)dataGridView1.BindingContext[dataGridView1.DataSource];
-               return cm.Current as HistoryEntry;
-            }
-            
-            return null;
-         }
-      }
-      
-      public void DataGridSetDataSource(IList<HistoryEntry> list)
-      {
-         DataGridSetDataSource(list.Count, list);
-      }
-
-      public void DataGridSetDataSource(int totalResults, IList<HistoryEntry> list)
-      {
-         txtResults.Text = totalResults.ToString();
-         txtShown.Text = list.Count.ToString();
-         dataGridView1.DataSource = new HistoryEntrySortableBindingList(list);
-      }
-      
-      public void ApplySort(string sortColumnName, SortOrder sortOrder)
-      {
-         if (String.IsNullOrEmpty(sortColumnName) == false &&
-             dataGridView1.Columns.Contains(sortColumnName) &&
-             sortOrder.Equals(SortOrder.None) == false)
-         {
-            // ReSharper disable AssignNullToNotNullAttribute
-            if (sortOrder.Equals(SortOrder.Ascending))
-            {
-               dataGridView1.Sort(dataGridView1.Columns[sortColumnName], ListSortDirection.Ascending);
-               dataGridView1.SortedColumn.HeaderCell.SortGlyphDirection = sortOrder;
-            }
-            else if (sortOrder.Equals(SortOrder.Descending))
-            {
-               dataGridView1.Sort(dataGridView1.Columns[sortColumnName], ListSortDirection.Descending);
-               dataGridView1.SortedColumn.HeaderCell.SortGlyphDirection = sortOrder;
-            }
-            // ReSharper restore AssignNullToNotNullAttribute
-         }
       }
 
       /// <summary>
@@ -260,11 +152,6 @@ namespace HFM.Forms
 
       #endregion
       
-      private void cboSortView_SelectedIndexChanged(object sender, EventArgs e)
-      {
-         _presenter.SelectQuery(cboSortView.SelectedIndex);
-      }
-
       private void btnNew_Click(object sender, EventArgs e)
       {
          _presenter.NewQueryClick();
@@ -278,11 +165,6 @@ namespace HFM.Forms
       private void btnDelete_Click(object sender, EventArgs e)
       {
          _presenter.DeleteQueryClick();
-      }
-
-      private void mnuFileImportCompletedUnits_Click(object sender, EventArgs e)
-      {
-         //_presenter.ImportCompletedUnitsClick();
       }
 
       private void mnuFileExit_Click(object sender, EventArgs e)
@@ -332,16 +214,16 @@ namespace HFM.Forms
          dataGridView1.Columns[QueryFieldName.ProjectID.ToString()].DataPropertyName = QueryFieldName.ProjectID.ToString();
          dataGridView1.Columns.Add(QueryFieldName.WorkUnitName.ToString(), names[(int)QueryFieldName.WorkUnitName]);
          dataGridView1.Columns[QueryFieldName.WorkUnitName.ToString()].DataPropertyName = QueryFieldName.WorkUnitName.ToString();
-         dataGridView1.Columns.Add(QueryFieldName.InstanceName.ToString(), names[(int)QueryFieldName.InstanceName]);
-         dataGridView1.Columns[QueryFieldName.InstanceName.ToString()].DataPropertyName = QueryFieldName.InstanceName.ToString();
-         dataGridView1.Columns.Add(QueryFieldName.InstancePath.ToString(), names[(int)QueryFieldName.InstancePath]);
-         dataGridView1.Columns[QueryFieldName.InstancePath.ToString()].DataPropertyName = QueryFieldName.InstancePath.ToString();
+         dataGridView1.Columns.Add(QueryFieldName.Name.ToString(), names[(int)QueryFieldName.Name]);
+         dataGridView1.Columns[QueryFieldName.Name.ToString()].DataPropertyName = QueryFieldName.Name.ToString();
+         dataGridView1.Columns.Add(QueryFieldName.Path.ToString(), names[(int)QueryFieldName.Path]);
+         dataGridView1.Columns[QueryFieldName.Path.ToString()].DataPropertyName = QueryFieldName.Path.ToString();
          dataGridView1.Columns.Add(QueryFieldName.Username.ToString(), names[(int)QueryFieldName.Username]);
          dataGridView1.Columns[QueryFieldName.Username.ToString()].DataPropertyName = QueryFieldName.Username.ToString();
          dataGridView1.Columns.Add(QueryFieldName.Team.ToString(), names[(int)QueryFieldName.Team]);
          dataGridView1.Columns[QueryFieldName.Team.ToString()].DataPropertyName = QueryFieldName.Team.ToString();
-         dataGridView1.Columns.Add(QueryFieldName.ClientType.ToString(), names[(int)QueryFieldName.ClientType]);
-         dataGridView1.Columns[QueryFieldName.ClientType.ToString()].DataPropertyName = QueryFieldName.ClientType.ToString();
+         dataGridView1.Columns.Add(QueryFieldName.SlotType.ToString(), names[(int)QueryFieldName.SlotType]);
+         dataGridView1.Columns[QueryFieldName.SlotType.ToString()].DataPropertyName = QueryFieldName.SlotType.ToString();
          dataGridView1.Columns.Add(QueryFieldName.Core.ToString(), names[(int)QueryFieldName.Core]);
          dataGridView1.Columns[QueryFieldName.Core.ToString()].DataPropertyName = QueryFieldName.Core.ToString();
          dataGridView1.Columns.Add(QueryFieldName.CoreVersion.ToString(), names[(int)QueryFieldName.CoreVersion]);
@@ -385,14 +267,6 @@ namespace HFM.Forms
             e.Graphics.DrawString((e.RowIndex + 1).ToString(), Font, Brushes.Black, e.CellBounds, sf);
             e.Handled = true;
          }
-      }
-
-      /// <summary>
-      /// Update Form Level Sorting Fields
-      /// </summary>
-      private void dataGridView1_Sorted(object sender, EventArgs e)
-      {
-         _presenter.SaveSortSettings(dataGridView1.SortedColumn.Name, dataGridView1.SortOrder);
       }
 
       private void dataGridView1_MouseDown(object sender, MouseEventArgs e)

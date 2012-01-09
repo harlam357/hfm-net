@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Work Unit History Database Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -74,14 +74,14 @@ namespace HFM.Core.Tests
          Assert.AreEqual(1, entry.ProjectRun);
          Assert.AreEqual(2, entry.ProjectClone);
          Assert.AreEqual(3, entry.ProjectGen);
-         Assert.AreEqual("Owner", entry.InstanceName);
-         Assert.AreEqual("Path", entry.InstancePath);
+         Assert.AreEqual("Owner", entry.Name);
+         Assert.AreEqual("Path", entry.Path);
          Assert.AreEqual("harlam357", entry.Username);
          Assert.AreEqual(32, entry.Team);
          Assert.AreEqual(2.09f, entry.CoreVersion);
          Assert.AreEqual(100, entry.FramesCompleted);
          Assert.AreEqual(TimeSpan.FromSeconds(600), entry.FrameTime);
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, entry.Result);
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, entry.Result.ToWorkUnitResult());
          Assert.AreEqual(new DateTime(2010, 1, 1), entry.DownloadDateTime);
          Assert.AreEqual(new DateTime(2010, 1, 2), entry.CompletionDateTime);
          
@@ -133,14 +133,14 @@ namespace HFM.Core.Tests
          Assert.AreEqual(4, entry.ProjectRun);
          Assert.AreEqual(5, entry.ProjectClone);
          Assert.AreEqual(6, entry.ProjectGen);
-         Assert.AreEqual("Owner's", entry.InstanceName);
-         Assert.AreEqual("The Path's", entry.InstancePath);
+         Assert.AreEqual("Owner's", entry.Name);
+         Assert.AreEqual("The Path's", entry.Path);
          Assert.AreEqual("harlam357's", entry.Username);
          Assert.AreEqual(100, entry.Team);
          Assert.AreEqual(2.27f, entry.CoreVersion);
          Assert.AreEqual(56, entry.FramesCompleted);
          Assert.AreEqual(TimeSpan.FromSeconds(1000), entry.FrameTime);
-         Assert.AreEqual(WorkUnitResult.EarlyUnitEnd, entry.Result);
+         Assert.AreEqual(WorkUnitResult.EarlyUnitEnd, entry.Result.ToWorkUnitResult());
          Assert.AreEqual(new DateTime(2009, 5, 5), entry.DownloadDateTime);
          Assert.AreEqual(DateTime.MinValue, entry.CompletionDateTime);
 
@@ -191,7 +191,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(2, entry.ProjectRun);
          Assert.AreEqual(3, entry.ProjectClone);
          Assert.AreEqual(4, entry.ProjectGen);
-         Assert.AreEqual(WorkUnitResult.EarlyUnitEnd, entry.Result);
+         Assert.AreEqual(WorkUnitResult.EarlyUnitEnd, entry.Result.ToWorkUnitResult());
          Assert.AreEqual(new DateTime(2010, 2, 2), entry.DownloadDateTime);
          Assert.AreEqual(DateTime.MinValue, entry.CompletionDateTime);
 
