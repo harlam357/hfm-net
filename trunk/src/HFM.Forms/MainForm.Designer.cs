@@ -2,7 +2,7 @@ using HFM.Forms.Controls;
 
 namespace HFM.Forms
 {
-   partial class frmMain
+   partial class MainForm
    {
       /// <summary>
       /// Required designer variable.
@@ -34,7 +34,7 @@ namespace HFM.Forms
          System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
          System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
          System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
+         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
          this.statusStrip = new System.Windows.Forms.StatusStrip();
          this.statusLabelLeft = new harlam357.Windows.Forms.BindableToolStripStatusLabel();
          this.statusUserTeamRank = new harlam357.Windows.Forms.BindableToolStripStatusLabel();
@@ -1047,7 +1047,7 @@ namespace HFM.Forms
          this.mnuContextForceRefreshEocStats.Text = "Force Refresh EOC Stats";
          this.mnuContextForceRefreshEocStats.Click += new System.EventHandler(this.mnuWebRefreshUserStats_Click);
          // 
-         // frmMain
+         // MainForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -1056,7 +1056,7 @@ namespace HFM.Forms
          this.Controls.Add(this.AppMenu);
          this.Controls.Add(this.statusStrip);
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-         this.Name = "frmMain";
+         this.Name = "MainForm";
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
          this.Text = "HFM.NET";
          this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
