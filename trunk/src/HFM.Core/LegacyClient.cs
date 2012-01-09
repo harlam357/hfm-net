@@ -85,6 +85,8 @@ namespace HFM.Core
             if (_slotModel.Owns(unitInfo))
             {
                _slotModel.UnitInfoLogic = BuildUnitInfoLogic(unitInfo, false);
+               string message = String.Format(CultureInfo.CurrentCulture, "Restored unit: {0}", unitInfo.ProjectRunCloneGen());
+               Logger.Info(Constants.ClientNameFormat, _settings.Name, message);
                break;
             }
          }

@@ -357,7 +357,8 @@ namespace HFM.Core
       {
          using (var command = new SQLiteCommand(con))
          {
-            Logger.Info("Writing unit {0} to database.", unitInfoLogic.UnitInfoData.ProjectRunCloneGen());
+            string message = String.Format(CultureInfo.CurrentCulture, "Writing unit to database: {0}", unitInfoLogic.UnitInfoData.ProjectRunCloneGen());
+            Logger.Info(Constants.ClientNameFormat, unitInfoLogic.UnitInfoData.OwningSlotName, message);
 
             var projectID = new SQLiteParameter("ProjectID", DbType.Int32) { Value = unitInfoLogic.UnitInfoData.ProjectID };
             command.Parameters.Add(projectID);
