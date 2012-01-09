@@ -168,7 +168,9 @@
     <Compile Include="MainForm.designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainFormGridHandlers.cs" />
+    <Compile Include="MainFormGridHandlers.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="HistoryEntrySortableBindingList.cs" />
     <Compile Include="Controls\HistoryGridViewWrapper.cs">
       <SubType>Component</SubType>
