@@ -162,18 +162,18 @@ namespace HFM.Core
                _fahClient.SendCommand(String.Format(CultureInfo.InvariantCulture, Constants.FahClientSlotOptions, slot.Id));
             }
          }
-         else if (e.DataType.Equals(typeof(SlotOptions)))
+         else if (e.DataType == typeof(SlotOptions))
          {
             _slotOptions.Add(_fahClient.GetMessage<SlotOptions>());
          }
-         else if (e.DataType.Equals(typeof(LogRestart)))
+         else if (e.DataType == typeof(LogRestart))
          {
             // clear
             _logText.Length = 0;
             _logText.Append(_fahClient.GetMessage<LogRestart>().Value);
             // write new local log file
          }
-         else if (e.DataType.Equals(typeof(LogUpdate)))
+         else if (e.DataType == typeof(LogUpdate))
          {
             _logText.Append(_fahClient.GetMessage<LogUpdate>().Value);
             // append to local log file
@@ -432,7 +432,8 @@ namespace HFM.Core
    {
       public static bool Contains(this IEnumerable<MessageUpdatedEventArgs> messages, Type type)
       {
-         return messages.FirstOrDefault(x => x.DataType.Equals(type)) != null;
+         // use == for equality... DataType property could easily be null
+         return messages.FirstOrDefault(x => x.DataType == type) != null;
       }
 
       public static bool ContainsUpdates(this IEnumerable<MessageUpdatedEventArgs> messages)
