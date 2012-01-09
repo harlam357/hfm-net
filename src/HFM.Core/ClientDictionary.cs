@@ -260,6 +260,7 @@ namespace HFM.Core
             string existingName = client.Settings.Name;
             string existingPath = client.Settings.DataPath();
             
+            client.ClearEventSubscriptions();
             // update the settings
             client.Settings = settings;
             // if the key changed the client object
@@ -267,13 +268,11 @@ namespace HFM.Core
             // correct key
             if (keyChanged)
             {
-               //client.ClearEventSubscriptions();
                _clientDictionary.Remove(key);
-
-               //client.SlotsChanged += delegate { OnClientDataInvalidated(EventArgs.Empty); };
-               //client.RetrievalFinished += delegate { OnClientDataInvalidated(EventArgs.Empty); };
                _clientDictionary.Add(settings.Name, client);
             }
+            client.SlotsChanged += delegate { OnClientDataInvalidated(EventArgs.Empty); };
+            client.RetrievalFinished += delegate { OnClientDataInvalidated(EventArgs.Empty); };
             
             if (settings.IsFahClient() || settings.IsLegacy())
             {

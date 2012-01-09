@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Client Settings Serializer
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Security.Cryptography;
+using System.Xml;
 
 using Castle.Core.Logging;
 
@@ -77,10 +78,11 @@ namespace HFM.Core.Serializers
       public void Serialize(string fileName, List<ClientSettings> value)
       {
          using (var fileStream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+         using (var xmlWriter = XmlWriter.Create(fileStream, new XmlWriterSettings { Indent = true }))
          {
             var serializer = new DataContractSerializer(typeof(List<ClientSettings>));
             Encrypt(value);
-            serializer.WriteObject(fileStream, value);
+            serializer.WriteObject(xmlWriter, value);
          }
       }
 
@@ -91,6 +93,8 @@ namespace HFM.Core.Serializers
          var symetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false) { IntializationVector = _iv };
          foreach (var settings in value)
          {
+            if (settings.Password.Length == 0) continue;
+
             try
             {
                settings.Password = symetricProvider.Encrypt(new Data(settings.Password), _symmetricKey).ToBase64();
@@ -107,6 +111,8 @@ namespace HFM.Core.Serializers
          var symetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false) { IntializationVector = _iv };
          foreach (var settings in value)
          {
+            if (settings.Password.Length == 0) continue;
+
             try
             {
                settings.Password = symetricProvider.Decrypt(new Data(
