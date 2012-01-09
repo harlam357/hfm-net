@@ -74,6 +74,7 @@
          this.ClientTimeOffsetLabel.Size = new System.Drawing.Size(136, 13);
          this.ClientTimeOffsetLabel.TabIndex = 23;
          this.ClientTimeOffsetLabel.Text = "Client Time Offset (Minutes)";
+         this.ClientTimeOffsetLabel.Visible = false;
          // 
          // ClientTimeOffsetUpDown
          // 
@@ -82,6 +83,7 @@
          this.ClientTimeOffsetUpDown.Name = "ClientTimeOffsetUpDown";
          this.ClientTimeOffsetUpDown.Size = new System.Drawing.Size(54, 20);
          this.ClientTimeOffsetUpDown.TabIndex = 22;
+         this.ClientTimeOffsetUpDown.Visible = false;
          // 
          // ClientNoUtcOffsetCheckBox
          // 
@@ -93,6 +95,7 @@
          this.ClientNoUtcOffsetCheckBox.TabIndex = 21;
          this.ClientNoUtcOffsetCheckBox.Text = "Client has no UTC offset.";
          this.ClientNoUtcOffsetCheckBox.UseVisualStyleBackColor = true;
+         this.ClientNoUtcOffsetCheckBox.Visible = false;
          // 
          // DialogCancelButton
          // 
