@@ -57,11 +57,10 @@ namespace HFM.Log
                if (ClientRunList[i].UnitIndexes[j].QueueIndex == queueIndex)
                {
                   int start = ClientRunList[i].UnitIndexes[j].StartIndex;
-                  //int end = ClientRunList[i].UnitIndexes[j].EndIndex != -1 ? ClientRunList[i].UnitIndexes[j].EndIndex : LogLineList.Count - 1;
                   int end = ClientRunList[i].UnitIndexes[j].EndIndex;
 
                   var logLines = LogLineList.WhereLineIndex(start, end);
-                  var logLinesIndexOnly = logLines.Filter(LogFilterType.IndexOnly);
+                  var logLinesIndexOnly = logLines.Filter(LogFilterType.UnitIndex, queueIndex);
 
                   var info = logLinesIndexOnly.FirstProjectInfoOrDefault();
                   if (info != null && info.EqualsProject(projectInfo))

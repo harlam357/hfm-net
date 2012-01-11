@@ -178,6 +178,9 @@ namespace HFM.Core.DataTypes
       #region IEnumerable<LogLine>
 
       public static readonly Regex WorkUnitRunningRegex =
+         new Regex("(?<Timestamp>.{8}):WU(?<UnitIndex>\\d{2}):FS(?<FoldingSlot>\\d{2}):.*", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+      
+      public static readonly Regex WorkUnitRunningRegex38 =
          new Regex("(?<Timestamp>.{8}):Unit (?<UnitIndex>\\d{2}):.*", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       /// <summary>
@@ -197,39 +200,65 @@ namespace HFM.Core.DataTypes
       }
 
       /// <summary>
-      /// Filter v7 log lines by queue index (:Unit xx:).  Has no effect on legacy log lines.
+      /// Filter v7 log lines by index.  Has no effect on legacy log lines.
       /// </summary>
-      public static IEnumerable<LogLine> Filter(this IEnumerable<LogLine> logLines, LogFilterType filterType)
+      public static IEnumerable<LogLine> Filter(this IEnumerable<LogLine> logLines, LogFilterType filterType, int index)
       {
          if (logLines == null) throw new ArgumentNullException("logLines");
 
-         LogLine logLine = logLines.FirstOrDefault();
-         if (logLine == null)
+         switch (filterType)
          {
-            return logLines;
+            case LogFilterType.UnitIndex:
+               return FilterUnitIndex(logLines, index);
+            case LogFilterType.UnitAndNonIndexed:
+               return FilterUnitAndNonIndexed(logLines, index);
+            case LogFilterType.SlotIndex:
+               return FilterSlotIndex(logLines, index);
+            case LogFilterType.SlotAndNonIndexed:
+               return FilterSlotAndNonIndexed(logLines, index);
+            default:
+               return logLines;
          }
-         if (!logLine.LineType.Equals(LogLineType.WorkUnitWorking))
-         {
-            return logLines;
-         }
-
-         var queueIndex = (int)logLine.LineData;
-         if (filterType.Equals(LogFilterType.IndexOnly))
-         {
-            return FilterIndexOnly(logLines, queueIndex);
-         }
-         return FilterIndexAndNonIndexed(logLines, queueIndex);
       }
 
-      private static IEnumerable<LogLine> FilterIndexOnly(this IEnumerable<LogLine> logLines, int queueIndex)
+      private static IEnumerable<LogLine> FilterUnitIndex(this IEnumerable<LogLine> logLines, int index)
       {
          Debug.Assert(logLines != null);
 
          var list = new List<LogLine>(logLines.Count());
          foreach (var line in logLines)
          {
-            Match match = WorkUnitRunningRegex.Match(line.LineRaw);
-            if (match.Success && Int32.Parse(match.Result("${UnitIndex}")) == queueIndex)
+            Match match;
+            if ((match = WorkUnitRunningRegex.Match(line.LineRaw)).Success ||
+                (match = WorkUnitRunningRegex38.Match(line.LineRaw)).Success)
+            {
+               if (Int32.Parse(match.Result("${UnitIndex}")) == index)
+               {
+                  list.Add(line);
+               }
+            }
+         }
+
+         return list.AsReadOnly();
+      }
+
+      private static IEnumerable<LogLine> FilterUnitAndNonIndexed(this IEnumerable<LogLine> logLines, int index)
+      {
+         Debug.Assert(logLines != null);
+
+         var list = new List<LogLine>(logLines.Count());
+         foreach (var line in logLines)
+         {
+            Match match;
+            if ((match = WorkUnitRunningRegex.Match(line.LineRaw)).Success ||
+                (match = WorkUnitRunningRegex38.Match(line.LineRaw)).Success)
+            {
+               if (Int32.Parse(match.Result("${UnitIndex}")) == index)
+               {
+                  list.Add(line);
+               }
+            }
+            else
             {
                list.Add(line);
             }
@@ -238,17 +267,37 @@ namespace HFM.Core.DataTypes
          return list.AsReadOnly();
       }
 
-      private static IEnumerable<LogLine> FilterIndexAndNonIndexed(this IEnumerable<LogLine> logLines, int queueIndex)
+      private static IEnumerable<LogLine> FilterSlotIndex(this IEnumerable<LogLine> logLines, int index)
       {
          Debug.Assert(logLines != null);
 
          var list = new List<LogLine>(logLines.Count());
          foreach (var line in logLines)
          {
-            Match match = WorkUnitRunningRegex.Match(line.LineRaw);
-            if (match.Success)
+            Match match;
+            if ((match = WorkUnitRunningRegex.Match(line.LineRaw)).Success)
             {
-               if (Int32.Parse(match.Result("${UnitIndex}")) == queueIndex)
+               if (Int32.Parse(match.Result("${FoldingSlot}")) == index)
+               {
+                  list.Add(line);
+               }
+            }
+         }
+
+         return list.AsReadOnly();
+      }
+
+      private static IEnumerable<LogLine> FilterSlotAndNonIndexed(this IEnumerable<LogLine> logLines, int index)
+      {
+         Debug.Assert(logLines != null);
+
+         var list = new List<LogLine>(logLines.Count());
+         foreach (var line in logLines)
+         {
+            Match match;
+            if ((match = WorkUnitRunningRegex.Match(line.LineRaw)).Success)
+            {
+               if (Int32.Parse(match.Result("${FoldingSlot}")) == index)
                {
                   list.Add(line);
                }
