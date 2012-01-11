@@ -46,10 +46,14 @@
       <Exec Command="..\..\..\Deploy.bat ..\..\..\Artifacts\HFM.NET" WorkingDirectory="HFM\bin\Release"/>
    </Target>
 
+   <PropertyGroup Condition=" '$(AssemblyOriginatorKeyFile)' == '' ">
+      <AssemblyOriginatorKeyFile>$(MSBuildProjectDirectory)\harlam357public.snk</AssemblyOriginatorKeyFile>
+   </PropertyGroup>
+
    <Target Name="Compile" DependsOnTargets="AssemblyVersion;CreateArtifactsFolder">
       <MSBuild Projects="HFM.All.sln"
                Targets="Rebuild"
-               Properties="Configuration=ScriptedRelease" />
+               Properties="Configuration=ScriptedRelease;AssemblyOriginatorKeyFile=$(AssemblyOriginatorKeyFile)" />
 
       <CallTarget Targets="NUnit" />
    </Target>

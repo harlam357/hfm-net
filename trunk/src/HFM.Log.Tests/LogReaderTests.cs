@@ -746,7 +746,7 @@ namespace HFM.Log.Tests
 
          logLines = logInterpreter.GetLogLinesForQueueIndex(1, new ProjectInfo { ProjectID = 7136, ProjectRun = 0, ProjectClone = 39, ProjectGen = 103 });
          Assert.AreEqual(99, logLines.Count);
-         FahLogUnitData fahLogData = LogReader.GetFahLogDataFromLogLines(logLines.Filter(LogFilterType.IndexAndNonIndexed));
+         FahLogUnitData fahLogData = LogReader.GetFahLogDataFromLogLines(logLines.Filter(LogFilterType.UnitAndNonIndexed, 1));
          Assert.AreEqual(new TimeSpan(18, 6, 54), fahLogData.UnitStartTimeStamp);
          Assert.AreEqual("2.27", fahLogData.CoreVersion);
          Assert.AreEqual(6, fahLogData.FrameDataList.Count);
@@ -759,7 +759,7 @@ namespace HFM.Log.Tests
 
          logLines = logInterpreter.GetLogLinesForQueueIndex(0, new ProjectInfo { ProjectID = 6984, ProjectRun = 0, ProjectClone = 1, ProjectGen = 18 });
          Assert.AreEqual(198, logLines.Count);
-         fahLogData = LogReader.GetFahLogDataFromLogLines(logLines.Filter(LogFilterType.IndexAndNonIndexed));
+         fahLogData = LogReader.GetFahLogDataFromLogLines(logLines.Filter(LogFilterType.UnitAndNonIndexed, 0));
          Assert.AreEqual(new TimeSpan(18, 39, 17), fahLogData.UnitStartTimeStamp);
          Assert.AreEqual("2.27", fahLogData.CoreVersion);
          Assert.AreEqual(101, fahLogData.FrameDataList.Count);
@@ -805,7 +805,7 @@ namespace HFM.Log.Tests
 
          logLines = logInterpreter.GetLogLinesForQueueIndex(0, new ProjectInfo { ProjectID = 6801, ProjectRun = 6348, ProjectClone = 0, ProjectGen = 305 });
          Assert.AreEqual(227, logLines.Count);
-         FahLogUnitData fahLogData = LogReader.GetFahLogDataFromLogLines(logLines.Filter(LogFilterType.IndexAndNonIndexed));
+         FahLogUnitData fahLogData = LogReader.GetFahLogDataFromLogLines(logLines.Filter(LogFilterType.UnitAndNonIndexed, 0));
          Assert.AreEqual(new TimeSpan(0, 37, 37), fahLogData.UnitStartTimeStamp);
          Assert.AreEqual("2.20", fahLogData.CoreVersion);
          Assert.AreEqual(101, fahLogData.FrameDataList.Count);
@@ -818,7 +818,7 @@ namespace HFM.Log.Tests
 
          logLines = logInterpreter.GetLogLinesForQueueIndex(2, new ProjectInfo { ProjectID = 11051, ProjectRun = 0, ProjectClone = 2, ProjectGen = 39 });
          Assert.AreEqual(570, logLines.Count);
-         fahLogData = LogReader.GetFahLogDataFromLogLines(logLines.Filter(LogFilterType.IndexAndNonIndexed));
+         fahLogData = LogReader.GetFahLogDataFromLogLines(logLines.Filter(LogFilterType.UnitAndNonIndexed, 2));
          Assert.AreEqual(new TimeSpan(18, 29, 46), fahLogData.UnitStartTimeStamp);
          Assert.AreEqual("2.27", fahLogData.CoreVersion);
          Assert.AreEqual(101, fahLogData.FrameDataList.Count);
@@ -857,7 +857,7 @@ namespace HFM.Log.Tests
 
          logLines = logInterpreter.GetLogLinesForQueueIndex(1, new ProjectInfo { ProjectID = 7704, ProjectRun = 4, ProjectClone = 7, ProjectGen = 1 });
          Assert.AreEqual(31, logLines.Count);
-         FahLogUnitData fahLogData = LogReader.GetFahLogDataFromLogLines(logLines.Filter(LogFilterType.IndexAndNonIndexed));
+         FahLogUnitData fahLogData = LogReader.GetFahLogDataFromLogLines(logLines.Filter(LogFilterType.UnitAndNonIndexed, 1));
          Assert.AreEqual(new TimeSpan(22, 1, 5), fahLogData.UnitStartTimeStamp);
          Assert.AreEqual("2.27", fahLogData.CoreVersion);
          Assert.AreEqual(0, fahLogData.FrameDataList.Count);

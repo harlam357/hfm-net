@@ -547,8 +547,6 @@ namespace HFM.Forms
             txtMaximumDays.Text = String.Empty;
             txtContact.Text = String.Empty;
             txtServerIP.Text = String.Empty;
-         
-            _logger.Warn("Could not find Project {0}.", projectID);
          }
 
          return lines.ToArray();

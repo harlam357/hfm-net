@@ -159,7 +159,9 @@ namespace HFM.Core.DataTypes
    /// </summary>
    public enum LogFilterType
    {
-      IndexOnly,
-      IndexAndNonIndexed
+      UnitIndex,
+      UnitAndNonIndexed,
+      SlotIndex,
+      SlotAndNonIndexed
    }
 }
