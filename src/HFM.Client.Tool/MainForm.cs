@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Client.Tool Main Form
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -59,7 +59,7 @@ namespace HFM.Client.Tool
             var slotCollection = _fahClient.GetMessage<SlotCollection>();
             foreach (var slot in slotCollection)
             {
-               _fahClient.SendCommand("slot-options " + slot.Id + " client-type client-subtype machine-id max-packet-size core-priority next-unit-percentage max-units checkpoint pause-on-start gpu-vendor-id gpu-device-id");
+               _fahClient.SendCommand("slot-options " + slot.Id + " client-type client-subtype cpu-usage machine-id max-packet-size core-priority next-unit-percentage max-units checkpoint pause-on-start gpu-index gpu-usage");
                _fahClient.SendCommand("simulation-info " + slot.Id);
             }
          }

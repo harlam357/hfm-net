@@ -20,7 +20,7 @@ PyON 1 info
     ],
     [
       "Config",
-      "C:/Documents and Settings/harlarw/Application Data/FAHClient/config.xml"
+      ""
     ]
   ],
   [
@@ -106,7 +106,7 @@ PyON 1 info
     ],
     [
       "CWD",
-      "C:/Documents and Settings/harlarw/Application Data/FAHClient"
+      ""
     ],
     [
       "OS",

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Slot Collection Data Class Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -186,6 +186,27 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("RUNNING", slotCollection[1].Status);
          Assert.AreEqual(FahSlotStatus.Running, slotCollection[1].StatusEnum);
          Assert.AreEqual("gpu:0:\"GF106 [GeForce 450 GTS]\"", slotCollection[1].Description);
+      }
+
+      [Test]
+      public void FillTest10()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slots.txt");
+         var slotCollection = new SlotCollection();
+         slotCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(2, slotCollection.Count);
+
+         Assert.AreEqual(0, slotCollection[0].Id);
+         Assert.AreEqual("RUNNING", slotCollection[0].Status);
+         Assert.AreEqual(FahSlotStatus.Running, slotCollection[0].StatusEnum);
+         Assert.AreEqual("smp:4", slotCollection[0].Description);
+         Assert.AreEqual(true, slotCollection[0].SlotOptions.PauseOnStart);
+
+         Assert.AreEqual(1, slotCollection[1].Id);
+         Assert.AreEqual("RUNNING", slotCollection[1].Status);
+         Assert.AreEqual(FahSlotStatus.Running, slotCollection[1].StatusEnum);
+         Assert.AreEqual("gpu:0:\"GT200b [GeForce GTX 285]\"", slotCollection[1].Description);
+         Assert.AreEqual(true, slotCollection[0].SlotOptions.PauseOnStart);
       }
    }
 

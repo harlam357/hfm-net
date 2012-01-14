@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Slot Options Data Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -41,6 +41,9 @@ namespace HFM.Client.DataTypes
       [MessageProperty("client-subtype", typeof(FahClientSubTypeConverter))]
       public FahClientSubType FahClientSubTypeEnum { get; set; }
 
+      [MessageProperty("cpu-usage")]
+      public int? CpuUsage { get; set; }
+
       [MessageProperty("machine-id")]
       public int? MachineId { get; set; }
 
@@ -68,11 +71,19 @@ namespace HFM.Client.DataTypes
       [MessageProperty("pause-on-start")]
       public bool? PauseOnStart { get; set; }
 
+      // Version 7.1.38 and prior
       [MessageProperty("gpu-vendor-id")]
       public string GpuVendorId { get; set; }
 
+      // Version 7.1.38 and prior
       [MessageProperty("gpu-device-id")]
       public string GpuDeviceId { get; set; }
+
+      [MessageProperty("gpu-index")]
+      public int? GpuIndex { get; set; }
+
+      [MessageProperty("gpu-usage")]
+      public int? GpuUsage { get; set; }
 
       #endregion
 

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Core Constants Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -81,6 +81,6 @@ namespace HFM.Core
 
       public const string ClientNameFormat = "({0}) {1}";
 
-      public const string FahClientSlotOptions = "slot-options {0} client-type client-subtype machine-id max-packet-size core-priority next-unit-percentage max-units checkpoint pause-on-start gpu-vendor-id gpu-device-id";
+      public const string FahClientSlotOptions = "slot-options {0} client-type client-subtype cpu-usage machine-id max-packet-size core-priority next-unit-percentage max-units checkpoint pause-on-start gpu-index gpu-usage";
    }
 }

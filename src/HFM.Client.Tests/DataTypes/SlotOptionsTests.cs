@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Slot Options Data Class Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
 using System.IO;
 
 using NUnit.Framework;
@@ -280,6 +279,52 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(0, slotOptions.MaxUnits);
          Assert.AreEqual(15, slotOptions.Checkpoint);
          Assert.AreEqual(false, slotOptions.PauseOnStart);
+         Assert.AreEqual(null, slotOptions.GpuVendorId);
+         Assert.AreEqual(null, slotOptions.GpuDeviceId);
+      }
+
+      [Test]
+      public void FillTest10_1()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options1.txt");
+         var slotOptions = new SlotOptions();
+         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual("normal", slotOptions.FahClientType);
+         Assert.AreEqual(FahClientType.Normal, slotOptions.FahClientTypeEnum);
+         Assert.AreEqual("SMP", slotOptions.FahClientSubType);
+         Assert.AreEqual(FahClientSubType.SMP, slotOptions.FahClientSubTypeEnum);
+         Assert.AreEqual(0, slotOptions.MachineId);
+         Assert.AreEqual("normal", slotOptions.MaxPacketSize);
+         Assert.AreEqual(MaxPacketSize.Normal, slotOptions.MaxPacketSizeEnum);
+         Assert.AreEqual("idle", slotOptions.CorePriority);
+         Assert.AreEqual(CorePriority.Idle, slotOptions.CorePriorityEnum);
+         Assert.AreEqual(99, slotOptions.NextUnitPercentage);
+         Assert.AreEqual(0, slotOptions.MaxUnits);
+         Assert.AreEqual(15, slotOptions.Checkpoint);
+         Assert.AreEqual(true, slotOptions.PauseOnStart);
+         Assert.AreEqual(null, slotOptions.GpuVendorId);
+         Assert.AreEqual(null, slotOptions.GpuDeviceId);
+      }
+
+      [Test]
+      public void FillTest10_2()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options2.txt");
+         var slotOptions = new SlotOptions();
+         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual("normal", slotOptions.FahClientType);
+         Assert.AreEqual(FahClientType.Normal, slotOptions.FahClientTypeEnum);
+         Assert.AreEqual("GPU", slotOptions.FahClientSubType);
+         Assert.AreEqual(FahClientSubType.GPU, slotOptions.FahClientSubTypeEnum);
+         Assert.AreEqual(1, slotOptions.MachineId);
+         Assert.AreEqual("normal", slotOptions.MaxPacketSize);
+         Assert.AreEqual(MaxPacketSize.Normal, slotOptions.MaxPacketSizeEnum);
+         Assert.AreEqual("idle", slotOptions.CorePriority);
+         Assert.AreEqual(CorePriority.Idle, slotOptions.CorePriorityEnum);
+         Assert.AreEqual(99, slotOptions.NextUnitPercentage);
+         Assert.AreEqual(0, slotOptions.MaxUnits);
+         Assert.AreEqual(15, slotOptions.Checkpoint);
+         Assert.AreEqual(true, slotOptions.PauseOnStart);
          Assert.AreEqual(null, slotOptions.GpuVendorId);
          Assert.AreEqual(null, slotOptions.GpuDeviceId);
       }

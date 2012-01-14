@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Log Line Parser Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,9 +35,15 @@ namespace HFM.Log
          new Regex("(?<Timestamp>.{8}):Starting Unit (?<UnitIndex>\\d{2})", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       private static readonly Regex WorkUnitCoreReturnRegex =
+         new Regex("(?<Timestamp>.{8}):WU(?<UnitIndex>\\d{2}):FS(?<FoldingSlot>\\d{2}):FahCore returned: (?<UnitResult>.*) \\(.*\\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+
+      private static readonly Regex WorkUnitCoreReturnRegex38 =
          new Regex("(?<Timestamp>.{8}):FahCore, running Unit (?<UnitIndex>\\d{2}), returned: (?<UnitResult>.*) \\(.*\\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       private static readonly Regex WorkUnitCleanUpRegex =
+         new Regex("(?<Timestamp>.{8}):WU(?<UnitIndex>\\d{2}):FS(?<FoldingSlot>\\d{2}):Cleaning up", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+
+      private static readonly Regex WorkUnitCleanUpRegex38 =
          new Regex("(?<Timestamp>.{8}):Cleaning up Unit (?<UnitIndex>\\d{2})", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       #endregion
@@ -86,10 +92,22 @@ namespace HFM.Log
                             Value = coreReturnMatch.Result("${UnitResult}").ToWorkUnitResult()
                          };
                }
+               if ((coreReturnMatch = WorkUnitCoreReturnRegex38.Match(logLine.LineRaw)).Success)
+               {
+                  return new UnitResult
+                         {
+                            Index = Int32.Parse(coreReturnMatch.Result("${UnitIndex}")),
+                            Value = coreReturnMatch.Result("${UnitResult}").ToWorkUnitResult()
+                         };
+               }
                return new LogLineError(String.Format("Failed to parse Work Unit Result value from '{0}'", logLine.LineRaw));
             case LogLineType.WorkUnitCleaningUp:
                Match workUnitCleanUpMatch;
                if ((workUnitCleanUpMatch = WorkUnitCleanUpRegex.Match(logLine.LineRaw)).Success)
+               {
+                  return Int32.Parse(workUnitCleanUpMatch.Result("${UnitIndex}"));
+               }
+               if ((workUnitCleanUpMatch = WorkUnitCleanUpRegex38.Match(logLine.LineRaw)).Success)
                {
                   return Int32.Parse(workUnitCleanUpMatch.Result("${UnitIndex}"));
                }

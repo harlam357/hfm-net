@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Client Connection Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -339,13 +339,70 @@ namespace HFM.Client
             command += "\n";
          }
          byte[] buffer = Encoding.ASCII.GetBytes(command);
-         _stream.BeginWrite(buffer, 0, buffer.Length, null, null);
-         // send data sent event
-         OnDataLengthSent(new DataLengthEventArgs(buffer.Length));
-         // send status message
-         OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
-            "Sent command: {0} ({1} bytes)", CleanUpCommandText(command), buffer.Length), TraceLevel.Info));
+
+#if SEND_ASYNC
+         _stream.BeginWrite(buffer, 0, buffer.Length, WriteCallback, new AsyncData(command, buffer));
+#else
+         try
+         {
+            _stream.Write(buffer, 0, buffer.Length);
+            // send data sent event
+            OnDataLengthSent(new DataLengthEventArgs(buffer.Length));
+            // send status message
+            OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
+               "Sent command: {0} ({1} bytes)", CleanUpCommandText(command), buffer.Length), TraceLevel.Info));
+         }
+         catch (Exception ex)
+         {
+            OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
+               "Write failed: {0}", ex.Message), TraceLevel.Error));
+            Close();
+         }
+#endif
       }
+
+#if SEND_ASYNC      
+      private struct AsyncData
+      {
+         private readonly string _command;
+         public string Command
+         {
+            get { return _command; }
+         }
+
+         private readonly byte[] _buffer;
+         public byte[] Buffer
+         {
+            get { return _buffer; }
+         }
+
+         public AsyncData(string command, byte[] buffer)
+         {
+            _command = command;
+            _buffer = buffer;
+         }
+      }
+
+      private void WriteCallback(IAsyncResult result)
+      {
+         var asyncData = (AsyncData)result.AsyncState;
+         try
+         {
+            _stream.EndWrite(result);
+            // send data sent event
+            OnDataLengthSent(new DataLengthEventArgs(asyncData.Buffer.Length));
+            // send status message
+            OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
+               "Sent command: {0} ({1} bytes)", CleanUpCommandText(asyncData.Command), asyncData.Buffer.Length), TraceLevel.Info));
+         }
+         catch (Exception ex)
+         {
+            OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
+               "Write failed: {0}", ex.Message), TraceLevel.Error));
+            Close();
+         }
+      }
+#endif
 
       private static string CleanUpCommandText(string command)
       {
