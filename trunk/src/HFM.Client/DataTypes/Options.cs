@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Options Data Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -123,6 +123,9 @@ namespace HFM.Client.DataTypes
       [MessageProperty("cpus")]
       public int? Cpus { get; set; }
 
+      [MessageProperty("cuda-index")]
+      public int? CudaIndex { get; set; }
+
       [MessageProperty("cycle-rate")]
       public int? CycleRate { get; set; }
 
@@ -137,6 +140,9 @@ namespace HFM.Client.DataTypes
 
       [MessageProperty("debug-sockets")]
       public bool? DebugSockets { get; set; }
+
+      [MessageProperty("disable-project-lookup")]
+      public bool? DisableProjectLookup { get; set; }
 
       [MessageProperty("dump-after-deadline")]
       public bool? DumpAfterDeadline { get; set; }
@@ -165,18 +171,24 @@ namespace HFM.Client.DataTypes
       [MessageProperty("gpu-assignment-servers")]
       public string GpuAssignmentServers { get; set; }
 
+      // Version 7.1.38 and prior
       [MessageProperty("gpu-device-id")]
       public string GpuDeviceId { get; set; }
 
+      // Version 7.1.38 and prior
       [MessageProperty("gpu-id")]
       public int? GpuId { get; set; }
+
+      // Version 7.1.38 and prior
+      [MessageProperty("gpu-vendor-id")]
+      public string GpuVendorId { get; set; }
 
       [MessageProperty("gpu-index")]
       public string GpuIndex { get; set; }
 
-      [MessageProperty("gpu-vendor-id")]
-      public string GpuVendorId { get; set; }
-
+      [MessageProperty("gpu-usage")]
+      public int? GpuUsage { get; set; }
+      
       [MessageProperty("log")]
       public string Log { get; set; }
 
@@ -188,6 +200,9 @@ namespace HFM.Client.DataTypes
 
       [MessageProperty("log-date")]
       public bool? LogDate { get; set; }
+
+      [MessageProperty("log-date-periodically")]
+      public int? LogDatePeriodically { get; set; }
 
       [MessageProperty("log-debug")]
       public bool? LogDebug { get; set; }
@@ -267,6 +282,7 @@ namespace HFM.Client.DataTypes
       [MessageProperty("memory")]
       public string Memory { get; set; }
 
+      // Version 7.1.38 and prior
       [MessageProperty("min-delay")]
       public int? MinDelay { get; set; }
 
@@ -278,6 +294,9 @@ namespace HFM.Client.DataTypes
 
       [MessageProperty("no-assembly")]
       public bool? NoAssembly { get; set; }
+
+      [MessageProperty("opencl-index")]
+      public int? OpenClIndex { get; set; }
 
       // could be enum type
       [MessageProperty("os-species")]

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Simulation Info Data Class Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -444,6 +444,74 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(0, simulationInfo.Eta);
          // not exactly the same value seen in Unit.EtaTimeSpan
          Assert.AreEqual(TimeSpan.Zero, simulationInfo.EtaTimeSpan);
+         Assert.AreEqual(String.Empty, simulationInfo.News);
+      }
+
+      [Test]
+      public void FillTest10_1()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\simulation-info1.txt");
+         var simulationInfo = new SimulationInfo();
+         simulationInfo.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual("harlam357", simulationInfo.User);
+         Assert.AreEqual(32, simulationInfo.Team);
+         Assert.AreEqual(7610, simulationInfo.Project);
+         Assert.AreEqual(630, simulationInfo.Run);
+         Assert.AreEqual(0, simulationInfo.Clone);
+         Assert.AreEqual(59, simulationInfo.Gen);
+         Assert.AreEqual(164, simulationInfo.CoreType);
+         Assert.AreEqual("GROGBA4", simulationInfo.Core);
+         Assert.AreEqual("This project involves additional sampling of the FiP35 WW domain shot from the ultra-long trajectories run by DE Shaw on their new supercomputer ANTON. We are testing the differences between these new ultra-long trajectories and shorter ones from FAH, to test how simulations run on FAH stack up to more traditional methods.\r", simulationInfo.Description);
+         Assert.AreEqual(2000, simulationInfo.TotalIterations);
+         Assert.AreEqual(660, simulationInfo.IterationsDone);
+         Assert.AreEqual(0, simulationInfo.Energy);
+         Assert.AreEqual(0, simulationInfo.Temperature);
+         Assert.AreEqual("2012-01-10T23:20:27", simulationInfo.StartTime);
+         Assert.AreEqual(new DateTime(2012, 1, 10, 23, 20, 27), simulationInfo.StartTimeDateTime);
+         Assert.AreEqual(1327249371, simulationInfo.Timeout);
+         Assert.AreEqual(new DateTime(2012, 1, 22, 16, 22, 51), simulationInfo.TimeoutDateTime);
+         Assert.AreEqual(1327924155, simulationInfo.Deadline);
+         Assert.AreEqual(new DateTime(2012, 1, 30, 11, 49, 15), simulationInfo.DeadlineDateTime);
+         Assert.AreEqual(4836, simulationInfo.RunTime);
+         Assert.AreEqual(new TimeSpan(1, 20, 36), simulationInfo.RunTimeTimeSpan);
+         Assert.AreEqual(0, simulationInfo.SimulationTime);
+         Assert.AreEqual(8682, simulationInfo.Eta);
+         // not exactly the same value seen in Unit.EtaTimeSpan
+         Assert.AreEqual(new TimeSpan(2, 24, 42), simulationInfo.EtaTimeSpan);
+         Assert.AreEqual(String.Empty, simulationInfo.News);
+      }
+
+      [Test]
+      public void FillTest10_2()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\simulation-info2.txt");
+         var simulationInfo = new SimulationInfo();
+         simulationInfo.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual("harlam357", simulationInfo.User);
+         Assert.AreEqual(32, simulationInfo.Team);
+         Assert.AreEqual(5772, simulationInfo.Project);
+         Assert.AreEqual(7, simulationInfo.Run);
+         Assert.AreEqual(364, simulationInfo.Clone);
+         Assert.AreEqual(252, simulationInfo.Gen);
+         Assert.AreEqual(17, simulationInfo.CoreType);
+         Assert.AreEqual("GROGPU2", simulationInfo.Core);
+         Assert.AreEqual(1196, simulationInfo.Description.Length);
+         Assert.AreEqual(15000, simulationInfo.TotalIterations);
+         Assert.AreEqual(7650, simulationInfo.IterationsDone);
+         Assert.AreEqual(0, simulationInfo.Energy);
+         Assert.AreEqual(0, simulationInfo.Temperature);
+         Assert.AreEqual("2012-01-11T04:21:14", simulationInfo.StartTime);
+         Assert.AreEqual(new DateTime(2012, 1, 11, 4, 21, 14), simulationInfo.StartTimeDateTime);
+         Assert.AreEqual(0, simulationInfo.Timeout);
+         Assert.AreEqual(null, simulationInfo.TimeoutDateTime);
+         Assert.AreEqual(0, simulationInfo.Deadline);
+         Assert.AreEqual(null, simulationInfo.DeadlineDateTime);
+         Assert.AreEqual(1725, simulationInfo.RunTime);
+         Assert.AreEqual(new TimeSpan(0, 28, 45), simulationInfo.RunTimeTimeSpan);
+         Assert.AreEqual(0, simulationInfo.SimulationTime);
+         Assert.AreEqual(1655, simulationInfo.Eta);
+         // not exactly the same value seen in Unit.EtaTimeSpan
+         Assert.AreEqual(new TimeSpan(0, 27, 35), simulationInfo.EtaTimeSpan);
          Assert.AreEqual(String.Empty, simulationInfo.News);
       }
 

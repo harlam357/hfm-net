@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Log Line List Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -66,10 +66,16 @@ namespace HFM.Log
          {
             return LogLineType.ClientAttemptGetWorkPacket;
          }
+         if (logLine.Trim().EndsWith(":Starting"))
+         {
+            return LogLineType.WorkUnitWorking;
+         }
+         /*** Appears to be for v7.1.38 and previous only ***/
          if (logLine.Contains(":Starting Unit"))
          {
             return LogLineType.WorkUnitWorking;
          }
+         /***************************************************/
          if (logLine.Contains(":*------------------------------*"))
          {
             return LogLineType.WorkUnitStart;
@@ -94,14 +100,26 @@ namespace HFM.Log
          {
             return LogLineType.WorkUnitCoreShutdown;
          }
+         if (Regex.IsMatch(logLine, "FahCore returned: "))
+         {
+            return LogLineType.WorkUnitCoreReturn;
+         }
+         /*** Appears to be for v7.1.38 and previous only ***/
          if (Regex.IsMatch(logLine, "FahCore, running Unit \\d{2}, returned: "))
          {
             return LogLineType.WorkUnitCoreReturn;
          }
+         /***************************************************/
+         if (logLine.Contains(":Cleaning up"))
+         {
+            return LogLineType.WorkUnitCleaningUp;
+         }
+         /*** Appears to be for v7.1.38 and previous only ***/
          if (logLine.Contains(":Cleaning up Unit"))
          {
             return LogLineType.WorkUnitCleaningUp;
          }
+         /***************************************************/
 
          return LogLineType.Unknown;
       }

@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Log Reader Class Tests
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -46,6 +46,7 @@ namespace HFM.Log.Tests
          expectedRun.UnitIndexes.Add(new UnitIndex(5, 30));
          expectedRun.UnitIndexes.Add(new UnitIndex(6, 150));
          expectedRun.Arguments = "-smp -verbosity 9";
+         expectedRun.ClientVersion = "6.24beta";
          expectedRun.FoldingID = "harlam357";
          expectedRun.Team = 32;
          expectedRun.UserID = "5131EA752EB60547";
@@ -62,6 +63,7 @@ namespace HFM.Log.Tests
          expectedRun.UnitIndexes.Add(new UnitIndex(6, 302));
          expectedRun.UnitIndexes.Add(new UnitIndex(7, 402));
          expectedRun.Arguments = "-smp -verbosity 9";
+         expectedRun.ClientVersion = "6.24beta";
          expectedRun.FoldingID = "harlam357";
          expectedRun.Team = 32;
          expectedRun.UserID = "5131EA752EB60547";
@@ -97,6 +99,7 @@ namespace HFM.Log.Tests
          expectedRun.UnitIndexes.Add(new UnitIndex(1, 30));
          expectedRun.UnitIndexes.Add(new UnitIndex(2, 221));
          expectedRun.Arguments = "-smp -verbosity 9";
+         expectedRun.ClientVersion = "6.24beta";
          expectedRun.FoldingID = "harlam357";
          expectedRun.Team = 32;
          expectedRun.UserID = "3A49EBB303C19834";
@@ -135,6 +138,7 @@ namespace HFM.Log.Tests
          expectedRun.UnitIndexes.Add(new UnitIndex(1, 231));
          expectedRun.UnitIndexes.Add(new UnitIndex(2, 385));
          expectedRun.Arguments = "-local -forceasm -smp 4";
+         expectedRun.ClientVersion = "6.02";
          expectedRun.FoldingID = "harlam357";
          expectedRun.Team = 32;
          // verbosity (normal) does not output User ID after requested from server
@@ -171,6 +175,7 @@ namespace HFM.Log.Tests
          var expectedRun = new ClientRun(401);
          expectedRun.UnitIndexes.Add(new UnitIndex(-1, 426));
          expectedRun.Arguments = "-configonly";
+         expectedRun.ClientVersion = "6.24R3";
          expectedRun.FoldingID = "sneakysnowman";
          expectedRun.Team = 32;
          expectedRun.UserID = "5D2DCEF06CE524B3";
@@ -238,6 +243,7 @@ namespace HFM.Log.Tests
          expectedRun.UnitIndexes.Add(new UnitIndex(9, 3710));
          expectedRun.UnitIndexes.Add(new UnitIndex(0, 3760));
          expectedRun.Arguments = "-smp -verbosity 9";
+         expectedRun.ClientVersion = "6.30";
          expectedRun.FoldingID = "harlam357";
          expectedRun.Team = 32;
          expectedRun.UserID = "DC1DAF57D91DF79";
@@ -277,6 +283,7 @@ namespace HFM.Log.Tests
          expectedRun.UnitIndexes.Add(new UnitIndex(5, 510));
          expectedRun.UnitIndexes.Add(new UnitIndex(6, 571));
          expectedRun.Arguments = "-verbosity 9 -local";
+         expectedRun.ClientVersion = "6.23";
          expectedRun.FoldingID = "harlam357";
          expectedRun.Team = 32;
          expectedRun.UserID = "CF185086C102A47";
@@ -304,6 +311,7 @@ namespace HFM.Log.Tests
          expectedRun.UnitIndexes.Add(new UnitIndex(8, 2715));
          expectedRun.UnitIndexes.Add(new UnitIndex(9, 2917));
          expectedRun.Arguments = "-verbosity 9 -local";
+         expectedRun.ClientVersion = "6.23";
          expectedRun.FoldingID = "harlam357";
          expectedRun.Team = 32;
          expectedRun.UserID = "CF185086C102A47";
@@ -340,6 +348,7 @@ namespace HFM.Log.Tests
          expectedRun.UnitIndexes.Add(new UnitIndex(9, 208));
          expectedRun.UnitIndexes.Add(new UnitIndex(0, 382));
          expectedRun.Arguments = String.Empty;
+         expectedRun.ClientVersion = "6.23";
          expectedRun.FoldingID = "harlam357";
          expectedRun.Team = 32;
          expectedRun.UserID = "51108B97183EA3DF";
@@ -374,6 +383,7 @@ namespace HFM.Log.Tests
          var expectedRun = new ClientRun(0);
          expectedRun.UnitIndexes.Add(new UnitIndex(6, 24));
          expectedRun.Arguments = String.Empty;
+         expectedRun.ClientVersion = "6.23";
          expectedRun.FoldingID = "JollySwagman";
          expectedRun.Team = 32;
          expectedRun.UserID = "1D1493BB0A79C9AE";
@@ -394,6 +404,7 @@ namespace HFM.Log.Tests
          expectedRun.UnitIndexes.Add(new UnitIndex(0, 373));
          expectedRun.UnitIndexes.Add(new UnitIndex(1, 421));
          expectedRun.Arguments = String.Empty;
+         expectedRun.ClientVersion = "6.23";
          expectedRun.FoldingID = "JollySwagman";
          expectedRun.Team = 32;
          expectedRun.UserID = "1D1493BB0A79C9AE";
@@ -431,6 +442,7 @@ namespace HFM.Log.Tests
          var expectedRun = new ClientRun(0);
          expectedRun.UnitIndexes.Add(new UnitIndex(0, 24));
          expectedRun.Arguments = String.Empty;
+         expectedRun.ClientVersion = "6.23";
          expectedRun.FoldingID = "Zagen30";
          expectedRun.Team = 46301;
          expectedRun.UserID = "xxxxxxxxxxxxxxxxxxx";
@@ -482,6 +494,7 @@ namespace HFM.Log.Tests
          expectedRun.UnitIndexes.Add(new UnitIndex(3, 27));
          expectedRun.UnitIndexes.Add(new UnitIndex(4, 170));
          expectedRun.Arguments = "-gpu 0 -verbosity 9 -local -verbosity 9";
+         expectedRun.ClientVersion = "6.41r2";
          expectedRun.FoldingID = "HayesK";
          expectedRun.Team = 32;
          expectedRun.UserID = "37114EB5198643C1";
@@ -531,6 +544,7 @@ namespace HFM.Log.Tests
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
          expectedRun.Arguments = "-configonly";
+         expectedRun.ClientVersion = "6.23";
          expectedRun.FoldingID = "harlam357";
          expectedRun.Team = 32;
          expectedRun.UserID = "4E34332601E26450";
@@ -546,6 +560,7 @@ namespace HFM.Log.Tests
          expectedRun.UnitIndexes.Add(new UnitIndex(1, 179));
          expectedRun.UnitIndexes.Add(new UnitIndex(2, 593));
          expectedRun.Arguments = "-verbosity 9 -forceasm";
+         expectedRun.ClientVersion = "6.23";
          expectedRun.FoldingID = "harlam357";
          expectedRun.Team = 32;
          expectedRun.UserID = "4E34332601E26450";
@@ -561,6 +576,7 @@ namespace HFM.Log.Tests
          expectedRun = new ClientRun(839);
          expectedRun.UnitIndexes.Add(new UnitIndex(2, 874));
          expectedRun.Arguments = "-verbosity 9 -forceasm -oneunit";
+         expectedRun.ClientVersion = "6.23";
          expectedRun.FoldingID = "harlam357";
          expectedRun.Team = 32;
          expectedRun.UserID = "4E34332601E26450";
@@ -595,6 +611,7 @@ namespace HFM.Log.Tests
          var expectedRun = new ClientRun(788);
          expectedRun.UnitIndexes.Add(new UnitIndex(4, 820));
          expectedRun.Arguments = "-oneunit -forceasm -verbosity 9";
+         expectedRun.ClientVersion = "6.23";
          expectedRun.FoldingID = "borden.b";
          expectedRun.Team = 131;
          expectedRun.UserID = "722723950C6887C2";
@@ -610,6 +627,7 @@ namespace HFM.Log.Tests
          expectedRun = new ClientRun(927);
          expectedRun.UnitIndexes.Add(new UnitIndex(4, 961));
          expectedRun.Arguments = "-forceasm -verbosity 9 -oneunit";
+         expectedRun.ClientVersion = "6.23";
          expectedRun.FoldingID = "borden.b";
          expectedRun.Team = 131;
          expectedRun.UserID = "722723950C6887C2";
@@ -670,6 +688,7 @@ namespace HFM.Log.Tests
          expectedRun.UnitIndexes.Add(new UnitIndex(6, 1870));
          expectedRun.UnitIndexes.Add(new UnitIndex(7, 2130));
          expectedRun.Arguments = String.Empty;
+         expectedRun.ClientVersion = "6.23";
          expectedRun.FoldingID = "DrSpalding";
          expectedRun.Team = 48083;
          expectedRun.UserID = "1E19BD450434A6ED";
@@ -745,8 +764,8 @@ namespace HFM.Log.Tests
          Assert.AreEqual(1, logInterpreter.LogLineParsingErrors.Count());
 
          logLines = logInterpreter.GetLogLinesForQueueIndex(1, new ProjectInfo { ProjectID = 7136, ProjectRun = 0, ProjectClone = 39, ProjectGen = 103 });
-         Assert.AreEqual(99, logLines.Count);
-         FahLogUnitData fahLogData = LogReader.GetFahLogDataFromLogLines(logLines.Filter(LogFilterType.UnitAndNonIndexed, 1));
+         Assert.AreEqual(56, logLines.Count);
+         FahLogUnitData fahLogData = LogReader.GetFahLogDataFromLogLines(logLines);
          Assert.AreEqual(new TimeSpan(18, 6, 54), fahLogData.UnitStartTimeStamp);
          Assert.AreEqual("2.27", fahLogData.CoreVersion);
          Assert.AreEqual(6, fahLogData.FrameDataList.Count);
@@ -758,8 +777,8 @@ namespace HFM.Log.Tests
          Assert.AreEqual(WorkUnitResult.FinishedUnit, fahLogData.UnitResult);
 
          logLines = logInterpreter.GetLogLinesForQueueIndex(0, new ProjectInfo { ProjectID = 6984, ProjectRun = 0, ProjectClone = 1, ProjectGen = 18 });
-         Assert.AreEqual(198, logLines.Count);
-         fahLogData = LogReader.GetFahLogDataFromLogLines(logLines.Filter(LogFilterType.UnitAndNonIndexed, 0));
+         Assert.AreEqual(142, logLines.Count);
+         fahLogData = LogReader.GetFahLogDataFromLogLines(logLines);
          Assert.AreEqual(new TimeSpan(18, 39, 17), fahLogData.UnitStartTimeStamp);
          Assert.AreEqual("2.27", fahLogData.CoreVersion);
          Assert.AreEqual(101, fahLogData.FrameDataList.Count);
@@ -804,9 +823,9 @@ namespace HFM.Log.Tests
          Assert.AreEqual(1, logInterpreter.LogLineParsingErrors.Count());
 
          logLines = logInterpreter.GetLogLinesForQueueIndex(0, new ProjectInfo { ProjectID = 6801, ProjectRun = 6348, ProjectClone = 0, ProjectGen = 305 });
-         Assert.AreEqual(227, logLines.Count);
-         FahLogUnitData fahLogData = LogReader.GetFahLogDataFromLogLines(logLines.Filter(LogFilterType.UnitAndNonIndexed, 0));
-         Assert.AreEqual(new TimeSpan(0, 37, 37), fahLogData.UnitStartTimeStamp);
+         Assert.AreEqual(158, logLines.Count);
+         FahLogUnitData fahLogData = LogReader.GetFahLogDataFromLogLines(logLines);
+         Assert.AreEqual(new TimeSpan(0, 37, 38), fahLogData.UnitStartTimeStamp);
          Assert.AreEqual("2.20", fahLogData.CoreVersion);
          Assert.AreEqual(101, fahLogData.FrameDataList.Count);
          Assert.AreEqual(101, fahLogData.FramesObserved);
@@ -814,12 +833,12 @@ namespace HFM.Log.Tests
          Assert.AreEqual(6348, fahLogData.ProjectRun);
          Assert.AreEqual(0, fahLogData.ProjectClone);
          Assert.AreEqual(305, fahLogData.ProjectGen);
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, fahLogData.UnitResult);
+         Assert.AreEqual(WorkUnitResult.Unknown, fahLogData.UnitResult);
 
          logLines = logInterpreter.GetLogLinesForQueueIndex(2, new ProjectInfo { ProjectID = 11051, ProjectRun = 0, ProjectClone = 2, ProjectGen = 39 });
-         Assert.AreEqual(570, logLines.Count);
-         fahLogData = LogReader.GetFahLogDataFromLogLines(logLines.Filter(LogFilterType.UnitAndNonIndexed, 2));
-         Assert.AreEqual(new TimeSpan(18, 29, 46), fahLogData.UnitStartTimeStamp);
+         Assert.AreEqual(141, logLines.Count);
+         fahLogData = LogReader.GetFahLogDataFromLogLines(logLines);
+         Assert.AreEqual(new TimeSpan(18, 29, 47), fahLogData.UnitStartTimeStamp);
          Assert.AreEqual("2.27", fahLogData.CoreVersion);
          Assert.AreEqual(101, fahLogData.FrameDataList.Count);
          Assert.AreEqual(101, fahLogData.FramesObserved);
@@ -856,8 +875,8 @@ namespace HFM.Log.Tests
          Assert.AreEqual(2, logInterpreter.LogLineParsingErrors.Count());
 
          logLines = logInterpreter.GetLogLinesForQueueIndex(1, new ProjectInfo { ProjectID = 7704, ProjectRun = 4, ProjectClone = 7, ProjectGen = 1 });
-         Assert.AreEqual(31, logLines.Count);
-         FahLogUnitData fahLogData = LogReader.GetFahLogDataFromLogLines(logLines.Filter(LogFilterType.UnitAndNonIndexed, 1));
+         Assert.AreEqual(27, logLines.Count);
+         FahLogUnitData fahLogData = LogReader.GetFahLogDataFromLogLines(logLines);
          Assert.AreEqual(new TimeSpan(22, 1, 5), fahLogData.UnitStartTimeStamp);
          Assert.AreEqual("2.27", fahLogData.CoreVersion);
          Assert.AreEqual(0, fahLogData.FrameDataList.Count);
@@ -869,11 +888,67 @@ namespace HFM.Log.Tests
          Assert.AreEqual(WorkUnitResult.Unknown, fahLogData.UnitResult);
       }
 
+      [Test]
+      public void Client_v7_10()
+      {
+         // Scan
+         IList<LogLine> logLines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt"), LogFileType.FahClient);
+         IList<ClientRun> clientRuns = LogReader.GetClientRuns(logLines, LogFileType.FahClient);
+
+         // Check Run 0 Positions
+         var expectedRun = new ClientRun(1);
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 120, 349));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 85, -1));
+         expectedRun.UnitIndexes.Add(new UnitIndex(2, 319, -1));
+         expectedRun.Arguments = "";
+         expectedRun.ClientVersion = "";
+         expectedRun.FoldingID = "Unknown";
+         expectedRun.Team = 0;
+         expectedRun.UserID = "";
+         expectedRun.MachineID = 0;
+         expectedRun.CompletedUnits = 1;
+         expectedRun.FailedUnits = 0;
+         expectedRun.TotalCompletedUnits = 0;
+         expectedRun.Status = SlotStatus.Unknown;
+
+         DoClientRunCheck(expectedRun, clientRuns[0]);
+
+         var logInterpreter = new LogInterpreter(logLines, clientRuns);
+         Assert.AreEqual(1, logInterpreter.LogLineParsingErrors.Count());
+
+         logLines = logInterpreter.GetLogLinesForQueueIndex(1, new ProjectInfo { ProjectID = 7610, ProjectRun = 630, ProjectClone = 0, ProjectGen = 59 });
+         Assert.AreEqual(39, logLines.Count);
+         FahLogUnitData fahLogData = LogReader.GetFahLogDataFromLogLines(logLines);
+         Assert.AreEqual(new TimeSpan(3, 25, 32), fahLogData.UnitStartTimeStamp);
+         Assert.AreEqual("2.27", fahLogData.CoreVersion);
+         Assert.AreEqual(10, fahLogData.FrameDataList.Count);
+         Assert.AreEqual(10, fahLogData.FramesObserved);
+         Assert.AreEqual(7610, fahLogData.ProjectID);
+         Assert.AreEqual(630, fahLogData.ProjectRun);
+         Assert.AreEqual(0, fahLogData.ProjectClone);
+         Assert.AreEqual(59, fahLogData.ProjectGen);
+         Assert.AreEqual(WorkUnitResult.Unknown, fahLogData.UnitResult);
+
+         logLines = logInterpreter.GetLogLinesForQueueIndex(2, new ProjectInfo { ProjectID = 5772, ProjectRun = 7, ProjectClone = 364, ProjectGen = 252 });
+         Assert.AreEqual(87, logLines.Count);
+         fahLogData = LogReader.GetFahLogDataFromLogLines(logLines);
+         Assert.AreEqual(new TimeSpan(4, 21, 52), fahLogData.UnitStartTimeStamp);
+         Assert.AreEqual("1.31", fahLogData.CoreVersion);
+         Assert.AreEqual(53, fahLogData.FrameDataList.Count);
+         Assert.AreEqual(53, fahLogData.FramesObserved);
+         Assert.AreEqual(5772, fahLogData.ProjectID);
+         Assert.AreEqual(7, fahLogData.ProjectRun);
+         Assert.AreEqual(364, fahLogData.ProjectClone);
+         Assert.AreEqual(252, fahLogData.ProjectGen);
+         Assert.AreEqual(WorkUnitResult.Unknown, fahLogData.UnitResult);
+      }
+
       #endregion
       
       private static void DoClientRunCheck(ClientRun expectedRun, ClientRun run)
       {
          Assert.AreEqual(expectedRun.ClientStartIndex, run.ClientStartIndex);
+         Assert.AreEqual(expectedRun.ClientVersion, run.ClientVersion);
          Assert.AreEqual(expectedRun.UnitIndexes.Count, run.UnitIndexes.Count);
          for (int i = 0; i < expectedRun.UnitIndexes.Count; i++)
          {

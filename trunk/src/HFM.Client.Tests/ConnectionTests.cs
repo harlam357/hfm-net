@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Client Connection Class Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -174,8 +174,8 @@ namespace HFM.Client.Tests
          tcpClient.Expect(x => x.Connected).Return(true).Repeat.AtLeastOnce();
 
          // setup SendCommand() expectation
-         var passwordBuffer = Encoding.ASCII.GetBytes("auth password\n");
-         stream.Expect(x => x.BeginWrite(passwordBuffer, 0, passwordBuffer.Length, null, null)).Return(null);
+         var buffer = Encoding.ASCII.GetBytes("auth password\n");
+         stream.Expect(x => x.Write(buffer, 0, buffer.Length));
       }
 
       private void Connect(Connection connection)
@@ -297,7 +297,7 @@ namespace HFM.Client.Tests
             connection.DataLengthSent += (sender, args) => dataLengthSentFired = true;
             connection.StatusMessage += (sender, args) => statusMessageFired = true;
             var buffer = Encoding.ASCII.GetBytes("command\n");
-            _stream.Expect(x => x.BeginWrite(buffer, 0, buffer.Length, null, null)).Return(null);
+            _stream.Expect(x => x.Write(buffer, 0, buffer.Length));
             connection.SendCommand("command");
 
             Assert.IsTrue(dataLengthSentFired);
