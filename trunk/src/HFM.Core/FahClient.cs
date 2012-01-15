@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Fah Client Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -321,7 +321,7 @@ namespace HFM.Core
 
             DataAggregator.ClientName = slotModel.Name;
             var lines = _logText.ToString().Split('\n').Where(x => x.Length != 0).ToList();
-            IList<UnitInfo> units = DataAggregator.AggregateData(LogReader.GetLogLines(lines, LogFileType.FahClient), unitCollection, options, slotModel.SlotOptions, slotModel.SlotId);
+            IDictionary<int, UnitInfo> units = DataAggregator.AggregateData(LogReader.GetLogLines(lines, LogFileType.FahClient), unitCollection, options, slotModel.SlotOptions, slotModel.SlotId);
             // Issue 126 - Use the Folding ID, Team, User ID, and Machine ID from the FAHlog data.
             // Use the Current Queue Entry as a backup data source.
             PopulateRunLevelData(DataAggregator.CurrentClientRun, info, slotModel);
@@ -332,12 +332,12 @@ namespace HFM.Core
 
             #endregion
 
-            var parsedUnits = new UnitInfoLogic[units.Count];
-            for (int i = 0; i < units.Count; i++)
+            var parsedUnits = new Dictionary<int, UnitInfoLogic>(units.Count);
+            foreach (int key in units.Keys)
             {
-               if (units[i] != null)
+               if (units[key] != null)
                {
-                  parsedUnits[i] = BuildUnitInfoLogic(slotModel, units[i]);
+                  parsedUnits[key] = BuildUnitInfoLogic(slotModel, units[key]);
                }
             }
 

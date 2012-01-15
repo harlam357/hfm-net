@@ -1,7 +1,7 @@
 /*
  * HFM.NET - Main UI Form
  * Copyright (C) 2006-2007 David Rawling
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -603,6 +603,11 @@ namespace HFM.Forms
       private void mnuToolsBenchmarks_Click(object sender, EventArgs e)
       {
          _presenter.ToolsBenchmarksClick();
+      }
+
+      private void mnuToolsPointsCalculator_Click(object sender, EventArgs e)
+      {
+         _presenter.ToolsPointsCalculatorClick();
       }
 
       private void mnuToolsHistory_Click(object sender, EventArgs e)

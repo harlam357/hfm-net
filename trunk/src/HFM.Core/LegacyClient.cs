@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Legacy Client Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -207,7 +207,11 @@ namespace HFM.Core
             unitInfo.UnitRetrievalTime = LastRetrievalTime;
             unitInfo.OwningSlotName = Settings.Name;
             unitInfo.OwningSlotPath = Settings.DataPath();
-            unitInfo.SlotType = UnitInfo.DetermineSlotType(protein.Core, unitInfo.CoreID);
+            unitInfo.SlotType = protein.Core.ToSlotType();
+            if (unitInfo.SlotType.Equals(SlotType.Unknown))
+            {
+               unitInfo.SlotType = unitInfo.CoreID.ToSlotType();
+            }
          }
          // build unit info logic
          var unitInfoLogic = ServiceLocator.Resolve<UnitInfoLogic>();

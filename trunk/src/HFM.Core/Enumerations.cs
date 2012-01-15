@@ -19,6 +19,55 @@
 
 namespace HFM.Core
 {
+   /// <summary>
+   /// Client Types
+   /// </summary>
+   public enum ClientType
+   {
+      FahClient,
+      Legacy,
+      External //?
+   }
+
+   /// <summary>
+   /// Legacy Client Sub Types
+   /// </summary>
+   public enum LegacyClientSubType
+   {
+      None,
+      Path,
+      Ftp,
+      Http
+   }
+
+   /// <summary>
+   /// Folding Slot Type
+   /// </summary>
+   public enum SlotType
+   {
+      Unknown,
+      Uniprocessor,
+      SMP,
+      GPU
+   }
+
+   /// <summary>
+   /// Queue Entry Status Types
+   /// </summary>
+   public enum QueueEntryStatus
+   {
+      Unknown,
+      Empty,
+      Deleted,
+      Finished,
+      Garbage,
+      FoldingNow,
+      Queued,
+      ReadyForUpload,
+      Abandonded,
+      FetchingFromServer
+   }
+
    public enum PpdCalculationType
    {
       LastFrame,

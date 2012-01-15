@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Data Aggregator Interface
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -56,7 +56,12 @@ namespace HFM.Core
       /// <summary>
       /// Aggregate Data and return UnitInfo List
       /// </summary>
-      IList<UnitInfo> AggregateData(IList<LogLine> logLines, UnitCollection unitCollection, Options options, SlotOptions slotOptions, int slotId);
+      IDictionary<int, UnitInfo> AggregateData(IList<LogLine> logLines, UnitCollection unitCollection, Options options, SlotOptions slotOptions, int slotId);
+
+      /// <summary>
+      /// Array of LogLine Lists
+      /// </summary>
+      IDictionary<int, IList<LogLine>> UnitLogLines { get; }
    }
 
    public interface ILegacyDataAggregator : IDataAggregator

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Core.DataTypes Enumerations
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,38 +19,6 @@
 
 namespace HFM.Core.DataTypes
 {
-   /// <summary>
-   /// Client Types
-   /// </summary>
-   public enum ClientType
-   {
-      FahClient,
-      Legacy,
-      External //?
-   }
-
-   /// <summary>
-   /// Legacy Client Sub Types
-   /// </summary>
-   public enum LegacyClientSubType
-   {
-      None,
-      Path,
-      Ftp,
-      Http
-   }
-
-   /// <summary>
-   /// Folding Slot Type
-   /// </summary>
-   public enum SlotType
-   {
-      Unknown,
-      Uniprocessor,
-      SMP,
-      GPU
-   }
-
    /// <summary>
    /// Slot Status Types
    /// </summary>
@@ -135,23 +103,6 @@ namespace HFM.Core.DataTypes
       BadWorkUnit,
       CoreOutdated,
       ClientCoreError
-   }
-
-   /// <summary>
-   /// Queue Entry Status Types
-   /// </summary>
-   public enum QueueEntryStatus
-   {
-      Unknown,
-      Empty,
-      Deleted,
-      Finished,
-      Garbage,
-      FoldingNow,
-      Queued,
-      ReadyForUpload,
-      Abandonded,
-      FetchingFromServer
    }
 
    /// <summary>
