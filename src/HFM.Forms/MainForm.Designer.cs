@@ -134,6 +134,7 @@ namespace HFM.Forms
          this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuContextForceRefreshEocStats = new System.Windows.Forms.ToolStripMenuItem();
          this.toolTipNotify = new System.Windows.Forms.ToolTip(this.components);
+         this.mnuToolsPointsCalculator = new System.Windows.Forms.ToolStripMenuItem();
          this.statusStrip.SuspendLayout();
          this.notifyMenu.SuspendLayout();
          this.AppMenu.SuspendLayout();
@@ -653,6 +654,7 @@ namespace HFM.Forms
          this.mnuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuToolsBenchmarks,
             this.mnuToolsHistory,
+            this.mnuToolsPointsCalculator,
             this.mnuToolsDownloadProjects});
          this.mnuTools.Name = "mnuTools";
          this.mnuTools.Size = new System.Drawing.Size(48, 20);
@@ -1047,6 +1049,13 @@ namespace HFM.Forms
          this.mnuContextForceRefreshEocStats.Text = "Force Refresh EOC Stats";
          this.mnuContextForceRefreshEocStats.Click += new System.EventHandler(this.mnuWebRefreshUserStats_Click);
          // 
+         // mnuToolsPointsCalculator
+         // 
+         this.mnuToolsPointsCalculator.Name = "mnuToolsPointsCalculator";
+         this.mnuToolsPointsCalculator.Size = new System.Drawing.Size(252, 22);
+         this.mnuToolsPointsCalculator.Text = "Points Calculator";
+         this.mnuToolsPointsCalculator.Click += new System.EventHandler(this.mnuToolsPointsCalculator_Click);
+         // 
          // MainForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1181,5 +1190,6 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripMenuItem mnuClientsMergeClientData;
       private System.Windows.Forms.ToolStripSeparator mnuClientsSep3;
       private System.Windows.Forms.ToolStripMenuItem mnuClientsAddLegacy;
+      private System.Windows.Forms.ToolStripMenuItem mnuToolsPointsCalculator;
    }
 }

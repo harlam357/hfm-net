@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Main View Presenter
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -1217,6 +1217,12 @@ namespace HFM.Forms
          }
 
          _historyPresenter.Show();
+      }
+
+      internal void ToolsPointsCalculatorClick()
+      {
+         var dlg = ServiceLocator.Resolve<ProteinCalculatorForm>();
+         dlg.Show(_view);
       }
       
       #endregion

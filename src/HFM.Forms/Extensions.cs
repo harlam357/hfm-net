@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Forms Extensions Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -94,6 +94,11 @@ namespace HFM.Forms
       {
          control.DataBindings.Add("Text", dataSource, dataMember, false, DataSourceUpdateMode.OnValidation);
       }
+
+      //public static void BindText(this Control control, object dataSource, string dataMember, DataSourceUpdateMode updateMode)
+      //{
+      //   control.DataBindings.Add("Text", dataSource, dataMember, false, updateMode);
+      //}
 
       public static void BindEnabled(this Control control, object dataSource, string dataMember)
       {

@@ -207,6 +207,7 @@
     <Compile Include="Models\FahClientSettingsModel.cs" />
     <Compile Include="Models\LegacyClientSettingsModel.cs" />
     <Compile Include="Models\MainGridModel.cs" />
+    <Compile Include="Models\ProteinCalculatorModel.cs" />
     <Compile Include="Models\UserStatsDataModel.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Controls\QueueControl.cs">
@@ -244,6 +245,12 @@
     </Compile>
     <Compile Include="ProjectDownloadDialog.Designer.cs">
       <DependentUpon>ProjectDownloadDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProteinCalculatorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProteinCalculatorForm.Designer.cs">
+      <DependentUpon>ProteinCalculatorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ProteinLoadResultsDialog.cs">
       <SubType>Form</SubType>
@@ -311,6 +318,9 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProteinCalculatorForm.resx">
+      <DependentUpon>ProteinCalculatorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProteinLoadResultsDialog.resx">
       <DependentUpon>ProteinLoadResultsDialog.cs</DependentUpon>

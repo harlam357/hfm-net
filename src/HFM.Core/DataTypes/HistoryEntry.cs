@@ -108,7 +108,7 @@ namespace HFM.Core.DataTypes
          _protein = protein;
          if (protein != null)
          {
-            SlotType = UnitInfo.GetSlotTypeFromCore(protein.Core).ToString();
+            SlotType = protein.Core.ToSlotType().ToString();
          }
 
          return this;

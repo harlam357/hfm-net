@@ -45,6 +45,11 @@ namespace HFM.Forms.Configuration
             Component.For<Models.HistoryPresenterModel>()
                .LifeStyle.Transient);
 
+         // ProteinCalculatorModel - Transient
+         container.Register(
+            Component.For<Models.ProteinCalculatorModel>()
+               .LifeStyle.Transient);
+
          #endregion
 
          #region View Interfaces
@@ -85,21 +90,10 @@ namespace HFM.Forms.Configuration
                .ImplementedBy<HistoryForm>()
                .LifeStyle.Transient);
 
-         // HistoryPresenter - Transient
-         container.Register(
-            Component.For<HistoryPresenter>()
-               .LifeStyle.Transient);
-
          // IFahClientSetupView - Transient
          container.Register(
             Component.For<IFahClientSetupView>()
                .ImplementedBy<FahClientSetupDialog>()
-               .LifeStyle.Transient);
-
-         // IFahClientSetupPresenter - Transient
-         container.Register(
-            Component.For<IFahClientSetupPresenter>()
-               .ImplementedBy<FahClientSetupPresenter>()
                .LifeStyle.Transient);
 
          // ILegacyClientSetupView - Transient
@@ -108,18 +102,12 @@ namespace HFM.Forms.Configuration
                .ImplementedBy<LegacyClientSetupDialog>()
                .LifeStyle.Transient);
 
-         // ILegacyClientSetupPresenter - Transient
-         container.Register(
-            Component.For<ILegacyClientSetupPresenter>()
-               .ImplementedBy<LegacyClientSetupPresenter>()
-               .LifeStyle.Transient);
-
          // IMainView - Singleton
          container.Register(
             Component.For<IMainView>()
                .ImplementedBy<MainForm>());
 
-         // IMainView - Singleton
+         // IMessagesView - Singleton
          container.Register(
             Component.For<IMessagesView>()
                .ImplementedBy<MessagesForm>());
@@ -144,6 +132,23 @@ namespace HFM.Forms.Configuration
          container.Register(
             Component.For<MainPresenter>());
 
+         // IFahClientSetupPresenter - Transient
+         container.Register(
+            Component.For<IFahClientSetupPresenter>()
+               .ImplementedBy<FahClientSetupPresenter>()
+               .LifeStyle.Transient);
+
+         // ILegacyClientSetupPresenter - Transient
+         container.Register(
+            Component.For<ILegacyClientSetupPresenter>()
+               .ImplementedBy<LegacyClientSetupPresenter>()
+               .LifeStyle.Transient);
+
+         // HistoryPresenter - Transient
+         container.Register(
+            Component.For<HistoryPresenter>()
+               .LifeStyle.Transient);
+
          #endregion
 
          #region Service Interfaces
@@ -163,6 +168,11 @@ namespace HFM.Forms.Configuration
          // PreferencesDialog - Transient
          container.Register(
             Component.For<PreferencesDialog>()
+               .LifeStyle.Transient);
+
+         // ProteinCalculatorForm - Transient
+         container.Register(
+            Component.For<ProteinCalculatorForm>()
                .LifeStyle.Transient);
 
          // RetrievalLogic - Singleton

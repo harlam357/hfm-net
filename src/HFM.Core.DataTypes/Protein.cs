@@ -1,7 +1,7 @@
 /*
  * HFM.NET - Protein Class
  * Copyright (C) 2006 David Rawling
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -163,7 +163,7 @@ namespace HFM.Core.DataTypes
       public double GetCredit(TimeSpan estTimeOfUnit, bool calculateBonus)
       {
          double bonusMulti = GetMultiplier(estTimeOfUnit, calculateBonus);
-         return Math.Round((Credit * bonusMulti), 0);
+         return Math.Round((Credit * bonusMulti), Default.MaxDecimalPlaces);
       }
 
       /// <summary>
@@ -178,7 +178,7 @@ namespace HFM.Core.DataTypes
          {
             if (estTimeOfUnit <= TimeSpan.FromDays(PreferredDays))
             {
-               return Math.Sqrt((MaximumDays * KFactor) / estTimeOfUnit.TotalDays);
+               return Math.Round(Math.Sqrt((MaximumDays * KFactor) / estTimeOfUnit.TotalDays), Default.MaxDecimalPlaces);
             }
          }
          

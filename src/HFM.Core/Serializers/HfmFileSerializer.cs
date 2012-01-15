@@ -77,12 +77,16 @@ namespace HFM.Core.Serializers
 
       public void Serialize(string fileName, List<ClientSettings> value)
       {
+         // copy the values before encrypting, otherwise the ClientSettings
+         // objects will retain the encrypted value from here on out...
+         var valueCopy = ProtoBuf.Serializer.DeepClone(value);
+
          using (var fileStream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
          using (var xmlWriter = XmlWriter.Create(fileStream, new XmlWriterSettings { Indent = true }))
          {
             var serializer = new DataContractSerializer(typeof(List<ClientSettings>));
-            Encrypt(value);
-            serializer.WriteObject(xmlWriter, value);
+            Encrypt(valueCopy);
+            serializer.WriteObject(xmlWriter, valueCopy);
          }
       }
 

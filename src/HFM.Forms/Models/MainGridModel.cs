@@ -19,6 +19,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 using HFM.Core;
@@ -145,15 +146,21 @@ namespace HFM.Forms.Models
          OnAfterResetBindings(EventArgs.Empty);
       }
 
+      private static readonly object SlotListLock = new object();
+
       /// <summary>
       /// Refresh the SlotModel list from the ClientDictionary.
       /// </summary>
       private void RefreshSlotList()
       {
-         _slotList.Clear();
-         foreach (var slot in _clientDictionary.Slots)
+         lock (SlotListLock)
          {
-            _slotList.Add(slot);
+            _slotList.Clear();
+            foreach (var slot in _clientDictionary.Slots)
+            {
+               _slotList.Add(slot);
+            }
+            Debug.WriteLine("Number of slots: " + _slotList.Count);
          }
       }
 
