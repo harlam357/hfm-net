@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Protein Class Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -83,7 +83,7 @@ namespace HFM.Core.DataTypes.Tests
       public void GetCreditTest2()
       {
          var protein = new Protein { Credit = 700, PreferredDays = 3, MaximumDays = 5, KFactor = 26.4 };
-         Assert.AreEqual(13648.0, protein.GetCredit(TimeSpan.FromMinutes(5 * 100), true));
+         Assert.AreEqual(13648.383, protein.GetCredit(TimeSpan.FromMinutes(5 * 100), true));
       }
 
       [Test]
@@ -108,11 +108,11 @@ namespace HFM.Core.DataTypes.Tests
          Assert.AreEqual(26.4, values.KFactor);
          Assert.AreEqual(TimeSpan.FromMinutes(5 * 100).Add(TimeSpan.FromMinutes(10)), values.EftByDownloadTime);
          Assert.AreEqual(19.31, values.DownloadTimeBonusMulti, 0.01);
-         Assert.AreEqual(13514.0, values.DownloadTimeBonusCredit);
+         Assert.AreEqual(13513.913, values.DownloadTimeBonusCredit);
          Assert.AreEqual(38920.07, values.DownloadTimeBonusPPD, 0.01);
          Assert.AreEqual(TimeSpan.FromMinutes(5 * 100), values.EftByFrameTime);
          Assert.AreEqual(19.5, values.FrameTimeBonusMulti, 0.01);
-         Assert.AreEqual(13648.0, values.FrameTimeBonusCredit);
+         Assert.AreEqual(13648.383, values.FrameTimeBonusCredit);
          Assert.AreEqual(39307.35, values.FrameTimeBonusPPD, 0.01);
       }
    }

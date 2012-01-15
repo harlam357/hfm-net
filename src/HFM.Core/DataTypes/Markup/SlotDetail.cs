@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace HFM.Core.DataTypes.Markup
@@ -53,6 +54,9 @@ namespace HFM.Core.DataTypes.Markup
       public GridData GridData { get; set; }
 
       [DataMember(Order = 10)]
+      public IList<LogLine> CurrentLogLines { get; set; }
+
+      [DataMember(Order = 11)]
       public Protein Protein { get; set; }
    }
 }

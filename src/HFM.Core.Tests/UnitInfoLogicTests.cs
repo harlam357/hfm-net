@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Unit Info Logic Class Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -733,9 +733,9 @@ namespace HFM.Core.Tests
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
-         Assert.AreEqual(849, unitInfoLogic.GetCredit(SlotStatus.RunningNoFrameTimes, PpdCalculationType.LastFrame, true));
+         Assert.AreEqual(848.528, unitInfoLogic.GetCredit(SlotStatus.RunningNoFrameTimes, PpdCalculationType.LastFrame, true));
          Assert.AreEqual(2.4, unitInfoLogic.GetUPD(PpdCalculationType.LastFrame));
-         Assert.AreEqual(2036.46753, unitInfoLogic.GetPPD(SlotStatus.RunningNoFrameTimes, PpdCalculationType.LastFrame, true));
+         Assert.AreEqual(2036.4672, unitInfoLogic.GetPPD(SlotStatus.RunningNoFrameTimes, PpdCalculationType.LastFrame, true));
       }
 
       [Test]
@@ -752,9 +752,9 @@ namespace HFM.Core.Tests
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
-         Assert.AreEqual(1897, unitInfoLogic.GetCredit(SlotStatus.Running, PpdCalculationType.LastFrame, true));
+         Assert.AreEqual(1897.367, unitInfoLogic.GetCredit(SlotStatus.Running, PpdCalculationType.LastFrame, true));
          Assert.AreEqual(2.4, unitInfoLogic.GetUPD(PpdCalculationType.LastFrame));
-         Assert.AreEqual(4553.67983, unitInfoLogic.GetPPD(SlotStatus.Running, PpdCalculationType.LastFrame, true));
+         Assert.AreEqual(4553.6808, unitInfoLogic.GetPPD(SlotStatus.Running, PpdCalculationType.LastFrame, true));
       }
 
       [Test]

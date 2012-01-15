@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Markup Data Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace HFM.Core.DataTypes.Markup
@@ -96,8 +95,5 @@ namespace HFM.Core.DataTypes.Markup
 
       [DataMember(Order = 24)]
       public string PreferredDeadline { get; set; }
-
-      [DataMember(Order = 25)]
-      public IList<LogLine> CurrentLogLines { get; set; }
    }
 }

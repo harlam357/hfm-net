@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Client Run List Base Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -91,6 +91,9 @@ namespace HFM.Log
             case LogLineType.ClientCoreCommunicationsError:
                HandleWorkUnitCoreShutdown(logLine);
                break;
+            case LogLineType.WorkUnitCoreReturn:
+               HandleWorkUnitCoreReturn(logLine);
+               break;
             case LogLineType.ClientNumberOfUnitsCompleted:
                HandleClientNumberOfUnitsCompleted(logLine);
                break;
@@ -145,22 +148,12 @@ namespace HFM.Log
 
       protected virtual void HandleWorkUnitCoreShutdown(LogLine logLine)
       {
-         if (CurrentClientRun != null)
-         {
-            if (logLine.LineData.Equals(WorkUnitResult.FinishedUnit))
-            {
-               CurrentClientRun.CompletedUnits++;
-            }
-            else if (logLine.LineData.Equals(WorkUnitResult.EarlyUnitEnd) ||
-                     logLine.LineData.Equals(WorkUnitResult.UnstableMachine) ||
-                     logLine.LineData.Equals(WorkUnitResult.Interrupted) ||
-                     logLine.LineData.Equals(WorkUnitResult.BadWorkUnit) ||
-                     logLine.LineData.Equals(WorkUnitResult.CoreOutdated) ||
-                     logLine.LineData.Equals(WorkUnitResult.ClientCoreError))
-            {
-               CurrentClientRun.FailedUnits++;
-            }
-         }
+         
+      }
+
+      protected virtual void HandleWorkUnitCoreReturn(LogLine logLine)
+      {
+         
       }
 
       private void HandleClientNumberOfUnitsCompleted(LogLine logLine)
@@ -175,6 +168,26 @@ namespace HFM.Log
       protected virtual void HandleWorkUnitCleaningUp(LogLine logLine)
       {
          
+      }
+
+      protected void AddWorkUnitResult(WorkUnitResult result)
+      {
+         if (CurrentClientRun != null)
+         {
+            if (result.Equals(WorkUnitResult.FinishedUnit))
+            {
+               CurrentClientRun.CompletedUnits++;
+            }
+            else if (result.Equals(WorkUnitResult.EarlyUnitEnd) ||
+                     result.Equals(WorkUnitResult.UnstableMachine) ||
+                     result.Equals(WorkUnitResult.Interrupted) ||
+                     result.Equals(WorkUnitResult.BadWorkUnit) ||
+                     result.Equals(WorkUnitResult.CoreOutdated) ||
+                     result.Equals(WorkUnitResult.ClientCoreError))
+            {
+               CurrentClientRun.FailedUnits++;
+            }
+         }
       }
       
       #endregion

@@ -753,7 +753,7 @@ namespace HFM.Log.Tests
          expectedRun.Team = 0;
          expectedRun.UserID = String.Empty;
          expectedRun.MachineID = 0;
-         expectedRun.CompletedUnits = 21;
+         expectedRun.CompletedUnits = 23;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 0;
          expectedRun.Status = SlotStatus.Unknown;
@@ -812,7 +812,7 @@ namespace HFM.Log.Tests
          expectedRun.Team = 0;
          expectedRun.UserID = "";
          expectedRun.MachineID = 0;
-         expectedRun.CompletedUnits = 5;
+         expectedRun.CompletedUnits = 8;
          expectedRun.FailedUnits = 0;
          expectedRun.TotalCompletedUnits = 0;
          expectedRun.Status = SlotStatus.Unknown;
