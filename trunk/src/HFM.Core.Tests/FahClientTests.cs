@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Fah Client Class Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -56,8 +56,8 @@ namespace HFM.Core.Tests
          var unitInfoLogic1 = new UnitInfoLogic { CurrentProtein = new Protein(), UnitInfoData = unitInfo1Clone };
 
          // arrange
-         database.Stub(x => x.Connected).Return(true);
-         database.Expect(x => x.WriteUnitInfo(null)).IgnoreArguments().Repeat.Times(1);
+         //database.Stub(x => x.Connected).Return(true);
+         //database.Expect(x => x.WriteUnitInfo(null)).IgnoreArguments().Repeat.Times(1);
 
          var benchmarkClient = new BenchmarkClient("Owner", "Path");
 
@@ -74,7 +74,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(true, new List<int>(benchmarkCollection.GetBenchmarkProjects(benchmarkClient)).Contains(2669));
          Assert.AreEqual(TimeSpan.FromMinutes(5), benchmarkCollection.GetBenchmark(currentUnitInfo.UnitInfoData).AverageFrameTime);
 
-         database.VerifyAllExpectations();
+         //database.VerifyAllExpectations();
       }
    }
 }

@@ -53,7 +53,7 @@
                      PPW
                   </td>
                   <td class="RightCol">
-                     <xsl:value-of select="GridData/PPD * 7"/> (<xsl:value-of select="GridData/UPD * 7"/> WUs)
+                     <xsl:value-of select="user:FormatNumber(NumberFormat, GridData/PPD * 7)"/> (<xsl:value-of select="user:FormatNumber(NumberFormat, GridData/UPD * 7)"/> WUs)
                   </td>
                </tr>
                <tr>
@@ -98,7 +98,7 @@
                </tr>
                <tr>
                   <td class="LeftCol" colspan="2">
-                     <xsl:for-each select="GridData/CurrentLogLines/LogLine">
+                     <xsl:for-each select="CurrentLogLines/LogLine">
                         <xsl:value-of select="LineRaw" disable-output-escaping="yes"/><xsl:element name="br"/>
                      </xsl:for-each>
                   </td>

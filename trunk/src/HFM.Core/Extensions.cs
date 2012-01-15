@@ -56,7 +56,7 @@ namespace HFM.Core
 
       public static string CachedFahLogFileName(this ClientSettings settings)
       {
-         return settings == null ? String.Empty : String.Format(CultureInfo.InvariantCulture, "{0}-{1}", settings.Name, Default.FahLogFileName);
+         return settings == null ? String.Empty : String.Format(CultureInfo.InvariantCulture, "{0}-{1}", settings.Name, settings.IsLegacy() ? Default.FahLogFileName : Default.FahClientLogFileName);
       }
 
       public static string CachedUnitInfoFileName(this ClientSettings settings)

@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -171,12 +172,14 @@ namespace HFM.Core
             // clear
             _logText.Length = 0;
             _logText.Append(_fahClient.GetMessage<LogRestart>().Value);
-            // write new local log file
+            string fahLogPath = Path.Combine(Prefs.CacheDirectory, Settings.CachedFahLogFileName());
+            File.WriteAllText(fahLogPath, _fahClient.GetMessage<LogRestart>().Value);
          }
          else if (e.DataType == typeof(LogUpdate))
          {
             _logText.Append(_fahClient.GetMessage<LogUpdate>().Value);
-            // append to local log file
+            string fahLogPath = Path.Combine(Prefs.CacheDirectory, Settings.CachedFahLogFileName());
+            File.AppendAllText(fahLogPath, _fahClient.GetMessage<LogUpdate>().Value);
          }
       }
 
@@ -338,6 +341,10 @@ namespace HFM.Core
                if (units[key] != null)
                {
                   parsedUnits[key] = BuildUnitInfoLogic(slotModel, units[key]);
+                  //if (!parsedUnits[key].FinishedTime.Equals(DateTime.MinValue))
+                  //{
+                  //   UpdateUnitInfoDatabase(parsedUnits[key]);
+                  //}
                }
             }
 
@@ -345,7 +352,7 @@ namespace HFM.Core
             {
                // *** THIS HAS TO BE DONE BEFORE UPDATING SlotModel.UnitInfoLogic ***
                UpdateBenchmarkData(slotModel.UnitInfoLogic, parsedUnits[DataAggregator.CurrentUnitIndex]);
-               // 
+               // set current unit info logic
                slotModel.UnitInfoLogic = parsedUnits[DataAggregator.CurrentUnitIndex];
             }
 
@@ -413,12 +420,16 @@ namespace HFM.Core
 
          // Update benchmarks
          BenchmarkCollection.UpdateData(parsedUnitInfo.UnitInfoData, previousFramesComplete, parsedUnitInfo.FramesComplete);
+      }
+
+      private void UpdateUnitInfoDatabase(UnitInfoLogic unitInfoLogic)
+      {
          // Update history database
          if (UnitInfoDatabase != null && UnitInfoDatabase.Connected)
          {
             try
             {
-               UnitInfoDatabase.WriteUnitInfo(parsedUnitInfo);
+               UnitInfoDatabase.WriteUnitInfo(unitInfoLogic);
             }
             catch (Exception ex)
             {
