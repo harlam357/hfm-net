@@ -84,6 +84,7 @@
     <Compile Include="LegacyClientTests.cs" />
     <Compile Include="LegacyDataAggregatorTests.cs" />
     <Compile Include="MarkupGeneratorTests.cs" />
+    <Compile Include="MarkupReaderTests.cs" />
     <Compile Include="NetworkOpsTests.cs" />
     <Compile Include="PathsTests.cs" />
     <Compile Include="ApplicationTests.cs" />
@@ -133,6 +134,7 @@
     <Content Include="TestFiles\HFM.Proteins.ExampleSerializer.dll" />
     <Content Include="TestFiles\HFM.Proteins.ExampleSerializer.NoFileDescription.dll" />
     <Content Include="TestFiles\HFM.Proteins.ExampleSerializer.NoFileExtension.dll" />
+    <Content Include="TestFiles\SlotSummary1.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

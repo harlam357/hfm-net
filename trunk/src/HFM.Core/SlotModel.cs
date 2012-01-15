@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Slot Model Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -80,13 +80,16 @@ namespace HFM.Core
                UpdateTimeOfLastProgress(value);
             }
             _unitInfoLogic = value;
+            _unitInfo = null;
          }
       }
 
+      // ReSharper disable UnaccessedField.Local
       private UnitInfo _unitInfo;
+      // ReSharper restore UnaccessedField.Local
       public UnitInfo UnitInfo
       {
-         get { return UnitInfoLogic != null ? UnitInfoLogic.UnitInfoData : null; }
+         get { return _unitInfo ?? UnitInfoLogic.UnitInfoData; }
          set { _unitInfo = value; }
       }
 
@@ -172,10 +175,16 @@ namespace HFM.Core
          get { return UserId.Length == 0; }
       }
 
+      private int _machineId;
       /// <summary>
       /// Machine ID associated with this client
       /// </summary>
-      public int MachineId { get; set; }
+      public int MachineId
+      {
+         // if SlotId is populated by a v7 client then also use it for the MachineId value
+         get { return SlotId > -1 ? SlotId : _machineId; }
+         set { _machineId = value; }
+      }
 
       /// <summary>
       /// Combined User ID and Machine ID String
@@ -323,7 +332,7 @@ namespace HFM.Core
 
       public double Credit
       {
-         get { return ProductionValuesOk ? UnitInfoLogic.GetCredit(Status, CalculationType, CalculateBonus) : UnitInfoLogic.CurrentProtein.Credit; }
+         get { return ProductionValuesOk ? Math.Round(UnitInfoLogic.GetCredit(Status, CalculationType, CalculateBonus), DecimalPlaces) : UnitInfoLogic.CurrentProtein.Credit; }
       }
 
       public int Completed

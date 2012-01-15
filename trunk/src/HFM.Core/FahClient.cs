@@ -234,7 +234,6 @@ namespace HFM.Core
                   var slotModel = new SlotModel { Settings = _settings, Prefs = Prefs };
                   slotModel.Status = (SlotStatus)slot.StatusEnum;
                   slotModel.SlotId = slot.Id;
-                  slotModel.MachineId = slot.SlotOptions.MachineId.GetValueOrDefault();
                   slotModel.SlotOptions = slot.SlotOptions;
                   _slots.Add(slotModel);
                }
@@ -320,8 +319,9 @@ namespace HFM.Core
             var info = _fahClient.GetMessage<Info>();
 
             DataAggregator.ClientName = slotModel.Name;
-            var lines = _logText.ToString().Split('\n').Where(x => x.Length != 0).ToList();
-            IDictionary<int, UnitInfo> units = DataAggregator.AggregateData(LogReader.GetLogLines(lines, LogFileType.FahClient), unitCollection, options, slotModel.SlotOptions, slotModel.SlotId);
+            var lines = LogReader.GetLogLines(_logText.ToString().Split('\n').Where(x => x.Length != 0).ToList(), LogFileType.FahClient);
+            lines = lines.Filter(LogFilterType.SlotAndNonIndexed, slotModel.SlotId).ToList();
+            IDictionary<int, UnitInfo> units = DataAggregator.AggregateData(lines, unitCollection, options, slotModel.SlotOptions, slotModel.SlotId);
             // Issue 126 - Use the Folding ID, Team, User ID, and Machine ID from the FAHlog data.
             // Use the Current Queue Entry as a backup data source.
             PopulateRunLevelData(DataAggregator.CurrentClientRun, info, slotModel);

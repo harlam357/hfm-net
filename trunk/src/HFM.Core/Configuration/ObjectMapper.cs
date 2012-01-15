@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Core ObjectMapper Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -41,6 +41,18 @@ namespace HFM.Core.Configuration
             .ForMember(dest => dest.Failed, opt => opt.MapFrom(src => src.TotalRunFailedUnits))
             .ForMember(dest => dest.DownloadTime, opt => opt.MapFrom(src => src.DownloadTime.ToDateString()))
             .ForMember(dest => dest.PreferredDeadline, opt => opt.MapFrom(src => src.PreferredDeadline.ToDateString()));
+         Mapper.CreateMap<SlotData, SlotModel>()
+            .ForMember(dest => dest.Prefs, opt => opt.Ignore())
+            .ForMember(dest => dest.UnitInfoLogic, opt => opt.Ignore())
+            .ForMember(dest => dest.Settings, opt => opt.Ignore())
+            .ForMember(dest => dest.SlotOptions, opt => opt.Ignore())
+            .ForMember(dest => dest.UserIdIsDuplicate, opt => opt.Ignore())
+            .ForMember(dest => dest.ProjectIsDuplicate, opt => opt.Ignore())
+            .ForMember(dest => dest.TimeOfLastUnitStart, opt => opt.Ignore())
+            .ForMember(dest => dest.TimeOfLastFrameProgress, opt => opt.Ignore())
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(x => x.GridData.Status))
+            .ForMember(dest => dest.Queue, opt => opt.Ignore()) // Ignore for now, may want to include later
+            .ForMember(dest => dest.UnitLogLines, opt => opt.Ignore()); // Ignore for now, may want to include later
       }
    }
 }

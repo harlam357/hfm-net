@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Forms ObjectMapper Class Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,7 +20,7 @@
 using AutoMapper;
 using NUnit.Framework;
 
-using HFM.Core.Configuration;
+using HFM.Forms.Configuration;
 
 namespace HFM.Forms.Tests.Configuration
 {
@@ -30,6 +30,7 @@ namespace HFM.Forms.Tests.Configuration
       [Test]
       public void CreateMapsTest()
       {
+         Mapper.Reset();
          ObjectMapper.CreateMaps();
          Mapper.AssertConfigurationIsValid();
       }

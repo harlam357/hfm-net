@@ -179,7 +179,10 @@ namespace HFM.Core.DataTypes
 
       public static readonly Regex WorkUnitRunningRegex =
          new Regex("(?<Timestamp>.{8}):WU(?<UnitIndex>\\d{2}):FS(?<FoldingSlot>\\d{2}):.*", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
-      
+
+      private static readonly Regex FoldingSlotRegex =
+         new Regex("(?<Timestamp>.{8}):FS(?<FoldingSlot>\\d{2}):.*", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+
       public static readonly Regex WorkUnitRunningRegex38 =
          new Regex("(?<Timestamp>.{8}):Unit (?<UnitIndex>\\d{2}):.*", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
@@ -275,7 +278,8 @@ namespace HFM.Core.DataTypes
          foreach (var line in logLines)
          {
             Match match;
-            if ((match = WorkUnitRunningRegex.Match(line.LineRaw)).Success)
+            if ((match = WorkUnitRunningRegex.Match(line.LineRaw)).Success ||
+                (match = FoldingSlotRegex.Match(line.LineRaw)).Success)
             {
                if (Int32.Parse(match.Result("${FoldingSlot}")) == index)
                {
@@ -295,7 +299,8 @@ namespace HFM.Core.DataTypes
          foreach (var line in logLines)
          {
             Match match;
-            if ((match = WorkUnitRunningRegex.Match(line.LineRaw)).Success)
+            if ((match = WorkUnitRunningRegex.Match(line.LineRaw)).Success ||
+                (match = FoldingSlotRegex.Match(line.LineRaw)).Success)
             {
                if (Int32.Parse(match.Result("${FoldingSlot}")) == index)
                {

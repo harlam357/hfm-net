@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace HFM.Core.DataTypes.Markup
@@ -37,18 +38,24 @@ namespace HFM.Core.DataTypes.Markup
       public int MachineId { get; set; }
 
       [DataMember(Order = 5)]
-      public int TotalRunCompletedUnits { get; set; }
+      public int SlotId { get; set; }
 
       [DataMember(Order = 6)]
-      public int TotalCompletedUnits { get; set; }
+      public int TotalRunCompletedUnits { get; set; }
 
       [DataMember(Order = 7)]
-      public int TotalRunFailedUnits { get; set; }
+      public int TotalCompletedUnits { get; set; }
 
       [DataMember(Order = 8)]
-      public GridData GridData { get; set; }
+      public int TotalRunFailedUnits { get; set; }
 
       [DataMember(Order = 9)]
+      public GridData GridData { get; set; }
+
+      [DataMember(Order = 10)]
+      public IList<LogLine> CurrentLogLines { get; set; }
+
+      [DataMember(Order = 11)]
       public UnitInfo UnitInfo { get; set; }
    }
 }
