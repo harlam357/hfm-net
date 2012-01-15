@@ -50,14 +50,14 @@ namespace HFM.Forms
       private void InitializeComponent()
       {
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutDialog));
-         this.lblProduct = new LabelWrapper();
-         this.lblVersion = new LabelWrapper();
-         this.btnClose = new ButtonWrapper();
+         this.lblProduct = new HFM.Forms.Controls.LabelWrapper();
+         this.lblVersion = new HFM.Forms.Controls.LabelWrapper();
+         this.btnClose = new HFM.Forms.Controls.ButtonWrapper();
          this.pictureBox1 = new System.Windows.Forms.PictureBox();
-         this.textBoxWrapper1 = new TextBoxWrapper();
+         this.textBoxWrapper1 = new HFM.Forms.Controls.TextBoxWrapper();
          this.lnkHfmGoogleCode = new System.Windows.Forms.LinkLabel();
          this.lnkHfmGoogleGroup = new System.Windows.Forms.LinkLabel();
-         this.lblDate = new LabelWrapper();
+         this.lblDate = new HFM.Forms.Controls.LabelWrapper();
          ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
          this.SuspendLayout();
          // 

@@ -37,7 +37,7 @@
       <Message Text="Version: $(Major).$(Minor).$(Build).$(Revision)"/>
    </Target>
 
-   <Target Name="Build" DependsOnTargets="Compile">
+   <Target Name="Build" DependsOnTargets="RemoveArtifactsFolder;Compile">
       <CallTarget Targets="Deploy" ContinueOnError="true"/>
       <Message Text="HFM.NET Build Complete"/>
    </Target>
@@ -56,6 +56,10 @@
                Properties="Configuration=ScriptedRelease;AssemblyOriginatorKeyFile=$(AssemblyOriginatorKeyFile)" />
 
       <CallTarget Targets="NUnit" />
+   </Target>
+
+   <Target Name="RemoveArtifactsFolder">
+      <RemoveDir Directories="$(ArtifactsPath)" ContinueOnError="true" />
    </Target>
 
    <Target Name="CreateArtifactsFolder">

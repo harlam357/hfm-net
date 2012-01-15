@@ -195,8 +195,7 @@ namespace HFM
       /// </summary>
       private void ClearCacheFolder()
       {
-         string path = Path.Combine(_prefs.CacheDirectory, _prefs.GetPreference<string>(Preference.CacheFolder));
-         var di = new DirectoryInfo(path);
+         var di = new DirectoryInfo(_prefs.CacheDirectory);
          if (!di.Exists)
          {
             di.Create();

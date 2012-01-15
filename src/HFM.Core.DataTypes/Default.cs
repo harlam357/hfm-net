@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Default Value Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -32,6 +32,7 @@ namespace HFM.Core.DataTypes
       public const string FahLogFileName = "FAHlog.txt";
       public const string UnitInfoFileName = "unitinfo.txt";
       public const string QueueFileName = "queue.dat";
+      public const string FahClientLogFileName = "log.txt";
       //public const string ExternalDataFileName = "ClientData.dat";
 
       public const int FahClientPort = 36330;
