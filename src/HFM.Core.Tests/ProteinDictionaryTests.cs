@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Protein Dictionary Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,8 +35,8 @@ namespace HFM.Core.Tests
          var downloader = MockRepository.GenerateMock<IProjectSummaryDownloader>();
          downloader.Expect(x => x.DownloadFromStanford());
          downloader.Expect(x => x.DownloadFilePath).Return("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\psummary.html");
-         downloader.Expect(x => x.DownloadFromHfmWeb());
-         downloader.Expect(x => x.DownloadFilePath).Return("..\\..\\TestFiles\\ProjectInfo.xml");
+         //downloader.Expect(x => x.DownloadFromHfmWeb());
+         //downloader.Expect(x => x.DownloadFilePath).Return("..\\..\\TestFiles\\ProjectInfo.xml");
          
          var proteins = new ProteinDictionary(prefs, downloader);
          var protein = CreateValidProtein(2483);
