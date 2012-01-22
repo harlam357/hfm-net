@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Markup Data Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,7 +36,7 @@ namespace HFM.Core.DataTypes.Markup
       public DateTime UpdateDateTime { get; set; }
 
       [DataMember(Order = 4)]
-      public bool LogFilesAvailable { get; set; }
+      public bool LogFileAvailable { get; set; }
 
       [DataMember(Order = 5)]
       public string LogFileName { get; set; }

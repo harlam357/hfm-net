@@ -1081,7 +1081,7 @@ namespace HFM.Forms
          _prefs.Set(Preference.TimeStyle, style.Equals(TimeStyleType.Standard) 
                                  ? TimeStyleType.Formatted 
                                  : TimeStyleType.Standard);
-
+         _prefs.Save();
          _view.DataGridView.Invalidate();
       }
 
@@ -1091,13 +1091,14 @@ namespace HFM.Forms
          _prefs.Set(Preference.CompletedCountDisplay, style.Equals(CompletedCountDisplayType.ClientTotal)
                                  ? CompletedCountDisplayType.ClientRunTotal
                                  : CompletedCountDisplayType.ClientTotal);
-
+         _prefs.Save();
          _view.DataGridView.Invalidate();
       }
 
       public void ViewToggleVersionInformationClick()
       {
          _prefs.Set(Preference.ShowVersions, !_prefs.Get<bool>(Preference.ShowVersions));
+         _prefs.Save();
          _view.DataGridView.Invalidate();
       }
 
@@ -1114,6 +1115,8 @@ namespace HFM.Forms
 
          calculationType = (BonusCalculationType)typeIndex;
          _prefs.Set(Preference.CalculateBonus, calculationType);
+         _prefs.Save();
+
          string calculationTypeString = (from item in OptionsModel.BonusCalculationList
                                          where ((BonusCalculationType)item.ValueMember) == calculationType
                                          select item.DisplayMember).First();
@@ -1134,6 +1137,8 @@ namespace HFM.Forms
 
          calculationType = (PpdCalculationType)typeIndex;
          _prefs.Set(Preference.PpdCalculation, calculationType);
+         _prefs.Save();
+
          string calculationTypeString = (from item in OptionsModel.PpdCalculationList
                                          where ((PpdCalculationType)item.ValueMember) == calculationType
                                          select item.DisplayMember).First();

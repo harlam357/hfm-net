@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - FAH Client Settings Model
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -39,8 +39,8 @@ namespace HFM.Forms.Models
          {
             return NameError ||
                    ServerError ||
-                   PortError ||
-                   PasswordError;
+                   PortError;
+                   //PasswordError;
          }
       }
 
@@ -124,10 +124,10 @@ namespace HFM.Forms.Models
          }
       }
 
-      public bool PasswordError
-      {
-         get { return Password.Length == 0; }
-      }
+      //public bool PasswordError
+      //{
+      //   get { return Password.Length == 0; }
+      //}
 
       private readonly List<FahClientSettingsSlotModel> _slots;
 

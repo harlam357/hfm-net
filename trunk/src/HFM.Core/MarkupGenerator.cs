@@ -331,7 +331,7 @@ namespace HFM.Core
          slotDetail.HfmVersion = Application.VersionWithRevision;
          slotDetail.NumberFormat = _prefs.PpdFormatString;
          slotDetail.UpdateDateTime = updateDateTime;
-         slotDetail.LogFilesAvailable = _prefs.Get<bool>(Preference.WebGenCopyFAHlog);
+         slotDetail.LogFileAvailable = _prefs.Get<bool>(Preference.WebGenCopyFAHlog);
          slotDetail.LogFileName = slot.Settings.CachedFahLogFileName();
          slotDetail.TotalRunCompletedUnits = slot.TotalRunCompletedUnits;
          slotDetail.TotalCompletedUnits = slot.TotalCompletedUnits;

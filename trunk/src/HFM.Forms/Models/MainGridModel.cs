@@ -73,7 +73,11 @@ namespace HFM.Forms.Models
       /// </summary>
       public bool CachedLogMenuItemVisible
       {
-         get { return SelectedSlot != null && SelectedSlot.Settings.ClientType.Equals(ClientType.Legacy); }
+         get 
+         { 
+            return SelectedSlot != null && (SelectedSlot.Settings.ClientType.Equals(ClientType.Legacy) ||
+                                            SelectedSlot.Settings.ClientType.Equals(ClientType.FahClient)); 
+         }
       }
 
       /// <summary>
