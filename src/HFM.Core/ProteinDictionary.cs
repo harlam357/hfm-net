@@ -133,28 +133,30 @@ namespace HFM.Core
                return this[projectId];
             }
 
-            // Execute a Download (HFM Web)
-            _downloader.DownloadFromHfmWeb();
-            try
-            {
-               var proteinList = Read(_downloader.DownloadFilePath, new Serializers.XmlFileSerializer<List<Protein>>());
-               var protein = proteinList.FirstOrDefault(x => x.ProjectNumber == projectId);
-               if (protein != null)
-               {
-                  Add(protein.ProjectNumber, protein);
-               }
-            }
-            catch (Exception ex)
-            {
-               Logger.ErrorFormat(ex, "{0}", ex.Message);
-            }
+            /*** Disable HFM Web Download For Now ***/
 
-            if (ContainsKey(projectId))
-            {
-               // remove it from the not found list and return it
-               _projectsNotFound.Remove(projectId);
-               return this[projectId];
-            }
+            //// Execute a Download (HFM Web)
+            //_downloader.DownloadFromHfmWeb();
+            //try
+            //{
+            //   var proteinList = Read(_downloader.DownloadFilePath, new Serializers.XmlFileSerializer<List<Protein>>());
+            //   var protein = proteinList.FirstOrDefault(x => x.ProjectNumber == projectId);
+            //   if (protein != null)
+            //   {
+            //      Add(protein.ProjectNumber, protein);
+            //   }
+            //}
+            //catch (Exception ex)
+            //{
+            //   Logger.ErrorFormat(ex, "{0}", ex.Message);
+            //}
+
+            //if (ContainsKey(projectId))
+            //{
+            //   // remove it from the not found list and return it
+            //   _projectsNotFound.Remove(projectId);
+            //   return this[projectId];
+            //}
          }
 
          AddToProjectsNotFound(projectId);
