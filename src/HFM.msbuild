@@ -98,6 +98,9 @@
 
    <ItemGroup>
       <ZipFiles Include="$(ArtifactsHFM)\**\*.*" />
+      <ClientZipFiles Include="$(ArtifactsHFM)\HFM.Client.dll;$(ArtifactsHFM)\HFM.Client.xml;$(ArtifactsHFM)\Documentation\License\GPLv2.txt;$(ArtifactsHFM)\Newtonsoft.Json.Net35.dll;$(ArtifactsHFM)\Newtonsoft.Json.Net35.xml;$(ArtifactsHFM)\Documentation\License\Json.NET License.txt" />
+      <LogZipFiles Include="$(ArtifactsHFM)\HFM.Log.dll;$(ArtifactsHFM)\HFM.Log.xml;$(ArtifactsHFM)\HFM.Core.DataTypes.dll;$(ArtifactsHFM)\HFM.Core.DataTypes.xml;$(ArtifactsHFM)\Documentation\License\GPLv2.txt" />
+      <QueueZipFiles Include="$(ArtifactsHFM)\HFM.Queue.dll;$(ArtifactsHFM)\HFM.Queue.xml;$(ArtifactsHFM)\Documentation\License\GPLv2.txt" />
    </ItemGroup>
 
    <Target Name="BuildZip" DependsOnTargets="Version">
@@ -105,6 +108,11 @@
       <Zip Files="@(ZipFiles)"
            WorkingDirectory="$(ArtifactsHFM)"
            ZipFileName="$(ArtifactsPackages)\HFM $(Major).$(Minor).$(Build).$(Revision).zip" />
+      <CallTarget Targets="CopyZipPackage" />
+   </Target>
+
+   <Target Name ="CopyZipPackage" Condition="'$(PackageDestination)' != ''" DependsOnTargets="Version">
+      <Copy SourceFiles="$(ArtifactsPackages)\HFM $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
    </Target>
 
    <Target Name="BuildMsi" DependsOnTargets="Version">
@@ -113,14 +121,34 @@
                Targets="Rebuild"
                Properties="Configuration=Release" />
       <Copy SourceFiles=".\HFM.Setup\bin\Release\HFM.Setup.msi" DestinationFiles="$(ArtifactsPackages)\HFM $(Major).$(Minor).$(Build).$(Revision).msi" />
+      <CallTarget Targets="CopyMsiPackage" />
    </Target>
-
-   <Target Name ="CopyPackages" Condition="'$(PackageDestination)' != ''" DependsOnTargets="Version">
-      <Copy SourceFiles="$(ArtifactsPackages)\HFM $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
+   
+   <Target Name ="CopyMsiPackage" Condition="'$(PackageDestination)' != ''" DependsOnTargets="Version">
       <Copy SourceFiles="$(ArtifactsPackages)\HFM $(Major).$(Minor).$(Build).$(Revision).msi" DestinationFolder="$(PackageDestination)" />
    </Target>
 
-   <Target Name="BuildPlugins" DependsOnTargets="CompilePlugins">
+   <Target Name="BuildApiZips" DependsOnTargets="Version">
+      <MakeDir Directories="$(ArtifactsPackages)" />
+      <Zip Files="@(ClientZipFiles)"
+           WorkingDirectory="$(ArtifactsHFM)"
+           ZipFileName="$(ArtifactsPackages)\HFM.Client $(Major).$(Minor).$(Build).$(Revision).zip" />
+      <Zip Files="@(LogZipFiles)"
+           WorkingDirectory="$(ArtifactsHFM)"
+           ZipFileName="$(ArtifactsPackages)\HFM.Log $(Major).$(Minor).$(Build).$(Revision).zip" />
+      <Zip Files="@(QueueZipFiles)"
+           WorkingDirectory="$(ArtifactsHFM)"
+           ZipFileName="$(ArtifactsPackages)\HFM.Queue $(Major).$(Minor).$(Build).$(Revision).zip" />
+      <CallTarget Targets="CopyApiZipPackages" />
+   </Target>
+
+   <Target Name ="CopyApiZipPackages" Condition="'$(PackageDestination)' != ''" DependsOnTargets="Version">
+      <Copy SourceFiles="$(ArtifactsPackages)\HFM.Client $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
+      <Copy SourceFiles="$(ArtifactsPackages)\HFM.Log $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
+      <Copy SourceFiles="$(ArtifactsPackages)\HFM.Queue $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
+   </Target>
+      
+   <!--<Target Name="BuildPlugins" DependsOnTargets="CompilePlugins">
       <Message Text="HFM.NET Plugins Build Complete"/>
    </Target>
 
@@ -143,5 +171,5 @@
 
    <Target Name ="CopyPluginsPackages" Condition="'$(PackageDestination)' != ''" DependsOnTargets="Version">
       <Copy SourceFiles="$(ArtifactsPackages)\HFM FahMon Plugin $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
-   </Target>
+   </Target>-->
 </Project>
