@@ -284,17 +284,7 @@ namespace HFM.Core
                   // Update benchmarks
                   BenchmarkCollection.UpdateData(parsedUnits[index].UnitInfoData, previousFramesComplete, parsedUnits[index].FramesComplete);
                   // Update history database
-                  if (UnitInfoDatabase != null && UnitInfoDatabase.Connected)
-                  {
-                     try
-                     {
-                        UnitInfoDatabase.WriteUnitInfo(parsedUnits[index]);
-                     }
-                     catch (Exception ex)
-                     {
-                        Logger.ErrorFormat(ex, "{0}", ex.Message);
-                     }
-                  }
+                  UpdateUnitInfoDatabase(parsedUnits[index]);
                }
             }
 

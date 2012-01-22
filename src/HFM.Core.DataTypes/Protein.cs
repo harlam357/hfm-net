@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.Serialization;
+using System.Text;
 
 namespace HFM.Core.DataTypes
 {
@@ -245,26 +246,25 @@ namespace HFM.Core.DataTypes
 
       public double FrameTimeBonusPPD { get; set; }
       
-      public IEnumerable<string> ToMultiLineString()
+      public string ToMultiLineString()
       {
-         return new[]
-         {
-            String.Format(CultureInfo.CurrentCulture, " - Base Credit--------- : {0}", BaseCredit),
-            String.Format(CultureInfo.CurrentCulture, " - Base PPD ----------- : {0}", BasePPD),
-            String.Format(CultureInfo.CurrentCulture, " - Preferred Time ----- : {0}", PreferredTime),
-            String.Format(CultureInfo.CurrentCulture, " - Maximum Time ------- : {0}", MaximumTime),
-            String.Format(CultureInfo.CurrentCulture, " - KFactor ------------ : {0}", KFactor),
-            String.Format(CultureInfo.CurrentCulture, " + - by Download Time - + {0}", String.Empty),
-            String.Format(CultureInfo.CurrentCulture, " - --- WU Time -------- : {0}", EftByDownloadTime),
-            String.Format(CultureInfo.CurrentCulture, " - --- Bonus Multiplier : {0}", DownloadTimeBonusMulti),
-            String.Format(CultureInfo.CurrentCulture, " - --- Bonus Credit --- : {0}", DownloadTimeBonusCredit),
-            String.Format(CultureInfo.CurrentCulture, " - --- Bonus PPD ------ : {0}", DownloadTimeBonusPPD),
-            String.Format(CultureInfo.CurrentCulture, " + - by Frame Time ---- + {0}", String.Empty),
-            String.Format(CultureInfo.CurrentCulture, " - --- WU Time -------- : {0}", EftByFrameTime),
-            String.Format(CultureInfo.CurrentCulture, " - --- Bonus Multiplier : {0}", FrameTimeBonusMulti),
-            String.Format(CultureInfo.CurrentCulture, " - --- Bonus Credit --- : {0}", FrameTimeBonusCredit),
-            String.Format(CultureInfo.CurrentCulture, " - --- Bonus PPD ------ : {0}", FrameTimeBonusPPD)
-         };
+         var sb = new StringBuilder();
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - Base Credit--------- : {0}{1}", BaseCredit, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - Base PPD ----------- : {0}{1}", BasePPD, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - Preferred Time ----- : {0}{1}", PreferredTime, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - Maximum Time ------- : {0}{1}", MaximumTime, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - KFactor ------------ : {0}{1}", KFactor, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " + - by Download Time - + {0}{1}", String.Empty, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- WU Time -------- : {0}{1}", EftByDownloadTime, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus Multiplier : {0}{1}", DownloadTimeBonusMulti, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus Credit --- : {0}{1}", DownloadTimeBonusCredit, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus PPD ------ : {0}{1}", DownloadTimeBonusPPD, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " + - by Frame Time ---- + {0}{1}", String.Empty, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- WU Time -------- : {0}{1}", EftByFrameTime, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus Multiplier : {0}{1}", FrameTimeBonusMulti, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus Credit --- : {0}{1}", FrameTimeBonusCredit, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus PPD ------ : {0}{1}", FrameTimeBonusPPD, Environment.NewLine);
+         return sb.ToString();
       }
    }
 }

@@ -241,6 +241,7 @@ namespace HFM.Forms
          dataGridView1.Columns[QueryFieldName.CompletionDateTime.ToString()].DataPropertyName = QueryFieldName.CompletionDateTime.ToString();
          dataGridView1.Columns.Add(QueryFieldName.Credit.ToString(), names[(int)QueryFieldName.Credit]);
          dataGridView1.Columns[QueryFieldName.Credit.ToString()].DataPropertyName = QueryFieldName.Credit.ToString();
+         dataGridView1.Columns[QueryFieldName.Credit.ToString()].DefaultCellStyle = new DataGridViewCellStyle { Format = prefs.PpdFormatString };
          dataGridView1.Columns.Add(QueryFieldName.Frames.ToString(), names[(int)QueryFieldName.Frames]);
          dataGridView1.Columns[QueryFieldName.Frames.ToString()].DataPropertyName = QueryFieldName.Frames.ToString();
          dataGridView1.Columns.Add(QueryFieldName.FramesCompleted.ToString(), names[(int)QueryFieldName.FramesCompleted]);

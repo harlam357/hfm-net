@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Unit Info Logic Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -477,7 +477,7 @@ namespace HFM.Core
 
          TimeSpan frameTime = GetFrameTime(calculationType);
          var values = CurrentProtein.GetProductionValues(frameTime, GetEftByDownloadTime(frameTime), GetEftByFrameTime(frameTime), calculateBonus);
-         values.ToMultiLineString().ToList().ForEach(logger.Debug);
+         logger.Debug(values.ToMultiLineString());
       }
       
       #endregion

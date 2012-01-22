@@ -45,6 +45,7 @@ namespace HFM.Core.DataTypes
          UnitResult = WorkUnitResult.Unknown;
          UnitFrames = new Dictionary<int, UnitFrame>();
          CoreID = Default.CoreID;
+         QueueIndex = -1;
       }
       
       #region Owner Data Properties
@@ -230,6 +231,12 @@ namespace HFM.Core.DataTypes
       /// </summary>
       [DataMember(Order = 24)]
       public string CoreID { get; set; }
+
+      /// <summary>
+      /// Unit Queue Index
+      /// </summary>
+      [DataMember(Order = 25)]
+      public int QueueIndex { get; set; }
 
       /// <summary>
       /// Set the Current Work Unit Frame

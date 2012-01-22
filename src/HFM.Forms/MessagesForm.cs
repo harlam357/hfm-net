@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Messages Form Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,8 +31,6 @@ namespace HFM.Forms
 {
    public interface IMessagesView
    {
-      void AddMessage(string message);
-
       void ScrollToEnd();
 
       void SetManualStartPosition();
@@ -66,21 +64,21 @@ namespace HFM.Forms
       
          InitializeComponent();
 
-         _logger.TextMessage += (sender, e) => AddMessage(e.Message);
+         _logger.TextMessage += (sender, e) => AddMessage(e.Messages);
       } 
 
       #endregion
 
       #region Implementation
 
-      public void AddMessage(string message)
+      private void AddMessage(IEnumerable<string> messages)
       {
          if (_lines.Count > 500)
          {
             _lines.RemoveRange(0, 100);
          }
 
-         _lines.Add(message);
+         _lines.AddRange(messages);
 
          UpdateMessages(_lines.ToArray());
       }

@@ -786,6 +786,20 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(0, unitCollection[1].CreditEstimate);
          Assert.AreEqual(1196, unitCollection[1].Description.Length);
       }
+
+      [Test]
+      public void EqualityTest1()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\units.txt");
+
+         string messageCopy = message;
+         var unitCollection1 = new UnitCollection();
+         unitCollection1.Fill(MessageCache.GetNextJsonMessage(ref messageCopy));
+         var unitCollection2 = new UnitCollection();
+         messageCopy = message;
+         unitCollection2.Fill(MessageCache.GetNextJsonMessage(ref messageCopy));
+         Assert.IsTrue(unitCollection1.Equals(unitCollection2));
+      }
    }
 
    public class UnitDerived : Unit

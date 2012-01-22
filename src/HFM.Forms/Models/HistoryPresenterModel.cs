@@ -144,6 +144,7 @@ namespace HFM.Forms.Models
 
          _queryList.Add(parameters);
          _queryList.Sort();
+         _queryBindingSource.ResetBindings(false);
          _queryBindingSource.Position = _queryBindingSource.IndexOf(parameters);
       }
 
@@ -166,6 +167,7 @@ namespace HFM.Forms.Models
          _queryList.Remove(SelectedQuery);
          _queryList.Add(parameters);
          _queryList.Sort();
+         _queryBindingSource.ResetBindings(false);
          _queryBindingSource.Position = _queryBindingSource.IndexOf(parameters);
       }
 
@@ -198,6 +200,7 @@ namespace HFM.Forms.Models
          }
 
          _queryList.Remove(parameters);
+         _queryBindingSource.ResetBindings(false);
       }
 
       public void DeleteUnitInfo(long id)

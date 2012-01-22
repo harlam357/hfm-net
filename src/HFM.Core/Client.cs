@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Client Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -186,5 +186,21 @@ namespace HFM.Core
       }
 
       protected abstract void RetrieveInternal();
+
+      protected void UpdateUnitInfoDatabase(UnitInfoLogic unitInfoLogic)
+      {
+         // Update history database
+         if (UnitInfoDatabase != null && UnitInfoDatabase.Connected)
+         {
+            try
+            {
+               UnitInfoDatabase.WriteUnitInfo(unitInfoLogic);
+            }
+            catch (Exception ex)
+            {
+               Logger.ErrorFormat(ex, "{0}", ex.Message);
+            }
+         }
+      }
    }
 }

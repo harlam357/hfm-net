@@ -193,12 +193,12 @@ namespace HFM.Client.Tests
          tcpClient.Expect(x => x.EndConnect(asyncResult));
          tcpClient.Expect(x => x.GetStream()).Return(stream);
 
+         // setup Connected property expectations
+         tcpClient.Expect(x => x.Client).Return(new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)).Repeat.AtLeastOnce();
+         tcpClient.Expect(x => x.Connected).Return(true).Repeat.AtLeastOnce();
+
          if (withPassword)
          {
-            // setup Connected property expectations
-            tcpClient.Expect(x => x.Client).Return(new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)).Repeat.AtLeastOnce();
-            tcpClient.Expect(x => x.Connected).Return(true).Repeat.AtLeastOnce();
-   
             // setup SendCommand() expectation
             var buffer = Encoding.ASCII.GetBytes("auth password\n");
             stream.Expect(x => x.Write(buffer, 0, buffer.Length));

@@ -131,6 +131,8 @@ namespace HFM.Core
       private readonly StringBuilder _logText;
       private readonly List<MessageUpdatedEventArgs> _newMessages;
 
+      private bool _unitCollectionUpdated;
+      private UnitCollection _unitCollection;
       private SlotCollection _slotCollection;
       private readonly List<SlotOptions> _slotOptions;
 
@@ -155,7 +157,21 @@ namespace HFM.Core
 
          _newMessages.Add(e);
 
-         if (e.DataType == typeof(SlotCollection))
+         if (e.DataType == typeof(UnitCollection))
+         {
+            var unitCollection = _fahClient.GetMessage<UnitCollection>();
+            if (_unitCollection == null)
+            {
+               _unitCollection = unitCollection;
+               _unitCollectionUpdated = true;
+            }
+            else if (!_unitCollection.Equals(unitCollection))
+            {
+               _unitCollection = unitCollection;
+               _unitCollectionUpdated = true;
+            }
+         }
+         else if (e.DataType == typeof(SlotCollection))
          {
             _slotCollection = _fahClient.GetMessage<SlotCollection>();
             foreach (var slot in _slotCollection)
@@ -226,10 +242,12 @@ namespace HFM.Core
             _slotOptions.Clear();
             RefreshSlots();
          }
-         if (!DefaultSlotActive && _newMessages.ContainsUpdates())
+         if (!DefaultSlotActive && _newMessages.ContainsUpdates() && _unitCollectionUpdated)
          {
             // clear the new messages buffer
             _newMessages.Clear();
+            // clear collection updated flag
+            _unitCollectionUpdated = false;
             // Process the retrieved logs
             Retrieve();
          }
@@ -335,23 +353,20 @@ namespace HFM.Core
          // Set successful Last Retrieval Time
          LastRetrievalTime = DateTime.Now;
 
+         var options = _fahClient.GetMessage<Options>();
+         var info = _fahClient.GetMessage<Info>();
+
          foreach (var slotModel in Slots)
          {
             // Re-Init Slot Level Members Before Processing
             slotModel.Initialize();
 
             #region Run the Aggregator
-
-            var unitCollection = _fahClient.GetMessage<UnitCollection>();
-            var options = _fahClient.GetMessage<Options>();
-            var info = _fahClient.GetMessage<Info>();
-
+            
             DataAggregator.ClientName = slotModel.Name;
             var lines = LogReader.GetLogLines(_logText.ToString().Split('\n').Where(x => x.Length != 0).ToList(), LogFileType.FahClient);
             lines = lines.Filter(LogFilterType.SlotAndNonIndexed, slotModel.SlotId).ToList();
-            IDictionary<int, UnitInfo> units = DataAggregator.AggregateData(lines, unitCollection, options, slotModel.SlotOptions, slotModel.SlotId);
-            // Issue 126 - Use the Folding ID, Team, User ID, and Machine ID from the FAHlog data.
-            // Use the Current Queue Entry as a backup data source.
+            IDictionary<int, UnitInfo> units = DataAggregator.AggregateData(lines, _unitCollection, options, slotModel.SlotOptions, slotModel.UnitInfo, slotModel.SlotId);
             PopulateRunLevelData(DataAggregator.CurrentClientRun, info, slotModel);
 
             slotModel.Queue = DataAggregator.Queue;
@@ -366,18 +381,15 @@ namespace HFM.Core
                if (units[key] != null)
                {
                   parsedUnits[key] = BuildUnitInfoLogic(slotModel, units[key]);
-                  if (!parsedUnits[key].FinishedTime.Equals(DateTime.MinValue))
-                  {
-                     UpdateUnitInfoDatabase(parsedUnits[key]);
-                  }
                }
             }
 
+            // *** THIS HAS TO BE DONE BEFORE UPDATING SlotModel.UnitInfoLogic ***
+            UpdateBenchmarkData(slotModel.UnitInfoLogic, parsedUnits.Values, DataAggregator.CurrentUnitIndex);
+
+            // Update the UnitInfoLogic if we have a current unit index
             if (DataAggregator.CurrentUnitIndex != -1)
             {
-               // *** THIS HAS TO BE DONE BEFORE UPDATING SlotModel.UnitInfoLogic ***
-               UpdateBenchmarkData(slotModel.UnitInfoLogic, parsedUnits[DataAggregator.CurrentUnitIndex]);
-               // set current unit info logic
                slotModel.UnitInfoLogic = parsedUnits[DataAggregator.CurrentUnitIndex];
             }
 
@@ -436,30 +448,33 @@ namespace HFM.Core
          //slotModel.TotalCompletedUnits = run.TotalCompletedUnits;
       }
 
-      internal void UpdateBenchmarkData(UnitInfoLogic currentUnitInfo, UnitInfoLogic parsedUnitInfo)
+      internal void UpdateBenchmarkData(UnitInfoLogic currentUnitInfo, IEnumerable<UnitInfoLogic> parsedUnits, int currentUnitIndex)
       {
-         if (parsedUnitInfo == null) return;
-
-         // current frame has already been recorded, increment to the next frame
-         int previousFramesComplete = currentUnitInfo.FramesComplete + 1;
-
-         // Update benchmarks
-         BenchmarkCollection.UpdateData(parsedUnitInfo.UnitInfoData, previousFramesComplete, parsedUnitInfo.FramesComplete);
-      }
-
-      private void UpdateUnitInfoDatabase(UnitInfoLogic unitInfoLogic)
-      {
-         // Update history database
-         if (UnitInfoDatabase != null && UnitInfoDatabase.Connected)
+         foreach (var unitInfoLogic in parsedUnits)
          {
-            try
+            if (unitInfoLogic == null)
             {
-               UnitInfoDatabase.WriteUnitInfo(unitInfoLogic);
+               continue;
             }
-            catch (Exception ex)
+
+            if (currentUnitInfo.UnitInfoData.Equals(unitInfoLogic.UnitInfoData))
             {
-               Logger.ErrorFormat(ex, "{0}", ex.Message);
+               // found the current unit
+               // current frame has already been recorded, increment to the next frame
+               int previousFramesComplete = currentUnitInfo.FramesComplete + 1;
+               // Update benchmarks
+               BenchmarkCollection.UpdateData(unitInfoLogic.UnitInfoData, previousFramesComplete, unitInfoLogic.FramesComplete);
+               // Update history database
+               if (!unitInfoLogic.FinishedTime.Equals(DateTime.MinValue))
+               {
+                  UpdateUnitInfoDatabase(unitInfoLogic);
+               }
             }
+            //// used when there is no currentUnitInfo
+            //else if (unitInfoLogic.UnitInfoData.QueueIndex == currentUnitIndex)
+            //{
+            //   BenchmarkCollection.UpdateData(unitInfoLogic.UnitInfoData, 0, unitInfoLogic.FramesComplete);
+            //}
          }
       }
    }
