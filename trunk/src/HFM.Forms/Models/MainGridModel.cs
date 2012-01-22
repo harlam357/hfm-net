@@ -130,52 +130,66 @@ namespace HFM.Forms.Models
          _clientDictionary.ClientDataInvalidated += delegate { ResetBindings(); };
       }
 
-      public void ResetBindings()
+      private bool _resetInProgress;
+
+      private void ResetBindings()
       {
          if (_syncObject.InvokeRequired)
          {
-            _syncObject.Invoke(new MethodInvoker(ResetBindings), null);
+            _syncObject.BeginInvoke(new MethodInvoker(ResetBindings), null);
             return;
          }
 
-         OnBeforeResetBindings(EventArgs.Empty);
-         // halt binding source updates
-         _bindingSource.RaiseListChangedEvents = false;
-         // refresh the underlying binding list
-         RefreshSlotList();
-         // sort the list
-         _bindingSource.Sort = null;
-         _bindingSource.Sort = SortColumnName + " " + SortColumnOrder.ToDirectionString();
-         // reset selected slot
-         ResetSelectedSlot();
-         // find duplicates
-         FindDuplicates();
-         // enable binding source updates
-         _bindingSource.RaiseListChangedEvents = true;
-         // reset AFTER RaiseListChangedEvents is enabled
-         _bindingSource.ResetBindings(false);
-         // restore binding source updates
-         OnAfterResetBindings(EventArgs.Empty);
-      }
+         // this check appears to fix the duplicate slot issue.
+         // every time this condition is met and the return
+         // statement is removed then subsequently in 
+         // RefreshSlotList() the _slotList shows duplicate slots
+         if (_resetInProgress)
+         {
+            Debug.WriteLine("Reset already in progress...");
+            return;
+         }
 
-      //private static readonly object SlotListLock = new object();
+         _resetInProgress = true;
+         try
+         {
+            OnBeforeResetBindings(EventArgs.Empty);
+            // halt binding source updates
+            _bindingSource.RaiseListChangedEvents = false;
+            // refresh the underlying binding list
+            RefreshSlotList();
+            // sort the list
+            _bindingSource.Sort = null;
+            _bindingSource.Sort = SortColumnName + " " + SortColumnOrder.ToDirectionString();
+            // reset selected slot
+            ResetSelectedSlot();
+            // find duplicates
+            FindDuplicates();
+            // enable binding source updates
+            _bindingSource.RaiseListChangedEvents = true;
+            // reset AFTER RaiseListChangedEvents is enabled
+            _bindingSource.ResetBindings(false);
+            // restore binding source updates
+            OnAfterResetBindings(EventArgs.Empty);
+         }
+         finally
+         {
+            _resetInProgress = false;
+         }
+      }
 
       /// <summary>
       /// Refresh the SlotModel list from the ClientDictionary.
       /// </summary>
       private void RefreshSlotList()
       {
-         //lock (SlotListLock)
-         //{
-            _slotList.Clear();
-            foreach (var slot in _clientDictionary.Slots)
-            {
-               _slotList.Add(slot);
-            }
-            string message = String.Format(CultureInfo.InvariantCulture, "Number of slots: {0}", _slotList.Count);
-            _logger.Debug(message);
-            Debug.WriteLine(message);
-         //}
+         _slotList.Clear();
+         foreach (var slot in _clientDictionary.Slots)
+         {
+            _slotList.Add(slot);
+         }
+         string message = String.Format(CultureInfo.InvariantCulture, "Number of slots: {0}", _slotList.Count);
+         Debug.WriteLine(message);
       }
 
       /// <summary>

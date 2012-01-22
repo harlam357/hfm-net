@@ -286,14 +286,17 @@ namespace HFM.Client
                // send authentication
                SendCommand("auth " + password);
             }
-            // send connected event
-            OnConnectedChanged(new ConnectedChangedEventArgs(true)); // maybe use Connected property?
-            // send status message
-            OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
-               "Connected to {0}:{1}", host, port), TraceLevel.Info));
-            // start listening for messages
-            // from the network stream
-            _timer.Start();
+            if (Connected)
+            {
+               // send connected event
+               OnConnectedChanged(new ConnectedChangedEventArgs(true)); // maybe use Connected property?
+               // send status message
+               OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture, 
+                  "Connected to {0}:{1}", host, port), TraceLevel.Info));
+               // start listening for messages
+               // from the network stream
+               _timer.Start();
+            }
          }
          finally
          {

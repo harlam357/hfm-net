@@ -46,6 +46,7 @@ namespace HFM.Core.Tests
          unitInfo1.ProjectClone = 2;
          unitInfo1.ProjectGen = 3;
          unitInfo1.FinishedTime = new DateTime(2010, 1, 1);
+         unitInfo1.QueueIndex = 0;
          var currentUnitInfo = new UnitInfoLogic { CurrentProtein = new Protein(), UnitInfoData = unitInfo1 };
 
          var unitInfo1Clone = unitInfo1.DeepClone();
@@ -55,9 +56,11 @@ namespace HFM.Core.Tests
          unitInfo1Clone.UnitFrames.Add(3, new UnitFrame { FrameDuration = TimeSpan.FromMinutes(5), FrameID = 3 });
          var unitInfoLogic1 = new UnitInfoLogic { CurrentProtein = new Protein(), UnitInfoData = unitInfo1Clone };
 
+         var parsedUnits = new[] { unitInfoLogic1 };
+
          // arrange
-         //database.Stub(x => x.Connected).Return(true);
-         //database.Expect(x => x.WriteUnitInfo(null)).IgnoreArguments().Repeat.Times(1);
+         database.Stub(x => x.Connected).Return(true);
+         database.Expect(x => x.WriteUnitInfo(null)).IgnoreArguments().Repeat.Times(1);
 
          var benchmarkClient = new BenchmarkClient("Owner", "Path");
 
@@ -67,14 +70,14 @@ namespace HFM.Core.Tests
          Assert.IsNull(benchmarkCollection.GetBenchmark(currentUnitInfo.UnitInfoData));
 
          // act
-         fahClient.UpdateBenchmarkData(currentUnitInfo, unitInfoLogic1);
+         fahClient.UpdateBenchmarkData(currentUnitInfo, parsedUnits, 0);
 
          // assert after act
          Assert.AreEqual(true, benchmarkCollection.Contains(benchmarkClient));
          Assert.AreEqual(true, new List<int>(benchmarkCollection.GetBenchmarkProjects(benchmarkClient)).Contains(2669));
          Assert.AreEqual(TimeSpan.FromMinutes(5), benchmarkCollection.GetBenchmark(currentUnitInfo.UnitInfoData).AverageFrameTime);
 
-         //database.VerifyAllExpectations();
+         database.VerifyAllExpectations();
       }
    }
 }

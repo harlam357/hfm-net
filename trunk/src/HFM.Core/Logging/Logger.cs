@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Core Logger
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,8 +18,10 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 using Castle.Core.Logging;
 
@@ -44,20 +46,29 @@ namespace HFM.Core.Logging
          throw new NotImplementedException();
       }
 
+      private static readonly object LogLock = new object();
+
       protected override void Log(LoggerLevel loggerLevel, string loggerName, string message, Exception exception)
       {
-         string formattedMessage = FormatMessage(loggerLevel, message);
-         if (loggerLevel <= Level)
+         lock (LogLock)
          {
-            OnTextMessage(new TextMessageEventArgs(formattedMessage));
-
-            if (exception == null)
+            if (loggerLevel <= Level)
             {
-               Trace.WriteLine(formattedMessage);
-            }
-            else
-            {
-               Trace.WriteLine(exception.ToString());
+               if (exception == null)
+               {
+                  var lines = message.Split(new[] { Environment.NewLine }, StringSplitOptions.None).Select(x => FormatMessage(loggerLevel, x));
+                  OnTextMessage(new TextMessageEventArgs(lines));
+                  foreach (var line in lines)
+                  {
+                     Trace.WriteLine(line);
+                  }
+               }
+               else
+               {
+                  string formattedMessage = FormatMessage(loggerLevel, message);
+                  OnTextMessage(new TextMessageEventArgs(new[] { formattedMessage }));
+                  Trace.WriteLine(exception.ToString());
+               }
             }
          }
       }
@@ -156,16 +167,16 @@ namespace HFM.Core.Logging
    [CoverageExclude]
    public class TextMessageEventArgs : EventArgs
    {
-      private readonly string _message;
+      private readonly IEnumerable<string> _messages;
 
-      public string Message
+      public IEnumerable<string> Messages
       {
-         get { return _message; }
+         get { return _messages; }
       }
 
-      public TextMessageEventArgs(string message)
+      public TextMessageEventArgs(IEnumerable<string> messages)
       {
-         _message = message;
+         _messages = messages;
       }
    }
 }

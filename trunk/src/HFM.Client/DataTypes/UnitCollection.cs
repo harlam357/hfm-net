@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Net;
 
 using Newtonsoft.Json.Linq;
@@ -29,7 +30,7 @@ using HFM.Client.Converters;
 
 namespace HFM.Client.DataTypes
 {
-   public sealed class UnitCollection : TypedMessageCollection, IList<Unit>
+   public sealed class UnitCollection : TypedMessageCollection, IList<Unit>, IEquatable<UnitCollection>
    {
       private readonly List<Unit> _units;
 
@@ -239,9 +240,43 @@ namespace HFM.Client.DataTypes
       }
 
       #endregion
+
+      #region Equality Methods
+
+      public bool Equals(UnitCollection other)
+      {
+         if (ReferenceEquals(null, other)) return false;
+         if (ReferenceEquals(this, other)) return true;
+         return other._units.SequenceEqual(_units);
+      }
+
+      public override bool Equals(object obj)
+      {
+         if (ReferenceEquals(null, obj)) return false;
+         if (ReferenceEquals(this, obj)) return true;
+         if (obj.GetType() != typeof(UnitCollection)) return false;
+         return Equals((UnitCollection)obj);
+      }
+
+      public override int GetHashCode()
+      {
+         return (_units != null ? _units.GetHashCode() : 0);
+      }
+
+      public static bool operator ==(UnitCollection left, UnitCollection right)
+      {
+         return Equals(left, right);
+      }
+
+      public static bool operator !=(UnitCollection left, UnitCollection right)
+      {
+         return !Equals(left, right);
+      }
+
+      #endregion
    }
 
-   public class Unit : ITypedMessageObject
+   public class Unit : ITypedMessageObject, IEquatable<Unit>
    {
       public Unit()
       {
@@ -376,6 +411,78 @@ namespace HFM.Client.DataTypes
       void ITypedMessageObject.AddError(MessagePropertyConversionError error)
       {
          _errors.Add(error);
+      }
+
+      #endregion
+
+      #region Equality Methods
+
+      public bool Equals(Unit other)
+      {
+         if (ReferenceEquals(null, other)) return false;
+         if (ReferenceEquals(this, other)) return true;
+         return other.Id == Id && Equals(other.State, State) && Equals(other.StateEnum, StateEnum) && other.Project == Project && other.Run == Run && other.Clone == Clone && other.Gen == Gen && Equals(other.Core, Core) && Equals(other.UnitId, UnitId) && Equals(other.PercentDone, PercentDone) && other.TotalFrames == TotalFrames && other.FramesDone == FramesDone && Equals(other.Assigned, Assigned) && other.AssignedDateTime.Equals(AssignedDateTime) && Equals(other.Timeout, Timeout) && other.TimeoutDateTime.Equals(TimeoutDateTime) && Equals(other.Deadline, Deadline) && other.DeadlineDateTime.Equals(DeadlineDateTime) && Equals(other.WorkServer, WorkServer) && Equals(other.WorkServerIPAddress, WorkServerIPAddress) && Equals(other.CollectionServer, CollectionServer) && Equals(other.CollectionServerIPAddress, CollectionServerIPAddress) && Equals(other.WaitingOn, WaitingOn) && other.Attempts == Attempts && Equals(other.NextAttempt, NextAttempt) && other.NextAttemptTimeSpan.Equals(NextAttemptTimeSpan) && other.Slot == Slot && Equals(other.Eta, Eta) && other.EtaTimeSpan.Equals(EtaTimeSpan) && other.Ppd.Equals(Ppd) && Equals(other.Tpf, Tpf) && other.TpfTimeSpan.Equals(TpfTimeSpan) && other.BaseCredit.Equals(BaseCredit) && other.CreditEstimate.Equals(CreditEstimate) && Equals(other.Description, Description);
+      }
+
+      public override bool Equals(object obj)
+      {
+         if (ReferenceEquals(null, obj)) return false;
+         if (ReferenceEquals(this, obj)) return true;
+         if (obj.GetType() != typeof(Unit)) return false;
+         return Equals((Unit)obj);
+      }
+
+      public override int GetHashCode()
+      {
+         unchecked
+         {
+            int result = Id;
+            result = (result * 397) ^ (State != null ? State.GetHashCode() : 0);
+            result = (result * 397) ^ StateEnum.GetHashCode();
+            result = (result * 397) ^ Project;
+            result = (result * 397) ^ Run;
+            result = (result * 397) ^ Clone;
+            result = (result * 397) ^ Gen;
+            result = (result * 397) ^ (Core != null ? Core.GetHashCode() : 0);
+            result = (result * 397) ^ (UnitId != null ? UnitId.GetHashCode() : 0);
+            result = (result * 397) ^ (PercentDone != null ? PercentDone.GetHashCode() : 0);
+            result = (result * 397) ^ TotalFrames;
+            result = (result * 397) ^ FramesDone;
+            result = (result * 397) ^ (Assigned != null ? Assigned.GetHashCode() : 0);
+            result = (result * 397) ^ (AssignedDateTime.HasValue ? AssignedDateTime.Value.GetHashCode() : 0);
+            result = (result * 397) ^ (Timeout != null ? Timeout.GetHashCode() : 0);
+            result = (result * 397) ^ (TimeoutDateTime.HasValue ? TimeoutDateTime.Value.GetHashCode() : 0);
+            result = (result * 397) ^ (Deadline != null ? Deadline.GetHashCode() : 0);
+            result = (result * 397) ^ (DeadlineDateTime.HasValue ? DeadlineDateTime.Value.GetHashCode() : 0);
+            result = (result * 397) ^ (WorkServer != null ? WorkServer.GetHashCode() : 0);
+            result = (result * 397) ^ (WorkServerIPAddress != null ? WorkServerIPAddress.GetHashCode() : 0);
+            result = (result * 397) ^ (CollectionServer != null ? CollectionServer.GetHashCode() : 0);
+            result = (result * 397) ^ (CollectionServerIPAddress != null ? CollectionServerIPAddress.GetHashCode() : 0);
+            result = (result * 397) ^ (WaitingOn != null ? WaitingOn.GetHashCode() : 0);
+            result = (result * 397) ^ Attempts;
+            result = (result * 397) ^ (NextAttempt != null ? NextAttempt.GetHashCode() : 0);
+            result = (result * 397) ^ (NextAttemptTimeSpan.HasValue ? NextAttemptTimeSpan.Value.GetHashCode() : 0);
+            result = (result * 397) ^ Slot;
+            result = (result * 397) ^ (Eta != null ? Eta.GetHashCode() : 0);
+            result = (result * 397) ^ (EtaTimeSpan.HasValue ? EtaTimeSpan.Value.GetHashCode() : 0);
+            result = (result * 397) ^ Ppd.GetHashCode();
+            result = (result * 397) ^ (Tpf != null ? Tpf.GetHashCode() : 0);
+            result = (result * 397) ^ (TpfTimeSpan.HasValue ? TpfTimeSpan.Value.GetHashCode() : 0);
+            result = (result * 397) ^ BaseCredit.GetHashCode();
+            result = (result * 397) ^ CreditEstimate.GetHashCode();
+            result = (result * 397) ^ (Description != null ? Description.GetHashCode() : 0);
+            return result;
+         }
+      }
+
+      public static bool operator ==(Unit left, Unit right)
+      {
+         return Equals(left, right);
+      }
+
+      public static bool operator !=(Unit left, Unit right)
+      {
+         return !Equals(left, right);
       }
 
       #endregion
