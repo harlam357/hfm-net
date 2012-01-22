@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -29,7 +30,7 @@ using HFM.Core;
 
 namespace HFM.Forms.Models
 {
-   internal sealed class MainGridModel
+   public sealed class MainGridModel
    {
       public event EventHandler BeforeResetBindings;
       public event EventHandler AfterResetBindings;
@@ -89,6 +90,10 @@ namespace HFM.Forms.Models
       private readonly ISynchronizeInvoke _syncObject;
       private readonly IClientDictionary _clientDictionary;
       private readonly SlotModelSortableBindingList _slotList;
+      public IEnumerable<SlotModel> SlotCollection
+      {
+         get { return _slotList; }
+      }
       private readonly BindingSource _bindingSource;
       public BindingSource BindingSource
       {
@@ -247,7 +252,7 @@ namespace HFM.Forms.Models
    }
 
    [CoverageExclude]
-   internal sealed class IndexChangedEventArgs : EventArgs
+   public sealed class IndexChangedEventArgs : EventArgs
    {
       private readonly int _index;
 

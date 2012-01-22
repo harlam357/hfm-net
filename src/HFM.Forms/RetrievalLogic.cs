@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Retrieval Logic Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,16 +20,16 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 
 using Castle.Core.Logging;
 
 using HFM.Core;
+using HFM.Forms.Models;
 
 namespace HFM.Forms
 {
-   public class RetrievalLogic
+   public sealed class RetrievalLogic
    {
       #region Fields
 
@@ -89,12 +89,13 @@ namespace HFM.Forms
 
       private readonly IPreferenceSet _prefs;
       private readonly IClientDictionary _clientDictionary;
+      private readonly MainGridModel _mainGridModel;
 
       #endregion
 
       #endregion
 
-      public RetrievalLogic(IPreferenceSet prefs, IClientDictionary clientDictionary)
+      public RetrievalLogic(IPreferenceSet prefs, IClientDictionary clientDictionary, MainGridModel mainGridModel)
       {
          _prefs = prefs;
          _clientDictionary = clientDictionary;
@@ -110,6 +111,7 @@ namespace HFM.Forms
                                                           RetrieveSingleClient(e.Name);
                                                        }
                                                     };
+         _mainGridModel = mainGridModel;
       }
 
       public void Initialize()
@@ -176,7 +178,7 @@ namespace HFM.Forms
 
                _logger.Info("Starting Web Generation...");
 
-               var slots = _clientDictionary.Slots.ToList();
+               var slots = _mainGridModel.SlotCollection;
                _markupGenerator.Generate(slots);
                _websiteDeployer.DeployWebsite(_markupGenerator.HtmlFilePaths, _markupGenerator.XmlFilePaths, slots);
 

@@ -36,6 +36,10 @@ namespace HFM.Forms.Configuration
       {
          #region Data Models
 
+         // MainGridModel - Singleton
+         container.Register(
+            Component.For<Models.MainGridModel>());
+
          // UserStatsDataModel - Singleton
          container.Register(
             Component.For<Models.UserStatsDataModel>());
@@ -104,7 +108,7 @@ namespace HFM.Forms.Configuration
 
          // IMainView - Singleton
          container.Register(
-            Component.For<IMainView>()
+            Component.For<System.ComponentModel.ISynchronizeInvoke, IMainView>()
                .ImplementedBy<MainForm>());
 
          // IMessagesView - Singleton
