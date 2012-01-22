@@ -90,7 +90,7 @@
                   </td>
                   <td class="Plain">
                      <xsl:choose>
-                        <xsl:when test="LogFilesAvailable='true' and LogFileName!=''">
+                        <xsl:when test="LogFileAvailable='true' and LogFileName!=''">
                            <a><xsl:attribute name="href"><xsl:value-of select="LogFileName"/></xsl:attribute>Full Log File</a>
                         </xsl:when>
                      </xsl:choose>
