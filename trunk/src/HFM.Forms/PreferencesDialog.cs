@@ -58,8 +58,8 @@ namespace HFM.Forms
 
       private const string XsltExt = "xslt";
       private const string XsltFilter = "XML Transform (*.xslt;*.xsl)|*.xslt;*.xsl";
-      private const string HfmExt = "hfm";
-      private const string HfmFilter = "HFM Configuration Files|*.hfm";
+      private const string HfmExt = "hfmx";
+      private const string HfmFilter = "HFM Configuration Files|*.hfmx";
       private const string ExeExt = "exe";
       private const string ExeFilter = "Program Files|*.exe";
       
@@ -1067,6 +1067,11 @@ namespace HFM.Forms
                if (dirInfo.Exists)
                {
                   openConfigDialog.InitialDirectory = dirInfo.FullName;
+                  openConfigDialog.FileName = String.Empty;
+               }
+               else
+               {
+                  openConfigDialog.InitialDirectory = String.Empty;
                   openConfigDialog.FileName = String.Empty;
                }
             }

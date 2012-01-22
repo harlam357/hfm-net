@@ -107,14 +107,14 @@ namespace HFM.Forms
 
       #region Constructor
 
-      public MainPresenter(IMainView view, IMessagesView messagesView, IMessageBoxView messageBoxView,
+      public MainPresenter(MainGridModel mainGridModel, IMainView view, IMessagesView messagesView, IMessageBoxView messageBoxView,
                            IOpenFileDialogView openFileDialogView, ISaveFileDialogView saveFileDialogView,
                            IClientDictionary clientDictionary, IProteinDictionary proteinDictionary,
                            IUnitInfoCollection unitInfoCollection, IUpdateLogic updateLogic, 
                            RetrievalLogic retrievalLogic, IExternalProcessStarter processStarter, 
                            IPreferenceSet prefs, IClientSettingsManager settingsManager)
       {
-         _gridModel = ServiceLocator.Resolve<MainGridModel>();
+         _gridModel = mainGridModel;
          //_gridModel.BeforeResetBindings += delegate { _view.DataGridView.FreezeSelectionChanged = true; };
          _gridModel.AfterResetBindings += delegate
                                           {
