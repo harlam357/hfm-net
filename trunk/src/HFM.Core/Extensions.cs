@@ -199,10 +199,12 @@ namespace HFM.Core
             case "GROCVS":
             case "GRO-A3":
             case "GRO-A5":
+            case "GRO-A6":
                return SlotType.SMP;
             case "GROGPU2":
             case "GROGPU2-MT":
             case "OPENMMGPU":
+            case "OPENMM_OPENCL":
             case "ATI-DEV":
             case "NVIDIA-DEV":
                return SlotType.GPU;
@@ -240,6 +242,7 @@ namespace HFM.Core
             case "A2": // Gromacs SMP
             case "A3": // Gromacs SMP2
             case "A5": // Gromacs SMP2
+            case "A6": // Gromacs SMP2
                return SlotType.SMP;
             case "11": // GPU2 - GROGPU2
             case "12": // GPU2 - ATI-DEV
