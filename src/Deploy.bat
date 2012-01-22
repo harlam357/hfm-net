@@ -9,25 +9,34 @@ echo Deploying Assemblies...
 copy /y HFM.exe %1
 copy /y HFM.exe.config %1
 copy /y HFM.Client.dll %1
+copy /y HFM.Client.xml %1
 copy /y HFM.Core.dll %1
 copy /y HFM.Core.DataTypes.dll %1
+copy /y HFM.Core.DataTypes.xml %1
 copy /Y HFM.Core.Plugins.dll %1
+copy /Y HFM.Core.Plugins.xml %1
 copy /y HFM.Forms.dll %1
 copy /Y HFM.Log.dll %1
+copy /Y HFM.Log.xml %1
 copy /Y HFM.Preferences.dll %1
 copy /Y HFM.Proteins.dll %1
+copy /Y HFM.Proteins.xml %1
 copy /Y HFM.Queue.dll %1
+copy /Y HFM.Queue.xml %1
 copy /Y HTMLparser.dll %1
 copy /Y harlam357.Net.dll %1
 copy /Y harlam357.Security.dll %1
 copy /Y harlam357.Windows.Forms.dll %1
 copy /Y ZedGraph.dll %1
+copy /Y ZedGraph.xml %1
 copy /Y Castle.Core.dll %1
 copy /Y Castle.Windsor.dll %1
 copy /Y protobuf-net.dll %1
+copy /Y protobuf-net.xml %1
 copy /Y System.Linq.Dynamic.dll %1
 copy /Y AutoMapper.dll %1
 copy /Y Newtonsoft.Json.Net35.dll %1
+copy /Y Newtonsoft.Json.Net35.xml %1
 
 if not exist %1\SQLite md %1\SQLite
 if not exist %1\SQLite\x86 md %1\SQLite\x86

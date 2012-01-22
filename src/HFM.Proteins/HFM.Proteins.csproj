@@ -51,6 +51,7 @@
     <BaseAddress>27262976</BaseAddress>
     <DebugSymbols>true</DebugSymbols>
     <CodeAnalysisRuleSet>..\..\..\hfm-net\src\HFM.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\Release\HFM.Proteins.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>

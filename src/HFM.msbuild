@@ -53,7 +53,7 @@
    <Target Name="Compile" DependsOnTargets="AssemblyVersion;CreateArtifactsFolder">
       <MSBuild Projects="HFM.All.sln"
                Targets="Rebuild"
-               Properties="Configuration=ScriptedRelease;AssemblyOriginatorKeyFile=$(AssemblyOriginatorKeyFile)" />
+               Properties="Configuration=ScriptedRelease;AssemblyOriginatorKeyFile=$(AssemblyOriginatorKeyFile);NoWarn=1591" />
 
       <CallTarget Targets="NUnit" />
    </Target>
