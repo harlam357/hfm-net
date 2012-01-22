@@ -114,7 +114,7 @@ namespace HFM.Forms
                            RetrievalLogic retrievalLogic, IExternalProcessStarter processStarter, 
                            IPreferenceSet prefs, IClientSettingsManager settingsManager)
       {
-         _gridModel = new MainGridModel(prefs, view, clientDictionary);
+         _gridModel = new MainGridModel(prefs, view, clientDictionary) { Logger = _logger };
          //_gridModel.BeforeResetBindings += delegate { _view.DataGridView.FreezeSelectionChanged = true; };
          _gridModel.AfterResetBindings += delegate
                                           {

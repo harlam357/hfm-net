@@ -220,8 +220,8 @@ namespace HFM.Core
       public IEnumerable<SlotModel> Slots
       {
          // cacheLock handled by Values property
-         get { return Values.SelectMany(client => client.Slots); }
-         //get { return Values.SelectMany(client => client.Slots).ToList().AsReadOnly(); }
+         //get { return Values.SelectMany(client => client.Slots); }
+         get { return Values.SelectMany(client => client.Slots).ToList().AsReadOnly(); }
       }
 
       public void Add(ClientSettings settings)

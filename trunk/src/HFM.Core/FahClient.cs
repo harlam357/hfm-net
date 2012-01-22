@@ -169,18 +169,42 @@ namespace HFM.Core
          }
          else if (e.DataType == typeof(LogRestart))
          {
+            string logRestart = _fahClient.GetMessage<LogRestart>().Value;
             // clear
             _logText.Length = 0;
-            _logText.Append(_fahClient.GetMessage<LogRestart>().Value);
-            string fahLogPath = Path.Combine(Prefs.CacheDirectory, Settings.CachedFahLogFileName());
-            File.WriteAllText(fahLogPath, _fahClient.GetMessage<LogRestart>().Value);
+            WriteToLocalFahLogCache(logRestart);
+            AppendToLogBuffer(logRestart);
          }
          else if (e.DataType == typeof(LogUpdate))
          {
-            _logText.Append(_fahClient.GetMessage<LogUpdate>().Value);
-            string fahLogPath = Path.Combine(Prefs.CacheDirectory, Settings.CachedFahLogFileName());
-            File.AppendAllText(fahLogPath, _fahClient.GetMessage<LogUpdate>().Value);
+            string logUpdate = _fahClient.GetMessage<LogUpdate>().Value;
+            WriteToLocalFahLogCache(logUpdate);
+            AppendToLogBuffer(logUpdate);
          }
+      }
+
+      private void WriteToLocalFahLogCache(string value)
+      {
+         string fahLogPath = Path.Combine(Prefs.CacheDirectory, Settings.CachedFahLogFileName());
+         if (_logText.Length == 0)
+         {
+            File.WriteAllText(fahLogPath, value);
+         }
+         else
+         {
+            File.AppendAllText(fahLogPath, value);
+         }
+      }
+
+      private void AppendToLogBuffer(string value)
+      {
+         Debug.Assert(value != null);
+
+         if (_logText.Length > 450000)
+         {
+            _logText.Remove(0, value.Length);
+         }
+         _logText.Append(value);
       }
 
       private void FahClientUpdateFinished(object sender, EventArgs e)
@@ -295,7 +319,8 @@ namespace HFM.Core
       private void SetUpdateCommands()
       {
          _fahClient.SendCommand("updates clear");
-         _fahClient.SendCommand("log-updates restart");
+         //_fahClient.SendCommand("log-updates restart");
+         _fahClient.SendCommand("log-updates start");
          _fahClient.SendCommand("updates add 0 5 $heartbeat");
          _fahClient.SendCommand("updates add 1 1 $info");
          _fahClient.SendCommand("updates add 2 1 $(options -a)");
@@ -341,10 +366,10 @@ namespace HFM.Core
                if (units[key] != null)
                {
                   parsedUnits[key] = BuildUnitInfoLogic(slotModel, units[key]);
-                  //if (!parsedUnits[key].FinishedTime.Equals(DateTime.MinValue))
-                  //{
-                  //   UpdateUnitInfoDatabase(parsedUnits[key]);
-                  //}
+                  if (!parsedUnits[key].FinishedTime.Equals(DateTime.MinValue))
+                  {
+                     UpdateUnitInfoDatabase(parsedUnits[key]);
+                  }
                }
             }
 

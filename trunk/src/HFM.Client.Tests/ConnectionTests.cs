@@ -157,7 +157,31 @@ namespace HFM.Client.Tests
          _stream.VerifyAllExpectations();
       }
 
-      private static void SetupSuccessfulConnectionExpectations(ITcpClient tcpClient, INetworkStream stream)
+      [Test]
+      public void ConnectTest1NoPassword()
+      {
+         using (var connection = new Connection(CreateClientFactory()))
+         {
+            SetupSuccessfulConnectionExpectations(_tcpClient, _stream, false);
+
+            bool connectedChangedFired = false;
+            bool statusMessageFired = false;
+            connection.ConnectedChanged += (sender, args) => connectedChangedFired = true;
+            connection.StatusMessage += (sender, args) => statusMessageFired = true;
+            // set to 5 minutes so the update loop never gets a chance to fire
+            connection.ReceiveLoopTime = 300000;
+            connection.Connect("server", 10000);
+
+            Assert.IsTrue(connectedChangedFired);
+            Assert.IsTrue(statusMessageFired);
+            Assert.IsTrue(connection.UpdateEnabled);
+         }
+
+         _tcpClient.VerifyAllExpectations();
+         _stream.VerifyAllExpectations();
+      }
+
+      private static void SetupSuccessfulConnectionExpectations(ITcpClient tcpClient, INetworkStream stream, bool withPassword = true)
       {
          // client not connected
          tcpClient.Expect(x => x.Client).Return(null);
@@ -169,13 +193,16 @@ namespace HFM.Client.Tests
          tcpClient.Expect(x => x.EndConnect(asyncResult));
          tcpClient.Expect(x => x.GetStream()).Return(stream);
 
-         // setup Connected property expectations
-         tcpClient.Expect(x => x.Client).Return(new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)).Repeat.AtLeastOnce();
-         tcpClient.Expect(x => x.Connected).Return(true).Repeat.AtLeastOnce();
-
-         // setup SendCommand() expectation
-         var buffer = Encoding.ASCII.GetBytes("auth password\n");
-         stream.Expect(x => x.Write(buffer, 0, buffer.Length));
+         if (withPassword)
+         {
+            // setup Connected property expectations
+            tcpClient.Expect(x => x.Client).Return(new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)).Repeat.AtLeastOnce();
+            tcpClient.Expect(x => x.Connected).Return(true).Repeat.AtLeastOnce();
+   
+            // setup SendCommand() expectation
+            var buffer = Encoding.ASCII.GetBytes("auth password\n");
+            stream.Expect(x => x.Write(buffer, 0, buffer.Length));
+         }
       }
 
       private void Connect(Connection connection)

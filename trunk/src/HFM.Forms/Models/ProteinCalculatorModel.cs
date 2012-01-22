@@ -22,16 +22,17 @@ using System.Collections.Generic;
 using System.ComponentModel;
 
 using HFM.Core;
-using HFM.Core.DataTypes;
 
 namespace HFM.Forms.Models
 {
-   public sealed class ProteinCalculatorModel : INotifyPropertyChanged 
+   public sealed class ProteinCalculatorModel : INotifyPropertyChanged
    {
+      private readonly IPreferenceSet _prefs;
       private readonly IProteinDictionary _proteinDictionary;
 
-      public ProteinCalculatorModel(IProteinDictionary proteinDictionary)
+      public ProteinCalculatorModel(IPreferenceSet prefs, IProteinDictionary proteinDictionary)
       {
+         _prefs = prefs;
          _proteinDictionary = proteinDictionary;
       }
 
@@ -54,19 +55,21 @@ namespace HFM.Forms.Models
                totalTimeByUser = totalTimeByFrame;
             }
          }
+
+         var decimalPlaces = _prefs.Get<int>(Preference.DecimalPlaces);
          var values = protein.GetProductionValues(frameTime, totalTimeByUser, totalTimeByFrame, true);
          CoreName = protein.Core;
          SlotType = protein.Core.ToSlotType().ToString();
          NumberOfAtoms = protein.NumberOfAtoms;
-         CompletionTime = Math.Round((TotalWuTimeEnabled ? totalTimeByUser.TotalDays : totalTimeByFrame.TotalDays), Default.MaxDecimalPlaces);
+         CompletionTime = Math.Round((TotalWuTimeEnabled ? totalTimeByUser.TotalDays : totalTimeByFrame.TotalDays), decimalPlaces);
          PreferredDeadline = protein.PreferredDays;
          FinalDeadline = protein.MaximumDays;
          KFactor = protein.KFactor;
-         BonusMultiplier = TotalWuTimeEnabled ? values.DownloadTimeBonusMulti : values.FrameTimeBonusMulti;
+         BonusMultiplier = Math.Round((TotalWuTimeEnabled ? values.DownloadTimeBonusMulti : values.FrameTimeBonusMulti), decimalPlaces);
          BaseCredit = values.BaseCredit;
-         TotalCredit = TotalWuTimeEnabled ? values.DownloadTimeBonusCredit : values.FrameTimeBonusCredit;
+         TotalCredit = Math.Round((TotalWuTimeEnabled ? values.DownloadTimeBonusCredit : values.FrameTimeBonusCredit), decimalPlaces);
          BasePpd = values.BasePPD;
-         TotalPpd = TotalWuTimeEnabled ? values.DownloadTimeBonusPPD : values.FrameTimeBonusPPD;
+         TotalPpd = Math.Round((TotalWuTimeEnabled ? values.DownloadTimeBonusPPD : values.FrameTimeBonusPPD), decimalPlaces);
       }
 
       #region Properties
