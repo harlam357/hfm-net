@@ -44,7 +44,7 @@ using HFM.Proteins;
 
 namespace HFM.Forms
 {
-   public class MainPresenter
+   public sealed class MainPresenter
    {
       #region Properties
    
@@ -114,7 +114,7 @@ namespace HFM.Forms
                            RetrievalLogic retrievalLogic, IExternalProcessStarter processStarter, 
                            IPreferenceSet prefs, IClientSettingsManager settingsManager)
       {
-         _gridModel = new MainGridModel(prefs, view, clientDictionary) { Logger = _logger };
+         _gridModel = ServiceLocator.Resolve<MainGridModel>();
          //_gridModel.BeforeResetBindings += delegate { _view.DataGridView.FreezeSelectionChanged = true; };
          _gridModel.AfterResetBindings += delegate
                                           {
