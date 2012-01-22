@@ -20,10 +20,12 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Windows.Forms;
 
+using Castle.Core.Logging;
+
 using HFM.Core;
-using HFM.Core.DataTypes;
 
 namespace HFM.Forms.Models
 {
@@ -32,6 +34,16 @@ namespace HFM.Forms.Models
       public event EventHandler BeforeResetBindings;
       public event EventHandler AfterResetBindings;
       public event EventHandler<IndexChangedEventArgs> SelectedSlotChanged;
+
+      private ILogger _logger = NullLogger.Instance;
+
+      public ILogger Logger
+      {
+         [CoverageExclude]
+         get { return _logger; }
+         [CoverageExclude]
+         set { _logger = value; }
+      }
 
       private SlotModel _selectedSlot;
       public SlotModel SelectedSlot
@@ -146,22 +158,24 @@ namespace HFM.Forms.Models
          OnAfterResetBindings(EventArgs.Empty);
       }
 
-      private static readonly object SlotListLock = new object();
+      //private static readonly object SlotListLock = new object();
 
       /// <summary>
       /// Refresh the SlotModel list from the ClientDictionary.
       /// </summary>
       private void RefreshSlotList()
       {
-         lock (SlotListLock)
-         {
+         //lock (SlotListLock)
+         //{
             _slotList.Clear();
             foreach (var slot in _clientDictionary.Slots)
             {
                _slotList.Add(slot);
             }
-            Debug.WriteLine("Number of slots: " + _slotList.Count);
-         }
+            string message = String.Format(CultureInfo.InvariantCulture, "Number of slots: {0}", _slotList.Count);
+            _logger.Debug(message);
+            Debug.WriteLine(message);
+         //}
       }
 
       /// <summary>

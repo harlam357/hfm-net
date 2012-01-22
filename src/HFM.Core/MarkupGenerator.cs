@@ -320,6 +320,7 @@ namespace HFM.Core
          slotSummary.NumberFormat = _prefs.PpdFormatString;
          slotSummary.UpdateDateTime = updateDateTime;
          slotSummary.SlotTotals = slots.GetSlotTotals();
+         //TODO: sort slots
          slotSummary.Slots = slots.Select(AutoMapper.Mapper.Map<SlotModel, SlotData>).ToList();
          return slotSummary;
       }

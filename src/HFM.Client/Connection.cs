@@ -242,6 +242,19 @@ namespace HFM.Client
       /// </summary>
       /// <param name="host">Hostname or IP Address</param>
       /// <param name="port">TCP Port</param>
+      /// <exception cref="InvalidOperationException">Throws if the client is already connected.</exception>
+      /// <exception cref="ArgumentNullException">Throws if either 'host' or 'password' argument is null.</exception>
+      /// <exception cref="TimeoutException">Throws if connection attempt times out.</exception>
+      public void Connect(string host, int port)
+      {
+         Connect(host, port, String.Empty);
+      }
+
+      /// <summary>
+      /// Connect to a Server.
+      /// </summary>
+      /// <param name="host">Hostname or IP Address</param>
+      /// <param name="port">TCP Port</param>
       /// <param name="password">Client Access Password</param>
       /// <exception cref="InvalidOperationException">Throws if the client is already connected.</exception>
       /// <exception cref="ArgumentNullException">Throws if either 'host' or 'password' argument is null.</exception>
@@ -268,8 +281,11 @@ namespace HFM.Client
             _tcpClient.EndConnect(ar);
             _stream = _tcpClient.GetStream();
 
-            // send authentication
-            SendCommand("auth " + password);
+            if (password.Length != 0)
+            {
+               // send authentication
+               SendCommand("auth " + password);
+            }
             // send connected event
             OnConnectedChanged(new ConnectedChangedEventArgs(true)); // maybe use Connected property?
             // send status message
