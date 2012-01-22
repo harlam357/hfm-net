@@ -76,6 +76,16 @@ namespace HFM.Core
       EffectiveRate
    }
 
+   /// <summary>
+   /// Bonus Calculation Types
+   /// </summary>
+   public enum BonusCalculationType
+   {
+      DownloadTime,
+      FrameTime,
+      None
+   }
+
    public enum TimeStyleType
    {
       Standard,

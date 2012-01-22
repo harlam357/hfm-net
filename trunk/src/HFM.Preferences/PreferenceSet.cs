@@ -29,7 +29,6 @@ using System.Globalization;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-using System.Windows.Forms;
 
 using Castle.Core.Logging;
 
@@ -147,7 +146,7 @@ namespace HFM.Preferences
 
       private static void Upgrade()
       {
-         string appVersionString = Core.Application.VersionWithRevision;
+         string appVersionString = Application.VersionWithRevision;
 
          if (Settings.Default.ApplicationVersion != appVersionString)
          {
@@ -175,18 +174,6 @@ namespace HFM.Preferences
       }
 
       /// <summary>
-      /// Get a Preference of Type T
-      /// </summary>
-      /// <typeparam name="T">Preference Data Type</typeparam>
-      /// <param name="key">Preference Key</param>
-      //[Obsolete("Use Get<T>()")]
-      [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
-      public T GetPreference<T>(Preference key)
-      {
-         return Get<T>(key);
-      }
-
-      /// <summary>
       /// Set a Preference of Type T
       /// </summary>
       /// <typeparam name="T">Preference Data Type</typeparam>
@@ -209,18 +196,6 @@ namespace HFM.Preferences
 
          throw new ArgumentException(String.Format(CultureInfo.CurrentCulture,
             "Preference '{0}' of Type '{1}' does not exist.", key, typeof(T)));
-      }
-
-      /// <summary>
-      /// Set a Preference of Type T
-      /// </summary>
-      /// <typeparam name="T">Preference Data Type</typeparam>
-      /// <param name="key">Preference Key</param>
-      /// <param name="value">Preference Value</param>
-      //[Obsolete("Use Set<T>()")]
-      public void SetPreference<T>(Preference key, T value)
-      {
-         Set(key, value);
       }
 
       private void SetupDictionary()
@@ -291,7 +266,7 @@ namespace HFM.Preferences
          _prefs.Add(Preference.AutoSaveConfig, new Metadata<bool>());
          _prefs.Add(Preference.PpdCalculation, new Metadata<PpdCalculationType>());
          _prefs.Add(Preference.DecimalPlaces, new Metadata<int>());
-         _prefs.Add(Preference.CalculateBonus, new Metadata<bool>());
+         _prefs.Add(Preference.CalculateBonus, new Metadata<BonusCalculationType>());
          _prefs.Add(Preference.EtaDate, new Metadata<bool>());
          _prefs.Add(Preference.LogFileViewer, new Metadata<string>());
          _prefs.Add(Preference.FileExplorer, new Metadata<string>());
@@ -416,7 +391,7 @@ namespace HFM.Preferences
          Set(Preference.AutoSaveConfig, Settings.Default.AutoSaveConfig);
          Set(Preference.PpdCalculation, GetPpdCalculation());
          Set(Preference.DecimalPlaces, Settings.Default.DecimalPlaces);
-         Set(Preference.CalculateBonus, Settings.Default.CalculateBonus);
+         Set(Preference.CalculateBonus, GetBonusCalculation());
          Set(Preference.EtaDate, Settings.Default.EtaDate);
          Set(Preference.LogFileViewer, Settings.Default.LogFileViewer);
          Set(Preference.FileExplorer, Settings.Default.FileExplorer);
@@ -653,6 +628,21 @@ namespace HFM.Preferences
          }
       }
 
+      private static BonusCalculationType GetBonusCalculation()
+      {
+         switch (Settings.Default.CalculateBonus)
+         {
+            case "DownloadTime":
+               return BonusCalculationType.DownloadTime;
+            case "FrameTime":
+               return BonusCalculationType.FrameTime;
+            case "None":
+               return BonusCalculationType.None;
+            default:
+               return BonusCalculationType.DownloadTime;
+         }
+      }
+
       private string DecryptEmailReportingServerPassword(string value, Symmetric symmetricProvider)
       {
          Debug.Assert(value != null);
@@ -830,7 +820,7 @@ namespace HFM.Preferences
             // if config file name is nothing, automatically set default config to false
             if (Settings.Default.DefaultConfigFile.Length == 0)
             {
-               SetPreference(Preference.UseDefaultConfigFile, false);
+               Set(Preference.UseDefaultConfigFile, false);
                Settings.Default.UseDefaultConfigFile = false;
             }
 
@@ -855,11 +845,11 @@ namespace HFM.Preferences
                raiseDecimalPlacesChanged = true;
             }
             Settings.Default.DecimalPlaces = Get<int>(Preference.DecimalPlaces);
-            if (Settings.Default.CalculateBonus != Get<bool>(Preference.CalculateBonus))
+            if (Settings.Default.CalculateBonus != Get<BonusCalculationType>(Preference.CalculateBonus).ToString())
             {
                raiseCalculateBonusChanged = true;
             }
-            Settings.Default.CalculateBonus = Get<bool>(Preference.CalculateBonus);
+            Settings.Default.CalculateBonus = Get<BonusCalculationType>(Preference.CalculateBonus).ToString();
             Settings.Default.EtaDate = Get<bool>(Preference.EtaDate);
             Settings.Default.LogFileViewer = Get<string>(Preference.LogFileViewer);
             Settings.Default.FileExplorer = Get<string>(Preference.FileExplorer);
@@ -1137,7 +1127,7 @@ namespace HFM.Preferences
       {
          get
          {
-            var decimalPlaces = GetPreference<int>(Preference.DecimalPlaces);
+            var decimalPlaces = Get<int>(Preference.DecimalPlaces);
 
             var sbldr = new StringBuilder("###,###,##0");
             if (decimalPlaces > 0)

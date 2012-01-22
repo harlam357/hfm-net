@@ -126,9 +126,8 @@ namespace HFM.Forms
          this.DuplicateUserCheckBox = new HFM.Forms.Controls.CheckBoxWrapper();
          this.DuplicateProjectCheckBox = new HFM.Forms.Controls.CheckBoxWrapper();
          this.chkEtaAsDate = new HFM.Forms.Controls.CheckBoxWrapper();
-         this.chkCalcBonus = new HFM.Forms.Controls.CheckBoxWrapper();
          this.label2 = new HFM.Forms.Controls.LabelWrapper();
-         this.cboPpdCalc = new HFM.Forms.Controls.ComboBoxWrapper();
+         this.PpdCalculationComboBox = new HFM.Forms.Controls.ComboBoxWrapper();
          this.chkOffline = new HFM.Forms.Controls.CheckBoxWrapper();
          this.chkColorLog = new HFM.Forms.Controls.CheckBoxWrapper();
          this.udDecimalPlaces = new System.Windows.Forms.NumericUpDown();
@@ -203,6 +202,8 @@ namespace HFM.Forms
          this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
          this.btnOK = new HFM.Forms.Controls.ButtonWrapper();
          this.btnCancel = new HFM.Forms.Controls.ButtonWrapper();
+         this.labelWrapper6 = new HFM.Forms.Controls.LabelWrapper();
+         this.BonusCalculationComboBox = new HFM.Forms.Controls.ComboBoxWrapper();
          this.tabControl1.SuspendLayout();
          this.tabSchdTasks.SuspendLayout();
          this.grpUpdateData.SuspendLayout();
@@ -1021,13 +1022,14 @@ namespace HFM.Forms
          // 
          // grpInteractiveOptions
          // 
+         this.grpInteractiveOptions.Controls.Add(this.BonusCalculationComboBox);
+         this.grpInteractiveOptions.Controls.Add(this.labelWrapper6);
          this.grpInteractiveOptions.Controls.Add(this.ShowUserStatsCheckBox);
          this.grpInteractiveOptions.Controls.Add(this.DuplicateUserCheckBox);
          this.grpInteractiveOptions.Controls.Add(this.DuplicateProjectCheckBox);
          this.grpInteractiveOptions.Controls.Add(this.chkEtaAsDate);
-         this.grpInteractiveOptions.Controls.Add(this.chkCalcBonus);
          this.grpInteractiveOptions.Controls.Add(this.label2);
-         this.grpInteractiveOptions.Controls.Add(this.cboPpdCalc);
+         this.grpInteractiveOptions.Controls.Add(this.PpdCalculationComboBox);
          this.grpInteractiveOptions.Controls.Add(this.chkOffline);
          this.grpInteractiveOptions.Controls.Add(this.chkColorLog);
          this.grpInteractiveOptions.Controls.Add(this.udDecimalPlaces);
@@ -1080,16 +1082,6 @@ namespace HFM.Forms
          this.chkEtaAsDate.Text = "Show ETA value as a Date and Time";
          this.chkEtaAsDate.UseVisualStyleBackColor = true;
          // 
-         // chkCalcBonus
-         // 
-         this.chkCalcBonus.AutoSize = true;
-         this.chkCalcBonus.Location = new System.Drawing.Point(256, 72);
-         this.chkCalcBonus.Name = "chkCalcBonus";
-         this.chkCalcBonus.Size = new System.Drawing.Size(179, 17);
-         this.chkCalcBonus.TabIndex = 8;
-         this.chkCalcBonus.Text = "Calculate Bonus Credit and PPD";
-         this.chkCalcBonus.UseVisualStyleBackColor = true;
-         // 
          // label2
          // 
          this.label2.AutoSize = true;
@@ -1099,14 +1091,14 @@ namespace HFM.Forms
          this.label2.TabIndex = 4;
          this.label2.Text = "Calculate PPD based on:";
          // 
-         // cboPpdCalc
+         // PpdCalculationComboBox
          // 
-         this.cboPpdCalc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-         this.cboPpdCalc.FormattingEnabled = true;
-         this.cboPpdCalc.Location = new System.Drawing.Point(367, 16);
-         this.cboPpdCalc.Name = "cboPpdCalc";
-         this.cboPpdCalc.Size = new System.Drawing.Size(113, 21);
-         this.cboPpdCalc.TabIndex = 5;
+         this.PpdCalculationComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+         this.PpdCalculationComboBox.FormattingEnabled = true;
+         this.PpdCalculationComboBox.Location = new System.Drawing.Point(367, 16);
+         this.PpdCalculationComboBox.Name = "PpdCalculationComboBox";
+         this.PpdCalculationComboBox.Size = new System.Drawing.Size(113, 21);
+         this.PpdCalculationComboBox.TabIndex = 5;
          // 
          // chkOffline
          // 
@@ -1130,7 +1122,7 @@ namespace HFM.Forms
          // 
          // udDecimalPlaces
          // 
-         this.udDecimalPlaces.Location = new System.Drawing.Point(367, 43);
+         this.udDecimalPlaces.Location = new System.Drawing.Point(367, 69);
          this.udDecimalPlaces.Name = "udDecimalPlaces";
          this.udDecimalPlaces.Size = new System.Drawing.Size(39, 20);
          this.udDecimalPlaces.TabIndex = 7;
@@ -1148,7 +1140,7 @@ namespace HFM.Forms
          // labelWrapper1
          // 
          this.labelWrapper1.AutoSize = true;
-         this.labelWrapper1.Location = new System.Drawing.Point(253, 47);
+         this.labelWrapper1.Location = new System.Drawing.Point(253, 73);
          this.labelWrapper1.Name = "labelWrapper1";
          this.labelWrapper1.Size = new System.Drawing.Size(108, 13);
          this.labelWrapper1.TabIndex = 6;
@@ -2046,6 +2038,24 @@ namespace HFM.Forms
          this.btnCancel.UseVisualStyleBackColor = true;
          this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
          // 
+         // labelWrapper6
+         // 
+         this.labelWrapper6.AutoSize = true;
+         this.labelWrapper6.Location = new System.Drawing.Point(227, 47);
+         this.labelWrapper6.Name = "labelWrapper6";
+         this.labelWrapper6.Size = new System.Drawing.Size(134, 13);
+         this.labelWrapper6.TabIndex = 13;
+         this.labelWrapper6.Text = "Calculate Bonus based on:";
+         // 
+         // BonusCalculationComboBox
+         // 
+         this.BonusCalculationComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+         this.BonusCalculationComboBox.FormattingEnabled = true;
+         this.BonusCalculationComboBox.Location = new System.Drawing.Point(367, 43);
+         this.BonusCalculationComboBox.Name = "BonusCalculationComboBox";
+         this.BonusCalculationComboBox.Size = new System.Drawing.Size(113, 21);
+         this.BonusCalculationComboBox.TabIndex = 14;
+         // 
          // PreferencesDialog
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2200,8 +2210,7 @@ namespace HFM.Forms
       private CheckBoxWrapper chkColorLog;
       private CheckBoxWrapper chkOffline;
       private LabelWrapper label2;
-      private ComboBoxWrapper cboPpdCalc;
-      private CheckBoxWrapper chkCalcBonus;
+      private ComboBoxWrapper PpdCalculationComboBox;
       private CheckBoxWrapper chkAllowRunningAsync;
       private RadioButtonWrapper radioActive;
       private RadioButtonWrapper radioPassive;
@@ -2259,5 +2268,7 @@ namespace HFM.Forms
       private RadioButtonWrapper WebGenTypePathRadioButton;
       private ValidatingTextBox WebSitePortTextBox;
       private LabelWrapper WebSitePortLabel;
+      private LabelWrapper labelWrapper6;
+      private ComboBoxWrapper BonusCalculationComboBox;
    }
 }

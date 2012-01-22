@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - External Process Starter Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -97,7 +97,7 @@ namespace HFM.Core
          string errorMessage = String.Format(CultureInfo.CurrentCulture, 
                "An error occured while attempting to show the HFM.log file.{0}{0}Please check the current Log File Viewer defined in the Preferences.",
                Environment.NewLine);
-         return RunProcess(_prefs.GetPreference<string>(Preference.LogFileViewer), logFilePath, errorMessage);
+         return RunProcess(_prefs.Get<string>(Preference.LogFileViewer), logFilePath, errorMessage);
       }
 
       /// <summary>
@@ -109,7 +109,7 @@ namespace HFM.Core
          string errorMessage = String.Format(CultureInfo.CurrentCulture,
                "An error occured while attempting to show the FAHlog.txt file.{0}{0}Please check the current Log File Viewer defined in the Preferences.",
                Environment.NewLine);
-         return RunProcess(_prefs.GetPreference<string>(Preference.LogFileViewer), logFilePath, errorMessage);
+         return RunProcess(_prefs.Get<string>(Preference.LogFileViewer), logFilePath, errorMessage);
       }
       
       /// <summary>
@@ -121,7 +121,7 @@ namespace HFM.Core
          string errorMessage = String.Format(CultureInfo.CurrentCulture,
                "An error occured while attempting to show '{0}'.{1}{1}Please check the current File Explorer defined in the Preferences.",
                path, Environment.NewLine);
-         return RunProcess(_prefs.GetPreference<string>(Preference.FileExplorer), path, errorMessage);
+         return RunProcess(_prefs.Get<string>(Preference.FileExplorer), path, errorMessage);
       }
 
       /// <summary>

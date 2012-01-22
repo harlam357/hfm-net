@@ -713,10 +713,10 @@ namespace HFM.Preferences.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool CalculateBonus {
+        [global::System.Configuration.DefaultSettingValueAttribute("DownloadTime")]
+        public string CalculateBonus {
             get {
-                return ((bool)(this["CalculateBonus"]));
+                return ((string)(this["CalculateBonus"]));
             }
             set {
                 this["CalculateBonus"] = value;

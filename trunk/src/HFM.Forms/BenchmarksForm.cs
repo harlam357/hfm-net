@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Benchmarks Form Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -125,7 +125,7 @@ namespace HFM.Forms
          UpdateClientsComboBinding();
          UpdateProjectListBoxBinding(LoadProjectID);
          lstColors.DataSource = _graphColors;
-         GraphLayoutType = _prefs.GetPreference<GraphLayoutType>(Preference.BenchmarksGraphLayoutType);
+         GraphLayoutType = _prefs.Get<GraphLayoutType>(Preference.BenchmarksGraphLayoutType);
          pnlClientLayout.DataSource = this;
          pnlClientLayout.ValueMember = "GraphLayoutType";
          
@@ -136,9 +136,9 @@ namespace HFM.Forms
       private void frmBenchmarks_FormClosing(object sender, FormClosingEventArgs e)
       {
          // Save state data
-         _prefs.SetPreference(Preference.BenchmarksFormLocation, Location);
-         _prefs.SetPreference(Preference.BenchmarksFormSize, Size);
-         _prefs.SetPreference(Preference.BenchmarksGraphLayoutType, GraphLayoutType);
+         _prefs.Set(Preference.BenchmarksFormLocation, Location);
+         _prefs.Set(Preference.BenchmarksFormSize, Size);
+         _prefs.Set(Preference.BenchmarksGraphLayoutType, GraphLayoutType);
          _prefs.Save();
       }
 
@@ -183,7 +183,7 @@ namespace HFM.Forms
 
          tabControl1.SuspendLayout();
 
-         int clientsPerGraph = _prefs.GetPreference<int>(Preference.BenchmarksClientsPerGraph);
+         int clientsPerGraph = _prefs.Get<int>(Preference.BenchmarksClientsPerGraph);
          SetupGraphTabs(list.Count, clientsPerGraph);
 
          int tabIndex = 1;
@@ -262,7 +262,7 @@ namespace HFM.Forms
       {
          _zedGraphManager.CreateFrameTimeGraph(GetFrameTimeGraph(tabIndex), lines, benchmarks, _graphColors);
          _zedGraphManager.CreatePpdGraph(GetPpdGraph(tabIndex), lines, benchmarks, _graphColors,
-            _prefs.GetPreference<int>(Preference.DecimalPlaces), protein, _prefs.GetPreference<bool>(Preference.CalculateBonus));
+            _prefs.Get<int>(Preference.DecimalPlaces), protein, _prefs.Get<BonusCalculationType>(Preference.CalculateBonus).IsEnabled());
       }
 
       private ZedGraphControl GetFrameTimeGraph(int index)
@@ -289,7 +289,7 @@ namespace HFM.Forms
          _proteinDictionary.TryGetValue(benchmark.ProjectID, out protein);
          if (protein != null)
          {
-            var calculateBonus = _prefs.Get<bool>(Preference.CalculateBonus);
+            var calculateBonus = _prefs.Get<BonusCalculationType>(Preference.CalculateBonus);
 
             output.Add(String.Empty);
             output.Add(String.Format(" Name: {0}", benchmark.OwningSlotName));
@@ -297,9 +297,9 @@ namespace HFM.Forms
             output.Add(String.Format(" Number of Frames Observed: {0}", benchmark.FrameTimes.Count));
             output.Add(String.Empty);
             output.Add(String.Format(" Min. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-               benchmark.MinimumFrameTime, protein.GetPPD(benchmark.MinimumFrameTime, calculateBonus)));
+               benchmark.MinimumFrameTime, protein.GetPPD(benchmark.MinimumFrameTime, calculateBonus.IsEnabled())));
             output.Add(String.Format(" Avg. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-               benchmark.AverageFrameTime, protein.GetPPD(benchmark.AverageFrameTime, calculateBonus)));
+               benchmark.AverageFrameTime, protein.GetPPD(benchmark.AverageFrameTime, calculateBonus.IsEnabled())));
 
             if (slotModel != null && slotModel.UnitInfoLogic.UnitInfoData.ProjectID.Equals(protein.ProjectNumber) && slotModel.ProductionValuesOk)
             {
@@ -483,7 +483,7 @@ namespace HFM.Forms
 
       private void udClientsPerGraph_ValueChanged(object sender, EventArgs e)
       {
-         _prefs.SetPreference(Preference.BenchmarksClientsPerGraph, (int)udClientsPerGraph.Value);
+         _prefs.Set(Preference.BenchmarksClientsPerGraph, (int)udClientsPerGraph.Value);
       }
 
       private void SetClientsPerGraphUpDownEnabled()

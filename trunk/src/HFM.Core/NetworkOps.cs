@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Network Operations Helper Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -693,14 +693,14 @@ namespace HFM.Core
       [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
       public IWebProxy GetProxy()
       {
-         if (_prefs.GetPreference<bool>(Preference.UseProxy))
+         if (_prefs.Get<bool>(Preference.UseProxy))
          {
-            IWebProxy proxy = new WebProxy(_prefs.GetPreference<string>(Preference.ProxyServer),
-                                           _prefs.GetPreference<int>(Preference.ProxyPort));
-            if (_prefs.GetPreference<bool>(Preference.UseProxyAuth))
+            IWebProxy proxy = new WebProxy(_prefs.Get<string>(Preference.ProxyServer),
+                                           _prefs.Get<int>(Preference.ProxyPort));
+            if (_prefs.Get<bool>(Preference.UseProxyAuth))
             {
-               proxy.Credentials = GetNetworkCredential(_prefs.GetPreference<string>(Preference.ProxyUser),
-                                                        _prefs.GetPreference<string>(Preference.ProxyPass));
+               proxy.Credentials = GetNetworkCredential(_prefs.Get<string>(Preference.ProxyUser),
+                                                        _prefs.Get<string>(Preference.ProxyPass));
             }
 
             return proxy;

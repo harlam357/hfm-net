@@ -133,8 +133,8 @@ namespace HFM.Forms
          // Save state data
          if (WindowState == FormWindowState.Normal)
          {
-            _prefs.SetPreference(Preference.MessagesFormLocation, Location);
-            _prefs.SetPreference(Preference.MessagesFormSize, Size);
+            _prefs.Set(Preference.MessagesFormLocation, Location);
+            _prefs.Set(Preference.MessagesFormSize, Size);
             _prefs.Save();
          }
       

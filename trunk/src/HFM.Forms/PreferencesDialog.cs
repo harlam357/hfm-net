@@ -527,12 +527,15 @@ namespace HFM.Forms
          DuplicateUserCheckBox.BindChecked(_optionsModel, "DuplicateUserIdCheck");
          ShowUserStatsCheckBox.BindChecked(_optionsModel, "ShowXmlStats");
 
-         cboPpdCalc.DataSource = OptionsModel.PpdCalculationList;
-         cboPpdCalc.DisplayMember = "DisplayMember";
-         cboPpdCalc.ValueMember = "ValueMember";
-         cboPpdCalc.DataBindings.Add("SelectedValue", _optionsModel, "PpdCalculation", false, DataSourceUpdateMode.OnPropertyChanged);
+         PpdCalculationComboBox.DataSource = OptionsModel.PpdCalculationList;
+         PpdCalculationComboBox.DisplayMember = "DisplayMember";
+         PpdCalculationComboBox.ValueMember = "ValueMember";
+         PpdCalculationComboBox.DataBindings.Add("SelectedValue", _optionsModel, "PpdCalculation", false, DataSourceUpdateMode.OnPropertyChanged);
+         BonusCalculationComboBox.DataSource = OptionsModel.BonusCalculationList;
+         BonusCalculationComboBox.DisplayMember = "DisplayMember";
+         BonusCalculationComboBox.ValueMember = "ValueMember";
+         BonusCalculationComboBox.DataBindings.Add("SelectedValue", _optionsModel, "CalculateBonus", false, DataSourceUpdateMode.OnPropertyChanged);
          udDecimalPlaces.DataBindings.Add("Value", _optionsModel, "DecimalPlaces", false, DataSourceUpdateMode.OnPropertyChanged);
-         chkCalcBonus.BindChecked(_optionsModel, "CalculateBonus");
          chkEtaAsDate.BindChecked(_optionsModel, "EtaDate");
          #endregion
 

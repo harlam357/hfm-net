@@ -1,6 +1,6 @@
 /*
  * HFM.NET - User Preferences Interface
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -64,30 +64,12 @@ namespace HFM.Core
       T Get<T>(Preference key);
 
       /// <summary>
-      /// Get a Preference of Type T
-      /// </summary>
-      /// <typeparam name="T">Preference Data Type</typeparam>
-      /// <param name="key">Preference Key</param>
-      //[Obsolete("Use Get<T>()")]
-      [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
-      T GetPreference<T>(Preference key);
-
-      /// <summary>
       /// Set a Preference of Type T
       /// </summary>
       /// <typeparam name="T">Preference Data Type</typeparam>
       /// <param name="key">Preference Key</param>
       /// <param name="value">Preference Value</param>
       void Set<T>(Preference key, T value);
-
-      /// <summary>
-      /// Set a Preference of Type T
-      /// </summary>
-      /// <typeparam name="T">Preference Data Type</typeparam>
-      /// <param name="key">Preference Key</param>
-      /// <param name="value">Preference Value</param>
-      //[Obsolete("Use Set<T>()")]
-      void SetPreference<T>(Preference key, T value);
 
       /// <summary>
       /// Revert to the previously saved settings

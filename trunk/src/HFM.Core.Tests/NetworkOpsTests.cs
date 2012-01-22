@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Network Operations Helper Class Tests
- * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -40,7 +40,7 @@ namespace HFM.Core.Tests
          _mocks = new MockRepository();
 
          var prefs = _mocks.DynamicMock<IPreferenceSet>();
-         Expect.Call(prefs.GetPreference<bool>(Preference.UseProxy)).Return(false).Repeat.Any();
+         Expect.Call(prefs.Get<bool>(Preference.UseProxy)).Return(false).Repeat.Any();
          _net = new NetworkOps(prefs);
       }
 

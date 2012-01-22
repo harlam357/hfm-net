@@ -37,9 +37,9 @@ namespace HFM.Core
          get { return Prefs.Get<PpdCalculationType>(Preference.PpdCalculation); }
       }
 
-      private bool CalculateBonus
+      private BonusCalculationType CalculateBonus
       {
-         get { return Prefs.Get<bool>(Preference.CalculateBonus); }
+         get { return Prefs.Get<BonusCalculationType>(Preference.CalculateBonus); }
       }
 
       public bool ShowVersions

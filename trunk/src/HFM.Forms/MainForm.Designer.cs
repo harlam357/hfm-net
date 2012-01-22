@@ -93,6 +93,7 @@ namespace HFM.Forms
          this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuToolsBenchmarks = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuToolsHistory = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuToolsPointsCalculator = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuToolsDownloadProjects = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuWeb = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuWebEOCUser = new System.Windows.Forms.ToolStripMenuItem();
@@ -134,7 +135,6 @@ namespace HFM.Forms
          this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuContextForceRefreshEocStats = new System.Windows.Forms.ToolStripMenuItem();
          this.toolTipNotify = new System.Windows.Forms.ToolTip(this.components);
-         this.mnuToolsPointsCalculator = new System.Windows.Forms.ToolStripMenuItem();
          this.statusStrip.SuspendLayout();
          this.notifyMenu.SuspendLayout();
          this.AppMenu.SuspendLayout();
@@ -574,20 +574,20 @@ namespace HFM.Forms
          // mnuViewAutoSizeGridColumns
          // 
          this.mnuViewAutoSizeGridColumns.Name = "mnuViewAutoSizeGridColumns";
-         this.mnuViewAutoSizeGridColumns.Size = new System.Drawing.Size(311, 22);
+         this.mnuViewAutoSizeGridColumns.Size = new System.Drawing.Size(303, 22);
          this.mnuViewAutoSizeGridColumns.Text = "Auto Size &Grid Columns";
          this.mnuViewAutoSizeGridColumns.Click += new System.EventHandler(this.mnuViewAutoSizeGridColumns_Click);
          // 
          // mnuViewSep1
          // 
          this.mnuViewSep1.Name = "mnuViewSep1";
-         this.mnuViewSep1.Size = new System.Drawing.Size(308, 6);
+         this.mnuViewSep1.Size = new System.Drawing.Size(300, 6);
          // 
          // mnuViewMessages
          // 
          this.mnuViewMessages.Name = "mnuViewMessages";
          this.mnuViewMessages.ShortcutKeys = System.Windows.Forms.Keys.F7;
-         this.mnuViewMessages.Size = new System.Drawing.Size(311, 22);
+         this.mnuViewMessages.Size = new System.Drawing.Size(303, 22);
          this.mnuViewMessages.Text = "Show/Hide &Messages Window";
          this.mnuViewMessages.Click += new System.EventHandler(this.mnuViewMessages_Click);
          // 
@@ -595,20 +595,20 @@ namespace HFM.Forms
          // 
          this.mnuViewShowHideLog.Name = "mnuViewShowHideLog";
          this.mnuViewShowHideLog.ShortcutKeys = System.Windows.Forms.Keys.F8;
-         this.mnuViewShowHideLog.Size = new System.Drawing.Size(311, 22);
+         this.mnuViewShowHideLog.Size = new System.Drawing.Size(303, 22);
          this.mnuViewShowHideLog.Text = "Show/Hide &Log/Queue Viewer";
          this.mnuViewShowHideLog.Click += new System.EventHandler(this.mnuViewShowHideLog_Click);
          // 
          // mnuViewSep2
          // 
          this.mnuViewSep2.Name = "mnuViewSep2";
-         this.mnuViewSep2.Size = new System.Drawing.Size(308, 6);
+         this.mnuViewSep2.Size = new System.Drawing.Size(300, 6);
          // 
          // mnuViewToggleDateTime
          // 
          this.mnuViewToggleDateTime.Name = "mnuViewToggleDateTime";
          this.mnuViewToggleDateTime.ShortcutKeys = System.Windows.Forms.Keys.F9;
-         this.mnuViewToggleDateTime.Size = new System.Drawing.Size(311, 22);
+         this.mnuViewToggleDateTime.Size = new System.Drawing.Size(303, 22);
          this.mnuViewToggleDateTime.Text = "Toggle &Date/Time Style";
          this.mnuViewToggleDateTime.Click += new System.EventHandler(this.mnuViewToggleDateTime_Click);
          // 
@@ -616,7 +616,7 @@ namespace HFM.Forms
          // 
          this.mnuViewToggleCompletedCountStyle.Name = "mnuViewToggleCompletedCountStyle";
          this.mnuViewToggleCompletedCountStyle.ShortcutKeys = System.Windows.Forms.Keys.F10;
-         this.mnuViewToggleCompletedCountStyle.Size = new System.Drawing.Size(311, 22);
+         this.mnuViewToggleCompletedCountStyle.Size = new System.Drawing.Size(303, 22);
          this.mnuViewToggleCompletedCountStyle.Text = "Toggle &Completed Count Style";
          this.mnuViewToggleCompletedCountStyle.Click += new System.EventHandler(this.mnuViewToggleCompletedCountStyle_Click);
          // 
@@ -624,28 +624,28 @@ namespace HFM.Forms
          // 
          this.mnuViewToggleVersionInformation.Name = "mnuViewToggleVersionInformation";
          this.mnuViewToggleVersionInformation.ShortcutKeys = System.Windows.Forms.Keys.F11;
-         this.mnuViewToggleVersionInformation.Size = new System.Drawing.Size(311, 22);
+         this.mnuViewToggleVersionInformation.Size = new System.Drawing.Size(303, 22);
          this.mnuViewToggleVersionInformation.Text = "Toggle &Version Information";
          this.mnuViewToggleVersionInformation.Click += new System.EventHandler(this.mnuViewToggleVersionInformation_Click);
          // 
          // mnuViewSep3
          // 
          this.mnuViewSep3.Name = "mnuViewSep3";
-         this.mnuViewSep3.Size = new System.Drawing.Size(308, 6);
+         this.mnuViewSep3.Size = new System.Drawing.Size(300, 6);
          // 
          // mnuViewToggleBonusCalculation
          // 
          this.mnuViewToggleBonusCalculation.Name = "mnuViewToggleBonusCalculation";
          this.mnuViewToggleBonusCalculation.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.O)));
-         this.mnuViewToggleBonusCalculation.Size = new System.Drawing.Size(311, 22);
-         this.mnuViewToggleBonusCalculation.Text = "Toggle Bo&nus PPD/Credit Calculation";
+         this.mnuViewToggleBonusCalculation.Size = new System.Drawing.Size(303, 22);
+         this.mnuViewToggleBonusCalculation.Text = "Cycle Bo&nus PPD/Credit Calculation";
          this.mnuViewToggleBonusCalculation.Click += new System.EventHandler(this.mnuViewToggleBonusCalculation_Click);
          // 
          // mnuViewCycleCalculationStyle
          // 
          this.mnuViewCycleCalculationStyle.Name = "mnuViewCycleCalculationStyle";
          this.mnuViewCycleCalculationStyle.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.P)));
-         this.mnuViewCycleCalculationStyle.Size = new System.Drawing.Size(311, 22);
+         this.mnuViewCycleCalculationStyle.Size = new System.Drawing.Size(303, 22);
          this.mnuViewCycleCalculationStyle.Text = "Cycle &PPD/Credit Calculation";
          this.mnuViewCycleCalculationStyle.Click += new System.EventHandler(this.mnuViewCycleCalculation_Click);
          // 
@@ -675,6 +675,13 @@ namespace HFM.Forms
          this.mnuToolsHistory.Size = new System.Drawing.Size(252, 22);
          this.mnuToolsHistory.Text = "Work Unit &History Viewer";
          this.mnuToolsHistory.Click += new System.EventHandler(this.mnuToolsHistory_Click);
+         // 
+         // mnuToolsPointsCalculator
+         // 
+         this.mnuToolsPointsCalculator.Name = "mnuToolsPointsCalculator";
+         this.mnuToolsPointsCalculator.Size = new System.Drawing.Size(252, 22);
+         this.mnuToolsPointsCalculator.Text = "Points Calculator";
+         this.mnuToolsPointsCalculator.Click += new System.EventHandler(this.mnuToolsPointsCalculator_Click);
          // 
          // mnuToolsDownloadProjects
          // 
@@ -1048,13 +1055,6 @@ namespace HFM.Forms
          this.mnuContextForceRefreshEocStats.Size = new System.Drawing.Size(205, 22);
          this.mnuContextForceRefreshEocStats.Text = "Force Refresh EOC Stats";
          this.mnuContextForceRefreshEocStats.Click += new System.EventHandler(this.mnuWebRefreshUserStats_Click);
-         // 
-         // mnuToolsPointsCalculator
-         // 
-         this.mnuToolsPointsCalculator.Name = "mnuToolsPointsCalculator";
-         this.mnuToolsPointsCalculator.Size = new System.Drawing.Size(252, 22);
-         this.mnuToolsPointsCalculator.Text = "Points Calculator";
-         this.mnuToolsPointsCalculator.Click += new System.EventHandler(this.mnuToolsPointsCalculator_Click);
          // 
          // MainForm
          // 

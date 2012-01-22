@@ -1101,11 +1101,23 @@ namespace HFM.Forms
          _view.DataGridView.Invalidate();
       }
 
-      public void ViewToggleBonusCalculationClick()
+      public void ViewCycleBonusCalculationClick()
       {
-         bool value = !_prefs.Get<bool>(Preference.CalculateBonus);
-         _prefs.Set(Preference.CalculateBonus, value);
-         _view.ShowNotifyToolTip(value ? "Bonus On" : "Bonus Off");
+         var calculationType = _prefs.Get<BonusCalculationType>(Preference.CalculateBonus);
+         int typeIndex = 0;
+         // None is always LAST entry
+         if (calculationType.Equals(BonusCalculationType.None) == false)
+         {
+            typeIndex = (int)calculationType;
+            typeIndex++;
+         }
+
+         calculationType = (BonusCalculationType)typeIndex;
+         _prefs.Set(Preference.CalculateBonus, calculationType);
+         string calculationTypeString = (from item in OptionsModel.BonusCalculationList
+                                         where ((BonusCalculationType)item.ValueMember) == calculationType
+                                         select item.DisplayMember).First();
+         _view.ShowNotifyToolTip(calculationTypeString);
          _view.DataGridView.Invalidate();
       }
 

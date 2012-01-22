@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Linq;
 
 using Castle.Core.Logging;
 
@@ -289,7 +288,7 @@ namespace HFM.Core
       /// <summary>
       /// Work unit credit
       /// </summary>
-      public double GetCredit(SlotStatus status, PpdCalculationType calculationType, bool calculateBonus)
+      public double GetCredit(SlotStatus status, PpdCalculationType calculationType, BonusCalculationType calculateBonus)
       {
          TimeSpan frameTime = GetFrameTime(calculationType);
          return GetCredit(GetEftByDownloadTime(frameTime), GetEftByFrameTime(frameTime), status, calculateBonus);
@@ -306,7 +305,7 @@ namespace HFM.Core
       /// <summary>
       /// Points per day (PPD) rating for this unit
       /// </summary>
-      public double GetPPD(SlotStatus status, PpdCalculationType calculationType, bool calculateBonus)
+      public double GetPPD(SlotStatus status, PpdCalculationType calculationType, BonusCalculationType calculateBonus)
       {
          TimeSpan frameTime = GetFrameTime(calculationType);
          return GetPPD(frameTime, GetEftByDownloadTime(frameTime), GetEftByFrameTime(frameTime), status, calculateBonus);
@@ -399,7 +398,7 @@ namespace HFM.Core
 
       #region Calculate Credit and PPD
 
-      private double GetCredit(TimeSpan eftByDownloadTime, TimeSpan eftByFrameTime, SlotStatus status, bool calculateBonus)
+      private double GetCredit(TimeSpan eftByDownloadTime, TimeSpan eftByFrameTime, SlotStatus status, BonusCalculationType calculateBonus)
       {
          if (CurrentProtein.IsUnknown())
          {
@@ -407,7 +406,7 @@ namespace HFM.Core
          }
 
          // Issue 125
-         if (calculateBonus)
+         if (calculateBonus.Equals(BonusCalculationType.DownloadTime))
          {
             // Issue 183
             if (status.Equals(SlotStatus.RunningAsync) ||
@@ -418,11 +417,15 @@ namespace HFM.Core
 
             return CurrentProtein.GetCredit(eftByDownloadTime, true);
          }
+         if (calculateBonus.Equals(BonusCalculationType.FrameTime))
+         {
+            return CurrentProtein.GetCredit(eftByFrameTime, true);
+         }
 
          return CurrentProtein.Credit;
       }
       
-      private double GetPPD(TimeSpan frameTime, TimeSpan eftByDownloadTime, TimeSpan eftByFrameTime, SlotStatus status, bool calculateBonus)
+      private double GetPPD(TimeSpan frameTime, TimeSpan eftByDownloadTime, TimeSpan eftByFrameTime, SlotStatus status, BonusCalculationType calculateBonus)
       {
          if (CurrentProtein.IsUnknown())
          {
@@ -430,7 +433,7 @@ namespace HFM.Core
          }
          
          // Issue 125
-         if (calculateBonus)
+         if (calculateBonus.Equals(BonusCalculationType.DownloadTime))
          {
             // Issue 183
             if (status.Equals(SlotStatus.RunningAsync) ||
@@ -441,11 +444,15 @@ namespace HFM.Core
 
             return CurrentProtein.GetPPD(frameTime, eftByDownloadTime, true);
          }
+         if (calculateBonus.Equals(BonusCalculationType.FrameTime))
+         {
+            return CurrentProtein.GetPPD(frameTime, eftByFrameTime, true);
+         }
 
          return CurrentProtein.GetPPD(frameTime);
       }
 
-      public void ShowPPDTrace(ILogger logger, SlotStatus status, PpdCalculationType calculationType, bool calculateBonus)
+      public void ShowPPDTrace(ILogger logger, SlotStatus status, PpdCalculationType calculationType, BonusCalculationType calculateBonus)
       {
          // test the level
          if (!logger.IsDebugEnabled) return;
@@ -457,7 +464,7 @@ namespace HFM.Core
          }
 
          // Issue 125
-         if (calculateBonus)
+         if (calculateBonus.Equals(BonusCalculationType.DownloadTime))
          {
             // Issue 183
             if (status.Equals(SlotStatus.RunningAsync) ||
@@ -470,13 +477,17 @@ namespace HFM.Core
                logger.DebugFormat(Constants.ClientNameFormat, _unitInfo.OwningSlotName, "Calculate Bonus PPD by Download Time.");
             }
          }
+         else if (calculateBonus.Equals(BonusCalculationType.FrameTime))
+         {
+            logger.DebugFormat(Constants.ClientNameFormat, _unitInfo.OwningSlotName, "Calculate Bonus PPD by Frame Time.");
+         }
          else
          {
             logger.DebugFormat(Constants.ClientNameFormat, _unitInfo.OwningSlotName, "Calculate Standard PPD.");
          }
 
          TimeSpan frameTime = GetFrameTime(calculationType);
-         var values = CurrentProtein.GetProductionValues(frameTime, GetEftByDownloadTime(frameTime), GetEftByFrameTime(frameTime), calculateBonus);
+         var values = CurrentProtein.GetProductionValues(frameTime, GetEftByDownloadTime(frameTime), GetEftByFrameTime(frameTime), calculateBonus.IsEnabled());
          logger.Debug(values.ToMultiLineString());
       }
       

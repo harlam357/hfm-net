@@ -556,7 +556,7 @@ namespace HFM.Forms
 
       private void mnuViewToggleBonusCalculation_Click(object sender, EventArgs e)
       {
-         _presenter.ViewToggleBonusCalculationClick();
+         _presenter.ViewCycleBonusCalculationClick();
       }
 
       private void mnuViewCycleCalculation_Click(object sender, EventArgs e)

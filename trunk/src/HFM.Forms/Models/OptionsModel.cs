@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Preferences - Options Tab - Binding Model
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -41,7 +41,7 @@ namespace HFM.Forms.Models
          AutoSaveConfig = prefs.Get<bool>(Preference.AutoSaveConfig);
          PpdCalculation = prefs.Get<PpdCalculationType>(Preference.PpdCalculation);
          DecimalPlaces = prefs.Get<int>(Preference.DecimalPlaces);
-         CalculateBonus = prefs.Get<bool>(Preference.CalculateBonus);
+         CalculateBonus = prefs.Get<BonusCalculationType>(Preference.CalculateBonus);
          EtaDate = prefs.Get<bool>(Preference.EtaDate);
          DuplicateProjectCheck = prefs.Get<bool>(Preference.DuplicateProjectCheck);
          DuplicateUserIdCheck = prefs.Get<bool>(Preference.DuplicateUserIdCheck);
@@ -143,9 +143,9 @@ namespace HFM.Forms.Models
          }
       }
 
-      private bool _calculateBonus;
+      private BonusCalculationType _calculateBonus;
 
-      public bool CalculateBonus
+      public BonusCalculationType CalculateBonus
       {
          get { return _calculateBonus; }
          set
@@ -286,6 +286,23 @@ namespace HFM.Forms.Models
                           { DisplayMember = "All Frames", ValueMember = PpdCalculationType.AllFrames },
                           new ListItem
                           { DisplayMember = "Effective Rate", ValueMember = PpdCalculationType.EffectiveRate }
+                       };
+            return list.AsReadOnly();
+         }
+      }
+
+      public static ReadOnlyCollection<ListItem> BonusCalculationList
+      {
+         get
+         {
+            var list = new List<ListItem>
+                       {
+                          new ListItem
+                          { DisplayMember = "Download Time", ValueMember = BonusCalculationType.DownloadTime },
+                          new ListItem
+                          { DisplayMember = "Frame Time", ValueMember = BonusCalculationType.FrameTime },
+                          new ListItem
+                          { DisplayMember = "None", ValueMember = BonusCalculationType.None },
                        };
             return list.AsReadOnly();
          }
