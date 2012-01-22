@@ -38,7 +38,7 @@ namespace HFM.Core.Tests
       {
          _prefs = MockRepository.GenerateStub<IPreferenceSet>();
          _prefs.Stub(x => x.Get<PpdCalculationType>(Preference.PpdCalculation)).Return(PpdCalculationType.LastThreeFrames);
-         _prefs.Stub(x => x.Get<bool>(Preference.CalculateBonus)).Return(true);
+         _prefs.Stub(x => x.Get<BonusCalculationType>(Preference.CalculateBonus)).Return(BonusCalculationType.DownloadTime);
          _prefs.Stub(x => x.Get<bool>(Preference.ShowVersions)).Return(true);
          _prefs.Stub(x => x.Get<int>(Preference.DecimalPlaces)).Return(1);
          _prefs.Stub(x => x.Get<CompletedCountDisplayType>(Preference.CompletedCountDisplay)).Return(CompletedCountDisplayType.ClientRunTotal);

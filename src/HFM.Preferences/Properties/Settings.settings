@@ -184,8 +184,8 @@
     <Setting Name="WebGenCopyFAHlog" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="CalculateBonus" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+    <Setting Name="CalculateBonus" Type="System.String" Scope="User">
+      <Value Profile="(Default)">DownloadTime</Value>
     </Setting>
     <Setting Name="AllowRunningAsync" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

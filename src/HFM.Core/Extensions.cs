@@ -255,6 +255,16 @@ namespace HFM.Core
 
       #endregion
 
+      #region BonusCalculationType
+
+      public static bool IsEnabled(this BonusCalculationType type)
+      {
+         return type.Equals(BonusCalculationType.DownloadTime) ||
+                type.Equals(BonusCalculationType.FrameTime);
+      }
+
+      #endregion
+
       #region Protein
 
       public static Protein DeepClone(this Protein protein)
