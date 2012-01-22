@@ -656,9 +656,9 @@ namespace HFM.Forms
          this.chkFAHlog.Enabled = false;
          this.chkFAHlog.Location = new System.Drawing.Point(276, 182);
          this.chkFAHlog.Name = "chkFAHlog";
-         this.chkFAHlog.Size = new System.Drawing.Size(148, 17);
+         this.chkFAHlog.Size = new System.Drawing.Size(136, 17);
          this.chkFAHlog.TabIndex = 21;
-         this.chkFAHlog.Text = "Copy FAHlog.txt to Target";
+         this.chkFAHlog.Text = "Copy Log File to Target";
          this.chkFAHlog.UseVisualStyleBackColor = true;
          // 
          // radioFullRefresh
