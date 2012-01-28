@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 using Castle.Core.Logging;
 
@@ -115,8 +116,9 @@ namespace HFM.Core
                                                       SlotOptions slotOptions, UnitInfo currentUnifInfo, int slotId)
       {
          _currentUnitIndex = -1;
-         _currentLogLines = logLines;
-         _logInterpreter = new LogInterpreter(_currentLogLines, LogReader.GetClientRuns(_currentLogLines, LogFileType.FahClient));
+         // only take up to the last MaxDisplayableLogLines
+         _currentLogLines = logLines.Skip(Math.Max(0, logLines.Count - Constants.MaxDisplayableLogLines)).ToList();
+         _logInterpreter = new LogInterpreter(logLines, LogReader.GetClientRuns(logLines, LogFileType.FahClient));
          _currentClientRun = _logInterpreter.CurrentClientRun;
 
          // report errors that came back from log parsing

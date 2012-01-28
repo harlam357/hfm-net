@@ -93,24 +93,24 @@ namespace HFM.Core
          set { _unitInfo = value; }
       }
 
-      public bool Owns(IOwnedByClientSlot value)
+      public bool Owns(IOwnedByClient value)
       {
-         if (Settings.IsFahClient())
-         {
+         //if (Settings.IsFahClient())
+         //{
+         //   if (value.OwningSlotName.Equals(Name) &&
+         //       value.OwningClientPath.Equals(Settings.DataPath()))
+         //   {
+         //      return true;
+         //   }
+         //}
+         //else if (Settings.IsLegacy())
+         //{
             if (value.OwningSlotName.Equals(Name) &&
-                value.OwningSlotPath.Equals(Settings.DataPath()))
-            {
-               return true;
-            }
-         }
-         else if (Settings.IsLegacy())
-         {
-            if (value.OwningSlotName.Equals(Name) &&
-                Paths.Equal(value.OwningSlotPath, Settings.DataPath()))
+                Paths.Equal(value.OwningClientPath, Settings.DataPath()))
             {
                return true;
             }   
-         }
+         //}
 
          return false;
       }
@@ -218,14 +218,7 @@ namespace HFM.Core
 
       public string Name
       {
-         get
-         {
-            if (Settings.ClientType.Equals(ClientType.FahClient) && SlotId != -1)
-            {
-               return Settings.Name + " Slot " + SlotId;
-            }
-            return Settings.Name;
-         }
+         get { return Settings.IsFahClient() ? Settings.Name.AppendSlotId(SlotId) : Settings.Name; }
       }
       
       private int _slotId = -1;

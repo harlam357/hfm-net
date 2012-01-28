@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 
 using Castle.Core.Logging;
@@ -96,7 +97,13 @@ namespace HFM.Forms.Models
       private readonly SlotModelSortableBindingList _slotList;
       public IEnumerable<SlotModel> SlotCollection
       {
-         get { return _slotList; }
+         // ToList() to make a "copy" of the current list.
+         // The value returned here is used by web generation
+         // and if the collection changes the web generation
+         // will not be able to enumerate the collection...
+         // possibly use a lock here and RefreshSlotList()
+         // if this doesn't work.
+         get { return _slotList.ToList().AsReadOnly(); }
       }
       private readonly BindingSource _bindingSource;
       public BindingSource BindingSource

@@ -275,13 +275,22 @@ namespace HFM.Forms
                
                if (paint.Equals(PaintCell.Status))
                {
-                  var newRect = new Rectangle(e.CellBounds.X + 4, e.CellBounds.Y + 4,
-                                              e.CellBounds.Width - 10, e.CellBounds.Height - 10);
+                  // this is new... sometimes being passed a null
+                  // value here.  check and skip if so. - 1/28/12
+                  if (e.Value != null)
+                  {
+                     // Draw the inset highlight box.
+                     var newRect = new Rectangle(e.CellBounds.X + 4, e.CellBounds.Y + 4,
+                                                 e.CellBounds.Width - 10, e.CellBounds.Height - 10);
 
-                  // Draw the inset highlight box.
-                  var status = (SlotStatus)e.Value;
-                  e.Graphics.DrawRectangle(status.GetDrawingPen(), newRect);
-                  e.Graphics.FillRectangle(status.GetDrawingBrush(), newRect);
+                     var status = (SlotStatus)e.Value;
+                     e.Graphics.DrawRectangle(status.GetDrawingPen(), newRect);
+                     e.Graphics.FillRectangle(status.GetDrawingBrush(), newRect);
+                  }
+                  else
+                  {
+                     Debug.WriteLine("Status value is null.");
+                  }
                }
                else if (paint.Equals(PaintCell.Time))
                {

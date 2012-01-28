@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Log Reader Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 
 using HFM.Core.DataTypes;
@@ -293,7 +294,19 @@ namespace HFM.Log
             throw new ArgumentException("Argument 'logFilePath' cannot be an empty string.");
          }
 
-         return GetLogLines(File.ReadAllLines(logFilePath), logFileType);
+         var logLineList = logFileType.GetLogLineList();
+         using (var reader = new StreamReader(logFilePath))
+         {
+            while (reader.Peek() != -1)
+            {
+               // Need to clear any previous data before adding new range.
+               logLineList.Add(reader.ReadLine());
+            }
+         }
+
+         return logLineList;
+
+         //return GetLogLines(File.ReadAllLines(logFilePath), logFileType);
       }
 
       /// <summary>

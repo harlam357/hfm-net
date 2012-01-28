@@ -650,10 +650,10 @@ namespace HFM.Forms
 
       public void RefreshControlsWithTotalsData(SlotTotals totals)
       {
-         SetNotifyIconText(String.Format("{0} Working Clients{3}{1} Non-Working Clients{3}{2:" + _prefs.PpdFormatString + "} PPD",
+         SetNotifyIconText(String.Format("{0} Working Slots{3}{1} Non-Working Slots{3}{2:" + _prefs.PpdFormatString + "} PPD",
                                          totals.WorkingSlots, totals.NonWorkingSlots, totals.PPD, Environment.NewLine));
 
-         string clientLabel = totals.WorkingSlots == 1 ? "Client" : "Clients";
+         string clientLabel = totals.WorkingSlots == 1 ? "Slot" : "Slots";
          SetStatusLabelHostsText(String.Format(CultureInfo.CurrentCulture, "{0} {1}", totals.WorkingSlots, clientLabel));
          SetStatusLabelPPDText(String.Format(CultureInfo.CurrentCulture, "{0:" + _prefs.PpdFormatString + "} PPD", totals.PPD));
       }
@@ -672,7 +672,7 @@ namespace HFM.Forms
             if (val.Length > 64)
             {
                //if string is too long, remove the word Clients
-               val = val.Replace("Clients", String.Empty);
+               val = val.Replace("Slots", String.Empty);
             }
             _notifyIcon.Text = val;
          }

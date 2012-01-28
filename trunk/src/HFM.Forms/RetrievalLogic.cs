@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using ThreadState = System.Threading.ThreadState;
 
 using Castle.Core.Logging;
 
@@ -90,6 +91,8 @@ namespace HFM.Forms
       private readonly IPreferenceSet _prefs;
       private readonly IClientDictionary _clientDictionary;
       private readonly MainGridModel _mainGridModel;
+
+      private Thread _doRetrievalThread;
 
       #endregion
 
@@ -210,7 +213,17 @@ namespace HFM.Forms
             _workTimer.Stop();
 
             // fire the retrieval wrapper thread (basically a wait thread off the UI thread)
-            new Action(DoRetrievalWrapper).BeginInvoke(null, null);
+            _doRetrievalThread = new Thread(DoRetrievalWrapper) { IsBackground = true, Name = "DoRetrievalWrapper" };
+            _doRetrievalThread.Start();
+            //new Action(DoRetrievalWrapper).BeginInvoke(null, null);
+         }
+      }
+
+      public void Abort()
+      {
+         if (RetrievalInProgress)
+         {
+            _doRetrievalThread.Abort();
          }
       }
 
@@ -225,21 +238,19 @@ namespace HFM.Forms
             RetrievalInProgress = true;
 
             // fire the actual retrieval thread
-            IAsyncResult async = new Action(DoRetrieval).BeginInvoke(null, null);
+            var doRetrieval = new Thread(DoRetrieval) { IsBackground = true, Name = "DoRetrieval" };
+            doRetrieval.Start();
             // wait for completion
-            async.AsyncWaitHandle.WaitOne();
+            doRetrieval.Join();
 
             // run post retrieval processes
             if (_prefs.Get<bool>(Preference.GenerateWeb) &&
                 _prefs.Get<bool>(Preference.WebGenAfterRefresh))
             {
                // do a web gen (on another thread)
-               new Action(DoWebGeneration).BeginInvoke(null, null);
-            }
-
-            if (_prefs.Get<bool>(Preference.ShowXmlStats))
-            {
-               //_presenter.RefreshUserStatsData(false);
+               var webGen = new Thread(DoWebGeneration) { IsBackground = true, Name = "DoWebGeneration" };
+               webGen.Start();
+               //new Action(DoWebGeneration).BeginInvoke(null, null);
             }
 
             // Enable the data retrieval timer
@@ -247,6 +258,10 @@ namespace HFM.Forms
             {
                StartBackgroundTimer();
             }
+         }
+         catch (ThreadAbortException)
+         {
+            // do nothing, just let this thread die
          }
          finally
          {
@@ -312,7 +327,8 @@ namespace HFM.Forms
       /// </summary>
       private static IAsyncResult QueueNewRetrieval(IClient client)
       {
-         return new Action<IClient>(RetrieveInstance).BeginInvoke(client, null, null);
+         var retrieveInstance = new Action<IClient>(RetrieveInstance);
+         return retrieveInstance.BeginInvoke(client, RetrieveInstanceCallback, retrieveInstance);
       }
 
       /// <summary>
@@ -340,7 +356,8 @@ namespace HFM.Forms
       public void RetrieveSingleClient(IClient client)
       {
          // fire the actual retrieval thread
-         new Action<IClient>(DoSingleClientRetieval).BeginInvoke(client, null, null);
+         var retrieveInstance = new Action<IClient>(DoSingleClientRetieval);
+         retrieveInstance.BeginInvoke(client, RetrieveInstanceCallback, retrieveInstance);
       }
 
       /// <summary>
@@ -353,6 +370,12 @@ namespace HFM.Forms
             IAsyncResult async = QueueNewRetrieval(client);
             async.AsyncWaitHandle.WaitOne();
          }
+      }
+
+      private static void RetrieveInstanceCallback(IAsyncResult async)
+      {
+         var retrieveInstance = (Action<IClient>)async.AsyncState;
+         retrieveInstance.EndInvoke(async);
       }
 
       /// <summary>

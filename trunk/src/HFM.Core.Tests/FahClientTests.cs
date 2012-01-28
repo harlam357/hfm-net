@@ -39,8 +39,9 @@ namespace HFM.Core.Tests
          var fahClient = new FahClient(MockRepository.GenerateStub<IFahClientInterface>()) { BenchmarkCollection = benchmarkCollection, UnitInfoDatabase = database };
 
          var unitInfo1 = new UnitInfo();
-         unitInfo1.OwningSlotName = "Owner";
-         unitInfo1.OwningSlotPath = "Path";
+         unitInfo1.OwningClientName = "Owner";
+         unitInfo1.OwningClientPath = "Path";
+         unitInfo1.OwningSlotId = 0;
          unitInfo1.ProjectID = 2669;
          unitInfo1.ProjectRun = 1;
          unitInfo1.ProjectClone = 2;
@@ -62,7 +63,7 @@ namespace HFM.Core.Tests
          database.Stub(x => x.Connected).Return(true);
          database.Expect(x => x.WriteUnitInfo(null)).IgnoreArguments().Repeat.Times(1);
 
-         var benchmarkClient = new BenchmarkClient("Owner", "Path");
+         var benchmarkClient = new BenchmarkClient("Owner Slot 0", "Path");
 
          // assert before act
          Assert.AreEqual(false, benchmarkCollection.Contains(benchmarkClient));

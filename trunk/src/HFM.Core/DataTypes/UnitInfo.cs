@@ -27,7 +27,7 @@ using System.Runtime.Serialization;
 namespace HFM.Core.DataTypes
 {
    [DataContract(Namespace = "")]
-   public class UnitInfo : IProjectInfo, IOwnedByClientSlot, IEquatable<UnitInfo>
+   public class UnitInfo : IProjectInfo, IOwnedByClient, IEquatable<UnitInfo>
    {
       public UnitInfo()
       {
@@ -46,21 +46,36 @@ namespace HFM.Core.DataTypes
          UnitFrames = new Dictionary<int, UnitFrame>();
          CoreID = Default.CoreID;
          QueueIndex = -1;
+         OwningSlotId = -1;
       }
       
       #region Owner Data Properties
 
       /// <summary>
-      /// Name of the Client Instance that owns this UnitInfo
+      /// Fully qualified name of the folding slot that owns this object (includes "Slot" designation).
       /// </summary>
-      [DataMember(Order = 1)]
-      public string OwningSlotName { get; set; }
+      public string OwningSlotName
+      {
+         get { return OwningClientName.AppendSlotId(OwningSlotId); }
+      }
 
       /// <summary>
-      /// Path of the Client Instance that owns this UnitInfo
+      /// Name of the folding client that owns this object (name given during client setup).
+      /// </summary>
+      [DataMember(Order = 1)]
+      public string OwningClientName { get; set; }
+
+      /// <summary>
+      /// Path of the folding slot that own this object.
       /// </summary>
       [DataMember(Order = 2)]
-      public string OwningSlotPath { get; set; }
+      public string OwningClientPath { get; set; }
+
+      /// <summary>
+      /// Identification number of the folding slot on the folding client that owns this object.
+      /// </summary>
+      [DataMember(Order = 26, IsRequired = true)]
+      public int OwningSlotId { get; set; }
 
       #endregion
 

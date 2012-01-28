@@ -120,6 +120,8 @@ namespace HFM.Forms
          StartPosition = FormStartPosition.Manual;
       }
 
+      // ReSharper disable InconsistentNaming
+
       private void frmBenchmarks_Shown(object sender, EventArgs e)
       {
          UpdateClientsComboBinding();
@@ -170,6 +172,7 @@ namespace HFM.Forms
          {
             UnitInfoLogic unit = null;
             bool valuesOk = false;
+            SlotStatus status = SlotStatus.Unknown;
 
             ProteinBenchmark benchmark1 = benchmark;
             var slotModel = _clientDictionary.Slots.FirstOrDefault(x => x.Name.Equals(benchmark1.OwningSlotName));
@@ -177,8 +180,9 @@ namespace HFM.Forms
             {
                unit = slotModel.UnitInfoLogic;
                valuesOk = slotModel.ProductionValuesOk;
+               status = slotModel.Status;
             }
-            UpdateBenchmarkText(ToMultiLineString(benchmark, slotModel, _prefs.PpdFormatString));
+            UpdateBenchmarkText(ToMultiLineString(benchmark, unit, valuesOk, status, _prefs.PpdFormatString));
          }
 
          tabControl1.SuspendLayout();
@@ -278,10 +282,7 @@ namespace HFM.Forms
       /// <summary>
       /// Return Multi-Line String (Array)
       /// </summary>
-      /// <param name="benchmark"></param>
-      /// <param name="slotModel">Slot Model (null for unavailable)</param>
-      /// <param name="ppdFormatString">PPD Format String</param>
-      private IEnumerable<string> ToMultiLineString(ProteinBenchmark benchmark, SlotModel slotModel, string ppdFormatString)
+      private IEnumerable<string> ToMultiLineString(ProteinBenchmark benchmark, UnitInfoLogic unitInfoLogic, bool valuesOk, SlotStatus status, string ppdFormatString)
       {
          var output = new List<string>(12);
 
@@ -293,7 +294,7 @@ namespace HFM.Forms
 
             output.Add(String.Empty);
             output.Add(String.Format(" Name: {0}", benchmark.OwningSlotName));
-            output.Add(String.Format(" Path: {0}", benchmark.OwningSlotPath));
+            output.Add(String.Format(" Path: {0}", benchmark.OwningClientPath));
             output.Add(String.Format(" Number of Frames Observed: {0}", benchmark.FrameTimes.Count));
             output.Add(String.Empty);
             output.Add(String.Format(" Min. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
@@ -301,17 +302,16 @@ namespace HFM.Forms
             output.Add(String.Format(" Avg. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
                benchmark.AverageFrameTime, protein.GetPPD(benchmark.AverageFrameTime, calculateBonus.IsEnabled())));
 
-            if (slotModel != null && slotModel.UnitInfoLogic.UnitInfoData.ProjectID.Equals(protein.ProjectNumber) && slotModel.ProductionValuesOk)
+            if (unitInfoLogic != null && unitInfoLogic.UnitInfoData.ProjectID.Equals(protein.ProjectNumber) && valuesOk)
             {
-               UnitInfoLogic unitInfo = slotModel.UnitInfoLogic;
                output.Add(String.Format(" Cur. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-                  unitInfo.GetFrameTime(PpdCalculationType.LastFrame), unitInfo.GetPPD(slotModel.Status, PpdCalculationType.LastFrame, calculateBonus)));
+                  unitInfoLogic.GetFrameTime(PpdCalculationType.LastFrame), unitInfoLogic.GetPPD(status, PpdCalculationType.LastFrame, calculateBonus)));
                output.Add(String.Format(" R3F. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-                  unitInfo.GetFrameTime(PpdCalculationType.LastThreeFrames), unitInfo.GetPPD(slotModel.Status, PpdCalculationType.LastThreeFrames, calculateBonus)));
+                  unitInfoLogic.GetFrameTime(PpdCalculationType.LastThreeFrames), unitInfoLogic.GetPPD(status, PpdCalculationType.LastThreeFrames, calculateBonus)));
                output.Add(String.Format(" All  Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-                  unitInfo.GetFrameTime(PpdCalculationType.AllFrames), unitInfo.GetPPD(slotModel.Status, PpdCalculationType.AllFrames, calculateBonus)));
+                  unitInfoLogic.GetFrameTime(PpdCalculationType.AllFrames), unitInfoLogic.GetPPD(status, PpdCalculationType.AllFrames, calculateBonus)));
                output.Add(String.Format(" Eff. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-                  unitInfo.GetFrameTime(PpdCalculationType.EffectiveRate), unitInfo.GetPPD(slotModel.Status, PpdCalculationType.EffectiveRate, calculateBonus)));
+                  unitInfoLogic.GetFrameTime(PpdCalculationType.EffectiveRate), unitInfoLogic.GetPPD(status, PpdCalculationType.EffectiveRate, calculateBonus)));
             }
 
             output.Add(String.Empty);
@@ -495,6 +495,8 @@ namespace HFM.Forms
       {
          Close();
       } 
+
+      // ReSharper restore InconsistentNaming
 
       #endregion
 

@@ -64,7 +64,7 @@ namespace HFM.Core.Tests
          proteinDictionary.Stub(x => x.GetProteinOrDownload(0)).IgnoreArguments().Return(new Protein());
          var markupReader = new MarkupReader(_prefs, proteinDictionary);
          var slots = markupReader.Read("..\\..\\TestFiles\\SlotSummary1.xml");
-         Assert.AreEqual(7, slots.Count());
+         Assert.AreEqual(9, slots.Count());
       }
    }
 }

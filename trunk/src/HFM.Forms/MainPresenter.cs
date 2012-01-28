@@ -83,6 +83,7 @@ namespace HFM.Forms
       #region Collections
 
       private readonly IClientDictionary _clientDictionary;
+      private readonly IProteinBenchmarkCollection _benchmarkCollection;
       private readonly IProteinDictionary _proteinDictionary;
       private readonly IUnitInfoCollection _unitInfoCollection;
 
@@ -109,8 +110,8 @@ namespace HFM.Forms
 
       public MainPresenter(MainGridModel mainGridModel, IMainView view, IMessagesView messagesView, IMessageBoxView messageBoxView,
                            IOpenFileDialogView openFileDialogView, ISaveFileDialogView saveFileDialogView,
-                           IClientDictionary clientDictionary, IProteinDictionary proteinDictionary,
-                           IUnitInfoCollection unitInfoCollection, IUpdateLogic updateLogic, 
+                           IClientDictionary clientDictionary, IProteinBenchmarkCollection benchmarkCollection,
+                           IProteinDictionary proteinDictionary, IUnitInfoCollection unitInfoCollection, IUpdateLogic updateLogic, 
                            RetrievalLogic retrievalLogic, IExternalProcessStarter processStarter, 
                            IPreferenceSet prefs, IClientSettingsManager settingsManager)
       {
@@ -139,6 +140,7 @@ namespace HFM.Forms
          _saveFileDialogView = saveFileDialogView;
          // Collections
          _clientDictionary = clientDictionary;
+         _benchmarkCollection = benchmarkCollection;
          _proteinDictionary = proteinDictionary;
          _unitInfoCollection = unitInfoCollection;
          // Logic Services
@@ -154,6 +156,7 @@ namespace HFM.Forms
          // Hook-up Event Handlers
          //_proteinCollection.Downloader.ProjectInfoUpdated += delegate { _retrievalLogic.QueueNewRetrieval(); };
 
+         _clientDictionary.ClientEdited += HandleClientEdit;
          _clientDictionary.DictionaryChanged += delegate { AutoSaveConfig(); };
       }
       
@@ -595,11 +598,11 @@ namespace HFM.Forms
 
       public void FileNewClick()
       {
-         if (_retrievalLogic.RetrievalInProgress)
-         {
-            _messageBoxView.ShowInformation(_view, "Retrieval in progress... please wait to create a new config file.", _view.Text);
-            return;
-         }
+         //if (_retrievalLogic.RetrievalInProgress)
+         //{
+         //   _messageBoxView.ShowInformation(_view, "Retrieval in progress... please wait to create a new config file.", _view.Text);
+         //   return;
+         //}
 
          if (CheckForConfigurationChanges())
          {
@@ -609,11 +612,11 @@ namespace HFM.Forms
 
       public void FileOpenClick()
       {
-         if (_retrievalLogic.RetrievalInProgress)
-         {
-            _messageBoxView.ShowInformation(_view, "Retrieval in progress... please wait to open another config file.", _view.Text);
-            return;
-         }
+         //if (_retrievalLogic.RetrievalInProgress)
+         //{
+         //   _messageBoxView.ShowInformation(_view, "Retrieval in progress... please wait to open another config file.", _view.Text);
+         //   return;
+         //}
 
          if (CheckForConfigurationChanges())
          {
@@ -632,6 +635,12 @@ namespace HFM.Forms
 
       private void ClearConfiguration()
       {
+         // abort current retrieval
+         if (_retrievalLogic.RetrievalInProgress)
+         {
+            _retrievalLogic.Abort();
+         }
+
          // clear the clients and UI
          _settingsManager.ClearFileName();
          // 
@@ -897,6 +906,22 @@ namespace HFM.Forms
                   _messageBoxView.ShowError(_view, Core.Application.NameAndVersion, ex.Message);
                }
             }
+         }
+      }
+
+      private void HandleClientEdit(object sender, ClientEditedEventArgs e)
+      {
+         // the name changed
+         if (e.PreviousName != e.NewName)
+         {
+            // update the Names in the benchmark collection
+            _benchmarkCollection.UpdateOwnerName(e.PreviousName, e.PreviousPath, e.NewName);
+         }
+         // the path changed
+         if (!Paths.Equal(e.PreviousPath, e.NewPath))
+         {
+            // update the Paths in the benchmark collection
+            _benchmarkCollection.UpdateOwnerPath(e.NewName, e.PreviousPath, e.NewPath);
          }
       }
 

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Benchmark Collection Class Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -77,14 +77,31 @@ namespace HFM.Core.Tests
          {
             var benchmark = new ProteinBenchmark
                             {
-                               OwningSlotName = "TestOwner",
-                               OwningSlotPath = "TestPath",
+                               OwningClientName = "TestOwner",
+                               OwningClientPath = "TestPath",
                                ProjectID = 100 + i
                             };
             
             for (int j = 1; j < 6; j++)
             {
                benchmark.SetFrameTime(TimeSpan.FromMinutes(j));
+            }
+            list.Add(benchmark);
+         }
+
+         for (int i = 10; i < 20; i++)
+         {
+            var benchmark = new ProteinBenchmark
+            {
+               OwningClientName = "TestOwner2",
+               OwningClientPath = "TestPath2",
+               OwningSlotId = i - 10,
+               ProjectID = 200 + i
+            };
+
+            for (int j = 1; j < 6; j++)
+            {
+               benchmark.SetFrameTime(TimeSpan.FromMinutes(j + 10));
             }
             list.Add(benchmark);
          }
@@ -98,13 +115,32 @@ namespace HFM.Core.Tests
          {
             ProteinBenchmark benchmark = list[i];
             Assert.AreEqual("TestOwner", benchmark.OwningSlotName);
-            Assert.AreEqual("TestPath", benchmark.OwningSlotPath);
+            Assert.AreEqual("TestOwner", benchmark.OwningClientName);
+            Assert.AreEqual("TestPath", benchmark.OwningClientPath);
+            Assert.AreEqual(-1, benchmark.OwningSlotId);
             Assert.AreEqual(100 + i, benchmark.ProjectID);
             
             int index = 0;
             for (int j = 5; j > 0; j--)
             {
                Assert.AreEqual(TimeSpan.FromMinutes(j), benchmark.FrameTimes[index].Duration);
+               index++;
+            }
+         }
+
+         for (int i = 10; i < 20; i++)
+         {
+            ProteinBenchmark benchmark = list[i];
+            Assert.AreEqual("TestOwner2 Slot " + (i - 10), benchmark.OwningSlotName);
+            Assert.AreEqual("TestOwner2", benchmark.OwningClientName);
+            Assert.AreEqual("TestPath2", benchmark.OwningClientPath);
+            Assert.AreEqual(i - 10, benchmark.OwningSlotId);
+            Assert.AreEqual(200 + i, benchmark.ProjectID);
+
+            int index = 0;
+            for (int j = 5; j > 0; j--)
+            {
+               Assert.AreEqual(TimeSpan.FromMinutes(j + 10), benchmark.FrameTimes[index].Duration);
                index++;
             }
          }

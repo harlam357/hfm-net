@@ -28,6 +28,11 @@ namespace HFM.Core
 {
    public static class Extensions
    {
+      public static string AppendSlotId(this string name, int slotId)
+      {
+         return slotId >= 0 ? String.Format(CultureInfo.InvariantCulture, "{0} Slot {1}", name, slotId) : name;
+      }
+
       #region ClientSettings
 
       public static bool IsFahClient(this ClientSettings settings)

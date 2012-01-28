@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Benchmark Collection Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -91,20 +91,14 @@ namespace HFM.Core
       IEnumerable<ProteinBenchmark> GetBenchmarks(BenchmarkClient benchmarkClient, int projectId);
 
       /// <summary>
-      /// Updates the owner name of all the elements in ProteinBenchmarkCollection that match the benchmarkClient and projectId.
+      /// Updates the owner name of all the elements in ProteinBenchmarkCollection that match the given client name and path.
       /// </summary>
-      /// <param name="benchmarkClient">The BenchmarkClient to locate in the ProteinBenchmarkCollection.</param>
-      /// <param name="name">The new benchmark owner name.</param>
-      /// <exception cref="T:System.ArgumentNullException"><paramref name="benchmarkClient"/> is null or <paramref name="name"/> is null.</exception>
-      void UpdateOwnerName(BenchmarkClient benchmarkClient, string name);
+      void UpdateOwnerName(string clientName, string clientPath, string newName);
 
       /// <summary>
-      /// Updates the owner path of all the elements in ProteinBenchmarkCollection that match the benchmarkClient and projectId.
+      /// Updates the owner path of all the elements in ProteinBenchmarkCollection that match the given client name and path.
       /// </summary>
-      /// <param name="benchmarkClient">The BenchmarkClient to locate in the ProteinBenchmarkCollection.</param>
-      /// <param name="path">The new benchmark owner path.</param>
-      /// <exception cref="T:System.ArgumentNullException"><paramref name="benchmarkClient"/> is null or <paramref name="path"/> is null.</exception>
-      void UpdateOwnerPath(BenchmarkClient benchmarkClient, string path);
+      void UpdateOwnerPath(string clientName, string clientPath, string newPath);
 
       /// <summary>
       /// Updates the minimum frame time of all the elements in ProteinBenchmarkCollection that match the benchmarkClient and projectId.
@@ -216,8 +210,9 @@ namespace HFM.Core
             {
                var newBenchmark = new ProteinBenchmark
                                   {
-                                     OwningSlotName = unit.OwningSlotName,
-                                     OwningSlotPath = unit.OwningSlotPath,
+                                     OwningClientName = unit.OwningClientName,
+                                     OwningClientPath = unit.OwningClientPath,
+                                     OwningSlotId = unit.OwningSlotId,
                                      ProjectID = unit.ProjectID
                                   };
 
@@ -437,24 +432,25 @@ namespace HFM.Core
          }
       }
 
-      public void UpdateOwnerName(BenchmarkClient benchmarkClient, string name)
+      public void UpdateOwnerName(string clientName, string clientPath, string newName)
       {
-         if (benchmarkClient == null) throw new ArgumentNullException("benchmarkClient");
-         if (name == null) throw new ArgumentNullException("name");
+         if (clientName == null) throw new ArgumentNullException("clientName");
+         if (clientPath == null) throw new ArgumentNullException("clientPath");
+         if (newName == null) throw new ArgumentNullException("newName");
          
          // Core library - should have a valid client name 
-         Debug.Assert(Validate.ClientName(name));
+         Debug.Assert(Validate.ClientName(newName));
 
          // GetBenchmarks() BEFORE entering write lock 
          // because it uses a read lock
-         IEnumerable<ProteinBenchmark> benchmarks = GetBenchmarks(benchmarkClient);
+         IEnumerable<ProteinBenchmark> benchmarks = GetBenchmarksForOwnerUpdate(clientName, clientPath);
          // write lock
          _cacheLock.EnterWriteLock();
          try
          {
             foreach (ProteinBenchmark benchmark in benchmarks)
             {
-               benchmark.OwningSlotName = name;
+               benchmark.OwningClientName = newName;
             }
             Write();
          }
@@ -464,27 +460,45 @@ namespace HFM.Core
          }
       }
 
-      public void UpdateOwnerPath(BenchmarkClient benchmarkClient, string path)
+      public void UpdateOwnerPath(string clientName, string clientPath, string newPath)
       {
-         if (benchmarkClient == null) throw new ArgumentNullException("benchmarkClient");
-         if (path == null) throw new ArgumentNullException("path");
+         if (clientName == null) throw new ArgumentNullException("clientName");
+         if (clientPath == null) throw new ArgumentNullException("clientPath");
+         if (newPath == null) throw new ArgumentNullException("newPath");
 
          // GetBenchmarks() BEFORE entering write lock 
          // because it uses a read lock
-         IEnumerable<ProteinBenchmark> benchmarks = GetBenchmarks(benchmarkClient);
+         IEnumerable<ProteinBenchmark> benchmarks = GetBenchmarksForOwnerUpdate(clientName, clientPath);
          // write lock
          _cacheLock.EnterWriteLock();
          try
          {
             foreach (ProteinBenchmark benchmark in benchmarks)
             {
-               benchmark.OwningSlotPath = path;
+               benchmark.OwningClientPath = newPath;
             }
             Write();
          }
          finally
          {
             _cacheLock.ExitWriteLock();
+         }
+      }
+
+      private IEnumerable<ProteinBenchmark> GetBenchmarksForOwnerUpdate(string clientName, string clientPath)
+      {
+         Debug.Assert(clientName != null);
+         Debug.Assert(clientPath != null);
+
+         _cacheLock.EnterReadLock();
+         try
+         {
+            return Data.FindAll(benchmark => benchmark.OwningClientName.Equals(clientName) &&
+                                             Paths.Equal(benchmark.OwningClientPath, clientPath)).AsReadOnly();
+         }
+         finally
+         {
+            _cacheLock.ExitReadLock();
          }
       }
 
