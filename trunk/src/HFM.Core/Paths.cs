@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Paths Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,6 +19,7 @@
  
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HFM.Core
 {
@@ -79,15 +80,21 @@ namespace HFM.Core
       {
          if (path == null) return String.Empty;
 
-         // if the path is of sufficient length but does not
-         // end with a directory separator character (for any
-         // filesystem), then append the current platform
-         // separator character
-         if (path.Length > 2 &&
-            (path.EndsWith("\\") ||
-             path.EndsWith("/")) == false)
+         const char backslash = '\\';
+         const char forwardslash = '/';
+
+         char separatorChar = backslash;
+         if (path.TakeWhile(c => !c.Equals(backslash)).Any(c => c.Equals(forwardslash)))
          {
-            path = String.Concat(path, System.IO.Path.DirectorySeparatorChar);
+            separatorChar = forwardslash;
+         }
+
+         // if the path is of sufficient length but does not
+         // end with the dectected directory separator character
+         // then append the detected separator character
+         if (path.Length > 2 && (!path.EndsWith(separatorChar.ToString())))
+         {
+            path = String.Concat(path, separatorChar);
          }
 
          return path;
