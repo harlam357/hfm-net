@@ -185,7 +185,8 @@ namespace HFM.Core
             {
                parsedUnits.Add(unit.Id, unitInfo);
                _unitLogLines.Add(unit.Id, logLines);
-               if (unit.StateEnum.Equals(FahSlotStatus.Running))
+               if (unit.StateEnum.Equals(FahSlotStatus.Running) ||
+                   unit.StateEnum.Equals(FahSlotStatus.Finishing))
                {
                   _currentUnitIndex = unit.Id;
                }

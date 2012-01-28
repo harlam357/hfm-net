@@ -375,7 +375,8 @@ namespace HFM.Core
          {
             return Status.Equals(SlotStatus.Running) ||
                    Status.Equals(SlotStatus.RunningAsync) ||
-                   Status.Equals(SlotStatus.RunningNoFrameTimes);
+                   Status.Equals(SlotStatus.RunningNoFrameTimes) ||
+                   Status.Equals(SlotStatus.Finishing);
          }
       }
 

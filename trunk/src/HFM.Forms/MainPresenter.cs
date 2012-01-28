@@ -47,7 +47,12 @@ namespace HFM.Forms
    public sealed class MainPresenter
    {
       #region Properties
-   
+
+      /// <summary>
+      /// Command Line Arguments.
+      /// </summary>
+      public IEnumerable<Argument> Arguments { get; set; }
+
       /// <summary>
       /// Holds the state of the window before it is hidden (minimize to tray behaviour)
       /// </summary>
@@ -273,7 +278,16 @@ namespace HFM.Forms
             _view.WindowState = FormWindowState.Minimized;
          }
 
-         if (_prefs.Get<bool>(Preference.UseDefaultConfigFile))
+         Debug.Assert(Arguments != null);
+         var openFile = Arguments.FirstOrDefault(x => x.Type.Equals(ArgumentType.OpenFile));
+         if (openFile != null)
+         {
+            if (!String.IsNullOrEmpty(openFile.Data))
+            {
+               LoadConfigFile(openFile.Data);
+            }
+         }
+         else if (_prefs.Get<bool>(Preference.UseDefaultConfigFile))
          {
             var fileName = _prefs.Get<string>(Preference.DefaultConfigFile);
             if (!String.IsNullOrEmpty(fileName))

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Command Line Arguments Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,15 +20,15 @@
 using System;
 using System.Collections.Generic;
 
-namespace HFM
+namespace HFM.Core
 {
-   internal enum ArgumentType
+   public enum ArgumentType
    {
       ResetPrefs,
       OpenFile
    }
 
-   internal static class Arguments
+   public static class Arguments
    {
       private const string ResetPrefsArg = "/r";
       private const string OpenFileArg = "/f";
@@ -39,7 +39,7 @@ namespace HFM
       /// <param name="args">Raw Argument Array</param>
       /// <returns>Argument Collection</returns>
       /// <exception cref="FormatException">Throws if a supplied raw argument is malformed.</exception>
-      internal static ICollection<Argument> Parse(IList<string> args)
+      public static IEnumerable<Argument> Parse(IList<string> args)
       {
          var arguments = new List<Argument>();
       
@@ -67,8 +67,8 @@ namespace HFM
          return arguments.AsReadOnly();
       }
    }
-   
-   internal sealed class Argument
+
+   public sealed class Argument
    {
       public ArgumentType Type { get; set; }
 
