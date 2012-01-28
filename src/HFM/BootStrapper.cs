@@ -47,7 +47,7 @@ namespace HFM
       {
          #region Parse Arguments
 
-         ICollection<Argument> arguments;
+         IEnumerable<Argument> arguments;
          try
          {
             arguments = Arguments.Parse(args);
@@ -146,18 +146,19 @@ namespace HFM
 
             #region Initialize Main View
 
-            IMainView frm;
+            IMainView mainView = ServiceLocator.Resolve<IMainView>();
+            var mainPresenter = ServiceLocator.Resolve<MainPresenter>();
+            mainPresenter.Arguments = arguments;
             try
             {
-               frm = ServiceLocator.Resolve<IMainView>();
-               frm.Initialize(ServiceLocator.Resolve<MainPresenter>());
-               //frm.WorkUnitHistoryMenuEnabled = connectionOk;
+               mainView.Initialize(mainPresenter);
             }
             catch (Exception ex)
             {
                ShowStartupError(ex, "Primary UI failed to initialize.");
                return;
             }
+            mainView.WorkUnitHistoryMenuEnabled = ServiceLocator.Resolve<IUnitInfoDatabase>().Connected;
 
             #endregion
 
@@ -168,7 +169,7 @@ namespace HFM
 
             #endregion
 
-            System.Windows.Forms.Application.Run((Form)frm);
+            System.Windows.Forms.Application.Run((Form)mainView);
          }
       }
 

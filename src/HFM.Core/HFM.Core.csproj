@@ -81,6 +81,7 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Arguments.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="ClientFactory.cs" />
     <Compile Include="DataTypes\Markup\GridData.cs" />

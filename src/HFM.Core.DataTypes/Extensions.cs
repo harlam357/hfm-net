@@ -364,6 +364,8 @@ namespace HFM.Core.DataTypes
                return ColorTranslator.ToHtml(Color.White);
             case SlotStatus.RunningNoFrameTimes:
                return ColorTranslator.ToHtml(Color.Black);
+            case SlotStatus.Finishing:
+               return ColorTranslator.ToHtml(Color.White);
             case SlotStatus.Stopped:
             case SlotStatus.EuePause:
             case SlotStatus.Hung:
@@ -393,6 +395,8 @@ namespace HFM.Core.DataTypes
                return Color.Blue;
             case SlotStatus.RunningNoFrameTimes:
                return Color.Yellow;
+            case SlotStatus.Finishing:
+               return Color.DarkCyan;
             case SlotStatus.Stopped:
             case SlotStatus.EuePause:
             case SlotStatus.Hung:
