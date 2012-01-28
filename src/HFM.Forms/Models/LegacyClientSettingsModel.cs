@@ -235,6 +235,11 @@ namespace HFM.Forms.Models
             {
                string path = value == null ? String.Empty : value.Trim();
                path = StripFahClientFileNames(path);
+               if (LegacyClientSubType.Equals(LegacyClientSubType.Path) ||
+                   LegacyClientSubType.Equals(LegacyClientSubType.Ftp))
+               {
+                  path = Paths.AddTrailingSlash(path);
+               }
                _path = path;
                OnPropertyChanged("Path");
             }

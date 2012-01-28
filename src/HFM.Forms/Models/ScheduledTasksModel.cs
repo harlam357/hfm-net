@@ -248,7 +248,7 @@ namespace HFM.Forms.Models
          {
             if (WebRoot != value)
             {
-               _webRoot = value == null ? String.Empty : value.Trim();
+               _webRoot = value == null ? String.Empty : Paths.AddTrailingSlash(value.Trim());
                OnPropertyChanged("WebRoot");
             }
          }
