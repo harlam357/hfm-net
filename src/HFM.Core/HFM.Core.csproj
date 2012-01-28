@@ -120,7 +120,7 @@
     <Compile Include="DataTypes\ClientQueue.cs" />
     <Compile Include="DataTypes\ClientQueueEntry.cs" />
     <Compile Include="DataTypes\HistoryEntry.cs" />
-    <Compile Include="DataTypes\IOwnedByClientSlot.cs" />
+    <Compile Include="DataTypes\IOwnedByClient.cs" />
     <Compile Include="DataTypes\ProteinBenchmark.cs" />
     <Compile Include="DataTypes\ProteinFrameTime.cs" />
     <Compile Include="DataTypes\QueryParameters.cs" />

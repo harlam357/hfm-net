@@ -205,8 +205,8 @@ namespace HFM.Core
          {
             // update the data
             unitInfo.UnitRetrievalTime = LastRetrievalTime;
-            unitInfo.OwningSlotName = Settings.Name;
-            unitInfo.OwningSlotPath = Settings.DataPath();
+            unitInfo.OwningClientName = Settings.Name;
+            unitInfo.OwningClientPath = Settings.DataPath();
             unitInfo.SlotType = protein.Core.ToSlotType();
             if (unitInfo.SlotType.Equals(SlotType.Unknown))
             {

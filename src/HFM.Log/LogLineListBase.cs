@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Log Line List Base Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -43,19 +43,18 @@ namespace HFM.Log
          // LogLineType and any LineData parsed from the raw line.
          for (int i = 0; i < logLines.Count; i++)
          {
-            Add(i, logLines[i]);
+            Add(logLines[i]);
          }
       }
 
       /// <summary>
       /// Adds a LogLine to the end of the List.
       /// </summary>
-      /// <param name="index">The log line index.</param>
       /// <param name="logLine">The raw log line being added.</param>
-      private void Add(int index, string logLine)
+      internal void Add(string logLine)
       {
          LogLineType lineType = DetermineLineType(logLine);
-         var logLineObject = new LogLine { LineType = lineType, LineIndex = index, LineRaw = logLine };
+         var logLineObject = new LogLine { LineType = lineType, LineIndex = Count, LineRaw = logLine };
          try
          {
             object lineData = _logLineParser.GetLineData(logLineObject);

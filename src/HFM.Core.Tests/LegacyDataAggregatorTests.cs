@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Legacy Data Aggregator Class Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -76,7 +76,9 @@ namespace HFM.Core.Tests
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
-         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
+         Assert.AreEqual(null, unitInfoData.OwningClientName);
+         Assert.AreEqual(null, unitInfoData.OwningClientPath);
+         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -149,7 +151,9 @@ namespace HFM.Core.Tests
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
-         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
+         Assert.AreEqual(null, unitInfoData.OwningClientName);
+         Assert.AreEqual(null, unitInfoData.OwningClientPath);
+         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -229,7 +233,9 @@ namespace HFM.Core.Tests
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
-         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
+         Assert.AreEqual(null, unitInfoData.OwningClientName);
+         Assert.AreEqual(null, unitInfoData.OwningClientPath);
+         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -289,7 +295,9 @@ namespace HFM.Core.Tests
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
-         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
+         Assert.AreEqual(null, unitInfoData.OwningClientName);
+         Assert.AreEqual(null, unitInfoData.OwningClientPath);
+         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -360,7 +368,9 @@ namespace HFM.Core.Tests
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
-         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
+         Assert.AreEqual(null, unitInfoData.OwningClientName);
+         Assert.AreEqual(null, unitInfoData.OwningClientPath);
+         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("coccola", unitInfoData.FoldingID);
          Assert.AreEqual(86565, unitInfoData.Team);
@@ -433,7 +443,9 @@ namespace HFM.Core.Tests
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
-         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
+         Assert.AreEqual(null, unitInfoData.OwningClientName);
+         Assert.AreEqual(null, unitInfoData.OwningClientPath);
+         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("Felix_Pasqualli", unitInfoData.FoldingID);
          Assert.AreEqual(52523, unitInfoData.Team);
@@ -506,7 +518,9 @@ namespace HFM.Core.Tests
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
-         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
+         Assert.AreEqual(null, unitInfoData.OwningClientName);
+         Assert.AreEqual(null, unitInfoData.OwningClientPath);
+         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -579,7 +593,9 @@ namespace HFM.Core.Tests
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
-         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
+         Assert.AreEqual(null, unitInfoData.OwningClientName);
+         Assert.AreEqual(null, unitInfoData.OwningClientPath);
+         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -652,7 +668,9 @@ namespace HFM.Core.Tests
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
-         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
+         Assert.AreEqual(null, unitInfoData.OwningClientName);
+         Assert.AreEqual(null, unitInfoData.OwningClientPath);
+         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -727,7 +745,9 @@ namespace HFM.Core.Tests
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
-         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
+         Assert.AreEqual(null, unitInfoData.OwningClientName);
+         Assert.AreEqual(null, unitInfoData.OwningClientPath);
+         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -785,7 +805,9 @@ namespace HFM.Core.Tests
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
-         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
+         Assert.AreEqual(null, unitInfoData.OwningClientName);
+         Assert.AreEqual(null, unitInfoData.OwningClientPath);
+         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("JollySwagman", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -858,7 +880,9 @@ namespace HFM.Core.Tests
          
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
-         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
+         Assert.AreEqual(null, unitInfoData.OwningClientName);
+         Assert.AreEqual(null, unitInfoData.OwningClientPath);
+         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -932,7 +956,9 @@ namespace HFM.Core.Tests
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
-         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
+         Assert.AreEqual(null, unitInfoData.OwningClientName);
+         Assert.AreEqual(null, unitInfoData.OwningClientPath);
+         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("Zagen30", unitInfoData.FoldingID);
          Assert.AreEqual(46301, unitInfoData.Team);
@@ -1005,7 +1031,9 @@ namespace HFM.Core.Tests
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
-         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
+         Assert.AreEqual(null, unitInfoData.OwningClientName);
+         Assert.AreEqual(null, unitInfoData.OwningClientPath);
+         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -1060,7 +1088,9 @@ namespace HFM.Core.Tests
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
-         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
+         Assert.AreEqual(null, unitInfoData.OwningClientName);
+         Assert.AreEqual(null, unitInfoData.OwningClientPath);
+         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -1131,7 +1161,9 @@ namespace HFM.Core.Tests
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
-         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
+         Assert.AreEqual(null, unitInfoData.OwningClientName);
+         Assert.AreEqual(null, unitInfoData.OwningClientPath);
+         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -1159,7 +1191,9 @@ namespace HFM.Core.Tests
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
-         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
+         Assert.AreEqual(null, unitInfoData.OwningClientName);
+         Assert.AreEqual(null, unitInfoData.OwningClientPath);
+         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -1230,7 +1264,9 @@ namespace HFM.Core.Tests
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
-         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
+         Assert.AreEqual(null, unitInfoData.OwningClientName);
+         Assert.AreEqual(null, unitInfoData.OwningClientPath);
+         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("borden.b", unitInfoData.FoldingID);
          Assert.AreEqual(131, unitInfoData.Team);
@@ -1287,7 +1323,9 @@ namespace HFM.Core.Tests
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
-         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
+         Assert.AreEqual(null, unitInfoData.OwningClientName);
+         Assert.AreEqual(null, unitInfoData.OwningClientPath);
+         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("NerdZone", unitInfoData.FoldingID);
          Assert.AreEqual(155945, unitInfoData.Team);
@@ -1344,7 +1382,9 @@ namespace HFM.Core.Tests
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
-         Assert.AreEqual(null, unitInfoData.OwningSlotPath);
+         Assert.AreEqual(null, unitInfoData.OwningClientName);
+         Assert.AreEqual(null, unitInfoData.OwningClientPath);
+         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("DrSpalding", unitInfoData.FoldingID);
          Assert.AreEqual(48083, unitInfoData.Team);

@@ -60,14 +60,25 @@ namespace HFM.Core
                    !_settings.Password.Equals(value.Password))
                {
                   // connection settings have changed
+                  // reset settings BEFORE Close()
+                  _settings = value;
+                  // Close this client and allow retrieval
+                  // to open a new connection
                   _fahClient.Close();
                }
                else
                {
+                  // reset settings BEFORE slot refresh
+                  _settings = value;
+                  // refresh the slots with the updated settings
                   RefreshSlots();
                }
             }
-            _settings = value;
+            else
+            {
+               // no existing settings, just set the value
+               _settings = value;
+            }
          }
       }
 
@@ -416,8 +427,9 @@ namespace HFM.Core
 
          // update the data
          unitInfo.UnitRetrievalTime = LastRetrievalTime;
-         unitInfo.OwningSlotName = slotModel.Name; // this will return ClientSettings.Name - SlotModel.SlotId
-         unitInfo.OwningSlotPath = Settings.DataPath();
+         unitInfo.OwningClientName = Settings.Name;
+         unitInfo.OwningClientPath = Settings.DataPath();
+         unitInfo.OwningSlotId = slotModel.SlotId;
          //unitInfo.SlotType = UnitInfo.DetermineSlotType(protein.Core, unitInfo.CoreID);
          // build unit info logic
          var unitInfoLogic = ServiceLocator.Resolve<UnitInfoLogic>();

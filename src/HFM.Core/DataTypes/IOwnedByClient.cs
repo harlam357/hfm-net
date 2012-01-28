@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - Owning Slot Interface
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * HFM.NET - Owning Client Interface
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,17 +19,27 @@
 
 namespace HFM.Core.DataTypes
 {
-   public interface IOwnedByClientSlot
+   public interface IOwnedByClient
    {
       /// <summary>
-      /// Name of the Client Instance that owns this Object
+      /// Fully qualified name of the folding slot that owns this object (includes "Slot" designation).
       /// </summary>
       string OwningSlotName { get; }
 
       /// <summary>
-      /// Path of the Client Instance that owns this Object
+      /// Name of the folding client that owns this object (name given during client setup).
       /// </summary>
-      string OwningSlotPath { get; }
+      string OwningClientName { get; }
+
+      /// <summary>
+      /// Path of the folding client that own this object.
+      /// </summary>
+      string OwningClientPath { get; }
+
+      /// <summary>
+      /// Identification number of the folding slot on the folding client that owns this object.
+      /// </summary>
+      int OwningSlotId { get; }
 
       /// <summary>
       /// Project ID

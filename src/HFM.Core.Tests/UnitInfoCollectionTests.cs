@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - UnitInfo Collection Class Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -63,8 +63,8 @@ namespace HFM.Core.Tests
          for (int i = 0; i < 10; i++)
          {
             var unitInfo = new UnitInfo();
-            unitInfo.OwningSlotName = "TestOwner";
-            unitInfo.OwningSlotPath = "TestPath";
+            unitInfo.OwningClientName = "TestOwner";
+            unitInfo.OwningClientPath = "TestPath";
             unitInfo.UnitRetrievalTime = new DateTime((2000 + i), 1, 1, 0, 0, 0);
             unitInfo.FoldingID = "TestID";
             unitInfo.Team = 32;
@@ -94,6 +94,41 @@ namespace HFM.Core.Tests
             list.Add(unitInfo);
          }
 
+         for (int i = 10; i < 20; i++)
+         {
+            var unitInfo = new UnitInfo();
+            unitInfo.OwningClientName = "TestOwner2";
+            unitInfo.OwningClientPath = "TestPath2";
+            unitInfo.OwningSlotId = i - 10;
+            unitInfo.UnitRetrievalTime = new DateTime((2000 + i), 1, 1, 0, 0, 0);
+            unitInfo.FoldingID = "TestID";
+            unitInfo.Team = 32;
+            unitInfo.SlotType = SlotType.Uniprocessor;
+            unitInfo.DownloadTime = new DateTime(2000, 2, 2, 0, 0, 0);
+            unitInfo.DueTime = new DateTime(2000, 3, 3, 0, 0, 0);
+            unitInfo.UnitStartTimeStamp = TimeSpan.FromHours(i + 1);
+            unitInfo.FinishedTime = new DateTime(2000, 4, 4, 0, 0, 0);
+            unitInfo.CoreVersion = "2.27";
+            unitInfo.ProjectID = 6903;
+            unitInfo.ProjectRun = 1;
+            unitInfo.ProjectClone = 2;
+            unitInfo.ProjectGen = 3;
+            unitInfo.ProteinName = "Protein";
+            unitInfo.ProteinTag = "ProteinTag";
+            unitInfo.UnitResult = WorkUnitResult.CoreOutdated;
+            unitInfo.RawFramesComplete = 2500;
+            unitInfo.RawFramesTotal = 250000;
+
+            for (int j = 0; j < 4; j++)
+            {
+               var unitFrame = new UnitFrame { FrameID = j, TimeOfFrame = TimeSpan.FromMinutes(j + 1) };
+               unitInfo.UnitFrames.Add(j, unitFrame);
+            }
+            unitInfo.FramesObserved = 4;
+
+            list.Add(unitInfo);
+         }
+
          return list;
       }
 
@@ -102,9 +137,11 @@ namespace HFM.Core.Tests
          for (int i = 0; i < 10; i++)
          {
             UnitInfo unitInfo = list[i];
-            
+
             Assert.AreEqual("TestOwner", unitInfo.OwningSlotName);
-            Assert.AreEqual("TestPath", unitInfo.OwningSlotPath);
+            Assert.AreEqual("TestOwner", unitInfo.OwningClientName);
+            Assert.AreEqual("TestPath", unitInfo.OwningClientPath);
+            Assert.AreEqual(-1, unitInfo.OwningSlotId);
             Assert.AreEqual(new DateTime((2000 + i), 1, 1, 0, 0, 0), unitInfo.UnitRetrievalTime);
             Assert.AreEqual("TestID", unitInfo.FoldingID);
             Assert.AreEqual(32, unitInfo.Team);
@@ -124,6 +161,44 @@ namespace HFM.Core.Tests
             Assert.AreEqual(2500, unitInfo.RawFramesComplete);
             Assert.AreEqual(250000, unitInfo.RawFramesTotal);
             
+            UnitFrame unitFrame = null;
+            for (int j = 0; j < 4; j++)
+            {
+               unitFrame = unitInfo.UnitFrames[j];
+               Assert.AreEqual(j, unitFrame.FrameID);
+               Assert.AreEqual(TimeSpan.FromMinutes(j + 1), unitFrame.TimeOfFrame);
+            }
+            Assert.AreEqual(4, unitInfo.FramesObserved);
+            Assert.AreEqual(unitFrame, unitInfo.CurrentFrame);
+         }
+
+         for (int i = 10; i < 20; i++)
+         {
+            UnitInfo unitInfo = list[i];
+
+            Assert.AreEqual("TestOwner2 Slot " + (i - 10), unitInfo.OwningSlotName);
+            Assert.AreEqual("TestOwner2", unitInfo.OwningClientName);
+            Assert.AreEqual("TestPath2", unitInfo.OwningClientPath);
+            Assert.AreEqual(i - 10, unitInfo.OwningSlotId);
+            Assert.AreEqual(new DateTime((2000 + i), 1, 1, 0, 0, 0), unitInfo.UnitRetrievalTime);
+            Assert.AreEqual("TestID", unitInfo.FoldingID);
+            Assert.AreEqual(32, unitInfo.Team);
+            Assert.AreEqual(SlotType.Uniprocessor, unitInfo.SlotType);
+            Assert.AreEqual(new DateTime(2000, 2, 2, 0, 0, 0), unitInfo.DownloadTime);
+            Assert.AreEqual(new DateTime(2000, 3, 3, 0, 0, 0), unitInfo.DueTime);
+            Assert.AreEqual(TimeSpan.FromHours(i + 1), unitInfo.UnitStartTimeStamp);
+            Assert.AreEqual(new DateTime(2000, 4, 4, 0, 0, 0), unitInfo.FinishedTime);
+            Assert.AreEqual("2.27", unitInfo.CoreVersion);
+            Assert.AreEqual(6903, unitInfo.ProjectID);
+            Assert.AreEqual(1, unitInfo.ProjectRun);
+            Assert.AreEqual(2, unitInfo.ProjectClone);
+            Assert.AreEqual(3, unitInfo.ProjectGen);
+            Assert.AreEqual("Protein", unitInfo.ProteinName);
+            Assert.AreEqual("ProteinTag", unitInfo.ProteinTag);
+            Assert.AreEqual(WorkUnitResult.CoreOutdated, unitInfo.UnitResult);
+            Assert.AreEqual(2500, unitInfo.RawFramesComplete);
+            Assert.AreEqual(250000, unitInfo.RawFramesTotal);
+
             UnitFrame unitFrame = null;
             for (int j = 0; j < 4; j++)
             {

@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Protein Benchmark Data Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,14 +19,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Runtime.Serialization;
 
 namespace HFM.Core.DataTypes
 {
    [Serializable]
    [DataContract]
-   public sealed class ProteinBenchmark : IOwnedByClientSlot, IEquatable<IOwnedByClientSlot>
+   public sealed class ProteinBenchmark : IOwnedByClient, IEquatable<IOwnedByClient>
    {
       private const int DefaultMaxFrames = 300;
 
@@ -37,16 +36,30 @@ namespace HFM.Core.DataTypes
       #region Owner Data Properties
 
       /// <summary>
-      /// Name of the Client Instance that owns this Benchmark
+      /// Fully qualified name of the folding slot that owns this object (includes "Slot" designation).
       /// </summary>
-      [DataMember(Order = 1)]
-      public string OwningSlotName { get; set; }
+      public string OwningSlotName
+      {
+         get { return OwningClientName.AppendSlotId(OwningSlotId); }
+      }
 
       /// <summary>
-      /// Path of the Client Instance that owns this Benchmark
+      /// Name of the folding client that owns this object (name given during client setup).
+      /// </summary>
+      [DataMember(Order = 1)]
+      public string OwningClientName { get; set; }
+
+      /// <summary>
+      /// Path of the folding slot that own this object.
       /// </summary>
       [DataMember(Order = 2)]
-      public string OwningSlotPath { get; set; }
+      public string OwningClientPath { get; set; }
+
+      /// <summary>
+      /// Identification number of the folding slot on the folding client that owns this object.
+      /// </summary>
+      [DataMember(Order = 6, IsRequired = true)]
+      public int OwningSlotId { get; set; }
 
       #endregion
 
@@ -98,7 +111,7 @@ namespace HFM.Core.DataTypes
       /// </summary>
       public BenchmarkClient Client
       {
-         get { return new BenchmarkClient(OwningSlotName, OwningSlotPath); }
+         get { return new BenchmarkClient(OwningSlotName, OwningClientPath); }
       }
       
       #endregion
@@ -110,6 +123,7 @@ namespace HFM.Core.DataTypes
       /// </summary>
       public ProteinBenchmark()
       {
+         OwningSlotId = -1;
          MinimumFrameTime = TimeSpan.Zero;
          FrameTimes = new List<ProteinFrameTime>(DefaultMaxFrames);
       }
@@ -174,10 +188,10 @@ namespace HFM.Core.DataTypes
 
       #region IEquatable<ProteinBenchmark> Members
 
-      public bool Equals(IOwnedByClientSlot other)
+      public bool Equals(IOwnedByClient other)
       {
          return OwningSlotName == other.OwningSlotName &&
-                Paths.Equal(OwningSlotPath, other.OwningSlotPath) &&
+                Paths.Equal(OwningClientPath, other.OwningClientPath) &&
                 ProjectID == other.ProjectID;
       }
 

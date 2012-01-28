@@ -1,6 +1,6 @@
 /*
  * HFM.NET - RichTextBox Wrapper Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -95,7 +95,7 @@ namespace HFM.Forms.Controls
          else
          {
             Rtf = null;
-            Lines = (from LogLine line in _logLines select line.LineRaw).ToArray();
+            Lines = (from LogLine line in _logLines select line.LineRaw.Replace("\r", String.Empty)).ToArray();
          }
       }
 

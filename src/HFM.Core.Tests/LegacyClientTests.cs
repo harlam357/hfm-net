@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Legacy Client Class Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -39,8 +39,8 @@ namespace HFM.Core.Tests
          var legacyClient = new LegacyClient { BenchmarkCollection = benchmarkCollection, UnitInfoDatabase = database };
 
          var unitInfo1 = new UnitInfo();
-         unitInfo1.OwningSlotName = "Owner";
-         unitInfo1.OwningSlotPath = "Path";
+         unitInfo1.OwningClientName = "Owner";
+         unitInfo1.OwningClientPath = "Path";
          unitInfo1.ProjectID = 2669;
          unitInfo1.ProjectRun = 1;
          unitInfo1.ProjectClone = 2;
@@ -56,8 +56,8 @@ namespace HFM.Core.Tests
          var unitInfoLogic1 = new UnitInfoLogic { CurrentProtein = new Protein(), UnitInfoData = unitInfo1Clone };
 
          var unitInfo2 = new UnitInfo();
-         unitInfo2.OwningSlotName = "Owner";
-         unitInfo2.OwningSlotPath = "Path";
+         unitInfo2.OwningClientName = "Owner";
+         unitInfo2.OwningClientPath = "Path";
          unitInfo2.ProjectID = 2669;
          unitInfo2.ProjectRun = 2;
          unitInfo2.ProjectClone = 3;
@@ -66,8 +66,8 @@ namespace HFM.Core.Tests
          var unitInfoLogic2 = new UnitInfoLogic { CurrentProtein = new Protein(), UnitInfoData = unitInfo2 };
 
          var unitInfo3 = new UnitInfo();
-         unitInfo3.OwningSlotName = "Owner";
-         unitInfo3.OwningSlotPath = "Path";
+         unitInfo3.OwningClientName = "Owner";
+         unitInfo3.OwningClientPath = "Path";
          unitInfo3.ProjectID = 2669;
          unitInfo3.ProjectRun = 3;
          unitInfo3.ProjectClone = 4;

@@ -49,8 +49,8 @@ namespace HFM.Core.Tests
          unitInfo.ProjectRun = 1;
          unitInfo.ProjectClone = 2;
          unitInfo.ProjectGen = 3;
-         unitInfo.OwningSlotName = "Owner";
-         unitInfo.OwningSlotPath = "Path";
+         unitInfo.OwningClientName = "Owner";
+         unitInfo.OwningClientPath = "Path";
          unitInfo.FoldingID = "harlam357";
          unitInfo.Team = 32;
          unitInfo.CoreVersion = "2.09";
@@ -108,8 +108,8 @@ namespace HFM.Core.Tests
          unitInfo.ProjectRun = 4;
          unitInfo.ProjectClone = 5;
          unitInfo.ProjectGen = 6;
-         unitInfo.OwningSlotName = "Owner's";
-         unitInfo.OwningSlotPath = "The Path's";
+         unitInfo.OwningClientName = "Owner's";
+         unitInfo.OwningClientPath = "The Path's";
          unitInfo.FoldingID = "harlam357's";
          unitInfo.Team = 100;
          unitInfo.CoreVersion = "2.27";
@@ -167,8 +167,8 @@ namespace HFM.Core.Tests
          unitInfo.ProjectRun = 2;
          unitInfo.ProjectClone = 3;
          unitInfo.ProjectGen = 4;
-         unitInfo.OwningSlotName = "Owner";
-         unitInfo.OwningSlotPath = "Path";
+         unitInfo.OwningClientName = "Owner";
+         unitInfo.OwningClientPath = "Path";
          unitInfo.FoldingID = "harlam357";
          unitInfo.Team = 32;
          unitInfo.CoreVersion = "2.09";
@@ -187,6 +187,8 @@ namespace HFM.Core.Tests
          var rows = database.QueryUnitData(new QueryParameters());
          Assert.AreEqual(1, rows.Count);
          HistoryEntry entry = rows[0];
+         Assert.AreEqual("Owner", entry.Name);
+         Assert.AreEqual("Path", entry.Path);
          Assert.AreEqual(2670, entry.ProjectID);
          Assert.AreEqual(2, entry.ProjectRun);
          Assert.AreEqual(3, entry.ProjectClone);
@@ -194,6 +196,54 @@ namespace HFM.Core.Tests
          Assert.AreEqual(WorkUnitResult.EarlyUnitEnd, entry.Result.ToWorkUnitResult());
          Assert.AreEqual(new DateTime(2010, 2, 2), entry.DownloadDateTime);
          Assert.AreEqual(DateTime.MinValue, entry.CompletionDateTime);
+
+         File.Delete(testFile);
+      }
+
+      [Test]
+      public void WriteUnitInfoTest4()
+      {
+         const string testFile = "UnitInfoTest4.db3";
+         if (File.Exists(testFile))
+         {
+            File.Delete(testFile);
+         }
+
+         var unitInfo = new UnitInfo();
+         unitInfo.ProjectID = 6903;
+         unitInfo.ProjectRun = 2;
+         unitInfo.ProjectClone = 3;
+         unitInfo.ProjectGen = 4;
+         unitInfo.OwningClientName = "Owner2";
+         unitInfo.OwningClientPath = "Path2";
+         unitInfo.OwningSlotId = 2;
+         unitInfo.FoldingID = "harlam357";
+         unitInfo.Team = 32;
+         unitInfo.CoreVersion = "2.27";
+         unitInfo.UnitResult = WorkUnitResult.FinishedUnit;
+         unitInfo.DownloadTime = new DateTime(2012, 1, 2);
+         unitInfo.FinishedTime = new DateTime(2012, 1, 5);
+         unitInfo.SetCurrentFrame(new UnitFrame { FrameID = 99, TimeOfFrame = TimeSpan.Zero });
+         unitInfo.SetCurrentFrame(new UnitFrame { FrameID = 100, TimeOfFrame = TimeSpan.FromMinutes(10) });
+
+         var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo);
+
+         var database = CreateUnitInfoDatabase();
+         database.DatabaseFilePath = testFile;
+         database.WriteUnitInfo(unitInfoLogic);
+
+         var rows = database.QueryUnitData(new QueryParameters());
+         Assert.AreEqual(1, rows.Count);
+         HistoryEntry entry = rows[0];
+         Assert.AreEqual("Owner2 Slot 2", entry.Name);
+         Assert.AreEqual("Path2", entry.Path);
+         Assert.AreEqual(6903, entry.ProjectID);
+         Assert.AreEqual(2, entry.ProjectRun);
+         Assert.AreEqual(3, entry.ProjectClone);
+         Assert.AreEqual(4, entry.ProjectGen);
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, entry.Result.ToWorkUnitResult());
+         Assert.AreEqual(new DateTime(2012, 1, 2), entry.DownloadDateTime);
+         Assert.AreEqual(new DateTime(2012, 1, 5), entry.CompletionDateTime);
 
          File.Delete(testFile);
       }

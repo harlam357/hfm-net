@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - DataGridView Progress Column Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -66,6 +66,10 @@ namespace HFM.Forms.Controls
                                     object value, object formattedValue, string errorText, DataGridViewCellStyle cellStyle,
                                     DataGridViewAdvancedBorderStyle advancedBorderStyle, DataGridViewPaintParts paintParts)
       {
+         // this is new... sometimes being passed a null
+         // value here.  check and get out if so. - 1/28/12
+         if (value == null) return;
+         
          var percentage = (float)value;
          var progressVal = Convert.ToInt32(percentage * 100);
          Brush foreColorBrush = new SolidBrush(cellStyle.ForeColor);
