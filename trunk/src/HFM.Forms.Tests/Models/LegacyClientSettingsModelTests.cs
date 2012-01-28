@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Legacy Client Settings Model Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -66,7 +66,7 @@ namespace HFM.Forms.Tests.Models
       {
          var model = CreateValidModel(LegacyClientSubType.Ftp);
          Assert.AreEqual(LegacyClientSubType.Ftp, model.LegacyClientSubType);
-         Assert.AreEqual("/path", model.Path);
+         Assert.AreEqual("/path/", model.Path);
          Assert.AreEqual("123.123.123.123", model.Server);
          Assert.AreEqual(45000, model.Port);
          Assert.AreEqual("ftpuser", model.Username);
@@ -337,7 +337,7 @@ namespace HFM.Forms.Tests.Models
          Assert.IsFalse(model.Error);
 
          model.Path = "bad)path";
-         Assert.AreEqual("bad)path", model.Path);
+         Assert.AreEqual("bad)path\\", model.Path);
          Assert.IsTrue(model.PathError);
          Assert.IsTrue(model.Error);
       }
@@ -400,11 +400,11 @@ namespace HFM.Forms.Tests.Models
          var model = CreateValidModel(LegacyClientSubType.Path);
          bool propertyChangedFired = false;
          model.PropertyChanged += (sender, e) => propertyChangedFired = (e.PropertyName == "Path");
-         model.Path = "C:\\newpath";
+         model.Path = "C:\\newpath\\";
          Assert.IsTrue(propertyChangedFired);
 
          propertyChangedFired = false;
-         model.Path = "C:\\newpath";
+         model.Path = "C:\\newpath\\";
          Assert.IsFalse(propertyChangedFired);
       }
 
