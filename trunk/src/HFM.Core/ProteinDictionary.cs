@@ -120,6 +120,7 @@ namespace HFM.Core
             try
             {
                Load(Read(_downloader.DownloadFilePath, new HtmlSerializer()));
+               Write();
             }
             catch (Exception ex)
             {
@@ -144,6 +145,7 @@ namespace HFM.Core
             //   if (protein != null)
             //   {
             //      Add(protein.ProjectNumber, protein);
+            //      Write();
             //   }
             //}
             //catch (Exception ex)

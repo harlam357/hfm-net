@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Legacy Data Aggregator Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -176,6 +176,8 @@ namespace HFM.Core
 
       private static ClientQueue BuildClientQueue(QueueData q)
       {
+         Debug.Assert(q != null);
+
          var cq = Mapper.Map<QueueData, ClientQueue>(q);
          for (int i = 0; i < 10; i++)
          {
@@ -234,6 +236,8 @@ namespace HFM.Core
 
       private UnitInfo[] GenerateUnitInfoDataFromQueue(QueueData q)
       {
+         Debug.Assert(q != null);
+
          var parsedUnits = new UnitInfo[10];
          _unitLogLines = new IList<LogLine>[10];
 
@@ -313,6 +317,10 @@ namespace HFM.Core
 
       private UnitInfo BuildUnitInfo(QueueEntry queueEntry, FahLogUnitData fahLogUnitData, UnitInfoLogData unitInfoLogData, bool matchOverride)
       {
+         // queueEntry can be null
+         Debug.Assert(fahLogUnitData != null);
+         // unitInfoLogData can be null
+
          var unit = new UnitInfo();
          unit.UnitStartTimeStamp = fahLogUnitData.UnitStartTimeStamp;
          unit.FramesObserved = fahLogUnitData.FramesObserved;
@@ -349,6 +357,8 @@ namespace HFM.Core
       private static void SearchFahLogUnitDataProjects(UnitInfo unit, FahLogUnitData fahLogUnitData)
       {
          Debug.Assert(unit != null);
+         Debug.Assert(fahLogUnitData != null);
+
          for (int i = 0; i < fahLogUnitData.ProjectInfoList.Count; i++)
          {
             if (ProjectsMatch(unit, fahLogUnitData.ProjectInfoList[i]))
@@ -361,6 +371,7 @@ namespace HFM.Core
       private static bool ProjectsMatch(UnitInfo unit, IProjectInfo projectInfo)
       {
          Debug.Assert(unit != null);
+
          if (unit.ProjectIsUnknown() || projectInfo == null) return false;
       
          return (unit.ProjectID == projectInfo.ProjectID &&
@@ -373,6 +384,9 @@ namespace HFM.Core
 
       private static void PopulateUnitInfoFromQueueEntry(QueueEntry entry, UnitInfo unit)
       {
+         Debug.Assert(entry != null);
+         Debug.Assert(unit != null);
+
          // convert to enum
          var queueEntryStatus = (QueueEntryStatus)entry.EntryStatus;
       
@@ -417,6 +431,7 @@ namespace HFM.Core
       {
          Debug.Assert(currentClientRun != null);
          Debug.Assert(fahLogUnitData != null);
+         // unitInfoLogData can be null
          Debug.Assert(unit != null);
 
          /* Project (R/C/G) (Could have already been read through Queue) */
@@ -488,6 +503,9 @@ namespace HFM.Core
 
       private static void ParseFrameData(IEnumerable<LogLine> frameData, UnitInfo unit)
       {
+         Debug.Assert(frameData != null);
+         Debug.Assert(unit != null);
+
          foreach (var logLine in frameData)
          {
             // Check for FrameData

@@ -447,8 +447,12 @@ namespace HFM.Core
          }
       }
 
-      private static void PopulateRunLevelData(ClientRun run, Info info, SlotModel slotModel)
+      private void PopulateRunLevelData(ClientRun run, Info info, SlotModel slotModel)
       {
+         if (run == null) Logger.Info("{0}: Argument run is null", Instrumentation.FunctionName);
+         if (info == null) Logger.Info("{0}: Argument info is null", Instrumentation.FunctionName);
+         if (slotModel == null) Logger.Info("{0}: Argument slotModel is null", Instrumentation.FunctionName);
+
          //slotModel.Arguments = run.Arguments;
          slotModel.ClientVersion = info.Build.Version;
 
