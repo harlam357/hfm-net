@@ -67,7 +67,7 @@ namespace HFM.Core.Logging
                {
                   string formattedMessage = FormatMessage(loggerLevel, message);
                   OnTextMessage(new TextMessageEventArgs(new[] { formattedMessage }));
-                  Trace.WriteLine(exception.ToString());
+                  Trace.WriteLine(FormatMessage(loggerLevel, exception.ToString()));
                }
             }
          }

@@ -115,6 +115,12 @@ namespace HFM.Core
       public IDictionary<int, UnitInfo> AggregateData(IList<LogLine> logLines, UnitCollection unitCollection, Options options, 
                                                       SlotOptions slotOptions, UnitInfo currentUnifInfo, int slotId)
       {
+         if (logLines == null) throw new ArgumentNullException("logLines");
+         if (unitCollection == null) throw new ArgumentNullException("unitCollection");
+         if (options == null) throw new ArgumentNullException("options");
+         if (slotOptions == null) throw new ArgumentNullException("slotOptions");
+         if (currentUnifInfo == null) throw new ArgumentNullException("currentUnifInfo");
+
          _currentUnitIndex = -1;
          // only take up to the last MaxDisplayableLogLines
          _currentLogLines = logLines.Skip(Math.Max(0, logLines.Count - Constants.MaxDisplayableLogLines)).ToList();
@@ -136,6 +142,8 @@ namespace HFM.Core
 
       //private static ClientQueue BuildClientQueue(QueueData q)
       //{
+      //   Debug.Assert(q != null);
+      //
       //   var cq = Mapper.Map<QueueData, ClientQueue>(q);
       //   for (int i = 0; i < 10; i++)
       //   {
@@ -148,6 +156,11 @@ namespace HFM.Core
       private IDictionary<int, UnitInfo> GenerateUnitInfoDataFromQueue(IEnumerable<Unit> unitCollection, Options options, 
                                                                        SlotOptions slotOptions, UnitInfo currentUnitInfo, int slotId)
       {
+         Debug.Assert(unitCollection != null);
+         Debug.Assert(options != null);
+         Debug.Assert(slotOptions != null);
+         Debug.Assert(currentUnitInfo != null);
+
          var parsedUnits = new Dictionary<int, UnitInfo>();
          _unitLogLines = new Dictionary<int, IList<LogLine>>();
 
@@ -215,6 +228,8 @@ namespace HFM.Core
       private static UnitInfo BuildUnitInfo(Unit queueEntry, Options options, SlotOptions slotOptions, FahLogUnitData fahLogUnitData)
       {
          Debug.Assert(queueEntry != null);
+         Debug.Assert(options != null);
+         Debug.Assert(slotOptions != null);
          Debug.Assert(fahLogUnitData != null);
 
          var unit = new UnitInfo();
@@ -267,6 +282,11 @@ namespace HFM.Core
 
       private static void PopulateUnitInfoFromQueueEntry(Unit entry, Options options, SlotOptions slotOptions, UnitInfo unit)
       {
+         Debug.Assert(entry != null);
+         Debug.Assert(options != null);
+         Debug.Assert(slotOptions != null);
+         Debug.Assert(unit != null);
+
          /* DownloadTime (AssignedDateTime from HFM.Client API) */
          unit.DownloadTime = entry.AssignedDateTime.GetValueOrDefault();
 
@@ -287,8 +307,8 @@ namespace HFM.Core
          unit.ProjectGen = entry.Gen;
 
          /* FoldingID and Team from Queue Entry */
-         unit.FoldingID = options.User;
-         unit.Team = options.Team.GetValueOrDefault();
+         unit.FoldingID = options.User ?? Default.FoldingID;
+         unit.Team = options.Team ?? Default.Team;
          unit.SlotType = (SlotType)slotOptions.FahClientSubTypeEnum;
 
          /* Core ID */
@@ -297,6 +317,9 @@ namespace HFM.Core
 
       private static void ParseFrameData(IEnumerable<LogLine> frameData, UnitInfo unit)
       {
+         Debug.Assert(frameData != null);
+         Debug.Assert(unit != null);
+
          foreach (var logLine in frameData)
          {
             // Check for FrameData
