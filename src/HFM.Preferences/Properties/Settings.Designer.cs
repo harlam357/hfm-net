@@ -1151,5 +1151,17 @@ namespace HFM.Preferences.Properties {
                 this["WebGenType"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool FollowLogFile {
+            get {
+                return ((bool)(this["FollowLogFile"]));
+            }
+            set {
+                this["FollowLogFile"] = value;
+            }
+        }
     }
 }

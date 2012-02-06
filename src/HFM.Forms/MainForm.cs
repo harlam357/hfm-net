@@ -67,6 +67,8 @@ namespace HFM.Forms
 
       bool QueueControlVisible { get; set; }
 
+      bool FollowLogFileChecked { get; set; }
+
       #endregion
       
       #region Methods
@@ -135,6 +137,12 @@ namespace HFM.Forms
       {
          get { return queueControl.Visible; }
          set { queueControl.Visible = value; }
+      }
+
+      public bool FollowLogFileChecked
+      {
+         get { return ViewToggleFollowLogFileMenuItem.Checked; }
+         set { ViewToggleFollowLogFileMenuItem.Checked = value; }
       }
       
       #endregion
@@ -562,6 +570,11 @@ namespace HFM.Forms
       private void mnuViewCycleCalculation_Click(object sender, EventArgs e)
       {
          _presenter.ViewCycleCalculationClick();
+      }
+
+      private void ViewToggleFollowLogFileMenuItem_Click(object sender, EventArgs e)
+      {
+         _presenter.ViewToggleFollowLogFile();
       }
       
       public void ShowNotifyToolTip(string text)

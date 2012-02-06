@@ -239,6 +239,7 @@ namespace HFM.Core
       PpdCalculation,
       DecimalPlaces,
       CalculateBonus,
+      FollowLogFile,
       EtaDate,
       LogFileViewer,
       FileExplorer,

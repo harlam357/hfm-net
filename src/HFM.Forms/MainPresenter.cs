@@ -219,6 +219,7 @@ namespace HFM.Forms
          {
             ShowHideQueue(false);
          }
+         _view.FollowLogFileChecked = _prefs.Get<bool>(Preference.FollowLogFile);
 
          //if (Prefs.FormSortColumn != String.Empty &&
          //    Prefs.FormSortOrder != SortOrder.None)
@@ -239,13 +240,13 @@ namespace HFM.Forms
             for (int i = 0; i < colsArray.Length; i++)
             {
                string[] a = colsArray[i].Split(',');
-               int index = int.Parse(a[3]);
+               int index = Int32.Parse(a[3]);
                _view.DataGridView.Columns[index].DisplayIndex = Int32.Parse(a[0]);
                if (_view.DataGridView.Columns[index].AutoSizeMode.Equals(DataGridViewAutoSizeColumnMode.Fill) == false)
                {
                   _view.DataGridView.Columns[index].Width = Int32.Parse(a[1]);
                }
-               _view.DataGridView.Columns[index].Visible = bool.Parse(a[2]);
+               _view.DataGridView.Columns[index].Visible = Boolean.Parse(a[2]);
             }
          }
          catch (NullReferenceException)
@@ -519,7 +520,10 @@ namespace HFM.Forms
             _view.LogFileViewer.SetNoLogLines();
          }
 
-         _view.LogFileViewer.ScrollToBottom();
+         if (_prefs.Get<bool>(Preference.FollowLogFile))
+         {
+            _view.LogFileViewer.ScrollToBottom();
+         }
       }
 
       private void DataGridViewColumnDisplayIndexChanged()
@@ -1183,6 +1187,11 @@ namespace HFM.Forms
                                          select item.DisplayMember).First();
          _view.ShowNotifyToolTip(calculationTypeString);
          _view.DataGridView.Invalidate();
+      }
+
+      internal void ViewToggleFollowLogFile()
+      {
+         _prefs.Set(Preference.FollowLogFile, !_prefs.Get<bool>(Preference.FollowLogFile));
       }
 
       #endregion
