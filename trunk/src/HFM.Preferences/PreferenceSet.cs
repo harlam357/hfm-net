@@ -267,6 +267,7 @@ namespace HFM.Preferences
          _prefs.Add(Preference.PpdCalculation, new Metadata<PpdCalculationType>());
          _prefs.Add(Preference.DecimalPlaces, new Metadata<int>());
          _prefs.Add(Preference.CalculateBonus, new Metadata<BonusCalculationType>());
+         _prefs.Add(Preference.FollowLogFile, new Metadata<bool>());
          _prefs.Add(Preference.EtaDate, new Metadata<bool>());
          _prefs.Add(Preference.LogFileViewer, new Metadata<string>());
          _prefs.Add(Preference.FileExplorer, new Metadata<string>());
@@ -392,6 +393,7 @@ namespace HFM.Preferences
          Set(Preference.PpdCalculation, GetPpdCalculation());
          Set(Preference.DecimalPlaces, Settings.Default.DecimalPlaces);
          Set(Preference.CalculateBonus, GetBonusCalculation());
+         Set(Preference.FollowLogFile, Settings.Default.FollowLogFile);
          Set(Preference.EtaDate, Settings.Default.EtaDate);
          Set(Preference.LogFileViewer, Settings.Default.LogFileViewer);
          Set(Preference.FileExplorer, Settings.Default.FileExplorer);
@@ -850,6 +852,7 @@ namespace HFM.Preferences
                raiseCalculateBonusChanged = true;
             }
             Settings.Default.CalculateBonus = Get<BonusCalculationType>(Preference.CalculateBonus).ToString();
+            Settings.Default.FollowLogFile = Get<bool>(Preference.FollowLogFile);
             Settings.Default.EtaDate = Get<bool>(Preference.EtaDate);
             Settings.Default.LogFileViewer = Get<string>(Preference.LogFileViewer);
             Settings.Default.FileExplorer = Get<string>(Preference.FileExplorer);

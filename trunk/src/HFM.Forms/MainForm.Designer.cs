@@ -90,6 +90,7 @@ namespace HFM.Forms
          this.mnuViewSep3 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuViewToggleBonusCalculation = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuViewCycleCalculationStyle = new System.Windows.Forms.ToolStripMenuItem();
+         this.ViewToggleFollowLogFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuToolsBenchmarks = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuToolsHistory = new System.Windows.Forms.ToolStripMenuItem();
@@ -564,6 +565,7 @@ namespace HFM.Forms
             this.mnuViewToggleDateTime,
             this.mnuViewToggleCompletedCountStyle,
             this.mnuViewToggleVersionInformation,
+            this.ViewToggleFollowLogFileMenuItem,
             this.mnuViewSep3,
             this.mnuViewToggleBonusCalculation,
             this.mnuViewCycleCalculationStyle});
@@ -638,7 +640,7 @@ namespace HFM.Forms
          this.mnuViewToggleBonusCalculation.Name = "mnuViewToggleBonusCalculation";
          this.mnuViewToggleBonusCalculation.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.O)));
          this.mnuViewToggleBonusCalculation.Size = new System.Drawing.Size(303, 22);
-         this.mnuViewToggleBonusCalculation.Text = "Cycle Bo&nus PPD/Credit Calculation";
+         this.mnuViewToggleBonusCalculation.Text = "Cycle B&onus PPD/Credit Calculation";
          this.mnuViewToggleBonusCalculation.Click += new System.EventHandler(this.mnuViewToggleBonusCalculation_Click);
          // 
          // mnuViewCycleCalculationStyle
@@ -648,6 +650,15 @@ namespace HFM.Forms
          this.mnuViewCycleCalculationStyle.Size = new System.Drawing.Size(303, 22);
          this.mnuViewCycleCalculationStyle.Text = "Cycle &PPD/Credit Calculation";
          this.mnuViewCycleCalculationStyle.Click += new System.EventHandler(this.mnuViewCycleCalculation_Click);
+         // 
+         // ViewToggleFollowLogFileMenuItem
+         // 
+         this.ViewToggleFollowLogFileMenuItem.CheckOnClick = true;
+         this.ViewToggleFollowLogFileMenuItem.Name = "ViewToggleFollowLogFileMenuItem";
+         this.ViewToggleFollowLogFileMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.W)));
+         this.ViewToggleFollowLogFileMenuItem.Size = new System.Drawing.Size(303, 22);
+         this.ViewToggleFollowLogFileMenuItem.Text = "Toggle Follo&w Log File";
+         this.ViewToggleFollowLogFileMenuItem.Click += new System.EventHandler(this.ViewToggleFollowLogFileMenuItem_Click);
          // 
          // mnuTools
          // 
@@ -1191,5 +1202,6 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripSeparator mnuClientsSep3;
       private System.Windows.Forms.ToolStripMenuItem mnuClientsAddLegacy;
       private System.Windows.Forms.ToolStripMenuItem mnuToolsPointsCalculator;
+      private System.Windows.Forms.ToolStripMenuItem ViewToggleFollowLogFileMenuItem;
    }
 }

@@ -157,6 +157,8 @@ namespace HFM.Core
 
          _slotOptions = new List<SlotOptions>();
 
+         //_fahClient.CacheMessage<Info>(true);
+         //_fahClient.CacheMessage<Options>(true);
          _fahClient.MessageUpdated += FahClientMessageUpdated;
          _fahClient.UpdateFinished += FahClientUpdateFinished;
          _fahClient.ConnectedChanged += FahClientConnectedChanged;
@@ -348,12 +350,11 @@ namespace HFM.Core
       private void SetUpdateCommands()
       {
          _fahClient.SendCommand("updates clear");
-         //_fahClient.SendCommand("log-updates restart");
-         _fahClient.SendCommand("log-updates start");
-         _fahClient.SendCommand("updates add 0 5 $heartbeat");
+         _fahClient.SendCommand("log-updates restart");
+         _fahClient.SendCommand("updates add 0 60 $heartbeat");
          _fahClient.SendCommand("updates add 1 1 $info");
          _fahClient.SendCommand("updates add 2 1 $(options -a)");
-         _fahClient.SendCommand("updates add 3 4 $queue-info");
+         _fahClient.SendCommand("updates add 3 30 $queue-info");
          _fahClient.SendCommand("updates add 4 1 $slot-info");
       }
 
@@ -447,21 +448,19 @@ namespace HFM.Core
          }
       }
 
-      private void PopulateRunLevelData(ClientRun run, Info info, SlotModel slotModel)
+      private static void PopulateRunLevelData(ClientRun run, Info info, SlotModel slotModel)
       {
-         if (run == null) Logger.Info("{0}: Argument run is null", Instrumentation.FunctionName);
-         if (info == null) Logger.Info("{0}: Argument info is null", Instrumentation.FunctionName);
-         if (slotModel == null) Logger.Info("{0}: Argument slotModel is null", Instrumentation.FunctionName);
+         Debug.Assert(slotModel != null);
 
-         //slotModel.Arguments = run.Arguments;
-         slotModel.ClientVersion = info.Build.Version;
-
-         //slotModel.UserId = run.UserID;
-         //slotModel.MachineId = run.MachineID;
-
-         slotModel.TotalRunCompletedUnits = run.CompletedUnits;
-         slotModel.TotalRunFailedUnits = run.FailedUnits;
-         //slotModel.TotalCompletedUnits = run.TotalCompletedUnits;
+         if (info != null)
+         {
+            slotModel.ClientVersion = info.Build.Version;
+         }
+         if (run != null)
+         {
+            slotModel.TotalRunCompletedUnits = run.CompletedUnits;
+            slotModel.TotalRunFailedUnits = run.FailedUnits;
+         }
       }
 
       internal void UpdateBenchmarkData(UnitInfoLogic currentUnitInfo, IEnumerable<UnitInfoLogic> parsedUnits, int currentUnitIndex)
