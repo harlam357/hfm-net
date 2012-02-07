@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Client Data Type Enumerations
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -71,16 +71,17 @@ namespace HFM.Client.DataTypes
       Unknown,
       Windows,
       WindowsXP,
-      WindowsXPx64,
-      Vista32,
-      Vista64,
+      WindowsVista,
       Windows7,
-      //Windows7x32,
-      //Windows7x64,
       Linux,
       OSX
+   }
 
-      // Expand Linux and OSX members if necessary
+   public enum OperatingSystemArchitectureType
+   {
+      Unknown,
+      x86,
+      x64
    }
 
    public enum CpuManufacturer
