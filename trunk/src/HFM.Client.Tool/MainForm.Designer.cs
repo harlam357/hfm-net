@@ -51,6 +51,7 @@
          this.ClearMessagesButton = new System.Windows.Forms.Button();
          this.ClientCommandGroupBox = new System.Windows.Forms.GroupBox();
          this.StatusMessageListBox = new System.Windows.Forms.ListBox();
+         this.LogMessagesCheckBox = new System.Windows.Forms.CheckBox();
          this.StatusStrip.SuspendLayout();
          this.ConnectionGroupBox.SuspendLayout();
          this.ClientCommandGroupBox.SuspendLayout();
@@ -132,7 +133,7 @@
          // 
          // CommandTextBox
          // 
-         this.CommandTextBox.Location = new System.Drawing.Point(87, 19);
+         this.CommandTextBox.Location = new System.Drawing.Point(87, 20);
          this.CommandTextBox.Name = "CommandTextBox";
          this.CommandTextBox.Size = new System.Drawing.Size(193, 20);
          this.CommandTextBox.TabIndex = 1;
@@ -140,7 +141,7 @@
          // CommandLabel
          // 
          this.CommandLabel.AutoSize = true;
-         this.CommandLabel.Location = new System.Drawing.Point(24, 22);
+         this.CommandLabel.Location = new System.Drawing.Point(24, 23);
          this.CommandLabel.Name = "CommandLabel";
          this.CommandLabel.Size = new System.Drawing.Size(57, 13);
          this.CommandLabel.TabIndex = 0;
@@ -148,7 +149,7 @@
          // 
          // SendCommandButton
          // 
-         this.SendCommandButton.Location = new System.Drawing.Point(292, 14);
+         this.SendCommandButton.Location = new System.Drawing.Point(292, 15);
          this.SendCommandButton.Name = "SendCommandButton";
          this.SendCommandButton.Size = new System.Drawing.Size(119, 28);
          this.SendCommandButton.TabIndex = 2;
@@ -186,6 +187,7 @@
          // 
          // ConnectionGroupBox
          // 
+         this.ConnectionGroupBox.Controls.Add(this.LogMessagesCheckBox);
          this.ConnectionGroupBox.Controls.Add(this.DataReceivedValueLabel);
          this.ConnectionGroupBox.Controls.Add(this.DataSentValueLabel);
          this.ConnectionGroupBox.Controls.Add(this.DataReceivedLabel);
@@ -271,6 +273,17 @@
          this.StatusMessageListBox.Size = new System.Drawing.Size(246, 184);
          this.StatusMessageListBox.TabIndex = 4;
          // 
+         // LogMessagesCheckBox
+         // 
+         this.LogMessagesCheckBox.AutoSize = true;
+         this.LogMessagesCheckBox.Location = new System.Drawing.Point(292, 48);
+         this.LogMessagesCheckBox.Name = "LogMessagesCheckBox";
+         this.LogMessagesCheckBox.Size = new System.Drawing.Size(95, 17);
+         this.LogMessagesCheckBox.TabIndex = 13;
+         this.LogMessagesCheckBox.Text = "Log Messages";
+         this.LogMessagesCheckBox.UseVisualStyleBackColor = true;
+         this.LogMessagesCheckBox.CheckedChanged += new System.EventHandler(this.LogMessagesCheckBoxCheckedChanged);
+         // 
          // MainForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -321,6 +334,7 @@
       private System.Windows.Forms.Label DataReceivedLabel;
       private System.Windows.Forms.Label DataSentLabel;
       private System.Windows.Forms.Label DataReceivedValueLabel;
+      private System.Windows.Forms.CheckBox LogMessagesCheckBox;
    }
 }
 

@@ -201,9 +201,14 @@ namespace HFM.Client
       }
 
       /// <summary>
-      /// When true the receive buffer is written to a buffer.txt file.
+      /// When true the receive buffer is written to a log file.
       /// </summary>
       public bool DebugReceiveBuffer { get; set; }
+
+      /// <summary>
+      /// The file name to write buffer messages.
+      /// </summary>
+      public string DebugBufferFileName { get; set; }
 
       #endregion
 
@@ -498,9 +503,18 @@ namespace HFM.Client
          while (_stream.DataAvailable);
          // send data received event
          OnDataLengthReceived(new DataLengthEventArgs(totalBytesRead));
-         if (DebugReceiveBuffer)
+         if (DebugReceiveBuffer && !String.IsNullOrEmpty(DebugBufferFileName))
          {
-            System.IO.File.AppendAllText("buffer.txt", _readBuffer.ToString().Replace("\n", Environment.NewLine).Replace("\\n", Environment.NewLine));
+            try
+            {
+               System.IO.File.AppendAllText(DebugBufferFileName, 
+                  _readBuffer.ToString().Replace("\n", Environment.NewLine).Replace("\\n", Environment.NewLine));
+            }
+            catch (Exception ex)
+            {
+               OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
+                  "Debug buffer write failed: {0}", ex.Message), TraceLevel.Error));
+            }
          }
       }
 

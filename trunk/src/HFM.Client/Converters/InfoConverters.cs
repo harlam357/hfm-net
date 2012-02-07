@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Info Data Converters
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -74,13 +74,13 @@ namespace HFM.Client.Converters
 
             #region Detect Specific Windows Version
 
-            if (inputString.Contains("Windows(R) XP Professional x64 Edition"))
-            {
-               os = OperatingSystemType.WindowsXPx64;
-            }
-            else if (inputString.Contains("Windows XP"))
+            if (inputString.Contains("Windows XP"))
             {
                os = OperatingSystemType.WindowsXP;
+            }
+            else if (inputString.Contains("Vista"))
+            {
+               os = OperatingSystemType.WindowsVista;
             }
             else if (inputString.Contains("Windows 7"))
             {
@@ -100,6 +100,25 @@ namespace HFM.Client.Converters
             return OperatingSystemType.OSX;
          }
 
+         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
+            "Failed to parse OS value from '{0}'.", inputString));
+      }
+   }
+
+   internal sealed class OperatingSystemArchitectureConverter : IConversionProvider
+   {
+      public object Convert(object input)
+      {
+         var inputString = (string)input;
+         if (inputString == "X86")
+         {
+            return OperatingSystemArchitectureType.x86;
+         }
+         if (inputString == "AMD64")
+         {
+            return OperatingSystemArchitectureType.x64;
+         }
+         
          throw new FormatException(String.Format(CultureInfo.InvariantCulture,
             "Failed to parse OS value from '{0}'.", inputString));
       }

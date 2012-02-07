@@ -32,6 +32,7 @@ namespace HFM.Client.Tool
 
       private int _totalBytesSent;
       private int _totalBytesReceived;
+      private string _debugBufferFileName;
 
       public MainForm()
       {
@@ -41,7 +42,6 @@ namespace HFM.Client.Tool
          _fahClient.DataLengthSent += FahClientDataLengthSent;
          _fahClient.DataLengthReceived += FahClientDataLengthReceived;
          _fahClient.StatusMessage += FahClientStatusMessage;
-         _fahClient.DebugReceiveBuffer = true;
 
          InitializeComponent();
 
@@ -100,23 +100,64 @@ namespace HFM.Client.Tool
          StatusMessageListBox.SelectedIndex = StatusMessageListBox.Items.Count - 1;
       }
 
+      private void LogMessagesCheckBoxCheckedChanged(object sender, EventArgs e)
+      {
+         if (LogMessagesCheckBox.Checked)
+         {
+            if (String.IsNullOrEmpty(_debugBufferFileName))
+            {
+               using (var dlg = new OpenFileDialog { CheckFileExists = false })
+               {
+                  if (dlg.ShowDialog(this).Equals(DialogResult.OK))
+                  {
+                     _debugBufferFileName = dlg.FileName;
+                  }
+                  else
+                  {
+                     LogMessagesCheckBox.Checked = false;
+                     return;
+                  }
+               }
+            }
+
+            if (File.Exists(_debugBufferFileName))
+            {
+               string message = String.Format(CultureInfo.CurrentCulture, 
+                  "Do you want to delete the existing {0} file?", _debugBufferFileName);
+               if (MessageBox.Show(this, message, Text, MessageBoxButtons.YesNo).Equals(DialogResult.Yes))
+               {
+                  try
+                  {
+                     File.Delete(_debugBufferFileName);
+                  }
+                  catch (Exception)
+                  {
+                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture,
+                        "Could not delete {0}.  Make sure the file is not already in use.", _debugBufferFileName));
+                     LogMessagesCheckBox.Checked = false;
+                     return;
+                  }
+               }
+            }
+
+            _fahClient.DebugBufferFileName = _debugBufferFileName;
+            _fahClient.DebugReceiveBuffer = true;
+         }
+         else
+         {
+            _fahClient.DebugReceiveBuffer = false;
+         }
+      }
+
       private void ConnectButtonClick(object sender, EventArgs e)
       {
-         if (File.Exists("buffer.txt"))
-         {
-            try
-            {
-               File.Delete("buffer.txt");
-            }
-            // ReSharper disable EmptyGeneralCatchClause
-            catch (Exception)
-            { }
-            // ReSharper restore EmptyGeneralCatchClause
-         }
-
          try
          {
             _fahClient.Connect(HostAddressTextBox.Text, Int32.Parse(PortTextBox.Text), PasswordTextBox.Text);
+            _totalBytesSent = 0;
+            UpdateDataSentValueLabel(_totalBytesSent);
+            _totalBytesReceived = 0;
+            UpdateDataReceivedValueLabel(_totalBytesReceived);
          }
          catch (InvalidOperationException ex)
          {
@@ -186,19 +227,19 @@ namespace HFM.Client.Tool
          {
             _totalBytesSent += e.DataLength;
          }
-         UpdateDataSentValueLabel(String.Format(CultureInfo.CurrentCulture, 
-            "{0:0.0} KBs", _totalBytesSent / 1024.0));
+         UpdateDataSentValueLabel(_totalBytesSent);
       }
 
-      private void UpdateDataSentValueLabel(string text)
+      private void UpdateDataSentValueLabel(int value)
       {
          if (InvokeRequired)
          {
-            Invoke(new Action<string>(UpdateDataSentValueLabel), text);
+            Invoke(new Action<int>(UpdateDataSentValueLabel), value);
             return;
          }
 
-         DataSentValueLabel.Text = text;
+         DataSentValueLabel.Text = String.Format(CultureInfo.CurrentCulture,
+            "{0:0.0} KBs", value / 1024.0);
       }
 
       private void FahClientDataLengthReceived(object sender, DataLengthEventArgs e)
@@ -207,19 +248,19 @@ namespace HFM.Client.Tool
          {
             _totalBytesReceived += e.DataLength;
          }
-         UpdateDataReceivedValueLabel(String.Format(CultureInfo.CurrentCulture,
-            "{0:0.0} KBs", _totalBytesReceived / 1024.0));
+         UpdateDataReceivedValueLabel(_totalBytesReceived);
       }
 
-      private void UpdateDataReceivedValueLabel(string text)
+      private void UpdateDataReceivedValueLabel(int value)
       {
          if (InvokeRequired)
          {
-            Invoke(new Action<string>(UpdateDataReceivedValueLabel), text);
+            Invoke(new Action<int>(UpdateDataReceivedValueLabel), value);
             return;
          }
 
-         DataReceivedValueLabel.Text = text;
+         DataReceivedValueLabel.Text = String.Format(CultureInfo.CurrentCulture,
+            "{0:0.0} KBs", value / 1024.0);
       }
 
       #region TextBox KeyPress Event Handler (to enforce digits only)

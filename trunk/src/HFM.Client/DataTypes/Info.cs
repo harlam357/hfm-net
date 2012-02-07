@@ -184,6 +184,9 @@ namespace HFM.Client.DataTypes
       [MessageProperty("OS Arch")]
       public string OperatingSystemArchitecture { get; set; }
 
+      [MessageProperty("OS Arch", typeof(OperatingSystemArchitectureConverter))]
+      public OperatingSystemArchitectureType OperatingSystemArchitectureEnum { get; set; }
+
       [MessageProperty("CPU")]
       public string Cpu { get; set; }
 
