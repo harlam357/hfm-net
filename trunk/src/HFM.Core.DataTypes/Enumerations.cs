@@ -115,4 +115,52 @@ namespace HFM.Core.DataTypes
       SlotIndex,
       SlotAndNonIndexed
    }
+
+   // ReSharper disable InconsistentNaming
+
+   public enum OperatingSystemType
+   {
+      Unknown,
+      Windows,
+      WindowsXP,
+      WindowsVista,
+      Windows7,
+      Linux,
+      OSX
+   }
+
+   public enum OperatingSystemArchitectureType
+   {
+      Unknown,
+      x86,
+      x64
+   }
+
+   public enum CpuManufacturer
+   {
+      Unknown,
+      Intel,
+      AMD
+   }
+
+   public enum CpuType
+   {
+      Unknown,
+      Core2,
+      Corei7,
+      Corei5,
+      Corei3,
+      PhenomII,
+      Phenom,
+      Athlon
+   }
+
+   public enum GpuManufacturer
+   {
+      Unknown,
+      ATI,
+      Nvidia
+   }
+
+   // ReSharper restore InconsistentNaming
 }

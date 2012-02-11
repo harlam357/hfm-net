@@ -23,6 +23,7 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 
 using HFM.Client.Converters;
+using HFM.Core.DataTypes;
 
 namespace HFM.Client.DataTypes
 {
