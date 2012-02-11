@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Application Boot Strapper
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -146,7 +146,7 @@ namespace HFM
 
             #region Initialize Main View
 
-            IMainView mainView = ServiceLocator.Resolve<IMainView>();
+            var mainView = ServiceLocator.Resolve<IMainView>();
             var mainPresenter = ServiceLocator.Resolve<MainPresenter>();
             mainPresenter.Arguments = arguments;
             try

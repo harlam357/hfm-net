@@ -87,10 +87,10 @@ namespace HFM.Forms
          this.mnuViewToggleDateTime = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuViewToggleCompletedCountStyle = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuViewToggleVersionInformation = new System.Windows.Forms.ToolStripMenuItem();
+         this.ViewToggleFollowLogFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuViewSep3 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuViewToggleBonusCalculation = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuViewCycleCalculationStyle = new System.Windows.Forms.ToolStripMenuItem();
-         this.ViewToggleFollowLogFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuToolsBenchmarks = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuToolsHistory = new System.Windows.Forms.ToolStripMenuItem();
@@ -470,45 +470,45 @@ namespace HFM.Forms
          // mnuClientsAdd
          // 
          this.mnuClientsAdd.Name = "mnuClientsAdd";
-         this.mnuClientsAdd.Size = new System.Drawing.Size(186, 22);
-         this.mnuClientsAdd.Text = "&Add Client";
+         this.mnuClientsAdd.Size = new System.Drawing.Size(193, 22);
+         this.mnuClientsAdd.Text = "&Add Client (v7)";
          this.mnuClientsAdd.Click += new System.EventHandler(this.mnuClientsAdd_Click);
          // 
          // mnuClientsAddLegacy
          // 
          this.mnuClientsAddLegacy.Name = "mnuClientsAddLegacy";
-         this.mnuClientsAddLegacy.Size = new System.Drawing.Size(186, 22);
-         this.mnuClientsAddLegacy.Text = "Add Legacy Client";
+         this.mnuClientsAddLegacy.Size = new System.Drawing.Size(193, 22);
+         this.mnuClientsAddLegacy.Text = "Add Legacy Client (v6)";
          this.mnuClientsAddLegacy.Click += new System.EventHandler(this.mnuClientsAddLegacy_Click);
          // 
          // mnuClientsSep1
          // 
          this.mnuClientsSep1.Name = "mnuClientsSep1";
-         this.mnuClientsSep1.Size = new System.Drawing.Size(183, 6);
+         this.mnuClientsSep1.Size = new System.Drawing.Size(190, 6);
          // 
          // mnuClientsEdit
          // 
          this.mnuClientsEdit.Name = "mnuClientsEdit";
-         this.mnuClientsEdit.Size = new System.Drawing.Size(186, 22);
+         this.mnuClientsEdit.Size = new System.Drawing.Size(193, 22);
          this.mnuClientsEdit.Text = "&Edit Client";
          this.mnuClientsEdit.Click += new System.EventHandler(this.mnuClientsEdit_Click);
          // 
          // mnuClientsDelete
          // 
          this.mnuClientsDelete.Name = "mnuClientsDelete";
-         this.mnuClientsDelete.Size = new System.Drawing.Size(186, 22);
+         this.mnuClientsDelete.Size = new System.Drawing.Size(193, 22);
          this.mnuClientsDelete.Text = "&Delete Client";
          this.mnuClientsDelete.Click += new System.EventHandler(this.mnuClientsDelete_Click);
          // 
          // mnuClientsSep2
          // 
          this.mnuClientsSep2.Name = "mnuClientsSep2";
-         this.mnuClientsSep2.Size = new System.Drawing.Size(183, 6);
+         this.mnuClientsSep2.Size = new System.Drawing.Size(190, 6);
          // 
          // mnuClientsMergeClientData
          // 
          this.mnuClientsMergeClientData.Name = "mnuClientsMergeClientData";
-         this.mnuClientsMergeClientData.Size = new System.Drawing.Size(186, 22);
+         this.mnuClientsMergeClientData.Size = new System.Drawing.Size(193, 22);
          this.mnuClientsMergeClientData.Text = "&Merge Client Data";
          this.mnuClientsMergeClientData.Visible = false;
          this.mnuClientsMergeClientData.Click += new System.EventHandler(this.mnuClientsMerge_Click);
@@ -516,33 +516,33 @@ namespace HFM.Forms
          // mnuClientsSep3
          // 
          this.mnuClientsSep3.Name = "mnuClientsSep3";
-         this.mnuClientsSep3.Size = new System.Drawing.Size(183, 6);
+         this.mnuClientsSep3.Size = new System.Drawing.Size(190, 6);
          this.mnuClientsSep3.Visible = false;
          // 
          // mnuClientsViewCachedLog
          // 
          this.mnuClientsViewCachedLog.Name = "mnuClientsViewCachedLog";
-         this.mnuClientsViewCachedLog.Size = new System.Drawing.Size(186, 22);
+         this.mnuClientsViewCachedLog.Size = new System.Drawing.Size(193, 22);
          this.mnuClientsViewCachedLog.Text = "View Cached &Log File";
          this.mnuClientsViewCachedLog.Click += new System.EventHandler(this.mnuClientsViewCachedLog_Click);
          // 
          // mnuClientsViewClientFiles
          // 
          this.mnuClientsViewClientFiles.Name = "mnuClientsViewClientFiles";
-         this.mnuClientsViewClientFiles.Size = new System.Drawing.Size(186, 22);
+         this.mnuClientsViewClientFiles.Size = new System.Drawing.Size(193, 22);
          this.mnuClientsViewClientFiles.Text = "View Client &Files";
          this.mnuClientsViewClientFiles.Click += new System.EventHandler(this.mnuClientsViewClientFiles_Click);
          // 
          // mnuClientsSep4
          // 
          this.mnuClientsSep4.Name = "mnuClientsSep4";
-         this.mnuClientsSep4.Size = new System.Drawing.Size(183, 6);
+         this.mnuClientsSep4.Size = new System.Drawing.Size(190, 6);
          // 
          // mnuClientsRefreshSelected
          // 
          this.mnuClientsRefreshSelected.Name = "mnuClientsRefreshSelected";
          this.mnuClientsRefreshSelected.ShortcutKeys = System.Windows.Forms.Keys.F5;
-         this.mnuClientsRefreshSelected.Size = new System.Drawing.Size(186, 22);
+         this.mnuClientsRefreshSelected.Size = new System.Drawing.Size(193, 22);
          this.mnuClientsRefreshSelected.Text = "Refresh &Selected";
          this.mnuClientsRefreshSelected.Click += new System.EventHandler(this.mnuClientsRefreshSelected_Click);
          // 
@@ -550,7 +550,7 @@ namespace HFM.Forms
          // 
          this.mnuClientsRefreshAll.Name = "mnuClientsRefreshAll";
          this.mnuClientsRefreshAll.ShortcutKeys = System.Windows.Forms.Keys.F6;
-         this.mnuClientsRefreshAll.Size = new System.Drawing.Size(186, 22);
+         this.mnuClientsRefreshAll.Size = new System.Drawing.Size(193, 22);
          this.mnuClientsRefreshAll.Text = "&Refresh All";
          this.mnuClientsRefreshAll.Click += new System.EventHandler(this.mnuClientsRefreshAll_Click);
          // 
@@ -630,6 +630,15 @@ namespace HFM.Forms
          this.mnuViewToggleVersionInformation.Text = "Toggle &Version Information";
          this.mnuViewToggleVersionInformation.Click += new System.EventHandler(this.mnuViewToggleVersionInformation_Click);
          // 
+         // ViewToggleFollowLogFileMenuItem
+         // 
+         this.ViewToggleFollowLogFileMenuItem.CheckOnClick = true;
+         this.ViewToggleFollowLogFileMenuItem.Name = "ViewToggleFollowLogFileMenuItem";
+         this.ViewToggleFollowLogFileMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.W)));
+         this.ViewToggleFollowLogFileMenuItem.Size = new System.Drawing.Size(303, 22);
+         this.ViewToggleFollowLogFileMenuItem.Text = "Toggle Follo&w Log File";
+         this.ViewToggleFollowLogFileMenuItem.Click += new System.EventHandler(this.ViewToggleFollowLogFileMenuItem_Click);
+         // 
          // mnuViewSep3
          // 
          this.mnuViewSep3.Name = "mnuViewSep3";
@@ -650,15 +659,6 @@ namespace HFM.Forms
          this.mnuViewCycleCalculationStyle.Size = new System.Drawing.Size(303, 22);
          this.mnuViewCycleCalculationStyle.Text = "Cycle &PPD/Credit Calculation";
          this.mnuViewCycleCalculationStyle.Click += new System.EventHandler(this.mnuViewCycleCalculation_Click);
-         // 
-         // ViewToggleFollowLogFileMenuItem
-         // 
-         this.ViewToggleFollowLogFileMenuItem.CheckOnClick = true;
-         this.ViewToggleFollowLogFileMenuItem.Name = "ViewToggleFollowLogFileMenuItem";
-         this.ViewToggleFollowLogFileMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.W)));
-         this.ViewToggleFollowLogFileMenuItem.Size = new System.Drawing.Size(303, 22);
-         this.ViewToggleFollowLogFileMenuItem.Text = "Toggle Follo&w Log File";
-         this.ViewToggleFollowLogFileMenuItem.Click += new System.EventHandler(this.ViewToggleFollowLogFileMenuItem_Click);
          // 
          // mnuTools
          // 
