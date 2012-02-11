@@ -22,6 +22,7 @@ using System.IO;
 using NUnit.Framework;
 
 using HFM.Client.DataTypes;
+using HFM.Core.DataTypes;
 
 namespace HFM.Client.Tests.DataTypes
 {

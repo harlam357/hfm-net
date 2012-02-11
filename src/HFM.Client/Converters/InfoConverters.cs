@@ -21,7 +21,7 @@ using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-using HFM.Client.DataTypes;
+using HFM.Core.DataTypes;
 
 namespace HFM.Client.Converters
 {
