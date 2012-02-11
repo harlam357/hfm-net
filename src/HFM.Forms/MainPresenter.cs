@@ -40,7 +40,6 @@ using harlam357.Windows.Forms;
 using HFM.Core;
 using HFM.Core.DataTypes;
 using HFM.Forms.Models;
-using HFM.Proteins;
 
 namespace HFM.Forms
 {
@@ -1214,7 +1213,7 @@ namespace HFM.Forms
          IEnumerable<ProteinLoadInfo> loadInfo;
          try
          {
-            loadInfo = _proteinDictionary.Load(_proteinDictionary.Read(projectSummaryDownloader.DownloadFilePath, new HtmlSerializer()));
+            loadInfo = _proteinDictionary.Load(projectSummaryDownloader.DownloadFilePath);
             _proteinDictionary.Write();
             //_proteinDictionary.Write(Path.Combine(_prefs.ApplicationDataFolderPath, "ProjectInfo.xml"), new Core.Serializers.XmlFileSerializer<List<Protein>>());
          }
