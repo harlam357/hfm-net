@@ -91,7 +91,7 @@ namespace HFM.Core.DataTypes
 
       #endregion
 
-      #region IProtein
+      #region Protein
 
       public static bool IsUnknown(this Protein protein)
       {

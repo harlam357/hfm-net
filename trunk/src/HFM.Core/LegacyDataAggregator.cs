@@ -261,7 +261,7 @@ namespace HFM.Core
                if (queueIndex == q.CurrentIndex)
                {
                   string message = String.Format(CultureInfo.CurrentCulture,
-                     "Could not verify log section for current queue entry ({0}). Trying to parse with most recent log section.", queueIndex);
+                     "Could not verify log section for current queue entry {0}. Trying to parse with most recent log section.", queueIndex);
                   _logger.Warn(Constants.ClientNameFormat, ClientName, message);
 
                   _unitLogLines[queueIndex] = _logInterpreterLegacy.CurrentWorkUnitLogLines;

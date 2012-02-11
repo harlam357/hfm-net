@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -37,7 +38,17 @@ namespace HFM.Core.Logging
       {
          _prefs = prefs;
 
-         Initialize();
+         try
+         {
+            Initialize();
+         }
+         catch (IOException ex)
+         {
+            string message = String.Format(CultureInfo.CurrentCulture, 
+               "Logging failed to initialize.  Please check to be sure that the {0} or {1} file is not open or otherwise in use.", 
+               Constants.HfmLogFileName, Constants.HfmPrevLogFileName);
+            throw new IOException(message, ex);
+         }
          Level = GetLoggerLevel();
       }
 

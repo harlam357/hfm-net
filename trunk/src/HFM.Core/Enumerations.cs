@@ -40,6 +40,8 @@ namespace HFM.Core
       Http
    }
 
+   // ReSharper disable InconsistentNaming
+
    /// <summary>
    /// Folding Slot Type
    /// </summary>
@@ -50,6 +52,8 @@ namespace HFM.Core
       SMP,
       GPU
    }
+
+   // ReSharper restore InconsistentNaming
 
    /// <summary>
    /// Queue Entry Status Types
@@ -177,6 +181,8 @@ namespace HFM.Core
       Path,
       Ftp
    }
+
+   // ReSharper disable InconsistentNaming
    
    public enum Preference
    {
@@ -275,4 +281,6 @@ namespace HFM.Core
       HistoryFormColumns,
       CacheFolder
    }
+
+   // ReSharper restore InconsistentNaming
 }

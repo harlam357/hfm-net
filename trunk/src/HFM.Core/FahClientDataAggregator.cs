@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 
 using Castle.Core.Logging;
@@ -186,6 +187,9 @@ namespace HFM.Core
             var logLines = _logInterpreter.GetLogLinesForQueueIndex(unit.Id, projectInfo);
             if (logLines == null)
             {
+               string message = String.Format(CultureInfo.CurrentCulture,
+                  "Could not find log section for slot {0}. Cannot update data for this slot.", slotId);
+               _logger.Warn(Constants.ClientNameFormat, ClientName, message);
                // no log lines matching this unit
                continue;
             }

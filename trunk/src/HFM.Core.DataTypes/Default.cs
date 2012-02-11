@@ -33,7 +33,6 @@ namespace HFM.Core.DataTypes
       public const string UnitInfoFileName = "unitinfo.txt";
       public const string QueueFileName = "queue.dat";
       public const string FahClientLogFileName = "log.txt";
-      //public const string ExternalDataFileName = "ClientData.dat";
 
       public const int FahClientPort = 36330;
       public const int FtpPort = 21;
@@ -43,7 +42,7 @@ namespace HFM.Core.DataTypes
       private static readonly bool IsRunningOnMono = Type.GetType("Mono.Runtime") != null;
 
       /// <summary>
-      /// Get the DateTimeStyle for the given Client Instance.
+      /// Get the Default DateTimeStyle based on the current runtime (.NET or Mono).
       /// </summary>
       public static System.Globalization.DateTimeStyles DateTimeStyle
       {
