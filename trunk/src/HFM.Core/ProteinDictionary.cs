@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Core Protein Dictionary
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,6 +34,13 @@ namespace HFM.Core
       void ClearProjectsNotFoundCache();
 
       Protein GetProteinOrDownload(int projectId);
+
+      /// <summary>
+      /// Load element values into the ProteinDictionary and return an <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.
+      /// </summary>
+      /// <param name="fileName">File name to load into the dictionary.</param>
+      /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.</returns>
+      IEnumerable<ProteinLoadInfo> Load(string fileName);
 
       /// <summary>
       /// Load element values into the ProteinDictionary and return an <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.
@@ -195,6 +202,11 @@ namespace HFM.Core
          {
             _projectsNotFound.Add(projectId, DateTime.Now);
          }
+      }
+
+      public IEnumerable<ProteinLoadInfo> Load(string fileName)
+      {
+         return _dictionary.Load(fileName);
       }
 
       public IEnumerable<ProteinLoadInfo> Load(IEnumerable<Protein> values)

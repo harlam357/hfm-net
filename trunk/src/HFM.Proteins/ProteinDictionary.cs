@@ -23,6 +23,7 @@ using System.ComponentModel;
 using System.Linq;
 
 using HFM.Core.DataTypes;
+using HFM.Core.Plugins;
 
 namespace HFM.Proteins
 {
@@ -33,6 +34,27 @@ namespace HFM.Proteins
       public ProteinDictionary()
       {
          _dictionary = new SortedDictionary<int, Protein>();
+      }
+
+      /// <summary>
+      /// Load element values into the ProteinDictionary and return an <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.
+      /// </summary>
+      /// <param name="fileName">File name to load into the dictionary.</param>
+      /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.</returns>
+      public IEnumerable<ProteinLoadInfo> Load(string fileName)
+      {
+         return Load(fileName, new HtmlSerializer());
+      }
+
+      /// <summary>
+      /// Load element values into the ProteinDictionary and return an <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.
+      /// </summary>
+      /// <param name="fileName">File name to load into the dictionary.</param>
+      /// <param name="serializer">Serializer used to load the file.</param>
+      /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.</returns>
+      public IEnumerable<ProteinLoadInfo> Load(string fileName, IFileSerializer<List<Protein>> serializer)
+      {
+         return Load(serializer.Deserialize(fileName));
       }
 
       /// <summary>

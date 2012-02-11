@@ -79,7 +79,6 @@
     <Compile Include="TabSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProteinDictionary.cs" />
-    <Compile Include="ProteinLoadInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HFM.Core.DataTypes\HFM.Core.DataTypes.csproj">

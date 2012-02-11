@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Protein Load Info Metadata Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
-namespace HFM.Proteins
+namespace HFM.Core.DataTypes
 {
    public enum ProteinLoadResult
    {
@@ -56,13 +56,13 @@ namespace HFM.Proteins
          get { return _changes; }
       }
 
-      internal ProteinLoadInfo(int projectNumber, ProteinLoadResult result)
+      public ProteinLoadInfo(int projectNumber, ProteinLoadResult result)
          : this(projectNumber, result, null)
       {
 
       }
 
-      internal ProteinLoadInfo(int projectNumber, ProteinLoadResult result, IEnumerable<ProteinPropertyChange> changes)
+      public ProteinLoadInfo(int projectNumber, ProteinLoadResult result, IEnumerable<ProteinPropertyChange> changes)
       {
          _projectNumber = projectNumber;
          _result = result;
@@ -108,7 +108,7 @@ namespace HFM.Proteins
          get { return _newValue; }
       }
 
-      internal ProteinPropertyChange(string name, string oldValue, string newValue)
+      public ProteinPropertyChange(string name, string oldValue, string newValue)
       {
          _name = name;
          _oldValue = oldValue;
