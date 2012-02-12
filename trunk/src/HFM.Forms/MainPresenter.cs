@@ -1199,21 +1199,25 @@ namespace HFM.Forms
 
       public void ToolsDownloadProjectsClick()
       {
-         var projectSummaryDownloader = ServiceLocator.Resolve<IProjectSummaryDownloader>();
+         var downloader = ServiceLocator.Resolve<IProjectSummaryDownloader>();
          // Clear the Project Not Found Cache and Last Download Time
          _proteinDictionary.ClearProjectsNotFoundCache();
-         projectSummaryDownloader.ResetLastDownloadTime();
+         downloader.ResetLastDownloadTime();
          // Execute Asynchronous Download
          var projectDownloadView = ServiceLocator.Resolve<IProgressDialogView>();
          projectDownloadView.OwnerWindow = _view;
-         projectDownloadView.ProcessRunner = projectSummaryDownloader;
+         projectDownloadView.ProcessRunner = downloader;
          projectDownloadView.UpdateMessage(_prefs.Get<string>(Preference.ProjectDownloadUrl));
          projectDownloadView.Process();
 
          IEnumerable<ProteinLoadInfo> loadInfo;
          try
          {
-            loadInfo = _proteinDictionary.Load(projectSummaryDownloader.DownloadFilePath);
+            loadInfo = _proteinDictionary.Load(downloader.DownloadFilePath);
+            foreach (var info in loadInfo.Where(info => !info.Result.Equals(ProteinLoadResult.NoChange)))
+            {
+               Logger.Info(info.ToString());
+            }
             _proteinDictionary.Write();
             //_proteinDictionary.Write(Path.Combine(_prefs.ApplicationDataFolderPath, "ProjectInfo.xml"), new Core.Serializers.XmlFileSerializer<List<Protein>>());
          }
