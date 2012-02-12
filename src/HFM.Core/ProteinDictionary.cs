@@ -126,7 +126,11 @@ namespace HFM.Core
             _downloader.DownloadFromStanford();
             try
             {
-               Load(Read(_downloader.DownloadFilePath, new HtmlSerializer()));
+               var loadInfo = Load(_downloader.DownloadFilePath);
+               foreach (var info in loadInfo.Where(info => !info.Result.Equals(ProteinLoadResult.NoChange)))
+               {
+                  Logger.Info(info.ToString());
+               }
                Write();
             }
             catch (Exception ex)

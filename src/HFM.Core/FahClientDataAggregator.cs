@@ -114,13 +114,13 @@ namespace HFM.Core
       /// Aggregate Data and return UnitInfo List
       /// </summary>
       public IDictionary<int, UnitInfo> AggregateData(IList<LogLine> logLines, UnitCollection unitCollection, Info info, Options options, 
-                                                      SlotOptions slotOptions, UnitInfo currentUnifInfo, int slotId)
+                                                      SlotOptions slotOptions, UnitInfo currentUnitInfo, int slotId)
       {
          if (logLines == null) throw new ArgumentNullException("logLines");
          if (unitCollection == null) throw new ArgumentNullException("unitCollection");
          if (options == null) throw new ArgumentNullException("options");
          if (slotOptions == null) throw new ArgumentNullException("slotOptions");
-         if (currentUnifInfo == null) throw new ArgumentNullException("currentUnifInfo");
+         if (currentUnitInfo == null) throw new ArgumentNullException("currentUnitInfo");
 
          _currentUnitIndex = -1;
          // only take up to the last MaxDisplayableLogLines
@@ -134,7 +134,7 @@ namespace HFM.Core
             _logger.Debug(Constants.ClientNameFormat, ClientName, s);
          }
 
-         IDictionary<int, UnitInfo> parsedUnits = GenerateUnitInfoDataFromQueue(unitCollection, options, slotOptions, currentUnifInfo, slotId);
+         IDictionary<int, UnitInfo> parsedUnits = GenerateUnitInfoDataFromQueue(unitCollection, options, slotOptions, currentUnitInfo, slotId);
          _clientQueue = BuildClientQueue(unitCollection, info, slotOptions, slotId);
          _logInterpreter = null;
 
