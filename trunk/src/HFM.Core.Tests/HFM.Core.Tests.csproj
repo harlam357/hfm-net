@@ -118,6 +118,10 @@
       <Project>{360034D2-9F6A-4377-B5B9-D82712171223}</Project>
       <Name>HFM.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HFM.Log\HFM.Log.csproj">
+      <Project>{2C3EA8A1-D17F-419D-A76A-970550FB5A09}</Project>
+      <Name>HFM.Log</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\harlam357public.snk">

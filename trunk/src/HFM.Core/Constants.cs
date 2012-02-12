@@ -31,7 +31,6 @@ namespace HFM.Core
       public const string ProjectInfoFileName = "ProjectInfo.tab";
       public const string UnitInfoCacheFileName = "UnitInfoCache.dat";
       public const string BenchmarkCacheFileName = "BenchmarkCache.dat";
-      //public const string CompletedUnitsCsvFileName = "CompletedUnits.csv";
       public const string UserStatsCacheFileName = "UserStatsCache.dat";
       public const string QueryCacheFileName = "WuHistoryQuery.dat";
 
@@ -54,6 +53,17 @@ namespace HFM.Core
 
       public const string EocStatsFormat = "{0:###,###,##0}";
 
+      // Folding ID and Team Defaults
+      public const string DefaultFoldingID = "Unknown";
+      public const int DefaultTeam = 0;
+      public const string DefaultCoreID = "Unknown";
+
+      // Log Filename Constants
+      public const string FahLogFileName = "FAHlog.txt";
+      public const string UnitInfoFileName = "unitinfo.txt";
+      public const string QueueFileName = "queue.dat";
+      public const string FahClientLogFileName = "log.txt";
+
       /// <summary>
       /// Conversion factor - minutes to milli-seconds
       /// </summary>
@@ -63,6 +73,8 @@ namespace HFM.Core
       /// UnitInfo Log File Maximum Download Size
       /// </summary>
       public const int UnitInfoMax = 1048576; // 1 Megabyte
+
+      public const int MaxDecimalPlaces = 5;
 
       public const int MinMinutes = 1;
       public const int MaxMinutes = 180;
@@ -76,6 +88,9 @@ namespace HFM.Core
       // Default ID Constants
       public const string DefaultUserID = "";
       public const int DefaultMachineID = 0;
+
+      public const int DefaultFahClientPort = 36330;
+      public const int DefaultFtpPort = 21;
 
       public const int MaxDisplayableLogLines = 500;
 

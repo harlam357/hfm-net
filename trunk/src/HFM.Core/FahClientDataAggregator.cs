@@ -311,8 +311,8 @@ namespace HFM.Core
          unit.ProjectGen = entry.Gen;
 
          /* FoldingID and Team from Queue Entry */
-         unit.FoldingID = options.User ?? Default.FoldingID;
-         unit.Team = options.Team ?? Default.Team;
+         unit.FoldingID = options.User ?? Constants.DefaultFoldingID;
+         unit.Team = options.Team ?? Constants.DefaultTeam;
          unit.SlotType = (SlotType)slotOptions.FahClientSubTypeEnum;
 
          /* Core ID */

@@ -478,11 +478,12 @@ namespace HFM.Core
          }
 
          /* FoldingID and Team from Last Client Run (Could have already been read through Queue) */
-         if (unit.FoldingID.Equals(Default.FoldingID))
+         if (unit.FoldingID.Equals(Constants.DefaultFoldingID) &&
+            !String.IsNullOrEmpty(currentClientRun.FoldingID))
          {
             unit.FoldingID = currentClientRun.FoldingID;
          }
-         if (unit.Team == Default.Team)
+         if (unit.Team == Constants.DefaultTeam)
          {
             unit.Team = currentClientRun.Team;
          }

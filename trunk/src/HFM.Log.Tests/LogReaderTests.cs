@@ -749,7 +749,7 @@ namespace HFM.Log.Tests
          expectedRun.UnitIndexes.Add(new UnitIndex(1, 3827, 4053));
          expectedRun.UnitIndexes.Add(new UnitIndex(0, 4005, -1));
          expectedRun.Arguments = String.Empty;
-         expectedRun.FoldingID = "Unknown";
+         expectedRun.FoldingID = String.Empty;
          expectedRun.Team = 0;
          expectedRun.UserID = String.Empty;
          expectedRun.MachineID = 0;
@@ -808,7 +808,7 @@ namespace HFM.Log.Tests
          expectedRun.UnitIndexes.Add(new UnitIndex(2, 755, 1324));
          expectedRun.UnitIndexes.Add(new UnitIndex(0, 1172, 1398));
          expectedRun.Arguments = "";
-         expectedRun.FoldingID = "Unknown";
+         expectedRun.FoldingID = String.Empty;
          expectedRun.Team = 0;
          expectedRun.UserID = "";
          expectedRun.MachineID = 0;
@@ -860,7 +860,7 @@ namespace HFM.Log.Tests
          var expectedRun = new ClientRun(1);
          expectedRun.UnitIndexes.Add(new UnitIndex(1, 114, -1));
          expectedRun.Arguments = "";
-         expectedRun.FoldingID = "Unknown";
+         expectedRun.FoldingID = String.Empty;
          expectedRun.Team = 0;
          expectedRun.UserID = "";
          expectedRun.MachineID = 0;
@@ -902,7 +902,7 @@ namespace HFM.Log.Tests
          expectedRun.UnitIndexes.Add(new UnitIndex(2, 319, -1));
          expectedRun.Arguments = "";
          expectedRun.ClientVersion = "";
-         expectedRun.FoldingID = "Unknown";
+         expectedRun.FoldingID = String.Empty;
          expectedRun.Team = 0;
          expectedRun.UserID = "";
          expectedRun.MachineID = 0;

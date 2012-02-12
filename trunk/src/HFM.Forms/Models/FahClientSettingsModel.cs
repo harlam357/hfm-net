@@ -89,7 +89,7 @@ namespace HFM.Forms.Models
          get { return !Validate.ServerName(Server); }
       }
 
-      private int _port = Core.DataTypes.Default.FahClientPort;
+      private int _port = Constants.DefaultFahClientPort;
 
       public int Port
       {

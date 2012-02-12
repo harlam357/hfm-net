@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Text;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 using HFM.Core.DataTypes;
@@ -243,14 +243,14 @@ namespace HFM.Log
                {
                   data.DownloadTime = DateTime.ParseExact(line.Substring(15), "MMMM d H:mm:ss",
                                                           DateTimeFormatInfo.InvariantInfo,
-                                                          Default.DateTimeStyle);
+                                                          LogReaderExtensions.DateTimeStyle);
                }
                /* DueTime (Could be read here or through the queue.dat) */
                else if (line.StartsWith("Due time: "))
                {
                   data.DueTime = DateTime.ParseExact(line.Substring(10), "MMMM d H:mm:ss",
                                                      DateTimeFormatInfo.InvariantInfo,
-                                                     Default.DateTimeStyle);
+                                                     LogReaderExtensions.DateTimeStyle);
                }
                /* Progress (Supplemental Read - if progress percentage cannot be determined through FAHlog.txt) */
                else if (line.StartsWith("Progress: "))
@@ -415,10 +415,77 @@ namespace HFM.Log
       {
          return DateTime.ParseExact(value, "HH:mm:ss",
                                     DateTimeFormatInfo.InvariantInfo,
-                                    Default.DateTimeStyle).TimeOfDay;
+                                    DateTimeStyle).TimeOfDay;
       }
 
       #endregion
+
+      private static readonly bool IsRunningOnMono = Type.GetType("Mono.Runtime") != null;
+
+      /// <summary>
+      /// Get the Default DateTimeStyle based on the current runtime (.NET or Mono).
+      /// </summary>
+      internal static DateTimeStyles DateTimeStyle
+      {
+         get
+         {
+            DateTimeStyles style;
+
+            if (IsRunningOnMono)
+            {
+               style = DateTimeStyles.AssumeUniversal |
+                       DateTimeStyles.AdjustToUniversal;
+            }
+            else
+            {
+               // set parse style to parse local
+               style = DateTimeStyles.NoCurrentDateDefault |
+                       DateTimeStyles.AssumeUniversal |
+                       DateTimeStyles.AdjustToUniversal;
+            }
+
+            return style;
+         }
+      }
+
+      /// <summary>
+      /// Return the log lines from start index to end index.
+      /// </summary>
+      public static IEnumerable<LogLine> WhereLineIndex(this IEnumerable<LogLine> logLines, int startIndex, int endIndex)
+      {
+         if (logLines == null) throw new ArgumentNullException("logLines");
+
+         // end index cannot be less than start
+         if (endIndex < startIndex)
+         {
+            // if so, return everything > than start index
+            return logLines.Where(x => x.LineIndex >= startIndex);
+         }
+         return logLines.Where(x => x.LineIndex >= startIndex && x.LineIndex <= endIndex);
+      }
+
+      /// <summary>
+      /// Return the first project info found in the log lines or null.
+      /// </summary>
+      public static IProjectInfo FirstProjectInfoOrDefault(this IEnumerable<LogLine> logLines)
+      {
+         if (logLines == null) throw new ArgumentNullException("logLines");
+
+         var projectLine = logLines.FirstOrDefault(x => x.LineType.Equals(LogLineType.WorkUnitProject));
+         if (projectLine == null)
+         {
+            return null;
+         }
+
+         var match = (Match)projectLine.LineData;
+         return new ProjectInfo
+         {
+            ProjectID = Int32.Parse(match.Result("${ProjectNumber}")),
+            ProjectRun = Int32.Parse(match.Result("${Run}")),
+            ProjectClone = Int32.Parse(match.Result("${Clone}")),
+            ProjectGen = Int32.Parse(match.Result("${Gen}"))
+         };
+      }
 
       #region LogFileType
 

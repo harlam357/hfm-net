@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Client Settings Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -157,9 +157,9 @@ namespace HFM.Core.DataTypes
          Password = String.Empty;
 
          ClientProcessorMegahertz = 1;
-         FahLogFileName = Default.FahLogFileName;
-         UnitInfoFileName = Default.UnitInfoFileName;
-         QueueFileName = Default.QueueFileName;
+         FahLogFileName = Constants.FahLogFileName;
+         UnitInfoFileName = Constants.UnitInfoFileName;
+         QueueFileName = Constants.QueueFileName;
          Path = String.Empty;
          FtpMode = FtpType.Passive;
 

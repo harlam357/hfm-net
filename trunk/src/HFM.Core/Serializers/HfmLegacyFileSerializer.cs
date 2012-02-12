@@ -170,7 +170,7 @@ namespace HFM.Core.Serializers
          catch (NullReferenceException)
          {
             _logger.Warn("Cannot load FAHlog.txt file name.");
-            settings.FahLogFileName = Default.FahLogFileName;
+            settings.FahLogFileName = Constants.FahLogFileName;
          }
 
          try
@@ -180,7 +180,7 @@ namespace HFM.Core.Serializers
          catch (NullReferenceException)
          {
             _logger.Warn("Cannot load unitinfo.txt file name.");
-            settings.UnitInfoFileName = Default.UnitInfoFileName;
+            settings.UnitInfoFileName = Constants.UnitInfoFileName;
          }
 
          try
@@ -190,7 +190,7 @@ namespace HFM.Core.Serializers
          catch (NullReferenceException)
          {
             _logger.Warn("Cannot load queue.dat file name.");
-            settings.QueueFileName = Default.QueueFileName;
+            settings.QueueFileName = Constants.QueueFileName;
          }
 
          try

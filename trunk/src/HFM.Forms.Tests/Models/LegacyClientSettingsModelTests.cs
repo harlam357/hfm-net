@@ -23,7 +23,6 @@ using System.IO;
 using NUnit.Framework;
 
 using HFM.Core;
-using HFM.Core.DataTypes;
 using HFM.Forms.Models;
 
 namespace HFM.Forms.Tests.Models
@@ -37,11 +36,11 @@ namespace HFM.Forms.Tests.Models
          var model = new LegacyClientSettingsModel();
          Assert.AreEqual(LegacyClientSubType.Path, model.LegacyClientSubType);
          Assert.AreEqual(1, model.ClientProcessorMegahertz);
-         Assert.AreEqual(Default.FahLogFileName, model.FahLogFileName);
-         Assert.AreEqual(Default.UnitInfoFileName, model.UnitInfoFileName);
-         Assert.AreEqual(Default.QueueFileName, model.QueueFileName);
+         Assert.AreEqual(Constants.FahLogFileName, model.FahLogFileName);
+         Assert.AreEqual(Constants.UnitInfoFileName, model.UnitInfoFileName);
+         Assert.AreEqual(Constants.QueueFileName, model.QueueFileName);
          Assert.AreEqual(String.Empty, model.Server);
-         Assert.AreEqual(Default.FtpPort, model.Port);
+         Assert.AreEqual(Constants.DefaultFtpPort, model.Port);
          Assert.AreEqual(String.Empty, model.Username);
          Assert.AreEqual(String.Empty, model.Password);
          Assert.AreEqual(FtpType.Passive, model.FtpMode);
@@ -77,7 +76,7 @@ namespace HFM.Forms.Tests.Models
          Assert.AreEqual(LegacyClientSubType.Path, model.LegacyClientSubType);
          Assert.AreEqual(String.Empty, model.Path);
          Assert.AreEqual(String.Empty, model.Server);
-         Assert.AreEqual(Default.FtpPort, model.Port);
+         Assert.AreEqual(Constants.DefaultFtpPort, model.Port);
          Assert.AreEqual(String.Empty, model.Username);
          Assert.AreEqual(String.Empty, model.Password);
          Assert.AreEqual(FtpType.Passive, model.FtpMode);
