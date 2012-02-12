@@ -16,7 +16,7 @@
             <table class="Overview" width="100%">
                <tr>
                   <td class="Heading" colspan="2">Summary</td>
-                  <td class="Plain" colspan="16">
+                  <td class="Plain" colspan="14">
                      <a href="index.html">Overview Page</a>
                   </td>
                </tr>
@@ -27,8 +27,6 @@
                   <td class="Heading">Client Type</td>
                   <td class="Heading">TPF</td>
                   <td class="Heading">PPD</td>
-                  <td class="Heading">MHz</td>
-                  <td class="Heading">PPD/MHz</td>
                   <td class="Heading">ETA</td>
                   <td class="Heading">Core</td>
                   <td class="Heading">Core ID</td>
@@ -92,10 +90,10 @@
                <xsl:value-of select="GridData/Status"/>
             </font>
          </td>
-         <td width="2%" class="RightCol">
+         <td width="5%" class="RightCol">
             <xsl:value-of select="GridData/PercentComplete"/>%
          </td>
-         <td width="12%">
+         <td width="15%">
             <xsl:choose>
                <xsl:when test="GridData/UserIdIsDuplicate='true'">
                   <xsl:attribute name="class">StatusCol</xsl:attribute>
@@ -117,12 +115,6 @@
          </td>
          <td width="8%" class="RightCol">
             <xsl:value-of select="GridData/PPD"/> (<xsl:value-of select="GridData/UPD"/> WUs)
-         </td>
-         <td width="3%" class="RightCol">
-            <xsl:value-of select="GridData/MHz"/>
-         </td>
-         <td width="3%" class="RightCol">
-            <xsl:value-of select="GridData/PPDMHz"/>
          </td>
          <td width="8%" class="RightCol">
             <xsl:value-of select="GridData/ETA"/>

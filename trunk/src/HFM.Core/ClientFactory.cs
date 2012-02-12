@@ -153,12 +153,6 @@ namespace HFM.Core
          {
             #region Legacy Settings
 
-            if (settings.ClientProcessorMegahertz < 1)
-            {
-               warnings.Add("Client MHz is less than 1, defaulting to 1 MHz.");
-               settings.ClientProcessorMegahertz = 1;
-            }
-
             if (String.IsNullOrEmpty(settings.FahLogFileName))
             {
                warnings.Add("No remote FAHlog.txt filename, loading default.");

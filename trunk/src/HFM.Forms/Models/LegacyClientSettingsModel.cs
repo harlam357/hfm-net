@@ -31,8 +31,6 @@ namespace HFM.Forms.Models
          get
          {
             return (NameError ||
-                    //ExternalFilenameError ||
-                    ClientProcessorMegahertzError ||
                     FahLogFileNameError ||
                     UnitInfoFileNameError ||
                     QueueFileNameError ||
@@ -48,7 +46,6 @@ namespace HFM.Forms.Models
       {
          _legacyClientSubType = LegacyClientSubType.Path;
          _name = String.Empty;
-         _clientProcessorMegahertz = 1;
          _fahLogFileName = Constants.FahLogFileName;
          _unitInfoFileName = Constants.UnitInfoFileName;
          _queueFileName = Constants.QueueFileName;
@@ -132,28 +129,6 @@ namespace HFM.Forms.Models
       //}
 
       #endregion
-
-      private int _clientProcessorMegahertz;
-      /// <summary>
-      /// The number of processor megahertz for this client instance
-      /// </summary>
-      public int ClientProcessorMegahertz
-      {
-         get { return _clientProcessorMegahertz; }
-         set
-         {
-            if (_clientProcessorMegahertz != value)
-            {
-               _clientProcessorMegahertz = value;
-               OnPropertyChanged("ClientProcessorMegahertz");
-            }
-         }
-      }
-      
-      public bool ClientProcessorMegahertzError
-      {
-         get { return ClientProcessorMegahertz < 1; }
-      }
 
       private string _fahLogFileName;
       /// <summary>

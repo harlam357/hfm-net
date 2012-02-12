@@ -95,8 +95,6 @@ namespace HFM.Forms
          this.LogFileNameLabel = new HFM.Forms.Controls.LabelWrapper();
          this.UnitInfoFileNameTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
          this.UnitInfoFileNameLabel = new HFM.Forms.Controls.LabelWrapper();
-         this.ClientMegahertzLabel = new HFM.Forms.Controls.LabelWrapper();
-         this.ClientMegahertzTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
          this.ClientTimeOffsetLabel = new HFM.Forms.Controls.LabelWrapper();
          this.QueueFileNameLabel = new HFM.Forms.Controls.LabelWrapper();
          this.QueueFileNameTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
@@ -114,7 +112,7 @@ namespace HFM.Forms
          // DialogOkButton
          // 
          this.DialogOkButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-         this.DialogOkButton.Location = new System.Drawing.Point(212, 350);
+         this.DialogOkButton.Location = new System.Drawing.Point(212, 326);
          this.DialogOkButton.Name = "DialogOkButton";
          this.DialogOkButton.Size = new System.Drawing.Size(81, 25);
          this.DialogOkButton.TabIndex = 18;
@@ -127,7 +125,7 @@ namespace HFM.Forms
          this.DialogCancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
          this.DialogCancelButton.CausesValidation = false;
          this.DialogCancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-         this.DialogCancelButton.Location = new System.Drawing.Point(304, 350);
+         this.DialogCancelButton.Location = new System.Drawing.Point(304, 326);
          this.DialogCancelButton.Name = "DialogCancelButton";
          this.DialogCancelButton.Size = new System.Drawing.Size(81, 25);
          this.DialogCancelButton.TabIndex = 19;
@@ -155,7 +153,7 @@ namespace HFM.Forms
          // 
          this.ClientNoUtcOffsetCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
          this.ClientNoUtcOffsetCheckBox.AutoSize = true;
-         this.ClientNoUtcOffsetCheckBox.Location = new System.Drawing.Point(12, 326);
+         this.ClientNoUtcOffsetCheckBox.Location = new System.Drawing.Point(12, 302);
          this.ClientNoUtcOffsetCheckBox.Name = "ClientNoUtcOffsetCheckBox";
          this.ClientNoUtcOffsetCheckBox.Size = new System.Drawing.Size(144, 17);
          this.ClientNoUtcOffsetCheckBox.TabIndex = 15;
@@ -168,7 +166,7 @@ namespace HFM.Forms
          // ClientTimeOffsetUpDown
          // 
          this.ClientTimeOffsetUpDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-         this.ClientTimeOffsetUpDown.Location = new System.Drawing.Point(8, 352);
+         this.ClientTimeOffsetUpDown.Location = new System.Drawing.Point(8, 328);
          this.ClientTimeOffsetUpDown.Name = "ClientTimeOffsetUpDown";
          this.ClientTimeOffsetUpDown.Size = new System.Drawing.Size(54, 20);
          this.ClientTimeOffsetUpDown.TabIndex = 16;
@@ -438,7 +436,7 @@ namespace HFM.Forms
          this.LocalPathGroupBox.Controls.Add(this.LogFolderBrowseButton);
          this.LocalPathGroupBox.Controls.Add(this.LogFolderTextBox);
          this.LocalPathGroupBox.Controls.Add(this.LogFolderLabel);
-         this.LocalPathGroupBox.Location = new System.Drawing.Point(7, 166);
+         this.LocalPathGroupBox.Location = new System.Drawing.Point(7, 140);
          this.LocalPathGroupBox.Name = "LocalPathGroupBox";
          this.LocalPathGroupBox.Size = new System.Drawing.Size(378, 69);
          this.LocalPathGroupBox.TabIndex = 11;
@@ -468,7 +466,7 @@ namespace HFM.Forms
          this.FtpGroupBox.Controls.Add(this.FtpPasswordLabel);
          this.FtpGroupBox.Controls.Add(this.FtpServerPathTextBox);
          this.FtpGroupBox.Controls.Add(this.FtpUsernameTextBox);
-         this.FtpGroupBox.Location = new System.Drawing.Point(7, 166);
+         this.FtpGroupBox.Location = new System.Drawing.Point(7, 140);
          this.FtpGroupBox.Name = "FtpGroupBox";
          this.FtpGroupBox.Size = new System.Drawing.Size(378, 152);
          this.FtpGroupBox.TabIndex = 13;
@@ -551,7 +549,7 @@ namespace HFM.Forms
          this.HttpGroupBox.Controls.Add(this.WebPasswordLabel);
          this.HttpGroupBox.Controls.Add(this.WebUsernameLabel);
          this.HttpGroupBox.Controls.Add(this.WebUrlLabel);
-         this.HttpGroupBox.Location = new System.Drawing.Point(7, 166);
+         this.HttpGroupBox.Location = new System.Drawing.Point(7, 140);
          this.HttpGroupBox.Name = "HttpGroupBox";
          this.HttpGroupBox.Size = new System.Drawing.Size(378, 99);
          this.HttpGroupBox.TabIndex = 12;
@@ -571,7 +569,7 @@ namespace HFM.Forms
          this.LogFileNameTextBox.ErrorToolTipDuration = 5000;
          this.LogFileNameTextBox.ErrorToolTipPoint = new System.Drawing.Point(230, 0);
          this.LogFileNameTextBox.ErrorToolTipText = "File name contains invalid characters.";
-         this.LogFileNameTextBox.Location = new System.Drawing.Point(146, 64);
+         this.LogFileNameTextBox.Location = new System.Drawing.Point(146, 38);
          this.LogFileNameTextBox.MaxLength = 100;
          this.LogFileNameTextBox.Name = "LogFileNameTextBox";
          this.LogFileNameTextBox.Size = new System.Drawing.Size(237, 20);
@@ -581,7 +579,7 @@ namespace HFM.Forms
          // LogFileNameLabel
          // 
          this.LogFileNameLabel.AutoSize = true;
-         this.LogFileNameLabel.Location = new System.Drawing.Point(6, 67);
+         this.LogFileNameLabel.Location = new System.Drawing.Point(6, 41);
          this.LogFileNameLabel.Name = "LogFileNameLabel";
          this.LogFileNameLabel.Size = new System.Drawing.Size(116, 13);
          this.LogFileNameLabel.TabIndex = 4;
@@ -597,7 +595,7 @@ namespace HFM.Forms
          this.UnitInfoFileNameTextBox.ErrorToolTipDuration = 5000;
          this.UnitInfoFileNameTextBox.ErrorToolTipPoint = new System.Drawing.Point(230, 0);
          this.UnitInfoFileNameTextBox.ErrorToolTipText = "File name contains invalid characters.";
-         this.UnitInfoFileNameTextBox.Location = new System.Drawing.Point(146, 90);
+         this.UnitInfoFileNameTextBox.Location = new System.Drawing.Point(146, 64);
          this.UnitInfoFileNameTextBox.MaxLength = 100;
          this.UnitInfoFileNameTextBox.Name = "UnitInfoFileNameTextBox";
          this.UnitInfoFileNameTextBox.Size = new System.Drawing.Size(237, 20);
@@ -607,45 +605,17 @@ namespace HFM.Forms
          // UnitInfoFileNameLabel
          // 
          this.UnitInfoFileNameLabel.AutoSize = true;
-         this.UnitInfoFileNameLabel.Location = new System.Drawing.Point(6, 93);
+         this.UnitInfoFileNameLabel.Location = new System.Drawing.Point(6, 67);
          this.UnitInfoFileNameLabel.Name = "UnitInfoFileNameLabel";
          this.UnitInfoFileNameLabel.Size = new System.Drawing.Size(115, 13);
          this.UnitInfoFileNameLabel.TabIndex = 6;
          this.UnitInfoFileNameLabel.Text = "Filename for unitinfo.txt";
          // 
-         // ClientMegahertzLabel
-         // 
-         this.ClientMegahertzLabel.AutoSize = true;
-         this.ClientMegahertzLabel.Location = new System.Drawing.Point(6, 41);
-         this.ClientMegahertzLabel.Name = "ClientMegahertzLabel";
-         this.ClientMegahertzLabel.Size = new System.Drawing.Size(111, 13);
-         this.ClientMegahertzLabel.TabIndex = 2;
-         this.ClientMegahertzLabel.Text = "Client Processor MHz:";
-         // 
-         // ClientMegahertzTextBox
-         // 
-         this.ClientMegahertzTextBox.BackColor = System.Drawing.SystemColors.Window;
-         this.ClientMegahertzTextBox.DoubleBuffered = true;
-         this.ClientMegahertzTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
-         this.ClientMegahertzTextBox.ErrorState = false;
-         this.ClientMegahertzTextBox.ErrorToolTip = this.toolTipHost;
-         this.ClientMegahertzTextBox.ErrorToolTipDuration = 5000;
-         this.ClientMegahertzTextBox.ErrorToolTipPoint = new System.Drawing.Point(230, 0);
-         this.ClientMegahertzTextBox.ErrorToolTipText = "Client Processor Megahertz must be numeric and greater than zero.";
-         this.ClientMegahertzTextBox.Location = new System.Drawing.Point(146, 38);
-         this.ClientMegahertzTextBox.MaxLength = 9;
-         this.ClientMegahertzTextBox.Name = "ClientMegahertzTextBox";
-         this.ClientMegahertzTextBox.Size = new System.Drawing.Size(237, 20);
-         this.ClientMegahertzTextBox.TabIndex = 3;
-         this.ClientMegahertzTextBox.Text = "1";
-         this.ClientMegahertzTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
-         this.ClientMegahertzTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
-         // 
          // ClientTimeOffsetLabel
          // 
          this.ClientTimeOffsetLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
          this.ClientTimeOffsetLabel.AutoSize = true;
-         this.ClientTimeOffsetLabel.Location = new System.Drawing.Point(64, 355);
+         this.ClientTimeOffsetLabel.Location = new System.Drawing.Point(64, 331);
          this.ClientTimeOffsetLabel.Name = "ClientTimeOffsetLabel";
          this.ClientTimeOffsetLabel.Size = new System.Drawing.Size(136, 13);
          this.ClientTimeOffsetLabel.TabIndex = 17;
@@ -654,7 +624,7 @@ namespace HFM.Forms
          // QueueFileNameLabel
          // 
          this.QueueFileNameLabel.AutoSize = true;
-         this.QueueFileNameLabel.Location = new System.Drawing.Point(6, 119);
+         this.QueueFileNameLabel.Location = new System.Drawing.Point(6, 93);
          this.QueueFileNameLabel.Name = "QueueFileNameLabel";
          this.QueueFileNameLabel.Size = new System.Drawing.Size(115, 13);
          this.QueueFileNameLabel.TabIndex = 8;
@@ -670,7 +640,7 @@ namespace HFM.Forms
          this.QueueFileNameTextBox.ErrorToolTipDuration = 5000;
          this.QueueFileNameTextBox.ErrorToolTipPoint = new System.Drawing.Point(230, 0);
          this.QueueFileNameTextBox.ErrorToolTipText = "File name contains invalid characters.";
-         this.QueueFileNameTextBox.Location = new System.Drawing.Point(146, 116);
+         this.QueueFileNameTextBox.Location = new System.Drawing.Point(146, 90);
          this.QueueFileNameTextBox.MaxLength = 100;
          this.QueueFileNameTextBox.Name = "QueueFileNameTextBox";
          this.QueueFileNameTextBox.Size = new System.Drawing.Size(237, 20);
@@ -679,7 +649,7 @@ namespace HFM.Forms
          // 
          // TestConnectionButton
          // 
-         this.TestConnectionButton.Location = new System.Drawing.Point(271, 142);
+         this.TestConnectionButton.Location = new System.Drawing.Point(271, 116);
          this.TestConnectionButton.Name = "TestConnectionButton";
          this.TestConnectionButton.Size = new System.Drawing.Size(114, 24);
          this.TestConnectionButton.TabIndex = 14;
@@ -692,7 +662,7 @@ namespace HFM.Forms
          this.LegacyClientSubTypePanel.Controls.Add(this.LegacyClientSubTypeLocalPathRadioButton);
          this.LegacyClientSubTypePanel.Controls.Add(this.LegacyClientSubTypeFtpRadioButton);
          this.LegacyClientSubTypePanel.Controls.Add(this.LegacyClientSubTypeHttpRadioButton);
-         this.LegacyClientSubTypePanel.Location = new System.Drawing.Point(8, 139);
+         this.LegacyClientSubTypePanel.Location = new System.Drawing.Point(8, 113);
          this.LegacyClientSubTypePanel.Name = "LegacyClientSubTypePanel";
          this.LegacyClientSubTypePanel.Size = new System.Drawing.Size(257, 30);
          this.LegacyClientSubTypePanel.TabIndex = 10;
@@ -700,7 +670,7 @@ namespace HFM.Forms
          // 
          // DummyTextBox
          // 
-         this.DummyTextBox.Location = new System.Drawing.Point(331, 324);
+         this.DummyTextBox.Location = new System.Drawing.Point(331, 298);
          this.DummyTextBox.Name = "DummyTextBox";
          this.DummyTextBox.Size = new System.Drawing.Size(49, 20);
          this.DummyTextBox.TabIndex = 20;
@@ -709,7 +679,7 @@ namespace HFM.Forms
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(392, 385);
+         this.ClientSize = new System.Drawing.Size(392, 361);
          this.Controls.Add(this.FtpGroupBox);
          this.Controls.Add(this.LocalPathGroupBox);
          this.Controls.Add(this.DummyTextBox);
@@ -719,8 +689,6 @@ namespace HFM.Forms
          this.Controls.Add(this.QueueFileNameLabel);
          this.Controls.Add(this.ClientTimeOffsetLabel);
          this.Controls.Add(this.ClientTimeOffsetUpDown);
-         this.Controls.Add(this.ClientMegahertzTextBox);
-         this.Controls.Add(this.ClientMegahertzLabel);
          this.Controls.Add(this.ClientNoUtcOffsetCheckBox);
          this.Controls.Add(this.ClientNameLabel);
          this.Controls.Add(this.DialogCancelButton);
@@ -788,8 +756,6 @@ namespace HFM.Forms
       private ValidatingTextBox UnitInfoFileNameTextBox;
       private LabelWrapper UnitInfoFileNameLabel;
       private CheckBoxWrapper ClientNoUtcOffsetCheckBox;
-      private LabelWrapper ClientMegahertzLabel;
-      private ValidatingTextBox ClientMegahertzTextBox;
       private LabelWrapper ClientTimeOffsetLabel;
       private System.Windows.Forms.NumericUpDown ClientTimeOffsetUpDown;
       private RadioButtonWrapper LegacyClientSubTypeLocalPathRadioButton;

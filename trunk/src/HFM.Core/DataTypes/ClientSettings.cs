@@ -69,35 +69,35 @@ namespace HFM.Core.DataTypes
 
       #region Legacy Data
 
-      /// <summary>
-      /// The number of processor megahertz for this client instance
-      /// </summary>
-      [DataMember(Order = 8)]
-      public int ClientProcessorMegahertz { get; set; }
+      ///// <summary>
+      ///// The number of processor megahertz for this client instance
+      ///// </summary>
+      //[DataMember(Order = 8)]
+      //public int ClientProcessorMegahertz { get; set; }
 
       /// <summary>
       /// Remote client log file name
       /// </summary>
-      [DataMember(Order = 9)]
+      [DataMember(Order = 8)]
       public string FahLogFileName { get; set; }
 
       /// <summary>
       /// Remote client unit info log file name
       /// </summary>
-      [DataMember(Order = 10)]
+      [DataMember(Order = 9)]
       public string UnitInfoFileName { get; set; }
 
       /// <summary>
       /// Remote client queue.dat file name
       /// </summary>
-      [DataMember(Order = 11)]
+      [DataMember(Order = 10)]
       public string QueueFileName { get; set; }
 
       private string _path;
       /// <summary>
       /// Location of log files for this instance
       /// </summary>
-      [DataMember(Order = 12)]
+      [DataMember(Order = 11)]
       public string Path
       {
          get { return _path; }
@@ -123,7 +123,7 @@ namespace HFM.Core.DataTypes
       /// <summary>
       /// Specifies the FTP Communication Mode for this client
       /// </summary>
-      [DataMember(Order = 13)]
+      [DataMember(Order = 12)]
       public FtpType FtpMode { get; set; }
 
       #endregion
@@ -131,13 +131,13 @@ namespace HFM.Core.DataTypes
       /// <summary>
       /// Specifies that this client reports local time as UTC
       /// </summary>
-      [DataMember(Order = 14)]
+      [DataMember(Order = 13)]
       public bool UtcOffsetIsZero { get; set; }
 
       /// <summary>
       /// Specifies the number of minutes (+/-) this client's clock differentiates
       /// </summary>
-      [DataMember(Order = 15)]
+      [DataMember(Order = 14)]
       public int ClientTimeOffset { get; set; }
       
       public ClientSettings()
@@ -156,7 +156,7 @@ namespace HFM.Core.DataTypes
          Username = String.Empty;
          Password = String.Empty;
 
-         ClientProcessorMegahertz = 1;
+         //ClientProcessorMegahertz = 1;
          FahLogFileName = Constants.FahLogFileName;
          UnitInfoFileName = Constants.UnitInfoFileName;
          QueueFileName = Constants.QueueFileName;

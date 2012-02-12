@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Legacy Client Settings Serializer
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -146,21 +146,6 @@ namespace HFM.Core.Serializers
          {
             _logger.Warn("Cannot load external instance flag. Skipping these client settings and continuing.");
             return null;
-         }
-
-         try
-         {
-            settings.ClientProcessorMegahertz = Int32.Parse(xmlData.SelectSingleNode(xmlNodeClientMHz).InnerText);
-         }
-         catch (NullReferenceException)
-         {
-            _logger.Warn("Cannot load client MHz, defaulting to 1 MHz.");
-            settings.ClientProcessorMegahertz = 1;
-         }
-         catch (FormatException)
-         {
-            _logger.Warn("Cannot load client MHz, defaulting to 1 MHz.");
-            settings.ClientProcessorMegahertz = 1;
          }
 
          try
