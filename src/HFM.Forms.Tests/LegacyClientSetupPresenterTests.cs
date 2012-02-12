@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Instance Settings Presenter Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -238,7 +238,6 @@ namespace HFM.Forms.Tests
          var model = new LegacyClientSettingsModel();
          model.LegacyClientSubType = LegacyClientSubType.Path;
          model.Name = "Test";
-         model.ClientProcessorMegahertz = 1;
          model.FahLogFileName = "FAHlog.txt";
          model.UnitInfoFileName = "unitinfo.txt";
          model.QueueFileName = "queue.dat";

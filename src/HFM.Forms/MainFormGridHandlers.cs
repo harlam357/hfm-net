@@ -514,7 +514,7 @@ namespace HFM.Forms
       
       #endregion
 
-      public const int NumberOfDisplayFields = 19;
+      public const int NumberOfDisplayFields = 17;
 
       public static void SetupDataGridViewColumns(DataGridView dgv)
       {
@@ -534,10 +534,10 @@ namespace HFM.Forms
          dgv.Columns["TPF"].DataPropertyName = "TPF";
          dgv.Columns.Add("PPD", "PPD");
          dgv.Columns["PPD"].DataPropertyName = "PPD";
-         dgv.Columns.Add("MHz", "MHz");
-         dgv.Columns["MHz"].DataPropertyName = "MHz";
-         dgv.Columns.Add("PPDMHz", "PPD/MHz");
-         dgv.Columns["PPDMHz"].DataPropertyName = "PPDMHz";
+         //dgv.Columns.Add("MHz", "MHz");
+         //dgv.Columns["MHz"].DataPropertyName = "MHz";
+         //dgv.Columns.Add("PPDMHz", "PPD/MHz");
+         //dgv.Columns["PPDMHz"].DataPropertyName = "PPDMHz";
          dgv.Columns.Add("ETA", "ETA");
          dgv.Columns["ETA"].DataPropertyName = "ETA";
          dgv.Columns.Add("Core", "Core");

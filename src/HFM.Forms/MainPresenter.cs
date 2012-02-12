@@ -236,7 +236,7 @@ namespace HFM.Forms
             cols.CopyTo(colsArray, 0);
             Array.Sort(colsArray);
 
-            for (int i = 0; i < colsArray.Length; i++)
+            for (int i = 0; i < colsArray.Length && i < MainForm.NumberOfDisplayFields; i++)
             {
                string[] a = colsArray[i].Split(',');
                int index = Int32.Parse(a[3]);

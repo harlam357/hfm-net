@@ -275,16 +275,6 @@ namespace HFM.Core
          get { return ProductionValuesOk ? Math.Round(UnitInfoLogic.GetUPD(CalculationType), 3) : 0; }
       }
 
-      public int MHz
-      {
-         get { return Settings.ClientProcessorMegahertz; }
-      }
-
-      public double PPDMHz
-      {
-         get { return Math.Round(PPD / MHz, 3); }
-      }
-
       /// <summary>
       /// Esimated time of arrival (ETA) for this protein
       /// </summary>

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Instance Settings Presenter
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,7 +31,6 @@ using Castle.Core.Logging;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
-using HFM.Core.DataTypes;
 using HFM.Forms.Models;
 
 namespace HFM.Forms
@@ -45,8 +44,6 @@ namespace HFM.Forms
 
    public class LegacyClientSetupPresenter : ILegacyClientSetupPresenter
    {
-      //private const int LogFileNamesVisibleOffset = 70;
-   
       #region Fields
 
       private LegacyClientSettingsModel _settingsModel;
@@ -63,7 +60,6 @@ namespace HFM.Forms
             _settingsView.DataBind(_settingsModel);
             _propertyCollection = TypeDescriptor.GetProperties(_settingsModel);
             _settingsModel.PropertyChanged += SettingsModelPropertyChanged;
-            //SetViewInstanceType();
             SetViewHostType();
          }
       }
@@ -118,58 +114,24 @@ namespace HFM.Forms
          if (Core.Application.IsRunningOnMono) HandleSettingsModelPropertyChangedForMono(e.PropertyName);
       }
       
-      //private void SetViewInstanceType()
-      //{
-      //   if (_settingsModel.ExternalInstance)
-      //   {
-      //      _settingsView.Text = "Client Data Merge Setup"; 
-      //      _settingsView.ClientMegahertzLabelText = "Merge File Name:";
-      //      _settingsView.MergeFileNameVisible = true;
-      //      _settingsView.LogFileNamesVisible = false;
-      //      _settingsView.ClientIsOnVirtualMachineVisible = false;
-      //      _settingsView.ClientTimeOffsetVisible = false;
-      //   }
-      //}
-      
       private void SetViewHostType()
       {
          switch (_settingsModel.LegacyClientSubType)
          {
             case LegacyClientSubType.Path:
-               //if (_settingsModel.ExternalInstance)
-               //{
-               //   _settingsView.Size = new Size(_settingsView.MaxWidth, _settingsView.MaxHeight - 78 - LogFileNamesVisibleOffset);
-               //}
-               //else
-               //{
-                  _settingsView.Size = new Size(_settingsView.MaxWidth, _settingsView.MaxHeight - 78);
-               //}
+               _settingsView.Size = new Size(_settingsView.MaxWidth, _settingsView.MaxHeight - 78);
                _settingsView.PathGroupVisible = true;
                _settingsView.HttpGroupVisible = false;
                _settingsView.FtpGroupVisible = false;
                break;
             case LegacyClientSubType.Http:
-               //if (_settingsModel.ExternalInstance)
-               //{
-               //   _settingsView.Size = new Size(_settingsView.MaxWidth, _settingsView.MaxHeight - 50 - LogFileNamesVisibleOffset);
-               //}
-               //else
-               //{
-                  _settingsView.Size = new Size(_settingsView.MaxWidth, _settingsView.MaxHeight - 50);
-               //}
+               _settingsView.Size = new Size(_settingsView.MaxWidth, _settingsView.MaxHeight - 50);
                _settingsView.PathGroupVisible = false;
                _settingsView.HttpGroupVisible = true;
                _settingsView.FtpGroupVisible = false;
                break;
             case LegacyClientSubType.Ftp:
-               //if (_settingsModel.ExternalInstance)
-               //{
-               //   _settingsView.Size = new Size(_settingsView.MaxWidth, _settingsView.MaxHeight - LogFileNamesVisibleOffset);
-               //}
-               //else
-               //{
-                  _settingsView.Size = new Size(_settingsView.MaxWidth, _settingsView.MaxHeight);
-               //}
+               _settingsView.Size = new Size(_settingsView.MaxWidth, _settingsView.MaxHeight);
                _settingsView.PathGroupVisible = false;
                _settingsView.HttpGroupVisible = false;
                _settingsView.FtpGroupVisible = true;
@@ -308,7 +270,6 @@ namespace HFM.Forms
          SetPropertyErrorState();
          // Check for error conditions
          if (SettingsModel.NameError ||
-             SettingsModel.ClientProcessorMegahertzError ||
              SettingsModel.FahLogFileNameError ||
              SettingsModel.UnitInfoFileNameError ||
              SettingsModel.QueueFileNameError ||

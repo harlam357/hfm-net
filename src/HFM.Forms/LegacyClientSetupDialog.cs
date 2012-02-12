@@ -1,7 +1,7 @@
 /*
  * HFM.NET - Legacy Client Setup Dialog
  * Copyright (C) 2006-2007 David Rawling
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -50,12 +50,6 @@ namespace HFM.Forms
 
       List<IValidatingControl> FindValidatingControls();
 
-      string ClientMegahertzLabelText { get; set; }
-      
-      //bool MergeFileNameVisible { get; set; }
-
-      //bool LogFileNamesVisible { set; }
-      
       bool PathGroupVisible { set; }
 
       bool HttpGroupVisible { set; }
@@ -138,8 +132,6 @@ namespace HFM.Forms
       public void DataBind(LegacyClientSettingsModel settings)
       {
          ClientNameTextBox.DataBindings.Add("Text", settings, "Name", false, DataSourceUpdateMode.OnValidation);
-         //txtMergeFileName.DataBindings.Add("Text", settings, "ExternalFileName", false, DataSourceUpdateMode.OnValidation);
-         ClientMegahertzTextBox.DataBindings.Add("Text", settings, "ClientProcessorMegahertz", false, DataSourceUpdateMode.OnValidation);
          LogFileNameTextBox.DataBindings.Add("Text", settings, "FahLogFileName", false, DataSourceUpdateMode.OnValidation);
          UnitInfoFileNameTextBox.DataBindings.Add("Text", settings, "UnitInfoFileName", false, DataSourceUpdateMode.OnValidation);
          QueueFileNameTextBox.DataBindings.Add("Text", settings, "QueueFileName", false, DataSourceUpdateMode.OnValidation);
@@ -187,39 +179,6 @@ namespace HFM.Forms
 
          return validatingControls;
       }
-
-      public string ClientMegahertzLabelText
-      {
-         get { return ClientMegahertzLabel.Text; }
-         set { ClientMegahertzLabel.Text = value; }
-      }
-
-      //public bool MergeFileNameVisible
-      //{
-      //   get { return txtMergeFileName.Visible; }
-      //   set { txtMergeFileName.Visible = value; }
-      //}
-      
-      //public bool LogFileNamesVisible
-      //{
-      //   set 
-      //   { 
-      //      //lblClientMegahertz.Visible = value;
-      //      //txtClientMegahertz.Visible = value;
-      //      lblLogFileName.Visible = value;
-      //      txtLogFileName.Visible = value;
-      //      lblUnitFileName.Visible = value;
-      //      txtUnitFileName.Visible = value;
-      //      lblQueueFileName.Visible = value;
-      //      txtQueueFileName.Visible = value;
-
-      //      pnlHostType.Top = pnlHostType.Top - LegacyClientSetupPresenter.LogFileNamesVisibleOffset;
-      //      btnTestConnection.Top = btnTestConnection.Top - LegacyClientSetupPresenter.LogFileNamesVisibleOffset;
-      //      grpLocal.Top = grpLocal.Top - LegacyClientSetupPresenter.LogFileNamesVisibleOffset;
-      //      grpHTTP.Top = grpHTTP.Top - LegacyClientSetupPresenter.LogFileNamesVisibleOffset;
-      //      grpFTP.Top = grpFTP.Top - LegacyClientSetupPresenter.LogFileNamesVisibleOffset;
-      //   }
-      //}
 
       public bool PathGroupVisible
       {

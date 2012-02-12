@@ -41,7 +41,6 @@ namespace HFM.Forms.Configuration
             .ForMember(dest => dest.ClientType, opt => opt.UseValue(ClientType.FahClient))
             .ForMember(dest => dest.LegacyClientSubType, opt => opt.UseValue(LegacyClientSubType.None))
             .ForMember(dest => dest.Username, opt => opt.Ignore())
-            .ForMember(dest => dest.ClientProcessorMegahertz, opt => opt.Ignore())
             .ForMember(dest => dest.FahLogFileName, opt => opt.Ignore())
             .ForMember(dest => dest.UnitInfoFileName, opt => opt.Ignore())
             .ForMember(dest => dest.QueueFileName, opt => opt.Ignore())

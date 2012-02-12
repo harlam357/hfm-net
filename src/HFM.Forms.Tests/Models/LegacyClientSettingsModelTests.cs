@@ -35,7 +35,6 @@ namespace HFM.Forms.Tests.Models
       {
          var model = new LegacyClientSettingsModel();
          Assert.AreEqual(LegacyClientSubType.Path, model.LegacyClientSubType);
-         Assert.AreEqual(1, model.ClientProcessorMegahertz);
          Assert.AreEqual(Constants.FahLogFileName, model.FahLogFileName);
          Assert.AreEqual(Constants.UnitInfoFileName, model.UnitInfoFileName);
          Assert.AreEqual(Constants.QueueFileName, model.QueueFileName);
@@ -142,36 +141,6 @@ namespace HFM.Forms.Tests.Models
 
          propertyChangedFired = false; 
          model.Name = "Some other name";
-         Assert.IsFalse(propertyChangedFired);
-      }
-
-      [Test]
-      public void ClientProcessorMegahertzTest1()
-      {
-         var model = CreateValidModel(LegacyClientSubType.Path);
-         Assert.IsFalse(model.ClientProcessorMegahertzError);
-         Assert.IsFalse(model.Error);
-
-         model.ClientProcessorMegahertz = 0;
-         Assert.IsTrue(model.ClientProcessorMegahertzError);
-         Assert.IsTrue(model.Error);
-
-         model.ClientProcessorMegahertz = -1;
-         Assert.IsTrue(model.ClientProcessorMegahertzError);
-         Assert.IsTrue(model.Error);
-      }
-
-      [Test]
-      public void ClientProcessorMegahertzTest2()
-      {
-         var model = CreateValidModel(LegacyClientSubType.Path);
-         bool propertyChangedFired = false;
-         model.PropertyChanged += (sender, e) => propertyChangedFired = (e.PropertyName == "ClientProcessorMegahertz");
-         model.ClientProcessorMegahertz = 1000;
-         Assert.IsTrue(propertyChangedFired);
-
-         propertyChangedFired = false;
-         model.ClientProcessorMegahertz = 1000;
          Assert.IsFalse(propertyChangedFired);
       }
 
