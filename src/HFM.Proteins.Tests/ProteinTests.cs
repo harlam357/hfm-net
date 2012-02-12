@@ -21,7 +21,9 @@ using System;
 
 using NUnit.Framework;
 
-namespace HFM.Core.DataTypes.Tests
+using HFM.Core.DataTypes;
+
+namespace HFM.Proteins.Tests
 {
    [TestFixture]
    public class ProteinTests
